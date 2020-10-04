@@ -6,8 +6,11 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
+using System.Text;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -49,13 +52,7 @@ namespace Nikse.SubtitleEdit.Forms
             int total = (int)Math.Round(_cdgGraphics.DurationInMilliseconds / CdgGraphics.TimeMsFactor);
 
             var bw = new BackgroundWorker { WorkerReportsProgress = true };
-            bw.DoWork += (o, args) =>
-            {
-                _imageList = cdgToImageList.MakeImageList(_cdgGraphics, _subtitle, (number, unique) =>
-                {
-                    bw.ReportProgress(number, unique);
-                });
-            };
+            bw.DoWork += (o, args) => { _imageList = cdgToImageList.MakeImageList(_cdgGraphics, _subtitle, (number, unique) => { bw.ReportProgress(number, unique); }); };
             bw.RunWorkerCompleted += (o, args) =>
             {
                 using (var exportBdnXmlPng = new ExportPngXml())
@@ -65,6 +62,15 @@ namespace Nikse.SubtitleEdit.Forms
                     exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), ExportPngXml.ExportFormats.BluraySup, FileName, this, "Test123");
                     exportBdnXmlPng.ShowDialog(this);
                     Configuration.Settings.Tools.ExportBluRayRemoveSmallGaps = old;
+                    var supFileName = exportBdnXmlPng.GetOutputFileName();
+                    if (!string.IsNullOrEmpty(supFileName) && File.Exists(supFileName))
+                    {
+
+                        var tempFolder = Path.GetTempPath();
+                        var audioFileName = @"C:\Users\WinX\Desktop\auto-br\CDG\samples\FOR HE'S A JOLLY GOOD FELLOW.mp3";
+                        var processMakeVideo = GetFFmpegProcess(labelBackgroundImage.Text,)
+                    }
+
                     DialogResult = DialogResult.OK;
                 }
             };
@@ -86,6 +92,70 @@ namespace Nikse.SubtitleEdit.Forms
         public bool GetIsForced(int index)
         {
             return false;
+        }
+
+        private void buttonChooseBackgroundImage_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog(this) != DialogResult.OK)
+            {
+                return;
+            }
+
+            pictureBoxBackgroundImage.Image = new Bitmap(openFileDialog1.FileName);
+            labelBackgroundImage.Text = openFileDialog1.FileName;
+        }
+
+        public Process GetFFmpegProcess(string imageFileName, string audioFileName, string outputFileName)
+        {
+            var ffmpegLocation = Configuration.Settings.General.FFmpegLocation;
+            if (!Configuration.IsRunningOnWindows && (string.IsNullOrEmpty(ffmpegLocation) || !File.Exists(ffmpegLocation)))
+            {
+                ffmpegLocation = "ffmpeg";
+            }
+
+            var process = new Process
+            {
+                StartInfo =
+                {
+                    FileName = ffmpegLocation,
+                    Arguments = $"-loop 1 -i \"{imageFileName}\" -i \"{audioFileName}\" -c:v libx264 -tune stillimage -shortest \"{outputFileName}\"",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true
+                }
+            };
+            return process;
+        }
+
+        public Process GetMkvMergeProcess(string videoFileName, string subtitleFileName, string outputFileName)
+        {
+            var location = @"j:\data\Tools\MKVToolNix\mkvmerge.exe";
+            if (!Configuration.IsRunningOnWindows && (string.IsNullOrEmpty(location) || !File.Exists(location)))
+            {
+                location = "mkvmerge";
+            }
+
+            var process = new Process
+            {
+                StartInfo =
+                {
+                    FileName = location,
+                    Arguments = $"-o \"{videoFileName}\" \"{outputFileName}\" \"{subtitleFileName}\"",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true
+                }
+            };
+
+            var workingDirectory = Path.GetDirectoryName(location);
+            if (!string.IsNullOrEmpty(workingDirectory))
+            {
+                process.StartInfo.WorkingDirectory = workingDirectory;
+            }
+
+            return process;
         }
     }
 }
