@@ -34,6 +34,7 @@
    * Update Korean translation - thx domddol
    * Update Portugese translation - thx moob
    * Update Greek translation - thx Lero91
+   * Update Russian translation - thx Elheym
    * Update Polish spell check dictionary - thx borifax
    * Improve support for transport stream in "cmd line convert"
    * Improve support for transport stream in "Batch convert"
