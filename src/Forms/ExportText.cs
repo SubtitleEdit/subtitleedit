@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             public bool ShowLineNumbers { get; set; }
             public bool AddNewlineAfterLineNumber { get; set; }
-            public bool ShowTimecodes { get; set; }
+            public bool ShowTimeCodes { get; set; }
             public bool TimeCodeSrt { get; set; }
             public bool TimeCodeHHMMSSFF { get; set; }
             public bool AddNewlineAfterTimeCodes { get; set; }
@@ -102,8 +102,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 radioButtonTimeCodeHHMMSSFF.Checked = true;
             }
-
-            if (Configuration.Settings.Tools.ExportTextTimeCodeFormat == "Milliseconds")
+            else if (Configuration.Settings.Tools.ExportTextTimeCodeFormat == "Milliseconds")
             {
                 radioButtonTimeCodeMs.Checked = true;
             }
@@ -139,7 +138,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 ShowLineNumbers = checkBoxShowLineNumbers.Checked,
                 AddNewlineAfterLineNumber = checkBoxAddNewlineAfterLineNumber.Checked,
-                ShowTimecodes = checkBoxShowTimeCodes.Checked,
+                ShowTimeCodes = checkBoxShowTimeCodes.Checked,
                 TimeCodeSrt = radioButtonTimeCodeSrt.Checked,
                 TimeCodeHHMMSSFF = radioButtonTimeCodeHHMMSSFF.Checked,
                 AddNewlineAfterTimeCodes = checkBoxAddNewlineAfterTimeCodes.Checked,
@@ -172,7 +171,7 @@ namespace Nikse.SubtitleEdit.Forms
                         sb.Append(' ');
                     }
                 }
-                if (exportOptions.ShowTimecodes)
+                if (exportOptions.ShowTimeCodes)
                 {
                     if (exportOptions.TimeCodeSrt)
                     {
