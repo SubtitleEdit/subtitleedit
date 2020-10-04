@@ -249,6 +249,7 @@ namespace Nikse.SubtitleEdit.Core
         public int ExportBluRayBottomMarginPixels { get; set; }
         public int ExportBluRayShadow { get; set; }
         public bool ExportBluRayRemoveSmallGaps { get; set; }
+        public string ExportCdgBackgroundImage { get; set; }
         public int Export3DType { get; set; }
         public int Export3DDepth { get; set; }
         public int ExportLastShadowTransparency { get; set; }
@@ -4262,6 +4263,12 @@ $HorzAlign          =   Center
                 settings.Tools.ExportBluRayRemoveSmallGaps = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("ExportCdgBackgroundImage");
+            if (subNode != null)
+            {
+                settings.Tools.ExportCdgBackgroundImage = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("Export3DType");
             if (subNode != null)
             {
@@ -7758,6 +7765,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ExportBluRayBottomMarginPixels", settings.Tools.ExportBluRayBottomMarginPixels.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportBluRayShadow", settings.Tools.ExportBluRayShadow.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportBluRayRemoveSmallGaps", settings.Tools.ExportBluRayRemoveSmallGaps.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ExportCdgBackgroundImage", settings.Tools.ExportCdgBackgroundImage);
                 textWriter.WriteElementString("Export3DType", settings.Tools.Export3DType.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("Export3DDepth", settings.Tools.Export3DDepth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportLastShadowTransparency", settings.Tools.ExportLastShadowTransparency.ToString(CultureInfo.InvariantCulture));
