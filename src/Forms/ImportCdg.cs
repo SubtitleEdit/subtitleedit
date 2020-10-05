@@ -125,8 +125,6 @@ namespace Nikse.SubtitleEdit.Forms
             buttonStart.Enabled = false;
 
             var cdgToImageList = new CdgToImageList();
-            int total = (int)Math.Round(_cdgGraphics.DurationInMilliseconds / CdgGraphics.TimeMsFactor);
-
             var bw = new BackgroundWorker { WorkerReportsProgress = true };
             bw.DoWork += (o, args) => { _imageList = cdgToImageList.MakeImageList(_cdgGraphics, _subtitle, (number, unique) => { bw.ReportProgress(number, unique); }); };
             bw.RunWorkerCompleted += (o, args) =>
@@ -193,11 +191,8 @@ namespace Nikse.SubtitleEdit.Forms
                     DialogResult = DialogResult.OK;
                 }
             };
-            bw.ProgressChanged += (o, args) =>
-            {
-                labelStatus.Text = $"Frame {args.ProgressPercentage:#,###,##0} of {total:#,###,##0}, unique images {(int)args.UserState:#,###,##0}";
-                labelStatus.Refresh();
-            };
+            labelStatus.Text = "Generating images...";
+            labelStatus.Refresh();
             bw.RunWorkerAsync();
         }
 
