@@ -212,6 +212,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonChooseBackgroundImage_Click(object sender, EventArgs e)
         {
+            openFileDialog1.Filter = "Images|*.png;*.jpg";
+            openFileDialog1.FileName = string.Empty;
             if (openFileDialog1.ShowDialog(this) != DialogResult.OK)
             {
                 return;
@@ -293,6 +295,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonAudioFileBrowse_Click(object sender, EventArgs e)
         {
+            openFileDialog1.Filter = "Audio files|*.mp3;*.ogg";
+            openFileDialog1.FileName = string.Empty;
             if (openFileDialog1.ShowDialog(this) != DialogResult.OK)
             {
                 return;
