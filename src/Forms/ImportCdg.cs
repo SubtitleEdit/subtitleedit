@@ -8,13 +8,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
     public partial class ImportCdg : Form, IBinaryParagraphList
-    {        
+    {
         //300x216
         private readonly CdgGraphics _cdgGraphics;
         private readonly Subtitle _subtitle;
@@ -22,7 +23,6 @@ namespace Nikse.SubtitleEdit.Forms
         private string _audioFileName;
         private Bitmap _originalBackgroundImage;
         private Bitmap _resizedBackgroundImage;
-        private int _durationSeconds;
 
         public string FileName { get; }
 
@@ -34,10 +34,8 @@ namespace Nikse.SubtitleEdit.Forms
             _cdgGraphics = CdgGraphicsFile.Load(fileName);
             _subtitle = new Subtitle();
             FileName = fileName;
-            labelProgress.Text = string.Empty;
-            labelProgress2.Text = string.Empty;
+            labelStatus.Text = string.Empty;
             labelFileName.Text = string.Format("File name: {0}", Path.GetFileName(fileName));
-            _durationSeconds = (int) (_cdgGraphics.DurationInMilliseconds / 1000.0 + 0.5);
             labelDuration.Text = string.Format("Duration: {0}", TimeCode.FromSeconds(_cdgGraphics.DurationInMilliseconds / 1000.0).ToDisplayString());
             buttonCancel.Text = Configuration.Settings.Language.General.Ok;
 
@@ -51,16 +49,30 @@ namespace Nikse.SubtitleEdit.Forms
                 if (File.Exists(audioFileName))
                 {
                     _audioFileName = audioFileName;
-                    labelAudioFileName.Text = "Audio file name: " + Path.GetFileName(audioFileName);
+                    labelAudioFileName.Text = Path.GetFileName(audioFileName);
                 }
             }
+
+            textBoxFFmpegPath.Text = Configuration.Settings.General.MkvMergeLocation;
+
+            comboBoxRes.SelectedIndex = 0;
+
+            for (int i = 0; i <= 1000; i++)
+            {
+                comboBoxLeftRightMargin.Items.Add(i);
+                comboBoxBottomMargin.Items.Add(i);
+            }
+
+            comboBoxLeftRightMargin.SelectedIndex = Configuration.Settings.Tools.ExportCdgMarginLeft;
+            comboBoxBottomMargin.SelectedIndex = Configuration.Settings.Tools.ExportCdgMarginBottom;
 
             if (!string.IsNullOrEmpty(Configuration.Settings.Tools.ExportCdgBackgroundImage) &&
                 File.Exists(Configuration.Settings.Tools.ExportCdgBackgroundImage))
             {
-                pictureBoxBackgroundImage.Image = new Bitmap(Configuration.Settings.Tools.ExportCdgBackgroundImage);
-                labelBackgroundImage.Text = Configuration.Settings.Tools.ExportCdgBackgroundImage;
+                SetBackgroundImage(Configuration.Settings.Tools.ExportCdgBackgroundImage);
             }
+
+            radioButtonBluRaySup_CheckedChanged(null, null);
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -71,6 +83,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonStart_Click(object sender, EventArgs e)
         {
             radioButtonBluRaySup.Enabled = false;
+            radioButtonVideo.Enabled = false;
             buttonStart.Enabled = false;
 
             var cdgToImageList = new CdgToImageList();
@@ -80,38 +93,82 @@ namespace Nikse.SubtitleEdit.Forms
             bw.DoWork += (o, args) => { _imageList = cdgToImageList.MakeImageList(_cdgGraphics, _subtitle, (number, unique) => { bw.ReportProgress(number, unique); }); };
             bw.RunWorkerCompleted += (o, args) =>
             {
-                using (var exportBdnXmlPng = new ExportPngXml())
+                if (radioButtonBluRaySup.Checked)
                 {
-                    var old = Configuration.Settings.Tools.ExportBluRayRemoveSmallGaps;
-                    Configuration.Settings.Tools.ExportBluRayRemoveSmallGaps = false; // Hm, not really sure if a 'true' is needed here - seems to give a small blink once in a while!?
-                    exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), ExportPngXml.ExportFormats.BluraySup, FileName, this, "Test123");
-                    exportBdnXmlPng.ShowDialog(this);
-                    Configuration.Settings.Tools.ExportBluRayRemoveSmallGaps = old;
-                    var supFileName = exportBdnXmlPng.GetOutputFileName();
-                    if (!string.IsNullOrEmpty(supFileName) && File.Exists(supFileName))
+                    using (var exportBdnXmlPng = new ExportPngXml())
                     {
-
-                        var tempFolder = Path.GetTempPath();
-                        var tempMkv = Path.Combine(tempFolder, Guid.NewGuid() + ".mkv");
-                        var processMakeVideo = GetFFmpegProcess(labelBackgroundImage.Text, _audioFileName, tempMkv);
-                        processMakeVideo.Start();
-                        processMakeVideo.WaitForExit();
-
-                        var finalMkv = Path.Combine(Path.GetDirectoryName(FileName), Guid.NewGuid() + ".mkv");
-                        var processAddSubtitles = GetMkvMergeProcess(tempMkv, supFileName, finalMkv);
-                        processAddSubtitles.Start();
-                        processAddSubtitles.WaitForExit();
+                        exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), ExportPngXml.ExportFormats.BluraySup, FileName, this, "Test123");
+                        exportBdnXmlPng.ShowDialog(this);
+                    }
+                    DialogResult = DialogResult.OK;
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(_audioFileName) || !File.Exists(_audioFileName))
+                    {
+                        MessageBox.Show("No audio file!");
+                        return;
                     }
 
-                    DialogResult = DialogResult.OK;
+                    if (_originalBackgroundImage == null)
+                    {
+                        MessageBox.Show("No background image file!");
+                        return;
+                    }
+
+                    if (string.IsNullOrEmpty(textBoxFFmpegPath.Text) || !File.Exists(textBoxFFmpegPath.Text))
+                    {
+                        MessageBox.Show("mkvmerge.exe not found!");
+                        return;
+                    }
+
+                    using (var exportBdnXmlPng = new ExportPngXml())
+                    {
+                        var old = Configuration.Settings.Tools.ExportBluRayRemoveSmallGaps;
+                        Configuration.Settings.Tools.ExportBluRayRemoveSmallGaps = false; // Hm, not really sure if a 'true' is needed here - seems to give a small blink once in a while!?
+                        exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), ExportPngXml.ExportFormats.BluraySup, FileName, this, "Test123");
+                        exportBdnXmlPng.ShowDialog(this);
+                        Configuration.Settings.Tools.ExportBluRayRemoveSmallGaps = old;
+                        var supFileName = exportBdnXmlPng.GetOutputFileName();
+                        if (!string.IsNullOrEmpty(supFileName) && File.Exists(supFileName))
+                        {
+                            saveFileDialog1.Filter = "Matroska (*.mkv)|*.mkv";
+                            saveFileDialog1.FileName = FileName.Substring(0, FileName.Length - 3) + "mkv";
+                            if (saveFileDialog1.ShowDialog(this) != DialogResult.OK)
+                            {
+                                return;
+                            }
+
+                            var finalMkv = saveFileDialog1.FileName;
+
+                            labelStatus.Text = "Generating video...";
+                            labelStatus.Refresh();
+                            var tempFolder = Path.GetTempPath();
+                            var tempImageFileName = Path.Combine(tempFolder, Guid.NewGuid() + ".png");
+                            _resizedBackgroundImage.Save(tempImageFileName, ImageFormat.Png);
+                            var tempMkv = Path.Combine(tempFolder, Guid.NewGuid() + ".mkv");
+                            var processMakeVideo = GetFFmpegProcess(tempImageFileName, _audioFileName, tempMkv);
+                            processMakeVideo.Start();
+                            processMakeVideo.WaitForExit();
+
+                            labelStatus.Text = "Adding subtitles to video...";
+                            labelStatus.Refresh();
+                            var processAddSubtitles = GetMkvMergeProcess(tempMkv, supFileName, finalMkv);
+                            processAddSubtitles.Start();
+                            processAddSubtitles.WaitForExit();
+                            labelStatus.Text = string.Empty;
+
+                            UiUtil.OpenFolderFromFileName(finalMkv);
+                        }
+
+                        DialogResult = DialogResult.OK;
+                    }
                 }
             };
             bw.ProgressChanged += (o, args) =>
             {
-                labelProgress.Text = $"Frame {args.ProgressPercentage:#,###,##0} of {total:#,###,##0}";
-                labelProgress.Refresh();
-                labelProgress2.Text = $"Unique images {(int)args.UserState:#,###,##0}";
-                labelProgress2.Refresh();
+                labelStatus.Text = $"Frame {args.ProgressPercentage:#,###,##0} of {total:#,###,##0}, unique images {(int)args.UserState:#,###,##0}";
+                labelStatus.Refresh();
             };
             bw.RunWorkerAsync();
         }
@@ -133,9 +190,29 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            pictureBoxBackgroundImage.Image = new Bitmap(openFileDialog1.FileName);
-            labelBackgroundImage.Text = openFileDialog1.FileName;
-            Configuration.Settings.Tools.ExportCdgBackgroundImage = openFileDialog1.FileName;
+            SetBackgroundImage(openFileDialog1.FileName);
+        }
+
+        private void SetBackgroundImage(string fileName)
+        {
+            _originalBackgroundImage = new Bitmap(fileName);
+            SetBackgroundImage(_originalBackgroundImage);
+            labelBackgroundImage.Text = fileName;
+            Configuration.Settings.Tools.ExportCdgBackgroundImage = fileName;
+        }
+
+        private void SetBackgroundImage(Bitmap originalBackgroundImage)
+        {
+            _resizedBackgroundImage = ExportPngXml.ResizeBitmap(originalBackgroundImage, 620, 350);
+            var bmp = new Bitmap(_resizedBackgroundImage);
+            using (var g = Graphics.FromImage(bmp))
+            {
+                g.DrawRectangle(Pens.Green, Convert.ToInt32(comboBoxLeftRightMargin.SelectedIndex), 350 - CdgGraphics.FullHeight - Convert.ToInt32(comboBoxBottomMargin.SelectedIndex), CdgGraphics.FullWidth, CdgGraphics.FullHeight);
+            }
+
+            var oldBitmap = pictureBoxBackgroundImage.Image as Bitmap;
+            pictureBoxBackgroundImage.Image = bmp;
+            oldBitmap?.Dispose();
         }
 
         public Process GetFFmpegProcess(string imageFileName, string audioFileName, string outputFileName)
@@ -151,11 +228,9 @@ namespace Nikse.SubtitleEdit.Forms
                 StartInfo =
                 {
                     FileName = ffmpegLocation,
-                    Arguments = $"-loop 1 -i \"{imageFileName}\" -i \"{audioFileName}\" -c:v libx264 -tune stillimage -shortest \"{outputFileName}\"",
-                    //UseShellExecute = false,
-                    //RedirectStandardOutput = true,
-                    //RedirectStandardError = true,
-                    //CreateNoWindow = true
+                    Arguments = $"-loop 1 -i \"{imageFileName}\" -i \"{audioFileName}\" -c:v libx264 -tune stillimage -shortest -s 620x350 \"{outputFileName}\"",
+                    UseShellExecute = false,
+                    CreateNoWindow = true
                 }
             };
             return process;
@@ -163,7 +238,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public Process GetMkvMergeProcess(string videoFileName, string subtitleFileName, string outputFileName)
         {
-            var location = @"j:\data\Tools\MKVToolNix\mkvmerge.exe";
+            var location = Configuration.Settings.General.MkvMergeLocation;
             if (!Configuration.IsRunningOnWindows && (string.IsNullOrEmpty(location) || !File.Exists(location)))
             {
                 location = "mkvmerge";
@@ -175,10 +250,8 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     FileName = location,
                     Arguments = $"-o \"{outputFileName}\" \"{videoFileName}\" \"{subtitleFileName}\"",
-                    //UseShellExecute = false,
-                    //RedirectStandardOutput = true,
-                    //RedirectStandardError = true,
-                    //CreateNoWindow = true
+                    UseShellExecute = false,
+                    CreateNoWindow = true
                 }
             };
 
@@ -200,6 +273,51 @@ namespace Nikse.SubtitleEdit.Forms
 
             _audioFileName = openFileDialog1.FileName;
             labelAudioFileName.Text = "Audio file name: " + Path.GetFileName(_audioFileName);
+        }
+
+        private void comboBoxBottomMargin_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (_originalBackgroundImage == null)
+            {
+                return;
+            }
+
+            SetBackgroundImage(_originalBackgroundImage);
+            Configuration.Settings.Tools.ExportCdgMarginBottom = comboBoxBottomMargin.SelectedIndex;
+        }
+
+        private void comboBoxLeftRightMargin_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (_originalBackgroundImage == null)
+            {
+                return;
+            }
+
+            SetBackgroundImage(_originalBackgroundImage);
+            Configuration.Settings.Tools.ExportCdgMarginLeft = comboBoxLeftRightMargin.SelectedIndex;
+        }
+
+        private void buttonBrowseToFFmpeg_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.FileName = string.Empty;
+            openFileDialog1.Filter = "MKVToolNix mkvmerge (mkvmerge.exe)|mkvmerge.exe";
+            if (openFileDialog1.ShowDialog(this) != DialogResult.OK)
+            {
+                return;
+            }
+            textBoxFFmpegPath.Text = openFileDialog1.FileName;
+            Configuration.Settings.General.MkvMergeLocation = openFileDialog1.FileName;
+        }
+
+        private void buttonDownloadFfmpeg_Click(object sender, EventArgs e)
+        {
+            UiUtil.OpenURL("https://mkvtoolnix.download/downloads.html");
+        }
+
+        private void radioButtonBluRaySup_CheckedChanged(object sender, EventArgs e)
+        {
+            groupBoxVideoExportSettings.Enabled = !radioButtonBluRaySup.Checked;
+            groupBoxMkvMerge.Enabled = !radioButtonBluRaySup.Checked;
         }
     }
 }
