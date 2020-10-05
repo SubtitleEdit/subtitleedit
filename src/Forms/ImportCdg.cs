@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelStatus.Text = string.Empty;
             labelFileName.Text = string.Format("File name: {0}", Path.GetFileName(fileName));
             labelDuration.Text = string.Format("Duration: {0}", TimeCode.FromSeconds(_cdgGraphics.DurationInMilliseconds / 1000.0).ToDisplayString());
-            buttonCancel.Text = Configuration.Settings.Language.General.Ok;
+            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
 
             if (fileName != null && fileName.Length > 3)
             {
@@ -74,6 +74,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             radioButtonBluRaySup_CheckedChanged(null, null);
+
+            buttonDownloadFfmpeg.Text = Configuration.Settings.Language.Settings.DownloadFFmpeg;
+            var isFfmpegAvailable = !string.IsNullOrEmpty(Configuration.Settings.General.FFmpegLocation) && File.Exists(Configuration.Settings.General.FFmpegLocation);
+            buttonDownloadFfmpeg.Visible = !isFfmpegAvailable;
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -336,7 +340,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.General.MkvMergeLocation = openFileDialog1.FileName;
         }
 
-        private void buttonDownloadFfmpeg_Click(object sender, EventArgs e)
+        private void buttonDownloadMkvToolNix_Click(object sender, EventArgs e)
         {
             UiUtil.OpenURL("https://mkvtoolnix.download/downloads.html");
         }
@@ -345,6 +349,19 @@ namespace Nikse.SubtitleEdit.Forms
         {
             groupBoxVideoExportSettings.Enabled = !radioButtonBluRaySup.Checked;
             groupBoxMkvMerge.Enabled = !radioButtonBluRaySup.Checked;
+        }
+
+        private void buttonDownloadFfmpeg_Click(object sender, EventArgs e)
+        {
+            using (var form = new DownloadFfmpeg())
+            {
+                if (form.ShowDialog(this) == DialogResult.OK && !string.IsNullOrEmpty(form.FFmpegPath))
+                {
+                    Configuration.Settings.General.FFmpegLocation = form.FFmpegPath;
+                    buttonDownloadFfmpeg.Visible = false;
+                    Configuration.Settings.Save();
+                }
+            }
         }
     }
 }

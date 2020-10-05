@@ -37,7 +37,7 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.radioButtonVideo = new System.Windows.Forms.RadioButton();
             this.groupBoxMkvMerge = new System.Windows.Forms.GroupBox();
-            this.buttonDownloadFfmpeg = new System.Windows.Forms.Button();
+            this.buttonDownloadMkvToolNix = new System.Windows.Forms.Button();
             this.buttonBrowseToFFmpeg = new System.Windows.Forms.Button();
             this.textBoxFFmpegPath = new System.Windows.Forms.TextBox();
             this.labelFFmpegPath = new System.Windows.Forms.Label();
@@ -56,6 +56,7 @@
             this.pictureBoxBackgroundImage = new System.Windows.Forms.PictureBox();
             this.labelBackgroundImage = new System.Windows.Forms.Label();
             this.buttonChooseBackgroundImage = new System.Windows.Forms.Button();
+            this.buttonDownloadFfmpeg = new System.Windows.Forms.Button();
             this.groupBoxMkvMerge.SuspendLayout();
             this.groupBoxVideoExportSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBackgroundImage)).BeginInit();
@@ -140,7 +141,7 @@
             // groupBoxMkvMerge
             // 
             this.groupBoxMkvMerge.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.groupBoxMkvMerge.Controls.Add(this.buttonDownloadFfmpeg);
+            this.groupBoxMkvMerge.Controls.Add(this.buttonDownloadMkvToolNix);
             this.groupBoxMkvMerge.Controls.Add(this.buttonBrowseToFFmpeg);
             this.groupBoxMkvMerge.Controls.Add(this.textBoxFFmpegPath);
             this.groupBoxMkvMerge.Controls.Add(this.labelFFmpegPath);
@@ -151,15 +152,15 @@
             this.groupBoxMkvMerge.TabStop = false;
             this.groupBoxMkvMerge.Text = "MKVToolNix mkvmerge";
             // 
-            // buttonDownloadFfmpeg
+            // buttonDownloadMkvToolNix
             // 
-            this.buttonDownloadFfmpeg.Location = new System.Drawing.Point(274, 17);
-            this.buttonDownloadFfmpeg.Name = "buttonDownloadFfmpeg";
-            this.buttonDownloadFfmpeg.Size = new System.Drawing.Size(136, 23);
-            this.buttonDownloadFfmpeg.TabIndex = 2;
-            this.buttonDownloadFfmpeg.Text = "Download MKVToolNix";
-            this.buttonDownloadFfmpeg.UseVisualStyleBackColor = true;
-            this.buttonDownloadFfmpeg.Click += new System.EventHandler(this.buttonDownloadFfmpeg_Click);
+            this.buttonDownloadMkvToolNix.Location = new System.Drawing.Point(274, 17);
+            this.buttonDownloadMkvToolNix.Name = "buttonDownloadMkvToolNix";
+            this.buttonDownloadMkvToolNix.Size = new System.Drawing.Size(136, 23);
+            this.buttonDownloadMkvToolNix.TabIndex = 2;
+            this.buttonDownloadMkvToolNix.Text = "Download MKVToolNix";
+            this.buttonDownloadMkvToolNix.UseVisualStyleBackColor = true;
+            this.buttonDownloadMkvToolNix.Click += new System.EventHandler(this.buttonDownloadMkvToolNix_Click);
             // 
             // buttonBrowseToFFmpeg
             // 
@@ -341,11 +342,23 @@
             this.buttonChooseBackgroundImage.UseVisualStyleBackColor = true;
             this.buttonChooseBackgroundImage.Click += new System.EventHandler(this.buttonChooseBackgroundImage_Click);
             // 
+            // buttonDownloadFfmpeg
+            // 
+            this.buttonDownloadFfmpeg.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonDownloadFfmpeg.Location = new System.Drawing.Point(257, 294);
+            this.buttonDownloadFfmpeg.Name = "buttonDownloadFfmpeg";
+            this.buttonDownloadFfmpeg.Size = new System.Drawing.Size(184, 23);
+            this.buttonDownloadFfmpeg.TabIndex = 71;
+            this.buttonDownloadFfmpeg.Text = "Download ffmpeg";
+            this.buttonDownloadFfmpeg.UseVisualStyleBackColor = true;
+            this.buttonDownloadFfmpeg.Click += new System.EventHandler(this.buttonDownloadFfmpeg_Click);
+            // 
             // ImportCdg
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(931, 476);
+            this.Controls.Add(this.buttonDownloadFfmpeg);
             this.Controls.Add(this.groupBoxVideoExportSettings);
             this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.groupBoxMkvMerge);
@@ -384,7 +397,7 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.RadioButton radioButtonVideo;
         private System.Windows.Forms.GroupBox groupBoxMkvMerge;
-        private System.Windows.Forms.Button buttonDownloadFfmpeg;
+        private System.Windows.Forms.Button buttonDownloadMkvToolNix;
         private System.Windows.Forms.Button buttonBrowseToFFmpeg;
         private System.Windows.Forms.TextBox textBoxFFmpegPath;
         private System.Windows.Forms.Label labelFFmpegPath;
@@ -403,5 +416,6 @@
         private System.Windows.Forms.PictureBox pictureBoxBackgroundImage;
         private System.Windows.Forms.Label labelBackgroundImage;
         private System.Windows.Forms.Button buttonChooseBackgroundImage;
+        private System.Windows.Forms.Button buttonDownloadFfmpeg;
     }
 }
