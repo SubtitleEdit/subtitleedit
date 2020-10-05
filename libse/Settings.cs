@@ -250,6 +250,8 @@ namespace Nikse.SubtitleEdit.Core
         public int ExportBluRayShadow { get; set; }
         public bool ExportBluRayRemoveSmallGaps { get; set; }
         public string ExportCdgBackgroundImage { get; set; }
+        public int ExportCdgMarginLeft { get; set; }
+        public int ExportCdgMarginBottom { get; set; }
         public int Export3DType { get; set; }
         public int Export3DDepth { get; set; }
         public int ExportLastShadowTransparency { get; set; }
@@ -1107,6 +1109,7 @@ $HorzAlign          =   Center
         public string MpvExtraOption { get; set; }
         public bool MpvHandlesPreviewText { get; set; }
         public string MpcHcLocation { get; set; }
+        public string MkvMergeLocation { get; set; }
         public bool UseFFmpegForWaveExtraction { get; set; }
         public string FFmpegLocation { get; set; }
         public string FFmpegSceneThreshold { get; set; }
@@ -3301,6 +3304,12 @@ $HorzAlign          =   Center
                 settings.General.MpcHcLocation = subNode.InnerText.Trim();
             }
 
+            subNode = node.SelectSingleNode("MkvMergeLocation");
+            if (subNode != null)
+            {
+                settings.General.MkvMergeLocation = subNode.InnerText.Trim();
+            }
+            
             subNode = node.SelectSingleNode("UseFFmpegForWaveExtraction");
             if (subNode != null)
             {
@@ -4267,6 +4276,18 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.ExportCdgBackgroundImage = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("ExportCdgMarginLeft");
+            if (subNode != null)
+            {
+                settings.Tools.ExportCdgMarginLeft = Convert.ToInt32(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("ExportCdgMarginBottom");
+            if (subNode != null)
+            {
+                settings.Tools.ExportCdgMarginBottom = Convert.ToInt32(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("Export3DType");
@@ -7601,6 +7622,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MpvExtraOption", settings.General.MpvExtraOption);
                 textWriter.WriteElementString("MpvHandlesPreviewText", settings.General.MpvHandlesPreviewText.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MpcHcLocation", settings.General.MpcHcLocation);
+                textWriter.WriteElementString("MkvMergeLocation", settings.General.MkvMergeLocation);
                 textWriter.WriteElementString("UseFFmpegForWaveExtraction", settings.General.UseFFmpegForWaveExtraction.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FFmpegLocation", settings.General.FFmpegLocation);
                 textWriter.WriteElementString("FFmpegSceneThreshold", settings.General.FFmpegSceneThreshold);
@@ -7766,6 +7788,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ExportBluRayShadow", settings.Tools.ExportBluRayShadow.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportBluRayRemoveSmallGaps", settings.Tools.ExportBluRayRemoveSmallGaps.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportCdgBackgroundImage", settings.Tools.ExportCdgBackgroundImage);
+                textWriter.WriteElementString("ExportCdgMarginLeft", settings.Tools.ExportCdgMarginLeft.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ExportCdgMarginBottom", settings.Tools.ExportCdgMarginBottom.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("Export3DType", settings.Tools.Export3DType.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("Export3DDepth", settings.Tools.Export3DDepth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportLastShadowTransparency", settings.Tools.ExportLastShadowTransparency.ToString(CultureInfo.InvariantCulture));
