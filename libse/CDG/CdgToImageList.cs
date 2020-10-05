@@ -50,7 +50,7 @@ namespace Nikse.SubtitleEdit.Core.CDG
                                 p = new Paragraph(string.Empty, timeMs, timeMs);
                             }
                         }
-                        else
+                        else 
                         {
                             p.EndTime.TotalMilliseconds = timeMs;
                         }
