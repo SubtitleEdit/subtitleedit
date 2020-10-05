@@ -207,7 +207,7 @@ namespace Nikse.SubtitleEdit.Core
                 HistoryItems.RemoveAt(0);
             }
 
-            HistoryItems.Add(new HistoryItem(HistoryItems.Count, this, description, FileName, fileModified, subtitleFormat.FriendlyName, original, originalSubtitleFileName, lineNumber, linePosition, linePositionAlternate));
+            HistoryItems.Add(new HistoryItem(HistoryItems.Count, this, description, fileModified, subtitleFormat.FriendlyName, original, originalSubtitleFileName, lineNumber, linePosition, linePositionAlternate));
         }
 
         public string UndoHistory(int index, out string subtitleFormatFriendlyName, out DateTime fileModified, out Subtitle originalSubtitle, out string originalSubtitleFileName)
@@ -219,7 +219,6 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             subtitleFormatFriendlyName = HistoryItems[index].SubtitleFormatFriendlyName;
-            FileName = HistoryItems[index].FileName;
             fileModified = HistoryItems[index].FileModified;
             originalSubtitle = new Subtitle(HistoryItems[index].OriginalSubtitle);
             originalSubtitleFileName = HistoryItems[index].OriginalSubtitleFileName;
