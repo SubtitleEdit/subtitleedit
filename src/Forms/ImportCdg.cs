@@ -83,6 +83,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonStart_Click(object sender, EventArgs e)
         {
+            var finalMkv = string.Empty;
             if (radioButtonVideo.Checked)
             {
                 if (string.IsNullOrEmpty(_audioFileName) || !File.Exists(_audioFileName))
@@ -108,6 +109,15 @@ namespace Nikse.SubtitleEdit.Forms
                     MessageBox.Show("ffmpeg not configured!");
                     return;
                 }
+
+                saveFileDialog1.Filter = "Matroska (*.mkv)|*.mkv";
+                saveFileDialog1.FileName = FileName.Substring(0, FileName.Length - 3) + "mkv";
+                if (saveFileDialog1.ShowDialog(this) != DialogResult.OK)
+                {
+                    return;
+                }
+
+                finalMkv = saveFileDialog1.FileName;
             }
 
             radioButtonBluRaySup.Enabled = false;
@@ -161,15 +171,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (!string.IsNullOrEmpty(supFileName) && File.Exists(supFileName))
                     {
-                        saveFileDialog1.Filter = "Matroska (*.mkv)|*.mkv";
-                        saveFileDialog1.FileName = FileName.Substring(0, FileName.Length - 3) + "mkv";
-                        if (saveFileDialog1.ShowDialog(this) != DialogResult.OK)
-                        {
-                            return;
-                        }
-
-                        var finalMkv = saveFileDialog1.FileName;
-
                         labelStatus.Text = "Generating video...";
                         labelStatus.Refresh();
                         var tempImageFileName = Path.Combine(tempFolder, Guid.NewGuid() + ".png");
