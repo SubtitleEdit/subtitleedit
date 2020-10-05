@@ -12,7 +12,6 @@ namespace Nikse.SubtitleEdit.Core
         public Subtitle Subtitle { get; set; }
         public string SubtitleFormatFriendlyName { get; set; }
         public Subtitle OriginalSubtitle { get; set; }
-        public string OriginalSubtitleFileName { get; set; }
         public List<Paragraph> RedoParagraphs { get; set; }
         public List<Paragraph> RedoParagraphsAlternate { get; set; }
         public int RedoLineIndex { get; set; }
@@ -26,7 +25,7 @@ namespace Nikse.SubtitleEdit.Core
         public int LinePositionAlternate { get; set; }
 
         public HistoryItem(int index, Subtitle subtitle, string description,DateTime fileModified, string subtitleFormatFriendlyName,
-            Subtitle originalSubtitle, string originalSubtitleFileName, int lineIndex, int linePosition, int linePositionAlternate)
+            Subtitle originalSubtitle, int lineIndex, int linePosition, int linePositionAlternate)
         {
             Index = index;
             Timestamp = DateTime.Now;
@@ -35,7 +34,6 @@ namespace Nikse.SubtitleEdit.Core
             FileModified = fileModified;
             SubtitleFormatFriendlyName = subtitleFormatFriendlyName;
             OriginalSubtitle = new Subtitle(originalSubtitle);
-            OriginalSubtitleFileName = originalSubtitleFileName;
             LineIndex = lineIndex;
             LinePosition = linePosition;
             LinePositionAlternate = linePositionAlternate;
