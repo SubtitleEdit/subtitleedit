@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.CDG;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
@@ -82,6 +83,33 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonStart_Click(object sender, EventArgs e)
         {
+            if (radioButtonVideo.Checked)
+            {
+                if (string.IsNullOrEmpty(_audioFileName) || !File.Exists(_audioFileName))
+                {
+                    MessageBox.Show("No audio file!");
+                    return;
+                }
+
+                if (_originalBackgroundImage == null)
+                {
+                    MessageBox.Show("No background image file!");
+                    return;
+                }
+
+                if (string.IsNullOrEmpty(textBoxFFmpegPath.Text) || !File.Exists(textBoxFFmpegPath.Text))
+                {
+                    MessageBox.Show("mkvmerge.exe not found!");
+                    return;
+                }
+
+                if (string.IsNullOrEmpty(Configuration.Settings.General.FFmpegLocation) || !File.Exists(Configuration.Settings.General.FFmpegLocation))
+                {
+                    MessageBox.Show("ffmpeg not configured!");
+                    return;
+                }
+            }
+
             radioButtonBluRaySup.Enabled = false;
             radioButtonVideo.Enabled = false;
             buttonStart.Enabled = false;
@@ -104,65 +132,64 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    if (string.IsNullOrEmpty(_audioFileName) || !File.Exists(_audioFileName))
+                    var tempFolder = Path.GetTempPath();
+                    var supFileName = Path.Combine(tempFolder, Guid.NewGuid() + ".sup");
+                    using (var binarySubtitleFile = new FileStream(supFileName, FileMode.Create))
                     {
-                        MessageBox.Show("No audio file!");
-                        return;
-                    }
+                        labelStatus.Text = "Generating Blu-ray sup file...";
+                        labelStatus.Refresh();
 
-                    if (_originalBackgroundImage == null)
-                    {
-                        MessageBox.Show("No background image file!");
-                        return;
-                    }
-
-                    if (string.IsNullOrEmpty(textBoxFFmpegPath.Text) || !File.Exists(textBoxFFmpegPath.Text))
-                    {
-                        MessageBox.Show("mkvmerge.exe not found!");
-                        return;
-                    }
-
-                    using (var exportBdnXmlPng = new ExportPngXml())
-                    {
-                        var old = Configuration.Settings.Tools.ExportBluRayRemoveSmallGaps;
-                        Configuration.Settings.Tools.ExportBluRayRemoveSmallGaps = false; // Hm, not really sure if a 'true' is needed here - seems to give a small blink once in a while!?
-                        exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), ExportPngXml.ExportFormats.BluraySup, FileName, this, "Test123");
-                        exportBdnXmlPng.ShowDialog(this);
-                        Configuration.Settings.Tools.ExportBluRayRemoveSmallGaps = old;
-                        var supFileName = exportBdnXmlPng.GetOutputFileName();
-                        if (!string.IsNullOrEmpty(supFileName) && File.Exists(supFileName))
+                        var bottomMargin = comboBoxBottomMargin.SelectedIndex;
+                        var leftMargin = comboBoxLeftRightMargin.SelectedIndex;
+                        for (var index = 0; index < _subtitle.Paragraphs.Count; index++)
                         {
-                            saveFileDialog1.Filter = "Matroska (*.mkv)|*.mkv";
-                            saveFileDialog1.FileName = FileName.Substring(0, FileName.Length - 3) + "mkv";
-                            if (saveFileDialog1.ShowDialog(this) != DialogResult.OK)
+                            var p = _subtitle.Paragraphs[index];
+                            var image = _imageList[index].GetBitmap();
+                            var brSub = new BluRaySupPicture
                             {
-                                return;
-                            }
+                                StartTime = (long)p.StartTime.TotalMilliseconds,
+                                EndTime = (long)p.EndTime.TotalMilliseconds,
+                                Width = 620,
+                                Height = 350,
+                                CompositionNumber = p.Number * 2
+                            };
 
-                            var finalMkv = saveFileDialog1.FileName;
+                            var buffer = BluRaySupPicture.CreateSupFrame(brSub, image, 25, bottomMargin, leftMargin, ContentAlignment.BottomLeft);
+                            binarySubtitleFile.Write(buffer, 0, buffer.Length);
+                        }
+                    }
 
-                            labelStatus.Text = "Generating video...";
-                            labelStatus.Refresh();
-                            var tempFolder = Path.GetTempPath();
-                            var tempImageFileName = Path.Combine(tempFolder, Guid.NewGuid() + ".png");
-                            _resizedBackgroundImage.Save(tempImageFileName, ImageFormat.Png);
-                            var tempMkv = Path.Combine(tempFolder, Guid.NewGuid() + ".mkv");
-                            var processMakeVideo = GetFFmpegProcess(tempImageFileName, _audioFileName, tempMkv);
-                            processMakeVideo.Start();
-                            processMakeVideo.WaitForExit();
-
-                            labelStatus.Text = "Adding subtitles to video...";
-                            labelStatus.Refresh();
-                            var processAddSubtitles = GetMkvMergeProcess(tempMkv, supFileName, finalMkv);
-                            processAddSubtitles.Start();
-                            processAddSubtitles.WaitForExit();
-                            labelStatus.Text = string.Empty;
-
-                            UiUtil.OpenFolderFromFileName(finalMkv);
+                    if (!string.IsNullOrEmpty(supFileName) && File.Exists(supFileName))
+                    {
+                        saveFileDialog1.Filter = "Matroska (*.mkv)|*.mkv";
+                        saveFileDialog1.FileName = FileName.Substring(0, FileName.Length - 3) + "mkv";
+                        if (saveFileDialog1.ShowDialog(this) != DialogResult.OK)
+                        {
+                            return;
                         }
 
-                        DialogResult = DialogResult.OK;
+                        var finalMkv = saveFileDialog1.FileName;
+
+                        labelStatus.Text = "Generating video...";
+                        labelStatus.Refresh();
+                        var tempImageFileName = Path.Combine(tempFolder, Guid.NewGuid() + ".png");
+                        _resizedBackgroundImage.Save(tempImageFileName, ImageFormat.Png);
+                        var tempMkv = Path.Combine(tempFolder, Guid.NewGuid() + ".mkv");
+                        var processMakeVideo = GetFFmpegProcess(tempImageFileName, _audioFileName, tempMkv);
+                        processMakeVideo.Start();
+                        processMakeVideo.WaitForExit();
+
+                        labelStatus.Text = "Adding subtitles to video...";
+                        labelStatus.Refresh();
+                        var processAddSubtitles = GetMkvMergeProcess(tempMkv, supFileName, finalMkv);
+                        processAddSubtitles.Start();
+                        processAddSubtitles.WaitForExit();
+                        labelStatus.Text = string.Empty;
+
+                        UiUtil.OpenFolderFromFileName(finalMkv);
                     }
+
+                    DialogResult = DialogResult.OK;
                 }
             };
             bw.ProgressChanged += (o, args) =>
@@ -272,7 +299,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _audioFileName = openFileDialog1.FileName;
-            labelAudioFileName.Text = "Audio file name: " + Path.GetFileName(_audioFileName);
+            labelAudioFileName.Text = Path.GetFileName(_audioFileName);
         }
 
         private void comboBoxBottomMargin_SelectedIndexChanged(object sender, EventArgs e)

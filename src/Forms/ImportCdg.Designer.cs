@@ -297,6 +297,7 @@
             this.buttonAudioFileBrowse.TabIndex = 72;
             this.buttonAudioFileBrowse.Text = "...";
             this.buttonAudioFileBrowse.UseVisualStyleBackColor = true;
+            this.buttonAudioFileBrowse.Click += new System.EventHandler(this.buttonAudioFileBrowse_Click);
             // 
             // labelAudioFileName
             // 
