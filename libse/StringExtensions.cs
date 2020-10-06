@@ -482,7 +482,7 @@ namespace Nikse.SubtitleEdit.Core
                 {
                     htmlTagOn = true;
                 }
-                else if (ch != '\n' && ch != '\r' && ch != '\t' && ch != zeroWidthSpace && ch != zeroWidthNoBreakSpace && ch != normalSpace && ch != '\u202B' && !(ignoreArabicDiacritics && ch >= '\u064B' && ch <= '\u0653'))
+                else if (!char.IsControl(ch) && ch != zeroWidthSpace && ch != zeroWidthNoBreakSpace && ch != normalSpace && ch != '\u202B' && !(ignoreArabicDiacritics && ch >= '\u064B' && ch <= '\u0653'))
                 {
                     length++;
                 }
