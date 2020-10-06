@@ -17,7 +17,6 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class ImportCdg : Form, IBinaryParagraphList
     {
-        //300x216
         private readonly CdgGraphics _cdgGraphics;
         private readonly Subtitle _subtitle;
         private List<NikseBitmap> _imageList;
@@ -73,11 +72,22 @@ namespace Nikse.SubtitleEdit.Forms
                 SetBackgroundImage(Configuration.Settings.Tools.ExportCdgBackgroundImage);
             }
 
+            if (Configuration.Settings.Tools.ExportCdgFormat == "VIDEO")
+            {
+                radioButtonVideo.Checked = true;
+            }
+            else
+            {
+                radioButtonBluRaySup.Checked = true;
+            }
+
             radioButtonBluRaySup_CheckedChanged(null, null);
 
             buttonDownloadFfmpeg.Text = Configuration.Settings.Language.Settings.DownloadFFmpeg;
             var isFfmpegAvailable = !string.IsNullOrEmpty(Configuration.Settings.General.FFmpegLocation) && File.Exists(Configuration.Settings.General.FFmpegLocation);
             buttonDownloadFfmpeg.Visible = !isFfmpegAvailable;
+
+            buttonStart.Font = new Font(buttonStart.Font.FontFamily, buttonStart.Font.Size, FontStyle.Bold);
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -102,13 +112,13 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                if (string.IsNullOrEmpty(textBoxFFmpegPath.Text) || !File.Exists(textBoxFFmpegPath.Text))
+                if (Configuration.IsRunningOnWindows && (string.IsNullOrEmpty(textBoxFFmpegPath.Text) || !File.Exists(textBoxFFmpegPath.Text)))
                 {
                     MessageBox.Show("mkvmerge.exe not found!");
                     return;
                 }
 
-                if (string.IsNullOrEmpty(Configuration.Settings.General.FFmpegLocation) || !File.Exists(Configuration.Settings.General.FFmpegLocation))
+                if (Configuration.IsRunningOnWindows && (string.IsNullOrEmpty(Configuration.Settings.General.FFmpegLocation) || !File.Exists(Configuration.Settings.General.FFmpegLocation)))
                 {
                     MessageBox.Show("ffmpeg not configured!");
                     return;
@@ -349,6 +359,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             groupBoxVideoExportSettings.Enabled = !radioButtonBluRaySup.Checked;
             groupBoxMkvMerge.Enabled = !radioButtonBluRaySup.Checked;
+
+            Configuration.Settings.Tools.ExportCdgFormat = radioButtonVideo.Checked ? "VIDEO" : ExportPngXml.ExportFormats.BluraySup;
         }
 
         private void buttonDownloadFfmpeg_Click(object sender, EventArgs e)
