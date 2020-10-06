@@ -19990,6 +19990,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                 toolStripMenuItemAssStyles.Visible = true;
                 toolStripMenuItemAssStyles.Text = _language.Menu.ContextMenu.AdvancedSubStationAlphaStyles;
+
+                toolStripMenuItemAssaStyles.Visible = true;
             }
             else if (ft == typeof(SubStationAlpha))
             {
@@ -19998,11 +20000,14 @@ namespace Nikse.SubtitleEdit.Forms
 
                 toolStripMenuItemAssStyles.Visible = true;
                 toolStripMenuItemAssStyles.Text = _language.Menu.ContextMenu.AdvancedSubStationAlphaStyles;
+
+                toolStripMenuItemAssaStyles.Visible = true;
             }
             else
             {
                 toolStripMenuItemSubStationAlpha.Visible = false;
                 toolStripMenuItemAssStyles.Visible = false;
+                toolStripMenuItemAssaStyles.Visible = false;
             }
 
             if (ft == typeof(Ebu))
