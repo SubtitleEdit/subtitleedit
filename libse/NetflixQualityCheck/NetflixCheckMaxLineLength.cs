@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using System;
 using System.Globalization;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 {
@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                             }
                         }
                     }
-                    else if (HtmlUtil.RemoveHtmlTags(line, true).CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) > controller.SingleLineMaxLength)
+                    else if (line.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) > controller.SingleLineMaxLength)
                     {
                         var fixedParagraph = new Paragraph(p, false);
                         fixedParagraph.Text = Utilities.AutoBreakLine(fixedParagraph.Text, controller.SingleLineMaxLength, controller.SingleLineMaxLength - 3, controller.Language);

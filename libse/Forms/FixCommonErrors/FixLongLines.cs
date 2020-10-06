@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 bool tooLong = false;
                 foreach (string line in lines)
                 {
-                    if (HtmlUtil.RemoveHtmlTags(line, true).CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) > Configuration.Settings.General.SubtitleLineMaximumLength)
+                    if (line.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) > Configuration.Settings.General.SubtitleLineMaximumLength)
                     {
                         tooLong = true;
                         break;
