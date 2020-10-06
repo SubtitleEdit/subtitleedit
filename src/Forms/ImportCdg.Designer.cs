@@ -68,7 +68,7 @@
             this.labelFileName.Location = new System.Drawing.Point(12, 18);
             this.labelFileName.Name = "labelFileName";
             this.labelFileName.Size = new System.Drawing.Size(55, 13);
-            this.labelFileName.TabIndex = 6;
+            this.labelFileName.TabIndex = 0;
             this.labelFileName.Text = "File name:";
             // 
             // buttonStart
@@ -77,7 +77,7 @@
             this.buttonStart.Location = new System.Drawing.Point(15, 178);
             this.buttonStart.Name = "buttonStart";
             this.buttonStart.Size = new System.Drawing.Size(154, 32);
-            this.buttonStart.TabIndex = 4;
+            this.buttonStart.TabIndex = 5;
             this.buttonStart.Text = "Start";
             this.buttonStart.UseVisualStyleBackColor = true;
             this.buttonStart.Click += new System.EventHandler(this.buttonStart_Click);
@@ -88,7 +88,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(844, 441);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 5;
+            this.buttonCancel.TabIndex = 9;
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -99,7 +99,7 @@
             this.labelDuration.Location = new System.Drawing.Point(12, 39);
             this.labelDuration.Name = "labelDuration";
             this.labelDuration.Size = new System.Drawing.Size(50, 13);
-            this.labelDuration.TabIndex = 7;
+            this.labelDuration.TabIndex = 1;
             this.labelDuration.Text = "Duration:";
             // 
             // label1
@@ -108,7 +108,7 @@
             this.label1.Location = new System.Drawing.Point(12, 87);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(70, 13);
-            this.label1.TabIndex = 9;
+            this.label1.TabIndex = 2;
             this.label1.Text = "Target format";
             // 
             // radioButtonBluRaySup
@@ -118,7 +118,7 @@
             this.radioButtonBluRaySup.Location = new System.Drawing.Point(29, 110);
             this.radioButtonBluRaySup.Name = "radioButtonBluRaySup";
             this.radioButtonBluRaySup.Size = new System.Drawing.Size(122, 17);
-            this.radioButtonBluRaySup.TabIndex = 13;
+            this.radioButtonBluRaySup.TabIndex = 3;
             this.radioButtonBluRaySup.TabStop = true;
             this.radioButtonBluRaySup.Text = "Blu-ray subtitle (.sup)";
             this.radioButtonBluRaySup.UseVisualStyleBackColor = true;
@@ -134,7 +134,7 @@
             this.radioButtonVideo.Location = new System.Drawing.Point(29, 133);
             this.radioButtonVideo.Name = "radioButtonVideo";
             this.radioButtonVideo.Size = new System.Drawing.Size(241, 17);
-            this.radioButtonVideo.TabIndex = 21;
+            this.radioButtonVideo.TabIndex = 4;
             this.radioButtonVideo.Text = "Matroska video with Blu-ray subtitle softcoded";
             this.radioButtonVideo.UseVisualStyleBackColor = true;
             // 
@@ -148,7 +148,7 @@
             this.groupBoxMkvMerge.Location = new System.Drawing.Point(15, 323);
             this.groupBoxMkvMerge.Name = "groupBoxMkvMerge";
             this.groupBoxMkvMerge.Size = new System.Drawing.Size(426, 112);
-            this.groupBoxMkvMerge.TabIndex = 65;
+            this.groupBoxMkvMerge.TabIndex = 7;
             this.groupBoxMkvMerge.TabStop = false;
             this.groupBoxMkvMerge.Text = "MKVToolNix mkvmerge";
             // 
@@ -157,7 +157,7 @@
             this.buttonDownloadMkvToolNix.Location = new System.Drawing.Point(274, 17);
             this.buttonDownloadMkvToolNix.Name = "buttonDownloadMkvToolNix";
             this.buttonDownloadMkvToolNix.Size = new System.Drawing.Size(136, 23);
-            this.buttonDownloadMkvToolNix.TabIndex = 2;
+            this.buttonDownloadMkvToolNix.TabIndex = 0;
             this.buttonDownloadMkvToolNix.Text = "Download MKVToolNix";
             this.buttonDownloadMkvToolNix.UseVisualStyleBackColor = true;
             this.buttonDownloadMkvToolNix.Click += new System.EventHandler(this.buttonDownloadMkvToolNix_Click);
@@ -167,7 +167,7 @@
             this.buttonBrowseToFFmpeg.Location = new System.Drawing.Point(381, 65);
             this.buttonBrowseToFFmpeg.Name = "buttonBrowseToFFmpeg";
             this.buttonBrowseToFFmpeg.Size = new System.Drawing.Size(29, 21);
-            this.buttonBrowseToFFmpeg.TabIndex = 23;
+            this.buttonBrowseToFFmpeg.TabIndex = 3;
             this.buttonBrowseToFFmpeg.Text = "...";
             this.buttonBrowseToFFmpeg.UseVisualStyleBackColor = true;
             this.buttonBrowseToFFmpeg.Click += new System.EventHandler(this.buttonBrowseToFFmpeg_Click);
@@ -178,7 +178,7 @@
             this.textBoxFFmpegPath.MaxLength = 1000;
             this.textBoxFFmpegPath.Name = "textBoxFFmpegPath";
             this.textBoxFFmpegPath.Size = new System.Drawing.Size(366, 20);
-            this.textBoxFFmpegPath.TabIndex = 22;
+            this.textBoxFFmpegPath.TabIndex = 2;
             // 
             // labelFFmpegPath
             // 
@@ -186,7 +186,7 @@
             this.labelFFmpegPath.Location = new System.Drawing.Point(6, 49);
             this.labelFFmpegPath.Name = "labelFFmpegPath";
             this.labelFFmpegPath.Size = new System.Drawing.Size(80, 13);
-            this.labelFFmpegPath.TabIndex = 2;
+            this.labelFFmpegPath.TabIndex = 1;
             this.labelFFmpegPath.Text = "mkvmerge path";
             // 
             // labelStatus
@@ -219,7 +219,7 @@
             this.groupBoxVideoExportSettings.Location = new System.Drawing.Point(455, 12);
             this.groupBoxVideoExportSettings.Name = "groupBoxVideoExportSettings";
             this.groupBoxVideoExportSettings.Size = new System.Drawing.Size(464, 423);
-            this.groupBoxVideoExportSettings.TabIndex = 70;
+            this.groupBoxVideoExportSettings.TabIndex = 8;
             this.groupBoxVideoExportSettings.TabStop = false;
             this.groupBoxVideoExportSettings.Text = "Video output settings";
             // 
@@ -229,7 +229,7 @@
             this.label3.Location = new System.Drawing.Point(17, 30);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(50, 13);
-            this.label3.TabIndex = 79;
+            this.label3.TabIndex = 0;
             this.label3.Text = "Audio file";
             // 
             // label2
@@ -238,7 +238,7 @@
             this.label2.Location = new System.Drawing.Point(17, 57);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(57, 13);
-            this.label2.TabIndex = 78;
+            this.label2.TabIndex = 3;
             this.label2.Text = "Resolution";
             // 
             // comboBoxLeftRightMargin
@@ -248,7 +248,7 @@
             this.comboBoxLeftRightMargin.Location = new System.Drawing.Point(123, 108);
             this.comboBoxLeftRightMargin.Name = "comboBoxLeftRightMargin";
             this.comboBoxLeftRightMargin.Size = new System.Drawing.Size(63, 21);
-            this.comboBoxLeftRightMargin.TabIndex = 76;
+            this.comboBoxLeftRightMargin.TabIndex = 8;
             this.comboBoxLeftRightMargin.SelectedIndexChanged += new System.EventHandler(this.comboBoxLeftRightMargin_SelectedIndexChanged);
             // 
             // comboBoxBottomMargin
@@ -258,7 +258,7 @@
             this.comboBoxBottomMargin.Location = new System.Drawing.Point(123, 81);
             this.comboBoxBottomMargin.Name = "comboBoxBottomMargin";
             this.comboBoxBottomMargin.Size = new System.Drawing.Size(63, 21);
-            this.comboBoxBottomMargin.TabIndex = 75;
+            this.comboBoxBottomMargin.TabIndex = 6;
             this.comboBoxBottomMargin.SelectedIndexChanged += new System.EventHandler(this.comboBoxBottomMargin_SelectedIndexChanged);
             // 
             // labelBottomMargin
@@ -267,7 +267,7 @@
             this.labelBottomMargin.Location = new System.Drawing.Point(17, 84);
             this.labelBottomMargin.Name = "labelBottomMargin";
             this.labelBottomMargin.Size = new System.Drawing.Size(74, 13);
-            this.labelBottomMargin.TabIndex = 74;
+            this.labelBottomMargin.TabIndex = 5;
             this.labelBottomMargin.Text = "Bottom margin";
             // 
             // labelLeftRightMargin
@@ -276,7 +276,7 @@
             this.labelLeftRightMargin.Location = new System.Drawing.Point(17, 110);
             this.labelLeftRightMargin.Name = "labelLeftRightMargin";
             this.labelLeftRightMargin.Size = new System.Drawing.Size(84, 13);
-            this.labelLeftRightMargin.TabIndex = 77;
+            this.labelLeftRightMargin.TabIndex = 7;
             this.labelLeftRightMargin.Text = "Left/right margin";
             // 
             // comboBoxRes
@@ -288,14 +288,14 @@
             this.comboBoxRes.Location = new System.Drawing.Point(123, 54);
             this.comboBoxRes.Name = "comboBoxRes";
             this.comboBoxRes.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxRes.TabIndex = 73;
+            this.comboBoxRes.TabIndex = 4;
             // 
             // buttonAudioFileBrowse
             // 
             this.buttonAudioFileBrowse.Location = new System.Drawing.Point(123, 25);
             this.buttonAudioFileBrowse.Name = "buttonAudioFileBrowse";
             this.buttonAudioFileBrowse.Size = new System.Drawing.Size(25, 23);
-            this.buttonAudioFileBrowse.TabIndex = 72;
+            this.buttonAudioFileBrowse.TabIndex = 1;
             this.buttonAudioFileBrowse.Text = "...";
             this.buttonAudioFileBrowse.UseVisualStyleBackColor = true;
             this.buttonAudioFileBrowse.Click += new System.EventHandler(this.buttonAudioFileBrowse_Click);
@@ -306,7 +306,7 @@
             this.labelAudioFileName.Location = new System.Drawing.Point(154, 30);
             this.labelAudioFileName.Name = "labelAudioFileName";
             this.labelAudioFileName.Size = new System.Drawing.Size(79, 13);
-            this.labelAudioFileName.TabIndex = 71;
+            this.labelAudioFileName.TabIndex = 2;
             this.labelAudioFileName.Text = "Audio file name";
             // 
             // pictureBoxBackgroundImage
@@ -328,7 +328,7 @@
             this.labelBackgroundImage.Location = new System.Drawing.Point(17, 392);
             this.labelBackgroundImage.Name = "labelBackgroundImage";
             this.labelBackgroundImage.Size = new System.Drawing.Size(116, 13);
-            this.labelBackgroundImage.TabIndex = 69;
+            this.labelBackgroundImage.TabIndex = 10;
             this.labelBackgroundImage.Text = "labelBackgroundImage";
             // 
             // buttonChooseBackgroundImage
@@ -337,7 +337,7 @@
             this.buttonChooseBackgroundImage.Location = new System.Drawing.Point(309, 119);
             this.buttonChooseBackgroundImage.Name = "buttonChooseBackgroundImage";
             this.buttonChooseBackgroundImage.Size = new System.Drawing.Size(146, 23);
-            this.buttonChooseBackgroundImage.TabIndex = 68;
+            this.buttonChooseBackgroundImage.TabIndex = 9;
             this.buttonChooseBackgroundImage.Text = "Background image...";
             this.buttonChooseBackgroundImage.UseVisualStyleBackColor = true;
             this.buttonChooseBackgroundImage.Click += new System.EventHandler(this.buttonChooseBackgroundImage_Click);
@@ -348,7 +348,7 @@
             this.buttonDownloadFfmpeg.Location = new System.Drawing.Point(257, 294);
             this.buttonDownloadFfmpeg.Name = "buttonDownloadFfmpeg";
             this.buttonDownloadFfmpeg.Size = new System.Drawing.Size(184, 23);
-            this.buttonDownloadFfmpeg.TabIndex = 71;
+            this.buttonDownloadFfmpeg.TabIndex = 6;
             this.buttonDownloadFfmpeg.Text = "Download ffmpeg";
             this.buttonDownloadFfmpeg.UseVisualStyleBackColor = true;
             this.buttonDownloadFfmpeg.Click += new System.EventHandler(this.buttonDownloadFfmpeg_Click);
@@ -376,6 +376,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Import CD+G kareoke";
+            this.Shown += new System.EventHandler(this.ImportCdg_Shown);
             this.groupBoxMkvMerge.ResumeLayout(false);
             this.groupBoxMkvMerge.PerformLayout();
             this.groupBoxVideoExportSettings.ResumeLayout(false);

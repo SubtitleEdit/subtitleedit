@@ -375,5 +375,10 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
         }
+
+        private void ImportCdg_Shown(object sender, EventArgs e)
+        {
+            buttonStart.Focus();
+        }
     }
 }
