@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.5.17 (xth October 2020) BETA
+3.5.17 (6th October 2020)
 * NEW:
    * Add new subtitle formats - thx Holmgeir
    * Add new subtitle (Excel) format - thx Jecy
