@@ -252,6 +252,7 @@ namespace Nikse.SubtitleEdit.Core
         public string ExportCdgBackgroundImage { get; set; }
         public int ExportCdgMarginLeft { get; set; }
         public int ExportCdgMarginBottom { get; set; }
+        public string ExportCdgFormat { get; set; }
         public int Export3DType { get; set; }
         public int Export3DDepth { get; set; }
         public int ExportLastShadowTransparency { get; set; }
@@ -390,6 +391,8 @@ namespace Nikse.SubtitleEdit.Core
             ExportBluRayShadow = 1;
             Export3DType = 0;
             Export3DDepth = 0;
+            ExportCdgMarginLeft = 160;
+            ExportCdgMarginBottom= 67;
             ExportLastShadowTransparency = 200;
             ExportLastFrameRate = 24.0d;
             ExportFullFrame = false;
@@ -4290,6 +4293,12 @@ $HorzAlign          =   Center
                 settings.Tools.ExportCdgMarginBottom = Convert.ToInt32(subNode.InnerText);
             }
 
+            subNode = node.SelectSingleNode("ExportCdgFormat");
+            if (subNode != null)
+            {
+                settings.Tools.ExportCdgFormat = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("Export3DType");
             if (subNode != null)
             {
@@ -7790,6 +7799,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ExportCdgBackgroundImage", settings.Tools.ExportCdgBackgroundImage);
                 textWriter.WriteElementString("ExportCdgMarginLeft", settings.Tools.ExportCdgMarginLeft.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportCdgMarginBottom", settings.Tools.ExportCdgMarginBottom.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ExportCdgFormat", settings.Tools.ExportCdgFormat);
                 textWriter.WriteElementString("Export3DType", settings.Tools.Export3DType.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("Export3DDepth", settings.Tools.Export3DDepth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportLastShadowTransparency", settings.Tools.ExportLastShadowTransparency.ToString(CultureInfo.InvariantCulture));
