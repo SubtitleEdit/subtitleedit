@@ -222,6 +222,7 @@ Source: ..\Dictionaries\es_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtit
 Source: ..\Dictionaries\hr_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
 Source: ..\Dictionaries\mk_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
 Source: ..\Dictionaries\pt_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\ru_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
 Source: ..\Dictionaries\sr_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
 Source: ..\Dictionaries\da_DK_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
 Source: ..\Dictionaries\de_DE_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
@@ -601,6 +602,7 @@ begin
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\hr_NoBreakAfterList.xml'));
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\mk_NoBreakAfterList.xml'));
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\pt_NoBreakAfterList.xml'));
+  DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\ru_NoBreakAfterList.xml'));
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\sr_NoBreakAfterList.xml'));
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\da_DK_user.xml'));
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\de_DE_user.xml'));
