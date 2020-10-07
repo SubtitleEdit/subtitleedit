@@ -3032,7 +3032,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         {
                             var tempBmp = GenerateBitmapForCalc(tempLine, parameter);
                             tempBmp.CropTransparentSidesAndBottom(0, false);
-                            tempBmp.GetBitmap().Save(@"j:\temp\a_" + widths.Count + ".bmp");
                             w = tempBmp.Width;
                         }
                         else
