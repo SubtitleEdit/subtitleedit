@@ -446,7 +446,8 @@ namespace Nikse.SubtitleEdit.Core
         }
 
         /// <summary>
-        /// Count characters excl. white spaces/ssa-tags/html-tag, normal space and Arabic diacritics depending on parameter.
+        /// Count characters excl. white spaces, ssa-tags, html-tags, control-characters, normal spaces and
+        /// Arabic diacritics depending on parameter.
         /// </summary>
         public static int CountCharacters(this string value, bool removeNormalSpace, bool ignoreArabicDiacritics)
         {
@@ -482,7 +483,18 @@ namespace Nikse.SubtitleEdit.Core
                 {
                     htmlTagOn = true;
                 }
-                else if (!char.IsControl(ch) && ch != zeroWidthSpace && ch != zeroWidthNoBreakSpace && ch != normalSpace && ch != '\u202B' && !(ignoreArabicDiacritics && ch >= '\u064B' && ch <= '\u0653'))
+                else if (!char.IsControl(ch) &&
+                         ch != zeroWidthSpace &&
+                         ch != zeroWidthNoBreakSpace &&
+                         ch != normalSpace &&
+                         ch != '\u200E' &&
+                         ch != '\u200F' &&
+                         ch != '\u202A' &&
+                         ch != '\u202B' &&
+                         ch != '\u202C' &&
+                         ch != '\u202D' &&
+                         ch != '\u202E' &&
+                         !(ignoreArabicDiacritics && ch >= '\u064B' && ch <= '\u0653'))
                 {
                     length++;
                 }
