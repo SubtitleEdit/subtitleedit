@@ -188,6 +188,7 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <UseStyleFromSource>A forrásból származó stílus használata</UseStyleFromSource>
     <ConvertOptions>Konvertálási lehetőségek</ConvertOptions>
     <RemoveFormatting>Formázási címkék eltávolítása</RemoveFormatting>
+    <RemoveStyleActor>Stílus/színész eltávolítása</RemoveStyleActor>
     <RemoveTextForHI>Hallássérülteknek szánt szöveg eltávolítása</RemoveTextForHI>
     <OverwriteOriginalFiles>Eredeti fájlok felülírása (új kiterjesztés, ha a formátum módosult)</OverwriteOriginalFiles>
     <RedoCasing>Betűállás újraállítása</RedoCasing>
@@ -214,6 +215,7 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <FilterMoreThanTwoLines>Több, mint két sor egy feliratban</FilterMoreThanTwoLines>
     <FilterContains>Szöveget tartalmaz...</FilterContains>
     <FilterFileNameContains>Fájlnév részei...</FilterFileNameContains>
+    <MkvLanguageCodeContains>A Matroska (.mkv) nyelvi kód tartalmazza...</MkvLanguageCodeContains>
     <FixCommonErrorsErrorX>Gyakori hibák javítása: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Csoportos csere: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Automatikus kiegyenlítés: {0}</AutoBalanceErrorX>
@@ -357,9 +359,13 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <Title>Kis térközök áthidalása a feliratok között</Title>
     <GapsBridgedX>Áthidalt kis szünetek száma: {0}</GapsBridgedX>
     <GapToNext>Következő szünet másodpercben</GapToNext>
+    <GapToNextFrames>Képkockák közötti távolság</GapToNextFrames>
     <BridgeGapsSmallerThanXPart1>A következőnél kisebb szünetek áthidalása:</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>ezredmásodperc</BridgeGapsSmallerThanXPart2>
+    <BridgeGapsSmallerThanXPart1Frames>A távolságok kisebbek, mint</BridgeGapsSmallerThanXPart1Frames>
+    <BridgeGapsSmallerThanXPart2Frames>képkocka</BridgeGapsSmallerThanXPart2Frames>
     <MinMillisecondsBetweenLines>Min. ezredmásodperc a sorok között</MinMillisecondsBetweenLines>
+    <MinFramesBetweenLines>Min. képkockák a sorok között</MinFramesBetweenLines>
     <ProlongEndTime>Az előző szöveg szünetének időegységét kapja</ProlongEndTime>
     <DivideEven>A szövegek közti szünet idejének felosztása</DivideEven>
   </DurationsBridgeGaps>
@@ -702,6 +708,7 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Hi John! - Hi Ida! -&gt; Hi John!&lt;br /&gt;- Hi Ida!</FixDialogsOneLineExample>
     <SelectDefault>Válassza ki az alapértelmezettet</SelectDefault>
+    <SetDefault>Az aktuális javítások beállítása alapértelmezettként</SetDefault>
     <FixContinuationStyleX>Folytatási stílus javítása: {0}</FixContinuationStyleX>
     <XFixContinuationStyle>{0} folytatási stílus javítva</XFixContinuationStyle>
     <FixUnnecessaryLeadingDots>Szükségtelen sorkezdő pontok eltávolítása</FixUnnecessaryLeadingDots>
@@ -1036,6 +1043,7 @@ Lépjen az "Opciók -&gt; Beállítások -&gt; Eszközök" lapra a Google fordí
         <GoToSubtitleNumber>&amp;Ugrás egy felirat számra...</GoToSubtitleNumber>
         <RightToLeftMode>Jobbról balra írásmód</RightToLeftMode>
         <FixRtlViaUnicodeControlCharacters>RTL javítása Unicode vezérlőkaraktereken keresztül (kijelölt soroknál)</FixRtlViaUnicodeControlCharacters>
+        <RemoveUnicodeControlCharacters>Unicode vezérlőkarakterek eltávolítása (a kijelölt sorokból)</RemoveUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>RTL indítás/befejezés megfordítása (kijelölt soroknál)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Eredeti szöveg megjelenítése az audió/videó előzetesekben</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Kijelölés módosítása...</ModifySelection>
@@ -1320,6 +1328,7 @@ Lépjen az "Opciók -&gt; Beállítások -&gt; Eszközök" lapra a Google fordí
 A fájl írásvédett!</FileXIsReadOnly>
     <UnableToSaveSubtitleX>Nem sikerült menteni a(z) {0} feliratfájlt.
 A felirat üresnek tűnik - próbálja meg újra elmenteni, ha egy érvényes feliraton dolgozik!</UnableToSaveSubtitleX>
+    <FormatXShouldUseUft8>A(z) {0} fájlok mentésekor UTF-8 kódolást kell használni!</FormatXShouldUseUft8>
     <BeforeNew>Az új előtt</BeforeNew>
     <New>Új</New>
     <BeforeConvertingToX>{0} konvertálás előtti állapotra</BeforeConvertingToX>
@@ -1774,6 +1783,8 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <ShowOnlyModifiedLines>Csak a módosított sorok megjelenítése</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Minimum ezredmásodperc a sorok között</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Képarány információ</FrameInfo>
+    <Frames>Képkockák</Frames>
+    <XFrameYisZMilliseconds>{0} képkocka {1} fps sebességnél {2} ezredmásodperc</XFrameYisZMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Szinkronizációs pont beállítása a(z) {0} sor esetén</Title>
@@ -1995,11 +2006,13 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <ListView>Listanézet</ListView>
     <TextBox>Szövegdoboz</TextBox>
     <UpdateShortcut>Frissítés</UpdateShortcut>
+    <FoucsSetVideoPosition>Fókuszálás, videópozíció beállítása</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Videóvezérlő dokkolás/leválasztás kapcsoló</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Befejezés beállítása, új hozzáadása és ugrás az újra</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Igazítás a végpozíción keresztül</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Beállítás a végpozíción keresztül és ugrás a következőre</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Befejezés beállítása és ugrás a következőre</AdjustSetEndTimeAndGoToNext>
+    <AdjustSetEndTimeAndPause>Befejezés és szünet beállítása</AdjustSetEndTimeAndPause>
     <AdjustSetStartAutoDurationAndGoToNext>Indítás beállítása, automatikus időtartam és ugrás a következőre</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Befejezés beállítása, következő indítás és ugrás a következőre</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>Le gomb=indítás beállítása, Fel gomb=befejezés beállítása és ugrás a következőre</AdjustStartDownEndUpAndGoToNext>
@@ -2021,8 +2034,14 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <AdjustSetEndAndOffsetTheRest>A befejezés és a többi eltolás beállítása</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>A befejezés és a többi eltolás beállítása és ugrás a következőre</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <AdjustExtendCurrentSubtitle>Az aktuális sor kibővítése a következő feliratra vagy max időtartamra</AdjustExtendCurrentSubtitle>
+    <AdjustSnapStartToNextSceneChange>A kiválasztott sorok igazítása a következő jelenetváltáshoz</AdjustSnapStartToNextSceneChange>
+    <AdjustSnapStartToNextSceneChangeWithGap>A kiválasztott sorok igazítása a következő jelenetváltáshoz min. távolsággal</AdjustSnapStartToNextSceneChangeWithGap>
+    <AdjustSnapEndToPreviousSceneChange>A kiválasztott sorok igazítása az előző jelenetváltáshoz</AdjustSnapEndToPreviousSceneChange>
+    <AdjustSnapEndToPreviousSceneChangeWithGap>A kiválasztott sorok igazítása az előző jelenetváltáshoz min. távolsággal</AdjustSnapEndToPreviousSceneChangeWithGap>
     <AdjustExtendToNextSceneChange>Kijelölt sorok kiterjesztése a következő jelenetváltásra (vagy a következő feliratra)</AdjustExtendToNextSceneChange>
+    <AdjustExtendToNextSceneChangeWithGap>A kijelölt vonalak kiterjesztése az előző jelenetmódosításra min. távolság (vagy a következő felirat) használatával</AdjustExtendToNextSceneChangeWithGap>
     <AdjustExtendToPreviousSceneChange>Kijelölt sorok kiterjesztése az előző jelenetváltásra (vagy az előző feliratra)</AdjustExtendToPreviousSceneChange>
+    <AdjustExtendToPreviousSceneChangeWithGap>A kijelölt vonalak kiterjesztése az előző jelenetmódosításra min. távolság (vagy az előző felirat) használatával</AdjustExtendToPreviousSceneChangeWithGap>
     <AdjustExtendToNextSubtitle>Kijelölt sorok kiterjesztése a következő feliratra</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Kijelölt sorok kiterjesztése az előző feliratra</AdjustExtendToPreviousSubtitle>
     <RecalculateDurationOfCurrentSubtitle>Az aktuális felirat időtartamának újraszámolása</RecalculateDurationOfCurrentSubtitle>
@@ -2052,6 +2071,8 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <CopyTextOnly>Szöveg másolása csak a vágólapra (kijelölt sorok)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Szöveg másolása az eredetiből a jelenlegibe</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Automatikus időtartam (kijelölt sorok)</AutoDurationSelectedLines>
+    <FixRTLViaUnicodeChars>RtL javítása Unicode vezérlőkarakterekkel</FixRTLViaUnicodeChars>
+    <RemoveRTLUnicodeChars>Unicode vezérlőkarakterek eltávolítása</RemoveRTLUnicodeChars>
     <ReverseStartAndEndingForRtl>RTL indítás/befejezés megfordítása</ReverseStartAndEndingForRtl>
     <VerticalZoom>Függőleges nagyítás</VerticalZoom>
     <VerticalZoomOut>Függőleges kicsinyítés</VerticalZoomOut>
@@ -2080,6 +2101,10 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <GoForward1Second>Egy másodperc előre</GoForward1Second>
     <GoBack5Seconds>Öt másodperc vissza</GoBack5Seconds>
     <GoForward5Seconds>Öt másodperc előre</GoForward5Seconds>
+    <GoBackXSSeconds>Kis kiválasztott idő vissza</GoBackXSSeconds>
+    <GoForwardXSSeconds>Kis kiválasztott idő előre</GoForwardXSSeconds>
+    <GoBackXLSeconds>Nagy kiválasztott idő vissza</GoBackXLSeconds>
+    <GoForwardXLSeconds>Nagy kiválasztott idő előre</GoForwardXLSeconds>
     <GoBack3Second>Három másodperc vissza</GoBack3Second>
     <GoToStartCurrent>Videó pozíció beállítása az aktuális felirat kezdetére</GoToStartCurrent>
     <ToggleStartEndCurrent>Videó pozíció váltása az aktuális felirat kezdete/vége között</ToggleStartEndCurrent>
@@ -2260,7 +2285,7 @@ Folytatja?</RestoreDefaultSettingsMsg>
     <OpenReportInFolder>Jelentés megnyitása a mappában</OpenReportInFolder>
     <FoundXIssues>A Netflix minőségellenőrzés {0:#,###} problémát talált.</FoundXIssues>
     <CheckOk>Netflix minőségellenőrzés OK :)</CheckOk>
-    <MaximumXCharsPerSecond>Legfeljebb {0} karakter másodpercenként (excl. szóközök)</MaximumXCharsPerSecond>
+    <MaximumXCharsPerSecond>Legfeljebb {0} karakter másodpercenként (szóközökkel együtt)</MaximumXCharsPerSecond>
     <MaximumLineLength>Maximális sorhosszúság ({0})</MaximumLineLength>
     <MinimumDuration>Legkisebb időtartam: 5/6 mp (833 ezredmp)</MinimumDuration>
   </NetflixQualityCheck>
