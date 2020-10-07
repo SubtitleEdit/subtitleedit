@@ -2262,54 +2262,34 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             return 0;
         }
 
-        private static Font SetFont(MakeBitmapParameter parameter, float fontSize)
+        private static Font GetFontOrDefault(MakeBitmapParameter parameter, float fontSize)
         {
-            Font font;
             try
             {
-                var fontStyle = FontStyle.Regular;
-                if (parameter.SubtitleFontBold)
-                {
-                    fontStyle = FontStyle.Bold;
-                }
-
-                font = new Font(parameter.SubtitleFontName, fontSize, fontStyle);
+                return new Font(parameter.SubtitleFontName, fontSize, parameter.SubtitleFontBold ? FontStyle.Bold : FontStyle.Regular);
             }
-            catch (Exception exception)
+            catch
             {
                 try
                 {
-                    var fontStyle = FontStyle.Regular;
-                    if (!parameter.SubtitleFontBold)
-                    {
-                        fontStyle = FontStyle.Bold;
-                    }
-
-                    font = new Font(parameter.SubtitleFontName, fontSize, fontStyle);
+                    // try with different font-style which could be the 'cause of previous exception
+                    return new Font(parameter.SubtitleFontName, fontSize, parameter.SubtitleFontBold ? FontStyle.Regular : FontStyle.Bold);
                 }
-                catch
+                catch (ArgumentException exception)
                 {
                     MessageBox.Show(exception.Message);
-
-                    if (FontFamily.Families[0].IsStyleAvailable(FontStyle.Regular))
+                    int count = Math.Min(3, FontFamily.Families.Length);
+                    for (int i = 0; i < count; i++)
                     {
-                        font = new Font(FontFamily.Families[0].Name, fontSize);
+                        var fontFamily = FontFamily.Families[i];
+                        if (fontFamily.IsStyleAvailable(FontStyle.Regular))
+                        {
+                            return new Font(fontFamily.Name, fontSize);
+                        }
                     }
-                    else if (FontFamily.Families.Length > 1 && FontFamily.Families[1].IsStyleAvailable(FontStyle.Regular))
-                    {
-                        font = new Font(FontFamily.Families[1].Name, fontSize);
-                    }
-                    else if (FontFamily.Families.Length > 2 && FontFamily.Families[1].IsStyleAvailable(FontStyle.Regular))
-                    {
-                        font = new Font(FontFamily.Families[2].Name, fontSize);
-                    }
-                    else
-                    {
-                        font = new Font("Arial", fontSize);
-                    }
+                    return new Font("Arial", fontSize);
                 }
             }
-            return font;
         }
 
         private double GetResizeScale()
@@ -2468,7 +2448,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             g.SmoothingMode = SmoothingMode.HighSpeed;
             g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
 
-            Font font = SetFont(parameter, parameter.SubtitleFontSize);
+            Font font = GetFontOrDefault(parameter, parameter.SubtitleFontSize);
             var fontStack = new Stack<Font>();
             while (i < text.Length)
             {
@@ -2565,7 +2545,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             {
                                 fontStack.Push(font); // save old cfont
                                 var p = new MakeBitmapParameter { SubtitleFontName = fontFace, SubtitleFontSize = fontSize };
-                                font = SetFont(p, p.SubtitleFontSize);
+                                font = GetFontOrDefault(p, p.SubtitleFontSize);
                             }
                             catch
                             {
@@ -2899,7 +2879,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             Bitmap bmp = null;
             try
             {
-                font = SetFont(parameter, parameter.SubtitleFontSize);
+                font = GetFontOrDefault(parameter, parameter.SubtitleFontSize);
                 SizeF textSize;
                 using (var bmpTemp = new Bitmap(1, 1))
                 using (var g = Graphics.FromImage(bmpTemp))
@@ -3345,7 +3325,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                         {
                                             fontStack.Push(font); // save old cfont
                                             var p = new MakeBitmapParameter { SubtitleFontName = fontFace, SubtitleFontSize = fontSize };
-                                            font = SetFont(p, p.SubtitleFontSize);
+                                            font = GetFontOrDefault(p, p.SubtitleFontSize);
                                         }
                                         catch
                                         {
@@ -4430,7 +4410,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 SubtitleFontBold = _subtitleFontBold
             };
             var fontSize = (float)TextDraw.GetFontSize(mbp.SubtitleFontSize);
-            using (var font = SetFont(mbp, fontSize))
+            using (var font = GetFontOrDefault(mbp, fontSize))
             using (var bmp = new Bitmap(100, 100))
             using (var g = Graphics.FromImage(bmp))
             {
@@ -4458,7 +4438,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 SubtitleFontBold = style.Bold
                             };
                             var fontSize = (float)TextDraw.GetFontSize(mbp.SubtitleFontSize);
-                            Font font = SetFont(mbp, fontSize);
+                            Font font = GetFontOrDefault(mbp, fontSize);
                             SizeF textSize = g.MeasureString("Hj!", font);
                             int lineHeight = (int)Math.Round(textSize.Height * 0.64f);
                             if (fontSize < 30)
