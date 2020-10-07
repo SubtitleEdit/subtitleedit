@@ -118,6 +118,7 @@ namespace Nikse.SubtitleEdit.Forms
         private NetworkChat _networkChat;
 
         private ShowEarlierLater _showEarlierOrLater;
+        private MeasurementConverter _measurementConverter;
 
         private bool _isVideoControlsUndocked;
         private VideoPlayerUndocked _videoPlayerUndocked;
@@ -20331,7 +20332,6 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemInverseSelection.Visible = showBeta;
             toolStripMenuItemSpellCheckFromCurrentLine.Visible = showBeta;
             toolStripMenuItemImportOcrHardSub.Visible = showBeta;
-            toolStripMenuItemMeasurementConverter.Visible = showBeta;
             toolStripMenuItemOpenDvd.Visible = showBeta;
 
             if (Configuration.Settings.General.StartRememberPositionAndSize &&
@@ -20554,6 +20554,7 @@ namespace Nikse.SubtitleEdit.Forms
             ChangeCasingToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsChangeCasing);
             toolStripMenuItemShowOriginalInPreview.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditToggleTranslationOriginalInPreviews);
             toolStripMenuItemBatchConvert.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsBatchConvert);
+            toolStripMenuItemMeasurementConverter.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsMeasurementConverter);
             splitToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsSplit);
             appendTextVisuallyToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsAppend);
             joinSubtitlesToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsJoin);
@@ -26677,8 +26678,46 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemMeasurementConverter_Click(object sender, EventArgs e)
         {
-            var form = new MeasurementConverter();
-            form.Show(this);
+            var selectedText = string.Empty;
+            if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+            {
+                selectedText = textBoxSource.SelectedText;
+            }
+            else
+            {
+                if (textBoxListViewTextAlternate.Focused)
+                {
+                    selectedText = textBoxListViewTextAlternate.SelectedText;
+                }
+                else
+                {
+                    selectedText = textBoxListViewText.SelectedText;
+                }
+            }
+
+            if (_measurementConverter != null && !_measurementConverter.IsDisposed)
+            {
+                _measurementConverter.WindowState = FormWindowState.Normal;
+                _measurementConverter.Input = selectedText;
+                _measurementConverter.Focus();
+                return;
+            }
+
+            _measurementConverter = new MeasurementConverter
+            {
+                Input = selectedText
+            };
+            _measurementConverter.Show(this);
+
+            _measurementConverter.ReplaceClicked += measurementConverter_ReplaceClicked;
+        }
+
+        private void measurementConverter_ReplaceClicked(object sender, MeasurementConverter.ReplaceEventArgs e)
+        {
+            if (IsSubtitleLoaded)
+            {
+                textBoxListViewText.SelectedText = e.Result; 
+            }
         }
 
         private void toolStripMenuItemImportSceneChanges_Click(object sender, EventArgs e)

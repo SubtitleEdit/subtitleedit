@@ -1710,16 +1710,109 @@
             public string ConvertFrom { get; set; }
             public string ConvertTo { get; set; }
             public string CopyToClipboard { get; set; }
-            public string Celsius { get; set; }
-            public string Fahrenheit { get; set; }
-            public string Miles { get; set; }
+            public string Length { get; set; }
+            public string Mass { get; set; }
+            public string Volume { get; set; }
+            public string Area { get; set; }
+            public string Time { get; set; }
+            public string Temperature { get; set; }
+            public string Velocity { get; set; }
+            public string Force { get; set; }
+            public string Energy { get; set; }
+            public string Power { get; set; }
+            public string Pressure { get; set; }
             public string Kilometers { get; set; }
             public string Meters { get; set; }
+            public string Centimeters { get; set; }
+            public string Millimeters { get; set; }
+            public string Micrometers { get; set; }
+            public string Nanometers { get; set; }
+            public string Angstroms { get; set; }
+            public string MilesTerrestial { get; set; }
+            public string MilesNautical { get; set; }
             public string Yards { get; set; }
             public string Feet { get; set; }
             public string Inches { get; set; }
-            public string Pounds { get; set; }
+            public string Chains { get; set; }
+            public string Fathoms { get; set; }
+            public string Hands { get; set; }
+            public string Rods { get; set; }
+            public string Spans { get; set; }
+            public string LongTonnes { get; set; }
+            public string ShortTonnes { get; set; }
+            public string Tonnes { get; set; }
             public string Kilos { get; set; }
+            public string Grams { get; set; }
+            public string Milligrams { get; set; }
+            public string Micrograms { get; set; }
+            public string Pounds { get; set; }
+            public string Ounces { get; set; }
+            public string Carats { get; set; }
+            public string Drams { get; set; }
+            public string Grains { get; set; }
+            public string Stones { get; set; }
+            public string CubicKilometers { get; set; }
+            public string CubicMeters { get; set; }
+            public string Litres { get; set; }
+            public string CubicCentimeters { get; set; }
+            public string CubicMillimeters { get; set; }
+            public string CubicMiles { get; set; }
+            public string CubicYards { get; set; }
+            public string CubicFTs { get; set; }
+            public string CubicInches { get; set; }
+            public string OilBarrels { get; set; }
+            public string GallonUS { get; set; }
+            public string QuartsUS { get; set; }
+            public string PintsUS { get; set; }
+            public string FluidOuncesUS { get; set; }
+            public string Bushels { get; set; }
+            public string Pecks { get; set; }
+            public string GallonsUK { get; set; }
+            public string QuartsUK { get; set; }
+            public string PintsUK { get; set; }
+            public string FluidOuncesUK { get; set; }
+            public string SquareKilometers { get; set; }
+            public string SquareMeters { get; set; }
+            public string SquareCentimeters { get; set; }
+            public string SquareMillimeters { get; set; }
+            public string SquareMiles { get; set; }
+            public string SquareYards { get; set; }
+            public string SquareFTs { get; set; }
+            public string SquareInches { get; set; }
+            public string Hectares { get; set; }
+            public string Acres { get; set; }
+            public string Ares { get; set; }
+            public string Hours { get; set; }
+            public string Minutes { get; set; }
+            public string Seconds { get; set; }
+            public string Milliseconds { get; set; }
+            public string Microseconds { get; set; }
+            public string Fahrenheit { get; set; }
+            public string Celsius { get; set; }
+            public string Kelvin { get; set; }
+            public string KilometersPerHour { get; set; }
+            public string MetersPerSecond { get; set; }
+            public string MilesPerHour { get; set; }
+            public string YardsPerMinute { get; set; }
+            public string FTsPerSecond { get; set; }
+            public string Knots { get; set; }
+            public string PoundsForce { get; set; }
+            public string Newtons { get; set; }
+            public string KilosForce { get; set; }
+            public string Jouls { get; set; }
+            public string Calories { get; set; }
+            public string Ergs { get; set; }
+            public string ElectronVolts { get; set; }
+            public string Btus { get; set; }
+            public string Watts { get; set; }
+            public string Horsepower { get; set; }
+            public string Atmospheres { get; set; }
+            public string Bars { get; set; }
+            public string Pascals { get; set; }
+            public string MillimetersOfMercury { get; set; }
+            public string PoundPerSquareInch { get; set; }
+            public string KilogramPerSquareCentimeter { get; set; }
+            public string KiloPascals { get; set; }
         }
 
         public class MergeDoubleLines
