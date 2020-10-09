@@ -5554,6 +5554,12 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/AdjustExtendToPreviousSubtitle":
                     language.Settings.AdjustExtendToPreviousSubtitle = reader.Value;
                     break;
+                case "Settings/AdjustExtendPreviousLineEndToCurrentStart":
+                    language.Settings.AdjustExtendPreviousLineEndToCurrentStart = reader.Value;
+                    break;
+                case "Settings/AdjustExtendNextLineStartToCurrentEnd":
+                    language.Settings.AdjustExtendNextLineStartToCurrentEnd = reader.Value;
+                    break;
                 case "Settings/RecalculateDurationOfCurrentSubtitle":
                     language.Settings.RecalculateDurationOfCurrentSubtitle = reader.Value;
                     break;
