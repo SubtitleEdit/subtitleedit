@@ -1938,6 +1938,8 @@ $HorzAlign          =   Center
         public string MainAdjustExtendToPreviousSceneChangeWithGap { get; set; }
         public string MainAdjustExtendToNextSubtitle { get; set; }
         public string MainAdjustExtendToPreviousSubtitle { get; set; }
+        public string MainAdjustExtendPreviousLineEndToCurrentStart { get; set; }
+        public string MainAdjustExtendNextLineStartToCurrentEnd { get; set; }
         public string MainInsertAfter { get; set; }
         public string MainTextBoxAutoBreak { get; set; }
         public string MainTextBoxBreakAtPosition { get; set; }
@@ -2106,6 +2108,8 @@ $HorzAlign          =   Center
             MainAdjustExtendToPreviousSceneChangeWithGap = string.Empty;
             MainAdjustExtendToNextSubtitle = "Control+Shift+E";
             MainAdjustExtendToPreviousSubtitle = "Alt+Shift+E";
+            MainAdjustExtendPreviousLineEndToCurrentStart = string.Empty;
+            MainAdjustExtendNextLineStartToCurrentEnd = string.Empty;
         }
     }
 
@@ -7046,6 +7050,18 @@ $HorzAlign          =   Center
                     settings.Shortcuts.MainAdjustExtendToPreviousSubtitle = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainAdjustExtendPreviousLineEndToCurrentStart");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainAdjustExtendPreviousLineEndToCurrentStart = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustExtendNextLineStartToCurrentEnd");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainAdjustExtendNextLineStartToCurrentEnd = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainInsertAfter");
                 if (subNode != null)
                 {
@@ -8308,6 +8324,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MainAdjustExtendToPreviousSceneChangeWithGap", settings.Shortcuts.MainAdjustExtendToPreviousSceneChangeWithGap);
                 textWriter.WriteElementString("MainAdjustExtendToNextSubtitle", settings.Shortcuts.MainAdjustExtendToNextSubtitle);
                 textWriter.WriteElementString("MainAdjustExtendToPreviousSubtitle", settings.Shortcuts.MainAdjustExtendToPreviousSubtitle);
+                textWriter.WriteElementString("MainAdjustExtendPreviousLineEndToCurrentStart", settings.Shortcuts.MainAdjustExtendPreviousLineEndToCurrentStart);
+                textWriter.WriteElementString("MainAdjustExtendNextLineStartToCurrentEnd", settings.Shortcuts.MainAdjustExtendNextLineStartToCurrentEnd);
                 textWriter.WriteElementString("MainInsertAfter", settings.Shortcuts.MainInsertAfter);
                 textWriter.WriteElementString("MainTextBoxAutoBreak", settings.Shortcuts.MainTextBoxAutoBreak);
                 textWriter.WriteElementString("MainTextBoxBreakAtPosition", settings.Shortcuts.MainTextBoxBreakAtPosition);

@@ -2044,6 +2044,8 @@ can edit in same subtitle file (collaboration)</Information>
     <AdjustExtendToPreviousSceneChangeWithGap>Extend selected lines to previous scene change with min. gap (or previous subtitle)</AdjustExtendToPreviousSceneChangeWithGap>
     <AdjustExtendToNextSubtitle>Extend selected lines to next subtitle</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Extend selected lines to previous subtitle</AdjustExtendToPreviousSubtitle>
+    <AdjustExtendPreviousLineEndToCurrentStart>Extend previous line's end to current's start</AdjustExtendPreviousLineEndToCurrentStart>
+    <AdjustExtendNextLineStartToCurrentEnd>Extend next line's start to current's end</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>Re-calculate duration of current subtitle</RecalculateDurationOfCurrentSubtitle>
     <MainCreateStartDownEndUp>Insert new subtitle at key-down, set end time at key-up</MainCreateStartDownEndUp>
     <MergeDialog>Merge dialog (insert dashes)</MergeDialog>

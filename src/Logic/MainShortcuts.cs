@@ -124,6 +124,8 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainAdjustExtendToPreviousSceneChangeWithGap { get; set; }
         public Keys MainAdjustExtendToNextSubtitle { get; set; }
         public Keys MainAdjustExtendToPreviousSubtitle { get; set; }
+        public Keys MainAdjustExtendPreviousLineEndToCurrentStart { get; set; }
+        public Keys MainAdjustExtendNextLineStartToCurrentEnd { get; set; }
         public Keys MainInsertAfter { get; set; }
         public Keys MainInsertBefore { get; set; }
         public Keys MainTextBoxAutoBreak { get; set; }
@@ -316,6 +318,8 @@ namespace Nikse.SubtitleEdit.Logic
             MainAdjustExtendToPreviousSceneChangeWithGap = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousSceneChangeWithGap);
             MainAdjustExtendToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendToNextSubtitle);
             MainAdjustExtendToPreviousSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousSubtitle);
+            MainAdjustExtendPreviousLineEndToCurrentStart = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendPreviousLineEndToCurrentStart);
+            MainAdjustExtendNextLineStartToCurrentEnd = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendNextLineStartToCurrentEnd);
             MainInsertAfter = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainInsertAfter);
             MainInsertBefore = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainInsertBefore);
             MainTextBoxAutoBreak = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxAutoBreak);
