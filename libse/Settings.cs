@@ -1749,7 +1749,6 @@ $HorzAlign          =   Center
         public string GeneralGoToNextSubtitleAndFocusVideo { get; set; }
         public string GeneralGoToPrevSubtitleAndPlay { get; set; }
         public string GeneralGoToNextSubtitleAndPlay { get; set; }
-        public string GeneralExtendCurrentSubtitle { get; set; }
         public string GeneralAutoCalcCurrentDuration { get; set; }
         public string GeneralPlayFirstSelected { get; set; }
         public string GeneralHelp { get; set; }
@@ -1938,6 +1937,7 @@ $HorzAlign          =   Center
         public string MainAdjustExtendToPreviousSceneChangeWithGap { get; set; }
         public string MainAdjustExtendToNextSubtitle { get; set; }
         public string MainAdjustExtendToPreviousSubtitle { get; set; }
+        public string MainAdjustExtendCurrentSubtitle { get; set; }
         public string MainAdjustExtendPreviousLineEndToCurrentStart { get; set; }
         public string MainAdjustExtendNextLineStartToCurrentEnd { get; set; }
         public string MainInsertAfter { get; set; }
@@ -2086,7 +2086,6 @@ $HorzAlign          =   Center
             WaveformPlaySelectionEnd = string.Empty;
             GeneralGoToNextSubtitleAndFocusVideo = string.Empty;
             GeneralGoToPreviousSubtitleAndFocusVideo = string.Empty;
-            GeneralExtendCurrentSubtitle = string.Empty;
             GeneralAutoCalcCurrentDuration = string.Empty;
             GeneralPlayFirstSelected = string.Empty;
             GeneralHelp = "F1";
@@ -2108,6 +2107,7 @@ $HorzAlign          =   Center
             MainAdjustExtendToPreviousSceneChangeWithGap = string.Empty;
             MainAdjustExtendToNextSubtitle = "Control+Shift+E";
             MainAdjustExtendToPreviousSubtitle = "Alt+Shift+E";
+            MainAdjustExtendCurrentSubtitle = string.Empty;
             MainAdjustExtendPreviousLineEndToCurrentStart = string.Empty;
             MainAdjustExtendNextLineStartToCurrentEnd = string.Empty;
         }
@@ -5917,12 +5917,6 @@ $HorzAlign          =   Center
                     settings.Shortcuts.GeneralGoToPreviousSubtitleAndFocusVideo = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("GeneralExtendCurrentSubtitle");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.GeneralExtendCurrentSubtitle = subNode.InnerText;
-                }
-
                 subNode = node.SelectSingleNode("GeneralAutoCalcCurrentDuration");
                 if (subNode != null)
                 {
@@ -7050,6 +7044,12 @@ $HorzAlign          =   Center
                     settings.Shortcuts.MainAdjustExtendToPreviousSubtitle = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainAdjustExtendCurrentSubtitle");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainAdjustExtendCurrentSubtitle = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainAdjustExtendPreviousLineEndToCurrentStart");
                 if (subNode != null)
                 {
@@ -8136,7 +8136,6 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("GeneralGoToNextSubtitleAndFocusVideo", settings.Shortcuts.GeneralGoToNextSubtitleAndFocusVideo);
                 textWriter.WriteElementString("GeneralGoToPrevSubtitleAndPlay", settings.Shortcuts.GeneralGoToPrevSubtitleAndPlay);
                 textWriter.WriteElementString("GeneralGoToNextSubtitleAndPlay", settings.Shortcuts.GeneralGoToNextSubtitleAndPlay);
-                textWriter.WriteElementString("GeneralExtendCurrentSubtitle", settings.Shortcuts.GeneralExtendCurrentSubtitle);
                 textWriter.WriteElementString("GeneralAutoCalcCurrentDuration", settings.Shortcuts.GeneralAutoCalcCurrentDuration);
                 textWriter.WriteElementString("GeneralPlayFirstSelected", settings.Shortcuts.GeneralPlayFirstSelected);
                 textWriter.WriteElementString("GeneralHelp", settings.Shortcuts.GeneralHelp);
@@ -8324,6 +8323,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MainAdjustExtendToPreviousSceneChangeWithGap", settings.Shortcuts.MainAdjustExtendToPreviousSceneChangeWithGap);
                 textWriter.WriteElementString("MainAdjustExtendToNextSubtitle", settings.Shortcuts.MainAdjustExtendToNextSubtitle);
                 textWriter.WriteElementString("MainAdjustExtendToPreviousSubtitle", settings.Shortcuts.MainAdjustExtendToPreviousSubtitle);
+                textWriter.WriteElementString("MainAdjustExtendCurrentSubtitle", settings.Shortcuts.MainAdjustExtendCurrentSubtitle);
                 textWriter.WriteElementString("MainAdjustExtendPreviousLineEndToCurrentStart", settings.Shortcuts.MainAdjustExtendPreviousLineEndToCurrentStart);
                 textWriter.WriteElementString("MainAdjustExtendNextLineStartToCurrentEnd", settings.Shortcuts.MainAdjustExtendNextLineStartToCurrentEnd);
                 textWriter.WriteElementString("MainInsertAfter", settings.Shortcuts.MainInsertAfter);
