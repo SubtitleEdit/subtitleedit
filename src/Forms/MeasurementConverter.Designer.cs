@@ -37,7 +37,7 @@
             this.textBoxResult = new System.Windows.Forms.TextBox();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.checkBoxCloseOnInsert = new System.Windows.Forms.CheckBox();
-            this.buttonReplace = new System.Windows.Forms.Button();
+            this.buttonInsert = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
@@ -129,17 +129,17 @@
             this.checkBoxCloseOnInsert.Text = "Close on insert";
             this.checkBoxCloseOnInsert.UseVisualStyleBackColor = true;
             // 
-            // buttonReplace
+            // buttonInsert
             // 
-            this.buttonReplace.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonReplace.DialogResult = System.Windows.Forms.DialogResult.Yes;
-            this.buttonReplace.Location = new System.Drawing.Point(245, 155);
-            this.buttonReplace.Name = "buttonInsert";
-            this.buttonReplace.Size = new System.Drawing.Size(75, 23);
-            this.buttonReplace.TabIndex = 9;
-            this.buttonReplace.Text = "&Insert";
-            this.buttonReplace.UseVisualStyleBackColor = true;
-            this.buttonReplace.Click += new System.EventHandler(this.buttonReplace_Click);
+            this.buttonInsert.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonInsert.DialogResult = System.Windows.Forms.DialogResult.Yes;
+            this.buttonInsert.Location = new System.Drawing.Point(245, 155);
+            this.buttonInsert.Name = "buttonInsert";
+            this.buttonInsert.Size = new System.Drawing.Size(75, 23);
+            this.buttonInsert.TabIndex = 9;
+            this.buttonInsert.Text = "&Insert";
+            this.buttonInsert.UseVisualStyleBackColor = true;
+            this.buttonInsert.Click += new System.EventHandler(this.buttonInsert_Click);
             // 
             // buttonOK
             // 
@@ -167,7 +167,7 @@
             this.Controls.Add(this.textBoxResult);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.checkBoxCloseOnInsert);
-            this.Controls.Add(this.buttonReplace);
+            this.Controls.Add(this.buttonInsert);
             this.Controls.Add(this.buttonOK);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.KeyPreview = true;
@@ -198,7 +198,7 @@
         private System.Windows.Forms.TextBox textBoxResult;
         private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.CheckBox checkBoxCloseOnInsert;
-        private System.Windows.Forms.Button buttonReplace;
+        private System.Windows.Forms.Button buttonInsert;
         private System.Windows.Forms.Button buttonOK;
     }
 }
