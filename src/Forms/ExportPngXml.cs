@@ -4417,7 +4417,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             if (checkBoxSimpleRender.Enabled)
             {
-                checkBoxSimpleRender.Checked = Configuration.Settings.Tools.ExportVobSubSimpleRendering || languageCode == "ar";
+                checkBoxSimpleRender.Checked = Configuration.Settings.Tools.ExportVobSubSimpleRendering || _language == "ar";
             }
 
             if (exportType == ExportFormats.BluraySup || exportType == ExportFormats.VobSub || exportType == ExportFormats.BdnXml)
