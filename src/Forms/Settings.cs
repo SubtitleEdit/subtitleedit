@@ -1351,7 +1351,6 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(createAndAdjustNode, language.AdjustSetEndNextStartAndGoToNext, nameof(Configuration.Settings.Shortcuts.MainAdjustSetEndNextStartAndGoToNext));
             AddNode(createAndAdjustNode, language.AdjustViaEndAutoStart, nameof(Configuration.Settings.Shortcuts.MainAdjustViaEndAutoStart));
             AddNode(createAndAdjustNode, language.AdjustViaEndAutoStartAndGoToNext, nameof(Configuration.Settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext));
-            AddNode(createAndAdjustNode, language.AdjustExtendCurrentSubtitle, nameof(Configuration.Settings.Shortcuts.GeneralExtendCurrentSubtitle));
             AddNode(createAndAdjustNode, language.AdjustSelected100MsBack, nameof(Configuration.Settings.Shortcuts.MainAdjustSelected100MsBack));
             AddNode(createAndAdjustNode, language.AdjustSelected100MsForward, nameof(Configuration.Settings.Shortcuts.MainAdjustSelected100MsForward));
             AddNode(createAndAdjustNode, string.Format(language.AdjustStartXMsBack, Configuration.Settings.Tools.MoveStartEndMs), nameof(Configuration.Settings.Shortcuts.MainAdjustStartXMsBack));
@@ -1377,6 +1376,9 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(createAndAdjustNode, language.AdjustExtendToPreviousSceneChangeWithGap, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousSceneChangeWithGap));
             AddNode(createAndAdjustNode, language.AdjustExtendToNextSubtitle, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToNextSubtitle));
             AddNode(createAndAdjustNode, language.AdjustExtendToPreviousSubtitle, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousSubtitle));
+            AddNode(createAndAdjustNode, language.AdjustExtendCurrentSubtitle, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendCurrentSubtitle));
+            AddNode(createAndAdjustNode, language.AdjustExtendPreviousLineEndToCurrentStart, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendPreviousLineEndToCurrentStart));
+            AddNode(createAndAdjustNode, language.AdjustExtendNextLineStartToCurrentEnd, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendNextLineStartToCurrentEnd));
             if (createAndAdjustNode.Nodes.Count > 0)
             {
                 _shortcuts.Nodes.Add(createAndAdjustNode);
