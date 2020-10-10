@@ -151,8 +151,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
         private static List<NOcrPoint> ReadPoints(Stream stream)
         {
-            var list = new List<NOcrPoint>();
             int length = stream.ReadByte() << 8 | stream.ReadByte();
+            var list = new List<NOcrPoint>(length);
             var buffer = new byte[8];
             for (int i = 0; i < length; i++)
             {
@@ -169,8 +169,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
         private static List<NOcrPoint> ReadPointsBytes(Stream stream)
         {
-            var list = new List<NOcrPoint>();
             int length = stream.ReadByte();
+            var list = new List<NOcrPoint>(length);
             var buffer = new byte[4];
             for (int i = 0; i < length; i++)
             {
