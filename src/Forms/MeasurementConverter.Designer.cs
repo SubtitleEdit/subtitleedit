@@ -179,6 +179,8 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Measurement converter";
             this.Activated += new System.EventHandler(this.MeasurementConverter_Activated);
+            this.Deactivate += new System.EventHandler(this.MeasurementConverter_Deactivate);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MeasurementConverter_FormClosed);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MeasurementConverter_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
