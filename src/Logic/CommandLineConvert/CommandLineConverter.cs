@@ -1150,7 +1150,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 bool targetFormatFound = false;
                 string outputFileName;
 
-                if (binaryParagraphs != null && binaryParagraphs.Count > 0)
+                if (binaryParagraphs != null && binaryParagraphs.Count > 0 && !HasImageTarget(targetFormat))
                 {
                     using (var vobSubOcr = new VobSubOcr())
                     {
@@ -1762,6 +1762,17 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             {
                 Configuration.Settings.General.CurrentFrameRate = oldFrameRate;
             }
+        }
+
+        private static bool HasImageTarget(string targetFormat)
+        {
+            var target = targetFormat.RemoveChar(' ');
+
+            return BatchConvert.BluRaySubtitle.RemoveChar(' ').Equals(target, StringComparison.OrdinalIgnoreCase) ||
+                   BatchConvert.VobSubSubtitle.RemoveChar(' ').Equals(target, StringComparison.OrdinalIgnoreCase) ||
+                   BatchConvert.DostImageSubtitle.RemoveChar(' ').Equals(target, StringComparison.OrdinalIgnoreCase) ||
+                   BatchConvert.BdnXmlSubtitle.RemoveChar(' ').Equals(target, StringComparison.OrdinalIgnoreCase) ||
+                   BatchConvert.FcpImageSubtitle.RemoveChar(' ').Equals(target, StringComparison.OrdinalIgnoreCase);
         }
 
         internal static Subtitle RunActions(TextEncoding targetEncoding, Subtitle sub, SubtitleFormat format, List<BatchAction> actions, bool autoDetectLanguage)
