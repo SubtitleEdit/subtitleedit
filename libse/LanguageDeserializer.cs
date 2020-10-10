@@ -1333,6 +1333,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "ExportPngXml/CenterLeftJustify":
                     language.ExportPngXml.CenterLeftJustify = reader.Value;
                     break;
+                case "ExportPngXml/CenterLeftJustifyDialogs":
+                    language.ExportPngXml.CenterLeftJustifyDialogs = reader.Value;
+                    break;
                 case "ExportPngXml/CenterTopJustify":
                     language.ExportPngXml.CenterTopJustify = reader.Value;
                     break;
