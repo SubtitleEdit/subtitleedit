@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                         jp.Text = NetflixImsc11Japanese.RemoveTags(jp.Text);
                     }
                     var charactersPerSeconds = Utilities.GetCharactersPerSecond(jp);
-                    if (charactersPerSeconds > controller.CharactersPerSecond)
+                    if (charactersPerSeconds > controller.CharactersPerSecond && !p.StartTime.IsMaxTime)
                     {
                         var fixedParagraph = new Paragraph(p, false);
                         while (Utilities.GetCharactersPerSecond(fixedParagraph) > controller.CharactersPerSecond)
