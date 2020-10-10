@@ -4291,20 +4291,65 @@ namespace Nikse.SubtitleEdit.Core
                 case "MeasurementConverter/CopyToClipboard":
                     language.MeasurementConverter.CopyToClipboard = reader.Value;
                     break;
-                case "MeasurementConverter/Celsius":
-                    language.MeasurementConverter.Celsius = reader.Value;
+                case "MeasurementConverter/Length":
+                    language.MeasurementConverter.Length = reader.Value;
                     break;
-                case "MeasurementConverter/Fahrenheit":
-                    language.MeasurementConverter.Fahrenheit = reader.Value;
+                case "MeasurementConverter/Mass":
+                    language.MeasurementConverter.Mass = reader.Value;
                     break;
-                case "MeasurementConverter/Miles":
-                    language.MeasurementConverter.Miles = reader.Value;
+                case "MeasurementConverter/Volume":
+                    language.MeasurementConverter.Volume = reader.Value;
+                    break;
+                case "MeasurementConverter/Area":
+                    language.MeasurementConverter.Area = reader.Value;
+                    break;
+                case "MeasurementConverter/Time":
+                    language.MeasurementConverter.Time = reader.Value;
+                    break;
+                case "MeasurementConverter/Temperature":
+                    language.MeasurementConverter.Temperature = reader.Value;
+                    break;
+                case "MeasurementConverter/Velocity":
+                    language.MeasurementConverter.Velocity = reader.Value;
+                    break;
+                case "MeasurementConverter/Force":
+                    language.MeasurementConverter.Force = reader.Value;
+                    break;
+                case "MeasurementConverter/Energy":
+                    language.MeasurementConverter.Energy = reader.Value;
+                    break;
+                case "MeasurementConverter/Power":
+                    language.MeasurementConverter.Power = reader.Value;
+                    break;
+                case "MeasurementConverter/Pressure":
+                    language.MeasurementConverter.Pressure = reader.Value;
                     break;
                 case "MeasurementConverter/Kilometers":
                     language.MeasurementConverter.Kilometers = reader.Value;
                     break;
                 case "MeasurementConverter/Meters":
                     language.MeasurementConverter.Meters = reader.Value;
+                    break;
+                case "MeasurementConverter/Centimeters":
+                    language.MeasurementConverter.Centimeters = reader.Value;
+                    break;
+                case "MeasurementConverter/Millimeters":
+                    language.MeasurementConverter.Millimeters = reader.Value;
+                    break;
+                case "MeasurementConverter/Micrometers":
+                    language.MeasurementConverter.Micrometers = reader.Value;
+                    break;
+                case "MeasurementConverter/Nanometers":
+                    language.MeasurementConverter.Nanometers = reader.Value;
+                    break;
+                case "MeasurementConverter/Angstroms":
+                    language.MeasurementConverter.Angstroms = reader.Value;
+                    break;
+                case "MeasurementConverter/MilesTerrestial":
+                    language.MeasurementConverter.MilesTerrestial = reader.Value;
+                    break;
+                case "MeasurementConverter/MilesNautical":
+                    language.MeasurementConverter.MilesNautical = reader.Value;
                     break;
                 case "MeasurementConverter/Yards":
                     language.MeasurementConverter.Yards = reader.Value;
@@ -4315,11 +4360,245 @@ namespace Nikse.SubtitleEdit.Core
                 case "MeasurementConverter/Inches":
                     language.MeasurementConverter.Inches = reader.Value;
                     break;
-                case "MeasurementConverter/Pounds":
-                    language.MeasurementConverter.Pounds = reader.Value;
+                case "MeasurementConverter/Chains":
+                    language.MeasurementConverter.Chains = reader.Value;
+                    break;
+                case "MeasurementConverter/Fathoms":
+                    language.MeasurementConverter.Fathoms = reader.Value;
+                    break;
+                case "MeasurementConverter/Hands":
+                    language.MeasurementConverter.Hands = reader.Value;
+                    break;
+                case "MeasurementConverter/Rods":
+                    language.MeasurementConverter.Rods = reader.Value;
+                    break;
+                case "MeasurementConverter/Spans":
+                    language.MeasurementConverter.Spans = reader.Value;
+                    break;
+                case "MeasurementConverter/LongTonnes":
+                    language.MeasurementConverter.LongTonnes = reader.Value;
+                    break;
+                case "MeasurementConverter/ShortTonnes":
+                    language.MeasurementConverter.ShortTonnes = reader.Value;
+                    break;
+                case "MeasurementConverter/Tonnes":
+                    language.MeasurementConverter.Tonnes = reader.Value;
                     break;
                 case "MeasurementConverter/Kilos":
                     language.MeasurementConverter.Kilos = reader.Value;
+                    break;
+                case "MeasurementConverter/Grams":
+                    language.MeasurementConverter.Grams = reader.Value;
+                    break;
+                case "MeasurementConverter/Milligrams":
+                    language.MeasurementConverter.Milligrams = reader.Value;
+                    break;
+                case "MeasurementConverter/Micrograms":
+                    language.MeasurementConverter.Micrograms = reader.Value;
+                    break;
+                case "MeasurementConverter/Pounds":
+                    language.MeasurementConverter.Pounds = reader.Value;
+                    break;
+                case "MeasurementConverter/Ounces":
+                    language.MeasurementConverter.Ounces = reader.Value;
+                    break;
+                case "MeasurementConverter/Carats":
+                    language.MeasurementConverter.Carats = reader.Value;
+                    break;
+                case "MeasurementConverter/Drams":
+                    language.MeasurementConverter.Drams = reader.Value;
+                    break;
+                case "MeasurementConverter/Grains":
+                    language.MeasurementConverter.Grains = reader.Value;
+                    break;
+                case "MeasurementConverter/Stones":
+                    language.MeasurementConverter.Stones = reader.Value;
+                    break;
+                case "MeasurementConverter/CubicKilometers":
+                    language.MeasurementConverter.CubicKilometers = reader.Value;
+                    break;
+                case "MeasurementConverter/CubicMeters":
+                    language.MeasurementConverter.CubicMeters = reader.Value;
+                    break;
+                case "MeasurementConverter/Litres":
+                    language.MeasurementConverter.Litres = reader.Value;
+                    break;
+                case "MeasurementConverter/CubicCentimeters":
+                    language.MeasurementConverter.CubicCentimeters = reader.Value;
+                    break;
+                case "MeasurementConverter/CubicMillimeters":
+                    language.MeasurementConverter.CubicMillimeters = reader.Value;
+                    break;
+                case "MeasurementConverter/CubicMiles":
+                    language.MeasurementConverter.CubicMiles = reader.Value;
+                    break;
+                case "MeasurementConverter/CubicYards":
+                    language.MeasurementConverter.CubicYards = reader.Value;
+                    break;
+                case "MeasurementConverter/CubicFTs":
+                    language.MeasurementConverter.CubicFTs = reader.Value;
+                    break;
+                case "MeasurementConverter/CubicInches":
+                    language.MeasurementConverter.CubicInches = reader.Value;
+                    break;
+                case "MeasurementConverter/OilBarrels":
+                    language.MeasurementConverter.OilBarrels = reader.Value;
+                    break;
+                case "MeasurementConverter/GallonUS":
+                    language.MeasurementConverter.GallonUS = reader.Value;
+                    break;
+                case "MeasurementConverter/QuartsUS":
+                    language.MeasurementConverter.QuartsUS = reader.Value;
+                    break;
+                case "MeasurementConverter/PintsUS":
+                    language.MeasurementConverter.PintsUS = reader.Value;
+                    break;
+                case "MeasurementConverter/FluidOuncesUS":
+                    language.MeasurementConverter.FluidOuncesUS = reader.Value;
+                    break;
+                case "MeasurementConverter/Bushels":
+                    language.MeasurementConverter.Bushels = reader.Value;
+                    break;
+                case "MeasurementConverter/Pecks":
+                    language.MeasurementConverter.Pecks = reader.Value;
+                    break;
+                case "MeasurementConverter/GallonsUK":
+                    language.MeasurementConverter.GallonsUK = reader.Value;
+                    break;
+                case "MeasurementConverter/QuartsUK":
+                    language.MeasurementConverter.QuartsUK = reader.Value;
+                    break;
+                case "MeasurementConverter/PintsUK":
+                    language.MeasurementConverter.PintsUK = reader.Value;
+                    break;
+                case "MeasurementConverter/FluidOuncesUK":
+                    language.MeasurementConverter.FluidOuncesUK = reader.Value;
+                    break;
+                case "MeasurementConverter/SquareKilometers":
+                    language.MeasurementConverter.SquareKilometers = reader.Value;
+                    break;
+                case "MeasurementConverter/SquareMeters":
+                    language.MeasurementConverter.SquareMeters = reader.Value;
+                    break;
+                case "MeasurementConverter/SquareCentimeters":
+                    language.MeasurementConverter.SquareCentimeters = reader.Value;
+                    break;
+                case "MeasurementConverter/SquareMillimeters":
+                    language.MeasurementConverter.SquareMillimeters = reader.Value;
+                    break;
+                case "MeasurementConverter/SquareMiles":
+                    language.MeasurementConverter.SquareMiles = reader.Value;
+                    break;
+                case "MeasurementConverter/SquareYards":
+                    language.MeasurementConverter.SquareYards = reader.Value;
+                    break;
+                case "MeasurementConverter/SquareFTs":
+                    language.MeasurementConverter.SquareFTs = reader.Value;
+                    break;
+                case "MeasurementConverter/SquareInches":
+                    language.MeasurementConverter.SquareInches = reader.Value;
+                    break;
+                case "MeasurementConverter/Hectares":
+                    language.MeasurementConverter.Hectares = reader.Value;
+                    break;
+                case "MeasurementConverter/Acres":
+                    language.MeasurementConverter.Acres = reader.Value;
+                    break;
+                case "MeasurementConverter/Ares":
+                    language.MeasurementConverter.Ares = reader.Value;
+                    break;
+                case "MeasurementConverter/Hours":
+                    language.MeasurementConverter.Hours = reader.Value;
+                    break;
+                case "MeasurementConverter/Minutes":
+                    language.MeasurementConverter.Minutes = reader.Value;
+                    break;
+                case "MeasurementConverter/Seconds":
+                    language.MeasurementConverter.Seconds = reader.Value;
+                    break;
+                case "MeasurementConverter/Milliseconds":
+                    language.MeasurementConverter.Milliseconds = reader.Value;
+                    break;
+                case "MeasurementConverter/Microseconds":
+                    language.MeasurementConverter.Microseconds = reader.Value;
+                    break;
+                case "MeasurementConverter/Fahrenheit":
+                    language.MeasurementConverter.Fahrenheit = reader.Value;
+                    break;
+                case "MeasurementConverter/Celsius":
+                    language.MeasurementConverter.Celsius = reader.Value;
+                    break;
+                case "MeasurementConverter/Kelvin":
+                    language.MeasurementConverter.Kelvin = reader.Value;
+                    break;
+                case "MeasurementConverter/KilometersPerHour":
+                    language.MeasurementConverter.KilometersPerHour = reader.Value;
+                    break;
+                case "MeasurementConverter/MetersPerSecond":
+                    language.MeasurementConverter.MetersPerSecond = reader.Value;
+                    break;
+                case "MeasurementConverter/MilesPerHour":
+                    language.MeasurementConverter.MilesPerHour = reader.Value;
+                    break;
+                case "MeasurementConverter/YardsPerMinute":
+                    language.MeasurementConverter.YardsPerMinute = reader.Value;
+                    break;
+                case "MeasurementConverter/FTsPerSecond":
+                    language.MeasurementConverter.FTsPerSecond = reader.Value;
+                    break;
+                case "MeasurementConverter/Knots":
+                    language.MeasurementConverter.Knots = reader.Value;
+                    break;
+                case "MeasurementConverter/PoundsForce":
+                    language.MeasurementConverter.PoundsForce = reader.Value;
+                    break;
+                case "MeasurementConverter/Newtons":
+                    language.MeasurementConverter.Newtons = reader.Value;
+                    break;
+                case "MeasurementConverter/KilosForce":
+                    language.MeasurementConverter.KilosForce = reader.Value;
+                    break;
+                case "MeasurementConverter/Jouls":
+                    language.MeasurementConverter.Jouls = reader.Value;
+                    break;
+                case "MeasurementConverter/Calories":
+                    language.MeasurementConverter.Calories = reader.Value;
+                    break;
+                case "MeasurementConverter/Ergs":
+                    language.MeasurementConverter.Ergs = reader.Value;
+                    break;
+                case "MeasurementConverter/ElectronVolts":
+                    language.MeasurementConverter.ElectronVolts = reader.Value;
+                    break;
+                case "MeasurementConverter/Btus":
+                    language.MeasurementConverter.Btus = reader.Value;
+                    break;
+                case "MeasurementConverter/Watts":
+                    language.MeasurementConverter.Watts = reader.Value;
+                    break;
+                case "MeasurementConverter/Horsepower":
+                    language.MeasurementConverter.Horsepower = reader.Value;
+                    break;
+                case "MeasurementConverter/Atmospheres":
+                    language.MeasurementConverter.Atmospheres = reader.Value;
+                    break;
+                case "MeasurementConverter/Bars":
+                    language.MeasurementConverter.Bars = reader.Value;
+                    break;
+                case "MeasurementConverter/Pascals":
+                    language.MeasurementConverter.Pascals = reader.Value;
+                    break;
+                case "MeasurementConverter/MillimetersOfMercury":
+                    language.MeasurementConverter.MillimetersOfMercury = reader.Value;
+                    break;
+                case "MeasurementConverter/PoundPerSquareInch":
+                    language.MeasurementConverter.PoundPerSquareInch = reader.Value;
+                    break;
+                case "MeasurementConverter/KilogramPerSquareCentimeter":
+                    language.MeasurementConverter.KilogramPerSquareCentimeter = reader.Value;
+                    break;
+                case "MeasurementConverter/KiloPascals":
+                    language.MeasurementConverter.KiloPascals = reader.Value;
                     break;
                 case "MergeDoubleLines/Title":
                     language.MergeDoubleLines.Title = reader.Value;
