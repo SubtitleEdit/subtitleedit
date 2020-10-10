@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 }
 
                 var next = subtitle.GetParagraphOrDefault(index + 1);
-                if (p.Duration.TotalMilliseconds < 833)
+                if (p.Duration.TotalMilliseconds < 833 && !p.StartTime.IsMaxTime)
                 {
                     Paragraph fixedParagraph = null;
                     if (next == null || next.StartTime.TotalMilliseconds > p.StartTime.TotalMilliseconds + 834)
