@@ -2046,7 +2046,9 @@ namespace Nikse.SubtitleEdit.Forms
                 try
                 {
                     var binaryParagraphs = new List<IBinaryParagraph>();
-                    if (p.FileName != null && p.FileName.EndsWith(".sup", StringComparison.OrdinalIgnoreCase) && FileUtil.IsBluRaySup(p.FileName) && AllowImageToImage())
+                    if (p.FileName != null && !p.Subtitle.Paragraphs.Any(s => !string.IsNullOrEmpty(s.Text)) &&
+                        p.FileName.EndsWith(".sup", StringComparison.OrdinalIgnoreCase) &&
+                        FileUtil.IsBluRaySup(p.FileName) && AllowImageToImage())
                     {
                         binaryParagraphs = BluRaySupParser.ParseBluRaySup(p.FileName, new StringBuilder()).Cast<IBinaryParagraph>().ToList();
                     }
