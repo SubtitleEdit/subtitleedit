@@ -26,7 +26,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 
                 double twoFramesGap = 1000.0 / controller.FrameRate * 2.0;
                 var gapInFrames = SubtitleFormat.MillisecondsToFrames(next.StartTime.TotalMilliseconds) - SubtitleFormat.MillisecondsToFrames(p.EndTime.TotalMilliseconds);
-                if (gapInFrames >= 3 && gapInFrames <= 11)
+                if (gapInFrames >= 3 && gapInFrames <= 11 && !p.StartTime.IsMaxTime)
                 {
                     var fixedParagraph = new Paragraph(p, false) { EndTime = { TotalMilliseconds = next.StartTime.TotalMilliseconds - twoFramesGap } };
                     string comment = "3-11 frames gap => 2 frames gap";
