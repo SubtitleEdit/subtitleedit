@@ -555,13 +555,13 @@ namespace Nikse.SubtitleEdit.Core
                     var optimalDurationMs = Utilities.GetOptimalDisplayMilliseconds(paragraph.Text);
                     if (next == null)
                     {
-                        paragraph.Duration.TotalMilliseconds = optimalDurationMs;
+                        paragraph.EndTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds + optimalDurationMs;
                     }
                     else
                     {
-                        if (next.StartTime.TotalMilliseconds < paragraph.StartTime.TotalMilliseconds + optimalDurationMs * 2)
+                        if (next.StartTime.TotalMilliseconds < paragraph.StartTime.TotalMilliseconds + optimalDurationMs + 2000)
                         {
-                            paragraph.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds;
+                            paragraph.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                         }
                         else
                         {
