@@ -26810,11 +26810,11 @@ namespace Nikse.SubtitleEdit.Forms
                 Input = selectedText,
                 IsOriginalActive = GetFocusedTextBox() == textBoxListViewTextAlternate,
             };
-            _measurementConverter.ReplaceClicked += measurementConverter_ReplaceClicked;
+            _measurementConverter.InsertClicked += measurementConverter_InsertClicked;
             _measurementConverter.Show(this);
         }
 
-        private void measurementConverter_ReplaceClicked(object sender, MeasurementConverter.ReplaceEventArgs e)
+        private void measurementConverter_InsertClicked(object sender, MeasurementConverter.InsertEventArgs e)
         {
             if (IsSubtitleLoaded)
             {
