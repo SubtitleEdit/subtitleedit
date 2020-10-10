@@ -1181,6 +1181,7 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(toolsNode, Configuration.Settings.Language.Main.Menu.Tools.MergeSameTimeCodes, nameof(Configuration.Settings.Shortcuts.MainToolsMergeSameTimeCodes), true);
             AddNode(toolsNode, Configuration.Settings.Language.Main.Menu.Tools.SplitLongLines, nameof(Configuration.Settings.Shortcuts.MainToolsSplitLongLines), true);
             AddNode(toolsNode, Configuration.Settings.Language.Main.Menu.Tools.BatchConvert, nameof(Configuration.Settings.Shortcuts.MainToolsBatchConvert));
+            AddNode(toolsNode, Configuration.Settings.Language.Main.Menu.Tools.MeasurementConverter, nameof(Configuration.Settings.Shortcuts.MainToolsMeasurementConverter), true);
             AddNode(toolsNode, Configuration.Settings.Language.Main.Menu.Tools.SplitSubtitle, nameof(Configuration.Settings.Shortcuts.MainToolsSplit), true);
             AddNode(toolsNode, Configuration.Settings.Language.Main.Menu.Tools.AppendSubtitle, nameof(Configuration.Settings.Shortcuts.MainToolsAppend), true);
             AddNode(toolsNode, Configuration.Settings.Language.Main.Menu.Tools.JoinSubtitles, nameof(Configuration.Settings.Shortcuts.MainToolsJoin), true);

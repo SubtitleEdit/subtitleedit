@@ -1583,16 +1583,109 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <ConvertFrom>Convert from</ConvertFrom>
     <ConvertTo>Convert to</ConvertTo>
     <CopyToClipboard>Copy to clipboard</CopyToClipboard>
-    <Celsius>Celsius</Celsius>
-    <Fahrenheit>Fahrenheit</Fahrenheit>
-    <Miles>Miles</Miles>
+    <Length>Length</Length>
+    <Mass>Mass</Mass>
+    <Volume>Volume</Volume>
+    <Area>Area</Area>
+    <Time>Time</Time>
+    <Temperature>Temperature</Temperature>
+    <Velocity>Velocity</Velocity>
+    <Force>Force</Force>
+    <Energy>Energy</Energy>
+    <Power>Power</Power>
+    <Pressure>Pressure</Pressure>
     <Kilometers>Kilometers</Kilometers>
     <Meters>Meters</Meters>
+    <Centimeters>Centimeters</Centimeters>
+    <Millimeters>Millimeters</Millimeters>
+    <Micrometers>Micrometers</Micrometers>
+    <Nanometers>Nanometers</Nanometers>
+    <Angstroms>Angstroms</Angstroms>
+    <MilesTerrestial>Miles (terrestial)</MilesTerrestial>
+    <MilesNautical>Miles (nautical)</MilesNautical>
     <Yards>Yards</Yards>
     <Feet>Feet</Feet>
     <Inches>Inches</Inches>
+    <Chains>Chains</Chains>
+    <Fathoms>Fathoms</Fathoms>
+    <Hands>Hands</Hands>
+    <Rods>Rods</Rods>
+    <Spans>Spans</Spans>
+    <LongTonnes>Long tonnes</LongTonnes>
+    <ShortTonnes>Short tonnes</ShortTonnes>
+    <Tonnes>Tonnes</Tonnes>
+    <Kilos>Kilograms</Kilos>
+    <Grams>Grams</Grams>
+    <Milligrams>Milligrams</Milligrams>
+    <Micrograms>Micrograms</Micrograms>
     <Pounds>Pounds</Pounds>
-    <Kilos>Kilos</Kilos>
+    <Ounces>Ounces</Ounces>
+    <Carats>Carats</Carats>
+    <Drams>Drams</Drams>
+    <Grains>Grains</Grains>
+    <Stones>Stones</Stones>
+    <CubicKilometers>Cubic kilometers</CubicKilometers>
+    <CubicMeters>Cubic meters</CubicMeters>
+    <Litres>Litres</Litres>
+    <CubicCentimeters>Cubic centimeters</CubicCentimeters>
+    <CubicMillimeters>Cubic millimeters</CubicMillimeters>
+    <CubicMiles>Cubic miles</CubicMiles>
+    <CubicYards>Cubic yards</CubicYards>
+    <CubicFTs>Cubic fts</CubicFTs>
+    <CubicInches>Cubic inches</CubicInches>
+    <OilBarrels>Oil barrels</OilBarrels>
+    <GallonUS>Gallon (US)</GallonUS>
+    <QuartsUS>Quarts (US)</QuartsUS>
+    <PintsUS>Pints (US)</PintsUS>
+    <FluidOuncesUS>Fluid ounces (US)</FluidOuncesUS>
+    <Bushels>Bushels</Bushels>
+    <Pecks>Pecks</Pecks>
+    <GallonsUK>Gallons (UK)</GallonsUK>
+    <QuartsUK>Quarts (UK)</QuartsUK>
+    <PintsUK>Pints (UK)</PintsUK>
+    <FluidOuncesUK>Fluid ounces (UK)</FluidOuncesUK>
+    <SquareKilometers>Square kilometers</SquareKilometers>
+    <SquareMeters>Square meters</SquareMeters>
+    <SquareCentimeters>Square Centimeters</SquareCentimeters>
+    <SquareMillimeters>Square millimeters</SquareMillimeters>
+    <SquareMiles>Square miles</SquareMiles>
+    <SquareYards>Square yards</SquareYards>
+    <SquareFTs>Square fts</SquareFTs>
+    <SquareInches>Square inches</SquareInches>
+    <Hectares>Hectares</Hectares>
+    <Acres>Acres</Acres>
+    <Ares>Ares</Ares>
+    <Hours>Hours</Hours>
+    <Minutes>Minutes</Minutes>
+    <Seconds>Seconds</Seconds>
+    <Milliseconds>Milliseconds</Milliseconds>
+    <Microseconds>Microseconds</Microseconds>
+    <Fahrenheit>Fahrenheit</Fahrenheit>
+    <Celsius>Celsius</Celsius>
+    <Kelvin>Kelvin</Kelvin>
+    <KilometersPerHour>Kilometers/Hour</KilometersPerHour>
+    <MetersPerSecond>Meters/Seconds</MetersPerSecond>
+    <MilesPerHour>Miles/Hour</MilesPerHour>
+    <YardsPerMinute>Yards/Minute</YardsPerMinute>
+    <FTsPerSecond>fts/Second</FTsPerSecond>
+    <Knots>Knots</Knots>
+    <PoundsForce>Pounds-Force</PoundsForce>
+    <Newtons>Newtons</Newtons>
+    <KilosForce>Kilos-Force</KilosForce>
+    <Jouls>Jouls</Jouls>
+    <Calories>Calories</Calories>
+    <Ergs>Ergs</Ergs>
+    <ElectronVolts>Electron-volts</ElectronVolts>
+    <Btus>Btus</Btus>
+    <Watts>Watts</Watts>
+    <Horsepower>Horsepower</Horsepower>
+    <Atmospheres>Atmospheres</Atmospheres>
+    <Bars>Bars</Bars>
+    <Pascals>Pascals</Pascals>
+    <MillimetersOfMercury>Millimeters of Mercury</MillimetersOfMercury>
+    <PoundPerSquareInch>Pound-force per square inch</PoundPerSquareInch>
+    <KilogramPerSquareCentimeter>Kilogram-force per square centimeter</KilogramPerSquareCentimeter>
+    <KiloPascals>Kilopascals</KiloPascals>
   </MeasurementConverter>
   <MergeDoubleLines>
     <Title>Merge lines with same text</Title>

@@ -1136,6 +1136,8 @@ $HorzAlign          =   Center
         public bool ShowFormatRequiresUtf8Warning { get; set; }
         public long CurrentVideoOffsetInMs { get; set; }
         public string TitleBarAsterisk { get; set; } // Show asteriks "before" or "after" file name (any other value will hide asteriks)
+        public bool MeasurementConverterCloseOnInsert { get; set; }
+        public string MeasurementConverterCategories { get; set; }
         public bool UseDarkTheme { get; set; }
         public bool ShowBetaStuff { get; set; }
 
@@ -1263,6 +1265,8 @@ $HorzAlign          =   Center
             ShowFormatRequiresUtf8Warning = true;
             UseDarkTheme = false;
             TitleBarAsterisk = "before";
+            MeasurementConverterCloseOnInsert = true;
+            MeasurementConverterCategories = "Length;Kilometers;Meters";
             PreviewAssaText = "ABCDEFGHIJKL abcdefghijkl 123";
             ShowBetaStuff = false;
             NewEmptyDefaultMs = 2000;
@@ -1806,6 +1810,7 @@ $HorzAlign          =   Center
         public string MainToolsChangeCasing { get; set; }
         public string MainToolsAutoDuration { get; set; }
         public string MainToolsBatchConvert { get; set; }
+        public string MainToolsMeasurementConverter { get; set; }
         public string MainToolsSplit { get; set; }
         public string MainToolsAppend { get; set; }
         public string MainToolsJoin { get; set; }
@@ -3377,6 +3382,18 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.TitleBarAsterisk = subNode.InnerText.Trim();
+            }
+
+            subNode = node.SelectSingleNode("MeasurementConverterCloseOnInsert");
+            if (subNode != null)
+            {
+                settings.General.MeasurementConverterCloseOnInsert = Convert.ToBoolean(subNode.InnerText.Trim());
+            }
+
+            subNode = node.SelectSingleNode("MeasurementConverterCategories");
+            if (subNode != null)
+            {
+                settings.General.MeasurementConverterCategories = subNode.InnerText.Trim();
             }
 
             subNode = node.SelectSingleNode("UseDarkTheme");
@@ -6159,6 +6176,12 @@ $HorzAlign          =   Center
                     settings.Shortcuts.MainToolsBatchConvert = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainToolsMeasurementConverter");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainToolsMeasurementConverter = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainToolsSplit");
                 if (subNode != null)
                 {
@@ -7611,6 +7634,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ShowNegativeDurationInfoOnSave", settings.General.ShowNegativeDurationInfoOnSave.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowFormatRequiresUtf8Warning", settings.General.ShowFormatRequiresUtf8Warning.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("TitleBarAsterisk", settings.General.TitleBarAsterisk);
+                textWriter.WriteElementString("MeasurementConverterCloseOnInsert", settings.General.MeasurementConverterCloseOnInsert.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("MeasurementConverterCategories", settings.General.MeasurementConverterCategories);
                 textWriter.WriteElementString("UseDarkTheme", settings.General.UseDarkTheme.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowBetaStuff", settings.General.ShowBetaStuff.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("NewEmptyDefaultMs", settings.General.NewEmptyDefaultMs.ToString(CultureInfo.InvariantCulture));
@@ -8128,6 +8153,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MainToolsChangeCasing", settings.Shortcuts.MainToolsChangeCasing);
                 textWriter.WriteElementString("MainToolsAutoDuration", settings.Shortcuts.MainToolsAutoDuration);
                 textWriter.WriteElementString("MainToolsBatchConvert", settings.Shortcuts.MainToolsBatchConvert);
+                textWriter.WriteElementString("MainToolsMeasurementConverter", settings.Shortcuts.MainToolsMeasurementConverter);
                 textWriter.WriteElementString("MainToolsSplit", settings.Shortcuts.MainToolsSplit);
                 textWriter.WriteElementString("MainToolsAppend", settings.Shortcuts.MainToolsAppend);
                 textWriter.WriteElementString("MainToolsJoin", settings.Shortcuts.MainToolsJoin);
