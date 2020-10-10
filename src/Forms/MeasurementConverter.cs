@@ -10,13 +10,13 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class MeasurementConverter : Form
     {
-        public class ReplaceEventArgs : EventArgs
+        public class InsertEventArgs : EventArgs
         {
             public string Result { get; set; }
             public bool IsOriginalActive { get; set; }
         }
 
-        public event EventHandler<ReplaceEventArgs> ReplaceClicked;
+        public event EventHandler<InsertEventArgs> InsertClicked;
 
         public string Input { get; set; }
         public bool IsOriginalActive { get; set; }
@@ -243,9 +243,9 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxInput_TextChanged(null, null);
         }
 
-        private void buttonReplace_Click(object sender, EventArgs e)
+        private void buttonInsert_Click(object sender, EventArgs e)
         {
-            ReplaceClicked?.Invoke(this, new ReplaceEventArgs { Result = Output, IsOriginalActive = IsOriginalActive });
+            InsertClicked?.Invoke(this, new InsertEventArgs { Result = Output, IsOriginalActive = IsOriginalActive });
 
             if (checkBoxCloseOnInsert.Checked)
             {
