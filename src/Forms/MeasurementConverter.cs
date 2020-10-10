@@ -4877,6 +4877,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MeasurementConverter_Activated(object sender, EventArgs e)
         {
+            this.Opacity = 1;
             if (double.TryParse(Input, out _))
             {
                 textBoxInput.Text = Input;
@@ -4884,6 +4885,19 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 textBoxInput.Text = "1";
+            }
+        }
+
+        private void MeasurementConverter_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+        }
+
+        private void MeasurementConverter_Deactivate(object sender, EventArgs e)
+        {
+            if (DialogResult != DialogResult.Cancel)
+            {
+                this.Opacity = 0.5;
             }
         }
     }
