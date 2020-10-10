@@ -24702,6 +24702,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _findHelper.MatchInOriginal = false;
             }
+
+            if (_measurementConverter != null)
+            {
+                _measurementConverter.IsOriginalActive = false;
+            }
         }
 
         private void TextBoxListViewTextAlternateEnter(object sender, EventArgs e)
@@ -24709,6 +24714,11 @@ namespace Nikse.SubtitleEdit.Forms
             if (_findHelper != null)
             {
                 _findHelper.MatchInOriginal = true;
+            }
+
+            if (_measurementConverter != null)
+            {
+                _measurementConverter.IsOriginalActive = true;
             }
         }
 
