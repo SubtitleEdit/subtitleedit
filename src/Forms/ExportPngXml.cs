@@ -101,6 +101,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Color _borderColor;
         private float _borderWidth = 2.0f;
         private bool _isLoading = true;
+        private string _language = "en";
         private string _exportType = ExportFormats.BdnXml;
         private string _fileName;
         private string _outputFileName;
@@ -391,7 +392,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SimpleRendering = checkBoxSimpleRender.Checked,
                 AlignLeft = comboBoxHAlign.SelectedIndex == 0,
                 AlignRight = comboBoxHAlign.SelectedIndex == 2,
-                JustifyLeft = comboBoxHAlign.SelectedIndex == 3, // center, left justify
+                JustifyLeft = GetJustifyLeft(p.Text), // center, left justify
                 JustifyTop = comboBoxHAlign.SelectedIndex == 4, // center, top justify
                 JustifyRight = comboBoxHAlign.SelectedIndex == 5, // center, right justify
                 ScreenWidth = screenWidth,
@@ -477,6 +478,24 @@ namespace Nikse.SubtitleEdit.Forms
                 parameter.P = null;
             }
             return parameter;
+        }
+
+        private bool GetJustifyLeft(string text)
+        {
+            if (comboBoxHAlign.SelectedIndex == 6 && !string.IsNullOrEmpty(text))
+            {
+                var s = Utilities.RemoveUnneededSpaces(text, _language);
+                var dialogHelper = new DialogSplitMerge { TwoLetterLanguageCode = _language };
+                var lines = s.SplitToLines();
+                return dialogHelper.IsDialog(lines) || HasTwoSpeakers(lines);
+            }
+
+            return comboBoxHAlign.SelectedIndex == 3;
+        }
+
+        private static bool HasTwoSpeakers(List<string> lines)
+        {
+            return lines.Count == 2 && lines[0].HasSentenceEnding() && lines[0].Contains(':') && lines[1].Contains(':');
         }
 
         private void ButtonExportClick(object sender, EventArgs e)
@@ -2347,7 +2366,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             mbp.AlignLeft = comboBoxHAlign.SelectedIndex == 0;
             mbp.AlignRight = comboBoxHAlign.SelectedIndex == 2;
-            mbp.JustifyLeft = comboBoxHAlign.SelectedIndex == 3;
+            mbp.JustifyLeft = GetJustifyLeft(p.Text);
             mbp.JustifyTop = comboBoxHAlign.SelectedIndex == 4;
             mbp.JustifyRight = comboBoxHAlign.SelectedIndex == 5;
             mbp.SimpleRendering = checkBoxSimpleRender.Checked;
@@ -4049,6 +4068,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.CenterLeftJustify);
             comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.CenterTopJustify);
             comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.CenterRightJustify);
+            comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.CenterLeftJustifyDialogs);
 
             buttonShadowColor.Text = Configuration.Settings.Language.ExportPngXml.ShadowColor;
             labelShadowWidth.Text = Configuration.Settings.Language.ExportPngXml.ShadowWidth;
@@ -4082,7 +4102,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 SetResolution(Configuration.Settings.Tools.ExportBluRayVideoResolution);
             }
 
-            string languageCode = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(subtitle);
+            _language = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(subtitle);
             if (exportType == ExportFormats.VobSub)
             {
                 comboBoxBorderWidth.SelectedIndex = 6;
@@ -4098,16 +4118,16 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 labelLanguage.Visible = true;
                 comboBoxLanguage.Visible = true;
                 comboBoxLanguage.Items.Clear();
-                if (languageCode == null)
+                if (_language == null)
                 {
-                    languageCode = Configuration.Settings.Tools.ExportVobSubLanguage;
+                    _language = Configuration.Settings.Tools.ExportVobSubLanguage;
                 }
 
                 int index = -1;
                 foreach (var language in DvdSubtitleLanguage.CompliantLanguages)
                 {
                     int i = comboBoxLanguage.Items.Add(language);
-                    if (language.Code == languageCode || (index < 0 && language.Code == "en"))
+                    if (language.Code == _language || index < 0 && language.Code == "en")
                     {
                         index = i;
                     }

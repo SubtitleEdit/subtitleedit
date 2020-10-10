@@ -643,6 +643,7 @@
             // comboBoxHAlign
             // 
             this.comboBoxHAlign.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxHAlign.DropDownWidth = 200;
             this.comboBoxHAlign.FormattingEnabled = true;
             this.comboBoxHAlign.Items.AddRange(new object[] {
             "Left",

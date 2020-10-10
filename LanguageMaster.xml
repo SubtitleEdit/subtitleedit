@@ -511,6 +511,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Right>Right</Right>
     <Center>Center</Center>
     <CenterLeftJustify>Center, left justify</CenterLeftJustify>
+    <CenterLeftJustifyDialogs>Center, left justify dialog</CenterLeftJustifyDialogs>
     <CenterTopJustify>Center, top justify</CenterTopJustify>
     <CenterRightJustify>Center, right justify</CenterRightJustify>
     <BottomMargin>Bottom margin</BottomMargin>

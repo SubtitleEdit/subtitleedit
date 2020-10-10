@@ -699,6 +699,7 @@ namespace Nikse.SubtitleEdit.Core
                 Center = "Center",
                 Right = "Right",
                 CenterLeftJustify = "Center, left justify",
+                CenterLeftJustifyDialogs = "Center, left justify dialog",
                 CenterTopJustify = "Center, top justify",
                 CenterRightJustify = "Center, right justify",
                 BottomMargin = "Bottom margin",
