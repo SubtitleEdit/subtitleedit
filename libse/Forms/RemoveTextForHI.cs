@@ -578,6 +578,101 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     }
                 }
             }
+            else if (noOfNames == 2 && Utilities.GetNumberOfLines(newText) == 3 && Utilities.GetNumberOfLines(text) == 3)
+            {
+                var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, TwoLetterLanguageCode = "en" };
+                if (dialogHelper.IsDialog(text.SplitToLines()))
+                {
+                    if (removedInFirstLine && removedInSecondLine)
+                    {
+                        var arr = newText.SplitToLines();
+
+                        if (!arr[0].Contains('-') && !arr[0].Contains(':'))
+                        {
+                            arr[0] = InsertStartDashInLine(arr[0]);
+                        }
+
+                        if (!arr[1].Contains('-') && !arr[1].Contains(':'))
+                        {
+                            arr[1] = InsertStartDashInLine(arr[1]);
+                        }
+
+                        newText = string.Join(Environment.NewLine, arr);
+                    }
+                    else if (!removedInFirstLine && removedInSecondLine)
+                    {
+                        var arr = newText.SplitToLines();
+
+                        if (!arr[1].Contains('-') && !arr[1].Contains(':'))
+                        {
+                            arr[1] = InsertStartDashInLine(arr[1]);
+                        }
+
+                        if (!arr[2].Contains('-') && !arr[2].Contains(':'))
+                        {
+                            arr[2] = InsertStartDashInLine(arr[2]);
+                        }
+
+                        newText = string.Join(Environment.NewLine, arr);
+                    }
+                    else if (removedInFirstLine && !removedInSecondLine)
+                    {
+                        var arr = newText.SplitToLines();
+
+                        if (!arr[0].Contains('-') && !arr[0].Contains(':'))
+                        {
+                            arr[0] = InsertStartDashInLine(arr[0]);
+                        }
+
+                        if (!arr[2].Contains('-') && !arr[2].Contains(':'))
+                        {
+                            arr[2] = InsertStartDashInLine(arr[2]);
+                        }
+
+                        newText = string.Join(Environment.NewLine, arr);
+                    }
+                }
+            }
+            else if (noOfNames == 1 && Utilities.GetNumberOfLines(newText) == 3 && Utilities.GetNumberOfLines(text) == 3)
+            {
+                var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, TwoLetterLanguageCode = "en" };
+                if (dialogHelper.IsDialog(text.SplitToLines()))
+                {
+                    if (removedInFirstLine)
+                    {
+                        var arr = newText.SplitToLines();
+
+                        if (!arr[0].Contains('-') && !arr[0].Contains(':'))
+                        {
+                            arr[0] = InsertStartDashInLine(arr[0]);
+                        }
+
+                        newText = string.Join(Environment.NewLine, arr);
+                    }
+                    else if (removedInSecondLine)
+                    {
+                        var arr = newText.SplitToLines();
+
+                        if (!arr[1].Contains('-') && !arr[1].Contains(':'))
+                        {
+                            arr[1] = InsertStartDashInLine(arr[1]);
+                        }
+
+                        newText = string.Join(Environment.NewLine, arr);
+                    }
+                    else if (!removedInFirstLine && !removedInSecondLine)
+                    {
+                        var arr = newText.SplitToLines();
+
+                        if (!arr[2].Contains('-') && !arr[2].Contains(':'))
+                        {
+                            arr[2] = InsertStartDashInLine(arr[2]);
+                        }
+
+                        newText = string.Join(Environment.NewLine, arr);
+                    }
+                }
+            }
             if (text.Contains("<i>") && !newText.Contains("<i>") && newText.EndsWith("</i>", StringComparison.Ordinal))
             {
                 newText = "<i>" + newText;
@@ -589,6 +684,38 @@ namespace Nikse.SubtitleEdit.Core.Forms
             }
 
             return preAssTag + newText;
+        }
+
+        private static string InsertStartDashInLine(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                return input;
+            }
+
+            var s = input.TrimStart();
+            var pre = string.Empty;
+
+            if (s.StartsWith('{') && s.IndexOf('}') > 0)
+            {
+                var idx = s.IndexOf('}');
+                pre += s.Substring(0, idx + 1);
+                s = s.Remove(0, idx + 1);
+            }
+
+            while (s.StartsWith('<') && s.IndexOf('>') > 0)
+            {
+                var idx = s.IndexOf('>');
+                pre += s.Substring(0, idx + 1);
+                s = s.Remove(0, idx + 1);
+            }
+
+            if (string.IsNullOrEmpty(s))
+            {
+                return input;
+            }
+
+            return pre + "- " + s;
         }
 
         private string RemovePartialBeforeColon(string line, int indexOfColon, string newText, int count, ref bool removedInFirstLine, ref bool removedInSecondLine, ref bool remove)
