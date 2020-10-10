@@ -386,6 +386,10 @@
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
             this.buttonReset = new System.Windows.Forms.Button();
             this.toolTipContinuationPreview = new System.Windows.Forms.ToolTip(this.components);
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.importShortcutsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportShortcutsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -1607,14 +1611,17 @@
             // contextMenuStripShortcuts
             // 
             this.contextMenuStripShortcuts.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemShortcutsCollapse});
+            this.toolStripMenuItemShortcutsCollapse,
+            this.toolStripSeparator1,
+            this.importShortcutsToolStripMenuItem,
+            this.exportShortcutsToolStripMenuItem});
             this.contextMenuStripShortcuts.Name = "contextMenuStripShortcuts";
-            this.contextMenuStripShortcuts.Size = new System.Drawing.Size(120, 26);
+            this.contextMenuStripShortcuts.Size = new System.Drawing.Size(120, 76);
             // 
             // toolStripMenuItemShortcutsCollapse
             // 
             this.toolStripMenuItemShortcutsCollapse.Name = "toolStripMenuItemShortcutsCollapse";
-            this.toolStripMenuItemShortcutsCollapse.Size = new System.Drawing.Size(119, 22);
+            this.toolStripMenuItemShortcutsCollapse.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItemShortcutsCollapse.Text = "Collapse";
             this.toolStripMenuItemShortcutsCollapse.Click += new System.EventHandler(this.toolStripMenuItemShortcutsCollapse_Click);
             // 
@@ -4687,6 +4694,25 @@
             this.toolTipContinuationPreview.InitialDelay = 500;
             this.toolTipContinuationPreview.ReshowDelay = 100;
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            // 
+            // importShortcutsToolStripMenuItem
+            // 
+            this.importShortcutsToolStripMenuItem.Name = "importShortcutsToolStripMenuItem";
+            this.importShortcutsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.importShortcutsToolStripMenuItem.Text = "Import...";
+            this.importShortcutsToolStripMenuItem.Click += new System.EventHandler(this.importShortcutsToolStripMenuItem_Click);
+            // 
+            // exportShortcutsToolStripMenuItem
+            // 
+            this.exportShortcutsToolStripMenuItem.Name = "exportShortcutsToolStripMenuItem";
+            this.exportShortcutsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exportShortcutsToolStripMenuItem.Text = "Export...";
+            this.exportShortcutsToolStripMenuItem.Click += new System.EventHandler(this.exportShortcutsToolStripMenuItem_Click);
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -5184,5 +5210,9 @@
         private System.Windows.Forms.Button buttonGapChoose;
         private System.Windows.Forms.CheckBox checkBoxSpellCheckAutoChangeNamesViaSuggestions;
         private System.Windows.Forms.ComboBox comboBoxBoxBingTokenEndpoint;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem importShortcutsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exportShortcutsToolStripMenuItem;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
     }
 }
