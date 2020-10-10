@@ -6322,7 +6322,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             var mp = new ModiParameter { Bitmap = bmp, Text = "", Language = GetModiLanguage() };
 
-            // We call in a seperate thread... or app will crash sometimes :(
+            // We call in a separate thread... or app will crash sometimes :(
             var modiThread = new System.Threading.Thread(DoWork);
             modiThread.Start(mp);
             modiThread.Join(3000); // wait max 3 seconds
@@ -6339,7 +6339,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 bmp = ResizeBitmap(bmp, (int)(bmp.Width * 1.2), (int)(bmp.Height * 1.2));
                 mp = new ModiParameter { Bitmap = bmp, Text = "", Language = GetModiLanguage() };
 
-                // We call in a seperate thread... or app will crash sometimes :(
+                // We call in a separate thread... or app will crash sometimes :(
                 modiThread = new System.Threading.Thread(DoWork);
                 modiThread.Start(mp);
                 modiThread.Join(3000); // wait max 3 seconds
@@ -6354,7 +6354,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     bmp = ResizeBitmap(bmp, (int)(bmp.Width * 1.3), (int)(bmp.Height * 1.4)); // a bit scaling
                     mp = new ModiParameter { Bitmap = bmp, Text = "", Language = GetModiLanguage() };
 
-                    // We call in a seperate thread... or app will crash sometimes :(
+                    // We call in a separate thread... or app will crash sometimes :(
                     modiThread = new System.Threading.Thread(DoWork);
                     modiThread.Start(mp);
                     modiThread.Join(3000); // wait max 3 seconds

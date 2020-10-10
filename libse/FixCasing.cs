@@ -257,7 +257,7 @@ namespace Nikse.SubtitleEdit.Core
                     text = text.ToLower(subtitleCulture).Trim();
                     text = text.FixExtraSpaces();
                     var st = new StrippableText(text);
-                    st.FixCasing(nameList, false, true, true, lastLine, millisecondsFromLast); // fix all casing but names (that's a seperate option)
+                    st.FixCasing(nameList, false, true, true, lastLine, millisecondsFromLast); // fix all casing but names (that's a separate option)
                     text = st.MergedString;
                 }
             }

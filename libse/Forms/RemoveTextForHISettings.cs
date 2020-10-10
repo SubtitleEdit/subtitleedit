@@ -26,7 +26,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         public RemoveTextForHISettings(Subtitle subtitle)
         {
-            OnlyIfInSeparateLine = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBetweenOnlySeperateLines;
+            OnlyIfInSeparateLine = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBetweenOnlySeparateLines;
             RemoveIfAllUppercase = Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfAllUppercase;
             RemoveTextBeforeColon = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBeforeColon;
             RemoveTextBeforeColonOnlyUppercase = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyIfUppercase;
