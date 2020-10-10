@@ -2069,7 +2069,7 @@ $HorzAlign          =   Center
         public bool RemoveTextBetweenCustom { get; set; }
         public string RemoveTextBetweenCustomBefore { get; set; }
         public string RemoveTextBetweenCustomAfter { get; set; }
-        public bool RemoveTextBetweenOnlySeperateLines { get; set; }
+        public bool RemoveTextBetweenOnlySeparateLines { get; set; }
         public bool RemoveTextBeforeColon { get; set; }
         public bool RemoveTextBeforeColonOnlyIfUppercase { get; set; }
         public bool RemoveTextBeforeColonOnlyOnSeparateLine { get; set; }
@@ -7302,10 +7302,10 @@ $HorzAlign          =   Center
                     settings.RemoveTextForHearingImpaired.RemoveTextBetweenCustomAfter = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("RemoveTextBetweenOnlySeperateLines");
+                subNode = node.SelectSingleNode("RemoveTextBetweenOnlySeparateLines");
                 if (subNode != null)
                 {
-                    settings.RemoveTextForHearingImpaired.RemoveTextBetweenOnlySeperateLines = Convert.ToBoolean(subNode.InnerText);
+                    settings.RemoveTextForHearingImpaired.RemoveTextBetweenOnlySeparateLines = Convert.ToBoolean(subNode.InnerText);
                 }
 
                 subNode = node.SelectSingleNode("RemoveTextBeforeColon");
@@ -8342,7 +8342,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("RemoveTextBetweenCustom", settings.RemoveTextForHearingImpaired.RemoveTextBetweenCustom.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("RemoveTextBetweenCustomBefore", settings.RemoveTextForHearingImpaired.RemoveTextBetweenCustomBefore);
                 textWriter.WriteElementString("RemoveTextBetweenCustomAfter", settings.RemoveTextForHearingImpaired.RemoveTextBetweenCustomAfter);
-                textWriter.WriteElementString("RemoveTextBetweenOnlySeperateLines", settings.RemoveTextForHearingImpaired.RemoveTextBetweenOnlySeperateLines.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("RemoveTextBetweenOnlySeparateLines", settings.RemoveTextForHearingImpaired.RemoveTextBetweenOnlySeparateLines.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("RemoveTextBeforeColon", settings.RemoveTextForHearingImpaired.RemoveTextBeforeColon.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("RemoveTextBeforeColonOnlyIfUppercase", settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyIfUppercase.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("RemoveTextBeforeColonOnlyOnSeparateLine", settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyOnSeparateLine.ToString(CultureInfo.InvariantCulture));

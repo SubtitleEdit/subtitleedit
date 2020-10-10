@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(this);
         }
 
-        public string GetInterjectionsSemiColonSeperatedString()
+        public string GetInterjectionsSemiColonSeparatedString()
         {
             var sb = new StringBuilder();
             foreach (string s in _interjections)
@@ -41,10 +41,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public void Initialize(string semiColonSeperatedList)
+        public void Initialize(string semiColonSeparatedList)
         {
             _interjections = new List<string>();
-            string[] arr = semiColonSeperatedList.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] arr = semiColonSeparatedList.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string s in arr)
             {
                 _interjections.Add(s.Trim());

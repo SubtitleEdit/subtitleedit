@@ -14,7 +14,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         //SUB[0 N 01:02:02:03>01:02:03:06] VAL
         //e eu tenho maiô pra nadar?
 
-        // or multiple "speakers" seperated with a "+"
+        // or multiple "speakers" separated with a "+"
         //SUB[0 N 01:02:12:26>01:02:14:19] FABINHO CRIANÇA + VAL
         //-Olha.
         //-Tô olhando!

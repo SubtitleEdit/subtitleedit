@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Core
 
             if (subtitle.Paragraphs.Count < 2 && !isJson)
             {
-                subtitle = ImportTimeCodesInFramesOnSameSeperateLine(lines);
+                subtitle = ImportTimeCodesInFramesOnSameSeparateLine(lines);
                 if (subtitle.Paragraphs.Count < 2)
                 {
                     var sameLineSub = ImportTimeCodesInFramesAndTextOnSameLine(lines);
@@ -225,7 +225,7 @@ namespace Nikse.SubtitleEdit.Core
             return subtitle;
         }
 
-        private Subtitle ImportTimeCodesInFramesOnSameSeperateLine(List<string> lines)
+        private Subtitle ImportTimeCodesInFramesOnSameSeparateLine(List<string> lines)
         {
             Paragraph p = null;
             var subtitle = new Subtitle();
@@ -775,7 +775,7 @@ namespace Nikse.SubtitleEdit.Core
             averateDuration = averateDuration / subtitle.Paragraphs.Count;
             if (averateDuration < 0.2 || (averateDuration < 0.5 && subtitle.Paragraphs.Count > 100 && subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].StartTime.TotalSeconds < 140 && subtitle.Paragraphs[subtitle.Paragraphs.Count - 2].StartTime.TotalSeconds < 140))
             {
-                subtitle = ImportTimeCodesOnSameSeperateLineNoMilliseconds(lines);
+                subtitle = ImportTimeCodesOnSameSeparateLineNoMilliseconds(lines);
                 int i = 0;
                 foreach (Paragraph a in subtitle.Paragraphs)
                 {
@@ -793,7 +793,7 @@ namespace Nikse.SubtitleEdit.Core
             return subtitle;
         }
 
-        private static Subtitle ImportTimeCodesOnSameSeperateLineNoMilliseconds(List<string> lines)
+        private static Subtitle ImportTimeCodesOnSameSeparateLineNoMilliseconds(List<string> lines)
         {
             Paragraph p = null;
             var subtitle = new Subtitle();
