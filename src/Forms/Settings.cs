@@ -18,6 +18,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -950,6 +951,8 @@ namespace Nikse.SubtitleEdit.Forms
             MakeShortcutsTreeView(language);
             ShowShortcutsTreeView();
             toolStripMenuItemShortcutsCollapse.Text = Configuration.Settings.Language.General.Collapse;
+            importShortcutsToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.Import;
+            exportShortcutsToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.Export;
             labelShortcutsSearch.Text = Configuration.Settings.Language.General.Search;
             buttonShortcutsClear.Text = Configuration.Settings.Language.DvdSubRip.Clear;
             textBoxShortcutSearch.Left = labelShortcutsSearch.Left + labelShortcutsSearch.Width + 5;
@@ -1447,6 +1450,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             treeViewShortcuts.ExpandAll();
             treeViewShortcuts.EndUpdate();
+            treeViewShortcuts.SelectedNode = treeViewShortcuts.Nodes[0];
         }
 
         private void AddNode(TreeNode parentNode, string text, ShortcutHelper shortcut)
@@ -3408,6 +3412,61 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     numericUpDownMinGapMs.Value = form.MinGapMs;
                 }
+            }
+        }
+
+        private void importShortcutsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openFileDialogFFmpeg.Title = null;
+            openFileDialogFFmpeg.Filter = "Xml files|*.xml";
+            openFileDialogFFmpeg.FileName = "SE_Shortcuts";
+            if (openFileDialogFFmpeg.ShowDialog(this) != DialogResult.OK)
+            {
+                return;
+            }
+
+            try
+            {
+                var r = new StreamReader(openFileDialogFFmpeg.FileName);
+                var s = new XmlSerializer(typeof(Shortcuts));
+                Configuration.Settings.Shortcuts = (Shortcuts)s.Deserialize(r);
+                r.Close();
+                MakeShortcutsTreeView(Configuration.Settings.Language.Settings);
+                ShowShortcutsTreeView();
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show("Shortcuts not imported!" + Environment.NewLine + Environment.NewLine + exception.Message);
+                SeLogger.Error(exception, "Failed to import shortcuts");
+            }
+        }
+
+        private void exportShortcutsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            saveFileDialog1.Filter = "Xml files|*.xml";
+            saveFileDialog1.FileName = "SE_Shortcuts";
+            if (saveFileDialog1.ShowDialog(this) != DialogResult.OK)
+            {
+                return;
+            }
+
+            try
+            {
+                var shortcuts = new Shortcuts();
+                foreach (var kvp in _newShortcuts)
+                {
+                    kvp.Key.Shortcut.SetValue(shortcuts, kvp.Value, null);
+                }
+
+                var s = new XmlSerializer(typeof(Shortcuts));
+                var w = new StreamWriter(saveFileDialog1.FileName);
+                s.Serialize(w, shortcuts);
+                w.Close();
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message);
+                SeLogger.Error(exception, "Failed to export shortcuts");
             }
         }
     }
