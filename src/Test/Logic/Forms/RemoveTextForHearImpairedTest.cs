@@ -1904,6 +1904,45 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
+        public void RemoveTextForHiThreeLinesDialog1()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBetweenBrackets = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            string actual = target.RemoveColon("- I mean, sometimes" + Environment.NewLine + "a leaf is just..." + Environment.NewLine + "- SAMANTHA: Uganda");
+            Assert.AreEqual("- I mean, sometimes" + Environment.NewLine + "a leaf is just..." + Environment.NewLine + "- Uganda", actual);
+        }
+
+        [TestMethod]
+        public void RemoveTextForHiThreeLinesDialog2()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBetweenBrackets = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            string actual = target.RemoveColon("- DAVID: I'm Artemis." + Environment.NewLine + "- LARRY: Not supposed" + Environment.NewLine + "to be purple.");
+            Assert.AreEqual("- I'm Artemis." + Environment.NewLine + "- Not supposed" + Environment.NewLine + "to be purple.", actual);
+        }
+
+        [TestMethod]
+        public void RemoveTextForHiThreeLinesDialog3()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBetweenBrackets = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            string actual = target.RemoveColon("<i>- and many were imm..." + Environment.NewLine + "- WOMAN: We believe" + Environment.NewLine + "the future of food...</i>");
+            Assert.AreEqual("<i>- and many were imm..." + Environment.NewLine + "- We believe" + Environment.NewLine + "the future of food...</i>", actual);
+        }
+
+        [TestMethod]
         public void RemoveInterjectionsAfterComma()
         {
             string actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("Hey, ahhhh.", onlyInSeparatedLine: false));
