@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -12,19 +13,21 @@ namespace Nikse.SubtitleEdit.Forms
         public class ReplaceEventArgs : EventArgs
         {
             public string Result { get; set; }
+            public bool IsOriginalActive { get; set; }
         }
 
         public event EventHandler<ReplaceEventArgs> ReplaceClicked;
 
         public string Input { get; set; }
+        public bool IsOriginalActive { get; set; }
 
         private string Output { get; set; }
 
         private readonly Color _defaultBackColor;
 
-        private readonly string[] fields = Configuration.Settings.General.MeasurementConverterCategories.Split(';');
+        private readonly string[] _fields = Configuration.Settings.General.MeasurementConverterCategories.Split(';');
 
-        private readonly List<string> Length = new List<string> { Configuration.Settings.Language.MeasurementConverter.Kilometers,
+        private readonly List<string> _length = new List<string> { Configuration.Settings.Language.MeasurementConverter.Kilometers,
             Configuration.Settings.Language.MeasurementConverter.Meters,
             Configuration.Settings.Language.MeasurementConverter.Centimeters,
             Configuration.Settings.Language.MeasurementConverter.Millimeters,
@@ -42,7 +45,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Language.MeasurementConverter.Rods,
             Configuration.Settings.Language.MeasurementConverter.Spans };
 
-        private readonly List<string> Mass = new List<string> { Configuration.Settings.Language.MeasurementConverter.LongTonnes,
+        private readonly List<string> _mass = new List<string> { Configuration.Settings.Language.MeasurementConverter.LongTonnes,
             Configuration.Settings.Language.MeasurementConverter.ShortTonnes,
             Configuration.Settings.Language.MeasurementConverter.Tonnes,
             Configuration.Settings.Language.MeasurementConverter.Kilos,
@@ -56,7 +59,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Language.MeasurementConverter.Grains,
             Configuration.Settings.Language.MeasurementConverter.Stones };
 
-        private readonly List<string> Volume = new List<string> { Configuration.Settings.Language.MeasurementConverter.CubicKilometers,
+        private readonly List<string> _volume = new List<string> { Configuration.Settings.Language.MeasurementConverter.CubicKilometers,
             Configuration.Settings.Language.MeasurementConverter.CubicMeters,
             Configuration.Settings.Language.MeasurementConverter.Litres,
             Configuration.Settings.Language.MeasurementConverter.CubicCentimeters,
@@ -77,7 +80,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Language.MeasurementConverter.PintsUK,
             Configuration.Settings.Language.MeasurementConverter.FluidOuncesUK };
 
-        private readonly List<string> Area = new List<string> {Configuration.Settings.Language.MeasurementConverter.SquareKilometers,
+        private readonly List<string> _area = new List<string> {Configuration.Settings.Language.MeasurementConverter.SquareKilometers,
             Configuration.Settings.Language.MeasurementConverter.SquareMeters,
             Configuration.Settings.Language.MeasurementConverter.SquareCentimeters,
             Configuration.Settings.Language.MeasurementConverter.SquareMillimeters,
@@ -89,37 +92,37 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Language.MeasurementConverter.Acres,
             Configuration.Settings.Language.MeasurementConverter.Ares };
 
-        private readonly List<string> Time = new List<string> { Configuration.Settings.Language.MeasurementConverter.Hours,
+        private readonly List<string> _time = new List<string> { Configuration.Settings.Language.MeasurementConverter.Hours,
             Configuration.Settings.Language.MeasurementConverter.Minutes,
             Configuration.Settings.Language.MeasurementConverter.Seconds,
             Configuration.Settings.Language.MeasurementConverter.Milliseconds,
             Configuration.Settings.Language.MeasurementConverter.Microseconds };
 
-        private readonly List<string> Temperature = new List<string> { Configuration.Settings.Language.MeasurementConverter.Fahrenheit,
+        private readonly List<string> _temperature = new List<string> { Configuration.Settings.Language.MeasurementConverter.Fahrenheit,
             Configuration.Settings.Language.MeasurementConverter.Celsius,
             Configuration.Settings.Language.MeasurementConverter.Kelvin };
 
-        private readonly List<string> Velocity = new List<string> { Configuration.Settings.Language.MeasurementConverter.KilometersPerHour,
+        private readonly List<string> _velocity = new List<string> { Configuration.Settings.Language.MeasurementConverter.KilometersPerHour,
             Configuration.Settings.Language.MeasurementConverter.MetersPerSecond,
             Configuration.Settings.Language.MeasurementConverter.MilesPerHour,
             Configuration.Settings.Language.MeasurementConverter.YardsPerMinute,
             Configuration.Settings.Language.MeasurementConverter.FTsPerSecond,
             Configuration.Settings.Language.MeasurementConverter.Knots };
 
-        private readonly List<string> Force = new List<string> { Configuration.Settings.Language.MeasurementConverter.PoundsForce,
+        private readonly List<string> _force = new List<string> { Configuration.Settings.Language.MeasurementConverter.PoundsForce,
             Configuration.Settings.Language.MeasurementConverter.Newtons,
             Configuration.Settings.Language.MeasurementConverter.KilosForce };
 
-        private readonly List<string> Energy = new List<string> { Configuration.Settings.Language.MeasurementConverter.Jouls,
+        private readonly List<string> _energy = new List<string> { Configuration.Settings.Language.MeasurementConverter.Jouls,
             Configuration.Settings.Language.MeasurementConverter.Calories,
             Configuration.Settings.Language.MeasurementConverter.Ergs,
             Configuration.Settings.Language.MeasurementConverter.ElectronVolts,
             Configuration.Settings.Language.MeasurementConverter.Btus };
 
-        private readonly List<string> Power = new List<string> { Configuration.Settings.Language.MeasurementConverter.Watts,
+        private readonly List<string> _power = new List<string> { Configuration.Settings.Language.MeasurementConverter.Watts,
             Configuration.Settings.Language.MeasurementConverter.Horsepower };
 
-        private readonly List<string> Pressure = new List<string> { Configuration.Settings.Language.MeasurementConverter.Atmospheres,
+        private readonly List<string> _pressure = new List<string> { Configuration.Settings.Language.MeasurementConverter.Atmospheres,
             Configuration.Settings.Language.MeasurementConverter.Bars,
             Configuration.Settings.Language.MeasurementConverter.Pascals,
             Configuration.Settings.Language.MeasurementConverter.MillimetersOfMercury,
@@ -155,7 +158,7 @@ namespace Nikse.SubtitleEdit.Forms
             listBoxCategory.Items.Add(l.Power);
             listBoxCategory.Items.Add(l.Pressure);
 
-            listBoxCategory.SelectedItem = fields[0];
+            listBoxCategory.SelectedItem = _fields[0];
 
             UiUtil.FixLargeFonts(this, buttonOK);
         }
@@ -170,55 +173,55 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (cat == l.Length)
             {
-                comboBoxTo.Items.AddRange(Length.ToArray());
+                comboBoxTo.Items.AddRange(_length.Cast<object>().ToArray());
             }
             else if (cat == l.Mass)
             {
-                comboBoxTo.Items.AddRange(Mass.ToArray());
+                comboBoxTo.Items.AddRange(_mass.Cast<object>().ToArray());
             }
             else if (cat == l.Volume)
             {
-                comboBoxTo.Items.AddRange(Volume.ToArray());
+                comboBoxTo.Items.AddRange(_volume.Cast<object>().ToArray());
             }
             else if (cat == l.Area)
             {
-                comboBoxTo.Items.AddRange(Area.ToArray());
+                comboBoxTo.Items.AddRange(_area.Cast<object>().ToArray());
             }
             else if (cat == l.Time)
             {
-                comboBoxTo.Items.AddRange(Time.ToArray());
+                comboBoxTo.Items.AddRange(_time.Cast<object>().ToArray());
             }
             else if (cat == l.Temperature)
             {
-                comboBoxTo.Items.AddRange(Temperature.ToArray());
+                comboBoxTo.Items.AddRange(_temperature.Cast<object>().ToArray());
             }
             else if (cat == l.Velocity)
             {
-                comboBoxTo.Items.AddRange(Velocity.ToArray());
+                comboBoxTo.Items.AddRange(_velocity.Cast<object>().ToArray());
             }
             else if (cat == l.Force)
             {
-                comboBoxTo.Items.AddRange(Force.ToArray());
+                comboBoxTo.Items.AddRange(_force.Cast<object>().ToArray());
             }
             else if (cat == l.Energy)
             {
-                comboBoxTo.Items.AddRange(Energy.ToArray());
+                comboBoxTo.Items.AddRange(_energy.Cast<object>().ToArray());
             }
             else if (cat == l.Power)
             {
-                comboBoxTo.Items.AddRange(Power.ToArray());
+                comboBoxTo.Items.AddRange(_power.Cast<object>().ToArray());
             }
             else if (cat == l.Pressure)
             {
-                comboBoxTo.Items.AddRange(Pressure.ToArray());
+                comboBoxTo.Items.AddRange(_pressure.Cast<object>().ToArray());
             }
             comboBoxTo.Items.Remove(text);
 
             if (comboBoxTo.Items.Count > 0)
             {
-                if (comboBoxTo.Items.Contains(fields[2]))
+                if (comboBoxTo.Items.Contains(_fields[2]))
                 {
-                    comboBoxTo.SelectedItem = fields[2];
+                    comboBoxTo.SelectedItem = _fields[2];
                 }
                 else
                 {
@@ -242,7 +245,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonReplace_Click(object sender, EventArgs e)
         {
-            ReplaceClicked(this, new ReplaceEventArgs { Result = Output });
+            ReplaceClicked?.Invoke(this, new ReplaceEventArgs { Result = Output, IsOriginalActive = IsOriginalActive });
 
             if (checkBoxCloseOnInsert.Checked)
             {
@@ -287,6 +290,7 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxInput.BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                 return;
             }
+
             textBoxInput.BackColor = _defaultBackColor;
 
             string text = comboBoxFrom.SelectedItem.ToString();
@@ -4789,12 +4793,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void textBoxInput_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (Char.IsDigit(e.KeyChar))
+            if (char.IsDigit(e.KeyChar))
             {
                 return;
             }
 
-            if (e.KeyChar == Convert.ToChar(Keys.Back) || (e.KeyChar == '.') || (e.KeyChar == ',') || (e.KeyChar == '-'))
+            if (e.KeyChar == Convert.ToChar(Keys.Back) || e.KeyChar == '.' || e.KeyChar == ',' || e.KeyChar == '-')
             {
                 return;
             }
@@ -4811,54 +4815,54 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (cat == l.Length)
             {
-                comboBoxFrom.Items.AddRange(Length.ToArray());
+                comboBoxFrom.Items.AddRange(_length.Cast<object>().ToArray());
             }
             else if (cat == l.Mass)
             {
-                comboBoxFrom.Items.AddRange(Mass.ToArray());
+                comboBoxFrom.Items.AddRange(_mass.Cast<object>().ToArray());
             }
             else if (cat == l.Volume)
             {
-                comboBoxFrom.Items.AddRange(Volume.ToArray());
+                comboBoxFrom.Items.AddRange(_volume.Cast<object>().ToArray());
             }
             else if (cat == l.Area)
             {
-                comboBoxFrom.Items.AddRange(Area.ToArray());
+                comboBoxFrom.Items.AddRange(_area.Cast<object>().ToArray());
             }
             else if (cat == l.Time)
             {
-                comboBoxFrom.Items.AddRange(Time.ToArray());
+                comboBoxFrom.Items.AddRange(_time.Cast<object>().ToArray());
             }
             else if (cat == l.Temperature)
             {
-                comboBoxFrom.Items.AddRange(Temperature.ToArray());
+                comboBoxFrom.Items.AddRange(_temperature.Cast<object>().ToArray());
             }
             else if (cat == l.Velocity)
             {
-                comboBoxFrom.Items.AddRange(Velocity.ToArray());
+                comboBoxFrom.Items.AddRange(_velocity.Cast<object>().ToArray());
             }
             else if (cat == l.Force)
             {
-                comboBoxFrom.Items.AddRange(Force.ToArray());
+                comboBoxFrom.Items.AddRange(_force.Cast<object>().ToArray());
             }
             else if (cat == l.Energy)
             {
-                comboBoxFrom.Items.AddRange(Energy.ToArray());
+                comboBoxFrom.Items.AddRange(_energy.Cast<object>().ToArray());
             }
             else if (cat == l.Power)
             {
-                comboBoxFrom.Items.AddRange(Power.ToArray());
+                comboBoxFrom.Items.AddRange(_power.Cast<object>().ToArray());
             }
             else if (cat == l.Pressure)
             {
-                comboBoxFrom.Items.AddRange(Pressure.ToArray());
+                comboBoxFrom.Items.AddRange(_pressure.Cast<object>().ToArray());
             }
 
             if (comboBoxFrom.Items.Count > 0)
             {
-                if (comboBoxFrom.Items.Contains(fields[1]))
+                if (comboBoxFrom.Items.Contains(_fields[1]))
                 {
-                    comboBoxFrom.SelectedItem = fields[1];
+                    comboBoxFrom.SelectedItem = _fields[1];
                 }
                 else
                 {
@@ -4877,15 +4881,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MeasurementConverter_Activated(object sender, EventArgs e)
         {
-            this.Opacity = 1;
-            if (double.TryParse(Input, out _))
-            {
-                textBoxInput.Text = Input;
-            }
-            else
-            {
-                textBoxInput.Text = "1";
-            }
+            Opacity = 1;
+            textBoxInput.Text = double.TryParse(Input, out _) ? Input : "1";
         }
 
         private void MeasurementConverter_FormClosed(object sender, FormClosedEventArgs e)
@@ -4897,7 +4894,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (DialogResult != DialogResult.Cancel)
             {
-                this.Opacity = 0.5;
+                Opacity = 0.5;
             }
         }
     }

@@ -15317,7 +15317,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                SubtitleListview1.SetStartTimeAndDuration(idx + 1, next, _subtitle.GetParagraphOrDefault(idx + 2), _subtitle.GetParagraphOrDefault(idx)); 
+                SubtitleListview1.SetStartTimeAndDuration(idx + 1, next, _subtitle.GetParagraphOrDefault(idx + 2), _subtitle.GetParagraphOrDefault(idx));
             }
         }
 
@@ -26783,38 +26783,33 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                if (textBoxListViewTextAlternate.Focused)
-                {
-                    selectedText = textBoxListViewTextAlternate.SelectedText;
-                }
-                else
-                {
-                    selectedText = textBoxListViewText.SelectedText;
-                }
+                selectedText = GetFocusedTextBox().SelectedText;
             }
 
             if (_measurementConverter != null && !_measurementConverter.IsDisposed)
             {
                 _measurementConverter.WindowState = FormWindowState.Normal;
                 _measurementConverter.Input = selectedText;
+                _measurementConverter.IsOriginalActive = GetFocusedTextBox() == textBoxListViewTextAlternate;
                 _measurementConverter.Focus();
                 return;
             }
 
             _measurementConverter = new MeasurementConverter
             {
-                Input = selectedText
+                Input = selectedText,
+                IsOriginalActive = GetFocusedTextBox() == textBoxListViewTextAlternate,
             };
-            _measurementConverter.Show(this);
-
             _measurementConverter.ReplaceClicked += measurementConverter_ReplaceClicked;
+            _measurementConverter.Show(this);
         }
 
         private void measurementConverter_ReplaceClicked(object sender, MeasurementConverter.ReplaceEventArgs e)
         {
             if (IsSubtitleLoaded)
             {
-                textBoxListViewText.SelectedText = e.Result; 
+                var tb = e.IsOriginalActive ? textBoxListViewTextAlternate : textBoxListViewText;
+                tb.SelectedText = e.Result;
             }
         }
 
