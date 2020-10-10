@@ -23,6 +23,8 @@ namespace Nikse.SubtitleEdit.Forms
         private string _audioFileName;
         private Bitmap _originalBackgroundImage;
         private Bitmap _resizedBackgroundImage;
+        private const int VideoWidth = 620;
+        private const int VideoHeight = 350;
 
         public string FileName { get; }
 
@@ -102,13 +104,13 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (string.IsNullOrEmpty(_audioFileName) || !File.Exists(_audioFileName))
                 {
-                    MessageBox.Show("No audio file!");
+                    MessageBox.Show("Please select an audio file!");
                     return;
                 }
 
                 if (_originalBackgroundImage == null)
                 {
-                    MessageBox.Show("No background image file!");
+                    MessageBox.Show("Please select a background image file!");
                     return;
                 }
 
@@ -171,8 +173,8 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 StartTime = (long)p.StartTime.TotalMilliseconds,
                                 EndTime = (long)p.EndTime.TotalMilliseconds,
-                                Width = 620,
-                                Height = 350,
+                                Width = VideoWidth,
+                                Height = VideoHeight,
                                 CompositionNumber = p.Number * 2
                             };
 
@@ -200,12 +202,22 @@ namespace Nikse.SubtitleEdit.Forms
                         labelStatus.Text = string.Empty;
 
                         UiUtil.OpenFolderFromFileName(finalMkv);
+
+                        try
+                        {
+                            File.Delete(supFileName);
+                            File.Delete(tempImageFileName);
+                        }
+                        catch
+                        {
+                            // ignore
+                        }
                     }
 
                     DialogResult = DialogResult.OK;
                 }
             };
-            labelStatus.Text = "Generating images...";
+            labelStatus.Text = "Extracting images...";
             labelStatus.Refresh();
             bw.RunWorkerAsync();
         }
@@ -242,11 +254,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetBackgroundImage(Bitmap originalBackgroundImage)
         {
-            _resizedBackgroundImage = ExportPngXml.ResizeBitmap(originalBackgroundImage, 620, 350);
+            _resizedBackgroundImage = ExportPngXml.ResizeBitmap(originalBackgroundImage, VideoWidth, VideoHeight);
             var bmp = new Bitmap(_resizedBackgroundImage);
             using (var g = Graphics.FromImage(bmp))
             {
-                g.DrawRectangle(Pens.Green, Convert.ToInt32(comboBoxLeftRightMargin.SelectedIndex), 350 - CdgGraphics.FullHeight - Convert.ToInt32(comboBoxBottomMargin.SelectedIndex), CdgGraphics.FullWidth, CdgGraphics.FullHeight);
+                g.DrawRectangle(Pens.Green, Convert.ToInt32(comboBoxLeftRightMargin.SelectedIndex), VideoHeight - CdgGraphics.FullHeight - Convert.ToInt32(comboBoxBottomMargin.SelectedIndex), CdgGraphics.FullWidth, CdgGraphics.FullHeight);
             }
 
             var oldBitmap = pictureBoxBackgroundImage.Image as Bitmap;
@@ -267,7 +279,7 @@ namespace Nikse.SubtitleEdit.Forms
                 StartInfo =
                 {
                     FileName = ffmpegLocation,
-                    Arguments = $"-loop 1 -i \"{imageFileName}\" -i \"{audioFileName}\" -c:v libx264 -tune stillimage -shortest -s 620x350 \"{outputFileName}\"",
+                    Arguments = $"-loop 1 -i \"{imageFileName}\" -i \"{audioFileName}\" -c:v libx264 -tune stillimage -shortest -s {VideoWidth}x{VideoHeight} \"{outputFileName}\"",
                     UseShellExecute = false,
                     CreateNoWindow = true
                 }
