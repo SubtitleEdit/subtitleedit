@@ -946,7 +946,16 @@ $HorzAlign          =   Center
 
         public void SetDefaultFixes()
         {
-            LoadUserDefaultFixes(string.Empty);
+            SetPredefinedFixes();
+            LoadUserDefaultFixes(DefaultFixes ?? string.Empty);
+            if (string.IsNullOrEmpty(DefaultFixes))
+            {
+                SaveUserDefaultFixes();
+            }
+        }
+
+        private void SetPredefinedFixes()
+        {
             EmptyLinesTicked = true;
             OverlappingDisplayTimeTicked = true;
             TooShortDisplayTimeTicked = true;
@@ -976,7 +985,6 @@ $HorzAlign          =   Center
             FixContinuationStyleTicked = false;
             FixUnnecessaryLeadingDotsTicked = true;
             NormalizeStringsTicked = false;
-            SaveUserDefaultFixes();
         }
     }
 
