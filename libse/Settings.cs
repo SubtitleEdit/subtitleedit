@@ -6421,7 +6421,7 @@ $HorzAlign          =   Center
                     shortcuts.MainToolsBeamer = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("MainToolsToggleTranslationOriginalInPreviews");
+                subNode = node.SelectSingleNode("MainEditToggleTranslationOriginalInPreviews");
                 if (subNode != null)
                 {
                     shortcuts.MainEditToggleTranslationOriginalInPreviews = subNode.InnerText;
@@ -8260,7 +8260,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainToolsAppend", shortcuts.MainToolsAppend);
             textWriter.WriteElementString("MainToolsJoin", shortcuts.MainToolsJoin);
             textWriter.WriteElementString("MainToolsBeamer", shortcuts.MainToolsBeamer);
-            textWriter.WriteElementString("MainToolsToggleTranslationOriginalInPreviews", shortcuts.MainEditToggleTranslationOriginalInPreviews);
+            textWriter.WriteElementString("MainEditToggleTranslationOriginalInPreviews", shortcuts.MainEditToggleTranslationOriginalInPreviews);
             textWriter.WriteElementString("MainEditInverseSelection", shortcuts.MainEditInverseSelection);
             textWriter.WriteElementString("MainEditModifySelection", shortcuts.MainEditModifySelection);
             textWriter.WriteElementString("MainVideoOpen", shortcuts.MainVideoOpen);
