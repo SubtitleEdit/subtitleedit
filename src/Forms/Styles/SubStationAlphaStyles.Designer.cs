@@ -385,11 +385,6 @@
             // numericUpDownShadowWidth
             // 
             this.numericUpDownShadowWidth.DecimalPlaces = 1;
-            this.numericUpDownShadowWidth.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
             this.numericUpDownShadowWidth.Location = new System.Drawing.Point(194, 18);
             this.numericUpDownShadowWidth.Name = "numericUpDownShadowWidth";
             this.numericUpDownShadowWidth.Size = new System.Drawing.Size(52, 20);

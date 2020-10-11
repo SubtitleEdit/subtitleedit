@@ -277,7 +277,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     using (var translateMatrix = new Matrix())
                     using (var pen = new Pen(Color.FromArgb(250, panelBackColor.BackColor), outline))
                     {
-                        for (int i = 0; i < (int)numericUpDownShadowWidth.Value; i++)
+                        int shadownCount = (int)numericUpDownShadowWidth.Value;
+                        for (int i = 0; i < shadownCount; i++)
                         {
                             translateMatrix.Reset();
                             translateMatrix.Translate(1, 1);
