@@ -1731,6 +1731,7 @@ $HorzAlign          =   Center
         }
     }
 
+    [Serializable]
     public class Shortcuts
     {
         public string GeneralGoToFirstSelectedLine { get; set; }
@@ -2074,19 +2075,20 @@ $HorzAlign          =   Center
         public static void Save(string fileName, Shortcuts shortcuts)
         {
             var s = new XmlSerializer(typeof(Shortcuts));
-            var w = new StreamWriter(fileName);
-            s.Serialize(w, shortcuts);
-            w.Close();
+            using (var w = new StreamWriter(fileName))
+            {
+                s.Serialize(w, shortcuts);
+            }
         }
 
         public static Shortcuts Load(string fileName)
         {
-            var shortcuts = new Shortcuts();
-            var r = new StreamReader(fileName);
-            var s = new XmlSerializer(typeof(Shortcuts));
-            shortcuts = (Shortcuts)s.Deserialize(r);
-            r.Close();
-            return shortcuts;
+            using (var r = new StreamReader(fileName))
+            {
+                var s = new XmlSerializer(typeof(Shortcuts));
+                var shortcuts = (Shortcuts)s.Deserialize(r);
+                return shortcuts;
+            }
         }
     }
 
