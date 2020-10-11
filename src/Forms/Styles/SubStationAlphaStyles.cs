@@ -166,8 +166,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             pictureBoxPreview.Image?.Dispose();
             var bmp = new Bitmap(pictureBoxPreview.Width, pictureBoxPreview.Height);
-
             using (Graphics g = Graphics.FromImage(bmp))
+            using (var path = new GraphicsPath())
+            using (var solidBrush = new SolidBrush(Color.White))
             {
                 // Draw background
                 const int rectangleSize = 9;
@@ -190,7 +191,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                                 c = Color.LightGray;
                             }
                         }
-                        g.FillRectangle(new SolidBrush(c), x, y, rectangleSize, rectangleSize);
+                        solidBrush.Color = c;
+                        g.FillRectangle(solidBrush, x, y, rectangleSize, rectangleSize);
                     }
                 }
 
@@ -207,7 +209,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 g.TextRenderingHint = TextRenderingHint.AntiAlias;
                 g.SmoothingMode = SmoothingMode.AntiAlias;
                 var sf = new StringFormat { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Near };
-                var path = new GraphicsPath();
 
                 bool newLine = false;
                 var sb = new StringBuilder();
@@ -272,16 +273,16 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 // draw shadow
                 if (numericUpDownShadowWidth.Value > 0 && radioButtonOutline.Checked)
                 {
-                    var shadowPath = (GraphicsPath)path.Clone();
-                    for (int i = 0; i < (int)numericUpDownShadowWidth.Value; i++)
+                    using (var shadowPath = (GraphicsPath)path.Clone())
+                    using (var translateMatrix = new Matrix())
+                    using (var pen = new Pen(Color.FromArgb(250, panelBackColor.BackColor), outline))
                     {
-                        var translateMatrix = new Matrix();
-                        translateMatrix.Translate(1, 1);
-                        shadowPath.Transform(translateMatrix);
-
-                        using (var p1 = new Pen(Color.FromArgb(250, panelBackColor.BackColor), outline))
+                        for (int i = 0; i < (int)numericUpDownShadowWidth.Value; i++)
                         {
-                            g.DrawPath(p1, shadowPath);
+                            translateMatrix.Reset();
+                            translateMatrix.Translate(1, 1);
+                            shadowPath.Transform(translateMatrix);
+                            g.DrawPath(pen, shadowPath);
                         }
                     }
                 }
