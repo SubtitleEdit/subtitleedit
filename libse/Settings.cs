@@ -5,7 +5,6 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
@@ -1731,7 +1730,6 @@ $HorzAlign          =   Center
         }
     }
 
-    [Serializable]
     public class Shortcuts
     {
         public string GeneralGoToFirstSelectedLine { get; set; }
@@ -2063,30 +2061,47 @@ $HorzAlign          =   Center
 
         public Shortcuts Clone()
         {
-            using (var ms = new MemoryStream())
+            var xws = new XmlWriterSettings { Indent = true };
+            var sb = new StringBuilder();
+            using (var textWriter = XmlWriter.Create(sb, xws))
             {
-                var formatter = new BinaryFormatter();
-                formatter.Serialize(ms, this);
-                ms.Position = 0;
-                return (Shortcuts)formatter.Deserialize(ms);
+                textWriter.WriteStartDocument();
+                textWriter.WriteStartElement("Settings", string.Empty);
+                Settings.WriteShortcuts(this, textWriter);
+                textWriter.WriteEndElement();
+                textWriter.WriteEndDocument();
             }
+
+            var doc = new XmlDocument { PreserveWhitespace = true };
+            doc.LoadXml(sb.ToString().Replace("encoding=\"utf-16\"", "encoding=\"utf-8\""));
+            var shortcuts = new Shortcuts();
+            Settings.ReadShortcuts(doc, shortcuts);
+            return shortcuts;
         }
 
         public static void Save(string fileName, Shortcuts shortcuts)
         {
-            var s = new XmlSerializer(typeof(Shortcuts));
-            using (var w = new StreamWriter(fileName))
+            var xws = new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 };
+            var sb = new StringBuilder();
+            using (var textWriter = XmlWriter.Create(sb, xws))
             {
-                s.Serialize(w, shortcuts);
+                textWriter.WriteStartDocument();
+                textWriter.WriteStartElement("Settings", string.Empty);
+                Settings.WriteShortcuts(shortcuts, textWriter);
+                textWriter.WriteEndElement();
+                textWriter.WriteEndDocument();
             }
+            File.WriteAllText(fileName, sb.ToString().Replace("encoding=\"utf-16\"", "encoding=\"utf-8\""), Encoding.UTF8);
         }
 
         public static Shortcuts Load(string fileName)
         {
-            using (var r = new StreamReader(fileName))
+            var doc = new XmlDocument { PreserveWhitespace = true };
+            using (var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                var s = new XmlSerializer(typeof(Shortcuts));
-                var shortcuts = (Shortcuts)s.Deserialize(r);
+                doc.Load(stream);
+                var shortcuts = new Shortcuts();
+                Settings.ReadShortcuts(doc, shortcuts);
                 return shortcuts;
             }
         }
@@ -5779,1514 +5794,7 @@ $HorzAlign          =   Center
             }
 
             // Shortcuts
-            node = doc.DocumentElement.SelectSingleNode("Shortcuts");
-            if (node != null)
-            {
-                subNode = node.SelectSingleNode("GeneralGoToFirstSelectedLine");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.GeneralGoToFirstSelectedLine = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("GeneralGoToNextEmptyLine");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.GeneralGoToNextEmptyLine = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("GeneralMergeSelectedLines");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.GeneralMergeSelectedLines = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("GeneralMergeSelectedLinesAndUnbreak");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.GeneralMergeSelectedLinesAndUnbreak = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("GeneralMergeSelectedLinesAndAutoBreak");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.GeneralMergeSelectedLinesAndAutoBreak = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("GeneralMergeSelectedLinesAndUnbreakCjk");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.GeneralMergeSelectedLinesAndUnbreakCjk = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("GeneralMergeSelectedLinesOnlyFirstText");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.GeneralMergeSelectedLinesOnlyFirstText = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("GeneralMergeSelectedLinesBilingual");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.GeneralMergeSelectedLinesBilingual = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("GeneralMergeWithNext");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.GeneralMergeWithNext = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("GeneralMergeWithPrevious");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.GeneralMergeWithPrevious = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("GeneralToggleTranslationMode");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.GeneralToggleTranslationMode = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("GeneralSwitchOriginalAndTranslation");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.GeneralSwitchOriginalAndTranslation = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("GeneralMergeOriginalAndTranslation");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.GeneralMergeOriginalAndTranslation = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("GeneralGoToNextSubtitle");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.GeneralGoToNextSubtitle = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("GeneralGoToPrevSubtitle");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.GeneralGoToPrevSubtitle = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("GeneralGoToEndOfCurrentSubtitle");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.GeneralGoToEndOfCurrentSubtitle = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("GeneralGoToStartOfCurrentSubtitle");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.GeneralGoToStartOfCurrentSubtitle = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("GeneralGoToNextSubtitleAndFocusVideo");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.GeneralGoToNextSubtitleAndFocusVideo = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("GeneralGoToPrevSubtitleAndPlay");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.GeneralGoToPrevSubtitleAndPlay = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("GeneralGoToNextSubtitleAndPlay");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.GeneralGoToNextSubtitleAndPlay = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("GeneralGoToPreviousSubtitleAndFocusVideo");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.GeneralGoToPreviousSubtitleAndFocusVideo = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("GeneralAutoCalcCurrentDuration");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.GeneralAutoCalcCurrentDuration = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("GeneralPlayFirstSelected");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.GeneralPlayFirstSelected = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("GeneralHelp");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.GeneralHelp = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("GeneralUnbrekNoSpace");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.GeneralUnbrekNoSpace = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("GeneralToggleBookmarks");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.GeneralToggleBookmarks = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("GeneralToggleBookmarksWithText");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.GeneralToggleBookmarksWithText = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("GeneralClearBookmarks");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.GeneralClearBookmarks = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("GeneralGoToBookmark");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.GeneralGoToBookmark = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("GeneralGoToPreviousBookmark");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.GeneralGoToPreviousBookmark = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("GeneralGoToNextBookmark");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.GeneralGoToNextBookmark = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("ChooseProfile");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.ChooseProfile = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("DuplicateLine");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.DuplicateLine = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainFileNew");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainFileNew = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainFileOpen");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainFileOpen = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainFileOpenKeepVideo");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainFileOpenKeepVideo = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainFileSave");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainFileSave = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainFileSaveOriginal");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainFileSaveOriginal = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainFileSaveOriginalAs");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainFileSaveOriginalAs = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainFileSaveAs");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainFileSaveAs = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainFileSaveAll");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainFileSaveAll = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainFileCloseOriginal");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainFileCloseOriginal = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainFileCompare");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainFileCompare = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainFileOpenOriginal");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainFileOpenOriginal = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainFileImportPlainText");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainFileImportPlainText = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainFileImportTimeCodes");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainFileImportTimeCodes = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainFileExportEbu");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainFileExportEbu = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainFileExportPac");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainFileExportPac = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainFileExportPlainText");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainFileExportPlainText = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainEditUndo");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainEditUndo = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainEditRedo");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainEditRedo = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainEditFind");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainEditFind = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainEditFindNext");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainEditFindNext = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainEditReplace");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainEditReplace = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainEditMultipleReplace");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainEditMultipleReplace = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainEditGoToLineNumber");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainEditGoToLineNumber = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainEditRightToLeft");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainEditRightToLeft = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainToolsFixCommonErrors");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainToolsFixCommonErrors = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainToolsFixCommonErrorsPreview");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainToolsFixCommonErrorsPreview = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainToolsMergeShortLines");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainToolsMergeShortLines = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainToolsMergeDuplicateText");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainToolsMergeDuplicateText = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainToolsMergeSameTimeCodes");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainToolsMergeSameTimeCodes = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainToolsMakeEmptyFromCurrent");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainToolsMakeEmptyFromCurrent = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainToolsSplitLongLines");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainToolsSplitLongLines = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainToolsDurationsBridgeGap");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainToolsDurationsBridgeGap = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainToolsMinimumDisplayTimeBetweenParagraphs");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainToolsMinimumDisplayTimeBetweenParagraphs = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainToolsRenumber");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainToolsRenumber = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainToolsRemoveTextForHI");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainToolsRemoveTextForHI = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainToolsChangeCasing");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainToolsChangeCasing = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainToolsAutoDuration");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainToolsAutoDuration = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainToolsBatchConvert");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainToolsBatchConvert = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainToolsMeasurementConverter");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainToolsMeasurementConverter = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainToolsSplit");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainToolsSplit = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainToolsAppend");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainToolsAppend = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainToolsJoin");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainToolsJoin = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainToolsBeamer");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainToolsBeamer = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainToolsToggleTranslationOriginalInPreviews");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainEditToggleTranslationOriginalInPreviews = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainEditInverseSelection");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainEditInverseSelection = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainEditModifySelection");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainEditModifySelection = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainVideoOpen");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainVideoOpen = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainVideoClose");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainVideoClose = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainVideoPause");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainVideoPause = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainVideoPlayFromJustBefore");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainVideoPlayFromJustBefore = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainVideoPlayPauseToggle");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainVideoPlayPauseToggle = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainVideoShowHideVideo");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainVideoShowHideVideo = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainVideoFoucsSetVideoPosition");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainVideoFoucsSetVideoPosition = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainVideoToggleVideoControls");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainVideoToggleVideoControls = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainVideo1FrameLeft");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainVideo1FrameLeft = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainVideo1FrameRight");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainVideo1FrameRight = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainVideo1FrameLeftWithPlay");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainVideo1FrameLeftWithPlay = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainVideo1FrameRightWithPlay");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainVideo1FrameRightWithPlay = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainVideo100MsLeft");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainVideo100MsLeft = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainVideo100MsRight");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainVideo100MsRight = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainVideo500MsLeft");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainVideo500MsLeft = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainVideo500MsRight");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainVideo500MsRight = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainVideo1000MsLeft");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainVideo1000MsLeft = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainVideo1000MsRight");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainVideo1000MsRight = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainVideo5000MsLeft");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainVideo5000MsLeft = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainVideo5000MsRight");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainVideo5000MsRight = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainVideoXSMsLeft");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainVideoXSMsLeft = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainVideoXSMsRight");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainVideoXSMsRight = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainVideoXLMsLeft");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainVideoXLMsLeft = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainVideoXLMsRight");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainVideoXLMsRight = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainVideo3000MsLeft");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainVideo3000MsLeft = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainVideoGoToStartCurrent");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainVideoGoToStartCurrent = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainVideoToggleStartEndCurrent");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainVideoToggleStartEndCurrent = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainVideoPlayCurrent");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainVideoPlayCurrent = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainVideoGoToPrevSubtitle");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainVideoGoToPrevSubtitle = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainVideoGoToNextSubtitle");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainVideoGoToNextSubtitle = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainVideoSelectNextSubtitle");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainVideoSelectNextSubtitle = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainVideoFullscreen");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainVideoFullscreen = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainVideoSlower");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainVideoSlower = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainVideoFaster");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainVideoFaster = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainVideoReset");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainVideoReset = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainSpellCheck");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainSpellCheck = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainSpellCheckFindDoubleWords");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainSpellCheckFindDoubleWords = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainSpellCheckAddWordToNames");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainSpellCheckAddWordToNames = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainSynchronizationAdjustTimes");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainSynchronizationAdjustTimes = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainSynchronizationVisualSync");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainSynchronizationVisualSync = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainSynchronizationPointSync");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainSynchronizationPointSync = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainSynchronizationPointSyncViaFile");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainSynchronizationPointSyncViaFile = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainSynchronizationChangeFrameRate");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainSynchronizationChangeFrameRate = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainListViewItalic");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainListViewItalic = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainListViewBold");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainListViewBold = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainListViewUnderline");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainListViewUnderline = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainListViewBox");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainListViewBox = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainListViewSplit");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainListViewSplit = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainListViewToggleDashes");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainListViewToggleDashes = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainListViewToggleMusicSymbols");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainListViewToggleMusicSymbols = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainListViewAlignment");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainListViewAlignment = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainListViewAlignmentN1");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainListViewAlignmentN1 = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainListViewAlignmentN1");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainListViewAlignmentN1 = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainListViewAlignmentN2");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainListViewAlignmentN2 = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainListViewAlignmentN3");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainListViewAlignmentN3 = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainListViewAlignmentN4");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainListViewAlignmentN4 = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainListViewAlignmentN5");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainListViewAlignmentN5 = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainListViewAlignmentN6");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainListViewAlignmentN6 = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainListViewAlignmentN7");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainListViewAlignmentN7 = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainListViewAlignmentN8");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainListViewAlignmentN8 = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainListViewAlignmentN9");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainListViewAlignmentN9 = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainRemoveFormatting");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainRemoveFormatting = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainListViewCopyText");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainListViewCopyText = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainListViewCopyTextFromOriginalToCurrent");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainListViewCopyTextFromOriginalToCurrent = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainListViewAutoDuration");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainListViewAutoDuration = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainListViewColumnDeleteText");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainListViewColumnDeleteText = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainListViewColumnDeleteTextAndShiftUp");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainListViewColumnDeleteTextAndShiftUp = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainListViewColumnInsertText");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainListViewColumnInsertText = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainListViewColumnPaste");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainListViewColumnPaste = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainListViewColumnTextUp");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainListViewColumnTextUp = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainListViewColumnTextDown");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainListViewColumnTextDown = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainListViewFocusWaveform");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainListViewFocusWaveform = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainListViewGoToNextError");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainListViewGoToNextError = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainListViewRemoveTimeCodes");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainListViewRemoveTimeCodes = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainEditFixRTLViaUnicodeChars");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainEditFixRTLViaUnicodeChars = subNode.InnerText;
-                }
-                subNode = node.SelectSingleNode("MainEditRemoveRTLUnicodeChars");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainEditRemoveRTLUnicodeChars = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainEditReverseStartAndEndingForRTL");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainEditReverseStartAndEndingForRTL = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainTextBoxItalic");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainTextBoxItalic = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainTextBoxSplitAtCursor");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainTextBoxSplitAtCursor = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainTextBoxSplitAtCursorAndVideoPos");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainTextBoxSplitAtCursorAndVideoPos = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainTextBoxSplitSelectedLineBilingual");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainTextBoxSplitSelectedLineBilingual = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainTextBoxMoveLastWordDown");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainTextBoxMoveLastWordDown = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainTextBoxMoveFirstWordFromNextUp");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainTextBoxMoveLastWordDownCurrent");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainTextBoxMoveLastWordDownCurrent = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainTextBoxMoveFirstWordUpCurrent");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainTextBoxMoveFirstWordUpCurrent = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainTextBoxSelectionToLower");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainTextBoxSelectionToLower = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainTextBoxSelectionToUpper");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainTextBoxSelectionToUpper = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainTextBoxSelectionToRuby");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainTextBoxSelectionToRuby = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainTextBoxToggleAutoDuration");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainTextBoxToggleAutoDuration = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainCreateInsertSubAtVideoPos");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainCreateInsertSubAtVideoPos = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainCreateInsertSubAtVideoPosNoTextBoxFocus");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainCreateInsertSubAtVideoPosNoTextBoxFocus = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainCreateSetStart");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainCreateSetStart = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainCreateSetEnd");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainCreateSetEnd = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainAdjustSetEndAndPause");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainAdjustSetEndAndPause = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainCreateSetEndAddNewAndGoToNew");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainCreateSetEndAddNewAndGoToNew = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainCreateStartDownEndUp");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainCreateStartDownEndUp = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainAdjustSetStartAndOffsetTheRest");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainAdjustSetStartAndOffsetTheRest2");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest2 = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainAdjustSetEndAndOffsetTheRest");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainAdjustSetEndAndOffsetTheRest = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainAdjustSetEndAndOffsetTheRestAndGoToNext");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainAdjustSetEndAndOffsetTheRestAndGoToNext = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainAdjustSetEndAndGotoNext");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainAdjustSetEndAndGotoNext = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainAdjustViaEndAutoStart");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainAdjustViaEndAutoStart = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainAdjustViaEndAutoStartAndGoToNext");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainAdjustSetStartAutoDurationAndGoToNext");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainAdjustSetStartAutoDurationAndGoToNext = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainAdjustSetEndNextStartAndGoToNext");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainAdjustSetEndNextStartAndGoToNext = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainAdjustStartDownEndUpAndGoToNext");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainAdjustStartDownEndUpAndGoToNext = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainAdjustSetStartKeepDuration");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainAdjustSetStartKeepDuration = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainAdjustSelected100MsForward");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainAdjustSelected100MsForward = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainAdjustSelected100MsBack");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainAdjustSelected100MsBack = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainAdjustStartXMsBack");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainAdjustStartXMsBack = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainAdjustStartXMsForward");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainAdjustStartXMsForward = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainAdjustEndXMsBack");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainAdjustEndXMsBack = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainAdjustEndXMsForward");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainAdjustEndXMsForward = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MoveStartOneFrameBack");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MoveStartOneFrameBack = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MoveStartOneFrameForward");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MoveStartOneFrameForward = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MoveEndOneFrameBack");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MoveEndOneFrameBack = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MoveEndOneFrameForward");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MoveEndOneFrameForward = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MoveStartOneFrameBackKeepGapPrev");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MoveStartOneFrameBackKeepGapPrev = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MoveStartOneFrameForwardKeepGapPrev");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MoveStartOneFrameForwardKeepGapPrev = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MoveEndOneFrameBackKeepGapNext");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MoveEndOneFrameBackKeepGapNext = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MoveEndOneFrameForwardKeepGapNext");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MoveEndOneFrameForwardKeepGapNext = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainAdjustSnapStartToNextSceneChange");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainAdjustSnapStartToNextSceneChange = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainAdjustSnapStartToNextSceneChangeWithGap");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainAdjustSnapStartToNextSceneChangeWithGap = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainAdjustSnapEndToPreviousSceneChange");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainAdjustSnapEndToPreviousSceneChange = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainAdjustSnapEndToPreviousSceneChangeWithGap");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainAdjustSnapEndToPreviousSceneChangeWithGap = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainAdjustExtendToNextSceneChange");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainAdjustExtendToNextSceneChange = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainAdjustExtendToNextSceneChangeWithGap");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainAdjustExtendToNextSceneChangeWithGap = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainAdjustExtendToPreviousSceneChange");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainAdjustExtendToPreviousSceneChange = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainAdjustExtendToPreviousSceneChangeWithGap");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainAdjustExtendToPreviousSceneChangeWithGap = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainAdjustExtendToNextSubtitle");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainAdjustExtendToNextSubtitle = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainAdjustExtendToPreviousSubtitle");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainAdjustExtendToPreviousSubtitle = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainAdjustExtendCurrentSubtitle");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainAdjustExtendCurrentSubtitle = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainAdjustExtendPreviousLineEndToCurrentStart");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainAdjustExtendPreviousLineEndToCurrentStart = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainAdjustExtendNextLineStartToCurrentEnd");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainAdjustExtendNextLineStartToCurrentEnd = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainInsertAfter");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainInsertAfter = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainTextBoxAutoBreak");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainTextBoxAutoBreak = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainTextBoxBreakAtPosition");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainTextBoxBreakAtPosition = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainTextBoxBreakAtPositionAndGoToNext");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainTextBoxBreakAtPositionAndGoToNext = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainTextBoxUnbreak");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainTextBoxUnbreak = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainWaveformInsertAtCurrentPosition");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainWaveformInsertAtCurrentPosition = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainInsertBefore");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainInsertBefore = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainMergeDialog");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainMergeDialog = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainToggleFocus");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainToggleFocus = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("WaveformAdd");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.WaveformAdd = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("WaveformVerticalZoom");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.WaveformVerticalZoom = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("WaveformVerticalZoomOut");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.WaveformVerticalZoomOut = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("WaveformZoomIn");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.WaveformZoomIn = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("WaveformZoomOut");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.WaveformZoomOut = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("WaveformSplit");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.WaveformSplit = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("WaveformPlaySelection");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.WaveformPlaySelection = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("WaveformPlaySelectionEnd");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.WaveformPlaySelectionEnd = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("WaveformSearchSilenceForward");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.WaveformSearchSilenceForward = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("WaveformSearchSilenceBack");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.WaveformSearchSilenceBack = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("WaveformAddTextHere");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.WaveformAddTextHere = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("WaveformAddTextHereFromClipboard");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.WaveformAddTextHereFromClipboard = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("WaveformSetParagraphAsSelection");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.WaveformSetParagraphAsSelection = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("WaveformFocusListView");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.WaveformFocusListView = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("WaveformGoToPreviousSceneChange");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.WaveformGoToPreviousSceneChange = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("WaveformGoToNextSceneChange");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.WaveformGoToNextSceneChange = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("WaveformToggleSceneChange");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.WaveformToggleSceneChange = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("WaveformGuessStart");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.WaveformGuessStart = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("Waveform100MsLeft");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.Waveform100MsLeft = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("Waveform100MsRight");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.Waveform100MsRight = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("Waveform1000MsLeft");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.Waveform1000MsLeft = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("Waveform1000MsRight");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.Waveform1000MsRight = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainTranslateGoogleIt");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainTranslateGoogleIt = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainTranslateGoogleTranslate");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainTranslateGoogleTranslate = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainTranslateCustomSearch1");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainTranslateCustomSearch1 = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainTranslateCustomSearch2");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainTranslateCustomSearch2 = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainTranslateCustomSearch3");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainTranslateCustomSearch3 = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainTranslateCustomSearch4");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainTranslateCustomSearch4 = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainTranslateCustomSearch5");
-                if (subNode != null)
-                {
-                    settings.Shortcuts.MainTranslateCustomSearch5 = subNode.InnerText;
-                }
-            }
+            ReadShortcuts(doc, settings.Shortcuts);
 
             // Remove text for Hearing Impaired
             node = doc.DocumentElement.SelectSingleNode("RemoveTextForHearingImpaired");
@@ -7450,9 +5958,1524 @@ $HorzAlign          =   Center
             return settings;
         }
 
+        internal static void ReadShortcuts(XmlDocument doc, Shortcuts shortcuts)
+        {
+            XmlNode node;
+            XmlNode subNode;
+            node = doc.DocumentElement.SelectSingleNode("Shortcuts");
+            if (node != null)
+            {
+                subNode = node.SelectSingleNode("GeneralGoToFirstSelectedLine");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralGoToFirstSelectedLine = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralGoToNextEmptyLine");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralGoToNextEmptyLine = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralMergeSelectedLines");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralMergeSelectedLines = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralMergeSelectedLinesAndUnbreak");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralMergeSelectedLinesAndUnbreak = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralMergeSelectedLinesAndAutoBreak");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralMergeSelectedLinesAndAutoBreak = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralMergeSelectedLinesAndUnbreakCjk");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralMergeSelectedLinesAndUnbreakCjk = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralMergeSelectedLinesOnlyFirstText");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralMergeSelectedLinesOnlyFirstText = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralMergeSelectedLinesBilingual");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralMergeSelectedLinesBilingual = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralMergeWithNext");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralMergeWithNext = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralMergeWithPrevious");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralMergeWithPrevious = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralToggleTranslationMode");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralToggleTranslationMode = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralSwitchOriginalAndTranslation");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralSwitchOriginalAndTranslation = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralMergeOriginalAndTranslation");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralMergeOriginalAndTranslation = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralGoToNextSubtitle");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralGoToNextSubtitle = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralGoToPrevSubtitle");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralGoToPrevSubtitle = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralGoToEndOfCurrentSubtitle");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralGoToEndOfCurrentSubtitle = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralGoToStartOfCurrentSubtitle");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralGoToStartOfCurrentSubtitle = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralGoToNextSubtitleAndFocusVideo");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralGoToNextSubtitleAndFocusVideo = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralGoToPrevSubtitleAndPlay");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralGoToPrevSubtitleAndPlay = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralGoToNextSubtitleAndPlay");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralGoToNextSubtitleAndPlay = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralGoToPreviousSubtitleAndFocusVideo");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralGoToPreviousSubtitleAndFocusVideo = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralAutoCalcCurrentDuration");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralAutoCalcCurrentDuration = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralPlayFirstSelected");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralPlayFirstSelected = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralHelp");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralHelp = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralUnbrekNoSpace");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralUnbrekNoSpace = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralToggleBookmarks");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralToggleBookmarks = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralToggleBookmarksWithText");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralToggleBookmarksWithText = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralClearBookmarks");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralClearBookmarks = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralGoToBookmark");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralGoToBookmark = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralGoToPreviousBookmark");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralGoToPreviousBookmark = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralGoToNextBookmark");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralGoToNextBookmark = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("ChooseProfile");
+                if (subNode != null)
+                {
+                    shortcuts.ChooseProfile = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("DuplicateLine");
+                if (subNode != null)
+                {
+                    shortcuts.DuplicateLine = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainFileNew");
+                if (subNode != null)
+                {
+                    shortcuts.MainFileNew = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainFileOpen");
+                if (subNode != null)
+                {
+                    shortcuts.MainFileOpen = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainFileOpenKeepVideo");
+                if (subNode != null)
+                {
+                    shortcuts.MainFileOpenKeepVideo = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainFileSave");
+                if (subNode != null)
+                {
+                    shortcuts.MainFileSave = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainFileSaveOriginal");
+                if (subNode != null)
+                {
+                    shortcuts.MainFileSaveOriginal = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainFileSaveOriginalAs");
+                if (subNode != null)
+                {
+                    shortcuts.MainFileSaveOriginalAs = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainFileSaveAs");
+                if (subNode != null)
+                {
+                    shortcuts.MainFileSaveAs = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainFileSaveAll");
+                if (subNode != null)
+                {
+                    shortcuts.MainFileSaveAll = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainFileCloseOriginal");
+                if (subNode != null)
+                {
+                    shortcuts.MainFileCloseOriginal = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainFileCompare");
+                if (subNode != null)
+                {
+                    shortcuts.MainFileCompare = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainFileOpenOriginal");
+                if (subNode != null)
+                {
+                    shortcuts.MainFileOpenOriginal = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainFileImportPlainText");
+                if (subNode != null)
+                {
+                    shortcuts.MainFileImportPlainText = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainFileImportTimeCodes");
+                if (subNode != null)
+                {
+                    shortcuts.MainFileImportTimeCodes = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainFileExportEbu");
+                if (subNode != null)
+                {
+                    shortcuts.MainFileExportEbu = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainFileExportPac");
+                if (subNode != null)
+                {
+                    shortcuts.MainFileExportPac = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainFileExportPlainText");
+                if (subNode != null)
+                {
+                    shortcuts.MainFileExportPlainText = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainEditUndo");
+                if (subNode != null)
+                {
+                    shortcuts.MainEditUndo = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainEditRedo");
+                if (subNode != null)
+                {
+                    shortcuts.MainEditRedo = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainEditFind");
+                if (subNode != null)
+                {
+                    shortcuts.MainEditFind = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainEditFindNext");
+                if (subNode != null)
+                {
+                    shortcuts.MainEditFindNext = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainEditReplace");
+                if (subNode != null)
+                {
+                    shortcuts.MainEditReplace = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainEditMultipleReplace");
+                if (subNode != null)
+                {
+                    shortcuts.MainEditMultipleReplace = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainEditGoToLineNumber");
+                if (subNode != null)
+                {
+                    shortcuts.MainEditGoToLineNumber = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainEditRightToLeft");
+                if (subNode != null)
+                {
+                    shortcuts.MainEditRightToLeft = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainToolsFixCommonErrors");
+                if (subNode != null)
+                {
+                    shortcuts.MainToolsFixCommonErrors = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainToolsFixCommonErrorsPreview");
+                if (subNode != null)
+                {
+                    shortcuts.MainToolsFixCommonErrorsPreview = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainToolsMergeShortLines");
+                if (subNode != null)
+                {
+                    shortcuts.MainToolsMergeShortLines = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainToolsMergeDuplicateText");
+                if (subNode != null)
+                {
+                    shortcuts.MainToolsMergeDuplicateText = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainToolsMergeSameTimeCodes");
+                if (subNode != null)
+                {
+                    shortcuts.MainToolsMergeSameTimeCodes = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainToolsMakeEmptyFromCurrent");
+                if (subNode != null)
+                {
+                    shortcuts.MainToolsMakeEmptyFromCurrent = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainToolsSplitLongLines");
+                if (subNode != null)
+                {
+                    shortcuts.MainToolsSplitLongLines = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainToolsDurationsBridgeGap");
+                if (subNode != null)
+                {
+                    shortcuts.MainToolsDurationsBridgeGap = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainToolsMinimumDisplayTimeBetweenParagraphs");
+                if (subNode != null)
+                {
+                    shortcuts.MainToolsMinimumDisplayTimeBetweenParagraphs = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainToolsRenumber");
+                if (subNode != null)
+                {
+                    shortcuts.MainToolsRenumber = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainToolsRemoveTextForHI");
+                if (subNode != null)
+                {
+                    shortcuts.MainToolsRemoveTextForHI = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainToolsChangeCasing");
+                if (subNode != null)
+                {
+                    shortcuts.MainToolsChangeCasing = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainToolsAutoDuration");
+                if (subNode != null)
+                {
+                    shortcuts.MainToolsAutoDuration = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainToolsBatchConvert");
+                if (subNode != null)
+                {
+                    shortcuts.MainToolsBatchConvert = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainToolsMeasurementConverter");
+                if (subNode != null)
+                {
+                    shortcuts.MainToolsMeasurementConverter = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainToolsSplit");
+                if (subNode != null)
+                {
+                    shortcuts.MainToolsSplit = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainToolsAppend");
+                if (subNode != null)
+                {
+                    shortcuts.MainToolsAppend = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainToolsJoin");
+                if (subNode != null)
+                {
+                    shortcuts.MainToolsJoin = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainToolsBeamer");
+                if (subNode != null)
+                {
+                    shortcuts.MainToolsBeamer = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainToolsToggleTranslationOriginalInPreviews");
+                if (subNode != null)
+                {
+                    shortcuts.MainEditToggleTranslationOriginalInPreviews = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainEditInverseSelection");
+                if (subNode != null)
+                {
+                    shortcuts.MainEditInverseSelection = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainEditModifySelection");
+                if (subNode != null)
+                {
+                    shortcuts.MainEditModifySelection = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideoOpen");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoOpen = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideoClose");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoClose = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideoPause");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoPause = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideoPlayFromJustBefore");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoPlayFromJustBefore = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideoPlayPauseToggle");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoPlayPauseToggle = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideoShowHideVideo");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoShowHideVideo = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideoFoucsSetVideoPosition");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoFoucsSetVideoPosition = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideoToggleVideoControls");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoToggleVideoControls = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideo1FrameLeft");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideo1FrameLeft = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideo1FrameRight");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideo1FrameRight = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideo1FrameLeftWithPlay");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideo1FrameLeftWithPlay = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideo1FrameRightWithPlay");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideo1FrameRightWithPlay = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideo100MsLeft");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideo100MsLeft = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideo100MsRight");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideo100MsRight = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideo500MsLeft");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideo500MsLeft = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideo500MsRight");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideo500MsRight = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideo1000MsLeft");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideo1000MsLeft = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideo1000MsRight");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideo1000MsRight = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideo5000MsLeft");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideo5000MsLeft = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideo5000MsRight");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideo5000MsRight = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideoXSMsLeft");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoXSMsLeft = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideoXSMsRight");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoXSMsRight = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideoXLMsLeft");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoXLMsLeft = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideoXLMsRight");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoXLMsRight = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideo3000MsLeft");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideo3000MsLeft = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideoGoToStartCurrent");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoGoToStartCurrent = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideoToggleStartEndCurrent");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoToggleStartEndCurrent = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideoPlayCurrent");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoPlayCurrent = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideoGoToPrevSubtitle");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoGoToPrevSubtitle = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideoGoToNextSubtitle");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoGoToNextSubtitle = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideoSelectNextSubtitle");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoSelectNextSubtitle = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideoFullscreen");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoFullscreen = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideoSlower");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoSlower = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideoFaster");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoFaster = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideoReset");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoReset = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainSpellCheck");
+                if (subNode != null)
+                {
+                    shortcuts.MainSpellCheck = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainSpellCheckFindDoubleWords");
+                if (subNode != null)
+                {
+                    shortcuts.MainSpellCheckFindDoubleWords = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainSpellCheckAddWordToNames");
+                if (subNode != null)
+                {
+                    shortcuts.MainSpellCheckAddWordToNames = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainSynchronizationAdjustTimes");
+                if (subNode != null)
+                {
+                    shortcuts.MainSynchronizationAdjustTimes = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainSynchronizationVisualSync");
+                if (subNode != null)
+                {
+                    shortcuts.MainSynchronizationVisualSync = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainSynchronizationPointSync");
+                if (subNode != null)
+                {
+                    shortcuts.MainSynchronizationPointSync = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainSynchronizationPointSyncViaFile");
+                if (subNode != null)
+                {
+                    shortcuts.MainSynchronizationPointSyncViaFile = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainSynchronizationChangeFrameRate");
+                if (subNode != null)
+                {
+                    shortcuts.MainSynchronizationChangeFrameRate = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewItalic");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewItalic = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewBold");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewBold = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewUnderline");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewUnderline = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewBox");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewBox = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewSplit");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSplit = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewToggleDashes");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewToggleDashes = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewToggleMusicSymbols");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewToggleMusicSymbols = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewAlignment");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewAlignment = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewAlignmentN1");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewAlignmentN1 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewAlignmentN1");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewAlignmentN1 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewAlignmentN2");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewAlignmentN2 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewAlignmentN3");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewAlignmentN3 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewAlignmentN4");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewAlignmentN4 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewAlignmentN5");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewAlignmentN5 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewAlignmentN6");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewAlignmentN6 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewAlignmentN7");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewAlignmentN7 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewAlignmentN8");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewAlignmentN8 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewAlignmentN9");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewAlignmentN9 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainRemoveFormatting");
+                if (subNode != null)
+                {
+                    shortcuts.MainRemoveFormatting = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewCopyText");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewCopyText = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewCopyTextFromOriginalToCurrent");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewCopyTextFromOriginalToCurrent = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewAutoDuration");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewAutoDuration = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewColumnDeleteText");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewColumnDeleteText = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewColumnDeleteTextAndShiftUp");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewColumnDeleteTextAndShiftUp = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewColumnInsertText");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewColumnInsertText = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewColumnPaste");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewColumnPaste = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewColumnTextUp");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewColumnTextUp = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewColumnTextDown");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewColumnTextDown = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewFocusWaveform");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewFocusWaveform = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewGoToNextError");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewGoToNextError = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewRemoveTimeCodes");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewRemoveTimeCodes = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainEditFixRTLViaUnicodeChars");
+                if (subNode != null)
+                {
+                    shortcuts.MainEditFixRTLViaUnicodeChars = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainEditRemoveRTLUnicodeChars");
+                if (subNode != null)
+                {
+                    shortcuts.MainEditRemoveRTLUnicodeChars = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainEditReverseStartAndEndingForRTL");
+                if (subNode != null)
+                {
+                    shortcuts.MainEditReverseStartAndEndingForRTL = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainTextBoxItalic");
+                if (subNode != null)
+                {
+                    shortcuts.MainTextBoxItalic = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainTextBoxSplitAtCursor");
+                if (subNode != null)
+                {
+                    shortcuts.MainTextBoxSplitAtCursor = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainTextBoxSplitAtCursorAndVideoPos");
+                if (subNode != null)
+                {
+                    shortcuts.MainTextBoxSplitAtCursorAndVideoPos = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainTextBoxSplitSelectedLineBilingual");
+                if (subNode != null)
+                {
+                    shortcuts.MainTextBoxSplitSelectedLineBilingual = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainTextBoxMoveLastWordDown");
+                if (subNode != null)
+                {
+                    shortcuts.MainTextBoxMoveLastWordDown = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainTextBoxMoveFirstWordFromNextUp");
+                if (subNode != null)
+                {
+                    shortcuts.MainTextBoxMoveFirstWordFromNextUp = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainTextBoxMoveLastWordDownCurrent");
+                if (subNode != null)
+                {
+                    shortcuts.MainTextBoxMoveLastWordDownCurrent = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainTextBoxMoveFirstWordUpCurrent");
+                if (subNode != null)
+                {
+                    shortcuts.MainTextBoxMoveFirstWordUpCurrent = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainTextBoxSelectionToLower");
+                if (subNode != null)
+                {
+                    shortcuts.MainTextBoxSelectionToLower = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainTextBoxSelectionToUpper");
+                if (subNode != null)
+                {
+                    shortcuts.MainTextBoxSelectionToUpper = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainTextBoxSelectionToRuby");
+                if (subNode != null)
+                {
+                    shortcuts.MainTextBoxSelectionToRuby = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainTextBoxToggleAutoDuration");
+                if (subNode != null)
+                {
+                    shortcuts.MainTextBoxToggleAutoDuration = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainCreateInsertSubAtVideoPos");
+                if (subNode != null)
+                {
+                    shortcuts.MainCreateInsertSubAtVideoPos = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainCreateInsertSubAtVideoPosNoTextBoxFocus");
+                if (subNode != null)
+                {
+                    shortcuts.MainCreateInsertSubAtVideoPosNoTextBoxFocus = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainCreateSetStart");
+                if (subNode != null)
+                {
+                    shortcuts.MainCreateSetStart = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainCreateSetEnd");
+                if (subNode != null)
+                {
+                    shortcuts.MainCreateSetEnd = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustSetEndAndPause");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustSetEndAndPause = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainCreateSetEndAddNewAndGoToNew");
+                if (subNode != null)
+                {
+                    shortcuts.MainCreateSetEndAddNewAndGoToNew = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainCreateStartDownEndUp");
+                if (subNode != null)
+                {
+                    shortcuts.MainCreateStartDownEndUp = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustSetStartAndOffsetTheRest");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustSetStartAndOffsetTheRest = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustSetStartAndOffsetTheRest2");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustSetStartAndOffsetTheRest2 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustSetEndAndOffsetTheRest");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustSetEndAndOffsetTheRest = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustSetEndAndOffsetTheRestAndGoToNext");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustSetEndAndOffsetTheRestAndGoToNext = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustSetEndAndGotoNext");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustSetEndAndGotoNext = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustViaEndAutoStart");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustViaEndAutoStart = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustViaEndAutoStartAndGoToNext");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustViaEndAutoStartAndGoToNext = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustSetStartAutoDurationAndGoToNext");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustSetStartAutoDurationAndGoToNext = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustSetEndNextStartAndGoToNext");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustSetEndNextStartAndGoToNext = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustStartDownEndUpAndGoToNext");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustStartDownEndUpAndGoToNext = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustSetStartKeepDuration");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustSetStartKeepDuration = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustSelected100MsForward");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustSelected100MsForward = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustSelected100MsBack");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustSelected100MsBack = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustStartXMsBack");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustStartXMsBack = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustStartXMsForward");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustStartXMsForward = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustEndXMsBack");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustEndXMsBack = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustEndXMsForward");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustEndXMsForward = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MoveStartOneFrameBack");
+                if (subNode != null)
+                {
+                    shortcuts.MoveStartOneFrameBack = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MoveStartOneFrameForward");
+                if (subNode != null)
+                {
+                    shortcuts.MoveStartOneFrameForward = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MoveEndOneFrameBack");
+                if (subNode != null)
+                {
+                    shortcuts.MoveEndOneFrameBack = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MoveEndOneFrameForward");
+                if (subNode != null)
+                {
+                    shortcuts.MoveEndOneFrameForward = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MoveStartOneFrameBackKeepGapPrev");
+                if (subNode != null)
+                {
+                    shortcuts.MoveStartOneFrameBackKeepGapPrev = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MoveStartOneFrameForwardKeepGapPrev");
+                if (subNode != null)
+                {
+                    shortcuts.MoveStartOneFrameForwardKeepGapPrev = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MoveEndOneFrameBackKeepGapNext");
+                if (subNode != null)
+                {
+                    shortcuts.MoveEndOneFrameBackKeepGapNext = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MoveEndOneFrameForwardKeepGapNext");
+                if (subNode != null)
+                {
+                    shortcuts.MoveEndOneFrameForwardKeepGapNext = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustSnapStartToNextSceneChange");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustSnapStartToNextSceneChange = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustSnapStartToNextSceneChangeWithGap");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustSnapStartToNextSceneChangeWithGap = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustSnapEndToPreviousSceneChange");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustSnapEndToPreviousSceneChange = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustSnapEndToPreviousSceneChangeWithGap");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustSnapEndToPreviousSceneChangeWithGap = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustExtendToNextSceneChange");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustExtendToNextSceneChange = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustExtendToNextSceneChangeWithGap");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustExtendToNextSceneChangeWithGap = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustExtendToPreviousSceneChange");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustExtendToPreviousSceneChange = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustExtendToPreviousSceneChangeWithGap");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustExtendToPreviousSceneChangeWithGap = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustExtendToNextSubtitle");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustExtendToNextSubtitle = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustExtendToPreviousSubtitle");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustExtendToPreviousSubtitle = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustExtendCurrentSubtitle");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustExtendCurrentSubtitle = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustExtendPreviousLineEndToCurrentStart");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustExtendPreviousLineEndToCurrentStart = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustExtendNextLineStartToCurrentEnd");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustExtendNextLineStartToCurrentEnd = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainInsertAfter");
+                if (subNode != null)
+                {
+                    shortcuts.MainInsertAfter = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainTextBoxAutoBreak");
+                if (subNode != null)
+                {
+                    shortcuts.MainTextBoxAutoBreak = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainTextBoxBreakAtPosition");
+                if (subNode != null)
+                {
+                    shortcuts.MainTextBoxBreakAtPosition = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainTextBoxBreakAtPositionAndGoToNext");
+                if (subNode != null)
+                {
+                    shortcuts.MainTextBoxBreakAtPositionAndGoToNext = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainTextBoxUnbreak");
+                if (subNode != null)
+                {
+                    shortcuts.MainTextBoxUnbreak = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainWaveformInsertAtCurrentPosition");
+                if (subNode != null)
+                {
+                    shortcuts.MainWaveformInsertAtCurrentPosition = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainInsertBefore");
+                if (subNode != null)
+                {
+                    shortcuts.MainInsertBefore = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainMergeDialog");
+                if (subNode != null)
+                {
+                    shortcuts.MainMergeDialog = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainToggleFocus");
+                if (subNode != null)
+                {
+                    shortcuts.MainToggleFocus = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("WaveformAdd");
+                if (subNode != null)
+                {
+                    shortcuts.WaveformAdd = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("WaveformVerticalZoom");
+                if (subNode != null)
+                {
+                    shortcuts.WaveformVerticalZoom = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("WaveformVerticalZoomOut");
+                if (subNode != null)
+                {
+                    shortcuts.WaveformVerticalZoomOut = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("WaveformZoomIn");
+                if (subNode != null)
+                {
+                    shortcuts.WaveformZoomIn = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("WaveformZoomOut");
+                if (subNode != null)
+                {
+                    shortcuts.WaveformZoomOut = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("WaveformSplit");
+                if (subNode != null)
+                {
+                    shortcuts.WaveformSplit = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("WaveformPlaySelection");
+                if (subNode != null)
+                {
+                    shortcuts.WaveformPlaySelection = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("WaveformPlaySelectionEnd");
+                if (subNode != null)
+                {
+                    shortcuts.WaveformPlaySelectionEnd = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("WaveformSearchSilenceForward");
+                if (subNode != null)
+                {
+                    shortcuts.WaveformSearchSilenceForward = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("WaveformSearchSilenceBack");
+                if (subNode != null)
+                {
+                    shortcuts.WaveformSearchSilenceBack = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("WaveformAddTextHere");
+                if (subNode != null)
+                {
+                    shortcuts.WaveformAddTextHere = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("WaveformAddTextHereFromClipboard");
+                if (subNode != null)
+                {
+                    shortcuts.WaveformAddTextHereFromClipboard = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("WaveformSetParagraphAsSelection");
+                if (subNode != null)
+                {
+                    shortcuts.WaveformSetParagraphAsSelection = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("WaveformFocusListView");
+                if (subNode != null)
+                {
+                    shortcuts.WaveformFocusListView = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("WaveformGoToPreviousSceneChange");
+                if (subNode != null)
+                {
+                    shortcuts.WaveformGoToPreviousSceneChange = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("WaveformGoToNextSceneChange");
+                if (subNode != null)
+                {
+                    shortcuts.WaveformGoToNextSceneChange = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("WaveformToggleSceneChange");
+                if (subNode != null)
+                {
+                    shortcuts.WaveformToggleSceneChange = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("WaveformGuessStart");
+                if (subNode != null)
+                {
+                    shortcuts.WaveformGuessStart = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("Waveform100MsLeft");
+                if (subNode != null)
+                {
+                    shortcuts.Waveform100MsLeft = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("Waveform100MsRight");
+                if (subNode != null)
+                {
+                    shortcuts.Waveform100MsRight = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("Waveform1000MsLeft");
+                if (subNode != null)
+                {
+                    shortcuts.Waveform1000MsLeft = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("Waveform1000MsRight");
+                if (subNode != null)
+                {
+                    shortcuts.Waveform1000MsRight = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainTranslateGoogleIt");
+                if (subNode != null)
+                {
+                    shortcuts.MainTranslateGoogleIt = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainTranslateGoogleTranslate");
+                if (subNode != null)
+                {
+                    shortcuts.MainTranslateGoogleTranslate = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainTranslateCustomSearch1");
+                if (subNode != null)
+                {
+                    shortcuts.MainTranslateCustomSearch1 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainTranslateCustomSearch2");
+                if (subNode != null)
+                {
+                    shortcuts.MainTranslateCustomSearch2 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainTranslateCustomSearch3");
+                if (subNode != null)
+                {
+                    shortcuts.MainTranslateCustomSearch3 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainTranslateCustomSearch4");
+                if (subNode != null)
+                {
+                    shortcuts.MainTranslateCustomSearch4 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainTranslateCustomSearch5");
+                if (subNode != null)
+                {
+                    shortcuts.MainTranslateCustomSearch5 = subNode.InnerText;
+                }
+            }
+        }
+
         private static void CustomSerialize(string fileName, Settings settings)
         {
-            var xws = new XmlWriterSettings { Indent = true };
+            var xws = new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 };
             var sb = new StringBuilder();
             using (var textWriter = XmlWriter.Create(sb, xws))
             {
@@ -8113,258 +8136,7 @@ $HorzAlign          =   Center
                 }
                 textWriter.WriteEndElement();
 
-                textWriter.WriteStartElement("Shortcuts", string.Empty);
-                textWriter.WriteElementString("GeneralGoToFirstSelectedLine", settings.Shortcuts.GeneralGoToFirstSelectedLine);
-                textWriter.WriteElementString("GeneralGoToNextEmptyLine", settings.Shortcuts.GeneralGoToNextEmptyLine);
-                textWriter.WriteElementString("GeneralMergeSelectedLines", settings.Shortcuts.GeneralMergeSelectedLines);
-                textWriter.WriteElementString("GeneralMergeSelectedLinesAndAutoBreak", settings.Shortcuts.GeneralMergeSelectedLinesAndAutoBreak);
-                textWriter.WriteElementString("GeneralMergeSelectedLinesAndUnbreak", settings.Shortcuts.GeneralMergeSelectedLinesAndUnbreak);
-                textWriter.WriteElementString("GeneralMergeSelectedLinesAndUnbreakCjk", settings.Shortcuts.GeneralMergeSelectedLinesAndUnbreakCjk);
-                textWriter.WriteElementString("GeneralMergeSelectedLinesOnlyFirstText", settings.Shortcuts.GeneralMergeSelectedLinesOnlyFirstText);
-                textWriter.WriteElementString("GeneralMergeSelectedLinesBilingual", settings.Shortcuts.GeneralMergeSelectedLinesBilingual);
-                textWriter.WriteElementString("GeneralMergeWithNext", settings.Shortcuts.GeneralMergeWithNext);
-                textWriter.WriteElementString("GeneralMergeWithPrevious", settings.Shortcuts.GeneralMergeWithPrevious);
-                textWriter.WriteElementString("GeneralToggleTranslationMode", settings.Shortcuts.GeneralToggleTranslationMode);
-                textWriter.WriteElementString("GeneralSwitchOriginalAndTranslation", settings.Shortcuts.GeneralSwitchOriginalAndTranslation);
-                textWriter.WriteElementString("GeneralMergeOriginalAndTranslation", settings.Shortcuts.GeneralMergeOriginalAndTranslation);
-                textWriter.WriteElementString("GeneralGoToNextSubtitle", settings.Shortcuts.GeneralGoToNextSubtitle);
-                textWriter.WriteElementString("GeneralGoToPrevSubtitle", settings.Shortcuts.GeneralGoToPrevSubtitle);
-                textWriter.WriteElementString("GeneralGoToEndOfCurrentSubtitle", settings.Shortcuts.GeneralGoToEndOfCurrentSubtitle);
-                textWriter.WriteElementString("GeneralGoToStartOfCurrentSubtitle", settings.Shortcuts.GeneralGoToStartOfCurrentSubtitle);
-                textWriter.WriteElementString("GeneralGoToPreviousSubtitleAndFocusVideo", settings.Shortcuts.GeneralGoToPreviousSubtitleAndFocusVideo);
-                textWriter.WriteElementString("GeneralGoToNextSubtitleAndFocusVideo", settings.Shortcuts.GeneralGoToNextSubtitleAndFocusVideo);
-                textWriter.WriteElementString("GeneralGoToPrevSubtitleAndPlay", settings.Shortcuts.GeneralGoToPrevSubtitleAndPlay);
-                textWriter.WriteElementString("GeneralGoToNextSubtitleAndPlay", settings.Shortcuts.GeneralGoToNextSubtitleAndPlay);
-                textWriter.WriteElementString("GeneralAutoCalcCurrentDuration", settings.Shortcuts.GeneralAutoCalcCurrentDuration);
-                textWriter.WriteElementString("GeneralPlayFirstSelected", settings.Shortcuts.GeneralPlayFirstSelected);
-                textWriter.WriteElementString("GeneralHelp", settings.Shortcuts.GeneralHelp);
-                textWriter.WriteElementString("GeneralUnbrekNoSpace", settings.Shortcuts.GeneralUnbrekNoSpace);
-                textWriter.WriteElementString("GeneralToggleBookmarks", settings.Shortcuts.GeneralToggleBookmarks);
-                textWriter.WriteElementString("GeneralToggleBookmarksWithText", settings.Shortcuts.GeneralToggleBookmarksWithText);
-                textWriter.WriteElementString("GeneralClearBookmarks", settings.Shortcuts.GeneralClearBookmarks);
-                textWriter.WriteElementString("GeneralGoToBookmark", settings.Shortcuts.GeneralGoToBookmark);
-                textWriter.WriteElementString("GeneralGoToNextBookmark", settings.Shortcuts.GeneralGoToNextBookmark);
-                textWriter.WriteElementString("ChooseProfile", settings.Shortcuts.ChooseProfile);
-                textWriter.WriteElementString("DuplicateLine", settings.Shortcuts.DuplicateLine);
-                textWriter.WriteElementString("GeneralGoToPreviousBookmark", settings.Shortcuts.GeneralGoToPreviousBookmark);
-                textWriter.WriteElementString("MainFileNew", settings.Shortcuts.MainFileNew);
-                textWriter.WriteElementString("MainFileOpen", settings.Shortcuts.MainFileOpen);
-                textWriter.WriteElementString("MainFileOpenKeepVideo", settings.Shortcuts.MainFileOpenKeepVideo);
-                textWriter.WriteElementString("MainFileSave", settings.Shortcuts.MainFileSave);
-                textWriter.WriteElementString("MainFileSaveOriginal", settings.Shortcuts.MainFileSaveOriginal);
-                textWriter.WriteElementString("MainFileSaveOriginalAs", settings.Shortcuts.MainFileSaveOriginalAs);
-                textWriter.WriteElementString("MainFileSaveAs", settings.Shortcuts.MainFileSaveAs);
-                textWriter.WriteElementString("MainFileCloseOriginal", settings.Shortcuts.MainFileCloseOriginal);
-                textWriter.WriteElementString("MainFileCompare", settings.Shortcuts.MainFileCompare);
-                textWriter.WriteElementString("MainFileOpenOriginal", settings.Shortcuts.MainFileOpenOriginal);
-                textWriter.WriteElementString("MainFileSaveAll", settings.Shortcuts.MainFileSaveAll);
-                textWriter.WriteElementString("MainFileImportPlainText", settings.Shortcuts.MainFileImportPlainText);
-                textWriter.WriteElementString("MainFileImportTimeCodes", settings.Shortcuts.MainFileImportTimeCodes);
-                textWriter.WriteElementString("MainFileExportPlainText", settings.Shortcuts.MainFileExportPlainText);
-                textWriter.WriteElementString("MainFileExportEbu", settings.Shortcuts.MainFileExportEbu);
-                textWriter.WriteElementString("MainFileExportPac", settings.Shortcuts.MainFileExportPac);
-                textWriter.WriteElementString("MainEditUndo", settings.Shortcuts.MainEditUndo);
-                textWriter.WriteElementString("MainEditRedo", settings.Shortcuts.MainEditRedo);
-                textWriter.WriteElementString("MainEditFind", settings.Shortcuts.MainEditFind);
-                textWriter.WriteElementString("MainEditFindNext", settings.Shortcuts.MainEditFindNext);
-                textWriter.WriteElementString("MainEditReplace", settings.Shortcuts.MainEditReplace);
-                textWriter.WriteElementString("MainEditMultipleReplace", settings.Shortcuts.MainEditMultipleReplace);
-                textWriter.WriteElementString("MainEditGoToLineNumber", settings.Shortcuts.MainEditGoToLineNumber);
-                textWriter.WriteElementString("MainEditRightToLeft", settings.Shortcuts.MainEditRightToLeft);
-                textWriter.WriteElementString("MainToolsFixCommonErrors", settings.Shortcuts.MainToolsFixCommonErrors);
-                textWriter.WriteElementString("MainToolsFixCommonErrorsPreview", settings.Shortcuts.MainToolsFixCommonErrorsPreview);
-                textWriter.WriteElementString("MainToolsMergeShortLines", settings.Shortcuts.MainToolsMergeShortLines);
-                textWriter.WriteElementString("MainToolsMergeDuplicateText", settings.Shortcuts.MainToolsMergeDuplicateText);
-                textWriter.WriteElementString("MainToolsMergeSameTimeCodes", settings.Shortcuts.MainToolsMergeSameTimeCodes);
-                textWriter.WriteElementString("MainToolsMakeEmptyFromCurrent", settings.Shortcuts.MainToolsMakeEmptyFromCurrent);
-                textWriter.WriteElementString("MainToolsSplitLongLines", settings.Shortcuts.MainToolsSplitLongLines);
-                textWriter.WriteElementString("MainToolsMinimumDisplayTimeBetweenParagraphs", settings.Shortcuts.MainToolsMinimumDisplayTimeBetweenParagraphs);
-                textWriter.WriteElementString("MainToolsDurationsBridgeGap", settings.Shortcuts.MainToolsDurationsBridgeGap);
-                textWriter.WriteElementString("MainToolsRenumber", settings.Shortcuts.MainToolsRenumber);
-                textWriter.WriteElementString("MainToolsRemoveTextForHI", settings.Shortcuts.MainToolsRemoveTextForHI);
-                textWriter.WriteElementString("MainToolsChangeCasing", settings.Shortcuts.MainToolsChangeCasing);
-                textWriter.WriteElementString("MainToolsAutoDuration", settings.Shortcuts.MainToolsAutoDuration);
-                textWriter.WriteElementString("MainToolsBatchConvert", settings.Shortcuts.MainToolsBatchConvert);
-                textWriter.WriteElementString("MainToolsMeasurementConverter", settings.Shortcuts.MainToolsMeasurementConverter);
-                textWriter.WriteElementString("MainToolsSplit", settings.Shortcuts.MainToolsSplit);
-                textWriter.WriteElementString("MainToolsAppend", settings.Shortcuts.MainToolsAppend);
-                textWriter.WriteElementString("MainToolsJoin", settings.Shortcuts.MainToolsJoin);
-                textWriter.WriteElementString("MainToolsBeamer", settings.Shortcuts.MainToolsBeamer);
-                textWriter.WriteElementString("MainToolsToggleTranslationOriginalInPreviews", settings.Shortcuts.MainEditToggleTranslationOriginalInPreviews);
-                textWriter.WriteElementString("MainEditInverseSelection", settings.Shortcuts.MainEditInverseSelection);
-                textWriter.WriteElementString("MainEditModifySelection", settings.Shortcuts.MainEditModifySelection);
-                textWriter.WriteElementString("MainVideoOpen", settings.Shortcuts.MainVideoOpen);
-                textWriter.WriteElementString("MainVideoClose", settings.Shortcuts.MainVideoClose);
-                textWriter.WriteElementString("MainVideoPause", settings.Shortcuts.MainVideoPause);
-                textWriter.WriteElementString("MainVideoPlayFromJustBefore", settings.Shortcuts.MainVideoPlayFromJustBefore);
-                textWriter.WriteElementString("MainVideoPlayPauseToggle", settings.Shortcuts.MainVideoPlayPauseToggle);
-                textWriter.WriteElementString("MainVideoShowHideVideo", settings.Shortcuts.MainVideoShowHideVideo);
-                textWriter.WriteElementString("MainVideoFoucsSetVideoPosition", settings.Shortcuts.MainVideoFoucsSetVideoPosition);
-                textWriter.WriteElementString("MainVideoToggleVideoControls", settings.Shortcuts.MainVideoToggleVideoControls);
-                textWriter.WriteElementString("MainVideo1FrameLeft", settings.Shortcuts.MainVideo1FrameLeft);
-                textWriter.WriteElementString("MainVideo1FrameRight", settings.Shortcuts.MainVideo1FrameRight);
-                textWriter.WriteElementString("MainVideo1FrameLeftWithPlay", settings.Shortcuts.MainVideo1FrameLeftWithPlay);
-                textWriter.WriteElementString("MainVideo1FrameRightWithPlay", settings.Shortcuts.MainVideo1FrameRightWithPlay);
-                textWriter.WriteElementString("MainVideo100MsLeft", settings.Shortcuts.MainVideo100MsLeft);
-                textWriter.WriteElementString("MainVideo100MsRight", settings.Shortcuts.MainVideo100MsRight);
-                textWriter.WriteElementString("MainVideo500MsLeft", settings.Shortcuts.MainVideo500MsLeft);
-                textWriter.WriteElementString("MainVideo500MsRight", settings.Shortcuts.MainVideo500MsRight);
-                textWriter.WriteElementString("MainVideo1000MsLeft", settings.Shortcuts.MainVideo1000MsLeft);
-                textWriter.WriteElementString("MainVideo1000MsRight", settings.Shortcuts.MainVideo1000MsRight);
-                textWriter.WriteElementString("MainVideo5000MsLeft", settings.Shortcuts.MainVideo5000MsLeft);
-                textWriter.WriteElementString("MainVideo5000MsRight", settings.Shortcuts.MainVideo5000MsRight);
-                textWriter.WriteElementString("MainVideoXSMsLeft", settings.Shortcuts.MainVideoXSMsLeft);
-                textWriter.WriteElementString("MainVideoXSMsRight", settings.Shortcuts.MainVideoXSMsRight);
-                textWriter.WriteElementString("MainVideoXLMsLeft", settings.Shortcuts.MainVideoXLMsLeft);
-                textWriter.WriteElementString("MainVideoXLMsRight", settings.Shortcuts.MainVideoXLMsRight);
-                textWriter.WriteElementString("MainVideo3000MsLeft", settings.Shortcuts.MainVideo3000MsLeft);
-                textWriter.WriteElementString("MainVideoGoToStartCurrent", settings.Shortcuts.MainVideoGoToStartCurrent);
-                textWriter.WriteElementString("MainVideoToggleStartEndCurrent", settings.Shortcuts.MainVideoToggleStartEndCurrent);
-                textWriter.WriteElementString("MainVideoPlayCurrent", settings.Shortcuts.MainVideoPlayCurrent);
-                textWriter.WriteElementString("MainVideoGoToPrevSubtitle", settings.Shortcuts.MainVideoGoToPrevSubtitle);
-                textWriter.WriteElementString("MainVideoGoToNextSubtitle", settings.Shortcuts.MainVideoGoToNextSubtitle);
-                textWriter.WriteElementString("MainVideoSelectNextSubtitle", settings.Shortcuts.MainVideoSelectNextSubtitle);
-                textWriter.WriteElementString("MainVideoFullscreen", settings.Shortcuts.MainVideoFullscreen);
-                textWriter.WriteElementString("MainVideoSlower", settings.Shortcuts.MainVideoSlower);
-                textWriter.WriteElementString("MainVideoFaster", settings.Shortcuts.MainVideoFaster);
-                textWriter.WriteElementString("MainVideoReset", settings.Shortcuts.MainVideoReset);
-                textWriter.WriteElementString("MainSpellCheck", settings.Shortcuts.MainSpellCheck);
-                textWriter.WriteElementString("MainSpellCheckFindDoubleWords", settings.Shortcuts.MainSpellCheckFindDoubleWords);
-                textWriter.WriteElementString("MainSpellCheckAddWordToNames", settings.Shortcuts.MainSpellCheckAddWordToNames);
-                textWriter.WriteElementString("MainSynchronizationAdjustTimes", settings.Shortcuts.MainSynchronizationAdjustTimes);
-                textWriter.WriteElementString("MainSynchronizationVisualSync", settings.Shortcuts.MainSynchronizationVisualSync);
-                textWriter.WriteElementString("MainSynchronizationPointSync", settings.Shortcuts.MainSynchronizationPointSync);
-                textWriter.WriteElementString("MainSynchronizationPointSyncViaFile", settings.Shortcuts.MainSynchronizationPointSyncViaFile);
-                textWriter.WriteElementString("MainSynchronizationChangeFrameRate", settings.Shortcuts.MainSynchronizationChangeFrameRate);
-                textWriter.WriteElementString("MainListViewItalic", settings.Shortcuts.MainListViewItalic);
-                textWriter.WriteElementString("MainListViewBold", settings.Shortcuts.MainListViewBold);
-                textWriter.WriteElementString("MainListViewUnderline", settings.Shortcuts.MainListViewUnderline);
-                textWriter.WriteElementString("MainListViewBox", settings.Shortcuts.MainListViewBox);
-                textWriter.WriteElementString("MainListViewSplit", settings.Shortcuts.MainListViewSplit);
-                textWriter.WriteElementString("MainListViewToggleDashes", settings.Shortcuts.MainListViewToggleDashes);
-                textWriter.WriteElementString("MainListViewToggleMusicSymbols", settings.Shortcuts.MainListViewToggleMusicSymbols);
-                textWriter.WriteElementString("MainListViewAlignment", settings.Shortcuts.MainListViewAlignment);
-                textWriter.WriteElementString("MainListViewAlignmentN1", settings.Shortcuts.MainListViewAlignmentN1);
-                textWriter.WriteElementString("MainListViewAlignmentN2", settings.Shortcuts.MainListViewAlignmentN2);
-                textWriter.WriteElementString("MainListViewAlignmentN3", settings.Shortcuts.MainListViewAlignmentN3);
-                textWriter.WriteElementString("MainListViewAlignmentN4", settings.Shortcuts.MainListViewAlignmentN4);
-                textWriter.WriteElementString("MainListViewAlignmentN5", settings.Shortcuts.MainListViewAlignmentN5);
-                textWriter.WriteElementString("MainListViewAlignmentN6", settings.Shortcuts.MainListViewAlignmentN6);
-                textWriter.WriteElementString("MainListViewAlignmentN7", settings.Shortcuts.MainListViewAlignmentN7);
-                textWriter.WriteElementString("MainListViewAlignmentN8", settings.Shortcuts.MainListViewAlignmentN8);
-                textWriter.WriteElementString("MainListViewAlignmentN9", settings.Shortcuts.MainListViewAlignmentN9);
-                textWriter.WriteElementString("MainRemoveFormatting", settings.Shortcuts.MainRemoveFormatting);
-                textWriter.WriteElementString("MainListViewCopyText", settings.Shortcuts.MainListViewCopyText);
-                textWriter.WriteElementString("MainListViewCopyTextFromOriginalToCurrent", settings.Shortcuts.MainListViewCopyTextFromOriginalToCurrent);
-                textWriter.WriteElementString("MainListViewAutoDuration", settings.Shortcuts.MainListViewAutoDuration);
-                textWriter.WriteElementString("MainListViewColumnDeleteText", settings.Shortcuts.MainListViewColumnDeleteText);
-                textWriter.WriteElementString("MainListViewColumnDeleteTextAndShiftUp", settings.Shortcuts.MainListViewColumnDeleteTextAndShiftUp);
-                textWriter.WriteElementString("MainListViewColumnInsertText", settings.Shortcuts.MainListViewColumnInsertText);
-                textWriter.WriteElementString("MainListViewColumnPaste", settings.Shortcuts.MainListViewColumnPaste);
-                textWriter.WriteElementString("MainListViewColumnTextUp", settings.Shortcuts.MainListViewColumnTextUp);
-                textWriter.WriteElementString("MainListViewColumnTextDown", settings.Shortcuts.MainListViewColumnTextDown);
-                textWriter.WriteElementString("MainListViewFocusWaveform", settings.Shortcuts.MainListViewFocusWaveform);
-                textWriter.WriteElementString("MainListViewGoToNextError", settings.Shortcuts.MainListViewGoToNextError);
-                textWriter.WriteElementString("MainListViewRemoveTimeCodes", settings.Shortcuts.MainListViewRemoveTimeCodes);
-                textWriter.WriteElementString("MainEditFixRTLViaUnicodeChars", settings.Shortcuts.MainEditFixRTLViaUnicodeChars);
-                textWriter.WriteElementString("MainEditRemoveRTLUnicodeChars", settings.Shortcuts.MainEditRemoveRTLUnicodeChars);
-                textWriter.WriteElementString("MainEditReverseStartAndEndingForRTL", settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
-                textWriter.WriteElementString("MainTextBoxItalic", settings.Shortcuts.MainTextBoxItalic);
-                textWriter.WriteElementString("MainTextBoxSplitAtCursor", settings.Shortcuts.MainTextBoxSplitAtCursor);
-                textWriter.WriteElementString("MainTextBoxSplitAtCursorAndVideoPos", settings.Shortcuts.MainTextBoxSplitAtCursorAndVideoPos);
-                textWriter.WriteElementString("MainTextBoxSplitSelectedLineBilingual", settings.Shortcuts.MainTextBoxSplitSelectedLineBilingual);
-                textWriter.WriteElementString("MainTextBoxMoveLastWordDown", settings.Shortcuts.MainTextBoxMoveLastWordDown);
-                textWriter.WriteElementString("MainTextBoxMoveFirstWordFromNextUp", settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp);
-                textWriter.WriteElementString("MainTextBoxMoveLastWordDownCurrent", settings.Shortcuts.MainTextBoxMoveLastWordDownCurrent);
-                textWriter.WriteElementString("MainTextBoxMoveFirstWordUpCurrent", settings.Shortcuts.MainTextBoxMoveFirstWordUpCurrent);
-                textWriter.WriteElementString("MainTextBoxSelectionToLower", settings.Shortcuts.MainTextBoxSelectionToLower);
-                textWriter.WriteElementString("MainTextBoxSelectionToUpper", settings.Shortcuts.MainTextBoxSelectionToUpper);
-                textWriter.WriteElementString("MainTextBoxSelectionToRuby", settings.Shortcuts.MainTextBoxSelectionToRuby);
-                textWriter.WriteElementString("MainTextBoxToggleAutoDuration", settings.Shortcuts.MainTextBoxToggleAutoDuration);
-                textWriter.WriteElementString("MainCreateInsertSubAtVideoPos", settings.Shortcuts.MainCreateInsertSubAtVideoPos);
-                textWriter.WriteElementString("MainCreateInsertSubAtVideoPosNoTextBoxFocus", settings.Shortcuts.MainCreateInsertSubAtVideoPosNoTextBoxFocus);
-                textWriter.WriteElementString("MainCreateSetStart", settings.Shortcuts.MainCreateSetStart);
-                textWriter.WriteElementString("MainCreateSetEnd", settings.Shortcuts.MainCreateSetEnd);
-                textWriter.WriteElementString("MainAdjustSetEndAndPause", settings.Shortcuts.MainAdjustSetEndAndPause);
-                textWriter.WriteElementString("MainCreateSetEndAddNewAndGoToNew", settings.Shortcuts.MainCreateSetEndAddNewAndGoToNew);
-                textWriter.WriteElementString("MainCreateStartDownEndUp", settings.Shortcuts.MainCreateStartDownEndUp);
-                textWriter.WriteElementString("MainAdjustSetStartAndOffsetTheRest", settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest);
-                textWriter.WriteElementString("MainAdjustSetStartAndOffsetTheRest2", settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest2);
-                textWriter.WriteElementString("MainAdjustSetEndAndOffsetTheRest", settings.Shortcuts.MainAdjustSetEndAndOffsetTheRest);
-                textWriter.WriteElementString("MainAdjustSetEndAndOffsetTheRestAndGoToNext", settings.Shortcuts.MainAdjustSetEndAndOffsetTheRestAndGoToNext);
-                textWriter.WriteElementString("MainAdjustSetEndAndGotoNext", settings.Shortcuts.MainAdjustSetEndAndGotoNext);
-                textWriter.WriteElementString("MainAdjustViaEndAutoStart", settings.Shortcuts.MainAdjustViaEndAutoStart);
-                textWriter.WriteElementString("MainAdjustViaEndAutoStartAndGoToNext", settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext);
-                textWriter.WriteElementString("MainAdjustSetStartAutoDurationAndGoToNext", settings.Shortcuts.MainAdjustSetStartAutoDurationAndGoToNext);
-                textWriter.WriteElementString("MainAdjustSetEndNextStartAndGoToNext", settings.Shortcuts.MainAdjustSetEndNextStartAndGoToNext);
-                textWriter.WriteElementString("MainAdjustStartDownEndUpAndGoToNext", settings.Shortcuts.MainAdjustStartDownEndUpAndGoToNext);
-                textWriter.WriteElementString("MainAdjustSetStartKeepDuration", settings.Shortcuts.MainAdjustSetStartKeepDuration);
-                textWriter.WriteElementString("MainAdjustSelected100MsForward", settings.Shortcuts.MainAdjustSelected100MsForward);
-                textWriter.WriteElementString("MainAdjustSelected100MsBack", settings.Shortcuts.MainAdjustSelected100MsBack);
-                textWriter.WriteElementString("MainAdjustStartXMsBack", settings.Shortcuts.MainAdjustStartXMsBack);
-                textWriter.WriteElementString("MainAdjustStartXMsForward", settings.Shortcuts.MainAdjustStartXMsForward);
-                textWriter.WriteElementString("MainAdjustEndXMsBack", settings.Shortcuts.MainAdjustEndXMsBack);
-                textWriter.WriteElementString("MainAdjustEndXMsForward", settings.Shortcuts.MainAdjustEndXMsForward);
-                textWriter.WriteElementString("MoveStartOneFrameBack", settings.Shortcuts.MoveStartOneFrameBack);
-                textWriter.WriteElementString("MoveStartOneFrameForward", settings.Shortcuts.MoveStartOneFrameForward);
-                textWriter.WriteElementString("MoveEndOneFrameBack", settings.Shortcuts.MoveEndOneFrameBack);
-                textWriter.WriteElementString("MoveEndOneFrameForward", settings.Shortcuts.MoveEndOneFrameForward);
-                textWriter.WriteElementString("MoveStartOneFrameBackKeepGapPrev", settings.Shortcuts.MoveStartOneFrameBackKeepGapPrev);
-                textWriter.WriteElementString("MoveStartOneFrameForwardKeepGapPrev", settings.Shortcuts.MoveStartOneFrameForwardKeepGapPrev);
-                textWriter.WriteElementString("MoveEndOneFrameBackKeepGapNext", settings.Shortcuts.MoveEndOneFrameBackKeepGapNext);
-                textWriter.WriteElementString("MoveEndOneFrameForwardKeepGapNext", settings.Shortcuts.MoveEndOneFrameForwardKeepGapNext);
-                textWriter.WriteElementString("MainAdjustSnapStartToNextSceneChange", settings.Shortcuts.MainAdjustSnapStartToNextSceneChange);
-                textWriter.WriteElementString("MainAdjustSnapStartToNextSceneChangeWithGap", settings.Shortcuts.MainAdjustSnapStartToNextSceneChangeWithGap);
-                textWriter.WriteElementString("MainAdjustSnapEndToPreviousSceneChange", settings.Shortcuts.MainAdjustSnapEndToPreviousSceneChange);
-                textWriter.WriteElementString("MainAdjustSnapEndToPreviousSceneChangeWithGap", settings.Shortcuts.MainAdjustSnapEndToPreviousSceneChangeWithGap);
-                textWriter.WriteElementString("MainAdjustExtendToNextSceneChange", settings.Shortcuts.MainAdjustExtendToNextSceneChange);
-                textWriter.WriteElementString("MainAdjustExtendToNextSceneChangeWithGap", settings.Shortcuts.MainAdjustExtendToNextSceneChangeWithGap);
-                textWriter.WriteElementString("MainAdjustExtendToPreviousSceneChange", settings.Shortcuts.MainAdjustExtendToPreviousSceneChange);
-                textWriter.WriteElementString("MainAdjustExtendToPreviousSceneChangeWithGap", settings.Shortcuts.MainAdjustExtendToPreviousSceneChangeWithGap);
-                textWriter.WriteElementString("MainAdjustExtendToNextSubtitle", settings.Shortcuts.MainAdjustExtendToNextSubtitle);
-                textWriter.WriteElementString("MainAdjustExtendToPreviousSubtitle", settings.Shortcuts.MainAdjustExtendToPreviousSubtitle);
-                textWriter.WriteElementString("MainAdjustExtendCurrentSubtitle", settings.Shortcuts.MainAdjustExtendCurrentSubtitle);
-                textWriter.WriteElementString("MainAdjustExtendPreviousLineEndToCurrentStart", settings.Shortcuts.MainAdjustExtendPreviousLineEndToCurrentStart);
-                textWriter.WriteElementString("MainAdjustExtendNextLineStartToCurrentEnd", settings.Shortcuts.MainAdjustExtendNextLineStartToCurrentEnd);
-                textWriter.WriteElementString("MainInsertAfter", settings.Shortcuts.MainInsertAfter);
-                textWriter.WriteElementString("MainTextBoxAutoBreak", settings.Shortcuts.MainTextBoxAutoBreak);
-                textWriter.WriteElementString("MainTextBoxBreakAtPosition", settings.Shortcuts.MainTextBoxBreakAtPosition);
-                textWriter.WriteElementString("MainTextBoxBreakAtPositionAndGoToNext", settings.Shortcuts.MainTextBoxBreakAtPositionAndGoToNext);
-                textWriter.WriteElementString("MainTextBoxUnbreak", settings.Shortcuts.MainTextBoxUnbreak);
-                textWriter.WriteElementString("MainWaveformInsertAtCurrentPosition", settings.Shortcuts.MainWaveformInsertAtCurrentPosition);
-                textWriter.WriteElementString("MainInsertBefore", settings.Shortcuts.MainInsertBefore);
-                textWriter.WriteElementString("MainMergeDialog", settings.Shortcuts.MainMergeDialog);
-                textWriter.WriteElementString("MainToggleFocus", settings.Shortcuts.MainToggleFocus);
-                textWriter.WriteElementString("WaveformAdd", settings.Shortcuts.WaveformAdd);
-                textWriter.WriteElementString("WaveformVerticalZoom", settings.Shortcuts.WaveformVerticalZoom);
-                textWriter.WriteElementString("WaveformVerticalZoomOut", settings.Shortcuts.WaveformVerticalZoomOut);
-                textWriter.WriteElementString("WaveformZoomIn", settings.Shortcuts.WaveformZoomIn);
-                textWriter.WriteElementString("WaveformZoomOut", settings.Shortcuts.WaveformZoomOut);
-                textWriter.WriteElementString("WaveformSplit", settings.Shortcuts.WaveformSplit);
-                textWriter.WriteElementString("WaveformPlaySelection", settings.Shortcuts.WaveformPlaySelection);
-                textWriter.WriteElementString("WaveformPlaySelectionEnd", settings.Shortcuts.WaveformPlaySelectionEnd);
-                textWriter.WriteElementString("WaveformSearchSilenceForward", settings.Shortcuts.WaveformSearchSilenceForward);
-                textWriter.WriteElementString("WaveformSearchSilenceBack", settings.Shortcuts.WaveformSearchSilenceBack);
-                textWriter.WriteElementString("WaveformAddTextHere", settings.Shortcuts.WaveformAddTextHere);
-                textWriter.WriteElementString("WaveformAddTextHereFromClipboard", settings.Shortcuts.WaveformAddTextHereFromClipboard);
-                textWriter.WriteElementString("WaveformSetParagraphAsSelection", settings.Shortcuts.WaveformSetParagraphAsSelection);
-                textWriter.WriteElementString("WaveformFocusListView", settings.Shortcuts.WaveformFocusListView);
-                textWriter.WriteElementString("WaveformGoToPreviousSceneChange", settings.Shortcuts.WaveformGoToPreviousSceneChange);
-                textWriter.WriteElementString("WaveformGoToNextSceneChange", settings.Shortcuts.WaveformGoToNextSceneChange);
-                textWriter.WriteElementString("WaveformToggleSceneChange", settings.Shortcuts.WaveformToggleSceneChange);
-                textWriter.WriteElementString("WaveformGuessStart", settings.Shortcuts.WaveformGuessStart);
-                textWriter.WriteElementString("Waveform100MsLeft", settings.Shortcuts.Waveform100MsLeft);
-                textWriter.WriteElementString("Waveform100MsRight", settings.Shortcuts.Waveform100MsRight);
-                textWriter.WriteElementString("Waveform1000MsLeft", settings.Shortcuts.Waveform1000MsLeft);
-                textWriter.WriteElementString("Waveform1000MsRight", settings.Shortcuts.Waveform1000MsRight);
-                textWriter.WriteElementString("MainTranslateGoogleIt", settings.Shortcuts.MainTranslateGoogleIt);
-                textWriter.WriteElementString("MainTranslateGoogleTranslate", settings.Shortcuts.MainTranslateGoogleTranslate);
-                textWriter.WriteElementString("MainTranslateCustomSearch1", settings.Shortcuts.MainTranslateCustomSearch1);
-                textWriter.WriteElementString("MainTranslateCustomSearch2", settings.Shortcuts.MainTranslateCustomSearch2);
-                textWriter.WriteElementString("MainTranslateCustomSearch3", settings.Shortcuts.MainTranslateCustomSearch3);
-                textWriter.WriteElementString("MainTranslateCustomSearch4", settings.Shortcuts.MainTranslateCustomSearch4);
-                textWriter.WriteElementString("MainTranslateCustomSearch5", settings.Shortcuts.MainTranslateCustomSearch5);
-                textWriter.WriteEndElement();
+                WriteShortcuts(settings.Shortcuts, textWriter);
 
                 textWriter.WriteStartElement("RemoveTextForHearingImpaired", string.Empty);
                 textWriter.WriteElementString("RemoveTextBetweenBrackets", settings.RemoveTextForHearingImpaired.RemoveTextBetweenBrackets.ToString(CultureInfo.InvariantCulture));
@@ -8409,5 +8181,260 @@ $HorzAlign          =   Center
             }
         }
 
+        internal static void WriteShortcuts(Shortcuts shortcuts, XmlWriter textWriter)
+        {
+            textWriter.WriteStartElement("Shortcuts", string.Empty);
+            textWriter.WriteElementString("GeneralGoToFirstSelectedLine", shortcuts.GeneralGoToFirstSelectedLine);
+            textWriter.WriteElementString("GeneralGoToNextEmptyLine", shortcuts.GeneralGoToNextEmptyLine);
+            textWriter.WriteElementString("GeneralMergeSelectedLines", shortcuts.GeneralMergeSelectedLines);
+            textWriter.WriteElementString("GeneralMergeSelectedLinesAndAutoBreak", shortcuts.GeneralMergeSelectedLinesAndAutoBreak);
+            textWriter.WriteElementString("GeneralMergeSelectedLinesAndUnbreak", shortcuts.GeneralMergeSelectedLinesAndUnbreak);
+            textWriter.WriteElementString("GeneralMergeSelectedLinesAndUnbreakCjk", shortcuts.GeneralMergeSelectedLinesAndUnbreakCjk);
+            textWriter.WriteElementString("GeneralMergeSelectedLinesOnlyFirstText", shortcuts.GeneralMergeSelectedLinesOnlyFirstText);
+            textWriter.WriteElementString("GeneralMergeSelectedLinesBilingual", shortcuts.GeneralMergeSelectedLinesBilingual);
+            textWriter.WriteElementString("GeneralMergeWithNext", shortcuts.GeneralMergeWithNext);
+            textWriter.WriteElementString("GeneralMergeWithPrevious", shortcuts.GeneralMergeWithPrevious);
+            textWriter.WriteElementString("GeneralToggleTranslationMode", shortcuts.GeneralToggleTranslationMode);
+            textWriter.WriteElementString("GeneralSwitchOriginalAndTranslation", shortcuts.GeneralSwitchOriginalAndTranslation);
+            textWriter.WriteElementString("GeneralMergeOriginalAndTranslation", shortcuts.GeneralMergeOriginalAndTranslation);
+            textWriter.WriteElementString("GeneralGoToNextSubtitle", shortcuts.GeneralGoToNextSubtitle);
+            textWriter.WriteElementString("GeneralGoToPrevSubtitle", shortcuts.GeneralGoToPrevSubtitle);
+            textWriter.WriteElementString("GeneralGoToEndOfCurrentSubtitle", shortcuts.GeneralGoToEndOfCurrentSubtitle);
+            textWriter.WriteElementString("GeneralGoToStartOfCurrentSubtitle", shortcuts.GeneralGoToStartOfCurrentSubtitle);
+            textWriter.WriteElementString("GeneralGoToPreviousSubtitleAndFocusVideo", shortcuts.GeneralGoToPreviousSubtitleAndFocusVideo);
+            textWriter.WriteElementString("GeneralGoToNextSubtitleAndFocusVideo", shortcuts.GeneralGoToNextSubtitleAndFocusVideo);
+            textWriter.WriteElementString("GeneralGoToPrevSubtitleAndPlay", shortcuts.GeneralGoToPrevSubtitleAndPlay);
+            textWriter.WriteElementString("GeneralGoToNextSubtitleAndPlay", shortcuts.GeneralGoToNextSubtitleAndPlay);
+            textWriter.WriteElementString("GeneralAutoCalcCurrentDuration", shortcuts.GeneralAutoCalcCurrentDuration);
+            textWriter.WriteElementString("GeneralPlayFirstSelected", shortcuts.GeneralPlayFirstSelected);
+            textWriter.WriteElementString("GeneralHelp", shortcuts.GeneralHelp);
+            textWriter.WriteElementString("GeneralUnbrekNoSpace", shortcuts.GeneralUnbrekNoSpace);
+            textWriter.WriteElementString("GeneralToggleBookmarks", shortcuts.GeneralToggleBookmarks);
+            textWriter.WriteElementString("GeneralToggleBookmarksWithText", shortcuts.GeneralToggleBookmarksWithText);
+            textWriter.WriteElementString("GeneralClearBookmarks", shortcuts.GeneralClearBookmarks);
+            textWriter.WriteElementString("GeneralGoToBookmark", shortcuts.GeneralGoToBookmark);
+            textWriter.WriteElementString("GeneralGoToNextBookmark", shortcuts.GeneralGoToNextBookmark);
+            textWriter.WriteElementString("ChooseProfile", shortcuts.ChooseProfile);
+            textWriter.WriteElementString("DuplicateLine", shortcuts.DuplicateLine);
+            textWriter.WriteElementString("GeneralGoToPreviousBookmark", shortcuts.GeneralGoToPreviousBookmark);
+            textWriter.WriteElementString("MainFileNew", shortcuts.MainFileNew);
+            textWriter.WriteElementString("MainFileOpen", shortcuts.MainFileOpen);
+            textWriter.WriteElementString("MainFileOpenKeepVideo", shortcuts.MainFileOpenKeepVideo);
+            textWriter.WriteElementString("MainFileSave", shortcuts.MainFileSave);
+            textWriter.WriteElementString("MainFileSaveOriginal", shortcuts.MainFileSaveOriginal);
+            textWriter.WriteElementString("MainFileSaveOriginalAs", shortcuts.MainFileSaveOriginalAs);
+            textWriter.WriteElementString("MainFileSaveAs", shortcuts.MainFileSaveAs);
+            textWriter.WriteElementString("MainFileCloseOriginal", shortcuts.MainFileCloseOriginal);
+            textWriter.WriteElementString("MainFileCompare", shortcuts.MainFileCompare);
+            textWriter.WriteElementString("MainFileOpenOriginal", shortcuts.MainFileOpenOriginal);
+            textWriter.WriteElementString("MainFileSaveAll", shortcuts.MainFileSaveAll);
+            textWriter.WriteElementString("MainFileImportPlainText", shortcuts.MainFileImportPlainText);
+            textWriter.WriteElementString("MainFileImportTimeCodes", shortcuts.MainFileImportTimeCodes);
+            textWriter.WriteElementString("MainFileExportPlainText", shortcuts.MainFileExportPlainText);
+            textWriter.WriteElementString("MainFileExportEbu", shortcuts.MainFileExportEbu);
+            textWriter.WriteElementString("MainFileExportPac", shortcuts.MainFileExportPac);
+            textWriter.WriteElementString("MainEditUndo", shortcuts.MainEditUndo);
+            textWriter.WriteElementString("MainEditRedo", shortcuts.MainEditRedo);
+            textWriter.WriteElementString("MainEditFind", shortcuts.MainEditFind);
+            textWriter.WriteElementString("MainEditFindNext", shortcuts.MainEditFindNext);
+            textWriter.WriteElementString("MainEditReplace", shortcuts.MainEditReplace);
+            textWriter.WriteElementString("MainEditMultipleReplace", shortcuts.MainEditMultipleReplace);
+            textWriter.WriteElementString("MainEditGoToLineNumber", shortcuts.MainEditGoToLineNumber);
+            textWriter.WriteElementString("MainEditRightToLeft", shortcuts.MainEditRightToLeft);
+            textWriter.WriteElementString("MainToolsFixCommonErrors", shortcuts.MainToolsFixCommonErrors);
+            textWriter.WriteElementString("MainToolsFixCommonErrorsPreview", shortcuts.MainToolsFixCommonErrorsPreview);
+            textWriter.WriteElementString("MainToolsMergeShortLines", shortcuts.MainToolsMergeShortLines);
+            textWriter.WriteElementString("MainToolsMergeDuplicateText", shortcuts.MainToolsMergeDuplicateText);
+            textWriter.WriteElementString("MainToolsMergeSameTimeCodes", shortcuts.MainToolsMergeSameTimeCodes);
+            textWriter.WriteElementString("MainToolsMakeEmptyFromCurrent", shortcuts.MainToolsMakeEmptyFromCurrent);
+            textWriter.WriteElementString("MainToolsSplitLongLines", shortcuts.MainToolsSplitLongLines);
+            textWriter.WriteElementString("MainToolsMinimumDisplayTimeBetweenParagraphs", shortcuts.MainToolsMinimumDisplayTimeBetweenParagraphs);
+            textWriter.WriteElementString("MainToolsDurationsBridgeGap", shortcuts.MainToolsDurationsBridgeGap);
+            textWriter.WriteElementString("MainToolsRenumber", shortcuts.MainToolsRenumber);
+            textWriter.WriteElementString("MainToolsRemoveTextForHI", shortcuts.MainToolsRemoveTextForHI);
+            textWriter.WriteElementString("MainToolsChangeCasing", shortcuts.MainToolsChangeCasing);
+            textWriter.WriteElementString("MainToolsAutoDuration", shortcuts.MainToolsAutoDuration);
+            textWriter.WriteElementString("MainToolsBatchConvert", shortcuts.MainToolsBatchConvert);
+            textWriter.WriteElementString("MainToolsMeasurementConverter", shortcuts.MainToolsMeasurementConverter);
+            textWriter.WriteElementString("MainToolsSplit", shortcuts.MainToolsSplit);
+            textWriter.WriteElementString("MainToolsAppend", shortcuts.MainToolsAppend);
+            textWriter.WriteElementString("MainToolsJoin", shortcuts.MainToolsJoin);
+            textWriter.WriteElementString("MainToolsBeamer", shortcuts.MainToolsBeamer);
+            textWriter.WriteElementString("MainToolsToggleTranslationOriginalInPreviews", shortcuts.MainEditToggleTranslationOriginalInPreviews);
+            textWriter.WriteElementString("MainEditInverseSelection", shortcuts.MainEditInverseSelection);
+            textWriter.WriteElementString("MainEditModifySelection", shortcuts.MainEditModifySelection);
+            textWriter.WriteElementString("MainVideoOpen", shortcuts.MainVideoOpen);
+            textWriter.WriteElementString("MainVideoClose", shortcuts.MainVideoClose);
+            textWriter.WriteElementString("MainVideoPause", shortcuts.MainVideoPause);
+            textWriter.WriteElementString("MainVideoPlayFromJustBefore", shortcuts.MainVideoPlayFromJustBefore);
+            textWriter.WriteElementString("MainVideoPlayPauseToggle", shortcuts.MainVideoPlayPauseToggle);
+            textWriter.WriteElementString("MainVideoShowHideVideo", shortcuts.MainVideoShowHideVideo);
+            textWriter.WriteElementString("MainVideoFoucsSetVideoPosition", shortcuts.MainVideoFoucsSetVideoPosition);
+            textWriter.WriteElementString("MainVideoToggleVideoControls", shortcuts.MainVideoToggleVideoControls);
+            textWriter.WriteElementString("MainVideo1FrameLeft", shortcuts.MainVideo1FrameLeft);
+            textWriter.WriteElementString("MainVideo1FrameRight", shortcuts.MainVideo1FrameRight);
+            textWriter.WriteElementString("MainVideo1FrameLeftWithPlay", shortcuts.MainVideo1FrameLeftWithPlay);
+            textWriter.WriteElementString("MainVideo1FrameRightWithPlay", shortcuts.MainVideo1FrameRightWithPlay);
+            textWriter.WriteElementString("MainVideo100MsLeft", shortcuts.MainVideo100MsLeft);
+            textWriter.WriteElementString("MainVideo100MsRight", shortcuts.MainVideo100MsRight);
+            textWriter.WriteElementString("MainVideo500MsLeft", shortcuts.MainVideo500MsLeft);
+            textWriter.WriteElementString("MainVideo500MsRight", shortcuts.MainVideo500MsRight);
+            textWriter.WriteElementString("MainVideo1000MsLeft", shortcuts.MainVideo1000MsLeft);
+            textWriter.WriteElementString("MainVideo1000MsRight", shortcuts.MainVideo1000MsRight);
+            textWriter.WriteElementString("MainVideo5000MsLeft", shortcuts.MainVideo5000MsLeft);
+            textWriter.WriteElementString("MainVideo5000MsRight", shortcuts.MainVideo5000MsRight);
+            textWriter.WriteElementString("MainVideoXSMsLeft", shortcuts.MainVideoXSMsLeft);
+            textWriter.WriteElementString("MainVideoXSMsRight", shortcuts.MainVideoXSMsRight);
+            textWriter.WriteElementString("MainVideoXLMsLeft", shortcuts.MainVideoXLMsLeft);
+            textWriter.WriteElementString("MainVideoXLMsRight", shortcuts.MainVideoXLMsRight);
+            textWriter.WriteElementString("MainVideo3000MsLeft", shortcuts.MainVideo3000MsLeft);
+            textWriter.WriteElementString("MainVideoGoToStartCurrent", shortcuts.MainVideoGoToStartCurrent);
+            textWriter.WriteElementString("MainVideoToggleStartEndCurrent", shortcuts.MainVideoToggleStartEndCurrent);
+            textWriter.WriteElementString("MainVideoPlayCurrent", shortcuts.MainVideoPlayCurrent);
+            textWriter.WriteElementString("MainVideoGoToPrevSubtitle", shortcuts.MainVideoGoToPrevSubtitle);
+            textWriter.WriteElementString("MainVideoGoToNextSubtitle", shortcuts.MainVideoGoToNextSubtitle);
+            textWriter.WriteElementString("MainVideoSelectNextSubtitle", shortcuts.MainVideoSelectNextSubtitle);
+            textWriter.WriteElementString("MainVideoFullscreen", shortcuts.MainVideoFullscreen);
+            textWriter.WriteElementString("MainVideoSlower", shortcuts.MainVideoSlower);
+            textWriter.WriteElementString("MainVideoFaster", shortcuts.MainVideoFaster);
+            textWriter.WriteElementString("MainVideoReset", shortcuts.MainVideoReset);
+            textWriter.WriteElementString("MainSpellCheck", shortcuts.MainSpellCheck);
+            textWriter.WriteElementString("MainSpellCheckFindDoubleWords", shortcuts.MainSpellCheckFindDoubleWords);
+            textWriter.WriteElementString("MainSpellCheckAddWordToNames", shortcuts.MainSpellCheckAddWordToNames);
+            textWriter.WriteElementString("MainSynchronizationAdjustTimes", shortcuts.MainSynchronizationAdjustTimes);
+            textWriter.WriteElementString("MainSynchronizationVisualSync", shortcuts.MainSynchronizationVisualSync);
+            textWriter.WriteElementString("MainSynchronizationPointSync", shortcuts.MainSynchronizationPointSync);
+            textWriter.WriteElementString("MainSynchronizationPointSyncViaFile", shortcuts.MainSynchronizationPointSyncViaFile);
+            textWriter.WriteElementString("MainSynchronizationChangeFrameRate", shortcuts.MainSynchronizationChangeFrameRate);
+            textWriter.WriteElementString("MainListViewItalic", shortcuts.MainListViewItalic);
+            textWriter.WriteElementString("MainListViewBold", shortcuts.MainListViewBold);
+            textWriter.WriteElementString("MainListViewUnderline", shortcuts.MainListViewUnderline);
+            textWriter.WriteElementString("MainListViewBox", shortcuts.MainListViewBox);
+            textWriter.WriteElementString("MainListViewSplit", shortcuts.MainListViewSplit);
+            textWriter.WriteElementString("MainListViewToggleDashes", shortcuts.MainListViewToggleDashes);
+            textWriter.WriteElementString("MainListViewToggleMusicSymbols", shortcuts.MainListViewToggleMusicSymbols);
+            textWriter.WriteElementString("MainListViewAlignment", shortcuts.MainListViewAlignment);
+            textWriter.WriteElementString("MainListViewAlignmentN1", shortcuts.MainListViewAlignmentN1);
+            textWriter.WriteElementString("MainListViewAlignmentN2", shortcuts.MainListViewAlignmentN2);
+            textWriter.WriteElementString("MainListViewAlignmentN3", shortcuts.MainListViewAlignmentN3);
+            textWriter.WriteElementString("MainListViewAlignmentN4", shortcuts.MainListViewAlignmentN4);
+            textWriter.WriteElementString("MainListViewAlignmentN5", shortcuts.MainListViewAlignmentN5);
+            textWriter.WriteElementString("MainListViewAlignmentN6", shortcuts.MainListViewAlignmentN6);
+            textWriter.WriteElementString("MainListViewAlignmentN7", shortcuts.MainListViewAlignmentN7);
+            textWriter.WriteElementString("MainListViewAlignmentN8", shortcuts.MainListViewAlignmentN8);
+            textWriter.WriteElementString("MainListViewAlignmentN9", shortcuts.MainListViewAlignmentN9);
+            textWriter.WriteElementString("MainRemoveFormatting", shortcuts.MainRemoveFormatting);
+            textWriter.WriteElementString("MainListViewCopyText", shortcuts.MainListViewCopyText);
+            textWriter.WriteElementString("MainListViewCopyTextFromOriginalToCurrent", shortcuts.MainListViewCopyTextFromOriginalToCurrent);
+            textWriter.WriteElementString("MainListViewAutoDuration", shortcuts.MainListViewAutoDuration);
+            textWriter.WriteElementString("MainListViewColumnDeleteText", shortcuts.MainListViewColumnDeleteText);
+            textWriter.WriteElementString("MainListViewColumnDeleteTextAndShiftUp", shortcuts.MainListViewColumnDeleteTextAndShiftUp);
+            textWriter.WriteElementString("MainListViewColumnInsertText", shortcuts.MainListViewColumnInsertText);
+            textWriter.WriteElementString("MainListViewColumnPaste", shortcuts.MainListViewColumnPaste);
+            textWriter.WriteElementString("MainListViewColumnTextUp", shortcuts.MainListViewColumnTextUp);
+            textWriter.WriteElementString("MainListViewColumnTextDown", shortcuts.MainListViewColumnTextDown);
+            textWriter.WriteElementString("MainListViewFocusWaveform", shortcuts.MainListViewFocusWaveform);
+            textWriter.WriteElementString("MainListViewGoToNextError", shortcuts.MainListViewGoToNextError);
+            textWriter.WriteElementString("MainListViewRemoveTimeCodes", shortcuts.MainListViewRemoveTimeCodes);
+            textWriter.WriteElementString("MainEditFixRTLViaUnicodeChars", shortcuts.MainEditFixRTLViaUnicodeChars);
+            textWriter.WriteElementString("MainEditRemoveRTLUnicodeChars", shortcuts.MainEditRemoveRTLUnicodeChars);
+            textWriter.WriteElementString("MainEditReverseStartAndEndingForRTL", shortcuts.MainEditReverseStartAndEndingForRTL);
+            textWriter.WriteElementString("MainTextBoxItalic", shortcuts.MainTextBoxItalic);
+            textWriter.WriteElementString("MainTextBoxSplitAtCursor", shortcuts.MainTextBoxSplitAtCursor);
+            textWriter.WriteElementString("MainTextBoxSplitAtCursorAndVideoPos", shortcuts.MainTextBoxSplitAtCursorAndVideoPos);
+            textWriter.WriteElementString("MainTextBoxSplitSelectedLineBilingual", shortcuts.MainTextBoxSplitSelectedLineBilingual);
+            textWriter.WriteElementString("MainTextBoxMoveLastWordDown", shortcuts.MainTextBoxMoveLastWordDown);
+            textWriter.WriteElementString("MainTextBoxMoveFirstWordFromNextUp", shortcuts.MainTextBoxMoveFirstWordFromNextUp);
+            textWriter.WriteElementString("MainTextBoxMoveLastWordDownCurrent", shortcuts.MainTextBoxMoveLastWordDownCurrent);
+            textWriter.WriteElementString("MainTextBoxMoveFirstWordUpCurrent", shortcuts.MainTextBoxMoveFirstWordUpCurrent);
+            textWriter.WriteElementString("MainTextBoxSelectionToLower", shortcuts.MainTextBoxSelectionToLower);
+            textWriter.WriteElementString("MainTextBoxSelectionToUpper", shortcuts.MainTextBoxSelectionToUpper);
+            textWriter.WriteElementString("MainTextBoxSelectionToRuby", shortcuts.MainTextBoxSelectionToRuby);
+            textWriter.WriteElementString("MainTextBoxToggleAutoDuration", shortcuts.MainTextBoxToggleAutoDuration);
+            textWriter.WriteElementString("MainCreateInsertSubAtVideoPos", shortcuts.MainCreateInsertSubAtVideoPos);
+            textWriter.WriteElementString("MainCreateInsertSubAtVideoPosNoTextBoxFocus", shortcuts.MainCreateInsertSubAtVideoPosNoTextBoxFocus);
+            textWriter.WriteElementString("MainCreateSetStart", shortcuts.MainCreateSetStart);
+            textWriter.WriteElementString("MainCreateSetEnd", shortcuts.MainCreateSetEnd);
+            textWriter.WriteElementString("MainAdjustSetEndAndPause", shortcuts.MainAdjustSetEndAndPause);
+            textWriter.WriteElementString("MainCreateSetEndAddNewAndGoToNew", shortcuts.MainCreateSetEndAddNewAndGoToNew);
+            textWriter.WriteElementString("MainCreateStartDownEndUp", shortcuts.MainCreateStartDownEndUp);
+            textWriter.WriteElementString("MainAdjustSetStartAndOffsetTheRest", shortcuts.MainAdjustSetStartAndOffsetTheRest);
+            textWriter.WriteElementString("MainAdjustSetStartAndOffsetTheRest2", shortcuts.MainAdjustSetStartAndOffsetTheRest2);
+            textWriter.WriteElementString("MainAdjustSetEndAndOffsetTheRest", shortcuts.MainAdjustSetEndAndOffsetTheRest);
+            textWriter.WriteElementString("MainAdjustSetEndAndOffsetTheRestAndGoToNext", shortcuts.MainAdjustSetEndAndOffsetTheRestAndGoToNext);
+            textWriter.WriteElementString("MainAdjustSetEndAndGotoNext", shortcuts.MainAdjustSetEndAndGotoNext);
+            textWriter.WriteElementString("MainAdjustViaEndAutoStart", shortcuts.MainAdjustViaEndAutoStart);
+            textWriter.WriteElementString("MainAdjustViaEndAutoStartAndGoToNext", shortcuts.MainAdjustViaEndAutoStartAndGoToNext);
+            textWriter.WriteElementString("MainAdjustSetStartAutoDurationAndGoToNext", shortcuts.MainAdjustSetStartAutoDurationAndGoToNext);
+            textWriter.WriteElementString("MainAdjustSetEndNextStartAndGoToNext", shortcuts.MainAdjustSetEndNextStartAndGoToNext);
+            textWriter.WriteElementString("MainAdjustStartDownEndUpAndGoToNext", shortcuts.MainAdjustStartDownEndUpAndGoToNext);
+            textWriter.WriteElementString("MainAdjustSetStartKeepDuration", shortcuts.MainAdjustSetStartKeepDuration);
+            textWriter.WriteElementString("MainAdjustSelected100MsForward", shortcuts.MainAdjustSelected100MsForward);
+            textWriter.WriteElementString("MainAdjustSelected100MsBack", shortcuts.MainAdjustSelected100MsBack);
+            textWriter.WriteElementString("MainAdjustStartXMsBack", shortcuts.MainAdjustStartXMsBack);
+            textWriter.WriteElementString("MainAdjustStartXMsForward", shortcuts.MainAdjustStartXMsForward);
+            textWriter.WriteElementString("MainAdjustEndXMsBack", shortcuts.MainAdjustEndXMsBack);
+            textWriter.WriteElementString("MainAdjustEndXMsForward", shortcuts.MainAdjustEndXMsForward);
+            textWriter.WriteElementString("MoveStartOneFrameBack", shortcuts.MoveStartOneFrameBack);
+            textWriter.WriteElementString("MoveStartOneFrameForward", shortcuts.MoveStartOneFrameForward);
+            textWriter.WriteElementString("MoveEndOneFrameBack", shortcuts.MoveEndOneFrameBack);
+            textWriter.WriteElementString("MoveEndOneFrameForward", shortcuts.MoveEndOneFrameForward);
+            textWriter.WriteElementString("MoveStartOneFrameBackKeepGapPrev", shortcuts.MoveStartOneFrameBackKeepGapPrev);
+            textWriter.WriteElementString("MoveStartOneFrameForwardKeepGapPrev", shortcuts.MoveStartOneFrameForwardKeepGapPrev);
+            textWriter.WriteElementString("MoveEndOneFrameBackKeepGapNext", shortcuts.MoveEndOneFrameBackKeepGapNext);
+            textWriter.WriteElementString("MoveEndOneFrameForwardKeepGapNext", shortcuts.MoveEndOneFrameForwardKeepGapNext);
+            textWriter.WriteElementString("MainAdjustSnapStartToNextSceneChange", shortcuts.MainAdjustSnapStartToNextSceneChange);
+            textWriter.WriteElementString("MainAdjustSnapStartToNextSceneChangeWithGap", shortcuts.MainAdjustSnapStartToNextSceneChangeWithGap);
+            textWriter.WriteElementString("MainAdjustSnapEndToPreviousSceneChange", shortcuts.MainAdjustSnapEndToPreviousSceneChange);
+            textWriter.WriteElementString("MainAdjustSnapEndToPreviousSceneChangeWithGap", shortcuts.MainAdjustSnapEndToPreviousSceneChangeWithGap);
+            textWriter.WriteElementString("MainAdjustExtendToNextSceneChange", shortcuts.MainAdjustExtendToNextSceneChange);
+            textWriter.WriteElementString("MainAdjustExtendToNextSceneChangeWithGap", shortcuts.MainAdjustExtendToNextSceneChangeWithGap);
+            textWriter.WriteElementString("MainAdjustExtendToPreviousSceneChange", shortcuts.MainAdjustExtendToPreviousSceneChange);
+            textWriter.WriteElementString("MainAdjustExtendToPreviousSceneChangeWithGap", shortcuts.MainAdjustExtendToPreviousSceneChangeWithGap);
+            textWriter.WriteElementString("MainAdjustExtendToNextSubtitle", shortcuts.MainAdjustExtendToNextSubtitle);
+            textWriter.WriteElementString("MainAdjustExtendToPreviousSubtitle", shortcuts.MainAdjustExtendToPreviousSubtitle);
+            textWriter.WriteElementString("MainAdjustExtendCurrentSubtitle", shortcuts.MainAdjustExtendCurrentSubtitle);
+            textWriter.WriteElementString("MainAdjustExtendPreviousLineEndToCurrentStart", shortcuts.MainAdjustExtendPreviousLineEndToCurrentStart);
+            textWriter.WriteElementString("MainAdjustExtendNextLineStartToCurrentEnd", shortcuts.MainAdjustExtendNextLineStartToCurrentEnd);
+            textWriter.WriteElementString("MainInsertAfter", shortcuts.MainInsertAfter);
+            textWriter.WriteElementString("MainTextBoxAutoBreak", shortcuts.MainTextBoxAutoBreak);
+            textWriter.WriteElementString("MainTextBoxBreakAtPosition", shortcuts.MainTextBoxBreakAtPosition);
+            textWriter.WriteElementString("MainTextBoxBreakAtPositionAndGoToNext", shortcuts.MainTextBoxBreakAtPositionAndGoToNext);
+            textWriter.WriteElementString("MainTextBoxUnbreak", shortcuts.MainTextBoxUnbreak);
+            textWriter.WriteElementString("MainWaveformInsertAtCurrentPosition", shortcuts.MainWaveformInsertAtCurrentPosition);
+            textWriter.WriteElementString("MainInsertBefore", shortcuts.MainInsertBefore);
+            textWriter.WriteElementString("MainMergeDialog", shortcuts.MainMergeDialog);
+            textWriter.WriteElementString("MainToggleFocus", shortcuts.MainToggleFocus);
+            textWriter.WriteElementString("WaveformAdd", shortcuts.WaveformAdd);
+            textWriter.WriteElementString("WaveformVerticalZoom", shortcuts.WaveformVerticalZoom);
+            textWriter.WriteElementString("WaveformVerticalZoomOut", shortcuts.WaveformVerticalZoomOut);
+            textWriter.WriteElementString("WaveformZoomIn", shortcuts.WaveformZoomIn);
+            textWriter.WriteElementString("WaveformZoomOut", shortcuts.WaveformZoomOut);
+            textWriter.WriteElementString("WaveformSplit", shortcuts.WaveformSplit);
+            textWriter.WriteElementString("WaveformPlaySelection", shortcuts.WaveformPlaySelection);
+            textWriter.WriteElementString("WaveformPlaySelectionEnd", shortcuts.WaveformPlaySelectionEnd);
+            textWriter.WriteElementString("WaveformSearchSilenceForward", shortcuts.WaveformSearchSilenceForward);
+            textWriter.WriteElementString("WaveformSearchSilenceBack", shortcuts.WaveformSearchSilenceBack);
+            textWriter.WriteElementString("WaveformAddTextHere", shortcuts.WaveformAddTextHere);
+            textWriter.WriteElementString("WaveformAddTextHereFromClipboard", shortcuts.WaveformAddTextHereFromClipboard);
+            textWriter.WriteElementString("WaveformSetParagraphAsSelection", shortcuts.WaveformSetParagraphAsSelection);
+            textWriter.WriteElementString("WaveformFocusListView", shortcuts.WaveformFocusListView);
+            textWriter.WriteElementString("WaveformGoToPreviousSceneChange", shortcuts.WaveformGoToPreviousSceneChange);
+            textWriter.WriteElementString("WaveformGoToNextSceneChange", shortcuts.WaveformGoToNextSceneChange);
+            textWriter.WriteElementString("WaveformToggleSceneChange", shortcuts.WaveformToggleSceneChange);
+            textWriter.WriteElementString("WaveformGuessStart", shortcuts.WaveformGuessStart);
+            textWriter.WriteElementString("Waveform100MsLeft", shortcuts.Waveform100MsLeft);
+            textWriter.WriteElementString("Waveform100MsRight", shortcuts.Waveform100MsRight);
+            textWriter.WriteElementString("Waveform1000MsLeft", shortcuts.Waveform1000MsLeft);
+            textWriter.WriteElementString("Waveform1000MsRight", shortcuts.Waveform1000MsRight);
+            textWriter.WriteElementString("MainTranslateGoogleIt", shortcuts.MainTranslateGoogleIt);
+            textWriter.WriteElementString("MainTranslateGoogleTranslate", shortcuts.MainTranslateGoogleTranslate);
+            textWriter.WriteElementString("MainTranslateCustomSearch1", shortcuts.MainTranslateCustomSearch1);
+            textWriter.WriteElementString("MainTranslateCustomSearch2", shortcuts.MainTranslateCustomSearch2);
+            textWriter.WriteElementString("MainTranslateCustomSearch3", shortcuts.MainTranslateCustomSearch3);
+            textWriter.WriteElementString("MainTranslateCustomSearch4", shortcuts.MainTranslateCustomSearch4);
+            textWriter.WriteElementString("MainTranslateCustomSearch5", shortcuts.MainTranslateCustomSearch5);
+            textWriter.WriteEndElement();
+        }
     }
 }
