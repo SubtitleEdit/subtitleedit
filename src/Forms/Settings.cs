@@ -18,7 +18,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
-using System.Xml.Serialization;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -3430,11 +3429,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             try
             {
-                var r = new StreamReader(openFileDialogFFmpeg.FileName);
-                var s = new XmlSerializer(typeof(Shortcuts));
-                Configuration.Settings.Shortcuts = (Shortcuts)s.Deserialize(r);
-                r.Close();
-                textBoxShortcutSearch.Text = String.Empty;
+                Configuration.Settings.Shortcuts = Shortcuts.Load(openFileDialogFFmpeg.FileName);
+                textBoxShortcutSearch.Text = string.Empty;
                 MakeShortcutsTreeView(Configuration.Settings.Language.Settings);
                 ShowShortcutsTreeView();
             }
@@ -3456,16 +3452,13 @@ namespace Nikse.SubtitleEdit.Forms
 
             try
             {
-                var shortcuts = new Shortcuts();
+                var shortcuts = Configuration.Settings.Shortcuts.Clone();
                 foreach (var kvp in _newShortcuts)
                 {
                     kvp.Key.Shortcut.SetValue(shortcuts, kvp.Value, null);
                 }
 
-                var s = new XmlSerializer(typeof(Shortcuts));
-                var w = new StreamWriter(saveFileDialog1.FileName);
-                s.Serialize(w, shortcuts);
-                w.Close();
+                Shortcuts.Save(saveFileDialog1.FileName, shortcuts);
             }
             catch (Exception exception)
             {

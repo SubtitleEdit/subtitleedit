@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
@@ -2057,6 +2058,35 @@ $HorzAlign          =   Center
             MainTranslateGoogleTranslate = "Control+Shift+G";
             MainAdjustExtendToNextSubtitle = "Control+Shift+E";
             MainAdjustExtendToPreviousSubtitle = "Alt+Shift+E";
+        }
+
+        public Shortcuts Clone()
+        {
+            using (var ms = new MemoryStream())
+            {
+                var formatter = new BinaryFormatter();
+                formatter.Serialize(ms, this);
+                ms.Position = 0;
+                return (Shortcuts)formatter.Deserialize(ms);
+            }
+        }
+
+        public static void Save(string fileName, Shortcuts shortcuts)
+        {
+            var s = new XmlSerializer(typeof(Shortcuts));
+            var w = new StreamWriter(fileName);
+            s.Serialize(w, shortcuts);
+            w.Close();
+        }
+
+        public static Shortcuts Load(string fileName)
+        {
+            var shortcuts = new Shortcuts();
+            var r = new StreamReader(fileName);
+            var s = new XmlSerializer(typeof(Shortcuts));
+            shortcuts = (Shortcuts)s.Deserialize(r);
+            r.Close();
+            return shortcuts;
         }
     }
 
