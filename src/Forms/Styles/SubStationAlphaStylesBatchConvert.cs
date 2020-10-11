@@ -487,115 +487,67 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void radioButtonTopLeft_CheckedChanged(object sender, EventArgs e)
         {
-            if (_doUpdate && (sender as RadioButton).Checked)
+            if (_doUpdate && ((RadioButton)sender).Checked)
             {
                 string name = CurrentStyleName;
-                if (_isSubStationAlpha)
-                {
-                    SetSsaStyle(name, "alignment", "5");
-                }
-                else
-                {
-                    SetSsaStyle(name, "alignment", "7");
-                }
-
+                SetSsaStyle(name, "alignment", _isSubStationAlpha ? "5" : "7");
                 GeneratePreviewAndUpdateRawHeader();
             }
         }
 
         private void radioButtonTopCenter_CheckedChanged(object sender, EventArgs e)
         {
-            if (_doUpdate && (sender as RadioButton).Checked)
+            if (_doUpdate && ((RadioButton)sender).Checked)
             {
                 string name = CurrentStyleName;
-                if (_isSubStationAlpha)
-                {
-                    SetSsaStyle(name, "alignment", "6");
-                }
-                else
-                {
-                    SetSsaStyle(name, "alignment", "8");
-                }
-
+                SetSsaStyle(name, "alignment", _isSubStationAlpha ? "6" : "8");
                 GeneratePreviewAndUpdateRawHeader();
             }
         }
 
         private void radioButtonTopRight_CheckedChanged(object sender, EventArgs e)
         {
-            if (_doUpdate && (sender as RadioButton).Checked)
+            if (_doUpdate && ((RadioButton)sender).Checked)
             {
                 string name = CurrentStyleName;
-                if (_isSubStationAlpha)
-                {
-                    SetSsaStyle(name, "alignment", "7");
-                }
-                else
-                {
-                    SetSsaStyle(name, "alignment", "9");
-                }
-
+                SetSsaStyle(name, "alignment", _isSubStationAlpha ? "7" : "9");
                 GeneratePreviewAndUpdateRawHeader();
             }
         }
 
         private void radioButtonMiddleLeft_CheckedChanged(object sender, EventArgs e)
         {
-            if (_doUpdate && (sender as RadioButton).Checked)
+            if (_doUpdate && ((RadioButton)sender).Checked)
             {
                 string name = CurrentStyleName;
-                if (_isSubStationAlpha)
-                {
-                    SetSsaStyle(name, "alignment", "9");
-                }
-                else
-                {
-                    SetSsaStyle(name, "alignment", "4");
-                }
-
+                SetSsaStyle(name, "alignment", _isSubStationAlpha ? "9" : "4");
                 GeneratePreviewAndUpdateRawHeader();
             }
         }
 
         private void radioButtonMiddleCenter_CheckedChanged(object sender, EventArgs e)
         {
-            if (_doUpdate && (sender as RadioButton).Checked)
+            if (_doUpdate && ((RadioButton)sender).Checked)
             {
                 string name = CurrentStyleName;
-                if (_isSubStationAlpha)
-                {
-                    SetSsaStyle(name, "alignment", "10");
-                }
-                else
-                {
-                    SetSsaStyle(name, "alignment", "5");
-                }
-
+                SetSsaStyle(name, "alignment", _isSubStationAlpha ? "10" : "5");
                 GeneratePreviewAndUpdateRawHeader();
             }
         }
 
         private void radioButtonMiddleRight_CheckedChanged(object sender, EventArgs e)
         {
-            if (_doUpdate && (sender as RadioButton).Checked)
+            if (_doUpdate && ((RadioButton)sender).Checked)
             {
                 string name = CurrentStyleName;
-                if (_isSubStationAlpha)
-                {
-                    SetSsaStyle(name, "alignment", "11");
-                }
-                else
-                {
-                    SetSsaStyle(name, "alignment", "6");
-                }
-
+                SetSsaStyle(name, "alignment", _isSubStationAlpha ? "11" : "6");
                 GeneratePreviewAndUpdateRawHeader();
             }
         }
 
         private void radioButtonBottomLeft_CheckedChanged(object sender, EventArgs e)
         {
-            if (_doUpdate && (sender as RadioButton).Checked)
+            if (_doUpdate && ((RadioButton)sender).Checked)
             {
                 SetSsaStyle(CurrentStyleName, "alignment", "1");
                 GeneratePreviewAndUpdateRawHeader();
@@ -604,7 +556,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void radioButtonBottomCenter_CheckedChanged(object sender, EventArgs e)
         {
-            if (_doUpdate && (sender as RadioButton).Checked)
+            if (_doUpdate && ((RadioButton)sender).Checked)
             {
                 SetSsaStyle(CurrentStyleName, "alignment", "2");
                 GeneratePreviewAndUpdateRawHeader();
@@ -613,7 +565,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void radioButtonBottomRight_CheckedChanged(object sender, EventArgs e)
         {
-            if (_doUpdate && (sender as RadioButton).Checked)
+            if (_doUpdate && ((RadioButton)sender).Checked)
             {
                 SetSsaStyle(CurrentStyleName, "alignment", "3");
                 GeneratePreviewAndUpdateRawHeader();
@@ -649,8 +601,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void radioButtonOutline_CheckedChanged(object sender, EventArgs e)
         {
-            var rb = (sender as RadioButton);
-            if (rb != null && _doUpdate && rb.Checked)
+            if (sender is RadioButton rb && _doUpdate && rb.Checked)
             {
                 numericUpDownShadowWidth.Value = 2;
                 string name = CurrentStyleName;
@@ -846,16 +797,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     }
                     else if (s.StartsWith("playresx:", StringComparison.Ordinal))
                     {
-                        int number;
-                        if (int.TryParse(s.Remove(0, 9).Trim(), out number))
+                        if (int.TryParse(s.Remove(0, 9).Trim(), out var number))
                         {
                             numericUpDownVideoWidth.Value = number;
                         }
                     }
                     else if (s.StartsWith("playresy:", StringComparison.Ordinal))
                     {
-                        int number;
-                        if (int.TryParse(s.Remove(0, 9).Trim(), out number))
+                        if (int.TryParse(s.Remove(0, 9).Trim(), out var number))
                         {
                             numericUpDownVideoHeight.Value = number;
                         }
@@ -1036,7 +985,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             var bmp = new Bitmap(pictureBoxPreview.Width, pictureBoxPreview.Height);
 
-            using (Graphics g = Graphics.FromImage(bmp))
+            using (var g = Graphics.FromImage(bmp))
             {
                 // Draw background
                 const int rectangleSize = 9;
@@ -1044,7 +993,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 {
                     for (int x = 0; x < bmp.Width; x += rectangleSize)
                     {
-                        Color c = Color.WhiteSmoke;
+                        var c = Color.WhiteSmoke;
                         if (y % (rectangleSize * 2) == 0)
                         {
                             if (x % (rectangleSize * 2) == 0)
@@ -1059,7 +1008,11 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                                 c = Color.LightGray;
                             }
                         }
-                        g.FillRectangle(new SolidBrush(c), x, y, rectangleSize, rectangleSize);
+
+                        using (var brush = new SolidBrush(c))
+                        {
+                            g.FillRectangle(brush, x, y, rectangleSize, rectangleSize);
+                        }
                     }
                 }
 
@@ -1124,13 +1077,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
                 if (radioButtonOpaqueBox.Checked)
                 {
-                    if (_isSubStationAlpha)
+                    using (var brush = new SolidBrush(_isSubStationAlpha ? panelBackColor.BackColor : panelOutlineColor.BackColor))
                     {
-                        g.FillRectangle(new SolidBrush(panelBackColor.BackColor), left, top, measuredWidth + 3, measuredHeight + 3);
-                    }
-                    else
-                    {
-                        g.FillRectangle(new SolidBrush(panelOutlineColor.BackColor), left, top, measuredWidth + 3, measuredHeight + 3);
+                        g.FillRectangle(brush, left, top, measuredWidth + 3, measuredHeight + 3);
                     }
                 }
 
@@ -1141,15 +1090,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 // draw shadow
                 if (numericUpDownShadowWidth.Value > 0 && radioButtonOutline.Checked)
                 {
-                    var shadowPath = (GraphicsPath)path.Clone();
-                    for (int i = 0; i < (int)numericUpDownShadowWidth.Value; i++)
+                    using (var shadowPath = (GraphicsPath)path.Clone())
+                    using (var p1 = new Pen(Color.FromArgb(250, panelBackColor.BackColor), outline))
                     {
-                        var translateMatrix = new Matrix();
-                        translateMatrix.Translate(1, 1);
-                        shadowPath.Transform(translateMatrix);
-
-                        using (var p1 = new Pen(Color.FromArgb(250, panelBackColor.BackColor), outline))
+                        for (int i = 0; i < (int)numericUpDownShadowWidth.Value; i++)
                         {
+                            var translateMatrix = new Matrix();
+                            translateMatrix.Translate(1, 1);
+                            shadowPath.Transform(translateMatrix);
                             g.DrawPath(p1, shadowPath);
                         }
                     }
@@ -1157,24 +1105,25 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
                 if (outline > 0 && radioButtonOutline.Checked)
                 {
-                    if (_isSubStationAlpha)
+                    using (var pen = new Pen(_isSubStationAlpha ? panelBackColor.BackColor : panelOutlineColor.BackColor))
                     {
-                        g.DrawPath(new Pen(panelBackColor.BackColor, outline), path);
-                    }
-                    else
-                    {
-                        g.DrawPath(new Pen(panelOutlineColor.BackColor, outline), path);
+                        g.DrawPath(pen, path);
                     }
                 }
-                g.FillPath(new SolidBrush(panelPrimaryColor.BackColor), path);
+
+                using (var brush = new SolidBrush(panelPrimaryColor.BackColor))
+                {
+                    g.FillPath(brush, path);
+                }
+
+                font.Dispose();
             }
             pictureBoxPreview.Image = bmp;
         }
 
         private void radioButtonOpaqueBox_CheckedChanged(object sender, EventArgs e)
         {
-            var rb = (sender as RadioButton);
-            if (rb != null && _doUpdate && rb.Checked)
+            if (sender is RadioButton rb && _doUpdate && rb.Checked)
             {
                 numericUpDownShadowWidth.Value = 0;
                 string name = CurrentStyleName;
@@ -1205,6 +1154,5 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             _doUpdate = true;
             GeneratePreview();
         }
-
     }
 }
