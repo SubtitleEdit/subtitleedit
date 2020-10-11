@@ -181,6 +181,7 @@
             this.Activated += new System.EventHandler(this.MeasurementConverter_Activated);
             this.Deactivate += new System.EventHandler(this.MeasurementConverter_Deactivate);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MeasurementConverter_FormClosed);
+            this.Load += new System.EventHandler(this.MeasurementConverter_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MeasurementConverter_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
