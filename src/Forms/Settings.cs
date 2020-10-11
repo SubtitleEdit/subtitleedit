@@ -3436,7 +3436,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
             catch (Exception exception)
             {
-                MessageBox.Show("Shortcuts not imported!" + Environment.NewLine + Environment.NewLine + exception.Message);
+                MessageBox.Show("Shortcuts not imported!" + Environment.NewLine + Environment.NewLine + 
+                                exception.Message + Environment.NewLine +
+                                exception.StackTrace);
                 SeLogger.Error(exception, "Failed to import shortcuts");
             }
         }
@@ -3462,7 +3464,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
             catch (Exception exception)
             {
-                MessageBox.Show(exception.Message);
+                MessageBox.Show(exception.Message + Environment.NewLine +
+                                exception.StackTrace);
                 SeLogger.Error(exception, "Failed to export shortcuts");
             }
         }
