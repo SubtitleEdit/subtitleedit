@@ -1450,7 +1450,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             treeViewShortcuts.ExpandAll();
             treeViewShortcuts.EndUpdate();
-            treeViewShortcuts.SelectedNode = treeViewShortcuts.Nodes[0];
+            if (treeViewShortcuts.Nodes.Count > 0)
+            {
+                treeViewShortcuts.SelectedNode = treeViewShortcuts.Nodes[0];
+            }
         }
 
         private void AddNode(TreeNode parentNode, string text, ShortcutHelper shortcut)
@@ -3431,6 +3434,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var s = new XmlSerializer(typeof(Shortcuts));
                 Configuration.Settings.Shortcuts = (Shortcuts)s.Deserialize(r);
                 r.Close();
+                textBoxShortcutSearch.Text = String.Empty;
                 MakeShortcutsTreeView(Configuration.Settings.Language.Settings);
                 ShowShortcutsTreeView();
             }
