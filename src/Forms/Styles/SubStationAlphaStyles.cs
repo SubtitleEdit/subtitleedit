@@ -167,7 +167,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             pictureBoxPreview.Image?.Dispose();
             var bmp = new Bitmap(pictureBoxPreview.Width, pictureBoxPreview.Height);
 
-            using (Graphics g = Graphics.FromImage(bmp))
+            using (var g = Graphics.FromImage(bmp))
             {
                 // Draw background
                 const int rectangleSize = 9;
@@ -190,7 +190,11 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                                 c = Color.LightGray;
                             }
                         }
-                        g.FillRectangle(new SolidBrush(c), x, y, rectangleSize, rectangleSize);
+
+                        using (var brush = new SolidBrush(c))
+                        {
+                            g.FillRectangle(brush, x, y, rectangleSize, rectangleSize);
+                        }
                     }
                 }
 
@@ -255,13 +259,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
                 if (radioButtonOpaqueBox.Checked)
                 {
-                    if (_isSubStationAlpha)
+                    using (var brush = new SolidBrush(_isSubStationAlpha ? panelBackColor.BackColor : panelOutlineColor.BackColor))
                     {
-                        g.FillRectangle(new SolidBrush(panelBackColor.BackColor), left, top, measuredWidth + 3, measuredHeight + 3);
-                    }
-                    else
-                    {
-                        g.FillRectangle(new SolidBrush(panelOutlineColor.BackColor), left, top, measuredWidth + 3, measuredHeight + 3);
+                        g.FillRectangle(brush, left, top, measuredWidth + 3, measuredHeight + 3);
                     }
                 }
 
@@ -272,15 +272,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 // draw shadow
                 if (numericUpDownShadowWidth.Value > 0 && radioButtonOutline.Checked)
                 {
-                    var shadowPath = (GraphicsPath)path.Clone();
-                    for (int i = 0; i < (int)numericUpDownShadowWidth.Value; i++)
+                    using (var shadowPath = (GraphicsPath)path.Clone())
+                    using (var p1 = new Pen(Color.FromArgb(250, panelBackColor.BackColor), outline))
                     {
-                        var translateMatrix = new Matrix();
-                        translateMatrix.Translate(1, 1);
-                        shadowPath.Transform(translateMatrix);
-
-                        using (var p1 = new Pen(Color.FromArgb(250, panelBackColor.BackColor), outline))
+                        for (int i = 0; i < (int)numericUpDownShadowWidth.Value; i++)
                         {
+                            var translateMatrix = new Matrix();
+                            translateMatrix.Translate(1, 1);
+                            shadowPath.Transform(translateMatrix);
                             g.DrawPath(p1, shadowPath);
                         }
                     }
@@ -288,16 +287,18 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
                 if (outline > 0 && radioButtonOutline.Checked)
                 {
-                    if (_isSubStationAlpha)
+                    using (var pen = new Pen(_isSubStationAlpha ? panelBackColor.BackColor : panelOutlineColor.BackColor))
                     {
-                        g.DrawPath(new Pen(panelBackColor.BackColor, outline), path);
-                    }
-                    else
-                    {
-                        g.DrawPath(new Pen(panelOutlineColor.BackColor, outline), path);
+                        g.DrawPath(pen, path);
                     }
                 }
-                g.FillPath(new SolidBrush(panelPrimaryColor.BackColor), path);
+
+                using (var brush = new SolidBrush(panelPrimaryColor.BackColor))
+                {
+                    g.FillPath(brush, path);
+                }
+
+                font.Dispose();
             }
             pictureBoxPreview.Image = bmp;
         }
@@ -306,7 +307,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         {
             var styles = AdvancedSubStationAlpha.GetStylesFromHeader(_header);
             listViewStyles.Items.Clear();
-            foreach (string style in styles)
+            foreach (var style in styles)
             {
                 SsaStyle ssaStyle = GetSsaStyle(style);
                 AddStyle(listViewStyles, ssaStyle, Subtitle, _isSubStationAlpha);
