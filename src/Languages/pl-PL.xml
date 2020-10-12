@@ -188,6 +188,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <UseStyleFromSource>Użyj stylu ze źródła</UseStyleFromSource>
     <ConvertOptions>Opcje konwersji</ConvertOptions>
     <RemoveFormatting>Usuń tagi formatujące</RemoveFormatting>
+    <RemoveStyleActor>Usuń styl/aktora</RemoveStyleActor>
     <RemoveTextForHI>Usuń tekst dla niedosłyszących (HI)</RemoveTextForHI>
     <OverwriteOriginalFiles>Nadpisz oryginalne pliki (nowe rozszerzenie w przypadku zmiany formatu)</OverwriteOriginalFiles>
     <RedoCasing>Ponów wielkie litery</RedoCasing>
@@ -214,6 +215,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <FilterMoreThanTwoLines>Więcej, niż dwie linie w jednym napisie</FilterMoreThanTwoLines>
     <FilterContains>Tekst zawiera...</FilterContains>
     <FilterFileNameContains>Nazwa pliku zawiera...</FilterFileNameContains>
+    <MkvLanguageCodeContains>Kod języka Matroska (.mkv) zawiera...</MkvLanguageCodeContains>
     <FixCommonErrorsErrorX>Poprawiono najczęstsze błędy: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Wielokrotne zastąpienia: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Automatyczne równoważenie linii: {0}</AutoBalanceErrorX>
@@ -357,9 +359,13 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <Title>Zmostkuj małe odstępy między liniami napisów</Title>
     <GapsBridgedX>Ilość zmostkowanych małych odstępów: {0}</GapsBridgedX>
     <GapToNext>Odstęp do następnego w sekundach</GapToNext>
+    <GapToNextFrames>Odstęp do następnego w klatkach</GapToNextFrames>
     <BridgeGapsSmallerThanXPart1>Zmostkuj odstępy mniejsze niż</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>milisekund</BridgeGapsSmallerThanXPart2>
+    <BridgeGapsSmallerThanXPart1Frames>Zmostkuj odstępy mniejsze niż</BridgeGapsSmallerThanXPart1Frames>
+    <BridgeGapsSmallerThanXPart2Frames>klatek</BridgeGapsSmallerThanXPart2Frames>
     <MinMillisecondsBetweenLines>Minimum milisekund między liniami</MinMillisecondsBetweenLines>
+    <MinFramesBetweenLines>Minimum klatek między liniami</MinFramesBetweenLines>
     <ProlongEndTime>Poprzedni tekst zajmuje cały czas odstępu</ProlongEndTime>
     <DivideEven>Teksty rozdzielane są czasem trwania odstępu</DivideEven>
   </DurationsBridgeGaps>
@@ -505,6 +511,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <Right>Do prawej</Right>
     <Center>Do środka</Center>
     <CenterLeftJustify>Środek, wyrównanie do lewej</CenterLeftJustify>
+    <CenterLeftJustifyDialogs>Środek, wyrównanie dialogu do lewej</CenterLeftJustifyDialogs>
     <CenterTopJustify>Środek, wyrównanie do góry</CenterTopJustify>
     <CenterRightJustify>Środek, wyrównanie do prawej</CenterRightJustify>
     <BottomMargin>Dolny margines</BottomMargin>
@@ -559,12 +566,12 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
   </ExtractDateTimeInfo>
   <FindDialog>
     <Title>Znajdź</Title>
-    <Find>Znajdź</Find>
+    <Find>&amp;Znajdź</Find>
     <Normal>&amp;Wyszukiwanie podstawowe</Normal>
     <CaseSensitive>&amp;Uwzględniaj wielość liter</CaseSensitive>
     <RegularExpression>Uwzględniaj wyrażenia &amp;regularne</RegularExpression>
-    <WholeWord>Całe słowo</WholeWord>
-    <Count>Liczenie</Count>
+    <WholeWord>&amp;Całe słowo</WholeWord>
+    <Count>Licze&amp;nie</Count>
     <XNumberOfMatches>{0:#,##0} dopasowań</XNumberOfMatches>
     <OneMatch>Jedno dopasowanie</OneMatch>
   </FindDialog>
@@ -702,6 +709,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Hi John! - Hi Ida! -&gt; Hi John!&lt;br /&gt;- Hi Ida!</FixDialogsOneLineExample>
     <SelectDefault>Domyślne</SelectDefault>
+    <SetDefault>Ustaw bieżące poprawki jako domyślne</SetDefault>
     <FixContinuationStyleX>Napraw styl kontynuacji: {0}</FixContinuationStyleX>
     <XFixContinuationStyle>Poprawiono {0} styli kontynuacji</XFixContinuationStyle>
     <FixUnnecessaryLeadingDots>Usuń niepotrzebny wielokropek na początku linii</FixUnnecessaryLeadingDots>
@@ -1035,7 +1043,8 @@ Przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby wpisać swój klucz A
         <MultipleReplace>&amp;Wielokrotne zastąpienia...</MultipleReplace>
         <GoToSubtitleNumber>&amp;Idź do linii o numerze...</GoToSubtitleNumber>
         <RightToLeftMode>Tryb od-prawej-do-lewej (PDL)</RightToLeftMode>
-        <FixRtlViaUnicodeControlCharacters>Popraw PDL za pomocą kontroli znaków Unicode (dla wybranych linii)</FixRtlViaUnicodeControlCharacters>
+        <FixRtlViaUnicodeControlCharacters>Napraw PDL za pomocą znaków kontrolnych Unicode (dla wybranych linii)</FixRtlViaUnicodeControlCharacters>
+        <RemoveUnicodeControlCharacters>Usuń znaki kontrolne Unicode (z wybranych linii)</RemoveUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Odwróć początek/koniec PDL (dla wybranych linii)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Pokaż oryginalny tekst w podglądzie audio/wideo</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Modyfikuj zaznaczone...</ModifySelection>
@@ -1320,6 +1329,7 @@ Przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby wpisać swój klucz A
 Plik jest tylko do odczytu!</FileXIsReadOnly>
     <UnableToSaveSubtitleX>Nie można zapisać pliku z napisami {0}
 Napisy wydają się być puste - spróbuj zapisać ponownie, jeśli pracujesz na sprawdzonych napisach!</UnableToSaveSubtitleX>
+    <FormatXShouldUseUft8>Podczas zapisywania plików {0} należy używać kodowania UTF-8!</FormatXShouldUseUft8>
     <BeforeNew>Przed nowym</BeforeNew>
     <New>Nowy</New>
     <BeforeConvertingToX>Przed konwersją do {0}</BeforeConvertingToX>
@@ -1574,16 +1584,109 @@ Jeśli edytowałeś ten plik w Subtitle Edit, to możesz odszukać kopię zapaso
     <ConvertFrom>Konwertuj z</ConvertFrom>
     <ConvertTo>Konwertuj na</ConvertTo>
     <CopyToClipboard>Kopiuj do schowka</CopyToClipboard>
-    <Celsius>Stopnie Celsjusza</Celsius>
-    <Fahrenheit>Stopnie Fahrenheita</Fahrenheit>
-    <Miles>Mile</Miles>
+    <Length>Długość</Length>
+    <Mass>Masa</Mass>
+    <Volume>Objętość</Volume>
+    <Area>Powierzchnia</Area>
+    <Time>Czas</Time>
+    <Temperature>Temperatura</Temperature>
+    <Velocity>Prędkość</Velocity>
+    <Force>Siła</Force>
+    <Energy>Energia</Energy>
+    <Power>Moc</Power>
+    <Pressure>Ciśnienie</Pressure>
     <Kilometers>Kilometry</Kilometers>
     <Meters>Metry</Meters>
+    <Centimeters>Centymetry</Centimeters>
+    <Millimeters>Milimetry</Millimeters>
+    <Micrometers>Mikrometry</Micrometers>
+    <Nanometers>Nanometry</Nanometers>
+    <Angstroms>Angstremy</Angstroms>
+    <MilesTerrestial>Mile (lądowe)</MilesTerrestial>
+    <MilesNautical>Mile (morskie)</MilesNautical>
     <Yards>Jardy</Yards>
     <Feet>Stopy</Feet>
     <Inches>Cale</Inches>
-    <Pounds>Funty</Pounds>
+    <Chains>Węzły</Chains>
+    <Fathoms>Sążnie</Fathoms>
+    <Hands>Dłonie</Hands>
+    <Rods>Pręty</Rods>
+    <Spans>Piędzi</Spans>
+    <LongTonnes>Tony brytyjskie</LongTonnes>
+    <ShortTonnes>Tony amerykańskie</ShortTonnes>
+    <Tonnes>Tony</Tonnes>
     <Kilos>Kilogramy</Kilos>
+    <Grams>Gramy</Grams>
+    <Milligrams>Miligramy</Milligrams>
+    <Micrograms>Mikrogramy</Micrograms>
+    <Pounds>Funty</Pounds>
+    <Ounces>Uncje</Ounces>
+    <Carats>Karaty</Carats>
+    <Drams>Dramy</Drams>
+    <Grains>Grany</Grains>
+    <Stones>Kamienie</Stones>
+    <CubicKilometers>Kilometry sześcienne</CubicKilometers>
+    <CubicMeters>Metry sześcienne</CubicMeters>
+    <Litres>Litry</Litres>
+    <CubicCentimeters>Centymetry sześcienne</CubicCentimeters>
+    <CubicMillimeters>Milimetry sześcienne</CubicMillimeters>
+    <CubicMiles>Mile sześcienne</CubicMiles>
+    <CubicYards>Jardy sześcienne</CubicYards>
+    <CubicFTs>Stopy sześcienne</CubicFTs>
+    <CubicInches>Cale sześcienne</CubicInches>
+    <OilBarrels>Baryłka z ropą</OilBarrels>
+    <GallonUS>Galon (Stany Zjednoczone)</GallonUS>
+    <QuartsUS>Kwarty (Stany Zjednoczone)</QuartsUS>
+    <PintsUS>Pinty (Stany Zjednoczone)</PintsUS>
+    <FluidOuncesUS>Uncje płynu (Stany Zjednoczone)</FluidOuncesUS>
+    <Bushels>Buszle</Bushels>
+    <Pecks>Pecki</Pecks>
+    <GallonsUK>Galony (Wielka Brytania)</GallonsUK>
+    <QuartsUK>Kwarty (Wielka Brytania)</QuartsUK>
+    <PintsUK>Pinty (Wielka Brytania)</PintsUK>
+    <FluidOuncesUK>Uncje płynu (Wielka Brytania)</FluidOuncesUK>
+    <SquareKilometers>Kilometry kwadratowe</SquareKilometers>
+    <SquareMeters>Metry kwadratowe</SquareMeters>
+    <SquareCentimeters>Centymetry kwadratowe</SquareCentimeters>
+    <SquareMillimeters>Milimetry kwadratowe</SquareMillimeters>
+    <SquareMiles>Mile kwadratowe</SquareMiles>
+    <SquareYards>Jardy kwadratowe</SquareYards>
+    <SquareFTs>Stopy kwadratowe</SquareFTs>
+    <SquareInches>Cale kwadratowe</SquareInches>
+    <Hectares>Hektary</Hectares>
+    <Acres>Akry</Acres>
+    <Ares>Ary</Ares>
+    <Hours>Godziny</Hours>
+    <Minutes>Minuty</Minutes>
+    <Seconds>Sekundy</Seconds>
+    <Milliseconds>Milisekundy</Milliseconds>
+    <Microseconds>Mikrosekundy</Microseconds>
+    <Fahrenheit>Stopnie Fahrenheita</Fahrenheit>
+    <Celsius>Stopnie Celsjusza</Celsius>
+    <Kelvin>Stopnie Kelwina</Kelvin>
+    <KilometersPerHour>Kilometry/godzinę</KilometersPerHour>
+    <MetersPerSecond>Metry/sekundę</MetersPerSecond>
+    <MilesPerHour>Mile/godzinę</MilesPerHour>
+    <YardsPerMinute>Jardy/minutę</YardsPerMinute>
+    <FTsPerSecond>Stopy/sekundę</FTsPerSecond>
+    <Knots>Węzły</Knots>
+    <PoundsForce>Funty-siła</PoundsForce>
+    <Newtons>Niutony</Newtons>
+    <KilosForce>Kilogramy-siła</KilosForce>
+    <Jouls>Dżule</Jouls>
+    <Calories>Kalorie</Calories>
+    <Ergs>Ergi</Ergs>
+    <ElectronVolts>Elektronowolty</ElectronVolts>
+    <Btus>Brytyjska jednostka cieplna (btu)</Btus>
+    <Watts>Waty</Watts>
+    <Horsepower>Koń mechaniczny</Horsepower>
+    <Atmospheres>Atmosfery</Atmospheres>
+    <Bars>Bary</Bars>
+    <Pascals>Paskale</Pascals>
+    <MillimetersOfMercury>Milimetry słupka rtęci</MillimetersOfMercury>
+    <PoundPerSquareInch>Funt-siła na cal kwadratowy</PoundPerSquareInch>
+    <KilogramPerSquareCentimeter>Kilogram-siła na centymetr kwadratowy</KilogramPerSquareCentimeter>
+    <KiloPascals>Kilopaskale</KiloPascals>
   </MeasurementConverter>
   <MergeDoubleLines>
     <Title>Połącz linie z takim samym tekstem</Title>
@@ -1774,6 +1877,8 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <ShowOnlyModifiedLines>Pokaż tylko zmodyfikowane linie</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Minimum milisekund między liniami</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Informacje o ilości klatek na sekundę</FrameInfo>
+    <Frames>Klatki</Frames>
+    <XFrameYisZMilliseconds>{0} klatek przy {1} fps to {2} milisekund</XFrameYisZMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Ustaw punkt synchronizacji dla linii {0}</Title>
@@ -1995,11 +2100,13 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <ListView>Widok listy</ListView>
     <TextBox>Pole tekstowe</TextBox>
     <UpdateShortcut>Aktualizuj</UpdateShortcut>
+    <FoucsSetVideoPosition>Koncentruj się na ustawionej pozycji video</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Przełączanie "Zadokuj"/"Oddokuj" panelu sterowania wideo</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Ustaw koniec, dodaj nowy i przejdź do nowego</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Dostosuj za pomocą pozycji końca</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Dostosuj za pomocą pozycji końca i przejdź do następnej</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Ustaw koniec i przejdź do następnej</AdjustSetEndTimeAndGoToNext>
+    <AdjustSetEndTimeAndPause>Ustaw koniec i wstrzymaj</AdjustSetEndTimeAndPause>
     <AdjustSetStartAutoDurationAndGoToNext>Ustaw początek, automatyczny czas trwania i przejdź do następnej</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Ustaw koniec, początek następnej i przejdź do następnej</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>Klawisz ↓ = ustaw początek, klawisz ↑ = ustaw koniec i przejdź do następnej</AdjustStartDownEndUpAndGoToNext>
@@ -2020,11 +2127,19 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <AdjustSetStartTimeKeepDuration>Ustaw czas rozpoczęcia, zachowaj czas trwania</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Ustaw koniec, przesuń pozostałe</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Ustaw koniec, przesuń pozostałe i przejdź do następnej</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustExtendCurrentSubtitle>Rozciągnij bieżącą linię do następnych napisów lub do maks. czasu trwania</AdjustExtendCurrentSubtitle>
+    <AdjustSnapStartToNextSceneChange>Przeciągnij wybrane linie do następnej zmiany sceny</AdjustSnapStartToNextSceneChange>
+    <AdjustSnapStartToNextSceneChangeWithGap>Przeciągnij start wybranych linii do następnej zmiany sceny z min. odstępem</AdjustSnapStartToNextSceneChangeWithGap>
+    <AdjustSnapEndToPreviousSceneChange>Przeciągnij koniec wybranych linii do poprzedniej zmiany sceny</AdjustSnapEndToPreviousSceneChange>
+    <AdjustSnapEndToPreviousSceneChangeWithGap>Przeciągnij koniec wybranych linii do poprzedniej zmiany sceny z min. odstępem</AdjustSnapEndToPreviousSceneChangeWithGap>
     <AdjustExtendToNextSceneChange>Rozciągnij wybrane linie do następnej zmiany sceny (lub następnego napisu)</AdjustExtendToNextSceneChange>
+    <AdjustExtendToNextSceneChangeWithGap>Rozciągnij wybrane linie do następnej zmiany sceny z min. odstępem (lub następnejgo napisu)</AdjustExtendToNextSceneChangeWithGap>
     <AdjustExtendToPreviousSceneChange>Rozciągnij wybrane linie do poprzedniej zmiany sceny (lub poprzedniego napisu)</AdjustExtendToPreviousSceneChange>
+    <AdjustExtendToPreviousSceneChangeWithGap>Rozciągnij wybrane linie do poprzedniej zmiany sceny z min. odstępem (lub poprzedniego napisu)</AdjustExtendToPreviousSceneChangeWithGap>
     <AdjustExtendToNextSubtitle>Rozciągnij wybrane linie do następnego napisu</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Rozciągnij wybrane linie do poprzedniego napisu</AdjustExtendToPreviousSubtitle>
+    <AdjustExtendCurrentSubtitle>Rozciągnij bieżącą linię do następnych napisów lub do maks. czasu trwania</AdjustExtendCurrentSubtitle>
+    <AdjustExtendPreviousLineEndToCurrentStart>Rozciągnij koniec poprzedniej linii do początku bieżącej</AdjustExtendPreviousLineEndToCurrentStart>
+    <AdjustExtendNextLineStartToCurrentEnd>Rozciągnij początek następnej linii do końca bieżącej</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>Wylicz ponownie czas trwania bieżących napisów</RecalculateDurationOfCurrentSubtitle>
     <MainCreateStartDownEndUp>Klawisz ↓ - utwórz nowy, klawisz ↑ - ustaw czas zakończenia</MainCreateStartDownEndUp>
     <MergeDialog>Połącz dialogi (wstaw myślniki)</MergeDialog>
@@ -2052,6 +2167,8 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <CopyTextOnly>Kopiuj tylko tekst do schowka (zaznaczone linie)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Kopiuj tekst z oryginału do bieżącego</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Automatyczny czas trwania (zaznaczone linie)</AutoDurationSelectedLines>
+    <FixRTLViaUnicodeChars>Napraw PDL za pomocą znaków kontrolnych Unicode</FixRTLViaUnicodeChars>
+    <RemoveRTLUnicodeChars>Usuń znaki kontrolne Unicode</RemoveRTLUnicodeChars>
     <ReverseStartAndEndingForRtl>Odwróć PDL start/koniec</ReverseStartAndEndingForRtl>
     <VerticalZoom>Powiększ w pionie</VerticalZoom>
     <VerticalZoomOut>Pomniejsz w pionie</VerticalZoomOut>
@@ -2080,6 +2197,10 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <GoForward1Second>1 sekunda do przodu</GoForward1Second>
     <GoBack5Seconds>5 sekund do tyłu</GoBack5Seconds>
     <GoForward5Seconds>5 sekund do przodu</GoForward5Seconds>
+    <GoBackXSSeconds>Mały wybrany czas do tyłu</GoBackXSSeconds>
+    <GoForwardXSSeconds>Mały wybrany czas do przodu</GoForwardXSSeconds>
+    <GoBackXLSeconds>Duży wybrany czas do tyłu</GoBackXLSeconds>
+    <GoForwardXLSeconds>Duży wybrany czas do przodu</GoForwardXLSeconds>
     <GoBack3Second>Trzy sekundy do tyłu</GoBack3Second>
     <GoToStartCurrent>Ustaw pozycję wideo na początek bieżących napisów</GoToStartCurrent>
     <ToggleStartEndCurrent>Przełącz pozycję wideo między początkiem/końcem bieżących napisów</ToggleStartEndCurrent>
