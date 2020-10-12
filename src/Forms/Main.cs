@@ -9870,6 +9870,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
+                FixSplitFontTag(currentParagraph, newParagraph);
                 SetSplitTime(splitSeconds, currentParagraph, newParagraph, oldText);
 
                 if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
@@ -10050,6 +10051,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         _subtitleAlternate.InsertParagraphInCorrectTimeOrder(originalNew);
                         _subtitleAlternate.Renumber();
+                        FixSplitFontTag(originalCurrent, originalNew);
                     }
                 }
 
@@ -10072,6 +10074,36 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowStatus(_language.LineSplitted);
                 SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
                 RefreshSelectedParagraph();
+            }
+        }
+
+        private void FixSplitFontTag(Paragraph currentParagraph, Paragraph nextParagraph)
+        {
+            if (currentParagraph == null || nextParagraph == null)
+            {
+                return;
+            }
+
+            var startIdx = currentParagraph.Text.LastIndexOf("<font ", StringComparison.OrdinalIgnoreCase);
+            if (startIdx >= 0 &&
+                !currentParagraph.Text.Contains("</font>", StringComparison.OrdinalIgnoreCase) &&
+                nextParagraph.Text.Contains("</font>", StringComparison.OrdinalIgnoreCase))
+            {
+                var endIdx = currentParagraph.Text.IndexOf('>', startIdx);
+                if (endIdx >= 0)
+                {
+                    var fontTag = currentParagraph.Text.Substring(startIdx, endIdx - startIdx + 1);
+                    var pre = string.Empty;
+                    if (currentParagraph.Text.StartsWith('{') && currentParagraph.Text.IndexOf('}') > 0)
+                    {
+                        var i = currentParagraph.Text.IndexOf('}');
+                        pre = currentParagraph.Text.Substring(0, i + 1);
+                        currentParagraph.Text = currentParagraph.Text.Remove(0, i + 1);
+                    }
+
+                    currentParagraph.Text = pre + currentParagraph.Text + "</font>";
+                    nextParagraph.Text = pre + fontTag + nextParagraph.Text;
+                }
             }
         }
 
