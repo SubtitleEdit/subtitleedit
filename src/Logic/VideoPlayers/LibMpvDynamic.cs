@@ -498,7 +498,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 _mpvInitialize.Invoke(_mpvHandle);
                 SetVideoOwner(ownerControl);
 
-                string videoOutput = "gpu";
+                string videoOutput = string.Empty;
                 if (Configuration.IsRunningOnLinux)
                 {
                     videoOutput = Configuration.Settings.General.MpvVideoOutputLinux;
@@ -508,7 +508,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     videoOutput = Configuration.Settings.General.MpvVideoOutputWindows;
                 }
 
-                _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("vo"), GetUtf8Bytes(videoOutput)); // use "direct3d" or "opengl"
+                if (!string.IsNullOrEmpty(videoOutput))
+                {
+                    _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("vo"), GetUtf8Bytes(videoOutput));
+                }
+
                 _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("keep-open"), GetUtf8Bytes("always")); // don't auto close video
                 _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("no-sub"), GetUtf8Bytes("")); // don't load subtitles
                 if (videoFileName.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||

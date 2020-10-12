@@ -1245,8 +1245,8 @@ $HorzAlign          =   Center
             ListViewColumnsRememberSize = true;
             DirectShowDoubleLoad = true;
             VlcWaveTranscodeSettings = "acodec=s16l"; // "acodec=s16l,channels=1,ab=64,samplerate=8000";
-            MpvVideoOutputWindows = "gpu";
-            MpvVideoOutputLinux = "x11";
+            MpvVideoOutputWindows = string.Empty; // could also be e.g. "gpu" or "directshow"
+            MpvVideoOutputLinux = string.Empty; // could also be e.g. "x11";
             MpvHandlesPreviewText = true;
             FFmpegSceneThreshold = "0.4"; // threshold for generating scene changes - 0.2 is sensitive (more scene change), 0.6 is less sensitive (fewer scene changes)
             UseTimeFormatHHMMSSFF = false;
