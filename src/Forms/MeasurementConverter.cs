@@ -4897,5 +4897,10 @@ namespace Nikse.SubtitleEdit.Forms
                 Opacity = 0.5;
             }
         }
+
+        private void MeasurementConverter_Load(object sender, EventArgs e)
+        {
+            CenterToParent();
+        }
     }
 }
