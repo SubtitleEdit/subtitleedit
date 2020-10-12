@@ -152,7 +152,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             try
             {
                 // Hack for windows 10... ???
-                if (!isAudio && Configuration.Settings.General.DirectShowDoubleLoadVideo)
+                if (!isAudio && Configuration.Settings.General.DirectShowDoubleLoad)
                 {
                     var quartzFilterGraphManager = new FilgraphManager();
                     quartzFilterGraphManager.RenderFile(VideoFileName);
@@ -232,7 +232,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
             catch
             {
+                // ignored
             }
+
             return info;
         }
 

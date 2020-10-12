@@ -268,10 +268,10 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 //Mono.Unix.
                 NativeMethods.mpv_initialize(_mpvHandle);
 
-                string videoOutput = "vaapi";
-                if (!string.IsNullOrWhiteSpace(Configuration.Settings.General.MpvVideoOutput))
+                string videoOutput = "gpu";
+                if (!string.IsNullOrWhiteSpace(Configuration.Settings.General.MpvVideoOutputWindows))
                 {
-                    videoOutput = Configuration.Settings.General.MpvVideoOutput;
+                    videoOutput = Configuration.Settings.General.MpvVideoOutputWindows;
                 }
 
                 NativeMethods.mpv_set_option_string(_mpvHandle, GetUtf8Bytes("vo"), GetUtf8Bytes(videoOutput)); // "direct3d_shaders" is default, "direct3d" could be used for compabality with old systems
