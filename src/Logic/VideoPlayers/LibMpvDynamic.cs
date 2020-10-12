@@ -498,14 +498,14 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 _mpvInitialize.Invoke(_mpvHandle);
                 SetVideoOwner(ownerControl);
 
-                string videoOutput = "direct3d";
+                string videoOutput = "gpu";
                 if (Configuration.IsRunningOnLinux)
                 {
                     videoOutput = Configuration.Settings.General.MpvVideoOutputLinux;
                 }
-                else if (!string.IsNullOrWhiteSpace(Configuration.Settings.General.MpvVideoOutput))
+                else if (!string.IsNullOrWhiteSpace(Configuration.Settings.General.MpvVideoOutputWindows))
                 {
-                    videoOutput = Configuration.Settings.General.MpvVideoOutput;
+                    videoOutput = Configuration.Settings.General.MpvVideoOutputWindows;
                 }
 
                 _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("vo"), GetUtf8Bytes(videoOutput)); // use "direct3d" or "opengl"

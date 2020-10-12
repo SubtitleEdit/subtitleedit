@@ -4448,7 +4448,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ShowSettings()
         {
             string oldVideoPlayer = Configuration.Settings.General.VideoPlayer;
-            string oldMpvVideoOutput = Configuration.Settings.General.MpvVideoOutput;
+            string oldMpvVideoOutput = Configuration.Settings.General.MpvVideoOutputWindows;
             string oldListViewLineSeparatorString = Configuration.Settings.General.ListViewLineSeparatorString;
             var oldCpsWhiteSpaceSetting = Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace;
             string oldSubtitleFontSettings = Configuration.Settings.General.SubtitleFontName +
@@ -4640,7 +4640,7 @@ namespace Nikse.SubtitleEdit.Forms
             CheckAndGetNewlyDownloadedMpvDlls("Please restart to use new libmpv dll");
 
             if (!string.IsNullOrEmpty(_videoFileName) && oldVideoPlayer != Configuration.Settings.General.VideoPlayer && mediaPlayer.VideoPlayer != null ||
-                (oldMpvVideoOutput != Configuration.Settings.General.MpvVideoOutput && Configuration.Settings.General.VideoPlayer.Equals("MPV", StringComparison.OrdinalIgnoreCase)))
+                (oldMpvVideoOutput != Configuration.Settings.General.MpvVideoOutputWindows && Configuration.Settings.General.VideoPlayer.Equals("MPV", StringComparison.OrdinalIgnoreCase)))
             {
                 string vfn = _videoFileName;
                 CloseVideoToolStripMenuItemClick(null, null);

@@ -3131,7 +3131,7 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonMpvSettings.Font = new Font(buttonMpvSettings.Font.FontFamily, buttonMpvSettings.Font.Size, FontStyle.Bold);
             }
 
-            labelMpvSettings.Text = "--vo=" + Configuration.Settings.General.MpvVideoOutput;
+            labelMpvSettings.Text = "--vo=" + Configuration.Settings.General.MpvVideoOutputWindows;
         }
 
         private void linkLabelBingSubscribe_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

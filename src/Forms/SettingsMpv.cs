@@ -22,13 +22,13 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(this);
             _justDownload = justDownload;
             labelPleaseWait.Text = string.Empty;
-            if (Configuration.IsRunningOnLinux && Configuration.Settings.General.MpvVideoOutput == "direct3d")
+            if (Configuration.IsRunningOnLinux)
             {
-                comboBoxVideoOutput.Text = "vaapi";
+                comboBoxVideoOutput.Text = Configuration.Settings.General.MpvVideoOutputLinux;
             }
             else
             {
-                comboBoxVideoOutput.Text = Configuration.Settings.General.MpvVideoOutput;
+                comboBoxVideoOutput.Text = Configuration.Settings.General.MpvVideoOutputWindows;
             }
 
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
@@ -140,7 +140,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (!string.IsNullOrWhiteSpace(comboBoxVideoOutput.Text))
             {
-                Configuration.Settings.General.MpvVideoOutput = comboBoxVideoOutput.Text;
+                Configuration.Settings.General.MpvVideoOutputWindows = comboBoxVideoOutput.Text;
             }
 
             DialogResult = DialogResult.OK;

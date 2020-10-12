@@ -1103,11 +1103,11 @@ $HorzAlign          =   Center
         public int ListViewActorWidth { get; set; }
         public int ListViewRegionWidth { get; set; }
         public int ListViewTextWidth { get; set; }
-        public bool DirectShowDoubleLoadVideo { get; set; }
+        public bool DirectShowDoubleLoad { get; set; }
         public string VlcWaveTranscodeSettings { get; set; }
         public string VlcLocation { get; set; }
         public string VlcLocationRelative { get; set; }
-        public string MpvVideoOutput { get; set; }
+        public string MpvVideoOutputWindows { get; set; }
         public string MpvVideoOutputLinux { get; set; }
         public string MpvExtraOption { get; set; }
         public bool MpvHandlesPreviewText { get; set; }
@@ -1243,9 +1243,9 @@ $HorzAlign          =   Center
             LargeDelayMilliseconds = 5000;
             OpenSubtitleExtraExtensions = "*.mp4;*.m4v;*.mkv;*.ts"; // matroska/mp4/m4v files (can contain subtitles)
             ListViewColumnsRememberSize = true;
-            DirectShowDoubleLoadVideo = false;
+            DirectShowDoubleLoad = true;
             VlcWaveTranscodeSettings = "acodec=s16l"; // "acodec=s16l,channels=1,ab=64,samplerate=8000";
-            MpvVideoOutput = "direct3d";
+            MpvVideoOutputWindows = "gpu";
             MpvVideoOutputLinux = "x11";
             MpvHandlesPreviewText = true;
             FFmpegSceneThreshold = "0.4"; // threshold for generating scene changes - 0.2 is sensitive (more scene change), 0.6 is less sensitive (fewer scene changes)
@@ -3251,10 +3251,10 @@ $HorzAlign          =   Center
                 settings.General.ListViewTextWidth = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
             }
 
-            subNode = node.SelectSingleNode("DirectShowDoubleLoadVideo");
+            subNode = node.SelectSingleNode("DirectShowDoubleLoad");
             if (subNode != null)
             {
-                settings.General.DirectShowDoubleLoadVideo = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                settings.General.DirectShowDoubleLoad = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("VlcWaveTranscodeSettings");
@@ -3275,10 +3275,10 @@ $HorzAlign          =   Center
                 settings.General.VlcLocationRelative = subNode.InnerText.Trim();
             }
 
-            subNode = node.SelectSingleNode("MpvVideoOutput");
+            subNode = node.SelectSingleNode("MpvVideoOutputWindows");
             if (subNode != null)
             {
-                settings.General.MpvVideoOutput = subNode.InnerText.Trim();
+                settings.General.MpvVideoOutputWindows = subNode.InnerText.Trim();
             }
 
             subNode = node.SelectSingleNode("MpvVideoOutputLinux");
@@ -7658,11 +7658,11 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ListViewGapWidth", settings.General.ListViewGapWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewActorWidth", settings.General.ListViewActorWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewRegionWidth", settings.General.ListViewRegionWidth.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("DirectShowDoubleLoadVideo", settings.General.DirectShowDoubleLoadVideo.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("DirectShowDoubleLoad", settings.General.DirectShowDoubleLoad.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VlcWaveTranscodeSettings", settings.General.VlcWaveTranscodeSettings);
                 textWriter.WriteElementString("VlcLocation", settings.General.VlcLocation);
                 textWriter.WriteElementString("VlcLocationRelative", settings.General.VlcLocationRelative);
-                textWriter.WriteElementString("MpvVideoOutput", settings.General.MpvVideoOutput);
+                textWriter.WriteElementString("MpvVideoOutputWindows", settings.General.MpvVideoOutputWindows);
                 textWriter.WriteElementString("MpvVideoOutputLinux", settings.General.MpvVideoOutputLinux);
                 textWriter.WriteElementString("MpvExtraOption", settings.General.MpvExtraOption);
                 textWriter.WriteElementString("MpvHandlesPreviewText", settings.General.MpvHandlesPreviewText.ToString(CultureInfo.InvariantCulture));

@@ -52,6 +52,7 @@
             // 
             this.comboBoxVideoOutput.FormattingEnabled = true;
             this.comboBoxVideoOutput.Items.AddRange(new object[] {
+            "gpu",
             "direct3d",
             "opengl",
             "sdl",
