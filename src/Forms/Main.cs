@@ -3540,15 +3540,22 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                Configuration.Settings.RecentFiles.Files = Configuration.Settings.RecentFiles.Files
-                    .Where(p => !notExistingFiles.Contains(p.FileName)).ToList();
-                for (var index = reopenToolStripMenuItem.DropDownItems.Count - 1; index >= 0; index--)
+                try
                 {
-                    ToolStripItem item = reopenToolStripMenuItem.DropDownItems[index];
-                    if (notExistingFiles.Contains((string)item.Tag))
+                    Configuration.Settings.RecentFiles.Files = Configuration.Settings.RecentFiles.Files
+                        .Where(p => !notExistingFiles.Contains(p.FileName)).ToList();
+                    for (var index = reopenToolStripMenuItem.DropDownItems.Count - 1; index >= 0; index--)
                     {
-                        reopenToolStripMenuItem.DropDownItems.RemoveAt(index);
+                        ToolStripItem item = reopenToolStripMenuItem.DropDownItems[index];
+                        if (notExistingFiles.Contains((string)item.Tag))
+                        {
+                            reopenToolStripMenuItem.DropDownItems.RemoveAt(index);
+                        }
                     }
+                }
+                catch
+                {
+                    // ignore
                 }
             };
             bw.RunWorkerAsync(Configuration.Settings.RecentFiles.Files);
