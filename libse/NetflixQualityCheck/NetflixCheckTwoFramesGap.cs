@@ -23,7 +23,16 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 if (next != null && SubtitleFormat.MillisecondsToFrames(p.EndTime.TotalMilliseconds + twoFramesGap) > SubtitleFormat.MillisecondsToFrames(next.StartTime.TotalMilliseconds) && !p.StartTime.IsMaxTime)
                 {
                     var fixedParagraph = new Paragraph(p, false) { EndTime = { TotalMilliseconds = next.StartTime.TotalMilliseconds - twoFramesGap } };
-                    string comment = "Minimum two frames gap";
+                    string comment;
+
+                    if (p.EndTime.TotalMilliseconds > next.StartTime.TotalMilliseconds)
+                    {
+                        comment = "Minimum two frames gap (Overlapping)";
+                    }
+                    else
+                    {
+                        comment = "Minimum two frames gap";
+                    }
                     controller.AddRecord(p, fixedParagraph, comment);
                 }
             }
