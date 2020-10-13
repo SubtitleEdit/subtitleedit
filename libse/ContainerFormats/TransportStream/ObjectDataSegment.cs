@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         public static int MapTable4To8Bit => 0x22;
         public static int EndOfObjectLineCode => 0xf0;
 
-        public int BufferIndex { get; private set; }
+        public int BufferIndex { get; }
 
         public ObjectDataSegment(byte[] buffer, int index)
         {
@@ -130,7 +130,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             if (dataType == PixelDecoding2Bit)
             {
                 int bitIndex = 0;
-                while (index < start + length - 1 && TwoBitPixelDecoding(buffer, ref index, ref bitIndex, out pixelCode, out runLength))
+                while (index < start + length - 1 && index < buffer.Length && TwoBitPixelDecoding(buffer, ref index, ref bitIndex, out pixelCode, out runLength))
                 {
                     DrawPixels(cds, twoToFourBitColorLookup[pixelCode], runLength, ref x, ref y);
                 }
@@ -145,7 +145,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             }
             else if (dataType == PixelDecoding8Bit)
             {
-                while (index < start + length - 1 && EightBitPixelDecoding(buffer, ref index, out pixelCode, out runLength))
+                while (index < start + length - 1 && index < buffer.Length && EightBitPixelDecoding(buffer, ref index, out pixelCode, out runLength))
                 {
                     DrawPixels(cds, pixelCode, runLength, ref x, ref y);
                 }
@@ -177,8 +177,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 // 16 entry numbers of 8-bits each
                 for (int k = 0; k < 16; k++)
                 {
-                    fourToEightBitColorLookup[k] = buffer[index];
-                    index++;
+                    if (index < buffer.Length)
+                    {
+                        fourToEightBitColorLookup[k] = buffer[index];
+                        index++;
+                    }
                 }
             }
             else if (dataType == EndOfObjectLineCode)
@@ -201,7 +204,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             if (dataType == PixelDecoding2Bit)
             {
                 int bitIndex = 0;
-                while (index < start + length - 1 && TwoBitPixelDecoding(buffer, ref index, ref bitIndex, out _, out runLength))
+                while (index < start + length - 1 && index < buffer.Length && TwoBitPixelDecoding(buffer, ref index, ref bitIndex, out _, out runLength))
                 {
                     x += runLength;
                 }
@@ -209,14 +212,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             else if (dataType == PixelDecoding4Bit)
             {
                 bool startHalf = false;
-                while (index < start + length - 1 && FourBitPixelDecoding(buffer, ref index, ref startHalf, out _, out runLength))
+                while (index < start + length - 1 && index < buffer.Length && FourBitPixelDecoding(buffer, ref index, ref startHalf, out _, out runLength))
                 {
                     x += runLength;
                 }
             }
             else if (dataType == PixelDecoding8Bit)
             {
-                while (index < start + length - 1 && EightBitPixelDecoding(buffer, ref index, out _, out runLength))
+                while (index < start + length - 1 && index < buffer.Length && EightBitPixelDecoding(buffer, ref index, out _, out runLength))
                 {
                     x += runLength;
                 }
@@ -239,7 +242,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 y += 2; // interlaced - skip one line
             }
 
-            if (index < start + length)
+            if (index < start + length && index < buffer.Length)
             {
                 dataType = buffer[index];
                 index++;
