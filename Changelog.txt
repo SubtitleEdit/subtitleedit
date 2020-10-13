@@ -1,5 +1,26 @@
 ﻿Subtitle Edit Changelog
 
+3.5.18 (xth November 2020) BETA
+* NEW:
+   * Add "Measurement converter" - thx OmrSi
+   * Add import/export of shortcuts
+   * Add "Center, left justify dialogs" to export images - thx Benjamin
+   * Add two more extend shortcuts - thx OmrSi
+   * Add "/renumber" option to command line - thx malashin
+* IMPROVED:
+   * Update Bulgarian translation - thx KalinM
+   * Update Hungarian translation - thx Zityi
+   * Update Polish translation - thx admas
+   * Improve "Remove text for HI" support for 3-liners - thx Sam
+   * Improve split with some handling of font tags - thx Peter
+   * Change DirectShow and mpv settings to improve compatibility
+   * Don't slow startup due to bad "RecentFiles" - thx beeeeswax/Geoff
+* FIXED:
+   * Fix crash in export image with font tag - thx Jake
+   * Fix batch convert of Blu-ray sup file to VobSub - thx John
+   * Fix crash in faulty ts files - thx ExYuSubs
+
+
 3.5.17 (6th October 2020)
 * NEW:
    * Add new subtitle formats - thx Holmgeir
