@@ -3485,22 +3485,19 @@ namespace Nikse.SubtitleEdit.Forms
                 var lowerFileNameList = new List<string>();
                 foreach (var file in Configuration.Settings.RecentFiles.Files)
                 {
-                    if (File.Exists(file.FileName))
+                    if (!string.IsNullOrEmpty(file.OriginalFileName) && File.Exists(file.OriginalFileName))
                     {
-                        if (!string.IsNullOrEmpty(file.OriginalFileName) && File.Exists(file.OriginalFileName))
-                        {
-                            dropDownItems.Add(new ToolStripMenuItem(file.FileName + " + " + file.OriginalFileName, null, ReopenSubtitleToolStripMenuItemClick));
-                        }
-                        else
-                        {
-                            if (!lowerFileNameList.Contains(file.FileName.ToLowerInvariant()))
-                            {
-                                dropDownItems.Add(new ToolStripMenuItem(file.FileName, null, ReopenSubtitleToolStripMenuItemClick));
-                                lowerFileNameList.Add(file.FileName.ToLowerInvariant());
-                            }
-                        }
-                        UiUtil.FixFonts(dropDownItems[dropDownItems.Count - 1]);
+                        dropDownItems.Add(new ToolStripMenuItem(file.FileName + " + " + file.OriginalFileName, null, ReopenSubtitleToolStripMenuItemClick) { Tag = file.FileName });
                     }
+                    else
+                    {
+                        if (!lowerFileNameList.Contains(file.FileName.ToLowerInvariant()))
+                        {
+                            dropDownItems.Add(new ToolStripMenuItem(file.FileName, null, ReopenSubtitleToolStripMenuItemClick) { Tag = file.FileName });
+                            lowerFileNameList.Add(file.FileName.ToLowerInvariant());
+                        }
+                    }
+                    UiUtil.FixFonts(dropDownItems[dropDownItems.Count - 1]);
                 }
                 reopenToolStripMenuItem.DropDownItems.AddRange(dropDownItems.ToArray());
             }
@@ -3511,6 +3508,50 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             reopenToolStripMenuItem.Visible = reopenToolStripMenuItem.DropDownItems.Count > 0;
+        }
+
+        private void RemoveNotExistingFilesFromRecentFilesUI()
+        {
+            if (!Configuration.Settings.General.ShowRecentFiles || Configuration.Settings.RecentFiles.Files.Count == 0)
+            {
+                return;
+            }
+
+            var bw = new BackgroundWorker();
+            bw.DoWork += (sender, args) =>
+            {
+                var recentFilesList = (List<RecentFileEntry>)args.Argument;
+                var notExistingFiles = new List<string>();
+                foreach (var entry in recentFilesList)
+                {
+                    if (!File.Exists(entry.FileName))
+                    {
+                        notExistingFiles.Add(entry.FileName);
+                    }
+                }
+
+                args.Result = notExistingFiles;
+            };
+            bw.RunWorkerCompleted += (sender, args) =>
+            {
+                var notExistingFiles = (List<string>)args.Result;
+                if (notExistingFiles.Count == 0)
+                {
+                    return;
+                }
+
+                Configuration.Settings.RecentFiles.Files = Configuration.Settings.RecentFiles.Files
+                    .Where(p => !notExistingFiles.Contains(p.FileName)).ToList();
+                for (var index = reopenToolStripMenuItem.DropDownItems.Count - 1; index >= 0; index--)
+                {
+                    ToolStripItem item = reopenToolStripMenuItem.DropDownItems[index];
+                    if (notExistingFiles.Contains((string)item.Tag))
+                    {
+                        reopenToolStripMenuItem.DropDownItems.RemoveAt(index);
+                    }
+                }
+            };
+            bw.RunWorkerAsync(Configuration.Settings.RecentFiles.Files);
         }
 
         private void ReopenSubtitleToolStripMenuItemClick(object sender, EventArgs e)
@@ -20435,6 +20476,7 @@ namespace Nikse.SubtitleEdit.Forms
             MainResize();
             _loading = false;
             OpenVideo(_videoFileName);
+            ShowSubtitleTimer.Stop();
             lock (_syncUndo)
             {
                 timerTextUndo.Start();
@@ -20539,17 +20581,19 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(comboBoxSubtitleFormats);
             UiUtil.FixFonts(comboBoxEncoding);
             UiUtil.FixFonts(toolStripSplitButtonPlayRate);
-            _lastTextKeyDownTicks = DateTime.UtcNow.Ticks;
-            ShowSubtitleTimer.Start();
 
+            _lastTextKeyDownTicks = DateTime.UtcNow.Ticks;
             if (_subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
             {
                 var idx = _subtitleListViewIndex;
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 SubtitleListview1.SelectIndexAndEnsureVisibleFaster(idx);
             }
+
             SetTitle();
             labelSingleLine.Left = labelTextLineLengths.Left + labelTextLineLengths.Width - 6;
+            RemoveNotExistingFilesFromRecentFilesUI();
+            ShowSubtitleTimer.Start();
         }
 
         private void InitializePlayRateDropDown()
