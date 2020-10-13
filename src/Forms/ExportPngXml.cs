@@ -2281,7 +2281,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             return 0;
         }
 
-        private static Font SetFont(MakeBitmapParameter parameter, float fontSize)
+        private static Font GetFont(MakeBitmapParameter parameter, float fontSize)
         {
             Font font;
             try
@@ -2487,7 +2487,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             g.SmoothingMode = SmoothingMode.HighSpeed;
             g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
 
-            Font font = SetFont(parameter, parameter.SubtitleFontSize);
+            Font font = GetFont(parameter, parameter.SubtitleFontSize);
             var fontStack = new Stack<Font>();
             while (i < text.Length)
             {
@@ -2584,7 +2584,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             {
                                 fontStack.Push(font); // save old cfont
                                 var p = new MakeBitmapParameter { SubtitleFontName = fontFace, SubtitleFontSize = fontSize };
-                                font = SetFont(p, p.SubtitleFontSize);
+                                font = GetFont(p, p.SubtitleFontSize);
                             }
                             catch
                             {
@@ -2922,7 +2922,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             Bitmap bmp = null;
             try
             {
-                font = SetFont(parameter, parameter.SubtitleFontSize);
+                font = GetFont(parameter, parameter.SubtitleFontSize);
                 SizeF textSize;
                 using (var bmpTemp = new Bitmap(1, 1))
                 using (var g = Graphics.FromImage(bmpTemp))
@@ -3368,7 +3368,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                         {
                                             fontStack.Push(font); // save old cfont
                                             var p = new MakeBitmapParameter { SubtitleFontName = fontFace, SubtitleFontSize = fontSize };
-                                            font = SetFont(p, p.SubtitleFontSize);
+                                            font = GetFont(p, p.SubtitleFontSize);
                                         }
                                         catch
                                         {
@@ -4454,7 +4454,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 SubtitleFontBold = _subtitleFontBold
             };
             var fontSize = (float)TextDraw.GetFontSize(mbp.SubtitleFontSize);
-            using (var font = SetFont(mbp, fontSize))
+            using (var font = GetFont(mbp, fontSize))
             using (var bmp = new Bitmap(100, 100))
             using (var g = Graphics.FromImage(bmp))
             {
@@ -4482,7 +4482,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 SubtitleFontBold = style.Bold
                             };
                             var fontSize = (float)TextDraw.GetFontSize(mbp.SubtitleFontSize);
-                            Font font = SetFont(mbp, fontSize);
+                            Font font = GetFont(mbp, fontSize);
                             SizeF textSize = g.MeasureString("Hj!", font);
                             int lineHeight = (int)Math.Round(textSize.Height * 0.64f);
                             if (fontSize < 30)
