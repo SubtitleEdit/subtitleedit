@@ -7,7 +7,7 @@
 Допълнения и последваща обработка: KalinM</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
-    <Ok>&amp;OK</Ok>
+    <Ok>OK</Ok>
     <Cancel>Отказ</Cancel>
     <Apply>Приложи</Apply>
     <None>Нищо</None>
@@ -513,6 +513,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Right>Дясно</Right>
     <Center>Центрирано</Center>
     <CenterLeftJustify>Центрирано, ляво подравнено</CenterLeftJustify>
+    <CenterLeftJustifyDialogs>Центрирано, диалог за подравняване вляво</CenterLeftJustifyDialogs>
     <CenterTopJustify>Центрирано, отгоре подравнено</CenterTopJustify>
     <CenterRightJustify>Центрирано, дясно подравнено</CenterRightJustify>
     <BottomMargin>Долно поле</BottomMargin>
@@ -588,7 +589,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Example>Пример</Example>
     <SelectAll>Избери вс.</SelectAll>
     <InverseSelection>Инвертиране</InverseSelection>
-    <Back>&lt; Назад</Back>
+    <Back>&lt;Обратно</Back>
     <Next>Напред&gt;</Next>
     <Step2>Стъпка 2/2 – Проверка на поправките</Step2>
     <Fixes>Поправки</Fixes>
@@ -1253,10 +1254,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <ListView>Изглед на списъка</ListView>
       <SourceView>Изглед оригинал</SourceView>
       <UndoChangesInEditPanel>Отмени промените</UndoChangesInEditPanel>
-      <Previous>&lt; Назад</Previous>
+      <Previous>&lt;Назад</Previous>
       <Next>Напред&gt;</Next>
       <AutoBreak>Авт. прекъсни</AutoBreak>
-      <Unbreak>Обедини в един ред</Unbreak>
+      <Unbreak>ОбединиВ1ред</Unbreak>
     </Controls>
     <VideoControls>
       <Translate>Превод</Translate>
@@ -1264,40 +1265,40 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <Create>Създаване</Create>
       <Adjust>Настройки</Adjust>
       <SelectCurrentElementWhilePlaying>Избиране на текущите субтитри при възпроизвеждане</SelectCurrentElementWhilePlaying>
-      <AutoRepeat>Автоматично повторение</AutoRepeat>
-      <AutoRepeatOn>Авт.повторение(Включено)</AutoRepeatOn>
+      <AutoRepeat>Авт. повторение</AutoRepeat>
+      <AutoRepeatOn>Авт.повтор.(Включено)</AutoRepeatOn>
       <AutoRepeatCount>Брой повторения</AutoRepeatCount>
-      <AutoContinue>Автоматично продължение</AutoContinue>
+      <AutoContinue>Авт. продължение</AutoContinue>
       <AutoContinueOn>Авт.продълж.(Включено)</AutoContinueOn>
       <DelayInSeconds>Задържане (секунди)</DelayInSeconds>
       <OriginalText>Оригинален текст</OriginalText>
-      <Previous>Предишни</Previous>
+      <Previous>&lt;Назад</Previous>
       <Stop>Стоп</Stop>
-      <PlayCurrent>Възпроизв.</PlayCurrent>
-      <Next>Следващи</Next>
+      <PlayCurrent>Възпр.</PlayCurrent>
+      <Next>Напред&gt;</Next>
       <Playing>Възпроизвеждане...</Playing>
       <RepeatingLastTime>Повторение... последен път</RepeatingLastTime>
       <RepeatingXTimesLeft>Повторение... остават {0}</RepeatingXTimesLeft>
       <AutoContinueInOneSecond>Авт. продължение след една секунда</AutoContinueInOneSecond>
       <AutoContinueInXSeconds>Авт. продължение след {0} секунди</AutoContinueInXSeconds>
       <StillTypingAutoContinueStopped>Все още се пише... авт. продължението е спряно</StillTypingAutoContinueStopped>
-      <InsertNewSubtitleAtVideoPosition>Вмъкни суб. в позиция видео</InsertNewSubtitleAtVideoPosition>
+      <InsertNewSubtitleAtVideoPosition>Вмъкни суб. в поз. видео</InsertNewSubtitleAtVideoPosition>
       <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Вмъкни суб. в позиция видео (без фокус на текстовото поле)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
       <Auto>Автоматично</Auto>
-      <PlayFromJustBeforeText>Пусни малко преди текста</PlayFromJustBeforeText>
+      <PlayFromJustBeforeText>ПусниМалкоПредиТекста</PlayFromJustBeforeText>
       <Pause>Пауза</Pause>
-      <GoToSubtitlePositionAndPause>Отиди до субпозиция и пауза</GoToSubtitlePositionAndPause>
+      <GoToSubtitlePositionAndPause>Отиди до субпоз. и пауза</GoToSubtitlePositionAndPause>
       <SetStartTime>Задай начално време</SetStartTime>
       <SetEndTimeAndGoToNext>Задай край и продължи</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Настройване чрез крайно време {0}</AdjustedViaEndTime>
       <SetEndTime>Задай крайно време</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Начало и изместване останалите</SetstartTimeAndOffsetOfRest>
+      <SetstartTimeAndOffsetOfRest>НачалоИизместиОстаналите</SetstartTimeAndOffsetOfRest>
       <SearchTextOnline>Търсене на текст в Интернет</SearchTextOnline>
       <GoogleTranslate>Google преводач</GoogleTranslate>
       <GoogleIt>Търсене с Google</GoogleIt>
       <SecondsBackShort>&lt;&lt;</SecondsBackShort>
       <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
-      <VideoPosition>Позиц. видео:</VideoPosition>
+      <VideoPosition>Позиц.видео:</VideoPosition>
       <TranslateTip>Използвайте клавиши &lt;Alt+горна/долна стрелка&gt;, за предишен/следващ субтитър</TranslateTip>
       <BeforeChangingTimeInWaveformX>Преди промяната на времето във формата на звуковия сигнал: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>Новия текст е вмъкнат в {0}</NewTextInsertAtX>
@@ -1590,16 +1591,109 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ConvertFrom>Конвертиране от</ConvertFrom>
     <ConvertTo>Конвертиране към</ConvertTo>
     <CopyToClipboard>Копиране в клипборда</CopyToClipboard>
-    <Celsius>Целзий</Celsius>
-    <Fahrenheit>Фаренхайт</Fahrenheit>
-    <Miles>Мили</Miles>
+    <Length>Дължина</Length>
+    <Mass>Тегло</Mass>
+    <Volume>Сила на звука</Volume>
+    <Area>Площ</Area>
+    <Time>Време</Time>
+    <Temperature>Температура</Temperature>
+    <Velocity>Скорост</Velocity>
+    <Force>Сила</Force>
+    <Energy>Енергия</Energy>
+    <Power>Мощност</Power>
+    <Pressure>Налягане</Pressure>
     <Kilometers>Километри</Kilometers>
     <Meters>Метри</Meters>
-    <Yards>Ярда</Yards>
-    <Feet>Фийт</Feet>
+    <Centimeters>Сантиметри</Centimeters>
+    <Millimeters>Милиметри</Millimeters>
+    <Micrometers>Микрометри</Micrometers>
+    <Nanometers>Нанометри</Nanometers>
+    <Angstroms>Ангстрьоми</Angstroms>
+    <MilesTerrestial>Мили (земни)</MilesTerrestial>
+    <MilesNautical>Мили (морски)</MilesNautical>
+    <Yards>Ярдове</Yards>
+    <Feet>Футове</Feet>
     <Inches>Инчове</Inches>
-    <Pounds>Паунда</Pounds>
+    <Chains>Вериги</Chains>
+    <Fathoms>Дълбочина</Fathoms>
+    <Hands>Ръце</Hands>
+    <Rods>Пръчки</Rods>
+    <Spans>Обхвати</Spans>
+    <LongTonnes>Дълги тонове</LongTonnes>
+    <ShortTonnes>Къси тонове</ShortTonnes>
+    <Tonnes>Тонове</Tonnes>
     <Kilos>Килограми</Kilos>
+    <Grams>Грамове</Grams>
+    <Milligrams>Милиграми</Milligrams>
+    <Micrograms>Микрограми</Micrograms>
+    <Pounds>Паунда</Pounds>
+    <Ounces>Унции</Ounces>
+    <Carats>Карати</Carats>
+    <Drams>Драми</Drams>
+    <Grains>Зърна</Grains>
+    <Stones>Камъни</Stones>
+    <CubicKilometers>Кубични километри</CubicKilometers>
+    <CubicMeters>Кубични метри</CubicMeters>
+    <Litres>Литри</Litres>
+    <CubicCentimeters>Кубични сантиметри</CubicCentimeters>
+    <CubicMillimeters>Кубични милиметри</CubicMillimeters>
+    <CubicMiles>Кубични мили</CubicMiles>
+    <CubicYards>Кубични ярдове</CubicYards>
+    <CubicFTs>Кубични футове</CubicFTs>
+    <CubicInches>Кубични инчове</CubicInches>
+    <OilBarrels>Маслени бъчви</OilBarrels>
+    <GallonUS>Галон (САЩ)</GallonUS>
+    <QuartsUS>Кварти (САЩ)</QuartsUS>
+    <PintsUS>Пинта (САЩ)</PintsUS>
+    <FluidOuncesUS>Течни унции (САЩ)</FluidOuncesUS>
+    <Bushels>Бушели</Bushels>
+    <Pecks>Pecks</Pecks>
+    <GallonsUK>Галони (Великобритания)</GallonsUK>
+    <QuartsUK>Кварти (Великобритания)</QuartsUK>
+    <PintsUK>Пинта (Великобритания)</PintsUK>
+    <FluidOuncesUK>Течни унции (Великобритания)</FluidOuncesUK>
+    <SquareKilometers>Квадратни километри</SquareKilometers>
+    <SquareMeters>Квадратни метри</SquareMeters>
+    <SquareCentimeters>Квадратни сантиметри</SquareCentimeters>
+    <SquareMillimeters>Квадратни милиметри</SquareMillimeters>
+    <SquareMiles>Квадратни мили</SquareMiles>
+    <SquareYards>Квадратни ярдове</SquareYards>
+    <SquareFTs>Квадратни футове</SquareFTs>
+    <SquareInches>Квадратни сантиметри</SquareInches>
+    <Hectares>Хектари</Hectares>
+    <Acres>Декари</Acres>
+    <Ares>Арове</Ares>
+    <Hours>Часове</Hours>
+    <Minutes>Минути</Minutes>
+    <Seconds>Секунди</Seconds>
+    <Milliseconds>Милисекунди</Milliseconds>
+    <Microseconds>Микросекунди</Microseconds>
+    <Fahrenheit>Фаренхайт</Fahrenheit>
+    <Celsius>Целзий</Celsius>
+    <Kelvin>Келвин</Kelvin>
+    <KilometersPerHour>Километри/Час</KilometersPerHour>
+    <MetersPerSecond>Метри/Секунди</MetersPerSecond>
+    <MilesPerHour>Мили/Час</MilesPerHour>
+    <YardsPerMinute>Ярдове/Минута</YardsPerMinute>
+    <FTsPerSecond>Футове/Секунди</FTsPerSecond>
+    <Knots>Възли</Knots>
+    <PoundsForce>Паунд-сила</PoundsForce>
+    <Newtons>Нютони</Newtons>
+    <KilosForce>Килограми-Сила</KilosForce>
+    <Jouls>Джаули</Jouls>
+    <Calories>Калории</Calories>
+    <Ergs>Ergs</Ergs>
+    <ElectronVolts>Електрон-волта</ElectronVolts>
+    <Btus>Btus</Btus>
+    <Watts>Ватове</Watts>
+    <Horsepower>Конски сили</Horsepower>
+    <Atmospheres>Атмосфери</Atmospheres>
+    <Bars>Барове</Bars>
+    <Pascals>Паскали</Pascals>
+    <MillimetersOfMercury>Милиметри живачен стълб</MillimetersOfMercury>
+    <PoundPerSquareInch>Паунд сила на квадратен инч</PoundPerSquareInch>
+    <KilogramPerSquareCentimeter>Килограми-сила на квадратен сантиметър</KilogramPerSquareCentimeter>
+    <KiloPascals>Килопаскали</KiloPascals>
   </MeasurementConverter>
   <MergeDoubleLines>
     <Title>Обединяване на редове с еднакъв текст</Title>
@@ -2017,7 +2111,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FoucsSetVideoPosition>Задаване на фокус позицията на видеото</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Превключване положението на видео регулаторите</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Задаване край, добавяне нов и преминаване към него</CreateSetEndAddNewAndGoToNew>
-    <AdjustViaEndAutoStart>Регулирайте чрез крайно положение</AdjustViaEndAutoStart>
+    <AdjustViaEndAutoStart>Регулиране чрез крайно положение</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Задаване крайно време в позицията на курсора и преминаване към следващия субтитър</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Задаване на край и преминаване на следващ</AdjustSetEndTimeAndGoToNext>
     <AdjustSetEndTimeAndPause>Задаване на край и пауза</AdjustSetEndTimeAndPause>
@@ -2042,7 +2136,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AdjustSetStartTimeKeepDuration>Задаване на начално време, запазване на времетраенето</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Задаване на край и начало на останалите</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Задаване на край и начало на останалите, и преминаване на следващите</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustExtendCurrentSubtitle>Удължаване на реда до след. субтитър или макс. продължителност</AdjustExtendCurrentSubtitle>
     <AdjustSnapStartToNextSceneChange>Свързване на избраните редове започва до следващата промяна на сцената</AdjustSnapStartToNextSceneChange>
     <AdjustSnapStartToNextSceneChangeWithGap>Свързване на избраните редове започва до следващата промяна на сцената с мин. разлика</AdjustSnapStartToNextSceneChangeWithGap>
     <AdjustSnapEndToPreviousSceneChange>Свързване на избраните редове завършва до предишната промяна на сцената</AdjustSnapEndToPreviousSceneChange>
@@ -2053,6 +2146,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AdjustExtendToPreviousSceneChangeWithGap>Удължаване на избраните редове до предишната промяна на сцената с мин.  разлика (или предишния субтитър)</AdjustExtendToPreviousSceneChangeWithGap>
     <AdjustExtendToNextSubtitle>Удължаване на избраните редове до следващия субтитър</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Удължаване на избраните редове до предишния субтитър</AdjustExtendToPreviousSubtitle>
+    <AdjustExtendCurrentSubtitle>Удължаване на реда до след. субтитър или макс. продължителност</AdjustExtendCurrentSubtitle>
+    <AdjustExtendPreviousLineEndToCurrentStart>Удължаване края на предишния ред до текущото начало</AdjustExtendPreviousLineEndToCurrentStart>
+    <AdjustExtendNextLineStartToCurrentEnd>Удължаване началото на следващия ред до текущия край</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>Преизчисляване продължителността на текущия субтитър</RecalculateDurationOfCurrentSubtitle>
     <MainCreateStartDownEndUp>Създаване на ново - стрелка НАДОЛУ, задаване крайно време - стрелка НАГОРЕ</MainCreateStartDownEndUp>
     <MergeDialog>Обединяване диалога (вмъкване на тирета)</MergeDialog>
