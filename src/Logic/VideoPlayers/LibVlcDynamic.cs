@@ -768,24 +768,40 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             {
                 _libVlcDll = NativeMethods.CrossLoadLibrary(dllFile);
             }
+            catch (Exception exception)
+            {
+                SeLogger.Error(exception, $"Unable to load '{dllFile}' (also check libc.so.6 + libdl.so.2)");
+            }
+
+            try
+            {
+                if (_libVlcDll == IntPtr.Zero && Configuration.IsRunningOnLinux)
+                {
+                    for (int i = 4; i < 20; i++)
+                    {
+                        if (_libVlcDll == IntPtr.Zero)
+                        {
+                            dllFile = $"libvlc.so.{i}";
+                            _libVlcDll = NativeMethods.CrossLoadLibrary(dllFile);
+                        }
+                    }
+
+                    if (_libVlcDll == IntPtr.Zero)
+                    {
+                        foreach (var fileName in Directory.GetFiles("/usr/lib/x86_64-linux-gnu", "libvlc.so.?"))
+                        {
+                            if (_libVlcDll == IntPtr.Zero)
+                            {
+                                dllFile = fileName;
+                                _libVlcDll = NativeMethods.CrossLoadLibrary(dllFile);
+                            }
+                        }
+                    }
+                }
+            }
             catch
             {
-                if (Configuration.IsRunningOnLinux)
-                {
-                    try
-                    {
-                        dllFile = "libvlc.so.5"; // Ubuntu 20.04
-                        _libVlcDll = NativeMethods.CrossLoadLibrary(dllFile);
-                    }
-                    catch
-                    {
-                        // ignore
-                    }
-                }
-                else
-                {
-                    throw;
-                }
+                // ignore
             }
 
             if (_libVlcDll == IntPtr.Zero)
