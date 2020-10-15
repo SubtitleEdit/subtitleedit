@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -6,7 +7,6 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 {
@@ -426,17 +426,10 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 {
                     if (Configuration.IsRunningOnLinux)
                     {
-                        var lib = NativeMethods.CrossLoadLibrary("libmpv.so");
-                        if (lib != IntPtr.Zero)
-                        {
-                            NativeMethods.CrossFreeLibrary(lib);
-                            return true;
-                        }
-
-                        return false;
+                        return LoadLib();
                     }
 
-                    string dllFile = GetMpvPath("mpv-1.dll");
+                    var dllFile = GetMpvPath("mpv-1.dll");
                     return File.Exists(dllFile);
                 }
                 catch (Exception ex)
@@ -465,9 +458,27 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             if (_libMpvDll == IntPtr.Zero)
             {
-                var fileName = Configuration.IsRunningOnWindows ? GetMpvPath("mpv-1.dll") : "libmpv.so";
-                _libMpvDll = NativeMethods.CrossLoadLibrary(fileName);
+                if (Configuration.IsRunningOnWindows)
+                {
+                    _libMpvDll = NativeMethods.CrossLoadLibrary(GetMpvPath("mpv-1.dll"));
+                }
+                else
+                {
+                    _libMpvDll = NativeMethods.CrossLoadLibrary("libmpv.so");
+                    if (_libMpvDll == IntPtr.Zero)
+                    {
+                        _libMpvDll = NativeMethods.CrossLoadLibrary("libmpv.so.1");
+                    }
+
+                    int i = 107;
+                    while (_libMpvDll == IntPtr.Zero && i < 120)
+                    {
+                        _libMpvDll = NativeMethods.CrossLoadLibrary($"libmpv.so.1.{i}.0");
+                        i++;
+                    }
+                }
             }
+
             return _libMpvDll != IntPtr.Zero;
         }
 
