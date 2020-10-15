@@ -3341,7 +3341,7 @@
             this.buttonStop.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonStop.Location = new System.Drawing.Point(288, 42);
             this.buttonStop.Name = "buttonStop";
-            this.buttonStop.Size = new System.Drawing.Size(75, 23);
+            this.buttonStop.Size = new System.Drawing.Size(76, 23);
             this.buttonStop.TabIndex = 5;
             this.buttonStop.Text = "Pa&use";
             this.buttonStop.UseVisualStyleBackColor = true;
@@ -3403,9 +3403,9 @@
             // buttonPlayPrevious
             // 
             this.buttonPlayPrevious.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonPlayPrevious.Location = new System.Drawing.Point(207, 14);
+            this.buttonPlayPrevious.Location = new System.Drawing.Point(206, 14);
             this.buttonPlayPrevious.Name = "buttonPlayPrevious";
-            this.buttonPlayPrevious.Size = new System.Drawing.Size(75, 23);
+            this.buttonPlayPrevious.Size = new System.Drawing.Size(76, 23);
             this.buttonPlayPrevious.TabIndex = 2;
             this.buttonPlayPrevious.Text = "<< Previous";
             this.buttonPlayPrevious.UseVisualStyleBackColor = true;
@@ -3416,7 +3416,7 @@
             this.buttonPlayCurrent.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonPlayCurrent.Location = new System.Drawing.Point(288, 14);
             this.buttonPlayCurrent.Name = "buttonPlayCurrent";
-            this.buttonPlayCurrent.Size = new System.Drawing.Size(75, 23);
+            this.buttonPlayCurrent.Size = new System.Drawing.Size(76, 23);
             this.buttonPlayCurrent.TabIndex = 3;
             this.buttonPlayCurrent.Text = "&Play current";
             this.buttonPlayCurrent.UseVisualStyleBackColor = true;
@@ -3427,7 +3427,7 @@
             this.buttonPlayNext.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonPlayNext.Location = new System.Drawing.Point(369, 14);
             this.buttonPlayNext.Name = "buttonPlayNext";
-            this.buttonPlayNext.Size = new System.Drawing.Size(75, 23);
+            this.buttonPlayNext.Size = new System.Drawing.Size(76, 23);
             this.buttonPlayNext.TabIndex = 4;
             this.buttonPlayNext.Text = "Next >>";
             this.buttonPlayNext.UseVisualStyleBackColor = true;
@@ -4924,7 +4924,7 @@
             // 
             this.buttonPrevious.Location = new System.Drawing.Point(8, 78);
             this.buttonPrevious.Name = "buttonPrevious";
-            this.buttonPrevious.Size = new System.Drawing.Size(64, 23);
+            this.buttonPrevious.Size = new System.Drawing.Size(72, 23);
             this.buttonPrevious.TabIndex = 2;
             this.buttonPrevious.Text = "< Prev ";
             this.buttonPrevious.UseVisualStyleBackColor = true;
@@ -4932,9 +4932,9 @@
             // 
             // buttonNext
             // 
-            this.buttonNext.Location = new System.Drawing.Point(74, 78);
+            this.buttonNext.Location = new System.Drawing.Point(86, 78);
             this.buttonNext.Name = "buttonNext";
-            this.buttonNext.Size = new System.Drawing.Size(64, 23);
+            this.buttonNext.Size = new System.Drawing.Size(72, 23);
             this.buttonNext.TabIndex = 3;
             this.buttonNext.Text = "Next >";
             this.buttonNext.UseVisualStyleBackColor = true;
