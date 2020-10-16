@@ -18667,12 +18667,9 @@ namespace Nikse.SubtitleEdit.Forms
                     audioVisualizer.WavePeaks = WavePeakData.FromDisk(peakWaveFileName);
                     audioVisualizer.SetSpectrogram(SpectrogramData.FromDisk(spectrogramFolder));
                     audioVisualizer.SceneChanges = SceneChangeHelper.FromDisk(_videoFileName);
-                    if (Configuration.Settings.General.ShowChapters && VideoFileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase) || VideoFileName.EndsWith(".mka", StringComparison.OrdinalIgnoreCase))
+                    if (mediaPlayer.Chapters != null)
                     {
-                        using (var matroska = new MatroskaFile(VideoFileName))
-                        {
-                            audioVisualizer.Chapters = matroska.GetChapters();
-                        }
+                        audioVisualizer.Chapters = mediaPlayer.Chapters;
                     }
                     SetWaveformPosition(0, 0, 0);
                     timerWaveform.Start();
@@ -21635,6 +21632,10 @@ namespace Nikse.SubtitleEdit.Forms
                         audioVisualizer.SetSpectrogram(addWaveform.Spectrogram);
                         timerWaveform.Start();
                     }
+                }
+                if (mediaPlayer.Chapters != null)
+                {
+                    audioVisualizer.Chapters = mediaPlayer.Chapters;
                 }
             }
         }
