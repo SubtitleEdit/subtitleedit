@@ -246,9 +246,12 @@ namespace Nikse.SubtitleEdit.Controls
                 long milliseconds = (DateTime.UtcNow.Ticks - _gotFocusTicks) / 10000;
                 if (milliseconds > 10)
                 {
-                    _dragText = SelectedText;
-                    _dragStartFrom = SelectionStart;
-                    _dragStartTicks = DateTime.UtcNow.Ticks;
+                    if (!SelectedText.Equals(_dragText))
+                    {
+                        _dragText = SelectedText;
+                        _dragStartFrom = SelectionStart;
+                        _dragStartTicks = DateTime.UtcNow.Ticks;
+                    }
                 }
             }
             base.WndProc(ref m);
