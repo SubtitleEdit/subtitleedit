@@ -600,78 +600,6 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                 }
 
-                if (_chapters != null)
-                {
-                    try
-                    {
-                        int index = 0;
-                        while (index < _chapters.Count)
-                        {
-                            int pos;
-                            try
-                            {
-                                double time = _chapters[index++];
-                                pos = SecondsToXPosition(time - _startPositionSeconds);
-                            }
-                            catch
-                            {
-                                pos = -1;
-                            }
-                            if (pos > 0 && pos < Width)
-                            {
-                                if (currentPositionPos == pos)
-                                { // scene change and current pos are the same - draw 2 pixels + current pos dotted
-                                    currentPosDone = true;
-                                    using (var p = new Pen(Color.LightGray, 2))
-                                    {
-                                        graphics.DrawLine(p, pos, 0, pos, Height);
-                                    }
-
-                                    using (var p = new Pen(CursorColor, 2) { DashStyle = DashStyle.Dash })
-                                    {
-                                        graphics.DrawLine(p, pos, 0, pos, Height);
-                                    }
-                                }
-                                else if (paragraphStartList.Contains(pos))
-                                { // scene change and current pos are the same - draw 2 pixels + current pos dotted
-                                    using (var p = new Pen(Color.LightGray, 2))
-                                    {
-                                        graphics.DrawLine(p, pos, 0, pos, Height);
-                                    }
-
-                                    using (var p = new Pen(Color.FromArgb(175, 0, 100, 0), 2) { DashStyle = DashStyle.Dash })
-                                    {
-                                        graphics.DrawLine(p, pos, 0, pos, Height);
-                                    }
-                                }
-                                else if (paragraphEndList.Contains(pos))
-                                { // scene change and current pos are the same - draw 2 pixels + current pos dotted
-                                    using (var p = new Pen(Color.LightGray, 2))
-                                    {
-                                        graphics.DrawLine(p, pos, 0, pos, Height);
-                                    }
-
-                                    using (var p = new Pen(Color.FromArgb(175, 110, 10, 10), 2) { DashStyle = DashStyle.Dash })
-                                    {
-                                        graphics.DrawLine(p, pos, 0, pos, Height);
-                                    }
-                                }
-                                else
-                                {
-                                    using (var p = new Pen(Color.LightGray))
-                                    {
-                                        graphics.DrawLine(p, pos, 0, pos, Height);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    catch (Exception)
-                    {
-                        // ignore
-                    }
-                }
-
                 // scene changes
                 if (_sceneChanges != null)
                 {
@@ -742,6 +670,79 @@ namespace Nikse.SubtitleEdit.Controls
                     catch (Exception)
                     {
                         // ignored
+                    }
+                }
+
+                // chapters
+                if (_chapters != null)
+                {
+                    try
+                    {
+                        int index = 0;
+                        while (index < _chapters.Count)
+                        {
+                            int pos;
+                            try
+                            {
+                                double time = _chapters[index++];
+                                pos = SecondsToXPosition(time - _startPositionSeconds);
+                            }
+                            catch
+                            {
+                                pos = -1;
+                            }
+                            if (pos > 0 && pos < Width)
+                            {
+                                if (currentPositionPos == pos)
+                                { // chapter and current pos are the same - draw 2 pixels + current pos dotted
+                                    currentPosDone = true;
+                                    using (var p = new Pen(Color.LightGray, 2))
+                                    {
+                                        graphics.DrawLine(p, pos, 0, pos, Height);
+                                    }
+
+                                    using (var p = new Pen(CursorColor, 2) { DashStyle = DashStyle.Dash })
+                                    {
+                                        graphics.DrawLine(p, pos, 0, pos, Height);
+                                    }
+                                }
+                                else if (paragraphStartList.Contains(pos))
+                                { // chapter and current pos are the same - draw 2 pixels + current pos dotted
+                                    using (var p = new Pen(Color.LightGray, 2))
+                                    {
+                                        graphics.DrawLine(p, pos, 0, pos, Height);
+                                    }
+
+                                    using (var p = new Pen(Color.FromArgb(175, 0, 100, 0), 2) { DashStyle = DashStyle.Dash })
+                                    {
+                                        graphics.DrawLine(p, pos, 0, pos, Height);
+                                    }
+                                }
+                                else if (paragraphEndList.Contains(pos))
+                                { // chapter and current pos are the same - draw 2 pixels + current pos dotted
+                                    using (var p = new Pen(Color.LightGray, 2))
+                                    {
+                                        graphics.DrawLine(p, pos, 0, pos, Height);
+                                    }
+
+                                    using (var p = new Pen(Color.FromArgb(175, 110, 10, 10), 2) { DashStyle = DashStyle.Dash })
+                                    {
+                                        graphics.DrawLine(p, pos, 0, pos, Height);
+                                    }
+                                }
+                                else
+                                {
+                                    using (var p = new Pen(Color.LightGray))
+                                    {
+                                        graphics.DrawLine(p, pos, 0, pos, Height);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        // ignore
                     }
                 }
 
