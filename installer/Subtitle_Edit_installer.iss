@@ -31,7 +31,7 @@
 #endif
 
 
-#define app_copyright "Copyright © 2001-2019, Nikse"
+#define app_copyright "Copyright © 2001-2020, Nikse"
 ; If you don't define "localize", i.e. comment out the following line then no translations
 ; for SubtitleEdit or the installer itself will be included in the installer
 #define localize
