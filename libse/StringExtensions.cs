@@ -479,7 +479,8 @@ namespace Nikse.SubtitleEdit.Core
                 {
                     ssaTagOn = true;
                 }
-                else if (ch == '<' && i < value.Length - 1 && (value[i + 1] == '/' || char.IsLetter(value[i + 1])) && value.IndexOf('>', i) > 0)
+                else if (ch == '<' && i < value.Length - 1 && (value[i + 1] == '/' || char.IsLetter(value[i + 1])) &&
+                         value.IndexOf('>', i) > 0 && IsKnownHtmlTag(value, i))
                 {
                     htmlTagOn = true;
                 }
@@ -501,6 +502,22 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             return length;
+        }
+
+        private static bool IsKnownHtmlTag(string input, int idx)
+        {
+            var s = input.Remove(0, idx + 1).ToLowerInvariant();
+            return s.StartsWith('/') ||
+                   s.StartsWith("i>", StringComparison.Ordinal) ||
+                   s.StartsWith("b>", StringComparison.Ordinal) ||
+                   s.StartsWith("u>", StringComparison.Ordinal) ||
+                   s.StartsWith("font ", StringComparison.Ordinal) ||
+                   s.StartsWith("ruby", StringComparison.Ordinal) ||
+                   s.StartsWith("span>", StringComparison.Ordinal) ||
+                   s.StartsWith("p>", StringComparison.Ordinal) ||
+                   s.StartsWith("br>", StringComparison.Ordinal) ||
+                   s.StartsWith("div>", StringComparison.Ordinal) ||
+                   s.StartsWith("div ", StringComparison.Ordinal);
         }
 
         public static bool HasSentenceEnding(this string value)
