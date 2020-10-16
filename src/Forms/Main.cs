@@ -3075,6 +3075,7 @@ namespace Nikse.SubtitleEdit.Forms
                     audioVisualizer.WavePeaks = null;
                     audioVisualizer.SetSpectrogram(null);
                     audioVisualizer.SceneChanges = new List<double>();
+                    audioVisualizer.Chapters = new List<double>();
                 }
 
                 if (Configuration.Settings.General.ShowVideoPlayer || Configuration.Settings.General.ShowAudioVisualizer)
@@ -3246,6 +3247,7 @@ namespace Nikse.SubtitleEdit.Forms
                     audioVisualizer.WavePeaks = null;
                     audioVisualizer.SetSpectrogram(null);
                     audioVisualizer.SceneChanges = new List<double>();
+                    audioVisualizer.Chapters = new List<double>();
 
                     Configuration.Settings.RecentFiles.Add(fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
                     Configuration.Settings.Save();
@@ -4194,6 +4196,7 @@ namespace Nikse.SubtitleEdit.Forms
                 audioVisualizer.WavePeaks = null;
                 audioVisualizer.SetSpectrogram(null);
                 audioVisualizer.SceneChanges = new List<double>();
+                audioVisualizer.Chapters = new List<double>();
                 if (mediaPlayer.VideoPlayer != null)
                 {
                     mediaPlayer.PauseAndDisposePlayer();
@@ -18618,6 +18621,14 @@ namespace Nikse.SubtitleEdit.Forms
                     labelVideoInfo.Text = labelVideoInfo.Text + " " + string.Format("{0:0.0##}", _videoInfo.FramesPerSecond);
                 }
 
+                if (Configuration.Settings.General.ShowChapters && VideoFileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
+                {
+                    using (var matroska = new MatroskaFile(VideoFileName))
+                    {
+                        mediaPlayer.Chapters = matroska.GetChapters();
+                    }
+                }
+
                 string peakWaveFileName = WavePeakGenerator.GetPeakWaveFileName(fileName);
                 string spectrogramFolder = WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(fileName);
                 if (File.Exists(peakWaveFileName))
@@ -18628,6 +18639,13 @@ namespace Nikse.SubtitleEdit.Forms
                     audioVisualizer.WavePeaks = WavePeakData.FromDisk(peakWaveFileName);
                     audioVisualizer.SetSpectrogram(SpectrogramData.FromDisk(spectrogramFolder));
                     audioVisualizer.SceneChanges = SceneChangeHelper.FromDisk(_videoFileName);
+                    if (Configuration.Settings.General.ShowChapters && VideoFileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase) || VideoFileName.EndsWith(".mka", StringComparison.OrdinalIgnoreCase))
+                    {
+                        using (var matroska = new MatroskaFile(VideoFileName))
+                        {
+                            audioVisualizer.Chapters = matroska.GetChapters();
+                        }
+                    }
                     SetWaveformPosition(0, 0, 0);
                     timerWaveform.Start();
                 }
@@ -19644,6 +19662,7 @@ namespace Nikse.SubtitleEdit.Forms
                     audioVisualizer.WavePeaks = null;
                     audioVisualizer.SetSpectrogram(null);
                     audioVisualizer.SceneChanges = new List<double>();
+                    audioVisualizer.Chapters = new List<double>();
                 }
 
                 openFileDialog1.InitialDirectory = Path.GetDirectoryName(openFileDialog1.FileName);
@@ -23453,6 +23472,7 @@ namespace Nikse.SubtitleEdit.Forms
             mediaPlayer.SetPlayerName(string.Empty);
             mediaPlayer.ResetTimeLabel();
             mediaPlayer.VideoPlayer = null;
+            mediaPlayer.CurrentPosition = 0;
             _videoFileName = null;
             _videoInfo = null;
             _videoAudioTrackNumber = -1;
@@ -23460,7 +23480,7 @@ namespace Nikse.SubtitleEdit.Forms
             audioVisualizer.WavePeaks = null;
             audioVisualizer.SetSpectrogram(null);
             audioVisualizer.SceneChanges = new List<double>();
-            mediaPlayer.CurrentPosition = 0;
+            audioVisualizer.Chapters = new List<double>();
             timeUpDownVideoPositionAdjust.TimeCode = new TimeCode();
             timeUpDownVideoPositionAdjust.Enabled = false;
             timeUpDownVideoPosition.TimeCode = new TimeCode();
@@ -27706,6 +27726,7 @@ namespace Nikse.SubtitleEdit.Forms
                             audioVisualizer.WavePeaks = null;
                             audioVisualizer.SetSpectrogram(null);
                             audioVisualizer.SceneChanges = new List<double>();
+                            audioVisualizer.Chapters = new List<double>();
                         }
 
                         if (!panelVideoPlayer.Visible)
