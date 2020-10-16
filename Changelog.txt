@@ -15,10 +15,13 @@
    * Improve split with some handling of font tags - thx Peter
    * Change DirectShow and mpv settings to improve compatibility
    * Don't slow startup due to bad "RecentFiles" - thx beeeeswax/Geoff
+   * Only omit known html tags in "CountCharacters" - thx Veronica
+   * Add some Greek letters to "Normalize strings" - thx FeMaster1
 * FIXED:
    * Fix crash in export image with font tag - thx Jake
    * Fix batch convert of Blu-ray sup file to VobSub - thx John
    * Fix crash in faulty ts files - thx ExYuSubs
+   * Fix libvlc load on Linux
 
 
 3.5.17 (6th October 2020)
