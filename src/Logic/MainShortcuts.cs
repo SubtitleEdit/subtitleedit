@@ -52,6 +52,8 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainVideoPlayCurrent { get; set; }
         public Keys VideoGoToPrevSubtitle { get; set; }
         public Keys VideoGoToNextSubtitle { get; set; }
+        public Keys VideoGoToPrevChapter { get; set; }
+        public Keys VideoGoToNextChapter { get; set; }
         public Keys VideoSelectNextSubtitle { get; set; }
         public Keys VideoPlayFirstSelected { get; set; }
         public Keys MainVideoFullscreen { get; set; }
@@ -225,6 +227,8 @@ namespace Nikse.SubtitleEdit.Logic
             MainVideoPlayCurrent = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlayCurrent);
             VideoGoToPrevSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoGoToPrevSubtitle);
             VideoGoToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoGoToNextSubtitle);
+            VideoGoToPrevChapter = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoGoToPrevChapter);
+            VideoGoToNextChapter = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoGoToNextChapter);
             VideoSelectNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoSelectNextSubtitle);
             VideoPlayFirstSelected = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralPlayFirstSelected);
             MainGoToPreviousSubtitleAndFocusVideo = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPreviousSubtitleAndFocusVideo);

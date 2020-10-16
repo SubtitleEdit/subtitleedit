@@ -14703,6 +14703,34 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
+            else if (mediaPlayer.Chapters != null && e.KeyData == _shortcuts.VideoGoToPrevChapter)
+            {
+                var cp = mediaPlayer.CurrentPosition - 0.01;
+                foreach (var chapter in mediaPlayer.Chapters.Reverse<double>())
+                {
+                    if (chapter < cp)
+                    {
+                        mediaPlayer.CurrentPosition = chapter;
+                        break;
+                    }
+                }
+
+                e.SuppressKeyPress = true;
+            }
+            else if (mediaPlayer.Chapters != null && e.KeyData == _shortcuts.VideoGoToNextChapter)
+            {
+                var cp = mediaPlayer.CurrentPosition + 0.01;
+                foreach (var chapter in mediaPlayer.Chapters)
+                {
+                    if (chapter > cp)
+                    {
+                        mediaPlayer.CurrentPosition = chapter;
+                        break;
+                    }
+                }
+
+                e.SuppressKeyPress = true;
+            }
             else if (audioVisualizer.SceneChanges != null && e.KeyData == _shortcuts.WaveformGoToPreviousSceneChange)
             {
                 var cp = mediaPlayer.CurrentPosition - 0.01;
