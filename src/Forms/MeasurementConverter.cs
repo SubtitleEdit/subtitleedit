@@ -4793,12 +4793,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void textBoxInput_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (char.IsDigit(e.KeyChar))
+            if (char.IsControl(e.KeyChar) || char.IsDigit(e.KeyChar))
             {
                 return;
             }
 
-            if (e.KeyChar == Convert.ToChar(Keys.Back) || e.KeyChar == '.' || e.KeyChar == ',' || e.KeyChar == '-')
+            if (e.KeyChar == '.' && !((sender as TextBox).Text.IndexOf('.') > -1) || e.KeyChar == ',' || e.KeyChar == '-' && !((sender as TextBox).Text.IndexOf('-') > -1))
             {
                 return;
             }
