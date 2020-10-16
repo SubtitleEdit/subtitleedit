@@ -6043,6 +6043,12 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/WaveformGoToNextSubtitle":
                     language.Settings.WaveformGoToNextSubtitle = reader.Value;
                     break;
+                case "Settings/WaveformGoToPrevChapter":
+                    language.Settings.WaveformGoToPrevChapter = reader.Value;
+                    break;
+                case "Settings/WaveformGoToNextChapter":
+                    language.Settings.WaveformGoToNextChapter = reader.Value;
+                    break;
                 case "Settings/WaveformSelectNextSubtitle":
                     language.Settings.WaveformSelectNextSubtitle = reader.Value;
                     break;

@@ -2207,6 +2207,8 @@ can edit in same subtitle file (collaboration)</Information>
     <PlayCurrent>Play current subtitle</PlayCurrent>
     <WaveformGoToPrevSubtitle>Go to previous subtitle (from video position)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Go to next subtitle (from video position)</WaveformGoToNextSubtitle>
+    <WaveformGoToPrevChapter>Go to previous chapter</WaveformGoToPrevChapter>
+    <WaveformGoToNextChapter>Go to next chapter</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>Select next subtitle (from video position, keep video pos)</WaveformSelectNextSubtitle>
     <TogglePlayPause>Toggle play/pause</TogglePlayPause>
     <Pause>Pause</Pause>

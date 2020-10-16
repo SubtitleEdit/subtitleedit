@@ -1847,6 +1847,8 @@ $HorzAlign          =   Center
         public string MainVideoPlayCurrent { get; set; }
         public string MainVideoGoToPrevSubtitle { get; set; }
         public string MainVideoGoToNextSubtitle { get; set; }
+        public string MainVideoGoToPrevChapter { get; set; }
+        public string MainVideoGoToNextChapter { get; set; }
         public string MainVideoSelectNextSubtitle { get; set; }
         public string MainVideoFullscreen { get; set; }
         public string MainVideoSlower { get; set; }
@@ -6627,6 +6629,18 @@ $HorzAlign          =   Center
                     shortcuts.MainVideoGoToNextSubtitle = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainVideoGoToPrevChapter");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoGoToPrevChapter = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideoGoToNextChapter");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoGoToNextChapter = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainVideoSelectNextSubtitle");
                 if (subNode != null)
                 {
@@ -8302,6 +8316,8 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainVideoPlayCurrent", shortcuts.MainVideoPlayCurrent);
             textWriter.WriteElementString("MainVideoGoToPrevSubtitle", shortcuts.MainVideoGoToPrevSubtitle);
             textWriter.WriteElementString("MainVideoGoToNextSubtitle", shortcuts.MainVideoGoToNextSubtitle);
+            textWriter.WriteElementString("MainVideoGoToPrevChapter", shortcuts.MainVideoGoToPrevChapter);
+            textWriter.WriteElementString("MainVideoGoToNextChapter", shortcuts.MainVideoGoToNextChapter);
             textWriter.WriteElementString("MainVideoSelectNextSubtitle", shortcuts.MainVideoSelectNextSubtitle);
             textWriter.WriteElementString("MainVideoFullscreen", shortcuts.MainVideoFullscreen);
             textWriter.WriteElementString("MainVideoSlower", shortcuts.MainVideoSlower);
