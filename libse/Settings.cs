@@ -39,6 +39,8 @@ namespace Nikse.SubtitleEdit.Core
 
         public void Add(string fileName, int firstVisibleIndex, int firstSelectedIndex, string videoFileName, string originalFileName, long videoOffset)
         {
+            Files = Files.Where(p => !string.IsNullOrEmpty(p.FileName)).ToList();
+
             if (string.IsNullOrEmpty(fileName) && !string.IsNullOrEmpty(originalFileName))
             {
                 fileName = originalFileName;
@@ -47,7 +49,6 @@ namespace Nikse.SubtitleEdit.Core
 
             if (string.IsNullOrEmpty(fileName))
             {
-                Files = Files.Where(p => !string.IsNullOrEmpty(p.FileName)).ToList();
                 Files.Insert(0, new RecentFileEntry { FileName = string.Empty });
                 return;
             }
@@ -72,10 +73,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public void Add(string fileName, string videoFileName, string originalFileName)
         {
-            if (string.IsNullOrEmpty(fileName))
-            {
-                Files = Files.Where(p => !string.IsNullOrEmpty(p.FileName)).ToList();
-            }
+            Files = Files.Where(p => !string.IsNullOrEmpty(p.FileName)).ToList();
 
             var existingEntry = GetRecentFile(fileName, originalFileName);
             if (existingEntry == null)
