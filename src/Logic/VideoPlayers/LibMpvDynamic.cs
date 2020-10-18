@@ -64,6 +64,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private IntPtr _mpvHandle;
         private Timer _videoLoadedTimer;
         private double? _pausePosition; // Hack to hold precise seeking when paused
+        private string _secondSubtitleFileName; 
 
         public override event EventHandler OnVideoLoaded;
         public override event EventHandler OnVideoEnded;
@@ -398,8 +399,19 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             DoMpvCommand("sub-add", fileName, "select");
         }
 
+        public void LoadSecondSubtitle(string fileName)
+        {
+            _secondSubtitleFileName = fileName;
+            DoMpvCommand("sub-add", fileName, "select");
+        }
+
         public void RemoveSubtitle()
         {
+            if (!string.IsNullOrEmpty(_secondSubtitleFileName))
+            {
+                return;
+            }
+
             DoMpvCommand("sub-remove");
         }
 
@@ -484,6 +496,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         public override void Initialize(Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
         {
+            _secondSubtitleFileName = null;
             if (LoadLib())
             {
                 LoadLibMpvDynamic();

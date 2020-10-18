@@ -524,6 +524,7 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
+            this.openSecondSubtitleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -2086,6 +2087,7 @@
             this.toolStripMenuItemOpenDvd,
             this.toolStripMenuItemSetAudioTrack,
             this.closeVideoToolStripMenuItem,
+            this.openSecondSubtitleToolStripMenuItem,
             this.setVideoOffsetToolStripMenuItem,
             this.smpteTimeModedropFrameToolStripMenuItem,
             this.toolStripMenuItemImportSceneChanges,
@@ -5091,6 +5093,13 @@
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
             // 
+            // openSecondSubtitleToolStripMenuItem
+            // 
+            this.openSecondSubtitleToolStripMenuItem.Name = "openSecondSubtitleToolStripMenuItem";
+            this.openSecondSubtitleToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+            this.openSecondSubtitleToolStripMenuItem.Text = "Open second subtitle...";
+            this.openSecondSubtitleToolStripMenuItem.Click += new System.EventHandler(this.openSecondSubtitleToolStripMenuItem_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -5660,5 +5669,6 @@
         private System.Windows.Forms.ToolStripMenuItem dCinemaSMPTE2014ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem boxToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAssaStyles;
+        private System.Windows.Forms.ToolStripMenuItem openSecondSubtitleToolStripMenuItem;
     }
 }

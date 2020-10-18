@@ -1096,6 +1096,7 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
         <OpenDvd>Open DVD...</OpenDvd>
         <ChooseAudioTrack>Choose audio track</ChooseAudioTrack>
         <CloseVideo>Close video file</CloseVideo>
+        <OpenSecondSubtitle>Open second subtitle file...</OpenSecondSubtitle>
         <SetVideoOffset>Set video offset...</SetVideoOffset>
         <SmptTimeMode>SMPTE timing (drop frame)</SmptTimeMode>
         <GenerateTextFromVideo>Generate text from video...</GenerateTextFromVideo>
