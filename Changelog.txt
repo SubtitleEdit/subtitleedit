@@ -11,6 +11,8 @@
    * Update Bulgarian translation - thx KalinM
    * Update Hungarian translation - thx Zityi
    * Update Polish translation - thx admas
+   * Update Chinese translation - thx nkh0472
+   * Update Korean translation - thx domddol
    * Improve "Remove text for HI" support for 3-liners - thx Sam
    * Improve split with some handling of font tags - thx Peter
    * Change DirectShow and mpv settings to improve compatibility
