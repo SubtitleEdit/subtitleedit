@@ -102,7 +102,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ListViewHistorySelectedIndexChanged(object sender, EventArgs e)
         {
-            buttonRollback.Enabled = listViewHistory.SelectedItems.Count == 1;
             buttonCompare.Enabled = listViewHistory.SelectedItems.Count == 1;
             buttonCompareHistory.Enabled = listViewHistory.SelectedItems.Count == 2;
             buttonRollback.Enabled = listViewHistory.SelectedItems.Count == 1 && listViewHistory.SelectedItems[0].Index <= _undoIndex;

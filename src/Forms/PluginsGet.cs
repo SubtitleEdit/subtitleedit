@@ -353,6 +353,8 @@ namespace Nikse.SubtitleEdit.Forms
                 MessageBox.Show(string.Format(_language.PluginXDownloaded, _downloadedPluginName));
             }
             ShowInstalledPlugins();
+
+            ((WebClient)sender).Dispose();
         }
 
         private void ChangeControlsState(bool enable)
