@@ -1462,6 +1462,7 @@ namespace Nikse.SubtitleEdit.Core
                 NoSupportHereDvdSup = "DVD sup files are not supported here.",
                 NoSupportHereVobSub = "VobSub files are not supported here.",
                 NoSupportHereDivx = "DivX files are not supported here.",
+                NoChapters = "No chapters found in the video.",
 
                 Menu = new LanguageStructure.Main.MainMenu
                 {
@@ -1597,6 +1598,7 @@ namespace Nikse.SubtitleEdit.Core
                         SetVideoOffset = "Set video offset...",
                         SmptTimeMode = "SMPTE timing (drop frame)",
                         GenerateTextFromVideo = "Generate text from video...",
+                        ImportChaptersFromVideo = "Import chapters from video...",
                         GenerateImportSceneChanges = "Generate/import scene changes...",
                         RemoveSceneChanges = "Remove scene changes",
                         WaveformBatchGenerate = "Batch generate waveforms...",

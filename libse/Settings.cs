@@ -1122,7 +1122,6 @@ $HorzAlign          =   Center
         public int ClearStatusBarAfterSeconds { get; set; }
         public string Company { get; set; }
         public bool MoveVideo100Or500MsPlaySmallSample { get; set; }
-        public bool ShowChapters { get; set; }
         public bool DisableVideoAutoLoading { get; set; }
         public bool AllowVolumeBoost { get; set; }
         public int NewEmptyDefaultMs { get; set; }
@@ -1255,7 +1254,6 @@ $HorzAlign          =   Center
             SplitRemovesDashes = true;
             ClearStatusBarAfterSeconds = 10;
             MoveVideo100Or500MsPlaySmallSample = false;
-            ShowChapters = false;
             DisableVideoAutoLoading = false;
             RightToLeftMode = false;
             LastSaveAsFormat = string.Empty;
@@ -3361,12 +3359,6 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.Company = subNode.InnerText;
-            }
-
-            subNode = node.SelectSingleNode("ShowChapters");
-            if (subNode != null)
-            {
-                settings.General.ShowChapters = Convert.ToBoolean(subNode.InnerText.Trim());
             }
 
             subNode = node.SelectSingleNode("DisableVideoAutoLoading");
@@ -7699,7 +7691,6 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ClearStatusBarAfterSeconds", settings.General.ClearStatusBarAfterSeconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("Company", settings.General.Company);
                 textWriter.WriteElementString("MoveVideo100Or500MsPlaySmallSample", settings.General.MoveVideo100Or500MsPlaySmallSample.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ShowChapters", settings.General.ShowChapters.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DisableVideoAutoLoading", settings.General.DisableVideoAutoLoading.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AllowVolumeBoost", settings.General.AllowVolumeBoost.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("RightToLeftMode", settings.General.RightToLeftMode.ToString(CultureInfo.InvariantCulture));

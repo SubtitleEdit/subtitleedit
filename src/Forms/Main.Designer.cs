@@ -224,6 +224,7 @@
             this.closeVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setVideoOffsetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.smpteTimeModedropFrameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemImportChapters = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemImportSceneChanges = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemRemoveSceneChanges = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAddWaveformBatch = new System.Windows.Forms.ToolStripMenuItem();
@@ -2088,6 +2089,7 @@
             this.closeVideoToolStripMenuItem,
             this.setVideoOffsetToolStripMenuItem,
             this.smpteTimeModedropFrameToolStripMenuItem,
+            this.toolStripMenuItemImportChapters,
             this.toolStripMenuItemImportSceneChanges,
             this.toolStripMenuItemRemoveSceneChanges,
             this.toolStripMenuItemAddWaveformBatch,
@@ -2151,6 +2153,13 @@
             this.smpteTimeModedropFrameToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
             this.smpteTimeModedropFrameToolStripMenuItem.Text = "SMPTE timing (drop frame)";
             this.smpteTimeModedropFrameToolStripMenuItem.Click += new System.EventHandler(this.SmpteTimeModedropFrameToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItemImportChapters
+            // 
+            this.toolStripMenuItemImportChapters.Name = "toolStripMenuItemImportChapters";
+            this.toolStripMenuItemImportChapters.Size = new System.Drawing.Size(257, 22);
+            this.toolStripMenuItemImportChapters.Text = "Import chapters from video...";
+            this.toolStripMenuItemImportChapters.Click += new System.EventHandler(this.toolStripMenuItemImportChapters_Click);
             // 
             // toolStripMenuItemImportSceneChanges
             // 
@@ -5562,6 +5571,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemNuendoProperties;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemDost;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMeasurementConverter;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportChapters;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportSceneChanges;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRemoveSceneChanges;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSubtitlesBridgeGaps;

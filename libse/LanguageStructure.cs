@@ -1323,6 +1323,7 @@
             public string NoSupportHereDvdSup { get; set; }
             public string NoSupportHereVobSub { get; set; }
             public string NoSupportHereDivx { get; set; }
+            public string NoChapters { get; set; }
 
             public class MainMenu
             {
@@ -1455,6 +1456,7 @@
                     public string SetVideoOffset { get; set; }
                     public string SmptTimeMode { get; set; }
                     public string GenerateTextFromVideo { get; set; }
+                    public string ImportChaptersFromVideo { get; set; }
                     public string GenerateImportSceneChanges { get; set; }
                     public string RemoveSceneChanges { get; set; }
                     public string WaveformBatchGenerate { get; set; }

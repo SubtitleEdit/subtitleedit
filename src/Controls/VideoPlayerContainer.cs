@@ -1993,10 +1993,7 @@ namespace Nikse.SubtitleEdit.Controls
             PanelPlayer.Hide();
             Pause();
             SubtitleText = string.Empty;
-            if (Configuration.Settings.General.ShowChapters)
-            {
-                Chapters = new List<double>();
-            }
+            Chapters = new List<double>();
             var temp = VideoPlayer;
             VideoPlayer = null;
             Application.DoEvents();

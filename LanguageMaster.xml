@@ -1099,6 +1099,7 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
         <SetVideoOffset>Set video offset...</SetVideoOffset>
         <SmptTimeMode>SMPTE timing (drop frame)</SmptTimeMode>
         <GenerateTextFromVideo>Generate text from video...</GenerateTextFromVideo>
+        <ImportChaptersFromVideo>Import chapters from video...</ImportChaptersFromVideo>
         <GenerateImportSceneChanges>Generate/import scene changes...</GenerateImportSceneChanges>
         <RemoveSceneChanges>Remove scene changes</RemoveSceneChanges>
         <WaveformBatchGenerate>Batch generate waveforms...</WaveformBatchGenerate>
@@ -1572,6 +1573,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <NoSupportHereDvdSup>DVD sup files are not supported here.</NoSupportHereDvdSup>
     <NoSupportHereVobSub>VobSub files are not supported here.</NoSupportHereVobSub>
     <NoSupportHereDivx>DivX files are not supported here.</NoSupportHereDivx>
+    <NoChapters>No chapters found in the video.</NoChapters>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Choose subtitle from Matroska file</Title>
