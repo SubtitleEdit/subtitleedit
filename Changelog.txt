@@ -7,6 +7,7 @@
    * Add "Center, left justify dialogs" to export images - thx Benjamin
    * Add two more extend shortcuts - thx OmrSi
    * Add "/renumber" option to command line - thx malashin
+   * Add "Video - Open second subtitle" for mpv/vlc - thx m0ck69/Penney
 * IMPROVED:
    * Update Bulgarian translation - thx KalinM
    * Update Hungarian translation - thx Zityi
