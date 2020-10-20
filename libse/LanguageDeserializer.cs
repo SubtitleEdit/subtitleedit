@@ -3376,6 +3376,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/NoSupportHereDivx":
                     language.Main.NoSupportHereDivx = reader.Value;
                     break;
+                case "Main/NoChapters":
+                    language.Main.NoChapters = reader.Value;
+                    break;
                 case "Main/Menu/File/Title":
                     language.Main.Menu.File.Title = reader.Value;
                     break;
@@ -3729,6 +3732,9 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Main/Menu/Video/GenerateTextFromVideo":
                     language.Main.Menu.Video.GenerateTextFromVideo = reader.Value;
+                    break;
+                case "Main/Menu/Video/ImportChaptersFromVideo":
+                    language.Main.Menu.Video.ImportChaptersFromVideo = reader.Value;
                     break;
                 case "Main/Menu/Video/GenerateImportSceneChanges":
                     language.Main.Menu.Video.GenerateImportSceneChanges = reader.Value;
