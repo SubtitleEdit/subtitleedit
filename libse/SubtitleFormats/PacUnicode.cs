@@ -75,7 +75,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             int index = 0;
             while (index < buffer.Length)
             {
-                Paragraph p = GetPacParagraph(ref index, buffer);
+                var p = GetPacParagraph(ref index, buffer);
                 if (p != null)
                 {
                     subtitle.Paragraphs.Add(p);
@@ -266,7 +266,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 sub.Paragraphs.Insert(0, new Paragraph { Text = "-" });
 
                 int number = 0;
-                foreach (Paragraph p in sub.Paragraphs)
+                foreach (var p in sub.Paragraphs)
                 {
                     WriteParagraph(fs, p, number, number + 1 == sub.Paragraphs.Count);
                     number++;
@@ -292,11 +292,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             Pac.WriteTimeCode(fs, p.EndTime);
 
             byte alignment = 2; // center
-            byte verticalAlignment = 0x0a; // bottom
-            if (!p.Text.Contains(Environment.NewLine))
-            {
-                verticalAlignment = 0x0b;
-            }
+            var verticalAlignment = (byte)Math.Max(0, Configuration.Settings.SubtitleSettings.PacVerticalBottom + 1 - Utilities.GetNumberOfLines(p.Text));
 
             string text = p.Text;
             if (text.StartsWith("{\\an1}", StringComparison.Ordinal) || text.StartsWith("{\\an4}", StringComparison.Ordinal) || text.StartsWith("{\\an7}", StringComparison.Ordinal))
@@ -307,14 +303,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 alignment = 0; // right
             }
+
             if (text.StartsWith("{\\an7}", StringComparison.Ordinal) || text.StartsWith("{\\an8}", StringComparison.Ordinal) || text.StartsWith("{\\an9}", StringComparison.Ordinal))
             {
-                verticalAlignment = 0; // top
+                verticalAlignment = (byte)Configuration.Settings.SubtitleSettings.PacVerticalTop; // top
             }
             else if (text.StartsWith("{\\an4}", StringComparison.Ordinal) || text.StartsWith("{\\an5}", StringComparison.Ordinal) || text.StartsWith("{\\an6}", StringComparison.Ordinal))
             {
-                verticalAlignment = 5; // center
+                verticalAlignment = (byte)Configuration.Settings.SubtitleSettings.PacVerticalCenter; // center
             }
+
             if (text.Length >= 6 && text[0] == '{' && text[5] == '}')
             {
                 text = text.Remove(0, 6);

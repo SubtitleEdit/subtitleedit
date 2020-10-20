@@ -1032,7 +1032,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             // paragraphs
             int number = 0;
-            foreach (Paragraph p in subtitle.Paragraphs)
+            foreach (var p in subtitle.Paragraphs)
             {
                 WriteParagraph(stream, p, number, number + 1 == subtitle.Paragraphs.Count);
                 number++;
@@ -1063,13 +1063,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             byte alignment = 2; // center
-            byte verticalAlignment = 0x0a; // bottom
-            if (!p.Text.Contains(Environment.NewLine))
-            {
-                verticalAlignment = 0x0b;
-            }
+            var verticalAlignment = (byte)Math.Max(0, Configuration.Settings.SubtitleSettings.PacVerticalBottom + 1 - Utilities.GetNumberOfLines(p.Text));
 
-            string text = p.Text;
+            var text = p.Text;
             if (text.StartsWith("{\\an1}", StringComparison.Ordinal) || text.StartsWith("{\\an4}", StringComparison.Ordinal) || text.StartsWith("{\\an7}", StringComparison.Ordinal))
             {
                 alignment = 1; // left
@@ -1078,14 +1074,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 alignment = 0; // right
             }
+
             if (text.StartsWith("{\\an7}", StringComparison.Ordinal) || text.StartsWith("{\\an8}", StringComparison.Ordinal) || text.StartsWith("{\\an9}", StringComparison.Ordinal))
             {
-                verticalAlignment = 0; // top
+                verticalAlignment = (byte)Configuration.Settings.SubtitleSettings.PacVerticalTop; // top
             }
             else if (text.StartsWith("{\\an4}", StringComparison.Ordinal) || text.StartsWith("{\\an5}", StringComparison.Ordinal) || text.StartsWith("{\\an6}", StringComparison.Ordinal))
             {
-                verticalAlignment = 5; // center
+                verticalAlignment = (byte)Configuration.Settings.SubtitleSettings.PacVerticalCenter; // center
             }
+
             if (text.Length >= 6 && text[0] == '{' && text[5] == '}')
             {
                 text = text.Remove(0, 6);
@@ -1093,7 +1091,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             text = MakePacItalicsAndRemoveOtherTags(text);
 
-            Encoding encoding = GetEncoding(CodePage);
+            var encoding = GetEncoding(CodePage);
             byte[] textBuffer;
 
             if (CodePage == CodePageArabic)
