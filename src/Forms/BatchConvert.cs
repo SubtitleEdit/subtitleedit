@@ -710,7 +710,7 @@ namespace Nikse.SubtitleEdit.Forms
                             item.SubItems.Add(Configuration.Settings.Language.UnknownSubtitle.Title);
                         }
                     }
-                    else if ((ext == ".ts" || ext == ".m2ts" || ext == ".mts") &&
+                    else if ((ext == ".ts" || ext == ".m2ts" || ext == ".mts" || ext == ".mpg" || ext == ".mpeg") &&
                              (FileUtil.IsTransportStream(fileName) || FileUtil.IsM2TransportStream(fileName)))
                     {
                         isTs = true;
@@ -1080,7 +1080,13 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         isMatroska = true;
                     }
-                    else if (format == null && (fileName.EndsWith(".ts", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".m2ts", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".mts", StringComparison.OrdinalIgnoreCase)) && item.SubItems[2].Text.StartsWith("Transport Stream", StringComparison.Ordinal))
+                    else if (format == null &&
+                             (fileName.EndsWith(".ts", StringComparison.OrdinalIgnoreCase) ||
+                              fileName.EndsWith(".m2ts", StringComparison.OrdinalIgnoreCase) ||
+                              fileName.EndsWith(".mts", StringComparison.OrdinalIgnoreCase) ||
+                              fileName.EndsWith(".mpg", StringComparison.OrdinalIgnoreCase) ||
+                              fileName.EndsWith(".mpeg", StringComparison.OrdinalIgnoreCase)) &&
+                             item.SubItems[2].Text.StartsWith("Transport Stream", StringComparison.Ordinal))
                     {
                         isTs = true;
                     }
@@ -2022,7 +2028,12 @@ namespace Nikse.SubtitleEdit.Forms
                 if (p.SourceFormat == null)
                 {
                     var ext = Path.GetExtension(p.FileName);
-                    if (ext != null && (ext.Equals(".ts", StringComparison.OrdinalIgnoreCase) || ext.Equals(".m2ts", StringComparison.OrdinalIgnoreCase) || ext.Equals(".mts", StringComparison.OrdinalIgnoreCase)) &&
+                    if (ext != null &&
+                        (ext.Equals(".ts", StringComparison.OrdinalIgnoreCase) ||
+                         ext.Equals(".m2ts", StringComparison.OrdinalIgnoreCase) ||
+                         ext.Equals(".mts", StringComparison.OrdinalIgnoreCase) ||
+                         ext.Equals(".mpg", StringComparison.OrdinalIgnoreCase) ||
+                         ext.Equals(".mpeg", StringComparison.OrdinalIgnoreCase)) &&
                         (FileUtil.IsTransportStream(p.FileName) || FileUtil.IsM2TransportStream(p.FileName)))
                     {
                         IncrementAndShowProgress();
