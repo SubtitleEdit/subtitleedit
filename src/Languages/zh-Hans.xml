@@ -3,9 +3,9 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.5.17</Version>
-    <TranslatedBy>翻译: FeiXJ | Leon Cheung | larsenlouis | VK</TranslatedBy>
+    <TranslatedBy>翻译: FeiXJ | Leon Cheung | larsenlouis | VK | nkh0472</TranslatedBy>
     <CultureName>zh-Hans</CultureName>
-    <HelpFile />
+    <HelpFile>帮助文件</HelpFile>
     <Ok>确定(&amp;O)</Ok>
     <Cancel>取消(&amp;A)</Cancel>
     <Apply>应用</Apply>
@@ -187,6 +187,7 @@ Command line: {1} {2}
     <UseStyleFromSource>使用来自源文件的样式</UseStyleFromSource>
     <ConvertOptions>转换选项</ConvertOptions>
     <RemoveFormatting>删除格式化标签</RemoveFormatting>
+    <RemoveStyleActor>删除样式/演员</RemoveStyleActor>
     <RemoveTextForHI>删除 HI 文本</RemoveTextForHI>
     <OverwriteOriginalFiles>覆盖原始文件(若扩展名变更，则使用新的扩展名)</OverwriteOriginalFiles>
     <RedoCasing>重做外壳</RedoCasing>
@@ -213,6 +214,7 @@ Command line: {1} {2}
     <FilterMoreThanTwoLines>单字幕包含有两行及以上</FilterMoreThanTwoLines>
     <FilterContains>文字内容包含...</FilterContains>
     <FilterFileNameContains>文件名包含...</FilterFileNameContains>
+    <MkvLanguageCodeContains>Matroska (.mkv) 语言包含...</MkvLanguageCodeContains>
     <FixCommonErrorsErrorX>修复常见错误： {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>多内容替换： {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>自动平衡： {0}</AutoBalanceErrorX>
@@ -356,14 +358,18 @@ Command line: {1} {2}
     <Title>桥接行间的小间隔</Title>
     <GapsBridgedX>已桥接的小间隔数量: {0}</GapsBridgedX>
     <GapToNext>与下一行的间隔时间</GapToNext>
+    <GapToNextFrames>与下一帧的间隔时间</GapToNextFrames>
     <BridgeGapsSmallerThanXPart1>桥接的间隔时长小于</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>毫秒</BridgeGapsSmallerThanXPart2>
+    <BridgeGapsSmallerThanXPart1Frames>桥接的间隔帧数小于</BridgeGapsSmallerThanXPart1Frames>
+    <BridgeGapsSmallerThanXPart2Frames>帧</BridgeGapsSmallerThanXPart2Frames>
     <MinMillisecondsBetweenLines>行间最小毫秒数</MinMillisecondsBetweenLines>
+    <MinFramesBetweenLines>行间最小帧数</MinFramesBetweenLines>
     <ProlongEndTime>间隔时间分配给前一行</ProlongEndTime>
     <DivideEven>间隔时间均分给前后两行</DivideEven>
   </DurationsBridgeGaps>
   <DvdSubRip>
-    <Title>从ifo/vobs (DVD) 中提取字幕</Title>
+    <Title>从IFO/VOBs (DVD) 中提取字幕</Title>
     <DvdGroupTitle>DVD文件/信息</DvdGroupTitle>
     <IfoFile>IFO文件</IfoFile>
     <IfoFiles>IFO文件</IfoFiles>
@@ -701,6 +707,7 @@ Command line: {1} {2}
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Hi John! - Hi Ida! -&gt; Hi John!&lt;br /&gt;- Hi Ida!</FixDialogsOneLineExample>
     <SelectDefault>选中默认</SelectDefault>
+    <SetDefault>将当前修复项目设为默认</SetDefault>
     <FixContinuationStyleX>修复延续型样式: {0}</FixContinuationStyleX>
     <XFixContinuationStyle>已修复 {0} 个延续型样式</XFixContinuationStyle>
     <FixUnnecessaryLeadingDots>移除不必要的点标题</FixUnnecessaryLeadingDots>
@@ -1031,6 +1038,7 @@ Command line: {1} {2}
         <GoToSubtitleNumber>转到字幕编号(&amp;G)...</GoToSubtitleNumber>
         <RightToLeftMode>从右向左阅读模式</RightToLeftMode>
         <FixRtlViaUnicodeControlCharacters>使用 Unicode 控制字符修复 RTL (针对选中的行)</FixRtlViaUnicodeControlCharacters>
+        <RemoveUnicodeControlCharacters>移除 Unicode 控制字符(针对选中的行)</RemoveUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>反转 RTL 开始/结束 (所选行)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>在 音频/视频 预览中显示原始文本</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>更改选择...</ModifySelection>
@@ -1314,6 +1322,7 @@ Command line: {1} {2}
 
 文件只读!</FileXIsReadOnly>
     <UnableToSaveSubtitleX>无法保存字幕文件 "{0}"。字幕文件可能无内容。如果当前操作的不是有效的字幕文件，请请尝试再次保存！</UnableToSaveSubtitleX>
+    <FormatXShouldUseUft8>保存文件 {0} 时应使用UTF-8编码!</FormatXShouldUseUft8>
     <BeforeNew>新建之前</BeforeNew>
     <New>新建</New>
     <BeforeConvertingToX>转换为 {0} 之前</BeforeConvertingToX>
@@ -1566,16 +1575,109 @@ Command line: {1} {2}
     <ConvertFrom>转换自</ConvertFrom>
     <ConvertTo>转换到 to</ConvertTo>
     <CopyToClipboard>复制到剪贴板</CopyToClipboard>
-    <Celsius>摄氏温度</Celsius>
-    <Fahrenheit>华氏温度</Fahrenheit>
-    <Miles>英里</Miles>
+    <Length>长度</Length>
+    <Mass>重量</Mass>
+    <Volume>体积</Volume>
+    <Area>面积</Area>
+    <Time>时间</Time>
+    <Temperature>温度</Temperature>
+    <Velocity>速度</Velocity>
+    <Force>力</Force>
+    <Energy>能量</Energy>
+    <Power>功率</Power>
+    <Pressure>压力</Pressure>
     <Kilometers>千米</Kilometers>
     <Meters>米</Meters>
+    <Centimeters>厘米</Centimeters>
+    <Millimeters>毫米</Millimeters>
+    <Micrometers>微米</Micrometers>
+    <Nanometers>纳米</Nanometers>
+    <Angstroms>埃</Angstroms>
+    <MilesTerrestial>英里（陆地）</MilesTerrestial>
+    <MilesNautical>英里（航海）</MilesNautical>
     <Yards>码</Yards>
     <Feet>英尺</Feet>
     <Inches>英寸</Inches>
-    <Pounds>英镑</Pounds>
+    <Chains>链</Chains>
+    <Fathoms>英寻</Fathoms>
+    <Hands>掌宽</Hands>
+    <Rods>杆</Rods>
+    <Spans>掌长</Spans>
+    <LongTonnes>英吨</LongTonnes>
+    <ShortTonnes>美吨</ShortTonnes>
+    <Tonnes>公吨</Tonnes>
     <Kilos>千克</Kilos>
+    <Grams>克</Grams>
+    <Milligrams>毫克</Milligrams>
+    <Micrograms>微克</Micrograms>
+    <Pounds>英镑</Pounds>
+    <Ounces>盎司</Ounces>
+    <Carats>克拉</Carats>
+    <Drams>打兰</Drams>
+    <Grains>谷</Grains>
+    <Stones>石</Stones>
+    <CubicKilometers>立方公里</CubicKilometers>
+    <CubicMeters>立方米</CubicMeters>
+    <Litres>升</Litres>
+    <CubicCentimeters>立方厘米</CubicCentimeters>
+    <CubicMillimeters>立方毫米</CubicMillimeters>
+    <CubicMiles>立方英里</CubicMiles>
+    <CubicYards>立方码</CubicYards>
+    <CubicFTs>立方英尺</CubicFTs>
+    <CubicInches>立方英寸</CubicInches>
+    <OilBarrels>油桶</OilBarrels>
+    <GallonUS>加仑（美国）</GallonUS>
+    <QuartsUS>夸脱（美国）</QuartsUS>
+    <PintsUS>品脱（美国）</PintsUS>
+    <FluidOuncesUS>液量盎司（美国）</FluidOuncesUS>
+    <Bushels>蒲式耳</Bushels>
+    <Pecks>配克</Pecks>
+    <GallonsUK>加仑（英国）</GallonsUK>
+    <QuartsUK>夸脱（英国）</QuartsUK>
+    <PintsUK>品脱（英国）</PintsUK>
+    <FluidOuncesUK>液量盎司（英国）</FluidOuncesUK>
+    <SquareKilometers>平方公里</SquareKilometers>
+    <SquareMeters>平方米</SquareMeters>
+    <SquareCentimeters>平方厘米</SquareCentimeters>
+    <SquareMillimeters>平方毫米</SquareMillimeters>
+    <SquareMiles>平方英里</SquareMiles>
+    <SquareYards>平方码</SquareYards>
+    <SquareFTs>平方尺</SquareFTs>
+    <SquareInches>平方英寸</SquareInches>
+    <Hectares>公顷</Hectares>
+    <Acres>英亩</Acres>
+    <Ares>公亩</Ares>
+    <Hours>小时</Hours>
+    <Minutes>分钟</Minutes>
+    <Seconds>秒</Seconds>
+    <Milliseconds>毫秒</Milliseconds>
+    <Microseconds>微秒</Microseconds>
+    <Fahrenheit>华氏温度</Fahrenheit>
+    <Celsius>摄氏温度</Celsius>
+    <Kelvin>开氏温度</Kelvin>
+    <KilometersPerHour>公里/小时</KilometersPerHour>
+    <MetersPerSecond>米/秒</MetersPerSecond>
+    <MilesPerHour>英里/小时</MilesPerHour>
+    <YardsPerMinute>码/分钟</YardsPerMinute>
+    <FTsPerSecond>英尺/秒</FTsPerSecond>
+    <Knots>结</Knots>
+    <PoundsForce>磅力</PoundsForce>
+    <Newtons>牛顿</Newtons>
+    <KilosForce>千牛</KilosForce>
+    <Jouls>焦耳</Jouls>
+    <Calories>卡路里</Calories>
+    <Ergs>尔格</Ergs>
+    <ElectronVolts>电子伏</ElectronVolts>
+    <Btus>英国热量单位</Btus>
+    <Watts>瓦数</Watts>
+    <Horsepower>马力</Horsepower>
+    <Atmospheres>大气压</Atmospheres>
+    <Bars>巴</Bars>
+    <Pascals>帕斯卡</Pascals>
+    <MillimetersOfMercury>毫米汞</MillimetersOfMercury>
+    <PoundPerSquareInch>磅每平方英寸</PoundPerSquareInch>
+    <KilogramPerSquareCentimeter>千克力/平方厘米</KilogramPerSquareCentimeter>
+    <KiloPascals>千帕斯卡</KiloPascals>
   </MeasurementConverter>
   <MergeDoubleLines>
     <Title>合并相同文本的行</Title>
@@ -1764,6 +1866,8 @@ Command line: {1} {2}
     <ShowOnlyModifiedLines>仅显示已修改的行</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>行间最小毫秒数</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>帧速率信息</FrameInfo>
+    <Frames>帧</Frames>
+    <XFrameYisZMilliseconds>{1} fps 下的 {0} 帧为 {2} 毫秒</XFrameYisZMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>为行 {0} 设置同步点</Title>
@@ -1985,11 +2089,13 @@ Command line: {1} {2}
     <ListView>列表视图</ListView>
     <TextBox>文本框</TextBox>
     <UpdateShortcut>更新</UpdateShortcut>
+    <FoucsSetVideoPosition>将焦点处设为视频位置</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>切换 停靠/不停靠 视频控件</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>设置终点，添加新点并转到新点</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>根据结束位置调节</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>通过结束位置调整并转到下一个</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>设置结束点并转到下一个</AdjustSetEndTimeAndGoToNext>
+    <AdjustSetEndTimeAndPause>设置结束点并暂停</AdjustSetEndTimeAndPause>
     <AdjustSetStartAutoDurationAndGoToNext>调整设置时长起点及转到下个文本</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>设置终点及下个起点并转到下一个</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>向下方向键=设置起点，向上方向键=设置终点，并转到下一个</AdjustStartDownEndUpAndGoToNext>
@@ -2010,11 +2116,19 @@ Command line: {1} {2}
     <AdjustSetStartTimeKeepDuration>设置结束时间，偏移其后的所有值</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>设置结束时间，偏移其后的所有时间</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>设置结束时间，偏移其后的所有时间并转到下一行</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustExtendCurrentSubtitle>将当前行延伸至下一条字幕或最大间隔</AdjustExtendCurrentSubtitle>
+    <AdjustSnapStartToNextSceneChange>将选定行的开始时间设为下一个场景变化处</AdjustSnapStartToNextSceneChange>
+    <AdjustSnapStartToNextSceneChangeWithGap>以最小间隔将选定行的开始时间设为下一个场景切换处</AdjustSnapStartToNextSceneChangeWithGap>
+    <AdjustSnapEndToPreviousSceneChange>将选定行的结束时间设为上一个场景切换处</AdjustSnapEndToPreviousSceneChange>
+    <AdjustSnapEndToPreviousSceneChangeWithGap>以最小间隔将选定行的结束时间设为上一个场景切换处</AdjustSnapEndToPreviousSceneChangeWithGap>
     <AdjustExtendToNextSceneChange>将所选行延伸至下个场景切换点</AdjustExtendToNextSceneChange>
+    <AdjustExtendToNextSceneChangeWithGap>以最小间隔将所选行延伸至下个场景切换点</AdjustExtendToNextSceneChangeWithGap>
     <AdjustExtendToPreviousSceneChange>将所选行延伸至上个场景切换点</AdjustExtendToPreviousSceneChange>
+    <AdjustExtendToPreviousSceneChangeWithGap>以最小间隔将所选行延伸至上个场景切换点</AdjustExtendToPreviousSceneChangeWithGap>
     <AdjustExtendToNextSubtitle>将所选行延伸至下一条字幕</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>将所选行延伸至上一条字幕</AdjustExtendToPreviousSubtitle>
+    <AdjustExtendCurrentSubtitle>将当前行延伸至下一条字幕或最大间隔</AdjustExtendCurrentSubtitle>
+    <AdjustExtendPreviousLineEndToCurrentStart>将上一条字幕延伸至所选行起点</AdjustExtendPreviousLineEndToCurrentStart>
+    <AdjustExtendNextLineStartToCurrentEnd>将下一条字幕起点延伸至所选行结尾</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>重新计算当前字幕时长</RecalculateDurationOfCurrentSubtitle>
     <MainCreateStartDownEndUp>用向下方向键创建新的开始时间，用向上方向键设置结束时间</MainCreateStartDownEndUp>
     <MergeDialog>合并对话 (插入破折号)</MergeDialog>
@@ -2042,6 +2156,8 @@ Command line: {1} {2}
     <CopyTextOnly>仅将文本复制到剪贴板 (所选行)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>将文本从原内容复制到当前内容</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>自动时长 (所选行)</AutoDurationSelectedLines>
+    <FixRTLViaUnicodeChars>通过Unicode控制符修复RTL</FixRTLViaUnicodeChars>
+    <RemoveRTLUnicodeChars>删除Unicode控制符</RemoveRTLUnicodeChars>
     <ReverseStartAndEndingForRtl>反转 RTL 起始时间 / 结束时间</ReverseStartAndEndingForRtl>
     <VerticalZoom>纵向缩小</VerticalZoom>
     <VerticalZoomOut>纵向放大</VerticalZoomOut>

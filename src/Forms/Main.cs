@@ -1463,6 +1463,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemOpenDvd.Text = _language.Menu.Video.OpenDvd;
             toolStripMenuItemSetAudioTrack.Text = _language.Menu.Video.ChooseAudioTrack;
             closeVideoToolStripMenuItem.Text = _language.Menu.Video.CloseVideo;
+            openSecondSubtitleToolStripMenuItem.Text = _language.Menu.Video.OpenSecondSubtitle;
             generateTextFromCurrentVideoToolStripMenuItem.Text = _language.Menu.Video.GenerateTextFromVideo;
 
             smpteTimeModedropFrameToolStripMenuItem.Text = _language.Menu.Video.SmptTimeMode;
@@ -14762,6 +14763,10 @@ namespace Nikse.SubtitleEdit.Forms
                 if (idx >= 0)
                 {
                     RemoveSceneChange(idx);
+                    if (audioVisualizer.SceneChanges.Count == 0)
+                    {
+                        SceneChangeHelper.DeleteSceneChanges(_videoFileName);
+                    }
                 }
                 else
                 { // add scene change
@@ -23535,10 +23540,12 @@ namespace Nikse.SubtitleEdit.Forms
                                                         File.Exists(Path.Combine(Configuration.DataDirectory, "youtube-dl.exe"));
 
             toolStripMenuItemSetAudioTrack.Visible = false;
+            openSecondSubtitleToolStripMenuItem.Visible = false;
             var libVlc = mediaPlayer.VideoPlayer as LibVlcDynamic;
             var libMpv = mediaPlayer.VideoPlayer as LibMpvDynamic;
             if (libVlc != null)
             {
+                openSecondSubtitleToolStripMenuItem.Visible = true;
                 var audioTracks = libVlc.GetAudioTracks();
                 _videoAudioTrackNumber = libVlc.AudioTrackNumber;
                 if (audioTracks.Count > 1)
@@ -23560,6 +23567,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (libMpv != null)
             {
+                openSecondSubtitleToolStripMenuItem.Visible = true;
                 int numberOfTracks = libMpv.AudioTrackCount;
                 _videoAudioTrackNumber = libMpv.AudioTrackNumber;
                 if (numberOfTracks > 1)
@@ -28502,6 +28510,32 @@ namespace Nikse.SubtitleEdit.Forms
         private void toolStripMenuItemAssaStyles_Click(object sender, EventArgs e)
         {
             toolStripMenuItemAssStyles_Click(sender, e);
+        }
+
+        private void openSecondSubtitleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.Title = _languageGeneral.OpenSubtitle;
+            openFileDialog1.FileName = string.Empty;
+            openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;
+            if (openFileDialog1.ShowDialog(this) != DialogResult.OK)
+            {
+                return;
+            }
+
+            if (mediaPlayer.VideoPlayer is LibMpvDynamic libMpv)
+            {
+                if (Configuration.Settings.General.MpvHandlesPreviewText)
+                {
+                    Configuration.Settings.General.MpvHandlesPreviewText = false;
+                    mediaPlayer.VideoPlayer = libMpv;
+                    mediaPlayer.SubtitleText = string.Empty;
+                }
+                libMpv.LoadSubtitle(openFileDialog1.FileName);
+            }
+            else if (mediaPlayer.VideoPlayer is LibVlcDynamic libvlc)
+            {
+                libvlc.LoadSecondSubtitle(openFileDialog1.FileName);
+            }
         }
     }
 }

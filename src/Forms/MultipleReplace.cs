@@ -904,6 +904,11 @@ namespace Nikse.SubtitleEdit.Forms
             if (groups.Count == 0)
             {
                 groupBoxReplaces.Text = string.Empty;
+                textBoxFind.Text = string.Empty;
+                textBoxReplace.Text = string.Empty;
+                textBoxDescription.Text = string.Empty;
+                textBoxDescription.Text = string.Empty;
+                radioButtonNormal.Checked = true;
             }
         }
 

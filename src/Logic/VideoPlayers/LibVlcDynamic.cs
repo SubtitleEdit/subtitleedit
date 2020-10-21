@@ -158,6 +158,10 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private libvlc_media_player_next_frame _libvlc_media_player_next_frame;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int libvlc_media_player_add_slave(IntPtr media, int type, byte[] filePath, bool select);
+        private libvlc_media_player_add_slave _libvlc_media_player_add_slave;
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate int libvlc_video_set_spu(IntPtr mediaPlayer, int trackNumber);
         private libvlc_video_set_spu _libvlc_video_set_spu;
 
@@ -207,28 +211,26 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             _libvlc_media_release = (libvlc_media_release)GetDllType(typeof(libvlc_media_release), "libvlc_media_release");
 
             _libvlc_video_get_size = (libvlc_video_get_size)GetDllType(typeof(libvlc_video_get_size), "libvlc_video_get_size");
+            _libvlc_video_set_spu = (libvlc_video_set_spu)GetDllType(typeof(libvlc_video_set_spu), "libvlc_video_set_spu");
+            _libvlc_video_set_callbacks = (libvlc_video_set_callbacks)GetDllType(typeof(libvlc_video_set_callbacks), "libvlc_video_set_callbacks");
+            _libvlc_video_set_format = (libvlc_video_set_format)GetDllType(typeof(libvlc_video_set_format), "libvlc_video_set_format");
+            _libvlc_video_take_snapshot = (libvlc_video_take_snapshot)GetDllType(typeof(libvlc_video_take_snapshot), "libvlc_video_take_snapshot");
+
             _libvlc_audio_get_track_count = (libvlc_audio_get_track_count)GetDllType(typeof(libvlc_audio_get_track_count), "libvlc_audio_get_track_count");
             _libvlc_audio_get_track_description = (libvlc_audio_get_track_description)GetDllType(typeof(libvlc_audio_get_track_description), "libvlc_audio_get_track_description");
+            _libvlc_audio_get_track = (libvlc_audio_get_track)GetDllType(typeof(libvlc_audio_get_track), "libvlc_audio_get_track");
+            _libvlc_audio_set_track = (libvlc_audio_set_track)GetDllType(typeof(libvlc_audio_set_track), "libvlc_audio_set_track");
+            _libvlc_audio_get_delay = (libvlc_audio_get_delay)GetDllType(typeof(libvlc_audio_get_delay), "libvlc_audio_get_delay");
+            _libvlc_audio_get_volume = (libvlc_audio_get_volume)GetDllType(typeof(libvlc_audio_get_volume), "libvlc_audio_get_volume");
+            _libvlc_audio_set_volume = (libvlc_audio_set_volume)GetDllType(typeof(libvlc_audio_set_volume), "libvlc_audio_set_volume");
+
             _libvlc_track_description_release = (libvlc_track_description_release)GetDllType(typeof(libvlc_track_description_release), "libvlc_track_description_release");
             if (_libvlc_track_description_release == null)
             { //TODO: libvlc 4 beta... check when final version is out
                 _libvlc_track_description_release = (libvlc_track_description_release)GetDllType(typeof(libvlc_track_description_release), "libvlc_track_description_list_release");
             }
 
-            _libvlc_audio_get_track = (libvlc_audio_get_track)GetDllType(typeof(libvlc_audio_get_track), "libvlc_audio_get_track");
-            _libvlc_audio_set_track = (libvlc_audio_set_track)GetDllType(typeof(libvlc_audio_set_track), "libvlc_audio_set_track");
-            _libvlc_video_take_snapshot = (libvlc_video_take_snapshot)GetDllType(typeof(libvlc_video_take_snapshot), "libvlc_video_take_snapshot");
-
-            _libvlc_audio_get_volume = (libvlc_audio_get_volume)GetDllType(typeof(libvlc_audio_get_volume), "libvlc_audio_get_volume");
-            _libvlc_audio_set_volume = (libvlc_audio_set_volume)GetDllType(typeof(libvlc_audio_set_volume), "libvlc_audio_set_volume");
-
             _libvlc_media_player_play = (libvlc_media_player_play)GetDllType(typeof(libvlc_media_player_play), "libvlc_media_player_play");
-            _libvlc_media_player_stop = (libvlc_media_player_stop)GetDllType(typeof(libvlc_media_player_stop), "libvlc_media_player_stop");
-            if (_libvlc_media_player_stop == null)
-            { //TODO: libvlc 4 beta... check when final version is out
-                _libvlc_media_player_stop = (libvlc_media_player_stop)GetDllType(typeof(libvlc_media_player_stop), "libvlc_media_player_stop_async");
-            }
-
             _libvlc_media_player_set_hwnd = (libvlc_media_player_set_hwnd)GetDllType(typeof(libvlc_media_player_set_hwnd), "libvlc_media_player_set_hwnd");
             _libvlc_media_player_set_xwindow = (libvlc_media_player_set_xwindow)GetDllType(typeof(libvlc_media_player_set_xwindow), "libvlc_media_player_set_xwindow");
             _libvlc_media_player_is_playing = (libvlc_media_player_is_playing)GetDllType(typeof(libvlc_media_player_is_playing), "libvlc_media_player_is_playing");
@@ -241,10 +243,12 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             _libvlc_media_player_get_rate = (libvlc_media_player_get_rate)GetDllType(typeof(libvlc_media_player_get_rate), "libvlc_media_player_get_rate");
             _libvlc_media_player_set_rate = (libvlc_media_player_set_rate)GetDllType(typeof(libvlc_media_player_set_rate), "libvlc_media_player_set_rate");
             _libvlc_media_player_next_frame = (libvlc_media_player_next_frame)GetDllType(typeof(libvlc_media_player_next_frame), "libvlc_media_player_next_frame");
-            _libvlc_video_set_spu = (libvlc_video_set_spu)GetDllType(typeof(libvlc_video_set_spu), "libvlc_video_set_spu");
-            _libvlc_video_set_callbacks = (libvlc_video_set_callbacks)GetDllType(typeof(libvlc_video_set_callbacks), "libvlc_video_set_callbacks");
-            _libvlc_video_set_format = (libvlc_video_set_format)GetDllType(typeof(libvlc_video_set_format), "libvlc_video_set_format");
-            _libvlc_audio_get_delay = (libvlc_audio_get_delay)GetDllType(typeof(libvlc_audio_get_delay), "libvlc_audio_get_delay");
+            _libvlc_media_player_add_slave = (libvlc_media_player_add_slave)GetDllType(typeof(libvlc_media_player_add_slave), "libvlc_media_player_add_slave");
+            _libvlc_media_player_stop = (libvlc_media_player_stop)GetDllType(typeof(libvlc_media_player_stop), "libvlc_media_player_stop");
+            if (_libvlc_media_player_stop == null)
+            { //TODO: libvlc 4 beta... check when final version is out
+                _libvlc_media_player_stop = (libvlc_media_player_stop)GetDllType(typeof(libvlc_media_player_stop), "libvlc_media_player_stop_async");
+            }
         }
 
         private bool IsAllMethodsLoaded()
@@ -496,6 +500,17 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         public bool TakeSnapshot(string fileName, UInt32 width, UInt32 height)
         {
             return _libvlc_video_take_snapshot?.Invoke(_mediaPlayer, 0, Encoding.UTF8.GetBytes(fileName + "\0"), width, height) == 1;
+        }
+
+        public bool LoadSecondSubtitle(string fileName)
+        {
+            if (_libvlc_media_player_add_slave == null)
+            {
+                return false;
+            }
+
+            var uri = new Uri(fileName);
+            return 0 == _libvlc_media_player_add_slave(_mediaPlayer, 0, Encoding.UTF8.GetBytes(uri.AbsoluteUri + "\0"), true);
         }
 
         public LibVlcDynamic MakeSecondMediaPlayer(Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
