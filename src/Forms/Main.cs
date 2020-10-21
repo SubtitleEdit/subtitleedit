@@ -14765,7 +14765,7 @@ namespace Nikse.SubtitleEdit.Forms
                     RemoveSceneChange(idx);
                     if (audioVisualizer.SceneChanges.Count == 0)
                     {
-                        SceneChangeHelper.DeleteSceneChanges(_videoFileName);
+                        SceneChangeHelper.DeleteSceneChanges(VideoFileName);
                     }
                 }
                 else
