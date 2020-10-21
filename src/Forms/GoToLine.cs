@@ -44,13 +44,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.KeyCode == Keys.Enter)
             {
-                if (int.TryParse(textBox1.Text, out _lineNumber))
-                {
-                    if (_lineNumber >= _min && _lineNumber <= _max)
-                    {
-                        DialogResult = DialogResult.OK;
-                    }
-                }
+                Validate(textBox1.Text);
             }
             else
             {
@@ -90,20 +84,24 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonOkClick(object sender, EventArgs e)
         {
-            if (int.TryParse(textBox1.Text, out _lineNumber))
-            {
-                if (_lineNumber >= _min && _lineNumber <= _max)
-                {
-                    DialogResult = DialogResult.OK;
-                    return;
-                }
-            }
-            MessageBox.Show(string.Format(Configuration.Settings.Language.GoToLine.XIsNotAValidNumber, textBox1.Text));
+            Validate(textBox1.Text);
         }
 
         private void ButtonCancelClick(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
+        }
+
+        private void Validate(string inp)
+        {
+            if (int.TryParse(inp, out _lineNumber) && _lineNumber >= _min && _lineNumber <= _max)
+            {
+                DialogResult = DialogResult.OK;
+            }
+            else
+            {
+                MessageBox.Show(string.Format(Configuration.Settings.Language.GoToLine.XIsNotAValidNumber, textBox1.Text));
+            }
         }
     }
 }
