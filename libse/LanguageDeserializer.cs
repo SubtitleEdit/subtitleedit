@@ -3724,6 +3724,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/Menu/Video/CloseVideo":
                     language.Main.Menu.Video.CloseVideo = reader.Value;
                     break;
+                case "Main/Menu/Video/OpenSecondSubtitle":
+                    language.Main.Menu.Video.OpenSecondSubtitle = reader.Value;
+                    break;
                 case "Main/Menu/Video/SetVideoOffset":
                     language.Main.Menu.Video.SetVideoOffset = reader.Value;
                     break;

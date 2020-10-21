@@ -1595,6 +1595,7 @@ namespace Nikse.SubtitleEdit.Core
                         OpenDvd = "Open DVD...",
                         ChooseAudioTrack = "Choose audio track",
                         CloseVideo = "Close video file",
+                        OpenSecondSubtitle = "Open second subtitle file...",
                         SetVideoOffset = "Set video offset...",
                         SmptTimeMode = "SMPTE timing (drop frame)",
                         GenerateTextFromVideo = "Generate text from video...",

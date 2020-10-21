@@ -184,6 +184,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <UseStyleFromSource>원본 스타일 사용</UseStyleFromSource>
     <ConvertOptions>변환 옵션</ConvertOptions>
     <RemoveFormatting>서식 태그 제거</RemoveFormatting>
+    <RemoveStyleActor>스타일/배우 제거</RemoveStyleActor>
     <RemoveTextForHI>청각 장애인용 텍스트 삭제</RemoveTextForHI>
     <OverwriteOriginalFiles>원본 파일 덮어쓰기 (형식이 변경된 경우)</OverwriteOriginalFiles>
     <RedoCasing>대/소문자 구분</RedoCasing>
@@ -354,9 +355,13 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Title>* 자막 사이의 작은 간격 메우기</Title>
     <GapsBridgedX>메워진 간격: {0}개</GapsBridgedX>
     <GapToNext>다음 줄과의 시간 간격</GapToNext>
+    <GapToNextFrames>프레임에서 다음 간격</GapToNextFrames>
     <BridgeGapsSmallerThanXPart1>- 다음보다 작은 간격 메움:</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>(밀리초)</BridgeGapsSmallerThanXPart2>
+    <BridgeGapsSmallerThanXPart1Frames>보다 작은 간격</BridgeGapsSmallerThanXPart1Frames>
+    <BridgeGapsSmallerThanXPart2Frames>프레임</BridgeGapsSmallerThanXPart2Frames>
     <MinMillisecondsBetweenLines>- 줄 사이의 최소 밀리초:</MinMillisecondsBetweenLines>
+    <MinFramesBetweenLines>줄 사이의 최소 프레임</MinFramesBetweenLines>
     <ProlongEndTime>이전 텍스트로 시간 간격 메움</ProlongEndTime>
     <DivideEven>텍스트로 시간 간격을 공유</DivideEven>
   </DurationsBridgeGaps>
@@ -502,6 +507,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Right>오른쪽</Right>
     <Center>가운데</Center>
     <CenterLeftJustify>가운데, 왼쪽 맞춤</CenterLeftJustify>
+    <CenterLeftJustifyDialogs>가운데, 왼쪽 맞춤</CenterLeftJustifyDialogs>
     <CenterTopJustify>가운데, 상단 맞춤</CenterTopJustify>
     <CenterRightJustify>가운데, 오른쪽 맞춤</CenterRightJustify>
     <BottomMargin>하단 여백</BottomMargin>
@@ -1034,6 +1040,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
         <GoToSubtitleNumber>자막 번호로 이동(&amp;G)...</GoToSubtitleNumber>
         <RightToLeftMode>RTL 모드...</RightToLeftMode>
         <FixRtlViaUnicodeControlCharacters>유니코드 제어 문자로 RTL 수정...</FixRtlViaUnicodeControlCharacters>
+        <RemoveUnicodeControlCharacters>유니코드 제어 문자 제거 (선택한 줄)...</RemoveUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>LTR 모드 (선택한 줄)...</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>오디오/비디오 미리 보기에 원본 텍스트 표시</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>줄 선택 바꾸기</ModifySelection>
@@ -1573,16 +1580,109 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <ConvertFrom>변환 대상:</ConvertFrom>
     <ConvertTo>변환 결과:</ConvertTo>
     <CopyToClipboard>클립보드에 복사</CopyToClipboard>
-    <Celsius>섭씨</Celsius>
-    <Fahrenheit>화씨</Fahrenheit>
-    <Miles>마일</Miles>
+    <Length>길이</Length>
+    <Mass>질량</Mass>
+    <Volume>볼륨</Volume>
+    <Area>영역</Area>
+    <Time>시간</Time>
+    <Temperature>온도</Temperature>
+    <Velocity>속도</Velocity>
+    <Force>힘</Force>
+    <Energy>에너지</Energy>
+    <Power>파워</Power>
+    <Pressure>압력</Pressure>
     <Kilometers>킬로미터</Kilometers>
     <Meters>미터</Meters>
+    <Centimeters>센티미터</Centimeters>
+    <Millimeters>밀리미터</Millimeters>
+    <Micrometers>마이크로미터</Micrometers>
+    <Nanometers>나노미터</Nanometers>
+    <Angstroms>옹스트롬</Angstroms>
+    <MilesTerrestial>마일 (지상)</MilesTerrestial>
+    <MilesNautical>마일 (해상)</MilesNautical>
     <Yards>야드</Yards>
     <Feet>피트</Feet>
     <Inches>인치</Inches>
-    <Pounds>파운드</Pounds>
+    <Chains>체인</Chains>
+    <Fathoms>패덤스</Fathoms>
+    <Hands>손</Hands>
+    <Rods>막대 </Rods>
+    <Spans>뼘</Spans>
+    <LongTonnes>긴 톤</LongTonnes>
+    <ShortTonnes>짧은 톤</ShortTonnes>
+    <Tonnes>톤</Tonnes>
     <Kilos>킬로그램</Kilos>
+    <Grams>그램</Grams>
+    <Milligrams>밀리그램</Milligrams>
+    <Micrograms>마이크로그램</Micrograms>
+    <Pounds>파운드</Pounds>
+    <Ounces>온스</Ounces>
+    <Carats>캐럿</Carats>
+    <Drams>드람</Drams>
+    <Grains>곡물</Grains>
+    <Stones>돌</Stones>
+    <CubicKilometers>입방 킬로미터</CubicKilometers>
+    <CubicMeters>입방 미터</CubicMeters>
+    <Litres>리터</Litres>
+    <CubicCentimeters>입방 센티미터</CubicCentimeters>
+    <CubicMillimeters>입방 밀리미터</CubicMillimeters>
+    <CubicMiles>입방 마일</CubicMiles>
+    <CubicYards>입방 야드</CubicYards>
+    <CubicFTs>입방 피트</CubicFTs>
+    <CubicInches>입방 인치</CubicInches>
+    <OilBarrels>오일 배럴</OilBarrels>
+    <GallonUS>갤런 (미국)</GallonUS>
+    <QuartsUS>쿼트 (미국)</QuartsUS>
+    <PintsUS>파인트 (미국)</PintsUS>
+    <FluidOuncesUS>유체 온스 (미국)</FluidOuncesUS>
+    <Bushels>부셸</Bushels>
+    <Pecks>펙스</Pecks>
+    <GallonsUK>갤런 (영국)</GallonsUK>
+    <QuartsUK>쿼트 (영국)</QuartsUK>
+    <PintsUK>파인트 (영국)</PintsUK>
+    <FluidOuncesUK>유체 온스 (영국)</FluidOuncesUK>
+    <SquareKilometers>평방 킬로미터</SquareKilometers>
+    <SquareMeters>평방 미터</SquareMeters>
+    <SquareCentimeters>제곱 센티미터</SquareCentimeters>
+    <SquareMillimeters>제곱 밀리미터</SquareMillimeters>
+    <SquareMiles>평방 마일</SquareMiles>
+    <SquareYards>평방 야드</SquareYards>
+    <SquareFTs>평방 피트</SquareFTs>
+    <SquareInches>평방 인치</SquareInches>
+    <Hectares>헥타르</Hectares>
+    <Acres>에이커</Acres>
+    <Ares>아르</Ares>
+    <Hours>시간</Hours>
+    <Minutes>분</Minutes>
+    <Seconds>초</Seconds>
+    <Milliseconds>밀리초</Milliseconds>
+    <Microseconds>마이크로초</Microseconds>
+    <Fahrenheit>화씨</Fahrenheit>
+    <Celsius>섭씨</Celsius>
+    <Kelvin>켈빈</Kelvin>
+    <KilometersPerHour>킬로미터/시간</KilometersPerHour>
+    <MetersPerSecond>미터/초</MetersPerSecond>
+    <MilesPerHour>마일/시간</MilesPerHour>
+    <YardsPerMinute>야드/분</YardsPerMinute>
+    <FTsPerSecond>피트/초</FTsPerSecond>
+    <Knots>노트</Knots>
+    <PoundsForce>파운드-포스</PoundsForce>
+    <Newtons>뉴턴</Newtons>
+    <KilosForce>킬로-포스</KilosForce>
+    <Jouls>줄</Jouls>
+    <Calories>칼로리</Calories>
+    <Ergs>에르그</Ergs>
+    <ElectronVolts>전자-볼트</ElectronVolts>
+    <Btus>Btus</Btus>
+    <Watts>와트</Watts>
+    <Horsepower>마력</Horsepower>
+    <Atmospheres>대기</Atmospheres>
+    <Bars>바</Bars>
+    <Pascals>파스칼</Pascals>
+    <MillimetersOfMercury>수은 밀리미터</MillimetersOfMercury>
+    <PoundPerSquareInch>평방 인치당 파운드 력</PoundPerSquareInch>
+    <KilogramPerSquareCentimeter>평방 센티미터당 킬로그램 력</KilogramPerSquareCentimeter>
+    <KiloPascals>킬로파스칼</KiloPascals>
   </MeasurementConverter>
   <MergeDoubleLines>
     <Title>* 동일한 텍스트로 된 라인(줄) 병합하기</Title>
@@ -1996,6 +2096,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <ListView>목록 보기</ListView>
     <TextBox>텍스트 상자</TextBox>
     <UpdateShortcut>업데이트</UpdateShortcut>
+    <FoucsSetVideoPosition>초점에 비디오 위치 설정</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>비디오 컨트롤 연결 | 해제</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>끝 지점과 새로 추가할 지점을 정하고 새 지점으로 이동</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>끝 지점을 통해 조정</AdjustViaEndAutoStart>
@@ -2022,12 +2123,19 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <AdjustSetStartTimeKeepDuration>시작 설정, 간격 유지</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>끝 설정, 나머지 보충</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>끝 설정, 나머지 보충하고 다음으로 이동</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustExtendCurrentSubtitle>현재 줄을 다음 자막으로 확장하거나 표시시간 최대화</AdjustExtendCurrentSubtitle>
+    <AdjustSnapStartToNextSceneChange>선택한 줄의 시작을 다음 장면 변경에 맞춤</AdjustSnapStartToNextSceneChange>
+    <AdjustSnapStartToNextSceneChangeWithGap>선택한 줄의 시작을 최소 간격으로 다음 장면 변경에 맞춤</AdjustSnapStartToNextSceneChangeWithGap>
+    <AdjustSnapEndToPreviousSceneChange>선택한 줄의 끝을 이전 장면 변경에 맞춤</AdjustSnapEndToPreviousSceneChange>
+    <AdjustSnapEndToPreviousSceneChangeWithGap>선택한 줄의 끝을 최소 간격으로 이전 장면 변경에 맞춤</AdjustSnapEndToPreviousSceneChangeWithGap>
     <AdjustExtendToNextSceneChange>선택한 줄을 다음 장면 변경으로 확장 (또는 다음 자막)</AdjustExtendToNextSceneChange>
     <AdjustExtendToNextSceneChangeWithGap>선택한 줄을 다음 장면 변경으로 최소 간격으로 확장 (또는 다음 자막)</AdjustExtendToNextSceneChangeWithGap>
     <AdjustExtendToPreviousSceneChange>선택한 줄을 이전 장면 변경으로 확장 (또는 이전 자막)</AdjustExtendToPreviousSceneChange>
+    <AdjustExtendToPreviousSceneChangeWithGap>선택한 줄을 최소 간격으로 이전 장면 변경으로 확장 (또는 이전 자막)</AdjustExtendToPreviousSceneChangeWithGap>
     <AdjustExtendToNextSubtitle>선택한 줄을 다음 자막으로 확장</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>선택한 줄을 이전 자막으로 확장</AdjustExtendToPreviousSubtitle>
+    <AdjustExtendCurrentSubtitle>현재 줄을 다음 자막으로 확장하거나 표시시간 최대화</AdjustExtendCurrentSubtitle>
+    <AdjustExtendPreviousLineEndToCurrentStart>이전 줄의 끝을 현재의 시작으로 확장</AdjustExtendPreviousLineEndToCurrentStart>
+    <AdjustExtendNextLineStartToCurrentEnd>다음 줄의 시작을 현재의 끝으로 확장</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>현재 자막의 표시시간 다시 계산</RecalculateDurationOfCurrentSubtitle>
     <MainCreateStartDownEndUp>'↓'키로 새로운 자막 삽입, '↑'키로 종료 시간 설정</MainCreateStartDownEndUp>
     <MergeDialog>대화 병합 (대시 삽입)</MergeDialog>
@@ -2055,6 +2163,8 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <CopyTextOnly>클립보드에 텍스트 복사 (선택한 줄)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>원본 텍스트를 현재 줄에 복사</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>자동 표시시간 (선택한 줄)</AutoDurationSelectedLines>
+    <FixRTLViaUnicodeChars>유니코드 제어 문자로 RTL 수정</FixRTLViaUnicodeChars>
+    <RemoveRTLUnicodeChars>유니코드 제어 문자 제거</RemoveRTLUnicodeChars>
     <ReverseStartAndEndingForRtl>RTL 시작/끝 반전</ReverseStartAndEndingForRtl>
     <VerticalZoom>세로 확대</VerticalZoom>
     <VerticalZoomOut>세로 축소</VerticalZoomOut>
@@ -2083,6 +2193,10 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <GoForward1Second>1초 앞으로</GoForward1Second>
     <GoBack5Seconds>5초 뒤로</GoBack5Seconds>
     <GoForward5Seconds>5초 앞으로</GoForward5Seconds>
+    <GoBackXSSeconds>작은 선택된 시간 뒤로</GoBackXSSeconds>
+    <GoForwardXSSeconds>작은 선택된 시간 앞으로</GoForwardXSSeconds>
+    <GoBackXLSeconds>큰 선택된 시간 뒤로</GoBackXLSeconds>
+    <GoForwardXLSeconds>큰 선택된 시간 앞으로</GoForwardXLSeconds>
     <GoBack3Second>3초 뒤로</GoBack3Second>
     <GoToStartCurrent>비디오 위치를  현재 자막의 시작으로 설정</GoToStartCurrent>
     <ToggleStartEndCurrent>현재 자막의 시작/끝 사이의 비디오 위치 전환</ToggleStartEndCurrent>
@@ -2263,7 +2377,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <OpenReportInFolder>폴더에서 보고서 열기</OpenReportInFolder>
     <FoundXIssues>Netflix 품질 검사에서 {0:#,###} 문제가 발견되었습니다.</FoundXIssues>
     <CheckOk>Netflix 품질 검사 OK :)</CheckOk>
-    <MaximumXCharsPerSecond>초당 최대 문자수(공백 제외): {0} </MaximumXCharsPerSecond>
+    <MaximumXCharsPerSecond>초당 최대 문자수(공백 포함): {0} </MaximumXCharsPerSecond>
     <MaximumLineLength>최대 줄 길이: ({0})</MaximumLineLength>
     <MinimumDuration>최소 표시시간: 5/6 초 (833 ms)</MinimumDuration>
   </NetflixQualityCheck>

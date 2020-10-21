@@ -39,6 +39,8 @@ namespace Nikse.SubtitleEdit.Core
 
         public void Add(string fileName, int firstVisibleIndex, int firstSelectedIndex, string videoFileName, string originalFileName, long videoOffset)
         {
+            Files = Files.Where(p => !string.IsNullOrEmpty(p.FileName)).ToList();
+
             if (string.IsNullOrEmpty(fileName) && !string.IsNullOrEmpty(originalFileName))
             {
                 fileName = originalFileName;
@@ -47,7 +49,6 @@ namespace Nikse.SubtitleEdit.Core
 
             if (string.IsNullOrEmpty(fileName))
             {
-                Files = Files.Where(p => !string.IsNullOrEmpty(p.FileName)).ToList();
                 Files.Insert(0, new RecentFileEntry { FileName = string.Empty });
                 return;
             }
@@ -72,10 +73,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public void Add(string fileName, string videoFileName, string originalFileName)
         {
-            if (string.IsNullOrEmpty(fileName))
-            {
-                Files = Files.Where(p => !string.IsNullOrEmpty(p.FileName)).ToList();
-            }
+            Files = Files.Where(p => !string.IsNullOrEmpty(p.FileName)).ToList();
 
             var existingEntry = GetRecentFile(fileName, originalFileName);
             if (existingEntry == null)
@@ -518,6 +516,9 @@ namespace Nikse.SubtitleEdit.Core
         public int EbuStlMarginTop { get; set; }
         public int EbuStlMarginBottom { get; set; }
         public int EbuStlNewLineRows { get; set; }
+        public int PacVerticalTop { get; set; }
+        public int PacVerticalCenter { get; set; }
+        public int PacVerticalBottom { get; set; }
 
         public string DvdStudioProHeader { get; set; }
 
@@ -575,6 +576,10 @@ namespace Nikse.SubtitleEdit.Core
             EbuStlMarginBottom = 2;
             EbuStlNewLineRows = 2;
 
+            PacVerticalTop = 1;
+            PacVerticalCenter = 5;
+            PacVerticalBottom = 11;
+           
             DvdStudioProHeader = @"$VertAlign          =   Bottom
 $Bold               =   FALSE
 $Underlined         =   FALSE
@@ -4861,6 +4866,24 @@ $HorzAlign          =   Center
                     settings.SubtitleSettings.EbuStlNewLineRows = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
                 }
 
+                subNode = node.SelectSingleNode("PacVerticalTop");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.PacVerticalTop = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
+                subNode = node.SelectSingleNode("PacVerticalCenter");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.PacVerticalCenter = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
+                subNode = node.SelectSingleNode("PacVerticalBottom");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.PacVerticalBottom = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
                 subNode = node.SelectSingleNode("DvdStudioProHeader");
                 if (subNode != null)
                 {
@@ -7962,6 +7985,9 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("EbuStlMarginTop", settings.SubtitleSettings.EbuStlMarginTop.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("EbuStlMarginBottom", settings.SubtitleSettings.EbuStlMarginBottom.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("EbuStlNewLineRows", settings.SubtitleSettings.EbuStlNewLineRows.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("PacVerticalTop", settings.SubtitleSettings.PacVerticalTop.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("PacVerticalCenter", settings.SubtitleSettings.PacVerticalCenter.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("PacVerticalBottom", settings.SubtitleSettings.PacVerticalBottom.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DvdStudioProHeader", settings.SubtitleSettings.DvdStudioProHeader.TrimEnd() + Environment.NewLine);
                 textWriter.WriteElementString("TmpegEncXmlFontName", settings.SubtitleSettings.TmpegEncXmlFontName.TrimEnd());
                 textWriter.WriteElementString("TmpegEncXmlFontHeight", settings.SubtitleSettings.TmpegEncXmlFontHeight.TrimEnd());
