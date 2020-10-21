@@ -393,7 +393,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 return new List<double>();
             }
 
-            return _chapters;
+            return _chapters.Distinct().ToList();
         }
 
         private void ReadChapters()
@@ -453,6 +453,26 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         {
             Element element;
             while (_stream.Position < chpaterAtom.EndPosition && (element = ReadElement()) != null)
+            {
+                if (element.Id == ElementId.ChapterTimeStart)
+                {
+                    _chapters.Add(ReadUInt((int)element.DataSize) / 1000000000.0);
+                }
+                else if (element.Id == ElementId.ChapterAtom)
+                {
+                    ReadNestedChaptersTimeStart(element);
+                }
+                else
+                {
+                    _stream.Seek(element.DataSize, SeekOrigin.Current);
+                }
+            }
+        }
+
+        private void ReadNestedChaptersTimeStart(Element nestedChpaterAtom)
+        {
+            Element element;
+            while (_stream.Position < nestedChpaterAtom.EndPosition && (element = ReadElement()) != null)
             {
                 if (element.Id == ElementId.ChapterTimeStart)
                 {
