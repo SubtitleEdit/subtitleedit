@@ -14603,8 +14603,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_shortcuts.MainToolsBeamer == e.KeyData)
             {
-                var beamer = new Beamer(this, _subtitle, _subtitleListViewIndex);
-                beamer.ShowDialog(this);
+                using (var beamer = new Beamer(this, _subtitle, _subtitleListViewIndex))
+                {
+                    beamer.ShowDialog(this);
+                }
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainVideoFullscreen) // fullscreen
