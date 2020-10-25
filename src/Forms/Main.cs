@@ -3950,9 +3950,17 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (format.Extension == ".rtf")
+                if (format.Extension == ".rtf" || formatType == typeof(ProjectionSubtitleList))
                 {
-                    currentEncoding = Encoding.ASCII;
+                    var enc = GetCurrentEncoding();
+                    if (enc != Encoding.ASCII)
+                    {
+                        var oldDisableShowStatus = _disableShowStatus;
+                        _disableShowStatus = false;
+                        ShowStatus("ASCII encoding used for save");
+                        _disableShowStatus = oldDisableShowStatus;
+                        currentEncoding = Encoding.ASCII;
+                    }
                 }
 
                 if (useNewLineWithOnly0A)
