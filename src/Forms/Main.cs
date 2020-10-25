@@ -28474,5 +28474,30 @@ namespace Nikse.SubtitleEdit.Forms
                 libvlc.LoadSecondSubtitle(openFileDialog1.FileName);
             }
         }
+
+        private void aSSStylesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            toolStripMenuItemAssStyles_Click(sender, e);
+        }
+
+        private void contextMenuStripEmpty_Opening(object sender, CancelEventArgs e)
+        {
+            var format = GetCurrentSubtitleFormat();
+            var formatType = format.GetType();
+            if (formatType == typeof(AdvancedSubStationAlpha))
+            {
+                aSSStylesToolStripMenuItem.Visible = true;
+                aSSStylesToolStripMenuItem.Text = _language.Menu.ContextMenu.AdvancedSubStationAlphaStyles;
+            }
+            else if (formatType == typeof(SubStationAlpha))
+            {
+                aSSStylesToolStripMenuItem.Visible = true;
+                aSSStylesToolStripMenuItem.Text = _language.Menu.ContextMenu.SubStationAlphaStyles;
+            }
+            else
+            {
+                aSSStylesToolStripMenuItem.Visible = false;
+            }
+        }
     }
 }
