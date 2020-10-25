@@ -324,7 +324,7 @@ namespace Nikse.SubtitleEdit.Core
             MusicSymbolReplace = "â™ª,â™," + // ♪ + ♫ in UTF-8 opened as ANSI
                                  "<s M/>,<s m/>," + // music symbols by subtitle creator
                                  "#,*,¶"; // common music symbols
-            UnicodeSymbolsToInsert = "♪;♫;☺;☹;♥;©;☮;☯;Σ;∞;≡;⇒;π";
+            UnicodeSymbolsToInsert = "♪;♫;°;☺;☹;♥;©;☮;☯;Σ;∞;≡;⇒;π";
             SpellCheckAutoChangeNames = true;
             SpellCheckAutoChangeNamesUseSuggestions = true;
             OcrFixUseHardcodedRules = true;
