@@ -1440,6 +1440,7 @@ Continue?</SubtitleAppendPrompt>
     <NoSubtitlesFound>No subtitles found</NoSubtitlesFound>
     <NotAValidMatroskaFileX>This is not a valid Matroska file: {0}</NotAValidMatroskaFileX>
     <BlurayNotSubtitlesFound>Blu-ray sup file does not contain any subtitles or contains errors - try demuxing again.</BlurayNotSubtitlesFound>
+    <GettingChapters>Getting chapters...</GettingChapters>
     <ParsingMatroskaFile>Parsing Matroska file. Please wait...</ParsingMatroskaFile>
     <ParsingTransportStreamFile>Parsing Transport Stream file. Please wait...</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Before import subtitle from Matroska file</BeforeImportFromMatroskaFile>

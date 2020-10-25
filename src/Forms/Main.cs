@@ -26958,22 +26958,37 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemImportChapters_Click(object sender, EventArgs e)
         {
-            using (var matroska = new MatroskaFile(VideoFileName))
+            toolStripMenuItemImportChapters.Enabled = false;
+            ShowStatus(_language.GettingChapters);
+
+            var chaps = new List<double>();
+            var getChapters = System.Threading.Tasks.Task.Factory.StartNew(() =>
             {
-                mediaPlayer.Chapters = matroska.GetChapters();
-            }
-            
-            if (mediaPlayer.Chapters?.Count > 0)
-            {
-                if (audioVisualizer.WavePeaks != null)
+                using (var matroska = new MatroskaFile(VideoFileName))
                 {
-                    audioVisualizer.Chapters = mediaPlayer.Chapters;
+                    chaps = matroska.GetChapters();
                 }
-            }
-            else
+            });
+
+            var uiContext = System.Threading.Tasks.TaskScheduler.FromCurrentSynchronizationContext();
+            getChapters.ContinueWith(_ =>
             {
-                MessageBox.Show(_language.NoChapters, Title);
-            }
+                if (chaps?.Count > 0)
+                {
+                    mediaPlayer.Chapters = chaps;
+
+                    if (audioVisualizer.WavePeaks != null)
+                    {
+                        audioVisualizer.Chapters = chaps;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(_language.NoChapters, Title);
+                }
+
+                toolStripMenuItemImportChapters.Enabled = true;
+            }, uiContext);
         }
 
         private void toolStripMenuItemImportSceneChanges_Click(object sender, EventArgs e)

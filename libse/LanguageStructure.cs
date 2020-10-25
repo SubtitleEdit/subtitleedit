@@ -1193,6 +1193,7 @@
             public string NoSubtitlesFound { get; set; }
             public string NotAValidMatroskaFileX { get; set; }
             public string BlurayNotSubtitlesFound { get; set; }
+            public string GettingChapters { get; set; }
             public string ParsingMatroskaFile { get; set; }
             public string ParsingTransportStreamFile { get; set; }
             public string BeforeImportFromMatroskaFile { get; set; }
