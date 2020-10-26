@@ -9,8 +9,9 @@ namespace Nikse.SubtitleEdit.Forms
     public sealed partial class AlignmentPicker : Form
     {
         public ContentAlignment Alignment { get; private set; }
+        private readonly string _text;
 
-        public AlignmentPicker()
+        public AlignmentPicker(string text)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -30,6 +31,7 @@ namespace Nikse.SubtitleEdit.Forms
             button9.Text = Configuration.Settings.Language.SubStationAlphaStyles.BottomRight;
 
             UiUtil.FixLargeFonts(this, button1);
+            _text = text;
         }
 
         public void Done()
@@ -101,8 +103,42 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AlignmentPicker_Shown(object sender, EventArgs e)
         {
-            button8.Focus();
+            if (_text.StartsWith("{\\an7}", StringComparison.Ordinal))
+            {
+                button1.Focus();
+            }
+            else if (_text.StartsWith("{\\an8}", StringComparison.Ordinal))
+            {
+                button2.Focus();
+            }
+            else if (_text.StartsWith("{\\an9}", StringComparison.Ordinal))
+            {
+                button3.Focus();
+            }
+            else if (_text.StartsWith("{\\an4}", StringComparison.Ordinal))
+            {
+                button4.Focus();
+            }
+            else if (_text.StartsWith("{\\an5}", StringComparison.Ordinal))
+            {
+                button5.Focus();
+            }
+            else if (_text.StartsWith("{\\an6}", StringComparison.Ordinal))
+            {
+                button6.Focus();
+            }
+            else if (_text.StartsWith("{\\an1}", StringComparison.Ordinal))
+            {
+                button7.Focus();
+            }
+            else if (_text.StartsWith("{\\an3}", StringComparison.Ordinal))
+            {
+                button9.Focus();
+            }
+            else
+            {
+                button8.Focus();
+            }
         }
-
     }
 }

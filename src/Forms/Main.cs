@@ -25855,7 +25855,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            using (var f = new AlignmentPicker())
+            using (var f = new AlignmentPicker(textBoxListViewText.Text))
             {
                 f.TopMost = true;
                 f.StartPosition = FormStartPosition.Manual;
