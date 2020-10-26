@@ -48,24 +48,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             XmlNode root = xml.DocumentElement.SelectSingleNode("rdf:RDF/rdf:Description/xmpDM:Tracks/rdf:Bag/rdf:li/xmpDM:markers/rdf:Seq", namespaceManager);
             foreach (var p in subtitle.Paragraphs)
             {
-                XmlNode paragraph = CreateParagraphElement(xml, namespaceManager, p);
+                XmlNode paragraph = CreateParagraphElement(xml, p);
                 root.AppendChild(paragraph);
             }
 
             return ToUtf8XmlString(xml);
         }
 
-        private XmlNode CreateParagraphElement(XmlDocument xml, XmlNamespaceManager namespaceManager, Paragraph paragraph)
+        private XmlNode CreateParagraphElement(XmlDocument xml, Paragraph paragraph)
         {
-
-            //<rdf:li rdf:parseType="Resource">
-            //      <xmpDM:comment>Hallo og velkommen til ukas podcast IT Simpelthen. I dag har vi besøk av ingen ringere enn selveste ny NAV-direktør Hans Christian Holte, velkommen.</xmpDM:comment>
-            //      <xmpDM:duration>284.75000000000017</xmpDM:duration>
-            //      <xmpDM:startTime>254.25</xmpDM:startTime>
-            //      <xmpDM:name>Jonas</xmpDM:name>
-            //</rdf:li>
-
-
             var li = xml.CreateElement("rdf", "li", NamespaceRdf);
             var parseType = xml.CreateAttribute("rdf", "parseType", NamespaceRdf);
             parseType.InnerText = "Resource";
@@ -120,7 +111,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var startTimeNode = node.SelectSingleNode("xmpDM:startTime", namespaceManager);
                     var durationNode = node.SelectSingleNode("xmpDM:duration", namespaceManager);
                     var textNode = node.SelectSingleNode("xmpDM:comment", namespaceManager);
-
                     if (startTimeNode != null && durationNode != null && textNode != null)
                     {
                         double start = FramesToMilliseconds(Convert.ToDouble(startTimeNode.InnerText, CultureInfo.InvariantCulture));
