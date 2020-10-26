@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -401,10 +401,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var underlineOff = encoding.GetString(new byte[] { 0x83 });
                 var boxingOn = encoding.GetString(new byte[] { 0x84 });
                 var boxingOff = encoding.GetString(new byte[] { 0x85 });
-                if (Utilities.CountTagInText(TextField, "<i>") == 1 && TextField.StartsWith("<i>", StringComparison.OrdinalIgnoreCase) && TextField.EndsWith("</i>", StringComparison.OrdinalIgnoreCase)) // italic on all lines
-                {
-                    TextField = TextField.Replace(Environment.NewLine, Environment.NewLine + "<i>");
-                }
+
+                TextField = FixItalics(TextField);
 
                 TextField = TextField.Replace("<i>", italicsOn);
                 TextField = TextField.Replace("<I>", italicsOn);
@@ -479,6 +477,41 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
                 return buffer;
+            }
+
+            private static string FixItalics(string text)
+            {
+                var italicOn = false;
+                var sb = new StringBuilder();
+                foreach (var line in HtmlUtil.FixInvalidItalicTags(text).SplitToLines())
+                {
+                    var s = line;
+                    if (italicOn && !s.TrimStart().StartsWith("<i>", StringComparison.Ordinal))
+                    {
+                        s = "<i>" + s;
+                    }
+
+                    var endTagIndex = s.LastIndexOf("</i>", StringComparison.Ordinal);
+                    if (s.LastIndexOf("<i>", StringComparison.Ordinal) > endTagIndex)
+                    {
+                        italicOn = true;
+                    }
+                    else if (endTagIndex >= 0)
+                    {
+                        italicOn = false;
+                    }
+
+                    if (italicOn)
+                    {
+                        sb.AppendLine(s + "</i>");
+                    }
+                    else
+                    {
+                        sb.AppendLine(s);
+                    }
+                }
+
+                return sb.ToString().TrimEnd();
             }
 
             private static string EncodeText(string text, Encoding encoding, string displayStandardCode)
