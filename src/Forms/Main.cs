@@ -10013,6 +10013,10 @@ namespace Nikse.SubtitleEdit.Forms
                             originalCurrent.Text = Utilities.AutoBreakLine(a);
                             originalNew.Text = Utilities.AutoBreakLine(b);
                         }
+                        else if (Utilities.GetNumberOfLines(originalCurrent.Text) == 2)
+                        {
+                            lines = originalCurrent.Text.SplitToLines();
+                        }
                         else
                         {
                             string s = Utilities.AutoBreakLine(originalCurrent.Text, 5, Configuration.Settings.General.MergeLinesShorterThan, languageOriginal);
