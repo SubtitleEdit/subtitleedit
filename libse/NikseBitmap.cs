@@ -1226,7 +1226,7 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        private static readonly byte[] EmptyByteArray = new byte[10000];
+        private static readonly byte[] EmptyByteArray = new byte[100000];
 
         public void MakeVerticalLinePartTransparent(int xStart, int xEnd, int y)
         {
@@ -1329,12 +1329,28 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
+        /// <summary>
+        /// Horizontal line.
+        /// </summary>
         public bool IsLineTransparent(int y)
         {
             int max = (_width * 4) + (y * _widthX4) + 3;
             for (int pos = y * _widthX4 + 3; pos < max; pos += 4)
             {
                 if (_bitmapData[pos] != 0)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public bool IsVerticalLineTransparent(int x)
+        {
+            for (int y = 0; y < Height; y++)
+            {
+                if (GetAlpha(x, y) > 0)
                 {
                     return false;
                 }
@@ -1381,6 +1397,31 @@ namespace Nikse.SubtitleEdit.Core
             return Height - startY - transparentBottomPixels;
         }
 
+        public int GetNonTransparentWidth()
+        {
+            var startX = 0;
+            int transparentPixelsRight = 0;
+            for (int x = 0; x < Width; x++)
+            {
+                var isLineTransparent = IsVerticalLineTransparent(x);
+                if (startX == x && isLineTransparent)
+                {
+                    startX++;
+                    continue;
+                }
+
+                if (isLineTransparent)
+                {
+                    transparentPixelsRight++;
+                }
+                else
+                {
+                    transparentPixelsRight = 0;
+                }
+            }
+
+            return Width - startX - transparentPixelsRight;
+        }
 
         public void EnsureEvenLines(Color fillColor)
         {
