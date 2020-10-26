@@ -8,8 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Text;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -38,6 +36,7 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly Dictionary<ShortcutHelper, string> _newShortcuts = new Dictionary<ShortcutHelper, string>();
         private List<RulesProfile> _rulesProfiles;
         private bool _loading = true;
+        private bool _backgroundImageDark;
 
         private class ComboBoxLanguage
         {
@@ -1950,93 +1949,59 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             pictureBoxPreview.Image?.Dispose();
-            var bmp = new Bitmap(pictureBoxPreview.Width, pictureBoxPreview.Height);
+            var backgroundImage = TextDesigner.MakeBackgroundImage(pictureBoxPreview.Width, pictureBoxPreview.Height, 9, _backgroundImageDark);
+            var outlineWidth = (float)numericUpDownSsaOutline.Value;
+            var shadowWidth = (float)numericUpDownSsaShadow.Value;
+            var outlineColor = Color.Black;
 
-            using (var g = Graphics.FromImage(bmp))
+            Font font;
+            try
             {
-                // Draw background
-                const int rectangleSize = 9;
-                for (int y = 0; y < bmp.Height; y += rectangleSize)
-                {
-                    for (int x = 0; x < bmp.Width; x += rectangleSize)
-                    {
-                        var c = Color.WhiteSmoke;
-                        if (y % (rectangleSize * 2) == 0)
-                        {
-                            if (x % (rectangleSize * 2) == 0)
-                            {
-                                c = Color.LightGray;
-                            }
-                        }
-                        else
-                        {
-                            if (x % (rectangleSize * 2) != 0)
-                            {
-                                c = Color.LightGray;
-                            }
-                        }
-                        g.FillRectangle(new SolidBrush(c), x, y, rectangleSize, rectangleSize);
-                    }
-                }
-
-                // Draw text
-                Font font;
-                try
-                {
-                    font = checkBoxSsaFontBold.Checked ? new Font(_ssaFontName, (float)_ssaFontSize, FontStyle.Bold) : new Font(_ssaFontName, (float)_ssaFontSize);
-                }
-                catch
-                {
-                    font = checkBoxSsaFontBold.Checked ? new Font(Font, FontStyle.Bold) : new Font(Font, FontStyle.Regular);
-                }
-                g.TextRenderingHint = TextRenderingHint.AntiAlias;
-                g.SmoothingMode = SmoothingMode.AntiAlias;
-                var sf = new StringFormat { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Near };
-                var path = new GraphicsPath();
-
-                bool newLine = false;
-                var sb = new StringBuilder();
-                sb.Append(Configuration.Settings.General.PreviewAssaText);
-
-                var measuredWidth = TextDraw.MeasureTextWidth(font, sb.ToString(), checkBoxSsaFontBold.Checked) + 1;
-                var measuredHeight = TextDraw.MeasureTextHeight(font, sb.ToString(), checkBoxSsaFontBold.Checked) + 1;
-
-                float left = (bmp.Width - measuredWidth) / 2;
-                float top = bmp.Height - measuredHeight - (int)numericUpDownSsaMarginVertical.Value;
-
-                const int leftMargin = 0;
-                int pathPointsStart = -1;
-
-                if (checkBoxSsaOpaqueBox.Checked)
-                {
-                    g.FillRectangle(new SolidBrush(Color.Black), left, top, measuredWidth + 3, measuredHeight + 3);
-                }
-
-                TextDraw.DrawText(font, sf, path, sb, false, checkBoxSsaFontBold.Checked, false, left, top, ref newLine, leftMargin, ref pathPointsStart);
-
-                int outline = (int)numericUpDownSsaOutline.Value;
-
-                // draw shadow
-                if (numericUpDownSsaShadow.Value > 0 && !checkBoxSsaOpaqueBox.Checked)
-                {
-                    for (int i = 0; i < (int)numericUpDownSsaShadow.Value; i++)
-                    {
-                        var shadowPath = new GraphicsPath();
-                        sb.Clear();
-                        sb.Append(Configuration.Settings.General.PreviewAssaText);
-                        int pathPointsStart2 = -1;
-                        TextDraw.DrawText(font, sf, shadowPath, sb, false, checkBoxSsaFontBold.Checked, false, left + i + outline, top + i + outline, ref newLine, leftMargin, ref pathPointsStart2);
-                        g.FillPath(new SolidBrush(Color.FromArgb(200, Color.Black)), shadowPath);
-                    }
-                }
-
-                if (outline > 0 && !checkBoxSsaOpaqueBox.Checked)
-                {
-                    g.DrawPath(new Pen(Color.Black, outline), path);
-                }
-                g.FillPath(new SolidBrush(Color.FromArgb(_ssaFontColor)), path);
+                font = new Font(comboBoxFontName.Text, (float)numericUpDownFontSize.Value * 1.1f, checkBoxSsaFontBold.Checked ? FontStyle.Bold : FontStyle.Regular);
             }
-            pictureBoxPreview.Image = bmp;
+            catch
+            {
+                font = new Font(Font, FontStyle.Regular);
+            }
+           
+            var measureBmp = TextDesigner.MakeTextBitmapAssa(
+                Configuration.Settings.General.PreviewAssaText,
+                0,
+                0,
+                font,
+                pictureBoxPreview.Width,
+                pictureBoxPreview.Height,
+                outlineWidth,
+                shadowWidth,
+                null,
+                panelPrimaryColor.BackColor,
+                outlineColor,
+                Color.FromArgb(100, Color.Black),
+                checkBoxSsaOpaqueBox.Checked);
+            var nBmp = new NikseBitmap(measureBmp);
+            var measuredWidth = nBmp.GetNonTransparentWidth();
+            var measuredHeight = nBmp.GetNonTransparentHeight();
+
+            float left = (pictureBoxPreview.Width - measuredWidth) / 2.0f;
+            float top = pictureBoxPreview.Height - measuredHeight - (int)numericUpDownSsaMarginVertical.Value;
+            var designedText = TextDesigner.MakeTextBitmapAssa(
+                Configuration.Settings.General.PreviewAssaText,
+                (int)Math.Round(left),
+                (int)Math.Round(top),
+                font,
+                pictureBoxPreview.Width,
+                pictureBoxPreview.Height,
+                outlineWidth,
+                shadowWidth,
+                backgroundImage,
+                panelPrimaryColor.BackColor,
+                Color.Black,
+                Color.FromArgb(200, Color.Black),
+                checkBoxSsaOpaqueBox.Checked);
+
+            pictureBoxPreview.Image?.Dispose();
+            pictureBoxPreview.Image = designedText;
+            font.Dispose();
         }
 
         private void ComboBoxWordListLanguageSelectedIndexChanged(object sender, EventArgs e)
@@ -3436,7 +3401,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             catch (Exception exception)
             {
-                MessageBox.Show("Shortcuts not imported!" + Environment.NewLine + Environment.NewLine + 
+                MessageBox.Show("Shortcuts not imported!" + Environment.NewLine + Environment.NewLine +
                                 exception.Message + Environment.NewLine +
                                 exception.StackTrace);
                 SeLogger.Error(exception, "Failed to import shortcuts");
@@ -3468,6 +3433,12 @@ namespace Nikse.SubtitleEdit.Forms
                                 exception.StackTrace);
                 SeLogger.Error(exception, "Failed to export shortcuts");
             }
+        }
+
+        private void pictureBoxPreview_Click(object sender, EventArgs e)
+        {
+            _backgroundImageDark = !_backgroundImageDark;
+            GeneratePreviewReal();
         }
     }
 }

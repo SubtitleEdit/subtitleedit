@@ -4,8 +4,6 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Text;
 using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
@@ -33,6 +31,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private string _oldSsaName;
         private readonly SubtitleFormat _format;
         private readonly bool _isSubStationAlpha;
+        private Bitmap _backgroundImage;
+        private bool _backgroundImageDark;
 
         public SubStationAlphaStyles(Subtitle subtitle, SubtitleFormat format)
             : base(subtitle)
@@ -164,143 +164,90 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 return;
             }
 
-            pictureBoxPreview.Image?.Dispose();
-            var bmp = new Bitmap(pictureBoxPreview.Width, pictureBoxPreview.Height);
-
-            using (var g = Graphics.FromImage(bmp))
+            if (_backgroundImage == null)
             {
-                // Draw background
                 const int rectangleSize = 9;
-                for (int y = 0; y < bmp.Height; y += rectangleSize)
-                {
-                    for (int x = 0; x < bmp.Width; x += rectangleSize)
-                    {
-                        var c = Color.WhiteSmoke;
-                        if (y % (rectangleSize * 2) == 0)
-                        {
-                            if (x % (rectangleSize * 2) == 0)
-                            {
-                                c = Color.LightGray;
-                            }
-                        }
-                        else
-                        {
-                            if (x % (rectangleSize * 2) != 0)
-                            {
-                                c = Color.LightGray;
-                            }
-                        }
-
-                        using (var brush = new SolidBrush(c))
-                        {
-                            g.FillRectangle(brush, x, y, rectangleSize, rectangleSize);
-                        }
-                    }
-                }
-
-                // Draw text
-                Font font;
-                try
-                {
-                    font = new Font(comboBoxFontName.Text, (float)numericUpDownFontSize.Value);
-                }
-                catch
-                {
-                    font = new Font(Font, FontStyle.Regular);
-                }
-                g.TextRenderingHint = TextRenderingHint.AntiAlias;
-                g.SmoothingMode = SmoothingMode.AntiAlias;
-                var sf = new StringFormat { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Near };
-                var path = new GraphicsPath();
-
-                bool newLine = false;
-                var sb = new StringBuilder();
-                sb.Append(Configuration.Settings.General.PreviewAssaText);
-
-                var measuredWidth = TextDraw.MeasureTextWidth(font, sb.ToString(), checkBoxFontBold.Checked) + 1;
-                var measuredHeight = TextDraw.MeasureTextHeight(font, sb.ToString(), checkBoxFontBold.Checked) + 1;
-
-                float left;
-                if (radioButtonTopLeft.Checked || radioButtonMiddleLeft.Checked || radioButtonBottomLeft.Checked)
-                {
-                    left = (float)numericUpDownMarginLeft.Value;
-                }
-                else if (radioButtonTopRight.Checked || radioButtonMiddleRight.Checked || radioButtonBottomRight.Checked)
-                {
-                    left = bmp.Width - (measuredWidth + (float)numericUpDownMarginRight.Value);
-                }
-                else
-                {
-                    left = (bmp.Width - measuredWidth) / 2;
-                }
-
-                float top;
-                if (radioButtonTopLeft.Checked || radioButtonTopCenter.Checked || radioButtonTopRight.Checked)
-                {
-                    top = (float)numericUpDownMarginVertical.Value;
-                }
-                else if (radioButtonMiddleLeft.Checked || radioButtonMiddleCenter.Checked || radioButtonMiddleRight.Checked)
-                {
-                    top = (bmp.Height - measuredHeight) / 2;
-                }
-                else
-                {
-                    top = bmp.Height - measuredHeight - ((int)numericUpDownMarginVertical.Value);
-                }
-
-                top -= (int)numericUpDownShadowWidth.Value;
-                if (radioButtonTopCenter.Checked || radioButtonMiddleCenter.Checked || radioButtonBottomCenter.Checked)
-                {
-                    left -= (int)(numericUpDownShadowWidth.Value / 2);
-                }
-
-                const int leftMargin = 0;
-                int pathPointsStart = -1;
-
-                if (radioButtonOpaqueBox.Checked)
-                {
-                    using (var brush = new SolidBrush(_isSubStationAlpha ? panelBackColor.BackColor : panelOutlineColor.BackColor))
-                    {
-                        g.FillRectangle(brush, left, top, measuredWidth + 3, measuredHeight + 3);
-                    }
-                }
-
-                TextDraw.DrawText(font, sf, path, sb, checkBoxFontItalic.Checked, checkBoxFontBold.Checked, checkBoxFontUnderline.Checked, left, top, ref newLine, leftMargin, ref pathPointsStart);
-
-                int outline = (int)numericUpDownOutline.Value;
-
-                // draw shadow
-                if (numericUpDownShadowWidth.Value > 0 && radioButtonOutline.Checked)
-                {
-                    using (var shadowPath = (GraphicsPath)path.Clone())
-                    using (var p1 = new Pen(Color.FromArgb(250, panelBackColor.BackColor), outline))
-                    {
-                        for (int i = 0; i < (int)numericUpDownShadowWidth.Value; i++)
-                        {
-                            var translateMatrix = new Matrix();
-                            translateMatrix.Translate(1, 1);
-                            shadowPath.Transform(translateMatrix);
-                            g.DrawPath(p1, shadowPath);
-                        }
-                    }
-                }
-
-                if (outline > 0 && radioButtonOutline.Checked)
-                {
-                    using (var pen = new Pen(_isSubStationAlpha ? panelBackColor.BackColor : panelOutlineColor.BackColor))
-                    {
-                        g.DrawPath(pen, path);
-                    }
-                }
-
-                using (var brush = new SolidBrush(panelPrimaryColor.BackColor))
-                {
-                    g.FillPath(brush, path);
-                }
-
-                font.Dispose();
+                _backgroundImage = TextDesigner.MakeBackgroundImage(pictureBoxPreview.Width, pictureBoxPreview.Height, rectangleSize, _backgroundImageDark);
             }
-            pictureBoxPreview.Image = bmp;
+
+            var outlineWidth = (float)numericUpDownOutline.Value;
+            var shadowWidth = (float)numericUpDownShadowWidth.Value;
+            var outlineColor = _isSubStationAlpha ? panelBackColor.BackColor : panelOutlineColor.BackColor;
+
+            Font font;
+            try
+            {
+                font = new Font(comboBoxFontName.Text, (float)numericUpDownFontSize.Value * 1.1f, checkBoxFontBold.Checked ? FontStyle.Bold : FontStyle.Regular);
+            }
+            catch
+            {
+                font = new Font(Font, FontStyle.Regular);
+            }
+
+            var measureBmp = TextDesigner.MakeTextBitmapAssa(
+                Configuration.Settings.General.PreviewAssaText,
+                0,
+                0,
+                font,
+                pictureBoxPreview.Width,
+                pictureBoxPreview.Height,
+                outlineWidth,
+                shadowWidth,
+                null,
+                panelPrimaryColor.BackColor,
+                outlineColor,
+                panelBackColor.BackColor,
+                radioButtonOpaqueBox.Checked);
+            var nBmp = new NikseBitmap(measureBmp);
+            var measuredWidth = nBmp.GetNonTransparentWidth();
+            var measuredHeight = nBmp.GetNonTransparentHeight();
+
+            float left;
+            if (radioButtonTopLeft.Checked || radioButtonMiddleLeft.Checked || radioButtonBottomLeft.Checked)
+            {
+                left = (float)numericUpDownMarginLeft.Value;
+            }
+            else if (radioButtonTopRight.Checked || radioButtonMiddleRight.Checked || radioButtonBottomRight.Checked)
+            {
+                left = pictureBoxPreview.Width - (measuredWidth + (float)numericUpDownMarginRight.Value);
+            }
+            else
+            {
+                left = (pictureBoxPreview.Width - measuredWidth) / 2.0f;
+            }
+
+            float top;
+            if (radioButtonTopLeft.Checked || radioButtonTopCenter.Checked || radioButtonTopRight.Checked)
+            {
+                top = (float)numericUpDownMarginVertical.Value;
+            }
+            else if (radioButtonMiddleLeft.Checked || radioButtonMiddleCenter.Checked || radioButtonMiddleRight.Checked)
+            {
+                top = (pictureBoxPreview.Height - measuredHeight) / 2.0f;
+            }
+            else
+            {
+                top = pictureBoxPreview.Height - measuredHeight - (int)numericUpDownMarginVertical.Value;
+            }
+
+            var designedText = TextDesigner.MakeTextBitmapAssa(
+                Configuration.Settings.General.PreviewAssaText,
+                (int)Math.Round(left),
+                (int)Math.Round(top),
+                font,
+                pictureBoxPreview.Width,
+                pictureBoxPreview.Height,
+                outlineWidth,
+                shadowWidth,
+                _backgroundImage,
+                panelPrimaryColor.BackColor,
+                panelOutlineColor.BackColor,
+                panelBackColor.BackColor,
+                radioButtonOpaqueBox.Checked);
+
+            pictureBoxPreview.Image?.Dispose();
+            pictureBoxPreview.Image = designedText;
+            font.Dispose();
         }
 
         private void InitializeListView()
@@ -1212,15 +1159,10 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         {
             if (sender is RadioButton rb && listViewStyles.SelectedItems.Count == 1 && _doUpdate && rb.Checked)
             {
-                numericUpDownShadowWidth.Value = 2;
                 string name = listViewStyles.SelectedItems[0].Text;
                 SetSsaStyle(name, "outline", numericUpDownOutline.Value.ToString(CultureInfo.InvariantCulture));
                 SetSsaStyle(name, "borderstyle", "1");
                 GeneratePreview();
-
-                numericUpDownOutline.Enabled = rb.Checked;
-                labelShadow.Enabled = rb.Checked;
-                numericUpDownShadowWidth.Enabled = rb.Checked;
             }
         }
 
@@ -1228,15 +1170,10 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         {
             if (sender is RadioButton rb && listViewStyles.SelectedItems.Count == 1 && _doUpdate && rb.Checked)
             {
-                numericUpDownShadowWidth.Value = 0;
                 string name = listViewStyles.SelectedItems[0].Text;
                 SetSsaStyle(name, "outline", numericUpDownOutline.Value.ToString(CultureInfo.InvariantCulture));
                 SetSsaStyle(name, "borderstyle", "3");
                 GeneratePreview();
-
-                numericUpDownOutline.Enabled = !rb.Checked;
-                labelShadow.Enabled = !rb.Checked;
-                numericUpDownShadowWidth.Enabled = !rb.Checked;
             }
         }
 
@@ -1385,6 +1322,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         {
             timerClearStatus.Stop();
             labelStatus.Text = string.Empty;
+        }
+
+        private void pictureBoxPreview_Click(object sender, EventArgs e)
+        {
+            _backgroundImageDark = !_backgroundImageDark;
+            _backgroundImage.Dispose();
+            _backgroundImage = null;
+            GeneratePreview();
         }
     }
 }

@@ -9833,7 +9833,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (lines.Count == 2)
                         {
-                            if (Utilities.CountTagInText(s, "<i>") == 1 && lines[0].StartsWith("<i>", StringComparison.Ordinal) && lines[1].EndsWith("</i>", StringComparison.Ordinal))
+                            if (Utilities.CountTagInText(s, "<i>") == 1 && lines[0].Contains("<i>", StringComparison.Ordinal) && lines[1].Contains("</i>", StringComparison.Ordinal))
                             {
                                 lines[0] += "</i>";
                                 lines[1] = "<i>" + lines[1];
@@ -9871,15 +9871,15 @@ namespace Nikse.SubtitleEdit.Forms
                             newParagraph.Text = Utilities.AutoBreakLine(sb1.ToString(), language);
                         }
 
-                        if (currentParagraph.Text.StartsWith("<i>", StringComparison.Ordinal) && !currentParagraph.Text.Contains("</i>", StringComparison.Ordinal) &&
-                            newParagraph.Text.EndsWith("</i>", StringComparison.Ordinal) && !newParagraph.Text.Contains("<i>", StringComparison.Ordinal))
+                        if (currentParagraph.Text.Contains("<i>", StringComparison.Ordinal) && !currentParagraph.Text.Contains("</i>", StringComparison.Ordinal) &&
+                            newParagraph.Text.Contains("</i>", StringComparison.Ordinal) && !newParagraph.Text.Contains("<i>", StringComparison.Ordinal))
                         {
                             currentParagraph.Text = currentParagraph.Text + "</i>";
                             newParagraph.Text = "<i>" + newParagraph.Text;
                         }
 
-                        if (currentParagraph.Text.StartsWith("<b>", StringComparison.Ordinal) && !currentParagraph.Text.Contains("</b>", StringComparison.Ordinal) &&
-                            newParagraph.Text.EndsWith("</b>", StringComparison.Ordinal) && !newParagraph.Text.Contains("<b>"))
+                        if (currentParagraph.Text.Contains("<b>", StringComparison.Ordinal) && !currentParagraph.Text.Contains("</b>", StringComparison.Ordinal) &&
+                            newParagraph.Text.Contains("</b>", StringComparison.Ordinal) && !newParagraph.Text.Contains("<b>"))
                         {
                             currentParagraph.Text = currentParagraph.Text + "</b>";
                             newParagraph.Text = "<b>" + newParagraph.Text;
@@ -9927,6 +9927,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
+                FixSplitItalicTag(currentParagraph, newParagraph);
                 FixSplitFontTag(currentParagraph, newParagraph);
                 SetSplitTime(splitSeconds, currentParagraph, newParagraph, oldText);
 
@@ -9954,8 +9955,8 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             originalCurrent.Text = Utilities.AutoBreakLine(oldText.Substring(0, alternateTextIndex.Value).Trim(), language);
                             originalNew.Text = Utilities.AutoBreakLine(oldText.Substring(alternateTextIndex.Value).Trim(), language);
-                            if (originalCurrent.Text.StartsWith("<i>", StringComparison.Ordinal) && !originalCurrent.Text.Contains("</i>", StringComparison.Ordinal) &&
-                                originalNew.Text.EndsWith("</i>", StringComparison.Ordinal) && !originalNew.Text.Contains("<i>", StringComparison.Ordinal))
+                            if (originalCurrent.Text.Contains("<i>", StringComparison.Ordinal) && !originalCurrent.Text.Contains("</i>", StringComparison.Ordinal) &&
+                                originalNew.Text.Contains("</i>", StringComparison.Ordinal) && !originalNew.Text.Contains("<i>", StringComparison.Ordinal))
                             {
                                 if (originalCurrent.Text.StartsWith("<i>-", StringComparison.Ordinal) && (originalCurrent.Text.EndsWith(".", StringComparison.Ordinal) || originalCurrent.Text.EndsWith("?", StringComparison.Ordinal) ||
                                                                                                           originalCurrent.Text.EndsWith("!", StringComparison.Ordinal) || originalCurrent.Text.EndsWith("؟", StringComparison.Ordinal)) && originalNew.Text.StartsWith("-", StringComparison.Ordinal))
@@ -9968,8 +9969,8 @@ namespace Nikse.SubtitleEdit.Forms
                                 originalNew.Text = "<i>" + originalNew.Text;
                             }
 
-                            if (originalCurrent.Text.StartsWith("<b>", StringComparison.Ordinal) && !originalCurrent.Text.Contains("</b>") &&
-                                originalNew.Text.EndsWith("</b>", StringComparison.Ordinal) && !originalNew.Text.Contains("<b>"))
+                            if (originalCurrent.Text.Contains("<b>", StringComparison.Ordinal) && !originalCurrent.Text.Contains("</b>") &&
+                                originalNew.Text.Contains("</b>", StringComparison.Ordinal) && !originalNew.Text.Contains("<b>"))
                             {
                                 originalCurrent.Text = originalCurrent.Text + "</b>";
                                 originalNew.Text = "<b>" + originalNew.Text;
@@ -10108,6 +10109,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         _subtitleAlternate.InsertParagraphInCorrectTimeOrder(originalNew);
                         _subtitleAlternate.Renumber();
+                        FixSplitItalicTag(originalCurrent, originalNew);
                         FixSplitFontTag(originalCurrent, originalNew);
                     }
                 }
@@ -10131,6 +10133,36 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowStatus(_language.LineSplitted);
                 SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
                 RefreshSelectedParagraph();
+            }
+        }
+
+        private void FixSplitItalicTag(Paragraph currentParagraph, Paragraph nextParagraph)
+        {
+            if (currentParagraph == null || nextParagraph == null)
+            {
+                return;
+            }
+
+            var startIdx = currentParagraph.Text.LastIndexOf("<i>", StringComparison.OrdinalIgnoreCase);
+            if (startIdx >= 0 &&
+                !currentParagraph.Text.Contains("</i>", StringComparison.OrdinalIgnoreCase) &&
+                nextParagraph.Text.Contains("</i>", StringComparison.OrdinalIgnoreCase))
+            {
+                var endIdx = currentParagraph.Text.IndexOf('>', startIdx);
+                if (endIdx >= 0)
+                {
+                    var fontTag = currentParagraph.Text.Substring(startIdx, endIdx - startIdx + 1);
+                    var pre = string.Empty;
+                    if (currentParagraph.Text.StartsWith('{') && currentParagraph.Text.IndexOf('}') > 0)
+                    {
+                        var i = currentParagraph.Text.IndexOf('}');
+                        pre = currentParagraph.Text.Substring(0, i + 1);
+                        currentParagraph.Text = currentParagraph.Text.Remove(0, i + 1);
+                    }
+
+                    currentParagraph.Text = pre + currentParagraph.Text + "</i>";
+                    nextParagraph.Text = pre + fontTag + nextParagraph.Text;
+                }
             }
         }
 

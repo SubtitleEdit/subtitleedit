@@ -786,6 +786,7 @@
             this.pictureBoxPreview.Size = new System.Drawing.Size(570, 367);
             this.pictureBoxPreview.TabIndex = 0;
             this.pictureBoxPreview.TabStop = false;
+            this.pictureBoxPreview.Click += new System.EventHandler(this.pictureBoxPreview_Click);
             // 
             // groupBox2
             // 
