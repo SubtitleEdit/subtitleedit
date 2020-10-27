@@ -280,6 +280,7 @@ namespace Nikse.SubtitleEdit.Controls
         public Color ParagraphColor { get; set; }
         public Color TextColor { get; set; }
         public Color CursorColor { get; set; }
+        public Color ChaptersColor { get; set; }
         public float TextSize { get; set; }
         public bool TextBold { get; set; }
         public Color GridColor { get; set; }
@@ -635,7 +636,7 @@ namespace Nikse.SubtitleEdit.Controls
                                     }
                                 }
                                 else if (paragraphStartList.Contains(pos))
-                                { // scene change and current pos are the same - draw 2 pixels + current pos dotted
+                                { // scene change and start pos are the same - draw 2 pixels + current pos dotted
                                     using (var p = new Pen(Color.AntiqueWhite, 2))
                                     {
                                         graphics.DrawLine(p, pos, 0, pos, Height);
@@ -647,7 +648,7 @@ namespace Nikse.SubtitleEdit.Controls
                                     }
                                 }
                                 else if (paragraphEndList.Contains(pos))
-                                { // scene change and current pos are the same - draw 2 pixels + current pos dotted
+                                { // scene change and end pos are the same - draw 2 pixels + current pos dotted
                                     using (var p = new Pen(Color.AntiqueWhite, 2))
                                     {
                                         graphics.DrawLine(p, pos, 0, pos, Height);
@@ -701,7 +702,7 @@ namespace Nikse.SubtitleEdit.Controls
                                     var name = string.Empty;
                                     var x = pos + 3;
                                     var y = index + 1 < _chapters.Count && _chapters[index].StartTime == _chapters[index + 1].StartTime ? Height / 2 - font.Height - 12 :  Height / 2 - 12;
-                                    using (var chpaterTextBackBrush = new SolidBrush(Color.FromArgb(255, 104, 33, 122)))
+                                    using (var chpaterTextBackBrush = new SolidBrush(ChaptersColor))
                                     {
                                         name = _chapters[index].Nested ? "+ " + _chapters[index].Name : _chapters[index].Name;
                                         var textSize = graphics.MeasureString(name, font);
@@ -716,7 +717,7 @@ namespace Nikse.SubtitleEdit.Controls
                                 if (currentPositionPos == pos)
                                 { // chapter and current pos are the same - draw 2 pixels + current pos dotted
                                     currentPosDone = true;
-                                    using (var p = new Pen(Color.FromArgb(255, 173, 57, 202), 2))
+                                    using (var p = new Pen(ChaptersColor, 2))
                                     {
                                         graphics.DrawLine(p, pos, 0, pos, Height);
                                     }
@@ -727,8 +728,8 @@ namespace Nikse.SubtitleEdit.Controls
                                     }
                                 }
                                 else if (paragraphStartList.Contains(pos))
-                                { // chapter and current pos are the same - draw 2 pixels + current pos dotted
-                                    using (var p = new Pen(Color.FromArgb(255, 173, 57, 202), 2))
+                                { // chapter and start pos are the same - draw 2 pixels + current pos dotted
+                                    using (var p = new Pen(ChaptersColor, 2))
                                     {
                                         graphics.DrawLine(p, pos, 0, pos, Height);
                                     }
@@ -739,8 +740,8 @@ namespace Nikse.SubtitleEdit.Controls
                                     }
                                 }
                                 else if (paragraphEndList.Contains(pos))
-                                { // chapter and current pos are the same - draw 2 pixels + current pos dotted
-                                    using (var p = new Pen(Color.FromArgb(255, 173, 57, 202), 2))
+                                { // chapter and end pos are the same - draw 2 pixels + current pos dotted
+                                    using (var p = new Pen(ChaptersColor, 2))
                                     {
                                         graphics.DrawLine(p, pos, 0, pos, Height);
                                     }
@@ -752,7 +753,7 @@ namespace Nikse.SubtitleEdit.Controls
                                 }
                                 else
                                 {
-                                    using (var p = new Pen(Color.FromArgb(255, 173, 57, 202)))
+                                    using (var p = new Pen(ChaptersColor))
                                     {
                                         graphics.DrawLine(p, pos, 0, pos, Height);
                                     }
