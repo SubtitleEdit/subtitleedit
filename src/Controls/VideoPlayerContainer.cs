@@ -1742,7 +1742,8 @@ namespace Nikse.SubtitleEdit.Controls
                         {
                             toolTiptext = _chapters[index].Name;
                         }
-                        _chapterToolTip.Show(toolTiptext, this, pos, Height - 65);
+                        _chapterToolTip.Show(toolTiptext, _pictureBoxProgressbarBackground, e.X - 10, e.Y - 25);
+                        break;
                     }
                 }
             }
@@ -1752,7 +1753,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (_chapters?.Count > 0)
             {
-                _chapterToolTip.Hide(this);
+                _chapterToolTip.Hide(_pictureBoxProgressbarBackground);
             }
         }
 
@@ -1782,7 +1783,8 @@ namespace Nikse.SubtitleEdit.Controls
                         {
                             toolTiptext = _chapters[index].Name;
                         }
-                        _chapterToolTip.Show(toolTiptext, this, pos, Height - 65);
+                        _chapterToolTip.Show(toolTiptext, _pictureBoxProgressBar, e.X - 10, e.Y - 25);
+                        break;
                     }
                 }
             }
@@ -1792,7 +1794,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (_chapters?.Count > 0)
             {
-                _chapterToolTip.Hide(this);
+                _chapterToolTip.Hide(_pictureBoxProgressBar);
             }
         }
 
