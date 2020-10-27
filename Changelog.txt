@@ -4,6 +4,7 @@
 * NEW:
    * Add "Measurement converter" - thx OmrSi
    * Add import/export of shortcuts
+   * Add subtitle format XMP - thx Tore
    * Add "Center, left justify dialogs" to export images - thx Benjamin
    * Add two more extend shortcuts - thx OmrSi
    * Add "/renumber" option to command line - thx malashin
@@ -20,11 +21,19 @@
    * Don't slow startup due to bad "RecentFiles" - thx beeeeswax/Geoff
    * Only omit known html tags in "CountCharacters" - thx Veronica
    * Add some Greek letters to "Normalize strings" - thx FeMaster1
+   * Alignment dialog - focus button with current alignment
+   * Improve ASSA/SSA preview - thx Mounter81
+   * Add degree symbol to Unicode chars - thx René
+   * Allow for .mpg/.mpeg transport stream file extension in "Batch convert"
+   * Add some more EBU STL validation - thx Valentina
 * FIXED:
    * Fix crash in export image with font tag - thx Jake
    * Fix batch convert of Blu-ray sup file to VobSub - thx John
    * Fix crash in faulty ts files - thx ExYuSubs
    * Fix libvlc load on Linux
+   * Allow for very large images in "Image compre" / nOCR - thx chcip2003
+   * Always close italic in EBU STL - thx Valentina
+   * Fix for split original (minor) - thx René
 
 
 3.5.17 (6th October 2020)
