@@ -66,18 +66,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     _errorCount++;
                 }
+            }
 
-                for (int i = 0; i < subtitle.Paragraphs.Count - 1; i++)
-                {
-                    var p2 = subtitle.Paragraphs[i];
-                    var next = subtitle.Paragraphs[i + 1];
-                    p2.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-                }
-                if (subtitle.Paragraphs.Count > 0)
-                {
-                    subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].EndTime.TotalMilliseconds = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].StartTime.TotalMilliseconds +
-                         Utilities.GetOptimalDisplayMilliseconds(subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Text);
-                }
+            for (int i = 0; i < subtitle.Paragraphs.Count - 1; i++)
+            {
+                var p = subtitle.Paragraphs[i];
+                var next = subtitle.Paragraphs[i + 1];
+                p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+            }
+            if (subtitle.Paragraphs.Count > 0)
+            {
+                subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].EndTime.TotalMilliseconds = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].StartTime.TotalMilliseconds +
+                     Utilities.GetOptimalDisplayMilliseconds(subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Text);
             }
             subtitle.RemoveEmptyLines();
             subtitle.Renumber();
