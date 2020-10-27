@@ -582,7 +582,7 @@ namespace Nikse.SubtitleEdit.Core
                 DisplayStandardCode = "Display standard code",
                 ColorRequiresTeletext = "Colors require teletext!",
                 AlignmentRequiresTeletext = "Alignment requires teletext!",
-                TeletextCharsShouldBe38 = "'Max# of chars per row' for Teletext should be 38!",
+                TeletextCharsShouldBe38 = "'Max# of chars per row' for teletext should be 38!",
                 CharacterCodeTable = "Character table",
                 LanguageCode = "Language code",
                 OriginalProgramTitle = "Original program title",
