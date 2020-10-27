@@ -695,27 +695,28 @@ namespace Nikse.SubtitleEdit.Controls
                             if (pos >= 0 && pos < Width)
                             {
                                 // draw chapter text
+                                using (var font = new Font(Configuration.Settings.General.SubtitleFontName, TextSize, TextBold ? FontStyle.Bold : FontStyle.Regular))
                                 using (var brush = new SolidBrush(Color.White))
                                 {
-                                    if (index + 1 < _chapters.Count && _chapters[index].StartTime == _chapters[index + 1].StartTime)
+                                    var name = string.Empty;
+                                    var x = pos + 3;
+                                    var y = index + 1 < _chapters.Count && _chapters[index].StartTime == _chapters[index + 1].StartTime ? Height / 2 - font.Height - 12 :  Height / 2 - 12;
+                                    using (var chpaterTextBackBrush = new SolidBrush(Color.FromArgb(255, 104, 33, 122)))
                                     {
-                                        graphics.DrawString(_chapters[index].Name, Font, brush, new PointF(pos + 2, Height / 2 - Font.Height - 8));
+                                        name = _chapters[index].Nested ? "+ " + _chapters[index].Name : _chapters[index].Name;
+                                        var textSize = graphics.MeasureString(name, font);
+                                        graphics.FillRectangle(chpaterTextBackBrush, x, y, textSize.Width + 2, textSize.Height);
                                     }
-                                    else if (_chapters[index].Nested)
-                                    {
-                                        graphics.DrawString("+ " + _chapters[index].Name, Font, brush, new PointF(pos + 2, Height / 2 - 8));
-                                    }
-                                    else
-                                    {
-                                        graphics.DrawString(_chapters[index].Name, Font, brush, new PointF(pos + 2, Height / 2 - 8));
-                                    }
+
+                                    x += 2;
+                                    graphics.DrawString(name, font, brush, new PointF(x, y));
                                 }
 
                                 // draw chapter line
                                 if (currentPositionPos == pos)
                                 { // chapter and current pos are the same - draw 2 pixels + current pos dotted
                                     currentPosDone = true;
-                                    using (var p = new Pen(Color.LightGray, 2))
+                                    using (var p = new Pen(Color.FromArgb(255, 173, 57, 202), 2))
                                     {
                                         graphics.DrawLine(p, pos, 0, pos, Height);
                                     }
@@ -727,7 +728,7 @@ namespace Nikse.SubtitleEdit.Controls
                                 }
                                 else if (paragraphStartList.Contains(pos))
                                 { // chapter and current pos are the same - draw 2 pixels + current pos dotted
-                                    using (var p = new Pen(Color.LightGray, 2))
+                                    using (var p = new Pen(Color.FromArgb(255, 173, 57, 202), 2))
                                     {
                                         graphics.DrawLine(p, pos, 0, pos, Height);
                                     }
@@ -739,7 +740,7 @@ namespace Nikse.SubtitleEdit.Controls
                                 }
                                 else if (paragraphEndList.Contains(pos))
                                 { // chapter and current pos are the same - draw 2 pixels + current pos dotted
-                                    using (var p = new Pen(Color.LightGray, 2))
+                                    using (var p = new Pen(Color.FromArgb(255, 173, 57, 202), 2))
                                     {
                                         graphics.DrawLine(p, pos, 0, pos, Height);
                                     }
@@ -751,7 +752,7 @@ namespace Nikse.SubtitleEdit.Controls
                                 }
                                 else
                                 {
-                                    using (var p = new Pen(Color.LightGray))
+                                    using (var p = new Pen(Color.FromArgb(255, 173, 57, 202)))
                                     {
                                         graphics.DrawLine(p, pos, 0, pos, Height);
                                     }
