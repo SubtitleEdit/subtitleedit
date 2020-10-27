@@ -3072,7 +3072,7 @@ namespace Nikse.SubtitleEdit.Forms
                     audioVisualizer.WavePeaks = null;
                     audioVisualizer.SetSpectrogram(null);
                     audioVisualizer.SceneChanges = new List<double>();
-                    audioVisualizer.Chapters = new List<double>();
+                    audioVisualizer.Chapters = new List<MatroskaChapter>();
                 }
 
                 if (Configuration.Settings.General.ShowVideoPlayer || Configuration.Settings.General.ShowAudioVisualizer)
@@ -3244,7 +3244,7 @@ namespace Nikse.SubtitleEdit.Forms
                     audioVisualizer.WavePeaks = null;
                     audioVisualizer.SetSpectrogram(null);
                     audioVisualizer.SceneChanges = new List<double>();
-                    audioVisualizer.Chapters = new List<double>();
+                    audioVisualizer.Chapters = new List<MatroskaChapter>();
 
                     Configuration.Settings.RecentFiles.Add(fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleAlternateFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
                     Configuration.Settings.Save();
@@ -4193,7 +4193,7 @@ namespace Nikse.SubtitleEdit.Forms
                 audioVisualizer.WavePeaks = null;
                 audioVisualizer.SetSpectrogram(null);
                 audioVisualizer.SceneChanges = new List<double>();
-                audioVisualizer.Chapters = new List<double>();
+                audioVisualizer.Chapters = new List<MatroskaChapter>();
                 if (mediaPlayer.VideoPlayer != null)
                 {
                     mediaPlayer.PauseAndDisposePlayer();
@@ -14703,11 +14703,11 @@ namespace Nikse.SubtitleEdit.Forms
             else if (mediaPlayer.Chapters?.Count > 0 && e.KeyData == _shortcuts.VideoGoToPrevChapter)
             {
                 var cp = mediaPlayer.CurrentPosition - 0.01;
-                foreach (var chapter in mediaPlayer.Chapters.Reverse<double>())
+                foreach (var chapter in mediaPlayer.Chapters.Reverse<MatroskaChapter>())
                 {
-                    if (chapter < cp)
+                    if (chapter.StartTime < cp)
                     {
-                        mediaPlayer.CurrentPosition = chapter;
+                        mediaPlayer.CurrentPosition = chapter.StartTime;
                         break;
                     }
                 }
@@ -14719,9 +14719,9 @@ namespace Nikse.SubtitleEdit.Forms
                 var cp = mediaPlayer.CurrentPosition + 0.01;
                 foreach (var chapter in mediaPlayer.Chapters)
                 {
-                    if (chapter > cp)
+                    if (chapter.StartTime > cp)
                     {
-                        mediaPlayer.CurrentPosition = chapter;
+                        mediaPlayer.CurrentPosition = chapter.StartTime;
                         break;
                     }
                 }
@@ -19676,7 +19676,7 @@ namespace Nikse.SubtitleEdit.Forms
                     audioVisualizer.WavePeaks = null;
                     audioVisualizer.SetSpectrogram(null);
                     audioVisualizer.SceneChanges = new List<double>();
-                    audioVisualizer.Chapters = new List<double>();
+                    audioVisualizer.Chapters = new List<MatroskaChapter>();
                 }
 
                 openFileDialog1.InitialDirectory = Path.GetDirectoryName(openFileDialog1.FileName);
@@ -23498,7 +23498,7 @@ namespace Nikse.SubtitleEdit.Forms
             audioVisualizer.WavePeaks = null;
             audioVisualizer.SetSpectrogram(null);
             audioVisualizer.SceneChanges = new List<double>();
-            audioVisualizer.Chapters = new List<double>();
+            audioVisualizer.Chapters = new List<MatroskaChapter>();
             timeUpDownVideoPositionAdjust.TimeCode = new TimeCode();
             timeUpDownVideoPositionAdjust.Enabled = false;
             timeUpDownVideoPosition.TimeCode = new TimeCode();
@@ -26961,7 +26961,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemImportChapters.Enabled = false;
             ShowStatus(_language.GettingChapters);
 
-            var chaps = new List<double>();
+            var chaps = new List<MatroskaChapter>();
             var getChapters = System.Threading.Tasks.Task.Factory.StartNew(() =>
             {
                 using (var matroska = new MatroskaFile(VideoFileName))
@@ -27791,7 +27791,7 @@ namespace Nikse.SubtitleEdit.Forms
                             audioVisualizer.WavePeaks = null;
                             audioVisualizer.SetSpectrogram(null);
                             audioVisualizer.SceneChanges = new List<double>();
-                            audioVisualizer.Chapters = new List<double>();
+                            audioVisualizer.Chapters = new List<MatroskaChapter>();
                         }
 
                         if (!panelVideoPlayer.Visible)
