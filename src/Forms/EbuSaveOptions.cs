@@ -31,7 +31,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelCodePageNumber.Text = language.CodePageNumber;
             labelDiskFormatCode.Text = language.DiskFormatCode;
             labelDisplayStandardCode.Text = language.DisplayStandardCode;
-            labelColorRequiresTeletext.Text = language.ColorRequiresTeletext;
+            labelDisplayStandardCodeWarning.Text = string.Empty;
+            labelMaxCharsPerRow38ForTeletext.Text = string.Empty;
             labelCharacterCodeTable.Text = language.CharacterCodeTable;
             labelLanguageCode.Text = language.LanguageCode;
             labelOriginalProgramTitle.Text = language.OriginalProgramTitle;
@@ -414,6 +415,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void numericUpDownMaxCharacters_ValueChanged(object sender, EventArgs e)
         {
+            CheckMaxCharsPerRow();
             CheckErrors(_subtitle);
         }
 
@@ -456,18 +458,63 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void comboBoxDisplayStandardCode_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (_subtitle != null && comboBoxDisplayStandardCode.SelectedIndex == 0)
+            labelDisplayStandardCodeWarning.Text = string.Empty;
+            CheckMaxCharsPerRow();
+            if (_subtitle == null)
+            {
+                return;
+            }
+
+            var fontColorFound = false;
+            var alignmentFound = false;
+            if (comboBoxDisplayStandardCode.SelectedIndex == 0) // open subtitling
             {
                 foreach (var paragraph in _subtitle.Paragraphs)
                 {
-                    if (paragraph.Text.Contains("<font color", StringComparison.OrdinalIgnoreCase))
+                    if (!fontColorFound &&
+                        paragraph.Text.Contains("<font color", StringComparison.OrdinalIgnoreCase))
                     {
-                        labelColorRequiresTeletext.Visible = true;
-                        return;
+                        labelDisplayStandardCodeWarning.Text =
+                            (labelDisplayStandardCodeWarning.Text + Environment.NewLine +
+                            Configuration.Settings.Language.EbuSaveOptions.ColorRequiresTeletext).Trim();
+                        fontColorFound = true;
+                    }
+
+                    if (!alignmentFound &&
+                        (paragraph.Text.Contains("{\\an1}", StringComparison.OrdinalIgnoreCase) ||
+                        paragraph.Text.Contains("{\\an2}", StringComparison.OrdinalIgnoreCase) ||
+                        paragraph.Text.Contains("{\\an3}", StringComparison.OrdinalIgnoreCase) ||
+                        paragraph.Text.Contains("{\\an4}", StringComparison.OrdinalIgnoreCase) ||
+                        paragraph.Text.Contains("{\\an5}", StringComparison.OrdinalIgnoreCase) ||
+                        paragraph.Text.Contains("{\\an6}", StringComparison.OrdinalIgnoreCase) ||
+                        paragraph.Text.Contains("{\\an7}", StringComparison.OrdinalIgnoreCase) ||
+                        paragraph.Text.Contains("{\\an8}", StringComparison.OrdinalIgnoreCase) ||
+                        paragraph.Text.Contains("{\\an9}", StringComparison.OrdinalIgnoreCase)))
+                    {
+                        labelDisplayStandardCodeWarning.Text =
+                            (labelDisplayStandardCodeWarning.Text + Environment.NewLine +
+                             Configuration.Settings.Language.EbuSaveOptions.AlignmentRequiresTeletext).Trim();
+
+                        alignmentFound = true;
                     }
                 }
             }
-            labelColorRequiresTeletext.Visible = false;
+        }
+
+        private void CheckMaxCharsPerRow()
+        {
+            labelMaxCharsPerRow38ForTeletext.Text = string.Empty;
+            if (_subtitle == null)
+            {
+                return;
+            }
+
+            // Teletext should have max chars per row = 38
+            if (comboBoxDisplayStandardCode.SelectedIndex == 1 || comboBoxDisplayStandardCode.SelectedIndex == 2 &&
+                numericUpDownMaxCharacters.Value != 38)
+            {
+                labelMaxCharsPerRow38ForTeletext.Text = Configuration.Settings.Language.EbuSaveOptions.TeletextCharsShouldBe38;
+            }
         }
 
         private void buttonChooseLanguageCode_Click(object sender, EventArgs e)

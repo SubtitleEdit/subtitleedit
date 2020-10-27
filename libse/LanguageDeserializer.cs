@@ -1051,6 +1051,12 @@ namespace Nikse.SubtitleEdit.Core
                 case "EbuSaveOptions/ColorRequiresTeletext":
                     language.EbuSaveOptions.ColorRequiresTeletext = reader.Value;
                     break;
+                case "EbuSaveOptions/AlignmentRequiresTeletext":
+                    language.EbuSaveOptions.AlignmentRequiresTeletext = reader.Value;
+                    break;
+                case "EbuSaveOptions/TeletextCharsShouldBe38":
+                    language.EbuSaveOptions.TeletextCharsShouldBe38 = reader.Value;
+                    break;
                 case "EbuSaveOptions/CharacterCodeTable":
                     language.EbuSaveOptions.CharacterCodeTable = reader.Value;
                     break;

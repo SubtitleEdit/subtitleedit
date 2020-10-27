@@ -405,6 +405,8 @@ Note: Do check free disk space.</WaveFileMalformed>
     <DiskFormatCode>Disk format code</DiskFormatCode>
     <DisplayStandardCode>Display standard code</DisplayStandardCode>
     <ColorRequiresTeletext>Colors require teletext!</ColorRequiresTeletext>
+    <AlignmentRequiresTeletext>Alignment requires Teletext</AlignmentRequiresTeletext>
+    <TeletextCharsShouldBe38>'Max# of chars per row' for Teletext should be 38</TeletextCharsShouldBe38>
     <CharacterCodeTable>Character table</CharacterCodeTable>
     <LanguageCode>Language code</LanguageCode>
     <OriginalProgramTitle>Original program title</OriginalProgramTitle>

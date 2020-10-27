@@ -35,10 +35,11 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPageHeader = new System.Windows.Forms.TabPage();
+            this.labelMaxCharsPerRow38ForTeletext = new System.Windows.Forms.Label();
             this.labelLanguageCodeFriendlyName = new System.Windows.Forms.Label();
             this.buttonChooseLanguageCode = new System.Windows.Forms.Button();
             this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
-            this.labelColorRequiresTeletext = new System.Windows.Forms.Label();
+            this.labelDisplayStandardCodeWarning = new System.Windows.Forms.Label();
             this.labelFrameRate = new System.Windows.Forms.Label();
             this.comboBoxFrameRate = new System.Windows.Forms.ComboBox();
             this.labelTimeCodeStartOfProgramme = new System.Windows.Forms.Label();
@@ -164,10 +165,11 @@
             // 
             // tabPageHeader
             // 
+            this.tabPageHeader.Controls.Add(this.labelMaxCharsPerRow38ForTeletext);
             this.tabPageHeader.Controls.Add(this.labelLanguageCodeFriendlyName);
             this.tabPageHeader.Controls.Add(this.buttonChooseLanguageCode);
             this.tabPageHeader.Controls.Add(this.timeUpDownStartTime);
-            this.tabPageHeader.Controls.Add(this.labelColorRequiresTeletext);
+            this.tabPageHeader.Controls.Add(this.labelDisplayStandardCodeWarning);
             this.tabPageHeader.Controls.Add(this.labelFrameRate);
             this.tabPageHeader.Controls.Add(this.comboBoxFrameRate);
             this.tabPageHeader.Controls.Add(this.labelTimeCodeStartOfProgramme);
@@ -216,6 +218,16 @@
             this.tabPageHeader.Text = "General subtitle information";
             this.tabPageHeader.UseVisualStyleBackColor = true;
             // 
+            // labelMaxCharsPerRow38ForTeletext
+            // 
+            this.labelMaxCharsPerRow38ForTeletext.AutoSize = true;
+            this.labelMaxCharsPerRow38ForTeletext.ForeColor = System.Drawing.Color.Red;
+            this.labelMaxCharsPerRow38ForTeletext.Location = new System.Drawing.Point(443, 347);
+            this.labelMaxCharsPerRow38ForTeletext.Name = "labelMaxCharsPerRow38ForTeletext";
+            this.labelMaxCharsPerRow38ForTeletext.Size = new System.Drawing.Size(198, 13);
+            this.labelMaxCharsPerRow38ForTeletext.TabIndex = 74;
+            this.labelMaxCharsPerRow38ForTeletext.Text = "Use 38 in \'Max chars per row\' for teletext";
+            // 
             // labelLanguageCodeFriendlyName
             // 
             this.labelLanguageCodeFriendlyName.AutoSize = true;
@@ -257,16 +269,15 @@
             this.timeUpDownStartTime.TimeCode = timeCode1;
             this.timeUpDownStartTime.UseVideoOffset = false;
             // 
-            // labelColorRequiresTeletext
+            // labelDisplayStandardCodeWarning
             // 
-            this.labelColorRequiresTeletext.AutoSize = true;
-            this.labelColorRequiresTeletext.ForeColor = System.Drawing.Color.Red;
-            this.labelColorRequiresTeletext.Location = new System.Drawing.Point(406, 102);
-            this.labelColorRequiresTeletext.Name = "labelColorRequiresTeletext";
-            this.labelColorRequiresTeletext.Size = new System.Drawing.Size(146, 13);
-            this.labelColorRequiresTeletext.TabIndex = 72;
-            this.labelColorRequiresTeletext.Text = "Use teletext to include colors!";
-            this.labelColorRequiresTeletext.Visible = false;
+            this.labelDisplayStandardCodeWarning.AutoSize = true;
+            this.labelDisplayStandardCodeWarning.ForeColor = System.Drawing.Color.Red;
+            this.labelDisplayStandardCodeWarning.Location = new System.Drawing.Point(406, 102);
+            this.labelDisplayStandardCodeWarning.Name = "labelDisplayStandardCodeWarning";
+            this.labelDisplayStandardCodeWarning.Size = new System.Drawing.Size(146, 13);
+            this.labelDisplayStandardCodeWarning.TabIndex = 72;
+            this.labelDisplayStandardCodeWarning.Text = "Use teletext to include colors!";
             // 
             // labelFrameRate
             // 
@@ -1019,9 +1030,10 @@
         private System.Windows.Forms.NumericUpDown numericUpDownNewLineRows;
         private System.Windows.Forms.Label labelNewLineRows;
         private System.Windows.Forms.NumericUpDown numericUpDownMarginBottom;
-        private System.Windows.Forms.Label labelColorRequiresTeletext;
+        private System.Windows.Forms.Label labelDisplayStandardCodeWarning;
         private System.Windows.Forms.Button buttonChooseLanguageCode;
         private System.Windows.Forms.Label labelLanguageCodeFriendlyName;
         private System.Windows.Forms.Label labelUseBox;
+        private System.Windows.Forms.Label labelMaxCharsPerRow38ForTeletext;
     }
 }
