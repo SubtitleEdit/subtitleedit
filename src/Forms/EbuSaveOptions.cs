@@ -510,7 +510,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             // Teletext should have max chars per row = 38
-            if (comboBoxDisplayStandardCode.SelectedIndex == 1 || comboBoxDisplayStandardCode.SelectedIndex == 2 &&
+            if ((comboBoxDisplayStandardCode.SelectedIndex == 1 || comboBoxDisplayStandardCode.SelectedIndex == 2) &&
                 numericUpDownMaxCharacters.Value != 38)
             {
                 labelMaxCharsPerRow38ForTeletext.Text = Configuration.Settings.Language.EbuSaveOptions.TeletextCharsShouldBe38;
