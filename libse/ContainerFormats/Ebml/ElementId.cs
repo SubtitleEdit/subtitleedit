@@ -46,6 +46,8 @@
         Chapters = 0x1043A770,
         EditionEntry = 0x45B9,
         ChapterAtom = 0xB6,
-        ChapterTimeStart = 0x91
+        ChapterTimeStart = 0x91,
+        ChapterDisplay = 0x80,
+        ChapString = 0x85
     }
 }

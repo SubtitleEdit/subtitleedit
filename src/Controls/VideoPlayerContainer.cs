@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
 using System.Drawing;
@@ -118,11 +119,12 @@ namespace Nikse.SubtitleEdit.Controls
         private readonly PictureBox _pictureBoxVolumeBar = new PictureBox();
         private readonly Label _labelTimeCode = new Label();
         private readonly Label _labelVideoPlayerName = new Label();
+        private readonly ToolTip _chapterToolTip = new ToolTip();
 
 
-        private List<double> _chapters = new List<double>();
+        private List<MatroskaChapter> _chapters = new List<MatroskaChapter>();
 
-        public List<double> Chapters
+        public List<MatroskaChapter> Chapters
         {
             get => _chapters;
             set
@@ -763,7 +765,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (_panelControls.Visible)
             {
-                _panelSubtitle.Height = _panelSubtitle.Height + _controlsHeight;
+                _panelSubtitle.Height += _controlsHeight;
                 _panelControls.Visible = false;
             }
             if (hideCursor)
@@ -778,7 +780,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _panelControls.Visible = true;
                 _panelControls.BringToFront();
-                _panelSubtitle.Height = _panelSubtitle.Height - _controlsHeight;
+                _panelSubtitle.Height -= _controlsHeight;
             }
             ShowCursor();
         }
@@ -962,8 +964,10 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxProgressbarBackground.Size = new Size(531, 12);
             _pictureBoxProgressbarBackground.SizeMode = PictureBoxSizeMode.StretchImage;
             _pictureBoxProgressbarBackground.TabStop = false;
-            _pictureBoxProgressbarBackground.Paint += new PaintEventHandler(ProgressbarBackgroundPaint);
+            _pictureBoxProgressbarBackground.Paint += PictureBoxProgressbarBackgroundPaint;
             _pictureBoxProgressbarBackground.MouseDown += PictureBoxProgressbarBackgroundMouseDown;
+            _pictureBoxProgressbarBackground.MouseLeave += PictureBoxProgressbarBackgroundMouseLeave;
+            _pictureBoxProgressbarBackground.MouseMove += PictureBoxProgressbarBackgroundMouseMove;
             _panelControls.Controls.Add(_pictureBoxProgressbarBackground);
 
             _pictureBoxProgressBar.Image = (Image)_resources.GetObject("pictureBoxProgressBar.Image");
@@ -972,8 +976,10 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxProgressBar.Size = new Size(318, 4);
             _pictureBoxProgressBar.SizeMode = PictureBoxSizeMode.StretchImage;
             _pictureBoxProgressBar.TabStop = false;
-            _pictureBoxProgressBar.Paint += new PaintEventHandler(ProgressBarPaint);
+            _pictureBoxProgressBar.Paint += PictureBoxProgressBarPaint;
             _pictureBoxProgressBar.MouseDown += PictureBoxProgressBarMouseDown;
+            _pictureBoxProgressBar.MouseLeave += PictureBoxProgressBarMouseLeave;
+            _pictureBoxProgressBar.MouseMove += PictureBoxProgressBarMouseMove;
             _panelControls.Controls.Add(_pictureBoxProgressBar);
             _pictureBoxProgressBar.BringToFront();
 
@@ -1131,81 +1137,6 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxPlay.BringToFront();
             _labelTimeCode.BringToFront();
             return _panelControls;
-        }  
-        
-        internal void ProgressbarBackgroundPaint(object sender, PaintEventArgs e)
-        {
-            if (_chapters != null)
-            {
-                try
-                {
-                    Graphics graphics = e.Graphics;
-                    int max = _pictureBoxProgressbarBackground.Width - 9;
-                    int index = 0;
-                    while (index < _chapters.Count)
-                    {
-                        int pos;
-                        try
-                        {
-                            double time = _chapters[index++];
-                            pos = (int)Math.Round(time * max / Duration + 3);
-                        }
-                        catch
-                        {
-                            pos = -1;
-                        }
-                        if (pos > 0 && pos < max)
-                        {
-                            using (var p = new Pen(Color.LightGray))
-                            {
-                                graphics.DrawLine(p, pos, _pictureBoxProgressBar.Location.Y, pos, _pictureBoxProgressBar.Location.Y + 3);
-                            }
-                        }
-                    }
-                }
-                catch (Exception)
-                {
-                    // ignore
-                }
-            }
-        }
-
-        internal void ProgressBarPaint(object sender, PaintEventArgs e)
-        {
-
-            if (_chapters != null)
-            {
-                try
-                {
-                    Graphics graphics = e.Graphics;
-                    int max = _pictureBoxProgressbarBackground.Width - 9;
-                    int index = 0;
-                    while (index < _chapters.Count)
-                    {
-                        int pos;
-                        try
-                        {
-                            double time = _chapters[index++];
-                            pos = (int)Math.Round(time * max / Duration - 1);
-                        }
-                        catch
-                        {
-                            pos = -1;
-                        }
-                        if (pos > 0 && pos < max)
-                        {
-                            using (var p = new Pen(Color.LightGray))
-                            {
-                                graphics.DrawLine(p, pos, 1, pos, Height);
-                            }
-                        }
-                    }
-                }
-                catch (Exception)
-                {
-                    // ignore
-                }
-            }
         }
 
         public void VideoPlayerContainerResize(object sender, EventArgs e)
@@ -1693,6 +1624,12 @@ namespace Nikse.SubtitleEdit.Controls
             CurrentPosition = percent * Duration / 100.0;
         }
 
+        private int SecondsToXPosition(double seconds)
+        {
+            int max = _pictureBoxProgressbarBackground.Width - 9;
+            return (int)Math.Round(seconds * max / Duration);
+        }
+
         private void PictureBoxProgressbarBackgroundMouseDown(object sender, MouseEventArgs e)
         {
             SetProgressBarPosition(e.X - 4);
@@ -1704,6 +1641,161 @@ namespace Nikse.SubtitleEdit.Controls
             SetProgressBarPosition(e.X + 2);
             OnButtonClicked?.Invoke(sender, e);
         }
+
+        private void PictureBoxProgressbarBackgroundPaint(object sender, PaintEventArgs e)
+        {
+            if (_chapters != null)
+            {
+                try
+                {
+                    Graphics graphics = e.Graphics;
+                    int max = _pictureBoxProgressbarBackground.Width - 9;
+                    int index = 0;
+                    while (index < _chapters.Count)
+                    {
+                        int pos;
+                        try
+                        {
+                            double time = _chapters[index++].StartTime;
+                            pos = SecondsToXPosition(time) + 3;
+                        }
+                        catch
+                        {
+                            pos = -1;
+                        }
+                        if (pos > 0 && pos < max)
+                        {
+                            using (var p = new Pen(Color.LightGray))
+                            {
+                                graphics.DrawLine(p, pos, _pictureBoxProgressBar.Location.Y, pos, _pictureBoxProgressBar.Location.Y + 3);
+                            }
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    // ignore
+                }
+            }
+        }
+
+        private void PictureBoxProgressBarPaint(object sender, PaintEventArgs e)
+        {
+            if (_chapters != null)
+            {
+                try
+                {
+                    Graphics graphics = e.Graphics;
+                    int max = _pictureBoxProgressbarBackground.Width - 9;
+                    int index = 0;
+                    while (index < _chapters.Count)
+                    {
+                        int pos;
+                        try
+                        {
+                            double time = _chapters[index++].StartTime;
+                            pos = SecondsToXPosition(time) - 1;
+                        }
+                        catch
+                        {
+                            pos = -1;
+                        }
+                        if (pos >= 0 && pos < max)
+                        {
+                            using (var p = new Pen(Color.LightGray))
+                            {
+                                graphics.DrawLine(p, pos, 1, pos, Height);
+                            }
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    // ignore
+                }
+            }
+        }
+
+        private void PictureBoxProgressbarBackgroundMouseMove(object sender, MouseEventArgs e)
+        {
+            if (_chapters?.Count > 0)
+            {
+                double time, nextTime;
+                int pos, nextPos;
+                string toolTiptext;
+
+                for (int index = 0; index < _chapters.Count; index++)
+                {
+                    time = _chapters[index].StartTime;
+                    pos = SecondsToXPosition(time) + 3;
+
+                    nextTime = index + 1 < _chapters.Count ? _chapters[index + 1].StartTime : Duration;
+                    nextPos = SecondsToXPosition(nextTime) + 3;
+
+                    if (e.X >= pos && e.X < nextPos)
+                    {
+                        if (_chapters[index].Nested)
+                        {
+                            toolTiptext = "+ " + _chapters[index].Name;
+                        }
+                        else
+                        {
+                            toolTiptext = _chapters[index].Name;
+                        }
+                        _chapterToolTip.Show(toolTiptext, this, pos, Height - 65);
+                    }
+                }
+            }
+        }
+
+        private void PictureBoxProgressbarBackgroundMouseLeave(object sender, EventArgs e)
+        {
+            if (_chapters?.Count > 0)
+            {
+                _chapterToolTip.Hide(this);
+            }
+        }
+
+        private void PictureBoxProgressBarMouseMove(object sender, MouseEventArgs e)
+        {
+            if (_chapters?.Count > 0)
+            {
+                double time, nextTime;
+                int pos, nextPos;
+                string toolTiptext;
+
+                for (int index = 0; index < _chapters.Count; index++)
+                {
+                    time = _chapters[index].StartTime;
+                    pos = SecondsToXPosition(time) - 1;
+
+                    nextTime = index + 1 < _chapters.Count ? _chapters[index + 1].StartTime : Duration;
+                    nextPos = SecondsToXPosition(nextTime) - 1;
+
+                    if (e.X >= pos && e.X < nextPos)
+                    {
+                        if (_chapters[index].Nested)
+                        {
+                            toolTiptext = "+ " + _chapters[index].Name;
+                        }
+                        else
+                        {
+                            toolTiptext = _chapters[index].Name;
+                        }
+                        _chapterToolTip.Show(toolTiptext, this, pos, Height - 65);
+                    }
+                }
+            }
+        }
+
+        private void PictureBoxProgressBarMouseLeave(object sender, EventArgs e)
+        {
+            if (_chapters?.Count > 0)
+            {
+                _chapterToolTip.Hide(this);
+            }
+        }
+
 
         /// <summary>
         /// Use SMPTE time (drop frame mode)
@@ -1993,7 +2085,7 @@ namespace Nikse.SubtitleEdit.Controls
             PanelPlayer.Hide();
             Pause();
             SubtitleText = string.Empty;
-            Chapters = new List<double>();
+            Chapters = new List<MatroskaChapter>();
             var temp = VideoPlayer;
             VideoPlayer = null;
             Application.DoEvents();

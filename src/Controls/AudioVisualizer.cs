@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
@@ -193,9 +194,9 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private List<double> _chapters = new List<double>();
+        private List<MatroskaChapter> _chapters = new List<MatroskaChapter>();
 
-        public List<double> Chapters
+        public List<MatroskaChapter> Chapters
         {
             get => _chapters;
             set
@@ -684,15 +685,33 @@ namespace Nikse.SubtitleEdit.Controls
                             int pos;
                             try
                             {
-                                double time = _chapters[index++];
+                                double time = _chapters[index].StartTime;
                                 pos = SecondsToXPosition(time - _startPositionSeconds);
                             }
                             catch
                             {
                                 pos = -1;
                             }
-                            if (pos > 0 && pos < Width)
+                            if (pos >= 0 && pos < Width)
                             {
+                                // draw chapter text
+                                using (var brush = new SolidBrush(Color.White))
+                                {
+                                    if (index + 1 < _chapters.Count && _chapters[index].StartTime == _chapters[index + 1].StartTime)
+                                    {
+                                        graphics.DrawString(_chapters[index].Name, Font, brush, new PointF(pos + 2, Height / 2 - Font.Height - 8));
+                                    }
+                                    else if (_chapters[index].Nested)
+                                    {
+                                        graphics.DrawString("+ " + _chapters[index].Name, Font, brush, new PointF(pos + 2, Height / 2 - 8));
+                                    }
+                                    else
+                                    {
+                                        graphics.DrawString(_chapters[index].Name, Font, brush, new PointF(pos + 2, Height / 2 - 8));
+                                    }
+                                }
+
+                                // draw chapter line
                                 if (currentPositionPos == pos)
                                 { // chapter and current pos are the same - draw 2 pixels + current pos dotted
                                     currentPosDone = true;
@@ -738,6 +757,8 @@ namespace Nikse.SubtitleEdit.Controls
                                     }
                                 }
                             }
+
+                            index++;
                         }
                     }
                     catch (Exception)
