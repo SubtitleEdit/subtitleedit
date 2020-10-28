@@ -1332,6 +1332,7 @@ namespace Nikse.SubtitleEdit.Core
                 NoSubtitlesFound = "No subtitles found",
                 NotAValidMatroskaFileX = "This is not a valid Matroska file: {0}",
                 BlurayNotSubtitlesFound = "Blu-ray sup file does not contain any subtitles or contains errors - try demuxing again.",
+                GettingChapters = "Getting chapters...",
                 ParsingMatroskaFile = "Parsing Matroska file. Please wait...",
                 ParsingTransportStreamFile = "Parsing Transport Stream file. Please wait...",
                 BeforeImportFromMatroskaFile = "Before import subtitle from Matroska file",
@@ -1464,6 +1465,7 @@ namespace Nikse.SubtitleEdit.Core
                 NoSupportHereDvdSup = "DVD sup files are not supported here.",
                 NoSupportHereVobSub = "VobSub files are not supported here.",
                 NoSupportHereDivx = "DivX files are not supported here.",
+                NoChapters = "No chapters found in the video.",
 
                 Menu = new LanguageStructure.Main.MainMenu
                 {
@@ -1600,6 +1602,7 @@ namespace Nikse.SubtitleEdit.Core
                         SetVideoOffset = "Set video offset...",
                         SmptTimeMode = "SMPTE timing (drop frame)",
                         GenerateTextFromVideo = "Generate text from video...",
+                        ImportChaptersFromVideo = "Import chapters from video...",
                         GenerateImportSceneChanges = "Generate/import scene changes...",
                         RemoveSceneChanges = "Remove scene changes",
                         WaveformBatchGenerate = "Batch generate waveforms...",
@@ -2492,6 +2495,8 @@ can edit in same subtitle file (collaboration)",
                 WaveformFocusListView = "Focus list view",
                 WaveformGoToPrevSubtitle = "Go to previous subtitle (from video position)",
                 WaveformGoToNextSubtitle = "Go to next subtitle (from video position)",
+                WaveformGoToPrevChapter = "Go to previous chapter",
+                WaveformGoToNextChapter = "Go to next chapter",
                 WaveformSelectNextSubtitle = "Select next subtitle (from video position, keep video pos)",
                 WaveformGoToPreviousSceneChange = "Go to previous scene change",
                 WaveformGoToNextSceneChange = "Go to next scene change",

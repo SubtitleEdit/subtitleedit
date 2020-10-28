@@ -41,6 +41,13 @@
         SimpleBlock = 0xA3,
         BlockGroup = 0xA0,
         Block = 0xA1,
-        BlockDuration = 0x9B
+        BlockDuration = 0x9B,
+
+        Chapters = 0x1043A770,
+        EditionEntry = 0x45B9,
+        ChapterAtom = 0xB6,
+        ChapterTimeStart = 0x91,
+        ChapterDisplay = 0x80,
+        ChapString = 0x85
     }
 }

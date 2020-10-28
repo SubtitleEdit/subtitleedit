@@ -1195,6 +1195,7 @@
             public string NoSubtitlesFound { get; set; }
             public string NotAValidMatroskaFileX { get; set; }
             public string BlurayNotSubtitlesFound { get; set; }
+            public string GettingChapters { get; set; }
             public string ParsingMatroskaFile { get; set; }
             public string ParsingTransportStreamFile { get; set; }
             public string BeforeImportFromMatroskaFile { get; set; }
@@ -1325,6 +1326,7 @@
             public string NoSupportHereDvdSup { get; set; }
             public string NoSupportHereVobSub { get; set; }
             public string NoSupportHereDivx { get; set; }
+            public string NoChapters { get; set; }
 
             public class MainMenu
             {
@@ -1458,6 +1460,7 @@
                     public string SetVideoOffset { get; set; }
                     public string SmptTimeMode { get; set; }
                     public string GenerateTextFromVideo { get; set; }
+                    public string ImportChaptersFromVideo { get; set; }
                     public string GenerateImportSceneChanges { get; set; }
                     public string RemoveSceneChanges { get; set; }
                     public string WaveformBatchGenerate { get; set; }
@@ -2377,6 +2380,8 @@
 
             public string WaveformGoToPrevSubtitle { get; set; }
             public string WaveformGoToNextSubtitle { get; set; }
+            public string WaveformGoToPrevChapter { get; set; }
+            public string WaveformGoToNextChapter { get; set; }
             public string WaveformSelectNextSubtitle { get; set; }
             public string TogglePlayPause { get; set; }
             public string Pause { get; set; }

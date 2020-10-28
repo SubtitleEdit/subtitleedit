@@ -1102,6 +1102,7 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
         <SetVideoOffset>Set video offset...</SetVideoOffset>
         <SmptTimeMode>SMPTE timing (drop frame)</SmptTimeMode>
         <GenerateTextFromVideo>Generate text from video...</GenerateTextFromVideo>
+        <ImportChaptersFromVideo>Import chapters from video...</ImportChaptersFromVideo>
         <GenerateImportSceneChanges>Generate/import scene changes...</GenerateImportSceneChanges>
         <RemoveSceneChanges>Remove scene changes</RemoveSceneChanges>
         <WaveformBatchGenerate>Batch generate waveforms...</WaveformBatchGenerate>
@@ -1441,6 +1442,7 @@ Continue?</SubtitleAppendPrompt>
     <NoSubtitlesFound>No subtitles found</NoSubtitlesFound>
     <NotAValidMatroskaFileX>This is not a valid Matroska file: {0}</NotAValidMatroskaFileX>
     <BlurayNotSubtitlesFound>Blu-ray sup file does not contain any subtitles or contains errors - try demuxing again.</BlurayNotSubtitlesFound>
+    <GettingChapters>Getting chapters...</GettingChapters>
     <ParsingMatroskaFile>Parsing Matroska file. Please wait...</ParsingMatroskaFile>
     <ParsingTransportStreamFile>Parsing Transport Stream file. Please wait...</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Before import subtitle from Matroska file</BeforeImportFromMatroskaFile>
@@ -1575,6 +1577,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <NoSupportHereDvdSup>DVD sup files are not supported here.</NoSupportHereDvdSup>
     <NoSupportHereVobSub>VobSub files are not supported here.</NoSupportHereVobSub>
     <NoSupportHereDivx>DivX files are not supported here.</NoSupportHereDivx>
+    <NoChapters>No chapters found in the video.</NoChapters>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Choose subtitle from Matroska file</Title>
@@ -2210,6 +2213,8 @@ can edit in same subtitle file (collaboration)</Information>
     <PlayCurrent>Play current subtitle</PlayCurrent>
     <WaveformGoToPrevSubtitle>Go to previous subtitle (from video position)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Go to next subtitle (from video position)</WaveformGoToNextSubtitle>
+    <WaveformGoToPrevChapter>Go to previous chapter</WaveformGoToPrevChapter>
+    <WaveformGoToNextChapter>Go to next chapter</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>Select next subtitle (from video position, keep video pos)</WaveformSelectNextSubtitle>
     <TogglePlayPause>Toggle play/pause</TogglePlayPause>
     <Pause>Pause</Pause>
