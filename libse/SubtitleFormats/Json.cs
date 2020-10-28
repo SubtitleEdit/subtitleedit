@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => "JSON";
 
-        public static string EncodeJsonText(string text)
+        public static string EncodeJsonText(string text, string newLineCharacter = "<br />")
         {
             var sb = new StringBuilder(text.Length);
             foreach (var c in text)
@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         break;
                 }
             }
-            return sb.ToString().Replace(Environment.NewLine, "<br />");
+            return sb.ToString().Replace(Environment.NewLine, newLineCharacter);
         }
 
         public static string DecodeJsonText(string text)
