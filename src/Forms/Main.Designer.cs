@@ -225,6 +225,7 @@
             this.openSecondSubtitleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setVideoOffsetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.smpteTimeModedropFrameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemImportChapters = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemImportSceneChanges = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemRemoveSceneChanges = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAddWaveformBatch = new System.Windows.Forms.ToolStripMenuItem();
@@ -2091,6 +2092,7 @@
             this.openSecondSubtitleToolStripMenuItem,
             this.setVideoOffsetToolStripMenuItem,
             this.smpteTimeModedropFrameToolStripMenuItem,
+            this.toolStripMenuItemImportChapters,
             this.toolStripMenuItemImportSceneChanges,
             this.toolStripMenuItemRemoveSceneChanges,
             this.toolStripMenuItemAddWaveformBatch,
@@ -2161,6 +2163,13 @@
             this.smpteTimeModedropFrameToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
             this.smpteTimeModedropFrameToolStripMenuItem.Text = "SMPTE timing (drop frame)";
             this.smpteTimeModedropFrameToolStripMenuItem.Click += new System.EventHandler(this.SmpteTimeModedropFrameToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItemImportChapters
+            // 
+            this.toolStripMenuItemImportChapters.Name = "toolStripMenuItemImportChapters";
+            this.toolStripMenuItemImportChapters.Size = new System.Drawing.Size(257, 22);
+            this.toolStripMenuItemImportChapters.Text = "Import chapters from video...";
+            this.toolStripMenuItemImportChapters.Click += new System.EventHandler(this.toolStripMenuItemImportChapters_Click);
             // 
             // toolStripMenuItemImportSceneChanges
             // 
@@ -3011,6 +3020,7 @@
             this.audioVisualizer.ClosenessForBorderSelection = 15;
             this.audioVisualizer.Color = System.Drawing.Color.GreenYellow;
             this.audioVisualizer.CursorColor = System.Drawing.Color.Empty;
+            this.audioVisualizer.ChaptersColor = System.Drawing.Color.Empty;
             this.audioVisualizer.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.audioVisualizer.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(18)))));
             this.audioVisualizer.InsertAtVideoPositionShortcut = System.Windows.Forms.Keys.Insert;
@@ -5581,6 +5591,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemNuendoProperties;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemDost;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMeasurementConverter;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportChapters;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportSceneChanges;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRemoveSceneChanges;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSubtitlesBridgeGaps;

@@ -21,6 +21,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         private int _subtitleRipTrackNumber;
         private readonly List<MatroskaSubtitle> _subtitleRip = new List<MatroskaSubtitle>();
         private List<MatroskaTrackInfo> _tracks;
+        private List<MatroskaChapter> _chapters;
 
         private readonly Element _segmentElement;
         private long _timeCodeScale = 1000000;
@@ -67,6 +68,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 }
             }
         }
+
         public List<MatroskaTrackInfo> GetTracks(bool subtitleOnly = false)
         {
             ReadSegmentInfoAndTracks();
@@ -381,6 +383,145 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 }
             }
         }
+
+        public List<MatroskaChapter> GetChapters()
+        {
+            ReadChapters();
+
+            if (_chapters == null)
+            {
+                return new List<MatroskaChapter>();
+            }
+
+            return _chapters.Distinct().ToList();
+        }
+
+        private void ReadChapters()
+        {
+            // go to segment
+            _stream.Seek(_segmentElement.DataPosition, SeekOrigin.Begin);
+
+            Element element;
+            while (_stream.Position < _segmentElement.EndPosition && (element = ReadElement()) != null)
+            {
+                if (element.Id == ElementId.Chapters)
+                {
+                    ReadChaptersElement(element);
+                }
+                else
+                {
+                    _stream.Seek(element.DataSize, SeekOrigin.Current);
+                }
+            }
+        }
+
+        private void ReadChaptersElement(Element chaptersElement)
+        {
+            _chapters = new List<MatroskaChapter>();
+
+            Element element;
+            while (_stream.Position < chaptersElement.EndPosition && (element = ReadElement()) != null)
+            {
+                if (element.Id == ElementId.EditionEntry)
+                {
+                    ReadEditionEntryElement(element);
+                }
+                else
+                {
+                    _stream.Seek(element.DataSize, SeekOrigin.Current);
+                }
+            }
+        }
+
+        private void ReadEditionEntryElement(Element editionEntryElement)
+        {
+            Element element;
+            while (_stream.Position < editionEntryElement.EndPosition && (element = ReadElement()) != null)
+            {
+                if (element.Id == ElementId.ChapterAtom)
+                {
+                    ReadChapterTimeStart(element);
+                }
+                else
+                {
+                    _stream.Seek(element.DataSize, SeekOrigin.Current);
+                }
+            }
+        }
+
+        private void ReadChapterTimeStart(Element chpaterAtom)
+        {
+            var chapter = new MatroskaChapter();
+
+            Element element;
+            while (_stream.Position < chpaterAtom.EndPosition && (element = ReadElement()) != null)
+            {
+                if (element.Id == ElementId.ChapterTimeStart)
+                {
+                    chapter.StartTime = ReadUInt((int)element.DataSize) / 1000000000.0;
+                }
+                else if (element.Id == ElementId.ChapterDisplay)
+                {
+                    chapter.Name = GetChapterName(element);
+                }
+                else if (element.Id == ElementId.ChapterAtom)
+                {
+                    ReadNestedChaptersTimeStart(element);
+                }
+                else
+                {
+                    _stream.Seek(element.DataSize, SeekOrigin.Current);
+                }
+
+                _chapters.Add(chapter);
+            }
+        }
+
+        private void ReadNestedChaptersTimeStart(Element nestedChpaterAtom)
+        {
+            var chapter = new MatroskaChapter
+            {
+                Nested = true
+            };
+
+            Element element;
+            while (_stream.Position < nestedChpaterAtom.EndPosition && (element = ReadElement()) != null)
+            {
+                if (element.Id == ElementId.ChapterTimeStart)
+                {
+                    chapter.StartTime = ReadUInt((int)element.DataSize) / 1000000000.0;
+                }
+                else if (element.Id == ElementId.ChapterDisplay)
+                {
+                    chapter.Name = GetChapterName(element);
+                }
+                else
+                {
+                    _stream.Seek(element.DataSize, SeekOrigin.Current);
+                }
+
+                _chapters.Add(chapter);
+            }
+        }
+
+        private string GetChapterName(Element ChapterDisplay)
+        {
+            Element element;
+            while (_stream.Position < ChapterDisplay.EndPosition && (element = ReadElement()) != null)
+            {
+                if (element.Id == ElementId.ChapString)
+                {
+                    return ReadString((int)element.DataSize, Encoding.UTF8);
+                }
+                else
+                {
+                    _stream.Seek(element.DataSize, SeekOrigin.Current);
+                }
+            }
+
+            return null;
+        }
+
 
         /// <summary>
         /// Get info about matroska file

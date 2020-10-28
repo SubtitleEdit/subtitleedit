@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
@@ -83,7 +84,6 @@ namespace Nikse.SubtitleEdit.Controls
         private MouseDownParagraphType _mouseDownParagraphType = MouseDownParagraphType.Start;
         private readonly List<Paragraph> _displayableParagraphs;
         private readonly List<Paragraph> _allSelectedParagraphs;
-        private Paragraph _selectedParagraph;
         private Paragraph _prevParagraph;
         private Paragraph _nextParagraph;
         private bool _firstMove = true;
@@ -194,6 +194,18 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        private List<MatroskaChapter> _chapters = new List<MatroskaChapter>();
+
+        public List<MatroskaChapter> Chapters
+        {
+            get => _chapters;
+            set
+            {
+                _chapters = value;
+                Invalidate();
+            }
+        }
+
         public bool IsSpectrogramAvailable => _spectrogram != null && _spectrogram.Images.Count > 0;
 
         private bool _showSpectrogram;
@@ -257,7 +269,7 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         public Paragraph NewSelectionParagraph { get; set; }
-        public Paragraph SelectedParagraph => _selectedParagraph;
+        public Paragraph SelectedParagraph { get; private set; }
         public Paragraph RightClickedParagraph { get; private set; }
         public double RightClickedSeconds { get; private set; }
 
@@ -268,6 +280,7 @@ namespace Nikse.SubtitleEdit.Controls
         public Color ParagraphColor { get; set; }
         public Color TextColor { get; set; }
         public Color CursorColor { get; set; }
+        public Color ChaptersColor { get; set; }
         public float TextSize { get; set; }
         public bool TextBold { get; set; }
         public Color GridColor { get; set; }
@@ -295,7 +308,7 @@ namespace Nikse.SubtitleEdit.Controls
             set
             {
                 _zoomFactor = 1.0;
-                _selectedParagraph = null;
+                SelectedParagraph = null;
                 _buttonDownTimeTicks = 0;
                 _mouseMoveLastX = -1;
                 _mouseMoveStartX = -1;
@@ -375,7 +388,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             _subtitle.Paragraphs.Clear();
             _displayableParagraphs.Clear();
-            _selectedParagraph = null;
+            SelectedParagraph = null;
             _allSelectedParagraphs.Clear();
 
             if (_wavePeaks == null)
@@ -407,7 +420,7 @@ namespace Nikse.SubtitleEdit.Controls
             var primaryParagraph = subtitle.GetParagraphOrDefault(primarySelectedIndex);
             if (primaryParagraph != null && !primaryParagraph.StartTime.IsMaxTime)
             {
-                _selectedParagraph = primaryParagraph;
+                SelectedParagraph = primaryParagraph;
                 _allSelectedParagraphs.Add(primaryParagraph);
             }
             foreach (int index in selectedIndexes)
@@ -623,7 +636,7 @@ namespace Nikse.SubtitleEdit.Controls
                                     }
                                 }
                                 else if (paragraphStartList.Contains(pos))
-                                { // scene change and current pos are the same - draw 2 pixels + current pos dotted
+                                { // scene change and start pos are the same - draw 2 pixels + current pos dotted
                                     using (var p = new Pen(Color.AntiqueWhite, 2))
                                     {
                                         graphics.DrawLine(p, pos, 0, pos, Height);
@@ -635,7 +648,7 @@ namespace Nikse.SubtitleEdit.Controls
                                     }
                                 }
                                 else if (paragraphEndList.Contains(pos))
-                                { // scene change and current pos are the same - draw 2 pixels + current pos dotted
+                                { // scene change and end pos are the same - draw 2 pixels + current pos dotted
                                     using (var p = new Pen(Color.AntiqueWhite, 2))
                                     {
                                         graphics.DrawLine(p, pos, 0, pos, Height);
@@ -659,6 +672,100 @@ namespace Nikse.SubtitleEdit.Controls
                     catch (Exception)
                     {
                         // ignored
+                    }
+                }
+
+                // chapters
+                if (_chapters != null)
+                {
+                    try
+                    {
+                        int index = 0;
+                        while (index < _chapters.Count)
+                        {
+                            int pos;
+                            try
+                            {
+                                double time = _chapters[index].StartTime;
+                                pos = SecondsToXPosition(time - _startPositionSeconds);
+                            }
+                            catch
+                            {
+                                pos = -1;
+                            }
+                            if (pos >= 0 && pos < Width)
+                            {
+                                // draw chapter text
+                                using (var font = new Font(Configuration.Settings.General.SubtitleFontName, TextSize, TextBold ? FontStyle.Bold : FontStyle.Regular))
+                                using (var brush = new SolidBrush(Color.White))
+                                {
+                                    var name = string.Empty;
+                                    var x = pos + 3;
+                                    var y = index + 1 < _chapters.Count && _chapters[index].StartTime == _chapters[index + 1].StartTime ? Height / 2 - font.Height - 12 :  Height / 2 - 12;
+                                    using (var chpaterTextBackBrush = new SolidBrush(ChaptersColor))
+                                    {
+                                        name = _chapters[index].Nested ? "+ " + _chapters[index].Name : _chapters[index].Name;
+                                        var textSize = graphics.MeasureString(name, font);
+                                        graphics.FillRectangle(chpaterTextBackBrush, x, y, textSize.Width + 2, textSize.Height);
+                                    }
+
+                                    x += 2;
+                                    graphics.DrawString(name, font, brush, new PointF(x, y));
+                                }
+
+                                // draw chapter line
+                                if (currentPositionPos == pos)
+                                { // chapter and current pos are the same - draw 2 pixels + current pos dotted
+                                    currentPosDone = true;
+                                    using (var p = new Pen(ChaptersColor, 2))
+                                    {
+                                        graphics.DrawLine(p, pos, 0, pos, Height);
+                                    }
+
+                                    using (var p = new Pen(CursorColor, 2) { DashStyle = DashStyle.Dash })
+                                    {
+                                        graphics.DrawLine(p, pos, 0, pos, Height);
+                                    }
+                                }
+                                else if (paragraphStartList.Contains(pos))
+                                { // chapter and start pos are the same - draw 2 pixels + current pos dotted
+                                    using (var p = new Pen(ChaptersColor, 2))
+                                    {
+                                        graphics.DrawLine(p, pos, 0, pos, Height);
+                                    }
+
+                                    using (var p = new Pen(Color.FromArgb(175, 0, 100, 0), 2) { DashStyle = DashStyle.Dash })
+                                    {
+                                        graphics.DrawLine(p, pos, 0, pos, Height);
+                                    }
+                                }
+                                else if (paragraphEndList.Contains(pos))
+                                { // chapter and end pos are the same - draw 2 pixels + current pos dotted
+                                    using (var p = new Pen(ChaptersColor, 2))
+                                    {
+                                        graphics.DrawLine(p, pos, 0, pos, Height);
+                                    }
+
+                                    using (var p = new Pen(Color.FromArgb(175, 110, 10, 10), 2) { DashStyle = DashStyle.Dash })
+                                    {
+                                        graphics.DrawLine(p, pos, 0, pos, Height);
+                                    }
+                                }
+                                else
+                                {
+                                    using (var p = new Pen(ChaptersColor))
+                                    {
+                                        graphics.DrawLine(p, pos, 0, pos, Height);
+                                    }
+                                }
+                            }
+
+                            index++;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        // ignore
                     }
                 }
 
@@ -1060,7 +1167,7 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                     SetMinMaxViaSeconds(seconds);
                 }
-                else if (SetParagraphBorderHit(milliseconds, _selectedParagraph) || SetParagraphBorderHit(milliseconds, _displayableParagraphs))
+                else if (SetParagraphBorderHit(milliseconds, SelectedParagraph) || SetParagraphBorderHit(milliseconds, _displayableParagraphs))
                 {
                     NewSelectionParagraph = null;
                     if (_mouseDownParagraph != null)
@@ -1297,9 +1404,9 @@ namespace Nikse.SubtitleEdit.Controls
         private Paragraph GetParagraphAtMilliseconds(int milliseconds)
         {
             Paragraph p = null;
-            if (IsParagraphHit(milliseconds, _selectedParagraph))
+            if (IsParagraphHit(milliseconds, SelectedParagraph))
             {
-                p = _selectedParagraph;
+                p = SelectedParagraph;
             }
 
             if (p == null)
@@ -1409,7 +1516,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     Cursor = Cursors.VSplit;
                 }
-                else if (IsParagraphBorderHit(milliseconds, _selectedParagraph) ||
+                else if (IsParagraphBorderHit(milliseconds, SelectedParagraph) ||
                          IsParagraphBorderHit(milliseconds, _displayableParagraphs))
                 {
                     Cursor = Cursors.VSplit;
@@ -1836,57 +1943,57 @@ namespace Nikse.SubtitleEdit.Controls
                 int diff = Math.Abs(_mouseMoveStartX - e.X);
                 if (_mouseMoveStartX == -1 || _mouseMoveEndX == -1 || diff < 10 && TimeSpan.FromTicks(DateTime.UtcNow.Ticks - _buttonDownTimeTicks).TotalSeconds < 0.25)
                 {
-                    if (ModifierKeys == Keys.Shift && _selectedParagraph != null)
+                    if (ModifierKeys == Keys.Shift && SelectedParagraph != null)
                     {
                         double seconds = RelativeXPositionToSeconds(e.X);
                         var milliseconds = (int)(seconds * TimeCode.BaseUnit);
                         if (_mouseDownParagraphType == MouseDownParagraphType.None || _mouseDownParagraphType == MouseDownParagraphType.Whole)
                         {
-                            if (seconds < _selectedParagraph.EndTime.TotalSeconds)
+                            if (seconds < SelectedParagraph.EndTime.TotalSeconds)
                             {
-                                _oldParagraph = new Paragraph(_selectedParagraph);
-                                _mouseDownParagraph = _selectedParagraph;
+                                _oldParagraph = new Paragraph(SelectedParagraph);
+                                _mouseDownParagraph = SelectedParagraph;
                                 _mouseDownParagraph.StartTime.TotalMilliseconds = milliseconds;
                                 OnTimeChanged?.Invoke(this, new ParagraphEventArgs(seconds, _mouseDownParagraph, _oldParagraph));
                             }
                         }
                         return;
                     }
-                    if (ModifierKeys == Keys.Control && _selectedParagraph != null)
+                    if (ModifierKeys == Keys.Control && SelectedParagraph != null)
                     {
                         double seconds = RelativeXPositionToSeconds(e.X);
                         var milliseconds = (int)(seconds * TimeCode.BaseUnit);
                         if (_mouseDownParagraphType == MouseDownParagraphType.None || _mouseDownParagraphType == MouseDownParagraphType.Whole)
                         {
-                            if (seconds > _selectedParagraph.StartTime.TotalSeconds)
+                            if (seconds > SelectedParagraph.StartTime.TotalSeconds)
                             {
-                                _oldParagraph = new Paragraph(_selectedParagraph);
-                                _mouseDownParagraph = _selectedParagraph;
+                                _oldParagraph = new Paragraph(SelectedParagraph);
+                                _mouseDownParagraph = SelectedParagraph;
                                 _mouseDownParagraph.EndTime.TotalMilliseconds = milliseconds;
                                 OnTimeChanged?.Invoke(this, new ParagraphEventArgs(seconds, _mouseDownParagraph, _oldParagraph));
                             }
                         }
                         return;
                     }
-                    if (ModifierKeys == (Keys.Control | Keys.Shift) && _selectedParagraph != null)
+                    if (ModifierKeys == (Keys.Control | Keys.Shift) && SelectedParagraph != null)
                     {
                         double seconds = RelativeXPositionToSeconds(e.X);
                         if (_mouseDownParagraphType == MouseDownParagraphType.None || _mouseDownParagraphType == MouseDownParagraphType.Whole)
                         {
-                            _oldParagraph = new Paragraph(_selectedParagraph);
-                            _mouseDownParagraph = _selectedParagraph;
+                            _oldParagraph = new Paragraph(SelectedParagraph);
+                            _mouseDownParagraph = SelectedParagraph;
                             OnTimeChangedAndOffsetRest?.Invoke(this, new ParagraphEventArgs(seconds, _mouseDownParagraph));
                         }
                         return;
                     }
-                    if (ModifierKeys == Keys.Alt && _selectedParagraph != null)
+                    if (ModifierKeys == Keys.Alt && SelectedParagraph != null)
                     {
                         double seconds = RelativeXPositionToSeconds(e.X);
                         var milliseconds = (int)(seconds * TimeCode.BaseUnit);
                         if (_mouseDownParagraphType == MouseDownParagraphType.None || _mouseDownParagraphType == MouseDownParagraphType.Whole)
                         {
-                            _oldParagraph = new Paragraph(_selectedParagraph);
-                            _mouseDownParagraph = _selectedParagraph;
+                            _oldParagraph = new Paragraph(SelectedParagraph);
+                            _mouseDownParagraph = SelectedParagraph;
                             double durationMilliseconds = _mouseDownParagraph.Duration.TotalMilliseconds;
                             _mouseDownParagraph.StartTime.TotalMilliseconds = milliseconds;
                             _mouseDownParagraph.EndTime.TotalMilliseconds = _mouseDownParagraph.StartTime.TotalMilliseconds + durationMilliseconds;

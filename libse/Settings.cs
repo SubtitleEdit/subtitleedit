@@ -1589,6 +1589,7 @@ $HorzAlign          =   Center
         public Color WaveformBackgroundColor { get; set; }
         public Color WaveformTextColor { get; set; }
         public Color WaveformCursorColor { get; set; }
+        public Color WaveformChaptersColor { get; set; }
         public int WaveformTextSize { get; set; }
         public bool WaveformTextBold { get; set; }
         public string WaveformDoubleClickOnNonParagraphAction { get; set; }
@@ -1620,6 +1621,7 @@ $HorzAlign          =   Center
             WaveformBackgroundColor = Color.Black;
             WaveformTextColor = Color.Gray;
             WaveformCursorColor = Color.Turquoise;
+            WaveformChaptersColor = Color.FromArgb(255, 104, 33, 122);
             WaveformTextSize = 9;
             WaveformTextBold = true;
             WaveformDoubleClickOnNonParagraphAction = "PlayPause";
@@ -1850,6 +1852,8 @@ $HorzAlign          =   Center
         public string MainVideoPlayCurrent { get; set; }
         public string MainVideoGoToPrevSubtitle { get; set; }
         public string MainVideoGoToNextSubtitle { get; set; }
+        public string MainVideoGoToPrevChapter { get; set; }
+        public string MainVideoGoToNextChapter { get; set; }
         public string MainVideoSelectNextSubtitle { get; set; }
         public string MainVideoFullscreen { get; set; }
         public string MainVideoSlower { get; set; }
@@ -5442,6 +5446,12 @@ $HorzAlign          =   Center
                 settings.VideoControls.WaveformCursorColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
             }
 
+            subNode = node.SelectSingleNode("WaveformChaptersColor");
+            if (subNode != null)
+            {
+                settings.VideoControls.WaveformChaptersColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+            }
+
             subNode = node.SelectSingleNode("WaveformTextSize");
             if (subNode != null)
             {
@@ -6640,6 +6650,18 @@ $HorzAlign          =   Center
                 if (subNode != null)
                 {
                     shortcuts.MainVideoGoToNextSubtitle = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideoGoToPrevChapter");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoGoToPrevChapter = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideoGoToNextChapter");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoGoToNextChapter = subNode.InnerText;
                 }
 
                 subNode = node.SelectSingleNode("MainVideoSelectNextSubtitle");
@@ -8078,6 +8100,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("WaveformBackgroundColor", settings.VideoControls.WaveformBackgroundColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformTextColor", settings.VideoControls.WaveformTextColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformCursorColor", settings.VideoControls.WaveformCursorColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("WaveformChaptersColor", settings.VideoControls.WaveformChaptersColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformTextSize", settings.VideoControls.WaveformTextSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformTextBold", settings.VideoControls.WaveformTextBold.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformDoubleClickOnNonParagraphAction", settings.VideoControls.WaveformDoubleClickOnNonParagraphAction);
@@ -8319,6 +8342,8 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainVideoPlayCurrent", shortcuts.MainVideoPlayCurrent);
             textWriter.WriteElementString("MainVideoGoToPrevSubtitle", shortcuts.MainVideoGoToPrevSubtitle);
             textWriter.WriteElementString("MainVideoGoToNextSubtitle", shortcuts.MainVideoGoToNextSubtitle);
+            textWriter.WriteElementString("MainVideoGoToPrevChapter", shortcuts.MainVideoGoToPrevChapter);
+            textWriter.WriteElementString("MainVideoGoToNextChapter", shortcuts.MainVideoGoToNextChapter);
             textWriter.WriteElementString("MainVideoSelectNextSubtitle", shortcuts.MainVideoSelectNextSubtitle);
             textWriter.WriteElementString("MainVideoFullscreen", shortcuts.MainVideoFullscreen);
             textWriter.WriteElementString("MainVideoSlower", shortcuts.MainVideoSlower);

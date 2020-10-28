@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
 using System.Drawing;
@@ -7,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
+using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -46,7 +48,6 @@ namespace Nikse.SubtitleEdit.Controls
         public event EventHandler OnEmptyPlayerClicked;
         public Panel PanelPlayer { get; private set; }
         private Panel _panelSubtitle;
-        private RichTextBoxViewOnly _subtitleTextBox;
         private string _subtitleText = string.Empty;
         private VideoPlayer _videoPlayer;
 
@@ -76,7 +77,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        public RichTextBoxViewOnly TextBox => _subtitleTextBox;
+        public RichTextBoxViewOnly TextBox { get; private set; }
 
         public int VideoWidth { get; set; }
         public int VideoHeight { get; set; }
@@ -118,15 +119,29 @@ namespace Nikse.SubtitleEdit.Controls
         private readonly PictureBox _pictureBoxVolumeBar = new PictureBox();
         private readonly Label _labelTimeCode = new Label();
         private readonly Label _labelVideoPlayerName = new Label();
+        private readonly ToolTip _chapterToolTip = new ToolTip();
+
+
+        private List<MatroskaChapter> _chapters = new List<MatroskaChapter>();
+
+        public List<MatroskaChapter> Chapters
+        {
+            get => _chapters;
+            set
+            {
+                _chapters = value;
+                Invalidate(true);
+            }
+        }
 
         public RightToLeft TextRightToLeft
         {
-            get => _subtitleTextBox.RightToLeft;
+            get => TextBox.RightToLeft;
             set
             {
-                _subtitleTextBox.RightToLeft = value;
-                _subtitleTextBox.SelectAll();
-                _subtitleTextBox.SelectionAlignment = HorizontalAlignment.Center;
+                TextBox.RightToLeft = value;
+                TextBox.SelectAll();
+                TextBox.SelectionAlignment = HorizontalAlignment.Center;
             }
         }
 
@@ -314,13 +329,13 @@ namespace Nikse.SubtitleEdit.Controls
         private Control MakeSubtitlesPanel()
         {
             _panelSubtitle = new Panel { BackColor = _backgroundColor, Left = 0, Top = 0, Height = _subtitlesHeight + 1 };
-            _subtitleTextBox = new RichTextBoxViewOnly();
-            _panelSubtitle.Controls.Add(_subtitleTextBox);
-            _subtitleTextBox.BackColor = _backgroundColor;
-            _subtitleTextBox.ForeColor = Color.White;
-            _subtitleTextBox.Dock = DockStyle.Fill;
+            TextBox = new RichTextBoxViewOnly();
+            _panelSubtitle.Controls.Add(TextBox);
+            TextBox.BackColor = _backgroundColor;
+            TextBox.ForeColor = Color.White;
+            TextBox.Dock = DockStyle.Fill;
             SetSubtitleFont();
-            _subtitleTextBox.MouseClick += SubtitleTextBoxMouseClick;
+            TextBox.MouseClick += SubtitleTextBoxMouseClick;
             return _panelSubtitle;
         }
 
@@ -334,11 +349,11 @@ namespace Nikse.SubtitleEdit.Controls
 
             if (gs.VideoPlayerPreviewFontBold)
             {
-                _subtitleTextBox.Font = new Font(gs.SubtitleFontName, gs.VideoPlayerPreviewFontSize * FontSizeFactor, FontStyle.Bold);
+                TextBox.Font = new Font(gs.SubtitleFontName, gs.VideoPlayerPreviewFontSize * FontSizeFactor, FontStyle.Bold);
             }
             else
             {
-                _subtitleTextBox.Font = new Font(gs.SubtitleFontName, gs.VideoPlayerPreviewFontSize * FontSizeFactor, FontStyle.Regular);
+                TextBox.Font = new Font(gs.SubtitleFontName, gs.VideoPlayerPreviewFontSize * FontSizeFactor, FontStyle.Regular);
             }
 
             SubtitleText = _subtitleText;
@@ -364,9 +379,9 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 _subtitleText = text;
                 RefreshMpv(mpv, subtitle);
-                if (_subtitleTextBox.Text.Length > 0)
+                if (TextBox.Text.Length > 0)
                 {
-                    _subtitleTextBox.Text = string.Empty;
+                    TextBox.Text = string.Empty;
                 }
             }
             else
@@ -408,7 +423,7 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         var oldSub = subtitle;
                         subtitle = new Subtitle(subtitle);
-                        if (_subtitleTextBox.RightToLeft == RightToLeft.Yes && LanguageAutoDetect.CouldBeRightToLeftLanguage(subtitle))
+                        if (TextBox.RightToLeft == RightToLeft.Yes && LanguageAutoDetect.CouldBeRightToLeftLanguage(subtitle))
                         {
                             for (var index = 0; index < subtitle.Paragraphs.Count; index++)
                             {
@@ -516,7 +531,7 @@ namespace Nikse.SubtitleEdit.Controls
                 bool isUnderline = false;
                 bool isFontColor = false;
                 int fontColorBegin = 0;
-                _subtitleTextBox.Text = string.Empty;
+                TextBox.Text = string.Empty;
                 int letterCount = 0;
                 var fontColorLookups = new System.Collections.Generic.Dictionary<Point, Color>();
                 var styleLookups = new System.Collections.Generic.Dictionary<int, FontStyle>(text.Length);
@@ -530,14 +545,14 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     if (text.Substring(i).StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
                     {
-                        _subtitleTextBox.AppendText(sb.ToString());
+                        TextBox.AppendText(sb.ToString());
                         sb.Clear();
                         isItalic = true;
                         i += 2;
                     }
                     else if (isItalic && text.Substring(i).StartsWith("</i>", StringComparison.OrdinalIgnoreCase))
                     {
-                        _subtitleTextBox.AppendText(sb.ToString());
+                        TextBox.AppendText(sb.ToString());
                         sb.Clear();
                         isItalic = false;
                         i += 3;
@@ -546,7 +561,7 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         if (!Configuration.Settings.General.VideoPlayerPreviewFontBold)
                         {
-                            _subtitleTextBox.AppendText(sb.ToString());
+                            TextBox.AppendText(sb.ToString());
                             sb.Clear();
                             isBold = true;
                         }
@@ -556,7 +571,7 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         if (!Configuration.Settings.General.VideoPlayerPreviewFontBold)
                         {
-                            _subtitleTextBox.AppendText(sb.ToString());
+                            TextBox.AppendText(sb.ToString());
                             sb.Clear();
                             isBold = false;
                         }
@@ -568,14 +583,14 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                     else if (text.Substring(i).StartsWith("<u>", StringComparison.OrdinalIgnoreCase))
                     {
-                        _subtitleTextBox.AppendText(sb.ToString());
+                        TextBox.AppendText(sb.ToString());
                         sb.Clear();
                         isUnderline = true;
                         i += 2;
                     }
                     else if (isUnderline && text.Substring(i).StartsWith("</u>", StringComparison.OrdinalIgnoreCase))
                     {
-                        _subtitleTextBox.AppendText(sb.ToString());
+                        TextBox.AppendText(sb.ToString());
                         sb.Clear();
                         isUnderline = false;
                         i += 3;
@@ -638,7 +653,7 @@ namespace Nikse.SubtitleEdit.Controls
                         }
                         if (fontFound)
                         {
-                            _subtitleTextBox.AppendText(sb.ToString());
+                            TextBox.AppendText(sb.ToString());
                             sb.Clear();
                             isFontColor = true;
                             fontColorBegin = letterCount;
@@ -646,8 +661,8 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                     else if (isFontColor && text.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
                     {
-                        fontColorLookups.Add(new Point(fontColorBegin, _subtitleTextBox.Text.Length + sb.ToString().Length - fontColorBegin), fontColor);
-                        _subtitleTextBox.AppendText(sb.ToString());
+                        fontColorLookups.Add(new Point(fontColorBegin, TextBox.Text.Length + sb.ToString().Length - fontColorBegin), fontColor);
+                        TextBox.AppendText(sb.ToString());
                         sb.Clear();
                         isFontColor = false;
                         i += 6;
@@ -666,7 +681,7 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                     else
                     {
-                        var idx = _subtitleTextBox.TextLength + sb.Length;
+                        var idx = TextBox.TextLength + sb.Length;
                         if (isBold)
                         {
                             styleLookups[idx] |= FontStyle.Bold;
@@ -687,39 +702,39 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                     i++;
                 }
-                _subtitleTextBox.Text += sb.ToString();
-                _subtitleTextBox.SelectAll();
+                TextBox.Text += sb.ToString();
+                TextBox.SelectAll();
 
                 if (alignLeft)
                 {
-                    _subtitleTextBox.SelectionAlignment = HorizontalAlignment.Left;
+                    TextBox.SelectionAlignment = HorizontalAlignment.Left;
                 }
                 else if (alignRight)
                 {
-                    _subtitleTextBox.SelectionAlignment = HorizontalAlignment.Right;
+                    TextBox.SelectionAlignment = HorizontalAlignment.Right;
                 }
                 else
                 {
-                    _subtitleTextBox.SelectionAlignment = HorizontalAlignment.Center;
+                    TextBox.SelectionAlignment = HorizontalAlignment.Center;
                 }
 
-                _subtitleTextBox.DeselectAll();
+                TextBox.DeselectAll();
 
-                Font currentFont = _subtitleTextBox.SelectionFont;
-                for (int k = 0; k < _subtitleTextBox.TextLength; k++)
+                Font currentFont = TextBox.SelectionFont;
+                for (int k = 0; k < TextBox.TextLength; k++)
                 {
-                    _subtitleTextBox.SelectionStart = k;
-                    _subtitleTextBox.SelectionLength = 1;
-                    _subtitleTextBox.SelectionFont = new Font(currentFont.FontFamily, currentFont.Size, styleLookups[k]);
-                    _subtitleTextBox.DeselectAll();
+                    TextBox.SelectionStart = k;
+                    TextBox.SelectionLength = 1;
+                    TextBox.SelectionFont = new Font(currentFont.FontFamily, currentFont.Size, styleLookups[k]);
+                    TextBox.DeselectAll();
                 }
 
                 foreach (var entry in fontColorLookups)
                 {
-                    _subtitleTextBox.SelectionStart = entry.Key.X;
-                    _subtitleTextBox.SelectionLength = entry.Key.Y;
-                    _subtitleTextBox.SelectionColor = entry.Value;
-                    _subtitleTextBox.DeselectAll();
+                    TextBox.SelectionStart = entry.Key.X;
+                    TextBox.SelectionLength = entry.Key.Y;
+                    TextBox.SelectionColor = entry.Value;
+                    TextBox.DeselectAll();
                 }
             }
         }
@@ -750,7 +765,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (_panelControls.Visible)
             {
-                _panelSubtitle.Height = _panelSubtitle.Height + _controlsHeight;
+                _panelSubtitle.Height += _controlsHeight;
                 _panelControls.Visible = false;
             }
             if (hideCursor)
@@ -765,7 +780,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _panelControls.Visible = true;
                 _panelControls.BringToFront();
-                _panelSubtitle.Height = _panelSubtitle.Height - _controlsHeight;
+                _panelSubtitle.Height -= _controlsHeight;
             }
             ShowCursor();
         }
@@ -949,7 +964,10 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxProgressbarBackground.Size = new Size(531, 12);
             _pictureBoxProgressbarBackground.SizeMode = PictureBoxSizeMode.StretchImage;
             _pictureBoxProgressbarBackground.TabStop = false;
+            _pictureBoxProgressbarBackground.Paint += PictureBoxProgressbarBackgroundPaint;
             _pictureBoxProgressbarBackground.MouseDown += PictureBoxProgressbarBackgroundMouseDown;
+            _pictureBoxProgressbarBackground.MouseLeave += PictureBoxProgressbarBackgroundMouseLeave;
+            _pictureBoxProgressbarBackground.MouseMove += PictureBoxProgressbarBackgroundMouseMove;
             _panelControls.Controls.Add(_pictureBoxProgressbarBackground);
 
             _pictureBoxProgressBar.Image = (Image)_resources.GetObject("pictureBoxProgressBar.Image");
@@ -958,7 +976,10 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxProgressBar.Size = new Size(318, 4);
             _pictureBoxProgressBar.SizeMode = PictureBoxSizeMode.StretchImage;
             _pictureBoxProgressBar.TabStop = false;
+            _pictureBoxProgressBar.Paint += PictureBoxProgressBarPaint;
             _pictureBoxProgressBar.MouseDown += PictureBoxProgressBarMouseDown;
+            _pictureBoxProgressBar.MouseLeave += PictureBoxProgressBarMouseLeave;
+            _pictureBoxProgressBar.MouseMove += PictureBoxProgressBarMouseMove;
             _panelControls.Controls.Add(_pictureBoxProgressBar);
             _pictureBoxProgressBar.BringToFront();
 
@@ -1603,6 +1624,12 @@ namespace Nikse.SubtitleEdit.Controls
             CurrentPosition = percent * Duration / 100.0;
         }
 
+        private int SecondsToXPosition(double seconds)
+        {
+            int max = _pictureBoxProgressbarBackground.Width - 9;
+            return (int)Math.Round(seconds * max / Duration);
+        }
+
         private void PictureBoxProgressbarBackgroundMouseDown(object sender, MouseEventArgs e)
         {
             SetProgressBarPosition(e.X - 4);
@@ -1614,6 +1641,163 @@ namespace Nikse.SubtitleEdit.Controls
             SetProgressBarPosition(e.X + 2);
             OnButtonClicked?.Invoke(sender, e);
         }
+
+        private void PictureBoxProgressbarBackgroundPaint(object sender, PaintEventArgs e)
+        {
+            if (_chapters != null)
+            {
+                try
+                {
+                    Graphics graphics = e.Graphics;
+                    int max = _pictureBoxProgressbarBackground.Width - 9;
+                    int index = 0;
+                    while (index < _chapters.Count)
+                    {
+                        int pos;
+                        try
+                        {
+                            double time = _chapters[index++].StartTime;
+                            pos = SecondsToXPosition(time) + 3;
+                        }
+                        catch
+                        {
+                            pos = -1;
+                        }
+                        if (pos > 0 && pos < max)
+                        {
+                            using (var p = new Pen(Color.LightGray))
+                            {
+                                graphics.DrawLine(p, pos, _pictureBoxProgressBar.Location.Y, pos, _pictureBoxProgressBar.Location.Y + 3);
+                            }
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    // ignore
+                }
+            }
+        }
+
+        private void PictureBoxProgressBarPaint(object sender, PaintEventArgs e)
+        {
+            if (_chapters != null)
+            {
+                try
+                {
+                    Graphics graphics = e.Graphics;
+                    int max = _pictureBoxProgressbarBackground.Width - 9;
+                    int index = 0;
+                    while (index < _chapters.Count)
+                    {
+                        int pos;
+                        try
+                        {
+                            double time = _chapters[index++].StartTime;
+                            pos = SecondsToXPosition(time) - 1;
+                        }
+                        catch
+                        {
+                            pos = -1;
+                        }
+                        if (pos >= 0 && pos < max)
+                        {
+                            using (var p = new Pen(Color.LightGray))
+                            {
+                                graphics.DrawLine(p, pos, 1, pos, Height);
+                            }
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    // ignore
+                }
+            }
+        }
+
+        private void PictureBoxProgressbarBackgroundMouseMove(object sender, MouseEventArgs e)
+        {
+            if (_chapters?.Count > 0)
+            {
+                double time, nextTime;
+                int pos, nextPos;
+                string toolTiptext;
+
+                for (int index = 0; index < _chapters.Count; index++)
+                {
+                    time = _chapters[index].StartTime;
+                    pos = SecondsToXPosition(time) + 3;
+
+                    nextTime = index + 1 < _chapters.Count ? _chapters[index + 1].StartTime : Duration;
+                    nextPos = SecondsToXPosition(nextTime) + 3;
+
+                    if (e.X >= pos && e.X < nextPos)
+                    {
+                        if (_chapters[index].Nested)
+                        {
+                            toolTiptext = "+ " + _chapters[index].Name;
+                        }
+                        else
+                        {
+                            toolTiptext = _chapters[index].Name;
+                        }
+                        _chapterToolTip.Show(toolTiptext, _pictureBoxProgressbarBackground, e.X - 10, e.Y - 25);
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void PictureBoxProgressbarBackgroundMouseLeave(object sender, EventArgs e)
+        {
+            if (_chapters?.Count > 0)
+            {
+                _chapterToolTip.Hide(_pictureBoxProgressbarBackground);
+            }
+        }
+
+        private void PictureBoxProgressBarMouseMove(object sender, MouseEventArgs e)
+        {
+            if (_chapters?.Count > 0)
+            {
+                double time, nextTime;
+                int pos, nextPos;
+                string toolTiptext;
+
+                for (int index = 0; index < _chapters.Count; index++)
+                {
+                    time = _chapters[index].StartTime;
+                    pos = SecondsToXPosition(time) - 1;
+
+                    nextTime = index + 1 < _chapters.Count ? _chapters[index + 1].StartTime : Duration;
+                    nextPos = SecondsToXPosition(nextTime) - 1;
+
+                    if (e.X >= pos && e.X < nextPos)
+                    {
+                        if (_chapters[index].Nested)
+                        {
+                            toolTiptext = "+ " + _chapters[index].Name;
+                        }
+                        else
+                        {
+                            toolTiptext = _chapters[index].Name;
+                        }
+                        _chapterToolTip.Show(toolTiptext, _pictureBoxProgressBar, e.X - 10, e.Y - 25);
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void PictureBoxProgressBarMouseLeave(object sender, EventArgs e)
+        {
+            if (_chapters?.Count > 0)
+            {
+                _chapterToolTip.Hide(_pictureBoxProgressBar);
+            }
+        }
+
 
         /// <summary>
         /// Use SMPTE time (drop frame mode)
@@ -1903,6 +2087,7 @@ namespace Nikse.SubtitleEdit.Controls
             PanelPlayer.Hide();
             Pause();
             SubtitleText = string.Empty;
+            Chapters = new List<MatroskaChapter>();
             var temp = VideoPlayer;
             VideoPlayer = null;
             Application.DoEvents();

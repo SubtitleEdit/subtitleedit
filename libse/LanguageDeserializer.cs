@@ -2992,6 +2992,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/BlurayNotSubtitlesFound":
                     language.Main.BlurayNotSubtitlesFound = reader.Value;
                     break;
+                case "Main/GettingChapters":
+                    language.Main.GettingChapters = reader.Value;
+                    break;
                 case "Main/ParsingMatroskaFile":
                     language.Main.ParsingMatroskaFile = reader.Value;
                     break;
@@ -3382,6 +3385,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/NoSupportHereDivx":
                     language.Main.NoSupportHereDivx = reader.Value;
                     break;
+                case "Main/NoChapters":
+                    language.Main.NoChapters = reader.Value;
+                    break;
                 case "Main/Menu/File/Title":
                     language.Main.Menu.File.Title = reader.Value;
                     break;
@@ -3738,6 +3744,9 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Main/Menu/Video/GenerateTextFromVideo":
                     language.Main.Menu.Video.GenerateTextFromVideo = reader.Value;
+                    break;
+                case "Main/Menu/Video/ImportChaptersFromVideo":
+                    language.Main.Menu.Video.ImportChaptersFromVideo = reader.Value;
                     break;
                 case "Main/Menu/Video/GenerateImportSceneChanges":
                     language.Main.Menu.Video.GenerateImportSceneChanges = reader.Value;
@@ -6051,6 +6060,12 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/WaveformGoToNextSubtitle":
                     language.Settings.WaveformGoToNextSubtitle = reader.Value;
+                    break;
+                case "Settings/WaveformGoToPrevChapter":
+                    language.Settings.WaveformGoToPrevChapter = reader.Value;
+                    break;
+                case "Settings/WaveformGoToNextChapter":
+                    language.Settings.WaveformGoToNextChapter = reader.Value;
                     break;
                 case "Settings/WaveformSelectNextSubtitle":
                     language.Settings.WaveformSelectNextSubtitle = reader.Value;
