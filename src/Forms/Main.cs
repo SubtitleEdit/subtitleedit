@@ -27006,7 +27006,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void toolStripMenuItemImportChapters_Click(object sender, EventArgs e)
         {
             toolStripMenuItemImportChapters.Enabled = false;
-            ShowStatus(_language.GettingChapters);
+            ShowStatus(_language.ImportingChapters);
 
             var chaps = new List<MatroskaChapter>();
             var getChapters = System.Threading.Tasks.Task.Factory.StartNew(() =>
@@ -27028,9 +27028,12 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         audioVisualizer.Chapters = chaps;
                     }
+
+                    ShowStatus(string.Format(_language.XChaptersImported, chaps?.Count));
                 }
                 else
                 {
+                    ShowStatus(_language.NoChapters);
                     MessageBox.Show(_language.NoChapters, Title);
                 }
 
