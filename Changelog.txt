@@ -4,7 +4,9 @@
 * NEW:
    * Add "Measurement converter" - thx OmrSi
    * Add import/export of shortcuts
+   * Add "Matroska chapter support" - thx OmrSi
    * Add subtitle format XMP - thx Tore
+   * Add subtitle (json) - thx Lukas
    * Add "Center, left justify dialogs" to export images - thx Benjamin
    * Add two more extend shortcuts - thx OmrSi
    * Add "/renumber" option to command line - thx malashin
