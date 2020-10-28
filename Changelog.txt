@@ -31,7 +31,7 @@
    * Fix batch convert of Blu-ray sup file to VobSub - thx John
    * Fix crash in faulty ts files - thx ExYuSubs
    * Fix libvlc load on Linux
-   * Allow for very large images in "Image compre" / nOCR - thx chcip2003
+   * Allow for very large images in "Image compare" / nOCR - thx chcip2003
    * Always close italic in EBU STL - thx Valentina
    * Fix for split original (minor) - thx René
 
