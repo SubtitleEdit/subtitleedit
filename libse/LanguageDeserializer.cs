@@ -2992,8 +2992,11 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/BlurayNotSubtitlesFound":
                     language.Main.BlurayNotSubtitlesFound = reader.Value;
                     break;
-                case "Main/GettingChapters":
-                    language.Main.GettingChapters = reader.Value;
+                case "Main/ImportingChapters":
+                    language.Main.ImportingChapters = reader.Value;
+                    break;
+                case "Main/XChaptersImported":
+                    language.Main.XChaptersImported = reader.Value;
                     break;
                 case "Main/ParsingMatroskaFile":
                     language.Main.ParsingMatroskaFile = reader.Value;
