@@ -103,7 +103,8 @@ namespace Nikse.SubtitleEdit.Core
         private static readonly string[] AutoDetectWordsSpanish =
         {
             "qué", "eso", "muy", "estoy?", "ahora", "hay", "tú", "así", "cuando", "cómo", "él", "sólo", "quiero", "gracias", "puedo", "bueno", "soy", "hacer", "fue", "eres", "usted", "tienes", "puede", "[Ss]eñor", "ese", "voy", "quién",
-            "creo", "hola", "dónde", "sus", "verdad", "quieres", "mucho", "entonces", "estaba", "tiempo", "esa", "mejor", "hombre", "hace", "dios", "también", "están", "siempre", "hasta", "ahí", "siento", "puedes"
+            "creo", "hola", "dónde", "sus", "verdad", "quieres", "mucho", "entonces", "estaba", "tiempo", "esa", "mejor", "hombre", "hace", "dios", "también", "están", "siempre", "hasta", "ahí", "siento",
+            "puedes", "Dónde", "está", "estoy", "Vámonos", "vistiendo", "Caliente", "chimenea"
         };
 
         private static readonly string[] AutoDetectWordsItalian =
@@ -1159,6 +1160,14 @@ namespace Nikse.SubtitleEdit.Core
                 }
 
                 var spanishCount1252 = GetCount(textEnc1252, AutoDetectWordsSpanish);
+                if (textEnc1252.Contains('¡'))
+                {
+                    spanishCount1252 += 5;
+                }
+                if (textEnc1252.Contains('¿'))
+                {
+                    spanishCount1252 += 5;
+                }
                 if (spanishCount1252 > wordMinCount && (textEnc1252.Contains('ú') || textEnc1252.Contains('í') || textEnc1252.Contains('ú') || textEnc1252.Contains('ó') || textEnc1252.Contains('é') || textEnc1252.Contains('ñ')))
                 {
                     return encoding1252;
