@@ -4184,7 +4184,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.Extra);
 
+            var oldDisableShowStatus = _disableShowStatus;
+            _disableShowStatus = true;
             ComboBoxSubtitleFormatsSelectedIndexChanged(null, null);
+            _disableShowStatus = oldDisableShowStatus;
 
             SetEncoding(Configuration.Settings.General.DefaultEncoding);
 
