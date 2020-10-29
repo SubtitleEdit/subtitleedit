@@ -3556,6 +3556,8 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     // ignore
                 }
+
+                ((BackgroundWorker)sender).Dispose();
             };
             bw.RunWorkerAsync(Configuration.Settings.RecentFiles.Files);
         }
@@ -11283,7 +11285,6 @@ namespace Nikse.SubtitleEdit.Forms
                     if (!string.IsNullOrEmpty(_fileName))
                     {
                         Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleAlternateFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
-
                     }
                     else
                     {
