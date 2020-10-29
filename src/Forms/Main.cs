@@ -8315,6 +8315,11 @@ namespace Nikse.SubtitleEdit.Forms
                 labelAlternateCharactersPerSecond.Text = string.Empty;
                 labelTextAlternateLineLengths.Text = string.Empty;
                 labelTextAlternateLineTotal.Text = string.Empty;
+
+                if (Text.Contains('*'))
+                {
+                    Text = Text.RemoveChar('*').TrimEnd();
+                }
             }
         }
 
