@@ -5773,8 +5773,10 @@ $HorzAlign          =   Center
 
             foreach (XmlNode groupNode in doc.DocumentElement.SelectNodes("MultipleSearchAndReplaceGroups/Group"))
             {
-                var group = new MultipleSearchAndReplaceGroup();
-                group.Rules = new List<MultipleSearchAndReplaceSetting>();
+                var group = new MultipleSearchAndReplaceGroup
+                {
+                    Rules = new List<MultipleSearchAndReplaceSetting>()
+                };
                 subNode = groupNode.SelectSingleNode("Name");
                 if (subNode != null)
                 {
