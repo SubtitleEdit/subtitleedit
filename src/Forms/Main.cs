@@ -4289,7 +4289,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                 MakeHistoryForUndo(_language.BeforeNew);
                 ResetSubtitle(true);
-                Configuration.Settings.RecentFiles.Add(null, null, null);
             }
         }
 
@@ -11276,9 +11275,17 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.General.SyncListViewWithVideoWhilePlaying = checkBoxSyncListViewWithVideoWhilePlaying.Checked;
                 Configuration.Settings.General.ShowWaveform = audioVisualizer.ShowWaveform;
                 Configuration.Settings.General.ShowSpectrogram = audioVisualizer.ShowSpectrogram;
-                if (Configuration.Settings.General.ShowRecentFiles && !string.IsNullOrEmpty(_fileName))
+                if (Configuration.Settings.General.ShowRecentFiles)
                 {
-                    Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleAlternateFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
+                    if (!string.IsNullOrEmpty(_fileName))
+                    {
+                        Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleAlternateFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
+
+                    }
+                    else
+                    {
+                        Configuration.Settings.RecentFiles.Add(null, null, null);
+                    }
                 }
 
                 if (SubtitleListview1.StateImageList?.Images.Count > 0)
