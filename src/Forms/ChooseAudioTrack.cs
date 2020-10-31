@@ -8,7 +8,9 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class ChooseAudioTrack : Form
     {
-        public ChooseAudioTrack(List<string> tracks, int defaultTrack)
+        public int SelectedTrack { get; set; }
+
+        public ChooseAudioTrack(List<string> tracks, int selectedTrack)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -16,11 +18,9 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (string track in tracks)
             {
                 listBoxTracks.Items.Add(track);
-                if (listBoxTracks.Items.Count == defaultTrack)
-                {
-                    listBoxTracks.SelectedIndex = listBoxTracks.Items.Count - 1;
-                }
             }
+            listBoxTracks.SelectedIndex = selectedTrack;
+
             if (listBoxTracks.SelectedIndex == -1 && listBoxTracks.Items.Count > 0)
             {
                 listBoxTracks.SelectedIndex = 0;
@@ -30,8 +30,6 @@ namespace Nikse.SubtitleEdit.Forms
             labelDescr.Text = Configuration.Settings.Language.ChooseAudioTrack.Title;
             UiUtil.FixLargeFonts(this, buttonOK);
         }
-
-        public int SelectedTrack { get; set; }
 
         private void ChooseAudioTrack_KeyDown(object sender, KeyEventArgs e)
         {

@@ -14,6 +14,7 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class AddWaveform : Form
     {
+        public int AudioTrackNumber { get; set; } = -1;
         public string SourceVideoFileName { get; private set; }
         private bool _cancel;
         private string _peakWaveFileName;
@@ -23,7 +24,6 @@ namespace Nikse.SubtitleEdit.Forms
         public SpectrogramData Spectrogram { get; private set; }
         private string _encodeParameters;
         private const string RetryEncodeParameters = "acodec=s16l";
-        private int _audioTrackNumber = -1;
         private int _delayInMilliseconds;
         private int _numberOfAudioTracks;
 
@@ -41,10 +41,10 @@ namespace Nikse.SubtitleEdit.Forms
         public void Initialize(string videoFile, string peakWaveFileName, string spectrogramDirectory, int audioTrackNumber)
         {
             _peakWaveFileName = peakWaveFileName;
-            _audioTrackNumber = audioTrackNumber;
-            if (_audioTrackNumber < 0)
+            AudioTrackNumber = audioTrackNumber;
+            if (AudioTrackNumber < 0)
             {
-                _audioTrackNumber = 0;
+                AudioTrackNumber = 0;
             }
 
             Text = Configuration.Settings.Language.AddWaveform.Title;
@@ -137,7 +137,7 @@ namespace Nikse.SubtitleEdit.Forms
             Process process;
             try
             {
-                process = GetCommandLineProcess(SourceVideoFileName, _audioTrackNumber, targetFile, _encodeParameters, out encoderName);
+                process = GetCommandLineProcess(SourceVideoFileName, AudioTrackNumber, targetFile, _encodeParameters, out encoderName);
                 labelInfo.Text = encoderName;
             }
             catch (DllNotFoundException)
@@ -373,11 +373,25 @@ namespace Nikse.SubtitleEdit.Forms
                 // Choose audio track
                 if (_numberOfAudioTracks > 1)
                 {
-                    using (var form = new ChooseAudioTrack(audioTrackNames, _audioTrackNumber))
+                    using (var form = new ChooseAudioTrack(audioTrackNames, AudioTrackNumber))
                     {
                         if (form.ShowDialog(this) == DialogResult.OK)
                         {
-                            _audioTrackNumber = form.SelectedTrack;
+                            if (AudioTrackNumber != form.SelectedTrack)
+                            {
+                                AudioTrackNumber = form.SelectedTrack;
+
+                                var peakWaveFileName = WavePeakGenerator.GetPeakWaveFileName(labelVideoFileName.Text, form.SelectedTrack);
+                                var spectrogramFolder = WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(labelVideoFileName.Text, form.SelectedTrack);
+                                if (File.Exists(peakWaveFileName))
+                                {
+                                    DialogResult = DialogResult.Cancel;
+                                    return;
+                                }
+
+                                _peakWaveFileName = peakWaveFileName;
+                                _spectrogramDirectory = spectrogramFolder; 
+                            }
                         }
                         else
                         {
@@ -396,7 +410,7 @@ namespace Nikse.SubtitleEdit.Forms
                         matroska = new MatroskaFile(labelVideoFileName.Text);
                         if (matroska.IsValid)
                         {
-                            _delayInMilliseconds = (int)matroska.GetAudioTrackDelayMilliseconds(mkvAudioTrackNumbers[_audioTrackNumber]);
+                            _delayInMilliseconds = (int)matroska.GetAudioTrackDelayMilliseconds(mkvAudioTrackNumbers[AudioTrackNumber]);
                         }
                     }
                     catch (Exception exception)
