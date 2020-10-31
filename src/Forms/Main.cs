@@ -64,7 +64,23 @@ namespace Nikse.SubtitleEdit.Forms
         private Subtitle _subtitleAlternate = new Subtitle();
         private string _subtitleAlternateFileName;
         private string _fileName;
+
         private int _videoAudioTrackNumber = -1;
+        public int VideoAudioTrackNumber
+        {
+            get => _videoAudioTrackNumber;
+            set
+            {
+                if (_videoAudioTrackNumber != value)
+                {
+                    if (value >= 0 && _videoAudioTrackNumber != -1)
+                    {
+                        ReloadWaveform(VideoFileName, value); 
+                    }
+                    _videoAudioTrackNumber = value;
+                }
+            }
+        }
 
         public string VideoFileName { get; set; }
 
@@ -2001,7 +2017,7 @@ namespace Nikse.SubtitleEdit.Forms
             using (var visualSync = new VisualSync())
             {
                 visualSync.VideoFileName = VideoFileName;
-                visualSync.AudioTrackNumber = _videoAudioTrackNumber;
+                visualSync.AudioTrackNumber = VideoAudioTrackNumber;
 
                 SaveSubtitleListviewIndices();
                 if (onlySelectedLines)
@@ -3067,7 +3083,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     VideoFileName = null;
                     _videoInfo = null;
-                    _videoAudioTrackNumber = -1;
+                    VideoAudioTrackNumber = -1;
                     labelVideoInfo.Text = _languageGeneral.NoVideoLoaded;
                     audioVisualizer.WavePeaks = null;
                     audioVisualizer.SetSpectrogram(null);
@@ -3239,7 +3255,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _spellCheckForm = null;
                     VideoFileName = null;
                     _videoInfo = null;
-                    _videoAudioTrackNumber = -1;
+                    VideoAudioTrackNumber = -1;
                     labelVideoInfo.Text = _languageGeneral.NoVideoLoaded;
                     audioVisualizer.WavePeaks = null;
                     audioVisualizer.SetSpectrogram(null);
@@ -4199,7 +4215,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 VideoFileName = null;
                 _videoInfo = null;
-                _videoAudioTrackNumber = -1;
+                VideoAudioTrackNumber = -1;
                 labelVideoInfo.Text = _languageGeneral.NoVideoLoaded;
                 audioVisualizer.WavePeaks = null;
                 audioVisualizer.SetSpectrogram(null);
@@ -18183,7 +18199,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             using (var pointSync = new SyncPointsSync())
             {
-                pointSync.Initialize(_subtitle, _fileName, VideoFileName, _videoAudioTrackNumber);
+                pointSync.Initialize(_subtitle, _fileName, VideoFileName, VideoAudioTrackNumber);
                 mediaPlayer.Pause();
                 if (pointSync.ShowDialog(this) == DialogResult.OK)
                 {
@@ -18338,7 +18354,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
 
-                    pointSync.Initialize(_subtitle, _fileName, VideoFileName, _videoAudioTrackNumber, fileName, sub);
+                    pointSync.Initialize(_subtitle, _fileName, VideoFileName, VideoAudioTrackNumber, fileName, sub);
                     mediaPlayer.Pause();
                     if (pointSync.ShowDialog(this) == DialogResult.OK)
                     {
@@ -18706,6 +18722,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     labelVideoInfo.Text = labelVideoInfo.Text + " " + string.Format("{0:0.0##}", _videoInfo.FramesPerSecond);
                 }
+
 
                 string peakWaveFileName = WavePeakGenerator.GetPeakWaveFileName(fileName);
                 string spectrogramFolder = WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(fileName);
@@ -21657,8 +21674,14 @@ namespace Nikse.SubtitleEdit.Forms
                 mediaPlayer.Pause();
                 using (var addWaveform = new AddWaveform())
                 {
-                    var peakWaveFileName = WavePeakGenerator.GetPeakWaveFileName(VideoFileName);
-                    var spectrogramFolder = WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(VideoFileName);
+                    var videoAudioTrackNumber =  VideoAudioTrackNumber;
+                    if (mediaPlayer.VideoPlayer is LibVlcDynamic && VideoAudioTrackNumber != -1)
+                    {
+                        videoAudioTrackNumber -= 1;
+                    }
+
+                    var peakWaveFileName = WavePeakGenerator.GetPeakWaveFileName(VideoFileName, videoAudioTrackNumber);
+                    var spectrogramFolder = WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(VideoFileName, videoAudioTrackNumber);
 
                     if (WavePeakGenerator.IsFileValidForVisualizer(VideoFileName))
                     {
@@ -21666,7 +21689,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        addWaveform.Initialize(VideoFileName, peakWaveFileName, spectrogramFolder, _videoAudioTrackNumber);
+                        addWaveform.Initialize(VideoFileName, peakWaveFileName, spectrogramFolder, videoAudioTrackNumber);
                     }
 
                     if (addWaveform.ShowDialog() == DialogResult.OK)
@@ -21678,11 +21701,57 @@ namespace Nikse.SubtitleEdit.Forms
                         audioVisualizer.SetSpectrogram(addWaveform.Spectrogram);
                         timerWaveform.Start();
                     }
+
+                    if (videoAudioTrackNumber != addWaveform.AudioTrackNumber)
+                    {
+                        if (mediaPlayer.VideoPlayer is LibVlcDynamic libVlc)
+                        {
+                            libVlc.AudioTrackNumber = addWaveform.AudioTrackNumber + 1;
+                            VideoAudioTrackNumber = addWaveform.AudioTrackNumber + 1;
+                        }
+                        else if (mediaPlayer.VideoPlayer is LibMpvDynamic libMpv)
+                        {
+                            libMpv.AudioTrackNumber = addWaveform.AudioTrackNumber;
+                            VideoAudioTrackNumber = addWaveform.AudioTrackNumber;
+                        }
+                    }
                 }
+
                 if (mediaPlayer.Chapters?.Count > 0)
                 {
                     audioVisualizer.Chapters = mediaPlayer.Chapters;
                 }
+            }
+        }
+
+        private void ReloadWaveform(string fileName, int audioTrackNumber)
+        {
+            if (audioVisualizer.WavePeaks != null)
+            {
+                audioVisualizer.WavePeaks = null;
+                audioVisualizer.SetSpectrogram(null);
+                audioVisualizer.SceneChanges = new List<double>();
+                audioVisualizer.Chapters = new List<MatroskaChapter>();
+            }
+
+            if (mediaPlayer.VideoPlayer is LibVlcDynamic && audioTrackNumber != -1)
+            {
+                audioTrackNumber -= 1;
+            }
+
+            var peakWaveFileName = WavePeakGenerator.GetPeakWaveFileName(fileName, audioTrackNumber);
+            var spectrogramFolder = WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(VideoFileName, audioTrackNumber);
+
+            if (File.Exists(peakWaveFileName))
+            {
+                audioVisualizer.ZoomFactor = 1.0;
+                audioVisualizer.VerticalZoomFactor = 1.0;
+                SelectZoomTextInComboBox();
+                audioVisualizer.WavePeaks = WavePeakData.FromDisk(peakWaveFileName);
+                audioVisualizer.SetSpectrogram(SpectrogramData.FromDisk(spectrogramFolder));
+                audioVisualizer.SceneChanges = SceneChangeHelper.FromDisk(VideoFileName);
+                SetWaveformPosition(0, 0, 0);
+                timerWaveform.Start();
             }
         }
 
@@ -22112,7 +22181,7 @@ namespace Nikse.SubtitleEdit.Forms
             using (var addWaveform = new AddWaveform())
             {
                 string peakWaveFileName = WavePeakGenerator.GetPeakWaveFileName(VideoFileName);
-                string spectrogramFolder = Nikse.SubtitleEdit.Core.WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(VideoFileName);
+                string spectrogramFolder = WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(VideoFileName);
                 addWaveform.InitializeViaWaveFile(fileName, peakWaveFileName, spectrogramFolder);
                 if (addWaveform.ShowDialog() == DialogResult.OK)
                 {
@@ -23550,7 +23619,7 @@ namespace Nikse.SubtitleEdit.Forms
             mediaPlayer.CurrentPosition = 0;
             VideoFileName = null;
             _videoInfo = null;
-            _videoAudioTrackNumber = -1;
+            VideoAudioTrackNumber = -1;
             labelVideoInfo.Text = _languageGeneral.NoVideoLoaded;
             audioVisualizer.WavePeaks = null;
             audioVisualizer.SetSpectrogram(null);
@@ -23598,13 +23667,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             toolStripMenuItemSetAudioTrack.Visible = false;
             openSecondSubtitleToolStripMenuItem.Visible = false;
-            var libVlc = mediaPlayer.VideoPlayer as LibVlcDynamic;
-            var libMpv = mediaPlayer.VideoPlayer as LibMpvDynamic;
-            if (libVlc != null)
+            if (mediaPlayer.VideoPlayer is LibVlcDynamic libVlc)
             {
                 openSecondSubtitleToolStripMenuItem.Visible = true;
                 var audioTracks = libVlc.GetAudioTracks();
-                _videoAudioTrackNumber = libVlc.AudioTrackNumber;
+                VideoAudioTrackNumber = libVlc.AudioTrackNumber;
                 if (audioTracks.Count > 1)
                 {
                     toolStripMenuItemSetAudioTrack.DropDownItems.Clear();
@@ -23613,7 +23680,7 @@ namespace Nikse.SubtitleEdit.Forms
                         var at = audioTracks[i];
                         toolStripMenuItemSetAudioTrack.DropDownItems.Add(string.IsNullOrWhiteSpace(at.Value) ? at.Key.ToString(CultureInfo.InvariantCulture) : at.Value, null, ChooseAudioTrack);
                         toolStripMenuItemSetAudioTrack.DropDownItems[toolStripMenuItemSetAudioTrack.DropDownItems.Count - 1].Tag = at.Key.ToString(CultureInfo.InvariantCulture);
-                        if (at.Key == _videoAudioTrackNumber)
+                        if (at.Key == VideoAudioTrackNumber)
                         {
                             toolStripMenuItemSetAudioTrack.DropDownItems[toolStripMenuItemSetAudioTrack.DropDownItems.Count - 1].Select();
                         }
@@ -23622,18 +23689,18 @@ namespace Nikse.SubtitleEdit.Forms
                     toolStripMenuItemSetAudioTrack.Visible = true;
                 }
             }
-            else if (libMpv != null)
+            else if (mediaPlayer.VideoPlayer is LibMpvDynamic libMpv)
             {
                 openSecondSubtitleToolStripMenuItem.Visible = true;
                 int numberOfTracks = libMpv.AudioTrackCount;
-                _videoAudioTrackNumber = libMpv.AudioTrackNumber;
+                VideoAudioTrackNumber = libMpv.AudioTrackNumber;
                 if (numberOfTracks > 1)
                 {
                     toolStripMenuItemSetAudioTrack.DropDownItems.Clear();
                     for (int i = 0; i < numberOfTracks; i++)
                     {
                         toolStripMenuItemSetAudioTrack.DropDownItems.Add((i + 1).ToString(CultureInfo.InvariantCulture), null, ChooseAudioTrack);
-                        if (i == _videoAudioTrackNumber)
+                        if (i == VideoAudioTrackNumber)
                         {
                             toolStripMenuItemSetAudioTrack.DropDownItems[toolStripMenuItemSetAudioTrack.DropDownItems.Count - 1].Select();
                         }
@@ -23668,22 +23735,20 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ChooseAudioTrack(object sender, EventArgs e)
         {
-            var libVlc = mediaPlayer.VideoPlayer as LibVlcDynamic;
-            var libMpv = mediaPlayer.VideoPlayer as LibMpvDynamic;
-            if (libVlc != null)
+            if (mediaPlayer.VideoPlayer is LibVlcDynamic libVlc)
             {
                 var item = sender as ToolStripItem;
                 int number = int.Parse(item.Tag.ToString());
                 libVlc.AudioTrackNumber = number;
-                _videoAudioTrackNumber = number;
+                VideoAudioTrackNumber = number;
             }
-            else if (libMpv != null)
+            else if (mediaPlayer.VideoPlayer is LibMpvDynamic libMpv)
             {
                 var item = sender as ToolStripItem;
                 int number = int.Parse(item.Text);
                 number--;
                 libMpv.AudioTrackNumber = number;
-                _videoAudioTrackNumber = number;
+                VideoAudioTrackNumber = number;
             }
         }
 
