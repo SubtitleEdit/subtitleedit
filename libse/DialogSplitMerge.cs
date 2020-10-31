@@ -355,9 +355,19 @@ namespace Nikse.SubtitleEdit.Core
             var l1 = HtmlUtil.RemoveHtmlTags(lines[1], true);
             var noLineEnding = SkipLineEndingCheck || LanguageAutoDetect.IsLanguageWithoutPeriods(TwoLetterLanguageCode);
 
-            if (lines.Count == 2 && (l0.HasSentenceEnding(TwoLetterLanguageCode) || noLineEnding) && (l1.TrimStart().StartsWith(GetDashChar()) || l1.TrimStart().StartsWith(GetAlternateDashChar())))
+            if (lines.Count == 2)
             {
-                return true;
+                if ((noLineEnding || l0.HasSentenceEnding(TwoLetterLanguageCode)) && (l1.TrimStart().StartsWith(GetDashChar()) || l1.TrimStart().StartsWith(GetAlternateDashChar())))
+                {
+                    return true;
+                }
+                // both lines has narrator
+                // foo: hello!
+                // bar: hello!
+                if (HasNarrator(l0) && HasNarrator(l1))
+                {
+                    return true;
+                }
             }
 
             if (lines.Count == 3)
@@ -390,6 +400,25 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             return false;
+        }
+
+        private bool HasNarrator(string line)
+        {
+            int startFromIdx = 0 + GetStartTags(line).Length;
+            int colonIdx = line.IndexOf(':', startFromIdx);
+
+            // invalid colon positions
+            if (colonIdx < 0 || colonIdx + 1 == line.Length || line[colonIdx + 1] != ' ')
+            {
+                return false;
+            }
+
+            if (!SkipLineEndingCheck)
+            {
+                return line.HasSentenceEnding(TwoLetterLanguageCode);
+            }
+
+            return true;
         }
 
         private bool IsDialogThreeLinesOneTwo(string l0, string l1, string l2)
