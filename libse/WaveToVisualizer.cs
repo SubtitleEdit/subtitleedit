@@ -345,7 +345,7 @@ namespace Nikse.SubtitleEdit.Core
     {
         #region Movie Hasher -
 
-        public static string GetPeakWaveFileName(string videofileName)
+        public static string GetPeakWaveFileName(string videoFileName, int trackNumber = 0)
         {
             var dir = Configuration.WaveformsDirectory.TrimEnd(Path.DirectorySeparatorChar);
             if (!Directory.Exists(dir))
@@ -353,7 +353,16 @@ namespace Nikse.SubtitleEdit.Core
                 Directory.CreateDirectory(dir);
             }
 
-            var wavePeakName = MovieHasher.GenerateHash(videofileName) + ".wav";
+            string wavePeakName;
+            if (trackNumber > 0)
+            {
+                wavePeakName = MovieHasher.GenerateHash(videoFileName) + "-" + trackNumber + ".wav"; 
+            }
+            else
+            {
+                wavePeakName = MovieHasher.GenerateHash(videoFileName) + ".wav";
+            }
+
             return Path.Combine(dir, wavePeakName);
         }
 
@@ -498,8 +507,10 @@ namespace Nikse.SubtitleEdit.Core
         public static WavePeakData GenerateEmptyPeaks(string peakFileName, int totalSeconds)
         {
             int peaksPerSecond = Configuration.Settings.VideoControls.WaveformMinimumSampleRate;
-            var peaks = new List<WavePeak>();
-            peaks.Add(new WavePeak(1000, -1000));
+            var peaks = new List<WavePeak>
+            {
+                new WavePeak(1000, -1000)
+            };
             var totalPeaks = peaksPerSecond * totalSeconds;
             for (int i = 0; i < totalPeaks; i++)
             {
@@ -853,7 +864,7 @@ namespace Nikse.SubtitleEdit.Core
             private readonly double[] _magnitude1;
             private readonly double[] _magnitude2;
 
-            public static string GetSpectrogramFolder(string videoFileName)
+            public static string GetSpectrogramFolder(string videoFileName, int trackNumber = 0)
             {
                 var dir = Configuration.SpectrogramsDirectory.TrimEnd(Path.DirectorySeparatorChar);
                 if (!Directory.Exists(dir))
@@ -861,7 +872,17 @@ namespace Nikse.SubtitleEdit.Core
                     Directory.CreateDirectory(dir);
                 }
 
-                return Path.Combine(dir, MovieHasher.GenerateHash(videoFileName));
+                string spectrogramFolder;
+                if (trackNumber > 0)
+                {
+                    spectrogramFolder = MovieHasher.GenerateHash(videoFileName) + "-" + trackNumber;
+                }
+                else
+                {
+                    spectrogramFolder = MovieHasher.GenerateHash(videoFileName);
+                }
+
+                return Path.Combine(dir, spectrogramFolder);
             }
 
             public SpectrogramDrawer(int nfft)
