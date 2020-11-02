@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="中文(简体)">
   <General>
     <Title>Subtitle Edit</Title>
@@ -403,7 +403,9 @@ Command line: {1} {2}
     <CodePageNumber>代码页编号</CodePageNumber>
     <DiskFormatCode>磁盘格式代码</DiskFormatCode>
     <DisplayStandardCode>显示标准码</DisplayStandardCode>
-    <ColorRequiresTeletext>颜色需要电视文字广播</ColorRequiresTeletext>
+    <ColorRequiresTeletext>颜色需要文字电视广播</ColorRequiresTeletext>
+    <AlignmentRequiresTeletext>对齐需要文字电视广播</AlignmentRequiresTeletext>
+    <TeletextCharsShouldBe38>文字电视广播的每行最大字符数应为38个</TeletextCharsShouldBe38>
     <CharacterCodeTable>字符表</CharacterCodeTable>
     <LanguageCode>语言代码</LanguageCode>
     <OriginalProgramTitle>原始影视标题</OriginalProgramTitle>
@@ -1090,9 +1092,11 @@ Command line: {1} {2}
         <OpenDvd>打开 DVD...</OpenDvd>
         <ChooseAudioTrack>选择音轨...</ChooseAudioTrack>
         <CloseVideo>关闭视频文件</CloseVideo>
+        <OpenSecondSubtitle>打开下一个字幕文件...</OpenSecondSubtitle>
         <SetVideoOffset>设置视频偏移...</SetVideoOffset>
         <SmptTimeMode>SMPTE 时间 (弃帧)</SmptTimeMode>
         <GenerateTextFromVideo>从视频生成文本...</GenerateTextFromVideo>
+        <ImportChaptersFromVideo>从视频中导入章节</ImportChaptersFromVideo>
         <GenerateImportSceneChanges>生成/导入场景切换...</GenerateImportSceneChanges>
         <RemoveSceneChanges>移除场景变更</RemoveSceneChanges>
         <WaveformBatchGenerate>批量生成波形...</WaveformBatchGenerate>
@@ -1429,6 +1433,8 @@ Command line: {1} {2}
     <NoSubtitlesFound>没有找到字幕</NoSubtitlesFound>
     <NotAValidMatroskaFileX>这不是有效的 Matroska 文件: {0}</NotAValidMatroskaFileX>
     <BlurayNotSubtitlesFound>Blu-ray sup 文件不包含任何字幕或出现错误 - 请尝试再次复合。</BlurayNotSubtitlesFound>
+    <ImportingChapters>导入章节...</ImportingChapters>
+    <XChaptersImported>已导入{0}章节</XChaptersImported>
     <ParsingMatroskaFile>正在解析 Matroska 文件。请稍候...</ParsingMatroskaFile>
     <ParsingTransportStreamFile>正在解析 Transport Stream 文件，请稍候...</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>从 Matroska 文件导入字幕之前</BeforeImportFromMatroskaFile>
@@ -1563,6 +1569,7 @@ Command line: {1} {2}
     <NoSupportHereDvdSup>此处不支持 DVD sup 文件。</NoSupportHereDvdSup>
     <NoSupportHereVobSub>此处不支持 VobSub 文件。</NoSupportHereVobSub>
     <NoSupportHereDivx>此处不支持 Divx 文件。</NoSupportHereDivx>
+    <NoChapters>视频中未找到章节。</NoChapters>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>从 Matroska 文件中选择字幕</Title>
@@ -2192,6 +2199,8 @@ Command line: {1} {2}
     <PlayCurrent>播放当前字幕</PlayCurrent>
     <WaveformGoToPrevSubtitle>转到上一条字幕（从当前视频位置起）</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>转到下一条字幕（从当前视频位置起）</WaveformGoToNextSubtitle>
+    <WaveformGoToPrevChapter>转到上一章节</WaveformGoToPrevChapter>
+    <WaveformGoToNextChapter>转到下一章节</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>选择下一行字幕 (从当前视频位置起, 保持视频位置不变)</WaveformSelectNextSubtitle>
     <TogglePlayPause>切换 播放/暂停</TogglePlayPause>
     <Pause>暂停</Pause>
