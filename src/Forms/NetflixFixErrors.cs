@@ -131,7 +131,7 @@ namespace Nikse.SubtitleEdit.Forms
             item.SubItems.Add(p.Number.ToString());
             item.SubItems.Add(action);
             item.SubItems.Add(before.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
-  //          item.SubItems.Add(after.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
+            item.SubItems.Add(after.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
             listViewFixes.Items.Add(item);
         }
 

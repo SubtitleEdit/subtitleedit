@@ -54,6 +54,7 @@
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.linkLabelOpenReportFolder = new System.Windows.Forms.LinkLabel();
             this.groupBoxRules.SuspendLayout();
             this.SuspendLayout();
@@ -345,7 +346,8 @@
             this.columnHeader4,
             this.columnHeader5,
             this.columnHeader6,
-            this.columnHeader7});
+            this.columnHeader7,
+            this.columnHeader8});
             this.listViewFixes.FullRowSelect = true;
             this.listViewFixes.GridLines = true;
             this.listViewFixes.HideSelection = false;
@@ -374,7 +376,12 @@
             // columnHeader7
             // 
             this.columnHeader7.Text = "Text";
-            this.columnHeader7.Width = 700;
+            this.columnHeader7.Width = 300;
+            // 
+            // columnHeader7
+            // 
+            this.columnHeader8.Text = "Suggested fix";
+            this.columnHeader8.Width = 300;
             // 
             // linkLabelOpenReportFolder
             // 
@@ -433,6 +440,7 @@
         private System.Windows.Forms.ColumnHeader columnHeader5;
         private System.Windows.Forms.ColumnHeader columnHeader6;
         private System.Windows.Forms.ColumnHeader columnHeader7;
+        private System.Windows.Forms.ColumnHeader columnHeader8;
         private System.Windows.Forms.CheckBox checkBoxNoItalics;
         private System.Windows.Forms.CheckBox checkBoxTtmlFrameRate;
         private System.Windows.Forms.CheckBox checkBoxMaxLineLength;
