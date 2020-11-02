@@ -660,7 +660,11 @@ namespace Nikse.SubtitleEdit.Forms
                     var paramEqual = MakeMakeBitmapParameter(0, width, height);
 
                     var threadUnEqual = new Thread(DoWork);
-                    var paramUnEqual = MakeMakeBitmapParameter(1, width, height);
+                    var paramUnEqual = new MakeBitmapParameter();
+                    if (_subtitle.Paragraphs.Count > 1)
+                    {
+                        MakeMakeBitmapParameter(1, width, height);
+                    }
 
                     threadEqual.Start(paramEqual);
                     int i = 1;
