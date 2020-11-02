@@ -24,8 +24,8 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 return;
             }
 
+            const int twelveFramesGap = 12;
             double twoFramesGap = 1000.0 / controller.FrameRate * 2.0;
-            var twelveFrames = SubtitleFormat.MillisecondsToFrames(1000.0 / controller.FrameRate * 12.0);
 
             foreach (Paragraph p in subtitle.Paragraphs)
             {
@@ -41,21 +41,21 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 if (previousStartSceneChanges.Count > 0)
                 {
                     double nearestStartPrevSceneChange = previousStartSceneChanges.Aggregate((x, y) => Math.Abs(x - p.StartTime.TotalSeconds) < Math.Abs(y - p.StartTime.TotalSeconds) ? x : y);
-                    if (SubtitleFormat.MillisecondsToFrames(p.StartTime.TotalMilliseconds - nearestStartPrevSceneChange * 1000) < twelveFrames)
+                    if (SubtitleFormat.MillisecondsToFrames(p.StartTime.TotalMilliseconds - nearestStartPrevSceneChange * 1000) < twelveFramesGap)
                     {
                         fixedParagraph.StartTime.TotalMilliseconds = nearestStartPrevSceneChange * 1000;
-                        comment = "The in-cue is 1-11 frames after the Shot Change";
+                        comment = "The in-cue is within 12 frames after the shot change";
                         controller.AddRecord(p, fixedParagraph, comment);
                     }
                 }
 
-                if (nextEndSceneChanges.Count > 0)
+                if (nextStartSceneChanges.Count > 0)
                 {
                     double nearestStartNextSceneChange = nextStartSceneChanges.Aggregate((x, y) => Math.Abs(x - p.StartTime.TotalSeconds) < Math.Abs(y - p.StartTime.TotalSeconds) ? x : y);
-                    if (SubtitleFormat.MillisecondsToFrames(nearestStartNextSceneChange * 1000 - p.StartTime.TotalMilliseconds) < twelveFrames)
+                    if (SubtitleFormat.MillisecondsToFrames(nearestStartNextSceneChange * 1000 - p.StartTime.TotalMilliseconds) < twelveFramesGap)
                     {
                         fixedParagraph.StartTime.TotalMilliseconds = nearestStartNextSceneChange * 1000;
-                        comment = "The in-cue is 1-11 frames before the Shot Change";
+                        comment = "The in-cue is within 12 frames before the shot change";
                         controller.AddRecord(p, fixedParagraph, comment);
                     }
                 }
@@ -63,10 +63,22 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 if (previousEndSceneChanges.Count > 0)
                 {
                     double nearestEndPrevSceneChange = previousEndSceneChanges.Aggregate((x, y) => Math.Abs(x - p.EndTime.TotalSeconds) < Math.Abs(y - p.EndTime.TotalSeconds) ? x : y);
-                    if (SubtitleFormat.MillisecondsToFrames(p.EndTime.TotalMilliseconds - nearestEndPrevSceneChange * 1000) < twelveFrames)
+                    if (SubtitleFormat.MillisecondsToFrames(p.EndTime.TotalMilliseconds - nearestEndPrevSceneChange * 1000) < twelveFramesGap)
                     {
                         fixedParagraph.EndTime.TotalMilliseconds = nearestEndPrevSceneChange * 1000 - twoFramesGap;
-                        comment = "The out-cue is 1-11 frames after the Shot Change";
+                        comment = "The out-cue is within 12 frames after the shot change";
+                        controller.AddRecord(p, fixedParagraph, comment);
+                    }
+                }
+
+                if (nextEndSceneChanges.Count > 0)
+                {
+                    double nearestEndNextSceneChange = nextEndSceneChanges.Aggregate((x, y) => Math.Abs(x - p.EndTime.TotalSeconds) < Math.Abs(y - p.EndTime.TotalSeconds) ? x : y);
+                    if (SubtitleFormat.MillisecondsToFrames(nearestEndNextSceneChange * 1000 - p.EndTime.TotalMilliseconds) - 1 < twelveFramesGap &&
+                        SubtitleFormat.MillisecondsToFrames(p.EndTime.TotalMilliseconds) != SubtitleFormat.MillisecondsToFrames(nearestEndNextSceneChange * 1000 - twoFramesGap))
+                    {
+                        fixedParagraph.EndTime.TotalMilliseconds = nearestEndNextSceneChange * 1000 - twoFramesGap;
+                        comment = "The out-cue is within 12 frames of the last frame before the shot change";
                         controller.AddRecord(p, fixedParagraph, comment);
                     }
                 }
@@ -74,7 +86,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 if (onSceneChange > 0)
                 {
                     fixedParagraph.EndTime.TotalMilliseconds = onSceneChange * 1000 - twoFramesGap;
-                    comment = "The out-cue is on the Shot Change";
+                    comment = "The out-cue is on the shot change (respect the two-frame gap)";
                     controller.AddRecord(p, fixedParagraph, comment);
                 }
             }

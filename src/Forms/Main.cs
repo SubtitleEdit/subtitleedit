@@ -27779,7 +27779,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 netflixController.FrameRate = _videoInfo.FramesPerSecond;
             }
-            else if (string.IsNullOrEmpty(VideoFileName) && CurrentFrameRate != 23.976 && CurrentFrameRate != 24)
+            else if (!string.IsNullOrEmpty(VideoFileName) && CurrentFrameRate != 23.976 && CurrentFrameRate != 24)
             {
                 netflixController.FrameRate = CurrentFrameRate;
             }
