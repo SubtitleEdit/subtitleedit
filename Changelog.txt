@@ -3,6 +3,7 @@
 3.5.18 (xth November 2020) BETA
 * NEW:
    * Add "Measurement converter" - thx OmrSi
+   * Add waveform multi- track support - thx OmrSi
    * Add import/export of shortcuts
    * Add "Matroska chapter support" - thx OmrSi
    * Add subtitle format XMP - thx Tore
@@ -36,6 +37,7 @@
    * Allow for very large images in "Image compare" / nOCR - thx chcip2003
    * Always close italic in EBU STL - thx Valentina
    * Fix for split original (minor) - thx René
+   * Do not crash in image export if only one line - thx OmrSi
 
 
 3.5.17 (6th October 2020)
