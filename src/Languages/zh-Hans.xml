@@ -512,6 +512,7 @@ Command line: {1} {2}
     <Right>右</Right>
     <Center>中</Center>
     <CenterLeftJustify>居中, 左对齐</CenterLeftJustify>
+    <CenterLeftJustifyDialogs>对话居中, 左对齐</CenterLeftJustifyDialogs>
     <CenterTopJustify>居中, 顶对齐</CenterTopJustify>
     <CenterRightJustify>集中, 右对齐</CenterRightJustify>
     <BottomMargin>底边距</BottomMargin>
@@ -2193,6 +2194,10 @@ Command line: {1} {2}
     <GoForward1Second>前进 1 秒</GoForward1Second>
     <GoBack5Seconds>回退 5 秒</GoBack5Seconds>
     <GoForward5Seconds>前进 5 秒</GoForward5Seconds>
+    <GoBackXSSeconds>以选定的时间少量回退</GoBackXSSeconds>
+    <GoForwardXSSeconds>以选定的时间少量前进</GoForwardXSSeconds>
+    <GoBackXLSeconds>以选定的时间回退</GoBackXLSeconds>
+    <GoForwardXLSeconds>以选定的时间前进</GoForwardXLSeconds>
     <GoBack3Second>回退 3 秒</GoBack3Second>
     <GoToStartCurrent>设定视频位置定位到当前字幕的起始点</GoToStartCurrent>
     <ToggleStartEndCurrent>让视频位置在当前字幕的起始点与结束点间切换跳转</ToggleStartEndCurrent>
