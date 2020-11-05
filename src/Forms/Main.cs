@@ -5205,7 +5205,7 @@ namespace Nikse.SubtitleEdit.Forms
             FindNext();
         }
 
-        private TextBox GetFindReplaceTextBox()
+        private SETextBox GetFindReplaceTextBox()
         {
             return _findHelper.MatchInOriginal ? textBoxListViewTextAlternate : textBoxListViewText;
         }
@@ -5215,7 +5215,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_findHelper != null)
             {
                 _findHelper.InProgress = true;
-                TextBox tb = GetFindReplaceTextBox();
+                var tb = GetFindReplaceTextBox();
                 if (tabControlSubtitle.SelectedIndex == TabControlListView)
                 {
                     int selectedIndex = -1;
@@ -5298,7 +5298,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _findHelper.InProgress = true;
-            TextBox tb = GetFindReplaceTextBox();
+            var tb = GetFindReplaceTextBox();
             if (tabControlSubtitle.SelectedIndex == TabControlListView)
             {
                 int selectedIndex = -1;
@@ -8884,7 +8884,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void UpdateListViewTextInfo(Label lineLengths, Label singleLine, Label singleLinePixels, Label lineTotal, Label charactersPerSecond, Paragraph paragraph, TextBox textBox)
+        private void UpdateListViewTextInfo(Label lineLengths, Label singleLine, Label singleLinePixels, Label lineTotal, Label charactersPerSecond, Paragraph paragraph, SETextBox textBox)
         {
             if (paragraph == null)
             {
@@ -11392,7 +11392,7 @@ namespace Nikse.SubtitleEdit.Forms
             Unbreak();
         }
 
-        private void BreakUnbreakTextBox(bool unbreak, TextBox tb)
+        private void BreakUnbreakTextBox(bool unbreak, SETextBox tb)
         {
             var textCaretPos = tb.SelectionStart;
             var startText = tb.Text.Substring(0, textCaretPos);
@@ -16085,7 +16085,7 @@ namespace Nikse.SubtitleEdit.Forms
             new BookmarkPersistence(_subtitle, _fileName).Save();
         }
 
-        private void MoveWordUpDownInCurrent(bool down, TextBox tb)
+        private void MoveWordUpDownInCurrent(bool down, SETextBox tb)
         {
             int firstIndex = FirstSelectedIndex;
             if (firstIndex < 0)
@@ -22315,7 +22315,7 @@ namespace Nikse.SubtitleEdit.Forms
             tb.SelectionLength = text.Length;
         }
 
-        private TextBox GetFocusedTextBox()
+        private SETextBox GetFocusedTextBox()
         {
             if (!textBoxListViewTextAlternate.Visible)
             {
@@ -25155,7 +25155,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void UpdatePositionAndTotalLength(Label lineTotal, TextBox textBox)
+        private void UpdatePositionAndTotalLength(Label lineTotal, SETextBox textBox)
         {
             if (string.IsNullOrEmpty(textBox.Text))
             {

@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Nikse.SubtitleEdit.Core.TimeCode timeCode3 = new Nikse.SubtitleEdit.Core.TimeCode();
+            Nikse.SubtitleEdit.Core.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.TimeCode();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonNextFinish = new System.Windows.Forms.Button();
             this.labelStatus = new System.Windows.Forms.Label();
@@ -49,6 +49,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.contextMenuStripRules = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemSelectAllRules = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemInverseRules = new System.Windows.Forms.ToolStripMenuItem();
+            this.selectDefaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.setCurrentFixesAsDefaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.labelLanguage2 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -67,6 +70,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonRefreshFixes = new System.Windows.Forms.Button();
             this.buttonFixesSelectAll = new System.Windows.Forms.Button();
             this.buttonFixesInverse = new System.Windows.Forms.Button();
+            this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.contextMenuStripListview = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -78,6 +82,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonAutoBreak = new System.Windows.Forms.Button();
             this.labelStartTimeWarning = new System.Windows.Forms.Label();
             this.labelDurationWarning = new System.Windows.Forms.Label();
+            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.numericUpDownDuration = new System.Windows.Forms.NumericUpDown();
             this.labelDuration = new System.Windows.Forms.Label();
             this.labelStartTime = new System.Windows.Forms.Label();
@@ -87,11 +92,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabPageLog = new System.Windows.Forms.TabPage();
             this.textBoxFixedIssues = new System.Windows.Forms.TextBox();
             this.labelNumberOfImportantLogMessages = new System.Windows.Forms.Label();
-            this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
-            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
-            this.selectDefaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.setCurrentFixesAsDefaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.groupBoxStep1.SuspendLayout();
             this.contextMenuStripRules.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -276,7 +276,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSeparator2,
             this.setCurrentFixesAsDefaultToolStripMenuItem});
             this.contextMenuStripRules.Name = "contextMenuStrip1";
-            this.contextMenuStripRules.Size = new System.Drawing.Size(213, 120);
+            this.contextMenuStripRules.Size = new System.Drawing.Size(213, 98);
             // 
             // toolStripMenuItemSelectAllRules
             // 
@@ -291,6 +291,25 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemInverseRules.Size = new System.Drawing.Size(212, 22);
             this.toolStripMenuItemInverseRules.Text = "Inverse selection";
             this.toolStripMenuItemInverseRules.Click += new System.EventHandler(this.ButtonInverseSelectionClick);
+            // 
+            // selectDefaultToolStripMenuItem
+            // 
+            this.selectDefaultToolStripMenuItem.Name = "selectDefaultToolStripMenuItem";
+            this.selectDefaultToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            this.selectDefaultToolStripMenuItem.Text = "Select default";
+            this.selectDefaultToolStripMenuItem.Click += new System.EventHandler(this.selectDefaultToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(209, 6);
+            // 
+            // setCurrentFixesAsDefaultToolStripMenuItem
+            // 
+            this.setCurrentFixesAsDefaultToolStripMenuItem.Name = "setCurrentFixesAsDefaultToolStripMenuItem";
+            this.setCurrentFixesAsDefaultToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            this.setCurrentFixesAsDefaultToolStripMenuItem.Text = "Set current fixes as default";
+            this.setCurrentFixesAsDefaultToolStripMenuItem.Click += new System.EventHandler(this.setCurrentFixesAsDefaultToolStripMenuItem_Click);
             // 
             // groupBox2
             // 
@@ -484,6 +503,33 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonFixesInverse.UseVisualStyleBackColor = true;
             this.buttonFixesInverse.Click += new System.EventHandler(this.ButtonFixesInverseClick);
             // 
+            // subtitleListView1
+            // 
+            this.subtitleListView1.AllowColumnReorder = true;
+            this.subtitleListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.subtitleListView1.ContextMenuStrip = this.contextMenuStripListview;
+            this.subtitleListView1.FirstVisibleIndex = -1;
+            this.subtitleListView1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.subtitleListView1.FullRowSelect = true;
+            this.subtitleListView1.GridLines = true;
+            this.subtitleListView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.subtitleListView1.HideSelection = false;
+            this.subtitleListView1.Location = new System.Drawing.Point(3, 5);
+            this.subtitleListView1.Name = "subtitleListView1";
+            this.subtitleListView1.OwnerDraw = true;
+            this.subtitleListView1.Size = new System.Drawing.Size(785, 158);
+            this.subtitleListView1.SubtitleFontBold = false;
+            this.subtitleListView1.SubtitleFontName = "Tahoma";
+            this.subtitleListView1.SubtitleFontSize = 8;
+            this.subtitleListView1.TabIndex = 110;
+            this.subtitleListView1.UseCompatibleStateImageBehavior = false;
+            this.subtitleListView1.UseSyntaxColoring = true;
+            this.subtitleListView1.View = System.Windows.Forms.View.Details;
+            this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.SubtitleListView1SelectedIndexChanged);
+            this.subtitleListView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.subtitleListView1_KeyDown);
+            // 
             // contextMenuStripListview
             // 
             this.contextMenuStripListview.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -599,6 +645,26 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelDurationWarning.TabIndex = 31;
             this.labelDurationWarning.Text = "labelDurationWarning";
             // 
+            // timeUpDownStartTime
+            // 
+            this.timeUpDownStartTime.AutoSize = true;
+            this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownStartTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.timeUpDownStartTime.Location = new System.Drawing.Point(8, 27);
+            this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
+            this.timeUpDownStartTime.Name = "timeUpDownStartTime";
+            this.timeUpDownStartTime.Size = new System.Drawing.Size(111, 27);
+            this.timeUpDownStartTime.TabIndex = 112;
+            timeCode1.Hours = 0;
+            timeCode1.Milliseconds = 0;
+            timeCode1.Minutes = 0;
+            timeCode1.Seconds = 0;
+            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode1.TotalMilliseconds = 0D;
+            timeCode1.TotalSeconds = 0D;
+            this.timeUpDownStartTime.TimeCode = timeCode1;
+            this.timeUpDownStartTime.UseVideoOffset = false;
+            // 
             // numericUpDownDuration
             // 
             this.numericUpDownDuration.DecimalPlaces = 3;
@@ -710,72 +776,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelNumberOfImportantLogMessages.TabIndex = 11;
             this.labelNumberOfImportantLogMessages.Text = "labelNumberOfImportantLogMessages";
             // 
-            // subtitleListView1
-            // 
-            this.subtitleListView1.AllowColumnReorder = true;
-            this.subtitleListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.subtitleListView1.ContextMenuStrip = this.contextMenuStripListview;
-            this.subtitleListView1.FirstVisibleIndex = -1;
-            this.subtitleListView1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.subtitleListView1.FullRowSelect = true;
-            this.subtitleListView1.GridLines = true;
-            this.subtitleListView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.subtitleListView1.HideSelection = false;
-            this.subtitleListView1.Location = new System.Drawing.Point(3, 5);
-            this.subtitleListView1.Name = "subtitleListView1";
-            this.subtitleListView1.OwnerDraw = true;
-            this.subtitleListView1.Size = new System.Drawing.Size(785, 158);
-            this.subtitleListView1.SubtitleFontBold = false;
-            this.subtitleListView1.SubtitleFontName = "Tahoma";
-            this.subtitleListView1.SubtitleFontSize = 8;
-            this.subtitleListView1.TabIndex = 110;
-            this.subtitleListView1.UseCompatibleStateImageBehavior = false;
-            this.subtitleListView1.UseSyntaxColoring = true;
-            this.subtitleListView1.View = System.Windows.Forms.View.Details;
-            this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.SubtitleListView1SelectedIndexChanged);
-            this.subtitleListView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.subtitleListView1_KeyDown);
-            // 
-            // timeUpDownStartTime
-            // 
-            this.timeUpDownStartTime.AutoSize = true;
-            this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.timeUpDownStartTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.timeUpDownStartTime.Location = new System.Drawing.Point(8, 27);
-            this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
-            this.timeUpDownStartTime.Name = "timeUpDownStartTime";
-            this.timeUpDownStartTime.Size = new System.Drawing.Size(111, 27);
-            this.timeUpDownStartTime.TabIndex = 112;
-            timeCode3.Hours = 0;
-            timeCode3.Milliseconds = 0;
-            timeCode3.Minutes = 0;
-            timeCode3.Seconds = 0;
-            timeCode3.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode3.TotalMilliseconds = 0D;
-            timeCode3.TotalSeconds = 0D;
-            this.timeUpDownStartTime.TimeCode = timeCode3;
-            this.timeUpDownStartTime.UseVideoOffset = false;
-            // 
-            // selectDefaultToolStripMenuItem
-            // 
-            this.selectDefaultToolStripMenuItem.Name = "selectDefaultToolStripMenuItem";
-            this.selectDefaultToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
-            this.selectDefaultToolStripMenuItem.Text = "Select default";
-            this.selectDefaultToolStripMenuItem.Click += new System.EventHandler(this.selectDefaultToolStripMenuItem_Click);
-            // 
-            // setCurrentFixesAsDefaultToolStripMenuItem
-            // 
-            this.setCurrentFixesAsDefaultToolStripMenuItem.Name = "setCurrentFixesAsDefaultToolStripMenuItem";
-            this.setCurrentFixesAsDefaultToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
-            this.setCurrentFixesAsDefaultToolStripMenuItem.Text = "Set current fixes as default";
-            this.setCurrentFixesAsDefaultToolStripMenuItem.Click += new System.EventHandler(this.setCurrentFixesAsDefaultToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(209, 6);
-            // 
             // FixCommonErrors
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -787,8 +787,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.Controls.Add(this.buttonBack);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonNextFinish);
-            this.Controls.Add(this.groupBoxStep1);
             this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.groupBoxStep1);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.KeyPreview = true;
             this.MinimizeBox = false;
