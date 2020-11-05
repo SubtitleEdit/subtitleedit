@@ -946,7 +946,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        public static void SelectWordAtCaret(TextBox textBox)
+        public static void SelectWordAtCaret(SETextBox textBox)
         {
             var text = textBox.Text;
             var endIndex = textBox.SelectionStart;
