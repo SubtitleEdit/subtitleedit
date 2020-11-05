@@ -24451,13 +24451,11 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                var frameRate = CurrentFrameRate;
                 var format = new Subtitle().ReloadLoadSubtitle(textBoxSource.Lines.ToList(), null, currentFormat);
                 if (format == null)
                 {
                     e.Cancel = true;
                 }
-                Configuration.Settings.General.DefaultFrameRate = frameRate;
             }
         }
 
