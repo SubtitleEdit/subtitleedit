@@ -379,5 +379,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void textBoxPreview_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.A)
+            {
+                textBoxPreview.SelectAll();
+            }
+        }
     }
 }

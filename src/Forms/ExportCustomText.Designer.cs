@@ -182,6 +182,7 @@
             this.textBoxPreview.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.textBoxPreview.Size = new System.Drawing.Size(445, 346);
             this.textBoxPreview.TabIndex = 0;
+            this.textBoxPreview.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxPreview_KeyDown);
             // 
             // groupBoxPreview
             // 
