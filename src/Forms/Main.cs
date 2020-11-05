@@ -23692,14 +23692,17 @@ namespace Nikse.SubtitleEdit.Forms
             else if (mediaPlayer.VideoPlayer is LibMpvDynamic libMpv)
             {
                 openSecondSubtitleToolStripMenuItem.Visible = true;
-                int numberOfTracks = libMpv.AudioTrackCount;
+                var audioTracks = libMpv.AudioTracks;
                 VideoAudioTrackNumber = libMpv.AudioTrackNumber;
-                if (numberOfTracks > 1)
+                if (audioTracks.Count > 1)
                 {
                     toolStripMenuItemSetAudioTrack.DropDownItems.Clear();
-                    for (int i = 0; i < numberOfTracks; i++)
+                    for (int i = 0; i < audioTracks.Count; i++)
                     {
-                        toolStripMenuItemSetAudioTrack.DropDownItems.Add((i + 1).ToString(CultureInfo.InvariantCulture), null, ChooseAudioTrack);
+                        var at = audioTracks[i];
+                        var trackText = string.IsNullOrWhiteSpace(at.Value) ? at.Key.ToString(CultureInfo.InvariantCulture) : "Track " + at.Key + " - " + char.ToUpper(at.Value[0]) + at.Value.Substring(1);
+                        toolStripMenuItemSetAudioTrack.DropDownItems.Add(trackText, null, ChooseAudioTrack);
+                        toolStripMenuItemSetAudioTrack.DropDownItems[toolStripMenuItemSetAudioTrack.DropDownItems.Count - 1].Tag = at.Key.ToString(CultureInfo.InvariantCulture);
                         if (i == VideoAudioTrackNumber)
                         {
                             toolStripMenuItemSetAudioTrack.DropDownItems[toolStripMenuItemSetAudioTrack.DropDownItems.Count - 1].Select();
@@ -23745,7 +23748,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (mediaPlayer.VideoPlayer is LibMpvDynamic libMpv)
             {
                 var item = sender as ToolStripItem;
-                int number = int.Parse(item.Text);
+                int number = int.Parse(item.Tag.ToString());
                 number--;
                 libMpv.AudioTrackNumber = number;
                 VideoAudioTrackNumber = number;

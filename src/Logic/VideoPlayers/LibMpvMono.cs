@@ -194,28 +194,29 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         public override bool IsPlaying => !IsPaused;
 
-        private List<string> _audioTrackIds;
-        public int AudioTrackCount
+        private List<KeyValuePair<int, string>> _audioTrackIds;
+        public List<KeyValuePair<int, string>> AudioTracks
         {
             get
             {
                 if (_audioTrackIds == null)
                 {
-                    _audioTrackIds = new List<string>();
+                    _audioTrackIds = new List<KeyValuePair<int, string>>();
                     var lpBuffer = NativeMethods.mpv_get_property_string(_mpvHandle, GetUtf8Bytes("track-list"));
                     string trackListJson = Marshal.PtrToStringAnsi(lpBuffer);
                     foreach (var json in Json.ReadObjectArray(trackListJson))
                     {
                         string trackType = Json.ReadTag(json, "type");
-                        string id = Json.ReadTag(json, "id");
+                        int id = int.Parse(Json.ReadTag(json, "id"));
                         if (trackType == "audio")
                         {
-                            _audioTrackIds.Add(id);
+                            string lang = Json.ReadTag(json, "lang");
+                            _audioTrackIds.Add(new KeyValuePair<int, string>(id, lang));
                         }
                     }
                     NativeMethods.mpv_free(lpBuffer);
                 }
-                return _audioTrackIds.Count;
+                return _audioTrackIds;
             }
         }
 
@@ -224,21 +225,18 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             get
             {
                 var lpBuffer = NativeMethods.mpv_get_property_string(_mpvHandle, GetUtf8Bytes("aid"));
-                string str = Marshal.PtrToStringAnsi(lpBuffer);
-                int number = 0;
-                if (AudioTrackCount > 1 && _audioTrackIds.Contains(str))
-                {
-                    number = _audioTrackIds.IndexOf(str);
-                }
+                int id = int.Parse(Marshal.PtrToStringAnsi(lpBuffer));
+                int idx = _audioTrackIds.FindIndex(x => x.Key == id);
+                int number = AudioTracks.Count > 1 && idx != -1 ? idx : 0;
                 NativeMethods.mpv_free(lpBuffer);
                 return number;
             }
             set
             {
                 string id = "1";
-                if (AudioTrackCount > 1 && value >= 0 && value < _audioTrackIds.Count)
+                if (AudioTracks.Count > 1 && value >= 0 && value < _audioTrackIds.Count)
                 {
-                    id = _audioTrackIds[value];
+                    id = _audioTrackIds[value].Key.ToString();
                 }
                 DoMpvCommand("set", "aid", id);
             }
