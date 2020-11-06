@@ -1442,7 +1442,7 @@
             "F10",
             "F11",
             "F12",
-            "Del",
+            "Delete",
             "Down",
             "Home",
             "End",
