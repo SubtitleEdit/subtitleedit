@@ -699,6 +699,10 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                 {
                                     if (f.IsMine(null, fileName))
                                     {
+                                        if (f is Pac pacFormat)
+                                        {
+                                            pacFormat.CodePage = pacCodePage;
+                                        }
                                         f.LoadSubtitle(sub, null, fileName);
                                         format = f;
                                         break;
