@@ -1692,9 +1692,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     { CodePageHebrew, "he" },
                     { CodePageThai, "th" },
                     { CodePageCyrillic, "ru-uk-mk" },
+                    { CodePageKorean, "ko" },
                     { CodePageChineseTraditional, "zh" },
                     { CodePageChineseSimplified, "zh" },
-                    { CodePageKorean, "ko" },
                     { CodePageJapanese, "ja" }
                 };
                 foreach (var kvp in dictionary)
