@@ -6698,7 +6698,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             FixVerticalScrollBars(textBoxCurrentText);
         }
 
-        private static void FixVerticalScrollBars(TextBox tb)
+        private static void FixVerticalScrollBars(SETextBox tb)
         {
             if (Utilities.GetNumberOfLines(tb.Text) > 5)
             {
@@ -7989,7 +7989,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             if (e.KeyData == _italicShortcut) // Ctrl+I (or custom) = Italic
             {
-                TextBox tb = textBoxCurrentText;
+                var tb = textBoxCurrentText;
                 string text = tb.SelectedText;
                 int selectionStart = tb.SelectionStart;
                 if (text.Contains("<i>"))
