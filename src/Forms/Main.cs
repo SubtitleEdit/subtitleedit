@@ -75,7 +75,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (value >= 0 && _videoAudioTrackNumber != -1)
                     {
-                        ReloadWaveform(VideoFileName, value); 
+                        ReloadWaveform(VideoFileName, value);
                     }
                     _videoAudioTrackNumber = value;
                 }
@@ -5939,7 +5939,7 @@ namespace Nikse.SubtitleEdit.Forms
             _findHelper.InProgress = false;
         }
 
-        private void ReplaceViaRegularExpression(TextBox tb, bool replaceAll)
+        private void ReplaceViaRegularExpression(SETextBox tb, bool replaceAll)
         {
             var r = new Regex(RegexUtils.FixNewLine(_findHelper.FindText), RegexOptions.Multiline);
             if (replaceAll)
@@ -9174,7 +9174,7 @@ namespace Nikse.SubtitleEdit.Forms
         private int _lastNumberOfNewLines = -1;
         private int _lastNumberOfNewLinesAlternate = -1;
 
-        private static void FixVerticalScrollBars(TextBox tb, ref int lastNumberOfNewLines)
+        private static void FixVerticalScrollBars(SETextBox tb, ref int lastNumberOfNewLines)
         {
             var noOfNewLines = Utilities.GetNumberOfLines(tb.Text);
             if (noOfNewLines == lastNumberOfNewLines)
@@ -9559,7 +9559,7 @@ namespace Nikse.SubtitleEdit.Forms
             UpdatePositionAndTotalLength(labelTextLineTotal, textBoxListViewText);
         }
 
-        private void MoveFirstWordInNextUp(TextBox tb)
+        private void MoveFirstWordInNextUp(SETextBox tb)
         {
             int firstIndex = FirstSelectedIndex;
             if (firstIndex >= 0)
@@ -9603,7 +9603,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void MoveLastWordDown(TextBox tb)
+        private void MoveLastWordDown(SETextBox tb)
         {
             int firstIndex = FirstSelectedIndex;
             if (firstIndex >= 0)
@@ -16824,7 +16824,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void ToggleDashesTextBox(TextBox tb)
+        private void ToggleDashesTextBox(SETextBox tb)
         {
             var hasStartDash = false;
             var lines = tb.Text.TrimEnd().SplitToLines();
@@ -21674,7 +21674,7 @@ namespace Nikse.SubtitleEdit.Forms
                 mediaPlayer.Pause();
                 using (var addWaveform = new AddWaveform())
                 {
-                    var videoAudioTrackNumber =  VideoAudioTrackNumber;
+                    var videoAudioTrackNumber = VideoAudioTrackNumber;
                     if (mediaPlayer.VideoPlayer is LibVlcDynamic && VideoAudioTrackNumber != -1)
                     {
                         videoAudioTrackNumber -= 1;
