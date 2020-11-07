@@ -402,6 +402,8 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <DiskFormatCode>Disk format code</DiskFormatCode>
     <DisplayStandardCode>Display standard code</DisplayStandardCode>
     <ColorRequiresTeletext>Farver kræver teletext!</ColorRequiresTeletext>
+    <AlignmentRequiresTeletext>Justering kræver teletext!</AlignmentRequiresTeletext>
+    <TeletextCharsShouldBe38>'Maks. antal tegn pr. række' for teletext skal være 38!</TeletextCharsShouldBe38>
     <CharacterCodeTable>Character table</CharacterCodeTable>
     <LanguageCode>Language code</LanguageCode>
     <OriginalProgramTitle>Original program title</OriginalProgramTitle>
@@ -508,6 +510,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <Right>Højre</Right>
     <Center>Centrer</Center>
     <CenterLeftJustify>Center, venstrestillet</CenterLeftJustify>
+    <CenterLeftJustifyDialogs>Center, dialog venstrestillet</CenterLeftJustifyDialogs>
     <CenterTopJustify>center, top</CenterTopJustify>
     <CenterRightJustify>Centrer, højrestillet</CenterRightJustify>
     <BottomMargin>Bundmargen</BottomMargin>
@@ -1092,9 +1095,11 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Go
         <OpenDvd>Åbn DVD...</OpenDvd>
         <ChooseAudioTrack>Vælg lydspor</ChooseAudioTrack>
         <CloseVideo>Luk videofil</CloseVideo>
+        <OpenSecondSubtitle>Åbn undertekst to...</OpenSecondSubtitle>
         <SetVideoOffset>Indstil video offset...</SetVideoOffset>
         <SmptTimeMode>SMPTE timing (drop frame)</SmptTimeMode>
         <GenerateTextFromVideo>Generer tekst fra video...</GenerateTextFromVideo>
+        <ImportChaptersFromVideo>Importer kapitler fra video</ImportChaptersFromVideo>
         <GenerateImportSceneChanges>Generer/importer sceneændringer...</GenerateImportSceneChanges>
         <RemoveSceneChanges>Fjern sceneskift</RemoveSceneChanges>
         <WaveformBatchGenerate>Batch generer bølgeformer...</WaveformBatchGenerate>
@@ -1433,6 +1438,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <NoSubtitlesFound>Ingen undertekster fundet</NoSubtitlesFound>
     <NotAValidMatroskaFileX>Dette er ikke en gyldig Matroska fil: {0}</NotAValidMatroskaFileX>
     <BlurayNotSubtitlesFound>Blu-ray sup fil indeholder ingen undertekster eller indeholder fejl - prøv at demuxe igen.</BlurayNotSubtitlesFound>
+    <ImportingChapters>Importerer kapitler...</ImportingChapters>
+    <XChaptersImported>{0} kapitler importeret</XChaptersImported>
     <ParsingMatroskaFile>Parsing Matroska filen. Vent venligst...</ParsingMatroskaFile>
     <ParsingTransportStreamFile>Parsing Transport Stream-fil. Vent venligst...</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Før import af undertekst fra Matroska fil</BeforeImportFromMatroskaFile>
@@ -1566,6 +1573,7 @@ Hvis du har redigeret denne fil med Subtitle Edit du måske finde en backup via 
     <NoSupportHereDvdSup>DVD sup-filer understøttes ikke her.</NoSupportHereDvdSup>
     <NoSupportHereVobSub>VobSub filer understøttes ikke her.</NoSupportHereVobSub>
     <NoSupportHereDivx>DivX-filer understøttes ikke her.</NoSupportHereDivx>
+    <NoChapters>Ingen kapitler fundet i videoen.</NoChapters>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vælg undertekst fra Matroska fil</Title>
@@ -1578,16 +1586,109 @@ Hvis du har redigeret denne fil med Subtitle Edit du måske finde en backup via 
     <ConvertFrom>konverter fra</ConvertFrom>
     <ConvertTo>Konverter til</ConvertTo>
     <CopyToClipboard>Kopier til udklipsholder</CopyToClipboard>
-    <Celsius>Celsius</Celsius>
-    <Fahrenheit>Fahrenheit</Fahrenheit>
-    <Miles>Miles</Miles>
+    <Length>Længde</Length>
+    <Mass>Masse</Mass>
+    <Volume>Volume</Volume>
+    <Area>Areal</Area>
+    <Time>Tid</Time>
+    <Temperature>Temperatur</Temperature>
+    <Velocity>Hastighed</Velocity>
+    <Force>Kraft</Force>
+    <Energy>Energi</Energy>
+    <Power>Strøm</Power>
+    <Pressure>Tryk</Pressure>
     <Kilometers>Kilometer</Kilometers>
     <Meters>Meter</Meters>
+    <Centimeters>Centimeter</Centimeters>
+    <Millimeters>Millimeter</Millimeters>
+    <Micrometers>Mikrometre</Micrometers>
+    <Nanometers>Nanometer</Nanometers>
+    <Angstroms>Ångstrøm</Angstroms>
+    <MilesTerrestial>Miles (terrestriske)</MilesTerrestial>
+    <MilesNautical>Miles (nautiske)</MilesNautical>
     <Yards>Yards</Yards>
     <Feet>Feet</Feet>
     <Inches>Tommer</Inches>
-    <Pounds>Pund</Pounds>
+    <Chains>Kæder</Chains>
+    <Fathoms>Favne</Fathoms>
+    <Hands>Hænder</Hands>
+    <Rods>Stænger</Rods>
+    <Spans>Spænder</Spans>
+    <LongTonnes>Lange tons</LongTonnes>
+    <ShortTonnes>Korte ton</ShortTonnes>
+    <Tonnes>Ton</Tonnes>
     <Kilos>Kilo</Kilos>
+    <Grams>Gram</Grams>
+    <Milligrams>Milligram</Milligrams>
+    <Micrograms>Mikrogram</Micrograms>
+    <Pounds>Pund</Pounds>
+    <Ounces>Ounces</Ounces>
+    <Carats>Karat</Carats>
+    <Drams>Drams</Drams>
+    <Grains>Korn</Grains>
+    <Stones>Sten</Stones>
+    <CubicKilometers>Kubik kilometer</CubicKilometers>
+    <CubicMeters>Kubikmeter</CubicMeters>
+    <Litres>Liter</Litres>
+    <CubicCentimeters>Kubikcentimeter</CubicCentimeters>
+    <CubicMillimeters>Kubiske millimeter</CubicMillimeters>
+    <CubicMiles>Kubikmiljø</CubicMiles>
+    <CubicYards>Kubiske værfter</CubicYards>
+    <CubicFTs>Kubiske fts</CubicFTs>
+    <CubicInches>Kubikcentimeter</CubicInches>
+    <OilBarrels>Olietønder</OilBarrels>
+    <GallonUS>Gallon (USA)</GallonUS>
+    <QuartsUS>Quarts (US)</QuartsUS>
+    <PintsUS>Pints ​​(US)</PintsUS>
+    <FluidOuncesUS>Væske ounces (US)</FluidOuncesUS>
+    <Bushels>Bushels</Bushels>
+    <Pecks>Hakker</Pecks>
+    <GallonsUK>Galloner (UK)</GallonsUK>
+    <QuartsUK>Quarts (UK)</QuartsUK>
+    <PintsUK>Pints ​​(UK)</PintsUK>
+    <FluidOuncesUK>Væske ounces (UK)</FluidOuncesUK>
+    <SquareKilometers>Kvadratkilometer</SquareKilometers>
+    <SquareMeters>Kvadratmeter</SquareMeters>
+    <SquareCentimeters>Kvadratcentimeter</SquareCentimeters>
+    <SquareMillimeters>Firkantede millimeter</SquareMillimeters>
+    <SquareMiles>Firkantede miles</SquareMiles>
+    <SquareYards>Kvadratmeter</SquareYards>
+    <SquareFTs>Firkantede fts</SquareFTs>
+    <SquareInches>Firkantede tommer</SquareInches>
+    <Hectares>Hektar</Hectares>
+    <Acres>Acres</Acres>
+    <Ares>Ares</Ares>
+    <Hours>Timer</Hours>
+    <Minutes>Protokol</Minutes>
+    <Seconds>Sekunder</Seconds>
+    <Milliseconds>Millisekunder</Milliseconds>
+    <Microseconds>Mikrosekunder</Microseconds>
+    <Fahrenheit>Fahrenheit</Fahrenheit>
+    <Celsius>Celsius</Celsius>
+    <Kelvin>Kelvin</Kelvin>
+    <KilometersPerHour>Kilometer/time</KilometersPerHour>
+    <MetersPerSecond>Meter/sekunder</MetersPerSecond>
+    <MilesPerHour>Miles/time</MilesPerHour>
+    <YardsPerMinute>Værfter/minut</YardsPerMinute>
+    <FTsPerSecond>fts/Andet</FTsPerSecond>
+    <Knots>Knuder</Knots>
+    <PoundsForce>Pounds-Force</PoundsForce>
+    <Newtons>Newton</Newtons>
+    <KilosForce>Kilokraft</KilosForce>
+    <Jouls>Jouls</Jouls>
+    <Calories>Kalorier</Calories>
+    <Ergs>Ergs</Ergs>
+    <ElectronVolts>Elektronvolt</ElectronVolts>
+    <Btus>Btus</Btus>
+    <Watts>Watts</Watts>
+    <Horsepower>Hestekræfter</Horsepower>
+    <Atmospheres>Atmosfærer</Atmospheres>
+    <Bars>Barer</Bars>
+    <Pascals>Pascals</Pascals>
+    <MillimetersOfMercury>Millimeter kviksølv</MillimetersOfMercury>
+    <PoundPerSquareInch>Pund-kraft pr. Kvadrat tomme</PoundPerSquareInch>
+    <KilogramPerSquareCentimeter>Kilogram-kraft pr. Kvadratcentimeter</KilogramPerSquareCentimeter>
+    <KiloPascals>Kilopascal</KiloPascals>
   </MeasurementConverter>
   <MergeDoubleLines>
     <Title>Flet linjer med samme tekst</Title>
@@ -2028,7 +2129,6 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <AdjustSetStartTimeKeepDuration>Sæt starttid, behold varighed</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Set sluttid, juster resten</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Set sluttid, juster resten og gå til næste</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustExtendCurrentSubtitle>Forlæng aktuelle linje til næste undertekster eller max varighed</AdjustExtendCurrentSubtitle>
     <AdjustSnapStartToNextSceneChange>Snap valgte linjer start til næste sceneændring</AdjustSnapStartToNextSceneChange>
     <AdjustSnapStartToNextSceneChangeWithGap>Snap valgte linjer start til næste sceneændring med min. gap</AdjustSnapStartToNextSceneChangeWithGap>
     <AdjustSnapEndToPreviousSceneChange>Snap valgte linjer slut til forrige sceneændring</AdjustSnapEndToPreviousSceneChange>
@@ -2039,6 +2139,9 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <AdjustExtendToPreviousSceneChangeWithGap>Udvid valgte linjer til tidligere sceneskift med min. gap (eller forrige undertekst)</AdjustExtendToPreviousSceneChangeWithGap>
     <AdjustExtendToNextSubtitle>Udvid valgte linjer til næste undertekst</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Udvid valgte linjer til forrige undertekst</AdjustExtendToPreviousSubtitle>
+    <AdjustExtendCurrentSubtitle>Forlæng aktuelle linje til næste undertekster eller max varighed</AdjustExtendCurrentSubtitle>
+    <AdjustExtendPreviousLineEndToCurrentStart>Forlæng slutningen af ​​den forrige linje til den aktuelle start</AdjustExtendPreviousLineEndToCurrentStart>
+    <AdjustExtendNextLineStartToCurrentEnd>Forlæng næste linjes start til strømens slutning</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>Genberegn varighed valgte undertekst</RecalculateDurationOfCurrentSubtitle>
     <MainCreateStartDownEndUp>Opret ny på tast-ned, sæt sluttid ved tast-op</MainCreateStartDownEndUp>
     <MergeDialog>Flet dialog (indsæt tankestreger)</MergeDialog>
@@ -2106,6 +2209,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <PlayCurrent>Afspil nuværende undertekst</PlayCurrent>
     <WaveformGoToPrevSubtitle>Gå til forrige undertekst (fra video position)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Gå til næste undertekst (fra video position)</WaveformGoToNextSubtitle>
+    <WaveformGoToPrevChapter>Gå til forrige kapitel</WaveformGoToPrevChapter>
+    <WaveformGoToNextChapter>Gå til næste kapitel</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>Vælg næste undertekst (fra videoposition, behold videopos)</WaveformSelectNextSubtitle>
     <TogglePlayPause>Skift mellem afspil og pause</TogglePlayPause>
     <Pause>Pause</Pause>
