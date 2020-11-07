@@ -64,7 +64,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private IntPtr _mpvHandle;
         private Timer _videoLoadedTimer;
         private double? _pausePosition; // Hack to hold precise seeking when paused
-        private string _secondSubtitleFileName; 
+        private string _secondSubtitleFileName;
 
         public override event EventHandler OnVideoLoaded;
         public override event EventHandler OnVideoEnded;
@@ -359,9 +359,15 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             {
                 var lpBuffer = IntPtr.Zero;
                 _mpvGetPropertyString(_mpvHandle, GetUtf8Bytes("aid"), MpvFormatString, ref lpBuffer);
-                int id = int.Parse(Marshal.PtrToStringAnsi(lpBuffer));
-                int idx = _audioTrackIds.FindIndex(x => x.Key == id);
-                int number = AudioTracks.Count > 1 && idx != -1 ? idx : 0;
+                var numberString = Marshal.PtrToStringAnsi(lpBuffer);
+                if (string.IsNullOrEmpty(numberString))
+                {
+                    return 0;
+                }
+
+                var id = int.Parse(numberString);
+                var idx = _audioTrackIds.FindIndex(x => x.Key == id);
+                var number = AudioTracks.Count > 1 && idx != -1 ? idx : 0;
                 _mpvFree(lpBuffer);
                 return number;
             }
@@ -504,8 +510,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 }
                 _mpvHandle = _mpvCreate.Invoke();
 
-                //var logFileName = Path.Combine(Configuration.DataDirectory, "mpv-log-" + Guid.NewGuid() + ".txt");
-                //_mpvSetOptionString(_mpvHandle, GetUtf8Bytes("log-file"), GetUtf8Bytes(logFileName));
+                if (Configuration.Settings.General.MpvLogging)
+                {
+                    var logFileName = Path.Combine(Configuration.DataDirectory, "mpv-log-" + Guid.NewGuid() + ".txt");
+                    _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("log-file"), GetUtf8Bytes(logFileName));
+                }
             }
             else if (!Directory.Exists(videoFileName))
             {
