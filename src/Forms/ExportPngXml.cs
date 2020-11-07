@@ -3167,11 +3167,20 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         {
                             sf.Alignment = StringAlignment.Center;
                             x = parameter.ScreenWidth / 2;
+                            if (parameter.JustifyLeft)
+                            {
+                                sf.Alignment = StringAlignment.Near;
+                            }
+                            else if (parameter.JustifyRight)
+                            {
+                                sf.Alignment = StringAlignment.Far;
+                            }
                         }
 
+                        bmp.Dispose();
                         bmp = new Bitmap(parameter.ScreenWidth, sizeY);
 
-                        Graphics surface = Graphics.FromImage(bmp);
+                        var surface = Graphics.FromImage(bmp);
                         surface.CompositingQuality = CompositingQuality.HighSpeed;
                         surface.InterpolationMode = InterpolationMode.Default;
                         surface.SmoothingMode = SmoothingMode.HighSpeed;
