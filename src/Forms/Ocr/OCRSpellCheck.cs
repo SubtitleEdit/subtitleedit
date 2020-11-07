@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             InspectCompareMatches,
         }
 
-        public bool IsBinaryImageCompare
+        public bool IsBinaryImageCompareOrNOcr
         {
             get => buttonEditImageDb.Visible;
             set => buttonEditImageDb.Visible = value;
@@ -77,13 +77,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             DialogResult = DialogResult.Abort;
         }
 
-        internal void Initialize(string word, List<string> suggestions, string line, Bitmap bitmap, bool isBinaryImageCompare)
+        internal void Initialize(string word, List<string> suggestions, string line, Bitmap bitmap, bool isBinaryImageCompareOrNOcr)
         {
-            IsBinaryImageCompare = isBinaryImageCompare;
+            IsBinaryImageCompareOrNOcr = isBinaryImageCompareOrNOcr;
             _originalWord = word;
             OriginalWholeText = line;
             pictureBoxText.SizeMode = PictureBoxSizeMode.Zoom;
-            if (isBinaryImageCompare)
+            if (isBinaryImageCompareOrNOcr)
             {
                 groupBoxTextAsImage.BackColor = Color.DimGray;
                 groupBoxTextAsImage.ForeColor = Color.White;

@@ -90,7 +90,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
         public bool Abort { get; set; }
         public OcrSpellCheck.Action LastAction { get; set; } = OcrSpellCheck.Action.Abort;
-        public bool IsBinaryImageCompare { get; set; }
+        public bool IsBinaryImageCompareOrNOcr { get; set; }
         public List<LogItem> AutoGuessesUsed { get; set; }
         public List<LogItem> UnknownWordsFound { get; set; }
         public bool IsDictionaryLoaded { get; private set; }
@@ -105,7 +105,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         /// <param name="hunspellName">Name of hunspell dictionary</param>
         /// <param name="parentForm">Used for centering/show spell check dialog</param>
         /// <param name="isBinaryImageCompare">Calling from OCR via "Image compare"</param>
-        public OcrFixEngine(string threeLetterIsoLanguageName, string hunspellName, Form parentForm, bool isBinaryImageCompare = false)
+        public OcrFixEngine(string threeLetterIsoLanguageName, string hunspellName, Form parentForm, bool isBinaryImageCompareOrNOcr = false)
         {
             if (string.IsNullOrEmpty(threeLetterIsoLanguageName))
             {
@@ -119,7 +119,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
             }
 
-            IsBinaryImageCompare = isBinaryImageCompare;
+            IsBinaryImageCompareOrNOcr = isBinaryImageCompareOrNOcr;
             if (threeLetterIsoLanguageName == "per")
             {
                 threeLetterIsoLanguageName = "fas";
@@ -130,7 +130,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             if (parentForm.GetType() != typeof(FixCommonErrors))
             {
-                _spellCheck = new OcrSpellCheck(_parentForm) { StartPosition = FormStartPosition.Manual, IsBinaryImageCompare = isBinaryImageCompare };
+                _spellCheck = new OcrSpellCheck(_parentForm) { StartPosition = FormStartPosition.Manual, IsBinaryImageCompareOrNOcr = isBinaryImageCompareOrNOcr };
                 _spellCheck.Location = new Point(parentForm.Left + (parentForm.Width / 2 - _spellCheck.Width / 2),
                     parentForm.Top + (parentForm.Height / 2 - _spellCheck.Height / 2));
             }
@@ -1787,7 +1787,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private SpellCheckOcrTextResult SpellCheckOcrText(string line, Bitmap bitmap, string word, List<string> suggestions)
         {
             var result = new SpellCheckOcrTextResult { Fixed = false, FixedWholeLine = false, Line = null, Word = null };
-            _spellCheck.Initialize(word, suggestions, line, bitmap, IsBinaryImageCompare);
+            _spellCheck.Initialize(word, suggestions, line, bitmap, IsBinaryImageCompareOrNOcr);
             _spellCheck.ShowDialog(_parentForm);
             LastAction = _spellCheck.ActionResult;
             switch (_spellCheck.ActionResult)
