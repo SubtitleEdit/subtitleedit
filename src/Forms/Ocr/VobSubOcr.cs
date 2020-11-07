@@ -4292,6 +4292,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     ButtonStopClick(null, null);
                     _ocrFixEngine.Abort = false;
+
+                    if (_ocrFixEngine.LastAction == OcrSpellCheck.Action.InspectCompareMatches)
+                    {
+                        toolStripMenuItemInspectNOcrMatches_Click(null, null);
+                    }
+
                     return string.Empty;
                 }
 
@@ -4840,7 +4846,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             if (comboBoxDictionaries.SelectedIndex <= 0)
             {
-                _ocrFixEngine = new OcrFixEngine(string.Empty, string.Empty, this, _ocrMethodIndex == _ocrMethodBinaryImageCompare);
+                _ocrFixEngine = new OcrFixEngine(string.Empty, string.Empty, this, _ocrMethodIndex == _ocrMethodBinaryImageCompare || _ocrMethodIndex == _ocrMethodNocr);
             }
 
             InitializeTopAlign();
@@ -5490,7 +5496,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 comboBoxDictionaries_SelectedIndexChanged(null, null);
                 if (_ocrFixEngine == null)
                 {
-                    _ocrFixEngine = new OcrFixEngine(string.Empty, string.Empty, this, _ocrMethodIndex == _ocrMethodBinaryImageCompare);
+                    _ocrFixEngine = new OcrFixEngine(string.Empty, string.Empty, this, _ocrMethodIndex == _ocrMethodBinaryImageCompare || _ocrMethodIndex == _ocrMethodNocr);
                 }
             }
 
@@ -7040,7 +7046,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 threeLetterIsoLanguageName = _languageId;
             }
 
-            var tempOcrFixEngine = new OcrFixEngine(threeLetterIsoLanguageName, hunspellName, this, _ocrMethodIndex == _ocrMethodBinaryImageCompare);
+            var tempOcrFixEngine = new OcrFixEngine(threeLetterIsoLanguageName, hunspellName, this, _ocrMethodIndex == _ocrMethodBinaryImageCompare || _ocrMethodIndex == _ocrMethodNocr);
             if (tempOcrFixEngine.IsDictionaryLoaded)
             {
                 _ocrFixEngine?.Dispose();
@@ -7563,7 +7569,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (language == null)
             {
                 _ocrFixEngine?.Dispose();
-                _ocrFixEngine = new OcrFixEngine(string.Empty, string.Empty, this, _ocrMethodIndex == _ocrMethodBinaryImageCompare);
+                _ocrFixEngine = new OcrFixEngine(string.Empty, string.Empty, this, _ocrMethodIndex == _ocrMethodBinaryImageCompare || _ocrMethodIndex == _ocrMethodNocr);
                 return;
             }
 
