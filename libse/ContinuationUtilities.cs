@@ -1261,7 +1261,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public static int GetMinimumGapMs()
         {
-            return Math.Max(Configuration.Settings.General.MinimumMillisecondsBetweenLines + 5, 300);
+            return Math.Max(Configuration.Settings.General.MinimumMillisecondsBetweenLines + 5, Configuration.Settings.General.ContinuationPause);
         }
 
         public static string GetContinuationStyleName(ContinuationStyle continuationStyle)
