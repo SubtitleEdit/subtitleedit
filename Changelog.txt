@@ -29,6 +29,7 @@
    * Add degree symbol to Unicode chars - thx René
    * Allow for .mpg/.mpeg transport stream file extension in "Batch convert"
    * Add some more EBU STL validation - thx Valentina
+   * Improve Korean auto detect in PAC - thx andrewburnheimer
 * FIXED:
    * Fix crash in export image with font tag - thx Jake
    * Fix batch convert of Blu-ray sup file to VobSub - thx John
@@ -38,6 +39,8 @@
    * Always close italic in EBU STL - thx Valentina
    * Fix for split original (minor) - thx René
    * Do not crash in image export if only one line - thx OmrSi
+   * Fix "Delete" not working in shortcuts - thx lambdacore12/OmrSi
+   * Use "pac-codepage" in cmd line convert read - thx jason-rayles-nbcuni
 
 
 3.5.17 (6th October 2020)
