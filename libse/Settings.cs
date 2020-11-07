@@ -1115,6 +1115,7 @@ $HorzAlign          =   Center
         public string MpvVideoOutputWindows { get; set; }
         public string MpvVideoOutputLinux { get; set; }
         public string MpvExtraOption { get; set; }
+        public bool MpvLogging { get; set; }
         public bool MpvHandlesPreviewText { get; set; }
         public string MpcHcLocation { get; set; }
         public string MkvMergeLocation { get; set; }
@@ -3300,6 +3301,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.MpvExtraOption = subNode.InnerText.Trim();
+            }
+
+            subNode = node.SelectSingleNode("MpvLogging");
+            if (subNode != null)
+            {
+                settings.General.MpvLogging = Convert.ToBoolean(subNode.InnerText.Trim());
             }
 
             subNode = node.SelectSingleNode("MpvHandlesPreviewText");
@@ -7712,6 +7719,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MpvVideoOutputWindows", settings.General.MpvVideoOutputWindows);
                 textWriter.WriteElementString("MpvVideoOutputLinux", settings.General.MpvVideoOutputLinux);
                 textWriter.WriteElementString("MpvExtraOption", settings.General.MpvExtraOption);
+                textWriter.WriteElementString("MpvLogging", settings.General.MpvLogging.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MpvHandlesPreviewText", settings.General.MpvHandlesPreviewText.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MpcHcLocation", settings.General.MpcHcLocation);
                 textWriter.WriteElementString("MkvMergeLocation", settings.General.MkvMergeLocation);

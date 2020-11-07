@@ -3,7 +3,7 @@
 3.5.18 (xth November 2020) BETA
 * NEW:
    * Add "Measurement converter" - thx OmrSi
-   * Add waveform multi- track support - thx OmrSi
+   * Add waveform multi-audio-track support - thx OmrSi
    * Add import/export of shortcuts
    * Add "Matroska chapter support" - thx OmrSi
    * Add subtitle format XMP - thx Tore
@@ -30,6 +30,7 @@
    * Allow for .mpg/.mpeg transport stream file extension in "Batch convert"
    * Add some more EBU STL validation - thx Valentina
    * Improve Korean auto detect in PAC - thx andrewburnheimer
+   * Add MpvLogging setting
 * FIXED:
    * Fix crash in export image with font tag - thx Jake
    * Fix batch convert of Blu-ray sup file to VobSub - thx John
