@@ -1056,6 +1056,7 @@ $HorzAlign          =   Center
         public double SubtitleMaximumWordsPerMinute { get; set; }
         public DialogType DialogStyle { get; set; }
         public ContinuationStyle ContinuationStyle { get; set; }
+        public int ContinuationPause { get; set; }
         public bool FixContinuationStyleUncheckInsertsAllCaps { get; set; }
         public bool FixContinuationStyleUncheckInsertsItalic { get; set; }
         public bool FixContinuationStyleUncheckInsertsLowercase { get; set; }
@@ -1212,6 +1213,7 @@ $HorzAlign          =   Center
             SubtitleMaximumWordsPerMinute = 300;
             DialogStyle = DialogType.DashBothLinesWithSpace;
             ContinuationStyle = ContinuationStyle.None;
+            ContinuationPause = 2000;
             FixContinuationStyleUncheckInsertsAllCaps = true;
             FixContinuationStyleUncheckInsertsItalic = true;
             FixContinuationStyleUncheckInsertsLowercase = true;
@@ -2947,6 +2949,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.ContinuationStyle = (ContinuationStyle)Enum.Parse(typeof(ContinuationStyle), subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("ContinuationPause");
+            if (subNode != null)
+            {
+                settings.General.ContinuationPause = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("FixContinuationStyleUncheckInsertsAllCaps");
@@ -7662,6 +7670,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("SubtitleMaximumWordsPerMinute", settings.General.SubtitleMaximumWordsPerMinute.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DialogStyle", settings.General.DialogStyle.ToString());
                 textWriter.WriteElementString("ContinuationStyle", settings.General.ContinuationStyle.ToString());
+                textWriter.WriteElementString("ContinuationPause", settings.General.ContinuationPause.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FixContinuationStyleUncheckInsertsAllCaps", settings.General.FixContinuationStyleUncheckInsertsAllCaps.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FixContinuationStyleUncheckInsertsItalic", settings.General.FixContinuationStyleUncheckInsertsItalic.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FixContinuationStyleUncheckInsertsLowercase", settings.General.FixContinuationStyleUncheckInsertsLowercase.ToString(CultureInfo.InvariantCulture));
