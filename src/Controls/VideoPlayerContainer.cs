@@ -119,6 +119,7 @@ namespace Nikse.SubtitleEdit.Controls
         private readonly PictureBox _pictureBoxVolumeBar = new PictureBox();
         private readonly Label _labelTimeCode = new Label();
         private readonly Label _labelVideoPlayerName = new Label();
+        private readonly Label _labelVolume = new Label();
         private readonly ToolTip _chapterToolTip = new ToolTip();
 
 
@@ -202,6 +203,7 @@ namespace Nikse.SubtitleEdit.Controls
             FontSizeFactor = 1.0F;
             BorderStyle = BorderStyle.None;
             _resources = new System.ComponentModel.ComponentResourceManager(typeof(VideoPlayerContainer));
+            _labelVolume.Text = Configuration.Settings.General.VideoPlayerDefaultVolume + "%";
             BackColor = _backgroundColor;
             Controls.Add(MakePlayerPanel());
             Controls.Add(MakeSubtitlesPanel());
@@ -1105,6 +1107,13 @@ namespace Nikse.SubtitleEdit.Controls
             };
             _panelControls.Controls.Add(_pictureBoxFastForwardDown);
 
+            _labelVolume.Location = new Point(120, 17);
+            _labelVolume.ForeColor = Color.WhiteSmoke;
+            _labelVolume.BackColor = Color.FromArgb(67, 75, 93);
+            _labelVolume.AutoSize = true;
+            _labelVolume.Font = new Font(_labelTimeCode.Font.FontFamily, 6);
+            _panelControls.Controls.Add(_labelVolume);
+
             _labelTimeCode.Location = new Point(280, 28);
             _labelTimeCode.ForeColor = Color.WhiteSmoke;
             _labelTimeCode.Font = new Font(_labelTimeCode.Font.FontFamily, 8, FontStyle.Bold);
@@ -1116,14 +1125,15 @@ namespace Nikse.SubtitleEdit.Controls
             _labelVideoPlayerName.BackColor = Color.FromArgb(67, 75, 93);
             _labelVideoPlayerName.AutoSize = true;
             _labelVideoPlayerName.Font = new Font(_labelTimeCode.Font.FontFamily, 6);
+            _panelControls.Controls.Add(_labelVideoPlayerName);
 
             if (Configuration.Settings.General.UseDarkTheme)
             {
+                _labelVolume.ForeColor = Color.Gray;
                 _labelTimeCode.ForeColor = Color.Gray;
                 _labelVideoPlayerName.ForeColor = Color.Gray;
             }
 
-            _panelControls.Controls.Add(_labelVideoPlayerName);
 
             _pictureBoxBackground.SendToBack();
             _pictureBoxFastForwardDown.BringToFront();
@@ -1136,6 +1146,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxPlayOver.BringToFront();
             _pictureBoxPlay.BringToFront();
             _labelTimeCode.BringToFront();
+            _labelVolume.BringToFront();
             return _panelControls;
         }
 
@@ -1862,6 +1873,7 @@ namespace Nikse.SubtitleEdit.Controls
                 _videoPlayer.Volume = (int)percent;
             }
 
+            _labelVolume.Text = (int)percent + "%";
             Configuration.Settings.General.VideoPlayerDefaultVolume = (int)percent;
         }
 
@@ -2058,14 +2070,16 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 if (VideoPlayer != null)
                 {
-                    if (value == false && _muteOldVolume != null)
+                    if (!value && _muteOldVolume != null)
                     {
                         Volume = _muteOldVolume.Value;
+                        _labelVolume.Visible = true;
                     }
                     else if (value)
                     {
                         _muteOldVolume = Volume;
                         Volume = 0;
+                        _labelVolume.Visible = false;
                     }
                     _isMuted = value;
                 }
