@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 var shouldProcess = true;
 
                 // Detect gap
-                bool gap = pNext.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds > minGapMs;
+                bool gap = pNext.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds >= minGapMs;
 
                 // Convert for Arabic
                 if (callbacks.Language == "ar")
