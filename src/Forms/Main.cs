@@ -18913,12 +18913,17 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowSubtitleTimerTick(object sender, EventArgs e)
         {
+            ShowSubtitleTimer.Stop();
+
             if (_subtitle == null || _subtitle.Paragraphs.Count == 0)
             {
-                return;
+                ShowSubtitleTimer.Interval = 250;
+            }
+            else
+            {
+                ShowSubtitleTimer.Interval = 17;
             }
 
-            ShowSubtitleTimer.Stop();
             if (mediaPlayer.VideoPlayer != null)
             {
                 int oldIndex = FirstSelectedIndex;
