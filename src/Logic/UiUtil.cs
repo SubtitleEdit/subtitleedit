@@ -315,6 +315,52 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
+        public static void CheckAutoWrap(RichTextBox textBox, KeyEventArgs e, int numberOfNewLines)
+        {
+            // Do not auto-break lines more than 1 line.
+            if (numberOfNewLines != 1 || !Configuration.Settings.General.AutoWrapLineWhileTyping)
+            {
+                return;
+            }
+
+            int length = HtmlUtil.RemoveHtmlTags(textBox.Text, true).Length;
+            if (e.Modifiers == Keys.None && e.KeyCode != Keys.Enter && length > Configuration.Settings.General.SubtitleLineMaximumLength)
+            {
+                string newText;
+                if (length > Configuration.Settings.General.SubtitleLineMaximumLength + 30)
+                {
+                    newText = Utilities.AutoBreakLine(textBox.Text);
+                }
+                else
+                {
+                    int lastSpace = textBox.Text.LastIndexOf(' ');
+                    if (lastSpace > 0)
+                    {
+                        newText = textBox.Text.Remove(lastSpace, 1).Insert(lastSpace, Environment.NewLine);
+                    }
+                    else
+                    {
+                        newText = textBox.Text;
+                    }
+                }
+
+                int autoBreakIndex = newText.IndexOf(Environment.NewLine, StringComparison.Ordinal);
+                if (autoBreakIndex > 0)
+                {
+                    int selectionStart = textBox.SelectionStart;
+                    textBox.Text = newText;
+                    if (selectionStart > autoBreakIndex)
+                    {
+                        selectionStart += Environment.NewLine.Length - 1;
+                    }
+                    if (selectionStart >= 0)
+                    {
+                        textBox.SelectionStart = selectionStart;
+                    }
+                }
+            }
+        }
+
         private static readonly Dictionary<string, Keys> AllKeys = new Dictionary<string, Keys>();
         private static Keys _helpKeys;
 
