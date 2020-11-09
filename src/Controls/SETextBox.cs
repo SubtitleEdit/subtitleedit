@@ -2,14 +2,15 @@
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Drawing;
+using System.Text;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Controls
 {
     /// <summary>
-    /// TextBox where double click selects current word
+    /// TextBox with drag and drop.
     /// </summary>
-    public sealed class SETextBox : TextBox
+    public sealed class SETextBox : RichTextBox
     {
         private string _dragText = string.Empty;
         private int _dragStartFrom;
@@ -17,33 +18,17 @@ namespace Nikse.SubtitleEdit.Controls
         private bool _dragRemoveOld;
         private bool _dragFromThis;
         private long _gotFocusTicks;
+        private bool _checkRtfChange = true;
 
         public SETextBox()
         {
             AllowDrop = true;
             DragEnter += SETextBox_DragEnter;
-            //DragOver += SETextBox_DragOver; could draw some gfx where drop position is...
             DragDrop += SETextBox_DragDrop;
+            GotFocus += (sender, args) => { _gotFocusTicks = DateTime.UtcNow.Ticks; };
             MouseDown += SETextBox_MouseDown;
             MouseUp += SETextBox_MouseUp;
-            KeyDown += SETextBox_KeyDown;
-
-            // To fix issue where WM_LBUTTONDOWN got wrong "SelectedText" (only in undocked mode)
-            GotFocus += (sender, args) => { _gotFocusTicks = DateTime.UtcNow.Ticks; };
-        }
-
-        private void SETextBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.A)
-            {
-                SelectAll();
-                e.SuppressKeyPress = true;
-            }
-            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Back)
-            {
-                UiUtil.ApplyControlBackspace(this);
-                e.SuppressKeyPress = true;
-            }
+            TextChanged += TextChangedHighlight;
         }
 
         private void SETextBox_MouseUp(object sender, MouseEventArgs e)
@@ -126,7 +111,7 @@ namespace Nikse.SubtitleEdit.Controls
                         }
 
                         SelectionStart = index;
-                        return; // too fast - nobody can drag'n'drop this fast
+                        return; // too fast - nobody can drag and drop this fast
                     }
 
                     if (index >= _dragStartFrom && index <= _dragStartFrom + _dragText.Length)
@@ -231,16 +216,9 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private const int WM_DBLCLICK = 0xA3;
-        private const int WM_LBUTTONDBLCLK = 0x203;
         private const int WM_LBUTTONDOWN = 0x0201;
         protected override void WndProc(ref Message m)
         {
-            if (m.Msg == WM_DBLCLICK || m.Msg == WM_LBUTTONDBLCLK)
-            {
-                UiUtil.SelectWordAtCaret(this);
-                return;
-            }
             if (m.Msg == WM_LBUTTONDOWN)
             {
                 long milliseconds = (DateTime.UtcNow.Ticks - _gotFocusTicks) / 10000;
@@ -254,5 +232,245 @@ namespace Nikse.SubtitleEdit.Controls
             base.WndProc(ref m);
         }
 
+        private void HighlightHtmlText(bool ignoreActiveWord)
+        {
+            var text = Text;
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                return;
+            }
+
+            var sb = new StringBuilder();
+            if (Configuration.Settings.General.RightToLeftMode) // (RightToLeft == RightToLeft.Yes)
+            {
+                if (RightToLeft != RightToLeft.Yes)
+                {
+                    RightToLeft = RightToLeft.Yes;
+                }
+
+                sb.Append(@"{\rtf1\fbidis\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 " + Configuration.Settings.General.SubtitleFontName + @";}}
+{\colortbl ;\red100\green149\blue237;\red95\green158\blue160;\red0\green0\blue0;\red200\green100\blue100;}
+{\*\generator Riched20 10.0.18362}\viewkind4\uc1 
+\pard\rtlpar\qr\cf3" + (Configuration.Settings.General.SubtitleFontBold ? "\\b" : string.Empty) + @"\f0\fs" + (Configuration.Settings.General.SubtitleFontSize + 12) + " ");
+            }
+            else
+            {
+                if (RightToLeft != RightToLeft.No)
+                {
+                    RightToLeft = RightToLeft.No;
+                }
+
+                sb.Append(@"{\rtf1\fbidis\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 " + Configuration.Settings.General.SubtitleFontName + @";}}
+{\colortbl ;\red100\green149\blue237;\red95\green158\blue160;\red0\green0\blue0;\red200\green100\blue100;}
+{\*\generator Riched20 10.0.18362}\viewkind4\uc1 
+\pard\cf3" + (Configuration.Settings.General.SubtitleFontBold ? "\\b" : string.Empty) + @"\f0\fs" + (Configuration.Settings.General.SubtitleFontSize + 12) + " ");
+            }
+
+            var start = SelectionStart;
+            bool htmlTagOn = false;
+            bool assaTagOn = false;
+            int tagOn = -1;
+            var textLength = text.Length;
+            int i = 0;
+            string normalFontColor = "\\cf3";
+            string htmlFontColor = "\\cf2";
+            string assaFontColor = "\\cf1";
+            string badSpellFontColor = "\\cf4";
+            bool wordOn = false;
+            bool wordOnBad = false;
+            while (i < textLength)
+            {
+                var ch = text[i];
+                if (assaTagOn)
+                {
+                    AppendCharToRtf(sb, ch);
+                    if (ch == '}' && tagOn >= 0)
+                    {
+                        assaTagOn = false;
+                        sb.Append(normalFontColor + " ");
+                    }
+                }
+                else if (htmlTagOn)
+                {
+                    AppendCharToRtf(sb, ch);
+                    if (ch == '>' && tagOn >= 0)
+                    {
+                        htmlTagOn = false;
+                        sb.Append(normalFontColor + " ");
+                    }
+                }
+                else if (ch == '{' && i < textLength - 1 && text[i + 1] == '\\' && text.IndexOf('}', i) > 0)
+                {
+                    wordOn = false;
+                    if (wordOnBad)
+                    {
+
+                    }
+                    wordOnBad = false;
+                    assaTagOn = true;
+                    tagOn = i;
+                    sb.Append(assaFontColor + " ");
+                    AppendCharToRtf(sb, ch);
+                }
+                else if (ch == '<')
+                {
+                    var s = text.Substring(i);
+                    if (s.StartsWith("<i>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("<b>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("<u>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("</i>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("</b>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("</u>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("</font>", StringComparison.OrdinalIgnoreCase) ||
+                        (s.StartsWith("<font ", StringComparison.OrdinalIgnoreCase) &&
+                         text.IndexOf("</font>", i, StringComparison.OrdinalIgnoreCase) > 0))
+                    {
+                        wordOn = false;
+                        if (wordOnBad)
+                        {
+
+                        }
+                        wordOnBad = false;
+                        htmlTagOn = true;
+                        tagOn = i;
+                        sb.Append(htmlFontColor + " ");
+                        AppendCharToRtf(sb, ch);
+                    }
+                    else
+                    {
+                        wordOn = AddWordWithSpellCheck(wordOn, ch, text, i, sb, normalFontColor, start, ref wordOnBad, ignoreActiveWord);
+                        AppendCharToRtf(sb, ch);
+                    }
+                }
+                else
+                {
+                    wordOn = AddWordWithSpellCheck(wordOn, ch, text, i, sb, normalFontColor, start, ref wordOnBad, ignoreActiveWord);
+                    AppendCharToRtf(sb, ch);
+                }
+
+                i++;
+            }
+
+            if (text.EndsWith("\n", StringComparison.Ordinal))
+            {
+                sb.AppendLine("\\par");
+            }
+
+            sb.Append("}");
+            SuspendLayout();
+            start = SelectionStart;
+            var length = SelectionLength;
+            Rtf = sb.ToString();
+            SelectionStart = start;
+            SelectionLength = length;
+            ResumeLayout();
+        }
+
+        private bool AddWordWithSpellCheck(bool wordOn, char ch, string text, int i, StringBuilder sb, string normalFontColor, int richTextIndex, ref bool wordOnBad, bool ignoreActiveWord)
+        {
+
+            if (!wordOn && char.IsLetterOrDigit(ch))
+            {
+                var word = GetSelectedWord(text, i, out var _);
+                if (ignoreActiveWord && richTextIndex >= i && richTextIndex <= i + word.Length)
+                {
+                    return true;
+                }
+
+                //if (!IsWordSpelledCorrect(word))
+                //{
+                //    wordOnBad = true;
+                //    sb.Append(badSpellFontColor + " ");
+                //}
+
+                return true;
+            }
+
+            if (wordOn && !char.IsLetterOrDigit(ch))
+            {
+                wordOn = false;
+            }
+
+            if (!wordOn && wordOnBad)
+            {
+                sb.Append(normalFontColor + " ");
+                wordOnBad = false;
+            }
+
+            return wordOn;
+        }
+
+        private static void AppendCharToRtf(StringBuilder sb, char ch)
+        {
+            if (ch == '\r')
+            {
+                // nothing
+            }
+            else if (ch == '\n')
+            {
+                sb.AppendLine("\\par");
+            }
+            else if (ch >= 0x20 && ch < 0x80)
+            {
+                if (ch == '\\' || ch == '{' || ch == '}')
+                {
+                    sb.Append('\\');
+                }
+                sb.Append(ch);
+            }
+            else if (ch < 0x20 || (ch >= 0x80 && ch <= 0xFF))
+            {
+                sb.Append($"\\'{((byte)ch):X}");
+            }
+            else
+            {
+                sb.Append($"\\u{(short)ch}?");
+            }
+        }
+
+        private static string GetSelectedWord(string txt, int pos, out int startPos)
+        {
+            startPos = pos;
+            while (startPos >= 0)
+            {
+                // Allow letters and digits
+                var ch = txt[startPos];
+                if (!char.IsLetter(ch) && ch != '\'')
+                {
+                    break;
+                }
+
+                startPos--;
+            }
+
+            startPos++;
+
+            // Find the end of the word.
+            var endPos = pos;
+            while (endPos < txt.Length)
+            {
+                char ch = txt[endPos];
+                if (!char.IsLetter(ch) && ch != '\'')
+                {
+                    break;
+                }
+
+                endPos++;
+            }
+
+            endPos--;
+
+            return startPos > endPos ? string.Empty : txt.Substring(startPos, endPos - startPos + 1);
+        }
+
+        private void TextChangedHighlight(object sender, EventArgs e)
+        {
+            if (_checkRtfChange)
+            {
+                _checkRtfChange = false;
+                HighlightHtmlText(true);
+                _checkRtfChange = true;
+            }
+        }
     }
 }

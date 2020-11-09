@@ -353,11 +353,12 @@ namespace Nikse.SubtitleEdit.Forms
                 UpdateNetflixGlyphCheckToolsVisibility();
                 Utilities.SetSecurityProtocol(); // download from Github requires TLS 1.2
 
-                if (Configuration.Settings.General.CenterSubtitleInTextBox)
-                {
-                    textBoxListViewText.TextAlign = HorizontalAlignment.Center;
-                    textBoxListViewTextAlternate.TextAlign = HorizontalAlignment.Center;
-                }
+                //TODO: Fix alignemnt
+                //if (Configuration.Settings.General.CenterSubtitleInTextBox)
+                //{
+                //    textBoxListViewText.TextAlign = HorizontalAlignment.Center;
+                //    textBoxListViewTextAlternate.TextAlign = HorizontalAlignment.Center;
+                //}
 
                 tabControlSubtitle.SelectTab(TabControlSourceView); // AC
                 ShowSourceLineNumber(); // AC
@@ -4657,16 +4658,18 @@ namespace Nikse.SubtitleEdit.Forms
 
                 SubtitleListview1.ForeColor = Configuration.Settings.General.SubtitleFontColor;
                 SubtitleListview1.BackColor = Configuration.Settings.General.SubtitleBackgroundColor;
-                if (Configuration.Settings.General.CenterSubtitleInTextBox)
-                {
-                    textBoxListViewText.TextAlign = HorizontalAlignment.Center;
-                    textBoxListViewTextAlternate.TextAlign = HorizontalAlignment.Center;
-                }
-                else if (textBoxListViewText.TextAlign == HorizontalAlignment.Center)
-                {
-                    textBoxListViewText.TextAlign = HorizontalAlignment.Left;
-                    textBoxListViewTextAlternate.TextAlign = HorizontalAlignment.Left;
-                }
+
+                //TODO: Fix aligment
+                //if (Configuration.Settings.General.CenterSubtitleInTextBox)
+                //{
+                //    textBoxListViewText.TextAlign = HorizontalAlignment.Center;
+                //    textBoxListViewTextAlternate.TextAlign = HorizontalAlignment.Center;
+                //}
+                //else if (textBoxListViewText.TextAlign == HorizontalAlignment.Center)
+                //{
+                //    textBoxListViewText.TextAlign = HorizontalAlignment.Left;
+                //    textBoxListViewTextAlternate.TextAlign = HorizontalAlignment.Left;
+                //}
 
                 SaveSubtitleListviewIndices();
                 UiUtil.InitializeSubtitleFont(SubtitleListview1);
@@ -9187,11 +9190,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (noOfNewLines <= 1 && tb.Text.Length <= 300 || TextRenderer.MeasureText(tb.Text, tb.Font).Height < tb.Height)
                 {
-                    tb.ScrollBars = ScrollBars.None;
+                    tb.ScrollBars = RichTextBoxScrollBars.None;
                 }
                 else
                 {
-                    tb.ScrollBars = ScrollBars.Vertical;
+                    tb.ScrollBars = RichTextBoxScrollBars.Vertical;
                 }
             }
             catch
@@ -9225,16 +9228,17 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxListViewText.TextChanged -= TextBoxListViewTextTextChanged;
             if (_doAutoBreakOnTextChanged)
             {
-                UiUtil.CheckAutoWrap(textBoxListViewText, new KeyEventArgs(Keys.None), Utilities.GetNumberOfLines(textBoxListViewText.Text));
+                //TODO: fix wrap
+                //UiUtil.CheckAutoWrap(textBoxListViewText, new KeyEventArgs(Keys.None), Utilities.GetNumberOfLines(textBoxListViewText.Text));
             }
 
             // update _subtitle + listview
             string text = textBoxListViewText.Text.TrimEnd();
             if (ContainsNonStandardNewLines(text))
             {
-                var lines = text.SplitToLines();
-                text = string.Join(Environment.NewLine, lines);
-                textBoxListViewText.Text = text;
+                //var lines = text.SplitToLines();
+                //text = string.Join(Environment.NewLine, lines);
+                //textBoxListViewText.Text = text;
             }
 
             if (idx < 0 || idx >= _subtitle.Paragraphs.Count)
@@ -9316,7 +9320,8 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     int numberOfNewLines = Utilities.GetNumberOfLines(textBoxListViewTextAlternate.Text);
-                    UiUtil.CheckAutoWrap(textBoxListViewTextAlternate, new KeyEventArgs(Keys.None), numberOfNewLines);
+                    //TODO:Fix autowrap
+                    //UiUtil.CheckAutoWrap(textBoxListViewTextAlternate, new KeyEventArgs(Keys.None), numberOfNewLines);
 
                     // update _subtitle + listview
                     string text = textBoxListViewTextAlternate.Text.TrimEnd();
