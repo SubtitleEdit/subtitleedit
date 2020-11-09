@@ -9228,17 +9228,15 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxListViewText.TextChanged -= TextBoxListViewTextTextChanged;
             if (_doAutoBreakOnTextChanged)
             {
-                //TODO: fix wrap
-                //UiUtil.CheckAutoWrap(textBoxListViewText, new KeyEventArgs(Keys.None), Utilities.GetNumberOfLines(textBoxListViewText.Text));
+                UiUtil.CheckAutoWrap(textBoxListViewText, new KeyEventArgs(Keys.None), Utilities.GetNumberOfLines(textBoxListViewText.Text));
             }
 
             // update _subtitle + listview
             string text = textBoxListViewText.Text.TrimEnd();
             if (ContainsNonStandardNewLines(text))
             {
-                //var lines = text.SplitToLines();
-                //text = string.Join(Environment.NewLine, lines);
-                //textBoxListViewText.Text = text;
+                var lines = text.SplitToLines();
+                text = string.Join(Environment.NewLine, lines);
             }
 
             if (idx < 0 || idx >= _subtitle.Paragraphs.Count)
@@ -9320,8 +9318,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     int numberOfNewLines = Utilities.GetNumberOfLines(textBoxListViewTextAlternate.Text);
-                    //TODO:Fix autowrap
-                    //UiUtil.CheckAutoWrap(textBoxListViewTextAlternate, new KeyEventArgs(Keys.None), numberOfNewLines);
+                    UiUtil.CheckAutoWrap(textBoxListViewTextAlternate, new KeyEventArgs(Keys.None), numberOfNewLines);
 
                     // update _subtitle + listview
                     string text = textBoxListViewTextAlternate.Text.TrimEnd();
@@ -9329,7 +9326,6 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         var lines = text.SplitToLines();
                         text = string.Join(Environment.NewLine, lines);
-                        textBoxListViewTextAlternate.Text = text;
                     }
 
                     original.Text = text;
