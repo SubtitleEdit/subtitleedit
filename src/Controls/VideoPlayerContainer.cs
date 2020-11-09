@@ -120,7 +120,7 @@ namespace Nikse.SubtitleEdit.Controls
         private readonly Label _labelTimeCode = new Label();
         private readonly Label _labelVideoPlayerName = new Label();
         private readonly Label _labelVolume = new Label();
-        private readonly ToolTip _chapterToolTip = new ToolTip();
+        private readonly ToolTip _currentPositionToolTip = new ToolTip();
 
 
         private List<MatroskaChapter> _chapters = new List<MatroskaChapter>();
@@ -1628,6 +1628,10 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 mouseX = max;
             }
+            else if (mouseX < 0)
+            {
+                mouseX = 0;
+            }
 
             double percent = mouseX * 100.0 / max;
             _pictureBoxProgressBar.Width = (int)(max * percent / 100.0);
@@ -1639,6 +1643,54 @@ namespace Nikse.SubtitleEdit.Controls
         {
             int max = _pictureBoxProgressbarBackground.Width - 9;
             return (int)Math.Round(seconds * max / Duration);
+        }
+
+        private double CursorVideoPosition(double mouseX)
+        {
+            int max = _pictureBoxProgressbarBackground.Width - 9;
+            if (mouseX > max)
+            {
+                mouseX = max;
+            }
+            else if (mouseX < 0)
+            {
+                mouseX = 0;
+            }
+
+            double videoPosition = mouseX * Duration / max;
+
+            return videoPosition;
+        }
+
+        private string CurrentPositionToolTipText(double mouseX)
+        {
+            double cursorVideoPosition = CursorVideoPosition(mouseX);
+            string toolTiptext = TimeCode.FromSeconds(cursorVideoPosition + Configuration.Settings.General.CurrentVideoOffsetInMs / TimeCode.BaseUnit).ToDisplayString();
+
+            if (_chapters?.Count > 0)
+            {
+                toolTiptext += " - ";
+                double chapterTime, nextChapterTime;
+
+                for (int index = 0; index < _chapters.Count; index++)
+                {
+                    chapterTime = _chapters[index].StartTime;
+                    nextChapterTime = index + 1 < _chapters.Count ? _chapters[index + 1].StartTime : Duration;
+
+                    if (cursorVideoPosition >= chapterTime && cursorVideoPosition < nextChapterTime)
+                    {
+                        if (_chapters[index].Nested)
+                        {
+                            toolTiptext += "+ ";
+                        }
+
+                        toolTiptext += _chapters[index].Name;
+                        break;
+                    }
+                }
+            }
+
+            return toolTiptext;
         }
 
         private void PictureBoxProgressbarBackgroundMouseDown(object sender, MouseEventArgs e)
@@ -1715,7 +1767,7 @@ namespace Nikse.SubtitleEdit.Controls
                         {
                             using (var p = new Pen(Color.LightGray))
                             {
-                                graphics.DrawLine(p, pos, 1, pos, Height);
+                                graphics.DrawLine(p, pos, 1, pos, _pictureBoxProgressBar.Height);
                             }
                         }
                     }
@@ -1729,83 +1781,35 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void PictureBoxProgressbarBackgroundMouseMove(object sender, MouseEventArgs e)
         {
-            if (_chapters?.Count > 0)
+            if (VideoPlayer != null)
             {
-                double time, nextTime;
-                int pos, nextPos;
-                string toolTiptext;
-
-                for (int index = 0; index < _chapters.Count; index++)
-                {
-                    time = _chapters[index].StartTime;
-                    pos = SecondsToXPosition(time) + 3;
-
-                    nextTime = index + 1 < _chapters.Count ? _chapters[index + 1].StartTime : Duration;
-                    nextPos = SecondsToXPosition(nextTime) + 3;
-
-                    if (e.X >= pos && e.X < nextPos)
-                    {
-                        if (_chapters[index].Nested)
-                        {
-                            toolTiptext = "+ " + _chapters[index].Name;
-                        }
-                        else
-                        {
-                            toolTiptext = _chapters[index].Name;
-                        }
-                        _chapterToolTip.Show(toolTiptext, _pictureBoxProgressbarBackground, e.X - 10, e.Y - 25);
-                        break;
-                    }
-                }
+                string toolTiptext = CurrentPositionToolTipText(e.X - 4);
+                _currentPositionToolTip.Show(toolTiptext, _pictureBoxProgressbarBackground, e.X - 10, e.Y - 25);
             }
         }
 
         private void PictureBoxProgressbarBackgroundMouseLeave(object sender, EventArgs e)
         {
-            if (_chapters?.Count > 0)
+            if (VideoPlayer != null)
             {
-                _chapterToolTip.Hide(_pictureBoxProgressbarBackground);
+                _currentPositionToolTip.Hide(_pictureBoxProgressbarBackground); 
             }
         }
 
         private void PictureBoxProgressBarMouseMove(object sender, MouseEventArgs e)
         {
-            if (_chapters?.Count > 0)
+            if (VideoPlayer != null)
             {
-                double time, nextTime;
-                int pos, nextPos;
-                string toolTiptext;
-
-                for (int index = 0; index < _chapters.Count; index++)
-                {
-                    time = _chapters[index].StartTime;
-                    pos = SecondsToXPosition(time) - 1;
-
-                    nextTime = index + 1 < _chapters.Count ? _chapters[index + 1].StartTime : Duration;
-                    nextPos = SecondsToXPosition(nextTime) - 1;
-
-                    if (e.X >= pos && e.X < nextPos)
-                    {
-                        if (_chapters[index].Nested)
-                        {
-                            toolTiptext = "+ " + _chapters[index].Name;
-                        }
-                        else
-                        {
-                            toolTiptext = _chapters[index].Name;
-                        }
-                        _chapterToolTip.Show(toolTiptext, _pictureBoxProgressBar, e.X - 10, e.Y - 25);
-                        break;
-                    }
-                }
+                string toolTiptext = CurrentPositionToolTipText(e.X + 2);
+                _currentPositionToolTip.Show(toolTiptext, _pictureBoxProgressBar, e.X - 10, e.Y - 25);
             }
         }
 
         private void PictureBoxProgressBarMouseLeave(object sender, EventArgs e)
         {
-            if (_chapters?.Count > 0)
+            if (VideoPlayer != null)
             {
-                _chapterToolTip.Hide(_pictureBoxProgressBar);
+                _currentPositionToolTip.Hide(_pictureBoxProgressBar); 
             }
         }
 
