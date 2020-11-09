@@ -1693,6 +1693,39 @@ namespace Nikse.SubtitleEdit.Controls
             return toolTiptext;
         }
 
+        private void DrawChapters(Graphics graphics, int mergin, int startPoint, int endPoint)
+        {
+            try
+            {
+                int max = _pictureBoxProgressbarBackground.Width - 9;
+                int index = 0;
+                while (index < _chapters.Count)
+                {
+                    int pos;
+                    try
+                    {
+                        double time = _chapters[index++].StartTime;
+                        pos = SecondsToXPosition(time) + mergin;
+                    }
+                    catch
+                    {
+                        pos = -1;
+                    }
+                    if (pos > 0 && pos < max)
+                    {
+                        using (var p = new Pen(Color.LightGray))
+                        {
+                            graphics.DrawLine(p, pos, startPoint, pos, endPoint);
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                // ignore
+            }
+        }
+
         private void PictureBoxProgressbarBackgroundMouseDown(object sender, MouseEventArgs e)
         {
             SetProgressBarPosition(e.X - 4);
@@ -1709,36 +1742,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (_chapters != null)
             {
-                try
-                {
-                    Graphics graphics = e.Graphics;
-                    int max = _pictureBoxProgressbarBackground.Width - 9;
-                    int index = 0;
-                    while (index < _chapters.Count)
-                    {
-                        int pos;
-                        try
-                        {
-                            double time = _chapters[index++].StartTime;
-                            pos = SecondsToXPosition(time) + 3;
-                        }
-                        catch
-                        {
-                            pos = -1;
-                        }
-                        if (pos > 0 && pos < max)
-                        {
-                            using (var p = new Pen(Color.LightGray))
-                            {
-                                graphics.DrawLine(p, pos, _pictureBoxProgressBar.Location.Y, pos, _pictureBoxProgressBar.Location.Y + 3);
-                            }
-                        }
-                    }
-                }
-                catch (Exception)
-                {
-                    // ignore
-                }
+                DrawChapters(e.Graphics, 3, _pictureBoxProgressBar.Location.Y, _pictureBoxProgressBar.Location.Y + 3);
             }
         }
 
@@ -1746,36 +1750,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (_chapters != null)
             {
-                try
-                {
-                    Graphics graphics = e.Graphics;
-                    int max = _pictureBoxProgressbarBackground.Width - 9;
-                    int index = 0;
-                    while (index < _chapters.Count)
-                    {
-                        int pos;
-                        try
-                        {
-                            double time = _chapters[index++].StartTime;
-                            pos = SecondsToXPosition(time) - 1;
-                        }
-                        catch
-                        {
-                            pos = -1;
-                        }
-                        if (pos >= 0 && pos < max)
-                        {
-                            using (var p = new Pen(Color.LightGray))
-                            {
-                                graphics.DrawLine(p, pos, 1, pos, _pictureBoxProgressBar.Height);
-                            }
-                        }
-                    }
-                }
-                catch (Exception)
-                {
-                    // ignore
-                }
+                DrawChapters(e.Graphics, -1, 1, _pictureBoxProgressBar.Height);
             }
         }
 
