@@ -579,7 +579,7 @@ namespace Nikse.SubtitleEdit.Core
             PacVerticalTop = 1;
             PacVerticalCenter = 5;
             PacVerticalBottom = 11;
-           
+
             DvdStudioProHeader = @"$VertAlign          =   Bottom
 $Bold               =   FALSE
 $Underlined         =   FALSE
@@ -1180,9 +1180,9 @@ $HorzAlign          =   Center
                 SubtitleFontName = "Times New Roman";
             }
 
-            SubtitleFontSize = 10;
+            SubtitleFontSize = 14;
             SubtitleListViewFontSize = 10;
-            SubtitleFontBold = false;
+            SubtitleFontBold = true;
             SubtitleFontColor = Color.Black;
             MeasureFontName = "Arial";
             MeasureFontSize = 24;
@@ -2312,6 +2312,13 @@ $HorzAlign          =   Center
                     {
                         settings.Shortcuts.MainTranslateGoogleTranslate = "Control+Shift+G";
                         settings.Tools.MicrosoftTranslatorTokenEndpoint = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
+                    }
+                    
+                    if (settings.Version.StartsWith("3.5", StringComparison.Ordinal) ||
+                        string.IsNullOrEmpty(settings.Version))
+                    {
+                        settings.General.SubtitleFontSize = 14;
+                        settings.General.SubtitleFontBold = true;
                     }
                 }
                 catch (Exception exception)
