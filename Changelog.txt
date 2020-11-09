@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.5.18 (xth November 2020) BETA
+3.5.18 (9th November 2020)
 * NEW:
    * Add "Measurement converter" - thx OmrSi
    * Add waveform multi-audio-track support - thx OmrSi
