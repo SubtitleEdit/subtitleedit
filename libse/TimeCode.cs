@@ -8,9 +8,8 @@ namespace Nikse.SubtitleEdit.Core
     {
         private static readonly char[] TimeSplitChars = { ':', ',', '.' };
         public const double BaseUnit = 1000.0; // Base unit of time
-        private double _totalMilliseconds;
 
-        public bool IsMaxTime => Math.Abs(_totalMilliseconds - MaxTimeTotalMilliseconds) < 0.01;
+        public bool IsMaxTime => Math.Abs(TotalMilliseconds - MaxTimeTotalMilliseconds) < 0.01;
         public const double MaxTimeTotalMilliseconds = 359999999; // new TimeCode(99, 59, 59, 999).TotalMilliseconds
 
         public static TimeCode FromSeconds(double seconds)
@@ -50,17 +49,17 @@ namespace Nikse.SubtitleEdit.Core
 
         public TimeCode(TimeSpan timeSpan)
         {
-            _totalMilliseconds = timeSpan.TotalMilliseconds;
+            TotalMilliseconds = timeSpan.TotalMilliseconds;
         }
 
         public TimeCode(double totalMilliseconds)
         {
-            _totalMilliseconds = totalMilliseconds;
+            TotalMilliseconds = totalMilliseconds;
         }
 
         public TimeCode(int hours, int minutes, int seconds, int milliseconds)
         {
-            _totalMilliseconds = hours * 60 * 60 * BaseUnit + minutes * 60 * BaseUnit + seconds * BaseUnit + milliseconds;
+            TotalMilliseconds = hours * 60 * 60 * BaseUnit + minutes * 60 * BaseUnit + seconds * BaseUnit + milliseconds;
         }
 
         public int Hours
@@ -73,7 +72,7 @@ namespace Nikse.SubtitleEdit.Core
             set
             {
                 var ts = TimeSpan;
-                _totalMilliseconds = new TimeSpan(ts.Days, value, ts.Minutes, ts.Seconds, ts.Milliseconds).TotalMilliseconds;
+                TotalMilliseconds = new TimeSpan(ts.Days, value, ts.Minutes, ts.Seconds, ts.Milliseconds).TotalMilliseconds;
             }
         }
 
@@ -83,7 +82,7 @@ namespace Nikse.SubtitleEdit.Core
             set
             {
                 var ts = TimeSpan;
-                _totalMilliseconds = new TimeSpan(ts.Days, ts.Hours, value, ts.Seconds, ts.Milliseconds).TotalMilliseconds;
+                TotalMilliseconds = new TimeSpan(ts.Days, ts.Hours, value, ts.Seconds, ts.Milliseconds).TotalMilliseconds;
             }
         }
 
@@ -93,7 +92,7 @@ namespace Nikse.SubtitleEdit.Core
             set
             {
                 var ts = TimeSpan;
-                _totalMilliseconds = new TimeSpan(ts.Days, ts.Hours, ts.Minutes, value, ts.Milliseconds).TotalMilliseconds;
+                TotalMilliseconds = new TimeSpan(ts.Days, ts.Hours, ts.Minutes, value, ts.Milliseconds).TotalMilliseconds;
             }
         }
 
@@ -103,26 +102,22 @@ namespace Nikse.SubtitleEdit.Core
             set
             {
                 var ts = TimeSpan;
-                _totalMilliseconds = new TimeSpan(ts.Days, ts.Hours, ts.Minutes, ts.Seconds, value).TotalMilliseconds;
+                TotalMilliseconds = new TimeSpan(ts.Days, ts.Hours, ts.Minutes, ts.Seconds, value).TotalMilliseconds;
             }
         }
 
-        public double TotalMilliseconds
-        {
-            get => _totalMilliseconds;
-            set => _totalMilliseconds = value;
-        }
+        public double TotalMilliseconds { get; set; }
 
         public double TotalSeconds
         {
-            get => _totalMilliseconds / BaseUnit;
-            set => _totalMilliseconds = value * BaseUnit;
+            get => TotalMilliseconds / BaseUnit;
+            set => TotalMilliseconds = value * BaseUnit;
         }
 
         public TimeSpan TimeSpan
         {
-            get => TimeSpan.FromMilliseconds(_totalMilliseconds);
-            set => _totalMilliseconds = value.TotalMilliseconds;
+            get => TimeSpan.FromMilliseconds(TotalMilliseconds);
+            set => TotalMilliseconds = value.TotalMilliseconds;
         }
 
         public override string ToString() => ToString(false);
