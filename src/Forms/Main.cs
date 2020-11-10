@@ -353,13 +353,6 @@ namespace Nikse.SubtitleEdit.Forms
                 UpdateNetflixGlyphCheckToolsVisibility();
                 Utilities.SetSecurityProtocol(); // download from Github requires TLS 1.2
 
-                //TODO: Fix alignemnt
-                //if (Configuration.Settings.General.CenterSubtitleInTextBox)
-                //{
-                //    textBoxListViewText.TextAlign = HorizontalAlignment.Center;
-                //    textBoxListViewTextAlternate.TextAlign = HorizontalAlignment.Center;
-                //}
-
                 tabControlSubtitle.SelectTab(TabControlSourceView); // AC
                 ShowSourceLineNumber(); // AC
                 tabControlSubtitle.SelectTab(TabControlListView); // AC
@@ -4658,18 +4651,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                 SubtitleListview1.ForeColor = Configuration.Settings.General.SubtitleFontColor;
                 SubtitleListview1.BackColor = Configuration.Settings.General.SubtitleBackgroundColor;
-
-                //TODO: Fix aligment
-                //if (Configuration.Settings.General.CenterSubtitleInTextBox)
-                //{
-                //    textBoxListViewText.TextAlign = HorizontalAlignment.Center;
-                //    textBoxListViewTextAlternate.TextAlign = HorizontalAlignment.Center;
-                //}
-                //else if (textBoxListViewText.TextAlign == HorizontalAlignment.Center)
-                //{
-                //    textBoxListViewText.TextAlign = HorizontalAlignment.Left;
-                //    textBoxListViewTextAlternate.TextAlign = HorizontalAlignment.Left;
-                //}
 
                 SaveSubtitleListviewIndices();
                 UiUtil.InitializeSubtitleFont(SubtitleListview1);
@@ -9363,6 +9344,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             int numberOfLines = Utilities.GetNumberOfLines(textBoxListViewText.Text);
+
+            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.F12)
+            {
+                Clipboard.SetText(textBoxListViewText.Rtf);
+                e.SuppressKeyPress = true;
+                return;
+            }
+
 
             if (e.Modifiers == Keys.None && e.KeyCode == Keys.Enter && numberOfLines > Configuration.Settings.General.MaxNumberOfLines)
             {
