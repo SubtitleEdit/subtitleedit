@@ -248,10 +248,9 @@ namespace Nikse.SubtitleEdit.Controls
                     RightToLeft = RightToLeft.Yes;
                 }
 
-                sb.Append(@"{\rtf1\fbidis\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 " + Configuration.Settings.General.SubtitleFontName + @";}}
+                sb.Append(@"{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 " + Configuration.Settings.General.SubtitleFontName + @";}}
 {\colortbl ;\red100\green149\blue237;\red95\green158\blue160;\red0\green0\blue0;\red200\green100\blue100;}
-{\*\generator Riched20 10.0.18362}\viewkind4\uc1 
-\pard\rtlpar\qr\cf3" + (Configuration.Settings.General.SubtitleFontBold ? "\\b" : string.Empty) + @"\f0\fs" + (Configuration.Settings.General.SubtitleFontSize + 12) + " ");
+\viewkind4\uc1\pard\rtlpar\qr\cf3" + (Configuration.Settings.General.SubtitleFontBold ? "\\b" : string.Empty) + @"\f0\fs" + (Configuration.Settings.General.SubtitleFontSize + 12) + " ");
             }
             else
             {
@@ -260,10 +259,9 @@ namespace Nikse.SubtitleEdit.Controls
                     RightToLeft = RightToLeft.No;
                 }
 
-                sb.Append(@"{\rtf1\fbidis\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 " + Configuration.Settings.General.SubtitleFontName + @";}}
+                sb.Append(@"{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 " + Configuration.Settings.General.SubtitleFontName + @";}}
 {\colortbl ;\red100\green149\blue237;\red95\green158\blue160;\red0\green0\blue0;\red200\green100\blue100;}
-{\*\generator Riched20 10.0.18362}\viewkind4\uc1 
-\pard\cf3" + (Configuration.Settings.General.SubtitleFontBold ? "\\b" : string.Empty) + @"\f0\fs" + (Configuration.Settings.General.SubtitleFontSize + 12) + " ");
+\viewkind4\uc1\pard" + (Configuration.Settings.General.CenterSubtitleInTextBox ? @"\qc" : string.Empty) + @"\cf3" + (Configuration.Settings.General.SubtitleFontBold ? "\\b" : string.Empty) + @"\f0\fs" + (Configuration.Settings.General.SubtitleFontSize + 12) + " ");
             }
 
             var start = SelectionStart;
@@ -351,11 +349,7 @@ namespace Nikse.SubtitleEdit.Controls
                 i++;
             }
 
-            if (text.EndsWith("\n", StringComparison.Ordinal))
-            {
-                sb.AppendLine("\\par");
-            }
-
+            sb.AppendLine("\\par");
             sb.Append("}");
             SuspendLayout();
             start = SelectionStart;
