@@ -13781,7 +13781,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var fc = FindFocusedControl(this);
-            if (fc != null && e.Modifiers != Keys.Control && e.Modifiers != (Keys.Control | Keys.Shift) && e.Modifiers != (Keys.Control | Keys.Alt) && e.Modifiers != (Keys.Control | Keys.Shift | Keys.Alt))
+            if (fc != null && e.Modifiers != Keys.Control && e.Modifiers != Keys.Alt && e.Modifiers != (Keys.Control | Keys.Shift) && e.Modifiers != (Keys.Control | Keys.Alt) && e.Modifiers != (Keys.Control | Keys.Shift | Keys.Alt))
             {
                 // do not check for shortcuts if text is being entered and a textbox is focused
                 if ((fc.Name == textBoxListViewText.Name || fc.Name == textBoxListViewTextAlternate.Name || fc.Name == textBoxSearchWord.Name) &&
@@ -27074,42 +27074,35 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void toolStripMenuItemImportChapters_Click(object sender, EventArgs e)
+        private async void toolStripMenuItemImportChapters_Click(object sender, EventArgs e)
         {
             toolStripMenuItemImportChapters.Enabled = false;
             ShowStatus(_language.ImportingChapters);
 
             var chaps = new List<MatroskaChapter>();
-            var getChapters = System.Threading.Tasks.Task.Factory.StartNew(() =>
+            using (var matroska = new MatroskaFile(VideoFileName))
             {
-                using (var matroska = new MatroskaFile(VideoFileName))
-                {
-                    chaps = matroska.GetChapters();
-                }
-            });
+                chaps = await System.Threading.Tasks.Task.Run(() => matroska.GetChapters());
+            }
 
-            var uiContext = System.Threading.Tasks.TaskScheduler.FromCurrentSynchronizationContext();
-            getChapters.ContinueWith(_ =>
+            if (chaps?.Count > 0)
             {
-                if (chaps?.Count > 0)
-                {
-                    mediaPlayer.Chapters = chaps;
+                mediaPlayer.Chapters = chaps;
 
-                    if (audioVisualizer.WavePeaks != null)
-                    {
-                        audioVisualizer.Chapters = chaps;
-                    }
-
-                    ShowStatus(string.Format(_language.XChaptersImported, chaps?.Count));
-                }
-                else
+                if (audioVisualizer.WavePeaks != null)
                 {
-                    ShowStatus(_language.NoChapters);
-                    MessageBox.Show(_language.NoChapters, Title);
+                    audioVisualizer.Chapters = chaps;
                 }
 
-                toolStripMenuItemImportChapters.Enabled = true;
-            }, uiContext);
+                ShowStatus(string.Format(_language.XChaptersImported, chaps?.Count));
+            }
+            else
+            {
+                ShowStatus(_language.NoChapters);
+                MessageBox.Show(_language.NoChapters, Title);
+            }
+
+            toolStripMenuItemImportChapters.Enabled = true;
         }
 
         private void toolStripMenuItemImportSceneChanges_Click(object sender, EventArgs e)
