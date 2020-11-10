@@ -247,22 +247,15 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     RightToLeft = RightToLeft.Yes;
                 }
-
-                sb.Append(@"{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 " + Configuration.Settings.General.SubtitleFontName + @";}}
-{\colortbl ;\red100\green149\blue237;\red95\green158\blue160;\red0\green0\blue0;\red200\green100\blue100;}
-\viewkind4\uc1\pard\rtlpar\qr\cf3" + (Configuration.Settings.General.SubtitleFontBold ? "\\b" : string.Empty) + @"\f0\fs" + (Configuration.Settings.General.SubtitleFontSize + 12) + " ");
             }
-            else
+            else if (RightToLeft != RightToLeft.No)
             {
-                if (RightToLeft != RightToLeft.No)
-                {
-                    RightToLeft = RightToLeft.No;
-                }
-
-                sb.Append(@"{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 " + Configuration.Settings.General.SubtitleFontName + @";}}
-{\colortbl ;\red100\green149\blue237;\red95\green158\blue160;\red0\green0\blue0;\red200\green100\blue100;}
-\viewkind4\uc1\pard" + (Configuration.Settings.General.CenterSubtitleInTextBox ? @"\qc" : string.Empty) + @"\cf3" + (Configuration.Settings.General.SubtitleFontBold ? "\\b" : string.Empty) + @"\f0\fs" + (Configuration.Settings.General.SubtitleFontSize + 12) + " ");
+                RightToLeft = RightToLeft.No;
             }
+
+            sb.Append(@"{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 " + Configuration.Settings.General.SubtitleFontName + @";}}
+{\colortbl ;\red100\green149\blue237;\red95\green158\blue160;\red0\green0\blue0;\red200\green100\blue100;}
+\viewkind4\uc1\pard" + GetRtfAlignmentCode() + @"\cf3" + (Configuration.Settings.General.SubtitleFontBold ? "\\b" : string.Empty) + @"\f0\fs" + (Configuration.Settings.General.SubtitleFontSize + 14) + " ");
 
             var start = SelectionStart;
             bool htmlTagOn = false;
@@ -358,6 +351,17 @@ namespace Nikse.SubtitleEdit.Controls
             SelectionStart = start;
             SelectionLength = length;
             ResumeLayout();
+        }
+
+        private static string GetRtfAlignmentCode()
+        {
+            if (Configuration.Settings.General.RightToLeftMode)
+            {
+                return @"\rtlpar\qr";
+            }
+
+            var result = Configuration.Settings.General.CenterSubtitleInTextBox ? @"\qc" : @"\ltrpar";
+            return result;
         }
 
         private bool AddWordWithSpellCheck(bool wordOn, char ch, string text, int i, StringBuilder sb, string normalFontColor, int richTextIndex, ref bool wordOnBad, bool ignoreActiveWord)
