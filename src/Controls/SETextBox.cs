@@ -19,6 +19,7 @@ namespace Nikse.SubtitleEdit.Controls
         private bool _dragFromThis;
         private long _gotFocusTicks;
         private bool _checkRtfChange = true;
+        private Panel _parentPanel;
 
         public SETextBox()
         {
@@ -29,6 +30,31 @@ namespace Nikse.SubtitleEdit.Controls
             MouseDown += SETextBox_MouseDown;
             MouseUp += SETextBox_MouseUp;
             TextChanged += TextChangedHighlight;
+
+            Enter += (sender, args) =>
+            {
+                if (_parentPanel != null)
+                {
+                    _parentPanel.BackColor = SystemColors.Highlight;
+                }
+            };
+            Leave += (sender, args) =>
+            {
+                if (_parentPanel != null)
+                {
+                    _parentPanel.BackColor = SystemColors.ActiveBorder;
+                }
+            };
+        }
+
+        public void DockToParentPanel(Panel panel)
+        {
+            _parentPanel = panel;
+            Parent = panel;
+            _parentPanel.Padding = new Padding(1);
+            _parentPanel.BackColor = SystemColors.ActiveBorder;
+            BorderStyle = BorderStyle.None;
+            Dock = DockStyle.Fill;
         }
 
         private void SETextBox_MouseUp(object sender, MouseEventArgs e)

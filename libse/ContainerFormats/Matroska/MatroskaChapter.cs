@@ -1,5 +1,8 @@
-﻿namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
+﻿using System;
+
+namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
 {
+    [Serializable]
     public class MatroskaChapter
     {
         public double StartTime { get; set; }
