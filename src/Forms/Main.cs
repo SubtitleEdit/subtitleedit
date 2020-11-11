@@ -9039,8 +9039,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             UpdateListViewTextCharactersPerSeconds(charactersPerSecond, paragraph);
-            charactersPerSecond.Left = textBox.Left + (textBox.Width - labelCharactersPerSecond.Width);
-            lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
+            charactersPerSecond.Left = textBox.Parent.Left + (textBox.Parent.Width - labelCharactersPerSecond.Width);
+            lineTotal.Left = textBox.Parent.Left + (textBox.Parent.Width - lineTotal.Width);
         }
 
         private void ButtonNextClick(object sender, EventArgs e)
@@ -25205,7 +25205,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (lineBreakPos < 0 || pos <= lineBreakPos)
             {
                 lineTotal.Text = "1," + (pos + 1) + totalL;
-                lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
+                lineTotal.Left = textBox.Parent.Left + (textBox.Parent.Width - lineTotal.Width);
                 return;
             }
 
@@ -25213,7 +25213,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (secondLineBreakPos < 0 || pos <= secondLineBreakPos + extraNewLineLength)
             {
                 lineTotal.Text = "2," + (pos - (lineBreakPos + extraNewLineLength)) + totalL;
-                lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
+                lineTotal.Left = textBox.Parent.Left + (textBox.Parent.Width - lineTotal.Width);
                 return;
             }
 
@@ -25221,7 +25221,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (thirdLineBreakPos < 0 || pos < thirdLineBreakPos + (extraNewLineLength * 2))
             {
                 lineTotal.Text = "3," + (pos - (secondLineBreakPos + extraNewLineLength)) + totalL;
-                lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
+                lineTotal.Left = textBox.Parent.Left + (textBox.Parent.Width - lineTotal.Width);
                 return;
             }
 
@@ -25229,7 +25229,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (forthLineBreakPos < 0 || pos < forthLineBreakPos + (extraNewLineLength * 3))
             {
                 lineTotal.Text = "4," + (pos - (thirdLineBreakPos + extraNewLineLength)) + totalL;
-                lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
+                lineTotal.Left = textBox.Parent.Left + (textBox.Parent.Width - lineTotal.Width);
                 return;
             }
 
