@@ -290,7 +290,10 @@ namespace Nikse.SubtitleEdit.Controls
                     _richTextBoxTemp.Text = text;
                     _richTextBoxTemp.SelectAll();
                     _richTextBoxTemp.SelectionAlignment = HorizontalAlignment.Center;
+
+                    // fix cursor to start in middle (and not left)
                     _richTextBoxTemp.Rtf = _richTextBoxTemp.Rtf.Replace("\\pard\\par", "\\par");
+
                     ResumeLayout(false);
                     Rtf = _richTextBoxTemp.Rtf;
                 }
@@ -420,11 +423,6 @@ namespace Nikse.SubtitleEdit.Controls
                     _richTextBoxTemp.Rtf = _richTextBoxTemp.Rtf.Replace("\\pard\\par", "\\par");
                 }
             }
-            //else if (Configuration.Settings.General.RightToLeftMode)
-            //{
-            //    _richTextBoxTemp.SelectAll();
-            //    _richTextBoxTemp.SelectionAlignment = HorizontalAlignment.Right;
-            //}
 
             _richTextBoxTemp.ResumeLayout(false);
 
