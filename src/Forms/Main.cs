@@ -25612,6 +25612,8 @@ namespace Nikse.SubtitleEdit.Forms
             MainResize();
             TextBoxListViewTextTextChanged(null, null);
             textBoxListViewTextAlternate_TextChanged(null, null);
+            textBoxListViewText.HighlightHtmlText();
+            textBoxListViewTextAlternate.HighlightHtmlText();
             if (focusedItem != null)
             {
                 SubtitleListview1.SelectIndexAndEnsureVisible(focusedItem.Index, true);
