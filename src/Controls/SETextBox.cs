@@ -278,6 +278,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
             }
 
+            _richTextBoxTemp.RightToLeft = RightToLeft;
             
 
             var text = Text;
