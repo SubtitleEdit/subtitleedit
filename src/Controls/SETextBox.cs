@@ -278,6 +278,8 @@ namespace Nikse.SubtitleEdit.Controls
                 }
             }
 
+            
+
             var text = Text;
             if (string.IsNullOrWhiteSpace(text) || text.Length > 1000)
             {
@@ -364,47 +366,7 @@ namespace Nikse.SubtitleEdit.Controls
                         _richTextBoxTemp.SelectionColor = Color.CornflowerBlue;
                         if (htmlTagFontOn && htmlTagStart >= 0)
                         {
-                            int colorStart = text.IndexOf(" color=", htmlTagStart, StringComparison.OrdinalIgnoreCase);
-                            if (colorStart > 0)
-                            {
-                                colorStart += " color=".Length;
-                                if (text[colorStart] == '"' || text[colorStart] == '\'')
-                                {
-                                    colorStart++;
-                                }
-
-                                int colorEnd = text.IndexOf('"', colorStart + 1);
-                                if (colorEnd > 0)
-                                {
-                                    var color = text.Substring(colorStart, colorEnd - colorStart);
-                                    try
-                                    {
-                                        Color c;
-                                        if (color.StartsWith("rgb(", StringComparison.Ordinal))
-                                        {
-                                            string[] arr = color.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                                            c = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
-                                        }
-                                        else
-                                        {
-                                            c = ColorTranslator.FromHtml(color);
-                                        }
-                                        _richTextBoxTemp.SelectionStart = colorStart;
-                                        _richTextBoxTemp.SelectionLength = colorEnd - colorStart;
-                                        _richTextBoxTemp.SelectionColor = c;
-
-                                        var diff = Math.Abs(c.R - BackColor.R) + Math.Abs(c.G - BackColor.G) + Math.Abs(c.B - BackColor.B);
-                                        if (diff < 60)
-                                        {
-                                            _richTextBoxTemp.SelectionBackColor = Color.FromArgb(byte.MaxValue - c.R, byte.MaxValue - c.G, byte.MaxValue - c.B, byte.MaxValue - c.R);
-                                        }
-                                    }
-                                    catch
-                                    {
-                                        // ignored
-                                    }
-                                }
-                            }
+                            SetHtmlColor(text, htmlTagStart);
                             htmlTagFontOn = false;
                         }
                         htmlTagStart = -1;
@@ -471,6 +433,57 @@ namespace Nikse.SubtitleEdit.Controls
             ResumeLayout(false);
         }
 
+        private void SetHtmlColor(string text, int htmlTagStart)
+        {
+            int colorStart = text.IndexOf(" color=", htmlTagStart, StringComparison.OrdinalIgnoreCase);
+            if (colorStart > 0)
+            {
+                colorStart += " color=".Length;
+                if (text[colorStart] == '"' || text[colorStart] == '\'')
+                {
+                    colorStart++;
+                }
+
+                int colorEnd = text.IndexOf('"', colorStart + 1);
+                if (colorEnd > 0)
+                {
+                    var color = text.Substring(colorStart, colorEnd - colorStart);
+                    try
+                    {
+                        Color c;
+                        if (color.StartsWith("rgb(", StringComparison.Ordinal))
+                        {
+                            string[] arr = color.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                            c = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
+                        }
+                        else
+                        {
+                            c = ColorTranslator.FromHtml(color);
+                        }
+
+                        SetForeColorAndChangeBackColorIfClose(colorStart, colorEnd, c);
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+                }
+            }
+        }
+
+        private void SetForeColorAndChangeBackColorIfClose(int colorStart, int colorEnd, Color c)
+        {
+            _richTextBoxTemp.SelectionStart = colorStart;
+            _richTextBoxTemp.SelectionLength = colorEnd - colorStart;
+            _richTextBoxTemp.SelectionColor = c;
+
+            var diff = Math.Abs(c.R - BackColor.R) + Math.Abs(c.G - BackColor.G) + Math.Abs(c.B - BackColor.B);
+            if (diff < 60)
+            {
+                _richTextBoxTemp.SelectionBackColor = Color.FromArgb(byte.MaxValue - c.R, byte.MaxValue - c.G, byte.MaxValue - c.B, byte.MaxValue - c.R);
+            }
+        }
+
         private void TextChangedHighlight(object sender, EventArgs e)
         {
             if (_checkRtfChange)
@@ -501,16 +514,8 @@ namespace Nikse.SubtitleEdit.Controls
                         if (color.Length == 7)
                         {
                             var rgbColor = string.Concat("#", color[5], color[6], color[3], color[4], color[1], color[2]);
-                            Color c = ColorTranslator.FromHtml(rgbColor);
-                            _richTextBoxTemp.SelectionStart = colorStart;
-                            _richTextBoxTemp.SelectionLength = colorEnd - colorStart;
-                            _richTextBoxTemp.SelectionColor = c;
-
-                            var diff = Math.Abs(c.R - BackColor.R) + Math.Abs(c.G - BackColor.G) + Math.Abs(c.B - BackColor.B);
-                            if (diff < 60)
-                            {
-                                _richTextBoxTemp.SelectionBackColor = Color.FromArgb(byte.MaxValue - c.R, byte.MaxValue - c.B, byte.MaxValue - c.R, byte.MaxValue - c.G);
-                            }
+                            var c = ColorTranslator.FromHtml(rgbColor);
+                            SetForeColorAndChangeBackColorIfClose(colorStart, colorEnd, c);
                         }
                     }
                     catch
