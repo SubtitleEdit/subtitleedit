@@ -2,7 +2,6 @@
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Controls
@@ -20,9 +19,11 @@ namespace Nikse.SubtitleEdit.Controls
         private long _gotFocusTicks;
         private bool _checkRtfChange = true;
         private Panel _parentPanel;
+        private readonly RichTextBox _richTextBoxTemp;
 
         public SETextBox()
         {
+            _richTextBoxTemp = new RichTextBox();
             AllowDrop = true;
             DragEnter += SETextBox_DragEnter;
             DragDrop += SETextBox_DragDrop;
@@ -258,76 +259,81 @@ namespace Nikse.SubtitleEdit.Controls
             base.WndProc(ref m);
         }
 
-        private void HighlightHtmlText(bool ignoreActiveWord)
+        public void HighlightHtmlText()
         {
-            var text = Text;
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                return;
-            }
-
-            var sb = new StringBuilder();
-            if (Configuration.Settings.General.RightToLeftMode) // (RightToLeft == RightToLeft.Yes)
+            if (Configuration.Settings.General.RightToLeftMode)
             {
                 if (RightToLeft != RightToLeft.Yes)
                 {
                     RightToLeft = RightToLeft.Yes;
                 }
             }
-            else if (RightToLeft != RightToLeft.No)
+            else
             {
-                RightToLeft = RightToLeft.No;
+                if (RightToLeft != RightToLeft.No)
+                {
+                    RightToLeft = RightToLeft.No;
+                }
             }
 
-            sb.Append(@"{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 " + Configuration.Settings.General.SubtitleFontName + @";}}
-{\colortbl ;\red100\green149\blue237;\red95\green158\blue160;\red0\green0\blue0;\red200\green100\blue100;}
-\viewkind4\uc1\pard" + GetRtfAlignmentCode() + @"\cf3" + (Configuration.Settings.General.SubtitleFontBold ? "\\b" : string.Empty) + @"\f0\fs" + (Configuration.Settings.General.SubtitleFontSize + 14) + " ");
+            var text = Text;
+            if (string.IsNullOrWhiteSpace(text) || text.Length > 1000)
+            {
+                if (Configuration.Settings.General.CenterSubtitleInTextBox)
+                {
+                    SuspendLayout();
+                    _richTextBoxTemp.SelectAll();
+                    _richTextBoxTemp.SelectionAlignment = HorizontalAlignment.Center;
+                    ResumeLayout(false);
+                }
 
-            var start = SelectionStart;
+                return;
+            }
+
+            _richTextBoxTemp.SuspendLayout();
+            _richTextBoxTemp.Text = text;
+            _richTextBoxTemp.SelectAll();
+            _richTextBoxTemp.SelectionFont = Font;
+            _richTextBoxTemp.SelectionColor = ForeColor;
+
             bool htmlTagOn = false;
+            int htmlTagStart = -1;
             bool assaTagOn = false;
+            var assaTagStart = -1;
             int tagOn = -1;
             var textLength = text.Length;
             int i = 0;
-            string normalFontColor = "\\cf3";
-            string htmlFontColor = "\\cf2";
-            string assaFontColor = "\\cf1";
-            string badSpellFontColor = "\\cf4";
-            bool wordOn = false;
-            bool wordOnBad = false;
+
             while (i < textLength)
             {
                 var ch = text[i];
                 if (assaTagOn)
                 {
-                    AppendCharToRtf(sb, ch);
                     if (ch == '}' && tagOn >= 0)
                     {
                         assaTagOn = false;
-                        sb.Append(normalFontColor + " ");
+                        _richTextBoxTemp.SelectionStart = assaTagStart;
+                        _richTextBoxTemp.SelectionLength = i - assaTagStart + 1;
+                        _richTextBoxTemp.SelectionColor = Color.DarkSeaGreen;
+                        htmlTagStart = -1;
                     }
                 }
                 else if (htmlTagOn)
                 {
-                    AppendCharToRtf(sb, ch);
                     if (ch == '>' && tagOn >= 0)
                     {
                         htmlTagOn = false;
-                        sb.Append(normalFontColor + " ");
+                        _richTextBoxTemp.SelectionStart = htmlTagStart;
+                        _richTextBoxTemp.SelectionLength = i - htmlTagStart + 1;
+                        _richTextBoxTemp.SelectionColor = Color.CornflowerBlue;
+                        htmlTagStart = -1;
                     }
                 }
                 else if (ch == '{' && i < textLength - 1 && text[i + 1] == '\\' && text.IndexOf('}', i) > 0)
                 {
-                    wordOn = false;
-                    if (wordOnBad)
-                    {
-
-                    }
-                    wordOnBad = false;
                     assaTagOn = true;
                     tagOn = i;
-                    sb.Append(assaFontColor + " ");
-                    AppendCharToRtf(sb, ch);
+                    assaTagStart = i;
                 }
                 else if (ch == '<')
                 {
@@ -342,149 +348,40 @@ namespace Nikse.SubtitleEdit.Controls
                         (s.StartsWith("<font ", StringComparison.OrdinalIgnoreCase) &&
                          text.IndexOf("</font>", i, StringComparison.OrdinalIgnoreCase) > 0))
                     {
-                        wordOn = false;
-                        if (wordOnBad)
-                        {
-
-                        }
-                        wordOnBad = false;
                         htmlTagOn = true;
+                        htmlTagStart = i;
                         tagOn = i;
-                        sb.Append(htmlFontColor + " ");
-                        AppendCharToRtf(sb, ch);
                     }
-                    else
-                    {
-                        wordOn = AddWordWithSpellCheck(wordOn, ch, text, i, sb, normalFontColor, start, ref wordOnBad, ignoreActiveWord);
-                        AppendCharToRtf(sb, ch);
-                    }
-                }
-                else
-                {
-                    wordOn = AddWordWithSpellCheck(wordOn, ch, text, i, sb, normalFontColor, start, ref wordOnBad, ignoreActiveWord);
-                    AppendCharToRtf(sb, ch);
                 }
 
                 i++;
             }
 
-            sb.AppendLine("\\par");
-            sb.Append("}");
-            SuspendLayout();
-            start = SelectionStart;
+            if (Configuration.Settings.General.CenterSubtitleInTextBox)
+            {
+                _richTextBoxTemp.SelectAll();
+                _richTextBoxTemp.SelectionAlignment = HorizontalAlignment.Center;
+            }
+            else if (Configuration.Settings.General.RightToLeftMode)
+            {
+                _richTextBoxTemp.SelectAll();
+                _richTextBoxTemp.SelectionAlignment = HorizontalAlignment.Right;
+            }
+
+            _richTextBoxTemp.ResumeLayout(false);
+
+            if (Text.Length != text.Length)
+            {
+                return;
+            }
+
+            var start = SelectionStart;
             var length = SelectionLength;
-            Rtf = sb.ToString();
+            SuspendLayout();
+            Rtf = _richTextBoxTemp.Rtf;
             SelectionStart = start;
             SelectionLength = length;
-            ResumeLayout();
-        }
-
-        private static string GetRtfAlignmentCode()
-        {
-            if (Configuration.Settings.General.RightToLeftMode)
-            {
-                return @"\rtlpar\qr";
-            }
-
-            var result = Configuration.Settings.General.CenterSubtitleInTextBox ? @"\qc" : @"\ltrpar";
-            return result;
-        }
-
-        private bool AddWordWithSpellCheck(bool wordOn, char ch, string text, int i, StringBuilder sb, string normalFontColor, int richTextIndex, ref bool wordOnBad, bool ignoreActiveWord)
-        {
-
-            if (!wordOn && char.IsLetterOrDigit(ch))
-            {
-                var word = GetSelectedWord(text, i, out var _);
-                if (ignoreActiveWord && richTextIndex >= i && richTextIndex <= i + word.Length)
-                {
-                    return true;
-                }
-
-                //if (!IsWordSpelledCorrect(word))
-                //{
-                //    wordOnBad = true;
-                //    sb.Append(badSpellFontColor + " ");
-                //}
-
-                return true;
-            }
-
-            if (wordOn && !char.IsLetterOrDigit(ch))
-            {
-                wordOn = false;
-            }
-
-            if (!wordOn && wordOnBad)
-            {
-                sb.Append(normalFontColor + " ");
-                wordOnBad = false;
-            }
-
-            return wordOn;
-        }
-
-        private static void AppendCharToRtf(StringBuilder sb, char ch)
-        {
-            if (ch == '\r')
-            {
-                // nothing
-            }
-            else if (ch == '\n')
-            {
-                sb.AppendLine("\\par");
-            }
-            else if (ch >= 0x20 && ch < 0x80)
-            {
-                if (ch == '\\' || ch == '{' || ch == '}')
-                {
-                    sb.Append('\\');
-                }
-                sb.Append(ch);
-            }
-            else if (ch < 0x20 || (ch >= 0x80 && ch <= 0xFF))
-            {
-                sb.Append($"\\'{((byte)ch):X}");
-            }
-            else
-            {
-                sb.Append($"\\u{(short)ch}?");
-            }
-        }
-
-        private static string GetSelectedWord(string txt, int pos, out int startPos)
-        {
-            startPos = pos;
-            while (startPos >= 0)
-            {
-                // Allow letters and digits
-                var ch = txt[startPos];
-                if (!char.IsLetter(ch) && ch != '\'')
-                {
-                    break;
-                }
-
-                startPos--;
-            }
-
-            startPos++;
-
-            // Find the end of the word.
-            var endPos = pos;
-            while (endPos < txt.Length)
-            {
-                char ch = txt[endPos];
-                if (!char.IsLetter(ch) && ch != '\'')
-                {
-                    break;
-                }
-
-                endPos++;
-            }
-
-            endPos--;
-
-            return startPos > endPos ? string.Empty : txt.Substring(startPos, endPos - startPos + 1);
+            ResumeLayout(false);
         }
 
         private void TextChangedHighlight(object sender, EventArgs e)
@@ -492,7 +389,7 @@ namespace Nikse.SubtitleEdit.Controls
             if (_checkRtfChange)
             {
                 _checkRtfChange = false;
-                HighlightHtmlText(true);
+                HighlightHtmlText();
                 _checkRtfChange = true;
             }
         }
