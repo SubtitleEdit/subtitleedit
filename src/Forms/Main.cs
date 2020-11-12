@@ -6967,7 +6967,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (selectedIndex >= 0)
                         {
                             _subtitle.HistoryItems[_undoIndex].RedoParagraphs[selectedIndex].Text =
-                                textBoxListViewText.Text;
+                                textBoxListViewText.TextWithEnvironmentNewLine;
                             if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null &&
                                 selectedIndex < _subtitle.HistoryItems[_undoIndex].RedoParagraphsAlternate.Count)
                             {
@@ -8743,9 +8743,9 @@ namespace Nikse.SubtitleEdit.Forms
                     bool showSource = false;
 
                     var last = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);
-                    if (textBoxListViewText.Text != last.Text)
+                    if (textBoxListViewText.TextWithEnvironmentNewLine != last.Text)
                     {
-                        last.Text = textBoxListViewText.Text.TrimEnd();
+                        last.Text = textBoxListViewText.TextWithEnvironmentNewLine.TrimEnd();
                         SubtitleListview1.SetText(_subtitleListViewIndex, last.Text);
                         showSource = true;
                     }
@@ -9141,14 +9141,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                var fixedText = Utilities.AutoBreakLine(textBoxListViewText.Text, language);
-                var makeHistory = textBoxListViewText.Text != fixedText;
+                var fixedText = Utilities.AutoBreakLine(textBoxListViewText.TextWithEnvironmentNewLine, language);
+                var makeHistory = textBoxListViewText.TextWithEnvironmentNewLine != fixedText;
                 if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
                 {
-                    var alternateFixedText = Utilities.AutoBreakLine(textBoxListViewTextAlternate.Text, languageOriginal);
+                    var alternateFixedText = Utilities.AutoBreakLine(textBoxListViewTextAlternate.TextWithEnvironmentNewLine, languageOriginal);
                     if (!makeHistory)
                     {
-                        makeHistory = textBoxListViewTextAlternate.Text != alternateFixedText;
+                        makeHistory = textBoxListViewTextAlternate.TextWithEnvironmentNewLine != alternateFixedText;
                     }
 
                     if (makeHistory)
@@ -9166,7 +9166,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            var s = textBoxListViewText.Text;
+            var s = textBoxListViewText.TextWithEnvironmentNewLine;
             var startText = s.Substring(0, Math.Min(textCaretPos, s.Length));
             var numberOfNewLines = Utilities.CountTagInText(startText, Environment.NewLine);
             textCaretPos += numberOfNewLines;
@@ -9239,7 +9239,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             // update _subtitle + listview
-            string text = textBoxListViewText.Text.TrimEnd();
+            string text = textBoxListViewText.TextWithEnvironmentNewLine.TrimEnd();
             if (ContainsNonStandardNewLines(text))
             {
                 var lines = text.SplitToLines();
@@ -9328,7 +9328,7 @@ namespace Nikse.SubtitleEdit.Forms
                     UiUtil.CheckAutoWrap(textBoxListViewTextAlternate, new KeyEventArgs(Keys.None), numberOfNewLines);
 
                     // update _subtitle + listview
-                    string text = textBoxListViewTextAlternate.Text.TrimEnd();
+                    string text = textBoxListViewTextAlternate.TextWithEnvironmentNewLine.TrimEnd();
                     if (ContainsNonStandardNewLines(text))
                     {
                         var lines = text.SplitToLines();
@@ -9396,7 +9396,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.KeyData == _shortcuts.MainTextBoxBreakAtCursorPosition)
             {
                 var text = Utilities.ReSplit(textBoxListViewText.Text, textBoxListViewText.SelectionStart);
-                if (text != textBoxListViewText.Text)
+                if (text != textBoxListViewText.TextWithEnvironmentNewLine)
                 {
                     MakeHistoryForUndo(string.Format(_language.BeforeReplace, Configuration.Settings.Language.Settings.MainTextBoxAutoBreakFromPos));
                     textBoxListViewText.Text = text;
@@ -9412,7 +9412,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.KeyData == _shortcuts.MainTextBoxBreakAtCursorPositionAndGoToNext)
             {
                 var text = Utilities.ReSplit(textBoxListViewText.Text, textBoxListViewText.SelectionStart);
-                if (text != textBoxListViewText.Text)
+                if (text != textBoxListViewText.TextWithEnvironmentNewLine)
                 {
                     MakeHistoryForUndo(string.Format(_language.BeforeReplace, Configuration.Settings.Language.Settings.MainTextBoxAutoBreakFromPosAndGoToNext));
                     textBoxListViewText.Text = text;
@@ -11541,10 +11541,10 @@ namespace Nikse.SubtitleEdit.Forms
                 var makeHistory = textBoxListViewText.Text != fixedText;
                 if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
                 {
-                    var alternateFixedText = Utilities.UnbreakLine(textBoxListViewTextAlternate.Text);
+                    var alternateFixedText = Utilities.UnbreakLine(textBoxListViewTextAlternate.TextWithEnvironmentNewLine);
                     if (!makeHistory)
                     {
-                        makeHistory = textBoxListViewTextAlternate.Text != alternateFixedText;
+                        makeHistory = textBoxListViewTextAlternate.TextWithEnvironmentNewLine != alternateFixedText;
                     }
 
                     if (makeHistory)
@@ -23141,7 +23141,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (p == null)
                     {
                         var tmp = new Paragraph(_oldSelectedParagraph);
-                        tmp.Text = textBoxListViewText.Text;
+                        tmp.Text = textBoxListViewText.TextWithEnvironmentNewLine;
                         p = _subtitle.GetFirstAlike(tmp);
                     }
 
@@ -23788,7 +23788,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var original = Utilities.GetOriginalParagraph(_subtitleListViewIndex, _subtitle.Paragraphs[_subtitleListViewIndex], _subtitleAlternate.Paragraphs);
                 if (original != null)
                 {
-                    string text = textBoxListViewTextAlternate.Text.TrimEnd();
+                    string text = textBoxListViewTextAlternate.TextWithEnvironmentNewLine.TrimEnd();
 
                     // update _subtitle + listview
                     original.Text = text;

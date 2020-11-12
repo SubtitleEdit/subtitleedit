@@ -48,6 +48,8 @@ namespace Nikse.SubtitleEdit.Controls
             };
         }
 
+        public string TextWithEnvironmentNewLine => Text.Replace("\n", Environment.NewLine);
+
         public void DockToParentPanel(Panel panel)
         {
             _parentPanel = panel;
