@@ -299,6 +299,7 @@ namespace Nikse.SubtitleEdit.Controls
             _richTextBoxTemp.SelectionColor = ForeColor;
 
             bool htmlTagOn = false;
+            bool htmlTagFontOn = false;
             int htmlTagStart = -1;
             bool assaTagOn = false;
             var assaTagStart = -1;
@@ -328,6 +329,51 @@ namespace Nikse.SubtitleEdit.Controls
                         _richTextBoxTemp.SelectionStart = htmlTagStart;
                         _richTextBoxTemp.SelectionLength = i - htmlTagStart + 1;
                         _richTextBoxTemp.SelectionColor = Color.CornflowerBlue;
+                        if (htmlTagFontOn && htmlTagStart >= 0)
+                        {
+                            int colorStart = text.IndexOf(" color=", htmlTagStart, StringComparison.OrdinalIgnoreCase);
+                            if (colorStart > 0)
+                            {
+                                colorStart += " color=".Length;
+                                if (text[colorStart] == '"' || text[colorStart] == '\'')
+                                {
+                                    colorStart++;
+                                }
+
+                                int colorEnd = text.IndexOf('"', colorStart + 1);
+                                if (colorEnd > 0)
+                                {
+                                    var color = text.Substring(colorStart, colorEnd - colorStart);
+                                    try
+                                    {
+                                        Color c;
+                                        if (color.StartsWith("rgb(", StringComparison.Ordinal))
+                                        {
+                                            string[] arr = color.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                                            c = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
+                                        }
+                                        else
+                                        {
+                                            c = ColorTranslator.FromHtml(color);
+                                        }
+                                        _richTextBoxTemp.SelectionStart = colorStart;
+                                        _richTextBoxTemp.SelectionLength = colorEnd - colorStart;
+                                        _richTextBoxTemp.SelectionColor = c;
+
+                                        var diff = Math.Abs(c.R - BackColor.R) + Math.Abs(c.G - BackColor.G) + Math.Abs(c.B - BackColor.B);
+                                        if (diff < 60)
+                                        {
+                                            _richTextBoxTemp.SelectionBackColor = Color.FromArgb(byte.MaxValue - c.R, byte.MaxValue - c.G, byte.MaxValue - c.B, byte.MaxValue - c.R);
+                                        }
+                                    }
+                                    catch
+                                    {
+                                        // ignored
+                                    }
+                                }
+                            }
+                            htmlTagFontOn = false;
+                        }
                         htmlTagStart = -1;
                     }
                 }
@@ -352,6 +398,7 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         htmlTagOn = true;
                         htmlTagStart = i;
+                        htmlTagFontOn = s.StartsWith("<font ", StringComparison.OrdinalIgnoreCase);
                         tagOn = i;
                     }
                 }
