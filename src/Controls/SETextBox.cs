@@ -302,6 +302,10 @@ namespace Nikse.SubtitleEdit.Controls
             bool htmlTagFontOn = false;
             int htmlTagStart = -1;
             bool assaTagOn = false;
+            bool assaPrimaryColorTagOn = false;
+            bool assaSecondaryColorTagOn = false;
+            bool assaBorderColorTagOn = false;
+            bool assaShadowColorTagOn = false;
             var assaTagStart = -1;
             int tagOn = -1;
             var textLength = text.Length;
@@ -318,7 +322,36 @@ namespace Nikse.SubtitleEdit.Controls
                         _richTextBoxTemp.SelectionStart = assaTagStart;
                         _richTextBoxTemp.SelectionLength = i - assaTagStart + 1;
                         _richTextBoxTemp.SelectionColor = Color.DarkSeaGreen;
-                        htmlTagStart = -1;
+                        if (assaTagStart >= 0)
+                        {
+                            if (assaPrimaryColorTagOn)
+                            {
+                                string colorTag = text.IndexOf("\\c", assaTagStart, StringComparison.OrdinalIgnoreCase) != -1 ? "\\c" : "\\1c";
+
+                                SetASSAColor(text, assaTagStart, colorTag);
+                                assaPrimaryColorTagOn = false;
+                            }
+
+                            if (assaSecondaryColorTagOn)
+                            {
+                                SetASSAColor(text, assaTagStart, "\\2c");
+                                assaSecondaryColorTagOn = false;
+                            }
+
+                            if (assaBorderColorTagOn)
+                            {
+                                SetASSAColor(text, assaTagStart, "\\3c");
+                                assaBorderColorTagOn = false;
+                            }
+
+                            if (assaShadowColorTagOn)
+                            {
+                                SetASSAColor(text, assaTagStart, "\\4c");
+                                assaShadowColorTagOn = false;
+                            }
+                        }
+
+                        assaTagStart = -1;
                     }
                 }
                 else if (htmlTagOn)
@@ -379,9 +412,14 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 else if (ch == '{' && i < textLength - 1 && text[i + 1] == '\\' && text.IndexOf('}', i) > 0)
                 {
+                    var s = text.Substring(i);
                     assaTagOn = true;
                     tagOn = i;
                     assaTagStart = i;
+                    assaPrimaryColorTagOn = s.Contains("\\c", StringComparison.OrdinalIgnoreCase) || s.Contains("\\1c", StringComparison.OrdinalIgnoreCase);
+                    assaSecondaryColorTagOn = s.Contains("\\2c", StringComparison.OrdinalIgnoreCase);
+                    assaBorderColorTagOn = s.Contains("\\3c", StringComparison.OrdinalIgnoreCase);
+                    assaShadowColorTagOn = s.Contains("\\4c", StringComparison.OrdinalIgnoreCase);
                 }
                 else if (ch == '<')
                 {
@@ -440,6 +478,46 @@ namespace Nikse.SubtitleEdit.Controls
                 _checkRtfChange = false;
                 HighlightHtmlText();
                 _checkRtfChange = true;
+            }
+        }
+
+        private void SetASSAColor(string text, int assaTagStart, string colorTag)
+        {
+            int colorStart = text.IndexOf(colorTag, assaTagStart, StringComparison.OrdinalIgnoreCase);
+            if (colorStart > 0)
+            {
+                colorStart += colorTag.Length;
+                if (text[colorStart] == '&')
+                {
+                    colorStart++;
+                }
+
+                int colorEnd = text.IndexOf('&', colorStart + 1);
+                if (colorEnd > 0)
+                {
+                    var color = text.Substring(colorStart, colorEnd - colorStart);
+                    try
+                    {
+                        if (color.Length == 7)
+                        {
+                            var rgbColor = string.Concat("#", color[5], color[6], color[3], color[4], color[1], color[2]);
+                            Color c = ColorTranslator.FromHtml(rgbColor);
+                            _richTextBoxTemp.SelectionStart = colorStart;
+                            _richTextBoxTemp.SelectionLength = colorEnd - colorStart;
+                            _richTextBoxTemp.SelectionColor = c;
+
+                            var diff = Math.Abs(c.R - BackColor.R) + Math.Abs(c.G - BackColor.G) + Math.Abs(c.B - BackColor.B);
+                            if (diff < 60)
+                            {
+                                _richTextBoxTemp.SelectionBackColor = Color.FromArgb(byte.MaxValue - c.R, byte.MaxValue - c.B, byte.MaxValue - c.R, byte.MaxValue - c.G);
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+                }
             }
         }
     }
