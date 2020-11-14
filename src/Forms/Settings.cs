@@ -145,6 +145,9 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxSubtitleFontSize.Text = gs.SubtitleFontSize.ToString(CultureInfo.InvariantCulture);
             comboBoxSubtitleListViewFontSize.Text = gs.SubtitleListViewFontSize.ToString(CultureInfo.InvariantCulture);
             checkBoxSubtitleFontBold.Checked = gs.SubtitleFontBold;
+            checkBoxSubtitleTextBoxSyntaxColor.Checked = gs.SubtitleTextBoxSyntaxColor;
+            panelTextBoxHtmlColor.BackColor = gs.SubtitleTextBoxHtmlColor;
+            panelTextBoxAssColor.BackColor = gs.SubtitleTextBoxAssColor;
             checkBoxSubtitleListViewFontBold.Checked = gs.SubtitleListViewFontBold;
             checkBoxSubtitleCenter.Checked = gs.CenterSubtitleInTextBox;
             panelSubtitleFontColor.BackColor = gs.SubtitleFontColor;
@@ -1665,6 +1668,9 @@ namespace Nikse.SubtitleEdit.Forms
             gs.SubtitleFontSize = int.Parse(comboBoxSubtitleFontSize.Text);
             gs.SubtitleListViewFontSize = int.Parse(comboBoxSubtitleListViewFontSize.Text);
             gs.SubtitleFontBold = checkBoxSubtitleFontBold.Checked;
+            gs.SubtitleTextBoxSyntaxColor = checkBoxSubtitleTextBoxSyntaxColor.Checked;
+            gs.SubtitleTextBoxHtmlColor = panelTextBoxHtmlColor.BackColor;
+            gs.SubtitleTextBoxAssColor = panelTextBoxAssColor.BackColor;
             gs.SubtitleListViewFontBold = checkBoxSubtitleListViewFontBold.Checked;
             gs.CenterSubtitleInTextBox = checkBoxSubtitleCenter.Checked;
             gs.SubtitleFontColor = panelSubtitleFontColor.BackColor;

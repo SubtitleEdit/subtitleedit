@@ -64,8 +64,6 @@ namespace Nikse.SubtitleEdit.Forms
         private Subtitle _subtitleAlternate = new Subtitle();
         private string _subtitleAlternateFileName;
         private string _fileName;
-        private Panel _panelText;
-        private Panel _panelTextAlternate;
 
         private int _videoAudioTrackNumber = -1;
         public int VideoAudioTrackNumber
@@ -258,15 +256,18 @@ namespace Nikse.SubtitleEdit.Forms
                     timeUpDownStartTime.Top += xDiff;
                     numericUpDownDuration.Top += xDiff;
                     pictureBoxBookmark.Top += xDiff;
-                    _panelText.Top += xDiff;
-                    _panelText.Height -= xDiff;
-                    _panelTextAlternate.Top += xDiff;
-                    _panelTextAlternate.Height -= xDiff;
+                    textBoxListViewText.Top += xDiff;
+                    textBoxListViewText.Height -= xDiff;
+                    textBoxListViewTextAlternate.Top += xDiff;
+                    textBoxListViewTextAlternate.Height -= xDiff;
                     comboBoxAutoRepeat.Top += xDiff;
                     comboBoxAutoContinue.Top += xDiff;
                 }
             }
             labelAutoDuration.Left = labelDuration.Left - (labelAutoDuration.Width - 5);
+
+            textBoxListViewText.BackColor = SystemColors.ActiveBorder;
+            textBoxListViewTextAlternate.BackColor = SystemColors.ActiveBorder;
 
             base.OnLoad(e);
         }
@@ -303,31 +304,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 Icon = Properties.Resources.SubtitleEditFormIcon;
 
-
-                _panelText = new Panel();
-                groupBoxEdit.Controls.Add(_panelText);
-                _panelText.Left = textBoxListViewText.Left;
-                _panelText.Top = textBoxListViewText.Top;
-                _panelText.Width = textBoxListViewText.Width;
-                _panelText.Height = textBoxListViewText.Height;
-                _panelText.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-                textBoxListViewText.DockToParentPanel(_panelText);
-                textBoxListViewText.Parent = _panelText;
-                textBoxListViewText.Dock = DockStyle.Fill;
-
-                _panelTextAlternate = new Panel();
-                groupBoxEdit.Controls.Add(_panelTextAlternate);
-                _panelTextAlternate.Left = _panelText.Left;
-                _panelTextAlternate.Top = _panelText.Top;
-                _panelTextAlternate.Width = _panelText.Width;
-                _panelTextAlternate.Height = _panelText.Height;
-                _panelTextAlternate.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-                textBoxListViewTextAlternate.Visible = true;
-                textBoxListViewTextAlternate.DockToParentPanel(_panelTextAlternate);
-                textBoxListViewTextAlternate.Parent = _panelTextAlternate;
-                textBoxListViewTextAlternate.Dock = DockStyle.Fill;
-                _panelTextAlternate.Visible = false;
-
+                textBoxListViewTextAlternate.Visible = false;
                 labelAlternateText.Visible = false;
                 labelAlternateCharactersPerSecond.Visible = false;
                 labelTextAlternateLineLengths.Visible = false;
@@ -4570,6 +4547,7 @@ namespace Nikse.SubtitleEdit.Forms
             var oldShowcolumnDuration = Configuration.Settings.Tools.ListViewShowColumnDuration;
             var oldShowColumnCharsPerSec = Configuration.Settings.Tools.ListViewShowColumnCharsPerSec;
             var oldShowWordsMinColumn = Configuration.Settings.Tools.ListViewShowColumnWordsPerMin;
+            var oldSubtitleTextBoxSyntaxColor = Configuration.Settings.General.SubtitleTextBoxSyntaxColor;
             using (var settings = new Settings())
             {
                 settings.Initialize(Icon, toolStripButtonFileNew.Image, toolStripButtonFileOpen.Image, toolStripButtonSave.Image, toolStripButtonSaveAs.Image, toolStripButtonFind.Image,
@@ -4752,6 +4730,13 @@ namespace Nikse.SubtitleEdit.Forms
                 RefreshTimeCodeMode();
             }
 
+            if (oldSubtitleTextBoxSyntaxColor != Configuration.Settings.General.SubtitleTextBoxSyntaxColor)
+            {
+                textBoxListViewText.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
+                textBoxListViewTextAlternate.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
+                RefreshSelectedParagraph();
+            }
+
             SubtitleListview1.SyntaxColorAllLines(_subtitle);
             mediaPlayer.LastParagraph = null;
             Application.DoEvents();
@@ -4827,7 +4812,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonUnBreak.Visible = false;
             buttonAutoBreak.Visible = false;
             buttonSplitLine.Visible = false;
-            _panelTextAlternate.Visible = true;
+            textBoxListViewTextAlternate.Visible = true;
             labelAlternateText.Visible = true;
             labelAlternateCharactersPerSecond.Visible = true;
             labelTextAlternateLineLengths.Visible = true;
@@ -5708,7 +5693,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 SubtitleListview1.Items[firstIndex].Focused = true;
                                 SubtitleListview1.Focus();
                                 textBoxListViewText.Text = _subtitle.Paragraphs[firstIndex].Text;
-                                if (_subtitleAlternate != null && _panelTextAlternate.Visible)
+                                if (_subtitleAlternate != null && textBoxListViewTextAlternate.Visible)
                                 {
                                     var orginial = Utilities.GetOriginalParagraph(_findHelper.SelectedIndex, _subtitle.Paragraphs[_findHelper.SelectedIndex], _subtitleAlternate.Paragraphs);
                                     if (orginial != null)
@@ -5990,7 +5975,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _subtitleListViewIndex = _findHelper.SelectedIndex;
             textBoxListViewText.Text = _subtitle.Paragraphs[_findHelper.SelectedIndex].Text;
-            if (_subtitleAlternate != null && _panelTextAlternate.Visible)
+            if (_subtitleAlternate != null && textBoxListViewTextAlternate.Visible)
             {
                 var orginial = Utilities.GetOriginalParagraph(_findHelper.SelectedIndex, _subtitle.Paragraphs[_findHelper.SelectedIndex], _subtitleAlternate.Paragraphs);
                 if (orginial != null)
@@ -6967,7 +6952,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (selectedIndex >= 0)
                         {
                             _subtitle.HistoryItems[_undoIndex].RedoParagraphs[selectedIndex].Text =
-                                textBoxListViewText.TextWithEnvironmentNewLine;
+                                textBoxListViewText.Text;
                             if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null &&
                                 selectedIndex < _subtitle.HistoryItems[_undoIndex].RedoParagraphsAlternate.Count)
                             {
@@ -8743,9 +8728,9 @@ namespace Nikse.SubtitleEdit.Forms
                     bool showSource = false;
 
                     var last = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);
-                    if (textBoxListViewText.TextWithEnvironmentNewLine != last.Text)
+                    if (textBoxListViewText.Text != last.Text)
                     {
-                        last.Text = textBoxListViewText.TextWithEnvironmentNewLine.TrimEnd();
+                        last.Text = textBoxListViewText.Text.TrimEnd();
                         SubtitleListview1.SetText(_subtitleListViewIndex, last.Text);
                         showSource = true;
                     }
@@ -8789,8 +8774,8 @@ namespace Nikse.SubtitleEdit.Forms
                     if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
                     {
                         InitializeListViewEditBoxAlternate(p, firstSelectedIndex);
-                        labelAlternateCharactersPerSecond.Left = _panelTextAlternate.Left + (_panelTextAlternate.Width - labelAlternateCharactersPerSecond.Width);
-                        labelTextAlternateLineTotal.Left = _panelTextAlternate.Left + (_panelTextAlternate.Width - labelTextAlternateLineTotal.Width);
+                        labelAlternateCharactersPerSecond.Left = textBoxListViewTextAlternate.Left + (textBoxListViewTextAlternate.Width - labelAlternateCharactersPerSecond.Width);
+                        labelTextAlternateLineTotal.Left = textBoxListViewTextAlternate.Left + (textBoxListViewTextAlternate.Width - labelTextAlternateLineTotal.Width);
                     }
                 }
             }
@@ -8913,7 +8898,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.Settings.Tools.ListViewSyntaxColorWideLines)
             {
                 UiUtil.GetLinePixelWidths(singleLinePixels, text);
-                labelSingleLinePixels.Visible = !(_panelText.Width / 3 < labelTextLineLengths.Width);
+                labelSingleLinePixels.Visible = !(textBoxListViewText.Width / 3 < labelTextLineLengths.Width);
             }
             else
             {
@@ -9032,15 +9017,15 @@ namespace Nikse.SubtitleEdit.Forms
                 var lang = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
                 var abl = Utilities.AutoBreakLine(s, lang).SplitToLines();
                 if (abl.Count > maxLines || abl.Any(li => li.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) > Configuration.Settings.General.SubtitleLineMaximumLength) &&
-                    !_panelTextAlternate.Visible)
+                    !textBoxListViewTextAlternate.Visible)
                 {
                     buttonSplitLine.Visible = true;
                 }
             }
 
             UpdateListViewTextCharactersPerSeconds(charactersPerSecond, paragraph);
-            charactersPerSecond.Left = textBox.Parent.Left + (textBox.Parent.Width - labelCharactersPerSecond.Width);
-            lineTotal.Left = textBox.Parent.Left + (textBox.Parent.Width - lineTotal.Width);
+            charactersPerSecond.Left = textBox.Left + (textBox.Width - labelCharactersPerSecond.Width);
+            lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
         }
 
         private void ButtonNextClick(object sender, EventArgs e)
@@ -9141,14 +9126,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                var fixedText = Utilities.AutoBreakLine(textBoxListViewText.TextWithEnvironmentNewLine, language);
-                var makeHistory = textBoxListViewText.TextWithEnvironmentNewLine != fixedText;
+                var fixedText = Utilities.AutoBreakLine(textBoxListViewText.Text, language);
+                var makeHistory = textBoxListViewText.Text != fixedText;
                 if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
                 {
-                    var alternateFixedText = Utilities.AutoBreakLine(textBoxListViewTextAlternate.TextWithEnvironmentNewLine, languageOriginal);
+                    var alternateFixedText = Utilities.AutoBreakLine(textBoxListViewTextAlternate.Text, languageOriginal);
                     if (!makeHistory)
                     {
-                        makeHistory = textBoxListViewTextAlternate.TextWithEnvironmentNewLine != alternateFixedText;
+                        makeHistory = textBoxListViewTextAlternate.Text != alternateFixedText;
                     }
 
                     if (makeHistory)
@@ -9166,7 +9151,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            var s = textBoxListViewText.TextWithEnvironmentNewLine;
+            var s = textBoxListViewText.Text;
             var startText = s.Substring(0, Math.Min(textCaretPos, s.Length));
             var numberOfNewLines = Utilities.CountTagInText(startText, Environment.NewLine);
             textCaretPos += numberOfNewLines;
@@ -9239,11 +9224,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             // update _subtitle + listview
-            string text = textBoxListViewText.TextWithEnvironmentNewLine.TrimEnd();
+            string text = textBoxListViewText.Text.TrimEnd();
             if (ContainsNonStandardNewLines(text))
             {
                 var lines = text.SplitToLines();
                 text = string.Join(Environment.NewLine, lines);
+                textBoxListViewText.Text = text;
             }
 
             if (idx < 0 || idx >= _subtitle.Paragraphs.Count)
@@ -9328,11 +9314,12 @@ namespace Nikse.SubtitleEdit.Forms
                     UiUtil.CheckAutoWrap(textBoxListViewTextAlternate, new KeyEventArgs(Keys.None), numberOfNewLines);
 
                     // update _subtitle + listview
-                    string text = textBoxListViewTextAlternate.TextWithEnvironmentNewLine.TrimEnd();
+                    string text = textBoxListViewTextAlternate.Text.TrimEnd();
                     if (ContainsNonStandardNewLines(text))
                     {
                         var lines = text.SplitToLines();
                         text = string.Join(Environment.NewLine, lines);
+                        textBoxListViewTextAlternate.Text = text;
                     }
 
                     original.Text = text;
@@ -9371,14 +9358,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             int numberOfLines = Utilities.GetNumberOfLines(textBoxListViewText.Text);
 
-            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.F12)
-            {
-                Clipboard.SetText(textBoxListViewText.Rtf);
-                e.SuppressKeyPress = true;
-                return;
-            }
-
-
             if (e.Modifiers == Keys.None && e.KeyCode == Keys.Enter && numberOfLines > Configuration.Settings.General.MaxNumberOfLines)
             {
                 e.SuppressKeyPress = true;
@@ -9396,7 +9375,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.KeyData == _shortcuts.MainTextBoxBreakAtCursorPosition)
             {
                 var text = Utilities.ReSplit(textBoxListViewText.Text, textBoxListViewText.SelectionStart);
-                if (text != textBoxListViewText.TextWithEnvironmentNewLine)
+                if (text != textBoxListViewText.Text)
                 {
                     MakeHistoryForUndo(string.Format(_language.BeforeReplace, Configuration.Settings.Language.Settings.MainTextBoxAutoBreakFromPos));
                     textBoxListViewText.Text = text;
@@ -9412,7 +9391,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.KeyData == _shortcuts.MainTextBoxBreakAtCursorPositionAndGoToNext)
             {
                 var text = Utilities.ReSplit(textBoxListViewText.Text, textBoxListViewText.SelectionStart);
-                if (text != textBoxListViewText.TextWithEnvironmentNewLine)
+                if (text != textBoxListViewText.Text)
                 {
                     MakeHistoryForUndo(string.Format(_language.BeforeReplace, Configuration.Settings.Language.Settings.MainTextBoxAutoBreakFromPosAndGoToNext));
                     textBoxListViewText.Text = text;
@@ -11541,10 +11520,10 @@ namespace Nikse.SubtitleEdit.Forms
                 var makeHistory = textBoxListViewText.Text != fixedText;
                 if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
                 {
-                    var alternateFixedText = Utilities.UnbreakLine(textBoxListViewTextAlternate.TextWithEnvironmentNewLine);
+                    var alternateFixedText = Utilities.UnbreakLine(textBoxListViewTextAlternate.Text);
                     if (!makeHistory)
                     {
-                        makeHistory = textBoxListViewTextAlternate.TextWithEnvironmentNewLine != alternateFixedText;
+                        makeHistory = textBoxListViewTextAlternate.Text != alternateFixedText;
                     }
 
                     if (makeHistory)
@@ -16810,7 +16789,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (!hasStartDash && _subtitleAlternate != null && _panelTextAlternate.Visible)
+                if (!hasStartDash && _subtitleAlternate != null && textBoxListViewTextAlternate.Visible)
                 {
                     var original = Utilities.GetOriginalParagraph(index, p, _subtitleAlternate.Paragraphs);
                     if (original != null)
@@ -16923,7 +16902,7 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxListViewText.Text = text;
                 }
 
-                if (_subtitleAlternate != null && _panelTextAlternate.Visible)
+                if (_subtitleAlternate != null && textBoxListViewTextAlternate.Visible)
                 {
                     var original = Utilities.GetOriginalParagraph(index, p, _subtitleAlternate.Paragraphs);
                     if (original != null)
@@ -16991,7 +16970,7 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxListViewText.Text = text;
                 }
 
-                if (_subtitleAlternate != null && _panelTextAlternate.Visible)
+                if (_subtitleAlternate != null && textBoxListViewTextAlternate.Visible)
                 {
                     var original = Utilities.GetOriginalParagraph(index, p, _subtitleAlternate.Paragraphs);
                     if (original != null)
@@ -18620,12 +18599,12 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonAutoBreak.Visible = false;
                 buttonSplitLine.Visible = false;
 
-                _panelText.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Bottom;
-                _panelText.Width = (groupBoxEdit.Width - (_panelText.Left + 10)) / 2;
-                _panelTextAlternate.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Bottom;
-                _panelTextAlternate.Left = _panelText.Left + _panelText.Width + 3;
-                _panelTextAlternate.Width = _panelText.Width;
-                _panelTextAlternate.Visible = true;
+                textBoxListViewText.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Bottom;
+                textBoxListViewText.Width = (groupBoxEdit.Width - (textBoxListViewText.Left + 10)) / 2;
+                textBoxListViewTextAlternate.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Bottom;
+                textBoxListViewTextAlternate.Left = textBoxListViewText.Left + textBoxListViewText.Width + 3;
+                textBoxListViewTextAlternate.Width = textBoxListViewText.Width;
+                textBoxListViewTextAlternate.Visible = true;
                 labelAlternateText.Text = _languageGeneral.OriginalText;
                 labelAlternateText.Visible = true;
                 labelAlternateCharactersPerSecond.Visible = true;
@@ -18634,8 +18613,8 @@ namespace Nikse.SubtitleEdit.Forms
                 labelAlternateSingleLinePixels.Visible = true;
                 labelTextAlternateLineTotal.Visible = true;
 
-                labelCharactersPerSecond.Left = _panelText.Left + (_panelText.Width - labelCharactersPerSecond.Width);
-                labelTextLineTotal.Left = _panelText.Left + (_panelText.Width - labelTextLineTotal.Width);
+                labelCharactersPerSecond.Left = textBoxListViewText.Left + (textBoxListViewText.Width - labelCharactersPerSecond.Width);
+                labelTextLineTotal.Left = textBoxListViewText.Left + (textBoxListViewText.Width - labelTextLineTotal.Width);
                 Main_Resize(null, null);
                 _changeAlternateSubtitleHash = _subtitleAlternate.GetFastHashCode(GetCurrentEncoding().BodyName);
 
@@ -19250,8 +19229,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MainResize()
         {
-            var tbText = _panelText;
-            var tbOriginal = _panelTextAlternate;
+            var tbText = textBoxListViewText;
+            var tbOriginal = textBoxListViewTextAlternate;
             int firstLeft = 236;
 
             var lbText = labelText;
@@ -19268,8 +19247,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (Configuration.Settings.General.RightToLeftMode && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
             {
-                tbText = _panelTextAlternate;
-                tbOriginal = _panelText;
+                tbText = textBoxListViewTextAlternate;
+                tbOriginal = textBoxListViewText;
 
                 lbText = labelAlternateText;
                 lbTextOriginal = labelText;
@@ -19287,7 +19266,7 @@ namespace Nikse.SubtitleEdit.Forms
             lbSingleLine.Left = firstLeft;
 
             if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0 &&
-                _panelTextAlternate.Visible)
+                textBoxListViewTextAlternate.Visible)
             {
                 tbText.Width = (groupBoxEdit.Width - (tbText.Left + 10)) / 2;
                 tbOriginal.Left = tbText.Left + tbText.Width + 3;
@@ -19300,7 +19279,7 @@ namespace Nikse.SubtitleEdit.Forms
                 labelAlternateSingleLine.Left = labelTextAlternateLineLengths.Left + labelTextAlternateLineLengths.Width;
                 labelAlternateSingleLinePixels.Left = labelAlternateSingleLine.Left + labelAlternateSingleLine.Width + 10;
                 labelTextAlternateLineTotal.Left = tbOriginal.Left + (tbOriginal.Width - labelTextAlternateLineTotal.Width);
-                if (_panelText.Width / 2.1 < labelTextLineLengths.Width)
+                if (textBoxListViewText.Width / 2.1 < labelTextLineLengths.Width)
                 {
                     labelTextAlternateLineTotal.Visible = false;
                 }
@@ -19309,7 +19288,7 @@ namespace Nikse.SubtitleEdit.Forms
                     labelTextAlternateLineTotal.Visible = true;
                 }
 
-                if (_panelText.Width / 3 < labelTextLineLengths.Width)
+                if (textBoxListViewText.Width / 3 < labelTextLineLengths.Width)
                 {
                     labelAlternateSingleLinePixels.Visible = false;
                 }
@@ -19324,7 +19303,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelTextLineTotal.Left = tbText.Left + (tbText.Width - labelTextLineTotal.Width);
             SubtitleListview1.AutoSizeAllColumns(this);
 
-            if (_panelText.Width / 2.1 < labelTextLineLengths.Width)
+            if (textBoxListViewText.Width / 2.1 < labelTextLineLengths.Width)
             {
                 labelTextLineTotal.Visible = false;
             }
@@ -19333,7 +19312,7 @@ namespace Nikse.SubtitleEdit.Forms
                 labelTextLineTotal.Visible = true;
             }
 
-            if (_panelText.Width / 3 < labelTextLineLengths.Width)
+            if (textBoxListViewText.Width / 3 < labelTextLineLengths.Width)
             {
                 labelSingleLinePixels.Visible = false;
             }
@@ -20682,10 +20661,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             // Fix some large font issue
-            if (numericUpDownDuration.Left + numericUpDownDuration.Width > _panelText.Left)
+            if (numericUpDownDuration.Left + numericUpDownDuration.Width > textBoxListViewText.Left)
             {
                 numericUpDownDuration.Left = timeUpDownStartTime.Left + timeUpDownStartTime.Width + 5;
-                numericUpDownDuration.Width = _panelText.Left - numericUpDownDuration.Left - 5;
+                numericUpDownDuration.Width = textBoxListViewText.Left - numericUpDownDuration.Left - 5;
                 labelDuration.Left = numericUpDownDuration.Left;
             }
 
@@ -22338,7 +22317,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private SETextBox GetFocusedTextBox()
         {
-            if (!_panelTextAlternate.Visible)
+            if (!textBoxListViewTextAlternate.Visible)
             {
                 return textBoxListViewText;
             }
@@ -22700,12 +22679,12 @@ namespace Nikse.SubtitleEdit.Forms
                         buttonAutoBreak.Visible = false;
                         buttonSplitLine.Visible = false;
 
-                        _panelText.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Bottom;
-                        _panelText.Width = (groupBoxEdit.Width - (_panelText.Left + 10)) / 2;
-                        _panelTextAlternate.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Bottom;
-                        _panelTextAlternate.Left = _panelText.Left + _panelText.Width + 3;
-                        _panelTextAlternate.Width = _panelText.Width;
-                        _panelTextAlternate.Visible = true;
+                        textBoxListViewText.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Bottom;
+                        textBoxListViewText.Width = (groupBoxEdit.Width - (textBoxListViewText.Left + 10)) / 2;
+                        textBoxListViewTextAlternate.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Bottom;
+                        textBoxListViewTextAlternate.Left = textBoxListViewText.Left + textBoxListViewText.Width + 3;
+                        textBoxListViewTextAlternate.Width = textBoxListViewText.Width;
+                        textBoxListViewTextAlternate.Visible = true;
                         labelAlternateText.Text = _languageGeneral.OriginalText;
                         labelAlternateText.Visible = true;
                         labelAlternateCharactersPerSecond.Visible = true;
@@ -22714,8 +22693,8 @@ namespace Nikse.SubtitleEdit.Forms
                         labelAlternateSingleLinePixels.Visible = true;
                         labelTextAlternateLineTotal.Visible = true;
 
-                        labelCharactersPerSecond.Left = _panelText.Left + (_panelText.Width - labelCharactersPerSecond.Width);
-                        labelTextLineTotal.Left = _panelText.Left + (_panelText.Width - labelTextLineTotal.Width);
+                        labelCharactersPerSecond.Left = textBoxListViewText.Left + (textBoxListViewText.Width - labelCharactersPerSecond.Width);
+                        labelTextLineTotal.Left = textBoxListViewText.Left + (textBoxListViewText.Width - labelTextLineTotal.Width);
                         AddAlternate();
                         Main_Resize(null, null);
                         _changeAlternateSubtitleHash = _subtitleAlternate.GetFastHashCode(GetCurrentEncoding().BodyName);
@@ -23141,7 +23120,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (p == null)
                     {
                         var tmp = new Paragraph(_oldSelectedParagraph);
-                        tmp.Text = textBoxListViewText.TextWithEnvironmentNewLine;
+                        tmp.Text = textBoxListViewText.Text;
                         p = _subtitle.GetFirstAlike(tmp);
                     }
 
@@ -23788,7 +23767,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var original = Utilities.GetOriginalParagraph(_subtitleListViewIndex, _subtitle.Paragraphs[_subtitleListViewIndex], _subtitleAlternate.Paragraphs);
                 if (original != null)
                 {
-                    string text = textBoxListViewTextAlternate.TextWithEnvironmentNewLine.TrimEnd();
+                    string text = textBoxListViewTextAlternate.Text.TrimEnd();
 
                     // update _subtitle + listview
                     original.Text = text;
@@ -24024,15 +24003,15 @@ namespace Nikse.SubtitleEdit.Forms
 
             buttonUnBreak.Visible = true;
             buttonAutoBreak.Visible = true;
-            _panelTextAlternate.Visible = false;
+            textBoxListViewTextAlternate.Visible = false;
             labelAlternateText.Visible = false;
             labelAlternateCharactersPerSecond.Visible = false;
             labelTextAlternateLineLengths.Visible = false;
             labelAlternateSingleLine.Visible = false;
             labelAlternateSingleLinePixels.Visible = false;
             labelTextAlternateLineTotal.Visible = false;
-            _panelText.Width = (groupBoxEdit.Width - (_panelText.Left + 8 + buttonUnBreak.Width));
-            _panelText.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
+            textBoxListViewText.Width = (groupBoxEdit.Width - (textBoxListViewText.Left + 8 + buttonUnBreak.Width));
+            textBoxListViewText.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
             labelTextLineTotal.Left = 236;
             labelTextAlternateLineTotal.Left = 236;
 
@@ -25205,7 +25184,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (lineBreakPos < 0 || pos <= lineBreakPos)
             {
                 lineTotal.Text = "1," + (pos + 1) + totalL;
-                lineTotal.Left = textBox.Parent.Left + (textBox.Parent.Width - lineTotal.Width);
+                lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
                 return;
             }
 
@@ -25213,7 +25192,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (secondLineBreakPos < 0 || pos <= secondLineBreakPos + extraNewLineLength)
             {
                 lineTotal.Text = "2," + (pos - (lineBreakPos + extraNewLineLength)) + totalL;
-                lineTotal.Left = textBox.Parent.Left + (textBox.Parent.Width - lineTotal.Width);
+                lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
                 return;
             }
 
@@ -25221,7 +25200,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (thirdLineBreakPos < 0 || pos < thirdLineBreakPos + (extraNewLineLength * 2))
             {
                 lineTotal.Text = "3," + (pos - (secondLineBreakPos + extraNewLineLength)) + totalL;
-                lineTotal.Left = textBox.Parent.Left + (textBox.Parent.Width - lineTotal.Width);
+                lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
                 return;
             }
 
@@ -25229,7 +25208,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (forthLineBreakPos < 0 || pos < forthLineBreakPos + (extraNewLineLength * 3))
             {
                 lineTotal.Text = "4," + (pos - (thirdLineBreakPos + extraNewLineLength)) + totalL;
-                lineTotal.Left = textBox.Parent.Left + (textBox.Parent.Width - lineTotal.Width);
+                lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
                 return;
             }
 
@@ -25612,8 +25591,6 @@ namespace Nikse.SubtitleEdit.Forms
             MainResize();
             TextBoxListViewTextTextChanged(null, null);
             textBoxListViewTextAlternate_TextChanged(null, null);
-            textBoxListViewText.HighlightHtmlText();
-            textBoxListViewTextAlternate.HighlightHtmlText();
             if (focusedItem != null)
             {
                 SubtitleListview1.SelectIndexAndEnsureVisible(focusedItem.Index, true);
@@ -27293,7 +27270,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                if (_panelTextAlternate.Visible && textBoxListViewTextAlternate.Enabled && textBoxListViewTextAlternate.Focused)
+                if (textBoxListViewTextAlternate.Visible && textBoxListViewTextAlternate.Enabled && textBoxListViewTextAlternate.Focused)
                 {
                     if (!string.IsNullOrEmpty(textBoxListViewTextAlternate.SelectedText))
                     {

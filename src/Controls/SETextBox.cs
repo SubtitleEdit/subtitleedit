@@ -9,8 +9,10 @@ namespace Nikse.SubtitleEdit.Controls
     /// <summary>
     /// TextBox with drag and drop.
     /// </summary>
-    public sealed class SETextBox : RichTextBox
+    public sealed class SETextBox : Panel
     {
+        public new event EventHandler TextChanged;
+
         private string _dragText = string.Empty;
         private int _dragStartFrom;
         private long _dragStartTicks;
@@ -18,46 +20,389 @@ namespace Nikse.SubtitleEdit.Controls
         private bool _dragFromThis;
         private long _gotFocusTicks;
         private bool _checkRtfChange = true;
-        private Panel _parentPanel;
-        private readonly RichTextBox _richTextBoxTemp;
+        private RichTextBox _richTextBoxTemp;
+        private RichTextBox _uiTextBox;
+        private TextBox _textBox;
 
         public SETextBox()
         {
-            _richTextBoxTemp = new RichTextBox();
-            AllowDrop = true;
-            DragEnter += SETextBox_DragEnter;
-            DragDrop += SETextBox_DragDrop;
-            GotFocus += (sender, args) => { _gotFocusTicks = DateTime.UtcNow.Ticks; };
-            MouseDown += SETextBox_MouseDown;
-            MouseUp += SETextBox_MouseUp;
-            TextChanged += TextChangedHighlight;
-
-            Enter += (sender, args) =>
-            {
-                if (_parentPanel != null)
-                {
-                    _parentPanel.BackColor = SystemColors.Highlight;
-                }
-            };
-            Leave += (sender, args) =>
-            {
-                if (_parentPanel != null)
-                {
-                    _parentPanel.BackColor = SystemColors.ActiveBorder;
-                }
-            };
+            Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
         }
 
-        public string TextWithEnvironmentNewLine => Text.Replace("\n", Environment.NewLine);
-
-        public void DockToParentPanel(Panel panel)
+        public void Initialize(bool useSyntaxColoring)
         {
-            _parentPanel = panel;
-            Parent = panel;
-            _parentPanel.Padding = new Padding(1);
-            _parentPanel.BackColor = SystemColors.ActiveBorder;
+            ContextMenuStrip oldContextMenuStrip = null;
+            if (_textBox != null)
+            {
+                oldContextMenuStrip = _textBox.ContextMenuStrip;
+            }
+            else if (_uiTextBox != null)
+            {
+                oldContextMenuStrip = _uiTextBox.ContextMenuStrip;
+            }
+
             BorderStyle = BorderStyle.None;
-            Dock = DockStyle.Fill;
+            Padding = new Padding(1);
+            BackColor = SystemColors.ActiveBorder;
+
+            Controls.Clear();
+            _textBox?.Dispose();
+            _richTextBoxTemp?.Dispose();
+            _uiTextBox?.Dispose();
+            if (useSyntaxColoring)
+            {
+                _textBox = null;
+                _richTextBoxTemp = new RichTextBox();
+                _uiTextBox = new RichTextBox { BorderStyle = BorderStyle.None, Multiline = true };
+                InitializeBackingControl(_uiTextBox);
+            }
+            else
+            {
+                _textBox = new TextBox { BorderStyle = BorderStyle.None, Multiline = true };
+                InitializeBackingControl(_textBox);
+            }
+
+            UpdateFontAndColors();
+            if (oldContextMenuStrip != null)
+            {
+                ContextMenuStrip = oldContextMenuStrip;
+            }
+        }
+
+        private void InitializeBackingControl(Control textBox)
+        {
+            textBox.AllowDrop = true;
+            textBox.DragEnter += SETextBox_DragEnter;
+            textBox.DragDrop += SETextBox_DragDrop;
+            textBox.GotFocus += (sender, args) => { _gotFocusTicks = DateTime.UtcNow.Ticks; };
+            textBox.MouseDown += SETextBox_MouseDown;
+            textBox.MouseUp += SETextBox_MouseUp;
+            textBox.TextChanged += TextChangedHighlight;
+            Controls.Add(textBox);
+            textBox.Dock = DockStyle.Fill;
+            textBox.Enter += (sender, args) => { BackColor = SystemColors.Highlight; };
+            textBox.Leave += (sender, args) => { BackColor = SystemColors.ActiveBorder; };
+            textBox.TextChanged += (sender, args) => { TextChanged?.Invoke(sender, args); };
+        }
+
+        private void UpdateFontAndColors()
+        {
+            UpdateFontAndColors(_uiTextBox);
+            UpdateFontAndColors(_richTextBoxTemp);
+            UpdateFontAndColors(_textBox);
+        }
+
+        public void UpdateFontAndColors(Control textBox)
+        {
+            if (textBox == null)
+            {
+                return;
+            }
+
+            var gs = Configuration.Settings.General;
+            if (string.IsNullOrEmpty(gs.SubtitleFontName))
+            {
+                gs.SubtitleFontName = Font.Name;
+            }
+
+            try
+            {
+                textBox.Font = gs.SubtitleFontBold ? new Font(gs.SubtitleFontName, gs.SubtitleFontSize, FontStyle.Bold) : new Font(gs.SubtitleFontName, gs.SubtitleFontSize);
+                textBox.ForeColor = gs.SubtitleFontColor;
+                textBox.BackColor = gs.SubtitleBackgroundColor;
+            }
+            catch
+            {
+                // ignore
+            }
+        }
+
+        private bool _fixedArabicComma = false;
+        public override string Text
+        {
+            get
+            {
+                if (_textBox != null)
+                {
+                    return _textBox.Text;
+                }
+
+                var s = _uiTextBox.Text;
+                if (_fixedArabicComma)
+                {
+                    s = s.Replace("\u202A", string.Empty);
+                }
+
+                return string.Join(Environment.NewLine, s.SplitToLines());
+            }
+            set
+            {
+                if (_textBox != null)
+                {
+                    _textBox.Text = value;
+                    return;
+                }
+
+                _fixedArabicComma = false;
+                var s = value;
+                if (!Configuration.Settings.General.RightToLeftMode && s.EndsWith('،') && !s.Contains('\u202A'))
+                {
+                    s = s.Replace("،", "\u202A،");
+                    _fixedArabicComma = true;
+                }
+
+                _uiTextBox.Text = string.Join("\n", s.SplitToLines());
+            }
+        }
+
+        public int SelectionStart
+        {
+            get => _textBox?.SelectionStart ?? _uiTextBox.SelectionStart;
+            set
+            {
+                if (_textBox != null)
+                {
+                    _textBox.SelectionStart = value;
+                    return;
+                }
+
+                _uiTextBox.SelectionStart = value;
+            }
+        }
+
+        public int SelectionLength
+        {
+            get => _textBox?.SelectionLength ?? _uiTextBox.SelectionLength;
+            set
+            {
+                if (_textBox != null)
+                {
+                    _textBox.SelectionLength = value;
+                    return;
+                }
+
+                _uiTextBox.SelectionLength = value;
+            }
+        }
+
+        public bool HideSelection
+        {
+            get => _textBox?.HideSelection ?? _uiTextBox.HideSelection;
+            set
+            {
+                if (_textBox != null)
+                {
+                    _textBox.HideSelection = value;
+                    return;
+                }
+
+                _uiTextBox.HideSelection = value;
+            }
+        }
+
+        public string SelectedText
+        {
+            get => _textBox?.SelectedText ?? _uiTextBox.SelectedText;
+            set
+            {
+                if (_textBox != null)
+                {
+                    _textBox.SelectedText = value;
+                    return;
+                }
+
+                _uiTextBox.SelectedText = value;
+            }
+        }
+
+        public bool Multiline
+        {
+            get => _textBox?.Multiline ?? _uiTextBox.Multiline;
+            set
+            {
+                if (_textBox != null)
+                {
+                    _textBox.Multiline = value;
+                    return;
+                }
+
+                _uiTextBox.Multiline = value;
+            }
+        }
+
+        public new bool Enabled
+        {
+            get => _textBox?.Enabled ?? _uiTextBox.Enabled;
+            set
+            {
+                if (_textBox != null)
+                {
+                    _textBox.Enabled = value;
+                    return;
+                }
+
+                _uiTextBox.Enabled = value;
+            }
+        }
+
+        public RichTextBoxScrollBars ScrollBars
+        {
+            get
+            {
+                if (_textBox != null)
+                {
+                    if (_textBox.ScrollBars == System.Windows.Forms.ScrollBars.Both)
+                    {
+                        return RichTextBoxScrollBars.Both;
+                    }
+
+                    if (_textBox.ScrollBars == System.Windows.Forms.ScrollBars.Horizontal)
+                    {
+                        return RichTextBoxScrollBars.Horizontal;
+                    }
+
+                    if (_textBox.ScrollBars == System.Windows.Forms.ScrollBars.Vertical)
+                    {
+                        return RichTextBoxScrollBars.Vertical;
+                    }
+
+                    return RichTextBoxScrollBars.None;
+                }
+
+                return _uiTextBox.ScrollBars;
+            }
+            set
+            {
+                if (_textBox != null)
+                {
+                    if (value == RichTextBoxScrollBars.Both || value == RichTextBoxScrollBars.ForcedBoth)
+                    {
+                        _textBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+                    }
+                    else if (value == RichTextBoxScrollBars.Horizontal || value == RichTextBoxScrollBars.ForcedHorizontal)
+                    {
+                        _textBox.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
+                    }
+                    else if (value == RichTextBoxScrollBars.Vertical || value == RichTextBoxScrollBars.ForcedVertical)
+                    {
+                        _textBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+                    }
+
+                    _textBox.ScrollBars = System.Windows.Forms.ScrollBars.None;
+                    return;
+                }
+
+                _uiTextBox.ScrollBars = value;
+            }
+        }
+
+        public override ContextMenuStrip ContextMenuStrip
+        {
+            get => _textBox?.ContextMenuStrip ?? _uiTextBox.ContextMenuStrip;
+            set
+            {
+                if (_textBox != null)
+                {
+                    _textBox.ContextMenuStrip = value;
+                    return;
+                }
+
+                _uiTextBox.ContextMenuStrip = value;
+            }
+        }
+
+        public int GetCharIndexFromPosition(Point pt)
+        {
+            if (_textBox != null)
+            {
+                return _textBox.GetCharIndexFromPosition(pt);
+            }
+
+            return _uiTextBox.GetCharIndexFromPosition(pt);
+        }
+
+        public void SelectAll()
+        {
+            if (_textBox != null)
+            {
+                _textBox.SelectAll();
+            }
+            else
+            {
+                _uiTextBox.SelectAll();
+            }
+        }
+
+        public void Clear()
+        {
+            if (_textBox != null)
+            {
+                _textBox.Clear();
+            }
+            else
+            {
+                _uiTextBox.Clear();
+            }
+        }
+
+        public void Undo()
+        {
+            if (_textBox != null)
+            {
+                _textBox.Undo();
+            }
+            else
+            {
+                _uiTextBox.Undo();
+            }
+        }
+
+        public void ClearUndo()
+        {
+            if (_textBox != null)
+            {
+                _textBox.ClearUndo();
+            }
+            else
+            {
+                _uiTextBox.ClearUndo();
+            }
+        }
+
+        public void Copy()
+        {
+            if (_textBox != null)
+            {
+                _textBox.Copy();
+            }
+            else
+            {
+                _uiTextBox.Copy();
+            }
+        }
+
+        public void Cut()
+        {
+            if (_textBox != null)
+            {
+                _textBox.Cut();
+            }
+            else
+            {
+                _uiTextBox.Cut();
+            }
+        }
+
+        public void Paste()
+        {
+            if (_textBox != null)
+            {
+                _textBox.Paste();
+            }
+            else
+            {
+                _uiTextBox.Paste();
+            }
         }
 
         private void SETextBox_MouseUp(object sender, MouseEventArgs e)
@@ -278,10 +623,21 @@ namespace Nikse.SubtitleEdit.Controls
                 }
             }
 
+            if (_textBox != null)
+            {
+                if (Configuration.Settings.General.CenterSubtitleInTextBox &&
+                    _textBox.TextAlign != HorizontalAlignment.Center)
+                {
+                    _textBox.TextAlign = HorizontalAlignment.Center;
+                }
+
+                return;
+            }
+
             _richTextBoxTemp.RightToLeft = RightToLeft;
 
 
-            var text = Text;
+            var text = _uiTextBox.Text;
             if (string.IsNullOrWhiteSpace(text) || text.Length > 1000)
             {
                 if (Configuration.Settings.General.CenterSubtitleInTextBox)
@@ -295,13 +651,14 @@ namespace Nikse.SubtitleEdit.Controls
                     _richTextBoxTemp.Rtf = _richTextBoxTemp.Rtf.Replace("\\pard\\par", "\\par");
 
                     ResumeLayout(false);
-                    Rtf = _richTextBoxTemp.Rtf;
+                    _uiTextBox.Rtf = _richTextBoxTemp.Rtf;
                 }
 
                 return;
             }
 
             _richTextBoxTemp.SuspendLayout();
+            _richTextBoxTemp.Clear();
             _richTextBoxTemp.Text = text;
             _richTextBoxTemp.SelectAll();
             _richTextBoxTemp.SelectionFont = Font;
@@ -330,7 +687,7 @@ namespace Nikse.SubtitleEdit.Controls
                         assaTagOn = false;
                         _richTextBoxTemp.SelectionStart = assaTagStart;
                         _richTextBoxTemp.SelectionLength = i - assaTagStart + 1;
-                        _richTextBoxTemp.SelectionColor = Color.DarkSeaGreen;
+                        _richTextBoxTemp.SelectionColor = Configuration.Settings.General.SubtitleTextBoxAssColor;
                         if (assaTagStart >= 0)
                         {
                             if (assaPrimaryColorTagOn)
@@ -370,7 +727,7 @@ namespace Nikse.SubtitleEdit.Controls
                         htmlTagOn = false;
                         _richTextBoxTemp.SelectionStart = htmlTagStart;
                         _richTextBoxTemp.SelectionLength = i - htmlTagStart + 1;
-                        _richTextBoxTemp.SelectionColor = Color.CornflowerBlue;
+                        _richTextBoxTemp.SelectionColor = Configuration.Settings.General.SubtitleTextBoxHtmlColor;
                         if (htmlTagFontOn && htmlTagStart >= 0)
                         {
                             SetHtmlColor(text, htmlTagStart);
@@ -399,6 +756,8 @@ namespace Nikse.SubtitleEdit.Controls
                         s.StartsWith("</i>", StringComparison.OrdinalIgnoreCase) ||
                         s.StartsWith("</b>", StringComparison.OrdinalIgnoreCase) ||
                         s.StartsWith("</u>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("<box>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("</box>", StringComparison.OrdinalIgnoreCase) ||
                         s.StartsWith("</font>", StringComparison.OrdinalIgnoreCase) ||
                         (s.StartsWith("<font ", StringComparison.OrdinalIgnoreCase) &&
                          text.IndexOf("</font>", i, StringComparison.OrdinalIgnoreCase) > 0))
@@ -426,7 +785,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             _richTextBoxTemp.ResumeLayout(false);
 
-            if (Text.Length != text.Length)
+            if (_uiTextBox.Text.Length != text.Length)
             {
                 return;
             }
@@ -434,7 +793,7 @@ namespace Nikse.SubtitleEdit.Controls
             var start = SelectionStart;
             var length = SelectionLength;
             SuspendLayout();
-            Rtf = _richTextBoxTemp.Rtf;
+            _uiTextBox.Rtf = _richTextBoxTemp.Rtf;
             SelectionStart = start;
             SelectionLength = length;
             ResumeLayout(false);

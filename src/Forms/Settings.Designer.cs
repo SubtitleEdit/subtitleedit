@@ -390,6 +390,11 @@
             this.buttonReset = new System.Windows.Forms.Button();
             this.toolTipContinuationPreview = new System.Windows.Forms.ToolTip(this.components);
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.checkBoxSubtitleTextBoxSyntaxColor = new System.Windows.Forms.CheckBox();
+            this.panelTextBoxAssColor = new System.Windows.Forms.Panel();
+            this.buttonTextBoxAssColor = new System.Windows.Forms.Button();
+            this.panelTextBoxHtmlColor = new System.Windows.Forms.Panel();
+            this.buttonTextBoxHtmlColor = new System.Windows.Forms.Button();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -4039,7 +4044,7 @@
             // labelFontNote
             // 
             this.labelFontNote.AutoSize = true;
-            this.labelFontNote.Location = new System.Drawing.Point(11, 352);
+            this.labelFontNote.Location = new System.Drawing.Point(11, 410);
             this.labelFontNote.Name = "labelFontNote";
             this.labelFontNote.Size = new System.Drawing.Size(278, 13);
             this.labelFontNote.TabIndex = 41;
@@ -4049,13 +4054,18 @@
             // 
             this.groupBoxFontTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxFontTextBox.Controls.Add(this.panelTextBoxAssColor);
+            this.groupBoxFontTextBox.Controls.Add(this.buttonTextBoxAssColor);
+            this.groupBoxFontTextBox.Controls.Add(this.panelTextBoxHtmlColor);
+            this.groupBoxFontTextBox.Controls.Add(this.buttonTextBoxHtmlColor);
+            this.groupBoxFontTextBox.Controls.Add(this.checkBoxSubtitleTextBoxSyntaxColor);
             this.groupBoxFontTextBox.Controls.Add(this.labelSubtitleFontSize);
             this.groupBoxFontTextBox.Controls.Add(this.comboBoxSubtitleFontSize);
             this.groupBoxFontTextBox.Controls.Add(this.checkBoxSubtitleFontBold);
             this.groupBoxFontTextBox.Controls.Add(this.checkBoxSubtitleCenter);
             this.groupBoxFontTextBox.Location = new System.Drawing.Point(14, 228);
             this.groupBoxFontTextBox.Name = "groupBoxFontTextBox";
-            this.groupBoxFontTextBox.Size = new System.Drawing.Size(806, 103);
+            this.groupBoxFontTextBox.Size = new System.Drawing.Size(806, 161);
             this.groupBoxFontTextBox.TabIndex = 40;
             this.groupBoxFontTextBox.TabStop = false;
             this.groupBoxFontTextBox.Text = "Text box";
@@ -4714,6 +4724,50 @@
             this.toolTipContinuationPreview.InitialDelay = 500;
             this.toolTipContinuationPreview.ReshowDelay = 100;
             // 
+            // checkBoxSubtitleTextBoxSyntaxColor
+            // 
+            this.checkBoxSubtitleTextBoxSyntaxColor.AutoSize = true;
+            this.checkBoxSubtitleTextBoxSyntaxColor.Location = new System.Drawing.Point(396, 20);
+            this.checkBoxSubtitleTextBoxSyntaxColor.Name = "checkBoxSubtitleTextBoxSyntaxColor";
+            this.checkBoxSubtitleTextBoxSyntaxColor.Size = new System.Drawing.Size(120, 17);
+            this.checkBoxSubtitleTextBoxSyntaxColor.TabIndex = 34;
+            this.checkBoxSubtitleTextBoxSyntaxColor.Text = "Use syntax coloring";
+            this.checkBoxSubtitleTextBoxSyntaxColor.UseVisualStyleBackColor = true;
+            // 
+            // panelTextBoxAssColor
+            // 
+            this.panelTextBoxAssColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelTextBoxAssColor.Location = new System.Drawing.Point(520, 73);
+            this.panelTextBoxAssColor.Name = "panelTextBoxAssColor";
+            this.panelTextBoxAssColor.Size = new System.Drawing.Size(21, 20);
+            this.panelTextBoxAssColor.TabIndex = 38;
+            // 
+            // buttonTextBoxAssColor
+            // 
+            this.buttonTextBoxAssColor.Location = new System.Drawing.Point(396, 72);
+            this.buttonTextBoxAssColor.Name = "buttonTextBoxAssColor";
+            this.buttonTextBoxAssColor.Size = new System.Drawing.Size(112, 23);
+            this.buttonTextBoxAssColor.TabIndex = 36;
+            this.buttonTextBoxAssColor.Text = "ASSA color";
+            this.buttonTextBoxAssColor.UseVisualStyleBackColor = true;
+            // 
+            // panelTextBoxHtmlColor
+            // 
+            this.panelTextBoxHtmlColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelTextBoxHtmlColor.Location = new System.Drawing.Point(520, 44);
+            this.panelTextBoxHtmlColor.Name = "panelTextBoxHtmlColor";
+            this.panelTextBoxHtmlColor.Size = new System.Drawing.Size(21, 20);
+            this.panelTextBoxHtmlColor.TabIndex = 37;
+            // 
+            // buttonTextBoxHtmlColor
+            // 
+            this.buttonTextBoxHtmlColor.Location = new System.Drawing.Point(396, 43);
+            this.buttonTextBoxHtmlColor.Name = "buttonTextBoxHtmlColor";
+            this.buttonTextBoxHtmlColor.Size = new System.Drawing.Size(112, 23);
+            this.buttonTextBoxHtmlColor.TabIndex = 35;
+            this.buttonTextBoxHtmlColor.Text = "Html color";
+            this.buttonTextBoxHtmlColor.UseVisualStyleBackColor = true;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -5215,5 +5269,10 @@
         private System.Windows.Forms.ToolStripMenuItem importShortcutsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportShortcutsToolStripMenuItem;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.Panel panelTextBoxAssColor;
+        private System.Windows.Forms.Button buttonTextBoxAssColor;
+        private System.Windows.Forms.Panel panelTextBoxHtmlColor;
+        private System.Windows.Forms.Button buttonTextBoxHtmlColor;
+        private System.Windows.Forms.CheckBox checkBoxSubtitleTextBoxSyntaxColor;
     }
 }
