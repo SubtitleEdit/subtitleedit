@@ -584,7 +584,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static void FixFontsInner(Control form, int iterations = 5)
         {
-            if (iterations < 1)
+            if (iterations < 1 || form is SETextBox)
             {
                 return;
             }
