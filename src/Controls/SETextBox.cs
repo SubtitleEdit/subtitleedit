@@ -117,7 +117,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private bool _fixedArabicComma = false;
+        private bool _fixedArabicComma;
         public override string Text
         {
             get
@@ -402,6 +402,20 @@ namespace Nikse.SubtitleEdit.Controls
             else
             {
                 _uiTextBox.Paste();
+            }
+        }
+
+        public override bool Focused => _textBox?.Focused ?? _uiTextBox.Focused;
+
+        public new void Focus()
+        {
+            if (_textBox != null)
+            {
+                _textBox.Focus();
+            }
+            else
+            {
+                _uiTextBox.Focus();
             }
         }
 
@@ -694,25 +708,25 @@ namespace Nikse.SubtitleEdit.Controls
                             {
                                 string colorTag = text.IndexOf("\\c", assaTagStart, StringComparison.OrdinalIgnoreCase) != -1 ? "\\c" : "\\1c";
 
-                                SetASSAColor(text, assaTagStart, colorTag);
+                                SetAssaColor(text, assaTagStart, colorTag);
                                 assaPrimaryColorTagOn = false;
                             }
 
                             if (assaSecondaryColorTagOn)
                             {
-                                SetASSAColor(text, assaTagStart, "\\2c");
+                                SetAssaColor(text, assaTagStart, "\\2c");
                                 assaSecondaryColorTagOn = false;
                             }
 
                             if (assaBorderColorTagOn)
                             {
-                                SetASSAColor(text, assaTagStart, "\\3c");
+                                SetAssaColor(text, assaTagStart, "\\3c");
                                 assaBorderColorTagOn = false;
                             }
 
                             if (assaShadowColorTagOn)
                             {
-                                SetASSAColor(text, assaTagStart, "\\4c");
+                                SetAssaColor(text, assaTagStart, "\\4c");
                                 assaShadowColorTagOn = false;
                             }
                         }
@@ -860,7 +874,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private void SetASSAColor(string text, int assaTagStart, string colorTag)
+        private void SetAssaColor(string text, int assaTagStart, string colorTag)
         {
             int colorStart = text.IndexOf(colorTag, assaTagStart, StringComparison.OrdinalIgnoreCase);
             if (colorStart > 0)
