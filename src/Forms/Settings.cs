@@ -1965,7 +1965,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 font = new Font(Font, FontStyle.Regular);
             }
-           
+
             var measureBmp = TextDesigner.MakeTextBitmapAssa(
                 Configuration.Settings.General.PreviewAssaText,
                 0,
@@ -2006,7 +2006,7 @@ namespace Nikse.SubtitleEdit.Forms
             font.Dispose();
         }
 
-        private void ComboBoxWordListLanguageSelectedIndexChanged(object sender, EventArgs e)
+        private async void ComboBoxWordListLanguageSelectedIndexChanged(object sender, EventArgs e)
         {
             buttonRemoveNameEtc.Enabled = false;
             buttonAddNames.Enabled = false;
@@ -2014,9 +2014,15 @@ namespace Nikse.SubtitleEdit.Forms
             buttonAddUserWord.Enabled = false;
             buttonRemoveOcrFix.Enabled = false;
             buttonAddOcrFix.Enabled = false;
+            listBoxNames.BeginUpdate();
             listBoxNames.Items.Clear();
+            listBoxNames.EndUpdate();
+            listBoxUserWordLists.BeginUpdate();
             listBoxUserWordLists.Items.Clear();
+            listBoxUserWordLists.EndUpdate();
+            listBoxOcrFixList.BeginUpdate();
             listBoxOcrFixList.Items.Clear();
+            listBoxOcrFixList.EndUpdate();
             if (comboBoxWordListLanguage.Items.Count > 0 && comboBoxWordListLanguage.Items[comboBoxWordListLanguage.SelectedIndex] is ComboBoxLanguage)
             {
                 string language = GetCurrentWordListLanguage();
@@ -2026,23 +2032,28 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonAddOcrFix.Enabled = true;
 
                 // user word list
-                LoadUserWords(language, true);
+                await LoadUserWordsAsync(language, true);
 
                 // OCR fix words
-                LoadOcrFixList(true);
+                await LoadOcrFixListAsync(true);
 
-                LoadNames(language, true);
+                // load names
+                await LoadNamesAsync(language, true);
             }
         }
 
-        private void LoadOcrFixList(bool reloadListBox)
+        private async Task LoadOcrFixListAsync(bool reloadListBox)
         {
             if (comboBoxWordListLanguage.Items.Count == 0 || !(comboBoxWordListLanguage.Items[comboBoxWordListLanguage.SelectedIndex] is ComboBoxLanguage cb))
             {
                 return;
             }
 
-            _ocrFixReplaceList = OcrFixReplaceList.FromLanguageId(cb.CultureInfo.GetThreeLetterIsoLanguageName());
+            await Task.Run(() =>
+            {
+                _ocrFixReplaceList = OcrFixReplaceList.FromLanguageId(cb.CultureInfo.GetThreeLetterIsoLanguageName());
+            }).ConfigureAwait(reloadListBox);
+
             if (reloadListBox)
             {
                 listBoxOcrFixList.BeginUpdate();
@@ -2054,41 +2065,43 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void LoadUserWords(string language, bool reloadListBox)
+        private async Task LoadUserWordsAsync(string language, bool reloadListBox)
         {
-            _userWordList = new List<string>();
-            Utilities.LoadUserWordList(_userWordList, language);
-            _userWordList.Sort();
+            await Task.Run(() =>
+            {
+                _userWordList = new List<string>();
+                Utilities.LoadUserWordList(_userWordList, language);
+                _userWordList.Sort();
+            }).ConfigureAwait(reloadListBox);
 
             if (reloadListBox)
             {
+                listBoxUserWordLists.BeginUpdate();
                 listBoxUserWordLists.Items.Clear();
-                listBoxUserWordLists.Items.AddRange(_userWordList.ToArray<object>());
+                listBoxUserWordLists.Items.AddRange(_userWordList.ToArray());
+                listBoxUserWordLists.EndUpdate();
             }
         }
 
-        private void LoadNames(string language, bool reloadListBox)
+        private async Task LoadNamesAsync(string language, bool reloadListBox)
         {
-            var task = Task.Factory.StartNew(() =>
+            await Task.Run(() =>
             {
                 // names etc
                 var nameList = new NameList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
                 _wordListNames = nameList.GetAllNames();
                 _wordListNames.Sort();
-                return _wordListNames;
-            });
+            }).ConfigureAwait(reloadListBox);
 
             if (reloadListBox)
             {
-                // reload the listbox on a continuation ui thead
-                var uiContext = TaskScheduler.FromCurrentSynchronizationContext();
-                task.ContinueWith(originalTask =>
+                listBoxNames.BeginUpdate();
+                listBoxNames.Items.Clear();
+                if (_wordListNames.Count > 0)
                 {
-                    listBoxNames.BeginUpdate();
-                    listBoxNames.Items.Clear();
-                    listBoxNames.Items.AddRange(originalTask.Result.ToArray<object>());
-                    listBoxNames.EndUpdate();
-                }, uiContext);
+                    listBoxNames.Items.AddRange(_wordListNames.ToArray());
+                }
+                listBoxNames.EndUpdate();
             }
         }
 
@@ -2104,7 +2117,7 @@ namespace Nikse.SubtitleEdit.Forms
             return cb?.CultureInfo.Name.Replace('-', '_');
         }
 
-        private void ButtonAddNamesClick(object sender, EventArgs e)
+        private async void ButtonAddNamesClick(object sender, EventArgs e)
         {
             var languageIndex = comboBoxWordListLanguage.SelectedIndex;
             if (languageIndex < 0)
@@ -2118,7 +2131,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var nameList = new NameList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
                 nameList.Add(text);
-                LoadNames(language, true);
+                await LoadNamesAsync(language, true);
                 labelStatus.Text = string.Format(Configuration.Settings.Language.Settings.WordAddedX, text);
                 textBoxNameEtc.Text = string.Empty;
                 textBoxNameEtc.Focus();
@@ -2149,7 +2162,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonRemoveNameEtc.Enabled = listBoxNames.SelectedIndex >= 0;
         }
 
-        private void ButtonRemoveNameEtcClick(object sender, EventArgs e)
+        private async void ButtonRemoveNameEtcClick(object sender, EventArgs e)
         {
             if (listBoxNames.SelectedIndices.Count == 0)
             {
@@ -2187,7 +2200,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (removeCount > 0)
                     {
-                        LoadNames(language, true); // reload
+                        await LoadNamesAsync(language, true); // reload
 
                         if (index < listBoxNames.Items.Count)
                         {
@@ -2227,7 +2240,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void ButtonAddUserWordClick(object sender, EventArgs e)
+        private async void ButtonAddUserWordClick(object sender, EventArgs e)
         {
             var languageIndex = comboBoxWordListLanguage.SelectedIndex;
             if (languageIndex < 0)
@@ -2240,7 +2253,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!string.IsNullOrEmpty(language) && text.Length > 0 && !_userWordList.Contains(text))
             {
                 Utilities.AddToUserDictionary(text, language);
-                LoadUserWords(language, true);
+                await LoadUserWordsAsync(language, true);
                 labelStatus.Text = string.Format(Configuration.Settings.Language.Settings.WordAddedX, text);
                 textBoxUserWord.Text = string.Empty;
                 textBoxUserWord.Focus();
@@ -2276,7 +2289,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void ButtonRemoveUserWordClick(object sender, EventArgs e)
+        private async void ButtonRemoveUserWordClick(object sender, EventArgs e)
         {
             if (listBoxUserWordLists.SelectedIndices.Count == 0)
             {
@@ -2331,7 +2344,7 @@ namespace Nikse.SubtitleEdit.Forms
                             doc.DocumentElement.AppendChild(node);
                         }
                         doc.Save(userWordFileName);
-                        LoadUserWords(language, false); // reload
+                        await LoadUserWordsAsync(language, false); // reload
                         buttonRemoveUserWord.Enabled = false;
 
                         if (index < listBoxUserWordLists.Items.Count)
@@ -2360,7 +2373,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonRemoveUserWord.Enabled = listBoxUserWordLists.SelectedIndex >= 0;
         }
 
-        private void ButtonAddOcrFixClick(object sender, EventArgs e)
+        private async void ButtonAddOcrFixClick(object sender, EventArgs e)
         {
             string key = textBoxOcrFixKey.Text.RemoveControlCharacters().Trim();
             string value = textBoxOcrFixValue.Text.RemoveControlCharacters().Trim();
@@ -2381,7 +2394,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            LoadOcrFixList(true);
+            await LoadOcrFixListAsync(true);
             textBoxOcrFixKey.Text = string.Empty;
             textBoxOcrFixValue.Text = string.Empty;
             textBoxOcrFixKey.Focus();
@@ -2461,7 +2474,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     listBoxOcrFixList.EndUpdate();
 
-                    LoadOcrFixList(false);
+                    LoadOcrFixListAsync(false);
                     buttonRemoveOcrFix.Enabled = false;
 
                     if (index < listBoxOcrFixList.Items.Count)
