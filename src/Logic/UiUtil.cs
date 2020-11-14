@@ -315,7 +315,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        public static void CheckAutoWrap(RichTextBox textBox, KeyEventArgs e, int numberOfNewLines)
+        public static void CheckAutoWrap(SETextBox textBox, KeyEventArgs e, int numberOfNewLines)
         {
             // Do not auto-break lines more than 1 line.
             if (numberOfNewLines != 1 || !Configuration.Settings.General.AutoWrapLineWhileTyping)

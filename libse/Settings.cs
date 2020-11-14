@@ -1019,6 +1019,9 @@ $HorzAlign          =   Center
 
         public string SubtitleFontName { get; set; }
         public int SubtitleFontSize { get; set; }
+        public bool SubtitleTextBoxSyntaxColor { get; set; }
+        public Color SubtitleTextBoxHtmlColor { get; set; }
+        public Color SubtitleTextBoxAssColor { get; set; }
         public int SubtitleListViewFontSize { get; set; }
         public bool SubtitleFontBold { get; set; }
         public bool SubtitleListViewFontBold { get; set; }
@@ -1182,6 +1185,9 @@ $HorzAlign          =   Center
 
             SubtitleFontSize = 14;
             SubtitleListViewFontSize = 10;
+            SubtitleTextBoxSyntaxColor = true;
+            SubtitleTextBoxHtmlColor = Color.CornflowerBlue;
+            SubtitleTextBoxAssColor = Color.BlueViolet;
             SubtitleFontBold = true;
             SubtitleFontColor = Color.Black;
             MeasureFontName = "Arial";
@@ -2752,6 +2758,24 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.SubtitleListViewFontBold = Convert.ToBoolean(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("SubtitleTextBoxSyntaxColor");
+            if (subNode != null)
+            {
+                settings.General.SubtitleTextBoxSyntaxColor = Convert.ToBoolean(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("SubtitleTextBoxHtmlColor");
+            if (subNode != null)
+            {
+                settings.General.SubtitleTextBoxHtmlColor = Color.FromArgb(Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture));
+            }
+
+            subNode = node.SelectSingleNode("SubtitleTextBoxAssColor");
+            if (subNode != null)
+            {
+                settings.General.SubtitleTextBoxAssColor = Color.FromArgb(Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture));
             }
 
             subNode = node.SelectSingleNode("SubtitleFontColor");
@@ -7643,6 +7667,9 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("SubtitleListViewFontSize", settings.General.SubtitleListViewFontSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleFontBold", settings.General.SubtitleFontBold.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleListViewFontBold", settings.General.SubtitleListViewFontBold.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("SubtitleTextBoxSyntaxColor", settings.General.SubtitleTextBoxSyntaxColor.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("SubtitleTextBoxHtmlColor", settings.General.SubtitleTextBoxHtmlColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("SubtitleTextBoxAssColor", settings.General.SubtitleTextBoxAssColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleFontColor", settings.General.SubtitleFontColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleBackgroundColor", settings.General.SubtitleBackgroundColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MeasureFontName", settings.General.MeasureFontName);
