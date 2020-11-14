@@ -264,8 +264,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
             labelAutoDuration.Left = labelDuration.Left - (labelAutoDuration.Width - 5);
 
-            textBoxListViewText.BackColor = SystemColors.ActiveBorder;
-            textBoxListViewTextAlternate.BackColor = SystemColors.ActiveBorder;
+            textBoxListViewText.BackColor = !IsSubtitleLoaded ? SystemColors.ActiveBorder : SystemColors.WindowFrame;
+            textBoxListViewTextAlternate.BackColor = !IsSubtitleLoaded ? SystemColors.ActiveBorder : SystemColors.WindowFrame;
 
             base.OnLoad(e);
         }
@@ -4236,6 +4236,8 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxListViewText.Text = string.Empty;
             textBoxListViewTextAlternate.Text = string.Empty;
             textBoxListViewText.Enabled = false;
+            textBoxListViewText.BackColor = SystemColors.ActiveBorder;
+            textBoxListViewTextAlternate.BackColor = SystemColors.ActiveBorder;
             labelTextLineLengths.Text = string.Empty;
             labelCharactersPerSecond.Text = string.Empty;
             labelTextLineTotal.Text = string.Empty;
@@ -8316,6 +8318,8 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxListViewText.Text = string.Empty;
                 textBoxListViewTextAlternate.Text = string.Empty;
                 textBoxListViewText.Enabled = false;
+                textBoxListViewText.BackColor = SystemColors.ActiveBorder;
+                textBoxListViewTextAlternate.BackColor = SystemColors.ActiveBorder;
                 buttonSplitLine.Visible = false;
                 labelTextLineLengths.Text = string.Empty;
                 labelCharactersPerSecond.Text = string.Empty;
