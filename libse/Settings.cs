@@ -1018,12 +1018,12 @@ $HorzAlign          =   Center
         public int SystemSubtitleFontSizeOverride { get; set; }
 
         public string SubtitleFontName { get; set; }
-        public int SubtitleFontSize { get; set; }
+        public int SubtitleTextBoxFontSize { get; set; }
         public bool SubtitleTextBoxSyntaxColor { get; set; }
         public Color SubtitleTextBoxHtmlColor { get; set; }
         public Color SubtitleTextBoxAssColor { get; set; }
         public int SubtitleListViewFontSize { get; set; }
-        public bool SubtitleFontBold { get; set; }
+        public bool SubtitleTextBoxFontBold { get; set; }
         public bool SubtitleListViewFontBold { get; set; }
         public Color SubtitleFontColor { get; set; }
         public Color SubtitleBackgroundColor { get; set; }
@@ -1183,12 +1183,12 @@ $HorzAlign          =   Center
                 SubtitleFontName = "Times New Roman";
             }
 
-            SubtitleFontSize = 14;
+            SubtitleTextBoxFontSize = 14;
             SubtitleListViewFontSize = 10;
             SubtitleTextBoxSyntaxColor = true;
             SubtitleTextBoxHtmlColor = Color.CornflowerBlue;
             SubtitleTextBoxAssColor = Color.BlueViolet;
-            SubtitleFontBold = true;
+            SubtitleTextBoxFontBold = true;
             SubtitleFontColor = Color.Black;
             MeasureFontName = "Arial";
             MeasureFontSize = 24;
@@ -2319,13 +2319,6 @@ $HorzAlign          =   Center
                         settings.Shortcuts.MainTranslateGoogleTranslate = "Control+Shift+G";
                         settings.Tools.MicrosoftTranslatorTokenEndpoint = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
                     }
-                    
-                    if (settings.Version.StartsWith("3.5", StringComparison.Ordinal) ||
-                        string.IsNullOrEmpty(settings.Version))
-                    {
-                        settings.General.SubtitleFontSize = 14;
-                        settings.General.SubtitleFontBold = true;
-                    }
                 }
                 catch (Exception exception)
                 {
@@ -2736,10 +2729,10 @@ $HorzAlign          =   Center
                 settings.General.SubtitleFontName = subNode.InnerText;
             }
 
-            subNode = node.SelectSingleNode("SubtitleFontSize");
+            subNode = node.SelectSingleNode("SubtitleTextBoxFontSize");
             if (subNode != null)
             {
-                settings.General.SubtitleFontSize = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                settings.General.SubtitleTextBoxFontSize = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("SubtitleListViewFontSize");
@@ -2748,10 +2741,10 @@ $HorzAlign          =   Center
                 settings.General.SubtitleListViewFontSize = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
-            subNode = node.SelectSingleNode("SubtitleFontBold");
+            subNode = node.SelectSingleNode("SubtitleTextBoxFontBold");
             if (subNode != null)
             {
-                settings.General.SubtitleFontBold = Convert.ToBoolean(subNode.InnerText);
+                settings.General.SubtitleTextBoxFontBold = Convert.ToBoolean(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("SubtitleListViewFontBold");
@@ -7663,9 +7656,9 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("SystemSubtitleFontNameOverride", settings.General.SystemSubtitleFontNameOverride);
                 textWriter.WriteElementString("SystemSubtitleFontSizeOverride", settings.General.SystemSubtitleFontSizeOverride.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleFontName", settings.General.SubtitleFontName);
-                textWriter.WriteElementString("SubtitleFontSize", settings.General.SubtitleFontSize.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("SubtitleTextBoxFontSize", settings.General.SubtitleTextBoxFontSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleListViewFontSize", settings.General.SubtitleListViewFontSize.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SubtitleFontBold", settings.General.SubtitleFontBold.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("SubtitleTextBoxFontBold", settings.General.SubtitleTextBoxFontBold.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleListViewFontBold", settings.General.SubtitleListViewFontBold.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleTextBoxSyntaxColor", settings.General.SubtitleTextBoxSyntaxColor.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleTextBoxHtmlColor", settings.General.SubtitleTextBoxHtmlColor.ToArgb().ToString(CultureInfo.InvariantCulture));

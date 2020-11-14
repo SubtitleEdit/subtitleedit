@@ -4523,9 +4523,9 @@ namespace Nikse.SubtitleEdit.Forms
             string oldListViewLineSeparatorString = Configuration.Settings.General.ListViewLineSeparatorString;
             var oldCpsWhiteSpaceSetting = Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace;
             string oldSubtitleFontSettings = Configuration.Settings.General.SubtitleFontName +
-                                             Configuration.Settings.General.SubtitleFontBold +
+                                             Configuration.Settings.General.SubtitleTextBoxFontBold +
                                              Configuration.Settings.General.CenterSubtitleInTextBox +
-                                             Configuration.Settings.General.SubtitleFontSize +
+                                             Configuration.Settings.General.SubtitleTextBoxFontSize +
                                              Configuration.Settings.General.SubtitleFontColor.ToArgb() +
                                              Configuration.Settings.General.SubtitleBackgroundColor.ToArgb() +
                                              Configuration.Settings.General.SubtitleListViewFontBold.ToString() +
@@ -4548,6 +4548,9 @@ namespace Nikse.SubtitleEdit.Forms
             var oldShowColumnCharsPerSec = Configuration.Settings.Tools.ListViewShowColumnCharsPerSec;
             var oldShowWordsMinColumn = Configuration.Settings.Tools.ListViewShowColumnWordsPerMin;
             var oldSubtitleTextBoxSyntaxColor = Configuration.Settings.General.SubtitleTextBoxSyntaxColor;
+            var oldSubtitleFontSize = Configuration.Settings.General.SubtitleTextBoxFontSize;
+            var oldSubtitleTextBoxHtmlColor = Configuration.Settings.General.SubtitleTextBoxHtmlColor.ToArgb().ToString();
+            var oldSubtitleTextBoxAssaColor = Configuration.Settings.General.SubtitleTextBoxAssColor.ToArgb().ToString();
             using (var settings = new Settings())
             {
                 settings.Initialize(Icon, toolStripButtonFileNew.Image, toolStripButtonFileOpen.Image, toolStripButtonSave.Image, toolStripButtonSaveAs.Image, toolStripButtonFind.Image,
@@ -4590,9 +4593,9 @@ namespace Nikse.SubtitleEdit.Forms
                                        Configuration.Settings.Tools.ListViewSyntaxErrorColor.ToArgb();
 
             if (oldSubtitleFontSettings != Configuration.Settings.General.SubtitleFontName +
-                Configuration.Settings.General.SubtitleFontBold +
+                Configuration.Settings.General.SubtitleTextBoxFontBold +
                 Configuration.Settings.General.CenterSubtitleInTextBox +
-                Configuration.Settings.General.SubtitleFontSize +
+                Configuration.Settings.General.SubtitleTextBoxFontSize +
                 Configuration.Settings.General.SubtitleFontColor.ToArgb() +
                 Configuration.Settings.General.SubtitleBackgroundColor.ToArgb() +
                 Configuration.Settings.General.SubtitleListViewFontBold.ToString() +
@@ -4730,10 +4733,15 @@ namespace Nikse.SubtitleEdit.Forms
                 RefreshTimeCodeMode();
             }
 
-            if (oldSubtitleTextBoxSyntaxColor != Configuration.Settings.General.SubtitleTextBoxSyntaxColor)
+            if (oldSubtitleTextBoxSyntaxColor != Configuration.Settings.General.SubtitleTextBoxSyntaxColor ||
+                oldSubtitleFontSize != Configuration.Settings.General.SubtitleTextBoxFontSize ||
+                oldSubtitleTextBoxHtmlColor != Configuration.Settings.General.SubtitleTextBoxHtmlColor.ToArgb().ToString() ||
+                oldSubtitleTextBoxAssaColor != Configuration.Settings.General.SubtitleTextBoxAssColor.ToArgb().ToString())
             {
                 textBoxListViewText.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
                 textBoxListViewTextAlternate.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
+                textBoxListViewText.BackColor = SystemColors.ActiveBorder;
+                textBoxListViewTextAlternate.BackColor = SystemColors.ActiveBorder;
                 RefreshSelectedParagraph();
             }
 
