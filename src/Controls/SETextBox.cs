@@ -684,8 +684,8 @@ namespace Nikse.SubtitleEdit.Controls
             _richTextBoxTemp.Clear();
             _richTextBoxTemp.Text = text;
             _richTextBoxTemp.SelectAll();
-            _richTextBoxTemp.SelectionFont = Font;
-            _richTextBoxTemp.SelectionColor = ForeColor;
+            _richTextBoxTemp.SelectionFont = _richTextBoxTemp.Font;
+            _richTextBoxTemp.SelectionColor = _richTextBoxTemp.ForeColor;
 
             bool htmlTagOn = false;
             bool htmlTagFontOn = false;
