@@ -1183,12 +1183,9 @@ $HorzAlign          =   Center
                 SubtitleFontName = "Times New Roman";
             }
 
-            SubtitleFontSize = 14;
+            SubtitleFontSize = 10;
             SubtitleListViewFontSize = 10;
-            SubtitleTextBoxSyntaxColor = true;
-            SubtitleTextBoxHtmlColor = Color.CornflowerBlue;
-            SubtitleTextBoxAssColor = Color.BlueViolet;
-            SubtitleFontBold = true;
+            SubtitleFontBold = false;
             SubtitleFontColor = Color.Black;
             MeasureFontName = "Arial";
             MeasureFontSize = 24;
@@ -2318,13 +2315,6 @@ $HorzAlign          =   Center
                     {
                         settings.Shortcuts.MainTranslateGoogleTranslate = "Control+Shift+G";
                         settings.Tools.MicrosoftTranslatorTokenEndpoint = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
-                    }
-                    
-                    if (settings.Version.StartsWith("3.5", StringComparison.Ordinal) ||
-                        string.IsNullOrEmpty(settings.Version))
-                    {
-                        settings.General.SubtitleFontSize = 14;
-                        settings.General.SubtitleFontBold = true;
                     }
                 }
                 catch (Exception exception)

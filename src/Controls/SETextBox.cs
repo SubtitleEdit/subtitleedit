@@ -81,7 +81,7 @@ namespace Nikse.SubtitleEdit.Controls
             Controls.Add(textBox);
             textBox.Dock = DockStyle.Fill;
             textBox.Enter += (sender, args) => { BackColor = SystemColors.Highlight; };
-            textBox.Leave += (sender, args) => { BackColor = SystemColors.ActiveBorder; };
+            textBox.Leave += (sender, args) => { BackColor = SystemColors.WindowFrame; };
             textBox.TextChanged += (sender, args) => { TextChanged?.Invoke(sender, args); };
         }
 
