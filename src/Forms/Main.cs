@@ -4740,8 +4740,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 textBoxListViewText.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
                 textBoxListViewTextAlternate.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
-                textBoxListViewText.BackColor = SystemColors.ActiveBorder;
-                textBoxListViewTextAlternate.BackColor = SystemColors.ActiveBorder;
+                textBoxListViewText.BackColor = SystemColors.WindowFrame;
+                textBoxListViewTextAlternate.BackColor = SystemColors.WindowFrame;
                 RefreshSelectedParagraph();
             }
 
