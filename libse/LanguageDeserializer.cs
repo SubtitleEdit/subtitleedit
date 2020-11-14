@@ -5740,6 +5740,15 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/TextBox":
                     language.Settings.TextBox = reader.Value;
                     break;
+                case "Settings/UseSyntaxColoring":
+                    language.Settings.UseSyntaxColoring = reader.Value;
+                    break;
+                case "Settings/HtmlColor":
+                    language.Settings.HtmlColor = reader.Value;
+                    break;
+                case "Settings/AssaColor":
+                    language.Settings.AssaColor = reader.Value;
+                    break;
                 case "Settings/UpdateShortcut":
                     language.Settings.UpdateShortcut = reader.Value;
                     break;
