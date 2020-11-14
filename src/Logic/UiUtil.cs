@@ -471,15 +471,15 @@ namespace Nikse.SubtitleEdit.Logic
                         control.Font = new Font(gs.SubtitleFontName, gs.SubtitleListViewFontSize);
                     }
                 }
-                else
+                else if (control is SETextBox || control is TextBox)
                 {
-                    if (gs.SubtitleFontBold)
+                    if (gs.SubtitleTextBoxFontBold)
                     {
-                        control.Font = new Font(gs.SubtitleFontName, gs.SubtitleFontSize, FontStyle.Bold);
+                        control.Font = new Font(gs.SubtitleFontName, gs.SubtitleTextBoxFontSize, FontStyle.Bold);
                     }
                     else
                     {
-                        control.Font = new Font(gs.SubtitleFontName, gs.SubtitleFontSize);
+                        control.Font = new Font(gs.SubtitleFontName, gs.SubtitleTextBoxFontSize);
                     }
                 }
 
