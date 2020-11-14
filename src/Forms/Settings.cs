@@ -1971,7 +1971,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 font = new Font(Font, FontStyle.Regular);
             }
-           
+
             var measureBmp = TextDesigner.MakeTextBitmapAssa(
                 Configuration.Settings.General.PreviewAssaText,
                 0,
@@ -3447,6 +3447,42 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _backgroundImageDark = !_backgroundImageDark;
             GeneratePreviewReal();
+        }
+
+        private void buttonTextBoxHtmlColor_Click(object sender, EventArgs e)
+        {
+            colorDialogSSAStyle.Color = panelTextBoxHtmlColor.BackColor;
+            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            {
+                panelTextBoxHtmlColor.BackColor = colorDialogSSAStyle.Color;
+            }
+        }
+
+        private void buttonTextBoxAssColor_Click(object sender, EventArgs e)
+        {
+            colorDialogSSAStyle.Color = panelTextBoxAssColor.BackColor;
+            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            {
+                panelTextBoxAssColor.BackColor = colorDialogSSAStyle.Color;
+            }
+        }
+
+        private void checkBoxSubtitleTextBoxSyntaxColor_CheckedChanged(object sender, EventArgs e)
+        {
+            buttonTextBoxHtmlColor.Enabled = checkBoxSubtitleTextBoxSyntaxColor.Checked;
+            panelTextBoxHtmlColor.Enabled = checkBoxSubtitleTextBoxSyntaxColor.Checked;
+            buttonTextBoxAssColor.Enabled = checkBoxSubtitleTextBoxSyntaxColor.Checked;
+            panelTextBoxAssColor.Enabled = checkBoxSubtitleTextBoxSyntaxColor.Checked;
+        }
+
+        private void panelTextBoxHtmlColor_MouseClick(object sender, MouseEventArgs e)
+        {
+            buttonTextBoxHtmlColor_Click(null, null);
+        }
+
+        private void panelTextBoxAssColor_MouseClick(object sender, MouseEventArgs e)
+        {
+            buttonTextBoxAssColor_Click(null, null);
         }
     }
 }

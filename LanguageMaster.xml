@@ -2106,6 +2106,9 @@ can edit in same subtitle file (collaboration)</Information>
     <ListViewAndTextBox>List view and text box</ListViewAndTextBox>
     <ListView>List view</ListView>
     <TextBox>Text box</TextBox>
+    <UseSyntaxColoring>Use syntax coloring</UseSyntaxColoring>
+    <HtmlColor>Html color</HtmlColor>
+    <AssaColor>ASSA color</AssaColor>
     <UpdateShortcut>Update</UpdateShortcut>
     <FoucsSetVideoPosition>Focus set video position</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Toggle dock/undock of video controls</ToggleDockUndockOfVideoControls>

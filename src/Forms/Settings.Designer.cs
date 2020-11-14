@@ -329,6 +329,11 @@
             this.groupBoxFont = new System.Windows.Forms.GroupBox();
             this.labelFontNote = new System.Windows.Forms.Label();
             this.groupBoxFontTextBox = new System.Windows.Forms.GroupBox();
+            this.panelTextBoxAssColor = new System.Windows.Forms.Panel();
+            this.buttonTextBoxAssColor = new System.Windows.Forms.Button();
+            this.panelTextBoxHtmlColor = new System.Windows.Forms.Panel();
+            this.buttonTextBoxHtmlColor = new System.Windows.Forms.Button();
+            this.checkBoxSubtitleTextBoxSyntaxColor = new System.Windows.Forms.CheckBox();
             this.labelSubtitleFontSize = new System.Windows.Forms.Label();
             this.comboBoxSubtitleFontSize = new System.Windows.Forms.ComboBox();
             this.checkBoxSubtitleFontBold = new System.Windows.Forms.CheckBox();
@@ -390,11 +395,6 @@
             this.buttonReset = new System.Windows.Forms.Button();
             this.toolTipContinuationPreview = new System.Windows.Forms.ToolTip(this.components);
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.checkBoxSubtitleTextBoxSyntaxColor = new System.Windows.Forms.CheckBox();
-            this.panelTextBoxAssColor = new System.Windows.Forms.Panel();
-            this.buttonTextBoxAssColor = new System.Windows.Forms.Button();
-            this.panelTextBoxHtmlColor = new System.Windows.Forms.Panel();
-            this.buttonTextBoxHtmlColor = new System.Windows.Forms.Button();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -4044,7 +4044,7 @@
             // labelFontNote
             // 
             this.labelFontNote.AutoSize = true;
-            this.labelFontNote.Location = new System.Drawing.Point(11, 410);
+            this.labelFontNote.Location = new System.Drawing.Point(11, 352);
             this.labelFontNote.Name = "labelFontNote";
             this.labelFontNote.Size = new System.Drawing.Size(278, 13);
             this.labelFontNote.TabIndex = 41;
@@ -4065,10 +4065,59 @@
             this.groupBoxFontTextBox.Controls.Add(this.checkBoxSubtitleCenter);
             this.groupBoxFontTextBox.Location = new System.Drawing.Point(14, 228);
             this.groupBoxFontTextBox.Name = "groupBoxFontTextBox";
-            this.groupBoxFontTextBox.Size = new System.Drawing.Size(806, 161);
+            this.groupBoxFontTextBox.Size = new System.Drawing.Size(806, 116);
             this.groupBoxFontTextBox.TabIndex = 40;
             this.groupBoxFontTextBox.TabStop = false;
             this.groupBoxFontTextBox.Text = "Text box";
+            // 
+            // panelTextBoxAssColor
+            // 
+            this.panelTextBoxAssColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelTextBoxAssColor.Location = new System.Drawing.Point(520, 73);
+            this.panelTextBoxAssColor.Name = "panelTextBoxAssColor";
+            this.panelTextBoxAssColor.Size = new System.Drawing.Size(21, 20);
+            this.panelTextBoxAssColor.TabIndex = 38;
+            this.panelTextBoxAssColor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelTextBoxAssColor_MouseClick);
+            // 
+            // buttonTextBoxAssColor
+            // 
+            this.buttonTextBoxAssColor.Location = new System.Drawing.Point(396, 72);
+            this.buttonTextBoxAssColor.Name = "buttonTextBoxAssColor";
+            this.buttonTextBoxAssColor.Size = new System.Drawing.Size(112, 23);
+            this.buttonTextBoxAssColor.TabIndex = 36;
+            this.buttonTextBoxAssColor.Text = "ASSA color";
+            this.buttonTextBoxAssColor.UseVisualStyleBackColor = true;
+            this.buttonTextBoxAssColor.Click += new System.EventHandler(this.buttonTextBoxAssColor_Click);
+            // 
+            // panelTextBoxHtmlColor
+            // 
+            this.panelTextBoxHtmlColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelTextBoxHtmlColor.Location = new System.Drawing.Point(520, 44);
+            this.panelTextBoxHtmlColor.Name = "panelTextBoxHtmlColor";
+            this.panelTextBoxHtmlColor.Size = new System.Drawing.Size(21, 20);
+            this.panelTextBoxHtmlColor.TabIndex = 37;
+            this.panelTextBoxHtmlColor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelTextBoxHtmlColor_MouseClick);
+            // 
+            // buttonTextBoxHtmlColor
+            // 
+            this.buttonTextBoxHtmlColor.Location = new System.Drawing.Point(396, 43);
+            this.buttonTextBoxHtmlColor.Name = "buttonTextBoxHtmlColor";
+            this.buttonTextBoxHtmlColor.Size = new System.Drawing.Size(112, 23);
+            this.buttonTextBoxHtmlColor.TabIndex = 35;
+            this.buttonTextBoxHtmlColor.Text = "Html color";
+            this.buttonTextBoxHtmlColor.UseVisualStyleBackColor = true;
+            this.buttonTextBoxHtmlColor.Click += new System.EventHandler(this.buttonTextBoxHtmlColor_Click);
+            // 
+            // checkBoxSubtitleTextBoxSyntaxColor
+            // 
+            this.checkBoxSubtitleTextBoxSyntaxColor.AutoSize = true;
+            this.checkBoxSubtitleTextBoxSyntaxColor.Location = new System.Drawing.Point(396, 20);
+            this.checkBoxSubtitleTextBoxSyntaxColor.Name = "checkBoxSubtitleTextBoxSyntaxColor";
+            this.checkBoxSubtitleTextBoxSyntaxColor.Size = new System.Drawing.Size(120, 17);
+            this.checkBoxSubtitleTextBoxSyntaxColor.TabIndex = 34;
+            this.checkBoxSubtitleTextBoxSyntaxColor.Text = "Use syntax coloring";
+            this.checkBoxSubtitleTextBoxSyntaxColor.UseVisualStyleBackColor = true;
+            this.checkBoxSubtitleTextBoxSyntaxColor.CheckedChanged += new System.EventHandler(this.checkBoxSubtitleTextBoxSyntaxColor_CheckedChanged);
             // 
             // labelSubtitleFontSize
             // 
@@ -4723,50 +4772,6 @@
             this.toolTipContinuationPreview.AutoPopDelay = 60000;
             this.toolTipContinuationPreview.InitialDelay = 500;
             this.toolTipContinuationPreview.ReshowDelay = 100;
-            // 
-            // checkBoxSubtitleTextBoxSyntaxColor
-            // 
-            this.checkBoxSubtitleTextBoxSyntaxColor.AutoSize = true;
-            this.checkBoxSubtitleTextBoxSyntaxColor.Location = new System.Drawing.Point(396, 20);
-            this.checkBoxSubtitleTextBoxSyntaxColor.Name = "checkBoxSubtitleTextBoxSyntaxColor";
-            this.checkBoxSubtitleTextBoxSyntaxColor.Size = new System.Drawing.Size(120, 17);
-            this.checkBoxSubtitleTextBoxSyntaxColor.TabIndex = 34;
-            this.checkBoxSubtitleTextBoxSyntaxColor.Text = "Use syntax coloring";
-            this.checkBoxSubtitleTextBoxSyntaxColor.UseVisualStyleBackColor = true;
-            // 
-            // panelTextBoxAssColor
-            // 
-            this.panelTextBoxAssColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelTextBoxAssColor.Location = new System.Drawing.Point(520, 73);
-            this.panelTextBoxAssColor.Name = "panelTextBoxAssColor";
-            this.panelTextBoxAssColor.Size = new System.Drawing.Size(21, 20);
-            this.panelTextBoxAssColor.TabIndex = 38;
-            // 
-            // buttonTextBoxAssColor
-            // 
-            this.buttonTextBoxAssColor.Location = new System.Drawing.Point(396, 72);
-            this.buttonTextBoxAssColor.Name = "buttonTextBoxAssColor";
-            this.buttonTextBoxAssColor.Size = new System.Drawing.Size(112, 23);
-            this.buttonTextBoxAssColor.TabIndex = 36;
-            this.buttonTextBoxAssColor.Text = "ASSA color";
-            this.buttonTextBoxAssColor.UseVisualStyleBackColor = true;
-            // 
-            // panelTextBoxHtmlColor
-            // 
-            this.panelTextBoxHtmlColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelTextBoxHtmlColor.Location = new System.Drawing.Point(520, 44);
-            this.panelTextBoxHtmlColor.Name = "panelTextBoxHtmlColor";
-            this.panelTextBoxHtmlColor.Size = new System.Drawing.Size(21, 20);
-            this.panelTextBoxHtmlColor.TabIndex = 37;
-            // 
-            // buttonTextBoxHtmlColor
-            // 
-            this.buttonTextBoxHtmlColor.Location = new System.Drawing.Point(396, 43);
-            this.buttonTextBoxHtmlColor.Name = "buttonTextBoxHtmlColor";
-            this.buttonTextBoxHtmlColor.Size = new System.Drawing.Size(112, 23);
-            this.buttonTextBoxHtmlColor.TabIndex = 35;
-            this.buttonTextBoxHtmlColor.Text = "Html color";
-            this.buttonTextBoxHtmlColor.UseVisualStyleBackColor = true;
             // 
             // Settings
             // 
