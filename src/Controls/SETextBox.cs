@@ -145,9 +145,18 @@ namespace Nikse.SubtitleEdit.Controls
 
                 _fixedArabicComma = false;
                 var s = value;
-                if (!Configuration.Settings.General.RightToLeftMode && s.EndsWith('،') && !s.Contains('\u202A'))
+                if (!Configuration.Settings.General.RightToLeftMode && !s.Contains('\u202A'))
                 {
-                    s = s.Replace("،", "\u202A،");
+                    string textNoTags = HtmlUtil.RemoveHtmlTags(s, true);
+                    if (textNoTags.EndsWith('،'))
+                    {
+                        s = s.Replace("،", "\u202A،"); 
+                    }
+                    else if (textNoTags.StartsWith('،'))
+                    {
+                        s = s.Replace("،", "،\u202A");
+                    }
+
                     _fixedArabicComma = true;
                 }
 
