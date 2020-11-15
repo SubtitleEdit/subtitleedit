@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Core.Translate;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,6 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Translate;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -482,7 +482,6 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.KeyCode == Keys.Escape && labelPleaseWait.Visible)
             {
                 _breakTranslation = true;
-                e.Handled = true;
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyCode == UiUtil.HelpKeys)

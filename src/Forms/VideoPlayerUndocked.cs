@@ -93,12 +93,12 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.KeyCode == Keys.Up && e.Modifiers == Keys.Alt && IsFullscreen)
             {
                 _mainForm.GotoPrevSubPosFromvideoPos();
-                e.Handled = true;
+                e.SuppressKeyPress = true;
             }
             else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.Down && IsFullscreen)
             {
                 _mainForm.GotoNextSubPosFromVideoPos();
-                e.Handled = true;
+                e.SuppressKeyPress = true;
             }
             else if (_redockKeys == e.KeyData)
             {

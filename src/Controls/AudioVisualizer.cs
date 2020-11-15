@@ -701,7 +701,7 @@ namespace Nikse.SubtitleEdit.Controls
                                 {
                                     var name = string.Empty;
                                     var x = pos + 3;
-                                    var y = index + 1 < _chapters.Count && _chapters[index].StartTime == _chapters[index + 1].StartTime ? Height / 2 - font.Height - 12 :  Height / 2 - 12;
+                                    var y = index + 1 < _chapters.Count && _chapters[index].StartTime == _chapters[index + 1].StartTime ? Height / 2 - font.Height - 12 : Height / 2 - 12;
                                     using (var chpaterTextBackBrush = new SolidBrush(ChaptersColor))
                                     {
                                         name = _chapters[index].Nested ? "+ " + _chapters[index].Name : _chapters[index].Name;
@@ -2024,20 +2024,17 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 ZoomIn();
                 e.SuppressKeyPress = true;
-                e.Handled = true;
             }
             else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Subtract)
             {
                 ZoomOut();
                 e.SuppressKeyPress = true;
-                e.Handled = true;
             }
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.D0)
             {
                 ZoomFactor = 1.0;
                 OnZoomedChanged?.Invoke(this, null);
                 e.SuppressKeyPress = true;
-                e.Handled = true;
             }
             else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Z)
             {
@@ -2047,7 +2044,6 @@ namespace Nikse.SubtitleEdit.Controls
                     OnPositionSelected?.Invoke(this, new ParagraphEventArgs(_startPositionSeconds, null));
                     Invalidate();
                     e.SuppressKeyPress = true;
-                    e.Handled = true;
                 }
             }
             else if (e.Modifiers == Keys.None && e.KeyCode == Keys.X)
@@ -2058,7 +2054,6 @@ namespace Nikse.SubtitleEdit.Controls
                     OnPositionSelected?.Invoke(this, new ParagraphEventArgs(_startPositionSeconds, null));
                     Invalidate();
                     e.SuppressKeyPress = true;
-                    e.Handled = true;
                 }
             }
             else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.C)
@@ -2066,7 +2061,6 @@ namespace Nikse.SubtitleEdit.Controls
                 Locked = !Locked;
                 Invalidate();
                 e.SuppressKeyPress = true;
-                e.Handled = true;
             }
             else if (e.KeyData == InsertAtVideoPositionShortcut)
             {
@@ -2074,7 +2068,6 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     InsertAtVideoPosition.Invoke(this, null);
                     e.SuppressKeyPress = true;
-                    e.Handled = true;
                 }
             }
             else if (e.KeyCode == Keys.V && e.Modifiers == Keys.Control) //Ctrl+v = Paste from clipboard
@@ -2083,7 +2076,6 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     PasteAtVideoPosition.Invoke(this, null);
                     e.SuppressKeyPress = true;
-                    e.Handled = true;
                 }
             }
             else if (e.KeyData == Move100MsLeft)
@@ -2092,7 +2084,6 @@ namespace Nikse.SubtitleEdit.Controls
                 OnPositionSelected?.Invoke(this, new ParagraphEventArgs(pos, null));
                 Invalidate();
                 e.SuppressKeyPress = true;
-                e.Handled = true;
             }
             else if (e.KeyData == Move100MsRight)
             {
@@ -2100,7 +2091,6 @@ namespace Nikse.SubtitleEdit.Controls
                 OnPositionSelected?.Invoke(this, new ParagraphEventArgs(pos, null));
                 Invalidate();
                 e.SuppressKeyPress = true;
-                e.Handled = true;
             }
             else if (e.KeyData == MoveOneSecondLeft)
             {
@@ -2108,7 +2098,6 @@ namespace Nikse.SubtitleEdit.Controls
                 OnPositionSelected?.Invoke(this, new ParagraphEventArgs(pos, null));
                 Invalidate();
                 e.SuppressKeyPress = true;
-                e.Handled = true;
             }
             else if (e.KeyData == MoveOneSecondRight)
             {
@@ -2116,7 +2105,6 @@ namespace Nikse.SubtitleEdit.Controls
                 OnPositionSelected?.Invoke(this, new ParagraphEventArgs(pos, null));
                 Invalidate();
                 e.SuppressKeyPress = true;
-                e.Handled = true;
             }
         }
 
