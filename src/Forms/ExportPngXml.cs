@@ -1037,7 +1037,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (_subtitle.Paragraphs.Count > 0)
             {
-                var end = (int)Math.Round(_subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].EndTime.TotalSeconds * FrameRate);
+                var end = SubtitleFormat.MillisecondsToFrames(_subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].EndTime.TotalMilliseconds, FrameRate);
                 end++;
                 s = s.Replace("[OUT]", end.ToString(CultureInfo.InvariantCulture));
             }
@@ -1933,9 +1933,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 ntsc = "TRUE";
             }
 
-            int duration = (int)Math.Round(param.P.Duration.TotalSeconds * param.FramesPerSeconds);
-            int start = (int)Math.Round(param.P.StartTime.TotalSeconds * param.FramesPerSeconds);
-            int end = (int)Math.Round(param.P.EndTime.TotalSeconds * param.FramesPerSeconds);
+            int duration = SubtitleFormat.MillisecondsToFrames(param.P.Duration.TotalMilliseconds, param.FramesPerSeconds);
+            var start = SubtitleFormat.MillisecondsToFrames(param.P.StartTime.TotalMilliseconds, param.FramesPerSeconds);
+            var end = SubtitleFormat.MillisecondsToFrames(param.P.EndTime.TotalMilliseconds, param.FramesPerSeconds);
 
             template = template.Replace("[DURATION]", duration.ToString(CultureInfo.InvariantCulture));
             template = template.Replace("[IN]", start.ToString(CultureInfo.InvariantCulture));
@@ -1950,7 +1950,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         internal int WriteBdnXmlParagraph(int width, StringBuilder sb, int border, int height, int imagesSavedCount, MakeBitmapParameter param, int i, string path)
         {
-            string numberString = string.Format("{0:0000}", i);
+            string numberString = $"{i:0000}";
             string fileName = Path.Combine(path, numberString + ".png");
 
             if (comboBoxImageFormat.Text == "Png 8-bit")
