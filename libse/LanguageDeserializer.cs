@@ -622,8 +622,20 @@ namespace Nikse.SubtitleEdit.Core
                 case "BatchConvert/RemoveLineBreaks":
                     language.BatchConvert.RemoveLineBreaks = reader.Value;
                     break;
+                case "BatchConvert/DeleteLines":
+                    language.BatchConvert.DeleteLines = reader.Value;
+                    break;
                 case "BatchConvert/TryToUseSourceEncoding":
                     language.BatchConvert.TryToUseSourceEncoding = reader.Value;
+                    break;
+                case "BatchConvert/DeleteFirstLines":
+                    language.BatchConvert.DeleteFirstLines = reader.Value;
+                    break;
+                case "BatchConvert/DeleteLastLines":
+                    language.BatchConvert.DeleteLastLines = reader.Value;
+                    break;
+                case "BatchConvert/DeleteContaining":
+                    language.BatchConvert.DeleteContaining = reader.Value;
                     break;
                 case "BatchConvert/MkvLanguageInOutputFileName":
                     language.BatchConvert.MkvLanguageInOutputFileName = reader.Value;

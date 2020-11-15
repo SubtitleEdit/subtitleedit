@@ -29,29 +29,17 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Nikse.SubtitleEdit.Core.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.TimeCode();
+            Nikse.SubtitleEdit.Core.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.TimeCode();
             this.buttonConvert = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxConvertOptions = new System.Windows.Forms.GroupBox();
-            this.groupBoxAdjustDuration = new System.Windows.Forms.GroupBox();
-            this.comboBoxAdjustDurationVia = new System.Windows.Forms.ComboBox();
-            this.labelAdjustDurationVia = new System.Windows.Forms.Label();
-            this.panelAdjustDurationFixed = new System.Windows.Forms.Panel();
-            this.numericUpDownFixedMilliseconds = new System.Windows.Forms.NumericUpDown();
-            this.labelMillisecondsFixed = new System.Windows.Forms.Label();
-            this.panelAdjustDurationAddPercent = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.numericUpDownAdjustViaPercent = new System.Windows.Forms.NumericUpDown();
-            this.labelAdjustViaPercent = new System.Windows.Forms.Label();
-            this.panelAdjustDurationAddSeconds = new System.Windows.Forms.Panel();
-            this.numericUpDownSeconds = new System.Windows.Forms.NumericUpDown();
-            this.labelAddSeconds = new System.Windows.Forms.Label();
-            this.panelAdjustDurationRecalc = new System.Windows.Forms.Panel();
-            this.checkBoxExtendOnly = new System.Windows.Forms.CheckBox();
-            this.numericUpDownOptimalCharsSec = new System.Windows.Forms.NumericUpDown();
-            this.labelOptimalCharsSec = new System.Windows.Forms.Label();
-            this.numericUpDownMaxCharsSec = new System.Windows.Forms.NumericUpDown();
-            this.labelMaxCharsPerSecond = new System.Windows.Forms.Label();
+            this.groupBoxDeleteLines = new System.Windows.Forms.GroupBox();
+            this.textBoxDeleteContains = new System.Windows.Forms.TextBox();
+            this.labelDeleteLinesContaining = new System.Windows.Forms.Label();
+            this.numericUpDownDeleteLast = new System.Windows.Forms.NumericUpDown();
+            this.labelDeleteLastLines = new System.Windows.Forms.Label();
+            this.numericUpDownDeleteFirst = new System.Windows.Forms.NumericUpDown();
+            this.labelDeleteFirstLines = new System.Windows.Forms.Label();
             this.groupBoxRemoveStyle = new System.Windows.Forms.GroupBox();
             this.textBoxRemoveStyle = new System.Windows.Forms.TextBox();
             this.labelStyleName = new System.Windows.Forms.Label();
@@ -94,6 +82,25 @@
             this.numericUpDownMaxMillisecondsBetweenLines = new System.Windows.Forms.NumericUpDown();
             this.labelMaxMillisecondsBetweenLines = new System.Windows.Forms.Label();
             this.labelMaxCharacters = new System.Windows.Forms.Label();
+            this.groupBoxAdjustDuration = new System.Windows.Forms.GroupBox();
+            this.comboBoxAdjustDurationVia = new System.Windows.Forms.ComboBox();
+            this.labelAdjustDurationVia = new System.Windows.Forms.Label();
+            this.panelAdjustDurationFixed = new System.Windows.Forms.Panel();
+            this.numericUpDownFixedMilliseconds = new System.Windows.Forms.NumericUpDown();
+            this.labelMillisecondsFixed = new System.Windows.Forms.Label();
+            this.panelAdjustDurationAddPercent = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.numericUpDownAdjustViaPercent = new System.Windows.Forms.NumericUpDown();
+            this.labelAdjustViaPercent = new System.Windows.Forms.Label();
+            this.panelAdjustDurationAddSeconds = new System.Windows.Forms.Panel();
+            this.numericUpDownSeconds = new System.Windows.Forms.NumericUpDown();
+            this.labelAddSeconds = new System.Windows.Forms.Label();
+            this.panelAdjustDurationRecalc = new System.Windows.Forms.Panel();
+            this.checkBoxExtendOnly = new System.Windows.Forms.CheckBox();
+            this.numericUpDownOptimalCharsSec = new System.Windows.Forms.NumericUpDown();
+            this.labelOptimalCharsSec = new System.Windows.Forms.Label();
+            this.numericUpDownMaxCharsSec = new System.Windows.Forms.NumericUpDown();
+            this.labelMaxCharsPerSecond = new System.Windows.Forms.Label();
             this.groupBoxOutput = new System.Windows.Forms.GroupBox();
             this.buttonBrowseEncoding = new System.Windows.Forms.Button();
             this.radioButtonSaveInOutputFolder = new System.Windows.Forms.RadioButton();
@@ -124,6 +131,8 @@
             this.columnHeaderFormat = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenuStripFiles = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.addFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openContainingFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -133,19 +142,10 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.addFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.groupBoxConvertOptions.SuspendLayout();
-            this.groupBoxAdjustDuration.SuspendLayout();
-            this.panelAdjustDurationFixed.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFixedMilliseconds)).BeginInit();
-            this.panelAdjustDurationAddPercent.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAdjustViaPercent)).BeginInit();
-            this.panelAdjustDurationAddSeconds.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSeconds)).BeginInit();
-            this.panelAdjustDurationRecalc.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOptimalCharsSec)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharsSec)).BeginInit();
+            this.groupBoxDeleteLines.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDeleteLast)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDeleteFirst)).BeginInit();
             this.groupBoxRemoveStyle.SuspendLayout();
             this.groupBoxOffsetTimeCodes.SuspendLayout();
             this.contextMenuStripOptions.SuspendLayout();
@@ -157,6 +157,16 @@
             this.groupBoxMergeShortLines.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharacters)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxMillisecondsBetweenLines)).BeginInit();
+            this.groupBoxAdjustDuration.SuspendLayout();
+            this.panelAdjustDurationFixed.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFixedMilliseconds)).BeginInit();
+            this.panelAdjustDurationAddPercent.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAdjustViaPercent)).BeginInit();
+            this.panelAdjustDurationAddSeconds.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSeconds)).BeginInit();
+            this.panelAdjustDurationRecalc.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOptimalCharsSec)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharsSec)).BeginInit();
             this.groupBoxOutput.SuspendLayout();
             this.groupBoxInput.SuspendLayout();
             this.contextMenuStripFiles.SuspendLayout();
@@ -190,7 +200,7 @@
             // 
             this.groupBoxConvertOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxConvertOptions.Controls.Add(this.groupBoxAdjustDuration);
+            this.groupBoxConvertOptions.Controls.Add(this.groupBoxDeleteLines);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxRemoveStyle);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxOffsetTimeCodes);
             this.groupBoxConvertOptions.Controls.Add(this.buttonConvertOptionsSettings);
@@ -200,6 +210,7 @@
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxSpeed);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxChangeCasing);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxMergeShortLines);
+            this.groupBoxConvertOptions.Controls.Add(this.groupBoxAdjustDuration);
             this.groupBoxConvertOptions.Location = new System.Drawing.Point(422, 19);
             this.groupBoxConvertOptions.Name = "groupBoxConvertOptions";
             this.groupBoxConvertOptions.Size = new System.Drawing.Size(583, 275);
@@ -207,257 +218,69 @@
             this.groupBoxConvertOptions.TabStop = false;
             this.groupBoxConvertOptions.Text = "Convert options";
             // 
-            // groupBoxAdjustDuration
+            // groupBoxDeleteLines
             // 
-            this.groupBoxAdjustDuration.Controls.Add(this.comboBoxAdjustDurationVia);
-            this.groupBoxAdjustDuration.Controls.Add(this.labelAdjustDurationVia);
-            this.groupBoxAdjustDuration.Controls.Add(this.panelAdjustDurationFixed);
-            this.groupBoxAdjustDuration.Controls.Add(this.panelAdjustDurationAddPercent);
-            this.groupBoxAdjustDuration.Controls.Add(this.panelAdjustDurationAddSeconds);
-            this.groupBoxAdjustDuration.Controls.Add(this.panelAdjustDurationRecalc);
-            this.groupBoxAdjustDuration.Location = new System.Drawing.Point(305, 16);
-            this.groupBoxAdjustDuration.Name = "groupBoxAdjustDuration";
-            this.groupBoxAdjustDuration.Size = new System.Drawing.Size(271, 251);
-            this.groupBoxAdjustDuration.TabIndex = 308;
-            this.groupBoxAdjustDuration.TabStop = false;
-            this.groupBoxAdjustDuration.Text = "Adjust duration";
-            this.groupBoxAdjustDuration.Visible = false;
+            this.groupBoxDeleteLines.Controls.Add(this.textBoxDeleteContains);
+            this.groupBoxDeleteLines.Controls.Add(this.labelDeleteLinesContaining);
+            this.groupBoxDeleteLines.Controls.Add(this.numericUpDownDeleteLast);
+            this.groupBoxDeleteLines.Controls.Add(this.labelDeleteLastLines);
+            this.groupBoxDeleteLines.Controls.Add(this.numericUpDownDeleteFirst);
+            this.groupBoxDeleteLines.Controls.Add(this.labelDeleteFirstLines);
+            this.groupBoxDeleteLines.Location = new System.Drawing.Point(305, 94);
+            this.groupBoxDeleteLines.Name = "groupBoxDeleteLines";
+            this.groupBoxDeleteLines.Size = new System.Drawing.Size(271, 140);
+            this.groupBoxDeleteLines.TabIndex = 308;
+            this.groupBoxDeleteLines.TabStop = false;
+            this.groupBoxDeleteLines.Text = "Delete lines";
+            this.groupBoxDeleteLines.Visible = false;
             // 
-            // comboBoxAdjustDurationVia
+            // textBoxDeleteContains
             // 
-            this.comboBoxAdjustDurationVia.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxAdjustDurationVia.FormattingEnabled = true;
-            this.comboBoxAdjustDurationVia.Location = new System.Drawing.Point(65, 19);
-            this.comboBoxAdjustDurationVia.Name = "comboBoxAdjustDurationVia";
-            this.comboBoxAdjustDurationVia.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxAdjustDurationVia.TabIndex = 8;
-            this.comboBoxAdjustDurationVia.SelectedIndexChanged += new System.EventHandler(this.comboBoxAdjustDurationVia_SelectedIndexChanged);
+            this.textBoxDeleteContains.Location = new System.Drawing.Point(10, 110);
+            this.textBoxDeleteContains.Name = "textBoxDeleteContains";
+            this.textBoxDeleteContains.Size = new System.Drawing.Size(237, 20);
+            this.textBoxDeleteContains.TabIndex = 5;
             // 
-            // labelAdjustDurationVia
+            // labelDeleteLinesContaining
             // 
-            this.labelAdjustDurationVia.AutoSize = true;
-            this.labelAdjustDurationVia.Location = new System.Drawing.Point(8, 22);
-            this.labelAdjustDurationVia.Name = "labelAdjustDurationVia";
-            this.labelAdjustDurationVia.Size = new System.Drawing.Size(51, 13);
-            this.labelAdjustDurationVia.TabIndex = 7;
-            this.labelAdjustDurationVia.Text = "AdjustVia";
+            this.labelDeleteLinesContaining.AutoSize = true;
+            this.labelDeleteLinesContaining.Location = new System.Drawing.Point(9, 89);
+            this.labelDeleteLinesContaining.Name = "labelDeleteLinesContaining";
+            this.labelDeleteLinesContaining.Size = new System.Drawing.Size(114, 13);
+            this.labelDeleteLinesContaining.TabIndex = 4;
+            this.labelDeleteLinesContaining.Text = "Delete lines containing";
             // 
-            // panelAdjustDurationFixed
+            // numericUpDownDeleteLast
             // 
-            this.panelAdjustDurationFixed.Controls.Add(this.numericUpDownFixedMilliseconds);
-            this.panelAdjustDurationFixed.Controls.Add(this.labelMillisecondsFixed);
-            this.panelAdjustDurationFixed.Location = new System.Drawing.Point(6, 123);
-            this.panelAdjustDurationFixed.Name = "panelAdjustDurationFixed";
-            this.panelAdjustDurationFixed.Size = new System.Drawing.Size(257, 57);
-            this.panelAdjustDurationFixed.TabIndex = 15;
+            this.numericUpDownDeleteLast.Location = new System.Drawing.Point(92, 45);
+            this.numericUpDownDeleteLast.Name = "numericUpDownDeleteLast";
+            this.numericUpDownDeleteLast.Size = new System.Drawing.Size(43, 20);
+            this.numericUpDownDeleteLast.TabIndex = 3;
             // 
-            // numericUpDownFixedMilliseconds
+            // labelDeleteLastLines
             // 
-            this.numericUpDownFixedMilliseconds.Location = new System.Drawing.Point(8, 27);
-            this.numericUpDownFixedMilliseconds.Maximum = new decimal(new int[] {
-            20000,
-            0,
-            0,
-            0});
-            this.numericUpDownFixedMilliseconds.Name = "numericUpDownFixedMilliseconds";
-            this.numericUpDownFixedMilliseconds.Size = new System.Drawing.Size(80, 20);
-            this.numericUpDownFixedMilliseconds.TabIndex = 13;
-            this.numericUpDownFixedMilliseconds.Value = new decimal(new int[] {
-            3000,
-            0,
-            0,
-            0});
+            this.labelDeleteLastLines.AutoSize = true;
+            this.labelDeleteLastLines.Location = new System.Drawing.Point(5, 47);
+            this.labelDeleteLastLines.Name = "labelDeleteLastLines";
+            this.labelDeleteLastLines.Size = new System.Drawing.Size(81, 13);
+            this.labelDeleteLastLines.TabIndex = 2;
+            this.labelDeleteLastLines.Text = "Delete last lines";
             // 
-            // labelMillisecondsFixed
+            // numericUpDownDeleteFirst
             // 
-            this.labelMillisecondsFixed.AutoSize = true;
-            this.labelMillisecondsFixed.Location = new System.Drawing.Point(5, 8);
-            this.labelMillisecondsFixed.Name = "labelMillisecondsFixed";
-            this.labelMillisecondsFixed.Size = new System.Drawing.Size(64, 13);
-            this.labelMillisecondsFixed.TabIndex = 14;
-            this.labelMillisecondsFixed.Text = "Milliseconds";
+            this.numericUpDownDeleteFirst.Location = new System.Drawing.Point(93, 19);
+            this.numericUpDownDeleteFirst.Name = "numericUpDownDeleteFirst";
+            this.numericUpDownDeleteFirst.Size = new System.Drawing.Size(43, 20);
+            this.numericUpDownDeleteFirst.TabIndex = 1;
             // 
-            // panelAdjustDurationAddPercent
+            // labelDeleteFirstLines
             // 
-            this.panelAdjustDurationAddPercent.Controls.Add(this.label1);
-            this.panelAdjustDurationAddPercent.Controls.Add(this.numericUpDownAdjustViaPercent);
-            this.panelAdjustDurationAddPercent.Controls.Add(this.labelAdjustViaPercent);
-            this.panelAdjustDurationAddPercent.Location = new System.Drawing.Point(7, 79);
-            this.panelAdjustDurationAddPercent.Name = "panelAdjustDurationAddPercent";
-            this.panelAdjustDurationAddPercent.Size = new System.Drawing.Size(257, 63);
-            this.panelAdjustDurationAddPercent.TabIndex = 14;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(90, 34);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(15, 13);
-            this.label1.TabIndex = 25;
-            this.label1.Text = "%";
-            // 
-            // numericUpDownAdjustViaPercent
-            // 
-            this.numericUpDownAdjustViaPercent.Location = new System.Drawing.Point(8, 27);
-            this.numericUpDownAdjustViaPercent.Maximum = new decimal(new int[] {
-            150,
-            0,
-            0,
-            0});
-            this.numericUpDownAdjustViaPercent.Minimum = new decimal(new int[] {
-            75,
-            0,
-            0,
-            0});
-            this.numericUpDownAdjustViaPercent.Name = "numericUpDownAdjustViaPercent";
-            this.numericUpDownAdjustViaPercent.Size = new System.Drawing.Size(80, 20);
-            this.numericUpDownAdjustViaPercent.TabIndex = 24;
-            this.numericUpDownAdjustViaPercent.Value = new decimal(new int[] {
-            110,
-            0,
-            0,
-            0});
-            // 
-            // labelAdjustViaPercent
-            // 
-            this.labelAdjustViaPercent.AutoSize = true;
-            this.labelAdjustViaPercent.Location = new System.Drawing.Point(5, 8);
-            this.labelAdjustViaPercent.Name = "labelAdjustViaPercent";
-            this.labelAdjustViaPercent.Size = new System.Drawing.Size(86, 13);
-            this.labelAdjustViaPercent.TabIndex = 23;
-            this.labelAdjustViaPercent.Text = "Adjust in percent";
-            // 
-            // panelAdjustDurationAddSeconds
-            // 
-            this.panelAdjustDurationAddSeconds.Controls.Add(this.numericUpDownSeconds);
-            this.panelAdjustDurationAddSeconds.Controls.Add(this.labelAddSeconds);
-            this.panelAdjustDurationAddSeconds.Location = new System.Drawing.Point(8, 47);
-            this.panelAdjustDurationAddSeconds.Name = "panelAdjustDurationAddSeconds";
-            this.panelAdjustDurationAddSeconds.Size = new System.Drawing.Size(257, 55);
-            this.panelAdjustDurationAddSeconds.TabIndex = 13;
-            // 
-            // numericUpDownSeconds
-            // 
-            this.numericUpDownSeconds.DecimalPlaces = 3;
-            this.numericUpDownSeconds.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            131072});
-            this.numericUpDownSeconds.Location = new System.Drawing.Point(8, 27);
-            this.numericUpDownSeconds.Maximum = new decimal(new int[] {
-            20,
-            0,
-            0,
-            0});
-            this.numericUpDownSeconds.Minimum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            -2147483648});
-            this.numericUpDownSeconds.Name = "numericUpDownSeconds";
-            this.numericUpDownSeconds.Size = new System.Drawing.Size(80, 20);
-            this.numericUpDownSeconds.TabIndex = 12;
-            this.numericUpDownSeconds.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            // 
-            // labelAddSeconds
-            // 
-            this.labelAddSeconds.AutoSize = true;
-            this.labelAddSeconds.Location = new System.Drawing.Point(5, 8);
-            this.labelAddSeconds.Name = "labelAddSeconds";
-            this.labelAddSeconds.Size = new System.Drawing.Size(69, 13);
-            this.labelAddSeconds.TabIndex = 11;
-            this.labelAddSeconds.Text = "Add seconds";
-            // 
-            // panelAdjustDurationRecalc
-            // 
-            this.panelAdjustDurationRecalc.Controls.Add(this.checkBoxExtendOnly);
-            this.panelAdjustDurationRecalc.Controls.Add(this.numericUpDownOptimalCharsSec);
-            this.panelAdjustDurationRecalc.Controls.Add(this.labelOptimalCharsSec);
-            this.panelAdjustDurationRecalc.Controls.Add(this.numericUpDownMaxCharsSec);
-            this.panelAdjustDurationRecalc.Controls.Add(this.labelMaxCharsPerSecond);
-            this.panelAdjustDurationRecalc.Location = new System.Drawing.Point(6, 66);
-            this.panelAdjustDurationRecalc.Name = "panelAdjustDurationRecalc";
-            this.panelAdjustDurationRecalc.Size = new System.Drawing.Size(257, 170);
-            this.panelAdjustDurationRecalc.TabIndex = 16;
-            // 
-            // checkBoxExtendOnly
-            // 
-            this.checkBoxExtendOnly.AutoSize = true;
-            this.checkBoxExtendOnly.Location = new System.Drawing.Point(8, 122);
-            this.checkBoxExtendOnly.Name = "checkBoxExtendOnly";
-            this.checkBoxExtendOnly.Size = new System.Drawing.Size(81, 17);
-            this.checkBoxExtendOnly.TabIndex = 14;
-            this.checkBoxExtendOnly.Text = "Extend only";
-            this.checkBoxExtendOnly.UseVisualStyleBackColor = true;
-            // 
-            // numericUpDownOptimalCharsSec
-            // 
-            this.numericUpDownOptimalCharsSec.DecimalPlaces = 1;
-            this.numericUpDownOptimalCharsSec.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.numericUpDownOptimalCharsSec.Location = new System.Drawing.Point(8, 85);
-            this.numericUpDownOptimalCharsSec.Minimum = new decimal(new int[] {
-            4,
-            0,
-            0,
-            0});
-            this.numericUpDownOptimalCharsSec.Name = "numericUpDownOptimalCharsSec";
-            this.numericUpDownOptimalCharsSec.Size = new System.Drawing.Size(80, 20);
-            this.numericUpDownOptimalCharsSec.TabIndex = 13;
-            this.numericUpDownOptimalCharsSec.Value = new decimal(new int[] {
-            17,
-            0,
-            0,
-            0});
-            // 
-            // labelOptimalCharsSec
-            // 
-            this.labelOptimalCharsSec.AutoSize = true;
-            this.labelOptimalCharsSec.Location = new System.Drawing.Point(5, 66);
-            this.labelOptimalCharsSec.Name = "labelOptimalCharsSec";
-            this.labelOptimalCharsSec.Size = new System.Drawing.Size(93, 13);
-            this.labelOptimalCharsSec.TabIndex = 15;
-            this.labelOptimalCharsSec.Text = "Optimal chars/sec";
-            // 
-            // numericUpDownMaxCharsSec
-            // 
-            this.numericUpDownMaxCharsSec.DecimalPlaces = 1;
-            this.numericUpDownMaxCharsSec.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.numericUpDownMaxCharsSec.Location = new System.Drawing.Point(8, 27);
-            this.numericUpDownMaxCharsSec.Minimum = new decimal(new int[] {
-            4,
-            0,
-            0,
-            0});
-            this.numericUpDownMaxCharsSec.Name = "numericUpDownMaxCharsSec";
-            this.numericUpDownMaxCharsSec.Size = new System.Drawing.Size(80, 20);
-            this.numericUpDownMaxCharsSec.TabIndex = 12;
-            this.numericUpDownMaxCharsSec.Value = new decimal(new int[] {
-            24,
-            0,
-            0,
-            0});
-            // 
-            // labelMaxCharsPerSecond
-            // 
-            this.labelMaxCharsPerSecond.AutoSize = true;
-            this.labelMaxCharsPerSecond.Location = new System.Drawing.Point(5, 8);
-            this.labelMaxCharsPerSecond.Name = "labelMaxCharsPerSecond";
-            this.labelMaxCharsPerSecond.Size = new System.Drawing.Size(81, 13);
-            this.labelMaxCharsPerSecond.TabIndex = 11;
-            this.labelMaxCharsPerSecond.Text = "Max. chars/sec";
+            this.labelDeleteFirstLines.AutoSize = true;
+            this.labelDeleteFirstLines.Location = new System.Drawing.Point(6, 20);
+            this.labelDeleteFirstLines.Name = "labelDeleteFirstLines";
+            this.labelDeleteFirstLines.Size = new System.Drawing.Size(81, 13);
+            this.labelDeleteFirstLines.TabIndex = 0;
+            this.labelDeleteFirstLines.Text = "Delete first lines";
             // 
             // groupBoxRemoveStyle
             // 
@@ -533,14 +356,14 @@
             this.timeUpDownAdjust.Name = "timeUpDownAdjust";
             this.timeUpDownAdjust.Size = new System.Drawing.Size(111, 27);
             this.timeUpDownAdjust.TabIndex = 1;
-            timeCode2.Hours = 0;
-            timeCode2.Milliseconds = 0;
-            timeCode2.Minutes = 0;
-            timeCode2.Seconds = 0;
-            timeCode2.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode2.TotalMilliseconds = 0D;
-            timeCode2.TotalSeconds = 0D;
-            this.timeUpDownAdjust.TimeCode = timeCode2;
+            timeCode1.Hours = 0;
+            timeCode1.Milliseconds = 0;
+            timeCode1.Minutes = 0;
+            timeCode1.Seconds = 0;
+            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode1.TotalMilliseconds = 0D;
+            timeCode1.TotalSeconds = 0D;
+            this.timeUpDownAdjust.TimeCode = timeCode1;
             this.timeUpDownAdjust.UseVideoOffset = false;
             // 
             // labelHourMinSecMilliSecond
@@ -952,6 +775,258 @@
             this.labelMaxCharacters.TabIndex = 40;
             this.labelMaxCharacters.Text = "Maximum characters in one paragraph";
             // 
+            // groupBoxAdjustDuration
+            // 
+            this.groupBoxAdjustDuration.Controls.Add(this.comboBoxAdjustDurationVia);
+            this.groupBoxAdjustDuration.Controls.Add(this.labelAdjustDurationVia);
+            this.groupBoxAdjustDuration.Controls.Add(this.panelAdjustDurationFixed);
+            this.groupBoxAdjustDuration.Controls.Add(this.panelAdjustDurationAddPercent);
+            this.groupBoxAdjustDuration.Controls.Add(this.panelAdjustDurationAddSeconds);
+            this.groupBoxAdjustDuration.Controls.Add(this.panelAdjustDurationRecalc);
+            this.groupBoxAdjustDuration.Location = new System.Drawing.Point(305, 16);
+            this.groupBoxAdjustDuration.Name = "groupBoxAdjustDuration";
+            this.groupBoxAdjustDuration.Size = new System.Drawing.Size(271, 251);
+            this.groupBoxAdjustDuration.TabIndex = 308;
+            this.groupBoxAdjustDuration.TabStop = false;
+            this.groupBoxAdjustDuration.Text = "Adjust duration";
+            this.groupBoxAdjustDuration.Visible = false;
+            // 
+            // comboBoxAdjustDurationVia
+            // 
+            this.comboBoxAdjustDurationVia.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxAdjustDurationVia.FormattingEnabled = true;
+            this.comboBoxAdjustDurationVia.Location = new System.Drawing.Point(65, 19);
+            this.comboBoxAdjustDurationVia.Name = "comboBoxAdjustDurationVia";
+            this.comboBoxAdjustDurationVia.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxAdjustDurationVia.TabIndex = 8;
+            this.comboBoxAdjustDurationVia.SelectedIndexChanged += new System.EventHandler(this.comboBoxAdjustDurationVia_SelectedIndexChanged);
+            // 
+            // labelAdjustDurationVia
+            // 
+            this.labelAdjustDurationVia.AutoSize = true;
+            this.labelAdjustDurationVia.Location = new System.Drawing.Point(8, 22);
+            this.labelAdjustDurationVia.Name = "labelAdjustDurationVia";
+            this.labelAdjustDurationVia.Size = new System.Drawing.Size(51, 13);
+            this.labelAdjustDurationVia.TabIndex = 7;
+            this.labelAdjustDurationVia.Text = "AdjustVia";
+            // 
+            // panelAdjustDurationFixed
+            // 
+            this.panelAdjustDurationFixed.Controls.Add(this.numericUpDownFixedMilliseconds);
+            this.panelAdjustDurationFixed.Controls.Add(this.labelMillisecondsFixed);
+            this.panelAdjustDurationFixed.Location = new System.Drawing.Point(6, 123);
+            this.panelAdjustDurationFixed.Name = "panelAdjustDurationFixed";
+            this.panelAdjustDurationFixed.Size = new System.Drawing.Size(257, 57);
+            this.panelAdjustDurationFixed.TabIndex = 15;
+            // 
+            // numericUpDownFixedMilliseconds
+            // 
+            this.numericUpDownFixedMilliseconds.Location = new System.Drawing.Point(8, 27);
+            this.numericUpDownFixedMilliseconds.Maximum = new decimal(new int[] {
+            20000,
+            0,
+            0,
+            0});
+            this.numericUpDownFixedMilliseconds.Name = "numericUpDownFixedMilliseconds";
+            this.numericUpDownFixedMilliseconds.Size = new System.Drawing.Size(80, 20);
+            this.numericUpDownFixedMilliseconds.TabIndex = 13;
+            this.numericUpDownFixedMilliseconds.Value = new decimal(new int[] {
+            3000,
+            0,
+            0,
+            0});
+            // 
+            // labelMillisecondsFixed
+            // 
+            this.labelMillisecondsFixed.AutoSize = true;
+            this.labelMillisecondsFixed.Location = new System.Drawing.Point(5, 8);
+            this.labelMillisecondsFixed.Name = "labelMillisecondsFixed";
+            this.labelMillisecondsFixed.Size = new System.Drawing.Size(64, 13);
+            this.labelMillisecondsFixed.TabIndex = 14;
+            this.labelMillisecondsFixed.Text = "Milliseconds";
+            // 
+            // panelAdjustDurationAddPercent
+            // 
+            this.panelAdjustDurationAddPercent.Controls.Add(this.label1);
+            this.panelAdjustDurationAddPercent.Controls.Add(this.numericUpDownAdjustViaPercent);
+            this.panelAdjustDurationAddPercent.Controls.Add(this.labelAdjustViaPercent);
+            this.panelAdjustDurationAddPercent.Location = new System.Drawing.Point(7, 79);
+            this.panelAdjustDurationAddPercent.Name = "panelAdjustDurationAddPercent";
+            this.panelAdjustDurationAddPercent.Size = new System.Drawing.Size(257, 63);
+            this.panelAdjustDurationAddPercent.TabIndex = 14;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(90, 34);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(15, 13);
+            this.label1.TabIndex = 25;
+            this.label1.Text = "%";
+            // 
+            // numericUpDownAdjustViaPercent
+            // 
+            this.numericUpDownAdjustViaPercent.Location = new System.Drawing.Point(8, 27);
+            this.numericUpDownAdjustViaPercent.Maximum = new decimal(new int[] {
+            150,
+            0,
+            0,
+            0});
+            this.numericUpDownAdjustViaPercent.Minimum = new decimal(new int[] {
+            75,
+            0,
+            0,
+            0});
+            this.numericUpDownAdjustViaPercent.Name = "numericUpDownAdjustViaPercent";
+            this.numericUpDownAdjustViaPercent.Size = new System.Drawing.Size(80, 20);
+            this.numericUpDownAdjustViaPercent.TabIndex = 24;
+            this.numericUpDownAdjustViaPercent.Value = new decimal(new int[] {
+            110,
+            0,
+            0,
+            0});
+            // 
+            // labelAdjustViaPercent
+            // 
+            this.labelAdjustViaPercent.AutoSize = true;
+            this.labelAdjustViaPercent.Location = new System.Drawing.Point(5, 8);
+            this.labelAdjustViaPercent.Name = "labelAdjustViaPercent";
+            this.labelAdjustViaPercent.Size = new System.Drawing.Size(86, 13);
+            this.labelAdjustViaPercent.TabIndex = 23;
+            this.labelAdjustViaPercent.Text = "Adjust in percent";
+            // 
+            // panelAdjustDurationAddSeconds
+            // 
+            this.panelAdjustDurationAddSeconds.Controls.Add(this.numericUpDownSeconds);
+            this.panelAdjustDurationAddSeconds.Controls.Add(this.labelAddSeconds);
+            this.panelAdjustDurationAddSeconds.Location = new System.Drawing.Point(8, 47);
+            this.panelAdjustDurationAddSeconds.Name = "panelAdjustDurationAddSeconds";
+            this.panelAdjustDurationAddSeconds.Size = new System.Drawing.Size(257, 55);
+            this.panelAdjustDurationAddSeconds.TabIndex = 13;
+            // 
+            // numericUpDownSeconds
+            // 
+            this.numericUpDownSeconds.DecimalPlaces = 3;
+            this.numericUpDownSeconds.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+            this.numericUpDownSeconds.Location = new System.Drawing.Point(8, 27);
+            this.numericUpDownSeconds.Maximum = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.numericUpDownSeconds.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDownSeconds.Name = "numericUpDownSeconds";
+            this.numericUpDownSeconds.Size = new System.Drawing.Size(80, 20);
+            this.numericUpDownSeconds.TabIndex = 12;
+            this.numericUpDownSeconds.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            // 
+            // labelAddSeconds
+            // 
+            this.labelAddSeconds.AutoSize = true;
+            this.labelAddSeconds.Location = new System.Drawing.Point(5, 8);
+            this.labelAddSeconds.Name = "labelAddSeconds";
+            this.labelAddSeconds.Size = new System.Drawing.Size(69, 13);
+            this.labelAddSeconds.TabIndex = 11;
+            this.labelAddSeconds.Text = "Add seconds";
+            // 
+            // panelAdjustDurationRecalc
+            // 
+            this.panelAdjustDurationRecalc.Controls.Add(this.checkBoxExtendOnly);
+            this.panelAdjustDurationRecalc.Controls.Add(this.numericUpDownOptimalCharsSec);
+            this.panelAdjustDurationRecalc.Controls.Add(this.labelOptimalCharsSec);
+            this.panelAdjustDurationRecalc.Controls.Add(this.numericUpDownMaxCharsSec);
+            this.panelAdjustDurationRecalc.Controls.Add(this.labelMaxCharsPerSecond);
+            this.panelAdjustDurationRecalc.Location = new System.Drawing.Point(6, 66);
+            this.panelAdjustDurationRecalc.Name = "panelAdjustDurationRecalc";
+            this.panelAdjustDurationRecalc.Size = new System.Drawing.Size(257, 170);
+            this.panelAdjustDurationRecalc.TabIndex = 16;
+            // 
+            // checkBoxExtendOnly
+            // 
+            this.checkBoxExtendOnly.AutoSize = true;
+            this.checkBoxExtendOnly.Location = new System.Drawing.Point(8, 122);
+            this.checkBoxExtendOnly.Name = "checkBoxExtendOnly";
+            this.checkBoxExtendOnly.Size = new System.Drawing.Size(81, 17);
+            this.checkBoxExtendOnly.TabIndex = 14;
+            this.checkBoxExtendOnly.Text = "Extend only";
+            this.checkBoxExtendOnly.UseVisualStyleBackColor = true;
+            // 
+            // numericUpDownOptimalCharsSec
+            // 
+            this.numericUpDownOptimalCharsSec.DecimalPlaces = 1;
+            this.numericUpDownOptimalCharsSec.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDownOptimalCharsSec.Location = new System.Drawing.Point(8, 85);
+            this.numericUpDownOptimalCharsSec.Minimum = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
+            this.numericUpDownOptimalCharsSec.Name = "numericUpDownOptimalCharsSec";
+            this.numericUpDownOptimalCharsSec.Size = new System.Drawing.Size(80, 20);
+            this.numericUpDownOptimalCharsSec.TabIndex = 13;
+            this.numericUpDownOptimalCharsSec.Value = new decimal(new int[] {
+            17,
+            0,
+            0,
+            0});
+            // 
+            // labelOptimalCharsSec
+            // 
+            this.labelOptimalCharsSec.AutoSize = true;
+            this.labelOptimalCharsSec.Location = new System.Drawing.Point(5, 66);
+            this.labelOptimalCharsSec.Name = "labelOptimalCharsSec";
+            this.labelOptimalCharsSec.Size = new System.Drawing.Size(93, 13);
+            this.labelOptimalCharsSec.TabIndex = 15;
+            this.labelOptimalCharsSec.Text = "Optimal chars/sec";
+            // 
+            // numericUpDownMaxCharsSec
+            // 
+            this.numericUpDownMaxCharsSec.DecimalPlaces = 1;
+            this.numericUpDownMaxCharsSec.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDownMaxCharsSec.Location = new System.Drawing.Point(8, 27);
+            this.numericUpDownMaxCharsSec.Minimum = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
+            this.numericUpDownMaxCharsSec.Name = "numericUpDownMaxCharsSec";
+            this.numericUpDownMaxCharsSec.Size = new System.Drawing.Size(80, 20);
+            this.numericUpDownMaxCharsSec.TabIndex = 12;
+            this.numericUpDownMaxCharsSec.Value = new decimal(new int[] {
+            24,
+            0,
+            0,
+            0});
+            // 
+            // labelMaxCharsPerSecond
+            // 
+            this.labelMaxCharsPerSecond.AutoSize = true;
+            this.labelMaxCharsPerSecond.Location = new System.Drawing.Point(5, 8);
+            this.labelMaxCharsPerSecond.Name = "labelMaxCharsPerSecond";
+            this.labelMaxCharsPerSecond.Size = new System.Drawing.Size(81, 13);
+            this.labelMaxCharsPerSecond.TabIndex = 11;
+            this.labelMaxCharsPerSecond.Text = "Max. chars/sec";
+            // 
             // groupBoxOutput
             // 
             this.groupBoxOutput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
@@ -1289,8 +1364,20 @@
             this.toolStripSeparator1,
             this.convertMkvSettingsToolStripMenuItem});
             this.contextMenuStripFiles.Name = "contextMenuStripStyles";
-            this.contextMenuStripFiles.Size = new System.Drawing.Size(400, 148);
+            this.contextMenuStripFiles.Size = new System.Drawing.Size(400, 126);
             this.contextMenuStripFiles.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripFilesOpening);
+            // 
+            // addFilesToolStripMenuItem
+            // 
+            this.addFilesToolStripMenuItem.Name = "addFilesToolStripMenuItem";
+            this.addFilesToolStripMenuItem.Size = new System.Drawing.Size(399, 22);
+            this.addFilesToolStripMenuItem.Text = "Add files";
+            this.addFilesToolStripMenuItem.Click += new System.EventHandler(this.addFilesToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(396, 6);
             // 
             // removeToolStripMenuItem
             // 
@@ -1348,18 +1435,6 @@
             this.labelStatus.TabIndex = 9;
             this.labelStatus.Text = "labelStatus";
             // 
-            // addFilesToolStripMenuItem
-            // 
-            this.addFilesToolStripMenuItem.Name = "addFilesToolStripMenuItem";
-            this.addFilesToolStripMenuItem.Size = new System.Drawing.Size(399, 22);
-            this.addFilesToolStripMenuItem.Text = "Add files";
-            this.addFilesToolStripMenuItem.Click += new System.EventHandler(this.addFilesToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(396, 6);
-            // 
             // BatchConvert
             // 
             this.AllowDrop = true;
@@ -1380,21 +1455,10 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.BatchConvert_FormClosing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.BatchConvert_KeyDown);
             this.groupBoxConvertOptions.ResumeLayout(false);
-            this.groupBoxAdjustDuration.ResumeLayout(false);
-            this.groupBoxAdjustDuration.PerformLayout();
-            this.panelAdjustDurationFixed.ResumeLayout(false);
-            this.panelAdjustDurationFixed.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFixedMilliseconds)).EndInit();
-            this.panelAdjustDurationAddPercent.ResumeLayout(false);
-            this.panelAdjustDurationAddPercent.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAdjustViaPercent)).EndInit();
-            this.panelAdjustDurationAddSeconds.ResumeLayout(false);
-            this.panelAdjustDurationAddSeconds.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSeconds)).EndInit();
-            this.panelAdjustDurationRecalc.ResumeLayout(false);
-            this.panelAdjustDurationRecalc.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOptimalCharsSec)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharsSec)).EndInit();
+            this.groupBoxDeleteLines.ResumeLayout(false);
+            this.groupBoxDeleteLines.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDeleteLast)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDeleteFirst)).EndInit();
             this.groupBoxRemoveStyle.ResumeLayout(false);
             this.groupBoxRemoveStyle.PerformLayout();
             this.groupBoxOffsetTimeCodes.ResumeLayout(false);
@@ -1413,6 +1477,21 @@
             this.groupBoxMergeShortLines.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharacters)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxMillisecondsBetweenLines)).EndInit();
+            this.groupBoxAdjustDuration.ResumeLayout(false);
+            this.groupBoxAdjustDuration.PerformLayout();
+            this.panelAdjustDurationFixed.ResumeLayout(false);
+            this.panelAdjustDurationFixed.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFixedMilliseconds)).EndInit();
+            this.panelAdjustDurationAddPercent.ResumeLayout(false);
+            this.panelAdjustDurationAddPercent.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAdjustViaPercent)).EndInit();
+            this.panelAdjustDurationAddSeconds.ResumeLayout(false);
+            this.panelAdjustDurationAddSeconds.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSeconds)).EndInit();
+            this.panelAdjustDurationRecalc.ResumeLayout(false);
+            this.panelAdjustDurationRecalc.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOptimalCharsSec)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharsSec)).EndInit();
             this.groupBoxOutput.ResumeLayout(false);
             this.groupBoxOutput.PerformLayout();
             this.groupBoxInput.ResumeLayout(false);
@@ -1530,5 +1609,12 @@
         private System.Windows.Forms.Label labelMaxCharsPerSecond;
         private System.Windows.Forms.ToolStripMenuItem addFilesToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.GroupBox groupBoxDeleteLines;
+        private System.Windows.Forms.TextBox textBoxDeleteContains;
+        private System.Windows.Forms.Label labelDeleteLinesContaining;
+        private System.Windows.Forms.NumericUpDown numericUpDownDeleteLast;
+        private System.Windows.Forms.Label labelDeleteLastLines;
+        private System.Windows.Forms.NumericUpDown numericUpDownDeleteFirst;
+        private System.Windows.Forms.Label labelDeleteFirstLines;
     }
 }

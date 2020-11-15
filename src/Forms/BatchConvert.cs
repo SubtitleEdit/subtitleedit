@@ -149,6 +149,11 @@ namespace Nikse.SubtitleEdit.Forms
             removeAllToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.RemoveAll;
             groupBoxRemoveStyle.Text = l.RemoveStyleActor;
             labelStyleName.Text = $"{Configuration.Settings.Language.General.Style}/{Configuration.Settings.Language.General.Actor}";
+            labelDeleteFirstLines.Text = l.DeleteFirstLines;
+            labelDeleteLastLines.Text = l.DeleteLastLines;
+            labelDeleteLinesContaining.Text = l.DeleteContaining;
+            numericUpDownDeleteFirst.Left = labelDeleteFirstLines.Left + labelDeleteFirstLines.Width + 5;
+            numericUpDownDeleteLast.Left = labelDeleteLastLines.Left + labelDeleteLastLines.Width + 5;
             groupBoxAdjustDuration.Text = Configuration.Settings.Language.AdjustDisplayDuration.Title;
 
             comboBoxFrameRateFrom.Left = labelFromFrameRate.Left + labelFromFrameRate.Width + 3;
@@ -514,7 +519,15 @@ namespace Nikse.SubtitleEdit.Forms
                     Text =  Configuration.Settings.Language.ApplyDurationLimits.Title,
                     Checked = Configuration.Settings.Tools.BatchConvertApplyDurationLimits,
                     Action = CommandLineConverter.BatchAction.ApplyDurationLimits
+                },
+                new FixActionItem
+                {
+                    Text =  l.DeleteLines,
+                    Checked = Configuration.Settings.Tools.BatchConvertDeleteLines,
+                    Action = CommandLineConverter.BatchAction.DeleteLines,
+                    Control = groupBoxDeleteLines
                 }
+
             };
             foreach (var fixItem in fixItems)
             {
@@ -1501,6 +1514,11 @@ namespace Nikse.SubtitleEdit.Forms
                 sub = fixDurationLimits.Fix(sub);
             }
 
+            if (IsActionEnabled(CommandLineConverter.BatchAction.DeleteLines))
+            {
+                DeleteLines(sub);
+            }
+
             if (IsActionEnabled(CommandLineConverter.BatchAction.RemoveStyle) && !string.IsNullOrEmpty(textBoxRemoveStyle.Text))
             {
                 sub.Paragraphs.RemoveAll(p => p.Extra == textBoxRemoveStyle.Text || p.Style == textBoxRemoveStyle.Text);
@@ -1634,6 +1652,28 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             return sub;
+        }
+
+        private void DeleteLines(Subtitle sub)
+        {
+            var skipFirst = (int)numericUpDownDeleteFirst.Value;
+            var skipLast = (int)numericUpDownDeleteLast.Value;
+            var deleteContains = textBoxDeleteContains.Text;
+            if (skipFirst == 0 && skipLast == 0 && string.IsNullOrWhiteSpace(deleteContains))
+            {
+                return;
+            }
+
+            var paragraphs = sub.Paragraphs.Skip(skipFirst).ToList();
+            paragraphs = paragraphs.Take(paragraphs.Count - skipLast).ToList();
+            if (!string.IsNullOrWhiteSpace(deleteContains))
+            {
+                paragraphs = paragraphs.Where(p => !p.Text.Contains(deleteContains)).ToList();
+            }
+
+            sub.Paragraphs.Clear();
+            sub.Paragraphs.AddRange(paragraphs);
+            sub.Renumber();
         }
 
         private void UpdateChangeCasingSettings()
