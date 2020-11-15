@@ -396,7 +396,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static int MillisecondsToFrames(double milliseconds)
         {
-            return (int)Math.Round(milliseconds / (TimeCode.BaseUnit / GetFrameForCalculation(Configuration.Settings.General.CurrentFrameRate)));
+            return MillisecondsToFrames(milliseconds, Configuration.Settings.General.CurrentFrameRate);
+        }
+
+        public static int MillisecondsToFrames(double milliseconds, double frameRate)
+        {
+            return (int)Math.Round(milliseconds / (TimeCode.BaseUnit / GetFrameForCalculation(frameRate)));
         }
 
         public static double GetFrameForCalculation(double frameRate)
@@ -569,32 +574,32 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             return new SubtitleFormat[]
             {
-                new Ebu { BatchMode = batchMode }, 
-                new Pac { BatchMode = batchMode }, 
-                new PacUnicode(), 
+                new Ebu { BatchMode = batchMode },
+                new Pac { BatchMode = batchMode },
+                new PacUnicode(),
                 new Cavena890 { BatchMode = batchMode },
-                new Spt(), 
-                new CheetahCaption(), 
-                new CheetahCaptionOld(), 
-                new TSB4(), 
-                new Chk(), 
-                new Ayato(), 
-                new CapMakerPlus(), 
+                new Spt(),
+                new CheetahCaption(),
+                new CheetahCaptionOld(),
+                new TSB4(),
+                new Chk(),
+                new Ayato(),
+                new CapMakerPlus(),
                 new Ultech130(),
-                new NciCaption(), 
-                new AvidStl(), 
-                new WinCaps32(),  
-                new IsmtDfxp(), 
-                new Cavena890(), 
-                new Spt(), 
-                new Sptx(), 
+                new NciCaption(),
+                new AvidStl(),
+                new WinCaps32(),
+                new IsmtDfxp(),
+                new Cavena890(),
+                new Spt(),
+                new Sptx(),
                 new IaiSub(),
-                new ELRStudioClosedCaption(), 
-                new CaptionsInc(), 
-                new TimeLineMvt(), 
-                new Cmaft(), 
+                new ELRStudioClosedCaption(),
+                new CaptionsInc(),
+                new TimeLineMvt(),
+                new Cmaft(),
                 new Pns(),
-                new PlayCaptionsFreeEditor(), 
+                new PlayCaptionsFreeEditor(),
             };
         }
 
@@ -602,21 +607,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             return new SubtitleFormat[]
             {
-                new DlDd(), 
-                new Ted20(), 
-                new Captionate(), 
-                new TimeLineAscii(), 
-                new TimeLineFootageAscii(),  
+                new DlDd(),
+                new Ted20(),
+                new Captionate(),
+                new TimeLineAscii(),
+                new TimeLineFootageAscii(),
                 new TimedTextImage(),
-                new FinalCutProImage(), 
-                new SpuImage(), 
-                new Dost(), 
-                new SeImageHtmlIndex(), 
-                new BdnXml(), 
+                new FinalCutProImage(),
+                new SpuImage(),
+                new Dost(),
+                new SeImageHtmlIndex(),
+                new BdnXml(),
                 new Wsb(),
-                new JsonTypeOnlyLoad1(), 
-                new TranscriptiveJson(), 
-                new KaraokeCdgCreatorText(), 
+                new JsonTypeOnlyLoad1(),
+                new TranscriptiveJson(),
+                new KaraokeCdgCreatorText(),
                 new VidIcelandic(),
             };
         }
