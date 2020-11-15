@@ -32,13 +32,16 @@ namespace Nikse.SubtitleEdit.Controls
         public void Initialize(bool useSyntaxColoring)
         {
             ContextMenuStrip oldContextMenuStrip = null;
+            var oldEnabled = true;
             if (_textBox != null)
             {
                 oldContextMenuStrip = _textBox.ContextMenuStrip;
+                oldEnabled = _textBox.Enabled;
             }
             else if (_uiTextBox != null)
             {
                 oldContextMenuStrip = _uiTextBox.ContextMenuStrip;
+                oldEnabled = _uiTextBox.Enabled;
             }
 
             BorderStyle = BorderStyle.None;
@@ -67,6 +70,8 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 ContextMenuStrip = oldContextMenuStrip;
             }
+
+            Enabled = oldEnabled;
         }
 
         private void InitializeBackingControl(Control textBox)
@@ -150,7 +155,7 @@ namespace Nikse.SubtitleEdit.Controls
                     string textNoTags = HtmlUtil.RemoveHtmlTags(s, true);
                     if (textNoTags.EndsWith('،'))
                     {
-                        s = s.Replace("،", "\u202A،"); 
+                        s = s.Replace("،", "\u202A،");
                     }
                     else if (textNoTags.StartsWith('،'))
                     {
