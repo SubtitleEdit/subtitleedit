@@ -682,7 +682,7 @@ namespace Nikse.SubtitleEdit.Core
                 string shortName = string.Empty;
                 int start = name.IndexOf('[');
                 int end = name.IndexOf(']');
-                if (start > 0 && end > start)
+                if (start >= 0 && end > start)
                 {
                     start++;
                     shortName = name.Substring(start, end - start);
