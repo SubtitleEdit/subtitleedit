@@ -1765,6 +1765,7 @@ $HorzAlign          =   Center
         public string GeneralSwitchOriginalAndTranslation { get; set; }
         public string GeneralMergeOriginalAndTranslation { get; set; }
         public string GeneralGoToNextSubtitle { get; set; }
+        public string GeneralGoToNextSubtitleCursorAtEnd { get; set; }
         public string GeneralGoToPrevSubtitle { get; set; }
         public string GeneralGoToStartOfCurrentSubtitle { get; set; }
         public string GeneralGoToEndOfCurrentSubtitle { get; set; }
@@ -6140,6 +6141,12 @@ $HorzAlign          =   Center
                     shortcuts.GeneralGoToNextSubtitle = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("GeneralGoToNextSubtitleCursorAtEnd");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralGoToNextSubtitleCursorAtEnd = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralGoToPrevSubtitle");
                 if (subNode != null)
                 {
@@ -8324,6 +8331,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("GeneralSwitchOriginalAndTranslation", shortcuts.GeneralSwitchOriginalAndTranslation);
             textWriter.WriteElementString("GeneralMergeOriginalAndTranslation", shortcuts.GeneralMergeOriginalAndTranslation);
             textWriter.WriteElementString("GeneralGoToNextSubtitle", shortcuts.GeneralGoToNextSubtitle);
+            textWriter.WriteElementString("GeneralGoToNextSubtitleCursorAtEnd", shortcuts.GeneralGoToNextSubtitleCursorAtEnd);
             textWriter.WriteElementString("GeneralGoToPrevSubtitle", shortcuts.GeneralGoToPrevSubtitle);
             textWriter.WriteElementString("GeneralGoToEndOfCurrentSubtitle", shortcuts.GeneralGoToEndOfCurrentSubtitle);
             textWriter.WriteElementString("GeneralGoToStartOfCurrentSubtitle", shortcuts.GeneralGoToStartOfCurrentSubtitle);

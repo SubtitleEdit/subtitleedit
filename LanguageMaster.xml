@@ -2160,6 +2160,7 @@ can edit in same subtitle file (collaboration)</Information>
     <MainCreateStartDownEndUp>Insert new subtitle at key-down, set end time at key-up</MainCreateStartDownEndUp>
     <MergeDialog>Merge dialog (insert dashes)</MergeDialog>
     <GoToNext>Go to next line</GoToNext>
+    <GoToNextCursorAtEnd>Go to next line and set cursor at end</GoToNextCursorAtEnd>
     <GoToPrevious>Go to previous line</GoToPrevious>
     <GoToCurrentSubtitleStart>Go to current line start</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Go to current line end</GoToCurrentSubtitleEnd>

@@ -5902,6 +5902,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/GoToNext":
                     language.Settings.GoToNext = reader.Value;
                     break;
+                case "Settings/GoToNextCursorAtEnd":
+                    language.Settings.GoToNextCursorAtEnd = reader.Value;
+                    break;
                 case "Settings/GoToPrevious":
                     language.Settings.GoToPrevious = reader.Value;
                     break;
