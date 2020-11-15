@@ -23,6 +23,7 @@ namespace Nikse.SubtitleEdit.Controls
         private RichTextBox _richTextBoxTemp;
         private RichTextBox _uiTextBox;
         private TextBox _textBox;
+        private int _mouseMoveSelectionLength;
 
         public SETextBox()
         {
@@ -58,6 +59,22 @@ namespace Nikse.SubtitleEdit.Controls
                 _richTextBoxTemp = new RichTextBox();
                 _uiTextBox = new RichTextBox { BorderStyle = BorderStyle.None, Multiline = true };
                 InitializeBackingControl(_uiTextBox);
+
+                // avoid selection when centered and clicking to the left
+                _uiTextBox.MouseDown += (sender, args) =>
+                {
+                    var charIndex = _uiTextBox.GetCharIndexFromPosition(args.Location);
+                    if (Configuration.Settings.General.CenterSubtitleInTextBox &&
+                        _mouseMoveSelectionLength == 0 &&
+                        (charIndex == 0 || charIndex >= 0 && _uiTextBox.Text[charIndex - 1] == '\n'))
+                    {
+                        _uiTextBox.SelectionLength = 0;
+                    }
+                };
+                _uiTextBox.MouseMove += (sender, args) =>
+                {
+                    _mouseMoveSelectionLength = _uiTextBox.SelectionLength;
+                };
             }
             else
             {
