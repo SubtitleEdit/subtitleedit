@@ -6702,11 +6702,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             if (Utilities.GetNumberOfLines(tb.Text) > 5)
             {
-                tb.ScrollBars = ScrollBars.Vertical;
+                tb.ScrollBars = RichTextBoxScrollBars.Vertical;
             }
             else
             {
-                tb.ScrollBars = ScrollBars.None;
+                tb.ScrollBars = RichTextBoxScrollBars.None;
             }
         }
 
