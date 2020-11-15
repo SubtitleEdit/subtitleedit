@@ -2326,6 +2326,7 @@
             public string MainCreateStartDownEndUp { get; set; }
             public string MergeDialog { get; set; }
             public string GoToNext { get; set; }
+            public string GoToNextCursorAtEnd { get; set; }
             public string GoToPrevious { get; set; }
             public string GoToCurrentSubtitleStart { get; set; }
             public string GoToCurrentSubtitleEnd { get; set; }

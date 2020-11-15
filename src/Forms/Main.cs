@@ -13967,7 +13967,15 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_shortcuts.MainGeneralGoToNextSubtitle == e.KeyData)
             {
-                ButtonNextClick(null, null);
+                MoveNextPrevious(0);
+                e.SuppressKeyPress = true;
+                e.Handled = true;
+            }
+            else if (_shortcuts.MainGeneralGoToNextSubtitleCursorAtEnd == e.KeyData)
+            {
+                MoveNextPrevious(0);
+                textBoxListViewText.SelectionStart = textBoxListViewText.Text.Length;
+                textBoxListViewText.SelectionLength = 0;
                 e.SuppressKeyPress = true;
                 e.Handled = true;
             }
