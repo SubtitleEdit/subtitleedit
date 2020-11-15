@@ -227,7 +227,11 @@ Note: Do check free disk space.</WaveFileMalformed>
     <TransportStreamFileNameEnding>File name ending</TransportStreamFileNameEnding>
     <TransportStreamSettingsButton>TS settings...</TransportStreamSettingsButton>
     <RemoveLineBreaks>Remove line-breaks</RemoveLineBreaks>
+    <DeleteLines>Delete lines</DeleteLines>
     <TryToUseSourceEncoding>Try to use source encoding</TryToUseSourceEncoding>
+    <DeleteFirstLines>Delete first lines</DeleteFirstLines>
+    <DeleteLastLines>Delete last lines</DeleteLastLines>
+    <DeleteContaining>Delete lines containing</DeleteContaining>
     <MkvLanguageInOutputFileName>"Language" in output file name</MkvLanguageInOutputFileName>
     <MkvLanguageInOutputFileNameX>Matroska (.mkv) "Language" in output file name: {0}</MkvLanguageInOutputFileNameX>
     <MkvLanguageStyleTwoLetter>Two letter language code</MkvLanguageStyleTwoLetter>

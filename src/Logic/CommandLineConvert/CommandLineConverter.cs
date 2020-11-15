@@ -49,7 +49,8 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             ChangeSpeed,
             AdjustDisplayDuration,
             ApplyDurationLimits,
-            RemoveLineBreaks
+            RemoveLineBreaks,
+            DeleteLines,
         }
 
         internal static void ConvertOrReturn(string productIdentifier, string[] commandLineArguments)

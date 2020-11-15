@@ -237,7 +237,11 @@
             public string TransportStreamFileNameEnding { get; set; }
             public string TransportStreamSettingsButton { get; set; }
             public string RemoveLineBreaks { get; set; }
+            public string DeleteLines { get; set; }
             public string TryToUseSourceEncoding { get; set; }
+            public string DeleteFirstLines { get; set; }
+            public string DeleteLastLines { get; set; }
+            public string DeleteContaining { get; set; }
             public string MkvLanguageInOutputFileName { get; set; }
             public string MkvLanguageInOutputFileNameX { get; set; }
             public string MkvLanguageStyleTwoLetter { get; set; }

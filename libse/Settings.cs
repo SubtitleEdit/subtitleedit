@@ -190,6 +190,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool BatchConvertChangeSpeed { get; set; }
         public bool BatchConvertAdjustDisplayDuration { get; set; }
         public bool BatchConvertApplyDurationLimits { get; set; }
+        public bool BatchConvertDeleteLines { get; set; }
         public bool BatchConvertOffsetTimeCodes { get; set; }
         public string BatchConvertLanguage { get; set; }
         public string BatchConvertFormat { get; set; }
@@ -3985,6 +3986,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.BatchConvertApplyDurationLimits = Convert.ToBoolean(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("BatchConvertDeleteLines");
+            if (subNode != null)
+            {
+                settings.Tools.BatchConvertDeleteLines = Convert.ToBoolean(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("BatchConvertChangeFrameRate");
@@ -7881,6 +7888,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("BatchConvertChangeSpeed", settings.Tools.BatchConvertChangeSpeed.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertAdjustDisplayDuration", settings.Tools.BatchConvertAdjustDisplayDuration.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertApplyDurationLimits", settings.Tools.BatchConvertApplyDurationLimits.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BatchConvertDeleteLines", settings.Tools.BatchConvertDeleteLines.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertChangeFrameRate", settings.Tools.BatchConvertChangeFrameRate.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertOffsetTimeCodes", settings.Tools.BatchConvertOffsetTimeCodes.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertLanguage", settings.Tools.BatchConvertLanguage);
