@@ -1916,19 +1916,16 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             if (Math.Abs(param.FramesPerSeconds - 29.97) < 0.01)
             {
-                param.FramesPerSeconds = 30.0 / 1.0001;
                 timeBase = 30;
                 ntsc = "TRUE";
             }
             else if (Math.Abs(param.FramesPerSeconds - 23.976) < 0.01)
             {
-                param.FramesPerSeconds = 24.0 / 1.0001;
                 timeBase = 24;
                 ntsc = "TRUE";
             }
             else if (Math.Abs(param.FramesPerSeconds - 59.94) < 0.01)
             {
-                param.FramesPerSeconds = 60.0 / 1.0001;
                 timeBase = 60;
                 ntsc = "TRUE";
             }
