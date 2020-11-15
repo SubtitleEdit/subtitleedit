@@ -1183,7 +1183,7 @@ $HorzAlign          =   Center
                 SubtitleFontName = "Times New Roman";
             }
 
-            SubtitleTextBoxFontSize = 14;
+            SubtitleTextBoxFontSize = 12;
             SubtitleListViewFontSize = 10;
             SubtitleTextBoxSyntaxColor = true;
             SubtitleTextBoxHtmlColor = Color.CornflowerBlue;
