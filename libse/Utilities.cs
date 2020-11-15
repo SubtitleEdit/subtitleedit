@@ -2169,6 +2169,16 @@ namespace Nikse.SubtitleEdit.Core
                 text = text.Replace(" ,", ",");
             }
 
+            while (text.Contains(" 's "))
+            {
+                text = text.Replace(" 's ", "'s ");
+            }
+
+            while (text.Contains(" 's" + Environment.NewLine))
+            {
+                text = text.Replace(" 's" + Environment.NewLine, "'s" + Environment.NewLine);
+            }
+
             if (text.EndsWith(" .", StringComparison.Ordinal))
             {
                 text = text.Remove(text.Length - 2, 1);
