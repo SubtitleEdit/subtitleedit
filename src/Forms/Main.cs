@@ -13765,7 +13765,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 // if it's less than one second since Win key was pressed we ignore key (not perfect...)
                 e.SuppressKeyPress = true;
-                e.Handled = true;
                 return;
             }
 
@@ -13963,13 +13962,11 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 e.SuppressKeyPress = true;
-                e.Handled = true;
             }
             else if (_shortcuts.MainGeneralGoToNextSubtitle == e.KeyData)
             {
                 MoveNextPrevious(0);
                 e.SuppressKeyPress = true;
-                e.Handled = true;
             }
             else if (_shortcuts.MainGeneralGoToNextSubtitleCursorAtEnd == e.KeyData)
             {
@@ -13977,7 +13974,6 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxListViewText.SelectionStart = textBoxListViewText.Text.Length;
                 textBoxListViewText.SelectionLength = 0;
                 e.SuppressKeyPress = true;
-                e.Handled = true;
             }
             else if (_shortcuts.MainGeneralGoToPrevSubtitle == e.KeyData)
             {
@@ -13991,7 +13987,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 e.SuppressKeyPress = true;
-                e.Handled = true;
             }
             else if (_shortcuts.MainGeneralGoToStartOfCurrentSubtitle == e.KeyData)
             {
@@ -14092,49 +14087,41 @@ namespace Nikse.SubtitleEdit.Forms
             else if (_shortcuts.MainUnbreakNoSpace == e.KeyData)
             {
                 Unbreak(true);
-                e.Handled = true;
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainGeneralToggleBookmarks == e.KeyData)
             {
                 ToggleBookmarks(false);
-                e.Handled = true;
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainGeneralClearBookmarks == e.KeyData)
             {
                 ClearBookmarks();
-                e.Handled = true;
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainGeneralGoToBookmark == e.KeyData)
             {
-                e.Handled = true;
                 e.SuppressKeyPress = true;
                 GoToBookmark();
             }
             else if (_shortcuts.MainGeneralGoToPreviousBookmark == e.KeyData)
             {
                 GoToPrevoiusBookmark();
-                e.Handled = true;
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainGeneralGoToNextBookmark == e.KeyData)
             {
                 GoToNextBookmark();
-                e.Handled = true;
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainGeneralChooseProfile == e.KeyData)
             {
                 ChooseProfile();
-                e.Handled = true;
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainGeneralDuplicateLine == e.KeyData && SubtitleListview1.SelectedItems.Count == 1)
             {
                 DuplicateLine();
-                e.Handled = true;
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainGeneralFileSaveAll == e.KeyData)
@@ -14293,7 +14280,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                     _endSeconds = -1;
                     e.SuppressKeyPress = true;
-                    e.Handled = true;
                     System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(1), () => mediaPlayer.TogglePlayPause());
                 }
             }
@@ -14304,7 +14290,6 @@ namespace Nikse.SubtitleEdit.Forms
                     _endSeconds = -1;
                     mediaPlayer.Pause();
                     e.SuppressKeyPress = true;
-                    e.Handled = true;
                 }
             }
             else if (_shortcuts.MainVideoPlayFromJustBefore == e.KeyData)
@@ -14337,7 +14322,6 @@ namespace Nikse.SubtitleEdit.Forms
                         _endSeconds = -1;
                         mediaPlayer.TogglePlayPause();
                         e.SuppressKeyPress = true;
-                        e.Handled = true;
                     }
                 }
             }

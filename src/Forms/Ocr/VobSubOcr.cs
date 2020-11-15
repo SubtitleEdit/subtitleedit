@@ -8170,7 +8170,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 subtitleListView1.SelectedIndexChanged -= SubtitleListView1SelectedIndexChanged;
                 subtitleListView1.SelectAll();
                 subtitleListView1.SelectedIndexChanged += SubtitleListView1SelectedIndexChanged;
-                e.Handled = true;
                 e.SuppressKeyPress = true;
             }
 
@@ -8179,7 +8178,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 subtitleListView1.SelectedIndexChanged -= SubtitleListView1SelectedIndexChanged;
                 subtitleListView1.SelectFirstSelectedItemOnly();
                 subtitleListView1.SelectedIndexChanged += SubtitleListView1SelectedIndexChanged;
-                e.Handled = true;
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyCode == Keys.I && e.Modifiers == (Keys.Control | Keys.Shift)) //InverseSelection
@@ -8187,13 +8185,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 subtitleListView1.SelectedIndexChanged -= SubtitleListView1SelectedIndexChanged;
                 subtitleListView1.InverseSelection();
                 subtitleListView1.SelectedIndexChanged += SubtitleListView1SelectedIndexChanged;
-                e.Handled = true;
                 e.SuppressKeyPress = true;
             }
             else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Delete)
             {
                 DeleteToolStripMenuItemClick(sender, e);
-                e.Handled = true;
                 e.SuppressKeyPress = true;
                 subtitleListView1.Focus();
             }

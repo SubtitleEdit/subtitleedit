@@ -540,14 +540,14 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _index = 0;
                 ShowCurrent();
-                e.Handled = true;
+                e.SuppressKeyPress = true;
                 return;
             }
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.End)
             {
                 _index = _subtitle.Paragraphs.Count - 1;
                 ShowCurrent();
-                e.Handled = true;
+                e.SuppressKeyPress = true;
                 return;
             }
 
@@ -564,7 +564,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _index++;
                     }
                     ShowCurrent();
-                    e.Handled = true;
+                    e.SuppressKeyPress = true;
                 }
                 else if (_mainGeneralGoToPrevSubtitle == e.KeyData || (e.KeyCode == Keys.Up && e.Modifiers == Keys.Alt))
                 {
@@ -573,7 +573,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _index--;
                     }
                     ShowCurrent();
-                    e.Handled = true;
+                    e.SuppressKeyPress = true;
                 }
                 else if (e.Modifiers == Keys.None && e.KeyCode == Keys.PageDown)
                 {
@@ -586,7 +586,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _index = _subtitle.Paragraphs.Count - 1;
                     }
                     ShowCurrent();
-                    e.Handled = true;
+                    e.SuppressKeyPress = true;
                 }
                 else if (e.Modifiers == Keys.None && e.KeyCode == Keys.PageUp)
                 {
@@ -599,7 +599,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _index = 0;
                     }
                     ShowCurrent();
-                    e.Handled = true;
+                    e.SuppressKeyPress = true;
                 }
                 return;
             }
@@ -616,7 +616,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _showIndex = -2;
                 _fullscreen = false;
                 ShowCurrent();
-                e.Handled = true;
+                e.SuppressKeyPress = true;
             }
             else if (e.KeyCode == Keys.Pause)
             {
@@ -641,7 +641,7 @@ namespace Nikse.SubtitleEdit.Forms
                     timer1.Start();
                 }
 
-                e.Handled = true;
+                e.SuppressKeyPress = true;
             }
             else if (e.KeyCode == Keys.Up && e.Modifiers == Keys.Alt)
             {
@@ -670,7 +670,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _index = _subtitle.Paragraphs.Count - 1;
                 }
                 ShowCurrent();
-                e.Handled = true;
+                e.SuppressKeyPress = true;
             }
             else if (e.Modifiers == Keys.None && e.KeyCode == Keys.PageUp)
             {
@@ -683,7 +683,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _index = 0;
                 }
                 ShowCurrent();
-                e.Handled = true;
+                e.SuppressKeyPress = true;
             }
             else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Add)
             {
