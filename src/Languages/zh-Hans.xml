@@ -2096,6 +2096,9 @@ Command line: {1} {2}
     <ListViewAndTextBox>列表视图及文本框</ListViewAndTextBox>
     <ListView>列表视图</ListView>
     <TextBox>文本框</TextBox>
+    <UseSyntaxColoring>启用语法高亮</UseSyntaxColoring>
+    <HtmlColor>Html配色</HtmlColor>
+    <AssaColor>ASSA配色</AssaColor>
     <UpdateShortcut>更新</UpdateShortcut>
     <FoucsSetVideoPosition>将焦点处设为视频位置</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>切换 停靠/不停靠 视频控件</ToggleDockUndockOfVideoControls>
@@ -2107,6 +2110,8 @@ Command line: {1} {2}
     <AdjustSetStartAutoDurationAndGoToNext>调整设置时长起点及转到下个文本</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>设置终点及下个起点并转到下一个</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>向下方向键=设置起点，向上方向键=设置终点，并转到下一个</AdjustStartDownEndUpAndGoToNext>
+    <AdjustSetStartAndEndOfPrevious>设置前一条的开始和结束（减去最小间隙）</AdjustSetStartAndEndOfPrevious>
+    <AdjustSetStartAndEndOfPreviousAndGoToNext>设置前一条的开始和结束（减去最小间隙），并转到下一条</AdjustSetStartAndEndOfPreviousAndGoToNext>
     <AdjustSelected100MsForward>所选行前移 100ms</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>所选行后移 100ms</AdjustSelected100MsBack>
     <AdjustStartXMsBack>将起始点向后移动 {0} ms</AdjustStartXMsBack>
