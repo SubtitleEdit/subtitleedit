@@ -1935,6 +1935,7 @@ $HorzAlign          =   Center
         public string MainAdjustSetStartAutoDurationAndGoToNext { get; set; }
         public string MainAdjustSetEndNextStartAndGoToNext { get; set; }
         public string MainAdjustStartDownEndUpAndGoToNext { get; set; }
+        public string MainAdjustSetStartAndEndOfPrevious { get; set; }
         public string MainAdjustSetStartKeepDuration { get; set; }
         public string MainAdjustSelected100MsForward { get; set; }
         public string MainAdjustSelected100MsBack { get; set; }
@@ -7161,6 +7162,12 @@ $HorzAlign          =   Center
                     shortcuts.MainAdjustStartDownEndUpAndGoToNext = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainAdjustSetStartAndEndOfPrevious");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustSetStartAndEndOfPrevious = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainAdjustSetStartKeepDuration");
                 if (subNode != null)
                 {
@@ -8465,6 +8472,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainAdjustSetStartAutoDurationAndGoToNext", shortcuts.MainAdjustSetStartAutoDurationAndGoToNext);
             textWriter.WriteElementString("MainAdjustSetEndNextStartAndGoToNext", shortcuts.MainAdjustSetEndNextStartAndGoToNext);
             textWriter.WriteElementString("MainAdjustStartDownEndUpAndGoToNext", shortcuts.MainAdjustStartDownEndUpAndGoToNext);
+            textWriter.WriteElementString("MainAdjustSetStartAndEndOfPrevious", shortcuts.MainAdjustSetStartAndEndOfPrevious);
             textWriter.WriteElementString("MainAdjustSetStartKeepDuration", shortcuts.MainAdjustSetStartKeepDuration);
             textWriter.WriteElementString("MainAdjustSelected100MsForward", shortcuts.MainAdjustSelected100MsForward);
             textWriter.WriteElementString("MainAdjustSelected100MsBack", shortcuts.MainAdjustSelected100MsBack);
