@@ -75,6 +75,46 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     _mouseMoveSelectionLength = _uiTextBox.SelectionLength;
                 };
+                _uiTextBox.KeyDown += (sender, args) =>
+                {
+                    // fix annoying "beeps" when moving cursor position
+                    if ((args.KeyData == Keys.Left || args.KeyData == Keys.PageUp) && _uiTextBox.SelectionStart == 0)
+                    {
+                        args.SuppressKeyPress = true;
+                    }
+                    else if (args.KeyData == Keys.Up && _uiTextBox.SelectionStart <= _uiTextBox.Text.IndexOf('\n'))
+                    {
+                        args.SuppressKeyPress = true;
+                    }
+                    else if (args.KeyData == Keys.Home && (_uiTextBox.SelectionStart == 0 || _uiTextBox.SelectionStart > 0 && _uiTextBox.Text[_uiTextBox.SelectionStart - 1] == '\n'))
+                    {
+                        args.SuppressKeyPress = true;
+                    }
+                    else if (args.KeyData == (Keys.Home | Keys.Control) && _uiTextBox.SelectionStart == 0)
+                    {
+                        args.SuppressKeyPress = true;
+                    }
+                    else if (args.KeyData == Keys.End && (_uiTextBox.SelectionStart >= _uiTextBox.Text.Length || _uiTextBox.SelectionStart + 1 < _uiTextBox.Text.Length && _uiTextBox.Text[_uiTextBox.SelectionStart] == '\n'))
+                    {
+                        args.SuppressKeyPress = true;
+                    }
+                    else if (args.KeyData == (Keys.End | Keys.Control) && _uiTextBox.SelectionStart >= _uiTextBox.Text.Length)
+                    {
+                        args.SuppressKeyPress = true;
+                    }
+                    else if (args.KeyData == Keys.Right && _uiTextBox.SelectionStart >= _uiTextBox.Text.Length)
+                    {
+                        args.SuppressKeyPress = true;
+                    }
+                    else if (args.KeyData == Keys.Down && _uiTextBox.SelectionStart >= _uiTextBox.Text.Length)
+                    {
+                        args.SuppressKeyPress = true;
+                    }
+                    else if (args.KeyData == Keys.PageDown && _uiTextBox.SelectionStart >= _uiTextBox.Text.Length)
+                    {
+                        args.SuppressKeyPress = true;
+                    }
+                };
             }
             else
             {
