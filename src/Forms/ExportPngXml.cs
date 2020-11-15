@@ -1924,7 +1924,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 ntsc = "TRUE";
             }
 
-            int duration = SubtitleFormat.MillisecondsToFrames(param.P.Duration.TotalMilliseconds, param.FramesPerSeconds);
+            var duration = SubtitleFormat.MillisecondsToFrames(param.P.Duration.TotalMilliseconds, param.FramesPerSeconds);
             var start = SubtitleFormat.MillisecondsToFrames(param.P.StartTime.TotalMilliseconds, param.FramesPerSeconds);
             var end = SubtitleFormat.MillisecondsToFrames(param.P.EndTime.TotalMilliseconds, param.FramesPerSeconds);
 

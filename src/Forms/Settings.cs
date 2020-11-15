@@ -1349,6 +1349,7 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(createAndAdjustNode, Configuration.Settings.Language.Main.VideoControls.SetstartTimeAndOffsetOfRest, nameof(Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest2));
             AddNode(createAndAdjustNode, language.AdjustSetStartAutoDurationAndGoToNext, nameof(Configuration.Settings.Shortcuts.MainAdjustSetStartAutoDurationAndGoToNext));
             AddNode(createAndAdjustNode, language.AdjustStartDownEndUpAndGoToNext, nameof(Configuration.Settings.Shortcuts.MainAdjustStartDownEndUpAndGoToNext));
+            AddNode(createAndAdjustNode, language.AdjustSetStartAndEndOfPrevious, nameof(Configuration.Settings.Shortcuts.MainAdjustSetStartAndEndOfPrevious));
             AddNode(createAndAdjustNode, Configuration.Settings.Language.Main.VideoControls.SetEndTime, nameof(Configuration.Settings.Shortcuts.MainCreateSetEnd));
             AddNode(createAndAdjustNode, language.AdjustSetEndTimeAndPause, nameof(Configuration.Settings.Shortcuts.MainAdjustSetEndAndPause));
             AddNode(createAndAdjustNode, language.CreateSetEndAddNewAndGoToNew, nameof(Configuration.Settings.Shortcuts.MainCreateSetEndAddNewAndGoToNew));

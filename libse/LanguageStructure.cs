@@ -2286,6 +2286,7 @@
             public string AdjustSetStartAutoDurationAndGoToNext { get; set; }
             public string AdjustSetEndNextStartAndGoToNext { get; set; }
             public string AdjustStartDownEndUpAndGoToNext { get; set; }
+            public string AdjustSetStartAndEndOfPrevious { get; set; }
             public string AdjustSelected100MsForward { get; set; }
             public string AdjustSelected100MsBack { get; set; }
             public string AdjustStartXMsBack { get; set; }

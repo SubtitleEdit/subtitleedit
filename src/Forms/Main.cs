@@ -15223,7 +15223,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustSetStartKeepDuration == e.KeyData)
             {
-                SetStartTime(true);
+                SetStartTime(true, mediaPlayer.CurrentPosition);
                 e.SuppressKeyPress = true;
             }
             else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustInsertViaEndAutoStart == e.KeyData)
@@ -15252,7 +15252,13 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 ShowNextSubtitleLabel();
                 _mainAdjustStartDownEndUpAndGoToNextParagraph = _subtitle.GetParagraphOrDefault(FirstSelectedIndex);
-                SetStartTime(true);
+                SetStartTime(true, mediaPlayer.CurrentPosition);
+                e.SuppressKeyPress = true;
+            }
+            else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustSetStartAndEndOfPrevious == e.KeyData)
+            {
+                var pos = mediaPlayer.CurrentPosition;
+                SetStartAndEndOfPrevious(pos);
                 e.SuppressKeyPress = true;
             }
 
@@ -15288,6 +15294,48 @@ namespace Nikse.SubtitleEdit.Forms
                 RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl5);
             }
             // put new entries above tabs
+        }
+
+        private void SetStartAndEndOfPrevious(double positionInSeconds)
+        {
+            int index = SubtitleListview1.SelectedItems[0].Index;
+            var current = _subtitle.GetParagraphOrDefault(index);
+            if (SubtitleListview1.SelectedItems.Count != 1 || current == null)
+            {
+                return;
+            }
+
+            if (positionInSeconds > current.EndTime.TotalSeconds - Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds / 1000)
+            {
+                return;
+            }
+
+            // previous sub
+            var p = _subtitle.GetParagraphOrDefault(index - 1);
+            if (p == null || p.StartTime.TotalMilliseconds < p.StartTime.TotalMilliseconds - 9000)
+            {
+                SetStartTime(false, mediaPlayer.CurrentPosition);
+                return;
+            }
+
+            if (positionInSeconds < p.StartTime.TotalSeconds + Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds / 1000)
+            {
+                return;
+            }
+
+            SetStartTime(false, mediaPlayer.CurrentPosition);
+
+            var oldParagraph = new Paragraph(p, false);
+            MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + p.Number + " " + p.Text));
+            p.EndTime.TotalMilliseconds = positionInSeconds * TimeCode.BaseUnit - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+            if (oldParagraph.StartTime.IsMaxTime)
+            {
+                p.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds - Utilities.GetOptimalDisplayMilliseconds(p.Text);
+            }
+
+            SubtitleListview1.SetStartTimeAndDuration(index, p, _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
+            UpdateOriginalTimeCodes(oldParagraph);
+            ShowSource();
         }
 
         private void ExtendCurrentSubtitle()
@@ -19469,10 +19517,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonSetStartTime_Click(object sender, EventArgs e)
         {
-            SetStartTime(false);
+            SetStartTime(false, mediaPlayer.CurrentPosition);
         }
 
-        private void SetStartTime(bool adjustEndTime)
+        private void SetStartTime(bool adjustEndTime, double videoPosition)
         {
             if (SubtitleListview1.SelectedItems.Count == 1)
             {
@@ -19485,7 +19533,6 @@ namespace Nikse.SubtitleEdit.Forms
                     adjustEndTime = true;
                 }
 
-                double videoPosition = mediaPlayer.CurrentPosition;
                 if (!mediaPlayer.IsPaused)
                 {
                     videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay / TimeCode.BaseUnit;
