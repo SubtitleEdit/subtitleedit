@@ -2272,6 +2272,9 @@
             public string ListViewAndTextBox { get; set; }
             public string ListView { get; set; }
             public string TextBox { get; set; }
+            public string UseSyntaxColoring { get; set; }
+            public string HtmlColor { get; set; }
+            public string AssaColor { get; set; }
             public string UpdateShortcut { get; set; }
             public string FoucsSetVideoPosition { get; set; }
             public string ToggleDockUndockOfVideoControls { get; set; }

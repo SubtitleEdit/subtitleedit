@@ -579,7 +579,7 @@ namespace Nikse.SubtitleEdit.Core
             PacVerticalTop = 1;
             PacVerticalCenter = 5;
             PacVerticalBottom = 11;
-           
+
             DvdStudioProHeader = @"$VertAlign          =   Bottom
 $Bold               =   FALSE
 $Underlined         =   FALSE
@@ -1018,9 +1018,12 @@ $HorzAlign          =   Center
         public int SystemSubtitleFontSizeOverride { get; set; }
 
         public string SubtitleFontName { get; set; }
-        public int SubtitleFontSize { get; set; }
+        public int SubtitleTextBoxFontSize { get; set; }
+        public bool SubtitleTextBoxSyntaxColor { get; set; }
+        public Color SubtitleTextBoxHtmlColor { get; set; }
+        public Color SubtitleTextBoxAssColor { get; set; }
         public int SubtitleListViewFontSize { get; set; }
-        public bool SubtitleFontBold { get; set; }
+        public bool SubtitleTextBoxFontBold { get; set; }
         public bool SubtitleListViewFontBold { get; set; }
         public Color SubtitleFontColor { get; set; }
         public Color SubtitleBackgroundColor { get; set; }
@@ -1180,9 +1183,12 @@ $HorzAlign          =   Center
                 SubtitleFontName = "Times New Roman";
             }
 
-            SubtitleFontSize = 10;
+            SubtitleTextBoxFontSize = 14;
             SubtitleListViewFontSize = 10;
-            SubtitleFontBold = false;
+            SubtitleTextBoxSyntaxColor = true;
+            SubtitleTextBoxHtmlColor = Color.CornflowerBlue;
+            SubtitleTextBoxAssColor = Color.BlueViolet;
+            SubtitleTextBoxFontBold = true;
             SubtitleFontColor = Color.Black;
             MeasureFontName = "Arial";
             MeasureFontSize = 24;
@@ -2723,10 +2729,10 @@ $HorzAlign          =   Center
                 settings.General.SubtitleFontName = subNode.InnerText;
             }
 
-            subNode = node.SelectSingleNode("SubtitleFontSize");
+            subNode = node.SelectSingleNode("SubtitleTextBoxFontSize");
             if (subNode != null)
             {
-                settings.General.SubtitleFontSize = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                settings.General.SubtitleTextBoxFontSize = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("SubtitleListViewFontSize");
@@ -2735,16 +2741,34 @@ $HorzAlign          =   Center
                 settings.General.SubtitleListViewFontSize = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
-            subNode = node.SelectSingleNode("SubtitleFontBold");
+            subNode = node.SelectSingleNode("SubtitleTextBoxFontBold");
             if (subNode != null)
             {
-                settings.General.SubtitleFontBold = Convert.ToBoolean(subNode.InnerText);
+                settings.General.SubtitleTextBoxFontBold = Convert.ToBoolean(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("SubtitleListViewFontBold");
             if (subNode != null)
             {
                 settings.General.SubtitleListViewFontBold = Convert.ToBoolean(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("SubtitleTextBoxSyntaxColor");
+            if (subNode != null)
+            {
+                settings.General.SubtitleTextBoxSyntaxColor = Convert.ToBoolean(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("SubtitleTextBoxHtmlColor");
+            if (subNode != null)
+            {
+                settings.General.SubtitleTextBoxHtmlColor = Color.FromArgb(Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture));
+            }
+
+            subNode = node.SelectSingleNode("SubtitleTextBoxAssColor");
+            if (subNode != null)
+            {
+                settings.General.SubtitleTextBoxAssColor = Color.FromArgb(Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture));
             }
 
             subNode = node.SelectSingleNode("SubtitleFontColor");
@@ -7632,10 +7656,13 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("SystemSubtitleFontNameOverride", settings.General.SystemSubtitleFontNameOverride);
                 textWriter.WriteElementString("SystemSubtitleFontSizeOverride", settings.General.SystemSubtitleFontSizeOverride.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleFontName", settings.General.SubtitleFontName);
-                textWriter.WriteElementString("SubtitleFontSize", settings.General.SubtitleFontSize.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("SubtitleTextBoxFontSize", settings.General.SubtitleTextBoxFontSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleListViewFontSize", settings.General.SubtitleListViewFontSize.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SubtitleFontBold", settings.General.SubtitleFontBold.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("SubtitleTextBoxFontBold", settings.General.SubtitleTextBoxFontBold.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleListViewFontBold", settings.General.SubtitleListViewFontBold.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("SubtitleTextBoxSyntaxColor", settings.General.SubtitleTextBoxSyntaxColor.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("SubtitleTextBoxHtmlColor", settings.General.SubtitleTextBoxHtmlColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("SubtitleTextBoxAssColor", settings.General.SubtitleTextBoxAssColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleFontColor", settings.General.SubtitleFontColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleBackgroundColor", settings.General.SubtitleBackgroundColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MeasureFontName", settings.General.MeasureFontName);

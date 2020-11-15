@@ -142,9 +142,12 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.InitializeTextEncodingComboBox(comboBoxEncoding);
 
             checkBoxAutoDetectAnsiEncoding.Checked = gs.AutoGuessAnsiEncoding;
-            comboBoxSubtitleFontSize.Text = gs.SubtitleFontSize.ToString(CultureInfo.InvariantCulture);
+            comboBoxSubtitleFontSize.Text = gs.SubtitleTextBoxFontSize.ToString(CultureInfo.InvariantCulture);
             comboBoxSubtitleListViewFontSize.Text = gs.SubtitleListViewFontSize.ToString(CultureInfo.InvariantCulture);
-            checkBoxSubtitleFontBold.Checked = gs.SubtitleFontBold;
+            checkBoxSubtitleFontBold.Checked = gs.SubtitleTextBoxFontBold;
+            checkBoxSubtitleTextBoxSyntaxColor.Checked = gs.SubtitleTextBoxSyntaxColor;
+            panelTextBoxHtmlColor.BackColor = gs.SubtitleTextBoxHtmlColor;
+            panelTextBoxAssColor.BackColor = gs.SubtitleTextBoxAssColor;
             checkBoxSubtitleListViewFontBold.Checked = gs.SubtitleListViewFontBold;
             checkBoxSubtitleCenter.Checked = gs.CenterSubtitleInTextBox;
             panelSubtitleFontColor.BackColor = gs.SubtitleFontColor;
@@ -1662,9 +1665,12 @@ namespace Nikse.SubtitleEdit.Forms
             gs.DefaultEncoding = ((TextEncoding)comboBoxEncoding.Items[comboBoxEncoding.SelectedIndex]).ToString();
 
             gs.AutoGuessAnsiEncoding = checkBoxAutoDetectAnsiEncoding.Checked;
-            gs.SubtitleFontSize = int.Parse(comboBoxSubtitleFontSize.Text);
+            gs.SubtitleTextBoxFontSize = int.Parse(comboBoxSubtitleFontSize.Text);
             gs.SubtitleListViewFontSize = int.Parse(comboBoxSubtitleListViewFontSize.Text);
-            gs.SubtitleFontBold = checkBoxSubtitleFontBold.Checked;
+            gs.SubtitleTextBoxFontBold = checkBoxSubtitleFontBold.Checked;
+            gs.SubtitleTextBoxSyntaxColor = checkBoxSubtitleTextBoxSyntaxColor.Checked;
+            gs.SubtitleTextBoxHtmlColor = panelTextBoxHtmlColor.BackColor;
+            gs.SubtitleTextBoxAssColor = panelTextBoxAssColor.BackColor;
             gs.SubtitleListViewFontBold = checkBoxSubtitleListViewFontBold.Checked;
             gs.CenterSubtitleInTextBox = checkBoxSubtitleCenter.Checked;
             gs.SubtitleFontColor = panelSubtitleFontColor.BackColor;
@@ -1965,7 +1971,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 font = new Font(Font, FontStyle.Regular);
             }
-           
+
             var measureBmp = TextDesigner.MakeTextBitmapAssa(
                 Configuration.Settings.General.PreviewAssaText,
                 0,
@@ -3441,6 +3447,42 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _backgroundImageDark = !_backgroundImageDark;
             GeneratePreviewReal();
+        }
+
+        private void buttonTextBoxHtmlColor_Click(object sender, EventArgs e)
+        {
+            colorDialogSSAStyle.Color = panelTextBoxHtmlColor.BackColor;
+            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            {
+                panelTextBoxHtmlColor.BackColor = colorDialogSSAStyle.Color;
+            }
+        }
+
+        private void buttonTextBoxAssColor_Click(object sender, EventArgs e)
+        {
+            colorDialogSSAStyle.Color = panelTextBoxAssColor.BackColor;
+            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            {
+                panelTextBoxAssColor.BackColor = colorDialogSSAStyle.Color;
+            }
+        }
+
+        private void checkBoxSubtitleTextBoxSyntaxColor_CheckedChanged(object sender, EventArgs e)
+        {
+            buttonTextBoxHtmlColor.Enabled = checkBoxSubtitleTextBoxSyntaxColor.Checked;
+            panelTextBoxHtmlColor.Enabled = checkBoxSubtitleTextBoxSyntaxColor.Checked;
+            buttonTextBoxAssColor.Enabled = checkBoxSubtitleTextBoxSyntaxColor.Checked;
+            panelTextBoxAssColor.Enabled = checkBoxSubtitleTextBoxSyntaxColor.Checked;
+        }
+
+        private void panelTextBoxHtmlColor_MouseClick(object sender, MouseEventArgs e)
+        {
+            buttonTextBoxHtmlColor_Click(null, null);
+        }
+
+        private void panelTextBoxAssColor_MouseClick(object sender, MouseEventArgs e)
+        {
+            buttonTextBoxAssColor_Click(null, null);
         }
     }
 }

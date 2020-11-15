@@ -234,8 +234,6 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixLargeFonts(tabControlButtons, buttonAutoBreak);
             UiUtil.FixLargeFonts(groupBoxEdit, buttonAutoBreak);
             UiUtil.InitializeSubtitleFont(textBoxSource);
-            UiUtil.InitializeSubtitleFont(textBoxListViewText);
-            UiUtil.InitializeSubtitleFont(textBoxListViewTextAlternate);
             UiUtil.InitializeSubtitleFont(SubtitleListview1);
 
             using (var graphics = CreateGraphics())
@@ -265,6 +263,9 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             labelAutoDuration.Left = labelDuration.Left - (labelAutoDuration.Width - 5);
+
+            textBoxListViewText.BackColor = SystemColors.ActiveBorder;
+            textBoxListViewTextAlternate.BackColor = SystemColors.ActiveBorder;
 
             base.OnLoad(e);
         }
@@ -352,12 +353,6 @@ namespace Nikse.SubtitleEdit.Forms
                 InitializeToolbar();
                 UpdateNetflixGlyphCheckToolsVisibility();
                 Utilities.SetSecurityProtocol(); // download from Github requires TLS 1.2
-
-                if (Configuration.Settings.General.CenterSubtitleInTextBox)
-                {
-                    textBoxListViewText.TextAlign = HorizontalAlignment.Center;
-                    textBoxListViewTextAlternate.TextAlign = HorizontalAlignment.Center;
-                }
 
                 tabControlSubtitle.SelectTab(TabControlSourceView); // AC
                 ShowSourceLineNumber(); // AC
@@ -4526,9 +4521,9 @@ namespace Nikse.SubtitleEdit.Forms
             string oldListViewLineSeparatorString = Configuration.Settings.General.ListViewLineSeparatorString;
             var oldCpsWhiteSpaceSetting = Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace;
             string oldSubtitleFontSettings = Configuration.Settings.General.SubtitleFontName +
-                                             Configuration.Settings.General.SubtitleFontBold +
+                                             Configuration.Settings.General.SubtitleTextBoxFontBold +
                                              Configuration.Settings.General.CenterSubtitleInTextBox +
-                                             Configuration.Settings.General.SubtitleFontSize +
+                                             Configuration.Settings.General.SubtitleTextBoxFontSize +
                                              Configuration.Settings.General.SubtitleFontColor.ToArgb() +
                                              Configuration.Settings.General.SubtitleBackgroundColor.ToArgb() +
                                              Configuration.Settings.General.SubtitleListViewFontBold.ToString() +
@@ -4550,6 +4545,10 @@ namespace Nikse.SubtitleEdit.Forms
             var oldShowcolumnDuration = Configuration.Settings.Tools.ListViewShowColumnDuration;
             var oldShowColumnCharsPerSec = Configuration.Settings.Tools.ListViewShowColumnCharsPerSec;
             var oldShowWordsMinColumn = Configuration.Settings.Tools.ListViewShowColumnWordsPerMin;
+            var oldSubtitleTextBoxSyntaxColor = Configuration.Settings.General.SubtitleTextBoxSyntaxColor;
+            var oldSubtitleFontSize = Configuration.Settings.General.SubtitleTextBoxFontSize;
+            var oldSubtitleTextBoxHtmlColor = Configuration.Settings.General.SubtitleTextBoxHtmlColor.ToArgb().ToString();
+            var oldSubtitleTextBoxAssaColor = Configuration.Settings.General.SubtitleTextBoxAssColor.ToArgb().ToString();
             using (var settings = new Settings())
             {
                 settings.Initialize(Icon, toolStripButtonFileNew.Image, toolStripButtonFileOpen.Image, toolStripButtonSave.Image, toolStripButtonSaveAs.Image, toolStripButtonFind.Image,
@@ -4592,9 +4591,9 @@ namespace Nikse.SubtitleEdit.Forms
                                        Configuration.Settings.Tools.ListViewSyntaxErrorColor.ToArgb();
 
             if (oldSubtitleFontSettings != Configuration.Settings.General.SubtitleFontName +
-                Configuration.Settings.General.SubtitleFontBold +
+                Configuration.Settings.General.SubtitleTextBoxFontBold +
                 Configuration.Settings.General.CenterSubtitleInTextBox +
-                Configuration.Settings.General.SubtitleFontSize +
+                Configuration.Settings.General.SubtitleTextBoxFontSize +
                 Configuration.Settings.General.SubtitleFontColor.ToArgb() +
                 Configuration.Settings.General.SubtitleBackgroundColor.ToArgb() +
                 Configuration.Settings.General.SubtitleListViewFontBold.ToString() +
@@ -4657,16 +4656,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                 SubtitleListview1.ForeColor = Configuration.Settings.General.SubtitleFontColor;
                 SubtitleListview1.BackColor = Configuration.Settings.General.SubtitleBackgroundColor;
-                if (Configuration.Settings.General.CenterSubtitleInTextBox)
-                {
-                    textBoxListViewText.TextAlign = HorizontalAlignment.Center;
-                    textBoxListViewTextAlternate.TextAlign = HorizontalAlignment.Center;
-                }
-                else if (textBoxListViewText.TextAlign == HorizontalAlignment.Center)
-                {
-                    textBoxListViewText.TextAlign = HorizontalAlignment.Left;
-                    textBoxListViewTextAlternate.TextAlign = HorizontalAlignment.Left;
-                }
 
                 SaveSubtitleListviewIndices();
                 UiUtil.InitializeSubtitleFont(SubtitleListview1);
@@ -4740,6 +4729,18 @@ namespace Nikse.SubtitleEdit.Forms
             if (oldUseTimeFormatHHMMSSFF != Configuration.Settings.General.UseTimeFormatHHMMSSFF)
             {
                 RefreshTimeCodeMode();
+            }
+
+            if (oldSubtitleTextBoxSyntaxColor != Configuration.Settings.General.SubtitleTextBoxSyntaxColor ||
+                oldSubtitleFontSize != Configuration.Settings.General.SubtitleTextBoxFontSize ||
+                oldSubtitleTextBoxHtmlColor != Configuration.Settings.General.SubtitleTextBoxHtmlColor.ToArgb().ToString() ||
+                oldSubtitleTextBoxAssaColor != Configuration.Settings.General.SubtitleTextBoxAssColor.ToArgb().ToString())
+            {
+                textBoxListViewText.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
+                textBoxListViewTextAlternate.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
+                textBoxListViewText.BackColor = SystemColors.WindowFrame;
+                textBoxListViewTextAlternate.BackColor = SystemColors.WindowFrame;
+                RefreshSelectedParagraph();
             }
 
             SubtitleListview1.SyntaxColorAllLines(_subtitle);
@@ -9187,11 +9188,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (noOfNewLines <= 1 && tb.Text.Length <= 300 || TextRenderer.MeasureText(tb.Text, tb.Font).Height < tb.Height)
                 {
-                    tb.ScrollBars = ScrollBars.None;
+                    tb.ScrollBars = RichTextBoxScrollBars.None;
                 }
                 else
                 {
-                    tb.ScrollBars = ScrollBars.Vertical;
+                    tb.ScrollBars = RichTextBoxScrollBars.Vertical;
                 }
             }
             catch
