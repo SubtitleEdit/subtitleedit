@@ -66,6 +66,7 @@ namespace Nikse.SubtitleEdit.Core
             Header = subtitle.Header;
             Footer = subtitle.Footer;
             FileName = subtitle.FileName;
+            OriginalFormat = subtitle.OriginalFormat;
         }
 
         public Subtitle(List<Paragraph> paragraphs) : this()
