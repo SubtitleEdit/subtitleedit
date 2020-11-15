@@ -4750,6 +4750,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 SelectBestImageCompareDatabase();
             }
+
+            textBoxCurrentText.BackColor = SystemColors.ActiveBorder;
         }
 
         public void DoHide()
