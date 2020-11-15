@@ -5785,6 +5785,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/AdjustSetStartAndEndOfPrevious":
                     language.Settings.AdjustSetStartAndEndOfPrevious = reader.Value;
                     break;
+                case "Settings/AdjustSetStartAndEndOfPreviousAndGoToNext":
+                    language.Settings.AdjustSetStartAndEndOfPreviousAndGoToNext = reader.Value;
+                    break;
                 case "Settings/AdjustSelected100MsForward":
                     language.Settings.AdjustSelected100MsForward = reader.Value;
                     break;

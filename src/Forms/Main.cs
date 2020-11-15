@@ -15258,7 +15258,13 @@ namespace Nikse.SubtitleEdit.Forms
             else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustSetStartAndEndOfPrevious == e.KeyData)
             {
                 var pos = mediaPlayer.CurrentPosition;
-                SetStartAndEndOfPrevious(pos);
+                SetStartAndEndOfPrevious(pos, false);
+                e.SuppressKeyPress = true;
+            }
+            else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustSetStartAndEndOfPreviousAndGoToNext == e.KeyData)
+            {
+                var pos = mediaPlayer.CurrentPosition;
+                SetStartAndEndOfPrevious(pos, true);
                 e.SuppressKeyPress = true;
             }
 
@@ -15296,7 +15302,7 @@ namespace Nikse.SubtitleEdit.Forms
             // put new entries above tabs
         }
 
-        private void SetStartAndEndOfPrevious(double positionInSeconds)
+        private void SetStartAndEndOfPrevious(double positionInSeconds, bool goToNext)
         {
             int index = SubtitleListview1.SelectedItems[0].Index;
             var current = _subtitle.GetParagraphOrDefault(index);
@@ -15333,9 +15339,16 @@ namespace Nikse.SubtitleEdit.Forms
                 p.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds - Utilities.GetOptimalDisplayMilliseconds(p.Text);
             }
 
-            SubtitleListview1.SetStartTimeAndDuration(index, p, _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
+            SubtitleListview1.SetStartTimeAndDuration(index, current, _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
+            SubtitleListview1.SetStartTimeAndDuration(index - 1, p, current, _subtitle.GetParagraphOrDefault(index - 2));
             UpdateOriginalTimeCodes(oldParagraph);
             ShowSource();
+
+            var next = _subtitle.GetParagraphOrDefault(index - 1);
+            if (goToNext && next != null)
+            {
+                SubtitleListview1.SelectIndexAndEnsureVisible(index + 1, true);
+            }
         }
 
         private void ExtendCurrentSubtitle()

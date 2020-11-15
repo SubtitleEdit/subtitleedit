@@ -2121,6 +2121,7 @@ can edit in same subtitle file (collaboration)</Information>
     <AdjustSetEndNextStartAndGoToNext>Set end, next start and go to next</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>Key down=set start, Key up=set end and go to next</AdjustStartDownEndUpAndGoToNext>
     <AdjustSetStartAndEndOfPrevious>Set start and set end of previous (minus min gap)</AdjustSetStartAndEndOfPrevious>
+    <AdjustSetStartAndEndOfPreviousAndGoToNext>Set start and set end of previous and go to next (minus min gap)</AdjustSetStartAndEndOfPreviousAndGoToNext>
     <AdjustSelected100MsForward>Move selected lines 100 ms forward</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Move selected lines 100 ms back</AdjustSelected100MsBack>
     <AdjustStartXMsBack>Move start {0} ms back</AdjustStartXMsBack>
