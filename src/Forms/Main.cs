@@ -20620,6 +20620,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void Main_Shown(object sender, EventArgs e)
         {
+            splitContainerListViewAndText.SplitterMoved += splitContainerListViewAndText_SplitterMoved;
+            splitContainerListViewAndText.SizeChanged += splitContainerListViewAndText_SizeChanged;
+
             imageListBookmarks.Images.Add(pictureBoxBookmark.Image);
             SetListViewStateImages();
 
@@ -28761,6 +28764,25 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 aSSStylesToolStripMenuItem.Visible = false;
             }
+        }
+
+        private void splitContainerListViewAndText_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+            if (Configuration.Settings.General.SubtitleTextBoxMaxHeight < splitContainerListViewAndText.Panel2MinSize &&
+                Configuration.Settings.General.SubtitleTextBoxMaxHeight > 1000)
+            {
+                return;
+            }
+
+            if (splitContainerListViewAndText.Panel2.Height > Configuration.Settings.General.SubtitleTextBoxMaxHeight)
+            {
+                splitContainerListViewAndText.SplitterDistance = splitContainerListViewAndText.Height - Configuration.Settings.General.SubtitleTextBoxMaxHeight;
+            }
+        }
+
+        private void splitContainerListViewAndText_SizeChanged(object sender, EventArgs e)
+        {
+            splitContainerListViewAndText_SplitterMoved(null, null);
         }
     }
 }
