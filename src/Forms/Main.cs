@@ -3070,6 +3070,8 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.Items[0].Selected = true;
                     SubtitleListview1.Items[0].Focused = true;
                 }
+                textBoxListViewText.BackColor = SystemColors.WindowFrame;
+                textBoxListViewTextAlternate.BackColor = SystemColors.WindowFrame;
 
                 _findHelper = null;
                 _spellCheckForm = null;
