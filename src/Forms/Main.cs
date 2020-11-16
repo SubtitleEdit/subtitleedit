@@ -24002,6 +24002,16 @@ namespace Nikse.SubtitleEdit.Forms
                     e.SuppressKeyPress = true;
                 }
             }
+            else if (_shortcuts.MainTextBoxSelectionToggleCasing == e.KeyData && textBoxListViewTextAlternate.SelectionLength > 0) // selection to uppercase
+            {
+                int start = textBoxListViewTextAlternate.SelectionStart;
+                int length = textBoxListViewTextAlternate.SelectionLength;
+                var text = ToggleCasing(textBoxListViewTextAlternate.SelectedText);
+                textBoxListViewTextAlternate.SelectedText = text;
+                textBoxListViewTextAlternate.SelectionStart = start;
+                textBoxListViewTextAlternate.SelectionLength = length;
+                e.SuppressKeyPress = true;
+            }
             else if (_shortcuts.MainTextBoxSplitAtCursor == e.KeyData && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
             {
                 ToolStripMenuItemSplitTextAtCursorClick(null, null);
