@@ -4744,8 +4744,8 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxListViewTextAlternate.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
                 RefreshSelectedParagraph();
             }
-            textBoxListViewText.BackColor = SystemColors.WindowFrame;
-            textBoxListViewTextAlternate.BackColor = SystemColors.WindowFrame;
+            textBoxListViewText.BackColor = !IsSubtitleLoaded ? SystemColors.ActiveBorder : SystemColors.WindowFrame;
+            textBoxListViewTextAlternate.BackColor = !IsSubtitleLoaded ? SystemColors.ActiveBorder : SystemColors.WindowFrame;
 
             SubtitleListview1.SyntaxColorAllLines(_subtitle);
             mediaPlayer.LastParagraph = null;
