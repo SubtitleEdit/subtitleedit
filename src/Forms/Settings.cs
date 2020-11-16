@@ -58,6 +58,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Nodes = new List<ShortcutNode>();
             }
+
             public ShortcutNode(string text)
             {
                 Text = text;
@@ -72,6 +73,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Shortcut = shortcut;
                 IsMenuItem = isMenuItem;
             }
+
             public PropertyInfo Shortcut { get; set; }
             public bool IsMenuItem { get; set; }
         }
@@ -103,7 +105,6 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixLargeFonts(this, buttonOK);
             Init();
         }
-
 
         public void Init()
         {
@@ -1316,6 +1317,7 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(textBoxNode, language.MainTextBoxMoveFirstWordUpCurrent, nameof(Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordUpCurrent));
             AddNode(textBoxNode, language.MainTextBoxSelectionToLower, nameof(Configuration.Settings.Shortcuts.MainTextBoxSelectionToLower));
             AddNode(textBoxNode, language.MainTextBoxSelectionToUpper, nameof(Configuration.Settings.Shortcuts.MainTextBoxSelectionToUpper));
+            AddNode(textBoxNode, language.MainTextBoxSelectionToggleCasing, nameof(Configuration.Settings.Shortcuts.MainTextBoxSelectionToggleCasing));
             AddNode(textBoxNode, language.MainTextBoxSelectionToRuby, nameof(Configuration.Settings.Shortcuts.MainTextBoxSelectionToRuby), true);
             AddNode(textBoxNode, language.MainTextBoxToggleAutoDuration, nameof(Configuration.Settings.Shortcuts.MainTextBoxToggleAutoDuration));
             AddNode(textBoxNode, language.MainTextBoxAutoBreak, nameof(Configuration.Settings.Shortcuts.MainTextBoxAutoBreak));
