@@ -8429,7 +8429,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
-        private void buttonUknownToUserDic_Click(object sender, EventArgs e)
+        private void buttonUnknownToUserDic_Click(object sender, EventArgs e)
         {
             if (listBoxUnknownWords.Items.Count > 0 && listBoxUnknownWords.SelectedItems.Count > 0)
             {
