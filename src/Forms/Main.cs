@@ -9356,6 +9356,12 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            if (e.Modifiers == Keys.None)
+            {
+                UpdatePositionAndTotalLength(labelTextLineTotal, textBoxListViewText);
+                return;
+            }
+
             if (e.Modifiers == Keys.Control && e.KeyCode == (Keys.LButton | Keys.ShiftKey))
             { // surround ctrl+v action with history (for undo)
                 _listViewTextTicks = 0;
@@ -13849,7 +13855,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (fc != null && e.Modifiers != Keys.Control && e.Modifiers != Keys.Alt && e.Modifiers != (Keys.Control | Keys.Shift) && e.Modifiers != (Keys.Control | Keys.Alt) && e.Modifiers != (Keys.Control | Keys.Shift | Keys.Alt))
             {
                 // do not check for shortcuts if text is being entered and a textbox is focused
-                if ((fc.Name == textBoxListViewText.Name || fc.Name == textBoxListViewTextAlternate.Name || fc.Name == textBoxSearchWord.Name) &&
+                if ((fc.Parent.Name == textBoxListViewText.Name || fc.Parent.Name == textBoxListViewTextAlternate.Name || fc.Name == textBoxSearchWord.Name) &&
                     ((e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z) || (e.KeyCode >= Keys.OemSemicolon && e.KeyCode <= Keys.OemBackslash)))
                 {
                     return;
