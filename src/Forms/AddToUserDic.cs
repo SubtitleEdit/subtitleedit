@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             string language = comboBoxDictionaries.Text;
-            if (language.IndexOf('[') > 0)
+            if (language.IndexOf('[') >= 0)
             {
                 language = language.Substring(language.IndexOf('[')).TrimStart('[');
             }
