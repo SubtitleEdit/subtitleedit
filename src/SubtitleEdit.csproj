@@ -163,6 +163,10 @@
     <Compile Include="Forms\DCinema\DCinemaPropertiesSmpte.Designer.cs">
       <DependentUpon>DCinemaPropertiesSmpte.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\DCinema\Form2.cs" />
+    <Compile Include="Forms\DCinema\Form2.Designer.cs">
+      <DependentUpon>Form2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\DoNotBreakAfterListEdit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1169,6 +1173,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DCinema\DCinemaPropertiesSmpte.resx">
       <DependentUpon>DCinemaPropertiesSmpte.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DCinema\Form2.resx">
+      <DependentUpon>Form2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DoNotBreakAfterListEdit.resx">
       <DependentUpon>DoNotBreakAfterListEdit.cs</DependentUpon>
