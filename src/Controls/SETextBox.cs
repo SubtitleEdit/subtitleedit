@@ -13,6 +13,11 @@ namespace Nikse.SubtitleEdit.Controls
     {
         public new event EventHandler TextChanged;
         public new event KeyEventHandler KeyDown;
+        public new event MouseEventHandler MouseClick;
+        public new event EventHandler Enter;
+        public new event KeyEventHandler KeyUp;
+        public new event EventHandler Leave;
+        public new event MouseEventHandler MouseMove;
 
         private string _dragText = string.Empty;
         private int _dragStartFrom;
@@ -146,10 +151,12 @@ namespace Nikse.SubtitleEdit.Controls
             textBox.Enter += (sender, args) => { BackColor = SystemColors.Highlight; };
             textBox.Leave += (sender, args) => { BackColor = SystemColors.WindowFrame; };
             textBox.TextChanged += (sender, args) => { TextChanged?.Invoke(sender, args); };
-            textBox.KeyDown += (sender, args) =>
-            {
-                KeyDown?.Invoke(sender, args);
-            };
+            textBox.KeyDown += (sender, args) => { KeyDown?.Invoke(sender, args); };
+            textBox.MouseClick += (sender, args) => { MouseClick?.Invoke(sender, args); };
+            textBox.Enter += (sender, args) => { Enter?.Invoke(sender, args); };
+            textBox.KeyUp += (sender, args) => { KeyUp?.Invoke(sender, args); };
+            textBox.Leave += (sender, args) => { Leave?.Invoke(sender, args); };
+            textBox.MouseMove += (sender, args) => { MouseMove?.Invoke(sender, args); };
         }
 
         private void UpdateFontAndColors()
