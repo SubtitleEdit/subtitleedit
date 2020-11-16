@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.5.18</Version>
-    <TranslatedBy>Suomentanut vm, päivittänyt Teijo S. [27-06-2020]</TranslatedBy>
+    <TranslatedBy>Suomentanut vm, päivittänyt Teijo S. [13-10-2020]</TranslatedBy>
     <CultureName>fi-FI</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
@@ -183,6 +183,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <UseStyleFromSource>Käytä lähteen tyyliä</UseStyleFromSource>
     <ConvertOptions>Muunnosasetukset</ConvertOptions>
     <RemoveFormatting>Poista muotoilutunnisteet</RemoveFormatting>
+    <RemoveStyleActor>Poista tyyli/näyttelijä</RemoveStyleActor>
     <RemoveTextForHI>Poista HI-teksti</RemoveTextForHI>
     <OverwriteOriginalFiles>Korvaa alkuperäinen tiedosto (uusi tiedostopääte tiedostomuodon muuttuessa)</OverwriteOriginalFiles>
     <RedoCasing>Palauta kirjainkoko</RedoCasing>
@@ -209,6 +210,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <FilterMoreThanTwoLines>Suodata useita rivejä</FilterMoreThanTwoLines>
     <FilterContains>Sisältö</FilterContains>
     <FilterFileNameContains>Tiedoston nimessä esiintyy</FilterFileNameContains>
+    <MkvLanguageCodeContains>Matroska (.mkv) kielikoodissa esiintyy</MkvLanguageCodeContains>
     <FixCommonErrorsErrorX>Yleisten virheiden korjaus epäonnistui: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Monen korvaus epäonnistui: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Automaattinen tasoittaminen epäonnistui: {0}</AutoBalanceErrorX>
@@ -351,10 +353,14 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
   <DurationsBridgeGaps>
     <Title>Siltaa kestojen pienet aikavälit</Title>
     <GapsBridgedX>Sillattuja pieniä aikavälejä: {0}</GapsBridgedX>
-    <GapToNext>Siltaa seuraavaan</GapToNext>
+    <GapToNext>Väli seuraavaan, sekunteja</GapToNext>
+    <GapToNextFrames>Väli seuraavaan, kehyksiä</GapToNextFrames>
     <BridgeGapsSmallerThanXPart1>Siltaa välit, joiden kesto on alle</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>millisekuntia</BridgeGapsSmallerThanXPart2>
+    <BridgeGapsSmallerThanXPart1Frames>Siltaa välit, joiden kesto on alle</BridgeGapsSmallerThanXPart1Frames>
+    <BridgeGapsSmallerThanXPart2Frames>kehystä</BridgeGapsSmallerThanXPart2Frames>
     <MinMillisecondsBetweenLines>Rivien välinen aika (msek)</MinMillisecondsBetweenLines>
+    <MinFramesBetweenLines>Rivien välinen aika (kehyksiä)</MinFramesBetweenLines>
     <ProlongEndTime>Täytä aikaväli edellisellä tekstillä</ProlongEndTime>
     <DivideEven>Jaa aikaväli tekstien kesken</DivideEven>
   </DurationsBridgeGaps>
@@ -394,6 +400,8 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <DiskFormatCode>Levyn muotokoodi</DiskFormatCode>
     <DisplayStandardCode>Näytä vakiokoodi</DisplayStandardCode>
     <ColorRequiresTeletext>Värit edellyttävät tekstitelevisiota!</ColorRequiresTeletext>
+    <AlignmentRequiresTeletext>Tasaus edellyttää tekstitelevisiota!</AlignmentRequiresTeletext>
+    <TeletextCharsShouldBe38>Tektitelevisiossa saa olla korkeintaan 38 merkkiä rivillä!</TeletextCharsShouldBe38>
     <CharacterCodeTable>Merkistö</CharacterCodeTable>
     <LanguageCode>Kielikoodi</LanguageCode>
     <OriginalProgramTitle>Alkuperäisen ohjelman nimi</OriginalProgramTitle>
@@ -500,6 +508,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <Right>Oikea</Right>
     <Center>Keski</Center>
     <CenterLeftJustify>Keski, kohdistus vasempaan</CenterLeftJustify>
+    <CenterLeftJustifyDialogs>Keski, vuoropuhelun kohdistus vasempaan</CenterLeftJustifyDialogs>
     <CenterTopJustify>Keski, kohdistus ylös</CenterTopJustify>
     <CenterRightJustify>Keski, kohdistus oikealle
 </CenterRightJustify>
@@ -698,6 +707,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Hei, Jussi! - Hei, Iida! -&gt; Hei, Jussi!&lt;br /&gt;- Hei, Iida!</FixDialogsOneLineExample>
     <SelectDefault>Valitse oletus</SelectDefault>
+    <SetDefault>Aseta nykyiset korjaukset oletuksiksi</SetDefault>
     <FixContinuationStyleX>Korjaa jatkumistyyli: {0}</FixContinuationStyleX>
     <XFixContinuationStyle>Korjattu{0} jatkumistyyliä</XFixContinuationStyle>
     <FixUnnecessaryLeadingDots>Poista alusta tarpeettomat pisteet</FixUnnecessaryLeadingDots>
@@ -1029,6 +1039,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
         <GoToSubtitleNumber>Siirry tekstitysnumeroon</GoToSubtitleNumber>
         <RightToLeftMode>Oikealta vasemmalle</RightToLeftMode>
         <FixRtlViaUnicodeControlCharacters>Korjaa RTL käyttäen Unicode-ohjausmerkkejä (valitut rivit)</FixRtlViaUnicodeControlCharacters>
+        <RemoveUnicodeControlCharacters>Poista Unicode-ohjausmerkit (valituilta riveiltä)</RemoveUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Käännä RTL-alku/loppu (valitut rivit)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Näytä alkuperäinen teksti audio/video-esikatselussa</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Muokkaa valintaa</ModifySelection>
@@ -1080,9 +1091,11 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
         <OpenDvd>Avaa DVD</OpenDvd>
         <ChooseAudioTrack>Valitse ääniraita</ChooseAudioTrack>
         <CloseVideo>Sulje videotiedosto</CloseVideo>
+        <OpenSecondSubtitle>Avaa toinen tekstitystiedosto..</OpenSecondSubtitle>
         <SetVideoOffset>Aseta videosiirtymä...</SetVideoOffset>
         <SmptTimeMode>SMTPE-ajoitus (kehysten pudotus)</SmptTimeMode>
         <GenerateTextFromVideo>Luo teksti videosta</GenerateTextFromVideo>
+        <ImportChaptersFromVideo>Tuo kappaleet videosta</ImportChaptersFromVideo>
         <GenerateImportSceneChanges>Luo tai tuo kohtaustenvaihtoja</GenerateImportSceneChanges>
         <RemoveSceneChanges>Poista kohtaustenvaihtoja</RemoveSceneChanges>
         <WaveformBatchGenerate>Luo aaltomuodot eräajona</WaveformBatchGenerate>
@@ -1310,6 +1323,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <OverwriteModifiedFile>Korvaa tiedosto {0} kohteessa {1} muokattu {2}{3} nykyisen levyltä ladatun tiedoston kanssa {4} {5}?</OverwriteModifiedFile>
     <FileXIsReadOnly>Tiedosto {0} on kirjoitussuojattu, tallennus epäonnistui.</FileXIsReadOnly>
     <UnableToSaveSubtitleX>Tekstitystä {0} ei voi tallentaa</UnableToSaveSubtitleX>
+    <FormatXShouldUseUft8>Tallennettaessa {0} -tiedostoja pitää käyttää UTF-8 koodausta!</FormatXShouldUseUft8>
     <BeforeNew>Ennen uutta</BeforeNew>
     <New>Uusi</New>
     <BeforeConvertingToX>Ennen muuntamista {0} muotoon</BeforeConvertingToX>
@@ -1413,6 +1427,8 @@ Haluatko aloittaa asiakirjan alusta ja hakea kerran vielä?</FindContinue>
     <NoSubtitlesFound>Tekstityksiä ei löydy</NoSubtitlesFound>
     <NotAValidMatroskaFileX>Tämä ei ole kelvollinen Matroska-tiedosto: {0}</NotAValidMatroskaFileX>
     <BlurayNotSubtitlesFound>Blu-ray sup -tiedosto on tyhjä tai sen lukeminen epäonnistui. Yritä uudelleen.</BlurayNotSubtitlesFound>
+    <ImportingChapters>Tuodaan lukuja...</ImportingChapters>
+    <XChaptersImported>Tuotiin {0} lukua.</XChaptersImported>
     <ParsingMatroskaFile>Jäsennetään Matroska-tiedostoa, odota.</ParsingMatroskaFile>
     <ParsingTransportStreamFile>Jäsennetään Transport Stream -tiedostoa, odota.</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Ennen tekstityksen tuontia Matroska-tiedostosta</BeforeImportFromMatroskaFile>
@@ -1545,6 +1561,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <NoSupportHereDvdSup>Toiminto ei toteutettavissa DVD sup -tiedostoille.</NoSupportHereDvdSup>
     <NoSupportHereVobSub>Toiminto ei toteutettavissa VobSub-tiedostoille.</NoSupportHereVobSub>
     <NoSupportHereDivx>Toiminto ei toteutettavissa DivX-tiedostoille.</NoSupportHereDivx>
+    <NoChapters>Videosta ei löydy lukuja.</NoChapters>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Valitse tekstitys Matroska-tiedostosta</Title>
@@ -1557,16 +1574,109 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <ConvertFrom>Muunna muodosta</ConvertFrom>
     <ConvertTo>Muunna muotoon</ConvertTo>
     <CopyToClipboard>Kopioi leikepöydälle</CopyToClipboard>
-    <Celsius>Celsius</Celsius>
-    <Fahrenheit>Fahrenheit</Fahrenheit>
-    <Miles>Mailia</Miles>
+    <Length>Kesto</Length>
+    <Mass>Paino</Mass>
+    <Volume>Osa</Volume>
+    <Area>Alue</Area>
+    <Time>Aika</Time>
+    <Temperature>Lämpötila</Temperature>
+    <Velocity>Kiihtyvyys</Velocity>
+    <Force>Voima</Force>
+    <Energy>Energia</Energy>
+    <Power>Teho</Power>
+    <Pressure>Paine</Pressure>
     <Kilometers>Kilometriä</Kilometers>
     <Meters>Metriä</Meters>
+    <Centimeters>Senttimetriä</Centimeters>
+    <Millimeters>Millimetriä</Millimeters>
+    <Micrometers>Mikrometriä</Micrometers>
+    <Nanometers>Nanometriä</Nanometers>
+    <Angstroms>Ångströmia</Angstroms>
+    <MilesTerrestial>Maileja (maa-)</MilesTerrestial>
+    <MilesNautical>Merimailia</MilesNautical>
     <Yards>Jaardia</Yards>
     <Feet>Jalkaa</Feet>
     <Inches>Tuumaa</Inches>
-    <Pounds>Paunaa</Pounds>
+    <Chains>Ketjua</Chains>
+    <Fathoms>Syliä</Fathoms>
+    <Hands>Vaaksaa</Hands>
+    <Rods>Rodia</Rods>
+    <Spans>Vaaksaa</Spans>
+    <LongTonnes>Long Tonnia</LongTonnes>
+    <ShortTonnes>Short Tonnia</ShortTonnes>
+    <Tonnes>Tonnia</Tonnes>
     <Kilos>Kiloa</Kilos>
+    <Grams>Grammaa</Grams>
+    <Milligrams>Milligrammaa</Milligrams>
+    <Micrograms>Mikrogrammaa</Micrograms>
+    <Pounds>Paunaa</Pounds>
+    <Ounces>Unssia</Ounces>
+    <Carats>Karaattia</Carats>
+    <Drams>Dramia</Drams>
+    <Grains>Grainia</Grains>
+    <Stones>Stonea</Stones>
+    <CubicKilometers>Kuutiokilometriä</CubicKilometers>
+    <CubicMeters>Kuutiometriä</CubicMeters>
+    <Litres>Litraa</Litres>
+    <CubicCentimeters>Kuutiosenttimetriä</CubicCentimeters>
+    <CubicMillimeters>Kuutiomillimetriä</CubicMillimeters>
+    <CubicMiles>Kuutiomailia</CubicMiles>
+    <CubicYards>Kuutiojaardia</CubicYards>
+    <CubicFTs>Kuutiojalkaa</CubicFTs>
+    <CubicInches>Kuutiotuumaa</CubicInches>
+    <OilBarrels>Öljytynnyriä</OilBarrels>
+    <GallonUS>Gallonaa (US)</GallonUS>
+    <QuartsUS>Quartsia (US)</QuartsUS>
+    <PintsUS>Pinttiä (US)</PintsUS>
+    <FluidOuncesUS>Nesteunssia (US)</FluidOuncesUS>
+    <Bushels>Bushelia</Bushels>
+    <Pecks>Peckiä</Pecks>
+    <GallonsUK>Gallonaa (UK)</GallonsUK>
+    <QuartsUK>Quartsia (UK)</QuartsUK>
+    <PintsUK>Pinttiä (UK)</PintsUK>
+    <FluidOuncesUK>Nesteunssia (UK)</FluidOuncesUK>
+    <SquareKilometers>Neliökilometriä</SquareKilometers>
+    <SquareMeters>Neliömetriä</SquareMeters>
+    <SquareCentimeters>Neliösenttimetriä</SquareCentimeters>
+    <SquareMillimeters>Neliömillimetriä</SquareMillimeters>
+    <SquareMiles>Neliömailia</SquareMiles>
+    <SquareYards>Neliöjaardia</SquareYards>
+    <SquareFTs>Neliöjalkaa</SquareFTs>
+    <SquareInches>Neliötuumaa</SquareInches>
+    <Hectares>Hehtaaria</Hectares>
+    <Acres>Eekkeriä</Acres>
+    <Ares>Aaria</Ares>
+    <Hours>Tuntia</Hours>
+    <Minutes>Minuuttia</Minutes>
+    <Seconds>Sekuntia</Seconds>
+    <Milliseconds>Millisekuntia</Milliseconds>
+    <Microseconds>Mikrosekuntia</Microseconds>
+    <Fahrenheit>Fahrenheit</Fahrenheit>
+    <Celsius>Celsius</Celsius>
+    <Kelvin>Kelvn</Kelvin>
+    <KilometersPerHour>Kilometriä tunnissa</KilometersPerHour>
+    <MetersPerSecond>Metriä sekunnissa</MetersPerSecond>
+    <MilesPerHour>Mailia tunnissa</MilesPerHour>
+    <YardsPerMinute>Jaardia minuutissa</YardsPerMinute>
+    <FTsPerSecond>Jalkaa sekunnissa</FTsPerSecond>
+    <Knots>Solmua</Knots>
+    <PoundsForce>Paunavoimaa</PoundsForce>
+    <Newtons>Newtonia</Newtons>
+    <KilosForce>Kilogrammavoimaa</KilosForce>
+    <Jouls>Joulea</Jouls>
+    <Calories>Kaloria</Calories>
+    <Ergs>Ergiä</Ergs>
+    <ElectronVolts>Elektronivolttia</ElectronVolts>
+    <Btus>Btu:a</Btus>
+    <Watts>Wattia</Watts>
+    <Horsepower>Hevosvoimaa</Horsepower>
+    <Atmospheres>Ilmakehää</Atmospheres>
+    <Bars>Baaria</Bars>
+    <Pascals>Pascalia</Pascals>
+    <MillimetersOfMercury>Elohopeamillimetriä</MillimetersOfMercury>
+    <PoundPerSquareInch>Paunavoimia neliötuumalle</PoundPerSquareInch>
+    <KilogramPerSquareCentimeter>Kilogrammavoimia neliösenttimetrille</KilogramPerSquareCentimeter>
+    <KiloPascals>Kilopascalia</KiloPascals>
   </MeasurementConverter>
   <MergeDoubleLines>
     <Title>Yhdistä samansisältöisiä rivejä</Title>
@@ -1755,6 +1865,8 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <ShowOnlyModifiedLines>Näytä vain muokatut rivit</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Pienin aika (ms) rivien välillä</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Kehystietoja</FrameInfo>
+    <Frames>Kehyksiä</Frames>
+    <XFrameYisZMilliseconds>{0} kehystä nopeudella {1} fps on {2} millisekuntia</XFrameYisZMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Aseta tahdistuskohta riville {0}</Title>
@@ -1977,11 +2089,13 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <ListView>Luettelo</ListView>
     <TextBox>Tekstiruutu</TextBox>
     <UpdateShortcut>Päivitä</UpdateShortcut>
+    <FoucsSetVideoPosition>Aseta tarkennus videokohtaan</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Vaihda videovalvonnan telakointi/irrottaminen</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Aseta loppu, lisää uusi ja siirry uuteen</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Säädä lopetuskohdan mukaan</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Säädä lopetuskohdan mukaan ja siirry seuraavaan</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Aseta loppu ja siirry seuraavaan</AdjustSetEndTimeAndGoToNext>
+    <AdjustSetEndTimeAndPause>Aseta loppu ja pidä tauko</AdjustSetEndTimeAndPause>
     <AdjustSetStartAutoDurationAndGoToNext>Aseta aloitus, automaattinen kesto ja siirry seuraavaan</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Aseta loppu, seuraava aloitus ja siirry seuraavaan</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>Nuoli alas=aseta alku, Nuoli ylös=aseta loppu ja siirry seuraavaan</AdjustStartDownEndUpAndGoToNext>
@@ -2002,11 +2116,19 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <AdjustSetStartTimeKeepDuration>Aseta aloitusaika, säilytä kesto</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Aseta loppu, liu'uta muita</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Aseta loppu, liu'uta muita ja siirry seuraavaan</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustExtendCurrentSubtitle>Laajenna nykyinen rivi seuraavaan tekstitykseen tai enimmäiskestoon</AdjustExtendCurrentSubtitle>
-    <AdjustExtendToNextSceneChange>Laajenna valitut rivit seuraavaan kohtauksenvaihtoon (tai teksitykseen)</AdjustExtendToNextSceneChange>
-    <AdjustExtendToPreviousSceneChange>Laajenna valitut rivit edelliseen kohtauksenvaihtoon (tai teksitykseen)</AdjustExtendToPreviousSceneChange>
+    <AdjustSnapStartToNextSceneChange>Kytke valitut rivit alkamaan seuraavassa näytöksen vaihdossa</AdjustSnapStartToNextSceneChange>
+    <AdjustSnapStartToNextSceneChangeWithGap>Kytke valitut rivit alkamaan seuraavassa näytöksen vaihdossa, minimivälillä</AdjustSnapStartToNextSceneChangeWithGap>
+    <AdjustSnapEndToPreviousSceneChange>Kytke valitut rivit päättymään edellisessä näytöksen vaihdossa</AdjustSnapEndToPreviousSceneChange>
+    <AdjustSnapEndToPreviousSceneChangeWithGap>Kytke valitut rivit päättymään edellisessä näytöksen vaihdossa, minimivälillä</AdjustSnapEndToPreviousSceneChangeWithGap>
+    <AdjustExtendToNextSceneChange>Laajenna valitut rivit seuraavaan kohtauksenvaihtoon (tai tekstitykseen)</AdjustExtendToNextSceneChange>
+    <AdjustExtendToNextSceneChangeWithGap>Laajenna valitut rivit seuraavaan kohtauksenvaihtoon (tai tekstitykseen) minimivälillä</AdjustExtendToNextSceneChangeWithGap>
+    <AdjustExtendToPreviousSceneChange>Laajenna valitut rivit edelliseen kohtauksenvaihtoon (tai tekstitykseen)</AdjustExtendToPreviousSceneChange>
+    <AdjustExtendToPreviousSceneChangeWithGap>Laajenna valitut rivit edelliseen kohtauksenvaihtoon (tai tekstitykseen) minimivälillä</AdjustExtendToPreviousSceneChangeWithGap>
     <AdjustExtendToNextSubtitle>Laajenna valitut rivit seuraavaan tekstitykseen</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Laajenna valitut rivit edelliseen tekstitykseen</AdjustExtendToPreviousSubtitle>
+    <AdjustExtendCurrentSubtitle>Laajenna nykyinen rivi seuraavaan tekstitykseen tai enimmäiskestoon</AdjustExtendCurrentSubtitle>
+    <AdjustExtendPreviousLineEndToCurrentStart>Laajenna edellisen rivin loppu nykyisen alkuun</AdjustExtendPreviousLineEndToCurrentStart>
+    <AdjustExtendNextLineStartToCurrentEnd>Laajenna seuraavan rivin alku nykyisen loppuun</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>Laske uudelleen nykyisen tekstityksen kesto</RecalculateDurationOfCurrentSubtitle>
     <MainCreateStartDownEndUp>Luo uusi alasnuolella, aseta loppuaika ylösnuolella</MainCreateStartDownEndUp>
     <MergeDialog>Yhdistä vuoropuhelu (lisää viivoja)</MergeDialog>
@@ -2034,6 +2156,8 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <CopyTextOnly>Kopioi vain teksti leikepöydälle (valitut rivit)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Kopioi alkuperäinen teksti</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Autom. kesto (valitut rivit)</AutoDurationSelectedLines>
+    <FixRTLViaUnicodeChars>Korjaa RTL käyttäen Unicode-ohjausmerkkejä</FixRTLViaUnicodeChars>
+    <RemoveRTLUnicodeChars>Poista Unicode-ohjausmerkit</RemoveRTLUnicodeChars>
     <ReverseStartAndEndingForRtl>Käänteinen RTL alku/loppu</ReverseStartAndEndingForRtl>
     <VerticalZoom>Pystysuora lähennys</VerticalZoom>
     <VerticalZoomOut>Pystysuora loitonnus</VerticalZoomOut>
@@ -2062,12 +2186,18 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <GoForward1Second>Sekunti eteenpäin</GoForward1Second>
     <GoBack5Seconds>Viisi sekuntia takaisin</GoBack5Seconds>
     <GoForward5Seconds>Viisi sekuntia eteenpäin</GoForward5Seconds>
+    <GoBackXSSeconds>Pienen aikasiirtymän verran takaisin</GoBackXSSeconds>
+    <GoForwardXSSeconds>Pienen aikasiirtymän verran eteenpäin</GoForwardXSSeconds>
+    <GoBackXLSeconds>Suuren aikasiirtymän verran takaisin</GoBackXLSeconds>
+    <GoForwardXLSeconds>Suuren aikasiirtymän verran eteenpäin</GoForwardXLSeconds>
     <GoBack3Second>Kolme sekuntia takaisin</GoBack3Second>
     <GoToStartCurrent>Siirrä videokohta nykyisen tekstityksen alkuun</GoToStartCurrent>
     <ToggleStartEndCurrent>Videokohta nykyisen tekstityksen alkuun/loppuun</ToggleStartEndCurrent>
     <PlayCurrent>Toista nykyinen tekstitys</PlayCurrent>
     <WaveformGoToPrevSubtitle>Siirry edelliseen tekstitykseen (videolta)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Siirry seuraavaan tekstitykseen (videolta)</WaveformGoToNextSubtitle>
+    <WaveformGoToPrevChapter>Siirry edelliseen lukuun</WaveformGoToPrevChapter>
+    <WaveformGoToNextChapter>Siirry seuraavaan lukuun</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>Valitse seuraava tekstitys (videolta, säilytä videokohta)</WaveformSelectNextSubtitle>
     <TogglePlayPause>Vaihda toisto/tauko</TogglePlayPause>
     <Pause>Tauko</Pause>
