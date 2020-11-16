@@ -9578,7 +9578,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string ToggleCasing(string text)
         {
-            if (string.IsNullOrWhiteSpace(text))
+            if (string.IsNullOrWhiteSpace(text) || text.ToLower() == text.ToUpper())
             {
                 return text;
             }
