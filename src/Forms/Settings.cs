@@ -433,6 +433,9 @@ namespace Nikse.SubtitleEdit.Forms
             labelSubtitleFontSize.Text = language.SubtitleFontSize;
             labelSubtitleListViewFontSize.Text = language.SubtitleFontSize;
             checkBoxSubtitleFontBold.Text = language.SubtitleBold;
+            checkBoxSubtitleTextBoxSyntaxColor.Text = language.UseSyntaxColoring;
+            buttonTextBoxHtmlColor.Text = language.HtmlColor;
+            buttonTextBoxAssColor.Text = language.AssaColor;
             checkBoxSubtitleListViewFontBold.Text = language.SubtitleBold;
             checkBoxSubtitleCenter.Text = language.SubtitleCenter;
             checkBoxSubtitleCenter.Left = checkBoxSubtitleFontBold.Left;
