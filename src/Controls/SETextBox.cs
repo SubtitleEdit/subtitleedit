@@ -12,6 +12,7 @@ namespace Nikse.SubtitleEdit.Controls
     public sealed class SETextBox : Panel
     {
         public new event EventHandler TextChanged;
+        public new event KeyEventHandler KeyDown;
 
         private string _dragText = string.Empty;
         private int _dragStartFrom;
@@ -145,6 +146,10 @@ namespace Nikse.SubtitleEdit.Controls
             textBox.Enter += (sender, args) => { BackColor = SystemColors.Highlight; };
             textBox.Leave += (sender, args) => { BackColor = SystemColors.WindowFrame; };
             textBox.TextChanged += (sender, args) => { TextChanged?.Invoke(sender, args); };
+            textBox.KeyDown += (sender, args) =>
+            {
+                KeyDown?.Invoke(sender, args);
+            };
         }
 
         private void UpdateFontAndColors()
