@@ -9356,12 +9356,6 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            if (e.Modifiers == Keys.None)
-            {
-                UpdatePositionAndTotalLength(labelTextLineTotal, textBoxListViewText);
-                return;
-            }
-
             if (e.Modifiers == Keys.Control && e.KeyCode == (Keys.LButton | Keys.ShiftKey))
             { // surround ctrl+v action with history (for undo)
                 _listViewTextTicks = 0;
