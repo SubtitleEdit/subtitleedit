@@ -1267,7 +1267,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.buttonUknownToUserDic.TabIndex = 1;
             this.buttonUknownToUserDic.Text = "Add to user dictionary";
             this.buttonUknownToUserDic.UseVisualStyleBackColor = true;
-            this.buttonUknownToUserDic.Click += new System.EventHandler(this.buttonUknownToUserDic_Click);
+            this.buttonUknownToUserDic.Click += new System.EventHandler(this.buttonUnknownToUserDic_Click);
             // 
             // buttonUknownToNames
             // 
