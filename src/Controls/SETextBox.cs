@@ -201,6 +201,11 @@ namespace Nikse.SubtitleEdit.Controls
                     return _textBox.Text;
                 }
 
+                if (_uiTextBox == null)
+                {
+                    return string.Empty;
+                }
+
                 var s = _uiTextBox.Text;
                 if (_fixedArabicComma)
                 {
@@ -214,6 +219,11 @@ namespace Nikse.SubtitleEdit.Controls
                 if (_textBox != null)
                 {
                     _textBox.Text = value;
+                    return;
+                }
+
+                if (_uiTextBox == null)
+                {
                     return;
                 }
 
@@ -240,91 +250,145 @@ namespace Nikse.SubtitleEdit.Controls
 
         public int SelectionStart
         {
-            get => _textBox?.SelectionStart ?? _uiTextBox.SelectionStart;
+            get
+            {
+                if (_textBox == null && _uiTextBox == null)
+                {
+                    return 0;
+                }
+
+                return _textBox?.SelectionStart ?? _uiTextBox.SelectionStart;
+            }
             set
             {
                 if (_textBox != null)
                 {
                     _textBox.SelectionStart = value;
-                    return;
                 }
-
-                _uiTextBox.SelectionStart = value;
+                else if (_uiTextBox != null)
+                {
+                    _uiTextBox.SelectionStart = value;
+                }
             }
         }
 
         public int SelectionLength
         {
-            get => _textBox?.SelectionLength ?? _uiTextBox.SelectionLength;
+            get
+            {
+                if (_textBox == null && _uiTextBox == null)
+                {
+                    return 0;
+                }
+
+                return _textBox?.SelectionLength ?? _uiTextBox.SelectionLength;
+            }
             set
             {
                 if (_textBox != null)
                 {
                     _textBox.SelectionLength = value;
-                    return;
                 }
-
-                _uiTextBox.SelectionLength = value;
+                else if (_uiTextBox != null)
+                {
+                    _uiTextBox.SelectionLength = value;
+                }
             }
         }
 
         public bool HideSelection
         {
-            get => _textBox?.HideSelection ?? _uiTextBox.HideSelection;
+            get
+            {
+                if (_textBox == null && _uiTextBox == null)
+                {
+                    return false;
+                }
+
+                return _textBox?.HideSelection ?? _uiTextBox.HideSelection;
+            }
             set
             {
                 if (_textBox != null)
                 {
                     _textBox.HideSelection = value;
-                    return;
                 }
-
-                _uiTextBox.HideSelection = value;
+                else if (_uiTextBox != null)
+                {
+                    _uiTextBox.HideSelection = value;
+                }
             }
         }
 
         public string SelectedText
         {
-            get => _textBox?.SelectedText ?? _uiTextBox.SelectedText;
+            get
+            {
+                if (_textBox == null && _uiTextBox == null)
+                {
+                    return string.Empty;
+                }
+
+                return _textBox?.SelectedText ?? _uiTextBox.SelectedText;
+            }
             set
             {
                 if (_textBox != null)
                 {
                     _textBox.SelectedText = value;
-                    return;
                 }
-
-                _uiTextBox.SelectedText = value;
+                else if (_uiTextBox != null)
+                {
+                    _uiTextBox.SelectedText = value;
+                }
             }
         }
 
         public bool Multiline
         {
-            get => _textBox?.Multiline ?? _uiTextBox.Multiline;
+            get
+            {
+                if (_textBox == null && _uiTextBox == null)
+                {
+                    return false;
+                }
+
+                return _textBox?.Multiline ?? _uiTextBox.Multiline;
+            }
             set
             {
                 if (_textBox != null)
                 {
                     _textBox.Multiline = value;
-                    return;
                 }
-
-                _uiTextBox.Multiline = value;
+                else if (_uiTextBox != null)
+                {
+                    _uiTextBox.Multiline = value;
+                }
             }
         }
 
         public new bool Enabled
         {
-            get => _textBox?.Enabled ?? _uiTextBox.Enabled;
+            get
+            {
+                if (_textBox == null && _uiTextBox == null)
+                {
+                    return true;
+                }
+
+                return _textBox?.Enabled ?? _uiTextBox.Enabled;
+            }
             set
             {
                 if (_textBox != null)
                 {
                     _textBox.Enabled = value;
-                    return;
                 }
-
-                _uiTextBox.Enabled = value;
+                else if (_uiTextBox != null)
+                {
+                    _uiTextBox.Enabled = value;
+                }
             }
         }
 
@@ -332,6 +396,11 @@ namespace Nikse.SubtitleEdit.Controls
         {
             get
             {
+                if (_textBox == null && _uiTextBox == null)
+                {
+                    return RichTextBoxScrollBars.None;
+                }
+
                 if (_textBox != null)
                 {
                     if (_textBox.ScrollBars == System.Windows.Forms.ScrollBars.Both)
@@ -372,16 +441,25 @@ namespace Nikse.SubtitleEdit.Controls
                     }
 
                     _textBox.ScrollBars = System.Windows.Forms.ScrollBars.None;
-                    return;
                 }
-
-                _uiTextBox.ScrollBars = value;
+                else if (_uiTextBox != null)
+                {
+                    _uiTextBox.ScrollBars = value;
+                }
             }
         }
 
         public override ContextMenuStrip ContextMenuStrip
         {
-            get => _textBox?.ContextMenuStrip ?? _uiTextBox.ContextMenuStrip;
+            get
+            {
+                if (_textBox == null && _uiTextBox == null)
+                {
+                    return null;
+                }
+
+                return _textBox?.ContextMenuStrip ?? _uiTextBox.ContextMenuStrip;
+            }
             set
             {
                 if (_textBox != null)
@@ -390,7 +468,10 @@ namespace Nikse.SubtitleEdit.Controls
                     return;
                 }
 
-                _uiTextBox.ContextMenuStrip = value;
+                if (_uiTextBox != null)
+                {
+                    _uiTextBox.ContextMenuStrip = value;
+                }
             }
         }
 
@@ -401,7 +482,12 @@ namespace Nikse.SubtitleEdit.Controls
                 return _textBox.GetCharIndexFromPosition(pt);
             }
 
-            return _uiTextBox.GetCharIndexFromPosition(pt);
+            if (_uiTextBox != null)
+            {
+                return _uiTextBox.GetCharIndexFromPosition(pt);
+            }
+
+            return 0;
         }
 
         public void SelectAll()
@@ -412,7 +498,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
             else
             {
-                _uiTextBox.SelectAll();
+                _uiTextBox?.SelectAll();
             }
         }
 
@@ -424,7 +510,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
             else
             {
-                _uiTextBox.Clear();
+                _uiTextBox?.Clear();
             }
         }
 
@@ -436,7 +522,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
             else
             {
-                _uiTextBox.Undo();
+                _uiTextBox?.Undo();
             }
         }
 
@@ -448,7 +534,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
             else
             {
-                _uiTextBox.ClearUndo();
+                _uiTextBox?.ClearUndo();
             }
         }
 
@@ -460,7 +546,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
             else
             {
-                _uiTextBox.Copy();
+                _uiTextBox?.Copy();
             }
         }
 
@@ -472,7 +558,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
             else
             {
-                _uiTextBox.Cut();
+                _uiTextBox?.Cut();
             }
         }
 
@@ -484,11 +570,22 @@ namespace Nikse.SubtitleEdit.Controls
             }
             else
             {
-                _uiTextBox.Paste();
+                _uiTextBox?.Paste();
             }
         }
 
-        public override bool Focused => _textBox?.Focused ?? _uiTextBox.Focused;
+        public override bool Focused
+        {
+            get
+            {
+                if (_textBox == null && _uiTextBox == null)
+                {
+                    return false;
+                }
+
+                return _textBox?.Focused ?? _uiTextBox.Focused;
+            }
+        }
 
         public new void Focus()
         {
@@ -498,7 +595,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
             else
             {
-                _uiTextBox.Focus();
+                _uiTextBox?.Focus();
             }
         }
 
