@@ -161,7 +161,6 @@
    * Update Chinese translation - thx LeonCheung
    * Update Polish translation - thx admas
    * Update Portuguese translation - thx moob
-   * Update Greek translation - thx Lero91
    * Init no-break-after-list with language
    * Make quick-char-list in "OCR Char" window dynamic
    * Remember settings for "column paste"

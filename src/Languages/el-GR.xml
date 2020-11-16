@@ -3,8 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.5.18</Version>
-    <TranslatedBy>Μετάφραση: Κλεάνθης Μανωλόπουλος
-Διορθώσεις και προσθήκες: Παναγιώτης Μητσάκης</TranslatedBy>
+    <TranslatedBy>Μετάφραση: Παναγιώτης Μητσάκης</TranslatedBy>
     <CultureName>el-GR</CultureName>
     <HelpFile />
     <Ok>&amp;Εντάξει</Ok>
@@ -227,7 +226,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TransportStreamFileNameEnding>Κατάληξη ονόματος αρχείου</TransportStreamFileNameEnding>
     <TransportStreamSettingsButton>Ρυθμίσεις TS...</TransportStreamSettingsButton>
     <RemoveLineBreaks>Αφαίρεση διάσπασης γραμμών</RemoveLineBreaks>
+    <DeleteLines>Διαγραφή γραμμών</DeleteLines>
     <TryToUseSourceEncoding>Προσπάθεια χρήσης αρχικής κωδικοποίησης</TryToUseSourceEncoding>
+    <DeleteFirstLines>Διαγραφή πρώτων γραμμών</DeleteFirstLines>
+    <DeleteLastLines>Διαγραφή τελευταίων γραμμών</DeleteLastLines>
+    <DeleteContaining>Διαγραφή γραμμών που περιέχουν</DeleteContaining>
     <MkvLanguageInOutputFileName>"Γλώσσα" στην εξαγωγή ονόματος αρχείου</MkvLanguageInOutputFileName>
     <MkvLanguageInOutputFileNameX>Matroska (.mkv) "Γλώσσα" στην εξαγωγή ονόματος αρχείου: {0}</MkvLanguageInOutputFileNameX>
     <MkvLanguageStyleTwoLetter>Κώδικες γλωσσών δύο γραμμάτων</MkvLanguageStyleTwoLetter>
@@ -406,6 +409,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DiskFormatCode>Κωδικός μορφής δίσκου</DiskFormatCode>
     <DisplayStandardCode>Προβολή τυπικού κώδικα</DisplayStandardCode>
     <ColorRequiresTeletext>Τα χρώματα απαιτούν τηλεκείμενο!</ColorRequiresTeletext>
+    <AlignmentRequiresTeletext>Η στοίχιση απαιτεί τηλεκείμενο!</AlignmentRequiresTeletext>
+    <TeletextCharsShouldBe38>Οι μέγιστοι χαρακτήρες τηλεκειμένου ανά σειρά θα πρέπει να είναι 38!</TeletextCharsShouldBe38>
     <CharacterCodeTable>Πίνακας χαρακτήρων</CharacterCodeTable>
     <LanguageCode>Κωδικός γλώσσας</LanguageCode>
     <OriginalProgramTitle>Πρωτότυπος τίτλος προγράμματος</OriginalProgramTitle>
@@ -512,6 +517,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Right>Δεξιά</Right>
     <Center>Κέντρο</Center>
     <CenterLeftJustify>Κέντρο, στοίχιση αριστερά</CenterLeftJustify>
+    <CenterLeftJustifyDialogs>Κέντρο, αριστερή στοίχιση διαλόγου</CenterLeftJustifyDialogs>
     <CenterTopJustify>Κέντρο, άνω στοίχιση</CenterTopJustify>
     <CenterRightJustify>Κέντρο, δεξιά στοίχιση</CenterRightJustify>
     <BottomMargin>Κάτω περιθώριο</BottomMargin>
@@ -1093,9 +1099,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <OpenDvd>Άνοιγμα DVD...</OpenDvd>
         <ChooseAudioTrack>Επιλέξτε κομματιού ήχου</ChooseAudioTrack>
         <CloseVideo>Κλείσιμο βίντεο</CloseVideo>
+        <OpenSecondSubtitle>Άνοιγμα δεύτερου υποτίτλου...</OpenSecondSubtitle>
         <SetVideoOffset>Αντιστάθμιση έναρξης βίντεο...</SetVideoOffset>
         <SmptTimeMode>Χρονισμός SMPTE (ρήξη καρέ)</SmptTimeMode>
         <GenerateTextFromVideo>Δημιουργία κειμένου από βίντεο...</GenerateTextFromVideo>
+        <ImportChaptersFromVideo>Εισαγωγή κεφαλαίων από βίντεο</ImportChaptersFromVideo>
         <GenerateImportSceneChanges>Δημιουργία/εισαγωγή αλλαγών σκηνών...</GenerateImportSceneChanges>
         <RemoveSceneChanges>Αφαίρεση σκηνών αλλαγής</RemoveSceneChanges>
         <WaveformBatchGenerate>Μαζική δημιουργία κυματομορφών...</WaveformBatchGenerate>
@@ -1432,6 +1440,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NoSubtitlesFound>Αδυναμία εύρεσης υποτίτλων</NoSubtitlesFound>
     <NotAValidMatroskaFileX>Μη έγκυρο αρχείο Matroska: {0}</NotAValidMatroskaFileX>
     <BlurayNotSubtitlesFound>Το αρχείο Blu-ray .sup δεν περιέχει υπότιτλους ή περιέχει σφάλματα - προσπαθήστε ξανά</BlurayNotSubtitlesFound>
+    <ImportingChapters>Εισαγωγή κεφαλαίων...</ImportingChapters>
+    <XChaptersImported>{0} εισαγωγή κεφαλαίου(ων)</XChaptersImported>
     <ParsingMatroskaFile>Ανάλυση αρχείου Matroska. Παρακαλώ, περιμένετε...</ParsingMatroskaFile>
     <ParsingTransportStreamFile>Ανάλυση αρχείου Trasport Stream. Παρακαλώ, περιμένετε...</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Πριν από εισαγωγή υπότιτλου από αρχείο Matroska</BeforeImportFromMatroskaFile>
@@ -1564,6 +1574,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NoSupportHereDvdSup>Τα αρχεία DVD sup δεν υποστηρίζονται.</NoSupportHereDvdSup>
     <NoSupportHereVobSub>Τα αρχεία VoSub δεν υποστηρίζονται.</NoSupportHereVobSub>
     <NoSupportHereDivx>Τα αρχεία Divx δεν υποστηρίζονται.</NoSupportHereDivx>
+    <NoChapters>Αδυναμία εύρεσης κεφαλαίων βίντεο.</NoChapters>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Επιλογή υπότιτλου από αρχείο Matroska</Title>
@@ -1576,16 +1587,109 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ConvertFrom>Μετατροπή από</ConvertFrom>
     <ConvertTo>Μετατροπή σε</ConvertTo>
     <CopyToClipboard>Αντιγραφή στο πρόχειρο</CopyToClipboard>
-    <Celsius>Κελσίου</Celsius>
-    <Fahrenheit>Φαρενάιτ</Fahrenheit>
-    <Miles>Μίλια</Miles>
+    <Length>Μήκος</Length>
+    <Mass>Μάζα</Mass>
+    <Volume>Όγκος</Volume>
+    <Area>Έκταση</Area>
+    <Time>Χρόνος</Time>
+    <Temperature>Θερμοκρασία</Temperature>
+    <Velocity>Ταχύτητα</Velocity>
+    <Force>Ισχύς</Force>
+    <Energy>Ενέργεια</Energy>
+    <Power>Ρεύμα</Power>
+    <Pressure>Πίεση</Pressure>
     <Kilometers>Χιλιόμετρα</Kilometers>
     <Meters>Μέτρα</Meters>
+    <Centimeters>Εκατοστά</Centimeters>
+    <Millimeters>Χιλιοστά</Millimeters>
+    <Micrometers>Μικρόμετρα</Micrometers>
+    <Nanometers>Νανόμετρα</Nanometers>
+    <Angstroms>Άνγκστρομα</Angstroms>
+    <MilesTerrestial>Μίλια</MilesTerrestial>
+    <MilesNautical>Ναυτικά μίλια</MilesNautical>
     <Yards>Γιάρδες</Yards>
     <Feet>Πόδια</Feet>
     <Inches>Ίντσες</Inches>
-    <Pounds>Λίβρες</Pounds>
+    <Chains>Τσέιν (μήκος)</Chains>
+    <Fathoms>Οργιές</Fathoms>
+    <Hands>Δείκτες</Hands>
+    <Rods>Ράβδοι</Rods>
+    <Spans>Ανοίγματα</Spans>
+    <LongTonnes>Τόνοι (ΗΒ)</LongTonnes>
+    <ShortTonnes>Τόνοι (ΗΠΑ)</ShortTonnes>
+    <Tonnes>Τόνοι</Tonnes>
     <Kilos>Κιλά</Kilos>
+    <Grams>Γραμμάρια</Grams>
+    <Milligrams>Χιλιόγραμμα</Milligrams>
+    <Micrograms>Μικρογραμμάρια</Micrograms>
+    <Pounds>Λίβρες</Pounds>
+    <Ounces>Ουγγιές</Ounces>
+    <Carats>Καράτια</Carats>
+    <Drams>Δράμια</Drams>
+    <Grains>Κόκοι</Grains>
+    <Stones>Κιλά (βάρος σώματος)</Stones>
+    <CubicKilometers>Κυβικά χιλιόμετρα</CubicKilometers>
+    <CubicMeters>Κυβικά μέτρα</CubicMeters>
+    <Litres>Λίτρα</Litres>
+    <CubicCentimeters>Κυβικά εκατοστά</CubicCentimeters>
+    <CubicMillimeters>Κυβικά χιλιοστά</CubicMillimeters>
+    <CubicMiles>Κυβικά μίλια</CubicMiles>
+    <CubicYards>Κυβικές γιάρδες</CubicYards>
+    <CubicFTs>Κυβικά πόδια</CubicFTs>
+    <CubicInches>Κυβικές ίντσες</CubicInches>
+    <OilBarrels>Βαρέλια πετρελαίου</OilBarrels>
+    <GallonUS>Γαλόνι (ΗΠΑ)</GallonUS>
+    <QuartsUS>Λίτρα (ΗΠΑ)</QuartsUS>
+    <PintsUS>Πίντες (ΗΠΑ)</PintsUS>
+    <FluidOuncesUS>Ουγγιές υγρών (ΗΠΑ)</FluidOuncesUS>
+    <Bushels>Μόδια</Bushels>
+    <Pecks>Πεκς (μονάδα μέτρησης στερεών)</Pecks>
+    <GallonsUK>Γαλόνια (ΗΒ)</GallonsUK>
+    <QuartsUK>Λίτρα (ΗΒ)</QuartsUK>
+    <PintsUK>Πίντες (ΗΒ)</PintsUK>
+    <FluidOuncesUK>Ουγγιές υγρών (ΗΒ)</FluidOuncesUK>
+    <SquareKilometers>Τετραγωνικά χιλιόμετρα</SquareKilometers>
+    <SquareMeters>Τετραγωνικά μέτρα</SquareMeters>
+    <SquareCentimeters>Τετραγωνικά εκατοστά</SquareCentimeters>
+    <SquareMillimeters>Τετραγωνικά χιλιοστά</SquareMillimeters>
+    <SquareMiles>Τετραγωνικά μίλια</SquareMiles>
+    <SquareYards>Τετραγωνικές γιάρδες</SquareYards>
+    <SquareFTs>Τετραγωνικά πόδια</SquareFTs>
+    <SquareInches>Τετραγωνικές ίντσες</SquareInches>
+    <Hectares>Εκτάρια</Hectares>
+    <Acres>Στρέμματα</Acres>
+    <Ares>Άρια</Ares>
+    <Hours>¨Ωρες</Hours>
+    <Minutes>Λεπτά</Minutes>
+    <Seconds>Δευτερόλεπτα</Seconds>
+    <Milliseconds>Χιλιοστά δευτερολέπτου</Milliseconds>
+    <Microseconds>Μικροδευτερόλεπτα</Microseconds>
+    <Fahrenheit>Φαρενάιτ</Fahrenheit>
+    <Celsius>Κελσίου</Celsius>
+    <Kelvin>Κέλβιν</Kelvin>
+    <KilometersPerHour>Χλμ/ώρα</KilometersPerHour>
+    <MetersPerSecond>Μέτρα/δευτερόλεπτο</MetersPerSecond>
+    <MilesPerHour>Μίλια/ώρα</MilesPerHour>
+    <YardsPerMinute>Γιάρδες/λεπτό</YardsPerMinute>
+    <FTsPerSecond>Πόδια/δευτερόλεπτο</FTsPerSecond>
+    <Knots>Κόμβοι</Knots>
+    <PoundsForce>Λίβρες ισχύος</PoundsForce>
+    <Newtons>Νιούτον</Newtons>
+    <KilosForce>Κιλά ισχύος</KilosForce>
+    <Jouls>Τζάουλ</Jouls>
+    <Calories>Θερμίδες</Calories>
+    <Ergs>Έργια</Ergs>
+    <ElectronVolts>Ηλεκτρονιοβόλτ</ElectronVolts>
+    <Btus>BTU</Btus>
+    <Watts>Βατ</Watts>
+    <Horsepower>Ιπποδύναμη</Horsepower>
+    <Atmospheres>Ατμόσφαιρες</Atmospheres>
+    <Bars>Μπαρ</Bars>
+    <Pascals>Πασκάλ</Pascals>
+    <MillimetersOfMercury>Χιλιοστά υδραργύρου (πίεση)</MillimetersOfMercury>
+    <PoundPerSquareInch>Λίβρες ισχύος ανά τετραγωνική ίντσα</PoundPerSquareInch>
+    <KilogramPerSquareCentimeter>Κιλά ισχύος ανά τετραγωνικό εκατοστό</KilogramPerSquareCentimeter>
+    <KiloPascals>Κιλοπασκάλ</KiloPascals>
   </MeasurementConverter>
   <MergeDoubleLines>
     <Title>Συγχώνευση γραμμών με ίδιο κείμενο</Title>
@@ -1998,6 +2102,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ListViewAndTextBox>Προβολή λίστας και πλαισίου κειμένου</ListViewAndTextBox>
     <ListView>Προβολή λίστας</ListView>
     <TextBox>Πλαίσιο κειμένου</TextBox>
+    <UseSyntaxColoring>Χρήση χρωματισμού σύνταξης</UseSyntaxColoring>
+    <HtmlColor>Χρώμα HTML</HtmlColor>
+    <AssaColor>Χρώμα ASSA</AssaColor>
     <UpdateShortcut>Ενημέρωση</UpdateShortcut>
     <FoucsSetVideoPosition>Εστίαση ορισμού θέσης βίντεο</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Εναλλαγή αγκύστρωσης/απαγκύστρωσης των στοιχείων ελέγχου βίντεο</ToggleDockUndockOfVideoControls>
@@ -2009,6 +2116,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AdjustSetStartAutoDurationAndGoToNext>Προσαρμογή μέσω αρχικής θέσης και επόμενο</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Ορισμός λήξης, έναρξη επομένου εκκίνηση και επόμενο</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>Κάτω βέλος = ορισμός έναρξης, Πάνω βέλος = ορισμός λήξης και μετάβαση σε επόμενο</AdjustStartDownEndUpAndGoToNext>
+    <AdjustSetStartAndEndOfPrevious>Ορισμός έναρξης και λήξης προηγούμενου (πλην ελάχιστο κενό)</AdjustSetStartAndEndOfPrevious>
+    <AdjustSetStartAndEndOfPreviousAndGoToNext>Ορισμός έναρξης και λήξης προηγούμενου και μετάβαση σε επόμενο (πλην ελάχιστο κενό)</AdjustSetStartAndEndOfPreviousAndGoToNext>
     <AdjustSelected100MsForward>Μετακίνηση γραμμών 100 χιλ. δ. εμπρός</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Μετακίνηση γραμμών 100 χιλ. δ. πίσω</AdjustSelected100MsBack>
     <AdjustStartXMsBack>Μετακίνηση αρχής {0} χιλ. δ. πίσω</AdjustStartXMsBack>
@@ -2026,7 +2135,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AdjustSetStartTimeKeepDuration>Ορισμός έναρξης, διατήρηση διάρκειας</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Ορισμός τέλους, αντιστάθμιση υπολοίπων</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Ορισμός τέλους, αντιστάθμιση υπολοίπων και μετάβαση σε επόμενο</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustExtendCurrentSubtitle>Επέκταση γραμμής μέχρι τον επόμενο υπότιτλο ή μέγιστη διάρκεια</AdjustExtendCurrentSubtitle>
     <AdjustSnapStartToNextSceneChange>Σπάσιμο έναρξης γραμμής σε επόμενη αλλαγή σκηνής</AdjustSnapStartToNextSceneChange>
     <AdjustSnapStartToNextSceneChangeWithGap>Σπάσιμο έναρξης γραμμής σε επόμενη αλλαγή σκηνής με ελάχιστο κενό</AdjustSnapStartToNextSceneChangeWithGap>
     <AdjustSnapEndToPreviousSceneChange>Σπάσιμο έναρξης γραμμής σε προηγούμενη αλλαγή σκηνής</AdjustSnapEndToPreviousSceneChange>
@@ -2037,10 +2145,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AdjustExtendToPreviousSceneChangeWithGap>Επέκταση γραμμών σε προηγούμενη αλλαγή σκηνής με ελάχιστο κενό (ή προηγούμενο υπότιτλο)</AdjustExtendToPreviousSceneChangeWithGap>
     <AdjustExtendToNextSubtitle>Επέκταση γραμμών μέχρι τον επόμενο υπότιτλο</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Επέκταση γραμμών μέχρι τον προηγούμενο υπότιλο</AdjustExtendToPreviousSubtitle>
+    <AdjustExtendCurrentSubtitle>Επέκταση γραμμής μέχρι τον επόμενο υπότιτλο ή μέγιστη διάρκεια</AdjustExtendCurrentSubtitle>
+    <AdjustExtendPreviousLineEndToCurrentStart>Επέκταση λήξης προηγούμενης γραμμής σε έναρξη τρέχουσας</AdjustExtendPreviousLineEndToCurrentStart>
+    <AdjustExtendNextLineStartToCurrentEnd>Επέκταση έναρξης επόμενης γραμμής σε λήξη τρέχουσας</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>Επαναϋπολογισμός διάρκειας υπότιτλου</RecalculateDurationOfCurrentSubtitle>
     <MainCreateStartDownEndUp>Δημιουργία νέου στο πάτημα του κάτω βέλους, ορισμός χρόνου λήξης στο πάτημα του πάνω βέλους</MainCreateStartDownEndUp>
     <MergeDialog>Συγχώνευση διαλόγου (εισαγωγή παυλών)</MergeDialog>
     <GoToNext>Μετάβαση σε επόμενη γραμμή</GoToNext>
+    <GoToNextCursorAtEnd>Μετάβαση σε επόμενη γραμμή και ορισμός δείκτη στη λήξη</GoToNextCursorAtEnd>
     <GoToPrevious>Μετάβαση σε προηγούμενη γραμμή</GoToPrevious>
     <GoToCurrentSubtitleStart>Μετάβαση στην αρχή της τρέχουσας γραμμής</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Μετάβαση στο τέλος της τρέχουσας γραμμής</GoToCurrentSubtitleEnd>
@@ -2104,6 +2216,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <PlayCurrent>Αναπαραγωγή τρέχοντος υπότιτλου</PlayCurrent>
     <WaveformGoToPrevSubtitle>Μετάβαση σε προηγούμενο υπότιτλο (από θέση βίντεο)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Μετάβαση σε επόμενο υπότιτλο (από θέση βίντεο)</WaveformGoToNextSubtitle>
+    <WaveformGoToPrevChapter>Μετάβαση σε προηγούμενο κεφάλαιο</WaveformGoToPrevChapter>
+    <WaveformGoToNextChapter>Μετάβαση σε επόμενο κεφάλαιο</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>Επιλογή επόμενου υπότιτλου (από θέση βίντεο, χωρίς αλλαγή)</WaveformSelectNextSubtitle>
     <TogglePlayPause>Εναλλαγή αναπαραγωγής/παύσης</TogglePlayPause>
     <Pause>Παύση</Pause>
@@ -2162,6 +2276,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MainTextBoxMoveLastWordDownCurrent>Μετακίνηση τελευταίας λέξης της άνω γραμμής κάτω</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Επιλογή σε μικρά</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Επιλογή σε κεφαλαία</MainTextBoxSelectionToUpper>
+    <MainTextBoxSelectionToggleCasing>Εναλλαγή πεζών-κεφαλαίων επιλογής (κανονικά/κεφαλαία/πεζά)</MainTextBoxSelectionToggleCasing>
     <MainTextBoxSelectionToRuby>Επιλογή σε Ruby (Ιαπωνικά)</MainTextBoxSelectionToRuby>
     <MainTextBoxToggleAutoDuration>Εναλλαγή αυτόματης διάρκειας</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Αυτόματη διάσπαση κειμένου</MainTextBoxAutoBreak>
