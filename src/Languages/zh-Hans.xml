@@ -226,7 +226,11 @@ Command line: {1} {2}
     <TransportStreamFileNameEnding>文件名结尾</TransportStreamFileNameEnding>
     <TransportStreamSettingsButton>传输流设定</TransportStreamSettingsButton>
     <RemoveLineBreaks>移除换行</RemoveLineBreaks>
+    <DeleteLines>删除行</DeleteLines>
     <TryToUseSourceEncoding>尝试使用源编码</TryToUseSourceEncoding>
+    <DeleteFirstLines>删除第一行</DeleteFirstLines>
+    <DeleteLastLines>删除最后一行</DeleteLastLines>
+    <DeleteContaining>删除行内容</DeleteContaining>
     <MkvLanguageInOutputFileName>在输出文件名中添加语言名称</MkvLanguageInOutputFileName>
     <MkvLanguageInOutputFileNameX>Matroska (.mkv) 输出文件名中的语言名称: {0}</MkvLanguageInOutputFileNameX>
     <MkvLanguageStyleTwoLetter>双字母语言代码</MkvLanguageStyleTwoLetter>
@@ -2146,6 +2150,7 @@ Command line: {1} {2}
     <MainCreateStartDownEndUp>用向下方向键创建新的开始时间，用向上方向键设置结束时间</MainCreateStartDownEndUp>
     <MergeDialog>合并对话 (插入破折号)</MergeDialog>
     <GoToNext>转到下一行</GoToNext>
+    <GoToNextCursorAtEnd>转到下一行并将光标置于末尾</GoToNextCursorAtEnd>
     <GoToPrevious>转到上一行</GoToPrevious>
     <GoToCurrentSubtitleStart>转到当前行的起始时间点</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>转到当前行尾</GoToCurrentSubtitleEnd>
