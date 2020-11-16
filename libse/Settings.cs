@@ -1920,6 +1920,7 @@ $HorzAlign          =   Center
         public string MainTextBoxMoveFirstWordUpCurrent { get; set; }
         public string MainTextBoxSelectionToLower { get; set; }
         public string MainTextBoxSelectionToUpper { get; set; }
+        public string MainTextBoxSelectionToggleCasing { get; set; }
         public string MainTextBoxSelectionToRuby { get; set; }
         public string MainTextBoxToggleAutoDuration { get; set; }
         public string MainCreateInsertSubAtVideoPos { get; set; }
@@ -2053,6 +2054,7 @@ $HorzAlign          =   Center
             MainTextBoxSplitAtCursor = "Control+Alt+V";
             MainTextBoxSelectionToLower = "Control+U";
             MainTextBoxSelectionToUpper = "Control+Shift+U";
+            MainTextBoxSelectionToggleCasing = "Ctrl+Shift+F3";
             MainToolsBeamer = "Control+Shift+Alt+B";
             MainCreateInsertSubAtVideoPos = "Shift+F9";
             MainVideoGoToStartCurrent = "Shift+F11";
@@ -7071,6 +7073,12 @@ $HorzAlign          =   Center
                     shortcuts.MainTextBoxSelectionToUpper = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainTextBoxSelectionToggleCasing");
+                if (subNode != null)
+                {
+                    shortcuts.MainTextBoxSelectionToggleCasing = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainTextBoxSelectionToRuby");
                 if (subNode != null)
                 {
@@ -8485,6 +8493,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainTextBoxMoveFirstWordUpCurrent", shortcuts.MainTextBoxMoveFirstWordUpCurrent);
             textWriter.WriteElementString("MainTextBoxSelectionToLower", shortcuts.MainTextBoxSelectionToLower);
             textWriter.WriteElementString("MainTextBoxSelectionToUpper", shortcuts.MainTextBoxSelectionToUpper);
+            textWriter.WriteElementString("MainTextBoxSelectionToggleCasing", shortcuts.MainTextBoxSelectionToggleCasing);
             textWriter.WriteElementString("MainTextBoxSelectionToRuby", shortcuts.MainTextBoxSelectionToRuby);
             textWriter.WriteElementString("MainTextBoxToggleAutoDuration", shortcuts.MainTextBoxToggleAutoDuration);
             textWriter.WriteElementString("MainCreateInsertSubAtVideoPos", shortcuts.MainCreateInsertSubAtVideoPos);

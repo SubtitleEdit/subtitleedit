@@ -2284,6 +2284,7 @@ can edit in same subtitle file (collaboration)</Information>
     <MainTextBoxMoveLastWordDownCurrent>Move last word from first line down (current subtitle)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Selection to lowercase</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Selection to uppercase</MainTextBoxSelectionToUpper>
+    <MainTextBoxSelectionToggleCasing>Toggle casing of selection (propercase/uppercase/lowercase)</MainTextBoxSelectionToggleCasing>
     <MainTextBoxSelectionToRuby>Selection to Ruby (Japanese)</MainTextBoxSelectionToRuby>
     <MainTextBoxToggleAutoDuration>Toggle auto duration</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Auto break text</MainTextBoxAutoBreak>

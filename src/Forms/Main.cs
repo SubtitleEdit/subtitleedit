@@ -9544,6 +9544,16 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxListViewText.SelectionLength = length;
                 e.SuppressKeyPress = true;
             }
+            else if (_shortcuts.MainTextBoxSelectionToggleCasing == e.KeyData && textBoxListViewText.SelectionLength > 0) // selection to uppercase
+            {
+                int start = textBoxListViewText.SelectionStart;
+                int length = textBoxListViewText.SelectionLength;
+                var text = ToggleCasing(textBoxListViewText.SelectedText);
+                textBoxListViewText.SelectedText = text;
+                textBoxListViewText.SelectionStart = start;
+                textBoxListViewText.SelectionLength = length;
+                e.SuppressKeyPress = true;
+            }
             else if (_shortcuts.MainTextBoxToggleAutoDuration == e.KeyData) // toggle auto-duration
             {
                 if (timerAutoDuration.Enabled)
@@ -9564,6 +9574,45 @@ namespace Nikse.SubtitleEdit.Forms
             _lastTextKeyDownTicks = DateTime.UtcNow.Ticks;
 
             UpdatePositionAndTotalLength(labelTextLineTotal, textBoxListViewText);
+        }
+
+        private string ToggleCasing(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                return text;
+            }
+
+            var containsLowercase = false;
+            var containsUppercase = false;
+            for (var i = 0; i < text.Length; i++)
+            {
+                var ch = text[i];
+
+                if (!containsLowercase && char.IsLower(ch))
+                {
+                    containsLowercase = true;
+                }
+
+                if (!containsUppercase && char.IsUpper(ch))
+                {
+                    containsUppercase = true;
+                }
+
+                i++;
+            }
+
+            if (containsUppercase && containsLowercase)
+            {
+                return text.ToUpperInvariant();
+            }
+
+            if (containsUppercase && !containsLowercase)
+            {
+                return text.ToLowerInvariant();
+            }
+
+            return System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(text);
         }
 
         private void MoveFirstWordInNextUp(SETextBox tb)

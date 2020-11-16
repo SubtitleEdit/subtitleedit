@@ -83,6 +83,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainTextBoxMoveFirstWordUpCurrent { get; set; }
         public Keys MainTextBoxSelectionToLower { get; set; }
         public Keys MainTextBoxSelectionToUpper { get; set; }
+        public Keys MainTextBoxSelectionToggleCasing { get; set; }
         public Keys MainTextBoxToggleAutoDuration { get; set; }
         public Keys MainCreateInsertSubAtVideoPos { get; set; }
         public Keys MainCreateInsertSubAtVideoPosNoTextBoxFocus { get; set; }
@@ -282,6 +283,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainTextBoxMoveFirstWordUpCurrent = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordUpCurrent);
             MainTextBoxSelectionToLower = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSelectionToLower);
             MainTextBoxSelectionToUpper = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSelectionToUpper);
+            MainTextBoxSelectionToggleCasing = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSelectionToggleCasing);
             MainTextBoxToggleAutoDuration = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxToggleAutoDuration);
             MainCreateInsertSubAtVideoPos = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateInsertSubAtVideoPos);
             MainCreateInsertSubAtVideoPosNoTextBoxFocus = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateInsertSubAtVideoPosNoTextBoxFocus);
