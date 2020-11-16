@@ -121,9 +121,7 @@ namespace Nikse.SubtitleEdit.Controls
         private readonly Label _labelVideoPlayerName = new Label();
         private readonly Label _labelVolume = new Label();
         private readonly ToolTip _currentPositionToolTip = new ToolTip();
-
-
-        private List<MatroskaChapter> _chapters = new List<MatroskaChapter>();
+        private List<MatroskaChapter> _chapters;
 
         public List<MatroskaChapter> Chapters
         {
@@ -199,6 +197,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public VideoPlayerContainer()
         {
+            _chapters = new List<MatroskaChapter>();
             SmpteMode = false;
             FontSizeFactor = 1.0F;
             BorderStyle = BorderStyle.None;
@@ -1670,12 +1669,11 @@ namespace Nikse.SubtitleEdit.Controls
             if (_chapters?.Count > 0)
             {
                 toolTiptext += " - ";
-                double chapterTime, nextChapterTime;
 
                 for (int index = 0; index < _chapters.Count; index++)
                 {
-                    chapterTime = _chapters[index].StartTime;
-                    nextChapterTime = index + 1 < _chapters.Count ? _chapters[index + 1].StartTime : Duration;
+                    var chapterTime = _chapters[index].StartTime;
+                    var nextChapterTime = index + 1 < _chapters.Count ? _chapters[index + 1].StartTime : Duration;
 
                     if (cursorVideoPosition >= chapterTime && cursorVideoPosition < nextChapterTime)
                     {
