@@ -411,8 +411,8 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                     pic.WindowYOffset = pic.Height - (bm.Height + bottomMargin);
                     break;
                 case ContentAlignment.BottomRight:
-                    pic.WindowXOffset = pic.Width - bm.Width - bottomMargin;
-                    pic.WindowYOffset = pic.Height - (bm.Height + leftOrRightMargin);
+                    pic.WindowXOffset = pic.Width - bm.Width - leftOrRightMargin;
+                    pic.WindowYOffset = pic.Height - (bm.Height + bottomMargin);
                     break;
                 case ContentAlignment.MiddleCenter:
                     pic.WindowXOffset = (pic.Width - bm.Width) / 2;

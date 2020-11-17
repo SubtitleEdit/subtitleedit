@@ -9,6 +9,10 @@ namespace Nikse.SubtitleEdit.Forms
     {
         private double _zoomFactor = 100;
         private readonly Bitmap _bmp;
+        public bool AllowNext { get; set; }
+        public bool NextPressed { get; private set; }
+        public bool AllowPrevious { get; set; }
+        public bool PreviousPressed { get; private set; }
 
         public ExportPngXmlPreview(Bitmap bmp)
         {
@@ -77,7 +81,7 @@ namespace Nikse.SubtitleEdit.Forms
             pictureBox1.Width = (int)(_bmp.Width * _zoomFactor / 100.0);
             pictureBox1.Height = (int)(_bmp.Height * _zoomFactor / 100.0);
 
-            Text = string.Format("{0}  {1}x{2}  {3}%", Configuration.Settings.Language.General.Preview, _bmp.Width, _bmp.Height, (int)_zoomFactor);
+            Text = $"{Configuration.Settings.Language.General.Preview}  {_bmp.Width}x{_bmp.Height}  {(int)_zoomFactor}%";
 
             Invalidate();
         }
@@ -115,6 +119,16 @@ namespace Nikse.SubtitleEdit.Forms
                 e.SuppressKeyPress = true;
                 _zoomFactor = 100;
                 Zoom(0);
+            }
+            else if ((e.KeyCode == Keys.Right || e.KeyCode == Keys.Down) && AllowNext)
+            {
+                NextPressed = true;
+                DialogResult = DialogResult.OK;
+            }
+            else if ((e.KeyCode == Keys.Left || e.KeyCode == Keys.Up) && AllowPrevious)
+            {
+                PreviousPressed = true;
+                DialogResult = DialogResult.OK;
             }
         }
     }
