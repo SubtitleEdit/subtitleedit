@@ -822,18 +822,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             Paragraph p = null;
             foreach (string line in lines)
             {
-                string s = line.Trim();
+                var s = line.Trim();
                 var match = RegexTimeCodes.Match(s);
                 if (match.Success)
                 {
-                    TimeCode startTime = ParseTimeCode(s.Substring(0, match.Length - 1));
-                    string text = GetSccText(s.Substring(match.Index), ref _errorCount);
+                    var startTime = ParseTimeCode(s.Substring(0, match.Length - 1));
+                    var text = GetSccText(s.Substring(match.Index), ref _errorCount);
 
                     if (text == "942c 942c" || text == "942c")
                     {
                         if (p != null)
                         {
-                            p.EndTime = new TimeCode(startTime.TotalMilliseconds);
+                            p.EndTime.TotalMilliseconds = startTime.TotalMilliseconds;
                         }
                     }
                     else
@@ -849,7 +849,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var next = subtitle.GetParagraphOrDefault(i + 1);
                 if (p != null && next != null && Math.Abs(p.EndTime.TotalMilliseconds - p.StartTime.TotalMilliseconds) < 0.001)
                 {
-                    p.EndTime = new TimeCode(next.StartTime.TotalMilliseconds);
+                    p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds;
                 }
 
                 if (next != null && string.IsNullOrEmpty(next.Text))
@@ -857,10 +857,25 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     subtitle.Paragraphs.Remove(next);
                 }
             }
+
             p = subtitle.GetParagraphOrDefault(0);
             if (p != null && string.IsNullOrEmpty(p.Text))
             {
                 subtitle.Paragraphs.Remove(p);
+            }
+
+            for (var index = 0; index < subtitle.Paragraphs.Count - 1; index++)
+            {
+                var current = subtitle.Paragraphs[index];
+                var next = subtitle.Paragraphs[index + 1];
+                if (Math.Abs(current.EndTime.TotalMilliseconds - next.StartTime.TotalMilliseconds) < 0.01)
+                {
+                    if (current.EndTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines >
+                        current.StartTime.TotalMilliseconds)
+                    {
+                        current.EndTime.TotalMilliseconds -= Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                    }
+                }
             }
 
             subtitle.Renumber();

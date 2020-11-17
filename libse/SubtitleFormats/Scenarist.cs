@@ -41,19 +41,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
             _errorCount = 0;
-            foreach (string line in lines)
+            foreach (var line in lines)
             {
                 if (RegexTimeCodes.IsMatch(line))
                 {
-                    string temp = line.Substring(0, RegexTimeCodes.Match(line).Length);
-                    string start = temp.Substring(5, 11);
-                    string end = temp.Substring(12 + 5, 11);
+                    var temp = line.Substring(0, RegexTimeCodes.Match(line).Length);
+                    var start = temp.Substring(5, 11);
+                    var end = temp.Substring(12 + 5, 11);
 
-                    string[] startParts = start.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
-                    string[] endParts = end.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
+                    var startParts = start.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
+                    var endParts = end.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
                     if (startParts.Length == 4 && endParts.Length == 4)
                     {
-                        string text = line.Remove(0, RegexTimeCodes.Match(line).Length - 1).Trim();
+                        var text = line.Remove(0, RegexTimeCodes.Match(line).Length - 1).Trim();
                         if (!text.Contains(Environment.NewLine))
                         {
                             text = text.Replace("\t", Environment.NewLine);
@@ -72,6 +72,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     _errorCount++;
                 }
             }
+
+            for (var index = 0; index < subtitle.Paragraphs.Count - 1; index++)
+            {
+                var current = subtitle.Paragraphs[index];
+                var next = subtitle.Paragraphs[index + 1];
+                if (Math.Abs(current.EndTime.TotalMilliseconds - next.StartTime.TotalMilliseconds) < 0.01)
+                {
+                    if (current.EndTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines >
+                        current.StartTime.TotalMilliseconds)
+                    {
+                        current.EndTime.TotalMilliseconds -= Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                    }
+                }
+            }
+
             subtitle.Renumber();
         }
 
