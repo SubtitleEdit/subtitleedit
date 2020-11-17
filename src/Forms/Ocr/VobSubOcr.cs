@@ -9212,6 +9212,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return;
             }
 
+            bool goNext;
+            bool goPrevious;
             Cursor = Cursors.WaitCursor;
             try
             {
@@ -9230,14 +9232,30 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                     using (var form = new ExportPngXmlPreview(bmp))
                     {
+
                         Cursor = Cursors.Default;
+                        form.AllowNext = _selectedIndex < _subtitle.Paragraphs.Count - 1;
+                        form.AllowPrevious = _selectedIndex > 0;
                         form.ShowDialog(this);
+                        goNext = form.NextPressed;
+                        goPrevious = form.PreviousPressed;
                     }
                 }
             }
             finally
             {
                 Cursor = Cursors.Default;
+            }
+
+            if (goNext)
+            {
+                subtitleListView1.SelectIndexAndEnsureVisible(_selectedIndex + 1);
+                previewToolStripMenuItem_Click(null, null);
+            }
+            else if (goPrevious)
+            {
+                subtitleListView1.SelectIndexAndEnsureVisible(_selectedIndex - 1);
+                previewToolStripMenuItem_Click(null, null);
             }
         }
 

@@ -373,7 +373,13 @@ namespace Nikse.SubtitleEdit.Forms
                     param.BottomMargin = param.ScreenHeight - param.OverridePosition.Value.Y - param.Bitmap.Height;
                 }
 
-                param.Buffer = BluRaySupPicture.CreateSupFrame(brSub, param.Bitmap, param.FramesPerSeconds, param.BottomMargin, param.LeftMargin, param.Alignment, param.OverridePosition);
+                var margin = (param.Alignment == ContentAlignment.TopRight ||
+                              param.Alignment == ContentAlignment.MiddleRight ||
+                              param.Alignment == ContentAlignment.BottomRight)
+                    ? param.RightMargin
+                    : param.LeftMargin;
+
+                param.Buffer = BluRaySupPicture.CreateSupFrame(brSub, param.Bitmap, param.FramesPerSeconds, param.BottomMargin, margin, param.Alignment, param.OverridePosition);
             }
         }
 
