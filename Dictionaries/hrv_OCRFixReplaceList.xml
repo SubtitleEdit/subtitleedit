@@ -3870,7 +3870,7 @@
     <RegEx find="znst" replaceWith="znost" />
     <RegEx find="(?&lt;![Oo]bra|o)zova([lton])" replaceWith="zira$1" />
     <RegEx find="zpr" replaceWith="spr" />
-    <RegEx find="zsp" replaceWith="zsp" />
+    <RegEx find="zsp" replaceWith="zap" />
     <RegEx find="zuslov" replaceWith="zuvjet" />
     <RegEx find="zvešć" replaceWith="zvest ć" />
     <RegEx find="zvolić" replaceWith="zvolit ć" />
