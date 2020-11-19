@@ -3,6 +3,8 @@ SETLOCAL
 PUSHD %~dp0
 SET "ConfigurationName=%~2"
 
+ECHO %cd%
+
 IF /I "%~1" == "rsrc" GOTO UpdateResourceScript
 IF /I "%~1" == "lang" GOTO UpdateLanguageFiles
 IF /I "%~1" == "rev"  GOTO UpdateAssemblyInfo
