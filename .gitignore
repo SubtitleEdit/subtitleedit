@@ -13,6 +13,8 @@
 /src/Languages/LanguageMaster.xml
 /src/Languages/XmlContentTranslator.exe
 /src/Properties/AssemblyInfo.cs
+/src/ui/Properties/AssemblyInfo.cs
+/src/libse/Properties/AssemblyInfo.cs
 /src/TestResults/
 /SubtitleEdit.lzma
 /SubtitleEdit.tar
@@ -37,3 +39,4 @@ SubtitleEdit-*.zip
 /src/SubtitleEdit.userprefs
 SubtitleEditBeta
 /src/SubtitleEdit.sln.DotSettings
+/packages/NHunspell.1.2.5554.16953
