@@ -1,4 +1,6 @@
-﻿namespace Nikse.SubtitleEdit.Forms
+﻿using Nikse.SubtitleEdit.Core.Common;
+
+namespace Nikse.SubtitleEdit.Forms
 {
     partial class EbuSaveOptions
     {
@@ -29,7 +31,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Nikse.SubtitleEdit.Core.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.TimeCode();
+            TimeCode timeCode1 = new TimeCode();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();

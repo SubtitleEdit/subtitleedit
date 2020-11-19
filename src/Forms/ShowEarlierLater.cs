@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Forms
 {

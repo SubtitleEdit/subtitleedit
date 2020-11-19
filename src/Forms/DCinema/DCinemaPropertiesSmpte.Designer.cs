@@ -1,4 +1,6 @@
-﻿namespace Nikse.SubtitleEdit.Forms.DCinema
+﻿using Nikse.SubtitleEdit.Core.Common;
+
+namespace Nikse.SubtitleEdit.Forms.DCinema
 {
     partial class DCinemaPropertiesSmpte
     {
@@ -28,7 +30,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            Nikse.SubtitleEdit.Core.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.TimeCode();
+            TimeCode timeCode1 = new TimeCode();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.labelStartTime = new System.Windows.Forms.Label();

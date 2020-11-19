@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -31,7 +32,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Nikse.SubtitleEdit.Core.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.TimeCode();
+            TimeCode timeCode1 = new TimeCode();
             this.labelHourMinSecMilliSecond = new System.Windows.Forms.Label();
             this.buttonShowLater = new System.Windows.Forms.Button();
             this.buttonShowEarlier = new System.Windows.Forms.Button();

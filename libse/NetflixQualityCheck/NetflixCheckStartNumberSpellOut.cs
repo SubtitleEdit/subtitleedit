@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 {

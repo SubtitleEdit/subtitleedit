@@ -5,6 +5,8 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Common;
+
 //using Nikse.SubtitleEdit.Logic.DirectShow.Custom;
 
 namespace Nikse.SubtitleEdit.Forms

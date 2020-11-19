@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
 using System.Text.RegularExpressions;
+using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {

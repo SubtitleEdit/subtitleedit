@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.BluRaySup;
+using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 {

@@ -1,4 +1,6 @@
-﻿namespace Nikse.SubtitleEdit.Forms
+﻿using Nikse.SubtitleEdit.Core.Common;
+
+namespace Nikse.SubtitleEdit.Forms
 {
     sealed partial class SetVideoOffset
     {
@@ -28,7 +30,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            Nikse.SubtitleEdit.Core.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.TimeCode();
+            TimeCode timeCode1 = new TimeCode();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.labelDescription = new System.Windows.Forms.Label();

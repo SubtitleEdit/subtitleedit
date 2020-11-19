@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.Common;
 
 namespace Test.Core
 {
