@@ -12,7 +12,6 @@ namespace UpdateLanguageFiles
             var sb = new StringBuilder(@"using System.IO;
 using System.Text;
 using System.Xml;
-using Nikse.SubtitleEdit.Core.Logic;
 
 // !!! THIS FILE IS AUTO-GENERATED!!!
 // !!! THIS FILE IS AUTO-GENERATED!!!

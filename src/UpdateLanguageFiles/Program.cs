@@ -127,7 +127,7 @@ namespace UpdateLanguageFiles
 
         private static string FindVersionNumber()
         {
-            var templateFileName = Path.Combine("src", "Properties", "AssemblyInfo.cs.template");
+            var templateFileName = Path.Combine("src", "ui", "Properties", "AssemblyInfo.cs.template");
             if (!File.Exists(templateFileName))
             {
                 templateFileName = Path.Combine("..", templateFileName);

@@ -1,9 +1,0 @@
-﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Nikse.SubtitleEdit.Properties" GeneratedClassName="Settings">
-  <Profiles />
-  <Settings>
-    <Setting Name="SubtitleEdit_SeNetworkService_SeService" Type="(Web Service URL)" Scope="Application">
-      <Value Profile="(Default)">http://localhost:2782/se/SeService.asmx</Value>
-    </Setting>
-  </Settings>
-</SettingsFile>

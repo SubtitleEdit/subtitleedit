@@ -1,0 +1,74 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net462;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(VisualStudioVersion)' == '15.0' ">net462</TargetFrameworks>
+    <RootNamespace>Nikse.SubtitleEdit.Core</RootNamespace>
+    <AssemblyName>libse</AssemblyName>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/SubtitleEdit/subtitleedit/tree/master/libse</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/SubtitleEdit/subtitleedit/tree/master/libse</RepositoryUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageTags>subtitle subrip srt</PackageTags>
+    <Authors>Nikolaj Olsson</Authors>
+    <PackageIcon>SutittleEdit_Logo.png</PackageIcon>
+    <RepositoryType>git</RepositoryType>
+    <PackageReleaseNotes>First nuget package (based on SE 3.5.18)</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Forms\FixCommonErrors\HelperContinuation.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <Target Name="InvokeBuildHelpers" BeforeTargets="BeforeCompile;CoreCompile">
+    <Exec Command="%22$(SolutionDir)\build_helpers.bat%22 rev %22$(ConfigurationName)%22" />
+    <Exec Command="%22$(SolutionDir)\build_helpers.bat%22 lang %22$(ConfigurationName)%22" />
+  </Target>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' ">
+    <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
+    <PackageReference Include="Microsoft.Win32.Registry" Version="4.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="UTF.Unknown" Version="2.3.0" />
+    <PackageReference Include="zlib.net-mutliplatform" Version="1.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\Icon suggestions\wetransfer-f47e26\SutittleEdit_Logo.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>
