@@ -16,7 +16,7 @@ EXIT /B
 :UpdateResourceScript
 SET "ToolPath=src\UpdateResourceScript\bin\%ConfigurationName%\UpdateResourceScript.exe"
 IF NOT EXIST "%ToolPath%" (
-  ECHO UpdateResourceScript - Compile Subtitle Edit first!
+  ECHO Compile Subtitle Edit first!
   GOTO END
 )
 
@@ -27,14 +27,15 @@ IF %ERRORLEVEL% NEQ 0 (
 )
 GOTO END
 
+
 :UpdateLanguageFiles
 SET "ToolPath=src\UpdateLanguageFiles\bin\%ConfigurationName%\UpdateLanguageFiles.exe"
 IF NOT EXIST "%ToolPath%" (
-  ECHO UpdateLanguageFiles - Compile Subtitle Edit first!
+  ECHO Compile Subtitle Edit first!
   GOTO END
 )
 
-"%ToolPath%" "LanguageMaster.xml" "src\libse\LanguageDeserializer.cs"
+"%ToolPath%" "LanguageMaster.xml" "libse\LanguageDeserializer.cs"
 
 IF %ERRORLEVEL% NEQ 0 (
   ECHO ERROR: Something went wrong when generating the language files...
@@ -45,11 +46,11 @@ GOTO END
 :UpdateAssemblyInfo
 SET "ToolPath=src\UpdateAssemblyInfo\bin\%ConfigurationName%\UpdateAssemblyInfo.exe"
 IF NOT EXIST "%ToolPath%" (
-  ECHO UpdateAssemblyInfo - Compile Subtitle Edit first!
+  ECHO Compile Subtitle Edit first!
   GOTO END
 )
 
-"%ToolPath%" "src\ui\Properties\AssemblyInfo.cs.template" "src\libse\Properties\AssemblyInfo.cs.template"
+"%ToolPath%" "src\Properties\AssemblyInfo.cs.template" "libse\Properties\AssemblyInfo.cs.template"
 
 IF %ERRORLEVEL% NEQ 0 (
   ECHO ERROR: Something went wrong when generating the revision number...
