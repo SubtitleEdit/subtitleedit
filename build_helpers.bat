@@ -16,8 +16,7 @@ EXIT /B
 :UpdateResourceScript
 SET "ToolPath=src\UpdateResourceScript\bin\%ConfigurationName%\UpdateResourceScript.exe"
 IF NOT EXIST "%ToolPath%" (
-  echo %CD%' 
-  ECHO Compile Subtitle Edit first!
+  ECHO UpdateResourceScript: Compile Subtitle Edit first!
   GOTO END
 )
 
@@ -32,8 +31,7 @@ GOTO END
 :UpdateLanguageFiles
 SET "ToolPath=src\UpdateLanguageFiles\bin\%ConfigurationName%\UpdateLanguageFiles.exe"
 IF NOT EXIST "%ToolPath%" (
-  echo %CD%' 
-  ECHO Compile Subtitle Edit first!
+  ECHO UpdateLanguageFiles: Compile Subtitle Edit first!
   GOTO END
 )
 
@@ -48,8 +46,7 @@ GOTO END
 :UpdateAssemblyInfo
 SET "ToolPath=src\UpdateAssemblyInfo\bin\%ConfigurationName%\UpdateAssemblyInfo.exe"
 IF NOT EXIST "%ToolPath%" (
-  echo %CD%' 
-  ECHO Compile Subtitle Edit first!
+  ECHO UpdateAssemblyInfo: Compile Subtitle Edit first!
   GOTO END
 )
 
