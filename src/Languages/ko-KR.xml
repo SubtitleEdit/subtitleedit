@@ -223,7 +223,11 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <TransportStreamFileNameEnding>파일 이름 끝</TransportStreamFileNameEnding>
     <TransportStreamSettingsButton>TS 설정...</TransportStreamSettingsButton>
     <RemoveLineBreaks>줄바꿈 제거</RemoveLineBreaks>
+    <DeleteLines>줄 삭제</DeleteLines>
     <TryToUseSourceEncoding>소스 인코딩을 사용 하십시오</TryToUseSourceEncoding>
+    <DeleteFirstLines>첫번째 줄 삭제</DeleteFirstLines>
+    <DeleteLastLines>마지막 줄 삭제</DeleteLastLines>
+    <DeleteContaining>포함된 줄 삭제</DeleteContaining>
     <MkvLanguageInOutputFileName>출력 파일 이름의 "언어"</MkvLanguageInOutputFileName>
     <MkvLanguageInOutputFileNameX>출력 파일 이름의 Matroska(.mkv) "언어": {0}</MkvLanguageInOutputFileNameX>
     <MkvLanguageStyleTwoLetter>두 문자 언어 코드</MkvLanguageStyleTwoLetter>
@@ -401,6 +405,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <DiskFormatCode>디스크 포맷 코드</DiskFormatCode>
     <DisplayStandardCode>표준 코드 표시</DisplayStandardCode>
     <ColorRequiresTeletext>텔레텍스트는 색상 필요!</ColorRequiresTeletext>
+    <AlignmentRequiresTeletext>정렬에는 텔레텍스트가 필요합니다!</AlignmentRequiresTeletext>
+    <TeletextCharsShouldBe38>텔레텍스트의 '줄당 최대 문자수'는 38 이어야 합니다!</TeletextCharsShouldBe38>
     <CharacterCodeTable>문자 코드 테이블</CharacterCodeTable>
     <LanguageCode>언어 코드</LanguageCode>
     <OriginalProgramTitle>원본 프로그램 제목</OriginalProgramTitle>
@@ -1092,9 +1098,11 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
         <OpenDvd>DVD 열기...</OpenDvd>
         <ChooseAudioTrack>오디오 트랙 선택하기</ChooseAudioTrack>
         <CloseVideo>비디오 파일 닫기</CloseVideo>
+        <OpenSecondSubtitle>두 번째 자막 파일 열기...</OpenSecondSubtitle>
         <SetVideoOffset>비디오 오프셋 설정...</SetVideoOffset>
         <SmptTimeMode>SMPTE 타이밍 (드롭 프레임)</SmptTimeMode>
         <GenerateTextFromVideo>비디오에서 텍스트 생성...</GenerateTextFromVideo>
+        <ImportChaptersFromVideo>비디오에서 챕터 가져오기</ImportChaptersFromVideo>
         <GenerateImportSceneChanges>장면 전환 생성/가져오기...</GenerateImportSceneChanges>
         <RemoveSceneChanges>장면 전환 제거</RemoveSceneChanges>
         <WaveformBatchGenerate>파형 일괄 생성...</WaveformBatchGenerate>
@@ -1432,6 +1440,8 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <NoSubtitlesFound>자막이 없습니다!</NoSubtitlesFound>
     <NotAValidMatroskaFileX>유효한 Matroska 파일이 없습니다: {0}</NotAValidMatroskaFileX>
     <BlurayNotSubtitlesFound>Blu-ray sup 파일에 어떠한 자막도 들어 있지 않거나 오류입니다 - 다시 추출하십시오.</BlurayNotSubtitlesFound>
+    <ImportingChapters>챕터 가져오는 중...</ImportingChapters>
+    <XChaptersImported>{0} 챕터 가져옴</XChaptersImported>
     <ParsingMatroskaFile>Matroska 파일의 구문을 분석하는 중...</ParsingMatroskaFile>
     <ParsingTransportStreamFile>전송 스트림 파일의 구문을 분석하는 중... 잠시 기다려 주십시오!</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Matroska 파일에서 자막을 가져오기 전</BeforeImportFromMatroskaFile>
@@ -1568,6 +1578,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <NoSupportHereDvdSup>DVD sup 파일은 여기서 지원되지 않습니다.</NoSupportHereDvdSup>
     <NoSupportHereVobSub>VobSub 파일은 여기서 지원되지 않습니다.</NoSupportHereVobSub>
     <NoSupportHereDivx>DivX 파일은 여기서 지원되지 않습니다.</NoSupportHereDivx>
+    <NoChapters>비디오에 챕터가 없습니다.</NoChapters>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>MATROSKA 파일 안에 있는 자막 선택하기</Title>
@@ -2095,6 +2106,9 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <ListViewAndTextBox>목록 보기 및 텍스트 상자</ListViewAndTextBox>
     <ListView>목록 보기</ListView>
     <TextBox>텍스트 상자</TextBox>
+    <UseSyntaxColoring>구문 색상 사용</UseSyntaxColoring>
+    <HtmlColor>Html 색상</HtmlColor>
+    <AssaColor>ASSA 색상</AssaColor>
     <UpdateShortcut>업데이트</UpdateShortcut>
     <FoucsSetVideoPosition>초점에 비디오 위치 설정</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>비디오 컨트롤 연결 | 해제</ToggleDockUndockOfVideoControls>
@@ -2106,6 +2120,8 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <AdjustSetStartAutoDurationAndGoToNext>시작 지점과 표시시간을 정하고 다음으로 이동</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>끝 지점과 다음 시작 지점을 정하고 다음으로 이동</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>'↓'키=시작 지점 설정, '↑'키=끝 지점 정하고 다음으로 이동</AdjustStartDownEndUpAndGoToNext>
+    <AdjustSetStartAndEndOfPrevious>시작 지점 정하고 이전 끝 지점 설정 (최소 간격 빼기)</AdjustSetStartAndEndOfPrevious>
+    <AdjustSetStartAndEndOfPreviousAndGoToNext>시작 지점 정하고 이전 끝 지점 정하고 다음으로 이동 (최소 간격 빼기)</AdjustSetStartAndEndOfPreviousAndGoToNext>
     <AdjustSelected100MsForward>선택한 줄을 0.1초 앞으로 이동</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>선택한 줄을 0.1초 뒤로 이동</AdjustSelected100MsBack>
     <AdjustStartXMsBack>시작 지점 {0} 밀리초 뒤로 이동</AdjustStartXMsBack>
@@ -2140,6 +2156,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <MainCreateStartDownEndUp>'↓'키로 새로운 자막 삽입, '↑'키로 종료 시간 설정</MainCreateStartDownEndUp>
     <MergeDialog>대화 병합 (대시 삽입)</MergeDialog>
     <GoToNext>다음 줄로 이동</GoToNext>
+    <GoToNextCursorAtEnd>다음 줄로 이동하여 끝에 커서 설정</GoToNextCursorAtEnd>
     <GoToPrevious>이전 줄로 이동</GoToPrevious>
     <GoToCurrentSubtitleStart>현재 줄의 시작 지점으로 이동</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>현재 줄의 끝 지점으로 이동</GoToCurrentSubtitleEnd>
@@ -2203,6 +2220,8 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <PlayCurrent>현재 자막 재생</PlayCurrent>
     <WaveformGoToPrevSubtitle>이전 자막으로 이동 (비디오 위치에서)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>다음 자막으로 이동 (비디오 위치에서)</WaveformGoToNextSubtitle>
+    <WaveformGoToPrevChapter>이전 챕터로 이동</WaveformGoToPrevChapter>
+    <WaveformGoToNextChapter>다음 챕터로 이동</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>다음 자막 선택 (비디오 위치에서, 비디오 위치를 유지)</WaveformSelectNextSubtitle>
     <TogglePlayPause>재생 및 일시 중지</TogglePlayPause>
     <Pause>일시 중지</Pause>
@@ -2261,6 +2280,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <MainTextBoxMoveLastWordDownCurrent>첫째 줄의 마지막 단어를 아래로 이동 (현재 자막)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>선택한 영역 소문자로...</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>선택한 영역 대문자로...</MainTextBoxSelectionToUpper>
+    <MainTextBoxSelectionToggleCasing>대/소문자 전환 (대문자/대문자/소문자)</MainTextBoxSelectionToggleCasing>
     <MainTextBoxSelectionToRuby>루비로 선택 (일본어)</MainTextBoxSelectionToRuby>
     <MainTextBoxToggleAutoDuration>자동 표시시간</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>자동 줄바꿈</MainTextBoxAutoBreak>
