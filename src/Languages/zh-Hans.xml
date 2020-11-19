@@ -2275,6 +2275,7 @@ Command line: {1} {2}
     <MainTextBoxMoveLastWordDownCurrent>将首行行末的词下移至次行行首（单条字幕内）</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>选中的内容转小写</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>选中的内容转大写</MainTextBoxSelectionToUpper>
+    <MainTextBoxSelectionToggleCasing>切换所选内容的大小写（首字母大写/大写/小写）</MainTextBoxSelectionToggleCasing>
     <MainTextBoxSelectionToRuby>选中的内容转Ruby（日本）</MainTextBoxSelectionToRuby>
     <MainTextBoxToggleAutoDuration>切换自动间隔</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>文本自动换行</MainTextBoxAutoBreak>
