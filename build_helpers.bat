@@ -52,7 +52,7 @@ IF NOT EXIST "%ToolPath%" (
   GOTO END
 )
 
-"%ToolPath%" "src\Properties\AssemblyInfo.cs.template" "libse\Properties\AssemblyInfo.cs.template"
+"%ToolPath%" "src\ui\Properties\AssemblyInfo.cs.template" "src\libse\Properties\AssemblyInfo.cs.template"
 
 IF %ERRORLEVEL% NEQ 0 (
   ECHO ERROR: Something went wrong when generating the revision number...
