@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using System;
+using Nikse.SubtitleEdit.Core.Common;
 
 namespace Test.Logic
 {

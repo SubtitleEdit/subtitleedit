@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Nikse.SubtitleEdit.Core.AudioToText.PhocketSphinx
+﻿namespace Nikse.SubtitleEdit.Core.AudioToText
 {
     public class ResultText
     {

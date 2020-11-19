@@ -622,20 +622,8 @@ namespace Nikse.SubtitleEdit.Core
                 case "BatchConvert/RemoveLineBreaks":
                     language.BatchConvert.RemoveLineBreaks = reader.Value;
                     break;
-                case "BatchConvert/DeleteLines":
-                    language.BatchConvert.DeleteLines = reader.Value;
-                    break;
                 case "BatchConvert/TryToUseSourceEncoding":
                     language.BatchConvert.TryToUseSourceEncoding = reader.Value;
-                    break;
-                case "BatchConvert/DeleteFirstLines":
-                    language.BatchConvert.DeleteFirstLines = reader.Value;
-                    break;
-                case "BatchConvert/DeleteLastLines":
-                    language.BatchConvert.DeleteLastLines = reader.Value;
-                    break;
-                case "BatchConvert/DeleteContaining":
-                    language.BatchConvert.DeleteContaining = reader.Value;
                     break;
                 case "BatchConvert/MkvLanguageInOutputFileName":
                     language.BatchConvert.MkvLanguageInOutputFileName = reader.Value;
@@ -5752,15 +5740,6 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/TextBox":
                     language.Settings.TextBox = reader.Value;
                     break;
-                case "Settings/UseSyntaxColoring":
-                    language.Settings.UseSyntaxColoring = reader.Value;
-                    break;
-                case "Settings/HtmlColor":
-                    language.Settings.HtmlColor = reader.Value;
-                    break;
-                case "Settings/AssaColor":
-                    language.Settings.AssaColor = reader.Value;
-                    break;
                 case "Settings/UpdateShortcut":
                     language.Settings.UpdateShortcut = reader.Value;
                     break;
@@ -5793,12 +5772,6 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/AdjustStartDownEndUpAndGoToNext":
                     language.Settings.AdjustStartDownEndUpAndGoToNext = reader.Value;
-                    break;
-                case "Settings/AdjustSetStartAndEndOfPrevious":
-                    language.Settings.AdjustSetStartAndEndOfPrevious = reader.Value;
-                    break;
-                case "Settings/AdjustSetStartAndEndOfPreviousAndGoToNext":
-                    language.Settings.AdjustSetStartAndEndOfPreviousAndGoToNext = reader.Value;
                     break;
                 case "Settings/AdjustSelected100MsForward":
                     language.Settings.AdjustSelected100MsForward = reader.Value;
@@ -5901,9 +5874,6 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/GoToNext":
                     language.Settings.GoToNext = reader.Value;
-                    break;
-                case "Settings/GoToNextCursorAtEnd":
-                    language.Settings.GoToNextCursorAtEnd = reader.Value;
                     break;
                 case "Settings/GoToPrevious":
                     language.Settings.GoToPrevious = reader.Value;
@@ -6273,9 +6243,6 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/MainTextBoxSelectionToUpper":
                     language.Settings.MainTextBoxSelectionToUpper = reader.Value;
-                    break;
-                case "Settings/MainTextBoxSelectionToggleCasing":
-                    language.Settings.MainTextBoxSelectionToggleCasing = reader.Value;
                     break;
                 case "Settings/MainTextBoxSelectionToRuby":
                     language.Settings.MainTextBoxSelectionToRuby = reader.Value;

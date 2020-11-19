@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.Forms;
 using System.Collections.Generic;
+using Nikse.SubtitleEdit.Core.Common;
 
 namespace Test.Logic
 {

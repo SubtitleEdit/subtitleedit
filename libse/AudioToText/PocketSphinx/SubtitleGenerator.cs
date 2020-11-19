@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Nikse.SubtitleEdit.Core.AudioToText.PhocketSphinx;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Dictionaries;
 
 namespace Nikse.SubtitleEdit.Core.AudioToText.PocketSphinx

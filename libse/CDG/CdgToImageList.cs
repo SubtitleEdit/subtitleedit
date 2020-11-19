@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 
 namespace Nikse.SubtitleEdit.Core.CDG

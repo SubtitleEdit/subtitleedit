@@ -1,4 +1,6 @@
-﻿namespace Nikse.SubtitleEdit.Forms
+﻿using Nikse.SubtitleEdit.Core.Common;
+
+namespace Nikse.SubtitleEdit.Forms
 {
     sealed partial class ExtractDateTimeInfo
     {
@@ -28,8 +30,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            Nikse.SubtitleEdit.Core.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.TimeCode();
-            Nikse.SubtitleEdit.Core.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.TimeCode();
+            TimeCode timeCode1 = new TimeCode();
+            TimeCode timeCode2 = new TimeCode();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.buttonOpenVideo = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();

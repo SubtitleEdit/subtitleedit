@@ -20,6 +20,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
+using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -5519,7 +5520,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
         }
 
-        private void SubtitleListView1InitializeLanguage(LanguageStructure.General general, Core.Settings settings)
+        private void SubtitleListView1InitializeLanguage(LanguageStructure.General general, Core.Common.Settings settings)
         {
             int columnIndexNumber = 0;
             int columnIndexStart = 1;

@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Core;
 using System;
 using System.Collections.Generic;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
 
 namespace Test.Logic

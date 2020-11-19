@@ -9,6 +9,7 @@ using System.Net;
 using System.Net.Cache;
 using System.Windows.Forms;
 using System.Xml;
+using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Forms
 {

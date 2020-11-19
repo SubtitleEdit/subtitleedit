@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Core;
 using System.IO;
 using System.Text;
+using Nikse.SubtitleEdit.Core.Common;
 
 namespace Test.Core
 {

@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic.Ocr.Binary;
 using System.Drawing;
 using System.IO;
+using Nikse.SubtitleEdit.Core.Common;
 
 namespace Test.Logic.Ocr
 {

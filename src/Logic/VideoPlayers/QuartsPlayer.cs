@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Common;
 
 //https://docs.microsoft.com/en-us/windows/win32/directshow/directshow
 //https://docs.microsoft.com/en-us/previous-versions//dd387928(v=vs.85)
