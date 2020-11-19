@@ -44,7 +44,7 @@
 #define VerBuild
 #define VerRevision
 
-#define bindir "..\src\bin\Release"
+#define bindir "..\src\ui\bin\Release"
 
 #ifnexist bindir + "\SubtitleEdit.exe"
   #error Compile Subtitle Edit first
@@ -92,7 +92,7 @@ VersionInfoVersion={#app_ver_full}
 MinVersion=5.6
 LicenseFile=..\LICENSE.txt
 InfoAfterFile=..\Changelog.txt
-SetupIconFile=..\src\Icons\SE.ico
+SetupIconFile=..\src\ui\Icons\SE.ico
 WizardImageFile=Icons\WizardImageFile.bmp
 WizardSmallImageFile=Icons\WizardSmallImageFile.bmp
 OutputDir=.

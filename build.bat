@@ -81,7 +81,6 @@ TITLE %BUILDTYPE%ing Subtitle Edit - Release^|Any CPU...
 ECHO.
 ECHO %BUILDTYPE%ing Subtitle Edit - Release^|Any CPU...
 DEL /F /Q SubtitleEdit-*-Setup.exe SubtitleEdit-*.zip 2>NUL
-PUSHD "src"
 ECHO.
 ECHO Visual Studio installation path: "%VSINSTALLDIR%"
 IF EXIST "%VSINSTALLDIR%MSBuild\15.0\Bin\MSBuild.exe" (
@@ -93,16 +92,24 @@ IF EXIST "%VSINSTALLDIR%MSBuild\Current\Bin\MSBuild.exe" (
   ECHO Cannot find Visual Studio 2017.
   GOTO EndWithError
 ))
+
 "%MSBUILD%" SubtitleEdit.sln /r /t:%BUILDTYPE% /p:Configuration=Release /p:Platform="Any CPU"^
  /maxcpucount /consoleloggerparameters:DisableMPLogging;Summary;Verbosity=minimal
 IF %ERRORLEVEL% NEQ 0 GOTO EndWithError
 
 IF /I "%BUILDTYPE%" == "Clean" GOTO EndSuccessful
 
+dir
+PUSHD "src/ui"
+dir
 ECHO.
 ECHO Merging assemblies with ILRepack...
 FOR /D %%A IN (packages\ILRepack.*) DO (SET "ILREPACKDIR=%%A")
 ECHO.
+dir
+echo ILREPACKDIR
+echo %ILREPACKDIR%
+echo ILREPACKDIR done
 "%ILREPACKDIR%\tools\ILRepack.exe" /parallel /internalize /targetplatform:v4 /out:"bin\Release\SubtitleEdit.exe" "bin\Release\SubtitleEdit.exe"^
  "bin\Release\libse.dll" "bin\Release\zlib.net.dll" "bin\Release\NHunspell.dll" "bin\Release\UtfUnknown.dll" "DLLs\Interop.QuartzTypeLib.dll"
 IF %ERRORLEVEL% NEQ 0 GOTO EndWithError
@@ -166,7 +173,7 @@ EXIT /B
 TITLE Creating ZIP archive with 7-Zip...
 ECHO.
 ECHO Creating ZIP archive with 7-Zip...
-PUSHD "src\bin\Release"
+PUSHD "src\ui\bin\Release"
 IF EXIST "temp_zip"                  RD /S /Q "temp_zip"
 IF NOT EXIST "temp_zip"              MD "temp_zip"
 IF NOT EXIST "temp_zip\Languages"    MD "temp_zip\Languages"
@@ -174,14 +181,14 @@ IF NOT EXIST "temp_zip\Dictionaries" MD "temp_zip\Dictionaries"
 IF NOT EXIST "temp_zip\Ocr"          MD "temp_zip\Ocr"
 
 ECHO.
-COPY /Y /V "..\..\..\LICENSE.txt"      "temp_zip\"
-COPY /Y /V "..\..\..\Changelog.txt"    "temp_zip\"
+COPY /Y /V "..\..\..\..\LICENSE.txt"      "temp_zip\"
+COPY /Y /V "..\..\..\..\Changelog.txt"    "temp_zip\"
 COPY /Y /V "Hunspellx86.dll"           "temp_zip\"
 COPY /Y /V "Hunspellx64.dll"           "temp_zip\"
 COPY /Y /V "SubtitleEdit.exe"          "temp_zip\"
 COPY /Y /V "Languages\*.xml"           "temp_zip\Languages\"
-COPY /Y /V "..\..\..\Dictionaries\*.*" "temp_zip\Dictionaries\"
-COPY /Y /V "..\..\..\Ocr\*.*"          "temp_zip\Ocr\"
+COPY /Y /V "..\..\..\..\Dictionaries\*.*" "temp_zip\Dictionaries\"
+COPY /Y /V "..\..\..\..\Ocr\*.*"          "temp_zip\Ocr\"
 
 PUSHD "temp_zip"
 START "" /B /WAIT "%SEVENZIP%" a -tzip -mx=9 "SubtitleEdit-%VERSION%.zip" * >NUL
@@ -189,7 +196,7 @@ IF %ERRORLEVEL% NEQ 0 GOTO EndWithError
 
 ECHO.
 ECHO ZIP archive created successfully!
-MOVE /Y "SubtitleEdit-%VERSION%.zip" "..\..\..\.." >NUL
+MOVE /Y "SubtitleEdit-%VERSION%.zip" "..\..\..\..\.." >NUL
 POPD
 IF EXIST "temp_zip" RD /S /Q "temp_zip"
 POPD
@@ -198,7 +205,7 @@ EXIT /B
 
 
 :SubGetVersion
-FOR /F delims^=^"^ tokens^=2 %%A IN ('FINDSTR /R /C:"AssemblyVersion" "src\Properties\AssemblyInfo.cs.template"') DO (
+FOR /F delims^=^"^ tokens^=2 %%A IN ('FINDSTR /R /C:"AssemblyVersion" "src\ui\Properties\AssemblyInfo.cs.template"') DO (
   REM 3.4.1.[REVNO]
   SET "VERSION=%%A"
 )

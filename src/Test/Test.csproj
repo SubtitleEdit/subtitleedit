@@ -93,16 +93,6 @@
     <Compile Include="Dictionaries\XmlDictionariesTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\libse\LibSE.csproj">
-      <Project>{3e3cb28f-3a7b-430f-9eb3-0d6c1e53b753}</Project>
-      <Name>LibSE</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SubtitleEdit.csproj">
-      <Project>{511A5B59-1C35-4719-8536-23B19AF9B21A}</Project>
-      <Name>SubtitleEdit</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Dictionaries\en_US.aff" />
     <EmbeddedResource Include="Dictionaries\en_US.dic" />
   </ItemGroup>
@@ -164,7 +154,16 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\libse\LibSE.csproj">
+      <Project>{d6f64cd3-c3ea-4b36-b575-9b3b8a3ca13f}</Project>
+      <Name>LibSE</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ui\SubtitleEdit.csproj">
+      <Project>{511a5b59-1c35-4719-8536-23b19af9b21a}</Project>
+      <Name>SubtitleEdit</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

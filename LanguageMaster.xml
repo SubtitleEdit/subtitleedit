@@ -227,7 +227,11 @@ Note: Do check free disk space.</WaveFileMalformed>
     <TransportStreamFileNameEnding>File name ending</TransportStreamFileNameEnding>
     <TransportStreamSettingsButton>TS settings...</TransportStreamSettingsButton>
     <RemoveLineBreaks>Remove line-breaks</RemoveLineBreaks>
+    <DeleteLines>Delete lines</DeleteLines>
     <TryToUseSourceEncoding>Try to use source encoding</TryToUseSourceEncoding>
+    <DeleteFirstLines>Delete first lines</DeleteFirstLines>
+    <DeleteLastLines>Delete last lines</DeleteLastLines>
+    <DeleteContaining>Delete lines containing</DeleteContaining>
     <MkvLanguageInOutputFileName>"Language" in output file name</MkvLanguageInOutputFileName>
     <MkvLanguageInOutputFileNameX>Matroska (.mkv) "Language" in output file name: {0}</MkvLanguageInOutputFileNameX>
     <MkvLanguageStyleTwoLetter>Two letter language code</MkvLanguageStyleTwoLetter>
@@ -2106,6 +2110,9 @@ can edit in same subtitle file (collaboration)</Information>
     <ListViewAndTextBox>List view and text box</ListViewAndTextBox>
     <ListView>List view</ListView>
     <TextBox>Text box</TextBox>
+    <UseSyntaxColoring>Use syntax coloring</UseSyntaxColoring>
+    <HtmlColor>Html color</HtmlColor>
+    <AssaColor>ASSA color</AssaColor>
     <UpdateShortcut>Update</UpdateShortcut>
     <FoucsSetVideoPosition>Focus set video position</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Toggle dock/undock of video controls</ToggleDockUndockOfVideoControls>
@@ -2117,6 +2124,8 @@ can edit in same subtitle file (collaboration)</Information>
     <AdjustSetStartAutoDurationAndGoToNext>Set start, auto duration and go to next</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Set end, next start and go to next</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>Key down=set start, Key up=set end and go to next</AdjustStartDownEndUpAndGoToNext>
+    <AdjustSetStartAndEndOfPrevious>Set start and set end of previous (minus min gap)</AdjustSetStartAndEndOfPrevious>
+    <AdjustSetStartAndEndOfPreviousAndGoToNext>Set start and set end of previous and go to next (minus min gap)</AdjustSetStartAndEndOfPreviousAndGoToNext>
     <AdjustSelected100MsForward>Move selected lines 100 ms forward</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Move selected lines 100 ms back</AdjustSelected100MsBack>
     <AdjustStartXMsBack>Move start {0} ms back</AdjustStartXMsBack>
@@ -2151,6 +2160,7 @@ can edit in same subtitle file (collaboration)</Information>
     <MainCreateStartDownEndUp>Insert new subtitle at key-down, set end time at key-up</MainCreateStartDownEndUp>
     <MergeDialog>Merge dialog (insert dashes)</MergeDialog>
     <GoToNext>Go to next line</GoToNext>
+    <GoToNextCursorAtEnd>Go to next line and set cursor at end</GoToNextCursorAtEnd>
     <GoToPrevious>Go to previous line</GoToPrevious>
     <GoToCurrentSubtitleStart>Go to current line start</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Go to current line end</GoToCurrentSubtitleEnd>
@@ -2274,6 +2284,7 @@ can edit in same subtitle file (collaboration)</Information>
     <MainTextBoxMoveLastWordDownCurrent>Move last word from first line down (current subtitle)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Selection to lowercase</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Selection to uppercase</MainTextBoxSelectionToUpper>
+    <MainTextBoxSelectionToggleCasing>Toggle casing of selection (propercase/uppercase/lowercase)</MainTextBoxSelectionToggleCasing>
     <MainTextBoxSelectionToRuby>Selection to Ruby (Japanese)</MainTextBoxSelectionToRuby>
     <MainTextBoxToggleAutoDuration>Toggle auto duration</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Auto break text</MainTextBoxAutoBreak>
