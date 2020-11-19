@@ -18,8 +18,18 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Win32Resources", "src\Win32
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B1BB9DD1-0EE8-4D43-AAAB-C39D0CC882A9}"
+	ProjectSection(SolutionItems) = preProject
+		build.bat = build.bat
+		build_helpers.bat = build_helpers.bat
+		Changelog.txt = Changelog.txt
+		LICENSE.txt = LICENSE.txt
+		README.md = README.md
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibSE", "src\libse\LibSE.csproj", "{D6F64CD3-C3EA-4B36-B575-9B3B8A3CA13F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DBD4656C-5F40-4067-A70B-C4460DE20F77} = {DBD4656C-5F40-4067-A70B-C4460DE20F77}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubtitleEdit", "src\ui\SubtitleEdit.csproj", "{511A5B59-1C35-4719-8536-23B19AF9B21A}"
 EndProject
