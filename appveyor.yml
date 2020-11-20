@@ -9,13 +9,13 @@ configuration:
   - Release
 
 build_script:
-  - msbuild "src\SubtitleEdit.sln" /r /v:minimal /clp:summary /p:"Platform=%PLATFORM%" /p:"Configuration=%CONFIGURATION%" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+  - msbuild "SubtitleEdit.sln" /r /v:minimal /clp:summary /p:"Platform=%PLATFORM%" /p:"Configuration=%CONFIGURATION%" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 test_script:
   - vstest.console "src\Test\bin\%CONFIGURATION%\Test.dll" /logger:Appveyor
 
 cache:
-  - 'src\packages -> **\packages.config'       # preserve the "src\packages" directory
+  - 'src\ui\packages -> **\src\ui\packages.config'
 
 matrix:
   fast_finish: true
