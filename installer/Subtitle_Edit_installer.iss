@@ -414,7 +414,7 @@ Filename: {win}\Microsoft.NET\Framework\v4.0.30319\ngen.exe; Parameters: "uninst
 
 
 [Registry]
-#include bindir + "\Resources.h"
+#include "..\bin\Release\Resources.h"
 #define rcicon(id) "{app}\SubtitleEdit.resources.dll,-" + Str(id)
 #define rctext(id) "@{app}\SubtitleEdit.resources.dll,-" + Str(id)
 Root: HKLM; Subkey: "{#keyAppPaths}\SubtitleEdit.exe"; ValueType: string; ValueName: ""; ValueData: "{app}\SubtitleEdit.exe"; Flags: deletekey uninsdeletekey; Check: HklmKeyExists('{#keyAppPaths}')
