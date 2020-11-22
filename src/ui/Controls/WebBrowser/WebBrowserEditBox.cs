@@ -3,6 +3,7 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -71,7 +72,38 @@ namespace Nikse.SubtitleEdit.Controls.WebBrowser
                 }
 
                 var text = (Document.InvokeScript("getText") ?? string.Empty).ToString();
-                return string.Join(Environment.NewLine, text.SplitToLines());
+                var sb = new StringBuilder();
+                int max = text.Length;
+                int i = 0;
+                var isNewLine = false;
+                while (i < max)
+                {
+                    var ch = text[i];
+                    if (ch == '\r')
+                    {
+                       //continue
+                    }
+                    else if (ch == '\n')
+                    {
+                        i++;
+                        if (!isNewLine)
+                        {
+                            sb.Append(Environment.NewLine);
+                        }
+
+                        isNewLine = !isNewLine;
+                    }
+                    else
+                    {
+                        sb.Append(ch);
+                        isNewLine = false;
+                    }
+
+                    i++;
+                }
+
+                var result = sb.ToString();
+                return result;
             }
             set
             {
@@ -100,8 +132,7 @@ namespace Nikse.SubtitleEdit.Controls.WebBrowser
                         Document.InvokeScript("setTextDirection", new object[] { code });
                     }
 
-                    var text = string.Join("\n", value.SplitToLines());
-                    Document.InvokeScript("setText", new object[] { text });
+                    Document.InvokeScript("setText", new object[] { value });
                 }
             }
         }
@@ -246,11 +277,6 @@ namespace Nikse.SubtitleEdit.Controls.WebBrowser
             Leave?.Invoke(this, new KeyEventArgs(0));
         }
 
-        public void ClientChanged()
-        {
-            TextChanged?.Invoke(this, new KeyEventArgs(0));
-        }
-
         public void ClientKeyUp(int keyCode, bool ctrlKey, bool shiftKey, bool altKey)
         {
             var keyData = (Keys)keyCode;
@@ -268,11 +294,13 @@ namespace Nikse.SubtitleEdit.Controls.WebBrowser
             }
 
             KeyUp?.Invoke(this, new KeyEventArgs(keyData));
+            TextChanged?.Invoke(this, new KeyEventArgs(0));
         }
 
         public void ClientClick()
         {
             MouseClick?.Invoke(this, new MouseEventArgs(MouseButtons.Left, 1, 1, 1, 1));
+            TextChanged?.Invoke(this, new KeyEventArgs(0));
         }
 
         public void ClientMouseMove()

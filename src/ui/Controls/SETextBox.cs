@@ -1,9 +1,9 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Controls.WebBrowser;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Controls.WebBrowser;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -59,7 +59,6 @@ namespace Nikse.SubtitleEdit.Controls
                 oldEnabled = _htmlBox.Enabled;
             }
 
-
             BorderStyle = BorderStyle.None;
             Padding = new Padding(1);
             BackColor = SystemColors.WindowFrame;
@@ -75,7 +74,6 @@ namespace Nikse.SubtitleEdit.Controls
             _richTextBoxTemp = null;
             if (useSyntaxColoring)
             {
-
                 if (_useWebBrowser)
                 {
                     _uiTextBox = null;
@@ -83,19 +81,13 @@ namespace Nikse.SubtitleEdit.Controls
                     Controls.Add(_htmlBox);
                     _htmlBox.Dock = DockStyle.Fill;
                     _htmlBox.Initialize();
-
-                    _htmlBox.TextChanged += TextChangedHighlight;
                     _htmlBox.Enter += (sender, args) => { BackColor = SystemColors.Highlight; };
                     _htmlBox.Leave += (sender, args) => { BackColor = SystemColors.WindowFrame; };
+                    _htmlBox.TextChanged += (sender, args) => { TextChanged?.Invoke(sender, args); };
                     _htmlBox.KeyDown += (sender, args) => { KeyDown?.Invoke(sender, args); };
                     _htmlBox.KeyUp += (sender, args) => { KeyUp?.Invoke(sender, args); };
                     _htmlBox.MouseClick += (sender, args) => { MouseClick?.Invoke(sender, args); };
                     _htmlBox.MouseMove += (sender, args) => { MouseMove?.Invoke(sender, args); };
-
-                    //TODO?
-                    //textBox.MouseDown += SETextBox_MouseDown;
-                    //textBox.MouseUp += SETextBox_MouseUp;
-
                 }
                 else
                 {
@@ -496,7 +488,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     return _uiTextBox.Enabled;
                 }
-                
+
                 if (_htmlBox != null)
                 {
                     return _htmlBox.Enabled;
