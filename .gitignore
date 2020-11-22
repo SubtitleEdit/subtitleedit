@@ -6,7 +6,6 @@
 *.vsp
 *.vspx
 /cov-int/
-/libse/Properties/AssemblyInfo.cs
 /SE*.zip
 /src/Win32Resources/Resources.aps
 /src/Win32Resources/Resources.rc
@@ -41,4 +40,6 @@ SubtitleEditBeta
 /src/SubtitleEdit.sln.DotSettings
 /packages/NHunspell.1.2.5554.16953
 /packages/ILRepack.2.0.18
-/src/ui
+/src/ui/packages
+/src/ui/ILRepack*
+/src/ui/NHunspell*

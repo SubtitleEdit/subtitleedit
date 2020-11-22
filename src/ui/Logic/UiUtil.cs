@@ -558,6 +558,11 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static void FixFonts(Control form, int iterations = 5)
         {
+            if (form == null)
+            {
+                return;
+            }
+
             FixFontsInner(form, iterations);
             if (Configuration.Settings.General.UseDarkTheme)
             {

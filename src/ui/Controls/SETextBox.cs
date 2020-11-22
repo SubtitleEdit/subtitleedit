@@ -1,9 +1,9 @@
-﻿using Nikse.SubtitleEdit.Core;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Controls.WebBrowser;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -31,12 +31,14 @@ namespace Nikse.SubtitleEdit.Controls
         private RichTextBox _uiTextBox;
         private TextBox _textBox;
         private int _mouseMoveSelectionLength;
+        private WebBrowserEditBox _htmlBox;
 
         public SETextBox()
         {
             Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
         }
 
+        private bool _useWebBrowser = true;
         public void Initialize(bool useSyntaxColoring)
         {
             ContextMenuStrip oldContextMenuStrip = null;
@@ -51,6 +53,12 @@ namespace Nikse.SubtitleEdit.Controls
                 oldContextMenuStrip = _uiTextBox.ContextMenuStrip;
                 oldEnabled = _uiTextBox.Enabled;
             }
+            else if (_htmlBox != null)
+            {
+                oldContextMenuStrip = _htmlBox.ContextMenuStrip;
+                oldEnabled = _htmlBox.Enabled;
+            }
+
 
             BorderStyle = BorderStyle.None;
             Padding = new Padding(1);
@@ -60,68 +68,98 @@ namespace Nikse.SubtitleEdit.Controls
             _textBox?.Dispose();
             _richTextBoxTemp?.Dispose();
             _uiTextBox?.Dispose();
+            _htmlBox?.Dispose();
+            _textBox = null;
+            _htmlBox = null;
+            _uiTextBox = null;
+            _richTextBoxTemp = null;
             if (useSyntaxColoring)
             {
-                _textBox = null;
-                _richTextBoxTemp = new RichTextBox();
-                _uiTextBox = new RichTextBox { BorderStyle = BorderStyle.None, Multiline = true };
-                InitializeBackingControl(_uiTextBox);
 
-                // avoid selection when centered and clicking to the left
-                _uiTextBox.MouseDown += (sender, args) =>
+                if (_useWebBrowser)
                 {
-                    var charIndex = _uiTextBox.GetCharIndexFromPosition(args.Location);
-                    if (Configuration.Settings.General.CenterSubtitleInTextBox &&
-                        _mouseMoveSelectionLength == 0 &&
-                        (charIndex == 0 || charIndex >= 0 && _uiTextBox.Text[charIndex - 1] == '\n'))
-                    {
-                        _uiTextBox.SelectionLength = 0;
-                    }
-                };
-                _uiTextBox.MouseMove += (sender, args) =>
+                    _uiTextBox = null;
+                    _htmlBox = new WebBrowserEditBox();
+                    Controls.Add(_htmlBox);
+                    _htmlBox.Dock = DockStyle.Fill;
+                    _htmlBox.Initialize();
+
+                    _htmlBox.TextChanged += TextChangedHighlight;
+                    _htmlBox.Enter += (sender, args) => { BackColor = SystemColors.Highlight; };
+                    _htmlBox.Leave += (sender, args) => { BackColor = SystemColors.WindowFrame; };
+                    _htmlBox.KeyDown += (sender, args) => { KeyDown?.Invoke(sender, args); };
+                    _htmlBox.KeyUp += (sender, args) => { KeyUp?.Invoke(sender, args); };
+                    _htmlBox.MouseClick += (sender, args) => { MouseClick?.Invoke(sender, args); };
+                    _htmlBox.MouseMove += (sender, args) => { MouseMove?.Invoke(sender, args); };
+
+                    //TODO?
+                    //textBox.MouseDown += SETextBox_MouseDown;
+                    //textBox.MouseUp += SETextBox_MouseUp;
+
+                }
+                else
                 {
-                    _mouseMoveSelectionLength = _uiTextBox.SelectionLength;
-                };
-                _uiTextBox.KeyDown += (sender, args) =>
-                {
-                    // fix annoying "beeps" when moving cursor position
-                    if ((args.KeyData == Keys.Left || args.KeyData == Keys.PageUp) && _uiTextBox.SelectionStart == 0)
+                    _htmlBox = null;
+                    _richTextBoxTemp = new RichTextBox();
+                    _uiTextBox = new RichTextBox { BorderStyle = BorderStyle.None, Multiline = true };
+                    InitializeBackingControl(_uiTextBox);
+
+                    // avoid selection when centered and clicking to the left
+                    _uiTextBox.MouseDown += (sender, args) =>
                     {
-                        args.SuppressKeyPress = true;
-                    }
-                    else if (args.KeyData == Keys.Up && _uiTextBox.SelectionStart <= _uiTextBox.Text.IndexOf('\n'))
+                        var charIndex = _uiTextBox.GetCharIndexFromPosition(args.Location);
+                        if (Configuration.Settings.General.CenterSubtitleInTextBox &&
+                            _mouseMoveSelectionLength == 0 &&
+                            (charIndex == 0 || charIndex >= 0 && _uiTextBox.Text[charIndex - 1] == '\n'))
+                        {
+                            _uiTextBox.SelectionLength = 0;
+                        }
+                    };
+                    _uiTextBox.MouseMove += (sender, args) =>
                     {
-                        args.SuppressKeyPress = true;
-                    }
-                    else if (args.KeyData == Keys.Home && (_uiTextBox.SelectionStart == 0 || _uiTextBox.SelectionStart > 0 && _uiTextBox.Text[_uiTextBox.SelectionStart - 1] == '\n'))
+                        _mouseMoveSelectionLength = _uiTextBox.SelectionLength;
+                    };
+                    _uiTextBox.KeyDown += (sender, args) =>
                     {
-                        args.SuppressKeyPress = true;
-                    }
-                    else if (args.KeyData == (Keys.Home | Keys.Control) && _uiTextBox.SelectionStart == 0)
-                    {
-                        args.SuppressKeyPress = true;
-                    }
-                    else if (args.KeyData == Keys.End && (_uiTextBox.SelectionStart >= _uiTextBox.Text.Length || _uiTextBox.SelectionStart + 1 < _uiTextBox.Text.Length && _uiTextBox.Text[_uiTextBox.SelectionStart] == '\n'))
-                    {
-                        args.SuppressKeyPress = true;
-                    }
-                    else if (args.KeyData == (Keys.End | Keys.Control) && _uiTextBox.SelectionStart >= _uiTextBox.Text.Length)
-                    {
-                        args.SuppressKeyPress = true;
-                    }
-                    else if (args.KeyData == Keys.Right && _uiTextBox.SelectionStart >= _uiTextBox.Text.Length)
-                    {
-                        args.SuppressKeyPress = true;
-                    }
-                    else if (args.KeyData == Keys.Down && _uiTextBox.SelectionStart >= _uiTextBox.Text.Length)
-                    {
-                        args.SuppressKeyPress = true;
-                    }
-                    else if (args.KeyData == Keys.PageDown && _uiTextBox.SelectionStart >= _uiTextBox.Text.Length)
-                    {
-                        args.SuppressKeyPress = true;
-                    }
-                };
+                        // fix annoying "beeps" when moving cursor position
+                        if ((args.KeyData == Keys.Left || args.KeyData == Keys.PageUp) && _uiTextBox.SelectionStart == 0)
+                        {
+                            args.SuppressKeyPress = true;
+                        }
+                        else if (args.KeyData == Keys.Up && _uiTextBox.SelectionStart <= _uiTextBox.Text.IndexOf('\n'))
+                        {
+                            args.SuppressKeyPress = true;
+                        }
+                        else if (args.KeyData == Keys.Home && (_uiTextBox.SelectionStart == 0 || _uiTextBox.SelectionStart > 0 && _uiTextBox.Text[_uiTextBox.SelectionStart - 1] == '\n'))
+                        {
+                            args.SuppressKeyPress = true;
+                        }
+                        else if (args.KeyData == (Keys.Home | Keys.Control) && _uiTextBox.SelectionStart == 0)
+                        {
+                            args.SuppressKeyPress = true;
+                        }
+                        else if (args.KeyData == Keys.End && (_uiTextBox.SelectionStart >= _uiTextBox.Text.Length || _uiTextBox.SelectionStart + 1 < _uiTextBox.Text.Length && _uiTextBox.Text[_uiTextBox.SelectionStart] == '\n'))
+                        {
+                            args.SuppressKeyPress = true;
+                        }
+                        else if (args.KeyData == (Keys.End | Keys.Control) && _uiTextBox.SelectionStart >= _uiTextBox.Text.Length)
+                        {
+                            args.SuppressKeyPress = true;
+                        }
+                        else if (args.KeyData == Keys.Right && _uiTextBox.SelectionStart >= _uiTextBox.Text.Length)
+                        {
+                            args.SuppressKeyPress = true;
+                        }
+                        else if (args.KeyData == Keys.Down && _uiTextBox.SelectionStart >= _uiTextBox.Text.Length)
+                        {
+                            args.SuppressKeyPress = true;
+                        }
+                        else if (args.KeyData == Keys.PageDown && _uiTextBox.SelectionStart >= _uiTextBox.Text.Length)
+                        {
+                            args.SuppressKeyPress = true;
+                        }
+                    };
+                }
             }
             else
             {
@@ -202,18 +240,24 @@ namespace Nikse.SubtitleEdit.Controls
                     return _textBox.Text;
                 }
 
-                if (_uiTextBox == null)
+                if (_uiTextBox != null)
                 {
-                    return string.Empty;
+
+                    var s = _uiTextBox.Text;
+                    if (_fixedArabicComma)
+                    {
+                        s = s.Replace("\u202A", string.Empty);
+                    }
+
+                    return string.Join(Environment.NewLine, s.SplitToLines());
                 }
 
-                var s = _uiTextBox.Text;
-                if (_fixedArabicComma)
+                if (_htmlBox != null)
                 {
-                    s = s.Replace("\u202A", string.Empty);
+                    return _htmlBox.Text;
                 }
 
-                return string.Join(Environment.NewLine, s.SplitToLines());
+                return string.Empty;
             }
             set
             {
@@ -223,29 +267,32 @@ namespace Nikse.SubtitleEdit.Controls
                     return;
                 }
 
-                if (_uiTextBox == null)
+                if (_uiTextBox != null)
                 {
-                    return;
+                    _fixedArabicComma = false;
+                    var s = value;
+                    if (!Configuration.Settings.General.RightToLeftMode && !s.Contains('\u202A'))
+                    {
+                        string textNoTags = HtmlUtil.RemoveHtmlTags(s, true);
+                        if (textNoTags.EndsWith('،'))
+                        {
+                            s = s.Replace("،", "\u202A،");
+                        }
+                        else if (textNoTags.StartsWith('،'))
+                        {
+                            s = s.Replace("،", "،\u202A");
+                        }
+
+                        _fixedArabicComma = true;
+                    }
+
+                    _uiTextBox.Text = string.Join("\n", s.SplitToLines());
                 }
 
-                _fixedArabicComma = false;
-                var s = value;
-                if (!Configuration.Settings.General.RightToLeftMode && !s.Contains('\u202A'))
+                if (_htmlBox != null)
                 {
-                    string textNoTags = HtmlUtil.RemoveHtmlTags(s, true);
-                    if (textNoTags.EndsWith('،'))
-                    {
-                        s = s.Replace("،", "\u202A،");
-                    }
-                    else if (textNoTags.StartsWith('،'))
-                    {
-                        s = s.Replace("،", "،\u202A");
-                    }
-
-                    _fixedArabicComma = true;
+                    _htmlBox.Text = value;
                 }
-
-                _uiTextBox.Text = string.Join("\n", s.SplitToLines());
             }
         }
 
@@ -253,12 +300,22 @@ namespace Nikse.SubtitleEdit.Controls
         {
             get
             {
-                if (_textBox == null && _uiTextBox == null)
+                if (_textBox != null)
                 {
-                    return 0;
+                    return _textBox.SelectionStart;
                 }
 
-                return _textBox?.SelectionStart ?? _uiTextBox.SelectionStart;
+                if (_uiTextBox != null)
+                {
+                    return _uiTextBox.SelectionStart;
+                }
+
+                if (_htmlBox != null)
+                {
+                    return _htmlBox.SelectionStart;
+                }
+
+                return 0;
             }
             set
             {
@@ -270,6 +327,10 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     _uiTextBox.SelectionStart = value;
                 }
+                else if (_htmlBox != null)
+                {
+                    _htmlBox.SelectionStart = value;
+                }
             }
         }
 
@@ -277,12 +338,22 @@ namespace Nikse.SubtitleEdit.Controls
         {
             get
             {
-                if (_textBox == null && _uiTextBox == null)
+                if (_textBox != null)
                 {
-                    return 0;
+                    return _textBox.SelectionLength;
                 }
 
-                return _textBox?.SelectionLength ?? _uiTextBox.SelectionLength;
+                if (_uiTextBox != null)
+                {
+                    return _uiTextBox.SelectionLength;
+                }
+
+                if (_htmlBox != null)
+                {
+                    return _htmlBox.SelectionLength;
+                }
+
+                return 0;
             }
             set
             {
@@ -294,6 +365,10 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     _uiTextBox.SelectionLength = value;
                 }
+                else if (_htmlBox != null)
+                {
+                    _htmlBox.SelectionLength = value;
+                }
             }
         }
 
@@ -301,12 +376,22 @@ namespace Nikse.SubtitleEdit.Controls
         {
             get
             {
-                if (_textBox == null && _uiTextBox == null)
+                if (_textBox != null)
                 {
-                    return false;
+                    return _textBox.HideSelection;
                 }
 
-                return _textBox?.HideSelection ?? _uiTextBox.HideSelection;
+                if (_uiTextBox != null)
+                {
+                    return _uiTextBox.HideSelection;
+                }
+
+                if (_htmlBox != null)
+                {
+                    return _htmlBox.HideSelection;
+                }
+
+                return false;
             }
             set
             {
@@ -318,6 +403,10 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     _uiTextBox.HideSelection = value;
                 }
+                else if (_htmlBox != null)
+                {
+                    _htmlBox.HideSelection = value;
+                }
             }
         }
 
@@ -325,12 +414,23 @@ namespace Nikse.SubtitleEdit.Controls
         {
             get
             {
-                if (_textBox == null && _uiTextBox == null)
+                if (_textBox != null)
                 {
-                    return string.Empty;
+                    return _textBox.SelectedText;
                 }
 
-                return _textBox?.SelectedText ?? _uiTextBox.SelectedText;
+                if (_uiTextBox != null)
+                {
+                    return _uiTextBox.SelectedText;
+                }
+
+                if (_htmlBox != null)
+                {
+                    return _htmlBox.SelectedText;
+                }
+
+                return string.Empty;
+
             }
             set
             {
@@ -342,6 +442,10 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     _uiTextBox.SelectedText = value;
                 }
+                else if (_htmlBox != null)
+                {
+                    _htmlBox.SelectedText = value;
+                }
             }
         }
 
@@ -349,12 +453,22 @@ namespace Nikse.SubtitleEdit.Controls
         {
             get
             {
-                if (_textBox == null && _uiTextBox == null)
+                if (_textBox != null)
                 {
-                    return false;
+                    return _textBox.Multiline;
                 }
 
-                return _textBox?.Multiline ?? _uiTextBox.Multiline;
+                if (_uiTextBox != null)
+                {
+                    return _uiTextBox.Multiline;
+                }
+
+                if (_htmlBox != null)
+                {
+                    return true;
+                }
+
+                return false;
             }
             set
             {
@@ -373,12 +487,22 @@ namespace Nikse.SubtitleEdit.Controls
         {
             get
             {
-                if (_textBox == null && _uiTextBox == null)
+                if (_textBox != null)
                 {
-                    return true;
+                    return _textBox.Enabled;
                 }
 
-                return _textBox?.Enabled ?? _uiTextBox.Enabled;
+                if (_uiTextBox != null)
+                {
+                    return _uiTextBox.Enabled;
+                }
+                
+                if (_htmlBox != null)
+                {
+                    return _htmlBox.Enabled;
+                }
+
+                return true;
             }
             set
             {
@@ -389,6 +513,10 @@ namespace Nikse.SubtitleEdit.Controls
                 else if (_uiTextBox != null)
                 {
                     _uiTextBox.Enabled = value;
+                }
+                else if (_htmlBox != null)
+                {
+                    _htmlBox.Enabled = value;
                 }
             }
         }
@@ -454,24 +582,36 @@ namespace Nikse.SubtitleEdit.Controls
         {
             get
             {
-                if (_textBox == null && _uiTextBox == null)
+                if (_textBox != null)
                 {
-                    return null;
+                    return _textBox.ContextMenuStrip;
                 }
 
-                return _textBox?.ContextMenuStrip ?? _uiTextBox.ContextMenuStrip;
+                if (_uiTextBox != null)
+                {
+                    return _uiTextBox.ContextMenuStrip;
+                }
+
+                if (_htmlBox != null)
+                {
+                    return _htmlBox.ContextMenuStrip;
+                }
+
+                return null;
             }
             set
             {
                 if (_textBox != null)
                 {
                     _textBox.ContextMenuStrip = value;
-                    return;
                 }
-
-                if (_uiTextBox != null)
+                else if (_uiTextBox != null)
                 {
                     _uiTextBox.ContextMenuStrip = value;
+                }
+                else if (_htmlBox != null)
+                {
+                    _htmlBox.ContextMenuStrip = value;
                 }
             }
         }
@@ -488,6 +628,11 @@ namespace Nikse.SubtitleEdit.Controls
                 return _uiTextBox.GetCharIndexFromPosition(pt);
             }
 
+            if (_htmlBox != null)
+            {
+                return _htmlBox.GetCharIndexFromPosition(pt);
+            }
+
             return 0;
         }
 
@@ -497,9 +642,13 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _textBox.SelectAll();
             }
-            else
+            else if (_uiTextBox != null)
             {
-                _uiTextBox?.SelectAll();
+                _uiTextBox.SelectAll();
+            }
+            else if (_htmlBox != null)
+            {
+                _htmlBox.SelectAll();
             }
         }
 
@@ -509,9 +658,13 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _textBox.Clear();
             }
-            else
+            else if (_uiTextBox != null)
             {
-                _uiTextBox?.Clear();
+                _uiTextBox.Clear();
+            }
+            else if (_htmlBox != null)
+            {
+                _htmlBox.Clear();
             }
         }
 
@@ -521,9 +674,13 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _textBox.Undo();
             }
-            else
+            else if (_uiTextBox != null)
             {
-                _uiTextBox?.Undo();
+                _uiTextBox.Undo();
+            }
+            else if (_htmlBox != null)
+            {
+                _htmlBox.Undo();
             }
         }
 
@@ -533,9 +690,13 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _textBox.ClearUndo();
             }
-            else
+            else if (_uiTextBox != null)
             {
-                _uiTextBox?.ClearUndo();
+                _uiTextBox.ClearUndo();
+            }
+            else if (_htmlBox != null)
+            {
+                _htmlBox.ClearUndo();
             }
         }
 
@@ -545,9 +706,13 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _textBox.Copy();
             }
-            else
+            else if (_uiTextBox != null)
             {
-                _uiTextBox?.Copy();
+                _uiTextBox.Copy();
+            }
+            else if (_htmlBox != null)
+            {
+                _htmlBox.Copy();
             }
         }
 
@@ -557,9 +722,13 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _textBox.Cut();
             }
-            else
+            else if (_uiTextBox != null)
             {
-                _uiTextBox?.Cut();
+                _uiTextBox.Cut();
+            }
+            else if (_htmlBox != null)
+            {
+                _htmlBox.Cut();
             }
         }
 
@@ -569,9 +738,13 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _textBox.Paste();
             }
-            else
+            else if (_textBox != null)
             {
                 _uiTextBox?.Paste();
+            }
+            else if (_htmlBox != null)
+            {
+                _htmlBox?.Paste();
             }
         }
 
@@ -579,12 +752,22 @@ namespace Nikse.SubtitleEdit.Controls
         {
             get
             {
-                if (_textBox == null && _uiTextBox == null)
+                if (_textBox != null)
                 {
-                    return false;
+                    return _textBox.Focused;
                 }
 
-                return _textBox?.Focused ?? _uiTextBox.Focused;
+                if (_uiTextBox != null)
+                {
+                    return _uiTextBox.Focused;
+                }
+
+                if (_htmlBox != null)
+                {
+                    return _htmlBox.Focused;
+                }
+
+                return false;
             }
         }
 
@@ -594,9 +777,13 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _textBox.Focus();
             }
-            else
+            else if (_textBox != null)
             {
-                _uiTextBox?.Focus();
+                _uiTextBox.Focus();
+            }
+            else if (_htmlBox != null)
+            {
+                _htmlBox.Focus();
             }
         }
 

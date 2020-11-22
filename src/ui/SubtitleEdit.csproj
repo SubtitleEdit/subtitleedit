@@ -88,6 +88,9 @@
     <Compile Include="Controls\AudioVisualizer.Designer.cs">
       <DependentUpon>AudioVisualizer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\WebBrowser\WebBrowserEditBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Forms\AlignmentPickerJapanese.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1658,6 +1661,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Controls\WebBrowser\WebBrowserEditBox.html" />
     <Content Include="DLLs\Voikkox64.dll" />
     <Content Include="DLLs\Voikkox86.dll" />
     <Content Include="Languages\ar-EG.xml">

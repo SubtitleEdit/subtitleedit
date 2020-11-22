@@ -1,0 +1,305 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+    <title>Browser Text Box</title>
+    <style>
+        body, html, #myContent {
+            height: 100%;
+            width: 100%;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #myContent {
+            font-size: 16px;
+            font-family: Tahoma;
+            font-weight: bold;
+            color: brown;
+            /*          border: 2px blue;
+            border-style: solid;*/
+            margin: 0;
+            padding: 0;
+        }
+
+        .disabled {
+            background: #f0f0f0;
+        }
+
+        p {
+            margin: 1px;
+            padding: 0;
+        }
+
+        html {
+            -ms-content-zooming: none; /* Disables zooming */
+        }
+    </style>
+</head>
+<body>
+    <div contenteditable="true" id="myContent" dir="ltr" style="text-align:center"></div>
+    <script>
+        window.addEventListener("keydown",
+            function (e) {
+                if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)) {
+                    // prevent find dialog
+                    e.preventDefault();
+                } else if (e.ctrlKey === true &&
+                    (e.keyCode === 61 ||
+                        e.keyCode === 107 ||
+                        e.keyCode === 173 ||
+                        e.keyCode === 109 ||
+                        e.keyCode === 187 ||
+                        e.keyCode === 189)) {
+                    // prevent zoom
+                    e.preventDefault();
+                }
+            });
+
+        // Use a more terse method for getting by id
+        function getById(id) {
+            return document.getElementById(id);
+        }
+
+        function initEvents() {
+            getById("myContent").addEventListener("focus", function (e) {
+                window.external.ClientFocus();
+            });
+
+            getById("myContent").addEventListener("blur", function (e) {
+                window.external.ClientBlur();
+            });
+
+            getById("myContent").addEventListener("keydown", function (e) {
+                window.external.ClientKeyDown(e.keyCode, e.ctrlKey, e.shiftKey, e.altKey);
+            });
+
+            getById("myContent").addEventListener("keyup", function (e) {
+                window.external.ClientKeyUp(e.keyCode, e.ctrlKey, e.shiftKey, e.altKey);
+            });
+
+            getById("myContent").addEventListener("change", function (e) {
+                window.external.ClientChanged();
+            });
+
+            getById("myContent").addEventListener("click", function (e) {
+                window.external.ClientClick();
+            });
+
+            getById("myContent").addEventListener("mousemove", function (e) {
+                window.external.ClientMouseMove();
+            });
+        }
+
+        function getPreviousOrParentLastChild(node) {
+            if (node.previousSibling) {
+                return [node.previousSibling, 0];
+            }
+
+            if (node.parentNode && node.parentNode.id === "myContent") {
+                return [null, 0];
+            }
+
+            var extraChar = 0;
+            if (node && node.parentNode.previousSibling) {
+                if (node.parentNode.previousSibling.lastChild) {
+
+                    if (node.parentNode.nodeName === "P") {
+                        if (node.parentNode.parentNode.id === "myContent" && !node.parentNode.previousSibling) {
+                            // skip first P
+                        } else {
+                            extraChar = 1;
+                        }
+                    }
+
+                    return [node.parentNode.previousSibling.lastChild, extraChar];
+                }
+                return [node.parentNode.previousSibling, extraChar];
+            }
+
+            return [null, extraChar];
+        }
+
+        function getNodePosition(node, offset) {
+            if (!node) {
+                return 0;
+            }
+
+            var idx = offset;
+
+            if (node.nodeName === "P" && node.previousSibling) {
+                idx++;
+            }
+
+            var res = getPreviousOrParentLastChild(node);
+            node = res[0];
+            if (res[1] > 0) {
+                idx++;
+            }
+
+            var i = 0;
+            while (node && i < 100) {
+                i++;
+                if (node.nodeType === 3) { // #text
+                    if (node.nodeValue.indexOf("\n") >= 0) {
+                    } else {
+                        idx += node.length;
+                    }
+                } else if (node.innerText) {
+                    idx += node.innerText.length;
+                }
+
+                var res2 = getPreviousOrParentLastChild(node);
+                node = res2[0];
+                if (res2[1] > 0) {
+                    idx++;
+                }
+            }
+
+            return idx;
+        }
+
+        function getCursorPosition() {
+            var x = window.getSelection();
+            return getNodePosition(x.focusNode, x.focusOffset);
+        }
+
+        function getSelectionText() {
+            return window.getSelection().toString();
+        }
+
+        function getSelectionStart() {
+            var x = window.getSelection();
+            return getNodePosition(x.anchorNode, x.anchorOffset);
+        }
+
+        function SetCaretPosition(el, pos) {
+
+            // Loop through all child nodes
+            for (var i = 0; i < el.childNodes.length; i++) {
+                var node = el.childNodes[i];
+                if (node.nodeType === 3) { // we have a text node
+                    if (node.length >= pos) {
+                        var range = document.createRange(),
+                            sel = window.getSelection();
+                        range.setStart(node, pos);
+                        range.collapse(true);
+                        sel.removeAllRanges();
+                        sel.addRange(range);
+                        return -1; // we are done
+                    } else {
+                        pos -= node.length;
+                    }
+                } else {
+                    pos = SetCaretPosition(node, pos);
+                    if (pos === -1) {
+                        return -1; // no need to finish the for loop
+                    }
+                }
+            }
+            return pos;
+        }
+
+        function selectElementContents(el) {
+            var range = document.createRange();
+            range.selectNodeContents(el);
+            var sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+        }
+
+        function getNextNode(node) {
+
+            if (node.firstChild) {
+                return node.firstChild;
+            }
+
+
+            if (node.nextSibling) {
+                return node.nextSibling;
+            }
+
+            if (node.parentNode && node.parentNode.id !== "myContent" && node.parentNode.nextSibling) {
+                if (node.parentNode.nextSibling.firstChild) {
+                    return node.parentNode.nextSibling;
+                }
+
+                return node.parentNode.nextSibling;
+            }
+
+            return null;
+        }
+
+        function setCursorPosition(pos) {
+            if (pos < 0) {
+                return;
+            }
+
+            var node = document.getElementById("myContent").firstChild;
+            var i = 0;
+            var idx = 0;
+            while (node && i < 100) {
+                i++;
+                if (node.nodeType === Node.TEXT_NODE && node.nodeValue) {
+                    if (node.nodeValue && idx + node.nodeValue.length > pos) {
+                        var range = document.createRange();
+                        var sel = window.getSelection();
+                        var newIdx = pos - idx;
+                        range.setStart(node, newIdx);
+                        range.collapse(true);
+                        sel.removeAllRanges();
+                        sel.addRange(range);
+                        return;
+                    }
+
+                    idx += node.nodeValue.length;
+                }
+                node = getNextNode(node);
+            }
+        }
+
+        // Call with: rtl / center / left
+        function setTextDirection(dir) {
+            var element = document.getElementById("myContent");
+            if (dir === "rtl") {
+                element.setAttribute("dir", "rtl");
+                element.setAttribute("style", "");
+            } else if (dir === "center") {
+                element.setAttribute("style", "text-align:center");
+                element.setAttribute("dir", "");
+            } else {
+                element.setAttribute("style", "");
+                element.setAttribute("dir", "");
+            }
+        }
+
+        function getText() {
+            return document.getElementById("myContent").innerText;
+        }
+
+        function setText(text) {
+            document.getElementById("myContent").innerText = text;
+        }
+
+        function getEnabled() {
+            return !document.getElementById("myContent").hasAttribute("disabled");
+        }
+
+        function setEnabled(enable) {
+            if (enable) {
+                var mc = document.getElementById("myContent");
+                mc.removeAttribute('disabled');
+                mc.className = "";
+            } else {
+                document.getElementById("myContent").setAttribute('disabled', 'disabled');
+                document.getElementById("myContent").setAttribute('class', 'disabled');
+            }
+        }
+    </script>
+</body>
+</html>
