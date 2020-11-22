@@ -43,6 +43,7 @@
 </head>
 <body>
     <div contenteditable="true" id="myContent" dir="ltr" style="text-align:center"></div>
+    <div id="div1"></div>
     <script>
         window.addEventListener("keydown",
             function (e) {
@@ -109,6 +110,7 @@
                         if (node.parentNode.parentNode.id === "myContent" && !node.parentNode.previousSibling) {
                             // skip first P
                         } else {
+                            getById("div1").innerText = getById("div1").innerText + "\nP found1";
                             extraChar = 2;
                         }
                     }
@@ -126,24 +128,28 @@
                 return 0;
             }
 
+            getById("div1").innerText = "getNodePosition for : " + getById("myContent").innerHTML;
+
             var idx = offset;
 
             if (node.nodeName === "P" && node.previousSibling) {
-                idx++;
-                idx++;
+                idx += 2;
+                getById("div1").innerText = getById("div1").innerText + "\nStart with P";
             }
 
             var res = getPreviousOrParentLastChild(node);
             node = res[0];
-            if (res[1] > 0) {
-                idx++;
-            }
+            idx += res[1];
 
             var i = 0;
             while (node && i < 100) {
                 i++;
-                if (node.nodeType === 3) { // #text
+                if (node.nodeName === "BR") {
+                    getById("div1").innerText = getById("div1").innerText + "\nBR found!";
+                    idx += 2;
+                } else if (node.nodeType === 3) { // #text
                     if (node.nodeValue.indexOf("\n") >= 0) {
+                        getById("div1").innerText = getById("div1").innerText + "\ntext with new-line found!";
                     } else {
                         idx += node.length;
                     }
@@ -151,11 +157,9 @@
                     idx += node.innerText.length;
                 }
 
-                var res2 = getPreviousOrParentLastChild(node);
-                node = res2[0];
-                if (res2[1] > 0) {
-                    idx++;
-                }
+                var resInner = getPreviousOrParentLastChild(node);
+                node = resInner[0];
+                idx += resInner[1];
             }
 
             return idx;
