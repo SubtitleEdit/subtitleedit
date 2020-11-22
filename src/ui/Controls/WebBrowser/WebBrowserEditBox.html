@@ -260,19 +260,11 @@
             }
         }
 
-        // Call with: rtl / center / left
-        function setTextDirection(dir) {
+        // Call with: center / rtl
+        function setTextDirection(align, dir) {
             var element = document.getElementById("myContent");
-            if (dir === "rtl") {
-                element.setAttribute("dir", "rtl");
-                element.setAttribute("style", "");
-            } else if (dir === "center") {
-                element.setAttribute("style", "text-align:center");
-                element.setAttribute("dir", "");
-            } else {
-                element.setAttribute("style", "");
-                element.setAttribute("dir", "");
-            }
+            element.setAttribute("style", align);
+            element.setAttribute("dir", dir);
         }
 
         function getText() {
