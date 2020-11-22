@@ -81,11 +81,10 @@ namespace Nikse.SubtitleEdit.Controls.WebBrowser
                     var ch = text[i];
                     if (ch == '\r')
                     {
-                       //continue
+                        //continue
                     }
                     else if (ch == '\n')
                     {
-                        i++;
                         if (!isNewLine)
                         {
                             sb.Append(Environment.NewLine);
@@ -205,7 +204,15 @@ namespace Nikse.SubtitleEdit.Controls.WebBrowser
             }
         }
 
-        public int SelectionLength { get; set; }
+        public int SelectionLength
+        {
+            get => SelectedText.Length;
+            set
+            {
+                //TODO: fix
+            }
+        }
+
         public bool HideSelection { get; set; }
 
         public void SelectAll()
@@ -299,13 +306,15 @@ namespace Nikse.SubtitleEdit.Controls.WebBrowser
 
         public void ClientClick()
         {
-            MouseClick?.Invoke(this, new MouseEventArgs(MouseButtons.Left, 1, 1, 1, 1));
+            var mp = PointToClient(MousePosition);
+            MouseClick?.Invoke(this, new MouseEventArgs(MouseButtons.Left, 1, mp.X, mp.Y, 1));
             TextChanged?.Invoke(this, new KeyEventArgs(0));
         }
 
         public void ClientMouseMove()
         {
-            MouseMove?.Invoke(this, new MouseEventArgs(MouseButtons.Left, 1, 1, 1, 1));
+            var mp = PointToClient(MousePosition);
+            MouseMove?.Invoke(this, new MouseEventArgs(MouseButtons.None, 0, mp.X, mp.Y, 0));
         }
 
         internal int GetCharIndexFromPosition(Point pt)
@@ -315,10 +324,17 @@ namespace Nikse.SubtitleEdit.Controls.WebBrowser
 
         public void Clear()
         {
+            Text = string.Empty;
         }
 
         public void Undo()
         {
+            if (Document == null)
+            {
+                return;
+            }
+
+            Document.ExecCommand("undo", false, null);
         }
 
         public void ClearUndo()

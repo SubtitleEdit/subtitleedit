@@ -109,7 +109,7 @@
                         if (node.parentNode.parentNode.id === "myContent" && !node.parentNode.previousSibling) {
                             // skip first P
                         } else {
-                            extraChar = 1;
+                            extraChar = 2;
                         }
                     }
 
@@ -129,6 +129,7 @@
             var idx = offset;
 
             if (node.nodeName === "P" && node.previousSibling) {
+                idx++;
                 idx++;
             }
 
