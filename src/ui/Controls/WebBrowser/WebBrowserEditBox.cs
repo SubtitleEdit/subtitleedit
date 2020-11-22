@@ -115,20 +115,13 @@ namespace Nikse.SubtitleEdit.Controls.WebBrowser
                         Thread.Sleep(5);
                         Application.DoEvents();
 
-                        _rightToLeft = Configuration.Settings.General.RightToLeftMode;
                         _center = Configuration.Settings.General.CenterSubtitleInTextBox;
+                        _rightToLeft = Configuration.Settings.General.RightToLeftMode;
 
-                        var code = "left";
-                        if (_rightToLeft)
-                        {
-                            code = "rtl";
-                        }
-                        else if (_center)
-                        {
-                            code = "center";
-                        }
+                        var align = _center ? "text-align:center" : string.Empty;
+                        var dir = _rightToLeft ? "rtl" : string.Empty;
 
-                        Document.InvokeScript("setTextDirection", new object[] { code });
+                        Document.InvokeScript("setTextDirection", new object[] { align, dir });
                     }
 
                     Document.InvokeScript("setText", new object[] { value });
