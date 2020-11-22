@@ -83,10 +83,6 @@
                 window.external.ClientKeyUp(e.keyCode, e.ctrlKey, e.shiftKey, e.altKey);
             });
 
-            getById("myContent").addEventListener("change", function (e) {
-                window.external.ClientChanged();
-            });
-
             getById("myContent").addEventListener("click", function (e) {
                 window.external.ClientClick();
             });
