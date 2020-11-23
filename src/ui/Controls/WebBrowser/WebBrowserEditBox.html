@@ -215,11 +215,9 @@
         }
 
         function getNextNode(node) {
-
             if (node.firstChild) {
                 return node.firstChild;
             }
-
 
             if (node.nextSibling) {
                 return node.nextSibling;
@@ -227,6 +225,8 @@
 
             if (node.parentNode && node.parentNode.id !== "myContent" && node.parentNode.nextSibling) {
                 if (node.parentNode.nextSibling.firstChild) {
+                    if (node.parentNode.nodeName === "P") {
+                    }
                     return node.parentNode.nextSibling;
                 }
 
@@ -241,16 +241,22 @@
                 return;
             }
 
+            var extra = 0;
             var node = document.getElementById("myContent").firstChild;
+            var firstNode = true;
             var i = 0;
             var idx = 0;
             while (node && i < 100) {
                 i++;
-                if (node.nodeType === Node.TEXT_NODE && node.nodeValue) {
-                    if (node.nodeValue && idx + node.nodeValue.length > pos) {
+                if (node.nodeName === "BR") {
+                    extra++;
+                } if (!firstNode && node.nodeName === "P") {
+                    extra++;
+                } else if (node.nodeType === Node.TEXT_NODE && node.nodeValue) {
+                    if (node.nodeValue && idx + extra + node.nodeValue.length >= pos) {
                         var range = document.createRange();
                         var sel = window.getSelection();
-                        var newIdx = pos - idx;
+                        var newIdx = pos - idx - extra;
                         range.setStart(node, newIdx);
                         range.collapse(true);
                         sel.removeAllRanges();
@@ -261,10 +267,10 @@
                     idx += node.nodeValue.length;
                 }
                 node = getNextNode(node);
+                firstNode = false;
             }
         }
 
-        // Call with: center / rtl
         function setTextDirection(align, dir) {
             var element = document.getElementById("myContent");
             element.setAttribute("style", align);
