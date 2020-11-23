@@ -102,40 +102,43 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 return;
             }
 
-            using (var reader = XmlReader.Create(fileNameOrUrl))
+            try
             {
-                reader.MoveToContent();
-                while (reader.Read())
+                using (var reader = XmlReader.Create(fileNameOrUrl))
                 {
-                    if (reader.NodeType == XmlNodeType.Element && !reader.IsEmptyElement)
+                    reader.MoveToContent();
+                    while (reader.Read())
                     {
-                        if (reader.Name == "name")
+                        if (reader.NodeType == XmlNodeType.Element && !reader.IsEmptyElement)
                         {
-                            var name = reader.ReadElementContentAsString().Trim();
-                            if (name.Length > 0)
+                            if (reader.Name == "name")
                             {
-                                if (name.Contains(' '))
+                                var name = reader.ReadElementContentAsString().Trim();
+                                if (name.Length > 0)
                                 {
-                                    _namesMultiList.Add(name);
-                                }
-                                else
-                                {
-                                    _namesList.Add(name);
+                                    if (name.Contains(' '))
+                                    {
+                                        _namesMultiList.Add(name);
+                                    }
+                                    else
+                                    {
+                                        _namesList.Add(name);
+                                    }
                                 }
                             }
-                        }
-                        else if (reader.Name == "blacklist")
-                        {
-                            while (reader.Read() && reader.NodeType != XmlNodeType.EndElement)
+                            else if (reader.Name == "blacklist")
                             {
-                                if (reader.NodeType == XmlNodeType.Element && !reader.IsEmptyElement)
+                                while (reader.Read() && reader.NodeType != XmlNodeType.EndElement)
                                 {
-                                    if (reader.Name == "name")
+                                    if (reader.NodeType == XmlNodeType.Element && !reader.IsEmptyElement)
                                     {
-                                        var name = reader.ReadElementContentAsString().Trim();
-                                        if (name.Length > 0)
+                                        if (reader.Name == "name")
                                         {
-                                            _blackList.Add(name);
+                                            var name = reader.ReadElementContentAsString().Trim();
+                                            if (name.Length > 0)
+                                            {
+                                                _blackList.Add(name);
+                                            }
                                         }
                                     }
                                 }
@@ -143,6 +146,10 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                         }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Unable to read name list file: " + fileNameOrUrl, ex);
             }
         }
 
