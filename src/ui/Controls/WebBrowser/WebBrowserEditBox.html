@@ -21,7 +21,8 @@
             font-family: Tahoma;
             font-weight: bold;
             color: brown;
-            /*          border: 2px blue;
+            background-color: lightblue;
+            /* border: 2px blue;
             border-style: solid;*/
             margin: 0;
             padding: 0;
@@ -67,6 +68,17 @@
             return document.getElementById(id);
         }
 
+        var millisecondsLastActivity = 0;
+        function syntaxColorIfNotActive() {
+            setTimeout(function () {
+                var ms = Date.now();
+                if (ms - millisecondsLastActivity > 100) {
+                    window.external.UpdateSyntaxColor(getById("myContent").innerText);
+                }
+            }, 150);
+            millisecondsLastActivity = Date.now();
+        }
+
         function initEvents() {
             getById("myContent").addEventListener("focus", function (e) {
                 window.external.ClientFocus();
@@ -82,10 +94,12 @@
 
             getById("myContent").addEventListener("keyup", function (e) {
                 window.external.ClientKeyUp(e.keyCode, e.ctrlKey, e.shiftKey, e.altKey);
+                syntaxColorIfNotActive();
             });
 
             getById("myContent").addEventListener("click", function (e) {
                 window.external.ClientClick();
+                syntaxColorIfNotActive();
             });
 
             getById("myContent").addEventListener("mousemove", function (e) {
@@ -149,7 +163,8 @@
                     idx += 2;
                 } else if (node.nodeType === 3) { // #text
                     if (node.nodeValue.indexOf("\n") >= 0) {
-                        getById("div1").innerText = getById("div1").innerText + "\ntext with new-line found!";
+                        //ext with new-line found!";
+                        idx += node.length;
                     } else {
                         idx += node.length;
                     }
@@ -298,6 +313,12 @@
                 document.getElementById("myContent").setAttribute('disabled', 'disabled');
                 document.getElementById("myContent").setAttribute('class', 'disabled');
             }
+        }
+
+        function setHtml(newHtml) {
+            var r = getCursorPosition();
+            document.getElementById("myContent").innerHTML = newHtml;
+            setCursorPosition(r);
         }
     </script>
 </body>
