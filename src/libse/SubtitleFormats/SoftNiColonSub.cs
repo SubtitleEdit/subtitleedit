@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -41,7 +42,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 int count = 0;
                 lineSb.Clear();
                 bool nextLineInItalics = false;
-                foreach (string line in lines)
+                foreach (var line in lines)
                 {
                     // Append line break in every line except the first one
                     if (count > 0)
@@ -66,12 +67,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         // Remove </i> from the end
                         tempLine = tempLine.Remove(tempLine.Length - 4, 4);
                         // Add new italics tag at the beginning
-                        tempLine = "[" + tempLine;
+                        tempLine = $"[{tempLine}]";
                     }
                     else if (tempLine.StartsWith("<i>", StringComparison.Ordinal) && Utilities.CountTagInText(tempLine, "<i>") > Utilities.CountTagInText(tempLine, "</i>"))
                     {
                         // Line starts with <i> but italics are not closed. So the next line should be in italics
                         nextLineInItalics = true;
+                        tempLine += "]";
                     }
                     lineSb.Append(tempLine);
                     count++;
@@ -79,6 +81,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     text = lineSb.ToString();
                     // Replace remaining italics tags
                     text = text.Replace("<i>", @"[");
+                    text = text.Replace("</i>]", @"]");
                     text = text.Replace("</i>", @"]");
                     text = HtmlUtil.RemoveHtmlTags(text);
                 }
@@ -91,8 +94,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 sb.AppendLine($"{text}{Environment.NewLine}{p.StartTime.ToHHMMSSPeriodFF().Replace(".", ":")}\\{p.EndTime.ToHHMMSSPeriodFF().Replace(".", ":")}");
             }
-            sb.AppendLine(@"*END*");
-            sb.AppendLine(@"...........\...........");
+
+            var last = subtitle.Paragraphs.Last();
+            if (last == null)
+            {
+                sb.AppendLine("*END*");
+                sb.AppendLine(@"...........\...........");
+            }
+            else if (!last.Text.StartsWith("*END", StringComparison.Ordinal))
+            {
+                var endTime = new TimeCode(last.EndTime.TotalMilliseconds + 1000.0) { Milliseconds = 0 };
+                sb.AppendLine("*END*");
+                sb.AppendLine($"{endTime.ToHHMMSSPeriodFF()}\\{endTime.ToHHMMSSPeriodFF()}");
+            }
+
             sb.AppendLine(@"*CODE*");
             sb.AppendLine(@"0000000000000000");
             sb.AppendLine(@"*CAST*");
@@ -224,6 +239,5 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             subtitle.Renumber();
         }
-
     }
 }
