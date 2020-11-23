@@ -2,6 +2,7 @@
 using System;
 using System.Drawing;
 using System.IO;
+using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading;
@@ -41,10 +42,22 @@ namespace Nikse.SubtitleEdit.Controls.WebBrowser
             var assembly = Assembly.GetExecutingAssembly();
             BringToFront();
 
+            LoadHtml(assembly);
+
+            IsWebBrowserContextMenuEnabled = false;
+            AllowWebBrowserDrop = false;
+            ObjectForScripting = this;
+        }
+
+        private void LoadHtml(Assembly assembly)
+        {
             using (var stream = assembly.GetManifestResourceStream("Nikse.SubtitleEdit.Controls.WebBrowser.WebBrowserEditBox.html"))
             using (var reader = new StreamReader(stream))
             {
                 var s = reader.ReadToEnd();
+                s = s.Replace("color: brown;", "color: " + ColorTranslator.ToHtml(Configuration.Settings.General.SubtitleFontColor) + ";");
+                s = s.Replace("background-color: lightblue;", "background-color: " + ColorTranslator.ToHtml(Configuration.Settings.General.SubtitleBackgroundColor) + ";");
+                
                 DocumentText = s;
             }
 
@@ -56,10 +69,6 @@ namespace Nikse.SubtitleEdit.Controls.WebBrowser
                 Application.DoEvents();
                 Thread.Sleep(5);
             }
-
-            IsWebBrowserContextMenuEnabled = false;
-            AllowWebBrowserDrop = false;
-            ObjectForScripting = this;
         }
 
         public override string Text
@@ -124,7 +133,8 @@ namespace Nikse.SubtitleEdit.Controls.WebBrowser
                         Document.InvokeScript("setTextDirection", new object[] { align, dir });
                     }
 
-                    Document.InvokeScript("setText", new object[] { value });
+                    UpdateSyntaxColor(value);
+                    //Document.InvokeScript("setText", new object[] { value });
                 }
             }
         }
@@ -333,5 +343,116 @@ namespace Nikse.SubtitleEdit.Controls.WebBrowser
         public void ClearUndo()
         {
         }
+
+        private string _lastHtml = null;
+
+        public void UpdateSyntaxColor(string text)
+        {
+            var html = HighLightHtml(text);
+            if (html.Contains("\n"))
+            {
+                html = html.Replace("\r\n\r\n", "<br />");
+                html = html.Replace("\r\n", "<br />");
+                html = html.Replace("\n", "<br />");
+            }
+
+            if (html != _lastHtml && Document != null)
+            {
+                Document.InvokeScript("setHtml", new object[] { html });
+                _lastHtml = html;
+            }
+        }
+
+        public string HighLightHtml(string text)
+        {
+            if (text == null)
+            {
+                return string.Empty;
+            }
+
+            bool htmlTagOn = false;
+            bool htmlTagFontOn = false;
+            int htmlTagStart = -1;
+            bool assaTagOn = false;
+            bool assaPrimaryColorTagOn = false;
+            bool assaSecondaryColorTagOn = false;
+            bool assaBorderColorTagOn = false;
+            bool assaShadowColorTagOn = false;
+            var assaTagStart = -1;
+            int tagOn = -1;
+            var textLength = text.Length;
+            int i = 0;
+            var sb = new StringBuilder();
+
+            while (i < textLength)
+            {
+                var ch = text[i];
+                if (assaTagOn)
+                {
+                    if (ch == '}' && tagOn >= 0)
+                    {
+                        assaTagOn = false;
+                        sb.Append($"<font color=\"{ColorTranslator.ToHtml(Configuration.Settings.General.SubtitleTextBoxAssColor)}\">");
+                        var inner = text.Substring(assaTagStart, i - assaTagStart + 1);
+                        sb.Append(WebUtility.HtmlEncode(inner));
+                        sb.Append("</font>");
+                        assaTagStart = -1;
+                    }
+                }
+                else if (htmlTagOn)
+                {
+                    if (ch == '>' && tagOn >= 0)
+                    {
+                        htmlTagOn = false;
+                        sb.Append($"<font color=\"{ColorTranslator.ToHtml(Configuration.Settings.General.SubtitleTextBoxHtmlColor)}\">");
+                        var inner = text.Substring(htmlTagStart, i - htmlTagStart + 1);
+                        sb.Append(WebUtility.HtmlEncode(inner));
+                        sb.Append("</font>");
+                        htmlTagStart = -1;
+                    }
+                }
+                else if (ch == '{' && i < textLength - 1 && text[i + 1] == '\\' && text.IndexOf('}', i) > 0)
+                {
+                    var s = text.Substring(i);
+                    assaTagOn = true;
+                    tagOn = i;
+                    assaTagStart = i;
+                }
+                else if (ch == '<')
+                {
+                    var s = text.Substring(i);
+                    if (s.StartsWith("<i>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("<b>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("<u>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("</i>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("</b>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("</u>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("<box>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("</box>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("</font>", StringComparison.OrdinalIgnoreCase) ||
+                        (s.StartsWith("<font ", StringComparison.OrdinalIgnoreCase) &&
+                         text.IndexOf("</font>", i, StringComparison.OrdinalIgnoreCase) > 0))
+                    {
+                        htmlTagOn = true;
+                        htmlTagStart = i;
+                        htmlTagFontOn = s.StartsWith("<font ", StringComparison.OrdinalIgnoreCase);
+                        tagOn = i;
+                    }
+                    else
+                    {
+                        sb.Append(WebUtility.HtmlEncode(ch.ToString()));
+                    }
+                }
+                else
+                {
+                    sb.Append(WebUtility.HtmlEncode(ch.ToString()));
+                }
+
+                i++;
+            }
+
+            return sb.ToString();
+        }
+
     }
 }
