@@ -48,7 +48,7 @@ namespace Nikse.SubtitleEdit.Core
         }
 
         /// <summary>
-        /// Copy constructor (only paragraphs)
+        /// Copy constructor (without history).
         /// </summary>
         /// <param name="subtitle">Subtitle to copy</param>
         /// <param name="generateNewId">Generate new ID (guid) for paragraphs</param>
@@ -67,6 +67,7 @@ namespace Nikse.SubtitleEdit.Core
             Header = subtitle.Header;
             Footer = subtitle.Footer;
             FileName = subtitle.FileName;
+           // OriginalFormat = subtitle.OriginalFormat;
         }
 
         public Subtitle(List<Paragraph> paragraphs) : this()
