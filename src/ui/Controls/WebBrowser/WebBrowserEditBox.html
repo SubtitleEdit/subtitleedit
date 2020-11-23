@@ -265,13 +265,18 @@
                 i++;
                 if (node.nodeName === "BR") {
                     extra++;
-                } if (!firstNode && node.nodeName === "P") {
+                    pos--;
+                } else if (!firstNode && node.nodeName === "P") {
                     extra++;
+                    pos--;
                 } else if (node.nodeType === Node.TEXT_NODE && node.nodeValue) {
                     if (node.nodeValue && idx + extra + node.nodeValue.length >= pos) {
                         var range = document.createRange();
                         var sel = window.getSelection();
                         var newIdx = pos - idx - extra;
+                        if (newIdx < 0) {
+                            newIdx = 0;
+                        }
                         range.setStart(node, newIdx);
                         range.collapse(true);
                         sel.removeAllRanges();

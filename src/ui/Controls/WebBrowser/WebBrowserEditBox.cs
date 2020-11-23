@@ -134,7 +134,6 @@ namespace Nikse.SubtitleEdit.Controls.WebBrowser
                     }
 
                     UpdateSyntaxColor(value);
-                    //Document.InvokeScript("setText", new object[] { value });
                 }
             }
         }
@@ -344,7 +343,7 @@ namespace Nikse.SubtitleEdit.Controls.WebBrowser
         {
         }
 
-        private string _lastHtml = null;
+        private string _lastHtml;
 
         public void UpdateSyntaxColor(string text)
         {
