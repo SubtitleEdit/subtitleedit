@@ -179,6 +179,7 @@ IF NOT EXIST "temp_zip"              MD "temp_zip"
 IF NOT EXIST "temp_zip\Languages"    MD "temp_zip\Languages"
 IF NOT EXIST "temp_zip\Dictionaries" MD "temp_zip\Dictionaries"
 IF NOT EXIST "temp_zip\Ocr"          MD "temp_zip\Ocr"
+IF NOT EXIST "temp_zip\Tesseract302"          MD "temp_zip\Tesseract302"
 
 ECHO.
 COPY /Y /V "..\..\..\..\LICENSE.txt"      "temp_zip\"
@@ -189,6 +190,7 @@ COPY /Y /V "SubtitleEdit.exe"          "temp_zip\"
 COPY /Y /V "Languages\*.xml"           "temp_zip\Languages\"
 COPY /Y /V "..\..\..\..\Dictionaries\*.*" "temp_zip\Dictionaries\"
 COPY /Y /V "..\..\..\..\Ocr\*.*"          "temp_zip\Ocr\"
+XCOPY /Y /V "..\..\..\..\Tesseract302\*.*"      "temp_zip\Tesseract302\" /S
 
 PUSHD "temp_zip"
 START "" /B /WAIT "%SEVENZIP%" a -tzip -mx=9 "SubtitleEdit-%VERSION%.zip" * >NUL
