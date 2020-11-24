@@ -132,6 +132,21 @@
                     return [node.parentNode.previousSibling.lastChild, extraChar];
                 }
                 return [node.parentNode.previousSibling, extraChar];
+            } else if (node.parentNode.parentNode && node.parentNode.parentNode.previousSibling) {
+                if (node.parentNode.parentNode.previousSibling.lastChild) {
+
+                    if (node.parentNode.parentNode.nodeName === "P") {
+                        if (node.parentNode.parentNode.parentNode.id === "myContent" && !node.parentNode.parentNode.previousSibling) {
+                            // skip first P
+                        } else {
+                            //                            getById("div1").innerText = getById("div1").innerText + "\nP found1";
+                            extraChar = 2;
+                        }
+                    }
+
+                    return [node.parentNode.parentNode.previousSibling.lastChild, extraChar];
+                }
+                return [node.parentNode.parentNode.previousSibling, extraChar];
             }
 
             return [null, extraChar];
