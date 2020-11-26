@@ -152,6 +152,10 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool ListViewSyntaxMoreThanXLines { get; set; }
         public Color ListViewSyntaxErrorColor { get; set; }
         public Color ListViewUnfocusedSelectedColor { get; set; }
+        public Color Color1ForShortcut { get; set; }
+        public Color Color2ForShortcut { get; set; }
+        public Color Color3ForShortcut { get; set; }
+        public Color Color4ForShortcut { get; set; }
         public bool ListViewShowColumnEndTime { get; set; }
         public bool ListViewShowColumnDuration { get; set; }
         public bool ListViewShowColumnCharsPerSec { get; set; }
@@ -354,6 +358,10 @@ namespace Nikse.SubtitleEdit.Core.Common
             ListViewSyntaxColorGap = true;
             ListViewSyntaxErrorColor = Color.FromArgb(255, 180, 150);
             ListViewUnfocusedSelectedColor = Color.LightBlue;
+            Color1ForShortcut = Color.Yellow;
+            Color2ForShortcut = Color.Red;
+            Color3ForShortcut = Color.Green;
+            Color4ForShortcut = Color.Cyan;
             ListViewShowColumnEndTime = true;
             ListViewShowColumnDuration = true;
             SplitAdvanced = false;
@@ -1897,6 +1905,10 @@ $HorzAlign          =   Center
         public string MainListViewAlignmentN7 { get; set; }
         public string MainListViewAlignmentN8 { get; set; }
         public string MainListViewAlignmentN9 { get; set; }
+        public string MainListViewColor1 { get; set; }
+        public string MainListViewColor2 { get; set; }
+        public string MainListViewColor3 { get; set; }
+        public string MainListViewColor4 { get; set; }
         public string MainRemoveFormatting { get; set; }
         public string MainListViewCopyText { get; set; }
         public string MainListViewCopyTextFromOriginalToCurrent { get; set; }
@@ -3781,6 +3793,30 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.ListViewUnfocusedSelectedColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+            }
+
+            subNode = node.SelectSingleNode("Color1ForShortcut");
+            if (subNode != null)
+            {
+                settings.Tools.Color1ForShortcut = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+            }
+
+            subNode = node.SelectSingleNode("Color2ForShortcut");
+            if (subNode != null)
+            {
+                settings.Tools.Color2ForShortcut = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+            }
+
+            subNode = node.SelectSingleNode("Color3ForShortcut");
+            if (subNode != null)
+            {
+                settings.Tools.Color3ForShortcut = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+            }
+
+            subNode = node.SelectSingleNode("Color4ForShortcut");
+            if (subNode != null)
+            {
+                settings.Tools.Color4ForShortcut = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
             }
 
             subNode = node.SelectSingleNode("ListViewShowColumnEndTime");
@@ -6917,6 +6953,30 @@ $HorzAlign          =   Center
                     shortcuts.MainListViewAlignmentN9 = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainListViewColor1");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewColor1 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewColor2");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewColor2 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewColor3");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewColor3 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewColor4");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewColor4 = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainRemoveFormatting");
                 if (subNode != null)
                 {
@@ -7876,6 +7936,10 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ListViewSyntaxColorGap", settings.Tools.ListViewSyntaxColorGap.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxErrorColor", settings.Tools.ListViewSyntaxErrorColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewUnfocusedSelectedColor", settings.Tools.ListViewUnfocusedSelectedColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("Color1ForShortcut", settings.Tools.Color1ForShortcut.ToArgb().ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("Color2ForShortcut", settings.Tools.Color2ForShortcut.ToArgb().ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("Color3ForShortcut", settings.Tools.Color3ForShortcut.ToArgb().ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("Color4ForShortcut", settings.Tools.Color4ForShortcut.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewShowColumnEndTime", settings.Tools.ListViewShowColumnEndTime.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewShowColumnDuration", settings.Tools.ListViewShowColumnDuration.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewShowColumnCharsPerSec", settings.Tools.ListViewShowColumnCharsPerSec.ToString(CultureInfo.InvariantCulture));
@@ -8467,6 +8531,10 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainListViewAlignmentN7", shortcuts.MainListViewAlignmentN7);
             textWriter.WriteElementString("MainListViewAlignmentN8", shortcuts.MainListViewAlignmentN8);
             textWriter.WriteElementString("MainListViewAlignmentN9", shortcuts.MainListViewAlignmentN9);
+            textWriter.WriteElementString("MainListViewColor1", shortcuts.MainListViewColor1);
+            textWriter.WriteElementString("MainListViewColor2", shortcuts.MainListViewColor2);
+            textWriter.WriteElementString("MainListViewColor3", shortcuts.MainListViewColor3);
+            textWriter.WriteElementString("MainListViewColor4", shortcuts.MainListViewColor4);
             textWriter.WriteElementString("MainRemoveFormatting", shortcuts.MainRemoveFormatting);
             textWriter.WriteElementString("MainListViewCopyText", shortcuts.MainListViewCopyText);
             textWriter.WriteElementString("MainListViewCopyTextFromOriginalToCurrent", shortcuts.MainListViewCopyTextFromOriginalToCurrent);

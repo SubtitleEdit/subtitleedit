@@ -154,6 +154,10 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainListViewAlignmentN7 { get; set; }
         public Keys MainListViewAlignmentN8 { get; set; }
         public Keys MainListViewAlignmentN9 { get; set; }
+        public Keys MainListViewColor1 { get; set; }
+        public Keys MainListViewColor2 { get; set; }
+        public Keys MainListViewColor3 { get; set; }
+        public Keys MainListViewColor4 { get; set; }
         public Keys MainListViewFocusWaveform { get; set; }
         public Keys MainListViewGoToNextError { get; set; }
         public Keys MainListViewRemoveTimeCodes { get; set; }
@@ -268,6 +272,10 @@ namespace Nikse.SubtitleEdit.Logic
             MainListViewAlignmentN7 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignmentN7);
             MainListViewAlignmentN8 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignmentN8);
             MainListViewAlignmentN9 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignmentN9);
+            MainListViewColor1 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColor1);
+            MainListViewColor2 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColor2);
+            MainListViewColor3 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColor3);
+            MainListViewColor4 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColor4);
             MainListViewFocusWaveform = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewFocusWaveform);
             MainListViewGoToNextError = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewGoToNextError);
             MainListViewRemoveTimeCodes = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewRemoveTimeCodes);

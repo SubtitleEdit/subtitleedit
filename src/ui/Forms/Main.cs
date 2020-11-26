@@ -626,6 +626,26 @@ namespace Nikse.SubtitleEdit.Forms
                 SetAlignment("{\\an9}", false);
                 e.SuppressKeyPress = true;
             }
+            else if (e.KeyData == _shortcuts.MainListViewColor1)
+            {
+                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color1ForShortcut));
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewColor2)
+            {
+                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color2ForShortcut));
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewColor3)
+            {
+                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color3ForShortcut));
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewColor4)
+            {
+                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color4ForShortcut));
+                e.SuppressKeyPress = true;
+            }
         }
 
         private void InitializeWaveformZoomDropdown()
@@ -9501,6 +9521,26 @@ namespace Nikse.SubtitleEdit.Forms
                 SetAlignment("{\\an9}", false);
                 e.SuppressKeyPress = true;
             }
+            else if (e.KeyData == _shortcuts.MainListViewColor1)
+            {
+                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color1ForShortcut));
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewColor2)
+            {
+                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color2ForShortcut));
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewColor3)
+            {
+                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color3ForShortcut));
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewColor4)
+            {
+                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color4ForShortcut));
+                e.SuppressKeyPress = true;
+            }
             else if (e.KeyData == _shortcuts.MainListViewToggleMusicSymbols)
             {
                 textBoxListViewText.Text = ToogleMusicSymbols("♪", textBoxListViewText.Text);
@@ -11842,29 +11882,57 @@ namespace Nikse.SubtitleEdit.Forms
                     color = Utilities.ColorToHex(colorDialog1.Color);
                 }
 
-                MakeHistoryForUndo(_language.BeforeSettingColor);
-                foreach (ListViewItem item in SubtitleListview1.SelectedItems)
+                SetListViewColor(color);
+            }
+        }
+
+        private void SetListViewColor(string color)
+        {
+            MakeHistoryForUndo(_language.BeforeSettingColor);
+            var remove = true;
+
+            foreach (ListViewItem item in SubtitleListview1.SelectedItems)
+            {
+                var p = _subtitle.GetParagraphOrDefault(item.Index);
+                if (p != null)
                 {
-                    var p = _subtitle.GetParagraphOrDefault(item.Index);
-                    if (p != null)
+                    var s = Utilities.RemoveSsaTags(p.Text);
+                    if (!s.StartsWith("<font ", StringComparison.OrdinalIgnoreCase) || !s.Contains(color, StringComparison.OrdinalIgnoreCase))
+                    {
+                        remove = false;
+                        break;
+                    }
+                }
+            }
+
+            foreach (ListViewItem item in SubtitleListview1.SelectedItems)
+            {
+                var p = _subtitle.GetParagraphOrDefault(item.Index);
+                if (p != null)
+                {
+                    if (remove)
+                    {
+                        p.Text = HtmlUtil.RemoveOpenCloseTags(p.Text, HtmlUtil.TagFont);
+                    }
+                    else
                     {
                         SetFontColor(p, color);
-                        SubtitleListview1.SetText(item.Index, p.Text);
-                        if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsAlternateTextColumnVisible)
+                    }
+
+                    SubtitleListview1.SetText(item.Index, p.Text);
+                    if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsAlternateTextColumnVisible)
+                    {
+                        var original = Utilities.GetOriginalParagraph(item.Index, p, _subtitleAlternate.Paragraphs);
+                        if (original != null)
                         {
-                            var original = Utilities.GetOriginalParagraph(item.Index, p, _subtitleAlternate.Paragraphs);
-                            if (original != null)
-                            {
-                                SetFontColor(original, color);
-                                SubtitleListview1.SetAlternateText(item.Index, original.Text);
-                            }
+                            SetFontColor(original, color);
+                            SubtitleListview1.SetAlternateText(item.Index, original.Text);
                         }
                     }
                 }
-
-                RefreshSelectedParagraph();
-
             }
+
+            RefreshSelectedParagraph();
         }
 
         private static void SetFontColor(Paragraph p, string color)
@@ -17275,6 +17343,26 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.KeyData == _shortcuts.MainListViewAlignmentN9)
             {
                 SetAlignment("{\\an9}", true);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewColor1)
+            {
+                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color1ForShortcut));
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewColor2)
+            {
+                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color2ForShortcut));
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewColor3)
+            {
+                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color3ForShortcut));
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewColor4)
+            {
+                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color4ForShortcut));
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainListViewFocusWaveform)
@@ -25293,7 +25381,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             int extraNewLineLength = Environment.NewLine.Length - 1;
-            
+
             int lineBreakPos = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
             int pos = textBox.SelectionStart;
             var s = HtmlUtil.RemoveHtmlTags(text, true).Replace(Environment.NewLine, string.Empty); // we don't count new line in total length... correct?

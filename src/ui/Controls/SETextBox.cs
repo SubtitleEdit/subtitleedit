@@ -32,13 +32,13 @@ namespace Nikse.SubtitleEdit.Controls
         private TextBox _textBox;
         private int _mouseMoveSelectionLength;
         private WebBrowserEditBox _htmlBox;
+        private bool _useWebBrowser = false;
 
         public SETextBox()
         {
             Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
         }
 
-        private bool _useWebBrowser = false;
         public void Initialize(bool useSyntaxColoring)
         {
             ContextMenuStrip oldContextMenuStrip = null;

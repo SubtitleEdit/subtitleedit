@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Controls.WebBrowser
         private bool _center;
         private long _lastKeyOrClick = -1;
         private bool _lastKeyOrClickActivity;
-        private System.Windows.Forms.Timer _timerSyntaxColor;
+        private readonly System.Windows.Forms.Timer _timerSyntaxColor;
 
         public new event EventHandler TextChanged;
         public new event KeyEventHandler KeyDown;
