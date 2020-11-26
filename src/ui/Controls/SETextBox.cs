@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Controls
             Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
         }
 
-        private bool _useWebBrowser = true;
+        private bool _useWebBrowser = false;
         public void Initialize(bool useSyntaxColoring)
         {
             ContextMenuStrip oldContextMenuStrip = null;

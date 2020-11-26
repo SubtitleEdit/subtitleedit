@@ -1187,7 +1187,7 @@ $HorzAlign          =   Center
 
             SubtitleTextBoxFontSize = 12;
             SubtitleListViewFontSize = 10;
-            SubtitleTextBoxSyntaxColor = true;
+            SubtitleTextBoxSyntaxColor = false;
             SubtitleTextBoxHtmlColor = Color.CornflowerBlue;
             SubtitleTextBoxAssColor = Color.BlueViolet;
             SubtitleTextBoxFontBold = true;

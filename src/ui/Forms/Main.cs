@@ -25285,16 +25285,18 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void UpdatePositionAndTotalLength(Label lineTotal, SETextBox textBox)
         {
-            if (string.IsNullOrEmpty(textBox.Text))
+            var text = textBox.Text;
+            if (string.IsNullOrEmpty(text))
             {
                 lineTotal.Text = string.Empty;
                 return;
             }
 
             int extraNewLineLength = Environment.NewLine.Length - 1;
-            int lineBreakPos = textBox.Text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
+            
+            int lineBreakPos = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
             int pos = textBox.SelectionStart;
-            var s = HtmlUtil.RemoveHtmlTags(textBox.Text, true).Replace(Environment.NewLine, string.Empty); // we don't count new line in total length... correct?
+            var s = HtmlUtil.RemoveHtmlTags(text, true).Replace(Environment.NewLine, string.Empty); // we don't count new line in total length... correct?
             int totalLength = s.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics);
             string totalL;
 
@@ -25315,7 +25317,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            int secondLineBreakPos = textBox.Text.IndexOf(Environment.NewLine, lineBreakPos + 1, StringComparison.Ordinal);
+            int secondLineBreakPos = text.IndexOf(Environment.NewLine, lineBreakPos + 1, StringComparison.Ordinal);
             if (secondLineBreakPos < 0 || pos <= secondLineBreakPos + extraNewLineLength)
             {
                 lineTotal.Text = "2," + (pos - (lineBreakPos + extraNewLineLength)) + totalL;
@@ -25323,7 +25325,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            int thirdLineBreakPos = textBox.Text.IndexOf(Environment.NewLine, secondLineBreakPos + 1, StringComparison.Ordinal);
+            int thirdLineBreakPos = text.IndexOf(Environment.NewLine, secondLineBreakPos + 1, StringComparison.Ordinal);
             if (thirdLineBreakPos < 0 || pos < thirdLineBreakPos + (extraNewLineLength * 2))
             {
                 lineTotal.Text = "3," + (pos - (secondLineBreakPos + extraNewLineLength)) + totalL;
@@ -25331,7 +25333,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            int forthLineBreakPos = textBox.Text.IndexOf(Environment.NewLine, thirdLineBreakPos + 1, StringComparison.Ordinal);
+            int forthLineBreakPos = text.IndexOf(Environment.NewLine, thirdLineBreakPos + 1, StringComparison.Ordinal);
             if (forthLineBreakPos < 0 || pos < forthLineBreakPos + (extraNewLineLength * 3))
             {
                 lineTotal.Text = "4," + (pos - (thirdLineBreakPos + extraNewLineLength)) + totalL;
