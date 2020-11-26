@@ -68,16 +68,11 @@
             return document.getElementById(id);
         }
 
-        var millisecondsLastActivity = 0;
-        function syntaxColorIfNotActive() {
-            setTimeout(function () {
-                var ms = Date.now();
-                if (ms - millisecondsLastActivity > 100) {
-                    window.external.UpdateSyntaxColor(getById("myContent").innerText);
-                }
-            }, 150);
-            millisecondsLastActivity = Date.now();
-        }
+        //function syntaxColorIfNotActive() {
+        //    setTimeout(function () {
+        //        window.external.UpdateSyntaxColorFromJs(getText(), document.getElementById("myContent").innerHTML);
+        //    }, 1);
+        //}
 
         function initEvents() {
             getById("myContent").addEventListener("focus", function (e) {
@@ -94,12 +89,12 @@
 
             getById("myContent").addEventListener("keyup", function (e) {
                 window.external.ClientKeyUp(e.keyCode, e.ctrlKey, e.shiftKey, e.altKey);
-                syntaxColorIfNotActive();
+//                syntaxColorIfNotActive();
             });
 
             getById("myContent").addEventListener("click", function (e) {
                 window.external.ClientClick();
-                syntaxColorIfNotActive();
+//                syntaxColorIfNotActive();
             });
 
             getById("myContent").addEventListener("mousemove", function (e) {
@@ -107,98 +102,71 @@
             });
         }
 
-        function getPreviousOrParentLastChild(node) {
-            if (node.previousSibling) {
-                return [node.previousSibling, 0];
-            }
-
-            if (node.parentNode && node.parentNode.id === "myContent") {
-                return [null, 0];
-            }
-
-            var extraChar = 0;
-            if (node && node.parentNode.previousSibling) {
-                if (node.parentNode.previousSibling.lastChild) {
-
-                    if (node.parentNode.nodeName === "P") {
-                        if (node.parentNode.parentNode.id === "myContent" && !node.parentNode.previousSibling) {
-                            // skip first P
-                        } else {
-                            getById("div1").innerText = getById("div1").innerText + "\nP found1";
-                            extraChar = 2;
-                        }
+        function getLengthFromChildren(node, txtObj, top) {
+            while (node != null) {
+                if (node.firstChild) {
+                    if (node.nodeName === "P" || node.nodeName === "DIV") {
+                        txtObj.l += 2;
                     }
-
-                    return [node.parentNode.previousSibling.lastChild, extraChar];
-                }
-                return [node.parentNode.previousSibling, extraChar];
-            } else if (node.parentNode.parentNode && node.parentNode.parentNode.previousSibling) {
-                if (node.parentNode.parentNode.previousSibling.lastChild) {
-
-                    if (node.parentNode.parentNode.nodeName === "P") {
-                        if (node.parentNode.parentNode.parentNode.id === "myContent" && !node.parentNode.parentNode.previousSibling) {
-                            // skip first P
-                        } else {
-                            //                            getById("div1").innerText = getById("div1").innerText + "\nP found1";
-                            extraChar = 2;
-                        }
+                    getLengthFromChildren(node.firstChild, txtObj, false);
+                } else {
+                    if (node.nodeType === 3) {
+                        txtObj.l += node.nodeValue.length;
+                    } else if (node.nodeName === "P" || node.nodeName === "DIV") {
+                        txtObj.l += 2;
+                    } else if (node.nodeName === "BR" && node.parentNode.nodeName !== "P" && node.parentNode.nodeName !== "DIV") {
+                        txtObj.l += 2;
+                    } else if (node.innerHTML === "<br>" && node.nodeName !== "P" && node.nodeName !== "DIV") {
+                        txtObj.l += 2;
                     }
-
-                    return [node.parentNode.parentNode.previousSibling.lastChild, extraChar];
                 }
-                return [node.parentNode.parentNode.previousSibling, extraChar];
+                if (top) {
+                    return;
+                }
+                node = node.nextSibling;
             }
-
-            return [null, extraChar];
+            return;
         }
 
-        function getNodePosition(node, offset) {
+        function getNodePosition(node, txtObj) {
             if (!node) {
-                return 0;
+                return txtObj.l;
             }
 
-            getById("div1").innerText = "getNodePosition for : " + getById("myContent").innerHTML;
-
-            var idx = offset;
-
-            if (node.nodeName === "P" && node.previousSibling) {
-                idx += 2;
-                getById("div1").innerText = getById("div1").innerText + "\nStart with P";
-            }
-
-            var res = getPreviousOrParentLastChild(node);
-            node = res[0];
-            idx += res[1];
-
-            var i = 0;
-            while (node && i < 100) {
-                i++;
-                if (node.nodeName === "BR") {
-                    getById("div1").innerText = getById("div1").innerText + "\nBR found!";
-                    idx += 2;
-                } else if (node.nodeType === 3) { // #text
-                    if (node.nodeValue.indexOf("\n") >= 0) {
-                        //ext with new-line found!";
-                        idx += node.length;
-                    } else {
-                        idx += node.length;
+            while (true) {
+                if (node.previousSibling) {
+                    node = node.previousSibling;
+                } else {
+                    var p = node.parentNode;
+                    if (p.id === "myContent") {
+                        return txtObj.l;
                     }
-                } else if (node.innerText) {
-                    idx += node.innerText.length;
+
+                    if (p.previousSibling) {
+                        node = p.previousSibling;
+                    } else {
+                        p = node.parentNode.parentNode;
+                        if (p && p.id === "myContent" || (p && p.nodeName === "P" && p.parentNode && p.parentNode.id === "myContent")) {
+                            return txtObj.l;
+                        }
+
+                        if (p && p.parentNode && p.parentNode.previousSibling) {
+                            node = p.parentNode.previousSibling;
+                        } else {
+                            return txtObj.l;
+                        }
+                    }
                 }
 
-                var resInner = getPreviousOrParentLastChild(node);
-                node = resInner[0];
-                idx += resInner[1];
+                getLengthFromChildren(node, txtObj, true);
             }
-
-            return idx;
         }
 
         function getCursorPosition() {
             var x = window.getSelection();
-            return getNodePosition(x.focusNode, x.focusOffset);
+            return getNodePosition(x.focusNode, { l: x.focusOffset });
         }
+
 
         function getSelectionText() {
             return window.getSelection().toString();
@@ -207,41 +175,6 @@
         function getSelectionStart() {
             var x = window.getSelection();
             return getNodePosition(x.anchorNode, x.anchorOffset);
-        }
-
-        function SetCaretPosition(el, pos) {
-
-            // Loop through all child nodes
-            for (var i = 0; i < el.childNodes.length; i++) {
-                var node = el.childNodes[i];
-                if (node.nodeType === 3) { // we have a text node
-                    if (node.length >= pos) {
-                        var range = document.createRange(),
-                            sel = window.getSelection();
-                        range.setStart(node, pos);
-                        range.collapse(true);
-                        sel.removeAllRanges();
-                        sel.addRange(range);
-                        return -1; // we are done
-                    } else {
-                        pos -= node.length;
-                    }
-                } else {
-                    pos = SetCaretPosition(node, pos);
-                    if (pos === -1) {
-                        return -1; // no need to finish the for loop
-                    }
-                }
-            }
-            return pos;
-        }
-
-        function selectElementContents(el) {
-            var range = document.createRange();
-            range.selectNodeContents(el);
-            var sel = window.getSelection();
-            sel.removeAllRanges();
-            sel.addRange(range);
         }
 
         function getNextNode(node) {
@@ -255,12 +188,16 @@
 
             if (node.parentNode && node.parentNode.id !== "myContent" && node.parentNode.nextSibling) {
                 if (node.parentNode.nextSibling.firstChild) {
-                    if (node.parentNode.nodeName === "P") {
-                    }
                     return node.parentNode.nextSibling;
                 }
-
                 return node.parentNode.nextSibling;
+            }
+
+            if (node.parentNode && node.parentNode && node.parentNode.parentNode.id !== "myContent" &&
+                node.parentNode.parentNode.nextSibling) {
+                if (node.parentNode.parentNode.nextSibling.firstChild) {
+                    return node.parentNode.parentNode.nextSibling;
+                }
             }
 
             return null;
@@ -312,8 +249,35 @@
             element.setAttribute("dir", dir);
         }
 
+        function GetTextRecur(node, txtObj, first) {
+            while (node != null) {
+                if (node.firstChild) {
+                    if (!first && (node.nodeName === "P" || node.nodeName === "DIV")) {
+                        txtObj.v += "\r\n";
+                    }
+                    GetTextRecur(node.firstChild, txtObj, false);
+                } else {
+                    if (node.nodeType === 3) {
+                        txtObj.v += node.nodeValue;
+                    } else if (node.nodeName === "P" || node.nodeName === "DIV") {
+                        txtObj.v += "\r\n";
+                    } else if (node.nodeName === "BR" && node.parentNode.nodeName !== "P" && node.parentNode.nodeName !== "DIV") {
+                        txtObj.v += "\r\n";
+                    } else if (node.innerHTML === "<br>" && node.nodeName !== "P" && node.nodeName !== "DIV") {
+                        if (node.parentNode && node.parentNode.nodeName !== "P" && node.parentNode.nodeName !== "DIV") {
+                            txtObj.v += "\r\n";
+                        }
+                    }
+                }
+                first = false;
+                node = node.nextSibling;
+            }
+            return txtObj.v;
+        }
+
         function getText() {
-            return document.getElementById("myContent").innerText;
+            var text = GetTextRecur(getById("myContent").firstChild, { v: "" }, true);
+            return text;
         }
 
         function setText(text) {
@@ -339,6 +303,10 @@
             var r = getCursorPosition();
             document.getElementById("myContent").innerHTML = newHtml;
             setCursorPosition(r);
+        }
+
+        function getHtml() {
+            return document.getElementById("myContent").innerHTML;
         }
     </script>
 </body>

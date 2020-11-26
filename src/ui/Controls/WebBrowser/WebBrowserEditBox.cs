@@ -15,6 +15,9 @@ namespace Nikse.SubtitleEdit.Controls.WebBrowser
     {
         private bool _rightToLeft;
         private bool _center;
+        private long _lastKeyOrClick = -1;
+        private bool _lastKeyOrClickActivity;
+        private System.Windows.Forms.Timer _timerSyntaxColor;
 
         public new event EventHandler TextChanged;
         public new event KeyEventHandler KeyDown;
@@ -35,6 +38,9 @@ namespace Nikse.SubtitleEdit.Controls.WebBrowser
                 Application.DoEvents();
                 Document?.InvokeScript("initEvents");
             };
+            _timerSyntaxColor = new System.Windows.Forms.Timer { Interval = 100 };
+            _timerSyntaxColor.Tick += (sender, args) => { UpdateSyntaxColorFromJs(); };
+            _timerSyntaxColor.Start();
         }
 
         public void Initialize()
@@ -81,37 +87,7 @@ namespace Nikse.SubtitleEdit.Controls.WebBrowser
                 }
 
                 var text = (Document.InvokeScript("getText") ?? string.Empty).ToString();
-                var sb = new StringBuilder();
-                int max = text.Length;
-                int i = 0;
-                var isNewLine = false;
-                while (i < max)
-                {
-                    var ch = text[i];
-                    if (ch == '\r')
-                    {
-                        //continue
-                    }
-                    else if (ch == '\n')
-                    {
-                        if (!isNewLine)
-                        {
-                            sb.Append(Environment.NewLine);
-                        }
-
-                        isNewLine = !isNewLine;
-                    }
-                    else
-                    {
-                        sb.Append(ch);
-                        isNewLine = false;
-                    }
-
-                    i++;
-                }
-
-                var result = sb.ToString();
-                return result;
+                return text;
             }
             set
             {
@@ -304,6 +280,8 @@ namespace Nikse.SubtitleEdit.Controls.WebBrowser
 
             KeyUp?.Invoke(this, new KeyEventArgs(keyData));
             TextChanged?.Invoke(this, new KeyEventArgs(0));
+            _lastKeyOrClick = DateTime.UtcNow.Ticks;
+            _lastKeyOrClickActivity = true;
         }
 
         public void ClientClick()
@@ -311,6 +289,8 @@ namespace Nikse.SubtitleEdit.Controls.WebBrowser
             var mp = PointToClient(MousePosition);
             MouseClick?.Invoke(this, new MouseEventArgs(MouseButtons.Left, 1, mp.X, mp.Y, 1));
             TextChanged?.Invoke(this, new KeyEventArgs(0));
+            _lastKeyOrClick = DateTime.UtcNow.Ticks;
+            _lastKeyOrClickActivity = true;
         }
 
         public void ClientMouseMove()
@@ -347,14 +327,9 @@ namespace Nikse.SubtitleEdit.Controls.WebBrowser
 
         public void UpdateSyntaxColor(string text)
         {
+            _lastKeyOrClick = DateTime.UtcNow.Ticks;
+            _lastKeyOrClickActivity = false;
             var html = HighLightHtml(text);
-            if (html.Contains("\n"))
-            {
-                html = html.Replace("\r\n\r\n", "<br />");
-                html = html.Replace("\r\n", "<br />");
-                html = html.Replace("\n", "<br />");
-            }
-
             if (html != _lastHtml && Document != null)
             {
                 Document.InvokeScript("setHtml", new object[] { html });
@@ -362,92 +337,123 @@ namespace Nikse.SubtitleEdit.Controls.WebBrowser
             }
         }
 
-        public string HighLightHtml(string text)
+        public void UpdateSyntaxColorFromJs()
         {
-            if (text == null)
+            if (!_lastKeyOrClickActivity)
             {
-                return string.Empty;
+                return; // exit if not key or click activity
             }
 
+            var diff = DateTime.UtcNow.Ticks - _lastKeyOrClick;
+            if (diff < 10_000 * 750)
+            {
+                return; // exit if activity within the last 500 ms
+            }
+
+            _lastKeyOrClick = DateTime.UtcNow.Ticks;
+
+            var text = Text;
+            var html = HighLightHtml(text);
+            if (html != _lastHtml && Document != null)
+            {
+                //var oldHtml = (Document.InvokeScript("getHtml") ?? "0").ToString();
+                Document.InvokeScript("setHtml", new object[] { html });
+                _lastHtml = html;
+            }
+        }
+
+        public string HighLightHtml(string text)
+        {
             bool htmlTagOn = false;
-            bool htmlTagFontOn = false;
             int htmlTagStart = -1;
             bool assaTagOn = false;
-            bool assaPrimaryColorTagOn = false;
-            bool assaSecondaryColorTagOn = false;
-            bool assaBorderColorTagOn = false;
-            bool assaShadowColorTagOn = false;
             var assaTagStart = -1;
             int tagOn = -1;
-            var textLength = text.Length;
-            int i = 0;
             var sb = new StringBuilder();
-
-            while (i < textLength)
+            var lines = text.SplitToLines();
+            var multiLine = lines.Count > 1;
+            foreach (var line in lines)
             {
-                var ch = text[i];
-                if (assaTagOn)
+                int i = 0;
+                var textLength = line.Length;
+                if (multiLine)
                 {
-                    if (ch == '}' && tagOn >= 0)
+                    sb.Append("<p>");
+                }
+
+                while (i < textLength)
+                {
+                    var ch = line[i];
+                    if (assaTagOn)
                     {
-                        assaTagOn = false;
-                        sb.Append($"<font color=\"{ColorTranslator.ToHtml(Configuration.Settings.General.SubtitleTextBoxAssColor)}\">");
-                        var inner = text.Substring(assaTagStart, i - assaTagStart + 1);
-                        sb.Append(WebUtility.HtmlEncode(inner));
-                        sb.Append("</font>");
-                        assaTagStart = -1;
+                        if (ch == '}' && tagOn >= 0)
+                        {
+                            assaTagOn = false;
+                            sb.Append("<font color=\"#4444dd\">");
+                            var inner = line.Substring(assaTagStart, i - assaTagStart + 1);
+                            sb.Append(WebUtility.HtmlEncode(inner));
+                            sb.Append("</font>");
+                            assaTagStart = -1;
+                        }
                     }
-                }
-                else if (htmlTagOn)
-                {
-                    if (ch == '>' && tagOn >= 0)
+                    else if (htmlTagOn)
                     {
-                        htmlTagOn = false;
-                        sb.Append($"<font color=\"{ColorTranslator.ToHtml(Configuration.Settings.General.SubtitleTextBoxHtmlColor)}\">");
-                        var inner = text.Substring(htmlTagStart, i - htmlTagStart + 1);
-                        sb.Append(WebUtility.HtmlEncode(inner));
-                        sb.Append("</font>");
-                        htmlTagStart = -1;
+                        if (ch == '>' && tagOn >= 0)
+                        {
+                            htmlTagOn = false;
+                            sb.Append("<font color=\"#44dd44\">");
+                            var inner = line.Substring(htmlTagStart, i - htmlTagStart + 1);
+                            sb.Append(WebUtility.HtmlEncode(inner));
+                            sb.Append("</font>");
+                            htmlTagStart = -1;
+                        }
                     }
-                }
-                else if (ch == '{' && i < textLength - 1 && text[i + 1] == '\\' && text.IndexOf('}', i) > 0)
-                {
-                    var s = text.Substring(i);
-                    assaTagOn = true;
-                    tagOn = i;
-                    assaTagStart = i;
-                }
-                else if (ch == '<')
-                {
-                    var s = text.Substring(i);
-                    if (s.StartsWith("<i>", StringComparison.OrdinalIgnoreCase) ||
-                        s.StartsWith("<b>", StringComparison.OrdinalIgnoreCase) ||
-                        s.StartsWith("<u>", StringComparison.OrdinalIgnoreCase) ||
-                        s.StartsWith("</i>", StringComparison.OrdinalIgnoreCase) ||
-                        s.StartsWith("</b>", StringComparison.OrdinalIgnoreCase) ||
-                        s.StartsWith("</u>", StringComparison.OrdinalIgnoreCase) ||
-                        s.StartsWith("<box>", StringComparison.OrdinalIgnoreCase) ||
-                        s.StartsWith("</box>", StringComparison.OrdinalIgnoreCase) ||
-                        s.StartsWith("</font>", StringComparison.OrdinalIgnoreCase) ||
-                        (s.StartsWith("<font ", StringComparison.OrdinalIgnoreCase) &&
-                         text.IndexOf("</font>", i, StringComparison.OrdinalIgnoreCase) > 0))
+                    else if (ch == '{' && i < textLength - 1 && line[i + 1] == '\\' && line.IndexOf('}', i) > 0)
                     {
-                        htmlTagOn = true;
-                        htmlTagStart = i;
-                        htmlTagFontOn = s.StartsWith("<font ", StringComparison.OrdinalIgnoreCase);
+                        assaTagOn = true;
                         tagOn = i;
+                        assaTagStart = i;
+                    }
+                    else if (ch == '<')
+                    {
+                        var s = line.Substring(i);
+                        if (s.StartsWith("<i>", StringComparison.OrdinalIgnoreCase) ||
+                            s.StartsWith("<b>", StringComparison.OrdinalIgnoreCase) ||
+                            s.StartsWith("<u>", StringComparison.OrdinalIgnoreCase) ||
+                            s.StartsWith("</i>", StringComparison.OrdinalIgnoreCase) ||
+                            s.StartsWith("</b>", StringComparison.OrdinalIgnoreCase) ||
+                            s.StartsWith("</u>", StringComparison.OrdinalIgnoreCase) ||
+                            s.StartsWith("<box>", StringComparison.OrdinalIgnoreCase) ||
+                            s.StartsWith("</box>", StringComparison.OrdinalIgnoreCase) ||
+                            s.StartsWith("</font>", StringComparison.OrdinalIgnoreCase) ||
+                            (s.StartsWith("<font ", StringComparison.OrdinalIgnoreCase) &&
+                             line.IndexOf("</font>", i, StringComparison.OrdinalIgnoreCase) > 0))
+                        {
+                            htmlTagOn = true;
+                            htmlTagStart = i;
+                            tagOn = i;
+                        }
+                        else
+                        {
+                            sb.Append(WebUtility.HtmlEncode(ch.ToString()));
+                        }
                     }
                     else
                     {
+
                         sb.Append(WebUtility.HtmlEncode(ch.ToString()));
                     }
-                }
-                else
-                {
-                    sb.Append(WebUtility.HtmlEncode(ch.ToString()));
-                }
 
-                i++;
+                    i++;
+                }
+                if (line == string.Empty && multiLine)
+                {
+                    sb.Append("<br>");
+                }
+                if (multiLine)
+                {
+                    sb.Append("</p>");
+                }
             }
 
             return sb.ToString();
