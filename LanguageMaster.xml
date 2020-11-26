@@ -2181,6 +2181,7 @@ can edit in same subtitle file (collaboration)</Information>
     <AlignmentN7>Alignment top left - {\an7}</AlignmentN7>
     <AlignmentN8>Alignment top center - {\an8}</AlignmentN8>
     <AlignmentN9>Alignment top right - {\an9}</AlignmentN9>
+    <ColorX>Color {0} ({1})</ColorX>
     <CopyTextOnly>Copy text only to clipboard (selected lines)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Copy text from original to current</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Auto-duration (selected lines)</AutoDurationSelectedLines>
