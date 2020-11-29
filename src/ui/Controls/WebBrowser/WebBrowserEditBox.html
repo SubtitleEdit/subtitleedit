@@ -68,12 +68,6 @@
             return document.getElementById(id);
         }
 
-        //function syntaxColorIfNotActive() {
-        //    setTimeout(function () {
-        //        window.external.UpdateSyntaxColorFromJs(getText(), document.getElementById("myContent").innerHTML);
-        //    }, 1);
-        //}
-
         function initEvents() {
             getById("myContent").addEventListener("focus", function (e) {
                 window.external.ClientFocus();
@@ -89,12 +83,10 @@
 
             getById("myContent").addEventListener("keyup", function (e) {
                 window.external.ClientKeyUp(e.keyCode, e.ctrlKey, e.shiftKey, e.altKey);
-//                syntaxColorIfNotActive();
             });
 
             getById("myContent").addEventListener("click", function (e) {
                 window.external.ClientClick();
-//                syntaxColorIfNotActive();
             });
 
             getById("myContent").addEventListener("mousemove", function (e) {
@@ -102,71 +94,58 @@
             });
         }
 
-        function getLengthFromChildren(node, txtObj, top) {
-            while (node != null) {
-                if (node.firstChild) {
-                    if (node.nodeName === "P" || node.nodeName === "DIV") {
-                        txtObj.l += 2;
-                    }
-                    getLengthFromChildren(node.firstChild, txtObj, false);
-                } else {
-                    if (node.nodeType === 3) {
-                        txtObj.l += node.nodeValue.length;
-                    } else if (node.nodeName === "P" || node.nodeName === "DIV") {
-                        txtObj.l += 2;
-                    } else if (node.nodeName === "BR" && node.parentNode.nodeName !== "P" && node.parentNode.nodeName !== "DIV") {
-                        txtObj.l += 2;
-                    } else if (node.innerHTML === "<br>" && node.nodeName !== "P" && node.nodeName !== "DIV") {
-                        txtObj.l += 2;
+        function nextNode(node) {
+            if (node.hasChildNodes()) {
+                return node.firstChild;
+            } else {
+                while (node && !node.nextSibling) {
+                    node = node.parentNode;
+                    if (node.id === "myContent") {
+                        return null;
                     }
                 }
-                if (top) {
-                    return;
+                if (!node) {
+                    return null;
                 }
-                node = node.nextSibling;
+                return node.nextSibling;
             }
-            return;
         }
 
-        function getNodePosition(node, txtObj) {
-            if (!node) {
-                return txtObj.l;
+        function getCursorPosInner(findNode, findOffset) {
+            if (!findNode) {
+                return 0;
             }
 
-            while (true) {
-                if (node.previousSibling) {
-                    node = node.previousSibling;
-                } else {
-                    var p = node.parentNode;
-                    if (p.id === "myContent") {
-                        return txtObj.l;
-                    }
-
-                    if (p.previousSibling) {
-                        node = p.previousSibling;
-                    } else {
-                        p = node.parentNode.parentNode;
-                        if (p && p.id === "myContent" || (p && p.nodeName === "P" && p.parentNode && p.parentNode.id === "myContent")) {
-                            return txtObj.l;
-                        }
-
-                        if (p && p.parentNode && p.parentNode.previousSibling) {
-                            node = p.parentNode.previousSibling;
-                        } else {
-                            return txtObj.l;
-                        }
-                    }
+            var node = getById("myContent").firstChild;
+            var l = findOffset;
+            var first = true;
+            while (node) {
+                if (!first && node.nodeName === "P" ||
+                    node.innerHTML === "<br>" && node.nodeName !== "P" && node.parentNode.nodeName !== "P") {
+                    l += 2;
                 }
 
-                getLengthFromChildren(node, txtObj, true);
+                if (findNode.isEqualNode(node)) {
+                    return l;
+                }
+
+                if (node.length) {
+                    l += node.length;
+                }
+
+                node = nextNode(node);
+                first = false;
             }
+            return l;
         }
 
         function getCursorPosition() {
             var x = window.getSelection();
-            return getNodePosition(x.focusNode, { l: x.focusOffset });
+            if (!x || !x.focusNode) {
+                return 0;
+            }
+            return getCursorPosInner(x.focusNode, x.focusOffset);
         }
-
 
         function getSelectionText() {
             return window.getSelection().toString();
@@ -174,7 +153,10 @@
 
         function getSelectionStart() {
             var x = window.getSelection();
-            return getNodePosition(x.anchorNode, x.anchorOffset);
+            if (!x || !x.anchorNode) {
+                return 0;
+            }
+            return getCursorPosInner(x.anchorNode, x.anchorOffset);
         }
 
         function getNextNode(node) {
@@ -213,6 +195,7 @@
             var firstNode = true;
             var i = 0;
             var idx = 0;
+            var lastNode = null;
             while (node && i < 100) {
                 i++;
                 if (node.nodeName === "BR") {
@@ -223,24 +206,64 @@
                     pos--;
                 } else if (node.nodeType === Node.TEXT_NODE && node.nodeValue) {
                     if (node.nodeValue && idx + extra + node.nodeValue.length >= pos) {
-                        var range = document.createRange();
-                        var sel = window.getSelection();
                         var newIdx = pos - idx - extra;
                         if (newIdx < 0) {
                             newIdx = 0;
                         }
-                        range.setStart(node, newIdx);
-                        range.collapse(true);
-                        sel.removeAllRanges();
-                        sel.addRange(range);
+                        focusNode(node, newIdx);
                         return;
                     }
 
                     idx += node.nodeValue.length;
                 }
+
+                if (idx + extra >= pos) {
+                    if (node.hasChildNodes()) {
+                        focusNode(node.lastChild, 0);
+                    } else {
+                        focusNode(node, 0);
+                    }
+                    return;
+                }
+
+                lastNode = node;
                 node = getNextNode(node);
                 firstNode = false;
             }
+
+            if (lastNode && pos >= getText().length) {
+                if (lastNode.hasChildNodes()) {
+                    focusNode(lastNode.lastChild, 0);
+                } else {
+                    focusNode(lastNode, 0);
+                }
+
+                return;
+            }
+        }
+
+        function focusNode(node, offset) {
+            var r = document.createRange();
+            var s = window.getSelection();
+            r.setStart(node, offset);
+            r.collapse(true);
+            s.removeAllRanges();
+            s.addRange(r);
+        }
+
+        function setCaretToEnd() {
+            var target = document.getElementById("myContent");
+            var range = document.createRange();
+            var sel = window.getSelection();
+            range.selectNodeContents(target);
+            range.collapse(false);
+            sel.removeAllRanges();
+            sel.addRange(range);
+            target.focus();
+            range.detach();
+
+            // scroll to end
+            target.scrollTop = target.scrollHeight;
         }
 
         function setTextDirection(align, dir) {
