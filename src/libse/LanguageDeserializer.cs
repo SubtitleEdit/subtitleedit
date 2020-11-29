@@ -5965,9 +5965,6 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/AlignmentN9":
                     language.Settings.AlignmentN9 = reader.Value;
                     break;
-                case "Settings/ColorX":
-                    language.Settings.ColorX = reader.Value;
-                    break;
                 case "Settings/CopyTextOnly":
                     language.Settings.CopyTextOnly = reader.Value;
                     break;

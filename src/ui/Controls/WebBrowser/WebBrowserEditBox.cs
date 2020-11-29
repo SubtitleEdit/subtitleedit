@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Reflection;
@@ -16,7 +17,7 @@ namespace Nikse.SubtitleEdit.Controls.WebBrowser
         private bool _rightToLeft;
         private bool _center;
         private long _lastKeyOrClick = -1;
-        private bool _lastKeyOrClickActivity;
+        private string _lastHtml;
         private readonly System.Windows.Forms.Timer _timerSyntaxColor;
 
         public new event EventHandler TextChanged;
@@ -39,7 +40,7 @@ namespace Nikse.SubtitleEdit.Controls.WebBrowser
                 Document?.InvokeScript("initEvents");
             };
             _timerSyntaxColor = new System.Windows.Forms.Timer { Interval = 100 };
-            _timerSyntaxColor.Tick += (sender, args) => { UpdateSyntaxColorFromJs(); };
+            _timerSyntaxColor.Tick += (sender, args) => { UpdateSyntaxColor(Text); };
             _timerSyntaxColor.Start();
         }
 
@@ -63,7 +64,7 @@ namespace Nikse.SubtitleEdit.Controls.WebBrowser
                 var s = reader.ReadToEnd();
                 s = s.Replace("color: brown;", "color: " + ColorTranslator.ToHtml(Configuration.Settings.General.SubtitleFontColor) + ";");
                 s = s.Replace("background-color: lightblue;", "background-color: " + ColorTranslator.ToHtml(Configuration.Settings.General.SubtitleBackgroundColor) + ";");
-                
+
                 DocumentText = s;
             }
 
@@ -178,7 +179,16 @@ namespace Nikse.SubtitleEdit.Controls.WebBrowser
             }
             set
             {
-                //TODO:
+                if (Document == null)
+                {
+                    return;
+                }
+
+                var position = (Document.InvokeScript("getCursorPosition") ?? "0").ToString();
+                if (position != value.ToString(CultureInfo.InvariantCulture))
+                {
+                    Document.InvokeScript("setCursorPosition", new object[] { value });
+                }
             }
         }
 
@@ -281,7 +291,6 @@ namespace Nikse.SubtitleEdit.Controls.WebBrowser
             KeyUp?.Invoke(this, new KeyEventArgs(keyData));
             TextChanged?.Invoke(this, new KeyEventArgs(0));
             _lastKeyOrClick = DateTime.UtcNow.Ticks;
-            _lastKeyOrClickActivity = true;
         }
 
         public void ClientClick()
@@ -290,7 +299,6 @@ namespace Nikse.SubtitleEdit.Controls.WebBrowser
             MouseClick?.Invoke(this, new MouseEventArgs(MouseButtons.Left, 1, mp.X, mp.Y, 1));
             TextChanged?.Invoke(this, new KeyEventArgs(0));
             _lastKeyOrClick = DateTime.UtcNow.Ticks;
-            _lastKeyOrClickActivity = true;
         }
 
         public void ClientMouseMove()
@@ -323,27 +331,8 @@ namespace Nikse.SubtitleEdit.Controls.WebBrowser
         {
         }
 
-        private string _lastHtml;
-
         public void UpdateSyntaxColor(string text)
         {
-            _lastKeyOrClick = DateTime.UtcNow.Ticks;
-            _lastKeyOrClickActivity = false;
-            var html = HighLightHtml(text);
-            if (html != _lastHtml && Document != null)
-            {
-                Document.InvokeScript("setHtml", new object[] { html });
-                _lastHtml = html;
-            }
-        }
-
-        public void UpdateSyntaxColorFromJs()
-        {
-            if (!_lastKeyOrClickActivity)
-            {
-                return; // exit if not key or click activity
-            }
-
             var diff = DateTime.UtcNow.Ticks - _lastKeyOrClick;
             if (diff < 10_000 * 750)
             {
@@ -351,12 +340,9 @@ namespace Nikse.SubtitleEdit.Controls.WebBrowser
             }
 
             _lastKeyOrClick = DateTime.UtcNow.Ticks;
-
-            var text = Text;
             var html = HighLightHtml(text);
-            if (html != _lastHtml && Document != null)
+            if (Document != null && (_lastHtml == null || html.Trim() != _lastHtml.Trim()))
             {
-                //var oldHtml = (Document.InvokeScript("getHtml") ?? "0").ToString();
                 Document.InvokeScript("setHtml", new object[] { html });
                 _lastHtml = html;
             }
@@ -458,6 +444,5 @@ namespace Nikse.SubtitleEdit.Controls.WebBrowser
 
             return sb.ToString();
         }
-
     }
 }

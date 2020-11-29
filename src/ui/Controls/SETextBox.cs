@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Controls
         private TextBox _textBox;
         private int _mouseMoveSelectionLength;
         private WebBrowserEditBox _htmlBox;
-        private bool _useWebBrowser = false;
+        private bool _useWebBrowser = true;
 
         public SETextBox()
         {
