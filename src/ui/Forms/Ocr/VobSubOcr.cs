@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.BluRaySup;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.Interfaces;
@@ -25,7 +26,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
@@ -7333,6 +7333,23 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void ItalicToolStripMenuItemClick(object sender, EventArgs e)
         {
             const string tag = "i";
+            var removeTag = true;
+            if (_subtitle.Paragraphs.Count > 0 && subtitleListView1.SelectedItems.Count > 0)
+            {
+                foreach (ListViewItem item in subtitleListView1.SelectedItems)
+                {
+                    var p = _subtitle.GetParagraphOrDefault(item.Index);
+                    if (p != null)
+                    {
+                        if (!Utilities.RemoveSsaTags(p.Text).StartsWith("<i>"))
+                        {
+                            removeTag = false;
+                            break;
+                        }
+                    }
+                }
+            }
+
             if (_subtitle.Paragraphs.Count > 0 && subtitleListView1.SelectedItems.Count > 0)
             {
                 foreach (ListViewItem item in subtitleListView1.SelectedItems)
@@ -7346,7 +7363,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             p.Text = p.Text.Replace("</" + tag + ">", string.Empty);
                         }
 
-                        p.Text = $"<{tag}>{p.Text}</{tag}>";
+                        if (!removeTag)
+                        {
+                            p.Text = $"<{tag}>{p.Text}</{tag}>";
+                        }
+
                         subtitleListView1.SetText(item.Index, p.Text);
                         if (item.Index == _selectedIndex)
                         {
@@ -9328,6 +9349,171 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             _numericUpDownPixelsIsSpace = (int)numericUpDownNumberOfPixelsIsSpaceNOCR.Value;
+        }
+
+        private void cutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            textBoxCurrentText.Cut();
+        }
+
+        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            textBoxCurrentText.Copy();
+        }
+
+        private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            textBoxCurrentText.Paste();
+        }
+
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            textBoxCurrentText.SelectedText = string.Empty;
+        }
+
+        private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            textBoxCurrentText.SelectAll();
+        }
+
+        private void normalToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            var tb = textBoxCurrentText;
+            if (tb.SelectionLength == 0)
+            {
+                var allText = HtmlUtil.RemoveHtmlTags(tb.Text);
+                allText = NetflixImsc11Japanese.RemoveTags(allText);
+                tb.Text = allText;
+                return;
+            }
+
+            string text = tb.SelectedText;
+            int selectionStart = tb.SelectionStart;
+            text = HtmlUtil.RemoveHtmlTags(text);
+            text = NetflixImsc11Japanese.RemoveTags(text);
+            tb.SelectedText = text;
+            tb.SelectionStart = selectionStart;
+            tb.SelectionLength = text.Length;
+        }
+
+        private void TextBoxListViewToggleTag(string tag)
+        {
+            var tb = textBoxCurrentText;
+            string text;
+            int selectionStart = tb.SelectionStart;
+
+            // No text selected.
+            if (tb.SelectedText.Length == 0)
+            {
+                text = tb.Text;
+
+                // Split lines (split a subtitle into its lines).
+                var lines = text.SplitToLines();
+
+                // Get current line index (the line where the cursor is current located).
+                int numberOfNewLines = 0;
+                for (int i = 0; i < tb.SelectionStart && i < text.Length; i++)
+                {
+                    if (text[i] == '\n')
+                    {
+                        numberOfNewLines++;
+                    }
+                }
+                int selectedLineIdx = numberOfNewLines; // Do not use 'GetLineFromCharIndex' as it also counts when lines are wrapped
+
+                // Get line from index.
+                string selectedLine = lines[selectedLineIdx];
+
+                // Test if line at where cursor is current at is a dialog.
+                bool isDialog = selectedLine.StartsWith('-') ||
+                                selectedLine.StartsWith("<" + tag + ">-", StringComparison.OrdinalIgnoreCase);
+
+                // Will be used keep cursor in its previous location after toggle/untoggle.
+                int textLen = text.Length;
+
+                // 1st set the cursor position to zero.
+                tb.SelectionStart = 0;
+
+                // If is dialog, only toggle/Untoggle line where caret/cursor is current at.
+                if (isDialog)
+                {
+                    lines[selectedLineIdx] = HtmlUtil.ToggleTag(selectedLine, tag);
+                    text = string.Join(Environment.NewLine, lines);
+                }
+                else
+                {
+                    text = HtmlUtil.ToggleTag(text, tag);
+                }
+
+                tb.Text = text;
+                // Note: Math.Max will prevent blowing if caret is at the begining and tag was untoggled.
+                tb.SelectionStart = textLen > text.Length ? Math.Max(selectionStart - 3, 0) : selectionStart + 3;
+            }
+            else
+            {
+                string post = string.Empty;
+                string pre = string.Empty;
+                // There is text selected
+                text = tb.SelectedText;
+                while (text.EndsWith(' ') || text.EndsWith(Environment.NewLine, StringComparison.Ordinal) || text.StartsWith(' ') || text.StartsWith(Environment.NewLine, StringComparison.Ordinal))
+                {
+                    if (text.EndsWith(' '))
+                    {
+                        post += " ";
+                        text = text.Remove(text.Length - 1);
+                    }
+
+                    if (text.EndsWith(Environment.NewLine, StringComparison.Ordinal))
+                    {
+                        post += Environment.NewLine;
+                        text = text.Remove(text.Length - 2);
+                    }
+
+                    if (text.StartsWith(' '))
+                    {
+                        pre += " ";
+                        text = text.Remove(0, 1);
+                    }
+
+                    if (text.StartsWith(Environment.NewLine, StringComparison.Ordinal))
+                    {
+                        pre += Environment.NewLine;
+                        text = text.Remove(0, 2);
+                    }
+                }
+
+                text = HtmlUtil.ToggleTag(text, tag);
+                // Update text and maintain selection.
+                if (pre.Length > 0)
+                {
+                    text = pre + text;
+                    selectionStart += pre.Length;
+                }
+
+                if (post.Length > 0)
+                {
+                    text = text + post;
+                }
+
+                tb.SelectedText = text;
+                tb.SelectionStart = selectionStart;
+                tb.SelectionLength = text.Length;
+            }
+        }
+
+        private void boldToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            TextBoxListViewToggleTag(HtmlUtil.TagBold);
+        }
+
+        private void italicToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            TextBoxListViewToggleTag(HtmlUtil.TagItalic);
+        }
+
+        private void underlineToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            TextBoxListViewToggleTag(HtmlUtil.TagUnderline);
         }
     }
 }
