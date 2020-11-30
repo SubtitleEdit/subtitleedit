@@ -432,7 +432,7 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownDuration.Visible = comboBoxRule.SelectedIndex == FunctionDurationLessThan || comboBoxRule.SelectedIndex == FunctionDurationGreaterThan;
             if (comboBoxRule.SelectedIndex == FunctionRegEx) // regex
             {
-                textBoxText.ContextMenu = FindReplaceDialogHelper.GetRegExContextMenu(textBoxText);
+                textBoxText.ContextMenuStrip = FindReplaceDialogHelper.GetRegExContextMenu(textBoxText);
                 checkBoxCaseSensitive.Enabled = false;
             }
             else if (comboBoxRule.SelectedIndex == FunctionUnequal || comboBoxRule.SelectedIndex == FunctionEqual || comboBoxRule.SelectedIndex == FunctionMoreThanTwoLines)

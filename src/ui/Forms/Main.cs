@@ -161,7 +161,7 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly Timer _dragAndDropVideoTimer = new Timer(); // to prevent locking windows explorer
         private long _labelNextTicks = -1;
         private bool _showBookmarkLabel = true;
-        private ContextMenu _bookmarkContextMenu;
+        private ContextMenuStrip _bookmarkContextMenu;
         private readonly MainShortcuts _shortcuts = new MainShortcuts();
         private long _winLeftDownTicks = -1;
         private long _winRightDownTicks = -1;
@@ -28331,15 +28331,15 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            _bookmarkContextMenu = new ContextMenu();
+            _bookmarkContextMenu = new ContextMenuStrip();
 
             // edit bookmark
-            var menuItem = new MenuItem(Configuration.Settings.Language.Main.Menu.ContextMenu.EditBookmark);
+            var menuItem = new ToolStripMenuItem(Configuration.Settings.Language.Main.Menu.ContextMenu.EditBookmark);
             menuItem.Click += (sender2, e2) => { labelBookmark_DoubleClick(null, null); };
-            _bookmarkContextMenu.MenuItems.Add(menuItem);
+            _bookmarkContextMenu.Items.Add(menuItem);
 
             // remove bookmark
-            menuItem = new MenuItem(Configuration.Settings.Language.Main.Menu.ContextMenu.RemoveBookmark);
+            menuItem = new ToolStripMenuItem(Configuration.Settings.Language.Main.Menu.ContextMenu.RemoveBookmark);
             menuItem.Click += (sender2, e2) =>
             {
                 var p2 = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);
@@ -28353,21 +28353,21 @@ namespace Nikse.SubtitleEdit.Forms
                     new BookmarkPersistence(_subtitle, _fileName).Save();
                 }
             };
-            _bookmarkContextMenu.MenuItems.Add(menuItem);
+            _bookmarkContextMenu.Items.Add(menuItem);
 
-            _bookmarkContextMenu.MenuItems.Add("-");
+            _bookmarkContextMenu.Items.Add("-");
 
             // go to bookmark
-            menuItem = new MenuItem(Configuration.Settings.Language.Settings.GoToBookmark);
+            menuItem = new ToolStripMenuItem(Configuration.Settings.Language.Settings.GoToBookmark);
             menuItem.Click += (sender2, e2) => { GoToBookmark(); };
-            _bookmarkContextMenu.MenuItems.Add(menuItem);
+            _bookmarkContextMenu.Items.Add(menuItem);
 
             // clear all bookmarks
-            menuItem = new MenuItem(Configuration.Settings.Language.Settings.ClearBookmarks);
+            menuItem = new ToolStripMenuItem(Configuration.Settings.Language.Settings.ClearBookmarks);
             menuItem.Click += (sender2, e2) => { ClearBookmarks(); };
-            _bookmarkContextMenu.MenuItems.Add(menuItem);
+            _bookmarkContextMenu.Items.Add(menuItem);
 
-            pictureBoxBookmark.ContextMenu = _bookmarkContextMenu;
+            pictureBoxBookmark.ContextMenuStrip = _bookmarkContextMenu;
         }
 
         private void labelBookmark_DoubleClick(object sender, EventArgs e)

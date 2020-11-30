@@ -213,7 +213,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (sender == radioButtonRegEx)
             {
-                textBoxNoBreakAfter.ContextMenu = FindReplaceDialogHelper.GetRegExContextMenu(textBoxNoBreakAfter);
+                textBoxNoBreakAfter.ContextMenuStrip = FindReplaceDialogHelper.GetRegExContextMenu(textBoxNoBreakAfter);
             }
             else
             {

@@ -155,19 +155,19 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (textBoxFind.Visible)
                 {
-                    comboBoxFind.ContextMenu = null;
-                    textBoxFind.ContextMenu = FindReplaceDialogHelper.GetRegExContextMenu(textBoxFind);
+                    comboBoxFind.ContextMenuStrip = null;
+                    textBoxFind.ContextMenuStrip = FindReplaceDialogHelper.GetRegExContextMenu(textBoxFind);
                 }
                 else
                 {
-                    textBoxFind.ContextMenu = null;
-                    comboBoxFind.ContextMenu = FindReplaceDialogHelper.GetRegExContextMenu(comboBoxFind);
+                    textBoxFind.ContextMenuStrip = null;
+                    comboBoxFind.ContextMenuStrip = FindReplaceDialogHelper.GetRegExContextMenu(comboBoxFind);
                 }
             }
             else
             {
-                textBoxFind.ContextMenu = null;
-                comboBoxFind.ContextMenu = null;
+                textBoxFind.ContextMenuStrip = null;
+                comboBoxFind.ContextMenuStrip = null;
             }
             checkBoxWholeWord.Enabled = !radioButtonRegEx.Checked;
             labelCount.Text = string.Empty;
