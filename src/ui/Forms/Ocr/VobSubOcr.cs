@@ -468,6 +468,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             FillSpellCheckDictionaries();
 
+            cutToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Cut;
+            copyToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Copy;
+            pasteToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Paste;
+            deleteToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Delete;
+            selectAllToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.SelectAll;
+            normalToolStripMenuItem1.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.RemoveFormattingAll;
+            boldToolStripMenuItem1.Text = Configuration.Settings.Language.General.Bold;
+            italicToolStripMenuItem1.Text = Configuration.Settings.Language.General.Italic;
+            underlineToolStripMenuItem1.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Underline;
+
             InitializeModi();
             comboBoxOcrMethod.Items.Clear();
             _ocrMethodBinaryImageCompare = comboBoxOcrMethod.Items.Add(language.OcrViaImageCompare);
