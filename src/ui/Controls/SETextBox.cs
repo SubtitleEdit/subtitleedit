@@ -738,7 +738,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _textBox.Paste();
             }
-            else if (_textBox != null)
+            else if (_uiTextBox!= null)
             {
                 _uiTextBox?.Paste();
             }
