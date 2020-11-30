@@ -156,6 +156,14 @@ namespace Nikse.SubtitleEdit.Controls
             else
             {
                 _textBox = new TextBox { BorderStyle = BorderStyle.None, Multiline = true };
+                _textBox.KeyDown += (sender, args) =>
+                {
+                    if (args.KeyData == (Keys.Control | Keys.Back))
+                    {
+                        UiUtil.ApplyControlBackspace(_textBox);
+                        args.SuppressKeyPress = true;
+                    }
+                };
                 InitializeBackingControl(_textBox);
             }
 
