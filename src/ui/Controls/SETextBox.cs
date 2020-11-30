@@ -777,7 +777,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _textBox.Focus();
             }
-            else if (_textBox != null)
+            else if (_uiTextBox != null)
             {
                 _uiTextBox.Focus();
             }
