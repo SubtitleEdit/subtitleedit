@@ -175,11 +175,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (sender == radioButtonRegEx)
             {
-                textBoxFind.ContextMenu = FindReplaceDialogHelper.GetRegExContextMenu(textBoxFind);
+                textBoxFind.ContextMenuStrip = FindReplaceDialogHelper.GetRegExContextMenu(textBoxFind);
             }
             else
             {
-                textBoxFind.ContextMenu = null;
+                textBoxFind.ContextMenuStrip = null;
             }
             checkBoxWholeWord.Enabled = !radioButtonRegEx.Checked;
         }

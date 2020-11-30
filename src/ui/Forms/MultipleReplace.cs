@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.FileName = string.Empty;
             saveFileDialog1.FileName = string.Empty;
 
-            textBoxReplace.ContextMenu = FindReplaceDialogHelper.GetReplaceTextContextMenu(textBoxReplace);
+            textBoxReplace.ContextMenuStrip = FindReplaceDialogHelper.GetReplaceTextContextMenu(textBoxReplace);
             buttonUpdate.Enabled = false;
 
             Text = Configuration.Settings.Language.MultipleReplace.Title;
@@ -194,7 +194,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RadioButtonCheckedChanged(object sender, EventArgs e)
         {
-            textBoxFind.ContextMenu = sender == radioButtonRegEx ? FindReplaceDialogHelper.GetRegExContextMenu(textBoxFind) : null;
+            textBoxFind.ContextMenuStrip = sender == radioButtonRegEx ? FindReplaceDialogHelper.GetRegExContextMenu(textBoxFind) : null;
         }
 
         private void ButtonAddClick(object sender, EventArgs e)

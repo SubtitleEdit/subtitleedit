@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Controls
         private TextBox _textBox;
         private int _mouseMoveSelectionLength;
         private WebBrowserEditBox _htmlBox;
-        private bool _useWebBrowser = true;
+        private const bool UseWebBrowser = false;
 
         public SETextBox()
         {
@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Controls
             _richTextBoxTemp = null;
             if (useSyntaxColoring)
             {
-                if (_useWebBrowser)
+                if (UseWebBrowser)
                 {
                     _uiTextBox = null;
                     _htmlBox = new WebBrowserEditBox();
