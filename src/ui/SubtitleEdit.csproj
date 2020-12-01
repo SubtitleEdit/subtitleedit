@@ -57,6 +57,9 @@
       <HintPath>DLLs\Interop.QuartzTypeLib.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="NHunspell, Version=1.2.5554.16953, Culture=neutral, PublicKeyToken=1ac793ea843b4366, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>packages\NHunspell.1.2.5554.16953\lib\net\NHunspell.dll</HintPath>
@@ -65,6 +68,14 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Extensions, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Primitives, Version=4.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -1054,6 +1065,7 @@
     <Compile Include="Logic\CommandLineConvert\TsToBluRaySup.cs" />
     <Compile Include="Logic\DarkTheme.cs" />
     <Compile Include="Logic\FindReplaceDialogHelper.cs" />
+    <Compile Include="Logic\Networking\SeNetworkService.cs" />
     <Compile Include="Logic\SceneChangesGenerator.cs" />
     <Compile Include="Logic\ListViewSorter.cs" />
     <Compile Include="Logic\NativeMethods.cs" />
@@ -1124,11 +1136,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Web References\SeNetworkService\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.map</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Controls\TimeUpDown.resx">
       <DependentUpon>TimeUpDown.cs</DependentUpon>
@@ -1648,20 +1655,6 @@
       <SubType>Designer</SubType>
     </None>
     <EmbeddedResource Include="Resources\SMPTE-428-7-2014-DCST.xsd.gz" />
-    <None Include="Web References\SeNetworkService\Reference.map">
-      <Generator>MSDiscoCodeGenerator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-    <None Include="Web References\SeNetworkService\SeSequence.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\SeNetworkService\SeService.wsdl" />
-    <None Include="Web References\SeNetworkService\SeUpdate.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\SeNetworkService\SeUser.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Controls\WebBrowser\WebBrowserEditBox.html" />
@@ -1784,7 +1777,6 @@
     <Content Include="Languages\zh-TW.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Web References\SeNetworkService\SeService.disco" />
     <None Include="DLLs\Interop.QuartzTypeLib.dll" />
     <EmbeddedResource Include="Controls\VideoPlayerContainer.resx">
       <DependentUpon>VideoPlayerContainer.cs</DependentUpon>
@@ -1905,22 +1897,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <WebReferences Include="Web References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <WebReferenceUrl Include="http://localhost:2782/se/SeService.asmx">
-      <UrlBehavior>Dynamic</UrlBehavior>
-      <RelPath>Web References\SeNetworkService\</RelPath>
-      <UpdateFromURL>http://localhost:2782/se/SeService.asmx</UpdateFromURL>
-      <ServiceLocationURL>
-      </ServiceLocationURL>
-      <CachedDynamicPropName>
-      </CachedDynamicPropName>
-      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
-      <CachedSettingsPropName>SubtitleEdit_SeNetworkService_SeService</CachedSettingsPropName>
-    </WebReferenceUrl>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\libse\LibSE.csproj">
       <Project>{3e3cb28f-3a7b-430f-9eb3-0d6c1e53b753}</Project>
       <Name>LibSE</Name>
@@ -1949,6 +1925,11 @@
   </Target>
   <Target Name="BeforeClean">
     <Delete Files="@(HunspellAssemblies -> '$(OutputPath)%(Identity)')" />
+  </Target>
+  <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
+    <Error Condition="!Exists('..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
+    <Error Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
