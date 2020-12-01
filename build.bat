@@ -111,7 +111,8 @@ echo ILREPACKDIR
 echo %ILREPACKDIR%
 echo ILREPACKDIR done
 "%ILREPACKDIR%\tools\ILRepack.exe" /parallel /internalize /targetplatform:v4 /out:"bin\Release\SubtitleEdit.exe" "bin\Release\SubtitleEdit.exe"^
- "bin\Release\libse.dll" "bin\Release\zlib.net.dll" "bin\Release\NHunspell.dll" "bin\Release\UtfUnknown.dll" "DLLs\Interop.QuartzTypeLib.dll"
+ "bin\Release\libse.dll" "bin\Release\zlib.net.dll" "bin\Release\NHunspell.dll" "bin\Release\UtfUnknown.dll" "DLLs\Interop.QuartzTypeLib.dll"^
+ "bin\Release\Newtonsoft.Json.dll" "bin\Release\System.Net.Http.Extensions.dll" "bin\Release\System.Net.Http.Primitives.dll"
 IF %ERRORLEVEL% NEQ 0 GOTO EndWithError
 POPD
 
