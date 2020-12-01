@@ -628,22 +628,22 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyData == _shortcuts.MainListViewColor1)
             {
-                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color1ForShortcut));
+                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color1));
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainListViewColor2)
             {
-                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color2ForShortcut));
+                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color2));
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainListViewColor3)
             {
-                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color3ForShortcut));
+                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color3));
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainListViewColor4)
             {
-                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color4ForShortcut));
+                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color4));
                 e.SuppressKeyPress = true;
             }
         }
@@ -9530,22 +9530,22 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyData == _shortcuts.MainListViewColor1)
             {
-                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color1ForShortcut));
+                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color1));
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainListViewColor2)
             {
-                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color2ForShortcut));
+                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color2));
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainListViewColor3)
             {
-                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color3ForShortcut));
+                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color3));
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainListViewColor4)
             {
-                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color4ForShortcut));
+                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color4));
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainListViewToggleMusicSymbols)
@@ -17342,22 +17342,22 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyData == _shortcuts.MainListViewColor1)
             {
-                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color1ForShortcut));
+                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color1));
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainListViewColor2)
             {
-                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color2ForShortcut));
+                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color2));
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainListViewColor3)
             {
-                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color3ForShortcut));
+                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color3));
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainListViewColor4)
             {
-                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color4ForShortcut));
+                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color4));
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainListViewFocusWaveform)

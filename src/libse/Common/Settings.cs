@@ -152,10 +152,10 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool ListViewSyntaxMoreThanXLines { get; set; }
         public Color ListViewSyntaxErrorColor { get; set; }
         public Color ListViewUnfocusedSelectedColor { get; set; }
-        public Color Color1ForShortcut { get; set; }
-        public Color Color2ForShortcut { get; set; }
-        public Color Color3ForShortcut { get; set; }
-        public Color Color4ForShortcut { get; set; }
+        public Color Color1 { get; set; }
+        public Color Color2 { get; set; }
+        public Color Color3 { get; set; }
+        public Color Color4 { get; set; }
         public bool ListViewShowColumnEndTime { get; set; }
         public bool ListViewShowColumnDuration { get; set; }
         public bool ListViewShowColumnCharsPerSec { get; set; }
@@ -358,10 +358,10 @@ namespace Nikse.SubtitleEdit.Core.Common
             ListViewSyntaxColorGap = true;
             ListViewSyntaxErrorColor = Color.FromArgb(255, 180, 150);
             ListViewUnfocusedSelectedColor = Color.LightBlue;
-            Color1ForShortcut = Color.Yellow;
-            Color2ForShortcut = Color.Red;
-            Color3ForShortcut = Color.Green;
-            Color4ForShortcut = Color.Cyan;
+            Color1 = Color.Yellow;
+            Color2 = Color.FromArgb(byte.MaxValue, 0, 0);
+            Color3 = Color.FromArgb(0, byte.MaxValue, 0);
+            Color4 = Color.Cyan;
             ListViewShowColumnEndTime = true;
             ListViewShowColumnDuration = true;
             SplitAdvanced = false;
@@ -3795,28 +3795,28 @@ $HorzAlign          =   Center
                 settings.Tools.ListViewUnfocusedSelectedColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
             }
 
-            subNode = node.SelectSingleNode("Color1ForShortcut");
+            subNode = node.SelectSingleNode("Color1");
             if (subNode != null)
             {
-                settings.Tools.Color1ForShortcut = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+                settings.Tools.Color1 = ColorTranslator.FromHtml(subNode.InnerText);
             }
 
-            subNode = node.SelectSingleNode("Color2ForShortcut");
+            subNode = node.SelectSingleNode("Color2");
             if (subNode != null)
             {
-                settings.Tools.Color2ForShortcut = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+                settings.Tools.Color2 = ColorTranslator.FromHtml(subNode.InnerText);
             }
 
-            subNode = node.SelectSingleNode("Color3ForShortcut");
+            subNode = node.SelectSingleNode("Color3");
             if (subNode != null)
             {
-                settings.Tools.Color3ForShortcut = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+                settings.Tools.Color3 = ColorTranslator.FromHtml(subNode.InnerText);
             }
 
-            subNode = node.SelectSingleNode("Color4ForShortcut");
+            subNode = node.SelectSingleNode("Color4");
             if (subNode != null)
             {
-                settings.Tools.Color4ForShortcut = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+                settings.Tools.Color4 = ColorTranslator.FromHtml(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("ListViewShowColumnEndTime");
@@ -7936,10 +7936,10 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ListViewSyntaxColorGap", settings.Tools.ListViewSyntaxColorGap.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxErrorColor", settings.Tools.ListViewSyntaxErrorColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewUnfocusedSelectedColor", settings.Tools.ListViewUnfocusedSelectedColor.ToArgb().ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("Color1ForShortcut", settings.Tools.Color1ForShortcut.ToArgb().ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("Color2ForShortcut", settings.Tools.Color2ForShortcut.ToArgb().ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("Color3ForShortcut", settings.Tools.Color3ForShortcut.ToArgb().ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("Color4ForShortcut", settings.Tools.Color4ForShortcut.ToArgb().ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("Color1", ColorTranslator.ToHtml(settings.Tools.Color1));
+                textWriter.WriteElementString("Color2", ColorTranslator.ToHtml(settings.Tools.Color2));
+                textWriter.WriteElementString("Color3", ColorTranslator.ToHtml(settings.Tools.Color3));
+                textWriter.WriteElementString("Color4", ColorTranslator.ToHtml(settings.Tools.Color4));
                 textWriter.WriteElementString("ListViewShowColumnEndTime", settings.Tools.ListViewShowColumnEndTime.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewShowColumnDuration", settings.Tools.ListViewShowColumnDuration.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewShowColumnCharsPerSec", settings.Tools.ListViewShowColumnCharsPerSec.ToString(CultureInfo.InvariantCulture));

@@ -1283,10 +1283,10 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(listViewAndTextBoxNode, language.AlignmentN7, nameof(Configuration.Settings.Shortcuts.MainListViewAlignmentN7));
             AddNode(listViewAndTextBoxNode, language.AlignmentN8, nameof(Configuration.Settings.Shortcuts.MainListViewAlignmentN8));
             AddNode(listViewAndTextBoxNode, language.AlignmentN9, nameof(Configuration.Settings.Shortcuts.MainListViewAlignmentN9));
-            AddNode(listViewAndTextBoxNode, string.Format(language.ColorX, "1", ColorTranslator.ToHtml(Configuration.Settings.Tools.Color1ForShortcut)), nameof(Configuration.Settings.Shortcuts.MainListViewColor1));
-            AddNode(listViewAndTextBoxNode, string.Format(language.ColorX, "2", ColorTranslator.ToHtml(Configuration.Settings.Tools.Color2ForShortcut)), nameof(Configuration.Settings.Shortcuts.MainListViewColor2));
-            AddNode(listViewAndTextBoxNode, string.Format(language.ColorX, "3", ColorTranslator.ToHtml(Configuration.Settings.Tools.Color3ForShortcut)), nameof(Configuration.Settings.Shortcuts.MainListViewColor3));
-            AddNode(listViewAndTextBoxNode, string.Format(language.ColorX, "4", ColorTranslator.ToHtml(Configuration.Settings.Tools.Color4ForShortcut)), nameof(Configuration.Settings.Shortcuts.MainListViewColor4));
+            AddNode(listViewAndTextBoxNode, string.Format(language.ColorX, "1", ColorTranslator.ToHtml(Configuration.Settings.Tools.Color1)), nameof(Configuration.Settings.Shortcuts.MainListViewColor1));
+            AddNode(listViewAndTextBoxNode, string.Format(language.ColorX, "2", ColorTranslator.ToHtml(Configuration.Settings.Tools.Color2)), nameof(Configuration.Settings.Shortcuts.MainListViewColor2));
+            AddNode(listViewAndTextBoxNode, string.Format(language.ColorX, "3", ColorTranslator.ToHtml(Configuration.Settings.Tools.Color3)), nameof(Configuration.Settings.Shortcuts.MainListViewColor3));
+            AddNode(listViewAndTextBoxNode, string.Format(language.ColorX, "4", ColorTranslator.ToHtml(Configuration.Settings.Tools.Color4)), nameof(Configuration.Settings.Shortcuts.MainListViewColor4));
             AddNode(listViewAndTextBoxNode, Configuration.Settings.Language.Main.Menu.ContextMenu.RemoveFormattingAll, nameof(Configuration.Settings.Shortcuts.MainRemoveFormatting), true);
             AddNode(listViewAndTextBoxNode, language.RemoveTimeCodes, nameof(Configuration.Settings.Shortcuts.MainListViewRemoveTimeCodes));
             if (listViewAndTextBoxNode.Nodes.Count > 0)
