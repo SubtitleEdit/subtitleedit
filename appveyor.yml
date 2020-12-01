@@ -15,7 +15,7 @@ test_script:
   - vstest.console "src\Test\bin\%CONFIGURATION%\Test.dll" /logger:Appveyor
 
 cache:
-  - 'src\ui\packages -> **\src\ui\packages.config'
+  - 'packages -> **\src\ui\packages.config'
 
 matrix:
   fast_finish: true
