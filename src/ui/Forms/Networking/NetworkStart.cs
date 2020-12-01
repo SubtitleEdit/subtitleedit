@@ -1,9 +1,8 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Net;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms.Networking
 {
@@ -41,7 +40,7 @@ namespace Nikse.SubtitleEdit.Forms.Networking
                 textBoxSessionKey.Text = Guid.NewGuid().ToString().RemoveChar('-');
             }
 
-            comboBoxWebServiceUrl.Text = Configuration.Settings.NetworkSettings.WebServiceUrl;
+            comboBoxWebServiceUrl.Text = Configuration.Settings.NetworkSettings.WebApiUrl;
             textBoxUserName.Text = Configuration.Settings.NetworkSettings.UserName;
             if (textBoxUserName.Text.Trim().Length < 2)
             {
@@ -52,7 +51,7 @@ namespace Nikse.SubtitleEdit.Forms.Networking
         private void buttonStart_Click(object sender, EventArgs e)
         {
             Configuration.Settings.NetworkSettings.SessionKey = textBoxSessionKey.Text;
-            Configuration.Settings.NetworkSettings.WebServiceUrl = comboBoxWebServiceUrl.Text;
+            Configuration.Settings.NetworkSettings.WebApiUrl = comboBoxWebServiceUrl.Text;
             Configuration.Settings.NetworkSettings.UserName = textBoxUserName.Text;
 
             buttonStart.Enabled = false;
@@ -65,8 +64,7 @@ namespace Nikse.SubtitleEdit.Forms.Networking
 
             try
             {
-                string message;
-                _networkSession.StartServer(comboBoxWebServiceUrl.Text, textBoxSessionKey.Text, textBoxUserName.Text, _fileName, out message);
+                _networkSession.StartServer(comboBoxWebServiceUrl.Text, textBoxSessionKey.Text, textBoxUserName.Text, _fileName, out var message);
                 if (message != "OK")
                 {
                     MessageBox.Show(message);

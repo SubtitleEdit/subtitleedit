@@ -1743,7 +1743,7 @@ $HorzAlign          =   Center
     public class NetworkSettings
     {
         public string UserName { get; set; }
-        public string WebServiceUrl { get; set; }
+        public string WebApiUrl { get; set; }
         public string SessionKey { get; set; }
         public int PollIntervalSeconds { get; set; }
         public string NewMessageSound { get; set; }
@@ -1751,8 +1751,8 @@ $HorzAlign          =   Center
         public NetworkSettings()
         {
             UserName = string.Empty;
-            SessionKey = "DemoSession"; // TODO: Leave blank or use guid
-            WebServiceUrl = "https://www.nikse.dk/se/SeService.asmx";
+            SessionKey = "DemoSession";
+            WebApiUrl = "https://www.nikse.dk/api/SeNet";
             PollIntervalSeconds = 5;
         }
     }
@@ -5635,10 +5635,10 @@ $HorzAlign          =   Center
                     settings.NetworkSettings.UserName = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("WebServiceUrl");
+                subNode = node.SelectSingleNode("WebApiUrl");
                 if (subNode != null)
                 {
-                    settings.NetworkSettings.WebServiceUrl = subNode.InnerText;
+                    settings.NetworkSettings.WebApiUrl = subNode.InnerText;
                 }
 
                 subNode = node.SelectSingleNode("PollIntervalSeconds");
@@ -8274,7 +8274,7 @@ $HorzAlign          =   Center
                 textWriter.WriteStartElement("NetworkSettings", string.Empty);
                 textWriter.WriteElementString("SessionKey", settings.NetworkSettings.SessionKey);
                 textWriter.WriteElementString("UserName", settings.NetworkSettings.UserName);
-                textWriter.WriteElementString("WebServiceUrl", settings.NetworkSettings.WebServiceUrl);
+                textWriter.WriteElementString("WebApiUrl", settings.NetworkSettings.WebApiUrl);
                 textWriter.WriteElementString("PollIntervalSeconds", settings.NetworkSettings.PollIntervalSeconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("NewMessageSound", settings.NetworkSettings.NewMessageSound);
                 textWriter.WriteEndElement();

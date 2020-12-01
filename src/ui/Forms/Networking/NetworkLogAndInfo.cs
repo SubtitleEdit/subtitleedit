@@ -1,8 +1,7 @@
-﻿using System;
-using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
+using System;
+using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.Networking
 {
@@ -26,7 +25,7 @@ namespace Nikse.SubtitleEdit.Forms.Networking
         {
             textBoxSessionKey.Text = networkSession.SessionId;
             textBoxUserName.Text = networkSession.CurrentUser.UserName;
-            textBoxWebServiceUrl.Text = networkSession.WebServiceUrl;
+            textBoxWebServiceUrl.Text = networkSession.BaseUrl;
             textBoxLog.Text = networkSession.GetLog();
         }
 

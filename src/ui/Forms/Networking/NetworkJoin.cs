@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Forms.Networking
                 textBoxSessionKey.Text = Guid.NewGuid().ToString().RemoveChar('-');
             }
 
-            comboBoxWebServiceUrl.Text = Configuration.Settings.NetworkSettings.WebServiceUrl;
+            comboBoxWebServiceUrl.Text = Configuration.Settings.NetworkSettings.WebApiUrl;
             textBoxUserName.Text = Configuration.Settings.NetworkSettings.UserName;
             if (textBoxUserName.Text.Trim().Length < 2)
             {
@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Forms.Networking
         private void buttonJoin_Click(object sender, EventArgs e)
         {
             Configuration.Settings.NetworkSettings.SessionKey = textBoxSessionKey.Text;
-            Configuration.Settings.NetworkSettings.WebServiceUrl = comboBoxWebServiceUrl.Text;
+            Configuration.Settings.NetworkSettings.WebApiUrl = comboBoxWebServiceUrl.Text;
             Configuration.Settings.NetworkSettings.UserName = textBoxUserName.Text;
 
             buttonJoin.Enabled = false;
