@@ -43,6 +43,5 @@ SubtitleEditBeta
 /src/ui/packages
 /src/ui/ILRepack*
 /src/ui/NHunspell*
-/build_beta.bat
 /TestResults
 /packages
