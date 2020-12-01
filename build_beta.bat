@@ -55,7 +55,6 @@ ECHO.
 CALL "%VsDevCmd_bat%" -startdir=none
 GOTO SetVsCmdLineEnv
 
-
 :SetBuildType
 IF "%~1" == "" (
   SET "BUILDTYPE=Build"
@@ -77,7 +76,6 @@ IF "%~1" == "" (
   ECHO Unsupported commandline switch!
   GOTO EndWithError
 )
-
 
 :START
 TITLE %BUILDTYPE%ing Subtitle Edit - Release^|Any CPU...
@@ -125,14 +123,12 @@ IF DEFINED SEVENZIP IF EXIST "%SEVENZIP%" (
 TITLE %BUILDTYPE%ing Subtitle Edit finished!
 GOTO END
 
-
 :EndWithError
 TITLE Compiling Subtitle Edit [ERROR]
 ECHO.
 ECHO.
 ECHO  ** ERROR: Build failed and aborted! **
 GOTO END
-
 
 :ShowHelp
 TITLE %~nx0 %1
@@ -145,14 +141,12 @@ ECHO          The arguments are not case sensitive.
 ECHO.
 ECHO Executing %~nx0 without any arguments is equivalent to "%~nx0 build".
 
-
 :END
 ECHO.
 ECHO.
 ENDLOCAL
 PAUSE
 EXIT /B
-
 
 :SubZipFile
 TITLE Creating ZIP archive with 7-Zip...
@@ -187,9 +181,7 @@ MOVE /Y "SubtitleEditBeta.zip" "..\..\..\..\..\SubtitleEditBeta" >NUL
 POPD
 IF EXIST "temp_zip" RD /S /Q "temp_zip"
 POPD
-
 EXIT /B
-
 
 :SubDetectSevenzipPath
 FOR %%G IN (7z.exe) DO (SET "SEVENZIP_PATH=%%~$PATH:G")
