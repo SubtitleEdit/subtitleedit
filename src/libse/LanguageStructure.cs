@@ -1194,8 +1194,8 @@
             public string BeforeTypeWriterEffect { get; set; }
             public string BeforeKaraokeEffect { get; set; }
             public string BeforeImportingDvdSubtitle { get; set; }
-            public string OpenMatroskaFile { get; set; }
-            public string MatroskaFiles { get; set; }
+            public string OpenSubtitleVideoFile { get; set; }
+            public string VideoFiles { get; set; }
             public string NoSubtitlesFound { get; set; }
             public string NotAValidMatroskaFileX { get; set; }
             public string BlurayNotSubtitlesFound { get; set; }
@@ -1221,8 +1221,6 @@
             public string VobSubFiles { get; set; }
             public string OpenBluRaySupFile { get; set; }
             public string BluRaySupFiles { get; set; }
-            public string OpenXSubFiles { get; set; }
-            public string XSubFiles { get; set; }
             public string BeforeImportingVobSubFile { get; set; }
             public string BeforeImportingBluRaySupFile { get; set; }
             public string BeforeImportingBdnXml { get; set; }
@@ -1358,11 +1356,10 @@
                     public string Compare { get; set; }
                     public string Statistics { get; set; }
                     public string Plugins { get; set; }
+                    public string ImportSubtitleFromVideoFile { get; set; }
                     public string ImportOcrFromDvd { get; set; }
                     public string ImportOcrVobSubSubtitle { get; set; }
                     public string ImportBluRaySupFile { get; set; }
-                    public string ImportXSub { get; set; }
-                    public string ImportSubtitleFromMatroskaFile { get; set; }
                     public string ImportSubtitleWithManualChosenEncoding { get; set; }
                     public string ImportText { get; set; }
                     public string ImportImages { get; set; }
