@@ -73,6 +73,9 @@
     <Compile Include="Controls\SETextBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\SimpleTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\VideoPlayerContainer.cs">
       <SubType>Component</SubType>
     </Compile>

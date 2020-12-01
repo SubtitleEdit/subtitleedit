@@ -8,7 +8,7 @@ using System.Windows.Forms;
 namespace Nikse.SubtitleEdit.Controls
 {
     /// <summary>
-    /// TextBox with drag and drop.
+    /// TextBox that can be either a normal text box or a rich text box (or a html text box).
     /// </summary>
     public sealed class SETextBox : Panel
     {
@@ -20,16 +20,10 @@ namespace Nikse.SubtitleEdit.Controls
         public new event EventHandler Leave;
         public new event MouseEventHandler MouseMove;
 
-        private string _dragText = string.Empty;
-        private int _dragStartFrom;
-        private long _dragStartTicks;
-        private bool _dragRemoveOld;
-        private bool _dragFromThis;
-        private long _gotFocusTicks;
         private bool _checkRtfChange = true;
         private RichTextBox _richTextBoxTemp;
         private RichTextBox _uiTextBox;
-        private TextBox _textBox;
+        private SimpleTextBox _simpleTextBox;
         private int _mouseMoveSelectionLength;
         private WebBrowserEditBox _htmlBox;
         private const bool UseWebBrowser = false;
@@ -43,10 +37,10 @@ namespace Nikse.SubtitleEdit.Controls
         {
             ContextMenuStrip oldContextMenuStrip = null;
             var oldEnabled = true;
-            if (_textBox != null)
+            if (_simpleTextBox != null)
             {
-                oldContextMenuStrip = _textBox.ContextMenuStrip;
-                oldEnabled = _textBox.Enabled;
+                oldContextMenuStrip = _simpleTextBox.ContextMenuStrip;
+                oldEnabled = _simpleTextBox.Enabled;
             }
             else if (_uiTextBox != null)
             {
@@ -64,11 +58,11 @@ namespace Nikse.SubtitleEdit.Controls
             BackColor = SystemColors.WindowFrame;
 
             Controls.Clear();
-            _textBox?.Dispose();
+            _simpleTextBox?.Dispose();
             _richTextBoxTemp?.Dispose();
             _uiTextBox?.Dispose();
             _htmlBox?.Dispose();
-            _textBox = null;
+            _simpleTextBox = null;
             _htmlBox = null;
             _uiTextBox = null;
             _richTextBoxTemp = null;
@@ -155,16 +149,16 @@ namespace Nikse.SubtitleEdit.Controls
             }
             else
             {
-                _textBox = new TextBox { BorderStyle = BorderStyle.None, Multiline = true };
-                _textBox.KeyDown += (sender, args) =>
+                _simpleTextBox = new SimpleTextBox { BorderStyle = BorderStyle.None, Multiline = true };
+                _simpleTextBox.KeyDown += (sender, args) =>
                 {
                     if (args.KeyData == (Keys.Control | Keys.Back))
                     {
-                        UiUtil.ApplyControlBackspace(_textBox);
+                        UiUtil.ApplyControlBackspace(_simpleTextBox);
                         args.SuppressKeyPress = true;
                     }
                 };
-                InitializeBackingControl(_textBox);
+                InitializeBackingControl(_simpleTextBox);
             }
 
             UpdateFontAndColors();
@@ -178,12 +172,6 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void InitializeBackingControl(Control textBox)
         {
-            textBox.AllowDrop = true;
-            textBox.DragEnter += SETextBox_DragEnter;
-            textBox.DragDrop += SETextBox_DragDrop;
-            textBox.GotFocus += (sender, args) => { _gotFocusTicks = DateTime.UtcNow.Ticks; };
-            textBox.MouseDown += SETextBox_MouseDown;
-            textBox.MouseUp += SETextBox_MouseUp;
             textBox.TextChanged += TextChangedHighlight;
             Controls.Add(textBox);
             textBox.Dock = DockStyle.Fill;
@@ -202,7 +190,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             UpdateFontAndColors(_uiTextBox);
             UpdateFontAndColors(_richTextBoxTemp);
-            UpdateFontAndColors(_textBox);
+            UpdateFontAndColors(_simpleTextBox);
         }
 
         public void UpdateFontAndColors(Control textBox)
@@ -235,9 +223,9 @@ namespace Nikse.SubtitleEdit.Controls
         {
             get
             {
-                if (_textBox != null)
+                if (_simpleTextBox != null)
                 {
-                    return _textBox.Text;
+                    return _simpleTextBox.Text;
                 }
 
                 if (_uiTextBox != null)
@@ -261,9 +249,9 @@ namespace Nikse.SubtitleEdit.Controls
             }
             set
             {
-                if (_textBox != null)
+                if (_simpleTextBox != null)
                 {
-                    _textBox.Text = value;
+                    _simpleTextBox.Text = value;
                     return;
                 }
 
@@ -300,9 +288,9 @@ namespace Nikse.SubtitleEdit.Controls
         {
             get
             {
-                if (_textBox != null)
+                if (_simpleTextBox != null)
                 {
-                    return _textBox.SelectionStart;
+                    return _simpleTextBox.SelectionStart;
                 }
 
                 if (_uiTextBox != null)
@@ -319,9 +307,9 @@ namespace Nikse.SubtitleEdit.Controls
             }
             set
             {
-                if (_textBox != null)
+                if (_simpleTextBox != null)
                 {
-                    _textBox.SelectionStart = value;
+                    _simpleTextBox.SelectionStart = value;
                 }
                 else if (_uiTextBox != null)
                 {
@@ -338,9 +326,9 @@ namespace Nikse.SubtitleEdit.Controls
         {
             get
             {
-                if (_textBox != null)
+                if (_simpleTextBox != null)
                 {
-                    return _textBox.SelectionLength;
+                    return _simpleTextBox.SelectionLength;
                 }
 
                 if (_uiTextBox != null)
@@ -357,9 +345,9 @@ namespace Nikse.SubtitleEdit.Controls
             }
             set
             {
-                if (_textBox != null)
+                if (_simpleTextBox != null)
                 {
-                    _textBox.SelectionLength = value;
+                    _simpleTextBox.SelectionLength = value;
                 }
                 else if (_uiTextBox != null)
                 {
@@ -376,9 +364,9 @@ namespace Nikse.SubtitleEdit.Controls
         {
             get
             {
-                if (_textBox != null)
+                if (_simpleTextBox != null)
                 {
-                    return _textBox.HideSelection;
+                    return _simpleTextBox.HideSelection;
                 }
 
                 if (_uiTextBox != null)
@@ -395,9 +383,9 @@ namespace Nikse.SubtitleEdit.Controls
             }
             set
             {
-                if (_textBox != null)
+                if (_simpleTextBox != null)
                 {
-                    _textBox.HideSelection = value;
+                    _simpleTextBox.HideSelection = value;
                 }
                 else if (_uiTextBox != null)
                 {
@@ -414,9 +402,9 @@ namespace Nikse.SubtitleEdit.Controls
         {
             get
             {
-                if (_textBox != null)
+                if (_simpleTextBox != null)
                 {
-                    return _textBox.SelectedText;
+                    return _simpleTextBox.SelectedText;
                 }
 
                 if (_uiTextBox != null)
@@ -434,9 +422,9 @@ namespace Nikse.SubtitleEdit.Controls
             }
             set
             {
-                if (_textBox != null)
+                if (_simpleTextBox != null)
                 {
-                    _textBox.SelectedText = value;
+                    _simpleTextBox.SelectedText = value;
                 }
                 else if (_uiTextBox != null)
                 {
@@ -453,9 +441,9 @@ namespace Nikse.SubtitleEdit.Controls
         {
             get
             {
-                if (_textBox != null)
+                if (_simpleTextBox != null)
                 {
-                    return _textBox.Multiline;
+                    return _simpleTextBox.Multiline;
                 }
 
                 if (_uiTextBox != null)
@@ -472,9 +460,9 @@ namespace Nikse.SubtitleEdit.Controls
             }
             set
             {
-                if (_textBox != null)
+                if (_simpleTextBox != null)
                 {
-                    _textBox.Multiline = value;
+                    _simpleTextBox.Multiline = value;
                 }
                 else if (_uiTextBox != null)
                 {
@@ -487,9 +475,9 @@ namespace Nikse.SubtitleEdit.Controls
         {
             get
             {
-                if (_textBox != null)
+                if (_simpleTextBox != null)
                 {
-                    return _textBox.Enabled;
+                    return _simpleTextBox.Enabled;
                 }
 
                 if (_uiTextBox != null)
@@ -506,9 +494,9 @@ namespace Nikse.SubtitleEdit.Controls
             }
             set
             {
-                if (_textBox != null)
+                if (_simpleTextBox != null)
                 {
-                    _textBox.Enabled = value;
+                    _simpleTextBox.Enabled = value;
                 }
                 else if (_uiTextBox != null)
                 {
@@ -525,24 +513,24 @@ namespace Nikse.SubtitleEdit.Controls
         {
             get
             {
-                if (_textBox == null && _uiTextBox == null)
+                if (_simpleTextBox == null && _uiTextBox == null)
                 {
                     return RichTextBoxScrollBars.None;
                 }
 
-                if (_textBox != null)
+                if (_simpleTextBox != null)
                 {
-                    if (_textBox.ScrollBars == System.Windows.Forms.ScrollBars.Both)
+                    if (_simpleTextBox.ScrollBars == System.Windows.Forms.ScrollBars.Both)
                     {
                         return RichTextBoxScrollBars.Both;
                     }
 
-                    if (_textBox.ScrollBars == System.Windows.Forms.ScrollBars.Horizontal)
+                    if (_simpleTextBox.ScrollBars == System.Windows.Forms.ScrollBars.Horizontal)
                     {
                         return RichTextBoxScrollBars.Horizontal;
                     }
 
-                    if (_textBox.ScrollBars == System.Windows.Forms.ScrollBars.Vertical)
+                    if (_simpleTextBox.ScrollBars == System.Windows.Forms.ScrollBars.Vertical)
                     {
                         return RichTextBoxScrollBars.Vertical;
                     }
@@ -554,22 +542,22 @@ namespace Nikse.SubtitleEdit.Controls
             }
             set
             {
-                if (_textBox != null)
+                if (_simpleTextBox != null)
                 {
                     if (value == RichTextBoxScrollBars.Both || value == RichTextBoxScrollBars.ForcedBoth)
                     {
-                        _textBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+                        _simpleTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
                     }
                     else if (value == RichTextBoxScrollBars.Horizontal || value == RichTextBoxScrollBars.ForcedHorizontal)
                     {
-                        _textBox.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
+                        _simpleTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
                     }
                     else if (value == RichTextBoxScrollBars.Vertical || value == RichTextBoxScrollBars.ForcedVertical)
                     {
-                        _textBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+                        _simpleTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
                     }
 
-                    _textBox.ScrollBars = System.Windows.Forms.ScrollBars.None;
+                    _simpleTextBox.ScrollBars = System.Windows.Forms.ScrollBars.None;
                 }
                 else if (_uiTextBox != null)
                 {
@@ -582,9 +570,9 @@ namespace Nikse.SubtitleEdit.Controls
         {
             get
             {
-                if (_textBox != null)
+                if (_simpleTextBox != null)
                 {
-                    return _textBox.ContextMenuStrip;
+                    return _simpleTextBox.ContextMenuStrip;
                 }
 
                 if (_uiTextBox != null)
@@ -601,9 +589,9 @@ namespace Nikse.SubtitleEdit.Controls
             }
             set
             {
-                if (_textBox != null)
+                if (_simpleTextBox != null)
                 {
-                    _textBox.ContextMenuStrip = value;
+                    _simpleTextBox.ContextMenuStrip = value;
                 }
                 else if (_uiTextBox != null)
                 {
@@ -618,9 +606,9 @@ namespace Nikse.SubtitleEdit.Controls
 
         public int GetCharIndexFromPosition(Point pt)
         {
-            if (_textBox != null)
+            if (_simpleTextBox != null)
             {
-                return _textBox.GetCharIndexFromPosition(pt);
+                return _simpleTextBox.GetCharIndexFromPosition(pt);
             }
 
             if (_uiTextBox != null)
@@ -638,9 +626,9 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SelectAll()
         {
-            if (_textBox != null)
+            if (_simpleTextBox != null)
             {
-                _textBox.SelectAll();
+                _simpleTextBox.SelectAll();
             }
             else if (_uiTextBox != null)
             {
@@ -654,9 +642,9 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void Clear()
         {
-            if (_textBox != null)
+            if (_simpleTextBox != null)
             {
-                _textBox.Clear();
+                _simpleTextBox.Clear();
             }
             else if (_uiTextBox != null)
             {
@@ -670,9 +658,9 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void Undo()
         {
-            if (_textBox != null)
+            if (_simpleTextBox != null)
             {
-                _textBox.Undo();
+                _simpleTextBox.Undo();
             }
             else if (_uiTextBox != null)
             {
@@ -686,9 +674,9 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void ClearUndo()
         {
-            if (_textBox != null)
+            if (_simpleTextBox != null)
             {
-                _textBox.ClearUndo();
+                _simpleTextBox.ClearUndo();
             }
             else if (_uiTextBox != null)
             {
@@ -702,9 +690,9 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void Copy()
         {
-            if (_textBox != null)
+            if (_simpleTextBox != null)
             {
-                _textBox.Copy();
+                _simpleTextBox.Copy();
             }
             else if (_uiTextBox != null)
             {
@@ -718,9 +706,9 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void Cut()
         {
-            if (_textBox != null)
+            if (_simpleTextBox != null)
             {
-                _textBox.Cut();
+                _simpleTextBox.Cut();
             }
             else if (_uiTextBox != null)
             {
@@ -734,9 +722,9 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void Paste()
         {
-            if (_textBox != null)
+            if (_simpleTextBox != null)
             {
-                _textBox.Paste();
+                _simpleTextBox.Paste();
             }
             else if (_uiTextBox!= null)
             {
@@ -752,9 +740,9 @@ namespace Nikse.SubtitleEdit.Controls
         {
             get
             {
-                if (_textBox != null)
+                if (_simpleTextBox != null)
                 {
-                    return _textBox.Focused;
+                    return _simpleTextBox.Focused;
                 }
 
                 if (_uiTextBox != null)
@@ -773,9 +761,9 @@ namespace Nikse.SubtitleEdit.Controls
 
         public new void Focus()
         {
-            if (_textBox != null)
+            if (_simpleTextBox != null)
             {
-                _textBox.Focus();
+                _simpleTextBox.Focus();
             }
             else if (_uiTextBox != null)
             {
@@ -785,207 +773,6 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _htmlBox.Focus();
             }
-        }
-
-        private void SETextBox_MouseUp(object sender, MouseEventArgs e)
-        {
-            _dragRemoveOld = false;
-            _dragFromThis = false;
-        }
-
-        private void SETextBox_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (MouseButtons == MouseButtons.Left && !string.IsNullOrEmpty(_dragText))
-            {
-                var pt = new Point(e.X, e.Y);
-                int index = GetCharIndexFromPosition(pt);
-                if (index >= _dragStartFrom && index <= _dragStartFrom + _dragText.Length)
-                {
-                    // re-make selection
-                    SelectionStart = _dragStartFrom;
-                    SelectionLength = _dragText.Length;
-
-                    try
-                    {
-                        var dataObject = new DataObject();
-                        dataObject.SetText(_dragText, TextDataFormat.UnicodeText);
-                        dataObject.SetText(_dragText, TextDataFormat.Text);
-
-                        _dragFromThis = true;
-                        if (ModifierKeys == Keys.Control)
-                        {
-                            _dragRemoveOld = false;
-                            DoDragDrop(dataObject, DragDropEffects.Copy);
-                        }
-                        else if (ModifierKeys == Keys.None)
-                        {
-                            _dragRemoveOld = true;
-                            DoDragDrop(dataObject, DragDropEffects.Move);
-                        }
-                    }
-                    catch
-                    {
-                        // ignored
-                    }
-                }
-            }
-        }
-
-        private void SETextBox_DragDrop(object sender, DragEventArgs e)
-        {
-            var pt = PointToClient(new Point(e.X, e.Y));
-            int index = GetCharIndexFromPosition(pt);
-
-            string newText;
-            if (e.Data.GetDataPresent(DataFormats.UnicodeText))
-            {
-                newText = (string)e.Data.GetData(DataFormats.UnicodeText);
-            }
-            else
-            {
-                newText = (string)e.Data.GetData(DataFormats.Text);
-            }
-
-            if (string.IsNullOrWhiteSpace(Text))
-            {
-                Text = newText;
-            }
-            else
-            {
-                bool justAppend = index == Text.Length - 1 && index > 0;
-                const string expectedChars = ":;]<.!?؟";
-                if (_dragFromThis)
-                {
-                    _dragFromThis = false;
-                    long milliseconds = (DateTime.UtcNow.Ticks - _dragStartTicks) / 10000;
-                    if (milliseconds < 400)
-                    {
-                        SelectionLength = 0;
-                        if (justAppend)
-                        {
-                            index++;
-                        }
-
-                        SelectionStart = index;
-                        return; // too fast - nobody can drag and drop this fast
-                    }
-
-                    if (index >= _dragStartFrom && index <= _dragStartFrom + _dragText.Length)
-                    {
-                        return; // don't drop same text at same position
-                    }
-
-                    if (_dragRemoveOld)
-                    {
-                        _dragRemoveOld = false;
-                        Text = Text.Remove(_dragStartFrom, _dragText.Length);
-
-                        // fix spaces
-                        if (_dragStartFrom == 0 && Text.Length > 0 && Text[0] == ' ')
-                        {
-                            Text = Text.Remove(0, 1);
-                            index--;
-                        }
-                        else if (_dragStartFrom > 1 && Text.Length > _dragStartFrom + 1 && Text[_dragStartFrom] == ' ' && Text[_dragStartFrom - 1] == ' ')
-                        {
-                            Text = Text.Remove(_dragStartFrom, 1);
-                            if (_dragStartFrom < index)
-                            {
-                                index--;
-                            }
-                        }
-                        else if (_dragStartFrom > 0 && Text.Length > _dragStartFrom + 1 && Text[_dragStartFrom] == ' ' && expectedChars.Contains(Text[_dragStartFrom + 1]))
-                        {
-                            Text = Text.Remove(_dragStartFrom, 1);
-                            if (_dragStartFrom < index)
-                            {
-                                index--;
-                            }
-                        }
-
-                        // fix index
-                        if (index > _dragStartFrom)
-                        {
-                            index -= _dragText.Length;
-                        }
-
-                        if (index < 0)
-                        {
-                            index = 0;
-                        }
-                    }
-                }
-                if (justAppend)
-                {
-                    index = Text.Length;
-                    Text += newText;
-                }
-                else
-                {
-                    Text = Text.Insert(index, newText);
-                }
-
-                // fix start spaces
-                int endIndex = index + newText.Length;
-                if (index > 0 && !newText.StartsWith(' ') && Text[index - 1] != ' ')
-                {
-                    Text = Text.Insert(index, " ");
-                    endIndex++;
-                }
-                else if (index > 0 && newText.StartsWith(' ') && Text[index - 1] == ' ')
-                {
-                    Text = Text.Remove(index, 1);
-                    endIndex--;
-                }
-
-                // fix end spaces
-                if (endIndex < Text.Length && !newText.EndsWith(' ') && Text[endIndex] != ' ')
-                {
-                    bool lastWord = expectedChars.Contains(Text[endIndex]);
-                    if (!lastWord)
-                    {
-                        Text = Text.Insert(endIndex, " ");
-                    }
-                }
-                else if (endIndex < Text.Length && newText.EndsWith(' ') && Text[endIndex] == ' ')
-                {
-                    Text = Text.Remove(endIndex, 1);
-                }
-
-                SelectionStart = index + 1;
-                UiUtil.SelectWordAtCaret(this);
-            }
-
-            _dragRemoveOld = false;
-            _dragFromThis = false;
-        }
-
-        private void SETextBox_DragEnter(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(DataFormats.Text) || e.Data.GetDataPresent(DataFormats.UnicodeText))
-            {
-                e.Effect = ModifierKeys == Keys.Control ? DragDropEffects.Copy : DragDropEffects.Move;
-            }
-            else
-            {
-                e.Effect = DragDropEffects.None;
-            }
-        }
-
-        private const int WM_LBUTTONDOWN = 0x0201;
-        protected override void WndProc(ref Message m)
-        {
-            if (m.Msg == WM_LBUTTONDOWN)
-            {
-                long milliseconds = (DateTime.UtcNow.Ticks - _gotFocusTicks) / 10000;
-                if (milliseconds > 10)
-                {
-                    _dragText = SelectedText;
-                    _dragStartFrom = SelectionStart;
-                    _dragStartTicks = DateTime.UtcNow.Ticks;
-                }
-            }
-            base.WndProc(ref m);
         }
 
         public void HighlightHtmlText()
@@ -1005,12 +792,12 @@ namespace Nikse.SubtitleEdit.Controls
                 }
             }
 
-            if (_textBox != null)
+            if (_simpleTextBox != null)
             {
                 if (Configuration.Settings.General.CenterSubtitleInTextBox &&
-                    _textBox.TextAlign != HorizontalAlignment.Center)
+                    _simpleTextBox.TextAlign != HorizontalAlignment.Center)
                 {
-                    _textBox.TextAlign = HorizontalAlignment.Center;
+                    _simpleTextBox.TextAlign = HorizontalAlignment.Center;
                 }
 
                 return;
