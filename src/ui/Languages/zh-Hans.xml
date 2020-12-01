@@ -997,11 +997,10 @@ Command line: {1} {2}
         <Compare>比较(&amp;C)...</Compare>
         <Statistics>统计(&amp;C)...</Statistics>
         <Plugins>插件(&amp;P)...</Plugins>
+        <ImportSubtitleFromVideoFile>从视频文件中导入字幕...</ImportSubtitleFromVideoFile>
         <ImportOcrFromDvd>从 DVD 导入/OCR 字幕...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>导入/OCR VobSub 字幕...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>导入/OCR 蓝光字幕...</ImportBluRaySupFile>
-        <ImportXSub>从 divx/avi 导入 /OCR XSub...</ImportXSub>
-        <ImportSubtitleFromMatroskaFile>从 Matroska 文件导入字幕...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>手动选择编码方式导入字幕...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>导入纯文本...</ImportText>
         <ImportImages>导入图像...</ImportImages>
@@ -1433,8 +1432,8 @@ Command line: {1} {2}
     <BeforeTypeWriterEffect>打字机效果之前</BeforeTypeWriterEffect>
     <BeforeKaraokeEffect>卡拉 OK 效果之前</BeforeKaraokeEffect>
     <BeforeImportingDvdSubtitle>从 DVD 导入字幕之前</BeforeImportingDvdSubtitle>
-    <OpenMatroskaFile>打开 Matroska 文件...</OpenMatroskaFile>
-    <MatroskaFiles>Matroska 文件 (*.mkv)</MatroskaFiles>
+    <OpenSubtitleVideoFile>打开视频文件中的字幕...</OpenSubtitleVideoFile>
+    <VideoFiles>视频文件</VideoFiles>
     <NoSubtitlesFound>没有找到字幕</NoSubtitlesFound>
     <NotAValidMatroskaFileX>这不是有效的 Matroska 文件: {0}</NotAValidMatroskaFileX>
     <BlurayNotSubtitlesFound>Blu-ray sup 文件不包含任何字幕或出现错误 - 请尝试再次复合。</BlurayNotSubtitlesFound>
@@ -1460,8 +1459,6 @@ Command line: {1} {2}
     <VobSubFiles>VobSub 字幕 (*.sub;*.idx)</VobSubFiles>
     <OpenBluRaySupFile>打开蓝光字幕...</OpenBluRaySupFile>
     <BluRaySupFiles>蓝光字幕 (*.sup)</BluRaySupFiles>
-    <OpenXSubFiles>打开 XSub 文件...</OpenXSubFiles>
-    <XSubFiles>XSub 文件</XSubFiles>
     <BeforeImportingVobSubFile>导入 VobSub 字幕之前</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>导入蓝光字幕之前</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>导入 BDN xml 文件之前</BeforeImportingBdnXml>
