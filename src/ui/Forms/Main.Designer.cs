@@ -106,47 +106,46 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemStatistics = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemPlugins = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItemImportDvdSubtitles = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemSubIdx = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemImportBluRaySup = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemImportXSub = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemImportOcrHardSub = new System.Windows.Forms.ToolStripMenuItem();
-            this.matroskaImportStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemManualAnsi = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemImportText = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemImport = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemImportImages = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemImportText = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemImportTimeCodes = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator22 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItemImportFromVideo = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemImportBluRaySup = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemImportSubIdx = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemImportDvdSubtitles = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemImportOcrHardSub = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemImportManualAnsi = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExport = new System.Windows.Forms.ToolStripMenuItem();
-            this.adobeEncoreFABImageScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemAvidStl = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemExportAdobeEncoreFABImageScript = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemExportAvidStl = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportAyato = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportPngXml = new System.Windows.Forms.ToolStripMenuItem();
-            this.bluraySupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemExportBluraySup = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportBdTextSt = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportCapMakerPlus = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportCaptionInc = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemCavena890 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemExportCavena890 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportCheetahCap = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportDcinemaInterop = new System.Windows.Forms.ToolStripMenuItem();
-            this.dCinemaSMPTE2014ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemDost = new System.Windows.Forms.ToolStripMenuItem();
-            this.DvdStudioProStl = new System.Windows.Forms.ToolStripMenuItem();
-            this.eBUSTLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemEdl = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemEdlClipName = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemExportDcinemaSMPTE2014 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemExportDost = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemExportDvdStudioProStl = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemExportEBUSTL = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemExportEdl = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemExportEdlClipName = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportFcpIImage = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemFcpXmlAdvanced = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemImagePerFrame = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemTextTimeCodePair = new System.Windows.Forms.ToolStripMenuItem();
-            this.pACScreenElectronicsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.uniPacExportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.plainTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemSpumux = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemExportFcpXmlAdvanced = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemExportImagePerFrame = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemExportTextTimeCodePair = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemExportPACScreenElectronics = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemExportUniPac = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemExportPlainText = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemExportSpumux = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportUltech130 = new System.Windows.Forms.ToolStripMenuItem();
-            this.vobSubsubidxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemExportVobSubSubIdx = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorExportCustomText = new System.Windows.Forms.ToolStripSeparator();
-            this.exportCustomTextFormatToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemExportCustomTextFormat = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -162,7 +161,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.multipleReplaceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gotoLineNumberToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemShowOriginalInPreview = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator25 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator24 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemRightToLeftMode = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemRtlUnicodeControlChars = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemRemoveUnicodeControlChars = new System.Windows.Forms.ToolStripMenuItem();
@@ -201,7 +200,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.AscendingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.descendingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.netflixQualityCheckToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator23 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator22 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemMakeEmptyFromCurrent = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemBatchConvert = new System.Windows.Forms.ToolStripMenuItem();
             this.generateDatetimeInfoFromVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -429,7 +428,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.extendToNextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemWaveformPlaySelection = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator24 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator23 = new System.Windows.Forms.ToolStripSeparator();
             this.showWaveformAndSpectrogramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showOnlyWaveformToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showOnlySpectrogramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -495,7 +494,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.boutenautoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemRuby = new System.Windows.Forms.ToolStripMenuItem();
             this.fontNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator26 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator25 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemInsertUnicodeSymbol = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemInsertUnicodeControlCharacters = new System.Windows.Forms.ToolStripMenuItem();
             this.leftToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1004,17 +1003,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemStatistics,
             this.toolStripMenuItemPlugins,
             this.toolStripSeparator1,
-            this.toolStripMenuItemImportDvdSubtitles,
-            this.toolStripMenuItemSubIdx,
-            this.toolStripMenuItemImportBluRaySup,
-            this.toolStripMenuItemImportXSub,
-            this.toolStripMenuItemImportOcrHardSub,
-            this.matroskaImportStripMenuItem,
-            this.toolStripMenuItemManualAnsi,
-            this.toolStripMenuItemImportText,
-            this.toolStripMenuItemImportImages,
-            this.toolStripMenuItemImportTimeCodes,
-            this.toolStripSeparator22,
+            this.toolStripMenuItemImport,
             this.toolStripMenuItemExport,
             this.toolStripSeparator10,
             this.exitToolStripMenuItem});
@@ -1201,61 +1190,21 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(332, 6);
             // 
-            // toolStripMenuItemImportDvdSubtitles
+            // toolStripMenuItemImport
             // 
-            this.toolStripMenuItemImportDvdSubtitles.Name = "toolStripMenuItemImportDvdSubtitles";
-            this.toolStripMenuItemImportDvdSubtitles.Size = new System.Drawing.Size(335, 22);
-            this.toolStripMenuItemImportDvdSubtitles.Text = "Import/OCR subtitle from VOB/IFO (DVD) ...";
-            this.toolStripMenuItemImportDvdSubtitles.Click += new System.EventHandler(this.ToolStripMenuItemImportDvdSubtitlesClick);
-            // 
-            // toolStripMenuItemSubIdx
-            // 
-            this.toolStripMenuItemSubIdx.Name = "toolStripMenuItemSubIdx";
-            this.toolStripMenuItemSubIdx.Size = new System.Drawing.Size(335, 22);
-            this.toolStripMenuItemSubIdx.Text = "Import/OCR VobSub (sub/idx) subtitle...";
-            this.toolStripMenuItemSubIdx.Click += new System.EventHandler(this.ToolStripMenuItemSubIdxClick1);
-            // 
-            // toolStripMenuItemImportBluRaySup
-            // 
-            this.toolStripMenuItemImportBluRaySup.Name = "toolStripMenuItemImportBluRaySup";
-            this.toolStripMenuItemImportBluRaySup.Size = new System.Drawing.Size(335, 22);
-            this.toolStripMenuItemImportBluRaySup.Text = "Import/OCR Blu-ray sup file...";
-            this.toolStripMenuItemImportBluRaySup.Click += new System.EventHandler(this.toolStripMenuItemImportBluRaySup_Click);
-            // 
-            // toolStripMenuItemImportXSub
-            // 
-            this.toolStripMenuItemImportXSub.Name = "toolStripMenuItemImportXSub";
-            this.toolStripMenuItemImportXSub.Size = new System.Drawing.Size(335, 22);
-            this.toolStripMenuItemImportXSub.Text = "Import/OCR XSub from divx/avi...";
-            this.toolStripMenuItemImportXSub.Click += new System.EventHandler(this.toolStripMenuItemImportXSub_Click);
-            // 
-            // toolStripMenuItemImportOcrHardSub
-            // 
-            this.toolStripMenuItemImportOcrHardSub.Name = "toolStripMenuItemImportOcrHardSub";
-            this.toolStripMenuItemImportOcrHardSub.Size = new System.Drawing.Size(335, 22);
-            this.toolStripMenuItemImportOcrHardSub.Text = "Import/OCR burned-in subtitles from video file...";
-            this.toolStripMenuItemImportOcrHardSub.Click += new System.EventHandler(this.toolStripMenuItemImportOcrHardSub_Click);
-            // 
-            // matroskaImportStripMenuItem
-            // 
-            this.matroskaImportStripMenuItem.Name = "matroskaImportStripMenuItem";
-            this.matroskaImportStripMenuItem.Size = new System.Drawing.Size(335, 22);
-            this.matroskaImportStripMenuItem.Text = "Import subtitle from Matroska file...";
-            this.matroskaImportStripMenuItem.Click += new System.EventHandler(this.MatroskaImportStripMenuItemClick);
-            // 
-            // toolStripMenuItemManualAnsi
-            // 
-            this.toolStripMenuItemManualAnsi.Name = "toolStripMenuItemManualAnsi";
-            this.toolStripMenuItemManualAnsi.Size = new System.Drawing.Size(335, 22);
-            this.toolStripMenuItemManualAnsi.Text = "Import subtitle with manually chosen encoding...";
-            this.toolStripMenuItemManualAnsi.Click += new System.EventHandler(this.ToolStripMenuItemManualAnsiClick);
-            // 
-            // toolStripMenuItemImportText
-            // 
-            this.toolStripMenuItemImportText.Name = "toolStripMenuItemImportText";
-            this.toolStripMenuItemImportText.Size = new System.Drawing.Size(335, 22);
-            this.toolStripMenuItemImportText.Text = "Import text...";
-            this.toolStripMenuItemImportText.Click += new System.EventHandler(this.ToolStripMenuItemImportTextClick);
+            this.toolStripMenuItemImport.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemImportImages,
+            this.toolStripMenuItemImportText,
+            this.toolStripMenuItemImportTimeCodes,
+            this.toolStripMenuItemImportFromVideo,
+            this.toolStripMenuItemImportBluRaySup,
+            this.toolStripMenuItemImportSubIdx,
+            this.toolStripMenuItemImportDvdSubtitles,
+            this.toolStripMenuItemImportOcrHardSub,
+            this.toolStripMenuItemImportManualAnsi});
+            this.toolStripMenuItemImport.Name = "toolStripMenuItemImport";
+            this.toolStripMenuItemImport.Size = new System.Drawing.Size(335, 22);
+            this.toolStripMenuItemImport.Text = "Import";
             // 
             // toolStripMenuItemImportImages
             // 
@@ -1264,6 +1213,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemImportImages.Text = "Import images...";
             this.toolStripMenuItemImportImages.Click += new System.EventHandler(this.toolStripMenuItemImportImages_Click);
             // 
+            // toolStripMenuItemImportText
+            // 
+            this.toolStripMenuItemImportText.Name = "toolStripMenuItemImportText";
+            this.toolStripMenuItemImportText.Size = new System.Drawing.Size(335, 22);
+            this.toolStripMenuItemImportText.Text = "Import text...";
+            this.toolStripMenuItemImportText.Click += new System.EventHandler(this.toolStripMenuItemImportText_Click);
+            // 
             // toolStripMenuItemImportTimeCodes
             // 
             this.toolStripMenuItemImportTimeCodes.Name = "toolStripMenuItemImportTimeCodes";
@@ -1271,60 +1227,97 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemImportTimeCodes.Text = "Import time codes into existing subtitle...";
             this.toolStripMenuItemImportTimeCodes.Click += new System.EventHandler(this.toolStripMenuItemImportTimeCodes_Click);
             // 
-            // toolStripSeparator22
+            // toolStripMenuItemImportFromVideo
             // 
-            this.toolStripSeparator22.Name = "toolStripSeparator22";
-            this.toolStripSeparator22.Size = new System.Drawing.Size(332, 6);
+            this.toolStripMenuItemImportFromVideo.Name = "toolStripMenuItemImportFromVideo";
+            this.toolStripMenuItemImportFromVideo.Size = new System.Drawing.Size(335, 22);
+            this.toolStripMenuItemImportFromVideo.Text = "Import subtitle from video file...";
+            this.toolStripMenuItemImportFromVideo.Click += new System.EventHandler(this.toolStripMenuItemImportFromVideo_Click);
+            // 
+            // toolStripMenuItemImportBluRaySup
+            // 
+            this.toolStripMenuItemImportBluRaySup.Name = "toolStripMenuItemImportBluRaySup";
+            this.toolStripMenuItemImportBluRaySup.Size = new System.Drawing.Size(335, 22);
+            this.toolStripMenuItemImportBluRaySup.Text = "Import/OCR Blu-ray sup file...";
+            this.toolStripMenuItemImportBluRaySup.Click += new System.EventHandler(this.toolStripMenuItemImportBluRaySup_Click);
+            // 
+            // toolStripMenuItemImportSubIdx
+            // 
+            this.toolStripMenuItemImportSubIdx.Name = "toolStripMenuItemImportSubIdx";
+            this.toolStripMenuItemImportSubIdx.Size = new System.Drawing.Size(335, 22);
+            this.toolStripMenuItemImportSubIdx.Text = "Import/OCR VobSub (sub/idx) subtitle...";
+            this.toolStripMenuItemImportSubIdx.Click += new System.EventHandler(this.toolStripMenuItemImportSubIdx_Click);
+            // 
+            // toolStripMenuItemImportDvdSubtitles
+            // 
+            this.toolStripMenuItemImportDvdSubtitles.Name = "toolStripMenuItemImportDvdSubtitles";
+            this.toolStripMenuItemImportDvdSubtitles.Size = new System.Drawing.Size(335, 22);
+            this.toolStripMenuItemImportDvdSubtitles.Text = "Import/OCR subtitle from VOB/IFO (DVD) ...";
+            this.toolStripMenuItemImportDvdSubtitles.Click += new System.EventHandler(this.toolStripMenuItemImportDvdSubtitles_Click);
+            // 
+            // toolStripMenuItemImportOcrHardSub
+            // 
+            this.toolStripMenuItemImportOcrHardSub.Name = "toolStripMenuItemImportOcrHardSub";
+            this.toolStripMenuItemImportOcrHardSub.Size = new System.Drawing.Size(335, 22);
+            this.toolStripMenuItemImportOcrHardSub.Text = "Import/OCR burned-in subtitles from video file...";
+            this.toolStripMenuItemImportOcrHardSub.Click += new System.EventHandler(this.toolStripMenuItemImportOcrHardSub_Click);
+            // 
+            // toolStripMenuItemImportManualAnsi
+            // 
+            this.toolStripMenuItemImportManualAnsi.Name = "toolStripMenuItemImportManualAnsi";
+            this.toolStripMenuItemImportManualAnsi.Size = new System.Drawing.Size(335, 22);
+            this.toolStripMenuItemImportManualAnsi.Text = "Import subtitle with manually chosen encoding...";
+            this.toolStripMenuItemImportManualAnsi.Click += new System.EventHandler(this.toolStripMenuItemImportManualAnsi_Click);
             // 
             // toolStripMenuItemExport
             // 
             this.toolStripMenuItemExport.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.adobeEncoreFABImageScriptToolStripMenuItem,
-            this.toolStripMenuItemAvidStl,
+            this.toolStripMenuItemExportAdobeEncoreFABImageScript,
+            this.toolStripMenuItemExportAvidStl,
             this.toolStripMenuItemExportAyato,
             this.toolStripMenuItemExportPngXml,
-            this.bluraySupToolStripMenuItem,
+            this.toolStripMenuItemExportBluraySup,
             this.toolStripMenuItemExportBdTextSt,
             this.toolStripMenuItemExportCapMakerPlus,
             this.toolStripMenuItemExportCaptionInc,
-            this.toolStripMenuItemCavena890,
+            this.toolStripMenuItemExportCavena890,
             this.toolStripMenuItemExportCheetahCap,
             this.toolStripMenuItemExportDcinemaInterop,
-            this.dCinemaSMPTE2014ToolStripMenuItem,
-            this.toolStripMenuItemDost,
-            this.DvdStudioProStl,
-            this.eBUSTLToolStripMenuItem,
-            this.toolStripMenuItemEdl,
-            this.toolStripMenuItemEdlClipName,
+            this.toolStripMenuItemExportDcinemaSMPTE2014,
+            this.toolStripMenuItemExportDost,
+            this.toolStripMenuItemExportDvdStudioProStl,
+            this.toolStripMenuItemExportEBUSTL,
+            this.toolStripMenuItemExportEdl,
+            this.toolStripMenuItemExportEdlClipName,
             this.toolStripMenuItemExportFcpIImage,
-            this.toolStripMenuItemFcpXmlAdvanced,
-            this.toolStripMenuItemImagePerFrame,
-            this.toolStripMenuItemTextTimeCodePair,
-            this.pACScreenElectronicsToolStripMenuItem,
-            this.uniPacExportToolStripMenuItem,
-            this.plainTextToolStripMenuItem,
-            this.toolStripMenuItemSpumux,
+            this.toolStripMenuItemExportFcpXmlAdvanced,
+            this.toolStripMenuItemExportImagePerFrame,
+            this.toolStripMenuItemExportTextTimeCodePair,
+            this.toolStripMenuItemExportPACScreenElectronics,
+            this.toolStripMenuItemExportUniPac,
+            this.toolStripMenuItemExportPlainText,
+            this.toolStripMenuItemExportSpumux,
             this.toolStripMenuItemExportUltech130,
-            this.vobSubsubidxToolStripMenuItem,
+            this.toolStripMenuItemExportVobSubSubIdx,
             this.toolStripSeparatorExportCustomText,
-            this.exportCustomTextFormatToolStripMenuItem});
+            this.toolStripMenuItemExportCustomTextFormat});
             this.toolStripMenuItemExport.Name = "toolStripMenuItemExport";
             this.toolStripMenuItemExport.Size = new System.Drawing.Size(335, 22);
             this.toolStripMenuItemExport.Text = "Export";
             // 
-            // adobeEncoreFABImageScriptToolStripMenuItem
+            // toolStripMenuItemExportAdobeEncoreFABImageScript
             // 
-            this.adobeEncoreFABImageScriptToolStripMenuItem.Name = "adobeEncoreFABImageScriptToolStripMenuItem";
-            this.adobeEncoreFABImageScriptToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
-            this.adobeEncoreFABImageScriptToolStripMenuItem.Text = "Adobe Encore FAB image script...";
-            this.adobeEncoreFABImageScriptToolStripMenuItem.Click += new System.EventHandler(this.AdobeEncoreFabImageScriptToolStripMenuItemClick);
+            this.toolStripMenuItemExportAdobeEncoreFABImageScript.Name = "toolStripMenuItemExportAdobeEncoreFABImageScript";
+            this.toolStripMenuItemExportAdobeEncoreFABImageScript.Size = new System.Drawing.Size(255, 22);
+            this.toolStripMenuItemExportAdobeEncoreFABImageScript.Text = "Adobe Encore FAB image script...";
+            this.toolStripMenuItemExportAdobeEncoreFABImageScript.Click += new System.EventHandler(this.toolStripMenuItemExportAdobeEncoreFABImageScript_Click);
             // 
-            // toolStripMenuItemAvidStl
+            // toolStripMenuItemExportAvidStl
             // 
-            this.toolStripMenuItemAvidStl.Name = "toolStripMenuItemAvidStl";
-            this.toolStripMenuItemAvidStl.Size = new System.Drawing.Size(255, 22);
-            this.toolStripMenuItemAvidStl.Text = "Avid STL...";
-            this.toolStripMenuItemAvidStl.Click += new System.EventHandler(this.toolStripMenuItemAvidStl_Click);
+            this.toolStripMenuItemExportAvidStl.Name = "toolStripMenuItemExportAvidStl";
+            this.toolStripMenuItemExportAvidStl.Size = new System.Drawing.Size(255, 22);
+            this.toolStripMenuItemExportAvidStl.Text = "Avid STL...";
+            this.toolStripMenuItemExportAvidStl.Click += new System.EventHandler(this.toolStripMenuItemExportAvidStl_Click);
             // 
             // toolStripMenuItemExportAyato
             // 
@@ -1338,14 +1331,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemExportPngXml.Name = "toolStripMenuItemExportPngXml";
             this.toolStripMenuItemExportPngXml.Size = new System.Drawing.Size(255, 22);
             this.toolStripMenuItemExportPngXml.Text = "BDN xml/png...";
-            this.toolStripMenuItemExportPngXml.Click += new System.EventHandler(this.ToolStripMenuItemExportPngXmlClick);
+            this.toolStripMenuItemExportPngXml.Click += new System.EventHandler(this.toolStripMenuItemExportPngXml_Click);
             // 
-            // bluraySupToolStripMenuItem
+            // toolStripMenuItemExportBluraySup
             // 
-            this.bluraySupToolStripMenuItem.Name = "bluraySupToolStripMenuItem";
-            this.bluraySupToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
-            this.bluraySupToolStripMenuItem.Text = "Blu-ray sup...";
-            this.bluraySupToolStripMenuItem.Click += new System.EventHandler(this.BluraySupToolStripMenuItemClick);
+            this.toolStripMenuItemExportBluraySup.Name = "toolStripMenuItemExportBluraySup";
+            this.toolStripMenuItemExportBluraySup.Size = new System.Drawing.Size(255, 22);
+            this.toolStripMenuItemExportBluraySup.Text = "Blu-ray sup...";
+            this.toolStripMenuItemExportBluraySup.Click += new System.EventHandler(this.toolStripMenuItemExportBluraySup_Click);
             // 
             // toolStripMenuItemExportBdTextSt
             // 
@@ -1368,12 +1361,12 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemExportCaptionInc.Text = "Captions Inc...";
             this.toolStripMenuItemExportCaptionInc.Click += new System.EventHandler(this.toolStripMenuItemExportCaptionInc_Click);
             // 
-            // toolStripMenuItemCavena890
+            // toolStripMenuItemExportCavena890
             // 
-            this.toolStripMenuItemCavena890.Name = "toolStripMenuItemCavena890";
-            this.toolStripMenuItemCavena890.Size = new System.Drawing.Size(255, 22);
-            this.toolStripMenuItemCavena890.Text = "Cavena 890...";
-            this.toolStripMenuItemCavena890.Click += new System.EventHandler(this.ToolStripMenuItemCavena890Click);
+            this.toolStripMenuItemExportCavena890.Name = "toolStripMenuItemExportCavena890";
+            this.toolStripMenuItemExportCavena890.Size = new System.Drawing.Size(255, 22);
+            this.toolStripMenuItemExportCavena890.Text = "Cavena 890...";
+            this.toolStripMenuItemExportCavena890.Click += new System.EventHandler(this.toolStripMenuItemExportCavena890_Click);
             // 
             // toolStripMenuItemExportCheetahCap
             // 
@@ -1387,49 +1380,49 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemExportDcinemaInterop.Name = "toolStripMenuItemExportDcinemaInterop";
             this.toolStripMenuItemExportDcinemaInterop.Size = new System.Drawing.Size(255, 22);
             this.toolStripMenuItemExportDcinemaInterop.Text = "D-Cinema interop/png...";
-            this.toolStripMenuItemExportDcinemaInterop.Click += new System.EventHandler(this.toolStripMenuItemExportDcinemaInteropClick);
+            this.toolStripMenuItemExportDcinemaInterop.Click += new System.EventHandler(this.toolStripMenuItemExportDcinemaInterop_Click);
             // 
-            // dCinemaSMPTE2014ToolStripMenuItem
+            // toolStripMenuItemExportDcinemaSMPTE2014
             // 
-            this.dCinemaSMPTE2014ToolStripMenuItem.Name = "dCinemaSMPTE2014ToolStripMenuItem";
-            this.dCinemaSMPTE2014ToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
-            this.dCinemaSMPTE2014ToolStripMenuItem.Text = "D-Cinema SMPTE 2014";
-            this.dCinemaSMPTE2014ToolStripMenuItem.Click += new System.EventHandler(this.dCinemaSMPTE2014ToolStripMenuItem_Click);
+            this.toolStripMenuItemExportDcinemaSMPTE2014.Name = "toolStripMenuItemExportDcinemaSMPTE2014";
+            this.toolStripMenuItemExportDcinemaSMPTE2014.Size = new System.Drawing.Size(255, 22);
+            this.toolStripMenuItemExportDcinemaSMPTE2014.Text = "D-Cinema SMPTE 2014";
+            this.toolStripMenuItemExportDcinemaSMPTE2014.Click += new System.EventHandler(this.toolStripMenuItemExportDcinemaSMPTE2014_Click);
             // 
-            // toolStripMenuItemDost
+            // toolStripMenuItemExportDost
             // 
-            this.toolStripMenuItemDost.Name = "toolStripMenuItemDost";
-            this.toolStripMenuItemDost.Size = new System.Drawing.Size(255, 22);
-            this.toolStripMenuItemDost.Text = "DOST...";
-            this.toolStripMenuItemDost.Click += new System.EventHandler(this.toolStripMenuItemDost_Click);
+            this.toolStripMenuItemExportDost.Name = "toolStripMenuItemExportDost";
+            this.toolStripMenuItemExportDost.Size = new System.Drawing.Size(255, 22);
+            this.toolStripMenuItemExportDost.Text = "DOST...";
+            this.toolStripMenuItemExportDost.Click += new System.EventHandler(this.toolStripMenuItemExportDost_Click);
             // 
-            // DvdStudioProStl
+            // toolStripMenuItemExportDvdStudioProStl
             // 
-            this.DvdStudioProStl.Name = "DvdStudioProStl";
-            this.DvdStudioProStl.Size = new System.Drawing.Size(255, 22);
-            this.DvdStudioProStl.Text = "DVD Studio Pro STL";
-            this.DvdStudioProStl.Click += new System.EventHandler(this.DvdStudioProStl_Click);
+            this.toolStripMenuItemExportDvdStudioProStl.Name = "toolStripMenuItemExportDvdStudioProStl";
+            this.toolStripMenuItemExportDvdStudioProStl.Size = new System.Drawing.Size(255, 22);
+            this.toolStripMenuItemExportDvdStudioProStl.Text = "DVD Studio Pro STL";
+            this.toolStripMenuItemExportDvdStudioProStl.Click += new System.EventHandler(this.toolStripMenuItemExportDvdStudioProStl_Click);
             // 
-            // eBUSTLToolStripMenuItem
+            // toolStripMenuItemExportEBUSTL
             // 
-            this.eBUSTLToolStripMenuItem.Name = "eBUSTLToolStripMenuItem";
-            this.eBUSTLToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
-            this.eBUSTLToolStripMenuItem.Text = "EBU STL...";
-            this.eBUSTLToolStripMenuItem.Click += new System.EventHandler(this.EBustlToolStripMenuItemClick);
+            this.toolStripMenuItemExportEBUSTL.Name = "toolStripMenuItemExportEBUSTL";
+            this.toolStripMenuItemExportEBUSTL.Size = new System.Drawing.Size(255, 22);
+            this.toolStripMenuItemExportEBUSTL.Text = "EBU STL...";
+            this.toolStripMenuItemExportEBUSTL.Click += new System.EventHandler(this.toolStripMenuItemExportEBUSTL_Click);
             // 
-            // toolStripMenuItemEdl
+            // toolStripMenuItemExportEdl
             // 
-            this.toolStripMenuItemEdl.Name = "toolStripMenuItemEdl";
-            this.toolStripMenuItemEdl.Size = new System.Drawing.Size(255, 22);
-            this.toolStripMenuItemEdl.Text = "EDL...";
-            this.toolStripMenuItemEdl.Click += new System.EventHandler(this.ExportToEdl);
+            this.toolStripMenuItemExportEdl.Name = "toolStripMenuItemExportEdl";
+            this.toolStripMenuItemExportEdl.Size = new System.Drawing.Size(255, 22);
+            this.toolStripMenuItemExportEdl.Text = "EDL...";
+            this.toolStripMenuItemExportEdl.Click += new System.EventHandler(this.toolStripMenuItemExportEdl_Click);
             // 
-            // toolStripMenuItemEdlClipName
+            // toolStripMenuItemExportEdlClipName
             // 
-            this.toolStripMenuItemEdlClipName.Name = "toolStripMenuItemEdlClipName";
-            this.toolStripMenuItemEdlClipName.Size = new System.Drawing.Size(255, 22);
-            this.toolStripMenuItemEdlClipName.Text = "EDL/CLIPNAME...";
-            this.toolStripMenuItemEdlClipName.Click += new System.EventHandler(this.ExportToEdlWithClipName);
+            this.toolStripMenuItemExportEdlClipName.Name = "toolStripMenuItemExportEdlClipName";
+            this.toolStripMenuItemExportEdlClipName.Size = new System.Drawing.Size(255, 22);
+            this.toolStripMenuItemExportEdlClipName.Text = "EDL/CLIPNAME...";
+            this.toolStripMenuItemExportEdlClipName.Click += new System.EventHandler(this.toolStripMenuItemExportEdlClipName_Click);
             // 
             // toolStripMenuItemExportFcpIImage
             // 
@@ -1438,55 +1431,55 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemExportFcpIImage.Text = "Final Cut Pro + image...";
             this.toolStripMenuItemExportFcpIImage.Click += new System.EventHandler(this.toolStripMenuItemExportFcpIImage_Click);
             // 
-            // toolStripMenuItemFcpXmlAdvanced
+            // toolStripMenuItemExportFcpXmlAdvanced
             // 
-            this.toolStripMenuItemFcpXmlAdvanced.Name = "toolStripMenuItemFcpXmlAdvanced";
-            this.toolStripMenuItemFcpXmlAdvanced.Size = new System.Drawing.Size(255, 22);
-            this.toolStripMenuItemFcpXmlAdvanced.Text = "Final Cut Pro XML advanced...";
-            this.toolStripMenuItemFcpXmlAdvanced.Click += new System.EventHandler(this.toolStripMenuItemFcpXmlAdvanced_Click);
+            this.toolStripMenuItemExportFcpXmlAdvanced.Name = "toolStripMenuItemExportFcpXmlAdvanced";
+            this.toolStripMenuItemExportFcpXmlAdvanced.Size = new System.Drawing.Size(255, 22);
+            this.toolStripMenuItemExportFcpXmlAdvanced.Text = "Final Cut Pro XML advanced...";
+            this.toolStripMenuItemExportFcpXmlAdvanced.Click += new System.EventHandler(this.toolStripMenuItemExportFcpXmlAdvanced_Click);
             // 
-            // toolStripMenuItemImagePerFrame
+            // toolStripMenuItemExportImagePerFrame
             // 
-            this.toolStripMenuItemImagePerFrame.Name = "toolStripMenuItemImagePerFrame";
-            this.toolStripMenuItemImagePerFrame.Size = new System.Drawing.Size(255, 22);
-            this.toolStripMenuItemImagePerFrame.Text = "Image per frame...";
-            this.toolStripMenuItemImagePerFrame.Visible = false;
-            this.toolStripMenuItemImagePerFrame.Click += new System.EventHandler(this.ToolStripMenuItemImagePerFrameClick);
+            this.toolStripMenuItemExportImagePerFrame.Name = "toolStripMenuItemExportImagePerFrame";
+            this.toolStripMenuItemExportImagePerFrame.Size = new System.Drawing.Size(255, 22);
+            this.toolStripMenuItemExportImagePerFrame.Text = "Image per frame...";
+            this.toolStripMenuItemExportImagePerFrame.Visible = false;
+            this.toolStripMenuItemExportImagePerFrame.Click += new System.EventHandler(this.toolStripMenuItemExportImagePerFrame_Click);
             // 
-            // toolStripMenuItemTextTimeCodePair
+            // toolStripMenuItemExportTextTimeCodePair
             // 
-            this.toolStripMenuItemTextTimeCodePair.Name = "toolStripMenuItemTextTimeCodePair";
-            this.toolStripMenuItemTextTimeCodePair.Size = new System.Drawing.Size(255, 22);
-            this.toolStripMenuItemTextTimeCodePair.Text = "Korean ATS file pair...";
-            this.toolStripMenuItemTextTimeCodePair.Click += new System.EventHandler(this.toolStripMenuItemTextTimeCodePair_Click);
+            this.toolStripMenuItemExportTextTimeCodePair.Name = "toolStripMenuItemExportTextTimeCodePair";
+            this.toolStripMenuItemExportTextTimeCodePair.Size = new System.Drawing.Size(255, 22);
+            this.toolStripMenuItemExportTextTimeCodePair.Text = "Korean ATS file pair...";
+            this.toolStripMenuItemExportTextTimeCodePair.Click += new System.EventHandler(this.toolStripMenuItemExportTextTimeCodePair_Click);
             // 
-            // pACScreenElectronicsToolStripMenuItem
+            // toolStripMenuItemExportPACScreenElectronics
             // 
-            this.pACScreenElectronicsToolStripMenuItem.Name = "pACScreenElectronicsToolStripMenuItem";
-            this.pACScreenElectronicsToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
-            this.pACScreenElectronicsToolStripMenuItem.Text = "PAC (Screen Electronics)...";
-            this.pACScreenElectronicsToolStripMenuItem.Click += new System.EventHandler(this.PacScreenElectronicsToolStripMenuItemClick);
+            this.toolStripMenuItemExportPACScreenElectronics.Name = "toolStripMenuItemExportPACScreenElectronics";
+            this.toolStripMenuItemExportPACScreenElectronics.Size = new System.Drawing.Size(255, 22);
+            this.toolStripMenuItemExportPACScreenElectronics.Text = "PAC (Screen Electronics)...";
+            this.toolStripMenuItemExportPACScreenElectronics.Click += new System.EventHandler(this.toolStripMenuItemExportPACScreenElectronics_Click);
             // 
-            // uniPacExportToolStripMenuItem
+            // toolStripMenuItemExportUniPac
             // 
-            this.uniPacExportToolStripMenuItem.Name = "uniPacExportToolStripMenuItem";
-            this.uniPacExportToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
-            this.uniPacExportToolStripMenuItem.Text = "PAC Unicode (UniPac)...";
-            this.uniPacExportToolStripMenuItem.Click += new System.EventHandler(this.uniPacExportToolStripMenuItem_Click);
+            this.toolStripMenuItemExportUniPac.Name = "toolStripMenuItemExportUniPac";
+            this.toolStripMenuItemExportUniPac.Size = new System.Drawing.Size(255, 22);
+            this.toolStripMenuItemExportUniPac.Text = "PAC Unicode (UniPac)...";
+            this.toolStripMenuItemExportUniPac.Click += new System.EventHandler(this.toolStripMenuItemExportUniPac_Click);
             // 
-            // plainTextToolStripMenuItem
+            // toolStripMenuItemExportPlainText
             // 
-            this.plainTextToolStripMenuItem.Name = "plainTextToolStripMenuItem";
-            this.plainTextToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
-            this.plainTextToolStripMenuItem.Text = "Plain text...";
-            this.plainTextToolStripMenuItem.Click += new System.EventHandler(this.PlainTextToolStripMenuItemClick);
+            this.toolStripMenuItemExportPlainText.Name = "toolStripMenuItemExportPlainText";
+            this.toolStripMenuItemExportPlainText.Size = new System.Drawing.Size(255, 22);
+            this.toolStripMenuItemExportPlainText.Text = "Plain text...";
+            this.toolStripMenuItemExportPlainText.Click += new System.EventHandler(this.toolStripMenuItemExportPlainText_Click);
             // 
-            // toolStripMenuItemSpumux
+            // toolStripMenuItemExportSpumux
             // 
-            this.toolStripMenuItemSpumux.Name = "toolStripMenuItemSpumux";
-            this.toolStripMenuItemSpumux.Size = new System.Drawing.Size(255, 22);
-            this.toolStripMenuItemSpumux.Text = "Spumux...";
-            this.toolStripMenuItemSpumux.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
+            this.toolStripMenuItemExportSpumux.Name = "toolStripMenuItemExportSpumux";
+            this.toolStripMenuItemExportSpumux.Size = new System.Drawing.Size(255, 22);
+            this.toolStripMenuItemExportSpumux.Text = "Spumux...";
+            this.toolStripMenuItemExportSpumux.Click += new System.EventHandler(this.toolStripMenuItemExportSpumux_Click);
             // 
             // toolStripMenuItemExportUltech130
             // 
@@ -1495,24 +1488,24 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemExportUltech130.Text = "Ultech caption...";
             this.toolStripMenuItemExportUltech130.Click += new System.EventHandler(this.toolStripMenuItemExportUltech130_Click);
             // 
-            // vobSubsubidxToolStripMenuItem
+            // toolStripMenuItemExportVobSubSubIdx
             // 
-            this.vobSubsubidxToolStripMenuItem.Name = "vobSubsubidxToolStripMenuItem";
-            this.vobSubsubidxToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
-            this.vobSubsubidxToolStripMenuItem.Text = "VobSub (sub/idx)...";
-            this.vobSubsubidxToolStripMenuItem.Click += new System.EventHandler(this.VobSubsubidxToolStripMenuItemClick);
+            this.toolStripMenuItemExportVobSubSubIdx.Name = "toolStripMenuItemExportVobSubSubIdx";
+            this.toolStripMenuItemExportVobSubSubIdx.Size = new System.Drawing.Size(255, 22);
+            this.toolStripMenuItemExportVobSubSubIdx.Text = "VobSub (sub/idx)...";
+            this.toolStripMenuItemExportVobSubSubIdx.Click += new System.EventHandler(this.toolStripMenuItemExportVobSubSubIdx_Click);
             // 
             // toolStripSeparatorExportCustomText
             // 
             this.toolStripSeparatorExportCustomText.Name = "toolStripSeparatorExportCustomText";
             this.toolStripSeparatorExportCustomText.Size = new System.Drawing.Size(252, 6);
             // 
-            // exportCustomTextFormatToolStripMenuItem
+            // toolStripMenuItemExportCustomTextFormat
             // 
-            this.exportCustomTextFormatToolStripMenuItem.Name = "exportCustomTextFormatToolStripMenuItem";
-            this.exportCustomTextFormatToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
-            this.exportCustomTextFormatToolStripMenuItem.Text = "Export custom text format...";
-            this.exportCustomTextFormatToolStripMenuItem.Click += new System.EventHandler(this.exportCustomTextFormatToolStripMenuItem_Click);
+            this.toolStripMenuItemExportCustomTextFormat.Name = "toolStripMenuItemExportCustomTextFormat";
+            this.toolStripMenuItemExportCustomTextFormat.Size = new System.Drawing.Size(255, 22);
+            this.toolStripMenuItemExportCustomTextFormat.Text = "Export custom text format...";
+            this.toolStripMenuItemExportCustomTextFormat.Click += new System.EventHandler(this.toolStripMenuItemExportExportCustomTextFormat_Click);
             // 
             // toolStripSeparator10
             // 
@@ -1541,7 +1534,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.multipleReplaceToolStripMenuItem,
             this.gotoLineNumberToolStripMenuItem,
             this.toolStripMenuItemShowOriginalInPreview,
-            this.toolStripSeparator25,
+            this.toolStripSeparator24,
             this.toolStripMenuItemRightToLeftMode,
             this.toolStripMenuItemRtlUnicodeControlChars,
             this.toolStripMenuItemRemoveUnicodeControlChars,
@@ -1638,10 +1631,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemShowOriginalInPreview.Text = "Show original text in video/audio previews";
             this.toolStripMenuItemShowOriginalInPreview.Click += new System.EventHandler(this.ToolStripMenuItemShowOriginalInPreviewClick);
             // 
-            // toolStripSeparator25
+            // toolStripSeparator24
             // 
-            this.toolStripSeparator25.Name = "toolStripSeparator25";
-            this.toolStripSeparator25.Size = new System.Drawing.Size(298, 6);
+            this.toolStripSeparator24.Name = "toolStripSeparator24";
+            this.toolStripSeparator24.Size = new System.Drawing.Size(298, 6);
             // 
             // toolStripMenuItemRightToLeftMode
             // 
@@ -1716,7 +1709,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemAutoSplitLongLines,
             this.toolStripMenuItemSortBy,
             this.netflixQualityCheckToolStripMenuItem,
-            this.toolStripSeparator23,
+            this.toolStripSeparator22,
             this.toolStripMenuItemMakeEmptyFromCurrent,
             this.toolStripMenuItemBatchConvert,
             this.generateDatetimeInfoFromVideoToolStripMenuItem,
@@ -1956,10 +1949,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.netflixQualityCheckToolStripMenuItem.Text = "Netflix quality check";
             this.netflixQualityCheckToolStripMenuItem.Click += new System.EventHandler(this.netflixGlyphCheckToolStripMenuItem_Click);
             // 
-            // toolStripSeparator23
+            // toolStripSeparator22
             // 
-            this.toolStripSeparator23.Name = "toolStripSeparator23";
-            this.toolStripSeparator23.Size = new System.Drawing.Size(335, 6);
+            this.toolStripSeparator22.Name = "toolStripSeparator22";
+            this.toolStripSeparator22.Size = new System.Drawing.Size(335, 6);
             // 
             // toolStripMenuItemMakeEmptyFromCurrent
             // 
@@ -3989,7 +3982,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.extendToNextToolStripMenuItem,
             this.toolStripSeparator6,
             this.toolStripMenuItemWaveformPlaySelection,
-            this.toolStripSeparator24,
+            this.toolStripSeparator23,
             this.showWaveformAndSpectrogramToolStripMenuItem,
             this.showOnlyWaveformToolStripMenuItem,
             this.showOnlySpectrogramToolStripMenuItem,
@@ -4105,10 +4098,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemWaveformPlaySelection.Text = "Play selection";
             this.toolStripMenuItemWaveformPlaySelection.Click += new System.EventHandler(this.toolStripMenuItemWaveformPlaySelection_Click);
             // 
-            // toolStripSeparator24
+            // toolStripSeparator23
             // 
-            this.toolStripSeparator24.Name = "toolStripSeparator24";
-            this.toolStripSeparator24.Size = new System.Drawing.Size(271, 6);
+            this.toolStripSeparator23.Name = "toolStripSeparator23";
+            this.toolStripSeparator23.Size = new System.Drawing.Size(271, 6);
             // 
             // showWaveformAndSpectrogramToolStripMenuItem
             // 
@@ -4530,7 +4523,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemBouten,
             this.toolStripMenuItemRuby,
             this.fontNameToolStripMenuItem,
-            this.toolStripSeparator26,
+            this.toolStripSeparator25,
             this.toolStripMenuItemInsertUnicodeSymbol,
             this.toolStripMenuItemInsertUnicodeControlCharacters,
             this.superscriptToolStripMenuItem,
@@ -4766,10 +4759,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.fontNameToolStripMenuItem.Text = "Font name...";
             this.fontNameToolStripMenuItem.Click += new System.EventHandler(this.FontNameToolStripMenuItemClick);
             // 
-            // toolStripSeparator26
+            // toolStripSeparator25
             // 
-            this.toolStripSeparator26.Name = "toolStripSeparator26";
-            this.toolStripSeparator26.Size = new System.Drawing.Size(270, 6);
+            this.toolStripSeparator25.Name = "toolStripSeparator25";
+            this.toolStripSeparator25.Size = new System.Drawing.Size(270, 6);
             // 
             // toolStripMenuItemInsertUnicodeSymbol
             // 
@@ -5292,10 +5285,8 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem typeEffectToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem karokeeEffectToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem matroskaImportStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator10;
         private Nikse.SubtitleEdit.Controls.TimeUpDown timeUpDownStartTime;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemManualAnsi;
         private System.Windows.Forms.ToolStripMenuItem ChangeCasingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMergeLines;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorAdvancedFunctions;
@@ -5320,15 +5311,11 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAutoBreakLines;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorBreakLines;
         private System.Windows.Forms.ToolStripMenuItem multipleReplaceToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportDvdSubtitles;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSubIdx;
         private System.Windows.Forms.ToolStripStatusLabel toolStripSelected;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInsertUnicodeCharacter;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorInsertUnicodeCharacter;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAutoMergeShortLines;
         private System.Windows.Forms.ToolStripMenuItem setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportText;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportTimeCodes;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemFont;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator14;
         private System.Windows.Forms.GroupBox groupBoxVideo;
@@ -5450,7 +5437,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.TrackBar trackBarWaveformPosition;
         private System.Windows.Forms.Label labelVideoInfo;
         private System.Windows.Forms.ToolStripMenuItem showhideWaveformToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportBluRaySup;
         private System.Windows.Forms.Label labelCharactersPerSecond;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemNetworking;
         private System.Windows.Forms.ToolStripMenuItem startServerToolStripMenuItem;
@@ -5504,54 +5490,78 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem underlineToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem colorToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem fontNameToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator22;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImport;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportImages;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportText;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportTimeCodes;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportFromVideo;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportBluRaySup;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportSubIdx;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportDvdSubtitles;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportOcrHardSub;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportManualAnsi;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExport;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportAdobeEncoreFABImageScript;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportAvidStl;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportAyato;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportPngXml;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportBluraySup;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportBdTextSt;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportCapMakerPlus;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportCaptionInc;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportCavena890;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportCheetahCap;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportDcinemaInterop;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportDcinemaSMPTE2014;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportDost;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportDvdStudioProStl;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportEBUSTL;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportEdl;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportEdlClipName;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportFcpIImage;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportFcpXmlAdvanced;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportImagePerFrame;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportTextTimeCodePair;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportPACScreenElectronics;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportUniPac;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportPlainText;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportSpumux;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportUltech130;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportVobSubSubIdx;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparatorExportCustomText;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportCustomTextFormat;
         private System.Windows.Forms.ToolStripMenuItem pointSyncViaOtherSubtitleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemGoogleMicrosoftTranslateSelLine;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator23;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator22;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMakeEmptyFromCurrent;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator24;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator23;
         private System.Windows.Forms.ToolStripMenuItem showWaveformAndSpectrogramToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showOnlyWaveformToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showOnlySpectrogramToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator26;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator25;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInsertUnicodeSymbol;
         private System.Windows.Forms.ToolStripMenuItem setStylesForSelectedLinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem FindDoubleLinesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem eBUSTLToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem pACScreenElectronicsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemCavena890;
         private Controls.SETextBox textBoxListViewTextAlternate;
         private System.Windows.Forms.ToolStripMenuItem textCharssecToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem plainTextToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem bluraySupToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem vobSubsubidxToolStripMenuItem;
         private System.Windows.Forms.Timer timerTextUndo;
         private System.Windows.Forms.Timer timerAlternateTextUndo;
-        private System.Windows.Forms.ToolStripMenuItem adobeEncoreFABImageScriptToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMergeDialog;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSurroundWithMusicSymbols;
         private System.Windows.Forms.ToolStripMenuItem superscriptToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem subscriptToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImagePerFrame;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemApplyDurationLimits;
         private System.Windows.Forms.ToolStripMenuItem generateDatetimeInfoFromVideoToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator25;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator24;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRightToLeftMode;
         private System.Windows.Forms.ToolStripMenuItem joinSubtitlesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemReverseRightToLeftStartEnd;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportCapMakerPlus;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportCheetahCap;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportCaptionInc;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportUltech130;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAssStyles;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSubStationAlpha;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAlignment;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRestoreAutoBackup;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStatistics;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemDCinemaProperties;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemTextTimeCodePair;
         private System.Windows.Forms.ToolStripMenuItem textWordsPerMinutewpmToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemTTProperties;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSaveSelectedLines;
@@ -5559,7 +5569,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem addParagraphAndPasteToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorGuessTimeCodes;
         private System.Windows.Forms.ToolStripMenuItem guessTimeCodesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem DvdStudioProStl;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemUndo;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRedo;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemShowOriginalInPreview;
@@ -5574,12 +5583,10 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInsertTextFromSub;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemOpenKeepVideo;
         private System.Windows.Forms.ToolStripMenuItem changeSpeedInPercentToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAvidStl;
         private System.Windows.Forms.ToolStripMenuItem columnDeleteTextOnlyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemBatchConvert;
         private System.Windows.Forms.ToolStripMenuItem copyOriginalTextToCurrentToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMergeDuplicateText;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSpumux;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemWebVTT;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemWebVttVoice;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemPreview;
@@ -5587,11 +5594,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemModifySelection;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInverseSelection;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSpellCheckFromCurrentLine;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportXSub;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportOcrHardSub;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportFcpIImage;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemNuendoProperties;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemDost;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMeasurementConverter;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportChapters;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportSceneChanges;
@@ -5604,8 +5607,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorAscOrDesc;
         private System.Windows.Forms.ToolStripMenuItem AscendingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem descendingToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparatorExportCustomText;
-        private System.Windows.Forms.ToolStripMenuItem exportCustomTextFormatToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSetLanguage;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInsertUnicodeControlCharacters;
         private System.Windows.Forms.ToolStripMenuItem leftToolStripMenuItem;
@@ -5616,31 +5617,23 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem startOfRighttoleftOverrideRLOToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRtlUnicodeControlChars;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRemoveUnicodeControlChars;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportImages;
         private System.Windows.Forms.ToolStripButton toolStripButtonRemoveTextForHi;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportDcinemaInterop;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMergeLinesWithSameTimeCodes;
         private System.Windows.Forms.ToolStripMenuItem checkForUpdatesToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItemSplitterCheckForUpdates;
         private System.Windows.Forms.ToolStripMenuItem setVideoOffsetToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemDvdStudioProProperties;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemEdlClipName;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAddWaveformBatch;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportBdTextSt;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelProgress;
-        private System.Windows.Forms.ToolStripMenuItem uniPacExportToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportAyato;
         private System.Windows.Forms.ToolStripButton toolStripButtonFixCommonErrors;
         private System.Windows.Forms.ToolStripMenuItem removeSceneChangeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addSceneChangeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem netflixQualityCheckToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton toolStripButtonNetflixQualityCheck;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemEdl;
         private System.Windows.Forms.ToolStripMenuItem setActorForSelectedLinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSetRegion;
         private System.Windows.Forms.ToolStripMenuItem insertSubtitleHereToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem actorToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemFcpXmlAdvanced;
         private System.Windows.Forms.Label labelNextWord;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemOpenVideoFromUrl;
         private System.Windows.Forms.ToolStripMenuItem smpteTimeModedropFrameToolStripMenuItem;
@@ -5689,7 +5682,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripMenuItem goToPreviousSubtitleStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem goToNextSubtitleStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem dCinemaSMPTE2014ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem boxToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAssaStyles;
         private System.Windows.Forms.ToolStripMenuItem openSecondSubtitleToolStripMenuItem;

@@ -2989,11 +2989,11 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/BeforeImportingDvdSubtitle":
                     language.Main.BeforeImportingDvdSubtitle = reader.Value;
                     break;
-                case "Main/OpenMatroskaFile":
-                    language.Main.OpenMatroskaFile = reader.Value;
+                case "Main/OpenSubtitleVideoFile":
+                    language.Main.OpenSubtitleVideoFile = reader.Value;
                     break;
-                case "Main/MatroskaFiles":
-                    language.Main.MatroskaFiles = reader.Value;
+                case "Main/VideoFiles":
+                    language.Main.VideoFiles = reader.Value;
                     break;
                 case "Main/NoSubtitlesFound":
                     language.Main.NoSubtitlesFound = reader.Value;
@@ -3069,12 +3069,6 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Main/BluRaySupFiles":
                     language.Main.BluRaySupFiles = reader.Value;
-                    break;
-                case "Main/OpenXSubFiles":
-                    language.Main.OpenXSubFiles = reader.Value;
-                    break;
-                case "Main/XSubFiles":
-                    language.Main.XSubFiles = reader.Value;
                     break;
                 case "Main/BeforeImportingVobSubFile":
                     language.Main.BeforeImportingVobSubFile = reader.Value;
@@ -3466,6 +3460,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/Menu/File/Plugins":
                     language.Main.Menu.File.Plugins = reader.Value;
                     break;
+                case "Main/Menu/File/ImportSubtitleFromVideoFile":
+                    language.Main.Menu.File.ImportSubtitleFromVideoFile = reader.Value;
+                    break;
                 case "Main/Menu/File/ImportOcrFromDvd":
                     language.Main.Menu.File.ImportOcrFromDvd = reader.Value;
                     break;
@@ -3474,12 +3471,6 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Main/Menu/File/ImportBluRaySupFile":
                     language.Main.Menu.File.ImportBluRaySupFile = reader.Value;
-                    break;
-                case "Main/Menu/File/ImportXSub":
-                    language.Main.Menu.File.ImportXSub = reader.Value;
-                    break;
-                case "Main/Menu/File/ImportSubtitleFromMatroskaFile":
-                    language.Main.Menu.File.ImportSubtitleFromMatroskaFile = reader.Value;
                     break;
                 case "Main/Menu/File/ImportSubtitleWithManualChosenEncoding":
                     language.Main.Menu.File.ImportSubtitleWithManualChosenEncoding = reader.Value;
