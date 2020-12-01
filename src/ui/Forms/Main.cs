@@ -801,7 +801,7 @@ namespace Nikse.SubtitleEdit.Forms
             extendToNextToolStripMenuItem.Visible = false;
             toolStripSeparator6.Visible = false;
             toolStripMenuItemWaveformPlaySelection.Visible = false;
-            toolStripSeparator24.Visible = false;
+            toolStripSeparator23.Visible = false;
             if (audioVisualizer.GetSceneChangeIndex(e.Seconds) >= 0)
             {
                 removeSceneChangeToolStripMenuItem.Visible = true;
@@ -958,7 +958,7 @@ namespace Nikse.SubtitleEdit.Forms
             extendToNextToolStripMenuItem.Visible = true;
             toolStripSeparator6.Visible = true;
             toolStripMenuItemWaveformPlaySelection.Visible = true;
-            toolStripSeparator24.Visible = true;
+            toolStripSeparator23.Visible = true;
             if (audioVisualizer.GetSceneChangeIndex(e.Seconds) >= 0)
             {
                 removeSceneChangeToolStripMenuItem.Visible = true;
@@ -1395,31 +1395,30 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemStatistics.Text = _language.Menu.File.Statistics;
             toolStripMenuItemPlugins.Text = _language.Menu.File.Plugins;
             toolStripMenuItemImportDvdSubtitles.Text = _language.Menu.File.ImportOcrFromDvd;
-            toolStripMenuItemSubIdx.Text = _language.Menu.File.ImportOcrVobSubSubtitle;
+            toolStripMenuItemImportSubIdx.Text = _language.Menu.File.ImportOcrVobSubSubtitle;
             toolStripButtonGetFrameRate.ToolTipText = _language.GetFrameRateFromVideoFile;
             toolStripMenuItemImportBluRaySup.Text = _language.Menu.File.ImportBluRaySupFile;
-            toolStripMenuItemImportXSub.Text = _language.Menu.File.ImportXSub;
-            matroskaImportStripMenuItem.Text = _language.Menu.File.ImportSubtitleFromMatroskaFile;
-            toolStripMenuItemManualAnsi.Text = _language.Menu.File.ImportSubtitleWithManualChosenEncoding;
+            toolStripMenuItemImportFromVideo.Text = _language.Menu.File.ImportSubtitleFromVideoFile;
+            toolStripMenuItemImportManualAnsi.Text = _language.Menu.File.ImportSubtitleWithManualChosenEncoding;
             toolStripMenuItemImportText.Text = _language.Menu.File.ImportText;
             toolStripMenuItemImportImages.Text = _language.Menu.File.ImportImages;
             toolStripMenuItemImportTimeCodes.Text = _language.Menu.File.ImportTimecodes;
             toolStripMenuItemExport.Text = _language.Menu.File.Export;
             toolStripMenuItemExportPngXml.Text = _language.Menu.File.ExportBdnXml;
-            bluraySupToolStripMenuItem.Text = _language.Menu.File.ExportBluRaySup;
-            adobeEncoreFABImageScriptToolStripMenuItem.Text = _language.Menu.File.ExportAdobeEncoreFabImageScript;
-            toolStripMenuItemTextTimeCodePair.Text = _language.Menu.File.ExportKoreanAtsFilePair;
-            vobSubsubidxToolStripMenuItem.Text = _language.Menu.File.ExportVobSub;
-            toolStripMenuItemCavena890.Text = _language.Menu.File.ExportCavena890;
-            eBUSTLToolStripMenuItem.Text = _language.Menu.File.ExportEbu;
-            pACScreenElectronicsToolStripMenuItem.Text = _language.Menu.File.ExportPac;
-            plainTextToolStripMenuItem.Text = _language.Menu.File.ExportPlainText;
-            toolStripMenuItemAvidStl.Text = _language.Menu.File.ExportAvidStl;
+            toolStripMenuItemExportBluraySup.Text = _language.Menu.File.ExportBluRaySup;
+            toolStripMenuItemExportAdobeEncoreFABImageScript.Text = _language.Menu.File.ExportAdobeEncoreFabImageScript;
+            toolStripMenuItemExportTextTimeCodePair.Text = _language.Menu.File.ExportKoreanAtsFilePair;
+            toolStripMenuItemExportVobSubSubIdx.Text = _language.Menu.File.ExportVobSub;
+            toolStripMenuItemExportCavena890.Text = _language.Menu.File.ExportCavena890;
+            toolStripMenuItemExportEBUSTL.Text = _language.Menu.File.ExportEbu;
+            toolStripMenuItemExportPACScreenElectronics.Text = _language.Menu.File.ExportPac;
+            toolStripMenuItemExportPlainText.Text = _language.Menu.File.ExportPlainText;
+            toolStripMenuItemExportAvidStl.Text = _language.Menu.File.ExportAvidStl;
             toolStripMenuItemExportCapMakerPlus.Text = _language.Menu.File.ExportCapMakerPlus;
             toolStripMenuItemExportCaptionInc.Text = _language.Menu.File.ExportCaptionsInc;
             toolStripMenuItemExportCheetahCap.Text = _language.Menu.File.ExportCheetahCap;
             toolStripMenuItemExportUltech130.Text = _language.Menu.File.ExportUltech130;
-            exportCustomTextFormatToolStripMenuItem.Text = _language.Menu.File.ExportCustomTextFormat;
+            toolStripMenuItemExportCustomTextFormat.Text = _language.Menu.File.ExportCustomTextFormat;
             exitToolStripMenuItem.Text = _language.Menu.File.Exit;
 
             editToolStripMenuItem.Text = _language.Menu.Edit.Title;
@@ -2279,10 +2278,18 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (ext == ".divx" || ext == ".avi")
             {
+                ShowStatus(_languageGeneral.PleaseWait);
                 if (ImportSubtitleFromDivX(fileName))
                 {
-                    return;
+                    ShowStatus(string.Format(_language.LoadedSubtitleX, fileName));
                 }
+                else
+                {
+                    ShowStatus(string.Empty);
+                    MessageBox.Show(_language.NotAValidXSubFile);
+                }
+
+                return;
             }
 
             if ((ext == ".ts" || ext == ".rec" || ext == ".mpeg" || ext == ".mpg") && file.Length > 10000 && FileUtil.IsTransportStream(fileName))
@@ -12154,18 +12161,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void MatroskaImportStripMenuItemClick(object sender, EventArgs e)
-        {
-            openFileDialog1.Title = _language.OpenMatroskaFile;
-            openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = _language.MatroskaFiles + "|*.mkv;*.mks|" + _languageGeneral.AllFiles + "|*.*";
-            if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
-            {
-                openFileDialog1.InitialDirectory = Path.GetDirectoryName(openFileDialog1.FileName);
-                ImportSubtitleFromMatroskaFile(openFileDialog1.FileName);
-            }
-        }
-
         private void ImportSubtitleFromMatroskaFile(string fileName)
         {
             using (var matroska = new MatroskaFile(fileName))
@@ -13420,7 +13415,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void ToolStripMenuItemManualAnsiClick(object sender, EventArgs e)
+        private void toolStripMenuItemImportManualAnsi_Click(object sender, EventArgs e)
         {
             ReloadFromSourceView();
             openFileDialog1.Title = _language.OpenAnsiSubtitle;
@@ -18030,7 +18025,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void ToolStripMenuItemImportDvdSubtitlesClick(object sender, EventArgs e)
+        private void toolStripMenuItemImportDvdSubtitles_Click(object sender, EventArgs e)
         {
             if (!ContinueNewOrExit())
             {
@@ -18089,7 +18084,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void ToolStripMenuItemSubIdxClick1(object sender, EventArgs e)
+        private void toolStripMenuItemImportSubIdx_Click(object sender, EventArgs e)
         {
             if (ContinueNewOrExit())
             {
@@ -18343,7 +18338,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void ToolStripMenuItemImportTextClick(object sender, EventArgs e)
+        private void toolStripMenuItemImportText_Click(object sender, EventArgs e)
         {
             ImportPlainText(null);
         }
@@ -20445,7 +20440,6 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemOpenContainingFolder.Visible = !string.IsNullOrEmpty(_fileName) && File.Exists(_fileName);
             bool subtitleLoaded = IsSubtitleLoaded;
             toolStripMenuItemStatistics.Visible = subtitleLoaded;
-            toolStripSeparator22.Visible = subtitleLoaded;
             toolStripMenuItemExport.Visible = subtitleLoaded;
             openOriginalToolStripMenuItem.Visible = subtitleLoaded;
             toolStripMenuItemOpenKeepVideo.Visible = VideoFileName != null;
@@ -21018,9 +21012,9 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemCompare.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileCompare);
             toolStripMenuItemImportText.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileImportPlainText);
             toolStripMenuItemImportTimeCodes.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileImportTimeCodes);
-            eBUSTLToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileExportEbu);
-            pACScreenElectronicsToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileExportPac);
-            plainTextToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileExportPlainText);
+            toolStripMenuItemExportEBUSTL.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileExportEbu);
+            toolStripMenuItemExportPACScreenElectronics.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileExportPac);
+            toolStripMenuItemExportPlainText.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileExportPlainText);
 
             toolStripMenuItemUndo.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditUndo);
             toolStripMenuItemRedo.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditRedo);
@@ -22928,11 +22922,11 @@ namespace Nikse.SubtitleEdit.Forms
             reopenToolStripMenuItem.Enabled = enabled;
             toolStripMenuItemOpenContainingFolder.Enabled = enabled;
             toolStripMenuItemCompare.Enabled = enabled;
+            toolStripMenuItemImportFromVideo.Enabled = enabled;
             toolStripMenuItemImportDvdSubtitles.Enabled = enabled;
-            toolStripMenuItemSubIdx.Enabled = enabled;
+            toolStripMenuItemImportSubIdx.Enabled = enabled;
             toolStripMenuItemImportBluRaySup.Enabled = enabled;
-            matroskaImportStripMenuItem.Enabled = enabled;
-            toolStripMenuItemManualAnsi.Enabled = enabled;
+            toolStripMenuItemImportManualAnsi.Enabled = enabled;
             toolStripMenuItemImportText.Enabled = enabled;
             toolStripMenuItemImportTimeCodes.Enabled = enabled;
 
@@ -24522,7 +24516,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 toolStripMenuItemInsertUnicodeSymbol.Visible = toolStripMenuItemInsertUnicodeSymbol.DropDownItems.Count > 0;
-                toolStripSeparator26.Visible = toolStripMenuItemInsertUnicodeSymbol.DropDownItems.Count > 0;
+                toolStripSeparator25.Visible = toolStripMenuItemInsertUnicodeSymbol.DropDownItems.Count > 0;
 
                 superscriptToolStripMenuItem.Visible = tb.SelectionLength > 0;
                 subscriptToolStripMenuItem.Visible = tb.SelectionLength > 0;
@@ -24531,7 +24525,7 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 toolStripMenuItemInsertUnicodeSymbol.Visible = false;
-                toolStripSeparator26.Visible = false;
+                toolStripSeparator25.Visible = false;
                 superscriptToolStripMenuItem.Visible = false;
                 subscriptToolStripMenuItem.Visible = false;
                 toolStripMenuItemInsertUnicodeControlCharacters.Visible = false;
@@ -24650,7 +24644,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void ToolStripMenuItemExportPngXmlClick(object sender, EventArgs e)
+        private void toolStripMenuItemExportPngXml_Click(object sender, EventArgs e)
         {
             using (var exportBdnXmlPng = new ExportPngXml())
             {
@@ -24814,13 +24808,13 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_subtitle?.Paragraphs.Count > 0 && _networkSession == null)
             {
-                toolStripSeparator23.Visible = true;
+                toolStripSeparator22.Visible = true;
                 toolStripMenuItemMakeEmptyFromCurrent.Visible = !SubtitleListview1.IsAlternateTextColumnVisible;
                 toolStripMenuItemShowOriginalInPreview.Checked = Configuration.Settings.General.ShowOriginalAsPreviewIfAvailable;
             }
             else
             {
-                toolStripSeparator23.Visible = false;
+                toolStripSeparator22.Visible = false;
                 toolStripMenuItemMakeEmptyFromCurrent.Visible = false;
                 toolStripMenuItemShowOriginalInPreview.Checked = false;
             }
@@ -24859,7 +24853,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                toolStripSeparator24.Visible = false;
+                toolStripSeparator23.Visible = false;
                 showWaveformAndSpectrogramToolStripMenuItem.Visible = false;
                 showOnlyWaveformToolStripMenuItem.Visible = false;
                 showOnlySpectrogramToolStripMenuItem.Visible = false;
@@ -24946,7 +24940,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void EBustlToolStripMenuItemClick(object sender, EventArgs e)
+        private void toolStripMenuItemExportEBUSTL_Click(object sender, EventArgs e)
         {
             var ebu = new Ebu();
             saveFileDialog1.Filter = ebu.Name + "|*" + ebu.Extension;
@@ -24989,7 +24983,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void ToolStripMenuItemCavena890Click(object sender, EventArgs e)
+        private void toolStripMenuItemExportCavena890_Click(object sender, EventArgs e)
         {
             var cavena890 = new Cavena890();
             saveFileDialog1.Filter = cavena890.Name + "|*" + cavena890.Extension;
@@ -25038,7 +25032,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void PacScreenElectronicsToolStripMenuItemClick(object sender, EventArgs e)
+        private void toolStripMenuItemExportPACScreenElectronics_Click(object sender, EventArgs e)
         {
             var pac = new Pac();
             saveFileDialog1.Filter = pac.Name + "|*" + pac.Extension;
@@ -25081,7 +25075,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void uniPacExportToolStripMenuItem_Click(object sender, EventArgs e)
+        private void toolStripMenuItemExportUniPac_Click(object sender, EventArgs e)
         {
             var uniPac = new PacUnicode();
             saveFileDialog1.Filter = uniPac.Name + "|*" + uniPac.Extension;
@@ -25193,7 +25187,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void PlainTextToolStripMenuItemClick(object sender, EventArgs e)
+        private void toolStripMenuItemExportPlainText_Click(object sender, EventArgs e)
         {
             using (var exportText = new ExportText())
             {
@@ -25205,7 +25199,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void BluraySupToolStripMenuItemClick(object sender, EventArgs e)
+        private void toolStripMenuItemExportBluraySup_Click(object sender, EventArgs e)
         {
             using (var exportBdnXmlPng = new ExportPngXml())
             {
@@ -25214,7 +25208,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void VobSubsubidxToolStripMenuItemClick(object sender, EventArgs e)
+        private void toolStripMenuItemExportVobSubSubIdx_Click(object sender, EventArgs e)
         {
             using (var exportBdnXmlPng = new ExportPngXml())
             {
@@ -25504,7 +25498,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void AdobeEncoreFabImageScriptToolStripMenuItemClick(object sender, EventArgs e)
+        private void toolStripMenuItemExportAdobeEncoreFABImageScript_Click(object sender, EventArgs e)
         {
             using (var exportBdnXmlPng = new ExportPngXml())
             {
@@ -25676,7 +25670,7 @@ namespace Nikse.SubtitleEdit.Forms
             tb.SelectionLength = text.Length;
         }
 
-        private void ToolStripMenuItemImagePerFrameClick(object sender, EventArgs e)
+        private void toolStripMenuItemExportImagePerFrame_Click(object sender, EventArgs e)
         {
             using (var exportBdnXmlPng = new ExportPngXml())
             {
@@ -26371,7 +26365,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void toolStripMenuItemTextTimeCodePair_Click(object sender, EventArgs e)
+        private void toolStripMenuItemExportTextTimeCodePair_Click(object sender, EventArgs e)
         {
             if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
@@ -26528,7 +26522,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void DvdStudioProStl_Click(object sender, EventArgs e)
+        private void toolStripMenuItemExportDvdStudioProStl_Click(object sender, EventArgs e)
         {
             using (var exportBdnXmlPng = new ExportPngXml())
             {
@@ -26964,7 +26958,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void toolStripMenuItemAvidStl_Click(object sender, EventArgs e)
+        private void toolStripMenuItemExportAvidStl_Click(object sender, EventArgs e)
         {
             var avidStl = new AvidStl();
             saveFileDialog1.Filter = avidStl.Name + "|*" + avidStl.Extension;
@@ -27147,7 +27141,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void toolStripMenuItem2_Click(object sender, EventArgs e)
+        private void toolStripMenuItemExportSpumux_Click(object sender, EventArgs e)
         {
             using (var exportBdnXmlPng = new ExportPngXml())
             {
@@ -27190,26 +27184,15 @@ namespace Nikse.SubtitleEdit.Forms
             SpellCheck(true, FirstSelectedIndex);
         }
 
-        private void toolStripMenuItemImportXSub_Click(object sender, EventArgs e)
+        private void toolStripMenuItemImportFromVideo_Click(object sender, EventArgs e)
         {
-            if (ContinueNewOrExit())
+            openFileDialog1.Title = _language.OpenSubtitleVideoFile;
+            openFileDialog1.FileName = string.Empty;
+            openFileDialog1.Filter = _language.VideoFiles + "|*.mkv;*.mks;*.mp4;*.ts;*.m2ts;*.mpeg;*.divx;*.avi";
+            if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
-                openFileDialog1.Title = _language.OpenXSubFiles;
-                openFileDialog1.FileName = string.Empty;
-                openFileDialog1.Filter = _language.XSubFiles + "|*.divx;*.avi";
-                if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
-                {
-                    ShowStatus(_languageGeneral.PleaseWait);
-                    if (ImportSubtitleFromDivX(openFileDialog1.FileName))
-                    {
-                        ShowStatus(string.Format(_language.LoadedSubtitleX, openFileDialog1.FileName));
-                    }
-                    else
-                    {
-                        ShowStatus(string.Empty);
-                        MessageBox.Show(_language.NotAValidXSubFile);
-                    }
-                }
+                openFileDialog1.InitialDirectory = Path.GetDirectoryName(openFileDialog1.FileName);
+                OpenSubtitle(openFileDialog1.FileName, null);
             }
         }
 
@@ -27248,7 +27231,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void toolStripMenuItemDost_Click(object sender, EventArgs e)
+        private void toolStripMenuItemExportDost_Click(object sender, EventArgs e)
         {
             using (var exportBdnXmlPng = new ExportPngXml())
             {
@@ -27468,7 +27451,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemSortBy.ShowDropDown();
         }
 
-        private void exportCustomTextFormatToolStripMenuItem_Click(object sender, EventArgs e)
+        private void toolStripMenuItemExportExportCustomTextFormat_Click(object sender, EventArgs e)
         {
             using (var form = new ExportCustomText(GetSaveSubtitle(_subtitle), GetSaveSubtitle(_subtitleAlternate), _fileName))
             {
@@ -27656,7 +27639,7 @@ namespace Nikse.SubtitleEdit.Forms
             RemoveTextForHearImpairedToolStripMenuItemClick(sender, e);
         }
 
-        private void toolStripMenuItemExportDcinemaInteropClick(object sender, EventArgs e)
+        private void toolStripMenuItemExportDcinemaInterop_Click(object sender, EventArgs e)
         {
             using (var exportBdnXmlPng = new ExportPngXml())
             {
@@ -27665,7 +27648,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void dCinemaSMPTE2014ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void toolStripMenuItemExportDcinemaSMPTE2014_Click(object sender, EventArgs e)
         {
             using (var exportBdnXmlPng = new ExportPngXml())
             {
@@ -27809,7 +27792,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void ExportToEdlWithClipName(object sender, EventArgs e)
+        private void toolStripMenuItemExportEdlClipName_Click(object sender, EventArgs e)
         {
             using (var exportBdnXmlPng = new ExportPngXml())
             {
@@ -27818,7 +27801,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void ExportToEdl(object sender, EventArgs e)
+        private void toolStripMenuItemExportEdl_Click(object sender, EventArgs e)
         {
             using (var exportBdnXmlPng = new ExportPngXml())
             {
@@ -28105,7 +28088,7 @@ namespace Nikse.SubtitleEdit.Forms
             SortSubtitle(SubtitleSortCriteria.Actor, (sender as ToolStripItem).Text);
         }
 
-        private void toolStripMenuItemFcpXmlAdvanced_Click(object sender, EventArgs e)
+        private void toolStripMenuItemExportFcpXmlAdvanced_Click(object sender, EventArgs e)
         {
             using (var dialog = new ExportFcpXmlAdvanced(_subtitle, VideoFileName))
             {
