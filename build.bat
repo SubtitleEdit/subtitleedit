@@ -99,14 +99,11 @@ IF %ERRORLEVEL% NEQ 0 GOTO EndWithError
 
 IF /I "%BUILDTYPE%" == "Clean" GOTO EndSuccessful
 
-dir
 PUSHD "src/ui"
-dir
 ECHO.
 ECHO Merging assemblies with ILRepack...
-FOR /D %%A IN (packages\ILRepack.*) DO (SET "ILREPACKDIR=%%A")
+FOR /D %%A IN (..\..\packages\ILRepack.*) DO (SET "ILREPACKDIR=%%A")
 ECHO.
-dir
 echo ILREPACKDIR
 echo %ILREPACKDIR%
 echo ILREPACKDIR done
