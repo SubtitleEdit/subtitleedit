@@ -1002,11 +1002,10 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
         <Compare>&amp;Compare...</Compare>
         <Statistics>Statisti&amp;cs...</Statistics>
         <Plugins>Plugins...</Plugins>
+        <ImportSubtitleFromVideoFile>Import subtitle from video file...</ImportSubtitleFromVideoFile>
         <ImportOcrFromDvd>Import/OCR subtitle from VOB/IFO (DVD)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Import/OCR VobSub (sub/idx) subtitle...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Import/OCR Blu-ray (.sup) subtitle file...</ImportBluRaySupFile>
-        <ImportXSub>Import/OCR XSub from DivX/avi...</ImportXSub>
-        <ImportSubtitleFromMatroskaFile>Import subtitle from Matroska (.mkv) file...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Import subtitle with manually chosen encoding...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Import plain text...</ImportText>
         <ImportImages>Import images...</ImportImages>
@@ -1441,8 +1440,8 @@ Continue?</SubtitleAppendPrompt>
     <BeforeTypeWriterEffect>Before typewriter effect</BeforeTypeWriterEffect>
     <BeforeKaraokeEffect>Before karaoke effect</BeforeKaraokeEffect>
     <BeforeImportingDvdSubtitle>Before importing subtitle from DVD</BeforeImportingDvdSubtitle>
-    <OpenMatroskaFile>Open Matroska file...</OpenMatroskaFile>
-    <MatroskaFiles>Matroska files</MatroskaFiles>
+    <OpenSubtitleVideoFile>Open subtitle from video file...</OpenSubtitleVideoFile>
+    <VideoFiles>Video files</VideoFiles>
     <NoSubtitlesFound>No subtitles found</NoSubtitlesFound>
     <NotAValidMatroskaFileX>This is not a valid Matroska file: {0}</NotAValidMatroskaFileX>
     <BlurayNotSubtitlesFound>Blu-ray sup file does not contain any subtitles or contains errors - try demuxing again.</BlurayNotSubtitlesFound>
@@ -1468,8 +1467,6 @@ Continue?</SubtitleAppendPrompt>
     <VobSubFiles>VobSub subtitle files</VobSubFiles>
     <OpenBluRaySupFile>Open Blu-ray .sup file...</OpenBluRaySupFile>
     <BluRaySupFiles>Blu-ray .sup files</BluRaySupFiles>
-    <OpenXSubFiles>Open XSub file...</OpenXSubFiles>
-    <XSubFiles>XSub files</XSubFiles>
     <BeforeImportingVobSubFile>Before importing VobSub subtitle</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Before importing Blu-ray sup file</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>Before importing BDN xml file</BeforeImportingBdnXml>
