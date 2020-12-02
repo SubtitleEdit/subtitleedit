@@ -106,7 +106,7 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.Fill(_subtitle);
             foreach (var index in mergedIndexes)
             {
-                SubtitleListview1.SetBackgroundColor(index, Color.Green);
+                SubtitleListview1.SetBackgroundColor(index, ColorTranslator.FromHtml("#6ebe6e"));
             }
             SubtitleListview1.EndUpdate();
             groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.MergeTextWithSameTimeCodes.NumberOfMergesX, NumberOfMerges);
@@ -139,7 +139,7 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.Fill(_subtitle);
             foreach (var index in mergedIndexes)
             {
-                SubtitleListview1.SetBackgroundColor(index, Color.Green);
+                SubtitleListview1.SetBackgroundColor(index, ColorTranslator.FromHtml("#6ebe6e"));
             }
             SubtitleListview1.EndUpdate();
             Cursor = Cursors.Default;
