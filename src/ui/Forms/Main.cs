@@ -14572,45 +14572,42 @@ namespace Nikse.SubtitleEdit.Forms
                 RefreshTimeCodeMode();
                 e.SuppressKeyPress = true;
             }
-            else if (_shortcuts.MainGeneralSwitchTranslationAndOriginal == e.KeyData) // switch original/current
-            {
-                if (_subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0 && _networkSession == null)
+            else if (_shortcuts.MainGeneralSwitchTranslationAndOriginal == e.KeyData &&
+                     _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0 && _networkSession == null)
+            { // switch original/current
+                int firstIndex = FirstSelectedIndex;
+                double firstMs = -1;
+                if (firstIndex >= 0)
                 {
-                    int firstIndex = FirstSelectedIndex;
-                    double firstMs = -1;
-                    if (firstIndex >= 0)
-                    {
-                        firstMs = _subtitle.Paragraphs[firstIndex].StartTime.TotalMilliseconds;
-                    }
-
-                    var temp = _subtitle;
-                    _subtitle = _subtitleAlternate;
-                    _subtitleAlternate = temp;
-
-                    var tempName = _fileName;
-                    _fileName = _subtitleAlternateFileName;
-                    _subtitleAlternateFileName = tempName;
-
-                    var tempChangeSubText = _changeSubtitleHash;
-                    _changeSubtitleHash = _changeAlternateSubtitleHash;
-                    _changeAlternateSubtitleHash = tempChangeSubText;
-
-                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-
-                    _subtitleListViewIndex = -1;
-                    if (firstIndex >= 0 && _subtitle.Paragraphs.Count > firstIndex && Math.Abs(_subtitle.Paragraphs[firstIndex].StartTime.TotalMilliseconds - firstMs) < 0.01)
-                    {
-                        SubtitleListview1.SelectIndexAndEnsureVisible(firstIndex, true);
-                    }
-                    else
-                    {
-                        RefreshSelectedParagraph();
-                    }
-
-                    SetTitle();
-
-                    _fileDateTime = new DateTime();
+                    firstMs = _subtitle.Paragraphs[firstIndex].StartTime.TotalMilliseconds;
                 }
+
+                var temp = _subtitle;
+                _subtitle = _subtitleAlternate;
+                _subtitleAlternate = temp;
+
+                var tempName = _fileName;
+                _fileName = _subtitleAlternateFileName;
+                _subtitleAlternateFileName = tempName;
+
+                var tempChangeSubText = _changeSubtitleHash;
+                _changeSubtitleHash = _changeAlternateSubtitleHash;
+                _changeAlternateSubtitleHash = tempChangeSubText;
+
+                SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+
+                _subtitleListViewIndex = -1;
+                if (firstIndex >= 0 && _subtitle.Paragraphs.Count > firstIndex && Math.Abs(_subtitle.Paragraphs[firstIndex].StartTime.TotalMilliseconds - firstMs) < 0.01)
+                {
+                    SubtitleListview1.SelectIndexAndEnsureVisible(firstIndex, true);
+                }
+                else
+                {
+                    RefreshSelectedParagraph();
+                }
+
+                SetTitle();
+                _fileDateTime = new DateTime();
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainGeneralMergeTranslationAndOriginal == e.KeyData) // Merge translation and original
