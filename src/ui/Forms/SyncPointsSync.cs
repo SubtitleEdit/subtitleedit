@@ -153,7 +153,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     var item = new ListBoxSyncPoint { Index = i, Text = _subtitle.Paragraphs[i].Number + " - " + p.StartTime };
                     listBoxSyncPoints.Items.Add(item);
-                    SubtitleListview1.SetBackgroundColor(i, Color.Green);
+                    SubtitleListview1.SetBackgroundColor(i, ColorTranslator.FromHtml("#6ebe6e"));
                     SubtitleListview1.SetNumber(_subtitle.Paragraphs[i].Number, "* * * *");
                 }
                 else
