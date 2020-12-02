@@ -2026,7 +2026,6 @@ $HorzAlign          =   Center
             GeneralGoToFirstSelectedLine = "Control+L";
             GeneralMergeSelectedLines = "Control+Shift+M";
             GeneralToggleTranslationMode = "Control+Shift+O";
-            GeneralSwitchOriginalAndTranslation = "Control+Alt+O";
             GeneralMergeOriginalAndTranslation = "Control+Alt+Shift+M";
             GeneralGoToNextSubtitle = "Shift+Return";
             GeneralToggleBookmarksWithText = "Control+Shift+B";
