@@ -2890,7 +2890,24 @@
             this.comboBoxBoxBingTokenEndpoint.FormattingEnabled = true;
             this.comboBoxBoxBingTokenEndpoint.Items.AddRange(new object[] {
             "https://api.cognitive.microsoft.com/sts/v1.0/issueToken",
-            "https://<your-region>.api.cognitive.microsoft.com/sts/v1.0/issueToken"});
+            "https://australiaeast.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://canadacentral.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://centralus.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://eastasia.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://eastus.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://eastus2.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://francecentral.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://centralindia.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://japaneast.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://koreacentral.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://northcentralus.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://northeurope.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://southcentralus.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://southeastasia.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://uksouth.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://westeurope.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://westus.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://westus2.api.cognitive.microsoft.com/sts/v1.0/issueToken"});
             this.comboBoxBoxBingTokenEndpoint.Location = new System.Drawing.Point(9, 101);
             this.comboBoxBoxBingTokenEndpoint.Name = "comboBoxBoxBingTokenEndpoint";
             this.comboBoxBoxBingTokenEndpoint.Size = new System.Drawing.Size(375, 21);
