@@ -839,6 +839,10 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     colorStart++;
                 }
+                if (text[colorStart] == 'H')
+                {
+                    colorStart++;
+                }
 
                 int colorEnd = text.IndexOf('&', colorStart + 1);
                 if (colorEnd > 0)
@@ -846,10 +850,9 @@ namespace Nikse.SubtitleEdit.Controls
                     var color = text.Substring(colorStart, colorEnd - colorStart);
                     try
                     {
-                        if (color.Length == 7)
+                        if (color.Length == 6)
                         {
-                            var rgbColor = string.Concat("#", color[5], color[6], color[3], color[4], color[1], color[2]);
-                            var c = ColorTranslator.FromHtml(rgbColor);
+                            var rgbColor = string.Concat("#", color[4], color[5], color[2], color[3], color[0], color[1]); var c = ColorTranslator.FromHtml(rgbColor);
                             SetForeColorAndChangeBackColorIfClose(colorStart, colorEnd, c);
                         }
                     }
