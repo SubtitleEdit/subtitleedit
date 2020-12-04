@@ -3098,8 +3098,6 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.Items[0].Selected = true;
                     SubtitleListview1.Items[0].Focused = true;
                 }
-                textBoxListViewText.BackColor = SystemColors.WindowFrame;
-                textBoxListViewTextAlternate.BackColor = SystemColors.WindowFrame;
 
                 _findHelper = null;
                 _spellCheckForm = null;
@@ -11245,6 +11243,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     textBoxListViewTextAlternate.Enabled = true;
+                    textBoxListViewTextAlternate.BackColor = textBoxListViewText.Focused ? SystemColors.Highlight : SystemColors.WindowFrame;
                     textBoxListViewTextAlternate.TextChanged -= TextBoxListViewTextAlternateTextChanged;
                     textBoxListViewTextAlternate.Text = original.Text;
                     textBoxListViewTextAlternate.TextChanged += TextBoxListViewTextAlternateTextChanged;
@@ -11282,6 +11281,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_subtitle != null && _subtitle.Paragraphs.Count > 0)
             {
                 textBoxListViewText.Enabled = true;
+                textBoxListViewText.BackColor = textBoxListViewText.Focused ? SystemColors.Highlight : SystemColors.WindowFrame;
             }
 
             StartUpdateListSyntaxColoring();
