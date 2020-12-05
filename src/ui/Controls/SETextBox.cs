@@ -254,7 +254,24 @@ namespace Nikse.SubtitleEdit.Controls
                     return _simpleTextBox.SelectionStart;
                 }
 
-                return _uiTextBox?.SelectionStart ?? 0;
+                if (_uiTextBox != null)
+                {
+                    var text = _uiTextBox.Text;
+                    var extra = 0;
+                    var target = _uiTextBox.SelectionStart;
+                    for (int i = 0; i < target && i < text.Length; i++)
+                    {
+                        if (text[i] == '\n')
+                        {
+                            extra++;
+                        }
+                    }
+
+                    return target + extra;
+                }
+
+
+                return 0;
             }
             set
             {
@@ -264,7 +281,17 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 else if (_uiTextBox != null)
                 {
-                    _uiTextBox.SelectionStart = value;
+                    var text = _uiTextBox.Text;
+                    var extra = 0;
+                    for (int i = 0; i < value && i < text.Length; i++)
+                    {
+                        if (text[i] == '\n')
+                        {
+                            extra++;
+                        }
+                    }
+
+                    _uiTextBox.SelectionStart = value - extra;
                 }
             }
         }
@@ -278,7 +305,28 @@ namespace Nikse.SubtitleEdit.Controls
                     return _simpleTextBox.SelectionLength;
                 }
 
-                return _uiTextBox?.SelectionLength ?? 0;
+                if (_uiTextBox != null)
+                {
+                    var target = _uiTextBox.SelectionLength;
+                    if (target == 0)
+                    {
+                        return 0;
+                    }
+
+                    var text = _uiTextBox.Text;
+                    var extra = 0;
+                    for (int i = _uiTextBox.SelectionStart; i < target && i < text.Length; i++)
+                    {
+                        if (text[i] == '\n')
+                        {
+                            extra++;
+                        }
+                    }
+
+                    return target + extra;
+                }
+
+                return 0;
             }
             set
             {
@@ -288,7 +336,24 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 else if (_uiTextBox != null)
                 {
-                    _uiTextBox.SelectionLength = value;
+                    var target = _uiTextBox.SelectionLength;
+                    if (target == 0)
+                    {
+                        _uiTextBox.SelectionLength = 0;
+                        return;
+                    }
+
+                    var text = _uiTextBox.Text;
+                    var extra = 0;
+                    for (int i = _uiTextBox.SelectionStart; i < target && i < text.Length; i++)
+                    {
+                        if (text[i] == '\n')
+                        {
+                            extra++;
+                        }
+                    }
+
+                    _uiTextBox.SelectionLength = value - extra;
                 }
             }
         }
@@ -326,7 +391,7 @@ namespace Nikse.SubtitleEdit.Controls
                     return _simpleTextBox.SelectedText;
                 }
 
-                return _uiTextBox != null ? _uiTextBox.SelectedText : string.Empty;
+                return _uiTextBox != null ? string.Join(Environment.NewLine, _uiTextBox.SelectedText.SplitToLines()) : string.Empty;
             }
             set
             {
