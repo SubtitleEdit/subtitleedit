@@ -16861,7 +16861,7 @@ namespace Nikse.SubtitleEdit.Forms
                 RunTranslateSearch((text) =>
                 {
                     url = string.Format(url, Utilities.UrlEncode(text));
-                    UiUtil.OpenURL(url);
+                    UiUtil.OpenUrl(url);
                 });
             }
         }
@@ -20397,7 +20397,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonGoogleIt_Click(object sender, EventArgs e)
         {
-            RunTranslateSearch((text) => { UiUtil.OpenURL("https://www.google.com/search?q=" + Utilities.UrlEncode(text)); });
+            RunTranslateSearch((text) => { UiUtil.OpenUrl("https://www.google.com/search?q=" + Utilities.UrlEncode(text)); });
         }
 
         private void buttonGoogleTranslateIt_Click(object sender, EventArgs e)
@@ -20405,7 +20405,7 @@ namespace Nikse.SubtitleEdit.Forms
             RunTranslateSearch((text) =>
             {
                 string languageId = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
-                UiUtil.OpenURL("https://translate.google.com/#auto|" + languageId + "|" + Utilities.UrlEncode(text));
+                UiUtil.OpenUrl("https://translate.google.com/#auto|" + languageId + "|" + Utilities.UrlEncode(text));
             });
         }
 

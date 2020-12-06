@@ -365,7 +365,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonDownloadMkvToolNix_Click(object sender, EventArgs e)
         {
-            UiUtil.OpenURL("https://mkvtoolnix.download/downloads.html");
+            UiUtil.OpenUrl("https://mkvtoolnix.download/downloads.html");
         }
 
         private void radioButtonBluRaySup_CheckedChanged(object sender, EventArgs e)

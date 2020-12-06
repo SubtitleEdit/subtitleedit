@@ -1,8 +1,11 @@
 ﻿using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Forms;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
+using Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,9 +15,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.Enums;
-using Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -91,9 +91,9 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
-            if (!String.IsNullOrEmpty(videoPlayerContainer.SubtitleText))
+            if (!string.IsNullOrEmpty(videoPlayerContainer.SubtitleText))
             {
-                videoPlayerContainer.SetSubtitleText(String.Empty, null, subtitle);
+                videoPlayerContainer.SetSubtitleText(string.Empty, null, subtitle);
             }
             else
             {
@@ -106,10 +106,10 @@ namespace Nikse.SubtitleEdit.Logic
         {
             if (DateTime.UtcNow.Ticks - _lastShowSubTicks > 10000 * 1000) // more than 1+ seconds ago
             {
-                var newHash = subtitle.GetFastHashCode(String.Empty);
+                var newHash = subtitle.GetFastHashCode(string.Empty);
                 if (newHash != _lastShowSubHash)
                 {
-                    videoPlayerContainer.SetSubtitleText(p == null ? String.Empty : p.Text, p, subtitle);
+                    videoPlayerContainer.SetSubtitleText(p == null ? string.Empty : p.Text, p, subtitle);
                     _lastShowSubHash = newHash;
                 }
 
@@ -149,9 +149,9 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
             }
-            if (!String.IsNullOrEmpty(videoPlayerContainer.SubtitleText))
+            if (!string.IsNullOrEmpty(videoPlayerContainer.SubtitleText))
             {
-                videoPlayerContainer.SetSubtitleText(String.Empty, null, subtitle);
+                videoPlayerContainer.SetSubtitleText(string.Empty, null, subtitle);
             }
             return -1;
         }
@@ -370,7 +370,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static Keys GetKeys(string keysInString)
         {
-            if (String.IsNullOrEmpty(keysInString))
+            if (string.IsNullOrEmpty(keysInString))
             {
                 return Keys.None;
             }
@@ -379,7 +379,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 foreach (Keys val in Enum.GetValues(typeof(Keys)))
                 {
-                    string k = val.ToString().ToLowerInvariant();
+                    var k = val.ToString().ToLowerInvariant();
                     if (!AllKeys.ContainsKey(k))
                     {
                         AllKeys.Add(k, val);
@@ -401,9 +401,9 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
-            string[] parts = keysInString.ToLowerInvariant().Split(new[] { '+' }, StringSplitOptions.RemoveEmptyEntries);
+            var parts = keysInString.ToLowerInvariant().Split(new[] { '+' }, StringSplitOptions.RemoveEmptyEntries);
             var resultKeys = Keys.None;
-            foreach (string k in parts)
+            foreach (var k in parts)
             {
                 if (AllKeys.ContainsKey(k))
                 {
@@ -457,7 +457,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             var gs = Configuration.Settings.General;
 
-            if (String.IsNullOrEmpty(gs.SubtitleFontName))
+            if (string.IsNullOrEmpty(gs.SubtitleFontName))
             {
                 gs.SubtitleFontName = DefaultSystemFont.Name;
             }
@@ -538,7 +538,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static Font GetDefaultFont()
         {
             var gs = Configuration.Settings.General;
-            if (String.IsNullOrEmpty(gs.SystemSubtitleFontNameOverride) || gs.SystemSubtitleFontSizeOverride < 5)
+            if (string.IsNullOrEmpty(gs.SystemSubtitleFontNameOverride) || gs.SystemSubtitleFontSizeOverride < 5)
             {
                 return DefaultSystemFont;
             }
@@ -995,7 +995,7 @@ namespace Nikse.SubtitleEdit.Logic
                             deleteFrom = 0;
                         }
                         textBox.Select(deleteFrom, deleteUpTo - deleteFrom);
-                        textBox.Paste(String.Empty);
+                        textBox.Paste(string.Empty);
                     }
                 }
             }
@@ -1090,7 +1090,7 @@ namespace Nikse.SubtitleEdit.Logic
             AddExtension(sb, new PlayCaptionsFreeEditor().Extension);
             AddExtension(sb, ".cdg"); // karaoke
 
-            if (!String.IsNullOrEmpty(Configuration.Settings.General.OpenSubtitleExtraExtensions))
+            if (!string.IsNullOrEmpty(Configuration.Settings.General.OpenSubtitleExtraExtensions))
             {
                 var extraExtensions = Configuration.Settings.General.OpenSubtitleExtraExtensions.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string ext in extraExtensions)
@@ -1170,7 +1170,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 ToolStripItem x = tsmi.DropDownItems[k];
                 var fileName = (string)x.Tag;
-                if (!String.IsNullOrEmpty(fileName) && fileName.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
+                if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
                 {
                     tsmi.DropDownItems.Remove(x);
                 }
@@ -1186,12 +1186,12 @@ namespace Nikse.SubtitleEdit.Logic
             string folderName = Path.GetDirectoryName(fileName);
             if (Configuration.IsRunningOnWindows)
             {
-                string argument = @"/select, " + fileName;
+                var argument = @"/select, " + fileName;
                 Process.Start("explorer.exe", argument);
             }
             else
             {
-                UiUtil.OpenFolder(folderName);
+                OpenFolder(folderName);
             }
         }
 
@@ -1200,7 +1200,7 @@ namespace Nikse.SubtitleEdit.Logic
             OpenItem(folder, "folder");
         }
 
-        public static void OpenURL(string url)
+        public static void OpenUrl(string url)
         {
             OpenItem(url, "url");
         }
@@ -1220,10 +1220,11 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 else if (Configuration.IsRunningOnLinux)
                 {
-                    Process process = new Process();
-                    process.EnableRaisingEvents = false;
-                    process.StartInfo.FileName = "xdg-open";
-                    process.StartInfo.Arguments = item;
+                    var process = new Process
+                    {
+                        EnableRaisingEvents = false, 
+                        StartInfo = { FileName = "xdg-open", Arguments = item }
+                    };
                     process.Start();
                 }
             }
@@ -1237,12 +1238,12 @@ namespace Nikse.SubtitleEdit.Logic
         {
             var sb = new StringBuilder();
             sb.Append(Configuration.Settings.Language.General.VideoFiles + "|*");
-            sb.Append(String.Join(";*", Utilities.VideoFileExtensions));
+            sb.Append(string.Join(";*", Utilities.VideoFileExtensions));
 
             if (includeAudioFiles)
             {
                 sb.Append("|" + Configuration.Settings.Language.General.AudioFiles + "|*");
-                sb.Append(String.Join(";*", Utilities.AudioFileExtensions));
+                sb.Append(string.Join(";*", Utilities.AudioFileExtensions));
             }
 
             sb.Append("|" + Configuration.Settings.Language.General.AllFiles + "|*.*");

@@ -204,7 +204,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.G)
             {
                 e.SuppressKeyPress = true;
-                UiUtil.OpenURL("https://www.google.com/search?q=" + Utilities.UrlEncode(textBoxWord.Text));
+                UiUtil.OpenUrl("https://www.google.com/search?q=" + Utilities.UrlEncode(textBoxWord.Text));
             }
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Z)
             {
@@ -1283,7 +1283,7 @@ namespace Nikse.SubtitleEdit.Forms
             string text = textBoxWord.Text.Trim();
             if (!string.IsNullOrWhiteSpace(text))
             {
-                UiUtil.OpenURL("https://www.google.com/search?q=" + Utilities.UrlEncode(text));
+                UiUtil.OpenUrl("https://www.google.com/search?q=" + Utilities.UrlEncode(text));
             }
         }
 
