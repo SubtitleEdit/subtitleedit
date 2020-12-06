@@ -98,10 +98,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             openFileDialog1.Title = Configuration.Settings.Language.General.OpenVideoFileTitle;
             openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = Utilities.GetVideoFileFilter(false);
+            openFileDialog1.Filter = UiUtil.GetVideoFileFilter(false);
             if (File.Exists(_subtitleFileName))
             {
-                var videoFileExt = Utilities.GetVideoFileFilter(false);
+                var videoFileExt = UiUtil.GetVideoFileFilter(false);
                 var folder = Path.GetDirectoryName(_subtitleFileName);
                 if (folder != null)
                 {
@@ -260,7 +260,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyCode == UiUtil.HelpKeys)
             {
-                Utilities.ShowHelp("#sync");
+                UiUtil.ShowHelp("#sync");
                 e.SuppressKeyPress = true;
             }
             else if (_mainGeneralGoToNextSubtitle == e.KeyData || (e.KeyCode == Keys.Down && e.Modifiers == Keys.Alt))

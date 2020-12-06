@@ -5,6 +5,7 @@ using Nikse.SubtitleEdit.Forms;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -12,6 +13,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
+using Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -88,9 +91,9 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
-            if (!string.IsNullOrEmpty(videoPlayerContainer.SubtitleText))
+            if (!String.IsNullOrEmpty(videoPlayerContainer.SubtitleText))
             {
-                videoPlayerContainer.SetSubtitleText(string.Empty, null, subtitle);
+                videoPlayerContainer.SetSubtitleText(String.Empty, null, subtitle);
             }
             else
             {
@@ -103,10 +106,10 @@ namespace Nikse.SubtitleEdit.Logic
         {
             if (DateTime.UtcNow.Ticks - _lastShowSubTicks > 10000 * 1000) // more than 1+ seconds ago
             {
-                var newHash = subtitle.GetFastHashCode(string.Empty);
+                var newHash = subtitle.GetFastHashCode(String.Empty);
                 if (newHash != _lastShowSubHash)
                 {
-                    videoPlayerContainer.SetSubtitleText(p == null ? string.Empty : p.Text, p, subtitle);
+                    videoPlayerContainer.SetSubtitleText(p == null ? String.Empty : p.Text, p, subtitle);
                     _lastShowSubHash = newHash;
                 }
 
@@ -146,9 +149,9 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
             }
-            if (!string.IsNullOrEmpty(videoPlayerContainer.SubtitleText))
+            if (!String.IsNullOrEmpty(videoPlayerContainer.SubtitleText))
             {
-                videoPlayerContainer.SetSubtitleText(string.Empty, null, subtitle);
+                videoPlayerContainer.SetSubtitleText(String.Empty, null, subtitle);
             }
             return -1;
         }
@@ -178,7 +181,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 try
                 {
-                    return VideoPlayers.MpcHC.MpcHc.GetMpcHcFileName() != null;
+                    return MpcHc.GetMpcHcFileName() != null;
                 }
                 catch (FileNotFoundException)
                 {
@@ -222,9 +225,9 @@ namespace Nikse.SubtitleEdit.Logic
                 return new LibMpvDynamic();
             }
 
-            if (gs.VideoPlayer == "MPC-HC" && VideoPlayers.MpcHC.MpcHc.IsInstalled)
+            if (gs.VideoPlayer == "MPC-HC" && MpcHc.IsInstalled)
             {
-                return new VideoPlayers.MpcHC.MpcHc();
+                return new MpcHc();
             }
 
             if (IsQuartsDllInstalled)
@@ -367,7 +370,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static Keys GetKeys(string keysInString)
         {
-            if (string.IsNullOrEmpty(keysInString))
+            if (String.IsNullOrEmpty(keysInString))
             {
                 return Keys.None;
             }
@@ -454,7 +457,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             var gs = Configuration.Settings.General;
 
-            if (string.IsNullOrEmpty(gs.SubtitleFontName))
+            if (String.IsNullOrEmpty(gs.SubtitleFontName))
             {
                 gs.SubtitleFontName = DefaultSystemFont.Name;
             }
@@ -535,7 +538,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static Font GetDefaultFont()
         {
             var gs = Configuration.Settings.General;
-            if (string.IsNullOrEmpty(gs.SystemSubtitleFontNameOverride) || gs.SystemSubtitleFontSizeOverride < 5)
+            if (String.IsNullOrEmpty(gs.SystemSubtitleFontNameOverride) || gs.SystemSubtitleFontSizeOverride < 5)
             {
                 return DefaultSystemFont;
             }
@@ -992,7 +995,7 @@ namespace Nikse.SubtitleEdit.Logic
                             deleteFrom = 0;
                         }
                         textBox.Select(deleteFrom, deleteUpTo - deleteFrom);
-                        textBox.Paste(string.Empty);
+                        textBox.Paste(String.Empty);
                     }
                 }
             }
@@ -1087,7 +1090,7 @@ namespace Nikse.SubtitleEdit.Logic
             AddExtension(sb, new PlayCaptionsFreeEditor().Extension);
             AddExtension(sb, ".cdg"); // karaoke
 
-            if (!string.IsNullOrEmpty(Configuration.Settings.General.OpenSubtitleExtraExtensions))
+            if (!String.IsNullOrEmpty(Configuration.Settings.General.OpenSubtitleExtraExtensions))
             {
                 var extraExtensions = Configuration.Settings.General.OpenSubtitleExtraExtensions.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string ext in extraExtensions)
@@ -1167,7 +1170,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 ToolStripItem x = tsmi.DropDownItems[k];
                 var fileName = (string)x.Tag;
-                if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
+                if (!String.IsNullOrEmpty(fileName) && fileName.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
                 {
                     tsmi.DropDownItems.Remove(x);
                 }
@@ -1184,7 +1187,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (Configuration.IsRunningOnWindows)
             {
                 string argument = @"/select, " + fileName;
-                System.Diagnostics.Process.Start("explorer.exe", argument);
+                Process.Start("explorer.exe", argument);
             }
             else
             {
@@ -1213,11 +1216,11 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 if (Configuration.IsRunningOnWindows || Configuration.IsRunningOnMac)
                 {
-                    System.Diagnostics.Process.Start(item);
+                    Process.Start(item);
                 }
                 else if (Configuration.IsRunningOnLinux)
                 {
-                    System.Diagnostics.Process process = new System.Diagnostics.Process();
+                    Process process = new Process();
                     process.EnableRaisingEvents = false;
                     process.StartInfo.FileName = "xdg-open";
                     process.StartInfo.Arguments = item;
@@ -1227,6 +1230,73 @@ namespace Nikse.SubtitleEdit.Logic
             catch (Exception exception)
             {
                 MessageBox.Show($"Cannot open {type}: {item}{Environment.NewLine}{Environment.NewLine}{exception.Source}: {exception.Message}", "Error opening URL", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        public static string GetVideoFileFilter(bool includeAudioFiles)
+        {
+            var sb = new StringBuilder();
+            sb.Append(Configuration.Settings.Language.General.VideoFiles + "|*");
+            sb.Append(String.Join(";*", Utilities.VideoFileExtensions));
+
+            if (includeAudioFiles)
+            {
+                sb.Append("|" + Configuration.Settings.Language.General.AudioFiles + "|*");
+                sb.Append(String.Join(";*", Utilities.AudioFileExtensions));
+            }
+
+            sb.Append("|" + Configuration.Settings.Language.General.AllFiles + "|*.*");
+            return sb.ToString();
+        }
+
+        public static void ShowHelp(string parameter)
+        {
+            var helpFile = Configuration.Settings.Language.General.HelpFile;
+            if (string.IsNullOrEmpty(helpFile))
+            {
+                helpFile = "https://www.nikse.dk/SubtitleEdit/Help";
+            }
+
+            try
+            {
+                if (Configuration.IsRunningOnWindows || Configuration.IsRunningOnMac)
+                {
+                    Process.Start(helpFile + parameter);
+                }
+                else if (Configuration.IsRunningOnLinux)
+                {
+                    var process = new Process
+                    {
+                        EnableRaisingEvents = false, 
+                        StartInfo = { FileName = "xdg-open", Arguments = helpFile + parameter }
+                    };
+                    process.Start();
+                }
+            }
+            catch
+            {
+                //Don't do anything
+            }
+        }
+
+        public static string GetContinuationStyleName(ContinuationStyle continuationStyle)
+        {
+            switch (continuationStyle)
+            {
+                case ContinuationStyle.NoneTrailingDots:
+                    return Configuration.Settings.Language.Settings.ContinuationStyleNoneTrailingDots;
+                case ContinuationStyle.NoneLeadingTrailingDots:
+                    return Configuration.Settings.Language.Settings.ContinuationStyleNoneLeadingTrailingDots;
+                case ContinuationStyle.OnlyTrailingDots:
+                    return Configuration.Settings.Language.Settings.ContinuationStyleOnlyTrailingDots;
+                case ContinuationStyle.LeadingTrailingDots:
+                    return Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDots;
+                case ContinuationStyle.LeadingTrailingDash:
+                    return Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDash;
+                case ContinuationStyle.LeadingTrailingDashDots:
+                    return Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDashDots;
+                default:
+                    return Configuration.Settings.Language.Settings.ContinuationStyleNone;
             }
         }
     }

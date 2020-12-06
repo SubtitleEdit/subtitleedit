@@ -5098,7 +5098,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             openFileDialog1.Title = _language.OpenVideoFile;
             openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = Utilities.GetVideoFileFilter(false);
+            openFileDialog1.Filter = UiUtil.GetVideoFileFilter(false);
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 VideoFileName = openFileDialog1.FileName;
@@ -6201,13 +6201,13 @@ namespace Nikse.SubtitleEdit.Forms
         private void HelpToolStripMenuItem1Click(object sender, EventArgs e)
         {
             ReloadFromSourceView();
-            Utilities.ShowHelp(string.Empty);
+            UiUtil.ShowHelp(string.Empty);
         }
 
         private void ToolStripButtonHelpClick(object sender, EventArgs e)
         {
             ReloadFromSourceView();
-            Utilities.ShowHelp(string.Empty);
+            UiUtil.ShowHelp(string.Empty);
         }
 
         private void GotoLineNumberToolStripMenuItemClick(object sender, EventArgs e)
@@ -19934,7 +19934,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             openFileDialog1.Title = _languageGeneral.OpenVideoFileTitle;
             openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = Utilities.GetVideoFileFilter(true);
+            openFileDialog1.Filter = UiUtil.GetVideoFileFilter(true);
 
             openFileDialog1.FileName = string.Empty;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -21766,7 +21766,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 string fileName = files[0];
                 string ext = Path.GetExtension(fileName).ToLowerInvariant();
-                if (Utilities.GetVideoFileFilter(true).Contains(ext))
+                if (UiUtil.GetVideoFileFilter(true).Contains(ext))
                 {
                     if (string.IsNullOrEmpty(_fileName))
                     {

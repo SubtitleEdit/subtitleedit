@@ -188,7 +188,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyCode == UiUtil.HelpKeys)
             {
-                Utilities.ShowHelp("#multiple_replace");
+                UiUtil.ShowHelp("#multiple_replace");
             }
         }
 

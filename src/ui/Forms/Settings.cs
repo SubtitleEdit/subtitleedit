@@ -1952,7 +1952,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyCode == UiUtil.HelpKeys)
             {
-                Utilities.ShowHelp("#Settings");
+                UiUtil.ShowHelp("#Settings");
                 e.SuppressKeyPress = true;
             }
         }

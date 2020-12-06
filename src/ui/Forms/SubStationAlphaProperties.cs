@@ -286,7 +286,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             openFileDialog1.Title = Configuration.Settings.Language.General.OpenVideoFileTitle;
             openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = Utilities.GetVideoFileFilter(false);
+            openFileDialog1.Filter = UiUtil.GetVideoFileFilter(false);
             openFileDialog1.FileName = string.Empty;
             if (string.IsNullOrEmpty(openFileDialog1.InitialDirectory) && !string.IsNullOrEmpty(_videoFileName))
             {

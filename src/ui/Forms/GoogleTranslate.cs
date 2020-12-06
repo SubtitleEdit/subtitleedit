@@ -487,7 +487,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyCode == UiUtil.HelpKeys)
             {
-                Utilities.ShowHelp("#translation");
+                UiUtil.ShowHelp("#translation");
             }
         }
 

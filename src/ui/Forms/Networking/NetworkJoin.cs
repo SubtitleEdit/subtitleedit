@@ -110,7 +110,7 @@ namespace Nikse.SubtitleEdit.Forms.Networking
             }
             else if (e.KeyCode == UiUtil.HelpKeys)
             {
-                Utilities.ShowHelp("#networking");
+                UiUtil.ShowHelp("#networking");
                 e.SuppressKeyPress = true;
             }
         }

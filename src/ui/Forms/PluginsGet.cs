@@ -395,7 +395,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyCode == UiUtil.HelpKeys)
             {
-                Utilities.ShowHelp("#plugins");
+                UiUtil.ShowHelp("#plugins");
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyCode == Keys.F5 && !_fetchingData)

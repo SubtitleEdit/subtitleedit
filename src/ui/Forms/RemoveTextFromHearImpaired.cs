@@ -169,7 +169,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyCode == UiUtil.HelpKeys)
             {
-                Utilities.ShowHelp("#remove_text_for_hi");
+                UiUtil.ShowHelp("#remove_text_for_hi");
             }
         }
 

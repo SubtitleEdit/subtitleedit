@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyCode == UiUtil.HelpKeys)
             {
-                Utilities.ShowHelp("#bookmarks");
+                UiUtil.ShowHelp("#bookmarks");
                 e.SuppressKeyPress = true;
             }
         }
