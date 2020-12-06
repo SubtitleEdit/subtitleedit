@@ -1,12 +1,11 @@
 ﻿using Nikse.SubtitleEdit.Controls;
-using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -21,7 +20,7 @@ namespace Nikse.SubtitleEdit.Logic
                                       .Where(c => c.GetType() == type);
         }
 
-        internal static readonly Color BackColor = Color.FromArgb(52, 52, 45);
+        internal static readonly Color BackColor = Color.FromArgb(0x1e, 0x1e, 0x1e); 
         internal static readonly Color ForeColor = Color.FromArgb(150, 150, 150);
 
         private static void TabControl1_DrawItem(object sender, DrawItemEventArgs e)

@@ -1264,27 +1264,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             return Math.Max(Configuration.Settings.General.MinimumMillisecondsBetweenLines + 5, Configuration.Settings.General.ContinuationPause);
         }
 
-        public static string GetContinuationStyleName(ContinuationStyle continuationStyle)
-        {
-            switch (continuationStyle)
-            {
-                case ContinuationStyle.NoneTrailingDots:
-                    return Configuration.Settings.Language.Settings.ContinuationStyleNoneTrailingDots;
-                case ContinuationStyle.NoneLeadingTrailingDots:
-                    return Configuration.Settings.Language.Settings.ContinuationStyleNoneLeadingTrailingDots;
-                case ContinuationStyle.OnlyTrailingDots:
-                    return Configuration.Settings.Language.Settings.ContinuationStyleOnlyTrailingDots;
-                case ContinuationStyle.LeadingTrailingDots:
-                    return Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDots;
-                case ContinuationStyle.LeadingTrailingDash:
-                    return Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDash;
-                case ContinuationStyle.LeadingTrailingDashDots:
-                    return Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDashDots;
-                default:
-                    return Configuration.Settings.Language.Settings.ContinuationStyleNone;
-            }
-        }
-
         public static int GetIndexFromContinuationStyle(ContinuationStyle continuationStyle)
         {
             switch (continuationStyle)
