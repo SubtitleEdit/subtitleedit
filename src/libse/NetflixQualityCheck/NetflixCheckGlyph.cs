@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 {
@@ -20,6 +20,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                     {
                         list.Add(int.Parse(line, System.Globalization.NumberStyles.HexNumber));
                     }
+
                     if (!list.Contains(10))
                     {
                         list.Add(10);
@@ -40,7 +41,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
             // Load allowed glyphs
             var allowedGlyphsSet = LoadNetflixGlyphs();
 
-            foreach (Paragraph paragraph in subtitle.Paragraphs)
+            foreach (var paragraph in subtitle.Paragraphs)
             {
                 for (int pos = 0, actualPos = 0; pos < paragraph.Text.Length; pos += char.IsSurrogatePair(paragraph.Text, pos) ? 2 : 1, actualPos++)
                 {
@@ -48,11 +49,11 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 
                     if (!allowedGlyphsSet.Contains(curCodepoint))
                     {
-                        string timecode = paragraph.StartTime.ToHHMMSSFF();
-                        string context = NetflixQualityController.StringContext(paragraph.Text, pos, 6);
-                        string comment = string.Format(Configuration.Settings.Language.NetflixQualityCheck.GlyphCheckReport, $"U+{curCodepoint:X}", actualPos);
+                        var timeCode = paragraph.StartTime.ToHHMMSSFF();
+                        var context = NetflixQualityController.StringContext(paragraph.Text, pos, 6);
+                        var comment = string.Format(Configuration.Settings.Language.NetflixQualityCheck.GlyphCheckReport, $"U+{curCodepoint:X}", actualPos);
 
-                        controller.AddRecord(paragraph, timecode, context, comment);
+                        controller.AddRecord(paragraph, timeCode, context, comment);
                     }
                 }
             }
