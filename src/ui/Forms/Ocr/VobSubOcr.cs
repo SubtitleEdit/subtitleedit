@@ -6782,7 +6782,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             if (e.KeyCode == UiUtil.HelpKeys)
             {
-                Utilities.ShowHelp("#importvobsub");
+                UiUtil.ShowHelp("#importvobsub");
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyCode == Keys.Down && e.Modifiers == Keys.Alt)

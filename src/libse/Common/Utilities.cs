@@ -30,22 +30,6 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static string[] VideoFileExtensions { get; } = { ".avi", ".mkv", ".wmv", ".mpg", ".mpeg", ".divx", ".mp4", ".asf", ".flv", ".mov", ".m4v", ".vob", ".ogv", ".webm", ".ts", ".m2ts", ".mts", ".avs", ".mxf" };
         public static string[] AudioFileExtensions { get; } = { ".mp3", ".wav", ".wma", ".ogg", ".mpa", ".m4a", ".ape", ".aiff", ".flac", ".aac", ".ac3", ".eac3", ".mka" };
 
-        public static string GetVideoFileFilter(bool includeAudioFiles)
-        {
-            var sb = new StringBuilder();
-            sb.Append(Configuration.Settings.Language.General.VideoFiles + "|*");
-            sb.Append(string.Join(";*", VideoFileExtensions));
-
-            if (includeAudioFiles)
-            {
-                sb.Append("|" + Configuration.Settings.Language.General.AudioFiles + "|*");
-                sb.Append(string.Join(";*", AudioFileExtensions));
-            }
-
-            sb.Append("|" + Configuration.Settings.Language.General.AllFiles + "|*.*");
-            return sb.ToString();
-        }
-
         public static bool IsInteger(string s)
         {
             return int.TryParse(s, out _);
@@ -992,34 +976,6 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static bool IsRunningOnMono()
         {
             return Type.GetType("Mono.Runtime") != null;
-        }
-
-        public static void ShowHelp(string parameter)
-        {
-            string helpFile = Configuration.Settings.Language.General.HelpFile;
-            if (string.IsNullOrEmpty(helpFile))
-            {
-                helpFile = "https://www.nikse.dk/SubtitleEdit/Help";
-            }
-            try
-            {
-                if (Configuration.IsRunningOnWindows || Configuration.IsRunningOnMac)
-                {
-                    System.Diagnostics.Process.Start(helpFile + parameter);
-                }
-                else if (Configuration.IsRunningOnLinux)
-                {
-                    System.Diagnostics.Process process = new System.Diagnostics.Process();
-                    process.EnableRaisingEvents = false;
-                    process.StartInfo.FileName = "xdg-open";
-                    process.StartInfo.Arguments = helpFile + parameter;
-                    process.Start();
-                }
-            }
-            catch
-            {
-                //Don't do anything
-            }
         }
 
         public static string AssemblyVersion => Assembly.GetEntryAssembly().GetName().Version.ToString();

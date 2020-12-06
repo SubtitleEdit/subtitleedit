@@ -114,7 +114,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyCode == UiUtil.HelpKeys)
             {
-                Utilities.ShowHelp("#spellcheck");
+                UiUtil.ShowHelp("#spellcheck");
                 e.SuppressKeyPress = true;
             }
         }

@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyCode == UiUtil.HelpKeys)
             {
-                Utilities.ShowHelp(null);
+                UiUtil.ShowHelp(null);
                 e.SuppressKeyPress = true;
             }
         }

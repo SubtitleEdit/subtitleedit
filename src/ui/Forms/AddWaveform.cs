@@ -441,7 +441,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyCode == UiUtil.HelpKeys)
             {
-                Utilities.ShowHelp("#waveform");
+                UiUtil.ShowHelp("#waveform");
                 e.SuppressKeyPress = true;
             }
         }

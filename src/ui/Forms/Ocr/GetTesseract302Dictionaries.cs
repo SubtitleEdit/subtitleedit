@@ -236,7 +236,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
             else if (e.KeyCode == UiUtil.HelpKeys)
             {
-                Utilities.ShowHelp("#importvobsub");
+                UiUtil.ShowHelp("#importvobsub");
                 e.SuppressKeyPress = true;
             }
         }

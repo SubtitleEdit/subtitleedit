@@ -540,7 +540,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             openFileDialog1.Title = _languageGeneral.OpenVideoFileTitle;
             openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = Utilities.GetVideoFileFilter(true);
+            openFileDialog1.Filter = UiUtil.GetVideoFileFilter(true);
             openFileDialog1.FileName = string.Empty;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -631,7 +631,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyCode == UiUtil.HelpKeys)
             {
-                Utilities.ShowHelp("#visual_sync");
+                UiUtil.ShowHelp("#visual_sync");
             }
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.O)
             {

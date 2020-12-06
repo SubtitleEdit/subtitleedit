@@ -4877,7 +4877,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
             else if (e.KeyCode == UiUtil.HelpKeys)
             {
-                Utilities.ShowHelp("#export");
+                UiUtil.ShowHelp("#export");
                 e.SuppressKeyPress = true;
             }
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.G && subtitleListView1.Items.Count > 1)
