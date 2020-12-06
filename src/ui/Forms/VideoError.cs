@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void richTextBoxMessage_LinkClicked(object sender, LinkClickedEventArgs e)
         {
-            UiUtil.OpenURL(e.LinkText);
+            UiUtil.OpenUrl(e.LinkText);
         }
 
         private void buttonMpvSettings_Click(object sender, EventArgs e)

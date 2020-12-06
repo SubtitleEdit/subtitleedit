@@ -8514,7 +8514,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 if (listBoxUnknownWords.SelectedItems[0] is LogItem uw && uw.Line > 0)
                 {
-                    UiUtil.OpenURL("https://www.google.com/search?q=" + Utilities.UrlEncode(uw.Text));
+                    UiUtil.OpenUrl("https://www.google.com/search?q=" + Utilities.UrlEncode(uw.Text));
                 }
             }
         }

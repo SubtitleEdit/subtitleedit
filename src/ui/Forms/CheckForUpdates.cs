@@ -149,7 +149,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonDownloadAndInstall_Click(object sender, EventArgs e)
         {
-            UiUtil.OpenURL("https://github.com/SubtitleEdit/subtitleedit/releases");
+            UiUtil.OpenUrl("https://github.com/SubtitleEdit/subtitleedit/releases");
         }
 
         private void buttonDontCheckUpdates_Click(object sender, EventArgs e)
