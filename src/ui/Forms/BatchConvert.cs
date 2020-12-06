@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.BluRaySup;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.Forms;
@@ -19,7 +20,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -2745,6 +2745,8 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxChangeCasing.Visible = false;
             groupBoxRemoveStyle.Visible = false;
             groupBoxAdjustDuration.Visible = false;
+            groupBoxDeleteLines.Visible = false;
+
             if (listViewConvertOptions.SelectedIndices.Count != 1)
             {
                 return;
@@ -2755,11 +2757,13 @@ namespace Nikse.SubtitleEdit.Forms
             if (fixItem?.Control != null)
             {
                 fixItem.Control.Top = listViewConvertOptions.Top;
+                fixItem.Control.Left = listViewConvertOptions.Left + listViewConvertOptions.Width + 5;
                 fixItem.Control.Visible = true;
                 fixItem.Control.BringToFront();
                 if (fixItem.Control is GroupBox groupBox)
                 {
                     groupBox.Height = listViewConvertOptions.Height;
+                    groupBox.Width = groupBoxConvertOptions.Width - listViewConvertOptions.Width - listViewConvertOptions.Left - 15;
                 }
             }
         }
