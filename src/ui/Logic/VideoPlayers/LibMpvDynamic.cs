@@ -1,4 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,6 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 {
@@ -40,8 +39,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private MpvSetOptionString _mpvSetOptionString;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int MpvGetPropertystring(IntPtr mpvHandle, byte[] name, int format, ref IntPtr data);
-        private MpvGetPropertystring _mpvGetPropertyString;
+        private delegate int MpvGetPropertyString(IntPtr mpvHandle, byte[] name, int format, ref IntPtr data);
+        private MpvGetPropertyString _mpvGetPropertyString;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate int MpvGetPropertyDouble(IntPtr mpvHandle, byte[] name, int format, ref double data);
@@ -86,7 +85,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             _mpvCommand = (MpvCommand)GetDllType(typeof(MpvCommand), "mpv_command");
             _mpvSetOption = (MpvSetOption)GetDllType(typeof(MpvSetOption), "mpv_set_option");
             _mpvSetOptionString = (MpvSetOptionString)GetDllType(typeof(MpvSetOptionString), "mpv_set_option_string");
-            _mpvGetPropertyString = (MpvGetPropertystring)GetDllType(typeof(MpvGetPropertystring), "mpv_get_property");
+            _mpvGetPropertyString = (MpvGetPropertyString)GetDllType(typeof(MpvGetPropertyString), "mpv_get_property");
             _mpvGetPropertyDouble = (MpvGetPropertyDouble)GetDllType(typeof(MpvGetPropertyDouble), "mpv_get_property");
             _mpvSetProperty = (MpvSetProperty)GetDllType(typeof(MpvSetProperty), "mpv_set_property");
             _mpvFree = (MpvFree)GetDllType(typeof(MpvFree), "mpv_free");
@@ -144,7 +143,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             Marshal.FreeHGlobal(mainPtr);
         }
 
-        public override string PlayerName => "libmpv " + VersionNumber;
+        public override string PlayerName => $"libmpv {VersionNumber}";
 
         private int _volume = 75;
         public override int Volume
@@ -366,7 +365,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     return 0;
                 }
 
-                var id = int.Parse(numberString);
+                if (!int.TryParse(numberString, out var id))
+                {
+                    return 0;
+                }
+
                 var idx = _audioTrackIds.FindIndex(x => x.Key == id);
                 var number = AudioTracks.Count > 1 && idx != -1 ? idx : 0;
                 _mpvFree(lpBuffer);
