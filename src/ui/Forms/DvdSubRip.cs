@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Logic;
 using System;
@@ -8,7 +9,6 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -122,10 +122,17 @@ namespace Nikse.SubtitleEdit.Forms
 
             using (var ifoParser = new IfoParser(fileName))
             {
-                if (!string.IsNullOrEmpty(ifoParser.ErrorMessage))
+                if (ifoParser.Error != null)
                 {
                     Clear();
-                    MessageBox.Show(ifoParser.ErrorMessage);
+                    if (ifoParser.Error.ErrorCode == IfoParser.IfoParserError.WrongInfoType)
+                    {
+                        MessageBox.Show(string.Format(Configuration.Settings.Language.DvdSubRip.WrongIfoType, ifoParser.Error.ErrorMessage, Environment.NewLine, fileName));
+                    }
+                    else
+                    {
+                        MessageBox.Show(ifoParser.Error.ErrorMessage);
+                    }
                     return;
                 }
 

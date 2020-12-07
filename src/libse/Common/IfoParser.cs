@@ -123,6 +123,14 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         };
 
+        public class IfoParserError
+        {
+            public static int WrongInfoType = 1;
+
+            public int ErrorCode { get; set; }
+            public string ErrorMessage { get; set; }
+        };
+
         private readonly List<string> _arrayOfAudioMode = new List<string> { "AC3", "...", "MPEG1", "MPEG2", "LPCM", "...", "DTS" };
         private readonly List<string> _arrayOfAudioExtension = new List<string> { "unspecified", "normal", "for visually impaired", "director's comments", "alternate director's comments" };
         private readonly List<string> _arrayOfAspect = new List<string> { "4:3", "...", "...", "16:9" };
@@ -133,7 +141,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public VtsPgci VideoTitleSetProgramChainTable => _vtsPgci;
         public VtsVobs VideoTitleSetVobs => _vtsVobs;
-        public string ErrorMessage { get; private set; }
+        public IfoParserError Error { get; private set; }
 
         private readonly VtsVobs _vtsVobs = new VtsVobs();
         private readonly VtsPgci _vtsPgci = new VtsPgci();
@@ -151,7 +159,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                 string id = Encoding.UTF8.GetString(buffer);
                 if (id != "DVDVIDEO-VTS")
                 {
-                    ErrorMessage = string.Format(Configuration.Settings.Language.DvdSubRip.WrongIfoType, id, Environment.NewLine, fileName);
+                    Error = new IfoParserError
+                    {
+                        ErrorCode = IfoParserError.WrongInfoType,
+                        ErrorMessage = id,
+                    };
                     return;
                 }
                 ParseVtsVobs();
@@ -160,7 +172,10 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
             catch (Exception exception)
             {
-                ErrorMessage = exception.Message + Environment.NewLine + exception.StackTrace;
+                Error = new IfoParserError
+                {
+                    ErrorMessage = exception.Message + Environment.NewLine + exception.StackTrace,
+                };
             }
         }
 
