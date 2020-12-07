@@ -248,6 +248,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.translatepoweredByMicrosoftToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.translateByGoogleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.translateFromSwedishToDanishToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.translateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeLanguageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -2299,7 +2300,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemAutoTranslate.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.translatepoweredByMicrosoftToolStripMenuItem,
             this.translateByGoogleToolStripMenuItem,
-            this.translateFromSwedishToDanishToolStripMenuItem});
+            this.translateFromSwedishToDanishToolStripMenuItem,
+            this.translateToolStripMenuItem
+            });
             this.toolStripMenuItemAutoTranslate.Name = "toolStripMenuItemAutoTranslate";
             this.toolStripMenuItemAutoTranslate.Size = new System.Drawing.Size(94, 20);
             this.toolStripMenuItemAutoTranslate.Text = "Auto-translate";
@@ -2327,6 +2330,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.translateFromSwedishToDanishToolStripMenuItem.Size = new System.Drawing.Size(402, 22);
             this.translateFromSwedishToDanishToolStripMenuItem.Text = "Translate from swedish to danish (powered by nikse.dk/mt)...";
             this.translateFromSwedishToDanishToolStripMenuItem.Click += new System.EventHandler(this.TranslateFromSwedishToDanishToolStripMenuItemClick);
+            // 
+            // translateToolStripMenuItem
+            // 
+            this.translateToolStripMenuItem.Name = "translateToolStripMenuItem";
+            this.translateToolStripMenuItem.Size = new System.Drawing.Size(402, 22);
+            this.translateToolStripMenuItem.Text = "Generic Translate";
+            this.translateToolStripMenuItem.Click += new System.EventHandler(this.TranslateToolStripMenuItemClick);
+
             // 
             // optionsToolStripMenuItem
             // 
@@ -5353,6 +5364,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAdjustAllTimes;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAutoTranslate;
         private System.Windows.Forms.ToolStripMenuItem translateByGoogleToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem translateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem translateFromSwedishToDanishToolStripMenuItem;
         private System.Windows.Forms.Timer timerStillTyping;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemVideo;
