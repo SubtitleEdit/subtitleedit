@@ -417,13 +417,9 @@ Obs: Kontrollera ledigt utrymme.</WaveFileMalformed>
   <EffectKaraoke>
     <Title>Karaoke effekt</Title>
     <ChooseColor>Välj färg:</ChooseColor>
-    <TotalMilliseconds>Totalt millisek.:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Slutlig fördröjning i millisek.:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Skrivmaskins effekt</Title>
-    <TotalMilliseconds>Totalt millisek.:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Slutlig fördröjning i millisek.:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Exportera anpassade textformat</Title>

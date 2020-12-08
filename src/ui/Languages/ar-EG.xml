@@ -217,13 +217,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <EffectKaraoke>
     <Title>تأثير الكاريوكي</Title>
     <ChooseColor>: اختر اللون</ChooseColor>
-    <TotalMilliseconds>:.مجموع ملي ثانية</TotalMilliseconds>
-    <EndDelayInMilliseconds>:.تأخير في نهاية ملي ثانية</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>تأثير آلة كاتبة</Title>
-    <TotalMilliseconds>:.مجموع ملي ثانية</TotalMilliseconds>
-    <EndDelayInMilliseconds>:.تأخير في نهاية ملي ثانية</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportPngXml>
     <Title>BDN XML/PNG تصدير</Title>

@@ -415,13 +415,9 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
   <EffectKaraoke>
     <Title>Efekt Karaoke</Title>
     <ChooseColor>Zvolte barvu:</ChooseColor>
-    <TotalMilliseconds>Celkem milisekund:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Zpoždění v milisekundách:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Efekt Psací stroj</Title>
-    <TotalMilliseconds>Celkem milisekund:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Zpoždění konce v milisekundách:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Exportovat vlastní textový formát</Title>

@@ -449,13 +449,13 @@ Note: Do check free disk space.</WaveFileMalformed>
   <EffectKaraoke>
     <Title>Karaoke effect</Title>
     <ChooseColor>Choose color:</ChooseColor>
-    <TotalMilliseconds>Total milliseconds:</TotalMilliseconds>
-    <EndDelayInMilliseconds>End delay in milliseconds:</EndDelayInMilliseconds>
+    <TotalSeconds>Total seconds:</TotalSeconds>
+    <EndDelayInSeconds>End delay in seconds:</EndDelayInSeconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Typewriter effect</Title>
-    <TotalMilliseconds>Total milliseconds:</TotalMilliseconds>
-    <EndDelayInMilliseconds>End delay in milliseconds:</EndDelayInMilliseconds>
+    <TotalSeconds>Total seconds:</TotalSeconds>
+    <EndDelayInSeconds>End delay in seconds:</EndDelayInSeconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Export custom text format</Title>

@@ -437,13 +437,9 @@ Notă: Verifică spațiul liber al discului.</WaveFileMalformed>
   <EffectKaraoke>
     <Title>Efect Karaoke</Title>
     <ChooseColor>Alege culoarea:</ChooseColor>
-    <TotalMilliseconds>Total milisecunde:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Temporizare întârziată în milisec.:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Efect „mașină de scris”</Title>
-    <TotalMilliseconds>Total milisecunde:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Temporizare întârziată în milisec.:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Exportare format text particularizat</Title>
