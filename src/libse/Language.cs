@@ -3101,6 +3101,7 @@ Keep changes?",
 
             Waveform = new LanguageStructure.Waveform
             {
+                AddWaveformAndSpectrogram = "Add waveform/spectrogram",
                 ClickToAddWaveform = "Click to add waveform",
                 ClickToAddWaveformAndSpectrogram = "Click to add waveform/spectrogram",
                 Seconds = "seconds",

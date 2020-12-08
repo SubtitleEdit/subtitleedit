@@ -1405,7 +1405,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var audioVisualizerNode = new ShortcutNode(language.WaveformAndSpectrogram);
-            AddNode(audioVisualizerNode, Configuration.Settings.Language.Waveform.ClickToAddWaveformAndSpectrogram, nameof(Configuration.Settings.Shortcuts.WaveformAdd));
+            AddNode(audioVisualizerNode, Configuration.Settings.Language.Waveform.AddWaveformAndSpectrogram, nameof(Configuration.Settings.Shortcuts.WaveformAdd));
             AddNode(audioVisualizerNode, Configuration.Settings.Language.Waveform.ZoomIn, nameof(Configuration.Settings.Shortcuts.WaveformZoomIn));
             AddNode(audioVisualizerNode, Configuration.Settings.Language.Waveform.ZoomOut, nameof(Configuration.Settings.Shortcuts.WaveformZoomOut));
             AddNode(audioVisualizerNode, language.VerticalZoom, nameof(Configuration.Settings.Shortcuts.WaveformVerticalZoom));
