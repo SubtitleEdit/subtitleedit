@@ -346,13 +346,9 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
   <EffectKaraoke>
     <Title>カラオケ効果</Title>
     <ChooseColor>色の選択:</ChooseColor>
-    <TotalMilliseconds>総ミリ秒:</TotalMilliseconds>
-    <EndDelayInMilliseconds>末尾の遅延 (ミリ秒).:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>タイプライター効果</Title>
-    <TotalMilliseconds>総ミリ秒:</TotalMilliseconds>
-    <EndDelayInMilliseconds>末尾の遅延 (ミリ秒).:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Formats>フォーマット</Formats>

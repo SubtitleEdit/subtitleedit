@@ -403,13 +403,9 @@ Catatan: Periksa ruang kosong disk.</WaveFileMalformed>
   <EffectKaraoke>
     <Title>Efek karaoke</Title>
     <ChooseColor>Pilih warna:</ChooseColor>
-    <TotalMilliseconds>Total milidetik:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Penundaan akhir dlm milidetik:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Efek mesin ketik</Title>
-    <TotalMilliseconds>Total milidetik:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Penundaan akhir dlm milidetik:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Ekspor format teks khusus</Title>

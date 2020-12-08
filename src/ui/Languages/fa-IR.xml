@@ -417,13 +417,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <EffectKaraoke>
     <Title>اثر کارائوکه</Title>
     <ChooseColor>انتخاب رنگ:</ChooseColor>
-    <TotalMilliseconds>تعداد میلی ثانیه:</TotalMilliseconds>
-    <EndDelayInMilliseconds>پایان تأخیر در میلی ثانیه:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>اثر ماشین تحریر</Title>
-    <TotalMilliseconds>تعداد میلی ثانیه:</TotalMilliseconds>
-    <EndDelayInMilliseconds>پایان تأخیر در میلی ثانیه:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>صدور قالب متن سفارشی</Title>

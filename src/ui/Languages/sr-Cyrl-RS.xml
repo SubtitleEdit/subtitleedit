@@ -212,13 +212,9 @@
   <EffectKaraoke>
     <Title>Караоке ефекат</Title>
     <ChooseColor>Изаберите боју:</ChooseColor>
-    <TotalMilliseconds>Укупно милисекунди:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Завршно кашњење:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Ефекат писаће машине</Title>
-    <TotalMilliseconds>Укупно време:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Завршно кашњење:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportPngXml>
     <Title>Извоз BDN XML/PNG</Title>

@@ -499,15 +499,15 @@
         {
             public string Title { get; set; }
             public string ChooseColor { get; set; }
-            public string TotalMilliseconds { get; set; }
-            public string EndDelayInMilliseconds { get; set; }
+            public string TotalSeconds { get; set; }
+            public string EndDelayInSeconds { get; set; }
         }
 
         public class EffectTypewriter
         {
             public string Title { get; set; }
-            public string TotalMilliseconds { get; set; }
-            public string EndDelayInMilliseconds { get; set; }
+            public string TotalSeconds { get; set; }
+            public string EndDelayInSeconds { get; set; }
         }
 
         public class ExportCustomText

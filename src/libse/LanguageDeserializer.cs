@@ -1178,19 +1178,19 @@ namespace Nikse.SubtitleEdit.Core
                     language.EffectKaraoke.ChooseColor = reader.Value;
                     break;
                 case "EffectKaraoke/TotalMilliseconds":
-                    language.EffectKaraoke.TotalMilliseconds = reader.Value;
+                    language.EffectKaraoke.TotalSeconds = reader.Value;
                     break;
                 case "EffectKaraoke/EndDelayInMilliseconds":
-                    language.EffectKaraoke.EndDelayInMilliseconds = reader.Value;
+                    language.EffectKaraoke.EndDelayInSeconds = reader.Value;
                     break;
                 case "EffectTypewriter/Title":
                     language.EffectTypewriter.Title = reader.Value;
                     break;
-                case "EffectTypewriter/TotalMilliseconds":
-                    language.EffectTypewriter.TotalMilliseconds = reader.Value;
+                case "EffectTypewriter/TotalSeconds":
+                    language.EffectTypewriter.TotalSeconds = reader.Value;
                     break;
-                case "EffectTypewriter/EndDelayInMilliseconds":
-                    language.EffectTypewriter.EndDelayInMilliseconds = reader.Value;
+                case "EffectTypewriter/EndDelayInSeconds":
+                    language.EffectTypewriter.EndDelayInSeconds = reader.Value;
                     break;
                 case "ExportCustomText/Title":
                     language.ExportCustomText.Title = reader.Value;

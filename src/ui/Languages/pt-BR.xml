@@ -435,13 +435,9 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
   <EffectKaraoke>
     <Title>Efeito Karaoke</Title>
     <ChooseColor>Selecione a cor:</ChooseColor>
-    <TotalMilliseconds>Total milisseg.:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Atraso final em milisseg.:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Efeito máquina de escrever</Title>
-    <TotalMilliseconds>Total milliseg.:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Atraso final em milisseg.:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Exportar formato de texto personalizado</Title>

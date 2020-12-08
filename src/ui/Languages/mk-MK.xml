@@ -425,13 +425,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <EffectKaraoke>
     <Title>Караоке ефект</Title>
     <ChooseColor>Избери боја:</ChooseColor>
-    <TotalMilliseconds>Вкупно милисекунди:</TotalMilliseconds>
-    <EndDelayInMilliseconds>End delay in milliseconds:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Ефект на машина за пишување</Title>
-    <TotalMilliseconds>Вкупно милисекунди:</TotalMilliseconds>
-    <EndDelayInMilliseconds>End delay in milliseconds:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Export custom text format</Title>

@@ -445,13 +445,9 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
   <EffectKaraoke>
     <Title>노래방 효과</Title>
     <ChooseColor>색상 선택 :</ChooseColor>
-    <TotalMilliseconds>총 시간 (밀리초):</TotalMilliseconds>
-    <EndDelayInMilliseconds>끝지점 지연 (밀리초):</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>타자기 효과</Title>
-    <TotalMilliseconds>총 시간 (밀리초):</TotalMilliseconds>
-    <EndDelayInMilliseconds>끝지점 지연 (밀리초):</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>사용자 지정 텍스트 형식으로 내보내기</Title>

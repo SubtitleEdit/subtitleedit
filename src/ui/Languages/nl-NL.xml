@@ -438,13 +438,9 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
   <EffectKaraoke>
     <Title>Karaoke-effect</Title>
     <ChooseColor>Kleur kiezen:</ChooseColor>
-    <TotalMilliseconds>Totaal millisec.:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Eindvertraging in millisec.:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Typemachine-effect</Title>
-    <TotalMilliseconds>Totaal millisec.:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Eindvertraging in millisec.:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Eigen tekstindeling exporteren</Title>

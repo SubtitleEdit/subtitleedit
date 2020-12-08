@@ -345,13 +345,9 @@
   <EffectKaraoke>
     <Title>เอฟเฟ็กต์แบบคาราโอเกะ</Title>
     <ChooseColor>เลือกสี:</ChooseColor>
-    <TotalMilliseconds>มิลลิวินาทีรวม:</TotalMilliseconds>
-    <EndDelayInMilliseconds>หน่วงเวลาเป็นมิลลิวินาที:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>เอฟเฟ็กต์แบบพิมพ์ดีด</Title>
-    <TotalMilliseconds>มิลลิวินาทีรวม.:</TotalMilliseconds>
-    <EndDelayInMilliseconds>หน่วงเวลาเป็นมิลลิวินาที:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>เอ็กซ์พอร์ตเป็นไฟล์ข้อความแบบกำหนดเอง</Title>

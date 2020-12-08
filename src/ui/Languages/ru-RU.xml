@@ -449,13 +449,9 @@ https://github.com/SubtitleEdit/subtitleedit
   <EffectKaraoke>
     <Title>Эффект Караоке</Title>
     <ChooseColor>Выбрать цвет:</ChooseColor>
-    <TotalMilliseconds>Всего мс:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Конечная задержка в мс:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Эффект Машинописи</Title>
-    <TotalMilliseconds>Всего мс:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Конечная задержка в мс:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Экспорт текста в пользовательский формат</Title>
