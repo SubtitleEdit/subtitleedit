@@ -1360,6 +1360,7 @@
                     public string ImportOcrFromDvd { get; set; }
                     public string ImportOcrVobSubSubtitle { get; set; }
                     public string ImportBluRaySupFile { get; set; }
+                    public string ImportBluRaySupFileEdit { get; set; }
                     public string ImportSubtitleWithManualChosenEncoding { get; set; }
                     public string ImportText { get; set; }
                     public string ImportImages { get; set; }

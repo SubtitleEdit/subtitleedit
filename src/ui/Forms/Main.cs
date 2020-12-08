@@ -1398,6 +1398,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemImportSubIdx.Text = _language.Menu.File.ImportOcrVobSubSubtitle;
             toolStripButtonGetFrameRate.ToolTipText = _language.GetFrameRateFromVideoFile;
             toolStripMenuItemImportBluRaySup.Text = _language.Menu.File.ImportBluRaySupFile;
+            bluraySupFileForEditToolStripMenuItem.Text = _language.Menu.File.ImportBluRaySupFileEdit;
             toolStripMenuItemImportFromVideo.Text = _language.Menu.File.ImportSubtitleFromVideoFile;
             toolStripMenuItemImportManualAnsi.Text = _language.Menu.File.ImportSubtitleWithManualChosenEncoding;
             toolStripMenuItemImportText.Text = _language.Menu.File.ImportText;
@@ -28911,6 +28912,23 @@ namespace Nikse.SubtitleEdit.Forms
         private void splitContainerListViewAndText_SizeChanged(object sender, EventArgs e)
         {
             splitContainerListViewAndText_SplitterMoved(null, null);
+        }
+
+        private void bluraySupFileForEditToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (ContinueNewOrExit())
+            {
+                openFileDialog1.Title = _language.OpenVobSubFile;
+                openFileDialog1.FileName = string.Empty;
+                openFileDialog1.Filter = _language.BluRaySupFiles + "|*.sup";
+                if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
+                {
+                    using (var form = new BinaryEdit.BinEdit(openFileDialog1.FileName))
+                    {
+                        form.ShowDialog(this);
+                    }
+                }
+            }
         }
     }
 }

@@ -34,10 +34,12 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             { "yi", "ji" }, { "jv", "jw" }, { "id", "in" }, { "he", "iw" } // { "bs", "sh" }, { "nb", "no" }, { "nn", "no" } ???
         };
+
         private static readonly Dictionary<string, string> DvdToIso = new Dictionary<string, string>
         {
             { "ji", "yi" }, { "jw", "jv" }, { "in", "id" }, { "iw", "he" }
         };
+
         private static readonly string[] CompliantDescriptions = {   // DVD code + native name
             "aa:Qafár af", "ab:аҧсуа бызшәа", "af:Afrikaans", "am:አማርኛ", "ar:العربية", "as:অসমীয়া", "ay:Aymar aru", "az:azərbaycan dili", "ba:башҡорт теле", "be:беларуская",
             "bg:български", "bh:भोजपुरी", "bi:Bislama", "bn:বাংলা", "bo:བོད་སྐད་", "br:brezhoneg", "ca:català", "co:corsu", "cs:čeština", "cy:Cymraeg", "da:dansk", "de:Deutsch", "dz:རྫོང་ཁ",
@@ -52,6 +54,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             "tk:türkmençe", "tl:Wikang Tagalog", "tn:Setswana", "to:lea fakatonga", "tr:Türkçe", "ts:Xitsonga", "tt:татар теле", "tw:Twi", "ug:ئۇيغۇرچە", "uk:українська", "ur:اردو", "uz:o‘zbek",
             "vi:Tiếng Việt", "vo:Volapük", "wo:Wollof", "xh:IsiXhosa", "yo:Èdè Yorùbá", "za:Vahcuengh (話僮)", "zh:中文", "zu:isiZulu"
         };
+
         private static LanguagesByCode _compliantLanguagesByCode;
 
         public string Code { get; }
