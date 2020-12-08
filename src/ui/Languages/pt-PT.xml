@@ -2056,6 +2056,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <GoToPrevSubtitleAndPlay>Ir para a linha anterior e reporduzir</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>Ir para a próxima linha e reproduzir</GoToNextSubtitleAndPlay>
     <ToggleFocus>Alternar o enfoque entre a caixa de texto da legenda e o separador (Lista) na janela principal</ToggleFocus>
+    <FocusWaveform>Destacar a forma de onda/espectrograma</FocusWaveform>
     <ToggleDialogDashes>Alternar travessões</ToggleDialogDashes>
     <ToggleMusicSymbols>Alternar símbolos de música</ToggleMusicSymbols>
     <Alignment>Alinhamento (linhas seleccionadas)</Alignment>
@@ -2160,7 +2161,6 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ListViewColumnPaste>Coluna, colar</ListViewColumnPaste>
     <ListViewColumnTextUp>Coluna, texto para cima</ListViewColumnTextUp>
     <ListViewColumnTextDown>Coluna, texto para baixo</ListViewColumnTextDown>
-    <ListViewFocusWaveform>Destacar a forma de onda/espectrograma</ListViewFocusWaveform>
     <ListViewGoToNextError>Ir para o erro seguinte</ListViewGoToNextError>
     <ShowBeamer>Iniciar a legenda em ecrã inteiro</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Mover a última palavra até à próxima linha da legenda</MainTextBoxMoveLastWordDown>

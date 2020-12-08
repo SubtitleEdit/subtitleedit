@@ -2161,6 +2161,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GoToPrevSubtitleAndPlay>Преминаване на предишния ред и възпроизвеждане</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>Преминаване на следващия ред и възпроизвеждане</GoToNextSubtitleAndPlay>
     <ToggleFocus>Превключване фокуса между изглед на списъка и реда за писане</ToggleFocus>
+    <FocusWaveform>Фокус на wave формата/спектограмата</FocusWaveform>
     <ToggleDialogDashes>Размяна на диалоговите тирета</ToggleDialogDashes>
     <ToggleMusicSymbols>Превключване на музикални символи</ToggleMusicSymbols>
     <Alignment>Подравняване (редовете в момента)</Alignment>
@@ -2266,7 +2267,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ListViewColumnPaste>Колона, поставяне</ListViewColumnPaste>
     <ListViewColumnTextUp>Колона, текста нагоре</ListViewColumnTextUp>
     <ListViewColumnTextDown>Колона, текста надолу</ListViewColumnTextDown>
-    <ListViewFocusWaveform>Фокус на wave формата/спектограмата</ListViewFocusWaveform>
     <ListViewGoToNextError>Преминаване към следващата грешка</ListViewGoToNextError>
     <ShowBeamer>Пускане на субтитрите при пълноекранен режим на проектора</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Преместване последната дума в следващия субтитърен ред</MainTextBoxMoveLastWordDown>

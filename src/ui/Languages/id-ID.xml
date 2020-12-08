@@ -1910,6 +1910,7 @@ bisa mengedit dlm file subjudul yg sama (kolaborasi)</Information>
     <GoToPreviousSubtitleAndFocusVideo>Pergi ke baris sebelumnya dan atur posisi video</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Pergi ke baris berikutnya dan atur posisi video</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Alihkan fokus antara tampilan daftar dan kotak teks subjudul</ToggleFocus>
+    <FocusWaveform>Fokus waveform/spektogram</FocusWaveform>
     <ToggleDialogDashes>Alihkan tanda hubung dialog</ToggleDialogDashes>
     <ToggleMusicSymbols>Alihkan simbol musik</ToggleMusicSymbols>
     <Alignment>Perataant (baris terpilih)</Alignment>
@@ -1978,7 +1979,6 @@ bisa mengedit dlm file subjudul yg sama (kolaborasi)</Information>
     <ListViewColumnPaste>Kolom, tempel</ListViewColumnPaste>
     <ListViewColumnTextUp>Kolom, teks ke atas</ListViewColumnTextUp>
     <ListViewColumnTextDown>Kolom, teks ke bawah</ListViewColumnTextDown>
-    <ListViewFocusWaveform>Fokus waveform/spektogram</ListViewFocusWaveform>
     <ListViewGoToNextError>Pergi ke eror berikutnya</ListViewGoToNextError>
     <ShowBeamer>Mulai beamer layar penuh subjudul</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Pindah kata terakhir ke subjudul berikutnya</MainTextBoxMoveLastWordDown>

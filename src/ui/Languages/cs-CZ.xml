@@ -1944,6 +1944,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <GoToPreviousSubtitleAndFocusVideo>Přejít na předchozí řádek a nastavit pozici videa</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Přejít na další řádek a nastavit pozici videa</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Přepnout mezi zobrazením seznamu a textovým oknem titulků</ToggleFocus>
+    <FocusWaveform>Zaměření křivky/spektrogramu</FocusWaveform>
     <ToggleDialogDashes>Přepnout dialogové pomlčky</ToggleDialogDashes>
     <ToggleMusicSymbols>Přepnout hudební symboly</ToggleMusicSymbols>
     <Alignment>Zarovnání (vybrané řádky)</Alignment>
@@ -2027,7 +2028,6 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <ListViewColumnPaste>Sloupec, vložit</ListViewColumnPaste>
     <ListViewColumnTextUp>Sloupec, text nahoru</ListViewColumnTextUp>
     <ListViewColumnTextDown>Sloupec, text dolů</ListViewColumnTextDown>
-    <ListViewFocusWaveform>Zaměření křivky/spektrogramu</ListViewFocusWaveform>
     <ListViewGoToNextError>Přejít na další chybu</ListViewGoToNextError>
     <ShowBeamer>Spustit beamer titulků na celou obrazovku</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Přesunout poslední slovo do dalšího titulku</MainTextBoxMoveLastWordDown>

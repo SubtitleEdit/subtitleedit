@@ -1667,6 +1667,7 @@ popravlja en podnapis (sodelovanje)</Information>
     <GoToCurrentSubtitleStart>Pojdi na trenutno začetno vrstico</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Pojdi na trenutno končno vrstico</GoToCurrentSubtitleEnd>
     <ToggleFocus>Preklopi fokus med pogledom vsebine in okvirjem podnapisa</ToggleFocus>
+    <FocusWaveform>Fokusiraj krivuljo/spektrograg</FocusWaveform>
     <ToggleDialogDashes>Prestavi pomišljaje dialoga</ToggleDialogDashes>
     <Alignment>Poravnava (izbrane vrstice)</Alignment>
     <CopyTextOnly>Kopiraj besedilo edino v odložišče (izbrane vrstice)</CopyTextOnly>
@@ -1715,7 +1716,6 @@ popravlja en podnapis (sodelovanje)</Information>
     <ListViewColumnDelete>Stolpec, pobriši besedilo</ListViewColumnDelete>
     <ListViewColumnInsert>Stolpec, vstavi besedilo</ListViewColumnInsert>
     <ListViewColumnPaste>Stolpec, prilepi</ListViewColumnPaste>
-    <ListViewFocusWaveform>Fokusiraj krivuljo/spektrograg</ListViewFocusWaveform>
     <ShowBeamer>Zaženi prenosnik za podnapise v celem ekranu</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Pomakni besedo nižje v naslednjo vrstico</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Pomakni besedo višje v naslednjo vrstico</MainTextBoxMoveFirstWordFromNextUp>
