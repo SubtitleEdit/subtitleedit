@@ -2166,6 +2166,7 @@ can edit in same subtitle file (collaboration)</Information>
     <GoToPrevSubtitleAndPlay>Go to previous line and play</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>Go to next line and play</GoToNextSubtitleAndPlay>
     <ToggleFocus>Toggle focus between list view and subtitle text box</ToggleFocus>
+    <FocusWaveform>Focus waveform/spectrogram</FocusWaveform>
     <ToggleDialogDashes>Toggle dialog dashes</ToggleDialogDashes>
     <ToggleMusicSymbols>Toggle music symbols</ToggleMusicSymbols>
     <Alignment>Alignment (selected lines)</Alignment>
@@ -2273,7 +2274,6 @@ can edit in same subtitle file (collaboration)</Information>
     <ListViewColumnPaste>Column, paste</ListViewColumnPaste>
     <ListViewColumnTextUp>Column, text up</ListViewColumnTextUp>
     <ListViewColumnTextDown>Column, text down</ListViewColumnTextDown>
-    <ListViewFocusWaveform>Focus waveform/spectrogram</ListViewFocusWaveform>
     <ListViewGoToNextError>Go to next error</ListViewGoToNextError>
     <ShowBeamer>Start subtitle fullscreen beamer</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Move last word to next subtitle</MainTextBoxMoveLastWordDown>

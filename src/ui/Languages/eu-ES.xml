@@ -2020,6 +2020,7 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <GoToPreviousSubtitleAndFocusVideo>Joan aurreko lerrora eta ezarri bideo kokapena</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Joan hurrengo lerrora eta ezarri bideo kokapena</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Aldatu fokoa zerrenda ikusi eta azpidatziaren idaz kutxa artean</ToggleFocus>
+    <FocusWaveform>Fokutu uhinera/argilitzaera</FocusWaveform>
     <ToggleDialogDashes>Aldatu elkarrizketa marratxoak</ToggleDialogDashes>
     <ToggleMusicSymbols>Aldatu musika ikurrak</ToggleMusicSymbols>
     <Alignment>Lerrokapena (hautaturiko lerroak)</Alignment>
@@ -2118,7 +2119,6 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <ListViewColumnPaste>Zutabea, itsatsi</ListViewColumnPaste>
     <ListViewColumnTextUp>Zutabea, idazkia gora</ListViewColumnTextUp>
     <ListViewColumnTextDown>Zutabea, idazkia behera</ListViewColumnTextDown>
-    <ListViewFocusWaveform>Fokutu uhinera/argilitzaera</ListViewFocusWaveform>
     <ListViewGoToNextError>Joan hurrengo akatsera</ListViewGoToNextError>
     <ShowBeamer>Hasi azpidatzia ikusleiho-osoko beamer</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Mugitu azken hitza behera hurrengo azpidatzi lerrora</MainTextBoxMoveLastWordDown>

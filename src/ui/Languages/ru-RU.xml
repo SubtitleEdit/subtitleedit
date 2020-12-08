@@ -2072,6 +2072,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <GoToPrevSubtitleAndPlay>Перейти к предыдущей строке и воспроизвести видео</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>Перейти к следующей строке и воспроизвести видео</GoToNextSubtitleAndPlay>
     <ToggleFocus>Переключить фокус между списком и полем ввода субтитра</ToggleFocus>
+    <FocusWaveform>Фокус на волновой форме/спектрограмме</FocusWaveform>
     <ToggleDialogDashes>Вкл./Откл. тире диалогов</ToggleDialogDashes>
     <ToggleMusicSymbols>Вкл./Откл. музыкальных символов</ToggleMusicSymbols>
     <Alignment>Выравнить (выделенные строки)</Alignment>
@@ -2177,7 +2178,6 @@ https://github.com/SubtitleEdit/subtitleedit
     <ListViewColumnPaste>Колонка, вставить</ListViewColumnPaste>
     <ListViewColumnTextUp>Колонка, текст выше</ListViewColumnTextUp>
     <ListViewColumnTextDown>Колонка, текст ниже</ListViewColumnTextDown>
-    <ListViewFocusWaveform>Фокус на волновой форме/спектрограмме</ListViewFocusWaveform>
     <ListViewGoToNextError>Перейти к следующей ошибке</ListViewGoToNextError>
     <ShowBeamer>Запустить субтитры при полноэкранном режиме проектора</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Переместить последнее слово вниз на следующую строку субтитров</MainTextBoxMoveLastWordDown>

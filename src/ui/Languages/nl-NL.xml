@@ -2027,6 +2027,7 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <GoToPreviousSubtitleAndFocusVideo>Naar vorige tekst en videopositie instellen</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Naar volgende tekst en videopositie instellen</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Tussen lĳstweergave en tekstvak wisselen</ToggleFocus>
+    <FocusWaveform>Golfvorm/spectrogram activeren</FocusWaveform>
     <ToggleDialogDashes>Dialoogstreepjes toevoegen/verwĳderen</ToggleDialogDashes>
     <ToggleMusicSymbols>Muzieksymbolen toevoegen/verwĳderen</ToggleMusicSymbols>
     <Alignment>Uitlĳning (geselecteerde ondertitels)</Alignment>
@@ -2125,7 +2126,6 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <ListViewColumnPaste>Kolom, samenvoegen</ListViewColumnPaste>
     <ListViewColumnTextUp>Kolom, tekst omhoog</ListViewColumnTextUp>
     <ListViewColumnTextDown>Kolom, tekst omlaag</ListViewColumnTextDown>
-    <ListViewFocusWaveform>Golfvorm/spectrogram activeren</ListViewFocusWaveform>
     <ListViewGoToNextError>Naar volgende fout</ListViewGoToNextError>
     <ShowBeamer>Ondertitelingbeamer voor volledig scherm starten</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Laatste woord naar volgende ondertitel verplaatsen</MainTextBoxMoveLastWordDown>

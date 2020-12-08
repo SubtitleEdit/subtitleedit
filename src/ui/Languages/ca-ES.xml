@@ -1936,6 +1936,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GoToPreviousSubtitleAndFocusVideo>Vés a la línia anterior i estableix possició del vídeo</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Vés a la línia següent i estableix possició del vídeo</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Activa/desactiva focus entre vista llista i quadre de text subtítol</ToggleFocus>
+    <FocusWaveform>Focus a espectrograma/forma ona</FocusWaveform>
     <ToggleDialogDashes>Activa/desactiva guions diàleg</ToggleDialogDashes>
     <ToggleMusicSymbols>Activa/desactiva símbols musicals</ToggleMusicSymbols>
     <Alignment>Alineació (selecció línies)</Alignment>
@@ -2020,7 +2021,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ListViewColumnPaste>Columna, enganxa</ListViewColumnPaste>
     <ListViewColumnTextUp>Columna, text amunt</ListViewColumnTextUp>
     <ListViewColumnTextDown>Columna, text avall</ListViewColumnTextDown>
-    <ListViewFocusWaveform>Focus a espectrograma/forma ona</ListViewFocusWaveform>
     <ListViewGoToNextError>Vés al següent error</ListViewGoToNextError>
     <ShowBeamer>Inicia subtítol projecció pantalla sencera</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Mou últim mot avall a següent línia subtítol</MainTextBoxMoveLastWordDown>
