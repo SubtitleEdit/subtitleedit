@@ -3021,7 +3021,7 @@ namespace Nikse.SubtitleEdit.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.audioVisualizer.BackColor = System.Drawing.Color.Black;
             this.audioVisualizer.BackgroundColor = System.Drawing.Color.Black;
-            this.audioVisualizer.Chapters = ((System.Collections.Generic.List<Nikse.SubtitleEdit.Core.ContainerFormats.Matroska.MatroskaChapter>)(resources.GetObject("audioVisualizer.Chapters")));
+            this.audioVisualizer.Chapters = null;
             this.audioVisualizer.ChaptersColor = System.Drawing.Color.Empty;
             this.audioVisualizer.ClosenessForBorderSelection = 15;
             this.audioVisualizer.Color = System.Drawing.Color.GreenYellow;
@@ -5076,7 +5076,7 @@ namespace Nikse.SubtitleEdit.Forms
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.mediaPlayer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(18)))), ((int)(((byte)(18)))));
-            this.mediaPlayer.Chapters = ((System.Collections.Generic.List<Nikse.SubtitleEdit.Core.ContainerFormats.Matroska.MatroskaChapter>)(resources.GetObject("mediaPlayer.Chapters")));
+            this.mediaPlayer.Chapters = null;
             this.mediaPlayer.CurrentPosition = 0D;
             this.mediaPlayer.FontSizeFactor = 1F;
             this.mediaPlayer.LastParagraph = null;
