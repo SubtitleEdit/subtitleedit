@@ -1002,14 +1002,15 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
         <Compare>&amp;Compare...</Compare>
         <Statistics>Statisti&amp;cs...</Statistics>
         <Plugins>Plugins...</Plugins>
-        <ImportSubtitleFromVideoFile>Import subtitle from video file...</ImportSubtitleFromVideoFile>
-        <ImportOcrFromDvd>Import/OCR subtitle from VOB/IFO (DVD)...</ImportOcrFromDvd>
-        <ImportOcrVobSubSubtitle>Import/OCR VobSub (sub/idx) subtitle...</ImportOcrVobSubSubtitle>
-        <ImportBluRaySupFile>Import/OCR Blu-ray (.sup) subtitle file...</ImportBluRaySupFile>
-        <ImportSubtitleWithManualChosenEncoding>Import subtitle with manually chosen encoding...</ImportSubtitleWithManualChosenEncoding>
-        <ImportText>Import plain text...</ImportText>
-        <ImportImages>Import images...</ImportImages>
-        <ImportTimecodes>Import time codes...</ImportTimecodes>
+        <ImportSubtitleFromVideoFile>Subtitle from video file...</ImportSubtitleFromVideoFile>
+        <ImportOcrFromDvd>Subtitle from VOB/IFO (DVD)...</ImportOcrFromDvd>
+        <ImportOcrVobSubSubtitle>VobSub (sub/idx) subtitle for OCR...</ImportOcrVobSubSubtitle>
+        <ImportBluRaySupFile>Blu-ray (.sup) subtitle file for OCR...</ImportBluRaySupFile>
+        <ImportBluRaySupFileEdit>Blu-ray (.sup) subtitle file for edit...</ImportBluRaySupFileEdit>
+        <ImportSubtitleWithManualChosenEncoding>Subtitle with manually chosen encoding...</ImportSubtitleWithManualChosenEncoding>
+        <ImportText>Plain text...</ImportText>
+        <ImportImages>Images...</ImportImages>
+        <ImportTimecodes>Time codes...</ImportTimecodes>
         <Export>Export</Export>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
         <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
