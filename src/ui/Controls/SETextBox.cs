@@ -829,11 +829,12 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void SetForeColorAndChangeBackColorIfClose(int colorStart, int colorEnd, Color c)
         {
+            var backColor = _richTextBoxTemp.BackColor;
             _richTextBoxTemp.SelectionStart = colorStart;
             _richTextBoxTemp.SelectionLength = colorEnd - colorStart;
             _richTextBoxTemp.SelectionColor = c;
 
-            var diff = Math.Abs(c.R - BackColor.R) + Math.Abs(c.G - BackColor.G) + Math.Abs(c.B - BackColor.B);
+            var diff = Math.Abs(c.R - backColor.R) + Math.Abs(c.G - backColor.G) + Math.Abs(c.B - backColor.B);
             if (diff < 60)
             {
                 _richTextBoxTemp.SelectionBackColor = Color.FromArgb(byte.MaxValue - c.R, byte.MaxValue - c.G, byte.MaxValue - c.B, byte.MaxValue - c.R);
