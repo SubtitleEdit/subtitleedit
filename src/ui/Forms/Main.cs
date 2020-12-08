@@ -355,6 +355,12 @@ namespace Nikse.SubtitleEdit.Forms
                 UpdateNetflixGlyphCheckToolsVisibility();
                 Utilities.SetSecurityProtocol(); // download from Github requires TLS 1.2
 
+                if (Configuration.Settings.General.RightToLeftMode)
+                {
+                    SubtitleListview1.RightToLeft = RightToLeft.Yes;
+                    SubtitleListview1.RightToLeftLayout = true;
+                }
+
                 tabControlSubtitle.SelectTab(TabControlSourceView); // AC
                 ShowSourceLineNumber(); // AC
                 tabControlSubtitle.SelectTab(TabControlListView); // AC
@@ -4577,6 +4583,7 @@ namespace Nikse.SubtitleEdit.Forms
             var oldShowWordsMinColumn = Configuration.Settings.Tools.ListViewShowColumnWordsPerMin;
             var oldSubtitleTextBoxSyntaxColor = Configuration.Settings.General.SubtitleTextBoxSyntaxColor;
             var oldSubtitleFontSize = Configuration.Settings.General.SubtitleTextBoxFontSize;
+            var oldSubtitleAlignment = Configuration.Settings.General.CenterSubtitleInTextBox;
             var oldSubtitleTextBoxHtmlColor = Configuration.Settings.General.SubtitleTextBoxHtmlColor.ToArgb().ToString();
             var oldSubtitleTextBoxAssaColor = Configuration.Settings.General.SubtitleTextBoxAssColor.ToArgb().ToString();
             using (var settings = new Settings())
@@ -4763,6 +4770,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (oldSubtitleTextBoxSyntaxColor != Configuration.Settings.General.SubtitleTextBoxSyntaxColor ||
                 oldSubtitleFontSize != Configuration.Settings.General.SubtitleTextBoxFontSize ||
+                oldSubtitleAlignment != Configuration.Settings.General.CenterSubtitleInTextBox ||
                 oldSubtitleTextBoxHtmlColor != Configuration.Settings.General.SubtitleTextBoxHtmlColor.ToArgb().ToString() ||
                 oldSubtitleTextBoxAssaColor != Configuration.Settings.General.SubtitleTextBoxAssColor.ToArgb().ToString())
             {
@@ -19551,6 +19559,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 textBoxListViewText.RightToLeft = RightToLeft.No;
                 textBoxSource.RightToLeft = RightToLeft.No;
+
+                if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
+                {
+                    textBoxListViewTextAlternate.RightToLeft = RightToLeft.No;
+                }
             }
         }
 
@@ -25774,8 +25787,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (!toolStripMenuItemRightToLeftMode.Checked)
             {
                 RightToLeft = RightToLeft.No;
-                textBoxListViewText.RightToLeft = RightToLeft.No;
-                textBoxListViewTextAlternate.RightToLeft = RightToLeft.No;
                 SubtitleListview1.RightToLeft = RightToLeft.No;
                 SubtitleListview1.RightToLeftLayout = false;
                 textBoxSource.RightToLeft = RightToLeft.No;
@@ -25786,8 +25797,6 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 //RightToLeft = RightToLeft.Yes; - is this better? TimeUpDown custom control needs to support RTL before enabling this
-                textBoxListViewText.RightToLeft = RightToLeft.Yes;
-                textBoxListViewTextAlternate.RightToLeft = RightToLeft.Yes;
                 SubtitleListview1.RightToLeft = RightToLeft.Yes;
                 SubtitleListview1.RightToLeftLayout = true;
                 textBoxSource.RightToLeft = RightToLeft.Yes;
