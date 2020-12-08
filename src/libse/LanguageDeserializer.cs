@@ -3472,6 +3472,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/Menu/File/ImportBluRaySupFile":
                     language.Main.Menu.File.ImportBluRaySupFile = reader.Value;
                     break;
+                case "Main/Menu/File/ImportBluRaySupFileEdit":
+                    language.Main.Menu.File.ImportBluRaySupFileEdit = reader.Value;
+                    break;
                 case "Main/Menu/File/ImportSubtitleWithManualChosenEncoding":
                     language.Main.Menu.File.ImportSubtitleWithManualChosenEncoding = reader.Value;
                     break;
