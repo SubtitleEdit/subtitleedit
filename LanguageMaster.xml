@@ -2740,6 +2740,7 @@ Keep changes?</KeepChangesMessage>
     <ErrorUnicodeEncodingOnly>Watermark only works with unicode file encoding.</ErrorUnicodeEncodingOnly>
   </Watermark>
   <Waveform>
+    <AddWaveformAndSpectrogram>Add waveform/spectrogram</AddWaveformAndSpectrogram>
     <ClickToAddWaveform>Click to add waveform</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Click to add waveform/spectrogram</ClickToAddWaveformAndSpectrogram>
     <Seconds>seconds</Seconds>
