@@ -148,11 +148,21 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
         private void insertToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            InsertParagraph(false);
+        }
+
+        private void insertAfterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            InsertParagraph(true);
+        }
+
+        private void InsertParagraph(bool after)
+        {
             var p = new Paragraph();
 
             if (subtitleListView1.SelectedItems.Count < 1)
             {
-                p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.DefaultAdjustMilliseconds;
+                p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.NewEmptyDefaultMs;
                 _subtitle.Paragraphs.Add(p);
                 _extra.Add(new Extra { Bitmap = new Bitmap(2, 2), Forced = checkBoxIsForced.Checked, X = (int)numericUpDownX.Value, Y = (int)numericUpDownY.Value });
                 subtitleListView1.Fill(_subtitle);
@@ -161,6 +171,11 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             }
 
             var idx = subtitleListView1.SelectedItems[0].Index;
+            if (after)
+            {
+                idx++;
+            }
+
             if (_bluRaySubtitles != null)
             {
                 _subtitle.Paragraphs.Insert(idx, p);
@@ -171,7 +186,8 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 {
                     p.StartTime.TotalMilliseconds = pre.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                 }
-                p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.DefaultAdjustMilliseconds;
+
+                p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.NewEmptyDefaultMs;
                 _bluRaySubtitles.Insert(idx, new BluRaySupParser.PcsData());
                 subtitleListView1.Fill(_subtitle);
                 subtitleListView1.SelectIndexAndEnsureVisible(idx);
@@ -196,8 +212,9 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             {
                 var sub = _bluRaySubtitles[idx];
                 var extra = _extra[idx];
-                timeUpDownStartTime.TimeCode = sub.StartTimeCode;
-                timeUpDownEndTime.TimeCode = sub.EndTimeCode;
+                var p = _subtitle.Paragraphs[idx];
+                timeUpDownStartTime.TimeCode = new TimeCode(p.StartTime.TotalMilliseconds);
+                timeUpDownEndTime.TimeCode = new TimeCode(p.EndTime.TotalMilliseconds);
                 checkBoxIsForced.Checked = extra.Forced;
                 numericUpDownX.Value = extra.X;
                 numericUpDownY.Value = extra.Y;
@@ -457,6 +474,8 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 }
 
                 p.StartTime.TotalMilliseconds = timeUpDownStartTime.TimeCode.TotalMilliseconds;
+                subtitleListView1.SetStartTimeAndDuration(idx, p, _subtitle.GetParagraphOrDefault(idx + 1), _subtitle.GetParagraphOrDefault(idx - 1));
+                subtitleListView1.SyntaxColorLine(_subtitle.Paragraphs, idx, p);
             };
             timeUpDownEndTime.MaskedTextBox.TextChanged += (o, args) =>
             {
@@ -473,12 +492,14 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 }
 
                 p.EndTime.TotalMilliseconds = timeUpDownEndTime.TimeCode.TotalMilliseconds;
+                subtitleListView1.SetStartTimeAndDuration(idx, p, _subtitle.GetParagraphOrDefault(idx + 1), _subtitle.GetParagraphOrDefault(idx - 1));
+                subtitleListView1.SyntaxColorLine(_subtitle.Paragraphs, idx, p);
             };
         }
 
         private void adjustAllTimesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (subtitleListView1.SelectedItems.Count > 1)
+            if (subtitleListView1.SelectedItems.Count < 1)
             {
                 return;
             }
@@ -623,7 +644,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
         private void changeFrameRateToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (subtitleListView1.SelectedItems.Count > 1)
+            if (subtitleListView1.SelectedItems.Count < 1)
             {
                 return;
             }
@@ -646,7 +667,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
         private void changeSpeedToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (subtitleListView1.SelectedItems.Count > 1)
+            if (subtitleListView1.SelectedItems.Count < 1)
             {
                 return;
             }
@@ -798,6 +819,84 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                     bmp.Dispose();
                 }
             }
+        }
+
+        private void centerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (subtitleListView1.SelectedItems.Count < 1)
+            {
+                return;
+            }
+
+            var idx = subtitleListView1.SelectedItems[0].Index;
+            var sub = _bluRaySubtitles[idx];
+            var extra = _extra[idx];
+            var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : sub.GetBitmap();
+            numericUpDownX.Value = (int)Math.Round(numericUpDownScreenWidth.Value / 2.0m - bmp.Width / 2.0m);
+        }
+
+        private void insertSubtitleAfterThisLineToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            if (subtitleListView1.SelectedItems.Count < 1)
+            {
+                return;
+            }
+
+            openFileDialog1.Title = Configuration.Settings.Language.Main.OpenBluRaySupFile;
+            openFileDialog1.FileName = string.Empty;
+            openFileDialog1.Filter = Configuration.Settings.Language.Main.BluRaySupFiles + "|*.sup";
+            if (openFileDialog1.ShowDialog(this) != DialogResult.OK)
+            {
+                return;
+            }
+
+            if (!FileUtil.IsBluRaySup(openFileDialog1.FileName))
+            {
+                return;
+            }
+
+            var idx = subtitleListView1.SelectedItems[0].Index;
+            var log = new StringBuilder();
+            var newBluRaySubtitles = BluRaySupParser.ParseBluRaySup(openFileDialog1.FileName, log);
+            foreach (var s in newBluRaySubtitles)
+            {
+                _subtitle.Paragraphs.Add(new Paragraph
+                {
+                    StartTime = new TimeCode(s.StartTime / 90.0),
+                    EndTime = new TimeCode(s.EndTime / 90.0)
+                });
+
+                var pos = s.GetPosition();
+                _extra.Add(new Extra { Forced = s.IsForced, X = pos.Left, Y = pos.Top });
+                _bluRaySubtitles.Add(s);
+            }
+
+            _subtitle.Renumber();
+            subtitleListView1.Fill(_subtitle);
+
+            if (_subtitle != null)
+            {
+                subtitleListView1.SelectIndexAndEnsureVisible(_subtitle.GetParagraphOrDefault(idx));
+            }
+        }
+
+        private void adjustAllTimesForSelectedLinesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (subtitleListView1.SelectedItems.Count < 1)
+            {
+                return;
+            }
+
+            using (var form = new ShowEarlierLater())
+            {
+                form.Initialize(ShowEarlierOrLater, true);
+                form.ShowDialog(this);
+            }
+        }
+
+        private void contextMenuStripListView_Opening(object sender, CancelEventArgs e)
+        {
+            adjustAllTimesForSelectedLinesToolStripMenuItem.Visible = subtitleListView1.SelectedItems.Count > 1;
         }
     }
 }

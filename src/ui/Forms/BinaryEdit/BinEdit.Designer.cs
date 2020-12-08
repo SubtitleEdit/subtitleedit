@@ -30,8 +30,8 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode3 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode4 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
             this.groupBoxCurrent = new System.Windows.Forms.GroupBox();
             this.labelCurrentSize = new System.Windows.Forms.Label();
             this.buttonExportImage = new System.Windows.Forms.Button();
@@ -55,7 +55,9 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.contextMenuStripListView = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.insertToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.insertAfterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.insertSubtitleAfterThisLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -73,10 +75,13 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.panel1 = new System.Windows.Forms.Panel();
             this.pictureBoxMovableImage = new System.Windows.Forms.PictureBox();
+            this.contextMenuStripMovableImage = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.centerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBoxScreen = new System.Windows.Forms.PictureBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
+            this.adjustAllTimesForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxCurrent.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).BeginInit();
@@ -87,6 +92,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMovableImage)).BeginInit();
+            this.contextMenuStripMovableImage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxScreen)).BeginInit();
             this.SuspendLayout();
             // 
@@ -117,7 +123,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.labelCurrentSize.Location = new System.Drawing.Point(257, 51);
             this.labelCurrentSize.Name = "labelCurrentSize";
             this.labelCurrentSize.Size = new System.Drawing.Size(99, 17);
-            this.labelCurrentSize.TabIndex = 15;
+            this.labelCurrentSize.TabIndex = 8;
             this.labelCurrentSize.Text = "Size:";
             this.labelCurrentSize.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -126,7 +132,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.buttonExportImage.Location = new System.Drawing.Point(388, 12);
             this.buttonExportImage.Name = "buttonExportImage";
             this.buttonExportImage.Size = new System.Drawing.Size(99, 23);
-            this.buttonExportImage.TabIndex = 14;
+            this.buttonExportImage.TabIndex = 9;
             this.buttonExportImage.Text = "Export image...";
             this.buttonExportImage.UseVisualStyleBackColor = true;
             this.buttonExportImage.Click += new System.EventHandler(this.buttonExportImage_Click);
@@ -136,7 +142,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.buttonImportImage.Location = new System.Drawing.Point(388, 41);
             this.buttonImportImage.Name = "buttonImportImage";
             this.buttonImportImage.Size = new System.Drawing.Size(99, 23);
-            this.buttonImportImage.TabIndex = 12;
+            this.buttonImportImage.TabIndex = 10;
             this.buttonImportImage.Text = "Import image...";
             this.buttonImportImage.UseVisualStyleBackColor = true;
             this.buttonImportImage.Click += new System.EventHandler(this.buttonImportImage_Click);
@@ -147,7 +153,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.label2.Location = new System.Drawing.Point(298, 17);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(12, 13);
-            this.label2.TabIndex = 11;
+            this.label2.TabIndex = 6;
             this.label2.Text = "x";
             // 
             // labelEndTime
@@ -156,7 +162,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.labelEndTime.Location = new System.Drawing.Point(16, 50);
             this.labelEndTime.Name = "labelEndTime";
             this.labelEndTime.Size = new System.Drawing.Size(48, 13);
-            this.labelEndTime.TabIndex = 9;
+            this.labelEndTime.TabIndex = 2;
             this.labelEndTime.Text = "End time";
             // 
             // labelStart
@@ -165,7 +171,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.labelStart.Location = new System.Drawing.Point(16, 22);
             this.labelStart.Name = "labelStart";
             this.labelStart.Size = new System.Drawing.Size(51, 13);
-            this.labelStart.TabIndex = 8;
+            this.labelStart.TabIndex = 0;
             this.labelStart.Text = "Start time";
             // 
             // numericUpDownY
@@ -201,7 +207,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             -2147483648});
             this.numericUpDownX.Name = "numericUpDownX";
             this.numericUpDownX.Size = new System.Drawing.Size(45, 20);
-            this.numericUpDownX.TabIndex = 6;
+            this.numericUpDownX.TabIndex = 5;
             this.numericUpDownX.ValueChanged += new System.EventHandler(this.numericUpDownX_ValueChanged);
             // 
             // checkBoxIsForced
@@ -225,14 +231,14 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.timeUpDownEndTime.Name = "timeUpDownEndTime";
             this.timeUpDownEndTime.Size = new System.Drawing.Size(111, 27);
             this.timeUpDownEndTime.TabIndex = 3;
-            timeCode1.Hours = 0;
-            timeCode1.Milliseconds = 0;
-            timeCode1.Minutes = 0;
-            timeCode1.Seconds = 0;
-            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode1.TotalMilliseconds = 0D;
-            timeCode1.TotalSeconds = 0D;
-            this.timeUpDownEndTime.TimeCode = timeCode1;
+            timeCode3.Hours = 0;
+            timeCode3.Milliseconds = 0;
+            timeCode3.Minutes = 0;
+            timeCode3.Seconds = 0;
+            timeCode3.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode3.TotalMilliseconds = 0D;
+            timeCode3.TotalSeconds = 0D;
+            this.timeUpDownEndTime.TimeCode = timeCode3;
             this.timeUpDownEndTime.UseVideoOffset = false;
             // 
             // timeUpDownStartTime
@@ -244,15 +250,15 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
             this.timeUpDownStartTime.Size = new System.Drawing.Size(111, 27);
-            this.timeUpDownStartTime.TabIndex = 2;
-            timeCode2.Hours = 0;
-            timeCode2.Milliseconds = 0;
-            timeCode2.Minutes = 0;
-            timeCode2.Seconds = 0;
-            timeCode2.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode2.TotalMilliseconds = 0D;
-            timeCode2.TotalSeconds = 0D;
-            this.timeUpDownStartTime.TimeCode = timeCode2;
+            this.timeUpDownStartTime.TabIndex = 1;
+            timeCode4.Hours = 0;
+            timeCode4.Milliseconds = 0;
+            timeCode4.Minutes = 0;
+            timeCode4.Seconds = 0;
+            timeCode4.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode4.TotalMilliseconds = 0D;
+            timeCode4.TotalSeconds = 0D;
+            this.timeUpDownStartTime.TimeCode = timeCode4;
             this.timeUpDownStartTime.UseVideoOffset = false;
             // 
             // label1
@@ -261,7 +267,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.label1.Location = new System.Drawing.Point(192, 17);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(44, 13);
-            this.label1.TabIndex = 10;
+            this.label1.TabIndex = 4;
             this.label1.Text = "Position";
             // 
             // groupBox2
@@ -286,7 +292,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.labelFrameRate.Location = new System.Drawing.Point(259, 23);
             this.labelFrameRate.Name = "labelFrameRate";
             this.labelFrameRate.Size = new System.Drawing.Size(57, 13);
-            this.labelFrameRate.TabIndex = 42;
+            this.labelFrameRate.TabIndex = 4;
             this.labelFrameRate.Text = "Frame rate";
             // 
             // comboBoxFrameRate
@@ -296,7 +302,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.comboBoxFrameRate.Location = new System.Drawing.Point(322, 20);
             this.comboBoxFrameRate.Name = "comboBoxFrameRate";
             this.comboBoxFrameRate.Size = new System.Drawing.Size(102, 21);
-            this.comboBoxFrameRate.TabIndex = 41;
+            this.comboBoxFrameRate.TabIndex = 5;
             // 
             // label3
             // 
@@ -304,7 +310,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.label3.Location = new System.Drawing.Point(120, 23);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(12, 13);
-            this.label3.TabIndex = 15;
+            this.label3.TabIndex = 2;
             this.label3.Text = "x";
             // 
             // label4
@@ -313,12 +319,12 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.label4.Location = new System.Drawing.Point(10, 23);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(55, 13);
-            this.label4.TabIndex = 14;
+            this.label4.TabIndex = 0;
             this.label4.Text = "Video size";
             // 
             // numericUpDownScreenHeight
             // 
-            this.numericUpDownScreenHeight.Location = new System.Drawing.Point(138, 21);
+            this.numericUpDownScreenHeight.Location = new System.Drawing.Point(137, 21);
             this.numericUpDownScreenHeight.Maximum = new decimal(new int[] {
             999999999,
             0,
@@ -331,7 +337,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             -2147483648});
             this.numericUpDownScreenHeight.Name = "numericUpDownScreenHeight";
             this.numericUpDownScreenHeight.Size = new System.Drawing.Size(45, 20);
-            this.numericUpDownScreenHeight.TabIndex = 13;
+            this.numericUpDownScreenHeight.TabIndex = 3;
             // 
             // numericUpDownScreenWidth
             // 
@@ -348,34 +354,53 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             -2147483648});
             this.numericUpDownScreenWidth.Name = "numericUpDownScreenWidth";
             this.numericUpDownScreenWidth.Size = new System.Drawing.Size(45, 20);
-            this.numericUpDownScreenWidth.TabIndex = 12;
+            this.numericUpDownScreenWidth.TabIndex = 1;
             // 
             // contextMenuStripListView
             // 
             this.contextMenuStripListView.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.deleteToolStripMenuItem,
-            this.insertToolStripMenuItem});
+            this.insertToolStripMenuItem,
+            this.insertAfterToolStripMenuItem,
+            this.toolStripSeparator3,
+            this.insertSubtitleAfterThisLineToolStripMenuItem,
+            this.adjustAllTimesForSelectedLinesToolStripMenuItem});
             this.contextMenuStripListView.Name = "contextMenuStripListView";
-            this.contextMenuStripListView.Size = new System.Drawing.Size(108, 48);
+            this.contextMenuStripListView.Size = new System.Drawing.Size(256, 142);
+            this.contextMenuStripListView.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripListView_Opening);
             // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
             this.deleteToolStripMenuItem.Text = "Delete";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
             // insertToolStripMenuItem
             // 
             this.insertToolStripMenuItem.Name = "insertToolStripMenuItem";
-            this.insertToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
-            this.insertToolStripMenuItem.Text = "Insert";
+            this.insertToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
+            this.insertToolStripMenuItem.Text = "Insert before";
             this.insertToolStripMenuItem.Click += new System.EventHandler(this.insertToolStripMenuItem_Click);
             // 
-            // contextMenuStrip1
+            // insertAfterToolStripMenuItem
             // 
-            this.contextMenuStrip1.Name = "contextMenuStripListView";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
+            this.insertAfterToolStripMenuItem.Name = "insertAfterToolStripMenuItem";
+            this.insertAfterToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
+            this.insertAfterToolStripMenuItem.Text = "Insert after";
+            this.insertAfterToolStripMenuItem.Click += new System.EventHandler(this.insertAfterToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(252, 6);
+            // 
+            // insertSubtitleAfterThisLineToolStripMenuItem
+            // 
+            this.insertSubtitleAfterThisLineToolStripMenuItem.Name = "insertSubtitleAfterThisLineToolStripMenuItem";
+            this.insertSubtitleAfterThisLineToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
+            this.insertSubtitleAfterThisLineToolStripMenuItem.Text = "Insert subtitle after this line...";
+            this.insertSubtitleAfterThisLineToolStripMenuItem.Click += new System.EventHandler(this.insertSubtitleAfterThisLineToolStripMenuItem_Click_1);
             // 
             // menuStrip1
             // 
@@ -386,7 +411,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1161, 24);
-            this.menuStrip1.TabIndex = 5;
+            this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // fileToolStripMenuItem
@@ -452,7 +477,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             // openVideoToolStripMenuItem
             // 
             this.openVideoToolStripMenuItem.Name = "openVideoToolStripMenuItem";
-            this.openVideoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openVideoToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.openVideoToolStripMenuItem.Text = "Open video...";
             // 
             // synchronizationToolStripMenuItem
@@ -468,21 +493,21 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             // adjustAllTimesToolStripMenuItem
             // 
             this.adjustAllTimesToolStripMenuItem.Name = "adjustAllTimesToolStripMenuItem";
-            this.adjustAllTimesToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.adjustAllTimesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.adjustAllTimesToolStripMenuItem.Text = "Adjust all times";
             this.adjustAllTimesToolStripMenuItem.Click += new System.EventHandler(this.adjustAllTimesToolStripMenuItem_Click);
             // 
             // changeFrameRateToolStripMenuItem
             // 
             this.changeFrameRateToolStripMenuItem.Name = "changeFrameRateToolStripMenuItem";
-            this.changeFrameRateToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.changeFrameRateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.changeFrameRateToolStripMenuItem.Text = "Change frame rate";
             this.changeFrameRateToolStripMenuItem.Click += new System.EventHandler(this.changeFrameRateToolStripMenuItem_Click);
             // 
             // changeSpeedToolStripMenuItem
             // 
             this.changeSpeedToolStripMenuItem.Name = "changeSpeedToolStripMenuItem";
-            this.changeSpeedToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.changeSpeedToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.changeSpeedToolStripMenuItem.Text = "Change speed";
             this.changeSpeedToolStripMenuItem.Click += new System.EventHandler(this.changeSpeedToolStripMenuItem_Click);
             // 
@@ -496,10 +521,11 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.panel1.Location = new System.Drawing.Point(513, 28);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(638, 543);
-            this.panel1.TabIndex = 7;
+            this.panel1.TabIndex = 4;
             // 
             // pictureBoxMovableImage
             // 
+            this.pictureBoxMovableImage.ContextMenuStrip = this.contextMenuStripMovableImage;
             this.pictureBoxMovableImage.Location = new System.Drawing.Point(256, 222);
             this.pictureBoxMovableImage.Name = "pictureBoxMovableImage";
             this.pictureBoxMovableImage.Size = new System.Drawing.Size(100, 50);
@@ -507,6 +533,20 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.pictureBoxMovableImage.TabStop = false;
             this.pictureBoxMovableImage.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBoxMovableImage_MouseDown);
             this.pictureBoxMovableImage.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBoxMovableImage_MouseMove);
+            // 
+            // contextMenuStripMovableImage
+            // 
+            this.contextMenuStripMovableImage.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.centerToolStripMenuItem});
+            this.contextMenuStripMovableImage.Name = "contextMenuStripMovableImage";
+            this.contextMenuStripMovableImage.Size = new System.Drawing.Size(175, 26);
+            // 
+            // centerToolStripMenuItem
+            // 
+            this.centerToolStripMenuItem.Name = "centerToolStripMenuItem";
+            this.centerToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+            this.centerToolStripMenuItem.Text = "Center horizontally";
+            this.centerToolStripMenuItem.Click += new System.EventHandler(this.centerToolStripMenuItem_Click);
             // 
             // pictureBoxScreen
             // 
@@ -552,12 +592,19 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.subtitleListView1.SubtitleFontBold = false;
             this.subtitleListView1.SubtitleFontName = "Tahoma";
             this.subtitleListView1.SubtitleFontSize = 8;
-            this.subtitleListView1.TabIndex = 0;
+            this.subtitleListView1.TabIndex = 1;
             this.subtitleListView1.UseCompatibleStateImageBehavior = false;
             this.subtitleListView1.UseSyntaxColoring = true;
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.subtitleListView1_SelectedIndexChanged);
             this.subtitleListView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.subtitleListView1_KeyDown);
+            // 
+            // adjustAllTimesForSelectedLinesToolStripMenuItem
+            // 
+            this.adjustAllTimesForSelectedLinesToolStripMenuItem.Name = "adjustAllTimesForSelectedLinesToolStripMenuItem";
+            this.adjustAllTimesForSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
+            this.adjustAllTimesForSelectedLinesToolStripMenuItem.Text = "Adjust all times for selected lines...";
+            this.adjustAllTimesForSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.adjustAllTimesForSelectedLinesToolStripMenuItem_Click);
             // 
             // BinEdit
             // 
@@ -593,6 +640,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.menuStrip1.PerformLayout();
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMovableImage)).EndInit();
+            this.contextMenuStripMovableImage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxScreen)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -623,7 +671,6 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private System.Windows.Forms.ToolStripMenuItem insertToolStripMenuItem;
         private System.Windows.Forms.Button buttonExportImage;
         private System.Windows.Forms.Label labelCurrentSize;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openFileToolStripMenuItem;
@@ -646,5 +693,11 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private System.Windows.Forms.ToolStripMenuItem importTimeCodesToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.PictureBox pictureBoxMovableImage;
+        private System.Windows.Forms.ToolStripMenuItem insertAfterToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripMovableImage;
+        private System.Windows.Forms.ToolStripMenuItem centerToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripMenuItem insertSubtitleAfterThisLineToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem adjustAllTimesForSelectedLinesToolStripMenuItem;
     }
 }
