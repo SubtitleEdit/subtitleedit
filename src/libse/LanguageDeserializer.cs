@@ -7459,6 +7459,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Watermark/ErrorUnicodeEncodingOnly":
                     language.Watermark.ErrorUnicodeEncodingOnly = reader.Value;
                     break;
+                case "Waveform/AddWaveformAndSpectrogram":
+                    language.Waveform.AddWaveformAndSpectrogram = reader.Value;
+                    break;
                 case "Waveform/ClickToAddWaveform":
                     language.Waveform.ClickToAddWaveform = reader.Value;
                     break;
