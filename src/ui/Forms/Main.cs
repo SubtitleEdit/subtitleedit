@@ -1404,7 +1404,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemImportSubIdx.Text = _language.Menu.File.ImportOcrVobSubSubtitle;
             toolStripButtonGetFrameRate.ToolTipText = _language.GetFrameRateFromVideoFile;
             toolStripMenuItemImportBluRaySup.Text = _language.Menu.File.ImportBluRaySupFile;
-            bluraySupFileForEditToolStripMenuItem.Text = _language.Menu.File.ImportBluRaySupFileEdit;
+            toolStripMenuItemImportBluraySupFileForEdit.Text = _language.Menu.File.ImportBluRaySupFileEdit;
             toolStripMenuItemImportFromVideo.Text = _language.Menu.File.ImportSubtitleFromVideoFile;
             toolStripMenuItemImportManualAnsi.Text = _language.Menu.File.ImportSubtitleWithManualChosenEncoding;
             toolStripMenuItemImportText.Text = _language.Menu.File.ImportText;
@@ -28923,7 +28923,7 @@ namespace Nikse.SubtitleEdit.Forms
             splitContainerListViewAndText_SplitterMoved(null, null);
         }
 
-        private void bluraySupFileForEditToolStripMenuItem_Click(object sender, EventArgs e)
+        private void toolStripMenuItemImportBluraySupFileForEdit_Click(object sender, EventArgs e)
         {
             if (ContinueNewOrExit())
             {

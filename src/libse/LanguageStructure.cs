@@ -2957,6 +2957,7 @@
 
         public class Waveform
         {
+            public string AddWaveformAndSpectrogram { get; set; }
             public string ClickToAddWaveform { get; set; }
             public string ClickToAddWaveformAndSpectrogram { get; set; }
             public string Seconds { get; set; }

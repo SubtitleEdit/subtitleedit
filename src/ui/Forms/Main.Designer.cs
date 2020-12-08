@@ -112,6 +112,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemImportTimeCodes = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemImportFromVideo = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemImportBluRaySup = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemImportBluraySupFileForEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemImportSubIdx = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemImportDvdSubtitles = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemImportOcrHardSub = new System.Windows.Forms.ToolStripMenuItem();
@@ -528,7 +529,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
-            this.bluraySupFileForEditToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -1199,7 +1199,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemImportTimeCodes,
             this.toolStripMenuItemImportFromVideo,
             this.toolStripMenuItemImportBluRaySup,
-            this.bluraySupFileForEditToolStripMenuItem,
+            this.toolStripMenuItemImportBluraySupFileForEdit,
             this.toolStripMenuItemImportSubIdx,
             this.toolStripMenuItemImportDvdSubtitles,
             this.toolStripMenuItemImportOcrHardSub,
@@ -1242,6 +1242,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemImportBluRaySup.Size = new System.Drawing.Size(330, 22);
             this.toolStripMenuItemImportBluRaySup.Text = "Blu-ray sup file for OCR...";
             this.toolStripMenuItemImportBluRaySup.Click += new System.EventHandler(this.toolStripMenuItemImportBluRaySup_Click);
+            // 
+            // toolStripMenuItemImportBluraySupFileForEdit
+            // 
+            this.toolStripMenuItemImportBluraySupFileForEdit.Name = "toolStripMenuItemImportBluraySupFileForEdit";
+            this.toolStripMenuItemImportBluraySupFileForEdit.Size = new System.Drawing.Size(330, 22);
+            this.toolStripMenuItemImportBluraySupFileForEdit.Text = "Blu-ray sup file for edit...";
+            this.toolStripMenuItemImportBluraySupFileForEdit.Click += new System.EventHandler(this.toolStripMenuItemImportBluraySupFileForEdit_Click);
             // 
             // toolStripMenuItemImportSubIdx
             // 
@@ -5131,13 +5138,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
             // 
-            // bluraySupFileForEditToolStripMenuItem
-            // 
-            this.bluraySupFileForEditToolStripMenuItem.Name = "bluraySupFileForEditToolStripMenuItem";
-            this.bluraySupFileForEditToolStripMenuItem.Size = new System.Drawing.Size(330, 22);
-            this.bluraySupFileForEditToolStripMenuItem.Text = "Blu-ray sup file for edit...";
-            this.bluraySupFileForEditToolStripMenuItem.Click += new System.EventHandler(this.bluraySupFileForEditToolStripMenuItem_Click);
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -5519,6 +5519,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportTimeCodes;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportFromVideo;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportBluRaySup;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportBluraySupFileForEdit;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportSubIdx;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportDvdSubtitles;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportOcrHardSub;
@@ -5709,6 +5710,5 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAssaStyles;
         private System.Windows.Forms.ToolStripMenuItem openSecondSubtitleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aSSStylesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem bluraySupFileForEditToolStripMenuItem;
     }
 }
