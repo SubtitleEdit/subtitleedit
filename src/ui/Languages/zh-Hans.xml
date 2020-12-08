@@ -2156,6 +2156,7 @@ Command line: {1} {2}
     <GoToPrevSubtitleAndPlay>跳转到上一行并播放</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>跳转到下一行并播放</GoToNextSubtitleAndPlay>
     <ToggleFocus>在列表视图和文本输入框之间切换焦点</ToggleFocus>
+    <FocusWaveform>操作焦点位于波形/频谱区</FocusWaveform>
     <ToggleDialogDashes>在对话内容前使用破折号</ToggleDialogDashes>
     <ToggleMusicSymbols>使用音乐符号</ToggleMusicSymbols>
     <Alignment>对齐 (所选行)</Alignment>
@@ -2264,7 +2265,6 @@ Command line: {1} {2}
     <ListViewColumnPaste>列，粘贴</ListViewColumnPaste>
     <ListViewColumnTextUp>列，文本上移</ListViewColumnTextUp>
     <ListViewColumnTextDown>列，文本下移</ListViewColumnTextDown>
-    <ListViewFocusWaveform>操作焦点位于波形/频谱区</ListViewFocusWaveform>
     <ListViewGoToNextError>转到下一处错误</ListViewGoToNextError>
     <ShowBeamer>启动字幕全屏幕投影仪</ShowBeamer>
     <MainTextBoxMoveLastWordDown>将上一行的最后一个单词移到下一行</MainTextBoxMoveLastWordDown>

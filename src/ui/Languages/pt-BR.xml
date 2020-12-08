@@ -2017,6 +2017,7 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <GoToPreviousSubtitleAndFocusVideo>Ir para linha anterior e definir posição do vídeo</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Ir para próxima linha e definir posição do vídeo</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Alternar foco entre exibição em lista e caixa de texto de legenda</ToggleFocus>
+    <FocusWaveform>Foco da forma de onda/espectrograma</FocusWaveform>
     <ToggleDialogDashes>Alternar traços de diálogo</ToggleDialogDashes>
     <ToggleMusicSymbols>Alternar símbolos musicais</ToggleMusicSymbols>
     <Alignment>Alinhamento (linhas selecionadas)</Alignment>
@@ -2115,7 +2116,6 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <ListViewColumnPaste>Coluna, colar</ListViewColumnPaste>
     <ListViewColumnTextUp>Coluna, texto para cima</ListViewColumnTextUp>
     <ListViewColumnTextDown>Coluna, texto para baixo</ListViewColumnTextDown>
-    <ListViewFocusWaveform>Foco da forma de onda/espectrograma</ListViewFocusWaveform>
     <ListViewGoToNextError>Ir para próximo erro</ListViewGoToNextError>
     <ShowBeamer>Iniciar projeção da legenda em tela cheia</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Mover a última palavra para a próxima legenda</MainTextBoxMoveLastWordDown>

@@ -1919,7 +1919,6 @@ $HorzAlign          =   Center
         public string MainListViewColumnPaste { get; set; }
         public string MainListViewColumnTextUp { get; set; }
         public string MainListViewColumnTextDown { get; set; }
-        public string MainListViewFocusWaveform { get; set; }
         public string MainListViewGoToNextError { get; set; }
         public string MainListViewRemoveTimeCodes { get; set; }
         public string MainTextBoxItalic { get; set; }
@@ -1991,6 +1990,7 @@ $HorzAlign          =   Center
         public string MainInsertBefore { get; set; }
         public string MainMergeDialog { get; set; }
         public string MainToggleFocus { get; set; }
+        public string MainFocusWaveform { get; set; }
         public string WaveformAdd { get; set; }
         public string WaveformVerticalZoom { get; set; }
         public string WaveformVerticalZoomOut { get; set; }
@@ -7036,12 +7036,6 @@ $HorzAlign          =   Center
                     shortcuts.MainListViewColumnTextDown = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("MainListViewFocusWaveform");
-                if (subNode != null)
-                {
-                    shortcuts.MainListViewFocusWaveform = subNode.InnerText;
-                }
-
                 subNode = node.SelectSingleNode("MainListViewGoToNextError");
                 if (subNode != null)
                 {
@@ -7484,6 +7478,12 @@ $HorzAlign          =   Center
                 if (subNode != null)
                 {
                     shortcuts.MainToggleFocus = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainFocusWaveform");
+                if (subNode != null)
+                {
+                    shortcuts.MainFocusWaveform = subNode.InnerText;
                 }
 
                 subNode = node.SelectSingleNode("WaveformAdd");
@@ -8544,7 +8544,6 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainListViewColumnPaste", shortcuts.MainListViewColumnPaste);
             textWriter.WriteElementString("MainListViewColumnTextUp", shortcuts.MainListViewColumnTextUp);
             textWriter.WriteElementString("MainListViewColumnTextDown", shortcuts.MainListViewColumnTextDown);
-            textWriter.WriteElementString("MainListViewFocusWaveform", shortcuts.MainListViewFocusWaveform);
             textWriter.WriteElementString("MainListViewGoToNextError", shortcuts.MainListViewGoToNextError);
             textWriter.WriteElementString("MainListViewRemoveTimeCodes", shortcuts.MainListViewRemoveTimeCodes);
             textWriter.WriteElementString("MainEditFixRTLViaUnicodeChars", shortcuts.MainEditFixRTLViaUnicodeChars);
@@ -8619,6 +8618,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainInsertBefore", shortcuts.MainInsertBefore);
             textWriter.WriteElementString("MainMergeDialog", shortcuts.MainMergeDialog);
             textWriter.WriteElementString("MainToggleFocus", shortcuts.MainToggleFocus);
+            textWriter.WriteElementString("MainFocusWaveform", shortcuts.MainFocusWaveform);
             textWriter.WriteElementString("WaveformAdd", shortcuts.WaveformAdd);
             textWriter.WriteElementString("WaveformVerticalZoom", shortcuts.WaveformVerticalZoom);
             textWriter.WriteElementString("WaveformVerticalZoomOut", shortcuts.WaveformVerticalZoomOut);

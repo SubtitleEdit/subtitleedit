@@ -1950,6 +1950,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <GoToPreviousSubtitleAndFocusVideo>Zum vorherigen Text und Videoposition setzen</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Zum nächsten Text und Videoposition setzen</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Zwischen Listenansicht und Textbox umschalten</ToggleFocus>
+    <FocusWaveform>Wellenform/Spektrogram fokussieren</FocusWaveform>
     <ToggleDialogDashes>Dialog Striche umschalten</ToggleDialogDashes>
     <ToggleMusicSymbols>Musiksymbole umschalten</ToggleMusicSymbols>
     <Alignment>Ausrichtung (gewählte Zeilen)</Alignment>
@@ -2009,7 +2010,6 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <ListViewColumnDelete>Zeile, Text löschen</ListViewColumnDelete>
     <ListViewColumnInsert>Zeile, Text einfügen</ListViewColumnInsert>
     <ListViewColumnPaste>Zeile, Einfügen</ListViewColumnPaste>
-    <ListViewFocusWaveform>Wellenform/Spektrogram fokussieren</ListViewFocusWaveform>
     <ListViewGoToNextError>Zum nächsten Fehler</ListViewGoToNextError>
     <ShowBeamer>Starte Untertitel Vollbildbeamer</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Letzes Wort zur nächsten Zeile</MainTextBoxMoveLastWordDown>

@@ -1709,6 +1709,7 @@
     <GoToCurrentSubtitleStart>ไปต้นบรรทัดปัจจุบัน</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>ไปท้ายบรรทัดปัจจุบัน</GoToCurrentSubtitleEnd>
     <ToggleFocus>สลับโฟกัสระหว่างลิสต์วิวและกล่องข้อความซับไตเติ้ล</ToggleFocus>
+    <FocusWaveform>โฟกัสที่เวฟฟอร์ม/สเปกโตแกรม</FocusWaveform>
     <ToggleDialogDashes>สลับยัติภังค์ในบทสนทนา</ToggleDialogDashes>
     <Alignment>การวางแนว (บรรทัดที่เลือก)</Alignment>
     <CopyTextOnly>สำเนาข้อความไปคลิปบอร์ดเท่านั้น (บรรทัดที่เลือก)</CopyTextOnly>
@@ -1759,7 +1760,6 @@
     <ListViewColumnDelete>คอลัมน์ ลบข้อความ</ListViewColumnDelete>
     <ListViewColumnInsert>คอลัมน์ แทรกข้อความ</ListViewColumnInsert>
     <ListViewColumnPaste>คอลัมน์ วาง</ListViewColumnPaste>
-    <ListViewFocusWaveform>โฟกัสที่เวฟฟอร์ม/สเปกโตแกรม</ListViewFocusWaveform>
     <ListViewGoToNextError>ไปที่ข้อผิดพลาดถัดไป</ListViewGoToNextError>
     <ShowBeamer>เริ่มซับไตเติ้ลเต็มจอแสดงบีมเมอร์</ShowBeamer>
     <MainTextBoxMoveLastWordDown>ย้ายคำสุดท้ายไปซับไตเติ้ลบรรทัดถัดไป</MainTextBoxMoveLastWordDown>
