@@ -2333,6 +2333,7 @@
             public string GoToPrevSubtitleAndPlay { get; set; }
             public string GoToNextSubtitleAndPlay { get; set; }
             public string ToggleFocus { get; set; }
+            public string FocusWaveform { get; set; }
             public string ToggleDialogDashes { get; set; }
             public string ToggleMusicSymbols { get; set; }
             public string Alignment { get; set; }
@@ -2441,7 +2442,6 @@
             public string ListViewColumnPaste { get; set; }
             public string ListViewColumnTextUp { get; set; }
             public string ListViewColumnTextDown { get; set; }
-            public string ListViewFocusWaveform { get; set; }
             public string ListViewGoToNextError { get; set; }
             public string ShowBeamer { get; set; }
             public string MainTextBoxMoveLastWordDown { get; set; }

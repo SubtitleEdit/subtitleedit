@@ -1876,6 +1876,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <GoToPreviousSubtitleAndFocusVideo>Idi na prošlu liniju i postavi video poziciju</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Idi na sljedeću liniju i postavi video poziciju</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Prebacivanje fokusa između prikaza popisa i podnaslova tekstnog okvira</ToggleFocus>
+    <FocusWaveform>Fokusiraj valni/spektrogram</FocusWaveform>
     <ToggleDialogDashes>Prebaci dijaloške crtice</ToggleDialogDashes>
     <Alignment>Poravnanje (odabrane linije)</Alignment>
     <CopyTextOnly>Kopiranje teksta samo u međuspremnik (odabrane linije)</CopyTextOnly>
@@ -1940,7 +1941,6 @@ određeni podnaslov s drugim ljudima.</Information>
     <ListViewColumnDelete>Stup, brisanje teksta</ListViewColumnDelete>
     <ListViewColumnInsert>Stup, umetnuti tekst</ListViewColumnInsert>
     <ListViewColumnPaste>Stup, zalijepiti</ListViewColumnPaste>
-    <ListViewFocusWaveform>Fokusiraj valni/spektrogram</ListViewFocusWaveform>
     <ListViewGoToNextError>Idi na sljedeću pogrešku</ListViewGoToNextError>
     <ShowBeamer>Započni pregled podnaslova preko cijelog zaslona</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Pomakni zadnju riječ dolje u novi redak podnaslova</MainTextBoxMoveLastWordDown>

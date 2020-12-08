@@ -2152,6 +2152,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <GoToPrevSubtitleAndPlay>Przejdź do poprzedniej linii i odtwarzaj</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>Przejdź do następnej linii i odtwarzaj</GoToNextSubtitleAndPlay>
     <ToggleFocus>Przełącz fokus między "Widokiem listy" i polem tekstowym napisów</ToggleFocus>
+    <FocusWaveform>Koncentruj uwagę na wykresie falowym/spektrogramie</FocusWaveform>
     <ToggleDialogDashes>Przełącz myślniki dialogów</ToggleDialogDashes>
     <ToggleMusicSymbols>Przełącz symbole muzyczne</ToggleMusicSymbols>
     <Alignment>Wyrównanie (zaznaczone linie)</Alignment>
@@ -2256,7 +2257,6 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <ListViewColumnPaste>Kolumna, wklej</ListViewColumnPaste>
     <ListViewColumnTextUp>Kolumna, tekst do góry</ListViewColumnTextUp>
     <ListViewColumnTextDown>Kolumna, tekst w dół</ListViewColumnTextDown>
-    <ListViewFocusWaveform>Koncentruj uwagę na wykresie falowym/spektrogramie</ListViewFocusWaveform>
     <ListViewGoToNextError>Przejdź do następnego błędu</ListViewGoToNextError>
     <ShowBeamer>Uruchom projekcję napisów na pełnym ekranie</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Przenieś ostatnie słowo do następnej linii napisów</MainTextBoxMoveLastWordDown>

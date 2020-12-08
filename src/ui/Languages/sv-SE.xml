@@ -1959,6 +1959,7 @@ kan redigera i samma undertextfil (samarbete)</Information>
     <GoToPreviousSubtitleAndFocusVideo>Gå till föregående rad och ställ in videopositionen</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Gå till nästa rad och ställ in videopositionen</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Växla fokus mellan listvyn och undertextrutan</ToggleFocus>
+    <FocusWaveform>Fokus vågform/spektrogram</FocusWaveform>
     <ToggleDialogDashes>Växla dialogstreck</ToggleDialogDashes>
     <ToggleMusicSymbols>Växla musiksymboler</ToggleMusicSymbols>
     <Alignment>Justering (markerade rader)</Alignment>
@@ -2042,7 +2043,6 @@ kan redigera i samma undertextfil (samarbete)</Information>
     <ListViewColumnPaste>Kolumn, klistra in</ListViewColumnPaste>
     <ListViewColumnTextUp>Kolumn, text upp</ListViewColumnTextUp>
     <ListViewColumnTextDown>Kolumn, text ner</ListViewColumnTextDown>
-    <ListViewFocusWaveform>Fokus vågform/spektrogram</ListViewFocusWaveform>
     <ListViewGoToNextError>Gå till nästa fel</ListViewGoToNextError>
     <ShowBeamer>Starta undertext i helskärms-beamer</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Flytta sista ordet till nästa undertext</MainTextBoxMoveLastWordDown>
