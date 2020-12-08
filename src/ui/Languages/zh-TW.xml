@@ -1788,6 +1788,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <GoToCurrentSubtitleStart>移至目前行的起始時間</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>移至目前行的結束時間</GoToCurrentSubtitleEnd>
     <ToggleFocus>在清單檢視和字幕文字框之間切換焦點</ToggleFocus>
+    <FocusWaveform>焦點置於 波形/頻譜圖</FocusWaveform>
     <ToggleDialogDashes>切換對話破折號</ToggleDialogDashes>
     <Alignment>對齊 (選擇的行)</Alignment>
     <CopyTextOnly>僅複製文字到剪貼簿 (選擇的行)</CopyTextOnly>
@@ -1844,7 +1845,6 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <ListViewColumnDelete>行、移除文字</ListViewColumnDelete>
     <ListViewColumnInsert>行、插入文字</ListViewColumnInsert>
     <ListViewColumnPaste>行、貼上</ListViewColumnPaste>
-    <ListViewFocusWaveform>焦點置於 波形/頻譜圖</ListViewFocusWaveform>
     <ListViewGoToNextError>移至下一處錯誤</ListViewGoToNextError>
     <ShowBeamer>啟動字幕全螢幕投影儀</ShowBeamer>
     <MainTextBoxMoveLastWordDown>將上一行的最後一個單字移至下一行</MainTextBoxMoveLastWordDown>

@@ -14265,6 +14265,14 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
+            else if (_shortcuts.MainFocusWaveform == e.KeyData)
+            {
+                if (audioVisualizer.CanFocus)
+                {
+                    audioVisualizer.Focus();
+                    e.SuppressKeyPress = true;
+                }
+            }
             else if (e.KeyCode == Keys.Home && e.Modifiers == Keys.Alt)
             {
                 SubtitleListview1.FirstVisibleIndex = -1;
@@ -17364,14 +17372,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color4));
                 e.SuppressKeyPress = true;
-            }
-            else if (e.KeyData == _shortcuts.MainListViewFocusWaveform)
-            {
-                if (audioVisualizer.CanFocus)
-                {
-                    audioVisualizer.Focus();
-                    e.SuppressKeyPress = true;
-                }
             }
             else if (e.KeyData == _shortcuts.MainListViewGoToNextError)
             {

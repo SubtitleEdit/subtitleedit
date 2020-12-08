@@ -2141,6 +2141,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <GoToPrevSubtitleAndPlay>Siirry edelliselle riville ja toista</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>Siirry seuraavalle riville ja toista</GoToNextSubtitleAndPlay>
     <ToggleFocus>Vaihda luettelonäkymän ja tekstitysruudun välillä</ToggleFocus>
+    <FocusWaveform>Aaltomuoto / taajuusanalyysi</FocusWaveform>
     <ToggleDialogDashes>Vaihda vuoropuhelun katkoviivat</ToggleDialogDashes>
     <ToggleMusicSymbols>Vaihda musiikkisymbolit</ToggleMusicSymbols>
     <Alignment>Tasaus (valitut rivit)</Alignment>
@@ -2247,7 +2248,6 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <ListViewColumnPaste>Sarake, liitä</ListViewColumnPaste>
     <ListViewColumnTextUp>Sarake, teksti ylös</ListViewColumnTextUp>
     <ListViewColumnTextDown>Sarake, teksti alas</ListViewColumnTextDown>
-    <ListViewFocusWaveform>Aaltomuoto / taajuusanalyysi</ListViewFocusWaveform>
     <ListViewGoToNextError>Siirry seuraavaan virheeseen</ListViewGoToNextError>
     <ShowBeamer>Aloita tekstityksen kokonäytön videoesitys</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Siirrä viimeinen sana seuraavalle riville</MainTextBoxMoveLastWordDown>

@@ -1956,6 +1956,7 @@ Continue anyway?</PromptInsertSubtitleOverlap>
     <GoToPreviousSubtitleAndFocusVideo>رفتن به خط قبلی و تنظیم موقعیت ویدیو</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>رفتن به خط بعدی و تنظیم موقعیت ویدیو</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>ضامن مرکز میان لیست ظاهری و جعبه متن زیرنویس</ToggleFocus>
+    <FocusWaveform>تمرکز شکل موج/طیف سنجی</FocusWaveform>
     <ToggleDialogDashes>کنترل ضامن خط های گفتگوها</ToggleDialogDashes>
     <ToggleMusicSymbols>نمادهای موسیقی را تغییر دهید</ToggleMusicSymbols>
     <Alignment>تراز (خطوط انتخاب شده)</Alignment>
@@ -2040,7 +2041,6 @@ Continue anyway?</PromptInsertSubtitleOverlap>
     <ListViewColumnPaste>ستون، چسباندن</ListViewColumnPaste>
     <ListViewColumnTextUp>ستون ، متن بالا</ListViewColumnTextUp>
     <ListViewColumnTextDown>ستون ، متن پایین</ListViewColumnTextDown>
-    <ListViewFocusWaveform>تمرکز شکل موج/طیف سنجی</ListViewFocusWaveform>
     <ListViewGoToNextError>رفتن به خطای بعدی</ListViewGoToNextError>
     <ShowBeamer>beamer تمام صفحه زیرنویس را شروع کنید</ShowBeamer>
     <MainTextBoxMoveLastWordDown>انتقال آخرین کلمه به خط بعدی زیرنویس</MainTextBoxMoveLastWordDown>

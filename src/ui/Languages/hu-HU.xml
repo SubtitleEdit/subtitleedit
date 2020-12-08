@@ -2056,6 +2056,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <GoToPrevSubtitleAndPlay>Ugrás az előző sorra és lejátszás</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>Ugrás a következő sorra és lejátszás</GoToNextSubtitleAndPlay>
     <ToggleFocus>Fókuszváltás a listanézet és felirat szövegdoboz között</ToggleFocus>
+    <FocusWaveform>Hullámforma/spectrogram fókusz</FocusWaveform>
     <ToggleDialogDashes>Párbeszéd gondolatjel váltó</ToggleDialogDashes>
     <ToggleMusicSymbols>Zenei szimbólumok váltása</ToggleMusicSymbols>
     <Alignment>Igazítás (kijelölt sorok)</Alignment>
@@ -2160,7 +2161,6 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <ListViewColumnPaste>Oszlop, beillesztés</ListViewColumnPaste>
     <ListViewColumnTextUp>Oszlop, szöveg felfelé</ListViewColumnTextUp>
     <ListViewColumnTextDown>Oszlop, szöveg lefelé</ListViewColumnTextDown>
-    <ListViewFocusWaveform>Hullámforma/spectrogram fókusz</ListViewFocusWaveform>
     <ListViewGoToNextError>Ugrás a következő hibára</ListViewGoToNextError>
     <ShowBeamer>Teljes képernyős projektor felirat indítás</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Utolsó szó áthelyezése a következő feliratra</MainTextBoxMoveLastWordDown>

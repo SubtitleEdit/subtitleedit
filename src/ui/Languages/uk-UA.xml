@@ -1799,6 +1799,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GoToCurrentSubtitleStart>Перейти до початку поточного субтитру</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Перейти до кінця поточного субтитру</GoToCurrentSubtitleEnd>
     <ToggleFocus>Перемкнути фокус між списком субтитрів та текстовим полем</ToggleFocus>
+    <FocusWaveform>Фокус на аудіохвилю/спектрограму</FocusWaveform>
     <ToggleDialogDashes>Перемкнути риски у діалозі</ToggleDialogDashes>
     <Alignment>Розташування (обрані рядки)</Alignment>
     <CopyTextOnly>Скопіювати до буферу обміну тільки текст (обрані рядки)</CopyTextOnly>
@@ -1850,7 +1851,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ListViewColumnDelete>Стовпчик, видалити текст</ListViewColumnDelete>
     <ListViewColumnInsert>Стовпчик, вставити текст</ListViewColumnInsert>
     <ListViewColumnPaste>Стовпчик, вставити з буферу обміну</ListViewColumnPaste>
-    <ListViewFocusWaveform>Фокус на аудіохвилю/спектрограму</ListViewFocusWaveform>
     <ListViewGoToNextError>Перейти до наступної помилки</ListViewGoToNextError>
     <ShowBeamer>Запустити повноекранний проектор субтитрів</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Пересунути останнє слово вниз до наступного субтитру</MainTextBoxMoveLastWordDown>

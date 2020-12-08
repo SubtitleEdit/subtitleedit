@@ -1779,6 +1779,7 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <GoToCurrentSubtitleStart>Vai all'inizio della linea corrente</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Vai alla fine della linea corrente</GoToCurrentSubtitleEnd>
     <ToggleFocus>Alterna focus tra lista sorgente e casella testo sottotitolo</ToggleFocus>
+    <FocusWaveform>Focus forma d'onda/spettrogramma</FocusWaveform>
     <ToggleDialogDashes>Alterna trattini di dialogo</ToggleDialogDashes>
     <Alignment>Allineamento (linee selezionate)</Alignment>
     <CopyTextOnly>Copia il testo negli appunti (linee selezionate)</CopyTextOnly>
@@ -1830,7 +1831,6 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <ListViewColumnDelete>Colonna, elimina testo</ListViewColumnDelete>
     <ListViewColumnInsert>Colonna, inserisci testo</ListViewColumnInsert>
     <ListViewColumnPaste>Colonna, incolla</ListViewColumnPaste>
-    <ListViewFocusWaveform>Focus forma d'onda/spettrogramma</ListViewFocusWaveform>
     <ListViewGoToNextError>Vai al prossimo errore</ListViewGoToNextError>
     <ShowBeamer>Inizia sottotitolo fullscreen beamer</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Sposta l'ultima parola nella linea sottotitolo successiva</MainTextBoxMoveLastWordDown>
