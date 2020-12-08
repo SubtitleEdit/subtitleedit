@@ -5920,6 +5920,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/ToggleFocus":
                     language.Settings.ToggleFocus = reader.Value;
                     break;
+                case "Settings/FocusWaveform":
+                    language.Settings.FocusWaveform = reader.Value;
+                    break;
                 case "Settings/ToggleDialogDashes":
                     language.Settings.ToggleDialogDashes = reader.Value;
                     break;
@@ -6240,9 +6243,6 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/ListViewColumnTextDown":
                     language.Settings.ListViewColumnTextDown = reader.Value;
-                    break;
-                case "Settings/ListViewFocusWaveform":
-                    language.Settings.ListViewFocusWaveform = reader.Value;
                     break;
                 case "Settings/ListViewGoToNextError":
                     language.Settings.ListViewGoToNextError = reader.Value;

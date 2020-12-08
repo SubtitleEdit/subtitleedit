@@ -2162,6 +2162,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GoToPrevSubtitleAndPlay>Μετάβαση σε προηγούμενη γραμμή και αναπαραγωγή</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>Μετάβαση σε επόμενη γραμμή και αναπαραγωγή</GoToNextSubtitleAndPlay>
     <ToggleFocus>Εναλλαγή εστίασης υποτίτλου μεταξύ προβολής λίστας και πλαισίου κειμένου</ToggleFocus>
+    <FocusWaveform>Εστίαση κυματομορφής/φασματογραφήματος</FocusWaveform>
     <ToggleDialogDashes>Εναλλαγή γραμμών διαλόγου</ToggleDialogDashes>
     <ToggleMusicSymbols>Εναλλαγή μουσικών συμβόλων</ToggleMusicSymbols>
     <Alignment>Στοίχιση (επιλεγμένες γραμμές)</Alignment>
@@ -2269,7 +2270,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ListViewColumnPaste>Στήλη, επικόλληση</ListViewColumnPaste>
     <ListViewColumnTextUp>Στήλη, κείμενο προς τα πάνω</ListViewColumnTextUp>
     <ListViewColumnTextDown>Στήλη, κείμενο προς τα κάτω</ListViewColumnTextDown>
-    <ListViewFocusWaveform>Εστίαση κυματομορφής/φασματογραφήματος</ListViewFocusWaveform>
     <ListViewGoToNextError>Μετάβαση σε επόμενο σφάλμα</ListViewGoToNextError>
     <ShowBeamer>Ξεκινήστε υπότιτλο σε πλήρη οθόνη βιντεοπροβολέα</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Μετακίνηση τελευταίας λέξης στην επόμενη γραμμή</MainTextBoxMoveLastWordDown>

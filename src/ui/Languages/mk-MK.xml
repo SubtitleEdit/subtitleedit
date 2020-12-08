@@ -1974,6 +1974,7 @@ can edit in same subtitle file (collaboration)</Information>
     <GoToPreviousSubtitleAndFocusVideo>Оди на претходна линија и постави видео позиција</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Оди на следна линија и постави видео позиција</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Активирај фокус меѓу прелгед Листа и текстуална рамка на титл</ToggleFocus>
+    <FocusWaveform>Фокусирај брановиден облик/спектограм</FocusWaveform>
     <ToggleDialogDashes>Активирај црти за дијалог</ToggleDialogDashes>
     <ToggleMusicSymbols>Активирај музички симболи</ToggleMusicSymbols>
     <Alignment>Порамни (избрани линии)</Alignment>
@@ -2058,7 +2059,6 @@ can edit in same subtitle file (collaboration)</Information>
     <ListViewColumnPaste>Колона, залепи</ListViewColumnPaste>
     <ListViewColumnTextUp>Колона, помести текст горе</ListViewColumnTextUp>
     <ListViewColumnTextDown>Колона, помести текст долу</ListViewColumnTextDown>
-    <ListViewFocusWaveform>Фокусирај брановиден облик/спектограм</ListViewFocusWaveform>
     <ListViewGoToNextError>Оди на следна грешка</ListViewGoToNextError>
     <ShowBeamer>Отвори титл на проектор на цел екран</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Премести го последниот збор во следната линија</MainTextBoxMoveLastWordDown>
