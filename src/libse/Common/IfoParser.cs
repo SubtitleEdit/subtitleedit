@@ -125,7 +125,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public class IfoParserError
         {
-            public static int WrongInfoType = 1;
+            public static readonly int WrongInfoType = 1;
 
             public int ErrorCode { get; set; }
             public string ErrorMessage { get; set; }
