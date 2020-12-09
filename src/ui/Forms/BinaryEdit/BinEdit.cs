@@ -11,10 +11,13 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 {
@@ -35,6 +38,9 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private Point _movableImageMouseDownLocation;
         private string _exportImageFolder;
         private string _videoFileName;
+        private double _frameRate;
+        private int _screenWidth;
+        private int _screenHeight;
 
         public BinEdit(string fileName)
         {
@@ -342,13 +348,90 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             }
         }
 
+        private int MillisecondsToFramesMaxFrameRate(double milliseconds)
+        {
+            int frames = (int)Math.Round(milliseconds / (1000.0 / _frameRate));
+            if (frames >= _frameRate)
+            {
+                frames = (int)(_frameRate - 0.01);
+            }
+
+            return frames;
+        }
+
+        private string ToHHMMSSFF(TimeCode timeCode)
+        {
+            return $"{timeCode.Hours:00}:{timeCode.Minutes:00}:{timeCode.Seconds:00}:{MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds):00}";
+        }
+
+        private void WriteBdnXmlParagraph(Bitmap bitmap, StringBuilder sb, string path, int i, Extra extra, Paragraph p)
+        {
+            string numberString = $"{i:0000}";
+            string fileName = Path.Combine(path, numberString + ".png");
+            bitmap.Save(fileName, ImageFormat.Png);
+            sb.AppendLine("<Event InTC=\"" + ToHHMMSSFF(p.StartTime) + "\" OutTC=\"" + ToHHMMSSFF(p.EndTime) + "\" Forced=\"" + extra.Forced.ToString().ToLowerInvariant() + "\">");
+            sb.AppendLine("  <Graphic Width=\"" + bitmap.Width.ToString(CultureInfo.InvariantCulture) + "\" Height=\"" +
+                          bitmap.Height.ToString(CultureInfo.InvariantCulture) + "\" X=\"" + extra.X.ToString(CultureInfo.InvariantCulture) + "\" Y=\"" + extra.Y.ToString(CultureInfo.InvariantCulture) +
+                          "\">" + numberString + ".png</Graphic>");
+            sb.AppendLine("</Event>");
+        }
+
+        private static string FormatUtf8Xml(XmlDocument doc)
+        {
+            var sb = new StringBuilder();
+            using (var writer = XmlWriter.Create(sb, new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 }))
+            {
+                doc.Save(writer);
+            }
+            return sb.ToString().Replace(" encoding=\"utf-16\"", " encoding=\"utf-8\"").Trim(); // "replace hack" due to missing encoding (encoding only works if it's the only parameter...)
+        }
+
+        private void WriteBdnXmlFile(StringBuilder sb, string fileName, int count)
+        {
+            string videoFormat = "1080p";
+            if (_screenWidth == 1920 && _screenHeight == 1080)
+            {
+                videoFormat = "1080p";
+            }
+            else if (_screenWidth == 1280 && _screenHeight == 720)
+            {
+                videoFormat = "720p";
+            }
+            else if (_screenWidth == 848 && _screenHeight == 480)
+            {
+                videoFormat = "480p";
+            }
+            else if (_screenWidth > 0 && _screenHeight > 0)
+            {
+                videoFormat = _screenWidth + "x" + _screenHeight;
+            }
+
+            var doc = new XmlDocument();
+            Paragraph first = _subtitle.Paragraphs[0];
+            Paragraph last = _subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1];
+            doc.LoadXml("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Environment.NewLine +
+                        "<BDN Version=\"0.93\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"BD-03-006-0093b BDN File Format.xsd\">" + Environment.NewLine +
+                        "<Description>" + Environment.NewLine +
+                        "<Name Title=\"subtitle_exp\" Content=\"\"/>" + Environment.NewLine +
+                        "<Language Code=\"eng\"/>" + Environment.NewLine +
+                        "<Format VideoFormat=\"" + videoFormat + "\" FrameRate=\"" + _frameRate.ToString(CultureInfo.InvariantCulture) + "\" DropFrame=\"False\"/>" + Environment.NewLine +
+                        "<Events Type=\"Graphic\" FirstEventInTC=\"" + ToHHMMSSFF(first.StartTime) + "\" LastEventOutTC=\"" + ToHHMMSSFF(last.EndTime) + "\" NumberofEvents=\"" + count.ToString(CultureInfo.InvariantCulture) + "\"/>" + Environment.NewLine +
+                        "</Description>" + Environment.NewLine +
+                        "<Events>" + Environment.NewLine +
+                        "</Events>" + Environment.NewLine +
+                        "</BDN>");
+            XmlNode events = doc.DocumentElement.SelectSingleNode("Events");
+            doc.PreserveWhitespace = true;
+            events.InnerXml = sb.ToString();
+            File.WriteAllText(fileName, FormatUtf8Xml(doc), Encoding.UTF8);
+        }
+
         private void saveFileAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             saveFileDialog1.Title = Configuration.Settings.Language.ExportPngXml.SaveBluRraySupAs;
             saveFileDialog1.DefaultExt = "*.sup";
             saveFileDialog1.AddExtension = true;
-            saveFileDialog1.Filter = "Blu-Ray sup|*.sup";
-
+            saveFileDialog1.Filter = "Blu-Ray sup|*.sup|BDN xml/png|*.xml";
             if (saveFileDialog1.ShowDialog(this) != DialogResult.OK)
             {
                 return;
@@ -359,7 +442,6 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             progressBar1.Visible = true;
             if (_bluRaySubtitles != null)
             {
-
                 Cursor = Cursors.WaitCursor;
                 var bw = new BackgroundWorker { WorkerReportsProgress = true };
                 bw.RunWorkerCompleted += (o, args) =>
@@ -373,8 +455,40 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 };
                 bw.DoWork += (o, args) =>
                 {
-                    using (var binarySubtitleFile = new FileStream(args.Argument.ToString(), FileMode.Create))
+                    if (saveFileDialog1.FilterIndex == 1)
                     {
+                        using (var binarySubtitleFile = new FileStream(args.Argument.ToString(), FileMode.Create))
+                        {
+                            for (var index = 0; index < _subtitle.Paragraphs.Count; index++)
+                            {
+                                bw.ReportProgress(index);
+                                var p = _subtitle.Paragraphs[index];
+                                var bd = _bluRaySubtitles[index];
+                                var extra = _extra[index];
+                                var bmp = extra.Bitmap ?? bd.GetBitmap();
+                                var brSub = new BluRaySupPicture
+                                {
+                                    StartTime = (long)p.StartTime.TotalMilliseconds,
+                                    EndTime = (long)p.EndTime.TotalMilliseconds,
+                                    Width = (int)numericUpDownScreenWidth.Value,
+                                    Height = (int)numericUpDownScreenHeight.Value,
+                                    CompositionNumber = p.Number * 2,
+                                    IsForced = extra.Forced,
+                                };
+                                var buffer = BluRaySupPicture.CreateSupFrame(brSub, bmp, 25, 0, 0, 0, new Point(extra.X, extra.Y));
+                                if (extra.Bitmap == null)
+                                {
+                                    bmp.Dispose();
+                                }
+
+                                binarySubtitleFile.Write(buffer, 0, buffer.Length);
+                            }
+                        }
+                    }
+                    else if (saveFileDialog1.FilterIndex == 2)
+                    {
+                        var path = Path.GetDirectoryName(saveFileDialog1.FileName);
+                        var sb = new StringBuilder();
                         for (var index = 0; index < _subtitle.Paragraphs.Count; index++)
                         {
                             bw.ReportProgress(index);
@@ -382,23 +496,10 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                             var bd = _bluRaySubtitles[index];
                             var extra = _extra[index];
                             var bmp = extra.Bitmap ?? bd.GetBitmap();
-                            var brSub = new BluRaySupPicture
-                            {
-                                StartTime = (long)p.StartTime.TotalMilliseconds,
-                                EndTime = (long)p.EndTime.TotalMilliseconds,
-                                Width = (int)numericUpDownScreenWidth.Value,
-                                Height = (int)numericUpDownScreenHeight.Value,
-                                CompositionNumber = p.Number * 2,
-                                IsForced = extra.Forced,
-                            };
-                            var buffer = BluRaySupPicture.CreateSupFrame(brSub, bmp, 25, 0, 0, 0, new Point(extra.X, extra.Y));
-                            if (extra.Bitmap == null)
-                            {
-                                bmp.Dispose();
-                            }
-
-                            binarySubtitleFile.Write(buffer, 0, buffer.Length);
+                            WriteBdnXmlParagraph(bmp, sb, path, (index + 1), extra, p);
+                            bmp.Dispose();
                         }
+                        WriteBdnXmlFile(sb, saveFileDialog1.FileName, _extra.Count);
                     }
                 };
                 bw.RunWorkerAsync(saveFileDialog1.FileName);
@@ -1068,6 +1169,26 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 extra.Y = pos.Top;
                 subtitleListView1.SelectIndexAndEnsureVisible(idx);
             }
+        }
+
+        private void comboBoxFrameRate_SelectedValueChanged(object sender, EventArgs e)
+        {
+            _frameRate = double.Parse(comboBoxFrameRate.SelectedItem.ToString());
+        }
+
+        private void comboBoxFrameRate_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            _frameRate = double.Parse(comboBoxFrameRate.SelectedItem.ToString());
+        }
+
+        private void numericUpDownScreenWidth_ValueChanged(object sender, EventArgs e)
+        {
+            _screenWidth = (int)numericUpDownScreenWidth.Value;
+        }
+
+        private void numericUpDownScreenHeight_ValueChanged(object sender, EventArgs e)
+        {
+            _screenHeight = (int)numericUpDownScreenHeight.Value;
         }
     }
 }
