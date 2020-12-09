@@ -290,8 +290,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 subtitleListView1.SelectedIndexChanged += subtitleListView1_SelectedIndexChanged;
                 e.SuppressKeyPress = true;
             }
-
-            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.D)
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.D)
             {
                 subtitleListView1.SelectedIndexChanged -= subtitleListView1_SelectedIndexChanged;
                 subtitleListView1.SelectFirstSelectedItemOnly();
@@ -307,14 +306,14 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             }
             else if (e.KeyCode == Keys.Home && e.Modifiers == Keys.Control) // Go to first sub
             {
-                subtitleListView1.SelectIndexAndEnsureVisible(0);
+                subtitleListView1.SelectIndexAndEnsureVisible(0, true);
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyCode == Keys.End && e.Modifiers == Keys.Control) // Go to last sub
             {
                 if (subtitleListView1.Items.Count >= 0)
                 {
-                    subtitleListView1.SelectIndexAndEnsureVisible(subtitleListView1.Items.Count - 1);
+                    subtitleListView1.SelectIndexAndEnsureVisible(subtitleListView1.Items.Count - 1, true);
                 }
 
                 e.SuppressKeyPress = true;
