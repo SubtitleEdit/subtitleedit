@@ -1177,10 +1177,10 @@ namespace Nikse.SubtitleEdit.Core
                 case "EffectKaraoke/ChooseColor":
                     language.EffectKaraoke.ChooseColor = reader.Value;
                     break;
-                case "EffectKaraoke/TotalMilliseconds":
+                case "EffectKaraoke/TotalSeconds":
                     language.EffectKaraoke.TotalSeconds = reader.Value;
                     break;
-                case "EffectKaraoke/EndDelayInMilliseconds":
+                case "EffectKaraoke/EndDelayInSeconds":
                     language.EffectKaraoke.EndDelayInSeconds = reader.Value;
                     break;
                 case "EffectTypewriter/Title":
