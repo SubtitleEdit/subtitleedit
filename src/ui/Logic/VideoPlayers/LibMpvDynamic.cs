@@ -413,17 +413,14 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             DoMpvCommand("sub-add", fileName, "select");
         }
 
-        public void RemoveSubtitle(bool force = false)
+        public void RemoveSubtitle()
         {
-            if (force)
-            {
-                DoMpvCommand("sub-remove");
-            }
-
             if (!string.IsNullOrEmpty(_secondSubtitleFileName))
             {
-                DoMpvCommand("sub-remove");
+                return;
             }
+
+            DoMpvCommand("sub-remove");
         }
 
         public void ReloadSubtitle()

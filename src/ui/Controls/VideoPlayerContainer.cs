@@ -122,7 +122,7 @@ namespace Nikse.SubtitleEdit.Controls
         private readonly Label _labelVideoPlayerName = new Label();
         private readonly Label _labelVolume = new Label();
         private readonly ToolTip _currentPositionToolTip = new ToolTip();
-        private List<MatroskaChapter> _chapters;
+        private List<MatroskaChapter> _chapters = null;
 
         public List<MatroskaChapter> Chapters
         {
