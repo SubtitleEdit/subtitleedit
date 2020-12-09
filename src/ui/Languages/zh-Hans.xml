@@ -448,13 +448,9 @@ Command line: {1} {2}
   <EffectKaraoke>
     <Title>卡拉 OK 效果</Title>
     <ChooseColor>选择颜色:</ChooseColor>
-    <TotalMilliseconds>总毫秒数:</TotalMilliseconds>
-    <EndDelayInMilliseconds>末尾延时(毫秒):</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>打字机效果</Title>
-    <TotalMilliseconds>总毫秒数:</TotalMilliseconds>
-    <EndDelayInMilliseconds>末尾延时(毫秒):</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>导出自定义文本格式</Title>

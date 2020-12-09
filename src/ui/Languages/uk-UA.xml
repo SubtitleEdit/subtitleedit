@@ -378,13 +378,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <EffectKaraoke>
     <Title>Ефект Караоке</Title>
     <ChooseColor>Оберіть колір:</ChooseColor>
-    <TotalMilliseconds>Всього мілісекунд:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Кінцева затримка в мілісекундах:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Ефект друкарської машинки</Title>
-    <TotalMilliseconds>Всього мілісекунд:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Кінцева затримка в мілісекундах:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Експортувати в користувацький текстовий формат</Title>

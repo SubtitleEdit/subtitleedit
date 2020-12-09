@@ -443,13 +443,9 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
   <EffectKaraoke>
     <Title>Karaoke hatás</Title>
     <ChooseColor>Szín:</ChooseColor>
-    <TotalMilliseconds>Ezredmásodperc:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Befejezés késleltetése mp-ben:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Írógép hatás</Title>
-    <TotalMilliseconds>Ezredmásodperc:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Befejezés késleltetése mp-ben:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Egyéni szövegformátum exportálása</Title>

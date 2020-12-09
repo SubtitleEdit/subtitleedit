@@ -453,13 +453,9 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
   <EffectKaraoke>
     <Title>Karaoke efekti</Title>
     <ChooseColor>Renk seç:</ChooseColor>
-    <TotalMilliseconds>Toplam milisaniye:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Milisaniye cinsinden sondaki gecikme:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Daktilo efekti</Title>
-    <TotalMilliseconds>Toplam milisaniye:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Milisaniye cinsinden sondaki gecikme:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Özel metin biçimini dışa aktar</Title>

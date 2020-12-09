@@ -627,15 +627,15 @@ namespace Nikse.SubtitleEdit.Core
             {
                 Title = "Karaoke effect",
                 ChooseColor = "Choose color:",
-                TotalMilliseconds = "Total milliseconds:",
-                EndDelayInMilliseconds = "End delay in milliseconds:"
+                TotalSeconds = "Total seconds:",
+                EndDelayInSeconds = "End delay in seconds:"
             };
 
             EffectTypewriter = new LanguageStructure.EffectTypewriter
             {
                 Title = "Typewriter effect",
-                TotalMilliseconds = "Total milliseconds:",
-                EndDelayInMilliseconds = "End delay in milliseconds:"
+                TotalSeconds = "Total seconds:",
+                EndDelayInSeconds = "End delay in seconds:"
             };
 
             ExportCustomText = new LanguageStructure.ExportCustomText

@@ -417,13 +417,9 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
   <EffectKaraoke>
     <Title>Karaoke Effekt</Title>
     <ChooseColor>Farbe auswählen:</ChooseColor>
-    <TotalMilliseconds>Gesamte Millisekunden:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Endverzögerung:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Schreibmaschinen Effekt</Title>
-    <TotalMilliseconds>Gesamte Millisekunden:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Endverzögerung:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Benutzer Textformat exportieren</Title>

@@ -420,13 +420,9 @@ Napomena: Proverite slobodan prostor na disku.</WaveFileMalformed>
   <EffectKaraoke>
     <Title>Karaoke efekat</Title>
     <ChooseColor>Izaberi boju:</ChooseColor>
-    <TotalMilliseconds>Ukupno milisekundi:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Kraj kašnjenja u milisekundama:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Efekat pisaće mašine</Title>
-    <TotalMilliseconds>Ukupno milisekundi:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Kraj kašnjenja u milisekundama:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Izvoz prilagođenog tekst formata</Title>

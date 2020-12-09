@@ -440,13 +440,9 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
   <EffectKaraoke>
     <Title>Karaoke tehoste</Title>
     <ChooseColor>Valitse väri:</ChooseColor>
-    <TotalMilliseconds>Yhteensä ms:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Lopetusviive ms:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Kirjoituskone tehoste</Title>
-    <TotalMilliseconds>Yhteensä ms:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Lopetusviive ms:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Vie mukautetussa tekstimuodossa</Title>

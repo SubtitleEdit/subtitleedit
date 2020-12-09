@@ -442,13 +442,9 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
   <EffectKaraoke>
     <Title>Karaoke effekt</Title>
     <ChooseColor>Vælg farve:</ChooseColor>
-    <TotalMilliseconds>Total milliseks.:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Slut forsinkelse i millisek.:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Skrivemaskine effekt</Title>
-    <TotalMilliseconds>Total milliseconds:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Slut forsinkelse i millisek.:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Eksporter bruger-defineret tekstformat</Title>
