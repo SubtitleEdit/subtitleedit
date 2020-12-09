@@ -81,6 +81,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.timerSubtitleOnVideo = new System.Windows.Forms.Timer(this.components);
+            this.buttonSetText = new System.Windows.Forms.Button();
             this.videoPlayerContainer1 = new Nikse.SubtitleEdit.Controls.VideoPlayerContainer();
             this.timeUpDownEndTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
@@ -102,6 +103,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             // groupBoxCurrent
             // 
             this.groupBoxCurrent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBoxCurrent.Controls.Add(this.buttonSetText);
             this.groupBoxCurrent.Controls.Add(this.labelCurrentSize);
             this.groupBoxCurrent.Controls.Add(this.buttonExportImage);
             this.groupBoxCurrent.Controls.Add(this.buttonImportImage);
@@ -114,27 +116,27 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.groupBoxCurrent.Controls.Add(this.timeUpDownEndTime);
             this.groupBoxCurrent.Controls.Add(this.timeUpDownStartTime);
             this.groupBoxCurrent.Controls.Add(this.label1);
-            this.groupBoxCurrent.Location = new System.Drawing.Point(12, 428);
+            this.groupBoxCurrent.Location = new System.Drawing.Point(12, 405);
             this.groupBoxCurrent.Name = "groupBoxCurrent";
-            this.groupBoxCurrent.Size = new System.Drawing.Size(493, 86);
+            this.groupBoxCurrent.Size = new System.Drawing.Size(493, 109);
             this.groupBoxCurrent.TabIndex = 2;
             this.groupBoxCurrent.TabStop = false;
             this.groupBoxCurrent.Text = "Current";
             // 
             // labelCurrentSize
             // 
-            this.labelCurrentSize.Location = new System.Drawing.Point(257, 51);
+            this.labelCurrentSize.AutoSize = true;
+            this.labelCurrentSize.Location = new System.Drawing.Point(192, 41);
             this.labelCurrentSize.Name = "labelCurrentSize";
-            this.labelCurrentSize.Size = new System.Drawing.Size(99, 17);
+            this.labelCurrentSize.Size = new System.Drawing.Size(30, 13);
             this.labelCurrentSize.TabIndex = 8;
             this.labelCurrentSize.Text = "Size:";
-            this.labelCurrentSize.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // buttonExportImage
             // 
-            this.buttonExportImage.Location = new System.Drawing.Point(388, 12);
+            this.buttonExportImage.Location = new System.Drawing.Point(376, 12);
             this.buttonExportImage.Name = "buttonExportImage";
-            this.buttonExportImage.Size = new System.Drawing.Size(99, 23);
+            this.buttonExportImage.Size = new System.Drawing.Size(111, 23);
             this.buttonExportImage.TabIndex = 9;
             this.buttonExportImage.Text = "Export image...";
             this.buttonExportImage.UseVisualStyleBackColor = true;
@@ -142,9 +144,9 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             // 
             // buttonImportImage
             // 
-            this.buttonImportImage.Location = new System.Drawing.Point(388, 41);
+            this.buttonImportImage.Location = new System.Drawing.Point(376, 41);
             this.buttonImportImage.Name = "buttonImportImage";
-            this.buttonImportImage.Size = new System.Drawing.Size(99, 23);
+            this.buttonImportImage.Size = new System.Drawing.Size(111, 23);
             this.buttonImportImage.TabIndex = 10;
             this.buttonImportImage.Text = "Import image...";
             this.buttonImportImage.UseVisualStyleBackColor = true;
@@ -216,7 +218,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             // checkBoxIsForced
             // 
             this.checkBoxIsForced.AutoSize = true;
-            this.checkBoxIsForced.Location = new System.Drawing.Point(192, 50);
+            this.checkBoxIsForced.Location = new System.Drawing.Point(19, 79);
             this.checkBoxIsForced.Name = "checkBoxIsForced";
             this.checkBoxIsForced.Size = new System.Drawing.Size(59, 17);
             this.checkBoxIsForced.TabIndex = 4;
@@ -558,6 +560,16 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.timerSubtitleOnVideo.Interval = 25;
             this.timerSubtitleOnVideo.Tick += new System.EventHandler(this.timerSubtitleOnVideo_Tick);
             // 
+            // buttonSetText
+            // 
+            this.buttonSetText.Location = new System.Drawing.Point(376, 70);
+            this.buttonSetText.Name = "buttonSetText";
+            this.buttonSetText.Size = new System.Drawing.Size(111, 23);
+            this.buttonSetText.TabIndex = 11;
+            this.buttonSetText.Text = "Set text...";
+            this.buttonSetText.UseVisualStyleBackColor = true;
+            this.buttonSetText.Click += new System.EventHandler(this.buttonSetText_Click);
+            // 
             // videoPlayerContainer1
             // 
             this.videoPlayerContainer1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(18)))), ((int)(((byte)(18)))));
@@ -635,7 +647,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.subtitleListView1.Location = new System.Drawing.Point(12, 27);
             this.subtitleListView1.Name = "subtitleListView1";
             this.subtitleListView1.OwnerDraw = true;
-            this.subtitleListView1.Size = new System.Drawing.Size(494, 395);
+            this.subtitleListView1.Size = new System.Drawing.Size(494, 372);
             this.subtitleListView1.SubtitleFontBold = false;
             this.subtitleListView1.SubtitleFontName = "Tahoma";
             this.subtitleListView1.SubtitleFontSize = 8;
@@ -743,5 +755,6 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private Controls.VideoPlayerContainer videoPlayerContainer1;
         private System.Windows.Forms.Timer timerSubtitleOnVideo;
         private System.Windows.Forms.ToolStripMenuItem closeVideoToolStripMenuItem;
+        private System.Windows.Forms.Button buttonSetText;
     }
 }
