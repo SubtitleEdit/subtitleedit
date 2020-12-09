@@ -1012,5 +1012,26 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         {
             closeVideoToolStripMenuItem.Visible = !string.IsNullOrEmpty(_videoFileName);
         }
+
+        private void buttonSetText_Click(object sender, EventArgs e)
+        {
+            if (subtitleListView1.SelectedItems.Count < 1)
+            {
+                return;
+            }
+
+            var idx = subtitleListView1.SelectedItems[0].Index;
+            using (var form = new BinEditNewText(string.Empty)) 
+            {
+                if (form.ShowDialog(this) != DialogResult.OK) 
+                {
+                    return;
+                }
+
+                _extra[idx].Bitmap?.Dispose();
+                _extra[idx].Bitmap = (Bitmap)form.Bitmap.Clone();
+                subtitleListView1_SelectedIndexChanged(null, null);
+            }
+        }        
     }
 }
