@@ -1045,5 +1045,29 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 subtitleListView1_SelectedIndexChanged(null, null);
             }
         }
+
+        private void undoChangesForThisElementToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (subtitleListView1.SelectedItems.Count < 1)
+            {
+                return;
+            }
+
+            var idx = subtitleListView1.SelectedItems[0].Index;
+            if (_bluRaySubtitles != null)
+            {
+                var s = _bluRaySubtitles[idx];
+                var p = _subtitle.Paragraphs[idx];
+                p.StartTime = new TimeCode(s.StartTime / 90.0);
+                p.EndTime = new TimeCode(s.EndTime / 90.0);
+                var pos = s.GetPosition();
+                var extra = _extra[idx];
+                extra.Bitmap = null;
+                extra.Forced = s.IsForced;
+                extra.X = pos.Left;
+                extra.Y = pos.Top;
+                subtitleListView1.SelectIndexAndEnsureVisible(idx);
+            }
+        }
     }
 }
