@@ -267,16 +267,28 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 return;
             }
 
-            var idx = subtitleListView1.SelectedItems[0].Index;
+            var removeIndices = new List<int>();
+            System.Collections.IList list = subtitleListView1.SelectedIndices;
+            for (int i = 0; i < subtitleListView1.SelectedIndices.Count; i++)
+            {
+                int index = (int)list[i];
+                removeIndices.Add(index);
+            }
 
-            _bluRaySubtitles?.RemoveAt(idx);
-            _extra.RemoveAt(idx);
-            _subtitle.Paragraphs.RemoveAt(idx);
+            var idx = subtitleListView1.SelectedItems[0].Index;
+            removeIndices = removeIndices.OrderByDescending(p => p).ToList();
+            foreach (var removeIndex in removeIndices)
+            {
+                _bluRaySubtitles?.RemoveAt(removeIndex);
+                _extra.RemoveAt(removeIndex);
+                _subtitle.Paragraphs.RemoveAt(removeIndex);
+            }
             _subtitle.Renumber();
             subtitleListView1.Fill(_subtitle);
-            if (idx >= _subtitle.Paragraphs.Count)
+
+            if (idx >= _subtitle.Paragraphs.Count && idx > 0)
             {
-                idx++;
+                idx--;
             }
 
             if (idx >= 0)
@@ -1021,9 +1033,9 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             }
 
             var idx = subtitleListView1.SelectedItems[0].Index;
-            using (var form = new BinEditNewText(string.Empty)) 
+            using (var form = new BinEditNewText(string.Empty))
             {
-                if (form.ShowDialog(this) != DialogResult.OK) 
+                if (form.ShowDialog(this) != DialogResult.OK)
                 {
                     return;
                 }
@@ -1032,6 +1044,6 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 _extra[idx].Bitmap = (Bitmap)form.Bitmap.Clone();
                 subtitleListView1_SelectedIndexChanged(null, null);
             }
-        }        
+        }
     }
 }

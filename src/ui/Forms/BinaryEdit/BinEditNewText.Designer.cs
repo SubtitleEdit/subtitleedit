@@ -140,6 +140,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.textBoxText.Size = new System.Drawing.Size(445, 61);
             this.textBoxText.TabIndex = 60;
             this.textBoxText.TextChanged += new System.EventHandler(this.textBoxText_TextChanged);
+            this.textBoxText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxText_KeyDown);
             // 
             // labelLineHeight
             // 
