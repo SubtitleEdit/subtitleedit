@@ -375,13 +375,9 @@ Nota: Controlla lo spazio libero sul disco.</WaveFileMalformed>
   <EffectKaraoke>
     <Title>Effetto Karaoke</Title>
     <ChooseColor>Scegli colore:</ChooseColor>
-    <TotalMilliseconds>Millisecondi totali:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Ritardo finale in millisecondi:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Effetto macchina da scrivere</Title>
-    <TotalMilliseconds>Millisecondi totali:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Ritardo finale in millisecondi:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Esporta formato testo personalizzato</Title>

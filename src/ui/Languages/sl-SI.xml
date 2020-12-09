@@ -326,13 +326,9 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
   <EffectKaraoke>
     <Title>Karaoke učinek</Title>
     <ChooseColor>Izberi barvo:</ChooseColor>
-    <TotalMilliseconds>Skupaj millisek.:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Končaj zakasnitev v millisek.:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Učinek pisalnega stroja</Title>
-    <TotalMilliseconds>Skupaj milisek.:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Končaj zakasnitev v milisek.:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Izvozi navaden format besedila</Title>

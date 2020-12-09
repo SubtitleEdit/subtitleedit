@@ -434,13 +434,9 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
   <EffectKaraoke>
     <Title>Karaoke eragina</Title>
     <ChooseColor>Hautatu margoa:</ChooseColor>
-    <TotalMilliseconds>Guztira segmil:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Amai atzerap. sm:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Idazmakina eragina</Title>
-    <TotalMilliseconds>Guztira segmil.:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Amaiera atzerapena segundumilaenetan:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Esportatu norbere idazki heuskarria</Title>

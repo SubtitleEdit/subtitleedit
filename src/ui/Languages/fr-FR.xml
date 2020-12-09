@@ -408,13 +408,9 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
   <EffectKaraoke>
     <Title>Effet Karaoké</Title>
     <ChooseColor>Choisir couleur:</ChooseColor>
-    <TotalMilliseconds>Millisecondes total:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Délai de fin en millisecondes:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Effet machine à écrire</Title>
-    <TotalMilliseconds>Millisecondes total:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Délai de fin en millisecondes:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Exporter format de texte personnalisé</Title>

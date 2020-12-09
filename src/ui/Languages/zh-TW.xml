@@ -362,13 +362,9 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
   <EffectKaraoke>
     <Title>卡拉 OK 效果</Title>
     <ChooseColor>選擇色彩:</ChooseColor>
-    <TotalMilliseconds>總毫秒數:</TotalMilliseconds>
-    <EndDelayInMilliseconds>結尾延遲 (毫秒):</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>打字機效果</Title>
-    <TotalMilliseconds>總毫秒數:</TotalMilliseconds>
-    <EndDelayInMilliseconds>結尾延遲 (毫秒):</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>匯出自訂文字格式</Title>

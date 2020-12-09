@@ -381,13 +381,9 @@ Tips: Se om du har noe plass igjen på harddisken.</WaveFileMalformed>
   <EffectKaraoke>
     <Title>Karaokeeffekt</Title>
     <ChooseColor>Velg farge:</ChooseColor>
-    <TotalMilliseconds>Totalt antall millisekunder:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Sluttforsinkelse i millisekunder:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Skrivemaskineffekt</Title>
-    <TotalMilliseconds>Totalt antall millisekunder:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Sluttforsinkelse i millisekunder:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Eksporter selvvalgt tekstformat</Title>
