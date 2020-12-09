@@ -413,14 +413,17 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             DoMpvCommand("sub-add", fileName, "select");
         }
 
-        public void RemoveSubtitle()
+        public void RemoveSubtitle(bool force = false)
         {
-            if (!string.IsNullOrEmpty(_secondSubtitleFileName))
+            if (force)
             {
-                return;
+                DoMpvCommand("sub-remove");
             }
 
-            DoMpvCommand("sub-remove");
+            if (!string.IsNullOrEmpty(_secondSubtitleFileName))
+            {
+                DoMpvCommand("sub-remove");
+            }
         }
 
         public void ReloadSubtitle()
@@ -549,7 +552,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 }
 
                 _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("keep-open"), GetUtf8Bytes("always")); // don't auto close video
-                _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("no-sub"), GetUtf8Bytes("")); // don't load subtitles
+                _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("no-sub"), GetUtf8Bytes("")); // don't load subtitles (does not seem to work anymore)
+                _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("sid"), GetUtf8Bytes("no")); // don't load subtitles
+
                 if (videoFileName.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
                     videoFileName.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
                 {
