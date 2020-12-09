@@ -6,6 +6,7 @@ using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Forms.Ocr;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -30,8 +31,10 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private List<BluRaySupParser.PcsData> _bluRaySubtitles;
         private List<Extra> _extra;
         private Subtitle _subtitle;
+        private Paragraph _lastPlayParagraph;
         private Point _movableImageMouseDownLocation;
         private string _exportImageFolder;
+        private string _videoFileName;
 
         public BinEdit(string fileName)
         {
@@ -40,6 +43,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             UiUtil.FixFonts(this);
             UiUtil.FixLargeFonts(this, buttonExportImage);
             UiUtil.InitializeSubtitleFont(subtitleListView1);
+            videoPlayerContainer1.Visible = false;
             subtitleListView1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             subtitleListView1.HideColumn(SubtitleListView.SubtitleColumn.CharactersPerSeconds);
             subtitleListView1.HideColumn(SubtitleListView.SubtitleColumn.Actor);
@@ -208,11 +212,17 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             }
 
             var idx = subtitleListView1.SelectedItems[0].Index;
+            var p = _subtitle.Paragraphs[idx];
+
+            if (videoPlayerContainer1.VideoPlayer != null && videoPlayerContainer1.IsPaused)
+            {
+                videoPlayerContainer1.CurrentPosition = p.StartTime.TotalSeconds;
+            }
+
             if (_bluRaySubtitles != null)
             {
                 var sub = _bluRaySubtitles[idx];
                 var extra = _extra[idx];
-                var p = _subtitle.Paragraphs[idx];
                 timeUpDownStartTime.TimeCode = new TimeCode(p.StartTime.TotalMilliseconds);
                 timeUpDownEndTime.TimeCode = new TimeCode(p.EndTime.TotalMilliseconds);
                 checkBoxIsForced.Checked = extra.Forced;
@@ -896,6 +906,111 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private void contextMenuStripListView_Opening(object sender, CancelEventArgs e)
         {
             adjustAllTimesForSelectedLinesToolStripMenuItem.Visible = subtitleListView1.SelectedItems.Count > 1;
+        }
+
+        private void openVideoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.Title = Configuration.Settings.Language.General.OpenVideoFileTitle;
+            openFileDialog1.FileName = string.Empty;
+            openFileDialog1.Filter = UiUtil.GetVideoFileFilter(true);
+
+            openFileDialog1.FileName = string.Empty;
+            if (openFileDialog1.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+
+            if (!videoPlayerContainer1.Visible)
+            {
+                videoPlayerContainer1.BringToFront();
+                pictureBoxMovableImage.BringToFront();
+                videoPlayerContainer1.Visible = true;
+                videoPlayerContainer1.Dock = DockStyle.Fill;
+            }
+
+            if (videoPlayerContainer1.VideoPlayer != null)
+            {
+                videoPlayerContainer1.Pause();
+                videoPlayerContainer1.VideoPlayer.DisposeVideoPlayer();
+            }
+
+            VideoInfo videoInfo = UiUtil.GetVideoInfo(openFileDialog1.FileName);
+            _videoFileName = openFileDialog1.FileName;
+            UiUtil.InitializeVideoPlayerAndContainer(openFileDialog1.FileName, videoInfo, videoPlayerContainer1, VideoStartLoaded, VideoStartEnded);
+        }
+
+        private void VideoStartEnded(object sender, EventArgs e)
+        {
+            videoPlayerContainer1.Pause();
+            if (videoPlayerContainer1.VideoPlayer is LibMpvDynamic libmpv)
+            {
+                libmpv.RemoveSubtitle();
+            }
+        }
+
+        private void VideoStartLoaded(object sender, EventArgs e)
+        {
+            videoPlayerContainer1.Pause();
+            timerSubtitleOnVideo.Start();
+        }
+
+        private void timerSubtitleOnVideo_Tick(object sender, EventArgs e)
+        {
+            if (videoPlayerContainer1 == null || videoPlayerContainer1.IsPaused)
+            {
+                return;
+            }
+
+            double pos;
+            if (!videoPlayerContainer1.IsPaused)
+            {
+                videoPlayerContainer1.RefreshProgressBar();
+                pos = videoPlayerContainer1.CurrentPosition;
+            }
+            else
+            {
+                pos = videoPlayerContainer1.CurrentPosition;
+            }
+
+            var sub = _subtitle.GetFirstParagraphOrDefaultByTime(pos * 1000.0);
+            if (sub == null)
+            {
+                pictureBoxMovableImage.Hide();
+            }
+
+            if (sub != null)
+            {
+                pictureBoxMovableImage.Show();
+                if (_lastPlayParagraph != sub)
+                {
+                    subtitleListView1.SelectIndexAndEnsureVisible(_subtitle.Paragraphs.IndexOf(sub));
+                    _lastPlayParagraph = sub;
+                }
+            }
+        }
+
+        private void BinEdit_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            closeVideoToolStripMenuItem_Click(null, null);
+        }
+
+        private void closeVideoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            timerSubtitleOnVideo.Stop();
+            Application.DoEvents();
+            if (videoPlayerContainer1.VideoPlayer != null)
+            {
+                videoPlayerContainer1.Pause();
+                videoPlayerContainer1.VideoPlayer.DisposeVideoPlayer();
+            }
+            Application.DoEvents();
+            _videoFileName = null;
+            videoPlayerContainer1.Visible = false;
+        }
+
+        private void videoToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+        {
+            closeVideoToolStripMenuItem.Visible = !string.IsNullOrEmpty(_videoFileName);
         }
     }
 }
