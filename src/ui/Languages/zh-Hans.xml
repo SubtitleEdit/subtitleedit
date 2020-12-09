@@ -448,9 +448,13 @@ Command line: {1} {2}
   <EffectKaraoke>
     <Title>卡拉 OK 效果</Title>
     <ChooseColor>选择颜色:</ChooseColor>
+    <TotalSeconds>总秒数：</TotalSeconds>
+    <EndDelayInSeconds>结束延迟（秒）：</EndDelayInSeconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>打字机效果</Title>
+    <TotalSeconds>总秒数：</TotalSeconds>
+    <EndDelayInSeconds>结束延迟（秒）：</EndDelayInSeconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>导出自定义文本格式</Title>
@@ -994,9 +998,10 @@ Command line: {1} {2}
         <Statistics>统计(&amp;C)...</Statistics>
         <Plugins>插件(&amp;P)...</Plugins>
         <ImportSubtitleFromVideoFile>从视频文件中导入字幕...</ImportSubtitleFromVideoFile>
-        <ImportOcrFromDvd>从 DVD 导入/OCR 字幕...</ImportOcrFromDvd>
-        <ImportOcrVobSubSubtitle>导入/OCR VobSub 字幕...</ImportOcrVobSubSubtitle>
-        <ImportBluRaySupFile>导入/OCR 蓝光字幕...</ImportBluRaySupFile>
+        <ImportOcrFromDvd>从 DVD 导入字幕以 OCR...</ImportOcrFromDvd>
+        <ImportOcrVobSubSubtitle>导入 VobSub 字幕以 OCR ...</ImportOcrVobSubSubtitle>
+        <ImportBluRaySupFile>导入蓝光字幕以OCR...</ImportBluRaySupFile>
+        <ImportBluRaySupFileEdit>导入蓝光字幕以编辑...</ImportBluRaySupFileEdit>
         <ImportSubtitleWithManualChosenEncoding>手动选择编码方式导入字幕...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>导入纯文本...</ImportText>
         <ImportImages>导入图像...</ImportImages>
@@ -2722,6 +2727,7 @@ Command line: {1} {2}
     <ErrorUnicodeEncodingOnly>水印仅可使用 Unicode 文件编码</ErrorUnicodeEncodingOnly>
   </Watermark>
   <Waveform>
+    <AddWaveformAndSpectrogram>添加波形/频谱</AddWaveformAndSpectrogram>
     <ClickToAddWaveform>点击以添加波形</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>点击以添加 波形/频谱图</ClickToAddWaveformAndSpectrogram>
     <Seconds>秒</Seconds>
