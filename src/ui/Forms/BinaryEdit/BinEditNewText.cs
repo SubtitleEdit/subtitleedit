@@ -200,7 +200,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
         private float GetFontHeight()
         {
-            if (comboBoxSubtitleFont.SelectedItem == null || comboBoxSubtitleFontSize.SelectedItem == null) 
+            if (comboBoxSubtitleFont.SelectedItem == null || comboBoxSubtitleFontSize.SelectedItem == null)
             {
                 return Configuration.Settings.Tools.ExportLastLineHeight;
             }
@@ -300,6 +300,22 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             if (e.KeyCode == Keys.Escape)
             {
                 DialogResult = DialogResult.Cancel;
+            }
+        }
+
+        private void textBoxText_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.I)
+            {
+                if (textBoxText.Text.Contains("<i>", StringComparison.Ordinal))
+                {
+                    textBoxText.Text = HtmlUtil.RemoveOpenCloseTags(textBoxText.Text.Trim(), HtmlUtil.TagItalic).Trim();
+                }
+                else
+                {
+                    textBoxText.Text = $"<i>{textBoxText.Text.Trim()}</i>";
+                }
+                e.SuppressKeyPress = true;
             }
         }
     }
