@@ -1775,7 +1775,6 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <GoToCurrentSubtitleStart>Vai all'inizio della linea corrente</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Vai alla fine della linea corrente</GoToCurrentSubtitleEnd>
     <ToggleFocus>Alterna focus tra lista sorgente e casella testo sottotitolo</ToggleFocus>
-    <FocusWaveform>Focus forma d'onda/spettrogramma</FocusWaveform>
     <ToggleDialogDashes>Alterna trattini di dialogo</ToggleDialogDashes>
     <Alignment>Allineamento (linee selezionate)</Alignment>
     <CopyTextOnly>Copia il testo negli appunti (linee selezionate)</CopyTextOnly>

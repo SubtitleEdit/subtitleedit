@@ -1784,7 +1784,6 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <GoToCurrentSubtitleStart>移至目前行的起始時間</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>移至目前行的結束時間</GoToCurrentSubtitleEnd>
     <ToggleFocus>在清單檢視和字幕文字框之間切換焦點</ToggleFocus>
-    <FocusWaveform>焦點置於 波形/頻譜圖</FocusWaveform>
     <ToggleDialogDashes>切換對話破折號</ToggleDialogDashes>
     <Alignment>對齊 (選擇的行)</Alignment>
     <CopyTextOnly>僅複製文字到剪貼簿 (選擇的行)</CopyTextOnly>

@@ -1663,7 +1663,6 @@ popravlja en podnapis (sodelovanje)</Information>
     <GoToCurrentSubtitleStart>Pojdi na trenutno začetno vrstico</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Pojdi na trenutno končno vrstico</GoToCurrentSubtitleEnd>
     <ToggleFocus>Preklopi fokus med pogledom vsebine in okvirjem podnapisa</ToggleFocus>
-    <FocusWaveform>Fokusiraj krivuljo/spektrograg</FocusWaveform>
     <ToggleDialogDashes>Prestavi pomišljaje dialoga</ToggleDialogDashes>
     <Alignment>Poravnava (izbrane vrstice)</Alignment>
     <CopyTextOnly>Kopiraj besedilo edino v odložišče (izbrane vrstice)</CopyTextOnly>

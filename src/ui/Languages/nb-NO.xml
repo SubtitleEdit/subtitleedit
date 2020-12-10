@@ -1801,7 +1801,6 @@ Hvis du har redigert denne filen i Subtitle Edit, kan du kanskje finne en backup
     <GoToCurrentSubtitleStart>Hopp til starten på nåværende linje</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Hopp til slutten på nåværende linje</GoToCurrentSubtitleEnd>
     <ToggleFocus>Skru av/på fokus mellom listevisning og undertekstboksen</ToggleFocus>
-    <FocusWaveform>Fokus på bølgevisning/spektrogram</FocusWaveform>
     <ToggleDialogDashes>Skru av/på dialogstreker</ToggleDialogDashes>
     <Alignment>Plassering (valgte linjer)</Alignment>
     <CopyTextOnly>Kopier kun tekst til utklippstavle (valgte linjer)</CopyTextOnly>

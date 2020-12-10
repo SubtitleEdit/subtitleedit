@@ -1705,7 +1705,6 @@
     <GoToCurrentSubtitleStart>ไปต้นบรรทัดปัจจุบัน</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>ไปท้ายบรรทัดปัจจุบัน</GoToCurrentSubtitleEnd>
     <ToggleFocus>สลับโฟกัสระหว่างลิสต์วิวและกล่องข้อความซับไตเติ้ล</ToggleFocus>
-    <FocusWaveform>โฟกัสที่เวฟฟอร์ม/สเปกโตแกรม</FocusWaveform>
     <ToggleDialogDashes>สลับยัติภังค์ในบทสนทนา</ToggleDialogDashes>
     <Alignment>การวางแนว (บรรทัดที่เลือก)</Alignment>
     <CopyTextOnly>สำเนาข้อความไปคลิปบอร์ดเท่านั้น (บรรทัดที่เลือก)</CopyTextOnly>

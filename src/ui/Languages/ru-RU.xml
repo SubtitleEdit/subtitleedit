@@ -2068,7 +2068,6 @@ https://github.com/SubtitleEdit/subtitleedit
     <GoToPrevSubtitleAndPlay>Перейти к предыдущей строке и воспроизвести видео</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>Перейти к следующей строке и воспроизвести видео</GoToNextSubtitleAndPlay>
     <ToggleFocus>Переключить фокус между списком и полем ввода субтитра</ToggleFocus>
-    <FocusWaveform>Фокус на волновой форме/спектрограмме</FocusWaveform>
     <ToggleDialogDashes>Вкл./Откл. тире диалогов</ToggleDialogDashes>
     <ToggleMusicSymbols>Вкл./Откл. музыкальных символов</ToggleMusicSymbols>
     <Alignment>Выравнить (выделенные строки)</Alignment>

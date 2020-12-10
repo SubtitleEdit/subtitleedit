@@ -2157,7 +2157,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GoToPrevSubtitleAndPlay>Преминаване на предишния ред и възпроизвеждане</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>Преминаване на следващия ред и възпроизвеждане</GoToNextSubtitleAndPlay>
     <ToggleFocus>Превключване фокуса между изглед на списъка и реда за писане</ToggleFocus>
-    <FocusWaveform>Фокус на wave формата/спектограмата</FocusWaveform>
     <ToggleDialogDashes>Размяна на диалоговите тирета</ToggleDialogDashes>
     <ToggleMusicSymbols>Превключване на музикални символи</ToggleMusicSymbols>
     <Alignment>Подравняване (редовете в момента)</Alignment>
