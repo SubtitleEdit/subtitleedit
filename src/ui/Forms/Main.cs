@@ -28997,8 +28997,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void TranslateToolStripMenuItemClick(object sender, EventArgs e)
         {
-            Debug.WriteLine("clicked");
-            var useGoogle = true;
             var onlySelectedLines = false;
             if (!IsSubtitleLoaded)
             {
@@ -29006,27 +29004,25 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            bool isAlternateVisible = SubtitleListview1.IsAlternateTextColumnVisible;
-            ReloadFromSourceView();
-            using (var googleTranslate = new GenericTranslate())
+            bool isAlternateVisible = SubtitleListview1.IsAlternateTextColumnVisible; //brummochse: ?
+            ReloadFromSourceView(); //brummochse: ?
+            using (var translateDialog = new GenericTranslate())
             {
+
                 SaveSubtitleListviewIndices();
-                string title = _language.GoogleTranslate;
-                if (!useGoogle)
-                {
-                    title = _language.MicrosoftTranslate;
-                }
+                string title = "";
 
                 if (onlySelectedLines)
                 {
                     var selectedLines = new Subtitle();
                     foreach (int index in SubtitleListview1.SelectedIndices)
                     {
+
                         selectedLines.Paragraphs.Add(_subtitle.Paragraphs[index]);
                     }
 
                     title += " - " + _language.SelectedLines;
-                    if (_subtitleAlternate != null)
+                    if (_subtitleAlternate != null) //brummochse: what is this alternate thing?
                     {
                         var paragraphs = new List<Paragraph>();
                         foreach (int index in SubtitleListview1.SelectedIndices)
@@ -29035,29 +29031,30 @@ namespace Nikse.SubtitleEdit.Forms
                             if (original != null)
                             {
                                 paragraphs.Add(original);
+
                             }
                         }
 
                         if (paragraphs.Count == selectedLines.Paragraphs.Count)
                         {
-                            googleTranslate.Initialize(new Subtitle(paragraphs), selectedLines, title, useGoogle, GetCurrentEncoding());
+                            translateDialog.Initialize(new Subtitle(paragraphs), selectedLines, title,  GetCurrentEncoding());
                         }
                         else
                         {
-                            googleTranslate.Initialize(selectedLines, null, title, useGoogle, GetCurrentEncoding());
+                            translateDialog.Initialize(selectedLines, null, title,  GetCurrentEncoding());
                         }
                     }
                     else
                     {
-                        googleTranslate.Initialize(selectedLines, null, title, useGoogle, GetCurrentEncoding());
+                        translateDialog.Initialize(selectedLines, null, title,  GetCurrentEncoding());
                     }
                 }
                 else
                 {
-                    googleTranslate.Initialize(_subtitle, null, title, useGoogle, GetCurrentEncoding());
+                    translateDialog.Initialize(_subtitle, null, title,  GetCurrentEncoding());
                 }
 
-                if (googleTranslate.ShowDialog(this) == DialogResult.OK)
+                if (translateDialog.ShowDialog(this) == DialogResult.OK)
                 {
                     _subtitleListViewIndex = -1;
                     string oldFileName = _fileName;
@@ -29068,7 +29065,7 @@ namespace Nikse.SubtitleEdit.Forms
                         int i = 0;
                         foreach (int index in SubtitleListview1.SelectedIndices)
                         {
-                            _subtitle.Paragraphs[index] = googleTranslate.TranslatedSubtitle.Paragraphs[i];
+                            _subtitle.Paragraphs[index] = translateDialog.TranslatedSubtitle.Paragraphs[i];
                             i++;
                         }
 
@@ -29082,7 +29079,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _subtitleAlternateFileName = _fileName;
                         _fileName = null;
                         _subtitle.Paragraphs.Clear();
-                        foreach (var p in googleTranslate.TranslatedSubtitle.Paragraphs)
+                        foreach (var p in translateDialog.TranslatedSubtitle.Paragraphs)
                         {
                             _subtitle.Paragraphs.Add(new Paragraph(p));
                         }
@@ -29108,7 +29105,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (!onlySelectedLines)
                     {
                         ResetHistory();
-                        _fileName = googleTranslate.GetFileNameWithTargetLanguage(oldFileName, VideoFileName, _subtitleAlternate, GetCurrentSubtitleFormat());
+                        _fileName = translateDialog.GetFileNameWithTargetLanguage(oldFileName, VideoFileName, _subtitleAlternate, GetCurrentSubtitleFormat());
                     }
 
                     RestoreSubtitleListviewIndices();
