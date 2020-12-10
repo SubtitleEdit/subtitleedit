@@ -31,6 +31,10 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             public Bitmap Bitmap { get; set; }
         }
 
+        private readonly Keys _goToLine = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditGoToLineNumber);
+        private readonly Keys _mainGeneralGoToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
+        private readonly Keys _mainGeneralGoToPrevSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
+        private readonly Keys _mainListViewGoToNextError = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewGoToNextError);
         private List<BluRaySupParser.PcsData> _bluRaySubtitles;
         private List<Extra> _extra;
         private Subtitle _subtitle;
@@ -345,6 +349,45 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 }
 
                 e.SuppressKeyPress = true;
+            }
+            else if (subtitleListView1.Visible && subtitleListView1.Items.Count > 0 && e.KeyData == _goToLine)
+            {
+                GoToLineNumber();
+            }
+            else if (_mainGeneralGoToNextSubtitle == e.KeyData || (e.KeyCode == Keys.Down && e.Modifiers == Keys.Alt))
+            {
+                int selectedIndex = 0;
+                if (subtitleListView1.SelectedItems.Count > 0)
+                {
+                    selectedIndex = subtitleListView1.SelectedItems[0].Index;
+                    selectedIndex++;
+                }
+                subtitleListView1.SelectIndexAndEnsureVisible(selectedIndex);
+            }
+            else if (_mainGeneralGoToPrevSubtitle == e.KeyData || (e.KeyCode == Keys.Up && e.Modifiers == Keys.Alt))
+            {
+                int selectedIndex = 0;
+                if (subtitleListView1.SelectedItems.Count > 0)
+                {
+                    selectedIndex = subtitleListView1.SelectedItems[0].Index;
+                    selectedIndex--;
+                }
+                subtitleListView1.SelectIndexAndEnsureVisible(selectedIndex);
+            }
+        }
+
+        private void GoToLineNumber()
+        {
+            using (var goToLine = new GoToLine())
+            {
+                goToLine.Initialize(1, subtitleListView1.Items.Count);
+                if (goToLine.ShowDialog(this) == DialogResult.OK)
+                {
+                    subtitleListView1.SelectNone();
+                    subtitleListView1.Items[goToLine.LineNumber - 1].Selected = true;
+                    subtitleListView1.Items[goToLine.LineNumber - 1].EnsureVisible();
+                    subtitleListView1.Items[goToLine.LineNumber - 1].Focused = true;
+                }
             }
         }
 
