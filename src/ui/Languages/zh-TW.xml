@@ -1797,7 +1797,6 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <WaveformAddTextHereFromClipboard>加入文字到此處 (從剪貼板用於新的選擇部份)</WaveformAddTextHereFromClipboard>
     <WaveformPlayNewSelection>播放新的選擇部份</WaveformPlayNewSelection>
     <WaveformPlayFirstSelectedSubtitle>播放第一個選擇的字幕</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>焦點置於清單檢視</WaveformFocusListView>
     <WaveformToggleSceneChange>切換場景變更</WaveformToggleSceneChange>
     <GoBack1Frame>向前一個影格</GoBack1Frame>
     <GoForward1Frame>向後一個影格</GoForward1Frame>

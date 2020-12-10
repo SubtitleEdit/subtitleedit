@@ -1808,7 +1808,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WaveformAddTextHere>Додати сюди текст (для нового виділення)</WaveformAddTextHere>
     <WaveformPlayNewSelection>Відтворити нове виділення</WaveformPlayNewSelection>
     <WaveformPlayFirstSelectedSubtitle>Відтворити перший вибраний субтитр</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Фокус на списку субтитрів</WaveformFocusListView>
     <GoBack1Frame>Один кадр назад</GoBack1Frame>
     <GoForward1Frame>Один кадр вперед</GoForward1Frame>
     <GoBack100Milliseconds>100 мс назад</GoBack100Milliseconds>

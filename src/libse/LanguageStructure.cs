@@ -2363,7 +2363,6 @@
             public string WaveformPlayNewSelection { get; set; }
             public string WaveformPlayNewSelectionEnd { get; set; }
             public string WaveformPlayFirstSelectedSubtitle { get; set; }
-            public string WaveformFocusListView { get; set; }
             public string WaveformGoToPreviousSceneChange { get; set; }
             public string WaveformGoToNextSceneChange { get; set; }
             public string WaveformToggleSceneChange { get; set; }

@@ -1788,7 +1788,6 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <WaveformAddTextHere>Aggiungi testo qui (per nuova selezione)</WaveformAddTextHere>
     <WaveformPlayNewSelection>Riproduci nuova selezione</WaveformPlayNewSelection>
     <WaveformPlayFirstSelectedSubtitle>Riproduci primo sottotitoli selezionato</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Focus su listview</WaveformFocusListView>
     <GoBack1Frame>Un frame indietro</GoBack1Frame>
     <GoForward1Frame>Un frame avanti</GoForward1Frame>
     <GoBack100Milliseconds>100 ms indietro</GoBack100Milliseconds>

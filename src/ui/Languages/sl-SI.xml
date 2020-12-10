@@ -1675,7 +1675,6 @@ popravlja en podnapis (sodelovanje)</Information>
     <WaveformAddTextHere>Sem dodaj besedilo (za novo izbrane)</WaveformAddTextHere>
     <WaveformPlayNewSelection>Predvajaj na novo izbrane</WaveformPlayNewSelection>
     <WaveformPlayFirstSelectedSubtitle>Predvajaj prvi izbrani podnapis</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Fokusiraj ogled seznama</WaveformFocusListView>
     <GoBack1Frame>Eno sliko nazaj</GoBack1Frame>
     <GoForward1Frame>Eno sliko naprej</GoForward1Frame>
     <GoBack100Milliseconds>100 ms nazaj</GoBack100Milliseconds>

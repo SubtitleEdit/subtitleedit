@@ -1980,7 +1980,6 @@ kan redigera i samma undertextfil (samarbete)</Information>
     <WaveformPlayNewSelection>Spela upp urvalet</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Spela upp slutet av urvalet</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Spela den första markerade undertexten</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Fokus listvy</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>Gå till föregående scenförändring</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Gå till nästa scenförändring</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Växla scenförändring</WaveformToggleSceneChange>

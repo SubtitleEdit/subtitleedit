@@ -2039,7 +2039,6 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <WaveformPlayNewSelection>Tocar seleção</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Tocar final da seleção</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Tocar primeira legenda selecionada</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Foco da visualização em lista</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>Ir para a mudança de cena anterior</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Ir para próxima mudança de cena</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Alternar mudança de cena</WaveformToggleSceneChange>

@@ -2189,7 +2189,6 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <WaveformPlayNewSelection>선택을 재생</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>선택의 끝을 재생</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>처음 선택한 자막 재생</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>「자막 보기」로 이동</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>이전 장면 전환으로 이동</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>다음 장면 전환으로 이동</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>장면 전환</WaveformToggleSceneChange>
