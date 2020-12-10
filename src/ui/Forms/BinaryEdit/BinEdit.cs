@@ -34,7 +34,6 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private readonly Keys _goToLine = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditGoToLineNumber);
         private readonly Keys _mainGeneralGoToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
         private readonly Keys _mainGeneralGoToPrevSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
-        private readonly Keys _mainListViewGoToNextError = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewGoToNextError);
         private List<BluRaySupParser.PcsData> _bluRaySubtitles;
         private List<Extra> _extra;
         private Subtitle _subtitle;
@@ -45,6 +44,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private double _frameRate;
         private int _screenWidth;
         private int _screenHeight;
+        private string _lastSaveHash;
 
         public BinEdit(string fileName)
         {
@@ -118,6 +118,8 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             {
                 subtitleListView1.SelectIndexAndEnsureVisible(_subtitle.GetParagraphOrDefault(0));
             }
+
+            _lastSaveHash = GetStateHash();
         }
 
         private void SetResolution(Size bmpSize)
@@ -480,6 +482,8 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 return;
             }
 
+            _lastSaveHash = GetStateHash();
+
             progressBar1.Value = 0;
             progressBar1.Maximum = _subtitle.Paragraphs.Count;
             progressBar1.Visible = true;
@@ -547,6 +551,27 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 };
                 bw.RunWorkerAsync(saveFileDialog1.FileName);
             }
+        }
+
+        private string GetStateHash()
+        {
+            int hash = 17;
+            unchecked // Overflow is fine, just wrap
+            {
+                for (int i = 0; i < _extra.Count; i++)
+                {
+                    var extra = _extra[i];
+                    hash = hash * 23 + extra.X.GetHashCode();
+                    hash = hash * 23 + extra.Y.GetHashCode();
+                    hash = hash * 23 + extra.Forced.GetHashCode();
+                    if (extra.Bitmap != null)
+                    {
+                        hash = hash * 23 + extra.Bitmap.GetHashCode();
+                    }
+                }
+            }
+
+            return hash.ToString() + _subtitle.GetFastHashCode(string.Empty);
         }
 
         private void openFileToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1147,7 +1172,22 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
         private void BinEdit_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (HasChanges())
+            {
+                var result = MessageBox.Show(this, "Close and lose changes?", "SE", MessageBoxButtons.YesNoCancel);
+                if (result != DialogResult.Yes)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+            }
+
             closeVideoToolStripMenuItem_Click(null, null);
+        }
+
+        private bool HasChanges()
+        {
+            return GetStateHash() != _lastSaveHash;
         }
 
         private void closeVideoToolStripMenuItem_Click(object sender, EventArgs e)
