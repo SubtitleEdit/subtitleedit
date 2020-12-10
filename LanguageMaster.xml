@@ -510,7 +510,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <HalfTopBottom3D>Half-Top/Bottom</HalfTopBottom3D>
     <Depth>Depth</Depth>
     <ExportAllLines>Export all lines...</ExportAllLines>
-    <XImagesSavedInY>{0} images saved in {1}</XImagesSavedInY>
+    <XImagesSavedInY>{0:#,##0} images saved in {1}</XImagesSavedInY>
     <VideoResolution>Video res</VideoResolution>
     <Align>Align</Align>
     <Left>Left</Left>
