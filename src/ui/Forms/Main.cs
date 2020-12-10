@@ -18936,6 +18936,13 @@ namespace Nikse.SubtitleEdit.Forms
                     SetWaveformPosition(0, 0, 0);
                     timerWaveform.Start();
                 }
+                else if (audioVisualizer.WavePeaks != null)
+                {
+                    audioVisualizer.WavePeaks = null;
+                    audioVisualizer.SetSpectrogram(null);
+                    audioVisualizer.SceneChanges = new List<double>();
+                    audioVisualizer.Chapters = new List<MatroskaChapter>();
+                }
 
                 Cursor = Cursors.Default;
 
@@ -19953,12 +19960,9 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.FileName = string.Empty;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                if (audioVisualizer.WavePeaks != null)
+                if (openFileDialog1.FileName == VideoFileName)
                 {
-                    audioVisualizer.WavePeaks = null;
-                    audioVisualizer.SetSpectrogram(null);
-                    audioVisualizer.SceneChanges = new List<double>();
-                    audioVisualizer.Chapters = new List<MatroskaChapter>();
+                    return;
                 }
 
                 openFileDialog1.InitialDirectory = Path.GetDirectoryName(openFileDialog1.FileName);
@@ -21787,6 +21791,11 @@ namespace Nikse.SubtitleEdit.Forms
                         var dirName = Path.GetDirectoryName(fileName);
                         saveFileDialog1.InitialDirectory = dirName;
                         openFileDialog1.InitialDirectory = dirName;
+                    }
+
+                    if (fileName == VideoFileName)
+                    {
+                        return;
                     }
 
                     VideoFileName = fileName;
