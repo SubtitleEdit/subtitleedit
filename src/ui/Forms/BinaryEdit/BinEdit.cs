@@ -495,6 +495,18 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 {
                     Cursor = Cursors.Default;
                     progressBar1.Visible = false;
+
+                    var folderName = Path.GetDirectoryName(saveFileDialog1.FileName);
+                    var text = string.Format(Configuration.Settings.Language.Main.SavedSubtitleX, saveFileDialog1.FileName);
+                    if (saveFileDialog1.FilterIndex == 2)
+                    {
+                        text = string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, _extra.Count, folderName);
+                    }
+
+                    using (var f = new ExportPngXmlDialogOpenFolder(text, folderName))
+                    {
+                        f.ShowDialog(this);
+                    }
                 };
                 bw.ProgressChanged += (o, args) =>
                 {

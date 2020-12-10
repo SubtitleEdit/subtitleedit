@@ -698,7 +698,7 @@ namespace Nikse.SubtitleEdit.Core
                 FontColor = "Font color",
                 FontFamily = "Font family",
                 FontSize = "Font size",
-                XImagesSavedInY = "{0} images saved in {1}",
+                XImagesSavedInY = "{0:#,##0} images saved in {1}",
                 VideoResolution = "Video res",
                 Align = "Align",
                 Left = "Left",
