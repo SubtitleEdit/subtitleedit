@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
     /// <summary>
     /// Google translate via Google Cloud V3 API - see https://cloud.google.com/translate/
     /// </summary>
-    public class GoogleTranslator3 : ITranslator
+    public class GoogleTranslator3 : ITranslationStrategy
     {
         private readonly string _apiKey;
         private readonly string _projectNumberOrId;

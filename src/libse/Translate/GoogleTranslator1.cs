@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
     /// <summary>
     /// Google translate via Google V1 API - see https://cloud.google.com/translate/
     /// </summary>
-    public class GoogleTranslator1 : ITranslator
+    public class GoogleTranslator1 : ITranslationStrategy
     {
         private const char SplitChar = '\n';
 

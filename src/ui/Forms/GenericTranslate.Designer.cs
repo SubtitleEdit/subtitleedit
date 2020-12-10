@@ -37,12 +37,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonTranslate = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.linkLabelPoweredByGoogleTranslate = new System.Windows.Forms.LinkLabel();
             this.labelPleaseWait = new System.Windows.Forms.Label();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.subtitleListViewTo = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.subtitleListViewFrom = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.labelApiKeyNotFound = new System.Windows.Forms.Label();
+            this.comboBoxTranslatoEngines = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // comboBoxFrom
@@ -112,18 +113,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel.TabIndex = 7;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
-            // 
-            // linkLabelPoweredByGoogleTranslate
-            // 
-            this.linkLabelPoweredByGoogleTranslate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.linkLabelPoweredByGoogleTranslate.AutoSize = true;
-            this.linkLabelPoweredByGoogleTranslate.Location = new System.Drawing.Point(15, 529);
-            this.linkLabelPoweredByGoogleTranslate.Name = "linkLabelPoweredByGoogleTranslate";
-            this.linkLabelPoweredByGoogleTranslate.Size = new System.Drawing.Size(146, 13);
-            this.linkLabelPoweredByGoogleTranslate.TabIndex = 8;
-            this.linkLabelPoweredByGoogleTranslate.TabStop = true;
-            this.linkLabelPoweredByGoogleTranslate.Text = "Powered by Google translate";
-            this.linkLabelPoweredByGoogleTranslate.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel1LinkClicked);
             // 
             // labelPleaseWait
             // 
@@ -198,16 +187,36 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelApiKeyNotFound.TabIndex = 12;
             this.labelApiKeyNotFound.Text = "Warning: API key not found!";
             // 
-            // GoogleTranslate
+            // comboBoxTranslatoEngines
+            // 
+            this.comboBoxTranslatoEngines.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxTranslatoEngines.FormattingEnabled = true;
+            this.comboBoxTranslatoEngines.Location = new System.Drawing.Point(144, 36);
+            this.comboBoxTranslatoEngines.Name = "comboBoxTranslatoEngines";
+            this.comboBoxTranslatoEngines.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxTranslatoEngines.TabIndex = 13;
+            this.comboBoxTranslatoEngines.TextChanged += new System.EventHandler(this.ComboBoxTranslatorEngineChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(15, 41);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(99, 13);
+            this.label1.TabIndex = 14;
+            this.label1.Text = "Translation Engine:";
+            // 
+            // GenericTranslate
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(925, 558);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.comboBoxTranslatoEngines);
             this.Controls.Add(this.labelApiKeyNotFound);
             this.Controls.Add(this.comboBoxFrom);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.labelPleaseWait);
-            this.Controls.Add(this.linkLabelPoweredByGoogleTranslate);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonTranslate);
@@ -220,11 +229,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.KeyPreview = true;
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(900, 500);
-            this.Name = "GoogleTranslate";
+            this.Name = "GenericTranslate";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Google translate";
+            this.Text = "Translate";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormGoogleTranslate_KeyDown);
             this.Resize += new System.EventHandler(this.GoogleTranslate_Resize);
             this.ResumeLayout(false);
@@ -243,9 +252,10 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonTranslate;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.LinkLabel linkLabelPoweredByGoogleTranslate;
         private System.Windows.Forms.Label labelPleaseWait;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Label labelApiKeyNotFound;
+        private System.Windows.Forms.ComboBox comboBoxTranslatoEngines;
+        private System.Windows.Forms.Label label1;
     }
 }

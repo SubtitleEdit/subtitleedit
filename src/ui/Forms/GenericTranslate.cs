@@ -5,6 +5,7 @@ using Nikse.SubtitleEdit.Core.Translate;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -19,9 +20,8 @@ namespace Nikse.SubtitleEdit.Forms
         public Subtitle TranslatedSubtitle { get; private set; }
         private Subtitle _subtitle;
         private bool _breakTranslation;
-        private bool _googleTranslate = true;
         private const string SplitterString = "+-+";
-        private ITranslator _translator;
+        private ITranslationService _translationService;
 
         private enum FormattingType
         {
@@ -30,12 +30,12 @@ namespace Nikse.SubtitleEdit.Forms
             ItalicTwoLines
         }
 
-        private static string GoogleTranslateUrl => new GoogleTranslator2(Configuration.Settings.Tools.GoogleApiV2Key).GetUrl();
-
         private FormattingType[] _formattingTypes;
         private bool[] _autoSplit;
 
-        private string _targetTwoLetterIsoLanguageName;
+        private string _toLanguageIsoCode;
+        private string _fromLanguageIsoCode;
+
 
         public class ComboBoxItem
         {
@@ -44,14 +44,18 @@ namespace Nikse.SubtitleEdit.Forms
 
             public ComboBoxItem(string text, string value)
             {
+                Text = UpcaseFirstLetter(text);
+                Value = value;
+            }
+
+            private static string UpcaseFirstLetter(string text)
+            {
                 if (text.Length > 1)
                 {
                     text = char.ToUpper(text[0]) + text.Substring(1).ToLowerInvariant();
                 }
 
-                Text = text;
-
-                Value = value;
+                return text;
             }
 
             public override string ToString()
@@ -71,7 +75,6 @@ namespace Nikse.SubtitleEdit.Forms
             labelTo.Text = Configuration.Settings.Language.GoogleTranslate.To;
             buttonTranslate.Text = Configuration.Settings.Language.GoogleTranslate.Translate;
             labelPleaseWait.Text = Configuration.Settings.Language.GoogleTranslate.PleaseWait;
-            linkLabelPoweredByGoogleTranslate.Text = Configuration.Settings.Language.GoogleTranslate.PoweredByGoogleTranslate;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             labelApiKeyNotFound.Text = string.Empty;
@@ -89,23 +92,21 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
-        internal void Initialize(Subtitle subtitle, Subtitle target, string title, bool googleTranslate, Encoding encoding)
+        internal void Initialize(Subtitle subtitle, Subtitle target, string title, Encoding encoding)
         {
+            InitTranslatorEngines();
+
             if (title != null)
             {
                 Text = title;
             }
 
-            _googleTranslate = googleTranslate;
-            if (!_googleTranslate)
-            {
-                _translator = new MicrosoftTranslator(Configuration.Settings.Tools.MicrosoftTranslatorApiKey, Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint, Configuration.Settings.Tools.MicrosoftTranslatorCategory);
-                linkLabelPoweredByGoogleTranslate.Text = Configuration.Settings.Language.GoogleTranslate.PoweredByMicrosoftTranslate;
-            }
+
 
             labelPleaseWait.Visible = false;
             progressBar1.Visible = false;
             _subtitle = subtitle;
+
 
             if (target != null)
             {
@@ -121,38 +122,53 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            _fromLanguageIsoCode = EvaluateDefaultFromLanguageCode(encoding);
+            _toLanguageIsoCode = EvaluateUiCultureTargetLanguage(_fromLanguageIsoCode);
 
-            string defaultFromLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(encoding); // Guess language via encoding
-            if (string.IsNullOrEmpty(defaultFromLanguage))
-            {
-                defaultFromLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle); // Guess language based on subtitle contents
-            }
+            subtitleListViewFrom.Fill(subtitle);
+            GoogleTranslate_Resize(null, null);
 
-            if (defaultFromLanguage == "he")
-            {
-                defaultFromLanguage = "iw";
-            }
+            _formattingTypes = new FormattingType[_subtitle.Paragraphs.Count];
+            _autoSplit = new bool[_subtitle.Paragraphs.Count];
+        }
 
+        private void ComboBoxTranslatorEngineChanged(object sender, EventArgs e)
+        {
+            _translationService = (ITranslationService)comboBoxTranslatoEngines.SelectedItem;
+            ReadLanguageSettings();
+            SetupLanguageSettings();
+        }
+
+        private void SetupLanguageSettings()
+        {
             FillComboWithLanguages(comboBoxFrom);
-            int i = 0;
-            foreach (ComboBoxItem item in comboBoxFrom.Items)
+            SelectLanguageCode(comboBoxFrom, _fromLanguageIsoCode);
+
+            FillComboWithLanguages(comboBoxTo);
+            SelectLanguageCode(comboBoxTo, _toLanguageIsoCode);
+        }
+
+        private void ReadLanguageSettings()
+        {
+            if (comboBoxTo.SelectedItem != null)
             {
-                if (item.Value == defaultFromLanguage)
-                {
-                    comboBoxFrom.SelectedIndex = i;
-                    break;
-                }
-                i++;
+                _toLanguageIsoCode = ((ComboBoxItem)comboBoxTo.SelectedItem).Value;
             }
 
+            if (comboBoxFrom.SelectedItem != null)
+            {
+                _fromLanguageIsoCode = ((ComboBoxItem)comboBoxFrom.SelectedItem).Value;
+            }
+        }
+
+        private string EvaluateUiCultureTargetLanguage(string defaultFromLanguage)
+        {
             var installedLanguages = new List<InputLanguage>();
             foreach (InputLanguage language in InputLanguage.InstalledInputLanguages)
             {
                 installedLanguages.Add(language);
             }
 
-            FillComboWithLanguages(comboBoxTo);
-            i = 0;
             string uiCultureTargetLanguage = Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage;
             if (uiCultureTargetLanguage == defaultFromLanguage)
             {
@@ -170,6 +186,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+
             if (uiCultureTargetLanguage == defaultFromLanguage)
             {
                 foreach (InputLanguage language in installedLanguages)
@@ -186,31 +203,131 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 uiCultureTargetLanguage = "es";
             }
+
             if (uiCultureTargetLanguage == defaultFromLanguage)
             {
                 uiCultureTargetLanguage = "en";
             }
 
-            comboBoxTo.SelectedIndex = 0;
-            foreach (ComboBoxItem item in comboBoxTo.Items)
-            {
-                if (item.Value == uiCultureTargetLanguage)
-                {
-                    comboBoxTo.SelectedIndex = i;
-                    break;
-                }
-                i++;
-            }
-
-            subtitleListViewFrom.Fill(subtitle);
-            GoogleTranslate_Resize(null, null);
-
-            _formattingTypes = new FormattingType[_subtitle.Paragraphs.Count];
-            _autoSplit = new bool[_subtitle.Paragraphs.Count];
+            return uiCultureTargetLanguage;
         }
 
-        private void Translate(string source, string target, ITranslator translator, int maxTextSize, int maximumRequestArrayLength = 100)
+        private void SelectLanguageCode(ComboBox comboBox, string defaultFromLanguage)
         {
+            int i = 0;
+            foreach (ComboBoxItem item in comboBox.Items)
+            {
+                if (item.Value == defaultFromLanguage)
+                {
+                    comboBox.SelectedIndex = i;
+                    return;
+                }
+
+                i++;
+            }
+        }
+
+        private string EvaluateDefaultFromLanguageCode(Encoding encoding)
+        {
+            string defaultFromLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(encoding); // Guess language via encoding
+            if (string.IsNullOrEmpty(defaultFromLanguage))
+            {
+                defaultFromLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle); // Guess language based on subtitle contents
+            }
+
+            //convert new Hebrew code (he) to old Hebrew code (iw)  http://www.mathguide.de/info/tools/languagecode.html
+            //brummochse: why get it converted to the old code?
+            if (defaultFromLanguage == "he")
+            {
+                defaultFromLanguage = "iw";
+            }
+
+            return defaultFromLanguage;
+        }
+
+        private void InitTranslatorEngines()
+        {
+            this.comboBoxTranslatoEngines.Items.AddRange(TranslationEngineManager.Instance.TranslatorEngines.ToArray());
+        }
+
+
+        private void buttonTranslate_Click(object sender, EventArgs e)
+        {
+            if (buttonTranslate.Text == Configuration.Settings.Language.General.Cancel)
+            {
+                buttonTranslate.Enabled = false;
+                _breakTranslation = true;
+                buttonOK.Enabled = true;
+                buttonCancel.Enabled = true;
+                return;
+            }
+
+            ReadLanguageSettings();
+            //Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage = _toLanguageIsoCode;
+
+
+            //var language = Configuration.Settings.Language.GoogleTranslate;
+            //if (_googleTranslate && string.IsNullOrEmpty(Configuration.Settings.Tools.GoogleApiV2Key))
+            //{
+            //    if (Configuration.Settings.Tools.GoogleApiV2KeyInfoShow)
+            //    {
+            //        using (var form = new DialogDoNotShowAgain("Subtitle Edit", language.GoogleApiKeyNeeded))
+            //        {
+            //            form.ShowDialog(this);
+            //            Configuration.Settings.Tools.GoogleApiV2KeyInfoShow = !form.DoNoDisplayAgain;
+            //        }
+            //    }
+
+            //    if (Configuration.Settings.Tools.GoogleTranslateNoKeyWarningShow)
+            //    {
+            //        using (var form = new DialogDoNotShowAgain("Subtitle Edit", language.GoogleNoApiKeyWarning))
+            //        {
+            //            form.ShowDialog();
+            //            Configuration.Settings.Tools.GoogleTranslateNoKeyWarningShow = !form.DoNoDisplayAgain;
+            //        }
+            //    }
+
+            //    labelApiKeyNotFound.Text = language.GoogleNoApiKeyWarning;
+
+            //    Translate( new GoogleTranslator1(), Configuration.Settings.Tools.GoogleApiV1ChunkSize);
+            //    return;
+            //}
+
+            //if (!_googleTranslate && string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorApiKey))
+            //{
+            //    MessageBox.Show(language.MsClientSecretNeeded);
+            //    return;
+            //}
+
+
+            //if (_googleTranslate)
+            //{
+            //    Translate(
+            //        new GoogleTranslator2(Configuration.Settings.Tools.GoogleApiV2Key),
+            //        1000);
+            //}
+            //else
+            //{
+            //    Translate(
+            //        new MicrosoftTranslator(Configuration.Settings.Tools.MicrosoftTranslatorApiKey, Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint, Configuration.Settings.Tools.MicrosoftTranslatorCategory),
+            //        1000, MicrosoftTranslator.MaximumRequestArrayLength);
+            //}
+
+
+            Translate();
+        }
+
+        private void Translate() //, int maxTextSize, int maximumRequestArrayLength = 100
+        {
+            _translationService.Init();
+            int maxTextSize = _translationService.MaxTextSize;
+            int maximumRequestArrayLength = _translationService.MaximumRequestArrayLength;
+
+
+            string source = _fromLanguageIsoCode;
+            string target = _toLanguageIsoCode;
+
+
             buttonOK.Enabled = false;
             buttonCancel.Enabled = false;
             _breakTranslation = false;
@@ -235,7 +352,7 @@ namespace Nikse.SubtitleEdit.Forms
                     sourceLength += Utilities.UrlEncode(p.Text).Length;
                     if ((sourceLength >= maxTextSize || sourceParagraphs.Count >= maximumRequestArrayLength) && sourceParagraphs.Count > 0)
                     {
-                        var result = translator.Translate(source, target, sourceParagraphs, log);
+                        var result = _translationService.Translate(source, target, sourceParagraphs, log);
                         FillTranslatedText(result, start, index - 1);
                         sourceLength = 0;
                         sourceParagraphs.Clear();
@@ -254,25 +371,25 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (sourceParagraphs.Count > 0)
                 {
-                    var result = translator.Translate(source, target, sourceParagraphs, log);
+                    var result = _translationService.Translate(source, target, sourceParagraphs, log);
                     FillTranslatedText(result, start, index - 1);
                 }
             }
             catch (WebException webException)
             {
-                if (translator.GetType() == typeof(GoogleTranslator1))
+                if (_translationService.GetType() == typeof(GoogleTranslator1))
                 {
                     MessageBox.Show("Free API quota exceeded?" + Environment.NewLine +
                                     Environment.NewLine +
                                     webException.Source + ": " + webException.Message);
                 }
-                else if (translator.GetType() == typeof(GoogleTranslator2) && webException.Message.Contains("(400) Bad Request"))
+                else if (_translationService.GetType() == typeof(GoogleTranslator2) && webException.Message.Contains("(400) Bad Request"))
                 {
                     MessageBox.Show("API key invalid (or perhaps billing is not enabled)?" + Environment.NewLine +
                                     Environment.NewLine +
                                     webException.Source + ": " + webException.Message);
                 }
-                else if (translator.GetType() == typeof(GoogleTranslator2) && webException.Message.Contains("(403) Forbidden."))
+                else if (_translationService.GetType() == typeof(GoogleTranslator2) && webException.Message.Contains("(403) Forbidden."))
                 {
                     MessageBox.Show("Perhaps billing is not enabled (or API key is invalid)?" + Environment.NewLine +
                                     Environment.NewLine +
@@ -293,9 +410,102 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonOK.Enabled = true;
                 buttonCancel.Enabled = true;
 
-                Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage = _targetTwoLetterIsoLanguageName;
+                Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage = _toLanguageIsoCode;
             }
         }
+
+        //private void Translate(ITranslator translator, int maxTextSize, int maximumRequestArrayLength = 100)
+        //{
+
+        //    string source = _fromLanguageIsoCode;
+        //    string target = _toLanguageIsoCode;
+
+
+        //    buttonOK.Enabled = false;
+        //    buttonCancel.Enabled = false;
+        //    _breakTranslation = false;
+        //    buttonTranslate.Text = Configuration.Settings.Language.General.Cancel;
+        //    Cursor.Current = Cursors.WaitCursor;
+        //    progressBar1.Maximum = _subtitle.Paragraphs.Count;
+        //    progressBar1.Value = 0;
+        //    progressBar1.Visible = true;
+        //    labelPleaseWait.Visible = true;
+        //    var sourceParagraphs = new List<Paragraph>();
+        //    try
+        //    {
+        //        var log = new StringBuilder();
+        //        var sourceLength = 0;
+        //        var selectedItems = subtitleListViewFrom.SelectedItems;
+        //        var startIndex = selectedItems.Count <= 0 ? 0 : selectedItems[0].Index;
+        //        var start = startIndex;
+        //        int index = startIndex;
+        //        for (int i = startIndex; i < _subtitle.Paragraphs.Count; i++)
+        //        {
+        //            Paragraph p = _subtitle.Paragraphs[i];
+        //            sourceLength += Utilities.UrlEncode(p.Text).Length;
+        //            if ((sourceLength >= maxTextSize || sourceParagraphs.Count >= maximumRequestArrayLength) && sourceParagraphs.Count > 0)
+        //            {
+        //                var result = translator.Translate(source, target, sourceParagraphs, log);
+        //                FillTranslatedText(result, start, index - 1);
+        //                sourceLength = 0;
+        //                sourceParagraphs.Clear();
+        //                progressBar1.Refresh();
+        //                Application.DoEvents();
+        //                start = index;
+        //            }
+        //            sourceParagraphs.Add(p);
+        //            index++;
+        //            progressBar1.Value = index;
+        //            if (_breakTranslation)
+        //            {
+        //                break;
+        //            }
+        //        }
+
+        //        if (sourceParagraphs.Count > 0)
+        //        {
+        //            var result = translator.Translate(source, target, sourceParagraphs, log);
+        //            FillTranslatedText(result, start, index - 1);
+        //        }
+        //    }
+        //    catch (WebException webException)
+        //    {
+        //        if (translator.GetType() == typeof(GoogleTranslator1))
+        //        {
+        //            MessageBox.Show("Free API quota exceeded?" + Environment.NewLine +
+        //                            Environment.NewLine +
+        //                            webException.Source + ": " + webException.Message);
+        //        }
+        //        else if (translator.GetType() == typeof(GoogleTranslator2) && webException.Message.Contains("(400) Bad Request"))
+        //        {
+        //            MessageBox.Show("API key invalid (or perhaps billing is not enabled)?" + Environment.NewLine +
+        //                            Environment.NewLine +
+        //                            webException.Source + ": " + webException.Message);
+        //        }
+        //        else if (translator.GetType() == typeof(GoogleTranslator2) && webException.Message.Contains("(403) Forbidden."))
+        //        {
+        //            MessageBox.Show("Perhaps billing is not enabled (or API key is invalid)?" + Environment.NewLine +
+        //                            Environment.NewLine +
+        //                            webException.Source + ": " + webException.Message);
+        //        }
+        //        else
+        //        {
+        //            MessageBox.Show(webException.Source + ": " + webException.Message);
+        //        }
+        //    }
+        //    finally
+        //    {
+        //        labelPleaseWait.Visible = false;
+        //        progressBar1.Visible = false;
+        //        Cursor.Current = Cursors.Default;
+        //        buttonTranslate.Text = Configuration.Settings.Language.GoogleTranslate.Translate;
+        //        buttonTranslate.Enabled = true;
+        //        buttonOK.Enabled = true;
+        //        buttonCancel.Enabled = true;
+
+        //        Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage = _toLanguageIsoCode;
+        //    }
+        //}
 
         private void FillTranslatedText(List<string> translatedLines, int start, int end)
         {
@@ -313,66 +523,6 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListViewTo.Fill(TranslatedSubtitle);
             subtitleListViewTo.SelectIndexAndEnsureVisible(end);
             subtitleListViewTo.EndUpdate();
-        }
-
-        private void buttonTranslate_Click(object sender, EventArgs e)
-        {
-            if (buttonTranslate.Text == Configuration.Settings.Language.General.Cancel)
-            {
-                buttonTranslate.Enabled = false;
-                _breakTranslation = true;
-                buttonOK.Enabled = true;
-                buttonCancel.Enabled = true;
-                return;
-            }
-
-            _targetTwoLetterIsoLanguageName = ((ComboBoxItem)comboBoxTo.SelectedItem).Value;
-            Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage = _targetTwoLetterIsoLanguageName;
-            var source = ((ComboBoxItem)comboBoxFrom.SelectedItem).Value;
-
-            var language = Configuration.Settings.Language.GoogleTranslate;
-            if (_googleTranslate && string.IsNullOrEmpty(Configuration.Settings.Tools.GoogleApiV2Key))
-            {
-                if (Configuration.Settings.Tools.GoogleApiV2KeyInfoShow)
-                {
-                    using (var form = new DialogDoNotShowAgain("Subtitle Edit", language.GoogleApiKeyNeeded))
-                    {
-                        form.ShowDialog(this);
-                        Configuration.Settings.Tools.GoogleApiV2KeyInfoShow = !form.DoNoDisplayAgain;
-                    }
-                }
-
-                if (Configuration.Settings.Tools.GoogleTranslateNoKeyWarningShow)
-                {
-                    using (var form = new DialogDoNotShowAgain("Subtitle Edit", language.GoogleNoApiKeyWarning))
-                    {
-                        form.ShowDialog(this);
-                        Configuration.Settings.Tools.GoogleTranslateNoKeyWarningShow = !form.DoNoDisplayAgain;
-                    }
-                }
-
-                labelApiKeyNotFound.Left = linkLabelPoweredByGoogleTranslate.Left + linkLabelPoweredByGoogleTranslate.Width + 20;
-                labelApiKeyNotFound.Text = language.GoogleNoApiKeyWarning;
-
-                Translate(source, _targetTwoLetterIsoLanguageName, new GoogleTranslator1(), Configuration.Settings.Tools.GoogleApiV1ChunkSize);
-                return;
-            }
-
-            if (!_googleTranslate && string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorApiKey))
-            {
-                MessageBox.Show(language.MsClientSecretNeeded);
-                return;
-            }
-
-
-            if (_googleTranslate)
-            {
-                Translate(source, _targetTwoLetterIsoLanguageName, new GoogleTranslator2(Configuration.Settings.Tools.GoogleApiV2Key), 1000);
-            }
-            else
-            {
-                Translate(source, _targetTwoLetterIsoLanguageName, new MicrosoftTranslator(Configuration.Settings.Tools.MicrosoftTranslatorApiKey, Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint, Configuration.Settings.Tools.MicrosoftTranslatorCategory), 1000, MicrosoftTranslator.MaximumRequestArrayLength);
-            }
         }
 
         private string CleanText(string s, int index)
@@ -443,30 +593,16 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void FillComboWithLanguages(ComboBox comboBox)
         {
-            if (!_googleTranslate)
+            comboBox.Items.Clear();
+            foreach (var bingLanguageCode in _translationService.GetTranslationPairs())
             {
-                foreach (var bingLanguageCode in _translator.GetTranslationPairs())
-                {
-                    comboBox.Items.Add(new ComboBoxItem(bingLanguageCode.Name, bingLanguageCode.Code));
-                }
-                return;
-            }
-
-            FillComboWithGoogleLanguages(comboBox);
-        }
-
-        public void FillComboWithGoogleLanguages(ComboBox comboBox)
-        {
-            var translator = new GoogleTranslator2(Configuration.Settings.Tools.GoogleApiV2Key);
-            foreach (var pair in translator.GetTranslationPairs())
-            {
-                comboBox.Items.Add(new ComboBoxItem(pair.Name, pair.Code));
+                comboBox.Items.Add(new ComboBoxItem(bingLanguageCode.Name, bingLanguageCode.Code));
             }
         }
-
+    
         private void LinkLabel1LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            UiUtil.OpenUrl(_googleTranslate ? GoogleTranslateUrl : _translator.GetUrl());
+            UiUtil.OpenUrl(_translationService.GetUrl());
         }
 
         private void ButtonOkClick(object sender, EventArgs e)
@@ -542,11 +678,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         public string GetFileNameWithTargetLanguage(string oldFileName, string videoFileName, Subtitle oldSubtitle, SubtitleFormat subtitleFormat)
         {
-            if (!string.IsNullOrEmpty(_targetTwoLetterIsoLanguageName))
+            if (!string.IsNullOrEmpty(_toLanguageIsoCode))
             {
                 if (!string.IsNullOrEmpty(videoFileName))
                 {
-                    return Path.GetFileNameWithoutExtension(videoFileName) + "." + _targetTwoLetterIsoLanguageName.ToLowerInvariant() + subtitleFormat.Extension;
+                    return Path.GetFileNameWithoutExtension(videoFileName) + "." + _toLanguageIsoCode.ToLowerInvariant() + subtitleFormat.Extension;
                 }
 
                 if (!string.IsNullOrEmpty(oldFileName))
@@ -560,10 +696,11 @@ namespace Nikse.SubtitleEdit.Forms
                             s = s.Remove(s.Length - 3);
                         }
                     }
-                    return s + "." + _targetTwoLetterIsoLanguageName.ToLowerInvariant() + subtitleFormat.Extension;
+                    return s + "." + _toLanguageIsoCode.ToLowerInvariant() + subtitleFormat.Extension;
                 }
             }
             return null;
         }
+
     }
 }

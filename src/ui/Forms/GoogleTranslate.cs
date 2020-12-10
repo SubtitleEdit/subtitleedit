@@ -21,7 +21,7 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _breakTranslation;
         private bool _googleTranslate = true;
         private const string SplitterString = "+-+";
-        private ITranslator _translator;
+        private ITranslationStrategy _translationStrategy;
 
         private enum FormattingType
         {
@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Forms
             _googleTranslate = googleTranslate;
             if (!_googleTranslate)
             {
-                _translator = new MicrosoftTranslator(Configuration.Settings.Tools.MicrosoftTranslatorApiKey, Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint, Configuration.Settings.Tools.MicrosoftTranslatorCategory);
+                _translationStrategy = new MicrosoftTranslationStrategy(Configuration.Settings.Tools.MicrosoftTranslatorApiKey, Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint, Configuration.Settings.Tools.MicrosoftTranslatorCategory);
                 linkLabelPoweredByGoogleTranslate.Text = Configuration.Settings.Language.GoogleTranslate.PoweredByMicrosoftTranslate;
             }
 
@@ -209,7 +209,7 @@ namespace Nikse.SubtitleEdit.Forms
             _autoSplit = new bool[_subtitle.Paragraphs.Count];
         }
 
-        private void Translate(string source, string target, ITranslator translator, int maxTextSize, int maximumRequestArrayLength = 100)
+        private void Translate(string source, string target, ITranslationStrategy translationStrategy, int maxTextSize, int maximumRequestArrayLength = 100)
         {
             buttonOK.Enabled = false;
             buttonCancel.Enabled = false;
@@ -235,7 +235,7 @@ namespace Nikse.SubtitleEdit.Forms
                     sourceLength += Utilities.UrlEncode(p.Text).Length;
                     if ((sourceLength >= maxTextSize || sourceParagraphs.Count >= maximumRequestArrayLength) && sourceParagraphs.Count > 0)
                     {
-                        var result = translator.Translate(source, target, sourceParagraphs, log);
+                        var result = translationStrategy.Translate(source, target, sourceParagraphs, log);
                         FillTranslatedText(result, start, index - 1);
                         sourceLength = 0;
                         sourceParagraphs.Clear();
@@ -254,25 +254,25 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (sourceParagraphs.Count > 0)
                 {
-                    var result = translator.Translate(source, target, sourceParagraphs, log);
+                    var result = translationStrategy.Translate(source, target, sourceParagraphs, log);
                     FillTranslatedText(result, start, index - 1);
                 }
             }
             catch (WebException webException)
             {
-                if (translator.GetType() == typeof(GoogleTranslator1))
+                if (translationStrategy.GetType() == typeof(GoogleTranslator1))
                 {
                     MessageBox.Show("Free API quota exceeded?" + Environment.NewLine +
                                     Environment.NewLine +
                                     webException.Source + ": " + webException.Message);
                 }
-                else if (translator.GetType() == typeof(GoogleTranslator2) && webException.Message.Contains("(400) Bad Request"))
+                else if (translationStrategy.GetType() == typeof(GoogleTranslator2) && webException.Message.Contains("(400) Bad Request"))
                 {
                     MessageBox.Show("API key invalid (or perhaps billing is not enabled)?" + Environment.NewLine +
                                     Environment.NewLine +
                                     webException.Source + ": " + webException.Message);
                 }
-                else if (translator.GetType() == typeof(GoogleTranslator2) && webException.Message.Contains("(403) Forbidden."))
+                else if (translationStrategy.GetType() == typeof(GoogleTranslator2) && webException.Message.Contains("(403) Forbidden."))
                 {
                     MessageBox.Show("Perhaps billing is not enabled (or API key is invalid)?" + Environment.NewLine +
                                     Environment.NewLine +
@@ -371,7 +371,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                Translate(source, _targetTwoLetterIsoLanguageName, new MicrosoftTranslator(Configuration.Settings.Tools.MicrosoftTranslatorApiKey, Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint, Configuration.Settings.Tools.MicrosoftTranslatorCategory), 1000, MicrosoftTranslator.MaximumRequestArrayLength);
+                Translate(source, _targetTwoLetterIsoLanguageName, new MicrosoftTranslationStrategy(Configuration.Settings.Tools.MicrosoftTranslatorApiKey, Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint, Configuration.Settings.Tools.MicrosoftTranslatorCategory), 1000, MicrosoftTranslationStrategy.MaximumRequestArrayLength);
             }
         }
 
@@ -445,7 +445,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (!_googleTranslate)
             {
-                foreach (var bingLanguageCode in _translator.GetTranslationPairs())
+                foreach (var bingLanguageCode in _translationStrategy.GetTranslationPairs())
                 {
                     comboBox.Items.Add(new ComboBoxItem(bingLanguageCode.Name, bingLanguageCode.Code));
                 }
@@ -466,7 +466,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void LinkLabel1LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            UiUtil.OpenUrl(_googleTranslate ? GoogleTranslateUrl : _translator.GetUrl());
+            UiUtil.OpenUrl(_googleTranslate ? GoogleTranslateUrl : _translationStrategy.GetUrl());
         }
 
         private void ButtonOkClick(object sender, EventArgs e)

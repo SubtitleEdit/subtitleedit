@@ -4,7 +4,7 @@ using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.Translate
 {
-    public interface ITranslator
+    public interface ITranslationStrategy
     {
         List<TranslationPair> GetTranslationPairs();
         string GetName();

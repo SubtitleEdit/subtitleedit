@@ -1,21 +1,20 @@
-﻿using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Core.Translate
 {
     /// <summary>
     /// https://docs.microsoft.com/en-us/azure/cognitive-services/translator/reference/v3-0-translate
     /// </summary>
-    public class MicrosoftTranslation : ITranslationStrategy
+    public class BingTranslationService : ITranslationService
     {
         public const string SignUpUrl = "https://docs.microsoft.com/en-us/azure/cognitive-services/translator/translator-text-how-to-signup";
         public const string GoToUrl = "https://www.bing.com/translator";
-        public const int MaximumRequestArrayLength = 25;
         private const string LanguagesUrl = "https://api.cognitive.microsofttranslator.com/languages?api-version=3.0&scope=translation";
         private const string TranslateUrl = "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from={0}&to={1}";
         private const string SecurityHeaderName = "Ocp-Apim-Subscription-Key";
@@ -23,10 +22,21 @@ namespace Nikse.SubtitleEdit.Core.Translate
         private readonly string _accessToken;
         private readonly string _category;
 
-        public MicrosoftTranslation(string apiKey, string tokenEndpoint, string category)
+        public BingTranslationService(string apiKey, string tokenEndpoint, string category)
         {
             _accessToken = GetAccessToken(apiKey, tokenEndpoint);
             _category = category; // Optional parameter - used to get translations from a customized system built with Custom Translator
+        }
+
+        public List<string> Init()
+        {
+            List<string> messages = new List<string>();
+            if (string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorApiKey))
+            {
+                var language = Configuration.Settings.Language.GoogleTranslate;
+                messages.Add(language.MsClientSecretNeeded);
+            }
+            return messages;
         }
 
         private static string GetAccessToken(string apiKey, string tokenEndpoint)
@@ -196,6 +206,24 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 }
             }
             return results;
+        }
+
+
+
+
+        public int MaxTextSize
+        {
+            get { return 1000; }
+        }
+
+        public int MaximumRequestArrayLength
+        {
+            get { return 25; }
+        }
+
+        public override string ToString()
+        {
+            return GetName();
         }
     }
 }
