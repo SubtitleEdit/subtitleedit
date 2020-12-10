@@ -2197,7 +2197,6 @@ can edit in same subtitle file (collaboration)</Information>
     <WaveformPlayNewSelection>Play selection</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Play end of selection</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Play first selected subtitle</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Focus list view</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>Go to previous scene change</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Go to next scene change</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Toggle scene change</WaveformToggleSceneChange>

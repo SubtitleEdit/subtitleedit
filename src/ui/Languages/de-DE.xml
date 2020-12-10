@@ -1962,7 +1962,6 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <WaveformPlayNewSelection>Auswahl abspielen</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Ende der Auswahl abspielen</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Ersten gewählten Untertitel abspielen</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Listenansicht fokussieren</WaveformFocusListView>
     <WaveformGoToNextSceneChange>Zum nächsten Szenenwechsel</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Szenenwechsel umschalten</WaveformToggleSceneChange>
     <GoBack1Frame>Ein Bild zurück</GoBack1Frame>

@@ -6013,9 +6013,6 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/WaveformPlayFirstSelectedSubtitle":
                     language.Settings.WaveformPlayFirstSelectedSubtitle = reader.Value;
                     break;
-                case "Settings/WaveformFocusListView":
-                    language.Settings.WaveformFocusListView = reader.Value;
-                    break;
                 case "Settings/WaveformGoToPreviousSceneChange":
                     language.Settings.WaveformGoToPreviousSceneChange = reader.Value;
                     break;

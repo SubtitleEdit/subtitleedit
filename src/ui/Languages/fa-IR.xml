@@ -1977,7 +1977,6 @@ Continue anyway?</PromptInsertSubtitleOverlap>
     <WaveformPlayNewSelection>پخش انتخاب</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>پخش پایان انتخاب</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>پخش اولین زیرنویس انتخاب شده</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>نمایش لیست فوکوس</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>به تغییر صحنه قبلی بروید</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>رفتن به تغییر صحنه بعدی</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>تغییر وضعیت صحنه</WaveformToggleSceneChange>

@@ -2096,7 +2096,6 @@ https://github.com/SubtitleEdit/subtitleedit
     <WaveformPlayNewSelection>Проиграть новое выделение</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Воспроизвести конец выделения</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Проиграть первый выделенный субтитр</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Фокус на списке</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>Перейти к предыдущему изменению сцены</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Перейти к следующему изменению сцены</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Переключить изменение сцен</WaveformToggleSceneChange>

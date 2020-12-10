@@ -2203,7 +2203,6 @@ Yeni oturum başlatın (işbirliği)</Information>
     <WaveformPlayNewSelection>Seçimi oynat</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Seçimin sonunu oynat</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Seçilmiş ilk altyazıyı oynat</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Liste görünümünü odakla</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>Bir önceki bölüm değişikliğine git</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Bir sonraki bölüm değişikliğine git</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Bölüm geçiş değişimi</WaveformToggleSceneChange>

@@ -2004,7 +2004,6 @@ $HorzAlign          =   Center
         public string WaveformAddTextHere { get; set; }
         public string WaveformAddTextHereFromClipboard { get; set; }
         public string WaveformSetParagraphAsSelection { get; set; }
-        public string WaveformFocusListView { get; set; }
         public string WaveformGoToPreviousSceneChange { get; set; }
         public string WaveformGoToNextSceneChange { get; set; }
         public string WaveformToggleSceneChange { get; set; }
@@ -7564,12 +7563,6 @@ $HorzAlign          =   Center
                     shortcuts.WaveformSetParagraphAsSelection = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("WaveformFocusListView");
-                if (subNode != null)
-                {
-                    shortcuts.WaveformFocusListView = subNode.InnerText;
-                }
-
                 subNode = node.SelectSingleNode("WaveformGoToPreviousSceneChange");
                 if (subNode != null)
                 {
@@ -8632,7 +8625,6 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("WaveformAddTextHere", shortcuts.WaveformAddTextHere);
             textWriter.WriteElementString("WaveformAddTextHereFromClipboard", shortcuts.WaveformAddTextHereFromClipboard);
             textWriter.WriteElementString("WaveformSetParagraphAsSelection", shortcuts.WaveformSetParagraphAsSelection);
-            textWriter.WriteElementString("WaveformFocusListView", shortcuts.WaveformFocusListView);
             textWriter.WriteElementString("WaveformGoToPreviousSceneChange", shortcuts.WaveformGoToPreviousSceneChange);
             textWriter.WriteElementString("WaveformGoToNextSceneChange", shortcuts.WaveformGoToNextSceneChange);
             textWriter.WriteElementString("WaveformToggleSceneChange", shortcuts.WaveformToggleSceneChange);

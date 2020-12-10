@@ -14873,11 +14873,6 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemSetParagraphAsSelection_Click(null, null);
                 e.SuppressKeyPress = true;
             }
-            else if (audioVisualizer.Focused && e.KeyData == _shortcuts.WaveformFocusListView)
-            {
-                SubtitleListview1.Focus();
-                e.SuppressKeyPress = true;
-            }
             else if (e.KeyData == _shortcuts.VideoGoToPrevSubtitle)
             {
                 GoToPreviousSubtitle(mediaPlayer.CurrentPosition * TimeCode.BaseUnit);

@@ -1816,7 +1816,6 @@ Hvis du har redigert denne filen i Subtitle Edit, kan du kanskje finne en backup
     <WaveformPlayNewSelection>Spill av utvalg</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Spill av slutten av utvalget</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Spill av førstvalgte undertekst</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Fokusliste-visning</WaveformFocusListView>
     <GoBack1Frame>Ett bilde bakover</GoBack1Frame>
     <GoForward1Frame>Et bilde forover</GoForward1Frame>
     <GoBack100Milliseconds>100 ms bakover</GoBack100Milliseconds>
