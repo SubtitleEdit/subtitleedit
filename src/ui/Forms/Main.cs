@@ -28934,17 +28934,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemImportBluraySupFileForEdit_Click(object sender, EventArgs e)
         {
-            if (ContinueNewOrExit())
+            openFileDialog1.Title = _language.OpenBluRaySupFile;
+            openFileDialog1.FileName = string.Empty;
+            openFileDialog1.Filter = _language.BluRaySupFiles + "|*.sup";
+            if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
-                openFileDialog1.Title = _language.OpenVobSubFile;
-                openFileDialog1.FileName = string.Empty;
-                openFileDialog1.Filter = _language.BluRaySupFiles + "|*.sup";
-                if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
+                using (var form = new BinaryEdit.BinEdit(openFileDialog1.FileName))
                 {
-                    using (var form = new BinaryEdit.BinEdit(openFileDialog1.FileName))
-                    {
-                        form.ShowDialog(this);
-                    }
+                    form.ShowDialog(this);
                 }
             }
         }
