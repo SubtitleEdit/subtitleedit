@@ -16780,12 +16780,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetEndAndOffsetTheRest(bool goToNext)
         {
-            if (SubtitleListview1.SelectedItems.Count == 1)
+            if (SubtitleListview1.SelectedItems.Count > 0)
             {
                 bool oldSync = checkBoxSyncListViewWithVideoWhilePlaying.Checked;
                 checkBoxSyncListViewWithVideoWhilePlaying.Checked = false;
 
                 int index = SubtitleListview1.SelectedItems[0].Index;
+                int lastLineNumber = SubtitleListview1.SelectedItems.Count == 1 ? SubtitleListview1.Items.Count : index + SubtitleListview1.SelectedItems.Count;
                 double videoPosition = mediaPlayer.CurrentPosition;
                 if (!mediaPlayer.IsPaused)
                 {
@@ -16810,7 +16811,7 @@ namespace Nikse.SubtitleEdit.Forms
                 numericUpDownDuration.ValueChanged += NumericUpDownDurationValueChanged;
                 RefreshSelectedParagraph();
 
-                for (int i = index + 1; i < SubtitleListview1.Items.Count; i++)
+                for (int i = index + 1; i < lastLineNumber; i++)
                 {
                     if (!_subtitle.Paragraphs[i].StartTime.IsMaxTime)
                     {
@@ -16826,7 +16827,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (original != null)
                     {
                         index = _subtitleAlternate.GetIndex(original);
-                        for (int i = index; i < _subtitleAlternate.Paragraphs.Count; i++)
+                        for (int i = index; i < lastLineNumber; i++)
                         {
                             if (!_subtitleAlternate.Paragraphs[i].StartTime.IsMaxTime)
                             {
@@ -20621,13 +20622,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetStartAndOffsetTheRest(double videoPosition)
         {
-            if (SubtitleListview1.SelectedItems.Count == 1)
+            if (SubtitleListview1.SelectedItems.Count > 0)
             {
                 bool oldSync = checkBoxSyncListViewWithVideoWhilePlaying.Checked;
                 checkBoxSyncListViewWithVideoWhilePlaying.Checked = false;
 
                 timeUpDownStartTime.MaskedTextBox.TextChanged -= MaskedTextBoxTextChanged;
                 int index = SubtitleListview1.SelectedItems[0].Index;
+                int lastLineNumber = SubtitleListview1.SelectedItems.Count == 1 ? SubtitleListview1.Items.Count : index + SubtitleListview1.SelectedItems.Count;
                 var oldP = new Paragraph(_subtitle.Paragraphs[index]);
                 if (!mediaPlayer.IsPaused)
                 {
@@ -20656,7 +20658,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _subtitle.Paragraphs[index].EndTime = new TimeCode(_subtitle.Paragraphs[index].EndTime.TotalMilliseconds - offset);
                 SubtitleListview1.SetStartTimeAndDuration(index, _subtitle.Paragraphs[index], _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
 
-                for (int i = index + 1; i < SubtitleListview1.Items.Count; i++)
+                for (int i = index + 1; i < lastLineNumber; i++)
                 {
                     if (!_subtitle.Paragraphs[i].StartTime.IsMaxTime)
                     {
@@ -20672,7 +20674,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (original != null)
                     {
                         index = _subtitleAlternate.GetIndex(original);
-                        for (int i = index; i < _subtitleAlternate.Paragraphs.Count; i++)
+                        for (int i = index; i < lastLineNumber; i++)
                         {
                             if (!_subtitleAlternate.Paragraphs[i].StartTime.IsMaxTime)
                             {
