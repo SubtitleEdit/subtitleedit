@@ -1795,7 +1795,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GoToCurrentSubtitleStart>Перейти до початку поточного субтитру</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Перейти до кінця поточного субтитру</GoToCurrentSubtitleEnd>
     <ToggleFocus>Перемкнути фокус між списком субтитрів та текстовим полем</ToggleFocus>
-    <FocusWaveform>Фокус на аудіохвилю/спектрограму</FocusWaveform>
     <ToggleDialogDashes>Перемкнути риски у діалозі</ToggleDialogDashes>
     <Alignment>Розташування (обрані рядки)</Alignment>
     <CopyTextOnly>Скопіювати до буферу обміну тільки текст (обрані рядки)</CopyTextOnly>

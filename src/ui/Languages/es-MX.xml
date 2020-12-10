@@ -1968,7 +1968,6 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <GoToPreviousSubtitleAndFocusVideo>Ir a la línea anterior y establecer la posición del video</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Ir a la siguiente línea y definir la posición del video</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Alternar el enfoque entre la vista de lista y cuadro de texto del subtítulo</ToggleFocus>
-    <FocusWaveform>Enfoque forma de onda/espectrograma</FocusWaveform>
     <ToggleDialogDashes>Cambiar guiones de diálogo</ToggleDialogDashes>
     <ToggleMusicSymbols>Alternar símbolos musicales</ToggleMusicSymbols>
     <Alignment>Alinear (líneas seleccionadas)</Alignment>

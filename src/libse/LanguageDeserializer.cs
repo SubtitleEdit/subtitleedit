@@ -5923,8 +5923,8 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/ToggleFocus":
                     language.Settings.ToggleFocus = reader.Value;
                     break;
-                case "Settings/FocusWaveform":
-                    language.Settings.FocusWaveform = reader.Value;
+                case "Settings/ToggleFocusWaveform":
+                    language.Settings.ToggleFocusWaveform = reader.Value;
                     break;
                 case "Settings/ToggleDialogDashes":
                     language.Settings.ToggleDialogDashes = reader.Value;

@@ -14266,13 +14266,18 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
-            else if (_shortcuts.MainFocusWaveform == e.KeyData)
+            else if (_shortcuts.MainToggleFocusWaveform == e.KeyData)
             {
-                if (audioVisualizer.CanFocus)
+                if (audioVisualizer.CanFocus && (SubtitleListview1.Focused || textBoxListViewText.Focused))
                 {
                     audioVisualizer.Focus();
-                    e.SuppressKeyPress = true;
                 }
+                else
+                {
+                    SubtitleListview1.Focus();
+                }
+
+                e.SuppressKeyPress = true;
             }
             else if (e.KeyCode == Keys.Home && e.Modifiers == Keys.Alt)
             {

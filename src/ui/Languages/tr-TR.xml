@@ -2175,7 +2175,6 @@ Yeni oturum başlatın (işbirliği)</Information>
     <GoToPrevSubtitleAndPlay>Önceki satıra git ve oynat</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>Sonraki satıra git ve oynat</GoToNextSubtitleAndPlay>
     <ToggleFocus>Odağı liste görünümü ve altyazı metin kutusu arasında değiştir</ToggleFocus>
-    <FocusWaveform>Dalga formu/spektrogram odakla</FocusWaveform>
     <ToggleDialogDashes>Diyalog çizgilerini aç/kapat</ToggleDialogDashes>
     <ToggleMusicSymbols>Müzik sembollerini değiştir</ToggleMusicSymbols>
     <Alignment>Hizala (seçilmiş satırlarda)</Alignment>

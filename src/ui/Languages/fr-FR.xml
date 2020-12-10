@@ -1919,7 +1919,6 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <GoToPreviousSubtitleAndFocusVideo>Aller à la ligne précédente et définir la position vidéo</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Aller à la ligne suivante et définir la position vidéo</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Naviguer entre mode liste et zone de texte</ToggleFocus>
-    <FocusWaveform>Focus sur onde/spectrogramme</FocusWaveform>
     <ToggleDialogDashes>Activer/Désactiver le son</ToggleDialogDashes>
     <ToggleMusicSymbols />
     <Alignment>Aligner (lignes sélectionnées)</Alignment>
