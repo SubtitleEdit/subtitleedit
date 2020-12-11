@@ -9486,8 +9486,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count >= 1 && SubtitleListview1.SelectedItems.Count < 10)
                 {
-                    e.SuppressKeyPress = true;
                     SplitSelectedLineBilingual();
+                    e.SuppressKeyPress = true;
                 }
             }
             else if (e.KeyData == _shortcuts.MainListViewAlignmentN1)
@@ -10530,10 +10530,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             MakeHistoryForUndo(_language.BeforeSplitLine);
             var oldText = p.Text;
-            string text1 = lines[0].Substring(0, start).Trim() + Environment.NewLine + lines[1].Substring(0, end - indexOfNewLine - 2).Trim();
-            string text2 = lines[0].Remove(0, start).Trim() + Environment.NewLine + lines[1].Remove(0, end - indexOfNewLine - 2).Trim();
-            var newParagraph = new Paragraph(p);
-            newParagraph.NewSection = false;
+            int newLineCharCount = Configuration.Settings.General.SubtitleTextBoxSyntaxColor ? 1 : 2;
+            string text1 = lines[0].Substring(0, start).Trim() + Environment.NewLine + lines[1].Substring(0, end - indexOfNewLine - newLineCharCount).Trim();
+            string text2 = lines[0].Remove(0, start).Trim() + Environment.NewLine + lines[1].Remove(0, end - indexOfNewLine - newLineCharCount).Trim();
+            var newParagraph = new Paragraph(p) { NewSection = false };
             double? splitPos = null;
             if (!string.IsNullOrEmpty(VideoFileName))
             {
@@ -10551,6 +10551,7 @@ namespace Nikse.SubtitleEdit.Forms
             newParagraph.Text = text2;
             SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
             SubtitleListview1.SelectIndexAndEnsureVisible(idx, true);
+            RefreshSelectedParagraph();
         }
 
         private void MergeSelectedLines(BreakMode breakMode = BreakMode.Normal)
