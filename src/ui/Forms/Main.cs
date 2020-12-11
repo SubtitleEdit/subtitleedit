@@ -11414,7 +11414,7 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleAlternateFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
 
                     }
-                    else
+                    else if (Configuration.Settings.RecentFiles.Files.Count > 0)
                     {
                         Configuration.Settings.RecentFiles.Add(null, null, null);
                     }
