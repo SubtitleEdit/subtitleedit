@@ -1932,7 +1932,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GoToPreviousSubtitleAndFocusVideo>Vés a la línia anterior i estableix possició del vídeo</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Vés a la línia següent i estableix possició del vídeo</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Activa/desactiva focus entre vista llista i quadre de text subtítol</ToggleFocus>
-    <FocusWaveform>Focus a espectrograma/forma ona</FocusWaveform>
     <ToggleDialogDashes>Activa/desactiva guions diàleg</ToggleDialogDashes>
     <ToggleMusicSymbols>Activa/desactiva símbols musicals</ToggleMusicSymbols>
     <Alignment>Alineació (selecció línies)</Alignment>
@@ -1958,7 +1957,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WaveformPlayNewSelection>Reprodueix nova selecció</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Reprodueix final de la selecció</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Reprodueix primer el subtítol seleccionat</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Focus en vista llista</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>Vés a canvi d'escena anterior</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Vés a canvi d'escena següent</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Activa/desactiva canvi d'escena</WaveformToggleSceneChange>

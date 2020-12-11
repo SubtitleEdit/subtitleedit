@@ -5923,8 +5923,8 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/ToggleFocus":
                     language.Settings.ToggleFocus = reader.Value;
                     break;
-                case "Settings/FocusWaveform":
-                    language.Settings.FocusWaveform = reader.Value;
+                case "Settings/ToggleFocusWaveform":
+                    language.Settings.ToggleFocusWaveform = reader.Value;
                     break;
                 case "Settings/ToggleDialogDashes":
                     language.Settings.ToggleDialogDashes = reader.Value;
@@ -6012,9 +6012,6 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/WaveformPlayFirstSelectedSubtitle":
                     language.Settings.WaveformPlayFirstSelectedSubtitle = reader.Value;
-                    break;
-                case "Settings/WaveformFocusListView":
-                    language.Settings.WaveformFocusListView = reader.Value;
                     break;
                 case "Settings/WaveformGoToPreviousSceneChange":
                     language.Settings.WaveformGoToPreviousSceneChange = reader.Value;

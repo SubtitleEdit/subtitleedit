@@ -2052,7 +2052,6 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <GoToPrevSubtitleAndPlay>Ugrás az előző sorra és lejátszás</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>Ugrás a következő sorra és lejátszás</GoToNextSubtitleAndPlay>
     <ToggleFocus>Fókuszváltás a listanézet és felirat szövegdoboz között</ToggleFocus>
-    <FocusWaveform>Hullámforma/spectrogram fókusz</FocusWaveform>
     <ToggleDialogDashes>Párbeszéd gondolatjel váltó</ToggleDialogDashes>
     <ToggleMusicSymbols>Zenei szimbólumok váltása</ToggleMusicSymbols>
     <Alignment>Igazítás (kijelölt sorok)</Alignment>
@@ -2081,7 +2080,6 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <WaveformPlayNewSelection>Új kijelölés lejátszása</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Kijelölés végének lejátszása</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Az első kiválasztott felirat lejátszása</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Listanézet fókusz</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>Ugrás az előző jelenetváltásra</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Ugrás a következő jelenet váltásra</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Jelenet váltás kapcsoló</WaveformToggleSceneChange>

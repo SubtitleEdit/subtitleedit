@@ -2013,7 +2013,6 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <GoToPreviousSubtitleAndFocusVideo>Ir para linha anterior e definir posição do vídeo</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Ir para próxima linha e definir posição do vídeo</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Alternar foco entre exibição em lista e caixa de texto de legenda</ToggleFocus>
-    <FocusWaveform>Foco da forma de onda/espectrograma</FocusWaveform>
     <ToggleDialogDashes>Alternar traços de diálogo</ToggleDialogDashes>
     <ToggleMusicSymbols>Alternar símbolos musicais</ToggleMusicSymbols>
     <Alignment>Alinhamento (linhas selecionadas)</Alignment>
@@ -2040,7 +2039,6 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <WaveformPlayNewSelection>Tocar seleção</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Tocar final da seleção</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Tocar primeira legenda selecionada</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Foco da visualização em lista</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>Ir para a mudança de cena anterior</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Ir para próxima mudança de cena</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Alternar mudança de cena</WaveformToggleSceneChange>

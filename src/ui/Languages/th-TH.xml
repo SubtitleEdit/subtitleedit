@@ -1705,7 +1705,6 @@
     <GoToCurrentSubtitleStart>ไปต้นบรรทัดปัจจุบัน</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>ไปท้ายบรรทัดปัจจุบัน</GoToCurrentSubtitleEnd>
     <ToggleFocus>สลับโฟกัสระหว่างลิสต์วิวและกล่องข้อความซับไตเติ้ล</ToggleFocus>
-    <FocusWaveform>โฟกัสที่เวฟฟอร์ม/สเปกโตแกรม</FocusWaveform>
     <ToggleDialogDashes>สลับยัติภังค์ในบทสนทนา</ToggleDialogDashes>
     <Alignment>การวางแนว (บรรทัดที่เลือก)</Alignment>
     <CopyTextOnly>สำเนาข้อความไปคลิปบอร์ดเท่านั้น (บรรทัดที่เลือก)</CopyTextOnly>
@@ -1718,7 +1717,6 @@
     <WaveformAddTextHere>แทรกข้อความตรงนี้ (สำหรับส่วนที่เลือกใหม่)</WaveformAddTextHere>
     <WaveformPlayNewSelection>เล่นส่วนที่เลือกใหม่</WaveformPlayNewSelection>
     <WaveformPlayFirstSelectedSubtitle>เล่นซับไตเติ้ลแรกที่เลือก</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>โฟกัสที่ลิสต์วิว</WaveformFocusListView>
     <GoBack1Frame>ย้อนหลังหนึ่งเฟรม</GoBack1Frame>
     <GoForward1Frame>เดินหน้าหนึ่งเฟรม</GoForward1Frame>
     <GoBack100Milliseconds>ย้อนหลัง 100 มิลลิวินาที</GoBack100Milliseconds>

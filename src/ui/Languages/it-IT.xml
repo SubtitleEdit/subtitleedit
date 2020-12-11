@@ -1775,7 +1775,6 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <GoToCurrentSubtitleStart>Vai all'inizio della linea corrente</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Vai alla fine della linea corrente</GoToCurrentSubtitleEnd>
     <ToggleFocus>Alterna focus tra lista sorgente e casella testo sottotitolo</ToggleFocus>
-    <FocusWaveform>Focus forma d'onda/spettrogramma</FocusWaveform>
     <ToggleDialogDashes>Alterna trattini di dialogo</ToggleDialogDashes>
     <Alignment>Allineamento (linee selezionate)</Alignment>
     <CopyTextOnly>Copia il testo negli appunti (linee selezionate)</CopyTextOnly>
@@ -1789,7 +1788,6 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <WaveformAddTextHere>Aggiungi testo qui (per nuova selezione)</WaveformAddTextHere>
     <WaveformPlayNewSelection>Riproduci nuova selezione</WaveformPlayNewSelection>
     <WaveformPlayFirstSelectedSubtitle>Riproduci primo sottotitoli selezionato</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Focus su listview</WaveformFocusListView>
     <GoBack1Frame>Un frame indietro</GoBack1Frame>
     <GoForward1Frame>Un frame avanti</GoForward1Frame>
     <GoBack100Milliseconds>100 ms indietro</GoBack100Milliseconds>

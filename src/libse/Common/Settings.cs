@@ -1990,7 +1990,7 @@ $HorzAlign          =   Center
         public string MainInsertBefore { get; set; }
         public string MainMergeDialog { get; set; }
         public string MainToggleFocus { get; set; }
-        public string MainFocusWaveform { get; set; }
+        public string MainToggleFocusWaveform { get; set; }
         public string WaveformAdd { get; set; }
         public string WaveformVerticalZoom { get; set; }
         public string WaveformVerticalZoomOut { get; set; }
@@ -2004,7 +2004,6 @@ $HorzAlign          =   Center
         public string WaveformAddTextHere { get; set; }
         public string WaveformAddTextHereFromClipboard { get; set; }
         public string WaveformSetParagraphAsSelection { get; set; }
-        public string WaveformFocusListView { get; set; }
         public string WaveformGoToPreviousSceneChange { get; set; }
         public string WaveformGoToNextSceneChange { get; set; }
         public string WaveformToggleSceneChange { get; set; }
@@ -7480,10 +7479,10 @@ $HorzAlign          =   Center
                     shortcuts.MainToggleFocus = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("MainFocusWaveform");
+                subNode = node.SelectSingleNode("MainToggleFocusWaveform");
                 if (subNode != null)
                 {
-                    shortcuts.MainFocusWaveform = subNode.InnerText;
+                    shortcuts.MainToggleFocusWaveform = subNode.InnerText;
                 }
 
                 subNode = node.SelectSingleNode("WaveformAdd");
@@ -7562,12 +7561,6 @@ $HorzAlign          =   Center
                 if (subNode != null)
                 {
                     shortcuts.WaveformSetParagraphAsSelection = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("WaveformFocusListView");
-                if (subNode != null)
-                {
-                    shortcuts.WaveformFocusListView = subNode.InnerText;
                 }
 
                 subNode = node.SelectSingleNode("WaveformGoToPreviousSceneChange");
@@ -8618,7 +8611,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainInsertBefore", shortcuts.MainInsertBefore);
             textWriter.WriteElementString("MainMergeDialog", shortcuts.MainMergeDialog);
             textWriter.WriteElementString("MainToggleFocus", shortcuts.MainToggleFocus);
-            textWriter.WriteElementString("MainFocusWaveform", shortcuts.MainFocusWaveform);
+            textWriter.WriteElementString("MainToggleFocusWaveform", shortcuts.MainToggleFocusWaveform);
             textWriter.WriteElementString("WaveformAdd", shortcuts.WaveformAdd);
             textWriter.WriteElementString("WaveformVerticalZoom", shortcuts.WaveformVerticalZoom);
             textWriter.WriteElementString("WaveformVerticalZoomOut", shortcuts.WaveformVerticalZoomOut);
@@ -8632,7 +8625,6 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("WaveformAddTextHere", shortcuts.WaveformAddTextHere);
             textWriter.WriteElementString("WaveformAddTextHereFromClipboard", shortcuts.WaveformAddTextHereFromClipboard);
             textWriter.WriteElementString("WaveformSetParagraphAsSelection", shortcuts.WaveformSetParagraphAsSelection);
-            textWriter.WriteElementString("WaveformFocusListView", shortcuts.WaveformFocusListView);
             textWriter.WriteElementString("WaveformGoToPreviousSceneChange", shortcuts.WaveformGoToPreviousSceneChange);
             textWriter.WriteElementString("WaveformGoToNextSceneChange", shortcuts.WaveformGoToNextSceneChange);
             textWriter.WriteElementString("WaveformToggleSceneChange", shortcuts.WaveformToggleSceneChange);

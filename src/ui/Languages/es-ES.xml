@@ -1968,7 +1968,6 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <GoToPreviousSubtitleAndFocusVideo>Ir a la línea anterior y establecer la posición del vídeo</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Ir a la siguiente línea y definir la posición del vídeo</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Alternar el enfoque entre la vista de lista y cuadro de texto del subtítulo</ToggleFocus>
-    <FocusWaveform>Enfoque forma de onda/espectrograma</FocusWaveform>
     <ToggleDialogDashes>Cambiar guiones de diálogo</ToggleDialogDashes>
     <ToggleMusicSymbols>Alternar símbolos musicales</ToggleMusicSymbols>
     <Alignment>Alineación (líneas seleccionadas)</Alignment>
@@ -1995,7 +1994,6 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <WaveformPlayNewSelection>Reproducir nueva selección</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Reproducir final de la selección</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Reproducir primer subtítulo seleccionado</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Vista de lista de enfoque</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>Ir al cambio de escena anterior</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Ir al cambio de escena siguiente</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Alternar cambio de escena</WaveformToggleSceneChange>

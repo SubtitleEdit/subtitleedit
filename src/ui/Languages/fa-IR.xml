@@ -1952,7 +1952,6 @@ Continue anyway?</PromptInsertSubtitleOverlap>
     <GoToPreviousSubtitleAndFocusVideo>رفتن به خط قبلی و تنظیم موقعیت ویدیو</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>رفتن به خط بعدی و تنظیم موقعیت ویدیو</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>ضامن مرکز میان لیست ظاهری و جعبه متن زیرنویس</ToggleFocus>
-    <FocusWaveform>تمرکز شکل موج/طیف سنجی</FocusWaveform>
     <ToggleDialogDashes>کنترل ضامن خط های گفتگوها</ToggleDialogDashes>
     <ToggleMusicSymbols>نمادهای موسیقی را تغییر دهید</ToggleMusicSymbols>
     <Alignment>تراز (خطوط انتخاب شده)</Alignment>
@@ -1978,7 +1977,6 @@ Continue anyway?</PromptInsertSubtitleOverlap>
     <WaveformPlayNewSelection>پخش انتخاب</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>پخش پایان انتخاب</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>پخش اولین زیرنویس انتخاب شده</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>نمایش لیست فوکوس</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>به تغییر صحنه قبلی بروید</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>رفتن به تغییر صحنه بعدی</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>تغییر وضعیت صحنه</WaveformToggleSceneChange>

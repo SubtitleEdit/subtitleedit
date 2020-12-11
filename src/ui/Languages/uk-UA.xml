@@ -1795,7 +1795,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GoToCurrentSubtitleStart>Перейти до початку поточного субтитру</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Перейти до кінця поточного субтитру</GoToCurrentSubtitleEnd>
     <ToggleFocus>Перемкнути фокус між списком субтитрів та текстовим полем</ToggleFocus>
-    <FocusWaveform>Фокус на аудіохвилю/спектрограму</FocusWaveform>
     <ToggleDialogDashes>Перемкнути риски у діалозі</ToggleDialogDashes>
     <Alignment>Розташування (обрані рядки)</Alignment>
     <CopyTextOnly>Скопіювати до буферу обміну тільки текст (обрані рядки)</CopyTextOnly>
@@ -1809,7 +1808,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WaveformAddTextHere>Додати сюди текст (для нового виділення)</WaveformAddTextHere>
     <WaveformPlayNewSelection>Відтворити нове виділення</WaveformPlayNewSelection>
     <WaveformPlayFirstSelectedSubtitle>Відтворити перший вибраний субтитр</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Фокус на списку субтитрів</WaveformFocusListView>
     <GoBack1Frame>Один кадр назад</GoBack1Frame>
     <GoForward1Frame>Один кадр вперед</GoForward1Frame>
     <GoBack100Milliseconds>100 мс назад</GoBack100Milliseconds>

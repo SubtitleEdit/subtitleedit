@@ -2157,7 +2157,6 @@ Command line: {1} {2}
     <GoToPrevSubtitleAndPlay>跳转到上一行并播放</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>跳转到下一行并播放</GoToNextSubtitleAndPlay>
     <ToggleFocus>在列表视图和文本输入框之间切换焦点</ToggleFocus>
-    <FocusWaveform>操作焦点位于波形/频谱区</FocusWaveform>
     <ToggleDialogDashes>在对话内容前使用破折号</ToggleDialogDashes>
     <ToggleMusicSymbols>使用音乐符号</ToggleMusicSymbols>
     <Alignment>对齐 (所选行)</Alignment>
@@ -2187,7 +2186,6 @@ Command line: {1} {2}
     <WaveformPlayNewSelection>播放新的选中行</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>播放选中内容的末尾</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>播放首个选中行</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>操作焦点位于列表视图</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>转到下一个场景变化点</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>转到下一处场景变动</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>切换场景变动</WaveformToggleSceneChange>

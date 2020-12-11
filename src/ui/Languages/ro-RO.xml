@@ -2030,7 +2030,6 @@ pot edita acelasi fișier de subtitrare (colaborare)</Information>
     <GoToPreviousSubtitleAndFocusVideo>Treci la linia precedentă și setează poziția video</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Treci la linia următoare și setează poziția video</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Comută focalizarea între vizualizarea listei și caseta text a subtitrării</ToggleFocus>
-    <FocusWaveform>Focalizare formă audio/spectrograma</FocusWaveform>
     <ToggleDialogDashes>Comută la liniuțele de dialog</ToggleDialogDashes>
     <ToggleMusicSymbols>Comută la simbolurile muzicale</ToggleMusicSymbols>
     <Alignment>Aliniere (linii selectate)</Alignment>
@@ -2057,7 +2056,6 @@ pot edita acelasi fișier de subtitrare (colaborare)</Information>
     <WaveformPlayNewSelection>Redă selecția</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Redă sfârșitul selecției</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Redă mai întâi subtitrarea selectată</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Focalizează vizualizarea listei</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>Treci la schimbarea precedentă de scenă</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Treci la schimbarea următoare de scenă</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Comută schimbarea de scenă</WaveformToggleSceneChange>

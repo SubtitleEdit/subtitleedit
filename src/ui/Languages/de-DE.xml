@@ -1946,7 +1946,6 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <GoToPreviousSubtitleAndFocusVideo>Zum vorherigen Text und Videoposition setzen</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Zum nächsten Text und Videoposition setzen</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Zwischen Listenansicht und Textbox umschalten</ToggleFocus>
-    <FocusWaveform>Wellenform/Spektrogram fokussieren</FocusWaveform>
     <ToggleDialogDashes>Dialog Striche umschalten</ToggleDialogDashes>
     <ToggleMusicSymbols>Musiksymbole umschalten</ToggleMusicSymbols>
     <Alignment>Ausrichtung (gewählte Zeilen)</Alignment>
@@ -1963,7 +1962,6 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <WaveformPlayNewSelection>Auswahl abspielen</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Ende der Auswahl abspielen</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Ersten gewählten Untertitel abspielen</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Listenansicht fokussieren</WaveformFocusListView>
     <WaveformGoToNextSceneChange>Zum nächsten Szenenwechsel</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Szenenwechsel umschalten</WaveformToggleSceneChange>
     <GoBack1Frame>Ein Bild zurück</GoBack1Frame>

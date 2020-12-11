@@ -1906,7 +1906,6 @@ bisa mengedit dlm file subjudul yg sama (kolaborasi)</Information>
     <GoToPreviousSubtitleAndFocusVideo>Pergi ke baris sebelumnya dan atur posisi video</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Pergi ke baris berikutnya dan atur posisi video</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Alihkan fokus antara tampilan daftar dan kotak teks subjudul</ToggleFocus>
-    <FocusWaveform>Fokus waveform/spektogram</FocusWaveform>
     <ToggleDialogDashes>Alihkan tanda hubung dialog</ToggleDialogDashes>
     <ToggleMusicSymbols>Alihkan simbol musik</ToggleMusicSymbols>
     <Alignment>Perataant (baris terpilih)</Alignment>
@@ -1923,7 +1922,6 @@ bisa mengedit dlm file subjudul yg sama (kolaborasi)</Information>
     <WaveformPlayNewSelection>Putar pilihan</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Putar akhir pilihan</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Putar subjudul pertama terpilih</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Fokus tampilan daftar</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>Pergi ke perubahan adegan sebelumnya</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Pergi ke perubahan adegan berikutnya</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Alihkan perubahan adegan</WaveformToggleSceneChange>

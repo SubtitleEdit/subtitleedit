@@ -1872,7 +1872,6 @@ određeni podnaslov s drugim ljudima.</Information>
     <GoToPreviousSubtitleAndFocusVideo>Idi na prošlu liniju i postavi video poziciju</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Idi na sljedeću liniju i postavi video poziciju</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Prebacivanje fokusa između prikaza popisa i podnaslova tekstnog okvira</ToggleFocus>
-    <FocusWaveform>Fokusiraj valni/spektrogram</FocusWaveform>
     <ToggleDialogDashes>Prebaci dijaloške crtice</ToggleDialogDashes>
     <Alignment>Poravnanje (odabrane linije)</Alignment>
     <CopyTextOnly>Kopiranje teksta samo u međuspremnik (odabrane linije)</CopyTextOnly>
@@ -1888,7 +1887,6 @@ određeni podnaslov s drugim ljudima.</Information>
     <WaveformPlayNewSelection>Reproduciraj novo izabrano</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd />
     <WaveformPlayFirstSelectedSubtitle>Reproduciraj prvi izabrani podnaslov</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Fokusiraj listu prikaza</WaveformFocusListView>
     <WaveformGoToNextSubtitle>Idi na sljedeći titl (sa video pozicije)</WaveformGoToNextSubtitle>
     <WaveformGoToPreviousSceneChange />
     <WaveformGoToNextSceneChange />

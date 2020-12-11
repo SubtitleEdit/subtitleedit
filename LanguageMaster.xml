@@ -2167,7 +2167,7 @@ can edit in same subtitle file (collaboration)</Information>
     <GoToPrevSubtitleAndPlay>Go to previous line and play</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>Go to next line and play</GoToNextSubtitleAndPlay>
     <ToggleFocus>Toggle focus between list view and subtitle text box</ToggleFocus>
-    <FocusWaveform>Focus waveform/spectrogram</FocusWaveform>
+    <ToggleFocusWaveform>Toggle focus between list view and waveform/spectrogram</ToggleFocusWaveform>
     <ToggleDialogDashes>Toggle dialog dashes</ToggleDialogDashes>
     <ToggleMusicSymbols>Toggle music symbols</ToggleMusicSymbols>
     <Alignment>Alignment (selected lines)</Alignment>
@@ -2197,7 +2197,6 @@ can edit in same subtitle file (collaboration)</Information>
     <WaveformPlayNewSelection>Play selection</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Play end of selection</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Play first selected subtitle</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Focus list view</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>Go to previous scene change</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Go to next scene change</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Toggle scene change</WaveformToggleSceneChange>

@@ -1961,7 +1961,6 @@ da uređujete određeni prevod sa drugim ljudima.</Information>
     <GoToPreviousSubtitleAndFocusVideo>Idi na prethodnu liniju i postavi Video poziciju</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Idi na sledeću liniju i postavi Video poziciju</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Prebacivanje fokusa između Liste prevoda i Polja za uređivanje teksta</ToggleFocus>
-    <FocusWaveform>Fokusiraj audio/spektrogram</FocusWaveform>
     <ToggleDialogDashes>Ubaci dijaloške crtice</ToggleDialogDashes>
     <ToggleMusicSymbols>Ubaci muzičke simbole</ToggleMusicSymbols>
     <Alignment>Položaj (odabrane linije)</Alignment>
@@ -1987,7 +1986,6 @@ da uređujete određeni prevod sa drugim ljudima.</Information>
     <WaveformPlayNewSelection>Reprodukuj selekciju</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Reprodukuj kraj od selekcije</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Reprodukuj prvi izabrani prevod</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Fokusiraj Listu</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>Prethodne promena scene</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Sledeća promena scene</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Postavi promenu scene</WaveformToggleSceneChange>

@@ -2148,7 +2148,6 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <GoToPrevSubtitleAndPlay>Przejdź do poprzedniej linii i odtwarzaj</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>Przejdź do następnej linii i odtwarzaj</GoToNextSubtitleAndPlay>
     <ToggleFocus>Przełącz fokus między "Widokiem listy" i polem tekstowym napisów</ToggleFocus>
-    <FocusWaveform>Koncentruj uwagę na wykresie falowym/spektrogramie</FocusWaveform>
     <ToggleDialogDashes>Przełącz myślniki dialogów</ToggleDialogDashes>
     <ToggleMusicSymbols>Przełącz symbole muzyczne</ToggleMusicSymbols>
     <Alignment>Wyrównanie (zaznaczone linie)</Alignment>
@@ -2177,7 +2176,6 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <WaveformPlayNewSelection>Odtwarzaj zaznaczenie</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Odtwarzaj koniec zaznaczenia</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Odtwarzaj pierwsze zaznaczone napisy</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Koncentruj uwagę na "Widoku listy"</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>Przejdź do poprzedniej zmiany scen</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Przejdź do następnej zmiany scen</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Przełączanie zmiany scen</WaveformToggleSceneChange>

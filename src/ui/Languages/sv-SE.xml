@@ -1955,7 +1955,6 @@ kan redigera i samma undertextfil (samarbete)</Information>
     <GoToPreviousSubtitleAndFocusVideo>Gå till föregående rad och ställ in videopositionen</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Gå till nästa rad och ställ in videopositionen</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Växla fokus mellan listvyn och undertextrutan</ToggleFocus>
-    <FocusWaveform>Fokus vågform/spektrogram</FocusWaveform>
     <ToggleDialogDashes>Växla dialogstreck</ToggleDialogDashes>
     <ToggleMusicSymbols>Växla musiksymboler</ToggleMusicSymbols>
     <Alignment>Justering (markerade rader)</Alignment>
@@ -1981,7 +1980,6 @@ kan redigera i samma undertextfil (samarbete)</Information>
     <WaveformPlayNewSelection>Spela upp urvalet</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Spela upp slutet av urvalet</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Spela den första markerade undertexten</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Fokus listvy</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>Gå till föregående scenförändring</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Gå till nästa scenförändring</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Växla scenförändring</WaveformToggleSceneChange>

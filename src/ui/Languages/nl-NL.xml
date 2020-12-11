@@ -2023,7 +2023,6 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <GoToPreviousSubtitleAndFocusVideo>Naar vorige tekst en videopositie instellen</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Naar volgende tekst en videopositie instellen</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Tussen lĳstweergave en tekstvak wisselen</ToggleFocus>
-    <FocusWaveform>Golfvorm/spectrogram activeren</FocusWaveform>
     <ToggleDialogDashes>Dialoogstreepjes toevoegen/verwĳderen</ToggleDialogDashes>
     <ToggleMusicSymbols>Muzieksymbolen toevoegen/verwĳderen</ToggleMusicSymbols>
     <Alignment>Uitlĳning (geselecteerde ondertitels)</Alignment>
@@ -2050,7 +2049,6 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <WaveformPlayNewSelection>Selectie afspelen</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Selectie-einde afspelen</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Eerste geselecteerde ondertitel afspelen</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Lĳstweergave activeren</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>Naar vorige beeldwissel</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Naar volgende beeldwissel</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Beeldwissel toevoegen/verwĳderen</WaveformToggleSceneChange>

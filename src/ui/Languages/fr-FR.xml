@@ -1919,7 +1919,6 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <GoToPreviousSubtitleAndFocusVideo>Aller à la ligne précédente et définir la position vidéo</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Aller à la ligne suivante et définir la position vidéo</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Naviguer entre mode liste et zone de texte</ToggleFocus>
-    <FocusWaveform>Focus sur onde/spectrogramme</FocusWaveform>
     <ToggleDialogDashes>Activer/Désactiver le son</ToggleDialogDashes>
     <ToggleMusicSymbols />
     <Alignment>Aligner (lignes sélectionnées)</Alignment>
@@ -1945,7 +1944,6 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <WaveformPlayNewSelection>Lecture de la nouvelle sélection</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Lecture de la fin de la sélection</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Lecture du premier sous-titre sélectionné</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Focus du mode liste</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange />
     <WaveformGoToNextSceneChange>Aller au changement de scène suivant</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Alterner changement de scène</WaveformToggleSceneChange>

@@ -141,7 +141,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainTextBoxBreakAtCursorPositionAndGoToNext { get; set; }
         public Keys MainMergeDialog { get; set; }
         public Keys MainToggleFocus { get; set; }
-        public Keys MainFocusWaveform { get; set; }
+        public Keys MainToggleFocusWaveform { get; set; }
         public Keys MainWaveformAdd { get; set; }
         public Keys MainListViewToggleDashes { get; set; }
         public Keys MainListViewToggleMusicSymbols { get; set; }
@@ -177,7 +177,6 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys WaveformAddTextAtHere { get; set; }
         public Keys WaveformAddTextAtHereFromClipboard { get; set; }
         public Keys WaveformSetParagraphAsNewSelection { get; set; }
-        public Keys WaveformFocusListView { get; set; }
         public Keys WaveformGoToPreviousSceneChange { get; set; }
         public Keys WaveformGoToNextSceneChange { get; set; }
         public Keys WaveformToggleSceneChange { get; set; }
@@ -348,7 +347,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainTextBoxUnbreak = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxUnbreak);
             MainMergeDialog = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainMergeDialog);
             MainToggleFocus = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToggleFocus);
-            MainFocusWaveform = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFocusWaveform);
+            MainToggleFocusWaveform = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToggleFocusWaveform);
             MainWaveformAdd = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformAdd);
             WaveformVerticalZoom = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformVerticalZoom);
             WaveformVerticalZoomOut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformVerticalZoomOut);
@@ -362,7 +361,6 @@ namespace Nikse.SubtitleEdit.Logic
             WaveformAddTextAtHere = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformAddTextHere);
             WaveformAddTextAtHereFromClipboard = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformAddTextHereFromClipboard);
             WaveformSetParagraphAsNewSelection = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformSetParagraphAsSelection);
-            WaveformFocusListView = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformFocusListView);
             WaveformGoToPreviousSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformGoToPreviousSceneChange);
             WaveformGoToNextSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformGoToNextSceneChange);
             WaveformToggleSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformToggleSceneChange);

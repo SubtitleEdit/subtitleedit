@@ -2137,7 +2137,6 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <GoToPrevSubtitleAndPlay>Siirry edelliselle riville ja toista</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>Siirry seuraavalle riville ja toista</GoToNextSubtitleAndPlay>
     <ToggleFocus>Vaihda luettelonäkymän ja tekstitysruudun välillä</ToggleFocus>
-    <FocusWaveform>Aaltomuoto / taajuusanalyysi</FocusWaveform>
     <ToggleDialogDashes>Vaihda vuoropuhelun katkoviivat</ToggleDialogDashes>
     <ToggleMusicSymbols>Vaihda musiikkisymbolit</ToggleMusicSymbols>
     <Alignment>Tasaus (valitut rivit)</Alignment>
@@ -2166,7 +2165,6 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <WaveformPlayNewSelection>Toista uusi valinta</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Toista valinnan loppu</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Toista ensimmäinen valittu tekstitys</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Tarkennusluettelonäkymä</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>Siirry edelliseen kohtauksen vaihtoon</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Siirry seuraavaan kohtauksen vaihtoon</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Kohtauksen vaihto päälle / pois</WaveformToggleSceneChange>

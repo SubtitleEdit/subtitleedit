@@ -1982,7 +1982,6 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <WaveformPlayNewSelection>Lecture de la nouvelle sélection</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Lecture de la fin de la sélection</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Lecture du premier sous-titre sélectionné</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Focus du mode liste</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>Go to previous scene change</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Aller au changement de scène suivant</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Alterner changement de scène</WaveformToggleSceneChange>

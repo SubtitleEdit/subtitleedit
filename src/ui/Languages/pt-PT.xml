@@ -2052,7 +2052,6 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <GoToPrevSubtitleAndPlay>Ir para a linha anterior e reporduzir</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>Ir para a próxima linha e reproduzir</GoToNextSubtitleAndPlay>
     <ToggleFocus>Alternar o enfoque entre a caixa de texto da legenda e o separador (Lista) na janela principal</ToggleFocus>
-    <FocusWaveform>Destacar a forma de onda/espectrograma</FocusWaveform>
     <ToggleDialogDashes>Alternar travessões</ToggleDialogDashes>
     <ToggleMusicSymbols>Alternar símbolos de música</ToggleMusicSymbols>
     <Alignment>Alinhamento (linhas seleccionadas)</Alignment>
@@ -2081,7 +2080,6 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformPlayNewSelection>Reproduzir selecção</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Reproduzir a partir do fim da selecção</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Reproduzir a partir da primeira linha selecionada</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Destacar a lista de visualização</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>Ir para a mudança de cena anterior</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Ir para a próxima mudança de cena</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Alternar a mudança de cena</WaveformToggleSceneChange>
