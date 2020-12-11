@@ -15,8 +15,12 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using Nikse.SubtitleEdit.Core.Interfaces;
+using Nikse.SubtitleEdit.Logic.Ocr;
 
 namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 {
@@ -44,6 +48,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private int _screenWidth;
         private int _screenHeight;
         private string _lastSaveHash;
+        private string _nOcrFileName;
 
         public BinEdit(string fileName)
         {
@@ -64,6 +69,13 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             pictureBoxMovableImage.SizeMode = PictureBoxSizeMode.Normal;
             pictureBoxScreen.SizeMode = PictureBoxSizeMode.StretchImage;
             SetBackgroundImage();
+
+            _nOcrFileName = Configuration.Settings.VobSubOcr.LineOcrLastLanguages;
+            if (string.IsNullOrEmpty(_nOcrFileName))
+            {
+                _nOcrFileName = "Latin";
+            }
+            _nOcrFileName = Path.Combine(Configuration.OcrDirectory, _nOcrFileName + ".nocr");
         }
 
         private void OpenBinSubtitle(string fileName)
@@ -233,6 +245,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 timeUpDownEndTime.TimeCode = new TimeCode();
                 numericUpDownX.Value = 0;
                 numericUpDownY.Value = 0;
+                groupBoxCurrent.Text = string.Empty;
                 if (subtitleListView1.Items.Count == 0)
                 {
                     pictureBoxMovableImage.Hide();
@@ -242,6 +255,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
             var idx = subtitleListView1.SelectedItems[0].Index;
             var p = _subtitle.Paragraphs[idx];
+            groupBoxCurrent.Text = $"{(idx + 1)} / {(_subtitle.Paragraphs.Count + 1)}";
             if (videoPlayerContainer1.VideoPlayer != null && videoPlayerContainer1.IsPaused)
             {
                 videoPlayerContainer1.CurrentPosition = p.StartTime.TotalSeconds;
@@ -476,6 +490,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
             progressBar1.Value = 0;
             progressBar1.Maximum = _subtitle.Paragraphs.Count;
+            progressBar1.Style = ProgressBarStyle.Blocks;
             progressBar1.Visible = true;
             if (_bluRaySubtitles != null)
             {
@@ -557,23 +572,29 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
         private string GetStateHash()
         {
-            int hash = 17;
+            int extraHash = 17;
+            int subtitleHash = 17;
             unchecked // Overflow is fine, just wrap
             {
-                for (int i = 0; i < _extra.Count; i++)
+                foreach (var extra in _extra)
                 {
-                    var extra = _extra[i];
-                    hash = hash * 23 + extra.X.GetHashCode();
-                    hash = hash * 23 + extra.Y.GetHashCode();
-                    hash = hash * 23 + extra.Forced.GetHashCode();
+                    extraHash = extraHash * 23 + extra.X.GetHashCode();
+                    extraHash = extraHash * 23 + extra.Y.GetHashCode();
+                    extraHash = extraHash * 23 + extra.Forced.GetHashCode();
                     if (extra.Bitmap != null)
                     {
-                        hash = hash * 23 + extra.Bitmap.GetHashCode();
+                        extraHash = extraHash * 23 + extra.Bitmap.GetHashCode();
                     }
+                }
+
+                foreach (var p in _subtitle.Paragraphs)
+                {
+                    subtitleHash = subtitleHash * 23 + p.StartTime.TotalMilliseconds.GetHashCode();
+                    subtitleHash = subtitleHash * 23 + p.EndTime.TotalMilliseconds.GetHashCode();
                 }
             }
 
-            return hash.ToString() + _subtitle.GetFastHashCode(string.Empty);
+            return extraHash.ToString() + subtitleHash;
         }
 
         private void openFileToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1089,6 +1110,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private void contextMenuStripListView_Opening(object sender, CancelEventArgs e)
         {
             adjustAllTimesForSelectedLinesToolStripMenuItem.Visible = subtitleListView1.SelectedItems.Count > 1;
+            oCRTextsforOverviewOnlyToolStripMenuItem.Visible = File.Exists(_nOcrFileName);
         }
 
         private void openVideoToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1219,7 +1241,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             }
 
             var idx = subtitleListView1.SelectedItems[0].Index;
-            using (var form = new BinEditNewText(string.Empty))
+            using (var form = new BinEditNewText(_subtitle.Paragraphs[idx].Text))
             {
                 if (form.ShowDialog(this) != DialogResult.OK)
                 {
@@ -1336,6 +1358,81 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             var idx = subtitleListView1.SelectedItems[0].Index;
             var p = _subtitle.Paragraphs[idx];
             videoPlayerContainer1.CurrentPosition = p.StartTime.TotalSeconds;
+        }
+
+        private void ocrTextsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (subtitleListView1.Items.Count < 1)
+            {
+                return;
+            }
+
+            progressBar1.Value = 0;
+            progressBar1.Maximum = _subtitle.Paragraphs.Count;
+            progressBar1.Visible = true;
+            var nOcrDb = new NOcrDb(_nOcrFileName);
+            int count = 0;
+            var bw = new BackgroundWorker { WorkerReportsProgress = true };
+            bw.DoWork += (o, args) =>
+            {
+                Parallel.For(0, _subtitle.Paragraphs.Count, i =>
+                {
+                    Interlocked.Increment(ref count);
+                    bw.ReportProgress(count);
+                    var p = _subtitle.Paragraphs[i];
+                    var s = _bluRaySubtitles[i];
+                    var extra = _extra[i];
+                    OcrParagraph(extra, s, nOcrDb, p);
+                });
+            };
+            bw.ProgressChanged += (o, args) =>
+            {
+                progressBar1.Value = args.ProgressPercentage;
+            };
+            bw.RunWorkerCompleted += (o, args) =>
+            {
+                if (IsDisposed)
+                {
+                    return;
+                }
+
+                progressBar1.Visible = false;
+                var idx = 0;
+                if (subtitleListView1.SelectedItems.Count > 0)
+                {
+                    idx = subtitleListView1.SelectedItems[0].Index;
+                }
+                subtitleListView1.Fill(_subtitle);
+                subtitleListView1.SelectIndexAndEnsureVisible(idx);
+                _nOcrFileName = null;
+            };
+            bw.RunWorkerAsync();
+        }
+
+        private static void OcrParagraph(Extra extra, IBinaryParagraph s, NOcrDb nOcrDb, Paragraph p)
+        {
+            var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : s.GetBitmap();
+            var nBmp = new NikseBitmap(bmp);
+            nBmp.MakeTwoColor(200);
+            var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nBmp, 8, false, true, 15, true);
+            var sb = new StringBuilder();
+            foreach (var item in list)
+            {
+                if (item.NikseBitmap == null)
+                {
+                    if (item.SpecialCharacter != null)
+                    {
+                        sb.Append(item.SpecialCharacter);
+                    }
+                }
+                else
+                {
+                    var match = nOcrDb.GetMatch(item.NikseBitmap, item.Top, true, 40);
+                    sb.Append(match != null ? match.Text : "*");
+                }
+            }
+
+            p.Text = sb.ToString().Trim();
         }
     }
 }
