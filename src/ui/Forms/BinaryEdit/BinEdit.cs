@@ -4,7 +4,6 @@ using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using Nikse.SubtitleEdit.Forms.Ocr;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
@@ -62,6 +61,9 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             subtitleListView1.AutoSizeColumns();
             progressBar1.Visible = false;
             OpenBinSubtitle(fileName);
+            pictureBoxMovableImage.SizeMode = PictureBoxSizeMode.Normal;
+            pictureBoxScreen.SizeMode = PictureBoxSizeMode.StretchImage;
+            SetBackgroundImage();
         }
 
         private void OpenBinSubtitle(string fileName)
@@ -120,6 +122,19 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             }
 
             _lastSaveHash = GetStateHash();
+        }
+
+        private void SetBackgroundImage()
+        {
+            var screenBmp = new Bitmap((int)numericUpDownScreenWidth.Value, (int)numericUpDownScreenHeight.Value);
+            using (var g = Graphics.FromImage(screenBmp))
+            {
+                using (var brush = new SolidBrush(Color.Black))
+                {
+                    g.FillRectangle(brush, 0, 0, screenBmp.Width, screenBmp.Height);
+                }
+            }
+            pictureBoxScreen.Image = screenBmp;
         }
 
         private void SetResolution(Size bmpSize)
@@ -218,14 +233,15 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 timeUpDownEndTime.TimeCode = new TimeCode();
                 numericUpDownX.Value = 0;
                 numericUpDownY.Value = 0;
-                pictureBoxMovableImage.Image?.Dispose();
-                pictureBoxScreen.Image?.Dispose();
+                if (subtitleListView1.Items.Count == 0)
+                {
+                    pictureBoxMovableImage.Hide();
+                }
                 return;
             }
 
             var idx = subtitleListView1.SelectedItems[0].Index;
             var p = _subtitle.Paragraphs[idx];
-
             if (videoPlayerContainer1.VideoPlayer != null && videoPlayerContainer1.IsPaused)
             {
                 videoPlayerContainer1.CurrentPosition = p.StartTime.TotalSeconds;
@@ -240,35 +256,9 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 checkBoxIsForced.Checked = extra.Forced;
                 numericUpDownX.Value = extra.X;
                 numericUpDownY.Value = extra.Y;
-                pictureBoxMovableImage.Image?.Dispose();
-                pictureBoxScreen.Image?.Dispose();
                 var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : sub.GetBitmap();
-                var nikseBitmap = new NikseBitmap(bmp);
-                nikseBitmap.ReplaceTransparentWith(Color.Black);
-                bmp.Dispose();
-                bmp = nikseBitmap.GetBitmap();
-                var screenBmp = new Bitmap((int)numericUpDownScreenWidth.Value, (int)numericUpDownScreenHeight.Value);
-                using (var g = Graphics.FromImage(screenBmp))
-                {
-                    using (var brush = new SolidBrush(Color.Black))
-                    {
-                        g.FillRectangle(brush, 0, 0, screenBmp.Width, screenBmp.Height);
-                    }
-                    //g.DrawImage(bmp, extra.X, extra.Y);
-                }
-
-                pictureBoxMovableImage.Width = bmp.Width;
-                var widthAspect = pictureBoxScreen.Width / numericUpDownScreenWidth.Value;
-                var heightAspect = pictureBoxScreen.Height / numericUpDownScreenHeight.Value;
-                var scaledBmp = VobSubOcr.ResizeBitmap(bmp, (int)Math.Round(bmp.Width * widthAspect), (int)Math.Round(bmp.Height * heightAspect));
-                pictureBoxMovableImage.Width = scaledBmp.Width;
-                pictureBoxMovableImage.Height = scaledBmp.Height;
-                pictureBoxMovableImage.SizeMode = PictureBoxSizeMode.StretchImage;
-                pictureBoxMovableImage.Image = scaledBmp;
-                pictureBoxMovableImage.Left = (int)Math.Round(extra.X * widthAspect);
-                pictureBoxMovableImage.Top = (int)Math.Round(extra.Y * heightAspect);
-                pictureBoxScreen.Image = screenBmp;
                 labelCurrentSize.Text = string.Format("Size: {0}x{1}", bmp.Width, bmp.Height);
+                ShowCurrentScaledImage(bmp, extra);
             }
         }
 
@@ -476,7 +466,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             saveFileDialog1.Title = Configuration.Settings.Language.ExportPngXml.SaveBluRraySupAs;
             saveFileDialog1.DefaultExt = "*.sup";
             saveFileDialog1.AddExtension = true;
-            saveFileDialog1.Filter = "Blu-Ray sup|*.sup|BDN xml/png|*.xml";
+            saveFileDialog1.Filter = Configuration.Settings.Language.Main.BluRaySupFiles + "|*.sup|BDN xml/png|*.xml";
             if (saveFileDialog1.ShowDialog(this) != DialogResult.OK)
             {
                 return;
@@ -997,7 +987,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 {
                     if (saveFileDialog1.FilterIndex == 0)
                     {
-                        bmp.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Png);
+                        bmp.Save(saveFileDialog1.FileName, ImageFormat.Png);
                     }
                     else if (saveFileDialog1.FilterIndex == 1)
                     {
@@ -1005,11 +995,11 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                     }
                     else if (saveFileDialog1.FilterIndex == 2)
                     {
-                        bmp.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Gif);
+                        bmp.Save(saveFileDialog1.FileName, ImageFormat.Gif);
                     }
                     else
                     {
-                        bmp.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Tiff);
+                        bmp.Save(saveFileDialog1.FileName, ImageFormat.Tiff);
                     }
                 }
                 catch (Exception exception)
@@ -1173,12 +1163,12 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
             if (sub != null)
             {
-                pictureBoxMovableImage.Show();
                 if (_lastPlayParagraph != sub)
                 {
                     subtitleListView1.SelectIndexAndEnsureVisible(_subtitle.Paragraphs.IndexOf(sub));
                     _lastPlayParagraph = sub;
                 }
+                pictureBoxMovableImage.Show();
             }
         }
 
@@ -1284,6 +1274,68 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private void numericUpDownScreenHeight_ValueChanged(object sender, EventArgs e)
         {
             _screenHeight = (int)numericUpDownScreenHeight.Value;
+        }
+
+        private void BinEdit_Resize(object sender, EventArgs e)
+        {
+            if (subtitleListView1.SelectedItems.Count < 1)
+            {
+                return;
+            }
+
+            var idx = subtitleListView1.SelectedItems[0].Index;
+            if (_bluRaySubtitles != null)
+            {
+                var sub = _bluRaySubtitles[idx];
+                var extra = _extra[idx];
+                var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : sub.GetBitmap();
+                ShowCurrentScaledImage(bmp, extra);
+            }
+        }
+
+        private void ShowCurrentScaledImage(Bitmap bmp, Extra extra)
+        {
+            var controlHeight = 0;
+            if (!string.IsNullOrEmpty(_videoFileName))
+            {
+                controlHeight = videoPlayerContainer1.ControlsHeight;
+            }
+
+            var widthAspect = pictureBoxScreen.Width / numericUpDownScreenWidth.Value;
+            var heightAspect = (pictureBoxScreen.Height - controlHeight) / numericUpDownScreenHeight.Value;
+            var scaledBmp = new Bitmap((int)Math.Round(bmp.Width * widthAspect), (int)Math.Round(bmp.Height * heightAspect));
+            using (var g = Graphics.FromImage(scaledBmp))
+            {
+                using (var brush = new SolidBrush(Color.Black))
+                {
+                    g.FillRectangle(brush, 0, 0, scaledBmp.Width, scaledBmp.Height);
+                }
+                g.DrawImage(bmp, 0, 0, scaledBmp.Width, scaledBmp.Height);
+            }
+
+            bmp.Dispose();
+            pictureBoxMovableImage.Hide();
+            var oldImage = pictureBoxMovableImage.Image;
+            pictureBoxMovableImage.Width = scaledBmp.Width;
+            pictureBoxMovableImage.Height = scaledBmp.Height;
+            pictureBoxMovableImage.Image = scaledBmp;
+            pictureBoxMovableImage.Left = (int)Math.Round(extra.X * widthAspect);
+            pictureBoxMovableImage.Top = (int)Math.Round(extra.Y * heightAspect);
+            pictureBoxMovableImage.Invalidate();
+            pictureBoxMovableImage.Show();
+            oldImage?.Dispose();
+        }
+
+        private void subtitleListView1_Click(object sender, EventArgs e)
+        {
+            if (subtitleListView1.SelectedItems.Count < 1 && string.IsNullOrEmpty(_videoFileName))
+            {
+                return;
+            }
+
+            var idx = subtitleListView1.SelectedItems[0].Index;
+            var p = _subtitle.Paragraphs[idx];
+            videoPlayerContainer1.CurrentPosition = p.StartTime.TotalSeconds;
         }
     }
 }

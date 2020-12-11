@@ -30,14 +30,14 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode3 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode4 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
             this.groupBoxCurrent = new System.Windows.Forms.GroupBox();
             this.buttonSetText = new System.Windows.Forms.Button();
             this.labelCurrentSize = new System.Windows.Forms.Label();
             this.buttonExportImage = new System.Windows.Forms.Button();
             this.buttonImportImage = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
+            this.labelPositionComma = new System.Windows.Forms.Label();
             this.labelEndTime = new System.Windows.Forms.Label();
             this.labelStart = new System.Windows.Forms.Label();
             this.numericUpDownY = new System.Windows.Forms.NumericUpDown();
@@ -78,12 +78,12 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.pictureBoxMovableImage = new System.Windows.Forms.PictureBox();
             this.contextMenuStripMovableImage = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.centerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.undoChangesForThisElementToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBoxScreen = new System.Windows.Forms.PictureBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.timerSubtitleOnVideo = new System.Windows.Forms.Timer(this.components);
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.undoChangesForThisElementToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.videoPlayerContainer1 = new Nikse.SubtitleEdit.Controls.VideoPlayerContainer();
             this.timeUpDownEndTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
@@ -109,7 +109,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.groupBoxCurrent.Controls.Add(this.labelCurrentSize);
             this.groupBoxCurrent.Controls.Add(this.buttonExportImage);
             this.groupBoxCurrent.Controls.Add(this.buttonImportImage);
-            this.groupBoxCurrent.Controls.Add(this.label2);
+            this.groupBoxCurrent.Controls.Add(this.labelPositionComma);
             this.groupBoxCurrent.Controls.Add(this.labelEndTime);
             this.groupBoxCurrent.Controls.Add(this.labelStart);
             this.groupBoxCurrent.Controls.Add(this.numericUpDownY);
@@ -164,14 +164,14 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.buttonImportImage.UseVisualStyleBackColor = true;
             this.buttonImportImage.Click += new System.EventHandler(this.buttonImportImage_Click);
             // 
-            // label2
+            // labelPositionComma
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(298, 17);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(12, 13);
-            this.label2.TabIndex = 6;
-            this.label2.Text = "x";
+            this.labelPositionComma.AutoSize = true;
+            this.labelPositionComma.Location = new System.Drawing.Point(298, 17);
+            this.labelPositionComma.Name = "labelPositionComma";
+            this.labelPositionComma.Size = new System.Drawing.Size(10, 13);
+            this.labelPositionComma.TabIndex = 6;
+            this.labelPositionComma.Text = ",";
             // 
             // labelEndTime
             // 
@@ -548,6 +548,18 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.centerToolStripMenuItem.Text = "Center horizontally";
             this.centerToolStripMenuItem.Click += new System.EventHandler(this.centerToolStripMenuItem_Click);
             // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(233, 6);
+            // 
+            // undoChangesForThisElementToolStripMenuItem
+            // 
+            this.undoChangesForThisElementToolStripMenuItem.Name = "undoChangesForThisElementToolStripMenuItem";
+            this.undoChangesForThisElementToolStripMenuItem.Size = new System.Drawing.Size(236, 22);
+            this.undoChangesForThisElementToolStripMenuItem.Text = "Undo changes for this element";
+            this.undoChangesForThisElementToolStripMenuItem.Click += new System.EventHandler(this.undoChangesForThisElementToolStripMenuItem_Click);
+            // 
             // pictureBoxScreen
             // 
             this.pictureBoxScreen.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -577,18 +589,6 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             // 
             this.timerSubtitleOnVideo.Interval = 25;
             this.timerSubtitleOnVideo.Tick += new System.EventHandler(this.timerSubtitleOnVideo_Tick);
-            // 
-            // toolStripSeparator4
-            // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(233, 6);
-            // 
-            // undoChangesForThisElementToolStripMenuItem
-            // 
-            this.undoChangesForThisElementToolStripMenuItem.Name = "undoChangesForThisElementToolStripMenuItem";
-            this.undoChangesForThisElementToolStripMenuItem.Size = new System.Drawing.Size(236, 22);
-            this.undoChangesForThisElementToolStripMenuItem.Text = "Undo changes for this element";
-            this.undoChangesForThisElementToolStripMenuItem.Click += new System.EventHandler(this.undoChangesForThisElementToolStripMenuItem_Click);
             // 
             // videoPlayerContainer1
             // 
@@ -622,14 +622,14 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.timeUpDownEndTime.Name = "timeUpDownEndTime";
             this.timeUpDownEndTime.Size = new System.Drawing.Size(111, 27);
             this.timeUpDownEndTime.TabIndex = 3;
-            timeCode3.Hours = 0;
-            timeCode3.Milliseconds = 0;
-            timeCode3.Minutes = 0;
-            timeCode3.Seconds = 0;
-            timeCode3.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode3.TotalMilliseconds = 0D;
-            timeCode3.TotalSeconds = 0D;
-            this.timeUpDownEndTime.TimeCode = timeCode3;
+            timeCode1.Hours = 0;
+            timeCode1.Milliseconds = 0;
+            timeCode1.Minutes = 0;
+            timeCode1.Seconds = 0;
+            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode1.TotalMilliseconds = 0D;
+            timeCode1.TotalSeconds = 0D;
+            this.timeUpDownEndTime.TimeCode = timeCode1;
             this.timeUpDownEndTime.UseVideoOffset = false;
             // 
             // timeUpDownStartTime
@@ -642,14 +642,14 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
             this.timeUpDownStartTime.Size = new System.Drawing.Size(111, 27);
             this.timeUpDownStartTime.TabIndex = 1;
-            timeCode4.Hours = 0;
-            timeCode4.Milliseconds = 0;
-            timeCode4.Minutes = 0;
-            timeCode4.Seconds = 0;
-            timeCode4.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode4.TotalMilliseconds = 0D;
-            timeCode4.TotalSeconds = 0D;
-            this.timeUpDownStartTime.TimeCode = timeCode4;
+            timeCode2.Hours = 0;
+            timeCode2.Milliseconds = 0;
+            timeCode2.Minutes = 0;
+            timeCode2.Seconds = 0;
+            timeCode2.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode2.TotalMilliseconds = 0D;
+            timeCode2.TotalSeconds = 0D;
+            this.timeUpDownStartTime.TimeCode = timeCode2;
             this.timeUpDownStartTime.UseVideoOffset = false;
             // 
             // subtitleListView1
@@ -676,6 +676,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.subtitleListView1.UseSyntaxColoring = true;
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.subtitleListView1_SelectedIndexChanged);
+            this.subtitleListView1.Click += new System.EventHandler(this.subtitleListView1_Click);
             this.subtitleListView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.subtitleListView1_KeyDown);
             // 
             // BinEdit
@@ -700,6 +701,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.BinEdit_FormClosing);
             this.Shown += new System.EventHandler(this.BinEdit_Shown);
             this.ResizeEnd += new System.EventHandler(this.BinEdit_ResizeEnd);
+            this.Resize += new System.EventHandler(this.BinEdit_Resize);
             this.groupBoxCurrent.ResumeLayout(false);
             this.groupBoxCurrent.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownY)).EndInit();
@@ -728,7 +730,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private Controls.TimeUpDown timeUpDownEndTime;
         private Controls.TimeUpDown timeUpDownStartTime;
         private System.Windows.Forms.Button buttonImportImage;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label labelPositionComma;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label labelEndTime;
         private System.Windows.Forms.Label labelStart;
