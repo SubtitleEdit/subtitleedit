@@ -2157,6 +2157,7 @@ Command line: {1} {2}
     <GoToPrevSubtitleAndPlay>跳转到上一行并播放</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>跳转到下一行并播放</GoToNextSubtitleAndPlay>
     <ToggleFocus>在列表视图和文本输入框之间切换焦点</ToggleFocus>
+    <ToggleFocusWaveform>在列表视图和波形/频谱视图之间切换焦点</ToggleFocusWaveform>
     <ToggleDialogDashes>在对话内容前使用破折号</ToggleDialogDashes>
     <ToggleMusicSymbols>使用音乐符号</ToggleMusicSymbols>
     <Alignment>对齐 (所选行)</Alignment>
