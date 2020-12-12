@@ -8,7 +8,14 @@ using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.Translate
 {
-    public abstract class Translator<T> where T : ITranslationUnit
+    public delegate bool TranslationCancelStatusCallback(Dictionary<int, string> targetParagraphs);
+
+    public interface ITranslator
+    {
+        List<string> Translate(ITranslationService translationService, string source, string target, List<Paragraph> paragraphs, TranslationCancelStatusCallback cancelStatusCallback);
+    }
+
+    public abstract class Translator<T> : ITranslator where T : ITranslationUnit
     {
         /**
          * due to translation service constraints not all paragraphs can't submitted at once. Therefore the paragraphs must be split in multiple Chunks
@@ -29,48 +36,43 @@ namespace Nikse.SubtitleEdit.Core.Translate
         }
 
 
-        private readonly ITranslationService _translationService;
 
-        public delegate bool TranslationCancelStatusCallback(Dictionary<int, string> targetParagraphs);
-
-        public Translator(ITranslationService translationService)
-        {
-            _translationService = translationService;
-        }
 
         protected abstract IEnumerable<T> ConstructTranslationUnits(List<Paragraph> sourceParagraphs);
         protected abstract Dictionary<int,string> GetTargetParagraphs(List<T> sourceTranslationUnits, List<string> targetTexts);
 
 
-        public void Translate(string source, string target, List<Paragraph> paragraphs, TranslationCancelStatusCallback cancelStatusCallback)
+        public List<string> Translate(ITranslationService translationService, string source, string target, List<Paragraph> paragraphs, TranslationCancelStatusCallback cancelStatusCallback )
         {
             var translationUnits =ConstructTranslationUnits(paragraphs);
-
-
-            var translationChunks = BuildTranslationChunks(translationUnits);
+            var translationChunks = BuildTranslationChunks(translationUnits, translationService);
             var log = new StringBuilder();
+
+            Dictionary<int,string> targetParagraphs=new Dictionary<int, string>();
 
             foreach (var translationChunk in translationChunks)
             {
-                List<string> result = _translationService.Translate(source, target, translationChunk.TranslationUnits.ConvertAll(x=>new Paragraph() { Text = x.GetText() }), log);
-
-                Dictionary<int, string> targetParagraphs=GetTargetParagraphs(translationChunk.TranslationUnits, result);
-           
-
-                if (cancelStatusCallback(targetParagraphs))
+                List<string> result = translationService.Translate(source, target, translationChunk.TranslationUnits.ConvertAll(x=>new Paragraph() { Text = x.GetText() }), log);
+                Dictionary<int, string> newTargetParagraphs=GetTargetParagraphs(translationChunk.TranslationUnits, result);
+                foreach (KeyValuePair<int, string> newTargetParagraph in newTargetParagraphs)
                 {
-                    return;
+                    targetParagraphs[newTargetParagraph.Key] = newTargetParagraph.Value;
+                }
+                if (cancelStatusCallback(newTargetParagraphs)) //check if operation was canceled outside
+                {
+                    return targetParagraphs.Values.ToList();
                 }
             }
+            return targetParagraphs.Values.ToList();
         }
 
-        private List<TranslationChunk> BuildTranslationChunks(IEnumerable<T> translationUnits)
+        private List<TranslationChunk> BuildTranslationChunks(IEnumerable<T> translationUnits, ITranslationService translationService)
         {
 
             List<TranslationChunk> chunks = new List<TranslationChunk>();
 
-            int maxTextSize = _translationService.MaxTextSize;
-            int maximumRequestArrayLength = _translationService.MaximumRequestArraySize;
+            int maxTextSize = translationService.MaxTextSize;
+            int maximumRequestArrayLength = translationService.MaximumRequestArraySize;
 
             TranslationChunk currentChunk = new TranslationChunk();
 

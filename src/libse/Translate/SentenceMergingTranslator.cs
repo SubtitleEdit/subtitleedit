@@ -16,11 +16,6 @@ namespace Nikse.SubtitleEdit.Core.Translate
 
     }
 
-    public interface ILineHandler
-    {
-        IEnumerable<ITranslationUnit> wrap(List<Paragraph> sourceParagraphs);
-        List<string> unwrap(List<ITranslationUnit> sourceUnits ,List<string> targetTexts);
-    }
 
     public class ParagraphWrapper
     {
@@ -43,18 +38,14 @@ namespace Nikse.SubtitleEdit.Core.Translate
 
     public class SentenceParagraphRelation
     {
-
         public string Text { get; }
         public string Translation { get; set; } = "";
-
-
         public ParagraphWrapper ParagraphWrapper { get; }
 
         public SentenceParagraphRelation(string text, ParagraphWrapper paragraphWrapper)
         {
             paragraphWrapper.SentenceParagraphRelations.Add(this);
             this.ParagraphWrapper = paragraphWrapper;
-
             this.Text = text;
         }
 
@@ -72,7 +63,11 @@ namespace Nikse.SubtitleEdit.Core.Translate
             return text;
         }
 
-        public void SetTranslation(string translatedText)
+        /**
+         * divides the full sentence in multiple chunks and assigns them to the source paragraphs.
+         * It tries to split by percentage equivalent to fit the length of the source paragraph
+         */
+        public void SetTranslation(string targetText)
         {
             var delimiterChars = new char[] { ' ', ' ' };
             List<int> chunksTextLength = SentenceParagraphs.ConvertAll(x => x.Text.Length);
@@ -82,12 +77,12 @@ namespace Nikse.SubtitleEdit.Core.Translate
             SentenceParagraphs[0].Translation = "";
             int currentSourceChunkEndPosition = chunksTextLength[0];
 
-            for (int i = 0; i < translatedText.Length; i++)
+            for (int i = 0; i < targetText.Length; i++)
             {
-                char charAt = translatedText[i];
+                char charAt = targetText[i];
                 if (delimiterChars.Contains(charAt))
                 {
-                    double currentTargetPositionPercentage = (double)i / translatedText.Length;
+                    double currentTargetPositionPercentage = (double)i / targetText.Length;
                     double currentSourceChunkEndPositionPercentage = (double)currentSourceChunkEndPosition / overallSourceLength;
                     if (currentTargetPositionPercentage > currentSourceChunkEndPositionPercentage)
                     {
@@ -106,7 +101,10 @@ namespace Nikse.SubtitleEdit.Core.Translate
 
     public class SentenceMergingTranslator : Translator<Sentence>
     {
-
+        public override string ToString()
+        {
+            return "Sentence Merging";
+        }
 
         private static IEnumerable<Sentence> ConcatSentences(List<Paragraph> paragraphs)
         {
@@ -137,11 +135,10 @@ namespace Nikse.SubtitleEdit.Core.Translate
                     }
                 }
             }
-            if (currentSentence.GetText().Trim().Length > 0)
+            if (currentSentence.GetText().Trim().Length > 0) //this check avoid a empty last Sentence (could happen when the last chunk ends with a delimiter)
             {
                 sentences.Add(currentSentence);
             }
-
 
 
             foreach (var sentence in sentences)
@@ -195,18 +192,12 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 foreach (var sentenceParagraphRelation in sourceSentence.SentenceParagraphs)
                 {
                     var paragraphWrapper = sentenceParagraphRelation.ParagraphWrapper;
-                    targetParagraphs.Remove(paragraphWrapper.Index);
-                    targetParagraphs.Add(paragraphWrapper.Index, paragraphWrapper.GenerateTargetText());
+                    targetParagraphs[paragraphWrapper.Index]= paragraphWrapper.GenerateTargetText();
                 }
             }
 
             return targetParagraphs;
         }
 
-
-
-        public SentenceMergingTranslator(ITranslationService translationService) : base(translationService)
-        {
-        }
     }
 }

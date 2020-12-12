@@ -42,8 +42,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListViewTo = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.subtitleListViewFrom = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.labelApiKeyNotFound = new System.Windows.Forms.Label();
-            this.comboBoxTranslatoEngines = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.comboBoxTranslationServices = new System.Windows.Forms.ComboBox();
+            this.labelTranslationService = new System.Windows.Forms.Label();
+            this.labelParagraphHandling = new System.Windows.Forms.Label();
+            this.comboBoxParagraphHandling = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // comboBoxFrom
@@ -52,7 +54,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxFrom.FormattingEnabled = true;
             this.comboBoxFrom.Location = new System.Drawing.Point(327, 34);
             this.comboBoxFrom.Name = "comboBoxFrom";
-            this.comboBoxFrom.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxFrom.Size = new System.Drawing.Size(121, 25);
             this.comboBoxFrom.TabIndex = 0;
             // 
             // labelFrom
@@ -60,7 +62,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelFrom.AutoSize = true;
             this.labelFrom.Location = new System.Drawing.Point(285, 41);
             this.labelFrom.Name = "labelFrom";
-            this.labelFrom.Size = new System.Drawing.Size(35, 13);
+            this.labelFrom.Size = new System.Drawing.Size(45, 17);
             this.labelFrom.TabIndex = 1;
             this.labelFrom.Text = "From:";
             // 
@@ -69,7 +71,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelTo.AutoSize = true;
             this.labelTo.Location = new System.Drawing.Point(468, 37);
             this.labelTo.Name = "labelTo";
-            this.labelTo.Size = new System.Drawing.Size(23, 13);
+            this.labelTo.Size = new System.Drawing.Size(29, 17);
             this.labelTo.TabIndex = 4;
             this.labelTo.Text = "To:";
             // 
@@ -79,7 +81,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxTo.FormattingEnabled = true;
             this.comboBoxTo.Location = new System.Drawing.Point(497, 34);
             this.comboBoxTo.Name = "comboBoxTo";
-            this.comboBoxTo.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxTo.Size = new System.Drawing.Size(121, 25);
             this.comboBoxTo.TabIndex = 3;
             // 
             // buttonTranslate
@@ -119,7 +121,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelPleaseWait.AutoSize = true;
             this.labelPleaseWait.Location = new System.Drawing.Point(703, 23);
             this.labelPleaseWait.Name = "labelPleaseWait";
-            this.labelPleaseWait.Size = new System.Drawing.Size(176, 13);
+            this.labelPleaseWait.Size = new System.Drawing.Size(215, 17);
             this.labelPleaseWait.TabIndex = 10;
             this.labelPleaseWait.Text = "Please wait... this may take a while";
             // 
@@ -181,38 +183,60 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelApiKeyNotFound.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelApiKeyNotFound.AutoSize = true;
             this.labelApiKeyNotFound.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.labelApiKeyNotFound.Location = new System.Drawing.Point(202, 529);
+            this.labelApiKeyNotFound.Location = new System.Drawing.Point(291, 529);
             this.labelApiKeyNotFound.Name = "labelApiKeyNotFound";
-            this.labelApiKeyNotFound.Size = new System.Drawing.Size(145, 13);
+            this.labelApiKeyNotFound.Size = new System.Drawing.Size(184, 17);
             this.labelApiKeyNotFound.TabIndex = 12;
             this.labelApiKeyNotFound.Text = "Warning: API key not found!";
             // 
             // comboBoxTranslatoEngines
             // 
-            this.comboBoxTranslatoEngines.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxTranslatoEngines.FormattingEnabled = true;
-            this.comboBoxTranslatoEngines.Location = new System.Drawing.Point(144, 36);
-            this.comboBoxTranslatoEngines.Name = "comboBoxTranslatoEngines";
-            this.comboBoxTranslatoEngines.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxTranslatoEngines.TabIndex = 13;
-            this.comboBoxTranslatoEngines.TextChanged += new System.EventHandler(this.ComboBoxTranslatorEngineChanged);
+            this.comboBoxTranslationServices.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxTranslationServices.FormattingEnabled = true;
+            this.comboBoxTranslationServices.Location = new System.Drawing.Point(84, 36);
+            this.comboBoxTranslationServices.Name = "comboBoxTranslationServices";
+            this.comboBoxTranslationServices.Size = new System.Drawing.Size(121, 25);
+            this.comboBoxTranslationServices.TabIndex = 13;
+            this.comboBoxTranslationServices.TextChanged += new System.EventHandler(this.ComboBoxTranslatorEngineChanged);
             // 
-            // label1
+            // labelTranslationService
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(15, 41);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(99, 13);
-            this.label1.TabIndex = 14;
-            this.label1.Text = "Translation Engine:";
+            this.labelTranslationService.AutoSize = true;
+            this.labelTranslationService.Location = new System.Drawing.Point(15, 41);
+            this.labelTranslationService.Name = "labelTranslationService";
+            this.labelTranslationService.Size = new System.Drawing.Size(57, 17);
+            this.labelTranslationService.TabIndex = 14;
+            this.labelTranslationService.Text = "Service:";
+            // 
+            // labelParagraphHandling
+            // 
+            this.labelParagraphHandling.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelParagraphHandling.AutoSize = true;
+            this.labelParagraphHandling.Location = new System.Drawing.Point(18, 530);
+            this.labelParagraphHandling.Name = "labelParagraphHandling";
+            this.labelParagraphHandling.Size = new System.Drawing.Size(132, 17);
+            this.labelParagraphHandling.TabIndex = 15;
+            this.labelParagraphHandling.Text = "Paragraph Handling:";
+            // 
+            // comboBoxParagraphHandling
+            // 
+            this.comboBoxParagraphHandling.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.comboBoxParagraphHandling.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxParagraphHandling.FormattingEnabled = true;
+            this.comboBoxParagraphHandling.Location = new System.Drawing.Point(155, 527);
+            this.comboBoxParagraphHandling.Name = "comboBoxParagraphHandling";
+            this.comboBoxParagraphHandling.Size = new System.Drawing.Size(121, 25);
+            this.comboBoxParagraphHandling.TabIndex = 16;
             // 
             // GenericTranslate
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(925, 558);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.comboBoxTranslatoEngines);
+            this.Controls.Add(this.comboBoxParagraphHandling);
+            this.Controls.Add(this.labelParagraphHandling);
+            this.Controls.Add(this.labelTranslationService);
+            this.Controls.Add(this.comboBoxTranslationServices);
             this.Controls.Add(this.labelApiKeyNotFound);
             this.Controls.Add(this.comboBoxFrom);
             this.Controls.Add(this.progressBar1);
@@ -255,7 +279,9 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Label labelPleaseWait;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Label labelApiKeyNotFound;
-        private System.Windows.Forms.ComboBox comboBoxTranslatoEngines;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox comboBoxTranslationServices;
+        private System.Windows.Forms.Label labelTranslationService;
+        private System.Windows.Forms.Label labelParagraphHandling;
+        private System.Windows.Forms.ComboBox comboBoxParagraphHandling;
     }
 }
