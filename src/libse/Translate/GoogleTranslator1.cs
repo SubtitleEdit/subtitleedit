@@ -26,6 +26,10 @@ namespace Nikse.SubtitleEdit.Core.Translate
             return "Google translate (old)";
         }
 
+        public int MaxTextSize => Configuration.Settings.Tools.GoogleApiV1ChunkSize;
+
+        public int MaximumRequestArraySize => 100;
+
         public string GetUrl()
         {
             return "https://translate.google.com/";
@@ -36,14 +40,14 @@ namespace Nikse.SubtitleEdit.Core.Translate
             string result;
             var input = new StringBuilder();
             var formatList = new List<Formatting>();
-            bool skipNext = false;
+            //bool skipNext = false;
             for (var index = 0; index < paragraphs.Count; index++)
             {
-                if (skipNext)
-                {
-                    skipNext = false;
-                    continue;
-                }
+                //if (skipNext)
+                //{
+                //    skipNext = false;
+                //    continue;
+                //}
 
                 var p = paragraphs[index];
                 var f = new Formatting();
@@ -60,11 +64,11 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 }
 
                 var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text.Replace(SplitChar.ToString(), string.Empty), sourceLanguage), sourceLanguage, nextText);
-                skipNext = f.SkipNext;
-                if (!skipNext)
-                {
+                //skipNext = f.SkipNext;
+                //if (!skipNext)
+                //{
                     text = f.UnBreak(text, p.Text);
-                }
+                //}
 
                 input.Append(text);
             }

@@ -8,9 +8,6 @@ namespace Nikse.SubtitleEdit.Core.Translate
     {
 
 
-        int MaxTextSize { get; }
-
-        int MaximumRequestArrayLength { get; }
         
          List<string> Init();
 

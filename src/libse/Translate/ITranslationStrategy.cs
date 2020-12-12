@@ -10,5 +10,8 @@ namespace Nikse.SubtitleEdit.Core.Translate
         string GetName();
         string GetUrl();
         List<string> Translate(string sourceLanguage, string targetLanguage, List<Paragraph> paragraphs, StringBuilder log);
+        int MaxTextSize { get; }
+        int MaximumRequestArraySize { get; }
+
     }
 }

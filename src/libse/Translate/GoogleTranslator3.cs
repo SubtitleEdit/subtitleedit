@@ -23,6 +23,9 @@ namespace Nikse.SubtitleEdit.Core.Translate
             _projectNumberOrId = projectNumberOrId;
         }
 
+        public int MaxTextSize => 1000; //brummochse: in the old code there is no value defined for Google trasnlate V3. this is simply the value from V2 in lack of better knowledge
+        public int MaximumRequestArraySize => 100; //brummochse: in the old code there is no value defined for Google trasnlate V3. this is simply the value from V2 in lack of better knowledge
+
         public List<TranslationPair> GetTranslationPairs()
         {
             return new GoogleTranslator2(null).GetTranslationPairs();
@@ -44,14 +47,14 @@ namespace Nikse.SubtitleEdit.Core.Translate
 
             var input = new StringBuilder();
             var formatList = new List<Formatting>();
-            bool skipNext = false;
+            //bool skipNext = false;
             for (var index = 0; index < paragraphs.Count; index++)
             {
-                if (skipNext)
-                {
-                    skipNext = false;
-                    continue;
-                }
+                //if (skipNext)
+                //{
+                //    skipNext = false;
+                //    continue;
+                //}
 
                 var p = paragraphs[index];
                 var f = new Formatting();
@@ -68,11 +71,11 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 }
 
                 var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text, sourceLanguage), sourceLanguage, nextText);
-                skipNext = f.SkipNext;
-                if (!skipNext)
-                {
+                //skipNext = f.SkipNext;
+                //if (!skipNext)
+                //{
                     text = f.UnBreak(text, p.Text);
-                }
+                //}
 
                 input.Append("\"" + Json.EncodeJsonText(text) + "\"");
             }

@@ -6,6 +6,7 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.EnterpriseServices;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -135,6 +136,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ComboBoxTranslatorEngineChanged(object sender, EventArgs e)
         {
             _translationService = (ITranslationService)comboBoxTranslatoEngines.SelectedItem;
+            _translationService.Init();
             ReadLanguageSettings();
             SetupLanguageSettings();
         }
@@ -263,69 +265,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             ReadLanguageSettings();
-            //Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage = _toLanguageIsoCode;
-
-
-            //var language = Configuration.Settings.Language.GoogleTranslate;
-            //if (_googleTranslate && string.IsNullOrEmpty(Configuration.Settings.Tools.GoogleApiV2Key))
-            //{
-            //    if (Configuration.Settings.Tools.GoogleApiV2KeyInfoShow)
-            //    {
-            //        using (var form = new DialogDoNotShowAgain("Subtitle Edit", language.GoogleApiKeyNeeded))
-            //        {
-            //            form.ShowDialog(this);
-            //            Configuration.Settings.Tools.GoogleApiV2KeyInfoShow = !form.DoNoDisplayAgain;
-            //        }
-            //    }
-
-            //    if (Configuration.Settings.Tools.GoogleTranslateNoKeyWarningShow)
-            //    {
-            //        using (var form = new DialogDoNotShowAgain("Subtitle Edit", language.GoogleNoApiKeyWarning))
-            //        {
-            //            form.ShowDialog();
-            //            Configuration.Settings.Tools.GoogleTranslateNoKeyWarningShow = !form.DoNoDisplayAgain;
-            //        }
-            //    }
-
-            //    labelApiKeyNotFound.Text = language.GoogleNoApiKeyWarning;
-
-            //    Translate( new GoogleTranslator1(), Configuration.Settings.Tools.GoogleApiV1ChunkSize);
-            //    return;
-            //}
-
-            //if (!_googleTranslate && string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorApiKey))
-            //{
-            //    MessageBox.Show(language.MsClientSecretNeeded);
-            //    return;
-            //}
-
-
-            //if (_googleTranslate)
-            //{
-            //    Translate(
-            //        new GoogleTranslator2(Configuration.Settings.Tools.GoogleApiV2Key),
-            //        1000);
-            //}
-            //else
-            //{
-            //    Translate(
-            //        new MicrosoftTranslator(Configuration.Settings.Tools.MicrosoftTranslatorApiKey, Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint, Configuration.Settings.Tools.MicrosoftTranslatorCategory),
-            //        1000, MicrosoftTranslator.MaximumRequestArrayLength);
-            //}
-
+  
 
             Translate();
         }
 
-        private void Translate() //, int maxTextSize, int maximumRequestArrayLength = 100
+        private void Translate()
         {
-            _translationService.Init();
-            int maxTextSize = _translationService.MaxTextSize;
-            int maximumRequestArrayLength = _translationService.MaximumRequestArrayLength;
-
-
-            string source = _fromLanguageIsoCode;
-            string target = _toLanguageIsoCode;
+            var translator = new SentenceMergingTranslator(_translationService);
 
 
             buttonOK.Enabled = false;
@@ -337,43 +284,23 @@ namespace Nikse.SubtitleEdit.Forms
             progressBar1.Value = 0;
             progressBar1.Visible = true;
             labelPleaseWait.Visible = true;
-            var sourceParagraphs = new List<Paragraph>();
             try
             {
-                var log = new StringBuilder();
-                var sourceLength = 0;
                 var selectedItems = subtitleListViewFrom.SelectedItems;
                 var startIndex = selectedItems.Count <= 0 ? 0 : selectedItems[0].Index;
-                var start = startIndex;
                 int index = startIndex;
-                for (int i = startIndex; i < _subtitle.Paragraphs.Count; i++)
-                {
-                    Paragraph p = _subtitle.Paragraphs[i];
-                    sourceLength += Utilities.UrlEncode(p.Text).Length;
-                    if ((sourceLength >= maxTextSize || sourceParagraphs.Count >= maximumRequestArrayLength) && sourceParagraphs.Count > 0)
-                    {
-                        var result = _translationService.Translate(source, target, sourceParagraphs, log);
-                        FillTranslatedText(result, start, index - 1);
-                        sourceLength = 0;
-                        sourceParagraphs.Clear();
-                        progressBar1.Refresh();
-                        Application.DoEvents();
-                        start = index;
-                    }
-                    sourceParagraphs.Add(p);
-                    index++;
-                    progressBar1.Value = index;
-                    if (_breakTranslation)
-                    {
-                        break;
-                    }
-                }
 
-                if (sourceParagraphs.Count > 0)
+                var selectedParagraphs=_subtitle.Paragraphs.GetRange(startIndex, _subtitle.Paragraphs.Count - startIndex);
+                translator.Translate(_fromLanguageIsoCode, _toLanguageIsoCode, selectedParagraphs, targetParagraphs =>
                 {
-                    var result = _translationService.Translate(source, target, sourceParagraphs, log);
-                    FillTranslatedText(result, start, index - 1);
-                }
+                    index = targetParagraphs.Keys.First();
+                    FillTranslatedText(targetParagraphs.Values, index, index + targetParagraphs.Count - 1);
+                    index += targetParagraphs.Count;
+                    progressBar1.Value = index;
+                    progressBar1.Refresh();
+                    Application.DoEvents();
+                    return _breakTranslation;
+                });
             }
             catch (WebException webException)
             {
@@ -414,8 +341,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        //private void Translate(ITranslator translator, int maxTextSize, int maximumRequestArrayLength = 100)
+        //private void Translate()
         //{
+        //    _translationService.Init();
+        //    int maxTextSize = _translationService.MaxTextSize;
+        //    int maximumRequestArrayLength = _translationService.MaximumRequestArraySize;
+
 
         //    string source = _fromLanguageIsoCode;
         //    string target = _toLanguageIsoCode;
@@ -445,7 +376,7 @@ namespace Nikse.SubtitleEdit.Forms
         //            sourceLength += Utilities.UrlEncode(p.Text).Length;
         //            if ((sourceLength >= maxTextSize || sourceParagraphs.Count >= maximumRequestArrayLength) && sourceParagraphs.Count > 0)
         //            {
-        //                var result = translator.Translate(source, target, sourceParagraphs, log);
+        //                List<string> result = _translationService.Translate(source, target, sourceParagraphs, log);
         //                FillTranslatedText(result, start, index - 1);
         //                sourceLength = 0;
         //                sourceParagraphs.Clear();
@@ -464,25 +395,25 @@ namespace Nikse.SubtitleEdit.Forms
 
         //        if (sourceParagraphs.Count > 0)
         //        {
-        //            var result = translator.Translate(source, target, sourceParagraphs, log);
+        //            var result = _translationService.Translate(source, target, sourceParagraphs, log);
         //            FillTranslatedText(result, start, index - 1);
         //        }
         //    }
         //    catch (WebException webException)
         //    {
-        //        if (translator.GetType() == typeof(GoogleTranslator1))
+        //        if (_translationService.GetType() == typeof(GoogleTranslator1))
         //        {
         //            MessageBox.Show("Free API quota exceeded?" + Environment.NewLine +
         //                            Environment.NewLine +
         //                            webException.Source + ": " + webException.Message);
         //        }
-        //        else if (translator.GetType() == typeof(GoogleTranslator2) && webException.Message.Contains("(400) Bad Request"))
+        //        else if (_translationService.GetType() == typeof(GoogleTranslator2) && webException.Message.Contains("(400) Bad Request"))
         //        {
         //            MessageBox.Show("API key invalid (or perhaps billing is not enabled)?" + Environment.NewLine +
         //                            Environment.NewLine +
         //                            webException.Source + ": " + webException.Message);
         //        }
-        //        else if (translator.GetType() == typeof(GoogleTranslator2) && webException.Message.Contains("(403) Forbidden."))
+        //        else if (_translationService.GetType() == typeof(GoogleTranslator2) && webException.Message.Contains("(403) Forbidden."))
         //        {
         //            MessageBox.Show("Perhaps billing is not enabled (or API key is invalid)?" + Environment.NewLine +
         //                            Environment.NewLine +
@@ -507,7 +438,7 @@ namespace Nikse.SubtitleEdit.Forms
         //    }
         //}
 
-        private void FillTranslatedText(List<string> translatedLines, int start, int end)
+        private void FillTranslatedText(IEnumerable<string> translatedLines, int start, int end)
         {
             int index = start;
             foreach (string s in translatedLines)

@@ -15,6 +15,9 @@ namespace Nikse.SubtitleEdit.Core.Translate
     {
         private readonly string _apiKey;
 
+        public int MaxTextSize => 1000; //brummochse: this value was the old translation method call. idk if this is really the correct value
+        public int MaximumRequestArraySize => 100; //brummochse: this value was the old default value for the old translation method. idk if this is really the correct value
+
         public GoogleTranslator2(string apiKey)
         {
             _apiKey = apiKey;
@@ -155,14 +158,14 @@ namespace Nikse.SubtitleEdit.Core.Translate
             var format = "text";
             var input = new StringBuilder();
             var formatList = new List<Formatting>();
-            bool skipNext = false;
+            //bool skipNext = false;
             for (var index = 0; index < paragraphs.Count; index++)
             {
-                if (skipNext)
-                {
-                    skipNext = false;
-                    continue;
-                }
+                //if (skipNext)
+                //{
+                //    skipNext = false;
+                //    continue;
+                //}
 
                 var p = paragraphs[index];
                 var f = new Formatting();
@@ -179,11 +182,11 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 }
 
                 var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text, sourceLanguage), sourceLanguage, nextText);
-                skipNext = f.SkipNext;
-                if (!skipNext)
-                {
+                //skipNext = f.SkipNext;
+                //if (!skipNext)
+                //{
                     text = f.UnBreak(text, p.Text);
-                }
+                //}
 
                 input.Append("q=" + Utilities.UrlEncode(text));
             }
