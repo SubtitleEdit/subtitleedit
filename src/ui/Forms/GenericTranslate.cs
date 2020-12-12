@@ -95,14 +95,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal void Initialize(Subtitle subtitle, Subtitle target, string title, Encoding encoding)
         {
-            InitTranslatorEngines();
+            InitTranslationServices();
+            InitParagraphHandlingStrategies();
 
             if (title != null)
             {
                 Text = title;
             }
-
-
 
             labelPleaseWait.Visible = false;
             progressBar1.Visible = false;
@@ -133,9 +132,21 @@ namespace Nikse.SubtitleEdit.Forms
             _autoSplit = new bool[_subtitle.Paragraphs.Count];
         }
 
+        private void InitParagraphHandlingStrategies()
+        {
+            this.comboBoxParagraphHandling.Items.Add(new SentenceMergingTranslator());
+            this.comboBoxParagraphHandling.Items.Add(new SingleParagraphTranslator());
+            this.comboBoxParagraphHandling.SelectedIndex = 1;
+        }
+
+        private void InitTranslationServices()
+        {
+            this.comboBoxTranslationServices.Items.AddRange(TranslationServiceManager.Instance.TranslatorEngines.ToArray());
+        }
+
         private void ComboBoxTranslatorEngineChanged(object sender, EventArgs e)
         {
-            _translationService = (ITranslationService)comboBoxTranslatoEngines.SelectedItem;
+            _translationService = (ITranslationService)comboBoxTranslationServices.SelectedItem;
             _translationService.Init();
             ReadLanguageSettings();
             SetupLanguageSettings();
@@ -247,10 +258,7 @@ namespace Nikse.SubtitleEdit.Forms
             return defaultFromLanguage;
         }
 
-        private void InitTranslatorEngines()
-        {
-            this.comboBoxTranslatoEngines.Items.AddRange(TranslationEngineManager.Instance.TranslatorEngines.ToArray());
-        }
+
 
 
         private void buttonTranslate_Click(object sender, EventArgs e)
@@ -272,28 +280,26 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void Translate()
         {
-            var translator = new SentenceMergingTranslator(_translationService);
-
+           var translator = (ITranslator)comboBoxParagraphHandling.SelectedItem;
 
             buttonOK.Enabled = false;
             buttonCancel.Enabled = false;
             _breakTranslation = false;
             buttonTranslate.Text = Configuration.Settings.Language.General.Cancel;
             Cursor.Current = Cursors.WaitCursor;
+
             progressBar1.Maximum = _subtitle.Paragraphs.Count;
-            progressBar1.Value = 0;
             progressBar1.Visible = true;
             labelPleaseWait.Visible = true;
             try
             {
                 var selectedItems = subtitleListViewFrom.SelectedItems;
                 var startIndex = selectedItems.Count <= 0 ? 0 : selectedItems[0].Index;
-                int index = startIndex;
-
+                progressBar1.Minimum = startIndex;
                 var selectedParagraphs=_subtitle.Paragraphs.GetRange(startIndex, _subtitle.Paragraphs.Count - startIndex);
-                translator.Translate(_fromLanguageIsoCode, _toLanguageIsoCode, selectedParagraphs, targetParagraphs =>
+                translator.Translate(_translationService, _fromLanguageIsoCode, _toLanguageIsoCode, selectedParagraphs, targetParagraphs =>
                 {
-                    index = targetParagraphs.Keys.First();
+                    int index = targetParagraphs.Keys.First()+ startIndex;
                     FillTranslatedText(targetParagraphs.Values, index, index + targetParagraphs.Count - 1);
                     index += targetParagraphs.Count;
                     progressBar1.Value = index;
@@ -340,103 +346,6 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage = _toLanguageIsoCode;
             }
         }
-
-        //private void Translate()
-        //{
-        //    _translationService.Init();
-        //    int maxTextSize = _translationService.MaxTextSize;
-        //    int maximumRequestArrayLength = _translationService.MaximumRequestArraySize;
-
-
-        //    string source = _fromLanguageIsoCode;
-        //    string target = _toLanguageIsoCode;
-
-
-        //    buttonOK.Enabled = false;
-        //    buttonCancel.Enabled = false;
-        //    _breakTranslation = false;
-        //    buttonTranslate.Text = Configuration.Settings.Language.General.Cancel;
-        //    Cursor.Current = Cursors.WaitCursor;
-        //    progressBar1.Maximum = _subtitle.Paragraphs.Count;
-        //    progressBar1.Value = 0;
-        //    progressBar1.Visible = true;
-        //    labelPleaseWait.Visible = true;
-        //    var sourceParagraphs = new List<Paragraph>();
-        //    try
-        //    {
-        //        var log = new StringBuilder();
-        //        var sourceLength = 0;
-        //        var selectedItems = subtitleListViewFrom.SelectedItems;
-        //        var startIndex = selectedItems.Count <= 0 ? 0 : selectedItems[0].Index;
-        //        var start = startIndex;
-        //        int index = startIndex;
-        //        for (int i = startIndex; i < _subtitle.Paragraphs.Count; i++)
-        //        {
-        //            Paragraph p = _subtitle.Paragraphs[i];
-        //            sourceLength += Utilities.UrlEncode(p.Text).Length;
-        //            if ((sourceLength >= maxTextSize || sourceParagraphs.Count >= maximumRequestArrayLength) && sourceParagraphs.Count > 0)
-        //            {
-        //                List<string> result = _translationService.Translate(source, target, sourceParagraphs, log);
-        //                FillTranslatedText(result, start, index - 1);
-        //                sourceLength = 0;
-        //                sourceParagraphs.Clear();
-        //                progressBar1.Refresh();
-        //                Application.DoEvents();
-        //                start = index;
-        //            }
-        //            sourceParagraphs.Add(p);
-        //            index++;
-        //            progressBar1.Value = index;
-        //            if (_breakTranslation)
-        //            {
-        //                break;
-        //            }
-        //        }
-
-        //        if (sourceParagraphs.Count > 0)
-        //        {
-        //            var result = _translationService.Translate(source, target, sourceParagraphs, log);
-        //            FillTranslatedText(result, start, index - 1);
-        //        }
-        //    }
-        //    catch (WebException webException)
-        //    {
-        //        if (_translationService.GetType() == typeof(GoogleTranslator1))
-        //        {
-        //            MessageBox.Show("Free API quota exceeded?" + Environment.NewLine +
-        //                            Environment.NewLine +
-        //                            webException.Source + ": " + webException.Message);
-        //        }
-        //        else if (_translationService.GetType() == typeof(GoogleTranslator2) && webException.Message.Contains("(400) Bad Request"))
-        //        {
-        //            MessageBox.Show("API key invalid (or perhaps billing is not enabled)?" + Environment.NewLine +
-        //                            Environment.NewLine +
-        //                            webException.Source + ": " + webException.Message);
-        //        }
-        //        else if (_translationService.GetType() == typeof(GoogleTranslator2) && webException.Message.Contains("(403) Forbidden."))
-        //        {
-        //            MessageBox.Show("Perhaps billing is not enabled (or API key is invalid)?" + Environment.NewLine +
-        //                            Environment.NewLine +
-        //                            webException.Source + ": " + webException.Message);
-        //        }
-        //        else
-        //        {
-        //            MessageBox.Show(webException.Source + ": " + webException.Message);
-        //        }
-        //    }
-        //    finally
-        //    {
-        //        labelPleaseWait.Visible = false;
-        //        progressBar1.Visible = false;
-        //        Cursor.Current = Cursors.Default;
-        //        buttonTranslate.Text = Configuration.Settings.Language.GoogleTranslate.Translate;
-        //        buttonTranslate.Enabled = true;
-        //        buttonOK.Enabled = true;
-        //        buttonCancel.Enabled = true;
-
-        //        Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage = _toLanguageIsoCode;
-        //    }
-        //}
 
         private void FillTranslatedText(IEnumerable<string> translatedLines, int start, int end)
         {

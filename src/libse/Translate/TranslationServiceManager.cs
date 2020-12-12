@@ -6,16 +6,16 @@ using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.Translate
 {
-    public class TranslationEngineManager
+    public class TranslationServiceManager
     {
-        private static readonly Lazy<TranslationEngineManager> _instance = new Lazy<TranslationEngineManager>(() => new TranslationEngineManager());
+        private static readonly Lazy<TranslationServiceManager> _instance = new Lazy<TranslationServiceManager>(() => new TranslationServiceManager());
 
         public List<ITranslationService> TranslatorEngines { get; }  = new List<ITranslationService>();
      
 
-        public static TranslationEngineManager Instance => _instance.Value;
+        public static TranslationServiceManager Instance => _instance.Value;
 
-        private TranslationEngineManager()
+        private TranslationServiceManager()
         {
             AddTranslatorEngine(new GoogleTranslationService());
             AddTranslatorEngine(new MicrosoftTranslationService(Configuration.Settings.Tools.MicrosoftTranslatorApiKey, Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint, Configuration.Settings.Tools.MicrosoftTranslatorCategory));

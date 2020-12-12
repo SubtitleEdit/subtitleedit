@@ -10,11 +10,12 @@ namespace Nikse.SubtitleEdit.Core.Translate
     public class IndexedParagraph : ITranslationUnit
     {
         private readonly Paragraph _sourceParagraph;
-        public int Index { get; set; }
+        public int Index { get;  }
 
-        public IndexedParagraph(Paragraph sourceParagraph)
+        public IndexedParagraph(Paragraph sourceParagraph, int index)
         {
             this._sourceParagraph = sourceParagraph;
+            this.Index = index;
         }
 
         public string GetText()
@@ -25,13 +26,18 @@ namespace Nikse.SubtitleEdit.Core.Translate
 
     public class SingleParagraphTranslator : Translator<IndexedParagraph>
     {
-        public SingleParagraphTranslator(ITranslationService translationService) : base(translationService)
+        public override string ToString()
         {
+            return "Single Paragraph";
         }
 
         protected override IEnumerable<IndexedParagraph> ConstructTranslationUnits(List<Paragraph> sourceParagraphs)
         {
-            return sourceParagraphs.ConvertAll(x => new IndexedParagraph(x));
+            for (int i = 0; i < sourceParagraphs.Count; i++)
+            {
+                yield return new IndexedParagraph(sourceParagraphs[i], i);
+            }
+
         }
 
         protected override Dictionary<int, string> GetTargetParagraphs(List<IndexedParagraph> sourceTranslationUnits, List<string> targetTexts)
