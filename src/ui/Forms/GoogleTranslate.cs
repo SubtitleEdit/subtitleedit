@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Forms
             _googleTranslate = googleTranslate;
             if (!_googleTranslate)
             {
-                _translationStrategy = new MicrosoftTranslationStrategy(Configuration.Settings.Tools.MicrosoftTranslatorApiKey, Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint, Configuration.Settings.Tools.MicrosoftTranslatorCategory);
+                _translationStrategy = new MicrosoftTranslator(Configuration.Settings.Tools.MicrosoftTranslatorApiKey, Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint, Configuration.Settings.Tools.MicrosoftTranslatorCategory);
                 linkLabelPoweredByGoogleTranslate.Text = Configuration.Settings.Language.GoogleTranslate.PoweredByMicrosoftTranslate;
             }
 
@@ -371,7 +371,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                Translate(source, _targetTwoLetterIsoLanguageName, new MicrosoftTranslationStrategy(Configuration.Settings.Tools.MicrosoftTranslatorApiKey, Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint, Configuration.Settings.Tools.MicrosoftTranslatorCategory), 1000, MicrosoftTranslationStrategy.MaximumRequestArrayLength);
+                Translate(source, _targetTwoLetterIsoLanguageName, new MicrosoftTranslator(Configuration.Settings.Tools.MicrosoftTranslatorApiKey, Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint, Configuration.Settings.Tools.MicrosoftTranslatorCategory), 1000, MicrosoftTranslator.MaximumRequestArrayLength);
             }
         }
 

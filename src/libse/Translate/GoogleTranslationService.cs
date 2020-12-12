@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
         private ITranslationStrategy _translationStrategy = null;
         public string GetName()
         {
-            return "Free Google Translate";
+            return "Google Translate";
         }
 
         public override string ToString()
@@ -18,11 +18,20 @@ namespace Nikse.SubtitleEdit.Core.Translate
             return GetName();
         }
 
+        public int MaxTextSize
+        {
+            get => _translationStrategy.MaxTextSize;
+        }
 
-        public int MaxTextSize { get; private set; }
+        public int MaximumRequestArraySize
+        {
+            get => _translationStrategy.MaximumRequestArraySize;
+        }
 
-        public int MaximumRequestArrayLength { get; private set; }
 
+        //  Translate(, , new GoogleTranslator1(), Configuration.Settings.Tools.GoogleApiV1ChunkSize),100;
+
+        //Translate(, , new GoogleTranslator2(), 1000,100);
 
         public List<string> Init()
         {
@@ -34,16 +43,10 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 messages.Add(language.GoogleNoApiKeyWarning);
 
                 _translationStrategy = new GoogleTranslator1();
-                MaxTextSize = Configuration.Settings.Tools.GoogleApiV1ChunkSize;
-                MaximumRequestArrayLength = 100;
-
             }
             else
             {
                 _translationStrategy = new GoogleTranslator2(Configuration.Settings.Tools.GoogleApiV2Key);
-                MaxTextSize = Configuration.Settings.Tools.GoogleApiV1ChunkSize;
-                MaxTextSize = 1000;
-                MaximumRequestArrayLength = 100;
             }
 
             return messages;

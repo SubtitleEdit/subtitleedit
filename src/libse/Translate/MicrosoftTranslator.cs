@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
     /// <summary>
     /// https://docs.microsoft.com/en-us/azure/cognitive-services/translator/reference/v3-0-translate
     /// </summary>
-    public class MicrosoftTranslation : ITranslationStrategy
+    public class MicrosoftTranslator : ITranslationStrategy
     {
         public const string SignUpUrl = "https://docs.microsoft.com/en-us/azure/cognitive-services/translator/translator-text-how-to-signup";
         public const string GoToUrl = "https://www.bing.com/translator";
@@ -23,7 +23,12 @@ namespace Nikse.SubtitleEdit.Core.Translate
         private readonly string _accessToken;
         private readonly string _category;
 
-        public MicrosoftTranslation(string apiKey, string tokenEndpoint, string category)
+
+
+        public int MaxTextSize => 1000;
+        public int MaximumRequestArraySize => MaximumRequestArrayLength;
+
+        public MicrosoftTranslator(string apiKey, string tokenEndpoint, string category)
         {
             _accessToken = GetAccessToken(apiKey, tokenEndpoint);
             _category = category; // Optional parameter - used to get translations from a customized system built with Custom Translator
@@ -107,15 +112,15 @@ namespace Nikse.SubtitleEdit.Core.Translate
             var jsonBuilder = new StringBuilder();
             jsonBuilder.Append("[");
             bool isFirst = true;
-            bool skipNext = false;
+            //bool skipNext = false;
             var formatList = new List<Formatting>();
             for (var index = 0; index < paragraphs.Count; index++)
             {
-                if (skipNext)
-                {
-                    skipNext = false;
-                    continue;
-                }
+                //if (skipNext)
+                //{
+                //    skipNext = false;
+                //    continue;
+                //}
 
                 var p = paragraphs[index];
                 if (!isFirst)
@@ -136,11 +141,11 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 var f = new Formatting();
                 formatList.Add(f);
                 var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text, sourceLanguage), sourceLanguage, nextText);
-                skipNext = f.SkipNext;
-                if (!skipNext)
-                {
+                //skipNext = f.SkipNext;
+                //if (!skipNext)
+                //{
                     text = f.UnBreak(text, p.Text);
-                }
+                //}
 
                 jsonBuilder.Append("{ \"Text\":\"" + Json.EncodeJsonText(text) + "\"}");
             }
