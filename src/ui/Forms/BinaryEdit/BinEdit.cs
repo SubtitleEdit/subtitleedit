@@ -69,6 +69,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             pictureBoxMovableImage.SizeMode = PictureBoxSizeMode.Normal;
             pictureBoxScreen.SizeMode = PictureBoxSizeMode.StretchImage;
             SetBackgroundImage();
+            labelVideoInfo.Text = string.Empty;
 
             _nOcrFileName = Configuration.Settings.VobSubOcr.LineOcrLastLanguages;
             if (string.IsNullOrEmpty(_nOcrFileName))
@@ -1139,9 +1140,11 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 videoPlayerContainer1.VideoPlayer.DisposeVideoPlayer();
             }
 
-            VideoInfo videoInfo = UiUtil.GetVideoInfo(openFileDialog1.FileName);
+            var videoInfo = UiUtil.GetVideoInfo(openFileDialog1.FileName);
             _videoFileName = openFileDialog1.FileName;
             UiUtil.InitializeVideoPlayerAndContainer(openFileDialog1.FileName, videoInfo, videoPlayerContainer1, VideoStartLoaded, VideoStartEnded);
+            labelVideoInfo.Text = $"{videoInfo.Width}x{videoInfo.Height}, {Path.GetFileName(_videoFileName)}";
+            subtitleListView1_SelectedIndexChanged(null, null);
         }
 
         private void VideoStartEnded(object sender, EventArgs e)
@@ -1226,6 +1229,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             Application.DoEvents();
             _videoFileName = null;
             videoPlayerContainer1.Visible = false;
+            labelVideoInfo.Text = string.Empty;
         }
 
         private void videoToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
