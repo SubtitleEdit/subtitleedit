@@ -8614,7 +8614,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
                 else if (_dvbSubtitles != null && _dvbSubtitles.Count > 0)
                 {
-                    var size = _dvbSubtitles[0].GetWindowSize();
+                    var size = _dvbSubtitles[0].GetScreenSize();
                     exportBdnXmlPng.SetResolution(new Point(size.Width, size.Height));
                 }
 

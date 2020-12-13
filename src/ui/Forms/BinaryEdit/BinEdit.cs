@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private readonly Keys _goToLine = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditGoToLineNumber);
         private readonly Keys _mainGeneralGoToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
         private readonly Keys _mainGeneralGoToPrevSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
-        private List<IBinaryParagraphWithPosition> _bluRaySubtitles;
+        private List<IBinaryParagraphWithPosition> _binSubtitles;
         private List<Extra> _extra;
         private Subtitle _subtitle;
         private Paragraph _lastPlayParagraph;
@@ -129,13 +129,25 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                     _extra.Add(new Extra { IsForced = s.IsForced, X = pos.Left, Y = pos.Top });
                 }
 
-                _bluRaySubtitles = new List<IBinaryParagraphWithPosition>(bluRaySubtitles);
+                _binSubtitles = new List<IBinaryParagraphWithPosition>(bluRaySubtitles);
                 _subtitle.Renumber();
                 subtitleListView1.Fill(_subtitle);
             }
             else if (ext == ".mkv" || ext == ".mks")
             {
                 if (OpenMatroskaFile(fileName))
+                {
+                    _subtitle.Renumber();
+                    subtitleListView1.Fill(_subtitle);
+                }
+                else
+                {
+                    return;
+                }
+            }
+            else if (ext == ".m2ts" || ext == ".ts" || ext == ".mts" || ext == ".rec" || ext == ".mpeg" || ext == ".mpg")
+            {
+                if (ImportSubtitleFromTransportStream(fileName))
                 {
                     _subtitle.Renumber();
                     subtitleListView1.Fill(_subtitle);
@@ -154,14 +166,79 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             _lastSaveHash = GetStateHash();
         }
 
+        private bool ImportSubtitleFromTransportStream(string fileName)
+        {
+            var tsParser = new TransportStreamParser();
+            tsParser.Parse(fileName, null);
+            if (tsParser.SubtitlePacketIds.Count == 0)
+            {
+                return false;  // no image based subtitles found
+            }
+
+            tsParser.TeletextSubtitlesLookup.Clear(); // no text subtitles
+            if (tsParser.SubtitlePacketIds.Count > 1)
+            {
+                using (var subChooser = new TransportStreamSubtitleChooser())
+                {
+                    subChooser.Initialize(tsParser, fileName);
+                    if (subChooser.ShowDialog(this) == DialogResult.Cancel)
+                    {
+                        return false;
+                    }
+
+                    if (subChooser.IsTeletext)
+                    {
+                        return false;
+                    }
+
+                    var packetId = tsParser.SubtitlePacketIds[subChooser.SelectedIndex];
+                    return LoadTransportStreamSubtitle(tsParser, packetId);
+                }
+            }
+
+            return LoadTransportStreamSubtitle(tsParser, tsParser.SubtitlePacketIds[0]);
+        }
+
+        private bool LoadTransportStreamSubtitle(TransportStreamParser tsParser, int packetId)
+        {
+            var subtitles = tsParser.GetDvbSubtitles(packetId);
+            _subtitle = new Subtitle();
+            _extra = new List<Extra>();
+            var first = true;
+            _binSubtitles = new List<IBinaryParagraphWithPosition>(subtitles);
+            foreach (var s in subtitles)
+            {
+                if (first)
+                {
+                    var bmp = s.GetBitmap();
+                    if (bmp != null && bmp.Width > 1 && bmp.Height > 1)
+                    {
+                        SetResolution(s.GetScreenSize());
+                        //                        SetFrameRate(s.FramesPerSecondType);
+                        first = false;
+                    }
+                }
+
+                _subtitle.Paragraphs.Add(new Paragraph
+                {
+                    StartTime = s.StartTimeCode,
+                    EndTime = s.EndTimeCode
+                });
+
+                var pos = s.GetPosition();
+                _extra.Add(new Extra { IsForced = s.IsForced, X = pos.Left, Y = pos.Top });
+            }
+
+            return true;
+        }
+
         private bool OpenMatroskaFile(string fileName)
         {
             using (var matroska = new MatroskaFile(fileName))
             {
                 if (matroska.IsValid)
                 {
-                    var subtitleList = matroska.GetTracks(true).Where(p => p.CodecId == "S_HDMV/PGS").ToList();
-                    //                    var subtitleList = matroska.GetTracks(true).Where(p => p.CodecId == "S_HDMV/PGS" || p.CodecId == "S_DVBSUB").ToList();
+                    var subtitleList = matroska.GetTracks(true).Where(p => p.CodecId == "S_HDMV/PGS" || p.CodecId == "S_DVBSUB").ToList();
                     if (subtitleList.Count == 0)
                     {
                         return false; // no bdsup or ts subtitles found
@@ -211,8 +288,6 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             }
 
             var sub = matroska.GetSubtitle(matroskaSubtitleInfo.TrackNumber, null);
-            TaskbarList.SetProgressState(Handle, TaskbarButtonProgressFlags.NoProgress);
-
             var subtitles = new List<BluRaySupParser.PcsData>();
             var log = new StringBuilder();
             var clusterStream = new MemoryStream();
@@ -266,7 +341,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             _subtitle = new Subtitle();
             _extra = new List<Extra>();
             var first = true;
-            _bluRaySubtitles = new List<IBinaryParagraphWithPosition>(subtitles);
+            _binSubtitles = new List<IBinaryParagraphWithPosition>(subtitles);
             foreach (var s in subtitles)
             {
                 if (first)
@@ -314,14 +389,10 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
         private bool LoadDvbFromMatroska(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska)
         {
-            Refresh();
             var sub = matroska.GetSubtitle(matroskaSubtitleInfo.TrackNumber, null);
-            TaskbarList.SetProgressState(Handle, TaskbarButtonProgressFlags.NoProgress);
-
-            _subtitle.Paragraphs.Clear();
             var subtitleImages = new List<DvbSubPes>();
             var subtitle = new Subtitle();
-            Utilities.LoadMatroskaTextSubtitle(matroskaSubtitleInfo, matroska, sub, _subtitle);
+            var subtitles = new List<TransportStreamSubtitle>();
             for (int index = 0; index < sub.Count; index++)
             {
                 try
@@ -364,10 +435,11 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                         }
                     }
 
-                    if (pes != null && pes.PageCompositions != null && pes.PageCompositions.Any(p => p.Regions.Count > 0))
+                    if (pes?.PageCompositions != null && pes.PageCompositions.Any(p => p.Regions.Count > 0))
                     {
                         subtitleImages.Add(pes);
                         subtitle.Paragraphs.Add(new Paragraph(string.Empty, msub.Start, msub.End));
+                        subtitles.Add(new TransportStreamSubtitle { Pes = pes });
                     }
                 }
                 catch
@@ -394,17 +466,20 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 {
                     p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                 }
+
+                subtitles[index].StartMilliseconds = (ulong)Math.Round(p.StartTime.TotalMilliseconds);
+                subtitles[index].EndMilliseconds = (ulong)Math.Round(p.EndTime.TotalMilliseconds);
             }
 
             _subtitle = new Subtitle();
             _extra = new List<Extra>();
             var first = true;
-            // _bluRaySubtitles = new List<IBinaryParagraphWithPosition>(subtitleImages);
-            foreach (var s in subtitleImages)
+            _binSubtitles = new List<IBinaryParagraphWithPosition>(subtitles);
+            foreach (var s in _binSubtitles)
             {
                 if (first)
                 {
-                    var bmp = s.GetImageFull();
+                    var bmp = s.GetBitmap();
                     if (bmp != null && bmp.Width > 1 && bmp.Height > 1)
                     {
                         SetFrameRate(0x10);
@@ -415,12 +490,12 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
                 _subtitle.Paragraphs.Add(new Paragraph
                 {
-                    //StartTime = s.StartTimeCode,
-                    //EndTime = s.EndTimeCode
+                    StartTime = s.StartTimeCode,
+                    EndTime = s.EndTimeCode
                 });
 
-                //   var pos = s.GetPosition();
-                //   _extra.Add(new Extra { IsForced = false, X = pos.Left, Y = pos.Top });
+                var pos = s.GetPosition();
+                _extra.Add(new Extra { IsForced = false, X = pos.Left, Y = pos.Top });
             }
 
             return true;
@@ -506,7 +581,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 idx++;
             }
 
-            if (_bluRaySubtitles != null)
+            if (_binSubtitles != null)
             {
                 _subtitle.Paragraphs.Insert(idx, p);
                 var extra = new Extra { Bitmap = new Bitmap(2, 2), IsForced = checkBoxIsForced.Checked, X = (int)numericUpDownX.Value, Y = (int)numericUpDownY.Value };
@@ -518,7 +593,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 }
 
                 p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.NewEmptyDefaultMs;
-                _bluRaySubtitles.Insert(idx, new BluRaySupParser.PcsData());
+                _binSubtitles.Insert(idx, new BluRaySupParser.PcsData());
                 subtitleListView1.Fill(_subtitle);
                 subtitleListView1.SelectIndexAndEnsureVisible(idx);
             }
@@ -548,9 +623,9 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 videoPlayerContainer1.CurrentPosition = p.StartTime.TotalSeconds;
             }
 
-            if (_bluRaySubtitles != null)
+            if (_binSubtitles != null)
             {
-                var sub = _bluRaySubtitles[idx];
+                var sub = _binSubtitles[idx];
                 var extra = _extra[idx];
                 timeUpDownStartTime.TimeCode = new TimeCode(p.StartTime.TotalMilliseconds);
                 timeUpDownEndTime.TimeCode = new TimeCode(p.EndTime.TotalMilliseconds);
@@ -582,7 +657,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             removeIndices = removeIndices.OrderByDescending(p => p).ToList();
             foreach (var removeIndex in removeIndices)
             {
-                _bluRaySubtitles?.RemoveAt(removeIndex);
+                _binSubtitles?.RemoveAt(removeIndex);
                 _extra.RemoveAt(removeIndex);
                 _subtitle.Paragraphs.RemoveAt(removeIndex);
             }
@@ -779,7 +854,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             progressBar1.Maximum = _subtitle.Paragraphs.Count;
             progressBar1.Style = ProgressBarStyle.Blocks;
             progressBar1.Visible = true;
-            if (_bluRaySubtitles != null)
+            if (_binSubtitles != null)
             {
                 Cursor = Cursors.WaitCursor;
                 var bw = new BackgroundWorker { WorkerReportsProgress = true };
@@ -814,7 +889,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                             {
                                 bw.ReportProgress(index);
                                 var p = _subtitle.Paragraphs[index];
-                                var bd = _bluRaySubtitles[index];
+                                var bd = _binSubtitles[index];
                                 var extra = _extra[index];
                                 var bmp = extra.Bitmap ?? bd.GetBitmap();
                                 var brSub = new BluRaySupPicture
@@ -844,7 +919,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                         {
                             bw.ReportProgress(index);
                             var p = _subtitle.Paragraphs[index];
-                            var bd = _bluRaySubtitles[index];
+                            var bd = _binSubtitles[index];
                             var extra = _extra[index];
                             var bmp = extra.Bitmap ?? bd.GetBitmap();
                             WriteBdnXmlParagraph(bmp, sb, path, (index + 1), extra, p);
@@ -1289,9 +1364,9 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 _exportImageFolder = Path.GetDirectoryName(saveFileDialog1.FileName);
                 var extra = _extra[idx];
                 var bmp = extra.Bitmap;
-                if (bmp == null && _bluRaySubtitles != null)
+                if (bmp == null && _binSubtitles != null)
                 {
-                    bmp = _bluRaySubtitles[idx].GetBitmap();
+                    bmp = _binSubtitles[idx].GetBitmap();
                 }
 
                 if (bmp == null)
@@ -1338,7 +1413,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             }
 
             var idx = subtitleListView1.SelectedItems[0].Index;
-            var sub = _bluRaySubtitles[idx];
+            var sub = _binSubtitles[idx];
             var extra = _extra[idx];
             var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : sub.GetBitmap();
             numericUpDownX.Value = (int)Math.Round(numericUpDownScreenWidth.Value / 2.0m - bmp.Width / 2.0m);
@@ -1377,7 +1452,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
                 var pos = s.GetPosition();
                 _extra.Add(new Extra { IsForced = s.IsForced, X = pos.Left, Y = pos.Top });
-                _bluRaySubtitles.Add(s);
+                _binSubtitles.Add(s);
             }
 
             _subtitle.Renumber();
@@ -1561,9 +1636,9 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             }
 
             var idx = subtitleListView1.SelectedItems[0].Index;
-            if (_bluRaySubtitles != null)
+            if (_binSubtitles != null)
             {
-                var s = _bluRaySubtitles[idx];
+                var s = _binSubtitles[idx];
                 var p = _subtitle.Paragraphs[idx];
                 p.StartTime = s.StartTimeCode;
                 p.EndTime = s.EndTimeCode;
@@ -1605,9 +1680,9 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             }
 
             var idx = subtitleListView1.SelectedItems[0].Index;
-            if (_bluRaySubtitles != null)
+            if (_binSubtitles != null)
             {
-                var sub = _bluRaySubtitles[idx];
+                var sub = _binSubtitles[idx];
                 var extra = _extra[idx];
                 var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : sub.GetBitmap();
                 ShowCurrentScaledImage(bmp, extra);
@@ -1679,7 +1754,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                     Interlocked.Increment(ref count);
                     bw.ReportProgress(count);
                     var p = _subtitle.Paragraphs[i];
-                    var s = _bluRaySubtitles[i];
+                    var s = _binSubtitles[i];
                     var extra = _extra[i];
                     OcrParagraph(extra, s, nOcrDb, p);
                 });
