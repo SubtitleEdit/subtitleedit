@@ -253,7 +253,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             }
         }
 
-        public class PcsData : IBinaryParagraph
+        public class PcsData : IBinaryParagraph, IBinaryParagraphWithPosition
         {
             public int CompNum { get; set; }
             public CompositionState CompositionState { get; set; }
@@ -307,12 +307,18 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 return mergedBmp;
             }
 
+            public Size GetScreenSize()
+            {
+                return Size;
+            }
+
             public Position GetPosition()
             {
                 if (PcsObjects.Count > 0)
                 {
                     return new Position(PcsObjects[0].Origin.X, PcsObjects[0].Origin.Y);
                 }
+
                 return new Position(0, 0);
             }
 

@@ -4321,6 +4321,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "MeasurementConverter/CopyToClipboard":
                     language.MeasurementConverter.CopyToClipboard = reader.Value;
                     break;
+                case "MeasurementConverter/CloseOnInsert":
+                    language.MeasurementConverter.CloseOnInsert = reader.Value;
+                    break;
                 case "MeasurementConverter/Length":
                     language.MeasurementConverter.Length = reader.Value;
                     break;
