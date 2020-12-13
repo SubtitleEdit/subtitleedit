@@ -21,8 +21,8 @@ namespace Test.Logic.TransportStream
             Assert.IsTrue(subtitles.Count == 10);
             using (var bmp = subtitles[0].Pes.GetImageFull())
             {
-                Assert.IsTrue(bmp.Width == 719);
-                Assert.IsTrue(bmp.Height == 575);
+                Assert.IsTrue(bmp.Width == 720);
+                Assert.IsTrue(bmp.Height == 576);
             }
         }
 
