@@ -31,8 +31,11 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.InitializeSubtitleFont(SubtitleListview1);
             SubtitleListview1.AutoSizeAllColumns(this);
             UiUtil.FixLargeFonts(this, buttonOK);
-
             groupBoxFrameInfo.Text = Configuration.Settings.Language.SetMinimumDisplayTimeBetweenParagraphs.FrameInfo;
+
+            labelFrames.Text = Configuration.Settings.Language.SetMinimumDisplayTimeBetweenParagraphs.Frames;
+            numericUpDownFrames.Left = labelFrames.Left + labelFrames.Width + 5;
+
             comboBoxFrameRate.Items.Add(23.976.ToString(CultureInfo.CurrentCulture));
             comboBoxFrameRate.Items.Add(24.0.ToString(CultureInfo.CurrentCulture));
             comboBoxFrameRate.Items.Add(25.0.ToString(CultureInfo.CurrentCulture));

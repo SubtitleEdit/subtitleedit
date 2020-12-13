@@ -1849,6 +1849,7 @@ namespace Nikse.SubtitleEdit.Core
                 ConvertFrom = "Convert from",
                 ConvertTo = "Convert to",
                 CopyToClipboard = "Copy to clipboard",
+                CloseOnInsert =  "Close on insert",
 
                 Length = "Length",
                 Mass = "Mass",
