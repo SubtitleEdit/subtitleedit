@@ -322,7 +322,8 @@ namespace Nikse.SubtitleEdit.Controls
 
                     var text = _uiTextBox.Text;
                     var extra = 0;
-                    for (int i = _uiTextBox.SelectionStart; i < target && i < text.Length; i++)
+                    var start = _uiTextBox.SelectionStart;
+                    for (int i = start; i < target + start && i < text.Length; i++)
                     {
                         if (text[i] == '\n')
                         {
