@@ -48,6 +48,21 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             return Pes.GetImageFull();
         }
 
+        public Size GetWindowSize()
+        {
+            if (_bdSup != null)
+            {
+                return _bdSup.Size;
+            }
+
+            if (Pes != null)
+            {
+                return Pes.GetWindowSize();
+            }
+
+            return new Size(DvbSubPes.DefaultScreenWidth, DvbSubPes.DefaultScreenHeight);
+        }
+
         public bool IsForced
         {
             get

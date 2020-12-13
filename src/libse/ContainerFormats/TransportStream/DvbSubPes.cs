@@ -472,6 +472,29 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             return bmp;
         }
 
+        public Size GetWindowSize()
+        {
+            if (SubtitleSegments == null)
+            {
+                ParseSegments();
+            }
+
+            int width = DefaultScreenWidth;
+            int height = DefaultScreenHeight;
+
+            var segments = SubtitleSegments;
+            foreach (var ss in segments)
+            {
+                if (ss.DisplayDefinition != null)
+                {
+                    width = ss.DisplayDefinition.DisplayWith;
+                    height = ss.DisplayDefinition.DisplayHeight;
+                }
+            }
+
+            return new Size(width, height);
+        }
+
         public static string GetStreamIdDescription(int streamId)
         {
             if (0xC0 <= streamId && streamId < 0xE0)
