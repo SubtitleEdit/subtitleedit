@@ -4,7 +4,7 @@ using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 {
-    public class TransportStreamSubtitle : IBinaryParagraph
+    public class TransportStreamSubtitle : IBinaryParagraph, IBinaryParagraphWithPosition
     {
         public ulong StartMilliseconds { get; set; }
 
@@ -48,7 +48,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             return Pes.GetImageFull();
         }
 
-        public Size GetWindowSize()
+        public Size GetScreenSize()
         {
             if (_bdSup != null)
             {
@@ -71,6 +71,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 {
                     return _bdSup.IsForced;
                 }
+
                 return false;
             }
         }
@@ -81,9 +82,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             {
                 return _bdSup.GetPosition();
             }
+
             return new Position(0, 0);
         }
 
+        public TimeCode StartTimeCode => new TimeCode(StartMilliseconds);
+
+        public TimeCode EndTimeCode => new TimeCode(EndMilliseconds);
 
         public int NumberOfImages
         {
@@ -97,6 +102,5 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 return _bdSup.BitmapObjects.Count;
             }
         }
-
     }
 }
