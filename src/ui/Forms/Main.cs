@@ -28938,7 +28938,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             openFileDialog1.Title = _language.OpenBluRaySupFile;
             openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = _language.BluRaySupFiles + "|*.sup";
+            openFileDialog1.Filter = _language.BluRaySupFiles + "|*.sup|" +
+                                     "Matroska|*.mkv;*.mks|" +
+                                     "Transport stream|*.ts;*.m2ts;*.mts;*.rec;*.mpeg;*.mpg";
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 using (var form = new BinaryEdit.BinEdit(openFileDialog1.FileName))

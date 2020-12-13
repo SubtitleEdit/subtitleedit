@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 {
@@ -472,7 +473,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             return bmp;
         }
 
-        public Size GetWindowSize()
+        public Size GetScreenSize()
         {
             if (SubtitleSegments == null)
             {

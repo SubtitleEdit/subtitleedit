@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
             if (Pes != null)
             {
-                return Pes.GetWindowSize();
+                return Pes.GetScreenSize();
             }
 
             return new Size(DvbSubPes.DefaultScreenWidth, DvbSubPes.DefaultScreenHeight);
