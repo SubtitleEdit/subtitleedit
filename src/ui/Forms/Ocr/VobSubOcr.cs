@@ -2170,10 +2170,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             if (_dvbPesSubtitles != null)
             {
-                var bmp = _dvbPesSubtitles[index].GetImageFull();
-                width = bmp.Width;
-                height = bmp.Height;
-                bmp.Dispose();
+                var size = _dvbPesSubtitles[index].GetWindowSize();
+                width = size.Width;
+                height = size.Height;
             }
 
             if (_dvbSubtitles != null)
@@ -8610,17 +8609,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                 if (_dvbPesSubtitles != null && _dvbPesSubtitles.Count > 0)
                 {
-                    using (var bmp = _dvbPesSubtitles[0].GetImageFull())
-                    {
-                        exportBdnXmlPng.SetResolution(new Point(bmp.Width, bmp.Height));
-                    }
+                    var size = _dvbPesSubtitles[0].GetWindowSize();
+                    exportBdnXmlPng.SetResolution(new Point(size.Width, size.Height));
                 }
                 else if (_dvbSubtitles != null && _dvbSubtitles.Count > 0)
                 {
-                    using (var bmp = _dvbSubtitles[0].GetBitmap())
-                    {
-                        exportBdnXmlPng.SetResolution(new Point(bmp.Width, bmp.Height));
-                    }
+                    var size = _dvbSubtitles[0].GetWindowSize();
+                    exportBdnXmlPng.SetResolution(new Point(size.Width, size.Height));
                 }
 
                 exportBdnXmlPng.ShowDialog(this);
