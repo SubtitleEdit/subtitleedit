@@ -1921,8 +1921,8 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <GoToBookmark>책갈피로 이동</GoToBookmark>
     <GoToPreviousBookmark>이전 책갈피로 이동</GoToPreviousBookmark>
     <GoToNextBookmark>다음 책갈피로 이동</GoToNextBookmark>
-    <ChooseProfile>프로필 선택</ChooseProfile>
-    <DuplicateLine>중복 줄</DuplicateLine>
+    <GeneralChooseProfile>프로필 선택</GeneralChooseProfile>
+    <GeneralDuplicateLine>중복 줄</GeneralDuplicateLine>
     <FontInUi>UI 글꼴</FontInUi>
     <ShowFrameRate>도구 모음에 프레임 속도 표시</ShowFrameRate>
     <DefaultFrameRate>기본 프레임 속도</DefaultFrameRate>

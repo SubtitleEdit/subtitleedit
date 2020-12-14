@@ -2085,8 +2085,6 @@
             public string SpellCheck { get; set; }
             public string NetflixQualityCheck { get; set; }
             public string SettingsName { get; set; }
-            public string Help { get; set; }
-            public string UnbreakNoSpace { get; set; }
             public string ToggleBookmarks { get; set; }
             public string ToggleBookmarksWithComment { get; set; }
             public string ClearBookmarks { get; set; }
@@ -2096,6 +2094,7 @@
             public string ChooseProfile { get; set; }
             public string DuplicateLine { get; set; }
             public string ToggleView { get; set; }
+            public string Help { get; set; }
             public string FontInUi { get; set; }
             public string ShowFrameRate { get; set; }
             public string DefaultFrameRate { get; set; }
@@ -2460,6 +2459,7 @@
             public string MainTextBoxAutoBreakFromPos { get; set; }
             public string MainTextBoxAutoBreakFromPosAndGoToNext { get; set; }
             public string MainTextBoxUnbreak { get; set; }
+            public string MainTextBoxUnbreakNoSpace { get; set; }
             public string MainFileSaveAll { get; set; }
             public string Miscellaneous { get; set; }
             public string CpsIncludesSpace { get; set; }

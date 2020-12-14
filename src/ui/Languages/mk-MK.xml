@@ -1822,8 +1822,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GoToBookmark>Оди на ознака</GoToBookmark>
     <GoToPreviousBookmark>Оди на претходна ознака</GoToPreviousBookmark>
     <GoToNextBookmark>Оди на следна ознака</GoToNextBookmark>
-    <ChooseProfile>Избери профил</ChooseProfile>
-    <DuplicateLine>Направи дупликат од линијата</DuplicateLine>
+    <GeneralChooseProfile>Избери профил</GeneralChooseProfile>
+    <GeneralDuplicateLine>Направи дупликат од линијата</GeneralDuplicateLine>
     <FontInUi>UI Фонт</FontInUi>
     <ShowFrameRate>Прикажи број на кадри во алатник</ShowFrameRate>
     <DefaultFrameRate>Стандарден број на кадри</DefaultFrameRate>

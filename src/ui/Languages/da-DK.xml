@@ -1916,8 +1916,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <GoToBookmark>Gå til bogmærke</GoToBookmark>
     <GoToPreviousBookmark>Gå til tidligere bogmærke</GoToPreviousBookmark>
     <GoToNextBookmark>Gå til næste bogmærke</GoToNextBookmark>
-    <ChooseProfile>Vælg profil</ChooseProfile>
-    <DuplicateLine>Dupliker linje</DuplicateLine>
+    <GeneralChooseProfile>Vælg profil</GeneralChooseProfile>
+    <GeneralDuplicateLine>Dupliker linje</GeneralDuplicateLine>
     <FontInUi>UI-skrifttype</FontInUi>
     <ShowFrameRate>Vis frame rate i værktøjslinjen</ShowFrameRate>
     <DefaultFrameRate>Standard frame rate</DefaultFrameRate>

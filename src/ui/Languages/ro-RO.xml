@@ -1808,8 +1808,8 @@ pot edita acelasi fișier de subtitrare (colaborare)</Information>
     <GoToBookmark>Treci la marcaj</GoToBookmark>
     <GoToPreviousBookmark>Treci la marcajul anterior</GoToPreviousBookmark>
     <GoToNextBookmark>Treci la marcajul următor</GoToNextBookmark>
-    <ChooseProfile>Alege profilul</ChooseProfile>
-    <DuplicateLine>Linie dublată</DuplicateLine>
+    <GeneralChooseProfile>Alege profilul</GeneralChooseProfile>
+    <GeneralDuplicateLine>Linie dublată</GeneralDuplicateLine>
     <FontInUi>Font UI</FontInUi>
     <ShowFrameRate>Arată rata cadrului în bara de unelte</ShowFrameRate>
     <DefaultFrameRate>Rata implicită a cadrului</DefaultFrameRate>

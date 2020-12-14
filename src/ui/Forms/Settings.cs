@@ -1122,17 +1122,16 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(generalNode, language.GoToNextSubtitleAndFocusVideo, nameof(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitleAndFocusVideo));
             AddNode(generalNode, language.GoToPrevSubtitleAndPlay, nameof(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitleAndPlay));
             AddNode(generalNode, language.GoToNextSubtitleAndPlay, nameof(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitleAndPlay));
-            AddNode(generalNode, language.Help, nameof(Configuration.Settings.Shortcuts.GeneralHelp), true);
-            AddNode(generalNode, language.UnbreakNoSpace, nameof(Configuration.Settings.Shortcuts.GeneralUnbrekNoSpace));
             AddNode(generalNode, language.ToggleBookmarks, nameof(Configuration.Settings.Shortcuts.GeneralToggleBookmarks));
             AddNode(generalNode, language.ToggleBookmarksWithComment, nameof(Configuration.Settings.Shortcuts.GeneralToggleBookmarksWithText), true);
             AddNode(generalNode, language.ClearBookmarks, nameof(Configuration.Settings.Shortcuts.GeneralClearBookmarks));
             AddNode(generalNode, language.GoToBookmark, nameof(Configuration.Settings.Shortcuts.GeneralGoToBookmark));
             AddNode(generalNode, language.GoToPreviousBookmark, nameof(Configuration.Settings.Shortcuts.GeneralGoToPreviousBookmark));
             AddNode(generalNode, language.GoToNextBookmark, nameof(Configuration.Settings.Shortcuts.GeneralGoToNextBookmark));
-            AddNode(generalNode, language.ChooseProfile, nameof(Configuration.Settings.Shortcuts.ChooseProfile));
-            AddNode(generalNode, language.DuplicateLine, nameof(Configuration.Settings.Shortcuts.DuplicateLine));
-            AddNode(generalNode, language.ToggleView, nameof(Configuration.Settings.Shortcuts.ToggleView));
+            AddNode(generalNode, language.ChooseProfile, nameof(Configuration.Settings.Shortcuts.GeneralChooseProfile));
+            AddNode(generalNode, language.DuplicateLine, nameof(Configuration.Settings.Shortcuts.GeneralDuplicateLine));
+            AddNode(generalNode, language.ToggleView, nameof(Configuration.Settings.Shortcuts.GeneralToggleView));
+            AddNode(generalNode, language.Help, nameof(Configuration.Settings.Shortcuts.GeneralHelp), true);
             if (generalNode.Nodes.Count > 0)
             {
                 _shortcuts.Nodes.Add(generalNode);
@@ -1335,6 +1334,7 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(textBoxNode, language.MainTextBoxAutoBreakFromPos, nameof(Configuration.Settings.Shortcuts.MainTextBoxBreakAtPosition));
             AddNode(textBoxNode, language.MainTextBoxAutoBreakFromPosAndGoToNext, nameof(Configuration.Settings.Shortcuts.MainTextBoxBreakAtPositionAndGoToNext));
             AddNode(textBoxNode, language.MainTextBoxUnbreak, nameof(Configuration.Settings.Shortcuts.MainTextBoxUnbreak));
+            AddNode(textBoxNode, language.MainTextBoxUnbreakNoSpace, nameof(Configuration.Settings.Shortcuts.MainTextBoxUnbreakNoSpace));
             if (textBoxNode.Nodes.Count > 0)
             {
                 _shortcuts.Nodes.Add(textBoxNode);

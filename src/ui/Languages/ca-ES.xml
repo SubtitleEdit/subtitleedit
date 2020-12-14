@@ -1743,7 +1743,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GoToBookmark>Vés a marcador</GoToBookmark>
     <GoToPreviousBookmark>Vés a l'anterior marcador</GoToPreviousBookmark>
     <GoToNextBookmark>Vés al següent marcador</GoToNextBookmark>
-    <ChooseProfile>Escolliu perfil</ChooseProfile>
+    <GeneralChooseProfile>Escolliu perfil</GeneralChooseProfile>
     <FontInUi>Font UI</FontInUi>
     <ShowFrameRate>Mostra ràtio quadres en barra d'eines</ShowFrameRate>
     <DefaultFrameRate>Ràtio quadres predeterminada</DefaultFrameRate>

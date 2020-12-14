@@ -1933,8 +1933,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GoToBookmark>Преминаване на отметка</GoToBookmark>
     <GoToPreviousBookmark>Преминаване на предишната отметка</GoToPreviousBookmark>
     <GoToNextBookmark>Преминаване до следващата отметка</GoToNextBookmark>
-    <ChooseProfile>Избор на профил</ChooseProfile>
-    <DuplicateLine>Дублиран ред</DuplicateLine>
+    <GeneralChooseProfile>Избор на профил</GeneralChooseProfile>
+    <GeneralDuplicateLine>Дублиран ред</GeneralDuplicateLine>
     <FontInUi>Шрифт на потребителския интерфейс</FontInUi>
     <ShowFrameRate>Показване честотата на кадрите в лентата с инструменти</ShowFrameRate>
     <DefaultFrameRate>Честота на кадрите (fps) по подр.</DefaultFrameRate>

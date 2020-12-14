@@ -1778,8 +1778,8 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <GoToBookmark>Ir al marcador</GoToBookmark>
     <GoToPreviousBookmark>Ir al marcador anterior</GoToPreviousBookmark>
     <GoToNextBookmark>Ir al siguiente marcador</GoToNextBookmark>
-    <ChooseProfile>Elegir perfil</ChooseProfile>
-    <DuplicateLine>Duplicar línea</DuplicateLine>
+    <GeneralChooseProfile>Elegir perfil</GeneralChooseProfile>
+    <GeneralDuplicateLine>Duplicar línea</GeneralDuplicateLine>
     <FontInUi>Interfaz de la Fuente</FontInUi>
     <ShowFrameRate>Mostrar tasa de cuadros en barra herramientas</ShowFrameRate>
     <DefaultFrameRate>Tasa de cuadros por defecto</DefaultFrameRate>

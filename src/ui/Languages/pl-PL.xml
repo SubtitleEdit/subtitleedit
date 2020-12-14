@@ -1914,8 +1914,8 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <GoToBookmark>Przejdź do zakładki</GoToBookmark>
     <GoToPreviousBookmark>Przejdź do poprzedniej zakładki</GoToPreviousBookmark>
     <GoToNextBookmark>Przejdź do następnej zakładki</GoToNextBookmark>
-    <ChooseProfile>Wybierz profil</ChooseProfile>
-    <DuplicateLine>Duplikat linii</DuplicateLine>
+    <GeneralChooseProfile>Wybierz profil</GeneralChooseProfile>
+    <GeneralDuplicateLine>Duplikat linii</GeneralDuplicateLine>
     <FontInUi>Czcionka interfejsu użytkownika</FontInUi>
     <ShowFrameRate>Pokaż ilość klatek/sekundę na Pasku narzędzi</ShowFrameRate>
     <DefaultFrameRate>Domyślna ilość klatek/sekundę</DefaultFrameRate>

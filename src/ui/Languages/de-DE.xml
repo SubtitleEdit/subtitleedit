@@ -1769,7 +1769,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <GoToBookmark>Zum Lesezeichen</GoToBookmark>
     <GoToPreviousBookmark>Vorheriges Lesezeichen</GoToPreviousBookmark>
     <GoToNextBookmark>Nächstes Lesezeichen</GoToNextBookmark>
-    <ChooseProfile>Profil wählen</ChooseProfile>
+    <GeneralChooseProfile>Profil wählen</GeneralChooseProfile>
     <FontInUi>Benutzeroberfläche Schriftart</FontInUi>
     <ShowFrameRate>Bildfrequenz in Symbolleiste anzeigen</ShowFrameRate>
     <DefaultFrameRate>Standard Bildfrequenz</DefaultFrameRate>

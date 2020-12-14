@@ -1562,7 +1562,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <GoToBookmark>ブックマークへ移動</GoToBookmark>
     <GoToPreviousBookmark>前のブックマークへ移動</GoToPreviousBookmark>
     <GoToNextBookmark>次のブックマークへ移動</GoToNextBookmark>
-    <ChooseProfile>プロファイルを選択</ChooseProfile>
+    <GeneralChooseProfile>プロファイルを選択</GeneralChooseProfile>
     <ShowFrameRate>ツール バーにフレームレートを表示する</ShowFrameRate>
     <DefaultFrameRate>既定のフレームレート</DefaultFrameRate>
     <DefaultFileEncoding>既定のファイル エンコード</DefaultFileEncoding>
