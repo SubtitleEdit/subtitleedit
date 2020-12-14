@@ -76,6 +76,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainGeneralGoToNextBookmark { get; set; }
         public Keys MainGeneralChooseProfile { get; set; }
         public Keys MainGeneralDuplicateLine { get; set; }
+        public Keys MainGeneralToggleView { get; set; }
         public Keys MainTextBoxSplitAtCursor { get; set; }
         public Keys MainTextBoxSplitAtCursorAndVideoPos { get; set; }
         public Keys MainTextBoxSplitSelectedLineBilingual { get; set; }
@@ -255,6 +256,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainGeneralGoToNextBookmark = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextBookmark);
             MainGeneralChooseProfile = UiUtil.GetKeys(Configuration.Settings.Shortcuts.ChooseProfile);
             MainGeneralDuplicateLine = UiUtil.GetKeys(Configuration.Settings.Shortcuts.DuplicateLine);
+            MainGeneralToggleView = UiUtil.GetKeys(Configuration.Settings.Shortcuts.ToggleView);
             MainVideoFullscreen = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoFullscreen);
             MainVideoSlower = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoSlower);
             MainVideoFaster = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoFaster);

@@ -1932,6 +1932,7 @@ can edit in same subtitle file (collaboration)</Information>
     <GoToNextBookmark>Go to next bookmark</GoToNextBookmark>
     <ChooseProfile>Choose profile</ChooseProfile>
     <DuplicateLine>Duplicate line</DuplicateLine>
+    <ToggleView>Toggle list/source view</ToggleView>
     <FontInUi>UI Font</FontInUi>
     <ShowFrameRate>Show frame rate in toolbar</ShowFrameRate>
     <DefaultFrameRate>Default frame rate</DefaultFrameRate>

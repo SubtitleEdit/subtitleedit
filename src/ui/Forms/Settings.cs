@@ -1132,6 +1132,7 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(generalNode, language.GoToNextBookmark, nameof(Configuration.Settings.Shortcuts.GeneralGoToNextBookmark));
             AddNode(generalNode, language.ChooseProfile, nameof(Configuration.Settings.Shortcuts.ChooseProfile));
             AddNode(generalNode, language.DuplicateLine, nameof(Configuration.Settings.Shortcuts.DuplicateLine));
+            AddNode(generalNode, language.ToggleView, nameof(Configuration.Settings.Shortcuts.ToggleView));
             if (generalNode.Nodes.Count > 0)
             {
                 _shortcuts.Nodes.Add(generalNode);

@@ -5218,6 +5218,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/DuplicateLine":
                     language.Settings.DuplicateLine = reader.Value;
                     break;
+                case "Settings/ToggleView":
+                    language.Settings.ToggleView = reader.Value;
+                    break;
                 case "Settings/FontInUi":
                     language.Settings.FontInUi = reader.Value;
                     break;

@@ -14250,6 +14250,19 @@ namespace Nikse.SubtitleEdit.Forms
                 DuplicateLine();
                 e.SuppressKeyPress = true;
             }
+            else if (_shortcuts.MainGeneralToggleView == e.KeyData)
+            {
+                if (inListView)
+                {
+                    tabControlSubtitle.SelectedIndex = TabControlSourceView;
+                }
+                else
+                {
+                    tabControlSubtitle.SelectedIndex = TabControlListView;
+                }
+
+                e.SuppressKeyPress = true;
+            }
             else if (_shortcuts.MainGeneralFileSaveAll == e.KeyData)
             {
                 SaveAll();
