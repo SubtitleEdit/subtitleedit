@@ -1587,7 +1587,7 @@ Command line: {1} {2}
     <ConvertFrom>转换自</ConvertFrom>
     <ConvertTo>转换到 to</ConvertTo>
     <CopyToClipboard>复制到剪贴板</CopyToClipboard>
-    <CloseOnInsert>插入时关闭</CloseOnInsert>
+    <CloseOnInsert>插入后关闭</CloseOnInsert>
     <Length>长度</Length>
     <Mass>重量</Mass>
     <Volume>体积</Volume>
