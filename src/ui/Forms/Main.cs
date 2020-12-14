@@ -14436,6 +14436,13 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonBeforeText_Click(null, null);
                 e.SuppressKeyPress = true;
             }
+            else if (_shortcuts.MainVideoPlayFromBeginning == e.KeyData)
+            {
+                mediaPlayer.Stop();
+                mediaPlayer.CurrentPosition = 0;
+                mediaPlayer.Play();
+                e.SuppressKeyPress = true;
+            }
             else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.Right)
             {
                 if (!textBoxListViewText.Focused && !textBoxListViewTextAlternate.Focused)
