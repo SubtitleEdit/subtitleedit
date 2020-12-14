@@ -287,6 +287,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.moveTextUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.moveTextDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemBookmark = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemGoToSourceView = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemEmptyGoToSourceView = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.splitLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemMergeLines = new System.Windows.Forms.ToolStripMenuItem();
@@ -2465,6 +2467,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemCopySourceText,
             this.toolStripMenuItemColumn,
             this.toolStripMenuItemBookmark,
+            this.toolStripMenuItemGoToSourceView,
             this.toolStripSeparator7,
             this.splitLineToolStripMenuItem,
             this.toolStripMenuItemMergeLines,
@@ -2670,6 +2673,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemBookmark.Size = new System.Drawing.Size(284, 22);
             this.toolStripMenuItemBookmark.Text = "Bookmark...";
             this.toolStripMenuItemBookmark.Click += new System.EventHandler(this.toolStripMenuItemBookmark_Click);
+            // 
+            // toolStripMenuItemGoToSourceView
+            // 
+            this.toolStripMenuItemGoToSourceView.Name = "toolStripMenuItemGoToSourceView";
+            this.toolStripMenuItemGoToSourceView.Size = new System.Drawing.Size(284, 22);
+            this.toolStripMenuItemGoToSourceView.Text = "Go to source view";
+            this.toolStripMenuItemGoToSourceView.Click += new System.EventHandler(this.toolStripMenuItemGoToSourceView_Click);
             // 
             // toolStripSeparator7
             // 
@@ -5102,6 +5112,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.contextMenuStripEmpty.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.insertLineToolStripMenuItem,
+            this.toolStripMenuItemEmptyGoToSourceView,
             this.aSSStylesToolStripMenuItem});
             this.contextMenuStripEmpty.Name = "contextMenuStripEmpty";
             this.contextMenuStripEmpty.Size = new System.Drawing.Size(136, 48);
@@ -5113,6 +5124,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.insertLineToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
             this.insertLineToolStripMenuItem.Text = "Insert line";
             this.insertLineToolStripMenuItem.Click += new System.EventHandler(this.InsertLineToolStripMenuItemClick);
+            // 
+            // toolStripMenuItemEmptyGoToSourceView
+            // 
+            this.toolStripMenuItemEmptyGoToSourceView.Name = "toolStripMenuItemEmptyGoToSourceView";
+            this.toolStripMenuItemEmptyGoToSourceView.Size = new System.Drawing.Size(284, 22);
+            this.toolStripMenuItemEmptyGoToSourceView.Text = "Go to source view";
+            this.toolStripMenuItemEmptyGoToSourceView.Click += new System.EventHandler(this.toolStripMenuItemGoToSourceView_Click);
             // 
             // aSSStylesToolStripMenuItem
             // 
@@ -5675,6 +5693,8 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem googleTranslateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem microsoftBingTranslateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemBookmark;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemGoToSourceView;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemEmptyGoToSourceView;
         private System.Windows.Forms.ToolStripMenuItem removeAllFormattingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem removeBoldToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem removeItalicToolStripMenuItem;

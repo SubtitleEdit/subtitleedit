@@ -1766,6 +1766,7 @@ namespace Nikse.SubtitleEdit.Core
                         RemoveActors = "Remove actors",
                         EditBookmark = "Edit bookmark",
                         RemoveBookmark = "Remove bookmark",
+                        GoToSourceView = "Go to source view",
                     }
                 },
 

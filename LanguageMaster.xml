@@ -1251,6 +1251,7 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
         <RemoveActors>Remove actors</RemoveActors>
         <EditBookmark>Edit bookmark</EditBookmark>
         <RemoveBookmark>Remove bookmark</RemoveBookmark>
+        <GoToSourceView>Go to source view</GoToSourceView>
       </ContextMenu>
     </Menu>
     <Controls>
