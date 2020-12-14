@@ -1006,6 +1006,7 @@ Command line: {1} {2}
         <ImportText>导入纯文本...</ImportText>
         <ImportImages>导入图像...</ImportImages>
         <ImportTimecodes>导入时间码...</ImportTimecodes>
+        <Import>导入</Import>
         <Export>导出</Export>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
         <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
@@ -1285,6 +1286,7 @@ Command line: {1} {2}
       <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>在当前视频位置插入新字幕 (且不将操作焦点定位到文本框)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
       <Auto>自动</Auto>
       <PlayFromJustBeforeText>从文本前播放(&amp;T)</PlayFromJustBeforeText>
+      <PlayFromBeginning>从视频开头播放</PlayFromBeginning>
       <Pause>暂停</Pause>
       <GoToSubtitlePositionAndPause>转到字幕位置并暂停</GoToSubtitlePositionAndPause>
       <SetStartTime>设为起始时间(&amp;S)</SetStartTime>
@@ -1585,6 +1587,7 @@ Command line: {1} {2}
     <ConvertFrom>转换自</ConvertFrom>
     <ConvertTo>转换到 to</ConvertTo>
     <CopyToClipboard>复制到剪贴板</CopyToClipboard>
+    <CloseOnInsert>插入后关闭</CloseOnInsert>
     <Length>长度</Length>
     <Mass>重量</Mass>
     <Volume>体积</Volume>
