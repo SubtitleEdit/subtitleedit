@@ -3487,6 +3487,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/Menu/File/ImportTimecodes":
                     language.Main.Menu.File.ImportTimecodes = reader.Value;
                     break;
+                case "Main/Menu/File/Import":
+                    language.Main.Menu.File.Import = reader.Value;
+                    break;
                 case "Main/Menu/File/Export":
                     language.Main.Menu.File.Export = reader.Value;
                     break;
