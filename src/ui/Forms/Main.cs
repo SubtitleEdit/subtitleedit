@@ -9486,8 +9486,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count >= 1 && SubtitleListview1.SelectedItems.Count < 10)
                 {
-                    e.SuppressKeyPress = true;
                     SplitSelectedLineBilingual();
+                    e.SuppressKeyPress = true;
                 }
             }
             else if (e.KeyData == _shortcuts.MainListViewAlignmentN1)
@@ -10523,7 +10523,7 @@ namespace Nikse.SubtitleEdit.Forms
             var start = tb.SelectionStart;
             var end = start + tb.SelectionLength;
             var indexOfNewLine = tb.Text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
-            if (end < indexOfNewLine || start > indexOfNewLine)
+            if (end < indexOfNewLine || start > indexOfNewLine || end - indexOfNewLine - 2 >= lines[1].Length)
             {
                 return;
             }
@@ -10551,6 +10551,7 @@ namespace Nikse.SubtitleEdit.Forms
             newParagraph.Text = text2;
             SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
             SubtitleListview1.SelectIndexAndEnsureVisible(idx, true);
+            RefreshSelectedParagraph();
         }
 
         private void MergeSelectedLines(BreakMode breakMode = BreakMode.Normal)
