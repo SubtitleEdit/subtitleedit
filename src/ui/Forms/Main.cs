@@ -7947,7 +7947,7 @@ namespace Nikse.SubtitleEdit.Forms
                     toolStripMenuItemUnbreakLines.Visible = false;
                     toolStripMenuItemAutoBreakLines.Visible = false;
                     toolStripSeparatorBreakLines.Visible = false;
-                    if (_subtitleAlternate != null && noNetWorkSession && !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftBingApiId))
+                    if (_subtitleAlternate != null && noNetWorkSession && !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorApiKey))
                     {
                         toolStripMenuItemGoogleMicrosoftTranslateSelLine.Visible = true;
                     }
@@ -17238,7 +17238,7 @@ namespace Nikse.SubtitleEdit.Forms
             string separator = " + ";
             if (!string.IsNullOrEmpty(_fileName))
             {
-                text = _fileName;
+                text = Path.GetFileName(_fileName);
             }
 
             if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
@@ -17251,7 +17251,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (!string.IsNullOrEmpty(_subtitleAlternateFileName))
                 {
-                    text += _subtitleAlternateFileName;
+                    text += Path.GetFileName(_subtitleAlternateFileName);
                 }
                 else
                 {
