@@ -263,7 +263,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemSplitterCheckForUpdates = new System.Windows.Forms.ToolStripSeparator();
             this.helpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.contextMenuStripListview = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.contextMenuStripListView = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.setStylesForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setActorForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAssStyles = new System.Windows.Forms.ToolStripMenuItem();
@@ -532,7 +532,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
-            this.contextMenuStripListview.SuspendLayout();
+            this.contextMenuStripListView.SuspendLayout();
             this.groupBoxVideo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarWaveformPosition)).BeginInit();
             this.panelWaveformControls.SuspendLayout();
@@ -2450,7 +2450,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // contextMenuStripListview
             // 
-            this.contextMenuStripListview.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.contextMenuStripListView.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.setStylesForSelectedLinesToolStripMenuItem,
             this.setActorForSelectedLinesToolStripMenuItem,
             this.toolStripMenuItemAssStyles,
@@ -2499,11 +2499,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.fixCommonErrorsInSelectedLinesToolStripMenuItem,
             this.changeCasingForSelectedLinesToolStripMenuItem,
             this.toolStripMenuItemSaveSelectedLines});
-            this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 964);
-            this.contextMenuStripListview.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
-            this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
-            this.contextMenuStripListview.Opened += new System.EventHandler(this.MenuOpened);
+            this.contextMenuStripListView.Name = "contextMenuStripListView";
+            this.contextMenuStripListView.Size = new System.Drawing.Size(285, 964);
+            this.contextMenuStripListView.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
+            this.contextMenuStripListView.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListViewOpening);
+            this.contextMenuStripListView.Opened += new System.EventHandler(this.MenuOpened);
             // 
             // setStylesForSelectedLinesToolStripMenuItem
             // 
@@ -4263,7 +4263,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.SubtitleListview1.AllowColumnReorder = true;
             this.SubtitleListview1.AllowDrop = true;
-            this.SubtitleListview1.ContextMenuStrip = this.contextMenuStripListview;
+            this.SubtitleListview1.ContextMenuStrip = this.contextMenuStripListView;
             this.SubtitleListview1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SubtitleListview1.FirstVisibleIndex = -1;
             this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -5165,7 +5165,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStrip1.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.contextMenuStripListview.ResumeLayout(false);
+            this.contextMenuStripListView.ResumeLayout(false);
             this.groupBoxVideo.ResumeLayout(false);
             this.groupBoxVideo.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarWaveformPosition)).EndInit();
@@ -5275,7 +5275,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem splitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem appendTextVisuallyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showHistoryforUndoToolStripMenuItem;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStripListview;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripListView;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemDelete;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInsertBefore;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInsertAfter;
