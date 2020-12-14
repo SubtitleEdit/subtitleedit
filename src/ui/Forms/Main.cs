@@ -228,7 +228,7 @@ namespace Nikse.SubtitleEdit.Forms
         protected override void OnLoad(EventArgs e)
         {
             UiUtil.FixFonts(this, 10000);
-            UiUtil.FixFonts(contextMenuStripListview);
+            UiUtil.FixFonts(contextMenuStripListView);
             UiUtil.FixFonts(contextMenuStripTextBoxListView);
             UiUtil.FixFonts(contextMenuStripWaveform);
             UiUtil.FixLargeFonts(tabControlButtons, buttonAutoBreak);
@@ -7430,7 +7430,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void ContextMenuStripListviewOpening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void ContextMenuStripListViewOpening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             var format = GetCurrentSubtitleFormat();
             var formatType = format.GetType();
