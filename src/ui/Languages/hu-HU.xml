@@ -1820,8 +1820,8 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <GoToBookmark>Ugrás a könyvjelzőre</GoToBookmark>
     <GoToPreviousBookmark>Ugrás az előző könyvjelzőre</GoToPreviousBookmark>
     <GoToNextBookmark>Ugrás a következő könyvjelzőre</GoToNextBookmark>
-    <ChooseProfile>Válasszon profilt</ChooseProfile>
-    <DuplicateLine>Ismétlődő sor</DuplicateLine>
+    <GeneralChooseProfile>Válasszon profilt</GeneralChooseProfile>
+    <GeneralDuplicateLine>Ismétlődő sor</GeneralDuplicateLine>
     <FontInUi>Felület betűtípusa</FontInUi>
     <ShowFrameRate>Képarány megjelenítése az eszköztáron</ShowFrameRate>
     <DefaultFrameRate>Alapértelmezett képarány</DefaultFrameRate>

@@ -1918,8 +1918,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GoToBookmark>Μετάβαση σε σημείωση</GoToBookmark>
     <GoToPreviousBookmark>Προηγούμενη σημείωση</GoToPreviousBookmark>
     <GoToNextBookmark>Επόμενη σημείωση</GoToNextBookmark>
-    <ChooseProfile>Επιλογή προφίλ</ChooseProfile>
-    <DuplicateLine>Αντιγραφή γραμμής</DuplicateLine>
+    <GeneralChooseProfile>Επιλογή προφίλ</GeneralChooseProfile>
+    <GeneralDuplicateLine>Αντιγραφή γραμμής</GeneralDuplicateLine>
     <FontInUi>Γραμματοσειρά διεπαφής</FontInUi>
     <ShowFrameRate>Εμφάνιση ρυθμού καρέ στη γραμμή εργαλείων</ShowFrameRate>
     <DefaultFrameRate>Προεπιλεγμένος ρυθμός καρέ</DefaultFrameRate>

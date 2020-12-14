@@ -1810,8 +1810,8 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <GoToBookmark>Naar bladwĳzer</GoToBookmark>
     <GoToPreviousBookmark>Naar vorige bladwĳzer</GoToPreviousBookmark>
     <GoToNextBookmark>Naar volgende bladwĳzer</GoToNextBookmark>
-    <ChooseProfile>Profiel kiezen</ChooseProfile>
-    <DuplicateLine>Identieke ondertitel</DuplicateLine>
+    <GeneralChooseProfile>Profiel kiezen</GeneralChooseProfile>
+    <GeneralDuplicateLine>Identieke ondertitel</GeneralDuplicateLine>
     <FontInUi>Lettertype interface</FontInUi>
     <ShowFrameRate>Beeldsnelheid in werkbalk weergeven</ShowFrameRate>
     <DefaultFrameRate>Standaardbeeldsnelheid</DefaultFrameRate>

@@ -1763,7 +1763,7 @@ Continue anyway?</PromptInsertSubtitleOverlap>
     <GoToBookmark>به نشانک بروید</GoToBookmark>
     <GoToPreviousBookmark>به نشانک قبلی بروید</GoToPreviousBookmark>
     <GoToNextBookmark>به نشانک بعدی بروید</GoToNextBookmark>
-    <ChooseProfile>نمایه را انتخاب کنید</ChooseProfile>
+    <GeneralChooseProfile>نمایه را انتخاب کنید</GeneralChooseProfile>
     <FontInUi>قلم UI</FontInUi>
     <ShowFrameRate>نمایش نرخ فریم را در نوار ابزار</ShowFrameRate>
     <DefaultFrameRate>نرخ فریم پیش فرض</DefaultFrameRate>

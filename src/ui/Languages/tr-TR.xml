@@ -1937,8 +1937,8 @@ Yeni oturum başlatın (işbirliği)</Information>
     <GoToBookmark>Yer imine git</GoToBookmark>
     <GoToPreviousBookmark>Önceki yer imine git</GoToPreviousBookmark>
     <GoToNextBookmark>Sonraki yer imine git</GoToNextBookmark>
-    <ChooseProfile>Profil seçin</ChooseProfile>
-    <DuplicateLine>Yinelenen satır</DuplicateLine>
+    <GeneralChooseProfile>Profil seçin</GeneralChooseProfile>
+    <GeneralDuplicateLine>Yinelenen satır</GeneralDuplicateLine>
     <FontInUi>UI Font</FontInUi>
     <ShowFrameRate>Kare hızını araç çubuğunda göster</ShowFrameRate>
     <DefaultFrameRate>Varsayılan kare hızı</DefaultFrameRate>

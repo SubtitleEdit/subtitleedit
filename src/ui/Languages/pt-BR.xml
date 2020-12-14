@@ -1800,8 +1800,8 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <GoToBookmark>Ir para marcador</GoToBookmark>
     <GoToPreviousBookmark>Ir para o marcador anterior</GoToPreviousBookmark>
     <GoToNextBookmark>Ir para o próximo marcador</GoToNextBookmark>
-    <ChooseProfile>Escolha o perfil</ChooseProfile>
-    <DuplicateLine>Duplicar linha</DuplicateLine>
+    <GeneralChooseProfile>Escolha o perfil</GeneralChooseProfile>
+    <GeneralDuplicateLine>Duplicar linha</GeneralDuplicateLine>
     <FontInUi>Fonte da interface</FontInUi>
     <ShowFrameRate>Mostrar taxa de quadros na barra de ferramentas</ShowFrameRate>
     <DefaultFrameRate>Taxa de quadros padrão</DefaultFrameRate>

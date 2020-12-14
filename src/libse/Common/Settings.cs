@@ -1783,17 +1783,16 @@ $HorzAlign          =   Center
         public string GeneralGoToNextSubtitleAndPlay { get; set; }
         public string GeneralAutoCalcCurrentDuration { get; set; }
         public string GeneralPlayFirstSelected { get; set; }
-        public string GeneralHelp { get; set; }
-        public string GeneralUnbrekNoSpace { get; set; }
         public string GeneralToggleBookmarks { get; set; }
         public string GeneralToggleBookmarksWithText { get; set; }
         public string GeneralClearBookmarks { get; set; }
         public string GeneralGoToBookmark { get; set; }
         public string GeneralGoToPreviousBookmark { get; set; }
         public string GeneralGoToNextBookmark { get; set; }
-        public string ChooseProfile { get; set; }
-        public string DuplicateLine { get; set; }
-        public string ToggleView { get; set; }
+        public string GeneralChooseProfile { get; set; }
+        public string GeneralDuplicateLine { get; set; }
+        public string GeneralToggleView { get; set; }
+        public string GeneralHelp { get; set; }
         public string MainFileNew { get; set; }
         public string MainFileOpen { get; set; }
         public string MainFileOpenKeepVideo { get; set; }
@@ -1989,6 +1988,7 @@ $HorzAlign          =   Center
         public string MainTextBoxBreakAtPosition { get; set; }
         public string MainTextBoxBreakAtPositionAndGoToNext { get; set; }
         public string MainTextBoxUnbreak { get; set; }
+        public string MainTextBoxUnbreakNoSpace { get; set; }
         public string MainWaveformInsertAtCurrentPosition { get; set; }
         public string MainInsertBefore { get; set; }
         public string MainMergeDialog { get; set; }
@@ -2031,6 +2031,7 @@ $HorzAlign          =   Center
             GeneralMergeOriginalAndTranslation = "Control+Alt+Shift+M";
             GeneralGoToNextSubtitle = "Shift+Return";
             GeneralToggleBookmarksWithText = "Control+Shift+B";
+            GeneralHelp = "F1";
             MainFileNew = "Control+N";
             MainFileOpen = "Control+O";
             MainFileSave = "Control+S";
@@ -2085,17 +2086,16 @@ $HorzAlign          =   Center
             MainWaveformInsertAtCurrentPosition = "Insert";
             MainInsertBefore = "Control+Shift+Insert";
             MainTextBoxAutoBreak = "Control+R";
+            MainTranslateGoogleTranslate = "Control+Shift+G";
+            MainAdjustExtendToNextSubtitle = "Control+Shift+E";
+            MainAdjustExtendToPreviousSubtitle = "Alt+Shift+E";
             WaveformVerticalZoom = "Shift+Add";
             WaveformVerticalZoomOut = "Shift+Subtract";
-            GeneralHelp = "F1";
             WaveformAddTextHere = "Return";
             Waveform100MsLeft = "Shift+Left";
             Waveform100MsRight = "Shift+Right";
             Waveform1000MsLeft = "Left";
             Waveform1000MsRight = "Right";
-            MainTranslateGoogleTranslate = "Control+Shift+G";
-            MainAdjustExtendToNextSubtitle = "Control+Shift+E";
-            MainAdjustExtendToPreviousSubtitle = "Alt+Shift+E";
         }
 
         public Shortcuts Clone()
@@ -6066,23 +6066,25 @@ $HorzAlign          =   Center
             if (profileCount == 0)
             {
                 settings.General.CurrentProfile = "Default";
-                settings.General.Profiles = new List<RulesProfile>();
-                settings.General.Profiles.Add(new RulesProfile
+                settings.General.Profiles = new List<RulesProfile>
                 {
-                    Name = settings.General.CurrentProfile,
-                    SubtitleLineMaximumLength = settings.General.SubtitleLineMaximumLength,
-                    MaxNumberOfLines = settings.General.MaxNumberOfLines,
-                    MergeLinesShorterThan = settings.General.MergeLinesShorterThan,
-                    SubtitleMaximumCharactersPerSeconds = (decimal)settings.General.SubtitleMaximumCharactersPerSeconds,
-                    SubtitleOptimalCharactersPerSeconds = (decimal)settings.General.SubtitleOptimalCharactersPerSeconds,
-                    SubtitleMaximumDisplayMilliseconds = settings.General.SubtitleMaximumDisplayMilliseconds,
-                    SubtitleMinimumDisplayMilliseconds = settings.General.SubtitleMinimumDisplayMilliseconds,
-                    SubtitleMaximumWordsPerMinute = (decimal)settings.General.SubtitleMaximumWordsPerMinute,
-                    CpsIncludesSpace = !settings.General.CharactersPerSecondsIgnoreWhiteSpace,
-                    MinimumMillisecondsBetweenLines = settings.General.MinimumMillisecondsBetweenLines,
-                    DialogStyle = settings.General.DialogStyle,
-                    ContinuationStyle = settings.General.ContinuationStyle
-                });
+                    new RulesProfile
+                    {
+                        Name = settings.General.CurrentProfile,
+                        SubtitleLineMaximumLength = settings.General.SubtitleLineMaximumLength,
+                        MaxNumberOfLines = settings.General.MaxNumberOfLines,
+                        MergeLinesShorterThan = settings.General.MergeLinesShorterThan,
+                        SubtitleMaximumCharactersPerSeconds = (decimal)settings.General.SubtitleMaximumCharactersPerSeconds,
+                        SubtitleOptimalCharactersPerSeconds = (decimal)settings.General.SubtitleOptimalCharactersPerSeconds,
+                        SubtitleMaximumDisplayMilliseconds = settings.General.SubtitleMaximumDisplayMilliseconds,
+                        SubtitleMinimumDisplayMilliseconds = settings.General.SubtitleMinimumDisplayMilliseconds,
+                        SubtitleMaximumWordsPerMinute = (decimal)settings.General.SubtitleMaximumWordsPerMinute,
+                        CpsIncludesSpace = !settings.General.CharactersPerSecondsIgnoreWhiteSpace,
+                        MinimumMillisecondsBetweenLines = settings.General.MinimumMillisecondsBetweenLines,
+                        DialogStyle = settings.General.DialogStyle,
+                        ContinuationStyle = settings.General.ContinuationStyle
+                    }
+                };
                 GeneralSettings.AddExtraProfiles(settings.General.Profiles);
             }
 
@@ -6240,18 +6242,6 @@ $HorzAlign          =   Center
                     shortcuts.GeneralPlayFirstSelected = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("GeneralHelp");
-                if (subNode != null)
-                {
-                    shortcuts.GeneralHelp = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("GeneralUnbrekNoSpace");
-                if (subNode != null)
-                {
-                    shortcuts.GeneralUnbrekNoSpace = subNode.InnerText;
-                }
-
                 subNode = node.SelectSingleNode("GeneralToggleBookmarks");
                 if (subNode != null)
                 {
@@ -6288,22 +6278,28 @@ $HorzAlign          =   Center
                     shortcuts.GeneralGoToNextBookmark = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("ChooseProfile");
+                subNode = node.SelectSingleNode("GeneralChooseProfile");
                 if (subNode != null)
                 {
-                    shortcuts.ChooseProfile = subNode.InnerText;
+                    shortcuts.GeneralChooseProfile = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("DuplicateLine");
+                subNode = node.SelectSingleNode("GeneralDuplicateLine");
                 if (subNode != null)
                 {
-                    shortcuts.DuplicateLine = subNode.InnerText;
+                    shortcuts.GeneralDuplicateLine = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("ToggleView");
+                subNode = node.SelectSingleNode("GeneralToggleView");
                 if (subNode != null)
                 {
-                    shortcuts.ToggleView = subNode.InnerText;
+                    shortcuts.GeneralToggleView = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralHelp");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralHelp = subNode.InnerText;
                 }
 
                 subNode = node.SelectSingleNode("MainFileNew");
@@ -7476,6 +7472,12 @@ $HorzAlign          =   Center
                     shortcuts.MainTextBoxUnbreak = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainTextBoxUnbrekNoSpace");
+                if (subNode != null)
+                {
+                    shortcuts.MainTextBoxUnbreakNoSpace = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainWaveformInsertAtCurrentPosition");
                 if (subNode != null)
                 {
@@ -8426,17 +8428,16 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("GeneralGoToNextSubtitleAndPlay", shortcuts.GeneralGoToNextSubtitleAndPlay);
             textWriter.WriteElementString("GeneralAutoCalcCurrentDuration", shortcuts.GeneralAutoCalcCurrentDuration);
             textWriter.WriteElementString("GeneralPlayFirstSelected", shortcuts.GeneralPlayFirstSelected);
-            textWriter.WriteElementString("GeneralHelp", shortcuts.GeneralHelp);
-            textWriter.WriteElementString("GeneralUnbrekNoSpace", shortcuts.GeneralUnbrekNoSpace);
             textWriter.WriteElementString("GeneralToggleBookmarks", shortcuts.GeneralToggleBookmarks);
             textWriter.WriteElementString("GeneralToggleBookmarksWithText", shortcuts.GeneralToggleBookmarksWithText);
             textWriter.WriteElementString("GeneralClearBookmarks", shortcuts.GeneralClearBookmarks);
             textWriter.WriteElementString("GeneralGoToBookmark", shortcuts.GeneralGoToBookmark);
             textWriter.WriteElementString("GeneralGoToNextBookmark", shortcuts.GeneralGoToNextBookmark);
-            textWriter.WriteElementString("ChooseProfile", shortcuts.ChooseProfile);
-            textWriter.WriteElementString("DuplicateLine", shortcuts.DuplicateLine);
-            textWriter.WriteElementString("ToggleView", shortcuts.ToggleView);
             textWriter.WriteElementString("GeneralGoToPreviousBookmark", shortcuts.GeneralGoToPreviousBookmark);
+            textWriter.WriteElementString("GeneralChooseProfile", shortcuts.GeneralChooseProfile);
+            textWriter.WriteElementString("GeneralDuplicateLine", shortcuts.GeneralDuplicateLine);
+            textWriter.WriteElementString("GeneralToggleView", shortcuts.GeneralToggleView);
+            textWriter.WriteElementString("GeneralHelp", shortcuts.GeneralHelp);
             textWriter.WriteElementString("MainFileNew", shortcuts.MainFileNew);
             textWriter.WriteElementString("MainFileOpen", shortcuts.MainFileOpen);
             textWriter.WriteElementString("MainFileOpenKeepVideo", shortcuts.MainFileOpenKeepVideo);
@@ -8631,6 +8632,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainTextBoxBreakAtPosition", shortcuts.MainTextBoxBreakAtPosition);
             textWriter.WriteElementString("MainTextBoxBreakAtPositionAndGoToNext", shortcuts.MainTextBoxBreakAtPositionAndGoToNext);
             textWriter.WriteElementString("MainTextBoxUnbreak", shortcuts.MainTextBoxUnbreak);
+            textWriter.WriteElementString("MainTextBoxUnbrekNoSpace", shortcuts.MainTextBoxUnbreakNoSpace);
             textWriter.WriteElementString("MainWaveformInsertAtCurrentPosition", shortcuts.MainWaveformInsertAtCurrentPosition);
             textWriter.WriteElementString("MainInsertBefore", shortcuts.MainInsertBefore);
             textWriter.WriteElementString("MainMergeDialog", shortcuts.MainMergeDialog);
