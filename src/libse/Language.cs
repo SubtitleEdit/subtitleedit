@@ -1811,6 +1811,7 @@ namespace Nikse.SubtitleEdit.Core
                     InsertNewSubtitleAtVideoPositionNoTextBoxFocus = "Insert new subtitle at video pos (no text box focus)",
                     Auto = "Auto",
                     PlayFromJustBeforeText = "Play from just before &text",
+                    PlayFromBeginning = "Play from beginning of video",
                     Pause = "Pause",
                     GoToSubtitlePositionAndPause = "Go to sub position and pause",
                     SetStartTime = "Set &start time",

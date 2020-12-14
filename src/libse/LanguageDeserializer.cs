@@ -4246,6 +4246,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/VideoControls/PlayFromJustBeforeText":
                     language.Main.VideoControls.PlayFromJustBeforeText = reader.Value;
                     break;
+                case "Main/VideoControls/PlayFromBeginning":
+                    language.Main.VideoControls.PlayFromBeginning = reader.Value;
+                    break;
                 case "Main/VideoControls/Pause":
                     language.Main.VideoControls.Pause = reader.Value;
                     break;

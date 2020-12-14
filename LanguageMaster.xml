@@ -1291,6 +1291,7 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
       <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Insert new subtitle at video pos (no text box focus)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
       <Auto>Auto</Auto>
       <PlayFromJustBeforeText>Play from just before &amp;text</PlayFromJustBeforeText>
+      <PlayFromBeginning>Play from beginning of video</PlayFromBeginning>
       <Pause>Pause</Pause>
       <GoToSubtitlePositionAndPause>Go to sub position and pause</GoToSubtitlePositionAndPause>
       <SetStartTime>Set &amp;start time</SetStartTime>

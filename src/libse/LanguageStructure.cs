@@ -1683,6 +1683,7 @@
 
                 public string Auto { get; set; }
                 public string PlayFromJustBeforeText { get; set; }
+                public string PlayFromBeginning { get; set; }
                 public string Pause { get; set; }
                 public string GoToSubtitlePositionAndPause { get; set; }
                 public string SetStartTime { get; set; }
