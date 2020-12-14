@@ -166,6 +166,21 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             _lastSaveHash = GetStateHash();
         }
 
+        private static Bitmap GetBitmap(IBinaryParagraphWithPosition s)
+        {
+            if (s is TransportStreamSubtitle)
+            {
+                var bmp = s.GetBitmap();
+                var nikseBitmap = new NikseBitmap(bmp);
+                nikseBitmap.CropTopTransparent(0);
+                nikseBitmap.CropSidesAndBottom(0, Color.FromArgb(0, 0, 0, 0), true);
+                bmp.Dispose();
+                return nikseBitmap.GetBitmap();
+            }
+
+            return s.GetBitmap();
+        }
+
         private bool ImportSubtitleFromTransportStream(string fileName)
         {
             var tsParser = new TransportStreamParser();
@@ -210,8 +225,8 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             {
                 if (first)
                 {
-                    var bmp = s.GetBitmap();
-                    if (bmp != null && bmp.Width > 1 && bmp.Height > 1)
+                    var bmpFirst = s.GetBitmap();
+                    if (bmpFirst != null && bmpFirst.Width > 1 && bmpFirst.Height > 1)
                     {
                         SetResolution(s.GetScreenSize());
                         //                        SetFrameRate(s.FramesPerSecondType);
@@ -226,7 +241,13 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 });
 
                 var pos = s.GetPosition();
-                _extra.Add(new Extra { IsForced = s.IsForced, X = pos.Left, Y = pos.Top });
+                var bmp = s.GetBitmap();
+                var nikseBitmap = new NikseBitmap(bmp);
+                var y = pos.Top + nikseBitmap.CropTopTransparent(0);
+                var x = pos.Left + nikseBitmap.CropSidesAndBottom(0, Color.FromArgb(0, 0, 0, 0), true);
+                bmp.Dispose();
+
+                _extra.Add(new Extra { IsForced = s.IsForced, X = x, Y = y });
             }
 
             return true;
@@ -632,7 +653,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 checkBoxIsForced.Checked = extra.IsForced;
                 numericUpDownX.Value = extra.X;
                 numericUpDownY.Value = extra.Y;
-                var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : sub.GetBitmap();
+                var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : GetBitmap(sub);
                 labelCurrentSize.Text = string.Format("Size: {0}x{1}", bmp.Width, bmp.Height);
                 ShowCurrentScaledImage(bmp, extra);
             }
@@ -891,7 +912,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                                 var p = _subtitle.Paragraphs[index];
                                 var bd = _binSubtitles[index];
                                 var extra = _extra[index];
-                                var bmp = extra.Bitmap ?? bd.GetBitmap();
+                                var bmp = extra.Bitmap ?? GetBitmap(bd);
                                 var brSub = new BluRaySupPicture
                                 {
                                     StartTime = (long)p.StartTime.TotalMilliseconds,
@@ -921,7 +942,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                             var p = _subtitle.Paragraphs[index];
                             var bd = _binSubtitles[index];
                             var extra = _extra[index];
-                            var bmp = extra.Bitmap ?? bd.GetBitmap();
+                            var bmp = extra.Bitmap ?? GetBitmap(bd);
                             WriteBdnXmlParagraph(bmp, sb, path, (index + 1), extra, p);
                             bmp.Dispose();
                         }
@@ -1366,7 +1387,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 var bmp = extra.Bitmap;
                 if (bmp == null && _binSubtitles != null)
                 {
-                    bmp = _binSubtitles[idx].GetBitmap();
+                    bmp = GetBitmap(_binSubtitles[idx]);
                 }
 
                 if (bmp == null)

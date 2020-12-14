@@ -2110,9 +2110,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 var pos = item.GetPosition();
                 var bmp = item.GetBitmap();
                 var nbmp = new NikseBitmap(bmp);
-                left = pos.Left;
                 top = pos.Top + nbmp.CropTopTransparent(0);
-                nbmp.CropSidesAndBottom(0, Color.FromArgb(0, 0, 0, 0), true);
+                left = pos.Left + nbmp.CropSidesAndBottom(0, Color.FromArgb(0, 0, 0, 0), true);
                 width = nbmp.Width;
                 height = nbmp.Height;
                 bmp.Dispose();
@@ -8892,6 +8891,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             while (i < _dvbSubtitles.Count)
             {
                 var dvbSub = _dvbSubtitles[i];
+                dvbSub.TransportStreamPosition = null;
                 dvbSub.ActiveImageIndex = null;
                 if (i < _dvbSubtitles.Count - 1 && dvbSub.Pes == _dvbSubtitles[i + 1].Pes)
                 {
@@ -8927,14 +8927,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     var tempList = new List<TransportStreamSubtitle>();
                     for (int i = 0; i < dvbSub.Pes.ObjectDataList.Count; i++)
                     {
-                        if (dvbSub.Pes.ObjectDataList[i].TopFieldDataBlockLength > 8)
+                        var ods = dvbSub.Pes.ObjectDataList[i];
+                        if (ods.TopFieldDataBlockLength > 8)
                         {
+                            var pos = dvbSub.Pes.GetImagePosition(ods);
                             tempList.Add(new TransportStreamSubtitle
                             {
                                 Pes = dvbSub.Pes,
                                 ActiveImageIndex = i,
                                 StartMilliseconds = dvbSub.StartMilliseconds,
-                                EndMilliseconds = dvbSub.EndMilliseconds
+                                EndMilliseconds = dvbSub.EndMilliseconds,
+                                TransportStreamPosition = new Position(pos.X, pos.Y)
                             });
                         }
                     }

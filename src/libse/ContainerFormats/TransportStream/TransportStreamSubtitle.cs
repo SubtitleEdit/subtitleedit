@@ -1,11 +1,13 @@
-﻿using System.Drawing;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Interfaces;
+using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 {
     public class TransportStreamSubtitle : IBinaryParagraph, IBinaryParagraphWithPosition
     {
+        public Position TransportStreamPosition;
+
         public ulong StartMilliseconds { get; set; }
 
         public ulong EndMilliseconds { get; set; }
@@ -18,15 +20,15 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
         public bool IsDvbSub => Pes != null;
 
+        public TransportStreamSubtitle()
+        {
+        }
+
         public TransportStreamSubtitle(BluRaySup.BluRaySupParser.PcsData bdSup, ulong startMilliseconds, ulong endMilliseconds)
         {
             _bdSup = bdSup;
             StartMilliseconds = startMilliseconds;
             EndMilliseconds = endMilliseconds;
-        }
-
-        public TransportStreamSubtitle()
-        {
         }
 
         /// <summary>
@@ -81,6 +83,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             if (_bdSup != null)
             {
                 return _bdSup.GetPosition();
+            }
+
+            if (TransportStreamPosition != null)
+            {
+                return TransportStreamPosition;
             }
 
             return new Position(0, 0);

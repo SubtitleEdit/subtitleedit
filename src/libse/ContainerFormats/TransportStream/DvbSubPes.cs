@@ -1,5 +1,4 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
