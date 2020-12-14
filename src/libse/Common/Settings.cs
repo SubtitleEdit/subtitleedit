@@ -1793,6 +1793,7 @@ $HorzAlign          =   Center
         public string GeneralGoToNextBookmark { get; set; }
         public string ChooseProfile { get; set; }
         public string DuplicateLine { get; set; }
+        public string ToggleView { get; set; }
         public string MainFileNew { get; set; }
         public string MainFileOpen { get; set; }
         public string MainFileOpenKeepVideo { get; set; }
@@ -6299,6 +6300,12 @@ $HorzAlign          =   Center
                     shortcuts.DuplicateLine = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("ToggleView");
+                if (subNode != null)
+                {
+                    shortcuts.ToggleView = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainFileNew");
                 if (subNode != null)
                 {
@@ -8428,6 +8435,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("GeneralGoToNextBookmark", shortcuts.GeneralGoToNextBookmark);
             textWriter.WriteElementString("ChooseProfile", shortcuts.ChooseProfile);
             textWriter.WriteElementString("DuplicateLine", shortcuts.DuplicateLine);
+            textWriter.WriteElementString("ToggleView", shortcuts.ToggleView);
             textWriter.WriteElementString("GeneralGoToPreviousBookmark", shortcuts.GeneralGoToPreviousBookmark);
             textWriter.WriteElementString("MainFileNew", shortcuts.MainFileNew);
             textWriter.WriteElementString("MainFileOpen", shortcuts.MainFileOpen);
