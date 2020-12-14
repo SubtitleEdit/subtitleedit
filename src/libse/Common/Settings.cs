@@ -1805,6 +1805,7 @@ $HorzAlign          =   Center
         public string MainFileCloseOriginal { get; set; }
         public string MainFileCompare { get; set; }
         public string MainFileImportPlainText { get; set; }
+        public string MainFileImportBdSupForEdit { get; set; }
         public string MainFileImportTimeCodes { get; set; }
         public string MainFileExportEbu { get; set; }
         public string MainFileExportPac { get; set; }
@@ -6369,6 +6370,12 @@ $HorzAlign          =   Center
                     shortcuts.MainFileImportPlainText = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainFileImportBdSupForEdit");
+                if (subNode != null)
+                {
+                    shortcuts.MainFileImportBdSupForEdit = subNode.InnerText;
+                }
+                
                 subNode = node.SelectSingleNode("MainFileImportTimeCodes");
                 if (subNode != null)
                 {
@@ -8427,6 +8434,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainFileOpenOriginal", shortcuts.MainFileOpenOriginal);
             textWriter.WriteElementString("MainFileSaveAll", shortcuts.MainFileSaveAll);
             textWriter.WriteElementString("MainFileImportPlainText", shortcuts.MainFileImportPlainText);
+            textWriter.WriteElementString("MainFileImportBdSupForEdit", shortcuts.MainFileImportBdSupForEdit);
             textWriter.WriteElementString("MainFileImportTimeCodes", shortcuts.MainFileImportTimeCodes);
             textWriter.WriteElementString("MainFileExportPlainText", shortcuts.MainFileExportPlainText);
             textWriter.WriteElementString("MainFileExportEbu", shortcuts.MainFileExportEbu);

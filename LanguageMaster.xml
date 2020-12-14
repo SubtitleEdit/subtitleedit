@@ -1011,6 +1011,7 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
         <ImportText>Plain text...</ImportText>
         <ImportImages>Images...</ImportImages>
         <ImportTimecodes>Time codes...</ImportTimecodes>
+        <Import>Import</Import>
         <Export>Export</Export>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
         <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>

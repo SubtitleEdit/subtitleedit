@@ -1504,6 +1504,7 @@ namespace Nikse.SubtitleEdit.Core
                         ImportText = "Plain text...",
                         ImportImages = "Images...",
                         ImportTimecodes = "Time codes...",
+                        Import = "Import",
                         Export = "Export",
                         ExportBdnXml = "BDN xml/png...",
                         ExportBluRaySup = "Blu-ray sup...",
