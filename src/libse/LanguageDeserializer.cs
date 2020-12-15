@@ -4144,6 +4144,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/Menu/ContextMenu/GoToSourceView":
                     language.Main.Menu.ContextMenu.GoToSourceView = reader.Value;
                     break;
+                case "Main/Menu/ContextMenu/GoToListView":
+                    language.Main.Menu.ContextMenu.GoToListView = reader.Value;
+                    break;
                 case "Main/Controls/SubtitleFormat":
                     language.Main.Controls.SubtitleFormat = reader.Value;
                     break;

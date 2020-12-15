@@ -523,6 +523,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelAutoDuration = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.textBoxSource = new System.Windows.Forms.TextBox();
+            this.contextMenuStripTextBoxSourceView = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemGoToListView = new System.Windows.Forms.ToolStripMenuItem();
             this.panelVideoPlayer = new System.Windows.Forms.Panel();
             this.mediaPlayer = new Nikse.SubtitleEdit.Controls.VideoPlayerContainer();
             this.contextMenuStripEmpty = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -571,6 +573,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.contextMenuStripTextBoxListView.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).BeginInit();
             this.tabPage2.SuspendLayout();
+            this.contextMenuStripTextBoxSourceView.SuspendLayout();
             this.panelVideoPlayer.SuspendLayout();
             this.contextMenuStripEmpty.SuspendLayout();
             this.SuspendLayout();
@@ -5050,6 +5053,7 @@ namespace Nikse.SubtitleEdit.Forms
             // textBoxSource
             // 
             this.textBoxSource.AllowDrop = true;
+            this.textBoxSource.ContextMenuStrip = this.contextMenuStripTextBoxSourceView;
             this.textBoxSource.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBoxSource.HideSelection = false;
             this.textBoxSource.Location = new System.Drawing.Point(3, 3);
@@ -5065,8 +5069,35 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxSource.DragDrop += new System.Windows.Forms.DragEventHandler(this.TextBoxSourceDragDrop);
             this.textBoxSource.DragEnter += new System.Windows.Forms.DragEventHandler(this.TextBoxSourceDragEnter);
             this.textBoxSource.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxSourceKeyDown);
-            this.textBoxSource.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBoxSource_KeyUp);
+            this.textBoxSource.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TextBoxSource_KeyUp);
             this.textBoxSource.Leave += new System.EventHandler(this.TextBoxSourceLeave);
+            //
+            // contextMenuStripTextBoxSourceView
+            //
+            this.contextMenuStripTextBoxSourceView.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemGoToListView,
+            this.toolStripSeparator18,
+            this.cutToolStripMenuItem,
+            this.copyToolStripMenuItem,
+            this.pasteToolStripMenuItem,
+            this.deleteToolStripMenuItem,
+            this.toolStripSeparator17,
+            this.selectAllToolStripMenuItem,
+            this.toolStripSeparator25,
+            this.toolStripMenuItemInsertUnicodeSymbol,
+            this.toolStripMenuItemInsertUnicodeControlCharacters});
+            this.contextMenuStripTextBoxSourceView.Name = "contextMenuStripTextBoxSourceView";
+            this.contextMenuStripTextBoxSourceView.Size = new System.Drawing.Size(274, 512);
+            this.contextMenuStripTextBoxSourceView.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
+            this.contextMenuStripTextBoxSourceView.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripTextBoxListViewOpening);
+            this.contextMenuStripTextBoxSourceView.Opened += new System.EventHandler(this.MenuOpened);
+            // 
+            // toolStripMenuItemGoToListView
+            // 
+            this.toolStripMenuItemGoToListView.Name = "toolStripMenuItemGoToListView";
+            this.toolStripMenuItemGoToListView.Size = new System.Drawing.Size(284, 22);
+            this.toolStripMenuItemGoToListView.Text = "Go to list view";
+            this.toolStripMenuItemGoToListView.Click += new System.EventHandler(this.toolStripMenuItemGoToListView_Click);
             // 
             // panelVideoPlayer
             // 
@@ -5232,6 +5263,7 @@ namespace Nikse.SubtitleEdit.Forms
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            this.contextMenuStripTextBoxSourceView.ResumeLayout(false);
             this.panelVideoPlayer.ResumeLayout(false);
             this.contextMenuStripEmpty.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -5268,6 +5300,8 @@ namespace Nikse.SubtitleEdit.Forms
         private Nikse.SubtitleEdit.Controls.SubtitleListView SubtitleListview1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TextBox textBoxSource;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripTextBoxSourceView;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemGoToListView;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.ToolStripButton toolStripButtonFileOpen;
