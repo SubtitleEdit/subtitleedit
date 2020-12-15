@@ -10,97 +10,95 @@ using Nikse.SubtitleEdit.Core.Common;
 namespace Nikse.SubtitleEdit.Core.Translate
 {
 
-    public interface ITranslationUnit
+
+
+
+   
+
+    public class SentenceMergingTranslationProcessor : AbstractTranslationProcessor<SentenceMergingTranslationProcessor.Sentence>
     {
-        string GetText();
-
-    }
-
-
-    public class ParagraphWrapper
-    {
-        private Paragraph _paragraph;
-        public int Index { get;  }
-        public List<SentenceParagraphRelation> SentenceParagraphRelations { get; } = new List<SentenceParagraphRelation>();
-
-        public ParagraphWrapper(Paragraph paragraph, int index)
+        public class ParagraphWrapper
         {
-            this._paragraph = paragraph;
-            this.Index = index;
-        }
+            private Paragraph _paragraph;
+            public int Index { get; }
+            public List<SentenceParagraphRelation> SentenceParagraphRelations { get; } = new List<SentenceParagraphRelation>();
 
-        public string GenerateTargetText()
-        {
-            return string.Join(" ", SentenceParagraphRelations.ConvertAll(x => x.Translation));
-        }
-    }
-
-
-    public class SentenceParagraphRelation
-    {
-        public string Text { get; }
-        public string Translation { get; set; } = "";
-        public ParagraphWrapper ParagraphWrapper { get; }
-
-        public SentenceParagraphRelation(string text, ParagraphWrapper paragraphWrapper)
-        {
-            paragraphWrapper.SentenceParagraphRelations.Add(this);
-            this.ParagraphWrapper = paragraphWrapper;
-            this.Text = text;
-        }
-
-    }
-
-    public class Sentence : ITranslationUnit
-    {
-        public List<SentenceParagraphRelation> SentenceParagraphs = new List<SentenceParagraphRelation>();
-
-        public string GetText()
-        {
-            string text = string.Join(" ", SentenceParagraphs.ConvertAll(e => e.Text));
-            text = Regex.Replace(text, @"\s+", " "); //replace new lines and multiple spaces to a single space
-            text = text.Trim();
-            return text;
-        }
-
-        /**
-         * divides the full sentence in multiple chunks and assigns them to the source paragraphs.
-         * It tries to split by percentage equivalent to fit the length of the source paragraph
-         */
-        public void SetTranslation(string targetText)
-        {
-            var delimiterChars = new char[] { ' ', ' ' };
-            List<int> chunksTextLength = SentenceParagraphs.ConvertAll(x => x.Text.Length);
-            int overallSourceLength = Enumerable.Sum(chunksTextLength);
-
-            int currentSentenceParagraph = 0;
-            SentenceParagraphs[0].Translation = "";
-            int currentSourceChunkEndPosition = chunksTextLength[0];
-
-            for (int i = 0; i < targetText.Length; i++)
+            public ParagraphWrapper(Paragraph paragraph, int index)
             {
-                char charAt = targetText[i];
-                if (delimiterChars.Contains(charAt))
-                {
-                    double currentTargetPositionPercentage = (double)i / targetText.Length;
-                    double currentSourceChunkEndPositionPercentage = (double)currentSourceChunkEndPosition / overallSourceLength;
-                    if (currentTargetPositionPercentage > currentSourceChunkEndPositionPercentage)
-                    {
-                        currentSentenceParagraph++;
-                        SentenceParagraphs[currentSentenceParagraph].Translation = "";
-                        currentSourceChunkEndPosition += chunksTextLength[currentSentenceParagraph];
-                    }
-                }
+                this._paragraph = paragraph;
+                this.Index = index;
+            }
 
-                SentenceParagraphs[currentSentenceParagraph].Translation += charAt;
+            public string GenerateTargetText()
+            {
+                return string.Join(" ", SentenceParagraphRelations.ConvertAll(x => x.Translation));
             }
         }
 
-      
-    }
 
-    public class SentenceMergingTranslator : Translator<Sentence>
-    {
+        public class SentenceParagraphRelation
+        {
+            public string Text { get; }
+            public string Translation { get; set; } = "";
+            public ParagraphWrapper ParagraphWrapper { get; }
+
+            public SentenceParagraphRelation(string text, ParagraphWrapper paragraphWrapper)
+            {
+                paragraphWrapper.SentenceParagraphRelations.Add(this);
+                this.ParagraphWrapper = paragraphWrapper;
+                this.Text = text;
+            }
+
+        }
+
+        public class Sentence : ITranslationUnit
+        {
+            public List<SentenceParagraphRelation> SentenceParagraphs = new List<SentenceParagraphRelation>();
+
+            public string GetText()
+            {
+                string text = string.Join(" ", SentenceParagraphs.ConvertAll(e => e.Text));
+                text = Regex.Replace(text, @"\s+", " "); //replace new lines and multiple spaces to a single space
+                text = text.Trim();
+                return text;
+            }
+
+            /**
+             * divides the full sentence in multiple chunks and assigns them to the source paragraphs.
+             * It tries to split by percentage equivalent to fit the length of the source paragraph
+             */
+            public void SetTranslation(string targetText)
+            {
+                var delimiterChars = new char[] { ' ', ' ' };
+                List<int> chunksTextLength = SentenceParagraphs.ConvertAll(x => x.Text.Length);
+                int overallSourceLength = Enumerable.Sum(chunksTextLength);
+
+                int currentSentenceParagraph = 0;
+                SentenceParagraphs[0].Translation = "";
+                int currentSourceChunkEndPosition = chunksTextLength[0];
+
+                for (int i = 0; i < targetText.Length; i++)
+                {
+                    char charAt = targetText[i];
+                    if (delimiterChars.Contains(charAt))
+                    {
+                        double currentTargetPositionPercentage = (double)i / targetText.Length;
+                        double currentSourceChunkEndPositionPercentage = (double)currentSourceChunkEndPosition / overallSourceLength;
+                        if (currentTargetPositionPercentage > currentSourceChunkEndPositionPercentage)
+                        {
+                            currentSentenceParagraph++;
+                            SentenceParagraphs[currentSentenceParagraph].Translation = "";
+                            currentSourceChunkEndPosition += chunksTextLength[currentSentenceParagraph];
+                        }
+                    }
+
+                    SentenceParagraphs[currentSentenceParagraph].Translation += charAt;
+                }
+            }
+
+
+        }
+
         public override string ToString()
         {
             return "Sentence Merging";

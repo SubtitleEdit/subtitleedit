@@ -7,25 +7,27 @@ using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.Translate
 {
-    public class IndexedParagraph : ITranslationUnit
-    {
-        private readonly Paragraph _sourceParagraph;
-        public int Index { get;  }
+    
 
-        public IndexedParagraph(Paragraph sourceParagraph, int index)
+    public class SingleParagraphTranslationProcessor : AbstractTranslationProcessor<SingleParagraphTranslationProcessor.IndexedParagraph>
+    {
+        public class IndexedParagraph : ITranslationUnit
         {
-            this._sourceParagraph = sourceParagraph;
-            this.Index = index;
+            private readonly Paragraph _sourceParagraph;
+            public int Index { get; }
+
+            public IndexedParagraph(Paragraph sourceParagraph, int index)
+            {
+                this._sourceParagraph = sourceParagraph;
+                this.Index = index;
+            }
+
+            public string GetText()
+            {
+                return _sourceParagraph.Text;
+            }
         }
 
-        public string GetText()
-        {
-            return _sourceParagraph.Text;
-        }
-    }
-
-    public class SingleParagraphTranslator : Translator<IndexedParagraph>
-    {
         public override string ToString()
         {
             return "Single Paragraph";
