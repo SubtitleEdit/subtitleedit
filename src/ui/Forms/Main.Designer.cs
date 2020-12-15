@@ -247,7 +247,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemAutoTranslate = new System.Windows.Forms.ToolStripMenuItem();
             this.translatepoweredByMicrosoftToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.translateByGoogleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.translateFromSwedishToDanishToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.translateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -2300,7 +2299,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemAutoTranslate.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.translatepoweredByMicrosoftToolStripMenuItem,
             this.translateByGoogleToolStripMenuItem,
-            this.translateFromSwedishToDanishToolStripMenuItem,
             this.translateToolStripMenuItem
             });
             this.toolStripMenuItemAutoTranslate.Name = "toolStripMenuItemAutoTranslate";
@@ -2323,13 +2321,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.translateByGoogleToolStripMenuItem.Size = new System.Drawing.Size(402, 22);
             this.translateByGoogleToolStripMenuItem.Text = "Translate (powered by Google)...";
             this.translateByGoogleToolStripMenuItem.Click += new System.EventHandler(this.TranslateByGoogleToolStripMenuItemClick);
-            // 
-            // translateFromSwedishToDanishToolStripMenuItem
-            // 
-            this.translateFromSwedishToDanishToolStripMenuItem.Name = "translateFromSwedishToDanishToolStripMenuItem";
-            this.translateFromSwedishToDanishToolStripMenuItem.Size = new System.Drawing.Size(402, 22);
-            this.translateFromSwedishToDanishToolStripMenuItem.Text = "Translate from swedish to danish (powered by nikse.dk/mt)...";
-            this.translateFromSwedishToDanishToolStripMenuItem.Click += new System.EventHandler(this.TranslateFromSwedishToDanishToolStripMenuItemClick);
             // 
             // translateToolStripMenuItem
             // 
@@ -5365,7 +5356,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAutoTranslate;
         private System.Windows.Forms.ToolStripMenuItem translateByGoogleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem translateToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem translateFromSwedishToDanishToolStripMenuItem;
         private System.Windows.Forms.Timer timerStillTyping;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemVideo;
         private System.Windows.Forms.ToolStripMenuItem openVideoToolStripMenuItem;

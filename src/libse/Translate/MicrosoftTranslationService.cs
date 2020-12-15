@@ -208,7 +208,15 @@ namespace Nikse.SubtitleEdit.Core.Translate
             return results;
         }
 
+        public List<TranslationPair> GetSupportedSourceLanguages()
+        {
+            return this.GetTranslationPairs();
+        }
 
+        public List<TranslationPair> GetSupportedTargetLanguages()
+        {
+            return this.GetTranslationPairs();
+        }
 
 
         public int MaxTextSize => 1000;

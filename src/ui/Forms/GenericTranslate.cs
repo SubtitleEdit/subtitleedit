@@ -154,10 +154,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetupLanguageSettings()
         {
-            FillComboWithLanguages(comboBoxFrom);
+            FillComboWithLanguages(comboBoxFrom, _translationService.GetSupportedSourceLanguages());
             SelectLanguageCode(comboBoxFrom, _fromLanguageIsoCode);
 
-            FillComboWithLanguages(comboBoxTo);
+            FillComboWithLanguages(comboBoxTo, _translationService.GetSupportedTargetLanguages());
             SelectLanguageCode(comboBoxTo, _toLanguageIsoCode);
         }
 
@@ -431,10 +431,10 @@ namespace Nikse.SubtitleEdit.Forms
             return cleanText;
         }
 
-        public void FillComboWithLanguages(ComboBox comboBox)
+        public void FillComboWithLanguages(ComboBox comboBox, List<TranslationPair> languages)
         {
             comboBox.Items.Clear();
-            foreach (var bingLanguageCode in _translationService.GetTranslationPairs())
+            foreach (var bingLanguageCode in languages)
             {
                 comboBox.Items.Add(new ComboBoxItem(bingLanguageCode.Name, bingLanguageCode.Code));
             }

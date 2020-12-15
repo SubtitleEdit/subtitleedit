@@ -1539,7 +1539,6 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemAutoTranslate.Text = _language.Menu.AutoTranslate.Title;
             translateByGoogleToolStripMenuItem.Text = _language.Menu.AutoTranslate.TranslatePoweredByGoogle;
             translatepoweredByMicrosoftToolStripMenuItem.Text = _language.Menu.AutoTranslate.TranslatePoweredByMicrosoft;
-            translateFromSwedishToDanishToolStripMenuItem.Text = _language.Menu.AutoTranslate.TranslateFromSwedishToDanish;
 
             optionsToolStripMenuItem.Text = _language.Menu.Options.Title;
             settingsToolStripMenuItem.Text = _language.Menu.Options.Settings;
@@ -6840,111 +6839,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private static string GetTranslateStringFromNikseDk(string input)
-        {
-            WebRequest.DefaultWebProxy = Utilities.GetProxy();
-            //var request = WebRequest.Create("http://localhost:54942/MultiTranslator/TranslateForSubtitleEdit");
-            var request = WebRequest.Create("https://www.nikse.dk/MultiTranslator/TranslateForSubtitleEdit");
-            request.Method = "POST";
-            var postData = String.Format("languagePair={1}&text={0}", Utilities.UrlEncode(input), "svda");
-            var byteArray = Encoding.UTF8.GetBytes(postData);
-            request.ContentType = "application/x-www-form-urlencoded";
-            request.ContentLength = byteArray.Length;
-            using (var dataStream = request.GetRequestStream())
-            {
-                dataStream.Write(byteArray, 0, byteArray.Length);
-            }
-
-            using (var response = request.GetResponse())
-            using (var reader = new StreamReader(response.GetResponseStream()))
-            {
-                return reader.ReadToEnd();
-            }
-        }
-
-        private void TranslateFromSwedishToDanishToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            if (!IsSubtitleLoaded)
-            {
-                DisplaySubtitleNotLoadedMessage();
-                return;
-            }
-
-            bool isSwedish = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle) == "sv";
-            string promptText = _language.TranslateSwedishToDanish;
-            if (!isSwedish)
-            {
-                promptText = _language.TranslateSwedishToDanishWarning;
-            }
-
-            if (MessageBox.Show(promptText, Title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
-            {
-                try
-                {
-                    _subtitleAlternate = new Subtitle(_subtitle);
-                    _subtitleAlternateFileName = null;
-                    int firstSelectedIndex = 0;
-                    if (SubtitleListview1.SelectedItems.Count > 0)
-                    {
-                        firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
-                    }
-
-                    _subtitleListViewIndex = -1;
-
-                    Cursor.Current = Cursors.WaitCursor;
-                    ShowStatus(_language.TranslatingViaNikseDkMt);
-                    var sb = new StringBuilder();
-                    var output = new StringBuilder();
-                    foreach (var p in _subtitle.Paragraphs)
-                    {
-                        var s = p.Text.Replace(Environment.NewLine, "<br/>");
-                        s = "<p>" + s + "</p>";
-                        sb.Append(s);
-
-                        if (sb.Length > 9000)
-                        {
-                            output.Append(GetTranslateStringFromNikseDk(sb.ToString()));
-                            sb.Length = 0;
-                        }
-                    }
-
-                    if (sb.Length > 0)
-                    {
-                        output.Append(GetTranslateStringFromNikseDk(sb.ToString()));
-                    }
-
-                    MakeHistoryForUndo(_language.BeforeSwedishToDanishTranslation);
-                    var result = output.ToString();
-                    if (result.Length > 0)
-                    {
-                        int index = 0;
-                        foreach (var s in result.Split(new[] { "<p>", "</p>" }, StringSplitOptions.RemoveEmptyEntries))
-                        {
-                            if (index < _subtitle.Paragraphs.Count)
-                            {
-                                _subtitle.Paragraphs[index].Text = s.Trim();
-                            }
-
-                            index++;
-                        }
-
-                        ShowSource();
-                        SubtitleListview1.ShowAlternateTextColumn(_languageGeneral.OriginalText);
-                        SubtitleListview1.AutoSizeAllColumns(this);
-                        SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                        ShowStatus(_language.TranslationFromSwedishToDanishComplete);
-                        SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex, true);
-                        _converted = true;
-                    }
-                }
-                catch
-                {
-                    ShowStatus(_language.TranslationFromSwedishToDanishFailed);
-                }
-
-                Cursor.Current = Cursors.Default;
-            }
-        }
 
         /// <summary>
         /// Undo or Redo
