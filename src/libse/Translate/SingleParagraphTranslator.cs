@@ -35,11 +35,10 @@ namespace Nikse.SubtitleEdit.Core.Translate
 
         protected override IEnumerable<IndexedParagraph> ConstructTranslationUnits(List<Paragraph> sourceParagraphs)
         {
-            for (int i = 0; i < sourceParagraphs.Count; i++)
+            foreach (var sourceParagraph in sourceParagraphs)
             {
-                yield return new IndexedParagraph(sourceParagraphs[i], i);
+                yield return new IndexedParagraph(sourceParagraph, sourceParagraph.Number);
             }
-
         }
 
         protected override Dictionary<int, string> GetTargetParagraphs(List<IndexedParagraph> sourceTranslationUnits, List<string> targetTexts)

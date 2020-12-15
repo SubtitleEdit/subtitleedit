@@ -10,13 +10,11 @@ using Nikse.SubtitleEdit.Core.Common;
 namespace Nikse.SubtitleEdit.Core.Translate
 {
 
-
-
-
-   
-
     public class SentenceMergingTranslationProcessor : AbstractTranslationProcessor<SentenceMergingTranslationProcessor.Sentence>
     {
+
+        private static readonly char[] SentenceDelimiterChars = { '.', '?', '!' };
+
         public class ParagraphWrapper
         {
             private Paragraph _paragraph;
@@ -95,8 +93,6 @@ namespace Nikse.SubtitleEdit.Core.Translate
                     SentenceParagraphs[currentSentenceParagraph].Translation += charAt;
                 }
             }
-
-
         }
 
         public override string ToString()
@@ -106,19 +102,25 @@ namespace Nikse.SubtitleEdit.Core.Translate
 
         private static IEnumerable<Sentence> ConcatSentences(List<Paragraph> paragraphs)
         {
-            var delimiterChars = new char[] { '.', '?', '!' };
-            
-            List<Sentence> sentences = new List<Sentence>();
             Sentence currentSentence = new Sentence();
+            int lastParagraphNumber = Int16.MinValue;
 
-            for (var index = 0; index < paragraphs.Count; index++)
+            foreach (var paragraph in paragraphs)
             {
-                Paragraph paragraph = paragraphs[index];
+                if (lastParagraphNumber + 1 != paragraph.Number) //check if paragraphs belong sequentially together 
+                {
+                    if (currentSentence.GetText().Trim().Length > 0) //this check avoid to add empty Sentence
+                    {
+                        yield return currentSentence;
+                        currentSentence = new Sentence();
+                    }
+                }
 
-                var paragraphWrapper = new ParagraphWrapper(paragraph, index);
+                lastParagraphNumber = paragraph.Number;
+                var paragraphWrapper = new ParagraphWrapper(paragraph, paragraph.Number);
                 var text = paragraph.Text;
 
-                List<int> splitPositions = FindAllPositionsOf(text, delimiterChars);
+                var splitPositions = new List<int>(FindAllPositionsOf(text, SentenceDelimiterChars));
                 splitPositions = splitPositions.Select(i => i + 1).ToList(); //set the cut point after the delimiter to ensurer that the delimiter is always the end of a chunk
                 List<string> sentenceChunks = SplitAt(text, splitPositions).ToList();
                 sentenceChunks.RemoveAll(x => x.Trim().Length == 0); //remove empty chunks
@@ -126,36 +128,28 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 foreach (var sentenceChunk in sentenceChunks)
                 {
                     currentSentence.SentenceParagraphs.Add(new SentenceParagraphRelation(sentenceChunk, paragraphWrapper));
-                    if (sentenceChunk.IndexOfAny(delimiterChars) >=0)
+                    if (sentenceChunk.IndexOfAny(SentenceDelimiterChars) >=0)
                     {
-                        sentences.Add(currentSentence);
+                        yield return currentSentence;
                         currentSentence = new Sentence();
                     }
                 }
             }
             if (currentSentence.GetText().Trim().Length > 0) //this check avoid a empty last Sentence (could happen when the last chunk ends with a delimiter)
             {
-                sentences.Add(currentSentence);
-            }
-
-
-            foreach (var sentence in sentences)
-            {
-                yield return sentence;
+                yield return currentSentence;
             }
         }
 
-        private static List<int> FindAllPositionsOf(string text, char[] searchChars)
+        private static IEnumerable<int> FindAllPositionsOf(string text, char[] searchChars)
         {
-            var foundIndexes = new List<int>();
             for (int i = 0; i < text.Length; i++)
             {
                 if (searchChars.Contains(text[i]))
                 {
-                    foundIndexes.Add(i);
+                    yield return i;
                 }
             }
-            return foundIndexes;
         }
 
         public static string[] SplitAt(string source, List<int> positions)

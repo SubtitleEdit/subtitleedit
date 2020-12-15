@@ -258,9 +258,6 @@ namespace Nikse.SubtitleEdit.Forms
             return defaultFromLanguage;
         }
 
-
-
-
         private void buttonTranslate_Click(object sender, EventArgs e)
         {
             if (buttonTranslate.Text == Configuration.Settings.Language.General.Cancel)
@@ -299,11 +296,8 @@ namespace Nikse.SubtitleEdit.Forms
                 var selectedParagraphs=_subtitle.Paragraphs.GetRange(startIndex, _subtitle.Paragraphs.Count - startIndex);
                 translator.Translate(_translationService, _fromLanguageIsoCode, _toLanguageIsoCode, selectedParagraphs, targetParagraphs =>
                 {
-                    int index = targetParagraphs.Keys.First()+ startIndex;
-                    FillTranslatedText(targetParagraphs.Values, index, index + targetParagraphs.Count - 1);
-                    index += targetParagraphs.Count;
-                    progressBar1.Value = index;
-                    progressBar1.Refresh();
+                    FillTranslatedText(targetParagraphs);
+                    progressBar1.Value += targetParagraphs.Count;
                     Application.DoEvents();
                     return _breakTranslation;
                 });
@@ -347,23 +341,25 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void FillTranslatedText(IEnumerable<string> translatedLines, int start, int end)
+        private void FillTranslatedText(Dictionary<int, string> targetTexts)
         {
-            int index = start;
-            foreach (string s in translatedLines)
+            int lastIndex = 0;
+            foreach (var targetText in targetTexts)
             {
-                if (index < TranslatedSubtitle.Paragraphs.Count)
-                {
-                    var cleanText = CleanText(s, index);
-                    TranslatedSubtitle.Paragraphs[index].Text = cleanText;
-                }
-                index++;
+                int paragraphNumber = targetText.Key;
+                string paragraphTargetText = targetText.Value;
+                lastIndex=TranslatedSubtitle.Paragraphs.FindIndex(x => x.Number == paragraphNumber);
+
+                var cleanText = CleanText(paragraphTargetText, lastIndex);
+                TranslatedSubtitle.Paragraphs[lastIndex].Text = cleanText;
             }
             subtitleListViewTo.BeginUpdate();
             subtitleListViewTo.Fill(TranslatedSubtitle);
-            subtitleListViewTo.SelectIndexAndEnsureVisible(end);
+            subtitleListViewTo.SelectIndexAndEnsureVisible(lastIndex);
             subtitleListViewTo.EndUpdate();
         }
+
+       
 
         private string CleanText(string s, int index)
         {

@@ -219,9 +219,15 @@ namespace Nikse.SubtitleEdit.Core.Translate
         }
 
 
-        public int MaxTextSize => 1000;
+        public int GetMaxTextSize()
+        {
+            return 1000;
+        }
 
-        public int MaximumRequestArraySize => 25;
+        public int GetMaximumRequestArraySize()
+        {
+            return 25;
+        }
 
         public override string ToString()
         {

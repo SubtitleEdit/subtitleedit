@@ -3122,7 +3122,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void linkLabelBingSubscribe_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            UiUtil.OpenUrl(MicrosoftTranslator.SignUpUrl);
+            UiUtil.OpenUrl(MicrosoftTranslationService.SignUpUrl);
         }
 
         private void ValidateShortcut(object sender, EventArgs e)

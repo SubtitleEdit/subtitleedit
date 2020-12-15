@@ -15,8 +15,15 @@ namespace Nikse.SubtitleEdit.Core.Translate
     {
         private readonly string _apiKey;
 
-        public int MaxTextSize => 1000; //brummochse: this value was the old translation method call. idk if this is really the correct value
-        public int MaximumRequestArraySize => 100; //brummochse: this value was the old default value for the old translation method. idk if this is really the correct value
+        public int GetMaxTextSize()
+        {
+            return 1000; //brummochse: this value was the old translation method call. idk if this is really the correct value
+        }
+
+        public int GetMaximumRequestArraySize()
+        {
+            return 100; //brummochse: this value was the old default value for the old translation method. idk if this is really the correct value
+        }
 
         public GoogleTranslator2(string apiKey)
         {

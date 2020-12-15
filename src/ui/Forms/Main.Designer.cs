@@ -324,6 +324,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemGoogleMicrosoftTranslateSelLine = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemTranslateSelected = new System.Windows.Forms.ToolStripMenuItem();
             this.googleTranslateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.genericTranslateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.microsoftBingTranslateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.adjustDisplayTimeForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fixCommonErrorsInSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -2918,6 +2919,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.toolStripMenuItemTranslateSelected.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.googleTranslateToolStripMenuItem,
+            this.genericTranslateToolStripMenuItem,
             this.microsoftBingTranslateToolStripMenuItem});
             this.toolStripMenuItemTranslateSelected.Name = "toolStripMenuItemTranslateSelected";
             this.toolStripMenuItemTranslateSelected.Size = new System.Drawing.Size(284, 22);
@@ -2929,6 +2931,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.googleTranslateToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
             this.googleTranslateToolStripMenuItem.Text = "Google translate...";
             this.googleTranslateToolStripMenuItem.Click += new System.EventHandler(this.googleTranslateToolStripMenuItem_Click);
+            // 
+            // genericTranslateToolStripMenuItem
+            // 
+            this.genericTranslateToolStripMenuItem.Name = "genericTranslateToolStripMenuItem";
+            this.genericTranslateToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
+            this.genericTranslateToolStripMenuItem.Text = "translate...";
+            this.genericTranslateToolStripMenuItem.Click += new System.EventHandler(this.TranslateSelectedLinesToolStripMenuItemClick);
+
             // 
             // microsoftBingTranslateToolStripMenuItem
             // 
@@ -5651,6 +5661,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.PictureBox pictureBoxBookmark;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemTranslateSelected;
         private System.Windows.Forms.ToolStripMenuItem googleTranslateToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem genericTranslateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem microsoftBingTranslateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemBookmark;
         private System.Windows.Forms.ToolStripMenuItem removeAllFormattingsToolStripMenuItem;
