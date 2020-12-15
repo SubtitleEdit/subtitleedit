@@ -6,10 +6,10 @@ namespace Nikse.SubtitleEdit.Core.Translate
 {
     public interface ITranslationService : ITranslationStrategy
     {
+        List<TranslationPair> GetSupportedSourceLanguages();
+        List<TranslationPair> GetSupportedTargetLanguages();
 
 
-        
-         List<string> Init();
-
+        List<string> Init();
     }
 }

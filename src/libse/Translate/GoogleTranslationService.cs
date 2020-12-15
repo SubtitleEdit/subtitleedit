@@ -29,9 +29,15 @@ namespace Nikse.SubtitleEdit.Core.Translate
         }
 
 
-        //  Translate(, , new GoogleTranslator1(), Configuration.Settings.Tools.GoogleApiV1ChunkSize),100;
+        public List<TranslationPair> GetSupportedSourceLanguages()
+        {
+            return this.GetTranslationPairs();
+        }
 
-        //Translate(, , new GoogleTranslator2(), 1000,100);
+        public List<TranslationPair> GetSupportedTargetLanguages()
+        {
+            return this.GetTranslationPairs();
+        }
 
         public List<string> Init()
         {
