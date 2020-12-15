@@ -1621,6 +1621,7 @@
                     public string EditBookmark { get; set; }
                     public string RemoveBookmark { get; set; }
                     public string GoToSourceView { get; set; }
+                    public string GoToListView { get; set; }
                 }
 
                 public FileMenu File { get; set; }

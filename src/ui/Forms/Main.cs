@@ -1595,6 +1595,7 @@ namespace Nikse.SubtitleEdit.Forms
             copyOriginalTextToCurrentToolStripMenuItem.Text = _language.Menu.ContextMenu.ColumnCopyOriginalTextToCurrent;
             toolStripMenuItemBookmark.Text = Configuration.Settings.Language.Settings.ToggleBookmarksWithComment;
             toolStripMenuItemGoToSourceView.Text = _language.Menu.ContextMenu.GoToSourceView;
+            toolStripMenuItemGoToListView.Text = _language.Menu.ContextMenu.GoToListView;
 
             splitLineToolStripMenuItem.Text = _language.Menu.ContextMenu.Split;
             toolStripMenuItemMergeLines.Text = _language.Menu.ContextMenu.MergeSelectedLines;
@@ -5070,7 +5071,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void textBoxSource_KeyUp(object sender, KeyEventArgs e)
+        private void TextBoxSource_KeyUp(object sender, KeyEventArgs e)
         {
             ShowSourceLineNumber();
         }
@@ -21166,6 +21167,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemBookmark.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleBookmarksWithText);
             toolStripMenuItemGoToSourceView.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleView);
             toolStripMenuItemEmptyGoToSourceView.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleView);
+            toolStripMenuItemGoToListView.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleView);
 
             spellCheckToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheck);
             findDoubleWordsToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheckFindDoubleWords);
@@ -22591,27 +22593,62 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GetFocusedTextBox().SelectAll();
+            if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+            {
+                textBoxSource.SelectAll();
+            }
+            else
+            {
+                GetFocusedTextBox().SelectAll();
+            }
         }
 
         private void cutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GetFocusedTextBox().Cut();
+            if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+            {
+                textBoxSource.Cut();
+            }
+            else
+            {
+                GetFocusedTextBox().Cut();
+            }
         }
 
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GetFocusedTextBox().Copy();
+            if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+            {
+                textBoxSource.Copy();
+            }
+            else
+            {
+                GetFocusedTextBox().Copy();
+            }
         }
 
         private void PasteToolStripMenuItemClick(object sender, EventArgs e)
         {
-            GetFocusedTextBox().Paste();
+            if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+            {
+                textBoxSource.Paste();
+            }
+            else
+            {
+                GetFocusedTextBox().Paste();
+            }
         }
 
         private void DeleteToolStripMenuItemClick(object sender, EventArgs e)
         {
-            GetFocusedTextBox().SelectedText = string.Empty;
+            if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+            {
+                textBoxSource.SelectedText = string.Empty;
+            }
+            else
+            {
+                GetFocusedTextBox().SelectedText = string.Empty;
+            }
         }
 
         private void NormalToolStripMenuItem1Click(object sender, EventArgs e)
@@ -28496,6 +28533,11 @@ namespace Nikse.SubtitleEdit.Forms
         private void toolStripMenuItemGoToSourceView_Click(object sender, EventArgs e)
         {
             tabControlSubtitle.SelectedIndex = TabControlSourceView;
+        }
+
+        private void toolStripMenuItemGoToListView_Click(object sender, EventArgs e)
+        {
+            tabControlSubtitle.SelectedIndex = TabControlListView;
         }
 
         private void RunActionOnAllParagraphs(Func<Paragraph, string> action, string historyMessage)

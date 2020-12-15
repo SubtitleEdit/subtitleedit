@@ -1767,6 +1767,7 @@ namespace Nikse.SubtitleEdit.Core
                         EditBookmark = "Edit bookmark",
                         RemoveBookmark = "Remove bookmark",
                         GoToSourceView = "Go to source view",
+                        GoToListView = "Go to list view"
                     }
                 },
 
