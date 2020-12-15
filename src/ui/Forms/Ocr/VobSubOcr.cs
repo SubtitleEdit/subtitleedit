@@ -324,6 +324,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private Subtitle _bdnXmlOriginal;
         private Subtitle _bdnXmlSubtitle;
+        private XmlDocument _bdnXmlDocument;
         private string _bdnFileName;
         private bool _isSon;
 
@@ -2075,7 +2076,23 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             if (_bdnXmlSubtitle != null)
-            { //TODO: FIX 
+            {
+                var p = _subtitle.GetParagraphOrDefault(index);
+                if (p != null && p.Extra != null)
+                {
+                    var parts = p.Extra.Split(',');
+                    if (parts.Length == 2)
+                    {
+                        left = int.Parse(parts[0]);
+                        top = int.Parse(parts[1]);
+                        var bmp = GetSubtitleBitmap(index, false);
+                        width = bmp.Width;
+                        height = bmp.Height;
+                        bmp.Dispose();
+                        return;
+                    }
+                }
+
                 left = 0;
                 top = 0;
                 width = 0;
@@ -2157,6 +2174,69 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 var item = _spList[index];
                 width = item.Picture.ImageDisplayArea.Width;
                 height = item.Picture.ImageDisplayArea.Bottom;
+                return;
+            }
+
+            if (_bdnXmlSubtitle != null && _bdnFileName != null)
+            {
+                width = 0;
+                height = 0;
+                try
+                {
+                    if (_bdnXmlDocument == null)
+                    {
+                        _bdnXmlDocument = new XmlDocument { XmlResolver = null };
+                        _bdnXmlDocument.Load(_bdnFileName);
+                    }
+
+                    var formatNode = _bdnXmlDocument.DocumentElement.SelectSingleNode("Description/Format");
+                    var videoFormat = formatNode?.Attributes["VideoFormat"].InnerText;
+                    if (videoFormat == "480i" || videoFormat == "480p")
+                    {
+                        width = 720; // not certain
+                        height = 480;
+                    }
+                    else if (videoFormat == "576i" || videoFormat == "576p")
+                    {
+                        width = 720; // not certain
+                        height = 576;
+                    }
+                    else if (videoFormat == "720i" || videoFormat == "720p")
+                    {
+                        width = 1280;
+                        height = 720;
+                    }
+                    else if (videoFormat == "1080i" || videoFormat == "1080p")
+                    {
+                        width = 1920;
+                        height = 1080;
+                    }
+                    else if (videoFormat == "2160i" || videoFormat == "2160p")
+                    {
+                        width = 3840;
+                        height = 2160;
+                    }
+                    else if (videoFormat == "4320i" || videoFormat == "4320p")
+                    {
+                        width = 7680;
+                        height = 4320;
+                    }
+                    else if (videoFormat.Contains("x"))
+                    {
+                        var parts = videoFormat.Split('x');
+                        if (parts.Length == 2)
+                        {
+                            width = int.Parse(parts[0]);
+                            height = int.Parse(parts[1]);
+                        }
+                    }
+                }
+                catch
+                {
+                    width = 0;
+                    height = 0;
+                }
+
                 return;
             }
 
