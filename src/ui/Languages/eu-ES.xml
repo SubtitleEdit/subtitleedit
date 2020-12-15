@@ -1794,8 +1794,8 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <GoToBookmark>Joan lastermarkara</GoToBookmark>
     <GoToPreviousBookmark>Joan aurreko lastermarkara</GoToPreviousBookmark>
     <GoToNextBookmark>Joan hurrengo lastermarkara</GoToNextBookmark>
-    <ChooseProfile>Hautatu profila</ChooseProfile>
-    <DuplicateLine>Bikoiztu lerroa</DuplicateLine>
+    <GeneralChooseProfile>Hautatu profila</GeneralChooseProfile>
+    <GeneralDuplicateLine>Bikoiztu lerroa</GeneralDuplicateLine>
     <FontInUi>EI Hizkia</FontInUi>
     <ShowFrameRate>Erakutsi frame neurria tresnabarran</ShowFrameRate>
     <DefaultFrameRate>Berezko frame neurria:</DefaultFrameRate>

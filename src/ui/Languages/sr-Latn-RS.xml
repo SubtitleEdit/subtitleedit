@@ -1772,7 +1772,7 @@ da uređujete određeni prevod sa drugim ljudima.</Information>
     <GoToBookmark>Idi na marker</GoToBookmark>
     <GoToPreviousBookmark>Idi na prethodni marker</GoToPreviousBookmark>
     <GoToNextBookmark>Idi na sledeći marker</GoToNextBookmark>
-    <ChooseProfile>Izaberi profil</ChooseProfile>
+    <GeneralChooseProfile>Izaberi profil</GeneralChooseProfile>
     <FontInUi>UI Font</FontInUi>
     <ShowFrameRate>Prikaži broj kadrova u traci sa alatkama</ShowFrameRate>
     <DefaultFrameRate>Podrazumevani broj kadrova</DefaultFrameRate>

@@ -1834,8 +1834,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <GoToBookmark>Перейти в закладки</GoToBookmark>
     <GoToPreviousBookmark>Перейти к предыдущей закладке</GoToPreviousBookmark>
     <GoToNextBookmark>Перейти к следующей закладке</GoToNextBookmark>
-    <ChooseProfile>Выберите профиль</ChooseProfile>
-    <DuplicateLine>Дублировать линию</DuplicateLine>
+    <GeneralChooseProfile>Выберите профиль</GeneralChooseProfile>
+    <GeneralDuplicateLine>Дублировать линию</GeneralDuplicateLine>
     <FontInUi>Шрифты для Интерфейса Пользователя (UI)</FontInUi>
     <ShowFrameRate>Показывать частоту кадров в панели инструментов</ShowFrameRate>
     <DefaultFrameRate>Частота кадров по умолчанию</DefaultFrameRate>
