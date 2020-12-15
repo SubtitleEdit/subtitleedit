@@ -1,11 +1,10 @@
-﻿using Nikse.SubtitleEdit.Core;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Common;
 
-namespace Nikse.SubtitleEdit.Forms
+namespace Nikse.SubtitleEdit.Forms.Options
 {
     public sealed partial class SettingsProfileExport : Form
     {

@@ -4588,7 +4588,7 @@ namespace Nikse.SubtitleEdit.Forms
             var oldSubtitleAlignment = Configuration.Settings.General.CenterSubtitleInTextBox;
             var oldSubtitleTextBoxHtmlColor = Configuration.Settings.General.SubtitleTextBoxHtmlColor.ToArgb().ToString();
             var oldSubtitleTextBoxAssaColor = Configuration.Settings.General.SubtitleTextBoxAssColor.ToArgb().ToString();
-            using (var settings = new Settings())
+            using (var settings = new Options.Settings())
             {
                 settings.Initialize(Icon, toolStripButtonFileNew.Image, toolStripButtonFileOpen.Image, toolStripButtonSave.Image, toolStripButtonSaveAs.Image, toolStripButtonFind.Image,
                     toolStripButtonReplace.Image, toolStripButtonFixCommonErrors.Image, toolStripButtonRemoveTextForHi.Image, toolStripButtonVisualSync.Image,
@@ -17932,7 +17932,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ChangeLanguageToolStripMenuItemClick(object sender, EventArgs e)
         {
-            using (var cl = new ChooseLanguage())
+            using (var cl = new Options.ChooseLanguage())
             {
                 if (cl.ShowDialog(this) == DialogResult.OK)
                 {
