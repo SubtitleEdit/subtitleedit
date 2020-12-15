@@ -1501,7 +1501,11 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
         private void contextMenuStripListView_Opening(object sender, CancelEventArgs e)
         {
-            adjustAllTimesForSelectedLinesToolStripMenuItem.Visible = subtitleListView1.SelectedItems.Count > 1;
+            var selectedCount = subtitleListView1.SelectedItems.Count;
+            adjustAllTimesForSelectedLinesToolStripMenuItem.Visible = selectedCount > 1;
+            insertToolStripMenuItem.Visible = selectedCount == 1;
+            insertAfterToolStripMenuItem.Visible = selectedCount == 1;
+            insertSubtitleAfterThisLineToolStripMenuItem.Visible = selectedCount == 1;
             oCRTextsforOverviewOnlyToolStripMenuItem.Visible = File.Exists(_nOcrFileName);
         }
 
@@ -1837,6 +1841,79 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             }
 
             p.Text = sb.ToString().Trim();
+        }
+
+        private void centerSelectedLinesHorizontallyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (subtitleListView1.SelectedItems.Count < 1)
+            {
+                return;
+            }
+
+            var idx = subtitleListView1.SelectedItems[0].Index;
+            for (int i = 0; i < subtitleListView1.SelectedIndices.Count; i++)
+            {
+                var index = subtitleListView1.SelectedIndices[i];
+                var extra = _extra[index];
+                var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : _binSubtitles[index].GetBitmap();
+                extra.X = (int)Math.Round(numericUpDownScreenWidth.Value / 2.0m - bmp.Width / 2.0m);
+
+                if (index == idx)
+                {
+                    ShowCurrentScaledImage(bmp, extra);
+                    numericUpDownX.Value = extra.X;
+                }
+
+                bmp.Dispose();
+            }
+        }
+
+        private void topAlignSelectedLinesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (subtitleListView1.SelectedItems.Count < 1)
+            {
+                return;
+            }
+
+            var idx = subtitleListView1.SelectedItems[0].Index;
+            for (int i = 0; i < subtitleListView1.SelectedIndices.Count; i++)
+            {
+                var index = subtitleListView1.SelectedIndices[i];
+                var extra = _extra[index];
+                extra.Y = (int)Math.Round(numericUpDownScreenHeight.Value * 0.05m);
+
+                if (index == idx)
+                {
+                    var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : _binSubtitles[index].GetBitmap();
+                    ShowCurrentScaledImage(bmp, extra);
+                    numericUpDownY.Value = extra.Y;
+                }
+            }
+        }
+
+        private void bottomAlignSelectedLinesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (subtitleListView1.SelectedItems.Count < 1)
+            {
+                return;
+            }
+
+            var idx = subtitleListView1.SelectedItems[0].Index;
+            for (int i = 0; i < subtitleListView1.SelectedIndices.Count; i++)
+            {
+                var index = subtitleListView1.SelectedIndices[i];
+                var extra = _extra[index];
+                var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : _binSubtitles[index].GetBitmap();
+                extra.Y = (int)Math.Round(numericUpDownScreenHeight.Value - bmp.Height - numericUpDownScreenHeight.Value * 0.05m);
+
+                if (index == idx)
+                {
+                    ShowCurrentScaledImage(bmp, extra);
+                    numericUpDownY.Value = extra.Y;
+                }
+
+                bmp.Dispose();
+            }
         }
     }
 }

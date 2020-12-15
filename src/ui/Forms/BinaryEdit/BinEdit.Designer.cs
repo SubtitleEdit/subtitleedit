@@ -58,6 +58,10 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.insertToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.insertAfterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.centerSelectedLineshorizontallyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.topAlignSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bottomAlignSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.insertSubtitleAfterThisLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.adjustAllTimesForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.oCRTextsforOverviewOnlyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -386,11 +390,15 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.insertToolStripMenuItem,
             this.insertAfterToolStripMenuItem,
             this.toolStripSeparator3,
+            this.centerSelectedLineshorizontallyToolStripMenuItem,
+            this.topAlignSelectedLinesToolStripMenuItem,
+            this.bottomAlignSelectedLinesToolStripMenuItem,
+            this.toolStripSeparator5,
             this.insertSubtitleAfterThisLineToolStripMenuItem,
             this.adjustAllTimesForSelectedLinesToolStripMenuItem,
             this.oCRTextsforOverviewOnlyToolStripMenuItem});
             this.contextMenuStripListView.Name = "contextMenuStripListView";
-            this.contextMenuStripListView.Size = new System.Drawing.Size(263, 142);
+            this.contextMenuStripListView.Size = new System.Drawing.Size(263, 236);
             this.contextMenuStripListView.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripListView_Opening);
             // 
             // deleteToolStripMenuItem
@@ -418,6 +426,32 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
             this.toolStripSeparator3.Size = new System.Drawing.Size(259, 6);
+            // 
+            // centerSelectedLineshorizontallyToolStripMenuItem
+            // 
+            this.centerSelectedLineshorizontallyToolStripMenuItem.Name = "centerSelectedLineshorizontallyToolStripMenuItem";
+            this.centerSelectedLineshorizontallyToolStripMenuItem.Size = new System.Drawing.Size(262, 22);
+            this.centerSelectedLineshorizontallyToolStripMenuItem.Text = "Center selected lines (horizontally) ";
+            this.centerSelectedLineshorizontallyToolStripMenuItem.Click += new System.EventHandler(this.centerSelectedLinesHorizontallyToolStripMenuItem_Click);
+            // 
+            // topAlignSelectedLinesToolStripMenuItem
+            // 
+            this.topAlignSelectedLinesToolStripMenuItem.Name = "topAlignSelectedLinesToolStripMenuItem";
+            this.topAlignSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(262, 22);
+            this.topAlignSelectedLinesToolStripMenuItem.Text = "Top align selected lines";
+            this.topAlignSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.topAlignSelectedLinesToolStripMenuItem_Click);
+            // 
+            // bottomAlignSelectedLinesToolStripMenuItem
+            // 
+            this.bottomAlignSelectedLinesToolStripMenuItem.Name = "bottomAlignSelectedLinesToolStripMenuItem";
+            this.bottomAlignSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(262, 22);
+            this.bottomAlignSelectedLinesToolStripMenuItem.Text = "Bottom align selected lines";
+            this.bottomAlignSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.bottomAlignSelectedLinesToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(259, 6);
             // 
             // insertSubtitleAfterThisLineToolStripMenuItem
             // 
@@ -802,5 +836,9 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private System.Windows.Forms.ToolStripMenuItem undoChangesForThisElementToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem oCRTextsforOverviewOnlyToolStripMenuItem;
         private System.Windows.Forms.Label labelVideoInfo;
+        private System.Windows.Forms.ToolStripMenuItem centerSelectedLineshorizontallyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem topAlignSelectedLinesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem bottomAlignSelectedLinesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
     }
 }
