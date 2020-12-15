@@ -309,6 +309,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         // DVB (from transport stream)
         private List<TransportStreamSubtitle> _dvbSubtitles;
         private Color _dvbSubColor = Color.Transparent;
+        private bool _transportStreamUseColor;
 
         // DVB (from transport stream inside mkv)
         private List<DvbSubPes> _dvbPesSubtitles;
@@ -1742,7 +1743,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     var nDvbBmp = new NikseBitmap(dvbBmp);
                     nDvbBmp.CropTopTransparent(2);
                     nDvbBmp.CropTransparentSidesAndBottom(2, true);
-                    if (checkBoxTransportStreamGetColorAndSplit.Checked)
+                    if (_transportStreamUseColor)
                     {
                         _dvbSubColor = nDvbBmp.GetBrightestColorWhiteIsTransparent();
                     }
@@ -1769,7 +1770,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     var nDvbBmp = new NikseBitmap(dvbBmp);
                     nDvbBmp.CropTopTransparent(2);
                     nDvbBmp.CropTransparentSidesAndBottom(2, true);
-                    if (checkBoxTransportStreamGetColorAndSplit.Checked)
+                    if (_transportStreamUseColor)
                     {
                         _dvbSubColor = nDvbBmp.GetBrightestColorWhiteIsTransparent();
                     }
@@ -4888,7 +4889,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void ButtonOkClick(object sender, EventArgs e)
         {
             _okClicked = true; // don't ask about discard changes
-            if (_dvbSubtitles != null && checkBoxTransportStreamGetColorAndSplit.Checked)
+            if (_dvbSubtitles != null && _transportStreamUseColor)
             {
                 MergeDvbForEachSubImage();
             }
@@ -5237,7 +5238,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
                 }
 
-                if (_dvbSubtitles != null && checkBoxTransportStreamGetColorAndSplit.Checked)
+                if (_dvbSubtitles != null && _transportStreamUseColor)
                 {
                     if (_dvbSubColor != Color.Transparent)
                     {
@@ -5395,7 +5396,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
             }
 
-            if (_dvbSubtitles != null && checkBoxTransportStreamGetColorAndSplit.Checked)
+            if (_dvbSubtitles != null && _transportStreamUseColor)
             {
                 if (_dvbSubColor != Color.Transparent)
                 {
@@ -8947,6 +8948,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void checkBoxTransportStreamGetColorAndSplit_CheckedChanged(object sender, EventArgs e)
         {
+            _transportStreamUseColor = checkBoxTransportStreamGetColorAndSplit.Checked;
+
             if (_ocrMethodIndex == _ocrMethodTesseract4)
             {
                 _abort = true;
