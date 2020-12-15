@@ -134,8 +134,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void InitParagraphHandlingStrategies()
         {
-            this.comboBoxParagraphHandling.Items.Add(new SentenceMergingTranslator());
-            this.comboBoxParagraphHandling.Items.Add(new SingleParagraphTranslator());
+            this.comboBoxParagraphHandling.Items.Add(new SentenceMergingTranslationProcessor());
+            this.comboBoxParagraphHandling.Items.Add(new SingleParagraphTranslationProcessor());
             this.comboBoxParagraphHandling.SelectedIndex = 1;
         }
 
@@ -280,7 +280,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void Translate()
         {
-           var translator = (ITranslator)comboBoxParagraphHandling.SelectedItem;
+           var translator = (ITranslationProcessor)comboBoxParagraphHandling.SelectedItem;
 
             buttonOK.Enabled = false;
             buttonCancel.Enabled = false;
