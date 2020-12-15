@@ -6,7 +6,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 {
     public class TransportStreamSubtitle : IBinaryParagraph, IBinaryParagraphWithPosition
     {
-        public Position TransportStreamPosition;
+        public Position TransportStreamPosition { get; set; }
 
         public ulong StartMilliseconds { get; set; }
 

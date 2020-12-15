@@ -86,8 +86,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     string start = node.Attributes["InTC"].InnerText;
                     string end = node.Attributes["OutTC"].InnerText;
                     var textBuilder = new StringBuilder();
+                    var position = string.Empty;
                     foreach (XmlNode graphic in node.SelectNodes("Graphic"))
                     {
+                        if (graphic.Attributes["X"] != null || graphic.Attributes["Y"] != null)
+                        {
+                            position = graphic.Attributes["X"].InnerText + "," + graphic.Attributes["Y"].InnerText;
+                        }
+
                         textBuilder.AppendLine(graphic.InnerText);
                     }
 
@@ -95,6 +101,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (node.Attributes["Forced"] != null && node.Attributes["Forced"].Value.Equals("true", StringComparison.OrdinalIgnoreCase))
                     {
                         p.Forced = true;
+                    }
+
+                    if (!string.IsNullOrEmpty(position))
+                    {
+                        p.Extra = position;
                     }
 
                     subtitle.Paragraphs.Add(p);
