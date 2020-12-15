@@ -1,7 +1,5 @@
-﻿namespace Nikse.SubtitleEdit.Forms
+﻿namespace Nikse.SubtitleEdit.Forms.Options
 {
-    using Nikse.SubtitleEdit.Core;
-
     sealed partial class SettingsMpv
     {
         /// <summary>
