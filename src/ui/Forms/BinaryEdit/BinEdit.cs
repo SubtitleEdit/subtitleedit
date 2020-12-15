@@ -1600,7 +1600,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 }
             }
 
-            closeVideoToolStripMenuItem_Click(null, null);
+            CloseVideo();
         }
 
         private bool HasChanges()
@@ -1610,13 +1610,22 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
         private void closeVideoToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            CloseVideo();
+            subtitleListView1_SelectedIndexChanged(null, null);
+        }
+
+        private void CloseVideo()
+        {
             timerSubtitleOnVideo.Stop();
+
             Application.DoEvents();
             if (videoPlayerContainer1.VideoPlayer != null)
             {
                 videoPlayerContainer1.Pause();
                 videoPlayerContainer1.VideoPlayer.DisposeVideoPlayer();
+                videoPlayerContainer1.VideoPlayer = null;
             }
+
             Application.DoEvents();
             _videoFileName = null;
             videoPlayerContainer1.Visible = false;
