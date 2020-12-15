@@ -5188,12 +5188,6 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/SettingsName":
                     language.Settings.SettingsName = reader.Value;
                     break;
-                case "Settings/Help":
-                    language.Settings.Help = reader.Value;
-                    break;
-                case "Settings/UnbreakNoSpace":
-                    language.Settings.UnbreakNoSpace = reader.Value;
-                    break;
                 case "Settings/ToggleBookmarks":
                     language.Settings.ToggleBookmarks = reader.Value;
                     break;
@@ -5217,6 +5211,12 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/DuplicateLine":
                     language.Settings.DuplicateLine = reader.Value;
+                    break;
+                case "Settings/ToggleView":
+                    language.Settings.ToggleView = reader.Value;
+                    break;
+                case "Settings/Help":
+                    language.Settings.Help = reader.Value;
                     break;
                 case "Settings/FontInUi":
                     language.Settings.FontInUi = reader.Value;
@@ -6297,6 +6297,9 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/MainTextBoxUnbreak":
                     language.Settings.MainTextBoxUnbreak = reader.Value;
+                    break;
+                case "Settings/MainTextBoxUnbreakNoSpace":
+                    language.Settings.MainTextBoxUnbreakNoSpace = reader.Value;
                     break;
                 case "Settings/MainFileSaveAll":
                     language.Settings.MainFileSaveAll = reader.Value;

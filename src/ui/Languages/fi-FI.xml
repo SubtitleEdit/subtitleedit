@@ -1902,8 +1902,8 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <GoToBookmark>Siirry kirjanmerkkiin</GoToBookmark>
     <GoToPreviousBookmark>Siirry edelliseen kirjanmerkkiin</GoToPreviousBookmark>
     <GoToNextBookmark>Siirry seuraavaan kirjanmerkkiin</GoToNextBookmark>
-    <ChooseProfile>Valitse profiili</ChooseProfile>
-    <DuplicateLine>Kahdenna rivi</DuplicateLine>
+    <GeneralChooseProfile>Valitse profiili</GeneralChooseProfile>
+    <GeneralDuplicateLine>Kahdenna rivi</GeneralDuplicateLine>
     <FontInUi>Käyttöliittymäfontti</FontInUi>
     <ShowFrameRate>Näytä kuvataajuus</ShowFrameRate>
     <DefaultFrameRate>Kuvataajuus (oletus)</DefaultFrameRate>

@@ -9110,110 +9110,6 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.ResumeLayout();
         }
 
-        private void ButtonAutoBreakClick(object sender, EventArgs e)
-        {
-            string language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
-            string languageOriginal = string.Empty;
-            if (_subtitleAlternate != null)
-            {
-                languageOriginal = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleAlternate);
-            }
-
-            var textCaretPos = textBoxListViewText.SelectionStart;
-
-            if (SubtitleListview1.SelectedItems.Count > 1)
-            {
-                bool historyAdded = false;
-                SubtitleListview1.BeginUpdate();
-                foreach (int index in SubtitleListview1.SelectedIndices)
-                {
-                    var p = _subtitle.GetParagraphOrDefault(index);
-                    if (p != null)
-                    {
-                        var oldText = p.Text;
-                        var newText = Utilities.AutoBreakLine(p.Text, language);
-                        if (oldText != newText)
-                        {
-                            if (!historyAdded)
-                            {
-                                historyAdded = true;
-                                MakeHistoryForUndo(_language.Controls.AutoBreak.RemoveChar('&'));
-                            }
-
-                            p.Text = newText;
-                            SubtitleListview1.SetText(index, p.Text);
-                        }
-
-                        if (_subtitleAlternate != null && SubtitleListview1.IsAlternateTextColumnVisible && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
-                        {
-                            var original = Utilities.GetOriginalParagraph(index, p, _subtitleAlternate.Paragraphs);
-                            if (original != null)
-                            {
-                                oldText = original.Text;
-                                newText = Utilities.AutoBreakLine(original.Text, language);
-                                if (oldText != newText)
-                                {
-                                    if (!historyAdded)
-                                    {
-                                        historyAdded = true;
-                                        MakeHistoryForUndo(_language.Controls.AutoBreak.RemoveChar('&'));
-                                    }
-
-                                    original.Text = newText;
-                                    SubtitleListview1.SetAlternateText(index, original.Text);
-                                }
-                            }
-                        }
-
-                        SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, index, p);
-                    }
-                }
-
-                SubtitleListview1.EndUpdate();
-                RefreshSelectedParagraph();
-            }
-            else
-            {
-                var fixedText = Utilities.AutoBreakLine(textBoxListViewText.Text, language);
-                var makeHistory = textBoxListViewText.Text != fixedText;
-                if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
-                {
-                    var alternateFixedText = Utilities.AutoBreakLine(textBoxListViewTextAlternate.Text, languageOriginal);
-                    if (!makeHistory)
-                    {
-                        makeHistory = textBoxListViewTextAlternate.Text != alternateFixedText;
-                    }
-
-                    if (makeHistory)
-                    {
-                        MakeHistoryForUndo(_language.Controls.AutoBreak.RemoveChar('&'));
-                        textBoxListViewText.Text = fixedText;
-                    }
-
-                    textBoxListViewTextAlternate.Text = alternateFixedText;
-                }
-                else if (makeHistory)
-                {
-                    MakeHistoryForUndo(_language.Controls.AutoBreak.RemoveChar('&'));
-                    textBoxListViewText.Text = fixedText;
-                }
-            }
-
-            var s = textBoxListViewText.Text;
-            var startText = s.Substring(0, Math.Min(textCaretPos, s.Length));
-            var numberOfNewLines = Utilities.CountTagInText(startText, Environment.NewLine);
-            textCaretPos += numberOfNewLines;
-            if (s.Length > textCaretPos && '\n' == s[textCaretPos])
-            {
-                textCaretPos--;
-            }
-
-            if (textCaretPos > 0)
-            {
-                textBoxListViewText.SelectionStart = textCaretPos;
-            }
-        }
-
         private int _lastNumberOfNewLines = -1;
         private int _lastNumberOfNewLinesAlternate = -1;
 
@@ -9408,16 +9304,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (e.Modifiers == Keys.None && e.KeyCode == Keys.Enter && numberOfLines > Configuration.Settings.General.MaxNumberOfLines)
             {
-                e.SuppressKeyPress = true;
-            }
-            else if (e.KeyData == _shortcuts.MainTextBoxAutoBreak)
-            {
-                BreakUnbreakTextBox(false, textBoxListViewText);
-                e.SuppressKeyPress = true;
-            }
-            else if (e.KeyData == _shortcuts.MainTextBoxUnbreak)
-            {
-                BreakUnbreakTextBox(true, textBoxListViewText);
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainTextBoxBreakAtCursorPosition)
@@ -11502,12 +11388,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void ButtonUnBreakClick(object sender, EventArgs e)
-        {
-            Unbreak();
-        }
-
-        private void BreakUnbreakTextBox(bool unbreak, SETextBox tb)
+        private void BreakUnbreakTextBox(bool unbreak, SETextBox tb, bool removeNewLineOnly = false)
         {
             var textCaretPos = tb.SelectionStart;
             var startText = tb.Text.Substring(0, textCaretPos);
@@ -11515,7 +11396,14 @@ namespace Nikse.SubtitleEdit.Forms
             if (unbreak)
             {
                 textCaretPos -= numberOfNewLines;
-                tb.Text = Utilities.UnbreakLine(tb.Text);
+                if (removeNewLineOnly)
+                {
+                    tb.Text = tb.Text.Replace(Environment.NewLine, string.Empty);
+                }
+                else
+                {
+                    tb.Text = Utilities.UnbreakLine(tb.Text);
+                }
             }
             else
             {
@@ -11559,6 +11447,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             tb.SelectionStart = textCaretPos;
+        }
+
+        private void ButtonUnBreakClick(object sender, EventArgs e)
+        {
+            Unbreak();
         }
 
         private void Unbreak(bool removeNewLineOnly = false)
@@ -11640,7 +11533,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var makeHistory = textBoxListViewText.Text != fixedText;
                 if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
                 {
-                    var alternateFixedText = Utilities.UnbreakLine(textBoxListViewTextAlternate.Text);
+                    var alternateFixedText = removeNewLineOnly ? textBoxListViewText.Text.Replace(Environment.NewLine, string.Empty) : Utilities.UnbreakLine(textBoxListViewTextAlternate.Text);
                     if (!makeHistory)
                     {
                         makeHistory = textBoxListViewTextAlternate.Text != alternateFixedText;
@@ -11663,6 +11556,115 @@ namespace Nikse.SubtitleEdit.Forms
 
             _doAutoBreakOnTextChanged = true;
             textBoxListViewText.SelectionStart = textCaretPos;
+        }
+
+        private void ButtonAutoBreakClick(object sender, EventArgs e)
+        {
+            AutoBreak();
+        }
+
+        private void AutoBreak()
+        {
+            string language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
+            string languageOriginal = string.Empty;
+            if (_subtitleAlternate != null)
+            {
+                languageOriginal = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleAlternate);
+            }
+
+            var textCaretPos = textBoxListViewText.SelectionStart;
+
+            if (SubtitleListview1.SelectedItems.Count > 1)
+            {
+                bool historyAdded = false;
+                SubtitleListview1.BeginUpdate();
+                foreach (int index in SubtitleListview1.SelectedIndices)
+                {
+                    var p = _subtitle.GetParagraphOrDefault(index);
+                    if (p != null)
+                    {
+                        var oldText = p.Text;
+                        var newText = Utilities.AutoBreakLine(p.Text, language);
+                        if (oldText != newText)
+                        {
+                            if (!historyAdded)
+                            {
+                                historyAdded = true;
+                                MakeHistoryForUndo(_language.Controls.AutoBreak.RemoveChar('&'));
+                            }
+
+                            p.Text = newText;
+                            SubtitleListview1.SetText(index, p.Text);
+                        }
+
+                        if (_subtitleAlternate != null && SubtitleListview1.IsAlternateTextColumnVisible && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                        {
+                            var original = Utilities.GetOriginalParagraph(index, p, _subtitleAlternate.Paragraphs);
+                            if (original != null)
+                            {
+                                oldText = original.Text;
+                                newText = Utilities.AutoBreakLine(original.Text, language);
+                                if (oldText != newText)
+                                {
+                                    if (!historyAdded)
+                                    {
+                                        historyAdded = true;
+                                        MakeHistoryForUndo(_language.Controls.AutoBreak.RemoveChar('&'));
+                                    }
+
+                                    original.Text = newText;
+                                    SubtitleListview1.SetAlternateText(index, original.Text);
+                                }
+                            }
+                        }
+
+                        SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, index, p);
+                    }
+                }
+
+                SubtitleListview1.EndUpdate();
+                RefreshSelectedParagraph();
+            }
+            else
+            {
+                var fixedText = Utilities.AutoBreakLine(textBoxListViewText.Text, language);
+                var makeHistory = textBoxListViewText.Text != fixedText;
+                if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                {
+                    var alternateFixedText = Utilities.AutoBreakLine(textBoxListViewTextAlternate.Text, languageOriginal);
+                    if (!makeHistory)
+                    {
+                        makeHistory = textBoxListViewTextAlternate.Text != alternateFixedText;
+                    }
+
+                    if (makeHistory)
+                    {
+                        MakeHistoryForUndo(_language.Controls.AutoBreak.RemoveChar('&'));
+                        textBoxListViewText.Text = fixedText;
+                    }
+
+                    textBoxListViewTextAlternate.Text = alternateFixedText;
+                }
+                else if (makeHistory)
+                {
+                    MakeHistoryForUndo(_language.Controls.AutoBreak.RemoveChar('&'));
+                    textBoxListViewText.Text = fixedText;
+                }
+            }
+
+            var s = textBoxListViewText.Text;
+            var startText = s.Substring(0, Math.Min(textCaretPos, s.Length));
+            var numberOfNewLines = Utilities.CountTagInText(startText, Environment.NewLine);
+            textCaretPos += numberOfNewLines;
+            if (s.Length > textCaretPos && '\n' == s[textCaretPos])
+            {
+                textCaretPos--;
+            }
+
+            if (textCaretPos > 0)
+            {
+                textBoxListViewText.SelectionStart = textCaretPos;
+            }
         }
 
         private void TabControlSubtitleSelectedIndexChanged(object sender, EventArgs e)
@@ -14038,6 +14040,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     ToggleDashes();
                 }
+
                 e.SuppressKeyPress = true;
             }
             else if (!toolStripMenuItemRtlUnicodeControlChars.Visible && _shortcuts.MainEditFixRTLViaUnicodeChars == e.KeyData && inListView)
@@ -14210,9 +14213,55 @@ namespace Nikse.SubtitleEdit.Forms
                     e.SuppressKeyPress = true;
                 }
             }
-            else if (_shortcuts.MainUnbreakNoSpace == e.KeyData)
+            else if (_shortcuts.MainTextBoxAutoBreak == e.KeyData && inListView)
             {
-                Unbreak(true);
+                if (textBoxListViewText.Focused)
+                {
+                    BreakUnbreakTextBox(false, textBoxListViewText);
+                }
+                else if (textBoxListViewTextAlternate.Focused)
+                {
+                    BreakUnbreakTextBox(false, textBoxListViewTextAlternate);
+                }
+                else
+                {
+                    AutoBreak();
+                }
+
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainTextBoxUnbreak == e.KeyData && inListView)
+            {
+                if (textBoxListViewText.Focused)
+                {
+                    BreakUnbreakTextBox(true, textBoxListViewText);
+                }
+                else if (textBoxListViewTextAlternate.Focused)
+                {
+                    BreakUnbreakTextBox(true, textBoxListViewTextAlternate);
+                }
+                else
+                {
+                    Unbreak();
+                }
+
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainTextBoxUnbreakNoSpace == e.KeyData && inListView)
+            {
+                if (textBoxListViewText.Focused)
+                {
+                    BreakUnbreakTextBox(true, textBoxListViewText, true);
+                }
+                else if (textBoxListViewTextAlternate.Focused)
+                {
+                    BreakUnbreakTextBox(true, textBoxListViewTextAlternate, true);
+                }
+                else
+                {
+                    Unbreak(true);
+                }
+
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainGeneralToggleBookmarks == e.KeyData)
@@ -14248,6 +14297,19 @@ namespace Nikse.SubtitleEdit.Forms
             else if (_shortcuts.MainGeneralDuplicateLine == e.KeyData && SubtitleListview1.SelectedItems.Count == 1)
             {
                 DuplicateLine();
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainGeneralToggleView == e.KeyData)
+            {
+                if (inListView)
+                {
+                    tabControlSubtitle.SelectedIndex = TabControlSourceView;
+                }
+                else
+                {
+                    tabControlSubtitle.SelectedIndex = TabControlListView;
+                }
+
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainGeneralFileSaveAll == e.KeyData)
@@ -24038,16 +24100,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (e.Modifiers == Keys.None && e.KeyCode == Keys.Enter && numberOfLines > Configuration.Settings.General.MaxNumberOfLines)
             {
-                e.SuppressKeyPress = true;
-            }
-            else if (e.KeyData == _shortcuts.MainTextBoxAutoBreak)
-            {
-                BreakUnbreakTextBox(false, textBoxListViewTextAlternate);
-                e.SuppressKeyPress = true;
-            }
-            else if (e.KeyData == _shortcuts.MainTextBoxUnbreak)
-            {
-                BreakUnbreakTextBox(true, textBoxListViewTextAlternate);
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainTextBoxBreakAtCursorPosition)

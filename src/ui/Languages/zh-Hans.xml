@@ -1920,8 +1920,8 @@ Command line: {1} {2}
     <GoToBookmark>转到书签</GoToBookmark>
     <GoToPreviousBookmark>转到上一书签</GoToPreviousBookmark>
     <GoToNextBookmark>转到下一书签</GoToNextBookmark>
-    <ChooseProfile>选择预设方案</ChooseProfile>
-    <DuplicateLine>复制行</DuplicateLine>
+    <GeneralChooseProfile>选择预设方案</GeneralChooseProfile>
+    <GeneralDuplicateLine>复制行</GeneralDuplicateLine>
     <FontInUi>用户界面字体</FontInUi>
     <ShowFrameRate>在工具栏显示帧率</ShowFrameRate>
     <DefaultFrameRate>默认帧率</DefaultFrameRate>
