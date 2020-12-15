@@ -1625,6 +1625,7 @@ namespace Nikse.SubtitleEdit.Forms
             visualSyncSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.VisualSyncSelectedLines;
             toolStripMenuItemGoogleMicrosoftTranslateSelLine.Text = _language.Menu.ContextMenu.GoogleAndMicrosoftTranslateSelectedLine;
             googleTranslateToolStripMenuItem.Text = _language.Menu.AutoTranslate.TranslatePoweredByGoogle;
+            genericTranslateToolStripMenuItem.Text = "_language.Menu.AutoTranslate.TranslatePoweredByGeneric";
             microsoftBingTranslateToolStripMenuItem.Text = _language.Menu.AutoTranslate.TranslatePoweredByMicrosoft;
             toolStripMenuItemTranslateSelected.Text = _language.Menu.ContextMenu.TranslateSelectedLines;
             adjustDisplayTimeForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.AdjustDisplayDurationForSelectedLines;
@@ -6707,6 +6708,22 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+     
+
+        private void microsoftBingTranslateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TranslateViaGoogle(true, false);
+        }
+
+        private void translatepoweredByMicrosoftToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TranslateViaGoogle(false, false);
+        }
+
+        private void googleTranslateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TranslateViaGoogle(true, true);
+        }
         private void TranslateByGoogleToolStripMenuItemClick(object sender, EventArgs e)
         {
             TranslateViaGoogle(false, true);
@@ -21799,10 +21816,7 @@ namespace Nikse.SubtitleEdit.Forms
             GoBackSeconds(-(double)numericUpDownSecAdjust2.Value);
         }
 
-        private void translatepoweredByMicrosoftToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            TranslateViaGoogle(false, false);
-        }
+     
 
         private void AudioWaveform_Click(object sender, EventArgs e)
         {
@@ -28338,16 +28352,9 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
         }
+        
+      
 
-        private void googleTranslateToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            TranslateViaGoogle(true, true);
-        }
-
-        private void microsoftBingTranslateToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            TranslateViaGoogle(true, false);
-        }
 
         private void toolStripMenuItemBookmark_Click(object sender, EventArgs e)
         {
@@ -28888,10 +28895,20 @@ namespace Nikse.SubtitleEdit.Forms
             splitContainerListViewAndText_SplitterMoved(null, null);
         }
 
+        private void TranslateSelectedLinesToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            var onlySelectedLines = true;
+            Translate(onlySelectedLines);
+        }
 
         private void TranslateToolStripMenuItemClick(object sender, EventArgs e)
         {
             var onlySelectedLines = false;
+            Translate(onlySelectedLines);
+        }
+
+        private void Translate(bool onlySelectedLines)
+        {
             if (!IsSubtitleLoaded)
             {
                 DisplaySubtitleNotLoadedMessage();
@@ -28902,7 +28919,6 @@ namespace Nikse.SubtitleEdit.Forms
             ReloadFromSourceView(); //brummochse: ?
             using (var translateDialog = new GenericTranslate())
             {
-
                 SaveSubtitleListviewIndices();
                 string title = "";
 
@@ -28911,7 +28927,6 @@ namespace Nikse.SubtitleEdit.Forms
                     var selectedLines = new Subtitle();
                     foreach (int index in SubtitleListview1.SelectedIndices)
                     {
-
                         selectedLines.Paragraphs.Add(_subtitle.Paragraphs[index]);
                     }
 
@@ -28925,27 +28940,26 @@ namespace Nikse.SubtitleEdit.Forms
                             if (original != null)
                             {
                                 paragraphs.Add(original);
-
                             }
                         }
 
                         if (paragraphs.Count == selectedLines.Paragraphs.Count)
                         {
-                            translateDialog.Initialize(new Subtitle(paragraphs), selectedLines, title,  GetCurrentEncoding());
+                            translateDialog.Initialize(new Subtitle(paragraphs), selectedLines, title, GetCurrentEncoding());
                         }
                         else
                         {
-                            translateDialog.Initialize(selectedLines, null, title,  GetCurrentEncoding());
+                            translateDialog.Initialize(selectedLines, null, title, GetCurrentEncoding());
                         }
                     }
                     else
                     {
-                        translateDialog.Initialize(selectedLines, null, title,  GetCurrentEncoding());
+                        translateDialog.Initialize(selectedLines, null, title, GetCurrentEncoding());
                     }
                 }
                 else
                 {
-                    translateDialog.Initialize(_subtitle, null, title,  GetCurrentEncoding());
+                    translateDialog.Initialize(_subtitle, null, title, GetCurrentEncoding());
                 }
 
                 if (translateDialog.ShowDialog(this) == DialogResult.OK)

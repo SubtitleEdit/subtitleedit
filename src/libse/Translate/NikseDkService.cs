@@ -92,8 +92,14 @@ namespace Nikse.SubtitleEdit.Core.Translate
             }
         }
 
-        public int MaxTextSize => 9000; //brummochse: found this value in the old source code.. is it correct?
-        public int MaximumRequestArraySize => 1000;//brummochse: actually, when I understand the service correctly, no limit is required because it is only limited by text size
+        public int GetMaxTextSize() {
+            return 9000; //brummochse: found this value in the old source code.. is it correct?
+        }
+
+        public int GetMaximumRequestArraySize()
+        {
+            return 1000; //brummochse: actually, when I understand the service correctly, no limit is required because it is only limited by text size
+        }
 
         public List<string> Init()
         {

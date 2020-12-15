@@ -80,8 +80,8 @@ namespace Nikse.SubtitleEdit.Core.Translate
         {
             List<TranslationChunk> chunks = new List<TranslationChunk>();
 
-            int maxTextSize = translationService.MaxTextSize;
-            int maximumRequestArrayLength = translationService.MaximumRequestArraySize;
+            int maxTextSize = translationService.GetMaxTextSize();
+            int maximumRequestArrayLength = translationService.GetMaximumRequestArraySize();
 
             TranslationChunk currentChunk = new TranslationChunk();
 

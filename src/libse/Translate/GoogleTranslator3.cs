@@ -23,8 +23,17 @@ namespace Nikse.SubtitleEdit.Core.Translate
             _projectNumberOrId = projectNumberOrId;
         }
 
-        public int MaxTextSize => 1000; //brummochse: in the old code there is no value defined for Google trasnlate V3. this is simply the value from V2 in lack of better knowledge
-        public int MaximumRequestArraySize => 100; //brummochse: in the old code there is no value defined for Google trasnlate V3. this is simply the value from V2 in lack of better knowledge
+        public  int  GetMaxTextSize()
+        {
+            return 1000; //brummochse: in the old code there is no value defined for Google trasnlate V3. this is simply the value from V2 in lack of better knowledge
+        }
+
+
+        public int GetMaximumRequestArraySize()
+        {
+            return 100; //brummochse: in the old code there is no value defined for Google trasnlate V3. this is simply the value from V2 in lack of better knowledge
+
+        }
 
         public List<TranslationPair> GetTranslationPairs()
         {

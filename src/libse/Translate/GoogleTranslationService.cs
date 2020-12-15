@@ -18,14 +18,14 @@ namespace Nikse.SubtitleEdit.Core.Translate
             return GetName();
         }
 
-        public int MaxTextSize
+        public int GetMaxTextSize()
         {
-            get => _translationStrategy.MaxTextSize;
+            return _translationStrategy.GetMaxTextSize();
         }
 
-        public int MaximumRequestArraySize
+        public int GetMaximumRequestArraySize()
         {
-            get => _translationStrategy.MaximumRequestArraySize;
+            return _translationStrategy.GetMaximumRequestArraySize();
         }
 
 

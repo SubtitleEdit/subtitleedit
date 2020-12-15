@@ -126,7 +126,7 @@ namespace Nikse.SubtitleEdit.Forms
                 // ms translator
                 if (!string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorApiKey) && !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint))
                 {
-                    var translator = new MicrosoftTranslator(Configuration.Settings.Tools.MicrosoftTranslatorApiKey, Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint, Configuration.Settings.Tools.MicrosoftTranslatorCategory);
+                    var translator = new MicrosoftTranslationService(Configuration.Settings.Tools.MicrosoftTranslatorApiKey, Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint, Configuration.Settings.Tools.MicrosoftTranslatorCategory);
                     var result = translator.Translate(from, to, new List<Paragraph> { new Paragraph { Text = textBoxSourceText.Text } }, new StringBuilder());
                     buttonMicrosoft.Text = result[0];
                 }

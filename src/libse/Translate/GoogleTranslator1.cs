@@ -26,9 +26,15 @@ namespace Nikse.SubtitleEdit.Core.Translate
             return "Google translate (old)";
         }
 
-        public int MaxTextSize => Configuration.Settings.Tools.GoogleApiV1ChunkSize;
+        public int GetMaxTextSize()
+        {
+            return Configuration.Settings.Tools.GoogleApiV1ChunkSize;
+        }
 
-        public int MaximumRequestArraySize => 100;
+        public int GetMaximumRequestArraySize()
+        {
+            return 100;
+        }
 
         public string GetUrl()
         {
