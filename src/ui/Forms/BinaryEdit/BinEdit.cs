@@ -1317,7 +1317,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 var idx = subtitleListView1.SelectedItems[0].Index;
                 var extra = _extra[idx];
                 var widthAspect = numericUpDownScreenWidth.Value / panelBackground.Width;
-                var heightAspect = GetHeightAspect();
+                var heightAspect = GetHeightAspectFromUi();
                 extra.X = (int)Math.Round(pictureBoxMovableImage.Left * widthAspect);
                 extra.Y = (int)Math.Round(pictureBoxMovableImage.Top * heightAspect);
                 numericUpDownX.Value = extra.X;
@@ -1737,6 +1737,17 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             return (panelBackground.Height - controlHeight) / numericUpDownScreenHeight.Value;
         }
 
+        private decimal GetHeightAspectFromUi()
+        {
+            var controlHeight = 0;
+            if (!string.IsNullOrEmpty(_videoFileName))
+            {
+                controlHeight = videoPlayerContainer1.ControlsHeight;
+            }
+
+            return numericUpDownScreenHeight.Value / (panelBackground.Height - controlHeight);
+        }
+
         private void ShowCurrentScaledImage(Bitmap bmp, Extra extra)
         {
             var widthAspect = panelBackground.Width / numericUpDownScreenWidth.Value;
@@ -1887,7 +1898,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             {
                 var index = subtitleListView1.SelectedIndices[i];
                 var extra = _extra[index];
-                extra.Y = (int)Math.Round(numericUpDownScreenHeight.Value * 0.05m);
+                extra.Y = Configuration.Settings.Tools.BinEditVerticalMargin;
 
                 if (index == idx)
                 {
@@ -1911,7 +1922,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 var index = subtitleListView1.SelectedIndices[i];
                 var extra = _extra[index];
                 var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : GetBitmap(_binSubtitles[index]);
-                extra.Y = (int)Math.Round(numericUpDownScreenHeight.Value - bmp.Height - numericUpDownScreenHeight.Value * 0.05m);
+                extra.Y = (int)Math.Round(numericUpDownScreenHeight.Value - bmp.Height - Configuration.Settings.Tools.BinEditVerticalMargin);
 
                 if (index == idx)
                 {
@@ -2143,7 +2154,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                     }
 
                     panelBackground.BackColor = Configuration.Settings.Tools.BinEditBackgroundColor;
-                    
+
                     var idx = subtitleListView1.SelectedItems[0].Index;
                     var sub = _binSubtitles[idx];
                     var extra = _extra[idx];
