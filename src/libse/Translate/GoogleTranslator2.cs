@@ -165,14 +165,8 @@ namespace Nikse.SubtitleEdit.Core.Translate
             var format = "text";
             var input = new StringBuilder();
             var formatList = new List<Formatting>();
-            //bool skipNext = false;
             for (var index = 0; index < paragraphs.Count; index++)
             {
-                //if (skipNext)
-                //{
-                //    skipNext = false;
-                //    continue;
-                //}
 
                 var p = paragraphs[index];
                 var f = new Formatting();
@@ -189,25 +183,38 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 }
 
                 var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text, sourceLanguage), sourceLanguage, nextText);
-                //skipNext = f.SkipNext;
-                //if (!skipNext)
-                //{
-                    text = f.UnBreak(text, p.Text);
-                //}
+                text = f.UnBreak(text, p.Text);
 
                 input.Append("q=" + Utilities.UrlEncode(text));
             }
 
             string uri = $"{baseUrl}/?{input}&target={targetLanguage}&source={sourceLanguage}&format={format}&key={_apiKey}";
+            string content;
+            try
+            {
+                var request = WebRequest.Create(uri);
+                request.Proxy = Utilities.GetProxy();
+                request.ContentType = "application/json";
+                request.ContentLength = 0;
+                request.Method = "POST";
+                var response = request.GetResponse();
+                var reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
+                content = reader.ReadToEnd();
+            }
+            catch (WebException webException)
+            {
+                string message = "";
+                if (webException.Message.Contains("(400) Bad Request"))
+                {
+                    message = "API key invalid (or perhaps billing is not enabled)?";
+                } 
+                else if (webException.Message.Contains("(403) Forbidden."))
+                {
+                    message = "Perhaps billing is not enabled (or API key is invalid)?";
+                }
+                throw new TranslationException(message, webException);
+            }
 
-            var request = WebRequest.Create(uri);
-            request.Proxy = Utilities.GetProxy();
-            request.ContentType = "application/json";
-            request.ContentLength = 0;
-            request.Method = "POST";
-            var response = request.GetResponse();
-            var reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
-            string content = reader.ReadToEnd();
             var skipCount = 0;
             var resultList = new List<string>();
             var parser = new JsonParser();

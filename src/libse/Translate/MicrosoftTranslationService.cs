@@ -107,104 +107,100 @@ namespace Nikse.SubtitleEdit.Core.Translate
             {
                 url += "&category=" + _category.Trim();
             }
-
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-            httpWebRequest.Proxy = Utilities.GetProxy();
-            httpWebRequest.ContentType = "application/json";
-            httpWebRequest.Method = "POST";
-            httpWebRequest.Headers.Add("Authorization", "Bearer " + _accessToken);
-
-            var jsonBuilder = new StringBuilder();
-            jsonBuilder.Append("[");
-            bool isFirst = true;
-            //bool skipNext = false;
-            var formatList = new List<Formatting>();
-            for (var index = 0; index < paragraphs.Count; index++)
-            {
-                //if (skipNext)
-                //{
-                //    skipNext = false;
-                //    continue;
-                //}
-
-                var p = paragraphs[index];
-                if (!isFirst)
-                {
-                    jsonBuilder.Append(",");
-                }
-                else
-                {
-                    isFirst = false;
-                }
-
-                var nextText = string.Empty;
-                if (index < paragraphs.Count - 1 && paragraphs[index + 1].StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds < 200)
-                {
-                    nextText = paragraphs[index + 1].Text;
-                }
-
-                var f = new Formatting();
-                formatList.Add(f);
-                var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text, sourceLanguage), sourceLanguage, nextText);
-                //skipNext = f.SkipNext;
-                //if (!skipNext)
-                //{
-                    text = f.UnBreak(text, p.Text);
-                //}
-
-                jsonBuilder.Append("{ \"Text\":\"" + Json.EncodeJsonText(text) + "\"}");
-            }
-
-            jsonBuilder.Append("]");
-            var json = jsonBuilder.ToString();
-            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
-            {
-                streamWriter.Write(json);
-                streamWriter.Flush();
-                streamWriter.Close();
-            }
-
             var results = new List<string>();
-            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            var skipCount = 0;
-            using (var streamReader = new StreamReader(httpResponse.GetResponseStream() ?? throw new InvalidOperationException()))
+            try
             {
-                var result = streamReader.ReadToEnd();
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+                httpWebRequest.Proxy = Utilities.GetProxy();
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Method = "POST";
+                httpWebRequest.Headers.Add("Authorization", "Bearer " + _accessToken);
 
-                var parser = new JsonParser();
-                var x = (List<object>)parser.Parse(result);
-                foreach (var xElement in x)
+                var jsonBuilder = new StringBuilder();
+                jsonBuilder.Append("[");
+                bool isFirst = true;
+                var formatList = new List<Formatting>();
+                for (var index = 0; index < paragraphs.Count; index++)
                 {
-                    var dict = (Dictionary<string, object>)xElement;
-                    var y = (List<object>)dict["translations"];
-                    foreach (var o in y)
+                    var p = paragraphs[index];
+                    if (!isFirst)
                     {
-                        var textDics = (Dictionary<string, object>)o;
-                        var res = (string)textDics["text"];
+                        jsonBuilder.Append(",");
+                    }
+                    else
+                    {
+                        isFirst = false;
+                    }
 
-                        string nextText = null;
-                        if (formatList.Count > results.Count - skipCount)
+                    var nextText = string.Empty;
+                    if (index < paragraphs.Count - 1 && paragraphs[index + 1].StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds < 200)
+                    {
+                        nextText = paragraphs[index + 1].Text;
+                    }
+
+                    var f = new Formatting();
+                    formatList.Add(f);
+                    var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text, sourceLanguage), sourceLanguage, nextText);
+                    text = f.UnBreak(text, p.Text);
+                    jsonBuilder.Append("{ \"Text\":\"" + Json.EncodeJsonText(text) + "\"}");
+                }
+
+                jsonBuilder.Append("]");
+                var json = jsonBuilder.ToString();
+                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                {
+                    streamWriter.Write(json);
+                    streamWriter.Flush();
+                    streamWriter.Close();
+                }
+
+
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                var skipCount = 0;
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream() ?? throw new InvalidOperationException()))
+                {
+                    var result = streamReader.ReadToEnd();
+
+                    var parser = new JsonParser();
+                    var x = (List<object>)parser.Parse(result);
+                    foreach (var xElement in x)
+                    {
+                        var dict = (Dictionary<string, object>)xElement;
+                        var y = (List<object>)dict["translations"];
+                        foreach (var o in y)
                         {
-                            res = formatList[results.Count - skipCount].ReAddFormatting(res, out nextText);
+                            var textDics = (Dictionary<string, object>)o;
+                            var res = (string)textDics["text"];
 
-                            if (nextText == null)
+                            string nextText = null;
+                            if (formatList.Count > results.Count - skipCount)
                             {
-                                res = formatList[results.Count - skipCount].ReBreak(res, targetLanguage);
+                                res = formatList[results.Count - skipCount].ReAddFormatting(res, out nextText);
+
+                                if (nextText == null)
+                                {
+                                    res = formatList[results.Count - skipCount].ReBreak(res, targetLanguage);
+                                }
                             }
-                        }
 
-                        res = TranslationHelper.PostTranslate(res, targetLanguage);
+                            res = TranslationHelper.PostTranslate(res, targetLanguage);
 
-                        results.Add(res);
+                            results.Add(res);
 
-                        if (nextText != null)
-                        {
-                            results.Add(nextText);
-                            skipCount++;
+                            if (nextText != null)
+                            {
+                                results.Add(nextText);
+                                skipCount++;
+                            }
                         }
                     }
                 }
             }
+            catch (WebException webException)
+            {
+                throw new TranslationException(webException);
+            }
+
             return results;
         }
 

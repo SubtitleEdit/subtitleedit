@@ -43,144 +43,144 @@ namespace Nikse.SubtitleEdit.Core.Translate
 
         public List<string> Translate(string sourceLanguage, string targetLanguage, List<Paragraph> paragraphs, StringBuilder log)
         {
-            string result;
-            var input = new StringBuilder();
-            var formatList = new List<Formatting>();
-            //bool skipNext = false;
-            for (var index = 0; index < paragraphs.Count; index++)
-            {
-                //if (skipNext)
-                //{
-                //    skipNext = false;
-                //    continue;
-                //}
 
-                var p = paragraphs[index];
-                var f = new Formatting();
-                formatList.Add(f);
-                if (input.Length > 0)
+                string result;
+                var input = new StringBuilder();
+                var formatList = new List<Formatting>();
+                for (var index = 0; index < paragraphs.Count; index++)
                 {
-                    input.Append(" " + SplitChar + " ");
-                }
 
-                var nextText = string.Empty;
-                if (index < paragraphs.Count - 1 && paragraphs[index + 1].StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds < 200)
-                {
-                    nextText = paragraphs[index + 1].Text;
-                }
-
-                var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text.Replace(SplitChar.ToString(), string.Empty), sourceLanguage), sourceLanguage, nextText);
-                //skipNext = f.SkipNext;
-                //if (!skipNext)
-                //{
-                    text = f.UnBreak(text, p.Text);
-                //}
-
-                input.Append(text);
-            }
-
-            using (var wc = new WebClient())
-            {
-                string url = $"https://translate.googleapis.com/translate_a/single?client=gtx&sl={sourceLanguage}&tl={targetLanguage}&dt=t&q={Utilities.UrlEncode(input.ToString())}";
-                wc.Proxy = Utilities.GetProxy();
-                wc.Encoding = Encoding.UTF8;
-                wc.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
-                result = wc.DownloadString(url).Trim();
-            }
-
-            var sbAll = new StringBuilder();
-            int count = 0;
-            int i = 1;
-            int level = result.StartsWith('[') ? 1 : 0;
-            while (i < result.Length - 1)
-            {
-                var sb = new StringBuilder();
-                var start = false;
-                for (; i < result.Length - 1; i++)
-                {
-                    var c = result[i];
-                    if (start)
+                    var p = paragraphs[index];
+                    var f = new Formatting();
+                    formatList.Add(f);
+                    if (input.Length > 0)
                     {
-                        if (c == '"' && result[i - 1] != '\\')
+                        input.Append(" " + SplitChar + " ");
+                    }
+
+                    var nextText = string.Empty;
+                    if (index < paragraphs.Count - 1 && paragraphs[index + 1].StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds < 200)
+                    {
+                        nextText = paragraphs[index + 1].Text;
+                    }
+
+                    var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text.Replace(SplitChar.ToString(), string.Empty), sourceLanguage), sourceLanguage, nextText);
+                    text = f.UnBreak(text, p.Text);
+                    input.Append(text);
+                }
+
+                try
+                {
+                    using (var wc = new WebClient())
+                    {
+
+                        string url = $"https://translate.googleapis.com/translate_a/single?client=gtx&sl={sourceLanguage}&tl={targetLanguage}&dt=t&q={Utilities.UrlEncode(input.ToString())}";
+                        wc.Proxy = Utilities.GetProxy();
+                        wc.Encoding = Encoding.UTF8;
+                        wc.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
+                        result = wc.DownloadString(url).Trim();
+                    }
+                }
+                catch (WebException webException)
+                {
+                    throw new TranslationException("Free API quota exceeded?", webException);
+                }
+
+                var sbAll = new StringBuilder();
+                int count = 0;
+                int i = 1;
+                int level = result.StartsWith('[') ? 1 : 0;
+                while (i < result.Length - 1)
+                {
+                    var sb = new StringBuilder();
+                    var start = false;
+                    for (; i < result.Length - 1; i++)
+                    {
+                        var c = result[i];
+                        if (start)
                         {
-                            count++;
-                            if (count % 2 == 1 && level > 2 && level < 5) // even numbers are original text, level 3 is translation
+                            if (c == '"' && result[i - 1] != '\\')
                             {
-                                sbAll.Append(" " + sb);
+                                count++;
+                                if (count % 2 == 1 && level > 2 && level < 5) // even numbers are original text, level 3 is translation
+                                {
+                                    sbAll.Append(" " + sb);
+                                }
+
+                                i++;
+                                break;
                             }
 
-                            i++;
-                            break;
+                            sb.Append(c);
                         }
-                        sb.Append(c);
-                    }
-                    else if (c == '"')
-                    {
-                        start = true;
-                    }
-                    else if (c == '[')
-                    {
-                        level++;
-                    }
-                    else if (c == ']')
-                    {
-                        level--;
+                        else if (c == '"')
+                        {
+                            start = true;
+                        }
+                        else if (c == '[')
+                        {
+                            level++;
+                        }
+                        else if (c == ']')
+                        {
+                            level--;
+                        }
                     }
                 }
-            }
 
-            var res = sbAll.ToString().Trim();
-            res = Regex.Unescape(res);
-            var lines = res.SplitToLines().ToList();
-            var resultList = new List<string>();
-            for (var index = 0; index < lines.Count; index++)
-            {
-                var line = lines[index];
-                var s = Json.DecodeJsonText(line);
-                s = string.Join(Environment.NewLine, s.SplitToLines());
-                s = TranslationHelper.PostTranslate(s, targetLanguage);
-                s = s.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-                s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
-                s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
-                s = s.Replace(" " + Environment.NewLine, Environment.NewLine);
-                s = s.Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
-                string nextText = null;
-                if (formatList.Count > index)
+                var res = sbAll.ToString().Trim();
+                res = Regex.Unescape(res);
+                var lines = res.SplitToLines().ToList();
+                var resultList = new List<string>();
+                for (var index = 0; index < lines.Count; index++)
                 {
-                    s = formatList[index].ReAddFormatting(s, out nextText);
-                    if (nextText == null)
+                    var line = lines[index];
+                    var s = Json.DecodeJsonText(line);
+                    s = string.Join(Environment.NewLine, s.SplitToLines());
+                    s = TranslationHelper.PostTranslate(s, targetLanguage);
+                    s = s.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+                    s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
+                    s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
+                    s = s.Replace(" " + Environment.NewLine, Environment.NewLine);
+                    s = s.Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
+                    string nextText = null;
+                    if (formatList.Count > index)
                     {
-                        s = formatList[index].ReBreak(s, targetLanguage);
+                        s = formatList[index].ReAddFormatting(s, out nextText);
+                        if (nextText == null)
+                        {
+                            s = formatList[index].ReBreak(s, targetLanguage);
+                        }
+                    }
+
+                    resultList.Add(s);
+
+                    if (nextText != null)
+                    {
+                        resultList.Add(nextText);
                     }
                 }
 
-                resultList.Add(s);
-
-                if (nextText != null)
+                if (resultList.Count > paragraphs.Count)
                 {
-                    resultList.Add(nextText);
+                    var trimmedList = resultList.Where(p => !string.IsNullOrEmpty(p)).ToList();
+                    if (trimmedList.Count == paragraphs.Count)
+                    {
+                        return trimmedList;
+                    }
                 }
-            }
 
-            if (resultList.Count > paragraphs.Count)
-            {
-                var trimmedList = resultList.Where(p => !string.IsNullOrEmpty(p)).ToList();
-                if (trimmedList.Count == paragraphs.Count)
+                if (resultList.Count < paragraphs.Count)
                 {
-                    return trimmedList;
+                    var splitList = SplitMergedLines(resultList, paragraphs);
+                    if (splitList.Count == paragraphs.Count)
+                    {
+                        return splitList;
+                    }
                 }
-            }
 
-            if (resultList.Count < paragraphs.Count)
-            {
-                var splitList = SplitMergedLines(resultList, paragraphs);
-                if (splitList.Count == paragraphs.Count)
-                {
-                    return splitList;
-                }
-            }
-
-            return resultList;
+                return resultList;
+         
         }
 
         private static List<string> SplitMergedLines(List<string> input, List<Paragraph> paragraphs)
