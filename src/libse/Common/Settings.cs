@@ -2032,6 +2032,7 @@ $HorzAlign          =   Center
             GeneralMergeOriginalAndTranslation = "Control+Alt+Shift+M";
             GeneralGoToNextSubtitle = "Shift+Return";
             GeneralToggleBookmarksWithText = "Control+Shift+B";
+            GeneralToggleView = "F2";
             GeneralHelp = "F1";
             MainFileNew = "Control+N";
             MainFileOpen = "Control+O";
