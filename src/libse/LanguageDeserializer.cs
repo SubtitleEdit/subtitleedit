@@ -4141,17 +4141,17 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/Menu/ContextMenu/RemoveBookmark":
                     language.Main.Menu.ContextMenu.RemoveBookmark = reader.Value;
                     break;
+                case "Main/Menu/ContextMenu/GoToSourceView":
+                    language.Main.Menu.ContextMenu.GoToSourceView = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/GoToListView":
+                    language.Main.Menu.ContextMenu.GoToListView = reader.Value;
+                    break;
                 case "Main/Controls/SubtitleFormat":
                     language.Main.Controls.SubtitleFormat = reader.Value;
                     break;
                 case "Main/Controls/FileEncoding":
                     language.Main.Controls.FileEncoding = reader.Value;
-                    break;
-                case "Main/Controls/ListView":
-                    language.Main.Controls.ListView = reader.Value;
-                    break;
-                case "Main/Controls/SourceView":
-                    language.Main.Controls.SourceView = reader.Value;
                     break;
                 case "Main/Controls/UndoChangesInEditPanel":
                     language.Main.Controls.UndoChangesInEditPanel = reader.Value;

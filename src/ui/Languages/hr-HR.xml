@@ -1137,8 +1137,6 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <Controls>
       <SubtitleFormat>Oblik podnaslova:</SubtitleFormat>
       <FileEncoding>Kodni raspored:</FileEncoding>
-      <ListView>Popis</ListView>
-      <SourceView>Izvor</SourceView>
       <UndoChangesInEditPanel>&amp;Opozovi</UndoChangesInEditPanel>
       <Previous>&lt; &amp;Natrag</Previous>
       <Next>N&amp;aprijed &gt;</Next>

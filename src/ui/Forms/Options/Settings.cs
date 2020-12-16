@@ -1296,7 +1296,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 _shortcuts.Nodes.Add(listViewAndTextBoxNode);
             }
 
-            var listViewNode = new ShortcutNode(Configuration.Settings.Language.Main.Controls.ListView);
+            var listViewNode = new ShortcutNode(language.ListView);
             AddNode(listViewNode, language.MergeDialog, nameof(Configuration.Settings.Shortcuts.MainMergeDialog));
             AddNode(listViewNode, language.ToggleFocus, nameof(Configuration.Settings.Shortcuts.MainToggleFocus));
             AddNode(listViewNode, language.ToggleFocusWaveform, nameof(Configuration.Settings.Shortcuts.MainToggleFocusWaveform));

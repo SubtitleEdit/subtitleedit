@@ -263,7 +263,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemSplitterCheckForUpdates = new System.Windows.Forms.ToolStripSeparator();
             this.helpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.contextMenuStripListview = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.contextMenuStripListView = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.setStylesForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setActorForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAssStyles = new System.Windows.Forms.ToolStripMenuItem();
@@ -287,6 +287,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.moveTextUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.moveTextDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemBookmark = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemGoToSourceView = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemEmptyGoToSourceView = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.splitLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemMergeLines = new System.Windows.Forms.ToolStripMenuItem();
@@ -441,8 +443,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.insertSubtitleHereToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainerMain = new System.Windows.Forms.SplitContainer();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.tabControlSubtitle = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
             this.splitContainerListViewAndText = new System.Windows.Forms.SplitContainer();
             this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.imageListBookmarks = new System.Windows.Forms.ImageList(this.components);
@@ -519,8 +519,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxListViewText = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.labelDuration = new System.Windows.Forms.Label();
             this.labelAutoDuration = new System.Windows.Forms.Label();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.textBoxSource = new System.Windows.Forms.TextBox();
+            this.contextMenuStripTextBoxSourceView = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemGoToListView = new System.Windows.Forms.ToolStripMenuItem();
             this.panelVideoPlayer = new System.Windows.Forms.Panel();
             this.mediaPlayer = new Nikse.SubtitleEdit.Controls.VideoPlayerContainer();
             this.contextMenuStripEmpty = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -532,7 +533,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
-            this.contextMenuStripListview.SuspendLayout();
+            this.contextMenuStripListView.SuspendLayout();
             this.groupBoxVideo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarWaveformPosition)).BeginInit();
             this.panelWaveformControls.SuspendLayout();
@@ -557,8 +558,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.tabControlSubtitle.SuspendLayout();
-            this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerListViewAndText)).BeginInit();
             this.splitContainerListViewAndText.Panel1.SuspendLayout();
             this.splitContainerListViewAndText.Panel2.SuspendLayout();
@@ -568,7 +567,7 @@ namespace Nikse.SubtitleEdit.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBookmark)).BeginInit();
             this.contextMenuStripTextBoxListView.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).BeginInit();
-            this.tabPage2.SuspendLayout();
+            this.contextMenuStripTextBoxSourceView.SuspendLayout();
             this.panelVideoPlayer.SuspendLayout();
             this.contextMenuStripEmpty.SuspendLayout();
             this.SuspendLayout();
@@ -2450,7 +2449,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // contextMenuStripListview
             // 
-            this.contextMenuStripListview.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.contextMenuStripListView.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.setStylesForSelectedLinesToolStripMenuItem,
             this.setActorForSelectedLinesToolStripMenuItem,
             this.toolStripMenuItemAssStyles,
@@ -2465,6 +2464,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemCopySourceText,
             this.toolStripMenuItemColumn,
             this.toolStripMenuItemBookmark,
+            this.toolStripMenuItemGoToSourceView,
             this.toolStripSeparator7,
             this.splitLineToolStripMenuItem,
             this.toolStripMenuItemMergeLines,
@@ -2499,11 +2499,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.fixCommonErrorsInSelectedLinesToolStripMenuItem,
             this.changeCasingForSelectedLinesToolStripMenuItem,
             this.toolStripMenuItemSaveSelectedLines});
-            this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 964);
-            this.contextMenuStripListview.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
-            this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
-            this.contextMenuStripListview.Opened += new System.EventHandler(this.MenuOpened);
+            this.contextMenuStripListView.Name = "contextMenuStripListView";
+            this.contextMenuStripListView.Size = new System.Drawing.Size(285, 964);
+            this.contextMenuStripListView.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
+            this.contextMenuStripListView.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListViewOpening);
+            this.contextMenuStripListView.Opened += new System.EventHandler(this.MenuOpened);
             // 
             // setStylesForSelectedLinesToolStripMenuItem
             // 
@@ -2670,6 +2670,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemBookmark.Size = new System.Drawing.Size(284, 22);
             this.toolStripMenuItemBookmark.Text = "Bookmark...";
             this.toolStripMenuItemBookmark.Click += new System.EventHandler(this.toolStripMenuItemBookmark_Click);
+            // 
+            // toolStripMenuItemGoToSourceView
+            // 
+            this.toolStripMenuItemGoToSourceView.Name = "toolStripMenuItemGoToSourceView";
+            this.toolStripMenuItemGoToSourceView.Size = new System.Drawing.Size(284, 22);
+            this.toolStripMenuItemGoToSourceView.Text = "Go to source view";
+            this.toolStripMenuItemGoToSourceView.Click += new System.EventHandler(this.toolStripMenuItemGoToSourceView_Click);
             // 
             // toolStripSeparator7
             // 
@@ -4202,7 +4209,9 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.tabControlSubtitle);
+            this.splitContainer1.Panel1.Controls.Add(this.splitContainerListViewAndText);
+            this.splitContainer1.Panel1.Controls.Add(this.textBoxSource);
+            this.splitContainer1.Panel1.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
             // 
             // splitContainer1.Panel2
             // 
@@ -4212,39 +4221,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.splitContainer1.TabIndex = 7;
             this.splitContainer1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.SplitContainer1SplitterMoved);
             // 
-            // tabControlSubtitle
-            // 
-            this.tabControlSubtitle.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControlSubtitle.Controls.Add(this.tabPage1);
-            this.tabControlSubtitle.Controls.Add(this.tabPage2);
-            this.tabControlSubtitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tabControlSubtitle.Location = new System.Drawing.Point(3, 3);
-            this.tabControlSubtitle.Name = "tabControlSubtitle";
-            this.tabControlSubtitle.SelectedIndex = 0;
-            this.tabControlSubtitle.Size = new System.Drawing.Size(738, 248);
-            this.tabControlSubtitle.TabIndex = 0;
-            this.tabControlSubtitle.SelectedIndexChanged += new System.EventHandler(this.TabControlSubtitleSelectedIndexChanged);
-            this.tabControlSubtitle.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.TabControlSubtitleSelecting);
-            // 
-            // tabPage1
-            // 
-            this.tabPage1.Controls.Add(this.splitContainerListViewAndText);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(730, 222);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "List view";
-            this.tabPage1.UseVisualStyleBackColor = true;
-            // 
             // splitContainerListViewAndText
             // 
             this.splitContainerListViewAndText.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainerListViewAndText.Location = new System.Drawing.Point(3, 3);
             this.splitContainerListViewAndText.Name = "splitContainerListViewAndText";
             this.splitContainerListViewAndText.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.splitContainerListViewAndText.VisibleChanged += new System.EventHandler(this.ListViewVisibleChanged);
             // 
             // splitContainerListViewAndText.Panel1
             // 
@@ -4263,7 +4246,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.SubtitleListview1.AllowColumnReorder = true;
             this.SubtitleListview1.AllowDrop = true;
-            this.SubtitleListview1.ContextMenuStrip = this.contextMenuStripListview;
+            this.SubtitleListview1.ContextMenuStrip = this.contextMenuStripListView;
             this.SubtitleListview1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SubtitleListview1.FirstVisibleIndex = -1;
             this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -4298,6 +4281,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // groupBoxEdit
             // 
+            this.groupBoxEdit.BackColor = System.Drawing.Color.White;
             this.groupBoxEdit.Controls.Add(this.labelAlternateSingleLinePixels);
             this.groupBoxEdit.Controls.Add(this.labelSingleLinePixels);
             this.groupBoxEdit.Controls.Add(this.panelBookmark);
@@ -5026,20 +5010,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelAutoDuration.TabIndex = 30;
             this.labelAutoDuration.Text = "Auto";
             // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.textBoxSource);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(730, 222);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Source view";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
             // textBoxSource
             // 
             this.textBoxSource.AllowDrop = true;
+            this.textBoxSource.ContextMenuStrip = this.contextMenuStripTextBoxSourceView;
             this.textBoxSource.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBoxSource.HideSelection = false;
             this.textBoxSource.Location = new System.Drawing.Point(3, 3);
@@ -5052,11 +5026,39 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxSource.WordWrap = false;
             this.textBoxSource.Click += new System.EventHandler(this.TextBoxSourceClick);
             this.textBoxSource.TextChanged += new System.EventHandler(this.TextBoxSourceTextChanged);
+            this.textBoxSource.VisibleChanged += new System.EventHandler(this.SourceViewVisibleChanged);
             this.textBoxSource.DragDrop += new System.Windows.Forms.DragEventHandler(this.TextBoxSourceDragDrop);
             this.textBoxSource.DragEnter += new System.Windows.Forms.DragEventHandler(this.TextBoxSourceDragEnter);
             this.textBoxSource.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxSourceKeyDown);
-            this.textBoxSource.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBoxSource_KeyUp);
+            this.textBoxSource.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TextBoxSource_KeyUp);
             this.textBoxSource.Leave += new System.EventHandler(this.TextBoxSourceLeave);
+            //
+            // contextMenuStripTextBoxSourceView
+            //
+            this.contextMenuStripTextBoxSourceView.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemGoToListView,
+            this.toolStripSeparator18,
+            this.cutToolStripMenuItem,
+            this.copyToolStripMenuItem,
+            this.pasteToolStripMenuItem,
+            this.deleteToolStripMenuItem,
+            this.toolStripSeparator17,
+            this.selectAllToolStripMenuItem,
+            this.toolStripSeparator25,
+            this.toolStripMenuItemInsertUnicodeSymbol,
+            this.toolStripMenuItemInsertUnicodeControlCharacters});
+            this.contextMenuStripTextBoxSourceView.Name = "contextMenuStripTextBoxSourceView";
+            this.contextMenuStripTextBoxSourceView.Size = new System.Drawing.Size(274, 512);
+            this.contextMenuStripTextBoxSourceView.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
+            this.contextMenuStripTextBoxSourceView.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripTextBoxListViewOpening);
+            this.contextMenuStripTextBoxSourceView.Opened += new System.EventHandler(this.MenuOpened);
+            // 
+            // toolStripMenuItemGoToListView
+            // 
+            this.toolStripMenuItemGoToListView.Name = "toolStripMenuItemGoToListView";
+            this.toolStripMenuItemGoToListView.Size = new System.Drawing.Size(284, 22);
+            this.toolStripMenuItemGoToListView.Text = "Go to list view";
+            this.toolStripMenuItemGoToListView.Click += new System.EventHandler(this.toolStripMenuItemGoToListView_Click);
             // 
             // panelVideoPlayer
             // 
@@ -5102,6 +5104,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.contextMenuStripEmpty.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.insertLineToolStripMenuItem,
+            this.toolStripMenuItemEmptyGoToSourceView,
             this.aSSStylesToolStripMenuItem});
             this.contextMenuStripEmpty.Name = "contextMenuStripEmpty";
             this.contextMenuStripEmpty.Size = new System.Drawing.Size(136, 48);
@@ -5113,6 +5116,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.insertLineToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
             this.insertLineToolStripMenuItem.Text = "Insert line";
             this.insertLineToolStripMenuItem.Click += new System.EventHandler(this.InsertLineToolStripMenuItemClick);
+            // 
+            // toolStripMenuItemEmptyGoToSourceView
+            // 
+            this.toolStripMenuItemEmptyGoToSourceView.Name = "toolStripMenuItemEmptyGoToSourceView";
+            this.toolStripMenuItemEmptyGoToSourceView.Size = new System.Drawing.Size(284, 22);
+            this.toolStripMenuItemEmptyGoToSourceView.Text = "Go to source view";
+            this.toolStripMenuItemEmptyGoToSourceView.Click += new System.EventHandler(this.toolStripMenuItemGoToSourceView_Click);
             // 
             // aSSStylesToolStripMenuItem
             // 
@@ -5165,7 +5175,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStrip1.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.contextMenuStripListview.ResumeLayout(false);
+            this.contextMenuStripListView.ResumeLayout(false);
             this.groupBoxVideo.ResumeLayout(false);
             this.groupBoxVideo.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarWaveformPosition)).EndInit();
@@ -5199,8 +5209,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.tabControlSubtitle.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
             this.splitContainerListViewAndText.Panel1.ResumeLayout(false);
             this.splitContainerListViewAndText.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerListViewAndText)).EndInit();
@@ -5212,8 +5220,7 @@ namespace Nikse.SubtitleEdit.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBookmark)).EndInit();
             this.contextMenuStripTextBoxListView.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).EndInit();
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
+            this.contextMenuStripTextBoxSourceView.ResumeLayout(false);
             this.panelVideoPlayer.ResumeLayout(false);
             this.contextMenuStripEmpty.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -5245,11 +5252,10 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem replaceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem gotoLineNumberToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
-        private System.Windows.Forms.TabControl tabControlSubtitle;
-        private System.Windows.Forms.TabPage tabPage1;
         private Nikse.SubtitleEdit.Controls.SubtitleListView SubtitleListview1;
-        private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TextBox textBoxSource;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripTextBoxSourceView;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemGoToListView;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.ToolStripButton toolStripButtonFileOpen;
@@ -5275,7 +5281,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem splitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem appendTextVisuallyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showHistoryforUndoToolStripMenuItem;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStripListview;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripListView;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemDelete;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInsertBefore;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInsertAfter;
@@ -5675,6 +5681,8 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem googleTranslateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem microsoftBingTranslateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemBookmark;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemGoToSourceView;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemEmptyGoToSourceView;
         private System.Windows.Forms.ToolStripMenuItem removeAllFormattingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem removeBoldToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem removeItalicToolStripMenuItem;

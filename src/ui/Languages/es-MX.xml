@@ -1204,8 +1204,6 @@ Ve a "Opciones -&gt; Configuración -&gt; Herramientas" para introducir la clave
     <Controls>
       <SubtitleFormat>Formato</SubtitleFormat>
       <FileEncoding>Codificador</FileEncoding>
-      <ListView>Vista de lista</ListView>
-      <SourceView>Vista original</SourceView>
       <UndoChangesInEditPanel>Deshacer cambios en panel de edición</UndoChangesInEditPanel>
       <Previous>&lt;Anterior</Previous>
       <Next>Siguiente&gt;</Next>

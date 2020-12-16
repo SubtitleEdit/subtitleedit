@@ -1195,8 +1195,6 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <Controls>
       <SubtitleFormat>Format</SubtitleFormat>
       <FileEncoding>Kodierung</FileEncoding>
-      <ListView>Listenansicht</ListView>
-      <SourceView>Quellansicht</SourceView>
       <UndoChangesInEditPanel>Rückgängig</UndoChangesInEditPanel>
       <Previous>Zurück</Previous>
       <Next>Weiter</Next>

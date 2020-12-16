@@ -1007,8 +1007,6 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <Controls>
       <SubtitleFormat>Oblika</SubtitleFormat>
       <FileEncoding>Kodiranje</FileEncoding>
-      <ListView>Ogled seznama</ListView>
-      <SourceView>Ogled izvora</SourceView>
       <UndoChangesInEditPanel>Razveljavi spremembe v urejevalniku</UndoChangesInEditPanel>
       <Previous>&lt; Nazaj</Previous>
       <Next>Naprej &gt;</Next>

@@ -1252,8 +1252,6 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <Controls>
       <SubtitleFormat>형식</SubtitleFormat>
       <FileEncoding>인코딩</FileEncoding>
-      <ListView>자막 보기</ListView>
-      <SourceView>소스 보기</SourceView>
       <UndoChangesInEditPanel>편집 취소</UndoChangesInEditPanel>
       <Previous>&lt; 이전</Previous>
       <Next>다음 &gt;</Next>

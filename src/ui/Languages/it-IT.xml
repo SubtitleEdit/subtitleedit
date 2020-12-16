@@ -1082,8 +1082,6 @@ Nota: Controlla lo spazio libero sul disco.</WaveFileMalformed>
     <Controls>
       <SubtitleFormat>Formato</SubtitleFormat>
       <FileEncoding>Codifica</FileEncoding>
-      <ListView>Vista elenco</ListView>
-      <SourceView>Vista sorgente</SourceView>
       <UndoChangesInEditPanel>Annulla cambiamenti nel pannello modifica</UndoChangesInEditPanel>
       <Previous>&lt; Prec</Previous>
       <Next>Succ &gt;</Next>

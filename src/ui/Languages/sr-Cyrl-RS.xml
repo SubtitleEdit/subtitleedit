@@ -707,8 +707,6 @@
     <Controls>
       <SubtitleFormat>Облик титла:</SubtitleFormat>
       <FileEncoding>Кодни распоред:</FileEncoding>
-      <ListView>Списак</ListView>
-      <SourceView>Извор</SourceView>
       <UndoChangesInEditPanel>&amp;Опозови</UndoChangesInEditPanel>
       <Previous>&lt; &amp;Назад</Previous>
       <Next>Н&amp;апред &gt;</Next>

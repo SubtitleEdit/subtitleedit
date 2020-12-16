@@ -1244,8 +1244,6 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Go
     <Controls>
       <SubtitleFormat>Undertekst format</SubtitleFormat>
       <FileEncoding>Filkodning</FileEncoding>
-      <ListView>Listevisning</ListView>
-      <SourceView>Kilde visning</SourceView>
       <UndoChangesInEditPanel>Fortryd ændringer</UndoChangesInEditPanel>
       <Previous>&lt;Forrige</Previous>
       <Next>Næste&gt;</Next>
