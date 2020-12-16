@@ -1912,16 +1912,16 @@ Command line: {1} {2}
     <SpellCheck>拼写检查</SpellCheck>
     <NetflixQualityCheck>Netflix品质检查</NetflixQualityCheck>
     <SettingsName>设置</SettingsName>
-    <Help>帮助</Help>
-    <UnbreakNoSpace>取消断行且不带空格（用于中日韩等语言）</UnbreakNoSpace>
     <ToggleBookmarks>使用书签</ToggleBookmarks>
     <ToggleBookmarksWithComment>使用书签 - 添加注释</ToggleBookmarksWithComment>
     <ClearBookmarks>清空书签</ClearBookmarks>
     <GoToBookmark>转到书签</GoToBookmark>
     <GoToPreviousBookmark>转到上一书签</GoToPreviousBookmark>
     <GoToNextBookmark>转到下一书签</GoToNextBookmark>
-    <GeneralChooseProfile>选择预设方案</GeneralChooseProfile>
-    <GeneralDuplicateLine>复制行</GeneralDuplicateLine>
+    <ChooseProfile>选择预设方案</ChooseProfile>
+    <DuplicateLine>创建副本行</DuplicateLine>
+    <ToggleView>切换表格/源视图</ToggleView>
+    <Help>帮助</Help>
     <FontInUi>用户界面字体</FontInUi>
     <ShowFrameRate>在工具栏显示帧率</ShowFrameRate>
     <DefaultFrameRate>默认帧率</DefaultFrameRate>
@@ -2283,6 +2283,7 @@ Command line: {1} {2}
     <MainTextBoxAutoBreakFromPos>在指针后的第一个空格处换行</MainTextBoxAutoBreakFromPos>
     <MainTextBoxAutoBreakFromPosAndGoToNext>在指针后的第一个空格处换行，并转到下一行</MainTextBoxAutoBreakFromPosAndGoToNext>
     <MainTextBoxUnbreak>取消换行</MainTextBoxUnbreak>
+    <MainTextBoxUnbreakNoSpace>取消断行且不带空格（用于中日韩等语言）</MainTextBoxUnbreakNoSpace>
     <MainFileSaveAll>显示全部</MainFileSaveAll>
     <Miscellaneous>杂项</Miscellaneous>
     <CpsIncludesSpace>字词/秒 （CPS）含空格</CpsIncludesSpace>
