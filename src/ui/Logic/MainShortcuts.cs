@@ -30,6 +30,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainVideoFoucsSetVideoPosition { get; set; }
         public Keys ToggleVideoDockUndock { get; set; }
         public Keys VideoPause { get; set; }
+        public Keys VideoStop { get; set; }
         public Keys VideoPlayPauseToggle { get; set; }
         public Keys MainVideoPlayFromJustBefore { get; set; }
         public Keys MainVideoPlayFromBeginning { get; set; }
@@ -214,6 +215,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainVideoPlayFromJustBefore = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlayFromJustBefore);
             MainVideoPlayFromBeginning = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlayFromBeginning);
             VideoPause = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPause);
+            VideoStop = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoStop);
             MainVideoFoucsSetVideoPosition = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoFoucsSetVideoPosition);
             ToggleVideoDockUndock = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
             VideoPlayPauseToggle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlayPauseToggle);

@@ -1847,6 +1847,7 @@ $HorzAlign          =   Center
         public string MainVideoOpen { get; set; }
         public string MainVideoClose { get; set; }
         public string MainVideoPause { get; set; }
+        public string MainVideoStop { get; set; }
         public string MainVideoPlayFromJustBefore { get; set; }
         public string MainVideoPlayFromBeginning { get; set; }
         public string MainVideoPlayPauseToggle { get; set; }
@@ -6602,6 +6603,12 @@ $HorzAlign          =   Center
                     shortcuts.MainVideoPause = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainVideoStop");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoStop = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainVideoPlayFromJustBefore");
                 if (subNode != null)
                 {
@@ -8488,6 +8495,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainVideoOpen", shortcuts.MainVideoOpen);
             textWriter.WriteElementString("MainVideoClose", shortcuts.MainVideoClose);
             textWriter.WriteElementString("MainVideoPause", shortcuts.MainVideoPause);
+            textWriter.WriteElementString("MainVideoStop", shortcuts.MainVideoStop);
             textWriter.WriteElementString("MainVideoPlayFromJustBefore", shortcuts.MainVideoPlayFromJustBefore);
             textWriter.WriteElementString("MainVideoPlayFromBeginning", shortcuts.MainVideoPlayFromBeginning);
             textWriter.WriteElementString("MainVideoPlayPauseToggle", shortcuts.MainVideoPlayPauseToggle);
