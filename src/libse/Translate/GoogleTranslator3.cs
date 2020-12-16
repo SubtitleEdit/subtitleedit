@@ -35,16 +35,6 @@ namespace Nikse.SubtitleEdit.Core.Translate
 
         }
 
-        public List<TranslationPair> GetTranslationPairs()
-        {
-            return new GoogleTranslator2(null).GetTranslationPairs();
-        }
-
-        public string GetName()
-        {
-            return "Google translate V3";
-        }
-
         public string GetUrl()
         {
             return "https://translate.google.com/";
@@ -56,14 +46,8 @@ namespace Nikse.SubtitleEdit.Core.Translate
 
             var input = new StringBuilder();
             var formatList = new List<Formatting>();
-            //bool skipNext = false;
             for (var index = 0; index < paragraphs.Count; index++)
             {
-                //if (skipNext)
-                //{
-                //    skipNext = false;
-                //    continue;
-                //}
 
                 var p = paragraphs[index];
                 var f = new Formatting();
@@ -80,11 +64,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 }
 
                 var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text, sourceLanguage), sourceLanguage, nextText);
-                //skipNext = f.SkipNext;
-                //if (!skipNext)
-                //{
-                    text = f.UnBreak(text, p.Text);
-                //}
+                text = f.UnBreak(text, p.Text);
 
                 input.Append("\"" + Json.EncodeJsonText(text) + "\"");
             }

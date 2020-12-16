@@ -34,37 +34,9 @@ namespace Nikse.SubtitleEdit.Forms
         private FormattingType[] _formattingTypes;
         private bool[] _autoSplit;
 
-        private string _toLanguageIsoCode;
-        private string _fromLanguageIsoCode;
-
-
-        public class ComboBoxItem
-        {
-            public string Text { get; set; }
-            public string Value { get; set; }
-
-            public ComboBoxItem(string text, string value)
-            {
-                Text = UpcaseFirstLetter(text);
-                Value = value;
-            }
-
-            private static string UpcaseFirstLetter(string text)
-            {
-                if (text.Length > 1)
-                {
-                    text = char.ToUpper(text[0]) + text.Substring(1).ToLowerInvariant();
-                }
-
-                return text;
-            }
-
-            public override string ToString()
-            {
-                return Text;
-            }
-        }
-
+        private string _targetLanguageIsoCode;
+        private string _sourceLanguageIsoCode;
+        
         public GenericTranslate()
         {
             UiUtil.PreInitialize(this);
@@ -122,8 +94,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            _fromLanguageIsoCode = EvaluateDefaultFromLanguageCode(encoding);
-            _toLanguageIsoCode = EvaluateUiCultureTargetLanguage(_fromLanguageIsoCode);
+            _sourceLanguageIsoCode = EvaluateDefaultSourceLanguageCode(encoding,_subtitle);
+            _targetLanguageIsoCode = EvaluateDefaultTargetLanguageCode(_sourceLanguageIsoCode);
 
             subtitleListViewFrom.Fill(subtitle);
             GoogleTranslate_Resize(null, null);
@@ -136,7 +108,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             this.comboBoxParagraphHandling.Items.Add(new SentenceMergingTranslationProcessor());
             this.comboBoxParagraphHandling.Items.Add(new SingleParagraphTranslationProcessor());
-            this.comboBoxParagraphHandling.SelectedIndex = 1;
+            this.comboBoxParagraphHandling.SelectedIndex = 0;
         }
 
         private void InitTranslationServices()
@@ -155,26 +127,43 @@ namespace Nikse.SubtitleEdit.Forms
         private void SetupLanguageSettings()
         {
             FillComboWithLanguages(comboBoxFrom, _translationService.GetSupportedSourceLanguages());
-            SelectLanguageCode(comboBoxFrom, _fromLanguageIsoCode);
+            SelectLanguageCode(comboBoxFrom, _sourceLanguageIsoCode);
 
             FillComboWithLanguages(comboBoxTo, _translationService.GetSupportedTargetLanguages());
-            SelectLanguageCode(comboBoxTo, _toLanguageIsoCode);
+            SelectLanguageCode(comboBoxTo, _targetLanguageIsoCode);
         }
 
         private void ReadLanguageSettings()
         {
             if (comboBoxTo.SelectedItem != null)
             {
-                _toLanguageIsoCode = ((ComboBoxItem)comboBoxTo.SelectedItem).Value;
+                _targetLanguageIsoCode = ((TranslationPair)comboBoxTo.SelectedItem).Code;
             }
 
             if (comboBoxFrom.SelectedItem != null)
             {
-                _fromLanguageIsoCode = ((ComboBoxItem)comboBoxFrom.SelectedItem).Value;
+                _sourceLanguageIsoCode = ((TranslationPair)comboBoxFrom.SelectedItem).Code;
             }
         }
 
-        private string EvaluateUiCultureTargetLanguage(string defaultFromLanguage)
+        public static string EvaluateDefaultSourceLanguageCode(Encoding encoding,Subtitle subtitle)
+        {
+            string defaultFromLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(encoding); // Guess language via encoding
+            if (string.IsNullOrEmpty(defaultFromLanguage))
+            {
+                defaultFromLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle); // Guess language based on subtitle contents
+            }
+
+            //convert new Hebrew code (he) to old Hebrew code (iw)  http://www.mathguide.de/info/tools/languagecode.html
+            //brummochse: why get it converted to the old code?
+            if (defaultFromLanguage == "he")
+            {
+                defaultFromLanguage = "iw";
+            }
+
+            return defaultFromLanguage;
+        }
+        public static string EvaluateDefaultTargetLanguageCode(string defaultFromLanguage)
         {
             var installedLanguages = new List<InputLanguage>();
             foreach (InputLanguage language in InputLanguage.InstalledInputLanguages)
@@ -225,12 +214,12 @@ namespace Nikse.SubtitleEdit.Forms
             return uiCultureTargetLanguage;
         }
 
-        private void SelectLanguageCode(ComboBox comboBox, string defaultFromLanguage)
+        public static void SelectLanguageCode(ComboBox comboBox, string languageIsoCode)
         {
             int i = 0;
-            foreach (ComboBoxItem item in comboBox.Items)
+            foreach (TranslationPair item in comboBox.Items)
             {
-                if (item.Value == defaultFromLanguage)
+                if (item.Code == languageIsoCode)
                 {
                     comboBox.SelectedIndex = i;
                     return;
@@ -240,23 +229,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private string EvaluateDefaultFromLanguageCode(Encoding encoding)
-        {
-            string defaultFromLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(encoding); // Guess language via encoding
-            if (string.IsNullOrEmpty(defaultFromLanguage))
-            {
-                defaultFromLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle); // Guess language based on subtitle contents
-            }
-
-            //convert new Hebrew code (he) to old Hebrew code (iw)  http://www.mathguide.de/info/tools/languagecode.html
-            //brummochse: why get it converted to the old code?
-            if (defaultFromLanguage == "he")
-            {
-                defaultFromLanguage = "iw";
-            }
-
-            return defaultFromLanguage;
-        }
+    
 
         private void buttonTranslate_Click(object sender, EventArgs e)
         {
@@ -294,7 +267,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var startIndex = selectedItems.Count <= 0 ? 0 : selectedItems[0].Index;
                 progressBar1.Minimum = startIndex;
                 var selectedParagraphs=_subtitle.Paragraphs.GetRange(startIndex, _subtitle.Paragraphs.Count - startIndex);
-                translator.Translate(_translationService, _fromLanguageIsoCode, _toLanguageIsoCode, selectedParagraphs, targetParagraphs =>
+                translator.Translate(_translationService, _sourceLanguageIsoCode, _targetLanguageIsoCode, selectedParagraphs, targetParagraphs =>
                 {
                     FillTranslatedText(targetParagraphs);
                     int lastIndex = TranslatedSubtitle.Paragraphs.FindIndex(x => x.Number == targetParagraphs.Keys.Last());
@@ -318,7 +291,7 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonOK.Enabled = true;
                 buttonCancel.Enabled = true;
 
-                Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage = _toLanguageIsoCode;
+                Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage = _targetLanguageIsoCode;
             }
         }
 
@@ -406,12 +379,12 @@ namespace Nikse.SubtitleEdit.Forms
             return cleanText;
         }
 
-        public void FillComboWithLanguages(ComboBox comboBox, List<TranslationPair> languages)
+        public static void FillComboWithLanguages(ComboBox comboBox, IEnumerable<TranslationPair> languages)
         {
             comboBox.Items.Clear();
-            foreach (var bingLanguageCode in languages)
+            foreach (var language in languages)
             {
-                comboBox.Items.Add(new ComboBoxItem(bingLanguageCode.Name, bingLanguageCode.Code));
+                comboBox.Items.Add(language);
             }
         }
     
@@ -493,11 +466,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         public string GetFileNameWithTargetLanguage(string oldFileName, string videoFileName, Subtitle oldSubtitle, SubtitleFormat subtitleFormat)
         {
-            if (!string.IsNullOrEmpty(_toLanguageIsoCode))
+            if (!string.IsNullOrEmpty(_targetLanguageIsoCode))
             {
                 if (!string.IsNullOrEmpty(videoFileName))
                 {
-                    return Path.GetFileNameWithoutExtension(videoFileName) + "." + _toLanguageIsoCode.ToLowerInvariant() + subtitleFormat.Extension;
+                    return Path.GetFileNameWithoutExtension(videoFileName) + "." + _targetLanguageIsoCode.ToLowerInvariant() + subtitleFormat.Extension;
                 }
 
                 if (!string.IsNullOrEmpty(oldFileName))
@@ -511,7 +484,7 @@ namespace Nikse.SubtitleEdit.Forms
                             s = s.Remove(s.Length - 3);
                         }
                     }
-                    return s + "." + _toLanguageIsoCode.ToLowerInvariant() + subtitleFormat.Extension;
+                    return s + "." + _targetLanguageIsoCode.ToLowerInvariant() + subtitleFormat.Extension;
                 }
             }
             return null;
