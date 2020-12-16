@@ -50,8 +50,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private const int TabControlListView = 0;
-        private const int TabControlSourceView = 1;
+        private Control ListView => splitContainerListViewAndText;
+        private Control SourceView => textBoxSource;
+        private bool inListView => splitContainerListViewAndText.Visible;
+        private bool inSourceView => textBoxSource.Visible;
 
         private Subtitle _subtitle = new Subtitle();
 
@@ -361,12 +363,12 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.RightToLeftLayout = true;
                 }
 
-                tabControlSubtitle.SelectTab(TabControlSourceView); // AC
+                SwitchView(SourceView); // AC
                 ShowSourceLineNumber(); // AC
-                tabControlSubtitle.SelectTab(TabControlListView); // AC
+                SwitchView(ListView); // AC
                 if (Configuration.Settings.General.StartInSourceView)
                 {
-                    tabControlSubtitle.SelectTab(TabControlSourceView);
+                    SwitchView(SourceView);
                 }
 
                 audioVisualizer.Visible = Configuration.Settings.General.ShowAudioVisualizer;
@@ -839,7 +841,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     var index = _subtitle.GetIndex(e.Paragraph);
                     SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
-                    if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+                    if (inSourceView)
                     {
                         var p = _subtitle.GetParagraphOrDefault(index);
                         if (p != null)
@@ -1664,8 +1666,6 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripLabelSubtitleFormat.Text = _language.Controls.SubtitleFormat;
             toolStripLabelEncoding.Text = _language.Controls.FileEncoding;
             toolStripLabelFrameRate.Text = _languageGeneral.FrameRate;
-            tabControlSubtitle.TabPages[TabControlSourceView].Text = _language.Controls.SourceView;
-            tabControlSubtitle.TabPages[TabControlListView].Text = _language.Controls.ListView;
             labelStartTime.Text = _languageGeneral.StartTime;
             labelDuration.Text = _languageGeneral.Duration;
             labelText.Text = _languageGeneral.Text;
@@ -5087,7 +5087,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowSourceLineNumber()
         {
-            if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+            if (inSourceView)
             {
                 var profile = Configuration.Settings.General.CurrentProfile + "   ";
                 if (!ShowProfileInStatusBar)
@@ -5131,7 +5131,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void Find()
         {
             string selectedText;
-            if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+            if (inSourceView)
             {
                 selectedText = textBoxSource.SelectedText;
             }
@@ -5186,7 +5186,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 ShowStatus(string.Format(_language.SearchingForXFromLineY, _findHelper.FindText, _subtitleListViewIndex + 1));
-                if (tabControlSubtitle.SelectedIndex == TabControlListView)
+                if (inListView)
                 {
                     var tb = GetFindReplaceTextBox();
                     int startPos = tb.SelectedText.Length > 0 ? tb.SelectionStart + 1 : tb.SelectionStart;
@@ -5215,7 +5215,7 @@ namespace Nikse.SubtitleEdit.Forms
                         ShowStatus(string.Format(_language.XNotFound, _findHelper.FindText));
                     }
                 }
-                else if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+                else if (inSourceView)
                 {
                     if (_findHelper.Find(textBoxSource, textBoxSource.SelectionStart))
                     {
@@ -5254,7 +5254,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _findHelper.InProgress = true;
                 var tb = GetFindReplaceTextBox();
-                if (tabControlSubtitle.SelectedIndex == TabControlListView)
+                if (inListView)
                 {
                     int selectedIndex = -1;
                     if (SubtitleListview1.SelectedItems.Count > 0)
@@ -5302,7 +5302,7 @@ namespace Nikse.SubtitleEdit.Forms
                         ShowStatus(string.Format(_language.XNotFound, _findHelper.FindText));
                     }
                 }
-                else if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+                else if (inSourceView)
                 {
                     if (_findHelper.FindNext(textBoxSource.Text, textBoxSource.SelectionStart))
                     {
@@ -5337,7 +5337,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             _findHelper.InProgress = true;
             var tb = GetFindReplaceTextBox();
-            if (tabControlSubtitle.SelectedIndex == TabControlListView)
+            if (inListView)
             {
                 int selectedIndex = -1;
                 if (SubtitleListview1.SelectedItems.Count > 0)
@@ -5367,7 +5367,7 @@ namespace Nikse.SubtitleEdit.Forms
                     ShowStatus(string.Format(_language.XNotFound, _findHelper.FindText));
                 }
             }
-            else if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+            else if (inSourceView)
             {
                 if (_findHelper.FindPrevious(textBoxSource.Text, textBoxSource.SelectionStart))
                 {
@@ -6049,7 +6049,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void Replace(ReplaceDialog replaceDialog)
         {
-            if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+            if (inSourceView)
             {
                 ReplaceSourceView(replaceDialog);
             }
@@ -6226,18 +6226,18 @@ namespace Nikse.SubtitleEdit.Forms
 
             using (var goToLine = new GoToLine())
             {
-                if (tabControlSubtitle.SelectedIndex == TabControlListView)
+                if (inListView)
                 {
                     goToLine.Initialize(1, SubtitleListview1.Items.Count);
                 }
-                else if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+                else if (inSourceView)
                 {
                     goToLine.Initialize(1, textBoxSource.Lines.Length);
                 }
 
                 if (goToLine.ShowDialog(this) == DialogResult.OK)
                 {
-                    if (tabControlSubtitle.SelectedIndex == TabControlListView)
+                    if (inListView)
                     {
                         SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
                         SubtitleListview1.SelectNone();
@@ -6248,7 +6248,7 @@ namespace Nikse.SubtitleEdit.Forms
                         SubtitleListview1.Items[goToLine.LineNumber - 1].Focused = true;
                         ShowStatus(string.Format(_language.GoToLineNumberX, goToLine.LineNumber));
                     }
-                    else if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+                    else if (inSourceView)
                     {
                         textBoxSource.SelectionStart = textBoxSource.GetFirstCharIndexFromLine(goToLine.LineNumber - 1);
                         textBoxSource.SelectionLength = textBoxSource.Lines[goToLine.LineNumber - 1].Length;
@@ -7260,12 +7260,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void FocusParagraph(int index)
         {
-            if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+            if (inSourceView)
             {
-                tabControlSubtitle.SelectedIndex = TabControlListView;
+                // Check
+                SwitchView(ListView);
             }
-
-            if (tabControlSubtitle.SelectedIndex == TabControlListView)
+            else if (inListView)
             {
                 SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
             }
@@ -7273,7 +7273,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RefreshSelectedParagraph()
         {
-            if (tabControlSubtitle.SelectedIndex != TabControlListView)
+            if (!inListView)
             {
                 return;
             }
@@ -8872,7 +8872,7 @@ namespace Nikse.SubtitleEdit.Forms
                 profile = string.Empty;
             }
 
-            if (tabControlSubtitle.SelectedIndex == TabControlListView)
+            if (inListView)
             {
                 if (SubtitleListview1.SelectedItems.Count == 1)
                 {
@@ -11657,74 +11657,40 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void TabControlSubtitleSelectedIndexChanged(object sender, EventArgs e)
+        private void SwitchView(Control view)
         {
-            var format = GetCurrentSubtitleFormat();
-            if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+            if (inSourceView && textBoxSource.Text.Trim().Length > 0)
             {
-                ShowSource();
-                ShowSourceLineNumber();
-                if (textBoxSource.CanFocus)
+                var currentFormat = GetCurrentSubtitleFormat();
+                if (currentFormat != null && !currentFormat.IsTextBased)
                 {
-                    textBoxSource.Focus();
+                    return;
                 }
 
-                // go to correct line in source view
-                if (SubtitleListview1.SelectedItems.Count > 0)
+                var newFormat = new Subtitle().ReloadLoadSubtitle(textBoxSource.Lines.ToList(), null, currentFormat);
+                if (newFormat == null)
                 {
-                    if (format.GetType() == typeof(SubRip))
-                    {
-                        var p = _subtitle.GetParagraphOrDefault(FirstSelectedIndex);
-                        if (p != null)
-                        {
-                            string tc = p.StartTime + " --> " + p.EndTime;
-                            int start = textBoxSource.Text.IndexOf(p.Number + Environment.NewLine + tc, StringComparison.Ordinal);
-                            if (start < 0)
-                            {
-                                start = 0;
-                            }
-
-                            start = textBoxSource.Text.IndexOf(tc, start, StringComparison.Ordinal);
-                            if (start > 0)
-                            {
-                                textBoxSource.SelectionStart = start + tc.Length + Environment.NewLine.Length;
-                                textBoxSource.SelectionLength = 0;
-                                textBoxSource.ScrollToCaret();
-                            }
-                        }
-                    }
-                    else if (format.GetType() == typeof(SubStationAlpha) || format.GetType() == typeof(AdvancedSubStationAlpha))
-                    {
-                        var p = _subtitle.GetParagraphOrDefault(FirstSelectedIndex);
-                        if (p != null)
-                        {
-                            const string timeCodeFormat = "{0}:{1:00}:{2:00}.{3:00}"; // h:mm:ss.cc
-                            string startTimeCode = string.Format(timeCodeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds / 10);
-                            string endTimeCode = string.Format(timeCodeFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds / 10);
-                            string tc = startTimeCode + "," + endTimeCode;
-                            int start = textBoxSource.Text.IndexOf(tc, StringComparison.Ordinal);
-                            if (start > 0)
-                            {
-                                int start2 = textBoxSource.Text.LastIndexOf("Dialogue:", start, StringComparison.Ordinal);
-                                if (start2 > 0)
-                                {
-                                    start2 = (textBoxSource.Text + Environment.NewLine).IndexOf(Environment.NewLine, start2, StringComparison.Ordinal);
-                                }
-
-                                if (start2 > 0)
-                                {
-                                    start = start2;
-                                }
-
-                                textBoxSource.SelectionStart = start;
-                                textBoxSource.SelectionLength = 0;
-                                textBoxSource.ScrollToCaret();
-                            }
-                        }
-                    }
+                    MessageBox.Show(_language.UnableToParseSourceView);
+                    return;
                 }
             }
+
+            if (view == ListView)
+            {
+                textBoxSource.Visible = false;
+                splitContainerListViewAndText.Visible = true;
+            }
             else
+            {
+                textBoxSource.Visible = true;
+                splitContainerListViewAndText.Visible = false;
+            }
+        }
+
+        private void ListViewVisibleChanged(object sender, EventArgs e)
+        {
+            var currentFormat = GetCurrentSubtitleFormat();
+            if (inListView)
             {
                 ReloadFromSourceView();
                 ShowLineInformationListView();
@@ -11736,7 +11702,7 @@ namespace Nikse.SubtitleEdit.Forms
                 // go to (select + focus) correct line in list view
                 if (textBoxSource.SelectionStart > 0 && textBoxSource.TextLength > 30)
                 {
-                    if (format.GetType() == typeof(SubRip))
+                    if (currentFormat.GetType() == typeof(SubRip))
                     {
                         var timeCodeRegEx = new Regex(@"^-?\d+:-?\d+:-?\d+[:,]-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+[:,]-?\d+$");
                         var lineNumber = textBoxSource.GetLineFromCharIndex(textBoxSource.SelectionStart);
@@ -11789,7 +11755,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
                     }
-                    else if (format.GetType() == typeof(SubStationAlpha) || format.GetType() == typeof(AdvancedSubStationAlpha))
+                    else if (currentFormat.GetType() == typeof(SubStationAlpha) || currentFormat.GetType() == typeof(AdvancedSubStationAlpha))
                     {
                         int pos = textBoxSource.SelectionStart;
                         string s = textBoxSource.Text;
@@ -11847,6 +11813,75 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (textBoxSource.SelectionStart == 0 && textBoxSource.TextLength > 30)
                 {
                     SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
+                }
+            }
+        }
+
+        private void SourceViewVisibleChanged(object sender, EventArgs e)
+        {
+            var currentFormat = GetCurrentSubtitleFormat();
+            if (inSourceView)
+            {
+                ShowSource();
+                ShowSourceLineNumber();
+                if (textBoxSource.CanFocus)
+                {
+                    textBoxSource.Focus();
+                }
+
+                // go to correct line in source view
+                if (SubtitleListview1.SelectedItems.Count > 0)
+                {
+                    if (currentFormat.GetType() == typeof(SubRip))
+                    {
+                        var p = _subtitle.GetParagraphOrDefault(FirstSelectedIndex);
+                        if (p != null)
+                        {
+                            string tc = p.StartTime + " --> " + p.EndTime;
+                            int start = textBoxSource.Text.IndexOf(p.Number + Environment.NewLine + tc, StringComparison.Ordinal);
+                            if (start < 0)
+                            {
+                                start = 0;
+                            }
+
+                            start = textBoxSource.Text.IndexOf(tc, start, StringComparison.Ordinal);
+                            if (start > 0)
+                            {
+                                textBoxSource.SelectionStart = start + tc.Length + Environment.NewLine.Length;
+                                textBoxSource.SelectionLength = 0;
+                                textBoxSource.ScrollToCaret();
+                            }
+                        }
+                    }
+                    else if (currentFormat.GetType() == typeof(SubStationAlpha) || currentFormat.GetType() == typeof(AdvancedSubStationAlpha))
+                    {
+                        var p = _subtitle.GetParagraphOrDefault(FirstSelectedIndex);
+                        if (p != null)
+                        {
+                            const string timeCodeFormat = "{0}:{1:00}:{2:00}.{3:00}"; // h:mm:ss.cc
+                            string startTimeCode = string.Format(timeCodeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds / 10);
+                            string endTimeCode = string.Format(timeCodeFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds / 10);
+                            string tc = startTimeCode + "," + endTimeCode;
+                            int start = textBoxSource.Text.IndexOf(tc, StringComparison.Ordinal);
+                            if (start > 0)
+                            {
+                                int start2 = textBoxSource.Text.LastIndexOf("Dialogue:", start, StringComparison.Ordinal);
+                                if (start2 > 0)
+                                {
+                                    start2 = (textBoxSource.Text + Environment.NewLine).IndexOf(Environment.NewLine, start2, StringComparison.Ordinal);
+                                }
+
+                                if (start2 > 0)
+                                {
+                                    start = start2;
+                                }
+
+                                textBoxSource.SelectionStart = start;
+                                textBoxSource.SelectionLength = 0;
+                                textBoxSource.ScrollToCaret();
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -13930,10 +13965,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            bool inListView = tabControlSubtitle.SelectedIndex == TabControlListView;
-            bool inSourceView = tabControlSubtitle.SelectedIndex == TabControlSourceView;
-
-
             if (e.KeyCode == Keys.Escape && !_cancelWordSpellCheck)
             {
                 _cancelWordSpellCheck = true;
@@ -14294,11 +14325,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (inListView)
                 {
-                    tabControlSubtitle.SelectedIndex = TabControlSourceView;
+                    SwitchView(SourceView);
                 }
                 else
                 {
-                    tabControlSubtitle.SelectedIndex = TabControlListView;
+                    SwitchView(ListView);
                 }
 
                 e.SuppressKeyPress = true;
@@ -20258,7 +20289,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void UpdateSourceView()
         {
-            if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+            if (inSourceView)
             {
                 var textBoxSourceFocused = textBoxSource.Focused;
                 var caretPosition = textBoxSource.SelectionStart;
@@ -20944,7 +20975,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             mediaPlayer.InitializeVolume(Configuration.Settings.General.VideoPlayerDefaultVolume);
-            tabControlSubtitle.Invalidate();
+            splitContainer1.Panel1.Invalidate();
 
             if (string.IsNullOrEmpty(Configuration.Settings.Language.CheckForUpdates.CheckingForUpdates))
             {
@@ -22593,7 +22624,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+            if (inSourceView)
             {
                 textBoxSource.SelectAll();
             }
@@ -22605,7 +22636,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void cutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+            if (inSourceView)
             {
                 textBoxSource.Cut();
             }
@@ -22617,7 +22648,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+            if (inSourceView)
             {
                 textBoxSource.Copy();
             }
@@ -22629,7 +22660,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void PasteToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+            if (inSourceView)
             {
                 textBoxSource.Paste();
             }
@@ -22641,7 +22672,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void DeleteToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+            if (inSourceView)
             {
                 textBoxSource.SelectedText = string.Empty;
             }
@@ -24801,24 +24832,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void TabControlSubtitleSelecting(object sender, TabControlCancelEventArgs e)
-        {
-            if (tabControlSubtitle.SelectedIndex != TabControlSourceView && textBoxSource.Text.Trim().Length > 1)
-            {
-                var currentFormat = GetCurrentSubtitleFormat();
-                if (currentFormat != null && !currentFormat.IsTextBased)
-                {
-                    return;
-                }
-
-                var format = new Subtitle().ReloadLoadSubtitle(textBoxSource.Lines.ToList(), null, currentFormat);
-                if (format == null)
-                {
-                    e.Cancel = true;
-                }
-            }
-        }
-
         private void ToolStripComboBoxFrameRateTextChanged(object sender, EventArgs e)
         {
             Configuration.Settings.General.CurrentFrameRate = CurrentFrameRate;
@@ -26228,7 +26241,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemSubStationAlpha_Click(object sender, EventArgs e)
         {
-            if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+            if (inSourceView)
             {
                 ReloadFromSourceView();
             }
@@ -27384,7 +27397,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void toolStripMenuItemMeasurementConverter_Click(object sender, EventArgs e)
         {
             var selectedText = string.Empty;
-            if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+            if (inSourceView)
             {
                 selectedText = textBoxSource.SelectedText;
             }
@@ -27605,7 +27618,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void PasteIntoActiveTextBox(string s, bool allowMultiLine = false)
         {
-            if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+            if (inSourceView)
             {
                 textBoxSource.SelectedText = s;
             }
@@ -28532,12 +28545,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemGoToSourceView_Click(object sender, EventArgs e)
         {
-            tabControlSubtitle.SelectedIndex = TabControlSourceView;
+            SwitchView(SourceView);
         }
 
         private void toolStripMenuItemGoToListView_Click(object sender, EventArgs e)
         {
-            tabControlSubtitle.SelectedIndex = TabControlListView;
+            SwitchView(ListView);
         }
 
         private void RunActionOnAllParagraphs(Func<Paragraph, string> action, string historyMessage)
