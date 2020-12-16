@@ -1186,8 +1186,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Controls>
       <SubtitleFormat>Formatació</SubtitleFormat>
       <FileEncoding>Codificació</FileEncoding>
-      <ListView>Vista llista</ListView>
-      <SourceView>Vista origen</SourceView>
       <UndoChangesInEditPanel>Des-fés canvis en panell Edita</UndoChangesInEditPanel>
       <Previous>&lt; Prev.</Previous>
       <Next>Seg. &gt;</Next>

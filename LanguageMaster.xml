@@ -1251,13 +1251,13 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
         <RemoveActors>Remove actors</RemoveActors>
         <EditBookmark>Edit bookmark</EditBookmark>
         <RemoveBookmark>Remove bookmark</RemoveBookmark>
+        <GoToSourceView>Go to source view</GoToSourceView>
+        <GoToListView>Go to list view</GoToListView>
       </ContextMenu>
     </Menu>
     <Controls>
       <SubtitleFormat>Format</SubtitleFormat>
       <FileEncoding>Encoding</FileEncoding>
-      <ListView>List view</ListView>
-      <SourceView>Source view</SourceView>
       <UndoChangesInEditPanel>Undo changes in edit panel</UndoChangesInEditPanel>
       <Previous>&lt; Prev</Previous>
       <Next>Next &gt;</Next>

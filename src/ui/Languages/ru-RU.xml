@@ -1251,8 +1251,6 @@ https://github.com/SubtitleEdit/subtitleedit
     <Controls>
       <SubtitleFormat>Формат</SubtitleFormat>
       <FileEncoding>Кодировка</FileEncoding>
-      <ListView>Список субтитров</ListView>
-      <SourceView>Исходный список</SourceView>
       <UndoChangesInEditPanel>Отменить изменения</UndoChangesInEditPanel>
       <Previous>&lt; Назад</Previous>
       <Next>Далее &gt;</Next>

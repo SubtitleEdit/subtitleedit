@@ -1232,8 +1232,6 @@ Treci la "Opțiuni -&gt; Setări -&gt; Unelte" ptr. a introduce codul API al Goo
     <Controls>
       <SubtitleFormat>Format</SubtitleFormat>
       <FileEncoding>Codare</FileEncoding>
-      <ListView>Vizualizare listă</ListView>
-      <SourceView>Vizualizare sursă</SourceView>
       <UndoChangesInEditPanel>Anulează modificările din panoul de editare</UndoChangesInEditPanel>
       <Previous>&lt; Înapoi</Previous>
       <Next>Înainte &gt;</Next>

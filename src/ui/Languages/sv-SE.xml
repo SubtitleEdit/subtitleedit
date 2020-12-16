@@ -1196,8 +1196,6 @@ Gå till "Alternativ -&gt; Inställningar -&gt; Verktyg" för att ange din Googl
     <Controls>
       <SubtitleFormat>Text format</SubtitleFormat>
       <FileEncoding>Filkodning</FileEncoding>
-      <ListView>Listvy</ListView>
-      <SourceView>Ursprungskällan</SourceView>
       <UndoChangesInEditPanel>Ångra ändringar i redigirutan</UndoChangesInEditPanel>
       <Previous>&lt; Bakåt</Previous>
       <Next>Nästa &gt;</Next>

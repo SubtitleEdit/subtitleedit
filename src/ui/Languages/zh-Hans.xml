@@ -1251,8 +1251,6 @@ Command line: {1} {2}
     <Controls>
       <SubtitleFormat>格式</SubtitleFormat>
       <FileEncoding>编码方式</FileEncoding>
-      <ListView>列表视图</ListView>
-      <SourceView>源视图</SourceView>
       <UndoChangesInEditPanel>撤消编辑框内更改</UndoChangesInEditPanel>
       <Previous>&lt; 上一行</Previous>
       <Next>下一行 &gt;</Next>

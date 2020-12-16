@@ -1079,8 +1079,6 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <Controls>
       <SubtitleFormat>格式</SubtitleFormat>
       <FileEncoding>編碼</FileEncoding>
-      <ListView>清單檢視</ListView>
-      <SourceView>來源檢視</SourceView>
       <UndoChangesInEditPanel>復原編輯面板內的變更</UndoChangesInEditPanel>
       <Previous>&lt; 上一行</Previous>
       <Next>下一行 &gt;</Next>

@@ -1620,6 +1620,8 @@
                     public string RemoveActors { get; set; }
                     public string EditBookmark { get; set; }
                     public string RemoveBookmark { get; set; }
+                    public string GoToSourceView { get; set; }
+                    public string GoToListView { get; set; }
                 }
 
                 public FileMenu File { get; set; }
@@ -1640,8 +1642,6 @@
             {
                 public string SubtitleFormat { get; set; }
                 public string FileEncoding { get; set; }
-                public string ListView { get; set; }
-                public string SourceView { get; set; }
                 public string UndoChangesInEditPanel { get; set; }
                 public string Previous { get; set; }
                 public string Next { get; set; }

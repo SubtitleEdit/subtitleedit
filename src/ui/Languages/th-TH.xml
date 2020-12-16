@@ -1038,8 +1038,6 @@
     <Controls>
       <SubtitleFormat>รูปแบบ</SubtitleFormat>
       <FileEncoding>รหัสภาษา</FileEncoding>
-      <ListView>ลิสต์วิว</ListView>
-      <SourceView>ซอร์สวิว</SourceView>
       <UndoChangesInEditPanel>เลิกทำสิ่งที่แก้ไขไปในช่องแก้ไข</UndoChangesInEditPanel>
       <Previous>&lt; ก่อน</Previous>
       <Next>หลัง &gt;</Next>

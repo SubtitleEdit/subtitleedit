@@ -1165,8 +1165,6 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <Controls>
       <SubtitleFormat>Format</SubtitleFormat>
       <FileEncoding>Encodage</FileEncoding>
-      <ListView>Mode liste</ListView>
-      <SourceView>Mode source</SourceView>
       <UndoChangesInEditPanel>Annuler changement</UndoChangesInEditPanel>
       <Previous>&lt; Préc.</Previous>
       <Next>Suiv. &gt;</Next>

@@ -1247,8 +1247,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Controls>
       <SubtitleFormat>Μορφή</SubtitleFormat>
       <FileEncoding>Κωδικοποίηση</FileEncoding>
-      <ListView>Προβολή λίστας</ListView>
-      <SourceView>Προβολή πηγής</SourceView>
       <UndoChangesInEditPanel>Αναίρεση αλλαγών στον πίνακα επεξεργασίας</UndoChangesInEditPanel>
       <Previous>&lt; Προηγούμενο</Previous>
       <Next>Επόμενο &gt;</Next>

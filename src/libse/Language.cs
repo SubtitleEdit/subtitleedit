@@ -1766,6 +1766,8 @@ namespace Nikse.SubtitleEdit.Core
                         RemoveActors = "Remove actors",
                         EditBookmark = "Edit bookmark",
                         RemoveBookmark = "Remove bookmark",
+                        GoToSourceView = "Go to source view",
+                        GoToListView = "Go to list view"
                     }
                 },
 
@@ -1773,8 +1775,6 @@ namespace Nikse.SubtitleEdit.Core
                 {
                     SubtitleFormat = "Format",
                     FileEncoding = "Encoding",
-                    ListView = "List view",
-                    SourceView = "Source view",
                     UndoChangesInEditPanel = "Undo changes in edit panel",
                     Previous = "< Prev",
                     Next = "Next >",
