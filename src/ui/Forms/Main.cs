@@ -14541,6 +14541,14 @@ namespace Nikse.SubtitleEdit.Forms
                     e.SuppressKeyPress = true;
                 }
             }
+            else if (e.KeyData == _shortcuts.VideoStop)
+            {
+                if (mediaPlayer.VideoPlayer != null)
+                {
+                    mediaPlayer.Stop();
+                    e.SuppressKeyPress = true;
+                }
+            }
             else if (_shortcuts.MainVideoPlayFromJustBefore == e.KeyData)
             {
                 buttonBeforeText_Click(null, null);
@@ -14549,7 +14557,6 @@ namespace Nikse.SubtitleEdit.Forms
             else if (_shortcuts.MainVideoPlayFromBeginning == e.KeyData)
             {
                 mediaPlayer.Stop();
-                mediaPlayer.CurrentPosition = 0;
                 mediaPlayer.Play();
                 e.SuppressKeyPress = true;
             }
