@@ -9,44 +9,24 @@ namespace Nikse.SubtitleEdit.Core.Translate
 {
     
 
-    public class SingleParagraphTranslationProcessor : AbstractTranslationProcessor<SingleParagraphTranslationProcessor.IndexedParagraph>
+    public class SingleParagraphTranslationProcessor : AbstractTranslationProcessor<Paragraph>
     {
-        public class IndexedParagraph : ITranslationUnit
-        {
-            private readonly Paragraph _sourceParagraph;
-            public int Index { get; }
-
-            public IndexedParagraph(Paragraph sourceParagraph, int index)
-            {
-                this._sourceParagraph = sourceParagraph;
-                this.Index = index;
-            }
-
-            public string GetText()
-            {
-                return _sourceParagraph.Text;
-            }
-        }
-
         public override string ToString()
         {
             return "Single Paragraph";
         }
 
-        protected override IEnumerable<IndexedParagraph> ConstructTranslationUnits(List<Paragraph> sourceParagraphs)
+        protected override IEnumerable<Paragraph> ConstructTranslationBaseUnits(List<Paragraph> sourceParagraphs)
         {
-            foreach (var sourceParagraph in sourceParagraphs)
-            {
-                yield return new IndexedParagraph(sourceParagraph, sourceParagraph.Number);
-            }
+            return sourceParagraphs;
         }
 
-        protected override Dictionary<int, string> GetTargetParagraphs(List<IndexedParagraph> sourceTranslationUnits, List<string> targetTexts)
+        protected override Dictionary<int, string> GetTargetParagraphs(List<Paragraph> sourceTranslationUnits, List<string> targetTexts)
         {
             Dictionary<int, string> targetParagraphs = new Dictionary<int, string>();
             for (int i = 0; i < sourceTranslationUnits.Count; i++)
             {
-                targetParagraphs.Add(sourceTranslationUnits[i].Index, targetTexts[i]);
+                targetParagraphs.Add(sourceTranslationUnits[i].Number, targetTexts[i]);
             }
             return targetParagraphs;
         }

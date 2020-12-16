@@ -49,17 +49,21 @@ namespace Nikse.SubtitleEdit.Core.Translate
 
         }
 
-        public class Sentence : ITranslationUnit
+        public class Sentence : ITranslationBaseUnit
         {
             public List<SentenceParagraphRelation> SentenceParagraphs = new List<SentenceParagraphRelation>();
 
-            public string GetText()
+            public string Text
             {
-                string text = string.Join(" ", SentenceParagraphs.ConvertAll(e => e.Text));
-                text = Regex.Replace(text, @"\s+", " "); //replace new lines and multiple spaces to a single space
-                text = text.Trim();
-                return text;
+                get
+                {
+                    string text = string.Join(" ", SentenceParagraphs.ConvertAll(e => e.Text));
+                    text = Regex.Replace(text, @"\s+", " "); //replace new lines and multiple spaces to a single space
+                    text = text.Trim();
+                    return text;
+                }
             }
+
 
             /**
              * divides the full sentence in multiple chunks and assigns them to the source paragraphs.
@@ -109,7 +113,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
             {
                 if (lastParagraphNumber + 1 != paragraph.Number) //check if paragraphs belong sequentially together 
                 {
-                    if (currentSentence.GetText().Trim().Length > 0) //this check avoid to add empty Sentence
+                    if (currentSentence.Text.Trim().Length > 0) //this check avoid to add empty Sentence
                     {
                         yield return currentSentence;
                         currentSentence = new Sentence();
@@ -135,7 +139,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
                     }
                 }
             }
-            if (currentSentence.GetText().Trim().Length > 0) //this check avoid a empty last Sentence (could happen when the last chunk ends with a delimiter)
+            if (currentSentence.Text.Trim().Length > 0) //this check avoid a empty last Sentence (could happen when the last chunk ends with a delimiter)
             {
                 yield return currentSentence;
             }
@@ -165,7 +169,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
             return output;
         }
 
-        protected override IEnumerable<Sentence> ConstructTranslationUnits(List<Paragraph> sourceParagraphs)
+        protected override IEnumerable<Sentence> ConstructTranslationBaseUnits(List<Paragraph> sourceParagraphs)
         {
             return ConcatSentences(sourceParagraphs).ToList();
         }
