@@ -1243,8 +1243,6 @@ Przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby wpisać swój klucz A
     <Controls>
       <SubtitleFormat>Format</SubtitleFormat>
       <FileEncoding>Kodowanie</FileEncoding>
-      <ListView>Widok listy</ListView>
-      <SourceView>Widok źródła</SourceView>
       <UndoChangesInEditPanel>Cofnij zmiany w panelu edycji</UndoChangesInEditPanel>
       <Previous>&lt; Wróć</Previous>
       <Next>Dalej &gt;</Next>

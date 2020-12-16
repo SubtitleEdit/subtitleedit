@@ -1256,8 +1256,6 @@ Aller à "Options -&gt; Paramètres -&gt; Outils" pour entrer votre clé API pou
     <Controls>
       <SubtitleFormat>Format</SubtitleFormat>
       <FileEncoding>Code</FileEncoding>
-      <ListView>Mode liste</ListView>
-      <SourceView>Mode source</SourceView>
       <UndoChangesInEditPanel>Défaire modif. édition</UndoChangesInEditPanel>
       <Previous>&lt; Préc.</Previous>
       <Next>Suiv. &gt;</Next>

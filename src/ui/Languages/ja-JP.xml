@@ -1040,8 +1040,6 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <Controls>
       <SubtitleFormat>フォーマット</SubtitleFormat>
       <FileEncoding>エンコード</FileEncoding>
-      <ListView>リスト ビュー</ListView>
-      <SourceView>ソース ビュー</SourceView>
       <UndoChangesInEditPanel>編集を元に戻す</UndoChangesInEditPanel>
       <Previous>&lt; 前へ</Previous>
       <Next>次へ &gt;</Next>

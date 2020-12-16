@@ -1093,8 +1093,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Controls>
       <SubtitleFormat>Формат</SubtitleFormat>
       <FileEncoding>Кодування</FileEncoding>
-      <ListView>Список</ListView>
-      <SourceView>Сирець</SourceView>
       <UndoChangesInEditPanel>Скасувати зміни в панелі редагування</UndoChangesInEditPanel>
       <Previous>&lt; Поп.</Previous>
       <Next>Наст. &gt;</Next>

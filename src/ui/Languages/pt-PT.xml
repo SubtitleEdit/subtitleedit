@@ -1242,8 +1242,6 @@ Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave AP
     <Controls>
       <SubtitleFormat>Formato</SubtitleFormat>
       <FileEncoding>Codificação</FileEncoding>
-      <ListView>Lista</ListView>
-      <SourceView>Original</SourceView>
       <UndoChangesInEditPanel>Anular alterações no painel de edição</UndoChangesInEditPanel>
       <Previous>Anterior</Previous>
       <Next>Próxima</Next>

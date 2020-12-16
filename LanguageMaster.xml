@@ -1258,7 +1258,6 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
     <Controls>
       <SubtitleFormat>Format</SubtitleFormat>
       <FileEncoding>Encoding</FileEncoding>
-      <ListView>List view</ListView>
       <UndoChangesInEditPanel>Undo changes in edit panel</UndoChangesInEditPanel>
       <Previous>&lt; Prev</Previous>
       <Next>Next &gt;</Next>

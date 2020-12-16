@@ -1201,8 +1201,6 @@ Idite na "Opcije -&gt; Podešavanja -&gt; Alatke" i unesite vaš API ključ.</Go
     <Controls>
       <SubtitleFormat>Format</SubtitleFormat>
       <FileEncoding>Kodiranje</FileEncoding>
-      <ListView>Lista</ListView>
-      <SourceView>Izvor</SourceView>
       <UndoChangesInEditPanel>Poništi radnju</UndoChangesInEditPanel>
       <Previous>&lt; Preth</Previous>
       <Next>Iduće &gt;</Next>

@@ -1242,8 +1242,6 @@ Lépjen az "Opciók -&gt; Beállítások -&gt; Eszközök" lapra a Google fordí
     <Controls>
       <SubtitleFormat>Formátum</SubtitleFormat>
       <FileEncoding>Kódolás</FileEncoding>
-      <ListView>Listanézet</ListView>
-      <SourceView>Forrásnézet</SourceView>
       <UndoChangesInEditPanel>Módosítások visszavonása a szerkesztő panelben</UndoChangesInEditPanel>
       <Previous>&lt; Előző</Previous>
       <Next>Köv &gt;</Next>

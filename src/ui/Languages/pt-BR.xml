@@ -1228,8 +1228,6 @@ Vá para "Opções -&gt; Configurações -&gt; Ferramentas" para inserir sua cha
     <Controls>
       <SubtitleFormat>Formato</SubtitleFormat>
       <FileEncoding>Codificação</FileEncoding>
-      <ListView>Lista</ListView>
-      <SourceView>Original</SourceView>
       <UndoChangesInEditPanel>Desfazer alterações no painel de edição</UndoChangesInEditPanel>
       <Previous>&lt; Anterior</Previous>
       <Next>Próximo &gt;</Next>

@@ -1258,8 +1258,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Controls>
       <SubtitleFormat>Формат на субтитрите</SubtitleFormat>
       <FileEncoding>Кодиране на файла</FileEncoding>
-      <ListView>Изглед на списъка</ListView>
-      <SourceView>Изглед оригинал</SourceView>
       <UndoChangesInEditPanel>Отмени промените</UndoChangesInEditPanel>
       <Previous>&lt;Назад</Previous>
       <Next>Напред&gt;</Next>

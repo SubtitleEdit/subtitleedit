@@ -1231,8 +1231,6 @@ Open ‘Instellingen -&gt; Voorkeuren -&gt; Extra’ voor meer informatie.</Goog
     <Controls>
       <SubtitleFormat>Opmaak</SubtitleFormat>
       <FileEncoding>Codering</FileEncoding>
-      <ListView>Lĳstweergave</ListView>
-      <SourceView>Bronweergave</SourceView>
       <UndoChangesInEditPanel>Wĳzigingen ongedaan maken</UndoChangesInEditPanel>
       <Previous>&lt; Vorige</Previous>
       <Next>Volgende &gt;</Next>

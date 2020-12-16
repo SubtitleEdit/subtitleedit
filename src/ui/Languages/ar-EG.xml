@@ -717,8 +717,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Controls>
       <SubtitleFormat>تشكيل</SubtitleFormat>
       <FileEncoding>الترميز</FileEncoding>
-      <ListView>عرض القائمة</ListView>
-      <SourceView>عرض المصدر</SourceView>
       <UndoChangesInEditPanel>التراجع عن التغييرات في لوحة التحرير</UndoChangesInEditPanel>
       <Previous>&lt; السابق</Previous>
       <Next>التالى &gt;</Next>
