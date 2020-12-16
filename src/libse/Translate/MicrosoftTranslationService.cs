@@ -214,7 +214,6 @@ namespace Nikse.SubtitleEdit.Core.Translate
             return this.GetTranslationPairs();
         }
 
-
         public int GetMaxTextSize()
         {
             return 1000;

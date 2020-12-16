@@ -446,7 +446,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (!_googleTranslate)
             {
-                foreach (var bingLanguageCode in _translationStrategy.GetTranslationPairs())
+                var microsoftTranslationService = new MicrosoftTranslationService(Configuration.Settings.Tools.MicrosoftTranslatorApiKey, Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint, Configuration.Settings.Tools.MicrosoftTranslatorCategory);
+
+                foreach (var bingLanguageCode in microsoftTranslationService.GetTranslationPairs())
                 {
                     comboBox.Items.Add(new ComboBoxItem(bingLanguageCode.Name, bingLanguageCode.Code));
                 }
@@ -458,7 +460,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void FillComboWithGoogleLanguages(ComboBox comboBox)
         {
-            var translator = new GoogleTranslator2(Configuration.Settings.Tools.GoogleApiV2Key);
+            var translator = new GoogleTranslationService();
+            translator.Init();
             foreach (var pair in translator.GetTranslationPairs())
             {
                 comboBox.Items.Add(new ComboBoxItem(pair.Name, pair.Code));

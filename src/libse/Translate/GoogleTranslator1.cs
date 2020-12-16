@@ -16,16 +16,6 @@ namespace Nikse.SubtitleEdit.Core.Translate
     {
         private const char SplitChar = '\n';
 
-        public List<TranslationPair> GetTranslationPairs()
-        {
-            return new GoogleTranslator2(string.Empty).GetTranslationPairs();
-        }
-
-        public string GetName()
-        {
-            return "Google translate (old)";
-        }
-
         public int GetMaxTextSize()
         {
             return Configuration.Settings.Tools.GoogleApiV1ChunkSize;

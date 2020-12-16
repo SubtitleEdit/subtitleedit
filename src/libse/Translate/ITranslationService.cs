@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
         List<TranslationPair> GetSupportedSourceLanguages();
         List<TranslationPair> GetSupportedTargetLanguages();
 
-
+        string GetName();
         List<string> Init();
     }
 }
