@@ -443,8 +443,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.insertSubtitleHereToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainerMain = new System.Windows.Forms.SplitContainer();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.tabControlSubtitle = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
             this.splitContainerListViewAndText = new System.Windows.Forms.SplitContainer();
             this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.imageListBookmarks = new System.Windows.Forms.ImageList(this.components);
@@ -521,7 +519,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxListViewText = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.labelDuration = new System.Windows.Forms.Label();
             this.labelAutoDuration = new System.Windows.Forms.Label();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.textBoxSource = new System.Windows.Forms.TextBox();
             this.contextMenuStripTextBoxSourceView = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemGoToListView = new System.Windows.Forms.ToolStripMenuItem();
@@ -561,8 +558,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.tabControlSubtitle.SuspendLayout();
-            this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerListViewAndText)).BeginInit();
             this.splitContainerListViewAndText.Panel1.SuspendLayout();
             this.splitContainerListViewAndText.Panel2.SuspendLayout();
@@ -572,7 +567,6 @@ namespace Nikse.SubtitleEdit.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBookmark)).BeginInit();
             this.contextMenuStripTextBoxListView.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).BeginInit();
-            this.tabPage2.SuspendLayout();
             this.contextMenuStripTextBoxSourceView.SuspendLayout();
             this.panelVideoPlayer.SuspendLayout();
             this.contextMenuStripEmpty.SuspendLayout();
@@ -4215,7 +4209,9 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.tabControlSubtitle);
+            this.splitContainer1.Panel1.Controls.Add(this.splitContainerListViewAndText);
+            this.splitContainer1.Panel1.Controls.Add(this.textBoxSource);
+            this.splitContainer1.Panel1.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
             // 
             // splitContainer1.Panel2
             // 
@@ -4225,39 +4221,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.splitContainer1.TabIndex = 7;
             this.splitContainer1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.SplitContainer1SplitterMoved);
             // 
-            // tabControlSubtitle
-            // 
-            this.tabControlSubtitle.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControlSubtitle.Controls.Add(this.tabPage1);
-            this.tabControlSubtitle.Controls.Add(this.tabPage2);
-            this.tabControlSubtitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tabControlSubtitle.Location = new System.Drawing.Point(3, 3);
-            this.tabControlSubtitle.Name = "tabControlSubtitle";
-            this.tabControlSubtitle.SelectedIndex = 0;
-            this.tabControlSubtitle.Size = new System.Drawing.Size(738, 248);
-            this.tabControlSubtitle.TabIndex = 0;
-            this.tabControlSubtitle.SelectedIndexChanged += new System.EventHandler(this.TabControlSubtitleSelectedIndexChanged);
-            this.tabControlSubtitle.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.TabControlSubtitleSelecting);
-            // 
-            // tabPage1
-            // 
-            this.tabPage1.Controls.Add(this.splitContainerListViewAndText);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(730, 222);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "List view";
-            this.tabPage1.UseVisualStyleBackColor = true;
-            // 
             // splitContainerListViewAndText
             // 
             this.splitContainerListViewAndText.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainerListViewAndText.Location = new System.Drawing.Point(3, 3);
             this.splitContainerListViewAndText.Name = "splitContainerListViewAndText";
             this.splitContainerListViewAndText.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.splitContainerListViewAndText.VisibleChanged += new System.EventHandler(this.ListViewVisibleChanged);
             // 
             // splitContainerListViewAndText.Panel1
             // 
@@ -4311,6 +4281,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // groupBoxEdit
             // 
+            this.groupBoxEdit.BackColor = System.Drawing.Color.White;
             this.groupBoxEdit.Controls.Add(this.labelAlternateSingleLinePixels);
             this.groupBoxEdit.Controls.Add(this.labelSingleLinePixels);
             this.groupBoxEdit.Controls.Add(this.panelBookmark);
@@ -5039,17 +5010,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelAutoDuration.TabIndex = 30;
             this.labelAutoDuration.Text = "Auto";
             // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.textBoxSource);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(730, 222);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Source view";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
             // textBoxSource
             // 
             this.textBoxSource.AllowDrop = true;
@@ -5066,6 +5026,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxSource.WordWrap = false;
             this.textBoxSource.Click += new System.EventHandler(this.TextBoxSourceClick);
             this.textBoxSource.TextChanged += new System.EventHandler(this.TextBoxSourceTextChanged);
+            this.textBoxSource.VisibleChanged += new System.EventHandler(this.SourceViewVisibleChanged);
             this.textBoxSource.DragDrop += new System.Windows.Forms.DragEventHandler(this.TextBoxSourceDragDrop);
             this.textBoxSource.DragEnter += new System.Windows.Forms.DragEventHandler(this.TextBoxSourceDragEnter);
             this.textBoxSource.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxSourceKeyDown);
@@ -5248,8 +5209,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.tabControlSubtitle.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
             this.splitContainerListViewAndText.Panel1.ResumeLayout(false);
             this.splitContainerListViewAndText.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerListViewAndText)).EndInit();
@@ -5261,8 +5220,6 @@ namespace Nikse.SubtitleEdit.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBookmark)).EndInit();
             this.contextMenuStripTextBoxListView.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).EndInit();
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
             this.contextMenuStripTextBoxSourceView.ResumeLayout(false);
             this.panelVideoPlayer.ResumeLayout(false);
             this.contextMenuStripEmpty.ResumeLayout(false);
@@ -5295,10 +5252,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem replaceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem gotoLineNumberToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
-        private System.Windows.Forms.TabControl tabControlSubtitle;
-        private System.Windows.Forms.TabPage tabPage1;
         private Nikse.SubtitleEdit.Controls.SubtitleListView SubtitleListview1;
-        private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TextBox textBoxSource;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripTextBoxSourceView;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemGoToListView;

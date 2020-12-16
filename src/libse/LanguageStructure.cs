@@ -1643,7 +1643,6 @@
                 public string SubtitleFormat { get; set; }
                 public string FileEncoding { get; set; }
                 public string ListView { get; set; }
-                public string SourceView { get; set; }
                 public string UndoChangesInEditPanel { get; set; }
                 public string Previous { get; set; }
                 public string Next { get; set; }

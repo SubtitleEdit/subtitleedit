@@ -4156,9 +4156,6 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/Controls/ListView":
                     language.Main.Controls.ListView = reader.Value;
                     break;
-                case "Main/Controls/SourceView":
-                    language.Main.Controls.SourceView = reader.Value;
-                    break;
                 case "Main/Controls/UndoChangesInEditPanel":
                     language.Main.Controls.UndoChangesInEditPanel = reader.Value;
                     break;
