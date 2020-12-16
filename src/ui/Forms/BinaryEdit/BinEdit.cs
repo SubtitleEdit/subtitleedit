@@ -101,6 +101,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             var ext = Path.GetExtension(fileName)?.ToLowerInvariant();
             if (FileUtil.IsBluRaySup(fileName))
             {
+                CleanUp();
                 var log = new StringBuilder();
                 var bluRaySubtitles = BluRaySupParser.ParseBluRaySup(fileName, log);
                 _subtitle = new Subtitle();
@@ -216,6 +217,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
         private bool LoadTransportStreamSubtitle(TransportStreamParser tsParser, int packetId)
         {
+            CleanUp();
             var subtitles = tsParser.GetDvbSubtitles(packetId);
             _subtitle = new Subtitle();
             _extra = new List<Extra>();
@@ -229,7 +231,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                     if (bmpFirst != null && bmpFirst.Width > 1 && bmpFirst.Height > 1)
                     {
                         SetResolution(s.GetScreenSize());
-                        //                        SetFrameRate(s.FramesPerSecondType);
+                        //TODO: set frame rate!?
                         first = false;
                     }
                 }
@@ -308,6 +310,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 return false;
             }
 
+            CleanUp();
             var sub = matroska.GetSubtitle(matroskaSubtitleInfo.TrackNumber, null);
             var subtitles = new List<BluRaySupParser.PcsData>();
             var log = new StringBuilder();
@@ -410,6 +413,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
         private bool LoadDvbFromMatroska(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska)
         {
+            CleanUp();
             var sub = matroska.GetSubtitle(matroskaSubtitleInfo.TrackNumber, null);
             var subtitleImages = new List<DvbSubPes>();
             var subtitle = new Subtitle();
@@ -1605,6 +1609,20 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             }
 
             CloseVideo();
+            CleanUp();
+        }
+
+        private void CleanUp()
+        {
+            if (_extra == null)
+            {
+                return;
+            }
+
+            foreach (var extra in _extra)
+            {
+                extra.Bitmap?.Dispose();
+            }
         }
 
         private bool HasChanges()
@@ -1855,7 +1873,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             {
                 var index = subtitleListView1.SelectedIndices[i];
                 var extra = _extra[index];
-                var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : _binSubtitles[index].GetBitmap();
+                var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : GetBitmap(_binSubtitles[index]);
                 extra.X = (int)Math.Round(numericUpDownScreenWidth.Value / 2.0m - bmp.Width / 2.0m);
 
                 if (index == idx)
@@ -1884,7 +1902,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
                 if (index == idx)
                 {
-                    var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : _binSubtitles[index].GetBitmap();
+                    var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : GetBitmap(_binSubtitles[index]);
                     ShowCurrentScaledImage(bmp, extra);
                     numericUpDownY.Value = extra.Y;
                 }
@@ -1903,7 +1921,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             {
                 var index = subtitleListView1.SelectedIndices[i];
                 var extra = _extra[index];
-                var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : _binSubtitles[index].GetBitmap();
+                var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : GetBitmap(_binSubtitles[index]);
                 extra.Y = (int)Math.Round(numericUpDownScreenHeight.Value - bmp.Height - numericUpDownScreenHeight.Value * 0.05m);
 
                 if (index == idx)
@@ -1914,6 +1932,73 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
                 bmp.Dispose();
             }
+        }
+
+        private void colorSelectedLinesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (subtitleListView1.SelectedItems.Count < 1)
+            {
+                return;
+            }
+
+            var color = Color.Yellow;
+            using (var colorChooser = new ColorChooser { Color = color, ShowAlpha = false })
+            {
+                if (colorChooser.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
+                color = colorChooser.Color;
+            }
+
+            var total = color.R + color.G + color.B;
+            var redPercent = color.R * 100 / total;
+            var greenPercent = color.G * 100 / total;
+            var bluePercent = color.B * 100 / total;
+
+            var idx = subtitleListView1.SelectedItems[0].Index;
+            for (int i = 0; i < subtitleListView1.SelectedIndices.Count; i++)
+            {
+                var index = subtitleListView1.SelectedIndices[i];
+                var extra = _extra[index];
+                var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : GetBitmap(_binSubtitles[index]);
+
+                if (bmp.Width > 0 && bmp.Height > 0)
+                {
+                    var newBitmap = ColorBitmap(bmp, redPercent, greenPercent, bluePercent);
+                    extra.Bitmap?.Dispose();
+                    extra.Bitmap = newBitmap;
+
+                    if (index == idx)
+                    {
+                        ShowCurrentScaledImage((Bitmap)newBitmap.Clone(), extra);
+                    }
+                }
+
+                bmp.Dispose();
+            }
+        }
+
+        private Bitmap ColorBitmap(Bitmap bitmap, int redPercent, int greenPercent, int bluePercent)
+        {
+            var nikseBitmap = new NikseBitmap(bitmap);
+            for (int x = 0; x < nikseBitmap.Width; x++)
+            {
+                for (int y = 0; y < nikseBitmap.Height; y++)
+                {
+                    var color = nikseBitmap.GetPixel(x, y);
+                    var totalCurrent = color.R + color.G + color.B;
+                    if (totalCurrent > 100)
+                    {
+                        var r = Math.Min(byte.MaxValue, redPercent * totalCurrent / 100);
+                        var g = Math.Min(byte.MaxValue, greenPercent * totalCurrent / 100);
+                        var b = Math.Min(byte.MaxValue, bluePercent * totalCurrent / 100);
+                        var newColor = Color.FromArgb(r, g, b);
+                        nikseBitmap.SetPixel(x, y, newColor);
+                    }
+                }
+            }
+            return nikseBitmap.GetBitmap();
         }
     }
 }

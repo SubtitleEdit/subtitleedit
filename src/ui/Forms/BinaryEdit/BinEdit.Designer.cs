@@ -94,6 +94,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.timerSubtitleOnVideo = new System.Windows.Forms.Timer(this.components);
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.labelVideoInfo = new System.Windows.Forms.Label();
+            this.colorSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxCurrent.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).BeginInit();
@@ -393,12 +394,13 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.centerSelectedLineshorizontallyToolStripMenuItem,
             this.topAlignSelectedLinesToolStripMenuItem,
             this.bottomAlignSelectedLinesToolStripMenuItem,
+            this.colorSelectedLinesToolStripMenuItem,
             this.toolStripSeparator5,
             this.insertSubtitleAfterThisLineToolStripMenuItem,
             this.adjustAllTimesForSelectedLinesToolStripMenuItem,
             this.oCRTextsforOverviewOnlyToolStripMenuItem});
             this.contextMenuStripListView.Name = "contextMenuStripListView";
-            this.contextMenuStripListView.Size = new System.Drawing.Size(263, 236);
+            this.contextMenuStripListView.Size = new System.Drawing.Size(263, 258);
             this.contextMenuStripListView.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripListView_Opening);
             // 
             // deleteToolStripMenuItem
@@ -732,6 +734,13 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.labelVideoInfo.TabIndex = 9;
             this.labelVideoInfo.Text = "Video info";
             // 
+            // colorSelectedLinesToolStripMenuItem
+            // 
+            this.colorSelectedLinesToolStripMenuItem.Name = "colorSelectedLinesToolStripMenuItem";
+            this.colorSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(262, 22);
+            this.colorSelectedLinesToolStripMenuItem.Text = "Color selected lines...";
+            this.colorSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.colorSelectedLinesToolStripMenuItem_Click);
+            // 
             // BinEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -840,5 +849,6 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private System.Windows.Forms.ToolStripMenuItem topAlignSelectedLinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bottomAlignSelectedLinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ToolStripMenuItem colorSelectedLinesToolStripMenuItem;
     }
 }
