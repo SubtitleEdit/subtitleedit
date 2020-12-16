@@ -297,35 +297,16 @@ namespace Nikse.SubtitleEdit.Forms
                 translator.Translate(_translationService, _fromLanguageIsoCode, _toLanguageIsoCode, selectedParagraphs, targetParagraphs =>
                 {
                     FillTranslatedText(targetParagraphs);
-                    progressBar1.Value += targetParagraphs.Count;
+                    int lastIndex = TranslatedSubtitle.Paragraphs.FindIndex(x => x.Number == targetParagraphs.Keys.Last());
+                    progressBar1.Value = lastIndex;
                     Application.DoEvents();
                     return _breakTranslation;
                 });
             }
-            catch (WebException webException)
+            catch (TranslationException translationException)
             {
-                if (_translationService.GetType() == typeof(GoogleTranslator1))
-                {
-                    MessageBox.Show("Free API quota exceeded?" + Environment.NewLine +
-                                    Environment.NewLine +
-                                    webException.Source + ": " + webException.Message);
-                }
-                else if (_translationService.GetType() == typeof(GoogleTranslator2) && webException.Message.Contains("(400) Bad Request"))
-                {
-                    MessageBox.Show("API key invalid (or perhaps billing is not enabled)?" + Environment.NewLine +
-                                    Environment.NewLine +
-                                    webException.Source + ": " + webException.Message);
-                }
-                else if (_translationService.GetType() == typeof(GoogleTranslator2) && webException.Message.Contains("(403) Forbidden."))
-                {
-                    MessageBox.Show("Perhaps billing is not enabled (or API key is invalid)?" + Environment.NewLine +
-                                    Environment.NewLine +
-                                    webException.Source + ": " + webException.Message);
-                }
-                else
-                {
-                    MessageBox.Show(webException.Source + ": " + webException.Message);
-                }
+                MessageBox.Show(translationException.Message + Environment.NewLine +
+                                translationException.InnerException.Source + ": " + translationException.InnerException.Message);
             }
             finally
             {
@@ -358,8 +339,6 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListViewTo.SelectIndexAndEnsureVisible(lastIndex);
             subtitleListViewTo.EndUpdate();
         }
-
-       
 
         private string CleanText(string s, int index)
         {
