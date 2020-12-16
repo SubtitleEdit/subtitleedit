@@ -14509,7 +14509,6 @@ namespace Nikse.SubtitleEdit.Forms
             else if (_shortcuts.MainVideoPlayFromBeginning == e.KeyData)
             {
                 mediaPlayer.Stop();
-                mediaPlayer.CurrentPosition = 0;
                 mediaPlayer.Play();
                 e.SuppressKeyPress = true;
             }
