@@ -7262,7 +7262,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (inSourceView)
             {
-                // Check
                 SwitchView(ListView);
             }
             else if (inListView)
