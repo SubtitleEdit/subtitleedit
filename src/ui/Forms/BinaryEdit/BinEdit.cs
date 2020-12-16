@@ -161,7 +161,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
             if (_subtitle != null)
             {
-                subtitleListView1.SelectIndexAndEnsureVisible(_subtitle.GetParagraphOrDefault(0));
+                subtitleListView1.SelectIndexAndEnsureVisible(0, true);
             }
 
             _lastSaveHash = GetStateHash();
@@ -596,7 +596,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 _subtitle.Paragraphs.Add(p);
                 _extra.Add(new Extra { Bitmap = new Bitmap(2, 2), IsForced = checkBoxIsForced.Checked, X = (int)numericUpDownX.Value, Y = (int)numericUpDownY.Value });
                 subtitleListView1.Fill(_subtitle);
-                subtitleListView1.SelectIndexAndEnsureVisible(0);
+                subtitleListView1.SelectIndexAndEnsureVisible(0, true);
                 return;
             }
 
@@ -620,7 +620,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.NewEmptyDefaultMs;
                 _binSubtitles.Insert(idx, new BluRaySupParser.PcsData());
                 subtitleListView1.Fill(_subtitle);
-                subtitleListView1.SelectIndexAndEnsureVisible(idx);
+                subtitleListView1.SelectIndexAndEnsureVisible(idx, true);
             }
         }
 
@@ -642,7 +642,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
             var idx = subtitleListView1.SelectedItems[0].Index;
             var p = _subtitle.Paragraphs[idx];
-            groupBoxCurrent.Text = $"{(idx + 1)} / {(_subtitle.Paragraphs.Count + 1)}";
+            groupBoxCurrent.Text = $"{idx + 1} / {_subtitle.Paragraphs.Count}";
             if (videoPlayerContainer1.VideoPlayer != null && videoPlayerContainer1.IsPaused)
             {
                 videoPlayerContainer1.CurrentPosition = p.StartTime.TotalSeconds;
@@ -696,7 +696,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
             if (idx >= 0)
             {
-                subtitleListView1.SelectIndexAndEnsureVisible(_subtitle.GetParagraphOrDefault(idx));
+                subtitleListView1.SelectIndexAndEnsureVisible(idx, true);
             }
         }
 
@@ -755,7 +755,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                     selectedIndex = subtitleListView1.SelectedItems[0].Index;
                     selectedIndex++;
                 }
-                subtitleListView1.SelectIndexAndEnsureVisible(selectedIndex);
+                subtitleListView1.SelectIndexAndEnsureVisible(selectedIndex, true);
             }
             else if (_mainGeneralGoToPrevSubtitle == e.KeyData || (e.KeyCode == Keys.Up && e.Modifiers == Keys.Alt))
             {
@@ -765,7 +765,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                     selectedIndex = subtitleListView1.SelectedItems[0].Index;
                     selectedIndex--;
                 }
-                subtitleListView1.SelectIndexAndEnsureVisible(selectedIndex);
+                subtitleListView1.SelectIndexAndEnsureVisible(selectedIndex, true);
             }
         }
 
@@ -1154,7 +1154,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
             var idx = subtitleListView1.SelectedItems[0].Index;
             subtitleListView1.Fill(_subtitle);
-            subtitleListView1.SelectIndexAndEnsureVisible(_subtitle.GetParagraphOrDefault(idx));
+            subtitleListView1.SelectIndexAndEnsureVisible(idx, true);
         }
 
         private void ShowEarlierOrLaterParagraph(double adjustMilliseconds, int i)
@@ -1247,7 +1247,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 MessageBox.Show(string.Format(Configuration.Settings.Language.Main.TimeCodeImportedFromXY, Path.GetFileName(openFileDialog1.FileName), count));
                 var idx = subtitleListView1.SelectedItems[0].Index;
                 subtitleListView1.Fill(_subtitle);
-                subtitleListView1.SelectIndexAndEnsureVisible(_subtitle.GetParagraphOrDefault(idx));
+                subtitleListView1.SelectIndexAndEnsureVisible(idx, true);
             }
         }
 
@@ -1269,7 +1269,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                     MessageBox.Show(string.Format(Configuration.Settings.Language.Main.FrameRateChangedFromXToY, oldFrameRate, newFrameRate));
                     var idx = subtitleListView1.SelectedItems[0].Index;
                     subtitleListView1.Fill(_subtitle);
-                    subtitleListView1.SelectIndexAndEnsureVisible(_subtitle.GetParagraphOrDefault(idx));
+                    subtitleListView1.SelectIndexAndEnsureVisible(idx, true);
                 }
             }
         }
@@ -1303,7 +1303,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
                     var idx = subtitleListView1.SelectedItems[0].Index;
                     subtitleListView1.Fill(_subtitle);
-                    subtitleListView1.SelectIndexAndEnsureVisible(_subtitle.GetParagraphOrDefault(idx));
+                    subtitleListView1.SelectIndexAndEnsureVisible(idx, true);
                 }
             }
         }
@@ -1485,7 +1485,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
             if (_subtitle != null)
             {
-                subtitleListView1.SelectIndexAndEnsureVisible(_subtitle.GetParagraphOrDefault(idx));
+                subtitleListView1.SelectIndexAndEnsureVisible(idx, true);
             }
         }
 
@@ -1506,7 +1506,6 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private void contextMenuStripListView_Opening(object sender, CancelEventArgs e)
         {
             var selectedCount = subtitleListView1.SelectedItems.Count;
-            adjustAllTimesForSelectedLinesToolStripMenuItem.Visible = selectedCount > 1;
             insertToolStripMenuItem.Visible = selectedCount == 1;
             insertAfterToolStripMenuItem.Visible = selectedCount == 1;
             insertSubtitleAfterThisLineToolStripMenuItem.Visible = selectedCount == 1;
@@ -1589,7 +1588,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             {
                 if (_lastPlayParagraph != sub)
                 {
-                    subtitleListView1.SelectIndexAndEnsureVisible(_subtitle.Paragraphs.IndexOf(sub));
+                    subtitleListView1.SelectIndexAndEnsureVisible(_subtitle.Paragraphs.IndexOf(sub), true);
                     _lastPlayParagraph = sub;
                 }
                 pictureBoxMovableImage.Show();
@@ -1700,7 +1699,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 extra.IsForced = s.IsForced;
                 extra.X = pos.Left;
                 extra.Y = pos.Top;
-                subtitleListView1.SelectIndexAndEnsureVisible(idx);
+                subtitleListView1.SelectIndexAndEnsureVisible(idx, true);
             }
         }
 
@@ -1829,8 +1828,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                     idx = subtitleListView1.SelectedItems[0].Index;
                 }
                 subtitleListView1.Fill(_subtitle);
-                subtitleListView1.SelectIndexAndEnsureVisible(idx);
-                _nOcrFileName = null;
+                subtitleListView1.SelectIndexAndEnsureVisible(idx, true);
             };
             bw.RunWorkerAsync();
         }
@@ -1999,6 +1997,147 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 }
             }
             return nikseBitmap.GetBitmap();
+        }
+
+        private void adjustDisplayTimeForSelectedLinesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AdjustDisplayTime(true);
+        }
+
+        private void AdjustDisplayTime(bool onlySelectedLines)
+        {
+            if (subtitleListView1.SelectedItems.Count < 1)
+            {
+                return;
+            }
+
+            var idx = subtitleListView1.SelectedItems[0].Index;
+            using (var adjustDisplayTime = new AdjustDisplayDuration(_subtitle.Paragraphs.Any(p => !string.IsNullOrEmpty(p.Text))))
+            {
+                List<int> selectedIndices = null;
+                if (onlySelectedLines)
+                {
+                    adjustDisplayTime.Text += " - " + Configuration.Settings.Language.Main.SelectedLines;
+                    selectedIndices = new List<int>();
+                    foreach (int item in subtitleListView1.SelectedIndices)
+                    {
+                        selectedIndices.Add(item);
+                    }
+                }
+
+                if (adjustDisplayTime.ShowDialog(this) == DialogResult.OK)
+                {
+                    if (adjustDisplayTime.AdjustUsingPercent)
+                    {
+                        double percent = double.Parse(adjustDisplayTime.AdjustValue);
+                        _subtitle.AdjustDisplayTimeUsingPercent(percent, selectedIndices);
+                    }
+                    else if (adjustDisplayTime.AdjustUsingSeconds)
+                    {
+                        double seconds = double.Parse(adjustDisplayTime.AdjustValue, CultureInfo.InvariantCulture);
+                        _subtitle.AdjustDisplayTimeUsingSeconds(seconds, selectedIndices);
+                    }
+                    else if (adjustDisplayTime.AdjustUsingRecalc)
+                    {
+                        double maxCharSeconds = (double)(adjustDisplayTime.MaxCharactersPerSecond);
+                        _subtitle.RecalculateDisplayTimes(maxCharSeconds, selectedIndices, (double)adjustDisplayTime.OptimalCharactersPerSecond, adjustDisplayTime.ExtendOnly);
+                    }
+                    else
+                    { // fixed duration
+                        _subtitle.SetFixedDuration(selectedIndices, adjustDisplayTime.FixedMilliseconds);
+                    }
+                }
+
+                subtitleListView1.Fill(_subtitle);
+                subtitleListView1.SelectIndexAndEnsureVisible(idx, true);
+                foreach (var i in selectedIndices)
+                {
+                    subtitleListView1.Items[i].Selected = true;
+                }
+            }
+        }
+
+        private void adjustDisplayTimesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AdjustDisplayTime(false);
+        }
+
+        private void applyDurationLimitsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ApplyDisplayTimeLimits(false);
+        }
+
+        private void ApplyDisplayTimeLimits(bool onlySelectedLines)
+        {
+            if (subtitleListView1.SelectedItems.Count < 1)
+            {
+                return;
+            }
+
+            var idx = subtitleListView1.SelectedItems[0].Index;
+            using (var applyDurationLimits = new ApplyDurationLimits())
+            {
+                var selectedIndices = new List<int>();
+                if (onlySelectedLines)
+                {
+                    var selectedLines = new Subtitle();
+                    foreach (int index in subtitleListView1.SelectedIndices)
+                    {
+                        selectedLines.Paragraphs.Add(_subtitle.Paragraphs[index]);
+                        selectedIndices.Add(index);
+                    }
+
+                    applyDurationLimits.Initialize(selectedLines);
+                }
+                else
+                {
+                    applyDurationLimits.Initialize(_subtitle);
+                }
+
+                if (applyDurationLimits.ShowDialog(this) == DialogResult.OK)
+                {
+                    if (onlySelectedLines)
+                    { // we only update selected lines
+                        int i = 0;
+                        foreach (int index in subtitleListView1.SelectedIndices)
+                        {
+                            _subtitle.Paragraphs[index] = applyDurationLimits.FixedSubtitle.Paragraphs[i];
+                            i++;
+                        }
+
+                        subtitleListView1.SyntaxColorAllLines(_subtitle);
+                    }
+                    else
+                    {
+                        _subtitle.Paragraphs.Clear();
+                        foreach (var p in applyDurationLimits.FixedSubtitle.Paragraphs)
+                        {
+                            _subtitle.Paragraphs.Add(new Paragraph(p));
+                        }
+
+                        subtitleListView1.Fill(_subtitle);
+                    }
+                    subtitleListView1.SelectIndexAndEnsureVisible(idx, true);
+                    foreach (var i in selectedIndices)
+                    {
+                        subtitleListView1.Items[i].Selected = true;
+                    }
+                }
+            }
+        }
+
+        private void applyDurationLimitsForSelectedLinesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ApplyDisplayTimeLimits(true);
+        }
+
+        private void appendSubtitleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (subtitleListView1.Items.Count > 0)
+            {
+                subtitleListView1.SelectIndexAndEnsureVisible(subtitleListView1.Items.Count - 1, true);
+            }
+            insertSubtitleAfterThisLineToolStripMenuItem_Click_1(null, null);
         }
     }
 }
