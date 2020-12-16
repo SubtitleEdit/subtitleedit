@@ -1262,8 +1262,6 @@ Google translate API anahtarınızı girmek için "Seçenekler -&gt; Ayarlar -&g
     <Controls>
       <SubtitleFormat>Biçim</SubtitleFormat>
       <FileEncoding>Kodlama</FileEncoding>
-      <ListView>Liste görünümü</ListView>
-      <SourceView>Kaynak görünümü</SourceView>
       <UndoChangesInEditPanel>Düzenleme panelinde değişiklikleri geri al</UndoChangesInEditPanel>
       <Previous>&lt; Önceki</Previous>
       <Next>Sonraki &gt;</Next>

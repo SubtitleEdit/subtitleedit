@@ -1093,8 +1093,6 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
     <Controls>
       <SubtitleFormat>Stumm</SubtitleFormat>
       <FileEncoding>Enkodañ</FileEncoding>
-      <ListView>Mod listenn</ListView>
-      <SourceView>Mod mammenn</SourceView>
       <UndoChangesInEditPanel>Nulañ ar cheñchamantoù</UndoChangesInEditPanel>
       <Previous>&lt; Kent.</Previous>
       <Next>Goude. &gt;</Next>

@@ -1228,8 +1228,6 @@ Joan "Aukerk -&gt; Ezarpenak -&gt; Tresnak" zure Google itzulpena API gakoa sart
     <Controls>
       <SubtitleFormat>Heuskarria:</SubtitleFormat>
       <FileEncoding>Kodeaketa:</FileEncoding>
-      <ListView>Zerrenda ikusi</ListView>
-      <SourceView>Iturburua ikusi</SourceView>
       <UndoChangesInEditPanel>Desegin</UndoChangesInEditPanel>
       <Previous>&lt; Aurr.</Previous>
       <Next>Hurr. &gt;</Next>

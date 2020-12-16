@@ -1154,8 +1154,6 @@ Catatan: Periksa ruang kosong disk.</WaveFileMalformed>
     <Controls>
       <SubtitleFormat>Format</SubtitleFormat>
       <FileEncoding>Enkode</FileEncoding>
-      <ListView>Tampilan daftar</ListView>
-      <SourceView>Tampilan sumber</SourceView>
       <UndoChangesInEditPanel>Batalkan perubahan di panel edit</UndoChangesInEditPanel>
       <Previous>&lt;Sblm</Previous>
       <Next>Brkt&gt;</Next>

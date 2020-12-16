@@ -1185,8 +1185,6 @@ Přejděte na "Volby -&gt; Nastavení -&gt; Nástroje" pro zadání vašeho klí
     <Controls>
       <SubtitleFormat>Formát</SubtitleFormat>
       <FileEncoding>Kódování</FileEncoding>
-      <ListView>Zobrazení seznamu</ListView>
-      <SourceView>Zobrazení zdroje</SourceView>
       <UndoChangesInEditPanel>Vrátit změny</UndoChangesInEditPanel>
       <Previous>&lt; Před.</Previous>
       <Next>Další &gt;</Next>

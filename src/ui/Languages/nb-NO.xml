@@ -1101,8 +1101,6 @@ Tips: Se om du har noe plass igjen på harddisken.</WaveFileMalformed>
     <Controls>
       <SubtitleFormat>Format</SubtitleFormat>
       <FileEncoding>Tekstkoding</FileEncoding>
-      <ListView>Listevisning</ListView>
-      <SourceView>Kildevisning</SourceView>
       <UndoChangesInEditPanel>Angre endringer i redigeringspanelet</UndoChangesInEditPanel>
       <Previous>← Forrige</Previous>
       <Next>Neste →</Next>

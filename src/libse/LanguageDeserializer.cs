@@ -4153,9 +4153,6 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/Controls/FileEncoding":
                     language.Main.Controls.FileEncoding = reader.Value;
                     break;
-                case "Main/Controls/ListView":
-                    language.Main.Controls.ListView = reader.Value;
-                    break;
                 case "Main/Controls/UndoChangesInEditPanel":
                     language.Main.Controls.UndoChangesInEditPanel = reader.Value;
                     break;

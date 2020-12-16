@@ -1240,8 +1240,6 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <Controls>
       <SubtitleFormat>Muoto</SubtitleFormat>
       <FileEncoding>Koodaus</FileEncoding>
-      <ListView>Luettelonäkymä</ListView>
-      <SourceView>Lähdenäkymä</SourceView>
       <UndoChangesInEditPanel>Kumoa muutokset muokkauspaneelissa</UndoChangesInEditPanel>
       <Previous>Edellinen</Previous>
       <Next>Seuraava</Next>

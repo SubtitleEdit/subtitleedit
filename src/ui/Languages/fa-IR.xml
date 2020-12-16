@@ -1194,8 +1194,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Controls>
       <SubtitleFormat>قالب</SubtitleFormat>
       <FileEncoding>رمز گذاری</FileEncoding>
-      <ListView>مشاهده لیست</ListView>
-      <SourceView>نمایش مبدأ</SourceView>
       <UndoChangesInEditPanel>تغییرات واگرد در پانل ویرایش</UndoChangesInEditPanel>
       <Previous>&lt;قبلی</Previous>
       <Next>بعدی&gt;</Next>

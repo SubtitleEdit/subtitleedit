@@ -1775,7 +1775,6 @@ namespace Nikse.SubtitleEdit.Core
                 {
                     SubtitleFormat = "Format",
                     FileEncoding = "Encoding",
-                    ListView = "List view",
                     UndoChangesInEditPanel = "Undo changes in edit panel",
                     Previous = "< Prev",
                     Next = "Next >",
