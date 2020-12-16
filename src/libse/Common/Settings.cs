@@ -263,6 +263,11 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool ExportFullFrame { get; set; }
         public bool ExportFcpFullPathUrl { get; set; }
         public string ExportPenLineJoin { get; set; }
+        public Color BinEditBackgroundColor { get; set; }
+        public Color BinEditImageBackgroundColor { get; set; }
+        public int BinEditVerticalMargin { get; set; }
+        public int BinEditLeftMargin { get; set; }
+        public int BinEditRightMargin { get; set; }
         public bool FixCommonErrorsFixOverlapAllowEqualEndStart { get; set; }
         public bool FixCommonErrorsSkipStepOne { get; set; }
         public string ImportTextSplitting { get; set; }
@@ -407,6 +412,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             ExportFcpImageType = "Bmp";
             ExportFcpPalNtsc = "PAL";
             ExportLastBorderWidth = 4;
+            BinEditBackgroundColor = Color.Black;
+            BinEditImageBackgroundColor = Color.Black;
+            BinEditVerticalMargin = 10;
+            BinEditLeftMargin = 10;
+            BinEditRightMargin = 10;
             BridgeGapMilliseconds = 100;
             ExportCustomTemplates = "SubRipÆÆ{number}\r\n{start} --> {end}\r\n{text}\r\n\r\nÆhh:mm:ss,zzzÆ[Do not modify]ÆæMicroDVDÆÆ{{start}}{{end}}{text}\r\nÆffÆ||Æ";
             UseNoLineBreakAfter = false;
@@ -4578,6 +4588,36 @@ $HorzAlign          =   Center
                 settings.Tools.MusicSymbolStyle = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("BinEditBackgroundColor");
+            if (subNode != null)
+            {
+                settings.Tools.BinEditBackgroundColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+            }
+
+            subNode = node.SelectSingleNode("BinEditImageBackgroundColor");
+            if (subNode != null)
+            {
+                settings.Tools.BinEditImageBackgroundColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+            }
+
+            subNode = node.SelectSingleNode("BinEditVerticalMargin");
+            if (subNode != null)
+            {
+                settings.Tools.BinEditVerticalMargin = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("BinEditLeftMargin");
+            if (subNode != null)
+            {
+                settings.Tools.BinEditLeftMargin = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("BinEditRightMargin");
+            if (subNode != null)
+            {
+                settings.Tools.BinEditRightMargin = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("BridgeGapMilliseconds");
             if (subNode != null)
             {
@@ -8088,6 +8128,11 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ImportTextFixedDuration", settings.Tools.ImportTextFixedDuration.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenerateTimeCodePatterns", settings.Tools.GenerateTimeCodePatterns);
                 textWriter.WriteElementString("MusicSymbolStyle", settings.Tools.MusicSymbolStyle);
+                textWriter.WriteElementString("BinEditBackgroundColor", settings.Tools.BinEditBackgroundColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BinEditImageBackgroundColor", settings.Tools.BinEditImageBackgroundColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BinEditVerticalMargin", settings.Tools.BinEditVerticalMargin.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BinEditLeftMargin", settings.Tools.BinEditLeftMargin.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BinEditRightMargin", settings.Tools.BinEditRightMargin.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BridgeGapMilliseconds", settings.Tools.BridgeGapMilliseconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportCustomTemplates", settings.Tools.ExportCustomTemplates);
                 textWriter.WriteElementString("ChangeCasingChoice", settings.Tools.ChangeCasingChoice);

@@ -70,9 +70,8 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             progressBar1.Visible = false;
             OpenBinSubtitle(fileName);
             pictureBoxMovableImage.SizeMode = PictureBoxSizeMode.Normal;
-            pictureBoxScreen.SizeMode = PictureBoxSizeMode.StretchImage;
-            SetBackgroundImage();
             labelVideoInfo.Text = string.Empty;
+            panelBackground.BackColor = Configuration.Settings.Tools.BinEditBackgroundColor;
 
             _nOcrFileName = Configuration.Settings.VobSubOcr.LineOcrLastLanguages;
             if (string.IsNullOrEmpty(_nOcrFileName))
@@ -524,19 +523,6 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             }
 
             return true;
-        }
-
-        private void SetBackgroundImage()
-        {
-            var screenBmp = new Bitmap((int)numericUpDownScreenWidth.Value, (int)numericUpDownScreenHeight.Value);
-            using (var g = Graphics.FromImage(screenBmp))
-            {
-                using (var brush = new SolidBrush(Color.Black))
-                {
-                    g.FillRectangle(brush, 0, 0, screenBmp.Width, screenBmp.Height);
-                }
-            }
-            pictureBoxScreen.Image = screenBmp;
         }
 
         private void SetResolution(Size bmpSize)
@@ -1025,7 +1011,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             var extra = _extra[idx];
             extra.X = (int)numericUpDownX.Value;
 
-            var widthAspect = pictureBoxScreen.Width / numericUpDownScreenWidth.Value;
+            var widthAspect = panelBackground.Width / numericUpDownScreenWidth.Value;
             pictureBoxMovableImage.Left = (int)Math.Round(extra.X * widthAspect);
         }
 
@@ -1045,7 +1031,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             var extra = _extra[idx];
             extra.Y = (int)numericUpDownY.Value;
 
-            var heightAspect = pictureBoxScreen.Height / numericUpDownScreenHeight.Value;
+            var heightAspect = GetHeightAspect();
             pictureBoxMovableImage.Top = (int)Math.Round(extra.Y * heightAspect);
         }
 
@@ -1330,8 +1316,8 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
                 var idx = subtitleListView1.SelectedItems[0].Index;
                 var extra = _extra[idx];
-                var widthAspect = numericUpDownScreenWidth.Value / pictureBoxScreen.Width;
-                var heightAspect = numericUpDownScreenHeight.Value / pictureBoxScreen.Height;
+                var widthAspect = numericUpDownScreenWidth.Value / panelBackground.Width;
+                var heightAspect = GetHeightAspect();
                 extra.X = (int)Math.Round(pictureBoxMovableImage.Left * widthAspect);
                 extra.Y = (int)Math.Round(pictureBoxMovableImage.Top * heightAspect);
                 numericUpDownX.Value = extra.X;
@@ -1740,7 +1726,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             }
         }
 
-        private void ShowCurrentScaledImage(Bitmap bmp, Extra extra)
+        private decimal GetHeightAspect()
         {
             var controlHeight = 0;
             if (!string.IsNullOrEmpty(_videoFileName))
@@ -1748,12 +1734,17 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 controlHeight = videoPlayerContainer1.ControlsHeight;
             }
 
-            var widthAspect = pictureBoxScreen.Width / numericUpDownScreenWidth.Value;
-            var heightAspect = (pictureBoxScreen.Height - controlHeight) / numericUpDownScreenHeight.Value;
+            return (panelBackground.Height - controlHeight) / numericUpDownScreenHeight.Value;
+        }
+
+        private void ShowCurrentScaledImage(Bitmap bmp, Extra extra)
+        {
+            var widthAspect = panelBackground.Width / numericUpDownScreenWidth.Value;
+            var heightAspect = GetHeightAspect();
             var scaledBmp = new Bitmap((int)Math.Round(bmp.Width * widthAspect), (int)Math.Round(bmp.Height * heightAspect));
             using (var g = Graphics.FromImage(scaledBmp))
             {
-                using (var brush = new SolidBrush(Color.Black))
+                using (var brush = new SolidBrush(Configuration.Settings.Tools.BinEditImageBackgroundColor))
                 {
                     g.FillRectangle(brush, 0, 0, scaledBmp.Width, scaledBmp.Height);
                 }
@@ -2138,6 +2129,28 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 subtitleListView1.SelectIndexAndEnsureVisible(subtitleListView1.Items.Count - 1, true);
             }
             insertSubtitleAfterThisLineToolStripMenuItem_Click_1(null, null);
+        }
+
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var form = new BinEditSettings())
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    if (subtitleListView1.SelectedItems.Count == 0)
+                    {
+                        return;
+                    }
+
+                    panelBackground.BackColor = Configuration.Settings.Tools.BinEditBackgroundColor;
+                    
+                    var idx = subtitleListView1.SelectedItems[0].Index;
+                    var sub = _binSubtitles[idx];
+                    var extra = _extra[idx];
+                    var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : GetBitmap(sub);
+                    ShowCurrentScaledImage(bmp, extra);
+                }
+            }
         }
     }
 }

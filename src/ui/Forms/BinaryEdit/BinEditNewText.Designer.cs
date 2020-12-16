@@ -472,6 +472,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.panelBorderColor.Name = "panelBorderColor";
             this.panelBorderColor.Size = new System.Drawing.Size(21, 20);
             this.panelBorderColor.TabIndex = 31;
+            this.panelBorderColor.Click += new System.EventHandler(this.buttonBorderColor_Click);
             // 
             // buttonBorderColor
             // 
@@ -490,6 +491,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.panelColor.Name = "panelColor";
             this.panelColor.Size = new System.Drawing.Size(21, 20);
             this.panelColor.TabIndex = 12;
+            this.panelColor.Click += new System.EventHandler(this.buttonColor_Click);
             // 
             // buttonColor
             // 
