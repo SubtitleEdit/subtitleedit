@@ -1246,6 +1246,8 @@ Command line: {1} {2}
         <RemoveActors>移除演员...</RemoveActors>
         <EditBookmark>编辑书签</EditBookmark>
         <RemoveBookmark>移除书签</RemoveBookmark>
+        <GoToSourceView>转到源视图</GoToSourceView>
+        <GoToListView>转到列表视图</GoToListView>
       </ContextMenu>
     </Menu>
     <Controls>
