@@ -30,8 +30,8 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode3 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode4 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
             this.groupBoxCurrent = new System.Windows.Forms.GroupBox();
             this.buttonSetText = new System.Windows.Forms.Button();
             this.labelCurrentSize = new System.Windows.Forms.Label();
@@ -43,8 +43,6 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.numericUpDownY = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownX = new System.Windows.Forms.NumericUpDown();
             this.checkBoxIsForced = new System.Windows.Forms.CheckBox();
-            this.timeUpDownEndTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
-            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.labelFrameRate = new System.Windows.Forms.Label();
@@ -82,6 +80,10 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.adjustDisplayTimesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.applyDurationLimitsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.appendSubtitleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
+            this.resizeBitmapsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.quickOCRTextsforOverviewOnlyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.videoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -93,7 +95,6 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.panelBackground = new System.Windows.Forms.Panel();
-            this.videoPlayerContainer1 = new Nikse.SubtitleEdit.Controls.VideoPlayerContainer();
             this.pictureBoxMovableImage = new System.Windows.Forms.PictureBox();
             this.contextMenuStripMovableImage = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.centerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -103,9 +104,12 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.timerSubtitleOnVideo = new System.Windows.Forms.Timer(this.components);
             this.labelVideoInfo = new System.Windows.Forms.Label();
+            this.resizeImagesForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.alignmentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.videoPlayerContainer1 = new Nikse.SubtitleEdit.Controls.VideoPlayerContainer();
+            this.timeUpDownEndTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
+            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
-            this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
-            this.quickOCRTextsforOverviewOnlyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxCurrent.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).BeginInit();
@@ -255,46 +259,6 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.checkBoxIsForced.UseVisualStyleBackColor = true;
             this.checkBoxIsForced.CheckedChanged += new System.EventHandler(this.checkBoxIsForced_CheckedChanged);
             // 
-            // timeUpDownEndTime
-            // 
-            this.timeUpDownEndTime.AutoSize = true;
-            this.timeUpDownEndTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.timeUpDownEndTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.timeUpDownEndTime.Location = new System.Drawing.Point(74, 50);
-            this.timeUpDownEndTime.Margin = new System.Windows.Forms.Padding(4);
-            this.timeUpDownEndTime.Name = "timeUpDownEndTime";
-            this.timeUpDownEndTime.Size = new System.Drawing.Size(111, 27);
-            this.timeUpDownEndTime.TabIndex = 3;
-            timeCode3.Hours = 0;
-            timeCode3.Milliseconds = 0;
-            timeCode3.Minutes = 0;
-            timeCode3.Seconds = 0;
-            timeCode3.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode3.TotalMilliseconds = 0D;
-            timeCode3.TotalSeconds = 0D;
-            this.timeUpDownEndTime.TimeCode = timeCode3;
-            this.timeUpDownEndTime.UseVideoOffset = false;
-            // 
-            // timeUpDownStartTime
-            // 
-            this.timeUpDownStartTime.AutoSize = true;
-            this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.timeUpDownStartTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.timeUpDownStartTime.Location = new System.Drawing.Point(74, 18);
-            this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
-            this.timeUpDownStartTime.Name = "timeUpDownStartTime";
-            this.timeUpDownStartTime.Size = new System.Drawing.Size(111, 27);
-            this.timeUpDownStartTime.TabIndex = 1;
-            timeCode4.Hours = 0;
-            timeCode4.Milliseconds = 0;
-            timeCode4.Minutes = 0;
-            timeCode4.Seconds = 0;
-            timeCode4.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode4.TotalMilliseconds = 0D;
-            timeCode4.TotalSeconds = 0D;
-            this.timeUpDownStartTime.TimeCode = timeCode4;
-            this.timeUpDownStartTime.UseVideoOffset = false;
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -406,6 +370,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.topAlignSelectedLinesToolStripMenuItem,
             this.bottomAlignSelectedLinesToolStripMenuItem,
             this.toolStripSeparator7,
+            this.resizeImagesForSelectedLinesToolStripMenuItem,
             this.colorSelectedLinesToolStripMenuItem,
             this.toolStripSeparator6,
             this.adjustAllTimesForSelectedLinesToolStripMenuItem,
@@ -593,6 +558,9 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.applyDurationLimitsToolStripMenuItem,
             this.appendSubtitleToolStripMenuItem,
             this.toolStripSeparator8,
+            this.resizeBitmapsToolStripMenuItem,
+            this.alignmentToolStripMenuItem,
+            this.toolStripSeparator5,
             this.quickOCRTextsforOverviewOnlyToolStripMenuItem});
             this.toolStripMenuItemTools.Name = "toolStripMenuItemTools";
             this.toolStripMenuItemTools.Size = new System.Drawing.Size(46, 20);
@@ -619,6 +587,30 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.appendSubtitleToolStripMenuItem.Text = "Append subtitle...";
             this.appendSubtitleToolStripMenuItem.Click += new System.EventHandler(this.appendSubtitleToolStripMenuItem_Click);
             // 
+            // toolStripSeparator8
+            // 
+            this.toolStripSeparator8.Name = "toolStripSeparator8";
+            this.toolStripSeparator8.Size = new System.Drawing.Size(259, 6);
+            // 
+            // resizeBitmapsToolStripMenuItem
+            // 
+            this.resizeBitmapsToolStripMenuItem.Name = "resizeBitmapsToolStripMenuItem";
+            this.resizeBitmapsToolStripMenuItem.Size = new System.Drawing.Size(262, 22);
+            this.resizeBitmapsToolStripMenuItem.Text = "Resize bitmaps...";
+            this.resizeBitmapsToolStripMenuItem.Click += new System.EventHandler(this.resizeBitmapsToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(259, 6);
+            // 
+            // quickOCRTextsforOverviewOnlyToolStripMenuItem
+            // 
+            this.quickOCRTextsforOverviewOnlyToolStripMenuItem.Name = "quickOCRTextsforOverviewOnlyToolStripMenuItem";
+            this.quickOCRTextsforOverviewOnlyToolStripMenuItem.Size = new System.Drawing.Size(262, 22);
+            this.quickOCRTextsforOverviewOnlyToolStripMenuItem.Text = "Quick OCR texts (for overview only)";
+            this.quickOCRTextsforOverviewOnlyToolStripMenuItem.Click += new System.EventHandler(this.quickOCRTextsforOverviewOnlyToolStripMenuItem_Click);
+            // 
             // videoToolStripMenuItem
             // 
             this.videoToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -632,14 +624,14 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             // openVideoToolStripMenuItem
             // 
             this.openVideoToolStripMenuItem.Name = "openVideoToolStripMenuItem";
-            this.openVideoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openVideoToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.openVideoToolStripMenuItem.Text = "Open video...";
             this.openVideoToolStripMenuItem.Click += new System.EventHandler(this.openVideoToolStripMenuItem_Click);
             // 
             // closeVideoToolStripMenuItem
             // 
             this.closeVideoToolStripMenuItem.Name = "closeVideoToolStripMenuItem";
-            this.closeVideoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.closeVideoToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.closeVideoToolStripMenuItem.Text = "Close video";
             this.closeVideoToolStripMenuItem.Click += new System.EventHandler(this.closeVideoToolStripMenuItem_Click);
             // 
@@ -701,28 +693,6 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.panelBackground.Name = "panelBackground";
             this.panelBackground.Size = new System.Drawing.Size(638, 543);
             this.panelBackground.TabIndex = 4;
-            // 
-            // videoPlayerContainer1
-            // 
-            this.videoPlayerContainer1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(18)))), ((int)(((byte)(18)))));
-            this.videoPlayerContainer1.Chapters = null;
-            this.videoPlayerContainer1.CurrentPosition = 0D;
-            this.videoPlayerContainer1.FontSizeFactor = 1F;
-            this.videoPlayerContainer1.LastParagraph = null;
-            this.videoPlayerContainer1.Location = new System.Drawing.Point(31, 107);
-            this.videoPlayerContainer1.Name = "videoPlayerContainer1";
-            this.videoPlayerContainer1.ShowFullscreenButton = true;
-            this.videoPlayerContainer1.ShowMuteButton = true;
-            this.videoPlayerContainer1.ShowStopButton = true;
-            this.videoPlayerContainer1.Size = new System.Drawing.Size(584, 333);
-            this.videoPlayerContainer1.SmpteMode = false;
-            this.videoPlayerContainer1.SubtitleText = "";
-            this.videoPlayerContainer1.TabIndex = 16;
-            this.videoPlayerContainer1.TextRightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.videoPlayerContainer1.VideoHeight = 0;
-            this.videoPlayerContainer1.VideoPlayer = null;
-            this.videoPlayerContainer1.VideoWidth = 0;
-            this.videoPlayerContainer1.Volume = 0D;
             // 
             // pictureBoxMovableImage
             // 
@@ -790,6 +760,82 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.labelVideoInfo.TabIndex = 9;
             this.labelVideoInfo.Text = "Video info";
             // 
+            // resizeImagesForSelectedLinesToolStripMenuItem
+            // 
+            this.resizeImagesForSelectedLinesToolStripMenuItem.Name = "resizeImagesForSelectedLinesToolStripMenuItem";
+            this.resizeImagesForSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(376, 22);
+            this.resizeImagesForSelectedLinesToolStripMenuItem.Text = "Resize images for selected lines...";
+            this.resizeImagesForSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.resizeImagesForSelectedLinesToolStripMenuItem_Click);
+            // 
+            // alignmentToolStripMenuItem
+            // 
+            this.alignmentToolStripMenuItem.Name = "alignmentToolStripMenuItem";
+            this.alignmentToolStripMenuItem.Size = new System.Drawing.Size(262, 22);
+            this.alignmentToolStripMenuItem.Text = "Alignment...";
+            this.alignmentToolStripMenuItem.Click += new System.EventHandler(this.alignmentToolStripMenuItem_Click);
+            // 
+            // videoPlayerContainer1
+            // 
+            this.videoPlayerContainer1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(18)))), ((int)(((byte)(18)))));
+            this.videoPlayerContainer1.Chapters = null;
+            this.videoPlayerContainer1.CurrentPosition = 0D;
+            this.videoPlayerContainer1.FontSizeFactor = 1F;
+            this.videoPlayerContainer1.LastParagraph = null;
+            this.videoPlayerContainer1.Location = new System.Drawing.Point(31, 107);
+            this.videoPlayerContainer1.Name = "videoPlayerContainer1";
+            this.videoPlayerContainer1.ShowFullscreenButton = true;
+            this.videoPlayerContainer1.ShowMuteButton = true;
+            this.videoPlayerContainer1.ShowStopButton = true;
+            this.videoPlayerContainer1.Size = new System.Drawing.Size(584, 333);
+            this.videoPlayerContainer1.SmpteMode = false;
+            this.videoPlayerContainer1.SubtitleText = "";
+            this.videoPlayerContainer1.TabIndex = 16;
+            this.videoPlayerContainer1.TextRightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.videoPlayerContainer1.VideoHeight = 0;
+            this.videoPlayerContainer1.VideoPlayer = null;
+            this.videoPlayerContainer1.VideoWidth = 0;
+            this.videoPlayerContainer1.Volume = 0D;
+            // 
+            // timeUpDownEndTime
+            // 
+            this.timeUpDownEndTime.AutoSize = true;
+            this.timeUpDownEndTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownEndTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.timeUpDownEndTime.Location = new System.Drawing.Point(74, 50);
+            this.timeUpDownEndTime.Margin = new System.Windows.Forms.Padding(4);
+            this.timeUpDownEndTime.Name = "timeUpDownEndTime";
+            this.timeUpDownEndTime.Size = new System.Drawing.Size(111, 27);
+            this.timeUpDownEndTime.TabIndex = 3;
+            timeCode1.Hours = 0;
+            timeCode1.Milliseconds = 0;
+            timeCode1.Minutes = 0;
+            timeCode1.Seconds = 0;
+            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode1.TotalMilliseconds = 0D;
+            timeCode1.TotalSeconds = 0D;
+            this.timeUpDownEndTime.TimeCode = timeCode1;
+            this.timeUpDownEndTime.UseVideoOffset = false;
+            // 
+            // timeUpDownStartTime
+            // 
+            this.timeUpDownStartTime.AutoSize = true;
+            this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownStartTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.timeUpDownStartTime.Location = new System.Drawing.Point(74, 18);
+            this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
+            this.timeUpDownStartTime.Name = "timeUpDownStartTime";
+            this.timeUpDownStartTime.Size = new System.Drawing.Size(111, 27);
+            this.timeUpDownStartTime.TabIndex = 1;
+            timeCode2.Hours = 0;
+            timeCode2.Milliseconds = 0;
+            timeCode2.Minutes = 0;
+            timeCode2.Seconds = 0;
+            timeCode2.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode2.TotalMilliseconds = 0D;
+            timeCode2.TotalSeconds = 0D;
+            this.timeUpDownStartTime.TimeCode = timeCode2;
+            this.timeUpDownStartTime.UseVideoOffset = false;
+            // 
             // subtitleListView1
             // 
             this.subtitleListView1.AllowColumnReorder = true;
@@ -816,18 +862,6 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.subtitleListView1_SelectedIndexChanged);
             this.subtitleListView1.Click += new System.EventHandler(this.subtitleListView1_Click);
             this.subtitleListView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.subtitleListView1_KeyDown);
-            // 
-            // toolStripSeparator8
-            // 
-            this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(259, 6);
-            // 
-            // quickOCRTextsforOverviewOnlyToolStripMenuItem
-            // 
-            this.quickOCRTextsforOverviewOnlyToolStripMenuItem.Name = "quickOCRTextsforOverviewOnlyToolStripMenuItem";
-            this.quickOCRTextsforOverviewOnlyToolStripMenuItem.Size = new System.Drawing.Size(262, 22);
-            this.quickOCRTextsforOverviewOnlyToolStripMenuItem.Text = "Quick OCR texts (for overview only)";
-            this.quickOCRTextsforOverviewOnlyToolStripMenuItem.Click += new System.EventHandler(this.quickOCRTextsforOverviewOnlyToolStripMenuItem_Click);
             // 
             // BinEdit
             // 
@@ -948,5 +982,9 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
         private System.Windows.Forms.ToolStripMenuItem quickOCRTextsforOverviewOnlyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem resizeBitmapsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ToolStripMenuItem resizeImagesForSelectedLinesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem alignmentToolStripMenuItem;
     }
 }
