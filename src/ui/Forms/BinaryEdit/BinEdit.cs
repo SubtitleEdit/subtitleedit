@@ -1793,7 +1793,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
         private void ocrTextsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
+
         }
 
         private static void OcrParagraph(Extra extra, IBinaryParagraphWithPosition s, NOcrDb nOcrDb, Paragraph p)
@@ -2127,6 +2127,11 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
         private void alignSelectedLinesToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            AlignLines(true);
+        }
+
+        private void AlignLines(bool onlySelectedLines)
+        {
             if (subtitleListView1.SelectedItems.Count < 1)
             {
                 return;
@@ -2144,52 +2149,12 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 }
 
                 var idx = subtitleListView1.SelectedItems[0].Index;
-                for (int i = 0; i < subtitleListView1.SelectedIndices.Count; i++)
+                var selectedIndices = GetIndices(onlySelectedLines);
+                foreach (var index in selectedIndices)
                 {
-                    var index = subtitleListView1.SelectedIndices[i];
                     var extra = _extra[index];
                     var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : GetBitmap(_binSubtitles[index]);
-
-                    switch (f.Alignment)
-                    {
-                        case ContentAlignment.BottomLeft:
-                            extra.X = Configuration.Settings.Tools.BinEditLeftMargin;
-                            extra.Y = (int)Math.Round(numericUpDownScreenHeight.Value - bmp.Height - Configuration.Settings.Tools.BinEditVerticalMargin);
-                            break;
-                        case ContentAlignment.BottomCenter:
-                            extra.X = (int)Math.Round((numericUpDownScreenWidth.Value - bmp.Width) / 2.0m);
-                            extra.Y = (int)Math.Round(numericUpDownScreenHeight.Value - bmp.Height - Configuration.Settings.Tools.BinEditVerticalMargin);
-                            break;
-                        case ContentAlignment.BottomRight:
-                            extra.X = (int)Math.Round(numericUpDownScreenWidth.Value - bmp.Width - Configuration.Settings.Tools.BinEditRightMargin);
-                            extra.Y = (int)Math.Round(numericUpDownScreenHeight.Value - bmp.Height - Configuration.Settings.Tools.BinEditVerticalMargin);
-                            break;
-                        case ContentAlignment.MiddleLeft:
-                            extra.X = Configuration.Settings.Tools.BinEditLeftMargin;
-                            extra.Y = (int)Math.Round((numericUpDownScreenHeight.Value - bmp.Height) / 2.0m);
-                            break;
-                        case ContentAlignment.MiddleCenter:
-                            extra.X = (int)Math.Round((numericUpDownScreenWidth.Value - bmp.Width) / 2.0m);
-                            extra.Y = (int)Math.Round((numericUpDownScreenHeight.Value - bmp.Height) / 2.0m);
-                            break;
-                        case ContentAlignment.MiddleRight:
-                            extra.X = (int)Math.Round(numericUpDownScreenWidth.Value - bmp.Width - Configuration.Settings.Tools.BinEditRightMargin);
-                            extra.Y = (int)Math.Round((numericUpDownScreenHeight.Value - bmp.Height) / 2.0m);
-                            break;
-                        case ContentAlignment.TopLeft:
-                            extra.X = Configuration.Settings.Tools.BinEditLeftMargin;
-                            extra.Y = Configuration.Settings.Tools.BinEditVerticalMargin;
-                            break;
-                        case ContentAlignment.TopCenter:
-                            extra.X = (int)Math.Round((numericUpDownScreenWidth.Value - bmp.Width) / 2.0m);
-                            extra.Y = Configuration.Settings.Tools.BinEditVerticalMargin;
-                            break;
-                        case ContentAlignment.TopRight:
-                            extra.X = (int)Math.Round(numericUpDownScreenWidth.Value - bmp.Width - Configuration.Settings.Tools.BinEditRightMargin);
-                            extra.Y = Configuration.Settings.Tools.BinEditVerticalMargin;
-                            break;
-                    }
-
+                    FixAlignment(f.Alignment, extra, bmp);
 
                     if (index == idx)
                     {
@@ -2200,6 +2165,49 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
                     bmp.Dispose();
                 }
+            }
+        }
+
+        private void FixAlignment(ContentAlignment alignment, Extra extra, Bitmap bmp)
+        {
+            switch (alignment)
+            {
+                case ContentAlignment.BottomLeft:
+                    extra.X = Configuration.Settings.Tools.BinEditLeftMargin;
+                    extra.Y = (int)Math.Round(numericUpDownScreenHeight.Value - bmp.Height - Configuration.Settings.Tools.BinEditVerticalMargin);
+                    break;
+                case ContentAlignment.BottomCenter:
+                    extra.X = (int)Math.Round((numericUpDownScreenWidth.Value - bmp.Width) / 2.0m);
+                    extra.Y = (int)Math.Round(numericUpDownScreenHeight.Value - bmp.Height - Configuration.Settings.Tools.BinEditVerticalMargin);
+                    break;
+                case ContentAlignment.BottomRight:
+                    extra.X = (int)Math.Round(numericUpDownScreenWidth.Value - bmp.Width - Configuration.Settings.Tools.BinEditRightMargin);
+                    extra.Y = (int)Math.Round(numericUpDownScreenHeight.Value - bmp.Height - Configuration.Settings.Tools.BinEditVerticalMargin);
+                    break;
+                case ContentAlignment.MiddleLeft:
+                    extra.X = Configuration.Settings.Tools.BinEditLeftMargin;
+                    extra.Y = (int)Math.Round((numericUpDownScreenHeight.Value - bmp.Height) / 2.0m);
+                    break;
+                case ContentAlignment.MiddleCenter:
+                    extra.X = (int)Math.Round((numericUpDownScreenWidth.Value - bmp.Width) / 2.0m);
+                    extra.Y = (int)Math.Round((numericUpDownScreenHeight.Value - bmp.Height) / 2.0m);
+                    break;
+                case ContentAlignment.MiddleRight:
+                    extra.X = (int)Math.Round(numericUpDownScreenWidth.Value - bmp.Width - Configuration.Settings.Tools.BinEditRightMargin);
+                    extra.Y = (int)Math.Round((numericUpDownScreenHeight.Value - bmp.Height) / 2.0m);
+                    break;
+                case ContentAlignment.TopLeft:
+                    extra.X = Configuration.Settings.Tools.BinEditLeftMargin;
+                    extra.Y = Configuration.Settings.Tools.BinEditVerticalMargin;
+                    break;
+                case ContentAlignment.TopCenter:
+                    extra.X = (int)Math.Round((numericUpDownScreenWidth.Value - bmp.Width) / 2.0m);
+                    extra.Y = Configuration.Settings.Tools.BinEditVerticalMargin;
+                    break;
+                case ContentAlignment.TopRight:
+                    extra.X = (int)Math.Round(numericUpDownScreenWidth.Value - bmp.Width - Configuration.Settings.Tools.BinEditRightMargin);
+                    extra.Y = Configuration.Settings.Tools.BinEditVerticalMargin;
+                    break;
             }
         }
 
@@ -2251,6 +2259,84 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             };
             bw.RunWorkerAsync();
             quickOCRTextsforOverviewOnlyToolStripMenuItem.Enabled = false;
+        }
+
+        private void resizeBitmapsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ResizeBitmaps(false);
+        }
+
+        private List<int> GetIndices(bool onlySelected)
+        {
+            var indices = new List<int>();
+            if (onlySelected)
+            {
+                foreach (int index in subtitleListView1.SelectedIndices)
+                {
+                    indices.Add(index);
+                }
+            }
+            else
+            {
+                for (int index = 0; index < _extra.Count; index++)
+                {
+                    indices.Add(index);
+                }
+            }
+
+            return indices;
+        }
+
+        private void ResizeBitmaps(bool onlySelectedLines)
+        {
+            if (subtitleListView1.SelectedItems.Count < 1)
+            {
+                return;
+            }
+
+            var idx = subtitleListView1.SelectedItems[0].Index;
+            var extra = _extra[idx];
+            var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : GetBitmap(_binSubtitles[idx]);
+
+            using (var form = new BinEditResize(bmp))
+            {
+                if (form.ShowDialog(this) != DialogResult.OK)
+                {
+                    return;
+                }
+
+                var selectedIndices = GetIndices(onlySelectedLines);
+                foreach (var i in selectedIndices)
+                {
+                    var sub = _binSubtitles[i];
+                    extra = _extra[i];
+                    bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : GetBitmap(sub);
+                    extra.Bitmap = ExportPngXml.ResizeBitmap(bmp, (int)Math.Round(bmp.Width * form.Factor), (int)Math.Round(bmp.Height * form.Factor));
+                    if (form.FixAlignment)
+                    {
+                        FixAlignment(form.Alignment, extra, extra.Bitmap);
+                    }
+
+                    if (i == idx)
+                    {
+                        ShowCurrentScaledImage((Bitmap)extra.Bitmap.Clone(), extra);
+                        numericUpDownY.Value = extra.Y;
+                        numericUpDownX.Value = extra.X;
+                    }
+
+                    bmp.Dispose();
+                }
+            }
+        }
+
+        private void resizeImagesForSelectedLinesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ResizeBitmaps(true);
+        }
+
+        private void alignmentToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AlignLines(false);
         }
     }
 }
