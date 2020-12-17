@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
         //public bool SkipNext { get; set; }
 
 
-        public string SetTagsAndReturnTrimmed(string input, string sourceLanguage, string inputNext)
+        public string SetTagsAndReturnTrimmed(string input, string sourceLanguage)
         {
             if (string.IsNullOrEmpty(input))
             {
@@ -97,57 +97,20 @@ namespace Nikse.SubtitleEdit.Core.Translate
                     text = Utilities.UnbreakLine(text);
                     AutoBreak = true;
                 }
-
-                //if (Configuration.Settings.Tools.TranslateAllowSplit &&
-                //    !string.IsNullOrEmpty(inputNext) && !string.IsNullOrEmpty(text) &&
-                //    (char.IsLetterOrDigit(text[text.Length - 1]) || text[text.Length - 1] == ',' || sourceLanguage == "ar" && text[text.Length - 1] == '\u060C') &&
-                //    char.IsLower(inputNext[0]) &&
-                //    !text.Contains('-') && !inputNext.Contains('-') && !Italic && !SquareBrackets && string.IsNullOrEmpty(Font))
-                //{
-                //    text = Utilities.UnbreakLine(text);
-                //    text = text + " " + Utilities.UnbreakLine(inputNext);
-                //    SkipNext = true;
-                //}
             }
 
             return text.Trim();
         }
 
-        public string ReAddFormatting(string input, out string nextText)
+        public string ReAddFormatting(string input)
         {
             var text = input.Trim();
-            nextText = null;
 
             // Auto-break line
             if (AutoBreak)
             {
                 text = Utilities.AutoBreakLine(text);
             }
-
-            //if (SkipNext)
-            //{
-            //    var lines = Utilities.AutoBreakLine(text).SplitToLines();
-            //    if (lines.Count == 1)
-            //    {
-            //        nextText = string.Empty;
-            //    }
-            //    else if (lines.Count == 2)
-            //    {
-            //        text = Utilities.AutoBreakLine(lines[0]);
-            //        nextText = Utilities.AutoBreakLine(lines[1]);
-            //    }
-            //    else
-            //    {
-            //        text = Utilities.AutoBreakLine(lines[0] + " " + lines[1]);
-            //        var sb = new StringBuilder();
-            //        for (int i = 2; i < lines.Count; i++)
-            //        {
-            //            sb.Append(lines[i]);
-            //            sb.Append(" ");
-            //        }
-            //        nextText = Utilities.AutoBreakLine(sb.ToString().TrimEnd());
-            //    }
-            //}
 
             // Square brackets
             if (SquareBracketsUppercase)

@@ -48,13 +48,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
                         input.Append(" " + SplitChar + " ");
                     }
 
-                    var nextText = string.Empty;
-                    if (index < paragraphs.Count - 1 && paragraphs[index + 1].StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds < 200)
-                    {
-                        nextText = paragraphs[index + 1].Text;
-                    }
-
-                    var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text.Replace(SplitChar.ToString(), string.Empty), sourceLanguage), sourceLanguage, nextText);
+                    var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text.Replace(SplitChar.ToString(), string.Empty), sourceLanguage), sourceLanguage);
                     text = f.UnBreak(text, p.Text);
                     input.Append(text);
                 }
@@ -133,22 +127,13 @@ namespace Nikse.SubtitleEdit.Core.Translate
                     s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
                     s = s.Replace(" " + Environment.NewLine, Environment.NewLine);
                     s = s.Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
-                    string nextText = null;
                     if (formatList.Count > index)
                     {
-                        s = formatList[index].ReAddFormatting(s, out nextText);
-                        if (nextText == null)
-                        {
-                            s = formatList[index].ReBreak(s, targetLanguage);
-                        }
+                        s = formatList[index].ReAddFormatting(s);
+                        s = formatList[index].ReBreak(s, targetLanguage);
                     }
 
                     resultList.Add(s);
-
-                    if (nextText != null)
-                    {
-                        resultList.Add(nextText);
-                    }
                 }
 
                 if (resultList.Count > paragraphs.Count)

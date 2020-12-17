@@ -57,13 +57,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
                     input.Append(",");
                 }
 
-                var nextText = string.Empty;
-                if (index < paragraphs.Count - 1 && paragraphs[index + 1].StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds < 200)
-                {
-                    nextText = paragraphs[index + 1].Text;
-                }
-
-                var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text, sourceLanguage), sourceLanguage, nextText);
+                var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text, sourceLanguage), sourceLanguage);
                 text = f.UnBreak(text, p.Text);
 
                 input.Append("\"" + Json.EncodeJsonText(text) + "\"");
@@ -102,26 +96,17 @@ namespace Nikse.SubtitleEdit.Core.Translate
                                     {
                                         if (v2[innerKey2] is string translatedText)
                                         {
-                                            string nextText = null;
+
                                             translatedText = Regex.Unescape(translatedText);
                                             translatedText = string.Join(Environment.NewLine, translatedText.SplitToLines());
                                             translatedText = TranslationHelper.PostTranslate(translatedText, targetLanguage);
                                             if (resultList.Count - skipCount < formatList.Count)
                                             {
-                                                translatedText = formatList[resultList.Count - skipCount].ReAddFormatting(translatedText, out nextText);
-                                                if (nextText == null)
-                                                {
-                                                    translatedText = formatList[resultList.Count - skipCount].ReBreak(translatedText, targetLanguage);
-                                                }
+                                                translatedText = formatList[resultList.Count - skipCount].ReAddFormatting(translatedText);
+                                                translatedText = formatList[resultList.Count - skipCount].ReBreak(translatedText, targetLanguage);
                                             }
 
                                             resultList.Add(translatedText);
-
-                                            if (nextText != null)
-                                            {
-                                                resultList.Add(nextText);
-                                                skipCount++;
-                                            }
                                         }
                                     }
                                 }
