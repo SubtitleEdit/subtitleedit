@@ -132,15 +132,9 @@ namespace Nikse.SubtitleEdit.Core.Translate
                         isFirst = false;
                     }
 
-                    var nextText = string.Empty;
-                    if (index < paragraphs.Count - 1 && paragraphs[index + 1].StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds < 200)
-                    {
-                        nextText = paragraphs[index + 1].Text;
-                    }
-
                     var f = new Formatting();
                     formatList.Add(f);
-                    var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text, sourceLanguage), sourceLanguage, nextText);
+                    var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text, sourceLanguage), sourceLanguage);
                     text = f.UnBreak(text, p.Text);
                     jsonBuilder.Append("{ \"Text\":\"" + Json.EncodeJsonText(text) + "\"}");
                 }
@@ -172,26 +166,13 @@ namespace Nikse.SubtitleEdit.Core.Translate
                             var textDics = (Dictionary<string, object>)o;
                             var res = (string)textDics["text"];
 
-                            string nextText = null;
                             if (formatList.Count > results.Count - skipCount)
                             {
-                                res = formatList[results.Count - skipCount].ReAddFormatting(res, out nextText);
-
-                                if (nextText == null)
-                                {
-                                    res = formatList[results.Count - skipCount].ReBreak(res, targetLanguage);
-                                }
+                                res = formatList[results.Count - skipCount].ReAddFormatting(res);
+                                res = formatList[results.Count - skipCount].ReBreak(res, targetLanguage);
                             }
-
                             res = TranslationHelper.PostTranslate(res, targetLanguage);
-
                             results.Add(res);
-
-                            if (nextText != null)
-                            {
-                                results.Add(nextText);
-                                skipCount++;
-                            }
                         }
                     }
                 }
