@@ -30,8 +30,8 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode3 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode4 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
             this.groupBoxCurrent = new System.Windows.Forms.GroupBox();
             this.buttonSetText = new System.Windows.Forms.Button();
             this.labelCurrentSize = new System.Windows.Forms.Label();
@@ -58,16 +58,17 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.insertToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.insertAfterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.alignSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.centerSelectedLineshorizontallyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.topAlignSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bottomAlignSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.colorSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.adjustAllTimesForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.adjustDisplayTimeForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.applyDurationLimitsForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.oCRTextsforOverviewOnlyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparatorInsertSub = new System.Windows.Forms.ToolStripSeparator();
             this.insertSubtitleAfterThisLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -103,6 +104,8 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.timerSubtitleOnVideo = new System.Windows.Forms.Timer(this.components);
             this.labelVideoInfo = new System.Windows.Forms.Label();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
+            this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
+            this.quickOCRTextsforOverviewOnlyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxCurrent.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).BeginInit();
@@ -262,14 +265,14 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.timeUpDownEndTime.Name = "timeUpDownEndTime";
             this.timeUpDownEndTime.Size = new System.Drawing.Size(111, 27);
             this.timeUpDownEndTime.TabIndex = 3;
-            timeCode1.Hours = 0;
-            timeCode1.Milliseconds = 0;
-            timeCode1.Minutes = 0;
-            timeCode1.Seconds = 0;
-            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode1.TotalMilliseconds = 0D;
-            timeCode1.TotalSeconds = 0D;
-            this.timeUpDownEndTime.TimeCode = timeCode1;
+            timeCode3.Hours = 0;
+            timeCode3.Milliseconds = 0;
+            timeCode3.Minutes = 0;
+            timeCode3.Seconds = 0;
+            timeCode3.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode3.TotalMilliseconds = 0D;
+            timeCode3.TotalSeconds = 0D;
+            this.timeUpDownEndTime.TimeCode = timeCode3;
             this.timeUpDownEndTime.UseVideoOffset = false;
             // 
             // timeUpDownStartTime
@@ -282,14 +285,14 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
             this.timeUpDownStartTime.Size = new System.Drawing.Size(111, 27);
             this.timeUpDownStartTime.TabIndex = 1;
-            timeCode2.Hours = 0;
-            timeCode2.Milliseconds = 0;
-            timeCode2.Minutes = 0;
-            timeCode2.Seconds = 0;
-            timeCode2.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode2.TotalMilliseconds = 0D;
-            timeCode2.TotalSeconds = 0D;
-            this.timeUpDownStartTime.TimeCode = timeCode2;
+            timeCode4.Hours = 0;
+            timeCode4.Milliseconds = 0;
+            timeCode4.Minutes = 0;
+            timeCode4.Seconds = 0;
+            timeCode4.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode4.TotalMilliseconds = 0D;
+            timeCode4.TotalSeconds = 0D;
+            this.timeUpDownStartTime.TimeCode = timeCode4;
             this.timeUpDownStartTime.UseVideoOffset = false;
             // 
             // label1
@@ -398,117 +401,123 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.insertToolStripMenuItem,
             this.insertAfterToolStripMenuItem,
             this.toolStripSeparator3,
+            this.alignSelectedLinesToolStripMenuItem,
             this.centerSelectedLineshorizontallyToolStripMenuItem,
             this.topAlignSelectedLinesToolStripMenuItem,
             this.bottomAlignSelectedLinesToolStripMenuItem,
+            this.toolStripSeparator7,
             this.colorSelectedLinesToolStripMenuItem,
             this.toolStripSeparator6,
             this.adjustAllTimesForSelectedLinesToolStripMenuItem,
             this.adjustDisplayTimeForSelectedLinesToolStripMenuItem,
             this.applyDurationLimitsForSelectedLinesToolStripMenuItem,
-            this.toolStripSeparator5,
-            this.oCRTextsforOverviewOnlyToolStripMenuItem,
+            this.toolStripSeparatorInsertSub,
             this.insertSubtitleAfterThisLineToolStripMenuItem});
             this.contextMenuStripListView.Name = "contextMenuStripListView";
-            this.contextMenuStripListView.Size = new System.Drawing.Size(286, 286);
+            this.contextMenuStripListView.Size = new System.Drawing.Size(377, 314);
             this.contextMenuStripListView.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripListView_Opening);
             // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(376, 22);
             this.deleteToolStripMenuItem.Text = "Delete";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
             // insertToolStripMenuItem
             // 
             this.insertToolStripMenuItem.Name = "insertToolStripMenuItem";
-            this.insertToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
+            this.insertToolStripMenuItem.Size = new System.Drawing.Size(376, 22);
             this.insertToolStripMenuItem.Text = "Insert before";
             this.insertToolStripMenuItem.Click += new System.EventHandler(this.insertToolStripMenuItem_Click);
             // 
             // insertAfterToolStripMenuItem
             // 
             this.insertAfterToolStripMenuItem.Name = "insertAfterToolStripMenuItem";
-            this.insertAfterToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
+            this.insertAfterToolStripMenuItem.Size = new System.Drawing.Size(376, 22);
             this.insertAfterToolStripMenuItem.Text = "Insert after";
             this.insertAfterToolStripMenuItem.Click += new System.EventHandler(this.insertAfterToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(282, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(373, 6);
+            // 
+            // alignSelectedLinesToolStripMenuItem
+            // 
+            this.alignSelectedLinesToolStripMenuItem.Name = "alignSelectedLinesToolStripMenuItem";
+            this.alignSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(376, 22);
+            this.alignSelectedLinesToolStripMenuItem.Text = "Align selected lines...";
+            this.alignSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.alignSelectedLinesToolStripMenuItem_Click);
             // 
             // centerSelectedLineshorizontallyToolStripMenuItem
             // 
             this.centerSelectedLineshorizontallyToolStripMenuItem.Name = "centerSelectedLineshorizontallyToolStripMenuItem";
-            this.centerSelectedLineshorizontallyToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
-            this.centerSelectedLineshorizontallyToolStripMenuItem.Text = "Center selected lines (horizontally) ";
+            this.centerSelectedLineshorizontallyToolStripMenuItem.Size = new System.Drawing.Size(376, 22);
+            this.centerSelectedLineshorizontallyToolStripMenuItem.Text = "Center selected lines (horizontally, keep vertical position) ";
             this.centerSelectedLineshorizontallyToolStripMenuItem.Click += new System.EventHandler(this.centerSelectedLinesHorizontallyToolStripMenuItem_Click);
             // 
             // topAlignSelectedLinesToolStripMenuItem
             // 
             this.topAlignSelectedLinesToolStripMenuItem.Name = "topAlignSelectedLinesToolStripMenuItem";
-            this.topAlignSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
-            this.topAlignSelectedLinesToolStripMenuItem.Text = "Top align selected lines";
+            this.topAlignSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(376, 22);
+            this.topAlignSelectedLinesToolStripMenuItem.Text = "Top align selected lines (keep horizontal position)";
             this.topAlignSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.topAlignSelectedLinesToolStripMenuItem_Click);
             // 
             // bottomAlignSelectedLinesToolStripMenuItem
             // 
             this.bottomAlignSelectedLinesToolStripMenuItem.Name = "bottomAlignSelectedLinesToolStripMenuItem";
-            this.bottomAlignSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
-            this.bottomAlignSelectedLinesToolStripMenuItem.Text = "Bottom align selected lines";
+            this.bottomAlignSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(376, 22);
+            this.bottomAlignSelectedLinesToolStripMenuItem.Text = "Bottom align selected lines (keep horizontal position)";
             this.bottomAlignSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.bottomAlignSelectedLinesToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator7
+            // 
+            this.toolStripSeparator7.Name = "toolStripSeparator7";
+            this.toolStripSeparator7.Size = new System.Drawing.Size(373, 6);
             // 
             // colorSelectedLinesToolStripMenuItem
             // 
             this.colorSelectedLinesToolStripMenuItem.Name = "colorSelectedLinesToolStripMenuItem";
-            this.colorSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
-            this.colorSelectedLinesToolStripMenuItem.Text = "Color selected lines...";
+            this.colorSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(376, 22);
+            this.colorSelectedLinesToolStripMenuItem.Text = "Change color for selected lines...";
             this.colorSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.colorSelectedLinesToolStripMenuItem_Click);
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(282, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(373, 6);
             // 
             // adjustAllTimesForSelectedLinesToolStripMenuItem
             // 
             this.adjustAllTimesForSelectedLinesToolStripMenuItem.Name = "adjustAllTimesForSelectedLinesToolStripMenuItem";
-            this.adjustAllTimesForSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
+            this.adjustAllTimesForSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(376, 22);
             this.adjustAllTimesForSelectedLinesToolStripMenuItem.Text = "Adjust all times for selected lines...";
             this.adjustAllTimesForSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.adjustAllTimesForSelectedLinesToolStripMenuItem_Click);
             // 
             // adjustDisplayTimeForSelectedLinesToolStripMenuItem
             // 
             this.adjustDisplayTimeForSelectedLinesToolStripMenuItem.Name = "adjustDisplayTimeForSelectedLinesToolStripMenuItem";
-            this.adjustDisplayTimeForSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
+            this.adjustDisplayTimeForSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(376, 22);
             this.adjustDisplayTimeForSelectedLinesToolStripMenuItem.Text = "Adjust display time for selected lines...";
             this.adjustDisplayTimeForSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.adjustDisplayTimeForSelectedLinesToolStripMenuItem_Click);
             // 
             // applyDurationLimitsForSelectedLinesToolStripMenuItem
             // 
             this.applyDurationLimitsForSelectedLinesToolStripMenuItem.Name = "applyDurationLimitsForSelectedLinesToolStripMenuItem";
-            this.applyDurationLimitsForSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
+            this.applyDurationLimitsForSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(376, 22);
             this.applyDurationLimitsForSelectedLinesToolStripMenuItem.Text = "Apply duration limits for selected lines...";
             this.applyDurationLimitsForSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.applyDurationLimitsForSelectedLinesToolStripMenuItem_Click);
             // 
-            // toolStripSeparator5
+            // toolStripSeparatorInsertSub
             // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(282, 6);
-            // 
-            // oCRTextsforOverviewOnlyToolStripMenuItem
-            // 
-            this.oCRTextsforOverviewOnlyToolStripMenuItem.Name = "oCRTextsforOverviewOnlyToolStripMenuItem";
-            this.oCRTextsforOverviewOnlyToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
-            this.oCRTextsforOverviewOnlyToolStripMenuItem.Text = "Quick OCR texts (for overview only)";
-            this.oCRTextsforOverviewOnlyToolStripMenuItem.Click += new System.EventHandler(this.ocrTextsToolStripMenuItem_Click);
+            this.toolStripSeparatorInsertSub.Name = "toolStripSeparatorInsertSub";
+            this.toolStripSeparatorInsertSub.Size = new System.Drawing.Size(373, 6);
             // 
             // insertSubtitleAfterThisLineToolStripMenuItem
             // 
             this.insertSubtitleAfterThisLineToolStripMenuItem.Name = "insertSubtitleAfterThisLineToolStripMenuItem";
-            this.insertSubtitleAfterThisLineToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
+            this.insertSubtitleAfterThisLineToolStripMenuItem.Size = new System.Drawing.Size(376, 22);
             this.insertSubtitleAfterThisLineToolStripMenuItem.Text = "Insert subtitle after this line...";
             this.insertSubtitleAfterThisLineToolStripMenuItem.Click += new System.EventHandler(this.insertSubtitleAfterThisLineToolStripMenuItem_Click_1);
             // 
@@ -582,7 +591,9 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.toolStripMenuItemTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.adjustDisplayTimesToolStripMenuItem,
             this.applyDurationLimitsToolStripMenuItem,
-            this.appendSubtitleToolStripMenuItem});
+            this.appendSubtitleToolStripMenuItem,
+            this.toolStripSeparator8,
+            this.quickOCRTextsforOverviewOnlyToolStripMenuItem});
             this.toolStripMenuItemTools.Name = "toolStripMenuItemTools";
             this.toolStripMenuItemTools.Size = new System.Drawing.Size(46, 20);
             this.toolStripMenuItemTools.Text = "Tools";
@@ -590,21 +601,21 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             // adjustDisplayTimesToolStripMenuItem
             // 
             this.adjustDisplayTimesToolStripMenuItem.Name = "adjustDisplayTimesToolStripMenuItem";
-            this.adjustDisplayTimesToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.adjustDisplayTimesToolStripMenuItem.Size = new System.Drawing.Size(262, 22);
             this.adjustDisplayTimesToolStripMenuItem.Text = "Adjust display times...";
             this.adjustDisplayTimesToolStripMenuItem.Click += new System.EventHandler(this.adjustDisplayTimesToolStripMenuItem_Click);
             // 
             // applyDurationLimitsToolStripMenuItem
             // 
             this.applyDurationLimitsToolStripMenuItem.Name = "applyDurationLimitsToolStripMenuItem";
-            this.applyDurationLimitsToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.applyDurationLimitsToolStripMenuItem.Size = new System.Drawing.Size(262, 22);
             this.applyDurationLimitsToolStripMenuItem.Text = "Apply duration limits";
             this.applyDurationLimitsToolStripMenuItem.Click += new System.EventHandler(this.applyDurationLimitsToolStripMenuItem_Click);
             // 
             // appendSubtitleToolStripMenuItem
             // 
             this.appendSubtitleToolStripMenuItem.Name = "appendSubtitleToolStripMenuItem";
-            this.appendSubtitleToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.appendSubtitleToolStripMenuItem.Size = new System.Drawing.Size(262, 22);
             this.appendSubtitleToolStripMenuItem.Text = "Append subtitle...";
             this.appendSubtitleToolStripMenuItem.Click += new System.EventHandler(this.appendSubtitleToolStripMenuItem_Click);
             // 
@@ -621,14 +632,14 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             // openVideoToolStripMenuItem
             // 
             this.openVideoToolStripMenuItem.Name = "openVideoToolStripMenuItem";
-            this.openVideoToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.openVideoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.openVideoToolStripMenuItem.Text = "Open video...";
             this.openVideoToolStripMenuItem.Click += new System.EventHandler(this.openVideoToolStripMenuItem_Click);
             // 
             // closeVideoToolStripMenuItem
             // 
             this.closeVideoToolStripMenuItem.Name = "closeVideoToolStripMenuItem";
-            this.closeVideoToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.closeVideoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.closeVideoToolStripMenuItem.Text = "Close video";
             this.closeVideoToolStripMenuItem.Click += new System.EventHandler(this.closeVideoToolStripMenuItem_Click);
             // 
@@ -806,6 +817,18 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.subtitleListView1.Click += new System.EventHandler(this.subtitleListView1_Click);
             this.subtitleListView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.subtitleListView1_KeyDown);
             // 
+            // toolStripSeparator8
+            // 
+            this.toolStripSeparator8.Name = "toolStripSeparator8";
+            this.toolStripSeparator8.Size = new System.Drawing.Size(259, 6);
+            // 
+            // quickOCRTextsforOverviewOnlyToolStripMenuItem
+            // 
+            this.quickOCRTextsforOverviewOnlyToolStripMenuItem.Name = "quickOCRTextsforOverviewOnlyToolStripMenuItem";
+            this.quickOCRTextsforOverviewOnlyToolStripMenuItem.Size = new System.Drawing.Size(262, 22);
+            this.quickOCRTextsforOverviewOnlyToolStripMenuItem.Text = "Quick OCR texts (for overview only)";
+            this.quickOCRTextsforOverviewOnlyToolStripMenuItem.Click += new System.EventHandler(this.quickOCRTextsforOverviewOnlyToolStripMenuItem_Click);
+            // 
             // BinEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -906,12 +929,11 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private System.Windows.Forms.Button buttonSetText;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem undoChangesForThisElementToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem oCRTextsforOverviewOnlyToolStripMenuItem;
         private System.Windows.Forms.Label labelVideoInfo;
         private System.Windows.Forms.ToolStripMenuItem centerSelectedLineshorizontallyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem topAlignSelectedLinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bottomAlignSelectedLinesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparatorInsertSub;
         private System.Windows.Forms.ToolStripMenuItem colorSelectedLinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem adjustDisplayTimeForSelectedLinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemTools;
@@ -922,5 +944,9 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private System.Windows.Forms.ToolStripMenuItem appendSubtitleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem alignSelectedLinesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
+        private System.Windows.Forms.ToolStripMenuItem quickOCRTextsforOverviewOnlyToolStripMenuItem;
     }
 }

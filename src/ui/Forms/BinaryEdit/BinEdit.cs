@@ -164,6 +164,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             }
 
             _lastSaveHash = GetStateHash();
+            Text = Path.GetFileName(fileName) + " - " + Configuration.Settings.Language.General.Title;
         }
 
         private static Bitmap GetBitmap(IBinaryParagraphWithPosition s)
@@ -1494,8 +1495,11 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             var selectedCount = subtitleListView1.SelectedItems.Count;
             insertToolStripMenuItem.Visible = selectedCount == 1;
             insertAfterToolStripMenuItem.Visible = selectedCount == 1;
-            insertSubtitleAfterThisLineToolStripMenuItem.Visible = selectedCount == 1;
-            oCRTextsforOverviewOnlyToolStripMenuItem.Visible = File.Exists(_nOcrFileName);
+
+            toolStripSeparatorInsertSub.Visible = selectedCount == 1 && subtitleListView1.SelectedItems[0].Index == subtitleListView1.Items.Count - 1;
+            insertSubtitleAfterThisLineToolStripMenuItem.Visible = selectedCount == 1 && subtitleListView1.SelectedItems[0].Index == subtitleListView1.Items.Count - 1;
+
+            quickOCRTextsforOverviewOnlyToolStripMenuItem.Visible = File.Exists(_nOcrFileName);
         }
 
         private void openVideoToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1789,50 +1793,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
         private void ocrTextsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (subtitleListView1.Items.Count < 1)
-            {
-                return;
-            }
-
-            progressBar1.Value = 0;
-            progressBar1.Maximum = _subtitle.Paragraphs.Count;
-            progressBar1.Visible = true;
-            var nOcrDb = new NOcrDb(_nOcrFileName);
-            int count = 0;
-            var bw = new BackgroundWorker { WorkerReportsProgress = true };
-            bw.DoWork += (o, args) =>
-            {
-                Parallel.For(0, _subtitle.Paragraphs.Count, i =>
-                {
-                    Interlocked.Increment(ref count);
-                    bw.ReportProgress(count);
-                    var p = _subtitle.Paragraphs[i];
-                    var s = _binSubtitles[i];
-                    var extra = _extra[i];
-                    OcrParagraph(extra, s, nOcrDb, p);
-                });
-            };
-            bw.ProgressChanged += (o, args) =>
-            {
-                progressBar1.Value = args.ProgressPercentage;
-            };
-            bw.RunWorkerCompleted += (o, args) =>
-            {
-                if (IsDisposed)
-                {
-                    return;
-                }
-
-                progressBar1.Visible = false;
-                var idx = 0;
-                if (subtitleListView1.SelectedItems.Count > 0)
-                {
-                    idx = subtitleListView1.SelectedItems[0].Index;
-                }
-                subtitleListView1.Fill(_subtitle);
-                subtitleListView1.SelectIndexAndEnsureVisible(idx, true);
-            };
-            bw.RunWorkerAsync();
+            
         }
 
         private static void OcrParagraph(Extra extra, IBinaryParagraphWithPosition s, NOcrDb nOcrDb, Paragraph p)
@@ -2162,6 +2123,134 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                     ShowCurrentScaledImage(bmp, extra);
                 }
             }
+        }
+
+        private void alignSelectedLinesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (subtitleListView1.SelectedItems.Count < 1)
+            {
+                return;
+            }
+
+            using (var f = new AlignmentPicker(string.Empty))
+            {
+                f.TopMost = true;
+                f.StartPosition = FormStartPosition.Manual;
+                f.Left = Cursor.Position.X - 150;
+                f.Top = Cursor.Position.Y - 75;
+                if (f.ShowDialog(this) != DialogResult.OK)
+                {
+                    return;
+                }
+
+                var idx = subtitleListView1.SelectedItems[0].Index;
+                for (int i = 0; i < subtitleListView1.SelectedIndices.Count; i++)
+                {
+                    var index = subtitleListView1.SelectedIndices[i];
+                    var extra = _extra[index];
+                    var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : GetBitmap(_binSubtitles[index]);
+
+                    switch (f.Alignment)
+                    {
+                        case ContentAlignment.BottomLeft:
+                            extra.X = Configuration.Settings.Tools.BinEditLeftMargin;
+                            extra.Y = (int)Math.Round(numericUpDownScreenHeight.Value - bmp.Height - Configuration.Settings.Tools.BinEditVerticalMargin);
+                            break;
+                        case ContentAlignment.BottomCenter:
+                            extra.X = (int)Math.Round((numericUpDownScreenWidth.Value - bmp.Width) / 2.0m);
+                            extra.Y = (int)Math.Round(numericUpDownScreenHeight.Value - bmp.Height - Configuration.Settings.Tools.BinEditVerticalMargin);
+                            break;
+                        case ContentAlignment.BottomRight:
+                            extra.X = (int)Math.Round(numericUpDownScreenWidth.Value - bmp.Width - Configuration.Settings.Tools.BinEditRightMargin);
+                            extra.Y = (int)Math.Round(numericUpDownScreenHeight.Value - bmp.Height - Configuration.Settings.Tools.BinEditVerticalMargin);
+                            break;
+                        case ContentAlignment.MiddleLeft:
+                            extra.X = Configuration.Settings.Tools.BinEditLeftMargin;
+                            extra.Y = (int)Math.Round((numericUpDownScreenHeight.Value - bmp.Height) / 2.0m);
+                            break;
+                        case ContentAlignment.MiddleCenter:
+                            extra.X = (int)Math.Round((numericUpDownScreenWidth.Value - bmp.Width) / 2.0m);
+                            extra.Y = (int)Math.Round((numericUpDownScreenHeight.Value - bmp.Height) / 2.0m);
+                            break;
+                        case ContentAlignment.MiddleRight:
+                            extra.X = (int)Math.Round(numericUpDownScreenWidth.Value - bmp.Width - Configuration.Settings.Tools.BinEditRightMargin);
+                            extra.Y = (int)Math.Round((numericUpDownScreenHeight.Value - bmp.Height) / 2.0m);
+                            break;
+                        case ContentAlignment.TopLeft:
+                            extra.X = Configuration.Settings.Tools.BinEditLeftMargin;
+                            extra.Y = Configuration.Settings.Tools.BinEditVerticalMargin;
+                            break;
+                        case ContentAlignment.TopCenter:
+                            extra.X = (int)Math.Round((numericUpDownScreenWidth.Value - bmp.Width) / 2.0m);
+                            extra.Y = Configuration.Settings.Tools.BinEditVerticalMargin;
+                            break;
+                        case ContentAlignment.TopRight:
+                            extra.X = (int)Math.Round(numericUpDownScreenWidth.Value - bmp.Width - Configuration.Settings.Tools.BinEditRightMargin);
+                            extra.Y = Configuration.Settings.Tools.BinEditVerticalMargin;
+                            break;
+                    }
+
+
+                    if (index == idx)
+                    {
+                        ShowCurrentScaledImage(bmp, extra);
+                        numericUpDownY.Value = extra.Y;
+                        numericUpDownX.Value = extra.X;
+                    }
+
+                    bmp.Dispose();
+                }
+            }
+        }
+
+        private void quickOCRTextsforOverviewOnlyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (subtitleListView1.Items.Count < 1)
+            {
+                return;
+            }
+
+            progressBar1.Value = 0;
+            progressBar1.Maximum = _subtitle.Paragraphs.Count;
+            progressBar1.Visible = true;
+            var nOcrDb = new NOcrDb(_nOcrFileName);
+            int count = 0;
+            var bw = new BackgroundWorker { WorkerReportsProgress = true };
+            bw.DoWork += (o, args) =>
+            {
+                Parallel.For(0, _subtitle.Paragraphs.Count, i =>
+                {
+                    Interlocked.Increment(ref count);
+                    bw.ReportProgress(count);
+                    var p = _subtitle.Paragraphs[i];
+                    var s = _binSubtitles[i];
+                    var extra = _extra[i];
+                    OcrParagraph(extra, s, nOcrDb, p);
+                });
+            };
+            bw.ProgressChanged += (o, args) =>
+            {
+                progressBar1.Value = args.ProgressPercentage;
+            };
+            bw.RunWorkerCompleted += (o, args) =>
+            {
+                if (IsDisposed)
+                {
+                    return;
+                }
+
+                progressBar1.Visible = false;
+                var idx = 0;
+                if (subtitleListView1.SelectedItems.Count > 0)
+                {
+                    idx = subtitleListView1.SelectedItems[0].Index;
+                }
+                subtitleListView1.Fill(_subtitle);
+                subtitleListView1.SelectIndexAndEnsureVisible(idx, true);
+                quickOCRTextsforOverviewOnlyToolStripMenuItem.Enabled = true;
+            };
+            bw.RunWorkerAsync();
+            quickOCRTextsforOverviewOnlyToolStripMenuItem.Enabled = false;
         }
     }
 }
