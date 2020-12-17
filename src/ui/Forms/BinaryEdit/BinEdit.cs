@@ -2013,9 +2013,12 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
                 subtitleListView1.Fill(_subtitle);
                 subtitleListView1.SelectIndexAndEnsureVisible(idx, true);
-                foreach (var i in selectedIndices)
+                if (onlySelectedLines)
                 {
-                    subtitleListView1.Items[i].Selected = true;
+                    foreach (var i in selectedIndices)
+                    {
+                        subtitleListView1.Items[i].Selected = true;
+                    }
                 }
             }
         }
