@@ -245,8 +245,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemChangeFrameRate2 = new System.Windows.Forms.ToolStripMenuItem();
             this.changeSpeedInPercentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAutoTranslate = new System.Windows.Forms.ToolStripMenuItem();
-            this.translatepoweredByMicrosoftToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.translateByGoogleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.translateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -323,9 +321,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.visualSyncSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemGoogleMicrosoftTranslateSelLine = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemTranslateSelected = new System.Windows.Forms.ToolStripMenuItem();
-            this.googleTranslateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.genericTranslateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.microsoftBingTranslateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.adjustDisplayTimeForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fixCommonErrorsInSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeCasingForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -2298,30 +2294,11 @@ namespace Nikse.SubtitleEdit.Forms
             // toolStripMenuItemAutoTranslate
             // 
             this.toolStripMenuItemAutoTranslate.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.translatepoweredByMicrosoftToolStripMenuItem,
-            this.translateByGoogleToolStripMenuItem,
             this.translateToolStripMenuItem
             });
             this.toolStripMenuItemAutoTranslate.Name = "toolStripMenuItemAutoTranslate";
             this.toolStripMenuItemAutoTranslate.Size = new System.Drawing.Size(94, 20);
             this.toolStripMenuItemAutoTranslate.Text = "Auto-translate";
-            this.toolStripMenuItemAutoTranslate.DropDownOpening += new System.EventHandler(this.toolStripMenuItemAutoTranslate_DropDownOpening);
-            // 
-            // translatepoweredByMicrosoftToolStripMenuItem
-            // 
-            this.translatepoweredByMicrosoftToolStripMenuItem.Name = "translatepoweredByMicrosoftToolStripMenuItem";
-            this.translatepoweredByMicrosoftToolStripMenuItem.Size = new System.Drawing.Size(402, 22);
-            this.translatepoweredByMicrosoftToolStripMenuItem.Text = "Translate (powered by Microsoft)...";
-            this.translatepoweredByMicrosoftToolStripMenuItem.Click += new System.EventHandler(this.translatepoweredByMicrosoftToolStripMenuItem_Click);
-            // 
-            // translateByGoogleToolStripMenuItem
-            // 
-            this.translateByGoogleToolStripMenuItem.Name = "translateByGoogleToolStripMenuItem";
-            this.translateByGoogleToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.G)));
-            this.translateByGoogleToolStripMenuItem.Size = new System.Drawing.Size(402, 22);
-            this.translateByGoogleToolStripMenuItem.Text = "Translate (powered by Google)...";
-            this.translateByGoogleToolStripMenuItem.Click += new System.EventHandler(this.TranslateByGoogleToolStripMenuItemClick);
             // 
             // translateToolStripMenuItem
             // 
@@ -2918,19 +2895,10 @@ namespace Nikse.SubtitleEdit.Forms
             // toolStripMenuItemTranslateSelected
             // 
             this.toolStripMenuItemTranslateSelected.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.googleTranslateToolStripMenuItem,
-            this.genericTranslateToolStripMenuItem,
-            this.microsoftBingTranslateToolStripMenuItem});
+            this.genericTranslateToolStripMenuItem});
             this.toolStripMenuItemTranslateSelected.Name = "toolStripMenuItemTranslateSelected";
             this.toolStripMenuItemTranslateSelected.Size = new System.Drawing.Size(284, 22);
             this.toolStripMenuItemTranslateSelected.Text = "Translate selected lines via...";
-            // 
-            // googleTranslateToolStripMenuItem
-            // 
-            this.googleTranslateToolStripMenuItem.Name = "googleTranslateToolStripMenuItem";
-            this.googleTranslateToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
-            this.googleTranslateToolStripMenuItem.Text = "Google translate...";
-            this.googleTranslateToolStripMenuItem.Click += new System.EventHandler(this.googleTranslateToolStripMenuItem_Click);
             // 
             // genericTranslateToolStripMenuItem
             // 
@@ -2938,14 +2906,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.genericTranslateToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
             this.genericTranslateToolStripMenuItem.Text = "translate...";
             this.genericTranslateToolStripMenuItem.Click += new System.EventHandler(this.TranslateSelectedLinesToolStripMenuItemClick);
-
-            // 
-            // microsoftBingTranslateToolStripMenuItem
-            // 
-            this.microsoftBingTranslateToolStripMenuItem.Name = "microsoftBingTranslateToolStripMenuItem";
-            this.microsoftBingTranslateToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
-            this.microsoftBingTranslateToolStripMenuItem.Text = "Microsoft Bing translate...";
-            this.microsoftBingTranslateToolStripMenuItem.Click += new System.EventHandler(this.microsoftBingTranslateToolStripMenuItem_Click);
             // 
             // adjustDisplayTimeForSelectedLinesToolStripMenuItem
             // 
@@ -5364,7 +5324,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemPointSync;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAdjustAllTimes;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAutoTranslate;
-        private System.Windows.Forms.ToolStripMenuItem translateByGoogleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem translateToolStripMenuItem;
         private System.Windows.Forms.Timer timerStillTyping;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemVideo;
@@ -5424,7 +5383,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Label labelCreateF11;
         private System.Windows.Forms.Label labelCreateF10;
         private System.Windows.Forms.Label labelCreateF9;
-        private System.Windows.Forms.ToolStripMenuItem translatepoweredByMicrosoftToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton toolStripButtonToggleWaveform;
         private Controls.VideoPlayerContainer mediaPlayer;
         private System.Windows.Forms.Panel panelVideoPlayer;
@@ -5660,9 +5618,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Label labelBookmark;
         private System.Windows.Forms.PictureBox pictureBoxBookmark;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemTranslateSelected;
-        private System.Windows.Forms.ToolStripMenuItem googleTranslateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem genericTranslateToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem microsoftBingTranslateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemBookmark;
         private System.Windows.Forms.ToolStripMenuItem removeAllFormattingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem removeBoldToolStripMenuItem;

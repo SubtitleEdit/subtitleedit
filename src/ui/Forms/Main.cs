@@ -1537,8 +1537,6 @@ namespace Nikse.SubtitleEdit.Forms
             pointSyncViaOtherSubtitleToolStripMenuItem.Text = _language.Menu.Synchronization.PointSyncViaOtherSubtitle;
 
             toolStripMenuItemAutoTranslate.Text = _language.Menu.AutoTranslate.Title;
-            translateByGoogleToolStripMenuItem.Text = _language.Menu.AutoTranslate.TranslatePoweredByGoogle;
-            translatepoweredByMicrosoftToolStripMenuItem.Text = _language.Menu.AutoTranslate.TranslatePoweredByMicrosoft;
 
             optionsToolStripMenuItem.Text = _language.Menu.Options.Title;
             settingsToolStripMenuItem.Text = _language.Menu.Options.Settings;
@@ -1624,9 +1622,7 @@ namespace Nikse.SubtitleEdit.Forms
             showSelectedLinesEarlierlaterToolStripMenuItem.Text = _language.Menu.ContextMenu.ShowSelectedLinesEarlierLater;
             visualSyncSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.VisualSyncSelectedLines;
             toolStripMenuItemGoogleMicrosoftTranslateSelLine.Text = _language.Menu.ContextMenu.GoogleAndMicrosoftTranslateSelectedLine;
-            googleTranslateToolStripMenuItem.Text = _language.Menu.AutoTranslate.TranslatePoweredByGoogle;
-            genericTranslateToolStripMenuItem.Text = "_language.Menu.AutoTranslate.TranslatePoweredByGeneric";
-            microsoftBingTranslateToolStripMenuItem.Text = _language.Menu.AutoTranslate.TranslatePoweredByMicrosoft;
+            genericTranslateToolStripMenuItem.Text = _language.Menu.AutoTranslate.Title;
             toolStripMenuItemTranslateSelected.Text = _language.Menu.ContextMenu.TranslateSelectedLines;
             adjustDisplayTimeForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.AdjustDisplayDurationForSelectedLines;
             fixCommonErrorsInSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.FixCommonErrorsInSelectedLines;
@@ -6708,154 +6704,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-     
-
-        private void microsoftBingTranslateToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            TranslateViaGoogle(true, false);
-        }
-
-        private void translatepoweredByMicrosoftToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            TranslateViaGoogle(false, false);
-        }
-
-        private void googleTranslateToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            TranslateViaGoogle(true, true);
-        }
-        private void TranslateByGoogleToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            TranslateViaGoogle(false, true);
-        }
-
-        private void TranslateViaGoogle(bool onlySelectedLines, bool useGoogle)
-        {
-            if (!IsSubtitleLoaded)
-            {
-                DisplaySubtitleNotLoadedMessage();
-                return;
-            }
-
-            bool isAlternateVisible = SubtitleListview1.IsAlternateTextColumnVisible;
-            ReloadFromSourceView();
-            using (var googleTranslate = new GoogleTranslate())
-            {
-                SaveSubtitleListviewIndices();
-                string title = _language.GoogleTranslate;
-                if (!useGoogle)
-                {
-                    title = _language.MicrosoftTranslate;
-                }
-
-                if (onlySelectedLines)
-                {
-                    var selectedLines = new Subtitle();
-                    foreach (int index in SubtitleListview1.SelectedIndices)
-                    {
-                        selectedLines.Paragraphs.Add(_subtitle.Paragraphs[index]);
-                    }
-
-                    title += " - " + _language.SelectedLines;
-                    if (_subtitleAlternate != null)
-                    {
-                        var paragraphs = new List<Paragraph>();
-                        foreach (int index in SubtitleListview1.SelectedIndices)
-                        {
-                            var original = Utilities.GetOriginalParagraph(index, _subtitle.Paragraphs[index], _subtitleAlternate.Paragraphs);
-                            if (original != null)
-                            {
-                                paragraphs.Add(original);
-                            }
-                        }
-
-                        if (paragraphs.Count == selectedLines.Paragraphs.Count)
-                        {
-                            googleTranslate.Initialize(new Subtitle(paragraphs), selectedLines, title, useGoogle, GetCurrentEncoding());
-                        }
-                        else
-                        {
-                            googleTranslate.Initialize(selectedLines, null, title, useGoogle, GetCurrentEncoding());
-                        }
-                    }
-                    else
-                    {
-                        googleTranslate.Initialize(selectedLines, null, title, useGoogle, GetCurrentEncoding());
-                    }
-                }
-                else
-                {
-                    googleTranslate.Initialize(_subtitle, null, title, useGoogle, GetCurrentEncoding());
-                }
-
-                if (googleTranslate.ShowDialog(this) == DialogResult.OK)
-                {
-                    _subtitleListViewIndex = -1;
-                    string oldFileName = _fileName;
-                    MakeHistoryForUndo(_language.BeforeGoogleTranslation);
-                    if (onlySelectedLines)
-                    {
-                        // we only update selected lines
-                        int i = 0;
-                        foreach (int index in SubtitleListview1.SelectedIndices)
-                        {
-                            _subtitle.Paragraphs[index] = googleTranslate.TranslatedSubtitle.Paragraphs[i];
-                            i++;
-                        }
-
-                        ShowStatus(_language.SelectedLinesTranslated);
-                    }
-                    else
-                    {
-                        ShowSubtitleTimer.Stop();
-                        var oldHash = _changeSubtitleHash;
-                        _subtitleAlternate = new Subtitle(_subtitle);
-                        _subtitleAlternateFileName = _fileName;
-                        _fileName = null;
-                        _subtitle.Paragraphs.Clear();
-                        foreach (var p in googleTranslate.TranslatedSubtitle.Paragraphs)
-                        {
-                            _subtitle.Paragraphs.Add(new Paragraph(p));
-                        }
-
-                        ShowStatus(_language.SubtitleTranslated);
-                        _changeAlternateSubtitleHash = oldHash;
-                        _changeSubtitleHash = -1;
-                        ShowSubtitleTimer.Start();
-                    }
-
-                    ShowSource();
-
-                    if (!onlySelectedLines)
-                    {
-                        SubtitleListview1.ShowAlternateTextColumn(_languageGeneral.OriginalText);
-                        SubtitleListview1.AutoSizeAllColumns(this);
-                        var oldHash = _changeAlternateSubtitleHash;
-                        SetupAlternateEdit();
-                        _changeAlternateSubtitleHash = oldHash;
-                    }
-
-                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                    if (!onlySelectedLines)
-                    {
-                        ResetHistory();
-                        _fileName = googleTranslate.GetFileNameWithTargetLanguage(oldFileName, VideoFileName, _subtitleAlternate, GetCurrentSubtitleFormat());
-                    }
-
-                    RestoreSubtitleListviewIndices();
-                    _converted = true;
-                    SetTitle();
-                    SetEncoding(Encoding.UTF8);
-                    if (!isAlternateVisible)
-                    {
-                        toolStripMenuItemShowOriginalInPreview.Checked = false;
-                        Configuration.Settings.General.ShowOriginalAsPreviewIfAvailable = false;
-                        audioVisualizer.Invalidate();
-                    }
-                }
-            }
-        }
-
 
         /// <summary>
         /// Undo or Redo
@@ -7827,11 +7675,8 @@ namespace Nikse.SubtitleEdit.Forms
                 boxToolStripMenuItem.Visible = false;
             }
 
-            microsoftBingTranslateToolStripMenuItem.Visible =
-                !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorApiKey) &&
-                !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint);
-
-            toolStripMenuItemGoogleMicrosoftTranslateSelLine.Visible = false;
+     
+            toolStripMenuItemGoogleMicrosoftTranslateSelLine.Visible = true;
             if (SubtitleListview1.SelectedItems.Count == 0)
             {
                 contextMenuStripEmpty.Show(MousePosition.X, MousePosition.Y);
@@ -7855,7 +7700,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripSeparatorAdvancedFunctions.Visible = noNetWorkSession;
                 adjustDisplayTimeForSelectedLinesToolStripMenuItem.Visible = true;
                 visualSyncSelectedLinesToolStripMenuItem.Visible = true;
-                toolStripMenuItemGoogleMicrosoftTranslateSelLine.Visible = false;
+                toolStripMenuItemGoogleMicrosoftTranslateSelLine.Visible = true;
                 toolStripMenuItemUnbreakLines.Visible = true;
                 toolStripMenuItemAutoBreakLines.Visible = true;
                 toolStripSeparatorBreakLines.Visible = true;
@@ -21028,7 +20873,6 @@ namespace Nikse.SubtitleEdit.Forms
             findDoubleWordsToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheckFindDoubleWords);
             addWordToNameListToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheckAddWordToNames);
 
-            translateByGoogleToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateGoogleTranslate);
 
             toolStripMenuItemAdjustAllTimes.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationAdjustTimes);
             visualSyncToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationVisualSync);
@@ -28667,12 +28511,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void toolStripMenuItemAutoTranslate_DropDownOpening(object sender, EventArgs e)
-        {
-            translatepoweredByMicrosoftToolStripMenuItem.Visible =
-                !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorApiKey) &&
-                !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint);
-        }
+     
 
         private void comboBoxSubtitleFormats_DropDownClosed(object sender, EventArgs e)
         {
