@@ -1622,7 +1622,9 @@ namespace Nikse.SubtitleEdit.Forms
             showSelectedLinesEarlierlaterToolStripMenuItem.Text = _language.Menu.ContextMenu.ShowSelectedLinesEarlierLater;
             visualSyncSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.VisualSyncSelectedLines;
             toolStripMenuItemGoogleMicrosoftTranslateSelLine.Text = _language.Menu.ContextMenu.GoogleAndMicrosoftTranslateSelectedLine;
+
             genericTranslateToolStripMenuItem.Text = _language.Menu.AutoTranslate.Title;
+            translateToolStripMenuItem.Text = _language.Menu.AutoTranslate.Title;
             toolStripMenuItemTranslateSelected.Text = _language.Menu.ContextMenu.TranslateSelectedLines;
             adjustDisplayTimeForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.AdjustDisplayDurationForSelectedLines;
             fixCommonErrorsInSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.FixCommonErrorsInSelectedLines;
