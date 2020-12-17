@@ -20,8 +20,8 @@ namespace Nikse.SubtitleEdit.Logic
                                       .Where(c => c.GetType() == type);
         }
 
-        internal static readonly Color BackColor = Color.FromArgb(0x1e, 0x1e, 0x1e);
-        internal static readonly Color ForeColor = Color.FromArgb(150, 150, 150);
+        internal static readonly Color BackColor = Color.FromArgb(37, 37, 38);
+        internal static readonly Color ForeColor = Color.FromArgb(255, 255, 255);
 
         private static void TabControl1_DrawItem(object sender, DrawItemEventArgs e)
         {
@@ -65,7 +65,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 Configuration.Settings.General.SubtitleBackgroundColor = BackColor;
                 Configuration.Settings.General.SubtitleFontColor = ForeColor;
-                Configuration.Settings.VideoControls.WaveformBackgroundColor = BackColor;
+                Configuration.Settings.VideoControls.WaveformBackgroundColor = Color.Black;
                 Configuration.Settings.VideoControls.WaveformGridColor = Color.FromArgb(62, 62, 60);
                 // prevent re-assignments
                 _isConfigUpdated = true;
@@ -271,7 +271,6 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 lv.OwnerDraw = true;
                 lv.DrawColumnHeader += lv_DrawColumnHeader;
-                lv.GridLines = false;
                 lv.ForeColor = ForeColor;
                 lv.BackColor = BackColor;
             }
@@ -301,7 +300,8 @@ namespace Nikse.SubtitleEdit.Logic
 
             using (var fc = new SolidBrush(ForeColor))
             {
-                e.Graphics.DrawString(e.Header.Text, e.Font, fc, e.Bounds, strFormat);
+                e.Graphics.DrawString(e.Header.Text, e.Font, fc, e.Bounds.X + 3, e.Bounds.Y, strFormat);
+                e.Graphics.DrawLine(new Pen(ForeColor), e.Bounds.X, e.Bounds.Y, e.Bounds.X, e.Bounds.Height);
             }
         }
 
