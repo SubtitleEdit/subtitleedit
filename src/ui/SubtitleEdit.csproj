@@ -700,12 +700,6 @@
     <Compile Include="Forms\SetSyncPoint.Designer.cs">
       <DependentUpon>SetSyncPoint.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\GoogleTranslate.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\GoogleTranslate.Designer.cs">
-      <DependentUpon>GoogleTranslate.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\GoToLine.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1444,10 +1438,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SetSyncPoint.resx">
       <DependentUpon>SetSyncPoint.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\GoogleTranslate.resx">
-      <DependentUpon>GoogleTranslate.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\GoToLine.resx">
       <DependentUpon>GoToLine.cs</DependentUpon>
