@@ -11663,6 +11663,8 @@ namespace Nikse.SubtitleEdit.Forms
                 var currentFormat = GetCurrentSubtitleFormat();
                 if (currentFormat != null && !currentFormat.IsTextBased)
                 {
+                    textBoxSource.Visible = false;
+                    splitContainerListViewAndText.Visible = true;
                     return;
                 }
 
