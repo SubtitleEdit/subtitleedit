@@ -1469,6 +1469,7 @@ namespace Nikse.SubtitleEdit.Core
                 NoSupportHereVobSub = "VobSub files are not supported here.",
                 NoSupportHereDivx = "DivX files are not supported here.",
                 NoChapters = "No chapters found in the video.",
+                DarkThemeRestart = "Restart Subtitle Edit for dark theme changes to take effect.",
 
                 Menu = new LanguageStructure.Main.MainMenu
                 {
@@ -2419,6 +2420,8 @@ can edit in same subtitle file (collaboration)",
                 UseSyntaxColoring = "Use syntax coloring",
                 HtmlColor = "Html color",
                 AssaColor = "ASSA color",
+                DarkTheme ="Dark theme",
+                DarkThemeEnabled = "Dark theme enabled",
                 ListViewAndTextBox = "List view and text box",
                 UpdateShortcut = "Update",
                 FoucsSetVideoPosition = "Focus set video position",

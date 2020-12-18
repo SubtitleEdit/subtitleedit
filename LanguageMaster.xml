@@ -1583,6 +1583,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <NoSupportHereVobSub>VobSub files are not supported here.</NoSupportHereVobSub>
     <NoSupportHereDivx>DivX files are not supported here.</NoSupportHereDivx>
     <NoChapters>No chapters found in the video.</NoChapters>
+    <DarkThemeRestart>Restart Subtitle Edit for dark theme changes to take effect.</DarkThemeRestart>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Choose subtitle from Matroska file</Title>
@@ -2114,6 +2115,8 @@ can edit in same subtitle file (collaboration)</Information>
     <UseSyntaxColoring>Use syntax coloring</UseSyntaxColoring>
     <HtmlColor>Html color</HtmlColor>
     <AssaColor>ASSA color</AssaColor>
+    <DarkTheme>Dark theme</DarkTheme>
+    <DarkThemeEnabled>Dark theme enabled</DarkThemeEnabled>
     <UpdateShortcut>Update</UpdateShortcut>
     <FoucsSetVideoPosition>Focus set video position</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Toggle dock/undock of video controls</ToggleDockUndockOfVideoControls>

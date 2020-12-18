@@ -4585,6 +4585,7 @@ namespace Nikse.SubtitleEdit.Forms
             var oldSubtitleAlignment = Configuration.Settings.General.CenterSubtitleInTextBox;
             var oldSubtitleTextBoxHtmlColor = Configuration.Settings.General.SubtitleTextBoxHtmlColor.ToArgb().ToString();
             var oldSubtitleTextBoxAssaColor = Configuration.Settings.General.SubtitleTextBoxAssColor.ToArgb().ToString();
+            var oldUseDarkTheme = Configuration.Settings.General.UseDarkTheme;
             using (var settings = new Options.Settings())
             {
                 settings.Initialize(Icon, toolStripButtonFileNew.Image, toolStripButtonFileOpen.Image, toolStripButtonSave.Image, toolStripButtonSaveAs.Image, toolStripButtonFind.Image,
@@ -4767,7 +4768,24 @@ namespace Nikse.SubtitleEdit.Forms
                 RefreshTimeCodeMode();
             }
 
-            if (oldSubtitleTextBoxSyntaxColor != Configuration.Settings.General.SubtitleTextBoxSyntaxColor ||
+            if (oldUseDarkTheme != Configuration.Settings.General.UseDarkTheme)
+            {
+                if (Configuration.Settings.General.UseDarkTheme)
+                {
+                    OnLoad(null);
+                    textBoxListViewText.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
+                    textBoxListViewTextAlternate.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
+                    SubtitleListview1.BackColor = Configuration.Settings.General.SubtitleBackgroundColor;
+                    RefreshSelectedParagraph();
+                }
+                else
+                {
+                    Configuration.Settings.General.SubtitleBackgroundColor = new TextBox().BackColor;
+                    Configuration.Settings.General.SubtitleFontColor = DefaultForeColor;
+                    MessageBox.Show(Configuration.Settings.Language.Main.DarkThemeRestart);
+                }
+            }
+            else if (oldSubtitleTextBoxSyntaxColor != Configuration.Settings.General.SubtitleTextBoxSyntaxColor ||
                 oldSubtitleFontSize != Configuration.Settings.General.SubtitleTextBoxFontSize ||
                 oldSubtitleAlignment != Configuration.Settings.General.CenterSubtitleInTextBox ||
                 oldSubtitleTextBoxHtmlColor != Configuration.Settings.General.SubtitleTextBoxHtmlColor.ToArgb().ToString() ||
@@ -14349,7 +14367,7 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                     {
                         SubtitleListview1.Focus();
-                    } 
+                    }
                 }
                 else if (inSourceView)
                 {
@@ -27348,7 +27366,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             openFileDialog1.Title = _language.OpenSubtitleVideoFile;
             openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = _language.VideoFiles + "|*.mkv;*.mks;*.mp4;*.ts;*.m2ts;*.mpeg;*.divx;*.avi"; 
+            openFileDialog1.Filter = _language.VideoFiles + "|*.mkv;*.mks;*.mp4;*.ts;*.m2ts;*.mpeg;*.divx;*.avi";
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 openFileDialog1.InitialDirectory = Path.GetDirectoryName(openFileDialog1.FileName);

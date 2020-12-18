@@ -20,13 +20,10 @@ namespace Nikse.SubtitleEdit.Logic
                                       .Where(c => c.GetType() == type);
         }
 
-        internal static readonly Color BackColor = Color.FromArgb(0x1e, 0x1e, 0x1e);
-        internal static readonly Color ForeColor = Color.FromArgb(150, 150, 150);
-
         private static void TabControl1_DrawItem(object sender, DrawItemEventArgs e)
         {
             var sz = e.Graphics.MeasureString((sender as TabControl)?.TabPages[e.Index].Text, e.Font);
-            using (var br = new SolidBrush(BackColor))
+            using (var br = new SolidBrush(Configuration.Settings.General.DarkThemeBackColor))
             {
                 e.Graphics.FillRectangle(br, e.Bounds);
                 e.Graphics.DrawString((sender as TabControl)?.TabPages[e.Index].Text, e.Font, Brushes.WhiteSmoke, e.Bounds.Left + (e.Bounds.Width - sz.Width) / 2, e.Bounds.Top + (e.Bounds.Height - sz.Height) / 2 + 1);
@@ -34,14 +31,14 @@ namespace Nikse.SubtitleEdit.Logic
                 var rect = e.Bounds;
                 rect.Offset(0, 1);
                 rect.Inflate(0, -1);
-                e.Graphics.DrawRectangle(new Pen(ForeColor, 1), rect);
+                e.Graphics.DrawRectangle(new Pen(Configuration.Settings.General.DarkThemeForeColor, 1), rect);
                 e.DrawFocusRectangle();
             }
         }
 
         private static void TabPage_Paint(object sender, PaintEventArgs e)
         {
-            using (var fillBrush = new SolidBrush(BackColor))
+            using (var fillBrush = new SolidBrush(Configuration.Settings.General.DarkThemeBackColor))
             {
                 e.Graphics.FillRectangle(fillBrush, e.ClipRectangle);
             }
@@ -63,9 +60,9 @@ namespace Nikse.SubtitleEdit.Logic
         {
             if (!_isConfigUpdated)
             {
-                Configuration.Settings.General.SubtitleBackgroundColor = BackColor;
-                Configuration.Settings.General.SubtitleFontColor = ForeColor;
-                Configuration.Settings.VideoControls.WaveformBackgroundColor = BackColor;
+                Configuration.Settings.General.SubtitleBackgroundColor = Configuration.Settings.General.DarkThemeBackColor;
+                Configuration.Settings.General.SubtitleFontColor = Configuration.Settings.General.DarkThemeForeColor;
+                Configuration.Settings.VideoControls.WaveformBackgroundColor = Configuration.Settings.General.DarkThemeBackColor;
                 Configuration.Settings.VideoControls.WaveformGridColor = Color.FromArgb(62, 62, 60);
                 // prevent re-assignments
                 _isConfigUpdated = true;
@@ -144,8 +141,8 @@ namespace Nikse.SubtitleEdit.Logic
                 var contextMenus = GetSubControls<ContextMenuStrip>(form);
                 foreach (ContextMenuStrip cms in contextMenus)
                 {
-                    cms.BackColor = BackColor;
-                    cms.ForeColor = ForeColor;
+                    cms.BackColor = Configuration.Settings.General.DarkThemeBackColor;
+                    cms.ForeColor = Configuration.Settings.General.DarkThemeForeColor;
                     cms.Renderer = new MyRenderer();
                     cms.ShowImageMargin = false;
                     cms.ShowCheckMargin = false;
@@ -158,41 +155,41 @@ namespace Nikse.SubtitleEdit.Logic
                 var toolStrips = GetSubControls<ToolStrip>(form);
                 foreach (ToolStrip c in toolStrips)
                 {
-                    c.BackColor = BackColor;
-                    c.ForeColor = ForeColor;
+                    c.BackColor = Configuration.Settings.General.DarkThemeBackColor;
+                    c.ForeColor = Configuration.Settings.General.DarkThemeForeColor;
                 }
 
                 var toolStripContentPanels = GetSubControls<ToolStripContentPanel>(form);
                 foreach (ToolStripContentPanel c in toolStripContentPanels)
                 {
-                    c.BackColor = BackColor;
-                    c.ForeColor = ForeColor;
+                    c.BackColor = Configuration.Settings.General.DarkThemeBackColor;
+                    c.ForeColor = Configuration.Settings.General.DarkThemeForeColor;
                 }
 
                 var toolStripContainers = GetSubControls<ToolStripContainer>(form);
                 foreach (ToolStripContainer c in toolStripContainers)
                 {
-                    c.BackColor = BackColor;
-                    c.ForeColor = ForeColor;
+                    c.BackColor = Configuration.Settings.General.DarkThemeBackColor;
+                    c.ForeColor = Configuration.Settings.General.DarkThemeForeColor;
                 }
 
                 var toolStripDropDownMenus = GetSubControls<ToolStripDropDownMenu>(form);
                 foreach (ToolStripDropDownMenu c in toolStripDropDownMenus)
                 {
-                    c.BackColor = BackColor;
-                    c.ForeColor = ForeColor;
+                    c.BackColor = Configuration.Settings.General.DarkThemeBackColor;
+                    c.ForeColor = Configuration.Settings.General.DarkThemeForeColor;
                     foreach (ToolStripItem x in c.Items)
                     {
-                        x.BackColor = BackColor;
-                        x.ForeColor = ForeColor;
+                        x.BackColor = Configuration.Settings.General.DarkThemeBackColor;
+                        x.ForeColor = Configuration.Settings.General.DarkThemeForeColor;
                     }
                 }
 
                 var toolStripMenuItems = GetSubControls<ToolStripMenuItem>(form);
                 foreach (ToolStripMenuItem c in toolStripMenuItems)
                 {
-                    c.BackColor = BackColor;
-                    c.ForeColor = ForeColor;
+                    c.BackColor = Configuration.Settings.General.DarkThemeBackColor;
+                    c.ForeColor = Configuration.Settings.General.DarkThemeForeColor;
                 }
 
                 var toolStripSeparators = GetSubControls<ToolStripSeparator>(form);
@@ -200,13 +197,13 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     if (c.GetCurrentParent() is ToolStripDropDownMenu p)
                     {
-                        p.BackColor = BackColor;
+                        p.BackColor = Configuration.Settings.General.DarkThemeBackColor;
                         p.ShowCheckMargin = false;
                         p.ShowImageMargin = false;
                     }
 
-                    c.BackColor = BackColor;
-                    c.ForeColor = ForeColor;
+                    c.BackColor = Configuration.Settings.General.DarkThemeBackColor;
+                    c.ForeColor = Configuration.Settings.General.DarkThemeForeColor;
                 }
             }
 
@@ -228,8 +225,8 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static void FixControl(Control c)
         {
-            c.BackColor = BackColor;
-            c.ForeColor = ForeColor;
+            c.BackColor = Configuration.Settings.General.DarkThemeBackColor;
+            c.ForeColor = Configuration.Settings.General.DarkThemeForeColor;
 
             if (c is Button b)
             {
@@ -261,8 +258,8 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     if (x is ToolStripMenuItem item)
                     {
-                        item.BackColor = BackColor;
-                        item.ForeColor = ForeColor;
+                        item.BackColor = Configuration.Settings.General.DarkThemeBackColor;
+                        item.ForeColor = Configuration.Settings.General.DarkThemeForeColor;
                     }
                 }
             }
@@ -272,18 +269,18 @@ namespace Nikse.SubtitleEdit.Logic
                 lv.OwnerDraw = true;
                 lv.DrawColumnHeader += lv_DrawColumnHeader;
                 lv.GridLines = false;
-                lv.ForeColor = ForeColor;
-                lv.BackColor = BackColor;
+                lv.BackColor = Configuration.Settings.General.DarkThemeBackColor;
+                lv.ForeColor = Configuration.Settings.General.DarkThemeForeColor;
             }
         }
 
         private static void lv_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
         {
             var lv = (ListView)sender;
-            lv.BackColor = BackColor;
-            lv.ForeColor = ForeColor;
+            lv.BackColor = lv.BackColor = Configuration.Settings.General.DarkThemeBackColor;
+            lv.ForeColor = Configuration.Settings.General.DarkThemeForeColor;
             e.DrawDefault = false;
-            using (var b = new SolidBrush(BackColor))
+            using (var b = new SolidBrush(Configuration.Settings.General.DarkThemeBackColor))
             {
                 e.Graphics.FillRectangle(b, e.Bounds);
             }
@@ -299,7 +296,7 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
             }
 
-            using (var fc = new SolidBrush(ForeColor))
+            using (var fc = new SolidBrush(Configuration.Settings.General.DarkThemeForeColor))
             {
                 e.Graphics.DrawString(e.Header.Text, e.Font, fc, e.Bounds, strFormat);
             }
@@ -309,7 +306,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             protected override void OnRenderToolStripBackground(ToolStripRenderEventArgs e)
             {
-                using (var brush = new SolidBrush(BackColor))
+                using (var brush = new SolidBrush(Configuration.Settings.General.DarkThemeBackColor))
                 {
                     e.Graphics.FillRectangle(brush, e.ConnectedArea);
                 }
@@ -318,8 +315,8 @@ namespace Nikse.SubtitleEdit.Logic
 
         internal static void SetDarkTheme(ToolStripItem item)
         {
-            item.BackColor = BackColor;
-            item.ForeColor = ForeColor;
+            item.BackColor = Configuration.Settings.General.DarkThemeBackColor;
+            item.ForeColor = Configuration.Settings.General.DarkThemeForeColor;
             if (item is ToolStripSeparator)
             {
                 item.Paint += ToolStripSeparatorPaint;
@@ -331,8 +328,8 @@ namespace Nikse.SubtitleEdit.Logic
             var toolStripSeparator = (ToolStripSeparator)sender;
             var width = toolStripSeparator.Width;
             var height = toolStripSeparator.Height;
-            e.Graphics.FillRectangle(new SolidBrush(BackColor), 0, 0, width, height);
-            e.Graphics.DrawLine(new Pen(ForeColor), 4, height / 2, width - 4, height / 2);
+            e.Graphics.FillRectangle(new SolidBrush(Configuration.Settings.General.DarkThemeBackColor), 0, 0, width, height);
+            e.Graphics.DrawLine(new Pen(Configuration.Settings.General.DarkThemeForeColor), 4, height / 2, width - 4, height / 2);
         }
     }
 }
