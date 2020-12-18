@@ -55,6 +55,10 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _inListView => splitContainerListViewAndText.Visible;
         private bool _inSourceView => textBoxSource.Visible;
 
+        private const int TranslateMode = 0;
+        private const int CreateMode = 1;
+        private const int AdjustMode = 2;
+
         private Subtitle _subtitle = new Subtitle();
 
         private int _undoIndex = -1;
@@ -172,12 +176,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool AutoRepeatContinueOn
         {
-            get { return tabControlButtons.SelectedIndex == 0 && checkBoxAutoContinue.Checked; }
+            get { return comboBoxMode.SelectedIndex == TranslateMode && checkBoxAutoContinue.Checked; }
         }
 
         private bool AutoRepeatOn
         {
-            get { return tabControlButtons.SelectedIndex == 0 && checkBoxAutoRepeatOn.Checked; }
+            get { return comboBoxMode.SelectedIndex == TranslateMode && checkBoxAutoRepeatOn.Checked; }
         }
 
         public string Title
@@ -233,8 +237,8 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(contextMenuStripListView);
             UiUtil.FixFonts(contextMenuStripTextBoxListView);
             UiUtil.FixFonts(contextMenuStripWaveform);
-            UiUtil.FixLargeFonts(tabControlButtons, buttonAutoBreak);
-            UiUtil.FixLargeFonts(tabControlButtons, buttonAutoBreak);
+            UiUtil.FixLargeFonts(panelMode, buttonAutoBreak);
+            UiUtil.FixLargeFonts(panelMode, buttonAutoBreak);
             UiUtil.FixLargeFonts(groupBoxEdit, buttonAutoBreak);
             UiUtil.InitializeSubtitleFont(textBoxSource);
             UiUtil.InitializeSubtitleFont(SubtitleListview1);
@@ -431,17 +435,17 @@ namespace Nikse.SubtitleEdit.Forms
                 switch (Configuration.Settings.VideoControls.LastActiveTab)
                 {
                     case "Translate":
-                        tabControlButtons.SelectedIndex = 0;
+                        comboBoxMode.SelectedIndex = TranslateMode;
                         break;
                     case "Create":
-                        tabControlButtons.SelectedIndex = 1;
+                        comboBoxMode.SelectedIndex = CreateMode;
                         break;
                     case "Adjust":
-                        tabControlButtons.SelectedIndex = 2;
+                        comboBoxMode.SelectedIndex = AdjustMode;
                         break;
                 }
 
-                tabControl1_SelectedIndexChanged(null, null);
+                comboBoxMode_SelectedIndexChanged(null, null);
                 buttonCustomUrl1.Text = Configuration.Settings.VideoControls.CustomSearchText1;
                 buttonCustomUrl1.Visible = Configuration.Settings.VideoControls.CustomSearchUrl1.Length > 1;
                 buttonCustomUrl2.Text = Configuration.Settings.VideoControls.CustomSearchText2;
@@ -1680,9 +1684,9 @@ namespace Nikse.SubtitleEdit.Forms
             ShowSourceLineNumber();
 
             // video controls
-            tabPageTranslate.Text = _language.VideoControls.Translate + "  ";
-            tabPageCreate.Text = _language.VideoControls.Create + "  ";
-            tabPageAdjust.Text = _language.VideoControls.Adjust + "  ";
+            comboBoxMode.Items.Add(_language.VideoControls.Translate);
+            comboBoxMode.Items.Add(_language.VideoControls.Create);
+            comboBoxMode.Items.Add(_language.VideoControls.Adjust);
             checkBoxSyncListViewWithVideoWhilePlaying.Text = _language.VideoControls.SelectCurrentElementWhilePlaying;
             if (VideoFileName == null)
             {
@@ -15340,7 +15344,7 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxListViewText.Text = p.Text;
                 e.SuppressKeyPress = true;
             }
-            else if (tabControlButtons.SelectedTab == tabPageCreate && e.Modifiers == Keys.Alt && e.KeyCode == Keys.F9)
+            else if (comboBoxMode.SelectedIndex == CreateMode && e.Modifiers == Keys.Alt && e.KeyCode == Keys.F9)
             {
                 StopAutoDuration();
                 ButtonSetEndClick(null, null);
@@ -19402,21 +19406,21 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (audioVisualizer.Visible)
                     {
-                        audioVisualizer.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
+                        audioVisualizer.Left = panelMode.Left + panelMode.Width + 5;
                     }
                     else
                     {
-                        panelVideoPlayer.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
+                        panelVideoPlayer.Left = panelMode.Left + panelMode.Width + 5;
                     }
                 }
                 else if (audioVisualizer.Visible)
                 {
-                    audioVisualizer.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
+                    audioVisualizer.Left = panelMode.Left + panelMode.Width + 5;
                 }
 
                 audioVisualizer.Width = groupBoxVideo.Width - (audioVisualizer.Left + 10);
 
-                checkBoxSyncListViewWithVideoWhilePlaying.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
+                checkBoxSyncListViewWithVideoWhilePlaying.Left = panelMode.Left + panelMode.Width + 5;
                 panelWaveformControls.Left = audioVisualizer.Left;
                 trackBarWaveformPosition.Left = panelWaveformControls.Left + panelWaveformControls.Width + 5;
                 trackBarWaveformPosition.Width = audioVisualizer.Left + audioVisualizer.Width - trackBarWaveformPosition.Left + 5;
@@ -19506,7 +19510,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             panelVideoPlayer.Top = 32;
-            panelVideoPlayer.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
+            panelVideoPlayer.Left = panelMode.Left + panelMode.Width + 5;
             panelVideoPlayer.Height = groupBoxVideo.Height - (panelVideoPlayer.Top + 5);
             panelVideoPlayer.Width = groupBoxVideo.Width - (panelVideoPlayer.Left + 5);
         }
@@ -19566,7 +19570,7 @@ namespace Nikse.SubtitleEdit.Forms
                     buttonAdjustSecForward2.Left = buttonInsertNewText.Left + buttonInsertNewText.Width - buttonAdjustSecForward2.Width;
                     numericUpDownSecAdjust2.Width = buttonInsertNewText.Width - (numericUpDownSecAdjust2.Left + buttonAdjustSecForward2.Width);
 
-                    tabControl1_SelectedIndexChanged(null, null);
+                    comboBoxMode_SelectedIndexChanged(null, null);
                 }
             }
         }
@@ -20570,7 +20574,7 @@ namespace Nikse.SubtitleEdit.Forms
         public void RunTranslateSearch(Action<string> act)
         {
             var text = textBoxSearchWord.Text;
-            if (tabControlButtons.SelectedTab != tabPageTranslate)
+            if (comboBoxMode.SelectedIndex != TranslateMode)
             {
                 var tb = GetFocusedTextBox();
                 if (tb.SelectionLength == 0)
@@ -20735,21 +20739,28 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.OpenFolderFromFileName(_fileName);
         }
 
-        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        private void comboBoxMode_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (tabControlButtons.SelectedIndex == 0)
+            panelTranslate.Visible = false;
+            panelCreate.Visible = false;
+            panelAdjust.Visible = false;
+
+            if (comboBoxMode.SelectedIndex == TranslateMode)
             {
-                tabControlButtons.Width = groupBoxTranslateSearch.Left + groupBoxTranslateSearch.Width + 10;
+                panelTranslate.Visible = true;
+                panelMode.Width = groupBoxTranslateSearch.Left + groupBoxTranslateSearch.Width + 14;
                 Configuration.Settings.VideoControls.LastActiveTab = "Translate";
             }
-            else if (tabControlButtons.SelectedIndex == 1)
+            else if (comboBoxMode.SelectedIndex == CreateMode)
             {
-                tabControlButtons.Width = buttonInsertNewText.Left + buttonInsertNewText.Width + 35;
+                panelCreate.Visible = true;
+                panelMode.Width = buttonInsertNewText.Left + buttonInsertNewText.Width + 38;
                 Configuration.Settings.VideoControls.LastActiveTab = "Create";
             }
-            else if (tabControlButtons.SelectedIndex == 2)
+            else if (comboBoxMode.SelectedIndex == AdjustMode)
             {
-                tabControlButtons.Width = buttonInsertNewText.Left + buttonInsertNewText.Width + 35;
+                panelAdjust.Visible = true;
+                panelMode.Width = buttonInsertNewText.Left + buttonInsertNewText.Width + 38;
                 Configuration.Settings.VideoControls.LastActiveTab = "Adjust";
             }
 
@@ -20757,12 +20768,12 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (toolStripButtonToggleWaveform.Checked)
                 {
-                    audioVisualizer.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
+                    audioVisualizer.Left = panelMode.Left + panelMode.Width + 5;
                 }
 
                 if (!toolStripButtonToggleWaveform.Checked && toolStripButtonToggleVideo.Checked)
                 {
-                    panelVideoPlayer.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
+                    panelVideoPlayer.Left = panelMode.Left + panelMode.Width + 5;
                     panelVideoPlayer.Width = groupBoxVideo.Width - (panelVideoPlayer.Left + 10);
                 }
 
@@ -20771,7 +20782,7 @@ namespace Nikse.SubtitleEdit.Forms
                 trackBarWaveformPosition.Left = panelWaveformControls.Left + panelWaveformControls.Width + 5;
                 trackBarWaveformPosition.Width = groupBoxVideo.Width - (trackBarWaveformPosition.Left + 10);
                 Main_Resize(null, null);
-                checkBoxSyncListViewWithVideoWhilePlaying.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
+                checkBoxSyncListViewWithVideoWhilePlaying.Left = panelMode.Left + panelMode.Width + 5;
                 if (!_loading)
                 {
                     Refresh();
@@ -20779,8 +20790,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_videoControlsUndocked != null && !_videoControlsUndocked.IsDisposed)
             {
-                _videoControlsUndocked.Width = tabControlButtons.Width + 20;
-                _videoControlsUndocked.Height = tabControlButtons.Height + 65;
+                _videoControlsUndocked.Width = panelMode.Width + 20;
+                _videoControlsUndocked.Height = panelMode.Height + 65;
             }
         }
 
@@ -23756,7 +23767,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void UnDockVideoButtons()
         {
             _videoControlsUndocked = new VideoControlsUndocked(this);
-            var control = tabControlButtons;
+            var control = panelMode;
             groupBoxVideo.Controls.Remove(control);
             control.Top = 25;
             control.Left = 0;
@@ -23835,8 +23846,8 @@ namespace Nikse.SubtitleEdit.Forms
                 _videoControlsUndocked.WindowState = FormWindowState.Normal;
                 _videoControlsUndocked.Top = top + 40;
                 _videoControlsUndocked.Left = Math.Abs(left - 10);
-                _videoControlsUndocked.Width = tabControlButtons.Width + 20;
-                _videoControlsUndocked.Height = tabControlButtons.Height + 65;
+                _videoControlsUndocked.Width = panelMode.Width + 20;
+                _videoControlsUndocked.Height = panelMode.Height + 65;
             }
 
             _isVideoControlsUndocked = true;
@@ -23845,7 +23856,7 @@ namespace Nikse.SubtitleEdit.Forms
             undockVideoControlsToolStripMenuItem.Visible = false;
             redockVideoControlsToolStripMenuItem.Visible = true;
 
-            tabControl1_SelectedIndexChanged(null, null);
+            comboBoxMode_SelectedIndexChanged(null, null);
             _videoControlsUndocked.Refresh();
         }
 
@@ -25639,22 +25650,6 @@ namespace Nikse.SubtitleEdit.Forms
         private void TextBoxListViewTextAlternateMouseClick(object sender, MouseEventArgs e)
         {
             UpdatePositionAndTotalLength(labelTextAlternateLineTotal, textBoxListViewTextAlternate);
-        }
-
-        private void TabControlButtonsDrawItem(object sender, DrawItemEventArgs e)
-        {
-            var tc = (TabControl)sender;
-            var textBrush = new SolidBrush(ForeColor);
-            var tabFont = new Font(tc.Font, FontStyle.Regular);
-            if (e.State == DrawItemState.Selected)
-            {
-                tabFont = new Font(tc.Font, FontStyle.Bold);
-                e.Graphics.FillRectangle(new SolidBrush(SystemColors.Window), e.Bounds);
-            }
-
-            Rectangle tabBounds = tc.GetTabRect(e.Index);
-            var stringFlags = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
-            e.Graphics.DrawString(tc.TabPages[e.Index].Text.Trim(), tabFont, textBrush, tabBounds, new StringFormat(stringFlags));
         }
 
         public void GotoNextSubPosFromVideoPos()
