@@ -3241,7 +3241,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.panelTranslate.Name = "panelTranslate";
             this.panelTranslate.Padding = new System.Windows.Forms.Padding(3);
             this.panelTranslate.Size = new System.Drawing.Size(459, 257);
-            this.panelTranslate.TabIndex = 0;
+            this.panelTranslate.TabIndex = 1;
             this.panelTranslate.Text = "Translate";
             // 
             // labelTranslateTip
@@ -3496,7 +3496,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.panelCreate.Name = "panelCreate";
             this.panelCreate.Padding = new System.Windows.Forms.Padding(3);
             this.panelCreate.Size = new System.Drawing.Size(214, 257);
-            this.panelCreate.TabIndex = 1;
+            this.panelCreate.TabIndex = 2;
             this.panelCreate.Text = "Create";
             // 
             // timeUpDownVideoPosition
@@ -3735,7 +3735,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.panelAdjust.Location = new System.Drawing.Point(4, 22);
             this.panelAdjust.Name = "panelAdjust";
             this.panelAdjust.Size = new System.Drawing.Size(214, 257);
-            this.panelAdjust.TabIndex = 2;
+            this.panelAdjust.TabIndex = 3;
             this.panelAdjust.Text = "Adjust";
             // 
             // timeUpDownVideoPositionAdjust
