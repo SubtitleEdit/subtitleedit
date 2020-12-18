@@ -4393,7 +4393,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelDurationWarning.AutoSize = true;
             this.labelDurationWarning.ForeColor = System.Drawing.Color.Red;
-            this.labelDurationWarning.Location = new System.Drawing.Point(122, 64);
+            this.labelDurationWarning.Location = new System.Drawing.Point(122, 54);
             this.labelDurationWarning.Name = "labelDurationWarning";
             this.labelDurationWarning.Size = new System.Drawing.Size(109, 13);
             this.labelDurationWarning.TabIndex = 17;
@@ -4403,7 +4403,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelStartTimeWarning.AutoSize = true;
             this.labelStartTimeWarning.ForeColor = System.Drawing.Color.Red;
-            this.labelStartTimeWarning.Location = new System.Drawing.Point(8, 50);
+            this.labelStartTimeWarning.Location = new System.Drawing.Point(8, 54);
             this.labelStartTimeWarning.Name = "labelStartTimeWarning";
             this.labelStartTimeWarning.Size = new System.Drawing.Size(114, 13);
             this.labelStartTimeWarning.TabIndex = 18;
@@ -4415,7 +4415,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonSplitLine.ForeColor = System.Drawing.Color.Red;
             this.buttonSplitLine.Location = new System.Drawing.Point(604, 80);
             this.buttonSplitLine.Name = "buttonSplitLine";
-            this.buttonSplitLine.Size = new System.Drawing.Size(115, 23);
+            this.buttonSplitLine.Size = new System.Drawing.Size(114, 23);
             this.buttonSplitLine.TabIndex = 39;
             this.buttonSplitLine.Text = "Split line";
             this.buttonSplitLine.UseVisualStyleBackColor = true;
@@ -4844,7 +4844,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonAutoBreak.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonAutoBreak.Location = new System.Drawing.Point(604, 51);
             this.buttonAutoBreak.Name = "buttonAutoBreak";
-            this.buttonAutoBreak.Size = new System.Drawing.Size(115, 23);
+            this.buttonAutoBreak.Size = new System.Drawing.Size(114, 23);
             this.buttonAutoBreak.TabIndex = 7;
             this.buttonAutoBreak.Text = "Auto br";
             this.buttonAutoBreak.UseVisualStyleBackColor = true;
@@ -4885,7 +4885,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonUnBreak.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonUnBreak.Location = new System.Drawing.Point(604, 22);
             this.buttonUnBreak.Name = "buttonUnBreak";
-            this.buttonUnBreak.Size = new System.Drawing.Size(115, 23);
+            this.buttonUnBreak.Size = new System.Drawing.Size(114, 23);
             this.buttonUnBreak.TabIndex = 6;
             this.buttonUnBreak.Text = "Unbreak";
             this.buttonUnBreak.UseVisualStyleBackColor = true;
@@ -4937,7 +4937,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // buttonPrevious
             // 
-            this.buttonPrevious.Location = new System.Drawing.Point(8, 78);
+            this.buttonPrevious.Location = new System.Drawing.Point(8, 75);
             this.buttonPrevious.Name = "buttonPrevious";
             this.buttonPrevious.Size = new System.Drawing.Size(72, 23);
             this.buttonPrevious.TabIndex = 2;
@@ -4947,7 +4947,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // buttonNext
             // 
-            this.buttonNext.Location = new System.Drawing.Point(86, 78);
+            this.buttonNext.Location = new System.Drawing.Point(86, 75);
             this.buttonNext.Name = "buttonNext";
             this.buttonNext.Size = new System.Drawing.Size(72, 23);
             this.buttonNext.TabIndex = 3;

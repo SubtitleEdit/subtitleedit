@@ -162,6 +162,14 @@ namespace Nikse.SubtitleEdit.Logic
                     c.ForeColor = ForeColor;
                 }
 
+                var toolStripComboBox = GetSubControls<ToolStripComboBox>(form);
+                foreach (ToolStripComboBox c in toolStripComboBox)
+                {
+                    c.BackColor = BackColor;
+                    c.ForeColor = ForeColor;
+                    c.FlatStyle = FlatStyle.Flat;
+                }
+
                 var toolStripContentPanels = GetSubControls<ToolStripContentPanel>(form);
                 foreach (ToolStripContentPanel c in toolStripContentPanels)
                 {
@@ -222,6 +230,7 @@ namespace Nikse.SubtitleEdit.Logic
                         tabPage.Paint += TabPage_Paint;
                     }
                 }
+
                 FixControl(c);
             }
         }
@@ -234,6 +243,16 @@ namespace Nikse.SubtitleEdit.Logic
             if (c is Button b)
             {
                 b.FlatStyle = FlatStyle.Flat;
+            }
+
+            if (c is ComboBox cmBox)
+            {
+                cmBox.FlatStyle = FlatStyle.Flat;
+            }
+
+            if (c is NumericUpDown numeric)
+            {
+                numeric.BorderStyle = BorderStyle.FixedSingle;
             }
 
             if (c is Panel p)
@@ -282,7 +301,7 @@ namespace Nikse.SubtitleEdit.Logic
             lv.BackColor = BackColor;
             lv.ForeColor = ForeColor;
             e.DrawDefault = false;
-            using (var b = new SolidBrush(BackColor))
+            using (var b = new SolidBrush(Color.FromArgb(21, 21, 21)))
             {
                 e.Graphics.FillRectangle(b, e.Bounds);
             }
@@ -301,7 +320,10 @@ namespace Nikse.SubtitleEdit.Logic
             using (var fc = new SolidBrush(ForeColor))
             {
                 e.Graphics.DrawString(e.Header.Text, e.Font, fc, e.Bounds.X + 3, e.Bounds.Y, strFormat);
-                e.Graphics.DrawLine(new Pen(ForeColor), e.Bounds.X, e.Bounds.Y, e.Bounds.X, e.Bounds.Height);
+                if (e.ColumnIndex != 0)
+                {
+                    e.Graphics.DrawLine(new Pen(ForeColor), e.Bounds.X, e.Bounds.Y, e.Bounds.X, e.Bounds.Height);
+                }
             }
         }
 
