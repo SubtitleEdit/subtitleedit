@@ -4773,6 +4773,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (Configuration.Settings.General.UseDarkTheme)
                 {
                     OnLoad(null);
+                    Configuration.Settings.VideoControls.WaveformDrawGrid = false;
                     textBoxListViewText.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
                     textBoxListViewTextAlternate.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
                     SubtitleListview1.BackColor = Configuration.Settings.General.SubtitleBackgroundColor;

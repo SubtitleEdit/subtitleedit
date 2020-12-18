@@ -63,7 +63,6 @@ namespace Nikse.SubtitleEdit.Logic
                 Configuration.Settings.General.SubtitleBackgroundColor = Configuration.Settings.General.DarkThemeBackColor;
                 Configuration.Settings.General.SubtitleFontColor = Configuration.Settings.General.DarkThemeForeColor;
                 Configuration.Settings.VideoControls.WaveformBackgroundColor = Configuration.Settings.General.DarkThemeBackColor;
-                Configuration.Settings.VideoControls.WaveformGridColor = Color.FromArgb(62, 62, 60);
                 // prevent re-assignments
                 _isConfigUpdated = true;
             }
