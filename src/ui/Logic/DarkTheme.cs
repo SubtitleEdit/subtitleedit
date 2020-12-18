@@ -54,20 +54,8 @@ namespace Nikse.SubtitleEdit.Logic
             return menus.Cast<T>().ToList();
         }
 
-        private static bool _isConfigUpdated;
-
         public static void SetDarkTheme(Control ctrl, int iterations = 5)
         {
-            if (!_isConfigUpdated)
-            {
-                Configuration.Settings.General.SubtitleBackgroundColor = Configuration.Settings.General.DarkThemeBackColor;
-                Configuration.Settings.General.SubtitleFontColor = Configuration.Settings.General.DarkThemeForeColor;
-                Configuration.Settings.VideoControls.WaveformBackgroundColor = Configuration.Settings.General.DarkThemeBackColor;
-                Configuration.Settings.VideoControls.WaveformGridColor = Color.FromArgb(62, 62, 60);
-                // prevent re-assignments
-                _isConfigUpdated = true;
-            }
-
             if (iterations < 1)
             {
                 // note: no need to restore the colors set are constants
@@ -162,8 +150,8 @@ namespace Nikse.SubtitleEdit.Logic
                 var toolStripComboBox = GetSubControls<ToolStripComboBox>(form);
                 foreach (ToolStripComboBox c in toolStripComboBox)
                 {
-                    c.BackColor = BackColor;
-                    c.ForeColor = ForeColor;
+                    c.BackColor = Configuration.Settings.General.DarkThemeBackColor;
+                    c.ForeColor = Configuration.Settings.General.DarkThemeForeColor;
                     c.FlatStyle = FlatStyle.Flat;
                 }
 
@@ -287,7 +275,6 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 lv.OwnerDraw = true;
                 lv.DrawColumnHeader += lv_DrawColumnHeader;
-                lv.GridLines = false;
                 lv.BackColor = Configuration.Settings.General.DarkThemeBackColor;
                 lv.ForeColor = Configuration.Settings.General.DarkThemeForeColor;
             }
@@ -320,7 +307,7 @@ namespace Nikse.SubtitleEdit.Logic
                 e.Graphics.DrawString(e.Header.Text, e.Font, fc, e.Bounds.X + 3, e.Bounds.Y, strFormat);
                 if (e.ColumnIndex != 0)
                 {
-                    e.Graphics.DrawLine(new Pen(ForeColor), e.Bounds.X, e.Bounds.Y, e.Bounds.X, e.Bounds.Height);
+                    e.Graphics.DrawLine(new Pen(Configuration.Settings.General.DarkThemeForeColor), e.Bounds.X, e.Bounds.Y, e.Bounds.X, e.Bounds.Height);
                 }
             }
         }
