@@ -2095,6 +2095,7 @@
             public string ChooseProfile { get; set; }
             public string DuplicateLine { get; set; }
             public string ToggleView { get; set; }
+            public string ToggleMode { get; set; }
             public string Help { get; set; }
             public string FontInUi { get; set; }
             public string ShowFrameRate { get; set; }
