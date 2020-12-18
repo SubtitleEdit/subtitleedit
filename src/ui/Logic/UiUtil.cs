@@ -1177,9 +1177,9 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        public static Color BackColor => Configuration.Settings.General.UseDarkTheme ? DarkTheme.BackColor : Control.DefaultBackColor;
+        public static Color BackColor => Configuration.Settings.General.UseDarkTheme ? Configuration.Settings.General.DarkThemeBackColor : Control.DefaultBackColor;
 
-        public static Color ForeColor => Configuration.Settings.General.UseDarkTheme ? DarkTheme.ForeColor : Control.DefaultForeColor;
+        public static Color ForeColor => Configuration.Settings.General.UseDarkTheme ? Configuration.Settings.General.DarkThemeForeColor : Control.DefaultForeColor;
 
         public static void OpenFolderFromFileName(string fileName)
         {
@@ -1222,7 +1222,7 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     var process = new Process
                     {
-                        EnableRaisingEvents = false, 
+                        EnableRaisingEvents = false,
                         StartInfo = { FileName = "xdg-open", Arguments = item }
                     };
                     process.Start();
@@ -1268,7 +1268,7 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     var process = new Process
                     {
-                        EnableRaisingEvents = false, 
+                        EnableRaisingEvents = false,
                         StartInfo = { FileName = "xdg-open", Arguments = helpFile + parameter }
                     };
                     process.Start();

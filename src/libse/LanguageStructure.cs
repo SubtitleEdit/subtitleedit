@@ -1330,6 +1330,7 @@
             public string NoSupportHereVobSub { get; set; }
             public string NoSupportHereDivx { get; set; }
             public string NoChapters { get; set; }
+            public string DarkThemeRestart { get; set; }
 
             public class MainMenu
             {
@@ -2280,6 +2281,8 @@
             public string UseSyntaxColoring { get; set; }
             public string HtmlColor { get; set; }
             public string AssaColor { get; set; }
+            public string DarkTheme { get; set; }
+            public string DarkThemeEnabled { get; set; }
             public string UpdateShortcut { get; set; }
             public string FoucsSetVideoPosition { get; set; }
             public string ToggleDockUndockOfVideoControls { get; set; }
