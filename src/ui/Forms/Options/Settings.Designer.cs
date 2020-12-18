@@ -4087,9 +4087,9 @@
             this.checkBoxDarkThemeEnabled.AutoSize = true;
             this.checkBoxDarkThemeEnabled.Location = new System.Drawing.Point(16, 25);
             this.checkBoxDarkThemeEnabled.Name = "checkBoxDarkThemeEnabled";
-            this.checkBoxDarkThemeEnabled.Size = new System.Drawing.Size(122, 17);
+            this.checkBoxDarkThemeEnabled.Size = new System.Drawing.Size(101, 17);
             this.checkBoxDarkThemeEnabled.TabIndex = 43;
-            this.checkBoxDarkThemeEnabled.Text = "Dark theme enabled";
+            this.checkBoxDarkThemeEnabled.Text = "Use dark theme";
             this.checkBoxDarkThemeEnabled.UseVisualStyleBackColor = true;
             // 
             // panelDarkThemeBackColor
@@ -4099,6 +4099,7 @@
             this.panelDarkThemeBackColor.Name = "panelDarkThemeBackColor";
             this.panelDarkThemeBackColor.Size = new System.Drawing.Size(21, 20);
             this.panelDarkThemeBackColor.TabIndex = 42;
+            this.panelDarkThemeBackColor.Click += new System.EventHandler(this.buttonDarkThemeBackColor_Click);
             // 
             // buttonDarkThemeBackColor
             // 
@@ -4108,6 +4109,7 @@
             this.buttonDarkThemeBackColor.TabIndex = 40;
             this.buttonDarkThemeBackColor.Text = "Back color";
             this.buttonDarkThemeBackColor.UseVisualStyleBackColor = true;
+            this.buttonDarkThemeBackColor.Click += new System.EventHandler(this.buttonDarkThemeBackColor_Click);
             // 
             // panelDarkThemeColor
             // 
@@ -4116,6 +4118,7 @@
             this.panelDarkThemeColor.Name = "panelDarkThemeColor";
             this.panelDarkThemeColor.Size = new System.Drawing.Size(21, 20);
             this.panelDarkThemeColor.TabIndex = 41;
+            this.panelDarkThemeColor.Click += new System.EventHandler(this.buttonDarkThemeColor_Click);
             // 
             // buttonDarkThemeColor
             // 
@@ -4125,6 +4128,7 @@
             this.buttonDarkThemeColor.TabIndex = 39;
             this.buttonDarkThemeColor.Text = "Color";
             this.buttonDarkThemeColor.UseVisualStyleBackColor = true;
+            this.buttonDarkThemeColor.Click += new System.EventHandler(this.buttonDarkThemeColor_Click);
             // 
             // labelFontNote
             // 

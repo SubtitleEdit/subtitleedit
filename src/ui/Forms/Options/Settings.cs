@@ -113,6 +113,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelStatus.Text = string.Empty;
             _rulesProfiles = new List<RulesProfile>(Configuration.Settings.General.Profiles);
             var gs = Configuration.Settings.General;
+            _backgroundImageDark = Configuration.Settings.General.UseDarkTheme;
 
             checkBoxToolbarNew.Checked = gs.ShowToolbarNew;
             checkBoxToolbarOpen.Checked = gs.ShowToolbarOpen;
@@ -3510,6 +3511,24 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private void panelTextBoxAssColor_MouseClick(object sender, MouseEventArgs e)
         {
             buttonTextBoxAssColor_Click(null, null);
+        }
+
+        private void buttonDarkThemeColor_Click(object sender, EventArgs e)
+        {
+            colorDialogSSAStyle.Color = panelDarkThemeColor.BackColor;
+            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            {
+                panelDarkThemeColor.BackColor = colorDialogSSAStyle.Color;
+            }
+        }
+
+        private void buttonDarkThemeBackColor_Click(object sender, EventArgs e)
+        {
+            colorDialogSSAStyle.Color = panelDarkThemeBackColor.BackColor;
+            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            {
+                panelDarkThemeBackColor.BackColor = colorDialogSSAStyle.Color;
+            }
         }
     }
 }

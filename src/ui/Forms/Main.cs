@@ -3328,7 +3328,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowHideTextBasedFeatures(SubtitleFormat format)
         {
-            textBoxSource.Enabled = format?.IsTextBased == true;
+            textBoxSource.ReadOnly = format?.IsTextBased == false;
         }
 
         private void SetUndockedWindowsTitle()
@@ -4590,6 +4590,8 @@ namespace Nikse.SubtitleEdit.Forms
             var oldSubtitleTextBoxHtmlColor = Configuration.Settings.General.SubtitleTextBoxHtmlColor.ToArgb().ToString();
             var oldSubtitleTextBoxAssaColor = Configuration.Settings.General.SubtitleTextBoxAssColor.ToArgb().ToString();
             var oldUseDarkTheme = Configuration.Settings.General.UseDarkTheme;
+            var oldUseDarkForeColor = Configuration.Settings.General.DarkThemeForeColor;
+            var oldUseDarkBackColor = Configuration.Settings.General.DarkThemeBackColor;
             using (var settings = new Options.Settings())
             {
                 settings.Initialize(Icon, toolStripButtonFileNew.Image, toolStripButtonFileOpen.Image, toolStripButtonSave.Image, toolStripButtonSaveAs.Image, toolStripButtonFind.Image,
@@ -4772,20 +4774,43 @@ namespace Nikse.SubtitleEdit.Forms
                 RefreshTimeCodeMode();
             }
 
-            if (oldUseDarkTheme != Configuration.Settings.General.UseDarkTheme)
+            if (oldUseDarkTheme != Configuration.Settings.General.UseDarkTheme ||
+                oldUseDarkForeColor != Configuration.Settings.General.DarkThemeForeColor ||
+                oldUseDarkBackColor != Configuration.Settings.General.DarkThemeBackColor)
             {
                 if (Configuration.Settings.General.UseDarkTheme)
                 {
                     OnLoad(null);
+
+                    if (oldUseDarkTheme != Configuration.Settings.General.UseDarkTheme)
+                    {
+                        // override colors one time
+
+                        var c = Configuration.Settings.General.DarkThemeBackColor;
+                        var slightlyLighter = Color.FromArgb(Math.Min(byte.MaxValue, c.R + 10), Math.Min(byte.MaxValue, c.G + 10), Math.Min(byte.MaxValue, c.B + 10));
+                        Configuration.Settings.VideoControls.WaveformGridColor = slightlyLighter;
+
+                        Configuration.Settings.VideoControls.WaveformColor = Color.FromArgb(7, 65, 152);
+                        Configuration.Settings.VideoControls.WaveformSelectedColor = Color.FromArgb(150, 0, 0);
+                        Configuration.Settings.VideoControls.WaveformBackgroundColor = c;
+
+                        //TODO: list view colors...   
+                    }
+
+                    Configuration.Settings.General.SubtitleBackgroundColor = Configuration.Settings.General.DarkThemeBackColor;
+                    Configuration.Settings.General.SubtitleFontColor = Configuration.Settings.General.DarkThemeForeColor;
                     textBoxListViewText.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
                     textBoxListViewTextAlternate.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
                     SubtitleListview1.BackColor = Configuration.Settings.General.SubtitleBackgroundColor;
                     RefreshSelectedParagraph();
+                    SetAudioVisualizerSettings();
                 }
                 else
                 {
                     Configuration.Settings.General.SubtitleBackgroundColor = new TextBox().BackColor;
                     Configuration.Settings.General.SubtitleFontColor = DefaultForeColor;
+                    Configuration.Settings.VideoControls.WaveformColor = Color.FromArgb(255, 160, 240, 30);
+                    Configuration.Settings.VideoControls.WaveformSelectedColor = Color.FromArgb(255, 230, 0, 0);
                     MessageBox.Show(Configuration.Settings.Language.Main.DarkThemeRestart);
                 }
             }
@@ -11681,19 +11706,17 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SwitchView(Control view)
         {
-            if (inSourceView && textBoxSource.Text.Trim().Length > 0)
+            if (inSourceView)
             {
                 var currentFormat = GetCurrentSubtitleFormat();
-                if (currentFormat != null && !currentFormat.IsTextBased)
+                if (currentFormat != null && currentFormat.IsTextBased)
                 {
-                    return;
-                }
-
-                var newFormat = new Subtitle().ReloadLoadSubtitle(textBoxSource.Lines.ToList(), null, currentFormat);
-                if (newFormat == null)
-                {
-                    MessageBox.Show(_language.UnableToParseSourceView);
-                    return;
+                    var newFormat = new Subtitle().ReloadLoadSubtitle(textBoxSource.Lines.ToList(), null, currentFormat);
+                    if (newFormat == null)
+                    {
+                        MessageBox.Show(_language.UnableToParseSourceView);
+                        return;
+                    }
                 }
             }
 
@@ -29125,6 +29148,16 @@ namespace Nikse.SubtitleEdit.Forms
                     form.ShowDialog(this);
                 }
             }
+        }
+
+        private void contextMenuStripTextBoxSourceView_Opening(object sender, CancelEventArgs e)
+        {
+            foreach (ToolStripItem item in contextMenuStripTextBoxSourceView.Items)
+            {
+                item.Visible = !textBoxSource.ReadOnly;
+            }
+
+            toolStripMenuItemGoToListView.Visible = true;
         }
     }
 }
