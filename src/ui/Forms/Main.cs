@@ -4781,13 +4781,20 @@ namespace Nikse.SubtitleEdit.Forms
                     if (oldUseDarkTheme != Configuration.Settings.General.UseDarkTheme)
                     {
                         // override colors one time
-                        Configuration.Settings.VideoControls.WaveformDrawGrid = false;
+
+                        var c = Configuration.Settings.General.DarkThemeBackColor;
+                        var slightlyLighter = Color.FromArgb(Math.Min(byte.MaxValue, c.R + 10), Math.Min(byte.MaxValue, c.G + 10), Math.Min(byte.MaxValue, c.B + 10));
+                        Configuration.Settings.VideoControls.WaveformGridColor = slightlyLighter;
+
                         Configuration.Settings.VideoControls.WaveformColor = Color.FromArgb(7, 65, 152);
                         Configuration.Settings.VideoControls.WaveformSelectedColor = Color.FromArgb(150, 0, 0);
+                        Configuration.Settings.VideoControls.WaveformBackgroundColor = c;
 
                         //TODO: list view colors...   
                     }
 
+                    Configuration.Settings.General.SubtitleBackgroundColor = Configuration.Settings.General.DarkThemeBackColor;
+                    Configuration.Settings.General.SubtitleFontColor = Configuration.Settings.General.DarkThemeForeColor;
                     textBoxListViewText.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
                     textBoxListViewTextAlternate.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
                     SubtitleListview1.BackColor = Configuration.Settings.General.SubtitleBackgroundColor;
