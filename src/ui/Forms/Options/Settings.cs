@@ -22,6 +22,18 @@ namespace Nikse.SubtitleEdit.Forms.Options
 {
     public sealed partial class Settings : PositionAndSizeForm
     {
+        private const int GeneralSection = 0;
+        private const int ShortcutsSection = 1;
+        private const int SyntaxColoringSection = 2;
+        private const int VideoPlayerSection = 3;
+        private const int WaveformAndSpectrogramSection = 4;
+        private const int ToolsSection = 5;
+        private const int WordListsSection = 6;
+        private const int ToolbarSection = 7;
+        private const int FontSection = 8;
+        private const int SsaStyleSection = 9;
+        private const int NetworkSection = 10;
+
         private string _ssaFontName;
         private double _ssaFontSize;
         private int _ssaFontColor;
@@ -114,6 +126,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             _rulesProfiles = new List<RulesProfile>(Configuration.Settings.General.Profiles);
             var gs = Configuration.Settings.General;
             _backgroundImageDark = Configuration.Settings.General.UseDarkTheme;
+
+            listBoxSection.SelectedIndex = GeneralSection;
 
             checkBoxToolbarNew.Checked = gs.ShowToolbarNew;
             checkBoxToolbarOpen.Checked = gs.ShowToolbarOpen;
@@ -337,18 +351,30 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             // Language
             var language = Configuration.Settings.Language.Settings;
+            listBoxSection.Items[GeneralSection] = language.General;
+            listBoxSection.Items[ShortcutsSection] = language.Shortcuts;
+            listBoxSection.Items[SyntaxColoringSection] = language.SyntaxColoring;
+            listBoxSection.Items[VideoPlayerSection] = language.VideoPlayer;
+            listBoxSection.Items[WaveformAndSpectrogramSection] = language.WaveformAndSpectrogram;
+            listBoxSection.Items[ToolsSection] = language.Tools;
+            listBoxSection.Items[WordListsSection] = language.WordLists;
+            listBoxSection.Items[ToolbarSection] = language.Toolbar;
+            listBoxSection.Items[FontSection] = Configuration.Settings.Language.DCinemaProperties.Font;
+            listBoxSection.Items[SsaStyleSection] = language.SsaStyle;
+            listBoxSection.Items[NetworkSection] = language.Network;
+
             Text = language.Title;
-            tabPageGeneral.Text = language.General;
-            tabPageVideoPlayer.Text = language.VideoPlayer;
-            tabPageWaveform.Text = language.WaveformAndSpectrogram;
-            tabPageWordLists.Text = language.WordLists;
-            tabPageTools.Text = language.Tools;
-            tabPageSsaStyle.Text = language.SsaStyle;
-            tabPageNetwork.Text = language.Network;
-            tabPageToolBar.Text = language.Toolbar;
-            tabPageFont.Text = Configuration.Settings.Language.DCinemaProperties.Font;
-            tabPageShortcuts.Text = language.Shortcuts;
-            tabPageSyntaxColoring.Text = language.SyntaxColoring;
+            panelGeneral.Text = language.General;
+            panelVideoPlayer.Text = language.VideoPlayer;
+            panelWaveform.Text = language.WaveformAndSpectrogram;
+            panelWordLists.Text = language.WordLists;
+            panelTools.Text = language.Tools;
+            panelSsaStyle.Text = language.SsaStyle;
+            panelNetwork.Text = language.Network;
+            panelToolBar.Text = language.Toolbar;
+            panelFont.Text = Configuration.Settings.Language.DCinemaProperties.Font;
+            panelShortcuts.Text = language.Shortcuts;
+            panelSyntaxColoring.Text = language.SyntaxColoring;
             groupBoxShowToolBarButtons.Text = language.ShowToolBarButtons;
             labelTBNew.Text = language.New;
             labelTBOpen.Text = language.Open;
@@ -2520,9 +2546,58 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
         }
 
-        private void TabControlSettingsSelectedIndexChanged(object sender, EventArgs e)
+        private void ListBoxSectionSelectedIndexChanged(object sender, EventArgs e)
         {
             labelStatus.Text = string.Empty;
+
+            panelGeneral.Visible = false;
+            panelShortcuts.Visible = false;
+            panelSyntaxColoring.Visible = false;
+            panelVideoPlayer.Visible = false;
+            panelWaveform.Visible = false;
+            panelTools.Visible = false;
+            panelWordLists.Visible = false;
+            panelToolBar.Visible = false;
+            panelFont.Visible = false;
+            panelSsaStyle.Visible = false;
+            panelNetwork.Visible = false;
+
+            var section = panelGeneral;
+            switch (listBoxSection.SelectedIndex)
+            {
+                case ShortcutsSection:
+                    section = panelShortcuts;
+                    break;
+                case SyntaxColoringSection:
+                    section = panelSyntaxColoring;
+                    break;
+                case VideoPlayerSection:
+                    section = panelVideoPlayer;
+                    break;
+                case WaveformAndSpectrogramSection:
+                    section = panelWaveform;
+                    break;
+                case ToolsSection:
+                    section = panelTools;
+                    break;
+                case WordListsSection:
+                    section = panelWordLists;
+                    break;
+                case ToolbarSection:
+                    section = panelToolBar;
+                    break;
+                case FontSection:
+                    section = panelFont;
+                    break;
+                case SsaStyleSection:
+                    section = panelSsaStyle;
+                    break;
+                case NetworkSection:
+                    section = panelNetwork;
+                    break;
+            }
+
+            section.Visible = true;
         }
 
         private void ListBoxKeyDownSearch(object sender, KeyEventArgs e)
@@ -3528,6 +3603,12 @@ namespace Nikse.SubtitleEdit.Forms.Options
             {
                 panelDarkThemeBackColor.BackColor = colorDialogSSAStyle.Color;
             }
+        }
+
+        private void listBoxSection_LostFocus(object sender, EventArgs e)
+        {
+            // avoid flickering when losing focus
+            listBoxSection.Update();
         }
     }
 }
