@@ -47,6 +47,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             _header = subtitle.Header;
             _format = format;
             _isSubStationAlpha = _format.Name == SubStationAlpha.NameOfFormat;
+            _backgroundImageDark = Configuration.Settings.General.UseDarkTheme;
 
             if (_header != null && _header.Contains("http://www.w3.org/ns/ttml"))
             {

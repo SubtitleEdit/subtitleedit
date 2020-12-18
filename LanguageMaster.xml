@@ -2116,7 +2116,7 @@ can edit in same subtitle file (collaboration)</Information>
     <HtmlColor>Html color</HtmlColor>
     <AssaColor>ASSA color</AssaColor>
     <DarkTheme>Dark theme</DarkTheme>
-    <DarkThemeEnabled>Dark theme enabled</DarkThemeEnabled>
+    <DarkThemeEnabled>Use dark theme</DarkThemeEnabled>
     <UpdateShortcut>Update</UpdateShortcut>
     <FoucsSetVideoPosition>Focus set video position</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Toggle dock/undock of video controls</ToggleDockUndockOfVideoControls>

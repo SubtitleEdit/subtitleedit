@@ -113,6 +113,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelStatus.Text = string.Empty;
             _rulesProfiles = new List<RulesProfile>(Configuration.Settings.General.Profiles);
             var gs = Configuration.Settings.General;
+            _backgroundImageDark = Configuration.Settings.General.UseDarkTheme;
 
             checkBoxToolbarNew.Checked = gs.ShowToolbarNew;
             checkBoxToolbarOpen.Checked = gs.ShowToolbarOpen;
