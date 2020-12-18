@@ -54,7 +54,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
             }
         }
 
-        public List<TranslationPair> GetTranslationPairs()
+        private List<TranslationPair> GetTranslationPairs()
         {
             if (_translationPairs != null)
             {

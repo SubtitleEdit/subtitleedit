@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
             return _translationStrategy.Translate(sourceLanguage, targetLanguage, paragraphs, log);
         }
 
-        public  List<TranslationPair> GetTranslationPairs()
+        private List<TranslationPair> GetTranslationPairs()
         {
             return new List<TranslationPair>
             {

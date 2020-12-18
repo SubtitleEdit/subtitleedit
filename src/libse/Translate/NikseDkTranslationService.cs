@@ -9,16 +9,9 @@ using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.Translate
 {
-    class NikseDkService : ITranslationService
+    class NikseDkTranslationService : ITranslationService
     {
-        public List<TranslationPair> GetTranslationPairs()
-        {
-            return new List<TranslationPair>
-            {
-
-            };
-        }
-
+     
         public List<TranslationPair> GetSupportedSourceLanguages()
         {
             return new List<TranslationPair>
