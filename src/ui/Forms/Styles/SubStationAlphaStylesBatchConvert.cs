@@ -30,6 +30,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             comboBoxCollision.SelectedIndex = 0;
             _header = subtitle.Header;
             _isSubStationAlpha = format.Name == SubStationAlpha.NameOfFormat;
+            _backgroundImageDark = Configuration.Settings.General.UseDarkTheme;
             if (_header == null || !_header.Contains("style:", StringComparison.OrdinalIgnoreCase))
             {
                 ResetHeader();
