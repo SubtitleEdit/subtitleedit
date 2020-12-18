@@ -150,6 +150,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxSubtitleTextBoxSyntaxColor.Checked = gs.SubtitleTextBoxSyntaxColor;
             panelTextBoxHtmlColor.BackColor = gs.SubtitleTextBoxHtmlColor;
             panelTextBoxAssColor.BackColor = gs.SubtitleTextBoxAssColor;
+            panelDarkThemeBackColor.BackColor = gs.DarkThemeBackColor;
+            panelDarkThemeColor.BackColor = gs.DarkThemeForeColor;
+            checkBoxDarkThemeEnabled.Checked = gs.UseDarkTheme;
             checkBoxSubtitleListViewFontBold.Checked = gs.SubtitleListViewFontBold;
             checkBoxSubtitleCenter.Checked = gs.CenterSubtitleInTextBox;
             panelSubtitleFontColor.BackColor = gs.SubtitleFontColor;
@@ -437,6 +440,10 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxSubtitleTextBoxSyntaxColor.Text = language.UseSyntaxColoring;
             buttonTextBoxHtmlColor.Text = language.HtmlColor;
             buttonTextBoxAssColor.Text = language.AssaColor;
+            groupBoxDarkTheme.Text = language.DarkTheme;
+            checkBoxDarkThemeEnabled.Text = language.DarkThemeEnabled;
+            buttonDarkThemeColor.Text = language.WaveformTextColor;
+            buttonDarkThemeBackColor.Text = language.WaveformBackgroundColor;
             checkBoxSubtitleListViewFontBold.Text = language.SubtitleBold;
             checkBoxSubtitleCenter.Text = language.SubtitleCenter;
             checkBoxSubtitleCenter.Left = checkBoxSubtitleFontBold.Left;
@@ -1688,6 +1695,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             gs.SubtitleTextBoxSyntaxColor = checkBoxSubtitleTextBoxSyntaxColor.Checked;
             gs.SubtitleTextBoxHtmlColor = panelTextBoxHtmlColor.BackColor;
             gs.SubtitleTextBoxAssColor = panelTextBoxAssColor.BackColor;
+            gs.DarkThemeBackColor = panelDarkThemeBackColor.BackColor;
+            gs.DarkThemeForeColor = panelDarkThemeColor.BackColor;
+            gs.UseDarkTheme = checkBoxDarkThemeEnabled.Checked;
             gs.SubtitleListViewFontBold = checkBoxSubtitleListViewFontBold.Checked;
             gs.CenterSubtitleInTextBox = checkBoxSubtitleCenter.Checked;
             gs.SubtitleFontColor = panelSubtitleFontColor.BackColor;

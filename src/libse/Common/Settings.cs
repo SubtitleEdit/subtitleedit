@@ -1168,6 +1168,8 @@ $HorzAlign          =   Center
         public bool MeasurementConverterCloseOnInsert { get; set; }
         public string MeasurementConverterCategories { get; set; }
         public int SubtitleTextBoxMaxHeight { get; set; }
+        public Color DarkThemeForeColor { get; set; }
+        public Color DarkThemeBackColor { get; set; }
         public bool UseDarkTheme { get; set; }
         public bool ShowBetaStuff { get; set; }
 
@@ -1297,6 +1299,8 @@ $HorzAlign          =   Center
             ShowProgress = false;
             ShowNegativeDurationInfoOnSave = true;
             ShowFormatRequiresUtf8Warning = true;
+            DarkThemeForeColor = Color.FromArgb(155, 155, 155);
+            DarkThemeBackColor = Color.FromArgb(30, 30, 30);
             UseDarkTheme = false;
             TitleBarAsterisk = "before";
             MeasurementConverterCloseOnInsert = true;
@@ -2081,7 +2085,7 @@ $HorzAlign          =   Center
             MainTextBoxSplitAtCursor = "Control+Alt+V";
             MainTextBoxSelectionToLower = "Control+U";
             MainTextBoxSelectionToUpper = "Control+Shift+U";
-            MainTextBoxSelectionToggleCasing = "Ctrl+Shift+F3";
+            MainTextBoxSelectionToggleCasing = "Control+Shift+F3";
             MainToolsBeamer = "Control+Shift+Alt+B";
             MainCreateInsertSubAtVideoPos = "Shift+F9";
             MainVideoGoToStartCurrent = "Shift+F11";
@@ -3529,6 +3533,18 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.SubtitleTextBoxMaxHeight = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("DarkThemeBackColor");
+            if (subNode != null)
+            {
+                settings.General.DarkThemeBackColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+            }
+
+            subNode = node.SelectSingleNode("DarkThemeForeColor");
+            if (subNode != null)
+            {
+                settings.General.DarkThemeForeColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
             }
 
             subNode = node.SelectSingleNode("UseDarkTheme");
@@ -7957,6 +7973,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MeasurementConverterCloseOnInsert", settings.General.MeasurementConverterCloseOnInsert.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MeasurementConverterCategories", settings.General.MeasurementConverterCategories);
                 textWriter.WriteElementString("SubtitleTextBoxMaxHeight", settings.General.SubtitleTextBoxMaxHeight.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("DarkThemeBackColor", settings.General.DarkThemeBackColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("DarkThemeForeColor", settings.General.DarkThemeForeColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("UseDarkTheme", settings.General.UseDarkTheme.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowBetaStuff", settings.General.ShowBetaStuff.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("NewEmptyDefaultMs", settings.General.NewEmptyDefaultMs.ToString(CultureInfo.InvariantCulture));

@@ -3397,6 +3397,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/NoChapters":
                     language.Main.NoChapters = reader.Value;
                     break;
+                case "Main/DarkThemeRestart":
+                    language.Main.DarkThemeRestart = reader.Value;
+                    break;
                 case "Main/Menu/File/Title":
                     language.Main.Menu.File.Title = reader.Value;
                     break;
@@ -5766,6 +5769,12 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/AssaColor":
                     language.Settings.AssaColor = reader.Value;
+                    break;
+                case "Settings/DarkTheme":
+                    language.Settings.DarkTheme = reader.Value;
+                    break;
+                case "Settings/DarkThemeEnabled":
+                    language.Settings.DarkThemeEnabled = reader.Value;
                     break;
                 case "Settings/UpdateShortcut":
                     language.Settings.UpdateShortcut = reader.Value;
