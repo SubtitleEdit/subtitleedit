@@ -3510,5 +3510,23 @@ namespace Nikse.SubtitleEdit.Forms.Options
         {
             buttonTextBoxAssColor_Click(null, null);
         }
+
+        private void buttonDarkThemeColor_Click(object sender, EventArgs e)
+        {
+            colorDialogSSAStyle.Color = panelDarkThemeColor.BackColor;
+            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            {
+                panelDarkThemeColor.BackColor = colorDialogSSAStyle.Color;
+            }
+        }
+
+        private void buttonDarkThemeBackColor_Click(object sender, EventArgs e)
+        {
+            colorDialogSSAStyle.Color = panelDarkThemeBackColor.BackColor;
+            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            {
+                panelDarkThemeBackColor.BackColor = colorDialogSSAStyle.Color;
+            }
+        }
     }
 }
