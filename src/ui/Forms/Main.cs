@@ -14338,6 +14338,17 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
+            else if (_shortcuts.MainGeneralToggleMode == e.KeyData)
+            {
+                var mode = comboBoxMode.SelectedIndex + 1;
+                if (mode == comboBoxMode.Items.Count)
+                {
+                    mode = 0;
+                }
+
+                comboBoxMode.SelectedIndex = mode;
+                e.SuppressKeyPress = true;
+            }
             else if (_shortcuts.MainGeneralFileSaveAll == e.KeyData)
             {
                 SaveAll();

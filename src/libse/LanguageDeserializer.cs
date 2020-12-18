@@ -5215,6 +5215,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/ToggleView":
                     language.Settings.ToggleView = reader.Value;
                     break;
+                case "Settings/ToggleMode":
+                    language.Settings.ToggleMode = reader.Value;
+                    break;
                 case "Settings/Help":
                     language.Settings.Help = reader.Value;
                     break;

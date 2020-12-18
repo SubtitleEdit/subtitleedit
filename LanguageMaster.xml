@@ -1931,6 +1931,7 @@ can edit in same subtitle file (collaboration)</Information>
     <ChooseProfile>Choose profile</ChooseProfile>
     <DuplicateLine>Duplicate line</DuplicateLine>
     <ToggleView>Toggle list/source view</ToggleView>
+    <ToggleMode>Toggle translate/create/adjust mode</ToggleMode>
     <Help>Help</Help>
     <FontInUi>UI Font</FontInUi>
     <ShowFrameRate>Show frame rate in toolbar</ShowFrameRate>
