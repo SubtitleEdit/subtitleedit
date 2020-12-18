@@ -276,7 +276,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 lv.OwnerDraw = true;
                 lv.DrawColumnHeader += lv_DrawColumnHeader;
-                lv.GridLines = false;
+                lv.GridLines = Configuration.Settings.General.DarkThemeShowListViewGridLines;
                 lv.BackColor = Configuration.Settings.General.DarkThemeBackColor;
                 lv.ForeColor = Configuration.Settings.General.DarkThemeForeColor;
             }
