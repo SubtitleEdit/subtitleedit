@@ -1684,9 +1684,9 @@ namespace Nikse.SubtitleEdit.Forms
             ShowSourceLineNumber();
 
             // video controls
-            comboBoxMode.Items.Add(_language.VideoControls.Translate);
-            comboBoxMode.Items.Add(_language.VideoControls.Create);
-            comboBoxMode.Items.Add(_language.VideoControls.Adjust);
+            comboBoxMode.Items[TranslateMode] = _language.VideoControls.Translate;
+            comboBoxMode.Items[CreateMode] = _language.VideoControls.Create;
+            comboBoxMode.Items[AdjustMode] = _language.VideoControls.Adjust;
             checkBoxSyncListViewWithVideoWhilePlaying.Text = _language.VideoControls.SelectCurrentElementWhilePlaying;
             if (VideoFileName == null)
             {

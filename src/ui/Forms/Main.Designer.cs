@@ -3221,6 +3221,10 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.comboBoxMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxMode.FormattingEnabled = true;
+            this.comboBoxMode.Items.AddRange(new object[] {
+            "Translate",
+            "Create",
+            "Adjust"});
             this.comboBoxMode.Location = new System.Drawing.Point(6, 8);
             this.comboBoxMode.Name = "comboBoxMode";
             this.comboBoxMode.Size = new System.Drawing.Size(129, 23);
