@@ -3324,7 +3324,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowHideTextBasedFeatures(SubtitleFormat format)
         {
-            textBoxSource.Enabled = format?.IsTextBased == true;
+            textBoxSource.ReadOnly = format?.IsTextBased == false;
         }
 
         private void SetUndockedWindowsTitle()
@@ -11676,19 +11676,17 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SwitchView(Control view)
         {
-            if (inSourceView && textBoxSource.Text.Trim().Length > 0)
+            if (inSourceView)
             {
                 var currentFormat = GetCurrentSubtitleFormat();
-                if (currentFormat != null && !currentFormat.IsTextBased)
+                if (currentFormat != null && currentFormat.IsTextBased)
                 {
-                    return;
-                }
-
-                var newFormat = new Subtitle().ReloadLoadSubtitle(textBoxSource.Lines.ToList(), null, currentFormat);
-                if (newFormat == null)
-                {
-                    MessageBox.Show(_language.UnableToParseSourceView);
-                    return;
+                    var newFormat = new Subtitle().ReloadLoadSubtitle(textBoxSource.Lines.ToList(), null, currentFormat);
+                    if (newFormat == null)
+                    {
+                        MessageBox.Show(_language.UnableToParseSourceView);
+                        return;
+                    }
                 }
             }
 
@@ -13962,7 +13960,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.ShiftKey)
             {
                 return;
-            }
+            }   
 
             var fc = FindFocusedControl(this);
             if (fc != null && e.Modifiers != Keys.Control && e.Modifiers != Keys.Alt && e.Modifiers != (Keys.Control | Keys.Shift) && e.Modifiers != (Keys.Control | Keys.Alt) && e.Modifiers != (Keys.Control | Keys.Shift | Keys.Alt))
@@ -13980,7 +13978,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     return;
                 }
-            }
+            }           
 
             if (e.KeyCode == Keys.Escape && !_cancelWordSpellCheck)
             {
@@ -29118,6 +29116,16 @@ namespace Nikse.SubtitleEdit.Forms
                     form.ShowDialog(this);
                 }
             }
+        }
+
+        private void contextMenuStripTextBoxSourceView_Opening(object sender, CancelEventArgs e)
+        {
+            foreach (ToolStripItem item in contextMenuStripTextBoxSourceView.Items)
+            {
+                item.Visible = !textBoxSource.ReadOnly;
+            }
+
+            toolStripMenuItemGoToListView.Visible = true;
         }
     }
 }
