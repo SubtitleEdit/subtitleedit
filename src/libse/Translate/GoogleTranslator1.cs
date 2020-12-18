@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
         public List<string> Translate(string sourceLanguage, string targetLanguage, List<Paragraph> paragraphs, StringBuilder log)
         {
 
-                string result;
+                string jsonResultString;
                 var input = new StringBuilder();
                 var formatList = new List<Formatting>();
                 for (var index = 0; index < paragraphs.Count; index++)
@@ -62,7 +62,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
                         wc.Proxy = Utilities.GetProxy();
                         wc.Encoding = Encoding.UTF8;
                         wc.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
-                        result = wc.DownloadString(url).Trim();
+                        jsonResultString = wc.DownloadString(url).Trim();
                     }
                 }
                 catch (WebException webException)
@@ -70,71 +70,11 @@ namespace Nikse.SubtitleEdit.Core.Translate
                     throw new TranslationException("Free API quota exceeded?", webException);
                 }
 
-                var sbAll = new StringBuilder();
-                int count = 0;
-                int i = 1;
-                int level = result.StartsWith('[') ? 1 : 0;
-                while (i < result.Length - 1)
-                {
-                    var sb = new StringBuilder();
-                    var start = false;
-                    for (; i < result.Length - 1; i++)
-                    {
-                        var c = result[i];
-                        if (start)
-                        {
-                            if (c == '"' && result[i - 1] != '\\')
-                            {
-                                count++;
-                                if (count % 2 == 1 && level > 2 && level < 5) // even numbers are original text, level 3 is translation
-                                {
-                                    sbAll.Append(" " + sb);
-                                }
 
-                                i++;
-                                break;
-                            }
+                List<string> resultList = ConvertJsonObjectToStringLines(jsonResultString);
+                resultList = ProcessPostFormattings(resultList, targetLanguage, formatList);
 
-                            sb.Append(c);
-                        }
-                        else if (c == '"')
-                        {
-                            start = true;
-                        }
-                        else if (c == '[')
-                        {
-                            level++;
-                        }
-                        else if (c == ']')
-                        {
-                            level--;
-                        }
-                    }
-                }
-
-                var res = sbAll.ToString().Trim();
-                res = Regex.Unescape(res);
-                var lines = res.SplitToLines().ToList();
-                var resultList = new List<string>();
-                for (var index = 0; index < lines.Count; index++)
-                {
-                    var line = lines[index];
-                    var s = Json.DecodeJsonText(line);
-                    s = string.Join(Environment.NewLine, s.SplitToLines());
-                    s = TranslationHelper.PostTranslate(s, targetLanguage);
-                    s = s.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-                    s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
-                    s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
-                    s = s.Replace(" " + Environment.NewLine, Environment.NewLine);
-                    s = s.Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
-                    if (formatList.Count > index)
-                    {
-                        s = formatList[index].ReAddFormatting(s);
-                        s = formatList[index].ReBreak(s, targetLanguage);
-                    }
-
-                    resultList.Add(s);
-                }
+                //brummochse: I do not really understand under which circumstances the following code is executed and if it is still required or maybe obsolete?
 
                 if (resultList.Count > paragraphs.Count)
                 {
@@ -156,6 +96,82 @@ namespace Nikse.SubtitleEdit.Core.Translate
 
                 return resultList;
          
+        }
+
+        private static List<string> ProcessPostFormattings(List<string> lines, string targetLanguage, List<Formatting> formatList)
+        {
+            var resultList = new List<string>();
+            for (var index = 0; index < lines.Count; index++)
+            {
+                var line = lines[index];
+                var s = Json.DecodeJsonText(line);
+                s = string.Join(Environment.NewLine, s.SplitToLines());
+                s = TranslationHelper.PostTranslate(s, targetLanguage);
+                s = s.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+                s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
+                s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
+                s = s.Replace(" " + Environment.NewLine, Environment.NewLine);
+                s = s.Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
+                if (formatList.Count > index)
+                {
+                    s = formatList[index].ReAddFormatting(s);
+                    s = formatList[index].ReBreak(s, targetLanguage);
+                }
+
+                resultList.Add(s);
+            }
+
+            return resultList;
+        }
+
+        private static List<string> ConvertJsonObjectToStringLines(string result)
+        {
+            var sbAll = new StringBuilder();
+            int count = 0;
+            int i = 1;
+            int level = result.StartsWith('[') ? 1 : 0;
+            while (i < result.Length - 1)
+            {
+                var sb = new StringBuilder();
+                var start = false;
+                for (; i < result.Length - 1; i++)
+                {
+                    var c = result[i];
+                    if (start)
+                    {
+                        if (c == '"' && result[i - 1] != '\\')
+                        {
+                            count++;
+                            if (count % 2 == 1 && level > 2 && level < 5) // even numbers are original text, level 3 is translation
+                            {
+                                sbAll.Append(" " + sb);
+                            }
+
+                            i++;
+                            break;
+                        }
+
+                        sb.Append(c);
+                    }
+                    else if (c == '"')
+                    {
+                        start = true;
+                    }
+                    else if (c == '[')
+                    {
+                        level++;
+                    }
+                    else if (c == ']')
+                    {
+                        level--;
+                    }
+                }
+            }
+
+            var res = sbAll.ToString().Trim();
+            res = Regex.Unescape(res);
+            var lines = res.SplitToLines().ToList();
+            return lines;
         }
 
         private static List<string> SplitMergedLines(List<string> input, List<Paragraph> paragraphs)

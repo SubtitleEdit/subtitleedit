@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
         {
             AddTranslatorEngine(new GoogleTranslationService());
             AddTranslatorEngine(new MicrosoftTranslationService(Configuration.Settings.Tools.MicrosoftTranslatorApiKey, Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint, Configuration.Settings.Tools.MicrosoftTranslatorCategory));
-            AddTranslatorEngine(new NikseDkService());
+            AddTranslatorEngine(new NikseDkTranslationService());
         }
 
 
