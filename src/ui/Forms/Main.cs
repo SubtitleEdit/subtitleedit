@@ -55,10 +55,6 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _inListView => splitContainerListViewAndText.Visible;
         private bool _inSourceView => textBoxSource.Visible;
 
-        private const int TranslateMode = 0;
-        private const int CreateMode = 1;
-        private const int AdjustMode = 2;
-
         private Subtitle _subtitle = new Subtitle();
 
         private int _undoIndex = -1;
@@ -176,12 +172,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool AutoRepeatContinueOn
         {
-            get { return comboBoxMode.SelectedIndex == TranslateMode && checkBoxAutoContinue.Checked; }
+            get { return panelTranslate.Visible && checkBoxAutoContinue.Checked; }
         }
 
         private bool AutoRepeatOn
         {
-            get { return comboBoxMode.SelectedIndex == TranslateMode && checkBoxAutoRepeatOn.Checked; }
+            get { return panelTranslate.Visible && checkBoxAutoRepeatOn.Checked; }
         }
 
         public string Title
@@ -435,17 +431,16 @@ namespace Nikse.SubtitleEdit.Forms
                 switch (Configuration.Settings.VideoControls.LastActiveTab)
                 {
                     case "Translate":
-                        comboBoxMode.SelectedIndex = TranslateMode;
+                        ModeChanged(buttonModeTranslate, EventArgs.Empty);
                         break;
                     case "Create":
-                        comboBoxMode.SelectedIndex = CreateMode;
+                        ModeChanged(buttonModeCreate, EventArgs.Empty);
                         break;
                     case "Adjust":
-                        comboBoxMode.SelectedIndex = AdjustMode;
+                        ModeChanged(buttonModeAdjust, EventArgs.Empty);
                         break;
                 }
 
-                comboBoxMode_SelectedIndexChanged(null, null);
                 buttonCustomUrl1.Text = Configuration.Settings.VideoControls.CustomSearchText1;
                 buttonCustomUrl1.Visible = Configuration.Settings.VideoControls.CustomSearchUrl1.Length > 1;
                 buttonCustomUrl2.Text = Configuration.Settings.VideoControls.CustomSearchText2;
@@ -1684,9 +1679,9 @@ namespace Nikse.SubtitleEdit.Forms
             ShowSourceLineNumber();
 
             // video controls
-            comboBoxMode.Items.Add(_language.VideoControls.Translate);
-            comboBoxMode.Items.Add(_language.VideoControls.Create);
-            comboBoxMode.Items.Add(_language.VideoControls.Adjust);
+            buttonModeTranslate.Text = _language.VideoControls.Translate;
+            buttonModeCreate.Text = _language.VideoControls.Create;
+            buttonModeAdjust.Text = _language.VideoControls.Adjust;
             checkBoxSyncListViewWithVideoWhilePlaying.Text = _language.VideoControls.SelectCurrentElementWhilePlaying;
             if (VideoFileName == null)
             {
@@ -14380,13 +14375,19 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_shortcuts.MainGeneralToggleMode == e.KeyData)
             {
-                var mode = comboBoxMode.SelectedIndex + 1;
-                if (mode == comboBoxMode.Items.Count)
+                if (panelTranslate.Visible)
                 {
-                    mode = 0;
+                    ModeChanged(buttonModeCreate, EventArgs.Empty);
+                }
+                else if (panelCreate.Visible)
+                {
+                    ModeChanged(buttonModeAdjust, EventArgs.Empty);
+                }
+                else
+                {
+                    ModeChanged(buttonModeTranslate, EventArgs.Empty);
                 }
 
-                comboBoxMode.SelectedIndex = mode;
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainGeneralFileSaveAll == e.KeyData)
@@ -15355,7 +15356,7 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxListViewText.Text = p.Text;
                 e.SuppressKeyPress = true;
             }
-            else if (comboBoxMode.SelectedIndex == CreateMode && e.Modifiers == Keys.Alt && e.KeyCode == Keys.F9)
+            else if (panelCreate.Visible && e.Modifiers == Keys.Alt && e.KeyCode == Keys.F9)
             {
                 StopAutoDuration();
                 ButtonSetEndClick(null, null);
@@ -19580,8 +19581,6 @@ namespace Nikse.SubtitleEdit.Forms
                     numericUpDownSecAdjust1.Width = buttonInsertNewText.Width - (numericUpDownSecAdjust2.Left + buttonAdjustSecForward1.Width);
                     buttonAdjustSecForward2.Left = buttonInsertNewText.Left + buttonInsertNewText.Width - buttonAdjustSecForward2.Width;
                     numericUpDownSecAdjust2.Width = buttonInsertNewText.Width - (numericUpDownSecAdjust2.Left + buttonAdjustSecForward2.Width);
-
-                    comboBoxMode_SelectedIndexChanged(null, null);
                 }
             }
         }
@@ -20585,7 +20584,7 @@ namespace Nikse.SubtitleEdit.Forms
         public void RunTranslateSearch(Action<string> act)
         {
             var text = textBoxSearchWord.Text;
-            if (comboBoxMode.SelectedIndex != TranslateMode)
+            if (panelTranslate.Visible)
             {
                 var tb = GetFocusedTextBox();
                 if (tb.SelectionLength == 0)
@@ -20750,30 +20749,39 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.OpenFolderFromFileName(_fileName);
         }
 
-        private void comboBoxMode_SelectedIndexChanged(object sender, EventArgs e)
+        private void ModeChanged(object sender, EventArgs e)
         {
+            buttonModeTranslate.Enabled = true;
+            buttonModeCreate.Enabled = true;
+            buttonModeAdjust.Enabled = true;
             panelTranslate.Visible = false;
             panelCreate.Visible = false;
             panelAdjust.Visible = false;
 
-            if (comboBoxMode.SelectedIndex == TranslateMode)
+            var clickedBtn = (Button)sender;
+            if (clickedBtn == buttonModeTranslate)
             {
+                buttonModeTranslate.Enabled = false;
                 panelTranslate.Visible = true;
                 panelMode.Width = groupBoxTranslateSearch.Left + groupBoxTranslateSearch.Width + 14;
                 Configuration.Settings.VideoControls.LastActiveTab = "Translate";
             }
-            else if (comboBoxMode.SelectedIndex == CreateMode)
+            else if (clickedBtn == buttonModeCreate)
             {
+                buttonModeCreate.Enabled = false;
                 panelCreate.Visible = true;
                 panelMode.Width = buttonInsertNewText.Left + buttonInsertNewText.Width + 38;
                 Configuration.Settings.VideoControls.LastActiveTab = "Create";
             }
-            else if (comboBoxMode.SelectedIndex == AdjustMode)
+            else if (clickedBtn == buttonModeAdjust)
             {
+                buttonModeAdjust.Enabled = false;
                 panelAdjust.Visible = true;
                 panelMode.Width = buttonInsertNewText.Left + buttonInsertNewText.Width + 38;
                 Configuration.Settings.VideoControls.LastActiveTab = "Adjust";
             }
+
+            panelMode.Focus();
 
             if (!_isVideoControlsUndocked)
             {
@@ -23867,7 +23875,6 @@ namespace Nikse.SubtitleEdit.Forms
             undockVideoControlsToolStripMenuItem.Visible = false;
             redockVideoControlsToolStripMenuItem.Visible = true;
 
-            comboBoxMode_SelectedIndexChanged(null, null);
             _videoControlsUndocked.Refresh();
         }
 

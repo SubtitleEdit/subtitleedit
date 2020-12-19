@@ -353,7 +353,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonLockCenter = new System.Windows.Forms.ToolStripButton();
             this.toolStripSplitButtonPlayRate = new System.Windows.Forms.ToolStripSplitButton();
             this.panelMode = new System.Windows.Forms.Panel();
-            this.comboBoxMode = new System.Windows.Forms.ComboBox();
+            this.buttonModeTranslate = new System.Windows.Forms.Button();
+            this.buttonModeCreate = new System.Windows.Forms.Button();
+            this.buttonModeAdjust = new System.Windows.Forms.Button();
             this.panelTranslate = new System.Windows.Forms.Panel();
             this.labelTranslateTip = new System.Windows.Forms.Label();
             this.groupBoxTranslateSearch = new System.Windows.Forms.GroupBox();
@@ -540,7 +542,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.panelWaveformControls.SuspendLayout();
             this.toolStripWaveControls.SuspendLayout();
             this.panelMode.SuspendLayout();
-            this.comboBoxMode.SuspendLayout();
             this.panelTranslate.SuspendLayout();
             this.groupBoxTranslateSearch.SuspendLayout();
             this.groupBoxAutoContinue.SuspendLayout();
@@ -3208,7 +3209,9 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // panelMode
             // 
-            this.panelMode.Controls.Add(this.comboBoxMode);
+            this.panelMode.Controls.Add(this.buttonModeTranslate);
+            this.panelMode.Controls.Add(this.buttonModeCreate);
+            this.panelMode.Controls.Add(this.buttonModeAdjust);
             this.panelMode.Controls.Add(this.panelTranslate);
             this.panelMode.Controls.Add(this.panelCreate);
             this.panelMode.Controls.Add(this.panelAdjust);
@@ -3217,15 +3220,32 @@ namespace Nikse.SubtitleEdit.Forms
             this.panelMode.Size = new System.Drawing.Size(467, 283);
             this.panelMode.TabIndex = 0;
             // 
-            // comboBoxMode
+            // buttonModeTranslate
             // 
-            this.comboBoxMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxMode.FormattingEnabled = true;
-            this.comboBoxMode.Location = new System.Drawing.Point(6, 8);
-            this.comboBoxMode.Name = "comboBoxMode";
-            this.comboBoxMode.Size = new System.Drawing.Size(129, 23);
-            this.comboBoxMode.TabIndex = 0;
-            this.comboBoxMode.SelectedIndexChanged += new System.EventHandler(comboBoxMode_SelectedIndexChanged);
+            this.buttonModeTranslate.Location = new System.Drawing.Point(6, 8);
+            this.buttonModeTranslate.Name = "buttonModeTranslate";
+            this.buttonModeTranslate.Size = new System.Drawing.Size(65, 23);
+            this.buttonModeTranslate.TabIndex = 0;
+            this.buttonModeTranslate.Text = "Translate";
+            this.buttonModeTranslate.Click += new System.EventHandler(this.ModeChanged);
+            // 
+            // buttonModeCreate
+            // 
+            this.buttonModeCreate.Location = new System.Drawing.Point(73, 8);
+            this.buttonModeCreate.Name = "buttonModeCreate";
+            this.buttonModeCreate.Size = new System.Drawing.Size(65, 23);
+            this.buttonModeCreate.TabIndex = 1;
+            this.buttonModeCreate.Text = "Create";
+            this.buttonModeCreate.Click += new System.EventHandler(this.ModeChanged);
+            // 
+            // buttonModeAdjust
+            // 
+            this.buttonModeAdjust.Location = new System.Drawing.Point(141, 8);
+            this.buttonModeAdjust.Name = "buttonModeAdjust";
+            this.buttonModeAdjust.Size = new System.Drawing.Size(65, 23);
+            this.buttonModeAdjust.TabIndex = 2;
+            this.buttonModeAdjust.Text = "Adjust";
+            this.buttonModeAdjust.Click += new System.EventHandler(this.ModeChanged);
             // 
             // panelTranslate
             // 
@@ -5190,7 +5210,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripWaveControls.ResumeLayout(false);
             this.toolStripWaveControls.PerformLayout();
             this.panelMode.ResumeLayout(false);
-            this.comboBoxMode.ResumeLayout(false);
             this.panelTranslate.ResumeLayout(false);
             this.panelTranslate.PerformLayout();
             this.groupBoxTranslateSearch.ResumeLayout(false);
@@ -5398,7 +5417,9 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Label labelVideoPosition;
         private Controls.TimeUpDown timeUpDownVideoPosition;
         private System.Windows.Forms.Panel panelMode;
-        private System.Windows.Forms.ComboBox comboBoxMode;
+        private System.Windows.Forms.Button buttonModeTranslate;
+        private System.Windows.Forms.Button buttonModeCreate;
+        private System.Windows.Forms.Button buttonModeAdjust;
         private System.Windows.Forms.Panel panelTranslate;
         private System.Windows.Forms.GroupBox groupBoxTranslateSearch;
         private System.Windows.Forms.Button buttonGoogleTranslateIt;
