@@ -5,8 +5,9 @@ using System.Net;
 using System.Text;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Core.Translate.Service;
 
-namespace Nikse.SubtitleEdit.Core.Translate
+namespace Nikse.SubtitleEdit.Core.Translate.Service
 {
     /// <summary>
     /// https://docs.microsoft.com/en-us/azure/cognitive-services/translator/reference/v3-0-translate

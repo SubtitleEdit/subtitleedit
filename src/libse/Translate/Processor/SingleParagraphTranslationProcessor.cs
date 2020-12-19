@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Nikse.SubtitleEdit.Core.Common;
 
-namespace Nikse.SubtitleEdit.Core.Translate
+namespace Nikse.SubtitleEdit.Core.Translate.Processor
 {
     public class SingleParagraphTranslationProcessor : AbstractTranslationProcessor<Paragraph>
     {
@@ -27,6 +27,11 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 targetParagraphs.Add(sourceTranslationUnits[i].Number, targetTexts[i]);
             }
             return targetParagraphs;
+        }
+
+        public override List<string> GetSupportedLanguages()
+        {
+            return null;
         }
     }
 }

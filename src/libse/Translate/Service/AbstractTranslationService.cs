@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Nikse.SubtitleEdit.Core.Common;
 
-namespace Nikse.SubtitleEdit.Core.Translate
+namespace Nikse.SubtitleEdit.Core.Translate.Service
 {
     public abstract class AbstractTranslationService : ITranslationStrategy
     {
@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
         {
             if (_initializationResult == null)
             {
-                _initializationResult= DoInitialize();
+                _initializationResult = DoInitialize();
             }
             return _initializationResult.Value;
         }

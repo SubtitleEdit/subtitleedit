@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Nikse.SubtitleEdit.Core.Common;
 
-namespace Nikse.SubtitleEdit.Core.Translate
+namespace Nikse.SubtitleEdit.Core.Translate.Service
 {
     /// <summary>
     /// Google translate via Google Cloud V2 API - see https://cloud.google.com/translate/

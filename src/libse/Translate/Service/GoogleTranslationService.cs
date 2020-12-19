@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Translate.Service;
 
-namespace Nikse.SubtitleEdit.Core.Translate
+namespace Nikse.SubtitleEdit.Core.Translate.Service
 {
     public class GoogleTranslationService : AbstractTranslationService
     {
