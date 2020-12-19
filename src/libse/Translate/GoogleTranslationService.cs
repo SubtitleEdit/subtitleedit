@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
             return this.GetTranslationPairs();
         }
 
-        protected override bool DoInit()
+        protected override bool DoInitialize()
         {
             var language = Configuration.Settings.Language.GoogleTranslate;
             if (string.IsNullOrEmpty(Configuration.Settings.Tools.GoogleApiV2Key))

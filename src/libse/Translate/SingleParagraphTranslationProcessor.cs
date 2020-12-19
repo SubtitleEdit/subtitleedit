@@ -7,8 +7,6 @@ using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.Translate
 {
-    
-
     public class SingleParagraphTranslationProcessor : AbstractTranslationProcessor<Paragraph>
     {
         public override string ToString()

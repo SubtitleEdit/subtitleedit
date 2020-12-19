@@ -94,7 +94,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
             return 1000; //brummochse: actually, when I understand the service correctly, no limit is required because it is only limited by text size
         }
 
-        protected override bool DoInit()
+        protected override bool DoInitialize()
         {
             return true;
         }
