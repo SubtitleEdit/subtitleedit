@@ -4773,6 +4773,7 @@ namespace Nikse.SubtitleEdit.Forms
                 oldUseDarkForeColor != Configuration.Settings.General.DarkThemeForeColor ||
                 oldUseDarkBackColor != Configuration.Settings.General.DarkThemeBackColor)
             {
+                var darkThemeBackColor = Configuration.Settings.General.DarkThemeBackColor;
                 var defaultWaveformValues = new VideoControlsSettings();
                 var darkModeWaveformColor = Color.FromArgb(7, 65, 152);
                 var darkModeWaveformSelectedColor = Color.FromArgb(150, 0, 0);
@@ -4789,9 +4790,13 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (Configuration.Settings.VideoControls.WaveformGridColor == defaultWaveformValues.WaveformGridColor)
                         {
-                            var c = Configuration.Settings.General.DarkThemeBackColor;
-                            var slightlyLighter = Color.FromArgb(Math.Min(byte.MaxValue, c.R + 10), Math.Min(byte.MaxValue, c.G + 10), Math.Min(byte.MaxValue, c.B + 10));
+                            var slightlyLighter = Color.FromArgb(Math.Min(byte.MaxValue, darkThemeBackColor.R + 10), Math.Min(byte.MaxValue, darkThemeBackColor.G + 10), Math.Min(byte.MaxValue, darkThemeBackColor.B + 10));
                             Configuration.Settings.VideoControls.WaveformGridColor = slightlyLighter;
+                        }
+
+                        if (Configuration.Settings.VideoControls.WaveformBackgroundColor == defaultWaveformValues.WaveformBackgroundColor)
+                        {
+                            Configuration.Settings.VideoControls.WaveformBackgroundColor = darkThemeBackColor;
                         }
 
                         if (Configuration.Settings.VideoControls.WaveformColor == defaultWaveformValues.WaveformColor)
@@ -4822,6 +4827,11 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Configuration.Settings.General.SubtitleBackgroundColor = new TextBox().BackColor;
                     Configuration.Settings.General.SubtitleFontColor = DefaultForeColor;
+
+                    if (Configuration.Settings.VideoControls.WaveformBackgroundColor == darkThemeBackColor)
+                    {
+                        Configuration.Settings.VideoControls.WaveformBackgroundColor = defaultWaveformValues.WaveformBackgroundColor;
+                    }
 
                     if (Configuration.Settings.VideoControls.WaveformColor == darkModeWaveformColor)
                     {
