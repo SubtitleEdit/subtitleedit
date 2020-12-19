@@ -287,9 +287,6 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static void lv_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
         {
-            var lv = (ListView)sender;
-            lv.BackColor = BackColor;
-            lv.ForeColor = ForeColor;
             e.DrawDefault = false;
             using (var b = new SolidBrush(Color.FromArgb(BackColor.R - 9, BackColor.G - 9, BackColor.B - 9)))
             {

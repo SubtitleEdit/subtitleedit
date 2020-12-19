@@ -4773,23 +4773,41 @@ namespace Nikse.SubtitleEdit.Forms
                 oldUseDarkForeColor != Configuration.Settings.General.DarkThemeForeColor ||
                 oldUseDarkBackColor != Configuration.Settings.General.DarkThemeBackColor)
             {
+                var defaultWaveformValues = new VideoControlsSettings();
+                var darkModeWaveformColor = Color.FromArgb(7, 65, 152);
+                var darkModeWaveformSelectedColor = Color.FromArgb(150, 0, 0);
+                var darkModeListViewSyntaxErrorColor = Color.FromArgb(185, 51, 0);
+                var defaultListViewSyntaxErrorColor = Color.FromArgb(255, 180, 150);
+
                 if (Configuration.Settings.General.UseDarkTheme)
                 {
                     OnLoad(null);
 
                     if (oldUseDarkTheme != Configuration.Settings.General.UseDarkTheme)
                     {
-                        // override colors one time
+                        // override colors one time if the user didn't change them
 
-                        var c = Configuration.Settings.General.DarkThemeBackColor;
-                        var slightlyLighter = Color.FromArgb(Math.Min(byte.MaxValue, c.R + 10), Math.Min(byte.MaxValue, c.G + 10), Math.Min(byte.MaxValue, c.B + 10));
-                        Configuration.Settings.VideoControls.WaveformGridColor = slightlyLighter;
+                        if (Configuration.Settings.VideoControls.WaveformGridColor == defaultWaveformValues.WaveformGridColor)
+                        {
+                            var c = Configuration.Settings.General.DarkThemeBackColor;
+                            var slightlyLighter = Color.FromArgb(Math.Min(byte.MaxValue, c.R + 10), Math.Min(byte.MaxValue, c.G + 10), Math.Min(byte.MaxValue, c.B + 10));
+                            Configuration.Settings.VideoControls.WaveformGridColor = slightlyLighter;
+                        }
 
-                        Configuration.Settings.VideoControls.WaveformColor = Color.FromArgb(7, 65, 152);
-                        Configuration.Settings.VideoControls.WaveformSelectedColor = Color.FromArgb(150, 0, 0);
-                        Configuration.Settings.VideoControls.WaveformBackgroundColor = c;
+                        if (Configuration.Settings.VideoControls.WaveformColor == defaultWaveformValues.WaveformColor)
+                        {
+                            Configuration.Settings.VideoControls.WaveformColor = darkModeWaveformColor;
+                        }
 
-                        Configuration.Settings.Tools.ListViewSyntaxErrorColor = Color.FromArgb(185, 51, 0);
+                        if (Configuration.Settings.VideoControls.WaveformSelectedColor == defaultWaveformValues.WaveformSelectedColor)
+                        {
+                            Configuration.Settings.VideoControls.WaveformSelectedColor = darkModeWaveformSelectedColor;
+                        }
+
+                        if (Configuration.Settings.Tools.ListViewSyntaxErrorColor == defaultListViewSyntaxErrorColor)
+                        {
+                            Configuration.Settings.Tools.ListViewSyntaxErrorColor = darkModeListViewSyntaxErrorColor;
+                        }
                     }
 
                     Configuration.Settings.General.SubtitleBackgroundColor = Configuration.Settings.General.DarkThemeBackColor;
@@ -4804,8 +4822,22 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Configuration.Settings.General.SubtitleBackgroundColor = new TextBox().BackColor;
                     Configuration.Settings.General.SubtitleFontColor = DefaultForeColor;
-                    Configuration.Settings.VideoControls.WaveformColor = Color.FromArgb(255, 160, 240, 30);
-                    Configuration.Settings.VideoControls.WaveformSelectedColor = Color.FromArgb(255, 230, 0, 0);
+
+                    if (Configuration.Settings.VideoControls.WaveformColor == darkModeWaveformColor)
+                    {
+                        Configuration.Settings.VideoControls.WaveformColor = defaultWaveformValues.WaveformColor;
+                    }
+
+                    if (Configuration.Settings.VideoControls.WaveformSelectedColor == Color.FromArgb(150, 0, 0))
+                    {
+                        Configuration.Settings.VideoControls.WaveformSelectedColor = defaultWaveformValues.WaveformSelectedColor;
+                    }
+
+                    if (Configuration.Settings.Tools.ListViewSyntaxErrorColor == darkModeListViewSyntaxErrorColor)
+                    {
+                        Configuration.Settings.Tools.ListViewSyntaxErrorColor = defaultListViewSyntaxErrorColor;
+                    }
+
                     MessageBox.Show(Configuration.Settings.Language.Main.DarkThemeRestart);
                 }
             }
