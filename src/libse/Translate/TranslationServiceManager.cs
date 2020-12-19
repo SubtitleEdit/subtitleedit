@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
     {
         private static readonly Lazy<TranslationServiceManager> _instance = new Lazy<TranslationServiceManager>(() => new TranslationServiceManager());
 
-        public List<ITranslationService> TranslatorEngines { get; }  = new List<ITranslationService>();
+        public List<AbstractTranslationService> TranslatorEngines { get; }  = new List<AbstractTranslationService>();
      
 
         public static TranslationServiceManager Instance => _instance.Value;
@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
         }
 
 
-        public void AddTranslatorEngine(ITranslationService translationService)
+        public void AddTranslatorEngine(AbstractTranslationService translationService)
         {
             TranslatorEngines.Add(translationService);
         }

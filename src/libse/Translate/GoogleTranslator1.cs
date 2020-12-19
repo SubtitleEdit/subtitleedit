@@ -31,16 +31,16 @@ namespace Nikse.SubtitleEdit.Core.Translate
             return "https://translate.google.com/";
         }
 
-        public List<string> Translate(string sourceLanguage, string targetLanguage, List<Paragraph> paragraphs, StringBuilder log)
+        public List<string> Translate(string sourceLanguage, string targetLanguage, List<Paragraph> sourceParagraphs)
         {
 
                 string jsonResultString;
                 var input = new StringBuilder();
                 var formatList = new List<Formatting>();
-                for (var index = 0; index < paragraphs.Count; index++)
+                for (var index = 0; index < sourceParagraphs.Count; index++)
                 {
 
-                    var p = paragraphs[index];
+                    var p = sourceParagraphs[index];
                     var f = new Formatting();
                     formatList.Add(f);
                     if (input.Length > 0)
@@ -76,19 +76,19 @@ namespace Nikse.SubtitleEdit.Core.Translate
 
                 //brummochse: I do not really understand under which circumstances the following code is executed and if it is still required or maybe obsolete?
 
-                if (resultList.Count > paragraphs.Count)
+                if (resultList.Count > sourceParagraphs.Count)
                 {
                     var trimmedList = resultList.Where(p => !string.IsNullOrEmpty(p)).ToList();
-                    if (trimmedList.Count == paragraphs.Count)
+                    if (trimmedList.Count == sourceParagraphs.Count)
                     {
                         return trimmedList;
                     }
                 }
 
-                if (resultList.Count < paragraphs.Count)
+                if (resultList.Count < sourceParagraphs.Count)
                 {
-                    var splitList = SplitMergedLines(resultList, paragraphs);
-                    if (splitList.Count == paragraphs.Count)
+                    var splitList = SplitMergedLines(resultList, sourceParagraphs);
+                    if (splitList.Count == sourceParagraphs.Count)
                     {
                         return splitList;
                     }

@@ -4,11 +4,11 @@ using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.Translate
 {
-    public class GoogleTranslationService : ITranslationService
+    public class GoogleTranslationService : AbstractTranslationService
     {
 
         private ITranslationStrategy _translationStrategy = null;
-        public string GetName()
+        public override string GetName()
         {
             return "Google Translate";
         }
@@ -18,35 +18,34 @@ namespace Nikse.SubtitleEdit.Core.Translate
             return GetName();
         }
 
-        public int GetMaxTextSize()
+        public override int GetMaxTextSize()
         {
             return _translationStrategy.GetMaxTextSize();
         }
 
-        public int GetMaximumRequestArraySize()
+        public override int GetMaximumRequestArraySize()
         {
             return _translationStrategy.GetMaximumRequestArraySize();
         }
 
 
-        public List<TranslationPair> GetSupportedSourceLanguages()
+        public override List<TranslationPair> GetSupportedSourceLanguages()
         {
             return this.GetTranslationPairs();
         }
 
-        public List<TranslationPair> GetSupportedTargetLanguages()
+        public override List<TranslationPair> GetSupportedTargetLanguages()
         {
             return this.GetTranslationPairs();
         }
 
-        public List<string> Init()
+        protected override bool DoInit()
         {
-            List<string> messages = new List<string>();
             var language = Configuration.Settings.Language.GoogleTranslate;
             if (string.IsNullOrEmpty(Configuration.Settings.Tools.GoogleApiV2Key))
             {
-                messages.Add(language.GoogleApiKeyNeeded);
-                messages.Add(language.GoogleNoApiKeyWarning);
+                OnMessageLogEvent(language.GoogleApiKeyNeeded);
+                OnMessageLogEvent(language.GoogleNoApiKeyWarning);
 
                 _translationStrategy = new GoogleTranslator1();
             }
@@ -55,17 +54,17 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 _translationStrategy = new GoogleTranslator2(Configuration.Settings.Tools.GoogleApiV2Key);
             }
 
-            return messages;
+            return true;
         }
 
-        public  string GetUrl()
+        public override string GetUrl()
         {
             return "https://translate.google.com/";
         }
 
-        public  List<string> Translate(string sourceLanguage, string targetLanguage, List<Paragraph> paragraphs, StringBuilder log)
+        protected override List<string> DoTranslate(string sourceLanguage, string targetLanguage, List<Paragraph> sourceParagraphs)
         {
-            return _translationStrategy.Translate(sourceLanguage, targetLanguage, paragraphs, log);
+            return _translationStrategy.Translate(sourceLanguage, targetLanguage, sourceParagraphs);
         }
 
         private List<TranslationPair> GetTranslationPairs()
