@@ -43,6 +43,8 @@
    * Fix crash on invalid time codes from ts files
    * Fix resolution when exporting dvbsub - thx Janusz
    * Fix translate with weird new lines - thx MarianTum
+   * Fix crash in .ASS preview - thx LeonCheung
+   * Fix crash in OCR image pre-processing - thx VoodooFX
 
 
 3.5.18 (9th November 2020)
