@@ -56,7 +56,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             Width = inputBitmap.Width;
             Height = inputBitmap.Height;
-
+            bool createdNewBitmap = false;
             if (inputBitmap.PixelFormat != PixelFormat.Format32bppArgb)
             {
                 var newBitmap = new Bitmap(inputBitmap.Width, inputBitmap.Height, PixelFormat.Format32bppArgb);
@@ -64,14 +64,18 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     gr.DrawImage(inputBitmap, 0, 0);
                 }
-                inputBitmap.Dispose();
                 inputBitmap = newBitmap;
+                createdNewBitmap = true;
             }
 
             var bitmapData = inputBitmap.LockBits(new Rectangle(0, 0, Width, Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
             _bitmapData = new byte[bitmapData.Stride * Height];
             Marshal.Copy(bitmapData.Scan0, _bitmapData, 0, _bitmapData.Length);
             inputBitmap.UnlockBits(bitmapData);
+            if (createdNewBitmap)
+            {
+                inputBitmap.Dispose();
+            }
         }
 
         public NikseBitmap(NikseBitmap input)
