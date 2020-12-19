@@ -9,10 +9,10 @@ using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.Translate
 {
-    class NikseDkTranslationService : ITranslationService
+    class NikseDkTranslationService : AbstractTranslationService
     {
      
-        public List<TranslationPair> GetSupportedSourceLanguages()
+        public override List<TranslationPair> GetSupportedSourceLanguages()
         {
             return new List<TranslationPair>
             {
@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
             };
         }
 
-        public List<TranslationPair> GetSupportedTargetLanguages()
+        public override List<TranslationPair> GetSupportedTargetLanguages()
         {
             return new List<TranslationPair>
             {
@@ -28,22 +28,22 @@ namespace Nikse.SubtitleEdit.Core.Translate
             };
         }
 
-        public string GetName()
+        public override string GetName()
         {
             return "nikse.dk Multi Translator";
         }
 
-        public string GetUrl()
+        public override string GetUrl()
         {
             return "https://www.nikse.dk/MultiTranslator/online";
         }
 
-        public List<string> Translate(string sourceLanguage, string targetLanguage, List<Paragraph> paragraphs, StringBuilder log)
+        protected override List<string> DoTranslate(string sourceLanguage, string targetLanguage, List<Paragraph> sourceParagraphs)
         {
             List<string> targetTexts = new List<string>();
 
             var sb = new StringBuilder();
-            foreach (var p in paragraphs)
+            foreach (var p in sourceParagraphs)
             {
                 var s = p.Text.Replace(Environment.NewLine, "<br/>");
                 s = "<p>" + s + "</p>";
@@ -56,9 +56,9 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 targetTexts.Add(s.Trim());
             }
 
-            if (paragraphs.Count != targetTexts.Count)
+            if (sourceParagraphs.Count != targetTexts.Count)
             {
-                throw new Exception("target paragraphs count (" + targetTexts + ") does not equal source paragraphs count (" + paragraphs + ").");
+                throw new Exception("target paragraphs count (" + targetTexts + ") does not equal source paragraphs count (" + sourceParagraphs + ").");
             }
             return targetTexts;
         }
@@ -85,18 +85,18 @@ namespace Nikse.SubtitleEdit.Core.Translate
             }
         }
 
-        public int GetMaxTextSize() {
+        public override int GetMaxTextSize() {
             return 9000; //brummochse: found this value in the old source code.. is it correct?
         }
 
-        public int GetMaximumRequestArraySize()
+        public override int GetMaximumRequestArraySize()
         {
             return 1000; //brummochse: actually, when I understand the service correctly, no limit is required because it is only limited by text size
         }
 
-        public List<string> Init()
+        protected override bool DoInit()
         {
-            return new List<string>();
+            return true;
         }
 
         public override string ToString()

@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Subtitle _subtitle;
         private bool _breakTranslation;
         private const string SplitterString = "+-+";
-        private ITranslationService _translationService;
+        private AbstractTranslationService _translationService;
 
         private enum FormattingType
         {
@@ -113,13 +113,23 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void InitTranslationServices()
         {
-            this.comboBoxTranslationServices.Items.AddRange(TranslationServiceManager.Instance.TranslatorEngines.ToArray());
+            var translationServices = TranslationServiceManager.Instance.TranslatorEngines;
+            foreach (var translationService in translationServices)
+            {
+                translationService.MessageLogEvent += delegate(object sender, string message)
+                {
+                    MessageBox.Show(message,translationService.GetName());
+                };
+                if (translationService.Init())
+                {
+                    this.comboBoxTranslationServices.Items.Add(translationService);
+                }
+            }
         }
 
         private void ComboBoxTranslatorEngineChanged(object sender, EventArgs e)
         {
-            _translationService = (ITranslationService)comboBoxTranslationServices.SelectedItem;
-            _translationService.Init();
+            _translationService = (AbstractTranslationService)comboBoxTranslationServices.SelectedItem;
             ReadLanguageSettings();
             SetupLanguageSettings();
         }
@@ -229,8 +239,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-    
-
         private void buttonTranslate_Click(object sender, EventArgs e)
         {
             if (buttonTranslate.Text == Configuration.Settings.Language.General.Cancel)
@@ -279,7 +287,7 @@ namespace Nikse.SubtitleEdit.Forms
             catch (TranslationException translationException)
             {
                 MessageBox.Show(translationException.Message + Environment.NewLine +
-                                translationException.InnerException.Source + ": " + translationException.InnerException.Message);
+                                translationException.InnerException?.Source + ": " + translationException.InnerException?.Message);
             }
             finally
             {

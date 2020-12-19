@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
 {
     public interface ITranslationProcessor
     {
-        List<string> Translate(ITranslationService translationService,
+        List<string> Translate(AbstractTranslationService translationService,
             string sourceLanguageIsoCode,
             string targetLanguageIsoCode,
             List<Paragraph> sourceParagraphs,
@@ -47,17 +47,16 @@ namespace Nikse.SubtitleEdit.Core.Translate
 
         protected abstract Dictionary<int,string> GetTargetParagraphs(List<T> sourceTranslationUnits, List<string> targetTexts);
 
-        public List<string> Translate(ITranslationService translationService, string sourceLanguageIsoCode, string targetLanguageIsoCode, List<Paragraph> sourceParagraphs, TranslationProcessCancelStatus processCancelStatus)
+        public List<string> Translate(AbstractTranslationService translationService, string sourceLanguageIsoCode, string targetLanguageIsoCode, List<Paragraph> sourceParagraphs, TranslationProcessCancelStatus processCancelStatus)
         {
             IEnumerable<T> translationBaseUnits =ConstructTranslationBaseUnits(sourceParagraphs);
             var translationChunks = BuildTranslationChunks(translationBaseUnits, translationService);
-            var log = new StringBuilder();
 
             Dictionary<int,string> targetParagraphs=new Dictionary<int, string>();
 
             foreach (TranslationChunk translationChunk in translationChunks)
             {
-                List<string> result = translationService.Translate(sourceLanguageIsoCode, targetLanguageIsoCode, translationChunk.TranslationUnits.ConvertAll(x=>new Paragraph() { Text = x.Text }), log);
+                List<string> result = translationService.Translate(sourceLanguageIsoCode, targetLanguageIsoCode, translationChunk.TranslationUnits.ConvertAll(x=>new Paragraph() { Text = x.Text }));
                 Dictionary<int, string> newTargetParagraphs=GetTargetParagraphs(translationChunk.TranslationUnits, result);
                 foreach (KeyValuePair<int, string> newTargetParagraph in newTargetParagraphs)
                 {
@@ -71,7 +70,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
             return targetParagraphs.Values.ToList();
         }
 
-        private IEnumerable<TranslationChunk> BuildTranslationChunks(IEnumerable<T> translationUnits, ITranslationService translationService)
+        private IEnumerable<TranslationChunk> BuildTranslationChunks(IEnumerable<T> translationUnits, AbstractTranslationService translationService)
         {
             int maxTextSize = translationService.GetMaxTextSize();
             int maximumRequestArrayLength = translationService.GetMaximumRequestArraySize();

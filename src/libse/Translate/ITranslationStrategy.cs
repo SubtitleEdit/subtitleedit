@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
     {
 
         string GetUrl();
-        List<string> Translate(string sourceLanguage, string targetLanguage, List<Paragraph> paragraphs, StringBuilder log);
+        List<string> Translate(string sourceLanguage, string targetLanguage, List<Paragraph> sourceParagraphs);
         int GetMaxTextSize();
         int GetMaximumRequestArraySize();
 

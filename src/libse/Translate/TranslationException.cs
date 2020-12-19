@@ -17,5 +17,10 @@ namespace Nikse.SubtitleEdit.Core.Translate
         {
 
         }
+
+        public TranslationException(string message) : base(message)
+        {
+
+        }
     }
 }

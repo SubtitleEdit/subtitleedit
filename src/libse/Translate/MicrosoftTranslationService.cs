@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
     /// <summary>
     /// https://docs.microsoft.com/en-us/azure/cognitive-services/translator/reference/v3-0-translate
     /// </summary>
-    public class MicrosoftTranslationService : ITranslationService
+    public class MicrosoftTranslationService : AbstractTranslationService
     {
         public const string SignUpUrl = "https://docs.microsoft.com/en-us/azure/cognitive-services/translator/translator-text-how-to-signup";
         public const string GoToUrl = "https://www.bing.com/translator";
@@ -28,15 +28,16 @@ namespace Nikse.SubtitleEdit.Core.Translate
             _category = category; // Optional parameter - used to get translations from a customized system built with Custom Translator
         }
 
-        public List<string> Init()
+        protected override bool DoInit()
         {
-            List<string> messages = new List<string>();
             if (string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorApiKey))
             {
                 var language = Configuration.Settings.Language.GoogleTranslate;
-                messages.Add(language.MsClientSecretNeeded);
+                OnMessageLogEvent(language.MsClientSecretNeeded);
+                return false;
             }
-            return messages;
+
+            return true;
         }
 
         private static string GetAccessToken(string apiKey, string tokenEndpoint)
@@ -90,17 +91,17 @@ namespace Nikse.SubtitleEdit.Core.Translate
             return list;
         }
 
-        public string GetName()
+        public override string GetName()
         {
             return "Microsoft translate";
         }
 
-        public string GetUrl()
+        public override string GetUrl()
         {
             return GoToUrl;
         }
 
-        public List<string> Translate(string sourceLanguage, string targetLanguage, List<Paragraph> paragraphs, StringBuilder log)
+        protected override List<string> DoTranslate(string sourceLanguage, string targetLanguage, List<Paragraph> sourceParagraphs)
         {
             var url = string.Format(TranslateUrl, sourceLanguage, targetLanguage);
             if (!string.IsNullOrEmpty(_category))
@@ -120,9 +121,9 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 jsonBuilder.Append("[");
                 bool isFirst = true;
                 var formatList = new List<Formatting>();
-                for (var index = 0; index < paragraphs.Count; index++)
+                for (var index = 0; index < sourceParagraphs.Count; index++)
                 {
-                    var p = paragraphs[index];
+                    var p = sourceParagraphs[index];
                     if (!isFirst)
                     {
                         jsonBuilder.Append(",");
@@ -185,22 +186,22 @@ namespace Nikse.SubtitleEdit.Core.Translate
             return results;
         }
 
-        public List<TranslationPair> GetSupportedSourceLanguages()
+        public override List<TranslationPair> GetSupportedSourceLanguages()
         {
             return this.GetTranslationPairs();
         }
 
-        public List<TranslationPair> GetSupportedTargetLanguages()
+        public override List<TranslationPair> GetSupportedTargetLanguages()
         {
             return this.GetTranslationPairs();
         }
 
-        public int GetMaxTextSize()
+        public override int GetMaxTextSize()
         {
             return 1000;
         }
 
-        public int GetMaximumRequestArraySize()
+        public override int GetMaximumRequestArraySize()
         {
             return 25;
         }

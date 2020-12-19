@@ -100,12 +100,12 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonGoogle.Text = string.Empty;
 
                 // google translate
-                buttonGoogle.Text = _googleTranslationService.Translate(from, to, new List<Paragraph> { new Paragraph { Text = textBoxSourceText.Text } }, new StringBuilder()).FirstOrDefault();
+                buttonGoogle.Text = _googleTranslationService.Translate(from, to, new List<Paragraph> { new Paragraph { Text = textBoxSourceText.Text } }).FirstOrDefault();
 
                 // ms translator
                 if (!string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorApiKey) && !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint))
                 {
-                    var result = _microsoftTranslationService.Translate(from, to, new List<Paragraph> { new Paragraph { Text = textBoxSourceText.Text } }, new StringBuilder());
+                    var result = _microsoftTranslationService.Translate(from, to, new List<Paragraph> { new Paragraph { Text = textBoxSourceText.Text } });
                     buttonMicrosoft.Text = result[0];
                 }
             }

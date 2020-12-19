@@ -35,16 +35,16 @@ namespace Nikse.SubtitleEdit.Core.Translate
             return "https://translate.google.com/";
         }
 
-        public List<string> Translate(string sourceLanguage, string targetLanguage, List<Paragraph> paragraphs, StringBuilder log)
+        public List<string> Translate(string sourceLanguage, string targetLanguage, List<Paragraph> sourceParagraphs)
         {
             var baseUrl = "https://translation.googleapis.com/language/translate/v2";
             var format = "text";
             var input = new StringBuilder();
             var formatList = new List<Formatting>();
-            for (var index = 0; index < paragraphs.Count; index++)
+            for (var index = 0; index < sourceParagraphs.Count; index++)
             {
 
-                var p = paragraphs[index];
+                var p = sourceParagraphs[index];
                 var f = new Formatting();
                 formatList.Add(f);
                 if (input.Length > 0)
