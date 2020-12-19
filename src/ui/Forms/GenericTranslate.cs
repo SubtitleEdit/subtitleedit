@@ -46,24 +46,24 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(this);
 
             Text = Configuration.Settings.Language.GoogleTranslate.Title;
-            labelFrom.Text = Configuration.Settings.Language.GoogleTranslate.From;
-            labelTo.Text = Configuration.Settings.Language.GoogleTranslate.To;
+            labelSource.Text = Configuration.Settings.Language.GoogleTranslate.From;
+            labelTarget.Text = Configuration.Settings.Language.GoogleTranslate.To;
             buttonTranslate.Text = Configuration.Settings.Language.GoogleTranslate.Translate;
             labelPleaseWait.Text = Configuration.Settings.Language.GoogleTranslate.PleaseWait;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             labelApiKeyNotFound.Text = string.Empty;
 
-            subtitleListViewFrom.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
-            subtitleListViewTo.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
-            subtitleListViewFrom.HideColumn(SubtitleListView.SubtitleColumn.CharactersPerSeconds);
-            subtitleListViewFrom.HideColumn(SubtitleListView.SubtitleColumn.WordsPerMinute);
-            subtitleListViewTo.HideColumn(SubtitleListView.SubtitleColumn.CharactersPerSeconds);
-            subtitleListViewTo.HideColumn(SubtitleListView.SubtitleColumn.WordsPerMinute);
-            UiUtil.InitializeSubtitleFont(subtitleListViewFrom);
-            UiUtil.InitializeSubtitleFont(subtitleListViewTo);
-            subtitleListViewFrom.AutoSizeColumns();
-            subtitleListViewFrom.AutoSizeColumns();
+            subtitleListViewSource.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
+            subtitleListViewTarget.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
+            subtitleListViewSource.HideColumn(SubtitleListView.SubtitleColumn.CharactersPerSeconds);
+            subtitleListViewSource.HideColumn(SubtitleListView.SubtitleColumn.WordsPerMinute);
+            subtitleListViewTarget.HideColumn(SubtitleListView.SubtitleColumn.CharactersPerSeconds);
+            subtitleListViewTarget.HideColumn(SubtitleListView.SubtitleColumn.WordsPerMinute);
+            UiUtil.InitializeSubtitleFont(subtitleListViewSource);
+            UiUtil.InitializeSubtitleFont(subtitleListViewTarget);
+            subtitleListViewSource.AutoSizeColumns();
+            subtitleListViewSource.AutoSizeColumns();
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
@@ -84,7 +84,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (target != null)
             {
                 TranslatedSubtitle = new Subtitle(target);
-                subtitleListViewTo.Fill(TranslatedSubtitle);
+                subtitleListViewTarget.Fill(TranslatedSubtitle);
             }
             else
             {
@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Forms
             InitTranslationServices();
             InitParagraphHandlingStrategies();
 
-            subtitleListViewFrom.Fill(subtitle);
+            subtitleListViewSource.Fill(subtitle);
             Translate_Resize(null, null);
 
             _formattingTypes = new FormattingType[_subtitle.Paragraphs.Count];
@@ -141,7 +141,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void ComboBoxTranslatorEngineChanged(object sender, EventArgs e)
+        private void ComboBoxTranslationServiceChanged(object sender, EventArgs e)
         {
             _translationService = (AbstractTranslationService)comboBoxTranslationServices.SelectedItem;
             ReadLanguageSettings();
@@ -152,7 +152,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void EvaluateTranslateButtonStatus()
         {
-            buttonTranslate.Enabled = comboBoxFrom.SelectedItem != null && comboBoxTo.SelectedItem != null && _translationService!=null;
+            buttonTranslate.Enabled = comboBoxSource.SelectedItem != null && comboBoxTarget.SelectedItem != null && _translationService!=null;
         }
 
         private void ComboBoxLanguageChanged(object sender, EventArgs e)
@@ -162,44 +162,44 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetupLanguageSettings()
         {
-            FillComboWithLanguages(comboBoxFrom, _translationService.GetSupportedSourceLanguages());
-            SelectLanguageCode(comboBoxFrom, _sourceLanguageIsoCode);
+            FillComboWithLanguages(comboBoxSource, _translationService.GetSupportedSourceLanguages());
+            SelectLanguageCode(comboBoxSource, _sourceLanguageIsoCode);
 
-            FillComboWithLanguages(comboBoxTo, _translationService.GetSupportedTargetLanguages());
-            SelectLanguageCode(comboBoxTo, _targetLanguageIsoCode);
+            FillComboWithLanguages(comboBoxTarget, _translationService.GetSupportedTargetLanguages());
+            SelectLanguageCode(comboBoxTarget, _targetLanguageIsoCode);
         }
 
         private void ReadLanguageSettings()
         {
-            if (comboBoxTo.SelectedItem != null)
+            if (comboBoxTarget.SelectedItem != null)
             {
-                _targetLanguageIsoCode = ((TranslationPair)comboBoxTo.SelectedItem).Code;
+                _targetLanguageIsoCode = ((TranslationPair)comboBoxTarget.SelectedItem).Code;
             }
 
-            if (comboBoxFrom.SelectedItem != null)
+            if (comboBoxSource.SelectedItem != null)
             {
-                _sourceLanguageIsoCode = ((TranslationPair)comboBoxFrom.SelectedItem).Code;
+                _sourceLanguageIsoCode = ((TranslationPair)comboBoxSource.SelectedItem).Code;
             }
         }
 
         public static string EvaluateDefaultSourceLanguageCode(Encoding encoding,Subtitle subtitle)
         {
-            string defaultFromLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(encoding); // Guess language via encoding
-            if (string.IsNullOrEmpty(defaultFromLanguage))
+            string defaultSourceLanguageCode = LanguageAutoDetect.AutoDetectGoogleLanguage(encoding); // Guess language via encoding
+            if (string.IsNullOrEmpty(defaultSourceLanguageCode))
             {
-                defaultFromLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle); // Guess language based on subtitle contents
+                defaultSourceLanguageCode = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle); // Guess language based on subtitle contents
             }
 
             //convert new Hebrew code (he) to old Hebrew code (iw)  http://www.mathguide.de/info/tools/languagecode.html
             //brummochse: why get it converted to the old code?
-            if (defaultFromLanguage == "he")
+            if (defaultSourceLanguageCode == "he")
             {
-                defaultFromLanguage = "iw";
+                defaultSourceLanguageCode = "iw";
             }
 
-            return defaultFromLanguage;
+            return defaultSourceLanguageCode;
         }
-        public static string EvaluateDefaultTargetLanguageCode(string defaultFromLanguage)
+        public static string EvaluateDefaultTargetLanguageCode(string defaultSourceLanguage)
         {
             var installedLanguages = new List<InputLanguage>();
             foreach (InputLanguage language in InputLanguage.InstalledInputLanguages)
@@ -208,7 +208,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             string uiCultureTargetLanguage = Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage;
-            if (uiCultureTargetLanguage == defaultFromLanguage)
+            if (uiCultureTargetLanguage == defaultSourceLanguage)
             {
                 foreach (string s in Utilities.GetDictionaryLanguages())
                 {
@@ -216,7 +216,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (temp.Length > 4)
                     {
                         temp = temp.Substring(temp.Length - 5, 2).ToLowerInvariant();
-                        if (temp != defaultFromLanguage && installedLanguages.Any(p => p.Culture.TwoLetterISOLanguageName.Contains(temp)))
+                        if (temp != defaultSourceLanguage && installedLanguages.Any(p => p.Culture.TwoLetterISOLanguageName.Contains(temp)))
                         {
                             uiCultureTargetLanguage = temp;
                             break;
@@ -225,11 +225,11 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            if (uiCultureTargetLanguage == defaultFromLanguage)
+            if (uiCultureTargetLanguage == defaultSourceLanguage)
             {
                 foreach (InputLanguage language in installedLanguages)
                 {
-                    if (language.Culture.TwoLetterISOLanguageName != defaultFromLanguage)
+                    if (language.Culture.TwoLetterISOLanguageName != defaultSourceLanguage)
                     {
                         uiCultureTargetLanguage = language.Culture.TwoLetterISOLanguageName;
                         break;
@@ -237,12 +237,12 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            if (uiCultureTargetLanguage == defaultFromLanguage && defaultFromLanguage == "en")
+            if (uiCultureTargetLanguage == defaultSourceLanguage && defaultSourceLanguage == "en")
             {
                 uiCultureTargetLanguage = "es";
             }
 
-            if (uiCultureTargetLanguage == defaultFromLanguage)
+            if (uiCultureTargetLanguage == defaultSourceLanguage)
             {
                 uiCultureTargetLanguage = "en";
             }
@@ -297,7 +297,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelPleaseWait.Visible = true;
             try
             {
-                var selectedItems = subtitleListViewFrom.SelectedItems;
+                var selectedItems = subtitleListViewSource.SelectedItems;
                 var startIndex = selectedItems.Count <= 0 ? 0 : selectedItems[0].Index;
                 progressBar1.Minimum = startIndex;
                 var selectedParagraphs=_subtitle.Paragraphs.GetRange(startIndex, _subtitle.Paragraphs.Count - startIndex);
@@ -341,10 +341,10 @@ namespace Nikse.SubtitleEdit.Forms
                 var cleanText = CleanText(paragraphTargetText, lastIndex);
                 TranslatedSubtitle.Paragraphs[lastIndex].Text = cleanText;
             }
-            subtitleListViewTo.BeginUpdate();
-            subtitleListViewTo.Fill(TranslatedSubtitle);
-            subtitleListViewTo.SelectIndexAndEnsureVisible(lastIndex);
-            subtitleListViewTo.EndUpdate();
+            subtitleListViewTarget.BeginUpdate();
+            subtitleListViewTarget.Fill(TranslatedSubtitle);
+            subtitleListViewTarget.SelectIndexAndEnsureVisible(lastIndex);
+            subtitleListViewTarget.EndUpdate();
         }
 
         private string CleanText(string s, int index)
@@ -429,7 +429,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonOkClick(object sender, EventArgs e)
         {
-            DialogResult = subtitleListViewTo.Items.Count > 0 ? DialogResult.OK : DialogResult.Cancel;
+            DialogResult = subtitleListViewTarget.Items.Count > 0 ? DialogResult.OK : DialogResult.Cancel;
         }
 
         private void FormTranslate_KeyDown(object sender, KeyEventArgs e)
@@ -451,24 +451,24 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void Translate_Resize(object sender, EventArgs e)
         {
-            int width = (Width / 2) - (subtitleListViewFrom.Left * 3) + 19;
-            subtitleListViewFrom.Width = width;
-            subtitleListViewTo.Width = width;
+            int width = (Width / 2) - (subtitleListViewSource.Left * 3) + 19;
+            subtitleListViewSource.Width = width;
+            subtitleListViewTarget.Width = width;
 
-            int height = Height - (subtitleListViewFrom.Top + buttonTranslate.Height + 60);
-            subtitleListViewFrom.Height = height;
-            subtitleListViewTo.Height = height;
+            int height = Height - (subtitleListViewSource.Top + buttonTranslate.Height + 60);
+            subtitleListViewSource.Height = height;
+            subtitleListViewTarget.Height = height;
 
-            comboBoxFrom.Left = subtitleListViewFrom.Left + (subtitleListViewFrom.Width - comboBoxFrom.Width);
-            labelFrom.Left = comboBoxFrom.Left - 5 - labelFrom.Width;
+            comboBoxSource.Left = subtitleListViewSource.Left + (subtitleListViewSource.Width - comboBoxSource.Width);
+            labelSource.Left = comboBoxSource.Left - 5 - labelSource.Width;
 
-            subtitleListViewTo.Left = width + (subtitleListViewFrom.Left * 2);
-            labelTo.Left = subtitleListViewTo.Left;
-            comboBoxTo.Left = labelTo.Left + labelTo.Width + 5;
-            buttonTranslate.Left = comboBoxTo.Left + comboBoxTo.Width + 9;
+            subtitleListViewTarget.Left = width + (subtitleListViewSource.Left * 2);
+            labelTarget.Left = subtitleListViewTarget.Left;
+            comboBoxTarget.Left = labelTarget.Left + labelTarget.Width + 5;
+            buttonTranslate.Left = comboBoxTarget.Left + comboBoxTarget.Width + 9;
             labelPleaseWait.Left = buttonTranslate.Left + buttonTranslate.Width + 9;
             progressBar1.Left = labelPleaseWait.Left;
-            progressBar1.Width = subtitleListViewTo.Width - (progressBar1.Left - subtitleListViewTo.Left);
+            progressBar1.Width = subtitleListViewTarget.Width - (progressBar1.Left - subtitleListViewTarget.Left);
         }
 
         private void SyncListViews(ListView listViewSelected, SubtitleListView listViewOther)
@@ -488,14 +488,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void subtitleListViewFrom_DoubleClick(object sender, EventArgs e)
+        private void subtitleListViewSource_DoubleClick(object sender, EventArgs e)
         {
-            SyncListViews(subtitleListViewFrom, subtitleListViewTo);
+            SyncListViews(subtitleListViewSource, subtitleListViewTarget);
         }
 
-        private void subtitleListViewTo_DoubleClick(object sender, EventArgs e)
+        private void subtitleListViewTarget_DoubleClick(object sender, EventArgs e)
         {
-            SyncListViews(subtitleListViewTo, subtitleListViewFrom);
+            SyncListViews(subtitleListViewTarget, subtitleListViewSource);
         }
 
         public string GetFileNameWithTargetLanguage(string oldFileName, string videoFileName, Subtitle oldSubtitle, SubtitleFormat subtitleFormat)
