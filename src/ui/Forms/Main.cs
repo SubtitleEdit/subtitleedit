@@ -11009,6 +11009,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             labelStartTimeWarning.Text = startTimeWarning;
             labelDurationWarning.Text = durationWarning;
+
+            if (!string.IsNullOrEmpty(startTimeWarning) && !string.IsNullOrEmpty(durationWarning))
+            {
+                labelDurationWarning.Left = labelStartTimeWarning.Right + 2;
+            }
         }
 
         private double _durationMsInitialValue = 0;
