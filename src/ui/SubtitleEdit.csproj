@@ -1874,6 +1874,7 @@
     <Content Include="Icons\VideoToggle.png" />
     <Content Include="Icons\VisualSync.png" />
     <Content Include="Icons\WaveformToggle.png" />
+    <None Include="Resources\tick.png" />
     <None Include="Resources\bookmark22.png" />
     <None Include="Resources\pictureBoxFS.Image.png" />
     <None Include="Resources\pictureBoxFSDown.Image.png" />
