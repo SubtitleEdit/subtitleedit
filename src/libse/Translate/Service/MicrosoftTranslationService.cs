@@ -20,21 +20,35 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
         private const string TranslateUrl = "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from={0}&to={1}";
         private const string SecurityHeaderName = "Ocp-Apim-Subscription-Key";
         private static List<TranslationPair> _translationPairs;
-        private readonly string _accessToken;
+        private string _accessToken;
         private readonly string _category;
+        private readonly string _apiKey;
+        private readonly string _tokenEndpoint;
 
         public MicrosoftTranslationService(string apiKey, string tokenEndpoint, string category)
         {
-            _accessToken = GetAccessToken(apiKey, tokenEndpoint);
+            _apiKey = apiKey;
+            _tokenEndpoint = tokenEndpoint;
             _category = category; // Optional parameter - used to get translations from a customized system built with Custom Translator
         }
 
         protected override bool DoInitialize()
         {
-            if (string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorApiKey))
+
+            if (string.IsNullOrEmpty(_apiKey))
             {
                 var language = Configuration.Settings.Language.GoogleTranslate;
                 OnMessageLogEvent(language.MsClientSecretNeeded);
+                return false;
+            }
+
+            try
+            {
+                _accessToken = GetAccessToken(_apiKey, _tokenEndpoint);
+            }
+            catch (Exception)
+            {
+                OnMessageLogEvent("Can't get Access Token");
                 return false;
             }
 
