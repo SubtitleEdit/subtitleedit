@@ -135,8 +135,6 @@ namespace Nikse.SubtitleEdit.Logic
                     cms.BackColor = BackColor;
                     cms.ForeColor = ForeColor;
                     cms.Renderer = new MyRenderer();
-                    cms.ShowImageMargin = false;
-                    cms.ShowCheckMargin = false;
                     foreach (Control inner in cms.Controls)
                     {
                         SetDarkTheme(inner, iterations - 1);
@@ -188,6 +186,12 @@ namespace Nikse.SubtitleEdit.Logic
                 var toolStripMenuItems = GetSubControls<ToolStripMenuItem>(form);
                 foreach (ToolStripMenuItem c in toolStripMenuItems)
                 {
+                    if (c.GetCurrentParent() is ToolStripDropDownMenu p)
+                    {
+                        p.BackColor = BackColor;
+                        p.Renderer = new MyRenderer();
+                    }
+
                     c.BackColor = BackColor;
                     c.ForeColor = ForeColor;
                 }
@@ -195,13 +199,6 @@ namespace Nikse.SubtitleEdit.Logic
                 var toolStripSeparators = GetSubControls<ToolStripSeparator>(form);
                 foreach (ToolStripSeparator c in toolStripSeparators)
                 {
-                    if (c.GetCurrentParent() is ToolStripDropDownMenu p)
-                    {
-                        p.BackColor = BackColor;
-                        p.ShowCheckMargin = false;
-                        p.ShowImageMargin = false;
-                    }
-
                     c.BackColor = BackColor;
                     c.ForeColor = ForeColor;
                 }
@@ -280,8 +277,6 @@ namespace Nikse.SubtitleEdit.Logic
                 lv.OwnerDraw = true;
                 lv.DrawColumnHeader += lv_DrawColumnHeader;
                 lv.GridLines = Configuration.Settings.General.DarkThemeShowListViewGridLines;
-                lv.BackColor = BackColor;
-                lv.ForeColor = ForeColor;
             }
         }
 
@@ -329,6 +324,39 @@ namespace Nikse.SubtitleEdit.Logic
                 if (!(e.ToolStrip is ToolStrip))
                 {
                     base.OnRenderToolStripBorder(e);
+                }
+            }
+
+            protected override void OnRenderImageMargin(ToolStripRenderEventArgs e)
+            {
+                var g = e.Graphics;
+                var rect = new Rectangle(0, 0, e.ToolStrip.Width - 1, e.ToolStrip.Height - 1);
+                using (var p = new Pen(Color.FromArgb(81, 81, 81)))
+                {
+                    g.DrawRectangle(p, rect);
+                }
+            }
+
+            protected override void OnRenderItemCheck(ToolStripItemImageRenderEventArgs e)
+            {
+                var g = e.Graphics;
+                var rect = new Rectangle(e.ImageRectangle.Left - 2, e.ImageRectangle.Top - 2,
+                    e.ImageRectangle.Width + 4, e.ImageRectangle.Height + 4);
+
+                using (var b = new SolidBrush(Color.FromArgb(81, 81, 81)))
+                {
+                    g.FillRectangle(b, rect);
+                }
+
+                using (var p = new Pen(Color.FromArgb(104, 151, 187)))
+                {
+                    var modRect = new Rectangle(rect.Left, rect.Top, rect.Width - 1, rect.Height - 1);
+                    g.DrawRectangle(p, modRect);
+                }
+
+                if (e.Item.ImageIndex == -1 && string.IsNullOrEmpty(e.Item.ImageKey) && e.Item.Image == null)
+                {
+                    g.DrawImageUnscaled(Properties.Resources.tick, new Point(e.ImageRectangle.Left, e.ImageRectangle.Top));
                 }
             }
         }

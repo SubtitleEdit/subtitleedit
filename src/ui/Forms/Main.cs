@@ -7516,6 +7516,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 e.Cancel = true;
                 var cm = new ContextMenuStrip();
+                UiUtil.FixFonts(cm);
                 var contextMenuStripLvHeaderResizeToolStripMenuItem = new ToolStripMenuItem(Configuration.Settings.Language.Main.Menu.ContextMenu.SizeAllColumnsToFit);
                 contextMenuStripLvHeaderResizeToolStripMenuItem.Click += (sender2, e2) => { SubtitleListview1.AutoSizeColumns(); };
                 cm.Items.Add(contextMenuStripLvHeaderResizeToolStripMenuItem);
