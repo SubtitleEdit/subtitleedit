@@ -54,19 +54,8 @@ namespace Nikse.SubtitleEdit.Logic
             return menus.Cast<T>().ToList();
         }
 
-        private static bool _isConfigUpdated;
-
         public static void SetDarkTheme(Control ctrl, int iterations = 5)
         {
-            if (!_isConfigUpdated)
-            {
-                Configuration.Settings.General.SubtitleBackgroundColor = Configuration.Settings.General.DarkThemeBackColor;
-                Configuration.Settings.General.SubtitleFontColor = Configuration.Settings.General.DarkThemeForeColor;
-                Configuration.Settings.VideoControls.WaveformBackgroundColor = Configuration.Settings.General.DarkThemeBackColor;
-                // prevent re-assignments
-                _isConfigUpdated = true;
-            }
-
             if (iterations < 1)
             {
                 // note: no need to restore the colors set are constants
@@ -159,6 +148,14 @@ namespace Nikse.SubtitleEdit.Logic
                     c.Renderer = new MyRenderer();
                 }
 
+                var toolStripComboBox = GetSubControls<ToolStripComboBox>(form);
+                foreach (ToolStripComboBox c in toolStripComboBox)
+                {
+                    c.BackColor = Configuration.Settings.General.DarkThemeBackColor;
+                    c.ForeColor = Configuration.Settings.General.DarkThemeForeColor;
+                    c.FlatStyle = FlatStyle.Flat;
+                }
+
                 var toolStripContentPanels = GetSubControls<ToolStripContentPanel>(form);
                 foreach (ToolStripContentPanel c in toolStripContentPanels)
                 {
@@ -219,6 +216,7 @@ namespace Nikse.SubtitleEdit.Logic
                         tabPage.Paint += TabPage_Paint;
                     }
                 }
+
                 FixControl(c);
             }
         }
@@ -231,6 +229,16 @@ namespace Nikse.SubtitleEdit.Logic
             if (c is Button b)
             {
                 b.FlatStyle = FlatStyle.Flat;
+            }
+
+            if (c is ComboBox cmBox)
+            {
+                cmBox.FlatStyle = FlatStyle.Flat;
+            }
+
+            if (c is NumericUpDown numeric)
+            {
+                numeric.BorderStyle = BorderStyle.FixedSingle;
             }
 
             if (c is Panel p)
