@@ -52,8 +52,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private Control ListView => splitContainerListViewAndText;
         private Control SourceView => textBoxSource;
-        private bool inListView => splitContainerListViewAndText.Visible;
-        private bool inSourceView => textBoxSource.Visible;
+        private bool _inListView => splitContainerListViewAndText.Visible;
+        private bool _inSourceView => textBoxSource.Visible;
 
         private Subtitle _subtitle = new Subtitle();
 
@@ -841,7 +841,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     var index = _subtitle.GetIndex(e.Paragraph);
                     SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
-                    if (inSourceView)
+                    if (_inSourceView)
                     {
                         var p = _subtitle.GetParagraphOrDefault(index);
                         if (p != null)
@@ -5130,7 +5130,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowSourceLineNumber()
         {
-            if (inSourceView)
+            if (_inSourceView)
             {
                 var profile = Configuration.Settings.General.CurrentProfile + "   ";
                 if (!ShowProfileInStatusBar)
@@ -5174,7 +5174,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void Find()
         {
             string selectedText;
-            if (inSourceView)
+            if (_inSourceView)
             {
                 selectedText = textBoxSource.SelectedText;
             }
@@ -5229,7 +5229,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 ShowStatus(string.Format(_language.SearchingForXFromLineY, _findHelper.FindText, _subtitleListViewIndex + 1));
-                if (inListView)
+                if (_inListView)
                 {
                     var tb = GetFindReplaceTextBox();
                     int startPos = tb.SelectedText.Length > 0 ? tb.SelectionStart + 1 : tb.SelectionStart;
@@ -5258,7 +5258,7 @@ namespace Nikse.SubtitleEdit.Forms
                         ShowStatus(string.Format(_language.XNotFound, _findHelper.FindText));
                     }
                 }
-                else if (inSourceView)
+                else if (_inSourceView)
                 {
                     if (_findHelper.Find(textBoxSource, textBoxSource.SelectionStart))
                     {
@@ -5297,7 +5297,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _findHelper.InProgress = true;
                 var tb = GetFindReplaceTextBox();
-                if (inListView)
+                if (_inListView)
                 {
                     int selectedIndex = -1;
                     if (SubtitleListview1.SelectedItems.Count > 0)
@@ -5345,7 +5345,7 @@ namespace Nikse.SubtitleEdit.Forms
                         ShowStatus(string.Format(_language.XNotFound, _findHelper.FindText));
                     }
                 }
-                else if (inSourceView)
+                else if (_inSourceView)
                 {
                     if (_findHelper.FindNext(textBoxSource.Text, textBoxSource.SelectionStart))
                     {
@@ -5380,7 +5380,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             _findHelper.InProgress = true;
             var tb = GetFindReplaceTextBox();
-            if (inListView)
+            if (_inListView)
             {
                 int selectedIndex = -1;
                 if (SubtitleListview1.SelectedItems.Count > 0)
@@ -5410,7 +5410,7 @@ namespace Nikse.SubtitleEdit.Forms
                     ShowStatus(string.Format(_language.XNotFound, _findHelper.FindText));
                 }
             }
-            else if (inSourceView)
+            else if (_inSourceView)
             {
                 if (_findHelper.FindPrevious(textBoxSource.Text, textBoxSource.SelectionStart))
                 {
@@ -6092,7 +6092,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void Replace(ReplaceDialog replaceDialog)
         {
-            if (inSourceView)
+            if (_inSourceView)
             {
                 ReplaceSourceView(replaceDialog);
             }
@@ -6140,7 +6140,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var format = GetCurrentSubtitleFormat();
                     var list = textBoxSource.Lines.ToList();
                     format = new Subtitle().ReloadLoadSubtitle(list, null, format);
-                    if (format == null)
+                    if (format == null && !string.IsNullOrWhiteSpace(textBoxSource.Text))
                     {
                         MessageBox.Show(_language.UnableToParseSourceView);
                         return;
@@ -6269,18 +6269,18 @@ namespace Nikse.SubtitleEdit.Forms
 
             using (var goToLine = new GoToLine())
             {
-                if (inListView)
+                if (_inListView)
                 {
                     goToLine.Initialize(1, SubtitleListview1.Items.Count);
                 }
-                else if (inSourceView)
+                else if (_inSourceView)
                 {
                     goToLine.Initialize(1, textBoxSource.Lines.Length);
                 }
 
                 if (goToLine.ShowDialog(this) == DialogResult.OK)
                 {
-                    if (inListView)
+                    if (_inListView)
                     {
                         SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
                         SubtitleListview1.SelectNone();
@@ -6291,7 +6291,7 @@ namespace Nikse.SubtitleEdit.Forms
                         SubtitleListview1.Items[goToLine.LineNumber - 1].Focused = true;
                         ShowStatus(string.Format(_language.GoToLineNumberX, goToLine.LineNumber));
                     }
-                    else if (inSourceView)
+                    else if (_inSourceView)
                     {
                         textBoxSource.SelectionStart = textBoxSource.GetFirstCharIndexFromLine(goToLine.LineNumber - 1);
                         textBoxSource.SelectionLength = textBoxSource.Lines[goToLine.LineNumber - 1].Length;
@@ -7303,11 +7303,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void FocusParagraph(int index)
         {
-            if (inSourceView)
+            if (_inSourceView)
             {
                 SwitchView(ListView);
             }
-            else if (inListView)
+            else if (_inListView)
             {
                 SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
             }
@@ -7315,7 +7315,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RefreshSelectedParagraph()
         {
-            if (!inListView)
+            if (!_inListView)
             {
                 return;
             }
@@ -8914,7 +8914,7 @@ namespace Nikse.SubtitleEdit.Forms
                 profile = string.Empty;
             }
 
-            if (inListView)
+            if (_inListView)
             {
                 if (SubtitleListview1.SelectedItems.Count == 1)
                 {
@@ -11701,13 +11701,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SwitchView(Control view)
         {
-            if (inSourceView)
+            if (_inSourceView)
             {
                 var currentFormat = GetCurrentSubtitleFormat();
                 if (currentFormat != null && currentFormat.IsTextBased)
                 {
                     var newFormat = new Subtitle().ReloadLoadSubtitle(textBoxSource.Lines.ToList(), null, currentFormat);
-                    if (newFormat == null)
+                    if (newFormat == null && !string.IsNullOrWhiteSpace(textBoxSource.Text))
                     {
                         MessageBox.Show(_language.UnableToParseSourceView);
                         return;
@@ -11730,7 +11730,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ListViewVisibleChanged(object sender, EventArgs e)
         {
             var currentFormat = GetCurrentSubtitleFormat();
-            if (inListView)
+            if (_inListView)
             {
                 ReloadFromSourceView();
                 ShowLineInformationListView();
@@ -11860,7 +11860,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void SourceViewVisibleChanged(object sender, EventArgs e)
         {
             var currentFormat = GetCurrentSubtitleFormat();
-            if (inSourceView)
+            if (_inSourceView)
             {
                 ShowSource();
                 ShowSourceLineNumber();
@@ -14071,24 +14071,24 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
-            else if (_shortcuts.MainInsertAfter == e.KeyData && inListView)
+            else if (_shortcuts.MainInsertAfter == e.KeyData && _inListView)
             {
                 InsertAfter(string.Empty);
                 e.SuppressKeyPress = true;
                 textBoxListViewText.Focus();
             }
-            else if (_shortcuts.MainInsertBefore == e.KeyData && inListView)
+            else if (_shortcuts.MainInsertBefore == e.KeyData && _inListView)
             {
                 InsertBefore();
                 e.SuppressKeyPress = true;
                 textBoxListViewText.Focus();
             }
-            else if (_shortcuts.MainMergeDialog == e.KeyData && inListView)
+            else if (_shortcuts.MainMergeDialog == e.KeyData && _inListView)
             {
                 MergeDialogs();
                 e.SuppressKeyPress = true;
             }
-            else if (_shortcuts.MainListViewToggleDashes == e.KeyData && inListView)
+            else if (_shortcuts.MainListViewToggleDashes == e.KeyData && _inListView)
             {
                 if (textBoxListViewText.Focused)
                 {
@@ -14105,17 +14105,17 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
-            else if (!toolStripMenuItemRtlUnicodeControlChars.Visible && _shortcuts.MainEditFixRTLViaUnicodeChars == e.KeyData && inListView)
+            else if (!toolStripMenuItemRtlUnicodeControlChars.Visible && _shortcuts.MainEditFixRTLViaUnicodeChars == e.KeyData && _inListView)
             {
                 toolStripMenuItemRtlUnicodeControlChar_Click(null, null);
                 e.SuppressKeyPress = true;
             }
-            else if (!toolStripMenuItemRemoveUnicodeControlChars.Visible && _shortcuts.MainEditRemoveRTLUnicodeChars == e.KeyData && inListView)
+            else if (!toolStripMenuItemRemoveUnicodeControlChars.Visible && _shortcuts.MainEditRemoveRTLUnicodeChars == e.KeyData && _inListView)
             {
                 toolStripMenuItemRemoveUnicodeControlChar_Click(null, null);
                 e.SuppressKeyPress = true;
             }
-            else if (!toolStripMenuItemReverseRightToLeftStartEnd.Visible && _shortcuts.MainEditReverseStartAndEndingForRtl == e.KeyData && inListView)
+            else if (!toolStripMenuItemReverseRightToLeftStartEnd.Visible && _shortcuts.MainEditReverseStartAndEndingForRtl == e.KeyData && _inListView)
             {
                 ReverseStartAndEndingForRtl();
                 e.SuppressKeyPress = true;
@@ -14275,7 +14275,7 @@ namespace Nikse.SubtitleEdit.Forms
                     e.SuppressKeyPress = true;
                 }
             }
-            else if (_shortcuts.MainTextBoxAutoBreak == e.KeyData && inListView)
+            else if (_shortcuts.MainTextBoxAutoBreak == e.KeyData && _inListView)
             {
                 if (textBoxListViewText.Focused)
                 {
@@ -14292,7 +14292,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
-            else if (_shortcuts.MainTextBoxUnbreak == e.KeyData && inListView)
+            else if (_shortcuts.MainTextBoxUnbreak == e.KeyData && _inListView)
             {
                 if (textBoxListViewText.Focused)
                 {
@@ -14309,7 +14309,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
-            else if (_shortcuts.MainTextBoxUnbreakNoSpace == e.KeyData && inListView)
+            else if (_shortcuts.MainTextBoxUnbreakNoSpace == e.KeyData && _inListView)
             {
                 if (textBoxListViewText.Focused)
                 {
@@ -14363,7 +14363,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_shortcuts.MainGeneralToggleView == e.KeyData)
             {
-                if (inListView)
+                if (_inListView)
                 {
                     SwitchView(SourceView);
                 }
@@ -14381,7 +14381,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_shortcuts.MainToggleFocus == e.KeyData)
             {
-                if (inListView)
+                if (_inListView)
                 {
                     if (SubtitleListview1.Focused)
                     {
@@ -14392,7 +14392,7 @@ namespace Nikse.SubtitleEdit.Forms
                         SubtitleListview1.Focus();
                     }
                 }
-                else if (inSourceView)
+                else if (_inSourceView)
                 {
                     if (!textBoxSource.Focused)
                     {
@@ -14406,7 +14406,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (audioVisualizer.CanFocus)
                 {
-                    if (inListView)
+                    if (_inListView)
                     {
                         if (SubtitleListview1.Focused || textBoxListViewText.Focused)
                         {
@@ -14417,7 +14417,7 @@ namespace Nikse.SubtitleEdit.Forms
                             SubtitleListview1.Focus();
                         }
                     }
-                    else if (inSourceView)
+                    else if (_inSourceView)
                     {
                         if (textBoxSource.Focused)
                         {
@@ -20336,7 +20336,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void UpdateSourceView()
         {
-            if (inSourceView)
+            if (_inSourceView)
             {
                 var textBoxSourceFocused = textBoxSource.Focused;
                 var caretPosition = textBoxSource.SelectionStart;
@@ -22671,7 +22671,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (inSourceView)
+            if (_inSourceView)
             {
                 textBoxSource.SelectAll();
             }
@@ -22683,7 +22683,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void cutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (inSourceView)
+            if (_inSourceView)
             {
                 textBoxSource.Cut();
             }
@@ -22695,7 +22695,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (inSourceView)
+            if (_inSourceView)
             {
                 textBoxSource.Copy();
             }
@@ -22707,7 +22707,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void PasteToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (inSourceView)
+            if (_inSourceView)
             {
                 textBoxSource.Paste();
             }
@@ -22719,7 +22719,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void DeleteToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (inSourceView)
+            if (_inSourceView)
             {
                 textBoxSource.SelectedText = string.Empty;
             }
@@ -26288,7 +26288,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemSubStationAlpha_Click(object sender, EventArgs e)
         {
-            if (inSourceView)
+            if (_inSourceView)
             {
                 ReloadFromSourceView();
             }
@@ -27444,7 +27444,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void toolStripMenuItemMeasurementConverter_Click(object sender, EventArgs e)
         {
             var selectedText = string.Empty;
-            if (inSourceView)
+            if (_inSourceView)
             {
                 selectedText = textBoxSource.SelectedText;
             }
@@ -27665,7 +27665,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void PasteIntoActiveTextBox(string s, bool allowMultiLine = false)
         {
-            if (inSourceView)
+            if (_inSourceView)
             {
                 textBoxSource.SelectedText = s;
             }
