@@ -22,8 +22,8 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            _googleTranslationService.Init();
-            _microsoftTranslationService.Init();
+            _googleTranslationService.Initialize();
+            _microsoftTranslationService.Initialize();
 
             InitLanguageComboboxes();
 
