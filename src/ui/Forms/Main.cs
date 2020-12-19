@@ -7678,7 +7678,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
      
-            toolStripMenuItemGoogleMicrosoftTranslateSelLine.Visible = true;
+            toolStripMenuItemGoogleMicrosoftTranslateSelLine.Visible = false;
             if (SubtitleListview1.SelectedItems.Count == 0)
             {
                 contextMenuStripEmpty.Show(MousePosition.X, MousePosition.Y);
@@ -7702,7 +7702,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripSeparatorAdvancedFunctions.Visible = noNetWorkSession;
                 adjustDisplayTimeForSelectedLinesToolStripMenuItem.Visible = true;
                 visualSyncSelectedLinesToolStripMenuItem.Visible = true;
-                toolStripMenuItemGoogleMicrosoftTranslateSelLine.Visible = true;
+                toolStripMenuItemGoogleMicrosoftTranslateSelLine.Visible = false;
                 toolStripMenuItemUnbreakLines.Visible = true;
                 toolStripMenuItemAutoBreakLines.Visible = true;
                 toolStripSeparatorBreakLines.Visible = true;
