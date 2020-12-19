@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Ocr;
 using Bitmap = System.Drawing.Bitmap;
 
@@ -15,7 +16,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         public OcrPreprocessingT4(Bitmap bitmap, PreprocessingSettings preprocessingSettings)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             _source = new NikseBitmap(bitmap);
             pictureBoxSubtitleImage.Image = bitmap;
             if (preprocessingSettings != null)
@@ -38,6 +41,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
 
             RefreshImage();
+            UiUtil.FixLargeFonts(this, buttonOK);
         }
 
         private void numericUpDownThreshold_ValueChanged(object sender, EventArgs e)
