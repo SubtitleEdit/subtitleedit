@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
             _category = category; // Optional parameter - used to get translations from a customized system built with Custom Translator
         }
 
-        protected override bool DoInit()
+        protected override bool DoInitialize()
         {
             if (string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorApiKey))
             {

@@ -120,7 +120,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     MessageBox.Show(message,translationService.GetName());
                 };
-                if (translationService.Init())
+                if (translationService.Initialize())
                 {
                     this.comboBoxTranslationServices.Items.Add(translationService);
                 }

@@ -17,14 +17,12 @@ namespace Nikse.SubtitleEdit.Core.Translate
 
         public class ParagraphWrapper
         {
-            private Paragraph _paragraph;
-            public int Index { get; }
+            public Paragraph Paragraph { get; }
             public List<SentenceParagraphRelation> SentenceParagraphRelations { get; } = new List<SentenceParagraphRelation>();
 
-            public ParagraphWrapper(Paragraph paragraph, int index)
+            public ParagraphWrapper(Paragraph paragraph)
             {
-                this._paragraph = paragraph;
-                this.Index = index;
+                this.Paragraph = paragraph;
             }
 
             public string GenerateTargetText()
@@ -66,7 +64,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
 
 
             /**
-             * divides the full sentence in multiple chunks and assigns them to the source paragraphs.
+             * divides the full sentence into multiple chunks and assigns them to the source paragraphs.
              * It tries to split by percentage equivalent to fit the length of the source paragraph
              */
             public void SetTranslation(string targetText)
@@ -121,7 +119,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 }
 
                 lastParagraphNumber = paragraph.Number;
-                var paragraphWrapper = new ParagraphWrapper(paragraph, paragraph.Number);
+                var paragraphWrapper = new ParagraphWrapper(paragraph);
                 var text = paragraph.Text;
 
                 var splitPositions = new List<int>(FindAllPositionsOf(text, SentenceDelimiterChars));
@@ -188,7 +186,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 foreach (var sentenceParagraphRelation in sourceSentence.SentenceParagraphs)
                 {
                     var paragraphWrapper = sentenceParagraphRelation.ParagraphWrapper;
-                    targetParagraphs[paragraphWrapper.Index]= paragraphWrapper.GenerateTargetText();
+                    targetParagraphs[paragraphWrapper.]= paragraphWrapper.GenerateTargetText();
                 }
             }
 
