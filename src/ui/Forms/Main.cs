@@ -19597,6 +19597,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            SubtitleListview1.AutoSizeColumns();
             if (WindowState == FormWindowState.Maximized)
             {
                 Main_ResizeEnd(sender, e);
@@ -19613,7 +19614,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            panelVideoPlayer.Invalidate();
+            SuspendLayout();
             MainResize();
 
             // Due to strange bug in listview when maximizing
@@ -19622,7 +19623,7 @@ namespace Nikse.SubtitleEdit.Forms
             RestoreSubtitleListviewIndices();
             SubtitleListview1.SelectIndexAndEnsureVisible(_subtitleListViewIndex, true);
 
-            panelVideoPlayer.Refresh();
+            ResumeLayout();
         }
 
         private void MainResize()

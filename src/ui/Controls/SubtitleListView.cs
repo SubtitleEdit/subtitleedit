@@ -633,6 +633,13 @@ namespace Nikse.SubtitleEdit.Controls
                 Columns[regionIdx].Width = 60;
             }
 
+            var extraIdx = GetColumnIndex(SubtitleColumn.Extra);
+            if (extraIdx >= 0)
+            {
+                Columns[extraIdx].Width = 120;
+                Columns[extraIdx].Width = 120;
+            }
+
             int w = 0;
             for (int index = 0; index < SubtitleColumns.Count; index++)
             {
