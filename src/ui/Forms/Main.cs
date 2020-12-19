@@ -20763,6 +20763,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 buttonModeTranslate.Enabled = false;
                 panelTranslate.Visible = true;
+                panelTranslate.Focus();
                 panelMode.Width = groupBoxTranslateSearch.Left + groupBoxTranslateSearch.Width + 14;
                 Configuration.Settings.VideoControls.LastActiveTab = "Translate";
             }
@@ -20770,6 +20771,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 buttonModeCreate.Enabled = false;
                 panelCreate.Visible = true;
+                panelCreate.Focus();
                 panelMode.Width = buttonInsertNewText.Left + buttonInsertNewText.Width + 38;
                 Configuration.Settings.VideoControls.LastActiveTab = "Create";
             }
@@ -20777,11 +20779,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 buttonModeAdjust.Enabled = false;
                 panelAdjust.Visible = true;
+                panelAdjust.Focus();
                 panelMode.Width = buttonInsertNewText.Left + buttonInsertNewText.Width + 38;
                 Configuration.Settings.VideoControls.LastActiveTab = "Adjust";
             }
 
-            panelMode.Focus();
 
             if (!_isVideoControlsUndocked)
             {
