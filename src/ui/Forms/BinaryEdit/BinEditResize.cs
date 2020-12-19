@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -15,7 +16,9 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
         public BinEditResize(Bitmap bitmap)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             _bitmap = bitmap;
             trackBarResize_Scroll(null, null);
@@ -23,6 +26,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             FixAlignment = true;
             Alignment = ContentAlignment.BottomCenter;
             checkBoxFixAlignment.Checked = true;
+            UiUtil.FixLargeFonts(this, buttonOK);
         }
 
         private void trackBarResize_Scroll(object sender, EventArgs e)

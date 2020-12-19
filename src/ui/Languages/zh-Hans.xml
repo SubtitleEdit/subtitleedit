@@ -1575,6 +1575,7 @@ Command line: {1} {2}
     <NoSupportHereVobSub>此处不支持 VobSub 文件。</NoSupportHereVobSub>
     <NoSupportHereDivx>此处不支持 Divx 文件。</NoSupportHereDivx>
     <NoChapters>视频中未找到章节。</NoChapters>
+    <DarkThemeRestart>重启 Subtitle Edit 使暗色主题设置生效。</DarkThemeRestart>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>从 Matroska 文件中选择字幕</Title>
@@ -2104,6 +2105,8 @@ Command line: {1} {2}
     <UseSyntaxColoring>启用语法高亮</UseSyntaxColoring>
     <HtmlColor>Html配色</HtmlColor>
     <AssaColor>ASSA配色</AssaColor>
+    <DarkTheme>暗色主题</DarkTheme>
+    <DarkThemeEnabled>使用暗色主题</DarkThemeEnabled>
     <UpdateShortcut>更新</UpdateShortcut>
     <FoucsSetVideoPosition>将焦点处设为视频位置</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>切换 停靠/不停靠 视频控件</ToggleDockUndockOfVideoControls>
@@ -2783,3 +2786,4 @@ Command line: {1} {2}
     <VoiceName>人声名称</VoiceName>
   </WebVttNewVoice>
 </Language>
+

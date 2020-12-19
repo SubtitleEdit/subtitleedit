@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Windows.Forms;
 
@@ -8,7 +9,9 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
     {
         public BinEditSettings()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             panelBackgroundColor.BackColor = Configuration.Settings.Tools.BinEditBackgroundColor;
             panelImageBackgroundColor.BackColor = Configuration.Settings.Tools.BinEditImageBackgroundColor;
@@ -16,6 +19,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             numericUpDownMarginLeft.Value = Configuration.Settings.Tools.BinEditLeftMargin;
             numericUpDownMarginRight.Value = Configuration.Settings.Tools.BinEditRightMargin;
             numericUpDownMarginVertical.Value = Configuration.Settings.Tools.BinEditVerticalMargin;
+            UiUtil.FixLargeFonts(this, buttonOK);
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
