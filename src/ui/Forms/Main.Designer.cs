@@ -4967,7 +4967,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonPrevious.Name = "buttonPrevious";
             this.buttonPrevious.Size = new System.Drawing.Size(72, 23);
             this.buttonPrevious.TabIndex = 2;
-            this.buttonPrevious.Text = "< Prev ";
+            this.buttonPrevious.Text = "< Prev";
             this.buttonPrevious.UseVisualStyleBackColor = true;
             this.buttonPrevious.Click += new System.EventHandler(this.ButtonPreviousClick);
             // 
