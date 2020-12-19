@@ -4787,7 +4787,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         Configuration.Settings.VideoControls.WaveformColor = Color.FromArgb(7, 65, 152);
                         Configuration.Settings.VideoControls.WaveformSelectedColor = Color.FromArgb(150, 0, 0);
-                        Configuration.Settings.VideoControls.WaveformBackgroundColor = c;
+                        Configuration.Settings.VideoControls.WaveformBackgroundColor = Color.Black;
 
                         //TODO: list view colors...   
                     }
