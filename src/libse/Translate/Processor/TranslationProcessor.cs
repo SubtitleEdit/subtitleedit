@@ -5,8 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Translate.Service;
 
-namespace Nikse.SubtitleEdit.Core.Translate
+namespace Nikse.SubtitleEdit.Core.Translate.Processor
 {
     /// <summary>
     /// handles complex translation tasks and cares about:
@@ -21,6 +22,12 @@ namespace Nikse.SubtitleEdit.Core.Translate
             string targetLanguageIsoCode,
             List<Paragraph> sourceParagraphs,
             TranslationProcessCancelStatus processCancelStatus = null);
+
+        /// <summary>
+        /// return the languages (as iso code) this Processor is suitable.
+        /// </summary>
+        /// <returns>null = no language restriction, empty = no language</returns>
+        List<string> GetSupportedLanguages();
     }
 
     public interface ITranslationBaseUnit
@@ -75,6 +82,8 @@ namespace Nikse.SubtitleEdit.Core.Translate
             }
             return targetParagraphs.Values.ToList();
         }
+
+        public abstract List<string> GetSupportedLanguages();
 
         private IEnumerable<TranslationChunk> BuildTranslationChunks(IEnumerable<T> translationUnits, AbstractTranslationService translationService)
         {

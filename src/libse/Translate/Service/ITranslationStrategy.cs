@@ -2,7 +2,7 @@
 using System.Text;
 using Nikse.SubtitleEdit.Core.Common;
 
-namespace Nikse.SubtitleEdit.Core.Translate
+namespace Nikse.SubtitleEdit.Core.Translate.Service
 {
     public interface ITranslationStrategy
     {

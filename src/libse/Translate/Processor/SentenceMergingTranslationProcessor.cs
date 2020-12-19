@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Nikse.SubtitleEdit.Core.Common;
 
-namespace Nikse.SubtitleEdit.Core.Translate
+namespace Nikse.SubtitleEdit.Core.Translate.Processor
 {
 
     public class SentenceMergingTranslationProcessor : AbstractTranslationProcessor<SentenceMergingTranslationProcessor.Sentence>
@@ -186,12 +183,16 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 foreach (var sentenceParagraphRelation in sourceSentence.SentenceParagraphs)
                 {
                     var paragraphWrapper = sentenceParagraphRelation.ParagraphWrapper;
-                    targetParagraphs[paragraphWrapper.]= paragraphWrapper.GenerateTargetText();
+                    targetParagraphs[paragraphWrapper.Paragraph.Number]= paragraphWrapper.GenerateTargetText();
                 }
             }
 
             return targetParagraphs;
         }
 
+        public override List<string> GetSupportedLanguages()
+        {
+            return Formatting.LanguagesAllowingLineMerging;
+        }
     }
 }

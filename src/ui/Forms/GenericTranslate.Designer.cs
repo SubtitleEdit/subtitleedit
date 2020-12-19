@@ -56,6 +56,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxFrom.Name = "comboBoxFrom";
             this.comboBoxFrom.Size = new System.Drawing.Size(121, 25);
             this.comboBoxFrom.TabIndex = 0;
+            this.comboBoxFrom.TextChanged += new System.EventHandler(this.ComboBoxLanguageChanged);
             // 
             // labelFrom
             // 
@@ -83,6 +84,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxTo.Name = "comboBoxTo";
             this.comboBoxTo.Size = new System.Drawing.Size(121, 25);
             this.comboBoxTo.TabIndex = 3;
+            this.comboBoxTo.TextChanged += new System.EventHandler(this.ComboBoxLanguageChanged);
             // 
             // buttonTranslate
             // 
@@ -258,8 +260,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Translate";
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormGoogleTranslate_KeyDown);
-            this.Resize += new System.EventHandler(this.GoogleTranslate_Resize);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormTranslate_KeyDown);
+            this.Resize += new System.EventHandler(this.Translate_Resize);
             this.ResumeLayout(false);
             this.PerformLayout();
 

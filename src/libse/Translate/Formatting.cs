@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
 {
     public class Formatting
     {
-        private static readonly List<string> LanguagesAllowingLineMerging = new List<string>
+        public static readonly List<string> LanguagesAllowingLineMerging = new List<string>
         {
             "en", "da", "nl", "de", "sv", "nb", "fr", "it", "tr", "es", "pt", "sr", "ru", "lv", "lt", "et", "ro", "pl", "ar", "he", "no"
         };

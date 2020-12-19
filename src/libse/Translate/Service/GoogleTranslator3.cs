@@ -7,10 +7,12 @@ using System.Text.RegularExpressions;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
-namespace Nikse.SubtitleEdit.Core.Translate
+namespace Nikse.SubtitleEdit.Core.Translate.Service
 {
     /// <summary>
     /// Google translate via Google Cloud V3 API - see https://cloud.google.com/translate/
+    ///
+    /// brummochse: not used at the moment!?
     /// </summary>
     public class GoogleTranslator3 : ITranslationStrategy
     {
