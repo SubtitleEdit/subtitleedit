@@ -145,6 +145,7 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     c.BackColor = Configuration.Settings.General.DarkThemeBackColor;
                     c.ForeColor = Configuration.Settings.General.DarkThemeForeColor;
+                    c.Renderer = new MyRenderer();
                 }
 
                 var toolStripComboBox = GetSubControls<ToolStripComboBox>(form);
@@ -320,6 +321,14 @@ namespace Nikse.SubtitleEdit.Logic
                 using (var brush = new SolidBrush(Configuration.Settings.General.DarkThemeBackColor))
                 {
                     e.Graphics.FillRectangle(brush, e.ConnectedArea);
+                }
+            }
+
+            protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e)
+            {
+                if (!(e.ToolStrip is ToolStrip))
+                {
+                    base.OnRenderToolStripBorder(e);
                 }
             }
         }
