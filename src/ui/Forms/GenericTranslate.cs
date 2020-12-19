@@ -69,8 +69,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal void Initialize(Subtitle subtitle, Subtitle target, string title, Encoding encoding)
         {
-
-
             if (title != null)
             {
                 Text = title;
@@ -126,13 +124,10 @@ namespace Nikse.SubtitleEdit.Forms
             var translationServices = TranslationServiceRepository.TranslatorEngines;
             foreach (var translationService in translationServices)
             {
-                translationService.MessageLogEvent += delegate(object sender, string message)
-                {
-                    MessageBox.Show(message,translationService.GetName());
-                };
+                translationService.MessageLogEvent += (sender, message) => HandleMessage(message, translationService.GetName());
                 if (translationService.Initialize())
                 {
-                    this.comboBoxTranslationServices.Items.Add(translationService);
+                    comboBoxTranslationServices.Items.Add(translationService);
                 }
             }
             if (comboBoxTranslationServices.Items.Count > 0)
@@ -140,6 +135,37 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxTranslationServices.SelectedIndex = 0;
             }
         }
+
+        private void HandleMessage(string message, string translationServiceName)
+        {
+            var language = Configuration.Settings.Language.GoogleTranslate;
+            if (message.Equals(language.GoogleApiKeyNeeded))
+            {
+                if (Configuration.Settings.Tools.GoogleApiV2KeyInfoShow)
+                {
+                    using (var form = new DialogDoNotShowAgain("Subtitle Edit", language.GoogleApiKeyNeeded))
+                    {
+                        form.ShowDialog(this);
+                        Configuration.Settings.Tools.GoogleApiV2KeyInfoShow = !form.DoNoDisplayAgain;
+                    }
+                }
+            }
+            else if (message.Equals(language.GoogleNoApiKeyWarning)) {
+                if (Configuration.Settings.Tools.GoogleTranslateNoKeyWarningShow)
+                {
+                    using (var form = new DialogDoNotShowAgain("Subtitle Edit", language.GoogleNoApiKeyWarning))
+                    {
+                        form.ShowDialog(this);
+                        Configuration.Settings.Tools.GoogleTranslateNoKeyWarningShow = !form.DoNoDisplayAgain;
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show(message, translationServiceName);
+            }
+        }
+
 
         private void ComboBoxTranslationServiceChanged(object sender, EventArgs e)
         {
