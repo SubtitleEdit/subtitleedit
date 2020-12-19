@@ -2178,7 +2178,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return;
             }
 
-            if (_bdnXmlSubtitle != null && _bdnFileName != null)
+            if (_bdnXmlSubtitle != null && File.Exists(_bdnFileName))
             {
                 width = 0;
                 height = 0;
