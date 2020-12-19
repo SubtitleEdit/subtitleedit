@@ -1096,7 +1096,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private void pictureBoxPreview_Click(object sender, EventArgs e)
         {
             _backgroundImageDark = !_backgroundImageDark;
-            _backgroundImage.Dispose();
+            _backgroundImage?.Dispose();
             _backgroundImage = null;
             GeneratePreview();
         }
