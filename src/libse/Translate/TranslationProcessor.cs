@@ -8,6 +8,12 @@ using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.Translate
 {
+    /// <summary>
+    /// handles complex translation tasks and cares about:
+    /// - input text chunking (complying translation service specific constraints)
+    /// - status report & cancellation option
+    /// - how to pass the paragraphs into the translator (paragraph line hadnling)
+    /// </summary>
     public interface ITranslationProcessor
     {
         List<string> Translate(AbstractTranslationService translationService,
