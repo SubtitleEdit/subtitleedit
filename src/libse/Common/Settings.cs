@@ -1171,6 +1171,7 @@ $HorzAlign          =   Center
         public Color DarkThemeForeColor { get; set; }
         public Color DarkThemeBackColor { get; set; }
         public bool UseDarkTheme { get; set; }
+        public bool DarkThemeShowListViewGridLines { get; set; }
         public bool ShowBetaStuff { get; set; }
 
         public GeneralSettings()
@@ -1302,6 +1303,7 @@ $HorzAlign          =   Center
             DarkThemeForeColor = Color.FromArgb(155, 155, 155);
             DarkThemeBackColor = Color.FromArgb(30, 30, 30);
             UseDarkTheme = false;
+            DarkThemeShowListViewGridLines = false;
             TitleBarAsterisk = "before";
             MeasurementConverterCloseOnInsert = true;
             MeasurementConverterCategories = "Length;Kilometers;Meters";
@@ -3551,6 +3553,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.UseDarkTheme = Convert.ToBoolean(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("DarkThemeShowListViewGridLines");
+            if (subNode != null)
+            {
+                settings.General.DarkThemeShowListViewGridLines = Convert.ToBoolean(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("ShowBetaStuff");
@@ -7976,6 +7984,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("DarkThemeBackColor", settings.General.DarkThemeBackColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DarkThemeForeColor", settings.General.DarkThemeForeColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("UseDarkTheme", settings.General.UseDarkTheme.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("DarkThemeShowListViewGridLines", settings.General.DarkThemeShowListViewGridLines.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowBetaStuff", settings.General.ShowBetaStuff.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("NewEmptyDefaultMs", settings.General.NewEmptyDefaultMs.ToString(CultureInfo.InvariantCulture));
 
