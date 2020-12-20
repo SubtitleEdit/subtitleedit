@@ -1,5 +1,4 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -7,7 +6,7 @@ using System.Windows.Forms;
 namespace Nikse.SubtitleEdit.Controls
 {
     /// <summary>
-    /// TextBox that can be either a normal text box or a rich text box (or a html text box).
+    /// TextBox that can be either a normal text box or a rich text box.
     /// </summary>
     public sealed class SETextBox : Panel
     {
@@ -62,6 +61,7 @@ namespace Nikse.SubtitleEdit.Controls
                 _uiTextBox = new RichTextBox { BorderStyle = BorderStyle.None, Multiline = true };
                 InitializeBackingControl(_uiTextBox);
 
+                _uiTextBox.TextChanged += TextChangedHighlight;
                 // avoid selection when centered and clicking to the left
                 _uiTextBox.MouseDown += (sender, args) =>
                 {
@@ -117,18 +117,26 @@ namespace Nikse.SubtitleEdit.Controls
                         args.SuppressKeyPress = true;
                     }
                 };
+                _uiTextBox.Enter += (sender, args) =>
+                {
+                    var text = _uiTextBox.Text;
+                    if (string.IsNullOrWhiteSpace(text) || text.Length > 1000)
+                    {
+                        if (Configuration.Settings.General.CenterSubtitleInTextBox)
+                        {
+                            SuspendLayout();
+                            _richTextBoxTemp.Text = text;
+                            _richTextBoxTemp.SelectAll();
+                            _richTextBoxTemp.SelectionAlignment = HorizontalAlignment.Center;
+                            ResumeLayout(false);
+                            _uiTextBox.Rtf = _richTextBoxTemp.Rtf;
+                        } 
+                    }
+                };
             }
             else
             {
                 _simpleTextBox = new SimpleTextBox { BorderStyle = BorderStyle.None, Multiline = true };
-                _simpleTextBox.KeyDown += (sender, args) =>
-                {
-                    if (args.KeyData == (Keys.Control | Keys.Back))
-                    {
-                        UiUtil.ApplyControlBackspace(_simpleTextBox);
-                        args.SuppressKeyPress = true;
-                    }
-                };
                 InitializeBackingControl(_simpleTextBox);
             }
 
@@ -143,7 +151,6 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void InitializeBackingControl(Control textBox)
         {
-            textBox.TextChanged += TextChangedHighlight;
             Controls.Add(textBox);
             textBox.Dock = DockStyle.Fill;
             textBox.Enter += (sender, args) => { BackColor = SystemColors.Highlight; };
@@ -315,7 +322,8 @@ namespace Nikse.SubtitleEdit.Controls
 
                     var text = _uiTextBox.Text;
                     var extra = 0;
-                    for (int i = _uiTextBox.SelectionStart; i < target && i < text.Length; i++)
+                    var start = _uiTextBox.SelectionStart;
+                    for (int i = start; i < target + start && i < text.Length; i++)
                     {
                         if (text[i] == '\n')
                         {
@@ -522,6 +530,28 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        protected override void OnRightToLeftChanged(EventArgs e)
+        {
+            base.OnRightToLeftChanged(e);
+
+            if (_simpleTextBox != null)
+            {
+                return;
+            }
+
+            var text = _uiTextBox.Text;
+            if (Configuration.Settings.General.CenterSubtitleInTextBox)
+            {
+                _richTextBoxTemp.RightToLeft = RightToLeft;
+                SuspendLayout();
+                _richTextBoxTemp.Text = text;
+                _richTextBoxTemp.SelectAll();
+                _richTextBoxTemp.SelectionAlignment = HorizontalAlignment.Center;
+                ResumeLayout(false);
+                _uiTextBox.Rtf = _richTextBoxTemp.Rtf;
+            }
+        }
+
         public int GetCharIndexFromPosition(Point pt)
         {
             if (_simpleTextBox != null)
@@ -641,57 +671,19 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        public void HighlightHtmlText()
+        private void TextChangedHighlight(object sender, EventArgs e)
         {
-            if (Configuration.Settings.General.RightToLeftMode)
+            if (_checkRtfChange)
             {
-                if (RightToLeft != RightToLeft.Yes)
-                {
-                    RightToLeft = RightToLeft.Yes;
-                }
+                _checkRtfChange = false;
+                HighlightHtmlText();
+                _checkRtfChange = true;
             }
-            else
-            {
-                if (RightToLeft != RightToLeft.No)
-                {
-                    RightToLeft = RightToLeft.No;
-                }
-            }
+        }
 
-            if (_simpleTextBox != null)
-            {
-                if (Configuration.Settings.General.CenterSubtitleInTextBox &&
-                    _simpleTextBox.TextAlign != HorizontalAlignment.Center)
-                {
-                    _simpleTextBox.TextAlign = HorizontalAlignment.Center;
-                }
-
-                return;
-            }
-
-            _richTextBoxTemp.RightToLeft = RightToLeft;
-
-
+        private void HighlightHtmlText()
+        {
             var text = _uiTextBox.Text;
-            if (string.IsNullOrWhiteSpace(text) || text.Length > 1000)
-            {
-                if (Configuration.Settings.General.CenterSubtitleInTextBox)
-                {
-                    SuspendLayout();
-                    _richTextBoxTemp.Text = text;
-                    _richTextBoxTemp.SelectAll();
-                    _richTextBoxTemp.SelectionAlignment = HorizontalAlignment.Center;
-
-                    // fix cursor to start in middle (and not left)
-                    _richTextBoxTemp.Rtf = _richTextBoxTemp.Rtf.Replace("\\pard\\par", "\\par");
-
-                    ResumeLayout(false);
-                    _uiTextBox.Rtf = _richTextBoxTemp.Rtf;
-                }
-
-                return;
-            }
-
             _richTextBoxTemp.SuspendLayout();
             _richTextBoxTemp.Clear();
             _richTextBoxTemp.Text = text;
@@ -810,11 +802,6 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _richTextBoxTemp.SelectAll();
                 _richTextBoxTemp.SelectionAlignment = HorizontalAlignment.Center;
-                if (text.TrimEnd(' ').EndsWith('\n'))
-                {
-                    // fix cursor to start in middle (and not left)
-                    _richTextBoxTemp.Rtf = _richTextBoxTemp.Rtf.Replace("\\pard\\par", "\\par");
-                }
             }
 
             _richTextBoxTemp.ResumeLayout(false);
@@ -871,29 +858,6 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private void SetForeColorAndChangeBackColorIfClose(int colorStart, int colorEnd, Color c)
-        {
-            _richTextBoxTemp.SelectionStart = colorStart;
-            _richTextBoxTemp.SelectionLength = colorEnd - colorStart;
-            _richTextBoxTemp.SelectionColor = c;
-
-            var diff = Math.Abs(c.R - BackColor.R) + Math.Abs(c.G - BackColor.G) + Math.Abs(c.B - BackColor.B);
-            if (diff < 60)
-            {
-                _richTextBoxTemp.SelectionBackColor = Color.FromArgb(byte.MaxValue - c.R, byte.MaxValue - c.G, byte.MaxValue - c.B, byte.MaxValue - c.R);
-            }
-        }
-
-        private void TextChangedHighlight(object sender, EventArgs e)
-        {
-            if (_checkRtfChange)
-            {
-                _checkRtfChange = false;
-                HighlightHtmlText();
-                _checkRtfChange = true;
-            }
-        }
-
         private void SetAssaColor(string text, int assaTagStart, string colorTag)
         {
             int colorStart = text.IndexOf(colorTag, assaTagStart, StringComparison.OrdinalIgnoreCase);
@@ -904,6 +868,10 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     colorStart++;
                 }
+                if (text[colorStart] == 'H')
+                {
+                    colorStart++;
+                }
 
                 int colorEnd = text.IndexOf('&', colorStart + 1);
                 if (colorEnd > 0)
@@ -911,10 +879,9 @@ namespace Nikse.SubtitleEdit.Controls
                     var color = text.Substring(colorStart, colorEnd - colorStart);
                     try
                     {
-                        if (color.Length == 7)
+                        if (color.Length == 6)
                         {
-                            var rgbColor = string.Concat("#", color[5], color[6], color[3], color[4], color[1], color[2]);
-                            var c = ColorTranslator.FromHtml(rgbColor);
+                            var rgbColor = string.Concat("#", color[4], color[5], color[2], color[3], color[0], color[1]); var c = ColorTranslator.FromHtml(rgbColor);
                             SetForeColorAndChangeBackColorIfClose(colorStart, colorEnd, c);
                         }
                     }
@@ -923,6 +890,20 @@ namespace Nikse.SubtitleEdit.Controls
                         // ignored
                     }
                 }
+            }
+        }
+
+        private void SetForeColorAndChangeBackColorIfClose(int colorStart, int colorEnd, Color c)
+        {
+            var backColor = _richTextBoxTemp.BackColor;
+            _richTextBoxTemp.SelectionStart = colorStart;
+            _richTextBoxTemp.SelectionLength = colorEnd - colorStart;
+            _richTextBoxTemp.SelectionColor = c;
+
+            var diff = Math.Abs(c.R - backColor.R) + Math.Abs(c.G - backColor.G) + Math.Abs(c.B - backColor.B);
+            if (diff < 60)
+            {
+                _richTextBoxTemp.SelectionBackColor = Color.FromArgb(byte.MaxValue - c.R, byte.MaxValue - c.G, byte.MaxValue - c.B, byte.MaxValue - c.R);
             }
         }
     }

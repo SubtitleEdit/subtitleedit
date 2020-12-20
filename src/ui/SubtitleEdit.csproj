@@ -121,6 +121,30 @@
     <Compile Include="Forms\BatchConvertTsSettings.Designer.cs">
       <DependentUpon>BatchConvertTsSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\BinaryEdit\BinEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BinaryEdit\BinEdit.Designer.cs">
+      <DependentUpon>BinEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\BinaryEdit\BinEditNewText.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BinaryEdit\BinEditNewText.Designer.cs">
+      <DependentUpon>BinEditNewText.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\BinaryEdit\BinEditResize.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BinaryEdit\BinEditResize.Designer.cs">
+      <DependentUpon>BinEditResize.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\BinaryEdit\BinEditSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BinaryEdit\BinEditSettings.Designer.cs">
+      <DependentUpon>BinEditSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\BookmarkAdd.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -167,13 +191,13 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\DCinema\DCinemaPropertiesInterop.cs">
-      <SubType>form</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\DCinema\DCinemaPropertiesInterop.Designer.cs">
       <DependentUpon>DCinemaPropertiesInterop.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\DCinema\DCinemaPropertiesSmpte.cs">
-      <SubType>form</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\DCinema\DCinemaPropertiesSmpte.Designer.cs">
       <DependentUpon>DCinemaPropertiesSmpte.cs</DependentUpon>
@@ -349,10 +373,10 @@
     <Compile Include="Forms\ChooseAudioTrack.Designer.cs">
       <DependentUpon>ChooseAudioTrack.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ChooseLanguage.cs">
+    <Compile Include="Forms\Options\ChooseLanguage.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\ChooseLanguage.Designer.cs">
+    <Compile Include="Forms\Options\ChooseLanguage.Designer.cs">
       <DependentUpon>ChooseLanguage.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ChooseEncoding.cs">
@@ -500,7 +524,7 @@
       <DependentUpon>ExportText.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ExtractDateTimeInfo.cs">
-      <SubType>form</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\ExtractDateTimeInfo.Designer.cs">
       <DependentUpon>ExtractDateTimeInfo.cs</DependentUpon>
@@ -760,46 +784,46 @@
     <Compile Include="Forms\SetMinimumDisplayTimeBetweenParagraphs.Designer.cs">
       <DependentUpon>SetMinimumDisplayTimeBetweenParagraphs.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Settings.cs">
+    <Compile Include="Forms\Options\Settings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Settings.Designer.cs">
+    <Compile Include="Forms\Options\Settings.Designer.cs">
       <DependentUpon>Settings.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SettingsFixContinuationStyle.cs">
+    <Compile Include="Forms\Options\SettingsFixContinuationStyle.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\SettingsFixContinuationStyle.Designer.cs">
+    <Compile Include="Forms\Options\SettingsFixContinuationStyle.Designer.cs">
       <DependentUpon>SettingsFixContinuationStyle.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SettingsGapChoose.cs">
+    <Compile Include="Forms\Options\SettingsGapChoose.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\SettingsGapChoose.Designer.cs">
+    <Compile Include="Forms\Options\SettingsGapChoose.Designer.cs">
       <DependentUpon>SettingsGapChoose.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SettingsLineWidth.cs">
+    <Compile Include="Forms\Options\SettingsLineWidth.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\SettingsLineWidth.Designer.cs">
+    <Compile Include="Forms\Options\SettingsLineWidth.Designer.cs">
       <DependentUpon>SettingsLineWidth.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SettingsMpv.cs">
+    <Compile Include="Forms\Options\SettingsMpv.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\SettingsMpv.Designer.cs">
+    <Compile Include="Forms\Options\SettingsMpv.Designer.cs">
       <DependentUpon>SettingsMpv.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SettingsProfile.cs">
+    <Compile Include="Forms\Options\SettingsProfile.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\SettingsProfile.Designer.cs">
+    <Compile Include="Forms\Options\SettingsProfile.Designer.cs">
       <DependentUpon>SettingsProfile.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SettingsProfileExport.cs">
+    <Compile Include="Forms\Options\SettingsProfileExport.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\SettingsProfileExport.Designer.cs">
+    <Compile Include="Forms\Options\SettingsProfileExport.Designer.cs">
       <DependentUpon>SettingsProfileExport.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\SetVideoOffset.cs">
@@ -944,7 +968,7 @@
       <DependentUpon>VideoPlayerUndocked.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\VisualSync.cs">
-      <SubType>form</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\VisualSync.Designer.cs">
       <DependentUpon>VisualSync.cs</DependentUpon>
@@ -980,7 +1004,7 @@
       <DependentUpon>VobSubNOcrTrain.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Ocr\VobSubOcr.cs">
-      <SubType>form</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\Ocr\VobSubOcr.Designer.cs">
       <DependentUpon>VobSubOcr.cs</DependentUpon>
@@ -1150,6 +1174,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BatchConvertTsSettings.resx">
       <DependentUpon>BatchConvertTsSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BinaryEdit\BinEdit.resx">
+      <DependentUpon>BinEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BinaryEdit\BinEditNewText.resx">
+      <DependentUpon>BinEditNewText.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BinaryEdit\BinEditResize.resx">
+      <DependentUpon>BinEditResize.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BinaryEdit\BinEditSettings.resx">
+      <DependentUpon>BinEditSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BookmarkAdd.resx">
       <DependentUpon>BookmarkAdd.cs</DependentUpon>
@@ -1464,26 +1500,26 @@
     <EmbeddedResource Include="Forms\SetMinimumDisplayTimeBetweenParagraphs.resx">
       <DependentUpon>SetMinimumDisplayTimeBetweenParagraphs.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Settings.resx">
+    <EmbeddedResource Include="Forms\Options\Settings.resx">
       <DependentUpon>Settings.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SettingsFixContinuationStyle.resx">
+    <EmbeddedResource Include="Forms\Options\SettingsFixContinuationStyle.resx">
       <DependentUpon>SettingsFixContinuationStyle.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SettingsGapChoose.resx">
+    <EmbeddedResource Include="Forms\Options\SettingsGapChoose.resx">
       <DependentUpon>SettingsGapChoose.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SettingsLineWidth.resx">
+    <EmbeddedResource Include="Forms\Options\SettingsLineWidth.resx">
       <DependentUpon>SettingsLineWidth.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SettingsMpv.resx">
+    <EmbeddedResource Include="Forms\Options\SettingsMpv.resx">
       <DependentUpon>SettingsMpv.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SettingsProfile.resx">
+    <EmbeddedResource Include="Forms\Options\SettingsProfile.resx">
       <DependentUpon>SettingsProfile.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SettingsProfileExport.resx">
+    <EmbeddedResource Include="Forms\Options\SettingsProfileExport.resx">
       <DependentUpon>SettingsProfileExport.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SetVideoOffset.resx">
@@ -1793,7 +1829,7 @@
       <DependentUpon>ChangeCasingNames.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ChooseLanguage.resx">
+    <EmbeddedResource Include="Forms\Options\ChooseLanguage.resx">
       <DependentUpon>ChooseLanguage.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>

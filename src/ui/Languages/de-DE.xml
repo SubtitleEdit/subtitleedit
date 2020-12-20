@@ -417,13 +417,9 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
   <EffectKaraoke>
     <Title>Karaoke Effekt</Title>
     <ChooseColor>Farbe auswählen:</ChooseColor>
-    <TotalMilliseconds>Gesamte Millisekunden:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Endverzögerung:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Schreibmaschinen Effekt</Title>
-    <TotalMilliseconds>Gesamte Millisekunden:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Endverzögerung:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Benutzer Textformat exportieren</Title>
@@ -1199,8 +1195,6 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <Controls>
       <SubtitleFormat>Format</SubtitleFormat>
       <FileEncoding>Kodierung</FileEncoding>
-      <ListView>Listenansicht</ListView>
-      <SourceView>Quellansicht</SourceView>
       <UndoChangesInEditPanel>Rückgängig</UndoChangesInEditPanel>
       <Previous>Zurück</Previous>
       <Next>Weiter</Next>
@@ -1773,7 +1767,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <GoToBookmark>Zum Lesezeichen</GoToBookmark>
     <GoToPreviousBookmark>Vorheriges Lesezeichen</GoToPreviousBookmark>
     <GoToNextBookmark>Nächstes Lesezeichen</GoToNextBookmark>
-    <ChooseProfile>Profil wählen</ChooseProfile>
+    <GeneralChooseProfile>Profil wählen</GeneralChooseProfile>
     <FontInUi>Benutzeroberfläche Schriftart</FontInUi>
     <ShowFrameRate>Bildfrequenz in Symbolleiste anzeigen</ShowFrameRate>
     <DefaultFrameRate>Standard Bildfrequenz</DefaultFrameRate>
@@ -1966,7 +1960,6 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <WaveformPlayNewSelection>Auswahl abspielen</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Ende der Auswahl abspielen</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Ersten gewählten Untertitel abspielen</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Listenansicht fokussieren</WaveformFocusListView>
     <WaveformGoToNextSceneChange>Zum nächsten Szenenwechsel</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Szenenwechsel umschalten</WaveformToggleSceneChange>
     <GoBack1Frame>Ein Bild zurück</GoBack1Frame>
@@ -2009,7 +2002,6 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <ListViewColumnDelete>Zeile, Text löschen</ListViewColumnDelete>
     <ListViewColumnInsert>Zeile, Text einfügen</ListViewColumnInsert>
     <ListViewColumnPaste>Zeile, Einfügen</ListViewColumnPaste>
-    <ListViewFocusWaveform>Wellenform/Spektrogram fokussieren</ListViewFocusWaveform>
     <ListViewGoToNextError>Zum nächsten Fehler</ListViewGoToNextError>
     <ShowBeamer>Starte Untertitel Vollbildbeamer</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Letzes Wort zur nächsten Zeile</MainTextBoxMoveLastWordDown>

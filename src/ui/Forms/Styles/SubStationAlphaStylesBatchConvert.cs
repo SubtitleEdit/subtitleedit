@@ -30,6 +30,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             comboBoxCollision.SelectedIndex = 0;
             _header = subtitle.Header;
             _isSubStationAlpha = format.Name == SubStationAlpha.NameOfFormat;
+            _backgroundImageDark = Configuration.Settings.General.UseDarkTheme;
             if (_header == null || !_header.Contains("style:", StringComparison.OrdinalIgnoreCase))
             {
                 ResetHeader();
@@ -1095,7 +1096,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private void pictureBoxPreview_Click(object sender, EventArgs e)
         {
             _backgroundImageDark = !_backgroundImageDark;
-            _backgroundImage.Dispose();
+            _backgroundImage?.Dispose();
             _backgroundImage = null;
             GeneratePreview();
         }

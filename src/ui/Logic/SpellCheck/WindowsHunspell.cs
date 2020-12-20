@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic.SpellCheck
 {
@@ -19,8 +20,9 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
 
         public override List<string> Suggest(string word)
         {
-            var list = _hunspell.Suggest(word);
-            AddIShouldBeLowercaseLSuggestion(list, word);
+            string filtered = Regex.Replace(word, @"\p{Cs}", "");
+            var list = _hunspell.Suggest(filtered);
+            AddIShouldBeLowercaseLSuggestion(list, filtered);
             return list;
         }
 

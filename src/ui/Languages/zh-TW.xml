@@ -362,13 +362,9 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
   <EffectKaraoke>
     <Title>卡拉 OK 效果</Title>
     <ChooseColor>選擇色彩:</ChooseColor>
-    <TotalMilliseconds>總毫秒數:</TotalMilliseconds>
-    <EndDelayInMilliseconds>結尾延遲 (毫秒):</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>打字機效果</Title>
-    <TotalMilliseconds>總毫秒數:</TotalMilliseconds>
-    <EndDelayInMilliseconds>結尾延遲 (毫秒):</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>匯出自訂文字格式</Title>
@@ -1083,8 +1079,6 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <Controls>
       <SubtitleFormat>格式</SubtitleFormat>
       <FileEncoding>編碼</FileEncoding>
-      <ListView>清單檢視</ListView>
-      <SourceView>來源檢視</SourceView>
       <UndoChangesInEditPanel>復原編輯面板內的變更</UndoChangesInEditPanel>
       <Previous>&lt; 上一行</Previous>
       <Next>下一行 &gt;</Next>
@@ -1801,7 +1795,6 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <WaveformAddTextHereFromClipboard>加入文字到此處 (從剪貼板用於新的選擇部份)</WaveformAddTextHereFromClipboard>
     <WaveformPlayNewSelection>播放新的選擇部份</WaveformPlayNewSelection>
     <WaveformPlayFirstSelectedSubtitle>播放第一個選擇的字幕</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>焦點置於清單檢視</WaveformFocusListView>
     <WaveformToggleSceneChange>切換場景變更</WaveformToggleSceneChange>
     <GoBack1Frame>向前一個影格</GoBack1Frame>
     <GoForward1Frame>向後一個影格</GoForward1Frame>
@@ -1844,7 +1837,6 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <ListViewColumnDelete>行、移除文字</ListViewColumnDelete>
     <ListViewColumnInsert>行、插入文字</ListViewColumnInsert>
     <ListViewColumnPaste>行、貼上</ListViewColumnPaste>
-    <ListViewFocusWaveform>焦點置於 波形/頻譜圖</ListViewFocusWaveform>
     <ListViewGoToNextError>移至下一處錯誤</ListViewGoToNextError>
     <ShowBeamer>啟動字幕全螢幕投影儀</ShowBeamer>
     <MainTextBoxMoveLastWordDown>將上一行的最後一個單字移至下一行</MainTextBoxMoveLastWordDown>

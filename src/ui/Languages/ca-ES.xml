@@ -410,13 +410,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <EffectKaraoke>
     <Title>Efecte karaoke</Title>
     <ChooseColor>Escolliu color:</ChooseColor>
-    <TotalMilliseconds>Milisegons totals:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Retard final en milisegons:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Efecte màquina d'escriure</Title>
-    <TotalMilliseconds>Milisegons totals:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Retard final en milisegons:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Exporta format de text personalitzat</Title>
@@ -1190,8 +1186,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Controls>
       <SubtitleFormat>Formatació</SubtitleFormat>
       <FileEncoding>Codificació</FileEncoding>
-      <ListView>Vista llista</ListView>
-      <SourceView>Vista origen</SourceView>
       <UndoChangesInEditPanel>Des-fés canvis en panell Edita</UndoChangesInEditPanel>
       <Previous>&lt; Prev.</Previous>
       <Next>Seg. &gt;</Next>
@@ -1747,7 +1741,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GoToBookmark>Vés a marcador</GoToBookmark>
     <GoToPreviousBookmark>Vés a l'anterior marcador</GoToPreviousBookmark>
     <GoToNextBookmark>Vés al següent marcador</GoToNextBookmark>
-    <ChooseProfile>Escolliu perfil</ChooseProfile>
+    <GeneralChooseProfile>Escolliu perfil</GeneralChooseProfile>
     <FontInUi>Font UI</FontInUi>
     <ShowFrameRate>Mostra ràtio quadres en barra d'eines</ShowFrameRate>
     <DefaultFrameRate>Ràtio quadres predeterminada</DefaultFrameRate>
@@ -1961,7 +1955,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WaveformPlayNewSelection>Reprodueix nova selecció</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Reprodueix final de la selecció</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Reprodueix primer el subtítol seleccionat</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Focus en vista llista</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>Vés a canvi d'escena anterior</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Vés a canvi d'escena següent</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Activa/desactiva canvi d'escena</WaveformToggleSceneChange>
@@ -2020,7 +2013,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ListViewColumnPaste>Columna, enganxa</ListViewColumnPaste>
     <ListViewColumnTextUp>Columna, text amunt</ListViewColumnTextUp>
     <ListViewColumnTextDown>Columna, text avall</ListViewColumnTextDown>
-    <ListViewFocusWaveform>Focus a espectrograma/forma ona</ListViewFocusWaveform>
     <ListViewGoToNextError>Vés al següent error</ListViewGoToNextError>
     <ShowBeamer>Inicia subtítol projecció pantalla sencera</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Mou últim mot avall a següent línia subtítol</MainTextBoxMoveLastWordDown>

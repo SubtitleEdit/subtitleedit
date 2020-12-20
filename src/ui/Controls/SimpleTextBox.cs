@@ -20,7 +20,9 @@ namespace Nikse.SubtitleEdit.Controls
 
         public SimpleTextBox()
         {
+            SetAlignment();
             AllowDrop = true;
+
             DragEnter += SETextBox_DragEnter;
             DragDrop += SETextBox_DragDrop;
             MouseDown += SETextBox_MouseDown;
@@ -29,6 +31,15 @@ namespace Nikse.SubtitleEdit.Controls
 
             // To fix issue where WM_LBUTTONDOWN got wrong "SelectedText" (only in undocked mode)
             GotFocus += (sender, args) => { _gotFocusTicks = DateTime.UtcNow.Ticks; };
+        }
+
+        private void SetAlignment()
+        {
+            if (Configuration.Settings.General.CenterSubtitleInTextBox &&
+                TextAlign != HorizontalAlignment.Center)
+            {
+                TextAlign = HorizontalAlignment.Center;
+            }
         }
 
         private void SETextBox_KeyDown(object sender, KeyEventArgs e)

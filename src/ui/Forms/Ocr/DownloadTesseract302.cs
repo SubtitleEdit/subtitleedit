@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic;
+using System;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
@@ -12,7 +12,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
     {
         public DownloadTesseract302()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             Text = Configuration.Settings.Language.GetTesseractDictionaries.Download + " Tesseract 3.02";
             labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait;
             labelDescription1.Text = Configuration.Settings.Language.GetTesseractDictionaries.Download + " Tesseract OCR";

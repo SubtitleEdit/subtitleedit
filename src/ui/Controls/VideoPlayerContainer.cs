@@ -86,7 +86,7 @@ namespace Nikse.SubtitleEdit.Controls
         private bool _isMuted;
         private double? _muteOldVolume;
         private readonly System.ComponentModel.ComponentResourceManager _resources;
-        private int _controlsHeight = 47;
+        public int ControlsHeight = 47;
         private const int OriginalSubtitlesHeight = 57;
         private int _subtitlesHeight = OriginalSubtitlesHeight;
         private readonly Color _backgroundColor = Color.FromArgb(18, 18, 18);
@@ -122,7 +122,7 @@ namespace Nikse.SubtitleEdit.Controls
         private readonly Label _labelVideoPlayerName = new Label();
         private readonly Label _labelVolume = new Label();
         private readonly ToolTip _currentPositionToolTip = new ToolTip();
-        private List<MatroskaChapter> _chapters;
+        private List<MatroskaChapter> _chapters = null;
 
         public List<MatroskaChapter> Chapters
         {
@@ -767,7 +767,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (_panelControls.Visible)
             {
-                _panelSubtitle.Height += _controlsHeight;
+                _panelSubtitle.Height += ControlsHeight;
                 _panelControls.Visible = false;
             }
             if (hideCursor)
@@ -782,7 +782,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _panelControls.Visible = true;
                 _panelControls.BringToFront();
-                _panelSubtitle.Height -= _controlsHeight;
+                _panelSubtitle.Height -= ControlsHeight;
             }
             ShowCursor();
         }
@@ -823,7 +823,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private Control MakeControlsPanel()
         {
-            _panelControls = new Panel { Left = 0, Height = _controlsHeight };
+            _panelControls = new Panel { Left = 0, Height = ControlsHeight };
 
             _pictureBoxBackground = new PictureBox
             {
@@ -1152,15 +1152,15 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void VideoPlayerContainerResize(object sender, EventArgs e)
         {
-            _controlsHeight = _pictureBoxBackground.Height;
-            PanelPlayer.Height = Height - (_controlsHeight + _subtitlesHeight);
+            ControlsHeight = _pictureBoxBackground.Height;
+            PanelPlayer.Height = Height - (ControlsHeight + _subtitlesHeight);
             PanelPlayer.Width = Width;
             _videoPlayer?.Resize(PanelPlayer.Width, PanelPlayer.Height);
 
-            _panelSubtitle.Top = Height - (_controlsHeight + _subtitlesHeight);
+            _panelSubtitle.Top = Height - (ControlsHeight + _subtitlesHeight);
             _panelSubtitle.Width = Width;
 
-            _panelControls.Top = Height - _controlsHeight + 2;
+            _panelControls.Top = Height - ControlsHeight + 2;
             _panelControls.Width = Width;
             _pictureBoxBackground.Width = Width;
             _pictureBoxProgressbarBackground.Width = Width - (_pictureBoxProgressbarBackground.Left * 2);

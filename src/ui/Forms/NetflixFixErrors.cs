@@ -1,13 +1,14 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.NetflixQualityCheck;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.NetflixQualityCheck;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using static Nikse.SubtitleEdit.Forms.FixCommonErrors;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -23,7 +24,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public NetflixFixErrors(Subtitle subtitle, SubtitleFormat subtitleFormat, string subtitleFileName, string videoFileName)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             _subtitle = subtitle;
             _subtitleFormat = subtitleFormat;
@@ -43,6 +46,7 @@ namespace Nikse.SubtitleEdit.Forms
             RefreshCheckBoxes(language);
             _loading = false;
             RuleCheckedChanged(null, null);
+            UiUtil.FixLargeFonts(this, buttonOK);
         }
 
         private void RefreshCheckBoxes(string language)
@@ -58,7 +62,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (SceneChangeHelper.FromDisk(_videoFileName).Count > 0)
                 {
                     sceneChangesExists = true;
-                } 
+                }
             }
             checkBoxSceneChange.Checked = _netflixQualityController.VideoExists && sceneChangesExists;
             checkBoxSceneChange.Enabled = _netflixQualityController.VideoExists && sceneChangesExists;

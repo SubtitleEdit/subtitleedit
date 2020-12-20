@@ -438,13 +438,9 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
   <EffectKaraoke>
     <Title>Karaoke-effect</Title>
     <ChooseColor>Kleur kiezen:</ChooseColor>
-    <TotalMilliseconds>Totaal millisec.:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Eindvertraging in millisec.:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Typemachine-effect</Title>
-    <TotalMilliseconds>Totaal millisec.:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Eindvertraging in millisec.:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Eigen tekstindeling exporteren</Title>
@@ -1235,8 +1231,6 @@ Open ‘Instellingen -&gt; Voorkeuren -&gt; Extra’ voor meer informatie.</Goog
     <Controls>
       <SubtitleFormat>Opmaak</SubtitleFormat>
       <FileEncoding>Codering</FileEncoding>
-      <ListView>Lĳstweergave</ListView>
-      <SourceView>Bronweergave</SourceView>
       <UndoChangesInEditPanel>Wĳzigingen ongedaan maken</UndoChangesInEditPanel>
       <Previous>&lt; Vorige</Previous>
       <Next>Volgende &gt;</Next>
@@ -1814,8 +1808,8 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <GoToBookmark>Naar bladwĳzer</GoToBookmark>
     <GoToPreviousBookmark>Naar vorige bladwĳzer</GoToPreviousBookmark>
     <GoToNextBookmark>Naar volgende bladwĳzer</GoToNextBookmark>
-    <ChooseProfile>Profiel kiezen</ChooseProfile>
-    <DuplicateLine>Identieke ondertitel</DuplicateLine>
+    <GeneralChooseProfile>Profiel kiezen</GeneralChooseProfile>
+    <GeneralDuplicateLine>Identieke ondertitel</GeneralDuplicateLine>
     <FontInUi>Lettertype interface</FontInUi>
     <ShowFrameRate>Beeldsnelheid in werkbalk weergeven</ShowFrameRate>
     <DefaultFrameRate>Standaardbeeldsnelheid</DefaultFrameRate>
@@ -2053,7 +2047,6 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <WaveformPlayNewSelection>Selectie afspelen</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Selectie-einde afspelen</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Eerste geselecteerde ondertitel afspelen</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Lĳstweergave activeren</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>Naar vorige beeldwissel</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Naar volgende beeldwissel</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Beeldwissel toevoegen/verwĳderen</WaveformToggleSceneChange>
@@ -2125,7 +2118,6 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <ListViewColumnPaste>Kolom, samenvoegen</ListViewColumnPaste>
     <ListViewColumnTextUp>Kolom, tekst omhoog</ListViewColumnTextUp>
     <ListViewColumnTextDown>Kolom, tekst omlaag</ListViewColumnTextDown>
-    <ListViewFocusWaveform>Golfvorm/spectrogram activeren</ListViewFocusWaveform>
     <ListViewGoToNextError>Naar volgende fout</ListViewGoToNextError>
     <ShowBeamer>Ondertitelingbeamer voor volledig scherm starten</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Laatste woord naar volgende ondertitel verplaatsen</MainTextBoxMoveLastWordDown>

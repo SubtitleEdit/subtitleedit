@@ -440,13 +440,9 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
   <EffectKaraoke>
     <Title>Karaoke tehoste</Title>
     <ChooseColor>Valitse väri:</ChooseColor>
-    <TotalMilliseconds>Yhteensä ms:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Lopetusviive ms:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Kirjoituskone tehoste</Title>
-    <TotalMilliseconds>Yhteensä ms:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Lopetusviive ms:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Vie mukautetussa tekstimuodossa</Title>
@@ -1244,8 +1240,6 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <Controls>
       <SubtitleFormat>Muoto</SubtitleFormat>
       <FileEncoding>Koodaus</FileEncoding>
-      <ListView>Luettelonäkymä</ListView>
-      <SourceView>Lähdenäkymä</SourceView>
       <UndoChangesInEditPanel>Kumoa muutokset muokkauspaneelissa</UndoChangesInEditPanel>
       <Previous>Edellinen</Previous>
       <Next>Seuraava</Next>
@@ -1906,8 +1900,8 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <GoToBookmark>Siirry kirjanmerkkiin</GoToBookmark>
     <GoToPreviousBookmark>Siirry edelliseen kirjanmerkkiin</GoToPreviousBookmark>
     <GoToNextBookmark>Siirry seuraavaan kirjanmerkkiin</GoToNextBookmark>
-    <ChooseProfile>Valitse profiili</ChooseProfile>
-    <DuplicateLine>Kahdenna rivi</DuplicateLine>
+    <GeneralChooseProfile>Valitse profiili</GeneralChooseProfile>
+    <GeneralDuplicateLine>Kahdenna rivi</GeneralDuplicateLine>
     <FontInUi>Käyttöliittymäfontti</FontInUi>
     <ShowFrameRate>Näytä kuvataajuus</ShowFrameRate>
     <DefaultFrameRate>Kuvataajuus (oletus)</DefaultFrameRate>
@@ -2169,7 +2163,6 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <WaveformPlayNewSelection>Toista uusi valinta</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Toista valinnan loppu</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Toista ensimmäinen valittu tekstitys</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Tarkennusluettelonäkymä</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>Siirry edelliseen kohtauksen vaihtoon</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Siirry seuraavaan kohtauksen vaihtoon</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Kohtauksen vaihto päälle / pois</WaveformToggleSceneChange>
@@ -2247,7 +2240,6 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <ListViewColumnPaste>Sarake, liitä</ListViewColumnPaste>
     <ListViewColumnTextUp>Sarake, teksti ylös</ListViewColumnTextUp>
     <ListViewColumnTextDown>Sarake, teksti alas</ListViewColumnTextDown>
-    <ListViewFocusWaveform>Aaltomuoto / taajuusanalyysi</ListViewFocusWaveform>
     <ListViewGoToNextError>Siirry seuraavaan virheeseen</ListViewGoToNextError>
     <ShowBeamer>Aloita tekstityksen kokonäytön videoesitys</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Siirrä viimeinen sana seuraavalle riville</MainTextBoxMoveLastWordDown>

@@ -1,11 +1,13 @@
-﻿using System.Drawing;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Interfaces;
+using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 {
-    public class TransportStreamSubtitle : IBinaryParagraph
+    public class TransportStreamSubtitle : IBinaryParagraph, IBinaryParagraphWithPosition
     {
+        public Position TransportStreamPosition { get; set; }
+
         public ulong StartMilliseconds { get; set; }
 
         public ulong EndMilliseconds { get; set; }
@@ -18,15 +20,15 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
         public bool IsDvbSub => Pes != null;
 
+        public TransportStreamSubtitle()
+        {
+        }
+
         public TransportStreamSubtitle(BluRaySup.BluRaySupParser.PcsData bdSup, ulong startMilliseconds, ulong endMilliseconds)
         {
             _bdSup = bdSup;
             StartMilliseconds = startMilliseconds;
             EndMilliseconds = endMilliseconds;
-        }
-
-        public TransportStreamSubtitle()
-        {
         }
 
         /// <summary>
@@ -48,6 +50,21 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             return Pes.GetImageFull();
         }
 
+        public Size GetScreenSize()
+        {
+            if (_bdSup != null)
+            {
+                return _bdSup.Size;
+            }
+
+            if (Pes != null)
+            {
+                return Pes.GetScreenSize();
+            }
+
+            return new Size(DvbSubPes.DefaultScreenWidth, DvbSubPes.DefaultScreenHeight);
+        }
+
         public bool IsForced
         {
             get
@@ -56,6 +73,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 {
                     return _bdSup.IsForced;
                 }
+
                 return false;
             }
         }
@@ -66,9 +84,18 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             {
                 return _bdSup.GetPosition();
             }
+
+            if (TransportStreamPosition != null)
+            {
+                return TransportStreamPosition;
+            }
+
             return new Position(0, 0);
         }
 
+        public TimeCode StartTimeCode => new TimeCode(StartMilliseconds);
+
+        public TimeCode EndTimeCode => new TimeCode(EndMilliseconds);
 
         public int NumberOfImages
         {
@@ -82,6 +109,5 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 return _bdSup.BitmapObjects.Count;
             }
         }
-
     }
 }

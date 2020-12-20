@@ -295,13 +295,9 @@ Hộp thư: Gửi thư tới: nikse.dk@gmail.com</AboutText1>
   <EffectKaraoke>
     <Title>Hiệu ứng karaoke</Title>
     <ChooseColor>Chọn màu sắc:</ChooseColor>
-    <TotalMilliseconds>Tổng ms:.</TotalMilliseconds>
-    <EndDelayInMilliseconds>Kết thúc sự chậm trễ trong ms.:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Hiệu ứng chữ viết</Title>
-    <TotalMilliseconds>Tổng ms:.</TotalMilliseconds>
-    <EndDelayInMilliseconds>Kết thúc sự chậm trễ trong ms:.</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportPngXml>
     <Title>Xuất ra BDN XML/PNG</Title>
@@ -892,8 +888,6 @@ Hộp thư: Gửi thư tới: nikse.dk@gmail.com</AboutText1>
     <Controls>
       <SubtitleFormat>Định dạng</SubtitleFormat>
       <FileEncoding>Mã hoá</FileEncoding>
-      <ListView>Xem danh sách</ListView>
-      <SourceView>Xem nguồn</SourceView>
       <UndoChangesInEditPanel>Hủy bỏ việc chỉnh sửa trong bảng hiệu chỉnh</UndoChangesInEditPanel>
       <Previous>&lt;Trước</Previous>
       <Next>Sau&gt;</Next>

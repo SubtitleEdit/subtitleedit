@@ -1,9 +1,9 @@
-﻿using Nikse.SubtitleEdit.Core;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Ocr;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
@@ -16,9 +16,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         public OcrPreprocessingSettings(Bitmap bitmap, bool isBinaryImageCompare, PreprocessingSettings preprocessingSettings)
         {
+            UiUtil.PreInitialize(this);
+            InitializeComponent();
+            UiUtil.FixFonts(this);
             _loading = true;
             _isBinaryImageCompare = isBinaryImageCompare;
-            InitializeComponent();
             groupBoxBinaryImageCompareThreshold.Visible = isBinaryImageCompare;
             _source = new NikseBitmap(bitmap);
             pictureBoxSubtitleImage.Image = bitmap;
@@ -62,6 +64,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             _loading = false;
             RefreshImage();
+            UiUtil.FixLargeFonts(this, buttonOK);
         }
 
         private void RefreshImage()

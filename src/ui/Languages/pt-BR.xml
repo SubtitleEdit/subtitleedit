@@ -435,13 +435,9 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
   <EffectKaraoke>
     <Title>Efeito Karaoke</Title>
     <ChooseColor>Selecione a cor:</ChooseColor>
-    <TotalMilliseconds>Total milisseg.:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Atraso final em milisseg.:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Efeito máquina de escrever</Title>
-    <TotalMilliseconds>Total milliseg.:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Atraso final em milisseg.:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Exportar formato de texto personalizado</Title>
@@ -1232,8 +1228,6 @@ Vá para "Opções -&gt; Configurações -&gt; Ferramentas" para inserir sua cha
     <Controls>
       <SubtitleFormat>Formato</SubtitleFormat>
       <FileEncoding>Codificação</FileEncoding>
-      <ListView>Lista</ListView>
-      <SourceView>Original</SourceView>
       <UndoChangesInEditPanel>Desfazer alterações no painel de edição</UndoChangesInEditPanel>
       <Previous>&lt; Anterior</Previous>
       <Next>Próximo &gt;</Next>
@@ -1804,8 +1798,8 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <GoToBookmark>Ir para marcador</GoToBookmark>
     <GoToPreviousBookmark>Ir para o marcador anterior</GoToPreviousBookmark>
     <GoToNextBookmark>Ir para o próximo marcador</GoToNextBookmark>
-    <ChooseProfile>Escolha o perfil</ChooseProfile>
-    <DuplicateLine>Duplicar linha</DuplicateLine>
+    <GeneralChooseProfile>Escolha o perfil</GeneralChooseProfile>
+    <GeneralDuplicateLine>Duplicar linha</GeneralDuplicateLine>
     <FontInUi>Fonte da interface</FontInUi>
     <ShowFrameRate>Mostrar taxa de quadros na barra de ferramentas</ShowFrameRate>
     <DefaultFrameRate>Taxa de quadros padrão</DefaultFrameRate>
@@ -2043,7 +2037,6 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <WaveformPlayNewSelection>Tocar seleção</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Tocar final da seleção</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Tocar primeira legenda selecionada</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Foco da visualização em lista</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>Ir para a mudança de cena anterior</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Ir para próxima mudança de cena</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Alternar mudança de cena</WaveformToggleSceneChange>
@@ -2115,7 +2108,6 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <ListViewColumnPaste>Coluna, colar</ListViewColumnPaste>
     <ListViewColumnTextUp>Coluna, texto para cima</ListViewColumnTextUp>
     <ListViewColumnTextDown>Coluna, texto para baixo</ListViewColumnTextDown>
-    <ListViewFocusWaveform>Foco da forma de onda/espectrograma</ListViewFocusWaveform>
     <ListViewGoToNextError>Ir para próximo erro</ListViewGoToNextError>
     <ShowBeamer>Iniciar projeção da legenda em tela cheia</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Mover a última palavra para a próxima legenda</MainTextBoxMoveLastWordDown>

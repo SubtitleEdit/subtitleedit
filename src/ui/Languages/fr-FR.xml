@@ -408,13 +408,9 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
   <EffectKaraoke>
     <Title>Effet Karaoké</Title>
     <ChooseColor>Choisir couleur:</ChooseColor>
-    <TotalMilliseconds>Millisecondes total:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Délai de fin en millisecondes:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Effet machine à écrire</Title>
-    <TotalMilliseconds>Millisecondes total:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Délai de fin en millisecondes:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Exporter format de texte personnalisé</Title>
@@ -1169,8 +1165,6 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <Controls>
       <SubtitleFormat>Format</SubtitleFormat>
       <FileEncoding>Encodage</FileEncoding>
-      <ListView>Mode liste</ListView>
-      <SourceView>Mode source</SourceView>
       <UndoChangesInEditPanel>Annuler changement</UndoChangesInEditPanel>
       <Previous>&lt; Préc.</Previous>
       <Next>Suiv. &gt;</Next>
@@ -1948,7 +1942,6 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <WaveformPlayNewSelection>Lecture de la nouvelle sélection</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Lecture de la fin de la sélection</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Lecture du premier sous-titre sélectionné</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Focus du mode liste</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange />
     <WaveformGoToNextSceneChange>Aller au changement de scène suivant</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Alterner changement de scène</WaveformToggleSceneChange>
@@ -2007,7 +2000,6 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <ListViewColumnPaste>Colonne, coller du presse-papiers</ListViewColumnPaste>
     <ListViewColumnTextUp />
     <ListViewColumnTextDown />
-    <ListViewFocusWaveform>Focus sur onde/spectrogramme</ListViewFocusWaveform>
     <ListViewGoToNextError>Aller à l'erreur suivante</ListViewGoToNextError>
     <ShowBeamer>Début des sous-titres spectateur (plein écran)</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Déplacer le dernier mot dans la ligne du sous-titre suivant</MainTextBoxMoveLastWordDown>

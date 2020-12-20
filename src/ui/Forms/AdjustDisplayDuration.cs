@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public bool ExtendOnly => checkBoxExtendOnly.Checked;
 
-        public AdjustDisplayDuration()
+        public AdjustDisplayDuration(bool recalcActive = true)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -106,6 +106,16 @@ namespace Nikse.SubtitleEdit.Forms
                     radioButtonFixed.Checked = true;
                     break;
             }
+
+            if (!recalcActive)
+            {
+                radioButtonAutoRecalculate.Enabled = false;
+                if (radioButtonAutoRecalculate.Checked)
+                {
+                    radioButtonSeconds.Checked = true;
+                }
+            }
+
             FixEnabled();
         }
 

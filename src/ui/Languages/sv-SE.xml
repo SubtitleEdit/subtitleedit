@@ -417,13 +417,9 @@ Obs: Kontrollera ledigt utrymme.</WaveFileMalformed>
   <EffectKaraoke>
     <Title>Karaoke effekt</Title>
     <ChooseColor>Välj färg:</ChooseColor>
-    <TotalMilliseconds>Totalt millisek.:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Slutlig fördröjning i millisek.:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Skrivmaskins effekt</Title>
-    <TotalMilliseconds>Totalt millisek.:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Slutlig fördröjning i millisek.:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Exportera anpassade textformat</Title>
@@ -1200,8 +1196,6 @@ Gå till "Alternativ -&gt; Inställningar -&gt; Verktyg" för att ange din Googl
     <Controls>
       <SubtitleFormat>Text format</SubtitleFormat>
       <FileEncoding>Filkodning</FileEncoding>
-      <ListView>Listvy</ListView>
-      <SourceView>Ursprungskällan</SourceView>
       <UndoChangesInEditPanel>Ångra ändringar i redigirutan</UndoChangesInEditPanel>
       <Previous>&lt; Bakåt</Previous>
       <Next>Nästa &gt;</Next>
@@ -1984,7 +1978,6 @@ kan redigera i samma undertextfil (samarbete)</Information>
     <WaveformPlayNewSelection>Spela upp urvalet</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Spela upp slutet av urvalet</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Spela den första markerade undertexten</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Fokus listvy</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>Gå till föregående scenförändring</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Gå till nästa scenförändring</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Växla scenförändring</WaveformToggleSceneChange>
@@ -2042,7 +2035,6 @@ kan redigera i samma undertextfil (samarbete)</Information>
     <ListViewColumnPaste>Kolumn, klistra in</ListViewColumnPaste>
     <ListViewColumnTextUp>Kolumn, text upp</ListViewColumnTextUp>
     <ListViewColumnTextDown>Kolumn, text ner</ListViewColumnTextDown>
-    <ListViewFocusWaveform>Fokus vågform/spektrogram</ListViewFocusWaveform>
     <ListViewGoToNextError>Gå till nästa fel</ListViewGoToNextError>
     <ShowBeamer>Starta undertext i helskärms-beamer</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Flytta sista ordet till nästa undertext</MainTextBoxMoveLastWordDown>

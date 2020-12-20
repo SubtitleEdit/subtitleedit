@@ -15,8 +15,8 @@
         {
             DisplayDefinitionVersionNumber = buffer[index] >> 4;
             DisplayWindowFlag = (buffer[index] & 0b00001000) > 0;
-            DisplayWith = Helper.GetEndianWord(buffer, index + 1);
-            DisplayHeight = Helper.GetEndianWord(buffer, index + 3);
+            DisplayWith = Helper.GetEndianWord(buffer, index + 1) + 1;
+            DisplayHeight = Helper.GetEndianWord(buffer, index + 3) + 1;
             if (DisplayWindowFlag)
             {
                 DisplayWindowHorizontalPositionMinimum = Helper.GetEndianWord(buffer, index + 5);

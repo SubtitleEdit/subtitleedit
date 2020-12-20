@@ -217,13 +217,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <EffectKaraoke>
     <Title>تأثير الكاريوكي</Title>
     <ChooseColor>: اختر اللون</ChooseColor>
-    <TotalMilliseconds>:.مجموع ملي ثانية</TotalMilliseconds>
-    <EndDelayInMilliseconds>:.تأخير في نهاية ملي ثانية</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>تأثير آلة كاتبة</Title>
-    <TotalMilliseconds>:.مجموع ملي ثانية</TotalMilliseconds>
-    <EndDelayInMilliseconds>:.تأخير في نهاية ملي ثانية</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportPngXml>
     <Title>BDN XML/PNG تصدير</Title>
@@ -721,8 +717,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Controls>
       <SubtitleFormat>تشكيل</SubtitleFormat>
       <FileEncoding>الترميز</FileEncoding>
-      <ListView>عرض القائمة</ListView>
-      <SourceView>عرض المصدر</SourceView>
       <UndoChangesInEditPanel>التراجع عن التغييرات في لوحة التحرير</UndoChangesInEditPanel>
       <Previous>&lt; السابق</Previous>
       <Next>التالى &gt;</Next>
