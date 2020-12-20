@@ -1922,6 +1922,7 @@ Command line: {1} {2}
     <ChooseProfile>选择预设方案</ChooseProfile>
     <DuplicateLine>创建副本行</DuplicateLine>
     <ToggleView>切换表格/源视图</ToggleView>
+    <ToggleMode>切换翻译/创建/调整模式</ToggleMode>
     <Help>帮助</Help>
     <FontInUi>用户界面字体</FontInUi>
     <ShowFrameRate>在工具栏显示帧率</ShowFrameRate>
