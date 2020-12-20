@@ -167,6 +167,7 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly MainShortcuts _shortcuts = new MainShortcuts();
         private long _winLeftDownTicks = -1;
         private long _winRightDownTicks = -1;
+        private FormWindowState _lastFormWindowState = FormWindowState.Maximized;
 
         public bool IsMenuOpen { get; private set; }
 
@@ -4463,6 +4464,10 @@ namespace Nikse.SubtitleEdit.Forms
                 if (formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha))
                 {
                     styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
+                    if (styles.Count == 0)
+                    {
+                        styles = AdvancedSubStationAlpha.GetStylesFromHeader(AdvancedSubStationAlpha.DefaultHeader);
+                    }
                 }
                 else if (formatType == typeof(TimedText10) || formatType == typeof(ItunesTimedText))
                 {
@@ -19672,9 +19677,18 @@ namespace Nikse.SubtitleEdit.Forms
             if (WindowState == FormWindowState.Maximized)
             {
                 Main_ResizeEnd(sender, e);
+                _lastFormWindowState = WindowState;
                 return;
             }
+            else if (WindowState == FormWindowState.Normal && _lastFormWindowState == FormWindowState.Maximized)
+            {
+                System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(25), () =>
+                {
+                    MainResize();
+                });
+            }
 
+            _lastFormWindowState = WindowState;
             panelVideoPlayer.Invalidate();
         }
 
