@@ -2403,6 +2403,27 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            if (ext == ".ismt")
+            {
+                var f = new IsmtDfxp();
+                if (f.IsMine(null, fileName))
+                {
+                    f.LoadSubtitle(_subtitle, null, fileName);
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                    encoding = GetCurrentEncoding();
+                    SubtitleListview1.Fill(_subtitle);
+                    _subtitleListViewIndex = -1;
+                    SubtitleListview1.FirstVisibleIndex = -1;
+                    SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
+                    _fileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) + GetCurrentSubtitleFormat().Extension;
+                    SetTitle();
+                    ShowStatus(string.Format(_language.LoadedSubtitleX, _fileName));
+                    _converted = true;
+                    return;
+                }
+            }
+
             if (file.Length > Subtitle.MaxFileSize)
             {
                 // retry Blu-ray sup (file with wrong extension)

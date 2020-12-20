@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                if (fs.Length > 10000000)
+                if (fs.Length > 20000000)
                 {
                     return false;
                 }
@@ -56,10 +56,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 try
                 {
+                    if (xmlAsString.Length < 80)
+                    {
+                        continue;
+                    }
+
                     var sub = new Subtitle();
                     var mdatLines = xmlAsString.SplitToLines();
                     sub.ReloadLoadSubtitle(mdatLines, null, new TimedText());
-
                     if (sub.Paragraphs.Count == 0)
                     {
                         continue;
