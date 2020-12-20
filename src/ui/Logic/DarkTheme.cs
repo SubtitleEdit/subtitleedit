@@ -282,8 +282,14 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static void lv_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
         {
+            if (sender is SubtitleListView lv && lv.RightToLeftLayout)
+            {
+                // until we find a solution for drawing it in RTL
+                return;
+            }
+
             e.DrawDefault = false;
-            using (var b = new SolidBrush(Color.FromArgb(BackColor.R - 9, BackColor.G - 9, BackColor.B - 9)))
+            using (var b = new SolidBrush(Color.FromArgb(Math.Max(BackColor.R - 9, 0), Math.Max(BackColor.G - 9, 0), Math.Max(BackColor.B - 9, 0))))
             {
                 e.Graphics.FillRectangle(b, e.Bounds);
             }
