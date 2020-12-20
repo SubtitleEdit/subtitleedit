@@ -449,13 +449,9 @@ https://github.com/SubtitleEdit/subtitleedit
   <EffectKaraoke>
     <Title>Эффект Караоке</Title>
     <ChooseColor>Выбрать цвет:</ChooseColor>
-    <TotalMilliseconds>Всего мс:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Конечная задержка в мс:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Эффект Машинописи</Title>
-    <TotalMilliseconds>Всего мс:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Конечная задержка в мс:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Экспорт текста в пользовательский формат</Title>
@@ -1255,8 +1251,6 @@ https://github.com/SubtitleEdit/subtitleedit
     <Controls>
       <SubtitleFormat>Формат</SubtitleFormat>
       <FileEncoding>Кодировка</FileEncoding>
-      <ListView>Список субтитров</ListView>
-      <SourceView>Исходный список</SourceView>
       <UndoChangesInEditPanel>Отменить изменения</UndoChangesInEditPanel>
       <Previous>&lt; Назад</Previous>
       <Next>Далее &gt;</Next>
@@ -1838,8 +1832,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <GoToBookmark>Перейти в закладки</GoToBookmark>
     <GoToPreviousBookmark>Перейти к предыдущей закладке</GoToPreviousBookmark>
     <GoToNextBookmark>Перейти к следующей закладке</GoToNextBookmark>
-    <ChooseProfile>Выберите профиль</ChooseProfile>
-    <DuplicateLine>Дублировать линию</DuplicateLine>
+    <GeneralChooseProfile>Выберите профиль</GeneralChooseProfile>
+    <GeneralDuplicateLine>Дублировать линию</GeneralDuplicateLine>
     <FontInUi>Шрифты для Интерфейса Пользователя (UI)</FontInUi>
     <ShowFrameRate>Показывать частоту кадров в панели инструментов</ShowFrameRate>
     <DefaultFrameRate>Частота кадров по умолчанию</DefaultFrameRate>
@@ -2100,7 +2094,6 @@ https://github.com/SubtitleEdit/subtitleedit
     <WaveformPlayNewSelection>Проиграть новое выделение</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Воспроизвести конец выделения</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Проиграть первый выделенный субтитр</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Фокус на списке</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>Перейти к предыдущему изменению сцены</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Перейти к следующему изменению сцены</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Переключить изменение сцен</WaveformToggleSceneChange>
@@ -2177,7 +2170,6 @@ https://github.com/SubtitleEdit/subtitleedit
     <ListViewColumnPaste>Колонка, вставить</ListViewColumnPaste>
     <ListViewColumnTextUp>Колонка, текст выше</ListViewColumnTextUp>
     <ListViewColumnTextDown>Колонка, текст ниже</ListViewColumnTextDown>
-    <ListViewFocusWaveform>Фокус на волновой форме/спектрограмме</ListViewFocusWaveform>
     <ListViewGoToNextError>Перейти к следующей ошибке</ListViewGoToNextError>
     <ShowBeamer>Запустить субтитры при полноэкранном режиме проектора</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Переместить последнее слово вниз на следующую строку субтитров</MainTextBoxMoveLastWordDown>

@@ -453,13 +453,13 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
   <EffectKaraoke>
     <Title>Karaoke efekti</Title>
     <ChooseColor>Renk seç:</ChooseColor>
-    <TotalMilliseconds>Toplam milisaniye:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Milisaniye cinsinden sondaki gecikme:</EndDelayInMilliseconds>
+    <TotalSeconds>Toplam saniye:</TotalSeconds>
+    <EndDelayInSeconds>Saniye cinsinden gecikmeyi bitir:</EndDelayInSeconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Daktilo efekti</Title>
-    <TotalMilliseconds>Toplam milisaniye:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Milisaniye cinsinden sondaki gecikme:</EndDelayInMilliseconds>
+    <TotalSeconds>Toplam saniye:</TotalSeconds>
+    <EndDelayInSeconds>Saniye cinsinden gecikmeyi bitir:</EndDelayInSeconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Özel metin biçimini dışa aktar</Title>
@@ -1009,11 +1009,11 @@ Google translate API anahtarınızı girmek için "Seçenekler -&gt; Ayarlar -&g
         <Compare>&amp;Karşılaştır...</Compare>
         <Statistics>İstatist&amp;ikler...</Statistics>
         <Plugins>Eklentiler...</Plugins>
+        <ImportSubtitleFromVideoFile>Video dosyasından altyazı...</ImportSubtitleFromVideoFile>
         <ImportOcrFromDvd>VOB/IFO (DVD)'den OCR altyazı içe aktar...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>OCR VobSub (sub/idx) altyazı dosyasını içe aktar...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>OCR Blu-ray (.sup) altyazı dosyasını içe aktar...</ImportBluRaySupFile>
-        <ImportXSub>divx/avi'den OCR XSub dosyasını içe aktar...</ImportXSub>
-        <ImportSubtitleFromMatroskaFile>Matroska (.mkv) dosyasından altyazı içe aktar...</ImportSubtitleFromMatroskaFile>
+        <ImportBluRaySupFileEdit>Blu-ray (.sup) altyazı dosyası düzenlemek için...</ImportBluRaySupFileEdit>
         <ImportSubtitleWithManualChosenEncoding>Manuel olarak seçilen kodlama ile altyazıyı içe aktar...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Düz metin içe aktar...</ImportText>
         <ImportImages>Resimleri içe aktar...</ImportImages>
@@ -1262,8 +1262,6 @@ Google translate API anahtarınızı girmek için "Seçenekler -&gt; Ayarlar -&g
     <Controls>
       <SubtitleFormat>Biçim</SubtitleFormat>
       <FileEncoding>Kodlama</FileEncoding>
-      <ListView>Liste görünümü</ListView>
-      <SourceView>Kaynak görünümü</SourceView>
       <UndoChangesInEditPanel>Düzenleme panelinde değişiklikleri geri al</UndoChangesInEditPanel>
       <Previous>&lt; Önceki</Previous>
       <Next>Sonraki &gt;</Next>
@@ -1448,8 +1446,8 @@ Devam edilsin mi?</SubtitleAppendPrompt>
     <BeforeTypeWriterEffect>Daktilo efektinden önce</BeforeTypeWriterEffect>
     <BeforeKaraokeEffect>Karaoke efektinden önce</BeforeKaraokeEffect>
     <BeforeImportingDvdSubtitle>DVD'den altyazı içe aktarmadan önce</BeforeImportingDvdSubtitle>
-    <OpenMatroskaFile>Matroska dosyası aç...</OpenMatroskaFile>
-    <MatroskaFiles>Matroska dosyaları</MatroskaFiles>
+    <OpenSubtitleVideoFile>Video dosyasından altyazıyı aç...</OpenSubtitleVideoFile>
+    <VideoFiles>Video dosyaları</VideoFiles>
     <NoSubtitlesFound>Bulunan altyazı yok</NoSubtitlesFound>
     <NotAValidMatroskaFileX>Bu bir geçerli Matroska dosyası değil: {0}</NotAValidMatroskaFileX>
     <BlurayNotSubtitlesFound>Blu-ray alt dosyası herhangi bir altyazı içermiyor ya da hatalar içeriyor - ayrıştırmayı tekrar deneyin</BlurayNotSubtitlesFound>
@@ -1475,8 +1473,6 @@ Devam edilsin mi?</SubtitleAppendPrompt>
     <VobSubFiles>VobSub altyazı dosyaları</VobSubFiles>
     <OpenBluRaySupFile>Blu-ray .sup dosyası aç...</OpenBluRaySupFile>
     <BluRaySupFiles>Blu-ray .sup dosyaları</BluRaySupFiles>
-    <OpenXSubFiles>XSub dosyası aç...</OpenXSubFiles>
-    <XSubFiles>XSub dosyaları</XSubFiles>
     <BeforeImportingVobSubFile>VobSub altyazı dosyasını içe aktarmadan önce</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Blu-ray sup dosyasını içe aktarmadan önce</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>BDN xml dosyasını içe aktarmadan önce</BeforeImportingBdnXml>
@@ -1939,8 +1935,8 @@ Yeni oturum başlatın (işbirliği)</Information>
     <GoToBookmark>Yer imine git</GoToBookmark>
     <GoToPreviousBookmark>Önceki yer imine git</GoToPreviousBookmark>
     <GoToNextBookmark>Sonraki yer imine git</GoToNextBookmark>
-    <ChooseProfile>Profil seçin</ChooseProfile>
-    <DuplicateLine>Yinelenen satır</DuplicateLine>
+    <GeneralChooseProfile>Profil seçin</GeneralChooseProfile>
+    <GeneralDuplicateLine>Yinelenen satır</GeneralDuplicateLine>
     <FontInUi>UI Font</FontInUi>
     <ShowFrameRate>Kare hızını araç çubuğunda göster</ShowFrameRate>
     <DefaultFrameRate>Varsayılan kare hızı</DefaultFrameRate>
@@ -2044,7 +2040,7 @@ Yeni oturum başlatın (işbirliği)</Information>
     <WaveformCursorColor>İmleç rengi</WaveformCursorColor>
     <WaveformTextColor>Metin rengi</WaveformTextColor>
     <WaveformTextFontSize>Metin yazı tipi boyutu</WaveformTextFontSize>
-    <WaveformAndSpectrogramsFolderEmpty>Boş 'Spectrograms' ve 'Waveforms' klasörü</WaveformAndSpectrogramsFolderEmpty>
+    <WaveformAndSpectrogramsFolderEmpty>'Spectrograms' ve 'Waveforms' klasörünü boşalt</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>'Spectrograms' ve 'Waveforms' klasörleri içeridiği {0} dosya ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Spektrogram</Spectrogram>
     <GenerateSpectrogram>Spektrogram oluştur</GenerateSpectrogram>
@@ -2179,6 +2175,7 @@ Yeni oturum başlatın (işbirliği)</Information>
     <GoToPrevSubtitleAndPlay>Önceki satıra git ve oynat</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>Sonraki satıra git ve oynat</GoToNextSubtitleAndPlay>
     <ToggleFocus>Odağı liste görünümü ve altyazı metin kutusu arasında değiştir</ToggleFocus>
+    <ToggleFocusWaveform>Odağı liste görünümü ve dalga formu/spektrogram arasında değiştir</ToggleFocusWaveform>
     <ToggleDialogDashes>Diyalog çizgilerini aç/kapat</ToggleDialogDashes>
     <ToggleMusicSymbols>Müzik sembollerini değiştir</ToggleMusicSymbols>
     <Alignment>Hizala (seçilmiş satırlarda)</Alignment>
@@ -2191,6 +2188,7 @@ Yeni oturum başlatın (işbirliği)</Information>
     <AlignmentN7>Sol üste hizalama - { an7}</AlignmentN7>
     <AlignmentN8>Üst ortaya hizalama - { an8}</AlignmentN8>
     <AlignmentN9>Sağ üste hizalama - { an9}</AlignmentN9>
+    <ColorX>Renk {0} ({1})</ColorX>
     <CopyTextOnly>Sadece metni panoya kopyala (seçilen satırlarda)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Orijinalden geçerliye metin koplala</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Otomatik süre ayarla (seçilen satırlarda))</AutoDurationSelectedLines>
@@ -2207,7 +2205,6 @@ Yeni oturum başlatın (işbirliği)</Information>
     <WaveformPlayNewSelection>Seçimi oynat</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Seçimin sonunu oynat</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Seçilmiş ilk altyazıyı oynat</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Liste görünümünü odakla</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>Bir önceki bölüm değişikliğine git</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Bir sonraki bölüm değişikliğine git</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Bölüm geçiş değişimi</WaveformToggleSceneChange>
@@ -2285,7 +2282,6 @@ Yeni oturum başlatın (işbirliği)</Information>
     <ListViewColumnPaste>Sütun, yapıştır</ListViewColumnPaste>
     <ListViewColumnTextUp>Sütun, metin yukarı</ListViewColumnTextUp>
     <ListViewColumnTextDown>Sütun, metin aşağı</ListViewColumnTextDown>
-    <ListViewFocusWaveform>Dalga formu/spektrogram odakla</ListViewFocusWaveform>
     <ListViewGoToNextError>Sonraki hataya git</ListViewGoToNextError>
     <ShowBeamer>Altyazı tam ekran akışını başlat</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Bir sonraki altyazı satırının son kelimesini aşağı taşı</MainTextBoxMoveLastWordDown>
@@ -2294,6 +2290,7 @@ Yeni oturum başlatın (işbirliği)</Information>
     <MainTextBoxMoveLastWordDownCurrent>Son kelimeyi ilk satırdan aşağı taşı (geçerli altyazı)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Küçük harf seçimi</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Büyük harf seçimi</MainTextBoxSelectionToUpper>
+    <MainTextBoxSelectionToggleCasing>Seçimin büyük/küçük harf durumunu değiştir (özel/büyük harf/küçük harf)</MainTextBoxSelectionToggleCasing>
     <MainTextBoxSelectionToRuby>Ruby'ye Seçim (Japonca)</MainTextBoxSelectionToRuby>
     <MainTextBoxToggleAutoDuration>Otomatik süre geçişi</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Metni otomatik böl</MainTextBoxAutoBreak>
@@ -2303,7 +2300,7 @@ Yeni oturum başlatın (işbirliği)</Information>
     <MainFileSaveAll>Tümünü kaydet</MainFileSaveAll>
     <Miscellaneous>Çeşitli</Miscellaneous>
     <CpsIncludesSpace>Karakter/sn (CPS) boşluk içerir</CpsIncludesSpace>
-    <UseDoNotBreakAfterList>Listeden sonra 'satır-bölmeyin' kullanın (otomatik bölmek için)</UseDoNotBreakAfterList>
+    <UseDoNotBreakAfterList>Listedekilerden sonra bölmesin</UseDoNotBreakAfterList>
     <BreakEarlyForLineEnding>Cümlenin sonu için erken bölün (.!?)</BreakEarlyForLineEnding>
     <BreakByPixelWidth>Piksel genişliğine göre bölün</BreakByPixelWidth>
     <BreakPreferBottomHeavy>Altsatırın daha fazla karakter olmasını tercih et</BreakPreferBottomHeavy>
@@ -2499,7 +2496,8 @@ Devam et?</RestoreDefaultSettingsMsg>
   <SubStationAlphaProperties>
     <Title>Gelişmiş Sub Station Alpha özellikleri</Title>
     <TitleSubstationAlpha>Sub Station Alpha özellikleri</TitleSubstationAlpha>
-    <Script>Script</Script>
+    <Script>
+    </Script>
     <ScriptTitle>Başlık</ScriptTitle>
     <OriginalScript>Orijinal komut</OriginalScript>
     <Translation>Çeviri</Translation>
@@ -2750,6 +2748,7 @@ Değişiklikler saklansın mı?</KeepChangesMessage>
     <ErrorUnicodeEncodingOnly>Filigrandan sadece unicode dosya kodlama ile çalışır.</ErrorUnicodeEncodingOnly>
   </Watermark>
   <Waveform>
+    <AddWaveformAndSpectrogram>Dalga formu/spektrogram ekle</AddWaveformAndSpectrogram>
     <ClickToAddWaveform>Dalga formu eklemek için lütfen buraya tıklayın...</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Dalga formu/spektrogram eklemek için tıklayın</ClickToAddWaveformAndSpectrogram>
     <Seconds>Saniyeler</Seconds>

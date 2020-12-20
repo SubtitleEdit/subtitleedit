@@ -1,11 +1,10 @@
-﻿using System;
-using Nikse.SubtitleEdit.Core;
-using System.IO;
-using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Ocr;
 using Nikse.SubtitleEdit.Logic.Ocr.Binary;
+using System;
+using System.IO;
+using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
@@ -15,7 +14,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         public BinaryOcrChooseEditDb(string binaryImageDb)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             buttonNewCharacterDatabase.Text = Configuration.Settings.Language.VobSubOcr.New;
             buttonEditCharacterDatabase.Text = Configuration.Settings.Language.VobSubOcr.Edit;
@@ -127,7 +128,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             var fileName = Path.Combine(Configuration.OcrDirectory, comboBoxCharacterDatabase.SelectedItem + ".db");
             var binaryOcrDb = new BinaryOcrDb(fileName);
             binaryOcrDb.LoadCompareImages();
-            using (var formVobSubEditCharacters = new VobSubEditCharacters( null, binaryOcrDb))
+            using (var formVobSubEditCharacters = new VobSubEditCharacters(null, binaryOcrDb))
             {
                 if (formVobSubEditCharacters.ShowDialog() == DialogResult.OK)
                 {

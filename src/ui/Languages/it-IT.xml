@@ -375,13 +375,9 @@ Nota: Controlla lo spazio libero sul disco.</WaveFileMalformed>
   <EffectKaraoke>
     <Title>Effetto Karaoke</Title>
     <ChooseColor>Scegli colore:</ChooseColor>
-    <TotalMilliseconds>Millisecondi totali:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Ritardo finale in millisecondi:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Effetto macchina da scrivere</Title>
-    <TotalMilliseconds>Millisecondi totali:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Ritardo finale in millisecondi:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Esporta formato testo personalizzato</Title>
@@ -1086,8 +1082,6 @@ Nota: Controlla lo spazio libero sul disco.</WaveFileMalformed>
     <Controls>
       <SubtitleFormat>Formato</SubtitleFormat>
       <FileEncoding>Codifica</FileEncoding>
-      <ListView>Vista elenco</ListView>
-      <SourceView>Vista sorgente</SourceView>
       <UndoChangesInEditPanel>Annulla cambiamenti nel pannello modifica</UndoChangesInEditPanel>
       <Previous>&lt; Prec</Previous>
       <Next>Succ &gt;</Next>
@@ -1792,7 +1786,6 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <WaveformAddTextHere>Aggiungi testo qui (per nuova selezione)</WaveformAddTextHere>
     <WaveformPlayNewSelection>Riproduci nuova selezione</WaveformPlayNewSelection>
     <WaveformPlayFirstSelectedSubtitle>Riproduci primo sottotitoli selezionato</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Focus su listview</WaveformFocusListView>
     <GoBack1Frame>Un frame indietro</GoBack1Frame>
     <GoForward1Frame>Un frame avanti</GoForward1Frame>
     <GoBack100Milliseconds>100 ms indietro</GoBack100Milliseconds>
@@ -1830,7 +1823,6 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <ListViewColumnDelete>Colonna, elimina testo</ListViewColumnDelete>
     <ListViewColumnInsert>Colonna, inserisci testo</ListViewColumnInsert>
     <ListViewColumnPaste>Colonna, incolla</ListViewColumnPaste>
-    <ListViewFocusWaveform>Focus forma d'onda/spettrogramma</ListViewFocusWaveform>
     <ListViewGoToNextError>Vai al prossimo errore</ListViewGoToNextError>
     <ShowBeamer>Inizia sottotitolo fullscreen beamer</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Sposta l'ultima parola nella linea sottotitolo successiva</MainTextBoxMoveLastWordDown>

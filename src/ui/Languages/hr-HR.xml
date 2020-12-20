@@ -395,13 +395,9 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
   <EffectKaraoke>
     <Title>Karaoke efekt</Title>
     <ChooseColor>Izaberite boju:</ChooseColor>
-    <TotalMilliseconds>Ukupno milisekundi:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Završno kašnjenje:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Efekt pisaće mašine</Title>
-    <TotalMilliseconds>Ukupno vrijeme:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Kraj kašnjenja u milisekundama:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Izvezi prilagođeni tekst format</Title>
@@ -1141,8 +1137,6 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <Controls>
       <SubtitleFormat>Oblik podnaslova:</SubtitleFormat>
       <FileEncoding>Kodni raspored:</FileEncoding>
-      <ListView>Popis</ListView>
-      <SourceView>Izvor</SourceView>
       <UndoChangesInEditPanel>&amp;Opozovi</UndoChangesInEditPanel>
       <Previous>&lt; &amp;Natrag</Previous>
       <Next>N&amp;aprijed &gt;</Next>
@@ -1891,7 +1885,6 @@ određeni podnaslov s drugim ljudima.</Information>
     <WaveformPlayNewSelection>Reproduciraj novo izabrano</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd />
     <WaveformPlayFirstSelectedSubtitle>Reproduciraj prvi izabrani podnaslov</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Fokusiraj listu prikaza</WaveformFocusListView>
     <WaveformGoToNextSubtitle>Idi na sljedeći titl (sa video pozicije)</WaveformGoToNextSubtitle>
     <WaveformGoToPreviousSceneChange />
     <WaveformGoToNextSceneChange />
@@ -1940,7 +1933,6 @@ određeni podnaslov s drugim ljudima.</Information>
     <ListViewColumnDelete>Stup, brisanje teksta</ListViewColumnDelete>
     <ListViewColumnInsert>Stup, umetnuti tekst</ListViewColumnInsert>
     <ListViewColumnPaste>Stup, zalijepiti</ListViewColumnPaste>
-    <ListViewFocusWaveform>Fokusiraj valni/spektrogram</ListViewFocusWaveform>
     <ListViewGoToNextError>Idi na sljedeću pogrešku</ListViewGoToNextError>
     <ShowBeamer>Započni pregled podnaslova preko cijelog zaslona</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Pomakni zadnju riječ dolje u novi redak podnaslova</MainTextBoxMoveLastWordDown>

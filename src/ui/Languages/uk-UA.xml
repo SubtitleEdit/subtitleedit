@@ -378,13 +378,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <EffectKaraoke>
     <Title>Ефект Караоке</Title>
     <ChooseColor>Оберіть колір:</ChooseColor>
-    <TotalMilliseconds>Всього мілісекунд:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Кінцева затримка в мілісекундах:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Ефект друкарської машинки</Title>
-    <TotalMilliseconds>Всього мілісекунд:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Кінцева затримка в мілісекундах:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Експортувати в користувацький текстовий формат</Title>
@@ -1097,8 +1093,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Controls>
       <SubtitleFormat>Формат</SubtitleFormat>
       <FileEncoding>Кодування</FileEncoding>
-      <ListView>Список</ListView>
-      <SourceView>Сирець</SourceView>
       <UndoChangesInEditPanel>Скасувати зміни в панелі редагування</UndoChangesInEditPanel>
       <Previous>&lt; Поп.</Previous>
       <Next>Наст. &gt;</Next>
@@ -1812,7 +1806,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WaveformAddTextHere>Додати сюди текст (для нового виділення)</WaveformAddTextHere>
     <WaveformPlayNewSelection>Відтворити нове виділення</WaveformPlayNewSelection>
     <WaveformPlayFirstSelectedSubtitle>Відтворити перший вибраний субтитр</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Фокус на списку субтитрів</WaveformFocusListView>
     <GoBack1Frame>Один кадр назад</GoBack1Frame>
     <GoForward1Frame>Один кадр вперед</GoForward1Frame>
     <GoBack100Milliseconds>100 мс назад</GoBack100Milliseconds>
@@ -1850,7 +1843,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ListViewColumnDelete>Стовпчик, видалити текст</ListViewColumnDelete>
     <ListViewColumnInsert>Стовпчик, вставити текст</ListViewColumnInsert>
     <ListViewColumnPaste>Стовпчик, вставити з буферу обміну</ListViewColumnPaste>
-    <ListViewFocusWaveform>Фокус на аудіохвилю/спектрограму</ListViewFocusWaveform>
     <ListViewGoToNextError>Перейти до наступної помилки</ListViewGoToNextError>
     <ShowBeamer>Запустити повноекранний проектор субтитрів</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Пересунути останнє слово вниз до наступного субтитру</MainTextBoxMoveLastWordDown>

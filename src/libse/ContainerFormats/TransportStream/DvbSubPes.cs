@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 {
@@ -470,6 +470,29 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 }
             }
             return bmp;
+        }
+
+        public Size GetScreenSize()
+        {
+            if (SubtitleSegments == null)
+            {
+                ParseSegments();
+            }
+
+            int width = DefaultScreenWidth;
+            int height = DefaultScreenHeight;
+
+            var segments = SubtitleSegments;
+            foreach (var ss in segments)
+            {
+                if (ss.DisplayDefinition != null)
+                {
+                    width = ss.DisplayDefinition.DisplayWith;
+                    height = ss.DisplayDefinition.DisplayHeight;
+                }
+            }
+
+            return new Size(width, height);
         }
 
         public static string GetStreamIdDescription(int streamId)

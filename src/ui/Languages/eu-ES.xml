@@ -434,13 +434,9 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
   <EffectKaraoke>
     <Title>Karaoke eragina</Title>
     <ChooseColor>Hautatu margoa:</ChooseColor>
-    <TotalMilliseconds>Guztira segmil:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Amai atzerap. sm:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Idazmakina eragina</Title>
-    <TotalMilliseconds>Guztira segmil.:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Amaiera atzerapena segundumilaenetan:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Esportatu norbere idazki heuskarria</Title>
@@ -1232,8 +1228,6 @@ Joan "Aukerk -&gt; Ezarpenak -&gt; Tresnak" zure Google itzulpena API gakoa sart
     <Controls>
       <SubtitleFormat>Heuskarria:</SubtitleFormat>
       <FileEncoding>Kodeaketa:</FileEncoding>
-      <ListView>Zerrenda ikusi</ListView>
-      <SourceView>Iturburua ikusi</SourceView>
       <UndoChangesInEditPanel>Desegin</UndoChangesInEditPanel>
       <Previous>&lt; Aurr.</Previous>
       <Next>Hurr. &gt;</Next>
@@ -1798,8 +1792,8 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <GoToBookmark>Joan lastermarkara</GoToBookmark>
     <GoToPreviousBookmark>Joan aurreko lastermarkara</GoToPreviousBookmark>
     <GoToNextBookmark>Joan hurrengo lastermarkara</GoToNextBookmark>
-    <ChooseProfile>Hautatu profila</ChooseProfile>
-    <DuplicateLine>Bikoiztu lerroa</DuplicateLine>
+    <GeneralChooseProfile>Hautatu profila</GeneralChooseProfile>
+    <GeneralDuplicateLine>Bikoiztu lerroa</GeneralDuplicateLine>
     <FontInUi>EI Hizkia</FontInUi>
     <ShowFrameRate>Erakutsi frame neurria tresnabarran</ShowFrameRate>
     <DefaultFrameRate>Berezko frame neurria:</DefaultFrameRate>
@@ -2046,7 +2040,6 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <WaveformPlayNewSelection>Irakurri hautapen berria</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Irakurri hautapenaren amaiera</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Irakurri lehenik hautaturiko azpidatzia</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Fokutu zerrenda ikuspegia</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>Joan aurreko agerraldi aldaketara</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Joan hurrengo agerraldi aldaketara</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Aldatu agerraldi aldaketa</WaveformToggleSceneChange>
@@ -2118,7 +2111,6 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <ListViewColumnPaste>Zutabea, itsatsi</ListViewColumnPaste>
     <ListViewColumnTextUp>Zutabea, idazkia gora</ListViewColumnTextUp>
     <ListViewColumnTextDown>Zutabea, idazkia behera</ListViewColumnTextDown>
-    <ListViewFocusWaveform>Fokutu uhinera/argilitzaera</ListViewFocusWaveform>
     <ListViewGoToNextError>Joan hurrengo akatsera</ListViewGoToNextError>
     <ShowBeamer>Hasi azpidatzia ikusleiho-osoko beamer</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Mugitu azken hitza behera hurrengo azpidatzi lerrora</MainTextBoxMoveLastWordDown>

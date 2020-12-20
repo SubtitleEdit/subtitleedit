@@ -21,8 +21,8 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(this);
 
             Text = Configuration.Settings.Language.EffectTypewriter.Title;
-            labelTM.Text = Configuration.Settings.Language.EffectTypewriter.TotalMilliseconds;
-            labelEndDelay.Text = Configuration.Settings.Language.EffectTypewriter.EndDelayInMilliseconds;
+            labelTM.Text = Configuration.Settings.Language.EffectTypewriter.TotalSeconds;
+            labelEndDelay.Text = Configuration.Settings.Language.EffectTypewriter.EndDelayInSeconds;
             buttonPreview.Text = Configuration.Settings.Language.General.Preview;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;

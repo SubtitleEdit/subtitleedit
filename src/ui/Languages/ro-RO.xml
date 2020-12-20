@@ -437,13 +437,9 @@ Notă: Verifică spațiul liber al discului.</WaveFileMalformed>
   <EffectKaraoke>
     <Title>Efect Karaoke</Title>
     <ChooseColor>Alege culoarea:</ChooseColor>
-    <TotalMilliseconds>Total milisecunde:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Temporizare întârziată în milisec.:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Efect „mașină de scris”</Title>
-    <TotalMilliseconds>Total milisecunde:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Temporizare întârziată în milisec.:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Exportare format text particularizat</Title>
@@ -1236,8 +1232,6 @@ Treci la "Opțiuni -&gt; Setări -&gt; Unelte" ptr. a introduce codul API al Goo
     <Controls>
       <SubtitleFormat>Format</SubtitleFormat>
       <FileEncoding>Codare</FileEncoding>
-      <ListView>Vizualizare listă</ListView>
-      <SourceView>Vizualizare sursă</SourceView>
       <UndoChangesInEditPanel>Anulează modificările din panoul de editare</UndoChangesInEditPanel>
       <Previous>&lt; Înapoi</Previous>
       <Next>Înainte &gt;</Next>
@@ -1812,8 +1806,8 @@ pot edita acelasi fișier de subtitrare (colaborare)</Information>
     <GoToBookmark>Treci la marcaj</GoToBookmark>
     <GoToPreviousBookmark>Treci la marcajul anterior</GoToPreviousBookmark>
     <GoToNextBookmark>Treci la marcajul următor</GoToNextBookmark>
-    <ChooseProfile>Alege profilul</ChooseProfile>
-    <DuplicateLine>Linie dublată</DuplicateLine>
+    <GeneralChooseProfile>Alege profilul</GeneralChooseProfile>
+    <GeneralDuplicateLine>Linie dublată</GeneralDuplicateLine>
     <FontInUi>Font UI</FontInUi>
     <ShowFrameRate>Arată rata cadrului în bara de unelte</ShowFrameRate>
     <DefaultFrameRate>Rata implicită a cadrului</DefaultFrameRate>
@@ -2060,7 +2054,6 @@ pot edita acelasi fișier de subtitrare (colaborare)</Information>
     <WaveformPlayNewSelection>Redă selecția</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Redă sfârșitul selecției</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Redă mai întâi subtitrarea selectată</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Focalizează vizualizarea listei</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>Treci la schimbarea precedentă de scenă</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Treci la schimbarea următoare de scenă</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Comută schimbarea de scenă</WaveformToggleSceneChange>
@@ -2132,7 +2125,6 @@ pot edita acelasi fișier de subtitrare (colaborare)</Information>
     <ListViewColumnPaste>Coloană, lipește</ListViewColumnPaste>
     <ListViewColumnTextUp>Coloană, text urcat</ListViewColumnTextUp>
     <ListViewColumnTextDown>Coloană, text coborât</ListViewColumnTextDown>
-    <ListViewFocusWaveform>Focalizare formă audio/spectrograma</ListViewFocusWaveform>
     <ListViewGoToNextError>Treci la următoarea eroare</ListViewGoToNextError>
     <ShowBeamer>Începe subtitrarea pe tot ecranul</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Mută ultimul cuvânt la următoarea subtitrare</MainTextBoxMoveLastWordDown>

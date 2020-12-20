@@ -346,13 +346,9 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
   <EffectKaraoke>
     <Title>カラオケ効果</Title>
     <ChooseColor>色の選択:</ChooseColor>
-    <TotalMilliseconds>総ミリ秒:</TotalMilliseconds>
-    <EndDelayInMilliseconds>末尾の遅延 (ミリ秒).:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>タイプライター効果</Title>
-    <TotalMilliseconds>総ミリ秒:</TotalMilliseconds>
-    <EndDelayInMilliseconds>末尾の遅延 (ミリ秒).:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Formats>フォーマット</Formats>
@@ -1044,8 +1040,6 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <Controls>
       <SubtitleFormat>フォーマット</SubtitleFormat>
       <FileEncoding>エンコード</FileEncoding>
-      <ListView>リスト ビュー</ListView>
-      <SourceView>ソース ビュー</SourceView>
       <UndoChangesInEditPanel>編集を元に戻す</UndoChangesInEditPanel>
       <Previous>&lt; 前へ</Previous>
       <Next>次へ &gt;</Next>
@@ -1566,7 +1560,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <GoToBookmark>ブックマークへ移動</GoToBookmark>
     <GoToPreviousBookmark>前のブックマークへ移動</GoToPreviousBookmark>
     <GoToNextBookmark>次のブックマークへ移動</GoToNextBookmark>
-    <ChooseProfile>プロファイルを選択</ChooseProfile>
+    <GeneralChooseProfile>プロファイルを選択</GeneralChooseProfile>
     <ShowFrameRate>ツール バーにフレームレートを表示する</ShowFrameRate>
     <DefaultFrameRate>既定のフレームレート</DefaultFrameRate>
     <DefaultFileEncoding>既定のファイル エンコード</DefaultFileEncoding>

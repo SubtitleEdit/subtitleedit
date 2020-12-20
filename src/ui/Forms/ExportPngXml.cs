@@ -546,7 +546,7 @@ namespace Nikse.SubtitleEdit.Forms
                 saveFileDialog1.DefaultExt = "*.txt";
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "FAB image scripts|*.txt";
-                singleFile = true;
+                singleFile = false;
             }
             else if (_exportType == ExportFormats.Stl)
             {

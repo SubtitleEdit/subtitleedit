@@ -1,11 +1,10 @@
-﻿using Nikse.SubtitleEdit.Core;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -23,8 +22,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             Text = Configuration.Settings.Language.EffectKaraoke.Title;
             labelChooseColor.Text = Configuration.Settings.Language.EffectKaraoke.ChooseColor;
-            labelTM.Text = Configuration.Settings.Language.EffectKaraoke.TotalMilliseconds;
-            labelEndDelay.Text = Configuration.Settings.Language.EffectKaraoke.EndDelayInMilliseconds;
+            labelTM.Text = Configuration.Settings.Language.EffectKaraoke.TotalSeconds;
+            labelEndDelay.Text = Configuration.Settings.Language.EffectKaraoke.EndDelayInSeconds;
             buttonPreview.Text = Configuration.Settings.Language.General.Preview;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;

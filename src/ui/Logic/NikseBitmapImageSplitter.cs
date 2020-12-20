@@ -610,7 +610,7 @@ namespace Nikse.SubtitleEdit.Logic
                     var a2 = bmp.GetAlpha(x, y + 1 + yChange);
                     if (a1 > 150 || a2 > 150)
                     {
-                        if (x > 1 && yChange < 8 &&
+                        if (x > 1 && yChange < 8 && y + 3 + yChange < bmp.Height &&
                             bmp.GetAlpha(x - 1, y + yChange) < 150 && bmp.GetAlpha(x - 1, y + yChange) < 150 &&
                             bmp.GetAlpha(x - 1, y + 1 + yChange) < 150 && bmp.GetAlpha(x - 1, y + 2 + yChange) < 150 &&
                             bmp.GetAlpha(x - 1, y + 2 + yChange) < 150 && bmp.GetAlpha(x - 1, y + 3 + yChange) < 150 &&
@@ -619,7 +619,7 @@ namespace Nikse.SubtitleEdit.Logic
                             yChange += 2;
                         }
 
-                        else if (x > 1 && yChange < 8 &&
+                        else if (x > 1 && yChange < 8 && y + 4 + yChange < bmp.Height &&
                                  bmp.GetAlpha(x - 1, y + yChange) < 150 && bmp.GetAlpha(x - 1, y + yChange) < 150 &&
                                  bmp.GetAlpha(x - 1, y + 1 + yChange) < 150 && bmp.GetAlpha(x - 1, y + 2 + yChange) < 150 &&
                                  bmp.GetAlpha(x - 1, y + 2 + yChange) < 150 && bmp.GetAlpha(x - 1, y + 3 + yChange) < 150 &&
@@ -629,7 +629,7 @@ namespace Nikse.SubtitleEdit.Logic
                             yChange += 3;
                         }
 
-                        else if (x > 1 && yChange < 7 &&
+                        else if (x > 1 && yChange < 7 && y + 5 + yChange < bmp.Height &&
                                  bmp.GetAlpha(x - 1, y + yChange) < 150 && bmp.GetAlpha(x - 1, y + yChange) < 150 &&
                                  bmp.GetAlpha(x - 1, y + 1 + yChange) < 150 && bmp.GetAlpha(x - 1, y + 2 + yChange) < 150 &&
                                  bmp.GetAlpha(x - 1, y + 2 + yChange) < 150 && bmp.GetAlpha(x - 1, y + 3 + yChange) < 150 &&

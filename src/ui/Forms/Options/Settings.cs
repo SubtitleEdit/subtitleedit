@@ -18,10 +18,22 @@ using System.Xml;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Translate.Service;
 
-namespace Nikse.SubtitleEdit.Forms
+namespace Nikse.SubtitleEdit.Forms.Options
 {
     public sealed partial class Settings : PositionAndSizeForm
     {
+        private const int GeneralSection = 0;
+        private const int ShortcutsSection = 1;
+        private const int SyntaxColoringSection = 2;
+        private const int VideoPlayerSection = 3;
+        private const int WaveformAndSpectrogramSection = 4;
+        private const int ToolsSection = 5;
+        private const int WordListsSection = 6;
+        private const int ToolbarSection = 7;
+        private const int FontSection = 8;
+        private const int SsaStyleSection = 9;
+        private const int NetworkSection = 10;
+
         private string _ssaFontName;
         private double _ssaFontSize;
         private int _ssaFontColor;
@@ -113,6 +125,9 @@ namespace Nikse.SubtitleEdit.Forms
             labelStatus.Text = string.Empty;
             _rulesProfiles = new List<RulesProfile>(Configuration.Settings.General.Profiles);
             var gs = Configuration.Settings.General;
+            _backgroundImageDark = Configuration.Settings.General.UseDarkTheme;
+
+            listBoxSection.SelectedIndex = GeneralSection;
 
             checkBoxToolbarNew.Checked = gs.ShowToolbarNew;
             checkBoxToolbarOpen.Checked = gs.ShowToolbarOpen;
@@ -150,6 +165,9 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSubtitleTextBoxSyntaxColor.Checked = gs.SubtitleTextBoxSyntaxColor;
             panelTextBoxHtmlColor.BackColor = gs.SubtitleTextBoxHtmlColor;
             panelTextBoxAssColor.BackColor = gs.SubtitleTextBoxAssColor;
+            panelDarkThemeBackColor.BackColor = gs.DarkThemeBackColor;
+            panelDarkThemeColor.BackColor = gs.DarkThemeForeColor;
+            checkBoxDarkThemeEnabled.Checked = gs.UseDarkTheme;
             checkBoxSubtitleListViewFontBold.Checked = gs.SubtitleListViewFontBold;
             checkBoxSubtitleCenter.Checked = gs.CenterSubtitleInTextBox;
             panelSubtitleFontColor.BackColor = gs.SubtitleFontColor;
@@ -333,18 +351,30 @@ namespace Nikse.SubtitleEdit.Forms
 
             // Language
             var language = Configuration.Settings.Language.Settings;
+            listBoxSection.Items[GeneralSection] = language.General;
+            listBoxSection.Items[ShortcutsSection] = language.Shortcuts;
+            listBoxSection.Items[SyntaxColoringSection] = language.SyntaxColoring;
+            listBoxSection.Items[VideoPlayerSection] = language.VideoPlayer;
+            listBoxSection.Items[WaveformAndSpectrogramSection] = language.WaveformAndSpectrogram;
+            listBoxSection.Items[ToolsSection] = language.Tools;
+            listBoxSection.Items[WordListsSection] = language.WordLists;
+            listBoxSection.Items[ToolbarSection] = language.Toolbar;
+            listBoxSection.Items[FontSection] = Configuration.Settings.Language.DCinemaProperties.Font;
+            listBoxSection.Items[SsaStyleSection] = language.SsaStyle;
+            listBoxSection.Items[NetworkSection] = language.Network;
+
             Text = language.Title;
-            tabPageGeneral.Text = language.General;
-            tabPageVideoPlayer.Text = language.VideoPlayer;
-            tabPageWaveform.Text = language.WaveformAndSpectrogram;
-            tabPageWordLists.Text = language.WordLists;
-            tabPageTools.Text = language.Tools;
-            tabPageSsaStyle.Text = language.SsaStyle;
-            tabPageNetwork.Text = language.Network;
-            tabPageToolBar.Text = language.Toolbar;
-            tabPageFont.Text = Configuration.Settings.Language.DCinemaProperties.Font;
-            tabPageShortcuts.Text = language.Shortcuts;
-            tabPageSyntaxColoring.Text = language.SyntaxColoring;
+            panelGeneral.Text = language.General;
+            panelVideoPlayer.Text = language.VideoPlayer;
+            panelWaveform.Text = language.WaveformAndSpectrogram;
+            panelWordLists.Text = language.WordLists;
+            panelTools.Text = language.Tools;
+            panelSsaStyle.Text = language.SsaStyle;
+            panelNetwork.Text = language.Network;
+            panelToolBar.Text = language.Toolbar;
+            panelFont.Text = Configuration.Settings.Language.DCinemaProperties.Font;
+            panelShortcuts.Text = language.Shortcuts;
+            panelSyntaxColoring.Text = language.SyntaxColoring;
             groupBoxShowToolBarButtons.Text = language.ShowToolBarButtons;
             labelTBNew.Text = language.New;
             labelTBOpen.Text = language.Open;
@@ -437,6 +467,10 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSubtitleTextBoxSyntaxColor.Text = language.UseSyntaxColoring;
             buttonTextBoxHtmlColor.Text = language.HtmlColor;
             buttonTextBoxAssColor.Text = language.AssaColor;
+            groupBoxDarkTheme.Text = language.DarkTheme;
+            checkBoxDarkThemeEnabled.Text = language.DarkThemeEnabled;
+            buttonDarkThemeColor.Text = language.WaveformTextColor;
+            buttonDarkThemeBackColor.Text = language.WaveformBackgroundColor;
             checkBoxSubtitleListViewFontBold.Text = language.SubtitleBold;
             checkBoxSubtitleCenter.Text = language.SubtitleCenter;
             checkBoxSubtitleCenter.Left = checkBoxSubtitleFontBold.Left;
@@ -1122,16 +1156,17 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(generalNode, language.GoToNextSubtitleAndFocusVideo, nameof(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitleAndFocusVideo));
             AddNode(generalNode, language.GoToPrevSubtitleAndPlay, nameof(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitleAndPlay));
             AddNode(generalNode, language.GoToNextSubtitleAndPlay, nameof(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitleAndPlay));
-            AddNode(generalNode, language.Help, nameof(Configuration.Settings.Shortcuts.GeneralHelp), true);
-            AddNode(generalNode, language.UnbreakNoSpace, nameof(Configuration.Settings.Shortcuts.GeneralUnbrekNoSpace));
             AddNode(generalNode, language.ToggleBookmarks, nameof(Configuration.Settings.Shortcuts.GeneralToggleBookmarks));
             AddNode(generalNode, language.ToggleBookmarksWithComment, nameof(Configuration.Settings.Shortcuts.GeneralToggleBookmarksWithText), true);
             AddNode(generalNode, language.ClearBookmarks, nameof(Configuration.Settings.Shortcuts.GeneralClearBookmarks));
             AddNode(generalNode, language.GoToBookmark, nameof(Configuration.Settings.Shortcuts.GeneralGoToBookmark));
             AddNode(generalNode, language.GoToPreviousBookmark, nameof(Configuration.Settings.Shortcuts.GeneralGoToPreviousBookmark));
             AddNode(generalNode, language.GoToNextBookmark, nameof(Configuration.Settings.Shortcuts.GeneralGoToNextBookmark));
-            AddNode(generalNode, language.ChooseProfile, nameof(Configuration.Settings.Shortcuts.ChooseProfile));
-            AddNode(generalNode, language.DuplicateLine, nameof(Configuration.Settings.Shortcuts.DuplicateLine));
+            AddNode(generalNode, language.ChooseProfile, nameof(Configuration.Settings.Shortcuts.GeneralChooseProfile));
+            AddNode(generalNode, language.DuplicateLine, nameof(Configuration.Settings.Shortcuts.GeneralDuplicateLine));
+            AddNode(generalNode, language.ToggleView, nameof(Configuration.Settings.Shortcuts.GeneralToggleView));
+            AddNode(generalNode, language.ToggleMode, nameof(Configuration.Settings.Shortcuts.GeneralToggleMode));
+            AddNode(generalNode, language.Help, nameof(Configuration.Settings.Shortcuts.GeneralHelp), true);
             if (generalNode.Nodes.Count > 0)
             {
                 _shortcuts.Nodes.Add(generalNode);
@@ -1149,8 +1184,9 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(fileNode, Configuration.Settings.Language.Main.Menu.File.CloseOriginal, nameof(Configuration.Settings.Shortcuts.MainFileCloseOriginal), true);
             AddNode(fileNode, language.MainFileSaveAll, nameof(Configuration.Settings.Shortcuts.MainFileSaveAll));
             AddNode(fileNode, Configuration.Settings.Language.Main.Menu.File.Compare, nameof(Configuration.Settings.Shortcuts.MainFileCompare), true);
-            AddNode(fileNode, Configuration.Settings.Language.Main.Menu.File.ImportText, nameof(Configuration.Settings.Shortcuts.MainFileImportPlainText), true);
-            AddNode(fileNode, Configuration.Settings.Language.Main.Menu.File.ImportTimecodes, nameof(Configuration.Settings.Shortcuts.MainFileImportTimeCodes), true);
+            AddNode(fileNode, Configuration.Settings.Language.Main.Menu.File.Import + " -> " + Configuration.Settings.Language.Main.Menu.File.ImportText, nameof(Configuration.Settings.Shortcuts.MainFileImportPlainText), true);
+            AddNode(fileNode, Configuration.Settings.Language.Main.Menu.File.Import + " -> " + Configuration.Settings.Language.Main.Menu.File.ImportBluRaySupFileEdit, nameof(Configuration.Settings.Shortcuts.MainFileImportBdSupForEdit), true);
+            AddNode(fileNode, Configuration.Settings.Language.Main.Menu.File.Import + " -> " + Configuration.Settings.Language.Main.Menu.File.ImportTimecodes, nameof(Configuration.Settings.Shortcuts.MainFileImportTimeCodes), true);
             AddNode(fileNode, Configuration.Settings.Language.Main.Menu.File.Export + " -> " + Configuration.Settings.Language.Main.Menu.File.ExportEbu, nameof(Configuration.Settings.Shortcuts.MainFileExportEbu), true);
             AddNode(fileNode, Configuration.Settings.Language.Main.Menu.File.Export + " -> " + Configuration.Settings.Language.Main.Menu.File.ExportPac, nameof(Configuration.Settings.Shortcuts.MainFileExportPac), true);
             AddNode(fileNode, Configuration.Settings.Language.Main.Menu.File.Export + " -> " + Configuration.Settings.Language.Main.Menu.File.ExportPlainText, nameof(Configuration.Settings.Shortcuts.MainFileExportPlainText), true);
@@ -1207,7 +1243,9 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(videoNode, Configuration.Settings.Language.Main.Menu.Video.CloseVideo, nameof(Configuration.Settings.Shortcuts.MainVideoClose), true);
             AddNode(videoNode, language.TogglePlayPause, nameof(Configuration.Settings.Shortcuts.MainVideoPlayPauseToggle));
             AddNode(videoNode, language.Pause, nameof(Configuration.Settings.Shortcuts.MainVideoPause));
+            AddNode(videoNode, Configuration.Settings.Language.Main.VideoControls.Stop, nameof(Configuration.Settings.Shortcuts.MainVideoStop));
             AddNode(videoNode, Configuration.Settings.Language.Main.VideoControls.PlayFromJustBeforeText, nameof(Configuration.Settings.Shortcuts.MainVideoPlayFromJustBefore));
+            AddNode(videoNode, Configuration.Settings.Language.Main.VideoControls.PlayFromBeginning, nameof(Configuration.Settings.Shortcuts.MainVideoPlayFromBeginning));
             AddNode(videoNode, Configuration.Settings.Language.Main.Menu.Video.ShowHideVideo, nameof(Configuration.Settings.Shortcuts.MainVideoShowHideVideo), true);
             AddNode(videoNode, language.FoucsSetVideoPosition, nameof(Configuration.Settings.Shortcuts.MainVideoFoucsSetVideoPosition));
             AddNode(videoNode, language.ToggleDockUndockOfVideoControls, nameof(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls), true);
@@ -1294,9 +1332,10 @@ namespace Nikse.SubtitleEdit.Forms
                 _shortcuts.Nodes.Add(listViewAndTextBoxNode);
             }
 
-            var listViewNode = new ShortcutNode(Configuration.Settings.Language.Main.Controls.ListView);
+            var listViewNode = new ShortcutNode(language.ListView);
             AddNode(listViewNode, language.MergeDialog, nameof(Configuration.Settings.Shortcuts.MainMergeDialog));
             AddNode(listViewNode, language.ToggleFocus, nameof(Configuration.Settings.Shortcuts.MainToggleFocus));
+            AddNode(listViewNode, language.ToggleFocusWaveform, nameof(Configuration.Settings.Shortcuts.MainToggleFocusWaveform));
             AddNode(listViewNode, language.ToggleDialogDashes, nameof(Configuration.Settings.Shortcuts.MainListViewToggleDashes));
             AddNode(listViewNode, language.Alignment, nameof(Configuration.Settings.Shortcuts.MainListViewAlignment), true);
             AddNode(listViewNode, language.CopyTextOnly, nameof(Configuration.Settings.Shortcuts.MainListViewCopyText));
@@ -1308,7 +1347,6 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(listViewNode, language.ListViewColumnPaste, nameof(Configuration.Settings.Shortcuts.MainListViewColumnPaste), true);
             AddNode(listViewNode, language.ListViewColumnTextUp, nameof(Configuration.Settings.Shortcuts.MainListViewColumnTextUp), true);
             AddNode(listViewNode, language.ListViewColumnTextDown, nameof(Configuration.Settings.Shortcuts.MainListViewColumnTextDown), true);
-            AddNode(listViewNode, language.ListViewFocusWaveform, nameof(Configuration.Settings.Shortcuts.MainListViewFocusWaveform));
             AddNode(listViewNode, language.ListViewGoToNextError, nameof(Configuration.Settings.Shortcuts.MainListViewGoToNextError));
             if (listViewNode.Nodes.Count > 0)
             {
@@ -1332,6 +1370,7 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(textBoxNode, language.MainTextBoxAutoBreakFromPos, nameof(Configuration.Settings.Shortcuts.MainTextBoxBreakAtPosition));
             AddNode(textBoxNode, language.MainTextBoxAutoBreakFromPosAndGoToNext, nameof(Configuration.Settings.Shortcuts.MainTextBoxBreakAtPositionAndGoToNext));
             AddNode(textBoxNode, language.MainTextBoxUnbreak, nameof(Configuration.Settings.Shortcuts.MainTextBoxUnbreak));
+            AddNode(textBoxNode, language.MainTextBoxUnbreakNoSpace, nameof(Configuration.Settings.Shortcuts.MainTextBoxUnbreakNoSpace));
             if (textBoxNode.Nodes.Count > 0)
             {
                 _shortcuts.Nodes.Add(textBoxNode);
@@ -1405,7 +1444,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var audioVisualizerNode = new ShortcutNode(language.WaveformAndSpectrogram);
-            AddNode(audioVisualizerNode, Configuration.Settings.Language.Waveform.ClickToAddWaveformAndSpectrogram, nameof(Configuration.Settings.Shortcuts.WaveformAdd));
+            AddNode(audioVisualizerNode, Configuration.Settings.Language.Waveform.AddWaveformAndSpectrogram, nameof(Configuration.Settings.Shortcuts.WaveformAdd));
             AddNode(audioVisualizerNode, Configuration.Settings.Language.Waveform.ZoomIn, nameof(Configuration.Settings.Shortcuts.WaveformZoomIn));
             AddNode(audioVisualizerNode, Configuration.Settings.Language.Waveform.ZoomOut, nameof(Configuration.Settings.Shortcuts.WaveformZoomOut));
             AddNode(audioVisualizerNode, language.VerticalZoom, nameof(Configuration.Settings.Shortcuts.WaveformVerticalZoom));
@@ -1419,7 +1458,6 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(audioVisualizerNode, language.WaveformPlayNewSelection, nameof(Configuration.Settings.Shortcuts.WaveformPlaySelection));
             AddNode(audioVisualizerNode, language.WaveformPlayNewSelectionEnd, nameof(Configuration.Settings.Shortcuts.WaveformPlaySelectionEnd));
             AddNode(audioVisualizerNode, Configuration.Settings.Language.Main.VideoControls.InsertNewSubtitleAtVideoPosition, nameof(Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition));
-            AddNode(audioVisualizerNode, language.WaveformFocusListView, nameof(Configuration.Settings.Shortcuts.WaveformFocusListView));
             AddNode(audioVisualizerNode, language.WaveformGoToPreviousSceneChange, nameof(Configuration.Settings.Shortcuts.WaveformGoToPreviousSceneChange));
             AddNode(audioVisualizerNode, language.WaveformGoToNextSceneChange, nameof(Configuration.Settings.Shortcuts.WaveformGoToNextSceneChange));
             AddNode(audioVisualizerNode, language.WaveformToggleSceneChange, nameof(Configuration.Settings.Shortcuts.WaveformToggleSceneChange));
@@ -1684,6 +1722,9 @@ namespace Nikse.SubtitleEdit.Forms
             gs.SubtitleTextBoxSyntaxColor = checkBoxSubtitleTextBoxSyntaxColor.Checked;
             gs.SubtitleTextBoxHtmlColor = panelTextBoxHtmlColor.BackColor;
             gs.SubtitleTextBoxAssColor = panelTextBoxAssColor.BackColor;
+            gs.DarkThemeBackColor = panelDarkThemeBackColor.BackColor;
+            gs.DarkThemeForeColor = panelDarkThemeColor.BackColor;
+            gs.UseDarkTheme = checkBoxDarkThemeEnabled.Checked;
             gs.SubtitleListViewFontBold = checkBoxSubtitleListViewFontBold.Checked;
             gs.CenterSubtitleInTextBox = checkBoxSubtitleCenter.Checked;
             gs.SubtitleFontColor = panelSubtitleFontColor.BackColor;
@@ -2506,9 +2547,58 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void TabControlSettingsSelectedIndexChanged(object sender, EventArgs e)
+        private void ListBoxSectionSelectedIndexChanged(object sender, EventArgs e)
         {
             labelStatus.Text = string.Empty;
+
+            panelGeneral.Visible = false;
+            panelShortcuts.Visible = false;
+            panelSyntaxColoring.Visible = false;
+            panelVideoPlayer.Visible = false;
+            panelWaveform.Visible = false;
+            panelTools.Visible = false;
+            panelWordLists.Visible = false;
+            panelToolBar.Visible = false;
+            panelFont.Visible = false;
+            panelSsaStyle.Visible = false;
+            panelNetwork.Visible = false;
+
+            var section = panelGeneral;
+            switch (listBoxSection.SelectedIndex)
+            {
+                case ShortcutsSection:
+                    section = panelShortcuts;
+                    break;
+                case SyntaxColoringSection:
+                    section = panelSyntaxColoring;
+                    break;
+                case VideoPlayerSection:
+                    section = panelVideoPlayer;
+                    break;
+                case WaveformAndSpectrogramSection:
+                    section = panelWaveform;
+                    break;
+                case ToolsSection:
+                    section = panelTools;
+                    break;
+                case WordListsSection:
+                    section = panelWordLists;
+                    break;
+                case ToolbarSection:
+                    section = panelToolBar;
+                    break;
+                case FontSection:
+                    section = panelFont;
+                    break;
+                case SsaStyleSection:
+                    section = panelSsaStyle;
+                    break;
+                case NetworkSection:
+                    section = panelNetwork;
+                    break;
+            }
+
+            section.Visible = true;
         }
 
         private void ListBoxKeyDownSearch(object sender, KeyEventArgs e)
@@ -3132,7 +3222,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool IsShortcutValid()
         {
-            if (treeViewShortcuts.SelectedNode == null || !treeViewShortcuts.SelectedNode.Text.Contains('['))
+            if (treeViewShortcuts.SelectedNode == null || !Enumerable.Contains(treeViewShortcuts.SelectedNode.Text, '['))
             {
                 return false;
             }
@@ -3496,6 +3586,30 @@ namespace Nikse.SubtitleEdit.Forms
         private void panelTextBoxAssColor_MouseClick(object sender, MouseEventArgs e)
         {
             buttonTextBoxAssColor_Click(null, null);
+        }
+
+        private void buttonDarkThemeColor_Click(object sender, EventArgs e)
+        {
+            colorDialogSSAStyle.Color = panelDarkThemeColor.BackColor;
+            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            {
+                panelDarkThemeColor.BackColor = colorDialogSSAStyle.Color;
+            }
+        }
+
+        private void buttonDarkThemeBackColor_Click(object sender, EventArgs e)
+        {
+            colorDialogSSAStyle.Color = panelDarkThemeBackColor.BackColor;
+            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            {
+                panelDarkThemeBackColor.BackColor = colorDialogSSAStyle.Color;
+            }
+        }
+
+        private void listBoxSection_LostFocus(object sender, EventArgs e)
+        {
+            // avoid flickering when losing focus
+            listBoxSection.Update();
         }
     }
 }

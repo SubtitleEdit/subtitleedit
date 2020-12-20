@@ -47,6 +47,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             _header = subtitle.Header;
             _format = format;
             _isSubStationAlpha = _format.Name == SubStationAlpha.NameOfFormat;
+            _backgroundImageDark = Configuration.Settings.General.UseDarkTheme;
 
             if (_header != null && _header.Contains("http://www.w3.org/ns/ttml"))
             {
@@ -1328,7 +1329,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private void pictureBoxPreview_Click(object sender, EventArgs e)
         {
             _backgroundImageDark = !_backgroundImageDark;
-            _backgroundImage.Dispose();
+            _backgroundImage?.Dispose();
             _backgroundImage = null;
             GeneratePreview();
         }

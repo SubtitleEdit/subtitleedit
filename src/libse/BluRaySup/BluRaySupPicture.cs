@@ -282,6 +282,11 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 return 0x40;
             }
 
+            if (Math.Abs(fps - 30.0) < 0.01) // 30
+            {
+                return 0x50;
+            }
+
             if (Math.Abs(fps - Core.FpsPalI) < 0.01) // 50
             {
                 return 0x60;

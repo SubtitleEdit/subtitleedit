@@ -449,13 +449,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <EffectKaraoke>
     <Title>Εφέ καραόκε</Title>
     <ChooseColor>Επιλογή χρώματος:</ChooseColor>
-    <TotalMilliseconds>Συνολικά χιλ. δευτερολέπτου:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Καθυστέρηση λήξης σε χιλ. δευτερολέπτου:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Εφέ γραφομηχανής</Title>
-    <TotalMilliseconds>Συνολικά χιλ. δευτερολέπτου:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Καθυστέρηση λήξης σε χιλ. δευτερολέπτου:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Εξαγωγή προσαρμοσμένης μορφής κειμένου</Title>
@@ -1251,8 +1247,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Controls>
       <SubtitleFormat>Μορφή</SubtitleFormat>
       <FileEncoding>Κωδικοποίηση</FileEncoding>
-      <ListView>Προβολή λίστας</ListView>
-      <SourceView>Προβολή πηγής</SourceView>
       <UndoChangesInEditPanel>Αναίρεση αλλαγών στον πίνακα επεξεργασίας</UndoChangesInEditPanel>
       <Previous>&lt; Προηγούμενο</Previous>
       <Next>Επόμενο &gt;</Next>
@@ -1922,8 +1916,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GoToBookmark>Μετάβαση σε σημείωση</GoToBookmark>
     <GoToPreviousBookmark>Προηγούμενη σημείωση</GoToPreviousBookmark>
     <GoToNextBookmark>Επόμενη σημείωση</GoToNextBookmark>
-    <ChooseProfile>Επιλογή προφίλ</ChooseProfile>
-    <DuplicateLine>Αντιγραφή γραμμής</DuplicateLine>
+    <GeneralChooseProfile>Επιλογή προφίλ</GeneralChooseProfile>
+    <GeneralDuplicateLine>Αντιγραφή γραμμής</GeneralDuplicateLine>
     <FontInUi>Γραμματοσειρά διεπαφής</FontInUi>
     <ShowFrameRate>Εμφάνιση ρυθμού καρέ στη γραμμή εργαλείων</ShowFrameRate>
     <DefaultFrameRate>Προεπιλεγμένος ρυθμός καρέ</DefaultFrameRate>
@@ -2191,7 +2185,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WaveformPlayNewSelection>Αναπαραγωγή επιλεγμένου</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Αναπαραγωγή λήξης επιλεγμένου</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Αναπαραγωγή του πρώτου υποτίτλου</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Εστίαση σε προβολή λίστας</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>Μετάβαση σε προηγούμενη αλλαγή σκηνής</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Μετάβαση σε επόμενη αλλαγή σκηνής</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Εναλλαγή αλλαγή σκηνής</WaveformToggleSceneChange>
@@ -2269,7 +2262,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ListViewColumnPaste>Στήλη, επικόλληση</ListViewColumnPaste>
     <ListViewColumnTextUp>Στήλη, κείμενο προς τα πάνω</ListViewColumnTextUp>
     <ListViewColumnTextDown>Στήλη, κείμενο προς τα κάτω</ListViewColumnTextDown>
-    <ListViewFocusWaveform>Εστίαση κυματομορφής/φασματογραφήματος</ListViewFocusWaveform>
     <ListViewGoToNextError>Μετάβαση σε επόμενο σφάλμα</ListViewGoToNextError>
     <ShowBeamer>Ξεκινήστε υπότιτλο σε πλήρη οθόνη βιντεοπροβολέα</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Μετακίνηση τελευταίας λέξης στην επόμενη γραμμή</MainTextBoxMoveLastWordDown>

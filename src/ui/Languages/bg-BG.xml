@@ -4,7 +4,7 @@
     <Title>Subtitle Edit</Title>
     <Version>3.5.18</Version>
     <TranslatedBy>Превод на български: Ivo Ivanov и JJD
-Допълнения и последваща обработка: KalinM</TranslatedBy>
+Допълнения и последна обработка: KalinM</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -229,7 +229,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TransportStreamFileNameEnding>Край на името на файла</TransportStreamFileNameEnding>
     <TransportStreamSettingsButton>Настройки на TS...</TransportStreamSettingsButton>
     <RemoveLineBreaks>Премахване прекъсвания на редове</RemoveLineBreaks>
+    <DeleteLines>Изтриване на редове</DeleteLines>
     <TryToUseSourceEncoding>Опитайте да използвате изходната кодова таблица</TryToUseSourceEncoding>
+    <DeleteFirstLines>Изтрийте първите редове</DeleteFirstLines>
+    <DeleteLastLines>Изтрийте последните редове</DeleteLastLines>
+    <DeleteContaining>Изтрийте редовете, съдържащи</DeleteContaining>
     <MkvLanguageInOutputFileName>„Език“ в името на изходния файл</MkvLanguageInOutputFileName>
     <MkvLanguageInOutputFileNameX>Matroska (.mkv) „Език“ в името на изходния файл: {0}</MkvLanguageInOutputFileNameX>
     <MkvLanguageStyleTwoLetter>Код на две букви на езика</MkvLanguageStyleTwoLetter>
@@ -407,6 +411,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DiskFormatCode>Код за формата на диска</DiskFormatCode>
     <DisplayStandardCode>Показване на стандартен код</DisplayStandardCode>
     <ColorRequiresTeletext>Задайте цвят на телетекста!</ColorRequiresTeletext>
+    <AlignmentRequiresTeletext>Изравняването изисква телетекст!</AlignmentRequiresTeletext>
+    <TeletextCharsShouldBe38>„Максималния брой символи на ред“ за телетекст трябва да бъде 38!</TeletextCharsShouldBe38>
     <CharacterCodeTable>Знакова таблица:</CharacterCodeTable>
     <LanguageCode>Код за език:</LanguageCode>
     <OriginalProgramTitle>Оригинално заглавие на програмата</OriginalProgramTitle>
@@ -1000,11 +1006,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Compare>Сравняване...</Compare>
         <Statistics>Статистика...</Statistics>
         <Plugins>Приставки (Plugins)...</Plugins>
+        <ImportSubtitleFromVideoFile>Импортиране на субтитри от видео файл...</ImportSubtitleFromVideoFile>
         <ImportOcrFromDvd>Импортиране/OCR на субтитри от VOB/IFO (DVD)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Импортиране/OCR на субтитри VobSub (sub/idx)...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Импортиране/OCR на субтитри от Blu-ray (sup)...</ImportBluRaySupFile>
-        <ImportXSub>Импортиране/OCR субтитри от divx/avi (XSub)...</ImportXSub>
-        <ImportSubtitleFromMatroskaFile>Импортиране на субтитри от файл Matroska (.mkv)...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Импортиране на субтитри с ръчно избрано кодиране...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Импортиране на обикновен текст...</ImportText>
         <ImportImages>Импортиране на изображения...</ImportImages>
@@ -1100,9 +1105,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <OpenDvd>Отваряне DVD...</OpenDvd>
         <ChooseAudioTrack>Избор на аудио пътечка</ChooseAudioTrack>
         <CloseVideo>Затвори видео файла</CloseVideo>
+        <OpenSecondSubtitle>Отваряне на втори файл със субтитри...</OpenSecondSubtitle>
         <SetVideoOffset>Задаване на видео отместване...</SetVideoOffset>
         <SmptTimeMode>SMPTE тайминг (избиране кадър)</SmptTimeMode>
         <GenerateTextFromVideo>Генериране на текст от видео...</GenerateTextFromVideo>
+        <ImportChaptersFromVideo>Импортиране на глави от видео</ImportChaptersFromVideo>
         <GenerateImportSceneChanges>Създаване/импортиране на промени в сцени...</GenerateImportSceneChanges>
         <RemoveSceneChanges>Премахване на промени в сцени</RemoveSceneChanges>
         <WaveformBatchGenerate>Пакетно генериране Wav форма на сигнала...</WaveformBatchGenerate>
@@ -1251,8 +1258,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Controls>
       <SubtitleFormat>Формат на субтитрите</SubtitleFormat>
       <FileEncoding>Кодиране на файла</FileEncoding>
-      <ListView>Изглед на списъка</ListView>
-      <SourceView>Изглед оригинал</SourceView>
       <UndoChangesInEditPanel>Отмени промените</UndoChangesInEditPanel>
       <Previous>&lt;Назад</Previous>
       <Next>Напред&gt;</Next>
@@ -1439,11 +1444,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeTypeWriterEffect>Преди ефекта пишеща машина</BeforeTypeWriterEffect>
     <BeforeKaraokeEffect>Преди ефекта караоке</BeforeKaraokeEffect>
     <BeforeImportingDvdSubtitle>Преди внасянето на субтитри от DVD</BeforeImportingDvdSubtitle>
-    <OpenMatroskaFile>Отваряне на файл Matroska...</OpenMatroskaFile>
-    <MatroskaFiles>Matroska файлове</MatroskaFiles>
+    <OpenSubtitleVideoFile>Отваряне на субтитри от видео файл...</OpenSubtitleVideoFile>
+    <VideoFiles>Видео файлове</VideoFiles>
     <NoSubtitlesFound>Няма намерени субтитри</NoSubtitlesFound>
     <NotAValidMatroskaFileX>Това е невалиден Matroska файл: {0}</NotAValidMatroskaFileX>
     <BlurayNotSubtitlesFound>Blu-ray sup файла не съдържа никакви субтитри или е повреден - опитайте да го демуксните отново</BlurayNotSubtitlesFound>
+    <ImportingChapters>Импортиране на глави...</ImportingChapters>
+    <XChaptersImported>{0} импортирани глави</XChaptersImported>
     <ParsingMatroskaFile>Обработка на файла Matroska. Моля, изчакайте...</ParsingMatroskaFile>
     <ParsingTransportStreamFile>Анализ на Transport Stream файл. Изчакайте, моля...</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Преди внасянето на субтитри от файла Matroska</BeforeImportFromMatroskaFile>
@@ -1464,8 +1471,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <VobSubFiles>Файл със субтитри VobSub</VobSubFiles>
     <OpenBluRaySupFile>Отваряне на файл Blu-ray .sup...</OpenBluRaySupFile>
     <BluRaySupFiles>Файлове Blu-ray .sup</BluRaySupFiles>
-    <OpenXSubFiles>Отваряне на XSub файл...</OpenXSubFiles>
-    <XSubFiles>XSub файлове</XSubFiles>
     <BeforeImportingVobSubFile>Преди внасянето на субтитри VobSub</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Преди внасянето на файла Blu-ray sup</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>Преди внасянето на файла BDN xml</BeforeImportingBdnXml>
@@ -1579,6 +1584,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NoSupportHereDvdSup>Тук не се поддържат DVD sup файлове</NoSupportHereDvdSup>
     <NoSupportHereVobSub>Тук не се поддържат VobSub файлове</NoSupportHereVobSub>
     <NoSupportHereDivx>Тук не се поддържат DivX файлове</NoSupportHereDivx>
+    <NoChapters>Няма намерени глави във видеото.</NoChapters>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Избор на субтитри от файл Matroska</Title>
@@ -1925,8 +1931,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GoToBookmark>Преминаване на отметка</GoToBookmark>
     <GoToPreviousBookmark>Преминаване на предишната отметка</GoToPreviousBookmark>
     <GoToNextBookmark>Преминаване до следващата отметка</GoToNextBookmark>
-    <ChooseProfile>Избор на профил</ChooseProfile>
-    <DuplicateLine>Дублиран ред</DuplicateLine>
+    <GeneralChooseProfile>Избор на профил</GeneralChooseProfile>
+    <GeneralDuplicateLine>Дублиран ред</GeneralDuplicateLine>
     <FontInUi>Шрифт на потребителския интерфейс</FontInUi>
     <ShowFrameRate>Показване честотата на кадрите в лентата с инструменти</ShowFrameRate>
     <DefaultFrameRate>Честота на кадрите (fps) по подр.</DefaultFrameRate>
@@ -2107,6 +2113,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ListViewAndTextBox>Изглед на списъка и текстово поле</ListViewAndTextBox>
     <ListView>Изглед на списъка</ListView>
     <TextBox>Текстово поле</TextBox>
+    <UseSyntaxColoring>Оцветяване на синтаксиса</UseSyntaxColoring>
+    <HtmlColor>Html цвят</HtmlColor>
+    <AssaColor>ASSA цвят</AssaColor>
     <UpdateShortcut>Обнови</UpdateShortcut>
     <FoucsSetVideoPosition>Задаване на фокус позицията на видеото</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Превключване положението на видео регулаторите</ToggleDockUndockOfVideoControls>
@@ -2118,6 +2127,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AdjustSetStartAutoDurationAndGoToNext>Задаване начало, авт. продължителност и преминаване на следващото</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Задаване край, следващо начало и преминаване на следващия</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>Клавиш надолу=задаване начало. Клавиш нагоре=задаване край и преминаване на следващ</AdjustStartDownEndUpAndGoToNext>
+    <AdjustSetStartAndEndOfPrevious>Задаване начало и край на предишния (минус мин. разлика)</AdjustSetStartAndEndOfPrevious>
+    <AdjustSetStartAndEndOfPreviousAndGoToNext>Задаване начало и край на предишния и преминаване към следващия (минус минимална разлика)</AdjustSetStartAndEndOfPreviousAndGoToNext>
     <AdjustSelected100MsForward>Преместване избраното със 100 мс НАПРЕД</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Преместване избраното със 100 мс НАЗАД</AdjustSelected100MsBack>
     <AdjustStartXMsBack>Преместване на старта с {0} мс  НАЗАД</AdjustStartXMsBack>
@@ -2153,7 +2164,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MainCreateStartDownEndUp>Създаване на ново - стрелка НАДОЛУ, задаване крайно време - стрелка НАГОРЕ</MainCreateStartDownEndUp>
     <MergeDialog>Обединяване диалога (вмъкване на тирета)</MergeDialog>
     <GoToNext>Преминаване на следващия ред</GoToNext>
-    <GoToPrevious>Преминаване на предния ред</GoToPrevious>
+    <GoToNextCursorAtEnd>Преминаване на следващия ред и задаване на курсора в края</GoToNextCursorAtEnd>
+    <GoToPrevious>Преминаване на предишния ред</GoToPrevious>
     <GoToCurrentSubtitleStart>Позициониране в началото на текущия ред</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Позициониране в края на текущия ред</GoToCurrentSubtitleEnd>
     <GoToPreviousSubtitleAndFocusVideo>Преминаване на предишния ред и задаване позиция на видеото</GoToPreviousSubtitleAndFocusVideo>
@@ -2173,6 +2185,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AlignmentN7>Подравняване Горе-Ляво - {\an7}</AlignmentN7>
     <AlignmentN8>Подравняване Горе-Център - {\an8}</AlignmentN8>
     <AlignmentN9>Подравняване Горе-Дясно - {\an9}</AlignmentN9>
+    <ColorX>Цвят {0} ({1})</ColorX>
     <CopyTextOnly>Копиране само на текста в клипборда (избрания ред)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Копиране на текста от оригинал в текущ</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Автоматично времетраене (избрания ред(ове))</AutoDurationSelectedLines>
@@ -2214,9 +2227,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GoToStartCurrent>Задаване на видео поз. за старт на текущия субтитър</GoToStartCurrent>
     <ToggleStartEndCurrent>Превключване на видео поз. между начало/край на текущия субтитър</ToggleStartEndCurrent>
     <PlayCurrent>Възпроизвеждане на текущия субтитър</PlayCurrent>
-    <WaveformGoToPrevSubtitle>Преминаване към предишния субтитър (от видео позиция)</WaveformGoToPrevSubtitle>
-    <WaveformGoToNextSubtitle>Преминаване към следващия субтитър (от позицията на видеото)</WaveformGoToNextSubtitle>
-    <WaveformSelectNextSubtitle>Избор на следващия субтитър (от позицията на видеото, запазване на видео поз.)</WaveformSelectNextSubtitle>
+    <WaveformGoToPrevSubtitle>Преминаване на предишния субтитър (от видео позицията)</WaveformGoToPrevSubtitle>
+    <WaveformGoToNextSubtitle>Преминаване на следващия субтитър (от видео позицията)</WaveformGoToNextSubtitle>
+    <WaveformGoToPrevChapter>Преминаване на предишната глава</WaveformGoToPrevChapter>
+    <WaveformGoToNextChapter>Преминаване на следващата глава</WaveformGoToNextChapter>
+    <WaveformSelectNextSubtitle>Избор на следващия субтитър (от видео позицията, запазване на видео поз.)</WaveformSelectNextSubtitle>
     <TogglePlayPause>Превключване Пусни/Пауза</TogglePlayPause>
     <Pause>Пауза</Pause>
     <Fullscreen>Цял екран</Fullscreen>
@@ -2275,6 +2290,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MainTextBoxMoveLastWordDownCurrent>Преместване последната дума от първия ред надолу (текущия субтитър)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Избраното в малки букви</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Избраното в ГЛАВНИ букви</MainTextBoxSelectionToUpper>
+    <MainTextBoxSelectionToggleCasing>Превключване корпуса на селекцията (правилно/главно/малко)</MainTextBoxSelectionToggleCasing>
     <MainTextBoxSelectionToRuby>Избраното на Ruby (Японски)</MainTextBoxSelectionToRuby>
     <MainTextBoxToggleAutoDuration>Превключване на авт. времетраене</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Автоматично прекъсване на текст</MainTextBoxAutoBreak>

@@ -326,13 +326,9 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
   <EffectKaraoke>
     <Title>Karaoke učinek</Title>
     <ChooseColor>Izberi barvo:</ChooseColor>
-    <TotalMilliseconds>Skupaj millisek.:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Končaj zakasnitev v millisek.:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Učinek pisalnega stroja</Title>
-    <TotalMilliseconds>Skupaj milisek.:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Končaj zakasnitev v milisek.:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Izvozi navaden format besedila</Title>
@@ -1011,8 +1007,6 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <Controls>
       <SubtitleFormat>Oblika</SubtitleFormat>
       <FileEncoding>Kodiranje</FileEncoding>
-      <ListView>Ogled seznama</ListView>
-      <SourceView>Ogled izvora</SourceView>
       <UndoChangesInEditPanel>Razveljavi spremembe v urejevalniku</UndoChangesInEditPanel>
       <Previous>&lt; Nazaj</Previous>
       <Next>Naprej &gt;</Next>
@@ -1679,7 +1673,6 @@ popravlja en podnapis (sodelovanje)</Information>
     <WaveformAddTextHere>Sem dodaj besedilo (za novo izbrane)</WaveformAddTextHere>
     <WaveformPlayNewSelection>Predvajaj na novo izbrane</WaveformPlayNewSelection>
     <WaveformPlayFirstSelectedSubtitle>Predvajaj prvi izbrani podnapis</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Fokusiraj ogled seznama</WaveformFocusListView>
     <GoBack1Frame>Eno sliko nazaj</GoBack1Frame>
     <GoForward1Frame>Eno sliko naprej</GoForward1Frame>
     <GoBack100Milliseconds>100 ms nazaj</GoBack100Milliseconds>
@@ -1715,7 +1708,6 @@ popravlja en podnapis (sodelovanje)</Information>
     <ListViewColumnDelete>Stolpec, pobriši besedilo</ListViewColumnDelete>
     <ListViewColumnInsert>Stolpec, vstavi besedilo</ListViewColumnInsert>
     <ListViewColumnPaste>Stolpec, prilepi</ListViewColumnPaste>
-    <ListViewFocusWaveform>Fokusiraj krivuljo/spektrograg</ListViewFocusWaveform>
     <ShowBeamer>Zaženi prenosnik za podnapise v celem ekranu</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Pomakni besedo nižje v naslednjo vrstico</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Pomakni besedo višje v naslednjo vrstico</MainTextBoxMoveFirstWordFromNextUp>

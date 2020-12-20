@@ -21,7 +21,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             linkLabelOpenFolder.Text = Configuration.Settings.Language.Main.Menu.File.OpenContainingFolder;
 
-            Text = string.Empty;
+            Text = "Subtitle Edit";
             labelText.Text = text;
             UiUtil.FixLargeFonts(this, buttonOK);
 

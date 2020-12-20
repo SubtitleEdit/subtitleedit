@@ -1,4 +1,6 @@
-﻿using System.Text.RegularExpressions;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using System;
+using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.Translate
 {
@@ -48,7 +50,8 @@ namespace Nikse.SubtitleEdit.Core.Translate
 
         public static string PreTranslate(string input, string source)
         {
-            var s = input;
+            string s = FixInvalidCarriageReturnLineFeedCharacters(input);
+
             if (source == "en")
             {
                 s = Regex.Replace(s, @"\bI'm ", "I am ");
@@ -76,5 +79,11 @@ namespace Nikse.SubtitleEdit.Core.Translate
             return s;
         }
 
+        private static string FixInvalidCarriageReturnLineFeedCharacters(string input)
+        {
+            // Fix new line chars (avoid "Specified value has invalid CRLF characters")
+            // See https://github.com/SubtitleEdit/subtitleedit/issues/4589
+            return string.Join(Environment.NewLine, input.SplitToLines()).Trim();
+        }
     }
 }

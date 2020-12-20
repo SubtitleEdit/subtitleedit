@@ -345,13 +345,9 @@
   <EffectKaraoke>
     <Title>เอฟเฟ็กต์แบบคาราโอเกะ</Title>
     <ChooseColor>เลือกสี:</ChooseColor>
-    <TotalMilliseconds>มิลลิวินาทีรวม:</TotalMilliseconds>
-    <EndDelayInMilliseconds>หน่วงเวลาเป็นมิลลิวินาที:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>เอฟเฟ็กต์แบบพิมพ์ดีด</Title>
-    <TotalMilliseconds>มิลลิวินาทีรวม.:</TotalMilliseconds>
-    <EndDelayInMilliseconds>หน่วงเวลาเป็นมิลลิวินาที:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>เอ็กซ์พอร์ตเป็นไฟล์ข้อความแบบกำหนดเอง</Title>
@@ -1042,8 +1038,6 @@
     <Controls>
       <SubtitleFormat>รูปแบบ</SubtitleFormat>
       <FileEncoding>รหัสภาษา</FileEncoding>
-      <ListView>ลิสต์วิว</ListView>
-      <SourceView>ซอร์สวิว</SourceView>
       <UndoChangesInEditPanel>เลิกทำสิ่งที่แก้ไขไปในช่องแก้ไข</UndoChangesInEditPanel>
       <Previous>&lt; ก่อน</Previous>
       <Next>หลัง &gt;</Next>
@@ -1721,7 +1715,6 @@
     <WaveformAddTextHere>แทรกข้อความตรงนี้ (สำหรับส่วนที่เลือกใหม่)</WaveformAddTextHere>
     <WaveformPlayNewSelection>เล่นส่วนที่เลือกใหม่</WaveformPlayNewSelection>
     <WaveformPlayFirstSelectedSubtitle>เล่นซับไตเติ้ลแรกที่เลือก</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>โฟกัสที่ลิสต์วิว</WaveformFocusListView>
     <GoBack1Frame>ย้อนหลังหนึ่งเฟรม</GoBack1Frame>
     <GoForward1Frame>เดินหน้าหนึ่งเฟรม</GoForward1Frame>
     <GoBack100Milliseconds>ย้อนหลัง 100 มิลลิวินาที</GoBack100Milliseconds>
@@ -1759,7 +1752,6 @@
     <ListViewColumnDelete>คอลัมน์ ลบข้อความ</ListViewColumnDelete>
     <ListViewColumnInsert>คอลัมน์ แทรกข้อความ</ListViewColumnInsert>
     <ListViewColumnPaste>คอลัมน์ วาง</ListViewColumnPaste>
-    <ListViewFocusWaveform>โฟกัสที่เวฟฟอร์ม/สเปกโตแกรม</ListViewFocusWaveform>
     <ListViewGoToNextError>ไปที่ข้อผิดพลาดถัดไป</ListViewGoToNextError>
     <ShowBeamer>เริ่มซับไตเติ้ลเต็มจอแสดงบีมเมอร์</ShowBeamer>
     <MainTextBoxMoveLastWordDown>ย้ายคำสุดท้ายไปซับไตเติ้ลบรรทัดถัดไป</MainTextBoxMoveLastWordDown>

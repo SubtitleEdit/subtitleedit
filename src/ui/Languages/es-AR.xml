@@ -421,13 +421,9 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
   <EffectKaraoke>
     <Title>Efecto Karaoke</Title>
     <ChooseColor>Seleccione color:</ChooseColor>
-    <TotalMilliseconds>Total de ms :</TotalMilliseconds>
-    <EndDelayInMilliseconds>Retraso del fin en ms :</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Efecto máquina de escribir</Title>
-    <TotalMilliseconds>Total de ms :</TotalMilliseconds>
-    <EndDelayInMilliseconds>Retraso del fin en ms :</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Exportar a formato de texto personalizado</Title>
@@ -1208,8 +1204,6 @@ Ve a "Opciones -&gt; Configuración -&gt; Herramientas" para introducir la clave
     <Controls>
       <SubtitleFormat>Formato</SubtitleFormat>
       <FileEncoding>Codificador</FileEncoding>
-      <ListView>Vista de lista</ListView>
-      <SourceView>Vista original</SourceView>
       <UndoChangesInEditPanel>Deshacer cambios en panel de edición</UndoChangesInEditPanel>
       <Previous>&lt; Previo</Previous>
       <Next>Siguiente &gt;</Next>
@@ -1781,8 +1775,8 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <GoToBookmark>Ir al marcador</GoToBookmark>
     <GoToPreviousBookmark>Ir al marcador anterior</GoToPreviousBookmark>
     <GoToNextBookmark>Ir al siguiente marcador</GoToNextBookmark>
-    <ChooseProfile>Elegir perfil</ChooseProfile>
-    <DuplicateLine>Duplicar línea</DuplicateLine>
+    <GeneralChooseProfile>Elegir perfil</GeneralChooseProfile>
+    <GeneralDuplicateLine>Duplicar línea</GeneralDuplicateLine>
     <FontInUi>Interfaz de la Fuente</FontInUi>
     <ShowFrameRate>Mostrar tasa de cuadros en barra herramientas</ShowFrameRate>
     <DefaultFrameRate>Tasa de cuadros por defecto</DefaultFrameRate>
@@ -1997,7 +1991,6 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <WaveformPlayNewSelection>Reproducir nueva selección</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Reproducir final de la selección</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Reproducir primer subtítulo seleccionado</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Centrar en vista de lista</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>Ir al cambio de escena anterior</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Ir al cambio de escena siguiente</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Alternar cambio de escena</WaveformToggleSceneChange>
@@ -2057,7 +2050,6 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <ListViewColumnPaste>Columna, pegar</ListViewColumnPaste>
     <ListViewColumnTextUp>Columna, subir texto</ListViewColumnTextUp>
     <ListViewColumnTextDown>Columna, bajar texto</ListViewColumnTextDown>
-    <ListViewFocusWaveform>Centrar en forma de onda/espectrograma</ListViewFocusWaveform>
     <ListViewGoToNextError>Ir al siguiente error</ListViewGoToNextError>
     <ShowBeamer>Inicio proyector de subtítulos en pantalla completa</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Mover la última palabra a la siguiente línea de subtítulos</MainTextBoxMoveLastWordDown>

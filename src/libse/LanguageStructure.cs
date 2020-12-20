@@ -499,15 +499,15 @@
         {
             public string Title { get; set; }
             public string ChooseColor { get; set; }
-            public string TotalMilliseconds { get; set; }
-            public string EndDelayInMilliseconds { get; set; }
+            public string TotalSeconds { get; set; }
+            public string EndDelayInSeconds { get; set; }
         }
 
         public class EffectTypewriter
         {
             public string Title { get; set; }
-            public string TotalMilliseconds { get; set; }
-            public string EndDelayInMilliseconds { get; set; }
+            public string TotalSeconds { get; set; }
+            public string EndDelayInSeconds { get; set; }
         }
 
         public class ExportCustomText
@@ -1330,6 +1330,7 @@
             public string NoSupportHereVobSub { get; set; }
             public string NoSupportHereDivx { get; set; }
             public string NoChapters { get; set; }
+            public string DarkThemeRestart { get; set; }
 
             public class MainMenu
             {
@@ -1360,10 +1361,12 @@
                     public string ImportOcrFromDvd { get; set; }
                     public string ImportOcrVobSubSubtitle { get; set; }
                     public string ImportBluRaySupFile { get; set; }
+                    public string ImportBluRaySupFileEdit { get; set; }
                     public string ImportSubtitleWithManualChosenEncoding { get; set; }
                     public string ImportText { get; set; }
                     public string ImportImages { get; set; }
                     public string ImportTimecodes { get; set; }
+                    public string Import { get; set; }
                     public string Export { get; set; }
                     public string ExportBdnXml { get; set; }
                     public string ExportBluRaySup { get; set; }
@@ -1618,6 +1621,8 @@
                     public string RemoveActors { get; set; }
                     public string EditBookmark { get; set; }
                     public string RemoveBookmark { get; set; }
+                    public string GoToSourceView { get; set; }
+                    public string GoToListView { get; set; }
                 }
 
                 public FileMenu File { get; set; }
@@ -1638,8 +1643,6 @@
             {
                 public string SubtitleFormat { get; set; }
                 public string FileEncoding { get; set; }
-                public string ListView { get; set; }
-                public string SourceView { get; set; }
                 public string UndoChangesInEditPanel { get; set; }
                 public string Previous { get; set; }
                 public string Next { get; set; }
@@ -1681,6 +1684,7 @@
 
                 public string Auto { get; set; }
                 public string PlayFromJustBeforeText { get; set; }
+                public string PlayFromBeginning { get; set; }
                 public string Pause { get; set; }
                 public string GoToSubtitlePositionAndPause { get; set; }
                 public string SetStartTime { get; set; }
@@ -1719,6 +1723,7 @@
             public string ConvertFrom { get; set; }
             public string ConvertTo { get; set; }
             public string CopyToClipboard { get; set; }
+            public string CloseOnInsert { get; set; }
             public string Length { get; set; }
             public string Mass { get; set; }
             public string Volume { get; set; }
@@ -2081,8 +2086,6 @@
             public string SpellCheck { get; set; }
             public string NetflixQualityCheck { get; set; }
             public string SettingsName { get; set; }
-            public string Help { get; set; }
-            public string UnbreakNoSpace { get; set; }
             public string ToggleBookmarks { get; set; }
             public string ToggleBookmarksWithComment { get; set; }
             public string ClearBookmarks { get; set; }
@@ -2091,6 +2094,9 @@
             public string GoToNextBookmark { get; set; }
             public string ChooseProfile { get; set; }
             public string DuplicateLine { get; set; }
+            public string ToggleView { get; set; }
+            public string ToggleMode { get; set; }
+            public string Help { get; set; }
             public string FontInUi { get; set; }
             public string ShowFrameRate { get; set; }
             public string DefaultFrameRate { get; set; }
@@ -2276,6 +2282,8 @@
             public string UseSyntaxColoring { get; set; }
             public string HtmlColor { get; set; }
             public string AssaColor { get; set; }
+            public string DarkTheme { get; set; }
+            public string DarkThemeEnabled { get; set; }
             public string UpdateShortcut { get; set; }
             public string FoucsSetVideoPosition { get; set; }
             public string ToggleDockUndockOfVideoControls { get; set; }
@@ -2332,6 +2340,7 @@
             public string GoToPrevSubtitleAndPlay { get; set; }
             public string GoToNextSubtitleAndPlay { get; set; }
             public string ToggleFocus { get; set; }
+            public string ToggleFocusWaveform { get; set; }
             public string ToggleDialogDashes { get; set; }
             public string ToggleMusicSymbols { get; set; }
             public string Alignment { get; set; }
@@ -2361,7 +2370,6 @@
             public string WaveformPlayNewSelection { get; set; }
             public string WaveformPlayNewSelectionEnd { get; set; }
             public string WaveformPlayFirstSelectedSubtitle { get; set; }
-            public string WaveformFocusListView { get; set; }
             public string WaveformGoToPreviousSceneChange { get; set; }
             public string WaveformGoToNextSceneChange { get; set; }
             public string WaveformToggleSceneChange { get; set; }
@@ -2440,7 +2448,6 @@
             public string ListViewColumnPaste { get; set; }
             public string ListViewColumnTextUp { get; set; }
             public string ListViewColumnTextDown { get; set; }
-            public string ListViewFocusWaveform { get; set; }
             public string ListViewGoToNextError { get; set; }
             public string ShowBeamer { get; set; }
             public string MainTextBoxMoveLastWordDown { get; set; }
@@ -2456,6 +2463,7 @@
             public string MainTextBoxAutoBreakFromPos { get; set; }
             public string MainTextBoxAutoBreakFromPosAndGoToNext { get; set; }
             public string MainTextBoxUnbreak { get; set; }
+            public string MainTextBoxUnbreakNoSpace { get; set; }
             public string MainFileSaveAll { get; set; }
             public string Miscellaneous { get; set; }
             public string CpsIncludesSpace { get; set; }
@@ -2956,6 +2964,7 @@
 
         public class Waveform
         {
+            public string AddWaveformAndSpectrogram { get; set; }
             public string ClickToAddWaveform { get; set; }
             public string ClickToAddWaveformAndSpectrogram { get; set; }
             public string Seconds { get; set; }

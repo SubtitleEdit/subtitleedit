@@ -273,7 +273,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 int textLength = length - usedBytes;
                 int start = usedBytes - 1;
-                for (int j = 0; j < 4; j++)
+                for (int j = 0; j < 4 && i + start - 1 < buffer.Length; j++)
                 {
                     if (buffer[i + start - 1] > 0x10)
                     {

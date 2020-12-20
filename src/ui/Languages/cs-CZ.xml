@@ -415,13 +415,9 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
   <EffectKaraoke>
     <Title>Efekt Karaoke</Title>
     <ChooseColor>Zvolte barvu:</ChooseColor>
-    <TotalMilliseconds>Celkem milisekund:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Zpoždění v milisekundách:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Efekt Psací stroj</Title>
-    <TotalMilliseconds>Celkem milisekund:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Zpoždění konce v milisekundách:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Exportovat vlastní textový formát</Title>
@@ -1189,8 +1185,6 @@ Přejděte na "Volby -&gt; Nastavení -&gt; Nástroje" pro zadání vašeho klí
     <Controls>
       <SubtitleFormat>Formát</SubtitleFormat>
       <FileEncoding>Kódování</FileEncoding>
-      <ListView>Zobrazení seznamu</ListView>
-      <SourceView>Zobrazení zdroje</SourceView>
       <UndoChangesInEditPanel>Vrátit změny</UndoChangesInEditPanel>
       <Previous>&lt; Před.</Previous>
       <Next>Další &gt;</Next>
@@ -1969,7 +1963,6 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <WaveformPlayNewSelection>Přehrát výběr</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Přehrát konec výběru</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Přehrát první vybraný titulek</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Zaměření zobrazení seznamu</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>Přejít na předchozí změnu scény</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Přejít na další změnu scény</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Přepnout změnu scény</WaveformToggleSceneChange>
@@ -2027,7 +2020,6 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <ListViewColumnPaste>Sloupec, vložit</ListViewColumnPaste>
     <ListViewColumnTextUp>Sloupec, text nahoru</ListViewColumnTextUp>
     <ListViewColumnTextDown>Sloupec, text dolů</ListViewColumnTextDown>
-    <ListViewFocusWaveform>Zaměření křivky/spektrogramu</ListViewFocusWaveform>
     <ListViewGoToNextError>Přejít na další chybu</ListViewGoToNextError>
     <ShowBeamer>Spustit beamer titulků na celou obrazovku</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Přesunout poslední slovo do dalšího titulku</MainTextBoxMoveLastWordDown>

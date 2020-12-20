@@ -443,13 +443,9 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
   <EffectKaraoke>
     <Title>Efekt Karaoke</Title>
     <ChooseColor>Wybierz kolor:</ChooseColor>
-    <TotalMilliseconds>Ogółem ms:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Opóźnienie zakończenia w ms:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Efekt maszyny do pisania</Title>
-    <TotalMilliseconds>Ogółem ms:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Opóźnienie zakończenia w ms:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Eksport do niestandardowego formatu tekstowego</Title>
@@ -1247,8 +1243,6 @@ Przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby wpisać swój klucz A
     <Controls>
       <SubtitleFormat>Format</SubtitleFormat>
       <FileEncoding>Kodowanie</FileEncoding>
-      <ListView>Widok listy</ListView>
-      <SourceView>Widok źródła</SourceView>
       <UndoChangesInEditPanel>Cofnij zmiany w panelu edycji</UndoChangesInEditPanel>
       <Previous>&lt; Wróć</Previous>
       <Next>Dalej &gt;</Next>
@@ -1918,8 +1912,8 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <GoToBookmark>Przejdź do zakładki</GoToBookmark>
     <GoToPreviousBookmark>Przejdź do poprzedniej zakładki</GoToPreviousBookmark>
     <GoToNextBookmark>Przejdź do następnej zakładki</GoToNextBookmark>
-    <ChooseProfile>Wybierz profil</ChooseProfile>
-    <DuplicateLine>Duplikat linii</DuplicateLine>
+    <GeneralChooseProfile>Wybierz profil</GeneralChooseProfile>
+    <GeneralDuplicateLine>Duplikat linii</GeneralDuplicateLine>
     <FontInUi>Czcionka interfejsu użytkownika</FontInUi>
     <ShowFrameRate>Pokaż ilość klatek/sekundę na Pasku narzędzi</ShowFrameRate>
     <DefaultFrameRate>Domyślna ilość klatek/sekundę</DefaultFrameRate>
@@ -2180,7 +2174,6 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <WaveformPlayNewSelection>Odtwarzaj zaznaczenie</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Odtwarzaj koniec zaznaczenia</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Odtwarzaj pierwsze zaznaczone napisy</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Koncentruj uwagę na "Widoku listy"</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>Przejdź do poprzedniej zmiany scen</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Przejdź do następnej zmiany scen</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Przełączanie zmiany scen</WaveformToggleSceneChange>
@@ -2256,7 +2249,6 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <ListViewColumnPaste>Kolumna, wklej</ListViewColumnPaste>
     <ListViewColumnTextUp>Kolumna, tekst do góry</ListViewColumnTextUp>
     <ListViewColumnTextDown>Kolumna, tekst w dół</ListViewColumnTextDown>
-    <ListViewFocusWaveform>Koncentruj uwagę na wykresie falowym/spektrogramie</ListViewFocusWaveform>
     <ListViewGoToNextError>Przejdź do następnego błędu</ListViewGoToNextError>
     <ShowBeamer>Uruchom projekcję napisów na pełnym ekranie</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Przenieś ostatnie słowo do następnej linii napisów</MainTextBoxMoveLastWordDown>

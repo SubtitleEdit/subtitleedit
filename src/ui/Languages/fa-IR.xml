@@ -417,13 +417,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <EffectKaraoke>
     <Title>اثر کارائوکه</Title>
     <ChooseColor>انتخاب رنگ:</ChooseColor>
-    <TotalMilliseconds>تعداد میلی ثانیه:</TotalMilliseconds>
-    <EndDelayInMilliseconds>پایان تأخیر در میلی ثانیه:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>اثر ماشین تحریر</Title>
-    <TotalMilliseconds>تعداد میلی ثانیه:</TotalMilliseconds>
-    <EndDelayInMilliseconds>پایان تأخیر در میلی ثانیه:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>صدور قالب متن سفارشی</Title>
@@ -1198,8 +1194,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Controls>
       <SubtitleFormat>قالب</SubtitleFormat>
       <FileEncoding>رمز گذاری</FileEncoding>
-      <ListView>مشاهده لیست</ListView>
-      <SourceView>نمایش مبدأ</SourceView>
       <UndoChangesInEditPanel>تغییرات واگرد در پانل ویرایش</UndoChangesInEditPanel>
       <Previous>&lt;قبلی</Previous>
       <Next>بعدی&gt;</Next>
@@ -1767,7 +1761,7 @@ Continue anyway?</PromptInsertSubtitleOverlap>
     <GoToBookmark>به نشانک بروید</GoToBookmark>
     <GoToPreviousBookmark>به نشانک قبلی بروید</GoToPreviousBookmark>
     <GoToNextBookmark>به نشانک بعدی بروید</GoToNextBookmark>
-    <ChooseProfile>نمایه را انتخاب کنید</ChooseProfile>
+    <GeneralChooseProfile>نمایه را انتخاب کنید</GeneralChooseProfile>
     <FontInUi>قلم UI</FontInUi>
     <ShowFrameRate>نمایش نرخ فریم را در نوار ابزار</ShowFrameRate>
     <DefaultFrameRate>نرخ فریم پیش فرض</DefaultFrameRate>
@@ -1981,7 +1975,6 @@ Continue anyway?</PromptInsertSubtitleOverlap>
     <WaveformPlayNewSelection>پخش انتخاب</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>پخش پایان انتخاب</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>پخش اولین زیرنویس انتخاب شده</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>نمایش لیست فوکوس</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>به تغییر صحنه قبلی بروید</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>رفتن به تغییر صحنه بعدی</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>تغییر وضعیت صحنه</WaveformToggleSceneChange>
@@ -2040,7 +2033,6 @@ Continue anyway?</PromptInsertSubtitleOverlap>
     <ListViewColumnPaste>ستون، چسباندن</ListViewColumnPaste>
     <ListViewColumnTextUp>ستون ، متن بالا</ListViewColumnTextUp>
     <ListViewColumnTextDown>ستون ، متن پایین</ListViewColumnTextDown>
-    <ListViewFocusWaveform>تمرکز شکل موج/طیف سنجی</ListViewFocusWaveform>
     <ListViewGoToNextError>رفتن به خطای بعدی</ListViewGoToNextError>
     <ShowBeamer>beamer تمام صفحه زیرنویس را شروع کنید</ShowBeamer>
     <MainTextBoxMoveLastWordDown>انتقال آخرین کلمه به خط بعدی زیرنویس</MainTextBoxMoveLastWordDown>

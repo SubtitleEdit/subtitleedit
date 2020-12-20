@@ -445,13 +445,13 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
   <EffectKaraoke>
     <Title>노래방 효과</Title>
     <ChooseColor>색상 선택 :</ChooseColor>
-    <TotalMilliseconds>총 시간 (밀리초):</TotalMilliseconds>
-    <EndDelayInMilliseconds>끝지점 지연 (밀리초):</EndDelayInMilliseconds>
+    <TotalSeconds>총 시간(초):</TotalSeconds>
+    <EndDelayInSeconds>종료 지연 시간(초):</EndDelayInSeconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>타자기 효과</Title>
-    <TotalMilliseconds>총 시간 (밀리초):</TotalMilliseconds>
-    <EndDelayInMilliseconds>끝지점 지연 (밀리초):</EndDelayInMilliseconds>
+    <TotalSeconds>총 시간(초):</TotalSeconds>
+    <EndDelayInSeconds>종료 지연 시간(초):</EndDelayInSeconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>사용자 지정 텍스트 형식으로 내보내기</Title>
@@ -506,7 +506,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <HalfTopBottom3D>상/하</HalfTopBottom3D>
     <Depth>깊이</Depth>
     <ExportAllLines>모든 줄 내보내기...</ExportAllLines>
-    <XImagesSavedInY>{0}개의 이미지가 {1}에 저장되었습니다.</XImagesSavedInY>
+    <XImagesSavedInY>{0:#,##0} 이미지가 {1}에 저장되었습니다.</XImagesSavedInY>
     <VideoResolution>비디오 해상도</VideoResolution>
     <Align>정렬</Align>
     <Left>왼쪽</Left>
@@ -804,7 +804,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <RemoveEmptyLines>빈 줄 제거</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>문자 없는 줄 제거</RemoveLinesWithoutLetters>
     <GenerateTimeCodes>타임코드 생성</GenerateTimeCodes>
-    <TakeTimeFromFileName>Take time from file name</TakeTimeFromFileName>
+    <TakeTimeFromFileName>파일 이름에서 시간 얻기</TakeTimeFromFileName>
     <GapBetweenSubtitles>자막 간격 (ms)</GapBetweenSubtitles>
     <Auto>자동</Auto>
     <Fixed>수정</Fixed>
@@ -998,15 +998,16 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
         <Compare>자막 비교(&amp;C)...</Compare>
         <Statistics>통계 자료(&amp;S)...</Statistics>
         <Plugins>플러그 인...</Plugins>
-        <ImportOcrFromDvd>DVD(VOB/IFO)에서 자막 가져오기/OCR...</ImportOcrFromDvd>
-        <ImportOcrVobSubSubtitle>VobSub(sub/idx)에서 자막 가져오기/OCR...</ImportOcrVobSubSubtitle>
-        <ImportBluRaySupFile>Blu-ray(.sup)에서 자막 가져오기/OCR...</ImportBluRaySupFile>
-        <ImportXSub>Divx/avi에서 XSub 가져오기/OCR...</ImportXSub>
-        <ImportSubtitleFromMatroskaFile>Matroska(.mkv)에서 자막 가져오기</ImportSubtitleFromMatroskaFile>
-        <ImportSubtitleWithManualChosenEncoding>사용자 정의의 인코딩 자막 가져오기</ImportSubtitleWithManualChosenEncoding>
-        <ImportText>일반 텍스트 파일에서 자막 가져오기</ImportText>
-        <ImportImages>이미지 가져오기</ImportImages>
-        <ImportTimecodes>다른 자막에서 타임코드 가져오기</ImportTimecodes>
+        <ImportSubtitleFromVideoFile>비디오 파일에서 자막...</ImportSubtitleFromVideoFile>
+        <ImportOcrFromDvd>DVD(VOB/IFO)에서 자막...</ImportOcrFromDvd>
+        <ImportOcrVobSubSubtitle>OCR용 VobSub(sub/idx) 자막...</ImportOcrVobSubSubtitle>
+        <ImportBluRaySupFile>OCR용 Blu-ray(.sup) 자막 파일...</ImportBluRaySupFile>
+        <ImportBluRaySupFileEdit>편집용 Blu-ray (.sup) 자막 파일...</ImportBluRaySupFileEdit>
+        <ImportSubtitleWithManualChosenEncoding>수동으로 선택한 인코딩이 포함된 자막...</ImportSubtitleWithManualChosenEncoding>
+        <ImportText>일반 텍스트...</ImportText>
+        <ImportImages>이미지...</ImportImages>
+        <ImportTimecodes>타임코드...</ImportTimecodes>
+        <Import>가져오기</Import>
         <Export>내보내기</Export>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
         <ExportBluRaySup>블루레이 자막(sup)으로...</ExportBluRaySup>
@@ -1251,8 +1252,6 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <Controls>
       <SubtitleFormat>형식</SubtitleFormat>
       <FileEncoding>인코딩</FileEncoding>
-      <ListView>자막 보기</ListView>
-      <SourceView>소스 보기</SourceView>
       <UndoChangesInEditPanel>편집 취소</UndoChangesInEditPanel>
       <Previous>&lt; 이전</Previous>
       <Next>다음 &gt;</Next>
@@ -1286,6 +1285,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
       <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>비디오 위치에 새 자막 삽입 (텍스트 상자 포커스 없음)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
       <Auto>자동</Auto>
       <PlayFromJustBeforeText>텍스트 직전부터 재생(&amp;T)</PlayFromJustBeforeText>
+      <PlayFromBeginning>비디오 시작점에서 재생</PlayFromBeginning>
       <Pause>중지</Pause>
       <GoToSubtitlePositionAndPause>자막 위치로 이동</GoToSubtitlePositionAndPause>
       <SetStartTime>시작 시간 설정(&amp;S)</SetStartTime>
@@ -1435,8 +1435,8 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <BeforeTypeWriterEffect>타자기 효과 전</BeforeTypeWriterEffect>
     <BeforeKaraokeEffect>가라오케 효과 전</BeforeKaraokeEffect>
     <BeforeImportingDvdSubtitle>DVD에서 자막 가져오기 전</BeforeImportingDvdSubtitle>
-    <OpenMatroskaFile>Matroska 파일 열기...</OpenMatroskaFile>
-    <MatroskaFiles>Matroska 파일</MatroskaFiles>
+    <OpenSubtitleVideoFile>비디오 파일에서 자막 열기...</OpenSubtitleVideoFile>
+    <VideoFiles>비디오 파일</VideoFiles>
     <NoSubtitlesFound>자막이 없습니다!</NoSubtitlesFound>
     <NotAValidMatroskaFileX>유효한 Matroska 파일이 없습니다: {0}</NotAValidMatroskaFileX>
     <BlurayNotSubtitlesFound>Blu-ray sup 파일에 어떠한 자막도 들어 있지 않거나 오류입니다 - 다시 추출하십시오.</BlurayNotSubtitlesFound>
@@ -1462,8 +1462,6 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <VobSubFiles>VobSub 자막 파일</VobSubFiles>
     <OpenBluRaySupFile>블루레이 자막 (Sup) 파일 열기...</OpenBluRaySupFile>
     <BluRaySupFiles>블루레이 자막 (Sup) 파일</BluRaySupFiles>
-    <OpenXSubFiles>XSUB 파일 열기...</OpenXSubFiles>
-    <XSubFiles>XSUB 파일</XSubFiles>
     <BeforeImportingVobSubFile>VobSub 자막 가져오기 전</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>블루레이 자막 (Sup) 파일 가져오기 전</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>BDN xml 파일 가져오기 전</BeforeImportingBdnXml>
@@ -1591,6 +1589,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <ConvertFrom>변환 대상:</ConvertFrom>
     <ConvertTo>변환 결과:</ConvertTo>
     <CopyToClipboard>클립보드에 복사</CopyToClipboard>
+    <CloseOnInsert>삽입 시 닫기</CloseOnInsert>
     <Length>길이</Length>
     <Mass>질량</Mass>
     <Volume>볼륨</Volume>
@@ -2165,6 +2164,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <GoToPrevSubtitleAndPlay>이전 줄로 이동하여 재생</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>다음 줄로 이동하여 재생</GoToNextSubtitleAndPlay>
     <ToggleFocus>목록 보기와 자막 텍스트 상자 간의 포커스 전환</ToggleFocus>
+    <ToggleFocusWaveform>목록 보기와 파형/스펙트로그램 간의 포커스 전환</ToggleFocusWaveform>
     <ToggleDialogDashes>대화의 대시('-') 전환</ToggleDialogDashes>
     <ToggleMusicSymbols>음악 기호 전환</ToggleMusicSymbols>
     <Alignment>정렬 (선택한 줄)</Alignment>
@@ -2177,6 +2177,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <AlignmentN7>좌측 상단 정렬 - {\an7}</AlignmentN7>
     <AlignmentN8>중앙 상단 정렬 - {\an8}</AlignmentN8>
     <AlignmentN9>우측 상단 정렬 - {\an9}</AlignmentN9>
+    <ColorX>색상 {0} ({1})</ColorX>
     <CopyTextOnly>클립보드에 텍스트 복사 (선택한 줄)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>원본 텍스트를 현재 줄에 복사</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>자동 표시시간 (선택한 줄)</AutoDurationSelectedLines>
@@ -2193,7 +2194,6 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <WaveformPlayNewSelection>선택을 재생</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>선택의 끝을 재생</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>처음 선택한 자막 재생</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>「자막 보기」로 이동</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>이전 장면 전환으로 이동</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>다음 장면 전환으로 이동</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>장면 전환</WaveformToggleSceneChange>
@@ -2271,7 +2271,6 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <ListViewColumnPaste>문자열, 붙여넣기</ListViewColumnPaste>
     <ListViewColumnTextUp>문자열, 텍스트 위로</ListViewColumnTextUp>
     <ListViewColumnTextDown>문자열, 텍스트 아래로</ListViewColumnTextDown>
-    <ListViewFocusWaveform>파형/스펙트로그램으로 이동</ListViewFocusWaveform>
     <ListViewGoToNextError>다음 오류로 이동</ListViewGoToNextError>
     <ShowBeamer>전체 화면으로 자막 프로젝터 시작</ShowBeamer>
     <MainTextBoxMoveLastWordDown>마지막 단어를 아래로 이동</MainTextBoxMoveLastWordDown>
@@ -2736,6 +2735,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <ErrorUnicodeEncodingOnly>워터마크는 오직 유니코드 파일 인코딩으로 작업합니다.</ErrorUnicodeEncodingOnly>
   </Watermark>
   <Waveform>
+    <AddWaveformAndSpectrogram>파형 및 스펙트로그램 추가</AddWaveformAndSpectrogram>
     <ClickToAddWaveform>파형을 추가하려면 여기를 클릭하십시오!</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>파형 및 스펙트로그램을 추가하려면 여기를 클릭하십시오.</ClickToAddWaveformAndSpectrogram>
     <Seconds>초</Seconds>

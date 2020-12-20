@@ -1,4 +1,4 @@
-﻿namespace Nikse.SubtitleEdit.Forms
+﻿namespace Nikse.SubtitleEdit.Forms.Options
 {
     sealed partial class Settings
     {
@@ -31,8 +31,9 @@
             this.components = new System.ComponentModel.Container();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.tabControlSettings = new System.Windows.Forms.TabControl();
-            this.tabPageGeneral = new System.Windows.Forms.TabPage();
+            this.panelSettings = new System.Windows.Forms.Panel();
+            this.listBoxSection = new System.Windows.Forms.ListBox();
+            this.panelGeneral = new System.Windows.Forms.Panel();
             this.groupBoxMiscellaneous = new System.Windows.Forms.GroupBox();
             this.labelSplitBehavior = new System.Windows.Forms.Label();
             this.comboBoxSplitBehavior = new System.Windows.Forms.ComboBox();
@@ -95,7 +96,7 @@
             this.labelDefaultFileEncoding = new System.Windows.Forms.Label();
             this.comboBoxFrameRate = new System.Windows.Forms.ComboBox();
             this.labelDefaultFrameRate = new System.Windows.Forms.Label();
-            this.tabPageShortcuts = new System.Windows.Forms.TabPage();
+            this.panelShortcuts = new System.Windows.Forms.Panel();
             this.groupBoxShortcuts = new System.Windows.Forms.GroupBox();
             this.buttonShortcutsClear = new System.Windows.Forms.Button();
             this.labelShortcutsSearch = new System.Windows.Forms.Label();
@@ -114,7 +115,7 @@
             this.importShortcutsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportShortcutsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelShortcut = new System.Windows.Forms.Label();
-            this.tabPageSyntaxColoring = new System.Windows.Forms.TabPage();
+            this.panelSyntaxColoring = new System.Windows.Forms.Panel();
             this.groupBoxListViewSyntaxColoring = new System.Windows.Forms.GroupBox();
             this.buttonLineWidthSettings = new System.Windows.Forms.Button();
             this.checkBoxSyntaxColorTextTooWide = new System.Windows.Forms.CheckBox();
@@ -126,7 +127,7 @@
             this.checkBoxSyntaxColorTextTooLong = new System.Windows.Forms.CheckBox();
             this.checkBoxSyntaxColorDurationTooLarge = new System.Windows.Forms.CheckBox();
             this.panelListViewSyntaxColorError = new System.Windows.Forms.Panel();
-            this.tabPageVideoPlayer = new System.Windows.Forms.TabPage();
+            this.panelVideoPlayer = new System.Windows.Forms.Panel();
             this.groupBoxMainWindowVideoControls = new System.Windows.Forms.GroupBox();
             this.labelCustomSearch5 = new System.Windows.Forms.Label();
             this.textBoxCustomSearchUrl5 = new System.Windows.Forms.TextBox();
@@ -169,7 +170,7 @@
             this.radioButtonVideoPlayerMPV = new System.Windows.Forms.RadioButton();
             this.radioButtonVideoPlayerDirectShow = new System.Windows.Forms.RadioButton();
             this.radioButtonVideoPlayerMpcHc = new System.Windows.Forms.RadioButton();
-            this.tabPageWaveform = new System.Windows.Forms.TabPage();
+            this.panelWaveform = new System.Windows.Forms.Panel();
             this.groupBoxFfmpeg = new System.Windows.Forms.GroupBox();
             this.buttonDownloadFfmpeg = new System.Windows.Forms.Button();
             this.buttonBrowseToFFmpeg = new System.Windows.Forms.Button();
@@ -212,7 +213,7 @@
             this.panelWaveformSelectedColor = new System.Windows.Forms.Panel();
             this.buttonWaveformSelectedColor = new System.Windows.Forms.Button();
             this.checkBoxWaveformShowGrid = new System.Windows.Forms.CheckBox();
-            this.tabPageTools = new System.Windows.Forms.TabPage();
+            this.panelTools = new System.Windows.Forms.Panel();
             this.groupBoxGoogleTranslate = new System.Windows.Forms.GroupBox();
             this.labelGoogleTranslateApiKey = new System.Windows.Forms.Label();
             this.textBoxGoogleTransleApiKey = new System.Windows.Forms.TextBox();
@@ -258,7 +259,7 @@
             this.comboBoxToolsStartSceneIndex = new System.Windows.Forms.ComboBox();
             this.comboBoxToolsVerifySeconds = new System.Windows.Forms.ComboBox();
             this.labelVerifyButton = new System.Windows.Forms.Label();
-            this.tabPageWordLists = new System.Windows.Forms.TabPage();
+            this.panelWordLists = new System.Windows.Forms.Panel();
             this.groupBoxWordLists = new System.Windows.Forms.GroupBox();
             this.linkLabelOpenDictionaryFolder = new System.Windows.Forms.LinkLabel();
             this.groupBoxOcrFixList = new System.Windows.Forms.GroupBox();
@@ -282,7 +283,7 @@
             this.buttonAddNames = new System.Windows.Forms.Button();
             this.labelWordListLanguage = new System.Windows.Forms.Label();
             this.comboBoxWordListLanguage = new System.Windows.Forms.ComboBox();
-            this.tabPageToolBar = new System.Windows.Forms.TabPage();
+            this.panelToolBar = new System.Windows.Forms.Panel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.checkBoxShowFrameRate = new System.Windows.Forms.CheckBox();
             this.groupBoxShowToolBarButtons = new System.Windows.Forms.GroupBox();
@@ -325,8 +326,14 @@
             this.labelTBNew = new System.Windows.Forms.Label();
             this.pictureBoxNew = new System.Windows.Forms.PictureBox();
             this.checkBoxToolbarNew = new System.Windows.Forms.CheckBox();
-            this.tabPageFont = new System.Windows.Forms.TabPage();
+            this.panelFont = new System.Windows.Forms.Panel();
             this.groupBoxFont = new System.Windows.Forms.GroupBox();
+            this.groupBoxDarkTheme = new System.Windows.Forms.GroupBox();
+            this.checkBoxDarkThemeEnabled = new System.Windows.Forms.CheckBox();
+            this.panelDarkThemeBackColor = new System.Windows.Forms.Panel();
+            this.buttonDarkThemeBackColor = new System.Windows.Forms.Button();
+            this.panelDarkThemeColor = new System.Windows.Forms.Panel();
+            this.buttonDarkThemeColor = new System.Windows.Forms.Button();
             this.labelFontNote = new System.Windows.Forms.Label();
             this.groupBoxFontTextBox = new System.Windows.Forms.GroupBox();
             this.panelTextBoxAssColor = new System.Windows.Forms.Panel();
@@ -349,7 +356,7 @@
             this.labelSubtitleFontColor = new System.Windows.Forms.Label();
             this.panelSubtitleBackgroundColor = new System.Windows.Forms.Panel();
             this.labelSubtitleFontBackgroundColor = new System.Windows.Forms.Label();
-            this.tabPageSsaStyle = new System.Windows.Forms.TabPage();
+            this.panelSsaStyle = new System.Windows.Forms.Panel();
             this.groupBoxSsaStyle = new System.Windows.Forms.GroupBox();
             this.groupBoxSsaBorder = new System.Windows.Forms.GroupBox();
             this.numericUpDownSsaOutline = new System.Windows.Forms.NumericUpDown();
@@ -374,7 +381,7 @@
             this.labelMarginLeft = new System.Windows.Forms.Label();
             this.groupBoxPreview = new System.Windows.Forms.GroupBox();
             this.pictureBoxPreview = new System.Windows.Forms.PictureBox();
-            this.tabPageNetwork = new System.Windows.Forms.TabPage();
+            this.panelNetwork = new System.Windows.Forms.Panel();
             this.groupBoxNetworkSession = new System.Windows.Forms.GroupBox();
             this.buttonNetworkSessionNewMessageSound = new System.Windows.Forms.Button();
             this.textBoxNetworkSessionNewMessageSound = new System.Windows.Forms.TextBox();
@@ -395,8 +402,9 @@
             this.buttonReset = new System.Windows.Forms.Button();
             this.toolTipContinuationPreview = new System.Windows.Forms.ToolTip(this.components);
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.tabControlSettings.SuspendLayout();
-            this.tabPageGeneral.SuspendLayout();
+            this.panelSettings.SuspendLayout();
+            this.listBoxSection.SuspendLayout();
+            this.panelGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOptimalCharsSec)).BeginInit();
@@ -407,22 +415,22 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMinGapMs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharsSec)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSubtitleLineMaximumLength)).BeginInit();
-            this.tabPageShortcuts.SuspendLayout();
+            this.panelShortcuts.SuspendLayout();
             this.groupBoxShortcuts.SuspendLayout();
             this.contextMenuStripShortcuts.SuspendLayout();
-            this.tabPageSyntaxColoring.SuspendLayout();
+            this.panelSyntaxColoring.SuspendLayout();
             this.groupBoxListViewSyntaxColoring.SuspendLayout();
-            this.tabPageVideoPlayer.SuspendLayout();
+            this.panelVideoPlayer.SuspendLayout();
             this.groupBoxMainWindowVideoControls.SuspendLayout();
             this.groupBoxVideoPlayerDefault.SuspendLayout();
             this.groupBoxVideoEngine.SuspendLayout();
-            this.tabPageWaveform.SuspendLayout();
+            this.panelWaveform.SuspendLayout();
             this.groupBoxFfmpeg.SuspendLayout();
             this.groupBoxSpectrogram.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBoxWaveformAppearence.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWaveformBorderHitMs)).BeginInit();
-            this.tabPageTools.SuspendLayout();
+            this.panelTools.SuspendLayout();
             this.groupBoxGoogleTranslate.SuspendLayout();
             this.groupBoxBing.SuspendLayout();
             this.groupBoxToolsAutoBr.SuspendLayout();
@@ -430,13 +438,13 @@
             this.groupBoxSpellCheck.SuspendLayout();
             this.groupBoxFixCommonErrors.SuspendLayout();
             this.groupBoxToolsVisualSync.SuspendLayout();
-            this.tabPageWordLists.SuspendLayout();
+            this.panelWordLists.SuspendLayout();
             this.groupBoxWordLists.SuspendLayout();
             this.groupBoxOcrFixList.SuspendLayout();
             this.groupBoxUserWordList.SuspendLayout();
             this.groupBoxWordListLocation.SuspendLayout();
             this.groupBoxNamesIgonoreLists.SuspendLayout();
-            this.tabPageToolBar.SuspendLayout();
+            this.panelToolBar.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBoxShowToolBarButtons.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNetflixQualityCheck)).BeginInit();
@@ -452,12 +460,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSave)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOpen)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNew)).BeginInit();
-            this.tabPageFont.SuspendLayout();
+            this.panelFont.SuspendLayout();
             this.groupBoxFont.SuspendLayout();
+            this.groupBoxDarkTheme.SuspendLayout();
             this.groupBoxFontTextBox.SuspendLayout();
             this.groupBoxFontListViews.SuspendLayout();
             this.groupBoxFontGeneral.SuspendLayout();
-            this.tabPageSsaStyle.SuspendLayout();
+            this.panelSsaStyle.SuspendLayout();
             this.groupBoxSsaStyle.SuspendLayout();
             this.groupBoxSsaBorder.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaOutline)).BeginInit();
@@ -470,7 +479,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaMarginLeft)).BeginInit();
             this.groupBoxPreview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
-            this.tabPageNetwork.SuspendLayout();
+            this.panelNetwork.SuspendLayout();
             this.groupBoxNetworkSession.SuspendLayout();
             this.groupBoxProxySettings.SuspendLayout();
             this.groupBoxProxyAuthentication.SuspendLayout();
@@ -480,10 +489,10 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(506, 563);
+            this.buttonOK.Location = new System.Drawing.Point(786, 563);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 0;
+            this.buttonOK.TabIndex = 3;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
@@ -492,47 +501,69 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(587, 563);
+            this.buttonCancel.Location = new System.Drawing.Point(867, 563);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 1;
+            this.buttonCancel.TabIndex = 2;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
-            // tabControlSettings
+            // panelSettings
             // 
-            this.tabControlSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.panelSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControlSettings.Controls.Add(this.tabPageGeneral);
-            this.tabControlSettings.Controls.Add(this.tabPageShortcuts);
-            this.tabControlSettings.Controls.Add(this.tabPageSyntaxColoring);
-            this.tabControlSettings.Controls.Add(this.tabPageVideoPlayer);
-            this.tabControlSettings.Controls.Add(this.tabPageWaveform);
-            this.tabControlSettings.Controls.Add(this.tabPageTools);
-            this.tabControlSettings.Controls.Add(this.tabPageWordLists);
-            this.tabControlSettings.Controls.Add(this.tabPageToolBar);
-            this.tabControlSettings.Controls.Add(this.tabPageFont);
-            this.tabControlSettings.Controls.Add(this.tabPageSsaStyle);
-            this.tabControlSettings.Controls.Add(this.tabPageNetwork);
-            this.tabControlSettings.Location = new System.Drawing.Point(13, 13);
-            this.tabControlSettings.Name = "tabControlSettings";
-            this.tabControlSettings.SelectedIndex = 0;
-            this.tabControlSettings.Size = new System.Drawing.Size(840, 546);
-            this.tabControlSettings.TabIndex = 2;
-            this.tabControlSettings.SelectedIndexChanged += new System.EventHandler(this.TabControlSettingsSelectedIndexChanged);
+            this.panelSettings.Controls.Add(this.listBoxSection);
+            this.panelSettings.Controls.Add(this.panelGeneral);
+            this.panelSettings.Controls.Add(this.panelShortcuts);
+            this.panelSettings.Controls.Add(this.panelSyntaxColoring);
+            this.panelSettings.Controls.Add(this.panelVideoPlayer);
+            this.panelSettings.Controls.Add(this.panelWaveform);
+            this.panelSettings.Controls.Add(this.panelTools);
+            this.panelSettings.Controls.Add(this.panelWordLists);
+            this.panelSettings.Controls.Add(this.panelToolBar);
+            this.panelSettings.Controls.Add(this.panelFont);
+            this.panelSettings.Controls.Add(this.panelSsaStyle);
+            this.panelSettings.Controls.Add(this.panelNetwork);
+            this.panelSettings.Location = new System.Drawing.Point(13, 13);
+            this.panelSettings.Name = "panelSettings";
+            this.panelSettings.Size = new System.Drawing.Size(1118, 546);
+            this.panelSettings.TabIndex = 0;
             // 
-            // tabPageGeneral
+            // listBoxSection
             // 
-            this.tabPageGeneral.Controls.Add(this.groupBoxMiscellaneous);
-            this.tabPageGeneral.Location = new System.Drawing.Point(4, 22);
-            this.tabPageGeneral.Name = "tabPageGeneral";
-            this.tabPageGeneral.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageGeneral.Size = new System.Drawing.Size(832, 520);
-            this.tabPageGeneral.TabIndex = 0;
-            this.tabPageGeneral.Text = "General";
-            this.tabPageGeneral.UseVisualStyleBackColor = true;
+            this.listBoxSection.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.listBoxSection.FormattingEnabled = true;
+            this.listBoxSection.ItemHeight = 25;
+            this.listBoxSection.Items.AddRange(new object[] {
+            "General",
+            "Shortcuts",
+            "Syntax coloring",
+            "Video player",
+            "Waveform/spectrogram",
+            "Tools",
+            "Wordlists",
+            "Toolbar",
+            "Font",
+            "ASS/SSA Style",
+            "Network"});
+            this.listBoxSection.Location = new System.Drawing.Point(13, 13);
+            this.listBoxSection.Name = "listBoxSection";
+            this.listBoxSection.Size = new System.Drawing.Size(250, 525);
+            this.listBoxSection.TabIndex = 0;
+            this.listBoxSection.SelectedIndexChanged += new System.EventHandler(ListBoxSectionSelectedIndexChanged);
+            this.listBoxSection.LostFocus += new System.EventHandler(this.listBoxSection_LostFocus);
+            // 
+            // panelGeneral
+            // 
+            this.panelGeneral.Controls.Add(this.groupBoxMiscellaneous);
+            this.panelGeneral.Location = new System.Drawing.Point(273, 13);
+            this.panelGeneral.Name = "panelGeneral";
+            this.panelGeneral.Padding = new System.Windows.Forms.Padding(3);
+            this.panelGeneral.Size = new System.Drawing.Size(832, 520);
+            this.panelGeneral.TabIndex = 1;
+            this.panelGeneral.Text = "General";
             // 
             // groupBoxMiscellaneous
             // 
@@ -1316,16 +1347,15 @@
             this.labelDefaultFrameRate.TabIndex = 1;
             this.labelDefaultFrameRate.Text = "Default frame rate";
             // 
-            // tabPageShortcuts
+            // panelShortcuts
             // 
-            this.tabPageShortcuts.Controls.Add(this.groupBoxShortcuts);
-            this.tabPageShortcuts.Location = new System.Drawing.Point(4, 22);
-            this.tabPageShortcuts.Name = "tabPageShortcuts";
-            this.tabPageShortcuts.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageShortcuts.Size = new System.Drawing.Size(832, 520);
-            this.tabPageShortcuts.TabIndex = 8;
-            this.tabPageShortcuts.Text = "Shortcuts";
-            this.tabPageShortcuts.UseVisualStyleBackColor = true;
+            this.panelShortcuts.Controls.Add(this.groupBoxShortcuts);
+            this.panelShortcuts.Location = new System.Drawing.Point(273, 13);
+            this.panelShortcuts.Name = "panelShortcuts";
+            this.panelShortcuts.Padding = new System.Windows.Forms.Padding(3);
+            this.panelShortcuts.Size = new System.Drawing.Size(832, 520);
+            this.panelShortcuts.TabIndex = 2;
+            this.panelShortcuts.Text = "Shortcuts";
             // 
             // groupBoxShortcuts
             // 
@@ -1659,16 +1689,15 @@
             this.labelShortcut.TabIndex = 3;
             this.labelShortcut.Text = "Shortcut:";
             // 
-            // tabPageSyntaxColoring
+            // panelSyntaxColoring
             // 
-            this.tabPageSyntaxColoring.Controls.Add(this.groupBoxListViewSyntaxColoring);
-            this.tabPageSyntaxColoring.Location = new System.Drawing.Point(4, 22);
-            this.tabPageSyntaxColoring.Name = "tabPageSyntaxColoring";
-            this.tabPageSyntaxColoring.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageSyntaxColoring.Size = new System.Drawing.Size(832, 520);
-            this.tabPageSyntaxColoring.TabIndex = 9;
-            this.tabPageSyntaxColoring.Text = "Syntax coloring";
-            this.tabPageSyntaxColoring.UseVisualStyleBackColor = true;
+            this.panelSyntaxColoring.Controls.Add(this.groupBoxListViewSyntaxColoring);
+            this.panelSyntaxColoring.Location = new System.Drawing.Point(273, 13);
+            this.panelSyntaxColoring.Name = "panelSyntaxColoring";
+            this.panelSyntaxColoring.Padding = new System.Windows.Forms.Padding(3);
+            this.panelSyntaxColoring.Size = new System.Drawing.Size(832, 520);
+            this.panelSyntaxColoring.TabIndex = 3;
+            this.panelSyntaxColoring.Text = "Syntax coloring";
             // 
             // groupBoxListViewSyntaxColoring
             // 
@@ -1791,18 +1820,17 @@
             this.panelListViewSyntaxColorError.TabIndex = 8;
             this.panelListViewSyntaxColorError.Click += new System.EventHandler(this.buttonListViewSyntaxColorError_Click);
             // 
-            // tabPageVideoPlayer
+            // panelVideoPlayer
             // 
-            this.tabPageVideoPlayer.Controls.Add(this.groupBoxMainWindowVideoControls);
-            this.tabPageVideoPlayer.Controls.Add(this.groupBoxVideoPlayerDefault);
-            this.tabPageVideoPlayer.Controls.Add(this.groupBoxVideoEngine);
-            this.tabPageVideoPlayer.Location = new System.Drawing.Point(4, 22);
-            this.tabPageVideoPlayer.Name = "tabPageVideoPlayer";
-            this.tabPageVideoPlayer.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageVideoPlayer.Size = new System.Drawing.Size(832, 520);
-            this.tabPageVideoPlayer.TabIndex = 2;
-            this.tabPageVideoPlayer.Text = "Video player";
-            this.tabPageVideoPlayer.UseVisualStyleBackColor = true;
+            this.panelVideoPlayer.Controls.Add(this.groupBoxMainWindowVideoControls);
+            this.panelVideoPlayer.Controls.Add(this.groupBoxVideoPlayerDefault);
+            this.panelVideoPlayer.Controls.Add(this.groupBoxVideoEngine);
+            this.panelVideoPlayer.Location = new System.Drawing.Point(273, 13);
+            this.panelVideoPlayer.Name = "panelVideoPlayer";
+            this.panelVideoPlayer.Padding = new System.Windows.Forms.Padding(3);
+            this.panelVideoPlayer.Size = new System.Drawing.Size(832, 520);
+            this.panelVideoPlayer.TabIndex = 4;
+            this.panelVideoPlayer.Text = "Video player";
             // 
             // groupBoxMainWindowVideoControls
             // 
@@ -2316,18 +2344,17 @@
             this.radioButtonVideoPlayerMpcHc.Text = "MPC-HC";
             this.radioButtonVideoPlayerMpcHc.UseVisualStyleBackColor = true;
             // 
-            // tabPageWaveform
+            // panelWaveform
             // 
-            this.tabPageWaveform.Controls.Add(this.groupBoxFfmpeg);
-            this.tabPageWaveform.Controls.Add(this.groupBoxSpectrogram);
-            this.tabPageWaveform.Controls.Add(this.groupBox1);
-            this.tabPageWaveform.Controls.Add(this.groupBoxWaveformAppearence);
-            this.tabPageWaveform.Location = new System.Drawing.Point(4, 22);
-            this.tabPageWaveform.Name = "tabPageWaveform";
-            this.tabPageWaveform.Size = new System.Drawing.Size(832, 520);
-            this.tabPageWaveform.TabIndex = 6;
-            this.tabPageWaveform.Text = "Waveform/spectrogram";
-            this.tabPageWaveform.UseVisualStyleBackColor = true;
+            this.panelWaveform.Controls.Add(this.groupBoxFfmpeg);
+            this.panelWaveform.Controls.Add(this.groupBoxSpectrogram);
+            this.panelWaveform.Controls.Add(this.groupBox1);
+            this.panelWaveform.Controls.Add(this.groupBoxWaveformAppearence);
+            this.panelWaveform.Location = new System.Drawing.Point(273, 13);
+            this.panelWaveform.Name = "panelWaveform";
+            this.panelWaveform.Size = new System.Drawing.Size(832, 520);
+            this.panelWaveform.TabIndex = 5;
+            this.panelWaveform.Text = "Waveform/spectrogram";
             // 
             // groupBoxFfmpeg
             // 
@@ -2801,21 +2828,20 @@
             this.checkBoxWaveformShowGrid.Text = "Show grid";
             this.checkBoxWaveformShowGrid.UseVisualStyleBackColor = true;
             // 
-            // tabPageTools
+            // panelTools
             // 
-            this.tabPageTools.Controls.Add(this.groupBoxGoogleTranslate);
-            this.tabPageTools.Controls.Add(this.groupBoxBing);
-            this.tabPageTools.Controls.Add(this.groupBoxToolsAutoBr);
-            this.tabPageTools.Controls.Add(this.groupBoxSpellCheck);
-            this.tabPageTools.Controls.Add(this.groupBoxFixCommonErrors);
-            this.tabPageTools.Controls.Add(this.groupBoxToolsVisualSync);
-            this.tabPageTools.Location = new System.Drawing.Point(4, 22);
-            this.tabPageTools.Name = "tabPageTools";
-            this.tabPageTools.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageTools.Size = new System.Drawing.Size(832, 520);
-            this.tabPageTools.TabIndex = 5;
-            this.tabPageTools.Text = "Tools";
-            this.tabPageTools.UseVisualStyleBackColor = true;
+            this.panelTools.Controls.Add(this.groupBoxGoogleTranslate);
+            this.panelTools.Controls.Add(this.groupBoxBing);
+            this.panelTools.Controls.Add(this.groupBoxToolsAutoBr);
+            this.panelTools.Controls.Add(this.groupBoxSpellCheck);
+            this.panelTools.Controls.Add(this.groupBoxFixCommonErrors);
+            this.panelTools.Controls.Add(this.groupBoxToolsVisualSync);
+            this.panelTools.Location = new System.Drawing.Point(273, 13);
+            this.panelTools.Name = "panelTools";
+            this.panelTools.Padding = new System.Windows.Forms.Padding(3);
+            this.panelTools.Size = new System.Drawing.Size(832, 520);
+            this.panelTools.TabIndex = 6;
+            this.panelTools.Text = "Tools";
             // 
             // groupBoxGoogleTranslate
             // 
@@ -3337,16 +3363,15 @@
             this.labelVerifyButton.TabIndex = 3;
             this.labelVerifyButton.Text = "Play X seconds and back, X is";
             // 
-            // tabPageWordLists
+            // panelWordLists
             // 
-            this.tabPageWordLists.Controls.Add(this.groupBoxWordLists);
-            this.tabPageWordLists.Location = new System.Drawing.Point(4, 22);
-            this.tabPageWordLists.Name = "tabPageWordLists";
-            this.tabPageWordLists.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageWordLists.Size = new System.Drawing.Size(832, 520);
-            this.tabPageWordLists.TabIndex = 3;
-            this.tabPageWordLists.Text = "Word lists";
-            this.tabPageWordLists.UseVisualStyleBackColor = true;
+            this.panelWordLists.Controls.Add(this.groupBoxWordLists);
+            this.panelWordLists.Location = new System.Drawing.Point(273, 13);
+            this.panelWordLists.Name = "panelWordLists";
+            this.panelWordLists.Padding = new System.Windows.Forms.Padding(3);
+            this.panelWordLists.Size = new System.Drawing.Size(832, 520);
+            this.panelWordLists.TabIndex = 7;
+            this.panelWordLists.Text = "Word lists";
             // 
             // groupBoxWordLists
             // 
@@ -3597,17 +3622,16 @@
             this.comboBoxWordListLanguage.TabIndex = 0;
             this.comboBoxWordListLanguage.SelectedIndexChanged += new System.EventHandler(this.ComboBoxWordListLanguageSelectedIndexChanged);
             // 
-            // tabPageToolBar
+            // panelToolBar
             // 
-            this.tabPageToolBar.Controls.Add(this.groupBox2);
-            this.tabPageToolBar.Controls.Add(this.groupBoxShowToolBarButtons);
-            this.tabPageToolBar.Location = new System.Drawing.Point(4, 22);
-            this.tabPageToolBar.Name = "tabPageToolBar";
-            this.tabPageToolBar.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageToolBar.Size = new System.Drawing.Size(832, 520);
-            this.tabPageToolBar.TabIndex = 7;
-            this.tabPageToolBar.Text = "Toolbar ";
-            this.tabPageToolBar.UseVisualStyleBackColor = true;
+            this.panelToolBar.Controls.Add(this.groupBox2);
+            this.panelToolBar.Controls.Add(this.groupBoxShowToolBarButtons);
+            this.panelToolBar.Location = new System.Drawing.Point(273, 13);
+            this.panelToolBar.Name = "panelToolBar";
+            this.panelToolBar.Padding = new System.Windows.Forms.Padding(3);
+            this.panelToolBar.Size = new System.Drawing.Size(832, 520);
+            this.panelToolBar.TabIndex = 8;
+            this.panelToolBar.Text = "Toolbar ";
             // 
             // groupBox2
             // 
@@ -4032,21 +4056,21 @@
             this.checkBoxToolbarNew.Text = "Visible";
             this.checkBoxToolbarNew.UseVisualStyleBackColor = true;
             // 
-            // tabPageFont
+            // panelFont
             // 
-            this.tabPageFont.Controls.Add(this.groupBoxFont);
-            this.tabPageFont.Location = new System.Drawing.Point(4, 22);
-            this.tabPageFont.Name = "tabPageFont";
-            this.tabPageFont.Size = new System.Drawing.Size(832, 520);
-            this.tabPageFont.TabIndex = 10;
-            this.tabPageFont.Text = "Font";
-            this.tabPageFont.UseVisualStyleBackColor = true;
+            this.panelFont.Controls.Add(this.groupBoxFont);
+            this.panelFont.Location = new System.Drawing.Point(273, 13);
+            this.panelFont.Name = "panelFont";
+            this.panelFont.Size = new System.Drawing.Size(832, 520);
+            this.panelFont.TabIndex = 9;
+            this.panelFont.Text = "Font";
             // 
             // groupBoxFont
             // 
             this.groupBoxFont.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxFont.Controls.Add(this.groupBoxDarkTheme);
             this.groupBoxFont.Controls.Add(this.labelFontNote);
             this.groupBoxFont.Controls.Add(this.groupBoxFontTextBox);
             this.groupBoxFont.Controls.Add(this.groupBoxFontListViews);
@@ -4058,10 +4082,74 @@
             this.groupBoxFont.TabStop = false;
             this.groupBoxFont.Text = "Font in UI";
             // 
+            // groupBoxDarkTheme
+            // 
+            this.groupBoxDarkTheme.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxDarkTheme.Controls.Add(this.checkBoxDarkThemeEnabled);
+            this.groupBoxDarkTheme.Controls.Add(this.panelDarkThemeBackColor);
+            this.groupBoxDarkTheme.Controls.Add(this.buttonDarkThemeBackColor);
+            this.groupBoxDarkTheme.Controls.Add(this.panelDarkThemeColor);
+            this.groupBoxDarkTheme.Controls.Add(this.buttonDarkThemeColor);
+            this.groupBoxDarkTheme.Location = new System.Drawing.Point(14, 315);
+            this.groupBoxDarkTheme.Name = "groupBoxDarkTheme";
+            this.groupBoxDarkTheme.Size = new System.Drawing.Size(806, 112);
+            this.groupBoxDarkTheme.TabIndex = 40;
+            this.groupBoxDarkTheme.TabStop = false;
+            this.groupBoxDarkTheme.Text = "Dark theme";
+            // 
+            // checkBoxDarkThemeEnabled
+            // 
+            this.checkBoxDarkThemeEnabled.AutoSize = true;
+            this.checkBoxDarkThemeEnabled.Location = new System.Drawing.Point(16, 25);
+            this.checkBoxDarkThemeEnabled.Name = "checkBoxDarkThemeEnabled";
+            this.checkBoxDarkThemeEnabled.Size = new System.Drawing.Size(101, 17);
+            this.checkBoxDarkThemeEnabled.TabIndex = 43;
+            this.checkBoxDarkThemeEnabled.Text = "Use dark theme";
+            this.checkBoxDarkThemeEnabled.UseVisualStyleBackColor = true;
+            // 
+            // panelDarkThemeBackColor
+            // 
+            this.panelDarkThemeBackColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelDarkThemeBackColor.Location = new System.Drawing.Point(140, 78);
+            this.panelDarkThemeBackColor.Name = "panelDarkThemeBackColor";
+            this.panelDarkThemeBackColor.Size = new System.Drawing.Size(21, 20);
+            this.panelDarkThemeBackColor.TabIndex = 42;
+            this.panelDarkThemeBackColor.Click += new System.EventHandler(this.buttonDarkThemeBackColor_Click);
+            // 
+            // buttonDarkThemeBackColor
+            // 
+            this.buttonDarkThemeBackColor.Location = new System.Drawing.Point(16, 77);
+            this.buttonDarkThemeBackColor.Name = "buttonDarkThemeBackColor";
+            this.buttonDarkThemeBackColor.Size = new System.Drawing.Size(112, 23);
+            this.buttonDarkThemeBackColor.TabIndex = 40;
+            this.buttonDarkThemeBackColor.Text = "Back color";
+            this.buttonDarkThemeBackColor.UseVisualStyleBackColor = true;
+            this.buttonDarkThemeBackColor.Click += new System.EventHandler(this.buttonDarkThemeBackColor_Click);
+            // 
+            // panelDarkThemeColor
+            // 
+            this.panelDarkThemeColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelDarkThemeColor.Location = new System.Drawing.Point(140, 49);
+            this.panelDarkThemeColor.Name = "panelDarkThemeColor";
+            this.panelDarkThemeColor.Size = new System.Drawing.Size(21, 20);
+            this.panelDarkThemeColor.TabIndex = 41;
+            this.panelDarkThemeColor.Click += new System.EventHandler(this.buttonDarkThemeColor_Click);
+            // 
+            // buttonDarkThemeColor
+            // 
+            this.buttonDarkThemeColor.Location = new System.Drawing.Point(16, 48);
+            this.buttonDarkThemeColor.Name = "buttonDarkThemeColor";
+            this.buttonDarkThemeColor.Size = new System.Drawing.Size(112, 23);
+            this.buttonDarkThemeColor.TabIndex = 39;
+            this.buttonDarkThemeColor.Text = "Color";
+            this.buttonDarkThemeColor.UseVisualStyleBackColor = true;
+            this.buttonDarkThemeColor.Click += new System.EventHandler(this.buttonDarkThemeColor_Click);
+            // 
             // labelFontNote
             // 
             this.labelFontNote.AutoSize = true;
-            this.labelFontNote.Location = new System.Drawing.Point(11, 352);
+            this.labelFontNote.Location = new System.Drawing.Point(10, 443);
             this.labelFontNote.Name = "labelFontNote";
             this.labelFontNote.Size = new System.Drawing.Size(278, 13);
             this.labelFontNote.TabIndex = 41;
@@ -4080,9 +4168,9 @@
             this.groupBoxFontTextBox.Controls.Add(this.comboBoxSubtitleFontSize);
             this.groupBoxFontTextBox.Controls.Add(this.checkBoxSubtitleFontBold);
             this.groupBoxFontTextBox.Controls.Add(this.checkBoxSubtitleCenter);
-            this.groupBoxFontTextBox.Location = new System.Drawing.Point(14, 228);
+            this.groupBoxFontTextBox.Location = new System.Drawing.Point(14, 196);
             this.groupBoxFontTextBox.Name = "groupBoxFontTextBox";
-            this.groupBoxFontTextBox.Size = new System.Drawing.Size(806, 116);
+            this.groupBoxFontTextBox.Size = new System.Drawing.Size(806, 113);
             this.groupBoxFontTextBox.TabIndex = 40;
             this.groupBoxFontTextBox.TabStop = false;
             this.groupBoxFontTextBox.Text = "Text box";
@@ -4206,9 +4294,9 @@
             this.groupBoxFontListViews.Controls.Add(this.labelSubtitleListViewFontSize);
             this.groupBoxFontListViews.Controls.Add(this.comboBoxSubtitleListViewFontSize);
             this.groupBoxFontListViews.Controls.Add(this.checkBoxSubtitleListViewFontBold);
-            this.groupBoxFontListViews.Location = new System.Drawing.Point(14, 141);
+            this.groupBoxFontListViews.Location = new System.Drawing.Point(14, 132);
             this.groupBoxFontListViews.Name = "groupBoxFontListViews";
-            this.groupBoxFontListViews.Size = new System.Drawing.Size(806, 81);
+            this.groupBoxFontListViews.Size = new System.Drawing.Size(806, 58);
             this.groupBoxFontListViews.TabIndex = 39;
             this.groupBoxFontListViews.TabStop = false;
             this.groupBoxFontListViews.Text = "List view";
@@ -4249,7 +4337,7 @@
             // checkBoxSubtitleListViewFontBold
             // 
             this.checkBoxSubtitleListViewFontBold.AutoSize = true;
-            this.checkBoxSubtitleListViewFontBold.Location = new System.Drawing.Point(210, 41);
+            this.checkBoxSubtitleListViewFontBold.Location = new System.Drawing.Point(289, 20);
             this.checkBoxSubtitleListViewFontBold.Name = "checkBoxSubtitleListViewFontBold";
             this.checkBoxSubtitleListViewFontBold.Size = new System.Drawing.Size(46, 17);
             this.checkBoxSubtitleListViewFontBold.TabIndex = 35;
@@ -4268,7 +4356,7 @@
             this.groupBoxFontGeneral.Controls.Add(this.labelSubtitleFontBackgroundColor);
             this.groupBoxFontGeneral.Location = new System.Drawing.Point(14, 20);
             this.groupBoxFontGeneral.Name = "groupBoxFontGeneral";
-            this.groupBoxFontGeneral.Size = new System.Drawing.Size(806, 115);
+            this.groupBoxFontGeneral.Size = new System.Drawing.Size(806, 106);
             this.groupBoxFontGeneral.TabIndex = 38;
             this.groupBoxFontGeneral.TabStop = false;
             this.groupBoxFontGeneral.Text = "General";
@@ -4327,16 +4415,15 @@
             this.labelSubtitleFontBackgroundColor.TabIndex = 36;
             this.labelSubtitleFontBackgroundColor.Text = "Subtitle font background color";
             // 
-            // tabPageSsaStyle
+            // panelSsaStyle
             // 
-            this.tabPageSsaStyle.Controls.Add(this.groupBoxSsaStyle);
-            this.tabPageSsaStyle.Location = new System.Drawing.Point(4, 22);
-            this.tabPageSsaStyle.Name = "tabPageSsaStyle";
-            this.tabPageSsaStyle.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageSsaStyle.Size = new System.Drawing.Size(832, 520);
-            this.tabPageSsaStyle.TabIndex = 1;
-            this.tabPageSsaStyle.Text = "SSA style";
-            this.tabPageSsaStyle.UseVisualStyleBackColor = true;
+            this.panelSsaStyle.Controls.Add(this.groupBoxSsaStyle);
+            this.panelSsaStyle.Location = new System.Drawing.Point(273, 13);
+            this.panelSsaStyle.Name = "panelSsaStyle";
+            this.panelSsaStyle.Padding = new System.Windows.Forms.Padding(3);
+            this.panelSsaStyle.Size = new System.Drawing.Size(832, 520);
+            this.panelSsaStyle.TabIndex = 10;
+            this.panelSsaStyle.Text = "SSA style";
             // 
             // groupBoxSsaStyle
             // 
@@ -4613,17 +4700,16 @@
             this.pictureBoxPreview.TabStop = false;
             this.pictureBoxPreview.Click += new System.EventHandler(this.pictureBoxPreview_Click);
             // 
-            // tabPageNetwork
+            // panelNetwork
             // 
-            this.tabPageNetwork.Controls.Add(this.groupBoxNetworkSession);
-            this.tabPageNetwork.Controls.Add(this.groupBoxProxySettings);
-            this.tabPageNetwork.Location = new System.Drawing.Point(4, 22);
-            this.tabPageNetwork.Name = "tabPageNetwork";
-            this.tabPageNetwork.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageNetwork.Size = new System.Drawing.Size(832, 520);
-            this.tabPageNetwork.TabIndex = 4;
-            this.tabPageNetwork.Text = "Network";
-            this.tabPageNetwork.UseVisualStyleBackColor = true;
+            this.panelNetwork.Controls.Add(this.groupBoxNetworkSession);
+            this.panelNetwork.Controls.Add(this.groupBoxProxySettings);
+            this.panelNetwork.Location = new System.Drawing.Point(273, 13);
+            this.panelNetwork.Name = "panelNetwork";
+            this.panelNetwork.Padding = new System.Windows.Forms.Padding(3);
+            this.panelNetwork.Size = new System.Drawing.Size(832, 520);
+            this.panelNetwork.TabIndex = 11;
+            this.panelNetwork.Text = "Network";
             // 
             // groupBoxNetworkSession
             // 
@@ -4766,7 +4852,7 @@
             this.labelStatus.Location = new System.Drawing.Point(12, 573);
             this.labelStatus.Name = "labelStatus";
             this.labelStatus.Size = new System.Drawing.Size(60, 13);
-            this.labelStatus.TabIndex = 3;
+            this.labelStatus.TabIndex = 1;
             this.labelStatus.Text = "labelStatus";
             // 
             // openFileDialogFFmpeg
@@ -4776,10 +4862,10 @@
             // buttonReset
             // 
             this.buttonReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonReset.Location = new System.Drawing.Point(668, 563);
+            this.buttonReset.Location = new System.Drawing.Point(948, 563);
             this.buttonReset.Name = "buttonReset";
             this.buttonReset.Size = new System.Drawing.Size(185, 23);
-            this.buttonReset.TabIndex = 2;
+            this.buttonReset.TabIndex = 4;
             this.buttonReset.Text = "Restore default settings";
             this.buttonReset.UseVisualStyleBackColor = true;
             this.buttonReset.Click += new System.EventHandler(this.buttonReset_Click);
@@ -4794,10 +4880,10 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(865, 598);
+            this.ClientSize = new System.Drawing.Size(1145, 598);
             this.Controls.Add(this.buttonReset);
             this.Controls.Add(this.labelStatus);
-            this.Controls.Add(this.tabControlSettings);
+            this.Controls.Add(this.panelSettings);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -4810,8 +4896,9 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Settings";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormSettings_KeyDown);
-            this.tabControlSettings.ResumeLayout(false);
-            this.tabPageGeneral.ResumeLayout(false);
+            this.panelSettings.ResumeLayout(false);
+            this.listBoxSection.ResumeLayout(false);
+            this.panelGeneral.ResumeLayout(false);
             this.groupBoxMiscellaneous.ResumeLayout(false);
             this.groupBoxMiscellaneous.PerformLayout();
             this.groupBoxGeneralRules.ResumeLayout(false);
@@ -4824,21 +4911,21 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMinGapMs)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharsSec)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSubtitleLineMaximumLength)).EndInit();
-            this.tabPageShortcuts.ResumeLayout(false);
+            this.panelShortcuts.ResumeLayout(false);
             this.groupBoxShortcuts.ResumeLayout(false);
             this.groupBoxShortcuts.PerformLayout();
             this.contextMenuStripShortcuts.ResumeLayout(false);
-            this.tabPageSyntaxColoring.ResumeLayout(false);
+            this.panelSyntaxColoring.ResumeLayout(false);
             this.groupBoxListViewSyntaxColoring.ResumeLayout(false);
             this.groupBoxListViewSyntaxColoring.PerformLayout();
-            this.tabPageVideoPlayer.ResumeLayout(false);
+            this.panelVideoPlayer.ResumeLayout(false);
             this.groupBoxMainWindowVideoControls.ResumeLayout(false);
             this.groupBoxMainWindowVideoControls.PerformLayout();
             this.groupBoxVideoPlayerDefault.ResumeLayout(false);
             this.groupBoxVideoPlayerDefault.PerformLayout();
             this.groupBoxVideoEngine.ResumeLayout(false);
             this.groupBoxVideoEngine.PerformLayout();
-            this.tabPageWaveform.ResumeLayout(false);
+            this.panelWaveform.ResumeLayout(false);
             this.groupBoxFfmpeg.ResumeLayout(false);
             this.groupBoxFfmpeg.PerformLayout();
             this.groupBoxSpectrogram.ResumeLayout(false);
@@ -4848,7 +4935,7 @@
             this.groupBoxWaveformAppearence.ResumeLayout(false);
             this.groupBoxWaveformAppearence.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWaveformBorderHitMs)).EndInit();
-            this.tabPageTools.ResumeLayout(false);
+            this.panelTools.ResumeLayout(false);
             this.groupBoxGoogleTranslate.ResumeLayout(false);
             this.groupBoxGoogleTranslate.PerformLayout();
             this.groupBoxBing.ResumeLayout(false);
@@ -4862,7 +4949,7 @@
             this.groupBoxFixCommonErrors.PerformLayout();
             this.groupBoxToolsVisualSync.ResumeLayout(false);
             this.groupBoxToolsVisualSync.PerformLayout();
-            this.tabPageWordLists.ResumeLayout(false);
+            this.panelWordLists.ResumeLayout(false);
             this.groupBoxWordLists.ResumeLayout(false);
             this.groupBoxWordLists.PerformLayout();
             this.groupBoxOcrFixList.ResumeLayout(false);
@@ -4873,7 +4960,7 @@
             this.groupBoxWordListLocation.PerformLayout();
             this.groupBoxNamesIgonoreLists.ResumeLayout(false);
             this.groupBoxNamesIgonoreLists.PerformLayout();
-            this.tabPageToolBar.ResumeLayout(false);
+            this.panelToolBar.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBoxShowToolBarButtons.ResumeLayout(false);
@@ -4891,16 +4978,18 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSave)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOpen)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNew)).EndInit();
-            this.tabPageFont.ResumeLayout(false);
+            this.panelFont.ResumeLayout(false);
             this.groupBoxFont.ResumeLayout(false);
             this.groupBoxFont.PerformLayout();
+            this.groupBoxDarkTheme.ResumeLayout(false);
+            this.groupBoxDarkTheme.PerformLayout();
             this.groupBoxFontTextBox.ResumeLayout(false);
             this.groupBoxFontTextBox.PerformLayout();
             this.groupBoxFontListViews.ResumeLayout(false);
             this.groupBoxFontListViews.PerformLayout();
             this.groupBoxFontGeneral.ResumeLayout(false);
             this.groupBoxFontGeneral.PerformLayout();
-            this.tabPageSsaStyle.ResumeLayout(false);
+            this.panelSsaStyle.ResumeLayout(false);
             this.groupBoxSsaStyle.ResumeLayout(false);
             this.groupBoxSsaBorder.ResumeLayout(false);
             this.groupBoxSsaBorder.PerformLayout();
@@ -4916,7 +5005,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaMarginLeft)).EndInit();
             this.groupBoxPreview.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).EndInit();
-            this.tabPageNetwork.ResumeLayout(false);
+            this.panelNetwork.ResumeLayout(false);
             this.groupBoxNetworkSession.ResumeLayout(false);
             this.groupBoxNetworkSession.PerformLayout();
             this.groupBoxProxySettings.ResumeLayout(false);
@@ -4932,9 +5021,10 @@
 
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.TabControl tabControlSettings;
-        private System.Windows.Forms.TabPage tabPageGeneral;
-        private System.Windows.Forms.TabPage tabPageSsaStyle;
+        private System.Windows.Forms.Panel panelSettings;
+        private System.Windows.Forms.ListBox listBoxSection;
+        private System.Windows.Forms.Panel panelGeneral;
+        private System.Windows.Forms.Panel panelSsaStyle;
         private System.Windows.Forms.GroupBox groupBoxMiscellaneous;
         private System.Windows.Forms.GroupBox groupBoxShowToolBarButtons;
         private System.Windows.Forms.PictureBox pictureBoxNew;
@@ -4977,7 +5067,7 @@
         private System.Windows.Forms.CheckBox checkBoxStartInSourceView;
         private System.Windows.Forms.CheckBox checkBoxReopenLastOpened;
         private System.Windows.Forms.Label labelSubMaxLen;
-        private System.Windows.Forms.TabPage tabPageVideoPlayer;
+        private System.Windows.Forms.Panel panelVideoPlayer;
         private System.Windows.Forms.CheckBox checkBoxVideoPlayerShowStopButton;
         private System.Windows.Forms.GroupBox groupBoxVideoEngine;
         private System.Windows.Forms.Label labelVideoPlayerMPlayer;
@@ -4989,7 +5079,7 @@
         private System.Windows.Forms.CheckBox checkBoxRememberWindowPosition;
         private System.Windows.Forms.TextBox textBoxShowLineBreaksAs;
         private System.Windows.Forms.Label labelShowLineBreaksAs;
-        private System.Windows.Forms.TabPage tabPageWordLists;
+        private System.Windows.Forms.Panel panelWordLists;
         private System.Windows.Forms.GroupBox groupBoxWordLists;
         private System.Windows.Forms.GroupBox groupBoxWordListLocation;
         private System.Windows.Forms.GroupBox groupBoxOcrFixList;
@@ -5009,7 +5099,7 @@
         private System.Windows.Forms.ListBox listBoxUserWordLists;
         private System.Windows.Forms.TextBox textBoxUserWord;
         private System.Windows.Forms.Button buttonAddUserWord;
-        private System.Windows.Forms.TabPage tabPageNetwork;
+        private System.Windows.Forms.Panel panelNetwork;
         private System.Windows.Forms.GroupBox groupBoxProxySettings;
         private System.Windows.Forms.Label labelProxyPassword;
         private System.Windows.Forms.TextBox textBoxProxyAddress;
@@ -5020,7 +5110,7 @@
         private System.Windows.Forms.CheckBox checkBoxNamesOnline;
         private System.Windows.Forms.TextBox textBoxNamesOnline;
         private System.Windows.Forms.TextBox textBoxOcrFixValue;
-        private System.Windows.Forms.TabPage tabPageTools;
+        private System.Windows.Forms.Panel panelTools;
         private System.Windows.Forms.GroupBox groupBoxToolsVisualSync;
         private System.Windows.Forms.ComboBox comboBoxToolsVerifySeconds;
         private System.Windows.Forms.Label labelVerifyButton;
@@ -5051,7 +5141,7 @@
         private System.Windows.Forms.TextBox textBoxCustomSearchUrl1;
         private System.Windows.Forms.Label labelCustomSearch;
         private System.Windows.Forms.ComboBox comboBoxCustomSearch1;
-        private System.Windows.Forms.TabPage tabPageWaveform;
+        private System.Windows.Forms.Panel panelWaveform;
         private System.Windows.Forms.GroupBox groupBoxWaveformAppearence;
         private System.Windows.Forms.Panel panelWaveformBackgroundColor;
         private System.Windows.Forms.Button buttonWaveformBackgroundColor;
@@ -5070,7 +5160,7 @@
         private System.Windows.Forms.CheckBox checkBoxRememberSelectedLine;
         private System.Windows.Forms.ComboBox comboBoxAutoBackup;
         private System.Windows.Forms.Label labelAutoBackup;
-        private System.Windows.Forms.TabPage tabPageToolBar;
+        private System.Windows.Forms.Panel panelToolBar;
         private System.Windows.Forms.CheckBox checkBoxShowFrameRate;
         private System.Windows.Forms.ComboBox comboBoxSpellChecker;
         private System.Windows.Forms.Label labelSpellChecker;
@@ -5082,7 +5172,7 @@
         private System.Windows.Forms.CheckBox checkBoxFixCommonOcrErrorsUsingHardcodedRules;
         private System.Windows.Forms.Label labelVideoPlayerPreviewFontSize;
         private System.Windows.Forms.ComboBox comboBoxlVideoPlayerPreviewFontSize;
-        private System.Windows.Forms.TabPage tabPageShortcuts;
+        private System.Windows.Forms.Panel panelShortcuts;
         private System.Windows.Forms.GroupBox groupBoxShortcuts;
         private System.Windows.Forms.Button buttonUpdateShortcut;
         private System.Windows.Forms.TreeView treeViewShortcuts;
@@ -5104,7 +5194,7 @@
         private System.Windows.Forms.NumericUpDown numericUpDownDurationMin;
         private System.Windows.Forms.ComboBox comboBoxTimeCodeMode;
         private System.Windows.Forms.Label labelTimeCodeMode;
-        private System.Windows.Forms.TabPage tabPageSyntaxColoring;
+        private System.Windows.Forms.Panel panelSyntaxColoring;
         private System.Windows.Forms.GroupBox groupBoxListViewSyntaxColoring;
         private System.Windows.Forms.CheckBox checkBoxSyntaxOverlap;
         private System.Windows.Forms.CheckBox checkBoxSyntaxColorTextTooLong;
@@ -5219,7 +5309,7 @@
         private System.Windows.Forms.CheckBox checkBoxVideoAutoOpen;
         private System.Windows.Forms.Button buttonClearShortcut;
         private System.Windows.Forms.CheckBox checkBoxAllowVolumeBoost;
-        private System.Windows.Forms.TabPage tabPageFont;
+        private System.Windows.Forms.Panel panelFont;
         private System.Windows.Forms.GroupBox groupBoxFont;
         private System.Windows.Forms.CheckBox checkBoxSubtitleCenter;
         private System.Windows.Forms.Panel panelSubtitleFontColor;
@@ -5296,5 +5386,11 @@
         private System.Windows.Forms.Panel panelTextBoxHtmlColor;
         private System.Windows.Forms.Button buttonTextBoxHtmlColor;
         private System.Windows.Forms.CheckBox checkBoxSubtitleTextBoxSyntaxColor;
+        private System.Windows.Forms.GroupBox groupBoxDarkTheme;
+        private System.Windows.Forms.CheckBox checkBoxDarkThemeEnabled;
+        private System.Windows.Forms.Panel panelDarkThemeBackColor;
+        private System.Windows.Forms.Button buttonDarkThemeBackColor;
+        private System.Windows.Forms.Panel panelDarkThemeColor;
+        private System.Windows.Forms.Button buttonDarkThemeColor;
     }
 }

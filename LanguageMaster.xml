@@ -449,13 +449,13 @@ Note: Do check free disk space.</WaveFileMalformed>
   <EffectKaraoke>
     <Title>Karaoke effect</Title>
     <ChooseColor>Choose color:</ChooseColor>
-    <TotalMilliseconds>Total milliseconds:</TotalMilliseconds>
-    <EndDelayInMilliseconds>End delay in milliseconds:</EndDelayInMilliseconds>
+    <TotalSeconds>Total seconds:</TotalSeconds>
+    <EndDelayInSeconds>End delay in seconds:</EndDelayInSeconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Typewriter effect</Title>
-    <TotalMilliseconds>Total milliseconds:</TotalMilliseconds>
-    <EndDelayInMilliseconds>End delay in milliseconds:</EndDelayInMilliseconds>
+    <TotalSeconds>Total seconds:</TotalSeconds>
+    <EndDelayInSeconds>End delay in seconds:</EndDelayInSeconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Export custom text format</Title>
@@ -510,7 +510,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <HalfTopBottom3D>Half-Top/Bottom</HalfTopBottom3D>
     <Depth>Depth</Depth>
     <ExportAllLines>Export all lines...</ExportAllLines>
-    <XImagesSavedInY>{0} images saved in {1}</XImagesSavedInY>
+    <XImagesSavedInY>{0:#,##0} images saved in {1}</XImagesSavedInY>
     <VideoResolution>Video res</VideoResolution>
     <Align>Align</Align>
     <Left>Left</Left>
@@ -1002,14 +1002,16 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
         <Compare>&amp;Compare...</Compare>
         <Statistics>Statisti&amp;cs...</Statistics>
         <Plugins>Plugins...</Plugins>
-        <ImportSubtitleFromVideoFile>Import subtitle from video file...</ImportSubtitleFromVideoFile>
-        <ImportOcrFromDvd>Import/OCR subtitle from VOB/IFO (DVD)...</ImportOcrFromDvd>
-        <ImportOcrVobSubSubtitle>Import/OCR VobSub (sub/idx) subtitle...</ImportOcrVobSubSubtitle>
-        <ImportBluRaySupFile>Import/OCR Blu-ray (.sup) subtitle file...</ImportBluRaySupFile>
-        <ImportSubtitleWithManualChosenEncoding>Import subtitle with manually chosen encoding...</ImportSubtitleWithManualChosenEncoding>
-        <ImportText>Import plain text...</ImportText>
-        <ImportImages>Import images...</ImportImages>
-        <ImportTimecodes>Import time codes...</ImportTimecodes>
+        <ImportSubtitleFromVideoFile>Subtitle from video file...</ImportSubtitleFromVideoFile>
+        <ImportOcrFromDvd>Subtitle from VOB/IFO (DVD)...</ImportOcrFromDvd>
+        <ImportOcrVobSubSubtitle>VobSub (sub/idx) subtitle for OCR...</ImportOcrVobSubSubtitle>
+        <ImportBluRaySupFile>Blu-ray (.sup) subtitle file for OCR...</ImportBluRaySupFile>
+        <ImportBluRaySupFileEdit>Blu-ray (.sup) subtitle file for edit...</ImportBluRaySupFileEdit>
+        <ImportSubtitleWithManualChosenEncoding>Subtitle with manually chosen encoding...</ImportSubtitleWithManualChosenEncoding>
+        <ImportText>Plain text...</ImportText>
+        <ImportImages>Images...</ImportImages>
+        <ImportTimecodes>Time codes...</ImportTimecodes>
+        <Import>Import</Import>
         <Export>Export</Export>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
         <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
@@ -1249,13 +1251,13 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
         <RemoveActors>Remove actors</RemoveActors>
         <EditBookmark>Edit bookmark</EditBookmark>
         <RemoveBookmark>Remove bookmark</RemoveBookmark>
+        <GoToSourceView>Go to source view</GoToSourceView>
+        <GoToListView>Go to list view</GoToListView>
       </ContextMenu>
     </Menu>
     <Controls>
       <SubtitleFormat>Format</SubtitleFormat>
       <FileEncoding>Encoding</FileEncoding>
-      <ListView>List view</ListView>
-      <SourceView>Source view</SourceView>
       <UndoChangesInEditPanel>Undo changes in edit panel</UndoChangesInEditPanel>
       <Previous>&lt; Prev</Previous>
       <Next>Next &gt;</Next>
@@ -1289,6 +1291,7 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
       <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Insert new subtitle at video pos (no text box focus)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
       <Auto>Auto</Auto>
       <PlayFromJustBeforeText>Play from just before &amp;text</PlayFromJustBeforeText>
+      <PlayFromBeginning>Play from beginning of video</PlayFromBeginning>
       <Pause>Pause</Pause>
       <GoToSubtitlePositionAndPause>Go to sub position and pause</GoToSubtitlePositionAndPause>
       <SetStartTime>Set &amp;start time</SetStartTime>
@@ -1580,6 +1583,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <NoSupportHereVobSub>VobSub files are not supported here.</NoSupportHereVobSub>
     <NoSupportHereDivx>DivX files are not supported here.</NoSupportHereDivx>
     <NoChapters>No chapters found in the video.</NoChapters>
+    <DarkThemeRestart>Restart Subtitle Edit for dark theme changes to take effect.</DarkThemeRestart>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Choose subtitle from Matroska file</Title>
@@ -1592,6 +1596,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <ConvertFrom>Convert from</ConvertFrom>
     <ConvertTo>Convert to</ConvertTo>
     <CopyToClipboard>Copy to clipboard</CopyToClipboard>
+    <CloseOnInsert>Close on insert</CloseOnInsert>
     <Length>Length</Length>
     <Mass>Mass</Mass>
     <Volume>Volume</Volume>
@@ -1918,8 +1923,6 @@ can edit in same subtitle file (collaboration)</Information>
     <SpellCheck>Spell check</SpellCheck>
     <NetflixQualityCheck>Netflix quality check</NetflixQualityCheck>
     <SettingsName>Settings</SettingsName>
-    <Help>Help</Help>
-    <UnbreakNoSpace>Unbreak without space (CJK)</UnbreakNoSpace>
     <ToggleBookmarks>Toggle bookmarks</ToggleBookmarks>
     <ToggleBookmarksWithComment>Toggle bookmarks - add comment</ToggleBookmarksWithComment>
     <ClearBookmarks>Clear bookmarks</ClearBookmarks>
@@ -1928,6 +1931,9 @@ can edit in same subtitle file (collaboration)</Information>
     <GoToNextBookmark>Go to next bookmark</GoToNextBookmark>
     <ChooseProfile>Choose profile</ChooseProfile>
     <DuplicateLine>Duplicate line</DuplicateLine>
+    <ToggleView>Toggle list/source view</ToggleView>
+    <ToggleMode>Toggle translate/create/adjust mode</ToggleMode>
+    <Help>Help</Help>
     <FontInUi>UI Font</FontInUi>
     <ShowFrameRate>Show frame rate in toolbar</ShowFrameRate>
     <DefaultFrameRate>Default frame rate</DefaultFrameRate>
@@ -2110,6 +2116,8 @@ can edit in same subtitle file (collaboration)</Information>
     <UseSyntaxColoring>Use syntax coloring</UseSyntaxColoring>
     <HtmlColor>Html color</HtmlColor>
     <AssaColor>ASSA color</AssaColor>
+    <DarkTheme>Dark theme</DarkTheme>
+    <DarkThemeEnabled>Use dark theme</DarkThemeEnabled>
     <UpdateShortcut>Update</UpdateShortcut>
     <FoucsSetVideoPosition>Focus set video position</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Toggle dock/undock of video controls</ToggleDockUndockOfVideoControls>
@@ -2166,6 +2174,7 @@ can edit in same subtitle file (collaboration)</Information>
     <GoToPrevSubtitleAndPlay>Go to previous line and play</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>Go to next line and play</GoToNextSubtitleAndPlay>
     <ToggleFocus>Toggle focus between list view and subtitle text box</ToggleFocus>
+    <ToggleFocusWaveform>Toggle focus between list view and waveform/spectrogram</ToggleFocusWaveform>
     <ToggleDialogDashes>Toggle dialog dashes</ToggleDialogDashes>
     <ToggleMusicSymbols>Toggle music symbols</ToggleMusicSymbols>
     <Alignment>Alignment (selected lines)</Alignment>
@@ -2195,7 +2204,6 @@ can edit in same subtitle file (collaboration)</Information>
     <WaveformPlayNewSelection>Play selection</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Play end of selection</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Play first selected subtitle</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Focus list view</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>Go to previous scene change</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Go to next scene change</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Toggle scene change</WaveformToggleSceneChange>
@@ -2273,7 +2281,6 @@ can edit in same subtitle file (collaboration)</Information>
     <ListViewColumnPaste>Column, paste</ListViewColumnPaste>
     <ListViewColumnTextUp>Column, text up</ListViewColumnTextUp>
     <ListViewColumnTextDown>Column, text down</ListViewColumnTextDown>
-    <ListViewFocusWaveform>Focus waveform/spectrogram</ListViewFocusWaveform>
     <ListViewGoToNextError>Go to next error</ListViewGoToNextError>
     <ShowBeamer>Start subtitle fullscreen beamer</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Move last word to next subtitle</MainTextBoxMoveLastWordDown>
@@ -2289,6 +2296,7 @@ can edit in same subtitle file (collaboration)</Information>
     <MainTextBoxAutoBreakFromPos>Break at first space from cursor position</MainTextBoxAutoBreakFromPos>
     <MainTextBoxAutoBreakFromPosAndGoToNext>Break at first space from cursor position and go to next</MainTextBoxAutoBreakFromPosAndGoToNext>
     <MainTextBoxUnbreak>Unbreak text</MainTextBoxUnbreak>
+    <MainTextBoxUnbreakNoSpace>Unbreak without space (CJK)</MainTextBoxUnbreakNoSpace>
     <MainFileSaveAll>Save all</MainFileSaveAll>
     <Miscellaneous>Misc.</Miscellaneous>
     <CpsIncludesSpace>Chars/sec (CPS) includes spaces</CpsIncludesSpace>
@@ -2739,6 +2747,7 @@ Keep changes?</KeepChangesMessage>
     <ErrorUnicodeEncodingOnly>Watermark only works with unicode file encoding.</ErrorUnicodeEncodingOnly>
   </Watermark>
   <Waveform>
+    <AddWaveformAndSpectrogram>Add waveform/spectrogram</AddWaveformAndSpectrogram>
     <ClickToAddWaveform>Click to add waveform</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Click to add waveform/spectrogram</ClickToAddWaveformAndSpectrogram>
     <Seconds>seconds</Seconds>
