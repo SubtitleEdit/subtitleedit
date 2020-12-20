@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 {
@@ -32,8 +33,16 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             {
                 CreationTime = GetUInt64(4); // 64-bit
                 ModificationTime = GetUInt64(12); // 64-bit
-                TimeScale = GetUInt(20); // 32-bit
-                Duration = GetUInt64(24); // 64-bit
+
+                // read the last 12 bytes
+                bytesRead = fs.Read(Buffer, 0, 4 + 8);
+                if (bytesRead < 4 + 8)
+                {
+                    return;
+                }
+
+                TimeScale = GetUInt(0); // 32-bit
+                Duration = GetUInt64(4); // 64-bit
             }
         }
     }
