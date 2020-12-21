@@ -1301,7 +1301,7 @@ namespace Nikse.SubtitleEdit.Controls
                 item.SubItems[ColumnIndexDuration].BackColor = BackColor;
             }
 
-            if (_settings.Tools.ListViewSyntaxColorDurationSmall)
+            if (_settings.Tools.ListViewSyntaxColorDurationSmall && !paragraph.StartTime.IsMaxTime)
             {
                 double charactersPerSecond = Utilities.GetCharactersPerSecond(paragraph);
                 if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
@@ -1342,7 +1342,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
             }
 
-            if (_settings.Tools.ListViewSyntaxColorGap && i >= 0 && i < paragraphs.Count - 1 && ColumnIndexGap >= 0)
+            if (_settings.Tools.ListViewSyntaxColorGap && i >= 0 && i < paragraphs.Count - 1 && ColumnIndexGap >= 0 && !paragraph.StartTime.IsMaxTime)
             {
                 Paragraph next = paragraphs[i + 1];
                 if (next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds < Configuration.Settings.General.MinimumMillisecondsBetweenLines)
