@@ -4840,6 +4840,11 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             Configuration.Settings.Tools.ListViewSyntaxErrorColor = darkModeListViewSyntaxErrorColor;
                         }
+
+                        if (Configuration.Settings.Tools.ListViewUnfocusedSelectedColor.ToArgb() == Color.LightBlue.ToArgb())
+                        {
+                            Configuration.Settings.Tools.ListViewUnfocusedSelectedColor = Color.DarkGray;
+                        }
                     }
 
                     Configuration.Settings.General.SubtitleBackgroundColor = darkThemeBackColor;
@@ -4879,6 +4884,11 @@ namespace Nikse.SubtitleEdit.Forms
                     if (Configuration.Settings.Tools.ListViewSyntaxErrorColor.ToArgb() == darkModeListViewSyntaxErrorColor.ToArgb())
                     {
                         Configuration.Settings.Tools.ListViewSyntaxErrorColor = defaultListViewSyntaxErrorColor;
+                    }
+
+                    if (Configuration.Settings.Tools.ListViewUnfocusedSelectedColor.ToArgb() == Color.DarkGray.ToArgb())
+                    {
+                        Configuration.Settings.Tools.ListViewUnfocusedSelectedColor = Color.LightBlue;
                     }
 
                     MessageBox.Show(Configuration.Settings.Language.Main.DarkThemeRestart);
