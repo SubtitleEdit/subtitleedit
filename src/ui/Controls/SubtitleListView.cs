@@ -56,26 +56,6 @@ namespace Nikse.SubtitleEdit.Controls
 
         private string _subtitleFontName = "Tahoma";
 
-        public override bool RightToLeftLayout
-        {
-            get => base.RightToLeftLayout;
-            set
-            {
-                var hzAlignment = value ? HorizontalAlignment.Left : HorizontalAlignment.Right;
-                if (ColumnIndexCps >= 0)
-                {
-                    Columns[ColumnIndexCps].TextAlign = hzAlignment;
-                }
-
-                if (ColumnIndexWpm >= 0)
-                {
-                    Columns[ColumnIndexWpm].TextAlign = hzAlignment;
-                }
-
-                base.RightToLeftLayout = value;
-            }
-        }
-
         public string SubtitleFontName
         {
             get => _subtitleFontName;
@@ -780,7 +760,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (GetColumnIndex(SubtitleColumn.End) == -1)
             {
-                var ch = new ColumnHeader { Text = title, TextAlign = RightToLeftLayout ? HorizontalAlignment.Right : HorizontalAlignment.Left };
+                var ch = new ColumnHeader { Text = title };
                 if (ColumnIndexStart >= 0)
                 {
                     SubtitleColumns.Insert(ColumnIndexStart + 1, SubtitleColumn.End);
@@ -820,7 +800,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (GetColumnIndex(SubtitleColumn.Duration) == -1)
             {
-                var ch = new ColumnHeader { Text = title, TextAlign = RightToLeftLayout ? HorizontalAlignment.Right : HorizontalAlignment.Left };
+                var ch = new ColumnHeader { Text = title };
                 if (ColumnIndexEnd >= 0)
                 {
                     SubtitleColumns.Insert(ColumnIndexEnd + 1, SubtitleColumn.Duration);
@@ -928,7 +908,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (GetColumnIndex(SubtitleColumn.CharactersPerSeconds) == -1)
             {
-                var ch = new ColumnHeader { Text = title, TextAlign = RightToLeftLayout ? HorizontalAlignment.Left : HorizontalAlignment.Right };
+                var ch = new ColumnHeader { Text = title };
                 if (ColumnIndexDuration >= 0)
                 {
                     SubtitleColumns.Insert(ColumnIndexDuration + 1, SubtitleColumn.CharactersPerSeconds);
@@ -960,7 +940,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (GetColumnIndex(SubtitleColumn.WordsPerMinute) == -1)
             {
-                var ch = new ColumnHeader { Text = title, TextAlign = RightToLeftLayout ? HorizontalAlignment.Left : HorizontalAlignment.Right };
+                var ch = new ColumnHeader { Text = title };
                 if (ColumnIndexCps >= 0)
                 {
                     SubtitleColumns.Insert(ColumnIndexCps + 1, SubtitleColumn.WordsPerMinute);
@@ -1159,7 +1139,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
             if (Columns.Count > 0)
             {
-                Columns[Columns.Count - 1].Width = Width - (width + 25);
+                Columns[Columns.Count - 1].Width = ClientSize.Width - width;
             }
         }
 
