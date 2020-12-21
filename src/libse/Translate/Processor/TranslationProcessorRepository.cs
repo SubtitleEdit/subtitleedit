@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Nikse.SubtitleEdit.Core.Translate.Processor;
+﻿using System.Collections.Generic;
 
-namespace Nikse.SubtitleEdit.Core.Translate
+namespace Nikse.SubtitleEdit.Core.Translate.Processor
 {
     public class TranslationProcessorRepository
     {
