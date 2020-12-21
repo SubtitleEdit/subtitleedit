@@ -167,7 +167,7 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly MainShortcuts _shortcuts = new MainShortcuts();
         private long _winLeftDownTicks = -1;
         private long _winRightDownTicks = -1;
-        private FormWindowState _lastFormWindowState = FormWindowState.Maximized;
+        private FormWindowState _lastFormWindowState = FormWindowState.Normal;
 
         public bool IsMenuOpen { get; private set; }
 
@@ -19683,7 +19683,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            SubtitleListview1.AutoSizeColumns();
+            SubtitleListview1.AutoSizeAllColumns(this);
             if (WindowState == FormWindowState.Maximized)
             {
                 Main_ResizeEnd(sender, e);
