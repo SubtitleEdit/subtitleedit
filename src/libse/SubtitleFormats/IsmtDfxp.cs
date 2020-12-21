@@ -52,6 +52,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Paragraphs.Clear();
             var mp4Parser = new MP4Parser(fileName);
             var dfxpStrings = mp4Parser.GetMdatsAsStrings();
+            SubtitleFormat format = new TimedText10();
             foreach (var xmlAsString in dfxpStrings)
             {
                 try
@@ -63,7 +64,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     var sub = new Subtitle();
                     var mdatLines = xmlAsString.SplitToLines();
-                    sub.ReloadLoadSubtitle(mdatLines, null, new TimedText());
+                    format = sub.ReloadLoadSubtitle(mdatLines, null, format);
                     if (sub.Paragraphs.Count == 0)
                     {
                         continue;
@@ -86,6 +87,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     _errorCount++;
                 }
             }
+
+            subtitle.Renumber();
         }
 
         public override string ToText(Subtitle subtitle, string title)
