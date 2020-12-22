@@ -10,7 +10,6 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
         {
             TranslationProcessors.Add(new SentenceMergingTranslationProcessor());
             TranslationProcessors.Add(new SingleParagraphTranslationProcessor());
-
         }
     }
 }
