@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -53,6 +53,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string RemoveIllegalSpacesAndFixEmptyCodes(string line)
         {
+            if (string.IsNullOrEmpty(line) || line.Length > 2000)
+            {
+                return line;
+            }
+
             int index = line.IndexOf(']');
             if (index >= 0 && index < line.Length)
             {

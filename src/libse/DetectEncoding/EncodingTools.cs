@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Core.DetectEncoding
         public static Encoding DetectInputCodepage(byte[] input)
         {
             var detected = DetectInputCodePages(input, 1);
-            return detected.Length > 0 ? detected[0] : Encoding.Default;
+            return detected.Length > 0 && detected[0] != null ? detected[0] : Encoding.Default;
         }
 
         /// <summary>

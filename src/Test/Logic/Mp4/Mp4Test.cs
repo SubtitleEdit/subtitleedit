@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using System.IO;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
 
 namespace Test.Logic.Mp4
 {
@@ -37,6 +38,28 @@ namespace Test.Logic.Mp4
             Assert.IsTrue(Math.Abs(paragraphs[1].EndTime.TotalMilliseconds - 5024) < 0.01);
             Assert.IsTrue(paragraphs[1].Text == "Line 2");
         }
-    }
 
+        private static byte[] StringToByteArray(string hex)
+        {
+            int numberChars = hex.Length;
+            byte[] bytes = new byte[numberChars / 2];
+            for (int i = 0; i < numberChars; i += 2)
+            {
+                bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
+            }
+
+            return bytes;
+        }
+
+        [TestMethod]
+        public void Mp4MvhdBox64Bit()
+        {
+            var buffer = StringToByteArray("010000000000000000000000000000000000000000989680000000068fcd4c00");
+            using (var ms = new MemoryStream(buffer))
+            {
+                var mvhd = new Mvhd(ms);
+                Assert.IsTrue(10000000 == mvhd.TimeScale);
+            }
+        }
+    }
 }
