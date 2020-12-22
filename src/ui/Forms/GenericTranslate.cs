@@ -165,8 +165,6 @@ namespace Nikse.SubtitleEdit.Forms
                 MessageBox.Show(message, translationServiceName);
             }
         }
-
-
         private void ComboBoxTranslationServiceChanged(object sender, EventArgs e)
         {
             _translationService = (AbstractTranslationService)comboBoxTranslationServices.SelectedItem;
@@ -201,7 +199,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _targetLanguageIsoCode = ((TranslationPair)comboBoxTarget.SelectedItem).Code;
             }
-
             if (comboBoxSource.SelectedItem != null)
             {
                 _sourceLanguageIsoCode = ((TranslationPair)comboBoxSource.SelectedItem).Code;
@@ -263,11 +260,11 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            //brummochse: I don't understand what the next code is doing and why?!
             if (uiCultureTargetLanguage == defaultSourceLanguage && defaultSourceLanguage == "en")
             {
                 uiCultureTargetLanguage = "es";
             }
-
             if (uiCultureTargetLanguage == defaultSourceLanguage)
             {
                 uiCultureTargetLanguage = "en";
@@ -286,7 +283,6 @@ namespace Nikse.SubtitleEdit.Forms
                     comboBox.SelectedIndex = i;
                     return;
                 }
-
                 i++;
             }
         }
@@ -303,8 +299,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             ReadLanguageSettings();
-  
-
             Translate();
         }
 
@@ -317,21 +311,18 @@ namespace Nikse.SubtitleEdit.Forms
             _breakTranslation = false;
             buttonTranslate.Text = Configuration.Settings.Language.General.Cancel;
             Cursor.Current = Cursors.WaitCursor;
-
-            progressBar1.Maximum = _subtitle.Paragraphs.Count;
+          
             progressBar1.Visible = true;
             labelPleaseWait.Visible = true;
             try
             {
-                var selectedItems = subtitleListViewSource.SelectedItems;
-                var startIndex = selectedItems.Count <= 0 ? 0 : selectedItems[0].Index;
-                progressBar1.Minimum = startIndex;
-                var selectedParagraphs=_subtitle.Paragraphs.GetRange(startIndex, _subtitle.Paragraphs.Count - startIndex);
+                List<Paragraph> selectedParagraphs= GetSelectedParagraphs();
+                progressBar1.Minimum = 0;
+                progressBar1.Maximum = selectedParagraphs.Count;
                 translator.Translate(_translationService, _sourceLanguageIsoCode, _targetLanguageIsoCode, selectedParagraphs, targetParagraphs =>
                 {
                     FillTranslatedText(targetParagraphs);
-                    int lastIndex = TranslatedSubtitle.Paragraphs.FindIndex(x => x.Number == targetParagraphs.Keys.Last());
-                    progressBar1.Value = lastIndex;
+                    progressBar1.Value = selectedParagraphs.FindIndex(x=>x.Number== targetParagraphs.Keys.Last());
                     Application.DoEvents();
                     return _breakTranslation;
                 });
@@ -353,6 +344,24 @@ namespace Nikse.SubtitleEdit.Forms
 
                 Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage = _targetLanguageIsoCode;
             }
+        }
+
+        private List<Paragraph> GetSelectedParagraphs()
+        {
+            List<Paragraph> selectedParagraphs = new List<Paragraph>();
+            ListView.SelectedListViewItemCollection selectedItems = subtitleListViewSource.SelectedItems;
+            if (selectedItems.Count > 0)
+            {
+                foreach (ListViewItem selectedItem in selectedItems)
+                {
+                    selectedParagraphs.Add(_subtitle.Paragraphs[selectedItem.Index]);
+                }
+            }
+            else
+            {
+                selectedParagraphs = _subtitle.Paragraphs;
+            }
+            return selectedParagraphs;
         }
 
         private void FillTranslatedText(Dictionary<int, string> targetTexts)

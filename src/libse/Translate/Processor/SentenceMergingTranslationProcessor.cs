@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Xml;
 using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.Translate.Processor
@@ -11,13 +8,19 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
 
     public class SentenceMergingTranslationProcessor : AbstractTranslationProcessor<SentenceMergingTranslationProcessor.Sentence>
     {
+        private static readonly char[] SentenceDelimiterAfterChars = { '.', '?', '!',')' };
+        private static readonly char[] SentenceDelimiterBeforeChars = { '(' };
 
-        private static readonly char[] SentenceDelimiterChars = { '.', '?', '!' };
-        private readonly StringSplitEngine _stringSplitEngine;
+        private static readonly char[] WordDelimiterAfterChars = { ' ', ' ' };
 
-        public SentenceMergingTranslationProcessor()
+        private static readonly StringSplitEngine SentenceSplitEngine = new StringSplitEngine(SentenceDelimiterAfterChars, SentenceDelimiterBeforeChars);
+        private static readonly List<AbstractStringSplitsChunkAssigner> StringSplitsChunkAssigners=new List<AbstractStringSplitsChunkAssigner>();
+
+        static SentenceMergingTranslationProcessor()
         {
-            _stringSplitEngine = new StringSplitEngine(SentenceDelimiterChars);
+            var wordSplitEngine = new StringSplitEngine(WordDelimiterAfterChars);
+            StringSplitsChunkAssigners.Add(new GreedyStringSplitsChunkAssigner(wordSplitEngine));
+            StringSplitsChunkAssigners.Add(new RandomizedStringSplitsChunkAssigner(wordSplitEngine));
         }
 
         public class ParagraphWrapper
@@ -36,7 +39,6 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
             }
         }
 
-
         public class SentenceParagraphRelation
         {
             public string Text { get; }
@@ -49,7 +51,6 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
                 ParagraphWrapper = paragraphWrapper;
                 Text = text;
             }
-
         }
 
         public class Sentence : ITranslationBaseUnit
@@ -62,13 +63,9 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
                 {
                     string text = string.Join(" ", SentenceParagraphs.ConvertAll(e => e.Text));
                     text = Regex.Replace(text, @"\s+", " "); //replace new lines and multiple spaces to a single space
-                    text = text.Trim();
-                    return text;
+                    return text.Trim();
                 }
             }
-
-
-     
 
             /**
              * divides the full sentence into multiple chunks and assigns them to the source paragraphs.
@@ -76,68 +73,28 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
              */
             public void SetTranslation(string targetText)
             {
+                List<int> sourceChunksTextLength = SentenceParagraphs.ConvertAll(x => x.Text.Length);
+                var breakPositions = EvaluateBreakPositions(targetText, sourceChunksTextLength);
 
-                var delimiterChars = new char[] { ' ', ' ' };
-                var stringSplitEngine = new StringSplitEngine(delimiterChars);
-                var inseparablePositions = stringSplitEngine.EvaluateInseparablePositions(targetText);
-
-                List<int> chunksTextLength = SentenceParagraphs.ConvertAll(x => x.Text.Length);
-                int overallSourceLength = Enumerable.Sum(chunksTextLength);
-
-                int currentSentenceParagraph = 0;
-                SentenceParagraphs[0].Translation = "";
-                int currentSourceChunkEndPosition = chunksTextLength[0];
-
-                for (int i = 0; i < targetText.Length; i++)
+                string[] targetChunks = StringSplitEngine.SplitAt(targetText, breakPositions);
+                for (int i = 0; i < targetChunks.Length; i++)
                 {
-                    char charAt = targetText[i];
-                    if (delimiterChars.Contains(charAt) && !inseparablePositions.Contains(i))
-                    {
-                        double currentTargetPositionPercentage = (double)i / targetText.Length;
-                        double currentSourceChunkEndPositionPercentage = (double)currentSourceChunkEndPosition / overallSourceLength;
-                        if (currentTargetPositionPercentage > currentSourceChunkEndPositionPercentage)
-                        {
-                            currentSentenceParagraph++;
-                            SentenceParagraphs[currentSentenceParagraph].Translation = "";
-                            currentSourceChunkEndPosition += chunksTextLength[currentSentenceParagraph];
-                        }
-                    }
-
-                    SentenceParagraphs[currentSentenceParagraph].Translation += charAt;
+                    SentenceParagraphs[i].Translation = targetChunks[i];
                 }
             }
-            ///**
-            // * divides the full sentence into multiple chunks and assigns them to the source paragraphs.
-            // * It tries to split by percentage equivalent to fit the length of the source paragraph
-            // */
-            //public void SetTranslation(string targetText)
-            //{
-            //    var delimiterChars = new char[] { ' ', ' ' };
-            //    List<int> chunksTextLength = SentenceParagraphs.ConvertAll(x => x.Text.Length);
-            //    int overallSourceLength = Enumerable.Sum(chunksTextLength);
 
-            //    int currentSentenceParagraph = 0;
-            //    SentenceParagraphs[0].Translation = "";
-            //    int currentSourceChunkEndPosition = chunksTextLength[0];
-
-            //    for (int i = 0; i < targetText.Length; i++)
-            //    {
-            //        char charAt = targetText[i];
-            //        if (delimiterChars.Contains(charAt))
-            //        {
-            //            double currentTargetPositionPercentage = (double)i / targetText.Length;
-            //            double currentSourceChunkEndPositionPercentage = (double)currentSourceChunkEndPosition / overallSourceLength;
-            //            if (currentTargetPositionPercentage > currentSourceChunkEndPositionPercentage)
-            //            {
-            //                currentSentenceParagraph++;
-            //                SentenceParagraphs[currentSentenceParagraph].Translation = "";
-            //                currentSourceChunkEndPosition += chunksTextLength[currentSentenceParagraph];
-            //            }
-            //        }
-
-            //        SentenceParagraphs[currentSentenceParagraph].Translation += charAt;
-            //    }
-            //}
+            private List<int> EvaluateBreakPositions(string targetText, List<int> sourceChunksTextLength)
+            {
+                List<AbstractStringSplitsChunkAssigner.RateResult> rateResults = new List<AbstractStringSplitsChunkAssigner.RateResult>();
+                foreach (var stringSplitsChunkAssigner in StringSplitsChunkAssigners)
+                {
+                    var potentialBreakPositions = stringSplitsChunkAssigner.GetSplitPositions(sourceChunksTextLength, targetText);
+                    var rateResult = AbstractStringSplitsChunkAssigner.CalculateRateResult(sourceChunksTextLength, targetText, potentialBreakPositions);
+                    rateResults.Add(rateResult);
+                }
+                rateResults = rateResults.OrderBy(x => x.Fitness).ToList();
+                return rateResults.First().BreakPositions;
+            }
         }
 
         public override string ToString()
@@ -148,13 +105,13 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
         private IEnumerable<Sentence> ConcatSentences(List<Paragraph> paragraphs)
         {
             Sentence currentSentence = new Sentence();
-            int lastParagraphNumber = Int16.MinValue;
+            int lastParagraphNumber = int.MinValue;
 
             foreach (var paragraph in paragraphs)
             {
                 if (lastParagraphNumber + 1 != paragraph.Number) //check if paragraphs belong sequentially together 
                 {
-                    if (currentSentence.Text.Trim().Length > 0) //this check avoid to add empty Sentence
+                    if (currentSentence.Text.Trim().Length > 0) //this check avoids to add empty Sentence
                     {
                         yield return currentSentence;
                         currentSentence = new Sentence();
@@ -163,13 +120,12 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
 
                 lastParagraphNumber = paragraph.Number;
                 var paragraphWrapper = new ParagraphWrapper(paragraph);
-                var text = paragraph.Text;
 
-                List<string> sentenceChunks = _stringSplitEngine.split(text);
+                var sentenceChunks = SentenceSplitEngine.Split(paragraph.Text);
                 foreach (var sentenceChunk in sentenceChunks)
                 {
                     currentSentence.SentenceParagraphs.Add(new SentenceParagraphRelation(sentenceChunk, paragraphWrapper));
-                    if (sentenceChunk.IndexOfAny(SentenceDelimiterChars) >= 0)
+                    if (sentenceChunk.IndexOfAny(SentenceDelimiterAfterChars)+ sentenceChunk.IndexOfAny(SentenceDelimiterBeforeChars) >= 0)
                     {
                         yield return currentSentence;
                         currentSentence = new Sentence();
