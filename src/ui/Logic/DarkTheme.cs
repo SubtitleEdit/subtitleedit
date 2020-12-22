@@ -238,6 +238,11 @@ namespace Nikse.SubtitleEdit.Logic
                 cb.Paint += CheckBox_Paint;
             }
 
+            if (c is RadioButton rb)
+            {
+                rb.Paint += RadioButton_Paint;
+            }
+
             if (c is ComboBox cmBox)
             {
                 cmBox.FlatStyle = FlatStyle.Flat;
@@ -317,6 +322,23 @@ namespace Nikse.SubtitleEdit.Logic
                 };
 
                 TextRenderer.DrawText(e.Graphics, checkBox.Text, checkBox.Font, textRectangleValue, Color.DimGray, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+            }
+        }
+
+        private static void RadioButton_Paint(object sender, PaintEventArgs e)
+        {
+            if (sender is RadioButton radioButton && !radioButton.Enabled)
+            {
+                var radioButtonWidth = RadioButtonRenderer.GetGlyphSize(e.Graphics, System.Windows.Forms.VisualStyles.RadioButtonState.UncheckedDisabled).Width;
+                Rectangle textRectangleValue = new Rectangle
+                {
+                    X = e.ClipRectangle.X + radioButtonWidth,
+                    Y = e.ClipRectangle.Y,
+                    Width = e.ClipRectangle.X + e.ClipRectangle.Width - radioButtonWidth,
+                    Height = e.ClipRectangle.Height
+                };
+
+                TextRenderer.DrawText(e.Graphics, radioButton.Text, radioButton.Font, textRectangleValue, Color.DimGray, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
             }
         }
 
