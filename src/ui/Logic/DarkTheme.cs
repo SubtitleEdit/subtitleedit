@@ -229,6 +229,18 @@ namespace Nikse.SubtitleEdit.Logic
             if (c is Button b)
             {
                 b.FlatStyle = FlatStyle.Flat;
+                b.EnabledChanged += Button_EnabledChanged;
+                b.Paint += Button_Paint;
+            }
+
+            if (c is CheckBox cb)
+            {
+                cb.Paint += CheckBox_Paint;
+            }
+
+            if (c is RadioButton rb)
+            {
+                rb.Paint += RadioButton_Paint;
             }
 
             if (c is ComboBox cmBox)
@@ -277,6 +289,56 @@ namespace Nikse.SubtitleEdit.Logic
                 lv.OwnerDraw = true;
                 lv.DrawColumnHeader += lv_DrawColumnHeader;
                 lv.GridLines = Configuration.Settings.General.DarkThemeShowListViewGridLines;
+            }
+        }
+
+        private static void Button_EnabledChanged(object sender, EventArgs e)
+        {
+            var button = (Button)sender;
+            button.ForeColor = button.Enabled ? ForeColor : Color.DimGray;
+        }
+
+        private static void Button_Paint(object sender, PaintEventArgs e)
+        {
+            if (sender is Button button && !button.Enabled)
+            {
+                button.ForeColor = Color.DimGray;
+                TextFormatFlags flags = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter;
+                TextRenderer.DrawText(e.Graphics, button.Text, button.Font, e.ClipRectangle, button.ForeColor, flags);
+            }
+        }
+
+        private static void CheckBox_Paint(object sender, PaintEventArgs e)
+        {
+            if (sender is CheckBox checkBox && !checkBox.Enabled)
+            {
+                var checkBoxWidth = CheckBoxRenderer.GetGlyphSize(e.Graphics, System.Windows.Forms.VisualStyles.CheckBoxState.CheckedDisabled).Width;
+                Rectangle textRectangleValue = new Rectangle
+                {
+                    X = e.ClipRectangle.X + checkBoxWidth,
+                    Y = e.ClipRectangle.Y,
+                    Width = e.ClipRectangle.X + e.ClipRectangle.Width - checkBoxWidth,
+                    Height = e.ClipRectangle.Height
+                };
+
+                TextRenderer.DrawText(e.Graphics, checkBox.Text, checkBox.Font, textRectangleValue, Color.DimGray, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+            }
+        }
+
+        private static void RadioButton_Paint(object sender, PaintEventArgs e)
+        {
+            if (sender is RadioButton radioButton && !radioButton.Enabled)
+            {
+                var radioButtonWidth = RadioButtonRenderer.GetGlyphSize(e.Graphics, System.Windows.Forms.VisualStyles.RadioButtonState.UncheckedDisabled).Width;
+                Rectangle textRectangleValue = new Rectangle
+                {
+                    X = e.ClipRectangle.X + radioButtonWidth,
+                    Y = e.ClipRectangle.Y,
+                    Width = e.ClipRectangle.X + e.ClipRectangle.Width - radioButtonWidth,
+                    Height = e.ClipRectangle.Height
+                };
+
+                TextRenderer.DrawText(e.Graphics, radioButton.Text, radioButton.Font, textRectangleValue, Color.DimGray, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
             }
         }
 
@@ -363,6 +425,39 @@ namespace Nikse.SubtitleEdit.Logic
                 if (e.Item.ImageIndex == -1 && string.IsNullOrEmpty(e.Item.ImageKey) && e.Item.Image == null)
                 {
                     g.DrawImageUnscaled(Properties.Resources.tick, new Point(e.ImageRectangle.Left, e.ImageRectangle.Top));
+                }
+            }
+
+            protected override void OnRenderMenuItemBackground(ToolStripItemRenderEventArgs e)
+            {
+                var g = e.Graphics;
+
+                e.Item.ForeColor = e.Item.Enabled ? Color.FromArgb(220, 220, 220) : Color.FromArgb(153, 153, 153);
+
+                if (e.Item.Enabled)
+                {
+
+                    var bgColor = e.Item.Selected ? Color.FromArgb(122, 128, 132) : e.Item.BackColor;
+
+                    // Normal item
+                    var rect = new Rectangle(2, 0, e.Item.Width - 3, e.Item.Height);
+
+                    using (var b = new SolidBrush(bgColor))
+                    {
+                        g.FillRectangle(b, rect);
+                    }
+
+                    // Header item on open menu
+                    if (e.Item.GetType() == typeof(ToolStripMenuItem))
+                    {
+                        if (((ToolStripMenuItem)e.Item).DropDown.Visible && e.Item.IsOnDropDown == false)
+                        {
+                            using (var b = new SolidBrush(Color.FromArgb(92, 92, 92)))
+                            {
+                                g.FillRectangle(b, rect);
+                            }
+                        }
+                    }
                 }
             }
         }
