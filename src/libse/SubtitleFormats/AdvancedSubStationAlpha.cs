@@ -2047,6 +2047,12 @@ Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour,
                     styleAdded = true;
                 }
             }
+
+            if (!styleAdded) 
+            {
+                sb.AppendLine(style.ToRawAss(styleFormat));
+            }
+
             return sb.ToString();
         }
 

@@ -8005,7 +8005,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void WebVTTSetNewVoice(object sender, EventArgs e)
         {
-            using (var form = new TextPrompt(Configuration.Settings.Language.WebVttNewVoice.Title, Configuration.Settings.Language.WebVttNewVoice.VoiceName))
+            using (var form = new TextPrompt(Configuration.Settings.Language.WebVttNewVoice.Title, Configuration.Settings.Language.WebVttNewVoice.VoiceName, string.Empty))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
@@ -8027,7 +8027,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetNewActor(object sender, EventArgs e)
         {
-            using (var form = new TextPrompt(Configuration.Settings.Language.Main.Menu.ContextMenu.NewActor.Replace("...", string.Empty), Configuration.Settings.Language.General.Actor))
+            using (var form = new TextPrompt(Configuration.Settings.Language.Main.Menu.ContextMenu.NewActor.Replace("...", string.Empty), Configuration.Settings.Language.General.Actor, string.Empty))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
@@ -8091,7 +8091,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void WebVTTSetNewVoiceTextBox(object sender, EventArgs e)
         {
-            using (var form = new TextPrompt(Configuration.Settings.Language.WebVttNewVoice.Title, Configuration.Settings.Language.WebVttNewVoice.VoiceName))
+            using (var form = new TextPrompt(Configuration.Settings.Language.WebVttNewVoice.Title, Configuration.Settings.Language.WebVttNewVoice.VoiceName, string.Empty))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
@@ -28169,7 +28169,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemOpenVideoFromUrl_Click(object sender, EventArgs e)
         {
-            using (var form = new TextPrompt(Configuration.Settings.Language.Main.OpenVideoFile, "Url"))
+            using (var form = new TextPrompt(Configuration.Settings.Language.Main.OpenVideoFile, "Url", string.Empty))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
