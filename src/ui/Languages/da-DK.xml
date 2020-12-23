@@ -224,7 +224,11 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <TransportStreamFileNameEnding>Filnavn slutter</TransportStreamFileNameEnding>
     <TransportStreamSettingsButton>TS-indstillinger...</TransportStreamSettingsButton>
     <RemoveLineBreaks>Fjern linjeskift</RemoveLineBreaks>
+    <DeleteLines>Slet linjer</DeleteLines>
     <TryToUseSourceEncoding>Prøv at bruge kildekodning</TryToUseSourceEncoding>
+    <DeleteFirstLines>Slet første linjer</DeleteFirstLines>
+    <DeleteLastLines>Slet sidste linjer</DeleteLastLines>
+    <DeleteContaining>Slet linjer, der indeholder</DeleteContaining>
     <MkvLanguageInOutputFileName>"Sprog" i outputfilnavn</MkvLanguageInOutputFileName>
     <MkvLanguageInOutputFileNameX>Matroska (.mkv) "Sprog" i outputfilnavnet: {0}</MkvLanguageInOutputFileNameX>
     <MkvLanguageStyleTwoLetter>To bogstavs sprogkode</MkvLanguageStyleTwoLetter>
@@ -442,9 +446,13 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
   <EffectKaraoke>
     <Title>Karaoke effekt</Title>
     <ChooseColor>Vælg farve:</ChooseColor>
+    <TotalSeconds>Total sekunder:</TotalSeconds>
+    <EndDelayInSeconds>Afslut forsinkelse i sekunder:</EndDelayInSeconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Skrivemaskine effekt</Title>
+    <TotalSeconds>Samlede sekunder:</TotalSeconds>
+    <EndDelayInSeconds>Afslut forsinkelse i sekunder:</EndDelayInSeconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Eksporter bruger-defineret tekstformat</Title>
@@ -991,15 +999,16 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Go
         <Compare>Sammenlign...</Compare>
         <Statistics>Statistik...</Statistics>
         <Plugins>Plugins...</Plugins>
+        <ImportSubtitleFromVideoFile>Undertekst fra videofil...</ImportSubtitleFromVideoFile>
         <ImportOcrFromDvd>Import/OCR undertekster fra VOB/IFO (DVD)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importer/OCR VobSub (sub/idx) undertekst...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Importer/OCR Blu-ray sup fil...</ImportBluRaySupFile>
-        <ImportXSub>Importer/OCR XSub fra divx/avi...</ImportXSub>
-        <ImportSubtitleFromMatroskaFile>Importer undertekster fra Matroska fil...</ImportSubtitleFromMatroskaFile>
+        <ImportBluRaySupFileEdit>Blu-ray (.sup) undertekstfil til redigering...</ImportBluRaySupFileEdit>
         <ImportSubtitleWithManualChosenEncoding>Importer undertekst med manuel valgt tegnsæt...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importer tekst...</ImportText>
         <ImportImages>Importer billeder...</ImportImages>
         <ImportTimecodes>Import tidskoder...</ImportTimecodes>
+        <Import>Importer</Import>
         <Export>Eksporter</Export>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
         <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
@@ -1239,6 +1248,8 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Go
         <RemoveActors>Fjern talere</RemoveActors>
         <EditBookmark>Rediger bogmærke</EditBookmark>
         <RemoveBookmark>Fjern bogmærke</RemoveBookmark>
+        <GoToSourceView>Gå til kildevisning</GoToSourceView>
+        <GoToListView>Gå til listevisning</GoToListView>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1277,6 +1288,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Go
       <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Indsæt ny undertekst ved videopos (ikke fokus på tekstboks)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
       <Auto>Auto</Auto>
       <PlayFromJustBeforeText>Spil fra lige før &amp;tekst</PlayFromJustBeforeText>
+      <PlayFromBeginning>Afspil fra starten af ​​video</PlayFromBeginning>
       <Pause>Pause</Pause>
       <GoToSubtitlePositionAndPause>Gå til tekst position og pause</GoToSubtitlePositionAndPause>
       <SetStartTime>Set &amp;starttidspunkt</SetStartTime>
@@ -1427,8 +1439,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <BeforeTypeWriterEffect>Før skrivemaskine effekt</BeforeTypeWriterEffect>
     <BeforeKaraokeEffect>Før karaoke effekt</BeforeKaraokeEffect>
     <BeforeImportingDvdSubtitle>Før importer af undertekster fra DVD</BeforeImportingDvdSubtitle>
-    <OpenMatroskaFile>Åbn Matroska fil...</OpenMatroskaFile>
-    <MatroskaFiles>Matroska-filer</MatroskaFiles>
+    <OpenSubtitleVideoFile>Åbn undertekst fra videofil...</OpenSubtitleVideoFile>
+    <VideoFiles>Videofiler</VideoFiles>
     <NoSubtitlesFound>Ingen undertekster fundet</NoSubtitlesFound>
     <NotAValidMatroskaFileX>Dette er ikke en gyldig Matroska fil: {0}</NotAValidMatroskaFileX>
     <BlurayNotSubtitlesFound>Blu-ray sup fil indeholder ingen undertekster eller indeholder fejl - prøv at demuxe igen.</BlurayNotSubtitlesFound>
@@ -1454,8 +1466,6 @@ Fortsæt?</SubtitleAppendPrompt>
     <VobSubFiles>VobSub undertekst filer</VobSubFiles>
     <OpenBluRaySupFile>Åbn Blu-ray sup fil...</OpenBluRaySupFile>
     <BluRaySupFiles>Blu-ray sup filer</BluRaySupFiles>
-    <OpenXSubFiles>Åbn XSub file...</OpenXSubFiles>
-    <XSubFiles>XSub filer</XSubFiles>
     <BeforeImportingVobSubFile>Før import af VobSub undertekst</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Før import af Blu-ray sup undertekst</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>Før importer af BDN xml</BeforeImportingBdnXml>
@@ -1568,6 +1578,7 @@ Hvis du har redigeret denne fil med Subtitle Edit du måske finde en backup via 
     <NoSupportHereVobSub>VobSub filer understøttes ikke her.</NoSupportHereVobSub>
     <NoSupportHereDivx>DivX-filer understøttes ikke her.</NoSupportHereDivx>
     <NoChapters>Ingen kapitler fundet i videoen.</NoChapters>
+    <DarkThemeRestart>Genstart Subtitle Edit for at temaændringer træder i kraft.</DarkThemeRestart>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vælg undertekst fra Matroska fil</Title>
@@ -1580,6 +1591,7 @@ Hvis du har redigeret denne fil med Subtitle Edit du måske finde en backup via 
     <ConvertFrom>konverter fra</ConvertFrom>
     <ConvertTo>Konverter til</ConvertTo>
     <CopyToClipboard>Kopier til udklipsholder</CopyToClipboard>
+    <CloseOnInsert>Luk ved indsæt</CloseOnInsert>
     <Length>Længde</Length>
     <Mass>Masse</Mass>
     <Volume>Volume</Volume>
@@ -1906,16 +1918,17 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <SpellCheck>Stavekontrol</SpellCheck>
     <NetflixQualityCheck>Netflix kvalitetstjek</NetflixQualityCheck>
     <SettingsName>Indstillinger</SettingsName>
-    <Help>Hjælp</Help>
-    <UnbreakNoSpace>Fjern lineskift uden mellemrum (CJK)</UnbreakNoSpace>
     <ToggleBookmarks>Tilføj/fjern bogmærker</ToggleBookmarks>
     <ToggleBookmarksWithComment>Tilføj/fjern bogmærker medj kommentar</ToggleBookmarksWithComment>
     <ClearBookmarks>Ryd bogmærker</ClearBookmarks>
     <GoToBookmark>Gå til bogmærke</GoToBookmark>
     <GoToPreviousBookmark>Gå til tidligere bogmærke</GoToPreviousBookmark>
     <GoToNextBookmark>Gå til næste bogmærke</GoToNextBookmark>
-    <GeneralChooseProfile>Vælg profil</GeneralChooseProfile>
-    <GeneralDuplicateLine>Dupliker linje</GeneralDuplicateLine>
+    <ChooseProfile>Vælg profil</ChooseProfile>
+    <DuplicateLine>Kopier linje</DuplicateLine>
+    <ToggleView>Skift liste-/kildevisning</ToggleView>
+    <ToggleMode>Skift oversæt/opret/juster tilstand</ToggleMode>
+    <Help>Hjælp</Help>
     <FontInUi>UI-skrifttype</FontInUi>
     <ShowFrameRate>Vis frame rate i værktøjslinjen</ShowFrameRate>
     <DefaultFrameRate>Standard frame rate</DefaultFrameRate>
@@ -2095,6 +2108,11 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <ListViewAndTextBox>Listevistning og tekstboks</ListViewAndTextBox>
     <ListView>Listevisning</ListView>
     <TextBox>Tekstboks</TextBox>
+    <UseSyntaxColoring>Brug syntaksfarvning</UseSyntaxColoring>
+    <HtmlColor>HTML-farve</HtmlColor>
+    <AssaColor>ASSA farve</AssaColor>
+    <DarkTheme>Mørkt tema</DarkTheme>
+    <DarkThemeEnabled>Brug mørkt tema</DarkThemeEnabled>
     <UpdateShortcut>Opdater</UpdateShortcut>
     <FoucsSetVideoPosition>Fokus, sæt videoposition</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Skift dok/frigør af video kontrol</ToggleDockUndockOfVideoControls>
@@ -2106,6 +2124,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <AdjustSetStartAutoDurationAndGoToNext>Sæt start, auto varighed og gå til næste</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Sæt slut, næste start og gå til næste</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>Tast ned = set start, tast op = sæt slut og gå til næste</AdjustStartDownEndUpAndGoToNext>
+    <AdjustSetStartAndEndOfPrevious>Indstil start og indstil slut på forrige (minus min afstand)</AdjustSetStartAndEndOfPrevious>
+    <AdjustSetStartAndEndOfPreviousAndGoToNext>Indstil start og indstil slut på forrige og gå til næste (minus min afstand)</AdjustSetStartAndEndOfPreviousAndGoToNext>
     <AdjustSelected100MsForward>Flyt valgte linjer 100 ms frem</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Flyt valgte linjer 100 ms tilbage</AdjustSelected100MsBack>
     <AdjustStartXMsBack>Flyt start {0} ms tilbage</AdjustStartXMsBack>
@@ -2140,6 +2160,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <MainCreateStartDownEndUp>Opret ny på tast-ned, sæt sluttid ved tast-op</MainCreateStartDownEndUp>
     <MergeDialog>Flet dialog (indsæt tankestreger)</MergeDialog>
     <GoToNext>Gå til næste linje</GoToNext>
+    <GoToNextCursorAtEnd>Gå til næste linje, og indstil markøren i slutningen</GoToNextCursorAtEnd>
     <GoToPrevious>Gå til forrige line</GoToPrevious>
     <GoToCurrentSubtitleStart>Gå til nuværende linje start</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Gå til nuværende linje slut</GoToCurrentSubtitleEnd>
@@ -2148,6 +2169,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <GoToPrevSubtitleAndPlay>Gå til forrige linje og afspil</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>Gå til næste linje og start video</GoToNextSubtitleAndPlay>
     <ToggleFocus>Skift fokus imellem liste visning og undertekst tekstboks</ToggleFocus>
+    <ToggleFocusWaveform>Skift fokus mellem listevisning og bølgeform/spektrogram</ToggleFocusWaveform>
     <ToggleDialogDashes>Toggle dialog tankestreger</ToggleDialogDashes>
     <ToggleMusicSymbols>Skift musik symboler</ToggleMusicSymbols>
     <Alignment>Justering (valgte linier)</Alignment>
@@ -2160,6 +2182,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <AlignmentN7>Justering top venstre - {\an7}</AlignmentN7>
     <AlignmentN8>Justering top midt - {\an8}</AlignmentN8>
     <AlignmentN9>Justering top højre- {\an9}</AlignmentN9>
+    <ColorX>Farve {0} ({1})</ColorX>
     <CopyTextOnly>Kopier kun tekst til klippe-bord (valgte linier)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Kopier tekst fra original</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Auto-varighed (valgte linjer)</AutoDurationSelectedLines>
@@ -2262,12 +2285,14 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <MainTextBoxMoveLastWordDownCurrent>Flyt sidste ord fra første linje ned (nuværende undertekst)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Markering til små bogstaver</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Markering til store bogstaver</MainTextBoxSelectionToUpper>
+    <MainTextBoxSelectionToggleCasing>Skift mellemvalg af markering (versal/stor bogstav/lille bogstav)</MainTextBoxSelectionToggleCasing>
     <MainTextBoxSelectionToRuby>Valg til Ruby (japansk)</MainTextBoxSelectionToRuby>
     <MainTextBoxToggleAutoDuration>Toggle auto varighed</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Auto-ombryd tekst</MainTextBoxAutoBreak>
     <MainTextBoxAutoBreakFromPos>Bryd ved første mellemrum fra markørposition</MainTextBoxAutoBreakFromPos>
     <MainTextBoxAutoBreakFromPosAndGoToNext>Bryd i første mellemrum fra markørposition og gå til næste</MainTextBoxAutoBreakFromPosAndGoToNext>
     <MainTextBoxUnbreak>Fjern linjeskift</MainTextBoxUnbreak>
+    <MainTextBoxUnbreakNoSpace>Unbreak uden plads (CJK)</MainTextBoxUnbreakNoSpace>
     <MainFileSaveAll>Gem alle</MainFileSaveAll>
     <Miscellaneous>Diverse</Miscellaneous>
     <CpsIncludesSpace>Tegn/sek (CPS) inkluderer mellemrum</CpsIncludesSpace>
@@ -2513,6 +2538,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <MarginLeft>Margen venstre</MarginLeft>
     <MarginRight>Margin højre</MarginRight>
     <MarginVertical>Margen lodret</MarginVertical>
+    <Vertical>Lodret</Vertical>
     <Border>Kant</Border>
     <PlusShadow>+ Skygge</PlusShadow>
     <OpaqueBox>Kasse (bruger konturfarve)</OpaqueBox>
@@ -2530,6 +2556,9 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <StyleAlreadyExits>Style findes allerede: {0}</StyleAlreadyExits>
     <StyleXExportedToFileY>Style '{0}' eksporteret til '{1}'</StyleXExportedToFileY>
     <StyleXImportedFromFileY>Style '{0}' importeret fra '{1}'</StyleXImportedFromFileY>
+    <SetPreviewText>Indstil eksempeltekst...</SetPreviewText>
+    <AddToFile>Tilføj til fil</AddToFile>
+    <AddToStorage>Føj til lager</AddToStorage>
   </SubStationAlphaStyles>
   <PointSync>
     <Title>Punkt synkronisering</Title>
@@ -2715,6 +2744,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <ErrorUnicodeEncodingOnly>"Vandmærke" virker kun med unicode fil kodning.</ErrorUnicodeEncodingOnly>
   </Watermark>
   <Waveform>
+    <AddWaveformAndSpectrogram>Tilføj bølgeform/spektrogram</AddWaveformAndSpectrogram>
     <ClickToAddWaveform>Klik for at tilføje audio kurve</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Klik for at tilføje bølgeform/spektrogram</ClickToAddWaveformAndSpectrogram>
     <Seconds>sekunder</Seconds>

@@ -6955,6 +6955,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "SubStationAlphaStyles/MarginVertical":
                     language.SubStationAlphaStyles.MarginVertical = reader.Value;
                     break;
+                case "SubStationAlphaStyles/Vertical":
+                    language.SubStationAlphaStyles.Vertical = reader.Value;
+                    break;
                 case "SubStationAlphaStyles/Border":
                     language.SubStationAlphaStyles.Border = reader.Value;
                     break;
@@ -7005,6 +7008,15 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "SubStationAlphaStyles/StyleXImportedFromFileY":
                     language.SubStationAlphaStyles.StyleXImportedFromFileY = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/SetPreviewText":
+                    language.SubStationAlphaStyles.SetPreviewText = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/AddToFile":
+                    language.SubStationAlphaStyles.AddToFile = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/AddToStorage":
+                    language.SubStationAlphaStyles.AddToStorage = reader.Value;
                     break;
                 case "PointSync/Title":
                     language.PointSync.Title = reader.Value;

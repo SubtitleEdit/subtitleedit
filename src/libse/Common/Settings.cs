@@ -497,6 +497,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public int SsaMarginLeft { get; set; }
         public int SsaMarginRight { get; set; }
         public int SsaMarginTopBottom { get; set; }
+        public string AssaStyleStorage { get; set; }
 
         public string DCinemaFontFile { get; set; }
         public string DCinemaLoadFontResource { get; set; }
@@ -4923,6 +4924,12 @@ $HorzAlign          =   Center
                     settings.SubtitleSettings.SsaMarginTopBottom = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
                 }
 
+                subNode = node.SelectSingleNode("AssaStyleStorage");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.AssaStyleStorage = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("DCinemaFontFile");
                 if (subNode != null)
                 {
@@ -8232,6 +8239,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("SsaMarginLeft", settings.SubtitleSettings.SsaMarginLeft.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SsaMarginRight", settings.SubtitleSettings.SsaMarginRight.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SsaMarginTopBottom", settings.SubtitleSettings.SsaMarginTopBottom.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AssaStyleStorage", settings.SubtitleSettings.AssaStyleStorage);
                 textWriter.WriteElementString("DCinemaFontFile", settings.SubtitleSettings.DCinemaFontFile);
                 textWriter.WriteElementString("DCinemaFontSize", settings.SubtitleSettings.DCinemaFontSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DCinemaBottomMargin", settings.SubtitleSettings.DCinemaBottomMargin.ToString(CultureInfo.InvariantCulture));

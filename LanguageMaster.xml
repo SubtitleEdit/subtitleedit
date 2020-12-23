@@ -2543,6 +2543,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <MarginLeft>Margin left</MarginLeft>
     <MarginRight>Margin right</MarginRight>
     <MarginVertical>Margin vertical</MarginVertical>
+    <Vertical>Vertical</Vertical>
     <Border>Border</Border>
     <PlusShadow>+ Shadow</PlusShadow>
     <OpaqueBox>Opaque box (uses outline color)</OpaqueBox>
@@ -2560,6 +2561,9 @@ Continue?</RestoreDefaultSettingsMsg>
     <StyleAlreadyExits>Style already exists: {0}</StyleAlreadyExits>
     <StyleXExportedToFileY>Style '{0}' exported to file '{1}'</StyleXExportedToFileY>
     <StyleXImportedFromFileY>Style '{0}' imported from file '{1}'</StyleXImportedFromFileY>
+    <SetPreviewText>Set preview text...</SetPreviewText>
+    <AddToFile>Add to file</AddToFile>
+    <AddToStorage>Add to storage</AddToStorage>
   </SubStationAlphaStyles>
   <PointSync>
     <Title>Point synchronization</Title>
