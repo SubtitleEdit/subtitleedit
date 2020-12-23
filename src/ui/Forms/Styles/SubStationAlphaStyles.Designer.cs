@@ -506,9 +506,9 @@
             this.groupBoxBorder.Controls.Add(this.numericUpDownShadowWidth);
             this.groupBoxBorder.Controls.Add(this.numericUpDownOutline);
             this.groupBoxBorder.Controls.Add(this.labelShadow);
-            this.groupBoxBorder.Location = new System.Drawing.Point(234, 143);
+            this.groupBoxBorder.Location = new System.Drawing.Point(217, 143);
             this.groupBoxBorder.Name = "groupBoxBorder";
-            this.groupBoxBorder.Size = new System.Drawing.Size(219, 91);
+            this.groupBoxBorder.Size = new System.Drawing.Size(236, 91);
             this.groupBoxBorder.TabIndex = 3;
             this.groupBoxBorder.TabStop = false;
             this.groupBoxBorder.Text = "Border";
@@ -597,7 +597,7 @@
             this.groupBoxMargins.Controls.Add(this.labelMarginVertical);
             this.groupBoxMargins.Controls.Add(this.labelMarginRight);
             this.groupBoxMargins.Controls.Add(this.labelMarginLeft);
-            this.groupBoxMargins.Location = new System.Drawing.Point(109, 143);
+            this.groupBoxMargins.Location = new System.Drawing.Point(92, 143);
             this.groupBoxMargins.Name = "groupBoxMargins";
             this.groupBoxMargins.Size = new System.Drawing.Size(119, 93);
             this.groupBoxMargins.TabIndex = 2;
@@ -684,7 +684,7 @@
             this.groupBoxColors.Controls.Add(this.buttonPrimaryColor);
             this.groupBoxColors.Location = new System.Drawing.Point(7, 242);
             this.groupBoxColors.Name = "groupBoxColors";
-            this.groupBoxColors.Size = new System.Drawing.Size(447, 83);
+            this.groupBoxColors.Size = new System.Drawing.Size(447, 62);
             this.groupBoxColors.TabIndex = 1;
             this.groupBoxColors.TabStop = false;
             this.groupBoxColors.Text = "Colors";
@@ -692,7 +692,7 @@
             // panelBackColor
             // 
             this.panelBackColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelBackColor.Location = new System.Drawing.Point(334, 50);
+            this.panelBackColor.Location = new System.Drawing.Point(409, 23);
             this.panelBackColor.Name = "panelBackColor";
             this.panelBackColor.Size = new System.Drawing.Size(21, 20);
             this.panelBackColor.TabIndex = 7;
@@ -700,9 +700,9 @@
             // 
             // buttonBackColor
             // 
-            this.buttonBackColor.Location = new System.Drawing.Point(212, 49);
+            this.buttonBackColor.Location = new System.Drawing.Point(334, 22);
             this.buttonBackColor.Name = "buttonBackColor";
-            this.buttonBackColor.Size = new System.Drawing.Size(112, 23);
+            this.buttonBackColor.Size = new System.Drawing.Size(69, 23);
             this.buttonBackColor.TabIndex = 6;
             this.buttonBackColor.Text = "Shadow";
             this.buttonBackColor.UseVisualStyleBackColor = true;
@@ -711,7 +711,7 @@
             // panelOutlineColor
             // 
             this.panelOutlineColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelOutlineColor.Location = new System.Drawing.Point(334, 23);
+            this.panelOutlineColor.Location = new System.Drawing.Point(284, 23);
             this.panelOutlineColor.Name = "panelOutlineColor";
             this.panelOutlineColor.Size = new System.Drawing.Size(21, 20);
             this.panelOutlineColor.TabIndex = 5;
@@ -719,9 +719,9 @@
             // 
             // buttonOutlineColor
             // 
-            this.buttonOutlineColor.Location = new System.Drawing.Point(212, 22);
+            this.buttonOutlineColor.Location = new System.Drawing.Point(222, 22);
             this.buttonOutlineColor.Name = "buttonOutlineColor";
-            this.buttonOutlineColor.Size = new System.Drawing.Size(112, 23);
+            this.buttonOutlineColor.Size = new System.Drawing.Size(58, 23);
             this.buttonOutlineColor.TabIndex = 4;
             this.buttonOutlineColor.Text = "Outline";
             this.buttonOutlineColor.UseVisualStyleBackColor = true;
@@ -730,7 +730,7 @@
             // panelSecondaryColor
             // 
             this.panelSecondaryColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelSecondaryColor.Location = new System.Drawing.Point(129, 50);
+            this.panelSecondaryColor.Location = new System.Drawing.Point(183, 23);
             this.panelSecondaryColor.Name = "panelSecondaryColor";
             this.panelSecondaryColor.Size = new System.Drawing.Size(21, 20);
             this.panelSecondaryColor.TabIndex = 3;
@@ -738,9 +738,9 @@
             // 
             // buttonSecondaryColor
             // 
-            this.buttonSecondaryColor.Location = new System.Drawing.Point(7, 49);
+            this.buttonSecondaryColor.Location = new System.Drawing.Point(129, 22);
             this.buttonSecondaryColor.Name = "buttonSecondaryColor";
-            this.buttonSecondaryColor.Size = new System.Drawing.Size(112, 23);
+            this.buttonSecondaryColor.Size = new System.Drawing.Size(53, 23);
             this.buttonSecondaryColor.TabIndex = 2;
             this.buttonSecondaryColor.Text = "S&econdary";
             this.buttonSecondaryColor.UseVisualStyleBackColor = true;
@@ -749,7 +749,7 @@
             // panelPrimaryColor
             // 
             this.panelPrimaryColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelPrimaryColor.Location = new System.Drawing.Point(129, 22);
+            this.panelPrimaryColor.Location = new System.Drawing.Point(85, 23);
             this.panelPrimaryColor.Name = "panelPrimaryColor";
             this.panelPrimaryColor.Size = new System.Drawing.Size(21, 20);
             this.panelPrimaryColor.TabIndex = 1;
@@ -759,7 +759,7 @@
             // 
             this.buttonPrimaryColor.Location = new System.Drawing.Point(7, 22);
             this.buttonPrimaryColor.Name = "buttonPrimaryColor";
-            this.buttonPrimaryColor.Size = new System.Drawing.Size(112, 23);
+            this.buttonPrimaryColor.Size = new System.Drawing.Size(72, 23);
             this.buttonPrimaryColor.TabIndex = 0;
             this.buttonPrimaryColor.Text = "&Primary";
             this.buttonPrimaryColor.UseVisualStyleBackColor = true;
@@ -780,7 +780,7 @@
             this.groupBoxAlignment.Controls.Add(this.radioButtonTopLeft);
             this.groupBoxAlignment.Location = new System.Drawing.Point(7, 143);
             this.groupBoxAlignment.Name = "groupBoxAlignment";
-            this.groupBoxAlignment.Size = new System.Drawing.Size(96, 93);
+            this.groupBoxAlignment.Size = new System.Drawing.Size(79, 93);
             this.groupBoxAlignment.TabIndex = 0;
             this.groupBoxAlignment.TabStop = false;
             this.groupBoxAlignment.Text = "Alignment";
@@ -882,9 +882,9 @@
             this.groupBoxPreview.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxPreview.Controls.Add(this.pictureBoxPreview);
-            this.groupBoxPreview.Location = new System.Drawing.Point(7, 331);
+            this.groupBoxPreview.Location = new System.Drawing.Point(7, 310);
             this.groupBoxPreview.Name = "groupBoxPreview";
-            this.groupBoxPreview.Size = new System.Drawing.Size(447, 223);
+            this.groupBoxPreview.Size = new System.Drawing.Size(447, 244);
             this.groupBoxPreview.TabIndex = 2;
             this.groupBoxPreview.TabStop = false;
             this.groupBoxPreview.Text = "Preview";
@@ -895,7 +895,7 @@
             this.pictureBoxPreview.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBoxPreview.Location = new System.Drawing.Point(3, 16);
             this.pictureBoxPreview.Name = "pictureBoxPreview";
-            this.pictureBoxPreview.Size = new System.Drawing.Size(441, 204);
+            this.pictureBoxPreview.Size = new System.Drawing.Size(441, 225);
             this.pictureBoxPreview.TabIndex = 0;
             this.pictureBoxPreview.TabStop = false;
             this.pictureBoxPreview.Click += new System.EventHandler(this.pictureBoxPreview_Click);
@@ -906,7 +906,7 @@
             this.chooseBackgroundImageToolStripMenuItem,
             this.setPreviewTextToolStripMenuItem});
             this.contextMenuStripPreview.Name = "contextMenuStripPreview";
-            this.contextMenuStripPreview.Size = new System.Drawing.Size(227, 70);
+            this.contextMenuStripPreview.Size = new System.Drawing.Size(227, 48);
             // 
             // chooseBackgroundImageToolStripMenuItem
             // 
