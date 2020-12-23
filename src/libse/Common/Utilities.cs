@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
@@ -11,8 +13,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
-using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
@@ -2604,8 +2604,44 @@ namespace Nikse.SubtitleEdit.Core.Common
                     subtitle.Paragraphs.Add(new Paragraph(p.GetText(matroskaSubtitleInfo), p.Start, p.End));
                 }
             }
+
+            for (int i = 0; i < subtitle.Paragraphs.Count; i++)
+            {
+                subtitle.Paragraphs[i].Text = subtitle.Paragraphs[i].Text.TrimEnd();
+                if (subtitle.Paragraphs[i].Duration.TotalMilliseconds < 1)
+                {
+                    // fix subtitles without duration
+                    FixShortDisplayTime(subtitle, i);
+                }
+            }
+
             subtitle.Renumber();
             return format;
+        }
+
+        private static void FixShortDisplayTime(Subtitle s, int i)
+        {
+            Paragraph p = s.Paragraphs[i];
+            var minDisplayTime = Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
+            double displayTime = p.Duration.TotalMilliseconds;
+            if (displayTime < minDisplayTime)
+            {
+                var next = s.GetParagraphOrDefault(i + 1);
+                var wantedEndMs = p.StartTime.TotalMilliseconds + minDisplayTime;
+                if (next == null || wantedEndMs < next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines)
+                {
+                    p.EndTime.TotalMilliseconds = wantedEndMs;
+                    wantedEndMs = p.StartTime.TotalMilliseconds + GetOptimalDisplayMilliseconds(p.Text);
+                    if (next == null || wantedEndMs < next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines)
+                    {
+                        p.EndTime.TotalMilliseconds = wantedEndMs;
+                    }
+                    else if (next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines > p.EndTime.TotalMilliseconds)
+                    {
+                        p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                    }
+                }
+            }
         }
 
         public static Subtitle LoadMatroskaSSA(MatroskaTrackInfo matroskaSubtitleInfo, string fileName, SubtitleFormat format, List<MatroskaSubtitle> sub)
