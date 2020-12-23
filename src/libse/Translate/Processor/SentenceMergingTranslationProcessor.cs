@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
             {
                 if (lastParagraphNumber + 1 != paragraph.Number) //check if paragraphs belong sequentially together 
                 {
-                    if (currentSentence.Text.Trim().Length > 0) //this check avoids to add empty Sentence
+                    if (currentSentence.Text.Length > 0) //this check avoids to add empty Sentence
                     {
                         yield return currentSentence;
                         currentSentence = new Sentence();
@@ -124,15 +124,20 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
                 var sentenceChunks = SentenceSplitEngine.Split(paragraph.Text);
                 foreach (var sentenceChunk in sentenceChunks)
                 {
+                    if (currentSentence.Text.Length > 0 && SentenceDelimiterBeforeChars.Contains(sentenceChunk[0]))
+                    {
+                        yield return currentSentence;
+                        currentSentence = new Sentence();
+                    }
                     currentSentence.SentenceParagraphs.Add(new SentenceParagraphRelation(sentenceChunk, paragraphWrapper));
-                    if (sentenceChunk.IndexOfAny(SentenceDelimiterAfterChars)+ sentenceChunk.IndexOfAny(SentenceDelimiterBeforeChars) >= 0)
+                    if (SentenceDelimiterAfterChars.Contains(sentenceChunk[sentenceChunk.Length-1]))
                     {
                         yield return currentSentence;
                         currentSentence = new Sentence();
                     }
                 }
             }
-            if (currentSentence.Text.Trim().Length > 0) //this check avoid a empty last Sentence (could happen when the last chunk ends with a delimiter)
+            if (currentSentence.Text.Length > 0) //this check avoid a empty last Sentence (could happen when the last chunk ends with a delimiter)
             {
                 yield return currentSentence;
             }
