@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
         public string InputText { get; set; }
 
-        public TextPrompt(string title, string label)
+        public TextPrompt(string title, string label, string initialText)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -19,6 +19,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelDescription.Text = label;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            textBox1.Text = initialText;
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 

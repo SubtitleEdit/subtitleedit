@@ -2878,6 +2878,7 @@ can edit in same subtitle file (collaboration)",
                 MarginLeft = "Margin left",
                 MarginRight = "Margin right",
                 MarginVertical = "Margin vertical",
+                Vertical = "Vertical",
                 Border = "Border",
                 PlusShadow = "+ Shadow",
                 OpaqueBox = "Opaque box (uses outline color)",
@@ -2895,6 +2896,7 @@ can edit in same subtitle file (collaboration)",
                 StyleAlreadyExits = "Style already exists: {0}",
                 StyleXExportedToFileY = "Style '{0}' exported to file '{1}'",
                 StyleXImportedFromFileY = "Style '{0}' imported from file '{1}'",
+                SetPreviewText = "Set preview text...",
             };
 
             PointSync = new LanguageStructure.PointSync

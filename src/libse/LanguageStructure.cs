@@ -2736,6 +2736,7 @@
             public string MarginLeft { get; set; }
             public string MarginRight { get; set; }
             public string MarginVertical { get; set; }
+            public string Vertical { get; set; }
             public string Border { get; set; }
             public string PlusShadow { get; set; }
             public string OpaqueBox { get; set; }
@@ -2753,6 +2754,7 @@
             public string StyleAlreadyExits { get; set; }
             public string StyleXExportedToFileY { get; set; }
             public string StyleXImportedFromFileY { get; set; }
+            public string SetPreviewText { get; set; }
         }
 
         public class PointSync
