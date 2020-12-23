@@ -2755,6 +2755,8 @@
             public string StyleXExportedToFileY { get; set; }
             public string StyleXImportedFromFileY { get; set; }
             public string SetPreviewText { get; set; }
+            public string AddToFile { get; set; }
+            public string AddToStorage { get; set; }
         }
 
         public class PointSync

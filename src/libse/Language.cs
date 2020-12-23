@@ -2897,6 +2897,8 @@ can edit in same subtitle file (collaboration)",
                 StyleXExportedToFileY = "Style '{0}' exported to file '{1}'",
                 StyleXImportedFromFileY = "Style '{0}' imported from file '{1}'",
                 SetPreviewText = "Set preview text...",
+                AddToFile = "Add to file",
+                AddToStorage = "Add to storage",
             };
 
             PointSync = new LanguageStructure.PointSync

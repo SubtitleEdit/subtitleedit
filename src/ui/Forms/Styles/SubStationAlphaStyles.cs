@@ -118,8 +118,19 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             buttonRemoveAll.Text = l.RemoveAll;
             groupBoxPreview.Text = Configuration.Settings.Language.General.Preview;
 
+            buttonStorageImport.Text = l.Import;
+            buttonStorageExport.Text = l.Export;
+            buttonStorageAdd.Text = l.New;
+            buttonStorageCopy.Text = l.Copy;
+            buttonStorageRemove.Text = l.Remove;
+            buttonStorageRemoveAll.Text = l.RemoveAll;
+
+            buttonAddToFile.Text = l.AddToFile;
+            buttonAddStyleToStorage.Text = l.AddToStorage;
+
             deleteToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.Remove;
             toolStripMenuItemRemoveAll.Text = Configuration.Settings.Language.MultipleReplace.RemoveAll;
+            addToStorageToolStripMenuItem1.Text = l.AddToStorage;
             moveUpToolStripMenuItem.Text = Configuration.Settings.Language.DvdSubRip.MoveUp;
             moveDownToolStripMenuItem.Text = Configuration.Settings.Language.DvdSubRip.MoveDown;
             moveTopToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.MoveToTop;
@@ -131,6 +142,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             toolStripMenuItemStorageRemove.Text = Configuration.Settings.Language.MultipleReplace.Remove;
             toolStripMenuItemStorageRemoveAll.Text = Configuration.Settings.Language.MultipleReplace.RemoveAll;
+            addToFileStylesToolStripMenuItem.Text = l.AddToFile;
             toolStripMenuItemStorageMoveUp.Text = Configuration.Settings.Language.DvdSubRip.MoveUp;
             toolStripMenuItemStorageMoveDown.Text = Configuration.Settings.Language.DvdSubRip.MoveDown;
             toolStripMenuItemStorageMoveTop.Text = Configuration.Settings.Language.MultipleReplace.MoveToTop;
@@ -141,6 +153,28 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             toolStripMenuItemStorageExport.Text = Configuration.Settings.Language.MultipleReplace.Export;
 
             setPreviewTextToolStripMenuItem.Text = l.SetPreviewText;
+
+            using (var graphics = CreateGraphics())
+            {
+                var w = (int)graphics.MeasureString(buttonPrimaryColor.Text, Font).Width;
+                buttonPrimaryColor.Width = w + 15;
+                panelPrimaryColor.Left = buttonPrimaryColor.Left + buttonPrimaryColor.Width + 4;
+
+                buttonSecondaryColor.Left = panelPrimaryColor.Left + panelPrimaryColor.Width + 12;
+                w = (int)graphics.MeasureString(buttonSecondaryColor.Text, Font).Width;
+                buttonSecondaryColor.Width = w + 15;
+                panelSecondaryColor.Left = buttonSecondaryColor.Left + buttonSecondaryColor.Width + 4;
+
+                buttonOutlineColor.Left = panelSecondaryColor.Left + panelSecondaryColor.Width + 12;
+                w = (int)graphics.MeasureString(buttonOutlineColor.Text, Font).Width;
+                buttonOutlineColor.Width = w + 15;
+                panelOutlineColor.Left = buttonOutlineColor.Left + buttonOutlineColor.Width + 4;
+
+                buttonBackColor.Left = panelOutlineColor.Left + panelOutlineColor.Width + 12;
+                w = (int)graphics.MeasureString(buttonBackColor.Text, Font).Width;
+                buttonBackColor.Width = w + 15;
+                panelBackColor.Left = buttonBackColor.Left + buttonBackColor.Width + 4;
+            }
 
             if (_isSubStationAlpha)
             {
