@@ -2450,6 +2450,7 @@
             public string ListViewColumnTextDown { get; set; }
             public string ListViewGoToNextError { get; set; }
             public string ShowBeamer { get; set; }
+            public string ShowStyleManager { get; set; }
             public string MainTextBoxMoveLastWordDown { get; set; }
             public string MainTextBoxMoveFirstWordFromNextUp { get; set; }
             public string MainTextBoxMoveFirstWordUpCurrent { get; set; }
@@ -2757,6 +2758,7 @@
             public string SetPreviewText { get; set; }
             public string AddToFile { get; set; }
             public string AddToStorage { get; set; }
+            public string OverwriteX { get; set; }
         }
 
         public class PointSync
