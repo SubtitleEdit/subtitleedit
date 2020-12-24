@@ -2532,6 +2532,7 @@ Command line: {1} {2}
     <MarginLeft>边界/左</MarginLeft>
     <MarginRight>边界/右</MarginRight>
     <MarginVertical>边界/竖向</MarginVertical>
+    <Vertical>竖向</Vertical>
     <Border>边框</Border>
     <PlusShadow>+ 阴影</PlusShadow>
     <OpaqueBox>不透明框 (使用轮廓颜色)</OpaqueBox>
@@ -2549,6 +2550,9 @@ Command line: {1} {2}
     <StyleAlreadyExits>样式已存在: {0}</StyleAlreadyExits>
     <StyleXExportedToFileY>样式 '{0}' 导出到文件 '{1}'</StyleXExportedToFileY>
     <StyleXImportedFromFileY>样式 '{0}' 从文件 '{1}' 导入</StyleXImportedFromFileY>
+    <SetPreviewText>设置预览文本…</SetPreviewText>
+    <AddToFile>添加到文件</AddToFile>
+    <AddToStorage>添加到储存</AddToStorage>
   </SubStationAlphaStyles>
   <PointSync>
     <Title>取点同步</Title>
