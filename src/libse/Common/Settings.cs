@@ -1862,6 +1862,7 @@ $HorzAlign          =   Center
         public string MainToolsAppend { get; set; }
         public string MainToolsJoin { get; set; }
         public string MainToolsBeamer { get; set; }
+        public string StyleManager { get; set; }
         public string MainVideoOpen { get; set; }
         public string MainVideoClose { get; set; }
         public string MainVideoPause { get; set; }
@@ -6646,6 +6647,12 @@ $HorzAlign          =   Center
                     shortcuts.MainToolsBeamer = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("StyleManager");
+                if (subNode != null)
+                {
+                    shortcuts.StyleManager = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainEditToggleTranslationOriginalInPreviews");
                 if (subNode != null)
                 {
@@ -8578,6 +8585,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainToolsAppend", shortcuts.MainToolsAppend);
             textWriter.WriteElementString("MainToolsJoin", shortcuts.MainToolsJoin);
             textWriter.WriteElementString("MainToolsBeamer", shortcuts.MainToolsBeamer);
+            textWriter.WriteElementString("StyleManager", shortcuts.StyleManager);
             textWriter.WriteElementString("MainEditToggleTranslationOriginalInPreviews", shortcuts.MainEditToggleTranslationOriginalInPreviews);
             textWriter.WriteElementString("MainEditInverseSelection", shortcuts.MainEditInverseSelection);
             textWriter.WriteElementString("MainEditModifySelection", shortcuts.MainEditModifySelection);

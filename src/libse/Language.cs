@@ -2589,6 +2589,7 @@ can edit in same subtitle file (collaboration)",
                 ListViewColumnTextDown = "Column, text down",
                 ListViewGoToNextError = "Go to next error",
                 ShowBeamer = "Start subtitle fullscreen beamer",
+                ShowStyleManager = "Show style manager",
                 MainTextBoxMoveLastWordDown = "Move last word to next subtitle",
                 MainTextBoxMoveFirstWordFromNextUp = "Fetch first word from next subtitle",
                 MainTextBoxMoveLastWordDownCurrent = "Move last word from first line down (current subtitle)",
@@ -2899,6 +2900,7 @@ can edit in same subtitle file (collaboration)",
                 SetPreviewText = "Set preview text...",
                 AddToFile = "Add to file",
                 AddToStorage = "Add to storage",
+                OverwriteX = "Overwrite {0}?"
             };
 
             PointSync = new LanguageStructure.PointSync

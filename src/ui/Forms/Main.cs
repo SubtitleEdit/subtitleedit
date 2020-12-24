@@ -21371,6 +21371,7 @@ namespace Nikse.SubtitleEdit.Forms
             splitToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsSplit);
             appendTextVisuallyToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsAppend);
             joinSubtitlesToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsJoin);
+            toolStripMenuItemAssStyles.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.StyleManager);
 
             openVideoToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoOpen);
             closeVideoToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoClose);

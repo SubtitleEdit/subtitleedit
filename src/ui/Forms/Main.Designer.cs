@@ -288,7 +288,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.moveTextDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemBookmark = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemGoToSourceView = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemEmptyGoToSourceView = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.splitLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemMergeLines = new System.Windows.Forms.ToolStripMenuItem();
@@ -332,6 +331,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.fixCommonErrorsInSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeCasingForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSaveSelectedLines = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemEmptyGoToSourceView = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
@@ -2450,7 +2450,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItemClick);
             // 
-            // contextMenuStripListview
+            // contextMenuStripListView
             // 
             this.contextMenuStripListView.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.setStylesForSelectedLinesToolStripMenuItem,
@@ -2503,7 +2503,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.changeCasingForSelectedLinesToolStripMenuItem,
             this.toolStripMenuItemSaveSelectedLines});
             this.contextMenuStripListView.Name = "contextMenuStripListView";
-            this.contextMenuStripListView.Size = new System.Drawing.Size(285, 964);
+            this.contextMenuStripListView.Size = new System.Drawing.Size(285, 1008);
             this.contextMenuStripListView.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
             this.contextMenuStripListView.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListViewOpening);
             this.contextMenuStripListView.Opened += new System.EventHandler(this.MenuOpened);
@@ -2981,6 +2981,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemSaveSelectedLines.Size = new System.Drawing.Size(284, 22);
             this.toolStripMenuItemSaveSelectedLines.Text = "Save selected lines as...";
             this.toolStripMenuItemSaveSelectedLines.Click += new System.EventHandler(this.ToolStripMenuItemSaveSelectedLinesClick);
+            // 
+            // toolStripMenuItemEmptyGoToSourceView
+            // 
+            this.toolStripMenuItemEmptyGoToSourceView.Name = "toolStripMenuItemEmptyGoToSourceView";
+            this.toolStripMenuItemEmptyGoToSourceView.Size = new System.Drawing.Size(168, 22);
+            this.toolStripMenuItemEmptyGoToSourceView.Text = "Go to source view";
+            this.toolStripMenuItemEmptyGoToSourceView.Click += new System.EventHandler(this.toolStripMenuItemGoToSourceView_Click);
             // 
             // openFileDialog1
             // 
@@ -4250,10 +4257,9 @@ namespace Nikse.SubtitleEdit.Forms
             // splitContainerListViewAndText
             // 
             this.splitContainerListViewAndText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainerListViewAndText.Location = new System.Drawing.Point(3, 3);
+            this.splitContainerListViewAndText.Location = new System.Drawing.Point(3, 0);
             this.splitContainerListViewAndText.Name = "splitContainerListViewAndText";
             this.splitContainerListViewAndText.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            this.splitContainerListViewAndText.VisibleChanged += new System.EventHandler(this.ListViewVisibleChanged);
             // 
             // splitContainerListViewAndText.Panel1
             // 
@@ -4264,9 +4270,10 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.splitContainerListViewAndText.Panel2.Controls.Add(this.groupBoxEdit);
             this.splitContainerListViewAndText.Panel2MinSize = 105;
-            this.splitContainerListViewAndText.Size = new System.Drawing.Size(724, 216);
-            this.splitContainerListViewAndText.SplitterDistance = 91;
+            this.splitContainerListViewAndText.Size = new System.Drawing.Size(740, 251);
+            this.splitContainerListViewAndText.SplitterDistance = 105;
             this.splitContainerListViewAndText.TabIndex = 2;
+            this.splitContainerListViewAndText.VisibleChanged += new System.EventHandler(this.ListViewVisibleChanged);
             // 
             // SubtitleListview1
             // 
@@ -4283,7 +4290,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.SubtitleListview1.Location = new System.Drawing.Point(0, 0);
             this.SubtitleListview1.Name = "SubtitleListview1";
             this.SubtitleListview1.OwnerDraw = true;
-            this.SubtitleListview1.Size = new System.Drawing.Size(724, 91);
+            this.SubtitleListview1.Size = new System.Drawing.Size(740, 105);
             this.SubtitleListview1.StateImageList = this.imageListBookmarks;
             this.SubtitleListview1.SubtitleFontBold = false;
             this.SubtitleListview1.SubtitleFontName = "Tahoma";
@@ -4339,7 +4346,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxEdit.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBoxEdit.Location = new System.Drawing.Point(0, 0);
             this.groupBoxEdit.Name = "groupBoxEdit";
-            this.groupBoxEdit.Size = new System.Drawing.Size(724, 121);
+            this.groupBoxEdit.Size = new System.Drawing.Size(740, 142);
             this.groupBoxEdit.TabIndex = 1;
             this.groupBoxEdit.TabStop = false;
             // 
@@ -4347,7 +4354,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelAlternateSingleLinePixels.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelAlternateSingleLinePixels.AutoSize = true;
-            this.labelAlternateSingleLinePixels.Location = new System.Drawing.Point(870, 94);
+            this.labelAlternateSingleLinePixels.Location = new System.Drawing.Point(870, 115);
             this.labelAlternateSingleLinePixels.Name = "labelAlternateSingleLinePixels";
             this.labelAlternateSingleLinePixels.Size = new System.Drawing.Size(62, 13);
             this.labelAlternateSingleLinePixels.TabIndex = 43;
@@ -4357,7 +4364,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelSingleLinePixels.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelSingleLinePixels.AutoSize = true;
-            this.labelSingleLinePixels.Location = new System.Drawing.Point(427, 94);
+            this.labelSingleLinePixels.Location = new System.Drawing.Point(427, 115);
             this.labelSingleLinePixels.Name = "labelSingleLinePixels";
             this.labelSingleLinePixels.Size = new System.Drawing.Size(105, 13);
             this.labelSingleLinePixels.TabIndex = 42;
@@ -4399,7 +4406,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelSingleLine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelSingleLine.AutoSize = true;
-            this.labelSingleLine.Location = new System.Drawing.Point(346, 94);
+            this.labelSingleLine.Location = new System.Drawing.Point(346, 115);
             this.labelSingleLine.Name = "labelSingleLine";
             this.labelSingleLine.Size = new System.Drawing.Size(78, 13);
             this.labelSingleLine.TabIndex = 32;
@@ -4409,7 +4416,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelAlternateSingleLine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelAlternateSingleLine.AutoSize = true;
-            this.labelAlternateSingleLine.Location = new System.Drawing.Point(839, 94);
+            this.labelAlternateSingleLine.Location = new System.Drawing.Point(839, 115);
             this.labelAlternateSingleLine.Name = "labelAlternateSingleLine";
             this.labelAlternateSingleLine.Size = new System.Drawing.Size(48, 13);
             this.labelAlternateSingleLine.TabIndex = 36;
@@ -4439,7 +4446,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonSplitLine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonSplitLine.ForeColor = System.Drawing.Color.Red;
-            this.buttonSplitLine.Location = new System.Drawing.Point(604, 80);
+            this.buttonSplitLine.Location = new System.Drawing.Point(620, 80);
             this.buttonSplitLine.Name = "buttonSplitLine";
             this.buttonSplitLine.Size = new System.Drawing.Size(114, 23);
             this.buttonSplitLine.TabIndex = 39;
@@ -4452,7 +4459,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelAlternateCharactersPerSecond.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelAlternateCharactersPerSecond.AutoSize = true;
-            this.labelAlternateCharactersPerSecond.Location = new System.Drawing.Point(636, 11);
+            this.labelAlternateCharactersPerSecond.Location = new System.Drawing.Point(652, 11);
             this.labelAlternateCharactersPerSecond.Name = "labelAlternateCharactersPerSecond";
             this.labelAlternateCharactersPerSecond.Size = new System.Drawing.Size(64, 13);
             this.labelAlternateCharactersPerSecond.TabIndex = 38;
@@ -4462,7 +4469,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelTextAlternateLineTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelTextAlternateLineTotal.AutoSize = true;
-            this.labelTextAlternateLineTotal.Location = new System.Drawing.Point(682, 94);
+            this.labelTextAlternateLineTotal.Location = new System.Drawing.Point(698, 115);
             this.labelTextAlternateLineTotal.Name = "labelTextAlternateLineTotal";
             this.labelTextAlternateLineTotal.Size = new System.Drawing.Size(35, 13);
             this.labelTextAlternateLineTotal.TabIndex = 37;
@@ -4472,7 +4479,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelTextAlternateLineLengths.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelTextAlternateLineLengths.AutoSize = true;
-            this.labelTextAlternateLineLengths.Location = new System.Drawing.Point(786, 94);
+            this.labelTextAlternateLineLengths.Location = new System.Drawing.Point(786, 115);
             this.labelTextAlternateLineLengths.Name = "labelTextAlternateLineLengths";
             this.labelTextAlternateLineLengths.Size = new System.Drawing.Size(57, 13);
             this.labelTextAlternateLineLengths.TabIndex = 35;
@@ -4515,7 +4522,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxListViewTextAlternate.SelectedText = "";
             this.textBoxListViewTextAlternate.SelectionLength = 0;
             this.textBoxListViewTextAlternate.SelectionStart = 0;
-            this.textBoxListViewTextAlternate.Size = new System.Drawing.Size(0, 63);
+            this.textBoxListViewTextAlternate.Size = new System.Drawing.Size(16, 84);
             this.textBoxListViewTextAlternate.TabIndex = 33;
             this.textBoxListViewTextAlternate.Visible = false;
             this.textBoxListViewTextAlternate.TextChanged += new System.EventHandler(this.textBoxListViewTextAlternate_TextChanged);
@@ -4530,15 +4537,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.contextMenuStripTextBoxListView.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItemWebVttVoice,
             this.toolStripSeparatorWebVTT,
-            this.cutToolStripMenuItem,
-            this.copyToolStripMenuItem,
-            this.pasteToolStripMenuItem,
-            this.deleteToolStripMenuItem,
             this.toolStripMenuItemSplitTextAtCursor,
             this.toolStripMenuItemSplitViaWaveform,
-            this.toolStripSeparator18,
-            this.selectAllToolStripMenuItem,
-            this.toolStripSeparator17,
             this.normalToolStripMenuItem1,
             this.boldToolStripMenuItem1,
             this.italicToolStripMenuItem1,
@@ -4549,13 +4549,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemBouten,
             this.toolStripMenuItemRuby,
             this.fontNameToolStripMenuItem,
-            this.toolStripSeparator25,
-            this.toolStripMenuItemInsertUnicodeSymbol,
-            this.toolStripMenuItemInsertUnicodeControlCharacters,
             this.superscriptToolStripMenuItem,
             this.subscriptToolStripMenuItem});
             this.contextMenuStripTextBoxListView.Name = "contextMenuStripTextBoxListView";
-            this.contextMenuStripTextBoxListView.Size = new System.Drawing.Size(274, 512);
+            this.contextMenuStripTextBoxListView.Size = new System.Drawing.Size(274, 340);
             this.contextMenuStripTextBoxListView.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
             this.contextMenuStripTextBoxListView.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripTextBoxListViewOpening);
             this.contextMenuStripTextBoxListView.Opened += new System.EventHandler(this.MenuOpened);
@@ -4575,7 +4572,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.cutToolStripMenuItem.Name = "cutToolStripMenuItem";
             this.cutToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-            this.cutToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
+            this.cutToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
             this.cutToolStripMenuItem.Text = "Cut";
             this.cutToolStripMenuItem.Click += new System.EventHandler(this.cutToolStripMenuItem_Click);
             // 
@@ -4583,7 +4580,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
             this.copyToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
             this.copyToolStripMenuItem.Text = "Copy";
             this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
             // 
@@ -4591,14 +4588,14 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
             this.pasteToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
+            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
             this.pasteToolStripMenuItem.Text = "Paste";
             this.pasteToolStripMenuItem.Click += new System.EventHandler(this.PasteToolStripMenuItemClick);
             // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
             this.deleteToolStripMenuItem.Text = "Delete";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.DeleteToolStripMenuItemClick);
             // 
@@ -4619,20 +4616,20 @@ namespace Nikse.SubtitleEdit.Forms
             // toolStripSeparator18
             // 
             this.toolStripSeparator18.Name = "toolStripSeparator18";
-            this.toolStripSeparator18.Size = new System.Drawing.Size(270, 6);
+            this.toolStripSeparator18.Size = new System.Drawing.Size(239, 6);
             // 
             // selectAllToolStripMenuItem
             // 
             this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
             this.selectAllToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
-            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
+            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
             this.selectAllToolStripMenuItem.Text = "Select all";
             this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
             // 
             // toolStripSeparator17
             // 
             this.toolStripSeparator17.Name = "toolStripSeparator17";
-            this.toolStripSeparator17.Size = new System.Drawing.Size(270, 6);
+            this.toolStripSeparator17.Size = new System.Drawing.Size(239, 6);
             // 
             // normalToolStripMenuItem1
             // 
@@ -4788,12 +4785,12 @@ namespace Nikse.SubtitleEdit.Forms
             // toolStripSeparator25
             // 
             this.toolStripSeparator25.Name = "toolStripSeparator25";
-            this.toolStripSeparator25.Size = new System.Drawing.Size(270, 6);
+            this.toolStripSeparator25.Size = new System.Drawing.Size(239, 6);
             // 
             // toolStripMenuItemInsertUnicodeSymbol
             // 
             this.toolStripMenuItemInsertUnicodeSymbol.Name = "toolStripMenuItemInsertUnicodeSymbol";
-            this.toolStripMenuItemInsertUnicodeSymbol.Size = new System.Drawing.Size(273, 22);
+            this.toolStripMenuItemInsertUnicodeSymbol.Size = new System.Drawing.Size(242, 22);
             this.toolStripMenuItemInsertUnicodeSymbol.Text = "Insert unicode character";
             // 
             // toolStripMenuItemInsertUnicodeControlCharacters
@@ -4806,7 +4803,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.startOfLefttorightOverrideLROToolStripMenuItem,
             this.startOfRighttoleftOverrideRLOToolStripMenuItem});
             this.toolStripMenuItemInsertUnicodeControlCharacters.Name = "toolStripMenuItemInsertUnicodeControlCharacters";
-            this.toolStripMenuItemInsertUnicodeControlCharacters.Size = new System.Drawing.Size(273, 22);
+            this.toolStripMenuItemInsertUnicodeControlCharacters.Size = new System.Drawing.Size(242, 22);
             this.toolStripMenuItemInsertUnicodeControlCharacters.Text = "Insert unicode control character";
             // 
             // leftToolStripMenuItem
@@ -4868,7 +4865,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonAutoBreak
             // 
             this.buttonAutoBreak.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonAutoBreak.Location = new System.Drawing.Point(604, 51);
+            this.buttonAutoBreak.Location = new System.Drawing.Point(620, 51);
             this.buttonAutoBreak.Name = "buttonAutoBreak";
             this.buttonAutoBreak.Size = new System.Drawing.Size(114, 23);
             this.buttonAutoBreak.TabIndex = 7;
@@ -4880,7 +4877,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelTextLineLengths.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelTextLineLengths.AutoSize = true;
-            this.labelTextLineLengths.Location = new System.Drawing.Point(239, 94);
+            this.labelTextLineLengths.Location = new System.Drawing.Point(239, 115);
             this.labelTextLineLengths.Name = "labelTextLineLengths";
             this.labelTextLineLengths.Size = new System.Drawing.Size(108, 13);
             this.labelTextLineLengths.TabIndex = 12;
@@ -4890,7 +4887,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelTextLineTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelTextLineTotal.AutoSize = true;
-            this.labelTextLineTotal.Location = new System.Drawing.Point(1001, 94);
+            this.labelTextLineTotal.Location = new System.Drawing.Point(1001, 115);
             this.labelTextLineTotal.Name = "labelTextLineTotal";
             this.labelTextLineTotal.Size = new System.Drawing.Size(94, 13);
             this.labelTextLineTotal.TabIndex = 21;
@@ -4900,7 +4897,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelCharactersPerSecond.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelCharactersPerSecond.AutoSize = true;
-            this.labelCharactersPerSecond.Location = new System.Drawing.Point(432, 11);
+            this.labelCharactersPerSecond.Location = new System.Drawing.Point(448, 11);
             this.labelCharactersPerSecond.Name = "labelCharactersPerSecond";
             this.labelCharactersPerSecond.Size = new System.Drawing.Size(133, 13);
             this.labelCharactersPerSecond.TabIndex = 31;
@@ -4909,7 +4906,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonUnBreak
             // 
             this.buttonUnBreak.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonUnBreak.Location = new System.Drawing.Point(604, 22);
+            this.buttonUnBreak.Location = new System.Drawing.Point(620, 22);
             this.buttonUnBreak.Name = "buttonUnBreak";
             this.buttonUnBreak.Size = new System.Drawing.Size(114, 23);
             this.buttonUnBreak.TabIndex = 6;
@@ -5008,7 +5005,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxListViewText.SelectedText = "";
             this.textBoxListViewText.SelectionLength = 0;
             this.textBoxListViewText.SelectionStart = 0;
-            this.textBoxListViewText.Size = new System.Drawing.Size(362, 63);
+            this.textBoxListViewText.Size = new System.Drawing.Size(378, 84);
             this.textBoxListViewText.TabIndex = 5;
             this.textBoxListViewText.TextChanged += new System.EventHandler(this.TextBoxListViewTextTextChanged);
             this.textBoxListViewText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxListViewTextKeyDown);
@@ -5042,12 +5039,12 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxSource.ContextMenuStrip = this.contextMenuStripTextBoxSourceView;
             this.textBoxSource.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBoxSource.HideSelection = false;
-            this.textBoxSource.Location = new System.Drawing.Point(3, 3);
+            this.textBoxSource.Location = new System.Drawing.Point(3, 0);
             this.textBoxSource.MaxLength = 0;
             this.textBoxSource.Multiline = true;
             this.textBoxSource.Name = "textBoxSource";
             this.textBoxSource.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxSource.Size = new System.Drawing.Size(724, 216);
+            this.textBoxSource.Size = new System.Drawing.Size(740, 251);
             this.textBoxSource.TabIndex = 12;
             this.textBoxSource.WordWrap = false;
             this.textBoxSource.Click += new System.EventHandler(this.TextBoxSourceClick);
@@ -5058,9 +5055,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxSource.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxSourceKeyDown);
             this.textBoxSource.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TextBoxSource_KeyUp);
             this.textBoxSource.Leave += new System.EventHandler(this.TextBoxSourceLeave);
-            //
+            // 
             // contextMenuStripTextBoxSourceView
-            //
+            // 
             this.contextMenuStripTextBoxSourceView.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItemGoToListView,
             this.toolStripSeparator18,
@@ -5074,7 +5071,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemInsertUnicodeSymbol,
             this.toolStripMenuItemInsertUnicodeControlCharacters});
             this.contextMenuStripTextBoxSourceView.Name = "contextMenuStripTextBoxSourceView";
-            this.contextMenuStripTextBoxSourceView.Size = new System.Drawing.Size(274, 512);
+            this.contextMenuStripTextBoxSourceView.Size = new System.Drawing.Size(243, 198);
             this.contextMenuStripTextBoxSourceView.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
             this.contextMenuStripTextBoxSourceView.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripTextBoxListViewOpening);
             this.contextMenuStripTextBoxSourceView.Opened += new System.EventHandler(this.MenuOpened);
@@ -5082,7 +5079,7 @@ namespace Nikse.SubtitleEdit.Forms
             // toolStripMenuItemGoToListView
             // 
             this.toolStripMenuItemGoToListView.Name = "toolStripMenuItemGoToListView";
-            this.toolStripMenuItemGoToListView.Size = new System.Drawing.Size(284, 22);
+            this.toolStripMenuItemGoToListView.Size = new System.Drawing.Size(242, 22);
             this.toolStripMenuItemGoToListView.Text = "Go to list view";
             this.toolStripMenuItemGoToListView.Click += new System.EventHandler(this.toolStripMenuItemGoToListView_Click);
             // 
@@ -5133,27 +5130,20 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemEmptyGoToSourceView,
             this.aSSStylesToolStripMenuItem});
             this.contextMenuStripEmpty.Name = "contextMenuStripEmpty";
-            this.contextMenuStripEmpty.Size = new System.Drawing.Size(136, 48);
+            this.contextMenuStripEmpty.Size = new System.Drawing.Size(169, 70);
             this.contextMenuStripEmpty.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripEmpty_Opening);
             // 
             // insertLineToolStripMenuItem
             // 
             this.insertLineToolStripMenuItem.Name = "insertLineToolStripMenuItem";
-            this.insertLineToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
+            this.insertLineToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.insertLineToolStripMenuItem.Text = "Insert line";
             this.insertLineToolStripMenuItem.Click += new System.EventHandler(this.InsertLineToolStripMenuItemClick);
-            // 
-            // toolStripMenuItemEmptyGoToSourceView
-            // 
-            this.toolStripMenuItemEmptyGoToSourceView.Name = "toolStripMenuItemEmptyGoToSourceView";
-            this.toolStripMenuItemEmptyGoToSourceView.Size = new System.Drawing.Size(284, 22);
-            this.toolStripMenuItemEmptyGoToSourceView.Text = "Go to source view";
-            this.toolStripMenuItemEmptyGoToSourceView.Click += new System.EventHandler(this.toolStripMenuItemGoToSourceView_Click);
             // 
             // aSSStylesToolStripMenuItem
             // 
             this.aSSStylesToolStripMenuItem.Name = "aSSStylesToolStripMenuItem";
-            this.aSSStylesToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
+            this.aSSStylesToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.aSSStylesToolStripMenuItem.Text = "ASS styles...";
             this.aSSStylesToolStripMenuItem.Click += new System.EventHandler(this.aSSStylesToolStripMenuItem_Click);
             // 
@@ -5232,6 +5222,7 @@ namespace Nikse.SubtitleEdit.Forms
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).EndInit();
             this.splitContainerMain.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
