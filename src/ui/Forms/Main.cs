@@ -681,11 +681,11 @@ namespace Nikse.SubtitleEdit.Forms
             double videoPositionInMilliseconds = mediaPlayer.CurrentPosition * TimeCode.BaseUnit;
             if (_subtitle.GetFirstParagraphOrDefaultByTime(videoPositionInMilliseconds) == null)
             {
-                PastFromClipboard(videoPositionInMilliseconds);
+                PasteFromClipboard(videoPositionInMilliseconds);
             }
         }
 
-        private void PastFromClipboard(double videoPositionInMilliseconds)
+        private void PasteFromClipboard(double videoPositionInMilliseconds)
         {
             if (Clipboard.ContainsText())
             {
@@ -11422,7 +11422,6 @@ namespace Nikse.SubtitleEdit.Forms
                     if (!string.IsNullOrEmpty(_fileName))
                     {
                         Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleAlternateFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
-
                     }
                     else if (Configuration.Settings.RecentFiles.Files.Count > 0)
                     {
@@ -21186,7 +21185,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Application.Exit();
             }
 
-            // Fix some large font issue
+            // Fix some large fonts issues
             if (numericUpDownDuration.Left + numericUpDownDuration.Width > textBoxListViewText.Left)
             {
                 numericUpDownDuration.Left = timeUpDownStartTime.Left + timeUpDownStartTime.Width + 5;
