@@ -11819,9 +11819,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ListViewVisibleChanged(object sender, EventArgs e)
         {
-            var currentFormat = GetCurrentSubtitleFormat();
-            if (_inListView)
+            if (_inListView && !_loading)
             {
+                var currentFormat = GetCurrentSubtitleFormat();
+
                 ReloadFromSourceView();
                 ShowLineInformationListView();
                 if (SubtitleListview1.CanFocus)
@@ -11949,9 +11950,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SourceViewVisibleChanged(object sender, EventArgs e)
         {
-            var currentFormat = GetCurrentSubtitleFormat();
-            if (_inSourceView)
+            if (_inSourceView && !_loading)
             {
+                var currentFormat = GetCurrentSubtitleFormat();
+
                 ShowSource();
                 ShowSourceLineNumber();
                 if (textBoxSource.CanFocus)
