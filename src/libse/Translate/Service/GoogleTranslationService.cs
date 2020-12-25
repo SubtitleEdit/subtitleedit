@@ -1,26 +1,74 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net;
+﻿using System.Collections.Generic;
 using System.Text;
-using System.Text.RegularExpressions;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Translate.Service;
 
-namespace Nikse.SubtitleEdit.Core.Translate
+namespace Nikse.SubtitleEdit.Core.Translate.Service
 {
-    /// <summary>
-    /// Google translate via Google Cloud V2 API - see https://cloud.google.com/translate/
-    /// </summary>
-    public class GoogleTranslator2 : ITranslator
+    public class GoogleTranslationService : AbstractTranslationService
     {
-        private readonly string _apiKey;
 
-        public GoogleTranslator2(string apiKey)
+        private ITranslationStrategy _translationStrategy = null;
+        public override string GetName()
         {
-            _apiKey = apiKey;
+            return "Google Translate";
         }
 
-        public List<TranslationPair> GetTranslationPairs()
+        public override string ToString()
+        {
+            return GetName();
+        }
+
+        public override int GetMaxTextSize()
+        {
+            return _translationStrategy.GetMaxTextSize();
+        }
+
+        public override int GetMaximumRequestArraySize()
+        {
+            return _translationStrategy.GetMaximumRequestArraySize();
+        }
+
+
+        public override List<TranslationPair> GetSupportedSourceLanguages()
+        {
+            return this.GetTranslationPairs();
+        }
+
+        public override List<TranslationPair> GetSupportedTargetLanguages()
+        {
+            return this.GetTranslationPairs();
+        }
+
+        protected override bool DoInitialize()
+        {
+            var language = Configuration.Settings.Language.GoogleTranslate;
+            if (string.IsNullOrEmpty(Configuration.Settings.Tools.GoogleApiV2Key))
+            {
+                OnMessageLogEvent(language.GoogleApiKeyNeeded);
+                OnMessageLogEvent(language.GoogleNoApiKeyWarning);
+
+                _translationStrategy = new GoogleTranslator1();
+            }
+            else
+            {
+                _translationStrategy = new GoogleTranslator2(Configuration.Settings.Tools.GoogleApiV2Key);
+            }
+
+            return true;
+        }
+
+        public override string GetUrl()
+        {
+            return "https://translate.google.com/";
+        }
+
+        protected override List<string> DoTranslate(string sourceLanguage, string targetLanguage, List<Paragraph> sourceParagraphs)
+        {
+            return _translationStrategy.Translate(sourceLanguage, targetLanguage, sourceParagraphs);
+        }
+
+        private List<TranslationPair> GetTranslationPairs()
         {
             return new List<TranslationPair>
             {
@@ -139,114 +187,6 @@ namespace Nikse.SubtitleEdit.Core.Translate
             };
         }
 
-        public string GetName()
-        {
-            return "Google translate";
-        }
-
-        public string GetUrl()
-        {
-            return "https://translate.google.com/";
-        }
-
-        public List<string> Translate(string sourceLanguage, string targetLanguage, List<Paragraph> paragraphs, StringBuilder log)
-        {
-            var baseUrl = "https://translation.googleapis.com/language/translate/v2";
-            var format = "text";
-            var input = new StringBuilder();
-            var formatList = new List<Formatting>();
-            bool skipNext = false;
-            for (var index = 0; index < paragraphs.Count; index++)
-            {
-                if (skipNext)
-                {
-                    skipNext = false;
-                    continue;
-                }
-
-                var p = paragraphs[index];
-                var f = new Formatting();
-                formatList.Add(f);
-                if (input.Length > 0)
-                {
-                    input.Append("&");
-                }
-
-                var nextText = string.Empty;
-                if (index < paragraphs.Count - 1 && paragraphs[index + 1].StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds < 200)
-                {
-                    nextText = paragraphs[index + 1].Text;
-                }
-
-                var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text, sourceLanguage), sourceLanguage, nextText);
-                skipNext = f.SkipNext;
-                if (!skipNext)
-                {
-                    text = f.UnBreak(text, p.Text);
-                }
-
-                input.Append("q=" + Utilities.UrlEncode(text));
-            }
-
-            string uri = $"{baseUrl}/?{input}&target={targetLanguage}&source={sourceLanguage}&format={format}&key={_apiKey}";
-
-            var request = WebRequest.Create(uri);
-            request.Proxy = Utilities.GetProxy();
-            request.ContentType = "application/json";
-            request.ContentLength = 0;
-            request.Method = "POST";
-            var response = request.GetResponse();
-            var reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
-            string content = reader.ReadToEnd();
-            var skipCount = 0;
-            var resultList = new List<string>();
-            var parser = new JsonParser();
-            var x = (Dictionary<string, object>)parser.Parse(content);
-            foreach (var k in x.Keys)
-            {
-                if (x[k] is Dictionary<string, object> v)
-                {
-                    foreach (var innerKey in v.Keys)
-                    {
-                        if (v[innerKey] is List<object> l)
-                        {
-                            foreach (var o2 in l)
-                            {
-                                if (o2 is Dictionary<string, object> v2)
-                                {
-                                    foreach (var innerKey2 in v2.Keys)
-                                    {
-                                        if (v2[innerKey2] is string translatedText)
-                                        {
-                                            string nextText = null;
-                                            translatedText = Regex.Unescape(translatedText);
-                                            translatedText = string.Join(Environment.NewLine, translatedText.SplitToLines());
-                                            translatedText = TranslationHelper.PostTranslate(translatedText, targetLanguage);
-                                            if (resultList.Count - skipCount < formatList.Count)
-                                            {
-                                                translatedText = formatList[resultList.Count - skipCount].ReAddFormatting(translatedText, out nextText);
-                                                if (nextText == null)
-                                                {
-                                                    translatedText = formatList[resultList.Count - skipCount].ReBreak(translatedText, targetLanguage);
-                                                }
-                                            }
-
-                                            resultList.Add(translatedText);
-
-                                            if (nextText != null)
-                                            {
-                                                resultList.Add(nextText);
-                                                skipCount++;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            return resultList;
-        }
+        
     }
 }
