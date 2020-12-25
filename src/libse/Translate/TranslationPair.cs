@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace Nikse.SubtitleEdit.Core.Translate
+﻿namespace Nikse.SubtitleEdit.Core.Translate
 {
-    public class TranslationPair : IEquatable<TranslationPair>
+    public class TranslationPair
     {
         public string Name { get; set; }
         public string Code { get; set; }
@@ -20,28 +18,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
 
         public override string ToString()
         {
-            return UpcaseFirstLetter(Name);
-        }
-
-        private static string UpcaseFirstLetter(string text)
-        {
-            if (text.Length > 1)
-            {
-                text = char.ToUpper(text[0]) + text.Substring(1).ToLowerInvariant();
-            }
-
-            return text;
-        }
-
-        public bool Equals(TranslationPair other)
-        {
-            return this.Code.Equals(other.Code);
-        }
-
-
-        public override int GetHashCode()
-        {
-            return Code != null ? Code.GetHashCode() : 0;
+            return Name;
         }
     }
 }

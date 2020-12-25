@@ -7,23 +7,23 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Nikse.SubtitleEdit.Core.Common;
 
-namespace Nikse.SubtitleEdit.Core.Translate.Service
+namespace Nikse.SubtitleEdit.Core.Translate
 {
     /// <summary>
     /// Google translate via Google V1 API - see https://cloud.google.com/translate/
     /// </summary>
-    public class GoogleTranslator1 : ITranslationStrategy
+    public class GoogleTranslator1 : ITranslator
     {
         private const char SplitChar = '\n';
 
-        public int GetMaxTextSize()
+        public List<TranslationPair> GetTranslationPairs()
         {
-            return Configuration.Settings.Tools.GoogleApiV1ChunkSize;
+            return new GoogleTranslator2(string.Empty).GetTranslationPairs();
         }
 
-        public int GetMaximumRequestArraySize()
+        public string GetName()
         {
-            return 100;
+            return "Google translate (old)";
         }
 
         public string GetUrl()
@@ -31,101 +31,53 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
             return "https://translate.google.com/";
         }
 
-        public List<string> Translate(string sourceLanguage, string targetLanguage, List<Paragraph> sourceParagraphs)
+        public List<string> Translate(string sourceLanguage, string targetLanguage, List<Paragraph> paragraphs, StringBuilder log)
         {
-
-                string jsonResultString;
-                var input = new StringBuilder();
-                var formatList = new List<Formatting>();
-                for (var index = 0; index < sourceParagraphs.Count; index++)
-                {
-
-                    var p = sourceParagraphs[index];
-                    var f = new Formatting();
-                    formatList.Add(f);
-                    if (input.Length > 0)
-                    {
-                        input.Append(" " + SplitChar + " ");
-                    }
-
-                    var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text.Replace(SplitChar.ToString(), string.Empty), sourceLanguage), sourceLanguage);
-                    text = f.UnBreak(text, p.Text);
-                    input.Append(text);
-                }
-
-                try
-                {
-                    using (var wc = new WebClient())
-                    {
-
-                        string url = $"https://translate.googleapis.com/translate_a/single?client=gtx&sl={sourceLanguage}&tl={targetLanguage}&dt=t&q={Utilities.UrlEncode(input.ToString())}";
-                        wc.Proxy = Utilities.GetProxy();
-                        wc.Encoding = Encoding.UTF8;
-                        wc.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
-                        jsonResultString = wc.DownloadString(url).Trim();
-                    }
-                }
-                catch (WebException webException)
-                {
-                    throw new TranslationException("Free API quota exceeded?", webException);
-                }
-
-
-                List<string> resultList = ConvertJsonObjectToStringLines(jsonResultString);
-                resultList = ProcessPostFormattings(resultList, targetLanguage, formatList);
-
-                //brummochse: I do not really understand under which circumstances the following code is executed and if it is still required or maybe obsolete?
-
-                if (resultList.Count > sourceParagraphs.Count)
-                {
-                    var trimmedList = resultList.Where(p => !string.IsNullOrEmpty(p)).ToList();
-                    if (trimmedList.Count == sourceParagraphs.Count)
-                    {
-                        return trimmedList;
-                    }
-                }
-
-                if (resultList.Count < sourceParagraphs.Count)
-                {
-                    var splitList = SplitMergedLines(resultList, sourceParagraphs);
-                    if (splitList.Count == sourceParagraphs.Count)
-                    {
-                        return splitList;
-                    }
-                }
-
-                return resultList;
-         
-        }
-
-        private static List<string> ProcessPostFormattings(List<string> lines, string targetLanguage, List<Formatting> formatList)
-        {
-            var resultList = new List<string>();
-            for (var index = 0; index < lines.Count; index++)
+            string result;
+            var input = new StringBuilder();
+            var formatList = new List<Formatting>();
+            bool skipNext = false;
+            for (var index = 0; index < paragraphs.Count; index++)
             {
-                var line = lines[index];
-                var s = Json.DecodeJsonText(line);
-                s = string.Join(Environment.NewLine, s.SplitToLines());
-                s = TranslationHelper.PostTranslate(s, targetLanguage);
-                s = s.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-                s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
-                s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
-                s = s.Replace(" " + Environment.NewLine, Environment.NewLine);
-                s = s.Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
-                if (formatList.Count > index)
+                if (skipNext)
                 {
-                    s = formatList[index].ReAddFormatting(s);
-                    s = formatList[index].ReBreak(s, targetLanguage);
+                    skipNext = false;
+                    continue;
                 }
 
-                resultList.Add(s);
+                var p = paragraphs[index];
+                var f = new Formatting();
+                formatList.Add(f);
+                if (input.Length > 0)
+                {
+                    input.Append(" " + SplitChar + " ");
+                }
+
+                var nextText = string.Empty;
+                if (index < paragraphs.Count - 1 && paragraphs[index + 1].StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds < 200)
+                {
+                    nextText = paragraphs[index + 1].Text;
+                }
+
+                var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text.Replace(SplitChar.ToString(), string.Empty), sourceLanguage), sourceLanguage, nextText);
+                skipNext = f.SkipNext;
+                if (!skipNext)
+                {
+                    text = f.UnBreak(text, p.Text);
+                }
+
+                input.Append(text);
             }
 
-            return resultList;
-        }
+            using (var wc = new WebClient())
+            {
+                string url = $"https://translate.googleapis.com/translate_a/single?client=gtx&sl={sourceLanguage}&tl={targetLanguage}&dt=t&q={Utilities.UrlEncode(input.ToString())}";
+                wc.Proxy = Utilities.GetProxy();
+                wc.Encoding = Encoding.UTF8;
+                wc.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
+                result = wc.DownloadString(url).Trim();
+            }
 
-        private static List<string> ConvertJsonObjectToStringLines(string result)
-        {
             var sbAll = new StringBuilder();
             int count = 0;
             int i = 1;
@@ -150,7 +102,6 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
                             i++;
                             break;
                         }
-
                         sb.Append(c);
                     }
                     else if (c == '"')
@@ -171,7 +122,55 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
             var res = sbAll.ToString().Trim();
             res = Regex.Unescape(res);
             var lines = res.SplitToLines().ToList();
-            return lines;
+            var resultList = new List<string>();
+            for (var index = 0; index < lines.Count; index++)
+            {
+                var line = lines[index];
+                var s = Json.DecodeJsonText(line);
+                s = string.Join(Environment.NewLine, s.SplitToLines());
+                s = TranslationHelper.PostTranslate(s, targetLanguage);
+                s = s.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+                s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
+                s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
+                s = s.Replace(" " + Environment.NewLine, Environment.NewLine);
+                s = s.Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
+                string nextText = null;
+                if (formatList.Count > index)
+                {
+                    s = formatList[index].ReAddFormatting(s, out nextText);
+                    if (nextText == null)
+                    {
+                        s = formatList[index].ReBreak(s, targetLanguage);
+                    }
+                }
+
+                resultList.Add(s);
+
+                if (nextText != null)
+                {
+                    resultList.Add(nextText);
+                }
+            }
+
+            if (resultList.Count > paragraphs.Count)
+            {
+                var trimmedList = resultList.Where(p => !string.IsNullOrEmpty(p)).ToList();
+                if (trimmedList.Count == paragraphs.Count)
+                {
+                    return trimmedList;
+                }
+            }
+
+            if (resultList.Count < paragraphs.Count)
+            {
+                var splitList = SplitMergedLines(resultList, paragraphs);
+                if (splitList.Count == paragraphs.Count)
+                {
+                    return splitList;
+                }
+            }
+
+            return resultList;
         }
 
         private static List<string> SplitMergedLines(List<string> input, List<Paragraph> paragraphs)
