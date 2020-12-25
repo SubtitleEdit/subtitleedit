@@ -73,6 +73,40 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             labelVideoInfo.Text = string.Empty;
             panelBackground.BackColor = Configuration.Settings.Tools.BinEditBackgroundColor;
 
+            fileToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.File.Title;
+            openFileToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.File.Open;
+            openVideoToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Video.OpenVideo;
+            closeVideoToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Video.CloseVideo;
+            importTimeCodesToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.File.ImportTimecodes;
+
+            toolStripMenuItemTools.Text = Configuration.Settings.Language.Main.Menu.Tools.Title;
+            adjustDisplayTimesToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Tools.AdjustDisplayDuration;
+            applyDurationLimitsToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Tools.ApplyDurationLimits;
+            appendSubtitleToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Tools.AppendSubtitle;
+            //resizeBitmapsToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Tools.FixCommonErrors;
+            alignmentToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Alignment;
+            //            quickOCRTextsforOverviewOnlyToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Tools.RemoveTextForHearingImpaired;
+            videoToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Video.Title;
+            synchronizationToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Synchronization.Title;
+            adjustAllTimesToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Synchronization.AdjustAllTimes;
+            changeFrameRateToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Tools.ChangeFrameRate;
+            changeSpeedToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Tools.ChangeSpeedInPercent;
+            optionsToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Options.Title;
+            settingsToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Options.Settings;
+
+            labelStart.Text = Configuration.Settings.Language.General.StartTime;
+            labelEndTime.Text = Configuration.Settings.Language.General.EndTime;
+            checkBoxIsForced.Text = Configuration.Settings.Language.ExportPngXml.Forced;
+            labelVideoSize.Text = Configuration.Settings.Language.ExportPngXml.VideoResolution;
+            labelFrameRate.Text = Configuration.Settings.Language.General.FrameRate;
+            labelCurrentSize.Text = string.Empty;
+
+            numericUpDownScreenWidth.Left = labelVideoSize.Left + labelVideoSize.Width + 7;
+            labelX.Left = numericUpDownScreenWidth.Left + numericUpDownScreenWidth.Width + 4;
+            numericUpDownScreenHeight.Left = labelX.Left + labelX.Width + 4;
+
+            comboBoxFrameRate.Left = labelFrameRate.Left + labelFrameRate.Width + 4;
+
             _nOcrFileName = Configuration.Settings.VobSubOcr.LineOcrLastLanguages;
             if (string.IsNullOrEmpty(_nOcrFileName))
             {
