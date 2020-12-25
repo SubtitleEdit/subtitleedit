@@ -1,8 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Core.Enums;
-using Nikse.SubtitleEdit.Core.Translate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
@@ -17,6 +15,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Translate.Service;
 
 namespace Nikse.SubtitleEdit.Forms.Options
 {
@@ -3213,7 +3213,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void linkLabelBingSubscribe_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            UiUtil.OpenUrl(MicrosoftTranslator.SignUpUrl);
+            UiUtil.OpenUrl(MicrosoftTranslationService.SignUpUrl);
         }
 
         private void ValidateShortcut(object sender, EventArgs e)
@@ -3223,7 +3223,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private bool IsShortcutValid()
         {
-            if (treeViewShortcuts.SelectedNode == null || !treeViewShortcuts.SelectedNode.Text.Contains('['))
+            if (treeViewShortcuts.SelectedNode == null || !Enumerable.Contains(treeViewShortcuts.SelectedNode.Text, '['))
             {
                 return false;
             }
