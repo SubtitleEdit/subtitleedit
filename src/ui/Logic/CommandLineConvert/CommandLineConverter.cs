@@ -230,6 +230,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 }
 
                 var ocrEngine = GetOcrEngine(unconsumedArguments);
+                var ocrDb = GetOcrDb(unconsumedArguments);
 
                 var targetEncoding = new TextEncoding(Encoding.UTF8, TextEncoding.Utf8WithBom);
                 if (Configuration.Settings.General.DefaultEncoding == TextEncoding.Utf8WithoutBom)
@@ -609,13 +610,13 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         if (!done && FileUtil.IsBluRaySup(fileName))
                         {
                             _stdOutWriter.WriteLine("Found Blu-Ray subtitle format");
-                            ConvertBluRaySubtitle(fileName, targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, forcedOnly, ocrEngine, resolution, renumber: renumber);
+                            ConvertBluRaySubtitle(fileName, targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, forcedOnly, ocrEngine, ocrDb, resolution, renumber: renumber);
                             done = true;
                         }
                         else if (!done && FileUtil.IsVobSub(fileName))
                         {
                             _stdOutWriter.WriteLine("Found VobSub subtitle format");
-                            ConvertVobSubSubtitle(fileName, targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, forcedOnly, ocrEngine, renumber: renumber);
+                            ConvertVobSubSubtitle(fileName, targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, forcedOnly, ocrEngine, ocrDb, renumber: renumber);
                             done = true;
                         }
 
@@ -648,7 +649,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                                 _stdOutWriter?.Write($"\r{Configuration.Settings.Language.BatchConvert.Ocr} : {progress}");
                                             };
                                             vobSubOcr.FileName = Path.GetFileName(fileName);
-                                            vobSubOcr.InitializeBatch(subPicturesWithTimeCodes, fileName, string.Empty, ocrEngine);
+                                            vobSubOcr.InitializeBatch(subPicturesWithTimeCodes, fileName, ocrDb, ocrEngine);
                                             _stdOutWriter?.WriteLine();
                                             sub = vobSubOcr.SubtitleFromOcr;
                                         }
@@ -806,7 +807,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             return null;
         }
 
-        private static void ConvertBluRaySubtitle(string fileName, string targetFormat, TimeSpan offset, TextEncoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, List<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, List<BatchAction> actions, bool forcedOnly, string ocrEngine, Point? resolution, int? renumber)
+        private static void ConvertBluRaySubtitle(string fileName, string targetFormat, TimeSpan offset, TextEncoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, List<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, List<BatchAction> actions, bool forcedOnly, string ocrEngine, string ocrDb, Point? resolution, int? renumber)
         {
             var format = Utilities.GetSubtitleFormatByFriendlyName(targetFormat) ?? new SubRip();
 
@@ -822,7 +823,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     _stdOutWriter?.Write($"\r{Configuration.Settings.Language.BatchConvert.Ocr} : {progress}");
                 };
                 vobSubOcr.FileName = Path.GetFileName(fileName);
-                vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName, forcedOnly, null, ocrEngine);
+                vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName, forcedOnly, ocrDb, ocrEngine);
                 _stdOutWriter?.WriteLine();
                 sub = vobSubOcr.SubtitleFromOcr;
                 _stdOutWriter?.WriteLine($"Extracted subtitles from file \"{fileName}\"");
@@ -835,7 +836,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             }
         }
 
-        private static void ConvertVobSubSubtitle(string fileName, string targetFormat, TimeSpan offset, TextEncoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, List<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, List<BatchAction> actions, bool forcedOnly, string ocrEngine, int? renumber)
+        private static void ConvertVobSubSubtitle(string fileName, string targetFormat, TimeSpan offset, TextEncoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, List<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, List<BatchAction> actions, bool forcedOnly, string ocrEngine, string ocrDb, int? renumber)
         {
             var format = Utilities.GetSubtitleFormatByFriendlyName(targetFormat) ?? new SubRip();
 
@@ -848,7 +849,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 {
                     _stdOutWriter?.Write($"\r{Configuration.Settings.Language.BatchConvert.Ocr} : {progress}");
                 };
-                vobSubOcr.InitializeBatch(fileName, Configuration.Settings.VobSubOcr, forcedOnly, ocrEngine);
+                vobSubOcr.InitializeBatch(fileName, Configuration.Settings.VobSubOcr, forcedOnly, ocrEngine, ocrDb);
                 _stdOutWriter?.WriteLine();
                 sub = vobSubOcr.SubtitleFromOcr;
                 _stdOutWriter?.WriteLine($"Extracted subtitles from file \"{fileName}\"");
@@ -927,6 +928,17 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             }
 
             return "tesseract";
+        }
+
+        private static string GetOcrDb(IList<string> commandLineArguments)
+        {
+            var ocrDb = GetArgument(commandLineArguments, "ocrdb:");
+            if (ocrDb.Length > 0)
+            {
+                return ocrDb;
+            }
+
+            return null;
         }
 
         /// <summary>
