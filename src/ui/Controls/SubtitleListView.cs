@@ -93,6 +93,7 @@ namespace Nikse.SubtitleEdit.Controls
         public bool UseSyntaxColoring { get; set; }
         private Settings _settings;
         private bool _saveColumnWidthChanges;
+        private Timer _setLastColumnWidthTimer;
 
         public int FirstVisibleIndex { get; set; } = -1;
 
@@ -283,6 +284,11 @@ namespace Nikse.SubtitleEdit.Controls
             Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             AllowColumnReorder = true;
             HeaderStyle = ColumnHeaderStyle.Nonclickable;
+            _setLastColumnWidthTimer = new Timer
+            {
+                Interval = 50
+            };
+            _setLastColumnWidthTimer.Tick += _setLastColumnWidthTimer_Tick;
 
             ColumnIndexNumber = -1;
             ColumnIndexStart = -1;
@@ -381,6 +387,22 @@ namespace Nikse.SubtitleEdit.Controls
             DrawItem += SubtitleListView_DrawItem;
             DrawSubItem += SubtitleListView_DrawSubItem;
             DrawColumnHeader += SubtitleListView_DrawColumnHeader;
+        }
+
+        private void _setLastColumnWidthTimer_Tick(object sender, EventArgs e)
+        {
+            _setLastColumnWidthTimer.Stop();
+
+            int width = 0;
+            for (int i = 0; i < Columns.Count - 1; i++)
+            {
+                width += Columns[i].Width;
+            }
+
+            if (Columns.Count > 0)
+            {
+                Columns[Columns.Count - 1].Width = ClientSize.Width - width;
+            }
         }
 
         private void UpdateColumnIndexes()
@@ -1132,15 +1154,8 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SubtitleListViewLastColumnFill(object sender, EventArgs e)
         {
-            int width = 0;
-            for (int i = 0; i < Columns.Count - 1; i++)
-            {
-                width += Columns[i].Width;
-            }
-            if (Columns.Count > 0)
-            {
-                Columns[Columns.Count - 1].Width = ClientSize.Width - width;
-            }
+            _setLastColumnWidthTimer.Stop();
+            _setLastColumnWidthTimer.Start();
         }
 
         public void SaveFirstVisibleIndex()
