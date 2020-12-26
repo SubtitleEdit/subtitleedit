@@ -2283,6 +2283,7 @@ can edit in same subtitle file (collaboration)</Information>
     <ListViewColumnTextDown>Column, text down</ListViewColumnTextDown>
     <ListViewGoToNextError>Go to next error</ListViewGoToNextError>
     <ShowBeamer>Start subtitle fullscreen beamer</ShowBeamer>
+    <ShowStyleManager>Show style manager</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>Move last word to next subtitle</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Fetch first word from next subtitle</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Move first word from next line up (current subtitle)</MainTextBoxMoveFirstWordUpCurrent>
@@ -2564,6 +2565,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <SetPreviewText>Set preview text...</SetPreviewText>
     <AddToFile>Add to file</AddToFile>
     <AddToStorage>Add to storage</AddToStorage>
+    <OverwriteX>Overwrite {0}?</OverwriteX>
   </SubStationAlphaStyles>
   <PointSync>
     <Title>Point synchronization</Title>

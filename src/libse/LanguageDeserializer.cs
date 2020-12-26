@@ -6271,6 +6271,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/ShowBeamer":
                     language.Settings.ShowBeamer = reader.Value;
                     break;
+                case "Settings/ShowStyleManager":
+                    language.Settings.ShowStyleManager = reader.Value;
+                    break;
                 case "Settings/MainTextBoxMoveLastWordDown":
                     language.Settings.MainTextBoxMoveLastWordDown = reader.Value;
                     break;
@@ -7017,6 +7020,9 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "SubStationAlphaStyles/AddToStorage":
                     language.SubStationAlphaStyles.AddToStorage = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/OverwriteX":
+                    language.SubStationAlphaStyles.OverwriteX = reader.Value;
                     break;
                 case "PointSync/Title":
                     language.PointSync.Title = reader.Value;
