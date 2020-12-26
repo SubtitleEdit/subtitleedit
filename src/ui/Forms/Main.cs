@@ -4843,7 +4843,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (Configuration.Settings.Tools.ListViewUnfocusedSelectedColor.ToArgb() == Color.LightBlue.ToArgb())
                         {
-                            Configuration.Settings.Tools.ListViewUnfocusedSelectedColor = Color.DarkGray;
+                            var listViewUnfocusedBackColor = Color.FromArgb(Math.Min(byte.MaxValue, darkThemeBackColor.R + 20), Math.Min(byte.MaxValue, darkThemeBackColor.G + 20), Math.Min(byte.MaxValue, darkThemeBackColor.B + 50));
+                            Configuration.Settings.Tools.ListViewUnfocusedSelectedColor = listViewUnfocusedBackColor;
                         }
                     }
 
