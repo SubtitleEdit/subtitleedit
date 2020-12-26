@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
         {
             public readonly List<T> TranslationUnits = new List<T>();
 
-            public int TextSize => Enumerable.Sum(TranslationUnits.ConvertAll(e => Utilities.UrlEncode(e.Text).Length));
+            public int TextSize => TranslationUnits.ConvertAll(e => Utilities.UrlEncode(e.Text).Length).Sum();
 
             public int ArrayLength => TranslationUnits.Count;
         }
