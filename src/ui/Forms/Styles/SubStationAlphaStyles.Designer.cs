@@ -404,7 +404,7 @@
             this.buttonAddStyleToStorage.Location = new System.Drawing.Point(280, 226);
             this.buttonAddStyleToStorage.Name = "buttonAddStyleToStorage";
             this.buttonAddStyleToStorage.Size = new System.Drawing.Size(163, 52);
-            this.buttonAddStyleToStorage.TabIndex = 7;
+            this.buttonAddStyleToStorage.TabIndex = 20;
             this.buttonAddStyleToStorage.Text = "Add to storage";
             this.buttonAddStyleToStorage.UseVisualStyleBackColor = true;
             this.buttonAddStyleToStorage.Click += new System.EventHandler(this.buttonAddStyleToStorage_Click);
@@ -416,7 +416,7 @@
             this.buttonExport.Location = new System.Drawing.Point(6, 255);
             this.buttonExport.Name = "buttonExport";
             this.buttonExport.Size = new System.Drawing.Size(82, 23);
-            this.buttonExport.TabIndex = 6;
+            this.buttonExport.TabIndex = 25;
             this.buttonExport.Text = "Export...";
             this.buttonExport.UseVisualStyleBackColor = true;
             this.buttonExport.Click += new System.EventHandler(this.buttonExport_Click);
@@ -440,7 +440,7 @@
             this.buttonCopy.Location = new System.Drawing.Point(94, 255);
             this.buttonCopy.Name = "buttonCopy";
             this.buttonCopy.Size = new System.Drawing.Size(82, 23);
-            this.buttonCopy.TabIndex = 1;
+            this.buttonCopy.TabIndex = 30;
             this.buttonCopy.Text = "Copy";
             this.buttonCopy.UseVisualStyleBackColor = true;
             this.buttonCopy.Click += new System.EventHandler(this.buttonCopy_Click);
@@ -464,7 +464,7 @@
             this.buttonAdd.Location = new System.Drawing.Point(94, 226);
             this.buttonAdd.Name = "buttonAdd";
             this.buttonAdd.Size = new System.Drawing.Size(82, 23);
-            this.buttonAdd.TabIndex = 2;
+            this.buttonAdd.TabIndex = 10;
             this.buttonAdd.Text = "New";
             this.buttonAdd.UseVisualStyleBackColor = true;
             this.buttonAdd.Click += new System.EventHandler(this.buttonAdd_Click);
@@ -476,7 +476,7 @@
             this.buttonRemove.Location = new System.Drawing.Point(182, 226);
             this.buttonRemove.Name = "buttonRemove";
             this.buttonRemove.Size = new System.Drawing.Size(92, 23);
-            this.buttonRemove.TabIndex = 3;
+            this.buttonRemove.TabIndex = 15;
             this.buttonRemove.Text = "Remove";
             this.buttonRemove.UseVisualStyleBackColor = true;
             this.buttonRemove.Click += new System.EventHandler(this.buttonRemove_Click);
@@ -512,7 +512,7 @@
             this.groupBoxBorder.Controls.Add(this.labelShadow);
             this.groupBoxBorder.Location = new System.Drawing.Point(217, 143);
             this.groupBoxBorder.Name = "groupBoxBorder";
-            this.groupBoxBorder.Size = new System.Drawing.Size(254, 91);
+            this.groupBoxBorder.Size = new System.Drawing.Size(254, 93);
             this.groupBoxBorder.TabIndex = 3;
             this.groupBoxBorder.TabStop = false;
             this.groupBoxBorder.Text = "Border";
@@ -610,7 +610,7 @@
             // 
             // numericUpDownMarginVertical
             // 
-            this.numericUpDownMarginVertical.Location = new System.Drawing.Point(62, 66);
+            this.numericUpDownMarginVertical.Location = new System.Drawing.Point(61, 66);
             this.numericUpDownMarginVertical.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -1045,7 +1045,7 @@
             this.groupBoxStorage.Location = new System.Drawing.Point(0, 0);
             this.groupBoxStorage.Name = "groupBoxStorage";
             this.groupBoxStorage.Size = new System.Drawing.Size(557, 280);
-            this.groupBoxStorage.TabIndex = 7;
+            this.groupBoxStorage.TabIndex = 100;
             this.groupBoxStorage.TabStop = false;
             this.groupBoxStorage.Text = "Style storage";
             // 
@@ -1056,7 +1056,7 @@
             this.buttonAddToFile.Location = new System.Drawing.Point(280, 222);
             this.buttonAddToFile.Name = "buttonAddToFile";
             this.buttonAddToFile.Size = new System.Drawing.Size(163, 52);
-            this.buttonAddToFile.TabIndex = 13;
+            this.buttonAddToFile.TabIndex = 135;
             this.buttonAddToFile.Text = "Add to file";
             this.buttonAddToFile.UseVisualStyleBackColor = true;
             this.buttonAddToFile.Click += new System.EventHandler(this.buttonAddToFile_Click);
@@ -1068,7 +1068,7 @@
             this.buttonStorageExport.Location = new System.Drawing.Point(6, 251);
             this.buttonStorageExport.Name = "buttonStorageExport";
             this.buttonStorageExport.Size = new System.Drawing.Size(82, 23);
-            this.buttonStorageExport.TabIndex = 12;
+            this.buttonStorageExport.TabIndex = 140;
             this.buttonStorageExport.Text = "Export...";
             this.buttonStorageExport.UseVisualStyleBackColor = true;
             this.buttonStorageExport.Click += new System.EventHandler(this.buttonStorageExport_Click);
@@ -1080,7 +1080,7 @@
             this.buttonStorageImport.Location = new System.Drawing.Point(6, 222);
             this.buttonStorageImport.Name = "buttonStorageImport";
             this.buttonStorageImport.Size = new System.Drawing.Size(82, 23);
-            this.buttonStorageImport.TabIndex = 11;
+            this.buttonStorageImport.TabIndex = 120;
             this.buttonStorageImport.Text = "Import...";
             this.buttonStorageImport.UseVisualStyleBackColor = true;
             this.buttonStorageImport.Click += new System.EventHandler(this.buttonStorageImport_Click);
@@ -1092,7 +1092,7 @@
             this.buttonStorageCopy.Location = new System.Drawing.Point(94, 251);
             this.buttonStorageCopy.Name = "buttonStorageCopy";
             this.buttonStorageCopy.Size = new System.Drawing.Size(82, 23);
-            this.buttonStorageCopy.TabIndex = 7;
+            this.buttonStorageCopy.TabIndex = 150;
             this.buttonStorageCopy.Text = "Copy";
             this.buttonStorageCopy.UseVisualStyleBackColor = true;
             this.buttonStorageCopy.Click += new System.EventHandler(this.buttonStorageCopy_Click);
@@ -1104,7 +1104,7 @@
             this.buttonStorageRemoveAll.Location = new System.Drawing.Point(182, 251);
             this.buttonStorageRemoveAll.Name = "buttonStorageRemoveAll";
             this.buttonStorageRemoveAll.Size = new System.Drawing.Size(92, 23);
-            this.buttonStorageRemoveAll.TabIndex = 10;
+            this.buttonStorageRemoveAll.TabIndex = 160;
             this.buttonStorageRemoveAll.Text = "Remove all";
             this.buttonStorageRemoveAll.UseVisualStyleBackColor = true;
             this.buttonStorageRemoveAll.Click += new System.EventHandler(this.buttonStorageRemoveAll_Click);
@@ -1116,7 +1116,7 @@
             this.buttonStorageAdd.Location = new System.Drawing.Point(94, 222);
             this.buttonStorageAdd.Name = "buttonStorageAdd";
             this.buttonStorageAdd.Size = new System.Drawing.Size(82, 23);
-            this.buttonStorageAdd.TabIndex = 8;
+            this.buttonStorageAdd.TabIndex = 125;
             this.buttonStorageAdd.Text = "New";
             this.buttonStorageAdd.UseVisualStyleBackColor = true;
             this.buttonStorageAdd.Click += new System.EventHandler(this.buttonStorageAdd_Click);
@@ -1128,7 +1128,7 @@
             this.buttonStorageRemove.Location = new System.Drawing.Point(182, 222);
             this.buttonStorageRemove.Name = "buttonStorageRemove";
             this.buttonStorageRemove.Size = new System.Drawing.Size(92, 23);
-            this.buttonStorageRemove.TabIndex = 9;
+            this.buttonStorageRemove.TabIndex = 130;
             this.buttonStorageRemove.Text = "Remove";
             this.buttonStorageRemove.UseVisualStyleBackColor = true;
             this.buttonStorageRemove.Click += new System.EventHandler(this.buttonStorageRemove_Click);
@@ -1152,7 +1152,7 @@
             this.listViewStorage.MultiSelect = false;
             this.listViewStorage.Name = "listViewStorage";
             this.listViewStorage.Size = new System.Drawing.Size(545, 197);
-            this.listViewStorage.TabIndex = 0;
+            this.listViewStorage.TabIndex = 110;
             this.listViewStorage.UseCompatibleStateImageBehavior = false;
             this.listViewStorage.View = System.Windows.Forms.View.Details;
             this.listViewStorage.SelectedIndexChanged += new System.EventHandler(this.listViewStorage_SelectedIndexChanged);
@@ -1358,6 +1358,7 @@
             this.ResizeEnd += new System.EventHandler(this.SubStationAlphaStyles_ResizeEnd);
             this.SizeChanged += new System.EventHandler(this.SubStationAlphaStyles_SizeChanged);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SubStationAlphaStyles_KeyDown);
+            this.Resize += new System.EventHandler(this.SubStationAlphaStyles_Resize);
             this.contextMenuStripFile.ResumeLayout(false);
             this.groupBoxStyles.ResumeLayout(false);
             this.groupBoxProperties.ResumeLayout(false);

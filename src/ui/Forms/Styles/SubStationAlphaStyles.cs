@@ -38,6 +38,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private bool _backgroundImageDark;
         private bool _fileStyleActive = true;
         private List<SsaStyle> _storageStyles;
+        private FormWindowState _lastFormWindowState = FormWindowState.Normal;
 
         private ListView ActiveListView
         {
@@ -1491,6 +1492,25 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
         }
 
+        private void SubStationAlphaStyles_Resize(object sender, EventArgs e)
+        {
+            if (WindowState == FormWindowState.Maximized)
+            {
+                SubStationAlphaStyles_ResizeEnd(sender, e);
+                _lastFormWindowState = WindowState;
+                return;
+            }
+            else if (WindowState == FormWindowState.Normal && _lastFormWindowState == FormWindowState.Maximized)
+            {
+                System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(25), () =>
+                {
+                    SubStationAlphaStyles_ResizeEnd(sender, e);
+                });
+            }
+
+            _lastFormWindowState = WindowState;
+        }
+
         private void SubStationAlphaStyles_ResizeEnd(object sender, EventArgs e)
         {
             listViewStyles.Columns[5].Width = -2;
@@ -1498,6 +1518,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             _backgroundImage?.Dispose();
             _backgroundImage = null;
             GeneratePreview();
+            _lastFormWindowState = WindowState;
         }
 
         private void numericUpDownOutline_ValueChanged(object sender, EventArgs e)
