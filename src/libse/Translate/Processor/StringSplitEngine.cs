@@ -44,22 +44,22 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
             }
         }
 
-        public static string[] SplitAt(string source, List<int> positions)
+        public static string[] SplitAt(string source, int[] positions)
         {
-            string[] output = new string[positions.Count + 1];
+            string[] output = new string[positions.Length + 1];
             int pos = 0;
 
-            for (int i = 0; i < positions.Count; pos = positions[i++])
+            for (int i = 0; i < positions.Length; pos = positions[i++])
                 output[i] = source.Substring(pos, positions[i] - pos);
 
-            output[positions.Count] = source.Substring(pos);
+            output[positions.Length] = source.Substring(pos);
             return output;
         }
 
         public List<string> Split(string text)
         {
             var splitPositions = FindAllSplitPositions(text);
-            var splits = SplitAt(text, splitPositions.ToList()).ToList();
+            var splits = SplitAt(text, splitPositions.ToArray()).ToList();
             splits.RemoveAll(x => x.Trim().Length == 0); //remove potential empty splits
             return splits;
         }
@@ -137,7 +137,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
                 if (openingTag != null && IsCloseTag(xmlTag))
                 {
                     var closeTag = xmlTag;
-                    for (int i = openingTag.Index; i < closeTag.Index + closeTag.Length; i++)
+                    for (int i = openingTag.Index +1; i < closeTag.Index + closeTag.Length; i++)
                     {
                         unsplittablePositions.Add(i);
                     }
@@ -157,7 +157,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
             MatchCollection matches = Regex.Matches(text, @"\b(?:https?://|www\.)\S+\b"); //regex to find URLs
             foreach (Match match in matches)
             {
-                for (int i = match.Index; i < match.Index + match.Length; i++)
+                for (int i = match.Index +1; i < match.Index + match.Length; i++)
                 {
                     unsplittablePositions.Add(i);
                 }

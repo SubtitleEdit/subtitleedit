@@ -83,13 +83,17 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
                 }
             }
 
-            private List<int> EvaluateBreakPositions(string targetText, List<int> sourceChunksTextLength)
+            private int[] EvaluateBreakPositions(string targetText, List<int> sourceChunksTextLength)
             {
+                if (sourceChunksTextLength.Count == 1) //only 1 source chunk, no breakup required
+                {
+                    return new int[0];
+                }
                 List<AbstractStringSplitsChunkAssigner.RateResult> rateResults = new List<AbstractStringSplitsChunkAssigner.RateResult>();
                 foreach (var stringSplitsChunkAssigner in StringSplitsChunkAssigners)
                 {
                     var potentialBreakPositions = stringSplitsChunkAssigner.GetSplitPositions(sourceChunksTextLength, targetText);
-                    var rateResult = AbstractStringSplitsChunkAssigner.CalculateRateResult(sourceChunksTextLength, targetText, potentialBreakPositions);
+                    var rateResult = AbstractStringSplitsChunkAssigner.CalculateRateResult(sourceChunksTextLength, targetText.Length, potentialBreakPositions);
                     rateResults.Add(rateResult);
                 }
                 rateResults = rateResults.OrderBy(x => x.Fitness).ToList();
