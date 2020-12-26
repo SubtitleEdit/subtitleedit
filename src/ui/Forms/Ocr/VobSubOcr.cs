@@ -7989,7 +7989,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             var imageSources = new List<Bitmap>();
             while (index < sourceList.Count)
             {
-                ImageSplitterItem item = sourceList[index];
+                var item = sourceList[index];
                 if (item.NikseBitmap == null)
                 {
                     matches.Add(new CompareMatch(item.SpecialCharacter, false, 0, null));
@@ -8000,7 +8000,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     var match = GetCompareMatchNew(item, out _, sourceList, index, _binaryOcrDb);
                     if (match == null)
                     {
-                        matches.Add(new CompareMatch(Configuration.Settings.Language.VobSubOcr.NoMatch, false, 0, null));
+                        var cm = new CompareMatch(Configuration.Settings.Language.VobSubOcr.NoMatch, false, 0, null)
+                        {
+                            ImageSplitterItem = item
+                        };
+                        matches.Add(cm);
                         imageSources.Add(item.NikseBitmap.GetBitmap());
                     }
                     else // found image match
