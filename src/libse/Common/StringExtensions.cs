@@ -540,7 +540,9 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             var last = s[s.Length - 1];
             return last == '.' || last == '!' || last == '?' || last == ']' || last == ')' || last == '…' || last == '♪' || last == '؟' ||
-                   twoLetterLanguageCode == "el" && last == ';' || twoLetterLanguageCode == "el" && last == '\u037E';
+                   twoLetterLanguageCode == "el" && last == ';' || twoLetterLanguageCode == "el" && last == '\u037E' || 
+                   last == '-' && s.Length > 3 && s.EndsWith("--", StringComparison.Ordinal) && char.IsLetter(s[s.Length-3]) ||
+                   last == '—' && s.Length > 2 && char.IsLetter(s[s.Length - 2]);
         }
     }
 }
