@@ -189,7 +189,7 @@
             this.listViewStyles.Location = new System.Drawing.Point(6, 19);
             this.listViewStyles.MultiSelect = false;
             this.listViewStyles.Name = "listViewStyles";
-            this.listViewStyles.Size = new System.Drawing.Size(615, 201);
+            this.listViewStyles.Size = new System.Drawing.Size(545, 201);
             this.listViewStyles.TabIndex = 0;
             this.listViewStyles.UseCompatibleStateImageBehavior = false;
             this.listViewStyles.View = System.Windows.Forms.View.Details;
@@ -359,7 +359,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(1029, 578);
+            this.buttonCancel.Location = new System.Drawing.Point(977, 578);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 5;
@@ -371,7 +371,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(948, 578);
+            this.buttonOK.Location = new System.Drawing.Point(896, 578);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 4;
@@ -392,7 +392,7 @@
             this.groupBoxStyles.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBoxStyles.Location = new System.Drawing.Point(0, 0);
             this.groupBoxStyles.Name = "groupBoxStyles";
-            this.groupBoxStyles.Size = new System.Drawing.Size(627, 284);
+            this.groupBoxStyles.Size = new System.Drawing.Size(557, 284);
             this.groupBoxStyles.TabIndex = 0;
             this.groupBoxStyles.TabStop = false;
             this.groupBoxStyles.Text = "File styles";
@@ -483,7 +483,8 @@
             // 
             // groupBoxProperties
             // 
-            this.groupBoxProperties.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.groupBoxProperties.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxProperties.Controls.Add(this.groupBoxBorder);
             this.groupBoxProperties.Controls.Add(this.textBoxStyleName);
@@ -493,9 +494,9 @@
             this.groupBoxProperties.Controls.Add(this.groupBoxAlignment);
             this.groupBoxProperties.Controls.Add(this.groupBoxPreview);
             this.groupBoxProperties.Controls.Add(this.groupBoxFont);
-            this.groupBoxProperties.Location = new System.Drawing.Point(645, 4);
+            this.groupBoxProperties.Location = new System.Drawing.Point(575, 4);
             this.groupBoxProperties.Name = "groupBoxProperties";
-            this.groupBoxProperties.Size = new System.Drawing.Size(459, 568);
+            this.groupBoxProperties.Size = new System.Drawing.Size(477, 568);
             this.groupBoxProperties.TabIndex = 3;
             this.groupBoxProperties.TabStop = false;
             this.groupBoxProperties.Text = "Properties";
@@ -511,7 +512,7 @@
             this.groupBoxBorder.Controls.Add(this.labelShadow);
             this.groupBoxBorder.Location = new System.Drawing.Point(217, 143);
             this.groupBoxBorder.Name = "groupBoxBorder";
-            this.groupBoxBorder.Size = new System.Drawing.Size(236, 91);
+            this.groupBoxBorder.Size = new System.Drawing.Size(254, 91);
             this.groupBoxBorder.TabIndex = 3;
             this.groupBoxBorder.TabStop = false;
             this.groupBoxBorder.Text = "Border";
@@ -687,7 +688,7 @@
             this.groupBoxColors.Controls.Add(this.buttonPrimaryColor);
             this.groupBoxColors.Location = new System.Drawing.Point(7, 242);
             this.groupBoxColors.Name = "groupBoxColors";
-            this.groupBoxColors.Size = new System.Drawing.Size(447, 62);
+            this.groupBoxColors.Size = new System.Drawing.Size(465, 62);
             this.groupBoxColors.TabIndex = 1;
             this.groupBoxColors.TabStop = false;
             this.groupBoxColors.Text = "Colors";
@@ -770,8 +771,6 @@
             // 
             // groupBoxAlignment
             // 
-            this.groupBoxAlignment.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxAlignment.Controls.Add(this.radioButtonBottomRight);
             this.groupBoxAlignment.Controls.Add(this.radioButtonBottomCenter);
             this.groupBoxAlignment.Controls.Add(this.radioButtonMiddleRight);
@@ -882,12 +881,13 @@
             // 
             // groupBoxPreview
             // 
-            this.groupBoxPreview.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupBoxPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxPreview.Controls.Add(this.pictureBoxPreview);
             this.groupBoxPreview.Location = new System.Drawing.Point(7, 310);
             this.groupBoxPreview.Name = "groupBoxPreview";
-            this.groupBoxPreview.Size = new System.Drawing.Size(447, 252);
+            this.groupBoxPreview.Size = new System.Drawing.Size(465, 252);
             this.groupBoxPreview.TabIndex = 2;
             this.groupBoxPreview.TabStop = false;
             this.groupBoxPreview.Text = "Preview";
@@ -898,7 +898,7 @@
             this.pictureBoxPreview.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBoxPreview.Location = new System.Drawing.Point(3, 16);
             this.pictureBoxPreview.Name = "pictureBoxPreview";
-            this.pictureBoxPreview.Size = new System.Drawing.Size(441, 233);
+            this.pictureBoxPreview.Size = new System.Drawing.Size(459, 233);
             this.pictureBoxPreview.TabIndex = 0;
             this.pictureBoxPreview.TabStop = false;
             this.pictureBoxPreview.Click += new System.EventHandler(this.pictureBoxPreview_Click);
@@ -908,12 +908,12 @@
             this.contextMenuStripPreview.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.setPreviewTextToolStripMenuItem});
             this.contextMenuStripPreview.Name = "contextMenuStripPreview";
-            this.contextMenuStripPreview.Size = new System.Drawing.Size(181, 48);
+            this.contextMenuStripPreview.Size = new System.Drawing.Size(167, 26);
             // 
             // setPreviewTextToolStripMenuItem
             // 
             this.setPreviewTextToolStripMenuItem.Name = "setPreviewTextToolStripMenuItem";
-            this.setPreviewTextToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.setPreviewTextToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
             this.setPreviewTextToolStripMenuItem.Text = "Set preview text...";
             this.setPreviewTextToolStripMenuItem.Click += new System.EventHandler(this.setPreviewTextToolStripMenuItem_Click);
             // 
@@ -930,7 +930,7 @@
             this.groupBoxFont.Controls.Add(this.labelFontName);
             this.groupBoxFont.Location = new System.Drawing.Point(7, 51);
             this.groupBoxFont.Name = "groupBoxFont";
-            this.groupBoxFont.Size = new System.Drawing.Size(446, 86);
+            this.groupBoxFont.Size = new System.Drawing.Size(464, 86);
             this.groupBoxFont.TabIndex = 3;
             this.groupBoxFont.TabStop = false;
             this.groupBoxFont.Text = "Font";
@@ -1044,7 +1044,7 @@
             this.groupBoxStorage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBoxStorage.Location = new System.Drawing.Point(0, 0);
             this.groupBoxStorage.Name = "groupBoxStorage";
-            this.groupBoxStorage.Size = new System.Drawing.Size(627, 280);
+            this.groupBoxStorage.Size = new System.Drawing.Size(557, 280);
             this.groupBoxStorage.TabIndex = 7;
             this.groupBoxStorage.TabStop = false;
             this.groupBoxStorage.Text = "Style storage";
@@ -1151,7 +1151,7 @@
             this.listViewStorage.Location = new System.Drawing.Point(6, 19);
             this.listViewStorage.MultiSelect = false;
             this.listViewStorage.Name = "listViewStorage";
-            this.listViewStorage.Size = new System.Drawing.Size(615, 197);
+            this.listViewStorage.Size = new System.Drawing.Size(545, 197);
             this.listViewStorage.TabIndex = 0;
             this.listViewStorage.UseCompatibleStateImageBehavior = false;
             this.listViewStorage.View = System.Windows.Forms.View.Details;
@@ -1319,9 +1319,8 @@
             // 
             // splitContainer1
             // 
-            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.splitContainer1.Location = new System.Drawing.Point(12, 4);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
@@ -1335,7 +1334,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.groupBoxStorage);
             this.splitContainer1.Panel2MinSize = 150;
-            this.splitContainer1.Size = new System.Drawing.Size(627, 568);
+            this.splitContainer1.Size = new System.Drawing.Size(557, 568);
             this.splitContainer1.SplitterDistance = 284;
             this.splitContainer1.TabIndex = 8;
             // 
@@ -1343,14 +1342,14 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1116, 611);
+            this.ClientSize = new System.Drawing.Size(1064, 611);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.groupBoxProperties);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.KeyPreview = true;
-            this.MinimumSize = new System.Drawing.Size(1000, 630);
+            this.MinimumSize = new System.Drawing.Size(1020, 630);
             this.Name = "SubStationAlphaStyles";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;

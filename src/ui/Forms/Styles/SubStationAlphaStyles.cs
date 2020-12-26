@@ -1495,6 +1495,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         {
             listViewStyles.Columns[5].Width = -2;
             listViewStorage.Columns[5].Width = -2;
+            _backgroundImage?.Dispose();
+            _backgroundImage = null;
             GeneratePreview();
         }
 
