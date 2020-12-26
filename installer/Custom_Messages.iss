@@ -76,20 +76,20 @@ bg.types_default=Default installation
 
 
 ; Catalan
-ca.comp_translations=Translations
-ca.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.6.2. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.6.2 now?
-ca.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
-ca.msg_OptimizingPerformance=Optimizing performance...
-ca.run_VisitWebsite=Visit Subtitle Edit's Website
-ca.sm_com_Changelog=Subtitle Edit's Changelog
-ca.tsk_AllUsers=For all users
-ca.tsk_CurrentUser=For the current user only
-ca.tsk_Other=Other:
-ca.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
-ca.tsk_ResetSettings=Reset Subtitle Edit's settings
-ca.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
-ca.types_custom=Custom installation
-ca.types_default=Default installation
+ca.comp_translations=Traduccions
+ca.msg_AskToDownNET=Subtitle Edit requereix .NET Framework 4.6.2. Si us plau descarrega i instal·la .NET Framework i torna a executar l'instal·lador de nou.%n%n¿Vols descarregar .NET Framework 4.6.2 ara?
+ca.msg_DeleteSettings=¿Vols també suprimir la configuració i qualsevol altre canvi que hages fet als diccionaris?%n%nSi tens planificat reinstal·lar Subtitle Edit no cal que els suprimisques.
+ca.msg_OptimizingPerformance=Optimitzant rendiment...
+ca.run_VisitWebsite=Visita la pàgina web de Subtitle Edit
+ca.sm_com_Changelog=Registre de canvis de Subtitle Edit
+ca.tsk_AllUsers=Per a tots els usuaris
+ca.tsk_CurrentUser=Només per a l'usuari actual
+ca.tsk_Other=Altre:
+ca.tsk_ResetDictionaries=Restableix els diccionaris i suprimeix qualsevol noms personalitzat
+ca.tsk_ResetSettings=Restableix la configuració de Subtitle Edit
+ca.tsk_SetFileTypes=Associa fitxerd SubRip Text (.srt) amb Subtitle Edit
+ca.types_custom=Instal·lació personalitzada
+ca.types_default=Instal·lació predeterminada
 
 
 ; Czech
