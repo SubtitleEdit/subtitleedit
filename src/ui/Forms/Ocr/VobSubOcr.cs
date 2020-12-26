@@ -345,7 +345,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private string[] _tesseractAsyncStrings;
         private int _tesseractAsyncIndex;
-        private int _tesseractEngineMode;
+        private int _tesseractEngineMode = 3;
 
         private bool _okClicked;
         private readonly Dictionary<string, int> _unknownWordsDictionary;
