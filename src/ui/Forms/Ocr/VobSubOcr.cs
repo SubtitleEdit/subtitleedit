@@ -6667,6 +6667,18 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     comboBoxTesseractLanguages.SelectedIndex = 0;
                 }
             }
+
+            if (string.IsNullOrEmpty(_languageId))
+            {
+                if (string.IsNullOrEmpty(chosenLanguage))
+                {
+                    _languageId = "eng";
+                }
+                else
+                {
+                    _languageId = chosenLanguage;
+                }
+            }
         }
 
         private void InitializeModiLanguages()
