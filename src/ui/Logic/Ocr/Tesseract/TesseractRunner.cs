@@ -25,6 +25,14 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
             LastError = null;
             var tempTextFileName = Path.GetTempPath() + Guid.NewGuid();
             var tesseractDirectory = run302 ? Configuration.Tesseract302Directory : Configuration.TesseractDirectory;
+
+            if (!_runningOnWindows)
+            {
+                // Tesseract 3.02 is only for Windows
+                run302 = false;
+                tesseractDirectory = Configuration.TesseractDirectory;
+            }
+
             using (var process = new Process())
             {
                 process.StartInfo = new ProcessStartInfo(Path.Combine(tesseractDirectory, "tesseract.exe"))
