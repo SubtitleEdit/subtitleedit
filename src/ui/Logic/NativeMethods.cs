@@ -1,5 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core;
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 using Nikse.SubtitleEdit.Core.Common;
 
@@ -54,6 +53,9 @@ namespace Nikse.SubtitleEdit.Logic
 
         [DllImport("user32.dll", EntryPoint = "SetWindowPos")]
         internal static extern IntPtr SetWindowPos(IntPtr hWnd, int hWndInsertAfter, int x, int y, int width, int height, int wFlags);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern int SendMessage(IntPtr hWnd, int msg, int wParam, int lParam);
 
         #endregion Win32 API
 

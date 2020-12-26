@@ -1140,6 +1140,7 @@ namespace Nikse.SubtitleEdit.Controls
             if (Columns.Count > 0)
             {
                 Columns[Columns.Count - 1].Width = ClientSize.Width - width;
+                NativeMethods.SendMessage(Handle, 0x1014, 0, 0);
             }
         }
 
