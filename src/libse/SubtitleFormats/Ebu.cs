@@ -301,8 +301,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 if (header.CharacterCodeTableNumber == "00")
                 {
-                    encoding = Encoding.GetEncoding(20269);
                     // 0xC1—0xCF combines characters - http://en.wikipedia.org/wiki/ISO/IEC_6937
+                    try
+                    {
+                        encoding = Encoding.GetEncoding(20269);
+                    }
+                    catch
+                    {
+                        encoding = Encoding.ASCII;
+                    }
 
                     var sbTwoChar = new StringBuilder();
                     bool skipNext = false;
@@ -1161,8 +1168,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     return "♪";
                 }
 
+                Encoding encoding;
                 //note that 0xC1—0xCF combines characters - http://en.wikipedia.org/wiki/ISO/IEC_6937
-                var encoding = Encoding.GetEncoding(20269);
+                try
+                {
+                    encoding = Encoding.GetEncoding(20269);
+                }
+                catch
+                {
+                    encoding = Encoding.ASCII;
+                }
+
                 if (index + 2 > buffer.Length)
                 {
                     return string.Empty;
