@@ -4807,6 +4807,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var darkModeListViewSyntaxErrorColor = Color.FromArgb(185, 51, 0);
                 var defaultListViewSyntaxErrorColor = Color.FromArgb(255, 180, 150);
                 var slightlyLighter = Color.FromArgb(Math.Min(byte.MaxValue, darkThemeBackColor.R + 10), Math.Min(byte.MaxValue, darkThemeBackColor.G + 10), Math.Min(byte.MaxValue, darkThemeBackColor.B + 10));
+                var listViewDarkThemeUnfocusedBackColor = Color.FromArgb(Math.Min(byte.MaxValue, darkThemeBackColor.R + 20), Math.Min(byte.MaxValue, darkThemeBackColor.G + 20), Math.Min(byte.MaxValue, darkThemeBackColor.B + 50));
 
                 if (Configuration.Settings.General.UseDarkTheme)
                 {
@@ -4843,8 +4844,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (Configuration.Settings.Tools.ListViewUnfocusedSelectedColor.ToArgb() == Color.LightBlue.ToArgb())
                         {
-                            var listViewUnfocusedBackColor = Color.FromArgb(Math.Min(byte.MaxValue, darkThemeBackColor.R + 20), Math.Min(byte.MaxValue, darkThemeBackColor.G + 20), Math.Min(byte.MaxValue, darkThemeBackColor.B + 50));
-                            Configuration.Settings.Tools.ListViewUnfocusedSelectedColor = listViewUnfocusedBackColor;
+                            Configuration.Settings.Tools.ListViewUnfocusedSelectedColor = listViewDarkThemeUnfocusedBackColor;
                         }
                     }
 
@@ -4887,7 +4887,7 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Tools.ListViewSyntaxErrorColor = defaultListViewSyntaxErrorColor;
                     }
 
-                    if (Configuration.Settings.Tools.ListViewUnfocusedSelectedColor.ToArgb() == Color.DarkGray.ToArgb())
+                    if (Configuration.Settings.Tools.ListViewUnfocusedSelectedColor.ToArgb() == listViewDarkThemeUnfocusedBackColor.ToArgb())
                     {
                         Configuration.Settings.Tools.ListViewUnfocusedSelectedColor = Color.LightBlue;
                     }
