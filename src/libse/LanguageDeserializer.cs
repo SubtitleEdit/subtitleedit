@@ -7021,6 +7021,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "SubStationAlphaStyles/AddToStorage":
                     language.SubStationAlphaStyles.AddToStorage = reader.Value;
                     break;
+                case "SubStationAlphaStyles/StyleStorage":
+                    language.SubStationAlphaStyles.StyleStorage = reader.Value;
+                    break;
                 case "SubStationAlphaStyles/OverwriteX":
                     language.SubStationAlphaStyles.OverwriteX = reader.Value;
                     break;

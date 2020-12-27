@@ -2565,6 +2565,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <SetPreviewText>Set preview text...</SetPreviewText>
     <AddToFile>Add to file</AddToFile>
     <AddToStorage>Add to storage</AddToStorage>
+    <StyleStorage>Style storage</StyleStorage>
     <OverwriteX>Overwrite {0}?</OverwriteX>
   </SubStationAlphaStyles>
   <PointSync>
