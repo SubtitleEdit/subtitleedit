@@ -2900,6 +2900,7 @@ can edit in same subtitle file (collaboration)",
                 SetPreviewText = "Set preview text...",
                 AddToFile = "Add to file",
                 AddToStorage = "Add to storage",
+                StyleStorage = "Style storage",
                 OverwriteX = "Overwrite {0}?"
             };
 

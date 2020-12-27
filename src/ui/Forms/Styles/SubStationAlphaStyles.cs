@@ -119,6 +119,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             buttonRemoveAll.Text = l.RemoveAll;
             groupBoxPreview.Text = Configuration.Settings.Language.General.Preview;
 
+            groupBoxStorage.Text = l.StyleStorage;
             buttonStorageImport.Text = l.Import;
             buttonStorageExport.Text = l.Export;
             buttonStorageAdd.Text = l.New;
@@ -1134,14 +1135,19 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void buttonAdd_Click(object sender, EventArgs e)
         {
-            SsaStyle style = GetSsaStyle(Configuration.Settings.Language.SubStationAlphaStyles.New);
+            if (listViewStyles.SelectedItems.Count > 0)
+            {
+                listViewStyles.SelectedItems[0].Selected = false;
+            }
+
+            var style = new SsaStyle { Name = Configuration.Settings.Language.SubStationAlphaStyles.New };
             if (GetSsaStyle(style.Name).LoadedFromHeader)
             {
                 int count = 2;
                 bool doRepeat = true;
                 while (doRepeat)
                 {
-                    style = GetSsaStyle(Configuration.Settings.Language.SubStationAlphaStyles.New + count);
+                    style = new SsaStyle { Name = Configuration.Settings.Language.SubStationAlphaStyles.New  + count };
                     doRepeat = GetSsaStyle(style.Name).LoadedFromHeader;
                     count++;
                 }
@@ -1149,8 +1155,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             _doUpdate = false;
             AddStyle(listViewStyles, style, Subtitle, _isSubStationAlpha);
-            SsaStyle oldStyle = GetSsaStyle(listViewStyles.Items[0].Text);
-            AddStyleToHeader(style, oldStyle);
+            AddStyleToHeader(style, style);
             listViewStyles.Items[listViewStyles.Items.Count - 1].Selected = true;
             listViewStyles.Items[listViewStyles.Items.Count - 1].EnsureVisible();
             listViewStyles.Items[listViewStyles.Items.Count - 1].Focused = true;

@@ -2758,6 +2758,7 @@
             public string SetPreviewText { get; set; }
             public string AddToFile { get; set; }
             public string AddToStorage { get; set; }
+            public string StyleStorage { get; set; }            
             public string OverwriteX { get; set; }
         }
 
