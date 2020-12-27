@@ -1,13 +1,14 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
+using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SpellCheck;
+using Nikse.SubtitleEdit.Logic.SpellCheck;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
-using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Logic.SpellCheck;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -30,16 +31,16 @@ namespace Nikse.SubtitleEdit.Controls
         private SimpleTextBox _simpleTextBox;
         private int _mouseMoveSelectionLength;
 
-        private List<SpellCheckWord> _words;
-        private SpellCheckWord _currentWord;
-        private List<SpellCheckWord> _wrongWords;
-        private SpellCheckWordLists _spellCheckWordLists;
         private Hunspell _hunspell;
-        private string _currentDictionary;
-        private string _currentLanguage;
+        private SpellCheckWordLists _spellCheckWordLists;
+        private List<SpellCheckWord> _words;
+        private List<SpellCheckWord> _wrongWords;
         private List<string> _skipAllList;
         private HashSet<string> _skipOnceList;
-        private int _currentLineIndex;
+        private SpellCheckWord _currentWord;
+        private string _currentDictionary;
+        private string _currentLanguage;
+        private int _currentLineIndex = -1;
 
         public bool IsWrongWord { get; set; }
         public bool IsSpellCheckerInitialized { get; set; }
@@ -98,6 +99,7 @@ namespace Nikse.SubtitleEdit.Controls
                 InitializeBackingControl(_uiTextBox);
 
                 _uiTextBox.TextChanged += TextChangedHighlight;
+                _uiTextBox.KeyDown += UiTextBox_KeyDown;
                 _uiTextBox.MouseDown += UiTextBox_MouseDown;
                 // avoid selection when centered and clicking to the left
                 _uiTextBox.MouseDown += (sender, args) =>
@@ -388,17 +390,7 @@ namespace Nikse.SubtitleEdit.Controls
                         return;
                     }
 
-                    var text = _uiTextBox.Text;
-                    var extra = 0;
-                    for (int i = _uiTextBox.SelectionStart; i < target && i < text.Length; i++)
-                    {
-                        if (text[i] == '\n')
-                        {
-                            extra++;
-                        }
-                    }
-
-                    _uiTextBox.SelectionLength = value - extra;
+                    _uiTextBox.SelectionLength = GetIndexWithLineBreak(value);
                 }
             }
         }
@@ -587,6 +579,21 @@ namespace Nikse.SubtitleEdit.Controls
                 ResumeLayout(false);
                 _uiTextBox.Rtf = _richTextBoxTemp.Rtf;
             }
+        }
+
+        private int GetIndexWithLineBreak(int index)
+        {
+            var text = _uiTextBox.Text;
+            var extra = 0;
+            for (int i = 0; i < index && i < text.Length; i++)
+            {
+                if (text[i] == '\n')
+                {
+                    extra++;
+                }
+            }
+
+            return index - extra;
         }
 
         public int GetCharIndexFromPosition(Point pt)
@@ -944,7 +951,96 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        private void SetWordBackColor(int startIndex, int length, Color color)
+        {
+            if (_uiTextBox is null)
+            {
+                return;
+            }
+
+            var cursorPos = _uiTextBox.SelectionStart;
+            var rtf = _uiTextBox.Rtf;
+            var text = _uiTextBox.Text;
+            startIndex = GetIndexWithLineBreak(startIndex);
+
+            _richTextBoxTemp.SuspendLayout();
+            _richTextBoxTemp.Clear();
+            _richTextBoxTemp.Text = text;
+            _richTextBoxTemp.Rtf = rtf;
+            _richTextBoxTemp.Select(startIndex, length);
+            _richTextBoxTemp.SelectionBackColor = color;
+            _richTextBoxTemp.ResumeLayout(false);
+            _uiTextBox.Rtf = _richTextBoxTemp.Rtf;
+            _uiTextBox.SelectionStart = cursorPos;
+        }
+
         #region LiveSpellCheck
+
+        public void InitializedSpellChecker(Subtitle subtitle)
+        {
+            IsSpellCheckerInitialized = true;
+
+            var languageName = LanguageAutoDetect.AutoDetectLanguageName("", subtitle);
+
+            if (_spellCheckWordLists is null && _hunspell is null)
+            {
+                if (string.IsNullOrEmpty(languageName))
+                {
+                    languageName = "en_US";
+                }
+
+                LoadDictionaries(languageName);
+                LiveSpellCheck(_currentLineIndex);
+            }
+        }
+
+        private void LoadHunspell(string dictionary)
+        {
+            _currentDictionary = dictionary;
+            _hunspell?.Dispose();
+            _hunspell = null;
+            _hunspell = Hunspell.GetHunspell(dictionary);
+        }
+
+        private void LoadDictionaries(string languageName)
+        {
+            var dictionaryFolder = Utilities.DictionaryFolder;
+            string dictionary = Utilities.DictionaryFolder + languageName;
+            _spellCheckWordLists = new SpellCheckWordLists(dictionaryFolder, languageName, this);
+            _skipAllList = new List<string>();
+            _skipOnceList = new HashSet<string>();
+            LoadHunspell(dictionary);
+            _currentLanguage = languageName;
+        }
+
+        public void DisposeHunspellAndDictionaries()
+        {
+            _skipAllList = null;
+            _skipOnceList = null;
+            _spellCheckWordLists = null;
+            _words = null;
+            _wrongWords = null;
+            _currentWord = null;
+            _currentDictionary = null;
+            _currentLanguage = null;
+            _currentLineIndex = -1;
+            _hunspell?.Dispose();
+            _hunspell = null;
+        }
+
+        public void CheckForLanguageChange(Subtitle subtitle)
+        {
+            if (IsSpellCheckerInitialized)
+            {
+                var languageName = LanguageAutoDetect.AutoDetectLanguageName("", subtitle);
+                if (_currentLanguage != languageName)
+                {
+                    DisposeHunspellAndDictionaries();
+                    LoadDictionaries(languageName);
+                    LiveSpellCheck(_currentLineIndex);
+                }
+            }
+        }
 
         public void LiveSpellCheck(int currentIndex)
         {
@@ -971,12 +1067,25 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        public bool DoSpell(string word)
+        {
+            return _hunspell.Spell(word);
+        }
+
+        private List<SpellCheckWord> GetWords(string s)
+        {
+            s = _spellCheckWordLists.ReplaceHtmlTagsWithBlanks(s);
+            s = _spellCheckWordLists.ReplaceAssTagsWithBlanks(s);
+            s = _spellCheckWordLists.ReplaceKnownWordsOrNamesWithBlanks(s);
+            return SpellCheckWordLists.Split(s);
+        }
+
         private void UiTextBox_MouseDown(object sender, MouseEventArgs e)
         {
             if (_wrongWords?.Count > 0 && e.Clicks == 1 && e.Button == MouseButtons.Right)
             {
                 int positionToSearch = _uiTextBox.GetCharIndexFromPosition(new Point(e.X, e.Y));
-                var wrongWord = _wrongWords.Where(word => positionToSearch >= word.Index && positionToSearch < word.Index + word.Length).FirstOrDefault();
+                var wrongWord = _wrongWords.Where(word => positionToSearch > GetIndexWithLineBreak(word.Index) && positionToSearch < GetIndexWithLineBreak(word.Index) + word.Length).FirstOrDefault();
                 if (wrongWord != null)
                 {
                     IsWrongWord = true;
@@ -986,6 +1095,26 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     IsWrongWord = false;
                 }
+            }
+        }
+
+        private void UiTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Apps && _wrongWords?.Count > 0)
+            {
+                var cursorPos = _uiTextBox.SelectionStart;
+                var wrongWord = _wrongWords.Where(word => cursorPos > GetIndexWithLineBreak(word.Index) && cursorPos < GetIndexWithLineBreak(word.Index) + word.Length).FirstOrDefault();
+                if (wrongWord != null)
+                {
+                    IsWrongWord = true;
+                    _currentWord = wrongWord;
+                }
+                else
+                {
+                    IsWrongWord = false;
+                }
+
+                e.SuppressKeyPress = true;
             }
         }
 
@@ -1018,136 +1147,6 @@ namespace Nikse.SubtitleEdit.Controls
             _uiTextBox.SelectionStart = cursorPos;
         }
 
-        private List<SpellCheckWord> GetWords(string s)
-        {
-            s = _spellCheckWordLists.ReplaceHtmlTagsWithBlanks(s);
-            s = _spellCheckWordLists.ReplaceAssTagsWithBlanks(s);
-            s = _spellCheckWordLists.ReplaceKnownWordsOrNamesWithBlanks(s);
-            return SpellCheckWordLists.Split(s);
-        }
-
-        public bool DoSpell(string word)
-        {
-            return _hunspell.Spell(word);
-        }
-
-        private void LoadDictionaries(string languageName)
-        {
-            var dictionaryFolder = Utilities.DictionaryFolder;
-            string dictionary = Utilities.DictionaryFolder + languageName;
-            _spellCheckWordLists = new SpellCheckWordLists(dictionaryFolder, languageName, this);
-            _skipAllList = new List<string>();
-            _skipOnceList = new HashSet<string>();
-            LoadHunspell(dictionary);
-            _currentLanguage = languageName;
-        }
-
-        private void LoadHunspell(string dictionary)
-        {
-            _currentDictionary = dictionary;
-            _hunspell?.Dispose();
-            _hunspell = null;
-            _hunspell = Hunspell.GetHunspell(dictionary);
-        }
-
-        public void CheckForLanguageChange(Subtitle subtitle)
-        {
-            if (IsSpellCheckerInitialized)
-            {
-                var languageName = LanguageAutoDetect.AutoDetectLanguageName("", subtitle);
-                if (_currentLanguage != languageName)
-                {
-                    DisposeDictionaries();
-                    LoadDictionaries(languageName);
-                    LiveSpellCheck(_currentLineIndex);
-                }
-            }
-        }
-
-        public void InitializedSpellChecker(Subtitle subtitle)
-        {
-            IsSpellCheckerInitialized = true;
-
-            var languageName = LanguageAutoDetect.AutoDetectLanguageName("", subtitle);
-
-            if (_spellCheckWordLists is null && _hunspell is null)
-            {
-                if (string.IsNullOrEmpty(languageName))
-                {
-                    languageName = "en_US";
-                }
-
-                LoadDictionaries(languageName);
-                LiveSpellCheck(_currentLineIndex);
-            }
-        }
-
-        public void DisposeDictionaries()
-        {
-            _skipAllList = new List<string>();
-            _skipOnceList = new HashSet<string>();
-            _spellCheckWordLists = null;
-            _hunspell?.Dispose();
-            _hunspell = null;
-        }
-
-        private int GetIndexWithLineBreak(int index)
-        {
-            var text = _uiTextBox.Text;
-            var extra = 0;
-            for (int i = 0; i < index && i < text.Length; i++)
-            {
-                if (text[i] == '\n')
-                {
-                    extra++;
-                }
-            }
-
-            return index - extra;
-        }
-
-        private void SetWordBackColor(int startIndex, int length, Color color)
-        {
-            if (_uiTextBox is null)
-            {
-                return;
-            }
-
-            var cursorPos = _uiTextBox.SelectionStart;
-            var rtf = _uiTextBox.Rtf;
-            var text = _uiTextBox.Text;
-            startIndex = GetIndexWithLineBreak(startIndex);
-
-            _richTextBoxTemp.SuspendLayout();
-            _richTextBoxTemp.Clear();
-            _richTextBoxTemp.Text = text;
-            _richTextBoxTemp.Rtf = rtf;
-            _richTextBoxTemp.Select(startIndex, length);
-            _richTextBoxTemp.SelectionBackColor = color;
-            _richTextBoxTemp.ResumeLayout(false);
-            _uiTextBox.Rtf = _richTextBoxTemp.Rtf;
-            _uiTextBox.SelectionStart = cursorPos;
-        }
-
-        public void SkipAll()
-        {
-            if (_currentWord != null)
-            {
-                _skipAllList.Add(_currentWord.Text);
-                SetWordBackColor(_currentWord.Index, _currentWord.Length, BackColor);
-            }
-        }
-
-        public void SkipOnce()
-        {
-            if (_currentWord != null)
-            {
-                string key = _currentLineIndex + "-" + _currentWord;
-                _skipOnceList.Add(key);
-                SetWordBackColor(_currentWord.Index, _currentWord.Length, BackColor);
-            }
-        }
-
         private List<string> DoSuggest(string word)
         {
             var parameter = new SuggestionParameter(word, _hunspell);
@@ -1168,6 +1167,31 @@ namespace Nikse.SubtitleEdit.Controls
             var parameter = (SuggestionParameter)data;
             parameter.Suggestions = parameter.Hunspell.Suggest(parameter.InputWord);
             parameter.Success = true;
+        }
+
+        public void DoAction(SpellCheckAction action)
+        {
+            if (_currentWord != null)
+            {
+                switch (action)
+                {
+                    case SpellCheckAction.Skip:
+                        string key = _currentLineIndex + "-" + _currentWord;
+                        _skipOnceList.Add(key);
+                        break;
+                    case SpellCheckAction.SkipAll:
+                        _skipAllList.Add(_currentWord.Text);
+                        break;
+                    case SpellCheckAction.AddToDictionary:
+                        _spellCheckWordLists.AddUserWord(_currentWord.Text);
+                        break;
+                    case SpellCheckAction.AddToNames:
+                        _spellCheckWordLists.AddName(_currentWord.Text);
+                        break;
+                }
+
+                SetWordBackColor(_currentWord.Index, _currentWord.Length, BackColor);
+            }
         }
 
         #endregion

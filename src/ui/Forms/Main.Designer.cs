@@ -470,6 +470,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSeparatorSpellCheckSuggestions = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemSpellCheckSkipOnce = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSpellCheckSkipAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemSpellCheckAddToDictionary = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemSpellCheckAddToNames = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorSpellCheck = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemWebVttVoice = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorWebVTT = new System.Windows.Forms.ToolStripSeparator();
@@ -4542,6 +4544,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSeparatorSpellCheckSuggestions,
             this.toolStripMenuItemSpellCheckSkipOnce,
             this.toolStripMenuItemSpellCheckSkipAll,
+            this.toolStripMenuItemSpellCheckAddToDictionary,
+            this.toolStripMenuItemSpellCheckAddToNames,
             this.toolStripSeparatorSpellCheck,
             this.toolStripMenuItemWebVttVoice,
             this.toolStripSeparatorWebVTT,
@@ -4587,6 +4591,22 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemSpellCheckSkipAll.Text = "Skip all";
             this.toolStripMenuItemSpellCheckSkipAll.Visible = false;
             this.toolStripMenuItemSpellCheckSkipAll.Click += new System.EventHandler(this.toolStripMenuItemSpellCheckSkipAll_Click);
+            // 
+            // toolStripMenuItemSpellCheckAddToDictionary
+            // 
+            this.toolStripMenuItemSpellCheckAddToDictionary.Name = "toolStripMenuItemSpellCheckAddToDictionary";
+            this.toolStripMenuItemSpellCheckAddToDictionary.Size = new System.Drawing.Size(273, 22);
+            this.toolStripMenuItemSpellCheckAddToDictionary.Text = "Add to dictionary";
+            this.toolStripMenuItemSpellCheckAddToDictionary.Visible = false;
+            this.toolStripMenuItemSpellCheckAddToDictionary.Click += new System.EventHandler(this.toolStripMenuItemSpellCheckAddToDictionary_Click);
+            // 
+            // toolStripMenuItemSpellCheckAddToNames
+            // 
+            this.toolStripMenuItemSpellCheckAddToNames.Name = "toolStripMenuItemSpellCheckAddToNames";
+            this.toolStripMenuItemSpellCheckAddToNames.Size = new System.Drawing.Size(273, 22);
+            this.toolStripMenuItemSpellCheckAddToNames.Text = "Add to names";
+            this.toolStripMenuItemSpellCheckAddToNames.Visible = false;
+            this.toolStripMenuItemSpellCheckAddToNames.Click += new System.EventHandler(this.toolStripMenuItemSpellCheckAddToNames_Click);
             // 
             // toolStripSeparatorSpellCheck
             // 
@@ -5678,6 +5698,8 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorSpellCheckSuggestions;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSpellCheckSkipOnce;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSpellCheckSkipAll;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSpellCheckAddToDictionary;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSpellCheckAddToNames;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorSpellCheck;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemWebVttVoice;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemPreview;

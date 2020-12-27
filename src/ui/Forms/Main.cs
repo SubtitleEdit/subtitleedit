@@ -36,7 +36,6 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-
     public sealed partial class Main : Form
     {
         private class ComboBoxZoomItem
@@ -19442,7 +19441,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (!IsSubtitleLoaded && textBoxListViewText.IsSpellCheckerInitialized)
                 {
-                    textBoxListViewText.DisposeDictionaries();
+                    textBoxListViewText.DisposeHunspellAndDictionaries();
                     textBoxListViewText.IsSpellCheckerInitialized = false;
                 }
             }
@@ -22840,12 +22839,22 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemSpellCheckSkipOnce_Click(object sender, EventArgs e)
         {
-            textBoxListViewText.SkipOnce();
+            textBoxListViewText.DoAction(SpellCheckAction.Skip);
         }
 
         private void toolStripMenuItemSpellCheckSkipAll_Click(object sender, EventArgs e)
         {
-            textBoxListViewText.SkipAll();
+            textBoxListViewText.DoAction(SpellCheckAction.SkipAll);
+        }
+
+        private void toolStripMenuItemSpellCheckAddToDictionary_Click(object sender, EventArgs e)
+        {
+            textBoxListViewText.DoAction(SpellCheckAction.AddToDictionary);
+        }
+
+        private void toolStripMenuItemSpellCheckAddToNames_Click(object sender, EventArgs e)
+        {
+            textBoxListViewText.DoAction(SpellCheckAction.AddToNames);
         }
 
         private void cutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -24905,6 +24914,8 @@ namespace Nikse.SubtitleEdit.Forms
                     toolStripSeparatorSpellCheckSuggestions.Visible = true;
                     toolStripMenuItemSpellCheckSkipOnce.Visible = true;
                     toolStripMenuItemSpellCheckSkipAll.Visible = true;
+                    toolStripMenuItemSpellCheckAddToDictionary.Visible = true;
+                    toolStripMenuItemSpellCheckAddToNames.Visible = true;
                     toolStripSeparatorSpellCheck.Visible = true;
                 }
             }
@@ -25069,6 +25080,8 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripSeparatorSpellCheckSuggestions.Visible = false;
                 toolStripMenuItemSpellCheckSkipOnce.Visible = false;
                 toolStripMenuItemSpellCheckSkipAll.Visible = false;
+                toolStripMenuItemSpellCheckAddToDictionary.Visible = false;
+                toolStripMenuItemSpellCheckAddToNames.Visible = false;
                 toolStripSeparatorSpellCheck.Visible = false;
             }
         }
