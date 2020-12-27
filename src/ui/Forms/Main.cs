@@ -8937,6 +8937,8 @@ namespace Nikse.SubtitleEdit.Forms
                     UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelSingleLinePixels, labelTextLineTotal, labelCharactersPerSecond, p, textBoxListViewText);
                     FixVerticalScrollBars(textBoxListViewText, ref _lastNumberOfNewLines);
 
+                    textBoxListViewText.LiveSpellCheck(FirstSelectedIndex);
+
                     if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
                     {
                         InitializeListViewEditBoxAlternate(p, firstSelectedIndex);
@@ -9305,6 +9307,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             _listViewTextUndoIndex = _subtitleListViewIndex;
             labelStatus.Text = string.Empty;
+
+            textBoxListViewText.LiveSpellCheck(FirstSelectedIndex);
 
             StartUpdateListSyntaxColoring();
             FixVerticalScrollBars(textBoxListViewText, ref _lastNumberOfNewLines);
@@ -19426,6 +19430,23 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            if (Configuration.Settings.Tools.LiveSpellCheck)
+            {
+                if (IsSubtitleLoaded)
+                {
+                    textBoxListViewText.CheckForLanguageChange(_subtitle);
+                    if (!textBoxListViewText.IsSpellCheckerInitialized)
+                    {
+                        textBoxListViewText.InitializedSpellChecker(_subtitle);
+                    }
+                }
+                else if (!IsSubtitleLoaded && textBoxListViewText.IsSpellCheckerInitialized)
+                {
+                    textBoxListViewText.DisposeDictionaries();
+                    textBoxListViewText.IsSpellCheckerInitialized = false;
+                }
+            }
+
             var currentChanged = _changeSubtitleHash != _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
             var originalActive = Configuration.Settings.General.AllowEditOfOriginalSubtitle &&
                                  _subtitleAlternate != null &&
@@ -22817,6 +22838,16 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void toolStripMenuItemSpellCheckSkipOnce_Click(object sender, EventArgs e)
+        {
+            textBoxListViewText.SkipOnce();
+        }
+
+        private void toolStripMenuItemSpellCheckSkipAll_Click(object sender, EventArgs e)
+        {
+            textBoxListViewText.SkipAll();
+        }
+
         private void cutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (_inSourceView)
@@ -24857,10 +24888,26 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void ContextMenuStripTextBoxListViewOpening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void ContextMenuStripTextBoxListViewOpening(object sender, CancelEventArgs e)
         {
             var tb = GetFocusedTextBox();
             toolStripMenuItemSplitTextAtCursor.Visible = tb.Text.Length > 1;
+
+            if (Configuration.Settings.Tools.LiveSpellCheck)
+            {
+                if (textBoxListViewText.IsWrongWord && _inListView)
+                {
+                    var oldItems = new ToolStripItem[contextMenuStripTextBoxListView.Items.Count];
+                    contextMenuStripTextBoxListView.Items.CopyTo(oldItems, 0);
+                    contextMenuStripTextBoxListView.Items.Clear();
+                    tb.AddSuggestions();
+                    contextMenuStripTextBoxListView.Items.AddRange(oldItems);
+                    toolStripSeparatorSpellCheckSuggestions.Visible = true;
+                    toolStripMenuItemSpellCheckSkipOnce.Visible = true;
+                    toolStripMenuItemSpellCheckSkipAll.Visible = true;
+                    toolStripSeparatorSpellCheck.Visible = true;
+                }
+            }
 
             if (IsUnicode)
             {
@@ -25002,6 +25049,27 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 toolStripMenuItemSplitViaWaveform.Visible = false;
+            }
+        }
+
+        private void contextMenuStripTextBoxListViewClosing(object sender, ToolStripDropDownClosingEventArgs e)
+        {
+            if (Configuration.Settings.Tools.LiveSpellCheck
+                && sender is ContextMenuStrip textBoxContextMenu && textBoxContextMenu.Name == "contextMenuStripTextBoxListView")
+            {
+                var firstSpellCheckItemIndex = textBoxContextMenu.Items.IndexOfKey("toolStripSeparatorSpellCheckSuggestions");
+                if (firstSpellCheckItemIndex >= 0)
+                {
+                    for (int i = 0; i < firstSpellCheckItemIndex; i++)
+                    {
+                        textBoxContextMenu.Items.RemoveAt(0);
+                    }
+                }
+
+                toolStripSeparatorSpellCheckSuggestions.Visible = false;
+                toolStripMenuItemSpellCheckSkipOnce.Visible = false;
+                toolStripMenuItemSpellCheckSkipAll.Visible = false;
+                toolStripSeparatorSpellCheck.Visible = false;
             }
         }
 
