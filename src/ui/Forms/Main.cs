@@ -5320,7 +5320,7 @@ namespace Nikse.SubtitleEdit.Forms
                     int startPos = tb.SelectedText.Length > 0 ? tb.SelectionStart + 1 : tb.SelectionStart;
                     bool found = _findHelper.Find(_subtitle, _subtitleAlternate, _subtitleListViewIndex, startPos);
                     tb = GetFindReplaceTextBox();
-                    //if we fail to find the text, we might want to start searching from the top of the file.
+                    // if we fail to find the text, we might want to start searching from the top of the file.
                     if (!found && _findHelper.StartLineIndex >= 1)
                     {
                         if (MessageBox.Show(_language.FindContinue, _language.FindContinueTitle, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
