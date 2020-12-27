@@ -946,7 +946,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     if (colorChooser.ShowDialog() == DialogResult.OK)
                     {
                         panelOutlineColor.BackColor = colorChooser.Color;
-                        ActiveListView.SelectedItems[0].SubItems[4].BackColor = panelOutlineColor.BackColor;
+                        ActiveListView.SelectedItems[0].SubItems[5].BackColor = panelOutlineColor.BackColor;
                         SetSsaStyle(name, "outlinecolour", GetSsaColorString(panelOutlineColor.BackColor));
                         GeneratePreview();
                     }
