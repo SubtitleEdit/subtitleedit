@@ -2641,7 +2641,6 @@ can edit in same subtitle file (collaboration)",
 
             SettingsMpv = new LanguageStructure.SettingsMpv
             {
-                Title = "Settings for mpv",
                 DownloadMpv = "Download mpv lib",
                 DownloadMpvFailed = "Unable to download mpv - please re-try later!",
                 DownloadMpvOk = "The mpv lib was downloaded and is ready for use.",

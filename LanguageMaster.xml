@@ -2333,7 +2333,6 @@ Continue?</RestoreDefaultSettingsMsg>
     <UseXAsNewGap>Use "{0}" milliseconds as new minimum gap?</UseXAsNewGap>
   </Settings>
   <SettingsMpv>
-    <Title>Settings for mpv</Title>
     <DownloadMpv>Download mpv lib</DownloadMpv>
     <DownloadMpvFailed>Unable to download mpv - please re-try later!</DownloadMpvFailed>
     <DownloadMpvOk>The mpv lib was downloaded and is ready for use.</DownloadMpvOk>
