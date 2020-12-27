@@ -978,8 +978,12 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void InitializedSpellChecker(Subtitle subtitle)
         {
-            IsSpellCheckerInitialized = true;
+            if (_uiTextBox is null)
+            {
+                return;
+            }
 
+            IsSpellCheckerInitialized = true;
             var languageName = LanguageAutoDetect.AutoDetectLanguageName("", subtitle);
 
             if (_spellCheckWordLists is null && _hunspell is null)
@@ -990,7 +994,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 LoadDictionaries(languageName);
-                LiveSpellCheck(_currentLineIndex);
+                DoLiveSpellCheck(_currentLineIndex);
             }
         }
 
@@ -1015,17 +1019,30 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void DisposeHunspellAndDictionaries()
         {
-            _skipAllList = null;
-            _skipOnceList = null;
-            _spellCheckWordLists = null;
-            _words = null;
-            _wrongWords = null;
-            _currentWord = null;
-            _currentDictionary = null;
-            _currentLanguage = null;
-            _currentLineIndex = -1;
-            _hunspell?.Dispose();
-            _hunspell = null;
+            if (IsSpellCheckerInitialized)
+            {
+                if (_wrongWords?.Count > 0)
+                {
+                    foreach (var spellCheckWord in _wrongWords)
+                    {
+                        SetWordBackColor(spellCheckWord.Index, spellCheckWord.Length, ForeColor);
+                    }
+                }
+
+                _skipAllList = null;
+                _skipOnceList = null;
+                _spellCheckWordLists = null;
+                _words = null;
+                _wrongWords = null;
+                _currentWord = null;
+                _currentDictionary = null;
+                _currentLanguage = null;
+                _currentLineIndex = -1;
+                _hunspell?.Dispose();
+                _hunspell = null;
+                IsWrongWord = false;
+                IsSpellCheckerInitialized = false;
+            }
         }
 
         public void CheckForLanguageChange(Subtitle subtitle)
@@ -1037,14 +1054,14 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     DisposeHunspellAndDictionaries();
                     LoadDictionaries(languageName);
-                    LiveSpellCheck(_currentLineIndex);
+                    DoLiveSpellCheck(_currentLineIndex);
                 }
             }
         }
 
-        public void LiveSpellCheck(int currentIndex)
+        public void DoLiveSpellCheck(int currentIndex)
         {
-            if (_spellCheckWordLists != null)
+            if (IsSpellCheckerInitialized)
             {
                 _words = GetWords(Text);
                 _wrongWords = new List<SpellCheckWord>();
@@ -1118,7 +1135,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        public void AddSuggestions()
+        public void AddSuggestionsToMenu()
         {
             if (_currentWord != null)
             {

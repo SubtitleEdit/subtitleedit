@@ -734,6 +734,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxSpellCheckOneLetterWords.Text = Configuration.Settings.Language.SpellCheck.CheckOneLetterWords;
             checkBoxTreatINQuoteAsING.Text = Configuration.Settings.Language.SpellCheck.TreatINQuoteAsING;
             checkBoxUseAlwaysToFile.Text = Configuration.Settings.Language.SpellCheck.RememberUseAlwaysList;
+            checkBoxLiveSpellCheck.Text = Configuration.Settings.Language.SpellCheck.LiveSpellCheck;
             buttonFixContinuationStyleSettings.Text = language.EditFixContinuationStyleSettings;
 
             groupBoxToolsAutoBr.Text = Configuration.Settings.Language.Main.Controls.AutoBreak.Replace("&", string.Empty);
@@ -931,6 +932,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxSpellCheckOneLetterWords.Checked = toolsSettings.CheckOneLetterWords;
             checkBoxTreatINQuoteAsING.Checked = toolsSettings.SpellCheckEnglishAllowInQuoteAsIng;
             checkBoxUseAlwaysToFile.Checked = toolsSettings.RememberUseAlwaysList;
+            checkBoxLiveSpellCheck.Checked = toolsSettings.LiveSpellCheck;
             checkBoxUseDoNotBreakAfterList.Checked = toolsSettings.UseNoLineBreakAfter;
             checkBoxToolsBreakEarlyComma.Checked = toolsSettings.AutoBreakCommaBreakEarly;
             checkBoxToolsBreakEarlyDash.Checked = toolsSettings.AutoBreakDashEarly;
@@ -1883,6 +1885,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             toolsSettings.CheckOneLetterWords = checkBoxSpellCheckOneLetterWords.Checked;
             toolsSettings.SpellCheckEnglishAllowInQuoteAsIng = checkBoxTreatINQuoteAsING.Checked;
             toolsSettings.RememberUseAlwaysList = checkBoxUseAlwaysToFile.Checked;
+            toolsSettings.LiveSpellCheck = checkBoxLiveSpellCheck.Checked;
             toolsSettings.UseNoLineBreakAfter = checkBoxUseDoNotBreakAfterList.Checked;
             toolsSettings.AutoBreakCommaBreakEarly = checkBoxToolsBreakEarlyComma.Checked;
             toolsSettings.AutoBreakLineEndingEarly = checkBoxToolsBreakEarlyLineEnding.Checked;
@@ -3577,6 +3580,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             panelTextBoxHtmlColor.Enabled = checkBoxSubtitleTextBoxSyntaxColor.Checked;
             buttonTextBoxAssColor.Enabled = checkBoxSubtitleTextBoxSyntaxColor.Checked;
             panelTextBoxAssColor.Enabled = checkBoxSubtitleTextBoxSyntaxColor.Checked;
+            checkBoxLiveSpellCheck.Enabled = checkBoxSubtitleTextBoxSyntaxColor.Checked;
         }
 
         private void panelTextBoxHtmlColor_MouseClick(object sender, MouseEventArgs e)
