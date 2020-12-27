@@ -1494,10 +1494,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SelectNone()
         {
-            for (var i = Items.Count - 1; i >= 0; i--)
-            {
-                Items[i].Selected = false;
-            }
+            SelectedIndices.Clear();
         }
 
         public void SelectIndexAndEnsureVisibleFaster(int index)
@@ -1509,10 +1506,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
 
             BeginUpdate();
-            foreach (var selectedIndex in GetSelectedIndices())
-            {
-                Items[selectedIndex].Selected = false;
-            }
+            SelectedIndices.Clear();
 
             var selectedItem = Items[index];
             selectedItem.Selected = true;
