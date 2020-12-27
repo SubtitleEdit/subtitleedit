@@ -2570,6 +2570,7 @@
             public string CheckOneLetterWords { get; set; }
             public string TreatINQuoteAsING { get; set; }
             public string RememberUseAlwaysList { get; set; }
+            public string LiveSpellCheck { get; set; }
             public string ImageText { get; set; }
             public string SpellCheckCompleted { get; set; }
             public string SpellCheckAborted { get; set; }

@@ -316,7 +316,7 @@
             this.checkBoxAutoChangeNames.Name = "checkBoxAutoChangeNames";
             this.checkBoxAutoChangeNames.Size = new System.Drawing.Size(216, 17);
             this.checkBoxAutoChangeNames.TabIndex = 3;
-            this.checkBoxAutoChangeNames.Text = "Auto fix names where only casing differ";
+            this.checkBoxAutoChangeNames.Text = "Auto fix names where only casing differs";
             this.checkBoxAutoChangeNames.UseVisualStyleBackColor = true;
             this.checkBoxAutoChangeNames.CheckedChanged += new System.EventHandler(this.CheckBoxAutoChangeNamesCheckedChanged);
             // 

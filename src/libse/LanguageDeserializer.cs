@@ -6559,6 +6559,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "SpellCheck/RememberUseAlwaysList":
                     language.SpellCheck.RememberUseAlwaysList = reader.Value;
                     break;
+                case "SpellCheck/LiveSpellCheck":
+                    language.SpellCheck.LiveSpellCheck = reader.Value;
+                    break;
                 case "SpellCheck/ImageText":
                     language.SpellCheck.ImageText = reader.Value;
                     break;

@@ -140,8 +140,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private GoogleOrMicrosoftTranslate _googleOrMicrosoftTranslate;
 
-        private bool _cancelWordSpellCheck = true;
         private bool _cleanupHasRun;
+        private bool _cancelWordSpellCheck = true;
+        private bool _isLiveSpellCheckEnabled => Configuration.Settings.Tools.LiveSpellCheck
+                                                 && Configuration.Settings.General.SubtitleTextBoxSyntaxColor;
 
         private bool _clearLastFind;
         private FindType _clearLastFindType = FindType.Normal;
@@ -1640,6 +1642,10 @@ namespace Nikse.SubtitleEdit.Forms
             pasteToolStripMenuItem.Text = _language.Menu.ContextMenu.Paste;
             deleteToolStripMenuItem.Text = _language.Menu.ContextMenu.Delete;
             toolStripMenuItemSplitTextAtCursor.Text = _language.Menu.ContextMenu.SplitLineAtCursorPosition;
+            toolStripMenuItemSpellCheckSkipOnce.Text = Configuration.Settings.Language.SpellCheck.SkipOnce;
+            toolStripMenuItemSpellCheckSkipAll.Text = Configuration.Settings.Language.SpellCheck.SkipAll;
+            toolStripMenuItemSpellCheckAddToDictionary.Text = Configuration.Settings.Language.SpellCheck.AddToUserDictionary;
+            toolStripMenuItemSpellCheckAddToNames.Text = Configuration.Settings.Language.SpellCheck.AddToNamesAndIgnoreList;
             toolStripMenuItemSplitViaWaveform.Text = _language.Menu.ContextMenu.SplitLineAtCursorAndWaveformPosition;
             selectAllToolStripMenuItem.Text = _language.Menu.ContextMenu.SelectAll;
             normalToolStripMenuItem1.Text = _language.Menu.ContextMenu.RemoveFormattingAll;
@@ -4604,6 +4610,7 @@ namespace Nikse.SubtitleEdit.Forms
             var oldShowcolumnDuration = Configuration.Settings.Tools.ListViewShowColumnDuration;
             var oldShowColumnCharsPerSec = Configuration.Settings.Tools.ListViewShowColumnCharsPerSec;
             var oldShowWordsMinColumn = Configuration.Settings.Tools.ListViewShowColumnWordsPerMin;
+            var oldLiveSpellCheck = Configuration.Settings.Tools.LiveSpellCheck;
             var oldSubtitleTextBoxSyntaxColor = Configuration.Settings.General.SubtitleTextBoxSyntaxColor;
             var oldSubtitleFontSize = Configuration.Settings.General.SubtitleTextBoxFontSize;
             var oldSubtitleAlignment = Configuration.Settings.General.CenterSubtitleInTextBox;
@@ -4906,6 +4913,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
             textBoxListViewText.BackColor = !IsSubtitleLoaded ? SystemColors.ActiveBorder : SystemColors.WindowFrame;
             textBoxListViewTextAlternate.BackColor = !IsSubtitleLoaded ? SystemColors.ActiveBorder : SystemColors.WindowFrame;
+
+            if (oldLiveSpellCheck && oldLiveSpellCheck != Configuration.Settings.Tools.LiveSpellCheck
+                || oldSubtitleTextBoxSyntaxColor && oldSubtitleTextBoxSyntaxColor != Configuration.Settings.General.SubtitleTextBoxSyntaxColor)
+            {
+                textBoxListViewText.DisposeHunspellAndDictionaries();
+            }
 
             SubtitleListview1.SyntaxColorAllLines(_subtitle);
             mediaPlayer.LastParagraph = null;
@@ -8936,7 +8949,10 @@ namespace Nikse.SubtitleEdit.Forms
                     UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelSingleLinePixels, labelTextLineTotal, labelCharactersPerSecond, p, textBoxListViewText);
                     FixVerticalScrollBars(textBoxListViewText, ref _lastNumberOfNewLines);
 
-                    textBoxListViewText.LiveSpellCheck(FirstSelectedIndex);
+                    if (_isLiveSpellCheckEnabled)
+                    {
+                        textBoxListViewText.DoLiveSpellCheck(FirstSelectedIndex);
+                    }
 
                     if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
                     {
@@ -9307,7 +9323,10 @@ namespace Nikse.SubtitleEdit.Forms
             _listViewTextUndoIndex = _subtitleListViewIndex;
             labelStatus.Text = string.Empty;
 
-            textBoxListViewText.LiveSpellCheck(FirstSelectedIndex);
+            if (_isLiveSpellCheckEnabled)
+            {
+                textBoxListViewText.DoLiveSpellCheck(FirstSelectedIndex);
+            }
 
             StartUpdateListSyntaxColoring();
             FixVerticalScrollBars(textBoxListViewText, ref _lastNumberOfNewLines);
@@ -19429,7 +19448,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            if (Configuration.Settings.Tools.LiveSpellCheck)
+            if (_isLiveSpellCheckEnabled)
             {
                 if (IsSubtitleLoaded)
                 {
@@ -19442,7 +19461,6 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (!IsSubtitleLoaded && textBoxListViewText.IsSpellCheckerInitialized)
                 {
                     textBoxListViewText.DisposeHunspellAndDictionaries();
-                    textBoxListViewText.IsSpellCheckerInitialized = false;
                 }
             }
 
@@ -24902,14 +24920,14 @@ namespace Nikse.SubtitleEdit.Forms
             var tb = GetFocusedTextBox();
             toolStripMenuItemSplitTextAtCursor.Visible = tb.Text.Length > 1;
 
-            if (Configuration.Settings.Tools.LiveSpellCheck)
+            if (_isLiveSpellCheckEnabled)
             {
                 if (textBoxListViewText.IsWrongWord && _inListView)
                 {
                     var oldItems = new ToolStripItem[contextMenuStripTextBoxListView.Items.Count];
                     contextMenuStripTextBoxListView.Items.CopyTo(oldItems, 0);
                     contextMenuStripTextBoxListView.Items.Clear();
-                    tb.AddSuggestions();
+                    tb.AddSuggestionsToMenu();
                     contextMenuStripTextBoxListView.Items.AddRange(oldItems);
                     toolStripSeparatorSpellCheckSuggestions.Visible = true;
                     toolStripMenuItemSpellCheckSkipOnce.Visible = true;
@@ -25065,11 +25083,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void contextMenuStripTextBoxListViewClosing(object sender, ToolStripDropDownClosingEventArgs e)
         {
-            if (Configuration.Settings.Tools.LiveSpellCheck
+            if (_isLiveSpellCheckEnabled && textBoxListViewText.IsWrongWord 
                 && sender is ContextMenuStrip textBoxContextMenu && textBoxContextMenu.Name == "contextMenuStripTextBoxListView")
             {
                 var firstSpellCheckItemIndex = textBoxContextMenu.Items.IndexOfKey("toolStripSeparatorSpellCheckSuggestions");
-                if (firstSpellCheckItemIndex >= 0)
+                if (firstSpellCheckItemIndex > 0)
                 {
                     for (int i = 0; i < firstSpellCheckItemIndex; i++)
                     {
