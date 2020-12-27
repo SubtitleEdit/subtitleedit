@@ -1,14 +1,20 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.SpellCheck;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Interfaces;
+using System.Collections.Generic;
+using System.Linq;
+using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic.SpellCheck;
 
 namespace Nikse.SubtitleEdit.Controls
 {
     /// <summary>
     /// TextBox that can be either a normal text box or a rich text box.
     /// </summary>
-    public sealed class SETextBox : Panel
+    public sealed class SETextBox : Panel, IDoSpell
     {
         public new event EventHandler TextChanged;
         public new event KeyEventHandler KeyDown;
@@ -23,6 +29,36 @@ namespace Nikse.SubtitleEdit.Controls
         private RichTextBox _uiTextBox;
         private SimpleTextBox _simpleTextBox;
         private int _mouseMoveSelectionLength;
+
+        private List<SpellCheckWord> _words;
+        private SpellCheckWord _currentWord;
+        private List<SpellCheckWord> _wrongWords;
+        private SpellCheckWordLists _spellCheckWordLists;
+        private Hunspell _hunspell;
+        private string _currentDictionary;
+        private string _currentLanguage;
+        private List<string> _skipAllList;
+        private HashSet<string> _skipOnceList;
+        private int _currentLineIndex;
+
+        public bool IsWrongWord { get; set; }
+        public bool IsSpellCheckerInitialized { get; set; }
+
+        public class SuggestionParameter
+        {
+            public string InputWord { get; set; }
+            public List<string> Suggestions { get; set; }
+            public Hunspell Hunspell { get; set; }
+            public bool Success { get; set; }
+
+            public SuggestionParameter(string word, Hunspell hunspell)
+            {
+                InputWord = word;
+                Suggestions = new List<string>();
+                Hunspell = hunspell;
+                Success = false;
+            }
+        }
 
         public SETextBox()
         {
@@ -62,6 +98,7 @@ namespace Nikse.SubtitleEdit.Controls
                 InitializeBackingControl(_uiTextBox);
 
                 _uiTextBox.TextChanged += TextChangedHighlight;
+                _uiTextBox.MouseDown += UiTextBox_MouseDown;
                 // avoid selection when centered and clicking to the left
                 _uiTextBox.MouseDown += (sender, args) =>
                 {
@@ -906,5 +943,233 @@ namespace Nikse.SubtitleEdit.Controls
                 _richTextBoxTemp.SelectionBackColor = Color.FromArgb(byte.MaxValue - c.R, byte.MaxValue - c.G, byte.MaxValue - c.B, byte.MaxValue - c.R);
             }
         }
+
+        #region LiveSpellCheck
+
+        public void LiveSpellCheck(int currentIndex)
+        {
+            if (_spellCheckWordLists != null)
+            {
+                _words = GetWords(Text);
+                _wrongWords = new List<SpellCheckWord>();
+                _currentLineIndex = currentIndex;
+
+                foreach (var spellCheckWord in _words)
+                {
+                    if (!DoSpell(spellCheckWord.Text))
+                    {
+                        string key = _currentLineIndex + "-" + _currentWord;
+                        if (_skipAllList.Contains(spellCheckWord.Text) || _skipOnceList.Contains(key))
+                        {
+                            continue;
+                        }
+
+                        _wrongWords.Add(spellCheckWord);
+                        SetWordBackColor(spellCheckWord.Index, spellCheckWord.Length, Configuration.Settings.Tools.ListViewSyntaxErrorColor);
+                    }
+                }
+            }
+        }
+
+        private void UiTextBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (_wrongWords?.Count > 0 && e.Clicks == 1 && e.Button == MouseButtons.Right)
+            {
+                int positionToSearch = _uiTextBox.GetCharIndexFromPosition(new Point(e.X, e.Y));
+                var wrongWord = _wrongWords.Where(word => positionToSearch >= word.Index && positionToSearch < word.Index + word.Length).FirstOrDefault();
+                if (wrongWord != null)
+                {
+                    IsWrongWord = true;
+                    _currentWord = wrongWord;
+                }
+                else
+                {
+                    IsWrongWord = false;
+                }
+            }
+        }
+
+        public void AddSuggestions()
+        {
+            if (_currentWord != null)
+            {
+                var suggestions = DoSuggest(_currentWord.Text);
+                if (suggestions?.Count > 0)
+                {
+                    foreach (var suggestion in suggestions)
+                    {
+                        _uiTextBox.ContextMenuStrip.Items.Add(suggestion, null, SuggestionSelected);
+                    }
+                }
+            }
+        }
+
+        private void SuggestionSelected(object sender, EventArgs e)
+        {
+            var item = (ToolStripItem)sender;
+            SetWordBackColor(_currentWord.Index, _currentWord.Length, BackColor);
+            var correctWord = item.Text;
+            var text = _uiTextBox.Text;
+            var cursorPos = _uiTextBox.SelectionStart;
+            var wordIndex = GetIndexWithLineBreak(_currentWord.Index);
+            text = text.Remove(wordIndex, _currentWord.Length);
+            text = text.Insert(wordIndex, correctWord);
+            _uiTextBox.Text = text;
+            _uiTextBox.SelectionStart = cursorPos;
+        }
+
+        private List<SpellCheckWord> GetWords(string s)
+        {
+            s = _spellCheckWordLists.ReplaceHtmlTagsWithBlanks(s);
+            s = _spellCheckWordLists.ReplaceAssTagsWithBlanks(s);
+            s = _spellCheckWordLists.ReplaceKnownWordsOrNamesWithBlanks(s);
+            return SpellCheckWordLists.Split(s);
+        }
+
+        public bool DoSpell(string word)
+        {
+            return _hunspell.Spell(word);
+        }
+
+        private void LoadDictionaries(string languageName)
+        {
+            var dictionaryFolder = Utilities.DictionaryFolder;
+            string dictionary = Utilities.DictionaryFolder + languageName;
+            _spellCheckWordLists = new SpellCheckWordLists(dictionaryFolder, languageName, this);
+            _skipAllList = new List<string>();
+            _skipOnceList = new HashSet<string>();
+            LoadHunspell(dictionary);
+            _currentLanguage = languageName;
+        }
+
+        private void LoadHunspell(string dictionary)
+        {
+            _currentDictionary = dictionary;
+            _hunspell?.Dispose();
+            _hunspell = null;
+            _hunspell = Hunspell.GetHunspell(dictionary);
+        }
+
+        public void CheckForLanguageChange(Subtitle subtitle)
+        {
+            if (IsSpellCheckerInitialized)
+            {
+                var languageName = LanguageAutoDetect.AutoDetectLanguageName("", subtitle);
+                if (_currentLanguage != languageName)
+                {
+                    DisposeDictionaries();
+                    LoadDictionaries(languageName);
+                    LiveSpellCheck(_currentLineIndex);
+                }
+            }
+        }
+
+        public void InitializedSpellChecker(Subtitle subtitle)
+        {
+            IsSpellCheckerInitialized = true;
+
+            var languageName = LanguageAutoDetect.AutoDetectLanguageName("", subtitle);
+
+            if (_spellCheckWordLists is null && _hunspell is null)
+            {
+                if (string.IsNullOrEmpty(languageName))
+                {
+                    languageName = "en_US";
+                }
+
+                LoadDictionaries(languageName);
+                LiveSpellCheck(_currentLineIndex);
+            }
+        }
+
+        public void DisposeDictionaries()
+        {
+            _skipAllList = new List<string>();
+            _skipOnceList = new HashSet<string>();
+            _spellCheckWordLists = null;
+            _hunspell?.Dispose();
+            _hunspell = null;
+        }
+
+        private int GetIndexWithLineBreak(int index)
+        {
+            var text = _uiTextBox.Text;
+            var extra = 0;
+            for (int i = 0; i < index && i < text.Length; i++)
+            {
+                if (text[i] == '\n')
+                {
+                    extra++;
+                }
+            }
+
+            return index - extra;
+        }
+
+        private void SetWordBackColor(int startIndex, int length, Color color)
+        {
+            if (_uiTextBox is null)
+            {
+                return;
+            }
+
+            var cursorPos = _uiTextBox.SelectionStart;
+            var rtf = _uiTextBox.Rtf;
+            var text = _uiTextBox.Text;
+            startIndex = GetIndexWithLineBreak(startIndex);
+
+            _richTextBoxTemp.SuspendLayout();
+            _richTextBoxTemp.Clear();
+            _richTextBoxTemp.Text = text;
+            _richTextBoxTemp.Rtf = rtf;
+            _richTextBoxTemp.Select(startIndex, length);
+            _richTextBoxTemp.SelectionBackColor = color;
+            _richTextBoxTemp.ResumeLayout(false);
+            _uiTextBox.Rtf = _richTextBoxTemp.Rtf;
+            _uiTextBox.SelectionStart = cursorPos;
+        }
+
+        public void SkipAll()
+        {
+            if (_currentWord != null)
+            {
+                _skipAllList.Add(_currentWord.Text);
+                SetWordBackColor(_currentWord.Index, _currentWord.Length, BackColor);
+            }
+        }
+
+        public void SkipOnce()
+        {
+            if (_currentWord != null)
+            {
+                string key = _currentLineIndex + "-" + _currentWord;
+                _skipOnceList.Add(key);
+                SetWordBackColor(_currentWord.Index, _currentWord.Length, BackColor);
+            }
+        }
+
+        private List<string> DoSuggest(string word)
+        {
+            var parameter = new SuggestionParameter(word, _hunspell);
+            var suggestThread = new System.Threading.Thread(DoWork);
+            suggestThread.Start(parameter);
+            suggestThread.Join(3000); // wait max 3 seconds
+            suggestThread.Abort();
+            if (!parameter.Success)
+            {
+                LoadHunspell(_currentDictionary);
+            }
+
+            return parameter.Suggestions;
+        }
+
+        private static void DoWork(object data)
+        {
+            var parameter = (SuggestionParameter)data;
+            parameter.Suggestions = parameter.Hunspell.Suggest(parameter.InputWord);
+            parameter.Success = true;
+        }
+
+        #endregion
     }
 }
