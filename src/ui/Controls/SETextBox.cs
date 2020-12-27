@@ -33,15 +33,18 @@ namespace Nikse.SubtitleEdit.Controls
         {
             ContextMenuStrip oldContextMenuStrip = null;
             var oldEnabled = true;
+            var oldText = string.Empty;
             if (_simpleTextBox != null)
             {
                 oldContextMenuStrip = _simpleTextBox.ContextMenuStrip;
                 oldEnabled = _simpleTextBox.Enabled;
+                oldText = _simpleTextBox.Text;
             }
             else if (_uiTextBox != null)
             {
                 oldContextMenuStrip = _uiTextBox.ContextMenuStrip;
                 oldEnabled = _uiTextBox.Enabled;
+                oldText = _uiTextBox.Text;
             }
 
             BorderStyle = BorderStyle.None;
@@ -147,6 +150,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
 
             Enabled = oldEnabled;
+            Text = oldText;
         }
 
         private void InitializeBackingControl(Control textBox)
@@ -344,7 +348,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 else if (_uiTextBox != null)
                 {
-                    var target = _uiTextBox.SelectionLength;
+                    var target = value;
                     if (target == 0)
                     {
                         _uiTextBox.SelectionLength = 0;
@@ -817,7 +821,7 @@ namespace Nikse.SubtitleEdit.Controls
             _uiTextBox.Rtf = _richTextBoxTemp.Rtf;
             SelectionStart = start;
             SelectionLength = length;
-            ResumeLayout(false);
+            ResumeLayout(true);
         }
 
         private void SetHtmlColor(string text, int htmlTagStart)
