@@ -231,7 +231,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         protected override void GeneratePreviewReal()
         {
-            if (listViewStyles.SelectedItems.Count != 1)
+            if (listViewStyles.SelectedItems.Count != 1 || pictureBoxPreview.Width <= 0 || pictureBoxPreview.Height <= 0)
             {
                 return;
             }
@@ -255,6 +255,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             try
             {
                 font = new Font(comboBoxFontName.Text, (float)numericUpDownFontSize.Value * 1.1f, checkBoxFontBold.Checked ? FontStyle.Bold : FontStyle.Regular);
+                if (checkBoxFontItalic.Checked)
+                {
+                    font = new Font(comboBoxFontName.Text, (float)numericUpDownFontSize.Value * 1.1f, font.Style | FontStyle.Italic);
+                }
+                if (checkBoxFontUnderline.Checked)
+                {
+                    font = new Font(comboBoxFontName.Text, (float)numericUpDownFontSize.Value * 1.1f, font.Style | FontStyle.Underline);
+                }
             }
             catch
             {
@@ -1147,7 +1155,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 bool doRepeat = true;
                 while (doRepeat)
                 {
-                    style = new SsaStyle { Name = Configuration.Settings.Language.SubStationAlphaStyles.New  + count };
+                    style = new SsaStyle { Name = Configuration.Settings.Language.SubStationAlphaStyles.New + count };
                     doRepeat = GetSsaStyle(style.Name).LoadedFromHeader;
                     count++;
                 }
