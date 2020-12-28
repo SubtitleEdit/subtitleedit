@@ -1032,33 +1032,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 listViewStyles.Items[listViewStyles.Items.Count - 1].Focused = true;
                 textBoxStyleName.Text = style.Name;
                 textBoxStyleName.Focus();
-                AddStyleToHeader(style, oldStyle);
+                AddStyleToHeader(style);
                 _doUpdate = true;
                 listViewStyles_SelectedIndexChanged(null, null);
-            }
-        }
-
-        private void AddStyleToHeader(SsaStyle newStyle, SsaStyle oldStyle)
-        {
-            if (listViewStyles.SelectedItems.Count == 1)
-            {
-                string newLine = oldStyle.RawLine;
-                newLine = newLine.Replace(oldStyle.Name + ",", newStyle.Name + ",");
-
-                int indexOfEvents = _header.IndexOf("[Events]", StringComparison.Ordinal);
-                if (indexOfEvents > 0)
-                {
-                    int i = indexOfEvents - 1;
-                    while (i > 0 && Environment.NewLine.Contains(_header[i]))
-                    {
-                        i--;
-                    }
-                    _header = _header.Insert(i + 1, Environment.NewLine + newLine);
-                }
-                else
-                {
-                    _header += Environment.NewLine + newLine;
-                }
             }
         }
 
@@ -1169,11 +1145,11 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             _doUpdate = false;
             AddStyle(listViewStyles, style, Subtitle, _isSubStationAlpha);
-            AddStyleToHeader(style, style);
             listViewStyles.Items[listViewStyles.Items.Count - 1].Selected = true;
             listViewStyles.Items[listViewStyles.Items.Count - 1].EnsureVisible();
             listViewStyles.Items[listViewStyles.Items.Count - 1].Focused = true;
             textBoxStyleName.Focus();
+            AddStyleToHeader(style);
             _doUpdate = true;
             textBoxStyleName.Text = style.Name;
             SetControlsFromStyle(style);
