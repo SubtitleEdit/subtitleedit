@@ -10,6 +10,8 @@
   <Item>έχω</Item>
   <Item>έως</Item>
   <Item>ή</Item>
+  <Item>ακόμα</Item>
+  <Item>ακόμη</Item>
   <Item>αν</Item>
   <Item>ανά</Item>
   <Item>αντί</Item>
@@ -37,16 +39,20 @@
   <Item>εμείς</Item>
   <Item>εν</Item>
   <Item>ενός</Item>
+  <Item>ενώ</Item>
   <Item>εσείς</Item>
   <Item>εσύ</Item>
+  <Item>εώς</Item>
   <Item>η</Item>
   <Item>θα</Item>
   <Item>κάθε</Item>
+  <Item>κάτι</Item>
   <Item>και</Item>
   <Item>κατά</Item>
   <Item>κατιτίς</Item>
   <Item>κι</Item>
   <Item>μάς</Item>
+  <Item>μέχρι</Item>
   <Item>μία</Item>
   <Item>μίαν</Item>
   <Item>μίας</Item>
@@ -56,16 +62,20 @@
   <Item>μια</Item>
   <Item>μιαν</Item>
   <Item>μιας</Item>
+  <Item>μολονότι</Item>
   <Item>μού</Item>
+  <Item>μόλις</Item>
   <Item>μόνο</Item>
   <Item>να</Item>
   <Item>ο</Item>
   <Item>οι</Item>
   <Item>οτιδήποτε</Item>
   <Item>πάσα</Item>
+  <Item>παρά</Item>
   <Item>πιο</Item>
   <Item>που</Item>
   <Item>πού</Item>
+  <Item>πριν</Item>
   <Item>προς</Item>
   <Item>πως</Item>
   <Item>πώς</Item>
@@ -98,6 +108,7 @@
   <Item>τού</Item>
   <Item>τούς</Item>
   <Item>των</Item>
+  <Item>τόσο</Item>
   <Item>υπό</Item>
   <Item>χωρίς</Item>
   <Item>ως</Item>
@@ -105,5 +116,5 @@
   <Item>όντως</Item>
   <Item>όσο</Item>
   <Item>ότι</Item>
-  <Item>κάτι</Item>
+  <Item>σχεδόν</Item>
 </NoBreakAfterList>
