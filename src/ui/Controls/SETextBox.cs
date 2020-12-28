@@ -1014,10 +1014,9 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 await LoadDictionariesAsync(languageName);
+                IsSpellCheckerInitialized = true;
                 DoLiveSpellCheck();
             }
-
-            IsSpellCheckerInitialized = true;
         }
 
         private async Task LoadDictionariesAsync(string languageName)
