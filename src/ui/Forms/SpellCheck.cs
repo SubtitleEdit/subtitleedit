@@ -604,7 +604,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         // "skip one" again (after change whole text)
                     }
-                    else if (IsNumber(_currentWord))
+                    else if (Utilities.IsNumber(_currentWord))
                     {
                         _noOfSkippedWords++;
                     }
@@ -891,24 +891,6 @@ namespace Nikse.SubtitleEdit.Forms
                     return true;
                 }
             }
-            return false;
-        }
-
-        private static readonly Regex RegexIsNumber = new Regex("^\\d+$", RegexOptions.Compiled);
-        private static readonly Regex RegexIsEpisodeNumber = new Regex("^\\d+x\\d+$", RegexOptions.Compiled); // e.g. 12x02
-        private static bool IsNumber(string s)
-        {
-            s = s.Trim('$', '£', '%', '*');
-            if (RegexIsNumber.IsMatch(s))
-            {
-                return true;
-            }
-
-            if (RegexIsEpisodeNumber.IsMatch(s))
-            {
-                return true;
-            }
-
             return false;
         }
 
