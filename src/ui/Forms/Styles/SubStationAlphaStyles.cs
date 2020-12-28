@@ -89,6 +89,12 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             listViewStyles.Columns[3].Text = l.UseCount;
             listViewStyles.Columns[4].Text = l.Primary;
             listViewStyles.Columns[5].Text = l.Outline;
+            listViewStorage.Columns[0].Text = l.Name;
+            listViewStorage.Columns[5].Text = l.Outline;
+            listViewStorage.Columns[1].Text = l.FontName;
+            listViewStorage.Columns[2].Text = l.FontSize;
+            listViewStorage.Columns[3].Text = l.UseCount;
+            listViewStorage.Columns[4].Text = l.Primary;
             groupBoxProperties.Text = l.Properties;
             labelStyleName.Text = l.Name;
             groupBoxFont.Text = l.Font;
