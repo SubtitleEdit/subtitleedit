@@ -32,6 +32,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             labelSubtitle2.Text = string.Empty;
             Text = Configuration.Settings.Language.CompareSubtitles.Title;
+            buttonReloadSubtitle1.Text = Configuration.Settings.Language.CompareSubtitles.Reload;
+            buttonReloadSubtitle2.Text = Configuration.Settings.Language.CompareSubtitles.Reload;
             buttonPreviousDifference.Text = Configuration.Settings.Language.CompareSubtitles.PreviousDifference;
             buttonNextDifference.Text = Configuration.Settings.Language.CompareSubtitles.NextDifference;
             checkBoxShowOnlyDifferences.Text = Configuration.Settings.Language.CompareSubtitles.ShowOnlyDifferences;
