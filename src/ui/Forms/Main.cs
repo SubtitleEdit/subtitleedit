@@ -8943,16 +8943,16 @@ namespace Nikse.SubtitleEdit.Forms
                 var p = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
                 if (p != null)
                 {
+                    if (_isLiveSpellCheckEnabled)
+                    {
+                        textBoxListViewText.CurrentLineIndex = firstSelectedIndex;
+                    }
+
                     InitializeListViewEditBox(p);
                     _subtitleListViewIndex = firstSelectedIndex;
                     _oldSelectedParagraph = new Paragraph(p);
                     UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelSingleLinePixels, labelTextLineTotal, labelCharactersPerSecond, p, textBoxListViewText);
                     FixVerticalScrollBars(textBoxListViewText, ref _lastNumberOfNewLines);
-
-                    if (_isLiveSpellCheckEnabled)
-                    {
-                        textBoxListViewText.DoLiveSpellCheck(FirstSelectedIndex);
-                    }
 
                     if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
                     {
@@ -9322,11 +9322,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             _listViewTextUndoIndex = _subtitleListViewIndex;
             labelStatus.Text = string.Empty;
-
-            if (_isLiveSpellCheckEnabled)
-            {
-                textBoxListViewText.DoLiveSpellCheck(FirstSelectedIndex);
-            }
 
             StartUpdateListSyntaxColoring();
             FixVerticalScrollBars(textBoxListViewText, ref _lastNumberOfNewLines);
@@ -19455,7 +19450,7 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxListViewText.CheckForLanguageChange(_subtitle);
                     if (!textBoxListViewText.IsSpellCheckerInitialized)
                     {
-                        textBoxListViewText.InitializedSpellChecker(_subtitle);
+                        textBoxListViewText.InitializeLiveSpellCheck(_subtitle, FirstSelectedIndex);
                     }
                 }
                 else if (!IsSubtitleLoaded && textBoxListViewText.IsSpellCheckerInitialized)
