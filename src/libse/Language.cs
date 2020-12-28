@@ -486,6 +486,7 @@ namespace Nikse.SubtitleEdit.Core
             CompareSubtitles = new LanguageStructure.CompareSubtitles
             {
                 Title = "Compare subtitles",
+                Reload = "Reload",
                 PreviousDifference = "&Previous difference",
                 NextDifference = "&Next difference",
                 SubtitlesNotAlike = "Subtitles have no similarities",

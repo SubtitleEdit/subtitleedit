@@ -826,6 +826,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "CompareSubtitles/Title":
                     language.CompareSubtitles.Title = reader.Value;
                     break;
+                case "CompareSubtitles/Reload":
+                    language.CompareSubtitles.Reload = reader.Value;
+                    break;
                 case "CompareSubtitles/PreviousDifference":
                     language.CompareSubtitles.PreviousDifference = reader.Value;
                     break;
