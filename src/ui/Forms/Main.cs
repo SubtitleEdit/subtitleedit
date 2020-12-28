@@ -32,6 +32,7 @@ using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -7314,6 +7315,22 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 MessageBox.Show(_language.NothingToUndo, Title, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private async Task InitializeLiveSpellChcek()
+        {
+            if (IsSubtitleLoaded)
+            {
+                await textBoxListViewText.CheckForLanguageChange(_subtitle);
+                if (!textBoxListViewText.IsSpellCheckerInitialized)
+                {
+                    await textBoxListViewText.InitializeLiveSpellCheck(_subtitle, FirstSelectedIndex);
+                }
+            }
+            else if (!IsSubtitleLoaded && textBoxListViewText.IsSpellCheckerInitialized)
+            {
+                textBoxListViewText.DisposeHunspellAndDictionaries();
             }
         }
 
@@ -19411,7 +19428,7 @@ namespace Nikse.SubtitleEdit.Forms
             GoBackSeconds(-60);
         }
 
-        private void ShowSubtitleTimerTick(object sender, EventArgs e)
+        private async void ShowSubtitleTimerTick(object sender, EventArgs e)
         {
             ShowSubtitleTimer.Stop();
 
@@ -19443,22 +19460,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            if (_isLiveSpellCheckEnabled)
-            {
-                if (IsSubtitleLoaded)
-                {
-                    textBoxListViewText.CheckForLanguageChange(_subtitle);
-                    if (!textBoxListViewText.IsSpellCheckerInitialized)
-                    {
-                        textBoxListViewText.InitializeLiveSpellCheck(_subtitle, FirstSelectedIndex);
-                    }
-                }
-                else if (!IsSubtitleLoaded && textBoxListViewText.IsSpellCheckerInitialized)
-                {
-                    textBoxListViewText.DisposeHunspellAndDictionaries();
-                }
-            }
-
             var currentChanged = _changeSubtitleHash != _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
             var originalActive = Configuration.Settings.General.AllowEditOfOriginalSubtitle &&
                                  _subtitleAlternate != null &&
@@ -19473,6 +19474,11 @@ namespace Nikse.SubtitleEdit.Forms
             else if (Text.Contains('*'))
             {
                 Text = Text.RemoveChar('*').TrimEnd();
+            }
+
+            if (_isLiveSpellCheckEnabled)
+            {
+                await InitializeLiveSpellChcek();
             }
 
             ShowSubtitleTimer.Start();
@@ -22066,7 +22072,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (!_cleanupHasRun)
                     {
                         // let the cleanup process be handled by worker thread
-                        System.Threading.Tasks.Task.Factory.StartNew(() => { RestoreAutoBackup.CleanAutoBackupFolder(Configuration.AutoBackupDirectory, Configuration.Settings.General.AutoBackupDeleteAfterMonths); });
+                        Task.Factory.StartNew(() => { RestoreAutoBackup.CleanAutoBackupFolder(Configuration.AutoBackupDirectory, Configuration.Settings.General.AutoBackupDeleteAfterMonths); });
                         _cleanupHasRun = true;
                     }
                 }
@@ -27701,7 +27707,7 @@ namespace Nikse.SubtitleEdit.Forms
             var chaps = new List<MatroskaChapter>();
             using (var matroska = new MatroskaFile(VideoFileName))
             {
-                chaps = await System.Threading.Tasks.Task.Run(() => matroska.GetChapters());
+                chaps = await Task.Run(() => matroska.GetChapters());
             }
 
             if (chaps?.Count > 0)

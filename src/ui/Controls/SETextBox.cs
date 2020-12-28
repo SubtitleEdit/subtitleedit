@@ -9,6 +9,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -983,26 +984,45 @@ namespace Nikse.SubtitleEdit.Controls
 
         #region LiveSpellCheck
 
-        public void InitializeLiveSpellCheck(Subtitle subtitle, int lineNumber)
+        public async Task CheckForLanguageChange(Subtitle subtitle)
+        {
+            if (IsSpellCheckerInitialized)
+            {
+                var languageName = LanguageAutoDetect.AutoDetectLanguageName("", subtitle);
+                if (_currentLanguage != languageName)
+                {
+                    DisposeHunspellAndDictionaries();
+                    await LoadDictionariesAsync(languageName);
+                    DoLiveSpellCheck();
+                }
+            }
+        }
+
+        public async Task InitializeLiveSpellCheck(Subtitle subtitle, int lineNumber)
         {
             if (_uiTextBox is null || lineNumber < 0)
             {
                 return;
             }
 
-            IsSpellCheckerInitialized = true;
-            var languageName = LanguageAutoDetect.AutoDetectLanguageName("", subtitle);
-
             if (_spellCheckWordLists is null && _hunspell is null)
             {
+                var languageName = LanguageAutoDetect.AutoDetectLanguageName("", subtitle);
                 if (string.IsNullOrEmpty(languageName))
                 {
                     languageName = "en_US";
                 }
 
-                LoadDictionaries(languageName);
+                await LoadDictionariesAsync(languageName);
                 DoLiveSpellCheck();
             }
+
+            IsSpellCheckerInitialized = true;
+        }
+
+        private async Task LoadDictionariesAsync(string languageName)
+        {
+            await Task.Run(() => LoadDictionaries(languageName));
         }
 
         private void LoadDictionaries(string languageName)
@@ -1048,20 +1068,6 @@ namespace Nikse.SubtitleEdit.Controls
                 _hunspell = null;
                 IsWrongWord = false;
                 IsSpellCheckerInitialized = false;
-            }
-        }
-
-        public void CheckForLanguageChange(Subtitle subtitle)
-        {
-            if (IsSpellCheckerInitialized)
-            {
-                var languageName = LanguageAutoDetect.AutoDetectLanguageName("", subtitle);
-                if (_currentLanguage != languageName)
-                {
-                    DisposeHunspellAndDictionaries();
-                    LoadDictionaries(languageName);
-                    DoLiveSpellCheck();
-                }
             }
         }
 
