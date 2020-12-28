@@ -1355,12 +1355,42 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
         }
 
+        private void UpdateListViewFontStyle(SsaStyle style)
+        {
+            try
+            {
+                var fontStyle = FontStyle.Regular;
+                if (style.Bold)
+                {
+                    fontStyle |= FontStyle.Bold;
+                }
+
+                if (style.Italic)
+                {
+                    fontStyle |= FontStyle.Italic;
+                }
+
+                if (style.Underline)
+                {
+                    fontStyle |= FontStyle.Underline;
+                }
+
+                var subItem = ActiveListView.SelectedItems[0].SubItems[5];
+                subItem.Font = new Font(style.FontName, subItem.Font.Size, fontStyle);
+            }
+            catch
+            {
+                // ignored
+            }
+        }
+
         private void checkBoxFontBold_CheckedChanged(object sender, EventArgs e)
         {
             if (ActiveListView.SelectedItems.Count == 1 && _doUpdate)
             {
                 string name = ActiveListView.SelectedItems[0].Text;
                 SetSsaStyle(name, "bold", checkBoxFontBold.Checked ? "-1" : "0");
+                UpdateListViewFontStyle(GetSsaStyle(name));
                 GeneratePreview();
             }
         }
@@ -1371,6 +1401,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 string name = ActiveListView.SelectedItems[0].Text;
                 SetSsaStyle(name, "italic", checkBoxFontItalic.Checked ? "-1" : "0");
+                UpdateListViewFontStyle(GetSsaStyle(name));
                 GeneratePreview();
             }
         }
@@ -1381,6 +1412,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 string name = ActiveListView.SelectedItems[0].Text;
                 SetSsaStyle(name, "underline", checkBoxFontUnderline.Checked ? "-1" : "0");
+                UpdateListViewFontStyle(GetSsaStyle(name));
                 GeneratePreview();
             }
         }
