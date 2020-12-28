@@ -12,13 +12,13 @@
     <None>Cap</None>
     <All>Tot</All>
     <Preview>Vista prèvia</Preview>
-    <SubtitleFiles>Fitxers subtítols</SubtitleFiles>
+    <SubtitleFiles>Fitxers de subtítols</SubtitleFiles>
     <AllFiles>Tots els fitxers</AllFiles>
     <VideoFiles>Fitxers de vídeo</VideoFiles>
     <AudioFiles>Fitxers d'audio</AudioFiles>
     <OpenSubtitle>Obre subtítol</OpenSubtitle>
-    <OpenVideoFile>Obre vídeo...</OpenVideoFile>
-    <OpenVideoFileTitle>Obre vídeo...</OpenVideoFileTitle>
+    <OpenVideoFile>Obre fitxer de vídeo...</OpenVideoFile>
+    <OpenVideoFileTitle>Obre fitxer de vídeo...</OpenVideoFileTitle>
     <NoVideoLoaded>Cap vídeo carregat</NoVideoLoaded>
     <VideoInformation>Info de vídeo</VideoInformation>
     <StartTime>Temps d'inici</StartTime>
@@ -27,7 +27,7 @@
     <CharsPerSec>Car/seg</CharsPerSec>
     <WordsPerMin>Mots/Min</WordsPerMin>
     <Actor>Actor</Actor>
-    <Gap>Espaiat</Gap>
+    <Gap>Interval</Gap>
     <Region>Regió</Region>
     <NumberSymbol>#</NumberSymbol>
     <Number>Nombre</Number>
@@ -35,7 +35,7 @@
     <HourMinutesSecondsMilliseconds>Hora:min:seg:mseg</HourMinutesSecondsMilliseconds>
     <HourMinutesSecondsFrames>Hora:min:seg:quadres</HourMinutesSecondsFrames>
     <Bold>Negreta</Bold>
-    <Italic>Itàlica</Italic>
+    <Italic>Cursiva</Italic>
     <Underline>Subratlla</Underline>
     <Visible>Visible</Visible>
     <FrameRate>Ràtio quadres</FrameRate>
@@ -47,22 +47,22 @@
     <VideoEncodingX>Codificació de vídeo: {0}</VideoEncodingX>
     <SingleLineLengths>Llàrgaria línia sola:</SingleLineLengths>
     <TotalLengthX>Llargària total: {0}</TotalLengthX>
-    <TotalLengthXSplitLine>Llàrgaria total: {0} (Divideix línia!)</TotalLengthXSplitLine>
-    <SplitLine>Divideix línia!</SplitLine>
+    <TotalLengthXSplitLine>Llàrgaria total: {0} (¡Divideix línia!)</TotalLengthXSplitLine>
+    <SplitLine>¡Divideix línia!</SplitLine>
     <NotAvailable>N/D</NotAvailable>
     <OverlapPreviousLineX>Solapament línia anterior ({0:#,##0.###})</OverlapPreviousLineX>
     <OverlapX>Solapament ({0:#,##0.###})</OverlapX>
     <OverlapNextX>Solapament següent ({0:#,##0.###})</OverlapNextX>
     <Negative>Negatiu</Negative>
-    <RegularExpressionIsNotValid>Expressió regular no vàlida!</RegularExpressionIsNotValid>
+    <RegularExpressionIsNotValid>¡Expressió regular no vàlida!</RegularExpressionIsNotValid>
     <CurrentSubtitle>Subtítol actual</CurrentSubtitle>
     <OriginalText>Text original</OriginalText>
-    <OpenOriginalSubtitleFile>Obre subtítol original...</OpenOriginalSubtitleFile>
+    <OpenOriginalSubtitleFile>Obre fitxer de subtítol original...</OpenOriginalSubtitleFile>
     <PleaseWait>Espereu si us plau...</PleaseWait>
     <SessionKey>Clau de sessió</SessionKey>
     <UserName>Usuari</UserName>
     <UserNameAlreadyInUse>Usuari ja en ús</UserNameAlreadyInUse>
-    <WebServiceUrl>URL</WebServiceUrl>
+    <WebServiceUrl>URL servei web</WebServiceUrl>
     <IP>IP</IP>
     <VideoWindowTitle>Vídeo - {0}</VideoWindowTitle>
     <AudioWindowTitle>Audio - {0}</AudioWindowTitle>
@@ -79,6 +79,11 @@
     <Size>Mida</Size>
     <Search>Cerca</Search>
     <DeleteCurrentLine>Suprimeix línia actual</DeleteCurrentLine>
+    <Width>Amplada</Width>
+    <Height>Alçada</Height>
+    <Collapse>Plega-ho </Collapse>
+    <ShortcutX>Drecera: {0}</ShortcutX>
+    <ExampleX>Exemple: {0}</ExampleX>
   </General>
   <About>
     <Title>Quant a Subtitle Edit</Title>
@@ -94,12 +99,12 @@ Les suggerències són benvingudes.
 Email: mailto:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
-    <Title>Afegeix a la llista de names/etc</Title>
-    <Description>Afegeix a la llista names/noise (sensible majúscules)</Description>
+    <Title>Afegeix a la llista de noms</Title>
+    <Description>Afegeix a la llista de noms/soroll (sensible majúscules)</Description>
   </AddToNames>
   <AddToOcrReplaceList>
-    <Title>Afegeix llista reemplaçament OCR</Title>
-    <Description>Afegeix parell a llista de reemplaçament OCR (distingueix majús)</Description>
+    <Title>Afegeix llista substitució d'OCR</Title>
+    <Description>Afegeix parell a llista desubstitució d'OCR (distingueix majús)</Description>
   </AddToOcrReplaceList>
   <AddToUserDictionary>
     <Title>Afegeix al diccionari d'usuari</Title>
@@ -107,31 +112,32 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </AddToUserDictionary>
   <AddWaveform>
     <Title>Genera dades d'ona wave</Title>
-    <SourceVideoFile>Fitxer origen vídeo:</SourceVideoFile>
+    <SourceVideoFile>Fitxer de vídeo d' origen:</SourceVideoFile>
     <GenerateWaveformData>Genera dades d'ona wave</GenerateWaveformData>
     <PleaseWait>Açò pot trigar uns minuts - espereu si us plau</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>No s'ha trobat VLC media player</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit li cal VLC media player 1.1.x o superior per extreure dades d'audio.</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Voleu anar a la web de VLC media player?</GoToVlcMediaPlayerHomePage>
+    <GoToVlcMediaPlayerHomePage>¿Voleu anar a la web de VLC media player?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Generant fitxer de pics...</GeneratingPeakFile>
     <GeneratingSpectrogram>Generant espectrògrama...</GeneratingSpectrogram>
     <ExtractingSeconds>Extraient audio: {0:0.0} segons</ExtractingSeconds>
     <ExtractingMinutes>Extraient audio: {0}.{1:00} minuts</ExtractingMinutes>
-    <WaveFileNotFound>Podria no trobar-se el fitxer wave extret!Aquesta característica li cal VLC media player 1.1.x o superior ({0}-bit).Command line: {1} {2}</WaveFileNotFound>
-    <WaveFileMalformed>{0} ha estat incapaç d'extraure audio del fitxer wave!Command line:{1}{2}Note:Comproveu l'espai lliure al disc</WaveFileMalformed>
+    <WaveFileNotFound>¡Podria no trobar-se el fitxer wave extret! ¡Aquesta característica li cal VLC media player 1.1.x o superior ({0}-bit).Línia d'ordres: {1} {2}</WaveFileNotFound>
+    <WaveFileMalformed>{0} no ha pogut extraure audio del fitxer wave! Línia d'ordres :{1}{2} Note: Comproveu l'espai lliure al disc</WaveFileMalformed>
     <LowDiskSpace>POC ESPAI EN DISC!</LowDiskSpace>
     <FreeDiskSpace>{0} lliure</FreeDiskSpace>
+    <NoAudioTracksFoundGenerateEmptyWaveform>¡No s'han trobat pistes d'audio! ¿Generar format wave buit?</NoAudioTracksFoundGenerateEmptyWaveform>
   </AddWaveform>
   <AddWaveformBatch>
-    <Title>Fitxer de lot genera dades d'onda</Title>
+    <Title>Fitxer de lot genera dades d'ona</Title>
     <ExtractingAudio>Extraient audio...</ExtractingAudio>
     <Calculating>Calculant...</Calculating>
     <Done>Fet</Done>
     <Error>Error</Error>
   </AddWaveformBatch>
   <AdjustDisplayDuration>
-    <Title>Ajustament durada</Title>
-    <AdjustVia>Ajustament per</AdjustVia>
+    <Title>Ajusta durada</Title>
+    <AdjustVia>Ajusta per</AdjustVia>
     <Seconds>Segons</Seconds>
     <Percent>Percentatge</Percent>
     <Recalculate>Recàlcul</Recalculate>
@@ -139,7 +145,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SetAsPercent>Estableix com percentatge de durada</SetAsPercent>
     <Note>Nota: La Durada no pot solapar-se al temps d'inici del següent text</Note>
     <Fixed>Arreglat</Fixed>
-    <Milliseconds>Milisegons</Milliseconds>
+    <Milliseconds>Mil·lisegons</Milliseconds>
     <ExtendOnly>Només estendre</ExtendOnly>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
@@ -148,12 +154,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <UnableToFix>No pot corregir-se:{0}</UnableToFix>
   </ApplyDurationLimits>
   <AudioToText>
-    <Title>Audio a texte</Title>
+    <Title>Audio a text</Title>
     <ExtractingAudioUsingX>Extraient audio emprant {0}...</ExtractingAudioUsingX>
-    <ExtractingTextUsingX>Extraiens texte d'audio emprant {0}...</ExtractingTextUsingX>
-    <ProgessViaXy>Extraient texte via {0} progrés: {1}%</ProgessViaXy>
-    <ShowLess>Mostra menys</ShowLess>
-    <ShowMore>Mostra més</ShowMore>
+    <ExtractingTextUsingX>Extraiens text d'audio emprant {0}...</ExtractingTextUsingX>
+    <ProgessViaXy>Extraient text mitjançant {0} progrés: {1}%</ProgessViaXy>
+    <ShowLess>Mostra menys  ▲</ShowLess>
+    <ShowMore>Mostra més  ▼</ShowMore>
   </AudioToText>
   <AutoBreakUnbreakLines>
     <TitleAutoBreak>Auto equilibra línies seleccionades</TitleAutoBreak>
@@ -168,57 +174,73 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <InputDescription>Introdueix fitxers(navega o arrossega i deixa anar)</InputDescription>
     <Status>Estat</Status>
     <Output>Sortida</Output>
-    <ChooseOutputFolder>Tria carpeta sortida</ChooseOutputFolder>
-    <OverwriteExistingFiles>Sobreescriu fitxers existents</OverwriteExistingFiles>
+    <SaveInSourceFolder>Desa en carpeta d'origen</SaveInSourceFolder>
+    <SaveInOutputFolder>Desa en carpeta de sortida inferior</SaveInOutputFolder>
+    <OverwriteFiles>Sobreescriu fitxers</OverwriteFiles>
     <Style>Estil...</Style>
-    <UseStyleFromSource>Empra l'estil de l'orige</UseStyleFromSource>
+    <UseStyleFromSource>Empra l'estil de l'origen</UseStyleFromSource>
     <ConvertOptions>Opcions conversió</ConvertOptions>
     <RemoveFormatting>Suprimeix etiquetes formatació</RemoveFormatting>
+    <RemoveStyleActor>Suprimeix estil/actor</RemoveStyleActor>
     <RemoveTextForHI>Suprimeix text per HI</RemoveTextForHI>
     <OverwriteOriginalFiles>Sobreescriu fitxers originals (nova extensió si es canvia el format)</OverwriteOriginalFiles>
     <RedoCasing>Refés coberta</RedoCasing>
     <Convert>Converteix</Convert>
-    <NothingToConvert>Res a convertir</NothingToConvert>
+    <NothingToConvert>¡Res a convertir!</NothingToConvert>
     <PleaseChooseOutputFolder>Trieu carpeta sortida</PleaseChooseOutputFolder>
     <NotConverted>Fallat</NotConverted>
     <Converted>Convertit</Converted>
     <Settings>Configuració</Settings>
     <FixRtl>Arregla RTL</FixRtl>
-    <FixRtlAddUnicode>Arregla RTL via etiquetes Unicode</FixRtlAddUnicode>
+    <FixRtlAddUnicode>Arregla RTL mitjantçant etiquetes Unicode</FixRtlAddUnicode>
     <FixRtlRemoveUnicode>Suprimeix etiquetes Unicode</FixRtlRemoveUnicode>
     <FixRtlReverseStartEnd>Invertix RTL inici/final </FixRtlReverseStartEnd>
     <SplitLongLines>Divideix línies llargues</SplitLongLines>
-    <AutoBalance>Balanç automàtic línies</AutoBalance>
+    <AutoBalance>Auto equilibra  línies</AutoBalance>
     <ScanFolder>Escaneja carpeta...</ScanFolder>
     <Recursive>Inclou subcarpetes</Recursive>
-    <SetMinMsBetweenSubtitles>Estableix min. milisegons entre subtítols</SetMinMsBetweenSubtitles>
-    <BridgeGaps>Espais pont</BridgeGaps>
-    <PlainText>text pla</PlainText>
+    <BridgeGaps>Uneix buits</BridgeGaps>
+    <PlainText>Text pla</PlainText>
     <Ocr>OCR...</Ocr>
     <Filter>Filtre</Filter>
     <FilterSkipped>Ignorat pel filtre</FilterSkipped>
     <FilterSrtNoUtf8BOM>Fitxers SubRip (.srt) sense capçalera UTF-8 BOM</FilterSrtNoUtf8BOM>
     <FilterMoreThanTwoLines>Més de dues línies en un subtitol</FilterMoreThanTwoLines>
     <FilterContains>Text conté...</FilterContains>
+    <FilterFileNameContains>Nom del fitxer conté...</FilterFileNameContains>
+    <MkvLanguageCodeContains>Codi Matroska (.mkv) conté...</MkvLanguageCodeContains>
     <FixCommonErrorsErrorX>Correció d'error comuns: {0}</FixCommonErrorsErrorX>
-    <MultipleReplaceErrorX>Múltiples reemplaçaments: {0}</MultipleReplaceErrorX>
-    <AutoBalanceErrorX>Auto balanç: {0}</AutoBalanceErrorX>
+    <MultipleReplaceErrorX>Múltiples substitucions: {0}</MultipleReplaceErrorX>
+    <AutoBalanceErrorX>Auto equilibra: {0}</AutoBalanceErrorX>
     <OffsetTimeCodes>Codis de temps de compensació</OffsetTimeCodes>
+    <TransportStreamSettings>Opcions de transport de seqüència</TransportStreamSettings>
+    <TransportStreamOverrideXPosition>Sobreescriu posició X original</TransportStreamOverrideXPosition>
+    <TransportStreamOverrideYPosition>Sobreescriu posició Y original</TransportStreamOverrideYPosition>
+    <TransportStreamOverrideVideoSize>Sobreescriu mida original del vídeo</TransportStreamOverrideVideoSize>
+    <TransportStreamFileNameEnding>Finalització nom de fitxer</TransportStreamFileNameEnding>
+    <TransportStreamSettingsButton>Configuració TS...</TransportStreamSettingsButton>
+    <RemoveLineBreaks>Suprimeix talls de línia</RemoveLineBreaks>
+    <TryToUseSourceEncoding>Intenta emprar codificació d'origen</TryToUseSourceEncoding>
+    <MkvLanguageInOutputFileName>"Idioma" al nom del fitxer de sortida</MkvLanguageInOutputFileName>
+    <MkvLanguageInOutputFileNameX>Matroska (.mkv) "Idioma" al nom del fitxer de sortida: {0} </MkvLanguageInOutputFileNameX>
+    <MkvLanguageStyleTwoLetter>Codi d'idioma dues lletres</MkvLanguageStyleTwoLetter>
+    <MkvLanguageStyleThreeLetter>Codi d'idioma tres lletres</MkvLanguageStyleThreeLetter>
+    <MkvLanguageStyleEmpty>Sense codi d'idioma</MkvLanguageStyleEmpty>
   </BatchConvert>
   <Beamer>
     <Title>Projector</Title>
   </Beamer>
   <Bookmarks>
-    <EditBookmark>Edita favorits</EditBookmark>
-    <AddBookmark>Afegeix favorit</AddBookmark>
-    <GoToBookmark>Vés a favorit</GoToBookmark>
+    <EditBookmark>Edita marcador</EditBookmark>
+    <AddBookmark>Afegeix marcador</AddBookmark>
+    <GoToBookmark>Aneu a marcador</GoToBookmark>
   </Bookmarks>
   <ChangeCasing>
     <Title>Canvia majúscules</Title>
     <ChangeCasingTo>Canvia majúscules a</ChangeCasingTo>
     <NormalCasing>Escriptura normal. Frases comencen amb lletra majúscula.</NormalCasing>
-    <FixNamesCasing>Fixa majúscules en noms (via Diccionaris\NamesEtc.xml)</FixNamesCasing>
-    <FixOnlyNamesCasing>Fixa només majúscules en noms (via Diccionaris\NamesEtc.xml)</FixOnlyNamesCasing>
+    <FixNamesCasing>Arregla majúscules en noms (mitjantçant Diccionaris\NamesEtc.xml)</FixNamesCasing>
+    <FixOnlyNamesCasing>Arregla només majúscules en noms (mitjantçant Diccionaris\NamesEtc.xml)</FixOnlyNamesCasing>
     <OnlyChangeAllUppercaseLines>Canvia només les línies tot en majúscula.</OnlyChangeAllUppercaseLines>
     <AllUppercase>TOT MAJÚSCULES</AllUppercase>
     <AllLowercase>tot minúscules</AllLowercase>
@@ -233,14 +255,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <ChangeFrameRate>
     <Title>Canvia ràtio quadres</Title>
     <ConvertFrameRateOfSubtitle>Converteix ràtio quadres del subtítol</ConvertFrameRateOfSubtitle>
-    <FromFrameRate>Des de ràtio</FromFrameRate>
-    <ToFrameRate>a ràtio</ToFrameRate>
+    <FromFrameRate>Des de ràtio quadres</FromFrameRate>
+    <ToFrameRate>a ràtio quadres</ToFrameRate>
     <FrameRateNotCorrect>Ràtio quadres incorrecte</FrameRateNotCorrect>
     <FrameRateNotChanged>Ràtio quadres igual - res per a convertir</FrameRateNotChanged>
   </ChangeFrameRate>
   <ChangeSpeedInPercent>
-    <Title>Adjusta velocitat en tant per cent</Title>
-    <TitleShort>Ajustament de velocitat</TitleShort>
+    <Title>Ajusta velocitat en tant per cent</Title>
+    <TitleShort>Ajusta velocitat</TitleShort>
     <Info>Canvia velocitat subtítol en tant per cent</Info>
     <Custom>Personalitzat</Custom>
     <ToDropFrame>A fotograma</ToDropFrame>
@@ -251,25 +273,25 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CheckingForUpdates>Comprovant actualitzacions...</CheckingForUpdates>
     <CheckingForUpdatesFailedX>Comprovació actualitzacions ha fallat: {0}</CheckingForUpdatesFailedX>
     <CheckingForUpdatesNoneAvailable>Vosté té l'última versió de Subtitle Edit :)</CheckingForUpdatesNoneAvailable>
-    <CheckingForUpdatesNewVersion>Nova versió disponible!</CheckingForUpdatesNewVersion>
-    <InstallUpdate>Vés a la pàgina de descàrrega</InstallUpdate>
+    <CheckingForUpdatesNewVersion>¡Nova versió disponible!</CheckingForUpdatesNewVersion>
+    <InstallUpdate>Aneu a la pàgina de descàrrega</InstallUpdate>
     <NoUpdates>No actualitze</NoUpdates>
   </CheckForUpdates>
   <ChooseAudioTrack>
-    <Title>Escolliu pista d'audio</Title>
+    <Title>Selecciona pista d'audio</Title>
   </ChooseAudioTrack>
   <ChooseEncoding>
-    <Title>Escolliu codificació</Title>
+    <Title>Selecciona codificació</Title>
     <CodePage>Pàgina de codis</CodePage>
     <DisplayName>Mostra nom</DisplayName>
-    <PleaseSelectAnEncoding>Seleccioneu i codifiqueu si us plau</PleaseSelectAnEncoding>
+    <PleaseSelectAnEncoding>Seleccioneu codificació si us plau</PleaseSelectAnEncoding>
   </ChooseEncoding>
   <ChooseLanguage>
-    <Title>Escolliu idioma</Title>
+    <Title>Selecciona idioma</Title>
     <Language>Idioma</Language>
   </ChooseLanguage>
   <ColorChooser>
-    <Title>Escolliu color</Title>
+    <Title>Selecciona color</Title>
     <Red>Vermell</Red>
     <Green>Verd</Green>
     <Blue>Blau</Blue>
@@ -277,7 +299,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </ColorChooser>
   <ColumnPaste>
     <Title>Enganxa columna</Title>
-    <ChooseColumn>Tria columna</ChooseColumn>
+    <ChooseColumn>Selecciona columna</ChooseColumn>
     <OverwriteShiftCellsDown>Sobreescriu/Desplaça cel·les avall</OverwriteShiftCellsDown>
     <Overwrite>Sobreescriu</Overwrite>
     <ShiftCellsDown>Desplaça cel·les avall</ShiftCellsDown>
@@ -291,8 +313,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NextDifference>Diferència següe&amp;nt</NextDifference>
     <SubtitlesNotAlike>Els subtítols no tenen similituds</SubtitlesNotAlike>
     <XNumberOfDifference>Nombre de diferències: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Nombre de diferències: {0} ({1}% de paraules canviades)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Nombre de diferències: {0} ({1}% de lletres canviades)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Nombre de diferències: {0} ({1}% de mots canviats)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Nombre de diferències: {0} ({1}% de mots canviats)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Mostra només diferències</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignora salts de línia</IgnoreLineBreaks>
     <IgnoreFormatting>Ignora formatació</IgnoreFormatting>
@@ -323,16 +345,20 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FadeDownTime>Disminueix gradualment el temps</FadeDownTime>
     <ZPosition>Posició Z</ZPosition>
     <ZPositionHelp>Nombres positius mouen text lluny, els negatius l'apropen. Si la posició Z és zero és perque és 2D.</ZPositionHelp>
-    <ChooseColor>Trieu color...</ChooseColor>
+    <ChooseColor>Selecciona color...</ChooseColor>
     <Generate>Genera</Generate>
   </DCinemaProperties>
   <DurationsBridgeGaps>
     <Title>Uneix petits buits en durades</Title>
     <GapsBridgedX>Quantitat de petits buits units: {0}</GapsBridgedX>
-    <GapToNext>Buit següent</GapToNext>
+    <GapToNext>Buit següent en segons</GapToNext>
+    <GapToNextFrames>Buit següent en quadres</GapToNextFrames>
     <BridgeGapsSmallerThanXPart1>Uneix buits més menuts de</BridgeGapsSmallerThanXPart1>
-    <BridgeGapsSmallerThanXPart2>milisegons</BridgeGapsSmallerThanXPart2>
-    <MinMillisecondsBetweenLines>Min. milisegons entre línies</MinMillisecondsBetweenLines>
+    <BridgeGapsSmallerThanXPart2>mil·lisegons</BridgeGapsSmallerThanXPart2>
+    <BridgeGapsSmallerThanXPart1Frames>Uneix buits més petits de</BridgeGapsSmallerThanXPart1Frames>
+    <BridgeGapsSmallerThanXPart2Frames>quadres</BridgeGapsSmallerThanXPart2Frames>
+    <MinMillisecondsBetweenLines>Min. mil·lisegons entre línies</MinMillisecondsBetweenLines>
+    <MinFramesBetweenLines>Mín. quadres entre línies</MinFramesBetweenLines>
     <ProlongEndTime>Text anterior pren tot el temps buit</ProlongEndTime>
     <DivideEven>Temps buit dividit entre texts</DivideEven>
   </DurationsBridgeGaps>
@@ -359,8 +385,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WrongIfoType>IFO és '{0}' i no 'DVDVIDEO-VTS'.{1} Intenta amb altre fitxer {2}</WrongIfoType>
   </DvdSubRip>
   <DvdSubRipChooseLanguage>
-    <Title>Escolliu idioma</Title>
-    <ChooseLanguageStreamId>Escolliu idioma (flux-id)</ChooseLanguageStreamId>
+    <Title>Selecciona idioma</Title>
+    <ChooseLanguageStreamId>Selecciona idioma (flux-id)</ChooseLanguageStreamId>
     <UnknownLanguage>Idioma desconegut</UnknownLanguage>
     <SubtitleImageXofYAndWidthXHeight>Imatge de subtítol {0}/{1} - {2}x{3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Imatge de subtítol</SubtitleImage>
@@ -372,6 +398,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DiskFormatCode>Codi format disc</DiskFormatCode>
     <DisplayStandardCode>Mostra codi estàndar</DisplayStandardCode>
     <ColorRequiresTeletext>¡Cal teletext pels colors!</ColorRequiresTeletext>
+    <AlignmentRequiresTeletext>¡Cal teletext per aliniació!</AlignmentRequiresTeletext>
+    <TeletextCharsShouldBe38>¡'Max# caràcters per línia' per al teletext deuen ser 38!</TeletextCharsShouldBe38>
     <CharacterCodeTable>Taula caràcters</CharacterCodeTable>
     <LanguageCode>Codi d'idioma</LanguageCode>
     <OriginalProgramTitle>Títol original del programa</OriginalProgramTitle>
@@ -401,7 +429,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Errors>Errors</Errors>
     <ErrorsX>Errors: {0}</ErrorsX>
     <MaxLengthError>Línia {0} supera llàrgaria màx ({1}) per {2}: {3}</MaxLengthError>
-    <TextUnchangedPresentation>Presntació original</TextUnchangedPresentation>
+    <TextUnchangedPresentation>Presentació original</TextUnchangedPresentation>
     <TextLeftJustifiedText>Justificat a l'esquerre</TextLeftJustifiedText>
     <TextCenteredText>Centrat</TextCenteredText>
     <TextRightJustifiedText>Justificat a la dreta</TextRightJustifiedText>
@@ -409,10 +437,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </EbuSaveOptions>
   <EffectKaraoke>
     <Title>Efecte karaoke</Title>
-    <ChooseColor>Escolliu color:</ChooseColor>
+    <ChooseColor>Selecciona color:</ChooseColor>
+    <TotalMilliseconds>Mil·lisegons totals:</TotalMilliseconds>
+    <EndDelayInMilliseconds>Retard final en mil·lisegons:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Efecte màquina d'escriure</Title>
+    <TotalMilliseconds>Mi·llisegons totals:</TotalMilliseconds>
+    <EndDelayInMilliseconds>Retard final en mil·lisegons:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Exporta format de text personalitzat</Title>
@@ -435,7 +467,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DoNotModify>[No modifica]</DoNotModify>
   </ExportCustomTextFormat>
   <ExportFcpXmlAdvanced>
-    <Title>Exportació a Final Cut Pro XML avançada</Title>
+    <Title>Exportació a Final Cut Pro XML avançat</Title>
     <FontName>Nom Font</FontName>
     <FontSize>Mida Font</FontSize>
     <FontFace>Presentació Font</FontFace>
@@ -445,21 +477,21 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </ExportFcpXmlAdvanced>
   <ExportPngXml>
     <Title>Exporta BDN XML/PNG</Title>
-    <ImageSettings>Configuració imatge</ImageSettings>
+    <ImageSettings>Configuració d'imatge</ImageSettings>
     <FontFamily>Font</FontFamily>
     <FontSize>Mida font</FontSize>
     <FontColor>Color font</FontColor>
     <BorderColor>Color de vora</BorderColor>
     <BorderWidth>Amplada vora</BorderWidth>
     <BorderStyle>Estil de vora</BorderStyle>
-    <BorderStyleOneBox>Una caixa</BorderStyleOneBox>
-    <BorderStyleBoxForEachLine>Cada línia de caixa</BorderStyleBoxForEachLine>
+    <BorderStyleOneBox>Un marc</BorderStyleOneBox>
+    <BorderStyleBoxForEachLine>Marc per a cada línia</BorderStyleBoxForEachLine>
     <BorderStyleNormalWidthX>Normal, ample={0}</BorderStyleNormalWidthX>
     <ShadowColor>Color de l'ombra</ShadowColor>
     <ShadowWidth>Ample de l'ombra</ShadowWidth>
     <Transparency>Alfa</Transparency>
     <ImageFormat>Format d'imatge</ImageFormat>
-    <FullFrameImage>Imatge fotograma completa</FullFrameImage>
+    <FullFrameImage>Imatge fotograma complet</FullFrameImage>
     <SimpleRendering>Renderització simple</SimpleRendering>
     <AntiAliasingWithTransparency>Anti-aliasing amb transparència</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
@@ -474,34 +506,37 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Right>Dreta</Right>
     <Center>Centrat</Center>
     <CenterLeftJustify>Centrat, justificat a l'esquerre</CenterLeftJustify>
+    <CenterLeftJustifyDialogs>Diàleg centrat, justificat a l'esquerre</CenterLeftJustifyDialogs>
     <CenterTopJustify>Centrat, justificat superior</CenterTopJustify>
+    <CenterRightJustify>Centrat, justificat a la dreta</CenterRightJustify>
     <BottomMargin>Marge inferior</BottomMargin>
     <LeftRightMargin>Marge esquerre/dret</LeftRightMargin>
-    <SaveBluRraySupAs>Trieu nom fitxer Blu-ray sup</SaveBluRraySupAs>
-    <SaveVobSubAs>Trieu nom fitxer VobSub</SaveVobSubAs>
-    <SaveFabImageScriptAs>Trieu nom fitxer Blu-ray sup</SaveFabImageScriptAs>
-    <SaveDvdStudioProStlAs>Trieu nom fitxer DVD Studio Pro STL</SaveDvdStudioProStlAs>
-    <SaveDigitalCinemaInteropAs>Trieu nom fitxer Digital Cinema Interop</SaveDigitalCinemaInteropAs>
-    <SavePremiereEdlAs>Trieu nom fitxer Premiere EDL</SavePremiereEdlAs>
-    <SaveFcpAs>Trieu nom fitxer Final Cut Pro xml</SaveFcpAs>
-    <SaveDostAs>Trieu nom fitxer DoStudio dost</SaveDostAs>
+    <SaveBluRraySupAs>Selecciona nom fitxer Blu-ray sup</SaveBluRraySupAs>
+    <SaveVobSubAs>Selecciona nom fitxer VobSub</SaveVobSubAs>
+    <SaveFabImageScriptAs>Selecciona nom fitxer Blu-ray sup</SaveFabImageScriptAs>
+    <SaveDvdStudioProStlAs>Selecciona nom fitxer DVD Studio Pro STL</SaveDvdStudioProStlAs>
+    <SaveDigitalCinemaInteropAs>Selecciona nom fitxer Digital Cinema Interop</SaveDigitalCinemaInteropAs>
+    <SaveDigitalCinemaSmpte2014>Selecciona nom fitxer Digital Cinema SMPTE 2014</SaveDigitalCinemaSmpte2014>
+    <SavePremiereEdlAs>Selecciona nom fitxer Premiere EDL</SavePremiereEdlAs>
+    <SaveFcpAs>Selecciona nom fitxer Final Cut Pro xml</SaveFcpAs>
+    <SaveDostAs>Selecciona nom fitxer DoStudio dost</SaveDostAs>
     <SomeLinesWereTooLongX>Algunes línies eren massa llargues: {0}</SomeLinesWereTooLongX>
     <LineHeight>Alçada de línia</LineHeight>
-    <BoxSingleLine>Caixa - línia única</BoxSingleLine>
-    <BoxMultiLine>Caixa - multi línia</BoxMultiLine>
+    <BoxSingleLine>Marc - línia única</BoxSingleLine>
+    <BoxMultiLine>Marc - multi línia</BoxMultiLine>
     <Forced>Forçat</Forced>
-    <ChooseBackgroundColor>Trieu colorde fons</ChooseBackgroundColor>
+    <ChooseBackgroundColor>Selecciona color de fons</ChooseBackgroundColor>
     <SaveImageAs>Desa imatge com...</SaveImageAs>
-    <FcpUseFullPathUrl>Empra el path complet de l'urle de la imatge completa en FCP xml</FcpUseFullPathUrl>
+    <FcpUseFullPathUrl>Empra l'url de la ruta completa de la imatge al FCP xml</FcpUseFullPathUrl>
   </ExportPngXml>
   <ExportText>
     <Title>Exporta text</Title>
-    <Preview>Visualització</Preview>
+    <Preview>Vista prèvia</Preview>
     <ExportOptions>Opcions d'exportació</ExportOptions>
     <FormatText>Format de text</FormatText>
     <None>Cap</None>
     <MergeAllLines>Uneix totes les línies</MergeAllLines>
-    <UnbreakLines>Línies unides</UnbreakLines>
+    <UnbreakLines>Línies sense tall</UnbreakLines>
     <RemoveStyling>Suprimeix estil</RemoveStyling>
     <ShowLineNumbers>Mostra nombres línia</ShowLineNumbers>
     <AddNewLineAfterLineNumber>Afegeix nova línia després del nombre de línia</AddNewLineAfterLineNumber>
@@ -511,13 +546,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AddNewLineBetweenSubtitles>Afegeix nova línia entre subtítols</AddNewLineBetweenSubtitles>
     <TimeCodeFormat>Format codi temps</TimeCodeFormat>
     <Srt>.srt</Srt>
-    <Milliseconds>Milisegons</Milliseconds>
+    <Milliseconds>Mi·llisegons</Milliseconds>
     <HHMMSSFF>HH:MM:SS:FF</HHMMSSFF>
     <TimeCodeSeparator>Separador codi temps</TimeCodeSeparator>
   </ExportText>
   <ExtractDateTimeInfo>
     <Title>Genera temps com a text</Title>
-    <OpenVideoFile>Tria fitxer de vídeo per traure-li indo data/hora</OpenVideoFile>
+    <OpenVideoFile>Selecciona fitxer de vídeo per traure info data/hora</OpenVideoFile>
     <StartFrom>Inicia des de</StartFrom>
     <DateTimeFormat>Format data/hora</DateTimeFormat>
     <Example>Exemple</Example>
@@ -530,7 +565,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CaseSensitive>Sensible majúscules</CaseSensitive>
     <RegularExpression>Expressió regular</RegularExpression>
     <WholeWord>Mot sencer</WholeWord>
-    <Count>Comptador</Count>
+    <Count>Comp&amp;tador</Count>
     <XNumberOfMatches>{0:#,##0} coincidències</XNumberOfMatches>
     <OneMatch>Una coincidència</OneMatch>
   </FindDialog>
@@ -540,9 +575,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FindNext>Cerca següe&amp;nt</FindNext>
   </FindSubtitleLine>
   <FixCommonErrors>
-    <Title>Fixa errors comuns</Title>
-    <Step1>Pas 1/2 - Escolliu error</Step1>
-    <WhatToFix>Què fixa</WhatToFix>
+    <Title>Arregla errors comuns</Title>
+    <Step1>Pas 1/2 - Selecciona error</Step1>
+    <WhatToFix>Què Arregla</WhatToFix>
     <Example>Exemple</Example>
     <SelectAll>Selecciona-ho tot</SelectAll>
     <InverseSelection>Inverteix selecció</InverseSelection>
@@ -558,58 +593,64 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemovedEmptyLineInMiddle>Suprimeix línia buida d'enmig</RemovedEmptyLineInMiddle>
     <RemovedEmptyLinesUnsedLineBreaks>Suprimeix salt de línia línies buides/sense ús</RemovedEmptyLinesUnsedLineBreaks>
     <EmptyLinesRemovedX>Línies buides suprimides: {0}</EmptyLinesRemovedX>
-    <FixOverlappingDisplayTimes>Fixa temps solapats</FixOverlappingDisplayTimes>
-    <FixShortDisplayTimes>Fixa temps curts</FixShortDisplayTimes>
-    <FixLongDisplayTimes>Fixa temps llargs</FixLongDisplayTimes>
-    <FixInvalidItalicTags>Fixa etiquetes itàlic invàlides</FixInvalidItalicTags>
+    <FixOverlappingDisplayTimes>Arregla temps solapats</FixOverlappingDisplayTimes>
+    <FixShortDisplayTimes>Arregla temps curts</FixShortDisplayTimes>
+    <FixLongDisplayTimes>Arregla temps llargs</FixLongDisplayTimes>
+    <FixShortGaps>Arregla buits curts</FixShortGaps>
+    <FixInvalidItalicTags>Arregla etiquetes itàlic invàlides</FixInvalidItalicTags>
     <RemoveUnneededSpaces>Suprimeix espais innecessaris</RemoveUnneededSpaces>
     <RemoveUnneededPeriods>Suprimeix punts innecessaris</RemoveUnneededPeriods>
-    <FixMissingSpaces>Fixa espais oblidats</FixMissingSpaces>
+    <FixCommas>Arregla comes</FixCommas>
+    <FixMissingSpaces>Arregla espais oblidats</FixMissingSpaces>
     <BreakLongLines>Divideix línies llargues</BreakLongLines>
     <RemoveLineBreaks>Suprimeix salts de línia en textos curts amb una sola frase</RemoveLineBreaks>
     <RemoveLineBreaksAll>Suprimeix salts de línia en textos curts (tots excepte els diàlegs)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Fixa majúscula 'i' dins de mots en minúscules (error OCR)</FixUppercaseIInsindeLowercaseWords>
-    <FixDoubleApostrophes>Fixa caràcters de doble apòstrof ('') amb una cometa (")</FixDoubleApostrophes>
+    <FixUppercaseIInsindeLowercaseWords>Arregla majúscula 'i' dins de mots en minúscules (error OCR)</FixUppercaseIInsindeLowercaseWords>
+    <FixDoubleApostrophes>Arregla caràcters de doble apòstrof ('') amb una cometa (")</FixDoubleApostrophes>
     <AddPeriods>Afegeix espai després de línia quan la següent comença amb majúscula</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Comença paràgraf amb majúscula</StartWithUppercaseLetterAfterParagraph>
     <StartWithUppercaseLetterAfterPeriodInsideParagraph>Comença amb majúscula després de punt dins del paràgraf</StartWithUppercaseLetterAfterPeriodInsideParagraph>
     <StartWithUppercaseLetterAfterColon>Comença amb majúscula després dos punts/punt i coma</StartWithUppercaseLetterAfterColon>
-    <FixLowercaseIToUppercaseI>Fixa minúscula 'i' solitària amb 'I' (Anglés)</FixLowercaseIToUppercaseI>
-    <FixCommonOcrErrors>Fixa errors comuns d'OCR (amb llista substitucions OCR)</FixCommonOcrErrors>
-    <CommonOcrErrorsFixed>Errors comuns d'OCR fixats (s'ha emprat llista substitucions OCR): {0}</CommonOcrErrorsFixed>
+    <FixLowercaseIToUppercaseI>Arregla minúscula 'i' solitària amb 'I' (Anglés)</FixLowercaseIToUppercaseI>
+    <FixCommonOcrErrors>Arregla errors comuns d'OCR (amb llista substitucions OCR)</FixCommonOcrErrors>
+    <CommonOcrErrorsFixed>Errors comuns d'OCR Arreglats (s'ha emprat llista substitucions OCR): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Suprimeix espais entre nombres</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Fixa diàlegs en una línia</FixDialogsOnOneLine>
+    <FixDialogsOnOneLine>Arregla diàlegs en una línia</FixDialogsOnOneLine>
+    <NormalizeStrings>Normalitza cadenes</NormalizeStrings>
     <RemoveSpaceBetweenNumbersFixed>Suprimeix espais entre nombres arreglats: {0}</RemoveSpaceBetweenNumbersFixed>
-    <FixTurkishAnsi>Fixa lletres ANSI Turc (Icelandic) a Unicode</FixTurkishAnsi>
-    <FixDanishLetterI>Fixa 'i' Danés</FixDanishLetterI>
-    <FixSpanishInvertedQuestionAndExclamationMarks>Fixa exclamació/interrogació invertida espanyol</FixSpanishInvertedQuestionAndExclamationMarks>
+    <FixTurkishAnsi>Arregla lletres ANSI Turc (Icelandic) a Unicode</FixTurkishAnsi>
+    <FixDanishLetterI>Arregla 'i' Danés</FixDanishLetterI>
+    <FixSpanishInvertedQuestionAndExclamationMarks>Arregla exclamació/interrogació invertida espanyol</FixSpanishInvertedQuestionAndExclamationMarks>
     <AddMissingQuote>Afegeix cometa omesa (")</AddMissingQuote>
     <AddMissingQuotes>Afegeix cometes omeses (")</AddMissingQuotes>
-    <FixHyphens>Fixa línies comencen amb guió (-)</FixHyphens>
-    <FixHyphensAdd>Fixa (afegeix guió) línies parells amb només un guió (-)</FixHyphensAdd>
-    <FixHyphen>Fixa línia comença amb guió (-)</FixHyphen>
-    <XHyphensFixed>Guions fixats: {0}</XHyphensFixed>
+    <RemoveHyphensSingleLine>Suprimeix guions en les línies simples</RemoveHyphensSingleLine>
+    <XHyphensSingleLineRemoved>Guions suprimits en línies simples: {0}</XHyphensSingleLineRemoved>
+    <FixHyphensInDialogs>Arregla guió als diàlegs via estil: {0}</FixHyphensInDialogs>
+    <XHyphensInDialogsFixed>Guions Arreglats: {0}</XHyphensInDialogsFixed>
     <AddMissingQuotesExample>"How are you? -&gt; "How are you?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Cometes omeses afegides: {0}</XMissingQuotesAdded>
-    <Fix3PlusLines>Fixa subtítols amb més de dues línies</Fix3PlusLines>
-    <Fix3PlusLine>Fixa subtítol amb més de dues línies</Fix3PlusLine>
-    <X3PlusLinesFixed>Subtítols amb més de dues línies fixats: {0}</X3PlusLinesFixed>
+    <Fix3PlusLines>Arregla subtítols amb més de dues línies</Fix3PlusLines>
+    <Fix3PlusLine>Arregla subtítol amb més de dues línies</Fix3PlusLine>
+    <X3PlusLinesFixed>Subtítols amb més de dues línies Arreglats: {0}</X3PlusLinesFixed>
     <Analysing>Analitzant...</Analysing>
-    <NothingToFix>Res per fixar :)</NothingToFix>
+    <NothingToFix>Res per Arreglar :)</NothingToFix>
     <FixesFoundX>Correccions trobades: {0}</FixesFoundX>
     <XFixesApplied>Correccions aplicades: {0}</XFixesApplied>
-    <NothingToFixBut>Res per corregir però algunes coses per millorar - veure log pels detalls</NothingToFixBut>
-    <UncheckedFixLowercaseIToUppercaseI>Desmarcat "Fixa minúscula 'i' solitària a 'I' (Anglés)"</UncheckedFixLowercaseIToUppercaseI>
+    <NothingFixableBut>No pot Arreglar-se res automàticament. El subtítol conté errors - llegir log per a detalls</NothingFixableBut>
+    <XFixedBut>{0} element(s) Arreglats però el subtítol encara té errors - llegir log per a detalls</XFixedBut>
+    <XCouldBeFixedBut>{0} element(s) podrien Arreglar-se però el subtítol encara té errors - llegir log per a detalls</XCouldBeFixedBut>
+    <UncheckedFixLowercaseIToUppercaseI>Desmarcat "Arregla minúscula 'i' solitària a 'I' (Anglés)"</UncheckedFixLowercaseIToUppercaseI>
     <XIsChangedToUppercase>{0} 'i' canviat a majúscules</XIsChangedToUppercase>
-    <FixFirstLetterToUppercaseAfterParagraph>Fixa a lletra capital després de paràgraf</FixFirstLetterToUppercaseAfterParagraph>
+    <FixFirstLetterToUppercaseAfterParagraph>Arregla a lletra capital després de paràgraf</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>Combina línia curta (una frase)</MergeShortLine>
     <MergeShortLineAll>Combina línia curta (tot excepte diàlegs)</MergeShortLineAll>
     <XLineBreaksAdded>{0} salts de línia afegits</XLineBreaksAdded>
     <BreakLongLine>Divideix línia llarga</BreakLongLine>
-    <FixLongDisplayTime>Fixa durada excessiva</FixLongDisplayTime>
-    <FixInvalidItalicTag>Fixa etiqueta itàlica invàlida</FixInvalidItalicTag>
-    <FixShortDisplayTime>Fixa durada massa curta</FixShortDisplayTime>
-    <FixOverlappingDisplayTime>Fixa temps pantalla sobrepossat</FixOverlappingDisplayTime>
+    <FixLongDisplayTime>Arregla durada excessiva</FixLongDisplayTime>
+    <FixInvalidItalicTag>Arregla etiqueta itàlica invàlida</FixInvalidItalicTag>
+    <FixShortDisplayTime>Arregla durada massa curta</FixShortDisplayTime>
+    <FixOverlappingDisplayTime>Arregla temps pantalla sobrepossat</FixOverlappingDisplayTime>
+    <FixShortGap>Arregla buits curts</FixShortGap>
     <FixInvalidItalicTagsExample>&lt;i&gt;What do I care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
     <RemoveUnneededSpacesExample>Hey   you , there. -&gt; Hey you, there.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
@@ -617,69 +658,75 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Nombre text {0}: Temps d'inici posterior a temps final: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
-    <UnableToFixStartTimeLaterThanEndTime>No pot fixar-se nombre text {0}: Temps d'inici posterior a temps final: {1}</UnableToFixStartTimeLaterThanEndTime>
-    <XFixedToYZ>{0} fixat a: {1}{2}</XFixedToYZ>
-    <UnableToFixTextXY>No pot fixar-se nombre text {0}: {1}</UnableToFixTextXY>
-    <XOverlappingTimestampsFixed>{0} solapaments de temps solucionats</XOverlappingTimestampsFixed>
+    <UnableToFixStartTimeLaterThanEndTime>No pot Arreglar-se nombre text {0}: Temps d'inici posterior a temps final: {1}</UnableToFixStartTimeLaterThanEndTime>
+    <XFixedToYZ>{0} Arreglat a: {1}{2}</XFixedToYZ>
+    <UnableToFixTextXY>No pot Arreglar-se nombre text {0}: {1}</UnableToFixTextXY>
+    <XOverlappingTimestampsFixed>{0} solapaments de temps arreglats</XOverlappingTimestampsFixed>
     <XDisplayTimesProlonged>{0} durades prolongades</XDisplayTimesProlonged>
-    <XInvalidHtmlTagsFixed>{0} etiquetes HTML fixades</XInvalidHtmlTagsFixed>
+    <XInvalidHtmlTagsFixed>{0} etiquetes HTML Arreglades</XInvalidHtmlTagsFixed>
     <XDisplayTimesShortned>{0} durades recurtades</XDisplayTimesShortned>
+    <XGapsFixed>{0} buits curts Arreglats</XGapsFixed>
     <XLinesUnbreaked>{0} salts de línia desfets</XLinesUnbreaked>
     <UnneededSpace>Espais innecessaris</UnneededSpace>
     <XUnneededSpacesRemoved>{0} espais innecessaris suprimits</XUnneededSpacesRemoved>
     <UnneededPeriod>Punts innecessaris</UnneededPeriod>
     <XUnneededPeriodsRemoved>{0} punts innecessaris suprimits</XUnneededPeriodsRemoved>
-    <FixMissingSpace>Fixa espai omés</FixMissingSpace>
+    <FixMissingSpace>Arregla espai omés</FixMissingSpace>
     <XMissingSpacesAdded>{0} espais omesos afegits</XMissingSpacesAdded>
-    <FixUppercaseIInsideLowercaseWord>Fixa 'i' majúscula en mot en minúscules</FixUppercaseIInsideLowercaseWord>
+    <FixUppercaseIInsideLowercaseWord>Arregla 'i' majúscula en mot en minúscules</FixUppercaseIInsideLowercaseWord>
     <XPeriodsAdded>{0} punts afegits.</XPeriodsAdded>
     <FixMissingPeriodAtEndOfLine>Afegeix punt omés al final de línia</FixMissingPeriodAtEndOfLine>
-    <XDoubleApostrophesFixed>{0} doble apòstrof fixats.</XDoubleApostrophesFixed>
+    <XDoubleApostrophesFixed>{0} doble apòstrof Arreglats.</XDoubleApostrophesFixed>
     <XUppercaseIsFoundInsideLowercaseWords>{0} 'i' majúscules en mots en minúscules trobades</XUppercaseIsFoundInsideLowercaseWords>
     <RefreshFixes>Refresca solucions disponibles</RefreshFixes>
     <ApplyFixes>Aplica selecció solucions</ApplyFixes>
     <AutoBreak>Auto &amp;br</AutoBreak>
     <Unbreak>Tall enrrere</Unbreak>
-    <FixDoubleDash>Fixa '--' -&gt; '...'</FixDoubleDash>
+    <FixDoubleDash>Arregla '--' -&gt; '...'</FixDoubleDash>
     <FixDoubleGreaterThan>Suprimeix &gt;&gt;</FixDoubleGreaterThan>
     <FixEllipsesStart>Suprimeix marcat '...'</FixEllipsesStart>
-    <FixMissingOpenBracket>Fixa [ omés en línia</FixMissingOpenBracket>
+    <FixMissingOpenBracket>Arregla [ omés en línia</FixMissingOpenBracket>
     <FixMusicNotation>Substitueix símbols musicals (e.g. âTª) amb símbols preferits</FixMusicNotation>
-    <XFixDoubleDash>{0} '--' fixats</XFixDoubleDash>
-    <XFixDoubleGreaterThan>{0} &gt;&gt; eliminats</XFixDoubleGreaterThan>
-    <XFixEllipsesStart>{0} '...' inicials eliminats</XFixEllipsesStart>
-    <XFixMissingOpenBracket>{0} [ omesos en línia fixats</XFixMissingOpenBracket>
-    <XFixMusicNotation>{0} notes musicals en línia fixats</XFixMusicNotation>
+    <XFixDoubleDash>{0} '--' Arreglats</XFixDoubleDash>
+    <XFixDoubleGreaterThan>{0} &gt;&gt; suprimits</XFixDoubleGreaterThan>
+    <XFixEllipsesStart>{0} '...' inicials suprimits</XFixEllipsesStart>
+    <XFixMissingOpenBracket>{0} [ omesos en línia Arreglats</XFixMissingOpenBracket>
+    <XFixMusicNotation>{0} notes musicals en línia Arreglades</XFixMusicNotation>
     <FixDoubleDashExample>'Whoa-- um yeah!' -&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
     <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' -&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... and then we' -&gt; 'and then we'</FixEllipsesStartExample>
     <FixMissingOpenBracketExample>'clanks] Look out!' -&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
     <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '♫ sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} missatges registre importants!</NumberOfImportantLogMessages>
-    <FixedOkXY>Fixats i OK - '{0}': {1}</FixedOkXY>
+    <FixedOkXY>Arreglats i OK - '{0}': {1}</FixedOkXY>
     <FixOcrErrorExample>D0n't -&gt; Don't</FixOcrErrorExample>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Hi John! - Hi Ida! -&gt; Hi John!&lt;br /&gt;- Hi Ida!</FixDialogsOneLineExample>
     <SelectDefault>Selecciona predeterminat</SelectDefault>
+    <SetDefault>Estableix arreglos actuals per defecte</SetDefault>
+    <FixContinuationStyleX>Arregla continuació d'estil: {0}</FixContinuationStyleX>
+    <XFixContinuationStyle>{0} Continuació d'estil Arreglats</XFixContinuationStyle>
+    <FixUnnecessaryLeadingDots>Suprimeix punts principals innecessaris</FixUnnecessaryLeadingDots>
+    <XFixUnnecessaryLeadingDots>{0} punts principals suprimits</XFixUnnecessaryLeadingDots>
   </FixCommonErrors>
   <GetDictionaries>
-    <Title>Us calen diccionaris?</Title>
+    <Title>¿Us calen diccionaris?</Title>
     <DescriptionLine1>El corrector ortogràfic de Subtitle Edit es basa en el motor de NHunspell què</DescriptionLine1>
-    <DescriptionLine2>empra corrector ortogràfic amb diccionaris de OpenOffice</DescriptionLine2>
-    <ChooseLanguageAndClickDownload>Escolliu idioma i clic descàrrega</ChooseLanguageAndClickDownload>
+    <DescriptionLine2>empra corrector ortogràfic amb diccionaris d'OpenOffice</DescriptionLine2>
+    <ChooseLanguageAndClickDownload>Selecciona idioma i clic descàrrega</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Obre carpeta 'Diccionaris'</OpenDictionariesFolder>
     <Download>Descàrrega</Download>
     <XDownloaded>{0} descarregats i instal·lats</XDownloaded>
   </GetDictionaries>
   <GetTesseractDictionaries>
-    <Title>Us alen diccionaris?</Title>
+    <Title>¿Us alen diccionaris?</Title>
     <DescriptionLine1>Obten diccionaris Tesseract OCR des de la web</DescriptionLine1>
-    <DownloadFailed>Descàrrega fallada!</DownloadFailed>
+    <DownloadFailed>¡Descàrrega fallada!</DownloadFailed>
     <GetDictionariesHere>Obten diccionaris aquí:</GetDictionariesHere>
-    <ChooseLanguageAndClickDownload>Tria el teu idioma i clic en descarrega</ChooseLanguageAndClickDownload>
+    <ChooseLanguageAndClickDownload>Selecciona idioma i clic en descarrega</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Obri carpeta 'Diccionaris'</OpenDictionariesFolder>
     <Download>Descàrrega</Download>
-    <XDownloaded>{0} s'han descarregat i instal·lat</XDownloaded>
+    <XDownloaded>{0} descarregats i instal·lats</XDownloaded>
   </GetTesseractDictionaries>
   <GoogleTranslate>
     <Title>Traductor Google</Title>
@@ -703,14 +750,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MicrosoftTranslate>Traducto Microsoft</MicrosoftTranslate>
   </GoogleOrMicrosoftTranslate>
   <GoToLine>
-    <Title>Vés al subtítol nombre</Title>
+    <Title>Aneu al subtítol nombre</Title>
     <XIsNotAValidNumber>{0} no és un nombre vàlid</XIsNotAValidNumber>
   </GoToLine>
   <ImportImages>
     <Title>Importa imatges</Title>
     <ImageFiles>Fitxer d'imatge</ImageFiles>
     <Input>Entrada</Input>
-    <InputDescription>Escolliu fitxers d'entrada (navega o arrossega i deixa anar)</InputDescription>
+    <InputDescription>Selecciona  fitxers d'entrada (navega o arrossega i deixa anar)</InputDescription>
     <Remove>Suprimeix</Remove>
     <RemoveAll>Suprimeix-ho tot</RemoveAll>
   </ImportImages>
@@ -723,7 +770,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TimeCodes>Codis de temps</TimeCodes>
     <Frames>Quadres</Frames>
     <Seconds>Segons</Seconds>
-    <Milliseconds>Milisegons</Milliseconds>
+    <Milliseconds>Mi·llisegons</Milliseconds>
     <GetSceneChangesWithFfmpeg>Genera canvis d'escena amb FFmpeg</GetSceneChangesWithFfmpeg>
     <Sensitivity>Sensibilitat</Sensitivity>
     <SensitivityDescription>Un valor més baix dona més canvis a l'escena</SensitivityDescription>
@@ -745,9 +792,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveEmptyLines>Suprimeix línies buides</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>Suprimeix línies sense lletres</RemoveLinesWithoutLetters>
     <GenerateTimeCodes>Genera codis de temps</GenerateTimeCodes>
-    <GapBetweenSubtitles>Desfasament entre subtítols (milisegons)</GapBetweenSubtitles>
+    <TakeTimeFromFileName>Pren el temps del nom del fitxer</TakeTimeFromFileName>
+    <GapBetweenSubtitles>Desfasament entre subtítols (mil·lisegons)</GapBetweenSubtitles>
     <Auto>Auto</Auto>
-    <Fixed>Fixat</Fixed>
+    <Fixed>Arreglat</Fixed>
     <Refresh>&amp;Refresca</Refresh>
     <TextFiles>Fitxers de text</TextFiles>
     <PreviewLinesModifiedX>Vista prèvia - paràgrafs modificats: {0}</PreviewLinesModifiedX>
@@ -768,7 +816,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TotalNumberOfLinesX>Nombre total línies: {0:#,###,###}</TotalNumberOfLinesX>
     <AlreadyCorrectTimeCodes>Els fitxers ja tenen els codis de temps corregits</AlreadyCorrectTimeCodes>
     <AppendTimeCodes>Afegeix temps final del fitxer anterior</AppendTimeCodes>
-    <AddMs>Afegeix milisegons després de cada fitxer</AddMs>
+    <AddMs>Afegeix mil·lisegons després de cada fitxer</AddMs>
   </JoinSubtitles>
   <LanguageNames>
     <NotSpecified>No especificat</NotSpecified>
@@ -983,9 +1031,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <FindNext>Cerca següe&amp;nt</FindNext>
         <Replace>&amp;Substitueix</Replace>
         <MultipleReplace>&amp;Múltiple substitució...</MultipleReplace>
-        <GoToSubtitleNumber>Vés a nombre subtítol...</GoToSubtitleNumber>
+        <GoToSubtitleNumber>Aneu a nombre subtítol...</GoToSubtitleNumber>
         <RightToLeftMode>Mòde dreta a esquerre</RightToLeftMode>
-        <FixRtlViaUnicodeControlCharacters>Fixa RTL amb control de caràcters Unicode (per a línies seleccionades)</FixRtlViaUnicodeControlCharacters>
+        <FixRtlViaUnicodeControlCharacters>Arregla RTL mitjantçant control de caràcters unicode (files seleccionades)</FixRtlViaUnicodeControlCharacters>
+        <RemoveUnicodeControlCharacters>Suprimeix control de caràcters unicode (files seleccionades)</RemoveUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Inverteix dreta-a-esquerre Inici/final (selecció línies)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Mostra text original en visualitzacions audio/vídeo</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Modifica selecció...</ModifySelection>
@@ -996,7 +1045,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <AdjustDisplayDuration>&amp;Ajustament durades</AdjustDisplayDuration>
         <ApplyDurationLimits>Aplica límits durada</ApplyDurationLimits>
         <SubtitlesBridgeGaps>Uneix buits en durades</SubtitlesBridgeGaps>
-        <FixCommonErrors>&amp;Fixa errors comuns</FixCommonErrors>
+        <FixCommonErrors>&amp;Arregla errors comuns</FixCommonErrors>
         <StartNumberingFrom>Inicia nombrat des de...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Suprimeix text pels sords...</RemoveTextForHearingImpaired>
         <ChangeCasing>Canvia majúscules...</ChangeCasing>
@@ -1035,11 +1084,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <OpenVideo>Obre fitxer de vídeo...</OpenVideo>
         <OpenVideoFromUrl>Obre el vídeo des d'URL...</OpenVideoFromUrl>
         <OpenDvd>Obri DVD...</OpenDvd>
-        <ChooseAudioTrack>Escolliu pista d'audio</ChooseAudioTrack>
+        <ChooseAudioTrack>Selecciona pista d'audio</ChooseAudioTrack>
         <CloseVideo>Tanca fitxer de vídeo</CloseVideo>
+        <OpenSecondSubtitle>Obre segon fitxer subtítols</OpenSecondSubtitle>
         <SetVideoOffset>Estableix offset de video...</SetVideoOffset>
         <SmptTimeMode>Cronometratge SMPTE (marc desplegable)</SmptTimeMode>
         <GenerateTextFromVideo>Genera text des del vídeo...</GenerateTextFromVideo>
+        <ImportChaptersFromVideo>Importa capítols des del vídeo</ImportChaptersFromVideo>
         <GenerateImportSceneChanges>Genera/importa canvis d'escena...</GenerateImportSceneChanges>
         <RemoveSceneChanges>Suprimeix canvis d'escena</RemoveSceneChanges>
         <WaveformBatchGenerate>Fitxer de lots genera waveforms...</WaveformBatchGenerate>
@@ -1097,7 +1148,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <SaveAs>Desa com</SaveAs>
         <Find>Cerca</Find>
         <Replace>Substitueix</Replace>
-        <FixCommonErrors>Fixa errors comuns</FixCommonErrors>
+        <FixCommonErrors>Arregla errors comuns</FixCommonErrors>
         <RemoveTextForHi>Suprimeix text per a persones amb debilitat auditiva</RemoveTextForHi>
         <VisualSync>Sinc visual</VisualSync>
         <SpellCheck>Corrector ortogràfic</SpellCheck>
@@ -1148,6 +1199,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <MergeSelectedLinesAsDialog>Combina selecció de línies com a diàleg</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Combina amb línia anterior</MergeWithLineBefore>
         <MergeWithLineAfter>Combina amb línia posterior</MergeWithLineAfter>
+        <ExtendToLineBefore>Amplia a línia anterior</ExtendToLineBefore>
+        <ExtendToLineAfter>Amplia a línia posterior</ExtendToLineAfter>
         <RemoveFormatting>Suprimeix formatació</RemoveFormatting>
         <RemoveFormattingAll>Suprimeix totes les formatacions</RemoveFormattingAll>
         <RemoveFormattingBold>Suprimeix negreta</RemoveFormattingBold>
@@ -1172,7 +1225,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <GoogleAndMicrosoftTranslateSelectedLine>Tradueix línia original Google/Microsoft</GoogleAndMicrosoftTranslateSelectedLine>
         <TranslateSelectedLines>Tradueix línies seleccionades...</TranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Ajusta Durada de la selecció de línies...</AdjustDisplayDurationForSelectedLines>
-        <FixCommonErrorsInSelectedLines>Fixa errors comuns de la selecció de línies...</FixCommonErrorsInSelectedLines>
+        <FixCommonErrorsInSelectedLines>Arregla errors comuns de la selecció de línies...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Canvia majúscules de la selecció de línies...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Desa selecció de línies com...</SaveSelectedLines>
         <WebVTTSetNewVoice>Estableix veu nova...</WebVTTSetNewVoice>
@@ -1186,6 +1239,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Controls>
       <SubtitleFormat>Formatació</SubtitleFormat>
       <FileEncoding>Codificació</FileEncoding>
+      <ListView>Vista llista</ListView>
+      <SourceView>Vista origen</SourceView>
       <UndoChangesInEditPanel>Des-fés canvis en panell Edita</UndoChangesInEditPanel>
       <Previous>&lt; Prev.</Previous>
       <Next>Seg. &gt;</Next>
@@ -1216,12 +1271,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <AutoContinueInXSeconds>Auto continua en {0} segons</AutoContinueInXSeconds>
       <StillTypingAutoContinueStopped>Escrivint ... auto continua aturat</StillTypingAutoContinueStopped>
       <InsertNewSubtitleAtVideoPosition>&amp;Insereix nou subtítol a vídeo pos</InsertNewSubtitleAtVideoPosition>
+      <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Insereix nou subtítol en la possició del vídeo (sense focus al quadre de text)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
       <Auto>Auto</Auto>
       <PlayFromJustBeforeText>Reprodueix des just abans del &amp;text</PlayFromJustBeforeText>
       <Pause>Pausa</Pause>
-      <GoToSubtitlePositionAndPause>Vés a sub possició i pausa</GoToSubtitlePositionAndPause>
+      <GoToSubtitlePositionAndPause>Aneu a sub possició i pausa</GoToSubtitlePositionAndPause>
       <SetStartTime>Estableix temps d'inici</SetStartTime>
-      <SetEndTimeAndGoToNext>Estableix temps final &amp;&amp; vés al següent</SetEndTimeAndGoToNext>
+      <SetEndTimeAndGoToNext>Estableix temps final &amp;&amp; Aneu al següent</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Ajusta via temps final {0}</AdjustedViaEndTime>
       <SetEndTime>Estableix temps final</SetEndTime>
       <SetstartTimeAndOffsetOfRest>Estableix inici i reprodueix la resta</SetstartTimeAndOffsetOfRest>
@@ -1261,7 +1317,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FileOnDiskModified>fitxer al disc modificat</FileOnDiskModified>
     <OverwriteModifiedFile>Sobreescriu fitxer {0} modificat en {1} {2}{3} amb l'actual carregat des del disc en {4} {5}?</OverwriteModifiedFile>
     <FileXIsReadOnly>No pot desar-se {0} fitxer de sols lectura!</FileXIsReadOnly>
-    <UnableToSaveSubtitleX>No pot desar-se fitxer subtítols {0}</UnableToSaveSubtitleX>
+    <UnableToSaveSubtitleX>No pot desar-se fitxer de subtítols {0} subtítols semblen estar buits - ¡Intenteu tornar-lo a desar si treballeu amb un subtítol vàlid!</UnableToSaveSubtitleX>
+    <FormatXShouldUseUft8>¡Deu emprar-se codi UTF-8 al desar {0} fitxers!</FormatXShouldUseUft8>
     <BeforeNew>Abans nou</BeforeNew>
     <New>Nou</New>
     <BeforeConvertingToX>Convertint anterior a {0}</BeforeConvertingToX>
@@ -1289,16 +1346,16 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <OneReplacementMade>S'ha fet una substitució.</OneReplacementMade>
     <BeforeChangesMadeInSourceView>Abans fer canvis en vista origen</BeforeChangesMadeInSourceView>
     <UnableToParseSourceView>No pot analitzar-se el text en vista origen!</UnableToParseSourceView>
-    <GoToLineNumberX>Vés a la línia {0}</GoToLineNumberX>
+    <GoToLineNumberX>Aneu a la línia {0}</GoToLineNumberX>
     <CreateAdjustChangesApplied>Canvis aplicats a ajusta/crea línies</CreateAdjustChangesApplied>
     <SelectedLines>Selecció línies</SelectedLines>
     <BeforeDisplayTimeAdjustment>Abans ajustament durada</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Durada ajustada: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Durades ajustades: {0}</DisplayTimesAdjustedX>
     <StarTimeAdjustedX>Temps d'inici ajustat: {0}</StarTimeAdjustedX>
-    <BeforeCommonErrorFixes>Abans fixa errors comuns</BeforeCommonErrorFixes>
-    <CommonErrorsFixedInSelectedLines>Errors comuns fixats en selecció línies</CommonErrorsFixedInSelectedLines>
-    <CommonErrorsFixed>Errors comuns fixats</CommonErrorsFixed>
+    <BeforeCommonErrorFixes>Abans Arregla errors comuns</BeforeCommonErrorFixes>
+    <CommonErrorsFixedInSelectedLines>Errors comuns Arreglats en selecció línies</CommonErrorsFixedInSelectedLines>
+    <CommonErrorsFixed>Errors comuns Arreglats</CommonErrorsFixed>
     <BeforeRenumbering>Abans renombrat</BeforeRenumbering>
     <RenumberedStartingFromX>Renombrat comença des de: {0}</RenumberedStartingFromX>
     <BeforeRemovalOfTextingForHearingImpaired>Abans suprimeix text pels sords</BeforeRemovalOfTextingForHearingImpaired>
@@ -1324,7 +1381,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeSwedishToDanishTranslation>Abans traducció SUEC al DANÉS</BeforeSwedishToDanishTranslation>
     <TranslationFromSwedishToDanishComplete>Traducció de SUEC al DANÉS completada</TranslationFromSwedishToDanishComplete>
     <TranslationFromSwedishToDanishFailed>Traducció de SUEC al DANÉS ha fallat</TranslationFromSwedishToDanishFailed>
-    <BeforeUndo>Abans Des-fés</BeforeUndo>
     <UndoPerformed>Des-fés realitzat</UndoPerformed>
     <RedoPerformed>Re-fés realitzat</RedoPerformed>
     <NothingToUndo>Res per Des-fés</NothingToUndo>
@@ -1365,6 +1421,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NoSubtitlesFound>No s'han trobat subtítols</NoSubtitlesFound>
     <NotAValidMatroskaFileX>No és un fitxer Matroska vàlid: {0}</NotAValidMatroskaFileX>
     <BlurayNotSubtitlesFound>Fitxer sup de Blu-ray no comté cap subtítol o conté errors - intenteu la desmultiplexació altra vegada.</BlurayNotSubtitlesFound>
+    <ImportingChapters>Importando capítulos...</ImportingChapters>
+    <XChaptersImported>{0} capítulos importados</XChaptersImported>
     <ParsingMatroskaFile>Analitzant fitxer Matroska. Espereu si us plau...</ParsingMatroskaFile>
     <ParsingTransportStreamFile>Analitzant fitxer Transport Stream. Espereu si us plau...</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Abans importa subtítol des de fitxer Matroska</BeforeImportFromMatroskaFile>
@@ -1453,6 +1511,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <LineNumberXErrorReadingFromSourceLineY>Línia {0} - error llegint: {1}</LineNumberXErrorReadingFromSourceLineY>
     <LineNumberXErrorReadingTimeCodeFromSourceLineY>Línia {0} - error llegint codi temps: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
     <LineNumberXExpectedNumberFromSourceLineY>Línia {0} - nombre subtítol esperat: {1}</LineNumberXExpectedNumberFromSourceLineY>
+    <LineNumberXExpectedEmptyLine>Línia {0} - s'esperava línia buida i s'ha trobat un nombre + codi de temps (nombre omès): {1}</LineNumberXExpectedEmptyLine>
     <BeforeGuessingTimeCodes>Abans d'endevinar els codis de temps</BeforeGuessingTimeCodes>
     <BeforeAutoDuration>Abans auto-durada selecció de línies</BeforeAutoDuration>
     <BeforeColumnPaste>Abans enanxa columna</BeforeColumnPaste>
@@ -1477,6 +1536,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XPercentCompleted>{0}% completat</XPercentCompleted>
     <NextX>Següent: {0}</NextX>
     <PromptInsertSubtitleOverlap>Inserir subtítol en la possició d'ona provocarà solapament! ¿Continuar de tota manera?</PromptInsertSubtitleOverlap>
+    <SubtitleContainsNegativeDurationsX>Subtítol conté durada negativa en línia(es): {0}</SubtitleContainsNegativeDurationsX>
     <SetPlayRateX>Estableix ratio reproducció (velocitat) a {0}%</SetPlayRateX>
     <ErrorLoadIdx>No pot llegir-se fitxers .idx. Els fitxers .idx son part d'un fitxer parell idx/sub (també anomenat VobSub) i Subtitle Edit pot obrir el fitxer .sub.</ErrorLoadIdx>
     <ErrorLoadRar>Aquest fitxer sembla un fitxer comprimit .rar. Subtitle Edit no pot obrir fitxers comprimits.</ErrorLoadRar>
@@ -1493,11 +1553,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NoSupportHereDvdSup>Fitxers sup de DVD no son compatibles ací.</NoSupportHereDvdSup>
     <NoSupportHereVobSub>Fitxers VobSub no son compatibles ací.</NoSupportHereVobSub>
     <NoSupportHereDivx>Fitxers Divx no son compatibles ací.</NoSupportHereDivx>
+    <NoChapters>No s'han trobat capítols al vídeo</NoChapters>
   </Main>
   <MatroskaSubtitleChooser>
-    <Title>Escolliu subtítol des de fitxer Matroska</Title>
-    <TitleMp4>Escolliu subtítol des de fitxer MP4</TitleMp4>
-    <PleaseChoose>S'ha trobat més d'un subtítol - escolliu si us plau</PleaseChoose>
+    <Title>Selecciona subtítol des de fitxer Matroska</Title>
+    <TitleMp4>Selecciona subtítol des de fitxer MP4</TitleMp4>
+    <PleaseChoose>S'ha trobat més d'un subtítol - Selecciona si us plau</PleaseChoose>
     <TrackXLanguageYTypeZ>Pista {0} - Idioma: {1} - tipus: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
@@ -1505,33 +1566,126 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ConvertFrom>Converteix des de</ConvertFrom>
     <ConvertTo>Converteix a</ConvertTo>
     <CopyToClipboard>Copia al porta-retalls</CopyToClipboard>
-    <Celsius>Celsius</Celsius>
-    <Fahrenheit>Fahrenheit</Fahrenheit>
-    <Miles>Milles</Miles>
+    <Length>Durada</Length>
+    <Mass>Massa</Mass>
+    <Volume>Volum</Volume>
+    <Area>Àrea</Area>
+    <Time>Hora</Time>
+    <Temperature>Temperatura</Temperature>
+    <Velocity>Velocitat</Velocity>
+    <Force>Força</Force>
+    <Energy>Energia</Energy>
+    <Power>Potència</Power>
+    <Pressure>Pressió</Pressure>
     <Kilometers>Quilòmetres</Kilometers>
     <Meters>Metres</Meters>
+    <Centimeters>Centímetres</Centimeters>
+    <Millimeters>Mil·límetres</Millimeters>
+    <Micrometers>Micròmetres</Micrometers>
+    <Nanometers>Nanòmetres</Nanometers>
+    <Angstroms>Àngstrom</Angstroms>
+    <MilesTerrestial>Milles (terrestre)</MilesTerrestial>
+    <MilesNautical>Milles (nàutiques)</MilesNautical>
     <Yards>Iardes</Yards>
     <Feet>Peus</Feet>
     <Inches>Polzades</Inches>
-    <Pounds>Lliures</Pounds>
+    <Chains>Cadenes</Chains>
+    <Fathoms>Braces</Fathoms>
+    <Hands>Pams</Hands>
+    <Rods>Rods</Rods>
+    <Spans>Pams</Spans>
+    <LongTonnes>Tones llargues</LongTonnes>
+    <ShortTonnes>Tones curtes</ShortTonnes>
+    <Tonnes>Tones</Tonnes>
     <Kilos>quilos</Kilos>
+    <Grams>Grams</Grams>
+    <Milligrams>Mil·ligrams</Milligrams>
+    <Micrograms>Micrograms</Micrograms>
+    <Pounds>Lliures</Pounds>
+    <Ounces>Unces</Ounces>
+    <Carats>Quirats</Carats>
+    <Drams>Drams</Drams>
+    <Grains>Grans</Grains>
+    <Stones>Pedres</Stones>
+    <CubicKilometers>Quilòmetres cúbics</CubicKilometers>
+    <CubicMeters>Metres cúbics</CubicMeters>
+    <Litres>Litres</Litres>
+    <CubicCentimeters>Centímetres cúbics</CubicCentimeters>
+    <CubicMillimeters>Mil·límetres cúblics</CubicMillimeters>
+    <CubicMiles>Milles cúbiques</CubicMiles>
+    <CubicYards>Iardes cúbiques</CubicYards>
+    <CubicFTs>Cubic fts</CubicFTs>
+    <CubicInches>Polzades cúbiques</CubicInches>
+    <OilBarrels>Barrils de petroli</OilBarrels>
+    <GallonUS>Galó (US)</GallonUS>
+    <QuartsUS>Quarts (US)</QuartsUS>
+    <PintsUS>Pintes (US)</PintsUS>
+    <FluidOuncesUS>Unces fluides (US)</FluidOuncesUS>
+    <Bushels>Bushels</Bushels>
+    <Pecks>Pecks</Pecks>
+    <GallonsUK>Galons (UK)</GallonsUK>
+    <QuartsUK>Quarts (UK)</QuartsUK>
+    <PintsUK>Pintes (UK)</PintsUK>
+    <FluidOuncesUK>Unces fluides (UK)</FluidOuncesUK>
+    <SquareKilometers>Quilòmetres quadrats</SquareKilometers>
+    <SquareMeters>Metres quadrats</SquareMeters>
+    <SquareCentimeters>Centímetres quadrats</SquareCentimeters>
+    <SquareMillimeters>Mil·límetres quadrats</SquareMillimeters>
+    <SquareMiles>Milles quadrades</SquareMiles>
+    <SquareYards>Iardes quadrades</SquareYards>
+    <SquareFTs>Square fts</SquareFTs>
+    <SquareInches>Polzades quadrades</SquareInches>
+    <Hectares>Hectàrea</Hectares>
+    <Acres>Acres</Acres>
+    <Ares>Àrea</Ares>
+    <Hours>Hores</Hours>
+    <Minutes>Minuts</Minutes>
+    <Seconds>Segons</Seconds>
+    <Milliseconds>Mil·lisegons</Milliseconds>
+    <Microseconds>Microsegons</Microseconds>
+    <Fahrenheit>Fahrenheit</Fahrenheit>
+    <Celsius>Celsius</Celsius>
+    <Kelvin>Kelvin</Kelvin>
+    <KilometersPerHour>Quilòmetres/hora</KilometersPerHour>
+    <MetersPerSecond>Metres/segon</MetersPerSecond>
+    <MilesPerHour>Milles/hora</MilesPerHour>
+    <YardsPerMinute>Iardes/minut</YardsPerMinute>
+    <FTsPerSecond>Fits/segons</FTsPerSecond>
+    <Knots>Nusos</Knots>
+    <PoundsForce>Lliures-força</PoundsForce>
+    <Newtons>Newtons</Newtons>
+    <KilosForce>Quilos-força</KilosForce>
+    <Jouls>Joules</Jouls>
+    <Calories>Calories</Calories>
+    <Ergs>Ergs</Ergs>
+    <ElectronVolts>Electró-volts</ElectronVolts>
+    <Btus>Btus</Btus>
+    <Watts>Watts</Watts>
+    <Horsepower>Cavalls de potència</Horsepower>
+    <Atmospheres>Atmosferes</Atmospheres>
+    <Bars>Bars</Bars>
+    <Pascals>Pascals</Pascals>
+    <MillimetersOfMercury>Mil·límetres de mercuri</MillimetersOfMercury>
+    <PoundPerSquareInch>Lliura-força per polzada quadrada</PoundPerSquareInch>
+    <KilogramPerSquareCentimeter>Quilo-força per centímetre quadrat</KilogramPerSquareCentimeter>
+    <KiloPascals>Kilopascals</KiloPascals>
   </MeasurementConverter>
   <MergeDoubleLines>
     <Title>Combina línies amb el mateix text</Title>
-    <MaxMillisecondsBetweenLines>Milisegons Max. entre línies</MaxMillisecondsBetweenLines>
+    <MaxMillisecondsBetweenLines>mil·lisegons Max. entre línies</MaxMillisecondsBetweenLines>
     <IncludeIncrementing>Inclou línies d'increment</IncludeIncrementing>
   </MergeDoubleLines>
   <MergedShortLines>
     <Title>Combina línies curtes</Title>
     <MaximumCharacters>Caràcters màxims en un paràgraf</MaximumCharacters>
-    <MaximumMillisecondsBetween>Milisegons màxims entre línies</MaximumMillisecondsBetween>
+    <MaximumMillisecondsBetween>mil·lisegons màxims entre línies</MaximumMillisecondsBetween>
     <NumberOfMergesX>Nombre combinacions: {0}</NumberOfMergesX>
     <MergedText>Text combinat</MergedText>
     <OnlyMergeContinuationLines>Només combina línies de continuació</OnlyMergeContinuationLines>
   </MergedShortLines>
   <MergeTextWithSameTimeCodes>
     <Title>Combina línies amb mateixos codis de temps</Title>
-    <MaxDifferenceMilliseconds>Max. Diferència milisegons</MaxDifferenceMilliseconds>
+    <MaxDifferenceMilliseconds>Max. Diferència mil·lisegons</MaxDifferenceMilliseconds>
     <ReBreakLines>Re-Trenca línies</ReBreakLines>
     <NumberOfMergesX>Nombre de combinacions: {0}</NumberOfMergesX>
     <MergedText>Text combinat</MergedText>
@@ -1555,6 +1709,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <EqualLines>Línies iguals</EqualLines>
     <DurationLessThan>Durada menor que</DurationLessThan>
     <DurationGreaterThan>Durada major que</DurationGreaterThan>
+    <MoreThanTwoLines>Més de dues línies</MoreThanTwoLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Substitució múltiple</Title>
@@ -1575,8 +1730,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Export>Exporta...</Export>
     <ImportRulesTitle>Importa regles reemplaçament de...</ImportRulesTitle>
     <ExportRulesTitle>Exporta regles reemplaçament a...</ExportRulesTitle>
-    <ChooseGroupsToImport>Escolliu grups a importar</ChooseGroupsToImport>
-    <ChooseGroupsToExport>Escolliu grups a exportar</ChooseGroupsToExport>
+    <ChooseGroupsToImport>Selecciona grups a importar</ChooseGroupsToImport>
+    <ChooseGroupsToExport>Selecciona grups a exportar</ChooseGroupsToExport>
     <Rules>Exporta regles</Rules>
     <MoveToTop>Mou al principi</MoveToTop>
     <MoveToBottom>Mou al fiunal</MoveToBottom>
@@ -1612,8 +1767,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <OpenDvdFrom>Obri DVD des de...</OpenDvdFrom>
     <Disc>Disc</Disc>
     <Folder>Carpeta</Folder>
-    <ChooseDrive>Tria unitat</ChooseDrive>
-    <ChooseFolder>Tria carpeta</ChooseFolder>
+    <ChooseDrive>Selecciona unitat</ChooseDrive>
+    <ChooseFolder>Selecciona carpeta</ChooseFolder>
   </OpenVideoDvd>
   <PluginsGet>
     <Title>Complements</Title>
@@ -1700,8 +1855,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Estableix temps mínim visualització entre paràgrafs</Title>
     <PreviewLinesModifiedX>Vista prèvia -paràgrafs modificats: {0}</PreviewLinesModifiedX>
     <ShowOnlyModifiedLines>Mostra només línies modificades</ShowOnlyModifiedLines>
-    <MinimumMillisecondsBetweenParagraphs>Milisegons mínims entre línies</MinimumMillisecondsBetweenParagraphs>
+    <MinimumMillisecondsBetweenParagraphs>mil·lisegons mínims entre línies</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Info ràtio quadre</FrameInfo>
+    <Frames>Quadres</Frames>
+    <XFrameYisZMilliseconds>{0} quadre(s) a {1} fps són {2} mil·lísegons</XFrameYisZMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Estableix punt Sinc per la línia {0}</Title>
@@ -1738,10 +1895,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ToggleBookmarks>Activa/desactiva marcadors</ToggleBookmarks>
     <ToggleBookmarksWithComment>Activa/desactiva marcadors - afegeix comentari</ToggleBookmarksWithComment>
     <ClearBookmarks>Buida marcadors</ClearBookmarks>
-    <GoToBookmark>Vés a marcador</GoToBookmark>
-    <GoToPreviousBookmark>Vés a l'anterior marcador</GoToPreviousBookmark>
-    <GoToNextBookmark>Vés al següent marcador</GoToNextBookmark>
-    <GeneralChooseProfile>Escolliu perfil</GeneralChooseProfile>
+    <GoToBookmark>Aneu a marcador</GoToBookmark>
+    <GoToPreviousBookmark>Aneu al marcador anterior</GoToPreviousBookmark>
+    <GoToNextBookmark>Aneu al marcador següent</GoToNextBookmark>
+    <ChooseProfile>Selecciona perfil</ChooseProfile>
+    <DuplicateLine>Línia duplicada</DuplicateLine>
     <FontInUi>Font UI</FontInUi>
     <ShowFrameRate>Mostra ràtio quadres en barra d'eines</ShowFrameRate>
     <DefaultFrameRate>Ràtio quadres predeterminada</DefaultFrameRate>
@@ -1756,8 +1914,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MaximumCharactersPerSecond>Caracters/segon màxims</MaximumCharactersPerSecond>
     <MaximumWordssPerMinute>Mots/minut màxims</MaximumWordssPerMinute>
     <AutoWrapWhileTyping>Auto-empaqueta mentre s'escriu</AutoWrapWhileTyping>
-    <DurationMinimumMilliseconds>Min. durada, milisegons</DurationMinimumMilliseconds>
-    <DurationMaximumMilliseconds>Màx. durada, milisegons</DurationMaximumMilliseconds>
+    <DurationMinimumMilliseconds>Min. durada, mil·lisegons</DurationMinimumMilliseconds>
+    <DurationMaximumMilliseconds>Màx. durada, mil·lisegons</DurationMaximumMilliseconds>
     <MinimumGapMilliseconds>Mín. gap entre subtítols en ms</MinimumGapMilliseconds>
     <MaximumLines>Nombre línies màxim</MaximumLines>
     <SubtitleFont>Font subtítol</SubtitleFont>
@@ -1778,15 +1936,15 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ShowLineBreaksAs>Mostra salts de línia en vista llista com</ShowLineBreaksAs>
     <SaveAsFileNameFrom>"Desa com..." empra noms de fitxer de</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>Clic doble sobre línia en vista llista finestra principal farà...</MainListViewDoubleClickAction>
-    <MainListViewColumnsInfo>Escolliu llista visible en vista columnes</MainListViewColumnsInfo>
+    <MainListViewColumnsInfo>Selecciona llista visible en vista columnes</MainListViewColumnsInfo>
     <MainListViewNothing>Res</MainListViewNothing>
-    <MainListViewVideoGoToPositionAndPause>Vés a possició vídeo i pausa</MainListViewVideoGoToPositionAndPause>
-    <MainListViewVideoGoToPositionAndPlay>Vés a possició vídeo i reprodueix</MainListViewVideoGoToPositionAndPlay>
-    <MainListViewEditText>Vés a quadre d'edició de text</MainListViewEditText>
-    <MainListViewVideoGoToPositionMinus1SecAndPause>Vés a possició vídeo - 1 segon i pausa</MainListViewVideoGoToPositionMinus1SecAndPause>
-    <MainListViewVideoGoToPositionMinusHalfSecAndPause>Vés a possició vídeo - 0,5 segon i pausa</MainListViewVideoGoToPositionMinusHalfSecAndPause>
-    <MainListViewVideoGoToPositionMinus1SecAndPlay>Vés a possició vídeo 1 segon i reprodueix</MainListViewVideoGoToPositionMinus1SecAndPlay>
-    <MainListViewEditTextAndPause>Vés a quadre d'edició de text, i pausa a possició de vídeo</MainListViewEditTextAndPause>
+    <MainListViewVideoGoToPositionAndPause>Aneu a possició vídeo i pausa</MainListViewVideoGoToPositionAndPause>
+    <MainListViewVideoGoToPositionAndPlay>Aneu a possició vídeo i reprodueix</MainListViewVideoGoToPositionAndPlay>
+    <MainListViewEditText>Aneu a quadre d'edició de text</MainListViewEditText>
+    <MainListViewVideoGoToPositionMinus1SecAndPause>Aneu a possició vídeo - 1 segon i pausa</MainListViewVideoGoToPositionMinus1SecAndPause>
+    <MainListViewVideoGoToPositionMinusHalfSecAndPause>Aneu a possició vídeo - 0,5 segon i pausa</MainListViewVideoGoToPositionMinusHalfSecAndPause>
+    <MainListViewVideoGoToPositionMinus1SecAndPlay>Aneu a possició vídeo 1 segon i reprodueix</MainListViewVideoGoToPositionMinus1SecAndPlay>
+    <MainListViewEditTextAndPause>Aneu a quadre d'edició de text, i pausa a possició de vídeo</MainListViewEditTextAndPause>
     <VideoFileName>Nom fitxer vídeo</VideoFileName>
     <ExistingFileName>Nom de fitxer ja existeix</ExistingFileName>
     <AutoBackup>Auto-copia</AutoBackup>
@@ -1804,6 +1962,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TimeCodeMode>Mòde codi temps</TimeCodeMode>
     <TimeCodeModeHHMMSSMS>HH:MM:SS.Mseg (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
+    <SplitBehavior>Funció divisió</SplitBehavior>
+    <SplitBehaviorPrevious>Afegeix buit a l'esquerra del punt de divisió (focus dret)</SplitBehaviorPrevious>
+    <SplitBehaviorHalf>Afegeix buit al centre del punt de divisió (focus esquerre)</SplitBehaviorHalf>
+    <SplitBehaviorNext>Afegeix buit a la dreta del punt de divisió (focus esquerre)</SplitBehaviorNext>
     <VideoEngine>Motor de Video</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll en carpeta system32</DirectShowDescription>
@@ -1831,11 +1993,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WaveformSetVideoPosMoveStartEnd>Estableix la possició del vídeo quan mous inici/final</WaveformSetVideoPosMoveStartEnd>
     <WaveformFocusMouseEnter>Estableix focus a l'entrada del ratolí</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>També estableix focus a vista llista a l'entrada del ratolí en vista llista</WaveformListViewFocusMouseEnter>
+    <WaveformSingleClickSelect>Un clic selecciona subtítols</WaveformSingleClickSelect>
+    <WaveformSnapToSceneChanges>Ajusta canvis d'escena(mantenir Majús per sobreescriure)</WaveformSnapToSceneChanges>
     <WaveformBorderHitMs1>Marca de vora deu pegar-se dins</WaveformBorderHitMs1>
-    <WaveformBorderHitMs2>milisegons</WaveformBorderHitMs2>
+    <WaveformBorderHitMs2>mil·lisegons</WaveformBorderHitMs2>
     <WaveformColor>Color</WaveformColor>
     <WaveformSelectedColor>Color seleccionat</WaveformSelectedColor>
     <WaveformBackgroundColor>Color fons</WaveformBackgroundColor>
+    <WaveformCursorColor>Color cursor</WaveformCursorColor>
     <WaveformTextColor>Color text</WaveformTextColor>
     <WaveformTextFontSize>Mida font del text</WaveformTextFontSize>
     <WaveformAndSpectrogramsFolderEmpty>Buida carpetes 'Espectrogrames' i 'FormesOna'</WaveformAndSpectrogramsFolderEmpty>
@@ -1851,7 +2016,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WaveformBrowseToFFmpeg>Navega a FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Navega a VLC portable</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Estil subtítol Station Alpha</SubStationAlphaStyle>
-    <ChooseColor>Escolliu color</ChooseColor>
+    <ChooseColor>Selecciona color</ChooseColor>
     <SsaOutline>Contorn</SsaOutline>
     <SsaShadow>Ombra</SsaShadow>
     <SsaOpaqueBox>Caixa opaca</SsaOpaqueBox>
@@ -1884,13 +2049,26 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <EndSceneIndex>Paràgraf final escena és</EndSceneIndex>
     <FirstPlusX>Primer + {0}</FirstPlusX>
     <LastMinusX>Últim - {0}</LastMinusX>
-    <FixCommonerrors>Fixa errors comuns</FixCommonerrors>
+    <FixCommonerrors>Arregla errors comuns</FixCommonerrors>
     <RemoveTextForHi>Suprimeix text per HI</RemoveTextForHi>
     <MergeLinesShorterThan>Combina línies més curtes de</MergeLinesShorterThan>
+    <DialogStyle>Estil diàleg</DialogStyle>
+    <DialogStyleDashBothLinesWithSpace>Guió ambdós línies amb espai</DialogStyleDashBothLinesWithSpace>
+    <DialogStyleDashBothLinesWithoutSpace>Guió ambdós línies sense espai</DialogStyleDashBothLinesWithoutSpace>
+    <DialogStyleDashSecondLineWithSpace>Guió segon línia amb espai</DialogStyleDashSecondLineWithSpace>
+    <DialogStyleDashSecondLineWithoutSpace>Guió segon línia sense espai</DialogStyleDashSecondLineWithoutSpace>
+    <ContinuationStyle>Estil de continuar</ContinuationStyle>
+    <ContinuationStyleNone>Cap</ContinuationStyleNone>
+    <ContinuationStyleNoneTrailingDots>Cap, punts a les pauses (només al final)</ContinuationStyleNoneTrailingDots>
+    <ContinuationStyleNoneLeadingTrailingDots>Cap, punts a les pauses</ContinuationStyleNoneLeadingTrailingDots>
+    <ContinuationStyleOnlyTrailingDots>unts (només al final)</ContinuationStyleOnlyTrailingDots>
+    <ContinuationStyleLeadingTrailingDots>Punts</ContinuationStyleLeadingTrailingDots>
+    <ContinuationStyleLeadingTrailingDash>Guió</ContinuationStyleLeadingTrailingDash>
+    <ContinuationStyleLeadingTrailingDashDots>Guió, a les pauses punts</ContinuationStyleLeadingTrailingDashDots>
     <MusicSymbol>Símbols musicals</MusicSymbol>
     <MusicSymbolsReplace>Símbols musicals a reemplaçar (separats per coma)</MusicSymbolsReplace>
-    <FixCommonOcrErrorsUseHardcodedRules>Fixa errors comuns OCR - també empra normes codificades</FixCommonOcrErrorsUseHardcodedRules>
-    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Fixa temps curt de pantalla -permet moure temps d'inici</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+    <FixCommonOcrErrorsUseHardcodedRules>Arregla errors comuns OCR - també empra normes codificades</FixCommonOcrErrorsUseHardcodedRules>
+    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Arregla temps curt de pantalla -permet moure temps d'inici</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Salta el primer pas (trieu regles de reparació)</FixCommonErrorsSkipStepOne>
     <Shortcuts>Dreceres</Shortcuts>
     <Shortcut>Drecera</Shortcut>
@@ -1902,33 +2080,57 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ListView>Vista llista</ListView>
     <TextBox>Quadre de text</TextBox>
     <UpdateShortcut>Actualització</UpdateShortcut>
+    <FoucsSetVideoPosition>El focus estableix posició del vídeo</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Activa/desactiva acoblament/desacoblament controls vídeo</ToggleDockUndockOfVideoControls>
-    <CreateSetEndAddNewAndGoToNew>Estableix final, afegeix nou i vés al nou</CreateSetEndAddNewAndGoToNew>
+    <CreateSetEndAddNewAndGoToNew>Estableix final, afegeix nou i Aneu al nou</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Ajustament via possició final</AdjustViaEndAutoStart>
-    <AdjustViaEndAutoStartAndGoToNext>Ajustament via possició final i vés al següent</AdjustViaEndAutoStartAndGoToNext>
-    <AdjustSetEndTimeAndGoToNext>Estableix final i vés al següent</AdjustSetEndTimeAndGoToNext>
-    <AdjustSetStartAutoDurationAndGoToNext>Estableix inici, auto-durada i vés al següent</AdjustSetStartAutoDurationAndGoToNext>
-    <AdjustSetEndNextStartAndGoToNext>Estableix final, inicia i vés al següent</AdjustSetEndNextStartAndGoToNext>
-    <AdjustStartDownEndUpAndGoToNext>Tecla avall=estableix inici, Tecla amunt=Estableix final i vés al següent</AdjustStartDownEndUpAndGoToNext>
+    <AdjustViaEndAutoStartAndGoToNext>Ajustament via possició final i Aneu al següent</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustSetEndTimeAndGoToNext>Estableix final i Aneu al següent</AdjustSetEndTimeAndGoToNext>
+    <AdjustSetEndTimeAndPause>Estableix final i pausa</AdjustSetEndTimeAndPause>
+    <AdjustSetStartAutoDurationAndGoToNext>Estableix inici, auto-durada i Aneu al següent</AdjustSetStartAutoDurationAndGoToNext>
+    <AdjustSetEndNextStartAndGoToNext>Estableix final, inicia i Aneu al següent</AdjustSetEndNextStartAndGoToNext>
+    <AdjustStartDownEndUpAndGoToNext>Tecla avall=estableix inici, Tecla amunt=Estableix final i Aneu al següent</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>Mou 100 ms avant selecció de línies</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Mou 100 ms enrrere selecció de línies</AdjustSelected100MsBack>
     <AdjustStartXMsBack>Mou inici {0} ms enrrere</AdjustStartXMsBack>
     <AdjustStartXMsForward>Mou inici {0} ms avant</AdjustStartXMsForward>
     <AdjustEndXMsBack>Mou final {0} ms enrrere</AdjustEndXMsBack>
     <AdjustEndXMsForward>Mou final {0} ms avant</AdjustEndXMsForward>
+    <AdjustStartOneFrameBack>Mou inici 1 quadre enrrere</AdjustStartOneFrameBack>
+    <AdjustStartOneFrameForward>Mou inici 1 quadre següent</AdjustStartOneFrameForward>
+    <AdjustEndOneFrameBack>Mou final 1 quadre enrrere</AdjustEndOneFrameBack>
+    <AdjustEndOneFrameForward>Mou final 1 quadre següent</AdjustEndOneFrameForward>
+    <AdjustStartOneFrameBackKeepGapPrev>Mou inici 1 quadre enrrere (mantenir buit amb l'anterior si és a prop)</AdjustStartOneFrameBackKeepGapPrev>
+    <AdjustStartOneFrameForwardKeepGapPrev>Mou inici 1 quadre següent (mantenir buit amb l'anterior si és a prop)</AdjustStartOneFrameForwardKeepGapPrev>
+    <AdjustEndOneFrameBackKeepGapNext>Mou final 1 quadre enrrere (mantenir buit amb l'anterior si és a prop)</AdjustEndOneFrameBackKeepGapNext>
+    <AdjustEndOneFrameForwardKeepGapNext>Mou final 1 quadre següent (mantenir buit amb l'anterior si és a prop)</AdjustEndOneFrameForwardKeepGapNext>
     <AdjustSetStartTimeKeepDuration>Estableix temps d'inici, manté duració</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Estableix final, compensa la resta</AdjustSetEndAndOffsetTheRest>
-    <AdjustSetEndAndOffsetTheRestAndGoToNext>Estableix final, compensa la resta i vés al següent</AdjustSetEndAndOffsetTheRestAndGoToNext>
+    <AdjustSetEndAndOffsetTheRestAndGoToNext>Estableix final, compensa la resta i Aneu al següent</AdjustSetEndAndOffsetTheRestAndGoToNext>
+    <AdjustSnapStartToNextSceneChange>Captura l'inici de les línies seleccionades al canvi d'escena següent</AdjustSnapStartToNextSceneChange>
+    <AdjustSnapStartToNextSceneChangeWithGap>Captura l'inici de les línies seleccionades al canvi d'escena següent amb min. buit</AdjustSnapStartToNextSceneChangeWithGap>
+    <AdjustSnapEndToPreviousSceneChange>Captura el final de les línies seleccionades al canvi d'escena anterior</AdjustSnapEndToPreviousSceneChange>
+    <AdjustSnapEndToPreviousSceneChangeWithGap>Captura el final de les línies seleccionades al canvi d'escena anterior amb min. buit</AdjustSnapEndToPreviousSceneChangeWithGap>
+    <AdjustExtendToNextSceneChange>Amplia les línies seleccionades al canvi d'escena següent (o subtítol)</AdjustExtendToNextSceneChange>
+    <AdjustExtendToNextSceneChangeWithGap>Amplia les línies seleccionades al canvi d'escena següent amb min. buit (o subtítol)</AdjustExtendToNextSceneChangeWithGap>
+    <AdjustExtendToPreviousSceneChange>Amplia les línies seleccionades al canvi d'escena anterior (o subtítol)</AdjustExtendToPreviousSceneChange>
+    <AdjustExtendToPreviousSceneChangeWithGap>Amplia les línies seleccionades al canvi d'escena anterior amb min. buit (o subtítol)</AdjustExtendToPreviousSceneChangeWithGap>
+    <AdjustExtendToNextSubtitle>Amplia línies seleccionades al següent subtítol</AdjustExtendToNextSubtitle>
+    <AdjustExtendToPreviousSubtitle>Amplia línes seleccionades a l'anterior subtítol</AdjustExtendToPreviousSubtitle>
     <AdjustExtendCurrentSubtitle>Amplia línia actual al següent subtítol o durada màxima</AdjustExtendCurrentSubtitle>
+    <AdjustExtendPreviousLineEndToCurrentStart>Amplia el final de línia anterior a l'inici actual</AdjustExtendPreviousLineEndToCurrentStart>
+    <AdjustExtendNextLineStartToCurrentEnd>Amplia l'inici de la següent línia al final actual</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>Torna a calcular durada del subtítol actual</RecalculateDurationOfCurrentSubtitle>
     <MainCreateStartDownEndUp>Crea nou amb tecla-avall, estableix final amb tecla-amunt</MainCreateStartDownEndUp>
     <MergeDialog>Combina diàleg (insereix guions)</MergeDialog>
-    <GoToNext>Vés a línia següent</GoToNext>
-    <GoToPrevious>Vés a línia anterior</GoToPrevious>
-    <GoToCurrentSubtitleStart>Vés a línia inici actual</GoToCurrentSubtitleStart>
-    <GoToCurrentSubtitleEnd>Vés a línia final actual</GoToCurrentSubtitleEnd>
-    <GoToPreviousSubtitleAndFocusVideo>Vés a la línia anterior i estableix possició del vídeo</GoToPreviousSubtitleAndFocusVideo>
-    <GoToNextSubtitleAndFocusVideo>Vés a la línia següent i estableix possició del vídeo</GoToNextSubtitleAndFocusVideo>
+    <GoToNext>Aneu a línia següent</GoToNext>
+    <GoToPrevious>Aneu a línia anterior</GoToPrevious>
+    <GoToCurrentSubtitleStart>Aneu a línia inici actual</GoToCurrentSubtitleStart>
+    <GoToCurrentSubtitleEnd>Aneu a línia final actual</GoToCurrentSubtitleEnd>
+    <GoToPreviousSubtitleAndFocusVideo>Aneu a la línia anterior i estableix possició del vídeo</GoToPreviousSubtitleAndFocusVideo>
+    <GoToNextSubtitleAndFocusVideo>Aneu a la línia següent i estableix possició del vídeo</GoToNextSubtitleAndFocusVideo>
+    <GoToPrevSubtitleAndPlay>Aneu a la línia anterior i reprodueix</GoToPrevSubtitleAndPlay>
+    <GoToNextSubtitleAndPlay>Aneu a la següent línia i reprodueix</GoToNextSubtitleAndPlay>
     <ToggleFocus>Activa/desactiva focus entre vista llista i quadre de text subtítol</ToggleFocus>
     <ToggleDialogDashes>Activa/desactiva guions diàleg</ToggleDialogDashes>
     <ToggleMusicSymbols>Activa/desactiva símbols musicals</ToggleMusicSymbols>
@@ -1945,6 +2147,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CopyTextOnly>Copia text només al porta-retalls (selecció línies)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Copia text de l'original a l'actual</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Auto-durada (selecció línies)</AutoDurationSelectedLines>
+    <FixRTLViaUnicodeChars>Arregla RTL mitjançant control de caràcters Unicode</FixRTLViaUnicodeChars>
+    <RemoveRTLUnicodeChars>Suprimeix control de caràcters Unicode</RemoveRTLUnicodeChars>
     <ReverseStartAndEndingForRtl>Inverteix inici/final RTL</ReverseStartAndEndingForRtl>
     <VerticalZoom>Amplia vertical</VerticalZoom>
     <VerticalZoomOut>Fora zoom vertical</VerticalZoomOut>
@@ -1952,12 +2156,15 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WaveformSeekSilenceBack>Cerca silenci enrrere</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Afegeix text ací (en nova selecció)</WaveformAddTextHere>
     <WaveformAddTextHereFromClipboard>Afegeix text ací (desde el porta-retalla a nova selecció)</WaveformAddTextHereFromClipboard>
+    <SetParagraphAsSelection>Estableix actual com a nova selecció</SetParagraphAsSelection>
     <WaveformPlayNewSelection>Reprodueix nova selecció</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Reprodueix final de la selecció</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Reprodueix primer el subtítol seleccionat</WaveformPlayFirstSelectedSubtitle>
-    <WaveformGoToPreviousSceneChange>Vés a canvi d'escena anterior</WaveformGoToPreviousSceneChange>
-    <WaveformGoToNextSceneChange>Vés a canvi d'escena següent</WaveformGoToNextSceneChange>
+    <WaveformFocusListView>Focus en vista llista</WaveformFocusListView>
+    <WaveformGoToPreviousSceneChange>Aneu a canvi d'escena anterior</WaveformGoToPreviousSceneChange>
+    <WaveformGoToNextSceneChange>Aneu a canvi d'escena següent</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Activa/desactiva canvi d'escena</WaveformToggleSceneChange>
+    <WaveformGuessStart>Autoajusta inici mitjantçant canvi volum/escena</WaveformGuessStart>
     <GoBack1Frame>Un quadre enrrere</GoBack1Frame>
     <GoForward1Frame>Un quadre avant</GoForward1Frame>
     <GoBack1FrameWithPlay>Un quadre enrrere (amb reproducció)</GoBack1FrameWithPlay>
@@ -1970,8 +2177,19 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GoForward1Second>Un segon avant</GoForward1Second>
     <GoBack5Seconds>Cinc segons enrrere</GoBack5Seconds>
     <GoForward5Seconds>Cinc segons avant</GoForward5Seconds>
-    <WaveformGoToPrevSubtitle>Vés al subtítol anterior (des de la possició del vídeo)</WaveformGoToPrevSubtitle>
-    <WaveformGoToNextSubtitle>Vés al subtítol següent (des de la possició del vídeo)</WaveformGoToNextSubtitle>
+    <GoBackXSSeconds>Temps enrrere seleccionat menut</GoBackXSSeconds>
+    <GoForwardXSSeconds>Temps avança seleccionat menut</GoForwardXSSeconds>
+    <GoBackXLSeconds>Temps enrrere seleccionat gran</GoBackXLSeconds>
+    <GoForwardXLSeconds>Temps avançat seleccionat gran</GoForwardXLSeconds>
+    <GoBack3Second>Tres segons enrrere</GoBack3Second>
+    <GoToStartCurrent>Estableix possició de vídeo a l'inici del subtítol actual</GoToStartCurrent>
+    <ToggleStartEndCurrent>Intercanvia possició vídeo entre inici/final subtítol actual</ToggleStartEndCurrent>
+    <PlayCurrent>Reprodueix subtítol actual</PlayCurrent>
+    <WaveformGoToPrevSubtitle>Aneu al subtítol anterior (des de la possició del vídeo)</WaveformGoToPrevSubtitle>
+    <WaveformGoToNextSubtitle>Aneu al subtítol següent (des de la possició del vídeo)</WaveformGoToNextSubtitle>
+    <WaveformGoToPrevChapter>Aneu al capítol anterior</WaveformGoToPrevChapter>
+    <WaveformGoToNextChapter>Aneu al capítol següent</WaveformGoToNextChapter>
+    <WaveformSelectNextSubtitle>Selecciona següent subtítol (des de la possició de vídeo, actual possició)</WaveformSelectNextSubtitle>
     <TogglePlayPause>Activa/desactiva Reprodueix/pausa</TogglePlayPause>
     <Pause>Pausa</Pause>
     <Fullscreen>Pantalla sencera</Fullscreen>
@@ -1985,14 +2203,21 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CustomSearch5>Tradueix, cerca personalitzada 5</CustomSearch5>
     <SyntaxColoring>Sintaxi colorejada</SyntaxColoring>
     <ListViewSyntaxColoring>Vista llista sintaxi colorejada</ListViewSyntaxColoring>
-    <SyntaxColorDurationIfTooSmall>Color durada massa curta</SyntaxColorDurationIfTooSmall>
-    <SyntaxColorDurationIfTooLarge>Color durada massa llarga</SyntaxColorDurationIfTooLarge>
-    <SyntaxColorTextIfTooLong>Color text massa llarg</SyntaxColorTextIfTooLong>
-    <SyntaxColorTextMoreThanMaxLines>Color text més de {0} línies</SyntaxColorTextMoreThanMaxLines>
-    <SyntaxColorOverlap>Color codi temps sobrepossat</SyntaxColorOverlap>
+    <SyntaxColorDurationIfTooSmall>Coloreja durada si és massa curta</SyntaxColorDurationIfTooSmall>
+    <SyntaxColorDurationIfTooLarge>Coloreja durada si és massa llarga</SyntaxColorDurationIfTooLarge>
+    <SyntaxColorTextIfTooLong>Coloreja text si és massa llarg</SyntaxColorTextIfTooLong>
+    <SyntaxColorTextIfTooWide>Coloreja text si és massa extens (pixels)</SyntaxColorTextIfTooWide>
+    <SyntaxColorTextMoreThanMaxLines>Coloreja text si té més de {0} línies</SyntaxColorTextMoreThanMaxLines>
+    <SyntaxColorOverlap>Coloreja codi temps sobrepossat</SyntaxColorOverlap>
+    <SyntaxColorGap>Coloreja buit si és massa curt</SyntaxColorGap>
     <SyntaxErrorColor>Color error</SyntaxErrorColor>
-    <GoToFirstSelectedLine>Vés a la primera línia seleccionada</GoToFirstSelectedLine>
-    <GoToNextEmptyLine>Vés a la següent línia buida</GoToNextEmptyLine>
+    <SyntaxLineWidthSettings>Configuració...</SyntaxLineWidthSettings>
+    <LineWidthSettings>Ajusta amplada línia</LineWidthSettings>
+    <MaximumLineWidth>Amplada màxima de línia:</MaximumLineWidth>
+    <Pixels>pixels </Pixels>
+    <MeasureFont>Mida de font:</MeasureFont>
+    <GoToFirstSelectedLine>Aneu a la primera línia seleccionada</GoToFirstSelectedLine>
+    <GoToNextEmptyLine>Aneu a la següent línia buida</GoToNextEmptyLine>
     <MergeSelectedLines>Combina selecció de línies</MergeSelectedLines>
     <MergeSelectedLinesAndAutoBreak>Combina selecció de línies i auto-trencament</MergeSelectedLinesAndAutoBreak>
     <MergeSelectedLinesAndUnbreak>Combina selecció de línies i desfer-trencament</MergeSelectedLinesAndUnbreak>
@@ -2013,7 +2238,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ListViewColumnPaste>Columna, enganxa</ListViewColumnPaste>
     <ListViewColumnTextUp>Columna, text amunt</ListViewColumnTextUp>
     <ListViewColumnTextDown>Columna, text avall</ListViewColumnTextDown>
-    <ListViewGoToNextError>Vés al següent error</ListViewGoToNextError>
+    <ListViewFocusWaveform>Focus a espectrograma/forma ona</ListViewFocusWaveform>
+    <ListViewGoToNextError>Aneu al següent error</ListViewGoToNextError>
     <ShowBeamer>Inicia subtítol projecció pantalla sencera</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Mou últim mot avall a següent línia subtítol</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Mou primer mot de la següent línia subtítol amunt</MainTextBoxMoveFirstWordFromNextUp>
@@ -2021,15 +2247,21 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MainTextBoxMoveLastWordDownCurrent>Moure l'últim mot de la primera línia avall (subtítol actual)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Selecció a minúscules</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Selecció a Majúscules</MainTextBoxSelectionToUpper>
+    <MainTextBoxSelectionToRuby>Selecció a carmín (japonés)</MainTextBoxSelectionToRuby>
     <MainTextBoxToggleAutoDuration>Activa/desactiva auto duració</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Auto-trencament de text</MainTextBoxAutoBreak>
     <MainTextBoxAutoBreakFromPos>Trenca al primer espai des de la possició del cursor</MainTextBoxAutoBreakFromPos>
-    <MainTextBoxAutoBreakFromPosAndGoToNext>Trenca al primer espai des de la possició del cursor i vés al següent</MainTextBoxAutoBreakFromPosAndGoToNext>
+    <MainTextBoxAutoBreakFromPosAndGoToNext>Trenca al primer espai des de la possició del cursor i Aneu al següent</MainTextBoxAutoBreakFromPosAndGoToNext>
     <MainTextBoxUnbreak>Destrencament deText</MainTextBoxUnbreak>
     <MainFileSaveAll>Desa-ho tot</MainFileSaveAll>
     <Miscellaneous>Misc.</Miscellaneous>
     <CpsIncludesSpace>Caràcters/segon (CPS) inclou espais</CpsIncludesSpace>
     <UseDoNotBreakAfterList>Empra no-trenques-després-de-llistar (per auto-br)</UseDoNotBreakAfterList>
+    <BreakEarlyForLineEnding>Salt abans per a final de frase (.!?)</BreakEarlyForLineEnding>
+    <BreakByPixelWidth>Salt per amplada de pixel</BreakByPixelWidth>
+    <BreakPreferBottomHeavy>Prefereix botó heavy</BreakPreferBottomHeavy>
+    <BreakEarlyForDashDialog>Salt abans per a guió</BreakEarlyForDashDialog>
+    <BreakEarlyForComma>Salt abans per coma</BreakEarlyForComma>
     <GoogleTranslate>Traducció amb Google</GoogleTranslate>
     <GoogleTranslateApiKey>Clau API</GoogleTranslateApiKey>
     <MicrosoftBingTranslator>Microsoft Bing Translator</MicrosoftBingTranslator>
@@ -2037,6 +2269,19 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MicrosoftTranslateApiKey>Clau</MicrosoftTranslateApiKey>
     <MicrosoftTranslateTokenEndpoint>Activa/desactiva punt final</MicrosoftTranslateTokenEndpoint>
     <FontNote>Nota: Aquesta configuració de Font es només per la interfície de Subtitle Edit. La configuració de Font per als subtítols se fa normalment al reproductor de vídeo, pero també quan s'empra una formatació de subt´tiol amb font integrada com "Sub Station Apha avançada" o via exportació.</FontNote>
+    <RestoreDefaultSettings>Restaura la configuració predeterminada</RestoreDefaultSettings>
+    <RestoreDefaultSettingsMsg>Va a restaurar-se tota la configuració a la predeterminada, ¿Segueix?</RestoreDefaultSettingsMsg>
+    <RemoveTimeCodes>Suprimeix codis de temps</RemoveTimeCodes>
+    <EditFixContinuationStyleSettings>Edita ajustaments per a Arreglar continuació d'estil...</EditFixContinuationStyleSettings>
+    <FixContinuationStyleSettings>Ajustaments per a Arreglar continuació d'estil</FixContinuationStyleSettings>
+    <UncheckInsertsAllCaps>Detecta i desmarca títols solitaris en capçaleres (Per exemple: SENSE ENTRADA)</UncheckInsertsAllCaps>
+    <UncheckInsertsItalic>Detecta i desmarca títols solitaris en itàlica, o lletres</UncheckInsertsItalic>
+    <UncheckInsertsLowercase>Detecta i desmarca títols solitaris, o lletres, en minúscules</UncheckInsertsLowercase>
+    <HideContinuationCandidatesWithoutName>Oculta frases de continuació improbables</HideContinuationCandidatesWithoutName>
+    <IgnoreLyrics>Ignora lletres entre símbols musicals</IgnoreLyrics>
+    <MinFrameGap>Min. buit en quadres</MinFrameGap>
+    <XFramesAtYFrameRateGivesZMs>{0} quadres en ratio de {1} resulta {2} mil·lísegons.</XFramesAtYFrameRateGivesZMs>
+    <UseXAsNewGap>¿Empra "{0}" mil·lísegons com a nou mímin buit?</UseXAsNewGap>
   </Settings>
   <SettingsMpv>
     <Title>Configuració mvp</Title>
@@ -2096,7 +2341,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <EditWordOnly>Edita només paraula</EditWordOnly>
     <AddXToNames>Afegeix '{0}' a llista names/etc</AddXToNames>
     <AddXToUserDictionary>Afegeix '{0}' al diccionari personal</AddXToUserDictionary>
-    <AutoFixNames>Auto fixa format de noms</AutoFixNames>
+    <AutoFixNames>Auto Arregla format de noms</AutoFixNames>
+    <AutoFixNamesViaSuggestions>També Arregla noms mitjantçant 'suggerències de correcció'</AutoFixNamesViaSuggestions>
     <CheckOneLetterWords>Comprova mots desconeguts d'una carta</CheckOneLetterWords>
     <TreatINQuoteAsING>Tracta final de paraula "in'" com "ing" (Anglès només)</TreatINQuoteAsING>
     <RememberUseAlwaysList>Recorda la llista "Empra sempre"</RememberUseAlwaysList>
@@ -2110,8 +2356,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GlyphCheckReport>Caràcter invàlid {0} trobat a la columna {1}</GlyphCheckReport>
     <WhiteSpaceCheckReport>Espai en blanc invàlid trobat a la columna {0}</WhiteSpaceCheckReport>
     <ReportPrompt>Vore informe complet ací: {0}.</ReportPrompt>
+    <OpenReportInFolder>Obri informe en carpeta</OpenReportInFolder>
     <FoundXIssues>La comprovació de qualitat de Netflix ha trobat {0} problemes.</FoundXIssues>
     <CheckOk>La comprovació de qualitat de Netflix ha estat correcta :-)</CheckOk>
+    <MaximumXCharsPerSecond>Màxim {0} caràcters per segon (espais compten)</MaximumXCharsPerSecond>
+    <MaximumLineLength>Longitud màxima de línia ({0})</MaximumLineLength>
+    <MinimumDuration>Durada mínima: 5/6 segons (833ms)</MinimumDuration>
   </NetflixQualityCheck>
   <Split>
     <Title>Divideix</Title>
@@ -2184,6 +2434,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SingleLineLengthMinimum>Llargària línia única - mínim: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Llargària línia única - màxim: {0}</SingleLineLengthMaximum>
     <SingleLineLengthAverage>Llargària línia única - mitjana: {0}</SingleLineLengthAverage>
+    <SingleLineWidthMinimum>Amplada línia única - mínim {0}</SingleLineWidthMinimum>
+    <SingleLineWidthMaximum>Amplada línia única - màxim {0}</SingleLineWidthMaximum>
+    <SingleLineWidthAverage>Amplada línia única - mitjana {0}</SingleLineWidthAverage>
     <DurationMinimum>Durada - mínim: {0:0.000} segons</DurationMinimum>
     <DurationMaximum>Durada - màxim: {0:0.000} segons</DurationMaximum>
     <DurationAverage>Durada - mitjana: {0:0.000} segons</DurationAverage>
@@ -2272,12 +2525,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </PointSync>
   <TransportStreamSubtitleChooser>
     <Title>Selector de subtítols de flux de transport - {0}</Title>
-    <PidLine>Identificador de paquet de transport (PID) = {0}, nombre de subtítols = {1}</PidLine>
+    <PidLineImage>Imatges - Identificador de transport de paquet (PID) = {0}, idioma = {1}, nombre de subtítols = {2}</PidLineImage>
+    <PidLineTeletext>Teletext - Identificador de transport de paquet (PID) = {1}, pàgina {0}, Idioma = {2}, nombre de subtítols = {3}</PidLineTeletext>
     <SubLine>{0}: {1} -&gt; {2}, {3} imatge(s)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Tipus subtítol desconegut</Title>
-    <Message>Si voleu açò fixat si us plau envieu un correu electrònic a mailto:niksedk@gmail.com i incloeu una copia del subtítol.</Message>
+    <Message>Si voleu açò Arreglat si us plau envieu un correu electrònic a mailto:niksedk@gmail.com i incloeu una copia del subtítol.</Message>
     <ImportAsPlainText>Importa com a text pla...</ImportAsPlainText>
   </UnknownSubtitle>
   <VisualSync>
@@ -2289,7 +2543,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ThreeSecondsBack>&lt; 3 segs</ThreeSecondsBack>
     <PlayXSecondsAndBack>Reprodueix {0} segons i torna</PlayXSecondsAndBack>
     <FindText>Cerca text</FindText>
-    <GoToSubPosition>Vés a sub pos</GoToSubPosition>
+    <GoToSubPosition>Aneu a sub pos</GoToSubPosition>
     <KeepChangesTitle>Manten canvis?</KeepChangesTitle>
     <KeepChangesMessage>S'han fet canvis al subtítol en 'Sinc Visual'. Manten canvis?</KeepChangesMessage>
     <SynchronizationDone>Sinc feta!</SynchronizationDone>
@@ -2298,7 +2552,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </VisualSync>
   <VobSubEditCharacters>
     <Title>Edita imatge comparant amb base dades</Title>
-    <ChooseCharacter>Escolliu caràcter(s)</ChooseCharacter>
+    <ChooseCharacter>Selecciona caràcter(s)</ChooseCharacter>
     <ImageCompareFiles>Compara fitxer d'imatge</ImageCompareFiles>
     <CurrentCompareImage>Compara imatge actual</CurrentCompareImage>
     <TextAssociatedWithImage>Text associat amb la imatge</TextAssociatedWithImage>
@@ -2313,11 +2567,16 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Importa/OCR subtítol VobSub (sub/idx)</Title>
     <TitleBluRay>Importa/OCR subtítol (.sup) Blu-ray</TitleBluRay>
     <OcrMethod>Mètode OCR</OcrMethod>
-    <OcrViaModi>OCR via Microsoft Office Document Imaging(MODI). Cal Microsoft Office</OcrViaModi>
-    <OcrViaTesseract>OCR via Tesseract</OcrViaTesseract>
-    <OcrViaNOCR>OCR via nOCR</OcrViaNOCR>
-    <Language>Idioma</Language>
+    <OcrViaTesseractVersionX>Tesseract {0}</OcrViaTesseractVersionX>
     <OcrViaImageCompare>OCR via comparació d'imatges</OcrViaImageCompare>
+    <OcrViaModi>OCR via Microsoft Office Document Imaging(MODI). Cal Microsoft Office</OcrViaModi>
+    <OcrViaNOCR>OCR via nOCR</OcrViaNOCR>
+    <TesseractEngineMode>Motor mode</TesseractEngineMode>
+    <TesseractEngineModeLegacy>Només Tesseract original (pot detectar cursiva)</TesseractEngineModeLegacy>
+    <TesseractEngineModeNeural>Només xarxes neuronals LSTM</TesseractEngineModeNeural>
+    <TesseractEngineModeBoth>Tesseract + LSTM</TesseractEngineModeBoth>
+    <TesseractEngineModeDefault>Per defecte, segons el que estigui disponible</TesseractEngineModeDefault>
+    <Language>Idioma</Language>
     <ImageDatabase>Base dades imatges</ImageDatabase>
     <NoOfPixelsIsSpace>Nombre pixels a l'espai</NoOfPixelsIsSpace>
     <MaxErrorPercent>Max. error %</MaxErrorPercent>
@@ -2343,11 +2602,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <PromptForUnknownWords>Sol·licita mots desconeguts</PromptForUnknownWords>
     <TryToGuessUnkownWords>Intenta endevinar mots desconeguts</TryToGuessUnkownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Salt de paràgraf automàtic si té més de dues línies</AutoBreakSubtitleIfMoreThanTwoLines>
-    <AllFixes>Fixa-ho tot</AllFixes>
+    <AllFixes>Arregla-ho tot</AllFixes>
     <GuessesUsed>Endevinades</GuessesUsed>
     <UnknownWords>Mots desconeguts</UnknownWords>
+    <UnknownWordToGuessInLine>{0} ⇒ {1} mitjantçant 'OCRFixReplaceList.xml' en línia: {2}</UnknownWordToGuessInLine>
     <OcrAutoCorrectionSpellChecking>Auto correcció/corrector ortogràfic d'OCR</OcrAutoCorrectionSpellChecking>
-    <FixOcrErrors>Fixa errors d'OCR</FixOcrErrors>
+    <FixOcrErrors>Arregla errors d'OCR</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importa text amb codi de temps coincident...</ImportTextWithMatchingTimeCodes>
     <ImportNewTimeCodes>Importa codis de temps nous</ImportNewTimeCodes>
     <SaveSubtitleImageAs>Desa imatge de subtítol com a ...</SaveSubtitleImageAs>
@@ -2363,12 +2623,23 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CaptureTopAlign>Captura l'alineació superior</CaptureTopAlign>
     <InspectCompareMatchesForCurrentImage>Inspecciona coincidències per la imatge actual...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Edita última imatge comparrant afegides...</EditLastAdditions>
-    <SetUnitalicFactor>Estableix factor no itàlica...</SetUnitalicFactor>
+    <SetItalicAngle>Estableix l'angle de cursiva...</SetItalicAngle>
+    <ItalicAngle>Angle de cursiva</ItalicAngle>
     <DiscardTitle>Descarta canvis fets a l'OCR?</DiscardTitle>
     <DiscardText>Voleu descartar els canvis fets a l'actual sessió d'OCR?</DiscardText>
     <MinLineSplitHeight>Mínima altura línia (separació)</MinLineSplitHeight>
     <FallbackToX>Retrasa a {0}</FallbackToX>
     <ImagePreProcessing>Pre-procés d'imatge...</ImagePreProcessing>
+    <EditImageDb>Edita la imatge db</EditImageDb>
+    <OcrTraining>Entrenament d'OCR...</OcrTraining>
+    <SubtitleTrainingFile>Fitxer de subtítols per entrenament</SubtitleTrainingFile>
+    <LetterCombinations>Combinacions de lletres que es poden dividir en una sola imatge</LetterCombinations>
+    <TrainingOptions>Opcions d'entrenament</TrainingOptions>
+    <NumberOfSegments>Nombre de segments per lletra</NumberOfSegments>
+    <AlsoTrainItalic>També entrenar cursiva</AlsoTrainItalic>
+    <AlsoTrainBold>També entrenar negreta</AlsoTrainBold>
+    <StartTraining>Iniciar l'entrenament</StartTraining>
+    <NowTraining>Entrenant la fontt '{1}'. Caràcters totals entrenats: {0:#,###,##0}, {2:#,###,##0} coneguts</NowTraining>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - imatge a text manualment</Title>
@@ -2396,10 +2667,24 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Nova carpeta</Title>
     <Message>Nom de nova carpeta de base de dades de caràcters</Message>
   </VobSubOcrNewFolder>
-  <VobSubOcrSetItalicFactor>
-    <Title>Estableix factor itàlica</Title>
-    <Description>Ajusta el valor fins que l'estil del text siga normal i no itàlica. Vegeu que la imatge original deu ser itàlica.</Description>
-  </VobSubOcrSetItalicFactor>
+  <VobSubOcrSetItalicAngle>
+    <Title>Estableix l'angle de cursiva</Title>
+    <Description>Ajusteu el valor fins que l'estil de text sigui normal i no cursiu.  Tingueu en compte que la imatge original ha de ser cursiva.</Description>
+  </VobSubOcrSetItalicAngle>
+  <OcrPreprocessing>
+    <Title>Preprocessament d'imatges OCR</Title>
+    <Colors>Colors</Colors>
+    <AdjustAlpha>Ajusteu el valor fins que es mostri clarament el text (normalment valors entre 200 i 300)</AdjustAlpha>
+    <OriginalImage>Imatge original</OriginalImage>
+    <PostImage>Imatge després del preprocessament</PostImage>
+    <BinaryThreshold>Llindar de comparació d'imatges binàries</BinaryThreshold>
+    <InvertColors>Inverteix els colors</InvertColors>
+    <YellowToWhite>De groc a blanc</YellowToWhite>
+    <ColorToWhite>Color a blanc</ColorToWhite>
+    <ColorToRemove>Color per eliminar</ColorToRemove>
+    <Cropping>Retallar</Cropping>
+    <CropTransparentColors>Retalleu colors transparents</CropTransparentColors>
+  </OcrPreprocessing>
   <Watermark>
     <Title>Marca d'aigüa</Title>
     <WatermarkX>Marca d'aigüa: {0}</WatermarkX>
@@ -2419,12 +2704,17 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ZoomOut>Allunya</ZoomOut>
     <AddParagraphHere>Afegeix text ací</AddParagraphHere>
     <AddParagraphHereAndPasteText>Afegeix text des del porta-retalls ací</AddParagraphHereAndPasteText>
+    <SetParagraphAsSelection>Estableix l'actual com a nova selecció</SetParagraphAsSelection>
     <FocusTextBox>Enfoc quadre de text</FocusTextBox>
+    <GoToPrevious>Aneu al subtítol anterior</GoToPrevious>
+    <GoToNext>Aneu al subtítol següent</GoToNext>
     <DeleteParagraph>Suprimeix text</DeleteParagraph>
     <Split>Divideix</Split>
     <SplitAtCursor>Divideix des del cursor</SplitAtCursor>
     <MergeWithPrevious>Fusiona amb l'anterior</MergeWithPrevious>
     <MergeWithNext>Fusiona amb la propera</MergeWithNext>
+    <ExtendToPrevious>Estén a l'anterior</ExtendToPrevious>
+    <ExtendToNext>Estén al següent</ExtendToNext>
     <PlaySelection>Reprodueix selecció</PlaySelection>
     <ShowWaveformAndSpectrogram>Mostra l'ona i l'espectrograma</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Mostra només l'ona</ShowWaveformOnly>
@@ -2445,13 +2735,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DeleteLines>Suprimeix línies</DeleteLines>
     <FromCurrentVideoPosition>Des de possició de vídeo actual</FromCurrentVideoPosition>
     <DetectOptions>Detecta opcions</DetectOptions>
-    <ScanBlocksOfMs>Escaneja blocs de milisegons</ScanBlocksOfMs>
+    <ScanBlocksOfMs>Escaneja blocs de mil·lisegons</ScanBlocksOfMs>
     <BlockAverageVolMin1>Bloca mitjana vòlum ha d'estar per sobre de</BlockAverageVolMin1>
     <BlockAverageVolMin2>% de mitjana vòlum total</BlockAverageVolMin2>
     <BlockAverageVolMax1>Bloca mitjana vòlum ha d'estar per sota de</BlockAverageVolMax1>
     <BlockAverageVolMax2>% de vòlum màxim total</BlockAverageVolMax2>
     <SplitLongLinesAt1>Divideix llargària subtítols en</SplitLongLinesAt1>
-    <SplitLongLinesAt2>milisegons</SplitLongLinesAt2>
+    <SplitLongLinesAt2>mil·lisegons</SplitLongLinesAt2>
     <Other>Altres</Other>
   </WaveformGenerateTimeCodes>
   <WebVttNewVoice>
