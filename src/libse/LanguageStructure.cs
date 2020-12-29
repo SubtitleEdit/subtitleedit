@@ -357,6 +357,7 @@
         public class CompareSubtitles
         {
             public string Title { get; set; }
+            public string Reload { get; set; }
             public string PreviousDifference { get; set; }
             public string NextDifference { get; set; }
             public string SubtitlesNotAlike { get; set; }
