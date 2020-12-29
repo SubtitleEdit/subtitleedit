@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Forms
         private List<int> _differences;
         private readonly Keys _mainGeneralGoToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
         private readonly Keys _mainGeneralGoToPrevSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
-        private string _language1;
+        private string _language;
         private readonly Color _backDifferenceColor = Color.FromArgb(255, 90, 90);
         private readonly Color _foregroundDifferenceColor = Color.FromArgb(225, 0, 0);
         private bool _loadingConfig = true;
@@ -32,6 +32,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             labelSubtitle2.Text = string.Empty;
             Text = Configuration.Settings.Language.CompareSubtitles.Title;
+            buttonReloadSubtitle1.Text = Configuration.Settings.Language.CompareSubtitles.Reload;
+            buttonReloadSubtitle2.Text = Configuration.Settings.Language.CompareSubtitles.Reload;
             buttonPreviousDifference.Text = Configuration.Settings.Language.CompareSubtitles.PreviousDifference;
             buttonNextDifference.Text = Configuration.Settings.Language.CompareSubtitles.NextDifference;
             checkBoxShowOnlyDifferences.Text = Configuration.Settings.Language.CompareSubtitles.ShowOnlyDifferences;
@@ -83,7 +85,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             subtitleListView1.SelectIndexAndEnsureVisible(0);
-            _language1 = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle1);
+            _language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle1);
         }
 
         public void Initialize(Subtitle subtitle1, string subtitleFileName1, Subtitle subtitle2, string subtitleFileName2)
@@ -96,7 +98,7 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle2 = subtitle2;
             labelSubtitle2.Text = subtitleFileName2;
 
-            _language1 = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle1);
+            _language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle1);
             CompareSubtitles();
 
             if (!string.IsNullOrEmpty(subtitleFileName1) && File.Exists(subtitleFileName1))
@@ -106,6 +108,27 @@ namespace Nikse.SubtitleEdit.Forms
 
             subtitleListView1.SelectIndexAndEnsureVisible(0);
             subtitleListView2.SelectIndexAndEnsureVisible(0);
+        }
+
+        private void LoadAndCompare(int subtitleNumber, string filaName)
+        {
+            if (subtitleNumber == 1)
+            {
+                _subtitle1 = LoadSubtitle(filaName);
+                subtitleListView1.Fill(_subtitle1);
+            }
+            else if (subtitleNumber == 2)
+            {
+                _subtitle2 = LoadSubtitle(filaName);
+                subtitleListView2.Fill(_subtitle2);
+            }
+
+            subtitleListView1.SelectIndexAndEnsureVisible(0);
+            subtitleListView2.SelectIndexAndEnsureVisible(0);
+            if (_subtitle1.Paragraphs.Count > 0 && _subtitle2?.Paragraphs.Count > 0)
+            {
+                CompareSubtitles();
+            }
         }
 
         private void ButtonOpenSubtitle1Click(object sender, EventArgs e)
@@ -119,17 +142,47 @@ namespace Nikse.SubtitleEdit.Forms
                     MessageBox.Show(Configuration.Settings.Language.CompareSubtitles.CannotCompareWithImageBasedSubtitles);
                     return;
                 }
-                _subtitle1 = LoadSubtitle(openFileDialog1.FileName);
 
-                subtitleListView1.Fill(_subtitle1);
-                subtitleListView1.SelectIndexAndEnsureVisible(0);
-                subtitleListView2.SelectIndexAndEnsureVisible(0);
+                LoadAndCompare(1, openFileDialog1.FileName);
                 labelSubtitle1.Text = openFileDialog1.FileName;
-                _language1 = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle1);
-                if (_subtitle1.Paragraphs.Count > 0 && _subtitle2?.Paragraphs.Count > 0)
+                _language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle1);
+                buttonReloadSubtitle1.Enabled = true;
+            }
+        }
+
+        private void ButtonReloadSubtitle1Click(object sender, EventArgs e)
+        {
+            var fileName = labelSubtitle1.Text;
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                LoadAndCompare(1, fileName);
+            }
+        }
+
+        private void ButtonOpenSubtitle2Click(object sender, EventArgs e)
+        {
+            openFileDialog1.FileName = string.Empty;
+
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                if (FileUtil.IsVobSub(openFileDialog1.FileName) || FileUtil.IsBluRaySup(openFileDialog1.FileName))
                 {
-                    CompareSubtitles();
+                    MessageBox.Show(Configuration.Settings.Language.CompareSubtitles.CannotCompareWithImageBasedSubtitles);
+                    return;
                 }
+
+                LoadAndCompare(2, openFileDialog1.FileName);
+                labelSubtitle2.Text = openFileDialog1.FileName;
+                buttonReloadSubtitle2.Enabled = true;
+            }
+        }
+
+        private void ButtonReloadSubtitle2Click(object sender, EventArgs e)
+        {
+            var fileName = labelSubtitle2.Text;
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                LoadAndCompare(2, fileName);
             }
         }
 
@@ -149,31 +202,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             return subtitle;
-        }
-
-        private void ButtonOpenSubtitle2Click(object sender, EventArgs e)
-        {
-            openFileDialog1.FileName = string.Empty;
-
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                if (FileUtil.IsVobSub(openFileDialog1.FileName) || FileUtil.IsBluRaySup(openFileDialog1.FileName))
-                {
-                    MessageBox.Show(Configuration.Settings.Language.CompareSubtitles.CannotCompareWithImageBasedSubtitles);
-                    return;
-                }
-
-                _subtitle2 = LoadSubtitle(openFileDialog1.FileName);
-
-                subtitleListView2.Fill(_subtitle2);
-                subtitleListView1.SelectIndexAndEnsureVisible(0);
-                subtitleListView2.SelectIndexAndEnsureVisible(0);
-                labelSubtitle2.Text = openFileDialog1.FileName;
-                if (_subtitle2.Paragraphs.Count > 0 && _subtitle1?.Paragraphs.Count > 0)
-                {
-                    CompareSubtitles();
-                }
-            }
         }
 
         private void CompareSubtitles()
@@ -424,7 +452,7 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView1.SelectIndexAndEnsureVisible(0);
         }
 
-        private bool ShouldBreakToLetter() => _language1 != null && (_language1 == "ja" || _language1 == "zh");
+        private bool ShouldBreakToLetter() => _language != null && (_language == "ja" || _language == "zh");
 
         private string FixWhitespace(string p)
         {
@@ -1000,7 +1028,7 @@ namespace Nikse.SubtitleEdit.Forms
                 subtitleListView1.SelectIndexAndEnsureVisible(0);
                 subtitleListView2.SelectIndexAndEnsureVisible(0);
                 labelSubtitle1.Text = filePath;
-                _language1 = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle1);
+                _language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle1);
                 if (_subtitle1.Paragraphs.Count > 0)
                 {
                     CompareSubtitles();
