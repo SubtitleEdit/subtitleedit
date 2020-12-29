@@ -406,6 +406,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.listViewConvertOptions.UseCompatibleStateImageBehavior = false;
             this.listViewConvertOptions.View = System.Windows.Forms.View.Details;
             this.listViewConvertOptions.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.listViewConvertOptions_ItemChecked);
+            this.listViewConvertOptions.Resize += new System.EventHandler(this.listViewConvertOptions_Resize);
             this.listViewConvertOptions.SelectedIndexChanged += new System.EventHandler(this.listViewConvertOptions_SelectedIndexChanged);
             // 
             // ActionCheckBox
