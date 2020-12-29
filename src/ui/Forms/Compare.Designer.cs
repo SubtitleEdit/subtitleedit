@@ -105,7 +105,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonReloadSubtitle1
             // 
             this.buttonReloadSubtitle1.Enabled = false;
-            this.buttonReloadSubtitle1.Location = new System.Drawing.Point(39, 8);
+            this.buttonReloadSubtitle1.Location = new System.Drawing.Point(43, 8);
             this.buttonReloadSubtitle1.Name = "buttonReloadSubtitle1";
             this.buttonReloadSubtitle1.Size = new System.Drawing.Size(60, 23);
             this.buttonReloadSubtitle1.TabIndex = 1;
@@ -126,7 +126,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonReloadSubtitle2
             // 
             this.buttonReloadSubtitle2.Enabled = false;
-            this.buttonReloadSubtitle2.Location = new System.Drawing.Point(521, 8);
+            this.buttonReloadSubtitle2.Location = new System.Drawing.Point(525, 8);
             this.buttonReloadSubtitle2.Name = "buttonReloadSubtitle2";
             this.buttonReloadSubtitle2.Size = new System.Drawing.Size(60, 23);
             this.buttonReloadSubtitle2.TabIndex = 3;
