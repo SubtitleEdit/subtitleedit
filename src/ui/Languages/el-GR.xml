@@ -2437,7 +2437,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NothingToSplit>Τίποτα για διαχωρισμό.</NothingToSplit>
     <SavePartOneAs>Αποθήκευση 1ου μέρους ως...</SavePartOneAs>
     <SavePartTwoAs>Αποθήκευση 2ου μέρους ως...</SavePartTwoAs>
-    <Part1>Μέρος1ο</Part1>
+    <Part1>Μέρος 1ο</Part1>
     <Part2>Μέρος 2ο</Part2>
     <UnableToSaveFileX>Αδυναμία αποθήκευσης {0}</UnableToSaveFileX>
     <OverwriteExistingFiles>Αντικατάσταση υπάρχοντων αρχείων;</OverwriteExistingFiles>
@@ -2771,7 +2771,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ShowSpectrogramOnly>Εμφάνιση μόνο φασματογράμματος</ShowSpectrogramOnly>
     <AddSceneChange>Προσθήκη αλλαγής σκηνής</AddSceneChange>
     <RemoveSceneChange>Αφαίρεση αλλαγής σκηνής</RemoveSceneChange>
-    <GuessTimeCodes>Μάντεψε τους κώδικες χρόνου...</GuessTimeCodes>
+    <GuessTimeCodes>Εικασία κωδικών χρόνου...</GuessTimeCodes>
     <SeekSilence>Αναζήτηση σιωπής...</SeekSilence>
     <InsertSubtitleHere>Εισαγωγή υποτίτλου εδώ...</InsertSubtitleHere>
     <CharsSecX>Χαρ/δευτ: {0:0.00}</CharsSecX>
@@ -2795,7 +2795,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Other>Άλλο</Other>
   </WaveformGenerateTimeCodes>
   <WebVttNewVoice>
-    <Title>WebVTT - καθορισμός νέας φωνής</Title>
+    <Title>WebVTT - ορισμός νέας φωνής</Title>
     <VoiceName>Όνομα φωνής</VoiceName>
   </WebVttNewVoice>
 </Language>
