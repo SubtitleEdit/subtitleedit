@@ -17909,14 +17909,14 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (selectedLines)
             {
+                var indices = SubtitleListview1.GetSelectedIndices();
+                if (indices.Length == 0)
+                {
+                    return;
+                }
+
                 SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
                 MakeHistoryForUndo(string.Format(_language.BeforeAddingTagX, tag));
-
-                var indices = new List<int>();
-                foreach (ListViewItem item in SubtitleListview1.SelectedItems)
-                {
-                    indices.Add(item.Index);
-                }
 
                 bool first = true;
                 SubtitleListview1.BeginUpdate();
