@@ -3342,6 +3342,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             ResetShowEarlierOrLater();
             FixRightToLeftDependingOnLanguage();
+            textBoxSource.SelectionLength = 0;
         }
 
         private void ShowHideTextBasedFeatures(SubtitleFormat format)
@@ -19306,6 +19307,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 trackBarWaveformPosition.Maximum = (int)mediaPlayer.Duration;
             }
+
+            textBoxSource.SelectionLength = 0;
         }
 
         private void VideoEnded(object sender, EventArgs e)
@@ -21235,6 +21238,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelSingleLine.Left = labelTextLineLengths.Left + labelTextLineLengths.Width - 6;
             RemoveNotExistingFilesFromRecentFilesUI();
             ShowSubtitleTimer.Start();
+            textBoxSource.SelectionLength = 0;
         }
 
         private void InitializePlayRateDropDown()
