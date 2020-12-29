@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using System;
@@ -8,7 +9,6 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -110,16 +110,16 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView2.SelectIndexAndEnsureVisible(0);
         }
 
-        private void LoadAndCompare(int subtitleNumber, string filaName)
+        private void LoadAndCompare(int subtitleNumber, string fileName)
         {
             if (subtitleNumber == 1)
             {
-                _subtitle1 = LoadSubtitle(filaName);
+                _subtitle1 = LoadSubtitle(fileName);
                 subtitleListView1.Fill(_subtitle1);
             }
             else if (subtitleNumber == 2)
             {
-                _subtitle2 = LoadSubtitle(filaName);
+                _subtitle2 = LoadSubtitle(fileName);
                 subtitleListView2.Fill(_subtitle2);
             }
 
@@ -782,6 +782,7 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView2.Width = (Width / 2) - 20;
             labelSubtitle2.Left = subtitleListView2.Left;
             buttonOpenSubtitle2.Left = subtitleListView2.Left;
+            buttonReloadSubtitle2.Left = buttonOpenSubtitle2.Left + buttonOpenSubtitle2.Width + 7;
 
             subtitleListView1.Height = Height - (subtitleListView1.Top + 140);
             subtitleListView2.Height = Height - (subtitleListView2.Top + 140);
