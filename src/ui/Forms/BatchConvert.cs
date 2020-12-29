@@ -2734,6 +2734,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void listViewConvertOptions_Resize(object sender, EventArgs e)
+        {
+            listViewConvertOptions.Columns[1].Width = -2;
+        }
+
         private void listViewConvertOptions_SelectedIndexChanged(object sender, EventArgs e)
         {
             groupBoxMergeShortLines.Visible = false;
