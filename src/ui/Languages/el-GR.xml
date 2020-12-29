@@ -506,8 +506,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SimpleRendering>Απλή απεικόνιση</SimpleRendering>
     <AntiAliasingWithTransparency>Διαφανής εξομάλυνση</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
-    <SideBySide3D>Κέντρο - Δεξιά - Αριστερά</SideBySide3D>
-    <HalfTopBottom3D>Κέντρο - Πάνω/Κάτω</HalfTopBottom3D>
+    <SideBySide3D>Κάθετος διαχωρισμός</SideBySide3D>
+    <HalfTopBottom3D>Οριζόντιος διαχωρισμός</HalfTopBottom3D>
     <Depth>Βάθος</Depth>
     <ExportAllLines>Εξαγωγή όλων των γραμμών...</ExportAllLines>
     <XImagesSavedInY>{0} εικόνες αποθηκεύτηκαν στον φάκελο {1}</XImagesSavedInY>
@@ -2279,7 +2279,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ListViewColumnTextDown>Στήλη, κείμενο προς τα κάτω</ListViewColumnTextDown>
     <ListViewGoToNextError>Μετάβαση σε επόμενο σφάλμα</ListViewGoToNextError>
     <ShowBeamer>Ξεκινήστε υπότιτλο σε πλήρη οθόνη βιντεοπροβολέα</ShowBeamer>
-    <ShowStyleManager>Προβολή στυλ</ShowStyleManager>
+    <ShowStyleManager>Προβολή διαχείρισης στυλ</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>Μετακίνηση τελευταίας λέξης στην επόμενη γραμμή</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Μετακίνηση πρώτης λέξης από την επόμενη γραμμή επάνω</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Μετακίνηση πρώτης λέξης της κάτω γραμμής πάνω</MainTextBoxMoveFirstWordUpCurrent>
@@ -2390,7 +2390,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ImageText>Κείμενο εικόνας</ImageText>
     <SpellCheckCompleted>Ολοκλήρωση ορθογραφικού ελέγχου</SpellCheckCompleted>
     <SpellCheckAborted>Ματαίωση ορθογραφικού ελέγχου</SpellCheckAborted>
-    <SpacesNotAllowed>Απαγορεύονται τα κενά σε λέξη!</SpacesNotAllowed>
+    <SpacesNotAllowed>Απαγορεύονται τα κενά σε λέξη.</SpacesNotAllowed>
     <UndoX>Αναιρέθηκαν: {0}</UndoX>
   </SpellCheck>
   <NetflixQualityCheck>
@@ -2434,20 +2434,20 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Description2>και πάρτε το μήκος από αρχείο βίντεο:</Description2>
     <Split>&amp;Διαχωρισμός</Split>
     <Done>&amp;Ολοκληρώθηκε</Done>
-    <NothingToSplit>Τίποτα για διαχωρισμό !</NothingToSplit>
-    <SavePartOneAs>Αποθήκευση μέρους 1 ως...</SavePartOneAs>
-    <SavePartTwoAs>Αποθήκευση μέρους 2 ως...</SavePartTwoAs>
-    <Part1>Μέρος1</Part1>
-    <Part2>Μέρος2</Part2>
+    <NothingToSplit>Τίποτα για διαχωρισμό.</NothingToSplit>
+    <SavePartOneAs>Αποθήκευση 1ου μέρους ως...</SavePartOneAs>
+    <SavePartTwoAs>Αποθήκευση 2ου μέρους ως...</SavePartTwoAs>
+    <Part1>Μέρος1ο</Part1>
+    <Part2>Μέρος 2ο</Part2>
     <UnableToSaveFileX>Αδυναμία αποθήκευσης {0}</UnableToSaveFileX>
-    <OverwriteExistingFiles>Αντικατάσταση υπαρχόντων αρχείων;</OverwriteExistingFiles>
-    <FolderNotFoundX>Ο φάκελος δεν βρέθηκε: {0}</FolderNotFoundX>
+    <OverwriteExistingFiles>Αντικατάσταση υπάρχοντων αρχείων;</OverwriteExistingFiles>
+    <FolderNotFoundX>Αδυναμία εύρεσης φακέλου: {0}</FolderNotFoundX>
     <Untitled>Χωρίς τίτλο</Untitled>
   </SplitSubtitle>
   <StartNumberingFrom>
-    <Title>Επαναρίθμησης από...</Title>
+    <Title>Επαναρίθμηση από...</Title>
     <StartFromNumber>Έναρξη από τον αριθμό:</StartFromNumber>
-    <PleaseEnterAValidNumber>Εισαγωγή έγκυρου αριθμού</PleaseEnterAValidNumber>
+    <PleaseEnterAValidNumber>Εισαγωγή έγκυρου αριθμού.</PleaseEnterAValidNumber>
   </StartNumberingFrom>
   <Statistics>
     <Title>Στατιστικά</Title>
@@ -2493,7 +2493,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ScriptTitle>Τίτλος</ScriptTitle>
     <OriginalScript>Αρχικό σενάριο</OriginalScript>
     <Translation>Μετάφραση</Translation>
-    <Editing>Επιμέλεια</Editing>
+    <Editing>Επεξεργασία</Editing>
     <Timing>Χρονισμός</Timing>
     <SyncPoint>Σημείο συγχρονισμού</SyncPoint>
     <UpdatedBy>Ενημερωμένο από</UpdatedBy>
