@@ -320,6 +320,7 @@ Note: Do check free disk space.</WaveFileMalformed>
   </ColumnPaste>
   <CompareSubtitles>
     <Title>Compare subtitles</Title>
+    <Reload>Reload</Reload>
     <PreviousDifference>&amp;Previous difference</PreviousDifference>
     <NextDifference>&amp;Next difference</NextDifference>
     <SubtitlesNotAlike>Subtitles have no similarities</SubtitlesNotAlike>
