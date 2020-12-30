@@ -14086,7 +14086,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 // do not check for shortcuts if text is being entered and a textbox is focused
                 if ((fc.Parent.Name == textBoxListViewText.Name || fc.Parent.Name == textBoxListViewTextAlternate.Name || fc.Name == textBoxSearchWord.Name) &&
-                    ((e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z) || (e.KeyCode >= Keys.OemSemicolon && e.KeyCode <= Keys.OemBackslash)))
+                    ((e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z) || (e.KeyCode >= Keys.OemSemicolon && e.KeyCode <= Keys.OemBackslash)) &&
+                    !Configuration.Settings.General.AllowLetterShortcutsInTextBox)
                 {
                     return;
                 }
