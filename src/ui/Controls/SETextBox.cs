@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SpellCheck;
+using Nikse.SubtitleEdit.Forms;
 using Nikse.SubtitleEdit.Logic.SpellCheck;
 using System;
 using System.Drawing;
@@ -45,6 +46,7 @@ namespace Nikse.SubtitleEdit.Controls
         public int CurrentLineIndex { get; set; }
         public bool IsWrongWord { get; set; }
         public bool IsSpellCheckerInitialized { get; set; }
+        public bool IsDictionaryDownloaded { get; set; } = true;
 
         public class SuggestionParameter
         {
@@ -986,15 +988,11 @@ namespace Nikse.SubtitleEdit.Controls
 
         public async Task CheckForLanguageChange(Subtitle subtitle)
         {
-            if (IsSpellCheckerInitialized)
+            var detectedLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
+            if (_currentLanguage != detectedLanguage)
             {
-                var languageName = LanguageAutoDetect.AutoDetectLanguageName("", subtitle);
-                if (_currentLanguage != languageName)
-                {
-                    DisposeHunspellAndDictionaries();
-                    await LoadDictionariesAsync(languageName);
-                    DoLiveSpellCheck();
-                }
+                DisposeHunspellAndDictionaries();
+                await InitializeLiveSpellCheck(subtitle, CurrentLineIndex);
             }
         }
 
@@ -1007,15 +1005,43 @@ namespace Nikse.SubtitleEdit.Controls
 
             if (_spellCheckWordLists is null && _hunspell is null)
             {
-                var languageName = LanguageAutoDetect.AutoDetectLanguageName("", subtitle);
-                if (string.IsNullOrEmpty(languageName))
+                var detectedLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
+                var availableDictionaries = Utilities.GetDictionaryLanguagesCultureNeutral();
+                var isDictionaryAvailable = false;
+                foreach (var availableDictionary in availableDictionaries)
                 {
-                    languageName = "en_US";
+                    if (availableDictionary.Contains($"[{detectedLanguage}]"))
+                    {
+                        isDictionaryAvailable = true;
+                        break;
+                    }
                 }
 
-                await LoadDictionariesAsync(languageName);
-                IsSpellCheckerInitialized = true;
-                DoLiveSpellCheck();
+                if (isDictionaryAvailable)
+                {
+                    var languageName = LanguageAutoDetect.AutoDetectLanguageName(string.Empty, subtitle);
+                    if (languageName.Split(new char[] { '_', '-' })[0] != detectedLanguage)
+                    {
+                        return;
+                    }
+
+                    await LoadDictionariesAsync(languageName);
+                    IsSpellCheckerInitialized = true;
+                    TextChangedHighlight(null, null);
+                }
+                else
+                {
+                    IsDictionaryDownloaded = false;
+                    using (var gd = new GetDictionaries())
+                    {
+                        if (gd.ShowDialog(this) == DialogResult.OK)
+                        {
+                            await InitializeLiveSpellCheck(subtitle, lineNumber);
+                        }
+                    }
+                }
+
+                _currentLanguage = detectedLanguage;
             }
         }
 
@@ -1032,7 +1058,6 @@ namespace Nikse.SubtitleEdit.Controls
             _skipAllList = new List<string>();
             _skipOnceList = new HashSet<string>();
             LoadHunspell(dictionary);
-            _currentLanguage = languageName;
         }
 
         private void LoadHunspell(string dictionary)
@@ -1184,7 +1209,7 @@ namespace Nikse.SubtitleEdit.Controls
                         continue; // do not spell check urls
                     }
 
-                    if (_currentLanguage.StartsWith("ar_", StringComparison.Ordinal) || _currentLanguage == "ar")
+                    if (_currentLanguage == "ar")
                     {
                         var trimmed = currentWordText.Trim('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', ',', '،');
                         if (trimmed != currentWordText)
@@ -1237,17 +1262,17 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         continue;
                     }
-                    else if (_currentLanguage.StartsWith("en_", StringComparison.Ordinal) && (currentWordText.Equals("a", StringComparison.OrdinalIgnoreCase) || currentWordText == "I"))
+                    else if (_currentLanguage == "en " && (currentWordText.Equals("a", StringComparison.OrdinalIgnoreCase) || currentWordText == "I"))
                     {
                         continue;
                     }
-                    else if (_currentLanguage.StartsWith("da_", StringComparison.Ordinal) && currentWordText.Equals("i", StringComparison.OrdinalIgnoreCase))
+                    else if (_currentLanguage == "da" && currentWordText.Equals("i", StringComparison.OrdinalIgnoreCase))
                     {
                         continue;
                     }
                 }
 
-                if (Configuration.Settings.Tools.SpellCheckEnglishAllowInQuoteAsIng && _currentLanguage.StartsWith("en_", StringComparison.Ordinal)
+                if (Configuration.Settings.Tools.SpellCheckEnglishAllowInQuoteAsIng && _currentLanguage == "en"
                     && _words[i].Text.EndsWith("in'", StringComparison.OrdinalIgnoreCase) && DoSpell(currentWordText.TrimEnd('\'') + "g"))
                 {
                     continue;

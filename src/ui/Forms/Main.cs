@@ -7322,15 +7322,19 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (IsSubtitleLoaded)
             {
-                await textBoxListViewText.CheckForLanguageChange(_subtitle);
-                if (!textBoxListViewText.IsSpellCheckerInitialized)
+                if (textBoxListViewText.IsSpellCheckerInitialized || !textBoxListViewText.IsDictionaryDownloaded)
+                {
+                    await textBoxListViewText.CheckForLanguageChange(_subtitle);
+                }
+                else
                 {
                     await textBoxListViewText.InitializeLiveSpellCheck(_subtitle, FirstSelectedIndex);
                 }
             }
-            else if (!IsSubtitleLoaded && textBoxListViewText.IsSpellCheckerInitialized)
+            else
             {
                 textBoxListViewText.DisposeHunspellAndDictionaries();
+                textBoxListViewText.IsDictionaryDownloaded = true;
             }
         }
 
