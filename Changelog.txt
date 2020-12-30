@@ -3,9 +3,9 @@
 3.6.0 (xth February 2021) BETA
 * NEW:
    * Use dotnet framework 4.6.2 (WinXP/Vista no longer supported)
-   * Add dark theme - thx OmrSi/dvjrickkraft/MuhammadiJK
    * Add edit/sync of bdsup with position - thx von Suppé/Janusz
    * Add internal store for ASSA styles - thx Leon/z3us
+   * Add dark theme - thx OmrSi/dvjrickkraft/MuhammadiJK
    * Add "Delete lines" to "Batch convert" - thx Milenko
    * Add shortcut "Set start and set end of previous" - thx Jeff
    * Add shortcut "Play from beginning of video" - thx Kimberly
@@ -13,6 +13,7 @@
    * Add shortcut toggle focus between list view/waveform - thx OmrSi
    * Add toggle color shortcuts - thx Jan
    * Add optional syntax coloring for textbox (probably only for Latin)
+   * Add compare reload - thx Leon/OmrSi
 * IMPROVED:
    * Update Greek translation - thx PMitsakis
    * Update Finnish translation - thx Teijo S
@@ -22,6 +23,7 @@
    * Update French (Belgian) translation - thx Pierre
    * Update French translation - thx Pierre
    * Update Turkish translation - thx ismail0100
+   * Update Catalan translation - thx Juansa
    * Add Catalan installer translation - thx Juansa
    * Source view is now hidden (more space), use F2 to toggle view, thx omrSi
    * Set default subtitle text box font size to 12
@@ -35,6 +37,7 @@
    * "File - Import" grouping - thx OmrSi/ivandrofly
    * Allow em-dash for sentence ending - thx Boulder08
    * Auto fix mkv subs without duration - thx uckthis
+   * Optimize writing Blu-ray .sup files
 * FIXED:
    * Fix frame rate bug in FCP+image - thx Christopher
    * Fix bdsup right align export issue - thx von Suppé
@@ -53,6 +56,7 @@
    * Fix Tesseract lang parameter in cmd line OCR on Linux - thx depeo
    * Fix crash in binOcr - thx jpinto0
    * Fix issues with ismt format - thx Bersu
+   * Don't log tag info when no sub - thx Jamakmake
 
 
 3.5.18 (9th November 2020)
