@@ -7,10 +7,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixAloneLowercaseIToUppercaseI : IFixCommonError
     {
+        public static class Language
+        {
+            public static string FixLowercaseIToUppercaseI { get; set; } = "Fix alone lowercase 'i' to 'I' (English)";
+        }
+
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            var language = Configuration.Settings.Language.FixCommonErrors;
-            string fixAction = language.FixLowercaseIToUppercaseI;
+            string fixAction = Language.FixLowercaseIToUppercaseI;
             int iFixes = 0;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
@@ -28,7 +32,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                 }
             }
-            callbacks.UpdateFixStatus(iFixes, language.FixLowercaseIToUppercaseI, language.XIsChangedToUppercase);
+            callbacks.UpdateFixStatus(iFixes, Language.FixLowercaseIToUppercaseI);
         }
 
         public static string FixAloneLowercaseIToUppercaseLine(Regex re, string oldText, string input, char target)

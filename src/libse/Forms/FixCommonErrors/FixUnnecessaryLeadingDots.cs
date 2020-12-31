@@ -1,18 +1,19 @@
-﻿using Nikse.SubtitleEdit.Core.Interfaces;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixUnnecessaryLeadingDots : IFixCommonError
     {
+        public static class Language
+        {
+            public static string FixUnnecessaryLeadingDots { get; set; } = "Remove unnecessary leading dots";
+        }
+
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            var language = Configuration.Settings.Language.FixCommonErrors;
-            string fixAction = language.FixUnnecessaryLeadingDots;
+            string fixAction = Language.FixUnnecessaryLeadingDots;
             int fixCount = 0;
 
             for (int i = 1; i < subtitle.Paragraphs.Count; i++)
@@ -60,7 +61,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 }
             }
 
-            callbacks.UpdateFixStatus(fixCount, language.FixUnnecessaryLeadingDots, language.XFixUnnecessaryLeadingDots);
+            callbacks.UpdateFixStatus(fixCount, Language.FixUnnecessaryLeadingDots);
         }
     }
 }

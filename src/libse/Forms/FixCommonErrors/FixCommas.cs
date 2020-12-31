@@ -1,11 +1,16 @@
-﻿using Nikse.SubtitleEdit.Core.Interfaces;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Interfaces;
 using System.Text.RegularExpressions;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixCommas : IFixCommonError
     {
+        public static class Language
+        {
+            public static string FixCommas { get; set; } = "Fix commas";
+        }
+
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
             var commaDouble = new Regex(@"([\p{L}\d\s]),,([\p{L}\d\s])");
@@ -14,7 +19,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             var commaWhiteSpaceBetween = new Regex(@"([\p{L}\d\s]),\s+,([\p{L}\d\s])");
             var commaFollowedByLetter = new Regex(@",(\p{L})");
 
-            string fixAction = Configuration.Settings.Language.FixCommonErrors.FixCommas;
+            string fixAction = Language.FixCommas;
             int fixCount = 0;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
@@ -59,7 +64,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                 }
             }
-            callbacks.UpdateFixStatus(fixCount, Configuration.Settings.Language.FixCommonErrors.FixCommas, fixCount.ToString());
+            callbacks.UpdateFixStatus(fixCount, Configuration.Settings.Language.FixCommonErrors.FixCommas);
         }
 
         private static string RemoveCommaBeforeSentenceEndingChar(string input, char comma)

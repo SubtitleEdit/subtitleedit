@@ -6,10 +6,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class AddMissingQuotes : IFixCommonError
     {
+        public static class Language
+        {
+            public static string AddMissingQuote { get; set; } = "Add missing quote (\")";
+        }
+
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            var language = Configuration.Settings.Language.FixCommonErrors;
-            string fixAction = language.AddMissingQuote;
+            string fixAction = Language.AddMissingQuote;
             int noOfFixes = 0;
             var skipTo = -1;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
@@ -229,7 +233,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                 }
             }
-            callbacks.UpdateFixStatus(noOfFixes, fixAction, language.XMissingQuotesAdded);
+            callbacks.UpdateFixStatus(noOfFixes, fixAction);
         }
 
         private string FixDifferentQuotes(string text)

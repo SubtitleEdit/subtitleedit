@@ -1,17 +1,20 @@
-﻿using System;
-using System.Globalization;
-using System.Text;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Interfaces;
+using System;
+using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixStartWithUppercaseLetterAfterParagraph : IFixCommonError
     {
+        public static class Language
+        {
+            public static string FixFirstLetterToUppercaseAfterParagraph { get; set; } = "Fix first letter to uppercase after paragraph";
+        }
+
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            var language = Configuration.Settings.Language.FixCommonErrors;
-            string fixAction = language.FixFirstLetterToUppercaseAfterParagraph;
+            string fixAction = Language.FixFirstLetterToUppercaseAfterParagraph;
             int fixedStartWithUppercaseLetterAfterParagraphTicked = 0;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
@@ -28,7 +31,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                 }
             }
-            callbacks.UpdateFixStatus(fixedStartWithUppercaseLetterAfterParagraphTicked, language.StartWithUppercaseLetterAfterParagraph, fixedStartWithUppercaseLetterAfterParagraphTicked.ToString(CultureInfo.InvariantCulture));
+            callbacks.UpdateFixStatus(fixedStartWithUppercaseLetterAfterParagraphTicked, fixAction);
         }
 
         private static string DoFix(Paragraph p, Paragraph prev, Encoding encoding, string language)

@@ -5,6 +5,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixDoubleApostrophes : IFixCommonError
     {
+        public static class Language
+        {
+            public static string FixDoubleApostrophes { get; set; } = "Fix double apostrophe characters ('') to a single quote (\")";
+        }
+
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
             var language = Configuration.Settings.Language.FixCommonErrors;
@@ -25,7 +30,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                 }
             }
-            callbacks.UpdateFixStatus(fixCount, language.FixDoubleApostrophes, language.XDoubleApostrophesFixed);
+            callbacks.UpdateFixStatus(fixCount, language.FixDoubleApostrophes);
         }
     }
 }

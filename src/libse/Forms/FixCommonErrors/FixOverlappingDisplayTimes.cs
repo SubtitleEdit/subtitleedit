@@ -1,18 +1,26 @@
-﻿using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using System;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Interfaces;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using System;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixOverlappingDisplayTimes : IFixCommonError
     {
+        public static class Language
+        {
+            public static string FixOverlappingDisplayTime { get; set; } = "Fix overlapping display times";
+            public static string StartTimeLaterThanEndTime { get; set; } = "Text number {0}: Start time is later than end time: {4}{1} -> {2} {3}";
+            public static string UnableToFixStartTimeLaterThanEndTime { get; set; } = "Unable to fix text number {0}: Start time is later than end time: {1}";
+            public static string FixOverlappingDisplayTimes { get; set; } = "Fix overlapping display times";
+            public static string XFixedToYZ { get; set; } = "{0} fixed to: {1}{2}";
+            public static string UnableToFixTextXY { get; set; } = "Unable to fix text number {0}: {1}";
+        }
+
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            var language = Configuration.Settings.Language.FixCommonErrors;
-
             // negative display time
-            string fixAction = language.FixOverlappingDisplayTime;
+            string fixAction = Language.FixOverlappingDisplayTime;
             int noOfOverlappingDisplayTimesFixed = 0;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
@@ -21,7 +29,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 if (p.Duration.TotalMilliseconds < 0) // negative display time...
                 {
                     bool isFixed = false;
-                    string status = string.Format(language.StartTimeLaterThanEndTime, i + 1, p.StartTime, p.EndTime, p.Text, Environment.NewLine);
+                    string status = string.Format(Language.StartTimeLaterThanEndTime, i + 1, p.StartTime, p.EndTime, p.Text, Environment.NewLine);
 
                     var prev = subtitle.GetParagraphOrDefault(i - 1);
                     var next = subtitle.GetParagraphOrDefault(i + 1);
@@ -55,15 +63,15 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                     else
                     {
-                        callbacks.LogStatus(language.FixOverlappingDisplayTimes, string.Format(language.UnableToFixStartTimeLaterThanEndTime, i + 1, p), true);
+                        callbacks.LogStatus(Language.FixOverlappingDisplayTimes, string.Format(Language.UnableToFixStartTimeLaterThanEndTime, i + 1, p), true);
                         callbacks.AddToTotalErrors(1);
                     }
 
                     if (isFixed)
                     {
                         noOfOverlappingDisplayTimesFixed++;
-                        status = string.Format(language.XFixedToYZ, status, Environment.NewLine, p);
-                        callbacks.LogStatus(language.FixOverlappingDisplayTimes, status);
+                        status = string.Format(Language.XFixedToYZ, status, Environment.NewLine, p);
+                        callbacks.LogStatus(Language.FixOverlappingDisplayTimes, status);
                         callbacks.AddFixToListView(p, fixAction, oldP.ToString(), p.ToString());
                     }
                 }
@@ -250,14 +258,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     {
                         if (callbacks.AllowFix(p, fixAction))
                         {
-                            callbacks.LogStatus(language.FixOverlappingDisplayTimes, string.Format(language.UnableToFixTextXY, i + 1, Environment.NewLine + prev.Number + "  " + prev + Environment.NewLine + p.Number + "  " + p), true);
+                            callbacks.LogStatus(Language.FixOverlappingDisplayTimes, string.Format(Language.UnableToFixTextXY, i + 1, Environment.NewLine + prev.Number + "  " + prev + Environment.NewLine + p.Number + "  " + p), true);
                             callbacks.AddToTotalErrors(1);
                         }
                     }
                 }
             }
 
-            callbacks.UpdateFixStatus(noOfOverlappingDisplayTimesFixed, fixAction, string.Format(language.XOverlappingTimestampsFixed, noOfOverlappingDisplayTimesFixed));
+            callbacks.UpdateFixStatus(noOfOverlappingDisplayTimesFixed, fixAction);
         }
 
     }

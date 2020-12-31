@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             // Empty callback
         }
 
-        public void UpdateFixStatus(int fixes, string message, string xMessage)
+        public void UpdateFixStatus(int fixes, string message)
         {
             // Empty callback
         }

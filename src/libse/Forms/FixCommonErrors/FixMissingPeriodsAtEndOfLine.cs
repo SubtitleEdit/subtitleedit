@@ -1,12 +1,18 @@
-﻿using Nikse.SubtitleEdit.Core.Interfaces;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
 using System.Linq;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixMissingPeriodsAtEndOfLine : IFixCommonError
     {
+        public static class Language
+        {
+            public static string FixMissingPeriodAtEndOfLine { get; set; } = "Add missing period at end of line";
+            public static string AddPeriods { get; set; } = "Add missing period at end of line";
+        }
+
         private static readonly char[] WordSplitChars = { ' ', '.', ',', '-', '?', '!', ':', ';', '"', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n' };
 
         private static bool IsOneLineUrl(string s)
@@ -47,8 +53,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            var language = Configuration.Settings.Language.FixCommonErrors;
-            string fixAction = language.FixMissingPeriodAtEndOfLine;
+            string fixAction = Language.FixMissingPeriodAtEndOfLine;
             int missingPeriodsAtEndOfLine = 0;
 
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
@@ -188,7 +193,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                 }
             }
-            callbacks.UpdateFixStatus(missingPeriodsAtEndOfLine, language.AddPeriods, language.XPeriodsAdded);
+            callbacks.UpdateFixStatus(missingPeriodsAtEndOfLine, Language.AddPeriods);
         }
 
         private static void AddPeriod(Paragraph p, string tempNoHtml)

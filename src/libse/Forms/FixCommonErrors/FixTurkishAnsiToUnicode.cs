@@ -2,13 +2,16 @@
 using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
-{
+{ 
     public class FixTurkishAnsiToUnicode : IFixCommonError
     {
+        public static class Language
+        {
+            public static string FixTurkishAnsi { get; set; } = "Fix Turkish ANSI (Icelandic) letters to Unicode";
+        }
+
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            var language = Configuration.Settings.Language.FixCommonErrors;
-            string fixAction = language.FixTurkishAnsi;
             int noOfFixes = 0;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
@@ -21,14 +24,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 text = text.Replace('ý', 'ı');
                 text = text.Replace('ð', 'ğ');
                 text = text.Replace('þ', 'ş');
-                if (oldText != text && callbacks.AllowFix(p, fixAction))
+                if (oldText != text && callbacks.AllowFix(p, Language.FixTurkishAnsi))
                 {
                     p.Text = text;
                     noOfFixes++;
-                    callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
+                    callbacks.AddFixToListView(p, Language.FixTurkishAnsi, oldText, p.Text);
                 }
             }
-            callbacks.UpdateFixStatus(noOfFixes, language.FixCommonOcrErrors, language.FixTurkishAnsi);
+            callbacks.UpdateFixStatus(noOfFixes, Language.FixTurkishAnsi);
         }
 
     }

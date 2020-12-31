@@ -5,15 +5,18 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class RemoveSpaceBetweenNumbers : IFixCommonError
     {
+        public static class Language
+        {
+            public static string RemoveSpaceBetweenNumber { get; set; } = "Remove space between numbers";
+        }
+
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            var language = Configuration.Settings.Language.FixCommonErrors;
-            var fixAction = language.RemoveSpaceBetweenNumber;
             int noOfFixes = 0;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 var p = subtitle.Paragraphs[i];
-                if (callbacks.AllowFix(p, fixAction))
+                if (callbacks.AllowFix(p, Language.RemoveSpaceBetweenNumber))
                 {
                     var text = Utilities.RemoveSpaceBetweenNumbers(p.Text);
                     if (text != p.Text)
@@ -21,12 +24,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         var oldText = p.Text;
                         p.Text = text;
                         noOfFixes++;
-                        callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
+                        callbacks.AddFixToListView(p, Language.RemoveSpaceBetweenNumber, oldText, p.Text);
                     }
                 }
             }
-            callbacks.UpdateFixStatus(noOfFixes, language.FixCommonOcrErrors, string.Format(language.RemoveSpaceBetweenNumbersFixed, noOfFixes));
+            callbacks.UpdateFixStatus(noOfFixes, Language.RemoveSpaceBetweenNumber);
         }
-
     }
 }

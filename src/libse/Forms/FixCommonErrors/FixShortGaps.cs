@@ -5,11 +5,16 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixShortGaps : IFixCommonError
     {
+        public static class Language
+        {
+            public static string FixShortGap { get; set; } = "Fix short gap";
+            public static string FixShortGaps { get; set; } = "Fix short gaps";
+        }
+
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            var language = Configuration.Settings.Language.FixCommonErrors;
             double minGap = Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-            string fixAction = language.FixShortGap;
+            string fixAction = Language.FixShortGap;
             int noOfShortGaps = 0;
             for (int i = 0; i < subtitle.Paragraphs.Count - 1; i++)
             {
@@ -28,7 +33,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                 }
             }
-            callbacks.UpdateFixStatus(noOfShortGaps, language.FixShortGaps, string.Format(language.XGapsFixed, noOfShortGaps));
+            callbacks.UpdateFixStatus(noOfShortGaps, Language.FixShortGaps);
         }
     }
 }

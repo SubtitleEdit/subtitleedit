@@ -6,16 +6,19 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixEllipsesStart : IFixCommonError
     {
+        public static class Language
+        {
+            public static string FixEllipsesStart { get; set; } = "Remove leading '...'";
+        }
+
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            var language = Configuration.Settings.Language.FixCommonErrors;
-            string fixAction = language.FixEllipsesStart;
             int fixCount = 0;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = subtitle.Paragraphs[i];
                 var text = p.Text;
-                if (text.Contains("..") && callbacks.AllowFix(p, fixAction))
+                if (text.Contains("..") && callbacks.AllowFix(p, Language.FixEllipsesStart))
                 {
                     var oldText = text;
                     var lines = text.SplitToLines();
@@ -28,12 +31,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     {
                         p.Text = text;
                         fixCount++;
-                        callbacks.AddFixToListView(p, fixAction, oldText, text);
+                        callbacks.AddFixToListView(p, Language.FixEllipsesStart, oldText, text);
                     }
                 }
             }
-            callbacks.UpdateFixStatus(fixCount, language.FixEllipsesStart, language.XFixEllipsesStart);
+            callbacks.UpdateFixStatus(fixCount, Language.FixEllipsesStart);
         }
-
     }
 }

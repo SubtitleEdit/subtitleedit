@@ -6,10 +6,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixMusicNotation : IFixCommonError
     {
+        public static class Language
+        {
+            public static string FixMusicNotation { get; set; } = "Replace music symbols (e.g. âTª) with preferred symbol";
+        }
+
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            var language = Configuration.Settings.Language.FixCommonErrors;
-            string fixAction = language.FixMusicNotation;
+            string fixAction = Language.FixMusicNotation;
             int fixCount = 0;
             string[] musicSymbols = Configuration.Settings.Tools.MusicSymbolReplace.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
@@ -95,7 +99,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                 }
             }
-            callbacks.UpdateFixStatus(fixCount, language.FixMusicNotation, language.XFixMusicNotation);
+            callbacks.UpdateFixStatus(fixCount, Language.FixMusicNotation);
         }
 
         private static string HandleQuestionMarks(string input)

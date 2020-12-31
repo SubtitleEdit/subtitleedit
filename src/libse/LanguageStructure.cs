@@ -690,7 +690,6 @@
             public string RemovedEmptyLineAtBottom { get; set; }
             public string RemovedEmptyLineInMiddle { get; set; }
             public string RemovedEmptyLinesUnsedLineBreaks { get; set; }
-            public string EmptyLinesRemovedX { get; set; }
             public string FixOverlappingDisplayTimes { get; set; }
             public string FixShortDisplayTimes { get; set; }
             public string FixLongDisplayTimes { get; set; }
@@ -715,21 +714,16 @@
             public string RemoveSpaceBetweenNumber { get; set; }
             public string FixDialogsOnOneLine { get; set; }
             public string NormalizeStrings { get; set; }
-            public string RemoveSpaceBetweenNumbersFixed { get; set; }
             public string FixTurkishAnsi { get; set; }
             public string FixDanishLetterI { get; set; }
             public string FixSpanishInvertedQuestionAndExclamationMarks { get; set; }
             public string AddMissingQuote { get; set; }
             public string AddMissingQuotes { get; set; }
             public string RemoveHyphensSingleLine { get; set; }
-            public string XHyphensSingleLineRemoved { get; set; }
             public string FixHyphensInDialogs { get; set; }
-            public string XHyphensInDialogsFixed { get; set; }
             public string AddMissingQuotesExample { get; set; }
             public string XMissingQuotesAdded { get; set; }
             public string Fix3PlusLines { get; set; }
-            public string Fix3PlusLine { get; set; }
-            public string X3PlusLinesFixed { get; set; }
             public string Analysing { get; set; }
             public string NothingToFix { get; set; }
             public string FixesFoundX { get; set; }
@@ -737,12 +731,9 @@
             public string NothingFixableBut { get; set; }
             public string XFixedBut { get; set; }
             public string XCouldBeFixedBut { get; set; }
-            public string UncheckedFixLowercaseIToUppercaseI { get; set; }
-            public string XIsChangedToUppercase { get; set; }
             public string FixFirstLetterToUppercaseAfterParagraph { get; set; }
             public string MergeShortLine { get; set; }
             public string MergeShortLineAll { get; set; }
-            public string XLineBreaksAdded { get; set; }
             public string BreakLongLine { get; set; }
             public string FixLongDisplayTime { get; set; }
             public string FixInvalidItalicTag { get; set; }
@@ -759,23 +750,11 @@
             public string UnableToFixStartTimeLaterThanEndTime { get; set; }
             public string XFixedToYZ { get; set; }
             public string UnableToFixTextXY { get; set; }
-            public string XOverlappingTimestampsFixed { get; set; }
-            public string XDisplayTimesProlonged { get; set; }
-            public string XInvalidHtmlTagsFixed { get; set; }
-            public string XDisplayTimesShortned { get; set; }
-            public string XGapsFixed { get; set; }
-            public string XLinesUnbreaked { get; set; }
             public string UnneededSpace { get; set; }
-            public string XUnneededSpacesRemoved { get; set; }
             public string UnneededPeriod { get; set; }
-            public string XUnneededPeriodsRemoved { get; set; }
             public string FixMissingSpace { get; set; }
-            public string XMissingSpacesAdded { get; set; }
             public string FixUppercaseIInsideLowercaseWord { get; set; }
-            public string XPeriodsAdded { get; set; }
             public string FixMissingPeriodAtEndOfLine { get; set; }
-            public string XDoubleApostrophesFixed { get; set; }
-            public string XUppercaseIsFoundInsideLowercaseWords { get; set; }
             public string RefreshFixes { get; set; }
             public string ApplyFixes { get; set; }
             public string AutoBreak { get; set; }
@@ -785,11 +764,6 @@
             public string FixEllipsesStart { get; set; }
             public string FixMissingOpenBracket { get; set; }
             public string FixMusicNotation { get; set; }
-            public string XFixDoubleDash { get; set; }
-            public string XFixDoubleGreaterThan { get; set; }
-            public string XFixEllipsesStart { get; set; }
-            public string XFixMissingOpenBracket { get; set; }
-            public string XFixMusicNotation { get; set; }
             public string FixDoubleDashExample { get; set; }
             public string FixDoubleGreaterThanExample { get; set; }
             public string FixEllipsesStartExample { get; set; }
@@ -803,9 +777,7 @@
             public string SelectDefault { get; set; }
             public string SetDefault { get; set; }
             public string FixContinuationStyleX { get; set; }
-            public string XFixContinuationStyle { get; set; }
             public string FixUnnecessaryLeadingDots { get; set; }
-            public string XFixUnnecessaryLeadingDots { get; set; }
         }
 
         public class GetDictionaries

@@ -5,10 +5,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixHyphensInDialog : IFixCommonError
     {
+        public static class Language
+        {
+            public static string FixHyphensInDialogs { get; set; } = "Fix dash in dialogs via style: {0}";
+        }
+
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            var language = Configuration.Settings.Language.FixCommonErrors;
-            string fixAction = string.Format(language.FixHyphensInDialogs, Configuration.Settings.General.DialogStyle);
+            string fixAction = string.Format(Language.FixHyphensInDialogs, Configuration.Settings.General.DialogStyle);
             int iFixes = 0;
             var dialogHelper = new DialogSplitMerge
             {
@@ -31,7 +35,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                 }
             }
-            callbacks.UpdateFixStatus(iFixes, fixAction, language.XHyphensInDialogsFixed);
+            callbacks.UpdateFixStatus(iFixes, fixAction);
         }
     }
 }

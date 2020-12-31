@@ -6,15 +6,18 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixDoubleGreaterThan : IFixCommonError
     {
+        public static class Language
+        {
+            public static string FixDoubleGreaterThan { get; set; } = "Remove '>>'";
+        }
+
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            var language = Configuration.Settings.Language.FixCommonErrors;
-            string fixAction = language.FixDoubleGreaterThan;
             int fixCount = 0;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = subtitle.Paragraphs[i];
-                if (callbacks.AllowFix(p, fixAction))
+                if (callbacks.AllowFix(p, Language.FixDoubleGreaterThan))
                 {
                     if (!p.Text.Contains(">>", StringComparison.Ordinal))
                     {
@@ -40,11 +43,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     {
                         fixCount++;
                         p.Text = text;
-                        callbacks.AddFixToListView(p, fixAction, oldText, text);
+                        callbacks.AddFixToListView(p, Language.FixDoubleGreaterThan, oldText, text);
                     }
                 }
             }
-            callbacks.UpdateFixStatus(fixCount, language.FixDoubleGreaterThan, language.XFixDoubleGreaterThan);
+            callbacks.UpdateFixStatus(fixCount, Language.FixDoubleGreaterThan);
         }
 
     }
