@@ -1,5 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.Interfaces;
+﻿using Nikse.SubtitleEdit.Core.Interfaces;
 using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
@@ -64,7 +63,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                 }
             }
-            callbacks.UpdateFixStatus(fixCount, Configuration.Settings.Language.FixCommonErrors.FixCommas);
+            callbacks.UpdateFixStatus(fixCount, Language.FixCommas);
         }
 
         private static string RemoveCommaBeforeSentenceEndingChar(string input, char comma)
