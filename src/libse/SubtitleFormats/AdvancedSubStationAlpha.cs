@@ -1461,7 +1461,7 @@ Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour,
                             _errorCount++;
                             if (errors.Length < 2000)
                             {
-                                errors.AppendLine(string.Format(Configuration.Settings.Language.Main.LineNumberXErrorReadingTimeCodeFromSourceLineY, lineNumber, line));
+                                errors.AppendLine(string.Format(FormatLanguage.LineNumberXErrorReadingTimeCodeFromSourceLineY, lineNumber, line));
                             }
                             else if (subtitle.Paragraphs.Count == 0)
                             {

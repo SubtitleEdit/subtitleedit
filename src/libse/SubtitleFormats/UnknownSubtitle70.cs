@@ -578,7 +578,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         _errorCount++;
                         if (_errors.Length < 2000)
                         {
-                            _errors.AppendLine(string.Format(Configuration.Settings.Language.Main.LineNumberXErrorReadingFromSourceLineY, _lineNumber, line));
+                            _errors.AppendLine(string.Format(FormatLanguage.LineNumberXErrorReadingFromSourceLineY, _lineNumber, line));
                         }
                     }
                 }
@@ -587,7 +587,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     _errorCount++;
                     if (_errors.Length < 2000)
                     {
-                        _errors.AppendLine(string.Format(Configuration.Settings.Language.Main.LineNumberXErrorReadingFromSourceLineY, _lineNumber, line));
+                        _errors.AppendLine(string.Format(FormatLanguage.LineNumberXErrorReadingFromSourceLineY, _lineNumber, line));
                     }
                 }
             }
