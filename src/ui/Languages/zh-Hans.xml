@@ -240,6 +240,20 @@ Command line: {1} {2}
   <Beamer>
     <Title>投影仪</Title>
   </Beamer>
+  <BinEdit>
+    <ImportImage>导入图片…</ImportImage>
+    <ExportImage>导出图片…</ExportImage>
+    <SetText>文本设置…</SetText>
+    <QuickOcr>快速OCR文本（仅用于参考）</QuickOcr>
+    <ResizeBitmaps>调整图片尺寸…</ResizeBitmaps>
+    <ResizeBitmapsForSelectedLines>为所选行调整图片尺寸…</ResizeBitmapsForSelectedLines>
+    <ChangeColorForSelectedLines>修改所选行颜色…</ChangeColorForSelectedLines>
+    <AlignSelectedLines>对齐所选行</AlignSelectedLines>
+    <CenterSelectedLines>居中所选行（水平，保持垂直位置）</CenterSelectedLines>
+    <TopAlignSelectedLines>顶部对齐所选行（保持水平位置）</TopAlignSelectedLines>
+    <BottomAlignSelectedLines>底部对齐所选行（保持水平位置）</BottomAlignSelectedLines>
+    <SizeXY>尺寸：{0}x{1}</SizeXY>
+  </BinEdit>
   <Bookmarks>
     <EditBookmark>编辑书签</EditBookmark>
     <AddBookmark>添加书签</AddBookmark>
@@ -319,6 +333,7 @@ Command line: {1} {2}
   </ColumnPaste>
   <CompareSubtitles>
     <Title>比较字幕</Title>
+    <Reload>重新载入</Reload>
     <PreviousDifference>上一个差异(&amp;P)</PreviousDifference>
     <NextDifference>下一个差异(&amp;N)</NextDifference>
     <SubtitlesNotAlike>字幕没有相似之处</SubtitlesNotAlike>
@@ -2274,6 +2289,7 @@ Command line: {1} {2}
     <ListViewColumnTextDown>列，文本下移</ListViewColumnTextDown>
     <ListViewGoToNextError>转到下一处错误</ListViewGoToNextError>
     <ShowBeamer>启动字幕全屏幕投影仪</ShowBeamer>
+    <ShowStyleManager>显示样式管理器</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>将上一行的最后一个单词移到下一行</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>将下一行的第一个单词移到上一行</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>将次行行首的词上移至首行行末（单条字幕内）</MainTextBoxMoveFirstWordUpCurrent>
@@ -2321,7 +2337,6 @@ Command line: {1} {2}
     <UseXAsNewGap>是否将 "{0}" 毫秒设为新的最小间隙值？</UseXAsNewGap>
   </Settings>
   <SettingsMpv>
-    <Title>mpv 设置</Title>
     <DownloadMpv>下载 mpv 库</DownloadMpv>
     <DownloadMpvFailed>无法下载 mpv - 请稍后重试!</DownloadMpvFailed>
     <DownloadMpvOk>mpv 库下载完成，等待启用。</DownloadMpvOk>
@@ -2793,4 +2808,3 @@ Command line: {1} {2}
     <VoiceName>人声名称</VoiceName>
   </WebVttNewVoice>
 </Language>
-
