@@ -241,6 +241,20 @@ Note: Do check free disk space.</WaveFileMalformed>
   <Beamer>
     <Title>Beamer</Title>
   </Beamer>
+  <BinEdit>
+    <ImportImage>Import image...</ImportImage>
+    <ExportImage>Export image...</ExportImage>
+    <SetText>Set text...</SetText>
+    <QuickOcr>Quick OCR texts (for overview only)</QuickOcr>
+    <ResizeBitmaps>Resize images...</ResizeBitmaps>
+    <ResizeBitmapsForSelectedLines>Resize images for selected lines...</ResizeBitmapsForSelectedLines>
+    <ChangeColorForSelectedLines>Change color for selected lines...</ChangeColorForSelectedLines>
+    <AlignSelectedLines>Align selected lines</AlignSelectedLines>
+    <CenterSelectedLines>Center selected lines (horizontally, keep vertical position)</CenterSelectedLines>
+    <TopAlignSelectedLines>Top align selected lines (keep horizontal position)</TopAlignSelectedLines>
+    <BottomAlignSelectedLines>Bottom align selected lines (keep horizontal position)</BottomAlignSelectedLines>
+    <SizeXY>Size: {0}x{1}</SizeXY>
+  </BinEdit>
   <Bookmarks>
     <EditBookmark>Edit bookmark</EditBookmark>
     <AddBookmark>Add bookmark</AddBookmark>

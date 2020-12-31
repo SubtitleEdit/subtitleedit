@@ -655,6 +655,42 @@ namespace Nikse.SubtitleEdit.Core
                 case "Beamer/Title":
                     language.Beamer.Title = reader.Value;
                     break;
+                case "BinEdit/ImportImage":
+                    language.BinEdit.ImportImage = reader.Value;
+                    break;
+                case "BinEdit/ExportImage":
+                    language.BinEdit.ExportImage = reader.Value;
+                    break;
+                case "BinEdit/SetText":
+                    language.BinEdit.SetText = reader.Value;
+                    break;
+                case "BinEdit/QuickOcr":
+                    language.BinEdit.QuickOcr = reader.Value;
+                    break;
+                case "BinEdit/ResizeBitmaps":
+                    language.BinEdit.ResizeBitmaps = reader.Value;
+                    break;
+                case "BinEdit/ResizeBitmapsForSelectedLines":
+                    language.BinEdit.ResizeBitmapsForSelectedLines = reader.Value;
+                    break;
+                case "BinEdit/ChangeColorForSelectedLines":
+                    language.BinEdit.ChangeColorForSelectedLines = reader.Value;
+                    break;
+                case "BinEdit/AlignSelectedLines":
+                    language.BinEdit.AlignSelectedLines = reader.Value;
+                    break;
+                case "BinEdit/CenterSelectedLines":
+                    language.BinEdit.CenterSelectedLines = reader.Value;
+                    break;
+                case "BinEdit/TopAlignSelectedLines":
+                    language.BinEdit.TopAlignSelectedLines = reader.Value;
+                    break;
+                case "BinEdit/BottomAlignSelectedLines":
+                    language.BinEdit.BottomAlignSelectedLines = reader.Value;
+                    break;
+                case "BinEdit/SizeXY":
+                    language.BinEdit.SizeXY = reader.Value;
+                    break;
                 case "Bookmarks/EditBookmark":
                     language.Bookmarks.EditBookmark = reader.Value;
                     break;
