@@ -322,7 +322,6 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.groupBox2.Size = new System.Drawing.Size(493, 51);
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Global settings";
             // 
             // labelFrameRate
             // 

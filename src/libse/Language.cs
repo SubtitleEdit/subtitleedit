@@ -22,6 +22,7 @@ namespace Nikse.SubtitleEdit.Core
         public LanguageStructure.AutoBreakUnbreakLines AutoBreakUnbreakLines;
         public LanguageStructure.BatchConvert BatchConvert;
         public LanguageStructure.Beamer Beamer;
+        public LanguageStructure.BinEdit BinEdit;
         public LanguageStructure.Bookmarks Bookmarks;
         public LanguageStructure.ChangeCasing ChangeCasing;
         public LanguageStructure.ChangeCasingNames ChangeCasingNames;
@@ -384,11 +385,27 @@ namespace Nikse.SubtitleEdit.Core
                 Title = "Beamer",
             };
 
+            BinEdit = new LanguageStructure.BinEdit
+            {
+                ImportImage = "Import image...",
+                ExportImage = "Export image...",
+                SetText = "Set text...",
+                QuickOcr = "Quick OCR texts (for overview only)",
+                ResizeBitmaps = "Resize images...",
+                ResizeBitmapsForSelectedLines = "Resize images for selected lines...",
+                ChangeColorForSelectedLines = "Change color for selected lines...",
+                AlignSelectedLines = "Align selected lines",
+                CenterSelectedLines = "Center selected lines (horizontally, keep vertical position)",
+                TopAlignSelectedLines = "Top align selected lines (keep horizontal position)",
+                BottomAlignSelectedLines = "Bottom align selected lines (keep horizontal position)",
+                SizeXY = "Size: {0}x{1}",
+            };
+
             Bookmarks = new LanguageStructure.Bookmarks
             {
                 GoToBookmark = "Go to bookmark",
                 EditBookmark = "Edit bookmark",
-                AddBookmark = "Add bookmark"
+                AddBookmark = "Add bookmark",
             };
 
             ChangeCasing = new LanguageStructure.ChangeCasing
@@ -1853,7 +1870,7 @@ namespace Nikse.SubtitleEdit.Core
                 ConvertFrom = "Convert from",
                 ConvertTo = "Convert to",
                 CopyToClipboard = "Copy to clipboard",
-                CloseOnInsert =  "Close on insert",
+                CloseOnInsert = "Close on insert",
 
                 Length = "Length",
                 Mass = "Mass",
@@ -2422,7 +2439,7 @@ can edit in same subtitle file (collaboration)",
                 UseSyntaxColoring = "Use syntax coloring",
                 HtmlColor = "Html color",
                 AssaColor = "ASSA color",
-                DarkTheme ="Dark theme",
+                DarkTheme = "Dark theme",
                 DarkThemeEnabled = "Use dark theme",
                 ListViewAndTextBox = "List view and text box",
                 UpdateShortcut = "Update",

@@ -254,6 +254,22 @@
             public string Title { get; set; }
         }
 
+        public class BinEdit
+        {
+            public string ImportImage { get; set; }
+            public string ExportImage { get; set; }
+            public string SetText { get; set; }
+            public string QuickOcr { get; set; }
+            public string ResizeBitmaps { get; set; }
+            public string ResizeBitmapsForSelectedLines { get; set; }
+            public string ChangeColorForSelectedLines { get; set; }
+            public string AlignSelectedLines { get; set; }
+            public string CenterSelectedLines { get; set; }
+            public string TopAlignSelectedLines { get; set; }
+            public string BottomAlignSelectedLines { get; set; }
+            public string SizeXY { get; set; }
+        }
+
         public class Bookmarks
         {
             public string EditBookmark { get; set; }
