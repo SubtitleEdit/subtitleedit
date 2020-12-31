@@ -1,15 +1,20 @@
-﻿using System;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Interfaces;
+using System;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixUnneededSpaces : IFixCommonError
     {
+        public static class Language
+        {
+            public static string UnneededSpace { get; set; } = "Unneeded space";
+            public static string RemoveUnneededSpaces { get; set; } = "Remove unneeded spaces";
+        }
+
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            var language = Configuration.Settings.Language.FixCommonErrors;
-            string fixAction = language.UnneededSpace;
+            string fixAction = Language.UnneededSpace;
             int doubleSpaces = 0;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
@@ -26,7 +31,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                 }
             }
-            callbacks.UpdateFixStatus(doubleSpaces, language.RemoveUnneededSpaces, string.Format(language.XUnneededSpacesRemoved, doubleSpaces));
+            callbacks.UpdateFixStatus(doubleSpaces, Language.RemoveUnneededSpaces);
         }
     }
 }

@@ -5,15 +5,19 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixShortDisplayTimes : IFixCommonError
     {
+        public static class Language
+        {
+            public static string FixShortDisplayTime { get; set; } = "Fix short display time";
+            public static string FixShortDisplayTimes { get; set; } = "Fix short display times";
+            public static string UnableToFixTextXY { get; set; } = "Unable to fix text number {0}: {1}";
+        }
 
         private IFixCallbacks _callbacks;
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            var language = Configuration.Settings.Language.FixCommonErrors;
             _callbacks = callbacks;
-
-            string fixAction = language.FixShortDisplayTime;
+            string fixAction = Language.FixShortDisplayTime;
             int noOfShortDisplayTimes = 0;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
@@ -56,7 +60,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                     else
                     {
-                        callbacks.LogStatus(language.FixShortDisplayTimes, string.Format(language.UnableToFixTextXY, i + 1, p));
+                        callbacks.LogStatus(Language.FixShortDisplayTimes, string.Format(Language.UnableToFixTextXY, i + 1, p));
                         callbacks.AddToTotalErrors(1);
                         skip = true;
                     }
@@ -160,12 +164,12 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             }
                         }
 
-                        callbacks.LogStatus(language.FixShortDisplayTimes, string.Format(language.UnableToFixTextXY, i + 1, p));
+                        callbacks.LogStatus(Language.FixShortDisplayTimes, string.Format(Language.UnableToFixTextXY, i + 1, p));
                         callbacks.AddToTotalErrors(1);
                     }
                 }
             }
-            callbacks.UpdateFixStatus(noOfShortDisplayTimes, fixAction, string.Format(language.XDisplayTimesProlonged, noOfShortDisplayTimes));
+            callbacks.UpdateFixStatus(noOfShortDisplayTimes, fixAction);
         }
 
         private int MoveStartTime(string fixAction, int noOfShortDisplayTimes, Paragraph p, Paragraph temp, Paragraph next)

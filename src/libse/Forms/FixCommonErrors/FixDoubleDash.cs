@@ -6,15 +6,18 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixDoubleDash : IFixCommonError
     {
+        public static class Language
+        {
+            public static string FixDoubleDash { get; set; } = "Fix '--' -> '...'";
+        }
+
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            var language = Configuration.Settings.Language.FixCommonErrors;
-            string fixAction = language.FixDoubleDash;
             int fixCount = 0;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = subtitle.Paragraphs[i];
-                if (callbacks.AllowFix(p, fixAction))
+                if (callbacks.AllowFix(p, Language.FixDoubleDash))
                 {
                     string text = p.Text;
                     string oldText = p.Text;
@@ -50,16 +53,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             text = Helper.RemoveSpacesBeginLineAfterEllipses(text);
                         }
                     }
-                    //if (text.EndsWith('-'))
-                    //{
-                    //    text = text.Substring(0, text.Length - 1) + "...";
-                    //    text = text.Replace(" ...", "...");
-                    //}
-                    //if (text.EndsWith("-</i>"))
-                    //{
-                    //    text = text.Replace("-</i>", "...</i>");
-                    //    text = text.Replace(" ...", "...");
-                    //}
 
                     if (text.StartsWith('—') && text.Length > 1)
                     {
@@ -75,11 +68,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     {
                         p.Text = text;
                         fixCount++;
-                        callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
+                        callbacks.AddFixToListView(p, Language.FixDoubleDash, oldText, p.Text);
                     }
                 }
             }
-            callbacks.UpdateFixStatus(fixCount, language.FixDoubleDash, language.XFixDoubleDash);
+            callbacks.UpdateFixStatus(fixCount, Language.FixDoubleDash);
         }
 
     }

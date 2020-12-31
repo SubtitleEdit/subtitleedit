@@ -6,10 +6,13 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixDanishLetterI : IFixCommonError
     {
+        public static class Language
+        {
+            public static string FixDanishLetterI { get; set; } = "Fix Danish letter 'i'";
+        }
+
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            var language = Configuration.Settings.Language.FixCommonErrors;
-            const string fixAction = "Fix Danish letter 'i'";
             int fixCount = 0;
 
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
@@ -81,15 +84,15 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     text = RegexUtils.DanishLetterI.RegExIOevrigt.Replace(text, "i øvrigt");
                 }
 
-                if (text != oldText && callbacks.AllowFix(p, fixAction))
+                if (text != oldText && callbacks.AllowFix(p, Language.FixDanishLetterI))
                 {
                     p.Text = text;
                     fixCount++;
-                    callbacks.AddFixToListView(subtitle.Paragraphs[i], fixAction, oldText, text);
+                    callbacks.AddFixToListView(subtitle.Paragraphs[i], Language.FixDanishLetterI, oldText, text);
                 }
             }
 
-            callbacks.UpdateFixStatus(fixCount, language.FixDanishLetterI, string.Format(language.XIsChangedToUppercase, fixCount));
+            callbacks.UpdateFixStatus(fixCount, Language.FixDanishLetterI);
         }
 
     }

@@ -7,11 +7,15 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixStartWithUppercaseLetterAfterColon : IFixCommonError
     {
+        public static class Language
+        {
+            public static string StartWithUppercaseLetterAfterColon { get; set; } = "Start with uppercase letter after colon/semicolon";
+        }
+
         private static readonly char[] ExpectedChars = { ':', ';' };
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            var language = Configuration.Settings.Language.FixCommonErrors;
-            string fixAction = language.StartWithUppercaseLetterAfterColon;
+            string fixAction = Language.StartWithUppercaseLetterAfterColon;
             int noOfFixes = 0;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
@@ -105,7 +109,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     callbacks.AddFixToListView(subtitle.Paragraphs[i], fixAction, oldText, p.Text);
                 }
             }
-            callbacks.UpdateFixStatus(noOfFixes, language.StartWithUppercaseLetterAfterColon, noOfFixes.ToString(CultureInfo.InvariantCulture));
+            callbacks.UpdateFixStatus(noOfFixes, Language.StartWithUppercaseLetterAfterColon);
         }
 
     }

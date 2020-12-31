@@ -1,12 +1,16 @@
-﻿using Nikse.SubtitleEdit.Core.Interfaces;
-using System.Globalization;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Interfaces;
 using System.Text.RegularExpressions;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixStartWithUppercaseLetterAfterPeriodInsideParagraph : IFixCommonError
     {
+        public static class Language
+        {
+            public static string StartWithUppercaseLetterAfterPeriodInsideParagraph { get; set; } = "Start with uppercase letter after period inside paragraph";
+        }
+
         private static readonly char[] ExpectedChars = { '.', '!', '?' };
 
         private bool IsAbbreviation(string text, int index, IFixCallbacks callbacks)
@@ -33,8 +37,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            var language = Configuration.Settings.Language.FixCommonErrors;
-            string fixAction = language.StartWithUppercaseLetterAfterPeriodInsideParagraph;
+            string fixAction = Language.StartWithUppercaseLetterAfterPeriodInsideParagraph;
             int noOfFixes = 0;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
@@ -97,7 +100,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                 }
             }
-            callbacks.UpdateFixStatus(noOfFixes, language.StartWithUppercaseLetterAfterPeriodInsideParagraph, noOfFixes.ToString(CultureInfo.InvariantCulture));
+            callbacks.UpdateFixStatus(noOfFixes, Language.StartWithUppercaseLetterAfterPeriodInsideParagraph);
         }
 
         private static string ToUpperFirstLetter(string textBefore, string text, IFixCallbacks callbacks)
