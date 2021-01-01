@@ -26,6 +26,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static readonly char[] NewLineChars = { '\r', '\n' };
 
         private static readonly Regex NumberSeparatorNumberRegEx = new Regex(@"\b\d+[\.:;] \d+\b", RegexOptions.Compiled);
+        private static readonly Regex RegexIsNumber = new Regex("^\\d+$", RegexOptions.Compiled);
+        private static readonly Regex RegexIsEpisodeNumber = new Regex("^\\d+x\\d+$", RegexOptions.Compiled);
 
         public static string[] VideoFileExtensions { get; } = { ".avi", ".mkv", ".wmv", ".mpg", ".mpeg", ".divx", ".mp4", ".asf", ".flv", ".mov", ".m4v", ".vob", ".ogv", ".webm", ".ts", ".m2ts", ".mts", ".avs", ".mxf" };
         public static string[] AudioFileExtensions { get; } = { ".mp3", ".wav", ".wma", ".ogg", ".mpa", ".m4a", ".ape", ".aiff", ".flac", ".aac", ".ac3", ".eac3", ".mka" };
@@ -46,6 +48,22 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return true;
+        }
+
+        public static bool IsNumber(string s)
+        {
+            s = s.Trim('$', '£', '%', '*');
+            if (RegexIsNumber.IsMatch(s))
+            {
+                return true;
+            }
+
+            if (RegexIsEpisodeNumber.IsMatch(s))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public static SubtitleFormat GetSubtitleFormatByFriendlyName(string friendlyName)
