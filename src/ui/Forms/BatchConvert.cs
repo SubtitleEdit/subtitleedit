@@ -2688,6 +2688,17 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void BatchConvert_Shown(object sender, EventArgs e)
+        {
+            BatchConvert_ResizeEnd(this, EventArgs.Empty);
+        }
+
+        private void BatchConvert_ResizeEnd(object sender, EventArgs e)
+        {
+            listViewInputFiles.Columns[listViewInputFiles.Columns.Count - 1].Width = -2;
+            listViewConvertOptions.Columns[listViewConvertOptions.Columns.Count - 1].Width = -2;
+        }
+
         private void comboBoxFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
             textBoxFilter.Visible = comboBoxFilter.SelectedIndex == 3 || comboBoxFilter.SelectedIndex == 4 || comboBoxFilter.SelectedIndex == 5;
@@ -2732,11 +2743,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 textBoxOutputFolder.Text = folderBrowserDialog1.SelectedPath;
             }
-        }
-
-        private void listViewConvertOptions_Resize(object sender, EventArgs e)
-        {
-            listViewConvertOptions.Columns[1].Width = -2;
         }
 
         private void listViewConvertOptions_SelectedIndexChanged(object sender, EventArgs e)

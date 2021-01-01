@@ -514,6 +514,7 @@
             this.panelSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelSettings.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle; ;
             this.panelSettings.Controls.Add(this.listBoxSection);
             this.panelSettings.Controls.Add(this.panelGeneral);
             this.panelSettings.Controls.Add(this.panelShortcuts);
