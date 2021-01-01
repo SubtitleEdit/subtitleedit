@@ -34,10 +34,10 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            Text = Configuration.Settings.Language.ChooseLanguage.Title;
-            labelLanguage.Text = Configuration.Settings.Language.ChooseLanguage.Language;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            Text = LanguageSettings.Current.ChooseLanguage.Title;
+            labelLanguage.Text = LanguageSettings.Current.ChooseLanguage.Language;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
 
             comboBoxLanguage.BeginUpdate();

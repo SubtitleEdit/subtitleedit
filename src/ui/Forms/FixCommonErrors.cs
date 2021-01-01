@@ -402,7 +402,7 @@ namespace Nikse.SubtitleEdit.Forms
                 new FixItem(_language.FixDoubleGreaterThan, _language.FixDoubleGreaterThanExample, () => new FixDoubleGreaterThan().Fix(Subtitle, this), ce.FixDoubleGreaterThanTicked),
                 new FixItem( string.Format(_language.FixContinuationStyleX, UiUtil.GetContinuationStyleName(Configuration.Settings.General.ContinuationStyle)), string.Empty, () => new FixContinuationStyle
                 {
-                    FixAction = string.Format(Configuration.Settings.Language.FixCommonErrors.FixContinuationStyleX, UiUtil.GetContinuationStyleName(Configuration.Settings.General.ContinuationStyle))
+                    FixAction = string.Format(LanguageSettings.Current.FixCommonErrors.FixContinuationStyleX, UiUtil.GetContinuationStyleName(Configuration.Settings.General.ContinuationStyle))
                 }.Fix(Subtitle, this), ce.FixContinuationStyleTicked),
                 new FixItem(_language.FixMissingOpenBracket, _language.FixMissingOpenBracketExample, () => new FixMissingOpenBracket().Fix(Subtitle, this), ce.FixMissingOpenBracketTicked),
                 new FixItem(_language.FixCommonOcrErrors, _language.FixOcrErrorExample, () => FixOcrErrorsViaReplaceList(threeLetterIsoLanguageName), ce.FixOcrErrorsViaReplaceListTicked),
@@ -450,17 +450,17 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (dialogStyle == DialogType.DashSecondLineWithoutSpace)
             {
-                return Configuration.Settings.Language.Settings.DialogStyleDashSecondLineWithoutSpace;
+                return LanguageSettings.Current.Settings.DialogStyleDashSecondLineWithoutSpace;
             }
             if (dialogStyle == DialogType.DashSecondLineWithSpace)
             {
-                return Configuration.Settings.Language.Settings.DialogStyleDashSecondLineWithSpace;
+                return LanguageSettings.Current.Settings.DialogStyleDashSecondLineWithSpace;
             }
             if (dialogStyle == DialogType.DashBothLinesWithoutSpace)
             {
-                return Configuration.Settings.Language.Settings.DialogStyleDashSecondLineWithSpace;
+                return LanguageSettings.Current.Settings.DialogStyleDashSecondLineWithSpace;
             }
-            return Configuration.Settings.Language.Settings.DialogStyleDashBothLinesWithSpace;
+            return LanguageSettings.Current.Settings.DialogStyleDashBothLinesWithSpace;
         }
 
         public FixCommonErrors()
@@ -474,8 +474,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelNumberOfImportantLogMessages.Text = string.Empty;
             labelLanguage2.Text = string.Empty;
             Encoding = Encoding.UTF8;
-            _language = Configuration.Settings.Language.FixCommonErrors;
-            _languageGeneral = Configuration.Settings.Language.General;
+            _language = LanguageSettings.Current.FixCommonErrors;
+            _languageGeneral = LanguageSettings.Current.General;
             Text = _language.Title;
             groupBoxStep1.Text = _language.Step1;
             groupBox2.Text = _language.Step2;
@@ -504,18 +504,18 @@ namespace Nikse.SubtitleEdit.Forms
             buttonUnBreak.Text = _language.Unbreak;
             buttonSplitLine.Text = _languageGeneral.SplitLine;
             subtitleListView1.InitializeLanguage(_languageGeneral, Configuration.Settings);
-            labelLanguage.Text = Configuration.Settings.Language.ChooseLanguage.Language;
-            toolStripMenuItemDelete.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Delete;
-            mergeSelectedLinesToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.MergeSelectedLines;
+            labelLanguage.Text = LanguageSettings.Current.ChooseLanguage.Language;
+            toolStripMenuItemDelete.Text = LanguageSettings.Current.Main.Menu.ContextMenu.Delete;
+            mergeSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.MergeSelectedLines;
             buttonResetDefault.Text = _language.SelectDefault;
 
-            toolStripMenuItemInverseSelection.Text = Configuration.Settings.Language.Main.Menu.Edit.InverseSelection;
-            toolStripMenuItemSelectAll.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.SelectAll;
+            toolStripMenuItemInverseSelection.Text = LanguageSettings.Current.Main.Menu.Edit.InverseSelection;
+            toolStripMenuItemSelectAll.Text = LanguageSettings.Current.Main.Menu.ContextMenu.SelectAll;
             selectDefaultToolStripMenuItem.Text = _language.SelectDefault;
             setCurrentFixesAsDefaultToolStripMenuItem.Text = _language.SetDefault;
 
-            toolStripMenuItemInverseRules.Text = Configuration.Settings.Language.Main.Menu.Edit.InverseSelection;
-            toolStripMenuItemSelectAllRules.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.SelectAll;
+            toolStripMenuItemInverseRules.Text = LanguageSettings.Current.Main.Menu.Edit.InverseSelection;
+            toolStripMenuItemSelectAllRules.Text = LanguageSettings.Current.Main.Menu.ContextMenu.SelectAll;
 
             splitContainerStep2.Panel1MinSize = 110;
             splitContainerStep2.Panel2MinSize = 160;
@@ -523,64 +523,64 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownDuration.Left = timeUpDownStartTime.Left + timeUpDownStartTime.Width;
             labelDuration.Left = timeUpDownStartTime.Left + timeUpDownStartTime.Width - 3;
 
-            AddMissingQuotes.Language.AddMissingQuote = Configuration.Settings.Language.FixCommonErrors.AddMissingQuote;
-            Fix3PlusLines.Language.Fix3PlusLine = Configuration.Settings.Language.FixCommonErrors.XMissingQuotesAdded;
-            Fix3PlusLines.Language.Fix3PlusLines = Configuration.Settings.Language.FixCommonErrors.Fix3PlusLines;
-            FixAloneLowercaseIToUppercaseI.Language.FixLowercaseIToUppercaseI = Configuration.Settings.Language.FixCommonErrors.FixLowercaseIToUppercaseI;
-            FixCommas.Language.FixCommas = Configuration.Settings.Language.FixCommonErrors.FixCommas;
-            FixContinuationStyle.Language.FixUnnecessaryLeadingDots = Configuration.Settings.Language.FixCommonErrors.FixUnnecessaryLeadingDots;
-            FixDanishLetterI.Language.FixDanishLetterI = Configuration.Settings.Language.FixCommonErrors.FixDanishLetterI;
-            FixDialogsOnOneLine.Language.FixDialogsOnOneLine = Configuration.Settings.Language.FixCommonErrors.FixDialogsOnOneLine;
-            FixDoubleApostrophes.Language.FixDoubleApostrophes = Configuration.Settings.Language.FixCommonErrors.FixDoubleApostrophes;
-            FixDoubleDash.Language.FixDoubleDash = Configuration.Settings.Language.FixCommonErrors.FixDoubleDash;
-            FixDoubleGreaterThan.Language.FixDoubleGreaterThan = Configuration.Settings.Language.FixCommonErrors.FixDoubleGreaterThan;
-            FixEllipsesStart.Language.FixEllipsesStart = Configuration.Settings.Language.FixCommonErrors.FixEllipsesStart;
-            FixEmptyLines.Language.RemovedEmptyLine = Configuration.Settings.Language.FixCommonErrors.RemovedEmptyLine;
-            FixEmptyLines.Language.RemovedEmptyLineAtBottom = Configuration.Settings.Language.FixCommonErrors.RemovedEmptyLineAtBottom;
-            FixEmptyLines.Language.RemovedEmptyLineAtTop = Configuration.Settings.Language.FixCommonErrors.RemovedEmptyLineAtTop;
-            FixEmptyLines.Language.RemovedEmptyLineInMiddle = Configuration.Settings.Language.FixCommonErrors.RemovedEmptyLineInMiddle;
-            FixEmptyLines.Language.RemovedEmptyLinesUnsedLineBreaks = Configuration.Settings.Language.FixCommonErrors.RemovedEmptyLinesUnsedLineBreaks;
-            FixHyphensInDialog.Language.FixHyphensInDialogs = Configuration.Settings.Language.FixCommonErrors.FixHyphensInDialogs;
-            FixHyphensRemoveDashSingleLine.Language.RemoveHyphensSingleLine = Configuration.Settings.Language.FixCommonErrors.RemoveHyphensSingleLine;
-            FixInvalidItalicTags.Language.FixInvalidItalicTag = Configuration.Settings.Language.FixCommonErrors.FixInvalidItalicTag;
-            FixInvalidItalicTags.Language.FixInvalidItalicTags = Configuration.Settings.Language.FixCommonErrors.FixInvalidItalicTags;
-            FixLongDisplayTimes.Language.FixLongDisplayTime = Configuration.Settings.Language.FixCommonErrors.FixLongDisplayTime;
-            FixLongLines.Language.BreakLongLine = Configuration.Settings.Language.FixCommonErrors.BreakLongLine;
-            FixLongLines.Language.BreakLongLines = Configuration.Settings.Language.FixCommonErrors.BreakLongLines;
-            FixLongLines.Language.UnableToFixTextXY = Configuration.Settings.Language.FixCommonErrors.UnableToFixTextXY;
-            FixMissingOpenBracket.Language.FixMissingOpenBracket = Configuration.Settings.Language.FixCommonErrors.FixMissingOpenBracket;
-            FixMissingPeriodsAtEndOfLine.Language.AddPeriods = Configuration.Settings.Language.FixCommonErrors.AddPeriods;
-            FixMissingPeriodsAtEndOfLine.Language.FixMissingPeriodAtEndOfLine = Configuration.Settings.Language.FixCommonErrors.FixMissingPeriodAtEndOfLine;
-            FixMissingSpaces.Language.FixMissingSpace = Configuration.Settings.Language.FixCommonErrors.FixMissingSpace;
-            FixMissingSpaces.Language.FixMissingSpaces = Configuration.Settings.Language.FixCommonErrors.FixMissingSpaces;
-            FixMusicNotation.Language.FixMusicNotation = Configuration.Settings.Language.FixCommonErrors.FixMusicNotation;
-            FixOverlappingDisplayTimes.Language.FixOverlappingDisplayTime = Configuration.Settings.Language.FixCommonErrors.FixOverlappingDisplayTime;
-            FixOverlappingDisplayTimes.Language.StartTimeLaterThanEndTime = Configuration.Settings.Language.FixCommonErrors.StartTimeLaterThanEndTime;
-            FixOverlappingDisplayTimes.Language.UnableToFixStartTimeLaterThanEndTime = Configuration.Settings.Language.FixCommonErrors.UnableToFixStartTimeLaterThanEndTime;
-            FixOverlappingDisplayTimes.Language.FixOverlappingDisplayTimes = Configuration.Settings.Language.FixCommonErrors.FixOverlappingDisplayTimes;
-            FixOverlappingDisplayTimes.Language.XFixedToYZ = Configuration.Settings.Language.FixCommonErrors.XFixedToYZ;
-            FixOverlappingDisplayTimes.Language.UnableToFixTextXY = Configuration.Settings.Language.FixCommonErrors.UnableToFixTextXY;
-            FixShortDisplayTimes.Language.FixShortDisplayTime = Configuration.Settings.Language.FixCommonErrors.FixShortDisplayTime;
-            FixShortDisplayTimes.Language.FixShortDisplayTimes = Configuration.Settings.Language.FixCommonErrors.FixShortDisplayTimes;
-            FixShortDisplayTimes.Language.UnableToFixTextXY = Configuration.Settings.Language.FixCommonErrors.UnableToFixTextXY;
-            FixShortGaps.Language.FixShortGap = Configuration.Settings.Language.FixCommonErrors.FixShortGap;
-            FixShortGaps.Language.FixShortGaps = Configuration.Settings.Language.FixCommonErrors.FixShortGaps;
-            FixShortLines.Language.MergeShortLine = Configuration.Settings.Language.FixCommonErrors.MergeShortLine;
-            FixShortLinesAll.Language.MergeShortLineAll = Configuration.Settings.Language.FixCommonErrors.MergeShortLineAll;
-            FixShortLinesAll.Language.RemoveLineBreaks = Configuration.Settings.Language.FixCommonErrors.RemoveLineBreaks;
-            FixSpanishInvertedQuestionAndExclamationMarks.Language.FixSpanishInvertedQuestionAndExclamationMarks = Configuration.Settings.Language.FixCommonErrors.FixSpanishInvertedQuestionAndExclamationMarks;
-            FixStartWithUppercaseLetterAfterColon.Language.StartWithUppercaseLetterAfterColon = Configuration.Settings.Language.FixCommonErrors.StartWithUppercaseLetterAfterColon;
-            FixStartWithUppercaseLetterAfterParagraph.Language.FixFirstLetterToUppercaseAfterParagraph = Configuration.Settings.Language.FixCommonErrors.FixFirstLetterToUppercaseAfterParagraph;
-            FixStartWithUppercaseLetterAfterPeriodInsideParagraph.Language.StartWithUppercaseLetterAfterPeriodInsideParagraph = Configuration.Settings.Language.FixCommonErrors.StartWithUppercaseLetterAfterPeriodInsideParagraph;
-            FixTurkishAnsiToUnicode.Language.FixTurkishAnsi = Configuration.Settings.Language.FixCommonErrors.FixTurkishAnsi;
-            FixUnnecessaryLeadingDots.Language.FixUnnecessaryLeadingDots = Configuration.Settings.Language.FixCommonErrors.FixUnnecessaryLeadingDots;
-            FixUnneededPeriods.Language.RemoveUnneededPeriods = Configuration.Settings.Language.FixCommonErrors.RemoveUnneededPeriods;
-            FixUnneededPeriods.Language.UnneededPeriod = Configuration.Settings.Language.FixCommonErrors.UnneededPeriod;
-            FixUnneededSpaces.Language.RemoveUnneededSpaces = Configuration.Settings.Language.FixCommonErrors.RemoveUnneededSpaces;
-            FixUnneededSpaces.Language.UnneededSpace = Configuration.Settings.Language.FixCommonErrors.UnneededSpace;
-            FixUppercaseIInsideWords.Language.FixUppercaseIInsideLowercaseWord = Configuration.Settings.Language.FixCommonErrors.FixUppercaseIInsideLowercaseWord;
-            FixUppercaseIInsideWords.Language.FixUppercaseIInsindeLowercaseWords = Configuration.Settings.Language.FixCommonErrors.FixUppercaseIInsindeLowercaseWords;
-            NormalizeStrings.Language.NormalizeStrings = Configuration.Settings.Language.FixCommonErrors.NormalizeStrings;
+            AddMissingQuotes.Language.AddMissingQuote = LanguageSettings.Current.FixCommonErrors.AddMissingQuote;
+            Fix3PlusLines.Language.Fix3PlusLine = LanguageSettings.Current.FixCommonErrors.XMissingQuotesAdded;
+            Fix3PlusLines.Language.Fix3PlusLines = LanguageSettings.Current.FixCommonErrors.Fix3PlusLines;
+            FixAloneLowercaseIToUppercaseI.Language.FixLowercaseIToUppercaseI = LanguageSettings.Current.FixCommonErrors.FixLowercaseIToUppercaseI;
+            FixCommas.Language.FixCommas = LanguageSettings.Current.FixCommonErrors.FixCommas;
+            FixContinuationStyle.Language.FixUnnecessaryLeadingDots = LanguageSettings.Current.FixCommonErrors.FixUnnecessaryLeadingDots;
+            FixDanishLetterI.Language.FixDanishLetterI = LanguageSettings.Current.FixCommonErrors.FixDanishLetterI;
+            FixDialogsOnOneLine.Language.FixDialogsOnOneLine = LanguageSettings.Current.FixCommonErrors.FixDialogsOnOneLine;
+            FixDoubleApostrophes.Language.FixDoubleApostrophes = LanguageSettings.Current.FixCommonErrors.FixDoubleApostrophes;
+            FixDoubleDash.Language.FixDoubleDash = LanguageSettings.Current.FixCommonErrors.FixDoubleDash;
+            FixDoubleGreaterThan.Language.FixDoubleGreaterThan = LanguageSettings.Current.FixCommonErrors.FixDoubleGreaterThan;
+            FixEllipsesStart.Language.FixEllipsesStart = LanguageSettings.Current.FixCommonErrors.FixEllipsesStart;
+            FixEmptyLines.Language.RemovedEmptyLine = LanguageSettings.Current.FixCommonErrors.RemovedEmptyLine;
+            FixEmptyLines.Language.RemovedEmptyLineAtBottom = LanguageSettings.Current.FixCommonErrors.RemovedEmptyLineAtBottom;
+            FixEmptyLines.Language.RemovedEmptyLineAtTop = LanguageSettings.Current.FixCommonErrors.RemovedEmptyLineAtTop;
+            FixEmptyLines.Language.RemovedEmptyLineInMiddle = LanguageSettings.Current.FixCommonErrors.RemovedEmptyLineInMiddle;
+            FixEmptyLines.Language.RemovedEmptyLinesUnsedLineBreaks = LanguageSettings.Current.FixCommonErrors.RemovedEmptyLinesUnsedLineBreaks;
+            FixHyphensInDialog.Language.FixHyphensInDialogs = LanguageSettings.Current.FixCommonErrors.FixHyphensInDialogs;
+            FixHyphensRemoveDashSingleLine.Language.RemoveHyphensSingleLine = LanguageSettings.Current.FixCommonErrors.RemoveHyphensSingleLine;
+            FixInvalidItalicTags.Language.FixInvalidItalicTag = LanguageSettings.Current.FixCommonErrors.FixInvalidItalicTag;
+            FixInvalidItalicTags.Language.FixInvalidItalicTags = LanguageSettings.Current.FixCommonErrors.FixInvalidItalicTags;
+            FixLongDisplayTimes.Language.FixLongDisplayTime = LanguageSettings.Current.FixCommonErrors.FixLongDisplayTime;
+            FixLongLines.Language.BreakLongLine = LanguageSettings.Current.FixCommonErrors.BreakLongLine;
+            FixLongLines.Language.BreakLongLines = LanguageSettings.Current.FixCommonErrors.BreakLongLines;
+            FixLongLines.Language.UnableToFixTextXY = LanguageSettings.Current.FixCommonErrors.UnableToFixTextXY;
+            FixMissingOpenBracket.Language.FixMissingOpenBracket = LanguageSettings.Current.FixCommonErrors.FixMissingOpenBracket;
+            FixMissingPeriodsAtEndOfLine.Language.AddPeriods = LanguageSettings.Current.FixCommonErrors.AddPeriods;
+            FixMissingPeriodsAtEndOfLine.Language.FixMissingPeriodAtEndOfLine = LanguageSettings.Current.FixCommonErrors.FixMissingPeriodAtEndOfLine;
+            FixMissingSpaces.Language.FixMissingSpace = LanguageSettings.Current.FixCommonErrors.FixMissingSpace;
+            FixMissingSpaces.Language.FixMissingSpaces = LanguageSettings.Current.FixCommonErrors.FixMissingSpaces;
+            FixMusicNotation.Language.FixMusicNotation = LanguageSettings.Current.FixCommonErrors.FixMusicNotation;
+            FixOverlappingDisplayTimes.Language.FixOverlappingDisplayTime = LanguageSettings.Current.FixCommonErrors.FixOverlappingDisplayTime;
+            FixOverlappingDisplayTimes.Language.StartTimeLaterThanEndTime = LanguageSettings.Current.FixCommonErrors.StartTimeLaterThanEndTime;
+            FixOverlappingDisplayTimes.Language.UnableToFixStartTimeLaterThanEndTime = LanguageSettings.Current.FixCommonErrors.UnableToFixStartTimeLaterThanEndTime;
+            FixOverlappingDisplayTimes.Language.FixOverlappingDisplayTimes = LanguageSettings.Current.FixCommonErrors.FixOverlappingDisplayTimes;
+            FixOverlappingDisplayTimes.Language.XFixedToYZ = LanguageSettings.Current.FixCommonErrors.XFixedToYZ;
+            FixOverlappingDisplayTimes.Language.UnableToFixTextXY = LanguageSettings.Current.FixCommonErrors.UnableToFixTextXY;
+            FixShortDisplayTimes.Language.FixShortDisplayTime = LanguageSettings.Current.FixCommonErrors.FixShortDisplayTime;
+            FixShortDisplayTimes.Language.FixShortDisplayTimes = LanguageSettings.Current.FixCommonErrors.FixShortDisplayTimes;
+            FixShortDisplayTimes.Language.UnableToFixTextXY = LanguageSettings.Current.FixCommonErrors.UnableToFixTextXY;
+            FixShortGaps.Language.FixShortGap = LanguageSettings.Current.FixCommonErrors.FixShortGap;
+            FixShortGaps.Language.FixShortGaps = LanguageSettings.Current.FixCommonErrors.FixShortGaps;
+            FixShortLines.Language.MergeShortLine = LanguageSettings.Current.FixCommonErrors.MergeShortLine;
+            FixShortLinesAll.Language.MergeShortLineAll = LanguageSettings.Current.FixCommonErrors.MergeShortLineAll;
+            FixShortLinesAll.Language.RemoveLineBreaks = LanguageSettings.Current.FixCommonErrors.RemoveLineBreaks;
+            FixSpanishInvertedQuestionAndExclamationMarks.Language.FixSpanishInvertedQuestionAndExclamationMarks = LanguageSettings.Current.FixCommonErrors.FixSpanishInvertedQuestionAndExclamationMarks;
+            FixStartWithUppercaseLetterAfterColon.Language.StartWithUppercaseLetterAfterColon = LanguageSettings.Current.FixCommonErrors.StartWithUppercaseLetterAfterColon;
+            FixStartWithUppercaseLetterAfterParagraph.Language.FixFirstLetterToUppercaseAfterParagraph = LanguageSettings.Current.FixCommonErrors.FixFirstLetterToUppercaseAfterParagraph;
+            FixStartWithUppercaseLetterAfterPeriodInsideParagraph.Language.StartWithUppercaseLetterAfterPeriodInsideParagraph = LanguageSettings.Current.FixCommonErrors.StartWithUppercaseLetterAfterPeriodInsideParagraph;
+            FixTurkishAnsiToUnicode.Language.FixTurkishAnsi = LanguageSettings.Current.FixCommonErrors.FixTurkishAnsi;
+            FixUnnecessaryLeadingDots.Language.FixUnnecessaryLeadingDots = LanguageSettings.Current.FixCommonErrors.FixUnnecessaryLeadingDots;
+            FixUnneededPeriods.Language.RemoveUnneededPeriods = LanguageSettings.Current.FixCommonErrors.RemoveUnneededPeriods;
+            FixUnneededPeriods.Language.UnneededPeriod = LanguageSettings.Current.FixCommonErrors.UnneededPeriod;
+            FixUnneededSpaces.Language.RemoveUnneededSpaces = LanguageSettings.Current.FixCommonErrors.RemoveUnneededSpaces;
+            FixUnneededSpaces.Language.UnneededSpace = LanguageSettings.Current.FixCommonErrors.UnneededSpace;
+            FixUppercaseIInsideWords.Language.FixUppercaseIInsideLowercaseWord = LanguageSettings.Current.FixCommonErrors.FixUppercaseIInsideLowercaseWord;
+            FixUppercaseIInsideWords.Language.FixUppercaseIInsindeLowercaseWords = LanguageSettings.Current.FixCommonErrors.FixUppercaseIInsindeLowercaseWords;
+            NormalizeStrings.Language.NormalizeStrings = LanguageSettings.Current.FixCommonErrors.NormalizeStrings;
 
             FixLargeFonts();
             listView1.Select();
@@ -756,7 +756,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (fixes > 0)
             {
                 _totalFixes += fixes;
-                LogStatus(message, string.Format(Configuration.Settings.Language.FixCommonErrors.XFixesApplied, fixes));
+                LogStatus(message, string.Format(LanguageSettings.Current.FixCommonErrors.XFixesApplied, fixes));
             }
         }
 
@@ -1618,8 +1618,8 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            var askText = subtitleListView1.SelectedItems.Count > 1 ? string.Format(Configuration.Settings.Language.Main.DeleteXLinesPrompt, subtitleListView1.SelectedItems.Count) : Configuration.Settings.Language.Main.DeleteOneLinePrompt;
-            if (Configuration.Settings.General.PromptDeleteLines && MessageBox.Show(askText, Configuration.Settings.Language.General.Title, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+            var askText = subtitleListView1.SelectedItems.Count > 1 ? string.Format(LanguageSettings.Current.Main.DeleteXLinesPrompt, subtitleListView1.SelectedItems.Count) : LanguageSettings.Current.Main.DeleteOneLinePrompt;
+            if (Configuration.Settings.General.PromptDeleteLines && MessageBox.Show(askText, LanguageSettings.Current.General.Title, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
             {
                 return;
             }

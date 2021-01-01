@@ -6,7 +6,7 @@ using System.Xml;
 // !!! THIS FILE IS AUTO-GENERATED!!!
 // !!! THIS FILE IS AUTO-GENERATED!!!
 
-namespace Nikse.SubtitleEdit.Core
+namespace Nikse.SubtitleEdit.Logic
 {
 
     public class LanguageDeserializer // NOTE: This class is AUTO-GENERATED!!!!

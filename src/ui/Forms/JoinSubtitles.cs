@@ -25,23 +25,23 @@ namespace Nikse.SubtitleEdit.Forms
             JoinedSubtitle = new Subtitle();
             labelTotalLines.Text = string.Empty;
 
-            listViewParts.Columns[0].Text = Configuration.Settings.Language.JoinSubtitles.NumberOfLines;
-            listViewParts.Columns[1].Text = Configuration.Settings.Language.JoinSubtitles.StartTime;
-            listViewParts.Columns[2].Text = Configuration.Settings.Language.JoinSubtitles.EndTime;
-            listViewParts.Columns[3].Text = Configuration.Settings.Language.JoinSubtitles.FileName;
+            listViewParts.Columns[0].Text = LanguageSettings.Current.JoinSubtitles.NumberOfLines;
+            listViewParts.Columns[1].Text = LanguageSettings.Current.JoinSubtitles.StartTime;
+            listViewParts.Columns[2].Text = LanguageSettings.Current.JoinSubtitles.EndTime;
+            listViewParts.Columns[3].Text = LanguageSettings.Current.JoinSubtitles.FileName;
 
-            buttonAddFile.Text = Configuration.Settings.Language.DvdSubRip.Add;
-            buttonRemoveFile.Text = Configuration.Settings.Language.DvdSubRip.Remove;
-            buttonClear.Text = Configuration.Settings.Language.DvdSubRip.Clear;
+            buttonAddFile.Text = LanguageSettings.Current.DvdSubRip.Add;
+            buttonRemoveFile.Text = LanguageSettings.Current.DvdSubRip.Remove;
+            buttonClear.Text = LanguageSettings.Current.DvdSubRip.Clear;
 
-            Text = Configuration.Settings.Language.JoinSubtitles.Title;
-            groupBoxPreview.Text = Configuration.Settings.Language.JoinSubtitles.Information;
-            buttonJoin.Text = Configuration.Settings.Language.JoinSubtitles.Join;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            Text = LanguageSettings.Current.JoinSubtitles.Title;
+            groupBoxPreview.Text = LanguageSettings.Current.JoinSubtitles.Information;
+            buttonJoin.Text = LanguageSettings.Current.JoinSubtitles.Join;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
-            radioButtonJoinPlain.Text = Configuration.Settings.Language.JoinSubtitles.AlreadyCorrectTimeCodes;
-            radioButtonJoinAddTime.Text = Configuration.Settings.Language.JoinSubtitles.AppendTimeCodes;
-            labelAddTime.Text = Configuration.Settings.Language.JoinSubtitles.AddMs;
+            radioButtonJoinPlain.Text = LanguageSettings.Current.JoinSubtitles.AlreadyCorrectTimeCodes;
+            radioButtonJoinAddTime.Text = LanguageSettings.Current.JoinSubtitles.AppendTimeCodes;
+            labelAddTime.Text = LanguageSettings.Current.JoinSubtitles.AddMs;
 
             labelAddTime.Left = radioButtonJoinAddTime.Left + radioButtonJoinAddTime.Width + 20;
             numericUpDownAddMs.Left = labelAddTime.Left + labelAddTime.Width + 5;
@@ -156,7 +156,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (format == null)
                     {
-                        Revert(k, Configuration.Settings.Language.UnknownSubtitle.Title + Environment.NewLine + fileName);
+                        Revert(k, LanguageSettings.Current.UnknownSubtitle.Title + Environment.NewLine + fileName);
                         break;
                     }
 
@@ -245,7 +245,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             JoinedSubtitle.Renumber();
-            labelTotalLines.Text = string.Format(Configuration.Settings.Language.JoinSubtitles.TotalNumberOfLinesX, JoinedSubtitle.Paragraphs.Count);
+            labelTotalLines.Text = string.Format(LanguageSettings.Current.JoinSubtitles.TotalNumberOfLinesX, JoinedSubtitle.Paragraphs.Count);
         }
 
         private void Revert(int idx, string message)
@@ -264,7 +264,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonAddSubtitleClick(object sender, EventArgs e)
         {
-            openFileDialog1.Title = Configuration.Settings.Language.General.OpenSubtitle;
+            openFileDialog1.Title = LanguageSettings.Current.General.OpenSubtitle;
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;
             openFileDialog1.Multiselect = true;
@@ -286,7 +286,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else
                         {
-                            sb.AppendLine(string.Format(Configuration.Settings.Language.Main.FileXIsLargerThan10MB, fileName));
+                            sb.AppendLine(string.Format(LanguageSettings.Current.Main.FileXIsLargerThan10MB, fileName));
                         }
                     }
                 }

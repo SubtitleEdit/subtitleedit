@@ -16,10 +16,10 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            Text = Configuration.Settings.Language.StartNumberingFrom.Title;
-            label1.Text = Configuration.Settings.Language.StartNumberingFrom.StartFromNumber;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            Text = LanguageSettings.Current.StartNumberingFrom.Title;
+            label1.Text = LanguageSettings.Current.StartNumberingFrom.StartFromNumber;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
@@ -65,7 +65,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                MessageBox.Show(Configuration.Settings.Language.StartNumberingFrom.PleaseEnterAValidNumber);
+                MessageBox.Show(LanguageSettings.Current.StartNumberingFrom.PleaseEnterAValidNumber);
                 textBox1.Focus();
                 textBox1.SelectAll();
             }

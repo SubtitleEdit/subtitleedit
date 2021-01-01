@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Forms
             Application.DoEvents();
 
             _subtitle = subtitle;
-            _NA = "[" + Configuration.Settings.Language.General.NotAvailable + "]";
+            _NA = "[" + LanguageSettings.Current.General.NotAvailable + "]";
             comboBoxDropMode.Items[0] = _NA;
             comboBoxTimeBase.Items[0] = _NA;
             comboBoxDefaultStyle.Items.Add(_NA);

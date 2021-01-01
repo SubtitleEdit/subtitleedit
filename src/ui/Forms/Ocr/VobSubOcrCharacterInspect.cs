@@ -36,18 +36,18 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             labelCount.Text = string.Empty;
             labelExpandCount.Text = string.Empty;
             labelImageSize.Text = string.Empty;
-            Text = Configuration.Settings.Language.VobSubOcrCharacterInspect.Title;
-            groupBoxInspectItems.Text = Configuration.Settings.Language.VobSubOcrCharacterInspect.InspectItems;
+            Text = LanguageSettings.Current.VobSubOcrCharacterInspect.Title;
+            groupBoxInspectItems.Text = LanguageSettings.Current.VobSubOcrCharacterInspect.InspectItems;
             labelImageInfo.Text = string.Empty;
-            groupBoxCurrentCompareImage.Text = Configuration.Settings.Language.VobSubEditCharacters.CurrentCompareImage;
-            labelTextAssociatedWithImage.Text = Configuration.Settings.Language.VobSubEditCharacters.TextAssociatedWithImage;
-            checkBoxItalic.Text = Configuration.Settings.Language.VobSubEditCharacters.IsItalic;
-            buttonUpdate.Text = Configuration.Settings.Language.VobSubEditCharacters.Update;
-            buttonDelete.Text = Configuration.Settings.Language.VobSubEditCharacters.Delete;
-            buttonAddBetterMatch.Text = Configuration.Settings.Language.VobSubOcrCharacterInspect.AddBetterMatch;
-            labelDoubleSize.Text = Configuration.Settings.Language.VobSubEditCharacters.ImageDoubleSize;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            groupBoxCurrentCompareImage.Text = LanguageSettings.Current.VobSubEditCharacters.CurrentCompareImage;
+            labelTextAssociatedWithImage.Text = LanguageSettings.Current.VobSubEditCharacters.TextAssociatedWithImage;
+            checkBoxItalic.Text = LanguageSettings.Current.VobSubEditCharacters.IsItalic;
+            buttonUpdate.Text = LanguageSettings.Current.VobSubEditCharacters.Update;
+            buttonDelete.Text = LanguageSettings.Current.VobSubEditCharacters.Delete;
+            buttonAddBetterMatch.Text = LanguageSettings.Current.VobSubOcrCharacterInspect.AddBetterMatch;
+            labelDoubleSize.Text = LanguageSettings.Current.VobSubEditCharacters.ImageDoubleSize;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
             foreach (ToolStripItem toolStripItem in contextMenuStripLetters.Items)
             {
@@ -209,11 +209,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                     var mbmp = new ManagedBitmap(f);
                                     var bitmap = mbmp.ToOldBitmap();
                                     SetDbItemView(mbmp.ToOldBitmap());
-                                    labelImageInfo.Text = string.Format(Configuration.Settings.Language.VobSubEditCharacters.Image + " - {0}x{1}", bitmap.Width, bitmap.Height);
+                                    labelImageInfo.Text = string.Format(LanguageSettings.Current.VobSubEditCharacters.Image + " - {0}x{1}", bitmap.Width, bitmap.Height);
                                 }
                                 catch (Exception exception)
                                 {
-                                    labelImageInfo.Text = Configuration.Settings.Language.VobSubEditCharacters.Image;
+                                    labelImageInfo.Text = LanguageSettings.Current.VobSubEditCharacters.Image;
                                     MessageBox.Show(exception.Message);
                                 }
                             }
@@ -225,13 +225,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
             }
 
-            buttonAddBetterMatch.Text = Configuration.Settings.Language.VobSubOcrCharacterInspect.AddBetterMatch;
-            if (_selectedMatch.Text == Configuration.Settings.Language.VobSubOcr.NoMatch)
+            buttonAddBetterMatch.Text = LanguageSettings.Current.VobSubOcrCharacterInspect.AddBetterMatch;
+            if (_selectedMatch.Text == LanguageSettings.Current.VobSubOcr.NoMatch)
             {
                 buttonUpdate.Enabled = false;
                 buttonDelete.Enabled = false;
                 buttonAddBetterMatch.Enabled = true;
-                buttonAddBetterMatch.Text = Configuration.Settings.Language.VobSubOcrCharacterInspect.Add;
+                buttonAddBetterMatch.Text = LanguageSettings.Current.VobSubOcrCharacterInspect.Add;
                 textBoxText.Enabled = true;
                 textBoxText.Text = string.Empty;
                 checkBoxItalic.Enabled = true;
@@ -367,7 +367,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return;
             }
 
-            listBoxInspectItems.Items[listBoxInspectItems.SelectedIndex] = Configuration.Settings.Language.VobSubOcr.NoMatch;
+            listBoxInspectItems.Items[listBoxInspectItems.SelectedIndex] = LanguageSettings.Current.VobSubOcr.NoMatch;
             if (_selectedCompareBinaryOcrBitmap != null)
             {
                 if (_selectedCompareBinaryOcrBitmap.ExpandCount > 0)
@@ -412,7 +412,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return;
             }
 
-            if (_selectedCompareBinaryOcrBitmap != null || (_binOcrDb != null && (_selectedMatch.Text == Configuration.Settings.Language.VobSubOcr.NoMatch || _selectedMatch.NOcrCharacter == null)))
+            if (_selectedCompareBinaryOcrBitmap != null || (_binOcrDb != null && (_selectedMatch.Text == LanguageSettings.Current.VobSubOcr.NoMatch || _selectedMatch.NOcrCharacter == null)))
             {
                 BinaryOcrBitmap bob;
                 int expandCount = 0;
@@ -571,7 +571,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return;
             }
 
-            if (next.Text == Configuration.Settings.Language.VobSubOcr.NoMatch)
+            if (next.Text == LanguageSettings.Current.VobSubOcr.NoMatch)
             {
                 return;
             }

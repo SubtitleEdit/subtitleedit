@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Forms
             pictureBox2.Height = 1;
             pictureBox2.Top = bmp.Height - 2;
 
-            Text = $"{Configuration.Settings.Language.General.Preview} {bmp.Width}x{bmp.Height}";
+            Text = $"{LanguageSettings.Current.General.Preview} {bmp.Width}x{bmp.Height}";
 
             MouseWheel += MouseWheelHandler;
         }
@@ -82,7 +82,7 @@ namespace Nikse.SubtitleEdit.Forms
             pictureBox1.Width = (int)(_bmp.Width * _zoomFactor / 100.0);
             pictureBox1.Height = (int)(_bmp.Height * _zoomFactor / 100.0);
 
-            Text = $"{Configuration.Settings.Language.General.Preview}  {_bmp.Width}x{_bmp.Height}  {(int)_zoomFactor}%";
+            Text = $"{LanguageSettings.Current.General.Preview}  {_bmp.Width}x{_bmp.Height}  {(int)_zoomFactor}%";
 
             Invalidate();
         }

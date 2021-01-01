@@ -20,12 +20,12 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            Text = Configuration.Settings.Language.EffectTypewriter.Title;
-            labelTM.Text = Configuration.Settings.Language.EffectTypewriter.TotalSeconds;
-            labelEndDelay.Text = Configuration.Settings.Language.EffectTypewriter.EndDelayInSeconds;
-            buttonPreview.Text = Configuration.Settings.Language.General.Preview;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            Text = LanguageSettings.Current.EffectTypewriter.Title;
+            labelTM.Text = LanguageSettings.Current.EffectTypewriter.TotalSeconds;
+            labelEndDelay.Text = LanguageSettings.Current.EffectTypewriter.EndDelayInSeconds;
+            buttonPreview.Text = LanguageSettings.Current.General.Preview;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 

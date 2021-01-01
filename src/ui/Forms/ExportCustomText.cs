@@ -51,15 +51,15 @@ namespace Nikse.SubtitleEdit.Forms
             }
             ShowTemplates(_templates);
 
-            var l = Configuration.Settings.Language.ExportCustomText;
+            var l = LanguageSettings.Current.ExportCustomText;
             Text = l.Title;
             groupBoxFormats.Text = l.Formats;
             buttonSave.Text = l.SaveAs;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            groupBoxPreview.Text = Configuration.Settings.Language.General.Preview;
-            labelEncoding.Text = Configuration.Settings.Language.Main.Controls.FileEncoding;
-            columnHeader1.Text = Configuration.Settings.Language.General.Name;
-            columnHeader2.Text = Configuration.Settings.Language.General.Text;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            groupBoxPreview.Text = LanguageSettings.Current.General.Preview;
+            labelEncoding.Text = LanguageSettings.Current.Main.Controls.FileEncoding;
+            columnHeader1.Text = LanguageSettings.Current.General.Name;
+            columnHeader2.Text = LanguageSettings.Current.General.Text;
             buttonNew.Text = l.New;
             buttonEdit.Text = l.Edit;
             buttonDelete.Text = l.Delete;
@@ -201,19 +201,19 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            saveFileDialog1.Title = Configuration.Settings.Language.ExportCustomText.SaveSubtitleAs;
+            saveFileDialog1.Title = LanguageSettings.Current.ExportCustomText.SaveSubtitleAs;
             if (!string.IsNullOrEmpty(_title))
             {
                 saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_title) + ".txt";
             }
 
-            saveFileDialog1.Filter = Configuration.Settings.Language.General.AllFiles + "|*.*";
+            saveFileDialog1.Filter = LanguageSettings.Current.General.AllFiles + "|*.*";
             if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 try
                 {
                     FileUtil.WriteAllText(saveFileDialog1.FileName, GenerateText(_subtitle, _translated, _title), GetCurrentEncoding());
-                    LogMessage = string.Format(Configuration.Settings.Language.ExportCustomText.SubtitleExportedInCustomFormatToX, saveFileDialog1.FileName);
+                    LogMessage = string.Format(LanguageSettings.Current.ExportCustomText.SubtitleExportedInCustomFormatToX, saveFileDialog1.FileName);
                     DialogResult = DialogResult.OK;
                 }
                 catch (Exception exception)
@@ -368,7 +368,7 @@ namespace Nikse.SubtitleEdit.Forms
         public void InitializeForBatchConvert(string customTextTemplate)
         {
             _batchConvert = true;
-            buttonSave.Text = Configuration.Settings.Language.General.Ok;
+            buttonSave.Text = LanguageSettings.Current.General.Ok;
 
             for (int index = 0; index < _templates.Count; index++)
             {

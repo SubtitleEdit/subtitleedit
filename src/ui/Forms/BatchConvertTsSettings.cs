@@ -13,24 +13,24 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            Text = Configuration.Settings.Language.BatchConvert.TransportStreamSettings;
-            checkBoxOverrideOriginalXPosition.Text = Configuration.Settings.Language.BatchConvert.TransportStreamOverrideXPosition;
-            checkBoxOverrideOriginalYPosition.Text = Configuration.Settings.Language.BatchConvert.TransportStreamOverrideYPosition;
-            checkBoxOverrideVideoSize.Text = Configuration.Settings.Language.BatchConvert.TransportStreamOverrideVideoSize;
-            labelBottomMargin.Text = Configuration.Settings.Language.ExportPngXml.BottomMargin;
-            labelXMargin.Text = Configuration.Settings.Language.ExportPngXml.LeftRightMargin;
-            labelXAlignment.Text = Configuration.Settings.Language.ExportPngXml.Align;
-            labelWidth.Text = Configuration.Settings.Language.General.Width;
-            labelHeight.Text = Configuration.Settings.Language.General.Height;
-            labelFileNameEnding.Text = Configuration.Settings.Language.BatchConvert.TransportStreamFileNameEnding;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
+            Text = LanguageSettings.Current.BatchConvert.TransportStreamSettings;
+            checkBoxOverrideOriginalXPosition.Text = LanguageSettings.Current.BatchConvert.TransportStreamOverrideXPosition;
+            checkBoxOverrideOriginalYPosition.Text = LanguageSettings.Current.BatchConvert.TransportStreamOverrideYPosition;
+            checkBoxOverrideVideoSize.Text = LanguageSettings.Current.BatchConvert.TransportStreamOverrideVideoSize;
+            labelBottomMargin.Text = LanguageSettings.Current.ExportPngXml.BottomMargin;
+            labelXMargin.Text = LanguageSettings.Current.ExportPngXml.LeftRightMargin;
+            labelXAlignment.Text = LanguageSettings.Current.ExportPngXml.Align;
+            labelWidth.Text = LanguageSettings.Current.General.Width;
+            labelHeight.Text = LanguageSettings.Current.General.Height;
+            labelFileNameEnding.Text = LanguageSettings.Current.BatchConvert.TransportStreamFileNameEnding;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
             UiUtil.FixLargeFonts(this, buttonOK);
 
             comboBoxHAlign.Items.Clear();
-            comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.Left);
-            comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.Center);
-            comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.Right);
+            comboBoxHAlign.Items.Add(LanguageSettings.Current.ExportPngXml.Left);
+            comboBoxHAlign.Items.Add(LanguageSettings.Current.ExportPngXml.Center);
+            comboBoxHAlign.Items.Add(LanguageSettings.Current.ExportPngXml.Right);
 
             numericUpDownXMargin.Left = labelXMargin.Left + labelXMargin.Width + 5;
             labelXMarginPercent.Left = numericUpDownXMargin.Left + numericUpDownXMargin.Width + 1;
@@ -127,7 +127,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonChooseResolution_Click(object sender, EventArgs e)
         {
-            openFileDialog1.Title = Configuration.Settings.Language.General.OpenVideoFileTitle;
+            openFileDialog1.Title = LanguageSettings.Current.General.OpenVideoFileTitle;
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.Filter = UiUtil.GetVideoFileFilter(false);
             openFileDialog1.FileName = string.Empty;

@@ -2253,9 +2253,6 @@ $HorzAlign          =   Center
         public SubtitleBeaming SubtitleBeaming { get; set; }
         public List<MultipleSearchAndReplaceGroup> MultipleSearchAndReplaceGroups { get; set; }
 
-        [XmlIgnore]
-        public Language Language { get; set; }
-
         public void Reset()
         {
             RecentFiles = new RecentFilesSettings();
@@ -2270,7 +2267,6 @@ $HorzAlign          =   Center
             VideoControls = new VideoControlsSettings();
             NetworkSettings = new NetworkSettings();
             MultipleSearchAndReplaceGroups = new List<MultipleSearchAndReplaceGroup>();
-            Language = new Language();
             Shortcuts = new Shortcuts();
             RemoveTextForHearingImpaired = new RemoveTextForHearingImpairedSettings();
             SubtitleBeaming = new SubtitleBeaming();

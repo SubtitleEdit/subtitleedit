@@ -17,12 +17,12 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            Text = Configuration.Settings.Language.OpenVideoDvd.Title;
-            groupBoxOpenDvdFrom.Text = Configuration.Settings.Language.OpenVideoDvd.OpenDvdFrom;
-            radioButtonDisc.Text = Configuration.Settings.Language.OpenVideoDvd.Disc;
-            radioButtonFolder.Text = Configuration.Settings.Language.OpenVideoDvd.Folder;
-            labelChooseDrive.Text = Configuration.Settings.Language.OpenVideoDvd.ChooseDrive;
-            labelChooseFolder.Text = Configuration.Settings.Language.OpenVideoDvd.ChooseFolder;
+            Text = LanguageSettings.Current.OpenVideoDvd.Title;
+            groupBoxOpenDvdFrom.Text = LanguageSettings.Current.OpenVideoDvd.OpenDvdFrom;
+            radioButtonDisc.Text = LanguageSettings.Current.OpenVideoDvd.Disc;
+            radioButtonFolder.Text = LanguageSettings.Current.OpenVideoDvd.Folder;
+            labelChooseDrive.Text = LanguageSettings.Current.OpenVideoDvd.ChooseDrive;
+            labelChooseFolder.Text = LanguageSettings.Current.OpenVideoDvd.ChooseFolder;
             PanelDrive.Enabled = false;
             UiUtil.FixLargeFonts(this, buttonOK);
             radioButtonDisc_CheckedChanged(null, null);

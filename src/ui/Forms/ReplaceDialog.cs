@@ -22,16 +22,16 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            Text = Configuration.Settings.Language.ReplaceDialog.Title;
-            labelFindWhat.Text = Configuration.Settings.Language.ReplaceDialog.FindWhat;
-            radioButtonNormal.Text = Configuration.Settings.Language.ReplaceDialog.Normal;
-            radioButtonCaseSensitive.Text = Configuration.Settings.Language.ReplaceDialog.CaseSensitive;
-            radioButtonRegEx.Text = Configuration.Settings.Language.ReplaceDialog.RegularExpression;
-            labelReplaceWith.Text = Configuration.Settings.Language.ReplaceDialog.ReplaceWith;
-            checkBoxWholeWord.Text = Configuration.Settings.Language.FindDialog.WholeWord;
-            buttonFind.Text = Configuration.Settings.Language.ReplaceDialog.Find;
-            buttonReplace.Text = Configuration.Settings.Language.ReplaceDialog.Replace;
-            buttonReplaceAll.Text = Configuration.Settings.Language.ReplaceDialog.ReplaceAll;
+            Text = LanguageSettings.Current.ReplaceDialog.Title;
+            labelFindWhat.Text = LanguageSettings.Current.ReplaceDialog.FindWhat;
+            radioButtonNormal.Text = LanguageSettings.Current.ReplaceDialog.Normal;
+            radioButtonCaseSensitive.Text = LanguageSettings.Current.ReplaceDialog.CaseSensitive;
+            radioButtonRegEx.Text = LanguageSettings.Current.ReplaceDialog.RegularExpression;
+            labelReplaceWith.Text = LanguageSettings.Current.ReplaceDialog.ReplaceWith;
+            checkBoxWholeWord.Text = LanguageSettings.Current.FindDialog.WholeWord;
+            buttonFind.Text = LanguageSettings.Current.ReplaceDialog.Find;
+            buttonReplace.Text = LanguageSettings.Current.ReplaceDialog.Replace;
+            buttonReplaceAll.Text = LanguageSettings.Current.ReplaceDialog.ReplaceAll;
 
             if (Width < radioButtonRegEx.Right + 5)
             {

@@ -17,9 +17,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            Text = Configuration.Settings.Language.GetTesseractDictionaries.Download + " Tesseract " + version;
-            labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait;
-            labelDescription1.Text = Configuration.Settings.Language.GetTesseractDictionaries.Download + " Tesseract OCR";
+            Text = LanguageSettings.Current.GetTesseractDictionaries.Download + " Tesseract " + version;
+            labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
+            labelDescription1.Text = LanguageSettings.Current.GetTesseractDictionaries.Download + " Tesseract OCR";
 
             var wc = new WebClient { Proxy = Utilities.GetProxy() };
             wc.DownloadDataAsync(new Uri(TesseractDownloadUrl));
@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             wc.DownloadDataCompleted += wc_DownloadDataCompleted;
             wc.DownloadProgressChanged += (o, args) =>
             {
-                labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait + "  " + args.ProgressPercentage + "%";
+                labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + args.ProgressPercentage + "%";
             };
         }
 
@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             if (e.Error != null)
             {
-                MessageBox.Show(Configuration.Settings.Language.GetTesseractDictionaries.DownloadFailed + Environment.NewLine +
+                MessageBox.Show(LanguageSettings.Current.GetTesseractDictionaries.DownloadFailed + Environment.NewLine +
                                 $"Please download {TesseractDownloadUrl} manually and unpack into this folder: \"{Configuration.TesseractDirectory}\"" + Environment.NewLine +
                                 Environment.NewLine +
                                 e.Error.Message + ": " + e.Error.StackTrace);

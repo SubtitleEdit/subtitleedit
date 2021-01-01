@@ -27,19 +27,19 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            groupBoxSyncPointTimeCode.Text = Configuration.Settings.Language.SetSyncPoint.SyncPointTimeCode;
-            buttonThreeSecondsBack.Text = Configuration.Settings.Language.SetSyncPoint.ThreeSecondsBack;
-            buttonHalfASecondBack.Text = Configuration.Settings.Language.SetSyncPoint.HalfASecondBack;
-            buttonVerify.Text = string.Format(Configuration.Settings.Language.VisualSync.PlayXSecondsAndBack, Configuration.Settings.Tools.VerifyPlaySeconds);
-            buttonHalfASecondAhead.Text = Configuration.Settings.Language.SetSyncPoint.HalfASecondForward;
-            buttonThreeSecondsAhead.Text = Configuration.Settings.Language.SetSyncPoint.ThreeSecondsForward;
-            buttonOpenMovie.Text = Configuration.Settings.Language.General.OpenVideoFile;
-            buttonSetSyncPoint.Text = Configuration.Settings.Language.PointSync.SetSyncPoint;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            subtitleListView1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
+            groupBoxSyncPointTimeCode.Text = LanguageSettings.Current.SetSyncPoint.SyncPointTimeCode;
+            buttonThreeSecondsBack.Text = LanguageSettings.Current.SetSyncPoint.ThreeSecondsBack;
+            buttonHalfASecondBack.Text = LanguageSettings.Current.SetSyncPoint.HalfASecondBack;
+            buttonVerify.Text = string.Format(LanguageSettings.Current.VisualSync.PlayXSecondsAndBack, Configuration.Settings.Tools.VerifyPlaySeconds);
+            buttonHalfASecondAhead.Text = LanguageSettings.Current.SetSyncPoint.HalfASecondForward;
+            buttonThreeSecondsAhead.Text = LanguageSettings.Current.SetSyncPoint.ThreeSecondsForward;
+            buttonOpenMovie.Text = LanguageSettings.Current.General.OpenVideoFile;
+            buttonSetSyncPoint.Text = LanguageSettings.Current.PointSync.SetSyncPoint;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            subtitleListView1.InitializeLanguage(LanguageSettings.Current.General, Configuration.Settings);
             UiUtil.InitializeSubtitleFont(subtitleListView1);
             subtitleListView1.AutoSizeAllColumns(this);
-            buttonFindTextEnd.Text = Configuration.Settings.Language.VisualSync.FindText;
+            buttonFindTextEnd.Text = LanguageSettings.Current.VisualSync.FindText;
             UiUtil.FixLargeFonts(this, buttonSetSyncPoint);
         }
 
@@ -53,9 +53,9 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView1.Fill(subtitle);
             _guess = subtitle.Paragraphs[index].StartTime.TimeSpan;
             subtitleListView1.Items[index].Selected = true;
-            Text = string.Format(Configuration.Settings.Language.SetSyncPoint.Title, subtitle.Paragraphs[index].Number + ": " + subtitle.Paragraphs[index]);
+            Text = string.Format(LanguageSettings.Current.SetSyncPoint.Title, subtitle.Paragraphs[index].Number + ": " + subtitle.Paragraphs[index]);
             labelSubtitle.Text = string.Empty;
-            labelVideoFileName.Text = Configuration.Settings.Language.General.NoVideoLoaded;
+            labelVideoFileName.Text = LanguageSettings.Current.General.NoVideoLoaded;
 
             timeUpDownLine.TimeCode = subtitle.Paragraphs[index].StartTime;
 
@@ -96,7 +96,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOpenMovie_Click(object sender, EventArgs e)
         {
-            openFileDialog1.Title = Configuration.Settings.Language.General.OpenVideoFileTitle;
+            openFileDialog1.Title = LanguageSettings.Current.General.OpenVideoFileTitle;
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.Filter = UiUtil.GetVideoFileFilter(false);
             if (File.Exists(_subtitleFileName))

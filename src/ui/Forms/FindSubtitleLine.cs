@@ -27,12 +27,12 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(this);
             Icon = Properties.Resources.SubtitleEditFormIcon;
 
-            Text = Configuration.Settings.Language.FindSubtitleLine.Title;
-            buttonFind.Text = Configuration.Settings.Language.FindSubtitleLine.Find;
-            buttonFindNext.Text = Configuration.Settings.Language.FindSubtitleLine.FindNext;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            subtitleListView1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
+            Text = LanguageSettings.Current.FindSubtitleLine.Title;
+            buttonFind.Text = LanguageSettings.Current.FindSubtitleLine.Find;
+            buttonFindNext.Text = LanguageSettings.Current.FindSubtitleLine.FindNext;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            subtitleListView1.InitializeLanguage(LanguageSettings.Current.General, Configuration.Settings);
             UiUtil.InitializeSubtitleFont(subtitleListView1);
             subtitleListView1.AutoSizeAllColumns(this);
             FixLargeFonts();

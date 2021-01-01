@@ -39,7 +39,6 @@
 
   <Target Name="InvokeBuildHelpers" BeforeTargets="BeforeCompile;CoreCompile">
     <Exec Command="%22$(SolutionDir)build_helpers.bat%22 rev %22$(ConfigurationName)%22" />
-    <Exec Command="%22$(SolutionDir)build_helpers.bat%22 lang %22$(ConfigurationName)%22" />
   </Target>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">

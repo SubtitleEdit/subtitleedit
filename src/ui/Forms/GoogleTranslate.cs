@@ -66,18 +66,18 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            Text = Configuration.Settings.Language.GoogleTranslate.Title;
-            labelFrom.Text = Configuration.Settings.Language.GoogleTranslate.From;
-            labelTo.Text = Configuration.Settings.Language.GoogleTranslate.To;
-            buttonTranslate.Text = Configuration.Settings.Language.GoogleTranslate.Translate;
-            labelPleaseWait.Text = Configuration.Settings.Language.GoogleTranslate.PleaseWait;
-            linkLabelPoweredByGoogleTranslate.Text = Configuration.Settings.Language.GoogleTranslate.PoweredByGoogleTranslate;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            Text = LanguageSettings.Current.GoogleTranslate.Title;
+            labelFrom.Text = LanguageSettings.Current.GoogleTranslate.From;
+            labelTo.Text = LanguageSettings.Current.GoogleTranslate.To;
+            buttonTranslate.Text = LanguageSettings.Current.GoogleTranslate.Translate;
+            labelPleaseWait.Text = LanguageSettings.Current.GoogleTranslate.PleaseWait;
+            linkLabelPoweredByGoogleTranslate.Text = LanguageSettings.Current.GoogleTranslate.PoweredByGoogleTranslate;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             labelApiKeyNotFound.Text = string.Empty;
 
-            subtitleListViewFrom.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
-            subtitleListViewTo.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
+            subtitleListViewFrom.InitializeLanguage(LanguageSettings.Current.General, Configuration.Settings);
+            subtitleListViewTo.InitializeLanguage(LanguageSettings.Current.General, Configuration.Settings);
             subtitleListViewFrom.HideColumn(SubtitleListView.SubtitleColumn.CharactersPerSeconds);
             subtitleListViewFrom.HideColumn(SubtitleListView.SubtitleColumn.WordsPerMinute);
             subtitleListViewTo.HideColumn(SubtitleListView.SubtitleColumn.CharactersPerSeconds);
@@ -100,7 +100,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!_googleTranslate)
             {
                 _translator = new MicrosoftTranslator(Configuration.Settings.Tools.MicrosoftTranslatorApiKey, Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint, Configuration.Settings.Tools.MicrosoftTranslatorCategory);
-                linkLabelPoweredByGoogleTranslate.Text = Configuration.Settings.Language.GoogleTranslate.PoweredByMicrosoftTranslate;
+                linkLabelPoweredByGoogleTranslate.Text = LanguageSettings.Current.GoogleTranslate.PoweredByMicrosoftTranslate;
             }
 
             labelPleaseWait.Visible = false;
@@ -214,7 +214,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Enabled = false;
             buttonCancel.Enabled = false;
             _breakTranslation = false;
-            buttonTranslate.Text = Configuration.Settings.Language.General.Cancel;
+            buttonTranslate.Text = LanguageSettings.Current.General.Cancel;
             Cursor.Current = Cursors.WaitCursor;
             progressBar1.Maximum = _subtitle.Paragraphs.Count;
             progressBar1.Value = 0;
@@ -288,7 +288,7 @@ namespace Nikse.SubtitleEdit.Forms
                 labelPleaseWait.Visible = false;
                 progressBar1.Visible = false;
                 Cursor.Current = Cursors.Default;
-                buttonTranslate.Text = Configuration.Settings.Language.GoogleTranslate.Translate;
+                buttonTranslate.Text = LanguageSettings.Current.GoogleTranslate.Translate;
                 buttonTranslate.Enabled = true;
                 buttonOK.Enabled = true;
                 buttonCancel.Enabled = true;
@@ -317,7 +317,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonTranslate_Click(object sender, EventArgs e)
         {
-            if (buttonTranslate.Text == Configuration.Settings.Language.General.Cancel)
+            if (buttonTranslate.Text == LanguageSettings.Current.General.Cancel)
             {
                 buttonTranslate.Enabled = false;
                 _breakTranslation = true;
@@ -330,7 +330,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage = _targetTwoLetterIsoLanguageName;
             var source = ((ComboBoxItem)comboBoxFrom.SelectedItem).Value;
 
-            var language = Configuration.Settings.Language.GoogleTranslate;
+            var language = LanguageSettings.Current.GoogleTranslate;
             if (_googleTranslate && string.IsNullOrEmpty(Configuration.Settings.Tools.GoogleApiV2Key))
             {
                 if (Configuration.Settings.Tools.GoogleApiV2KeyInfoShow)

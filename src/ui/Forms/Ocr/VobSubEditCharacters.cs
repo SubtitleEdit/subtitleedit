@@ -44,18 +44,18 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             pictureBox1.SizeMode = PictureBoxSizeMode.AutoSize;
             Refill(Additions);
 
-            Text = Configuration.Settings.Language.VobSubEditCharacters.Title;
-            labelChooseCharacters.Text = Configuration.Settings.Language.VobSubEditCharacters.ChooseCharacter;
-            labelImageCompareFiles.Text = Configuration.Settings.Language.VobSubEditCharacters.ImageCompareFiles;
-            groupBoxCurrentCompareImage.Text = Configuration.Settings.Language.VobSubEditCharacters.CurrentCompareImage;
-            labelTextAssociatedWithImage.Text = Configuration.Settings.Language.VobSubEditCharacters.TextAssociatedWithImage;
-            checkBoxItalic.Text = Configuration.Settings.Language.VobSubEditCharacters.IsItalic;
-            buttonUpdate.Text = Configuration.Settings.Language.VobSubEditCharacters.Update;
-            buttonDelete.Text = Configuration.Settings.Language.VobSubEditCharacters.Delete;
-            labelDoubleSize.Text = Configuration.Settings.Language.VobSubEditCharacters.ImageDoubleSize;
-            buttonImport.Text = Configuration.Settings.Language.SubStationAlphaStyles.Import;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            Text = LanguageSettings.Current.VobSubEditCharacters.Title;
+            labelChooseCharacters.Text = LanguageSettings.Current.VobSubEditCharacters.ChooseCharacter;
+            labelImageCompareFiles.Text = LanguageSettings.Current.VobSubEditCharacters.ImageCompareFiles;
+            groupBoxCurrentCompareImage.Text = LanguageSettings.Current.VobSubEditCharacters.CurrentCompareImage;
+            labelTextAssociatedWithImage.Text = LanguageSettings.Current.VobSubEditCharacters.TextAssociatedWithImage;
+            checkBoxItalic.Text = LanguageSettings.Current.VobSubEditCharacters.IsItalic;
+            buttonUpdate.Text = LanguageSettings.Current.VobSubEditCharacters.Update;
+            buttonDelete.Text = LanguageSettings.Current.VobSubEditCharacters.Delete;
+            labelDoubleSize.Text = LanguageSettings.Current.VobSubEditCharacters.ImageDoubleSize;
+            buttonImport.Text = LanguageSettings.Current.SubStationAlphaStyles.Import;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
             buttonImport.Visible = binOcrDb != null;
 
@@ -263,7 +263,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (bmp == null)
             {
                 bmp = new Bitmap(1, 1);
-                labelImageInfo.Text = Configuration.Settings.Language.VobSubEditCharacters.ImageFileNotFound;
+                labelImageInfo.Text = LanguageSettings.Current.VobSubEditCharacters.ImageFileNotFound;
             }
 
             pictureBox1.Image = bmp;
@@ -491,7 +491,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void saveImageAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            saveFileDialog1.Title = Configuration.Settings.Language.VobSubOcr.SaveSubtitleImageAs;
+            saveFileDialog1.Title = LanguageSettings.Current.VobSubOcr.SaveSubtitleImageAs;
             saveFileDialog1.AddExtension = true;
             saveFileDialog1.FileName = "Image";
             saveFileDialog1.Filter = "PNG image|*.png|BMP image|*.bmp|GIF image|*.gif|TIFF image|*.tiff";

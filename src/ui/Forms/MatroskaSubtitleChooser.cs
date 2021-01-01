@@ -18,10 +18,10 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            Text = fileType.Equals("mp4", StringComparison.Ordinal) ? Configuration.Settings.Language.MatroskaSubtitleChooser.TitleMp4 : Configuration.Settings.Language.MatroskaSubtitleChooser.Title;
-            labelChoose.Text = Configuration.Settings.Language.MatroskaSubtitleChooser.PleaseChoose;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            Text = fileType.Equals("mp4", StringComparison.Ordinal) ? LanguageSettings.Current.MatroskaSubtitleChooser.TitleMp4 : LanguageSettings.Current.MatroskaSubtitleChooser.Title;
+            labelChoose.Text = LanguageSettings.Current.MatroskaSubtitleChooser.PleaseChoose;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             listBox1.Visible = false;
             listView1.Visible = true;
-            var format = Configuration.Settings.Language.MatroskaSubtitleChooser.TrackXLanguageYTypeZ;
+            var format = LanguageSettings.Current.MatroskaSubtitleChooser.TrackXLanguageYTypeZ;
             foreach (var info in subtitleInfoList)
             {
                 AddListViewItem(info);

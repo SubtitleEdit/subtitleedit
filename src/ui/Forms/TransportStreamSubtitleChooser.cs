@@ -43,14 +43,14 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            labelChoose.Text = Configuration.Settings.Language.MatroskaSubtitleChooser.PleaseChoose;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            toolStripMenuItemExport.Text = Configuration.Settings.Language.Main.Menu.File.Export;
-            vobSubToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.File.ExportVobSub;
-            bDNXMLToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.File.ExportBdnXml;
-            bluraySupToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.File.ExportBluRaySup;
-            saveAllImagesWithHtmlIndexViewToolStripMenuItem.Text = Configuration.Settings.Language.VobSubOcr.SaveAllSubtitleImagesWithHtml;
+            labelChoose.Text = LanguageSettings.Current.MatroskaSubtitleChooser.PleaseChoose;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            toolStripMenuItemExport.Text = LanguageSettings.Current.Main.Menu.File.Export;
+            vobSubToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.File.ExportVobSub;
+            bDNXMLToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.File.ExportBdnXml;
+            bluraySupToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.File.ExportBluRaySup;
+            saveAllImagesWithHtmlIndexViewToolStripMenuItem.Text = LanguageSettings.Current.VobSubOcr.SaveAllSubtitleImagesWithHtml;
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
@@ -78,7 +78,7 @@ namespace Nikse.SubtitleEdit.Forms
             _programMapTableParser.Parse(fileName); // get languages
             _tsParser = tsParser;
             _fileName = fileName;
-            Text = string.Format(Configuration.Settings.Language.TransportStreamSubtitleChooser.Title, fileName);
+            Text = string.Format(LanguageSettings.Current.TransportStreamSubtitleChooser.Title, fileName);
 
             foreach (int id in tsParser.SubtitlePacketIds)
             {
@@ -90,7 +90,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 listBoxTracks.Items.Add(new StreamTrackItem
                 {
-                    Text = string.Format(Configuration.Settings.Language.TransportStreamSubtitleChooser.PidLineImage, id, language, tsParser.GetDvbSubtitles(id).Count),
+                    Text = string.Format(LanguageSettings.Current.TransportStreamSubtitleChooser.PidLineImage, id, language, tsParser.GetDvbSubtitles(id).Count),
                     IsTeletext = false,
                     Pid = id,
                     Language = language
@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Forms
                     subtitle.Renumber();
                     listBoxTracks.Items.Add(new StreamTrackItem
                     {
-                        Text = string.Format(Configuration.Settings.Language.TransportStreamSubtitleChooser.PidLineTeletext, kvp.Key, program.Key, language, kvp.Value.Count),
+                        Text = string.Format(LanguageSettings.Current.TransportStreamSubtitleChooser.PidLineTeletext, kvp.Key, program.Key, language, kvp.Value.Count),
                         IsTeletext = true,
                         Pid = program.Key,
                         PageNumber = kvp.Key,
@@ -153,7 +153,7 @@ namespace Nikse.SubtitleEdit.Forms
                 i++;
                 var start = new TimeCode(sub.StartMilliseconds);
                 var end = new TimeCode(sub.EndMilliseconds);
-                listBoxSubtitles.Items.Add(string.Format(Configuration.Settings.Language.TransportStreamSubtitleChooser.SubLine, i, start, end, sub.NumberOfImages));
+                listBoxSubtitles.Items.Add(string.Format(LanguageSettings.Current.TransportStreamSubtitleChooser.SubLine, i, start, end, sub.NumberOfImages));
             }
             if (list.Count > 0)
             {
@@ -321,7 +321,7 @@ namespace Nikse.SubtitleEdit.Forms
             var item = (StreamTrackItem)listBoxTracks.SelectedItem;
             if (item.IsTeletext)
             {
-                saveFileDialog1.Title = Configuration.Settings.Language.ExportCustomText.SaveSubtitleAs;
+                saveFileDialog1.Title = LanguageSettings.Current.ExportCustomText.SaveSubtitleAs;
                 var fileName = Utilities.GetPathAndFileNameWithoutExtension(_fileName);
                 if (item.PageNumber > 0)
                 {

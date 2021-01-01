@@ -18,9 +18,9 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
             Icon = Properties.Resources.SubtitleEditFormIcon;
-            Text = Configuration.Settings.Language.GoToLine.Title;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            Text = LanguageSettings.Current.GoToLine.Title;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                MessageBox.Show(string.Format(Configuration.Settings.Language.GoToLine.XIsNotAValidNumber, textBox1.Text));
+                MessageBox.Show(string.Format(LanguageSettings.Current.GoToLine.XIsNotAValidNumber, textBox1.Text));
             }
         }
     }

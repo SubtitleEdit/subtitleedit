@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Xml;
 using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -28,14 +29,14 @@ namespace Nikse.SubtitleEdit.Forms
                 listViewExportStyles.Items.Add(new ListViewItem(group.Name) { Checked = true });
             }
 
-            selectAllToolStripMenuItem.Text = Configuration.Settings.Language.FixCommonErrors.SelectAll;
-            inverseSelectionToolStripMenuItem.Text = Configuration.Settings.Language.FixCommonErrors.InverseSelection;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            selectAllToolStripMenuItem.Text = LanguageSettings.Current.FixCommonErrors.SelectAll;
+            inverseSelectionToolStripMenuItem.Text = LanguageSettings.Current.FixCommonErrors.InverseSelection;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             labelGroups.Text = export
-                ? Configuration.Settings.Language.MultipleReplace.ChooseGroupsToExport
-                : Configuration.Settings.Language.MultipleReplace.ChooseGroupsToImport;
-            Text = export ? Configuration.Settings.Language.MultipleReplace.Export : Configuration.Settings.Language.MultipleReplace.Import;
+                ? LanguageSettings.Current.MultipleReplace.ChooseGroupsToExport
+                : LanguageSettings.Current.MultipleReplace.ChooseGroupsToImport;
+            Text = export ? LanguageSettings.Current.MultipleReplace.Export : LanguageSettings.Current.MultipleReplace.Import;
         }
 
         private void MultipleReplaceExportImport_KeyDown(object sender, KeyEventArgs e)
@@ -89,8 +90,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             saveFileDialogStyle.InitialDirectory = Configuration.DataDirectory;
             saveFileDialogStyle.FileName = "multiple_replace_groups.template";
-            saveFileDialogStyle.Title = Configuration.Settings.Language.MultipleReplace.ExportRulesTitle;
-            saveFileDialogStyle.Filter = Configuration.Settings.Language.MultipleReplace.Rules + "|*.template";
+            saveFileDialogStyle.Title = LanguageSettings.Current.MultipleReplace.ExportRulesTitle;
+            saveFileDialogStyle.Filter = LanguageSettings.Current.MultipleReplace.Rules + "|*.template";
 
             if (saveFileDialogStyle.ShowDialog(this) == DialogResult.OK)
             {

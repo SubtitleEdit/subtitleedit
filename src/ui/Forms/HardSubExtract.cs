@@ -275,7 +275,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void saveImageAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            saveFileDialog1.Title = Configuration.Settings.Language.VobSubOcr.SaveSubtitleImageAs;
+            saveFileDialog1.Title = LanguageSettings.Current.VobSubOcr.SaveSubtitleImageAs;
             saveFileDialog1.AddExtension = true;
             saveFileDialog1.FileName = "Image";
             saveFileDialog1.Filter = "PNG image|*.png|BMP image|*.bmp|GIF image|*.gif|TIFF image|*.tiff";

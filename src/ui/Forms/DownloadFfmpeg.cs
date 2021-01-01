@@ -5,6 +5,7 @@ using System.Net;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -15,7 +16,7 @@ namespace Nikse.SubtitleEdit.Forms
         public DownloadFfmpeg()
         {
             InitializeComponent();
-            Text = Configuration.Settings.Language.SettingsFfmpeg.Title;
+            Text = LanguageSettings.Current.SettingsFfmpeg.Title;
         }
 
         private void DownloadFfmpeg_KeyDown(object sender, KeyEventArgs e)
@@ -40,7 +41,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
-                labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait;
+                labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
                 buttonOK.Enabled = false;
                 Refresh();
                 Cursor = Cursors.WaitCursor;
@@ -50,7 +51,7 @@ namespace Nikse.SubtitleEdit.Forms
                 wc.DownloadDataCompleted += wc_DownloadDataCompleted;
                 wc.DownloadProgressChanged += (o, args) =>
                 {
-                    labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait + "  " + args.ProgressPercentage + "%";
+                    labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + args.ProgressPercentage + "%";
                 };
                 wc.DownloadDataAsync(new Uri(url));
             }
@@ -67,7 +68,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.Error != null)
             {
-                labelPleaseWait.Text = string.Format(Configuration.Settings.Language.SettingsFfmpeg.XDownloadFailed, "ffmpeg");
+                labelPleaseWait.Text = string.Format(LanguageSettings.Current.SettingsFfmpeg.XDownloadFailed, "ffmpeg");
                 buttonOK.Enabled = true;
                 Cursor = Cursors.Default;
                 return;
@@ -102,7 +103,7 @@ namespace Nikse.SubtitleEdit.Forms
             Cursor = Cursors.Default;
             labelPleaseWait.Text = string.Empty;
             buttonOK.Enabled = true;
-            labelPleaseWait.Text = string.Format(Configuration.Settings.Language.SettingsFfmpeg.XDownloadOk, "ffmpeg");
+            labelPleaseWait.Text = string.Format(LanguageSettings.Current.SettingsFfmpeg.XDownloadOk, "ffmpeg");
         }
     }
 }

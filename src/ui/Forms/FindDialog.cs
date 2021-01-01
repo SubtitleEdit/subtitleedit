@@ -19,14 +19,14 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            Text = Configuration.Settings.Language.FindDialog.Title;
-            buttonFind.Text = Configuration.Settings.Language.FindDialog.Find;
-            radioButtonNormal.Text = Configuration.Settings.Language.FindDialog.Normal;
-            radioButtonCaseSensitive.Text = Configuration.Settings.Language.FindDialog.CaseSensitive;
-            radioButtonRegEx.Text = Configuration.Settings.Language.FindDialog.RegularExpression;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            checkBoxWholeWord.Text = Configuration.Settings.Language.FindDialog.WholeWord;
-            buttonCount.Text = Configuration.Settings.Language.FindDialog.Count;
+            Text = LanguageSettings.Current.FindDialog.Title;
+            buttonFind.Text = LanguageSettings.Current.FindDialog.Find;
+            radioButtonNormal.Text = LanguageSettings.Current.FindDialog.Normal;
+            radioButtonCaseSensitive.Text = LanguageSettings.Current.FindDialog.CaseSensitive;
+            radioButtonRegEx.Text = LanguageSettings.Current.FindDialog.RegularExpression;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            checkBoxWholeWord.Text = LanguageSettings.Current.FindDialog.WholeWord;
+            buttonCount.Text = LanguageSettings.Current.FindDialog.Count;
             labelCount.Text = string.Empty;
             _subtitle = subtitle;
 
@@ -221,7 +221,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             var count = GetFindDialogHelper(0).FindCount(_subtitle, checkBoxWholeWord.Checked);
             labelCount.ForeColor = count > 0 ? Color.Blue : Color.Red;
-            labelCount.Text = count == 1 ? Configuration.Settings.Language.FindDialog.OneMatch : string.Format(Configuration.Settings.Language.FindDialog.XNumberOfMatches, count);
+            labelCount.Text = count == 1 ? LanguageSettings.Current.FindDialog.OneMatch : string.Format(LanguageSettings.Current.FindDialog.XNumberOfMatches, count);
         }
 
         private void comboBoxFind_TextChanged(object sender, EventArgs e)

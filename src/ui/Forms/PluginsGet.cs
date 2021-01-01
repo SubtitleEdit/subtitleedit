@@ -49,31 +49,31 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            _language = Configuration.Settings.Language.PluginsGet;
+            _language = LanguageSettings.Current.PluginsGet;
             Text = _language.Title;
             tabPageInstalledPlugins.Text = _language.InstalledPlugins;
             tabPageGetPlugins.Text = _language.GetPlugins;
 
             buttonDownload.Text = _language.Download;
             buttonRemove.Text = _language.Remove;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
             linkLabelOpenPluginFolder.Text = _language.OpenPluginsFolder;
             labelDescription1.Text = _language.GetPluginsInfo1;
             labelClickDownload.Text = _language.GetPluginsInfo2;
 
-            columnHeaderName.Text = Configuration.Settings.Language.General.Name;
+            columnHeaderName.Text = LanguageSettings.Current.General.Name;
             columnHeaderDescription.Text = _language.Description;
             columnHeaderVersion.Text = _language.Version;
             columnHeaderDate.Text = _language.Date;
 
-            columnHeaderInsName.Text = Configuration.Settings.Language.General.Name;
+            columnHeaderInsName.Text = LanguageSettings.Current.General.Name;
             columnHeaderInsDescription.Text = _language.Description;
             columnHeaderInsVersion.Text = _language.Version;
             columnHeaderInsType.Text = _language.Type;
 
-            labelShortcutsSearch.Text = Configuration.Settings.Language.General.Search;
+            labelShortcutsSearch.Text = LanguageSettings.Current.General.Search;
             labelShortcutsSearch.Left = textBoxSearch.Left - labelShortcutsSearch.Width - 9;
-            buttonSearchClear.Text = Configuration.Settings.Language.DvdSubRip.Clear;
+            buttonSearchClear.Text = LanguageSettings.Current.DvdSubRip.Clear;
 
             buttonUpdateAll.Visible = false;
             DownloadPluginMetadataInfos();
@@ -83,7 +83,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
-                labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait;
+                labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
                 Refresh();
                 ShowInstalledPlugins();
                 string url = GetPluginXmlFileUrl();
@@ -151,13 +151,13 @@ namespace Nikse.SubtitleEdit.Forms
             if (_updateAllListUrls.Count > 0)
             {
                 buttonUpdateAll.BackColor = Color.LightGreen;
-                if (Configuration.Settings.Language.PluginsGet.UpdateAllX != null)
+                if (LanguageSettings.Current.PluginsGet.UpdateAllX != null)
                 {
-                    buttonUpdateAll.Text = string.Format(Configuration.Settings.Language.PluginsGet.UpdateAllX, _updateAllListUrls.Count);
+                    buttonUpdateAll.Text = string.Format(LanguageSettings.Current.PluginsGet.UpdateAllX, _updateAllListUrls.Count);
                 }
                 else
                 {
-                    buttonUpdateAll.Text = Configuration.Settings.Language.PluginsGet.UpdateAll;
+                    buttonUpdateAll.Text = LanguageSettings.Current.PluginsGet.UpdateAll;
                 }
 
                 buttonUpdateAll.Visible = true;
@@ -262,7 +262,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             try
             {
-                labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait;
+                labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
                 ChangeControlsState(false);
                 Refresh();
                 Cursor = Cursors.WaitCursor;
@@ -289,7 +289,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelPleaseWait.Text = string.Empty;
             if (e.Error != null)
             {
-                MessageBox.Show(Configuration.Settings.Language.GetTesseractDictionaries.DownloadFailed);
+                MessageBox.Show(LanguageSettings.Current.GetTesseractDictionaries.DownloadFailed);
                 ChangeControlsState(true);
                 Cursor = Cursors.Default;
                 DialogResult = DialogResult.Cancel;
@@ -446,7 +446,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonUpdateAll.BackColor = DefaultBackColor;
             try
             {
-                labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait;
+                labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
                 ChangeControlsState(false);
                 Refresh();
                 Cursor = Cursors.WaitCursor;

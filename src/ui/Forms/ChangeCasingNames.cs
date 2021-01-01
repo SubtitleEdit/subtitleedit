@@ -24,26 +24,26 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
             labelXLinesSelected.Text = string.Empty;
-            Text = Configuration.Settings.Language.ChangeCasingNames.Title;
+            Text = LanguageSettings.Current.ChangeCasingNames.Title;
             groupBoxNames.Text = string.Empty;
-            listViewNames.Columns[0].Text = Configuration.Settings.Language.ChangeCasingNames.Enabled;
-            listViewNames.Columns[1].Text = Configuration.Settings.Language.ChangeCasingNames.Name;
+            listViewNames.Columns[0].Text = LanguageSettings.Current.ChangeCasingNames.Enabled;
+            listViewNames.Columns[1].Text = LanguageSettings.Current.ChangeCasingNames.Name;
             groupBoxLinesFound.Text = string.Empty;
-            listViewFixes.Columns[0].Text = Configuration.Settings.Language.General.Apply;
-            listViewFixes.Columns[1].Text = Configuration.Settings.Language.General.LineNumber;
-            listViewFixes.Columns[2].Text = Configuration.Settings.Language.General.Before;
-            listViewFixes.Columns[3].Text = Configuration.Settings.Language.General.After;
+            listViewFixes.Columns[0].Text = LanguageSettings.Current.General.Apply;
+            listViewFixes.Columns[1].Text = LanguageSettings.Current.General.LineNumber;
+            listViewFixes.Columns[2].Text = LanguageSettings.Current.General.Before;
+            listViewFixes.Columns[3].Text = LanguageSettings.Current.General.After;
 
-            buttonSelectAll.Text = Configuration.Settings.Language.FixCommonErrors.SelectAll;
-            buttonInverseSelection.Text = Configuration.Settings.Language.FixCommonErrors.InverseSelection;
-            toolStripMenuItem1SelectAll.Text = Configuration.Settings.Language.FixCommonErrors.SelectAll;
-            toolStripMenuItem2InverseSelection.Text = Configuration.Settings.Language.FixCommonErrors.InverseSelection;
-            labelExtraNames.Text = Configuration.Settings.Language.ChangeCasingNames.ExtraNames;
-            buttonAddCustomNames.Text = Configuration.Settings.Language.DvdSubRip.Add;
-            toolStripMenuItemInverseSelection.Text = Configuration.Settings.Language.Main.Menu.Edit.InverseSelection;
-            toolStripMenuItemSelectAll.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.SelectAll;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonSelectAll.Text = LanguageSettings.Current.FixCommonErrors.SelectAll;
+            buttonInverseSelection.Text = LanguageSettings.Current.FixCommonErrors.InverseSelection;
+            toolStripMenuItem1SelectAll.Text = LanguageSettings.Current.FixCommonErrors.SelectAll;
+            toolStripMenuItem2InverseSelection.Text = LanguageSettings.Current.FixCommonErrors.InverseSelection;
+            labelExtraNames.Text = LanguageSettings.Current.ChangeCasingNames.ExtraNames;
+            buttonAddCustomNames.Text = LanguageSettings.Current.DvdSubRip.Add;
+            toolStripMenuItemInverseSelection.Text = LanguageSettings.Current.Main.Menu.Edit.InverseSelection;
+            toolStripMenuItemSelectAll.Text = LanguageSettings.Current.Main.Menu.ContextMenu.SelectAll;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             listViewFixes.Resize += delegate
             {
                 var width = (listViewFixes.Width - (listViewFixes.Columns[0].Width + listViewFixes.Columns[1].Width)) / 2;
@@ -128,7 +128,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             listViewFixes.EndUpdate();
-            groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.ChangeCasingNames.LinesFoundX, listViewFixes.Items.Count);
+            groupBoxLinesFound.Text = string.Format(LanguageSettings.Current.ChangeCasingNames.LinesFoundX, listViewFixes.Items.Count);
             Cursor = Cursors.Default;
         }
 
@@ -196,7 +196,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             listViewNames.EndUpdate();
-            groupBoxNames.Text = string.Format(Configuration.Settings.Language.ChangeCasingNames.NamesFoundInSubtitleX, listViewNames.Items.Count);
+            groupBoxNames.Text = string.Format(LanguageSettings.Current.ChangeCasingNames.NamesFoundInSubtitleX, listViewNames.Items.Count);
         }
 
         private void ListViewNamesSelectedIndexChanged(object sender, EventArgs e)
@@ -283,7 +283,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (listViewFixes.SelectedItems.Count > 1)
             {
-                labelXLinesSelected.Text = string.Format(Configuration.Settings.Language.Main.XLinesSelected, listViewFixes.SelectedItems.Count);
+                labelXLinesSelected.Text = string.Format(LanguageSettings.Current.Main.XLinesSelected, listViewFixes.SelectedItems.Count);
             }
             else
             {

@@ -78,13 +78,13 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            Text = Configuration.Settings.Language.ColorChooser.Title;
-            labelRed.Text = Configuration.Settings.Language.ColorChooser.Red;
-            labelGreen.Text = Configuration.Settings.Language.ColorChooser.Green;
-            labelBlue.Text = Configuration.Settings.Language.ColorChooser.Blue;
-            labelAlpha1.Text = Configuration.Settings.Language.ColorChooser.Alpha;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            Text = LanguageSettings.Current.ColorChooser.Title;
+            labelRed.Text = LanguageSettings.Current.ColorChooser.Red;
+            labelGreen.Text = LanguageSettings.Current.ColorChooser.Green;
+            labelBlue.Text = LanguageSettings.Current.ColorChooser.Blue;
+            labelAlpha1.Text = LanguageSettings.Current.ColorChooser.Alpha;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
         }
 
         public bool ShowAlpha

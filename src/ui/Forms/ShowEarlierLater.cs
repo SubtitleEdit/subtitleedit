@@ -21,13 +21,13 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(this);
             ResetTotalAdjustment();
             timeUpDownAdjust.MaskedTextBox.Text = "000000000";
-            Text = Configuration.Settings.Language.ShowEarlierLater.Title.RemoveChar('&');
-            labelHourMinSecMilliSecond.Text = Configuration.Settings.General.UseTimeFormatHHMMSSFF ? Configuration.Settings.Language.General.HourMinutesSecondsFrames : Configuration.Settings.Language.General.HourMinutesSecondsMilliseconds;
-            buttonShowEarlier.Text = Configuration.Settings.Language.ShowEarlierLater.ShowEarlier;
-            buttonShowLater.Text = Configuration.Settings.Language.ShowEarlierLater.ShowLater;
-            radioButtonAllLines.Text = Configuration.Settings.Language.ShowEarlierLater.AllLines;
-            radioButtonSelectedLinesOnly.Text = Configuration.Settings.Language.ShowEarlierLater.SelectedLinesOnly;
-            radioButtonSelectedLineAndForward.Text = Configuration.Settings.Language.ShowEarlierLater.SelectedLinesAndForward;
+            Text = LanguageSettings.Current.ShowEarlierLater.Title.RemoveChar('&');
+            labelHourMinSecMilliSecond.Text = Configuration.Settings.General.UseTimeFormatHHMMSSFF ? LanguageSettings.Current.General.HourMinutesSecondsFrames : LanguageSettings.Current.General.HourMinutesSecondsMilliseconds;
+            buttonShowEarlier.Text = LanguageSettings.Current.ShowEarlierLater.ShowEarlier;
+            buttonShowLater.Text = LanguageSettings.Current.ShowEarlierLater.ShowLater;
+            radioButtonAllLines.Text = LanguageSettings.Current.ShowEarlierLater.AllLines;
+            radioButtonSelectedLinesOnly.Text = LanguageSettings.Current.ShowEarlierLater.SelectedLinesOnly;
+            radioButtonSelectedLineAndForward.Text = LanguageSettings.Current.ShowEarlierLater.SelectedLinesAndForward;
             UiUtil.FixLargeFonts(this, buttonShowEarlier);
 
             timeUpDownAdjust.MaskedTextBox.TextChanged += (sender, args) =>
@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ShowTotalAdjustMent()
         {
             TimeCode tc = new TimeCode(_totalAdjustment);
-            labelTotalAdjustment.Text = string.Format(Configuration.Settings.Language.ShowEarlierLater.TotalAdjustmentX, tc.ToShortString());
+            labelTotalAdjustment.Text = string.Format(LanguageSettings.Current.ShowEarlierLater.TotalAdjustmentX, tc.ToShortString());
         }
 
         private void ButtonShowLaterClick(object sender, EventArgs e)

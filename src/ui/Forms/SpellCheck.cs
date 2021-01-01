@@ -92,28 +92,28 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
             labelActionInfo.Text = string.Empty;
-            Text = Configuration.Settings.Language.SpellCheck.Title;
-            labelFullText.Text = Configuration.Settings.Language.SpellCheck.FullText;
-            labelLanguage.Text = Configuration.Settings.Language.SpellCheck.Language;
-            groupBoxWordNotFound.Text = Configuration.Settings.Language.SpellCheck.WordNotFound;
-            buttonAddToDictionary.Text = Configuration.Settings.Language.SpellCheck.AddToUserDictionary;
-            buttonChange.Text = Configuration.Settings.Language.SpellCheck.Change;
-            buttonChangeAll.Text = Configuration.Settings.Language.SpellCheck.ChangeAll;
-            buttonSkipAll.Text = Configuration.Settings.Language.SpellCheck.SkipAll;
-            buttonSkipOnce.Text = Configuration.Settings.Language.SpellCheck.SkipOnce;
-            buttonUseSuggestion.Text = Configuration.Settings.Language.SpellCheck.Use;
-            buttonUseSuggestionAlways.Text = Configuration.Settings.Language.SpellCheck.UseAlways;
-            buttonAbort.Text = Configuration.Settings.Language.SpellCheck.Abort;
-            buttonEditWholeText.Text = Configuration.Settings.Language.SpellCheck.EditWholeText;
-            checkBoxAutoChangeNames.Text = Configuration.Settings.Language.SpellCheck.AutoFixNames;
+            Text = LanguageSettings.Current.SpellCheck.Title;
+            labelFullText.Text = LanguageSettings.Current.SpellCheck.FullText;
+            labelLanguage.Text = LanguageSettings.Current.SpellCheck.Language;
+            groupBoxWordNotFound.Text = LanguageSettings.Current.SpellCheck.WordNotFound;
+            buttonAddToDictionary.Text = LanguageSettings.Current.SpellCheck.AddToUserDictionary;
+            buttonChange.Text = LanguageSettings.Current.SpellCheck.Change;
+            buttonChangeAll.Text = LanguageSettings.Current.SpellCheck.ChangeAll;
+            buttonSkipAll.Text = LanguageSettings.Current.SpellCheck.SkipAll;
+            buttonSkipOnce.Text = LanguageSettings.Current.SpellCheck.SkipOnce;
+            buttonUseSuggestion.Text = LanguageSettings.Current.SpellCheck.Use;
+            buttonUseSuggestionAlways.Text = LanguageSettings.Current.SpellCheck.UseAlways;
+            buttonAbort.Text = LanguageSettings.Current.SpellCheck.Abort;
+            buttonEditWholeText.Text = LanguageSettings.Current.SpellCheck.EditWholeText;
+            checkBoxAutoChangeNames.Text = LanguageSettings.Current.SpellCheck.AutoFixNames;
             checkBoxAutoChangeNames.Checked = Configuration.Settings.Tools.SpellCheckAutoChangeNames;
-            groupBoxEditWholeText.Text = Configuration.Settings.Language.SpellCheck.EditWholeText;
-            buttonChangeWholeText.Text = Configuration.Settings.Language.SpellCheck.Change;
-            buttonSkipText.Text = Configuration.Settings.Language.SpellCheck.SkipOnce;
-            groupBoxSuggestions.Text = Configuration.Settings.Language.SpellCheck.Suggestions;
-            buttonAddToNames.Text = Configuration.Settings.Language.SpellCheck.AddToNamesAndIgnoreList;
-            buttonGoogleIt.Text = Configuration.Settings.Language.Main.VideoControls.GoogleIt;
-            deleteToolStripMenuItem.Text = Configuration.Settings.Language.General.DeleteCurrentLine;
+            groupBoxEditWholeText.Text = LanguageSettings.Current.SpellCheck.EditWholeText;
+            buttonChangeWholeText.Text = LanguageSettings.Current.SpellCheck.Change;
+            buttonSkipText.Text = LanguageSettings.Current.SpellCheck.SkipOnce;
+            groupBoxSuggestions.Text = LanguageSettings.Current.SpellCheck.Suggestions;
+            buttonAddToNames.Text = LanguageSettings.Current.SpellCheck.AddToNamesAndIgnoreList;
+            buttonGoogleIt.Text = LanguageSettings.Current.Main.VideoControls.GoogleIt;
+            deleteToolStripMenuItem.Text = LanguageSettings.Current.General.DeleteCurrentLine;
             UiUtil.FixLargeFonts(this, buttonAbort);
         }
 
@@ -123,8 +123,8 @@ namespace Nikse.SubtitleEdit.Forms
             _suggestions = suggestions;
             groupBoxWordNotFound.Visible = true;
             groupBoxEditWholeText.Visible = false;
-            buttonEditWholeText.Text = Configuration.Settings.Language.SpellCheck.EditWholeText;
-            Text = Configuration.Settings.Language.SpellCheck.Title + " [" + languageName + "] - " + progress;
+            buttonEditWholeText.Text = LanguageSettings.Current.SpellCheck.EditWholeText;
+            Text = LanguageSettings.Current.SpellCheck.Title + " [" + languageName + "] - " + progress;
             textBoxWord.Text = word.Text;
             textBoxWholeText.Text = paragraph;
             listBoxSuggestions.Items.Clear();
@@ -218,13 +218,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonAbortClick(object sender, EventArgs e)
         {
-            ShowEndStatusMessage(Configuration.Settings.Language.SpellCheck.SpellCheckAborted);
+            ShowEndStatusMessage(LanguageSettings.Current.SpellCheck.SpellCheckAborted);
             DialogResult = DialogResult.Abort;
         }
 
         private void ButtonChangeClick(object sender, EventArgs e)
         {
-            PushUndo($"{Configuration.Settings.Language.SpellCheck.Change}: {_currentWord + " > " + textBoxWord.Text}", SpellCheckAction.Change);
+            PushUndo($"{LanguageSettings.Current.SpellCheck.Change}: {_currentWord + " > " + textBoxWord.Text}", SpellCheckAction.Change);
             DoAction(SpellCheckAction.Change);
         }
 
@@ -233,26 +233,26 @@ namespace Nikse.SubtitleEdit.Forms
             if (listBoxSuggestions.SelectedIndex >= 0)
             {
                 textBoxWord.Text = listBoxSuggestions.SelectedItem.ToString();
-                PushUndo($"{Configuration.Settings.Language.SpellCheck.Change}: {_currentWord + " > " + textBoxWord.Text}", SpellCheckAction.Change);
+                PushUndo($"{LanguageSettings.Current.SpellCheck.Change}: {_currentWord + " > " + textBoxWord.Text}", SpellCheckAction.Change);
                 DoAction(SpellCheckAction.Change);
             }
         }
 
         private void ButtonSkipAllClick(object sender, EventArgs e)
         {
-            PushUndo($"{Configuration.Settings.Language.SpellCheck.SkipAll}: {textBoxWord.Text}", SpellCheckAction.SkipAll);
+            PushUndo($"{LanguageSettings.Current.SpellCheck.SkipAll}: {textBoxWord.Text}", SpellCheckAction.SkipAll);
             DoAction(SpellCheckAction.SkipAll);
         }
 
         private void ButtonSkipOnceClick(object sender, EventArgs e)
         {
-            PushUndo($"{Configuration.Settings.Language.SpellCheck.SkipOnce}: {textBoxWord.Text}", SpellCheckAction.Skip);
+            PushUndo($"{LanguageSettings.Current.SpellCheck.SkipOnce}: {textBoxWord.Text}", SpellCheckAction.Skip);
             DoAction(SpellCheckAction.Skip);
         }
 
         private void ButtonAddToDictionaryClick(object sender, EventArgs e)
         {
-            PushUndo($"{Configuration.Settings.Language.SpellCheck.AddToUserDictionary}: {textBoxWord.Text}", SpellCheckAction.AddToDictionary);
+            PushUndo($"{LanguageSettings.Current.SpellCheck.AddToUserDictionary}: {textBoxWord.Text}", SpellCheckAction.AddToDictionary);
             DoAction(SpellCheckAction.AddToDictionary);
         }
 
@@ -303,7 +303,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonChangeAllClick(object sender, EventArgs e)
         {
-            PushUndo($"{Configuration.Settings.Language.SpellCheck.ChangeAll}: {_currentWord + " > " + textBoxWord.Text}", SpellCheckAction.ChangeAll);
+            PushUndo($"{LanguageSettings.Current.SpellCheck.ChangeAll}: {_currentWord + " > " + textBoxWord.Text}", SpellCheckAction.ChangeAll);
             DoAction(SpellCheckAction.ChangeAll);
         }
 
@@ -312,7 +312,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (listBoxSuggestions.SelectedIndex >= 0)
             {
                 textBoxWord.Text = listBoxSuggestions.SelectedItem.ToString();
-                PushUndo($"{Configuration.Settings.Language.SpellCheck.ChangeAll}: {_currentWord + " > " + textBoxWord.Text}", SpellCheckAction.ChangeAll);
+                PushUndo($"{LanguageSettings.Current.SpellCheck.ChangeAll}: {_currentWord + " > " + textBoxWord.Text}", SpellCheckAction.ChangeAll);
                 DoAction(SpellCheckAction.ChangeAll);
             }
         }
@@ -328,7 +328,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonAddToNamesClick(object sender, EventArgs e)
         {
-            PushUndo($"{Configuration.Settings.Language.SpellCheck.AddToNamesAndIgnoreList}: {textBoxWord.Text}", SpellCheckAction.AddToNames);
+            PushUndo($"{LanguageSettings.Current.SpellCheck.AddToNamesAndIgnoreList}: {textBoxWord.Text}", SpellCheckAction.AddToNames);
             DoAction(SpellCheckAction.AddToNames);
         }
 
@@ -338,27 +338,27 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 groupBoxWordNotFound.Visible = false;
                 groupBoxEditWholeText.Visible = true;
-                buttonEditWholeText.Text = Configuration.Settings.Language.SpellCheck.EditWordOnly;
+                buttonEditWholeText.Text = LanguageSettings.Current.SpellCheck.EditWordOnly;
                 textBoxWholeText.Focus();
             }
             else
             {
                 groupBoxWordNotFound.Visible = true;
                 groupBoxEditWholeText.Visible = false;
-                buttonEditWholeText.Text = Configuration.Settings.Language.SpellCheck.EditWholeText;
+                buttonEditWholeText.Text = LanguageSettings.Current.SpellCheck.EditWholeText;
                 textBoxWord.Focus();
             }
         }
 
         private void ButtonSkipTextClick(object sender, EventArgs e)
         {
-            PushUndo($"{Configuration.Settings.Language.SpellCheck.SkipOnce}", SpellCheckAction.Skip);
+            PushUndo($"{LanguageSettings.Current.SpellCheck.SkipOnce}", SpellCheckAction.Skip);
             DoAction(SpellCheckAction.SkipWholeLine);
         }
 
         private void ButtonChangeWholeTextClick(object sender, EventArgs e)
         {
-            PushUndo($"{Configuration.Settings.Language.SpellCheck.EditWholeText}", SpellCheckAction.ChangeWholeText);
+            PushUndo($"{LanguageSettings.Current.SpellCheck.EditWholeText}", SpellCheckAction.ChangeWholeText);
             DoAction(SpellCheckAction.ChangeWholeText);
         }
 
@@ -368,8 +368,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (!string.IsNullOrWhiteSpace(richTextBoxParagraph.SelectedText))
             {
                 string word = richTextBoxParagraph.SelectedText.Trim();
-                addXToNamesnoiseListToolStripMenuItem.Text = string.Format(Configuration.Settings.Language.SpellCheck.AddXToNames, word);
-                addXToUserDictionaryToolStripMenuItem.Text = string.Format(Configuration.Settings.Language.SpellCheck.AddXToUserDictionary, word);
+                addXToNamesnoiseListToolStripMenuItem.Text = string.Format(LanguageSettings.Current.SpellCheck.AddXToNames, word);
+                addXToUserDictionaryToolStripMenuItem.Text = string.Format(LanguageSettings.Current.SpellCheck.AddXToUserDictionary, word);
                 showAddItems = true;
             }
             addXToNamesnoiseListToolStripMenuItem.Visible = showAddItems;
@@ -473,7 +473,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SetWords(_currentParagraph.Text);
                     break;
                 case SpellCheckAction.ChangeWholeText:
-                    _mainWindow.ShowStatus(string.Format(Configuration.Settings.Language.Main.SpellCheckChangedXToY, _currentParagraph.Text.Replace(Environment.NewLine, " "), ChangeWholeText.Replace(Environment.NewLine, " ")));
+                    _mainWindow.ShowStatus(string.Format(LanguageSettings.Current.Main.SpellCheckChangedXToY, _currentParagraph.Text.Replace(Environment.NewLine, " "), ChangeWholeText.Replace(Environment.NewLine, " ")));
                     _currentParagraph.Text = ChangeWholeText;
                     _mainWindow.ChangeWholeTextMainPart(ref _noOfChangedWords, ref _firstChange, _currentIndex, _currentParagraph);
                     _currentIndex--; // re-spellcheck current line
@@ -497,11 +497,11 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            if (_currentAction == Configuration.Settings.Language.SpellCheck.Change)
+            if (_currentAction == LanguageSettings.Current.SpellCheck.Change)
             {
                 ShowActionInfo(_currentAction, _currentWord + " > " + textBoxWord.Text);
             }
-            else if (_currentAction == Configuration.Settings.Language.SpellCheck.ChangeAll)
+            else if (_currentAction == LanguageSettings.Current.SpellCheck.ChangeAll)
             {
                 ShowActionInfo(_currentAction, _currentWord + " > " + textBoxWord.Text);
             }
@@ -546,7 +546,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        ShowEndStatusMessage(Configuration.Settings.Language.SpellCheck.SpellCheckCompleted);
+                        ShowEndStatusMessage(LanguageSettings.Current.SpellCheck.SpellCheckCompleted);
                         DialogResult = DialogResult.OK;
                         return;
                     }
@@ -830,12 +830,12 @@ namespace Nikse.SubtitleEdit.Forms
                             if (_postfix != null && _postfix == "'")
                             {
                                 _currentSpellCheckWord.Text = _currentWord + _postfix;
-                                Initialize(_languageName, _currentSpellCheckWord, suggestions, _currentParagraph.Text, string.Format(Configuration.Settings.Language.Main.LineXOfY, (_currentIndex + 1), _subtitle.Paragraphs.Count));
+                                Initialize(_languageName, _currentSpellCheckWord, suggestions, _currentParagraph.Text, string.Format(LanguageSettings.Current.Main.LineXOfY, (_currentIndex + 1), _subtitle.Paragraphs.Count));
                             }
                             else
                             {
                                 _currentSpellCheckWord.Text = _currentWord;
-                                Initialize(_languageName, _currentSpellCheckWord, suggestions, _currentParagraph.Text, string.Format(Configuration.Settings.Language.Main.LineXOfY, (_currentIndex + 1), _subtitle.Paragraphs.Count));
+                                Initialize(_languageName, _currentSpellCheckWord, suggestions, _currentParagraph.Text, string.Format(LanguageSettings.Current.Main.LineXOfY, (_currentIndex + 1), _subtitle.Paragraphs.Count));
                             }
                             if (!Visible)
                             {
@@ -922,8 +922,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowEndStatusMessage(string completedMessage)
         {
-            LanguageStructure.Main mainLanguage = Configuration.Settings.Language.Main;
-            if (_noOfChangedWords > 0 || _noOfAddedWords > 0 || _noOfSkippedWords > 0 || completedMessage == Configuration.Settings.Language.SpellCheck.SpellCheckCompleted)
+            LanguageStructure.Main mainLanguage = LanguageSettings.Current.Main;
+            if (_noOfChangedWords > 0 || _noOfAddedWords > 0 || _noOfSkippedWords > 0 || completedMessage == LanguageSettings.Current.SpellCheck.SpellCheckCompleted)
             {
                 Hide();
                 if (Configuration.Settings.Tools.SpellCheckShowCompletedMessage)
@@ -981,7 +981,7 @@ namespace Nikse.SubtitleEdit.Forms
         public void DoSpellCheck(bool autoDetect, Subtitle subtitle, string dictionaryFolder, Main mainWindow, int startLine)
         {
             _subtitle = subtitle;
-            LanguageStructure.Main mainLanguage = Configuration.Settings.Language.Main;
+            LanguageStructure.Main mainLanguage = LanguageSettings.Current.Main;
             _mainWindow = mainWindow;
 
             _skipAllList = new List<string>();
@@ -1067,7 +1067,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonAddToDictionary_MouseEnter(object sender, EventArgs e)
         {
-            ShowActionInfo(Configuration.Settings.Language.SpellCheck.AddToUserDictionary, textBoxWord.Text);
+            ShowActionInfo(LanguageSettings.Current.SpellCheck.AddToUserDictionary, textBoxWord.Text);
         }
 
         private void ShowActionInfo(string label, string text)
@@ -1084,7 +1084,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonAddToNames_MouseEnter(object sender, EventArgs e)
         {
-            ShowActionInfo(Configuration.Settings.Language.SpellCheck.AddToNamesAndIgnoreList, textBoxWord.Text);
+            ShowActionInfo(LanguageSettings.Current.SpellCheck.AddToNamesAndIgnoreList, textBoxWord.Text);
         }
 
         private void buttonAddToNames_MouseLeave(object sender, EventArgs e)
@@ -1095,7 +1095,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonSkipOnce_MouseEnter(object sender, EventArgs e)
         {
-            ShowActionInfo(Configuration.Settings.Language.SpellCheck.SkipOnce, textBoxWord.Text);
+            ShowActionInfo(LanguageSettings.Current.SpellCheck.SkipOnce, textBoxWord.Text);
         }
 
         private void buttonSkipOnce_MouseLeave(object sender, EventArgs e)
@@ -1106,7 +1106,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonSkipAll_MouseEnter(object sender, EventArgs e)
         {
-            ShowActionInfo(Configuration.Settings.Language.SpellCheck.SkipAll, textBoxWord.Text);
+            ShowActionInfo(LanguageSettings.Current.SpellCheck.SkipAll, textBoxWord.Text);
         }
 
         private void buttonSkipAll_MouseLeave(object sender, EventArgs e)
@@ -1117,7 +1117,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonChange_MouseEnter(object sender, EventArgs e)
         {
-            ShowActionInfo(Configuration.Settings.Language.SpellCheck.Change, _currentWord + " > " + textBoxWord.Text);
+            ShowActionInfo(LanguageSettings.Current.SpellCheck.Change, _currentWord + " > " + textBoxWord.Text);
         }
 
         private void buttonChange_MouseLeave(object sender, EventArgs e)
@@ -1128,7 +1128,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonChangeAll_MouseEnter(object sender, EventArgs e)
         {
-            ShowActionInfo(Configuration.Settings.Language.SpellCheck.ChangeAll, _currentWord + " > " + textBoxWord.Text);
+            ShowActionInfo(LanguageSettings.Current.SpellCheck.ChangeAll, _currentWord + " > " + textBoxWord.Text);
         }
 
         private void buttonChangeAll_MouseLeave(object sender, EventArgs e)
@@ -1177,7 +1177,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            string format = Configuration.Settings.Language.SpellCheck.UndoX;
+            string format = LanguageSettings.Current.SpellCheck.UndoX;
             if (string.IsNullOrEmpty(format))
             {
                 format = "Undo: {0}";
@@ -1289,7 +1289,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!Configuration.Settings.General.PromptDeleteLines || MessageBox.Show(Configuration.Settings.Language.Main.DeleteOneLinePrompt, Configuration.Settings.Language.SpellCheck.Title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+            if (!Configuration.Settings.General.PromptDeleteLines || MessageBox.Show(LanguageSettings.Current.Main.DeleteOneLinePrompt, LanguageSettings.Current.SpellCheck.Title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
             {
                 DoAction(SpellCheckAction.DeleteLine);
             }

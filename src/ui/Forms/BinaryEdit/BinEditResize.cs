@@ -38,17 +38,17 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             pictureBoxResized.Image = bmp;
 
             comboBoxAlignment.Items.Clear();
-            comboBoxAlignment.Items.Add(Configuration.Settings.Language.SubStationAlphaStyles.TopLeft);
-            comboBoxAlignment.Items.Add(Configuration.Settings.Language.SubStationAlphaStyles.TopCenter);
-            comboBoxAlignment.Items.Add(Configuration.Settings.Language.SubStationAlphaStyles.TopRight);
+            comboBoxAlignment.Items.Add(LanguageSettings.Current.SubStationAlphaStyles.TopLeft);
+            comboBoxAlignment.Items.Add(LanguageSettings.Current.SubStationAlphaStyles.TopCenter);
+            comboBoxAlignment.Items.Add(LanguageSettings.Current.SubStationAlphaStyles.TopRight);
 
-            comboBoxAlignment.Items.Add(Configuration.Settings.Language.SubStationAlphaStyles.MiddleLeft);
-            comboBoxAlignment.Items.Add(Configuration.Settings.Language.SubStationAlphaStyles.MiddleCenter);
-            comboBoxAlignment.Items.Add(Configuration.Settings.Language.SubStationAlphaStyles.MiddleRight);
+            comboBoxAlignment.Items.Add(LanguageSettings.Current.SubStationAlphaStyles.MiddleLeft);
+            comboBoxAlignment.Items.Add(LanguageSettings.Current.SubStationAlphaStyles.MiddleCenter);
+            comboBoxAlignment.Items.Add(LanguageSettings.Current.SubStationAlphaStyles.MiddleRight);
 
-            comboBoxAlignment.Items.Add(Configuration.Settings.Language.SubStationAlphaStyles.BottomLeft);
-            comboBoxAlignment.Items.Add(Configuration.Settings.Language.SubStationAlphaStyles.BottomCenter);
-            comboBoxAlignment.Items.Add(Configuration.Settings.Language.SubStationAlphaStyles.BottomRight);
+            comboBoxAlignment.Items.Add(LanguageSettings.Current.SubStationAlphaStyles.BottomLeft);
+            comboBoxAlignment.Items.Add(LanguageSettings.Current.SubStationAlphaStyles.BottomCenter);
+            comboBoxAlignment.Items.Add(LanguageSettings.Current.SubStationAlphaStyles.BottomRight);
 
             comboBoxAlignment.SelectedIndex = 7;
         }

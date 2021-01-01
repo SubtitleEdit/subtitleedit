@@ -32,52 +32,52 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            Text = Configuration.Settings.Language.ImportText.Title;
+            Text = LanguageSettings.Current.ImportText.Title;
             labelStatus.Text = string.Empty;
-            groupBoxImportText.Text = Configuration.Settings.Language.ImportText.Title;
-            buttonOpenText.Text = Configuration.Settings.Language.ImportText.OpenTextFile;
-            groupBoxImportOptions.Text = Configuration.Settings.Language.ImportText.ImportOptions;
-            groupBoxSplitting.Text = Configuration.Settings.Language.ImportText.Splitting;
-            radioButtonAutoSplit.Text = Configuration.Settings.Language.ImportText.AutoSplitText;
+            groupBoxImportText.Text = LanguageSettings.Current.ImportText.Title;
+            buttonOpenText.Text = LanguageSettings.Current.ImportText.OpenTextFile;
+            groupBoxImportOptions.Text = LanguageSettings.Current.ImportText.ImportOptions;
+            groupBoxSplitting.Text = LanguageSettings.Current.ImportText.Splitting;
+            radioButtonAutoSplit.Text = LanguageSettings.Current.ImportText.AutoSplitText;
             radioButtonLineMode.Text = string.Empty;
             comboBoxLineMode.Items.Clear();
-            comboBoxLineMode.Items.Add(Configuration.Settings.Language.ImportText.OneLineIsOneSubtitle);
-            comboBoxLineMode.Items.Add(Configuration.Settings.Language.ImportText.TwoLinesAreOneSubtitle);
+            comboBoxLineMode.Items.Add(LanguageSettings.Current.ImportText.OneLineIsOneSubtitle);
+            comboBoxLineMode.Items.Add(LanguageSettings.Current.ImportText.TwoLinesAreOneSubtitle);
             comboBoxLineMode.SelectedIndex = 0;
-            labelLineBreak.Text = Configuration.Settings.Language.ImportText.LineBreak;
-            columnHeaderFName.Text = Configuration.Settings.Language.JoinSubtitles.FileName;
-            columnHeaderSize.Text = Configuration.Settings.Language.General.Size;
+            labelLineBreak.Text = LanguageSettings.Current.ImportText.LineBreak;
+            columnHeaderFName.Text = LanguageSettings.Current.JoinSubtitles.FileName;
+            columnHeaderSize.Text = LanguageSettings.Current.General.Size;
             comboBoxLineBreak.Left = labelLineBreak.Left + labelLineBreak.Width + 3;
             comboBoxLineBreak.Width = groupBoxSplitting.Width - comboBoxLineBreak.Left - 5;
             checkBoxMultipleFiles.AutoSize = true;
             checkBoxMultipleFiles.Left = buttonOpenText.Left - checkBoxMultipleFiles.Width - 9;
-            checkBoxMultipleFiles.Text = Configuration.Settings.Language.ImportText.OneSubtitleIsOneFile;
+            checkBoxMultipleFiles.Text = LanguageSettings.Current.ImportText.OneSubtitleIsOneFile;
             listViewInputFiles.Visible = false;
-            labelSubMaxLen.Text = Configuration.Settings.Language.Settings.SubtitleLineMaximumLength;
+            labelSubMaxLen.Text = LanguageSettings.Current.Settings.SubtitleLineMaximumLength;
             numericUpDownSubtitleLineMaximumLength.Left = labelSubMaxLen.Left + labelSubMaxLen.Width + 3;
 
-            radioButtonSplitAtBlankLines.Text = Configuration.Settings.Language.ImportText.SplitAtBlankLines;
-            checkBoxMergeShortLines.Text = Configuration.Settings.Language.ImportText.MergeShortLines;
-            checkBoxRemoveEmptyLines.Text = Configuration.Settings.Language.ImportText.RemoveEmptyLines;
-            checkBoxRemoveLinesWithoutLetters.Text = Configuration.Settings.Language.ImportText.RemoveLinesWithoutLetters;
-            checkBoxAutoSplitRemoveLinesNoLetters.Text = Configuration.Settings.Language.ImportText.RemoveLinesWithoutLetters;
-            checkBoxGenerateTimeCodes.Text = Configuration.Settings.Language.ImportText.GenerateTimeCodes;
-            checkBoxTakeTimeFromFileNames.Text = Configuration.Settings.Language.ImportText.TakeTimeFromFileName;
+            radioButtonSplitAtBlankLines.Text = LanguageSettings.Current.ImportText.SplitAtBlankLines;
+            checkBoxMergeShortLines.Text = LanguageSettings.Current.ImportText.MergeShortLines;
+            checkBoxRemoveEmptyLines.Text = LanguageSettings.Current.ImportText.RemoveEmptyLines;
+            checkBoxRemoveLinesWithoutLetters.Text = LanguageSettings.Current.ImportText.RemoveLinesWithoutLetters;
+            checkBoxAutoSplitRemoveLinesNoLetters.Text = LanguageSettings.Current.ImportText.RemoveLinesWithoutLetters;
+            checkBoxGenerateTimeCodes.Text = LanguageSettings.Current.ImportText.GenerateTimeCodes;
+            checkBoxTakeTimeFromFileNames.Text = LanguageSettings.Current.ImportText.TakeTimeFromFileName;
             checkBoxTakeTimeFromFileNames.Left = checkBoxGenerateTimeCodes.Left + checkBoxGenerateTimeCodes.Width + 9;
-            checkBoxAutoBreak.Text = Configuration.Settings.Language.Settings.MainTextBoxAutoBreak;
-            labelGapBetweenSubtitles.Text = Configuration.Settings.Language.ImportText.GapBetweenSubtitles;
+            checkBoxAutoBreak.Text = LanguageSettings.Current.Settings.MainTextBoxAutoBreak;
+            labelGapBetweenSubtitles.Text = LanguageSettings.Current.ImportText.GapBetweenSubtitles;
             numericUpDownGapBetweenLines.Left = labelGapBetweenSubtitles.Left + labelGapBetweenSubtitles.Width + 3;
-            groupBoxDuration.Text = Configuration.Settings.Language.General.Duration;
-            radioButtonDurationAuto.Text = Configuration.Settings.Language.ImportText.Auto;
-            radioButtonDurationFixed.Text = Configuration.Settings.Language.ImportText.Fixed;
-            buttonRefresh.Text = Configuration.Settings.Language.ImportText.Refresh;
-            groupBoxTimeCodes.Text = Configuration.Settings.Language.ImportText.TimeCodes;
-            groupBoxImportResult.Text = Configuration.Settings.Language.General.Preview;
-            clearToolStripMenuItem.Text = Configuration.Settings.Language.DvdSubRip.Clear;
-            startNumberingFromToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Tools.StartNumberingFrom;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            SubtitleListview1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
+            groupBoxDuration.Text = LanguageSettings.Current.General.Duration;
+            radioButtonDurationAuto.Text = LanguageSettings.Current.ImportText.Auto;
+            radioButtonDurationFixed.Text = LanguageSettings.Current.ImportText.Fixed;
+            buttonRefresh.Text = LanguageSettings.Current.ImportText.Refresh;
+            groupBoxTimeCodes.Text = LanguageSettings.Current.ImportText.TimeCodes;
+            groupBoxImportResult.Text = LanguageSettings.Current.General.Preview;
+            clearToolStripMenuItem.Text = LanguageSettings.Current.DvdSubRip.Clear;
+            startNumberingFromToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.Tools.StartNumberingFrom;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            SubtitleListview1.InitializeLanguage(LanguageSettings.Current.General, Configuration.Settings);
             UiUtil.InitializeSubtitleFont(SubtitleListview1);
             UiUtil.InitializeSubtitleFont(listViewInputFiles);
             textBoxText.Font = new System.Drawing.Font(listViewInputFiles.Font.FontFamily, listViewInputFiles.Font.Size, listViewInputFiles.Font.Style);
@@ -108,12 +108,12 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxAutoBreak.Checked = Configuration.Settings.Tools.ImportTextAutoBreak;
             textBoxAsEnd.Text = Configuration.Settings.Tools.ImportTextAutoBreakAtEndMarkerText.Replace(" ", string.Empty);
             checkBoxAutoSplitAtEnd.Checked = Configuration.Settings.Tools.ImportTextAutoBreakAtEnd;
-            checkBoxAutoSplitAtEnd.Text = Configuration.Settings.Language.ImportText.SplitAtEndChars;
+            checkBoxAutoSplitAtEnd.Text = LanguageSettings.Current.ImportText.SplitAtEndChars;
             textBoxAsEnd.Left = checkBoxAutoSplitAtEnd.Left + checkBoxAutoSplitAtEnd.Width;
-            checkBoxAutoSplitAtBlankLines.Text = Configuration.Settings.Language.ImportText.SplitAtBlankLines;
+            checkBoxAutoSplitAtBlankLines.Text = LanguageSettings.Current.ImportText.SplitAtBlankLines;
 
-            groupBoxAutoSplitSettings.Text = Configuration.Settings.Language.Settings.Title;
-            labelAutoSplitNumberOfLines.Text = Configuration.Settings.Language.Settings.MaximumLines;
+            groupBoxAutoSplitSettings.Text = LanguageSettings.Current.Settings.Title;
+            labelAutoSplitNumberOfLines.Text = LanguageSettings.Current.Settings.MaximumLines;
             numericUpDownSubtitleLineMaximumLength.Left = labelSubMaxLen.Left + labelSubMaxLen.Width + 3;
             numericUpDownSubtitleLineMaximumLength.Value = Configuration.Settings.General.SubtitleLineMaximumLength;
 
@@ -162,15 +162,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonOpenTextClick(object sender, EventArgs e)
         {
-            Text = Configuration.Settings.Language.ImportText.Title;
+            Text = LanguageSettings.Current.ImportText.Title;
             openFileDialog1.Title = buttonOpenText.Text;
             if (checkBoxMultipleFiles.Visible && checkBoxMultipleFiles.Checked)
             {
-                openFileDialog1.Filter = Configuration.Settings.Language.ImportText.TextFiles + "|*.txt;*.rtf|" + Configuration.Settings.Language.General.AllFiles + " |*.*";
+                openFileDialog1.Filter = LanguageSettings.Current.ImportText.TextFiles + "|*.txt;*.rtf|" + LanguageSettings.Current.General.AllFiles + " |*.*";
             }
             else
             {
-                openFileDialog1.Filter = Configuration.Settings.Language.ImportText.TextFiles + "|*.txt;*.rtf;*.tx3g;*.astx;*" + new FinalDraftTemplate2().Extension + "|Adobe Story|*.astx|Final Draft Template|*" + new FinalDraftTemplate2().Extension + "|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
+                openFileDialog1.Filter = LanguageSettings.Current.ImportText.TextFiles + "|*.txt;*.rtf;*.tx3g;*.astx;*" + new FinalDraftTemplate2().Extension + "|Adobe Story|*.astx|Final Draft Template|*" + new FinalDraftTemplate2().Extension + "|" + LanguageSettings.Current.General.AllFiles + "|*.*";
             }
 
             openFileDialog1.FileName = string.Empty;
@@ -230,7 +230,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (ext == ".html" && IsHtmlIndexExportFromSubtitleEdit(fileName))
             {
                 textBoxText.Text = FileUtil.ReadAllTextShared(fileName, Encoding.UTF8);
-                Text = Configuration.Settings.Language.ImportText.Title + " - " + fileName;
+                Text = LanguageSettings.Current.ImportText.Title + " - " + fileName;
                 GeneratePreview();
                 groupBoxImportOptions.Visible = false;
             }
@@ -328,7 +328,7 @@ namespace Nikse.SubtitleEdit.Forms
                 checkBoxMergeShortLines.Enabled = true;
                 checkBoxRemoveEmptyLines.Enabled = true;
                 checkBoxAutoBreak.Enabled = true;
-                checkBoxAutoBreak.Text = Configuration.Settings.Language.Settings.MainTextBoxAutoBreak;
+                checkBoxAutoBreak.Text = LanguageSettings.Current.Settings.MainTextBoxAutoBreak;
             }
             else // auto split
             {
@@ -354,7 +354,7 @@ namespace Nikse.SubtitleEdit.Forms
                 groupBoxImportOptions.Visible = false;
                 var html = FileUtil.ReadAllTextShared(_fileName, Encoding.UTF8);
                 FixedSubtitle = GetSubtitleFromHtmlIndex(html);
-                groupBoxImportResult.Text = string.Format(Configuration.Settings.Language.ImportText.PreviewLinesModifiedX, FixedSubtitle.Paragraphs.Count);
+                groupBoxImportResult.Text = string.Format(LanguageSettings.Current.ImportText.PreviewLinesModifiedX, FixedSubtitle.Paragraphs.Count);
                 SubtitleListview1.Fill(FixedSubtitle);
                 SubtitleListview1.SelectIndexAndEnsureVisible(0);
                 return;
@@ -417,7 +417,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            groupBoxImportResult.Text = string.Format(Configuration.Settings.Language.ImportText.PreviewLinesModifiedX, FixedSubtitle.Paragraphs.Count);
+            groupBoxImportResult.Text = string.Format(LanguageSettings.Current.ImportText.PreviewLinesModifiedX, FixedSubtitle.Paragraphs.Count);
             SubtitleListview1.Fill(FixedSubtitle);
             SubtitleListview1.SelectIndexAndEnsureVisible(0);
         }
@@ -910,7 +910,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             textBoxText.Text = GetAllText(fileName);
             SetVideoFileName(fileName);
-            Text = Configuration.Settings.Language.ImportText.Title + " - " + fileName;
+            Text = LanguageSettings.Current.ImportText.Title + " - " + fileName;
             GeneratePreview();
         }
 
@@ -941,11 +941,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
-                labelStatus.Text = Configuration.Settings.Language.General.PleaseWait;
+                labelStatus.Text = LanguageSettings.Current.General.PleaseWait;
                 labelStatus.Refresh();
                 textBoxText.Text = GetRtfString(fileName);
                 SetVideoFileName(fileName);
-                Text = Configuration.Settings.Language.ImportText.Title + " - " + fileName;
+                Text = LanguageSettings.Current.ImportText.Title + " - " + fileName;
                 GeneratePreview();
             }
             finally
@@ -1066,7 +1066,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 textBoxText.Text = sb.ToString();
                 VideoFileName = null;
-                Text = Configuration.Settings.Language.ImportText.Title + " - " + fileName;
+                Text = LanguageSettings.Current.ImportText.Title + " - " + fileName;
             }
             catch (Exception ex)
             {
@@ -1100,14 +1100,14 @@ namespace Nikse.SubtitleEdit.Forms
 
                 textBoxText.Text = sub.ToText(fd);
                 VideoFileName = null;
-                Text = Configuration.Settings.Language.ImportText.Title + " - " + fileName;
+                Text = LanguageSettings.Current.ImportText.Title + " - " + fileName;
                 _subtitleInput = sub;
                 Format = new CsvNuendo();
                 groupBoxSplitting.Enabled = false;
                 textBoxText.Enabled = false;
                 if (_subtitleInput.Paragraphs.Any(p => !string.IsNullOrEmpty(p.Actor)))
                 {
-                    SubtitleListview1.ShowActorColumn(Configuration.Settings.Language.General.Character);
+                    SubtitleListview1.ShowActorColumn(LanguageSettings.Current.General.Character);
                 }
             }
             catch (Exception ex)
@@ -1257,7 +1257,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 listViewInputFiles.Visible = true;
                 textBoxText.Visible = false;
-                buttonOpenText.Text = Configuration.Settings.Language.ImportText.OpenTextFiles;
+                buttonOpenText.Text = LanguageSettings.Current.ImportText.OpenTextFiles;
                 groupBoxSplitting.Enabled = false;
                 checkBoxTakeTimeFromFileNames.Visible = true;
             }
@@ -1265,7 +1265,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 listViewInputFiles.Visible = false;
                 textBoxText.Visible = true;
-                buttonOpenText.Text = Configuration.Settings.Language.ImportText.OpenTextFile;
+                buttonOpenText.Text = LanguageSettings.Current.ImportText.OpenTextFile;
                 groupBoxSplitting.Enabled = true;
                 checkBoxTakeTimeFromFileNames.Visible = false;
             }

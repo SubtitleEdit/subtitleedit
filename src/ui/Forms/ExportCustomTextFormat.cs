@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            var l = Configuration.Settings.Language.ExportCustomTextFormat;
+            var l = LanguageSettings.Current.ExportCustomTextFormat;
             comboBoxNewLine.Items.Clear();
             comboBoxNewLine.Items.Add(l.DoNotModify);
             comboBoxNewLine.Items.Add("||");
@@ -50,16 +50,16 @@ namespace Nikse.SubtitleEdit.Forms
             GeneratePreview();
 
             Text = l.Title;
-            labelName.Text = Configuration.Settings.Language.General.Name;
+            labelName.Text = LanguageSettings.Current.General.Name;
             groupBoxTemplate.Text = l.Template;
             labelTimeCode.Text = l.TimeCode;
             labelNewLine.Text = l.NewLine;
             labelHeader.Text = l.Header;
             labelTextLine.Text = l.TextLine;
             labelFooter.Text = l.Footer;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            groupBoxPreview.Text = Configuration.Settings.Language.General.Preview;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            groupBoxPreview.Text = LanguageSettings.Current.General.Preview;
         }
 
         private void ExportCustomTextFormatKeyDown(object sender, KeyEventArgs e)
@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Forms
             subtitle.Paragraphs.Add(p2);
             try
             {
-                var newLine = comboBoxNewLine.Text.Replace(Configuration.Settings.Language.ExportCustomTextFormat.DoNotModify, EnglishDoNotModify);
+                var newLine = comboBoxNewLine.Text.Replace(LanguageSettings.Current.ExportCustomTextFormat.DoNotModify, EnglishDoNotModify);
                 var template = GetParagraphTemplate(textBoxParagraph.Text);
                 textBoxPreview.Text = GetHeaderOrFooter("Demo", subtitle, textBoxHeader.Text) +
                                       GetParagraph(template, start1, end1, GetText(p1.Text, newLine), GetText("Line 1a." + Environment.NewLine + "Line 1b.", newLine), 0, p1.Actor, p1.Duration, comboBoxTimeCode.Text, Utilities.GetCharactersPerSecond(p1)) +
@@ -275,7 +275,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            FormatOk = textBoxName.Text + "Æ" + textBoxHeader.Text + "Æ" + textBoxParagraph.Text + "Æ" + comboBoxTimeCode.Text + "Æ" + comboBoxNewLine.Text.Replace(Configuration.Settings.Language.ExportCustomTextFormat.DoNotModify, EnglishDoNotModify) + "Æ" + textBoxFooter.Text;
+            FormatOk = textBoxName.Text + "Æ" + textBoxHeader.Text + "Æ" + textBoxParagraph.Text + "Æ" + comboBoxTimeCode.Text + "Æ" + comboBoxNewLine.Text.Replace(LanguageSettings.Current.ExportCustomTextFormat.DoNotModify, EnglishDoNotModify) + "Æ" + textBoxFooter.Text;
             DialogResult = DialogResult.OK;
         }
 

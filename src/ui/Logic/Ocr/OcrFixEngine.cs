@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private class AutoGuess : LogItem
         {
             public AutoGuess(int index, string word, string guess, string line)
-                : base(index + 1, string.Format(Configuration.Settings.Language.VobSubOcr.UnknownWordToGuessInLine, word, guess, line.Replace(Environment.NewLine, " ")))
+                : base(index + 1, string.Format(LanguageSettings.Current.VobSubOcr.UnknownWordToGuessInLine, word, guess, line.Replace(Environment.NewLine, " ")))
             {
             }
         }

@@ -46,21 +46,21 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             numericUpDownThreshold.Value = PreprocessingSettings.BinaryImageCompareThreshold;
             trackBarThresshold.Value = PreprocessingSettings.BinaryImageCompareThreshold;
 
-            Text = Configuration.Settings.Language.OcrPreprocessing.Title;
-            groupBoxColors.Text = Configuration.Settings.Language.OcrPreprocessing.Colors;
-            checkBoxInvertColors.Text = Configuration.Settings.Language.OcrPreprocessing.InvertColors;
-            checkBoxYellowToWhite.Text = Configuration.Settings.Language.OcrPreprocessing.YellowToWhite;
-            buttonColorToWhite.Text = Configuration.Settings.Language.OcrPreprocessing.ColorToWhite;
-            buttonColorToRemove.Text = Configuration.Settings.Language.OcrPreprocessing.ColorToRemove;
-            buttonColorToRemove.Text = Configuration.Settings.Language.OcrPreprocessing.ColorToRemove;
-            groupBoxBinaryImageCompareThreshold.Text = Configuration.Settings.Language.OcrPreprocessing.BinaryThreshold;
-            labelThresholdDescription.Text = Configuration.Settings.Language.OcrPreprocessing.AdjustAlpha;
-            groupBoxCropping.Text = Configuration.Settings.Language.OcrPreprocessing.Cropping;
-            checkBoxCropTransparent.Text = Configuration.Settings.Language.OcrPreprocessing.CropTransparentColors;
-            labelOriginalImage.Text = Configuration.Settings.Language.OcrPreprocessing.OriginalImage;
-            labelPostImage.Text = Configuration.Settings.Language.OcrPreprocessing.PostImage;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            Text = LanguageSettings.Current.OcrPreprocessing.Title;
+            groupBoxColors.Text = LanguageSettings.Current.OcrPreprocessing.Colors;
+            checkBoxInvertColors.Text = LanguageSettings.Current.OcrPreprocessing.InvertColors;
+            checkBoxYellowToWhite.Text = LanguageSettings.Current.OcrPreprocessing.YellowToWhite;
+            buttonColorToWhite.Text = LanguageSettings.Current.OcrPreprocessing.ColorToWhite;
+            buttonColorToRemove.Text = LanguageSettings.Current.OcrPreprocessing.ColorToRemove;
+            buttonColorToRemove.Text = LanguageSettings.Current.OcrPreprocessing.ColorToRemove;
+            groupBoxBinaryImageCompareThreshold.Text = LanguageSettings.Current.OcrPreprocessing.BinaryThreshold;
+            labelThresholdDescription.Text = LanguageSettings.Current.OcrPreprocessing.AdjustAlpha;
+            groupBoxCropping.Text = LanguageSettings.Current.OcrPreprocessing.Cropping;
+            checkBoxCropTransparent.Text = LanguageSettings.Current.OcrPreprocessing.CropTransparentColors;
+            labelOriginalImage.Text = LanguageSettings.Current.OcrPreprocessing.OriginalImage;
+            labelPostImage.Text = LanguageSettings.Current.OcrPreprocessing.PostImage;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
             _loading = false;
             RefreshImage();
@@ -135,7 +135,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             var color = bmp.GetPixel(p.X, p.Y);
-            labelOriginalImage.Text = Configuration.Settings.Language.OcrPreprocessing.OriginalImage + 
+            labelOriginalImage.Text = LanguageSettings.Current.OcrPreprocessing.OriginalImage + 
                                       $"  {p.X},{p.Y} ARGB({color.A}, {color.R},{color.G},{color.B})";
         }
 

@@ -73,22 +73,22 @@ namespace Nikse.SubtitleEdit.Forms
 
             checkBoxExtendOnly.Checked = Configuration.Settings.Tools.AdjustDurationExtendOnly;
 
-            LanguageStructure.AdjustDisplayDuration language = Configuration.Settings.Language.AdjustDisplayDuration;
+            LanguageStructure.AdjustDisplayDuration language = LanguageSettings.Current.AdjustDisplayDuration;
             Text = language.Title;
             groupBoxAdjustVia.Text = language.AdjustVia;
             radioButtonSeconds.Text = language.Seconds;
             radioButtonPercent.Text = language.Percent;
             radioButtonAutoRecalculate.Text = language.Recalculate;
-            labelOptimalCharsSec.Text = Configuration.Settings.Language.Settings.OptimalCharactersPerSecond;
-            labelMaxCharsPerSecond.Text = Configuration.Settings.Language.Settings.MaximumCharactersPerSecond;
+            labelOptimalCharsSec.Text = LanguageSettings.Current.Settings.OptimalCharactersPerSecond;
+            labelMaxCharsPerSecond.Text = LanguageSettings.Current.Settings.MaximumCharactersPerSecond;
             labelAddSeconds.Text = language.AddSeconds;
             labelAddInPercent.Text = language.SetAsPercent;
             labelNote.Text = language.Note;
             radioButtonFixed.Text = language.Fixed;
             labelMillisecondsFixed.Text = language.Milliseconds;
             checkBoxExtendOnly.Text = language.ExtendOnly;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             FixLargeFonts();
 
             switch (Configuration.Settings.Tools.AdjustDurationLast)

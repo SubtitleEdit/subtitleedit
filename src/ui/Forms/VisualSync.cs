@@ -56,8 +56,8 @@ namespace Nikse.SubtitleEdit.Forms
             MediaPlayerEnd.InitializeVolume(Configuration.Settings.General.VideoPlayerDefaultVolume);
 
             labelSyncDone.Text = string.Empty;
-            _language = Configuration.Settings.Language.VisualSync;
-            _languageGeneral = Configuration.Settings.Language.General;
+            _language = LanguageSettings.Current.VisualSync;
+            _languageGeneral = LanguageSettings.Current.General;
             Text = _language.Title;
             buttonOpenMovie.Text = _languageGeneral.OpenVideoFile;
             groupBoxMovieInfo.Text = _languageGeneral.VideoInformation;

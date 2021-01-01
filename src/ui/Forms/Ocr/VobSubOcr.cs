@@ -386,7 +386,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             SetDoubleBuffered(subtitleListView1);
 
             _unknownWordsDictionary = new Dictionary<string, int>();
-            var language = Configuration.Settings.Language.VobSubOcr;
+            var language = LanguageSettings.Current.VobSubOcr;
             Text = language.Title;
             groupBoxOcrMethod.Text = language.OcrMethod;
             labelTesseractLanguage.Text = language.Language;
@@ -400,9 +400,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             labelStatus.Text = language.LoadingVobSubImages;
             groupBoxSubtitleImage.Text = language.SubtitleImage;
             labelSubtitleText.Text = language.SubtitleText;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            subtitleListView1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            subtitleListView1.InitializeLanguage(LanguageSettings.Current.General, Configuration.Settings);
             subtitleListView1.HideColumn(SubtitleListView.SubtitleColumn.CharactersPerSeconds);
             subtitleListView1.HideColumn(SubtitleListView.SubtitleColumn.Actor);
             subtitleListView1.HideColumn(SubtitleListView.SubtitleColumn.WordsPerMinute);
@@ -436,10 +436,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             tabControlLogs.TabPages[1].Text = language.AllFixes;
             tabControlLogs.TabPages[2].Text = language.GuessesUsed;
 
-            buttonUknownToNames.Text = Configuration.Settings.Language.SpellCheck.AddToNamesAndIgnoreList;
-            buttonUknownToUserDic.Text = Configuration.Settings.Language.SpellCheck.AddToUserDictionary;
-            buttonAddToOcrReplaceList.Text = Configuration.Settings.Language.SpellCheck.AddToOcrReplaceList;
-            buttonGoogleIt.Text = Configuration.Settings.Language.Main.VideoControls.GoogleIt;
+            buttonUknownToNames.Text = LanguageSettings.Current.SpellCheck.AddToNamesAndIgnoreList;
+            buttonUknownToUserDic.Text = LanguageSettings.Current.SpellCheck.AddToUserDictionary;
+            buttonAddToOcrReplaceList.Text = LanguageSettings.Current.SpellCheck.AddToOcrReplaceList;
+            buttonGoogleIt.Text = LanguageSettings.Current.Main.VideoControls.GoogleIt;
 
             numericUpDownPixelsIsSpace.Left = labelNoOfPixelsIsSpace.Left + labelNoOfPixelsIsSpace.Width + 5;
             numericUpDownMaxErrorPct.Left = numericUpDownPixelsIsSpace.Left;
@@ -470,15 +470,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             FillSpellCheckDictionaries();
 
-            cutToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Cut;
-            copyToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Copy;
-            pasteToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Paste;
-            deleteToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Delete;
-            selectAllToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.SelectAll;
-            normalToolStripMenuItem1.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.RemoveFormattingAll;
-            boldToolStripMenuItem1.Text = Configuration.Settings.Language.General.Bold;
-            italicToolStripMenuItem1.Text = Configuration.Settings.Language.General.Italic;
-            underlineToolStripMenuItem1.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Underline;
+            cutToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.Cut;
+            copyToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.Copy;
+            pasteToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.Paste;
+            deleteToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.Delete;
+            selectAllToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.SelectAll;
+            normalToolStripMenuItem1.Text = LanguageSettings.Current.Main.Menu.ContextMenu.RemoveFormattingAll;
+            boldToolStripMenuItem1.Text = LanguageSettings.Current.General.Bold;
+            italicToolStripMenuItem1.Text = LanguageSettings.Current.General.Italic;
+            underlineToolStripMenuItem1.Text = LanguageSettings.Current.Main.Menu.ContextMenu.Underline;
 
             InitializeModi();
             comboBoxOcrMethod.Items.Clear();
@@ -504,7 +504,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _ocrMethodNocr = comboBoxOcrMethod.Items.Add(language.OcrViaNOCR);
 
             checkBoxTesseractItalicsOn.Checked = Configuration.Settings.VobSubOcr.UseItalicsInTesseract;
-            checkBoxTesseractItalicsOn.Text = Configuration.Settings.Language.General.Italic;
+            checkBoxTesseractItalicsOn.Text = LanguageSettings.Current.General.Italic;
 
             comboBoxTesseractEngineMode.Items.Clear();
             comboBoxTesseractEngineMode.Items.Add(language.TesseractEngineModeLegacy);
@@ -520,7 +520,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             comboBoxTesseractEngineMode.Width = GroupBoxTesseractMethod.Width - comboBoxTesseractEngineMode.Left - 10;
 
             checkBoxTesseractMusicOn.Checked = Configuration.Settings.VobSubOcr.UseMusicSymbolsInTesseract;
-            checkBoxTesseractMusicOn.Text = Configuration.Settings.Language.Settings.MusicSymbol;
+            checkBoxTesseractMusicOn.Text = LanguageSettings.Current.Settings.MusicSymbol;
             checkBoxTesseractMusicOn.Left = checkBoxTesseractItalicsOn.Left + checkBoxTesseractItalicsOn.Width + 15;
             checkBoxTesseractFallback.Checked = Configuration.Settings.VobSubOcr.UseTesseractFallback;
             toolStripMenuItemCaptureTopAlign.Checked = Configuration.Settings.VobSubOcr.CaptureTopAlign;
@@ -537,30 +537,30 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             checkBoxShowOnlyForced.Text = language.ShowOnlyForcedSubtitles;
             checkBoxUseTimeCodesFromIdx.Text = language.UseTimeCodesFromIdx;
 
-            normalToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.RemoveFormattingAll;
-            italicToolStripMenuItem.Text = Configuration.Settings.Language.General.Italic;
+            normalToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.RemoveFormattingAll;
+            italicToolStripMenuItem.Text = LanguageSettings.Current.General.Italic;
             importTextWithMatchingTimeCodesToolStripMenuItem.Text = language.ImportTextWithMatchingTimeCodes;
             importNewTimeCodesToolStripMenuItem.Text = language.ImportNewTimeCodes;
             saveImageAsToolStripMenuItem.Text = language.SaveSubtitleImageAs;
             toolStripMenuItemImageSaveAs.Text = language.SaveSubtitleImageAs;
-            previewToolStripMenuItem.Text = Configuration.Settings.Language.General.Preview;
+            previewToolStripMenuItem.Text = LanguageSettings.Current.General.Preview;
             saveAllImagesWithHtmlIndexViewToolStripMenuItem.Text = language.SaveAllSubtitleImagesWithHtml;
             inspectImageCompareMatchesForCurrentImageToolStripMenuItem.Text = language.InspectCompareMatchesForCurrentImage;
             EditLastAdditionsToolStripMenuItem.Text = language.EditLastAdditions;
             checkBoxRightToLeft.Checked = Configuration.Settings.VobSubOcr.RightToLeft;
             toolStripMenuItemSetUnItalicFactor.Text = language.SetItalicAngle;
             setItalicAngleToolStripMenuItem.Text = language.SetItalicAngle;
-            deleteToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Delete;
+            deleteToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.Delete;
             imagePreprocessingToolStripMenuItem1.Text = language.ImagePreProcessing;
-            toolStripMenuItemSaveSubtitleAs.Text = Configuration.Settings.Language.Main.SaveSubtitleAs;
-            toolStripMenuItemExport.Text = Configuration.Settings.Language.Main.Menu.File.Export;
-            vobSubToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.File.ExportVobSub;
-            bDNXMLToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.File.ExportBdnXml;
-            bluraySupToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.File.ExportBluRaySup;
+            toolStripMenuItemSaveSubtitleAs.Text = LanguageSettings.Current.Main.SaveSubtitleAs;
+            toolStripMenuItemExport.Text = LanguageSettings.Current.Main.Menu.File.Export;
+            vobSubToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.File.ExportVobSub;
+            bDNXMLToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.File.ExportBdnXml;
+            bluraySupToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.File.ExportBluRaySup;
 
-            toolStripMenuItemClearFixes.Text = Configuration.Settings.Language.DvdSubRip.Clear;
-            toolStripMenuItemClearGuesses.Text = Configuration.Settings.Language.DvdSubRip.Clear;
-            clearToolStripMenuItem.Text = Configuration.Settings.Language.DvdSubRip.Clear;
+            toolStripMenuItemClearFixes.Text = LanguageSettings.Current.DvdSubRip.Clear;
+            toolStripMenuItemClearGuesses.Text = LanguageSettings.Current.DvdSubRip.Clear;
+            clearToolStripMenuItem.Text = LanguageSettings.Current.DvdSubRip.Clear;
 
             checkBoxNOcrDrawUnknownLetters.Checked = Configuration.Settings.VobSubOcr.LineOcrDraw;
             comboBoxNOcrLineSplitMinHeight.SelectedIndex = Configuration.Settings.VobSubOcr.LineOcrMaxLineHeight;
@@ -620,7 +620,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             comboBoxDictionaries.SelectedIndexChanged -= comboBoxDictionaries_SelectedIndexChanged;
             comboBoxDictionaries.Items.Clear();
-            comboBoxDictionaries.Items.Add(Configuration.Settings.Language.General.None);
+            comboBoxDictionaries.Items.Add(LanguageSettings.Current.General.None);
             foreach (string name in Utilities.GetDictionaryLanguages())
             {
                 comboBoxDictionaries.Items.Add(name);
@@ -1060,7 +1060,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             groupBoxImagePalette.Visible = false;
 
-            Text = Configuration.Settings.Language.VobSubOcr.TitleBluRay;
+            Text = LanguageSettings.Current.VobSubOcr.TitleBluRay;
             if (!string.IsNullOrEmpty(fileName))
             {
                 Text += " - " + Path.GetFileName(fileName);
@@ -1136,7 +1136,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
             catch (Exception ex)
             {
-                MessageBox.Show(string.Format(Configuration.Settings.Language.VobSubOcr.UnableToCreateCharacterDatabaseFolder, ex.Message));
+                MessageBox.Show(string.Format(LanguageSettings.Current.VobSubOcr.UnableToCreateCharacterDatabaseFolder, ex.Message));
             }
         }
 
@@ -2281,11 +2281,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     bmp = new Bitmap(1, 1);
                 }
 
-                groupBoxSubtitleImage.Text = string.Format(Configuration.Settings.Language.VobSubOcr.SubtitleImageXofY, index + 1, numberOfImages) + "   " + bmp.Width + "x" + bmp.Height;
+                groupBoxSubtitleImage.Text = string.Format(LanguageSettings.Current.VobSubOcr.SubtitleImageXofY, index + 1, numberOfImages) + "   " + bmp.Width + "x" + bmp.Height;
             }
             else
             {
-                groupBoxSubtitleImage.Text = Configuration.Settings.Language.VobSubOcr.SubtitleImage;
+                groupBoxSubtitleImage.Text = LanguageSettings.Current.VobSubOcr.SubtitleImage;
                 bmp = new Bitmap(1, 1);
             }
 
@@ -2303,11 +2303,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 int numberOfImages = GetSubtitleCount();
                 if (index < numberOfImages)
                 {
-                    groupBoxSubtitleImage.Text = string.Format(Configuration.Settings.Language.VobSubOcr.SubtitleImageXofY, index + 1, numberOfImages) + "   " + bmp.Width + "x" + bmp.Height;
+                    groupBoxSubtitleImage.Text = string.Format(LanguageSettings.Current.VobSubOcr.SubtitleImageXofY, index + 1, numberOfImages) + "   " + bmp.Width + "x" + bmp.Height;
                 }
                 else
                 {
-                    groupBoxSubtitleImage.Text = Configuration.Settings.Language.VobSubOcr.SubtitleImage;
+                    groupBoxSubtitleImage.Text = LanguageSettings.Current.VobSubOcr.SubtitleImage;
                 }
 
                 Bitmap old = pictureBoxSubtitleImage.Image as Bitmap;
@@ -4949,7 +4949,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             if (_ocrMethodIndex == _ocrMethodTesseract302 || _ocrMethodIndex == _ocrMethodTesseract4)
             {
-                labelStatus.Text = Configuration.Settings.Language.General.PleaseWait;
+                labelStatus.Text = LanguageSettings.Current.General.PleaseWait;
                 _tesseractThreadRunner?.Cancel();
                 _tesseractThreadRunner = new TesseractThreadRunner(OcrDone);
                 _tesseractRunner = new TesseractRunner();
@@ -7219,10 +7219,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 Configuration.Settings.VobSubOcr.LastOcrMethod = "Tesseract4";
                 comboBoxTesseractEngineMode.Visible = true;
                 labelTesseractEngineMode.Visible = true;
-                checkBoxTesseractFallback.Text = string.Format(Configuration.Settings.Language.VobSubOcr.FallbackToX, "Tesseract 3.02");
+                checkBoxTesseractFallback.Text = string.Format(LanguageSettings.Current.VobSubOcr.FallbackToX, "Tesseract 3.02");
                 if (Configuration.IsRunningOnWindows && !File.Exists(Path.Combine(Configuration.TesseractDirectory, "tesseract.exe")))
                 {
-                    if (MessageBox.Show($"{Configuration.Settings.Language.GetTesseractDictionaries.Download} Tesseract {Tesseract4Version}", Configuration.Settings.Language.General.Title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                    if (MessageBox.Show($"{LanguageSettings.Current.GetTesseractDictionaries.Download} Tesseract {Tesseract4Version}", LanguageSettings.Current.General.Title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                     {
                         comboBoxTesseractLanguages.Items.Clear();
                         using (var form = new DownloadTesseract4(Tesseract4Version))
@@ -7248,10 +7248,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 Configuration.Settings.VobSubOcr.LastOcrMethod = "Tesseract302";
                 comboBoxTesseractEngineMode.Visible = false;
                 labelTesseractEngineMode.Visible = false;
-                checkBoxTesseractFallback.Text = string.Format(Configuration.Settings.Language.VobSubOcr.FallbackToX, "Tesseract " + Tesseract4Version);
+                checkBoxTesseractFallback.Text = string.Format(LanguageSettings.Current.VobSubOcr.FallbackToX, "Tesseract " + Tesseract4Version);
                 if (!File.Exists(Path.Combine(Configuration.Tesseract302Directory, "tesseract.exe")))
                 {
-                    if (MessageBox.Show(Configuration.Settings.Language.GetTesseractDictionaries.Download + " Tesseract 3.02", Configuration.Settings.Language.General.Title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                    if (MessageBox.Show(LanguageSettings.Current.GetTesseractDictionaries.Download + " Tesseract 3.02", LanguageSettings.Current.General.Title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                     {
                         using (var form = new DownloadTesseract302())
                         {
@@ -7370,7 +7370,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void SaveImageAsToolStripMenuItemClick(object sender, EventArgs e)
         {
-            saveFileDialog1.Title = Configuration.Settings.Language.VobSubOcr.SaveSubtitleImageAs;
+            saveFileDialog1.Title = LanguageSettings.Current.VobSubOcr.SaveSubtitleImageAs;
             saveFileDialog1.AddExtension = true;
             saveFileDialog1.FileName = "Image" + (_selectedIndex + 1);
             saveFileDialog1.Filter = "PNG image|*.png|BMP image|*.bmp|GIF image|*.gif|TIFF image|*.tiff";
@@ -7772,7 +7772,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             groupBoxImagePalette.Visible = isSon;
 
-            Text = Configuration.Settings.Language.VobSubOcr.TitleBluRay;
+            Text = LanguageSettings.Current.VobSubOcr.TitleBluRay;
             Text += " - " + Path.GetFileName(_bdnFileName);
 
             autoTransparentBackgroundToolStripMenuItem.Checked = true;
@@ -7844,7 +7844,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void importTextWithMatchingTimeCodesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            openFileDialog1.Title = Configuration.Settings.Language.General.OpenSubtitle;
+            openFileDialog1.Title = LanguageSettings.Current.General.OpenSubtitle;
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
@@ -7858,9 +7858,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 var fi = new FileInfo(fileName);
                 if (fi.Length > 1024 * 1024 * 10) // max 10 mb
                 {
-                    if (MessageBox.Show(string.Format(Configuration.Settings.Language.Main.FileXIsLargerThan10MB + Environment.NewLine +
+                    if (MessageBox.Show(string.Format(LanguageSettings.Current.Main.FileXIsLargerThan10MB + Environment.NewLine +
                                                       Environment.NewLine +
-                                                      Configuration.Settings.Language.Main.ContinueAnyway,
+                                                      LanguageSettings.Current.Main.ContinueAnyway,
                             fileName), Text, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                     {
                         return;
@@ -8012,7 +8012,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     var match = GetCompareMatchNew(item, out _, sourceList, index, _binaryOcrDb);
                     if (match == null)
                     {
-                        var cm = new CompareMatch(Configuration.Settings.Language.VobSubOcr.NoMatch, false, 0, null)
+                        var cm = new CompareMatch(LanguageSettings.Current.VobSubOcr.NoMatch, false, 0, null)
                         {
                             ImageSplitterItem = item
                         };
@@ -8220,7 +8220,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             if (!_okClicked && HasChangesBeenMade())
             {
-                if (MessageBox.Show(Configuration.Settings.Language.VobSubOcr.DiscardText, Configuration.Settings.Language.VobSubOcr.DiscardTitle, MessageBoxButtons.YesNo) == DialogResult.No)
+                if (MessageBox.Show(LanguageSettings.Current.VobSubOcr.DiscardText, LanguageSettings.Current.VobSubOcr.DiscardTitle, MessageBoxButtons.YesNo) == DialogResult.No)
                 {
                     e.Cancel = true;
                     return;
@@ -8339,11 +8339,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             string askText;
             if (subtitleListView1.SelectedItems.Count > 1)
             {
-                askText = string.Format(Configuration.Settings.Language.Main.DeleteXLinesPrompt, subtitleListView1.SelectedItems.Count);
+                askText = string.Format(LanguageSettings.Current.Main.DeleteXLinesPrompt, subtitleListView1.SelectedItems.Count);
             }
             else
             {
-                askText = Configuration.Settings.Language.Main.DeleteOneLinePrompt;
+                askText = LanguageSettings.Current.Main.DeleteOneLinePrompt;
             }
 
             if (Configuration.Settings.General.PromptDeleteLines && MessageBox.Show(askText, "", MessageBoxButtons.YesNo) == DialogResult.No)
@@ -8522,11 +8522,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         {
                             comboBoxDictionaries_SelectedIndexChanged(null, null);
                             UpdateUnknownWordColoring(form.NewName, StringComparison.Ordinal);
-                            ShowStatus(string.Format(Configuration.Settings.Language.Main.NameXAddedToNameList, form.NewName));
+                            ShowStatus(string.Format(LanguageSettings.Current.Main.NameXAddedToNameList, form.NewName));
                         }
                         else if (!string.IsNullOrEmpty(form.NewName))
                         {
-                            MessageBox.Show(string.Format(Configuration.Settings.Language.Main.NameXNotAddedToNameList, form.NewName));
+                            MessageBox.Show(string.Format(LanguageSettings.Current.Main.NameXNotAddedToNameList, form.NewName));
                         }
                     }
                 }
@@ -8575,11 +8575,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         {
                             comboBoxDictionaries_SelectedIndexChanged(null, null);
                             UpdateUnknownWordColoring(form.NewWord, StringComparison.OrdinalIgnoreCase);
-                            ShowStatus(string.Format(Configuration.Settings.Language.Main.WordXAddedToUserDic, form.NewWord));
+                            ShowStatus(string.Format(LanguageSettings.Current.Main.WordXAddedToUserDic, form.NewWord));
                         }
                         else if (!string.IsNullOrEmpty(form.NewWord))
                         {
-                            MessageBox.Show(string.Format(Configuration.Settings.Language.Main.WordXNotAddedToUserDic, form.NewWord));
+                            MessageBox.Show(string.Format(LanguageSettings.Current.Main.WordXNotAddedToUserDic, form.NewWord));
                         }
                     }
                 }
@@ -8598,11 +8598,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         if (form.ShowDialog(this) == DialogResult.OK)
                         {
                             comboBoxDictionaries_SelectedIndexChanged(null, null);
-                            ShowStatus(string.Format(Configuration.Settings.Language.Main.OcrReplacePairXAdded, form.NewSource, form.NewTarget));
+                            ShowStatus(string.Format(LanguageSettings.Current.Main.OcrReplacePairXAdded, form.NewSource, form.NewTarget));
                         }
                         else
                         {
-                            MessageBox.Show(string.Format(Configuration.Settings.Language.Main.OcrReplacePairXNotAdded, form.NewSource, form.NewTarget));
+                            MessageBox.Show(string.Format(LanguageSettings.Current.Main.OcrReplacePairXNotAdded, form.NewSource, form.NewTarget));
                         }
                     }
                 }
@@ -9152,7 +9152,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void importNewTimeCodesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            openFileDialog1.Title = Configuration.Settings.Language.General.OpenSubtitle;
+            openFileDialog1.Title = LanguageSettings.Current.General.OpenSubtitle;
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
@@ -9166,9 +9166,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 var fi = new FileInfo(fileName);
                 if (fi.Length > 1024 * 1024 * 10) // max 10 mb
                 {
-                    if (MessageBox.Show(string.Format(Configuration.Settings.Language.Main.FileXIsLargerThan10MB + Environment.NewLine +
+                    if (MessageBox.Show(string.Format(LanguageSettings.Current.Main.FileXIsLargerThan10MB + Environment.NewLine +
                                                       Environment.NewLine +
-                                                      Configuration.Settings.Language.Main.ContinueAnyway,
+                                                      LanguageSettings.Current.Main.ContinueAnyway,
                             fileName), Text, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                     {
                         return;
@@ -9244,7 +9244,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void toolStripMenuItemSaveSubtitleAs_Click(object sender, EventArgs e)
         {
             var format = new SubRip();
-            saveFileDialog1.Title = Configuration.Settings.Language.Main.Menu.File.SaveAs;
+            saveFileDialog1.Title = LanguageSettings.Current.Main.Menu.File.SaveAs;
             saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(FileName);
             saveFileDialog1.Filter = format.Name + "|*" + format.Extension;
             saveFileDialog1.DefaultExt = "*" + format.Extension;

@@ -66,11 +66,11 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             var defaultLanguage = new Language();
             _defaultTranslation = new TranslationInfo(defaultLanguage.General.CultureName, defaultLanguage.Name);
-            var currentLanguage = Configuration.Settings.Language;
+            var currentLanguage = LanguageSettings.Current;
             if (currentLanguage == null)
             {
                 currentTranslation = new TranslationInfo(CultureInfo.CurrentUICulture.Name, CultureInfo.CurrentUICulture.NativeName);
-                Configuration.Settings.Language = defaultLanguage;
+                LanguageSettings.Current = defaultLanguage;
             }
             else
             {
@@ -120,10 +120,10 @@ namespace Nikse.SubtitleEdit.Forms.Options
             comboBoxLanguages.AutoCompleteSource = AutoCompleteSource.ListItems;
             comboBoxLanguages.AutoCompleteMode = AutoCompleteMode.Append;
 
-            Text = Configuration.Settings.Language.ChooseLanguage.Title;
-            labelLanguage.Text = Configuration.Settings.Language.ChooseLanguage.Language;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            Text = LanguageSettings.Current.ChooseLanguage.Title;
+            labelLanguage.Text = LanguageSettings.Current.ChooseLanguage.Language;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 

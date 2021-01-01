@@ -22,14 +22,14 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            Text = Configuration.Settings.Language.Settings.UseDoNotBreakAfterList;
-            labelLanguage.Text = Configuration.Settings.Language.ChooseLanguage.Language;
-            buttonRemoveNoBreakAfter.Text = Configuration.Settings.Language.DvdSubRip.Remove;
-            buttonAddNoBreakAfter.Text = Configuration.Settings.Language.DvdSubRip.Add;
-            radioButtonText.Text = Configuration.Settings.Language.General.Text;
-            radioButtonRegEx.Text = Configuration.Settings.Language.MultipleReplace.RegularExpression;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            Text = LanguageSettings.Current.Settings.UseDoNotBreakAfterList;
+            labelLanguage.Text = LanguageSettings.Current.ChooseLanguage.Language;
+            buttonRemoveNoBreakAfter.Text = LanguageSettings.Current.DvdSubRip.Remove;
+            buttonAddNoBreakAfter.Text = LanguageSettings.Current.DvdSubRip.Add;
+            radioButtonText.Text = LanguageSettings.Current.General.Text;
+            radioButtonRegEx.Text = LanguageSettings.Current.MultipleReplace.RegularExpression;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
             radioButtonRegEx.Left = radioButtonText.Left + radioButtonText.Width + 10;
             var idx = 0;
@@ -179,7 +179,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (!RegexUtils.IsValidRegex(textBoxNoBreakAfter.Text))
                 {
-                    MessageBox.Show(Configuration.Settings.Language.General.RegularExpressionIsNotValid);
+                    MessageBox.Show(LanguageSettings.Current.General.RegularExpressionIsNotValid);
                     return;
                 }
                 item = new NoBreakAfterItem(new Regex(textBoxNoBreakAfter.Text), textBoxNoBreakAfter.Text);
