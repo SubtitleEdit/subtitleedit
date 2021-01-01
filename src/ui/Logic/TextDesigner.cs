@@ -1,8 +1,7 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Logic
 {

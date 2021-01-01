@@ -89,6 +89,12 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             listViewStyles.Columns[3].Text = l.UseCount;
             listViewStyles.Columns[4].Text = l.Primary;
             listViewStyles.Columns[5].Text = l.Outline;
+            listViewStorage.Columns[0].Text = l.Name;
+            listViewStorage.Columns[5].Text = l.Outline;
+            listViewStorage.Columns[1].Text = l.FontName;
+            listViewStorage.Columns[2].Text = l.FontSize;
+            listViewStorage.Columns[3].Text = l.UseCount;
+            listViewStorage.Columns[4].Text = l.Primary;
             groupBoxProperties.Text = l.Properties;
             labelStyleName.Text = l.Name;
             groupBoxFont.Text = l.Font;
@@ -119,6 +125,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             buttonRemoveAll.Text = l.RemoveAll;
             groupBoxPreview.Text = Configuration.Settings.Language.General.Preview;
 
+            groupBoxStorage.Text = l.StyleStorage;
             buttonStorageImport.Text = l.Import;
             buttonStorageExport.Text = l.Export;
             buttonStorageAdd.Text = l.New;
@@ -230,7 +237,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         protected override void GeneratePreviewReal()
         {
-            if (listViewStyles.SelectedItems.Count != 1)
+            if (listViewStyles.SelectedItems.Count != 1 || pictureBoxPreview.Width <= 0 || pictureBoxPreview.Height <= 0)
             {
                 return;
             }
@@ -254,6 +261,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             try
             {
                 font = new Font(comboBoxFontName.Text, (float)numericUpDownFontSize.Value * 1.1f, checkBoxFontBold.Checked ? FontStyle.Bold : FontStyle.Regular);
+                if (checkBoxFontItalic.Checked)
+                {
+                    font = new Font(comboBoxFontName.Text, (float)numericUpDownFontSize.Value * 1.1f, font.Style | FontStyle.Italic);
+                }
+                if (checkBoxFontUnderline.Checked)
+                {
+                    font = new Font(comboBoxFontName.Text, (float)numericUpDownFontSize.Value * 1.1f, font.Style | FontStyle.Underline);
+                }
             }
             catch
             {
@@ -945,7 +960,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     if (colorChooser.ShowDialog() == DialogResult.OK)
                     {
                         panelOutlineColor.BackColor = colorChooser.Color;
-                        ActiveListView.SelectedItems[0].SubItems[4].BackColor = panelOutlineColor.BackColor;
+                        ActiveListView.SelectedItems[0].SubItems[5].BackColor = panelOutlineColor.BackColor;
                         SetSsaStyle(name, "outlinecolour", GetSsaColorString(panelOutlineColor.BackColor));
                         GeneratePreview();
                     }
@@ -1017,33 +1032,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 listViewStyles.Items[listViewStyles.Items.Count - 1].Focused = true;
                 textBoxStyleName.Text = style.Name;
                 textBoxStyleName.Focus();
-                AddStyleToHeader(style, oldStyle);
+                AddStyleToHeader(style);
                 _doUpdate = true;
                 listViewStyles_SelectedIndexChanged(null, null);
-            }
-        }
-
-        private void AddStyleToHeader(SsaStyle newStyle, SsaStyle oldStyle)
-        {
-            if (listViewStyles.SelectedItems.Count == 1)
-            {
-                string newLine = oldStyle.RawLine;
-                newLine = newLine.Replace(oldStyle.Name + ",", newStyle.Name + ",");
-
-                int indexOfEvents = _header.IndexOf("[Events]", StringComparison.Ordinal);
-                if (indexOfEvents > 0)
-                {
-                    int i = indexOfEvents - 1;
-                    while (i > 0 && Environment.NewLine.Contains(_header[i]))
-                    {
-                        i--;
-                    }
-                    _header = _header.Insert(i + 1, Environment.NewLine + newLine);
-                }
-                else
-                {
-                    _header += Environment.NewLine + newLine;
-                }
             }
         }
 
@@ -1134,14 +1125,19 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void buttonAdd_Click(object sender, EventArgs e)
         {
-            SsaStyle style = GetSsaStyle(Configuration.Settings.Language.SubStationAlphaStyles.New);
+            if (listViewStyles.SelectedItems.Count > 0)
+            {
+                listViewStyles.SelectedItems[0].Selected = false;
+            }
+
+            var style = new SsaStyle { Name = Configuration.Settings.Language.SubStationAlphaStyles.New };
             if (GetSsaStyle(style.Name).LoadedFromHeader)
             {
                 int count = 2;
                 bool doRepeat = true;
                 while (doRepeat)
                 {
-                    style = GetSsaStyle(Configuration.Settings.Language.SubStationAlphaStyles.New + count);
+                    style = new SsaStyle { Name = Configuration.Settings.Language.SubStationAlphaStyles.New + count };
                     doRepeat = GetSsaStyle(style.Name).LoadedFromHeader;
                     count++;
                 }
@@ -1149,12 +1145,11 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             _doUpdate = false;
             AddStyle(listViewStyles, style, Subtitle, _isSubStationAlpha);
-            SsaStyle oldStyle = GetSsaStyle(listViewStyles.Items[0].Text);
-            AddStyleToHeader(style, oldStyle);
             listViewStyles.Items[listViewStyles.Items.Count - 1].Selected = true;
             listViewStyles.Items[listViewStyles.Items.Count - 1].EnsureVisible();
             listViewStyles.Items[listViewStyles.Items.Count - 1].Focused = true;
             textBoxStyleName.Focus();
+            AddStyleToHeader(style);
             _doUpdate = true;
             textBoxStyleName.Text = style.Name;
             SetControlsFromStyle(style);
@@ -1342,12 +1337,42 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
         }
 
+        private void UpdateListViewFontStyle(SsaStyle style)
+        {
+            try
+            {
+                var fontStyle = FontStyle.Regular;
+                if (style.Bold)
+                {
+                    fontStyle |= FontStyle.Bold;
+                }
+
+                if (style.Italic)
+                {
+                    fontStyle |= FontStyle.Italic;
+                }
+
+                if (style.Underline)
+                {
+                    fontStyle |= FontStyle.Underline;
+                }
+
+                var subItem = ActiveListView.SelectedItems[0].SubItems[5];
+                subItem.Font = new Font(style.FontName, subItem.Font.Size, fontStyle);
+            }
+            catch
+            {
+                // ignored
+            }
+        }
+
         private void checkBoxFontBold_CheckedChanged(object sender, EventArgs e)
         {
             if (ActiveListView.SelectedItems.Count == 1 && _doUpdate)
             {
                 string name = ActiveListView.SelectedItems[0].Text;
                 SetSsaStyle(name, "bold", checkBoxFontBold.Checked ? "-1" : "0");
+                UpdateListViewFontStyle(GetSsaStyle(name));
                 GeneratePreview();
             }
         }
@@ -1358,6 +1383,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 string name = ActiveListView.SelectedItems[0].Text;
                 SetSsaStyle(name, "italic", checkBoxFontItalic.Checked ? "-1" : "0");
+                UpdateListViewFontStyle(GetSsaStyle(name));
                 GeneratePreview();
             }
         }
@@ -1368,6 +1394,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 string name = ActiveListView.SelectedItems[0].Text;
                 SetSsaStyle(name, "underline", checkBoxFontUnderline.Checked ? "-1" : "0");
+                UpdateListViewFontStyle(GetSsaStyle(name));
                 GeneratePreview();
             }
         }

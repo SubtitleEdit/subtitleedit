@@ -5,10 +5,15 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class Fix3PlusLines : IFixCommonError
     {
+        public static class Language
+        {
+            public static string Fix3PlusLine { get; set; } = "Fix subtitles with more than two lines";
+            public static string Fix3PlusLines { get; set; } = "Fix subtitles with more than two lines";
+        }
+
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            var language = Configuration.Settings.Language.FixCommonErrors;
-            var fixAction = language.Fix3PlusLine;
+            var fixAction = Language.Fix3PlusLine;
             int iFixes = 0;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
@@ -34,7 +39,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                 }
             }
-            callbacks.UpdateFixStatus(iFixes, language.Fix3PlusLines, language.X3PlusLinesFixed);
+            callbacks.UpdateFixStatus(iFixes, Language.Fix3PlusLines);
         }
     }
 }

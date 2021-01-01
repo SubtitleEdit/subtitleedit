@@ -9,13 +9,17 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixContinuationStyle : IFixCommonError
     {
+        public static class Language
+        {
+            public static string FixUnnecessaryLeadingDots { get; set; } = "Remove unnecessary leading dots";
+        }
+
         private ContinuationUtilities.ContinuationProfile _continuationProfile;
         private List<string> _names;
-        public string FixAction { get; set; }
+        public string FixAction { get; set; }        
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            var language = Configuration.Settings.Language.FixCommonErrors;
             int fixCount = 0;
 
             var isLanguageWithoutCaseDistinction = ContinuationUtilities.IsLanguageWithoutCaseDistinction(callbacks.Language);
@@ -248,7 +252,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 }
             }
 
-            callbacks.UpdateFixStatus(fixCount, language.FixUnnecessaryLeadingDots, language.XFixContinuationStyle);
+            callbacks.UpdateFixStatus(fixCount, Language.FixUnnecessaryLeadingDots);
         }
 
         private static bool IsPreviewStep(IFixCallbacks callbacks)

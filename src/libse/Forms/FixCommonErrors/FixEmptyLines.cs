@@ -6,14 +6,21 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixEmptyLines : IFixCommonError
     {
+        public static class Language
+        {
+            public static string RemovedEmptyLine { get; set; } = "Remove empty line";
+            public static string RemovedEmptyLineAtTop { get; set; } = "Remove empty line at top";
+            public static string RemovedEmptyLineAtBottom { get; set; } = "Remove empty line at bottom";
+            public static string RemovedEmptyLineInMiddle { get; set; } = "Remove empty line in middle";
+            public static string RemovedEmptyLinesUnsedLineBreaks { get; set; } = "Remove empty lines/unused line breaks";
+        }
+
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            var language = Configuration.Settings.Language.FixCommonErrors;
-
-            string fixAction0 = language.RemovedEmptyLine;
-            string fixAction1 = language.RemovedEmptyLineAtTop;
-            string fixAction2 = language.RemovedEmptyLineAtBottom;
-            string fixAction3 = language.RemovedEmptyLineInMiddle;
+            string fixAction0 = Language.RemovedEmptyLine;
+            string fixAction1 = Language.RemovedEmptyLineAtTop;
+            string fixAction2 = Language.RemovedEmptyLineAtBottom;
+            string fixAction3 = Language.RemovedEmptyLineInMiddle;
 
             if (subtitle.Paragraphs.Count == 0)
             {
@@ -141,14 +148,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 {
                     subtitle.Paragraphs.RemoveAt(i);
                     emptyLinesRemoved++;
-                    callbacks.AddFixToListView(p, fixAction0, p.Text, $"[{language.RemovedEmptyLine}]");
+                    callbacks.AddFixToListView(p, fixAction0, p.Text, $"[{Language.RemovedEmptyLine}]");
                     callbacks.AddToDeleteIndices(i);
                 }
             }
 
             if (emptyLinesRemoved > 0)
             {
-                callbacks.UpdateFixStatus(emptyLinesRemoved, language.RemovedEmptyLinesUnsedLineBreaks, string.Format(language.EmptyLinesRemovedX, emptyLinesRemoved));
+                callbacks.UpdateFixStatus(emptyLinesRemoved, Language.RemovedEmptyLinesUnsedLineBreaks);
                 subtitle.Renumber();
             }
         }

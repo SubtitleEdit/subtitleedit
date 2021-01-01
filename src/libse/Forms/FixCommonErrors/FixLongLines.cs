@@ -5,10 +5,16 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixLongLines : IFixCommonError
     {
+        public static class Language
+        {
+            public static string BreakLongLine { get; set; } = "Break long line";
+            public static string BreakLongLines { get; set; } = "Break long lines";
+            public static string UnableToFixTextXY { get; set; } = "Unable to fix text number {0}: {1}";
+        }
+
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            var language = Configuration.Settings.Language.FixCommonErrors;
-            string fixAction = language.BreakLongLine;
+            string fixAction = Language.BreakLongLine;
             int noOfLongLines = 0;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
@@ -34,13 +40,13 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                     else
                     {
-                        callbacks.LogStatus(fixAction, string.Format(language.UnableToFixTextXY, i + 1, p));
+                        callbacks.LogStatus(fixAction, string.Format(Language.UnableToFixTextXY, i + 1, p));
                         callbacks.AddToTotalErrors(1);
                     }
                 }
             }
 
-            callbacks.UpdateFixStatus(noOfLongLines, language.BreakLongLines, string.Format(language.XLineBreaksAdded, noOfLongLines));
+            callbacks.UpdateFixStatus(noOfLongLines, Language.BreakLongLines);
         }
     }
 }

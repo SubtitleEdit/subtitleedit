@@ -655,6 +655,42 @@ namespace Nikse.SubtitleEdit.Core
                 case "Beamer/Title":
                     language.Beamer.Title = reader.Value;
                     break;
+                case "BinEdit/ImportImage":
+                    language.BinEdit.ImportImage = reader.Value;
+                    break;
+                case "BinEdit/ExportImage":
+                    language.BinEdit.ExportImage = reader.Value;
+                    break;
+                case "BinEdit/SetText":
+                    language.BinEdit.SetText = reader.Value;
+                    break;
+                case "BinEdit/QuickOcr":
+                    language.BinEdit.QuickOcr = reader.Value;
+                    break;
+                case "BinEdit/ResizeBitmaps":
+                    language.BinEdit.ResizeBitmaps = reader.Value;
+                    break;
+                case "BinEdit/ResizeBitmapsForSelectedLines":
+                    language.BinEdit.ResizeBitmapsForSelectedLines = reader.Value;
+                    break;
+                case "BinEdit/ChangeColorForSelectedLines":
+                    language.BinEdit.ChangeColorForSelectedLines = reader.Value;
+                    break;
+                case "BinEdit/AlignSelectedLines":
+                    language.BinEdit.AlignSelectedLines = reader.Value;
+                    break;
+                case "BinEdit/CenterSelectedLines":
+                    language.BinEdit.CenterSelectedLines = reader.Value;
+                    break;
+                case "BinEdit/TopAlignSelectedLines":
+                    language.BinEdit.TopAlignSelectedLines = reader.Value;
+                    break;
+                case "BinEdit/BottomAlignSelectedLines":
+                    language.BinEdit.BottomAlignSelectedLines = reader.Value;
+                    break;
+                case "BinEdit/SizeXY":
+                    language.BinEdit.SizeXY = reader.Value;
+                    break;
                 case "Bookmarks/EditBookmark":
                     language.Bookmarks.EditBookmark = reader.Value;
                     break;
@@ -825,6 +861,9 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "CompareSubtitles/Title":
                     language.CompareSubtitles.Title = reader.Value;
+                    break;
+                case "CompareSubtitles/Reload":
+                    language.CompareSubtitles.Reload = reader.Value;
                     break;
                 case "CompareSubtitles/PreviousDifference":
                     language.CompareSubtitles.PreviousDifference = reader.Value;
@@ -1579,9 +1618,6 @@ namespace Nikse.SubtitleEdit.Core
                 case "FixCommonErrors/RemovedEmptyLinesUnsedLineBreaks":
                     language.FixCommonErrors.RemovedEmptyLinesUnsedLineBreaks = reader.Value;
                     break;
-                case "FixCommonErrors/EmptyLinesRemovedX":
-                    language.FixCommonErrors.EmptyLinesRemovedX = reader.Value;
-                    break;
                 case "FixCommonErrors/FixOverlappingDisplayTimes":
                     language.FixCommonErrors.FixOverlappingDisplayTimes = reader.Value;
                     break;
@@ -1654,9 +1690,6 @@ namespace Nikse.SubtitleEdit.Core
                 case "FixCommonErrors/NormalizeStrings":
                     language.FixCommonErrors.NormalizeStrings = reader.Value;
                     break;
-                case "FixCommonErrors/RemoveSpaceBetweenNumbersFixed":
-                    language.FixCommonErrors.RemoveSpaceBetweenNumbersFixed = reader.Value;
-                    break;
                 case "FixCommonErrors/FixTurkishAnsi":
                     language.FixCommonErrors.FixTurkishAnsi = reader.Value;
                     break;
@@ -1675,14 +1708,8 @@ namespace Nikse.SubtitleEdit.Core
                 case "FixCommonErrors/RemoveHyphensSingleLine":
                     language.FixCommonErrors.RemoveHyphensSingleLine = reader.Value;
                     break;
-                case "FixCommonErrors/XHyphensSingleLineRemoved":
-                    language.FixCommonErrors.XHyphensSingleLineRemoved = reader.Value;
-                    break;
                 case "FixCommonErrors/FixHyphensInDialogs":
                     language.FixCommonErrors.FixHyphensInDialogs = reader.Value;
-                    break;
-                case "FixCommonErrors/XHyphensInDialogsFixed":
-                    language.FixCommonErrors.XHyphensInDialogsFixed = reader.Value;
                     break;
                 case "FixCommonErrors/AddMissingQuotesExample":
                     language.FixCommonErrors.AddMissingQuotesExample = reader.Value;
@@ -1692,12 +1719,6 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "FixCommonErrors/Fix3PlusLines":
                     language.FixCommonErrors.Fix3PlusLines = reader.Value;
-                    break;
-                case "FixCommonErrors/Fix3PlusLine":
-                    language.FixCommonErrors.Fix3PlusLine = reader.Value;
-                    break;
-                case "FixCommonErrors/X3PlusLinesFixed":
-                    language.FixCommonErrors.X3PlusLinesFixed = reader.Value;
                     break;
                 case "FixCommonErrors/Analysing":
                     language.FixCommonErrors.Analysing = reader.Value;
@@ -1720,12 +1741,6 @@ namespace Nikse.SubtitleEdit.Core
                 case "FixCommonErrors/XCouldBeFixedBut":
                     language.FixCommonErrors.XCouldBeFixedBut = reader.Value;
                     break;
-                case "FixCommonErrors/UncheckedFixLowercaseIToUppercaseI":
-                    language.FixCommonErrors.UncheckedFixLowercaseIToUppercaseI = reader.Value;
-                    break;
-                case "FixCommonErrors/XIsChangedToUppercase":
-                    language.FixCommonErrors.XIsChangedToUppercase = reader.Value;
-                    break;
                 case "FixCommonErrors/FixFirstLetterToUppercaseAfterParagraph":
                     language.FixCommonErrors.FixFirstLetterToUppercaseAfterParagraph = reader.Value;
                     break;
@@ -1734,9 +1749,6 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "FixCommonErrors/MergeShortLineAll":
                     language.FixCommonErrors.MergeShortLineAll = reader.Value;
-                    break;
-                case "FixCommonErrors/XLineBreaksAdded":
-                    language.FixCommonErrors.XLineBreaksAdded = reader.Value;
                     break;
                 case "FixCommonErrors/BreakLongLine":
                     language.FixCommonErrors.BreakLongLine = reader.Value;
@@ -1786,56 +1798,20 @@ namespace Nikse.SubtitleEdit.Core
                 case "FixCommonErrors/UnableToFixTextXY":
                     language.FixCommonErrors.UnableToFixTextXY = reader.Value;
                     break;
-                case "FixCommonErrors/XOverlappingTimestampsFixed":
-                    language.FixCommonErrors.XOverlappingTimestampsFixed = reader.Value;
-                    break;
-                case "FixCommonErrors/XDisplayTimesProlonged":
-                    language.FixCommonErrors.XDisplayTimesProlonged = reader.Value;
-                    break;
-                case "FixCommonErrors/XInvalidHtmlTagsFixed":
-                    language.FixCommonErrors.XInvalidHtmlTagsFixed = reader.Value;
-                    break;
-                case "FixCommonErrors/XDisplayTimesShortned":
-                    language.FixCommonErrors.XDisplayTimesShortned = reader.Value;
-                    break;
-                case "FixCommonErrors/XGapsFixed":
-                    language.FixCommonErrors.XGapsFixed = reader.Value;
-                    break;
-                case "FixCommonErrors/XLinesUnbreaked":
-                    language.FixCommonErrors.XLinesUnbreaked = reader.Value;
-                    break;
                 case "FixCommonErrors/UnneededSpace":
                     language.FixCommonErrors.UnneededSpace = reader.Value;
-                    break;
-                case "FixCommonErrors/XUnneededSpacesRemoved":
-                    language.FixCommonErrors.XUnneededSpacesRemoved = reader.Value;
                     break;
                 case "FixCommonErrors/UnneededPeriod":
                     language.FixCommonErrors.UnneededPeriod = reader.Value;
                     break;
-                case "FixCommonErrors/XUnneededPeriodsRemoved":
-                    language.FixCommonErrors.XUnneededPeriodsRemoved = reader.Value;
-                    break;
                 case "FixCommonErrors/FixMissingSpace":
                     language.FixCommonErrors.FixMissingSpace = reader.Value;
-                    break;
-                case "FixCommonErrors/XMissingSpacesAdded":
-                    language.FixCommonErrors.XMissingSpacesAdded = reader.Value;
                     break;
                 case "FixCommonErrors/FixUppercaseIInsideLowercaseWord":
                     language.FixCommonErrors.FixUppercaseIInsideLowercaseWord = reader.Value;
                     break;
-                case "FixCommonErrors/XPeriodsAdded":
-                    language.FixCommonErrors.XPeriodsAdded = reader.Value;
-                    break;
                 case "FixCommonErrors/FixMissingPeriodAtEndOfLine":
                     language.FixCommonErrors.FixMissingPeriodAtEndOfLine = reader.Value;
-                    break;
-                case "FixCommonErrors/XDoubleApostrophesFixed":
-                    language.FixCommonErrors.XDoubleApostrophesFixed = reader.Value;
-                    break;
-                case "FixCommonErrors/XUppercaseIsFoundInsideLowercaseWords":
-                    language.FixCommonErrors.XUppercaseIsFoundInsideLowercaseWords = reader.Value;
                     break;
                 case "FixCommonErrors/RefreshFixes":
                     language.FixCommonErrors.RefreshFixes = reader.Value;
@@ -1863,21 +1839,6 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "FixCommonErrors/FixMusicNotation":
                     language.FixCommonErrors.FixMusicNotation = reader.Value;
-                    break;
-                case "FixCommonErrors/XFixDoubleDash":
-                    language.FixCommonErrors.XFixDoubleDash = reader.Value;
-                    break;
-                case "FixCommonErrors/XFixDoubleGreaterThan":
-                    language.FixCommonErrors.XFixDoubleGreaterThan = reader.Value;
-                    break;
-                case "FixCommonErrors/XFixEllipsesStart":
-                    language.FixCommonErrors.XFixEllipsesStart = reader.Value;
-                    break;
-                case "FixCommonErrors/XFixMissingOpenBracket":
-                    language.FixCommonErrors.XFixMissingOpenBracket = reader.Value;
-                    break;
-                case "FixCommonErrors/XFixMusicNotation":
-                    language.FixCommonErrors.XFixMusicNotation = reader.Value;
                     break;
                 case "FixCommonErrors/FixDoubleDashExample":
                     language.FixCommonErrors.FixDoubleDashExample = reader.Value;
@@ -1918,14 +1879,8 @@ namespace Nikse.SubtitleEdit.Core
                 case "FixCommonErrors/FixContinuationStyleX":
                     language.FixCommonErrors.FixContinuationStyleX = reader.Value;
                     break;
-                case "FixCommonErrors/XFixContinuationStyle":
-                    language.FixCommonErrors.XFixContinuationStyle = reader.Value;
-                    break;
                 case "FixCommonErrors/FixUnnecessaryLeadingDots":
                     language.FixCommonErrors.FixUnnecessaryLeadingDots = reader.Value;
-                    break;
-                case "FixCommonErrors/XFixUnnecessaryLeadingDots":
-                    language.FixCommonErrors.XFixUnnecessaryLeadingDots = reader.Value;
                     break;
                 case "GetDictionaries/Title":
                     language.GetDictionaries.Title = reader.Value;
@@ -6403,9 +6358,6 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/UseXAsNewGap":
                     language.Settings.UseXAsNewGap = reader.Value;
                     break;
-                case "SettingsMpv/Title":
-                    language.SettingsMpv.Title = reader.Value;
-                    break;
                 case "SettingsMpv/DownloadMpv":
                     language.SettingsMpv.DownloadMpv = reader.Value;
                     break;
@@ -7023,6 +6975,9 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "SubStationAlphaStyles/AddToStorage":
                     language.SubStationAlphaStyles.AddToStorage = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/StyleStorage":
+                    language.SubStationAlphaStyles.StyleStorage = reader.Value;
                     break;
                 case "SubStationAlphaStyles/OverwriteX":
                     language.SubStationAlphaStyles.OverwriteX = reader.Value;

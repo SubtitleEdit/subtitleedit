@@ -5,10 +5,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixShortLines : IFixCommonError
     {
+        public static class Language
+        {
+            public static string MergeShortLine { get; set; } = "Merge short line (single sentence)";
+        }
+
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            var language = Configuration.Settings.Language.FixCommonErrors;
-            string fixAction = language.MergeShortLine;
+            string fixAction = Language.MergeShortLine;
             int noOfShortLines = 0;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
@@ -22,7 +26,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                 }
             }
-            callbacks.UpdateFixStatus(noOfShortLines, language.RemoveLineBreaks, string.Format(language.XLinesUnbreaked, noOfShortLines));
+            callbacks.UpdateFixStatus(noOfShortLines, fixAction);
         }
     }
 }

@@ -33,6 +33,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(this);
 
             Text = Configuration.Settings.Language.ImportText.Title;
+            labelStatus.Text = string.Empty;
             groupBoxImportText.Text = Configuration.Settings.Language.ImportText.Title;
             buttonOpenText.Text = Configuration.Settings.Language.ImportText.OpenTextFile;
             groupBoxImportOptions.Text = Configuration.Settings.Language.ImportText.ImportOptions;

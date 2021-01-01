@@ -14,7 +14,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
         {
             string timeCode = p.StartTime.ToHHMMSSFF();
             string context = NetflixQualityController.StringContext(p.Text, pos, 6);
-            string comment = string.Format(Configuration.Settings.Language.NetflixQualityCheck.WhiteSpaceCheckReport, pos);
+            string comment = string.Format(NetflixLanguage.WhiteSpaceCheckReport, pos);
 
             report.AddRecord(p, timeCode, context, comment);
         }

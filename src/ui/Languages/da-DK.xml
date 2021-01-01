@@ -238,6 +238,20 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
   <Beamer>
     <Title>Undertekst fremviser</Title>
   </Beamer>
+  <BinEdit>
+    <ImportImage>Importer billede...</ImportImage>
+    <ExportImage>Eksportér billede...</ExportImage>
+    <SetText>Sæt tekst...</SetText>
+    <QuickOcr>Hurtig OCR (kun til oversigt)</QuickOcr>
+    <ResizeBitmaps>Ændr størrelse på billeder...</ResizeBitmaps>
+    <ResizeBitmapsForSelectedLines>Tilpas billedstørrelse for valgte linjer...</ResizeBitmapsForSelectedLines>
+    <ChangeColorForSelectedLines>Skift farve for valgte linjer...</ChangeColorForSelectedLines>
+    <AlignSelectedLines>Juster valgte linjer</AlignSelectedLines>
+    <CenterSelectedLines>Centrer valgte linjer (vandret, hold lodret position)</CenterSelectedLines>
+    <TopAlignSelectedLines>Topjuster valgte linjer (hold vandret position)</TopAlignSelectedLines>
+    <BottomAlignSelectedLines>Juster til bund for valgte linjer (hold vandret position)</BottomAlignSelectedLines>
+    <SizeXY>Størrelse: {0} x {1}</SizeXY>
+  </BinEdit>
   <Bookmarks>
     <EditBookmark>Rediger bogmærke</EditBookmark>
     <AddBookmark>Tilføj bogmærke</AddBookmark>
@@ -317,6 +331,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
   </ColumnPaste>
   <CompareSubtitles>
     <Title>Sammenlign undertekster</Title>
+    <Reload>Genindlæs</Reload>
     <PreviousDifference>&amp;Forrige ændring</PreviousDifference>
     <NextDifference>&amp;Næste ændring</NextDifference>
     <SubtitlesNotAlike>Undertekster har ingen ligheder</SubtitlesNotAlike>
@@ -2279,6 +2294,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <ListViewColumnTextDown>Kolonne, tekst ned</ListViewColumnTextDown>
     <ListViewGoToNextError>Gå til næste fejl</ListViewGoToNextError>
     <ShowBeamer>Start undertekst fremviser (fuldskærm)</ShowBeamer>
+    <ShowStyleManager></ShowStyleManager>
     <MainTextBoxMoveLastWordDown>Flyt sidste ord ned til næste linje</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Flyt første ord fra næste linje op</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Flyt første ord fra næste linje op (nuværende undertekst)</MainTextBoxMoveFirstWordUpCurrent>
@@ -2327,7 +2343,6 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <UseXAsNewGap>Brug "{0}" millisekunder som nyt minimumskløft?</UseXAsNewGap>
   </Settings>
   <SettingsMpv>
-    <Title>Indstillinger for MPV</Title>
     <DownloadMpv>Hent MPV lib</DownloadMpv>
     <DownloadMpvFailed>Kan ikke downloade MPV - prøv igen senere!</DownloadMpvFailed>
     <DownloadMpvOk>MPV lib blev hentet og er klar til brug.</DownloadMpvOk>
@@ -2559,6 +2574,8 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <SetPreviewText>Indstil eksempeltekst...</SetPreviewText>
     <AddToFile>Tilføj til fil</AddToFile>
     <AddToStorage>Føj til lager</AddToStorage>
+    <StyleStorage>Stil lager</StyleStorage>
+    <OverwriteX>Overskriv {0}?</OverwriteX>
   </SubStationAlphaStyles>
   <PointSync>
     <Title>Punkt synkronisering</Title>

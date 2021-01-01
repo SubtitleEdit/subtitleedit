@@ -99,6 +99,16 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         /// <returns>RLE buffer</returns>
         private static byte[] EncodeImage(NikseBitmap bm, List<Color> palette)
         {
+            var lookup = new Dictionary<int, int>();
+            for (int i = 0; i < palette.Count; i++)
+            {
+                var color = palette[i].ToArgb();
+                if (!lookup.ContainsKey(color))
+                {
+                    lookup.Add(color, i);
+                }
+            }
+
             var bytes = new List<byte>();
             for (int y = 0; y < bm.Height; y++)
             {
@@ -108,10 +118,9 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 {
                     Color c = bm.GetPixel(x, y);
                     byte color;
-                    var idx = palette.IndexOf(c);
-                    if (idx >= 0)
+                    if (lookup.TryGetValue(c.ToArgb(), out int intC))
                     {
-                        color = (byte)idx;
+                        color = (byte)intC;
                     }
                     else
                     {
@@ -228,6 +237,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         private static List<Color> GetBitmapPalette(NikseBitmap bitmap)
         {
             var pal = new List<Color>();
+            var lookup = new HashSet<int>();
             for (int y = 0; y < bitmap.Height; y++)
             {
                 for (int x = 0; x < bitmap.Width; x++)
@@ -235,11 +245,16 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                     var c = bitmap.GetPixel(x, y);
                     if (c != Color.Transparent)
                     {
-                        if (pal.Count < 100)
+                        if (lookup.Contains(c.ToArgb()))
+                        {
+                            // exact color already exists
+                        }
+                        else if (pal.Count < 100)
                         {
                             if (!HasCloseColor(c, pal, 1))
                             {
                                 pal.Add(c);
+                                lookup.Add(c.ToArgb());
                             }
                         }
                         else if (pal.Count < 240)
@@ -247,15 +262,18 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                             if (!HasCloseColor(c, pal, 5))
                             {
                                 pal.Add(c);
+                                lookup.Add(c.ToArgb());
                             }
                         }
                         else if (pal.Count < 254 && !HasCloseColor(c, pal, 25))
                         {
                             pal.Add(c);
+                            lookup.Add(c.ToArgb());
                         }
                     }
                 }
             }
+
             pal.Add(Color.Transparent); // last entry must be transparent
             return pal;
         }

@@ -510,9 +510,9 @@
             this.groupBoxBorder.Controls.Add(this.numericUpDownShadowWidth);
             this.groupBoxBorder.Controls.Add(this.numericUpDownOutline);
             this.groupBoxBorder.Controls.Add(this.labelShadow);
-            this.groupBoxBorder.Location = new System.Drawing.Point(217, 143);
+            this.groupBoxBorder.Location = new System.Drawing.Point(230, 143);
             this.groupBoxBorder.Name = "groupBoxBorder";
-            this.groupBoxBorder.Size = new System.Drawing.Size(254, 93);
+            this.groupBoxBorder.Size = new System.Drawing.Size(242, 93);
             this.groupBoxBorder.TabIndex = 3;
             this.groupBoxBorder.TabStop = false;
             this.groupBoxBorder.Text = "Border";
@@ -520,7 +520,7 @@
             // radioButtonOpaqueBox
             // 
             this.radioButtonOpaqueBox.AutoSize = true;
-            this.radioButtonOpaqueBox.Location = new System.Drawing.Point(12, 55);
+            this.radioButtonOpaqueBox.Location = new System.Drawing.Point(12, 56);
             this.radioButtonOpaqueBox.Name = "radioButtonOpaqueBox";
             this.radioButtonOpaqueBox.Size = new System.Drawing.Size(83, 17);
             this.radioButtonOpaqueBox.TabIndex = 4;
@@ -601,7 +601,7 @@
             this.groupBoxMargins.Controls.Add(this.labelMarginVertical);
             this.groupBoxMargins.Controls.Add(this.labelMarginRight);
             this.groupBoxMargins.Controls.Add(this.labelMarginLeft);
-            this.groupBoxMargins.Location = new System.Drawing.Point(92, 143);
+            this.groupBoxMargins.Location = new System.Drawing.Point(105, 143);
             this.groupBoxMargins.Name = "groupBoxMargins";
             this.groupBoxMargins.Size = new System.Drawing.Size(119, 93);
             this.groupBoxMargins.TabIndex = 2;
@@ -696,7 +696,7 @@
             // panelBackColor
             // 
             this.panelBackColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelBackColor.Location = new System.Drawing.Point(409, 23);
+            this.panelBackColor.Location = new System.Drawing.Point(404, 23);
             this.panelBackColor.Name = "panelBackColor";
             this.panelBackColor.Size = new System.Drawing.Size(21, 20);
             this.panelBackColor.TabIndex = 7;
@@ -704,7 +704,7 @@
             // 
             // buttonBackColor
             // 
-            this.buttonBackColor.Location = new System.Drawing.Point(334, 22);
+            this.buttonBackColor.Location = new System.Drawing.Point(330, 22);
             this.buttonBackColor.Name = "buttonBackColor";
             this.buttonBackColor.Size = new System.Drawing.Size(69, 23);
             this.buttonBackColor.TabIndex = 6;
@@ -734,7 +734,7 @@
             // panelSecondaryColor
             // 
             this.panelSecondaryColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelSecondaryColor.Location = new System.Drawing.Point(183, 23);
+            this.panelSecondaryColor.Location = new System.Drawing.Point(184, 23);
             this.panelSecondaryColor.Name = "panelSecondaryColor";
             this.panelSecondaryColor.Size = new System.Drawing.Size(21, 20);
             this.panelSecondaryColor.TabIndex = 3;
@@ -742,7 +742,7 @@
             // 
             // buttonSecondaryColor
             // 
-            this.buttonSecondaryColor.Location = new System.Drawing.Point(129, 22);
+            this.buttonSecondaryColor.Location = new System.Drawing.Point(128, 22);
             this.buttonSecondaryColor.Name = "buttonSecondaryColor";
             this.buttonSecondaryColor.Size = new System.Drawing.Size(53, 23);
             this.buttonSecondaryColor.TabIndex = 2;
@@ -782,7 +782,7 @@
             this.groupBoxAlignment.Controls.Add(this.radioButtonTopLeft);
             this.groupBoxAlignment.Location = new System.Drawing.Point(7, 143);
             this.groupBoxAlignment.Name = "groupBoxAlignment";
-            this.groupBoxAlignment.Size = new System.Drawing.Size(79, 93);
+            this.groupBoxAlignment.Size = new System.Drawing.Size(92, 93);
             this.groupBoxAlignment.TabIndex = 0;
             this.groupBoxAlignment.TabStop = false;
             this.groupBoxAlignment.Text = "Alignment";
@@ -790,7 +790,7 @@
             // radioButtonBottomRight
             // 
             this.radioButtonBottomRight.AutoSize = true;
-            this.radioButtonBottomRight.Location = new System.Drawing.Point(53, 65);
+            this.radioButtonBottomRight.Location = new System.Drawing.Point(59, 65);
             this.radioButtonBottomRight.Name = "radioButtonBottomRight";
             this.radioButtonBottomRight.Size = new System.Drawing.Size(14, 13);
             this.radioButtonBottomRight.TabIndex = 8;
@@ -801,7 +801,7 @@
             // 
             this.radioButtonBottomCenter.AutoSize = true;
             this.radioButtonBottomCenter.Checked = true;
-            this.radioButtonBottomCenter.Location = new System.Drawing.Point(33, 65);
+            this.radioButtonBottomCenter.Location = new System.Drawing.Point(39, 65);
             this.radioButtonBottomCenter.Name = "radioButtonBottomCenter";
             this.radioButtonBottomCenter.Size = new System.Drawing.Size(14, 13);
             this.radioButtonBottomCenter.TabIndex = 7;
@@ -812,7 +812,7 @@
             // radioButtonMiddleRight
             // 
             this.radioButtonMiddleRight.AutoSize = true;
-            this.radioButtonMiddleRight.Location = new System.Drawing.Point(53, 42);
+            this.radioButtonMiddleRight.Location = new System.Drawing.Point(59, 42);
             this.radioButtonMiddleRight.Name = "radioButtonMiddleRight";
             this.radioButtonMiddleRight.Size = new System.Drawing.Size(14, 13);
             this.radioButtonMiddleRight.TabIndex = 5;
@@ -822,7 +822,7 @@
             // radioButtonBottomLeft
             // 
             this.radioButtonBottomLeft.AutoSize = true;
-            this.radioButtonBottomLeft.Location = new System.Drawing.Point(13, 65);
+            this.radioButtonBottomLeft.Location = new System.Drawing.Point(19, 65);
             this.radioButtonBottomLeft.Name = "radioButtonBottomLeft";
             this.radioButtonBottomLeft.Size = new System.Drawing.Size(14, 13);
             this.radioButtonBottomLeft.TabIndex = 6;
@@ -832,7 +832,7 @@
             // radioButtonMiddleLeft
             // 
             this.radioButtonMiddleLeft.AutoSize = true;
-            this.radioButtonMiddleLeft.Location = new System.Drawing.Point(13, 42);
+            this.radioButtonMiddleLeft.Location = new System.Drawing.Point(19, 42);
             this.radioButtonMiddleLeft.Name = "radioButtonMiddleLeft";
             this.radioButtonMiddleLeft.Size = new System.Drawing.Size(14, 13);
             this.radioButtonMiddleLeft.TabIndex = 3;
@@ -842,7 +842,7 @@
             // radioButtonTopRight
             // 
             this.radioButtonTopRight.AutoSize = true;
-            this.radioButtonTopRight.Location = new System.Drawing.Point(53, 19);
+            this.radioButtonTopRight.Location = new System.Drawing.Point(59, 19);
             this.radioButtonTopRight.Name = "radioButtonTopRight";
             this.radioButtonTopRight.Size = new System.Drawing.Size(14, 13);
             this.radioButtonTopRight.TabIndex = 2;
@@ -852,7 +852,7 @@
             // radioButtonTopCenter
             // 
             this.radioButtonTopCenter.AutoSize = true;
-            this.radioButtonTopCenter.Location = new System.Drawing.Point(33, 19);
+            this.radioButtonTopCenter.Location = new System.Drawing.Point(39, 19);
             this.radioButtonTopCenter.Name = "radioButtonTopCenter";
             this.radioButtonTopCenter.Size = new System.Drawing.Size(14, 13);
             this.radioButtonTopCenter.TabIndex = 1;
@@ -862,7 +862,7 @@
             // radioButtonMiddleCenter
             // 
             this.radioButtonMiddleCenter.AutoSize = true;
-            this.radioButtonMiddleCenter.Location = new System.Drawing.Point(33, 42);
+            this.radioButtonMiddleCenter.Location = new System.Drawing.Point(39, 42);
             this.radioButtonMiddleCenter.Name = "radioButtonMiddleCenter";
             this.radioButtonMiddleCenter.Size = new System.Drawing.Size(14, 13);
             this.radioButtonMiddleCenter.TabIndex = 4;
@@ -872,7 +872,7 @@
             // radioButtonTopLeft
             // 
             this.radioButtonTopLeft.AutoSize = true;
-            this.radioButtonTopLeft.Location = new System.Drawing.Point(13, 19);
+            this.radioButtonTopLeft.Location = new System.Drawing.Point(19, 19);
             this.radioButtonTopLeft.Name = "radioButtonTopLeft";
             this.radioButtonTopLeft.Size = new System.Drawing.Size(14, 13);
             this.radioButtonTopLeft.TabIndex = 0;
@@ -930,7 +930,7 @@
             this.groupBoxFont.Controls.Add(this.labelFontName);
             this.groupBoxFont.Location = new System.Drawing.Point(7, 51);
             this.groupBoxFont.Name = "groupBoxFont";
-            this.groupBoxFont.Size = new System.Drawing.Size(464, 86);
+            this.groupBoxFont.Size = new System.Drawing.Size(465, 86);
             this.groupBoxFont.TabIndex = 3;
             this.groupBoxFont.TabStop = false;
             this.groupBoxFont.Text = "Font";

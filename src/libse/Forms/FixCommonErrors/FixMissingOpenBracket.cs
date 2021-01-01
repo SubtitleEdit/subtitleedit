@@ -6,6 +6,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixMissingOpenBracket : IFixCommonError
     {
+        public static class Language
+        {
+            public static string FixMissingOpenBracket { get; set; } = "Fix missing [ in line";
+        }
+
         private static string Fix(string text, string openB)
         {
             string pre = string.Empty;
@@ -61,8 +66,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            var language = Configuration.Settings.Language.FixCommonErrors;
-            string fixAction = language.FixMissingOpenBracket;
+            string fixAction = Language.FixMissingOpenBracket;
             int fixCount = 0;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
@@ -95,7 +99,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                 }
             }
-            callbacks.UpdateFixStatus(fixCount, language.FixMissingOpenBracket, language.XFixMissingOpenBracket);
+            callbacks.UpdateFixStatus(fixCount, Language.FixMissingOpenBracket);
         }
 
     }

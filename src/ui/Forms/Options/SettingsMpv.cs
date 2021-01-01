@@ -11,7 +11,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
 {
     public sealed partial class SettingsMpv : Form
     {
-
         private readonly bool _justDownload;
         private string _downloadUrl;
 
@@ -22,35 +21,16 @@ namespace Nikse.SubtitleEdit.Forms.Options
             UiUtil.FixFonts(this);
             _justDownload = justDownload;
             labelPleaseWait.Text = string.Empty;
-            if (Configuration.IsRunningOnLinux)
-            {
-                comboBoxVideoOutput.Text = Configuration.Settings.General.MpvVideoOutputLinux;
-            }
-            else
-            {
-                comboBoxVideoOutput.Text = Configuration.Settings.General.MpvVideoOutputWindows;
-            }
 
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            Text = Configuration.Settings.Language.SettingsMpv.Title;
+            Text = Configuration.Settings.Language.SettingsMpv.DownloadMpv;
             if (!Configuration.IsRunningOnLinux)
             {
                 buttonDownload.Text = Configuration.Settings.Language.SettingsMpv.DownloadMpv;
             }
 
-            if (Configuration.IsRunningOnLinux)
-            {
-                comboBoxVideoOutput.Items.Clear();
-                comboBoxVideoOutput.Items.AddRange(new object[] { "vaapi", "opengl", "sdl", "vdpau" });
-                Controls.Remove(buttonDownload);
-            }
             UiUtil.FixLargeFonts(this, buttonOK);
-
-            if (justDownload)
-            {
-                comboBoxVideoOutput.Enabled = false;
-            }
         }
 
         private void wc_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
@@ -80,7 +60,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                     {
                         string fileName = Path.GetFileName(entry.FilenameInZip);
                         string path = Path.Combine(dictionaryFolder, fileName);
-                        
+
                         try
                         {
                             zip.ExtractFile(entry, path);
@@ -100,12 +80,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             buttonDownload.Enabled = !Configuration.IsRunningOnLinux;
 
             MessageBox.Show(Configuration.Settings.Language.SettingsMpv.DownloadMpvOk);
-            if (_justDownload)
-            {
-                DialogResult = DialogResult.OK;
-            }
+            DialogResult = DialogResult.OK;
         }
-
 
         private void ButtonDownloadClick(object sender, EventArgs e)
         {
@@ -138,11 +114,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(comboBoxVideoOutput.Text))
-            {
-                Configuration.Settings.General.MpvVideoOutputWindows = comboBoxVideoOutput.Text;
-            }
-
             DialogResult = DialogResult.OK;
         }
 
@@ -153,7 +124,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void SettingsMpv_Load(object sender, EventArgs e)
         {
-            if (Configuration.IsRunningOnWindows && !LibMpvDynamic.IsInstalled)
+            if (Configuration.IsRunningOnWindows && (!LibMpvDynamic.IsInstalled || _justDownload))
             {
                 ButtonDownloadClick(null, null);
             }

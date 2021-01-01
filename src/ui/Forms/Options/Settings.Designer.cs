@@ -181,7 +181,7 @@
             this.labelSpectrogramAppearance = new System.Windows.Forms.Label();
             this.comboBoxSpectrogramAppearance = new System.Windows.Forms.ComboBox();
             this.checkBoxGenerateSpectrogram = new System.Windows.Forms.CheckBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBoxSpectrogramClean = new System.Windows.Forms.GroupBox();
             this.buttonWaveformsFolderEmpty = new System.Windows.Forms.Button();
             this.labelWaveformsFolderInfo = new System.Windows.Forms.Label();
             this.groupBoxWaveformAppearence = new System.Windows.Forms.GroupBox();
@@ -278,8 +278,9 @@
             this.checkBoxNamesOnline = new System.Windows.Forms.CheckBox();
             this.textBoxNamesOnline = new System.Windows.Forms.TextBox();
             this.groupBoxNamesIgonoreLists = new System.Windows.Forms.GroupBox();
+            this.listViewNames = new System.Windows.Forms.ListView();
+            this.columnHeaderNames = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.buttonRemoveNameEtc = new System.Windows.Forms.Button();
-            this.listBoxNames = new System.Windows.Forms.ListBox();
             this.textBoxNameEtc = new System.Windows.Forms.TextBox();
             this.buttonAddNames = new System.Windows.Forms.Button();
             this.labelWordListLanguage = new System.Windows.Forms.Label();
@@ -404,7 +405,6 @@
             this.toolTipContinuationPreview = new System.Windows.Forms.ToolTip(this.components);
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.panelSettings.SuspendLayout();
-            this.listBoxSection.SuspendLayout();
             this.panelGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
@@ -428,7 +428,7 @@
             this.panelWaveform.SuspendLayout();
             this.groupBoxFfmpeg.SuspendLayout();
             this.groupBoxSpectrogram.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.groupBoxSpectrogramClean.SuspendLayout();
             this.groupBoxWaveformAppearence.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWaveformBorderHitMs)).BeginInit();
             this.panelTools.SuspendLayout();
@@ -512,8 +512,8 @@
             // 
             // panelSettings
             // 
-            this.panelSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.panelSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelSettings.Controls.Add(this.listBoxSection);
             this.panelSettings.Controls.Add(this.panelGeneral);
@@ -536,7 +536,7 @@
             // 
             this.listBoxSection.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBoxSection.FormattingEnabled = true;
-            this.listBoxSection.ItemHeight = 25;
+            this.listBoxSection.ItemHeight = 16;
             this.listBoxSection.Items.AddRange(new object[] {
             "General",
             "Shortcuts",
@@ -551,9 +551,9 @@
             "Network"});
             this.listBoxSection.Location = new System.Drawing.Point(13, 13);
             this.listBoxSection.Name = "listBoxSection";
-            this.listBoxSection.Size = new System.Drawing.Size(250, 525);
+            this.listBoxSection.Size = new System.Drawing.Size(250, 516);
             this.listBoxSection.TabIndex = 0;
-            this.listBoxSection.SelectedIndexChanged += new System.EventHandler(ListBoxSectionSelectedIndexChanged);
+            this.listBoxSection.SelectedIndexChanged += new System.EventHandler(this.ListBoxSectionSelectedIndexChanged);
             this.listBoxSection.LostFocus += new System.EventHandler(this.listBoxSection_LostFocus);
             // 
             // panelGeneral
@@ -1377,7 +1377,7 @@
             this.groupBoxShortcuts.Controls.Add(this.labelShortcut);
             this.groupBoxShortcuts.Location = new System.Drawing.Point(6, 6);
             this.groupBoxShortcuts.Name = "groupBoxShortcuts";
-            this.groupBoxShortcuts.Size = new System.Drawing.Size(819, 499);
+            this.groupBoxShortcuts.Size = new System.Drawing.Size(819, 508);
             this.groupBoxShortcuts.TabIndex = 2;
             this.groupBoxShortcuts.TabStop = false;
             this.groupBoxShortcuts.Text = "Shortcuts";
@@ -1414,7 +1414,7 @@
             // 
             this.buttonClearShortcut.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonClearShortcut.Enabled = false;
-            this.buttonClearShortcut.Location = new System.Drawing.Point(582, 470);
+            this.buttonClearShortcut.Location = new System.Drawing.Point(582, 479);
             this.buttonClearShortcut.Name = "buttonClearShortcut";
             this.buttonClearShortcut.Size = new System.Drawing.Size(111, 23);
             this.buttonClearShortcut.TabIndex = 6;
@@ -1563,7 +1563,7 @@
             "F22",
             "F23",
             "F24"});
-            this.comboBoxShortcutKey.Location = new System.Drawing.Point(353, 470);
+            this.comboBoxShortcutKey.Location = new System.Drawing.Point(353, 479);
             this.comboBoxShortcutKey.Name = "comboBoxShortcutKey";
             this.comboBoxShortcutKey.Size = new System.Drawing.Size(92, 21);
             this.comboBoxShortcutKey.TabIndex = 4;
@@ -1574,7 +1574,7 @@
             // 
             this.labelShortcutKey.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelShortcutKey.AutoSize = true;
-            this.labelShortcutKey.Location = new System.Drawing.Point(322, 472);
+            this.labelShortcutKey.Location = new System.Drawing.Point(322, 481);
             this.labelShortcutKey.Name = "labelShortcutKey";
             this.labelShortcutKey.Size = new System.Drawing.Size(25, 13);
             this.labelShortcutKey.TabIndex = 35;
@@ -1585,7 +1585,7 @@
             this.checkBoxShortcutsShift.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxShortcutsShift.AutoSize = true;
             this.checkBoxShortcutsShift.Enabled = false;
-            this.checkBoxShortcutsShift.Location = new System.Drawing.Point(245, 472);
+            this.checkBoxShortcutsShift.Location = new System.Drawing.Point(245, 481);
             this.checkBoxShortcutsShift.Name = "checkBoxShortcutsShift";
             this.checkBoxShortcutsShift.Size = new System.Drawing.Size(48, 17);
             this.checkBoxShortcutsShift.TabIndex = 3;
@@ -1598,7 +1598,7 @@
             this.checkBoxShortcutsAlt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxShortcutsAlt.AutoSize = true;
             this.checkBoxShortcutsAlt.Enabled = false;
-            this.checkBoxShortcutsAlt.Location = new System.Drawing.Point(176, 472);
+            this.checkBoxShortcutsAlt.Location = new System.Drawing.Point(176, 481);
             this.checkBoxShortcutsAlt.Name = "checkBoxShortcutsAlt";
             this.checkBoxShortcutsAlt.Size = new System.Drawing.Size(39, 17);
             this.checkBoxShortcutsAlt.TabIndex = 2;
@@ -1611,7 +1611,7 @@
             this.checkBoxShortcutsControl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxShortcutsControl.AutoSize = true;
             this.checkBoxShortcutsControl.Enabled = false;
-            this.checkBoxShortcutsControl.Location = new System.Drawing.Point(89, 472);
+            this.checkBoxShortcutsControl.Location = new System.Drawing.Point(89, 481);
             this.checkBoxShortcutsControl.Name = "checkBoxShortcutsControl";
             this.checkBoxShortcutsControl.Size = new System.Drawing.Size(61, 17);
             this.checkBoxShortcutsControl.TabIndex = 1;
@@ -1623,7 +1623,7 @@
             // 
             this.buttonUpdateShortcut.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonUpdateShortcut.Enabled = false;
-            this.buttonUpdateShortcut.Location = new System.Drawing.Point(465, 470);
+            this.buttonUpdateShortcut.Location = new System.Drawing.Point(465, 479);
             this.buttonUpdateShortcut.Name = "buttonUpdateShortcut";
             this.buttonUpdateShortcut.Size = new System.Drawing.Size(111, 23);
             this.buttonUpdateShortcut.TabIndex = 5;
@@ -1640,7 +1640,7 @@
             this.treeViewShortcuts.HideSelection = false;
             this.treeViewShortcuts.Location = new System.Drawing.Point(16, 47);
             this.treeViewShortcuts.Name = "treeViewShortcuts";
-            this.treeViewShortcuts.Size = new System.Drawing.Size(797, 417);
+            this.treeViewShortcuts.Size = new System.Drawing.Size(797, 426);
             this.treeViewShortcuts.TabIndex = 0;
             this.treeViewShortcuts.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewShortcuts_AfterSelect);
             // 
@@ -1684,7 +1684,7 @@
             // 
             this.labelShortcut.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelShortcut.AutoSize = true;
-            this.labelShortcut.Location = new System.Drawing.Point(15, 472);
+            this.labelShortcut.Location = new System.Drawing.Point(15, 481);
             this.labelShortcut.Name = "labelShortcut";
             this.labelShortcut.Size = new System.Drawing.Size(52, 13);
             this.labelShortcut.TabIndex = 3;
@@ -1717,7 +1717,7 @@
             this.groupBoxListViewSyntaxColoring.Controls.Add(this.panelListViewSyntaxColorError);
             this.groupBoxListViewSyntaxColoring.Location = new System.Drawing.Point(6, 6);
             this.groupBoxListViewSyntaxColoring.Name = "groupBoxListViewSyntaxColoring";
-            this.groupBoxListViewSyntaxColoring.Size = new System.Drawing.Size(820, 523);
+            this.groupBoxListViewSyntaxColoring.Size = new System.Drawing.Size(820, 508);
             this.groupBoxListViewSyntaxColoring.TabIndex = 0;
             this.groupBoxListViewSyntaxColoring.TabStop = false;
             this.groupBoxListViewSyntaxColoring.Text = "List view syntax coloring";
@@ -2349,7 +2349,7 @@
             // 
             this.panelWaveform.Controls.Add(this.groupBoxFfmpeg);
             this.panelWaveform.Controls.Add(this.groupBoxSpectrogram);
-            this.panelWaveform.Controls.Add(this.groupBox1);
+            this.panelWaveform.Controls.Add(this.groupBoxSpectrogramClean);
             this.panelWaveform.Controls.Add(this.groupBoxWaveformAppearence);
             this.panelWaveform.Location = new System.Drawing.Point(273, 13);
             this.panelWaveform.Name = "panelWaveform";
@@ -2466,17 +2466,17 @@
             this.checkBoxGenerateSpectrogram.Text = "Generate spectrogram";
             this.checkBoxGenerateSpectrogram.UseVisualStyleBackColor = true;
             // 
-            // groupBox1
+            // groupBoxSpectrogramClean
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.groupBoxSpectrogramClean.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.groupBox1.Controls.Add(this.buttonWaveformsFolderEmpty);
-            this.groupBox1.Controls.Add(this.labelWaveformsFolderInfo);
-            this.groupBox1.Location = new System.Drawing.Point(10, 423);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(819, 80);
-            this.groupBox1.TabIndex = 3;
-            this.groupBox1.TabStop = false;
+            this.groupBoxSpectrogramClean.Controls.Add(this.buttonWaveformsFolderEmpty);
+            this.groupBoxSpectrogramClean.Controls.Add(this.labelWaveformsFolderInfo);
+            this.groupBoxSpectrogramClean.Location = new System.Drawing.Point(6, 423);
+            this.groupBoxSpectrogramClean.Name = "groupBoxSpectrogramClean";
+            this.groupBoxSpectrogramClean.Size = new System.Drawing.Size(819, 80);
+            this.groupBoxSpectrogramClean.TabIndex = 3;
+            this.groupBoxSpectrogramClean.TabStop = false;
             // 
             // buttonWaveformsFolderEmpty
             // 
@@ -3399,7 +3399,7 @@
             this.groupBoxWordLists.Controls.Add(this.comboBoxWordListLanguage);
             this.groupBoxWordLists.Location = new System.Drawing.Point(6, 6);
             this.groupBoxWordLists.Name = "groupBoxWordLists";
-            this.groupBoxWordLists.Size = new System.Drawing.Size(819, 503);
+            this.groupBoxWordLists.Size = new System.Drawing.Size(819, 508);
             this.groupBoxWordLists.TabIndex = 2;
             this.groupBoxWordLists.TabStop = false;
             this.groupBoxWordLists.Text = "Word lists";
@@ -3408,7 +3408,7 @@
             // 
             this.linkLabelOpenDictionaryFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.linkLabelOpenDictionaryFolder.AutoSize = true;
-            this.linkLabelOpenDictionaryFolder.Location = new System.Drawing.Point(6, 464);
+            this.linkLabelOpenDictionaryFolder.Location = new System.Drawing.Point(6, 469);
             this.linkLabelOpenDictionaryFolder.Name = "linkLabelOpenDictionaryFolder";
             this.linkLabelOpenDictionaryFolder.Size = new System.Drawing.Size(126, 13);
             this.linkLabelOpenDictionaryFolder.TabIndex = 29;
@@ -3564,8 +3564,8 @@
             // 
             // groupBoxNamesIgonoreLists
             // 
+            this.groupBoxNamesIgonoreLists.Controls.Add(this.listViewNames);
             this.groupBoxNamesIgonoreLists.Controls.Add(this.buttonRemoveNameEtc);
-            this.groupBoxNamesIgonoreLists.Controls.Add(this.listBoxNames);
             this.groupBoxNamesIgonoreLists.Controls.Add(this.textBoxNameEtc);
             this.groupBoxNamesIgonoreLists.Controls.Add(this.buttonAddNames);
             this.groupBoxNamesIgonoreLists.Location = new System.Drawing.Point(6, 43);
@@ -3574,6 +3574,27 @@
             this.groupBoxNamesIgonoreLists.TabIndex = 2;
             this.groupBoxNamesIgonoreLists.TabStop = false;
             this.groupBoxNamesIgonoreLists.Text = "Names/ignore lists";
+            // 
+            // listViewNames
+            // 
+            this.listViewNames.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeaderNames});
+            this.listViewNames.FullRowSelect = true;
+            this.listViewNames.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.listViewNames.HideSelection = false;
+            this.listViewNames.Location = new System.Drawing.Point(3, 21);
+            this.listViewNames.Name = "listViewNames";
+            this.listViewNames.Size = new System.Drawing.Size(148, 218);
+            this.listViewNames.TabIndex = 27;
+            this.listViewNames.UseCompatibleStateImageBehavior = false;
+            this.listViewNames.View = System.Windows.Forms.View.Details;
+            this.listViewNames.SelectedIndexChanged += new System.EventHandler(this.ListBoxNamesSelectedIndexChanged);
+            this.listViewNames.DoubleClick += new System.EventHandler(this.listBoxNames_DoubleClick);
+            this.listViewNames.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listViewNames_KeyDown);
+            // 
+            // columnHeaderNames
+            // 
+            this.columnHeaderNames.Width = 144;
             // 
             // buttonRemoveNameEtc
             // 
@@ -3584,19 +3605,6 @@
             this.buttonRemoveNameEtc.Text = "Remove";
             this.buttonRemoveNameEtc.UseVisualStyleBackColor = true;
             this.buttonRemoveNameEtc.Click += new System.EventHandler(this.ButtonRemoveNameEtcClick);
-            // 
-            // listBoxNames
-            // 
-            this.listBoxNames.FormattingEnabled = true;
-            this.listBoxNames.Location = new System.Drawing.Point(3, 16);
-            this.listBoxNames.Name = "listBoxNames";
-            this.listBoxNames.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.listBoxNames.Size = new System.Drawing.Size(150, 225);
-            this.listBoxNames.TabIndex = 20;
-            this.listBoxNames.SelectedIndexChanged += new System.EventHandler(this.ListBoxNamesSelectedIndexChanged);
-            this.listBoxNames.DoubleClick += new System.EventHandler(this.listBoxNames_DoubleClick);
-            this.listBoxNames.Enter += new System.EventHandler(this.ListBoxSearchReset);
-            this.listBoxNames.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ListBoxKeyDownSearch);
             // 
             // textBoxNameEtc
             // 
@@ -4089,7 +4097,7 @@
             this.groupBoxFont.Controls.Add(this.groupBoxFontGeneral);
             this.groupBoxFont.Location = new System.Drawing.Point(3, 3);
             this.groupBoxFont.Name = "groupBoxFont";
-            this.groupBoxFont.Size = new System.Drawing.Size(826, 509);
+            this.groupBoxFont.Size = new System.Drawing.Size(826, 508);
             this.groupBoxFont.TabIndex = 0;
             this.groupBoxFont.TabStop = false;
             this.groupBoxFont.Text = "Font in UI";
@@ -4447,7 +4455,7 @@
             this.groupBoxSsaStyle.Controls.Add(this.groupBoxPreview);
             this.groupBoxSsaStyle.Location = new System.Drawing.Point(6, 6);
             this.groupBoxSsaStyle.Name = "groupBoxSsaStyle";
-            this.groupBoxSsaStyle.Size = new System.Drawing.Size(819, 456);
+            this.groupBoxSsaStyle.Size = new System.Drawing.Size(819, 508);
             this.groupBoxSsaStyle.TabIndex = 0;
             this.groupBoxSsaStyle.TabStop = false;
             this.groupBoxSsaStyle.Text = "Sub Station Alpha style";
@@ -4697,7 +4705,7 @@
             this.groupBoxPreview.Controls.Add(this.pictureBoxPreview);
             this.groupBoxPreview.Location = new System.Drawing.Point(6, 118);
             this.groupBoxPreview.Name = "groupBoxPreview";
-            this.groupBoxPreview.Size = new System.Drawing.Size(807, 332);
+            this.groupBoxPreview.Size = new System.Drawing.Size(807, 384);
             this.groupBoxPreview.TabIndex = 10;
             this.groupBoxPreview.TabStop = false;
             this.groupBoxPreview.Text = "Preview";
@@ -4707,7 +4715,7 @@
             this.pictureBoxPreview.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBoxPreview.Location = new System.Drawing.Point(3, 17);
             this.pictureBoxPreview.Name = "pictureBoxPreview";
-            this.pictureBoxPreview.Size = new System.Drawing.Size(801, 312);
+            this.pictureBoxPreview.Size = new System.Drawing.Size(801, 364);
             this.pictureBoxPreview.TabIndex = 0;
             this.pictureBoxPreview.TabStop = false;
             this.pictureBoxPreview.Click += new System.EventHandler(this.pictureBoxPreview_Click);
@@ -4909,7 +4917,6 @@
             this.Text = "Settings";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormSettings_KeyDown);
             this.panelSettings.ResumeLayout(false);
-            this.listBoxSection.ResumeLayout(false);
             this.panelGeneral.ResumeLayout(false);
             this.groupBoxMiscellaneous.ResumeLayout(false);
             this.groupBoxMiscellaneous.PerformLayout();
@@ -4942,8 +4949,8 @@
             this.groupBoxFfmpeg.PerformLayout();
             this.groupBoxSpectrogram.ResumeLayout(false);
             this.groupBoxSpectrogram.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.groupBoxSpectrogramClean.ResumeLayout(false);
+            this.groupBoxSpectrogramClean.PerformLayout();
             this.groupBoxWaveformAppearence.ResumeLayout(false);
             this.groupBoxWaveformAppearence.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWaveformBorderHitMs)).EndInit();
@@ -5101,7 +5108,6 @@
         private System.Windows.Forms.Button buttonAddNames;
         private System.Windows.Forms.ComboBox comboBoxWordListLanguage;
         private System.Windows.Forms.Button buttonRemoveNameEtc;
-        private System.Windows.Forms.ListBox listBoxNames;
         private System.Windows.Forms.Button buttonRemoveOcrFix;
         private System.Windows.Forms.ListBox listBoxOcrFixList;
         private System.Windows.Forms.TextBox textBoxOcrFixKey;
@@ -5166,7 +5172,7 @@
         private System.Windows.Forms.Button buttonWaveformGridColor;
         private System.Windows.Forms.Panel panelWaveformTextColor;
         private System.Windows.Forms.Button buttonWaveformTextColor;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBoxSpectrogramClean;
         private System.Windows.Forms.Button buttonWaveformsFolderEmpty;
         private System.Windows.Forms.Label labelWaveformsFolderInfo;
         private System.Windows.Forms.CheckBox checkBoxRememberSelectedLine;
@@ -5184,7 +5190,6 @@
         private System.Windows.Forms.CheckBox checkBoxFixCommonOcrErrorsUsingHardcodedRules;
         private System.Windows.Forms.Label labelVideoPlayerPreviewFontSize;
         private System.Windows.Forms.ComboBox comboBoxlVideoPlayerPreviewFontSize;
-        private System.Windows.Forms.Panel panelShortcuts;
         private System.Windows.Forms.GroupBox groupBoxShortcuts;
         private System.Windows.Forms.Button buttonUpdateShortcut;
         private System.Windows.Forms.TreeView treeViewShortcuts;
@@ -5405,5 +5410,8 @@
         private System.Windows.Forms.Button buttonDarkThemeBackColor;
         private System.Windows.Forms.Panel panelDarkThemeColor;
         private System.Windows.Forms.Button buttonDarkThemeColor;
+        private System.Windows.Forms.ListView listViewNames;
+        private System.Windows.Forms.ColumnHeader columnHeaderNames;
+        private System.Windows.Forms.Panel panelShortcuts;
     }
 }

@@ -1575,6 +1575,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonToggleVideo.ToolTipText = _language.Menu.ToolBar.ShowHideVideo;
 
             toolStripMenuItemAssStyles.Text = _language.Menu.ContextMenu.SubStationAlphaStyles;
+            toolStripMenuItemAssaStyles.Text = _language.Menu.ContextMenu.SubStationAlphaStyles;
             setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SubStationAlphaSetStyle;
             setActorForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SetActor;
 
@@ -1772,7 +1773,160 @@ namespace Nikse.SubtitleEdit.Forms
                 audioVisualizer.WaveformNotLoadedText = languageWaveform.ClickToAddWaveform;
             }
 
-            // clear cached language names
+            FormatLanguage.LineNumberXErrorReadingFromSourceLineY = Configuration.Settings.Language.Main.LineNumberXErrorReadingFromSourceLineY;
+            FormatLanguage.LineNumberXErrorReadingTimeCodeFromSourceLineY = Configuration.Settings.Language.Main.LineNumberXErrorReadingTimeCodeFromSourceLineY;
+            FormatLanguage.LineNumberXExpectedEmptyLine = Configuration.Settings.Language.Main.LineNumberXExpectedEmptyLine;
+            FormatLanguage.LineNumberXExpectedNumberFromSourceLineY = Configuration.Settings.Language.Main.LineNumberXExpectedNumberFromSourceLineY;
+
+            NetflixLanguage.GlyphCheckReport = Configuration.Settings.Language.NetflixQualityCheck.GlyphCheckReport;
+            NetflixLanguage.WhiteSpaceCheckReport = Configuration.Settings.Language.NetflixQualityCheck.WhiteSpaceCheckReport;
+
+            DvdSubtitleLanguage.Language.NotSpecified = Configuration.Settings.Language.LanguageNames.NotSpecified;
+            DvdSubtitleLanguage.Language.UnknownCodeX = Configuration.Settings.Language.LanguageNames.UnknownCodeX;
+            DvdSubtitleLanguage.Language.CultureName = Configuration.Settings.Language.General.CultureName;
+            DvdSubtitleLanguage.Language.LanguageNames = new Dictionary<string, string>
+            {
+                {  "aa", Configuration.Settings.Language.LanguageNames.aaName },
+                {  "ab", Configuration.Settings.Language.LanguageNames.abName },
+                {  "af", Configuration.Settings.Language.LanguageNames.afName },
+                {  "am", Configuration.Settings.Language.LanguageNames.amName },
+                {  "ar", Configuration.Settings.Language.LanguageNames.arName },
+                {  "as", Configuration.Settings.Language.LanguageNames.asName },
+                {  "ay", Configuration.Settings.Language.LanguageNames.ayName },
+                {  "az", Configuration.Settings.Language.LanguageNames.azName },
+                {  "ba", Configuration.Settings.Language.LanguageNames.baName },
+                {  "be", Configuration.Settings.Language.LanguageNames.beName },
+                {  "bg", Configuration.Settings.Language.LanguageNames.bgName },
+                {  "bh", Configuration.Settings.Language.LanguageNames.bhName },
+                {  "bi", Configuration.Settings.Language.LanguageNames.biName },
+                {  "bn", Configuration.Settings.Language.LanguageNames.bnName },
+                {  "bo", Configuration.Settings.Language.LanguageNames.boName },
+                {  "br", Configuration.Settings.Language.LanguageNames.brName },
+                {  "ca", Configuration.Settings.Language.LanguageNames.caName },
+                {  "co", Configuration.Settings.Language.LanguageNames.coName },
+                {  "cs", Configuration.Settings.Language.LanguageNames.csName },
+                {  "cy", Configuration.Settings.Language.LanguageNames.cyName },
+                {  "da", Configuration.Settings.Language.LanguageNames.daName },
+                {  "de", Configuration.Settings.Language.LanguageNames.deName },
+                {  "dz", Configuration.Settings.Language.LanguageNames.dzName },
+                {  "el", Configuration.Settings.Language.LanguageNames.elName },
+                {  "en", Configuration.Settings.Language.LanguageNames.enName },
+                {  "eo", Configuration.Settings.Language.LanguageNames.eoName },
+                {  "es", Configuration.Settings.Language.LanguageNames.esName },
+                {  "et", Configuration.Settings.Language.LanguageNames.etName },
+                {  "eu", Configuration.Settings.Language.LanguageNames.euName },
+                {  "fa", Configuration.Settings.Language.LanguageNames.faName },
+                {  "fi", Configuration.Settings.Language.LanguageNames.fiName },
+                {  "fj", Configuration.Settings.Language.LanguageNames.fjName },
+                {  "fo", Configuration.Settings.Language.LanguageNames.foName },
+                {  "fr", Configuration.Settings.Language.LanguageNames.frName },
+                {  "fy", Configuration.Settings.Language.LanguageNames.fyName },
+                {  "ga", Configuration.Settings.Language.LanguageNames.gaName },
+                {  "gd", Configuration.Settings.Language.LanguageNames.gdName },
+                {  "gl", Configuration.Settings.Language.LanguageNames.glName },
+                {  "gn", Configuration.Settings.Language.LanguageNames.gnName },
+                {  "gu", Configuration.Settings.Language.LanguageNames.guName },
+                {  "ha", Configuration.Settings.Language.LanguageNames.haName },
+                {  "he", Configuration.Settings.Language.LanguageNames.heName },
+                {  "hi", Configuration.Settings.Language.LanguageNames.hiName },
+                {  "hr", Configuration.Settings.Language.LanguageNames.hrName },
+                {  "hu", Configuration.Settings.Language.LanguageNames.huName },
+                {  "hy", Configuration.Settings.Language.LanguageNames.hyName },
+                {  "ia", Configuration.Settings.Language.LanguageNames.iaName },
+                {  "id", Configuration.Settings.Language.LanguageNames.idName },
+                {  "ie", Configuration.Settings.Language.LanguageNames.ieName },
+                {  "ik", Configuration.Settings.Language.LanguageNames.ikName },
+                {  "is", Configuration.Settings.Language.LanguageNames.isName },
+                {  "it", Configuration.Settings.Language.LanguageNames.itName },
+                {  "iu", Configuration.Settings.Language.LanguageNames.iuName },
+                {  "ja", Configuration.Settings.Language.LanguageNames.jaName },
+                {  "jv", Configuration.Settings.Language.LanguageNames.jvName },
+                {  "ka", Configuration.Settings.Language.LanguageNames.kaName },
+                {  "kk", Configuration.Settings.Language.LanguageNames.kkName },
+                {  "kl", Configuration.Settings.Language.LanguageNames.klName },
+                {  "km", Configuration.Settings.Language.LanguageNames.kmName },
+                {  "kn", Configuration.Settings.Language.LanguageNames.knName },
+                {  "ko", Configuration.Settings.Language.LanguageNames.koName },
+                {  "ks", Configuration.Settings.Language.LanguageNames.ksName },
+                {  "ku", Configuration.Settings.Language.LanguageNames.kuName },
+                {  "ky", Configuration.Settings.Language.LanguageNames.kyName },
+                {  "la", Configuration.Settings.Language.LanguageNames.laName },
+                {  "lb", Configuration.Settings.Language.LanguageNames.lbName },
+                {  "ln", Configuration.Settings.Language.LanguageNames.lnName },
+                {  "lo", Configuration.Settings.Language.LanguageNames.loName },
+                {  "lt", Configuration.Settings.Language.LanguageNames.ltName },
+                {  "lv", Configuration.Settings.Language.LanguageNames.lvName },
+                {  "mg", Configuration.Settings.Language.LanguageNames.mgName },
+                {  "mi", Configuration.Settings.Language.LanguageNames.miName },
+                {  "mk", Configuration.Settings.Language.LanguageNames.mkName },
+                {  "ml", Configuration.Settings.Language.LanguageNames.mlName },
+                {  "mn", Configuration.Settings.Language.LanguageNames.mnName },
+                {  "mo", Configuration.Settings.Language.LanguageNames.moName },
+                {  "mr", Configuration.Settings.Language.LanguageNames.mrName },
+                {  "ms", Configuration.Settings.Language.LanguageNames.msName },
+                {  "mt", Configuration.Settings.Language.LanguageNames.mtName },
+                {  "my", Configuration.Settings.Language.LanguageNames.myName },
+                {  "na", Configuration.Settings.Language.LanguageNames.naName },
+                {  "ne", Configuration.Settings.Language.LanguageNames.neName },
+                {  "nl", Configuration.Settings.Language.LanguageNames.nlName },
+                {  "no", Configuration.Settings.Language.LanguageNames.noName },
+                {  "oc", Configuration.Settings.Language.LanguageNames.ocName },
+                {  "om", Configuration.Settings.Language.LanguageNames.omName },
+                {  "or", Configuration.Settings.Language.LanguageNames.orName },
+                {  "pa", Configuration.Settings.Language.LanguageNames.paName },
+                {  "pl", Configuration.Settings.Language.LanguageNames.plName },
+                {  "ps", Configuration.Settings.Language.LanguageNames.psName },
+                {  "pt", Configuration.Settings.Language.LanguageNames.ptName },
+                {  "qu", Configuration.Settings.Language.LanguageNames.quName },
+                {  "rm", Configuration.Settings.Language.LanguageNames.rmName },
+                {  "rn", Configuration.Settings.Language.LanguageNames.rnName },
+                {  "ro", Configuration.Settings.Language.LanguageNames.roName },
+                {  "ru", Configuration.Settings.Language.LanguageNames.ruName },
+                {  "rw", Configuration.Settings.Language.LanguageNames.rwName },
+                {  "sa", Configuration.Settings.Language.LanguageNames.saName },
+                {  "sd", Configuration.Settings.Language.LanguageNames.sdName },
+                {  "sg", Configuration.Settings.Language.LanguageNames.sgName },
+                {  "sh", Configuration.Settings.Language.LanguageNames.shName },
+                {  "si", Configuration.Settings.Language.LanguageNames.siName },
+                {  "sk", Configuration.Settings.Language.LanguageNames.skName },
+                {  "sl", Configuration.Settings.Language.LanguageNames.slName },
+                {  "sm", Configuration.Settings.Language.LanguageNames.smName },
+                {  "sn", Configuration.Settings.Language.LanguageNames.snName },
+                {  "so", Configuration.Settings.Language.LanguageNames.soName },
+                {  "sq", Configuration.Settings.Language.LanguageNames.sqName },
+                {  "sr", Configuration.Settings.Language.LanguageNames.srName },
+                {  "ss", Configuration.Settings.Language.LanguageNames.ssName },
+                {  "st", Configuration.Settings.Language.LanguageNames.stName },
+                {  "su", Configuration.Settings.Language.LanguageNames.suName },
+                {  "sv", Configuration.Settings.Language.LanguageNames.svName },
+                {  "sw", Configuration.Settings.Language.LanguageNames.swName },
+                {  "ta", Configuration.Settings.Language.LanguageNames.taName },
+                {  "te", Configuration.Settings.Language.LanguageNames.teName },
+                {  "tg", Configuration.Settings.Language.LanguageNames.tgName },
+                {  "th", Configuration.Settings.Language.LanguageNames.thName },
+                {  "ti", Configuration.Settings.Language.LanguageNames.tiName },
+                {  "tk", Configuration.Settings.Language.LanguageNames.tkName },
+                {  "tl", Configuration.Settings.Language.LanguageNames.tlName },
+                {  "tn", Configuration.Settings.Language.LanguageNames.tnName },
+                {  "to", Configuration.Settings.Language.LanguageNames.toName },
+                {  "tr", Configuration.Settings.Language.LanguageNames.trName },
+                {  "ts", Configuration.Settings.Language.LanguageNames.tsName },
+                {  "tt", Configuration.Settings.Language.LanguageNames.ttName },
+                {  "tw", Configuration.Settings.Language.LanguageNames.twName },
+                {  "ug", Configuration.Settings.Language.LanguageNames.ugName },
+                {  "uk", Configuration.Settings.Language.LanguageNames.ukName },
+                {  "ur", Configuration.Settings.Language.LanguageNames.urName },
+                {  "uz", Configuration.Settings.Language.LanguageNames.uzName },
+                {  "vi", Configuration.Settings.Language.LanguageNames.viName },
+                {  "vo", Configuration.Settings.Language.LanguageNames.voName },
+                {  "wo", Configuration.Settings.Language.LanguageNames.woName },
+                {  "xh", Configuration.Settings.Language.LanguageNames.xhName },
+                {  "yi", Configuration.Settings.Language.LanguageNames.yiName },
+                {  "yo", Configuration.Settings.Language.LanguageNames.yoName },
+                {  "za", Configuration.Settings.Language.LanguageNames.zaName },
+                {  "zh", Configuration.Settings.Language.LanguageNames.zhName },
+                {  "zu", Configuration.Settings.Language.LanguageNames.zuName },
+            };
             DvdSubtitleLanguage.Initialize();
         }
 
@@ -3347,6 +3501,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             ResetShowEarlierOrLater();
             FixRightToLeftDependingOnLanguage();
+            textBoxSource.SelectionLength = 0;
         }
 
         private void ShowHideTextBasedFeatures(SubtitleFormat format)
@@ -4814,6 +4969,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var darkModeListViewSyntaxErrorColor = Color.FromArgb(185, 51, 0);
                 var defaultListViewSyntaxErrorColor = Color.FromArgb(255, 180, 150);
                 var slightlyLighter = Color.FromArgb(Math.Min(byte.MaxValue, darkThemeBackColor.R + 10), Math.Min(byte.MaxValue, darkThemeBackColor.G + 10), Math.Min(byte.MaxValue, darkThemeBackColor.B + 10));
+                var listViewDarkThemeUnfocusedBackColor = Color.FromArgb(Math.Min(byte.MaxValue, darkThemeBackColor.R + 20), Math.Min(byte.MaxValue, darkThemeBackColor.G + 20), Math.Min(byte.MaxValue, darkThemeBackColor.B + 50));
 
                 if (Configuration.Settings.General.UseDarkTheme)
                 {
@@ -4850,8 +5006,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (Configuration.Settings.Tools.ListViewUnfocusedSelectedColor.ToArgb() == Color.LightBlue.ToArgb())
                         {
-                            var listViewUnfocusedBackColor = Color.FromArgb(Math.Min(byte.MaxValue, darkThemeBackColor.R + 20), Math.Min(byte.MaxValue, darkThemeBackColor.G + 20), Math.Min(byte.MaxValue, darkThemeBackColor.B + 50));
-                            Configuration.Settings.Tools.ListViewUnfocusedSelectedColor = listViewUnfocusedBackColor;
+                            Configuration.Settings.Tools.ListViewUnfocusedSelectedColor = listViewDarkThemeUnfocusedBackColor;
                         }
                     }
 
@@ -4894,7 +5049,7 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Tools.ListViewSyntaxErrorColor = defaultListViewSyntaxErrorColor;
                     }
 
-                    if (Configuration.Settings.Tools.ListViewUnfocusedSelectedColor.ToArgb() == Color.DarkGray.ToArgb())
+                    if (Configuration.Settings.Tools.ListViewUnfocusedSelectedColor.ToArgb() == listViewDarkThemeUnfocusedBackColor.ToArgb())
                     {
                         Configuration.Settings.Tools.ListViewUnfocusedSelectedColor = Color.LightBlue;
                     }
@@ -5333,7 +5488,7 @@ namespace Nikse.SubtitleEdit.Forms
                     int startPos = tb.SelectedText.Length > 0 ? tb.SelectionStart + 1 : tb.SelectionStart;
                     bool found = _findHelper.Find(_subtitle, _subtitleAlternate, _subtitleListViewIndex, startPos);
                     tb = GetFindReplaceTextBox();
-                    //if we fail to find the text, we might want to start searching from the top of the file.
+                    // if we fail to find the text, we might want to start searching from the top of the file.
                     if (!found && _findHelper.StartLineIndex >= 1)
                     {
                         if (MessageBox.Show(_language.FindContinue, _language.FindContinueTitle, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
@@ -14123,7 +14278,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 // do not check for shortcuts if text is being entered and a textbox is focused
                 if ((fc.Parent.Name == textBoxListViewText.Name || fc.Parent.Name == textBoxListViewTextAlternate.Name || fc.Name == textBoxSearchWord.Name) &&
-                    ((e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z) || (e.KeyCode >= Keys.OemSemicolon && e.KeyCode <= Keys.OemBackslash)))
+                    ((e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z) || (e.KeyCode >= Keys.OemSemicolon && e.KeyCode <= Keys.OemBackslash)) &&
+                    !Configuration.Settings.General.AllowLetterShortcutsInTextBox)
                 {
                     return;
                 }
@@ -17947,14 +18103,14 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (selectedLines)
             {
+                var indices = SubtitleListview1.GetSelectedIndices();
+                if (indices.Length == 0)
+                {
+                    return;
+                }
+
                 SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
                 MakeHistoryForUndo(string.Format(_language.BeforeAddingTagX, tag));
-
-                var indices = new List<int>();
-                foreach (ListViewItem item in SubtitleListview1.SelectedItems)
-                {
-                    indices.Add(item.Index);
-                }
 
                 bool first = true;
                 SubtitleListview1.BeginUpdate();
@@ -19344,6 +19500,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 trackBarWaveformPosition.Maximum = (int)mediaPlayer.Duration;
             }
+
+            textBoxSource.SelectionLength = 0;
         }
 
         private void VideoEnded(object sender, EventArgs e)
@@ -21278,6 +21436,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelSingleLine.Left = labelTextLineLengths.Left + labelTextLineLengths.Width - 6;
             RemoveNotExistingFilesFromRecentFilesUI();
             ShowSubtitleTimer.Start();
+            textBoxSource.SelectionLength = 0;
         }
 
         private void InitializePlayRateDropDown()
