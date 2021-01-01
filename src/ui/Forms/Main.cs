@@ -8967,6 +8967,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (_isLiveSpellCheckEnabled)
                     {
                         textBoxListViewText.CurrentLineIndex = firstSelectedIndex;
+                        textBoxListViewText.IsSpellCheckRequested = true;
                     }
 
                     InitializeListViewEditBox(p);
@@ -24925,22 +24926,19 @@ namespace Nikse.SubtitleEdit.Forms
             var tb = GetFocusedTextBox();
             toolStripMenuItemSplitTextAtCursor.Visible = tb.Text.Length > 1;
 
-            if (_isLiveSpellCheckEnabled)
+            if (_isLiveSpellCheckEnabled && textBoxListViewText.IsWrongWord && _inListView)
             {
-                if (textBoxListViewText.IsWrongWord && _inListView)
-                {
-                    var oldItems = new ToolStripItem[contextMenuStripTextBoxListView.Items.Count];
-                    contextMenuStripTextBoxListView.Items.CopyTo(oldItems, 0);
-                    contextMenuStripTextBoxListView.Items.Clear();
-                    tb.AddSuggestionsToMenu();
-                    contextMenuStripTextBoxListView.Items.AddRange(oldItems);
-                    toolStripSeparatorSpellCheckSuggestions.Visible = true;
-                    toolStripMenuItemSpellCheckSkipOnce.Visible = true;
-                    toolStripMenuItemSpellCheckSkipAll.Visible = true;
-                    toolStripMenuItemSpellCheckAddToDictionary.Visible = true;
-                    toolStripMenuItemSpellCheckAddToNames.Visible = true;
-                    toolStripSeparatorSpellCheck.Visible = true;
-                }
+                var oldItems = new ToolStripItem[contextMenuStripTextBoxListView.Items.Count];
+                contextMenuStripTextBoxListView.Items.CopyTo(oldItems, 0);
+                contextMenuStripTextBoxListView.Items.Clear();
+                tb.AddSuggestionsToMenu();
+                contextMenuStripTextBoxListView.Items.AddRange(oldItems);
+                toolStripSeparatorSpellCheckSuggestions.Visible = true;
+                toolStripMenuItemSpellCheckSkipOnce.Visible = true;
+                toolStripMenuItemSpellCheckSkipAll.Visible = true;
+                toolStripMenuItemSpellCheckAddToDictionary.Visible = true;
+                toolStripMenuItemSpellCheckAddToNames.Visible = true;
+                toolStripSeparatorSpellCheck.Visible = true;
             }
 
             if (IsUnicode)

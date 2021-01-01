@@ -43,10 +43,13 @@ namespace Nikse.SubtitleEdit.Controls
         private string _currentDictionary;
         private string _currentLanguage;
 
+        private static readonly char[] SplitChars = { ' ', '.', ',', '?', '!', ':', ';', '"', '“', '”', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n', '\b', '¿', '¡', '…', '—', '–', '♪', '♫', '„', '«', '»', '‹', '›', '؛', '،', '؟' };
+        
         public int CurrentLineIndex { get; set; }
         public bool IsWrongWord { get; set; }
         public bool IsSpellCheckerInitialized { get; set; }
         public bool IsDictionaryDownloaded { get; set; } = true;
+        public bool IsSpellCheckRequested { get; set; } = false;
 
         public class SuggestionParameter
         {
@@ -102,6 +105,7 @@ namespace Nikse.SubtitleEdit.Controls
                 InitializeBackingControl(_uiTextBox);
 
                 _uiTextBox.TextChanged += TextChangedHighlight;
+                _uiTextBox.KeyPress += UiTextBox_KeyPress;
                 _uiTextBox.KeyDown += UiTextBox_KeyDown;
                 _uiTextBox.MouseDown += UiTextBox_MouseDown;
                 // avoid selection when centered and clicking to the left
@@ -148,6 +152,12 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                     else if (args.KeyData == Keys.Right && _uiTextBox.SelectionStart >= _uiTextBox.Text.Length)
                     {
+                        if (Configuration.Settings.Tools.LiveSpellCheck)
+                        {
+                            IsSpellCheckRequested = true;
+                            TextChangedHighlight(this, EventArgs.Empty);
+                        }
+
                         args.SuppressKeyPress = true;
                     }
                     else if (args.KeyData == Keys.Down && _uiTextBox.SelectionStart >= _uiTextBox.Text.Length)
@@ -724,13 +734,6 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _checkRtfChange = false;
                 HighlightHtmlText();
-
-                if (Configuration.Settings.Tools.LiveSpellCheck
-                    && Configuration.Settings.General.SubtitleTextBoxSyntaxColor)
-                {
-                    DoLiveSpellCheck();
-                }
-
                 _checkRtfChange = true;
             }
         }
@@ -858,6 +861,21 @@ namespace Nikse.SubtitleEdit.Controls
                 _richTextBoxTemp.SelectionAlignment = HorizontalAlignment.Center;
             }
 
+            if (Configuration.Settings.Tools.LiveSpellCheck)
+            {
+                DoLiveSpellCheck();
+                if (_wrongWords?.Count > 0)
+                {
+                    foreach (var wrongWord in _wrongWords)
+                    {
+                        _richTextBoxTemp.Select(GetIndexWithLineBreak(wrongWord.Index), wrongWord.Length);
+                        _richTextBoxTemp.SelectionColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                    }
+                }
+
+                IsSpellCheckRequested = false;
+            }
+
             _richTextBoxTemp.ResumeLayout(false);
 
             if (_uiTextBox.Text.Length != text.Length)
@@ -961,29 +979,6 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private void SetWordBackColor(int startIndex, int length, Color color)
-        {
-            if (_uiTextBox is null)
-            {
-                return;
-            }
-
-            var cursorPos = _uiTextBox.SelectionStart;
-            var rtf = _uiTextBox.Rtf;
-            var text = _uiTextBox.Text;
-            startIndex = GetIndexWithLineBreak(startIndex);
-
-            _richTextBoxTemp.SuspendLayout();
-            _richTextBoxTemp.Clear();
-            _richTextBoxTemp.Text = text;
-            _richTextBoxTemp.Rtf = rtf;
-            _richTextBoxTemp.Select(startIndex, length);
-            _richTextBoxTemp.SelectionBackColor = color;
-            _richTextBoxTemp.ResumeLayout(false);
-            _uiTextBox.Rtf = _richTextBoxTemp.Rtf;
-            _uiTextBox.SelectionStart = cursorPos;
-        }
-
         #region LiveSpellCheck
 
         public async Task CheckForLanguageChange(Subtitle subtitle)
@@ -1027,7 +1022,8 @@ namespace Nikse.SubtitleEdit.Controls
 
                     await LoadDictionariesAsync(languageName);
                     IsSpellCheckerInitialized = true;
-                    TextChangedHighlight(null, null);
+                    IsSpellCheckRequested = true;
+                    TextChangedHighlight(this, EventArgs.Empty);
                 }
                 else
                 {
@@ -1072,14 +1068,6 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (IsSpellCheckerInitialized)
             {
-                if (_wrongWords?.Count > 0)
-                {
-                    foreach (var spellCheckWord in _wrongWords)
-                    {
-                        SetWordBackColor(spellCheckWord.Index, spellCheckWord.Length, ForeColor);
-                    }
-                }
-
                 _skipAllList = null;
                 _skipOnceList = null;
                 _spellCheckWordLists = null;
@@ -1092,19 +1080,20 @@ namespace Nikse.SubtitleEdit.Controls
                 _hunspell = null;
                 IsWrongWord = false;
                 IsSpellCheckerInitialized = false;
+
+                if (Configuration.Settings.General.SubtitleTextBoxSyntaxColor)
+                {
+                    TextChangedHighlight(this, EventArgs.Empty);
+                }
             }
         }
 
         public void DoLiveSpellCheck()
         {
-            if (IsSpellCheckerInitialized)
+            if (IsSpellCheckerInitialized && IsSpellCheckRequested)
             {
                 _words = GetWords(Text);
                 SetWrongWords();
-                if (_wrongWords?.Count > 0)
-                {
-                    ColorWrongWords();
-                }
             }
         }
 
@@ -1287,11 +1276,34 @@ namespace Nikse.SubtitleEdit.Controls
             return _hunspell.Spell(word);
         }
 
-        private void ColorWrongWords()
+        private void UiTextBox_KeyDown(object sender, KeyEventArgs e)
         {
-            foreach (var wrongWord in _wrongWords)
+            if (Configuration.Settings.Tools.LiveSpellCheck && e.KeyCode == Keys.Apps && _wrongWords?.Count > 0)
             {
-                SetWordBackColor(wrongWord.Index, wrongWord.Length, Configuration.Settings.Tools.ListViewSyntaxErrorColor);
+                var cursorPos = _uiTextBox.SelectionStart;
+                var wrongWord = _wrongWords.Where(word => cursorPos > GetIndexWithLineBreak(word.Index) && cursorPos < GetIndexWithLineBreak(word.Index) + word.Length).FirstOrDefault();
+                if (wrongWord != null)
+                {
+                    IsWrongWord = true;
+                    _currentWord = wrongWord;
+                }
+                else
+                {
+                    IsWrongWord = false;
+                }
+            }
+        }
+
+        private void UiTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (Configuration.Settings.Tools.LiveSpellCheck && SplitChars.Contains(e.KeyChar)
+                && _uiTextBox.SelectionStart == _uiTextBox.Text.Length || _uiTextBox.SelectionStart != _uiTextBox.Text.Length)
+            {
+                IsSpellCheckRequested = true;
+                if (e.KeyChar == '\b' || e.KeyChar == '\r' || e.KeyChar == '\n')
+                {
+                    TextChangedHighlight(this, EventArgs.Empty);
+                }
             }
         }
 
@@ -1310,26 +1322,6 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     IsWrongWord = false;
                 }
-            }
-        }
-
-        private void UiTextBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Apps && _wrongWords?.Count > 0)
-            {
-                var cursorPos = _uiTextBox.SelectionStart;
-                var wrongWord = _wrongWords.Where(word => cursorPos > GetIndexWithLineBreak(word.Index) && cursorPos < GetIndexWithLineBreak(word.Index) + word.Length).FirstOrDefault();
-                if (wrongWord != null)
-                {
-                    IsWrongWord = true;
-                    _currentWord = wrongWord;
-                }
-                else
-                {
-                    IsWrongWord = false;
-                }
-
-                e.SuppressKeyPress = true;
             }
         }
 
@@ -1372,8 +1364,9 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void SuggestionSelected(object sender, EventArgs e)
         {
+            IsWrongWord = false;
+            _wrongWords.Remove(_currentWord);
             var item = (ToolStripItem)sender;
-            SetWordBackColor(_currentWord.Index, _currentWord.Length, BackColor);
             var correctWord = item.Text;
             var text = _uiTextBox.Text;
             var cursorPos = _uiTextBox.SelectionStart;
@@ -1382,6 +1375,8 @@ namespace Nikse.SubtitleEdit.Controls
             text = text.Insert(wordIndex, correctWord);
             _uiTextBox.Text = text;
             _uiTextBox.SelectionStart = cursorPos;
+            IsSpellCheckRequested = true;
+            TextChangedHighlight(this, EventArgs.Empty);
         }
 
         public void DoAction(SpellCheckAction action)
@@ -1405,7 +1400,13 @@ namespace Nikse.SubtitleEdit.Controls
                         break;
                 }
 
-                SetWordBackColor(_currentWord.Index, _currentWord.Length, BackColor);
+                if (_wrongWords.Contains(_currentWord))
+                {
+                    IsWrongWord = false;
+                    _wrongWords.Remove(_currentWord);
+                    IsSpellCheckRequested = true;
+                    TextChangedHighlight(this, EventArgs.Empty);
+                }
             }
         }
 
