@@ -15,16 +15,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            Text = Configuration.Settings.Language.GetTesseractDictionaries.Download + " Tesseract 3.02";
-            labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait;
-            labelDescription1.Text = Configuration.Settings.Language.GetTesseractDictionaries.Download + " Tesseract OCR";
+            Text = LanguageSettings.Current.GetTesseractDictionaries.Download + " Tesseract 3.02";
+            labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
+            labelDescription1.Text = LanguageSettings.Current.GetTesseractDictionaries.Download + " Tesseract OCR";
 
             var wc = new WebClient { Proxy = Utilities.GetProxy() };
             wc.DownloadDataAsync(new Uri("https://github.com/SubtitleEdit/support-files/raw/master/Tesseract302.tar.gz"));
             wc.DownloadDataCompleted += wc_DownloadDataCompleted;
             wc.DownloadProgressChanged += (o, args) =>
             {
-                labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait + "  " + args.ProgressPercentage + "%";
+                labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + args.ProgressPercentage + "%";
             };
         }
 
@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             if (e.Error != null)
             {
-                MessageBox.Show(Configuration.Settings.Language.GetTesseractDictionaries.DownloadFailed);
+                MessageBox.Show(LanguageSettings.Current.GetTesseractDictionaries.DownloadFailed);
                 DialogResult = DialogResult.Cancel;
                 return;
             }

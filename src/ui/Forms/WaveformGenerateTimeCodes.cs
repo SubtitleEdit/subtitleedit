@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            var l = Configuration.Settings.Language.WaveformGenerateTimeCodes;
+            var l = LanguageSettings.Current.WaveformGenerateTimeCodes;
             Text = l.Title;
             groupBoxStartFrom.Text = l.StartFrom;
             radioButtonStartFromPos.Text = l.CurrentVideoPosition;
@@ -37,8 +37,8 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxOther.Text = l.Other;
             labelSplit1.Text = l.SplitLongLinesAt1;
             labelSplit2.Text = l.SplitLongLinesAt2;
-            radioButtonDeleteAll.Text = Configuration.Settings.Language.General.All;
-            radioButtonDeleteNone.Text = Configuration.Settings.Language.General.None;
+            radioButtonDeleteAll.Text = LanguageSettings.Current.General.All;
+            radioButtonDeleteNone.Text = LanguageSettings.Current.General.None;
             radioButtonForward.Text = l.FromCurrentVideoPosition;
 
             numericUpDownBlockSize.Left = labelScanBlocksMs.Left + labelScanBlocksMs.Width + 3;
@@ -49,8 +49,8 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownDefaultMilliseconds.Left = labelSplit1.Left + labelSplit1.Width + 3;
             labelSplit2.Left = numericUpDownDefaultMilliseconds.Left + numericUpDownDefaultMilliseconds.Width + 3;
 
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 

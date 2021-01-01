@@ -31,13 +31,13 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(this);
             _videoOffset = new TimeCode();
             checkBoxKeepTimeCodes.Checked = Configuration.Settings.Tools.VideoOffsetKeepTimeCodes;
-            Text = Configuration.Settings.Language.SetVideoOffset.Title;
-            labelDescription.Text = Configuration.Settings.Language.SetVideoOffset.Description;
-            checkBoxFromCurrentPosition.Text = Configuration.Settings.Language.SetVideoOffset.RelativeToCurrentVideoPosition;
-            checkBoxKeepTimeCodes.Text = Configuration.Settings.Language.SetVideoOffset.KeepTimeCodes;
-            buttonReset.Text = Configuration.Settings.Language.SetVideoOffset.Reset;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            Text = LanguageSettings.Current.SetVideoOffset.Title;
+            labelDescription.Text = LanguageSettings.Current.SetVideoOffset.Description;
+            checkBoxFromCurrentPosition.Text = LanguageSettings.Current.SetVideoOffset.RelativeToCurrentVideoPosition;
+            checkBoxKeepTimeCodes.Text = LanguageSettings.Current.SetVideoOffset.KeepTimeCodes;
+            buttonReset.Text = LanguageSettings.Current.SetVideoOffset.Reset;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 

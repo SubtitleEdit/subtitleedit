@@ -27,16 +27,16 @@ namespace Nikse.SubtitleEdit.Forms
             RemovedLanguagesNotInMicrosoftTranslate(comboBoxFrom);
             RemovedLanguagesNotInMicrosoftTranslate(comboBoxTo);
 
-            Text = Configuration.Settings.Language.GoogleOrMicrosoftTranslate.Title;
-            labelGoogleTranslate.Text = Configuration.Settings.Language.GoogleOrMicrosoftTranslate.GoogleTranslate;
-            labelMicrosoftTranslate.Text = Configuration.Settings.Language.GoogleOrMicrosoftTranslate.MicrosoftTranslate;
-            labelFrom.Text = Configuration.Settings.Language.GoogleOrMicrosoftTranslate.From;
-            labelTo.Text = Configuration.Settings.Language.GoogleOrMicrosoftTranslate.To;
-            labelSourceText.Text = Configuration.Settings.Language.GoogleOrMicrosoftTranslate.SourceText;
-            buttonGoogle.Text = Configuration.Settings.Language.GoogleOrMicrosoftTranslate.GoogleTranslate;
-            buttonMicrosoft.Text = Configuration.Settings.Language.GoogleOrMicrosoftTranslate.MicrosoftTranslate;
-            buttonTranslate.Text = Configuration.Settings.Language.GoogleOrMicrosoftTranslate.Translate;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            Text = LanguageSettings.Current.GoogleOrMicrosoftTranslate.Title;
+            labelGoogleTranslate.Text = LanguageSettings.Current.GoogleOrMicrosoftTranslate.GoogleTranslate;
+            labelMicrosoftTranslate.Text = LanguageSettings.Current.GoogleOrMicrosoftTranslate.MicrosoftTranslate;
+            labelFrom.Text = LanguageSettings.Current.GoogleOrMicrosoftTranslate.From;
+            labelTo.Text = LanguageSettings.Current.GoogleOrMicrosoftTranslate.To;
+            labelSourceText.Text = LanguageSettings.Current.GoogleOrMicrosoftTranslate.SourceText;
+            buttonGoogle.Text = LanguageSettings.Current.GoogleOrMicrosoftTranslate.GoogleTranslate;
+            buttonMicrosoft.Text = LanguageSettings.Current.GoogleOrMicrosoftTranslate.MicrosoftTranslate;
+            buttonTranslate.Text = LanguageSettings.Current.GoogleOrMicrosoftTranslate.Translate;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonCancel);
             buttonGoogle.Text = string.Empty;
             buttonMicrosoft.Text = string.Empty;

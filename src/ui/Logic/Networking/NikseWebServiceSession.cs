@@ -346,7 +346,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
             foreach (int index in indices)
             {
                 AdjustUpdateLogToDelete(index);
-                AppendToLog(string.Format(Configuration.Settings.Language.Main.NetworkDelete, CurrentUser.UserName, CurrentUser.Ip, index));
+                AppendToLog(string.Format(LanguageSettings.Current.Main.NetworkDelete, CurrentUser.UserName, CurrentUser.Ip, index));
             }
         }
 
@@ -362,7 +362,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
                 EndMilliseconds = (int)newParagraph.EndTime.TotalMilliseconds
             };
             _seWs.InsertLine(request);
-            AppendToLog(string.Format(Configuration.Settings.Language.Main.NetworkInsert, CurrentUser.UserName, CurrentUser.Ip, index, UiUtil.GetListViewTextFromString(newParagraph.Text)));
+            AppendToLog(string.Format(LanguageSettings.Current.Main.NetworkInsert, CurrentUser.UserName, CurrentUser.Ip, index, UiUtil.GetListViewTextFromString(newParagraph.Text)));
         }
 
         internal void AdjustUpdateLogToInsert(int index)

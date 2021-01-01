@@ -23,13 +23,13 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            Text = Configuration.Settings.Language.SplitSubtitle.Title;
-            label1.Text = Configuration.Settings.Language.SplitSubtitle.Description1;
-            label2.Text = Configuration.Settings.Language.SplitSubtitle.Description2;
-            buttonSplit.Text = Configuration.Settings.Language.SplitSubtitle.Split;
-            buttonDone.Text = Configuration.Settings.Language.SplitSubtitle.Done;
-            buttonAdvanced.Text = Configuration.Settings.Language.General.Advanced;
-            labelHourMinSecMilliSecond.Text = Configuration.Settings.General.UseTimeFormatHHMMSSFF ? Configuration.Settings.Language.General.HourMinutesSecondsFrames : Configuration.Settings.Language.General.HourMinutesSecondsMilliseconds;
+            Text = LanguageSettings.Current.SplitSubtitle.Title;
+            label1.Text = LanguageSettings.Current.SplitSubtitle.Description1;
+            label2.Text = LanguageSettings.Current.SplitSubtitle.Description2;
+            buttonSplit.Text = LanguageSettings.Current.SplitSubtitle.Split;
+            buttonDone.Text = LanguageSettings.Current.SplitSubtitle.Done;
+            buttonAdvanced.Text = LanguageSettings.Current.General.Advanced;
+            labelHourMinSecMilliSecond.Text = Configuration.Settings.General.UseTimeFormatHHMMSSFF ? LanguageSettings.Current.General.HourMinutesSecondsFrames : LanguageSettings.Current.General.HourMinutesSecondsMilliseconds;
             buttonGetFrameRate.Left = splitTimeUpDownAdjust.Left + splitTimeUpDownAdjust.Width;
 
             label2.Top = label1.Bottom;
@@ -90,16 +90,16 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 if (part1.Paragraphs.Count > 0 && part2.Paragraphs.Count > 0)
                 {
-                    SavePart(part1, Configuration.Settings.Language.SplitSubtitle.SavePartOneAs, Configuration.Settings.Language.SplitSubtitle.Part1);
+                    SavePart(part1, LanguageSettings.Current.SplitSubtitle.SavePartOneAs, LanguageSettings.Current.SplitSubtitle.Part1);
 
                     part2.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-splitTimeTotalMilliseconds));
                     part2.Renumber();
-                    SavePart(part2, Configuration.Settings.Language.SplitSubtitle.SavePartTwoAs, Configuration.Settings.Language.SplitSubtitle.Part2);
+                    SavePart(part2, LanguageSettings.Current.SplitSubtitle.SavePartTwoAs, LanguageSettings.Current.SplitSubtitle.Part2);
 
                     DialogResult = DialogResult.OK;
                     return;
                 }
-                MessageBox.Show(Configuration.Settings.Language.SplitSubtitle.NothingToSplit);
+                MessageBox.Show(LanguageSettings.Current.SplitSubtitle.NothingToSplit);
             }
             DialogResult = DialogResult.Cancel;
         }
@@ -135,7 +135,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch
                 {
-                    MessageBox.Show(string.Format(Configuration.Settings.Language.SplitSubtitle.UnableToSaveFileX, fileName));
+                    MessageBox.Show(string.Format(LanguageSettings.Current.SplitSubtitle.UnableToSaveFileX, fileName));
                 }
             }
         }
@@ -147,7 +147,7 @@ namespace Nikse.SubtitleEdit.Forms
                 openFileDialog1.InitialDirectory = Path.GetDirectoryName(_fileName);
             }
 
-            openFileDialog1.Title = Configuration.Settings.Language.General.OpenVideoFileTitle;
+            openFileDialog1.Title = LanguageSettings.Current.General.OpenVideoFileTitle;
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.Filter = UiUtil.GetVideoFileFilter(true);
             openFileDialog1.FileName = string.Empty;

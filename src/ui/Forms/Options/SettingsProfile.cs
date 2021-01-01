@@ -21,10 +21,10 @@ namespace Nikse.SubtitleEdit.Forms.Options
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            var language = Configuration.Settings.Language.Settings;
+            var language = LanguageSettings.Current.Settings;
             Text = language.Profiles;
             groupBoxGeneralRules.Text = language.Rules;
-            labelName.Text = Configuration.Settings.Language.General.Name;
+            labelName.Text = LanguageSettings.Current.General.Name;
             labelSubMaxLen.Text = language.SubtitleLineMaximumLength;
             labelOptimalCharsPerSecond.Text = language.OptimalCharactersPerSecond;
             labelMaxCharsPerSecond.Text = language.MaximumCharactersPerSecond;
@@ -37,21 +37,21 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelDialogStyle.Text = language.DialogStyle;
             labelContinuationStyle.Text = language.ContinuationStyle;
             checkBoxCpsIncludeWhiteSpace.Text = language.CpsIncludesSpace;
-            listViewProfiles.Columns[0].Text = Configuration.Settings.Language.General.Name;
+            listViewProfiles.Columns[0].Text = LanguageSettings.Current.General.Name;
             listViewProfiles.Columns[1].Text = language.SubtitleLineMaximumLength;
             listViewProfiles.Columns[2].Text = language.OptimalCharactersPerSecond;
             listViewProfiles.Columns[3].Text = language.MaximumCharactersPerSecond;
             listViewProfiles.Columns[4].Text = language.MinimumGapMilliseconds;
 
-            var l = Configuration.Settings.Language.SubStationAlphaStyles;
+            var l = LanguageSettings.Current.SubStationAlphaStyles;
             buttonImport.Text = l.Import;
             buttonExport.Text = l.Export;
             buttonCopy.Text = l.Copy;
             buttonAdd.Text = l.New;
             buttonRemove.Text = l.Remove;
             buttonRemoveAll.Text = l.RemoveAll;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
 
             comboBoxDialogStyle.Left = labelDialogStyle.Left + labelDialogStyle.Width + 5;
@@ -262,10 +262,10 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
 
             comboBoxDialogStyle.Items.Clear();
-            comboBoxDialogStyle.Items.Add(Configuration.Settings.Language.Settings.DialogStyleDashBothLinesWithSpace);
-            comboBoxDialogStyle.Items.Add(Configuration.Settings.Language.Settings.DialogStyleDashBothLinesWithoutSpace);
-            comboBoxDialogStyle.Items.Add(Configuration.Settings.Language.Settings.DialogStyleDashSecondLineWithSpace);
-            comboBoxDialogStyle.Items.Add(Configuration.Settings.Language.Settings.DialogStyleDashSecondLineWithoutSpace);
+            comboBoxDialogStyle.Items.Add(LanguageSettings.Current.Settings.DialogStyleDashBothLinesWithSpace);
+            comboBoxDialogStyle.Items.Add(LanguageSettings.Current.Settings.DialogStyleDashBothLinesWithoutSpace);
+            comboBoxDialogStyle.Items.Add(LanguageSettings.Current.Settings.DialogStyleDashSecondLineWithSpace);
+            comboBoxDialogStyle.Items.Add(LanguageSettings.Current.Settings.DialogStyleDashSecondLineWithoutSpace);
             switch (RulesProfiles[idx].DialogStyle)
             {
                 case DialogType.DashBothLinesWithSpace:
@@ -285,13 +285,13 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
 
             comboBoxContinuationStyle.Items.Clear();
-            comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleNone);
-            comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleNoneTrailingDots);
-            comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleNoneLeadingTrailingDots);
-            comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleOnlyTrailingDots);
-            comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDots);
-            comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDash);
-            comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDashDots);
+            comboBoxContinuationStyle.Items.Add(LanguageSettings.Current.Settings.ContinuationStyleNone);
+            comboBoxContinuationStyle.Items.Add(LanguageSettings.Current.Settings.ContinuationStyleNoneTrailingDots);
+            comboBoxContinuationStyle.Items.Add(LanguageSettings.Current.Settings.ContinuationStyleNoneLeadingTrailingDots);
+            comboBoxContinuationStyle.Items.Add(LanguageSettings.Current.Settings.ContinuationStyleOnlyTrailingDots);
+            comboBoxContinuationStyle.Items.Add(LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingDots);
+            comboBoxContinuationStyle.Items.Add(LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingDash);
+            comboBoxContinuationStyle.Items.Add(LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingDashDots);
             comboBoxContinuationStyle.SelectedIndex = 0;
             toolTipContinuationPreview.RemoveAll();
             toolTipContinuationPreview.SetToolTip(comboBoxContinuationStyle, ContinuationUtilities.GetContinuationStylePreview(RulesProfiles[idx].ContinuationStyle));
@@ -318,9 +318,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void buttonImport_Click(object sender, EventArgs e)
         {
-            openFileDialogImport.Title = Configuration.Settings.Language.Settings.ImportProfiles;
+            openFileDialogImport.Title = LanguageSettings.Current.Settings.ImportProfiles;
             openFileDialogImport.InitialDirectory = Configuration.DataDirectory;
-            openFileDialogImport.Filter = Configuration.Settings.Language.Settings.Profiles + "|*.profile";
+            openFileDialogImport.Filter = LanguageSettings.Current.Settings.Profiles + "|*.profile";
             if (openFileDialogImport.ShowDialog(this) != DialogResult.OK)
             {
                 return;

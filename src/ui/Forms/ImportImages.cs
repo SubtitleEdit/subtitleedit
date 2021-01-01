@@ -24,18 +24,18 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
             Subtitle = new Subtitle();
-            Text = Configuration.Settings.Language.ImportImages.Title;
-            groupBoxInput.Text = Configuration.Settings.Language.ImportImages.Input;
-            labelChooseInputFiles.Text = Configuration.Settings.Language.ImportImages.InputDescription;
-            removeToolStripMenuItem.Text = Configuration.Settings.Language.ImportImages.Remove;
-            removeAllToolStripMenuItem.Text = Configuration.Settings.Language.ImportImages.RemoveAll;
-            columnHeaderFName.Text = Configuration.Settings.Language.JoinSubtitles.FileName;
-            columnHeaderSize.Text = Configuration.Settings.Language.General.Size;
-            columnHeaderStartTime.Text = Configuration.Settings.Language.General.StartTime;
-            columnHeaderEndTime.Text = Configuration.Settings.Language.General.EndTime;
-            columnHeaderDuration.Text = Configuration.Settings.Language.General.Duration;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            Text = LanguageSettings.Current.ImportImages.Title;
+            groupBoxInput.Text = LanguageSettings.Current.ImportImages.Input;
+            labelChooseInputFiles.Text = LanguageSettings.Current.ImportImages.InputDescription;
+            removeToolStripMenuItem.Text = LanguageSettings.Current.ImportImages.Remove;
+            removeAllToolStripMenuItem.Text = LanguageSettings.Current.ImportImages.RemoveAll;
+            columnHeaderFName.Text = LanguageSettings.Current.JoinSubtitles.FileName;
+            columnHeaderSize.Text = LanguageSettings.Current.General.Size;
+            columnHeaderStartTime.Text = LanguageSettings.Current.General.StartTime;
+            columnHeaderEndTime.Text = LanguageSettings.Current.General.EndTime;
+            columnHeaderDuration.Text = LanguageSettings.Current.General.Duration;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             _filesAlreadyInList = new HashSet<string>();
         }
 
@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             buttonInputBrowse.Enabled = false;
             openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = Configuration.Settings.Language.ImportImages.ImageFiles + "|*.png;*.jpg;*.jpeg;*.bmp;*.gif;*.tif;*.tiff";
+            openFileDialog1.Filter = LanguageSettings.Current.ImportImages.ImageFiles + "|*.png;*.jpg;*.jpeg;*.bmp;*.gif;*.tif;*.tiff";
             openFileDialog1.Multiselect = true;
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {

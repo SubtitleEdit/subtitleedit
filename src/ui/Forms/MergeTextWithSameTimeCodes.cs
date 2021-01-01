@@ -39,18 +39,18 @@ namespace Nikse.SubtitleEdit.Forms
                 subtitle.Renumber(subtitle.Paragraphs[0].Number);
             }
 
-            Text = Configuration.Settings.Language.MergeTextWithSameTimeCodes.Title;
-            labelMaxDifferenceMS.Text = Configuration.Settings.Language.MergeTextWithSameTimeCodes.MaxDifferenceMilliseconds;
-            checkBoxAutoBreakOn.Text = Configuration.Settings.Language.MergeTextWithSameTimeCodes.ReBreakLines;
-            listViewFixes.Columns[0].Text = Configuration.Settings.Language.General.Apply;
-            listViewFixes.Columns[1].Text = Configuration.Settings.Language.General.LineNumber;
-            listViewFixes.Columns[2].Text = Configuration.Settings.Language.MergeTextWithSameTimeCodes.MergedText;
+            Text = LanguageSettings.Current.MergeTextWithSameTimeCodes.Title;
+            labelMaxDifferenceMS.Text = LanguageSettings.Current.MergeTextWithSameTimeCodes.MaxDifferenceMilliseconds;
+            checkBoxAutoBreakOn.Text = LanguageSettings.Current.MergeTextWithSameTimeCodes.ReBreakLines;
+            listViewFixes.Columns[0].Text = LanguageSettings.Current.General.Apply;
+            listViewFixes.Columns[1].Text = LanguageSettings.Current.General.LineNumber;
+            listViewFixes.Columns[2].Text = LanguageSettings.Current.MergeTextWithSameTimeCodes.MergedText;
 
-            toolStripMenuItemInverseSelection.Text = Configuration.Settings.Language.Main.Menu.Edit.InverseSelection;
-            toolStripMenuItemSelectAll.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.SelectAll;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            SubtitleListview1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
+            toolStripMenuItemInverseSelection.Text = LanguageSettings.Current.Main.Menu.Edit.InverseSelection;
+            toolStripMenuItemSelectAll.Text = LanguageSettings.Current.Main.Menu.ContextMenu.SelectAll;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            SubtitleListview1.InitializeLanguage(LanguageSettings.Current.General, Configuration.Settings);
             UiUtil.InitializeSubtitleFont(SubtitleListview1);
             SubtitleListview1.AutoSizeAllColumns(this);
             NumberOfMerges = 0;
@@ -109,7 +109,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SetBackgroundColor(index, ColorTranslator.FromHtml("#6ebe6e"));
             }
             SubtitleListview1.EndUpdate();
-            groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.MergeTextWithSameTimeCodes.NumberOfMergesX, NumberOfMerges);
+            groupBoxLinesFound.Text = string.Format(LanguageSettings.Current.MergeTextWithSameTimeCodes.NumberOfMergesX, NumberOfMerges);
         }
 
         private void listViewFixes_ItemChecked(object sender, ItemCheckedEventArgs e)
@@ -143,7 +143,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             SubtitleListview1.EndUpdate();
             Cursor = Cursors.Default;
-            groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.MergeTextWithSameTimeCodes.NumberOfMergesX, NumberOfMerges);
+            groupBoxLinesFound.Text = string.Format(LanguageSettings.Current.MergeTextWithSameTimeCodes.NumberOfMergesX, NumberOfMerges);
         }
 
         public Subtitle MergeLinesWithSameTimeCodes(Subtitle subtitle, List<int> mergedIndexes, out int numberOfMerges, bool clearFixes, bool reBreak, int maxMsBetween, string language)

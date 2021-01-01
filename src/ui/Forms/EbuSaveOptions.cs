@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            var language = Configuration.Settings.Language.EbuSaveOptions;
+            var language = LanguageSettings.Current.EbuSaveOptions;
             Text = language.Title;
             tabPageHeader.Text = language.GeneralSubtitleInformation;
             tabPageTextAndTiming.Text = language.TextAndTimingInformation;
@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelCountryOfOrigin.Text = language.CountryOfOrigin;
             labelTimeCodeStatus.Text = language.TimeCodeStatus;
             labelTimeCodeStartOfProgramme.Text = language.TimeCodeStartOfProgramme;
-            labelFrameRate.Text = Configuration.Settings.Language.General.FrameRate;
+            labelFrameRate.Text = LanguageSettings.Current.General.FrameRate;
 
             labelRevisionNumber.Text = language.RevisionNumber;
             labelMaxNoOfDisplayableChars.Text = language.MaxNoOfDisplayableChars;
@@ -77,8 +77,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelErrors.Text = language.Errors;
             labelUseBox.Text = language.UseBoxForOneNewLine;
 
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
 
             labelLanguageCodeFriendlyName.Text = string.Empty;
             timeUpDownStartTime.ForceHHMMSSFF();
@@ -123,9 +123,9 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxTeletextBox.Checked = Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox;
             checkBoxTeletextDoubleHeight.Checked = Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight;
 
-            Text = Configuration.Settings.Language.EbuSaveOptions.Title;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            Text = LanguageSettings.Current.EbuSaveOptions.Title;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
         }
 
         private void CheckErrors(Subtitle subtitle)
@@ -147,14 +147,14 @@ namespace Nikse.SubtitleEdit.Forms
                     string s = HtmlUtil.RemoveHtmlTags(line, true);
                     if (s.Length > numericUpDownMaxCharacters.Value)
                     {
-                        sb.AppendLine(string.Format(Configuration.Settings.Language.EbuSaveOptions.MaxLengthError, i, numericUpDownMaxCharacters.Value, s.Length - numericUpDownMaxCharacters.Value, s));
+                        sb.AppendLine(string.Format(LanguageSettings.Current.EbuSaveOptions.MaxLengthError, i, numericUpDownMaxCharacters.Value, s.Length - numericUpDownMaxCharacters.Value, s));
                         errorCount++;
                     }
                 }
                 i++;
             }
             textBoxErrors.Text = sb.ToString();
-            tabPageErrors.Text = string.Format(Configuration.Settings.Language.EbuSaveOptions.ErrorsX, errorCount);
+            tabPageErrors.Text = string.Format(LanguageSettings.Current.EbuSaveOptions.ErrorsX, errorCount);
         }
 
         private void FillFromHeader(Ebu.EbuGeneralSubtitleInformation header)
@@ -477,7 +477,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         labelDisplayStandardCodeWarning.Text =
                             (labelDisplayStandardCodeWarning.Text + Environment.NewLine +
-                            Configuration.Settings.Language.EbuSaveOptions.ColorRequiresTeletext).Trim();
+                            LanguageSettings.Current.EbuSaveOptions.ColorRequiresTeletext).Trim();
                         fontColorFound = true;
                     }
 
@@ -494,7 +494,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         labelDisplayStandardCodeWarning.Text =
                             (labelDisplayStandardCodeWarning.Text + Environment.NewLine +
-                             Configuration.Settings.Language.EbuSaveOptions.AlignmentRequiresTeletext).Trim();
+                             LanguageSettings.Current.EbuSaveOptions.AlignmentRequiresTeletext).Trim();
 
                         alignmentFound = true;
                     }
@@ -514,7 +514,7 @@ namespace Nikse.SubtitleEdit.Forms
             if ((comboBoxDisplayStandardCode.SelectedIndex == 1 || comboBoxDisplayStandardCode.SelectedIndex == 2) &&
                 numericUpDownMaxCharacters.Value != 38)
             {
-                labelMaxCharsPerRow38ForTeletext.Text = Configuration.Settings.Language.EbuSaveOptions.TeletextCharsShouldBe38;
+                labelMaxCharsPerRow38ForTeletext.Text = LanguageSettings.Current.EbuSaveOptions.TeletextCharsShouldBe38;
             }
         }
 

@@ -242,7 +242,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static ContextMenuStrip GetRegExContextMenu(TextBox textBox)
         {
             var cm = new ContextMenuStrip();
-            var l = Configuration.Settings.Language.RegularExpressionContextMenu;
+            var l = LanguageSettings.Current.RegularExpressionContextMenu;
             cm.Items.Add(l.WordBoundary, null, delegate { textBox.SelectedText = "\\b"; });
             cm.Items.Add(l.NonWordBoundary, null, delegate { textBox.SelectedText = "\\B"; });
             cm.Items.Add(l.NewLine, null, delegate { textBox.SelectedText = "\\r\\n"; });
@@ -261,7 +261,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static ContextMenuStrip GetRegExContextMenu(ComboBox comboBox)
         {
             var cm = new ContextMenuStrip();
-            var l = Configuration.Settings.Language.RegularExpressionContextMenu;
+            var l = LanguageSettings.Current.RegularExpressionContextMenu;
             cm.Items.Add(l.WordBoundary, null, delegate { comboBox.SelectedText = "\\b"; });
             cm.Items.Add(l.NonWordBoundary, null, delegate { comboBox.SelectedText = "\\B"; });
             cm.Items.Add(l.NewLine, null, delegate { comboBox.SelectedText = "\\r\\n"; });
@@ -280,7 +280,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static ContextMenuStrip GetReplaceTextContextMenu(TextBox textBox)
         {
             var cm = new ContextMenuStrip();
-            cm.Items.Add(Configuration.Settings.Language.RegularExpressionContextMenu.NewLineShort, null, delegate { textBox.SelectedText = "\\n"; });
+            cm.Items.Add(LanguageSettings.Current.RegularExpressionContextMenu.NewLineShort, null, delegate { textBox.SelectedText = "\\n"; });
             return cm;
         }
 
@@ -391,7 +391,7 @@ namespace Nikse.SubtitleEdit.Logic
                 var findText = RegexUtils.FixNewLine(FindText);
                 if (!RegexUtils.IsValidRegex(findText))
                 {
-                    MessageBox.Show(Configuration.Settings.Language.General.RegularExpressionIsNotValid);
+                    MessageBox.Show(LanguageSettings.Current.General.RegularExpressionIsNotValid);
                     return count;
                 }
                 _regEx = new Regex(findText);

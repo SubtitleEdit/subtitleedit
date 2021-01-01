@@ -18,13 +18,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            buttonNewCharacterDatabase.Text = Configuration.Settings.Language.VobSubOcr.New;
-            buttonEditCharacterDatabase.Text = Configuration.Settings.Language.VobSubOcr.Edit;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            labelImageDatabase.Text = Configuration.Settings.Language.VobSubOcr.ImageDatabase;
-            linkLabelOpenDictionaryFolder.Text = Configuration.Settings.Language.GetDictionaries.OpenDictionariesFolder;
-            Text = Configuration.Settings.Language.VobSubOcr.ImageDatabase;
+            buttonNewCharacterDatabase.Text = LanguageSettings.Current.VobSubOcr.New;
+            buttonEditCharacterDatabase.Text = LanguageSettings.Current.VobSubOcr.Edit;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            labelImageDatabase.Text = LanguageSettings.Current.VobSubOcr.ImageDatabase;
+            linkLabelOpenDictionaryFolder.Text = LanguageSettings.Current.GetDictionaries.OpenDictionariesFolder;
+            Text = LanguageSettings.Current.VobSubOcr.ImageDatabase;
 
             var imageCompareDbName = string.Empty;
             var nOcrDbName = string.Empty;

@@ -67,14 +67,14 @@ https://github.com/SubtitleEdit/subtitleedit
             _format = format;
             _fileName = fileName;
 
-            _l = Configuration.Settings.Language.Statistics;
+            _l = LanguageSettings.Current.Statistics;
             Text = string.IsNullOrEmpty(fileName) ? _l.Title : string.Format(_l.TitleWithFileName, fileName);
             groupBoxGeneral.Text = _l.GeneralStatistics;
             groupBoxMostUsed.Text = _l.MostUsed;
             labelMostUsedWords.Text = _l.MostUsedWords;
             labelMostUsedLines.Text = _l.MostUsedLines;
             buttonExport.Text = _l.Export;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
             UiUtil.FixLargeFonts(this, buttonOK);
 
             CalculateWordStatistics();
@@ -501,7 +501,7 @@ https://github.com/SubtitleEdit/subtitleedit
         private void buttonExport_Click(object sender, EventArgs e)
         {
             string preViewFileName = Path.GetFileNameWithoutExtension(_fileName) + ".Stats";
-            using (var saveDialog = new SaveFileDialog { FileName = preViewFileName, Filter = Configuration.Settings.Language.Main.TextFiles + " (*.txt)|*.txt|NFO files (*.nfo)|*.nfo" })
+            using (var saveDialog = new SaveFileDialog { FileName = preViewFileName, Filter = LanguageSettings.Current.Main.TextFiles + " (*.txt)|*.txt|NFO files (*.nfo)|*.nfo" })
             {
                 if (saveDialog.ShowDialog(this) == DialogResult.OK)
                 {

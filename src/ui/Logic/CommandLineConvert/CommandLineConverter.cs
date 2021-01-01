@@ -114,7 +114,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 _stdOutWriter.WriteLine("- For DOST/image .dost/image output use: '" + BatchConvert.DostImageSubtitle.RemoveChar(' ') + "'");
                 _stdOutWriter.WriteLine("- For BDN/XML .xml/image output use: '" + BatchConvert.BdnXmlSubtitle.RemoveChar(' ') + "'");
                 _stdOutWriter.WriteLine("- For FCP/image .xml/image output use: '" + BatchConvert.FcpImageSubtitle.RemoveChar(' ') + "'");
-                _stdOutWriter.WriteLine("- For plain text only output use: '" + Configuration.Settings.Language.BatchConvert.PlainText.RemoveChar(' ') + "'");
+                _stdOutWriter.WriteLine("- For plain text only output use: '" + LanguageSettings.Current.BatchConvert.PlainText.RemoveChar(' ') + "'");
             }
             else
             {
@@ -504,7 +504,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                                         {
                                                             vobSubOcr.ProgressCallback = progress =>
                                                             {
-                                                                _stdOutWriter?.Write($"\r{Configuration.Settings.Language.BatchConvert.Ocr} : {progress}");
+                                                                _stdOutWriter?.Write($"\r{LanguageSettings.Current.BatchConvert.Ocr} : {progress}");
                                                             };
                                                             vobSubOcr.FileName = Path.GetFileName(fileName);
                                                             vobSubOcr.InitializeBatch(vobSubs, idx.Palette, Configuration.Settings.VobSubOcr, fileName, false, lang, ocrEngine);
@@ -542,7 +542,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                                             {
                                                                 vobSubOcr.ProgressCallback = progress =>
                                                                 {
-                                                                    _stdOutWriter?.Write($"\r{Configuration.Settings.Language.BatchConvert.Ocr} : {progress}");
+                                                                    _stdOutWriter?.Write($"\r{LanguageSettings.Current.BatchConvert.Ocr} : {progress}");
                                                                 };
                                                                 vobSubOcr.FileName = Path.GetFileName(fileName);
                                                                 vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName, false, lang, ocrEngine);
@@ -646,7 +646,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                         {
                                             vobSubOcr.ProgressCallback = progress =>
                                             {
-                                                _stdOutWriter?.Write($"\r{Configuration.Settings.Language.BatchConvert.Ocr} : {progress}");
+                                                _stdOutWriter?.Write($"\r{LanguageSettings.Current.BatchConvert.Ocr} : {progress}");
                                             };
                                             vobSubOcr.FileName = Path.GetFileName(fileName);
                                             vobSubOcr.InitializeBatch(subPicturesWithTimeCodes, fileName, ocrDb, ocrEngine);
@@ -820,7 +820,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 _stdOutWriter?.WriteLine($"Using OCR via {ocrEngine} to extract subtitles");
                 vobSubOcr.ProgressCallback = progress =>
                 {
-                    _stdOutWriter?.Write($"\r{Configuration.Settings.Language.BatchConvert.Ocr} : {progress}");
+                    _stdOutWriter?.Write($"\r{LanguageSettings.Current.BatchConvert.Ocr} : {progress}");
                 };
                 vobSubOcr.FileName = Path.GetFileName(fileName);
                 vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName, forcedOnly, ocrDb, ocrEngine);
@@ -847,7 +847,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 _stdOutWriter?.WriteLine($"Using OCR via {ocrEngine} to extract subtitles");
                 vobSubOcr.ProgressCallback = progress =>
                 {
-                    _stdOutWriter?.Write($"\r{Configuration.Settings.Language.BatchConvert.Ocr} : {progress}");
+                    _stdOutWriter?.Write($"\r{LanguageSettings.Current.BatchConvert.Ocr} : {progress}");
                 };
                 vobSubOcr.InitializeBatch(fileName, Configuration.Settings.VobSubOcr, forcedOnly, ocrEngine, ocrDb);
                 _stdOutWriter?.WriteLine();
@@ -873,7 +873,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 _stdOutWriter?.WriteLine($"Using OCR via {ocrEngine} to extract subtitles");
                 vobSubOcr.ProgressCallback = progress =>
                 {
-                    _stdOutWriter?.Write($"\r{Configuration.Settings.Language.BatchConvert.Ocr} : {progress}");
+                    _stdOutWriter?.Write($"\r{LanguageSettings.Current.BatchConvert.Ocr} : {progress}");
                 };
                 vobSubOcr.InitializeBatch(subtitle, Configuration.Settings.VobSubOcr, GetTargetformat(targetFormat, formats).Name == new Son().Name, language, ocrEngine);
                 _stdOutWriter?.WriteLine();
@@ -1201,7 +1201,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         _stdOutWriter?.WriteLine($"Using OCR via {ocrEngine} to extract subtitles");
                         vobSubOcr.ProgressCallback = progress =>
                         {
-                            _stdOutWriter?.Write($"\r{Configuration.Settings.Language.BatchConvert.Ocr} : {progress}");
+                            _stdOutWriter?.Write($"\r{LanguageSettings.Current.BatchConvert.Ocr} : {progress}");
                         };
                         vobSubOcr.FileName = Path.GetFileName(fileName);
                         vobSubOcr.InitializeBatch(binaryParagraphs, Configuration.Settings.VobSubOcr, fileName, false, null, ocrEngine);
@@ -1394,7 +1394,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 }
                 if (!targetFormatFound)
                 {
-                    if (Configuration.Settings.Language.BatchConvert.PlainText.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
+                    if (LanguageSettings.Current.BatchConvert.PlainText.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
                     {
                         targetFormatFound = true;
                         outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".txt", outputFolder, overwrite);

@@ -47,10 +47,10 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxRemoveIfAllUppercase.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfAllUppercase;
             checkBoxInterjectionOnlySeparateLine.Enabled = checkBoxRemoveInterjections.Checked;
 
-            contextMenuStrip1.Items[0].Text = Configuration.Settings.Language.Main.Menu.ContextMenu.SelectAll;
-            contextMenuStrip1.Items[1].Text = Configuration.Settings.Language.Main.Menu.Edit.InverseSelection;
+            contextMenuStrip1.Items[0].Text = LanguageSettings.Current.Main.Menu.ContextMenu.SelectAll;
+            contextMenuStrip1.Items[1].Text = LanguageSettings.Current.Main.Menu.Edit.InverseSelection;
 
-            _language = Configuration.Settings.Language.RemoveTextFromHearImpaired;
+            _language = LanguageSettings.Current.RemoveTextFromHearImpaired;
             Text = _language.Title;
             groupBoxRemoveTextConditions.Text = _language.RemoveTextConditions;
             labelAnd.Text = _language.And;
@@ -69,14 +69,14 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxInterjectionOnlySeparateLine.Text = _language.OnlyIfInSeparateLine;
             buttonEditInterjections.Text = _language.EditInterjections;
             buttonEditInterjections.Left = checkBoxRemoveInterjections.Left + checkBoxRemoveInterjections.Width;
-            listViewFixes.Columns[0].Text = Configuration.Settings.Language.General.Apply;
-            listViewFixes.Columns[1].Text = Configuration.Settings.Language.General.LineNumber;
-            listViewFixes.Columns[2].Text = Configuration.Settings.Language.General.Before;
-            listViewFixes.Columns[3].Text = Configuration.Settings.Language.General.After;
-            labelText.Text = Configuration.Settings.Language.General.Text;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            buttonApply.Text = Configuration.Settings.Language.General.Apply;
+            listViewFixes.Columns[0].Text = LanguageSettings.Current.General.Apply;
+            listViewFixes.Columns[1].Text = LanguageSettings.Current.General.LineNumber;
+            listViewFixes.Columns[2].Text = LanguageSettings.Current.General.Before;
+            listViewFixes.Columns[3].Text = LanguageSettings.Current.General.After;
+            labelText.Text = LanguageSettings.Current.General.Text;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            buttonApply.Text = LanguageSettings.Current.General.Apply;
             UiUtil.FixLargeFonts(this, buttonOK);
             listViewFixes_SelectedIndexChanged(null, null);
         }
@@ -214,7 +214,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_mainForm != null && fixes > 0)
             {
                 TotalFixes += fixes;
-                _mainForm.ReloadFromSubtitle(new Subtitle(Subtitle), Configuration.Settings.Language.Main.BeforeRemovalOfTextingForHearingImpaired);
+                _mainForm.ReloadFromSubtitle(new Subtitle(Subtitle), LanguageSettings.Current.Main.BeforeRemovalOfTextingForHearingImpaired);
             }
         }
 

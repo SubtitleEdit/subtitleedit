@@ -363,17 +363,17 @@ namespace Nikse.SubtitleEdit.Controls
 
             if (Configuration.Settings != null && Configuration.Settings.Tools.ListViewShowColumnCharsPerSec)
             {
-                ShowCharsSecColumn(Configuration.Settings.Language.General.CharsPerSec);
+                ShowCharsSecColumn(LanguageSettings.Current.General.CharsPerSec);
             }
 
             if (Configuration.Settings != null && Configuration.Settings.Tools.ListViewShowColumnWordsPerMin)
             {
-                ShowWordsMinColumn(Configuration.Settings.Language.General.WordsPerMin);
+                ShowWordsMinColumn(LanguageSettings.Current.General.WordsPerMin);
             }
 
             if (Configuration.Settings != null && Configuration.Settings.Tools.ListViewShowColumnGap)
             {
-                ShowGapColumn(Configuration.Settings.Language.General.Gap);
+                ShowGapColumn(LanguageSettings.Current.General.Gap);
             }
 
             SubtitleListViewLastColumnFill(this, null);

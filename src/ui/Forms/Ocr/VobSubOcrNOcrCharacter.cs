@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             InitializeComponent();
             UiUtil.FixFonts(this);
             UiUtil.FixLargeFonts(this, buttonCancel);
-            checkBoxAutoSubmitOfFirstChar.Text = Configuration.Settings.Language.VobSubOcrCharacter.AutoSubmitOnFirstChar;
+            checkBoxAutoSubmitOfFirstChar.Text = LanguageSettings.Current.VobSubOcrCharacter.AutoSubmitOnFirstChar;
             labelItalicOn.Visible = false;
 
             foreach (ToolStripItem toolStripItem in contextMenuStripLetters.Items)

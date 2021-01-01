@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace Nikse.SubtitleEdit.Core
+namespace Nikse.SubtitleEdit.Logic
 {
     public class Language
     {

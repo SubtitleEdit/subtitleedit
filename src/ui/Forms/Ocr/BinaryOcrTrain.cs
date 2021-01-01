@@ -34,14 +34,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            var language = Configuration.Settings.Language.VobSubOcr;
+            var language = LanguageSettings.Current.VobSubOcr;
             Text = language.OcrTraining;
-            groupBoxInput.Text = Configuration.Settings.Language.BatchConvert.Input;
+            groupBoxInput.Text = LanguageSettings.Current.BatchConvert.Input;
             labelSubtitleForTraining.Text = language.SubtitleTrainingFile;
             labelLetterCombi.Text = language.LetterCombinations;
             groupBoxTrainingOptions.Text = language.TrainingOptions;
-            labelSubtitleFont.Text = Configuration.Settings.Language.Settings.SubtitleFont;
-            labelSubtitleFontSize.Text = Configuration.Settings.Language.Settings.SubtitleFontSize;
+            labelSubtitleFont.Text = LanguageSettings.Current.Settings.SubtitleFont;
+            labelSubtitleFontSize.Text = LanguageSettings.Current.Settings.SubtitleFontSize;
             buttonTrain.Text = language.StartTraining;
             comboBoxSubtitleFontSize.Left = labelSubtitleFontSize.Left + labelSubtitleFontSize.Width + 5;
 
@@ -194,14 +194,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void buttonTrain_Click(object sender, EventArgs e)
         {
-            if (buttonTrain.Text == Configuration.Settings.Language.SpellCheck.Abort)
+            if (buttonTrain.Text == LanguageSettings.Current.SpellCheck.Abort)
             {
                 _abort = true;
                 return;
             }
 
             _abort = false;
-            buttonTrain.Text = Configuration.Settings.Language.SpellCheck.Abort;
+            buttonTrain.Text = LanguageSettings.Current.SpellCheck.Abort;
             buttonOK.Enabled = false;
 
             saveFileDialog1.DefaultExt = ".db";
@@ -211,7 +211,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return;
             }
 
-            buttonTrain.Text = Configuration.Settings.Language.SpellCheck.Abort;
+            buttonTrain.Text = LanguageSettings.Current.SpellCheck.Abort;
             var startFontSize = Convert.ToInt32(comboBoxSubtitleFontSize.Items[comboBoxSubtitleFontSize.SelectedIndex].ToString());
             var endFontSize = Convert.ToInt32(comboBoxFontSizeEnd.Items[comboBoxFontSizeEnd.SelectedIndex].ToString());
 
@@ -262,7 +262,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                         TrainLetter(ref numberOfCharactersLearned, ref numberOfCharactersSkipped, bicDb, s, false, true);
                                     }
                                 }
-                                labelInfo.Text = string.Format(Configuration.Settings.Language.VobSubOcr.NowTraining, numberOfCharactersLearned, _subtitleFontName, numberOfCharactersSkipped);
+                                labelInfo.Text = string.Format(LanguageSettings.Current.VobSubOcr.NowTraining, numberOfCharactersLearned, _subtitleFontName, numberOfCharactersSkipped);
                             }
                         }
 

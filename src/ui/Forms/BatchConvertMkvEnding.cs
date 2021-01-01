@@ -15,28 +15,28 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            radioButton2Letter.Text = Configuration.Settings.Language.BatchConvert.MkvLanguageStyleTwoLetter;
-            radioButton3Letter.Text = Configuration.Settings.Language.BatchConvert.MkvLanguageStyleThreeLetter;
-            radioButtonNone.Text = Configuration.Settings.Language.BatchConvert.MkvLanguageStyleEmpty;
-            labelFileNameEnding.Text = Configuration.Settings.Language.BatchConvert.MkvLanguageInOutputFileName;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            radioButton2Letter.Text = LanguageSettings.Current.BatchConvert.MkvLanguageStyleTwoLetter;
+            radioButton3Letter.Text = LanguageSettings.Current.BatchConvert.MkvLanguageStyleThreeLetter;
+            radioButtonNone.Text = LanguageSettings.Current.BatchConvert.MkvLanguageStyleEmpty;
+            labelFileNameEnding.Text = LanguageSettings.Current.BatchConvert.MkvLanguageInOutputFileName;
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
         private void SetMkvLanguageTitle()
         {
-            var styleName = Configuration.Settings.Language.BatchConvert.MkvLanguageStyleThreeLetter;
+            var styleName = LanguageSettings.Current.BatchConvert.MkvLanguageStyleThreeLetter;
             if (radioButton2Letter.Checked)
             {
-                styleName = Configuration.Settings.Language.BatchConvert.MkvLanguageStyleTwoLetter;
+                styleName = LanguageSettings.Current.BatchConvert.MkvLanguageStyleTwoLetter;
             }
             else if (radioButtonNone.Checked)
             {
-                styleName = Configuration.Settings.Language.BatchConvert.MkvLanguageStyleEmpty;
+                styleName = LanguageSettings.Current.BatchConvert.MkvLanguageStyleEmpty;
             }
 
-            Text = string.Format(Configuration.Settings.Language.BatchConvert.MkvLanguageInOutputFileNameX, styleName);
+            Text = string.Format(LanguageSettings.Current.BatchConvert.MkvLanguageInOutputFileNameX, styleName);
         }
 
 
@@ -62,17 +62,17 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (radioButton2Letter.Checked)
             {
-                labelFileNameExample.Text = string.Format(Configuration.Settings.Language.General.ExampleX, "Video.en.srt");
+                labelFileNameExample.Text = string.Format(LanguageSettings.Current.General.ExampleX, "Video.en.srt");
                 LanguageCodeStyle = "2";
             }
             else if (radioButtonNone.Checked)
             {
-                labelFileNameExample.Text = string.Format(Configuration.Settings.Language.General.ExampleX, "Video.srt");
+                labelFileNameExample.Text = string.Format(LanguageSettings.Current.General.ExampleX, "Video.srt");
                 LanguageCodeStyle = "0";
             }
             else
             {
-                labelFileNameExample.Text = string.Format(Configuration.Settings.Language.General.ExampleX, "Video.eng.srt");
+                labelFileNameExample.Text = string.Format(LanguageSettings.Current.General.ExampleX, "Video.eng.srt");
                 LanguageCodeStyle = "3";
             }
 

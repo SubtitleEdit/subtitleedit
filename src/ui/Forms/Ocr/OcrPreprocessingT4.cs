@@ -34,10 +34,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             numericUpDownThreshold.Value = PreprocessingSettings.BinaryImageCompareThreshold;
 
-            Text = Configuration.Settings.Language.OcrPreprocessing.Title;
-            groupBoxBinaryImageCompareThreshold.Text = Configuration.Settings.Language.OcrPreprocessing.BinaryThreshold;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            Text = LanguageSettings.Current.OcrPreprocessing.Title;
+            groupBoxBinaryImageCompareThreshold.Text = LanguageSettings.Current.OcrPreprocessing.BinaryThreshold;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
             RefreshImage();
             UiUtil.FixLargeFonts(this, buttonOK);

@@ -22,11 +22,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _factor = factor;
             numericUpDownItalicFactor.Value = (decimal)factor;
 
-            Text = Configuration.Settings.Language.VobSubOcrSetItalicAngle.Title;
-            labelDescription.Text = Configuration.Settings.Language.VobSubOcrSetItalicAngle.Description;
-            saveImageAsToolStripMenuItem.Text = Configuration.Settings.Language.VobSubOcr.SaveSubtitleImageAs;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            Text = LanguageSettings.Current.VobSubOcrSetItalicAngle.Title;
+            labelDescription.Text = LanguageSettings.Current.VobSubOcrSetItalicAngle.Description;
+            saveImageAsToolStripMenuItem.Text = LanguageSettings.Current.VobSubOcr.SaveSubtitleImageAs;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
         }
 
         private void numericUpDownItalicFactor_ValueChanged(object sender, EventArgs e)
@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void saveImageAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            saveFileDialog1.Title = Configuration.Settings.Language.VobSubOcr.SaveSubtitleImageAs;
+            saveFileDialog1.Title = LanguageSettings.Current.VobSubOcr.SaveSubtitleImageAs;
             saveFileDialog1.AddExtension = true;
             saveFileDialog1.FileName = "ImageUnItalic";
             saveFileDialog1.Filter = "PNG image|*.png|BMP image|*.bmp|GIF image|*.gif|TIFF image|*.tiff";

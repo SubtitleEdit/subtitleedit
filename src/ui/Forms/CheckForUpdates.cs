@@ -26,14 +26,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void InitLanguage()
         {
-            Text = Configuration.Settings.Language.CheckForUpdates.Title;
-            labelStatus.Text = Configuration.Settings.Language.CheckForUpdates.CheckingForUpdates;
-            buttonDownloadAndInstall.Text = Configuration.Settings.Language.CheckForUpdates.InstallUpdate;
+            Text = LanguageSettings.Current.CheckForUpdates.Title;
+            labelStatus.Text = LanguageSettings.Current.CheckForUpdates.CheckingForUpdates;
+            buttonDownloadAndInstall.Text = LanguageSettings.Current.CheckForUpdates.InstallUpdate;
             buttonDownloadAndInstall.Visible = false;
             textBoxChangeLog.Visible = false;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonOK.Visible = false;
-            buttonDontCheckUpdates.Text = Configuration.Settings.Language.CheckForUpdates.NoUpdates;
+            buttonDontCheckUpdates.Text = LanguageSettings.Current.CheckForUpdates.NoUpdates;
             buttonDontCheckUpdates.Visible = false;
 
             Location = new System.Drawing.Point(_mainForm.Location.X + (_mainForm.Width / 2) - (Width / 2), _mainForm.Location.Y + (_mainForm.Height / 2) - (Height / 2) - 200);
@@ -84,13 +84,13 @@ namespace Nikse.SubtitleEdit.Forms
             if (_seconds > 10)
             {
                 timerCheckForUpdates.Stop();
-                labelStatus.Text = string.Format(Configuration.Settings.Language.CheckForUpdates.CheckingForUpdatesFailedX, "Time out");
+                labelStatus.Text = string.Format(LanguageSettings.Current.CheckForUpdates.CheckingForUpdatesFailedX, "Time out");
                 buttonOK.Visible = true;
             }
             else if (_updatesHelper.Error != null)
             {
                 timerCheckForUpdates.Stop();
-                labelStatus.Text = string.Format(Configuration.Settings.Language.CheckForUpdates.CheckingForUpdatesFailedX, _updatesHelper.Error);
+                labelStatus.Text = string.Format(LanguageSettings.Current.CheckForUpdates.CheckingForUpdatesFailedX, _updatesHelper.Error);
                 buttonOK.Visible = true;
             }
             else if (_updatesHelper.Done)
@@ -102,7 +102,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    labelStatus.Text = Configuration.Settings.Language.CheckForUpdates.CheckingForUpdatesNoneAvailable;
+                    labelStatus.Text = LanguageSettings.Current.CheckForUpdates.CheckingForUpdatesNoneAvailable;
                     SetLargeSize();
                     textBoxChangeLog.Text = _updatesHelper.LatestChangeLog;
                     textBoxChangeLog.Visible = true;
@@ -132,7 +132,7 @@ namespace Nikse.SubtitleEdit.Forms
             SetLargeSize();
             textBoxChangeLog.Text = _updatesHelper.LatestChangeLog;
             textBoxChangeLog.Visible = true;
-            labelStatus.Text = Configuration.Settings.Language.CheckForUpdates.CheckingForUpdatesNewVersion;
+            labelStatus.Text = LanguageSettings.Current.CheckForUpdates.CheckingForUpdatesNewVersion;
             buttonDownloadAndInstall.Visible = true;
             buttonOK.Visible = true;
             if (Configuration.Settings.General.CheckForUpdates && fromAutoCheck)

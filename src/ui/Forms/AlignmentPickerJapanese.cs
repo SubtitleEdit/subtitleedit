@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            Text = Configuration.Settings.Language.SubStationAlphaStyles.Alignment;
+            Text = LanguageSettings.Current.SubStationAlphaStyles.Alignment;
             UiUtil.FixLargeFonts(this, button2);
             _text = text;
         }

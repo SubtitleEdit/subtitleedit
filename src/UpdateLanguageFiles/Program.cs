@@ -42,7 +42,7 @@ namespace UpdateLanguageFiles
             {
                 var noOfChanges = 0;
 
-                var language = new Nikse.SubtitleEdit.Core.Language { General = { Version = FindVersionNumber() } };
+                var language = new Nikse.SubtitleEdit.Logic.Language { General = { Version = FindVersionNumber() } };
                 var languageAsXml = language.GetCurrentLanguageAsXml();
                 var oldLanguageAsXml = string.Empty;
                 if (File.Exists(args[0]))
@@ -108,7 +108,7 @@ namespace UpdateLanguageFiles
             File.WriteAllText(fileName, content, Encoding.UTF8);
         }
 
-        private static void SaveWithRetry(string fileName, Nikse.SubtitleEdit.Core.Language language)
+        private static void SaveWithRetry(string fileName, Nikse.SubtitleEdit.Logic.Language language)
         {
             for (var i = 0; i < 10; i++)
             {

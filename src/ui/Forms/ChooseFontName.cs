@@ -19,14 +19,14 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            Text = Configuration.Settings.Language.Main.Menu.ContextMenu.FontName;
-            labelShortcutsSearch.Text = Configuration.Settings.Language.General.Search;
-            buttonSearchClear.Text = Configuration.Settings.Language.DvdSubRip.Clear;
+            Text = LanguageSettings.Current.Main.Menu.ContextMenu.FontName;
+            labelShortcutsSearch.Text = LanguageSettings.Current.General.Search;
+            buttonSearchClear.Text = LanguageSettings.Current.DvdSubRip.Clear;
             textBoxSearch.Left = labelShortcutsSearch.Left + labelShortcutsSearch.Width + 5;
             buttonSearchClear.Left = textBoxSearch.Left + textBoxSearch.Width + 5;
-            groupBoxPreview.Text = Configuration.Settings.Language.General.Preview;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            groupBoxPreview.Text = LanguageSettings.Current.General.Preview;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
 
             buttonOK.Enabled = false;

@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            var l = Configuration.Settings.Language.Split;
+            var l = LanguageSettings.Current.Split;
             Text = l.Title;
             groupBoxSplitOptions.Text = l.SplitOptions;
             RadioButtonLines.Text = l.Lines;
@@ -34,10 +34,10 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxOutput.Text = l.Output;
             labelFileName.Text = l.FileName;
             labelChooseOutputFolder.Text = l.OutputFolder;
-            labelOutputFormat.Text = Configuration.Settings.Language.Main.Controls.SubtitleFormat;
-            labelEncoding.Text = Configuration.Settings.Language.Main.Controls.FileEncoding;
-            groupBoxPreview.Text = Configuration.Settings.Language.General.Preview;
-            buttonOpenOutputFolder.Text = Configuration.Settings.Language.Main.Menu.File.Open;
+            labelOutputFormat.Text = LanguageSettings.Current.Main.Controls.SubtitleFormat;
+            labelEncoding.Text = LanguageSettings.Current.Main.Controls.FileEncoding;
+            groupBoxPreview.Text = LanguageSettings.Current.General.Preview;
+            buttonOpenOutputFolder.Text = LanguageSettings.Current.Main.Menu.File.Open;
 
             listViewParts.Columns[0].Text = l.Lines;
             listViewParts.Columns[1].Text = l.Characters;
@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             buttonSplit.Text = l.DoSplit;
             buttonBasic.Text = l.Basic;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
             comboBoxSubtitleFormats.Left = labelOutputFormat.Left + labelOutputFormat.Width + 3;
             comboBoxEncoding.Left = labelEncoding.Left + labelEncoding.Width + 3;
@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle = subtitle;
             if (string.IsNullOrEmpty(fileName))
             {
-                textBoxFileName.Text = Configuration.Settings.Language.SplitSubtitle.Untitled;
+                textBoxFileName.Text = LanguageSettings.Current.SplitSubtitle.Untitled;
             }
             else
             {
@@ -72,8 +72,8 @@ namespace Nikse.SubtitleEdit.Forms
                 _totalNumberOfCharacters += HtmlUtil.RemoveHtmlTags(p.Text, true).Length;
             }
 
-            labelLines.Text = string.Format(Configuration.Settings.Language.Split.NumberOfLinesX, _subtitle.Paragraphs.Count);
-            labelCharacters.Text = string.Format(Configuration.Settings.Language.Split.NumberOfCharactersX, _totalNumberOfCharacters);
+            labelLines.Text = string.Format(LanguageSettings.Current.Split.NumberOfLinesX, _subtitle.Paragraphs.Count);
+            labelCharacters.Text = string.Format(LanguageSettings.Current.Split.NumberOfCharactersX, _totalNumberOfCharacters);
 
             try
             {
@@ -134,7 +134,7 @@ namespace Nikse.SubtitleEdit.Forms
             string fileNameNoExt = Path.GetFileNameWithoutExtension(textBoxFileName.Text);
             if (string.IsNullOrWhiteSpace(fileNameNoExt))
             {
-                fileNameNoExt = Configuration.Settings.Language.SplitSubtitle.Untitled;
+                fileNameNoExt = LanguageSettings.Current.SplitSubtitle.Untitled;
             }
 
             if (numericUpDownParts.Value == 0)
@@ -222,7 +222,7 @@ namespace Nikse.SubtitleEdit.Forms
             string fileNameNoExt = Path.GetFileNameWithoutExtension(textBoxFileName.Text);
             if (string.IsNullOrWhiteSpace(fileNameNoExt))
             {
-                fileNameNoExt = Configuration.Settings.Language.SplitSubtitle.Untitled;
+                fileNameNoExt = LanguageSettings.Current.SplitSubtitle.Untitled;
             }
 
             int number = 1;
@@ -234,7 +234,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string allText = sub.ToText(format);
                     if (File.Exists(fileName) && !overwrite)
                     {
-                        if (MessageBox.Show(Configuration.Settings.Language.SplitSubtitle.OverwriteExistingFiles, "", MessageBoxButtons.YesNo) == DialogResult.No)
+                        if (MessageBox.Show(LanguageSettings.Current.SplitSubtitle.OverwriteExistingFiles, "", MessageBoxButtons.YesNo) == DialogResult.No)
                         {
                             return;
                         }
@@ -345,7 +345,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                MessageBox.Show(string.Format(Configuration.Settings.Language.SplitSubtitle.FolderNotFoundX, textBoxOutputFolder.Text));
+                MessageBox.Show(string.Format(LanguageSettings.Current.SplitSubtitle.FolderNotFoundX, textBoxOutputFolder.Text));
             }
         }
 

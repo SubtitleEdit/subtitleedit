@@ -35,20 +35,20 @@ namespace Nikse.SubtitleEdit.Forms
 
             _videoFileName = videoFileName;
 
-            Text = Configuration.Settings.Language.ImportSceneChanges.Title;
-            groupBoxGenerateSceneChanges.Text = Configuration.Settings.Language.ImportSceneChanges.Generate;
-            buttonOpenText.Text = Configuration.Settings.Language.ImportSceneChanges.OpenTextFile;
-            groupBoxImportText.Text = Configuration.Settings.Language.ImportSceneChanges.Import;
-            radioButtonFrames.Text = Configuration.Settings.Language.ImportSceneChanges.Frames;
-            radioButtonSeconds.Text = Configuration.Settings.Language.ImportSceneChanges.Seconds;
-            radioButtonMilliseconds.Text = Configuration.Settings.Language.ImportSceneChanges.Milliseconds;
-            groupBoxTimeCodes.Text = Configuration.Settings.Language.ImportSceneChanges.TimeCodes;
-            buttonDownloadFfmpeg.Text = Configuration.Settings.Language.Settings.DownloadFFmpeg;
-            buttonImportWithFfmpeg.Text = Configuration.Settings.Language.ImportSceneChanges.GetSceneChangesWithFfmpeg;
-            labelFfmpegThreshold.Text = Configuration.Settings.Language.ImportSceneChanges.Sensitivity;
-            labelThresholdDescription.Text = Configuration.Settings.Language.ImportSceneChanges.SensitivityDescription;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            Text = LanguageSettings.Current.ImportSceneChanges.Title;
+            groupBoxGenerateSceneChanges.Text = LanguageSettings.Current.ImportSceneChanges.Generate;
+            buttonOpenText.Text = LanguageSettings.Current.ImportSceneChanges.OpenTextFile;
+            groupBoxImportText.Text = LanguageSettings.Current.ImportSceneChanges.Import;
+            radioButtonFrames.Text = LanguageSettings.Current.ImportSceneChanges.Frames;
+            radioButtonSeconds.Text = LanguageSettings.Current.ImportSceneChanges.Seconds;
+            radioButtonMilliseconds.Text = LanguageSettings.Current.ImportSceneChanges.Milliseconds;
+            groupBoxTimeCodes.Text = LanguageSettings.Current.ImportSceneChanges.TimeCodes;
+            buttonDownloadFfmpeg.Text = LanguageSettings.Current.Settings.DownloadFFmpeg;
+            buttonImportWithFfmpeg.Text = LanguageSettings.Current.ImportSceneChanges.GetSceneChangesWithFfmpeg;
+            labelFfmpegThreshold.Text = LanguageSettings.Current.ImportSceneChanges.Sensitivity;
+            labelThresholdDescription.Text = LanguageSettings.Current.ImportSceneChanges.SensitivityDescription;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
             buttonImportWithFfmpeg.Enabled = !string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) && File.Exists(Configuration.Settings.General.FFmpegLocation);
             numericUpDownThreshold.Enabled = !string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) && File.Exists(Configuration.Settings.General.FFmpegLocation);
@@ -79,11 +79,11 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonOpenText_Click(object sender, EventArgs e)
         {
             openFileDialog1.Title = buttonOpenText.Text;
-            openFileDialog1.Filter = Configuration.Settings.Language.ImportText.TextFiles + "|*.txt;*.scenechanges;*.xml;*.json" +
+            openFileDialog1.Filter = LanguageSettings.Current.ImportText.TextFiles + "|*.txt;*.scenechanges;*.xml;*.json" +
                                      "|Matroska xml chapter file|*.xml" +
                                      "|EZTitles shotchanges XML file|*.xml" +
                                      "|JSON scene changes file|*.json" +
-                                     "|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
+                                     "|" + LanguageSettings.Current.General.AllFiles + "|*.*";
             openFileDialog1.FileName = string.Empty;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -283,7 +283,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                MessageBox.Show(Configuration.Settings.Language.ImportSceneChanges.NoSceneChangesFound);
+                MessageBox.Show(LanguageSettings.Current.ImportSceneChanges.NoSceneChangesFound);
             }
         }
 

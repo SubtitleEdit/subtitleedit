@@ -1085,8 +1085,12 @@
     <Compile Include="Logic\CommandLineConvert\TsToBdnXml.cs" />
     <Compile Include="Logic\CommandLineConvert\TsConvert.cs" />
     <Compile Include="Logic\CommandLineConvert\TsToBluRaySup.cs" />
+    <Compile Include="Logic\CurrentLanguage.cs" />
     <Compile Include="Logic\DarkTheme.cs" />
     <Compile Include="Logic\FindReplaceDialogHelper.cs" />
+    <Compile Include="Logic\Language.cs" />
+    <Compile Include="Logic\LanguageDeserializer.cs" />
+    <Compile Include="Logic\LanguageStructure.cs" />
     <Compile Include="Logic\Networking\SeNetworkService.cs" />
     <Compile Include="Logic\SceneChangesGenerator.cs" />
     <Compile Include="Logic\ListViewSorter.cs" />

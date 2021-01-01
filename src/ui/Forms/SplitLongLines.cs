@@ -41,24 +41,24 @@ namespace Nikse.SubtitleEdit.Forms
                 subtitle.Renumber(subtitle.Paragraphs[0].Number);
             }
 
-            Text = Configuration.Settings.Language.SplitLongLines.Title;
-            labelSingleLineMaxLength.Text = Configuration.Settings.Language.SplitLongLines.SingleLineMaximumLength;
-            labelLineMaxLength.Text = Configuration.Settings.Language.SplitLongLines.LineMaximumLength;
-            labelLineContinuationBeginEnd.Text = Configuration.Settings.Language.SplitLongLines.LineContinuationBeginEndStrings;
+            Text = LanguageSettings.Current.SplitLongLines.Title;
+            labelSingleLineMaxLength.Text = LanguageSettings.Current.SplitLongLines.SingleLineMaximumLength;
+            labelLineMaxLength.Text = LanguageSettings.Current.SplitLongLines.LineMaximumLength;
+            labelLineContinuationBeginEnd.Text = LanguageSettings.Current.SplitLongLines.LineContinuationBeginEndStrings;
 
-            listViewFixes.Columns[0].Text = Configuration.Settings.Language.General.Apply;
-            listViewFixes.Columns[1].Text = Configuration.Settings.Language.General.LineNumber;
-            listViewFixes.Columns[2].Text = Configuration.Settings.Language.General.Text;
+            listViewFixes.Columns[0].Text = LanguageSettings.Current.General.Apply;
+            listViewFixes.Columns[1].Text = LanguageSettings.Current.General.LineNumber;
+            listViewFixes.Columns[2].Text = LanguageSettings.Current.General.Text;
 
             var continuationProfile = ContinuationUtilities.GetContinuationProfile(Configuration.Settings.General.ContinuationStyle);
             comboBoxLineContinuationBegin.Text = continuationProfile.Prefix;
             comboBoxLineContinuationEnd.Text = continuationProfile.Suffix;
 
-            toolStripMenuItemInverseSelection.Text = Configuration.Settings.Language.Main.Menu.Edit.InverseSelection;
-            toolStripMenuItemSelectAll.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.SelectAll;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            SubtitleListview1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
+            toolStripMenuItemInverseSelection.Text = LanguageSettings.Current.Main.Menu.Edit.InverseSelection;
+            toolStripMenuItemSelectAll.Text = LanguageSettings.Current.Main.Menu.ContextMenu.SelectAll;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            SubtitleListview1.InitializeLanguage(LanguageSettings.Current.General, Configuration.Settings);
             UiUtil.InitializeSubtitleFont(SubtitleListview1);
             SubtitleListview1.AutoSizeAllColumns(this);
             NumberOfSplits = 0;
@@ -108,7 +108,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             SubtitleListview1.EndUpdate();
-            groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.SplitLongLines.NumberOfSplits, NumberOfSplits);
+            groupBoxLinesFound.Text = string.Format(LanguageSettings.Current.SplitLongLines.NumberOfSplits, NumberOfSplits);
             UpdateLongestLinesInfo(SplitSubtitle);
         }
 
@@ -138,9 +138,9 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 i++;
             }
-            labelMaxSingleLineLengthIs.Text = string.Format(Configuration.Settings.Language.SplitLongLines.LongestSingleLineIsXAtY, singleLineMaxLength, singleLineMaxLengthIndex + 1);
+            labelMaxSingleLineLengthIs.Text = string.Format(LanguageSettings.Current.SplitLongLines.LongestSingleLineIsXAtY, singleLineMaxLength, singleLineMaxLengthIndex + 1);
             labelMaxSingleLineLengthIs.Tag = singleLineMaxLengthIndex.ToString(CultureInfo.InvariantCulture);
-            labelMaxLineLengthIs.Text = string.Format(Configuration.Settings.Language.SplitLongLines.LongestLineIsXAtY, maxLength, maxLengthIndex + 1);
+            labelMaxLineLengthIs.Text = string.Format(LanguageSettings.Current.SplitLongLines.LongestLineIsXAtY, maxLength, maxLengthIndex + 1);
             labelMaxLineLengthIs.Tag = maxLengthIndex.ToString(CultureInfo.InvariantCulture);
         }
 

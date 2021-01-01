@@ -12,9 +12,9 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            Text = p?.Bookmark == null ? Configuration.Settings.Language.Bookmarks.AddBookmark : Configuration.Settings.Language.Bookmarks.EditBookmark;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
+            Text = p?.Bookmark == null ? LanguageSettings.Current.Bookmarks.AddBookmark : LanguageSettings.Current.Bookmarks.EditBookmark;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
             textBoxBookmarkComment.Text = p?.Bookmark;
         }
 

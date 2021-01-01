@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            Text = Configuration.Settings.Language.ColorChooser.Title;
+            Text = LanguageSettings.Current.ColorChooser.Title;
             if (!showBlack)
             {
                 buttonBlack.Visible = false;

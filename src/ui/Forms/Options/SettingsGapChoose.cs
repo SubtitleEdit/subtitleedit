@@ -29,11 +29,11 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             numericUpDownFrames.Value = 2;
 
-            Text = Configuration.Settings.Language.Settings.MinimumGapMilliseconds;
-            labelFrameRate.Text = Configuration.Settings.Language.General.FrameRate;
-            labelFrames.Text = Configuration.Settings.Language.Settings.MinFrameGap;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            Text = LanguageSettings.Current.Settings.MinimumGapMilliseconds;
+            labelFrameRate.Text = LanguageSettings.Current.General.FrameRate;
+            labelFrames.Text = LanguageSettings.Current.Settings.MinFrameGap;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
 
             labelUseCalc.Font = new System.Drawing.Font(labelCalcInfo.Font.Name, labelCalcInfo.Font.Size, System.Drawing.FontStyle.Bold);
@@ -44,8 +44,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
         {
             var frameRate = GetFrameRate();
             MinGapMs = (int)Math.Round(1000.0 / frameRate * (double)numericUpDownFrames.Value);
-            labelCalcInfo.Text = string.Format(Configuration.Settings.Language.Settings.XFramesAtYFrameRateGivesZMs, numericUpDownFrames.Value, frameRate, MinGapMs);
-            labelUseCalc.Text = string.Format(Configuration.Settings.Language.Settings.UseXAsNewGap, MinGapMs);
+            labelCalcInfo.Text = string.Format(LanguageSettings.Current.Settings.XFramesAtYFrameRateGivesZMs, numericUpDownFrames.Value, frameRate, MinGapMs);
+            labelUseCalc.Text = string.Format(LanguageSettings.Current.Settings.UseXAsNewGap, MinGapMs);
         }
 
         private double GetFrameRate()

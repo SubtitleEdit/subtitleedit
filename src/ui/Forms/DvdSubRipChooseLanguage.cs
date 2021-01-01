@@ -40,12 +40,12 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            Text = Configuration.Settings.Language.DvdSubRipChooseLanguage.Title;
-            labelChooseLanguage.Text = Configuration.Settings.Language.DvdSubRipChooseLanguage.ChooseLanguageStreamId;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            buttonSaveAs.Text = Configuration.Settings.Language.Main.Menu.File.SaveAs;
-            groupBoxImage.Text = Configuration.Settings.Language.DvdSubRipChooseLanguage.SubtitleImage;
+            Text = LanguageSettings.Current.DvdSubRipChooseLanguage.Title;
+            labelChooseLanguage.Text = LanguageSettings.Current.DvdSubRipChooseLanguage.ChooseLanguageStreamId;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            buttonSaveAs.Text = LanguageSettings.Current.Main.Menu.File.SaveAs;
+            groupBoxImage.Text = LanguageSettings.Current.DvdSubRipChooseLanguage.SubtitleImage;
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
@@ -81,7 +81,7 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (var existingLanguageId in uniqueLanguageStreamIds) // subtitle tracks not supplied from IFO
             {
                 // Use U+200E (LEFT-TO-RIGHT MARK) to support right-to-left scripts
-                comboBoxLanguages.Items.Add(string.Format("{0} \x200E(0x{1:x})", Configuration.Settings.Language.DvdSubRipChooseLanguage.UnknownLanguage, existingLanguageId));
+                comboBoxLanguages.Items.Add(string.Format("{0} \x200E(0x{1:x})", LanguageSettings.Current.DvdSubRipChooseLanguage.UnknownLanguage, existingLanguageId));
             }
 
             if (comboBoxLanguages.Items.Count > 0 && comboBoxLanguages.SelectedIndex < 0)
@@ -121,7 +121,7 @@ namespace Nikse.SubtitleEdit.Forms
                 bmp = temp;
             }
             pictureBoxImage.Image = bmp;
-            groupBoxImage.Text = string.Format(Configuration.Settings.Language.DvdSubRipChooseLanguage.SubtitleImageXofYAndWidthXHeight, listBox1.SelectedIndex + 1, listBox1.Items.Count, bmp.Width, bmp.Height);
+            groupBoxImage.Text = string.Format(LanguageSettings.Current.DvdSubRipChooseLanguage.SubtitleImageXofYAndWidthXHeight, listBox1.SelectedIndex + 1, listBox1.Items.Count, bmp.Width, bmp.Height);
         }
 
         private static int GetLanguageIdFromString(string currentLanguage)

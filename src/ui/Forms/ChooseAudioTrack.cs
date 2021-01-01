@@ -27,8 +27,8 @@ namespace Nikse.SubtitleEdit.Forms
                 listBoxTracks.SelectedIndex = 0;
             }
 
-            Text = Configuration.Settings.Language.ChooseAudioTrack.Title;
-            labelDescr.Text = Configuration.Settings.Language.ChooseAudioTrack.Title;
+            Text = LanguageSettings.Current.ChooseAudioTrack.Title;
+            labelDescr.Text = LanguageSettings.Current.ChooseAudioTrack.Title;
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 

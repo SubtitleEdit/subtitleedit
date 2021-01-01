@@ -6,6 +6,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms.Styles
 {
@@ -31,12 +32,12 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 listViewExportStyles.Items.Add(new ListViewItem(style) { Checked = true });
             }
 
-            Text = Configuration.Settings.Language.SubStationAlphaStyles.Export;
-            labelStyles.Text = Configuration.Settings.Language.SubStationAlphaStyles.Styles;
-            toolStripMenuItemInverseSelection.Text = Configuration.Settings.Language.Main.Menu.Edit.InverseSelection;
-            toolStripMenuItemSelectAll.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.SelectAll;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            Text = LanguageSettings.Current.SubStationAlphaStyles.Export;
+            labelStyles.Text = LanguageSettings.Current.SubStationAlphaStyles.Styles;
+            toolStripMenuItemInverseSelection.Text = LanguageSettings.Current.Main.Menu.Edit.InverseSelection;
+            toolStripMenuItemSelectAll.Text = LanguageSettings.Current.Main.Menu.ContextMenu.SelectAll;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
@@ -54,16 +55,16 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 return;
             }
 
-            saveFileDialogStyle.Title = Configuration.Settings.Language.SubStationAlphaStyles.ExportStyleToFile;
+            saveFileDialogStyle.Title = LanguageSettings.Current.SubStationAlphaStyles.ExportStyleToFile;
             saveFileDialogStyle.InitialDirectory = Configuration.DataDirectory;
             if (_isSubStationAlpha)
             {
-                saveFileDialogStyle.Filter = SubStationAlpha.NameOfFormat + "|*.ssa|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
+                saveFileDialogStyle.Filter = SubStationAlpha.NameOfFormat + "|*.ssa|" + LanguageSettings.Current.General.AllFiles + "|*.*";
                 saveFileDialogStyle.FileName = "my_styles.ssa";
             }
             else
             {
-                saveFileDialogStyle.Filter = AdvancedSubStationAlpha.NameOfFormat + "|*.ass|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
+                saveFileDialogStyle.Filter = AdvancedSubStationAlpha.NameOfFormat + "|*.ass|" + LanguageSettings.Current.General.AllFiles + "|*.*";
                 saveFileDialogStyle.FileName = "my_styles.ass";
             }
 
@@ -131,7 +132,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
                                 if (stylesOn && toLower.StartsWith("style:" + styleName.Trim() + ",", StringComparison.OrdinalIgnoreCase))
                                 {
-                                    MessageBox.Show(string.Format(Configuration.Settings.Language.SubStationAlphaStyles.StyleAlreadyExits, styleName));
+                                    MessageBox.Show(string.Format(LanguageSettings.Current.SubStationAlphaStyles.StyleAlreadyExits, styleName));
                                     return;
                                 }
                             }

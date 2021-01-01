@@ -18,16 +18,16 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            Text = Configuration.Settings.Language.SeekSilence.Title;
-            groupBoxSearchDirection.Text = Configuration.Settings.Language.SeekSilence.SearchDirection;
-            radioButtonForward.Text = Configuration.Settings.Language.SeekSilence.Forward;
-            radioButtonBack.Text = Configuration.Settings.Language.SeekSilence.Back;
-            labelDuration.Text = Configuration.Settings.Language.SeekSilence.LengthInSeconds;
-            labelVolumeBelow.Text = Configuration.Settings.Language.SeekSilence.MaxVolume;
+            Text = LanguageSettings.Current.SeekSilence.Title;
+            groupBoxSearchDirection.Text = LanguageSettings.Current.SeekSilence.SearchDirection;
+            radioButtonForward.Text = LanguageSettings.Current.SeekSilence.Forward;
+            radioButtonBack.Text = LanguageSettings.Current.SeekSilence.Back;
+            labelDuration.Text = LanguageSettings.Current.SeekSilence.LengthInSeconds;
+            labelVolumeBelow.Text = LanguageSettings.Current.SeekSilence.MaxVolume;
             numericUpDownSeconds.Value = (decimal)Configuration.Settings.VideoControls.WaveformSeeksSilenceDurationSeconds;
             numericUpDownVolume.Value = (decimal)Configuration.Settings.VideoControls.WaveformSeeksSilenceMaxVolume;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 

@@ -29,13 +29,13 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            Text = Configuration.Settings.Language.GetDictionaries.Title;
-            labelDescription1.Text = Configuration.Settings.Language.GetDictionaries.DescriptionLine1;
-            labelDescription2.Text = Configuration.Settings.Language.GetDictionaries.DescriptionLine2;
-            linkLabelOpenDictionaryFolder.Text = Configuration.Settings.Language.GetDictionaries.OpenDictionariesFolder;
-            labelChooseLanguageAndClickDownload.Text = Configuration.Settings.Language.GetDictionaries.ChooseLanguageAndClickDownload;
-            buttonDownload.Text = Configuration.Settings.Language.GetDictionaries.Download;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
+            Text = LanguageSettings.Current.GetDictionaries.Title;
+            labelDescription1.Text = LanguageSettings.Current.GetDictionaries.DescriptionLine1;
+            labelDescription2.Text = LanguageSettings.Current.GetDictionaries.DescriptionLine2;
+            linkLabelOpenDictionaryFolder.Text = LanguageSettings.Current.GetDictionaries.OpenDictionariesFolder;
+            labelChooseLanguageAndClickDownload.Text = LanguageSettings.Current.GetDictionaries.ChooseLanguageAndClickDownload;
+            buttonDownload.Text = LanguageSettings.Current.GetDictionaries.Download;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
             labelPleaseWait.Text = string.Empty;
 
             LoadDictionaryList("Nikse.SubtitleEdit.Resources.HunspellDictionaries.xml.gz");
@@ -134,7 +134,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
-                labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait;
+                labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
                 buttonOK.Enabled = false;
                 buttonDownload.Enabled = false;
                 buttonDownloadAll.Enabled = false;
@@ -151,7 +151,7 @@ namespace Nikse.SubtitleEdit.Forms
                 wc.DownloadDataCompleted += wc_DownloadDataCompleted;
                 wc.DownloadProgressChanged += (o, args) =>
                 {
-                    labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait + "  " + args.ProgressPercentage + "%";
+                    labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + args.ProgressPercentage + "%";
                 };
                 wc.DownloadDataAsync(new Uri(url));
             }
@@ -186,7 +186,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (e.Error != null)
             {
-                MessageBox.Show(Configuration.Settings.Language.GetTesseractDictionaries.DownloadFailed + Environment.NewLine +
+                MessageBox.Show(LanguageSettings.Current.GetTesseractDictionaries.DownloadFailed + Environment.NewLine +
                                 Environment.NewLine +
                                 e.Error.Message);
                 DialogResult = DialogResult.Cancel;
@@ -238,7 +238,7 @@ namespace Nikse.SubtitleEdit.Forms
                 DownloadNext();
                 return;
             }
-            MessageBox.Show(string.Format(Configuration.Settings.Language.GetDictionaries.XDownloaded, comboBoxDictionaries.Items[index]));
+            MessageBox.Show(string.Format(LanguageSettings.Current.GetDictionaries.XDownloaded, comboBoxDictionaries.Items[index]));
         }
 
         private void ExtractDic(string dictionaryFolder, ZipExtractor zip, List<ZipExtractor.ZipFileEntry> dir, ref bool found)

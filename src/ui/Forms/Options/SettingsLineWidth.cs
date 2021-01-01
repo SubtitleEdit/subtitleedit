@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            var language = Configuration.Settings.Language.Settings;
+            var language = LanguageSettings.Current.Settings;
             var settings = Configuration.Settings.General;
             Text = language.LineWidthSettings;
             labelMaximumLineWidth.Text = language.MaximumLineWidth;
@@ -51,8 +51,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             comboBoxMeasureFontName.Left = numericUpDownMaxLineWidth.Left;
             comboBoxMeasureFontName.Width = numericUpDownMeasureFontSize.Left - numericUpDownMaxLineWidth.Left - 6;
 
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
