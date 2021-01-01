@@ -123,6 +123,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool CheckOneLetterWords { get; set; }
         public bool SpellCheckEnglishAllowInQuoteAsIng { get; set; }
         public bool RememberUseAlwaysList { get; set; }
+        public bool LiveSpellCheck { get; set; }
         public bool SpellCheckShowCompletedMessage { get; set; }
         public bool OcrFixUseHardcodedRules { get; set; }
         public int OcrBinaryImageCompareRgbThreshold { get; set; }
@@ -3662,6 +3663,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.RememberUseAlwaysList = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("LiveSpellCheck");
+            if (subNode != null)
+            {
+                settings.Tools.LiveSpellCheck = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("SpellCheckShowCompletedMessage");
@@ -8022,6 +8029,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("SpellCheckOneLetterWords", settings.Tools.CheckOneLetterWords.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SpellCheckEnglishAllowInQuoteAsIng", settings.Tools.SpellCheckEnglishAllowInQuoteAsIng.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("RememberUseAlwaysList", settings.Tools.RememberUseAlwaysList.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("LiveSpellCheck", settings.Tools.LiveSpellCheck.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SpellCheckShowCompletedMessage", settings.Tools.SpellCheckShowCompletedMessage.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("OcrFixUseHardcodedRules", settings.Tools.OcrFixUseHardcodedRules.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("OcrBinaryImageCompareRgbThreshold", settings.Tools.OcrBinaryImageCompareRgbThreshold.ToString(CultureInfo.InvariantCulture));

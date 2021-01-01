@@ -32,11 +32,11 @@ using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-
     public sealed partial class Main : Form
     {
         private class ComboBoxZoomItem
@@ -141,8 +141,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private GoogleOrMicrosoftTranslate _googleOrMicrosoftTranslate;
 
-        private bool _cancelWordSpellCheck = true;
         private bool _cleanupHasRun;
+        private bool _cancelWordSpellCheck = true;
+        private bool _isLiveSpellCheckEnabled => Configuration.Settings.Tools.LiveSpellCheck
+                                                 && Configuration.Settings.General.SubtitleTextBoxSyntaxColor;
 
         private bool _clearLastFind;
         private FindType _clearLastFindType = FindType.Normal;
@@ -1642,6 +1644,10 @@ namespace Nikse.SubtitleEdit.Forms
             pasteToolStripMenuItem.Text = _language.Menu.ContextMenu.Paste;
             deleteToolStripMenuItem.Text = _language.Menu.ContextMenu.Delete;
             toolStripMenuItemSplitTextAtCursor.Text = _language.Menu.ContextMenu.SplitLineAtCursorPosition;
+            toolStripMenuItemSpellCheckSkipOnce.Text = LanguageSettings.Current.SpellCheck.SkipOnce;
+            toolStripMenuItemSpellCheckSkipAll.Text = LanguageSettings.Current.SpellCheck.SkipAll;
+            toolStripMenuItemSpellCheckAddToDictionary.Text = LanguageSettings.Current.SpellCheck.AddToUserDictionary;
+            toolStripMenuItemSpellCheckAddToNames.Text = LanguageSettings.Current.SpellCheck.AddToNamesAndIgnoreList;
             toolStripMenuItemSplitViaWaveform.Text = _language.Menu.ContextMenu.SplitLineAtCursorAndWaveformPosition;
             selectAllToolStripMenuItem.Text = _language.Menu.ContextMenu.SelectAll;
             normalToolStripMenuItem1.Text = _language.Menu.ContextMenu.RemoveFormattingAll;
@@ -4760,6 +4766,7 @@ namespace Nikse.SubtitleEdit.Forms
             var oldShowcolumnDuration = Configuration.Settings.Tools.ListViewShowColumnDuration;
             var oldShowColumnCharsPerSec = Configuration.Settings.Tools.ListViewShowColumnCharsPerSec;
             var oldShowWordsMinColumn = Configuration.Settings.Tools.ListViewShowColumnWordsPerMin;
+            var oldLiveSpellCheck = Configuration.Settings.Tools.LiveSpellCheck;
             var oldSubtitleTextBoxSyntaxColor = Configuration.Settings.General.SubtitleTextBoxSyntaxColor;
             var oldSubtitleFontSize = Configuration.Settings.General.SubtitleTextBoxFontSize;
             var oldSubtitleAlignment = Configuration.Settings.General.CenterSubtitleInTextBox;
@@ -5062,6 +5069,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
             textBoxListViewText.BackColor = !IsSubtitleLoaded ? SystemColors.ActiveBorder : SystemColors.WindowFrame;
             textBoxListViewTextAlternate.BackColor = !IsSubtitleLoaded ? SystemColors.ActiveBorder : SystemColors.WindowFrame;
+
+            if (oldLiveSpellCheck && oldLiveSpellCheck != Configuration.Settings.Tools.LiveSpellCheck
+                || oldSubtitleTextBoxSyntaxColor && oldSubtitleTextBoxSyntaxColor != Configuration.Settings.General.SubtitleTextBoxSyntaxColor)
+            {
+                textBoxListViewText.DisposeHunspellAndDictionaries();
+            }
 
             SubtitleListview1.SyntaxColorAllLines(_subtitle);
             mediaPlayer.LastParagraph = null;
@@ -7460,6 +7473,26 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private async Task InitializeLiveSpellChcek()
+        {
+            if (IsSubtitleLoaded)
+            {
+                if (textBoxListViewText.IsSpellCheckerInitialized || !textBoxListViewText.IsDictionaryDownloaded)
+                {
+                    await textBoxListViewText.CheckForLanguageChange(_subtitle);
+                }
+                else
+                {
+                    await textBoxListViewText.InitializeLiveSpellCheck(_subtitle, FirstSelectedIndex);
+                }
+            }
+            else
+            {
+                textBoxListViewText.DisposeHunspellAndDictionaries();
+                textBoxListViewText.IsDictionaryDownloaded = true;
+            }
+        }
+
         private void ToolStripButtonSpellCheckClick(object sender, EventArgs e)
         {
             SpellCheck(true, 0);
@@ -9086,6 +9119,12 @@ namespace Nikse.SubtitleEdit.Forms
                 var p = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
                 if (p != null)
                 {
+                    if (_isLiveSpellCheckEnabled)
+                    {
+                        textBoxListViewText.CurrentLineIndex = firstSelectedIndex;
+                        textBoxListViewText.IsSpellCheckRequested = true;
+                    }
+
                     InitializeListViewEditBox(p);
                     _subtitleListViewIndex = firstSelectedIndex;
                     _oldSelectedParagraph = new Paragraph(p);
@@ -19552,7 +19591,7 @@ namespace Nikse.SubtitleEdit.Forms
             GoBackSeconds(-60);
         }
 
-        private void ShowSubtitleTimerTick(object sender, EventArgs e)
+        private async void ShowSubtitleTimerTick(object sender, EventArgs e)
         {
             ShowSubtitleTimer.Stop();
 
@@ -19598,6 +19637,11 @@ namespace Nikse.SubtitleEdit.Forms
             else if (Text.Contains('*'))
             {
                 Text = Text.RemoveChar('*').TrimEnd();
+            }
+
+            if (_isLiveSpellCheckEnabled)
+            {
+                await InitializeLiveSpellChcek();
             }
 
             ShowSubtitleTimer.Start();
@@ -22192,7 +22236,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (!_cleanupHasRun)
                     {
                         // let the cleanup process be handled by worker thread
-                        System.Threading.Tasks.Task.Factory.StartNew(() => { RestoreAutoBackup.CleanAutoBackupFolder(Configuration.AutoBackupDirectory, Configuration.Settings.General.AutoBackupDeleteAfterMonths); });
+                        Task.Factory.StartNew(() => { RestoreAutoBackup.CleanAutoBackupFolder(Configuration.AutoBackupDirectory, Configuration.Settings.General.AutoBackupDeleteAfterMonths); });
                         _cleanupHasRun = true;
                     }
                 }
@@ -22974,6 +23018,26 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 GetFocusedTextBox().SelectAll();
             }
+        }
+
+        private void toolStripMenuItemSpellCheckSkipOnce_Click(object sender, EventArgs e)
+        {
+            textBoxListViewText.DoAction(SpellCheckAction.Skip);
+        }
+
+        private void toolStripMenuItemSpellCheckSkipAll_Click(object sender, EventArgs e)
+        {
+            textBoxListViewText.DoAction(SpellCheckAction.SkipAll);
+        }
+
+        private void toolStripMenuItemSpellCheckAddToDictionary_Click(object sender, EventArgs e)
+        {
+            textBoxListViewText.DoAction(SpellCheckAction.AddToDictionary);
+        }
+
+        private void toolStripMenuItemSpellCheckAddToNames_Click(object sender, EventArgs e)
+        {
+            textBoxListViewText.DoAction(SpellCheckAction.AddToNames);
         }
 
         private void cutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -25016,10 +25080,25 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void ContextMenuStripTextBoxListViewOpening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void ContextMenuStripTextBoxListViewOpening(object sender, CancelEventArgs e)
         {
             var tb = GetFocusedTextBox();
             toolStripMenuItemSplitTextAtCursor.Visible = tb.Text.Length > 1;
+
+            if (_isLiveSpellCheckEnabled && textBoxListViewText.IsWrongWord && _inListView)
+            {
+                var oldItems = new ToolStripItem[contextMenuStripTextBoxListView.Items.Count];
+                contextMenuStripTextBoxListView.Items.CopyTo(oldItems, 0);
+                contextMenuStripTextBoxListView.Items.Clear();
+                tb.AddSuggestionsToMenu();
+                contextMenuStripTextBoxListView.Items.AddRange(oldItems);
+                toolStripSeparatorSpellCheckSuggestions.Visible = true;
+                toolStripMenuItemSpellCheckSkipOnce.Visible = true;
+                toolStripMenuItemSpellCheckSkipAll.Visible = true;
+                toolStripMenuItemSpellCheckAddToDictionary.Visible = true;
+                toolStripMenuItemSpellCheckAddToNames.Visible = true;
+                toolStripSeparatorSpellCheck.Visible = true;
+            }
 
             if (IsUnicode)
             {
@@ -25161,6 +25240,29 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 toolStripMenuItemSplitViaWaveform.Visible = false;
+            }
+        }
+
+        private void contextMenuStripTextBoxListViewClosing(object sender, ToolStripDropDownClosingEventArgs e)
+        {
+            if (_isLiveSpellCheckEnabled && textBoxListViewText.IsWrongWord 
+                && sender is ContextMenuStrip textBoxContextMenu && textBoxContextMenu.Name == "contextMenuStripTextBoxListView")
+            {
+                var firstSpellCheckItemIndex = textBoxContextMenu.Items.IndexOfKey("toolStripSeparatorSpellCheckSuggestions");
+                if (firstSpellCheckItemIndex > 0)
+                {
+                    for (int i = 0; i < firstSpellCheckItemIndex; i++)
+                    {
+                        textBoxContextMenu.Items.RemoveAt(0);
+                    }
+                }
+
+                toolStripSeparatorSpellCheckSuggestions.Visible = false;
+                toolStripMenuItemSpellCheckSkipOnce.Visible = false;
+                toolStripMenuItemSpellCheckSkipAll.Visible = false;
+                toolStripMenuItemSpellCheckAddToDictionary.Visible = false;
+                toolStripMenuItemSpellCheckAddToNames.Visible = false;
+                toolStripSeparatorSpellCheck.Visible = false;
             }
         }
 
@@ -27766,7 +27868,7 @@ namespace Nikse.SubtitleEdit.Forms
             var chaps = new List<MatroskaChapter>();
             using (var matroska = new MatroskaFile(VideoFileName))
             {
-                chaps = await System.Threading.Tasks.Task.Run(() => matroska.GetChapters());
+                chaps = await Task.Run(() => matroska.GetChapters());
             }
 
             if (chaps?.Count > 0)
