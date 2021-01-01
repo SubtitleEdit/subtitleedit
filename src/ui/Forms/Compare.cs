@@ -1029,6 +1029,7 @@ namespace Nikse.SubtitleEdit.Forms
                 subtitleListView1.SelectIndexAndEnsureVisible(0);
                 subtitleListView2.SelectIndexAndEnsureVisible(0);
                 labelSubtitle1.Text = filePath;
+                buttonReloadSubtitle1.Enabled = true;
                 _language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle1);
                 if (_subtitle1.Paragraphs.Count > 0)
                 {
@@ -1043,6 +1044,7 @@ namespace Nikse.SubtitleEdit.Forms
                 subtitleListView1.SelectIndexAndEnsureVisible(0);
                 subtitleListView2.SelectIndexAndEnsureVisible(0);
                 labelSubtitle2.Text = filePath;
+                buttonReloadSubtitle2.Enabled = true;
                 if (_subtitle2.Paragraphs.Count > 0)
                 {
                     CompareSubtitles();
