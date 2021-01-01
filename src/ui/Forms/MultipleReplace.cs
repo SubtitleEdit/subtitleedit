@@ -1133,6 +1133,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void MultipleReplace_ResizeEnd(object sender, EventArgs e)
         {
             listViewRules.Columns[listViewRules.Columns.Count - 1].Width = -2;
+            listViewFixes.Columns[listViewFixes.Columns.Count - 1].Width = -2;
         }
 
         private void moveToTopToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1304,6 +1305,5 @@ namespace Nikse.SubtitleEdit.Forms
                 e.SuppressKeyPress = true;
             }
         }
-
     }
 }

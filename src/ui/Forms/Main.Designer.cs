@@ -3216,6 +3216,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // panelMode
             // 
+            this.panelMode.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelMode.Controls.Add(this.buttonModeTranslate);
             this.panelMode.Controls.Add(this.buttonModeCreate);
             this.panelMode.Controls.Add(this.buttonModeAdjust);
