@@ -7,6 +7,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixMissingSpaces : IFixCommonError
     {
+        public static class Language
+        {
+            public static string FixMissingSpace { get; set; } = "Fix missing space";
+            public static string FixMissingSpaces { get; set; } = "Fix missing spaces";
+        }
 
         private static readonly Regex FixMissingSpacesReComma = new Regex(@"[^\s\d],[^\s]", RegexOptions.Compiled);
         private static readonly Regex FixMissingSpacesRePeriod = new Regex(@"[a-z][a-z][.][a-zA-Z]", RegexOptions.Compiled);
@@ -18,9 +23,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            var language = Configuration.Settings.Language.FixCommonErrors;
             string languageCode = callbacks.Language;
-            string fixAction = language.FixMissingSpace;
+            string fixAction = Language.FixMissingSpace;
             int missingSpaces = 0;
             var dialogHelper = new DialogSplitMerge
             {
@@ -367,7 +371,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                 }
             }
-            callbacks.UpdateFixStatus(missingSpaces, language.FixMissingSpaces, string.Format(language.XMissingSpacesAdded, missingSpaces));
+            callbacks.UpdateFixStatus(missingSpaces, Language.FixMissingSpaces);
         }
 
         private static string FixSpaceAfter(string input, char fixSpaceAfterChar)

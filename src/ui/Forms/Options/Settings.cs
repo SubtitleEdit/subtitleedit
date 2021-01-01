@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private double _ssaFontSize;
         private int _ssaFontColor;
         private string _listBoxSearchString = string.Empty;
-        private DateTime _listBoxSearchStringLastUsed = DateTime.Now;
+        private DateTime _listBoxSearchStringLastUsed = DateTime.UtcNow;
         private List<string> _wordListNames = new List<string>();
         private List<string> _userWordList = new List<string>();
         private OcrFixReplaceList _ocrFixReplaceList;
@@ -880,7 +880,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             {
                 float fontSize = comboBoxToolsMusicSymbol.Font.Size;
                 const string unicodeFontName = Utilities.WinXP2KUnicodeFontName;
-                listBoxNames.Font = new Font(unicodeFontName, fontSize);
+                listViewNames.Font = new Font(unicodeFontName, fontSize);
                 listBoxUserWordLists.Font = new Font(unicodeFontName, fontSize);
                 listBoxOcrFixList.Font = new Font(unicodeFontName, fontSize);
                 comboBoxToolsMusicSymbol.Font = new Font(unicodeFontName, fontSize);
@@ -2078,7 +2078,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             buttonAddUserWord.Enabled = false;
             buttonRemoveOcrFix.Enabled = false;
             buttonAddOcrFix.Enabled = false;
-            listBoxNames.Items.Clear();
+            listViewNames.Items.Clear();
             listBoxUserWordLists.Items.Clear();
             listBoxOcrFixList.Items.Clear();
             if (comboBoxWordListLanguage.Items.Count > 0 && comboBoxWordListLanguage.Items[comboBoxWordListLanguage.SelectedIndex] is ComboBoxLanguage)
@@ -2148,10 +2148,15 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 var uiContext = TaskScheduler.FromCurrentSynchronizationContext();
                 task.ContinueWith(originalTask =>
                 {
-                    listBoxNames.BeginUpdate();
-                    listBoxNames.Items.Clear();
-                    listBoxNames.Items.AddRange(originalTask.Result.ToArray<object>());
-                    listBoxNames.EndUpdate();
+                    listViewNames.BeginUpdate();
+                    listViewNames.Items.Clear();
+                    var list = new List<ListViewItem>();
+                    foreach (var item in originalTask.Result)
+                    {
+                        list.Add(new ListViewItem(item));
+                    }
+                    listViewNames.Items.AddRange(list.ToArray());
+                    listViewNames.EndUpdate();
                 }, uiContext);
             }
         }
@@ -2186,18 +2191,19 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 labelStatus.Text = string.Format(Configuration.Settings.Language.Settings.WordAddedX, text);
                 textBoxNameEtc.Text = string.Empty;
                 textBoxNameEtc.Focus();
-                for (int i = 0; i < listBoxNames.Items.Count; i++)
+                for (int i = 0; i < listViewNames.Items.Count; i++)
                 {
-                    if (listBoxNames.Items[i].ToString() == text)
+                    if (listViewNames.Items[i].ToString() == text)
                     {
-                        listBoxNames.SelectedIndex = i;
+                        listViewNames.Items[i].Selected = true;
+                        listViewNames.Items[i].Focused = true;
                         int top = i - 5;
                         if (top < 0)
                         {
                             top = 0;
                         }
 
-                        listBoxNames.TopIndex = top;
+                        listViewNames.EnsureVisible(top);
                         break;
                     }
                 }
@@ -2210,20 +2216,20 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void ListBoxNamesSelectedIndexChanged(object sender, EventArgs e)
         {
-            buttonRemoveNameEtc.Enabled = listBoxNames.SelectedIndex >= 0;
+            buttonRemoveNameEtc.Enabled = listViewNames.SelectedItems.Count >= 1;
         }
 
         private void ButtonRemoveNameEtcClick(object sender, EventArgs e)
         {
-            if (listBoxNames.SelectedIndices.Count == 0)
+            if (listViewNames.SelectedItems.Count == 0)
             {
                 return;
             }
 
             string language = GetCurrentWordListLanguage();
-            int index = listBoxNames.SelectedIndex;
-            string text = listBoxNames.Items[index].ToString();
-            int itemsToRemoveCount = listBoxNames.SelectedIndices.Count;
+            int index = listViewNames.SelectedItems[0].Index;
+            string text = listViewNames.Items[index].Text;
+            int itemsToRemoveCount = listViewNames.SelectedIndices.Count;
             if (!string.IsNullOrEmpty(language) && index >= 0)
             {
                 DialogResult result;
@@ -2240,29 +2246,29 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 {
                     int removeCount = 0;
                     var namesList = new NameList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
-                    for (int idx = listBoxNames.SelectedIndices.Count - 1; idx >= 0; idx--)
+                    for (int idx = listViewNames.SelectedIndices.Count - 1; idx >= 0; idx--)
                     {
-                        index = listBoxNames.SelectedIndices[idx];
-                        text = listBoxNames.Items[index].ToString();
+                        index = listViewNames.SelectedIndices[idx];
+                        text = listViewNames.Items[index].Text;
                         namesList.Remove(text);
                         removeCount++;
-                        listBoxNames.Items.RemoveAt(index);
+                        listViewNames.Items.RemoveAt(index);
                     }
 
                     if (removeCount > 0)
                     {
                         LoadNames(language, true); // reload
 
-                        if (index < listBoxNames.Items.Count)
+                        if (index < listViewNames.Items.Count)
                         {
-                            listBoxNames.SelectedIndex = index;
+                            listViewNames.Items[index].Selected = true;
                         }
-                        else if (listBoxNames.Items.Count > 0)
+                        else if (listViewNames.Items.Count > 0)
                         {
-                            listBoxNames.SelectedIndex = index - 1;
+                            listViewNames.Items[index - 1].Selected = true;
                         }
 
-                        listBoxNames.Focus();
+                        listViewNames.Focus();
 
                         buttonRemoveNameEtc.Enabled = false;
                         return;
@@ -2624,7 +2630,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
 
             if (TimeSpan.FromTicks(_listBoxSearchStringLastUsed.Ticks).TotalMilliseconds + 1800 <
-                TimeSpan.FromTicks(DateTime.Now.Ticks).TotalMilliseconds)
+                TimeSpan.FromTicks(DateTime.UtcNow.Ticks).TotalMilliseconds)
             {
                 _listBoxSearchString = string.Empty;
             }
@@ -2641,7 +2647,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 _listBoxSearchString += e.KeyCode.ToString();
             }
 
-            _listBoxSearchStringLastUsed = DateTime.Now;
+            _listBoxSearchStringLastUsed = DateTime.UtcNow;
             FindAndSelectListBoxItem(sender as ListBox);
             e.SuppressKeyPress = true;
         }
@@ -2654,6 +2660,22 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 if (s.StartsWith(_listBoxSearchString, StringComparison.OrdinalIgnoreCase))
                 {
                     listBox.SelectedIndex = i;
+                    break;
+                }
+                i++;
+            }
+        }
+
+        private void FindAndSelectListViewItem(ListView listView)
+        {
+            listView.SelectedItems.Clear();
+            int i = 0;
+            foreach (ListViewItem s in listView.Items)
+            {
+                if (s.Text.StartsWith(_listBoxSearchString, StringComparison.OrdinalIgnoreCase))
+                {
+                    listView.Items[i].Selected = true;
+                    listView.EnsureVisible(i);
                     break;
                 }
                 i++;
@@ -3184,7 +3206,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void buttonMpvSettings_Click(object sender, EventArgs e)
         {
-            using (var form = new SettingsMpv(LibMpvDynamic.IsInstalled))
+            using (var form = new SettingsMpv(!LibMpvDynamic.IsInstalled))
             {
                 var oldMpvEnabled = radioButtonVideoPlayerMPV.Enabled;
                 if (form.ShowDialog(this) == DialogResult.OK)
@@ -3433,10 +3455,15 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void listBoxNames_DoubleClick(object sender, EventArgs e)
         {
-            var idx = listBoxNames.SelectedIndex;
+            if (listViewNames.SelectedItems.Count == 0)
+            {
+                return;
+            }
+
+            var idx = listViewNames.SelectedItems[0].Index;
             if (idx >= 0)
             {
-                textBoxNameEtc.Text = (string)listBoxNames.Items[idx];
+                textBoxNameEtc.Text = (string)listViewNames.Items[idx].Text;
             }
         }
 
@@ -3615,6 +3642,47 @@ namespace Nikse.SubtitleEdit.Forms.Options
         {
             // avoid flickering when losing focus
             listBoxSection.Update();
+        }
+
+        private void listViewNames_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape ||
+                e.KeyCode == Keys.Tab ||
+                e.KeyCode == Keys.Return ||
+                e.KeyCode == Keys.Enter ||
+                e.KeyCode == Keys.Down ||
+                e.KeyCode == Keys.Up ||
+                e.KeyCode == Keys.PageDown ||
+                e.KeyCode == Keys.PageUp ||
+                e.KeyCode == Keys.None ||
+                e.KeyCode == UiUtil.HelpKeys ||
+                e.KeyCode == Keys.Home ||
+                e.KeyCode == Keys.End)
+            {
+                return;
+            }
+
+            if (TimeSpan.FromTicks(_listBoxSearchStringLastUsed.Ticks).TotalMilliseconds + 1800 <
+                TimeSpan.FromTicks(DateTime.UtcNow.Ticks).TotalMilliseconds)
+            {
+                _listBoxSearchString = string.Empty;
+            }
+
+            if (e.KeyCode == Keys.Delete)
+            {
+                if (_listBoxSearchString.Length > 0)
+                {
+                    _listBoxSearchString = _listBoxSearchString.Remove(_listBoxSearchString.Length - 1, 1);
+                }
+            }
+            else
+            {
+                _listBoxSearchString += e.KeyCode.ToString();
+            }
+
+            _listBoxSearchStringLastUsed = DateTime.UtcNow;
+            FindAndSelectListViewItem(sender as ListView);
+            e.SuppressKeyPress = true;
         }
     }
 }

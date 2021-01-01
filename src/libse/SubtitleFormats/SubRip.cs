@@ -165,7 +165,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             if (_errors.Length < 2000)
                             {
-                                _errors.AppendLine(string.Format(Configuration.Settings.Language.Main.LineNumberXExpectedNumberFromSourceLineY, _lineNumber, line));
+                                _errors.AppendLine(string.Format(FormatLanguage.LineNumberXExpectedNumberFromSourceLineY, _lineNumber, line));
                             }
 
                             _errorCount++;
@@ -182,7 +182,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         if (_errors.Length < 2000)
                         {
-                            _errors.AppendLine(string.Format(Configuration.Settings.Language.Main.LineNumberXErrorReadingTimeCodeFromSourceLineY, _lineNumber, line));
+                            _errors.AppendLine(string.Format(FormatLanguage.LineNumberXErrorReadingTimeCodeFromSourceLineY, _lineNumber, line));
                         }
 
                         _errorCount++;
@@ -203,7 +203,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                         if (_errors.Length < 2000 && line.Trim() != GetLastNumber(_paragraph))
                         {
-                            _errors.AppendLine(string.Format(Configuration.Settings.Language.Main.LineNumberXExpectedEmptyLine, _lineNumber, line));
+                            _errors.AppendLine(string.Format(FormatLanguage.LineNumberXExpectedEmptyLine, _lineNumber, line));
                         }
                     }
                     else if (TryReadTimeCodesLine(line, null, false))
@@ -360,7 +360,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         (startHours > 99 || startMinutes > 99 || startSeconds > 99 || startMilliseconds > 999 ||
                         endHours > 99 || endMinutes > 99 || endSeconds > 99 || endMilliseconds > 999))
                     {
-                        _errors.AppendLine(string.Format(Configuration.Settings.Language.Main.LineNumberXErrorReadingTimeCodeFromSourceLineY, _lineNumber, line));
+                        _errors.AppendLine(string.Format(FormatLanguage.LineNumberXErrorReadingTimeCodeFromSourceLineY, _lineNumber, line));
                     }
 
                     if (_isMsFrames && (parts[3].Length != 2 || startMilliseconds > 30 || parts[7].Length != 2 || endMilliseconds > 30))

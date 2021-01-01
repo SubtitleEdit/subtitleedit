@@ -241,6 +241,20 @@ Note: Do check free disk space.</WaveFileMalformed>
   <Beamer>
     <Title>Beamer</Title>
   </Beamer>
+  <BinEdit>
+    <ImportImage>Import image...</ImportImage>
+    <ExportImage>Export image...</ExportImage>
+    <SetText>Set text...</SetText>
+    <QuickOcr>Quick OCR texts (for overview only)</QuickOcr>
+    <ResizeBitmaps>Resize images...</ResizeBitmaps>
+    <ResizeBitmapsForSelectedLines>Resize images for selected lines...</ResizeBitmapsForSelectedLines>
+    <ChangeColorForSelectedLines>Change color for selected lines...</ChangeColorForSelectedLines>
+    <AlignSelectedLines>Align selected lines</AlignSelectedLines>
+    <CenterSelectedLines>Center selected lines (horizontally, keep vertical position)</CenterSelectedLines>
+    <TopAlignSelectedLines>Top align selected lines (keep horizontal position)</TopAlignSelectedLines>
+    <BottomAlignSelectedLines>Bottom align selected lines (keep horizontal position)</BottomAlignSelectedLines>
+    <SizeXY>Size: {0}x{1}</SizeXY>
+  </BinEdit>
   <Bookmarks>
     <EditBookmark>Edit bookmark</EditBookmark>
     <AddBookmark>Add bookmark</AddBookmark>
@@ -320,6 +334,7 @@ Note: Do check free disk space.</WaveFileMalformed>
   </ColumnPaste>
   <CompareSubtitles>
     <Title>Compare subtitles</Title>
+    <Reload>Reload</Reload>
     <PreviousDifference>&amp;Previous difference</PreviousDifference>
     <NextDifference>&amp;Next difference</NextDifference>
     <SubtitlesNotAlike>Subtitles have no similarities</SubtitlesNotAlike>
@@ -604,7 +619,6 @@ Note: Do check free disk space.</WaveFileMalformed>
     <RemovedEmptyLineAtBottom>Remove empty line at bottom</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Remove empty line in middle</RemovedEmptyLineInMiddle>
     <RemovedEmptyLinesUnsedLineBreaks>Remove empty lines/unused line breaks</RemovedEmptyLinesUnsedLineBreaks>
-    <EmptyLinesRemovedX>Empty lines removed: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Fix overlapping display times</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Fix short display times</FixShortDisplayTimes>
     <FixLongDisplayTimes>Fix long display times</FixLongDisplayTimes>
@@ -629,21 +643,16 @@ Note: Do check free disk space.</WaveFileMalformed>
     <RemoveSpaceBetweenNumber>Remove space between numbers</RemoveSpaceBetweenNumber>
     <FixDialogsOnOneLine>Fix dialogs on one line</FixDialogsOnOneLine>
     <NormalizeStrings>Normalize strings</NormalizeStrings>
-    <RemoveSpaceBetweenNumbersFixed>Remove space between numbers fixed: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>Fix Turkish ANSI (Icelandic) letters to Unicode</FixTurkishAnsi>
     <FixDanishLetterI>Fix Danish letter 'i'</FixDanishLetterI>
     <FixSpanishInvertedQuestionAndExclamationMarks>Fix Spanish inverted question and exclamation marks</FixSpanishInvertedQuestionAndExclamationMarks>
     <AddMissingQuote>Add missing quote (")</AddMissingQuote>
     <AddMissingQuotes>Add missing quotes (")</AddMissingQuotes>
     <RemoveHyphensSingleLine>Remove dialog dashes in single lines</RemoveHyphensSingleLine>
-    <XHyphensSingleLineRemoved>Dialog dash removed in single lines: {0}</XHyphensSingleLineRemoved>
     <FixHyphensInDialogs>Fix dash in dialogs via style: {0}</FixHyphensInDialogs>
-    <XHyphensInDialogsFixed>Dashes fixed: {0}</XHyphensInDialogsFixed>
     <AddMissingQuotesExample>"How are you? -&gt; "How are you?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Missing quotes added: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>Fix subtitles with more than two lines</Fix3PlusLines>
-    <Fix3PlusLine>Fix subtitle with more than two lines</Fix3PlusLine>
-    <X3PlusLinesFixed>Subtitles with more than two lines fixed: {0}</X3PlusLinesFixed>
     <Analysing>Analyzing...</Analysing>
     <NothingToFix>Nothing to fix :)</NothingToFix>
     <FixesFoundX>Fixes found: {0}</FixesFoundX>
@@ -651,12 +660,9 @@ Note: Do check free disk space.</WaveFileMalformed>
     <NothingFixableBut>Nothing could be fixed automatically. The subtitle contains errors - see log for details</NothingFixableBut>
     <XFixedBut>{0} issue(s) fixed but the subtitle still contain errors - see log for details</XFixedBut>
     <XCouldBeFixedBut>{0} issue(s) could be fixed but the subtitle will still contain errors - see log for details</XCouldBeFixedBut>
-    <UncheckedFixLowercaseIToUppercaseI>Unchecked "Fix alone lowercase 'i' to 'I' (English)"</UncheckedFixLowercaseIToUppercaseI>
-    <XIsChangedToUppercase>{0} i's changed to uppercase</XIsChangedToUppercase>
     <FixFirstLetterToUppercaseAfterParagraph>Fix first letter to uppercase after paragraph</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>Merge short line (single sentence)</MergeShortLine>
     <MergeShortLineAll>Merge short line (all except dialogs)</MergeShortLineAll>
-    <XLineBreaksAdded>{0} line breaks added</XLineBreaksAdded>
     <BreakLongLine>Break long line</BreakLongLine>
     <FixLongDisplayTime>Fix long display time</FixLongDisplayTime>
     <FixInvalidItalicTag>Fix invalid italic tag</FixInvalidItalicTag>
@@ -673,23 +679,11 @@ Note: Do check free disk space.</WaveFileMalformed>
     <UnableToFixStartTimeLaterThanEndTime>Unable to fix text number {0}: Start time is later than end time: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} fixed to: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>Unable to fix text number {0}: {1}</UnableToFixTextXY>
-    <XOverlappingTimestampsFixed>{0} overlapping timestamps fixed</XOverlappingTimestampsFixed>
-    <XDisplayTimesProlonged>{0} display times prolonged</XDisplayTimesProlonged>
-    <XInvalidHtmlTagsFixed>{0} invalid HTML tags fixed</XInvalidHtmlTagsFixed>
-    <XDisplayTimesShortned>{0} display times shortened</XDisplayTimesShortned>
-    <XGapsFixed>{0} short gaps fixed</XGapsFixed>
-    <XLinesUnbreaked>{0} lines unbroken</XLinesUnbreaked>
     <UnneededSpace>Unneeded space</UnneededSpace>
-    <XUnneededSpacesRemoved>{0} unneeded spaces removed</XUnneededSpacesRemoved>
     <UnneededPeriod>Unneeded period</UnneededPeriod>
-    <XUnneededPeriodsRemoved>{0} unneeded periods removed</XUnneededPeriodsRemoved>
     <FixMissingSpace>Fix missing space</FixMissingSpace>
-    <XMissingSpacesAdded>{0} missing spaces added</XMissingSpacesAdded>
     <FixUppercaseIInsideLowercaseWord>Fix uppercase 'i' inside lowercase word</FixUppercaseIInsideLowercaseWord>
-    <XPeriodsAdded>{0} periods added.</XPeriodsAdded>
     <FixMissingPeriodAtEndOfLine>Add missing period at end of line</FixMissingPeriodAtEndOfLine>
-    <XDoubleApostrophesFixed>{0} double apostrophes fixed.</XDoubleApostrophesFixed>
-    <XUppercaseIsFoundInsideLowercaseWords>{0} uppercase 'i's found inside lowercase words</XUppercaseIsFoundInsideLowercaseWords>
     <RefreshFixes>Refresh available fixes</RefreshFixes>
     <ApplyFixes>Apply selected fixes</ApplyFixes>
     <AutoBreak>Auto &amp;br</AutoBreak>
@@ -699,11 +693,6 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FixEllipsesStart>Remove leading '...'</FixEllipsesStart>
     <FixMissingOpenBracket>Fix missing [ in line</FixMissingOpenBracket>
     <FixMusicNotation>Replace music symbols (e.g. âTª) with preferred symbol</FixMusicNotation>
-    <XFixDoubleDash>{0} fixed '--'</XFixDoubleDash>
-    <XFixDoubleGreaterThan>{0} removed '&gt;&gt;'</XFixDoubleGreaterThan>
-    <XFixEllipsesStart>{0} remove starting '...'</XFixEllipsesStart>
-    <XFixMissingOpenBracket>{0} fixed missing [ in line</XFixMissingOpenBracket>
-    <XFixMusicNotation>{0} fix music notation in line</XFixMusicNotation>
     <FixDoubleDashExample>'Whoa-- um yeah!' -&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
     <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' -&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... and then we' -&gt; 'and then we'</FixEllipsesStartExample>
@@ -717,9 +706,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <SelectDefault>Select default</SelectDefault>
     <SetDefault>Set current fixes as default</SetDefault>
     <FixContinuationStyleX>Fix continuation style: {0}</FixContinuationStyleX>
-    <XFixContinuationStyle>{0} fixed continuation style</XFixContinuationStyle>
     <FixUnnecessaryLeadingDots>Remove unnecessary leading dots</FixUnnecessaryLeadingDots>
-    <XFixUnnecessaryLeadingDots>{0} removed unnecessary leading dots</XFixUnnecessaryLeadingDots>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Need dictionaries?</Title>
@@ -2333,7 +2320,6 @@ Continue?</RestoreDefaultSettingsMsg>
     <UseXAsNewGap>Use "{0}" milliseconds as new minimum gap?</UseXAsNewGap>
   </Settings>
   <SettingsMpv>
-    <Title>Settings for mpv</Title>
     <DownloadMpv>Download mpv lib</DownloadMpv>
     <DownloadMpvFailed>Unable to download mpv - please re-try later!</DownloadMpvFailed>
     <DownloadMpvOk>The mpv lib was downloaded and is ready for use.</DownloadMpvOk>
@@ -2565,6 +2551,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <SetPreviewText>Set preview text...</SetPreviewText>
     <AddToFile>Add to file</AddToFile>
     <AddToStorage>Add to storage</AddToStorage>
+    <StyleStorage>Style storage</StyleStorage>
     <OverwriteX>Overwrite {0}?</OverwriteX>
   </SubStationAlphaStyles>
   <PointSync>

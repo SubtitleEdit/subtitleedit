@@ -5,10 +5,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixDialogsOnOneLine : IFixCommonError
     {
+        public static class Language
+        {
+            public static string FixDialogsOnOneLine { get; set; } = "Fix dialogs on one line";
+        }
+
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            var language = Configuration.Settings.Language.FixCommonErrors;
-            string fixAction = language.FixDialogsOnOneLine;
+            string fixAction = Language.FixDialogsOnOneLine;
             int noOfFixes = 0;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
@@ -22,7 +26,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                 }
             }
-            callbacks.UpdateFixStatus(noOfFixes, language.FixCommonOcrErrors, language.FixDialogsOneLineExample);
+            callbacks.UpdateFixStatus(noOfFixes, Language.FixDialogsOnOneLine);
         }
     }
 }

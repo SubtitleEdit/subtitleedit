@@ -22,6 +22,7 @@ namespace Nikse.SubtitleEdit.Core
         public LanguageStructure.AutoBreakUnbreakLines AutoBreakUnbreakLines;
         public LanguageStructure.BatchConvert BatchConvert;
         public LanguageStructure.Beamer Beamer;
+        public LanguageStructure.BinEdit BinEdit;
         public LanguageStructure.Bookmarks Bookmarks;
         public LanguageStructure.ChangeCasing ChangeCasing;
         public LanguageStructure.ChangeCasingNames ChangeCasingNames;
@@ -384,11 +385,27 @@ namespace Nikse.SubtitleEdit.Core
                 Title = "Beamer",
             };
 
+            BinEdit = new LanguageStructure.BinEdit
+            {
+                ImportImage = "Import image...",
+                ExportImage = "Export image...",
+                SetText = "Set text...",
+                QuickOcr = "Quick OCR texts (for overview only)",
+                ResizeBitmaps = "Resize images...",
+                ResizeBitmapsForSelectedLines = "Resize images for selected lines...",
+                ChangeColorForSelectedLines = "Change color for selected lines...",
+                AlignSelectedLines = "Align selected lines",
+                CenterSelectedLines = "Center selected lines (horizontally, keep vertical position)",
+                TopAlignSelectedLines = "Top align selected lines (keep horizontal position)",
+                BottomAlignSelectedLines = "Bottom align selected lines (keep horizontal position)",
+                SizeXY = "Size: {0}x{1}",
+            };
+
             Bookmarks = new LanguageStructure.Bookmarks
             {
                 GoToBookmark = "Go to bookmark",
                 EditBookmark = "Edit bookmark",
-                AddBookmark = "Add bookmark"
+                AddBookmark = "Add bookmark",
             };
 
             ChangeCasing = new LanguageStructure.ChangeCasing
@@ -486,6 +503,7 @@ namespace Nikse.SubtitleEdit.Core
             CompareSubtitles = new LanguageStructure.CompareSubtitles
             {
                 Title = "Compare subtitles",
+                Reload = "Reload",
                 PreviousDifference = "&Previous difference",
                 NextDifference = "&Next difference",
                 SubtitlesNotAlike = "Subtitles have no similarities",
@@ -801,7 +819,6 @@ namespace Nikse.SubtitleEdit.Core
                 RemovedEmptyLineAtBottom = "Remove empty line at bottom",
                 RemovedEmptyLineInMiddle = "Remove empty line in middle",
                 RemovedEmptyLinesUnsedLineBreaks = "Remove empty lines/unused line breaks",
-                EmptyLinesRemovedX = "Empty lines removed: {0}",
                 FixOverlappingDisplayTimes = "Fix overlapping display times",
                 FixShortDisplayTimes = "Fix short display times",
                 FixLongDisplayTimes = "Fix long display times",
@@ -823,7 +840,6 @@ namespace Nikse.SubtitleEdit.Core
                 CommonOcrErrorsFixed = "Common OCR errors fixed (OcrReplaceList file used): {0}",
                 RemoveSpaceBetweenNumber = "Remove space between numbers",
                 FixDialogsOnOneLine = "Fix dialogs on one line",
-                RemoveSpaceBetweenNumbersFixed = "Remove space between numbers fixed: {0}",
                 NormalizeStrings = "Normalize strings",
                 FixLowercaseIToUppercaseI = "Fix alone lowercase 'i' to 'I' (English)",
                 FixTurkishAnsi = "Fix Turkish ANSI (Icelandic) letters to Unicode",
@@ -832,14 +848,10 @@ namespace Nikse.SubtitleEdit.Core
                 AddMissingQuote = "Add missing quote (\")",
                 AddMissingQuotes = "Add missing quotes (\")",
                 RemoveHyphensSingleLine = "Remove dialog dashes in single lines",
-                XHyphensSingleLineRemoved = "Dialog dash removed in single lines: {0}",
                 FixHyphensInDialogs = "Fix dash in dialogs via style: {0}",
-                XHyphensInDialogsFixed = "Dashes fixed: {0}",
                 AddMissingQuotesExample = "\"How are you? -> \"How are you?\"",
                 XMissingQuotesAdded = "Missing quotes added: {0}",
                 Fix3PlusLines = "Fix subtitles with more than two lines",
-                Fix3PlusLine = "Fix subtitle with more than two lines",
-                X3PlusLinesFixed = "Subtitles with more than two lines fixed: {0}",
                 Analysing = "Analyzing...",
                 NothingToFix = "Nothing to fix :)",
                 FixesFoundX = "Fixes found: {0}",
@@ -847,12 +859,9 @@ namespace Nikse.SubtitleEdit.Core
                 NothingFixableBut = "Nothing could be fixed automatically. The subtitle contains errors - see log for details",
                 XFixedBut = "{0} issue(s) fixed but the subtitle still contain errors - see log for details",
                 XCouldBeFixedBut = "{0} issue(s) could be fixed but the subtitle will still contain errors - see log for details",
-                UncheckedFixLowercaseIToUppercaseI = "Unchecked \"Fix alone lowercase 'i' to 'I' (English)\"",
-                XIsChangedToUppercase = "{0} i's changed to uppercase",
                 FixFirstLetterToUppercaseAfterParagraph = "Fix first letter to uppercase after paragraph",
                 MergeShortLine = "Merge short line (single sentence)",
                 MergeShortLineAll = "Merge short line (all except dialogs)",
-                XLineBreaksAdded = "{0} line breaks added",
                 BreakLongLine = "Break long line",
                 FixLongDisplayTime = "Fix long display time",
                 FixInvalidItalicTag = "Fix invalid italic tag",
@@ -869,23 +878,11 @@ namespace Nikse.SubtitleEdit.Core
                 UnableToFixStartTimeLaterThanEndTime = "Unable to fix text number {0}: Start time is later than end time: {1}",
                 XFixedToYZ = "{0} fixed to: {1}{2}",
                 UnableToFixTextXY = "Unable to fix text number {0}: {1}",
-                XOverlappingTimestampsFixed = "{0} overlapping timestamps fixed",
-                XDisplayTimesProlonged = "{0} display times prolonged",
-                XInvalidHtmlTagsFixed = "{0} invalid HTML tags fixed",
-                XDisplayTimesShortned = "{0} display times shortened",
-                XGapsFixed = "{0} short gaps fixed",
-                XLinesUnbreaked = "{0} lines unbroken",
                 UnneededSpace = "Unneeded space",
-                XUnneededSpacesRemoved = "{0} unneeded spaces removed",
                 UnneededPeriod = "Unneeded period",
-                XUnneededPeriodsRemoved = "{0} unneeded periods removed",
                 FixMissingSpace = "Fix missing space",
-                XMissingSpacesAdded = "{0} missing spaces added",
                 FixUppercaseIInsideLowercaseWord = "Fix uppercase 'i' inside lowercase word",
-                XPeriodsAdded = "{0} periods added.",
                 FixMissingPeriodAtEndOfLine = "Add missing period at end of line",
-                XDoubleApostrophesFixed = "{0} double apostrophes fixed.",
-                XUppercaseIsFoundInsideLowercaseWords = "{0} uppercase 'i's found inside lowercase words",
                 ApplyFixes = "Apply selected fixes",
                 RefreshFixes = "Refresh available fixes",
                 FixDoubleDash = "Fix '--' -> '...'",
@@ -898,11 +895,6 @@ namespace Nikse.SubtitleEdit.Core
                 FixEllipsesStartExample = "'... and then we' -> 'and then we'",
                 FixMissingOpenBracketExample = "'clanks] Look out!' -> '[clanks] Look out!'",
                 FixMusicNotationExample = "'âTª sweet dreams are' -> '♫ sweet dreams are'",
-                XFixDoubleDash = "{0} fixed '--'",
-                XFixDoubleGreaterThan = "{0} removed '>>'",
-                XFixEllipsesStart = "{0} remove starting '...'",
-                XFixMissingOpenBracket = "{0} fixed missing [ in line",
-                XFixMusicNotation = "{0} fix music notation in line",
                 AutoBreak = "Auto &br",
                 Unbreak = "&Unbreak",
                 FixCommonOcrErrors = "Fix common OCR errors (using OCR replace list)",
@@ -914,9 +906,7 @@ namespace Nikse.SubtitleEdit.Core
                 SelectDefault = "Select default",
                 SetDefault = "Set current fixes as default",
                 FixContinuationStyleX = "Fix continuation style: {0}",
-                XFixContinuationStyle = "{0} fixed continuation style",
                 FixUnnecessaryLeadingDots = "Remove unnecessary leading dots",
-                XFixUnnecessaryLeadingDots = "{0} removed unnecessary leading dots"
             };
 
             GetDictionaries = new LanguageStructure.GetDictionaries
@@ -1852,7 +1842,7 @@ namespace Nikse.SubtitleEdit.Core
                 ConvertFrom = "Convert from",
                 ConvertTo = "Convert to",
                 CopyToClipboard = "Copy to clipboard",
-                CloseOnInsert =  "Close on insert",
+                CloseOnInsert = "Close on insert",
 
                 Length = "Length",
                 Mass = "Mass",
@@ -2421,7 +2411,7 @@ can edit in same subtitle file (collaboration)",
                 UseSyntaxColoring = "Use syntax coloring",
                 HtmlColor = "Html color",
                 AssaColor = "ASSA color",
-                DarkTheme ="Dark theme",
+                DarkTheme = "Dark theme",
                 DarkThemeEnabled = "Use dark theme",
                 ListViewAndTextBox = "List view and text box",
                 UpdateShortcut = "Update",
@@ -2641,7 +2631,6 @@ can edit in same subtitle file (collaboration)",
 
             SettingsMpv = new LanguageStructure.SettingsMpv
             {
-                Title = "Settings for mpv",
                 DownloadMpv = "Download mpv lib",
                 DownloadMpvFailed = "Unable to download mpv - please re-try later!",
                 DownloadMpvOk = "The mpv lib was downloaded and is ready for use.",
@@ -2901,6 +2890,7 @@ can edit in same subtitle file (collaboration)",
                 SetPreviewText = "Set preview text...",
                 AddToFile = "Add to file",
                 AddToStorage = "Add to storage",
+                StyleStorage = "Style storage",
                 OverwriteX = "Overwrite {0}?"
             };
 

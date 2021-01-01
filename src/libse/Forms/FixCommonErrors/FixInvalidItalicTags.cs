@@ -5,14 +5,19 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixInvalidItalicTags : IFixCommonError
     {
+        public static class Language
+        {
+            public static string FixInvalidItalicTag { get; set; } = "Fix invalid italic tag";
+            public static string FixInvalidItalicTags { get; set; } = "Fix invalid italic tags";
+        }
+
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            var language = Configuration.Settings.Language.FixCommonErrors;
             const string beginTagUpper = "<I>";
             const string endTagUpper = "</I>";
             const string beginTag = "<i>";
             const string endTag = "</i>";
-            string fixAction = language.FixInvalidItalicTag;
+            string fixAction = Language.FixInvalidItalicTag;
             int noOfInvalidHtmlTags = 0;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
@@ -39,7 +44,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 }
             }
 
-            callbacks.UpdateFixStatus(noOfInvalidHtmlTags, language.FixInvalidItalicTags, string.Format(language.XInvalidHtmlTagsFixed, noOfInvalidHtmlTags));
+            callbacks.UpdateFixStatus(noOfInvalidHtmlTags, Language.FixInvalidItalicTags);
         }
 
     }

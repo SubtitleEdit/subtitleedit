@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -219,6 +219,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         header.AppendLine(line);
                     }
 
+                    continue;
+                }
+
+                if (index > 1 && (line.StartsWith("X-TIMESTAMP-MAP=", StringComparison.OrdinalIgnoreCase) || line == "WEBVTT"))
+                {
+                    // badly formatted web vtt file
                     continue;
                 }
 

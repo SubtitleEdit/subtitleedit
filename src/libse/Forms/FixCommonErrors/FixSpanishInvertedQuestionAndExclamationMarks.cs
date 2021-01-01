@@ -12,11 +12,15 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
     /// </summary>
     public class FixSpanishInvertedQuestionAndExclamationMarks : IFixCommonError
     {
+        public static class Language
+        {
+            public static string FixSpanishInvertedQuestionAndExclamationMarks { get; set; } = "Fix Spanish inverted question and exclamation marks";
+        }
+
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
             int fixCount = 0;
-            var language = Configuration.Settings.Language.FixCommonErrors;
-            var fixAction = language.FixSpanishInvertedQuestionAndExclamationMarks;
+            var fixAction = Language.FixSpanishInvertedQuestionAndExclamationMarks;
 
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
@@ -64,7 +68,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                 }
             }
-            callbacks.UpdateFixStatus(fixCount, language.FixSpanishInvertedQuestionAndExclamationMarks, fixCount.ToString(CultureInfo.InvariantCulture));
+            callbacks.UpdateFixStatus(fixCount, Language.FixSpanishInvertedQuestionAndExclamationMarks);
         }
 
         private static void FixSpanishInvertedLetter(char mark, string inverseMark, Paragraph p, Paragraph last, Paragraph next, ref bool isLastLineClosed, IFixCallbacks callbacks)

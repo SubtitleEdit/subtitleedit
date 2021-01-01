@@ -5,10 +5,13 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixLongDisplayTimes : IFixCommonError
     {
+        public static class Language
+        {
+            public static string FixLongDisplayTime { get; set; } = "Fix long display time";
+        }
+
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            var language = Configuration.Settings.Language.FixCommonErrors;
-            string fixAction = language.FixLongDisplayTime;
             int noOfLongDisplayTimes = 0;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
@@ -21,13 +24,13 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                 double displayTime = p.Duration.TotalMilliseconds;
 
-                bool allowFix = callbacks.AllowFix(p, fixAction);
+                bool allowFix = callbacks.AllowFix(p, Language.FixLongDisplayTime);
                 if (allowFix && displayTime > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                 {
                     string oldCurrent = p.ToString();
                     p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
                     noOfLongDisplayTimes++;
-                    callbacks.AddFixToListView(p, fixAction, oldCurrent, p.ToString());
+                    callbacks.AddFixToListView(p, Language.FixLongDisplayTime, oldCurrent, p.ToString());
                 }
                 else if (allowFix && maxDisplayTime < displayTime)
                 {
@@ -35,11 +38,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     displayTime = Utilities.GetOptimalDisplayMilliseconds(p.Text);
                     p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + displayTime;
                     noOfLongDisplayTimes++;
-                    callbacks.AddFixToListView(p, fixAction, oldCurrent, p.ToString());
+                    callbacks.AddFixToListView(p, Language.FixLongDisplayTime, oldCurrent, p.ToString());
                 }
             }
 
-            callbacks.UpdateFixStatus(noOfLongDisplayTimes, language.FixLongDisplayTimes, string.Format(language.XDisplayTimesShortned, noOfLongDisplayTimes));
+            callbacks.UpdateFixStatus(noOfLongDisplayTimes, Language.FixLongDisplayTime);
         }
 
     }

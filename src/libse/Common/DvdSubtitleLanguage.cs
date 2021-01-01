@@ -8,6 +8,156 @@ namespace Nikse.SubtitleEdit.Core.Common
 {
     public class DvdSubtitleLanguage
     {
+        public static class Language
+        {
+            public static Dictionary<string, string> LanguageNames { get; set; } = new Dictionary<string, string>
+            {
+               {"aa", "Afar"               },
+               {"ab", "Abkhazian"          },
+               {"af", "Afrikaans"          },
+               {"am", "Amharic"            },
+               {"ar", "Arabic"             },
+               {"as", "Assamese"           },
+               {"ay", "Aymara"             },
+               {"az", "Azerbaijani"        },
+               {"ba", "Bashkir"            },
+               {"be", "Belarusian"         },
+               {"bg", "Bulgarian"          },
+               {"bh", "Bihari"             },
+               {"bi", "Bislama"            },
+               {"bn", "Bengali"            },
+               {"bo", "Tibetan"            },
+               {"br", "Breton"             },
+               {"ca", "Catalan"            },
+               {"co", "Corsican"           },
+               {"cs", "Czech"              },
+               {"cy", "Welsh"              },
+               {"da", "Danish"             },
+               {"de", "German"             },
+               {"dz", "Dzongkha"           },
+               {"el", "Greek"              },
+               {"en", "English"            },
+               {"eo", "Esperanto"          },
+               {"es", "Spanish"            },
+               {"et", "Estonian"           },
+               {"eu", "Basque"             },
+               {"fa", "Persian"            },
+               {"fi", "Finnish"            },
+               {"fj", "Fijian"             },
+               {"fo", "Faroese"            },
+               {"fr", "French"             },
+               {"fy", "Western Frisian"    },
+               {"ga", "Irish"              },
+               {"gd", "Scottish Gaelic"    },
+               {"gl", "Galician"           },
+               {"gn", "Guarani"            },
+               {"gu", "Gujarati"           },
+               {"ha", "Hausa"              },
+               {"he", "Hebrew"             },
+               {"hi", "Hindi"              },
+               {"hr", "Croatian"           },
+               {"hu", "Hungarian"          },
+               {"hy", "Armenian"           },
+               {"ia", "Interlingua"        },
+               {"id", "Indonesian"         },
+               {"ie", "Interlingue"        },
+               {"ik", "Inupiaq"            },
+               {"is", "Icelandic"          },
+               {"it", "Italian"            },
+               {"iu", "Inuktitut"          },
+               {"ja", "Japanese"           },
+               {"jv", "Javanese"           },
+               {"ka", "Georgian"           },
+               {"kk", "Kazakh"             },
+               {"kl", "Kalaallisut"        },
+               {"km", "Khmer"              },
+               {"kn", "Kannada"            },
+               {"ko", "Korean"             },
+               {"ks", "Kashmiri"           },
+               {"ku", "Kurdish"            },
+               {"ky", "Kyrgyz"             },
+               {"la", "Latin"              },
+               {"lb", "Luxembourgish"      },
+               {"ln", "Lingala"            },
+               {"lo", "Lao"                },
+               {"lt", "Lithuanian"         },
+               {"lv", "Latvian"            },
+               {"mg", "Malagasy"           },
+               {"mi", "Maori"              },
+               {"mk", "Macedonian"         },
+               {"ml", "Malayalam"          },
+               {"mn", "Mongolian"          },
+               {"mo", "Moldavian"          },
+               {"mr", "Marathi"            },
+               {"ms", "Malay"              },
+               {"mt", "Maltese"            },
+               {"my", "Burmese"            },
+               {"na", "Nauru"              },
+               {"ne", "Nepali"             },
+               {"nl", "Dutch"              },
+               {"no", "Norwegian"          },
+               {"oc", "Occitan"            },
+               {"om", "Oromo"              },
+               {"or", "Oriya"              },
+               {"pa", "Punjabi"            },
+               {"pl", "Polish"             },
+               {"ps", "Pashto"             },
+               {"pt", "Portuguese"         },
+               {"qu", "Quechua"            },
+               {"rm", "Romansh"            },
+               {"rn", "Rundi"              },
+               {"ro", "Romanian"           },
+               {"ru", "Russian"            },
+               {"rw", "Kinyarwanda"        },
+               {"sa", "Sanskrit"           },
+               {"sd", "Sindhi"             },
+               {"sg", "Sango"              },
+               {"sh", "Serbo-Croatian"     },
+               {"si", "Sinhala"            },
+               {"sk", "Slovak"             },
+               {"sl", "Slovenian"          },
+               {"sm", "Samoan"             },
+               {"sn", "Shona"              },
+               {"so", "Somali"             },
+               {"sq", "Albanian"           },
+               {"sr", "Serbian"            },
+               {"ss", "Swati"              },
+               {"st", "Southern Sotho"     },
+               {"su", "Sundanese"          },
+               {"sv", "Swedish"            },
+               {"sw", "Swahili"            },
+               {"ta", "Tamil"              },
+               {"te", "Telugu"             },
+               {"tg", "Tajik"              },
+               {"th", "Thai"               },
+               {"ti", "Tigrinya"           },
+               {"tk", "Turkmen"            },
+               {"tl", "Tagalog"            },
+               {"tn", "Tswana"             },
+               {"to", "Tongan"             },
+               {"tr", "Turkish"            },
+               {"ts", "Tsonga"             },
+               {"tt", "Tatar"              },
+               {"tw", "Twi"                },
+               {"ug", "Uyghur"             },
+               {"uk", "Ukrainian"          },
+               {"ur", "Urdu"               },
+               {"uz", "Uzbek"              },
+               {"vi", "Vietnamese"         },
+               {"vo", "Volapük"            },
+               {"wo", "Wolof"              },
+               {"xh", "Xhosa"              },
+               {"yi", "Yiddish"            },
+               {"yo", "Yoruba"             },
+               {"za", "Zhuang"             },
+               {"zh", "Chinese"            },
+               {"zu", "Zulu"               },
+            };
+            public static string NotSpecified { get; set; } = "Not Specified";
+            public static string UnknownCodeX { get; set; } = "Unknown ({0})";
+            public static string CultureName { get; set; } = "en-US";
+        }
+
         private class LanguagesByCode : KeyedCollection<string, DvdSubtitleLanguage>
         {
             public LanguagesByCode(IEnumerable<DvdSubtitleLanguage> languages)
@@ -73,8 +223,14 @@ namespace Nikse.SubtitleEdit.Core.Common
             NativeName = description.Substring(3);
             var code = description.Remove(2);
             Code = code;
-            var names = Configuration.Settings.Language.LanguageNames;
-            LocalName = (string)names.GetType().GetProperty(ConvertDvdToIso(code) + "Name")?.GetValue(names, null);
+            if (Language.LanguageNames.TryGetValue(ConvertDvdToIso(code), out var localName))
+            {
+                LocalName = localName;
+            }
+            else
+            {
+                throw new Exception($"Dvd language {code} not found!");
+            }
         }
 
         public override string ToString()
@@ -93,7 +249,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 if (_compliantLanguagesByCode == null)
                 {
                     var cl = CompliantDescriptions.Select(s => new DvdSubtitleLanguage(s)).OrderBy(dsl => dsl.LocalName, StringComparer.CurrentCultureIgnoreCase).ThenBy(dsl => dsl.LocalName, StringComparer.Ordinal);
-                    var ns = new[] { new DvdSubtitleLanguage("  ", Configuration.Settings.Language.LanguageNames.NotSpecified, "Not Specified") };
+                    var ns = new[] { new DvdSubtitleLanguage("  ", Language.NotSpecified, "Not Specified") };
                     _compliantLanguagesByCode = new LanguagesByCode(ns.Concat(cl));
                 }
                 return _compliantLanguagesByCode;
@@ -130,7 +286,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var codeCulture = CultureInfo.GetCultureInfo(code);
                 try
                 {
-                    var seCulture = CultureInfo.GetCultureInfo(Configuration.Settings.Language.General.CultureName);
+                    var seCulture = CultureInfo.GetCultureInfo(Language.CultureName);
                     if (seCulture.Name == CultureInfo.CurrentUICulture.Name)
                     {
                         return codeCulture.DisplayName; // SE culture == UI culture
@@ -145,7 +301,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
             catch
             {
-                return string.Format(Configuration.Settings.Language.LanguageNames.UnknownCodeX, code);
+                return string.Format(Language.UnknownCodeX, code);
             }
         }
 

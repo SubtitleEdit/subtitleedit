@@ -1,14 +1,16 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.Interfaces;
+﻿using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class NormalizeStrings : IFixCommonError
     {
+        public static class Language
+        {
+            public static string NormalizeStrings { get; set; } = "Normalize strings";
+        }
+
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            var language = Configuration.Settings.Language.FixCommonErrors;
-            string fixAction = language.NormalizeStrings;
             var twoLetterLanguageCode = callbacks.Language;
             int noOfFixes = 0;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
@@ -60,14 +62,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         ;
                 }
 
-                if (oldText != text && callbacks.AllowFix(p, fixAction))
+                if (oldText != text && callbacks.AllowFix(p, Language.NormalizeStrings))
                 {
                     p.Text = text;
                     noOfFixes++;
-                    callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
+                    callbacks.AddFixToListView(p, Language.NormalizeStrings, oldText, p.Text);
                 }
             }
-            callbacks.UpdateFixStatus(noOfFixes, language.FixCommonOcrErrors, language.FixDialogsOneLineExample);
+            callbacks.UpdateFixStatus(noOfFixes, Language.NormalizeStrings);
         }
     }
 }

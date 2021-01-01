@@ -7,10 +7,15 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixUnneededPeriods : IFixCommonError
     {
+        public static class Language
+        {
+            public static string UnneededPeriod { get; set; } = "Unneeded period";
+            public static string RemoveUnneededPeriods { get; set; } = "Remove unneeded periods";
+        }
+
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            var language = Configuration.Settings.Language.FixCommonErrors;
-            string fixAction = language.UnneededPeriod;
+            string fixAction = Language.UnneededPeriod;
             int removedCount = 0;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
@@ -72,7 +77,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                 }
             }
-            callbacks.UpdateFixStatus(removedCount, language.RemoveUnneededPeriods, string.Format(language.XUnneededPeriodsRemoved, removedCount));
+            callbacks.UpdateFixStatus(removedCount, Language.RemoveUnneededPeriods);
         }
 
         public static string RemoveDotAfterPunctuation(string input)

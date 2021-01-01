@@ -75,17 +75,19 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
             fileToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.File.Title;
             openFileToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.File.Open;
+            saveFileAsToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.File.SaveAs;
             openVideoToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Video.OpenVideo;
             closeVideoToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Video.CloseVideo;
-            importTimeCodesToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.File.ImportTimecodes;
+            importTimeCodesToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.File.Import + " - " + Configuration.Settings.Language.Main.Menu.File.ImportTimecodes;
+            closeToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.File.Exit;
 
             toolStripMenuItemTools.Text = Configuration.Settings.Language.Main.Menu.Tools.Title;
             adjustDisplayTimesToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Tools.AdjustDisplayDuration;
             applyDurationLimitsToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Tools.ApplyDurationLimits;
             appendSubtitleToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Tools.AppendSubtitle;
-            //resizeBitmapsToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Tools.FixCommonErrors;
+            resizeBitmapsToolStripMenuItem.Text = Configuration.Settings.Language.BinEdit.ResizeBitmaps;
             alignmentToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Alignment;
-            //            quickOCRTextsforOverviewOnlyToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Tools.RemoveTextForHearingImpaired;
+            quickOCRTextsforOverviewOnlyToolStripMenuItem.Text = Configuration.Settings.Language.BinEdit.QuickOcr;
             videoToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Video.Title;
             synchronizationToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Synchronization.Title;
             adjustAllTimesToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Synchronization.AdjustAllTimes;
@@ -94,12 +96,28 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             optionsToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Options.Title;
             settingsToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Options.Settings;
 
+            deleteToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Delete;
+            insertToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.InsertBefore;
+            insertAfterToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.InsertAfter;
+            alignSelectedLinesToolStripMenuItem.Text = Configuration.Settings.Language.BinEdit.AlignSelectedLines;
+            centerSelectedLineshorizontallyToolStripMenuItem.Text = Configuration.Settings.Language.BinEdit.CenterSelectedLines;
+            topAlignSelectedLinesToolStripMenuItem.Text = Configuration.Settings.Language.BinEdit.TopAlignSelectedLines;
+            bottomAlignSelectedLinesToolStripMenuItem.Text = Configuration.Settings.Language.BinEdit.BottomAlignSelectedLines;
+            resizeImagesForSelectedLinesToolStripMenuItem.Text = Configuration.Settings.Language.BinEdit.ResizeBitmapsForSelectedLines;
+            colorSelectedLinesToolStripMenuItem.Text = Configuration.Settings.Language.BinEdit.ChangeColorForSelectedLines;
+            adjustAllTimesForSelectedLinesToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.ShowSelectedLinesEarlierLater;
+            adjustDisplayTimeForSelectedLinesToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.AdjustDisplayDurationForSelectedLines;
+            applyDurationLimitsForSelectedLinesToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.AdjustDisplayDurationForSelectedLines;
+
             labelStart.Text = Configuration.Settings.Language.General.StartTime;
             labelEndTime.Text = Configuration.Settings.Language.General.EndTime;
             checkBoxIsForced.Text = Configuration.Settings.Language.ExportPngXml.Forced;
             labelVideoSize.Text = Configuration.Settings.Language.ExportPngXml.VideoResolution;
             labelFrameRate.Text = Configuration.Settings.Language.General.FrameRate;
             labelCurrentSize.Text = string.Empty;
+            buttonImportImage.Text = Configuration.Settings.Language.BinEdit.ImportImage;
+            buttonExportImage.Text = Configuration.Settings.Language.BinEdit.ExportImage;
+            buttonSetText.Text = Configuration.Settings.Language.BinEdit.SetText;
 
             numericUpDownScreenWidth.Left = labelVideoSize.Left + labelVideoSize.Width + 7;
             labelX.Left = numericUpDownScreenWidth.Left + numericUpDownScreenWidth.Width + 4;
@@ -132,6 +150,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             comboBoxFrameRate.SelectedIndex = 2;
 
             var ext = Path.GetExtension(fileName)?.ToLowerInvariant();
+            var fileInfo = new FileInfo(fileName);
             if (FileUtil.IsBluRaySup(fileName))
             {
                 CleanUp();
@@ -169,27 +188,24 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             }
             else if (ext == ".mkv" || ext == ".mks")
             {
-                if (OpenMatroskaFile(fileName))
-                {
-                    _subtitle.Renumber();
-                    subtitleListView1.Fill(_subtitle);
-                }
-                else
+                if (!OpenMatroskaFile(fileName))
                 {
                     return;
                 }
+
+                _subtitle.Renumber();
+                subtitleListView1.Fill(_subtitle);
             }
-            else if (ext == ".m2ts" || ext == ".ts" || ext == ".mts" || ext == ".rec" || ext == ".mpeg" || ext == ".mpg")
+            else if (ext == ".m2ts" || ext == ".ts" || ext == ".mts" || ext == ".rec" || ext == ".mpeg" || ext == ".mpg" ||
+                     (fileInfo.Length < 100_000_000 && TransportStreamParser.IsDvbSup(fileName)))
             {
-                if (ImportSubtitleFromTransportStream(fileName))
-                {
-                    _subtitle.Renumber();
-                    subtitleListView1.Fill(_subtitle);
-                }
-                else
+                if (!ImportSubtitleFromTransportStream(fileName))
                 {
                     return;
                 }
+
+                _subtitle.Renumber();
+                subtitleListView1.Fill(_subtitle);
             }
 
             if (_subtitle != null)
@@ -222,6 +238,12 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             tsParser.Parse(fileName, null);
             if (tsParser.SubtitlePacketIds.Count == 0)
             {
+                var subtitles = TransportStreamParser.GetDvbSup(fileName);
+                if (subtitles.Count > 0)
+                {
+                    return LoadTransportStreamSubtitle(subtitles);
+                }
+
                 return false;  // no image based subtitles found
             }
 
@@ -242,17 +264,16 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                     }
 
                     var packetId = tsParser.SubtitlePacketIds[subChooser.SelectedIndex];
-                    return LoadTransportStreamSubtitle(tsParser, packetId);
+                    return LoadTransportStreamSubtitle(tsParser.GetDvbSubtitles(packetId));
                 }
             }
 
-            return LoadTransportStreamSubtitle(tsParser, tsParser.SubtitlePacketIds[0]);
+            return LoadTransportStreamSubtitle(tsParser.GetDvbSubtitles(tsParser.SubtitlePacketIds[0]));
         }
 
-        private bool LoadTransportStreamSubtitle(TransportStreamParser tsParser, int packetId)
+        private bool LoadTransportStreamSubtitle(List<TransportStreamSubtitle> subtitles)
         {
             CleanUp();
-            var subtitles = tsParser.GetDvbSubtitles(packetId);
             _subtitle = new Subtitle();
             _extra = new List<Extra>();
             var first = true;
@@ -679,7 +700,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 numericUpDownX.Value = extra.X;
                 numericUpDownY.Value = extra.Y;
                 var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : GetBitmap(sub);
-                labelCurrentSize.Text = string.Format("Size: {0}x{1}", bmp.Width, bmp.Height);
+                labelCurrentSize.Text = string.Format(Configuration.Settings.Language.BinEdit.SizeXY, bmp.Width, bmp.Height);
                 ShowCurrentScaledImage(bmp, extra);
             }
         }
@@ -1191,7 +1212,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
         private void importTimeCodesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (_subtitle.Paragraphs.Count < 1)
+            if (_subtitle == null || _subtitle.Paragraphs.Count < 1)
             {
                 return;
             }

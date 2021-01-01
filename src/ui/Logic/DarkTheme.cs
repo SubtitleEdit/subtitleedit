@@ -255,7 +255,10 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (c is Panel p)
             {
-                p.BorderStyle = BorderStyle.FixedSingle;
+                if (p.BorderStyle != BorderStyle.None)
+                {
+                    p.BorderStyle = BorderStyle.FixedSingle;
+                }
             }
 
             if (c is ContextMenuStrip cms)

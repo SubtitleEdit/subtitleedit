@@ -1,19 +1,24 @@
-﻿using System;
-using System.Text.RegularExpressions;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Interfaces;
+using System;
+using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixUppercaseIInsideWords : IFixCommonError
     {
+        public static class Language
+        {
+            public static string FixUppercaseIInsideLowercaseWord { get; set; } = "Fix uppercase 'i' inside lowercase word";
+            public static string FixUppercaseIInsindeLowercaseWords { get; set; } = "Fix uppercase 'i' inside lowercase words (OCR error)";
+        }
+
         private static readonly Regex ReAfterLowercaseLetter = new Regex(@"\p{Ll}I", RegexOptions.Compiled);
         private static readonly Regex ReBeforeLowercaseLetter = new Regex(@"\p{L}I\p{Ll}", RegexOptions.Compiled);
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            var l = Configuration.Settings.Language.FixCommonErrors;
-            string fixAction = l.FixUppercaseIInsideLowercaseWord;
+            string fixAction = Language.FixUppercaseIInsideLowercaseWord;
             var language = callbacks.Language;
             int uppercaseIsInsideLowercaseWords = 0;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
@@ -109,7 +114,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     match = match.NextMatch();
                 }
             }
-            callbacks.UpdateFixStatus(uppercaseIsInsideLowercaseWords, l.FixUppercaseIInsindeLowercaseWords, l.XUppercaseIsFoundInsideLowercaseWords);
+            callbacks.UpdateFixStatus(uppercaseIsInsideLowercaseWords, Language.FixUppercaseIInsindeLowercaseWords);
         }
 
         private static string GetWholeWord(string text, int index)
@@ -130,6 +135,5 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
             return text.Substring(start, end - start + 1);
         }
-
     }
 }
