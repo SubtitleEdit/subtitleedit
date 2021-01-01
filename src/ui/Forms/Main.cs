@@ -1644,10 +1644,10 @@ namespace Nikse.SubtitleEdit.Forms
             pasteToolStripMenuItem.Text = _language.Menu.ContextMenu.Paste;
             deleteToolStripMenuItem.Text = _language.Menu.ContextMenu.Delete;
             toolStripMenuItemSplitTextAtCursor.Text = _language.Menu.ContextMenu.SplitLineAtCursorPosition;
-            toolStripMenuItemSpellCheckSkipOnce.Text = Configuration.Settings.Language.SpellCheck.SkipOnce;
-            toolStripMenuItemSpellCheckSkipAll.Text = Configuration.Settings.Language.SpellCheck.SkipAll;
-            toolStripMenuItemSpellCheckAddToDictionary.Text = Configuration.Settings.Language.SpellCheck.AddToUserDictionary;
-            toolStripMenuItemSpellCheckAddToNames.Text = Configuration.Settings.Language.SpellCheck.AddToNamesAndIgnoreList;
+            toolStripMenuItemSpellCheckSkipOnce.Text = LanguageSettings.Current.SpellCheck.SkipOnce;
+            toolStripMenuItemSpellCheckSkipAll.Text = LanguageSettings.Current.SpellCheck.SkipAll;
+            toolStripMenuItemSpellCheckAddToDictionary.Text = LanguageSettings.Current.SpellCheck.AddToUserDictionary;
+            toolStripMenuItemSpellCheckAddToNames.Text = LanguageSettings.Current.SpellCheck.AddToNamesAndIgnoreList;
             toolStripMenuItemSplitViaWaveform.Text = _language.Menu.ContextMenu.SplitLineAtCursorAndWaveformPosition;
             selectAllToolStripMenuItem.Text = _language.Menu.ContextMenu.SelectAll;
             normalToolStripMenuItem1.Text = _language.Menu.ContextMenu.RemoveFormattingAll;
