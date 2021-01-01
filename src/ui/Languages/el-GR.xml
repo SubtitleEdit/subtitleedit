@@ -240,6 +240,20 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <Beamer>
     <Title>Βιντεοπροβολέας</Title>
   </Beamer>
+  <BinEdit>
+    <ImportImage>Εισαγωγή εικόνας...</ImportImage>
+    <ExportImage>Εξαγωγή εικόνας...</ExportImage>
+    <SetText>Ορισμός κειμένου...</SetText>
+    <QuickOcr>Γρήγορο OCR κειμένων (επισκόπηση μόνο)</QuickOcr>
+    <ResizeBitmaps>Αλλαγή μεγέθους εικόνων...</ResizeBitmaps>
+    <ResizeBitmapsForSelectedLines>Αλλαγή μεγέθους εικόνων επιλεγμένων γραμμών...</ResizeBitmapsForSelectedLines>
+    <ChangeColorForSelectedLines>Αλλαγή χρώματος επιλεγμένων γραμμών...</ChangeColorForSelectedLines>
+    <AlignSelectedLines>Στοίχιση επιλεγμένων γραμμών</AlignSelectedLines>
+    <CenterSelectedLines>Κεντράρισμα επιλεγμένων γραμμών (οριζόντια, κράτηση κάθετης θέσης)</CenterSelectedLines>
+    <TopAlignSelectedLines>Άνω στοίχιση επιλεγμένων γραμμών (κράτηση οριζόντιας θέσης)</TopAlignSelectedLines>
+    <BottomAlignSelectedLines>Κάτω στοίχιση επιλεγμένων γραμμών (κράτηση οριζόντιας θέσης)</BottomAlignSelectedLines>
+    <SizeXY>Μέγεθος: {0}χ{1}</SizeXY>
+  </BinEdit>
   <Bookmarks>
     <EditBookmark>Επεξεργασία σημείωσης</EditBookmark>
     <AddBookmark>Προσθήκη σημείωσης</AddBookmark>
@@ -319,6 +333,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </ColumnPaste>
   <CompareSubtitles>
     <Title>Σύγκριση υποτίτλων</Title>
+    <Reload>Ανανέωση</Reload>
     <PreviousDifference>&amp;Προηγούμενη διαφορά</PreviousDifference>
     <NextDifference>&amp;Επόμενη διαφορά</NextDifference>
     <SubtitlesNotAlike>Οι υπότιτλοι δεν έχουν ομοιότητες</SubtitlesNotAlike>
@@ -603,7 +618,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemovedEmptyLineAtBottom>Αφαίρεση κενής γραμμής στο τέλος</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Αφαίρεση κενής γραμμής στο κέντρο</RemovedEmptyLineInMiddle>
     <RemovedEmptyLinesUnsedLineBreaks>Αφαίρεση κενών γραμμών/άχρηστες αλλαγές γραμμής</RemovedEmptyLinesUnsedLineBreaks>
-    <EmptyLinesRemovedX>Αφαιρεμένες κενές γραμμές: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Επιδιόρθωση επικαλυπτόμενων χρόνων εμφάνισης</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Επιδιόρθωση σύντομων χρόνων εμφάνισης</FixShortDisplayTimes>
     <FixLongDisplayTimes>Επιδιόρθωση μεγάλων χρόνων εμφάνισης</FixLongDisplayTimes>
@@ -628,21 +642,16 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveSpaceBetweenNumber>Αφαίρεση διαστήματος μεταξύ αριθμών</RemoveSpaceBetweenNumber>
     <FixDialogsOnOneLine>Επιδιόρθωση διαλόγων</FixDialogsOnOneLine>
     <NormalizeStrings>Κανονικοποίηση συμβολοσειρών</NormalizeStrings>
-    <RemoveSpaceBetweenNumbersFixed>Επιδιορθώσεις αφαίρεσης διαστήματος μεταξύ αριθμών: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>Επιδιόρθωση Τουρκικών ANSI (Ισλανδικών) γραμμάτων σε Unicode</FixTurkishAnsi>
     <FixDanishLetterI>Επιδιόρθωση δανικού γράμματος 'i'</FixDanishLetterI>
     <FixSpanishInvertedQuestionAndExclamationMarks>Επιδιόρθωση ισπανικών αντεστραμμένων σημείων στίξης</FixSpanishInvertedQuestionAndExclamationMarks>
     <AddMissingQuote>Προσθήκη εισαγωγικού (")</AddMissingQuote>
     <AddMissingQuotes>Προσθήκη εισαγωγικών (")</AddMissingQuotes>
     <RemoveHyphensSingleLine>Αφαίρεση παύλας σε ενιαίες γραμμές</RemoveHyphensSingleLine>
-    <XHyphensSingleLineRemoved>Αφαίρεση παυλών: {0}</XHyphensSingleLineRemoved>
     <FixHyphensInDialogs>Επιδιόρθωση παυλών μέσω στυλ διαλόγου: {0}</FixHyphensInDialogs>
-    <XHyphensInDialogsFixed>Επιδιόρθωση παυλών: {0}</XHyphensInDialogsFixed>
     <AddMissingQuotesExample>"Πώς είσαι; -&gt; "Πώς είσαι;"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Προσθήκη εισαγωγικών: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>Επιδιόρθωση υποτίτλων με περισσότερες από δύο γραμμές</Fix3PlusLines>
-    <Fix3PlusLine>Επιδιόρθωση υποτίτλου με περισσότερες από δύο γραμμές</Fix3PlusLine>
-    <X3PlusLinesFixed>Επιδιόρθωση υποτίτλων με περισσότερες από δύο γραμμές: {0}</X3PlusLinesFixed>
     <Analysing>Ανάλυση...</Analysing>
     <NothingToFix>Τίποτα για επιδιόρθωση</NothingToFix>
     <FixesFoundX>Εύρεση επιδιορθώσεων: {0}</FixesFoundX>
@@ -650,12 +659,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NothingFixableBut>Τίποτα για αυτόματη επιδιόρθωση. Ο υπότιτλος περιέχει σφάλμα(τα) - προβολή αρχείου καταγραφής</NothingFixableBut>
     <XFixedBut>Επιδιόρθωση {0} θέματος(ων), αλλά υπάρχουν ακόμη σφάλματα - προβολή αρχείου καταγραφής</XFixedBut>
     <XCouldBeFixedBut>Επιδιόρθωση {0} θέματος(ων), αλλά θα υπάρχουν ακόμη σφάλματα - προβολή αρχείου καταγραφής</XCouldBeFixedBut>
-    <UncheckedFixLowercaseIToUppercaseI>Αποεπιλογή "Επιδιόρθωση μονού πεζού 'i' σε 'Ι' (Αγγλικά)"</UncheckedFixLowercaseIToUppercaseI>
-    <XIsChangedToUppercase>{0} άλλαγή(ές) σε κεφαλαία</XIsChangedToUppercase>
     <FixFirstLetterToUppercaseAfterParagraph>Επιδιόρθωση αρχικού γράμματος σε κεφαλαίο μετά από παράγραφο</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>Συγχώνευση γραμμών</MergeShortLine>
     <MergeShortLineAll>Συγχώνευση γραμμών (εκτός διαλόγου)</MergeShortLineAll>
-    <XLineBreaksAdded>Προσθήκη {0} αλλαγής(ών) γραμμής</XLineBreaksAdded>
     <BreakLongLine>Διάσπαση γραμμής</BreakLongLine>
     <FixLongDisplayTime>Επιδιόρθωση μεγάλου χρόνου</FixLongDisplayTime>
     <FixInvalidItalicTag>Επιδιόρθωση ετικέτας πλαγιαστής γραφής</FixInvalidItalicTag>
@@ -672,23 +678,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <UnableToFixStartTimeLaterThanEndTime>Αδυναμία επιδιόρθωσης του κειμένου με αριθμό {0}: Έναρξη αργότερα από λήξη: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>Επιδιόρθωση {0} σε: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>Αδυναμία επιδιόρθωσης του κειμένου με αριθμό {0}: {1}</UnableToFixTextXY>
-    <XOverlappingTimestampsFixed>Επιδιόρθωση {0} επικαλυπτόμενου(ων) χρόνου(ων)</XOverlappingTimestampsFixed>
-    <XDisplayTimesProlonged>Επέκταση {0} χρόνου(ων) εμφάνισης</XDisplayTimesProlonged>
-    <XInvalidHtmlTagsFixed>Επιδιόρθωση {0} λανθασμένης(ων) ετικέτας(ών) HTML</XInvalidHtmlTagsFixed>
-    <XDisplayTimesShortned>Σμίκρυνση {0} χρόνου(ων) εμφάνισης</XDisplayTimesShortned>
-    <XGapsFixed>Επιδιόρθωση {0} μικρού(ών) κενού(ών)</XGapsFixed>
-    <XLinesUnbreaked>Συνένωση {0} γραμμής(ών)</XLinesUnbreaked>
     <UnneededSpace>Αχρείαστο διάστημα</UnneededSpace>
-    <XUnneededSpacesRemoved>Αφαίρεση {0} αχρείαστου(ων) διαστήματος(ων)</XUnneededSpacesRemoved>
     <UnneededPeriod>Αχρείαστη τελεία</UnneededPeriod>
-    <XUnneededPeriodsRemoved>Αφαίρεση {0} αχρείαστης(ων) τελείας(ών)</XUnneededPeriodsRemoved>
     <FixMissingSpace>Επιδιόρθωση διαστήματος</FixMissingSpace>
-    <XMissingSpacesAdded>Προσθήκη {0} διαστήματος(ων)</XMissingSpacesAdded>
     <FixUppercaseIInsideLowercaseWord>Επιδιόρθωση κεφαλαίου 'i' μέσα σε λέξη</FixUppercaseIInsideLowercaseWord>
-    <XPeriodsAdded>Προσθήκη {0} τελείας(ών)</XPeriodsAdded>
     <FixMissingPeriodAtEndOfLine>Προσθήκη τελείας στο τέλος πρότασης</FixMissingPeriodAtEndOfLine>
-    <XDoubleApostrophesFixed>Επιδιόρθωση {0} διπλών αποστρόφων</XDoubleApostrophesFixed>
-    <XUppercaseIsFoundInsideLowercaseWords>Εύρεση {0} κεφαλαίου(ων) 'i' μέσα σε λέξη(εις)</XUppercaseIsFoundInsideLowercaseWords>
     <RefreshFixes>Ανανέωση</RefreshFixes>
     <ApplyFixes>Εφαρμογή</ApplyFixes>
     <AutoBreak>&amp;Διάσπαση</AutoBreak>
@@ -698,11 +692,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixEllipsesStart>Αφαίρεση αρχικού '...'</FixEllipsesStart>
     <FixMissingOpenBracket>Επιδιόρθωση ελλιπής [</FixMissingOpenBracket>
     <FixMusicNotation>Αντικατάσταση μουσικού συμβόλου (π.χ. âTª)</FixMusicNotation>
-    <XFixDoubleDash>Επιδιόρθωση {0} '--'</XFixDoubleDash>
-    <XFixDoubleGreaterThan>Αφαίρεση {0} &gt;&gt;</XFixDoubleGreaterThan>
-    <XFixEllipsesStart>Αφαίρεση {0} '...' από αρχή γραμμής</XFixEllipsesStart>
-    <XFixMissingOpenBracket>Επιδιόρθωση {0} ελλιπούςς(ών) [</XFixMissingOpenBracket>
-    <XFixMusicNotation>Αντικατάσταση {0} μουσικού(ών) συμβόλου(ων)</XFixMusicNotation>
     <FixDoubleDashExample>'Τι-- αα ναι!' -&gt; 'Τι... αα ναι!'</FixDoubleDashExample>
     <FixDoubleGreaterThanExample>'&gt;&gt; Ρόμπερτ: Τι τρέχει;' -&gt; 'Ρόμπερτ: Τι τρέχει;'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... και τότε εμείς' -&gt; 'και τότε εμείς'</FixEllipsesStartExample>
@@ -716,9 +705,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SelectDefault>Προεπιλεγμένα</SelectDefault>
     <SetDefault>Ορισμός προεπιλεγμένων</SetDefault>
     <FixContinuationStyleX>Επιδιόρθωση στυλ συνέχισης: {0}</FixContinuationStyleX>
-    <XFixContinuationStyle>Επιδιόρθωση {0} στυλ συνέχισης</XFixContinuationStyle>
     <FixUnnecessaryLeadingDots>Αφαίρεση αρχικών αποσιωπητικών</FixUnnecessaryLeadingDots>
-    <XFixUnnecessaryLeadingDots>Αφαίρεση {0} αρχικών αποσιωπητικών</XFixUnnecessaryLeadingDots>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Χρειάζεστε λεξικά;</Title>
