@@ -1,11 +1,11 @@
-﻿using Nikse.SubtitleEdit.Core.Enums;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core
 {
@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Core
             Header = subtitle.Header;
             Footer = subtitle.Footer;
             FileName = subtitle.FileName;
-           // OriginalFormat = subtitle.OriginalFormat;
+            // OriginalFormat = subtitle.OriginalFormat;
         }
 
         public Subtitle(List<Paragraph> paragraphs) : this()
