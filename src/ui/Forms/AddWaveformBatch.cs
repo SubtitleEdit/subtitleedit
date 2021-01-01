@@ -26,25 +26,25 @@ namespace Nikse.SubtitleEdit.Forms
             labelInfo.Text = string.Empty;
             progressBar1.Visible = false;
 
-            Text = Configuration.Settings.Language.AddWaveformBatch.Title;
-            buttonRipWave.Text = Configuration.Settings.Language.AddWaveform.GenerateWaveformData;
-            buttonDone.Text = Configuration.Settings.Language.General.Ok;
+            Text = LanguageSettings.Current.AddWaveformBatch.Title;
+            buttonRipWave.Text = LanguageSettings.Current.AddWaveform.GenerateWaveformData;
+            buttonDone.Text = LanguageSettings.Current.General.Ok;
 
-            var l = Configuration.Settings.Language.BatchConvert;
+            var l = LanguageSettings.Current.BatchConvert;
             groupBoxInput.Text = l.Input;
             labelChooseInputFiles.Text = l.InputDescription;
-            columnHeaderFName.Text = Configuration.Settings.Language.JoinSubtitles.FileName;
-            columnHeaderFormat.Text = Configuration.Settings.Language.Main.Controls.SubtitleFormat;
-            columnHeaderSize.Text = Configuration.Settings.Language.General.Size;
+            columnHeaderFName.Text = LanguageSettings.Current.JoinSubtitles.FileName;
+            columnHeaderFormat.Text = LanguageSettings.Current.Main.Controls.SubtitleFormat;
+            columnHeaderSize.Text = LanguageSettings.Current.General.Size;
             columnHeaderStatus.Text = l.Status;
             buttonSearchFolder.Text = l.ScanFolder;
             checkBoxScanFolderRecursive.Text = l.Recursive;
             checkBoxScanFolderRecursive.Left = buttonSearchFolder.Left - checkBoxScanFolderRecursive.Width - 5;
-            checkBoxGenerateSceneChanges.Text = Configuration.Settings.Language.ImportSceneChanges.GetSceneChangesWithFfmpeg;
+            checkBoxGenerateSceneChanges.Text = LanguageSettings.Current.ImportSceneChanges.GetSceneChangesWithFfmpeg;
             checkBoxGenerateSceneChanges.Left = groupBoxInput.Left + listViewInputFiles.Width - checkBoxGenerateSceneChanges.Width;
             checkBoxGenerateSceneChanges.Visible = !string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) && File.Exists(Configuration.Settings.General.FFmpegLocation);
-            removeToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.Remove;
-            removeAllToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.RemoveAll;
+            removeToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.Remove;
+            removeAllToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.RemoveAll;
             UiUtil.FixLargeFonts(this, buttonDone);
         }
 
@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonInputBrowse_Click(object sender, EventArgs e)
         {
             buttonInputBrowse.Enabled = false;
-            openFileDialog1.Title = Configuration.Settings.Language.General.OpenVideoFile;
+            openFileDialog1.Title = LanguageSettings.Current.General.OpenVideoFile;
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.Filter = UiUtil.GetVideoFileFilter(true);
             openFileDialog1.Multiselect = true;
@@ -228,7 +228,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (listViewInputFiles.Items.Count == 0)
             {
-                MessageBox.Show(Configuration.Settings.Language.BatchConvert.NothingToConvert);
+                MessageBox.Show(LanguageSettings.Current.BatchConvert.NothingToConvert);
                 return;
             }
             _converting = true;
@@ -257,7 +257,7 @@ namespace Nikse.SubtitleEdit.Forms
                     item.SubItems[3].Text = status;
                     Refresh();
                 };
-                updateStatus(Configuration.Settings.Language.AddWaveformBatch.ExtractingAudio);
+                updateStatus(LanguageSettings.Current.AddWaveformBatch.ExtractingAudio);
                 string fileName = item.Text;
                 try
                 {
@@ -270,9 +270,9 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     catch (DllNotFoundException)
                     {
-                        if (MessageBox.Show(Configuration.Settings.Language.AddWaveform.VlcMediaPlayerNotFound + Environment.NewLine +
-                                            Environment.NewLine + Configuration.Settings.Language.AddWaveform.GoToVlcMediaPlayerHomePage,
-                                            Configuration.Settings.Language.AddWaveform.VlcMediaPlayerNotFoundTitle,
+                        if (MessageBox.Show(LanguageSettings.Current.AddWaveform.VlcMediaPlayerNotFound + Environment.NewLine +
+                                            Environment.NewLine + LanguageSettings.Current.AddWaveform.GoToVlcMediaPlayerHomePage,
+                                            LanguageSettings.Current.AddWaveform.VlcMediaPlayerNotFoundTitle,
                                             MessageBoxButtons.YesNo) == DialogResult.Yes)
                         {
                             UiUtil.OpenUrl("http://www.videolan.org/");
@@ -328,7 +328,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
 
-                    updateStatus(Configuration.Settings.Language.AddWaveformBatch.Calculating);
+                    updateStatus(LanguageSettings.Current.AddWaveformBatch.Calculating);
                     MakeWaveformAndSpectrogram(fileName, targetFile, _delayInMilliseconds);
 
                     if (checkBoxGenerateSceneChanges.Visible && checkBoxGenerateSceneChanges.Checked)
@@ -348,13 +348,13 @@ namespace Nikse.SubtitleEdit.Forms
 
                     IncrementAndShowProgress();
 
-                    updateStatus(Configuration.Settings.Language.AddWaveformBatch.Done);
+                    updateStatus(LanguageSettings.Current.AddWaveformBatch.Done);
                 }
                 catch
                 {
                     IncrementAndShowProgress();
 
-                    updateStatus(Configuration.Settings.Language.AddWaveformBatch.Error);
+                    updateStatus(LanguageSettings.Current.AddWaveformBatch.Error);
                 }
                 index++;
             }

@@ -46,14 +46,14 @@ namespace Nikse.SubtitleEdit.Forms
             _borderColor = Color.Black;
             _borderWidth = 2.0f;
 
-            var language = Configuration.Settings.Language.Beamer;
+            var language = LanguageSettings.Current.Beamer;
             Text = language.Title;
-            groupBoxImageSettings.Text = Configuration.Settings.Language.ExportPngXml.ImageSettings;
-            labelSubtitleFont.Text = Configuration.Settings.Language.ExportPngXml.FontFamily;
-            labelSubtitleFontSize.Text = Configuration.Settings.Language.ExportPngXml.FontSize;
-            buttonColor.Text = Configuration.Settings.Language.ExportPngXml.FontColor;
-            buttonBorderColor.Text = Configuration.Settings.Language.ExportPngXml.BorderColor;
-            labelBorderWidth.Text = Configuration.Settings.Language.ExportPngXml.BorderWidth;
+            groupBoxImageSettings.Text = LanguageSettings.Current.ExportPngXml.ImageSettings;
+            labelSubtitleFont.Text = LanguageSettings.Current.ExportPngXml.FontFamily;
+            labelSubtitleFontSize.Text = LanguageSettings.Current.ExportPngXml.FontSize;
+            buttonColor.Text = LanguageSettings.Current.ExportPngXml.FontColor;
+            buttonBorderColor.Text = LanguageSettings.Current.ExportPngXml.BorderColor;
+            labelBorderWidth.Text = LanguageSettings.Current.ExportPngXml.BorderWidth;
 
             _subtitleFontName = Configuration.Settings.SubtitleBeaming.FontName;
             _subtitleFontSize = Configuration.Settings.SubtitleBeaming.FontSize;

@@ -21,13 +21,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            Text = Configuration.Settings.Language.GetTesseractDictionaries.Title;
-            labelDescription1.Text = Configuration.Settings.Language.GetTesseractDictionaries.DescriptionLine1;
-            linkLabelOpenDictionaryFolder.Text = Configuration.Settings.Language.GetTesseractDictionaries.OpenDictionariesFolder;
-            labelChooseLanguageAndClickDownload.Text = Configuration.Settings.Language.GetTesseractDictionaries.ChooseLanguageAndClickDownload;
-            buttonDownload.Text = Configuration.Settings.Language.GetTesseractDictionaries.Download;
+            Text = LanguageSettings.Current.GetTesseractDictionaries.Title;
+            labelDescription1.Text = LanguageSettings.Current.GetTesseractDictionaries.DescriptionLine1;
+            linkLabelOpenDictionaryFolder.Text = LanguageSettings.Current.GetTesseractDictionaries.OpenDictionariesFolder;
+            labelChooseLanguageAndClickDownload.Text = LanguageSettings.Current.GetTesseractDictionaries.ChooseLanguageAndClickDownload;
+            buttonDownload.Text = LanguageSettings.Current.GetTesseractDictionaries.Download;
             labelPleaseWait.Text = string.Empty;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
             FixLargeFonts();
             _dictionaries = TesseractDictionary.List();
             LoadDictionaryList(first);
@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             try
             {
-                labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait;
+                labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
                 buttonOK.Enabled = false;
                 buttonDownload.Enabled = false;
                 comboBoxDictionaries.Enabled = false;
@@ -95,7 +95,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
                 wc.DownloadProgressChanged += (o, args) =>
                 {
-                    labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait + "  " + args.ProgressPercentage + "%";
+                    labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + args.ProgressPercentage + "%";
                 };
                 wc.DownloadDataAsync(new Uri(url));
                 Cursor = Cursors.Default;
@@ -115,7 +115,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             if (e.Error != null)
             {
-                MessageBox.Show(Configuration.Settings.Language.GetTesseractDictionaries.DownloadFailed);
+                MessageBox.Show(LanguageSettings.Current.GetTesseractDictionaries.DownloadFailed);
                 DialogResult = DialogResult.Cancel;
                 return;
             }
@@ -156,14 +156,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             buttonOK.Enabled = true;
             buttonDownload.Enabled = true;
             comboBoxDictionaries.Enabled = true;
-            MessageBox.Show(string.Format(Configuration.Settings.Language.GetDictionaries.XDownloaded, comboBoxDictionaries.Items[index]));
+            MessageBox.Show(string.Format(LanguageSettings.Current.GetDictionaries.XDownloaded, comboBoxDictionaries.Items[index]));
         }
 
         private void wc_DownloadTrainedDataCompleted(object sender, DownloadDataCompletedEventArgs e)
         {
             if (e.Error != null)
             {
-                MessageBox.Show(Configuration.Settings.Language.GetTesseractDictionaries.DownloadFailed);
+                MessageBox.Show(LanguageSettings.Current.GetTesseractDictionaries.DownloadFailed);
                 DialogResult = DialogResult.Cancel;
                 return;
             }
@@ -192,7 +192,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             buttonOK.Enabled = true;
             buttonDownload.Enabled = true;
             comboBoxDictionaries.Enabled = true;
-            MessageBox.Show(string.Format(Configuration.Settings.Language.GetTesseractDictionaries.XDownloaded, comboBoxDictionaries.Items[index]));
+            MessageBox.Show(string.Format(LanguageSettings.Current.GetTesseractDictionaries.XDownloaded, comboBoxDictionaries.Items[index]));
         }
 
         private void linkLabelOpenDictionaryFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

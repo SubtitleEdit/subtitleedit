@@ -108,9 +108,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             LanguageCode = languageCode;
-            Text = Configuration.Settings.Language.EbuSaveOptions.Title;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            Text = LanguageSettings.Current.EbuSaveOptions.Title;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 

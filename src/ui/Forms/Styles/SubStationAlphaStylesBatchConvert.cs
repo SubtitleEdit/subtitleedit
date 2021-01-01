@@ -42,15 +42,15 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 comboBoxFontName.Items.Add(x.Name);
             }
 
-            var l = Configuration.Settings.Language.SubStationAlphaStyles;
+            var l = LanguageSettings.Current.SubStationAlphaStyles;
             Text = l.Title;
             groupBoxProperties.Text = l.Properties;
             groupBoxFont.Text = l.Font;
             labelFontName.Text = l.FontName;
             labelFontSize.Text = l.FontSize;
-            checkBoxFontItalic.Text = Configuration.Settings.Language.General.Italic;
-            checkBoxFontBold.Text = Configuration.Settings.Language.General.Bold;
-            checkBoxFontUnderline.Text = Configuration.Settings.Language.General.Underline;
+            checkBoxFontItalic.Text = LanguageSettings.Current.General.Italic;
+            checkBoxFontBold.Text = LanguageSettings.Current.General.Bold;
+            checkBoxFontUnderline.Text = LanguageSettings.Current.General.Underline;
             groupBoxAlignment.Text = l.Alignment;
             radioButtonTopLeft.Text = l.TopLeft;
             radioButtonTopCenter.Text = l.TopCenter;
@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             radioButtonOutline.Text = l.Outline;
             labelShadow.Text = l.PlusShadow;
             radioButtonOpaqueBox.Text = l.OpaqueBox;
-            groupBoxPreview.Text = Configuration.Settings.Language.General.Preview;
+            groupBoxPreview.Text = LanguageSettings.Current.General.Preview;
 
             if (_isSubStationAlpha)
             {
@@ -93,8 +93,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 numericUpDownShadowWidth.DecimalPlaces = 0;
             }
 
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
             UiUtil.FixLargeFonts(this, buttonCancel);
 
@@ -115,7 +115,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             checkBoxFontItalic.Left = checkBoxFontBold.Left + checkBoxFontBold.Width + 12;
             checkBoxFontUnderline.Left = checkBoxFontItalic.Left + checkBoxFontItalic.Width + 12;
 
-            var l2 = Configuration.Settings.Language.SubStationAlphaProperties;
+            var l2 = LanguageSettings.Current.SubStationAlphaProperties;
             groupBoxResolution.Text = l2.Resolution;
             labelVideoResolution.Text = l2.VideoResolution;
             groupBoxOptions.Text = l2.Options;
@@ -264,7 +264,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void buttonGetResolutionFromVideo_Click(object sender, EventArgs e)
         {
-            openFileDialog1.Title = Configuration.Settings.Language.General.OpenVideoFileTitle;
+            openFileDialog1.Title = LanguageSettings.Current.General.OpenVideoFileTitle;
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.Filter = UiUtil.GetVideoFileFilter(false);
             openFileDialog1.FileName = string.Empty;

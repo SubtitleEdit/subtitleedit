@@ -63,57 +63,57 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxReplace.ContextMenuStrip = FindReplaceDialogHelper.GetReplaceTextContextMenu(textBoxReplace);
             buttonUpdate.Enabled = false;
 
-            Text = Configuration.Settings.Language.MultipleReplace.Title;
-            labelFindWhat.Text = Configuration.Settings.Language.MultipleReplace.FindWhat;
-            labelReplaceWith.Text = Configuration.Settings.Language.MultipleReplace.ReplaceWith;
-            labelDescription.Text = Configuration.Settings.Language.MultipleReplace.Description;
-            radioButtonNormal.Text = Configuration.Settings.Language.MultipleReplace.Normal;
-            radioButtonRegEx.Text = Configuration.Settings.Language.MultipleReplace.RegularExpression;
-            radioButtonCaseSensitive.Text = Configuration.Settings.Language.MultipleReplace.CaseSensitive;
-            buttonAdd.Text = Configuration.Settings.Language.MultipleReplace.Add;
-            buttonUpdate.Text = Configuration.Settings.Language.MultipleReplace.Update;
-            listViewRules.Columns[0].Text = Configuration.Settings.Language.MultipleReplace.Enabled;
-            listViewRules.Columns[1].Text = Configuration.Settings.Language.MultipleReplace.FindWhat;
-            listViewRules.Columns[2].Text = Configuration.Settings.Language.MultipleReplace.ReplaceWith;
-            listViewRules.Columns[3].Text = Configuration.Settings.Language.MultipleReplace.SearchType;
-            listViewRules.Columns[4].Text = Configuration.Settings.Language.MultipleReplace.Description;
-            groupBoxGroups.Text = Configuration.Settings.Language.MultipleReplace.Groups;
+            Text = LanguageSettings.Current.MultipleReplace.Title;
+            labelFindWhat.Text = LanguageSettings.Current.MultipleReplace.FindWhat;
+            labelReplaceWith.Text = LanguageSettings.Current.MultipleReplace.ReplaceWith;
+            labelDescription.Text = LanguageSettings.Current.MultipleReplace.Description;
+            radioButtonNormal.Text = LanguageSettings.Current.MultipleReplace.Normal;
+            radioButtonRegEx.Text = LanguageSettings.Current.MultipleReplace.RegularExpression;
+            radioButtonCaseSensitive.Text = LanguageSettings.Current.MultipleReplace.CaseSensitive;
+            buttonAdd.Text = LanguageSettings.Current.MultipleReplace.Add;
+            buttonUpdate.Text = LanguageSettings.Current.MultipleReplace.Update;
+            listViewRules.Columns[0].Text = LanguageSettings.Current.MultipleReplace.Enabled;
+            listViewRules.Columns[1].Text = LanguageSettings.Current.MultipleReplace.FindWhat;
+            listViewRules.Columns[2].Text = LanguageSettings.Current.MultipleReplace.ReplaceWith;
+            listViewRules.Columns[3].Text = LanguageSettings.Current.MultipleReplace.SearchType;
+            listViewRules.Columns[4].Text = LanguageSettings.Current.MultipleReplace.Description;
+            groupBoxGroups.Text = LanguageSettings.Current.MultipleReplace.Groups;
             groupBoxLinesFound.Text = string.Empty;
-            listViewFixes.Columns[0].Text = Configuration.Settings.Language.General.Apply;
-            listViewFixes.Columns[1].Text = Configuration.Settings.Language.General.LineNumber;
-            listViewFixes.Columns[2].Text = Configuration.Settings.Language.General.Before;
-            listViewFixes.Columns[3].Text = Configuration.Settings.Language.General.After;
-            deleteToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.Remove;
-            toolStripMenuItemRemoveAll.Text = Configuration.Settings.Language.MultipleReplace.RemoveAll;
-            toolStripMenuItemImport.Text = Configuration.Settings.Language.MultipleReplace.Import;
-            toolStripMenuItemExport.Text = Configuration.Settings.Language.MultipleReplace.Export;
-            importToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.Import;
-            exportToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.Export;
-            buttonImportGroups.Text = Configuration.Settings.Language.MultipleReplace.Import;
-            buttonExportGroups.Text = Configuration.Settings.Language.MultipleReplace.Export;
-            buttonNewGroup.Text = Configuration.Settings.Language.MultipleReplace.NewGroup;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            buttonApply.Text = Configuration.Settings.Language.General.Apply;
-            buttonReplacesSelectAll.Text = Configuration.Settings.Language.FixCommonErrors.SelectAll;
-            buttonReplacesInverseSelection.Text = Configuration.Settings.Language.FixCommonErrors.InverseSelection;
+            listViewFixes.Columns[0].Text = LanguageSettings.Current.General.Apply;
+            listViewFixes.Columns[1].Text = LanguageSettings.Current.General.LineNumber;
+            listViewFixes.Columns[2].Text = LanguageSettings.Current.General.Before;
+            listViewFixes.Columns[3].Text = LanguageSettings.Current.General.After;
+            deleteToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.Remove;
+            toolStripMenuItemRemoveAll.Text = LanguageSettings.Current.MultipleReplace.RemoveAll;
+            toolStripMenuItemImport.Text = LanguageSettings.Current.MultipleReplace.Import;
+            toolStripMenuItemExport.Text = LanguageSettings.Current.MultipleReplace.Export;
+            importToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.Import;
+            exportToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.Export;
+            buttonImportGroups.Text = LanguageSettings.Current.MultipleReplace.Import;
+            buttonExportGroups.Text = LanguageSettings.Current.MultipleReplace.Export;
+            buttonNewGroup.Text = LanguageSettings.Current.MultipleReplace.NewGroup;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            buttonApply.Text = LanguageSettings.Current.General.Apply;
+            buttonReplacesSelectAll.Text = LanguageSettings.Current.FixCommonErrors.SelectAll;
+            buttonReplacesInverseSelection.Text = LanguageSettings.Current.FixCommonErrors.InverseSelection;
             UiUtil.FixLargeFonts(this, buttonOK);
             splitContainer1.Panel1MinSize = 200;
             splitContainer1.Panel2MinSize = 200;
 
-            moveUpToolStripMenuItem.Text = Configuration.Settings.Language.DvdSubRip.MoveUp;
-            moveDownToolStripMenuItem.Text = Configuration.Settings.Language.DvdSubRip.MoveDown;
-            moveTopToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.MoveToTop;
-            moveBottomToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.MoveToBottom;
-            newToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.NewGroup;
+            moveUpToolStripMenuItem.Text = LanguageSettings.Current.DvdSubRip.MoveUp;
+            moveDownToolStripMenuItem.Text = LanguageSettings.Current.DvdSubRip.MoveDown;
+            moveTopToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.MoveToTop;
+            moveBottomToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.MoveToBottom;
+            newToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.NewGroup;
 
-            toolStripMenuItemMoveRulesToGroup.Text = Configuration.Settings.Language.MultipleReplace.MoveSelectedRulesToGroup;
-            moveUpToolStripMenuItem1.Text = Configuration.Settings.Language.DvdSubRip.MoveUp;
-            moveDownToolStripMenuItem1.Text = Configuration.Settings.Language.DvdSubRip.MoveDown;
-            moveToTopToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.MoveToTop;
-            moveToBottomToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.MoveToBottom;
-            toolStripMenuItemRename.Text = Configuration.Settings.Language.MultipleReplace.RenameGroup;
-            deleteToolStripMenuItem1.Text = Configuration.Settings.Language.MultipleReplace.Remove;
+            toolStripMenuItemMoveRulesToGroup.Text = LanguageSettings.Current.MultipleReplace.MoveSelectedRulesToGroup;
+            moveUpToolStripMenuItem1.Text = LanguageSettings.Current.DvdSubRip.MoveUp;
+            moveDownToolStripMenuItem1.Text = LanguageSettings.Current.DvdSubRip.MoveDown;
+            moveToTopToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.MoveToTop;
+            moveToBottomToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.MoveToBottom;
+            toolStripMenuItemRename.Text = LanguageSettings.Current.MultipleReplace.RenameGroup;
+            deleteToolStripMenuItem1.Text = LanguageSettings.Current.MultipleReplace.Remove;
 
             radioButtonCaseSensitive.Left = radioButtonNormal.Left + radioButtonNormal.Width + 40;
             radioButtonRegEx.Left = radioButtonCaseSensitive.Left + radioButtonCaseSensitive.Width + 40;
@@ -217,7 +217,7 @@ namespace Nikse.SubtitleEdit.Forms
                     searchType = ReplaceExpression.SearchTypeRegularExpression;
                     if (!RegexUtils.IsValidRegex(findText))
                     {
-                        MessageBox.Show(Configuration.Settings.Language.General.RegularExpressionIsNotValid);
+                        MessageBox.Show(LanguageSettings.Current.General.RegularExpressionIsNotValid);
                         textBoxFind.Select();
                         return;
                     }
@@ -318,7 +318,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             listViewFixes.Items.AddRange(fixes.ToArray());
             listViewFixes.EndUpdate();
-            groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.MultipleReplace.LinesFoundX, fixedLines);
+            groupBoxLinesFound.Text = string.Format(LanguageSettings.Current.MultipleReplace.LinesFoundX, fixedLines);
             Cursor = Cursors.Default;
         }
 
@@ -343,12 +343,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static string LocalSearchTypeToEnglish(string searchType)
         {
-            if (searchType == Configuration.Settings.Language.MultipleReplace.RegularExpression)
+            if (searchType == LanguageSettings.Current.MultipleReplace.RegularExpression)
             {
                 return ReplaceExpression.SearchTypeRegularExpression;
             }
 
-            if (searchType == Configuration.Settings.Language.MultipleReplace.CaseSensitive)
+            if (searchType == LanguageSettings.Current.MultipleReplace.CaseSensitive)
             {
                 return ReplaceExpression.SearchTypeCaseSensitive;
             }
@@ -360,15 +360,15 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (searchType == ReplaceExpression.SearchTypeRegularExpression)
             {
-                return Configuration.Settings.Language.MultipleReplace.RegularExpression;
+                return LanguageSettings.Current.MultipleReplace.RegularExpression;
             }
 
             if (searchType == ReplaceExpression.SearchTypeCaseSensitive)
             {
-                return Configuration.Settings.Language.MultipleReplace.CaseSensitive;
+                return LanguageSettings.Current.MultipleReplace.CaseSensitive;
             }
 
-            return Configuration.Settings.Language.MultipleReplace.Normal;
+            return LanguageSettings.Current.MultipleReplace.Normal;
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
@@ -478,7 +478,7 @@ namespace Nikse.SubtitleEdit.Forms
                     searchType = ReplaceExpression.SearchTypeRegularExpression;
                     if (!RegexUtils.IsValidRegex(findText))
                     {
-                        MessageBox.Show(Configuration.Settings.Language.General.RegularExpressionIsNotValid);
+                        MessageBox.Show(LanguageSettings.Current.General.RegularExpressionIsNotValid);
                         textBoxFind.Select();
                         return;
                     }
@@ -929,7 +929,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewRules.ItemChecked -= ListViewRulesItemChecked;
             listViewGroups.ItemChecked -= listViewGroups_ItemChecked;
             listViewRules.BeginUpdate();
-            groupBoxReplaces.Text = string.Format(Configuration.Settings.Language.MultipleReplace.RulesForGroupX, _currentGroup.Name);
+            groupBoxReplaces.Text = string.Format(LanguageSettings.Current.MultipleReplace.RulesForGroupX, _currentGroup.Name);
             listViewRules.Items.Clear();
             foreach (var rule in _currentGroup.Rules)
             {
@@ -992,8 +992,8 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            saveFileDialog1.Title = Configuration.Settings.Language.MultipleReplace.ExportRulesTitle;
-            saveFileDialog1.Filter = Configuration.Settings.Language.MultipleReplace.Rules + TemplateFilterExtension;
+            saveFileDialog1.Title = LanguageSettings.Current.MultipleReplace.ExportRulesTitle;
+            saveFileDialog1.Filter = LanguageSettings.Current.MultipleReplace.Rules + TemplateFilterExtension;
             if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 var textWriter = new XmlTextWriter(saveFileDialog1.FileName, null) { Formatting = Formatting.Indented };
@@ -1027,8 +1027,8 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            openFileDialog1.Title = Configuration.Settings.Language.MultipleReplace.ImportRulesTitle;
-            openFileDialog1.Filter = Configuration.Settings.Language.MultipleReplace.Rules + TemplateFilterExtension;
+            openFileDialog1.Title = LanguageSettings.Current.MultipleReplace.ImportRulesTitle;
+            openFileDialog1.Filter = LanguageSettings.Current.MultipleReplace.Rules + TemplateFilterExtension;
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 try
@@ -1217,8 +1217,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void importToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            openFileDialog1.Title = Configuration.Settings.Language.MultipleReplace.ImportRulesTitle;
-            openFileDialog1.Filter = Configuration.Settings.Language.MultipleReplace.Rules + TemplateFilterExtension;
+            openFileDialog1.Title = LanguageSettings.Current.MultipleReplace.ImportRulesTitle;
+            openFileDialog1.Filter = LanguageSettings.Current.MultipleReplace.Rules + TemplateFilterExtension;
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 try
@@ -1226,7 +1226,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var importGroups = ImportGroupsFile(openFileDialog1.FileName);
                     if (importGroups.Count == 0)
                     {
-                        MessageBox.Show(Configuration.Settings.Language.MultipleReplace.NothingToImport);
+                        MessageBox.Show(LanguageSettings.Current.MultipleReplace.NothingToImport);
                         return;
                     }
 

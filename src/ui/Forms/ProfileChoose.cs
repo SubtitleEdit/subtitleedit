@@ -19,16 +19,16 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            var language = Configuration.Settings.Language.Settings;
+            var language = LanguageSettings.Current.Settings;
             Text = language.Profiles;
-            listViewProfiles.Columns[0].Text = Configuration.Settings.Language.General.Name;
+            listViewProfiles.Columns[0].Text = LanguageSettings.Current.General.Name;
             listViewProfiles.Columns[1].Text = language.SubtitleLineMaximumLength;
             listViewProfiles.Columns[2].Text = language.OptimalCharactersPerSecond;
             listViewProfiles.Columns[3].Text = language.MaximumCharactersPerSecond;
             listViewProfiles.Columns[4].Text = language.MinimumGapMilliseconds;
 
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
 
             RulesProfiles = rulesProfiles;

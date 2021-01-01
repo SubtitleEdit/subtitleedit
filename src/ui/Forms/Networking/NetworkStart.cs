@@ -19,13 +19,13 @@ namespace Nikse.SubtitleEdit.Forms.Networking
             UiUtil.FixFonts(this);
 
             labelStatus.Text = string.Empty;
-            Text = Configuration.Settings.Language.NetworkStart.Title;
-            labelInfo.Text = Configuration.Settings.Language.NetworkStart.Information;
-            labelSessionKey.Text = Configuration.Settings.Language.General.SessionKey;
-            labelUserName.Text = Configuration.Settings.Language.General.UserName;
-            labelWebServiceUrl.Text = Configuration.Settings.Language.General.WebServiceUrl;
-            buttonStart.Text = Configuration.Settings.Language.NetworkStart.Start;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            Text = LanguageSettings.Current.NetworkStart.Title;
+            labelInfo.Text = LanguageSettings.Current.NetworkStart.Information;
+            labelSessionKey.Text = LanguageSettings.Current.General.SessionKey;
+            labelUserName.Text = LanguageSettings.Current.General.UserName;
+            labelWebServiceUrl.Text = LanguageSettings.Current.General.WebServiceUrl;
+            buttonStart.Text = LanguageSettings.Current.NetworkStart.Start;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonCancel);
         }
 
@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Forms.Networking
             textBoxSessionKey.Enabled = false;
             textBoxUserName.Enabled = false;
             comboBoxWebServiceUrl.Enabled = false;
-            labelStatus.Text = string.Format(Configuration.Settings.Language.NetworkStart.ConnectionTo, comboBoxWebServiceUrl.Text);
+            labelStatus.Text = string.Format(LanguageSettings.Current.NetworkStart.ConnectionTo, comboBoxWebServiceUrl.Text);
             Refresh();
 
             try

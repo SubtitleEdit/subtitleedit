@@ -22,18 +22,18 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            Text = Configuration.Settings.Language.SetMinimumDisplayTimeBetweenParagraphs.Title;
-            labelMaxMillisecondsBetweenLines.Text = Configuration.Settings.Language.SetMinimumDisplayTimeBetweenParagraphs.MinimumMillisecondsBetweenParagraphs;
-            checkBoxShowOnlyChangedLines.Text = Configuration.Settings.Language.SetMinimumDisplayTimeBetweenParagraphs.ShowOnlyModifiedLines;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            SubtitleListview1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
+            Text = LanguageSettings.Current.SetMinimumDisplayTimeBetweenParagraphs.Title;
+            labelMaxMillisecondsBetweenLines.Text = LanguageSettings.Current.SetMinimumDisplayTimeBetweenParagraphs.MinimumMillisecondsBetweenParagraphs;
+            checkBoxShowOnlyChangedLines.Text = LanguageSettings.Current.SetMinimumDisplayTimeBetweenParagraphs.ShowOnlyModifiedLines;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            SubtitleListview1.InitializeLanguage(LanguageSettings.Current.General, Configuration.Settings);
             UiUtil.InitializeSubtitleFont(SubtitleListview1);
             SubtitleListview1.AutoSizeAllColumns(this);
             UiUtil.FixLargeFonts(this, buttonOK);
-            groupBoxFrameInfo.Text = Configuration.Settings.Language.SetMinimumDisplayTimeBetweenParagraphs.FrameInfo;
+            groupBoxFrameInfo.Text = LanguageSettings.Current.SetMinimumDisplayTimeBetweenParagraphs.FrameInfo;
 
-            labelFrames.Text = Configuration.Settings.Language.SetMinimumDisplayTimeBetweenParagraphs.Frames;
+            labelFrames.Text = LanguageSettings.Current.SetMinimumDisplayTimeBetweenParagraphs.Frames;
             numericUpDownFrames.Left = labelFrames.Left + labelFrames.Width + 5;
 
             comboBoxFrameRate.Items.Add(23.976.ToString(CultureInfo.CurrentCulture));
@@ -118,7 +118,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             SubtitleListview1.BeginUpdate();
-            groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.SetMinimumDisplayTimeBetweenParagraphs.PreviewLinesModifiedX, fixes.Count);
+            groupBoxLinesFound.Text = string.Format(LanguageSettings.Current.SetMinimumDisplayTimeBetweenParagraphs.PreviewLinesModifiedX, fixes.Count);
             if (checkBoxShowOnlyChangedLines.Checked)
             {
                 SubtitleListview1.Fill(onlyFixedSubtitle);
@@ -139,7 +139,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var frameRate = GetFrameRate();
             MinGapMs = (int)Math.Round(1000.0 / frameRate * (double)numericUpDownFrames.Value);
-            labelXFrameIsXMS.Text = string.Format(Configuration.Settings.Language.SetMinimumDisplayTimeBetweenParagraphs.XFrameYisZMilliseconds, numericUpDownFrames.Value, frameRate, MinGapMs);
+            labelXFrameIsXMS.Text = string.Format(LanguageSettings.Current.SetMinimumDisplayTimeBetweenParagraphs.XFrameYisZMilliseconds, numericUpDownFrames.Value, frameRate, MinGapMs);
         }
 
         private double GetFrameRate()

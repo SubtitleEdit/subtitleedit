@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Forms
             Rectangle screenRectangle = RectangleToScreen(ClientRectangle);
             int titleBarHeight = screenRectangle.Top - Top;
 
-            linkLabelOpenFolder.Text = Configuration.Settings.Language.Main.Menu.File.OpenContainingFolder;
+            linkLabelOpenFolder.Text = LanguageSettings.Current.Main.Menu.File.OpenContainingFolder;
 
             Text = "Subtitle Edit";
             labelText.Text = text;

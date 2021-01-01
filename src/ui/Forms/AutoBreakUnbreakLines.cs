@@ -29,14 +29,14 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Columns[2].Width = 290;
             listViewFixes.Columns[3].Width = 290;
 
-            listViewFixes.Columns[0].Text = Configuration.Settings.Language.General.Apply;
-            listViewFixes.Columns[1].Text = Configuration.Settings.Language.General.LineNumber;
-            listViewFixes.Columns[2].Text = Configuration.Settings.Language.General.Before;
-            listViewFixes.Columns[3].Text = Configuration.Settings.Language.General.After;
-            toolStripMenuItemInverseSelection.Text = Configuration.Settings.Language.Main.Menu.Edit.InverseSelection;
-            toolStripMenuItemSelectAll.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.SelectAll;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            listViewFixes.Columns[0].Text = LanguageSettings.Current.General.Apply;
+            listViewFixes.Columns[1].Text = LanguageSettings.Current.General.LineNumber;
+            listViewFixes.Columns[2].Text = LanguageSettings.Current.General.Before;
+            listViewFixes.Columns[3].Text = LanguageSettings.Current.General.After;
+            toolStripMenuItemInverseSelection.Text = LanguageSettings.Current.Main.Menu.Edit.InverseSelection;
+            toolStripMenuItemSelectAll.Text = LanguageSettings.Current.Main.Menu.ContextMenu.SelectAll;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
@@ -53,7 +53,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (autoBalance)
             {
-                labelCondition.Text = Configuration.Settings.Language.AutoBreakUnbreakLines.OnlyBreakLinesLongerThan;
+                labelCondition.Text = LanguageSettings.Current.AutoBreakUnbreakLines.OnlyBreakLinesLongerThan;
                 const int start = 10;
                 const int max = 60;
                 for (int i = start; i <= max; i++)
@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                labelCondition.Text = Configuration.Settings.Language.AutoBreakUnbreakLines.OnlyUnbreakLinesLongerThan;
+                labelCondition.Text = LanguageSettings.Current.AutoBreakUnbreakLines.OnlyUnbreakLinesLongerThan;
                 for (int i = 5; i < 51; i++)
                 {
                     comboBoxConditions.Items.Add(i.ToString(CultureInfo.InvariantCulture));
@@ -119,7 +119,7 @@ namespace Nikse.SubtitleEdit.Forms
             _notAllowedFixes = new HashSet<string>();
             _fixedText = new Dictionary<string, string>();
             int minLength = MinimumLength;
-            Text = Configuration.Settings.Language.AutoBreakUnbreakLines.TitleAutoBreak;
+            Text = LanguageSettings.Current.AutoBreakUnbreakLines.TitleAutoBreak;
 
 
             listViewFixes.BeginUpdate();
@@ -137,7 +137,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             listViewFixes.EndUpdate();
-            groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.AutoBreakUnbreakLines.LinesFoundX, listViewFixes.Items.Count);
+            groupBoxLinesFound.Text = string.Format(LanguageSettings.Current.AutoBreakUnbreakLines.LinesFoundX, listViewFixes.Items.Count);
             listViewFixes.ItemChecked += listViewFixes_ItemChecked;
         }
 
@@ -147,7 +147,7 @@ namespace Nikse.SubtitleEdit.Forms
             _notAllowedFixes = new HashSet<string>();
             _fixedText = new Dictionary<string, string>();
             int minLength = int.Parse(comboBoxConditions.Items[comboBoxConditions.SelectedIndex].ToString());
-            Text = Configuration.Settings.Language.AutoBreakUnbreakLines.TitleUnbreak;
+            Text = LanguageSettings.Current.AutoBreakUnbreakLines.TitleUnbreak;
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
             foreach (Paragraph p in _paragraphs)
@@ -163,7 +163,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             listViewFixes.EndUpdate();
-            groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.AutoBreakUnbreakLines.LinesFoundX, listViewFixes.Items.Count);
+            groupBoxLinesFound.Text = string.Format(LanguageSettings.Current.AutoBreakUnbreakLines.LinesFoundX, listViewFixes.Items.Count);
             listViewFixes.ItemChecked += listViewFixes_ItemChecked;
         }
 

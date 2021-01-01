@@ -13,12 +13,12 @@ namespace Nikse.SubtitleEdit.Forms.Networking
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            Text = Configuration.Settings.Language.NetworkLogAndInfo.Title;
-            labelSessionKey.Text = Configuration.Settings.Language.General.SessionKey;
-            labelUserName.Text = Configuration.Settings.Language.General.UserName;
-            labelWebServiceUrl.Text = Configuration.Settings.Language.General.WebServiceUrl;
-            labelLog.Text = Configuration.Settings.Language.NetworkLogAndInfo.Log;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
+            Text = LanguageSettings.Current.NetworkLogAndInfo.Title;
+            labelSessionKey.Text = LanguageSettings.Current.General.SessionKey;
+            labelUserName.Text = LanguageSettings.Current.General.UserName;
+            labelWebServiceUrl.Text = LanguageSettings.Current.General.WebServiceUrl;
+            labelLog.Text = LanguageSettings.Current.NetworkLogAndInfo.Log;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
         }
 
         internal void Initialize(Logic.Networking.NikseWebServiceSession networkSession)

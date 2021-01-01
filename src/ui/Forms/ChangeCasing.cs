@@ -14,7 +14,7 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            var language = Configuration.Settings.Language.ChangeCasing;
+            var language = LanguageSettings.Current.ChangeCasing;
             Text = language.Title;
             groupBoxChangeCasing.Text = language.ChangeCasingTo;
             radioButtonNormal.Text = language.NormalCasing;
@@ -23,8 +23,8 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxOnlyAllUpper.Text = language.OnlyChangeAllUppercaseLines;
             radioButtonUppercase.Text = language.AllUppercase;
             radioButtonLowercase.Text = language.AllLowercase;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             FixLargeFonts();
 
             if (Configuration.Settings.Tools.ChangeCasingChoice == "NamesOnly")

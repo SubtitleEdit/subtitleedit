@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle = subtitle;
             _isSubStationAlpha = isSubStationAlpha;
 
-            var l = Configuration.Settings.Language.SubStationAlphaStyles;
+            var l = LanguageSettings.Current.SubStationAlphaStyles;
             Text = l.ChooseStyle;
             listViewStyles.Columns[0].Text = l.Name;
             listViewStyles.Columns[1].Text = l.FontName;
@@ -33,8 +33,8 @@ namespace Nikse.SubtitleEdit.Forms
             listViewStyles.Columns[3].Text = l.UseCount;
             listViewStyles.Columns[4].Text = l.Primary;
             listViewStyles.Columns[5].Text = l.Outline;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
             InitializeListView();
             UiUtil.FixLargeFonts(this, buttonOK);

@@ -50,24 +50,24 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle = new Subtitle(subtitle);
             _videoFileName = videoFileName;
 
-            Text = Configuration.Settings.Language.ExportFcpXmlAdvanced.Title;
-            groupBoxImageSettings.Text = Configuration.Settings.Language.ExportPngXml.ImageSettings;
-            buttonColor.Text = Configuration.Settings.Language.ExportPngXml.FontColor;
-            labelSubtitleFont.Text = Configuration.Settings.Language.ExportFcpXmlAdvanced.FontName;
-            labelSubtitleFontSize.Text = Configuration.Settings.Language.ExportFcpXmlAdvanced.FontSize;
-            labelSubtitleFontFace.Text = Configuration.Settings.Language.ExportFcpXmlAdvanced.FontFace;
-            labelHorizontalAlign.Text = Configuration.Settings.Language.ExportFcpXmlAdvanced.Alignment;
-            labelBaseline.Text = Configuration.Settings.Language.ExportFcpXmlAdvanced.Baseline;
-            labelFrameRate.Text = Configuration.Settings.Language.General.FrameRate;
-            labelResolution.Text = Configuration.Settings.Language.ExportPngXml.VideoResolution;
-            buttonSave.Text = Configuration.Settings.Language.ExportCustomText.SaveAs;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            Text = LanguageSettings.Current.ExportFcpXmlAdvanced.Title;
+            groupBoxImageSettings.Text = LanguageSettings.Current.ExportPngXml.ImageSettings;
+            buttonColor.Text = LanguageSettings.Current.ExportPngXml.FontColor;
+            labelSubtitleFont.Text = LanguageSettings.Current.ExportFcpXmlAdvanced.FontName;
+            labelSubtitleFontSize.Text = LanguageSettings.Current.ExportFcpXmlAdvanced.FontSize;
+            labelSubtitleFontFace.Text = LanguageSettings.Current.ExportFcpXmlAdvanced.FontFace;
+            labelHorizontalAlign.Text = LanguageSettings.Current.ExportFcpXmlAdvanced.Alignment;
+            labelBaseline.Text = LanguageSettings.Current.ExportFcpXmlAdvanced.Baseline;
+            labelFrameRate.Text = LanguageSettings.Current.General.FrameRate;
+            labelResolution.Text = LanguageSettings.Current.ExportPngXml.VideoResolution;
+            buttonSave.Text = LanguageSettings.Current.ExportCustomText.SaveAs;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
             comboBoxHAlign.Items.Clear();
-            comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.Left);
-            comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.Center);
-            comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.Right);
-            comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.CenterLeftJustify);
+            comboBoxHAlign.Items.Add(LanguageSettings.Current.ExportPngXml.Left);
+            comboBoxHAlign.Items.Add(LanguageSettings.Current.ExportPngXml.Center);
+            comboBoxHAlign.Items.Add(LanguageSettings.Current.ExportPngXml.Right);
+            comboBoxHAlign.Items.Add(LanguageSettings.Current.ExportPngXml.CenterLeftJustify);
 
             foreach (var x in FontFamily.Families)
             {
@@ -124,7 +124,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             comboBoxFontFace.Items.Clear();
-            comboBoxFontFace.Items.Add(Configuration.Settings.Language.ExportFcpXmlAdvanced.FontFaceRegular);
+            comboBoxFontFace.Items.Add(LanguageSettings.Current.ExportFcpXmlAdvanced.FontFaceRegular);
             comboBoxFontFace.SelectedIndex = 0;
 
             comboBoxHAlign.SelectedIndex = 1;
@@ -151,7 +151,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             panelColor.BackColor = Configuration.Settings.FcpExportSettings.Color;
 
-            SubtitleListview.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
+            SubtitleListview.InitializeLanguage(LanguageSettings.Current.General, Configuration.Settings);
             SubtitleListview.InitializeTimestampColumnWidths(this);
             UiUtil.InitializeSubtitleFont(SubtitleListview);
             SubtitleListview.AutoSizeAllColumns(this);
@@ -175,7 +175,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonSave_Click(object sender, EventArgs e)
         {
-            saveFileDialog1.Title = Configuration.Settings.Language.ExportPngXml.SaveFcpAs;
+            saveFileDialog1.Title = LanguageSettings.Current.ExportPngXml.SaveFcpAs;
             saveFileDialog1.DefaultExt = "*.fcpxml";
             saveFileDialog1.AddExtension = true;
             saveFileDialog1.Filter = "FCP XML files|*.fcpxml";
@@ -202,7 +202,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var text = _subtitle.ToText(format);
                 File.WriteAllText(saveFileDialog1.FileName, text, Encoding.UTF8);
                 Configuration.Settings.General.CurrentFrameRate = oldFrameRate;
-                MessageBox.Show(string.Format(Configuration.Settings.Language.Main.SavedSubtitleX, saveFileDialog1.FileName));
+                MessageBox.Show(string.Format(LanguageSettings.Current.Main.SavedSubtitleX, saveFileDialog1.FileName));
                 DialogResult = DialogResult.OK;
             }
         }

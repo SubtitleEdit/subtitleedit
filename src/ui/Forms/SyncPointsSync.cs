@@ -42,17 +42,17 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            buttonSetSyncPoint.Text = Configuration.Settings.Language.PointSync.SetSyncPoint;
-            buttonRemoveSyncPoint.Text = Configuration.Settings.Language.PointSync.RemoveSyncPoint;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonApplySync.Text = Configuration.Settings.Language.PointSync.ApplySync;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            labelNoOfSyncPoints.Text = string.Format(Configuration.Settings.Language.PointSync.SyncPointsX, 0);
-            labelSyncInfo.Text = Configuration.Settings.Language.PointSync.Info;
-            buttonFindText.Text = Configuration.Settings.Language.VisualSync.FindText;
-            buttonFindTextOther.Text = Configuration.Settings.Language.VisualSync.FindText;
-            SubtitleListview1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
-            subtitleListView2.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
+            buttonSetSyncPoint.Text = LanguageSettings.Current.PointSync.SetSyncPoint;
+            buttonRemoveSyncPoint.Text = LanguageSettings.Current.PointSync.RemoveSyncPoint;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonApplySync.Text = LanguageSettings.Current.PointSync.ApplySync;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            labelNoOfSyncPoints.Text = string.Format(LanguageSettings.Current.PointSync.SyncPointsX, 0);
+            labelSyncInfo.Text = LanguageSettings.Current.PointSync.Info;
+            buttonFindText.Text = LanguageSettings.Current.VisualSync.FindText;
+            buttonFindTextOther.Text = LanguageSettings.Current.VisualSync.FindText;
+            SubtitleListview1.InitializeLanguage(LanguageSettings.Current.General, Configuration.Settings);
+            subtitleListView2.InitializeLanguage(LanguageSettings.Current.General, Configuration.Settings);
             SubtitleListview1.InitializeTimestampColumnWidths(this);
             subtitleListView2.InitializeTimestampColumnWidths(this);
             UiUtil.InitializeSubtitleFont(SubtitleListview1);
@@ -65,7 +65,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void Initialize(Subtitle subtitle, string subtitleFileName, string videoFileName, int audioTrackNumber)
         {
-            Text = Configuration.Settings.Language.PointSync.Title;
+            Text = LanguageSettings.Current.PointSync.Title;
             labelSubtitleFileName.Text = subtitleFileName;
             _subtitle = new Subtitle(subtitle);
             _originalSubtitle = subtitle;
@@ -105,7 +105,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void Initialize(Subtitle subtitle, string subtitleFileName, string videoFileName, int audioTrackNumber, string otherSubtitleFileName, Subtitle otherSubtitle)
         {
-            Text = Configuration.Settings.Language.PointSync.TitleViaOtherSubtitle;
+            Text = LanguageSettings.Current.PointSync.TitleViaOtherSubtitle;
             labelSubtitleFileName.Text = subtitleFileName;
             _subtitle = new Subtitle(subtitle);
             _otherSubtitle = otherSubtitle;
@@ -139,7 +139,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void RefreshSynchronizationPointsUi()
         {
             buttonApplySync.Enabled = _synchronizationPoints.Count > 0;
-            labelNoOfSyncPoints.Text = string.Format(Configuration.Settings.Language.PointSync.SyncPointsX, _synchronizationPoints.Count);
+            labelNoOfSyncPoints.Text = string.Format(LanguageSettings.Current.PointSync.SyncPointsX, _synchronizationPoints.Count);
 
             listBoxSyncPoints.Items.Clear();
 

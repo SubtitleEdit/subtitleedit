@@ -46,28 +46,28 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             InitializeComponent();
             UiUtil.FixFonts(this);
             _blinkForm = blinkForm;
-            Text = Configuration.Settings.Language.SpellCheck.Title;
-            buttonAddToDictionary.Text = Configuration.Settings.Language.SpellCheck.AddToUserDictionary;
-            buttonChange.Text = Configuration.Settings.Language.SpellCheck.Change;
-            buttonChangeAll.Text = Configuration.Settings.Language.SpellCheck.ChangeAll;
-            buttonSkipAll.Text = Configuration.Settings.Language.SpellCheck.SkipAll;
-            buttonSkipOnce.Text = Configuration.Settings.Language.SpellCheck.SkipOnce;
-            buttonUseSuggestion.Text = Configuration.Settings.Language.SpellCheck.Use;
-            buttonUseSuggestionAlways.Text = Configuration.Settings.Language.SpellCheck.UseAlways;
-            buttonAbort.Text = Configuration.Settings.Language.SpellCheck.Abort;
-            groupBoxEditWholeText.Text = Configuration.Settings.Language.SpellCheck.EditWholeText;
-            buttonChangeWholeText.Text = Configuration.Settings.Language.SpellCheck.Change;
-            buttonSkipText.Text = Configuration.Settings.Language.SpellCheck.SkipOnce;
-            buttonEditWholeText.Text = Configuration.Settings.Language.SpellCheck.EditWholeText;
-            buttonEditWord.Text = Configuration.Settings.Language.SpellCheck.EditWordOnly;
-            groupBoxText.Text = Configuration.Settings.Language.General.Text;
-            GroupBoxEditWord.Text = Configuration.Settings.Language.SpellCheck.WordNotFound;
-            buttonEditImageDb.Text = Configuration.Settings.Language.VobSubOcr.EditImageDb;
-            groupBoxSuggestions.Text = Configuration.Settings.Language.SpellCheck.Suggestions;
-            groupBoxTextAsImage.Text = Configuration.Settings.Language.SpellCheck.ImageText;
-            buttonAddToNames.Text = Configuration.Settings.Language.SpellCheck.AddToNamesAndIgnoreList;
-            buttonChangeAllWholeText.Text = Configuration.Settings.Language.SpellCheck.ChangeAll;
-            buttonGoogleIt.Text = Configuration.Settings.Language.Main.VideoControls.GoogleIt;
+            Text = LanguageSettings.Current.SpellCheck.Title;
+            buttonAddToDictionary.Text = LanguageSettings.Current.SpellCheck.AddToUserDictionary;
+            buttonChange.Text = LanguageSettings.Current.SpellCheck.Change;
+            buttonChangeAll.Text = LanguageSettings.Current.SpellCheck.ChangeAll;
+            buttonSkipAll.Text = LanguageSettings.Current.SpellCheck.SkipAll;
+            buttonSkipOnce.Text = LanguageSettings.Current.SpellCheck.SkipOnce;
+            buttonUseSuggestion.Text = LanguageSettings.Current.SpellCheck.Use;
+            buttonUseSuggestionAlways.Text = LanguageSettings.Current.SpellCheck.UseAlways;
+            buttonAbort.Text = LanguageSettings.Current.SpellCheck.Abort;
+            groupBoxEditWholeText.Text = LanguageSettings.Current.SpellCheck.EditWholeText;
+            buttonChangeWholeText.Text = LanguageSettings.Current.SpellCheck.Change;
+            buttonSkipText.Text = LanguageSettings.Current.SpellCheck.SkipOnce;
+            buttonEditWholeText.Text = LanguageSettings.Current.SpellCheck.EditWholeText;
+            buttonEditWord.Text = LanguageSettings.Current.SpellCheck.EditWordOnly;
+            groupBoxText.Text = LanguageSettings.Current.General.Text;
+            GroupBoxEditWord.Text = LanguageSettings.Current.SpellCheck.WordNotFound;
+            buttonEditImageDb.Text = LanguageSettings.Current.VobSubOcr.EditImageDb;
+            groupBoxSuggestions.Text = LanguageSettings.Current.SpellCheck.Suggestions;
+            groupBoxTextAsImage.Text = LanguageSettings.Current.SpellCheck.ImageText;
+            buttonAddToNames.Text = LanguageSettings.Current.SpellCheck.AddToNamesAndIgnoreList;
+            buttonChangeAllWholeText.Text = LanguageSettings.Current.SpellCheck.ChangeAll;
+            buttonGoogleIt.Text = LanguageSettings.Current.Main.VideoControls.GoogleIt;
             UiUtil.FixLargeFonts(this, buttonAddToNames);
         }
 
@@ -256,7 +256,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             Word = s;
             if (s.Length == 0 || s.Contains(' '))
             {
-                MessageBox.Show(Configuration.Settings.Language.SpellCheck.SpacesNotAllowed);
+                MessageBox.Show(LanguageSettings.Current.SpellCheck.SpacesNotAllowed);
                 ActionResult = Action.SkipOnce;
                 return;
             }
@@ -334,7 +334,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 Word = s;
                 if (s.Length == 0 || s.Contains(' '))
                 {
-                    MessageBox.Show(Configuration.Settings.Language.SpellCheck.SpacesNotAllowed);
+                    MessageBox.Show(LanguageSettings.Current.SpellCheck.SpacesNotAllowed);
                     ActionResult = Action.SkipOnce;
                     return;
                 }
@@ -349,8 +349,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (!string.IsNullOrWhiteSpace(richTextBoxParagraph.SelectedText))
             {
                 string word = richTextBoxParagraph.SelectedText.Trim();
-                addXToNamesnoiseListToolStripMenuItem.Text = string.Format(Configuration.Settings.Language.SpellCheck.AddXToNames, word);
-                addXToUserDictionaryToolStripMenuItem.Text = string.Format(Configuration.Settings.Language.SpellCheck.AddXToUserDictionary, word);
+                addXToNamesnoiseListToolStripMenuItem.Text = string.Format(LanguageSettings.Current.SpellCheck.AddXToNames, word);
+                addXToUserDictionaryToolStripMenuItem.Text = string.Format(LanguageSettings.Current.SpellCheck.AddXToUserDictionary, word);
                 showAddItems = true;
             }
             addXToNamesnoiseListToolStripMenuItem.Visible = showAddItems;

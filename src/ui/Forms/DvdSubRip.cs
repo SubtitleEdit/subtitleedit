@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelStatus.Text = string.Empty;
             buttonStartRipping.Enabled = false;
 
-            _language = Configuration.Settings.Language.DvdSubRip;
+            _language = LanguageSettings.Current.DvdSubRip;
             Text = _language.Title;
             groupBoxDvd.Text = _language.DvdGroupTitle;
             labelIfoFile.Text = _language.IfoFile;
@@ -127,7 +127,7 @@ namespace Nikse.SubtitleEdit.Forms
                     Clear();
                     if (ifoParser.Error.ErrorCode == IfoParser.IfoParserError.WrongInfoType)
                     {
-                        MessageBox.Show(string.Format(Configuration.Settings.Language.DvdSubRip.WrongIfoType, ifoParser.Error.ErrorMessage, Environment.NewLine, fileName));
+                        MessageBox.Show(string.Format(LanguageSettings.Current.DvdSubRip.WrongIfoType, ifoParser.Error.ErrorMessage, Environment.NewLine, fileName));
                     }
                     else
                     {
@@ -223,7 +223,7 @@ namespace Nikse.SubtitleEdit.Forms
             MergedVobSubPacks = vobSub.MergeVobSubPacks(); // Merge splitted-packs to whole-packs
             if (MergedVobSubPacks.Count == 0)
             {
-                MessageBox.Show(Configuration.Settings.Language.Main.NoSubtitlesFound);
+                MessageBox.Show(LanguageSettings.Current.Main.NoSubtitlesFound);
                 buttonStartRipping.Text = _language.StartRipping;
                 buttonStartRipping.Enabled = true;
                 return;

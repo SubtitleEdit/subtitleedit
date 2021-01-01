@@ -19,18 +19,18 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            LanguageStructure.ChooseEncoding language = Configuration.Settings.Language.ChooseEncoding;
+            LanguageStructure.ChooseEncoding language = LanguageSettings.Current.ChooseEncoding;
             Text = language.Title;
-            labelShortcutsSearch.Text = Configuration.Settings.Language.General.Search;
-            buttonSearchClear.Text = Configuration.Settings.Language.DvdSubRip.Clear;
+            labelShortcutsSearch.Text = LanguageSettings.Current.General.Search;
+            buttonSearchClear.Text = LanguageSettings.Current.DvdSubRip.Clear;
             textBoxSearch.Left = labelShortcutsSearch.Left + labelShortcutsSearch.Width + 5;
             buttonSearchClear.Left = textBoxSearch.Left + textBoxSearch.Width + 5;
-            LabelPreview.Text = Configuration.Settings.Language.General.Preview;
+            LabelPreview.Text = LanguageSettings.Current.General.Preview;
             listView1.Columns[0].Text = language.CodePage;
-            listView1.Columns[1].Text = Configuration.Settings.Language.General.Name;
+            listView1.Columns[1].Text = LanguageSettings.Current.General.Name;
             listView1.Columns[2].Text = language.DisplayName;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
@@ -91,7 +91,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (listView1.SelectedItems.Count == 0)
             {
-                MessageBox.Show(Configuration.Settings.Language.ChooseEncoding.PleaseSelectAnEncoding);
+                MessageBox.Show(LanguageSettings.Current.ChooseEncoding.PleaseSelectAnEncoding);
             }
             else
             {
@@ -106,7 +106,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Encoding encoding = Encoding.GetEncoding(int.Parse(listView1.SelectedItems[0].Text));
                 textBoxPreview.Text = encoding.GetString(_fileBuffer).Replace("\0", " ");
-                LabelPreview.Text = Configuration.Settings.Language.General.Preview + " - " + encoding.EncodingName;
+                LabelPreview.Text = LanguageSettings.Current.General.Preview + " - " + encoding.EncodingName;
             }
             else
             {

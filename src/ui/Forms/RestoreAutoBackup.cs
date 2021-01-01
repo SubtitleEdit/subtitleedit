@@ -25,17 +25,17 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(this);
             labelStatus.Text = string.Empty;
 
-            var l = Configuration.Settings.Language.RestoreAutoBackup;
+            var l = LanguageSettings.Current.RestoreAutoBackup;
             Text = l.Title;
-            linkLabelOpenContainingFolder.Text = Configuration.Settings.Language.Main.Menu.File.OpenContainingFolder;
+            linkLabelOpenContainingFolder.Text = LanguageSettings.Current.Main.Menu.File.OpenContainingFolder;
             listViewBackups.Columns[0].Text = l.DateAndTime;
             listViewBackups.Columns[1].Text = l.FileName;
             listViewBackups.Columns[2].Text = l.Extension;
-            listViewBackups.Columns[3].Text = Configuration.Settings.Language.General.Size;
+            listViewBackups.Columns[3].Text = LanguageSettings.Current.General.Size;
             labelInfo.Text = l.Information;
 
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
             UiUtil.FixLargeFonts(this, buttonCancel);
         }
@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             linkLabelOpenContainingFolder.Visible = false;
             labelStatus.Left = linkLabelOpenContainingFolder.Left;
-            labelStatus.Text = Configuration.Settings.Language.RestoreAutoBackup.NoBackedUpFilesFound;
+            labelStatus.Text = LanguageSettings.Current.RestoreAutoBackup.NoBackedUpFilesFound;
         }
 
         private void AddBackupToListView(string fileName)

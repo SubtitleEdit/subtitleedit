@@ -20,13 +20,13 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            Text = Configuration.Settings.Language.EffectKaraoke.Title;
-            labelChooseColor.Text = Configuration.Settings.Language.EffectKaraoke.ChooseColor;
-            labelTM.Text = Configuration.Settings.Language.EffectKaraoke.TotalSeconds;
-            labelEndDelay.Text = Configuration.Settings.Language.EffectKaraoke.EndDelayInSeconds;
-            buttonPreview.Text = Configuration.Settings.Language.General.Preview;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            Text = LanguageSettings.Current.EffectKaraoke.Title;
+            labelChooseColor.Text = LanguageSettings.Current.EffectKaraoke.ChooseColor;
+            labelTM.Text = LanguageSettings.Current.EffectKaraoke.TotalSeconds;
+            labelEndDelay.Text = LanguageSettings.Current.EffectKaraoke.EndDelayInSeconds;
+            buttonPreview.Text = LanguageSettings.Current.General.Preview;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 

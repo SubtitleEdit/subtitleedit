@@ -796,7 +796,7 @@ namespace Nikse.SubtitleEdit.Controls
                         {
                             using (var brush = new SolidBrush(CursorColor))
                             {
-                                graphics.DrawString($"{(double)currentRegionWidth / _wavePeaks.SampleRate / _zoomFactor:0.###} {Configuration.Settings.Language.Waveform.Seconds}", Font, brush, new PointF(currentRegionLeft + 3, Height - 32));
+                                graphics.DrawString($"{(double)currentRegionWidth / _wavePeaks.SampleRate / _zoomFactor:0.###} {LanguageSettings.Current.Waveform.Seconds}", Font, brush, new PointF(currentRegionLeft + 3, Height - 32));
                             }
                         }
                     }
@@ -1039,12 +1039,12 @@ namespace Nikse.SubtitleEdit.Controls
                         {
                             if (Configuration.Settings.VideoControls.WaveformDrawWpm)
                             {
-                                text = string.Format(Configuration.Settings.Language.Waveform.WordsMinX, paragraph.WordsPerMinute) + Environment.NewLine + text;
+                                text = string.Format(LanguageSettings.Current.Waveform.WordsMinX, paragraph.WordsPerMinute) + Environment.NewLine + text;
                             }
 
                             if (Configuration.Settings.VideoControls.WaveformDrawCps)
                             {
-                                text = string.Format(Configuration.Settings.Language.Waveform.CharsSecX, Utilities.GetCharactersPerSecond(paragraph)) + Environment.NewLine + text;
+                                text = string.Format(LanguageSettings.Current.Waveform.CharsSecX, Utilities.GetCharactersPerSecond(paragraph)) + Environment.NewLine + text;
                             }
                         }
                     }

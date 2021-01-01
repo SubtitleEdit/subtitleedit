@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelStatus.Text = string.Empty;
             labelFileName.Text = string.Format("File name: {0}", Path.GetFileName(fileName));
             labelDuration.Text = string.Format("Duration: {0}", TimeCode.FromSeconds(_cdgGraphics.DurationInMilliseconds / 1000.0).ToDisplayString());
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
             if (fileName != null && fileName.Length > 3)
             {
@@ -86,7 +86,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             radioButtonBluRaySup_CheckedChanged(null, null);
 
-            buttonDownloadFfmpeg.Text = Configuration.Settings.Language.Settings.DownloadFFmpeg;
+            buttonDownloadFfmpeg.Text = LanguageSettings.Current.Settings.DownloadFFmpeg;
             var isFfmpegAvailable = !string.IsNullOrEmpty(Configuration.Settings.General.FFmpegLocation) && File.Exists(Configuration.Settings.General.FFmpegLocation);
             buttonDownloadFfmpeg.Visible = !isFfmpegAvailable;
 

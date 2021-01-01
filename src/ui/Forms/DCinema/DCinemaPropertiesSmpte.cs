@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            var l = Configuration.Settings.Language.DCinemaProperties;
+            var l = LanguageSettings.Current.DCinemaProperties;
             Text = l.TitleSmpte;
             labelSubtitleID.Text = l.SubtitleId;
             labelMovieTitle.Text = l.MovieTitle;

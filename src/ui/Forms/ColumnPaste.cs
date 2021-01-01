@@ -26,17 +26,17 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonTimeCodes.Enabled = !onlyText;
             radioButtonOriginalText.Visible = isOriginalAvailable;
 
-            Text = Configuration.Settings.Language.ColumnPaste.Title;
-            groupBoxChooseColumn.Text = Configuration.Settings.Language.ColumnPaste.ChooseColumn;
-            groupBoxOverwriteOrInsert.Text = Configuration.Settings.Language.ColumnPaste.OverwriteShiftCellsDown;
-            radioButtonOverwrite.Text = Configuration.Settings.Language.ColumnPaste.Overwrite;
-            radioButtonShiftCellsDown.Text = Configuration.Settings.Language.ColumnPaste.ShiftCellsDown;
-            radioButtonAll.Text = Configuration.Settings.Language.General.All;
-            radioButtonTimeCodes.Text = Configuration.Settings.Language.ColumnPaste.TimeCodesOnly;
-            radioButtonTextOnly.Text = Configuration.Settings.Language.ColumnPaste.TextOnly;
-            radioButtonOriginalText.Text = Configuration.Settings.Language.ColumnPaste.OriginalTextOnly;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            Text = LanguageSettings.Current.ColumnPaste.Title;
+            groupBoxChooseColumn.Text = LanguageSettings.Current.ColumnPaste.ChooseColumn;
+            groupBoxOverwriteOrInsert.Text = LanguageSettings.Current.ColumnPaste.OverwriteShiftCellsDown;
+            radioButtonOverwrite.Text = LanguageSettings.Current.ColumnPaste.Overwrite;
+            radioButtonShiftCellsDown.Text = LanguageSettings.Current.ColumnPaste.ShiftCellsDown;
+            radioButtonAll.Text = LanguageSettings.Current.General.All;
+            radioButtonTimeCodes.Text = LanguageSettings.Current.ColumnPaste.TimeCodesOnly;
+            radioButtonTextOnly.Text = LanguageSettings.Current.ColumnPaste.TextOnly;
+            radioButtonOriginalText.Text = LanguageSettings.Current.ColumnPaste.OriginalTextOnly;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
             if (Configuration.Settings.Tools.ColumnPasteColumn == "timecodes")
             {

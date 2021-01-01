@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             UiUtil.FixLargeFonts(this, buttonExportImage);
             UiUtil.InitializeSubtitleFont(subtitleListView1);
             videoPlayerContainer1.Visible = false;
-            subtitleListView1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
+            subtitleListView1.InitializeLanguage(LanguageSettings.Current.General, Configuration.Settings);
             subtitleListView1.HideColumn(SubtitleListView.SubtitleColumn.CharactersPerSeconds);
             subtitleListView1.HideColumn(SubtitleListView.SubtitleColumn.Actor);
             subtitleListView1.HideColumn(SubtitleListView.SubtitleColumn.WordsPerMinute);
@@ -73,51 +73,51 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             labelVideoInfo.Text = string.Empty;
             panelBackground.BackColor = Configuration.Settings.Tools.BinEditBackgroundColor;
 
-            fileToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.File.Title;
-            openFileToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.File.Open;
-            saveFileAsToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.File.SaveAs;
-            openVideoToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Video.OpenVideo;
-            closeVideoToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Video.CloseVideo;
-            importTimeCodesToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.File.Import + " - " + Configuration.Settings.Language.Main.Menu.File.ImportTimecodes;
-            closeToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.File.Exit;
+            fileToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.File.Title;
+            openFileToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.File.Open;
+            saveFileAsToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.File.SaveAs;
+            openVideoToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.Video.OpenVideo;
+            closeVideoToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.Video.CloseVideo;
+            importTimeCodesToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.File.Import + " - " + LanguageSettings.Current.Main.Menu.File.ImportTimecodes;
+            closeToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.File.Exit;
 
-            toolStripMenuItemTools.Text = Configuration.Settings.Language.Main.Menu.Tools.Title;
-            adjustDisplayTimesToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Tools.AdjustDisplayDuration;
-            applyDurationLimitsToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Tools.ApplyDurationLimits;
-            appendSubtitleToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Tools.AppendSubtitle;
-            resizeBitmapsToolStripMenuItem.Text = Configuration.Settings.Language.BinEdit.ResizeBitmaps;
-            alignmentToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Alignment;
-            quickOCRTextsforOverviewOnlyToolStripMenuItem.Text = Configuration.Settings.Language.BinEdit.QuickOcr;
-            videoToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Video.Title;
-            synchronizationToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Synchronization.Title;
-            adjustAllTimesToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Synchronization.AdjustAllTimes;
-            changeFrameRateToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Tools.ChangeFrameRate;
-            changeSpeedToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Tools.ChangeSpeedInPercent;
-            optionsToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Options.Title;
-            settingsToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Options.Settings;
+            toolStripMenuItemTools.Text = LanguageSettings.Current.Main.Menu.Tools.Title;
+            adjustDisplayTimesToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.Tools.AdjustDisplayDuration;
+            applyDurationLimitsToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.Tools.ApplyDurationLimits;
+            appendSubtitleToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.Tools.AppendSubtitle;
+            resizeBitmapsToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.ResizeBitmaps;
+            alignmentToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.Alignment;
+            quickOCRTextsforOverviewOnlyToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.QuickOcr;
+            videoToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.Video.Title;
+            synchronizationToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.Synchronization.Title;
+            adjustAllTimesToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.Synchronization.AdjustAllTimes;
+            changeFrameRateToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.Tools.ChangeFrameRate;
+            changeSpeedToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.Tools.ChangeSpeedInPercent;
+            optionsToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.Options.Title;
+            settingsToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.Options.Settings;
 
-            deleteToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Delete;
-            insertToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.InsertBefore;
-            insertAfterToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.InsertAfter;
-            alignSelectedLinesToolStripMenuItem.Text = Configuration.Settings.Language.BinEdit.AlignSelectedLines;
-            centerSelectedLineshorizontallyToolStripMenuItem.Text = Configuration.Settings.Language.BinEdit.CenterSelectedLines;
-            topAlignSelectedLinesToolStripMenuItem.Text = Configuration.Settings.Language.BinEdit.TopAlignSelectedLines;
-            bottomAlignSelectedLinesToolStripMenuItem.Text = Configuration.Settings.Language.BinEdit.BottomAlignSelectedLines;
-            resizeImagesForSelectedLinesToolStripMenuItem.Text = Configuration.Settings.Language.BinEdit.ResizeBitmapsForSelectedLines;
-            colorSelectedLinesToolStripMenuItem.Text = Configuration.Settings.Language.BinEdit.ChangeColorForSelectedLines;
-            adjustAllTimesForSelectedLinesToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.ShowSelectedLinesEarlierLater;
-            adjustDisplayTimeForSelectedLinesToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.AdjustDisplayDurationForSelectedLines;
-            applyDurationLimitsForSelectedLinesToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.AdjustDisplayDurationForSelectedLines;
+            deleteToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.Delete;
+            insertToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.InsertBefore;
+            insertAfterToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.InsertAfter;
+            alignSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.AlignSelectedLines;
+            centerSelectedLineshorizontallyToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.CenterSelectedLines;
+            topAlignSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.TopAlignSelectedLines;
+            bottomAlignSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.BottomAlignSelectedLines;
+            resizeImagesForSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.ResizeBitmapsForSelectedLines;
+            colorSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.ChangeColorForSelectedLines;
+            adjustAllTimesForSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.ShowSelectedLinesEarlierLater;
+            adjustDisplayTimeForSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.AdjustDisplayDurationForSelectedLines;
+            applyDurationLimitsForSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.AdjustDisplayDurationForSelectedLines;
 
-            labelStart.Text = Configuration.Settings.Language.General.StartTime;
-            labelEndTime.Text = Configuration.Settings.Language.General.EndTime;
-            checkBoxIsForced.Text = Configuration.Settings.Language.ExportPngXml.Forced;
-            labelVideoSize.Text = Configuration.Settings.Language.ExportPngXml.VideoResolution;
-            labelFrameRate.Text = Configuration.Settings.Language.General.FrameRate;
+            labelStart.Text = LanguageSettings.Current.General.StartTime;
+            labelEndTime.Text = LanguageSettings.Current.General.EndTime;
+            checkBoxIsForced.Text = LanguageSettings.Current.ExportPngXml.Forced;
+            labelVideoSize.Text = LanguageSettings.Current.ExportPngXml.VideoResolution;
+            labelFrameRate.Text = LanguageSettings.Current.General.FrameRate;
             labelCurrentSize.Text = string.Empty;
-            buttonImportImage.Text = Configuration.Settings.Language.BinEdit.ImportImage;
-            buttonExportImage.Text = Configuration.Settings.Language.BinEdit.ExportImage;
-            buttonSetText.Text = Configuration.Settings.Language.BinEdit.SetText;
+            buttonImportImage.Text = LanguageSettings.Current.BinEdit.ImportImage;
+            buttonExportImage.Text = LanguageSettings.Current.BinEdit.ExportImage;
+            buttonSetText.Text = LanguageSettings.Current.BinEdit.SetText;
 
             numericUpDownScreenWidth.Left = labelVideoSize.Left + labelVideoSize.Width + 7;
             labelX.Left = numericUpDownScreenWidth.Left + numericUpDownScreenWidth.Width + 4;
@@ -214,7 +214,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             }
 
             _lastSaveHash = GetStateHash();
-            Text = Path.GetFileName(fileName) + " - " + Configuration.Settings.Language.General.Title;
+            Text = Path.GetFileName(fileName) + " - " + LanguageSettings.Current.General.Title;
         }
 
         private static Bitmap GetBitmap(IBinaryParagraphWithPosition s)
@@ -700,7 +700,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 numericUpDownX.Value = extra.X;
                 numericUpDownY.Value = extra.Y;
                 var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : GetBitmap(sub);
-                labelCurrentSize.Text = string.Format(Configuration.Settings.Language.BinEdit.SizeXY, bmp.Width, bmp.Height);
+                labelCurrentSize.Text = string.Format(LanguageSettings.Current.BinEdit.SizeXY, bmp.Width, bmp.Height);
                 ShowCurrentScaledImage(bmp, extra);
             }
         }
@@ -906,10 +906,10 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
         private void saveFileAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            saveFileDialog1.Title = Configuration.Settings.Language.ExportPngXml.SaveBluRraySupAs;
+            saveFileDialog1.Title = LanguageSettings.Current.ExportPngXml.SaveBluRraySupAs;
             saveFileDialog1.DefaultExt = "*.sup";
             saveFileDialog1.AddExtension = true;
-            saveFileDialog1.Filter = Configuration.Settings.Language.Main.BluRaySupFiles + "|*.sup|BDN xml/png|*.xml";
+            saveFileDialog1.Filter = LanguageSettings.Current.Main.BluRaySupFiles + "|*.sup|BDN xml/png|*.xml";
             if (saveFileDialog1.ShowDialog(this) != DialogResult.OK)
             {
                 return;
@@ -931,10 +931,10 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                     progressBar1.Visible = false;
 
                     var folderName = Path.GetDirectoryName(saveFileDialog1.FileName);
-                    var text = string.Format(Configuration.Settings.Language.Main.SavedSubtitleX, saveFileDialog1.FileName);
+                    var text = string.Format(LanguageSettings.Current.Main.SavedSubtitleX, saveFileDialog1.FileName);
                     if (saveFileDialog1.FilterIndex == 2)
                     {
-                        text = string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, _extra.Count, folderName);
+                        text = string.Format(LanguageSettings.Current.ExportPngXml.XImagesSavedInY, _extra.Count, folderName);
                     }
 
                     using (var f = new ExportPngXmlDialogOpenFolder(text, folderName))
@@ -1035,9 +1035,9 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
         private void openFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            openFileDialog1.Title = Configuration.Settings.Language.Main.OpenBluRaySupFile;
+            openFileDialog1.Title = LanguageSettings.Current.Main.OpenBluRaySupFile;
             openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = Configuration.Settings.Language.Main.BluRaySupFiles + "|*.sup|" +
+            openFileDialog1.Filter = LanguageSettings.Current.Main.BluRaySupFiles + "|*.sup|" +
                                      "Matroska|*.mkv;*.mks|" +
                                      "Transport stream|*.ts;*.m2ts;*.mts;*.rec;*.mpeg;*.mpg";
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
@@ -1217,7 +1217,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 return;
             }
 
-            openFileDialog1.Title = Configuration.Settings.Language.General.OpenSubtitle;
+            openFileDialog1.Title = LanguageSettings.Current.General.OpenSubtitle;
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
@@ -1263,7 +1263,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
                 if (timeCodeSubtitle.Paragraphs.Count != _subtitle.Paragraphs.Count)
                 {
-                    var text = string.Format(Configuration.Settings.Language.Main.ImportTimeCodesDifferentNumberOfLinesWarning, timeCodeSubtitle.Paragraphs.Count, _subtitle.Paragraphs.Count);
+                    var text = string.Format(LanguageSettings.Current.Main.ImportTimeCodesDifferentNumberOfLinesWarning, timeCodeSubtitle.Paragraphs.Count, _subtitle.Paragraphs.Count);
                     if (MessageBox.Show(this, text, Text, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                     {
                         return;
@@ -1286,7 +1286,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                     count++;
                 }
 
-                MessageBox.Show(string.Format(Configuration.Settings.Language.Main.TimeCodeImportedFromXY, Path.GetFileName(openFileDialog1.FileName), count));
+                MessageBox.Show(string.Format(LanguageSettings.Current.Main.TimeCodeImportedFromXY, Path.GetFileName(openFileDialog1.FileName), count));
                 var idx = subtitleListView1.SelectedItems[0].Index;
                 subtitleListView1.Fill(_subtitle);
                 subtitleListView1.SelectIndexAndEnsureVisible(idx, true);
@@ -1308,7 +1308,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                     var oldFrameRate = changeFrameRate.OldFrameRate;
                     var newFrameRate = changeFrameRate.NewFrameRate;
                     _subtitle.ChangeFrameRate(oldFrameRate, newFrameRate);
-                    MessageBox.Show(string.Format(Configuration.Settings.Language.Main.FrameRateChangedFromXToY, oldFrameRate, newFrameRate));
+                    MessageBox.Show(string.Format(LanguageSettings.Current.Main.FrameRateChangedFromXToY, oldFrameRate, newFrameRate));
                     var idx = subtitleListView1.SelectedItems[0].Index;
                     subtitleListView1.Fill(_subtitle);
                     subtitleListView1.SelectIndexAndEnsureVisible(idx, true);
@@ -1419,7 +1419,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             }
 
             var idx = subtitleListView1.SelectedItems[0].Index;
-            saveFileDialog1.Title = Configuration.Settings.Language.VobSubOcr.SaveSubtitleImageAs;
+            saveFileDialog1.Title = LanguageSettings.Current.VobSubOcr.SaveSubtitleImageAs;
             saveFileDialog1.AddExtension = true;
             saveFileDialog1.FileName = "Image" + (idx + 1);
             saveFileDialog1.Filter = "PNG image|*.png|BMP image|*.bmp|GIF image|*.gif|TIFF image|*.tiff";
@@ -1493,9 +1493,9 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 return;
             }
 
-            openFileDialog1.Title = Configuration.Settings.Language.Main.OpenBluRaySupFile;
+            openFileDialog1.Title = LanguageSettings.Current.Main.OpenBluRaySupFile;
             openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = Configuration.Settings.Language.Main.BluRaySupFiles + "|*.sup";
+            openFileDialog1.Filter = LanguageSettings.Current.Main.BluRaySupFiles + "|*.sup";
             if (openFileDialog1.ShowDialog(this) != DialogResult.OK)
             {
                 return;
@@ -1559,7 +1559,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
         private void openVideoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            openFileDialog1.Title = Configuration.Settings.Language.General.OpenVideoFileTitle;
+            openFileDialog1.Title = LanguageSettings.Current.General.OpenVideoFileTitle;
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.Filter = UiUtil.GetVideoFileFilter(true);
 
@@ -2035,7 +2035,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 List<int> selectedIndices = null;
                 if (onlySelectedLines)
                 {
-                    adjustDisplayTime.Text += " - " + Configuration.Settings.Language.Main.SelectedLines;
+                    adjustDisplayTime.Text += " - " + LanguageSettings.Current.Main.SelectedLines;
                     selectedIndices = new List<int>();
                     foreach (int item in subtitleListView1.SelectedIndices)
                     {

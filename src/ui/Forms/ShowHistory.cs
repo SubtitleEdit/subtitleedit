@@ -19,14 +19,14 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            Text = Configuration.Settings.Language.ShowHistory.Title;
-            label1.Text = Configuration.Settings.Language.ShowHistory.SelectRollbackPoint;
-            listViewHistory.Columns[0].Text = Configuration.Settings.Language.ShowHistory.Time;
-            listViewHistory.Columns[1].Text = Configuration.Settings.Language.ShowHistory.Description;
-            buttonCompare.Text = Configuration.Settings.Language.ShowHistory.CompareWithCurrent;
-            buttonCompareHistory.Text = Configuration.Settings.Language.ShowHistory.CompareHistoryItems;
-            buttonRollback.Text = Configuration.Settings.Language.ShowHistory.Rollback;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            Text = LanguageSettings.Current.ShowHistory.Title;
+            label1.Text = LanguageSettings.Current.ShowHistory.SelectRollbackPoint;
+            listViewHistory.Columns[0].Text = LanguageSettings.Current.ShowHistory.Time;
+            listViewHistory.Columns[1].Text = LanguageSettings.Current.ShowHistory.Description;
+            buttonCompare.Text = LanguageSettings.Current.ShowHistory.CompareWithCurrent;
+            buttonCompareHistory.Text = LanguageSettings.Current.ShowHistory.CompareHistoryItems;
+            buttonRollback.Text = LanguageSettings.Current.ShowHistory.Rollback;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonRollback);
         }
 
@@ -95,7 +95,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string descr2 = h2.ToHHMMSS() + " - " + h2.Description;
                 using (var compareForm = new Compare())
                 {
-                    compareForm.Initialize(_subtitle, Configuration.Settings.Language.General.CurrentSubtitle, h2.Subtitle, descr2);
+                    compareForm.Initialize(_subtitle, LanguageSettings.Current.General.CurrentSubtitle, h2.Subtitle, descr2);
                     compareForm.ShowDialog(this);
                 }
             }

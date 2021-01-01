@@ -31,21 +31,21 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(this);
 
             labelSubtitle2.Text = string.Empty;
-            Text = Configuration.Settings.Language.CompareSubtitles.Title;
-            buttonReloadSubtitle1.Text = Configuration.Settings.Language.CompareSubtitles.Reload;
-            buttonReloadSubtitle2.Text = Configuration.Settings.Language.CompareSubtitles.Reload;
-            buttonPreviousDifference.Text = Configuration.Settings.Language.CompareSubtitles.PreviousDifference;
-            buttonNextDifference.Text = Configuration.Settings.Language.CompareSubtitles.NextDifference;
-            checkBoxShowOnlyDifferences.Text = Configuration.Settings.Language.CompareSubtitles.ShowOnlyDifferences;
-            checkBoxIgnoreLineBreaks.Text = Configuration.Settings.Language.CompareSubtitles.IgnoreLineBreaks;
-            checkBoxIgnoreFormatting.Text = Configuration.Settings.Language.CompareSubtitles.IgnoreFormatting;
-            checkBoxOnlyListDifferencesInText.Text = Configuration.Settings.Language.CompareSubtitles.OnlyLookForDifferencesInText;
-            buttonExport.Text = Configuration.Settings.Language.Statistics.Export;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            copyTextToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Copy;
-            copyTextToolStripMenuItem1.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Copy;
-            subtitleListView1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
-            subtitleListView2.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
+            Text = LanguageSettings.Current.CompareSubtitles.Title;
+            buttonReloadSubtitle1.Text = LanguageSettings.Current.CompareSubtitles.Reload;
+            buttonReloadSubtitle2.Text = LanguageSettings.Current.CompareSubtitles.Reload;
+            buttonPreviousDifference.Text = LanguageSettings.Current.CompareSubtitles.PreviousDifference;
+            buttonNextDifference.Text = LanguageSettings.Current.CompareSubtitles.NextDifference;
+            checkBoxShowOnlyDifferences.Text = LanguageSettings.Current.CompareSubtitles.ShowOnlyDifferences;
+            checkBoxIgnoreLineBreaks.Text = LanguageSettings.Current.CompareSubtitles.IgnoreLineBreaks;
+            checkBoxIgnoreFormatting.Text = LanguageSettings.Current.CompareSubtitles.IgnoreFormatting;
+            checkBoxOnlyListDifferencesInText.Text = LanguageSettings.Current.CompareSubtitles.OnlyLookForDifferencesInText;
+            buttonExport.Text = LanguageSettings.Current.Statistics.Export;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            copyTextToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.Copy;
+            copyTextToolStripMenuItem1.Text = LanguageSettings.Current.Main.Menu.ContextMenu.Copy;
+            subtitleListView1.InitializeLanguage(LanguageSettings.Current.General, Configuration.Settings);
+            subtitleListView2.InitializeLanguage(LanguageSettings.Current.General, Configuration.Settings);
             UiUtil.InitializeSubtitleFont(subtitleListView1);
             subtitleListView1.HideColumn(SubtitleListView.SubtitleColumn.CharactersPerSeconds);
             subtitleListView1.HideColumn(SubtitleListView.SubtitleColumn.WordsPerMinute);
@@ -139,7 +139,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (FileUtil.IsVobSub(openFileDialog1.FileName) || FileUtil.IsBluRaySup(openFileDialog1.FileName))
                 {
-                    MessageBox.Show(Configuration.Settings.Language.CompareSubtitles.CannotCompareWithImageBasedSubtitles);
+                    MessageBox.Show(LanguageSettings.Current.CompareSubtitles.CannotCompareWithImageBasedSubtitles);
                     return;
                 }
 
@@ -167,7 +167,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (FileUtil.IsVobSub(openFileDialog1.FileName) || FileUtil.IsBluRaySup(openFileDialog1.FileName))
                 {
-                    MessageBox.Show(Configuration.Settings.Language.CompareSubtitles.CannotCompareWithImageBasedSubtitles);
+                    MessageBox.Show(LanguageSettings.Current.CompareSubtitles.CannotCompareWithImageBasedSubtitles);
                     return;
                 }
 
@@ -394,24 +394,24 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (_differences.Count >= min)
             {
-                labelStatus.Text = Configuration.Settings.Language.CompareSubtitles.SubtitlesNotAlike;
+                labelStatus.Text = LanguageSettings.Current.CompareSubtitles.SubtitlesNotAlike;
                 labelStatus.Font = new Font(labelStatus.Font.FontFamily, labelStatus.Font.Size, FontStyle.Bold);
             }
             else
             {
                 if (wordsChanged != totalWords && wordsChanged > 0)
                 {
-                    string formatString = Configuration.Settings.Language.CompareSubtitles.XNumberOfDifferenceAndPercentChanged;
+                    string formatString = LanguageSettings.Current.CompareSubtitles.XNumberOfDifferenceAndPercentChanged;
                     if (ShouldBreakToLetter())
                     {
-                        formatString = Configuration.Settings.Language.CompareSubtitles.XNumberOfDifferenceAndPercentLettersChanged;
+                        formatString = LanguageSettings.Current.CompareSubtitles.XNumberOfDifferenceAndPercentLettersChanged;
                     }
 
                     labelStatus.Text = string.Format(formatString, _differences.Count, wordsChanged * 100.00 / totalWords);
                 }
                 else
                 {
-                    labelStatus.Text = string.Format(Configuration.Settings.Language.CompareSubtitles.XNumberOfDifference, _differences.Count);
+                    labelStatus.Text = string.Format(LanguageSettings.Current.CompareSubtitles.XNumberOfDifference, _differences.Count);
                 }
                 labelStatus.Font = new Font(labelStatus.Font.FontFamily, labelStatus.Font.Size);
             }
@@ -990,14 +990,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (files.Length > 1)
             {
-                MessageBox.Show(Configuration.Settings.Language.Main.DropOnlyOneFile,
+                MessageBox.Show(LanguageSettings.Current.Main.DropOnlyOneFile,
                     string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             string filePath = files[0];
             if (FileUtil.IsDirectory(filePath))
             {
-                MessageBox.Show(Configuration.Settings.Language.Main.ErrorDirectoryDropNotAllowed,
+                MessageBox.Show(LanguageSettings.Current.Main.ErrorDirectoryDropNotAllowed,
                     string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
@@ -1017,7 +1017,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (FileUtil.IsVobSub(filePath) || FileUtil.IsBluRaySup(filePath))
             {
-                MessageBox.Show(Configuration.Settings.Language.CompareSubtitles.CannotCompareWithImageBasedSubtitles);
+                MessageBox.Show(LanguageSettings.Current.CompareSubtitles.CannotCompareWithImageBasedSubtitles);
                 return;
             }
 

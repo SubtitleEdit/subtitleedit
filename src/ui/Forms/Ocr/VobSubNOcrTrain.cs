@@ -30,14 +30,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            var language = Configuration.Settings.Language.VobSubOcr;
+            var language = LanguageSettings.Current.VobSubOcr;
             Text = language.OcrTraining;
-            groupBoxInput.Text = Configuration.Settings.Language.BatchConvert.Input;
+            groupBoxInput.Text = LanguageSettings.Current.BatchConvert.Input;
             labelSubtitleForTraining.Text = language.SubtitleTrainingFile;
             labelLetterCombi.Text = language.LetterCombinations;
             groupBoxTrainingOptions.Text = language.TrainingOptions;
-            labelSubtitleFont.Text = Configuration.Settings.Language.Settings.SubtitleFont;
-            labelSubtitleFontSize.Text = Configuration.Settings.Language.Settings.SubtitleFontSize;
+            labelSubtitleFont.Text = LanguageSettings.Current.Settings.SubtitleFont;
+            labelSubtitleFontSize.Text = LanguageSettings.Current.Settings.SubtitleFontSize;
             buttonTrain.Text = language.StartTraining;
             labelLineSegments.Text = language.NumberOfSegments;
             comboBoxSubtitleFontSize.Left = labelSubtitleFontSize.Left + labelSubtitleFontSize.Width + 5;
@@ -78,7 +78,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void buttonTrain_Click(object sender, EventArgs e)
         {
-            if (buttonTrain.Text == Configuration.Settings.Language.SpellCheck.Abort)
+            if (buttonTrain.Text == LanguageSettings.Current.SpellCheck.Abort)
             {
                 _abort = true;
                 return;
@@ -90,7 +90,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             _abort = false;
-            buttonTrain.Text = Configuration.Settings.Language.SpellCheck.Abort;
+            buttonTrain.Text = LanguageSettings.Current.SpellCheck.Abort;
             buttonOK.Enabled = false;
 
             int numberOfCharactersLearned = 0;
@@ -217,7 +217,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     nOcrD.Add(nOcrChar);
 
                     numberOfCharactersLearned++;
-                    labelInfo.Text = string.Format(Configuration.Settings.Language.VobSubOcr.NowTraining, numberOfCharactersLearned, _subtitleFontName, numberOfCharactersSkipped);
+                    labelInfo.Text = string.Format(LanguageSettings.Current.VobSubOcr.NowTraining, numberOfCharactersLearned, _subtitleFontName, numberOfCharactersSkipped);
                     bmp.Dispose();
                 }
                 else

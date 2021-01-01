@@ -19,17 +19,17 @@ namespace Nikse.SubtitleEdit.Forms.Networking
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            buttonSendChat.Text = Configuration.Settings.Language.NetworkChat.Send;
-            listViewUsers.Columns[0].Text = Configuration.Settings.Language.General.UserName;
-            listViewUsers.Columns[1].Text = Configuration.Settings.Language.General.IP;
-            listViewChat.Columns[0].Text = Configuration.Settings.Language.General.UserName;
-            listViewChat.Columns[1].Text = Configuration.Settings.Language.General.Text;
+            buttonSendChat.Text = LanguageSettings.Current.NetworkChat.Send;
+            listViewUsers.Columns[0].Text = LanguageSettings.Current.General.UserName;
+            listViewUsers.Columns[1].Text = LanguageSettings.Current.General.IP;
+            listViewChat.Columns[0].Text = LanguageSettings.Current.General.UserName;
+            listViewChat.Columns[1].Text = LanguageSettings.Current.General.Text;
         }
 
         internal void Initialize(NikseWebServiceSession networkSession)
         {
             _networkSession = networkSession;
-            Text = Configuration.Settings.Language.NetworkChat.Title + " - " + _networkSession.CurrentUser.UserName;
+            Text = LanguageSettings.Current.NetworkChat.Title + " - " + _networkSession.CurrentUser.UserName;
 
             listViewUsers.Items.Clear();
             foreach (var user in _networkSession.Users)

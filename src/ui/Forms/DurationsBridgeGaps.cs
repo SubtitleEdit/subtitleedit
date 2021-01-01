@@ -36,19 +36,19 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.WordsPerMinute);
             SubtitleListview1.SetCustomResize(SubtitleListView1_Resize);
 
-            Text = Configuration.Settings.Language.DurationsBridgeGaps.Title;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            SubtitleListview1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
+            Text = LanguageSettings.Current.DurationsBridgeGaps.Title;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            SubtitleListview1.InitializeLanguage(LanguageSettings.Current.General, Configuration.Settings);
             UiUtil.InitializeSubtitleFont(SubtitleListview1);
-            SubtitleListview1.ShowExtraColumn(Configuration.Settings.General.UseTimeFormatHHMMSSFF ? Configuration.Settings.Language.DurationsBridgeGaps.GapToNextFrames : Configuration.Settings.Language.DurationsBridgeGaps.GapToNext);
+            SubtitleListview1.ShowExtraColumn(Configuration.Settings.General.UseTimeFormatHHMMSSFF ? LanguageSettings.Current.DurationsBridgeGaps.GapToNextFrames : LanguageSettings.Current.DurationsBridgeGaps.GapToNext);
             SubtitleListview1.AutoSizeAllColumns(this);
 
-            labelBridgePart1.Text = Configuration.Settings.Language.DurationsBridgeGaps.BridgeGapsSmallerThanXPart1;
-            labelMilliseconds.Text = Configuration.Settings.Language.DurationsBridgeGaps.BridgeGapsSmallerThanXPart2;
-            labelMinMsBetweenLines.Text = Configuration.Settings.Language.DurationsBridgeGaps.MinMillisecondsBetweenLines;
-            radioButtonProlongEndTime.Text = Configuration.Settings.Language.DurationsBridgeGaps.ProlongEndTime;
-            radioButtonDivideEven.Text = Configuration.Settings.Language.DurationsBridgeGaps.DivideEven;
+            labelBridgePart1.Text = LanguageSettings.Current.DurationsBridgeGaps.BridgeGapsSmallerThanXPart1;
+            labelMilliseconds.Text = LanguageSettings.Current.DurationsBridgeGaps.BridgeGapsSmallerThanXPart2;
+            labelMinMsBetweenLines.Text = LanguageSettings.Current.DurationsBridgeGaps.MinMillisecondsBetweenLines;
+            radioButtonProlongEndTime.Text = LanguageSettings.Current.DurationsBridgeGaps.ProlongEndTime;
+            radioButtonDivideEven.Text = LanguageSettings.Current.DurationsBridgeGaps.DivideEven;
             groupBoxLinesFound.Text = string.Empty;
 
             _subtitle = subtitle;
@@ -67,10 +67,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
             {
-                labelBridgePart1.Text = Configuration.Settings.Language.DurationsBridgeGaps.BridgeGapsSmallerThanXPart1Frames;
-                labelMilliseconds.Text = Configuration.Settings.Language.DurationsBridgeGaps.BridgeGapsSmallerThanXPart2Frames;
+                labelBridgePart1.Text = LanguageSettings.Current.DurationsBridgeGaps.BridgeGapsSmallerThanXPart1Frames;
+                labelMilliseconds.Text = LanguageSettings.Current.DurationsBridgeGaps.BridgeGapsSmallerThanXPart2Frames;
 
-                labelMinMsBetweenLines.Text = Configuration.Settings.Language.DurationsBridgeGaps.MinFramesBetweenLines;
+                labelMinMsBetweenLines.Text = LanguageSettings.Current.DurationsBridgeGaps.MinFramesBetweenLines;
 
                 numericUpDownMaxMs.Value = SubtitleFormat.MillisecondsToFrames((double)numericUpDownMaxMs.Value);
                 numericUpDownMaxMs.Increment = 1;
@@ -183,7 +183,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             SubtitleListview1.EndUpdate();
-            groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.DurationsBridgeGaps.GapsBridgedX, FixedCount);
+            groupBoxLinesFound.Text = string.Format(LanguageSettings.Current.DurationsBridgeGaps.GapsBridgedX, FixedCount);
 
             Cursor = Cursors.Default;
         }

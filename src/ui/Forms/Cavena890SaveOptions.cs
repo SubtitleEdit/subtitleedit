@@ -16,8 +16,8 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
 
             timeUpDownStartTime.ForceHHMMSSFF();
             timeUpDownStartTime.TimeCode = new TimeCode(TimeCode.ParseHHMMSSFFToMilliseconds(Configuration.Settings.SubtitleSettings.Cavena890StartOfMessage));
