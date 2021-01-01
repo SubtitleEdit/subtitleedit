@@ -27,108 +27,108 @@ namespace Nikse.SubtitleEdit.Forms
 
         private readonly string[] _fields = Configuration.Settings.General.MeasurementConverterCategories.Split(';');
 
-        private readonly List<string> _length = new List<string> { Configuration.Settings.Language.MeasurementConverter.Kilometers,
-            Configuration.Settings.Language.MeasurementConverter.Meters,
-            Configuration.Settings.Language.MeasurementConverter.Centimeters,
-            Configuration.Settings.Language.MeasurementConverter.Millimeters,
-            Configuration.Settings.Language.MeasurementConverter.Micrometers,
-            Configuration.Settings.Language.MeasurementConverter.Nanometers,
-            Configuration.Settings.Language.MeasurementConverter.Angstroms,
-            Configuration.Settings.Language.MeasurementConverter.MilesTerrestial,
-            Configuration.Settings.Language.MeasurementConverter.MilesNautical,
-            Configuration.Settings.Language.MeasurementConverter.Yards,
-            Configuration.Settings.Language.MeasurementConverter.Feet,
-            Configuration.Settings.Language.MeasurementConverter.Inches,
-            Configuration.Settings.Language.MeasurementConverter.Chains,
-            Configuration.Settings.Language.MeasurementConverter.Fathoms,
-            Configuration.Settings.Language.MeasurementConverter.Hands,
-            Configuration.Settings.Language.MeasurementConverter.Rods,
-            Configuration.Settings.Language.MeasurementConverter.Spans };
+        private readonly List<string> _length = new List<string> { LanguageSettings.Current.MeasurementConverter.Kilometers,
+            LanguageSettings.Current.MeasurementConverter.Meters,
+            LanguageSettings.Current.MeasurementConverter.Centimeters,
+            LanguageSettings.Current.MeasurementConverter.Millimeters,
+            LanguageSettings.Current.MeasurementConverter.Micrometers,
+            LanguageSettings.Current.MeasurementConverter.Nanometers,
+            LanguageSettings.Current.MeasurementConverter.Angstroms,
+            LanguageSettings.Current.MeasurementConverter.MilesTerrestial,
+            LanguageSettings.Current.MeasurementConverter.MilesNautical,
+            LanguageSettings.Current.MeasurementConverter.Yards,
+            LanguageSettings.Current.MeasurementConverter.Feet,
+            LanguageSettings.Current.MeasurementConverter.Inches,
+            LanguageSettings.Current.MeasurementConverter.Chains,
+            LanguageSettings.Current.MeasurementConverter.Fathoms,
+            LanguageSettings.Current.MeasurementConverter.Hands,
+            LanguageSettings.Current.MeasurementConverter.Rods,
+            LanguageSettings.Current.MeasurementConverter.Spans };
 
-        private readonly List<string> _mass = new List<string> { Configuration.Settings.Language.MeasurementConverter.LongTonnes,
-            Configuration.Settings.Language.MeasurementConverter.ShortTonnes,
-            Configuration.Settings.Language.MeasurementConverter.Tonnes,
-            Configuration.Settings.Language.MeasurementConverter.Kilos,
-            Configuration.Settings.Language.MeasurementConverter.Grams,
-            Configuration.Settings.Language.MeasurementConverter.Milligrams,
-            Configuration.Settings.Language.MeasurementConverter.Micrograms,
-            Configuration.Settings.Language.MeasurementConverter.Pounds,
-            Configuration.Settings.Language.MeasurementConverter.Ounces,
-            Configuration.Settings.Language.MeasurementConverter.Carats,
-            Configuration.Settings.Language.MeasurementConverter.Drams,
-            Configuration.Settings.Language.MeasurementConverter.Grains,
-            Configuration.Settings.Language.MeasurementConverter.Stones };
+        private readonly List<string> _mass = new List<string> { LanguageSettings.Current.MeasurementConverter.LongTonnes,
+            LanguageSettings.Current.MeasurementConverter.ShortTonnes,
+            LanguageSettings.Current.MeasurementConverter.Tonnes,
+            LanguageSettings.Current.MeasurementConverter.Kilos,
+            LanguageSettings.Current.MeasurementConverter.Grams,
+            LanguageSettings.Current.MeasurementConverter.Milligrams,
+            LanguageSettings.Current.MeasurementConverter.Micrograms,
+            LanguageSettings.Current.MeasurementConverter.Pounds,
+            LanguageSettings.Current.MeasurementConverter.Ounces,
+            LanguageSettings.Current.MeasurementConverter.Carats,
+            LanguageSettings.Current.MeasurementConverter.Drams,
+            LanguageSettings.Current.MeasurementConverter.Grains,
+            LanguageSettings.Current.MeasurementConverter.Stones };
 
-        private readonly List<string> _volume = new List<string> { Configuration.Settings.Language.MeasurementConverter.CubicKilometers,
-            Configuration.Settings.Language.MeasurementConverter.CubicMeters,
-            Configuration.Settings.Language.MeasurementConverter.Litres,
-            Configuration.Settings.Language.MeasurementConverter.CubicCentimeters,
-            Configuration.Settings.Language.MeasurementConverter.CubicMillimeters,
-            Configuration.Settings.Language.MeasurementConverter.CubicMiles,
-            Configuration.Settings.Language.MeasurementConverter.CubicYards,
-            Configuration.Settings.Language.MeasurementConverter.CubicFTs,
-            Configuration.Settings.Language.MeasurementConverter.CubicInches,
-            Configuration.Settings.Language.MeasurementConverter.OilBarrels,
-            Configuration.Settings.Language.MeasurementConverter.GallonUS,
-            Configuration.Settings.Language.MeasurementConverter.QuartsUS,
-            Configuration.Settings.Language.MeasurementConverter.PintsUS,
-            Configuration.Settings.Language.MeasurementConverter.FluidOuncesUS,
-            Configuration.Settings.Language.MeasurementConverter.Bushels,
-            Configuration.Settings.Language.MeasurementConverter.Pecks,
-            Configuration.Settings.Language.MeasurementConverter.GallonsUK,
-            Configuration.Settings.Language.MeasurementConverter.QuartsUK,
-            Configuration.Settings.Language.MeasurementConverter.PintsUK,
-            Configuration.Settings.Language.MeasurementConverter.FluidOuncesUK };
+        private readonly List<string> _volume = new List<string> { LanguageSettings.Current.MeasurementConverter.CubicKilometers,
+            LanguageSettings.Current.MeasurementConverter.CubicMeters,
+            LanguageSettings.Current.MeasurementConverter.Litres,
+            LanguageSettings.Current.MeasurementConverter.CubicCentimeters,
+            LanguageSettings.Current.MeasurementConverter.CubicMillimeters,
+            LanguageSettings.Current.MeasurementConverter.CubicMiles,
+            LanguageSettings.Current.MeasurementConverter.CubicYards,
+            LanguageSettings.Current.MeasurementConverter.CubicFTs,
+            LanguageSettings.Current.MeasurementConverter.CubicInches,
+            LanguageSettings.Current.MeasurementConverter.OilBarrels,
+            LanguageSettings.Current.MeasurementConverter.GallonUS,
+            LanguageSettings.Current.MeasurementConverter.QuartsUS,
+            LanguageSettings.Current.MeasurementConverter.PintsUS,
+            LanguageSettings.Current.MeasurementConverter.FluidOuncesUS,
+            LanguageSettings.Current.MeasurementConverter.Bushels,
+            LanguageSettings.Current.MeasurementConverter.Pecks,
+            LanguageSettings.Current.MeasurementConverter.GallonsUK,
+            LanguageSettings.Current.MeasurementConverter.QuartsUK,
+            LanguageSettings.Current.MeasurementConverter.PintsUK,
+            LanguageSettings.Current.MeasurementConverter.FluidOuncesUK };
 
-        private readonly List<string> _area = new List<string> {Configuration.Settings.Language.MeasurementConverter.SquareKilometers,
-            Configuration.Settings.Language.MeasurementConverter.SquareMeters,
-            Configuration.Settings.Language.MeasurementConverter.SquareCentimeters,
-            Configuration.Settings.Language.MeasurementConverter.SquareMillimeters,
-            Configuration.Settings.Language.MeasurementConverter.SquareMiles,
-            Configuration.Settings.Language.MeasurementConverter.SquareYards,
-            Configuration.Settings.Language.MeasurementConverter.SquareFTs,
-            Configuration.Settings.Language.MeasurementConverter.SquareInches,
-            Configuration.Settings.Language.MeasurementConverter.Hectares,
-            Configuration.Settings.Language.MeasurementConverter.Acres,
-            Configuration.Settings.Language.MeasurementConverter.Ares };
+        private readonly List<string> _area = new List<string> {LanguageSettings.Current.MeasurementConverter.SquareKilometers,
+            LanguageSettings.Current.MeasurementConverter.SquareMeters,
+            LanguageSettings.Current.MeasurementConverter.SquareCentimeters,
+            LanguageSettings.Current.MeasurementConverter.SquareMillimeters,
+            LanguageSettings.Current.MeasurementConverter.SquareMiles,
+            LanguageSettings.Current.MeasurementConverter.SquareYards,
+            LanguageSettings.Current.MeasurementConverter.SquareFTs,
+            LanguageSettings.Current.MeasurementConverter.SquareInches,
+            LanguageSettings.Current.MeasurementConverter.Hectares,
+            LanguageSettings.Current.MeasurementConverter.Acres,
+            LanguageSettings.Current.MeasurementConverter.Ares };
 
-        private readonly List<string> _time = new List<string> { Configuration.Settings.Language.MeasurementConverter.Hours,
-            Configuration.Settings.Language.MeasurementConverter.Minutes,
-            Configuration.Settings.Language.MeasurementConverter.Seconds,
-            Configuration.Settings.Language.MeasurementConverter.Milliseconds,
-            Configuration.Settings.Language.MeasurementConverter.Microseconds };
+        private readonly List<string> _time = new List<string> { LanguageSettings.Current.MeasurementConverter.Hours,
+            LanguageSettings.Current.MeasurementConverter.Minutes,
+            LanguageSettings.Current.MeasurementConverter.Seconds,
+            LanguageSettings.Current.MeasurementConverter.Milliseconds,
+            LanguageSettings.Current.MeasurementConverter.Microseconds };
 
-        private readonly List<string> _temperature = new List<string> { Configuration.Settings.Language.MeasurementConverter.Fahrenheit,
-            Configuration.Settings.Language.MeasurementConverter.Celsius,
-            Configuration.Settings.Language.MeasurementConverter.Kelvin };
+        private readonly List<string> _temperature = new List<string> { LanguageSettings.Current.MeasurementConverter.Fahrenheit,
+            LanguageSettings.Current.MeasurementConverter.Celsius,
+            LanguageSettings.Current.MeasurementConverter.Kelvin };
 
-        private readonly List<string> _velocity = new List<string> { Configuration.Settings.Language.MeasurementConverter.KilometersPerHour,
-            Configuration.Settings.Language.MeasurementConverter.MetersPerSecond,
-            Configuration.Settings.Language.MeasurementConverter.MilesPerHour,
-            Configuration.Settings.Language.MeasurementConverter.YardsPerMinute,
-            Configuration.Settings.Language.MeasurementConverter.FTsPerSecond,
-            Configuration.Settings.Language.MeasurementConverter.Knots };
+        private readonly List<string> _velocity = new List<string> { LanguageSettings.Current.MeasurementConverter.KilometersPerHour,
+            LanguageSettings.Current.MeasurementConverter.MetersPerSecond,
+            LanguageSettings.Current.MeasurementConverter.MilesPerHour,
+            LanguageSettings.Current.MeasurementConverter.YardsPerMinute,
+            LanguageSettings.Current.MeasurementConverter.FTsPerSecond,
+            LanguageSettings.Current.MeasurementConverter.Knots };
 
-        private readonly List<string> _force = new List<string> { Configuration.Settings.Language.MeasurementConverter.PoundsForce,
-            Configuration.Settings.Language.MeasurementConverter.Newtons,
-            Configuration.Settings.Language.MeasurementConverter.KilosForce };
+        private readonly List<string> _force = new List<string> { LanguageSettings.Current.MeasurementConverter.PoundsForce,
+            LanguageSettings.Current.MeasurementConverter.Newtons,
+            LanguageSettings.Current.MeasurementConverter.KilosForce };
 
-        private readonly List<string> _energy = new List<string> { Configuration.Settings.Language.MeasurementConverter.Jouls,
-            Configuration.Settings.Language.MeasurementConverter.Calories,
-            Configuration.Settings.Language.MeasurementConverter.Ergs,
-            Configuration.Settings.Language.MeasurementConverter.ElectronVolts,
-            Configuration.Settings.Language.MeasurementConverter.Btus };
+        private readonly List<string> _energy = new List<string> { LanguageSettings.Current.MeasurementConverter.Jouls,
+            LanguageSettings.Current.MeasurementConverter.Calories,
+            LanguageSettings.Current.MeasurementConverter.Ergs,
+            LanguageSettings.Current.MeasurementConverter.ElectronVolts,
+            LanguageSettings.Current.MeasurementConverter.Btus };
 
-        private readonly List<string> _power = new List<string> { Configuration.Settings.Language.MeasurementConverter.Watts,
-            Configuration.Settings.Language.MeasurementConverter.Horsepower };
+        private readonly List<string> _power = new List<string> { LanguageSettings.Current.MeasurementConverter.Watts,
+            LanguageSettings.Current.MeasurementConverter.Horsepower };
 
-        private readonly List<string> _pressure = new List<string> { Configuration.Settings.Language.MeasurementConverter.Atmospheres,
-            Configuration.Settings.Language.MeasurementConverter.Bars,
-            Configuration.Settings.Language.MeasurementConverter.Pascals,
-            Configuration.Settings.Language.MeasurementConverter.MillimetersOfMercury,
-            Configuration.Settings.Language.MeasurementConverter.PoundPerSquareInch,
-            Configuration.Settings.Language.MeasurementConverter.KilogramPerSquareCentimeter,
-            Configuration.Settings.Language.MeasurementConverter.KiloPascals };
+        private readonly List<string> _pressure = new List<string> { LanguageSettings.Current.MeasurementConverter.Atmospheres,
+            LanguageSettings.Current.MeasurementConverter.Bars,
+            LanguageSettings.Current.MeasurementConverter.Pascals,
+            LanguageSettings.Current.MeasurementConverter.MillimetersOfMercury,
+            LanguageSettings.Current.MeasurementConverter.PoundPerSquareInch,
+            LanguageSettings.Current.MeasurementConverter.KilogramPerSquareCentimeter,
+            LanguageSettings.Current.MeasurementConverter.KiloPascals };
 
         public MeasurementConverter()
         {
@@ -136,12 +136,12 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
             _defaultBackColor = Color.White;
-            var l = Configuration.Settings.Language.MeasurementConverter;
+            var l = LanguageSettings.Current.MeasurementConverter;
             Text = l.Title;
             labelConvertFrom.Text = l.ConvertFrom;
             labelConvertTo.Text = l.ConvertTo;
             linkLabel1.Text = l.CopyToClipboard;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
             checkBoxCloseOnInsert.Text = l.CloseOnInsert;
             checkBoxCloseOnInsert.Checked = Configuration.Settings.General.MeasurementConverterCloseOnInsert;
 
@@ -168,7 +168,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string cat = listBoxCategory.SelectedItem.ToString();
             string text = comboBoxFrom.SelectedItem.ToString();
-            var l = Configuration.Settings.Language.MeasurementConverter;
+            var l = LanguageSettings.Current.MeasurementConverter;
 
             comboBoxTo.Items.Clear();
 
@@ -298,7 +298,7 @@ namespace Nikse.SubtitleEdit.Forms
             string textTo = comboBoxTo.SelectedItem.ToString();
 
             string cat = listBoxCategory.SelectedItem.ToString();
-            var l = Configuration.Settings.Language.MeasurementConverter;
+            var l = LanguageSettings.Current.MeasurementConverter;
 
             if (cat == l.Length)
             {
@@ -4810,7 +4810,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void listBoxCategory_SelectedIndexChanged(object sender, EventArgs e)
         {
             string cat = listBoxCategory.SelectedItem.ToString();
-            var l = Configuration.Settings.Language.MeasurementConverter;
+            var l = LanguageSettings.Current.MeasurementConverter;
 
             comboBoxFrom.Items.Clear();
 

@@ -1483,7 +1483,7 @@ namespace Nikse.SubtitleEdit.Forms
             textCharssecToolStripMenuItem.Text = _language.Menu.Tools.TextNumberOfCharactersPerSeconds;
             textWordsPerMinutewpmToolStripMenuItem.Text = _language.Menu.Tools.WordsPerMinute;
             styleToolStripMenuItem.Text = _language.Menu.Tools.Style;
-            actorToolStripMenuItem.Text = Configuration.Settings.Language.General.Actor;
+            actorToolStripMenuItem.Text = LanguageSettings.Current.General.Actor;
 
             toolStripMenuItemShowOriginalInPreview.Text = _language.Menu.Edit.ShowOriginalTextInAudioAndVideoPreview;
             toolStripMenuItemMakeEmptyFromCurrent.Text = _language.Menu.Tools.MakeNewEmptyTranslationFromCurrentSubtitle;
@@ -1544,7 +1544,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             optionsToolStripMenuItem.Text = _language.Menu.Options.Title;
             settingsToolStripMenuItem.Text = _language.Menu.Options.Settings;
-            changeLanguageToolStripMenuItem.Text = _language.Menu.Options.ChooseLanguage + " [" + Configuration.Settings.Language.Name + "]";
+            changeLanguageToolStripMenuItem.Text = _language.Menu.Options.ChooseLanguage + " [" + LanguageSettings.Current.Name + "]";
 
             toolStripMenuItemNetworking.Text = _language.Menu.Networking.Title;
             startServerToolStripMenuItem.Text = _language.Menu.Networking.StartNewSession;
@@ -1598,7 +1598,7 @@ namespace Nikse.SubtitleEdit.Forms
             moveTextUpToolStripMenuItem.Text = _language.Menu.ContextMenu.ColumnTextUp;
             moveTextDownToolStripMenuItem.Text = _language.Menu.ContextMenu.ColumnTextDown;
             copyOriginalTextToCurrentToolStripMenuItem.Text = _language.Menu.ContextMenu.ColumnCopyOriginalTextToCurrent;
-            toolStripMenuItemBookmark.Text = Configuration.Settings.Language.Settings.ToggleBookmarksWithComment;
+            toolStripMenuItemBookmark.Text = LanguageSettings.Current.Settings.ToggleBookmarksWithComment;
             toolStripMenuItemGoToSourceView.Text = _language.Menu.ContextMenu.GoToSourceView;
             toolStripMenuItemGoToListView.Text = _language.Menu.ContextMenu.GoToListView;
 
@@ -1737,7 +1737,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonAdjustSecForward2.Text = _language.VideoControls.SecondsForwardShort;
 
             // waveform
-            var languageWaveform = Configuration.Settings.Language.Waveform;
+            var languageWaveform = LanguageSettings.Current.Waveform;
             addParagraphHereToolStripMenuItem.Text = languageWaveform.AddParagraphHere;
             addParagraphAndPasteToolStripMenuItem.Text = languageWaveform.AddParagraphHereAndPasteText;
             toolStripMenuItemSetParagraphAsSelection.Text = languageWaveform.SetParagraphAsSelection;
@@ -1773,159 +1773,159 @@ namespace Nikse.SubtitleEdit.Forms
                 audioVisualizer.WaveformNotLoadedText = languageWaveform.ClickToAddWaveform;
             }
 
-            FormatLanguage.LineNumberXErrorReadingFromSourceLineY = Configuration.Settings.Language.Main.LineNumberXErrorReadingFromSourceLineY;
-            FormatLanguage.LineNumberXErrorReadingTimeCodeFromSourceLineY = Configuration.Settings.Language.Main.LineNumberXErrorReadingTimeCodeFromSourceLineY;
-            FormatLanguage.LineNumberXExpectedEmptyLine = Configuration.Settings.Language.Main.LineNumberXExpectedEmptyLine;
-            FormatLanguage.LineNumberXExpectedNumberFromSourceLineY = Configuration.Settings.Language.Main.LineNumberXExpectedNumberFromSourceLineY;
+            FormatLanguage.LineNumberXErrorReadingFromSourceLineY = LanguageSettings.Current.Main.LineNumberXErrorReadingFromSourceLineY;
+            FormatLanguage.LineNumberXErrorReadingTimeCodeFromSourceLineY = LanguageSettings.Current.Main.LineNumberXErrorReadingTimeCodeFromSourceLineY;
+            FormatLanguage.LineNumberXExpectedEmptyLine = LanguageSettings.Current.Main.LineNumberXExpectedEmptyLine;
+            FormatLanguage.LineNumberXExpectedNumberFromSourceLineY = LanguageSettings.Current.Main.LineNumberXExpectedNumberFromSourceLineY;
 
-            NetflixLanguage.GlyphCheckReport = Configuration.Settings.Language.NetflixQualityCheck.GlyphCheckReport;
-            NetflixLanguage.WhiteSpaceCheckReport = Configuration.Settings.Language.NetflixQualityCheck.WhiteSpaceCheckReport;
+            NetflixLanguage.GlyphCheckReport = LanguageSettings.Current.NetflixQualityCheck.GlyphCheckReport;
+            NetflixLanguage.WhiteSpaceCheckReport = LanguageSettings.Current.NetflixQualityCheck.WhiteSpaceCheckReport;
 
-            DvdSubtitleLanguage.Language.NotSpecified = Configuration.Settings.Language.LanguageNames.NotSpecified;
-            DvdSubtitleLanguage.Language.UnknownCodeX = Configuration.Settings.Language.LanguageNames.UnknownCodeX;
-            DvdSubtitleLanguage.Language.CultureName = Configuration.Settings.Language.General.CultureName;
+            DvdSubtitleLanguage.Language.NotSpecified = LanguageSettings.Current.LanguageNames.NotSpecified;
+            DvdSubtitleLanguage.Language.UnknownCodeX = LanguageSettings.Current.LanguageNames.UnknownCodeX;
+            DvdSubtitleLanguage.Language.CultureName = LanguageSettings.Current.General.CultureName;
             DvdSubtitleLanguage.Language.LanguageNames = new Dictionary<string, string>
             {
-                {  "aa", Configuration.Settings.Language.LanguageNames.aaName },
-                {  "ab", Configuration.Settings.Language.LanguageNames.abName },
-                {  "af", Configuration.Settings.Language.LanguageNames.afName },
-                {  "am", Configuration.Settings.Language.LanguageNames.amName },
-                {  "ar", Configuration.Settings.Language.LanguageNames.arName },
-                {  "as", Configuration.Settings.Language.LanguageNames.asName },
-                {  "ay", Configuration.Settings.Language.LanguageNames.ayName },
-                {  "az", Configuration.Settings.Language.LanguageNames.azName },
-                {  "ba", Configuration.Settings.Language.LanguageNames.baName },
-                {  "be", Configuration.Settings.Language.LanguageNames.beName },
-                {  "bg", Configuration.Settings.Language.LanguageNames.bgName },
-                {  "bh", Configuration.Settings.Language.LanguageNames.bhName },
-                {  "bi", Configuration.Settings.Language.LanguageNames.biName },
-                {  "bn", Configuration.Settings.Language.LanguageNames.bnName },
-                {  "bo", Configuration.Settings.Language.LanguageNames.boName },
-                {  "br", Configuration.Settings.Language.LanguageNames.brName },
-                {  "ca", Configuration.Settings.Language.LanguageNames.caName },
-                {  "co", Configuration.Settings.Language.LanguageNames.coName },
-                {  "cs", Configuration.Settings.Language.LanguageNames.csName },
-                {  "cy", Configuration.Settings.Language.LanguageNames.cyName },
-                {  "da", Configuration.Settings.Language.LanguageNames.daName },
-                {  "de", Configuration.Settings.Language.LanguageNames.deName },
-                {  "dz", Configuration.Settings.Language.LanguageNames.dzName },
-                {  "el", Configuration.Settings.Language.LanguageNames.elName },
-                {  "en", Configuration.Settings.Language.LanguageNames.enName },
-                {  "eo", Configuration.Settings.Language.LanguageNames.eoName },
-                {  "es", Configuration.Settings.Language.LanguageNames.esName },
-                {  "et", Configuration.Settings.Language.LanguageNames.etName },
-                {  "eu", Configuration.Settings.Language.LanguageNames.euName },
-                {  "fa", Configuration.Settings.Language.LanguageNames.faName },
-                {  "fi", Configuration.Settings.Language.LanguageNames.fiName },
-                {  "fj", Configuration.Settings.Language.LanguageNames.fjName },
-                {  "fo", Configuration.Settings.Language.LanguageNames.foName },
-                {  "fr", Configuration.Settings.Language.LanguageNames.frName },
-                {  "fy", Configuration.Settings.Language.LanguageNames.fyName },
-                {  "ga", Configuration.Settings.Language.LanguageNames.gaName },
-                {  "gd", Configuration.Settings.Language.LanguageNames.gdName },
-                {  "gl", Configuration.Settings.Language.LanguageNames.glName },
-                {  "gn", Configuration.Settings.Language.LanguageNames.gnName },
-                {  "gu", Configuration.Settings.Language.LanguageNames.guName },
-                {  "ha", Configuration.Settings.Language.LanguageNames.haName },
-                {  "he", Configuration.Settings.Language.LanguageNames.heName },
-                {  "hi", Configuration.Settings.Language.LanguageNames.hiName },
-                {  "hr", Configuration.Settings.Language.LanguageNames.hrName },
-                {  "hu", Configuration.Settings.Language.LanguageNames.huName },
-                {  "hy", Configuration.Settings.Language.LanguageNames.hyName },
-                {  "ia", Configuration.Settings.Language.LanguageNames.iaName },
-                {  "id", Configuration.Settings.Language.LanguageNames.idName },
-                {  "ie", Configuration.Settings.Language.LanguageNames.ieName },
-                {  "ik", Configuration.Settings.Language.LanguageNames.ikName },
-                {  "is", Configuration.Settings.Language.LanguageNames.isName },
-                {  "it", Configuration.Settings.Language.LanguageNames.itName },
-                {  "iu", Configuration.Settings.Language.LanguageNames.iuName },
-                {  "ja", Configuration.Settings.Language.LanguageNames.jaName },
-                {  "jv", Configuration.Settings.Language.LanguageNames.jvName },
-                {  "ka", Configuration.Settings.Language.LanguageNames.kaName },
-                {  "kk", Configuration.Settings.Language.LanguageNames.kkName },
-                {  "kl", Configuration.Settings.Language.LanguageNames.klName },
-                {  "km", Configuration.Settings.Language.LanguageNames.kmName },
-                {  "kn", Configuration.Settings.Language.LanguageNames.knName },
-                {  "ko", Configuration.Settings.Language.LanguageNames.koName },
-                {  "ks", Configuration.Settings.Language.LanguageNames.ksName },
-                {  "ku", Configuration.Settings.Language.LanguageNames.kuName },
-                {  "ky", Configuration.Settings.Language.LanguageNames.kyName },
-                {  "la", Configuration.Settings.Language.LanguageNames.laName },
-                {  "lb", Configuration.Settings.Language.LanguageNames.lbName },
-                {  "ln", Configuration.Settings.Language.LanguageNames.lnName },
-                {  "lo", Configuration.Settings.Language.LanguageNames.loName },
-                {  "lt", Configuration.Settings.Language.LanguageNames.ltName },
-                {  "lv", Configuration.Settings.Language.LanguageNames.lvName },
-                {  "mg", Configuration.Settings.Language.LanguageNames.mgName },
-                {  "mi", Configuration.Settings.Language.LanguageNames.miName },
-                {  "mk", Configuration.Settings.Language.LanguageNames.mkName },
-                {  "ml", Configuration.Settings.Language.LanguageNames.mlName },
-                {  "mn", Configuration.Settings.Language.LanguageNames.mnName },
-                {  "mo", Configuration.Settings.Language.LanguageNames.moName },
-                {  "mr", Configuration.Settings.Language.LanguageNames.mrName },
-                {  "ms", Configuration.Settings.Language.LanguageNames.msName },
-                {  "mt", Configuration.Settings.Language.LanguageNames.mtName },
-                {  "my", Configuration.Settings.Language.LanguageNames.myName },
-                {  "na", Configuration.Settings.Language.LanguageNames.naName },
-                {  "ne", Configuration.Settings.Language.LanguageNames.neName },
-                {  "nl", Configuration.Settings.Language.LanguageNames.nlName },
-                {  "no", Configuration.Settings.Language.LanguageNames.noName },
-                {  "oc", Configuration.Settings.Language.LanguageNames.ocName },
-                {  "om", Configuration.Settings.Language.LanguageNames.omName },
-                {  "or", Configuration.Settings.Language.LanguageNames.orName },
-                {  "pa", Configuration.Settings.Language.LanguageNames.paName },
-                {  "pl", Configuration.Settings.Language.LanguageNames.plName },
-                {  "ps", Configuration.Settings.Language.LanguageNames.psName },
-                {  "pt", Configuration.Settings.Language.LanguageNames.ptName },
-                {  "qu", Configuration.Settings.Language.LanguageNames.quName },
-                {  "rm", Configuration.Settings.Language.LanguageNames.rmName },
-                {  "rn", Configuration.Settings.Language.LanguageNames.rnName },
-                {  "ro", Configuration.Settings.Language.LanguageNames.roName },
-                {  "ru", Configuration.Settings.Language.LanguageNames.ruName },
-                {  "rw", Configuration.Settings.Language.LanguageNames.rwName },
-                {  "sa", Configuration.Settings.Language.LanguageNames.saName },
-                {  "sd", Configuration.Settings.Language.LanguageNames.sdName },
-                {  "sg", Configuration.Settings.Language.LanguageNames.sgName },
-                {  "sh", Configuration.Settings.Language.LanguageNames.shName },
-                {  "si", Configuration.Settings.Language.LanguageNames.siName },
-                {  "sk", Configuration.Settings.Language.LanguageNames.skName },
-                {  "sl", Configuration.Settings.Language.LanguageNames.slName },
-                {  "sm", Configuration.Settings.Language.LanguageNames.smName },
-                {  "sn", Configuration.Settings.Language.LanguageNames.snName },
-                {  "so", Configuration.Settings.Language.LanguageNames.soName },
-                {  "sq", Configuration.Settings.Language.LanguageNames.sqName },
-                {  "sr", Configuration.Settings.Language.LanguageNames.srName },
-                {  "ss", Configuration.Settings.Language.LanguageNames.ssName },
-                {  "st", Configuration.Settings.Language.LanguageNames.stName },
-                {  "su", Configuration.Settings.Language.LanguageNames.suName },
-                {  "sv", Configuration.Settings.Language.LanguageNames.svName },
-                {  "sw", Configuration.Settings.Language.LanguageNames.swName },
-                {  "ta", Configuration.Settings.Language.LanguageNames.taName },
-                {  "te", Configuration.Settings.Language.LanguageNames.teName },
-                {  "tg", Configuration.Settings.Language.LanguageNames.tgName },
-                {  "th", Configuration.Settings.Language.LanguageNames.thName },
-                {  "ti", Configuration.Settings.Language.LanguageNames.tiName },
-                {  "tk", Configuration.Settings.Language.LanguageNames.tkName },
-                {  "tl", Configuration.Settings.Language.LanguageNames.tlName },
-                {  "tn", Configuration.Settings.Language.LanguageNames.tnName },
-                {  "to", Configuration.Settings.Language.LanguageNames.toName },
-                {  "tr", Configuration.Settings.Language.LanguageNames.trName },
-                {  "ts", Configuration.Settings.Language.LanguageNames.tsName },
-                {  "tt", Configuration.Settings.Language.LanguageNames.ttName },
-                {  "tw", Configuration.Settings.Language.LanguageNames.twName },
-                {  "ug", Configuration.Settings.Language.LanguageNames.ugName },
-                {  "uk", Configuration.Settings.Language.LanguageNames.ukName },
-                {  "ur", Configuration.Settings.Language.LanguageNames.urName },
-                {  "uz", Configuration.Settings.Language.LanguageNames.uzName },
-                {  "vi", Configuration.Settings.Language.LanguageNames.viName },
-                {  "vo", Configuration.Settings.Language.LanguageNames.voName },
-                {  "wo", Configuration.Settings.Language.LanguageNames.woName },
-                {  "xh", Configuration.Settings.Language.LanguageNames.xhName },
-                {  "yi", Configuration.Settings.Language.LanguageNames.yiName },
-                {  "yo", Configuration.Settings.Language.LanguageNames.yoName },
-                {  "za", Configuration.Settings.Language.LanguageNames.zaName },
-                {  "zh", Configuration.Settings.Language.LanguageNames.zhName },
-                {  "zu", Configuration.Settings.Language.LanguageNames.zuName },
+                {  "aa", LanguageSettings.Current.LanguageNames.aaName },
+                {  "ab", LanguageSettings.Current.LanguageNames.abName },
+                {  "af", LanguageSettings.Current.LanguageNames.afName },
+                {  "am", LanguageSettings.Current.LanguageNames.amName },
+                {  "ar", LanguageSettings.Current.LanguageNames.arName },
+                {  "as", LanguageSettings.Current.LanguageNames.asName },
+                {  "ay", LanguageSettings.Current.LanguageNames.ayName },
+                {  "az", LanguageSettings.Current.LanguageNames.azName },
+                {  "ba", LanguageSettings.Current.LanguageNames.baName },
+                {  "be", LanguageSettings.Current.LanguageNames.beName },
+                {  "bg", LanguageSettings.Current.LanguageNames.bgName },
+                {  "bh", LanguageSettings.Current.LanguageNames.bhName },
+                {  "bi", LanguageSettings.Current.LanguageNames.biName },
+                {  "bn", LanguageSettings.Current.LanguageNames.bnName },
+                {  "bo", LanguageSettings.Current.LanguageNames.boName },
+                {  "br", LanguageSettings.Current.LanguageNames.brName },
+                {  "ca", LanguageSettings.Current.LanguageNames.caName },
+                {  "co", LanguageSettings.Current.LanguageNames.coName },
+                {  "cs", LanguageSettings.Current.LanguageNames.csName },
+                {  "cy", LanguageSettings.Current.LanguageNames.cyName },
+                {  "da", LanguageSettings.Current.LanguageNames.daName },
+                {  "de", LanguageSettings.Current.LanguageNames.deName },
+                {  "dz", LanguageSettings.Current.LanguageNames.dzName },
+                {  "el", LanguageSettings.Current.LanguageNames.elName },
+                {  "en", LanguageSettings.Current.LanguageNames.enName },
+                {  "eo", LanguageSettings.Current.LanguageNames.eoName },
+                {  "es", LanguageSettings.Current.LanguageNames.esName },
+                {  "et", LanguageSettings.Current.LanguageNames.etName },
+                {  "eu", LanguageSettings.Current.LanguageNames.euName },
+                {  "fa", LanguageSettings.Current.LanguageNames.faName },
+                {  "fi", LanguageSettings.Current.LanguageNames.fiName },
+                {  "fj", LanguageSettings.Current.LanguageNames.fjName },
+                {  "fo", LanguageSettings.Current.LanguageNames.foName },
+                {  "fr", LanguageSettings.Current.LanguageNames.frName },
+                {  "fy", LanguageSettings.Current.LanguageNames.fyName },
+                {  "ga", LanguageSettings.Current.LanguageNames.gaName },
+                {  "gd", LanguageSettings.Current.LanguageNames.gdName },
+                {  "gl", LanguageSettings.Current.LanguageNames.glName },
+                {  "gn", LanguageSettings.Current.LanguageNames.gnName },
+                {  "gu", LanguageSettings.Current.LanguageNames.guName },
+                {  "ha", LanguageSettings.Current.LanguageNames.haName },
+                {  "he", LanguageSettings.Current.LanguageNames.heName },
+                {  "hi", LanguageSettings.Current.LanguageNames.hiName },
+                {  "hr", LanguageSettings.Current.LanguageNames.hrName },
+                {  "hu", LanguageSettings.Current.LanguageNames.huName },
+                {  "hy", LanguageSettings.Current.LanguageNames.hyName },
+                {  "ia", LanguageSettings.Current.LanguageNames.iaName },
+                {  "id", LanguageSettings.Current.LanguageNames.idName },
+                {  "ie", LanguageSettings.Current.LanguageNames.ieName },
+                {  "ik", LanguageSettings.Current.LanguageNames.ikName },
+                {  "is", LanguageSettings.Current.LanguageNames.isName },
+                {  "it", LanguageSettings.Current.LanguageNames.itName },
+                {  "iu", LanguageSettings.Current.LanguageNames.iuName },
+                {  "ja", LanguageSettings.Current.LanguageNames.jaName },
+                {  "jv", LanguageSettings.Current.LanguageNames.jvName },
+                {  "ka", LanguageSettings.Current.LanguageNames.kaName },
+                {  "kk", LanguageSettings.Current.LanguageNames.kkName },
+                {  "kl", LanguageSettings.Current.LanguageNames.klName },
+                {  "km", LanguageSettings.Current.LanguageNames.kmName },
+                {  "kn", LanguageSettings.Current.LanguageNames.knName },
+                {  "ko", LanguageSettings.Current.LanguageNames.koName },
+                {  "ks", LanguageSettings.Current.LanguageNames.ksName },
+                {  "ku", LanguageSettings.Current.LanguageNames.kuName },
+                {  "ky", LanguageSettings.Current.LanguageNames.kyName },
+                {  "la", LanguageSettings.Current.LanguageNames.laName },
+                {  "lb", LanguageSettings.Current.LanguageNames.lbName },
+                {  "ln", LanguageSettings.Current.LanguageNames.lnName },
+                {  "lo", LanguageSettings.Current.LanguageNames.loName },
+                {  "lt", LanguageSettings.Current.LanguageNames.ltName },
+                {  "lv", LanguageSettings.Current.LanguageNames.lvName },
+                {  "mg", LanguageSettings.Current.LanguageNames.mgName },
+                {  "mi", LanguageSettings.Current.LanguageNames.miName },
+                {  "mk", LanguageSettings.Current.LanguageNames.mkName },
+                {  "ml", LanguageSettings.Current.LanguageNames.mlName },
+                {  "mn", LanguageSettings.Current.LanguageNames.mnName },
+                {  "mo", LanguageSettings.Current.LanguageNames.moName },
+                {  "mr", LanguageSettings.Current.LanguageNames.mrName },
+                {  "ms", LanguageSettings.Current.LanguageNames.msName },
+                {  "mt", LanguageSettings.Current.LanguageNames.mtName },
+                {  "my", LanguageSettings.Current.LanguageNames.myName },
+                {  "na", LanguageSettings.Current.LanguageNames.naName },
+                {  "ne", LanguageSettings.Current.LanguageNames.neName },
+                {  "nl", LanguageSettings.Current.LanguageNames.nlName },
+                {  "no", LanguageSettings.Current.LanguageNames.noName },
+                {  "oc", LanguageSettings.Current.LanguageNames.ocName },
+                {  "om", LanguageSettings.Current.LanguageNames.omName },
+                {  "or", LanguageSettings.Current.LanguageNames.orName },
+                {  "pa", LanguageSettings.Current.LanguageNames.paName },
+                {  "pl", LanguageSettings.Current.LanguageNames.plName },
+                {  "ps", LanguageSettings.Current.LanguageNames.psName },
+                {  "pt", LanguageSettings.Current.LanguageNames.ptName },
+                {  "qu", LanguageSettings.Current.LanguageNames.quName },
+                {  "rm", LanguageSettings.Current.LanguageNames.rmName },
+                {  "rn", LanguageSettings.Current.LanguageNames.rnName },
+                {  "ro", LanguageSettings.Current.LanguageNames.roName },
+                {  "ru", LanguageSettings.Current.LanguageNames.ruName },
+                {  "rw", LanguageSettings.Current.LanguageNames.rwName },
+                {  "sa", LanguageSettings.Current.LanguageNames.saName },
+                {  "sd", LanguageSettings.Current.LanguageNames.sdName },
+                {  "sg", LanguageSettings.Current.LanguageNames.sgName },
+                {  "sh", LanguageSettings.Current.LanguageNames.shName },
+                {  "si", LanguageSettings.Current.LanguageNames.siName },
+                {  "sk", LanguageSettings.Current.LanguageNames.skName },
+                {  "sl", LanguageSettings.Current.LanguageNames.slName },
+                {  "sm", LanguageSettings.Current.LanguageNames.smName },
+                {  "sn", LanguageSettings.Current.LanguageNames.snName },
+                {  "so", LanguageSettings.Current.LanguageNames.soName },
+                {  "sq", LanguageSettings.Current.LanguageNames.sqName },
+                {  "sr", LanguageSettings.Current.LanguageNames.srName },
+                {  "ss", LanguageSettings.Current.LanguageNames.ssName },
+                {  "st", LanguageSettings.Current.LanguageNames.stName },
+                {  "su", LanguageSettings.Current.LanguageNames.suName },
+                {  "sv", LanguageSettings.Current.LanguageNames.svName },
+                {  "sw", LanguageSettings.Current.LanguageNames.swName },
+                {  "ta", LanguageSettings.Current.LanguageNames.taName },
+                {  "te", LanguageSettings.Current.LanguageNames.teName },
+                {  "tg", LanguageSettings.Current.LanguageNames.tgName },
+                {  "th", LanguageSettings.Current.LanguageNames.thName },
+                {  "ti", LanguageSettings.Current.LanguageNames.tiName },
+                {  "tk", LanguageSettings.Current.LanguageNames.tkName },
+                {  "tl", LanguageSettings.Current.LanguageNames.tlName },
+                {  "tn", LanguageSettings.Current.LanguageNames.tnName },
+                {  "to", LanguageSettings.Current.LanguageNames.toName },
+                {  "tr", LanguageSettings.Current.LanguageNames.trName },
+                {  "ts", LanguageSettings.Current.LanguageNames.tsName },
+                {  "tt", LanguageSettings.Current.LanguageNames.ttName },
+                {  "tw", LanguageSettings.Current.LanguageNames.twName },
+                {  "ug", LanguageSettings.Current.LanguageNames.ugName },
+                {  "uk", LanguageSettings.Current.LanguageNames.ukName },
+                {  "ur", LanguageSettings.Current.LanguageNames.urName },
+                {  "uz", LanguageSettings.Current.LanguageNames.uzName },
+                {  "vi", LanguageSettings.Current.LanguageNames.viName },
+                {  "vo", LanguageSettings.Current.LanguageNames.voName },
+                {  "wo", LanguageSettings.Current.LanguageNames.woName },
+                {  "xh", LanguageSettings.Current.LanguageNames.xhName },
+                {  "yi", LanguageSettings.Current.LanguageNames.yiName },
+                {  "yo", LanguageSettings.Current.LanguageNames.yoName },
+                {  "za", LanguageSettings.Current.LanguageNames.zaName },
+                {  "zh", LanguageSettings.Current.LanguageNames.zhName },
+                {  "zu", LanguageSettings.Current.LanguageNames.zuName },
             };
             DvdSubtitleLanguage.Initialize();
         }
@@ -3446,7 +3446,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (_subtitle.Paragraphs.Any(p => !string.IsNullOrEmpty(p.Actor)))
                     {
                         bool wasVisible = SubtitleListview1.ColumnIndexActor >= 0;
-                        SubtitleListview1.ShowActorColumn(Configuration.Settings.Language.General.Character);
+                        SubtitleListview1.ShowActorColumn(LanguageSettings.Current.General.Character);
                         if (!wasVisible)
                         {
                             SaveSubtitleListviewIndices();
@@ -4121,7 +4121,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (containsNegativeTime && !skipPrompts)
                 {
                     if (MessageBox.Show(_language.NegativeTimeWarning + Environment.NewLine +
-                                        string.Format(Configuration.Settings.Language.MultipleReplace.LinesFoundX, string.Join(", ", negativeTimeLines)),
+                                        string.Format(LanguageSettings.Current.MultipleReplace.LinesFoundX, string.Join(", ", negativeTimeLines)),
                                         Title, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                     {
                         return DialogResult.No;
@@ -4591,11 +4591,11 @@ namespace Nikse.SubtitleEdit.Forms
                 bool wasVisible = SubtitleListview1.ColumnIndexActor >= 0;
                 if (formatType == typeof(CsvNuendo))
                 {
-                    SubtitleListview1.ShowActorColumn(Configuration.Settings.Language.General.Character);
+                    SubtitleListview1.ShowActorColumn(LanguageSettings.Current.General.Character);
                 }
                 else
                 {
-                    SubtitleListview1.ShowActorColumn(Configuration.Settings.Language.General.Actor);
+                    SubtitleListview1.ShowActorColumn(LanguageSettings.Current.General.Actor);
                 }
 
                 if (!wasVisible)
@@ -4612,7 +4612,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (formatType == typeof(TimedText10) && Configuration.Settings.Tools.ListViewShowColumnRegion)
             {
-                SubtitleListview1.ShowRegionColumn(Configuration.Settings.Language.General.Region);
+                SubtitleListview1.ShowRegionColumn(LanguageSettings.Current.General.Region);
             }
             else
             {
@@ -4832,7 +4832,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (Configuration.Settings.Tools.ListViewShowColumnEndTime)
                 {
-                    SubtitleListview1.ShowEndColumn(Configuration.Settings.Language.General.EndTime);
+                    SubtitleListview1.ShowEndColumn(LanguageSettings.Current.General.EndTime);
                 }
                 else
                 {
@@ -4841,7 +4841,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (Configuration.Settings.Tools.ListViewShowColumnDuration)
                 {
-                    SubtitleListview1.ShowDurationColumn(Configuration.Settings.Language.General.Duration);
+                    SubtitleListview1.ShowDurationColumn(LanguageSettings.Current.General.Duration);
                 }
                 else
                 {
@@ -4850,7 +4850,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (Configuration.Settings.Tools.ListViewShowColumnCharsPerSec)
                 {
-                    SubtitleListview1.ShowCharsSecColumn(Configuration.Settings.Language.General.CharsPerSec);
+                    SubtitleListview1.ShowCharsSecColumn(LanguageSettings.Current.General.CharsPerSec);
                 }
                 else
                 {
@@ -4859,7 +4859,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (Configuration.Settings.Tools.ListViewShowColumnWordsPerMin)
                 {
-                    SubtitleListview1.ShowWordsMinColumn(Configuration.Settings.Language.General.WordsPerMin);
+                    SubtitleListview1.ShowWordsMinColumn(LanguageSettings.Current.General.WordsPerMin);
                 }
                 else
                 {
@@ -4941,12 +4941,12 @@ namespace Nikse.SubtitleEdit.Forms
             SetTitle();
             if (Configuration.Settings.VideoControls.GenerateSpectrogram)
             {
-                audioVisualizer.WaveformNotLoadedText = Configuration.Settings.Language.Waveform.ClickToAddWaveformAndSpectrogram;
+                audioVisualizer.WaveformNotLoadedText = LanguageSettings.Current.Waveform.ClickToAddWaveformAndSpectrogram;
                 showhideWaveformToolStripMenuItem.Text = _language.Menu.Video.ShowHideWaveformAndSpectrogram;
             }
             else
             {
-                audioVisualizer.WaveformNotLoadedText = Configuration.Settings.Language.Waveform.ClickToAddWaveform;
+                audioVisualizer.WaveformNotLoadedText = LanguageSettings.Current.Waveform.ClickToAddWaveform;
                 showhideWaveformToolStripMenuItem.Text = _language.Menu.Video.ShowHideWaveform;
             }
 
@@ -5054,7 +5054,7 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Tools.ListViewUnfocusedSelectedColor = Color.LightBlue;
                     }
 
-                    MessageBox.Show(Configuration.Settings.Language.Main.DarkThemeRestart);
+                    MessageBox.Show(LanguageSettings.Current.Main.DarkThemeRestart);
                 }
             }
             else if (oldSubtitleTextBoxSyntaxColor != Configuration.Settings.General.SubtitleTextBoxSyntaxColor ||
@@ -7570,7 +7570,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void DeleteLine()
         {
-            MakeHistoryForUndo(Configuration.Settings.Language.Main.OneLineDeleted);
+            MakeHistoryForUndo(LanguageSettings.Current.Main.OneLineDeleted);
             DeleteSelectedLines();
         }
 
@@ -7759,7 +7759,7 @@ namespace Nikse.SubtitleEdit.Forms
                 e.Cancel = true;
                 var cm = new ContextMenuStrip();
                 UiUtil.FixFonts(cm);
-                var contextMenuStripLvHeaderResizeToolStripMenuItem = new ToolStripMenuItem(Configuration.Settings.Language.Main.Menu.ContextMenu.SizeAllColumnsToFit);
+                var contextMenuStripLvHeaderResizeToolStripMenuItem = new ToolStripMenuItem(LanguageSettings.Current.Main.Menu.ContextMenu.SizeAllColumnsToFit);
                 contextMenuStripLvHeaderResizeToolStripMenuItem.Click += (sender2, e2) => { SubtitleListview1.AutoSizeColumns(); };
                 cm.Items.Add(contextMenuStripLvHeaderResizeToolStripMenuItem);
 
@@ -7768,7 +7768,7 @@ namespace Nikse.SubtitleEdit.Forms
                 cm.Items.Add(tss);
 
                 // End time
-                var contextMenuStripLvHeaderEndTimeToolStripMenuItem = new ToolStripMenuItem(Configuration.Settings.Language.General.EndTime);
+                var contextMenuStripLvHeaderEndTimeToolStripMenuItem = new ToolStripMenuItem(LanguageSettings.Current.General.EndTime);
                 contextMenuStripLvHeaderEndTimeToolStripMenuItem.CheckOnClick = true;
                 contextMenuStripLvHeaderEndTimeToolStripMenuItem.Checked = Configuration.Settings.Tools.ListViewShowColumnEndTime;
                 contextMenuStripLvHeaderEndTimeToolStripMenuItem.Click += (sender2, e2) =>
@@ -7777,7 +7777,7 @@ namespace Nikse.SubtitleEdit.Forms
                     Configuration.Settings.Tools.ListViewShowColumnEndTime = contextMenuStripLvHeaderEndTimeToolStripMenuItem.Checked;
                     if (Configuration.Settings.Tools.ListViewShowColumnEndTime)
                     {
-                        SubtitleListview1.ShowEndColumn(Configuration.Settings.Language.General.EndTime);
+                        SubtitleListview1.ShowEndColumn(LanguageSettings.Current.General.EndTime);
                     }
                     else
                     {
@@ -7793,7 +7793,7 @@ namespace Nikse.SubtitleEdit.Forms
                 cm.Items.Add(contextMenuStripLvHeaderEndTimeToolStripMenuItem);
 
                 // Duration
-                var contextMenuStripLvHeaderDurationToolStripMenuItem = new ToolStripMenuItem(Configuration.Settings.Language.General.Duration);
+                var contextMenuStripLvHeaderDurationToolStripMenuItem = new ToolStripMenuItem(LanguageSettings.Current.General.Duration);
                 contextMenuStripLvHeaderDurationToolStripMenuItem.CheckOnClick = true;
                 contextMenuStripLvHeaderDurationToolStripMenuItem.Checked = Configuration.Settings.Tools.ListViewShowColumnDuration;
                 contextMenuStripLvHeaderDurationToolStripMenuItem.Click += (sender2, e2) =>
@@ -7802,7 +7802,7 @@ namespace Nikse.SubtitleEdit.Forms
                     Configuration.Settings.Tools.ListViewShowColumnDuration = contextMenuStripLvHeaderDurationToolStripMenuItem.Checked;
                     if (Configuration.Settings.Tools.ListViewShowColumnDuration)
                     {
-                        SubtitleListview1.ShowDurationColumn(Configuration.Settings.Language.General.Duration);
+                        SubtitleListview1.ShowDurationColumn(LanguageSettings.Current.General.Duration);
                     }
                     else
                     {
@@ -7818,7 +7818,7 @@ namespace Nikse.SubtitleEdit.Forms
                 cm.Items.Add(contextMenuStripLvHeaderDurationToolStripMenuItem);
 
                 // CPS
-                var contextMenuStripLvHeaderCpsToolStripMenuItem = new ToolStripMenuItem(Configuration.Settings.Language.General.CharsPerSec);
+                var contextMenuStripLvHeaderCpsToolStripMenuItem = new ToolStripMenuItem(LanguageSettings.Current.General.CharsPerSec);
                 contextMenuStripLvHeaderCpsToolStripMenuItem.CheckOnClick = true;
                 contextMenuStripLvHeaderCpsToolStripMenuItem.Checked = Configuration.Settings.Tools.ListViewShowColumnCharsPerSec;
                 contextMenuStripLvHeaderCpsToolStripMenuItem.Click += (sender2, e2) =>
@@ -7827,7 +7827,7 @@ namespace Nikse.SubtitleEdit.Forms
                     Configuration.Settings.Tools.ListViewShowColumnCharsPerSec = contextMenuStripLvHeaderCpsToolStripMenuItem.Checked;
                     if (Configuration.Settings.Tools.ListViewShowColumnCharsPerSec)
                     {
-                        SubtitleListview1.ShowCharsSecColumn(Configuration.Settings.Language.General.CharsPerSec);
+                        SubtitleListview1.ShowCharsSecColumn(LanguageSettings.Current.General.CharsPerSec);
                     }
                     else
                     {
@@ -7843,7 +7843,7 @@ namespace Nikse.SubtitleEdit.Forms
                 cm.Items.Add(contextMenuStripLvHeaderCpsToolStripMenuItem);
 
                 // WPM
-                var contextMenuStripLvHeaderWpmToolStripMenuItem = new ToolStripMenuItem(Configuration.Settings.Language.General.WordsPerMin);
+                var contextMenuStripLvHeaderWpmToolStripMenuItem = new ToolStripMenuItem(LanguageSettings.Current.General.WordsPerMin);
                 contextMenuStripLvHeaderWpmToolStripMenuItem.CheckOnClick = true;
                 contextMenuStripLvHeaderWpmToolStripMenuItem.Checked = Configuration.Settings.Tools.ListViewShowColumnWordsPerMin;
                 contextMenuStripLvHeaderWpmToolStripMenuItem.Click += (sender2, e2) =>
@@ -7852,7 +7852,7 @@ namespace Nikse.SubtitleEdit.Forms
                     Configuration.Settings.Tools.ListViewShowColumnWordsPerMin = contextMenuStripLvHeaderWpmToolStripMenuItem.Checked;
                     if (Configuration.Settings.Tools.ListViewShowColumnWordsPerMin)
                     {
-                        SubtitleListview1.ShowWordsMinColumn(Configuration.Settings.Language.General.WordsPerMin);
+                        SubtitleListview1.ShowWordsMinColumn(LanguageSettings.Current.General.WordsPerMin);
                     }
                     else
                     {
@@ -7868,7 +7868,7 @@ namespace Nikse.SubtitleEdit.Forms
                 cm.Items.Add(contextMenuStripLvHeaderWpmToolStripMenuItem);
 
                 // GAP
-                var contextMenuStripLvHeaderGapToolStripMenuItem = new ToolStripMenuItem(Configuration.Settings.Language.General.Gap);
+                var contextMenuStripLvHeaderGapToolStripMenuItem = new ToolStripMenuItem(LanguageSettings.Current.General.Gap);
                 contextMenuStripLvHeaderGapToolStripMenuItem.CheckOnClick = true;
                 contextMenuStripLvHeaderGapToolStripMenuItem.Checked = Configuration.Settings.Tools.ListViewShowColumnGap;
                 contextMenuStripLvHeaderGapToolStripMenuItem.Click += (sender2, e2) =>
@@ -7877,7 +7877,7 @@ namespace Nikse.SubtitleEdit.Forms
                     Configuration.Settings.Tools.ListViewShowColumnGap = contextMenuStripLvHeaderGapToolStripMenuItem.Checked;
                     if (Configuration.Settings.Tools.ListViewShowColumnGap)
                     {
-                        SubtitleListview1.ShowGapColumn(Configuration.Settings.Language.General.Gap);
+                        SubtitleListview1.ShowGapColumn(LanguageSettings.Current.General.Gap);
                     }
                     else
                     {
@@ -7895,7 +7895,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha) || formatType == typeof(CsvNuendo))
                 {
                     // ACTOR
-                    var actorTitle = formatType == typeof(CsvNuendo) ? Configuration.Settings.Language.General.Character : Configuration.Settings.Language.General.Actor;
+                    var actorTitle = formatType == typeof(CsvNuendo) ? LanguageSettings.Current.General.Character : LanguageSettings.Current.General.Actor;
                     var contextMenuStripLvHeaderActorToolStripMenuItem = new ToolStripMenuItem(actorTitle);
                     contextMenuStripLvHeaderActorToolStripMenuItem.CheckOnClick = true;
                     contextMenuStripLvHeaderActorToolStripMenuItem.Checked = Configuration.Settings.Tools.ListViewShowColumnActor;
@@ -7924,7 +7924,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (formatType == typeof(TimedText10))
                 {
                     // REGION
-                    var contextMenuStripLvHeaderRegionToolStripMenuItem = new ToolStripMenuItem(Configuration.Settings.Language.General.Region);
+                    var contextMenuStripLvHeaderRegionToolStripMenuItem = new ToolStripMenuItem(LanguageSettings.Current.General.Region);
                     contextMenuStripLvHeaderRegionToolStripMenuItem.CheckOnClick = true;
                     contextMenuStripLvHeaderRegionToolStripMenuItem.Checked = Configuration.Settings.Tools.ListViewShowColumnRegion;
                     contextMenuStripLvHeaderRegionToolStripMenuItem.Click += (sender2, e2) =>
@@ -7933,7 +7933,7 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Tools.ListViewShowColumnRegion = contextMenuStripLvHeaderRegionToolStripMenuItem.Checked;
                         if (Configuration.Settings.Tools.ListViewShowColumnRegion)
                         {
-                            SubtitleListview1.ShowRegionColumn(Configuration.Settings.Language.General.Region);
+                            SubtitleListview1.ShowRegionColumn(LanguageSettings.Current.General.Region);
                         }
                         else
                         {
@@ -8048,11 +8048,11 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     toolStripMenuItemSetRegion.DropDownItems.Add("-");
-                    var clear = new ToolStripMenuItem(Configuration.Settings.Language.DvdSubRip.Clear);
+                    var clear = new ToolStripMenuItem(LanguageSettings.Current.DvdSubRip.Clear);
                     toolStripMenuItemSetRegion.DropDownItems.Add(clear);
                     clear.Click += (sender2, e2) =>
                     {
-                        MakeHistoryForUndo("Set region: " + Configuration.Settings.Language.DvdSubRip.Clear);
+                        MakeHistoryForUndo("Set region: " + LanguageSettings.Current.DvdSubRip.Clear);
                         foreach (int index in SubtitleListview1.SelectedIndices)
                         {
                             _subtitle.Paragraphs[index].Region = null;
@@ -8117,11 +8117,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (languages.Count > 0)
                 {
-                    var clearLanguage = new ToolStripMenuItem(Configuration.Settings.Language.DvdSubRip.Clear);
+                    var clearLanguage = new ToolStripMenuItem(LanguageSettings.Current.DvdSubRip.Clear);
                     toolStripMenuItemSetLanguage.DropDownItems.Add(clearLanguage);
                     clearLanguage.Click += (sender2, e2) =>
                     {
-                        MakeHistoryForUndo("Set language: " + Configuration.Settings.Language.DvdSubRip.Clear);
+                        MakeHistoryForUndo("Set language: " + LanguageSettings.Current.DvdSubRip.Clear);
                         foreach (int index in SubtitleListview1.SelectedIndices)
                         {
                             _subtitle.Paragraphs[index].Language = null;
@@ -8357,7 +8357,7 @@ namespace Nikse.SubtitleEdit.Forms
             string actor = (sender as ToolStripItem).Text;
             if (!string.IsNullOrEmpty(actor))
             {
-                MakeHistoryForUndo(Configuration.Settings.Language.Main.Menu.ContextMenu.SetActor + ": " + actor);
+                MakeHistoryForUndo(LanguageSettings.Current.Main.Menu.ContextMenu.SetActor + ": " + actor);
 
                 foreach (int index in SubtitleListview1.SelectedIndices)
                 {
@@ -8436,7 +8436,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void WebVTTSetNewVoice(object sender, EventArgs e)
         {
-            using (var form = new TextPrompt(Configuration.Settings.Language.WebVttNewVoice.Title, Configuration.Settings.Language.WebVttNewVoice.VoiceName, string.Empty))
+            using (var form = new TextPrompt(LanguageSettings.Current.WebVttNewVoice.Title, LanguageSettings.Current.WebVttNewVoice.VoiceName, string.Empty))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
@@ -8458,7 +8458,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetNewActor(object sender, EventArgs e)
         {
-            using (var form = new TextPrompt(Configuration.Settings.Language.Main.Menu.ContextMenu.NewActor.Replace("...", string.Empty), Configuration.Settings.Language.General.Actor, string.Empty))
+            using (var form = new TextPrompt(LanguageSettings.Current.Main.Menu.ContextMenu.NewActor.Replace("...", string.Empty), LanguageSettings.Current.General.Actor, string.Empty))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
@@ -8522,7 +8522,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void WebVTTSetNewVoiceTextBox(object sender, EventArgs e)
         {
-            using (var form = new TextPrompt(Configuration.Settings.Language.WebVttNewVoice.Title, Configuration.Settings.Language.WebVttNewVoice.VoiceName, string.Empty))
+            using (var form = new TextPrompt(LanguageSettings.Current.WebVttNewVoice.Title, LanguageSettings.Current.WebVttNewVoice.VoiceName, string.Empty))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
@@ -9623,7 +9623,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var text = Utilities.ReSplit(textBoxListViewText.Text, textBoxListViewText.SelectionStart);
                 if (text != textBoxListViewText.Text)
                 {
-                    MakeHistoryForUndo(string.Format(_language.BeforeReplace, Configuration.Settings.Language.Settings.MainTextBoxAutoBreakFromPos));
+                    MakeHistoryForUndo(string.Format(_language.BeforeReplace, LanguageSettings.Current.Settings.MainTextBoxAutoBreakFromPos));
                     textBoxListViewText.Text = text;
                     var lines = textBoxListViewText.Text.SplitToLines();
                     if (lines.Count > 0)
@@ -9639,7 +9639,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var text = Utilities.ReSplit(textBoxListViewText.Text, textBoxListViewText.SelectionStart);
                 if (text != textBoxListViewText.Text)
                 {
-                    MakeHistoryForUndo(string.Format(_language.BeforeReplace, Configuration.Settings.Language.Settings.MainTextBoxAutoBreakFromPosAndGoToNext));
+                    MakeHistoryForUndo(string.Format(_language.BeforeReplace, LanguageSettings.Current.Settings.MainTextBoxAutoBreakFromPosAndGoToNext));
                     textBoxListViewText.Text = text;
                     ButtonNextClick(null, null);
                 }
@@ -15041,13 +15041,13 @@ namespace Nikse.SubtitleEdit.Forms
                 var enc = GetCurrentEncoding();
                 if (enc != Encoding.UTF8 && enc != Encoding.UTF32 && enc != Encoding.Unicode && enc != Encoding.UTF7)
                 {
-                    MessageBox.Show(Configuration.Settings.Language.Watermark.ErrorUnicodeEncodingOnly);
+                    MessageBox.Show(LanguageSettings.Current.Watermark.ErrorUnicodeEncodingOnly);
                 }
                 else
                 {
                     using (var watermarkForm = new Watermark())
                     {
-                        MakeHistoryForUndo(Configuration.Settings.Language.Watermark.BeforeWatermark);
+                        MakeHistoryForUndo(LanguageSettings.Current.Watermark.BeforeWatermark);
                         watermarkForm.Initialize(_subtitle, FirstSelectedIndex);
                         if (watermarkForm.ShowDialog(this) == DialogResult.OK)
                         {
@@ -15957,13 +15957,13 @@ namespace Nikse.SubtitleEdit.Forms
                 var next = _subtitle.GetParagraphOrDefault(idx + 1);
                 if (next == null || next.StartTime.TotalMilliseconds > p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines)
                 {
-                    MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustExtendCurrentSubtitle));
+                    MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustExtendCurrentSubtitle));
                     historyAdded = true;
                     p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
                 }
                 else
                 {
-                    MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustExtendCurrentSubtitle));
+                    MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustExtendCurrentSubtitle));
                     historyAdded = true;
                     p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                 }
@@ -15978,7 +15978,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (!historyAdded)
                             {
-                                MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustExtendCurrentSubtitle));
+                                MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustExtendCurrentSubtitle));
                             }
 
                             original.EndTime.TotalMilliseconds = original.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
@@ -15987,7 +15987,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (!historyAdded)
                             {
-                                MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustExtendCurrentSubtitle));
+                                MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustExtendCurrentSubtitle));
                             }
 
                             original.EndTime.TotalMilliseconds = originalNext.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
@@ -16011,7 +16011,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (!historyAdded)
                     {
-                        MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustExtendToNextSubtitle));
+                        MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustExtendToNextSubtitle));
                         historyAdded = true;
                     }
                     p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
@@ -16027,7 +16027,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (!historyAdded)
                             {
-                                MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustExtendToNextSubtitle));
+                                MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustExtendToNextSubtitle));
                                 historyAdded = true;
                             }
 
@@ -16060,7 +16060,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 if (!historyAdded)
                                 {
-                                    MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustExtendToPreviousSubtitle));
+                                    MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustExtendToPreviousSubtitle));
                                     historyAdded = true;
                                 }
 
@@ -16071,7 +16071,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (!historyAdded)
                     {
-                        MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustExtendToPreviousSubtitle));
+                        MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustExtendToPreviousSubtitle));
                         historyAdded = true;
                     }
 
@@ -16094,7 +16094,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (!historyAdded)
                     {
-                        MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustExtendPreviousLineEndToCurrentStart));
+                        MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustExtendPreviousLineEndToCurrentStart));
                         historyAdded = true;
                     }
                     previous.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
@@ -16110,7 +16110,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (!historyAdded)
                             {
-                                MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustExtendPreviousLineEndToCurrentStart));
+                                MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustExtendPreviousLineEndToCurrentStart));
                                 historyAdded = true;
                             }
 
@@ -16135,7 +16135,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (!historyAdded)
                     {
-                        MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustExtendNextLineStartToCurrentEnd));
+                        MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustExtendNextLineStartToCurrentEnd));
                         historyAdded = true;
                     }
                     next.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
@@ -16151,7 +16151,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (!historyAdded)
                             {
-                                MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustExtendNextLineStartToCurrentEnd));
+                                MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustExtendNextLineStartToCurrentEnd));
                                 historyAdded = true;
                             }
 
@@ -16183,7 +16183,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (!historyAdded)
                             {
-                                MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustSnapStartToNextSceneChange));
+                                MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustSnapStartToNextSceneChange));
                                 historyAdded = true;
                             }
 
@@ -16207,7 +16207,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (!historyAdded)
                     {
-                        MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustSnapStartToNextSceneChange));
+                        MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustSnapStartToNextSceneChange));
                         historyAdded = true;
                     }
 
@@ -16245,7 +16245,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (!historyAdded)
                     {
-                        MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustSnapEndToPreviousSceneChange));
+                        MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustSnapEndToPreviousSceneChange));
                         historyAdded = true;
                     }
 
@@ -16271,7 +16271,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (!historyAdded)
                             {
-                                MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustSnapEndToPreviousSceneChange));
+                                MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustSnapEndToPreviousSceneChange));
                                 historyAdded = true;
                             }
 
@@ -16314,7 +16314,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (!historyAdded)
                     {
-                        MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustExtendToNextSceneChange));
+                        MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustExtendToNextSceneChange));
                         historyAdded = true;
                     }
 
@@ -16337,7 +16337,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                             if (!historyAdded)
                             {
-                                MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustExtendToNextSceneChange));
+                                MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustExtendToNextSceneChange));
                                 historyAdded = true;
                             }
 
@@ -16382,7 +16382,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                             if (!historyAdded)
                             {
-                                MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustExtendToPreviousSceneChange));
+                                MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustExtendToPreviousSceneChange));
                                 historyAdded = true;
                             }
 
@@ -16399,7 +16399,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (!historyAdded)
                     {
-                        MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustExtendToPreviousSceneChange));
+                        MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustExtendToPreviousSceneChange));
                         historyAdded = true;
                     }
 
@@ -16546,7 +16546,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
 
-                    MakeHistoryForUndo(string.Format(Configuration.Settings.Language.Main.BeforeX, Configuration.Settings.Language.Settings.WaveformGuessStart));
+                    MakeHistoryForUndo(string.Format(LanguageSettings.Current.Main.BeforeX, LanguageSettings.Current.Settings.WaveformGuessStart));
 
                     if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
                     {
@@ -16638,11 +16638,11 @@ namespace Nikse.SubtitleEdit.Forms
             string newValue = null;
             if (setText)
             {
-                MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.ToggleBookmarksWithComment));
+                MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.ToggleBookmarksWithComment));
             }
             else
             {
-                MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.ToggleBookmarks));
+                MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.ToggleBookmarks));
             }
 
             foreach (int index in SubtitleListview1.SelectedIndices)
@@ -16693,11 +16693,11 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.StateImageList = _subtitle != null && _subtitle.Paragraphs.Any(p => p.Bookmark != null) ? imageListBookmarks : null;
             if (SubtitleListview1.StateImageList == null)
             {
-                SubtitleListview1.Columns[SubtitleListview1.ColumnIndexNumber].Text = Configuration.Settings.Language.General.NumberSymbol;
+                SubtitleListview1.Columns[SubtitleListview1.ColumnIndexNumber].Text = LanguageSettings.Current.General.NumberSymbol;
             }
             else
             {
-                SubtitleListview1.Columns[SubtitleListview1.ColumnIndexNumber].Text = "    " + Configuration.Settings.Language.General.NumberSymbol;
+                SubtitleListview1.Columns[SubtitleListview1.ColumnIndexNumber].Text = "    " + LanguageSettings.Current.General.NumberSymbol;
             }
 
             if (oldStaeImageList == SubtitleListview1.StateImageList)
@@ -16722,7 +16722,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ClearBookmarks()
         {
-            MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.ClearBookmarks));
+            MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.ClearBookmarks));
             for (var index = 0; index < _subtitle.Paragraphs.Count; index++)
             {
                 var paragraph = _subtitle.Paragraphs[index];
@@ -18004,7 +18004,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var fileDropList = Clipboard.GetFileDropList();
                     if (fileDropList.Count == 1)
                     {
-                        ShowStatus(Configuration.Settings.Language.General.PleaseWait, false);
+                        ShowStatus(LanguageSettings.Current.General.PleaseWait, false);
                         OpenSubtitle(fileDropList[0], null);
                     }
                 }
@@ -18070,7 +18070,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RemoveTimeCodesFromSelectedLines()
         {
-            MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.RemoveTimeCodes));
+            MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.RemoveTimeCodes));
 
             var indices = new List<int>();
             foreach (ListViewItem item in SubtitleListview1.SelectedItems)
@@ -18353,7 +18353,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 try
                 {
-                    Configuration.Settings.Language = Language.Load(Path.Combine(Configuration.BaseDirectory, "Languages", cultureName + ".xml"));
+                    LanguageSettings.Current = Language.Load(Path.Combine(Configuration.BaseDirectory, "Languages", cultureName + ".xml"));
                 }
                 catch (Exception ex)
                 {
@@ -18368,12 +18368,12 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (cultureName == "en-US")
             {
-                Configuration.Settings.Language = new Language(); // default is en-US
+                LanguageSettings.Current = new Language(); // default is en-US
             }
 
             Configuration.Settings.General.Language = cultureName;
-            _languageGeneral = Configuration.Settings.Language.General;
-            _language = Configuration.Settings.Language.Main;
+            _languageGeneral = LanguageSettings.Current.General;
+            _language = LanguageSettings.Current.Main;
             InitializeLanguage();
         }
 
@@ -21361,7 +21361,7 @@ namespace Nikse.SubtitleEdit.Forms
             mediaPlayer.InitializeVolume(Configuration.Settings.General.VideoPlayerDefaultVolume);
             splitContainer1.Panel1.Invalidate();
 
-            if (string.IsNullOrEmpty(Configuration.Settings.Language.CheckForUpdates.CheckingForUpdates))
+            if (string.IsNullOrEmpty(LanguageSettings.Current.CheckForUpdates.CheckingForUpdates))
             {
                 checkForUpdatesToolStripMenuItem.Visible = false;
                 toolStripMenuItemSplitterCheckForUpdates.Visible = false;
@@ -28578,7 +28578,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     ShowStatus(string.Format(_language.SavedSubtitleX, _fileName) + " - " +
-                               string.Format(Configuration.Settings.Language.NetflixQualityCheck.FoundXIssues, netflixController.Records.Count));
+                               string.Format(LanguageSettings.Current.NetflixQualityCheck.FoundXIssues, netflixController.Records.Count));
                 }
             }
             else if (!isSaving)
@@ -28679,7 +28679,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemOpenVideoFromUrl_Click(object sender, EventArgs e)
         {
-            using (var form = new TextPrompt(Configuration.Settings.Language.Main.OpenVideoFile, "Url", string.Empty))
+            using (var form = new TextPrompt(LanguageSettings.Current.Main.OpenVideoFile, "Url", string.Empty))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
@@ -28898,18 +28898,18 @@ namespace Nikse.SubtitleEdit.Forms
             _bookmarkContextMenu = new ContextMenuStrip();
 
             // edit bookmark
-            var menuItem = new ToolStripMenuItem(Configuration.Settings.Language.Main.Menu.ContextMenu.EditBookmark);
+            var menuItem = new ToolStripMenuItem(LanguageSettings.Current.Main.Menu.ContextMenu.EditBookmark);
             menuItem.Click += (sender2, e2) => { labelBookmark_DoubleClick(null, null); };
             _bookmarkContextMenu.Items.Add(menuItem);
 
             // remove bookmark
-            menuItem = new ToolStripMenuItem(Configuration.Settings.Language.Main.Menu.ContextMenu.RemoveBookmark);
+            menuItem = new ToolStripMenuItem(LanguageSettings.Current.Main.Menu.ContextMenu.RemoveBookmark);
             menuItem.Click += (sender2, e2) =>
             {
                 var p2 = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);
                 if (p2 != null)
                 {
-                    MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Main.Menu.ContextMenu.RemoveBookmark));
+                    MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Main.Menu.ContextMenu.RemoveBookmark));
                     p2.Bookmark = null;
                     SubtitleListview1.ShowState(_subtitleListViewIndex, p2);
                     ShowHideBookmark(p2);
@@ -28922,12 +28922,12 @@ namespace Nikse.SubtitleEdit.Forms
             _bookmarkContextMenu.Items.Add("-");
 
             // go to bookmark
-            menuItem = new ToolStripMenuItem(Configuration.Settings.Language.Settings.GoToBookmark);
+            menuItem = new ToolStripMenuItem(LanguageSettings.Current.Settings.GoToBookmark);
             menuItem.Click += (sender2, e2) => { GoToBookmark(); };
             _bookmarkContextMenu.Items.Add(menuItem);
 
             // clear all bookmarks
-            menuItem = new ToolStripMenuItem(Configuration.Settings.Language.Settings.ClearBookmarks);
+            menuItem = new ToolStripMenuItem(LanguageSettings.Current.Settings.ClearBookmarks);
             menuItem.Click += (sender2, e2) => { ClearBookmarks(); };
             _bookmarkContextMenu.Items.Add(menuItem);
 
@@ -28944,7 +28944,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var result = form.ShowDialog(this);
                     if (result == DialogResult.OK)
                     {
-                        MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Main.Menu.ContextMenu.EditBookmark));
+                        MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Main.Menu.ContextMenu.EditBookmark));
                         p1.Bookmark = form.Comment;
                         SubtitleListview1.ShowState(_subtitleListViewIndex, p1);
                         ShowHideBookmark(p1);
@@ -29315,7 +29315,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                ShowStatus(string.Format(Configuration.Settings.Language.General.ShortcutX, shortcut), false);
+                ShowStatus(string.Format(LanguageSettings.Current.General.ShortcutX, shortcut), false);
             }
         }
 

@@ -127,7 +127,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(this);
 
             var toolTip = new ToolTip { ShowAlways = true };
-            toolTip.SetToolTip(panelFullFrameBackground, Configuration.Settings.Language.ExportPngXml.ChooseBackgroundColor);
+            toolTip.SetToolTip(panelFullFrameBackground, LanguageSettings.Current.ExportPngXml.ChooseBackgroundColor);
             _lineHeights = new Dictionary<string, int>();
             comboBoxImageFormat.SelectedIndex = 4;
             _subtitleColor = Color.FromArgb(byte.MaxValue, Configuration.Settings.Tools.ExportFontColor);
@@ -463,13 +463,13 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (comboBoxBorderWidth.SelectedItem.ToString() == Configuration.Settings.Language.ExportPngXml.BorderStyleBoxForEachLine)
+                if (comboBoxBorderWidth.SelectedItem.ToString() == LanguageSettings.Current.ExportPngXml.BorderStyleBoxForEachLine)
                 {
                     parameter.BoxSingleLine = true;
                     parameter.BackgroundColor = panelBorderColor.BackColor;
                     parameter.BorderWidth = 0;
                 }
-                else if (comboBoxBorderWidth.SelectedItem.ToString() == Configuration.Settings.Language.ExportPngXml.BorderStyleOneBox)
+                else if (comboBoxBorderWidth.SelectedItem.ToString() == LanguageSettings.Current.ExportPngXml.BorderStyleOneBox)
                 {
                     parameter.BoxSingleLine = false;
                     parameter.BackgroundColor = panelBorderColor.BackColor;
@@ -526,7 +526,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (_exportType == ExportFormats.BluraySup)
             {
-                saveFileDialog1.Title = Configuration.Settings.Language.ExportPngXml.SaveBluRraySupAs;
+                saveFileDialog1.Title = LanguageSettings.Current.ExportPngXml.SaveBluRraySupAs;
                 saveFileDialog1.DefaultExt = "*.sup";
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "Blu-Ray sup|*.sup";
@@ -534,7 +534,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_exportType == ExportFormats.VobSub)
             {
-                saveFileDialog1.Title = Configuration.Settings.Language.ExportPngXml.SaveVobSubAs;
+                saveFileDialog1.Title = LanguageSettings.Current.ExportPngXml.SaveVobSubAs;
                 saveFileDialog1.DefaultExt = "*.sub";
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "VobSub|*.sub";
@@ -542,7 +542,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_exportType == ExportFormats.Fab)
             {
-                saveFileDialog1.Title = Configuration.Settings.Language.ExportPngXml.SaveFabImageScriptAs;
+                saveFileDialog1.Title = LanguageSettings.Current.ExportPngXml.SaveFabImageScriptAs;
                 saveFileDialog1.DefaultExt = "*.txt";
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "FAB image scripts|*.txt";
@@ -550,7 +550,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_exportType == ExportFormats.Stl)
             {
-                saveFileDialog1.Title = Configuration.Settings.Language.ExportPngXml.SaveDvdStudioProStlAs;
+                saveFileDialog1.Title = LanguageSettings.Current.ExportPngXml.SaveDvdStudioProStlAs;
                 saveFileDialog1.DefaultExt = "*.txt";
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "DVD Studio Pro STL|*.stl";
@@ -558,7 +558,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_exportType == ExportFormats.Fcp)
             {
-                saveFileDialog1.Title = Configuration.Settings.Language.ExportPngXml.SaveFcpAs;
+                saveFileDialog1.Title = LanguageSettings.Current.ExportPngXml.SaveFcpAs;
                 saveFileDialog1.DefaultExt = "*.xml";
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "Xml files|*.xml";
@@ -566,7 +566,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_exportType == ExportFormats.Dost)
             {
-                saveFileDialog1.Title = Configuration.Settings.Language.ExportPngXml.SaveDostAs;
+                saveFileDialog1.Title = LanguageSettings.Current.ExportPngXml.SaveDostAs;
                 saveFileDialog1.DefaultExt = "*.dost";
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "Dost files|*.dost";
@@ -574,7 +574,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_exportType == ExportFormats.DCinemaInterop)
             {
-                saveFileDialog1.Title = Configuration.Settings.Language.ExportPngXml.SaveDigitalCinemaInteropAs;
+                saveFileDialog1.Title = LanguageSettings.Current.ExportPngXml.SaveDigitalCinemaInteropAs;
                 saveFileDialog1.DefaultExt = "*.xml";
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "Xml files|*.xml";
@@ -582,7 +582,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_exportType == ExportFormats.DCinemaSmpte2014)
             {
-                saveFileDialog1.Title = Configuration.Settings.Language.ExportPngXml.SaveDigitalCinemaSmpte2014;
+                saveFileDialog1.Title = LanguageSettings.Current.ExportPngXml.SaveDigitalCinemaSmpte2014;
                 saveFileDialog1.DefaultExt = "*.xml";
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "Xml files|*.xml";
@@ -590,7 +590,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_exportType == ExportFormats.Edl || _exportType == ExportFormats.EdlClipName)
             {
-                saveFileDialog1.Title = Configuration.Settings.Language.ExportPngXml.SavePremiereEdlAs;
+                saveFileDialog1.Title = LanguageSettings.Current.ExportPngXml.SavePremiereEdlAs;
                 saveFileDialog1.DefaultExt = "*.edl";
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "EDL files|*.edl";
@@ -763,7 +763,7 @@ namespace Nikse.SubtitleEdit.Forms
                         errorSb.AppendLine("...");
                     }
 
-                    MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.SomeLinesWereTooLongX, errorSb));
+                    MessageBox.Show(string.Format(LanguageSettings.Current.ExportPngXml.SomeLinesWereTooLongX, errorSb));
                 }
 
                 _previewTimer.Tick += previewTimer_Tick;
@@ -771,18 +771,18 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_exportType == ExportFormats.BluraySup)
                 {
                     binarySubtitleFile.Close();
-                    MessageBox.Show(string.Format(Configuration.Settings.Language.Main.SavedSubtitleX, saveFileDialog1.FileName));
+                    MessageBox.Show(string.Format(LanguageSettings.Current.Main.SavedSubtitleX, saveFileDialog1.FileName));
                 }
                 else if (_exportType == ExportFormats.VobSub)
                 {
                     vobSubWriter.WriteIdxFile();
                     vobSubWriter.Dispose();
-                    MessageBox.Show(string.Format(Configuration.Settings.Language.Main.SavedSubtitleX, saveFileDialog1.FileName));
+                    MessageBox.Show(string.Format(LanguageSettings.Current.Main.SavedSubtitleX, saveFileDialog1.FileName));
                 }
                 else if (_exportType == ExportFormats.Fab)
                 {
                     File.WriteAllText(Path.Combine(folderBrowserDialog1.SelectedPath, "Fab_Image_script.txt"), sb.ToString());
-                    var text = string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath);
+                    var text = string.Format(LanguageSettings.Current.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath);
                     MessageBoxShowWithFolderName(text, folderBrowserDialog1.SelectedPath);
                 }
                 else if (_exportType == ExportFormats.ImageFrame)
@@ -792,13 +792,13 @@ namespace Nikse.SubtitleEdit.Forms
                     string numberString = $"{imagesSavedCount:00000}";
                     string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLowerInvariant());
                     SaveImage(empty, fileName, ImageFormat);
-                    var text = string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath);
+                    var text = string.Format(LanguageSettings.Current.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath);
                     MessageBoxShowWithFolderName(text, folderBrowserDialog1.SelectedPath);
                 }
                 else if (_exportType == ExportFormats.Stl)
                 {
                     File.WriteAllText(Path.Combine(folderBrowserDialog1.SelectedPath, "DVD_Studio_Pro_Image_script.stl"), sb.ToString());
-                    var text = string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath);
+                    var text = string.Format(LanguageSettings.Current.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath);
                     MessageBoxShowWithFolderName(text, folderBrowserDialog1.SelectedPath);
                 }
                 else if (_exportType == ExportFormats.Spumux)
@@ -809,19 +809,19 @@ namespace Nikse.SubtitleEdit.Forms
                                "\t</stream>" + Environment.NewLine +
                                "</subpictures>";
                     File.WriteAllText(Path.Combine(folderBrowserDialog1.SelectedPath, "spu.xml"), s);
-                    var text = string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath);
+                    var text = string.Format(LanguageSettings.Current.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath);
                     MessageBoxShowWithFolderName(text, folderBrowserDialog1.SelectedPath);
                 }
                 else if (_exportType == ExportFormats.Fcp)
                 {
                     WriteFcpFile(width, height, sb, saveFileDialog1.FileName);
-                    var text = string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(saveFileDialog1.FileName));
+                    var text = string.Format(LanguageSettings.Current.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(saveFileDialog1.FileName));
                     MessageBoxShowWithFolderName(text, Path.GetDirectoryName(saveFileDialog1.FileName));
                 }
                 else if (_exportType == ExportFormats.Dost)
                 {
                     WriteDostFile(saveFileDialog1.FileName, sb.ToString());
-                    var text = string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(saveFileDialog1.FileName));
+                    var text = string.Format(LanguageSettings.Current.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(saveFileDialog1.FileName));
                     MessageBoxShowWithFolderName(text, Path.GetDirectoryName(saveFileDialog1.FileName));
                 }
                 else if (_exportType == ExportFormats.DCinemaInterop)
@@ -849,7 +849,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     File.WriteAllText(fName, SubtitleFormat.ToUtf8XmlString(doc));
-                    var text = string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(fName));
+                    var text = string.Format(LanguageSettings.Current.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(fName));
                     MessageBoxShowWithFolderName(text, Path.GetDirectoryName(fName));
                 }
                 else if (_exportType == ExportFormats.DCinemaSmpte2014)
@@ -888,7 +888,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     File.WriteAllText(fName, SubtitleFormat.ToUtf8XmlString(doc));
-                    var text = string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(fName));
+                    var text = string.Format(LanguageSettings.Current.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(fName));
                     MessageBoxShowWithFolderName(text, Path.GetDirectoryName(fName));
                 }
                 else if (_exportType == ExportFormats.Edl || _exportType == ExportFormats.EdlClipName)
@@ -901,13 +901,13 @@ namespace Nikse.SubtitleEdit.Forms
 
                     string header = "TITLE: " + title + Environment.NewLine + Environment.NewLine;
                     File.WriteAllText(saveFileDialog1.FileName, header + sb);
-                    var text = string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(saveFileDialog1.FileName));
+                    var text = string.Format(LanguageSettings.Current.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(saveFileDialog1.FileName));
                     MessageBoxShowWithFolderName(text, Path.GetDirectoryName(saveFileDialog1.FileName));
                 }
                 else
                 {
                     WriteBdnXmlFile(imagesSavedCount, sb, Path.Combine(folderBrowserDialog1.SelectedPath, "BDN_Index.xml"));
-                    var text = string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath);
+                    var text = string.Format(LanguageSettings.Current.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath);
                     MessageBoxShowWithFolderName(text, folderBrowserDialog1.SelectedPath);
                 }
             }
@@ -2255,8 +2255,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private float GetBorderWidth()
         {
-            if (comboBoxBorderWidth.SelectedItem.ToString() == Configuration.Settings.Language.ExportPngXml.BorderStyleBoxForEachLine ||
-                comboBoxBorderWidth.SelectedItem.ToString() == Configuration.Settings.Language.ExportPngXml.BorderStyleOneBox)
+            if (comboBoxBorderWidth.SelectedItem.ToString() == LanguageSettings.Current.ExportPngXml.BorderStyleBoxForEachLine ||
+                comboBoxBorderWidth.SelectedItem.ToString() == LanguageSettings.Current.ExportPngXml.BorderStyleOneBox)
             {
                 return 0;
             }
@@ -2420,13 +2420,13 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
             }
 
-            if (comboBoxBorderWidth.SelectedItem.ToString() == Configuration.Settings.Language.ExportPngXml.BorderStyleBoxForEachLine)
+            if (comboBoxBorderWidth.SelectedItem.ToString() == LanguageSettings.Current.ExportPngXml.BorderStyleBoxForEachLine)
             {
                 _borderWidth = 0;
                 mbp.BackgroundColor = panelBorderColor.BackColor;
                 mbp.BoxSingleLine = true;
             }
-            else if (comboBoxBorderWidth.SelectedItem.ToString() == Configuration.Settings.Language.ExportPngXml.BorderStyleOneBox)
+            else if (comboBoxBorderWidth.SelectedItem.ToString() == LanguageSettings.Current.ExportPngXml.BorderStyleOneBox)
             {
                 mbp.BoxSingleLine = false;
                 _borderWidth = 0;
@@ -3934,7 +3934,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
             else
             {
-                Text = Configuration.Settings.Language.ExportPngXml.Title;
+                Text = LanguageSettings.Current.ExportPngXml.Title;
             }
 
             if (_exportType == ExportFormats.VobSub && !string.IsNullOrEmpty(Configuration.Settings.Tools.ExportVobSubFontName))
@@ -4030,74 +4030,74 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
             }
 
-            groupBoxImageSettings.Text = Configuration.Settings.Language.ExportPngXml.ImageSettings;
-            labelSubtitleFont.Text = Configuration.Settings.Language.ExportPngXml.FontFamily;
-            labelSubtitleFontSize.Text = Configuration.Settings.Language.ExportPngXml.FontSize;
-            labelResolution.Text = Configuration.Settings.Language.ExportPngXml.VideoResolution;
-            buttonColor.Text = Configuration.Settings.Language.ExportPngXml.FontColor;
-            checkBoxBold.Text = Configuration.Settings.Language.General.Bold;
-            checkBoxSimpleRender.Text = Configuration.Settings.Language.ExportPngXml.SimpleRendering;
-            checkBoxTransAntiAliase.Text = Configuration.Settings.Language.ExportPngXml.AntiAliasingWithTransparency;
-            labelResize.Text = Configuration.Settings.Language.General.Size;
-            normalToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.RemoveFormattingAll;
-            italicToolStripMenuItem.Text = Configuration.Settings.Language.General.Italic;
-            boxSingleLineToolStripMenuItem.Text = Configuration.Settings.Language.ExportPngXml.BoxSingleLine;
-            boxMultiLineToolStripMenuItem.Text = Configuration.Settings.Language.ExportPngXml.BoxMultiLine;
-            adjustTimeCodesToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Synchronization.AdjustAllTimes;
-            adjustDisplayTimeToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Tools.AdjustDisplayDuration;
+            groupBoxImageSettings.Text = LanguageSettings.Current.ExportPngXml.ImageSettings;
+            labelSubtitleFont.Text = LanguageSettings.Current.ExportPngXml.FontFamily;
+            labelSubtitleFontSize.Text = LanguageSettings.Current.ExportPngXml.FontSize;
+            labelResolution.Text = LanguageSettings.Current.ExportPngXml.VideoResolution;
+            buttonColor.Text = LanguageSettings.Current.ExportPngXml.FontColor;
+            checkBoxBold.Text = LanguageSettings.Current.General.Bold;
+            checkBoxSimpleRender.Text = LanguageSettings.Current.ExportPngXml.SimpleRendering;
+            checkBoxTransAntiAliase.Text = LanguageSettings.Current.ExportPngXml.AntiAliasingWithTransparency;
+            labelResize.Text = LanguageSettings.Current.General.Size;
+            normalToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.RemoveFormattingAll;
+            italicToolStripMenuItem.Text = LanguageSettings.Current.General.Italic;
+            boxSingleLineToolStripMenuItem.Text = LanguageSettings.Current.ExportPngXml.BoxSingleLine;
+            boxMultiLineToolStripMenuItem.Text = LanguageSettings.Current.ExportPngXml.BoxMultiLine;
+            adjustTimeCodesToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.Synchronization.AdjustAllTimes;
+            adjustDisplayTimeToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.Tools.AdjustDisplayDuration;
 
-            checkBoxFcpFullPathUrl.Text = Configuration.Settings.Language.ExportPngXml.FcpUseFullPathUrl;
+            checkBoxFcpFullPathUrl.Text = LanguageSettings.Current.ExportPngXml.FcpUseFullPathUrl;
             checkBoxFcpFullPathUrl.Visible = exportType == ExportFormats.Fcp;
             checkBoxFcpFullPathUrl.Checked = Configuration.Settings.Tools.ExportFcpFullPathUrl;
 
 
             comboBox3D.Items.Clear();
-            comboBox3D.Items.Add(Configuration.Settings.Language.General.None);
-            comboBox3D.Items.Add(Configuration.Settings.Language.ExportPngXml.SideBySide3D);
-            comboBox3D.Items.Add(Configuration.Settings.Language.ExportPngXml.HalfTopBottom3D);
+            comboBox3D.Items.Add(LanguageSettings.Current.General.None);
+            comboBox3D.Items.Add(LanguageSettings.Current.ExportPngXml.SideBySide3D);
+            comboBox3D.Items.Add(LanguageSettings.Current.ExportPngXml.HalfTopBottom3D);
             comboBox3D.SelectedIndex = 0;
 
-            labelDepth.Text = Configuration.Settings.Language.ExportPngXml.Depth;
+            labelDepth.Text = LanguageSettings.Current.ExportPngXml.Depth;
 
             numericUpDownDepth3D.Left = labelDepth.Left + labelDepth.Width + 3;
 
-            label3D.Text = Configuration.Settings.Language.ExportPngXml.Text3D;
+            label3D.Text = LanguageSettings.Current.ExportPngXml.Text3D;
 
             comboBox3D.Left = label3D.Left + label3D.Width + 3;
 
-            buttonBorderColor.Text = Configuration.Settings.Language.ExportPngXml.BorderColor;
-            labelBorderWidth.Text = Configuration.Settings.Language.ExportPngXml.BorderStyle;
-            labelImageFormat.Text = Configuration.Settings.Language.ExportPngXml.ImageFormat;
-            checkBoxFullFrameImage.Text = Configuration.Settings.Language.ExportPngXml.FullFrameImage;
+            buttonBorderColor.Text = LanguageSettings.Current.ExportPngXml.BorderColor;
+            labelBorderWidth.Text = LanguageSettings.Current.ExportPngXml.BorderStyle;
+            labelImageFormat.Text = LanguageSettings.Current.ExportPngXml.ImageFormat;
+            checkBoxFullFrameImage.Text = LanguageSettings.Current.ExportPngXml.FullFrameImage;
 
-            buttonExport.Text = Configuration.Settings.Language.ExportPngXml.ExportAllLines;
-            buttonCancel.Text = Configuration.Settings.Language.General.Ok;
-            labelLanguage.Text = Configuration.Settings.Language.ChooseLanguage.Language;
-            labelFrameRate.Text = Configuration.Settings.Language.General.FrameRate;
-            labelHorizontalAlign.Text = Configuration.Settings.Language.ExportPngXml.Align;
-            labelBottomMargin.Text = Configuration.Settings.Language.ExportPngXml.BottomMargin;
-            labelLeftRightMargin.Text = Configuration.Settings.Language.ExportPngXml.LeftRightMargin;
+            buttonExport.Text = LanguageSettings.Current.ExportPngXml.ExportAllLines;
+            buttonCancel.Text = LanguageSettings.Current.General.Ok;
+            labelLanguage.Text = LanguageSettings.Current.ChooseLanguage.Language;
+            labelFrameRate.Text = LanguageSettings.Current.General.FrameRate;
+            labelHorizontalAlign.Text = LanguageSettings.Current.ExportPngXml.Align;
+            labelBottomMargin.Text = LanguageSettings.Current.ExportPngXml.BottomMargin;
+            labelLeftRightMargin.Text = LanguageSettings.Current.ExportPngXml.LeftRightMargin;
 
             comboBoxHAlign.Items.Clear();
-            comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.Left);
-            comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.Center);
-            comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.Right);
-            comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.CenterLeftJustify);
-            comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.CenterTopJustify);
-            comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.CenterRightJustify);
-            comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.CenterLeftJustifyDialogs);
+            comboBoxHAlign.Items.Add(LanguageSettings.Current.ExportPngXml.Left);
+            comboBoxHAlign.Items.Add(LanguageSettings.Current.ExportPngXml.Center);
+            comboBoxHAlign.Items.Add(LanguageSettings.Current.ExportPngXml.Right);
+            comboBoxHAlign.Items.Add(LanguageSettings.Current.ExportPngXml.CenterLeftJustify);
+            comboBoxHAlign.Items.Add(LanguageSettings.Current.ExportPngXml.CenterTopJustify);
+            comboBoxHAlign.Items.Add(LanguageSettings.Current.ExportPngXml.CenterRightJustify);
+            comboBoxHAlign.Items.Add(LanguageSettings.Current.ExportPngXml.CenterLeftJustifyDialogs);
 
-            buttonShadowColor.Text = Configuration.Settings.Language.ExportPngXml.ShadowColor;
-            labelShadowWidth.Text = Configuration.Settings.Language.ExportPngXml.ShadowWidth;
-            labelShadowTransparency.Text = Configuration.Settings.Language.ExportPngXml.Transparency;
-            labelLineHeight.Text = Configuration.Settings.Language.ExportPngXml.LineHeight;
+            buttonShadowColor.Text = LanguageSettings.Current.ExportPngXml.ShadowColor;
+            labelShadowWidth.Text = LanguageSettings.Current.ExportPngXml.ShadowWidth;
+            labelShadowTransparency.Text = LanguageSettings.Current.ExportPngXml.Transparency;
+            labelLineHeight.Text = LanguageSettings.Current.ExportPngXml.LineHeight;
 
-            linkLabelPreview.Text = Configuration.Settings.Language.General.Preview;
+            linkLabelPreview.Text = LanguageSettings.Current.General.Preview;
             linkLabelPreview.Left = groupBoxExportImage.Width - linkLabelPreview.Width - 3;
 
-            saveImageAsToolStripMenuItem.Text = Configuration.Settings.Language.ExportPngXml.SaveImageAs;
+            saveImageAsToolStripMenuItem.Text = LanguageSettings.Current.ExportPngXml.SaveImageAs;
 
-            SubtitleListView1InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
+            SubtitleListView1InitializeLanguage(LanguageSettings.Current.General, Configuration.Settings);
             UiUtil.InitializeSubtitleFont(subtitleListView1);
             SubtitleListView1AutoSizeAllColumns();
 
@@ -4380,7 +4380,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 comboBox3D.Visible = false;
                 numericUpDownDepth3D.Enabled = true;
                 labelDepth.Enabled = true;
-                labelDepth.Text = Configuration.Settings.Language.DCinemaProperties.ZPosition;
+                labelDepth.Text = LanguageSettings.Current.DCinemaProperties.ZPosition;
             }
 
             if (_exportType == ExportFormats.Fcp)
@@ -4440,7 +4440,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             if (exportType == ExportFormats.BluraySup || exportType == ExportFormats.VobSub || exportType == ExportFormats.BdnXml)
             {
                 subtitleListView1.CheckBoxes = true;
-                subtitleListView1.Columns.Insert(0, Configuration.Settings.Language.ExportPngXml.Forced);
+                subtitleListView1.Columns.Insert(0, LanguageSettings.Current.ExportPngXml.Forced);
                 SubtitleListView1Fill(_subtitle);
                 if (_vobSubOcr != null)
                 {
@@ -4517,11 +4517,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         private void InitBorderStyle()
         {
             comboBoxBorderWidth.Items.Clear();
-            comboBoxBorderWidth.Items.Add(Configuration.Settings.Language.ExportPngXml.BorderStyleBoxForEachLine);
-            comboBoxBorderWidth.Items.Add(Configuration.Settings.Language.ExportPngXml.BorderStyleOneBox);
+            comboBoxBorderWidth.Items.Add(LanguageSettings.Current.ExportPngXml.BorderStyleBoxForEachLine);
+            comboBoxBorderWidth.Items.Add(LanguageSettings.Current.ExportPngXml.BorderStyleOneBox);
             for (int i = 0; i < 16; i++)
             {
-                comboBoxBorderWidth.Items.Add(string.Format(Configuration.Settings.Language.ExportPngXml.BorderStyleNormalWidthX, i));
+                comboBoxBorderWidth.Items.Add(string.Format(LanguageSettings.Current.ExportPngXml.BorderStyleNormalWidthX, i));
             }
             comboBoxBorderWidth.SelectedIndex = 4;
         }
@@ -5085,7 +5085,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             int selectedIndex = subtitleListView1.SelectedItems[0].Index;
 
-            saveFileDialog1.Title = Configuration.Settings.Language.VobSubOcr.SaveSubtitleImageAs;
+            saveFileDialog1.Title = LanguageSettings.Current.VobSubOcr.SaveSubtitleImageAs;
             saveFileDialog1.AddExtension = true;
             saveFileDialog1.FileName = "Image" + selectedIndex;
             saveFileDialog1.Filter = "PNG image|*.png|BMP image|*.bmp|GIF image|*.gif|TIFF image|*.tiff";
@@ -5505,7 +5505,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             subtitleListView1.Columns[columnIndexDuration].Width = 60;
             if (_formatName == AdvancedSubStationAlpha.NameOfFormat || _formatName == SubStationAlpha.NameOfFormat)
             {
-                subtitleListView1.Columns.Add("style", Configuration.Settings.Language.General.Style, 90);
+                subtitleListView1.Columns.Add("style", LanguageSettings.Current.General.Style, 90);
                 subtitleListView1.Columns[columnIndexText].Width = subtitleListView1.Width -
                                                                    subtitleListView1.Columns[columnIndexNumber].Width -
                                                                    subtitleListView1.Columns[columnIndexStart].Width -
@@ -5690,7 +5690,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void panelFullFrameBackground_Click(object sender, EventArgs e)
         {
-            using (var colorChooser = new ColorChooser { Color = panelFullFrameBackground.BackColor, Text = Configuration.Settings.Language.ExportPngXml.ChooseBackgroundColor })
+            using (var colorChooser = new ColorChooser { Color = panelFullFrameBackground.BackColor, Text = LanguageSettings.Current.ExportPngXml.ChooseBackgroundColor })
             {
                 if (colorChooser.ShowDialog() == DialogResult.OK)
                 {

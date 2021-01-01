@@ -16,15 +16,15 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            Text = Configuration.Settings.Language.ExportPngXml.VideoResolution;
-            labelVideoResolution.Text = Configuration.Settings.Language.ExportPngXml.VideoResolution;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            Text = LanguageSettings.Current.ExportPngXml.VideoResolution;
+            labelVideoResolution.Text = LanguageSettings.Current.ExportPngXml.VideoResolution;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            openFileDialog1.Title = Configuration.Settings.Language.General.OpenVideoFileTitle;
+            openFileDialog1.Title = LanguageSettings.Current.General.OpenVideoFileTitle;
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.Filter = UiUtil.GetVideoFileFilter(false);
             openFileDialog1.FileName = string.Empty;

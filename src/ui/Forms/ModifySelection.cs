@@ -43,46 +43,46 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitleListView = subtitleListView;
             labelInfo.Text = string.Empty;
             comboBoxRule.SelectedIndex = 0;
-            Text = Configuration.Settings.Language.ModifySelection.Title;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            buttonApply.Text = Configuration.Settings.Language.General.Apply;
-            groupBoxRule.Text = Configuration.Settings.Language.ModifySelection.Rule;
-            groupBoxWhatToDo.Text = Configuration.Settings.Language.ModifySelection.DoWithMatches;
-            checkBoxCaseSensitive.Text = Configuration.Settings.Language.ModifySelection.CaseSensitive;
-            radioButtonNewSelection.Text = Configuration.Settings.Language.ModifySelection.MakeNewSelection;
-            radioButtonAddToSelection.Text = Configuration.Settings.Language.ModifySelection.AddToCurrentSelection;
-            radioButtonSubtractFromSelection.Text = Configuration.Settings.Language.ModifySelection.SubtractFromCurrentSelection;
-            radioButtonIntersect.Text = Configuration.Settings.Language.ModifySelection.IntersectWithCurrentSelection;
-            columnHeaderApply.Text = Configuration.Settings.Language.General.Apply;
-            columnHeaderLine.Text = Configuration.Settings.Language.General.LineNumber;
-            columnHeaderText.Text = Configuration.Settings.Language.General.Text;
-            toolStripMenuItemInverseSelection.Text = Configuration.Settings.Language.Main.Menu.Edit.InverseSelection;
-            toolStripMenuItemSelectAll.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.SelectAll;
+            Text = LanguageSettings.Current.ModifySelection.Title;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            buttonApply.Text = LanguageSettings.Current.General.Apply;
+            groupBoxRule.Text = LanguageSettings.Current.ModifySelection.Rule;
+            groupBoxWhatToDo.Text = LanguageSettings.Current.ModifySelection.DoWithMatches;
+            checkBoxCaseSensitive.Text = LanguageSettings.Current.ModifySelection.CaseSensitive;
+            radioButtonNewSelection.Text = LanguageSettings.Current.ModifySelection.MakeNewSelection;
+            radioButtonAddToSelection.Text = LanguageSettings.Current.ModifySelection.AddToCurrentSelection;
+            radioButtonSubtractFromSelection.Text = LanguageSettings.Current.ModifySelection.SubtractFromCurrentSelection;
+            radioButtonIntersect.Text = LanguageSettings.Current.ModifySelection.IntersectWithCurrentSelection;
+            columnHeaderApply.Text = LanguageSettings.Current.General.Apply;
+            columnHeaderLine.Text = LanguageSettings.Current.General.LineNumber;
+            columnHeaderText.Text = LanguageSettings.Current.General.Text;
+            toolStripMenuItemInverseSelection.Text = LanguageSettings.Current.Main.Menu.Edit.InverseSelection;
+            toolStripMenuItemSelectAll.Text = LanguageSettings.Current.Main.Menu.ContextMenu.SelectAll;
 
             listViewStyles.Visible = false;
 
             UiUtil.FixLargeFonts(this, buttonOK);
 
             comboBoxRule.Items.Clear();
-            comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.Contains);
-            comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.StartsWith);
-            comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.EndsWith);
-            comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.NoContains);
-            comboBoxRule.Items.Add(Configuration.Settings.Language.ChangeCasing.AllUppercase);
-            comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.RegEx);
-            comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.UnequalLines);
-            comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.EqualLines);
-            comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.DurationLessThan);
-            comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.DurationGreaterThan);
-            comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.MoreThanTwoLines);
+            comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.Contains);
+            comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.StartsWith);
+            comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.EndsWith);
+            comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.NoContains);
+            comboBoxRule.Items.Add(LanguageSettings.Current.ChangeCasing.AllUppercase);
+            comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.RegEx);
+            comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.UnequalLines);
+            comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.EqualLines);
+            comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.DurationLessThan);
+            comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.DurationGreaterThan);
+            comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.MoreThanTwoLines);
             if (_format.HasStyleSupport)
             {
-                comboBoxRule.Items.Add(Configuration.Settings.Language.General.Style);
+                comboBoxRule.Items.Add(LanguageSettings.Current.General.Style);
             }
             if (_format.HasStyleSupport && (_format.GetType() == typeof(AdvancedSubStationAlpha) || _format.GetType() == typeof(SubStationAlpha)))
             {
-                comboBoxRule.Items.Add(Configuration.Settings.Language.General.Actor);
+                comboBoxRule.Items.Add(LanguageSettings.Current.General.Actor);
             }
 
             checkBoxCaseSensitive.Checked = Configuration.Settings.Tools.ModifySelectionCaseSensitive;
@@ -384,7 +384,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             listViewFixes.Items.AddRange(listViewItems.ToArray());
             listViewFixes.EndUpdate();
-            groupBoxPreview.Text = string.Format(Configuration.Settings.Language.ModifySelection.MatchingLinesX, listViewFixes.Items.Count);
+            groupBoxPreview.Text = string.Format(LanguageSettings.Current.ModifySelection.MatchingLinesX, listViewFixes.Items.Count);
         }
 
         private void ApplySelection()

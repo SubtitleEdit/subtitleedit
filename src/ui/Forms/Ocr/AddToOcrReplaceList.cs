@@ -18,10 +18,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            Text = Configuration.Settings.Language.AddToOcrReplaceList.Title;
-            labelDescription.Text = Configuration.Settings.Language.AddToOcrReplaceList.Description;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
+            Text = LanguageSettings.Current.AddToOcrReplaceList.Title;
+            labelDescription.Text = LanguageSettings.Current.AddToOcrReplaceList.Description;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 

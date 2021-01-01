@@ -23,25 +23,25 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            Text = Configuration.Settings.Language.ApplyDurationLimits.Title;
-            checkBoxMinDuration.Text = Configuration.Settings.Language.Settings.DurationMinimumMilliseconds;
-            checkBoxMaxDuration.Text = Configuration.Settings.Language.Settings.DurationMaximumMilliseconds;
+            Text = LanguageSettings.Current.ApplyDurationLimits.Title;
+            checkBoxMinDuration.Text = LanguageSettings.Current.Settings.DurationMinimumMilliseconds;
+            checkBoxMaxDuration.Text = LanguageSettings.Current.Settings.DurationMaximumMilliseconds;
             checkBoxMinDuration.Checked = Configuration.Settings.Tools.ApplyMinimumDurationLimit;
             checkBoxMaxDuration.Checked = Configuration.Settings.Tools.ApplyMaximumDurationLimit;
-            labelNote.Text = Configuration.Settings.Language.AdjustDisplayDuration.Note;
+            labelNote.Text = LanguageSettings.Current.AdjustDisplayDuration.Note;
             numericUpDownDurationMin.Value = Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
             numericUpDownDurationMax.Value = Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
-            toolStripMenuItemInverseSelection.Text = Configuration.Settings.Language.Main.Menu.Edit.InverseSelection;
-            toolStripMenuItemSelectAll.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.SelectAll;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            subtitleListView1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
+            toolStripMenuItemInverseSelection.Text = LanguageSettings.Current.Main.Menu.Edit.InverseSelection;
+            toolStripMenuItemSelectAll.Text = LanguageSettings.Current.Main.Menu.ContextMenu.SelectAll;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            subtitleListView1.InitializeLanguage(LanguageSettings.Current.General, Configuration.Settings);
             UiUtil.InitializeSubtitleFont(subtitleListView1);
             subtitleListView1.AutoSizeAllColumns(this);
-            listViewFixes.Columns[0].Text = Configuration.Settings.Language.General.Apply;
-            listViewFixes.Columns[1].Text = Configuration.Settings.Language.General.LineNumber;
-            listViewFixes.Columns[2].Text = Configuration.Settings.Language.General.Before;
-            listViewFixes.Columns[3].Text = Configuration.Settings.Language.General.After;
+            listViewFixes.Columns[0].Text = LanguageSettings.Current.General.Apply;
+            listViewFixes.Columns[1].Text = LanguageSettings.Current.General.LineNumber;
+            listViewFixes.Columns[2].Text = LanguageSettings.Current.General.Before;
+            listViewFixes.Columns[3].Text = LanguageSettings.Current.General.After;
             numericUpDownDurationMin.Left = checkBoxMinDuration.Left + checkBoxMinDuration.Width + 6;
             numericUpDownDurationMax.Left = checkBoxMaxDuration.Left + checkBoxMaxDuration.Width + 6;
             if (Math.Abs(numericUpDownDurationMin.Left - numericUpDownDurationMax.Left) < 10)
@@ -105,8 +105,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
             listViewFixes.EndUpdate();
 
-            groupBoxFixesAvailable.Text = string.Format(Configuration.Settings.Language.ApplyDurationLimits.FixesAvailable, _totalFixes);
-            groupBoxUnfixable.Text = string.Format(Configuration.Settings.Language.ApplyDurationLimits.UnableToFix, _totalErrors);
+            groupBoxFixesAvailable.Text = string.Format(LanguageSettings.Current.ApplyDurationLimits.FixesAvailable, _totalFixes);
+            groupBoxUnfixable.Text = string.Format(LanguageSettings.Current.ApplyDurationLimits.UnableToFix, _totalErrors);
         }
 
         private void AddFixToListView(Paragraph p, string before, string after, Color backgroundColor)

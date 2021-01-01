@@ -16,11 +16,11 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            Text = Configuration.Settings.Language.UnknownSubtitle.Title;
-            labelTitle.Text = Configuration.Settings.Language.UnknownSubtitle.Title;
-            richTextBoxMessage.Text = Configuration.Settings.Language.UnknownSubtitle.Message;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonImportPlainText.Text = Configuration.Settings.Language.UnknownSubtitle.ImportAsPlainText;
+            Text = LanguageSettings.Current.UnknownSubtitle.Title;
+            labelTitle.Text = LanguageSettings.Current.UnknownSubtitle.Title;
+            richTextBoxMessage.Text = LanguageSettings.Current.UnknownSubtitle.Message;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonImportPlainText.Text = LanguageSettings.Current.UnknownSubtitle.ImportAsPlainText;
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Forms
                 file.Close();
 
                 var encoding = LanguageAutoDetect.DetectAnsiEncoding(fileBuffer);
-                LabelPreview.Text = Configuration.Settings.Language.General.Preview + " - " + fileName;
+                LabelPreview.Text = LanguageSettings.Current.General.Preview + " - " + fileName;
                 textBoxPreview.Text = encoding.GetString(fileBuffer).Replace("\0", " ");
                 buttonImportPlainText.Visible = allowImportPlainText && !string.IsNullOrWhiteSpace(textBoxPreview.Text);
             }

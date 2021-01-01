@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Forms
             _isSubStationAlpha = format.Name == SubStationAlpha.NameOfFormat;
             _videoFileName = videoFileName;
 
-            var l = Configuration.Settings.Language.SubStationAlphaProperties;
+            var l = LanguageSettings.Current.SubStationAlphaProperties;
             if (_isSubStationAlpha)
             {
                 Text = l.TitleSubstationAlpha;
@@ -154,8 +154,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelWrapStyle.Text = l.WrapStyle;
             checkBoxScaleBorderAndShadow.Text = l.ScaleBorderAndShadow;
 
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
             UiUtil.FixLargeFonts(this, buttonCancel);
         }
@@ -284,7 +284,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonGetResolutionFromVideo_Click(object sender, EventArgs e)
         {
-            openFileDialog1.Title = Configuration.Settings.Language.General.OpenVideoFileTitle;
+            openFileDialog1.Title = LanguageSettings.Current.General.OpenVideoFileTitle;
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.Filter = UiUtil.GetVideoFileFilter(false);
             openFileDialog1.FileName = string.Empty;

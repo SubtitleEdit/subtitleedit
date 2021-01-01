@@ -15,11 +15,11 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            Text = Configuration.Settings.Language.Bookmarks.GoToBookmark;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            columnHeaderNumber.Text = Configuration.Settings.Language.General.NumberSymbol;
-            columnHeaderStartTime.Text = Configuration.Settings.Language.General.StartTime;
-            columnHeaderText.Text = Configuration.Settings.Language.General.Text;
+            Text = LanguageSettings.Current.Bookmarks.GoToBookmark;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            columnHeaderNumber.Text = LanguageSettings.Current.General.NumberSymbol;
+            columnHeaderStartTime.Text = LanguageSettings.Current.General.StartTime;
+            columnHeaderText.Text = LanguageSettings.Current.General.Text;
 
             _subtitle = subtitle;
             foreach (var p in subtitle.Paragraphs)

@@ -1057,7 +1057,7 @@ namespace Nikse.SubtitleEdit.Logic
         private static string GetOpenDialogFilter()
         {
             var sb = new StringBuilder();
-            sb.Append(Configuration.Settings.Language.General.SubtitleFiles + "|");
+            sb.Append(LanguageSettings.Current.General.SubtitleFiles + "|");
             foreach (SubtitleFormat s in SubtitleFormat.AllSubtitleFormats)
             {
                 AddExtension(sb, s.Extension);
@@ -1106,7 +1106,7 @@ namespace Nikse.SubtitleEdit.Logic
             AddExtension(sb, ".m2ts");
 
             sb.Append('|');
-            sb.Append(Configuration.Settings.Language.General.AllFiles);
+            sb.Append(LanguageSettings.Current.General.AllFiles);
             sb.Append("|*.*");
             return sb.ToString();
         }
@@ -1237,22 +1237,22 @@ namespace Nikse.SubtitleEdit.Logic
         public static string GetVideoFileFilter(bool includeAudioFiles)
         {
             var sb = new StringBuilder();
-            sb.Append(Configuration.Settings.Language.General.VideoFiles + "|*");
+            sb.Append(LanguageSettings.Current.General.VideoFiles + "|*");
             sb.Append(string.Join(";*", Utilities.VideoFileExtensions));
 
             if (includeAudioFiles)
             {
-                sb.Append("|" + Configuration.Settings.Language.General.AudioFiles + "|*");
+                sb.Append("|" + LanguageSettings.Current.General.AudioFiles + "|*");
                 sb.Append(string.Join(";*", Utilities.AudioFileExtensions));
             }
 
-            sb.Append("|" + Configuration.Settings.Language.General.AllFiles + "|*.*");
+            sb.Append("|" + LanguageSettings.Current.General.AllFiles + "|*.*");
             return sb.ToString();
         }
 
         public static void ShowHelp(string parameter)
         {
-            var helpFile = Configuration.Settings.Language.General.HelpFile;
+            var helpFile = LanguageSettings.Current.General.HelpFile;
             if (string.IsNullOrEmpty(helpFile))
             {
                 helpFile = "https://www.nikse.dk/SubtitleEdit/Help";
@@ -1285,19 +1285,19 @@ namespace Nikse.SubtitleEdit.Logic
             switch (continuationStyle)
             {
                 case ContinuationStyle.NoneTrailingDots:
-                    return Configuration.Settings.Language.Settings.ContinuationStyleNoneTrailingDots;
+                    return LanguageSettings.Current.Settings.ContinuationStyleNoneTrailingDots;
                 case ContinuationStyle.NoneLeadingTrailingDots:
-                    return Configuration.Settings.Language.Settings.ContinuationStyleNoneLeadingTrailingDots;
+                    return LanguageSettings.Current.Settings.ContinuationStyleNoneLeadingTrailingDots;
                 case ContinuationStyle.OnlyTrailingDots:
-                    return Configuration.Settings.Language.Settings.ContinuationStyleOnlyTrailingDots;
+                    return LanguageSettings.Current.Settings.ContinuationStyleOnlyTrailingDots;
                 case ContinuationStyle.LeadingTrailingDots:
-                    return Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDots;
+                    return LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingDots;
                 case ContinuationStyle.LeadingTrailingDash:
-                    return Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDash;
+                    return LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingDash;
                 case ContinuationStyle.LeadingTrailingDashDots:
-                    return Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDashDots;
+                    return LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingDashDots;
                 default:
-                    return Configuration.Settings.Language.Settings.ContinuationStyleNone;
+                    return LanguageSettings.Current.Settings.ContinuationStyleNone;
             }
         }
     }

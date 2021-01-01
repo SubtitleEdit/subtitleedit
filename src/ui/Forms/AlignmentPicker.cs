@@ -17,19 +17,19 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            Text = Configuration.Settings.Language.SubStationAlphaStyles.Alignment;
+            Text = LanguageSettings.Current.SubStationAlphaStyles.Alignment;
 
-            button1.Text = Configuration.Settings.Language.SubStationAlphaStyles.TopLeft;
-            button2.Text = Configuration.Settings.Language.SubStationAlphaStyles.TopCenter;
-            button3.Text = Configuration.Settings.Language.SubStationAlphaStyles.TopRight;
+            button1.Text = LanguageSettings.Current.SubStationAlphaStyles.TopLeft;
+            button2.Text = LanguageSettings.Current.SubStationAlphaStyles.TopCenter;
+            button3.Text = LanguageSettings.Current.SubStationAlphaStyles.TopRight;
 
-            button4.Text = Configuration.Settings.Language.SubStationAlphaStyles.MiddleLeft;
-            button5.Text = Configuration.Settings.Language.SubStationAlphaStyles.MiddleCenter;
-            button6.Text = Configuration.Settings.Language.SubStationAlphaStyles.MiddleRight;
+            button4.Text = LanguageSettings.Current.SubStationAlphaStyles.MiddleLeft;
+            button5.Text = LanguageSettings.Current.SubStationAlphaStyles.MiddleCenter;
+            button6.Text = LanguageSettings.Current.SubStationAlphaStyles.MiddleRight;
 
-            button7.Text = Configuration.Settings.Language.SubStationAlphaStyles.BottomLeft;
-            button8.Text = Configuration.Settings.Language.SubStationAlphaStyles.BottomCenter;
-            button9.Text = Configuration.Settings.Language.SubStationAlphaStyles.BottomRight;
+            button7.Text = LanguageSettings.Current.SubStationAlphaStyles.BottomLeft;
+            button8.Text = LanguageSettings.Current.SubStationAlphaStyles.BottomCenter;
+            button9.Text = LanguageSettings.Current.SubStationAlphaStyles.BottomRight;
 
             UiUtil.FixLargeFonts(this, button1);
             _text = text;

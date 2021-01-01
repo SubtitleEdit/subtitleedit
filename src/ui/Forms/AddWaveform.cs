@@ -47,12 +47,12 @@ namespace Nikse.SubtitleEdit.Forms
                 AudioTrackNumber = 0;
             }
 
-            Text = Configuration.Settings.Language.AddWaveform.Title;
-            buttonRipWave.Text = Configuration.Settings.Language.AddWaveform.GenerateWaveformData;
-            labelPleaseWait.Text = Configuration.Settings.Language.AddWaveform.PleaseWait;
+            Text = LanguageSettings.Current.AddWaveform.Title;
+            buttonRipWave.Text = LanguageSettings.Current.AddWaveform.GenerateWaveformData;
+            labelPleaseWait.Text = LanguageSettings.Current.AddWaveform.PleaseWait;
             labelVideoFileName.Text = videoFile;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            labelSourcevideoFile.Text = Configuration.Settings.Language.AddWaveform.SourceVideoFile;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            labelSourcevideoFile.Text = LanguageSettings.Current.AddWaveform.SourceVideoFile;
             _spectrogramDirectory = spectrogramDirectory;
             _encodeParameters = Configuration.Settings.General.VlcWaveTranscodeSettings;
         }
@@ -142,9 +142,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
             catch (DllNotFoundException)
             {
-                if (MessageBox.Show(Configuration.Settings.Language.AddWaveform.VlcMediaPlayerNotFound + Environment.NewLine +
-                                    Environment.NewLine + Configuration.Settings.Language.AddWaveform.GoToVlcMediaPlayerHomePage,
-                                    Configuration.Settings.Language.AddWaveform.VlcMediaPlayerNotFoundTitle,
+                if (MessageBox.Show(LanguageSettings.Current.AddWaveform.VlcMediaPlayerNotFound + Environment.NewLine +
+                                    Environment.NewLine + LanguageSettings.Current.AddWaveform.GoToVlcMediaPlayerHomePage,
+                                    LanguageSettings.Current.AddWaveform.VlcMediaPlayerNotFoundTitle,
                                     MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     UiUtil.OpenUrl("http://www.videolan.org/");
@@ -174,11 +174,11 @@ namespace Nikse.SubtitleEdit.Forms
                 seconds += 0.1;
                 if (seconds < 60)
                 {
-                    labelProgress.Text = string.Format(Configuration.Settings.Language.AddWaveform.ExtractingSeconds, seconds);
+                    labelProgress.Text = string.Format(LanguageSettings.Current.AddWaveform.ExtractingSeconds, seconds);
                 }
                 else
                 {
-                    labelProgress.Text = string.Format(Configuration.Settings.Language.AddWaveform.ExtractingMinutes, (int)(seconds / 60), (int)(seconds % 60));
+                    labelProgress.Text = string.Format(LanguageSettings.Current.AddWaveform.ExtractingMinutes, (int)(seconds / 60), (int)(seconds % 60));
                 }
 
                 Refresh();
@@ -203,11 +203,11 @@ namespace Nikse.SubtitleEdit.Forms
                             if (drive.AvailableFreeSpace < 50 * 1000000) // 50 mb
                             {
                                 labelInfo.ForeColor = Color.Red;
-                                labelInfo.Text = Configuration.Settings.Language.AddWaveform.LowDiskSpace;
+                                labelInfo.Text = LanguageSettings.Current.AddWaveform.LowDiskSpace;
                             }
                             else if (labelInfo.ForeColor == Color.Red)
                             {
-                                labelInfo.Text = string.Format(Configuration.Settings.Language.AddWaveform.FreeDiskSpace, Utilities.FormatBytesToDisplayFileSize(drive.AvailableFreeSpace));
+                                labelInfo.Text = string.Format(LanguageSettings.Current.AddWaveform.FreeDiskSpace, Utilities.FormatBytesToDisplayFileSize(drive.AvailableFreeSpace));
                             }
                         }
                     }
@@ -232,14 +232,14 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                if (_numberOfAudioTracks == 0 && MessageBox.Show(Configuration.Settings.Language.AddWaveform.NoAudioTracksFoundGenerateEmptyWaveform, Configuration.Settings.Language.General.Title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                if (_numberOfAudioTracks == 0 && MessageBox.Show(LanguageSettings.Current.AddWaveform.NoAudioTracksFoundGenerateEmptyWaveform, LanguageSettings.Current.General.Title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                 {
                     MakeEmptyWaveFile();
                     DialogResult = DialogResult.OK;
                     return;
                 }
 
-                MessageBox.Show(string.Format(Configuration.Settings.Language.AddWaveform.WaveFileNotFound, IntPtr.Size * 8, process.StartInfo.FileName, process.StartInfo.Arguments));
+                MessageBox.Show(string.Format(LanguageSettings.Current.AddWaveform.WaveFileNotFound, IntPtr.Size * 8, process.StartInfo.FileName, process.StartInfo.Arguments));
 
                 labelPleaseWait.Visible = false;
                 labelProgress.Text = string.Empty;
@@ -249,14 +249,14 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (targetFileInfo.Length <= 200)
             {
-                if (_numberOfAudioTracks == 0 && MessageBox.Show(Configuration.Settings.Language.AddWaveform.NoAudioTracksFoundGenerateEmptyWaveform, Configuration.Settings.Language.General.Title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                if (_numberOfAudioTracks == 0 && MessageBox.Show(LanguageSettings.Current.AddWaveform.NoAudioTracksFoundGenerateEmptyWaveform, LanguageSettings.Current.General.Title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                 {
                     MakeEmptyWaveFile();
                     DialogResult = DialogResult.OK;
                     return;
                 }
 
-                MessageBox.Show(string.Format(Configuration.Settings.Language.AddWaveform.WaveFileMalformed, encoderName, process.StartInfo.FileName, process.StartInfo.Arguments));
+                MessageBox.Show(string.Format(LanguageSettings.Current.AddWaveform.WaveFileMalformed, encoderName, process.StartInfo.FileName, process.StartInfo.Arguments));
 
                 labelPleaseWait.Visible = false;
                 labelProgress.Text = string.Empty;
@@ -272,7 +272,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ReadWaveFile(string targetFile, int delayInMilliseconds)
         {
-            labelProgress.Text = Configuration.Settings.Language.AddWaveform.GeneratingPeakFile;
+            labelProgress.Text = LanguageSettings.Current.AddWaveform.GeneratingPeakFile;
             Refresh();
 
             using (var waveFile = new WavePeakGenerator(targetFile))
@@ -281,7 +281,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (Configuration.Settings.VideoControls.GenerateSpectrogram)
                 {
-                    labelProgress.Text = Configuration.Settings.Language.AddWaveform.GeneratingSpectrogram;
+                    labelProgress.Text = LanguageSettings.Current.AddWaveform.GeneratingSpectrogram;
                     Refresh();
                     Spectrogram = waveFile.GenerateSpectrogram(delayInMilliseconds, _spectrogramDirectory);
                 }
@@ -292,7 +292,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MakeEmptyWaveFile()
         {
-            labelProgress.Text = Configuration.Settings.Language.AddWaveform.GeneratingPeakFile;
+            labelProgress.Text = LanguageSettings.Current.AddWaveform.GeneratingPeakFile;
             Refresh();
             var videoInfo = UiUtil.GetVideoInfo(SourceVideoFileName);
             Peaks = WavePeakGenerator.GenerateEmptyPeaks(_peakWaveFileName, (int)videoInfo.TotalMilliseconds / 1000);
@@ -459,18 +459,18 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixWaveOnly()
         {
-            Text = Configuration.Settings.Language.AddWaveform.Title;
-            buttonRipWave.Text = Configuration.Settings.Language.AddWaveform.GenerateWaveformData;
-            labelPleaseWait.Text = Configuration.Settings.Language.AddWaveform.PleaseWait;
+            Text = LanguageSettings.Current.AddWaveform.Title;
+            buttonRipWave.Text = LanguageSettings.Current.AddWaveform.GenerateWaveformData;
+            labelPleaseWait.Text = LanguageSettings.Current.AddWaveform.PleaseWait;
             labelVideoFileName.Text = string.Empty;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             buttonRipWave.Enabled = false;
             _cancel = false;
             buttonCancel.Visible = false;
             progressBar1.Visible = false;
             progressBar1.Style = ProgressBarStyle.Blocks;
 
-            labelProgress.Text = Configuration.Settings.Language.AddWaveform.GeneratingPeakFile;
+            labelProgress.Text = LanguageSettings.Current.AddWaveform.GeneratingPeakFile;
             Refresh();
             labelPleaseWait.Visible = false;
             try

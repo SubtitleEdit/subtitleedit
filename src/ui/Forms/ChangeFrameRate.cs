@@ -18,13 +18,13 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeCombobox(comboBoxFrameRateFrom);
             InitializeCombobox(comboBoxFrameRateTo);
 
-            var language = Configuration.Settings.Language.ChangeFrameRate;
+            var language = LanguageSettings.Current.ChangeFrameRate;
             Text = language.Title;
             labelInfo.Text = language.ConvertFrameRateOfSubtitle;
             labelFromFrameRate.Text = language.FromFrameRate;
             labelToFrameRate.Text = language.ToFrameRate;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
             if (Configuration.IsRunningOnWindows)
             {
@@ -65,7 +65,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string GetFrameRateFromVideoFile(string oldFrameRate)
         {
-            openFileDialog1.Title = Configuration.Settings.Language.General.OpenVideoFileTitle;
+            openFileDialog1.Title = LanguageSettings.Current.General.OpenVideoFileTitle;
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.Filter = UiUtil.GetVideoFileFilter(false);
             openFileDialog1.FileName = string.Empty;
@@ -94,7 +94,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (comboBoxFrameRateFrom.Text.Trim() == comboBoxFrameRateTo.Text.Trim())
             {
-                MessageBox.Show(Configuration.Settings.Language.ChangeFrameRate.FrameRateNotChanged);
+                MessageBox.Show(LanguageSettings.Current.ChangeFrameRate.FrameRateNotChanged);
                 return;
             }
 
@@ -104,7 +104,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                MessageBox.Show(Configuration.Settings.Language.ChangeFrameRate.FrameRateNotCorrect);
+                MessageBox.Show(LanguageSettings.Current.ChangeFrameRate.FrameRateNotCorrect);
             }
         }
 

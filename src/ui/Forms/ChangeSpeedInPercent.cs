@@ -17,17 +17,17 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            Text = Configuration.Settings.Language.ChangeSpeedInPercent.Title;
-            groupBoxInfo.Text = Configuration.Settings.Language.ChangeSpeedInPercent.Info;
-            radioButtonAllLines.Text = Configuration.Settings.Language.ShowEarlierLater.AllLines;
-            radioButtonSelectedLinesOnly.Text = Configuration.Settings.Language.ShowEarlierLater.SelectedLinesOnly;
-            radioButtonSpeedCustom.Text = Configuration.Settings.Language.ChangeSpeedInPercent.Custom;
-            radioButtonSpeedFromDropFrame.Text = Configuration.Settings.Language.ChangeSpeedInPercent.FromDropFrame;
-            radioButtonToDropFrame.Text = Configuration.Settings.Language.ChangeSpeedInPercent.ToDropFrame;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            Text = LanguageSettings.Current.ChangeSpeedInPercent.Title;
+            groupBoxInfo.Text = LanguageSettings.Current.ChangeSpeedInPercent.Info;
+            radioButtonAllLines.Text = LanguageSettings.Current.ShowEarlierLater.AllLines;
+            radioButtonSelectedLinesOnly.Text = LanguageSettings.Current.ShowEarlierLater.SelectedLinesOnly;
+            radioButtonSpeedCustom.Text = LanguageSettings.Current.ChangeSpeedInPercent.Custom;
+            radioButtonSpeedFromDropFrame.Text = LanguageSettings.Current.ChangeSpeedInPercent.FromDropFrame;
+            radioButtonToDropFrame.Text = LanguageSettings.Current.ChangeSpeedInPercent.ToDropFrame;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
-            if (string.IsNullOrEmpty(Configuration.Settings.Language.ChangeSpeedInPercent.ToDropFrame))
+            if (string.IsNullOrEmpty(LanguageSettings.Current.ChangeSpeedInPercent.ToDropFrame))
             {
                 radioButtonSpeedCustom.Visible = false;
                 radioButtonSpeedFromDropFrame.Visible = false;

@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,12 +21,12 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 listViewExportStyles.Items.Add(new ListViewItem(profile.Name) { Checked = false, Tag = profile });
             }
 
-            selectAllToolStripMenuItem.Text = Configuration.Settings.Language.FixCommonErrors.SelectAll;
-            inverseSelectionToolStripMenuItem.Text = Configuration.Settings.Language.FixCommonErrors.InverseSelection;
+            selectAllToolStripMenuItem.Text = LanguageSettings.Current.FixCommonErrors.SelectAll;
+            inverseSelectionToolStripMenuItem.Text = LanguageSettings.Current.FixCommonErrors.InverseSelection;
 
-            Text = Configuration.Settings.Language.Settings.ExportProfiles;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            Text = LanguageSettings.Current.Settings.ExportProfiles;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
@@ -43,9 +44,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 return;
             }
 
-            saveFileDialogStyle.Title = Configuration.Settings.Language.Settings.ExportProfiles;
+            saveFileDialogStyle.Title = LanguageSettings.Current.Settings.ExportProfiles;
             saveFileDialogStyle.InitialDirectory = Configuration.DataDirectory;
-            saveFileDialogStyle.Filter = Configuration.Settings.Language.Settings.Profiles + "|*.profile";
+            saveFileDialogStyle.Filter = LanguageSettings.Current.Settings.Profiles + "|*.profile";
             saveFileDialogStyle.FileName = "SE_Profiles.profile";
 
             if (saveFileDialogStyle.ShowDialog(this) != DialogResult.OK)

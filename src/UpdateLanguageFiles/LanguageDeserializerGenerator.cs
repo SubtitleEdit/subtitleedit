@@ -1,4 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core;
+﻿using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Text;
 
@@ -17,7 +17,7 @@ using System.Xml;
 // !!! THIS FILE IS AUTO-GENERATED!!!
 // !!! THIS FILE IS AUTO-GENERATED!!!
 
-namespace Nikse.SubtitleEdit.Core
+namespace Nikse.SubtitleEdit.Logic
 {
 
     public class LanguageDeserializer // NOTE: This class is AUTO-GENERATED!!!!
@@ -125,6 +125,5 @@ namespace Nikse.SubtitleEdit.Core
             }
             return sb.ToString();
         }
-
     }
 }

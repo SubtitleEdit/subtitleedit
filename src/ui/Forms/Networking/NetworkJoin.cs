@@ -20,13 +20,13 @@ namespace Nikse.SubtitleEdit.Forms.Networking
             UiUtil.FixFonts(this);
 
             labelStatus.Text = string.Empty;
-            Text = Configuration.Settings.Language.NetworkJoin.Title;
-            labelInfo.Text = Configuration.Settings.Language.NetworkJoin.Information;
-            labelSessionKey.Text = Configuration.Settings.Language.General.SessionKey;
-            labelUserName.Text = Configuration.Settings.Language.General.UserName;
-            labelWebServiceUrl.Text = Configuration.Settings.Language.General.WebServiceUrl;
-            buttonJoin.Text = Configuration.Settings.Language.NetworkJoin.Join;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            Text = LanguageSettings.Current.NetworkJoin.Title;
+            labelInfo.Text = LanguageSettings.Current.NetworkJoin.Information;
+            labelSessionKey.Text = LanguageSettings.Current.General.SessionKey;
+            labelUserName.Text = LanguageSettings.Current.General.UserName;
+            labelWebServiceUrl.Text = LanguageSettings.Current.General.WebServiceUrl;
+            buttonJoin.Text = LanguageSettings.Current.NetworkJoin.Join;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonCancel);
         }
 
@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Forms.Networking
             buttonCancel.Enabled = false;
             textBoxUserName.Enabled = false;
             comboBoxWebServiceUrl.Enabled = false;
-            labelStatus.Text = string.Format(Configuration.Settings.Language.NetworkStart.ConnectionTo, comboBoxWebServiceUrl.Text);
+            labelStatus.Text = string.Format(LanguageSettings.Current.NetworkStart.ConnectionTo, comboBoxWebServiceUrl.Text);
             Refresh();
 
             try
@@ -74,11 +74,11 @@ namespace Nikse.SubtitleEdit.Forms.Networking
                 {
                     if (message == "Session not found!")
                     {
-                        MessageBox.Show(string.Format(Configuration.Settings.Language.Main.XNotFound, textBoxSessionKey.Text));
+                        MessageBox.Show(string.Format(LanguageSettings.Current.Main.XNotFound, textBoxSessionKey.Text));
                     }
                     else if (message == "Username already in use!")
                     {
-                        MessageBox.Show(string.Format(Configuration.Settings.Language.General.UserNameAlreadyInUse, textBoxSessionKey.Text));
+                        MessageBox.Show(string.Format(LanguageSettings.Current.General.UserNameAlreadyInUse, textBoxSessionKey.Text));
                     }
                     else
                     {

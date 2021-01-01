@@ -15,8 +15,8 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(this);
 
             Text = "YouTube Annotations";
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             listViewFixes.Columns[1].Text = string.Empty; // style // TODO: Add better text + help text
             UiUtil.FixLargeFonts(this, buttonOK);
 

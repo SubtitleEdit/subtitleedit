@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Forms
             _backgroundWorker = new BackgroundWorker();
             UiUtil.FixLargeFonts(this, buttonOK);
             labelProgress.Text = string.Empty;
-            Text = Configuration.Settings.Language.AudioToText.Title;
+            Text = LanguageSettings.Current.AudioToText.Title;
         }
 
         public static Process GetCommandLineProcess(string inputVideoFile, int audioTrackNumber, string outWaveFile, string encodeParamters, out string encoderName)
@@ -97,13 +97,13 @@ namespace Nikse.SubtitleEdit.Forms
                 try
                 {
                     process = GetCommandLineProcess(_videoFileName, -1, _waveFileName, Configuration.Settings.General.VlcWaveTranscodeSettings, out var waveExtractor);
-                    _backgroundWorker.ReportProgress(0, string.Format(Configuration.Settings.Language.AudioToText.ExtractingAudioUsingX, waveExtractor));
+                    _backgroundWorker.ReportProgress(0, string.Format(LanguageSettings.Current.AudioToText.ExtractingAudioUsingX, waveExtractor));
                 }
                 catch (DllNotFoundException)
                 {
-                    if (MessageBox.Show(Configuration.Settings.Language.AddWaveform.VlcMediaPlayerNotFound + Environment.NewLine +
-                                        Environment.NewLine + Configuration.Settings.Language.AddWaveform.GoToVlcMediaPlayerHomePage,
-                                        Configuration.Settings.Language.AddWaveform.VlcMediaPlayerNotFoundTitle,
+                    if (MessageBox.Show(LanguageSettings.Current.AddWaveform.VlcMediaPlayerNotFound + Environment.NewLine +
+                                        Environment.NewLine + LanguageSettings.Current.AddWaveform.GoToVlcMediaPlayerHomePage,
+                                        LanguageSettings.Current.AddWaveform.VlcMediaPlayerNotFoundTitle,
                                         MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         UiUtil.OpenUrl("http://www.videolan.org/");
@@ -301,7 +301,7 @@ namespace Nikse.SubtitleEdit.Forms
             ExtractAudio();
 
             Subtitle subtitle;
-            _backgroundWorker.ReportProgress(0, string.Format(Configuration.Settings.Language.AudioToText.ExtractingTextUsingX, "PocketSphinx"));
+            _backgroundWorker.ReportProgress(0, string.Format(LanguageSettings.Current.AudioToText.ExtractingTextUsingX, "PocketSphinx"));
             var result = ExtractTextFromAudio(_waveFileName, _delayInMilliseconds);
             using (var stream = GenerateStreamFromString(result))
             {
@@ -340,7 +340,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void _backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             Subtitle = (Subtitle)e.Result;
-            labelProgress.Text = string.Format(Configuration.Settings.Language.AudioToText.ProgessViaXy, "PocketSphinx", 100);
+            labelProgress.Text = string.Format(LanguageSettings.Current.AudioToText.ProgessViaXy, "PocketSphinx", 100);
             progressBar1.Visible = false;
             buttonOK.Enabled = true;
         }
@@ -383,7 +383,7 @@ namespace Nikse.SubtitleEdit.Forms
                 progressBar1.Maximum = 100;
             }
             progressBar1.Value = percentage;
-            labelProgress.Text = string.Format(Configuration.Settings.Language.AudioToText.ProgessViaXy, "PocketSphinx", percentage);
+            labelProgress.Text = string.Format(LanguageSettings.Current.AudioToText.ProgessViaXy, "PocketSphinx", percentage);
         }
 
         private void linkLabelShowMoreLess_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -391,12 +391,12 @@ namespace Nikse.SubtitleEdit.Forms
             _showMore = !_showMore;
             if (_showMore)
             {
-                linkLabelShowMoreLess.Text = Configuration.Settings.Language.AudioToText.ShowLess;
+                linkLabelShowMoreLess.Text = LanguageSettings.Current.AudioToText.ShowLess;
                 Height = 500;
             }
             else
             {
-                linkLabelShowMoreLess.Text = Configuration.Settings.Language.AudioToText.ShowMore;
+                linkLabelShowMoreLess.Text = LanguageSettings.Current.AudioToText.ShowMore;
                 Height = linkLabelShowMoreLess.Top + linkLabelShowMoreLess.Height + buttonOK.Height + 60;
             }
             labelLog.Visible = _showMore;

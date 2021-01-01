@@ -22,12 +22,12 @@ namespace Nikse.SubtitleEdit.Forms.Options
             _justDownload = justDownload;
             labelPleaseWait.Text = string.Empty;
 
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            Text = Configuration.Settings.Language.SettingsMpv.DownloadMpv;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            Text = LanguageSettings.Current.SettingsMpv.DownloadMpv;
             if (!Configuration.IsRunningOnLinux)
             {
-                buttonDownload.Text = Configuration.Settings.Language.SettingsMpv.DownloadMpv;
+                buttonDownload.Text = LanguageSettings.Current.SettingsMpv.DownloadMpv;
             }
 
             UiUtil.FixLargeFonts(this, buttonOK);
@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
         {
             if (e.Error != null)
             {
-                MessageBox.Show(Configuration.Settings.Language.SettingsMpv.DownloadMpvFailed + Environment.NewLine +
+                MessageBox.Show(LanguageSettings.Current.SettingsMpv.DownloadMpvFailed + Environment.NewLine +
                                 Environment.NewLine +
                                 $"Manual action: Download \"{_downloadUrl}\" and unpack to \"{Configuration.DataDirectory}\"." + Environment.NewLine +
                                 Environment.NewLine +
@@ -79,7 +79,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             buttonOK.Enabled = true;
             buttonDownload.Enabled = !Configuration.IsRunningOnLinux;
 
-            MessageBox.Show(Configuration.Settings.Language.SettingsMpv.DownloadMpvOk);
+            MessageBox.Show(LanguageSettings.Current.SettingsMpv.DownloadMpvOk);
             DialogResult = DialogResult.OK;
         }
 
@@ -87,7 +87,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
         {
             try
             {
-                labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait;
+                labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
                 buttonOK.Enabled = false;
                 buttonDownload.Enabled = false;
                 Refresh();
@@ -98,7 +98,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 wc.DownloadDataCompleted += wc_DownloadDataCompleted;
                 wc.DownloadProgressChanged += (o, args) =>
                 {
-                    labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait + "  " + args.ProgressPercentage + "%";
+                    labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + args.ProgressPercentage + "%";
                 };
                 wc.DownloadDataAsync(new Uri(_downloadUrl));
             }

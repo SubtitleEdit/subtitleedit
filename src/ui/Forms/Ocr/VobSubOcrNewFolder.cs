@@ -19,10 +19,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             FolderName = null;
             _vobSub = vobsub;
 
-            Text = Configuration.Settings.Language.VobSubOcrNewFolder.Title;
-            label1.Text = Configuration.Settings.Language.VobSubOcrNewFolder.Message;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            Text = LanguageSettings.Current.VobSubOcrNewFolder.Title;
+            label1.Text = LanguageSettings.Current.VobSubOcrNewFolder.Message;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonCancel);
         }
 

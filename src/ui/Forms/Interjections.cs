@@ -51,14 +51,14 @@ namespace Nikse.SubtitleEdit.Forms
                 _interjections.Add(s.Trim());
             }
             FillListBox();
-            Text = Configuration.Settings.Language.Interjections.Title;
+            Text = LanguageSettings.Current.Interjections.Title;
 
             // Add to interjections (or general)
-            buttonRemove.Text = Configuration.Settings.Language.Settings.Remove;
-            buttonAdd.Text = Configuration.Settings.Language.MultipleReplace.Add;
+            buttonRemove.Text = LanguageSettings.Current.Settings.Remove;
+            buttonAdd.Text = LanguageSettings.Current.MultipleReplace.Add;
 
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
@@ -94,7 +94,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                MessageBox.Show(Configuration.Settings.Language.Settings.WordAlreadyExists);
+                MessageBox.Show(LanguageSettings.Current.Settings.WordAlreadyExists);
             }
         }
 
@@ -116,7 +116,7 @@ namespace Nikse.SubtitleEdit.Forms
             string text = listBoxInterjections.Items[index].ToString();
             if (index >= 0)
             {
-                if (MessageBox.Show(string.Format(Configuration.Settings.Language.Settings.RemoveX, text), null, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.RemoveX, text), null, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     _interjections.Remove(text);
                     listBoxInterjections.Items.RemoveAt(index);
@@ -133,7 +133,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     return;
                 }
-                MessageBox.Show(Configuration.Settings.Language.Settings.WordNotFound);
+                MessageBox.Show(LanguageSettings.Current.Settings.WordNotFound);
             }
         }
 

@@ -17,8 +17,8 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            Text = Configuration.Settings.Language.Main.StatusLog;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
+            Text = LanguageSettings.Current.Main.StatusLog;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
             _log = log;
             timer1_Tick(null, null);
         }

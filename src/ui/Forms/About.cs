@@ -8,8 +8,8 @@ namespace Nikse.SubtitleEdit.Forms
 {
     partial class About : PositionAndSizeForm
     {
-        private readonly LanguageStructure.About _language = Configuration.Settings.Language.About;
-        private readonly LanguageStructure.General _languageGeneral = Configuration.Settings.Language.General;
+        private readonly LanguageStructure.About _language = LanguageSettings.Current.About;
+        private readonly LanguageStructure.General _languageGeneral = LanguageSettings.Current.General;
 
         public About()
         {

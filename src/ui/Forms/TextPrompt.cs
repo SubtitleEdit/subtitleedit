@@ -17,8 +17,8 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(this);
             Text = title;
             labelDescription.Text = label;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             textBox1.Text = initialText;
             UiUtil.FixLargeFonts(this, buttonOK);
         }

@@ -26,7 +26,7 @@ namespace Nikse.SubtitleEdit.Forms
             timeUpDownStartTime.TimeCode = new TimeCode();
             timeUpDownDuration.TimeCode = new TimeCode(1, 0, 0, 0);
             comboBoxDateTimeFormats.Items.Clear();
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             foreach (string format in Configuration.Settings.Tools.GenerateTimeCodePatterns.Split(';'))
             {
                 _formats.Add(format);
@@ -37,11 +37,11 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxDateTimeFormats.SelectedIndex = 0;
             }
 
-            var l = Configuration.Settings.Language.ExtractDateTimeInfo;
+            var l = LanguageSettings.Current.ExtractDateTimeInfo;
             Text = l.Title;
             labelChooseVideoFile.Text = l.OpenVideoFile;
             labelStartFrom.Text = l.StartFrom;
-            labelDuration.Text = Configuration.Settings.Language.General.Duration;
+            labelDuration.Text = LanguageSettings.Current.General.Duration;
             labelExample.Text = l.Example;
             buttonOK.Text = l.GenerateSubtitle;
             labelWriteFormat.Text = l.DateTimeFormat;

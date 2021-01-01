@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            var language = Configuration.Settings.Language.Settings;
+            var language = LanguageSettings.Current.Settings;
             var settings = Configuration.Settings.General;
             Text = language.FixContinuationStyleSettings;
             checkBoxUncheckInsertsAllCaps.Text = language.UncheckInsertsAllCaps;
@@ -28,8 +28,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxHideContinuationCandidatesWithoutName.Checked = settings.FixContinuationStyleHideContinuationCandidatesWithoutName;
             checkBoxIgnoreLyrics.Checked = settings.FixContinuationStyleIgnoreLyrics;
 
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
 
             // resize window with if texts are too long

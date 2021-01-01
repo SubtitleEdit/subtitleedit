@@ -15,14 +15,14 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(this);
             textBox1.Text = name;
             GroupName = name;
-            label1.Text = Configuration.Settings.Language.MultipleReplace.GroupName;
+            label1.Text = LanguageSettings.Current.MultipleReplace.GroupName;
             if (name == string.Empty)
             {
-                Text = Configuration.Settings.Language.MultipleReplace.NewGroup;
+                Text = LanguageSettings.Current.MultipleReplace.NewGroup;
             }
             else
             {
-                Text = Configuration.Settings.Language.MultipleReplace.RenameGroup;
+                Text = LanguageSettings.Current.MultipleReplace.RenameGroup;
             }
         }
 

@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 comboBoxFontName.Items.Add(x.Name);
             }
 
-            var l = Configuration.Settings.Language.SubStationAlphaStyles;
+            var l = LanguageSettings.Current.SubStationAlphaStyles;
             Text = l.Title;
             groupBoxStyles.Text = l.Styles;
             listViewStyles.Columns[0].Text = l.Name;
@@ -100,9 +100,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             groupBoxFont.Text = l.Font;
             labelFontName.Text = l.FontName;
             labelFontSize.Text = l.FontSize;
-            checkBoxFontItalic.Text = Configuration.Settings.Language.General.Italic;
-            checkBoxFontBold.Text = Configuration.Settings.Language.General.Bold;
-            checkBoxFontUnderline.Text = Configuration.Settings.Language.General.Underline;
+            checkBoxFontItalic.Text = LanguageSettings.Current.General.Italic;
+            checkBoxFontBold.Text = LanguageSettings.Current.General.Bold;
+            checkBoxFontUnderline.Text = LanguageSettings.Current.General.Underline;
             groupBoxAlignment.Text = l.Alignment;
             groupBoxColors.Text = l.Colors;
             buttonPrimaryColor.Text = l.Primary;
@@ -110,8 +110,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             buttonOutlineColor.Text = l.Outline;
             buttonBackColor.Text = l.Shadow;
             groupBoxMargins.Text = l.Margins;
-            labelMarginLeft.Text = Configuration.Settings.Language.ExportPngXml.Left;
-            labelMarginRight.Text = Configuration.Settings.Language.ExportPngXml.Right;
+            labelMarginLeft.Text = LanguageSettings.Current.ExportPngXml.Left;
+            labelMarginRight.Text = LanguageSettings.Current.ExportPngXml.Right;
             labelMarginVertical.Text = l.Vertical;
             groupBoxBorder.Text = l.Border;
             radioButtonOutline.Text = l.Outline;
@@ -123,7 +123,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             buttonAdd.Text = l.New;
             buttonRemove.Text = l.Remove;
             buttonRemoveAll.Text = l.RemoveAll;
-            groupBoxPreview.Text = Configuration.Settings.Language.General.Preview;
+            groupBoxPreview.Text = LanguageSettings.Current.General.Preview;
 
             groupBoxStorage.Text = l.StyleStorage;
             buttonStorageImport.Text = l.Import;
@@ -136,29 +136,29 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             buttonAddToFile.Text = l.AddToFile;
             buttonAddStyleToStorage.Text = l.AddToStorage;
 
-            deleteToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.Remove;
-            toolStripMenuItemRemoveAll.Text = Configuration.Settings.Language.MultipleReplace.RemoveAll;
+            deleteToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.Remove;
+            toolStripMenuItemRemoveAll.Text = LanguageSettings.Current.MultipleReplace.RemoveAll;
             addToStorageToolStripMenuItem1.Text = l.AddToStorage;
-            moveUpToolStripMenuItem.Text = Configuration.Settings.Language.DvdSubRip.MoveUp;
-            moveDownToolStripMenuItem.Text = Configuration.Settings.Language.DvdSubRip.MoveDown;
-            moveTopToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.MoveToTop;
-            moveBottomToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.MoveToBottom;
-            newToolStripMenuItemNew.Text = Configuration.Settings.Language.SubStationAlphaStyles.New;
-            copyToolStripMenuItemCopy.Text = Configuration.Settings.Language.SubStationAlphaStyles.Copy;
-            toolStripMenuItemImport.Text = Configuration.Settings.Language.MultipleReplace.Import;
-            toolStripMenuItemExport.Text = Configuration.Settings.Language.MultipleReplace.Export;
+            moveUpToolStripMenuItem.Text = LanguageSettings.Current.DvdSubRip.MoveUp;
+            moveDownToolStripMenuItem.Text = LanguageSettings.Current.DvdSubRip.MoveDown;
+            moveTopToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.MoveToTop;
+            moveBottomToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.MoveToBottom;
+            newToolStripMenuItemNew.Text = LanguageSettings.Current.SubStationAlphaStyles.New;
+            copyToolStripMenuItemCopy.Text = LanguageSettings.Current.SubStationAlphaStyles.Copy;
+            toolStripMenuItemImport.Text = LanguageSettings.Current.MultipleReplace.Import;
+            toolStripMenuItemExport.Text = LanguageSettings.Current.MultipleReplace.Export;
 
-            toolStripMenuItemStorageRemove.Text = Configuration.Settings.Language.MultipleReplace.Remove;
-            toolStripMenuItemStorageRemoveAll.Text = Configuration.Settings.Language.MultipleReplace.RemoveAll;
+            toolStripMenuItemStorageRemove.Text = LanguageSettings.Current.MultipleReplace.Remove;
+            toolStripMenuItemStorageRemoveAll.Text = LanguageSettings.Current.MultipleReplace.RemoveAll;
             addToFileStylesToolStripMenuItem.Text = l.AddToFile;
-            toolStripMenuItemStorageMoveUp.Text = Configuration.Settings.Language.DvdSubRip.MoveUp;
-            toolStripMenuItemStorageMoveDown.Text = Configuration.Settings.Language.DvdSubRip.MoveDown;
-            toolStripMenuItemStorageMoveTop.Text = Configuration.Settings.Language.MultipleReplace.MoveToTop;
-            toolStripMenuItemStorageMoveBottom.Text = Configuration.Settings.Language.MultipleReplace.MoveToBottom;
-            toolStripMenuItemStorageNew.Text = Configuration.Settings.Language.SubStationAlphaStyles.New;
-            toolStripMenuItemStorageCopy.Text = Configuration.Settings.Language.SubStationAlphaStyles.Copy;
-            toolStripMenuItemStorageImport.Text = Configuration.Settings.Language.MultipleReplace.Import;
-            toolStripMenuItemStorageExport.Text = Configuration.Settings.Language.MultipleReplace.Export;
+            toolStripMenuItemStorageMoveUp.Text = LanguageSettings.Current.DvdSubRip.MoveUp;
+            toolStripMenuItemStorageMoveDown.Text = LanguageSettings.Current.DvdSubRip.MoveDown;
+            toolStripMenuItemStorageMoveTop.Text = LanguageSettings.Current.MultipleReplace.MoveToTop;
+            toolStripMenuItemStorageMoveBottom.Text = LanguageSettings.Current.MultipleReplace.MoveToBottom;
+            toolStripMenuItemStorageNew.Text = LanguageSettings.Current.SubStationAlphaStyles.New;
+            toolStripMenuItemStorageCopy.Text = LanguageSettings.Current.SubStationAlphaStyles.Copy;
+            toolStripMenuItemStorageImport.Text = LanguageSettings.Current.MultipleReplace.Import;
+            toolStripMenuItemStorageExport.Text = LanguageSettings.Current.MultipleReplace.Export;
 
             setPreviewTextToolStripMenuItem.Text = l.SetPreviewText;
 
@@ -215,8 +215,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 }
             }
 
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
             InitializeListView();
             UiUtil.FixLargeFonts(this, buttonCancel);
@@ -393,7 +393,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             subItem = new ListViewItem.ListViewSubItem(item, string.Empty)
             {
                 BackColor = isSubstationAlpha ? ssaStyle.Background : ssaStyle.Outline,
-                Text = Configuration.Settings.Language.General.Text,
+                Text = LanguageSettings.Current.General.Text,
                 ForeColor = ssaStyle.Primary
             };
             try
@@ -1011,7 +1011,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 string styleName = listViewStyles.SelectedItems[0].Text;
                 SsaStyle oldStyle = GetSsaStyle(styleName);
-                var style = new SsaStyle(oldStyle) { Name = string.Format(Configuration.Settings.Language.SubStationAlphaStyles.CopyOfY, styleName) }; // Copy contructor
+                var style = new SsaStyle(oldStyle) { Name = string.Format(LanguageSettings.Current.SubStationAlphaStyles.CopyOfY, styleName) }; // Copy contructor
 
                 if (GetSsaStyle(style.Name).LoadedFromHeader)
                 {
@@ -1019,7 +1019,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     bool doRepeat = true;
                     while (doRepeat)
                     {
-                        style.Name = string.Format(Configuration.Settings.Language.SubStationAlphaStyles.CopyXOfY, count, styleName);
+                        style.Name = string.Format(LanguageSettings.Current.SubStationAlphaStyles.CopyXOfY, count, styleName);
                         doRepeat = GetSsaStyle(style.Name).LoadedFromHeader;
                         count++;
                     }
@@ -1130,14 +1130,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 listViewStyles.SelectedItems[0].Selected = false;
             }
 
-            var style = new SsaStyle { Name = Configuration.Settings.Language.SubStationAlphaStyles.New };
+            var style = new SsaStyle { Name = LanguageSettings.Current.SubStationAlphaStyles.New };
             if (GetSsaStyle(style.Name).LoadedFromHeader)
             {
                 int count = 2;
                 bool doRepeat = true;
                 while (doRepeat)
                 {
-                    style = new SsaStyle { Name = Configuration.Settings.Language.SubStationAlphaStyles.New + count };
+                    style = new SsaStyle { Name = LanguageSettings.Current.SubStationAlphaStyles.New + count };
                     doRepeat = GetSsaStyle(style.Name).LoadedFromHeader;
                     count++;
                 }
@@ -1221,11 +1221,11 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             string askText;
             if (listViewStyles.SelectedItems.Count > 1)
             {
-                askText = string.Format(Configuration.Settings.Language.Main.DeleteXLinesPrompt, listViewStyles.SelectedItems.Count);
+                askText = string.Format(LanguageSettings.Current.Main.DeleteXLinesPrompt, listViewStyles.SelectedItems.Count);
             }
             else
             {
-                askText = Configuration.Settings.Language.Main.DeleteOneLinePrompt;
+                askText = LanguageSettings.Current.Main.DeleteOneLinePrompt;
             }
 
             if (Configuration.Settings.General.PromptDeleteLines && MessageBox.Show(askText, string.Empty, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
@@ -1257,11 +1257,11 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             string askText;
             if (listViewStyles.Items.Count > 1)
             {
-                askText = string.Format(Configuration.Settings.Language.Main.DeleteXLinesPrompt, listViewStyles.Items.Count);
+                askText = string.Format(LanguageSettings.Current.Main.DeleteXLinesPrompt, listViewStyles.Items.Count);
             }
             else
             {
-                askText = Configuration.Settings.Language.Main.DeleteOneLinePrompt;
+                askText = LanguageSettings.Current.Main.DeleteOneLinePrompt;
             }
 
             if (MessageBox.Show(askText, string.Empty, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
@@ -1597,16 +1597,16 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void buttonImport_Click(object sender, EventArgs e)
         {
-            openFileDialogImport.Title = Configuration.Settings.Language.SubStationAlphaStyles.ImportStyleFromFile;
+            openFileDialogImport.Title = LanguageSettings.Current.SubStationAlphaStyles.ImportStyleFromFile;
             openFileDialogImport.InitialDirectory = Configuration.DataDirectory;
             if (_isSubStationAlpha)
             {
-                openFileDialogImport.Filter = SubStationAlpha.NameOfFormat + "|*.ssa|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
+                openFileDialogImport.Filter = SubStationAlpha.NameOfFormat + "|*.ssa|" + LanguageSettings.Current.General.AllFiles + "|*.*";
                 saveFileDialogStyle.FileName = "my_styles.ssa";
             }
             else
             {
-                openFileDialogImport.Filter = AdvancedSubStationAlpha.NameOfFormat + "|*.ass|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
+                openFileDialogImport.Filter = AdvancedSubStationAlpha.NameOfFormat + "|*.ass|" + LanguageSettings.Current.General.AllFiles + "|*.*";
                 saveFileDialogStyle.FileName = "my_styles.ass";
             }
 
@@ -1665,7 +1665,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                                     listViewStyles_SelectedIndexChanged(null, null);
                                 }
 
-                                labelStatus.Text = string.Format(Configuration.Settings.Language.SubStationAlphaStyles.StyleXImportedFromFileY, styleNames, openFileDialogImport.FileName);
+                                labelStatus.Text = string.Format(LanguageSettings.Current.SubStationAlphaStyles.StyleXImportedFromFileY, styleNames, openFileDialogImport.FileName);
                                 timerClearStatus.Start();
                             }
                         }
@@ -1686,7 +1686,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     var styleNames = string.Join(", ", form.ExportedStyles.ToArray());
-                    labelStatus.Text = string.Format(Configuration.Settings.Language.SubStationAlphaStyles.StyleXExportedToFileY, styleNames, saveFileDialogStyle.FileName);
+                    labelStatus.Text = string.Format(LanguageSettings.Current.SubStationAlphaStyles.StyleXExportedToFileY, styleNames, saveFileDialogStyle.FileName);
                     timerClearStatus.Start();
                 }
             }
@@ -1722,7 +1722,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 DialogResult result = DialogResult.Yes;
                 if (Configuration.Settings.General.PromptDeleteLines)
                 {
-                    result = MessageBox.Show(string.Format(Configuration.Settings.Language.SubStationAlphaStyles.OverwriteX, styleName), string.Empty, MessageBoxButtons.YesNoCancel);
+                    result = MessageBox.Show(string.Format(LanguageSettings.Current.SubStationAlphaStyles.OverwriteX, styleName), string.Empty, MessageBoxButtons.YesNoCancel);
                 }
 
                 if (result != DialogResult.Yes)
@@ -1781,11 +1781,11 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             string askText;
             if (_storageStyles.Count > 1)
             {
-                askText = string.Format(Configuration.Settings.Language.Main.DeleteXLinesPrompt, _storageStyles.Count);
+                askText = string.Format(LanguageSettings.Current.Main.DeleteXLinesPrompt, _storageStyles.Count);
             }
             else
             {
-                askText = Configuration.Settings.Language.Main.DeleteOneLinePrompt;
+                askText = LanguageSettings.Current.Main.DeleteOneLinePrompt;
             }
 
             if (MessageBox.Show(askText, string.Empty, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
@@ -1807,11 +1807,11 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             string askText;
             if (listViewStorage.SelectedItems.Count > 1)
             {
-                askText = string.Format(Configuration.Settings.Language.Main.DeleteXLinesPrompt, listViewStorage.SelectedItems.Count);
+                askText = string.Format(LanguageSettings.Current.Main.DeleteXLinesPrompt, listViewStorage.SelectedItems.Count);
             }
             else
             {
-                askText = Configuration.Settings.Language.Main.DeleteOneLinePrompt;
+                askText = LanguageSettings.Current.Main.DeleteOneLinePrompt;
             }
 
             if (Configuration.Settings.General.PromptDeleteLines && MessageBox.Show(askText, string.Empty, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
@@ -1842,14 +1842,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void buttonStorageAdd_Click(object sender, EventArgs e)
         {
-            var name = Configuration.Settings.Language.SubStationAlphaStyles.New;
+            var name = LanguageSettings.Current.SubStationAlphaStyles.New;
             if (_storageStyles.Any(p => p.Name == name))
             {
                 int count = 2;
                 bool doRepeat = true;
                 while (doRepeat)
                 {
-                    name = Configuration.Settings.Language.SubStationAlphaStyles.New + count;
+                    name = LanguageSettings.Current.SubStationAlphaStyles.New + count;
                     doRepeat = _storageStyles.Any(p => p.Name == name);
                     count++;
                 }
@@ -1878,7 +1878,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             var index = listViewStorage.SelectedItems[0].Index;
             SsaStyle oldStyle = _storageStyles[index];
-            var style = new SsaStyle(oldStyle) { Name = string.Format(Configuration.Settings.Language.SubStationAlphaStyles.CopyOfY, oldStyle.Name) }; // Copy contructor
+            var style = new SsaStyle(oldStyle) { Name = string.Format(LanguageSettings.Current.SubStationAlphaStyles.CopyOfY, oldStyle.Name) }; // Copy contructor
             var styleName = style.Name;
             if (_storageStyles.Any(p => p.Name == styleName))
             {
@@ -1886,7 +1886,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 bool doRepeat = true;
                 while (doRepeat)
                 {
-                    style.Name = string.Format(Configuration.Settings.Language.SubStationAlphaStyles.CopyXOfY, count, styleName);
+                    style.Name = string.Format(LanguageSettings.Current.SubStationAlphaStyles.CopyXOfY, count, styleName);
                     doRepeat = _storageStyles.Any(p => p.Name == styleName);
                     count++;
                 }
@@ -1906,16 +1906,16 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void buttonStorageImport_Click(object sender, EventArgs e)
         {
-            openFileDialogImport.Title = Configuration.Settings.Language.SubStationAlphaStyles.ImportStyleFromFile;
+            openFileDialogImport.Title = LanguageSettings.Current.SubStationAlphaStyles.ImportStyleFromFile;
             openFileDialogImport.InitialDirectory = Configuration.DataDirectory;
             if (_isSubStationAlpha)
             {
-                openFileDialogImport.Filter = SubStationAlpha.NameOfFormat + "|*.ssa|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
+                openFileDialogImport.Filter = SubStationAlpha.NameOfFormat + "|*.ssa|" + LanguageSettings.Current.General.AllFiles + "|*.*";
                 saveFileDialogStyle.FileName = "my_styles.ssa";
             }
             else
             {
-                openFileDialogImport.Filter = AdvancedSubStationAlpha.NameOfFormat + "|*.ass|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
+                openFileDialogImport.Filter = AdvancedSubStationAlpha.NameOfFormat + "|*.ass|" + LanguageSettings.Current.General.AllFiles + "|*.*";
                 saveFileDialogStyle.FileName = "my_styles.ass";
             }
 
@@ -1966,7 +1966,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                                 listViewStorage_SelectedIndexChanged(null, null);
                             }
 
-                            labelStatus.Text = string.Format(Configuration.Settings.Language.SubStationAlphaStyles.StyleXImportedFromFileY, styleNames, openFileDialogImport.FileName);
+                            labelStatus.Text = string.Format(LanguageSettings.Current.SubStationAlphaStyles.StyleXImportedFromFileY, styleNames, openFileDialogImport.FileName);
                             timerClearStatus.Start();
                         }
                     }
@@ -1986,7 +1986,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     var styleNames = string.Join(", ", form.ExportedStyles.ToArray());
-                    labelStatus.Text = string.Format(Configuration.Settings.Language.SubStationAlphaStyles.StyleXExportedToFileY, styleNames, saveFileDialogStyle.FileName);
+                    labelStatus.Text = string.Format(LanguageSettings.Current.SubStationAlphaStyles.StyleXExportedToFileY, styleNames, saveFileDialogStyle.FileName);
                     timerClearStatus.Start();
                 }
             }
@@ -2078,7 +2078,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 DialogResult result = DialogResult.Yes;
                 if (Configuration.Settings.General.PromptDeleteLines)
                 {
-                    result = MessageBox.Show(string.Format(Configuration.Settings.Language.SubStationAlphaStyles.OverwriteX, styleName), string.Empty, MessageBoxButtons.YesNoCancel);
+                    result = MessageBox.Show(string.Format(LanguageSettings.Current.SubStationAlphaStyles.OverwriteX, styleName), string.Empty, MessageBoxButtons.YesNoCancel);
                 }
 
                 if (result != DialogResult.Yes)
@@ -2275,7 +2275,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void setPreviewTextToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (var form = new TextPrompt(string.Empty, Configuration.Settings.Language.SubStationAlphaStyles.SetPreviewText.TrimEnd('.'), Configuration.Settings.General.PreviewAssaText))
+            using (var form = new TextPrompt(string.Empty, LanguageSettings.Current.SubStationAlphaStyles.SetPreviewText.TrimEnd('.'), Configuration.Settings.General.PreviewAssaText))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {

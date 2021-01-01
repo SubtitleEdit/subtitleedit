@@ -35,11 +35,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             labelTotal.Text = string.Empty;
             linkLabelOpenReportFolder.Text = string.Empty;
-            Text = Configuration.Settings.Language.Main.Menu.ToolBar.NetflixQualityCheck;
-            labelLanguage.Text = Configuration.Settings.Language.ChooseLanguage.Language;
-            groupBoxRules.Text = Configuration.Settings.Language.Settings.Rules;
-            checkBoxMinDuration.Text = Configuration.Settings.Language.NetflixQualityCheck.MinimumDuration;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
+            Text = LanguageSettings.Current.Main.Menu.ToolBar.NetflixQualityCheck;
+            labelLanguage.Text = LanguageSettings.Current.ChooseLanguage.Language;
+            groupBoxRules.Text = LanguageSettings.Current.Settings.Rules;
+            checkBoxMinDuration.Text = LanguageSettings.Current.NetflixQualityCheck.MinimumDuration;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
             _loading = true;
             var language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
             InitializeLanguages(language);
@@ -73,8 +73,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             checkBoxDialogHypenNoSpace.Text = !_netflixQualityController.DualSpeakersHasHyphenAndNoSpace ? "Dual Speakers: Use a hyphen with a space" : "Dual Speakers: Use a hyphen without a space";
 
-            checkBox17CharsPerSecond.Text = string.Format(Configuration.Settings.Language.NetflixQualityCheck.MaximumXCharsPerSecond, _netflixQualityController.CharactersPerSecond);
-            checkBoxMaxLineLength.Text = string.Format(Configuration.Settings.Language.NetflixQualityCheck.MaximumLineLength, _netflixQualityController.SingleLineMaxLength);
+            checkBox17CharsPerSecond.Text = string.Format(LanguageSettings.Current.NetflixQualityCheck.MaximumXCharsPerSecond, _netflixQualityController.CharactersPerSecond);
+            checkBoxMaxLineLength.Text = string.Format(LanguageSettings.Current.NetflixQualityCheck.MaximumLineLength, _netflixQualityController.SingleLineMaxLength);
         }
 
         private void InitializeLanguages(string language)
@@ -114,9 +114,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _netflixQualityController.RunChecks(_subtitle, GetAllSelectedChecks());
-            labelTotal.Text = string.Format(Configuration.Settings.Language.NetflixQualityCheck.FoundXIssues, _netflixQualityController.Records.Count);
+            labelTotal.Text = string.Format(LanguageSettings.Current.NetflixQualityCheck.FoundXIssues, _netflixQualityController.Records.Count);
             linkLabelOpenReportFolder.Left = labelTotal.Left + labelTotal.Width + 15;
-            linkLabelOpenReportFolder.Text = Configuration.Settings.Language.NetflixQualityCheck.OpenReportInFolder;
+            linkLabelOpenReportFolder.Text = LanguageSettings.Current.NetflixQualityCheck.OpenReportInFolder;
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
             foreach (var record in _netflixQualityController.Records)

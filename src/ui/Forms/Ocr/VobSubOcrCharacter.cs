@@ -21,7 +21,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            var language = Configuration.Settings.Language.VobSubOcrCharacter;
+            var language = LanguageSettings.Current.VobSubOcrCharacter;
             Text = language.Title;
             labelSubtitleImage.Text = language.SubtitleImage;
             buttonExpandSelection.Text = language.ExpandSelection;
@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             labelItalicOn.Visible = false;
             labelItalicOn2.Visible = false;
             buttonAbort.Text = language.Abort;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonSkip.Text = language.Skip;
             nordicToolStripMenuItem.Text = language.Nordic;
             spanishToolStripMenuItem.Text = language.Spanish;
@@ -132,7 +132,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                 pictureBoxLastEdit.Visible = true;
                 pictureBoxLastEdit.Image = last.Image.GetBitmap();
-                buttonLastEdit.Text = string.Format(Configuration.Settings.Language.VobSubOcrCharacter.EditLastX, last.Text);
+                buttonLastEdit.Text = string.Format(LanguageSettings.Current.VobSubOcrCharacter.EditLastX, last.Text);
                 pictureBoxLastEdit.Top = buttonLastEdit.Top - last.Image.Height + buttonLastEdit.Height;
             }
             else

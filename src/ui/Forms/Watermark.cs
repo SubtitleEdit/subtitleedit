@@ -24,13 +24,13 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            _language = Configuration.Settings.Language.Watermark;
+            _language = LanguageSettings.Current.Watermark;
             Text = _language.Title;
             groupBoxGenerate.Text = _language.GenerateWatermarkTitle;
             radioButtonSpread.Text = _language.SpreadOverEntireSubtitle;
             buttonGenerate.Text = _language.Generate;
             buttonRemove.Text = _language.Remove;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
 
             UiUtil.FixLargeFonts(this, buttonOK);
         }

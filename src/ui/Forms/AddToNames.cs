@@ -16,11 +16,11 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            Text = Configuration.Settings.Language.AddToNames.Title;
-            labelDescription.Text = Configuration.Settings.Language.AddToNames.Description;
-            labelLanguage.Text = Configuration.Settings.Language.SpellCheck.Language;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
+            Text = LanguageSettings.Current.AddToNames.Title;
+            labelDescription.Text = LanguageSettings.Current.AddToNames.Description;
+            labelLanguage.Text = LanguageSettings.Current.SpellCheck.Language;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
             FixLargeFonts();
         }
 

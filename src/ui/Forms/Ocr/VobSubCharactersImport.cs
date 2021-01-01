@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             labelInfo.Text = string.Empty;
             labelCurrentImage.Text = string.Empty;
             Text = $"Import OCR images into \"{Path.GetFileName(_existingDb.FileName)}\"";
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
         }
 
         private void VobSubCharactersImport_Shown(object sender, EventArgs e)

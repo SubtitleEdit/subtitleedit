@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            var l = Configuration.Settings.Language.ExportText;
+            var l = LanguageSettings.Current.ExportText;
             Text = l.Title;
             labelPreview.Text = l.Preview;
             groupBoxImportOptions.Text = l.ExportOptions;
@@ -56,9 +56,9 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonTimeCodeHHMMSSFF.Text = l.HHMMSSFF;
             labelTimeCodeSeparator.Text = l.TimeCodeSeparator;
             comboBoxTimeCodeSeparator.Left = labelTimeCodeSeparator.Left + labelTimeCodeSeparator.Width + 5;
-            labelEncoding.Text = Configuration.Settings.Language.Main.Controls.FileEncoding;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            buttonOK.Text = Configuration.Settings.Language.Main.Menu.File.SaveAs;
+            labelEncoding.Text = LanguageSettings.Current.Main.Controls.FileEncoding;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            buttonOK.Text = LanguageSettings.Current.Main.Menu.File.SaveAs;
 
             _loading = true;
         }
@@ -241,8 +241,8 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonOK_Click(object sender, EventArgs e)
         {
             GeneratePreview();
-            saveFileDialog1.Title = Configuration.Settings.Language.Main.ExportPlainTextAs;
-            saveFileDialog1.Filter = Configuration.Settings.Language.Main.TextFiles + "|*.txt";
+            saveFileDialog1.Title = LanguageSettings.Current.Main.ExportPlainTextAs;
+            saveFileDialog1.Filter = LanguageSettings.Current.Main.TextFiles + "|*.txt";
             if (!string.IsNullOrEmpty(_fileName))
             {
                 saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_fileName);
@@ -318,7 +318,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelEncoding.Visible = false;
             comboBoxEncoding.Visible = false;
             buttonOK.Visible = false;
-            buttonCancel.Text = Configuration.Settings.Language.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Ok;
         }
 
     }
