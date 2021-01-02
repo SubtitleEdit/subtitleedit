@@ -394,7 +394,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 if (e.Item.Selected)
                 {
-                    var subtitleFont = new Font("Tahoma", 8.25F);
+                    var subtitleFont = UiUtil.GetDefaultFont();
                     Rectangle rect = e.Bounds;
                     if (Configuration.Settings != null)
                     {
