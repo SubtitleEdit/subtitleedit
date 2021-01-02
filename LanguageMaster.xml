@@ -1265,9 +1265,10 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
       <DelayInSeconds>Delay (seconds)</DelayInSeconds>
       <OriginalText>Original text</OriginalText>
       <Previous>&lt; Pre&amp;vious</Previous>
-      <Stop>&amp;Stop</Stop>
-      <PlayCurrent>&amp;Play current</PlayCurrent>
       <Next>&amp;Next &gt;</Next>
+      <PlayCurrent>&amp;Play current</PlayCurrent>
+      <Stop>&amp;Stop</Stop>
+      <ToggleSubtitleVisibility>Toggle subtitle visibility</ToggleSubtitleVisibility>
       <Playing>Playing...</Playing>
       <RepeatingLastTime>Repeating... last time</RepeatingLastTime>
       <RepeatingXTimesLeft>Repeating... {0} times left</RepeatingXTimesLeft>
@@ -2376,11 +2377,12 @@ Continue?</RestoreDefaultSettingsMsg>
     <EditWordOnly>Edit word only</EditWordOnly>
     <AddXToNames>Add '{0}' to name list</AddXToNames>
     <AddXToUserDictionary>Add '{0}' to user dictionary</AddXToUserDictionary>
-    <AutoFixNames>Auto fix names where only casing differ</AutoFixNames>
+    <AutoFixNames>Auto fix names where only casing differs</AutoFixNames>
     <AutoFixNamesViaSuggestions>Also fix names via 'spell check suggestions'</AutoFixNamesViaSuggestions>
     <CheckOneLetterWords>Prompt for unknown one letter words</CheckOneLetterWords>
     <TreatINQuoteAsING>Treat word ending " in' " as " ing " (English only)</TreatINQuoteAsING>
     <RememberUseAlwaysList>Remember "Use always" list</RememberUseAlwaysList>
+    <LiveSpellCheck>Live spell check</LiveSpellCheck>
     <ImageText>Image text</ImageText>
     <SpellCheckCompleted>Spell check completed</SpellCheckCompleted>
     <SpellCheckAborted>Spell check aborted</SpellCheckAborted>
