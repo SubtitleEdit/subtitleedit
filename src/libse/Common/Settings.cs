@@ -15,7 +15,6 @@ namespace Nikse.SubtitleEdit.Core.Common
     // ...but the built-in serialization is too slow - so a custom (de-)serialization has been used!
 
     public class RecentFileEntry
-
     {
         public string FileName { get; set; }
         public string OriginalFileName { get; set; }
@@ -1869,6 +1868,7 @@ $HorzAlign          =   Center
         public string MainVideoClose { get; set; }
         public string MainVideoPause { get; set; }
         public string MainVideoStop { get; set; }
+        public string MainVideoToggleSubtitleVisibility { get; set; }
         public string MainVideoPlayFromJustBefore { get; set; }
         public string MainVideoPlayFromBeginning { get; set; }
         public string MainVideoPlayPauseToggle { get; set; }
@@ -6705,6 +6705,12 @@ $HorzAlign          =   Center
                     shortcuts.MainVideoStop = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainVideoToggleSubtitleVisibility");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoToggleSubtitleVisibility = subNode.InnerText;
+
+                }
                 subNode = node.SelectSingleNode("MainVideoPlayFromJustBefore");
                 if (subNode != null)
                 {
@@ -8605,6 +8611,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainVideoClose", shortcuts.MainVideoClose);
             textWriter.WriteElementString("MainVideoPause", shortcuts.MainVideoPause);
             textWriter.WriteElementString("MainVideoStop", shortcuts.MainVideoStop);
+            textWriter.WriteElementString("MainVideoToggleSubtitleVisibility", shortcuts.MainVideoToggleSubtitleVisibility);
             textWriter.WriteElementString("MainVideoPlayFromJustBefore", shortcuts.MainVideoPlayFromJustBefore);
             textWriter.WriteElementString("MainVideoPlayFromBeginning", shortcuts.MainVideoPlayFromBeginning);
             textWriter.WriteElementString("MainVideoPlayPauseToggle", shortcuts.MainVideoPlayPauseToggle);

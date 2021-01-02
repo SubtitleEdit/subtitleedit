@@ -1791,6 +1791,7 @@ namespace Nikse.SubtitleEdit.Logic
                     Next = "&Next >",
                     PlayCurrent = "&Play current",
                     Stop = "&Stop",
+                    ToggleSubtitleVisibility = "Toggle subtitle visibility",
                     Playing = "Playing...",
                     RepeatingLastTime = "Repeating... last time",
                     RepeatingXTimesLeft = "Repeating... {0} times left",

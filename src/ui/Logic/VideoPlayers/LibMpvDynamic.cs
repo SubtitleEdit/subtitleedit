@@ -428,6 +428,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             DoMpvCommand("sub-reload");
         }
 
+        public void CycleSubtitleVisibility()
+        {
+            DoMpvCommand("cycle", "sub-visibility");
+        }
+
         public void HideCursor()
         {
             _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("cursor-autohide"), GetUtf8Bytes("always"));

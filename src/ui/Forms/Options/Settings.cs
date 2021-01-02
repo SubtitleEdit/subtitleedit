@@ -1246,6 +1246,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(videoNode, language.TogglePlayPause, nameof(Configuration.Settings.Shortcuts.MainVideoPlayPauseToggle));
             AddNode(videoNode, language.Pause, nameof(Configuration.Settings.Shortcuts.MainVideoPause));
             AddNode(videoNode, LanguageSettings.Current.Main.VideoControls.Stop, nameof(Configuration.Settings.Shortcuts.MainVideoStop));
+            AddNode(videoNode, LanguageSettings.Current.Main.VideoControls.ToggleSubtitleVisibility, nameof(Configuration.Settings.Shortcuts.MainVideoToggleSubtitleVisibility));
             AddNode(videoNode, LanguageSettings.Current.Main.VideoControls.PlayFromJustBeforeText, nameof(Configuration.Settings.Shortcuts.MainVideoPlayFromJustBefore));
             AddNode(videoNode, LanguageSettings.Current.Main.VideoControls.PlayFromBeginning, nameof(Configuration.Settings.Shortcuts.MainVideoPlayFromBeginning));
             AddNode(videoNode, LanguageSettings.Current.Main.Menu.Video.ShowHideVideo, nameof(Configuration.Settings.Shortcuts.MainVideoShowHideVideo), true);

@@ -4168,6 +4168,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/VideoControls/Stop":
                     language.Main.VideoControls.Stop = reader.Value;
                     break;
+                case "Main/VideoControls/ToggleSubtitleVisibility":
+                    language.Main.VideoControls.ToggleSubtitleVisibility = reader.Value;
+                    break;
                 case "Main/VideoControls/PlayCurrent":
                     language.Main.VideoControls.PlayCurrent = reader.Value;
                     break;

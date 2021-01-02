@@ -1658,6 +1658,7 @@
                 public string OriginalText { get; set; }
                 public string Previous { get; set; }
                 public string Stop { get; set; }
+                public string ToggleSubtitleVisibility { get; set; }
                 public string PlayCurrent { get; set; }
                 public string Next { get; set; }
                 public string Playing { get; set; }
