@@ -10082,8 +10082,8 @@ namespace Nikse.SubtitleEdit.Forms
                         b = DialogSplitMerge.RemoveStartDash(b);
                     }
 
-                    currentParagraph.Text = Utilities.AutoBreakLine(a, language);
-                    newParagraph.Text = Utilities.AutoBreakLine(b, language);
+                    currentParagraph.Text = a;
+                    newParagraph.Text = b;
                 }
                 else
                 {
@@ -10281,8 +10281,8 @@ namespace Nikse.SubtitleEdit.Forms
                         oldText = originalCurrent.Text;
                         if (alternateTextIndex != null && alternateTextIndex.Value > 1 && alternateTextIndex.Value < oldText.Length - 1)
                         {
-                            originalCurrent.Text = Utilities.AutoBreakLine(oldText.Substring(0, alternateTextIndex.Value).Trim(), language);
-                            originalNew.Text = Utilities.AutoBreakLine(oldText.Substring(alternateTextIndex.Value).Trim(), language);
+                            originalCurrent.Text = oldText.Substring(0, alternateTextIndex.Value).Trim();
+                            originalNew.Text = oldText.Substring(alternateTextIndex.Value).Trim();
                             if (originalCurrent.Text.Contains("<i>", StringComparison.Ordinal) && !originalCurrent.Text.Contains("</i>", StringComparison.Ordinal) &&
                                 originalNew.Text.Contains("</i>", StringComparison.Ordinal) && !originalNew.Text.Contains("<i>", StringComparison.Ordinal))
                             {
