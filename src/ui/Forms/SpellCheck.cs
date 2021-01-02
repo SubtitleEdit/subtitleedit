@@ -164,7 +164,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ShowActiveWordWithColor(SpellCheckWord word)
         {
             richTextBoxParagraph.SelectAll();
-            richTextBoxParagraph.SelectionColor = Color.Black;
+            richTextBoxParagraph.SelectionColor = Configuration.Settings.General.UseDarkTheme ? Configuration.Settings.General.DarkThemeForeColor : Color.Black;
             richTextBoxParagraph.SelectionLength = 0;
 
             for (int i = 0; i < 10; i++)
