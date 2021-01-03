@@ -99,6 +99,8 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.panelBackground = new System.Windows.Forms.Panel();
+            this.contextMenuStripBackground = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.setAspectRatio11ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.videoPlayerContainer1 = new Nikse.SubtitleEdit.Controls.VideoPlayerContainer();
             this.pictureBoxMovableImage = new System.Windows.Forms.PictureBox();
             this.contextMenuStripMovableImage = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -119,6 +121,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.contextMenuStripListView.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.panelBackground.SuspendLayout();
+            this.contextMenuStripBackground.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMovableImage)).BeginInit();
             this.contextMenuStripMovableImage.SuspendLayout();
             this.SuspendLayout();
@@ -740,12 +743,28 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelBackground.BackColor = System.Drawing.Color.Black;
+            this.panelBackground.ContextMenuStrip = this.contextMenuStripBackground;
             this.panelBackground.Controls.Add(this.videoPlayerContainer1);
             this.panelBackground.Controls.Add(this.pictureBoxMovableImage);
             this.panelBackground.Location = new System.Drawing.Point(513, 28);
             this.panelBackground.Name = "panelBackground";
             this.panelBackground.Size = new System.Drawing.Size(638, 543);
             this.panelBackground.TabIndex = 4;
+            // 
+            // contextMenuStripBackground
+            // 
+            this.contextMenuStripBackground.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.setAspectRatio11ToolStripMenuItem});
+            this.contextMenuStripBackground.Name = "contextMenuStripBackground";
+            this.contextMenuStripBackground.Size = new System.Drawing.Size(213, 48);
+            // 
+            // setAspectRatio11ToolStripMenuItem
+            // 
+            this.setAspectRatio11ToolStripMenuItem.Name = "setAspectRatio11ToolStripMenuItem";
+            this.setAspectRatio11ToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D0)));
+            this.setAspectRatio11ToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            this.setAspectRatio11ToolStripMenuItem.Text = "Set aspect ratio 1:1";
+            this.setAspectRatio11ToolStripMenuItem.Click += new System.EventHandler(this.setAspectRatio11ToolStripMenuItem_Click);
             // 
             // videoPlayerContainer1
             // 
@@ -898,6 +917,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.panelBackground.ResumeLayout(false);
+            this.contextMenuStripBackground.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMovableImage)).EndInit();
             this.contextMenuStripMovableImage.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -985,5 +1005,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripMenuItem resizeImagesForSelectedLinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem alignmentToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripBackground;
+        private System.Windows.Forms.ToolStripMenuItem setAspectRatio11ToolStripMenuItem;
     }
 }
