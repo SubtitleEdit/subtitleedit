@@ -553,6 +553,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                 timeUpDownVideoPosition.SetAutoWidth();
                 timeUpDownVideoPositionAdjust.SetAutoWidth();
+
+                toolStripSelected.Text = string.Empty;
             }
             catch (Exception exception)
             {
