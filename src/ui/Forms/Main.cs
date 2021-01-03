@@ -4357,6 +4357,11 @@ namespace Nikse.SubtitleEdit.Forms
                 text = text.Replace("®", "(Registered Trademark)");
             }
 
+            if (encoding.GetString(encoding.GetBytes("…")) != "…")
+            {
+                text = text.Replace("…", "...");
+            }
+
             // Hyphens
             return text.Replace('\u2043', defHyphen) // ⁃ Hyphen bullet (\u2043)
                 .Replace('\u2010', defHyphen) // ‐ Hyphen (\u2010)
@@ -4371,7 +4376,6 @@ namespace Nikse.SubtitleEdit.Forms
                 .Replace('\uFE13', defColon) // ︓ Presentation Form for Vertical Colon (\uFE13)
 
                 // Others
-                .Replace("…", "...")
                 .Replace("⇒", "=>")
 
                 // Spaces
