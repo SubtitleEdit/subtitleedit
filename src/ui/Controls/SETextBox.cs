@@ -42,6 +42,7 @@ namespace Nikse.SubtitleEdit.Controls
         private SpellCheckWord _currentWord;
         private string _currentDictionary;
         private string _currentLanguage;
+        private string _uiTextBoxOldText;
 
         private static readonly char[] SplitChars = { ' ', '.', ',', '?', '!', ':', ';', '"', '“', '”', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n', '\b', '¿', '¡', '…', '—', '–', '♪', '♫', '„', '«', '»', '‹', '›', '؛', '،', '؟' };
         
@@ -737,6 +738,18 @@ namespace Nikse.SubtitleEdit.Controls
             if (_checkRtfChange)
             {
                 _checkRtfChange = false;
+
+                if (Configuration.Settings.Tools.LiveSpellCheck)
+                { 
+                    if (!string.IsNullOrEmpty(_uiTextBoxOldText)
+                        && HtmlUtil.RemoveHtmlTags(_uiTextBoxOldText, true) == HtmlUtil.RemoveHtmlTags(_uiTextBox.Text, true))
+                    {
+                        IsSpellCheckRequested = true;
+                    }
+
+                    _uiTextBoxOldText = _uiTextBox.Text;
+                }
+
                 HighlightHtmlText();
                 _checkRtfChange = true;
             }
