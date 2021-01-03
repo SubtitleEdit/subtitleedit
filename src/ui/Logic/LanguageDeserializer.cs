@@ -691,6 +691,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "BinEdit/SizeXY":
                     language.BinEdit.SizeXY = reader.Value;
                     break;
+                case "BinEdit/SetAspectRatio11":
+                    language.BinEdit.SetAspectRatio11 = reader.Value;
+                    break;
                 case "Bookmarks/EditBookmark":
                     language.Bookmarks.EditBookmark = reader.Value;
                     break;

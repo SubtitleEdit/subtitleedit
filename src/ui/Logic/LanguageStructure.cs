@@ -268,6 +268,7 @@
             public string TopAlignSelectedLines { get; set; }
             public string BottomAlignSelectedLines { get; set; }
             public string SizeXY { get; set; }
+            public string SetAspectRatio11 { get; set; }
         }
 
         public class Bookmarks
