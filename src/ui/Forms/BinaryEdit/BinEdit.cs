@@ -108,6 +108,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             adjustAllTimesForSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.ShowSelectedLinesEarlierLater;
             adjustDisplayTimeForSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.AdjustDisplayDurationForSelectedLines;
             applyDurationLimitsForSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.AdjustDisplayDurationForSelectedLines;
+            setAspectRatio11ToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.SetAspectRatio11;
 
             labelStart.Text = LanguageSettings.Current.General.StartTime;
             labelEndTime.Text = LanguageSettings.Current.General.EndTime;
@@ -1587,6 +1588,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             _videoFileName = openFileDialog1.FileName;
             UiUtil.InitializeVideoPlayerAndContainer(openFileDialog1.FileName, videoInfo, videoPlayerContainer1, VideoStartLoaded, VideoStartEnded);
             labelVideoInfo.Text = $"{videoInfo.Width}x{videoInfo.Height}, {Path.GetFileName(_videoFileName)}";
+            labelVideoInfo.BringToFront();
             subtitleListView1_SelectedIndexChanged(null, null);
         }
 
@@ -2395,6 +2397,15 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private void alignmentToolStripMenuItem_Click(object sender, EventArgs e)
         {
             AlignLines(false);
+        }
+
+        private void setAspectRatio11ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var heightAspect = GetHeightAspect();
+            var currentWidth = panelBackground.Width;
+            var desiredWidth = numericUpDownScreenWidth.Value * heightAspect;
+            var change = (int)Math.Round(desiredWidth - currentWidth);
+            Width += change;
         }
     }
 }
