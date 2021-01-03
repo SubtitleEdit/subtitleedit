@@ -553,6 +553,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                 timeUpDownVideoPosition.SetAutoWidth();
                 timeUpDownVideoPositionAdjust.SetAutoWidth();
+
+                toolStripSelected.Text = string.Empty;
             }
             catch (Exception exception)
             {
@@ -4343,6 +4345,21 @@ namespace Nikse.SubtitleEdit.Forms
                 text = text.Replace('♫', hasSingleMusicNode ? '♪' : '#');
             }
 
+            if (encoding.GetString(encoding.GetBytes("©")) != "©")
+            {
+                text = text.Replace("©", "(Copyright)");
+            }
+
+            if (encoding.GetString(encoding.GetBytes("®")) != "®")
+            {
+                text = text.Replace("®", "(Registered Trademark)");
+            }
+
+            if (encoding.GetString(encoding.GetBytes("…")) != "…")
+            {
+                text = text.Replace("…", "...");
+            }
+
             // Hyphens
             return text.Replace('\u2043', defHyphen) // ⁃ Hyphen bullet (\u2043)
                 .Replace('\u2010', defHyphen) // ‐ Hyphen (\u2010)
@@ -4357,7 +4374,6 @@ namespace Nikse.SubtitleEdit.Forms
                 .Replace('\uFE13', defColon) // ︓ Presentation Form for Vertical Colon (\uFE13)
 
                 // Others
-                .Replace("…", "...")
                 .Replace("⇒", "=>")
 
                 // Spaces
@@ -4366,9 +4382,7 @@ namespace Nikse.SubtitleEdit.Forms
                 .Replace("\uFEFF", string.Empty) // Zero Width No-Break Space
 
                 // Intellectual property
-                .Replace("\u00A9", "(Copyright)") // © copyright
                 .Replace("\u2117", "(Sound-recording Copyright)") // ℗ sound-recording copyright
-                .Replace("\u00AE", "(Registered Trademark)") // ® registered trademark
                 .Replace("\u2120", "(Service Mark)") // ℠ service mark
                 .Replace("\u2122", "(Trademark)") // ™ trademark
 

@@ -254,6 +254,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <TopAlignSelectedLines>Top align selected lines (keep horizontal position)</TopAlignSelectedLines>
     <BottomAlignSelectedLines>Bottom align selected lines (keep horizontal position)</BottomAlignSelectedLines>
     <SizeXY>Size: {0}x{1}</SizeXY>
+    <SetAspectRatio11>Set aspect ratio 1:1</SetAspectRatio11>
   </BinEdit>
   <Bookmarks>
     <EditBookmark>Edit bookmark</EditBookmark>
@@ -2376,11 +2377,12 @@ Continue?</RestoreDefaultSettingsMsg>
     <EditWordOnly>Edit word only</EditWordOnly>
     <AddXToNames>Add '{0}' to name list</AddXToNames>
     <AddXToUserDictionary>Add '{0}' to user dictionary</AddXToUserDictionary>
-    <AutoFixNames>Auto fix names where only casing differ</AutoFixNames>
+    <AutoFixNames>Auto fix names where only casing differs</AutoFixNames>
     <AutoFixNamesViaSuggestions>Also fix names via 'spell check suggestions'</AutoFixNamesViaSuggestions>
     <CheckOneLetterWords>Prompt for unknown one letter words</CheckOneLetterWords>
     <TreatINQuoteAsING>Treat word ending " in' " as " ing " (English only)</TreatINQuoteAsING>
     <RememberUseAlwaysList>Remember "Use always" list</RememberUseAlwaysList>
+    <LiveSpellCheck>Live spell check</LiveSpellCheck>
     <ImageText>Image text</ImageText>
     <SpellCheckCompleted>Spell check completed</SpellCheckCompleted>
     <SpellCheckAborted>Spell check aborted</SpellCheckAborted>

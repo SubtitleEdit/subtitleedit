@@ -399,6 +399,7 @@ namespace Nikse.SubtitleEdit.Logic
                 TopAlignSelectedLines = "Top align selected lines (keep horizontal position)",
                 BottomAlignSelectedLines = "Bottom align selected lines (keep horizontal position)",
                 SizeXY = "Size: {0}x{1}",
+                SetAspectRatio11 = "Set aspect ratio 1:1",
             };
 
             Bookmarks = new LanguageStructure.Bookmarks
