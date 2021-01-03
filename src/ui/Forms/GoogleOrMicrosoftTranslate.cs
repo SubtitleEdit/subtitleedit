@@ -15,8 +15,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private  GoogleTranslationService _googleTranslationService;
         private  MicrosoftTranslationService _microsoftTranslationService;
-        private IEnumerable<TranslationPair> _targetLanguages = new List<TranslationPair>();
-        private IEnumerable<TranslationPair> _fromLanguages = new List<TranslationPair>();
         private string _toLanguage;
         private string _fromLanguage;
 
@@ -25,7 +23,6 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-
 
             Text = LanguageSettings.Current.GoogleOrMicrosoftTranslate.Title;
             labelGoogleTranslate.Text = LanguageSettings.Current.GoogleOrMicrosoftTranslate.GoogleTranslate;
@@ -76,16 +73,11 @@ namespace Nikse.SubtitleEdit.Forms
                 fromLanguages = googleSourceLanguages.Intersect(microsoftSourceLanguages);
             }
 
-                GenericTranslate.FillComboWithLanguages(comboBoxFrom, fromLanguages);
-                GenericTranslate.FillComboWithLanguages(comboBoxTo, targetLanguages);
+            GenericTranslate.FillComboWithLanguages(comboBoxFrom, fromLanguages);
+            GenericTranslate.FillComboWithLanguages(comboBoxTo, targetLanguages);
 
-
-                GenericTranslate.SelectLanguageCode(comboBoxFrom, _fromLanguage);
-                GenericTranslate.SelectLanguageCode(comboBoxTo, _toLanguage);
-
-
-            _targetLanguages = targetLanguages;
-            _fromLanguages = fromLanguages;
+            GenericTranslate.SelectLanguageCode(comboBoxFrom, _fromLanguage);
+            GenericTranslate.SelectLanguageCode(comboBoxTo, _toLanguage);
         }
 
 
@@ -110,7 +102,6 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-
         }
 
         internal void Initialize(Paragraph paragraph)
@@ -124,7 +115,6 @@ namespace Nikse.SubtitleEdit.Forms
             _microsoftTranslationService = MicrosoftTranslationInitializer.Init(true);
 
             InitLanguageComboboxes();
-
 
             Refresh();
             Translate();
