@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
 {
     public class SingleParagraphTranslationProcessor : AbstractTranslationProcessor<Paragraph>
     {
-        public override string ToString()
+        protected override string GetName()
         {
             return "Single Paragraph";
         }

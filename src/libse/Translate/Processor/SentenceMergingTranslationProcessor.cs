@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
             }
         }
 
-        public override string ToString()
+        protected override string GetName()
         {
             return "Sentence Merging";
         }

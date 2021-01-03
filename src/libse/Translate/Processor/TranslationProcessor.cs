@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
     /// handles complex translation tasks and cares about:
     /// - input text chunking (complying translation service specific constraints)
     /// - status report & cancellation option
-    /// - how to pass the paragraphs into the translator (paragraph line hadnling)
+    /// - how to pass the paragraphs into the translator (paragraph line handling)
     /// </summary>
     public interface ITranslationProcessor
     {
@@ -42,27 +42,34 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
     /// <returns></returns>
     public delegate bool TranslationProcessCancelStatus(Dictionary<int, string> targetParagraphs);
 
-    public abstract class AbstractTranslationProcessor<T> : ITranslationProcessor where T : ITranslationBaseUnit
+    public abstract class AbstractTranslationProcessor<TTranslationBaseUnit> : ITranslationProcessor where TTranslationBaseUnit : ITranslationBaseUnit
     {
         /**
          * due to translation service constraints not all paragraphs can't submitted at once. Therefore the paragraphs must be split in multiple Chunks
          */
         private class TranslationChunk
         {
-            public readonly List<T> TranslationUnits = new List<T>();
+            public readonly List<TTranslationBaseUnit> TranslationUnits = new List<TTranslationBaseUnit>();
 
             public int TextSize => TranslationUnits.ConvertAll(e => Utilities.UrlEncode(e.Text).Length).Sum();
 
             public int ArrayLength => TranslationUnits.Count;
         }
 
-        protected abstract IEnumerable<T> ConstructTranslationBaseUnits(List<Paragraph> sourceParagraphs);
+        protected abstract IEnumerable<TTranslationBaseUnit> ConstructTranslationBaseUnits(List<Paragraph> sourceParagraphs);
 
-        protected abstract Dictionary<int,string> GetTargetParagraphs(List<T> sourceTranslationUnits, List<string> targetTexts);
+        protected abstract Dictionary<int,string> GetTargetParagraphs(List<TTranslationBaseUnit> sourceTranslationUnits, List<string> targetTexts);
+
+        protected abstract string GetName();
+
+        public override string ToString()
+        {
+            return GetName();
+        }
 
         public List<string> Translate(ITranslationService translationService, string sourceLanguageIsoCode, string targetLanguageIsoCode, List<Paragraph> sourceParagraphs, TranslationProcessCancelStatus processCancelStatus)
         {
-            IEnumerable<T> translationBaseUnits =ConstructTranslationBaseUnits(sourceParagraphs);
+            IEnumerable<TTranslationBaseUnit> translationBaseUnits =ConstructTranslationBaseUnits(sourceParagraphs);
             var translationChunks = BuildTranslationChunks(translationBaseUnits, translationService);
 
             Dictionary<int,string> targetParagraphs=new Dictionary<int, string>();
@@ -85,7 +92,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
 
         public abstract List<string> GetSupportedLanguages();
 
-        private IEnumerable<TranslationChunk> BuildTranslationChunks(IEnumerable<T> translationUnits, ITranslationService translationService)
+        private IEnumerable<TranslationChunk> BuildTranslationChunks(IEnumerable<TTranslationBaseUnit> translationUnits, ITranslationService translationService)
         {
             int maxTextSize = translationService.GetMaxTextSize();
             int maximumRequestArrayLength = translationService.GetMaximumRequestArraySize();
