@@ -240,6 +240,7 @@
             this.groupBoxSpellCheck = new System.Windows.Forms.GroupBox();
             this.checkBoxSpellCheckAutoChangeNamesViaSuggestions = new System.Windows.Forms.CheckBox();
             this.checkBoxUseAlwaysToFile = new System.Windows.Forms.CheckBox();
+            this.checkBoxLiveSpellCheck = new System.Windows.Forms.CheckBox();
             this.checkBoxTreatINQuoteAsING = new System.Windows.Forms.CheckBox();
             this.checkBoxSpellCheckOneLetterWords = new System.Windows.Forms.CheckBox();
             this.checkBoxSpellCheckAutoChangeNames = new System.Windows.Forms.CheckBox();
@@ -3120,6 +3121,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxSpellCheckAutoChangeNamesViaSuggestions);
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxUseAlwaysToFile);
+            this.groupBoxSpellCheck.Controls.Add(this.checkBoxLiveSpellCheck);
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxTreatINQuoteAsING);
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxSpellCheckOneLetterWords);
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxSpellCheckAutoChangeNames);
@@ -3133,7 +3135,7 @@
             // checkBoxSpellCheckAutoChangeNamesViaSuggestions
             // 
             this.checkBoxSpellCheckAutoChangeNamesViaSuggestions.AutoSize = true;
-            this.checkBoxSpellCheckAutoChangeNamesViaSuggestions.Location = new System.Drawing.Point(30, 43);
+            this.checkBoxSpellCheckAutoChangeNamesViaSuggestions.Location = new System.Drawing.Point(30, 40);
             this.checkBoxSpellCheckAutoChangeNamesViaSuggestions.Name = "checkBoxSpellCheckAutoChangeNamesViaSuggestions";
             this.checkBoxSpellCheckAutoChangeNamesViaSuggestions.Size = new System.Drawing.Size(184, 17);
             this.checkBoxSpellCheckAutoChangeNamesViaSuggestions.TabIndex = 1;
@@ -3143,30 +3145,40 @@
             // checkBoxUseAlwaysToFile
             // 
             this.checkBoxUseAlwaysToFile.AutoSize = true;
-            this.checkBoxUseAlwaysToFile.Location = new System.Drawing.Point(15, 118);
+            this.checkBoxUseAlwaysToFile.Location = new System.Drawing.Point(15, 102);
             this.checkBoxUseAlwaysToFile.Name = "checkBoxUseAlwaysToFile";
             this.checkBoxUseAlwaysToFile.Size = new System.Drawing.Size(192, 17);
-            this.checkBoxUseAlwaysToFile.TabIndex = 12;
+            this.checkBoxUseAlwaysToFile.TabIndex = 4;
             this.checkBoxUseAlwaysToFile.Text = "Remember \"Use always\" / \"Skip all\"";
             this.checkBoxUseAlwaysToFile.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxLiveSpellCheck
+            // 
+            this.checkBoxLiveSpellCheck.AutoSize = true;
+            this.checkBoxLiveSpellCheck.Location = new System.Drawing.Point(15, 122);
+            this.checkBoxLiveSpellCheck.Name = "checkBoxLiveSpellCheck";
+            this.checkBoxLiveSpellCheck.Size = new System.Drawing.Size(192, 17);
+            this.checkBoxLiveSpellCheck.TabIndex = 5;
+            this.checkBoxLiveSpellCheck.Text = "Live spell check";
+            this.checkBoxLiveSpellCheck.UseVisualStyleBackColor = true;
             // 
             // checkBoxTreatINQuoteAsING
             // 
             this.checkBoxTreatINQuoteAsING.AutoSize = true;
-            this.checkBoxTreatINQuoteAsING.Location = new System.Drawing.Point(15, 95);
+            this.checkBoxTreatINQuoteAsING.Location = new System.Drawing.Point(15, 82);
             this.checkBoxTreatINQuoteAsING.Name = "checkBoxTreatINQuoteAsING";
             this.checkBoxTreatINQuoteAsING.Size = new System.Drawing.Size(253, 17);
-            this.checkBoxTreatINQuoteAsING.TabIndex = 8;
+            this.checkBoxTreatINQuoteAsING.TabIndex = 3;
             this.checkBoxTreatINQuoteAsING.Text = "Treat word ending \" in\' \" as \" ing \" (English only)";
             this.checkBoxTreatINQuoteAsING.UseVisualStyleBackColor = true;
             // 
             // checkBoxSpellCheckOneLetterWords
             // 
             this.checkBoxSpellCheckOneLetterWords.AutoSize = true;
-            this.checkBoxSpellCheckOneLetterWords.Location = new System.Drawing.Point(15, 72);
+            this.checkBoxSpellCheckOneLetterWords.Location = new System.Drawing.Point(15, 62);
             this.checkBoxSpellCheckOneLetterWords.Name = "checkBoxSpellCheckOneLetterWords";
             this.checkBoxSpellCheckOneLetterWords.Size = new System.Drawing.Size(205, 17);
-            this.checkBoxSpellCheckOneLetterWords.TabIndex = 4;
+            this.checkBoxSpellCheckOneLetterWords.TabIndex = 2;
             this.checkBoxSpellCheckOneLetterWords.Text = "Prompt for unknown one letter words";
             this.checkBoxSpellCheckOneLetterWords.UseVisualStyleBackColor = true;
             // 
@@ -3177,7 +3189,7 @@
             this.checkBoxSpellCheckAutoChangeNames.Name = "checkBoxSpellCheckAutoChangeNames";
             this.checkBoxSpellCheckAutoChangeNames.Size = new System.Drawing.Size(216, 17);
             this.checkBoxSpellCheckAutoChangeNames.TabIndex = 0;
-            this.checkBoxSpellCheckAutoChangeNames.Text = "Auto fix names where only casing differ";
+            this.checkBoxSpellCheckAutoChangeNames.Text = "Auto fix names where only casing differs";
             this.checkBoxSpellCheckAutoChangeNames.UseVisualStyleBackColor = true;
             // 
             // groupBoxFixCommonErrors
@@ -5347,6 +5359,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.CheckBox checkBoxAutoSave;
         private System.Windows.Forms.CheckBox checkBoxUseAlwaysToFile;
+        private System.Windows.Forms.CheckBox checkBoxLiveSpellCheck;
         private System.Windows.Forms.Label labelOptimalCharsPerSecond;
         private System.Windows.Forms.NumericUpDown numericUpDownOptimalCharsSec;
         private System.Windows.Forms.Button buttonEditProfile;

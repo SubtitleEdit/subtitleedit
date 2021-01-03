@@ -287,11 +287,19 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
-            if (c is SubtitleListView lv)
+            if (c is SubtitleListView seLV)
             {
+                seLV.OwnerDraw = true;
+                seLV.DrawColumnHeader += ListView_DrawColumnHeader;
+                seLV.GridLines = Configuration.Settings.General.DarkThemeShowListViewGridLines;
+            }
+            else if (c is ListView lv)
+            {
+                lv.GridLines = false;
                 lv.OwnerDraw = true;
-                lv.DrawColumnHeader += lv_DrawColumnHeader;
-                lv.GridLines = Configuration.Settings.General.DarkThemeShowListViewGridLines;
+                lv.DrawItem += ListView_DrawItem;
+                lv.DrawSubItem += ListView_DrawSubItem;
+                lv.DrawColumnHeader += ListView_DrawColumnHeader;
             }
         }
 
@@ -345,12 +353,104 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        private static void lv_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
+        private static void ListView_DrawItem(object sender, DrawListViewItemEventArgs e)
         {
-            if (sender is SubtitleListView lv && lv.RightToLeftLayout)
+            var lv = sender as ListView;
+            if (!lv.Focused && (e.State & ListViewItemStates.Selected) != 0)
             {
-                // until we find a solution for drawing it in RTL
+                if (e.Item.Focused)
+                {
+                    e.DrawFocusRectangle();
+                }
+            }
+            else
+            {
+                e.DrawDefault = true;
+            }
+        }
+
+        private static void ListView_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
+        {
+            var lv = sender as ListView;
+            Color backgroundColor = lv.Items[e.ItemIndex].SubItems[e.ColumnIndex].BackColor;
+            Color subBackgroundColor = Color.FromArgb(backgroundColor.A, Math.Max(backgroundColor.R - 39, 0), Math.Max(backgroundColor.G - 39, 0), Math.Max(backgroundColor.B - 39, 0));
+            if (lv.Focused && backgroundColor == BackColor || lv.RightToLeftLayout)
+            {
+                e.DrawDefault = true;
                 return;
+            }
+
+            using (var sf = new StringFormat())
+            {
+                switch (e.Header.TextAlign)
+                {
+                    case HorizontalAlignment.Center:
+                        sf.Alignment = StringAlignment.Center;
+                        break;
+                    case HorizontalAlignment.Right:
+                        sf.Alignment = StringAlignment.Far;
+                        break;
+                }
+
+                if (e.Item.Selected)
+                {
+                    var subtitleFont = UiUtil.GetDefaultFont();
+                    Rectangle rect = e.Bounds;
+                    if (Configuration.Settings != null)
+                    {
+                        backgroundColor = backgroundColor == BackColor ? Configuration.Settings.Tools.ListViewUnfocusedSelectedColor : subBackgroundColor;
+                        using (var sb = new SolidBrush(backgroundColor))
+                        {
+                            e.Graphics.FillRectangle(sb, rect);
+                        }
+                    }
+                    else
+                    {
+                        e.Graphics.FillRectangle(Brushes.LightBlue, rect);
+                    }
+
+                    int addX = 0;
+
+                    if (e.ColumnIndex == 0 && lv.CheckBoxes)
+                    {
+                        addX = 16;
+                        var checkBoxState = e.Item.Checked ? System.Windows.Forms.VisualStyles.CheckBoxState.CheckedNormal : System.Windows.Forms.VisualStyles.CheckBoxState.UncheckedNormal;
+                        CheckBoxRenderer.DrawCheckBox(e.Graphics, new Point(e.Bounds.X + 4, e.Bounds.Y + 2), checkBoxState);
+                    }
+
+                    if (lv.Columns[e.ColumnIndex].TextAlign == HorizontalAlignment.Right)
+                    {
+                        var stringWidth = (int)e.Graphics.MeasureString(e.Item.SubItems[e.ColumnIndex].Text, subtitleFont).Width;
+                        TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, subtitleFont, new Point(e.Bounds.Right - stringWidth - 7, e.Bounds.Top + 2), e.Item.ForeColor, TextFormatFlags.NoPrefix);
+                    }
+                    else
+                    {
+                        TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, subtitleFont, new Point(e.Bounds.Left + 3 + addX, e.Bounds.Top + 2), e.Item.ForeColor, TextFormatFlags.NoPrefix);
+                    }
+                }
+                else
+                {
+                    e.DrawDefault = true;
+                }
+            }
+        }
+
+        private static void ListView_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
+        {
+            if (sender is ListView lv && lv.RightToLeftLayout)
+            {
+                // Until we find a solution for drawing it in RTL
+                return;
+            }
+
+            int addY;
+            if (sender is SubtitleListView)
+            {
+                addY = 0;
+            }
+            else
+            {
+                addY = 4;
             }
 
             e.DrawDefault = false;
@@ -372,7 +472,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             using (var fc = new SolidBrush(ForeColor))
             {
-                e.Graphics.DrawString(e.Header.Text, e.Font, fc, e.Bounds.X + 3, e.Bounds.Y, strFormat);
+                e.Graphics.DrawString(e.Header.Text, e.Font, fc, e.Bounds.X + 3, e.Bounds.Y + addY, strFormat);
                 if (e.ColumnIndex != 0)
                 {
                     e.Graphics.DrawLine(new Pen(ForeColor), e.Bounds.X, e.Bounds.Y, e.Bounds.X, e.Bounds.Height);

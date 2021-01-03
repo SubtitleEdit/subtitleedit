@@ -464,6 +464,12 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelText = new System.Windows.Forms.Label();
             this.textBoxListViewTextAlternate = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.contextMenuStripTextBoxListView = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripSeparatorSpellCheckSuggestions = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItemSpellCheckSkipOnce = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemSpellCheckSkipAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemSpellCheckAddToDictionary = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemSpellCheckAddToNames = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparatorSpellCheck = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemWebVttVoice = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorWebVTT = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemSplitTextAtCursor = new System.Windows.Forms.ToolStripMenuItem();
@@ -3188,6 +3194,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // panelMode
             // 
+            this.panelMode.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelMode.Controls.Add(this.buttonModeTranslate);
             this.panelMode.Controls.Add(this.buttonModeCreate);
             this.panelMode.Controls.Add(this.buttonModeAdjust);
@@ -4507,6 +4514,12 @@ namespace Nikse.SubtitleEdit.Forms
             // contextMenuStripTextBoxListView
             // 
             this.contextMenuStripTextBoxListView.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripSeparatorSpellCheckSuggestions,
+            this.toolStripMenuItemSpellCheckSkipOnce,
+            this.toolStripMenuItemSpellCheckSkipAll,
+            this.toolStripMenuItemSpellCheckAddToDictionary,
+            this.toolStripMenuItemSpellCheckAddToNames,
+            this.toolStripSeparatorSpellCheck,
             this.toolStripMenuItemWebVttVoice,
             this.toolStripSeparatorWebVTT,
             this.toolStripMenuItemSplitTextAtCursor,
@@ -4526,8 +4539,53 @@ namespace Nikse.SubtitleEdit.Forms
             this.contextMenuStripTextBoxListView.Name = "contextMenuStripTextBoxListView";
             this.contextMenuStripTextBoxListView.Size = new System.Drawing.Size(274, 340);
             this.contextMenuStripTextBoxListView.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
+            this.contextMenuStripTextBoxListView.Closing += new System.Windows.Forms.ToolStripDropDownClosingEventHandler(this.contextMenuStripTextBoxListViewClosing);
             this.contextMenuStripTextBoxListView.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripTextBoxListViewOpening);
             this.contextMenuStripTextBoxListView.Opened += new System.EventHandler(this.MenuOpened);
+            // 
+            // toolStripSeparatorSpellCheckSuggestions
+            // 
+            this.toolStripSeparatorSpellCheckSuggestions.Name = "toolStripSeparatorSpellCheckSuggestions";
+            this.toolStripSeparatorSpellCheckSuggestions.Size = new System.Drawing.Size(270, 6);
+            this.toolStripSeparatorSpellCheckSuggestions.Visible = false;
+            // 
+            // toolStripMenuItemSpellCheckSkipOnce
+            // 
+            this.toolStripMenuItemSpellCheckSkipOnce.Name = "toolStripMenuItemSpellCheckSkipOnce";
+            this.toolStripMenuItemSpellCheckSkipOnce.Size = new System.Drawing.Size(273, 22);
+            this.toolStripMenuItemSpellCheckSkipOnce.Text = "Skip once";
+            this.toolStripMenuItemSpellCheckSkipOnce.Visible = false;
+            this.toolStripMenuItemSpellCheckSkipOnce.Click += new System.EventHandler(this.toolStripMenuItemSpellCheckSkipOnce_Click);
+            // 
+            // toolStripMenuItemSpellCheckSkipAll
+            // 
+            this.toolStripMenuItemSpellCheckSkipAll.Name = "toolStripMenuItemSpellCheckSkipAll";
+            this.toolStripMenuItemSpellCheckSkipAll.Size = new System.Drawing.Size(273, 22);
+            this.toolStripMenuItemSpellCheckSkipAll.Text = "Skip all";
+            this.toolStripMenuItemSpellCheckSkipAll.Visible = false;
+            this.toolStripMenuItemSpellCheckSkipAll.Click += new System.EventHandler(this.toolStripMenuItemSpellCheckSkipAll_Click);
+            // 
+            // toolStripMenuItemSpellCheckAddToDictionary
+            // 
+            this.toolStripMenuItemSpellCheckAddToDictionary.Name = "toolStripMenuItemSpellCheckAddToDictionary";
+            this.toolStripMenuItemSpellCheckAddToDictionary.Size = new System.Drawing.Size(273, 22);
+            this.toolStripMenuItemSpellCheckAddToDictionary.Text = "Add to dictionary";
+            this.toolStripMenuItemSpellCheckAddToDictionary.Visible = false;
+            this.toolStripMenuItemSpellCheckAddToDictionary.Click += new System.EventHandler(this.toolStripMenuItemSpellCheckAddToDictionary_Click);
+            // 
+            // toolStripMenuItemSpellCheckAddToNames
+            // 
+            this.toolStripMenuItemSpellCheckAddToNames.Name = "toolStripMenuItemSpellCheckAddToNames";
+            this.toolStripMenuItemSpellCheckAddToNames.Size = new System.Drawing.Size(273, 22);
+            this.toolStripMenuItemSpellCheckAddToNames.Text = "Add to names";
+            this.toolStripMenuItemSpellCheckAddToNames.Visible = false;
+            this.toolStripMenuItemSpellCheckAddToNames.Click += new System.EventHandler(this.toolStripMenuItemSpellCheckAddToNames_Click);
+            // 
+            // toolStripSeparatorSpellCheck
+            // 
+            this.toolStripSeparatorSpellCheck.Name = "toolStripSeparatorSpellCheck";
+            this.toolStripSeparatorSpellCheck.Size = new System.Drawing.Size(270, 6);
+            this.toolStripSeparatorSpellCheck.Visible = false;
             // 
             // toolStripMenuItemWebVttVoice
             // 
@@ -5608,6 +5666,12 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem copyOriginalTextToCurrentToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMergeDuplicateText;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemWebVTT;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparatorSpellCheckSuggestions;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSpellCheckSkipOnce;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSpellCheckSkipAll;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSpellCheckAddToDictionary;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSpellCheckAddToNames;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparatorSpellCheck;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemWebVttVoice;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemPreview;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorWebVTT;

@@ -220,7 +220,8 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
             var count = GetFindDialogHelper(0).FindCount(_subtitle, checkBoxWholeWord.Checked);
-            labelCount.ForeColor = count > 0 ? Color.Blue : Color.Red;
+            var colorIfFound = Configuration.Settings.General.UseDarkTheme ? Color.FromArgb(9, 128, 204) : Color.Blue;
+            labelCount.ForeColor = count > 0 ? colorIfFound : Color.Red;
             labelCount.Text = count == 1 ? LanguageSettings.Current.FindDialog.OneMatch : string.Format(LanguageSettings.Current.FindDialog.XNumberOfMatches, count);
         }
 

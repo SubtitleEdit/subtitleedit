@@ -1,14 +1,23 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
+using Nikse.SubtitleEdit.Core.Interfaces;
+using Nikse.SubtitleEdit.Core.SpellCheck;
+using Nikse.SubtitleEdit.Forms;
+using Nikse.SubtitleEdit.Logic.SpellCheck;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Controls
 {
     /// <summary>
     /// TextBox that can be either a normal text box or a rich text box.
     /// </summary>
-    public sealed class SETextBox : Panel
+    public sealed class SETextBox : Panel, IDoSpell
     {
         public new event EventHandler TextChanged;
         public new event KeyEventHandler KeyDown;
@@ -23,6 +32,40 @@ namespace Nikse.SubtitleEdit.Controls
         private RichTextBox _uiTextBox;
         private SimpleTextBox _simpleTextBox;
         private int _mouseMoveSelectionLength;
+
+        private Hunspell _hunspell;
+        private SpellCheckWordLists _spellCheckWordLists;
+        private List<SpellCheckWord> _words;
+        private List<SpellCheckWord> _wrongWords;
+        private List<string> _skipAllList;
+        private HashSet<string> _skipOnceList;
+        private SpellCheckWord _currentWord;
+        private string _currentDictionary;
+        private string _currentLanguage;
+
+        private static readonly char[] SplitChars = { ' ', '.', ',', '?', '!', ':', ';', '"', '“', '”', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n', '\b', '¿', '¡', '…', '—', '–', '♪', '♫', '„', '«', '»', '‹', '›', '؛', '،', '؟' };
+        
+        public int CurrentLineIndex { get; set; }
+        public bool IsWrongWord { get; set; }
+        public bool IsSpellCheckerInitialized { get; set; }
+        public bool IsDictionaryDownloaded { get; set; } = true;
+        public bool IsSpellCheckRequested { get; set; } = false;
+
+        public class SuggestionParameter
+        {
+            public string InputWord { get; set; }
+            public List<string> Suggestions { get; set; }
+            public Hunspell Hunspell { get; set; }
+            public bool Success { get; set; }
+
+            public SuggestionParameter(string word, Hunspell hunspell)
+            {
+                InputWord = word;
+                Suggestions = new List<string>();
+                Hunspell = hunspell;
+                Success = false;
+            }
+        }
 
         public SETextBox()
         {
@@ -65,6 +108,9 @@ namespace Nikse.SubtitleEdit.Controls
                 InitializeBackingControl(_uiTextBox);
 
                 _uiTextBox.TextChanged += TextChangedHighlight;
+                _uiTextBox.KeyPress += UiTextBox_KeyPress;
+                _uiTextBox.KeyDown += UiTextBox_KeyDown;
+                _uiTextBox.MouseDown += UiTextBox_MouseDown;
                 // avoid selection when centered and clicking to the left
                 _uiTextBox.MouseDown += (sender, args) =>
                 {
@@ -109,6 +155,12 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                     else if (args.KeyData == Keys.Right && _uiTextBox.SelectionStart >= _uiTextBox.Text.Length)
                     {
+                        if (Configuration.Settings.Tools.LiveSpellCheck)
+                        {
+                            IsSpellCheckRequested = true;
+                            TextChangedHighlight(this, EventArgs.Empty);
+                        }
+
                         args.SuppressKeyPress = true;
                     }
                     else if (args.KeyData == Keys.Down && _uiTextBox.SelectionStart >= _uiTextBox.Text.Length)
@@ -355,17 +407,7 @@ namespace Nikse.SubtitleEdit.Controls
                         return;
                     }
 
-                    var text = _uiTextBox.Text;
-                    var extra = 0;
-                    for (int i = _uiTextBox.SelectionStart; i < target && i < text.Length; i++)
-                    {
-                        if (text[i] == '\n')
-                        {
-                            extra++;
-                        }
-                    }
-
-                    _uiTextBox.SelectionLength = value - extra;
+                    _uiTextBox.SelectionLength = GetIndexWithLineBreak(value);
                 }
             }
         }
@@ -554,6 +596,21 @@ namespace Nikse.SubtitleEdit.Controls
                 ResumeLayout(false);
                 _uiTextBox.Rtf = _richTextBoxTemp.Rtf;
             }
+        }
+
+        private int GetIndexWithLineBreak(int index)
+        {
+            var text = _uiTextBox.Text;
+            var extra = 0;
+            for (int i = 0; i < index && i < text.Length; i++)
+            {
+                if (text[i] == '\n')
+                {
+                    extra++;
+                }
+            }
+
+            return index - extra;
         }
 
         public int GetCharIndexFromPosition(Point pt)
@@ -808,6 +865,21 @@ namespace Nikse.SubtitleEdit.Controls
                 _richTextBoxTemp.SelectionAlignment = HorizontalAlignment.Center;
             }
 
+            if (Configuration.Settings.Tools.LiveSpellCheck)
+            {
+                DoLiveSpellCheck();
+                if (_wrongWords?.Count > 0)
+                {
+                    foreach (var wrongWord in _wrongWords)
+                    {
+                        _richTextBoxTemp.Select(GetIndexWithLineBreak(wrongWord.Index), wrongWord.Length);
+                        _richTextBoxTemp.SelectionColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                    }
+                }
+
+                IsSpellCheckRequested = false;
+            }
+
             _richTextBoxTemp.ResumeLayout(false);
 
             if (_uiTextBox.Text.Length != text.Length)
@@ -910,5 +982,438 @@ namespace Nikse.SubtitleEdit.Controls
                 _richTextBoxTemp.SelectionBackColor = Color.FromArgb(byte.MaxValue - c.R, byte.MaxValue - c.G, byte.MaxValue - c.B, byte.MaxValue - c.R);
             }
         }
+
+        #region LiveSpellCheck
+
+        public async Task CheckForLanguageChange(Subtitle subtitle)
+        {
+            var detectedLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
+            if (_currentLanguage != detectedLanguage)
+            {
+                DisposeHunspellAndDictionaries();
+                await InitializeLiveSpellCheck(subtitle, CurrentLineIndex);
+            }
+        }
+
+        public async Task InitializeLiveSpellCheck(Subtitle subtitle, int lineNumber)
+        {
+            if (_uiTextBox is null || lineNumber < 0)
+            {
+                return;
+            }
+
+            if (_spellCheckWordLists is null && _hunspell is null)
+            {
+                var detectedLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
+                var availableDictionaries = Utilities.GetDictionaryLanguagesCultureNeutral();
+                var isDictionaryAvailable = false;
+                foreach (var availableDictionary in availableDictionaries)
+                {
+                    if (availableDictionary.Contains($"[{detectedLanguage}]"))
+                    {
+                        isDictionaryAvailable = true;
+                        break;
+                    }
+                }
+
+                if (isDictionaryAvailable)
+                {
+                    var languageName = LanguageAutoDetect.AutoDetectLanguageName(string.Empty, subtitle);
+                    if (languageName.Split(new char[] { '_', '-' })[0] != detectedLanguage)
+                    {
+                        return;
+                    }
+
+                    await LoadDictionariesAsync(languageName);
+                    IsSpellCheckerInitialized = true;
+                    IsSpellCheckRequested = true;
+                    TextChangedHighlight(this, EventArgs.Empty);
+                }
+                else
+                {
+                    IsDictionaryDownloaded = false;
+                    using (var gd = new GetDictionaries())
+                    {
+                        if (gd.ShowDialog(this) == DialogResult.OK)
+                        {
+                            await InitializeLiveSpellCheck(subtitle, lineNumber);
+                        }
+                    }
+                }
+
+                _currentLanguage = detectedLanguage;
+            }
+        }
+
+        private async Task LoadDictionariesAsync(string languageName)
+        {
+            await Task.Run(() => LoadDictionaries(languageName));
+        }
+
+        private void LoadDictionaries(string languageName)
+        {
+            var dictionaryFolder = Utilities.DictionaryFolder;
+            string dictionary = Utilities.DictionaryFolder + languageName;
+            _spellCheckWordLists = new SpellCheckWordLists(dictionaryFolder, languageName, this);
+            _skipAllList = new List<string>();
+            _skipOnceList = new HashSet<string>();
+            LoadHunspell(dictionary);
+        }
+
+        private void LoadHunspell(string dictionary)
+        {
+            _currentDictionary = dictionary;
+            _hunspell?.Dispose();
+            _hunspell = null;
+            _hunspell = Hunspell.GetHunspell(dictionary);
+        }
+
+        public void DisposeHunspellAndDictionaries()
+        {
+            if (IsSpellCheckerInitialized)
+            {
+                _skipAllList = null;
+                _skipOnceList = null;
+                _spellCheckWordLists = null;
+                _words = null;
+                _wrongWords = null;
+                _currentWord = null;
+                _currentDictionary = null;
+                _currentLanguage = null;
+                _hunspell?.Dispose();
+                _hunspell = null;
+                IsWrongWord = false;
+                IsSpellCheckerInitialized = false;
+
+                if (Configuration.Settings.General.SubtitleTextBoxSyntaxColor)
+                {
+                    TextChangedHighlight(this, EventArgs.Empty);
+                }
+            }
+        }
+
+        public void DoLiveSpellCheck()
+        {
+            if (IsSpellCheckerInitialized && IsSpellCheckRequested)
+            {
+                _words = GetWords(Text);
+                SetWrongWords();
+            }
+        }
+
+        private List<SpellCheckWord> GetWords(string s)
+        {
+            s = _spellCheckWordLists.ReplaceHtmlTagsWithBlanks(s);
+            s = _spellCheckWordLists.ReplaceAssTagsWithBlanks(s);
+            s = _spellCheckWordLists.ReplaceKnownWordsOrNamesWithBlanks(s);
+            return SpellCheckWordLists.Split(s);
+        }
+
+        private void SetWrongWords()
+        {
+            _wrongWords = new List<SpellCheckWord>();
+
+            for (int i = 0; i < _words.Count; i++)
+            {
+                var currentWord = _words[i];
+                var currentWordText = _words[i].Text;
+                int minLength = 2;
+                if (Configuration.Settings.Tools.CheckOneLetterWords)
+                {
+                    minLength = 1;
+                }
+
+                string key = CurrentLineIndex + "-" + currentWord.Text + "-" + currentWord.Index;
+                if (DoSpell(currentWordText) || Utilities.IsNumber(currentWordText) || _skipAllList.Contains(currentWordText)
+                    || _skipOnceList.Contains(key) || _spellCheckWordLists.HasUserWord(currentWordText) || _spellCheckWordLists.HasName(currentWordText)
+                    || currentWordText.Length < minLength || currentWordText == "&")
+                {
+                    continue;
+                }
+
+                string prefix = string.Empty;
+                string postfix = string.Empty;
+                if (currentWordText.RemoveControlCharacters().Trim().Length >= minLength)
+                {
+                    if (currentWordText.Length > 0)
+                    {
+                        var trimChars = "'`*#\u200E\u200F\u202A\u202B\u202C\u202D\u202E\u200B\uFEFF";
+                        var charHit = true;
+                        while (charHit)
+                        {
+                            charHit = false;
+                            foreach (char c in trimChars)
+                            {
+                                if (currentWordText.StartsWith(c))
+                                {
+                                    prefix += c;
+                                    currentWordText = currentWordText.Substring(1);
+                                    charHit = true;
+                                }
+                                if (currentWordText.EndsWith(c))
+                                {
+                                    postfix = c + postfix;
+                                    currentWordText = currentWordText.Remove(currentWordText.Length - 1);
+                                    charHit = true;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (prefix == "'" && currentWordText.Length >= 1 && (DoSpell(prefix + currentWordText) || _spellCheckWordLists.HasUserWord(prefix + currentWordText)))
+                {
+                    continue;
+                }
+                else if (currentWordText.Length > 1)
+                {
+                    if ("`'".Contains(currentWordText[currentWordText.Length - 1]) && DoSpell(currentWordText.TrimEnd('\'').TrimEnd('`')))
+                    {
+                        continue;
+                    }
+
+                    if (currentWordText.EndsWith("'s", StringComparison.Ordinal) && currentWordText.Length > 4
+                    && DoSpell(currentWordText.TrimEnd('s').TrimEnd('\'')))
+                    {
+                        continue;
+                    }
+
+                    if (currentWordText.EndsWith('\'') && DoSpell(currentWordText.TrimEnd('\'')))
+                    {
+                        continue;
+                    }
+
+                    string removeUnicode = currentWordText.Replace("\u200b", string.Empty); // zero width space
+                    removeUnicode = removeUnicode.Replace("\u2060", string.Empty); // word joiner
+                    removeUnicode = removeUnicode.Replace("\ufeff", string.Empty); // zero width no-break space
+                    if (DoSpell(removeUnicode))
+                    {
+                        continue;
+                    }
+
+                    if (i > 0 && i < _words.Count && _words.ElementAtOrDefault(i + 1) != null &&
+                        _words[i - 1].Text.ToLowerInvariant() == "www" &&
+                        (_words[i + 1].Text.ToLowerInvariant() == "com" ||
+                         _words[i + 1].Text.ToLowerInvariant() == "org" ||
+                         _words[i + 1].Text.ToLowerInvariant() == "net") &&
+                        Text.IndexOf(_words[i - 1].Text + "." + currentWordText + "." + 
+                                     _words[i + 1].Text, StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        continue; // do not spell check urls
+                    }
+
+                    if (_currentLanguage == "ar")
+                    {
+                        var trimmed = currentWordText.Trim('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', ',', '،');
+                        if (trimmed != currentWordText)
+                        {
+                            if (_spellCheckWordLists.HasName(trimmed) || _skipAllList.Contains(trimmed.ToUpperInvariant())
+                                || _spellCheckWordLists.HasUserWord(trimmed) || DoSpell(trimmed))
+                            {
+                                continue;
+                            }
+                        }
+                    }
+
+                    // check if dash concatenated word with previous or next word is in spell check dictionary
+                    if (i > 0 && (Text[currentWord.Index - 1] == '-' || Text[currentWord.Index - 1] == '‑'))
+                    {
+                        var wordWithDash = _words[i - 1].Text + "-" + currentWordText;
+                        if (DoSpell(wordWithDash))
+                        {
+                            continue;
+                        }
+
+                        wordWithDash = _words[i - 1].Text + "‑" + currentWordText; // non break hyphen
+                        if (DoSpell(wordWithDash) || _spellCheckWordLists.HasUserWord(wordWithDash)
+                        || _spellCheckWordLists.HasUserWord(wordWithDash.Replace("‑", "-")) || _spellCheckWordLists.HasUserWord("-" + currentWordText))
+                        {
+                            continue;
+                        }
+
+                    }
+
+                    if (i < _words.Count - 1 && _words[i + 1].Index - 1 < Text.Length &&
+                        (Text[_words[i + 1].Index - 1] == '-' || Text[_words[i + 1].Index - 1] == '‑'))
+                    {
+                        var wordWithDash = currentWordText + "-" + _words[i + 1].Text;
+                        if (DoSpell(wordWithDash))
+                        {
+                            continue;
+                        }
+
+                        wordWithDash = currentWordText + "‑" + _words[i + 1].Text; // non break hyphen
+                        if (DoSpell(wordWithDash) || _spellCheckWordLists.HasUserWord(wordWithDash) || _spellCheckWordLists.HasUserWord(wordWithDash.Replace("‑", "-")))
+                        {
+                            continue;
+                        }
+                    }
+                }
+                else
+                {
+                    if (currentWordText == "'")
+                    {
+                        continue;
+                    }
+                    else if (_currentLanguage == "en " && (currentWordText.Equals("a", StringComparison.OrdinalIgnoreCase) || currentWordText == "I"))
+                    {
+                        continue;
+                    }
+                    else if (_currentLanguage == "da" && currentWordText.Equals("i", StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
+                }
+
+                if (Configuration.Settings.Tools.SpellCheckEnglishAllowInQuoteAsIng && _currentLanguage == "en"
+                    && _words[i].Text.EndsWith("in'", StringComparison.OrdinalIgnoreCase) && DoSpell(currentWordText.TrimEnd('\'') + "g"))
+                {
+                    continue;
+                }
+
+                _wrongWords.Add(currentWord);
+            }
+        }
+
+        public bool DoSpell(string word)
+        {
+            return _hunspell.Spell(word);
+        }
+
+        private void UiTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (Configuration.Settings.Tools.LiveSpellCheck && e.KeyCode == Keys.Apps && _wrongWords?.Count > 0)
+            {
+                var cursorPos = _uiTextBox.SelectionStart;
+                var wrongWord = _wrongWords.Where(word => cursorPos > GetIndexWithLineBreak(word.Index) && cursorPos < GetIndexWithLineBreak(word.Index) + word.Length).FirstOrDefault();
+                if (wrongWord != null)
+                {
+                    IsWrongWord = true;
+                    _currentWord = wrongWord;
+                }
+                else
+                {
+                    IsWrongWord = false;
+                }
+            }
+        }
+
+        private void UiTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (Configuration.Settings.Tools.LiveSpellCheck && SplitChars.Contains(e.KeyChar)
+                && _uiTextBox.SelectionStart == _uiTextBox.Text.Length || _uiTextBox.SelectionStart != _uiTextBox.Text.Length)
+            {
+                IsSpellCheckRequested = true;
+                if (e.KeyChar == '\b' || e.KeyChar == '\r' || e.KeyChar == '\n')
+                {
+                    TextChangedHighlight(this, EventArgs.Empty);
+                }
+            }
+        }
+
+        private void UiTextBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (_wrongWords?.Count > 0 && e.Clicks == 1 && e.Button == MouseButtons.Right)
+            {
+                int positionToSearch = _uiTextBox.GetCharIndexFromPosition(new Point(e.X, e.Y));
+                var wrongWord = _wrongWords.Where(word => positionToSearch > GetIndexWithLineBreak(word.Index) && positionToSearch < GetIndexWithLineBreak(word.Index) + word.Length).FirstOrDefault();
+                if (wrongWord != null)
+                {
+                    IsWrongWord = true;
+                    _currentWord = wrongWord;
+                }
+                else
+                {
+                    IsWrongWord = false;
+                }
+            }
+        }
+
+        private List<string> DoSuggest(string word)
+        {
+            var parameter = new SuggestionParameter(word, _hunspell);
+            var suggestThread = new System.Threading.Thread(DoWork);
+            suggestThread.Start(parameter);
+            suggestThread.Join(3000); // wait max 3 seconds
+            suggestThread.Abort();
+            if (!parameter.Success)
+            {
+                LoadHunspell(_currentDictionary);
+            }
+
+            return parameter.Suggestions;
+        }
+
+        public void AddSuggestionsToMenu()
+        {
+            if (_currentWord != null)
+            {
+                var suggestions = DoSuggest(_currentWord.Text);
+                if (suggestions?.Count > 0)
+                {
+                    foreach (var suggestion in suggestions)
+                    {
+                        _uiTextBox.ContextMenuStrip.Items.Add(suggestion, null, SuggestionSelected);
+                    }
+                }
+            }
+        }
+
+        private static void DoWork(object data)
+        {
+            var parameter = (SuggestionParameter)data;
+            parameter.Suggestions = parameter.Hunspell.Suggest(parameter.InputWord);
+            parameter.Success = true;
+        }
+
+        private void SuggestionSelected(object sender, EventArgs e)
+        {
+            IsWrongWord = false;
+            _wrongWords.Remove(_currentWord);
+            var item = (ToolStripItem)sender;
+            var correctWord = item.Text;
+            var text = _uiTextBox.Text;
+            var cursorPos = _uiTextBox.SelectionStart;
+            var wordIndex = GetIndexWithLineBreak(_currentWord.Index);
+            text = text.Remove(wordIndex, _currentWord.Length);
+            text = text.Insert(wordIndex, correctWord);
+            _uiTextBox.Text = text;
+            _uiTextBox.SelectionStart = cursorPos;
+            IsSpellCheckRequested = true;
+            TextChangedHighlight(this, EventArgs.Empty);
+        }
+
+        public void DoAction(SpellCheckAction action)
+        {
+            if (_currentWord != null)
+            {
+                switch (action)
+                {
+                    case SpellCheckAction.Skip:
+                        string key = CurrentLineIndex + "-" + _currentWord.Text + "-" + _currentWord.Index;
+                        _skipOnceList.Add(key);
+                        break;
+                    case SpellCheckAction.SkipAll:
+                        _skipAllList.Add(_currentWord.Text);
+                        break;
+                    case SpellCheckAction.AddToDictionary:
+                        _spellCheckWordLists.AddUserWord(_currentWord.Text);
+                        break;
+                    case SpellCheckAction.AddToNames:
+                        _spellCheckWordLists.AddName(_currentWord.Text);
+                        break;
+                }
+
+                if (_wrongWords.Contains(_currentWord))
+                {
+                    IsWrongWord = false;
+                    _wrongWords.Remove(_currentWord);
+                    IsSpellCheckRequested = true;
+                    TextChangedHighlight(this, EventArgs.Empty);
+                }
+            }
+        }
+
+        #endregion
     }
 }

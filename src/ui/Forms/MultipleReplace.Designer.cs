@@ -122,7 +122,7 @@
             // 
             this.buttonReplacesInverseSelection.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonReplacesInverseSelection.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonReplacesInverseSelection.Location = new System.Drawing.Point(91, 204);
+            this.buttonReplacesInverseSelection.Location = new System.Drawing.Point(91, 202);
             this.buttonReplacesInverseSelection.Name = "buttonReplacesInverseSelection";
             this.buttonReplacesInverseSelection.Size = new System.Drawing.Size(100, 23);
             this.buttonReplacesInverseSelection.TabIndex = 12;
@@ -134,7 +134,7 @@
             // 
             this.buttonReplacesSelectAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonReplacesSelectAll.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonReplacesSelectAll.Location = new System.Drawing.Point(10, 204);
+            this.buttonReplacesSelectAll.Location = new System.Drawing.Point(10, 202);
             this.buttonReplacesSelectAll.Name = "buttonReplacesSelectAll";
             this.buttonReplacesSelectAll.Size = new System.Drawing.Size(75, 23);
             this.buttonReplacesSelectAll.TabIndex = 11;
@@ -478,7 +478,7 @@
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.Location = new System.Drawing.Point(804, 251);
+            this.buttonOK.Location = new System.Drawing.Point(808, 254);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 14;
@@ -490,7 +490,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(885, 251);
+            this.buttonCancel.Location = new System.Drawing.Point(889, 254);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 15;
@@ -538,7 +538,7 @@
             // buttonExportGroups
             // 
             this.buttonExportGroups.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonExportGroups.Location = new System.Drawing.Point(118, 230);
+            this.buttonExportGroups.Location = new System.Drawing.Point(118, 228);
             this.buttonExportGroups.Name = "buttonExportGroups";
             this.buttonExportGroups.Size = new System.Drawing.Size(99, 23);
             this.buttonExportGroups.TabIndex = 3;
@@ -549,7 +549,7 @@
             // buttonImportGroups
             // 
             this.buttonImportGroups.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonImportGroups.Location = new System.Drawing.Point(8, 230);
+            this.buttonImportGroups.Location = new System.Drawing.Point(8, 228);
             this.buttonImportGroups.Name = "buttonImportGroups";
             this.buttonImportGroups.Size = new System.Drawing.Size(104, 23);
             this.buttonImportGroups.TabIndex = 2;
@@ -560,7 +560,7 @@
             // buttonNewGroup
             // 
             this.buttonNewGroup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonNewGroup.Location = new System.Drawing.Point(8, 203);
+            this.buttonNewGroup.Location = new System.Drawing.Point(8, 201);
             this.buttonNewGroup.Name = "buttonNewGroup";
             this.buttonNewGroup.Size = new System.Drawing.Size(209, 23);
             this.buttonNewGroup.TabIndex = 1;
@@ -697,7 +697,7 @@
             // buttonApply
             // 
             this.buttonApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonApply.Location = new System.Drawing.Point(966, 251);
+            this.buttonApply.Location = new System.Drawing.Point(970, 254);
             this.buttonApply.Name = "buttonApply";
             this.buttonApply.Size = new System.Drawing.Size(75, 23);
             this.buttonApply.TabIndex = 16;
