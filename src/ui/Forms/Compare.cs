@@ -708,14 +708,15 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (richTextBox1.Text[richTextBox1.Text.Length - i] == richTextBox2.Text[richTextBox2.Text.Length - i])
                 {
+                    var selectionColor = Configuration.Settings.General.UseDarkTheme ? Configuration.Settings.General.DarkThemeForeColor : Color.Black;
                     richTextBox1.SelectionStart = richTextBox1.Text.Length - i;
                     richTextBox1.SelectionLength = 1;
-                    richTextBox1.SelectionColor = Color.Black;
+                    richTextBox1.SelectionColor = selectionColor;
                     richTextBox1.SelectionBackColor = richTextBox1.BackColor;
 
                     richTextBox2.SelectionStart = richTextBox2.Text.Length - i;
                     richTextBox2.SelectionLength = 1;
-                    richTextBox2.SelectionColor = Color.Black;
+                    richTextBox2.SelectionColor = selectionColor;
                     richTextBox2.SelectionBackColor = richTextBox1.BackColor;
                 }
                 else

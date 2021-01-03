@@ -331,13 +331,31 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 }
             }
 
-            foreach (string findWhat in _regExList.Keys)
+            if (_replaceRegExes == null || _regExList.Count != _replaceRegExes.Count)
             {
-                newText = Regex.Replace(newText, findWhat, _regExList[findWhat], RegexOptions.Multiline);
+                _replaceRegExes = new List<Regex>();
+                foreach (string findWhat in _regExList.Keys)
+                {
+                    var regex = new Regex(findWhat, RegexOptions.Multiline | RegexOptions.Compiled);
+                    _replaceRegExes.Add(regex);
+                    newText = regex.Replace(newText, _regExList[findWhat]);
+                }
+            }
+            else
+            {
+                int i = 0;
+                foreach (string findWhat in _regExList.Keys)
+                {
+                    var regex = _replaceRegExes[i];
+                    newText = regex.Replace(newText, _regExList[findWhat]);
+                    i++;
+                }
             }
 
             return newText;
         }
+
+        private List<Regex> _replaceRegExes = null;
 
         private static void AddToGuessList(List<string> list, string guess)
         {
@@ -369,7 +387,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                             var guess = word.Remove(i, letter.Length).Insert(i, _partialWordReplaceList[letter]);
                             AddToGuessList(list, guess);
                         }
-                        else 
+                        else
                         {
                             indexes.Add(i);
                             var guess = word.Remove(i, letter.Length).Insert(i, _partialWordReplaceList[letter]);

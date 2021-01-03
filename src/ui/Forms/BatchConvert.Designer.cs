@@ -406,7 +406,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.listViewConvertOptions.UseCompatibleStateImageBehavior = false;
             this.listViewConvertOptions.View = System.Windows.Forms.View.Details;
             this.listViewConvertOptions.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.listViewConvertOptions_ItemChecked);
-            this.listViewConvertOptions.Resize += new System.EventHandler(this.listViewConvertOptions_Resize);
             this.listViewConvertOptions.SelectedIndexChanged += new System.EventHandler(this.listViewConvertOptions_SelectedIndexChanged);
             // 
             // ActionCheckBox
@@ -1457,6 +1456,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.Text = "Batch convert";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.BatchConvert_FormClosing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.BatchConvert_KeyDown);
+            this.ResizeEnd += new System.EventHandler(this.BatchConvert_ResizeEnd);
+            this.Shown += new System.EventHandler(this.BatchConvert_Shown);
             this.groupBoxConvertOptions.ResumeLayout(false);
             this.groupBoxDeleteLines.ResumeLayout(false);
             this.groupBoxDeleteLines.PerformLayout();

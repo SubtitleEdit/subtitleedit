@@ -1,11 +1,11 @@
-﻿using Nikse.SubtitleEdit.Core.Enums;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core
 {
@@ -23,6 +23,7 @@ namespace Nikse.SubtitleEdit.Core
         public static int MaximumHistoryItems => 100;
 
         public SubtitleFormat OriginalFormat { get; private set; }
+        public Encoding OriginalEncoding { get; private set; }
 
         public List<HistoryItem> HistoryItems { get; }
         public bool CanUndo => HistoryItems.Count > 0;
@@ -67,7 +68,8 @@ namespace Nikse.SubtitleEdit.Core
             Header = subtitle.Header;
             Footer = subtitle.Footer;
             FileName = subtitle.FileName;
-           // OriginalFormat = subtitle.OriginalFormat;
+            OriginalFormat = subtitle.OriginalFormat;
+            OriginalEncoding = subtitle.OriginalEncoding;
         }
 
         public Subtitle(List<Paragraph> paragraphs) : this()
@@ -116,6 +118,109 @@ namespace Nikse.SubtitleEdit.Core
             return null;
         }
 
+        /// <summary>
+        /// Load a subtitle from a file.
+        /// Check "OriginalFormat" to see what subtitle format was used.
+        /// Check "OriginalEncoding" to see what text encoding was used.
+        /// </summary>
+        /// <param name="fileName">File name of subtitle to load.</param>
+        /// <returns>Loaded subtitle, null if file is not known subtitle format.</returns>
+        public static Subtitle Parse(string fileName)
+        {
+            var subtitle = new Subtitle();
+            var format = subtitle.LoadSubtitle(fileName, out var encodingUsed, null);
+            if (format == null)
+            {
+                return null;
+            }
+
+            subtitle.OriginalEncoding = encodingUsed;
+            return subtitle;
+        }
+
+        /// <summary>
+        /// Load a subtitle from a file.
+        /// Check "OriginalFormat" to see what subtitle format was used.
+        /// Check "OriginalEncoding" to see what text encoding was used.
+        /// </summary>
+        /// <param name="fileName">File name of subtitle to load.</param>
+        /// <param name="useThisEncoding">Encoding to read file with.</param>
+        /// <returns>Loaded subtitle, null if file is not known subtitle format.</returns>
+        public static Subtitle Parse(string fileName, Encoding useThisEncoding)
+        {
+            var subtitle = new Subtitle();
+            var format = subtitle.LoadSubtitle(fileName, out var encodingUsed, useThisEncoding);
+            if (format == null)
+            {
+                return null;
+            }
+
+            subtitle.OriginalEncoding = encodingUsed;
+            return subtitle;
+        }
+
+        /// <summary>
+        /// Load a subtitle from a file.
+        /// Check "OriginalFormat" to see what subtitle format was used.
+        /// Check "OriginalEncoding" to see what text encoding was used.
+        /// </summary>
+        /// <param name="fileName">File name of subtitle to load.</param>
+        /// <param name="format">SubtitleFormat to use.</param>
+        /// <returns>Loaded subtitle, null if format does not match the file.</returns>
+        public static Subtitle Parse(string fileName, SubtitleFormat format)
+        {
+            return Parse(fileName, new List<SubtitleFormat> { format });
+        }
+
+        /// <summary>
+        /// Load a subtitle from a file.
+        /// Check "OriginalFormat" to see what subtitle format was used.
+        /// Check "OriginalEncoding" to see what text encoding was used.
+        /// </summary>
+        /// <param name="fileName">File name of subtitle to load.</param>
+        /// <param name="formatsToLookfor">List of subtitle formats to use.</param>
+        /// <returns>Loaded subtitle, null if file is not matched by any format in formatsToLookFor.</returns>
+        public static Subtitle Parse(string fileName, List<SubtitleFormat> formatsToLookFor)
+        {
+            var subtitle = new Subtitle
+            {
+                FileName = fileName
+            };
+
+            List<string> lines;
+            try
+            {
+                lines = ReadLinesFromFile(fileName, null, out var encoding);
+                subtitle.OriginalEncoding = encoding;
+            }
+            catch (Exception exception)
+            {
+                System.Diagnostics.Debug.WriteLine(exception.Message);
+                return null;
+            }
+
+            var ext = Path.GetExtension(fileName).ToLowerInvariant();
+            foreach (var subtitleFormat in formatsToLookFor.Where(p => p.Extension == ext && !p.Name.StartsWith("Unknown", StringComparison.Ordinal)))
+            {
+                if (subtitleFormat.IsMine(lines, fileName))
+                {
+                    subtitle.FinalizeFormat(fileName, false, null, lines, subtitleFormat, true);
+                    return subtitle;
+                }
+            }
+
+            foreach (var subtitleFormat in formatsToLookFor.Where(p => p.Extension != ext || p.Name.StartsWith("Unknown", StringComparison.Ordinal)))
+            {
+                if (subtitleFormat.IsMine(lines, fileName))
+                {
+                    subtitle.FinalizeFormat(fileName, false, null, lines, subtitleFormat, true);
+                    return subtitle;
+                }
+            }
+
+            return null;
+        }
+
         public SubtitleFormat LoadSubtitle(string fileName, out Encoding encoding, Encoding useThisEncoding)
         {
             return LoadSubtitle(fileName, out encoding, useThisEncoding, false);
@@ -125,45 +230,17 @@ namespace Nikse.SubtitleEdit.Core
         {
             FileName = fileName;
             Paragraphs = new List<Paragraph>();
-            StreamReader sr;
-            if (useThisEncoding != null)
+            List<string> lines;
+            try
             {
-                try
-                {
-                    sr = new StreamReader(fileName, useThisEncoding);
-                }
-                catch (Exception exception)
-                {
-                    System.Diagnostics.Debug.WriteLine(exception.Message);
-                    encoding = Encoding.UTF8;
-                    return null;
-                }
+                lines = ReadLinesFromFile(fileName, useThisEncoding, out encoding);
             }
-            else
+            catch (Exception exception)
             {
-                try
-                {
-                    sr = new StreamReader(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName), true);
-                }
-                catch
-                {
-                    try
-                    {
-                        var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                        sr = new StreamReader(fs);
-                    }
-                    catch (Exception exception)
-                    {
-                        System.Diagnostics.Debug.WriteLine(exception.Message);
-                        encoding = Encoding.UTF8;
-                        return null;
-                    }
-                }
+                System.Diagnostics.Debug.WriteLine(exception.Message);
+                encoding = Encoding.UTF8;
+                return null;
             }
-
-            encoding = sr.CurrentEncoding;
-            var lines = sr.ReadToEnd().SplitToLines();
-            sr.Close();
 
             var ext = Path.GetExtension(fileName).ToLowerInvariant();
             foreach (var subtitleFormat in SubtitleFormat.AllSubtitleFormats.Where(p => p.Extension == ext && !p.Name.StartsWith("Unknown", StringComparison.Ordinal)))
@@ -173,6 +250,7 @@ namespace Nikse.SubtitleEdit.Core
                     return FinalizeFormat(fileName, batchMode, sourceFrameRate, lines, subtitleFormat, loadSubtitle);
                 }
             }
+
             foreach (var subtitleFormat in SubtitleFormat.AllSubtitleFormats.Where(p => p.Extension != ext || p.Name.StartsWith("Unknown", StringComparison.Ordinal)))
             {
                 if (subtitleFormat.IsMine(lines, fileName))
@@ -185,7 +263,34 @@ namespace Nikse.SubtitleEdit.Core
             {
                 return LoadSubtitle(fileName, out encoding, Encoding.Unicode);
             }
+
             return null;
+        }
+
+        private static List<string> ReadLinesFromFile(string fileName, Encoding useThisEncoding, out Encoding encoding)
+        {
+            StreamReader sr;
+            if (useThisEncoding != null)
+            {
+                sr = new StreamReader(fileName, useThisEncoding);
+            }
+            else
+            {
+                try
+                {
+                    sr = new StreamReader(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName), true);
+                }
+                catch
+                {
+                    var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                    sr = new StreamReader(fs);
+                }
+            }
+
+            encoding = sr.CurrentEncoding;
+            var lines = sr.ReadToEnd().SplitToLines();
+            sr.Close();
+            return lines;
         }
 
         private SubtitleFormat FinalizeFormat(string fileName, bool batchMode, double? sourceFrameRate, List<string> lines, SubtitleFormat subtitleFormat, bool loadSubtitle)
