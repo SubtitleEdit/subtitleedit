@@ -15,6 +15,13 @@ ECHO Getting latest changes...
 git pull
 ECHO.
 
+ECHO Check for new translation strings...
+SET "LanguageToolPath=src\UpdateLanguageFiles\bin\debug\UpdateLanguageFiles.exe"
+IF NOT EXIST "%LanguageToolPath%" (
+  ECHO Compile UpdateLanguageFiles!
+)
+"%LanguageToolPath%" "LanguageMaster.xml" "src\ui\Logic\LanguageDeserializer.cs"
+
 ECHO Starting compilation...
 
 REM Set environment variables for Visual Studio command line if necessary
