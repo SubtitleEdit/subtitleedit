@@ -1,4 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Ocr;
 using System;
@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
@@ -29,6 +28,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             labelImageSize.Text = string.Empty;
             labelStatus.Text = string.Empty;
             labelExpandCount.Text = string.Empty;
+
+            buttonAddBetterMatch.Text = LanguageSettings.Current.VobSubOcrCharacterInspect.AddBetterMatch;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
             foreach (ToolStripItem toolStripItem in contextMenuStripLetters.Items)
             {
@@ -161,19 +164,39 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 pictureBoxCharacter.Image = null;
             }
 
+            buttonAddBetterMatch.Text = LanguageSettings.Current.VobSubOcrCharacterInspect.AddBetterMatch;
             if (match == null)
-            { // spaces+new lines
-                _nOcrChar = null;
-                pictureBoxCharacter.Invalidate();
+            {
+                if (img.NikseBitmap != null && img.SpecialCharacter == null)
+                {
+                    // no match found
+                    buttonUpdate.Enabled = false;
+                    buttonDelete.Enabled = false;
+                    textBoxText.Text = string.Empty;
+                    _nOcrChar = null;
+                    pictureBoxCharacter.Invalidate();
 
-                buttonUpdate.Enabled = false;
-                buttonDelete.Enabled = false;
-                buttonEditDB.Enabled = false;
-                buttonAddBetterMatch.Enabled = false;
-                textBoxText.Text = string.Empty;
-                textBoxText.Enabled = false;
-                checkBoxItalic.Checked = false;
-                checkBoxItalic.Enabled = false;
+                    buttonEditDB.Enabled = true;
+                    buttonAddBetterMatch.Enabled = true;
+                    buttonAddBetterMatch.Text = LanguageSettings.Current.VobSubOcrCharacterInspect.Add;
+                    textBoxText.Enabled = true;
+                    checkBoxItalic.Enabled = true;
+                }
+                else
+                {
+                    // spaces+new lines
+                    _nOcrChar = null;
+                    pictureBoxCharacter.Invalidate();
+
+                    buttonUpdate.Enabled = false;
+                    buttonDelete.Enabled = false;
+                    buttonEditDB.Enabled = false;
+                    buttonAddBetterMatch.Enabled = false;
+                    textBoxText.Text = string.Empty;
+                    textBoxText.Enabled = false;
+                    checkBoxItalic.Checked = false;
+                    checkBoxItalic.Enabled = false;
+                }
             }
             else if (match.NOcrCharacter == null)
             { // no match found
@@ -186,8 +209,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                 buttonEditDB.Enabled = true;
                 buttonAddBetterMatch.Enabled = true;
-                textBoxText.Enabled = false;
-                checkBoxItalic.Enabled = false;
+                buttonAddBetterMatch.Text = LanguageSettings.Current.VobSubOcrCharacterInspect.Add;
+                textBoxText.Enabled = true;
+                checkBoxItalic.Enabled = true;
             }
             else
             {
@@ -306,12 +330,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             using (var vobSubOcrNOcrCharacter = new VobSubOcrNOcrCharacter())
             {
-                var text = string.Empty;
-                if (_nOcrChar != null && _nOcrChar.Text != textBoxText.Text)
-                {
-                    text = textBoxText.Text;
-                }
-
+                var text = textBoxText.Text;
                 vobSubOcrNOcrCharacter.Initialize(_bitmap, img, new Point(0, 0), checkBoxItalic.Checked, true, expandSelectionList.Count > 1, text);
                 DialogResult result = vobSubOcrNOcrCharacter.ShowDialog(this);
                 bool expandSelection = false;
