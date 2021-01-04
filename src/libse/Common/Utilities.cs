@@ -155,22 +155,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
-        public static void SetSecurityProtocol()
-        {
-            // Github requires TLS 1.2
-            try
-            {
-                var tls12Protocol = (SslProtocols)0x00000C00; //TODO: Remove this when it's standard in .net framework - 4.6+
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | (SecurityProtocolType)tls12Protocol;
-            }
-            catch (Exception)
-            {
-                // This will crash on .net framework versions < 4.5!
-                // .NET 4.5 required for TLS 1.2 - TLS 1.2 is not default so use this: ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12
-                // NET 4.6 and above. You don’t need to do any additional work to support TLS 1.2, it’s supported by default.
-            }
-        }
-
         public static WebProxy GetProxy()
         {
             if (!string.IsNullOrEmpty(Configuration.Settings.Proxy.ProxyAddress))
