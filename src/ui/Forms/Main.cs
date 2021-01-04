@@ -358,7 +358,6 @@ namespace Nikse.SubtitleEdit.Forms
                 UpdateRecentFilesUI();
                 InitializeToolbar();
                 UpdateNetflixGlyphCheckToolsVisibility();
-                Utilities.SetSecurityProtocol(); // download from Github requires TLS 1.2
 
                 if (Configuration.Settings.General.RightToLeftMode)
                 {
