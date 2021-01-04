@@ -27,8 +27,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
         public NOcrChar(NOcrChar old)
         {
-            LinesForeground = new List<NOcrPoint>();
-            LinesBackground = new List<NOcrPoint>();
+            LinesForeground = new List<NOcrPoint>(old.LinesForeground.Count);
+            LinesBackground = new List<NOcrPoint>(old.LinesBackground.Count);
             Text = old.Text;
             Width = old.Width;
             Height = old.Height;
