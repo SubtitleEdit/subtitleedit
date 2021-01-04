@@ -734,6 +734,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxSpellCheckOneLetterWords.Text = LanguageSettings.Current.SpellCheck.CheckOneLetterWords;
             checkBoxTreatINQuoteAsING.Text = LanguageSettings.Current.SpellCheck.TreatINQuoteAsING;
             checkBoxUseAlwaysToFile.Text = LanguageSettings.Current.SpellCheck.RememberUseAlwaysList;
+            checkBoxLiveSpellCheck.Text = LanguageSettings.Current.SpellCheck.LiveSpellCheck;
             buttonFixContinuationStyleSettings.Text = language.EditFixContinuationStyleSettings;
 
             groupBoxToolsAutoBr.Text = LanguageSettings.Current.Main.Controls.AutoBreak.Replace("&", string.Empty);
