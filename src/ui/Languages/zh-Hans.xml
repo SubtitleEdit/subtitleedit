@@ -253,6 +253,7 @@ Command line: {1} {2}
     <TopAlignSelectedLines>顶部对齐所选行（保持水平位置）</TopAlignSelectedLines>
     <BottomAlignSelectedLines>底部对齐所选行（保持水平位置）</BottomAlignSelectedLines>
     <SizeXY>尺寸：{0}x{1}</SizeXY>
+    <SetAspectRatio11>设置纵横比为1：1</SetAspectRatio11>
   </BinEdit>
   <Bookmarks>
     <EditBookmark>编辑书签</EditBookmark>
@@ -618,7 +619,6 @@ Command line: {1} {2}
     <RemovedEmptyLineAtBottom>删除底部空行</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>删除中部空行</RemovedEmptyLineInMiddle>
     <RemovedEmptyLinesUnsedLineBreaks>删除 空行/无用换行符</RemovedEmptyLinesUnsedLineBreaks>
-    <EmptyLinesRemovedX>已删除空行: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>修复重叠的显示时间</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>修正过短的显示时间</FixShortDisplayTimes>
     <FixLongDisplayTimes>修正过长的显示时间</FixLongDisplayTimes>
@@ -643,21 +643,16 @@ Command line: {1} {2}
     <RemoveSpaceBetweenNumber>删除数字间空格</RemoveSpaceBetweenNumber>
     <FixDialogsOnOneLine>修复一行上的对话</FixDialogsOnOneLine>
     <NormalizeStrings>使字符串规格化</NormalizeStrings>
-    <RemoveSpaceBetweenNumbersFixed>删除数字间空格已修复: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>修复土耳其语 ANSI (冰岛) 字母为 Unicode</FixTurkishAnsi>
     <FixDanishLetterI>修复丹麦语字母 'i'</FixDanishLetterI>
     <FixSpanishInvertedQuestionAndExclamationMarks>修复西班牙语反问号和感叹号</FixSpanishInvertedQuestionAndExclamationMarks>
     <AddMissingQuote>添加丢失的引号 (")</AddMissingQuote>
     <AddMissingQuotes>添加丢失的引号 (")</AddMissingQuotes>
     <RemoveHyphensSingleLine>移除单行字幕的对话连字符</RemoveHyphensSingleLine>
-    <XHyphensSingleLineRemoved>已移除的单行字幕的对话连字符: {0}</XHyphensSingleLineRemoved>
     <FixHyphensInDialogs>用以修复对话连字符的样式: {0}</FixHyphensInDialogs>
-    <XHyphensInDialogsFixed>已修复连字符: {0}</XHyphensInDialogsFixed>
     <AddMissingQuotesExample>"How are you? -&gt; "How are you?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>已添加丢失的引号: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>修复超过两行的字幕</Fix3PlusLines>
-    <Fix3PlusLine>修复超过两行的字幕</Fix3PlusLine>
-    <X3PlusLinesFixed>已修复超过两行的字幕: {0}</X3PlusLinesFixed>
     <Analysing>正在分析...</Analysing>
     <NothingToFix>没有什么要修复 :)</NothingToFix>
     <FixesFoundX>已找到的修复项: {0}</FixesFoundX>
@@ -665,12 +660,9 @@ Command line: {1} {2}
     <NothingFixableBut>没有可被自动修复的内容。该字幕包含错误 - 详见日志</NothingFixableBut>
     <XFixedBut>已修复 {0} 个问题，但该字幕仍包含错误 - 详见日志</XFixedBut>
     <XCouldBeFixedBut>可修复 {0} 个问题，但该字幕仍包含错误 - 详见日志</XCouldBeFixedBut>
-    <UncheckedFixLowercaseIToUppercaseI>已取消选中“单独的小写 'i' 修复为 'I' (英语)”</UncheckedFixLowercaseIToUppercaseI>
-    <XIsChangedToUppercase>{0} 个 'i' 已更改为大写</XIsChangedToUppercase>
     <FixFirstLetterToUppercaseAfterParagraph>修复段落后的首字母为大写</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>合并短行 (单个句子)</MergeShortLine>
     <MergeShortLineAll>合并短行 (除对话外所有)</MergeShortLineAll>
-    <XLineBreaksAdded>{0} 个换行符已添加</XLineBreaksAdded>
     <BreakLongLine>断开长行</BreakLongLine>
     <FixLongDisplayTime>修复过长的显示时间</FixLongDisplayTime>
     <FixInvalidItalicTag>修复无效的斜体</FixInvalidItalicTag>
@@ -687,23 +679,11 @@ Command line: {1} {2}
     <UnableToFixStartTimeLaterThanEndTime>无法修复文本编号 {0}: 起始时间晚于结束时间: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} 被修复为: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>无法修复文本编号 {0}: {1}</UnableToFixTextXY>
-    <XOverlappingTimestampsFixed>{0} 个重叠时间已修复</XOverlappingTimestampsFixed>
-    <XDisplayTimesProlonged>{0} 个显示时间已延长</XDisplayTimesProlonged>
-    <XInvalidHtmlTagsFixed>{0} 个无效 HTML 标签已修复</XInvalidHtmlTagsFixed>
-    <XDisplayTimesShortned>{0} 个显示时间已缩短</XDisplayTimesShortned>
-    <XGapsFixed>已修复 {0} 个短间隔</XGapsFixed>
-    <XLinesUnbreaked>{0} 行已取消断开</XLinesUnbreaked>
     <UnneededSpace>不需要的空格</UnneededSpace>
-    <XUnneededSpacesRemoved>{0} 个不需要的空格已删除</XUnneededSpacesRemoved>
     <UnneededPeriod>不需要的句号</UnneededPeriod>
-    <XUnneededPeriodsRemoved>{0} 个不需要的句号已删除</XUnneededPeriodsRemoved>
     <FixMissingSpace>修复丢失的空格</FixMissingSpace>
-    <XMissingSpacesAdded>{0} 个丢失的空格已添加</XMissingSpacesAdded>
     <FixUppercaseIInsideLowercaseWord>修复小写单词中的大写 'i'</FixUppercaseIInsideLowercaseWord>
-    <XPeriodsAdded>{0} 个句号已添加</XPeriodsAdded>
     <FixMissingPeriodAtEndOfLine>添加行行尾丢失的句号</FixMissingPeriodAtEndOfLine>
-    <XDoubleApostrophesFixed>{0} 个双引号已修复</XDoubleApostrophesFixed>
-    <XUppercaseIsFoundInsideLowercaseWords>{0} 个小写单词中的大写 'i' 已找到</XUppercaseIsFoundInsideLowercaseWords>
     <RefreshFixes>刷新可用的修复</RefreshFixes>
     <ApplyFixes>应用选择的修复</ApplyFixes>
     <AutoBreak>自动换行(&amp;B)</AutoBreak>
@@ -713,11 +693,6 @@ Command line: {1} {2}
     <FixEllipsesStart>删除开头的 '...'</FixEllipsesStart>
     <FixMissingOpenBracket>修复行内丢失的 '['</FixMissingOpenBracket>
     <FixMusicNotation>用自己喜欢的符号替换音符 (如 âTª)</FixMusicNotation>
-    <XFixDoubleDash>{0} 个 '--' 已修复</XFixDoubleDash>
-    <XFixDoubleGreaterThan>{0} 个 '&gt;&gt; 已删除'</XFixDoubleGreaterThan>
-    <XFixEllipsesStart>{0} 个开头的 '...' 已删除</XFixEllipsesStart>
-    <XFixMissingOpenBracket>{0} 个行内丢失的 '[' 已修复</XFixMissingOpenBracket>
-    <XFixMusicNotation>{0} 个行内丢失的音符已修复</XFixMusicNotation>
     <FixDoubleDashExample>'Whoa-- um yeah!' -&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
     <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' -&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... and then we' -&gt; 'and then we'</FixEllipsesStartExample>
@@ -731,9 +706,7 @@ Command line: {1} {2}
     <SelectDefault>选中默认</SelectDefault>
     <SetDefault>将当前修复项目设为默认</SetDefault>
     <FixContinuationStyleX>修复延续型样式: {0}</FixContinuationStyleX>
-    <XFixContinuationStyle>已修复 {0} 个延续型样式</XFixContinuationStyle>
     <FixUnnecessaryLeadingDots>移除不必要的点标题</FixUnnecessaryLeadingDots>
-    <XFixUnnecessaryLeadingDots>已移除 {0} 个不必要的点标题</XFixUnnecessaryLeadingDots>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>是否使用词典？</Title>
@@ -2398,6 +2371,7 @@ Command line: {1} {2}
     <CheckOneLetterWords>未能识别该字符</CheckOneLetterWords>
     <TreatINQuoteAsING>将词尾为‘in’‘as’‘ing’的词作视作同一个词 (仅对英文有效)</TreatINQuoteAsING>
     <RememberUseAlwaysList>记住 “始终使用”列表</RememberUseAlwaysList>
+    <LiveSpellCheck>在线拼写检查</LiveSpellCheck>
     <ImageText>图片文字</ImageText>
     <SpellCheckCompleted>拼写检查完成。</SpellCheckCompleted>
     <SpellCheckAborted>拼写检查中止</SpellCheckAborted>
