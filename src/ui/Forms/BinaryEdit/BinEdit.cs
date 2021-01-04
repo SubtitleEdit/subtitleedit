@@ -2407,5 +2407,13 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             var change = (int)Math.Round(desiredWidth - currentWidth);
             Width += change;
         }
+
+        private void BinEdit_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Modifiers == Keys.Control && (e.KeyCode == Keys.NumPad0 || e.KeyCode == Keys.D0))
+            {
+                setAspectRatio11ToolStripMenuItem_Click(null, null);
+            }
+        }
     }
 }
