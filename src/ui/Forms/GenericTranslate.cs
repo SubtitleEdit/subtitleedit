@@ -20,6 +20,7 @@ namespace Nikse.SubtitleEdit.Forms
         public Subtitle TranslatedSubtitle { get; private set; }
         public bool UseFreeGoogle { get; set; }
         private Subtitle _subtitle;
+        private Encoding _encoding;
         private bool _breakTranslation;
         private const string SplitterString = "+-+";
         private ITranslationService _translationService;
@@ -44,7 +45,6 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxTranslationServices.Left = labelTranslationService.Left + labelTranslationService.Width + 5;
             labelParagraphHandling.Text = LanguageSettings.Current.GoogleTranslate.LineMergeHandling;
             comboBoxParagraphHandling.Left = labelParagraphHandling.Left + labelParagraphHandling.Width + 5;
-
             subtitleListViewSource.InitializeLanguage(LanguageSettings.Current.General, Configuration.Settings);
             subtitleListViewTarget.InitializeLanguage(LanguageSettings.Current.General, Configuration.Settings);
             subtitleListViewSource.HideColumn(SubtitleListView.SubtitleColumn.CharactersPerSeconds);
@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal void Initialize(Subtitle subtitle, Subtitle target, string title, Encoding encoding)
         {
-            if (title != null)
+            if (!string.IsNullOrEmpty(title))
             {
                 Text = title;
             }
@@ -68,7 +68,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelPleaseWait.Visible = false;
             progressBar1.Visible = false;
             _subtitle = subtitle;
-            this.buttonTranslate.Enabled = false;
+            _encoding = encoding;
+            buttonTranslate.Enabled = false;
 
             if (target != null)
             {
@@ -129,7 +130,7 @@ namespace Nikse.SubtitleEdit.Forms
             AddTranslationService(MicrosoftTranslationInitializer.Init());
             AddTranslationService(new NikseDkTranslationService());
 
-            if (comboBoxTranslationServices.Items.Count > 0)
+            if (comboBoxTranslationServices.Items.Count > 0 && comboBoxTranslationServices.SelectedIndex < 0)
             {
                 comboBoxTranslationServices.SelectedIndex = 0;
             }
@@ -140,16 +141,11 @@ namespace Nikse.SubtitleEdit.Forms
             if (translationService != null)
             {
                 comboBoxTranslationServices.Items.Add(translationService);
+                if (translationService.GetType().ToString() == Configuration.Settings.Tools.TranslateLastService)
+                {
+                    comboBoxTranslationServices.SelectedIndex = comboBoxTranslationServices.Items.Count - 1;
+                }
             }
-        }
-
-        private void ComboBoxTranslationServiceChanged(object sender, EventArgs e)
-        {
-            _translationService = (ITranslationService)comboBoxTranslationServices.SelectedItem;
-            ReadLanguageSettings();
-            SetupLanguageSettings();
-
-            EvaluateTranslateButtonStatus();
         }
 
         private void EvaluateTranslateButtonStatus()
@@ -165,21 +161,24 @@ namespace Nikse.SubtitleEdit.Forms
         private void SetupLanguageSettings()
         {
             FillComboWithLanguages(comboBoxSource, _translationService.GetSupportedSourceLanguages());
+            _sourceLanguageIsoCode = EvaluateDefaultSourceLanguageCode(_encoding, _subtitle);
             SelectLanguageCode(comboBoxSource, _sourceLanguageIsoCode);
 
             FillComboWithLanguages(comboBoxTarget, _translationService.GetSupportedTargetLanguages());
+            _targetLanguageIsoCode = EvaluateDefaultTargetLanguageCode(_sourceLanguageIsoCode);
             SelectLanguageCode(comboBoxTarget, _targetLanguageIsoCode);
         }
 
         private void ReadLanguageSettings()
         {
-            if (comboBoxTarget.SelectedItem != null)
-            {
-                _targetLanguageIsoCode = ((TranslationPair)comboBoxTarget.SelectedItem).Code;
-            }
             if (comboBoxSource.SelectedItem != null)
             {
                 _sourceLanguageIsoCode = ((TranslationPair)comboBoxSource.SelectedItem).Code;
+            }
+
+            if (comboBoxTarget.SelectedItem != null)
+            {
+                _targetLanguageIsoCode = ((TranslationPair)comboBoxTarget.SelectedItem).Code;
             }
         }
 
@@ -200,6 +199,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             return defaultSourceLanguageCode;
         }
+
         public static string EvaluateDefaultTargetLanguageCode(string defaultSourceLanguage)
         {
             var installedLanguages = new List<InputLanguage>();
@@ -238,12 +238,12 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            //brummochse: I don't understand what the next code is doing and why?!
+            // Set target language to something different than source language
             if (uiCultureTargetLanguage == defaultSourceLanguage && defaultSourceLanguage == "en")
             {
                 uiCultureTargetLanguage = "es";
             }
-            if (uiCultureTargetLanguage == defaultSourceLanguage)
+            else if (uiCultureTargetLanguage == defaultSourceLanguage)
             {
                 uiCultureTargetLanguage = "en";
             }
@@ -262,6 +262,11 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
                 i++;
+            }
+
+            if (comboBox.SelectedIndex < 0 && comboBox.Items.Count > 0)
+            {
+                comboBox.SelectedIndex = 0;
             }
         }
 
@@ -340,15 +345,27 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var selectedParagraphs = new List<Paragraph>();
             var selectedItems = subtitleListViewSource.SelectedItems;
-            if (selectedItems.Count > 0)
+            if (selectedItems.Count > 1)
             {
+                // use selected items
                 foreach (ListViewItem selectedItem in selectedItems)
                 {
                     selectedParagraphs.Add(_subtitle.Paragraphs[selectedItem.Index]);
                 }
             }
+            else if (selectedItems.Count == 1)
+            {
+                // use first selected index and forward
+                var idx = selectedItems[0].Index;
+                while (idx < _subtitle.Paragraphs.Count)
+                {
+                    selectedParagraphs.Add(_subtitle.Paragraphs[idx]);
+                    idx++;
+                }
+            }
             else
             {
+                // use all
                 selectedParagraphs = _subtitle.Paragraphs;
             }
             return selectedParagraphs;
@@ -537,6 +554,18 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             return null;
+        }
+
+        private void GenericTranslate_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Configuration.Settings.Tools.TranslateLastService = _translationService.GetType().ToString();
+        }
+
+        private void comboBoxTranslationServices_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            _translationService = (ITranslationService)comboBoxTranslationServices.SelectedItem;
+            SetupLanguageSettings();
+            EvaluateTranslateButtonStatus();
         }
     }
 

@@ -935,7 +935,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             GoogleTranslate = new LanguageStructure.GoogleTranslate
             {
-                Title = "Google translate",
+                Title = "Translate",
                 From = "From:",
                 To = "To:",
                 Translate = "Translate",
@@ -1634,9 +1634,7 @@ namespace Nikse.SubtitleEdit.Logic
                     AutoTranslate = new LanguageStructure.Main.MainMenu.AutoTranslateMenu
                     {
                         Title = "Auto-translate",
-                        TranslatePoweredByGoogle = "Translate with Google...",
-                        TranslatePoweredByMicrosoft = "Translate with Bing...",
-                        TranslateFromSwedishToDanish = "Translate from Swedish to Danish (powered by nikse.dk)...",
+                        AutoTranslate = "Auto-translate..."
                     },
 
                     Options = new LanguageStructure.Main.MainMenu.OptionsMenu

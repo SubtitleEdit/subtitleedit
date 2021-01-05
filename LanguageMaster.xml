@@ -729,7 +729,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <XDownloaded>{0} has been downloaded and installed</XDownloaded>
   </GetTesseractDictionaries>
   <GoogleTranslate>
-    <Title>Google translate</Title>
+    <Title>Translate</Title>
     <From>From:</From>
     <To>To:</To>
     <Translate>Translate</Translate>
@@ -739,10 +739,13 @@ Note: Do check free disk space.</WaveFileMalformed>
     <MsClientSecretNeeded>Sorry, you need a Cognitive Services 'Translator Text' key from Microsoft to use the latest Microsoft Translator.
 
 Go to "Options -&gt; Settings -&gt; Tools" to enter your key.</MsClientSecretNeeded>
-    <GoogleApiKeyNeeded>Sorry, you need an API key from Google to use the latest Google Translate.
-
-Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API key.</GoogleApiKeyNeeded>
-    <GoogleNoApiKeyWarning>Trying to translate without API key... (slow and limited data)</GoogleNoApiKeyWarning>
+    <GoogleNoApiKeyWarning>Trying to translate without API key... (slow and limited data). 
+To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API key.</GoogleNoApiKeyWarning>
+    <Service>Service:</Service>
+    <LineMergeHandling>Line merge:</LineMergeHandling>
+    <ProcessorMergeNext>Merge max two lines</ProcessorMergeNext>
+    <ProcessorSentence>Merge sentences</ProcessorSentence>
+    <ProcessorSingle>No merging</ProcessorSingle>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Google vs Microsoft translate</Title>
@@ -1123,9 +1126,7 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
       </Synchronization>
       <AutoTranslate>
         <Title>Auto-translate</Title>
-        <TranslatePoweredByGoogle>Translate with Google...</TranslatePoweredByGoogle>
-        <TranslatePoweredByMicrosoft>Translate with Bing...</TranslatePoweredByMicrosoft>
-        <TranslateFromSwedishToDanish>Translate from Swedish to Danish (powered by nikse.dk)...</TranslateFromSwedishToDanish>
+        <AutoTranslate>Auto-translate...</AutoTranslate>
       </AutoTranslate>
       <Options>
         <Title>Options</Title>

@@ -1629,8 +1629,9 @@ namespace Nikse.SubtitleEdit.Forms
             visualSyncSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.VisualSyncSelectedLines;
             toolStripMenuItemGoogleMicrosoftTranslateSelLine.Text = _language.Menu.ContextMenu.GoogleAndMicrosoftTranslateSelectedLine;
 
-            genericTranslateToolStripMenuItem.Text = _language.Menu.AutoTranslate.Title;
-            translateToolStripMenuItem.Text = _language.Menu.AutoTranslate.Title;
+            toolStripMenuItemAutoTranslate.Text = _language.Menu.AutoTranslate.Title;
+            genericTranslateToolStripMenuItem.Text = _language.Menu.AutoTranslate.AutoTranslate;
+            translateToolStripMenuItem.Text = _language.Menu.AutoTranslate.AutoTranslate;
             toolStripMenuItemTranslateSelected.Text = _language.Menu.ContextMenu.TranslateSelectedLines;
             adjustDisplayTimeForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.AdjustDisplayDurationForSelectedLines;
             fixCommonErrorsInSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.FixCommonErrorsInSelectedLines;
@@ -7988,7 +7989,7 @@ namespace Nikse.SubtitleEdit.Forms
                 boxToolStripMenuItem.Visible = false;
             }
 
-     
+
             toolStripMenuItemGoogleMicrosoftTranslateSelLine.Visible = false;
             if (SubtitleListview1.SelectedItems.Count == 0)
             {
@@ -22151,7 +22152,7 @@ namespace Nikse.SubtitleEdit.Forms
             GoBackSeconds(-(double)numericUpDownSecAdjust2.Value);
         }
 
-     
+
 
         private void AudioWaveform_Click(object sender, EventArgs e)
         {
@@ -25012,7 +25013,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void contextMenuStripTextBoxListViewClosing(object sender, ToolStripDropDownClosingEventArgs e)
         {
-            if (_isLiveSpellCheckEnabled && textBoxListViewText.IsWrongWord 
+            if (_isLiveSpellCheckEnabled && textBoxListViewText.IsWrongWord
                 && sender is ContextMenuStrip textBoxContextMenu && textBoxContextMenu.Name == "contextMenuStripTextBoxListView")
             {
                 var firstSpellCheckItemIndex = textBoxContextMenu.Items.IndexOfKey("toolStripSeparatorSpellCheckSuggestions");
@@ -28721,8 +28722,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
         }
-        
-      
+
+
 
 
         private void toolStripMenuItemBookmark_Click(object sender, EventArgs e)
@@ -29040,7 +29041,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-     
+
 
         private void comboBoxSubtitleFormats_DropDownClosed(object sender, EventArgs e)
         {
@@ -29287,7 +29288,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             toolStripMenuItemGoToListView.Visible = true;
         }
-   private void TranslateSelectedLinesToolStripMenuItemClick(object sender, EventArgs e)
+        private void TranslateSelectedLinesToolStripMenuItemClick(object sender, EventArgs e)
         {
             var onlySelectedLines = true;
             Translate(onlySelectedLines);

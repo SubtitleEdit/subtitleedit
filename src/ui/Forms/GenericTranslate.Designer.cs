@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.Location = new System.Drawing.Point(796, 529);
+            this.buttonOK.Location = new System.Drawing.Point(882, 529);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 6;
@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(877, 529);
+            this.buttonCancel.Location = new System.Drawing.Point(963, 529);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 7;
@@ -199,7 +199,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxTranslationServices.Name = "comboBoxTranslationServices";
             this.comboBoxTranslationServices.Size = new System.Drawing.Size(142, 21);
             this.comboBoxTranslationServices.TabIndex = 13;
-            this.comboBoxTranslationServices.TextChanged += new System.EventHandler(this.ComboBoxTranslationServiceChanged);
+            this.comboBoxTranslationServices.SelectedIndexChanged += new System.EventHandler(this.comboBoxTranslationServices_SelectedIndexChanged);
             // 
             // labelTranslationService
             // 
@@ -234,7 +234,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(967, 558);
+            this.ClientSize = new System.Drawing.Size(1053, 558);
             this.Controls.Add(this.comboBoxParagraphHandling);
             this.Controls.Add(this.labelParagraphHandling);
             this.Controls.Add(this.labelTranslationService);
@@ -260,6 +260,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Translate";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GenericTranslate_FormClosing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormTranslate_KeyDown);
             this.Resize += new System.EventHandler(this.Translate_Resize);
             this.ResumeLayout(false);

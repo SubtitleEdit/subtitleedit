@@ -2311,8 +2311,7 @@ namespace Nikse.SubtitleEdit.Forms
             // toolStripMenuItemAutoTranslate
             // 
             this.toolStripMenuItemAutoTranslate.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.translateToolStripMenuItem
-            });
+            this.translateToolStripMenuItem});
             this.toolStripMenuItemAutoTranslate.Name = "toolStripMenuItemAutoTranslate";
             this.toolStripMenuItemAutoTranslate.Size = new System.Drawing.Size(94, 20);
             this.toolStripMenuItemAutoTranslate.Text = "Auto-translate";
@@ -2320,10 +2319,9 @@ namespace Nikse.SubtitleEdit.Forms
             // translateToolStripMenuItem
             // 
             this.translateToolStripMenuItem.Name = "translateToolStripMenuItem";
-            this.translateToolStripMenuItem.Size = new System.Drawing.Size(402, 22);
+            this.translateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.translateToolStripMenuItem.Text = "Generic Translate";
             this.translateToolStripMenuItem.Click += new System.EventHandler(this.TranslateToolStripMenuItemClick);
-
             // 
             // optionsToolStripMenuItem
             // 
@@ -2928,7 +2926,7 @@ namespace Nikse.SubtitleEdit.Forms
             // genericTranslateToolStripMenuItem
             // 
             this.genericTranslateToolStripMenuItem.Name = "genericTranslateToolStripMenuItem";
-            this.genericTranslateToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
+            this.genericTranslateToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
             this.genericTranslateToolStripMenuItem.Text = "translate...";
             this.genericTranslateToolStripMenuItem.Click += new System.EventHandler(this.TranslateSelectedLinesToolStripMenuItemClick);
             // 
@@ -4491,8 +4489,13 @@ namespace Nikse.SubtitleEdit.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxListViewTextAlternate.BackColor = System.Drawing.SystemColors.WindowFrame;
             this.textBoxListViewTextAlternate.ContextMenuStrip = this.contextMenuStripTextBoxListView;
+            this.textBoxListViewTextAlternate.CurrentLineIndex = 0;
             this.textBoxListViewTextAlternate.Enabled = false;
             this.textBoxListViewTextAlternate.HideSelection = false;
+            this.textBoxListViewTextAlternate.IsDictionaryDownloaded = true;
+            this.textBoxListViewTextAlternate.IsSpellCheckerInitialized = false;
+            this.textBoxListViewTextAlternate.IsSpellCheckRequested = false;
+            this.textBoxListViewTextAlternate.IsWrongWord = false;
             this.textBoxListViewTextAlternate.Location = new System.Drawing.Point(946, 28);
             this.textBoxListViewTextAlternate.Multiline = true;
             this.textBoxListViewTextAlternate.Name = "textBoxListViewTextAlternate";
@@ -4537,7 +4540,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.superscriptToolStripMenuItem,
             this.subscriptToolStripMenuItem});
             this.contextMenuStripTextBoxListView.Name = "contextMenuStripTextBoxListView";
-            this.contextMenuStripTextBoxListView.Size = new System.Drawing.Size(274, 340);
+            this.contextMenuStripTextBoxListView.Size = new System.Drawing.Size(274, 440);
             this.contextMenuStripTextBoxListView.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
             this.contextMenuStripTextBoxListView.Closing += new System.Windows.Forms.ToolStripDropDownClosingEventHandler(this.contextMenuStripTextBoxListViewClosing);
             this.contextMenuStripTextBoxListView.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripTextBoxListViewOpening);
@@ -4910,8 +4913,13 @@ namespace Nikse.SubtitleEdit.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxListViewText.BackColor = System.Drawing.SystemColors.WindowFrame;
             this.textBoxListViewText.ContextMenuStrip = this.contextMenuStripTextBoxListView;
+            this.textBoxListViewText.CurrentLineIndex = 0;
             this.textBoxListViewText.Enabled = false;
             this.textBoxListViewText.HideSelection = false;
+            this.textBoxListViewText.IsDictionaryDownloaded = true;
+            this.textBoxListViewText.IsSpellCheckerInitialized = false;
+            this.textBoxListViewText.IsSpellCheckRequested = false;
+            this.textBoxListViewText.IsWrongWord = false;
             this.textBoxListViewText.Location = new System.Drawing.Point(236, 28);
             this.textBoxListViewText.Multiline = true;
             this.textBoxListViewText.Name = "textBoxListViewText";
