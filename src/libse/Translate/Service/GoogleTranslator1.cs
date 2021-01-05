@@ -1,11 +1,11 @@
-﻿using Nikse.SubtitleEdit.Core.SubtitleFormats;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.Translate.Service
 {
@@ -39,68 +39,68 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
         public List<string> Translate(string sourceLanguage, string targetLanguage, List<Paragraph> sourceParagraphs)
         {
 
-                string jsonResultString;
-                var input = new StringBuilder();
-                var formatList = new List<Formatting>();
-                for (var index = 0; index < sourceParagraphs.Count; index++)
+            string jsonResultString;
+            var input = new StringBuilder();
+            var formatList = new List<Formatting>();
+            for (var index = 0; index < sourceParagraphs.Count; index++)
+            {
+
+                var p = sourceParagraphs[index];
+                var f = new Formatting();
+                formatList.Add(f);
+                if (input.Length > 0)
                 {
-
-                    var p = sourceParagraphs[index];
-                    var f = new Formatting();
-                    formatList.Add(f);
-                    if (input.Length > 0)
-                    {
-                        input.Append(" " + SplitChar + " ");
-                    }
-
-                    var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text.Replace(SplitChar.ToString(), string.Empty), sourceLanguage), sourceLanguage);
-                    text = f.UnBreak(text, p.Text);
-                    input.Append(text);
+                    input.Append(" " + SplitChar + " ");
                 }
 
-                try
+                var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text.Replace(SplitChar.ToString(), string.Empty), sourceLanguage), sourceLanguage);
+                text = f.UnBreak(text, p.Text);
+                input.Append(text);
+            }
+
+            try
+            {
+                using (var wc = new WebClient())
                 {
-                    using (var wc = new WebClient())
-                    {
 
-                        string url = $"https://translate.googleapis.com/translate_a/single?client=gtx&sl={sourceLanguage}&tl={targetLanguage}&dt=t&q={Utilities.UrlEncode(input.ToString())}";
-                        wc.Proxy = Utilities.GetProxy();
-                        wc.Encoding = Encoding.UTF8;
-                        wc.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
-                        jsonResultString = wc.DownloadString(url).Trim();
-                    }
+                    string url = $"https://translate.googleapis.com/translate_a/single?client=gtx&sl={sourceLanguage}&tl={targetLanguage}&dt=t&q={Utilities.UrlEncode(input.ToString())}";
+                    wc.Proxy = Utilities.GetProxy();
+                    wc.Encoding = Encoding.UTF8;
+                    wc.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
+                    jsonResultString = wc.DownloadString(url).Trim();
                 }
-                catch (WebException webException)
+            }
+            catch (WebException webException)
+            {
+                throw new TranslationException("Free API quota exceeded?", webException);
+            }
+
+
+            List<string> resultList = ConvertJsonObjectToStringLines(jsonResultString);
+            resultList = ProcessPostFormattings(resultList, targetLanguage, formatList);
+
+            //brummochse: I do not really understand under which circumstances the following code is executed and if it is still required or maybe obsolete?
+
+            if (resultList.Count > sourceParagraphs.Count)
+            {
+                var trimmedList = resultList.Where(p => !string.IsNullOrEmpty(p)).ToList();
+                if (trimmedList.Count == sourceParagraphs.Count)
                 {
-                    throw new TranslationException("Free API quota exceeded?", webException);
+                    return trimmedList;
                 }
+            }
 
-
-                List<string> resultList = ConvertJsonObjectToStringLines(jsonResultString);
-                resultList = ProcessPostFormattings(resultList, targetLanguage, formatList);
-
-                //brummochse: I do not really understand under which circumstances the following code is executed and if it is still required or maybe obsolete?
-
-                if (resultList.Count > sourceParagraphs.Count)
+            if (resultList.Count < sourceParagraphs.Count)
+            {
+                var splitList = SplitMergedLines(resultList, sourceParagraphs);
+                if (splitList.Count == sourceParagraphs.Count)
                 {
-                    var trimmedList = resultList.Where(p => !string.IsNullOrEmpty(p)).ToList();
-                    if (trimmedList.Count == sourceParagraphs.Count)
-                    {
-                        return trimmedList;
-                    }
+                    return splitList;
                 }
+            }
 
-                if (resultList.Count < sourceParagraphs.Count)
-                {
-                    var splitList = SplitMergedLines(resultList, sourceParagraphs);
-                    if (splitList.Count == sourceParagraphs.Count)
-                    {
-                        return splitList;
-                    }
-                }
+            return resultList;
 
-                return resultList;
-         
         }
 
         private static List<string> ProcessPostFormattings(List<string> lines, string targetLanguage, List<Formatting> formatList)
@@ -257,7 +257,5 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
 
             return input;
         }
-
-      
     }
 }

@@ -1,17 +1,13 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.Translate.Processor
 {
     /// <summary>
     ///  allows a maximum of 2 consecutive lines to be merged.
     /// </summary>
-    class NextLineMergeTranslationProcessor : AbstractTranslationProcessor<NextLineMergeTranslationProcessor.NextLineMerging>
+    public class NextLineMergeTranslationProcessor : AbstractTranslationProcessor<NextLineMergeTranslationProcessor.NextLineMerging>
     {
         const int TimeThresholdBetweenTwoParagraphs = 200;
 

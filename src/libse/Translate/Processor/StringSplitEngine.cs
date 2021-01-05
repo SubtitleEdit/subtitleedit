@@ -66,7 +66,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
 
         public HashSet<int> EvaluateUnsplittablePositions(string text)
         {
-            HashSet<int> unsplittablePositions = new HashSet<int>();
+            var unsplittablePositions = new HashSet<int>();
             foreach (var unsplittableMarker in _unsplittableMarkers)
             {
                 unsplittablePositions.UnionWith(unsplittableMarker.FindUnsplittablePositions(text));
@@ -153,8 +153,8 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
     {
         public HashSet<int> FindUnsplittablePositions(string text)
         {
-            HashSet<int> unsplittablePositions = new HashSet<int>();
-            MatchCollection matches = Regex.Matches(text, @"\b(?:https?://|www\.)\S+\b"); //regex to find URLs
+            var unsplittablePositions = new HashSet<int>();
+            var matches = Regex.Matches(text, @"\b(?:https?://|www\.)\S+\b"); //regex to find URLs
             foreach (Match match in matches)
             {
                 for (int i = match.Index +1; i < match.Index + match.Length; i++)

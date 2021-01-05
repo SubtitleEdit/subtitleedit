@@ -1,45 +1,32 @@
 ﻿using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.Translate;
+using Nikse.SubtitleEdit.Core.Translate.Processor;
+using Nikse.SubtitleEdit.Core.Translate.Service;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.EnterpriseServices;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Text;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.Translate.Processor;
-using Nikse.SubtitleEdit.Core.Translate.Service;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    
     public sealed partial class GenericTranslate : PositionAndSizeForm
     {
         public Subtitle TranslatedSubtitle { get; private set; }
+        public bool UseFreeGoogle { get; set; }
         private Subtitle _subtitle;
         private bool _breakTranslation;
         private const string SplitterString = "+-+";
         private ITranslationService _translationService;
-
-        private enum FormattingType
-        {
-            None,
-            Italic,
-            ItalicTwoLines
-        }
-
-        private FormattingType[] _formattingTypes;
         private bool[] _autoSplit;
-
         private string _targetLanguageIsoCode;
         private string _sourceLanguageIsoCode;
-        
+
         public GenericTranslate()
         {
             UiUtil.PreInitialize(this);
@@ -53,6 +40,10 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             labelApiKeyNotFound.Text = string.Empty;
+            labelTranslationService.Text = LanguageSettings.Current.GoogleTranslate.Service;
+            comboBoxTranslationServices.Left = labelTranslationService.Left + labelTranslationService.Width + 5;
+            labelParagraphHandling.Text = LanguageSettings.Current.GoogleTranslate.LineMergeHandling;
+            comboBoxParagraphHandling.Left = labelParagraphHandling.Left + labelParagraphHandling.Width + 5;
 
             subtitleListViewSource.InitializeLanguage(LanguageSettings.Current.General, Configuration.Settings);
             subtitleListViewTarget.InitializeLanguage(LanguageSettings.Current.General, Configuration.Settings);
@@ -93,7 +84,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            _sourceLanguageIsoCode = EvaluateDefaultSourceLanguageCode(encoding,_subtitle);
+            _sourceLanguageIsoCode = EvaluateDefaultSourceLanguageCode(encoding, _subtitle);
             _targetLanguageIsoCode = EvaluateDefaultTargetLanguageCode(_sourceLanguageIsoCode);
 
             InitTranslationServices();
@@ -102,7 +93,6 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListViewSource.Fill(subtitle);
             Translate_Resize(null, null);
 
-            _formattingTypes = new FormattingType[_subtitle.Paragraphs.Count];
             _autoSplit = new bool[_subtitle.Paragraphs.Count];
         }
 
@@ -110,6 +100,20 @@ namespace Nikse.SubtitleEdit.Forms
         {
             foreach (var translationProcessor in TranslationProcessorRepository.TranslationProcessors)
             {
+                var t = translationProcessor.GetType();
+                if (t == typeof(NextLineMergeTranslationProcessor))
+                {
+                    ((NextLineMergeTranslationProcessor)translationProcessor).TranslatedName = LanguageSettings.Current.GoogleTranslate.ProcessorMergeNext;
+                }
+                else if (t == typeof(SentenceMergingTranslationProcessor))
+                {
+                    ((SentenceMergingTranslationProcessor)translationProcessor).TranslatedName = LanguageSettings.Current.GoogleTranslate.ProcessorSentence;
+                }
+                else if (t == typeof(SingleParagraphTranslationProcessor))
+                {
+                    ((SingleParagraphTranslationProcessor)translationProcessor).TranslatedName = LanguageSettings.Current.GoogleTranslate.ProcessorSingle;
+                }
+
                 comboBoxParagraphHandling.Items.Add(translationProcessor);
             }
 
@@ -121,7 +125,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void InitTranslationServices()
         {
-
             AddTranslationService(GoogleTranslationInitializer.Init(this));
             AddTranslationService(MicrosoftTranslationInitializer.Init());
             AddTranslationService(new NikseDkTranslationService());
@@ -140,7 +143,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-     private void ComboBoxTranslationServiceChanged(object sender, EventArgs e)
+        private void ComboBoxTranslationServiceChanged(object sender, EventArgs e)
         {
             _translationService = (ITranslationService)comboBoxTranslationServices.SelectedItem;
             ReadLanguageSettings();
@@ -151,7 +154,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void EvaluateTranslateButtonStatus()
         {
-            buttonTranslate.Enabled = comboBoxSource.SelectedItem != null && comboBoxTarget.SelectedItem != null && _translationService!=null;
+            buttonTranslate.Enabled = comboBoxSource.SelectedItem != null && comboBoxTarget.SelectedItem != null && _translationService != null;
         }
 
         private void ComboBoxLanguageChanged(object sender, EventArgs e)
@@ -180,7 +183,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public static string EvaluateDefaultSourceLanguageCode(Encoding encoding,Subtitle subtitle)
+        public static string EvaluateDefaultSourceLanguageCode(Encoding encoding, Subtitle subtitle)
         {
             string defaultSourceLanguageCode = LanguageAutoDetect.AutoDetectGoogleLanguage(encoding); // Guess language via encoding
             if (string.IsNullOrEmpty(defaultSourceLanguageCode))
@@ -205,12 +208,12 @@ namespace Nikse.SubtitleEdit.Forms
                 installedLanguages.Add(language);
             }
 
-            string uiCultureTargetLanguage = Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage;
+            var uiCultureTargetLanguage = Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage;
             if (uiCultureTargetLanguage == defaultSourceLanguage)
             {
-                foreach (string s in Utilities.GetDictionaryLanguages())
+                foreach (var s in Utilities.GetDictionaryLanguages())
                 {
-                    string temp = s.Replace("[", string.Empty).Replace("]", string.Empty);
+                    var temp = s.Replace("[", string.Empty).Replace("]", string.Empty);
                     if (temp.Length > 4)
                     {
                         temp = temp.Substring(temp.Length - 5, 2).ToLowerInvariant();
@@ -273,31 +276,43 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            var translationService = (ITranslationService)comboBoxTranslationServices.SelectedItem;
+            if (translationService is GoogleTranslationService &&
+                Configuration.Settings.Tools.GoogleTranslateNoKeyWarningShow &&
+                string.IsNullOrEmpty(Configuration.Settings.Tools.GoogleApiV2Key))
+            {
+                using (var form = new DialogDoNotShowAgain("Subtitle Edit", LanguageSettings.Current.GoogleTranslate.GoogleNoApiKeyWarning))
+                {
+                    form.ShowDialog(this);
+                    Configuration.Settings.Tools.GoogleTranslateNoKeyWarningShow = !form.DoNoDisplayAgain;
+                }
+            }
+
             ReadLanguageSettings();
             Translate();
         }
 
         private void Translate()
         {
-           var translator = (ITranslationProcessor)comboBoxParagraphHandling.SelectedItem;
+            var translator = (ITranslationProcessor)comboBoxParagraphHandling.SelectedItem;
 
             buttonOK.Enabled = false;
             buttonCancel.Enabled = false;
             _breakTranslation = false;
             buttonTranslate.Text = LanguageSettings.Current.General.Cancel;
             Cursor.Current = Cursors.WaitCursor;
-          
+
             progressBar1.Visible = true;
             labelPleaseWait.Visible = true;
             try
             {
-                List<Paragraph> selectedParagraphs= GetSelectedParagraphs();
+                var selectedParagraphs = GetSelectedParagraphs();
                 progressBar1.Minimum = 0;
                 progressBar1.Maximum = selectedParagraphs.Count;
                 translator.Translate(_translationService, _sourceLanguageIsoCode, _targetLanguageIsoCode, selectedParagraphs, targetParagraphs =>
                 {
                     FillTranslatedText(targetParagraphs);
-                    progressBar1.Value = selectedParagraphs.FindIndex(x=>x.Number== targetParagraphs.Keys.Last());
+                    progressBar1.Value = selectedParagraphs.FindIndex(x => x.Number == targetParagraphs.Keys.Last());
                     Application.DoEvents();
                     return _breakTranslation;
                 });
@@ -323,8 +338,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private List<Paragraph> GetSelectedParagraphs()
         {
-            List<Paragraph> selectedParagraphs = new List<Paragraph>();
-            ListView.SelectedListViewItemCollection selectedItems = subtitleListViewSource.SelectedItems;
+            var selectedParagraphs = new List<Paragraph>();
+            var selectedItems = subtitleListViewSource.SelectedItems;
             if (selectedItems.Count > 0)
             {
                 foreach (ListViewItem selectedItem in selectedItems)
@@ -344,9 +359,9 @@ namespace Nikse.SubtitleEdit.Forms
             int lastIndex = 0;
             foreach (var targetText in targetTexts)
             {
-                int paragraphNumber = targetText.Key;
-                string paragraphTargetText = targetText.Value;
-                lastIndex=TranslatedSubtitle.Paragraphs.FindIndex(x => x.Number == paragraphNumber);
+                var paragraphNumber = targetText.Key;
+                var paragraphTargetText = targetText.Value;
+                lastIndex = TranslatedSubtitle.Paragraphs.FindIndex(x => x.Number == paragraphNumber);
 
                 var cleanText = CleanText(paragraphTargetText, lastIndex);
                 TranslatedSubtitle.Paragraphs[lastIndex].Text = cleanText;
@@ -359,8 +374,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string CleanText(string s, int index)
         {
-            string cleanText = s.Replace("</p>", string.Empty).Trim();
-            int indexOfP = cleanText.IndexOf(SplitterString.Trim(), StringComparison.Ordinal);
+            var cleanText = s.Replace("</p>", string.Empty).Trim();
+            var indexOfP = cleanText.IndexOf(SplitterString.Trim(), StringComparison.Ordinal);
             if (indexOfP >= 0 && indexOfP < 4)
             {
                 cleanText = cleanText.Remove(0, indexOfP);
@@ -415,11 +430,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            if (_formattingTypes[index] == FormattingType.ItalicTwoLines || _formattingTypes[index] == FormattingType.Italic)
-            {
-                cleanText = "<i>" + cleanText + "</i>";
-            }
-
             return cleanText;
         }
 
@@ -430,11 +440,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 comboBox.Items.Add(language);
             }
-        }
-    
-        private void LinkLabel1LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            UiUtil.OpenUrl(_translationService.GetUrl());
         }
 
         private void ButtonOkClick(object sender, EventArgs e)
@@ -481,7 +486,7 @@ namespace Nikse.SubtitleEdit.Forms
             progressBar1.Width = subtitleListViewTarget.Width - (progressBar1.Left - subtitleListViewTarget.Left);
         }
 
-        private void SyncListViews(ListView listViewSelected, SubtitleListView listViewOther)
+        private static void SyncListViews(ListView listViewSelected, SubtitleListView listViewOther)
         {
             if (listViewSelected.SelectedItems.Count > 0)
             {
@@ -533,8 +538,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
             return null;
         }
-
-     
     }
 
     public class GoogleTranslationInitializer
@@ -544,27 +547,8 @@ namespace Nikse.SubtitleEdit.Forms
             GoogleTranslationService googleTranslationService = null;
             try
             {
-                var language = LanguageSettings.Current.GoogleTranslate;
                 if (string.IsNullOrEmpty(Configuration.Settings.Tools.GoogleApiV2Key))
                 {
-                    if (owner != null && Configuration.Settings.Tools.GoogleApiV2KeyInfoShow)
-                    {
-                        using (var form = new DialogDoNotShowAgain("Subtitle Edit", language.GoogleApiKeyNeeded))
-                        {
-                            form.ShowDialog(owner);
-                            Configuration.Settings.Tools.GoogleApiV2KeyInfoShow = !form.DoNoDisplayAgain;
-                        }
-                    }
-
-                    if (owner != null && Configuration.Settings.Tools.GoogleTranslateNoKeyWarningShow)
-                    {
-                        using (var form = new DialogDoNotShowAgain("Subtitle Edit", language.GoogleNoApiKeyWarning))
-                        {
-                            form.ShowDialog(owner);
-                            Configuration.Settings.Tools.GoogleTranslateNoKeyWarningShow = !form.DoNoDisplayAgain;
-                        }
-                    }
-
                     googleTranslationService = new GoogleTranslationService(new GoogleTranslator1());
                 }
                 else

@@ -1954,12 +1954,6 @@ namespace Nikse.SubtitleEdit.Logic
                 case "GoogleTranslate/MsClientSecretNeeded":
                     language.GoogleTranslate.MsClientSecretNeeded = reader.Value;
                     break;
-                case "GoogleTranslate/GoogleApiKeyNeeded":
-                    language.GoogleTranslate.GoogleApiKeyNeeded = reader.Value;
-                    break;
-                case "GoogleTranslate/GoogleNoApiKeyWarning":
-                    language.GoogleTranslate.GoogleNoApiKeyWarning = reader.Value;
-                    break;
                 case "GoogleOrMicrosoftTranslate/Title":
                     language.GoogleOrMicrosoftTranslate.Title = reader.Value;
                     break;

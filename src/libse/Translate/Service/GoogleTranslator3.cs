@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
-using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Core.Translate.Service
 {
@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
         {
             return "Google Translate Cloud V3";
         }
-        public  int  GetMaxTextSize()
+        public int GetMaxTextSize()
         {
             return 1000; //brummochse: in the old code there is no value defined for Google trasnlate V3. this is simply the value from V2 in lack of better knowledge
         }

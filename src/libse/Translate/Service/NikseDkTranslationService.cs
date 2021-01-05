@@ -1,18 +1,15 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
-using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.Translate.Service;
 
 namespace Nikse.SubtitleEdit.Core.Translate.Service
 {
     public class NikseDkTranslationService : ITranslationService
     {
-     
+
         public List<TranslationPair> GetSupportedSourceLanguages()
         {
             return new List<TranslationPair>
@@ -41,8 +38,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
 
         public List<string> Translate(string sourceLanguage, string targetLanguage, List<Paragraph> sourceParagraphs)
         {
-            List<string> targetTexts = new List<string>();
-
+            var targetTexts = new List<string>();
             var sb = new StringBuilder();
             foreach (var p in sourceParagraphs)
             {
@@ -86,7 +82,8 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
             }
         }
 
-        public int GetMaxTextSize() {
+        public int GetMaxTextSize()
+        {
             return 9000; //brummochse: found this value in the old source code.. is it correct?
         }
 
