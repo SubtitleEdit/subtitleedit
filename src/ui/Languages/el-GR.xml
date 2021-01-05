@@ -169,7 +169,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </AudioToText>
   <AutoBreakUnbreakLines>
     <TitleAutoBreak>Αυτόματη ισορροπία γραμμών</TitleAutoBreak>
-    <TitleUnbreak>Αφαίρεση διασπάσεων από τις γραμμές</TitleUnbreak>
+    <TitleUnbreak>Αφαίρεση διασπάσεων γραμμών</TitleUnbreak>
     <LinesFoundX>Εύρεση γραμμών: {0}</LinesFoundX>
     <OnlyBreakLinesLongerThan>Διάσπαση γραμμών μεγαλύτερες από</OnlyBreakLinesLongerThan>
     <OnlyUnbreakLinesLongerThan>Συνένωση γραμμών μεγαλύτερες από</OnlyUnbreakLinesLongerThan>
@@ -253,6 +253,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TopAlignSelectedLines>Άνω στοίχιση επιλεγμένων γραμμών (κράτηση οριζόντιας θέσης)</TopAlignSelectedLines>
     <BottomAlignSelectedLines>Κάτω στοίχιση επιλεγμένων γραμμών (κράτηση οριζόντιας θέσης)</BottomAlignSelectedLines>
     <SizeXY>Μέγεθος: {0}χ{1}</SizeXY>
+    <SetAspectRatio11>Ορισμός λόγου διαστάσεων 1:1</SetAspectRatio11>
   </BinEdit>
   <Bookmarks>
     <EditBookmark>Επεξεργασία σημείωσης</EditBookmark>
@@ -1034,9 +1035,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <MultipleReplace>&amp;Πολλαπλή αντικατάστση...</MultipleReplace>
         <GoToSubtitleNumber>&amp;Μετάβαση σε αριθμό υποτίτλου...</GoToSubtitleNumber>
         <RightToLeftMode>Λειτουργία από δεξιά προς αριστερά</RightToLeftMode>
-        <FixRtlViaUnicodeControlCharacters>Επιδιόρθωση RTL μέσω χαρακτήρων ελέγχου Unicode (επιλεγμένων γραμμών)</FixRtlViaUnicodeControlCharacters>
-        <RemoveUnicodeControlCharacters>Αφαίρεση χαρακτήρων ελέγχου Unicode (επιλεγμένων γραμμών)</RemoveUnicodeControlCharacters>
-        <ReverseRightToLeftStartEnd>Αντιστροφή έναρξης/λήξης του RTL (επιλεγμένες γραμμές)</ReverseRightToLeftStartEnd>
+        <FixRtlViaUnicodeControlCharacters>Επιδιόρθωση RTL μέσω χαρακτήρων ελέγχου Unicode</FixRtlViaUnicodeControlCharacters>
+        <RemoveUnicodeControlCharacters>Αφαίρεση χαρακτήρων ελέγχου Unicode</RemoveUnicodeControlCharacters>
+        <ReverseRightToLeftStartEnd>Αντιστροφή έναρξης/λήξης του RTL</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Προβολή αρχικού κειμένου στις προεπισκοπήσεις ήχου/βίντεο</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Επεξεργασία επιλογής...</ModifySelection>
         <InverseSelection>Αντιστροφή</InverseSelection>
@@ -1068,7 +1069,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <TextTotalLength>Κείμενο - συνολικό μήκος</TextTotalLength>
         <TextNumberOfLines>Κείμενο - σύνολο γραμμών</TextNumberOfLines>
         <TextNumberOfCharactersPerSeconds>Κείμενο - σύνολο χαρακτήρων/δευτ.</TextNumberOfCharactersPerSeconds>
-        <WordsPerMinute>Κείμενο - λέξεις ανά λεπτό (λαλ)</WordsPerMinute>
+        <WordsPerMinute>Κείμενο - λέξεις ανά λεπτό</WordsPerMinute>
         <Style>Στυλ</Style>
         <Ascending>Αύξουσα</Ascending>
         <Descending>Φθίνουσα</Descending>
@@ -2374,6 +2375,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CheckOneLetterWords>Ερώτηση για άγνωστες λέξεις ένός γράμματος</CheckOneLetterWords>
     <TreatINQuoteAsING>Αντιμετώπιση κατάληξης " in' " ως " ing " (Μόνο Αγγλικά)</TreatINQuoteAsING>
     <RememberUseAlwaysList>Απομνημόνευση λίστας "Χρήση πάντα"</RememberUseAlwaysList>
+    <LiveSpellCheck>Απευθείας ορθογραφικός έλεγχος</LiveSpellCheck>
     <ImageText>Κείμενο εικόνας</ImageText>
     <SpellCheckCompleted>Ολοκλήρωση ορθογραφικού ελέγχου</SpellCheckCompleted>
     <SpellCheckAborted>Ματαίωση ορθογραφικού ελέγχου</SpellCheckAborted>
