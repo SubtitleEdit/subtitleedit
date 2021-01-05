@@ -191,13 +191,13 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\DCinema\DCinemaPropertiesInterop.cs">
-      <SubType>form</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\DCinema\DCinemaPropertiesInterop.Designer.cs">
       <DependentUpon>DCinemaPropertiesInterop.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\DCinema\DCinemaPropertiesSmpte.cs">
-      <SubType>form</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\DCinema\DCinemaPropertiesSmpte.Designer.cs">
       <DependentUpon>DCinemaPropertiesSmpte.cs</DependentUpon>
@@ -252,6 +252,12 @@
     </Compile>
     <Compile Include="Forms\ExportPngXmlDialogOpenFolder.Designer.cs">
       <DependentUpon>ExportPngXmlDialogOpenFolder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\GenericTranslate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\GenericTranslate.Designer.cs">
+      <DependentUpon>GenericTranslate.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ImportCdg.cs">
       <SubType>Form</SubType>
@@ -518,7 +524,7 @@
       <DependentUpon>ExportText.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ExtractDateTimeInfo.cs">
-      <SubType>form</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\ExtractDateTimeInfo.Designer.cs">
       <DependentUpon>ExtractDateTimeInfo.cs</DependentUpon>
@@ -717,12 +723,6 @@
     </Compile>
     <Compile Include="Forms\SetSyncPoint.Designer.cs">
       <DependentUpon>SetSyncPoint.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\GoogleTranslate.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\GoogleTranslate.Designer.cs">
-      <DependentUpon>GoogleTranslate.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\GoToLine.cs">
       <SubType>Form</SubType>
@@ -968,7 +968,7 @@
       <DependentUpon>VideoPlayerUndocked.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\VisualSync.cs">
-      <SubType>form</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\VisualSync.Designer.cs">
       <DependentUpon>VisualSync.cs</DependentUpon>
@@ -1004,7 +1004,7 @@
       <DependentUpon>VobSubNOcrTrain.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Ocr\VobSubOcr.cs">
-      <SubType>form</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\Ocr\VobSubOcr.Designer.cs">
       <DependentUpon>VobSubOcr.cs</DependentUpon>
@@ -1246,6 +1246,10 @@
     <EmbeddedResource Include="Forms\ExportPngXmlDialogOpenFolder.resx">
       <DependentUpon>ExportPngXmlDialogOpenFolder.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\GenericTranslate.resx">
+      <DependentUpon>GenericTranslate.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\ImportCdg.resx">
       <DependentUpon>ImportCdg.cs</DependentUpon>
     </EmbeddedResource>
@@ -1474,10 +1478,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SetSyncPoint.resx">
       <DependentUpon>SetSyncPoint.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\GoogleTranslate.resx">
-      <DependentUpon>GoogleTranslate.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\GoToLine.resx">
       <DependentUpon>GoToLine.cs</DependentUpon>
