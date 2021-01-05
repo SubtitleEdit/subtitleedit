@@ -1235,7 +1235,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(toolsNode, LanguageSettings.Current.Main.Menu.Tools.JoinSubtitles, nameof(Configuration.Settings.Shortcuts.MainToolsJoin), true);
             AddNode(toolsNode, LanguageSettings.Current.Main.Menu.ContextMenu.AutoDurationCurrentLine, nameof(Configuration.Settings.Shortcuts.MainToolsAutoDuration));
             AddNode(toolsNode, language.ShowBeamer, nameof(Configuration.Settings.Shortcuts.MainToolsBeamer), true);
-            AddNode(toolsNode, language.ShowStyleManager, nameof(Configuration.Settings.Shortcuts.StyleManager));
+            AddNode(toolsNode, language.ShowStyleManager, nameof(Configuration.Settings.Shortcuts.MainToolsStyleManager));
             if (toolsNode.Nodes.Count > 0)
             {
                 _shortcuts.Nodes.Add(toolsNode);
