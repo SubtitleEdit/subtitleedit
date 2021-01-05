@@ -12,7 +12,7 @@
    * Add shortcut for toggle casing - thx LeonCheung
    * Add shortcut toggle focus between list view/waveform - thx OmrSi
    * Add toggle color shortcuts - thx Jan
-   * Add optional syntax coloring for textbox (probably only for Latin)
+   * Add optional syntax coloring for textbox w live spell check - thx OmrSi
    * Add compare reload - thx Leon/OmrSi
 * IMPROVED:
    * Update Greek translation - thx PMitsakis
@@ -31,18 +31,19 @@
    * Improve SoftNi format - thx EduGomes
    * List possible Bing translator token endpoints
    * Update Tesseract 5 Alpha to "2020-11-27"
-   * Internal project restructure 
-   * Readying for .NET 5
+   * Internal project restructure + readying for .NET 5
    * Do not show full file path in title bar - thx Kristo
    * "File - Import" grouping - thx OmrSi/ivandrofly
    * Allow em-dash for sentence ending - thx Boulder08
    * Auto fix mkv subs without duration - thx uckthis
    * Optimize writing Blu-ray .sup files
+   * Enable "Add new" for nOCR char inspect
+   * Add "Subtitle.Parse" methods for simpler loading of subtitles (libse)
+   * Change ms to "Seconds" in Karaoke/Typewriter - thx frenchiveruti/OmrSi
 * FIXED:
    * Fix frame rate bug in FCP+image - thx Christopher
    * Fix bdsup right align export issue - thx von Suppé
    * Fix export FAB image script save path - thx rotorwave
-   * Change ms to "Seconds" in Karaoke/Typewriter - thx frenchiveruti/OmrSi
    * Fix crash loading Cheetah Caption - thx mook1975
    * Fix crash in video menu with video without audio - thx GrampaWildWilly
    * Fix crash in nhunspell suggest - thx SeproDE
@@ -52,11 +53,13 @@
    * Fix translate with weird new lines - thx MarianTum
    * Fix crash in .ASS preview - thx LeonCheung
    * Fix crashes in OCR image pre-processing - thx VoodooFX
-   * Fix list view colum auto size w style - thx Jamakmake
+   * Fix list view column auto size w style - thx Jamakmake
    * Fix Tesseract lang parameter in cmd line OCR on Linux - thx depeo
    * Fix crash in binOcr - thx jpinto0
    * Fix issues with ismt format - thx Bersu
    * Don't log tag info when no sub - thx Jamakmake
+   * Fix ANSI writing for a few chars (…/®/©) - thx fr
+   * Fix case-change issue in nOcr - thx Janusz
 
 
 3.5.18 (9th November 2020)
