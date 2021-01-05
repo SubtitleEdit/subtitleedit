@@ -289,7 +289,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     _fixedArabicComma = false;
                     var s = value;
-                    if (!Configuration.Settings.General.RightToLeftMode && !s.Contains('\u202A'))
+                    if (!Configuration.Settings.General.RightToLeftMode && !s.ContainsUnicodeControlChars())
                     {
                         string textNoTags = HtmlUtil.RemoveHtmlTags(s, true);
                         if (textNoTags.EndsWith('،'))
