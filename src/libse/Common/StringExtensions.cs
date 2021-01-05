@@ -7,6 +7,8 @@ namespace Nikse.SubtitleEdit.Core.Common
 {
     public static class StringExtensions
     {
+        public static char[] UnicodeControlChars { get; } = { '\u200E', '\u200F', '\u202A', '\u202B', '\u202C', '\u202D', '\u202E' };
+
         public static bool LineStartsWithHtmlTag(this string text, bool threeLengthTag, bool includeFont = false)
         {
             if (text == null || !threeLengthTag && !includeFont)
@@ -315,6 +317,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return false;
+        }
+
+        public static bool ContainsUnicodeControlChars(this string s)
+        {
+            return s.Contains(UnicodeControlChars);
         }
 
         public static string RemoveControlCharacters(this string s)
