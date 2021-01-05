@@ -131,7 +131,12 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             {
                 _nOcrFileName = "Latin";
             }
+
             _nOcrFileName = Path.Combine(Configuration.OcrDirectory, _nOcrFileName + ".nocr");
+            _ocrLowercaseHeightsTotal = 0;
+            _ocrLowercaseHeightsTotalCount = 0;
+            _ocrUppercaseHeightsTotal = 0;
+            _ocrUppercaseHeightsTotalCount = 0;
         }
 
         private void OpenBinSubtitle(string fileName)
@@ -1848,11 +1853,6 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             videoPlayerContainer1.CurrentPosition = p.StartTime.TotalSeconds;
         }
 
-        private void ocrTextsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private static void OcrParagraph(Extra extra, IBinaryParagraphWithPosition s, NOcrDb nOcrDb, Paragraph p)
         {
             var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : s.GetBitmap();
@@ -1872,7 +1872,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 else
                 {
                     var match = nOcrDb.GetMatch(item.NikseBitmap, item.Top, true, 40);
-                    sb.Append(match != null ? match.Text : "*");
+                    sb.Append(match != null ? FixUppercaseLowercaseIssues(item, match) : "*");
                 }
             }
 
@@ -2269,6 +2269,96 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                     extra.Y = Configuration.Settings.Tools.BinEditVerticalMargin;
                     break;
             }
+        }
+
+        private static readonly HashSet<string> UppercaseLikeLowercase = new HashSet<string> { "V", "W", "U", "S", "Z", "O", "X", "Ø", "C" };
+        private static readonly HashSet<string> LowercaseLikeUppercase = new HashSet<string> { "v", "w", "u", "s", "z", "o", "x", "ø", "c" };
+        private static readonly HashSet<string> UppercaseWithAccent = new HashSet<string> { "Č", "Š", "Ž", "Ś", "Ż", "Ś", "Ö", "Ü", "Ú", "Ï", "Í", "Ç", "Ì", "Ò", "Ù", "Ó", "Í" };
+        private static readonly HashSet<string> LowercaseWithAccent = new HashSet<string> { "č", "š", "ž", "ś", "ż", "ś", "ö", "ü", "ú", "ï", "í", "ç", "ì", "ò", "ù", "ó", "í" };
+
+        private static long _ocrLowercaseHeightsTotal;
+        private static int _ocrLowercaseHeightsTotalCount;
+        private static long _ocrUppercaseHeightsTotal;
+        private static int _ocrUppercaseHeightsTotalCount;
+
+        /// <summary>
+        /// Fix uppercase/lowercase issues (not I/l)
+        /// </summary>
+        private static string FixUppercaseLowercaseIssues(ImageSplitterItem targetItem, NOcrChar result)
+        {
+            if (result.Text == "e" || result.Text == "a" || result.Text == "d" || result.Text == "t")
+            {
+                _ocrLowercaseHeightsTotalCount++;
+                _ocrLowercaseHeightsTotal += targetItem.NikseBitmap.Height;
+                if (_ocrUppercaseHeightsTotalCount < 3)
+                {
+                    _ocrUppercaseHeightsTotalCount++;
+                    _ocrUppercaseHeightsTotal += targetItem.NikseBitmap.Height + 10;
+                }
+            }
+
+            if (result.Text == "E" || result.Text == "H" || result.Text == "R" || result.Text == "D" || result.Text == "T" || result.Text == "M")
+            {
+                _ocrUppercaseHeightsTotalCount++;
+                _ocrUppercaseHeightsTotal += targetItem.NikseBitmap.Height;
+                if (_ocrLowercaseHeightsTotalCount < 3 && targetItem.NikseBitmap.Height > 20)
+                {
+                    _ocrLowercaseHeightsTotalCount++;
+                    _ocrLowercaseHeightsTotal += targetItem.NikseBitmap.Height - 10;
+                }
+            }
+
+            if (_ocrLowercaseHeightsTotalCount <= 2 || _ocrUppercaseHeightsTotalCount <= 2)
+            {
+                return result.Text;
+            }
+
+            // Latin letters where lowercase versions look like uppercase version 
+            if (UppercaseLikeLowercase.Contains(result.Text))
+            {
+                var averageLowercase = _ocrLowercaseHeightsTotal / _ocrLowercaseHeightsTotalCount;
+                var averageUppercase = _ocrUppercaseHeightsTotal / _ocrUppercaseHeightsTotalCount;
+                if (Math.Abs(averageLowercase - targetItem.NikseBitmap.Height) < Math.Abs(averageUppercase - targetItem.NikseBitmap.Height))
+                {
+                    return result.Text.ToLowerInvariant();
+                }
+
+                return result.Text;
+            }
+
+            if (LowercaseLikeUppercase.Contains(result.Text))
+            {
+                var averageLowercase = _ocrLowercaseHeightsTotal / _ocrLowercaseHeightsTotalCount;
+                var averageUppercase = _ocrUppercaseHeightsTotal / _ocrUppercaseHeightsTotalCount;
+                if (Math.Abs(averageLowercase - targetItem.NikseBitmap.Height) > Math.Abs(averageUppercase - targetItem.NikseBitmap.Height))
+                {
+                    return result.Text.ToUpperInvariant();
+                }
+
+                return result.Text;
+            }
+
+            if (UppercaseWithAccent.Contains(result.Text))
+            {
+                var averageUppercase = _ocrUppercaseHeightsTotal / (double)_ocrUppercaseHeightsTotalCount;
+                if (targetItem.NikseBitmap.Height < averageUppercase + 3)
+                {
+                    return result.Text.ToLowerInvariant();
+                }
+
+                return result.Text;
+            }
+
+            if (LowercaseWithAccent.Contains(result.Text))
+            {
+                var averageUppercase = _ocrUppercaseHeightsTotal / (double)_ocrUppercaseHeightsTotalCount;
+                if (targetItem.NikseBitmap.Height > averageUppercase + 4)
+                {
+                    return result.Text.ToUpperInvariant();
+                }
+            }
+
+            return result.Text;
         }
 
         private void quickOCRTextsforOverviewOnlyToolStripMenuItem_Click(object sender, EventArgs e)

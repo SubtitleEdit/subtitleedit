@@ -444,7 +444,26 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 previousGuesses = new List<string>(list);
             }
 
-            return list;
+            // do not keep one letter consonants
+            var results = new List<string>();
+            foreach (var s in list)
+            {
+                var keep = true;
+                var words = s.Split(' ');
+                foreach (var w in words)
+                {
+                    if (w.Length == 1 && char.IsLetter(w[0]) && !"aeiouæøåöüäAEIOUÆØÅÖÜÄ".Contains(w))
+                    {
+                        keep = false;
+                    }
+                }
+                if (keep)
+                {
+                    results.Add(s);
+                }
+            }
+
+            return results;
         }
 
         public string FixCommonWordErrors(string input)
