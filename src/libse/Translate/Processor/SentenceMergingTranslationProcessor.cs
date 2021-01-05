@@ -1,20 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.Translate.Processor
 {
 
     public class SentenceMergingTranslationProcessor : AbstractTranslationProcessor<SentenceMergingTranslationProcessor.Sentence>
     {
-        private static readonly char[] SentenceDelimiterAfterChars = { '.', '?', '!',')' };
+        private static readonly char[] SentenceDelimiterAfterChars = { '.', '?', '!', ')' };
         private static readonly char[] SentenceDelimiterBeforeChars = { '(' };
 
         private static readonly char[] WordDelimiterAfterChars = { ' ', ' ' };
 
         private static readonly StringSplitEngine SentenceSplitEngine = new StringSplitEngine(SentenceDelimiterAfterChars, SentenceDelimiterBeforeChars);
-        private static readonly List<AbstractStringSplitsChunkAssigner> StringSplitsChunkAssigners=new List<AbstractStringSplitsChunkAssigner>();
+        private static readonly List<AbstractStringSplitsChunkAssigner> StringSplitsChunkAssigners = new List<AbstractStringSplitsChunkAssigner>();
 
         static SentenceMergingTranslationProcessor()
         {
@@ -134,7 +134,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
                         currentSentence = new Sentence();
                     }
                     currentSentence.SentenceParagraphs.Add(new SentenceParagraphRelation(sentenceChunk, paragraphWrapper));
-                    if (SentenceDelimiterAfterChars.Contains(sentenceChunk[sentenceChunk.Length-1]))
+                    if (SentenceDelimiterAfterChars.Contains(sentenceChunk[sentenceChunk.Length - 1]))
                     {
                         yield return currentSentence;
                         currentSentence = new Sentence();

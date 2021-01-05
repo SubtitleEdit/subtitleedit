@@ -1,8 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using System.Collections.Generic;
-using System.Text;
-using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.Translate.Service;
 
 namespace Nikse.SubtitleEdit.Core.Translate.Service
 {

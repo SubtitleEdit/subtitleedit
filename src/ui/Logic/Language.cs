@@ -945,10 +945,12 @@ namespace Nikse.SubtitleEdit.Logic
                 MsClientSecretNeeded = "Sorry, you need a Cognitive Services 'Translator Text' key from Microsoft to use the latest Microsoft Translator." + Environment.NewLine +
                                        Environment.NewLine +
                                        "Go to \"Options -> Settings -> Tools\" to enter your key.",
-                GoogleApiKeyNeeded = "Sorry, you need an API key from Google to use the latest Google Translate." + Environment.NewLine +
-                                     Environment.NewLine +
-                                     "Go to \"Options -> Settings -> Tools\" to enter your Google translate API key.",
-                GoogleNoApiKeyWarning = "Trying to translate without API key... (slow and limited data)"
+                GoogleNoApiKeyWarning = "Trying to translate without API key... (slow and limited data). " + Environment.NewLine + "To use an API key go to \"Options -> Settings -> Tools\" to enter your Google translate API key.",
+                Service = "Service:",
+                LineMergeHandling = "Line merge:",
+                ProcessorMergeNext = "Merge max two lines",
+                ProcessorSentence = "Merge sentences",
+                ProcessorSingle =  "No merging",
             };
 
             GoogleOrMicrosoftTranslate = new LanguageStructure.GoogleOrMicrosoftTranslate

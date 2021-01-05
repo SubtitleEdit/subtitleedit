@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.Translate.Service
 {
@@ -81,7 +81,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
                 if (webException.Message.Contains("(400) Bad Request"))
                 {
                     message = "API key invalid (or perhaps billing is not enabled)?";
-                } 
+                }
                 else if (webException.Message.Contains("(403) Forbidden."))
                 {
                     message = "Perhaps billing is not enabled (or API key is invalid)?";

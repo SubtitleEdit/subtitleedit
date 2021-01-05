@@ -1,11 +1,10 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
-using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using Nikse.SubtitleEdit.Core.Translate.Service;
 
 namespace Nikse.SubtitleEdit.Core.Translate.Service
 {
@@ -192,7 +191,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
             return this.GetTranslationPairs();
         }
 
-        public  List<TranslationPair> GetSupportedTargetLanguages()
+        public List<TranslationPair> GetSupportedTargetLanguages()
         {
             return this.GetTranslationPairs();
         }

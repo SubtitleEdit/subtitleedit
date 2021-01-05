@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Text;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Core.Translate.Service
 {
@@ -11,6 +10,5 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
         List<string> Translate(string sourceLanguage, string targetLanguage, List<Paragraph> sourceParagraphs);
         int GetMaxTextSize();
         int GetMaximumRequestArraySize();
-
     }
 }

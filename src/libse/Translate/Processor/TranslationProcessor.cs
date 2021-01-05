@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Translate.Service;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Core.Translate.Processor
 {
@@ -58,31 +54,33 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
 
         protected abstract IEnumerable<TTranslationBaseUnit> ConstructTranslationBaseUnits(List<Paragraph> sourceParagraphs);
 
-        protected abstract Dictionary<int,string> GetTargetParagraphs(List<TTranslationBaseUnit> sourceTranslationUnits, List<string> targetTexts);
+        protected abstract Dictionary<int, string> GetTargetParagraphs(List<TTranslationBaseUnit> sourceTranslationUnits, List<string> targetTexts);
 
         protected abstract string GetName();
+        
+        public string TranslatedName { get; set; }
 
         public override string ToString()
         {
-            return GetName();
+            return TranslatedName ?? GetName();
         }
 
         public List<string> Translate(ITranslationService translationService, string sourceLanguageIsoCode, string targetLanguageIsoCode, List<Paragraph> sourceParagraphs, TranslationProcessCancelStatus processCancelStatus)
         {
-            IEnumerable<TTranslationBaseUnit> translationBaseUnits =ConstructTranslationBaseUnits(sourceParagraphs);
+            IEnumerable<TTranslationBaseUnit> translationBaseUnits = ConstructTranslationBaseUnits(sourceParagraphs);
             var translationChunks = BuildTranslationChunks(translationBaseUnits, translationService);
 
-            Dictionary<int,string> targetParagraphs=new Dictionary<int, string>();
+            Dictionary<int, string> targetParagraphs = new Dictionary<int, string>();
 
             foreach (TranslationChunk translationChunk in translationChunks)
             {
-                List<string> result = translationService.Translate(sourceLanguageIsoCode, targetLanguageIsoCode, translationChunk.TranslationUnits.ConvertAll(x=>new Paragraph() { Text = x.Text }));
-                Dictionary<int, string> newTargetParagraphs=GetTargetParagraphs(translationChunk.TranslationUnits, result);
+                List<string> result = translationService.Translate(sourceLanguageIsoCode, targetLanguageIsoCode, translationChunk.TranslationUnits.ConvertAll(x => new Paragraph() { Text = x.Text }));
+                Dictionary<int, string> newTargetParagraphs = GetTargetParagraphs(translationChunk.TranslationUnits, result);
                 foreach (KeyValuePair<int, string> newTargetParagraph in newTargetParagraphs)
                 {
                     targetParagraphs[newTargetParagraph.Key] = newTargetParagraph.Value;
                 }
-                if (processCancelStatus!= null && processCancelStatus(newTargetParagraphs)) //check if operation was canceled outside
+                if (processCancelStatus != null && processCancelStatus(newTargetParagraphs)) //check if operation was canceled outside
                 {
                     return targetParagraphs.Values.ToList();
                 }
@@ -96,11 +94,11 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
         {
             int maxTextSize = translationService.GetMaxTextSize();
             int maximumRequestArrayLength = translationService.GetMaximumRequestArraySize();
-            TranslationChunk currentChunk = new TranslationChunk();
+            var currentChunk = new TranslationChunk();
 
             foreach (var translationUnit in translationUnits)
             {
-                if (currentChunk.TextSize + Utilities.UrlEncode(translationUnit.Text).Length > maxTextSize 
+                if (currentChunk.TextSize + Utilities.UrlEncode(translationUnit.Text).Length > maxTextSize
                     || currentChunk.ArrayLength + 1 > maximumRequestArrayLength)
                 {
                     yield return currentChunk;

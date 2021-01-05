@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace Nikse.SubtitleEdit.Core.Translate.Processor
@@ -140,7 +139,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
             _targetSplits = StringSplitEngine.Split(targetText);
             _targetSplitsLength = _targetSplits.ConvertAll(x => x.Length);
 
-            List<RateResult> rateResults = new List<RateResult>();
+            var rateResults = new List<RateResult>();
             for (int i = 0; i < _iterations; i++)
             {
                 int[] breakPositions = GetRandomBreakPositions(targetText, _sourceChunksTextLength);
