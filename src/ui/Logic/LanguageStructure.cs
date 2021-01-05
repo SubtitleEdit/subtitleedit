@@ -1490,9 +1490,7 @@
                 public class AutoTranslateMenu
                 {
                     public string Title { get; set; }
-                    public string TranslatePoweredByGoogle { get; set; }
-                    public string TranslatePoweredByMicrosoft { get; set; }
-                    public string TranslateFromSwedishToDanish { get; set; }
+                    public string AutoTranslate { get; set; }
                 }
                 public class OptionsMenu
                 {
