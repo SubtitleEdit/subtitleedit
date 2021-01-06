@@ -3,7 +3,6 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SpellCheck;
-using Nikse.SubtitleEdit.Forms;
 using Nikse.SubtitleEdit.Logic.SpellCheck;
 using System;
 using System.Drawing;
@@ -41,16 +40,17 @@ namespace Nikse.SubtitleEdit.Controls
         private HashSet<string> _skipOnceList;
         private SpellCheckWord _currentWord;
         private string _currentDictionary;
-        private string _currentLanguage;
         private string _uiTextBoxOldText;
 
         private static readonly char[] SplitChars = { ' ', '.', ',', '?', '!', ':', ';', '"', '“', '”', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n', '\b', '¿', '¡', '…', '—', '–', '♪', '♫', '„', '«', '»', '‹', '›', '؛', '،', '؟' };
-        
+
         public int CurrentLineIndex { get; set; }
+        public string CurrentLanguage { get; private set; }
+        public bool LanguageChanged { get; set; }
         public bool IsWrongWord { get; set; }
         public bool IsSpellCheckerInitialized { get; set; }
         public bool IsDictionaryDownloaded { get; set; } = true;
-        public bool IsSpellCheckRequested { get; set; } = false;
+        public bool IsSpellCheckRequested { get; set; }
 
         public class SuggestionParameter
         {
@@ -1001,7 +1001,7 @@ namespace Nikse.SubtitleEdit.Controls
         public async Task CheckForLanguageChange(Subtitle subtitle)
         {
             var detectedLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
-            if (_currentLanguage != detectedLanguage)
+            if (CurrentLanguage != detectedLanguage)
             {
                 DisposeHunspellAndDictionaries();
                 await InitializeLiveSpellCheck(subtitle, CurrentLineIndex);
@@ -1018,11 +1018,11 @@ namespace Nikse.SubtitleEdit.Controls
             if (_spellCheckWordLists is null && _hunspell is null)
             {
                 var detectedLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
-                var availableDictionaries = Utilities.GetDictionaryLanguagesCultureNeutral();
+                var downloadedDictionaries = Utilities.GetDictionaryLanguagesCultureNeutral();
                 var isDictionaryAvailable = false;
-                foreach (var availableDictionary in availableDictionaries)
+                foreach (var downloadedDictionary in downloadedDictionaries)
                 {
-                    if (availableDictionary.Contains($"[{detectedLanguage}]"))
+                    if (downloadedDictionary.Contains($"[{detectedLanguage}]"))
                     {
                         isDictionaryAvailable = true;
                         break;
@@ -1031,6 +1031,8 @@ namespace Nikse.SubtitleEdit.Controls
 
                 if (isDictionaryAvailable)
                 {
+                    IsDictionaryDownloaded = true;
+
                     var languageName = LanguageAutoDetect.AutoDetectLanguageName(string.Empty, subtitle);
                     if (languageName.Split(new char[] { '_', '-' })[0] != detectedLanguage)
                     {
@@ -1045,16 +1047,10 @@ namespace Nikse.SubtitleEdit.Controls
                 else
                 {
                     IsDictionaryDownloaded = false;
-                    using (var gd = new GetDictionaries())
-                    {
-                        if (gd.ShowDialog(this) == DialogResult.OK)
-                        {
-                            await InitializeLiveSpellCheck(subtitle, lineNumber);
-                        }
-                    }
                 }
 
-                _currentLanguage = detectedLanguage;
+                LanguageChanged = true;
+                CurrentLanguage = detectedLanguage;
             }
         }
 
@@ -1092,7 +1088,7 @@ namespace Nikse.SubtitleEdit.Controls
                 _wrongWords = null;
                 _currentWord = null;
                 _currentDictionary = null;
-                _currentLanguage = null;
+                CurrentLanguage = null;
                 _hunspell?.Dispose();
                 _hunspell = null;
                 IsWrongWord = false;
@@ -1215,7 +1211,7 @@ namespace Nikse.SubtitleEdit.Controls
                         continue; // do not spell check urls
                     }
 
-                    if (_currentLanguage == "ar")
+                    if (CurrentLanguage == "ar")
                     {
                         var trimmed = currentWordText.Trim('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', ',', '،');
                         if (trimmed != currentWordText)
@@ -1268,17 +1264,17 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         continue;
                     }
-                    else if (_currentLanguage == "en " && (currentWordText.Equals("a", StringComparison.OrdinalIgnoreCase) || currentWordText == "I"))
+                    else if (CurrentLanguage == "en " && (currentWordText.Equals("a", StringComparison.OrdinalIgnoreCase) || currentWordText == "I"))
                     {
                         continue;
                     }
-                    else if (_currentLanguage == "da" && currentWordText.Equals("i", StringComparison.OrdinalIgnoreCase))
+                    else if (CurrentLanguage == "da" && currentWordText.Equals("i", StringComparison.OrdinalIgnoreCase))
                     {
                         continue;
                     }
                 }
 
-                if (Configuration.Settings.Tools.SpellCheckEnglishAllowInQuoteAsIng && _currentLanguage == "en"
+                if (Configuration.Settings.Tools.SpellCheckEnglishAllowInQuoteAsIng && CurrentLanguage == "en"
                     && _words[i].Text.EndsWith("in'", StringComparison.OrdinalIgnoreCase) && DoSpell(currentWordText.TrimEnd('\'') + "g"))
                 {
                     continue;
