@@ -1868,7 +1868,7 @@ $HorzAlign          =   Center
         public string MainVideoClose { get; set; }
         public string MainVideoPause { get; set; }
         public string MainVideoStop { get; set; }
-        public string MainVideoToggleSubtitleVisibility { get; set; }
+        public string MainVideoToggleOnVideoPreview { get; set; }
         public string MainVideoPlayFromJustBefore { get; set; }
         public string MainVideoPlayFromBeginning { get; set; }
         public string MainVideoPlayPauseToggle { get; set; }
@@ -6705,10 +6705,10 @@ $HorzAlign          =   Center
                     shortcuts.MainVideoStop = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("MainVideoToggleSubtitleVisibility");
+                subNode = node.SelectSingleNode("MainVideoToggleOnVideoPreview");
                 if (subNode != null)
                 {
-                    shortcuts.MainVideoToggleSubtitleVisibility = subNode.InnerText;
+                    shortcuts.MainVideoToggleOnVideoPreview = subNode.InnerText;
 
                 }
                 subNode = node.SelectSingleNode("MainVideoPlayFromJustBefore");
@@ -8611,7 +8611,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainVideoClose", shortcuts.MainVideoClose);
             textWriter.WriteElementString("MainVideoPause", shortcuts.MainVideoPause);
             textWriter.WriteElementString("MainVideoStop", shortcuts.MainVideoStop);
-            textWriter.WriteElementString("MainVideoToggleSubtitleVisibility", shortcuts.MainVideoToggleSubtitleVisibility);
+            textWriter.WriteElementString("MainVideoToggleOnVideoPreview", shortcuts.MainVideoToggleOnVideoPreview);
             textWriter.WriteElementString("MainVideoPlayFromJustBefore", shortcuts.MainVideoPlayFromJustBefore);
             textWriter.WriteElementString("MainVideoPlayFromBeginning", shortcuts.MainVideoPlayFromBeginning);
             textWriter.WriteElementString("MainVideoPlayPauseToggle", shortcuts.MainVideoPlayPauseToggle);

@@ -1791,7 +1791,7 @@ namespace Nikse.SubtitleEdit.Logic
                     Next = "&Next >",
                     PlayCurrent = "&Play current",
                     Stop = "&Stop",
-                    ToggleSubtitleVisibility = "Toggle subtitle visibility",
+                    ToggleOnVideoPreview = "Toggle on-video preview (mpv handles preview text)",
                     Playing = "Playing...",
                     RepeatingLastTime = "Repeating... last time",
                     RepeatingXTimesLeft = "Repeating... {0} times left",

@@ -14894,18 +14894,13 @@ namespace Nikse.SubtitleEdit.Forms
                     e.SuppressKeyPress = true;
                 }
             }
-            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.VideoToggleSubtitleVisibility)
+            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.VideoToggleOnVideoPreview)
             {
                 if (mediaPlayer.VideoPlayer is LibMpvDynamic libMpv && Configuration.Settings.General.MpvHandlesPreviewText)
                 {
                     libMpv.CycleSubtitleVisibility();
+                    e.SuppressKeyPress = true;
                 }
-                else
-                {
-                    mediaPlayer.TextBox.Visible = !mediaPlayer.TextBox.Visible;
-                }
-
-                e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainVideoPlayFromJustBefore == e.KeyData)
             {
