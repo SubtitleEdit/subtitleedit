@@ -1270,7 +1270,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
       <Next>&amp;Next &gt;</Next>
       <PlayCurrent>&amp;Play current</PlayCurrent>
       <Stop>&amp;Stop</Stop>
-      <ToggleOnVideoPreview>Toggle on-video preview (mpv handles preview text)</ToggleOnVideoPreview>
+      <ToggleOnVideoPreview>Toggle on-video preview</ToggleOnVideoPreview>
       <Playing>Playing...</Playing>
       <RepeatingLastTime>Repeating... last time</RepeatingLastTime>
       <RepeatingXTimesLeft>Repeating... {0} times left</RepeatingXTimesLeft>

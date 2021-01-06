@@ -14685,8 +14685,13 @@ namespace Nikse.SubtitleEdit.Forms
                 if (mediaPlayer.VideoPlayer is LibMpvDynamic libMpv && Configuration.Settings.General.MpvHandlesPreviewText)
                 {
                     libMpv.CycleSubtitleVisibility();
-                    e.SuppressKeyPress = true;
                 }
+                else
+                {
+                    mediaPlayer.TextBox.Visible = !mediaPlayer.TextBox.Visible;
+                }
+
+                e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainVideoPlayFromJustBefore == e.KeyData)
             {
