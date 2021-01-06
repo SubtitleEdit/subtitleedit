@@ -251,6 +251,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <TopAlignSelectedLines>Topjuster valgte linjer (hold vandret position)</TopAlignSelectedLines>
     <BottomAlignSelectedLines>Juster til bund for valgte linjer (hold vandret position)</BottomAlignSelectedLines>
     <SizeXY>Størrelse: {0} x {1}</SizeXY>
+    <SetAspectRatio11>Indstil billedformat 1:1</SetAspectRatio11>
   </BinEdit>
   <Bookmarks>
     <EditBookmark>Rediger bogmærke</EditBookmark>
@@ -616,7 +617,6 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <RemovedEmptyLineAtBottom>Fjernede tom linje i bunden</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Fjernede tom linje i midten</RemovedEmptyLineInMiddle>
     <RemovedEmptyLinesUnsedLineBreaks>Fjern tomme linjer/ubrugte linjeskift</RemovedEmptyLinesUnsedLineBreaks>
-    <EmptyLinesRemovedX>Tomme linjer fjernet: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Ret overlappende visningstider</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Ret korte visningstider</FixShortDisplayTimes>
     <FixLongDisplayTimes>Ret lange visningstider</FixLongDisplayTimes>
@@ -641,21 +641,16 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <RemoveSpaceBetweenNumber>Fjern mellemrum mellem tal</RemoveSpaceBetweenNumber>
     <FixDialogsOnOneLine>Fix dialoger på én linje</FixDialogsOnOneLine>
     <NormalizeStrings>Normaliser strenge</NormalizeStrings>
-    <RemoveSpaceBetweenNumbersFixed>Fjern mellemrum mellem tallene rettet: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>Fix tyrkiske ANSI (islandske) bogstaver til Unicode</FixTurkishAnsi>
     <FixDanishLetterI>Ret fejl vedr. det dansk bogstav »i«</FixDanishLetterI>
     <FixSpanishInvertedQuestionAndExclamationMarks>Tilføj spanske omvendte spørgsmålstegn og udråbstegn</FixSpanishInvertedQuestionAndExclamationMarks>
     <AddMissingQuote>Tilføj manglende gåseøje</AddMissingQuote>
     <AddMissingQuotes>Tilføj manglende gåseøjne</AddMissingQuotes>
     <RemoveHyphensSingleLine>Fjern dialog-bindestreg i enkeltlinjer</RemoveHyphensSingleLine>
-    <XHyphensSingleLineRemoved>Dialog-bindestreger fjernes i enkeltlinjer: {0}</XHyphensSingleLineRemoved>
     <FixHyphensInDialogs>Fix dialog-bindestreg via stil: {0}</FixHyphensInDialogs>
-    <XHyphensInDialogsFixed>Streger fast: {0}</XHyphensInDialogsFixed>
     <AddMissingQuotesExample>"Hvordan har du det? -&gt; "Hvordan har du det?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Manglende antal gåseøjne tilføjet: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>Ret tekster med mere end 2 linjer</Fix3PlusLines>
-    <Fix3PlusLine>Ret tekst med mere end 2 linjer</Fix3PlusLine>
-    <X3PlusLinesFixed>Tekster med mere end 2 linjer rettet: {0}</X3PlusLinesFixed>
     <Analysing>Analyserer...</Analysing>
     <NothingToFix>Intet at rette :)</NothingToFix>
     <FixesFoundX>Rettelser fundet: {0}</FixesFoundX>
@@ -663,12 +658,9 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <NothingFixableBut>Intet kunne rettes automatisk.  Underteksten indeholder fejl - se log for detaljer</NothingFixableBut>
     <XFixedBut>{0} problem(er) rettet, men underteksten indeholder stadig fejl - se log for detaljer</XFixedBut>
     <XCouldBeFixedBut>{0} problem(er) kunne rettes, men underteksten vil stadig indeholde fejl - se log for detaljer</XCouldBeFixedBut>
-    <UncheckedFixLowercaseIToUppercaseI>"Ret alene små bogstaver 'i' til 'I' (engelsk)" er ikke længere valgt</UncheckedFixLowercaseIToUppercaseI>
-    <XIsChangedToUppercase>{0} i'er skiftet til store bogstaver</XIsChangedToUppercase>
     <FixFirstLetterToUppercaseAfterParagraph>Ret første bogstav til stort bogstav efter afsnit</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>Flet kort line</MergeShortLine>
     <MergeShortLineAll>Flet kort linjer (undtagen dialog)</MergeShortLineAll>
-    <XLineBreaksAdded>{0} linjeskift indsættes</XLineBreaksAdded>
     <BreakLongLine>Brryd lange linjer</BreakLongLine>
     <FixLongDisplayTime>Ret lang visningstid</FixLongDisplayTime>
     <FixInvalidItalicTag>Ret ugyldig kursiv tag</FixInvalidItalicTag>
@@ -685,23 +677,11 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <UnableToFixStartTimeLaterThanEndTime>Kunne ikke rette tekst nummer {0}: Start tidspunkt er senere udgangen sluttidspunkt: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} er rettet til: {1} {2}</XFixedToYZ>
     <UnableToFixTextXY>Kunne ikke rette tekst nummer {0}: {1}</UnableToFixTextXY>
-    <XOverlappingTimestampsFixed>{0} overlappende tidskoder rettet</XOverlappingTimestampsFixed>
-    <XDisplayTimesProlonged>{0} visningstider forlænget</XDisplayTimesProlonged>
-    <XInvalidHtmlTagsFixed>{0} ugyldig HTML tags rettet</XInvalidHtmlTagsFixed>
-    <XDisplayTimesShortned>{0} visningstider forkortet</XDisplayTimesShortned>
-    <XGapsFixed>{0} korte mellemrum rettet</XGapsFixed>
-    <XLinesUnbreaked>{0} linjer har fået linjeskift fjernet</XLinesUnbreaked>
     <UnneededSpace>Unødigt mellemrum</UnneededSpace>
-    <XUnneededSpacesRemoved>{0} unødvendige mellemrum fjernet</XUnneededSpacesRemoved>
     <UnneededPeriod>Unødig punktum</UnneededPeriod>
-    <XUnneededPeriodsRemoved>{0} unødig punktummer fjernet</XUnneededPeriodsRemoved>
     <FixMissingSpace>Ret manglende mellemrum</FixMissingSpace>
-    <XMissingSpacesAdded>{0} manglende mellemrum indsat</XMissingSpacesAdded>
     <FixUppercaseIInsideLowercaseWord>Ret store bogstav 'i' inde i ord med små bogstaver</FixUppercaseIInsideLowercaseWord>
-    <XPeriodsAdded>{0} punktummer tilføjet.</XPeriodsAdded>
     <FixMissingPeriodAtEndOfLine>Ret manglende punktum i slutningen af linjen</FixMissingPeriodAtEndOfLine>
-    <XDoubleApostrophesFixed>{0} dobbelte apostroffer rettet</XDoubleApostrophesFixed>
-    <XUppercaseIsFoundInsideLowercaseWords>{0} store i'er fundet inde i ord med små bogstaver</XUppercaseIsFoundInsideLowercaseWords>
     <RefreshFixes>Opdater tilgængelige rettelser</RefreshFixes>
     <ApplyFixes>Udfør valgte rettelser</ApplyFixes>
     <AutoBreak>Auto &amp;ombr</AutoBreak>
@@ -711,11 +691,6 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <FixEllipsesStart>Fjern startende '...'</FixEllipsesStart>
     <FixMissingOpenBracket>Fix manglende [</FixMissingOpenBracket>
     <FixMusicNotation>Erstat âTª med *</FixMusicNotation>
-    <XFixDoubleDash>{0} rettet '--'</XFixDoubleDash>
-    <XFixDoubleGreaterThan>{0} fjernet &gt;&gt;</XFixDoubleGreaterThan>
-    <XFixEllipsesStart>{0} begyndende '...' fjernet</XFixEllipsesStart>
-    <XFixMissingOpenBracket>{0} rettet manglende [</XFixMissingOpenBracket>
-    <XFixMusicNotation>{0} lave musik notation</XFixMusicNotation>
     <FixDoubleDashExample>'Whoa-- um yeah!' -&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
     <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' -&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... og så har vi' -&gt; 'og så har vi'</FixEllipsesStartExample>
@@ -729,9 +704,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <SelectDefault>Vælg standard</SelectDefault>
     <SetDefault>Indstil aktuelle rettelser som standard</SetDefault>
     <FixContinuationStyleX>Fix fortsættelsestil: {0}</FixContinuationStyleX>
-    <XFixContinuationStyle>{0} fast fortsættelsesstil</XFixContinuationStyle>
     <FixUnnecessaryLeadingDots>Fjern unødvendige førende punktummer</FixUnnecessaryLeadingDots>
-    <XFixUnnecessaryLeadingDots>{0} fjernede unødvendige førende punktummer</XFixUnnecessaryLeadingDots>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Mangler ordbøger?</Title>
@@ -763,10 +736,12 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <MsClientSecretNeeded>Der kræver en Bing "client secret" from Microsoft for at benytte Bing Translate.
 
 Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bing "client secret".</MsClientSecretNeeded>
-    <GoogleApiKeyNeeded>Sorry, you need an API key from Google to use the latest Google Translate.
-
-Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Google translate API nøgle.</GoogleApiKeyNeeded>
     <GoogleNoApiKeyWarning>Forsøger at oversætte uden API nøgle... (langsomt/begrænser/risiko for fejl)</GoogleNoApiKeyWarning>
+    <Service>Service:</Service>
+    <LineMergeHandling>Linjesammenlægning:</LineMergeHandling>
+    <ProcessorMergeNext>Flet maks to linjer</ProcessorMergeNext>
+    <ProcessorSentence>Flet sætninger</ProcessorSentence>
+    <ProcessorSingle>Ingen</ProcessorSingle>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Google vs Microsoft oversætter</Title>
@@ -1147,9 +1122,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Go
       </Synchronization>
       <AutoTranslate>
         <Title>Auto-oversæt</Title>
-        <TranslatePoweredByGoogle>Oversæt (via Google)...</TranslatePoweredByGoogle>
-        <TranslatePoweredByMicrosoft>Oversæt (via Microsoft)...</TranslatePoweredByMicrosoft>
-        <TranslateFromSwedishToDanish>Oversæt fra svensk til dansk (via nikse.dk)...</TranslateFromSwedishToDanish>
+        <AutoTranslate>Auto-oversæt...</AutoTranslate>
       </AutoTranslate>
       <Options>
         <Title>Indstillinger</Title>
@@ -2294,7 +2267,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <ListViewColumnTextDown>Kolonne, tekst ned</ListViewColumnTextDown>
     <ListViewGoToNextError>Gå til næste fejl</ListViewGoToNextError>
     <ShowBeamer>Start undertekst fremviser (fuldskærm)</ShowBeamer>
-    <ShowStyleManager></ShowStyleManager>
+    <ShowStyleManager>Vis style manager</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>Flyt sidste ord ned til næste linje</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Flyt første ord fra næste linje op</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Flyt første ord fra næste linje op (nuværende undertekst)</MainTextBoxMoveFirstWordUpCurrent>
@@ -2404,6 +2377,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <CheckOneLetterWords>Spørg ved enkeltbogstaver</CheckOneLetterWords>
     <TreatINQuoteAsING>Accepter ord der slutter med i' som ing (kun på engelsk)</TreatINQuoteAsING>
     <RememberUseAlwaysList>Husk "Brug altid" listen</RememberUseAlwaysList>
+    <LiveSpellCheck>Live stavekontrol</LiveSpellCheck>
     <ImageText>Billede tekst</ImageText>
     <SpellCheckCompleted>Stavekontrol færdig</SpellCheckCompleted>
     <SpellCheckAborted>Stavekontrol afbrudt</SpellCheckAborted>
