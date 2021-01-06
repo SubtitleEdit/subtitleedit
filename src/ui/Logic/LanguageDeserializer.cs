@@ -6523,6 +6523,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "SpellCheck/LiveSpellCheck":
                     language.SpellCheck.LiveSpellCheck = reader.Value;
                     break;
+                case "SpellCheck/LiveSpellCheckLanguage":
+                    language.SpellCheck.LiveSpellCheckLanguage = reader.Value;
+                    break;
+                case "SpellCheck/NoDictionaryForLiveSpellCheck":
+                    language.SpellCheck.NoDictionaryForLiveSpellCheck = reader.Value;
+                    break;
                 case "SpellCheck/ImageText":
                     language.SpellCheck.ImageText = reader.Value;
                     break;

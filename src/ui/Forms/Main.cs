@@ -7260,6 +7260,20 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     await textBoxListViewText.InitializeLiveSpellCheck(_subtitle, FirstSelectedIndex);
                 }
+
+                if (textBoxListViewText.LanguageChanged)
+                {
+                    if (textBoxListViewText.IsDictionaryDownloaded)
+                    {
+                        ShowStatus(string.Format(LanguageSettings.Current.SpellCheck.LiveSpellCheckLanguage, textBoxListViewText.CurrentLanguage), true);
+                    }
+                    else
+                    {
+                        ShowStatus(string.Format(LanguageSettings.Current.SpellCheck.NoDictionaryForLiveSpellCheck, textBoxListViewText.CurrentLanguage), true);
+                    }
+
+                    textBoxListViewText.LanguageChanged = false;
+                }
             }
             else
             {
