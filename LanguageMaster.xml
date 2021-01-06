@@ -1268,7 +1268,7 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
       <Next>&amp;Next &gt;</Next>
       <PlayCurrent>&amp;Play current</PlayCurrent>
       <Stop>&amp;Stop</Stop>
-      <ToggleSubtitleVisibility>Toggle subtitle visibility</ToggleSubtitleVisibility>
+      <ToggleOnVideoPreview>Toggle on-video preview (mpv handles preview text)</ToggleOnVideoPreview>
       <Playing>Playing...</Playing>
       <RepeatingLastTime>Repeating... last time</RepeatingLastTime>
       <RepeatingXTimesLeft>Repeating... {0} times left</RepeatingXTimesLeft>
