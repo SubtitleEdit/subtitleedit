@@ -2904,7 +2904,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         /// <summary>
         /// Fix uppercase/lowercase issues (not I/l)
         /// </summary>
-        private void FixUppercaseLowercaseIssues(ImageSplitterItem targetItem, NOcrChar result)
+        private string FixUppercaseLowercaseIssues(ImageSplitterItem targetItem, NOcrChar result)
         {
             if (result.Text == "e" || result.Text == "a" || result.Text == "d" || result.Text == "t")
             {
@@ -2930,7 +2930,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             if (_ocrLowercaseHeightsTotalCount <= 2 || _ocrUppercaseHeightsTotalCount <= 2)
             {
-                return;
+                return result.Text;
             }
 
             // Latin letters where lowercase versions look like uppercase version 
@@ -2940,10 +2940,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 var averageUppercase = _ocrUppercaseHeightsTotal / _ocrUppercaseHeightsTotalCount;
                 if (Math.Abs(averageLowercase - targetItem.NikseBitmap.Height) < Math.Abs(averageUppercase - targetItem.NikseBitmap.Height))
                 {
-                    result.Text = result.Text.ToLowerInvariant();
+                    return result.Text.ToLowerInvariant();
                 }
 
-                return;
+                return result.Text;
             }
 
             if (LowercaseLikeUppercase.Contains(result.Text))
@@ -2952,10 +2952,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 var averageUppercase = _ocrUppercaseHeightsTotal / _ocrUppercaseHeightsTotalCount;
                 if (Math.Abs(averageLowercase - targetItem.NikseBitmap.Height) > Math.Abs(averageUppercase - targetItem.NikseBitmap.Height))
                 {
-                    result.Text = result.Text.ToUpperInvariant();
+                    return result.Text.ToUpperInvariant();
                 }
 
-                return;
+                return result.Text;
             }
 
             if (UppercaseWithAccent.Contains(result.Text))
@@ -2963,10 +2963,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 var averageUppercase = _ocrUppercaseHeightsTotal / (double)_ocrUppercaseHeightsTotalCount;
                 if (targetItem.NikseBitmap.Height < averageUppercase + 3)
                 {
-                    result.Text = result.Text.ToLowerInvariant();
+                    return result.Text.ToLowerInvariant();
                 }
 
-                return;
+                return result.Text;
             }
 
             if (LowercaseWithAccent.Contains(result.Text))
@@ -2974,9 +2974,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 var averageUppercase = _ocrUppercaseHeightsTotal / (double)_ocrUppercaseHeightsTotalCount;
                 if (targetItem.NikseBitmap.Height > averageUppercase + 4)
                 {
-                    result.Text = result.Text.ToUpperInvariant();
+                    return result.Text.ToUpperInvariant();
                 }
             }
+
+            return result.Text;
         }
 
         internal CompareMatch GetNOcrCompareMatchNew(ImageSplitterItem targetItem, NikseBitmap parentBitmap, NOcrDb nOcrDb, bool tryItalicScaling, bool deepSeek, int index, List<ImageSplitterItem> list)
@@ -3024,9 +3026,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
             }
 
-            FixUppercaseLowercaseIssues(targetItem, result);
-
-            return new CompareMatch(result.Text, result.Italic, 0, null, result) { Y = targetItem.Y };
+            var text = FixUppercaseLowercaseIssues(targetItem, result);
+            return new CompareMatch(text, result.Italic, 0, null, result) { Y = targetItem.Y };
         }
 
         public static int _italicFixes = 0;
@@ -5061,7 +5062,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 // find letter size (uppercase/lowercase)
                 int testIndex = 0;
-                while (testIndex < 6 && (_ocrLowercaseHeightsTotalCount < 5 || _ocrUppercaseHeightsTotalCount < 5))
+                var noOfSubs = GetSubtitleCount();
+                while (testIndex < noOfSubs && testIndex < 10 && (_ocrLowercaseHeightsTotalCount < 25 || _ocrUppercaseHeightsTotalCount < 25))
                 {
                     NOCRIntialize(GetSubtitleBitmap(testIndex));
                     testIndex++;

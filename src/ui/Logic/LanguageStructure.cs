@@ -268,6 +268,7 @@
             public string TopAlignSelectedLines { get; set; }
             public string BottomAlignSelectedLines { get; set; }
             public string SizeXY { get; set; }
+            public string SetAspectRatio11 { get; set; }
         }
 
         public class Bookmarks
@@ -813,8 +814,12 @@
             public string PoweredByGoogleTranslate { get; set; }
             public string PoweredByMicrosoftTranslate { get; set; }
             public string MsClientSecretNeeded { get; set; }
-            public string GoogleApiKeyNeeded { get; set; }
             public string GoogleNoApiKeyWarning { get; set; }
+            public string Service { get; set; }
+            public string LineMergeHandling { get; set; }
+            public string ProcessorMergeNext { get; set; }
+            public string ProcessorSentence { get; set; }
+            public string ProcessorSingle { get; set; }
         }
 
         public class GoogleOrMicrosoftTranslate
@@ -1301,7 +1306,7 @@
             public string XPercentCompleted { get; set; }
             public string NextX { get; set; }
             public string PromptInsertSubtitleOverlap { get; set; }
-            public string SubtitleContainsNegativeDurationsX { get; set;  }
+            public string SubtitleContainsNegativeDurationsX { get; set; }
             public string SetPlayRateX { get; set; }
             public string ErrorLoadIdx { get; set; }
             public string ErrorLoadRar { get; set; }
@@ -1485,9 +1490,7 @@
                 public class AutoTranslateMenu
                 {
                     public string Title { get; set; }
-                    public string TranslatePoweredByGoogle { get; set; }
-                    public string TranslatePoweredByMicrosoft { get; set; }
-                    public string TranslateFromSwedishToDanish { get; set; }
+                    public string AutoTranslate { get; set; }
                 }
                 public class OptionsMenu
                 {
@@ -2482,7 +2485,7 @@
             public string HideContinuationCandidatesWithoutName { get; set; }
             public string IgnoreLyrics { get; set; }
             public string MinFrameGap { get; set; }
-            public string XFramesAtYFrameRateGivesZMs { get; set; } 
+            public string XFramesAtYFrameRateGivesZMs { get; set; }
             public string UseXAsNewGap { get; set; }
         }
 
@@ -2560,6 +2563,8 @@
             public string TreatINQuoteAsING { get; set; }
             public string RememberUseAlwaysList { get; set; }
             public string LiveSpellCheck { get; set; }
+            public string LiveSpellCheckLanguage{ get; set; }
+            public string NoDictionaryForLiveSpellCheck { get; set; }
             public string ImageText { get; set; }
             public string SpellCheckCompleted { get; set; }
             public string SpellCheckAborted { get; set; }
@@ -2748,7 +2753,7 @@
             public string SetPreviewText { get; set; }
             public string AddToFile { get; set; }
             public string AddToStorage { get; set; }
-            public string StyleStorage { get; set; }            
+            public string StyleStorage { get; set; }
             public string OverwriteX { get; set; }
         }
 

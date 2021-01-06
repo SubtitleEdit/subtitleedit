@@ -1432,7 +1432,12 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         if (!correct && word.Length > 3 && !word.EndsWith("ss", StringComparison.Ordinal) && !string.IsNullOrEmpty(_threeLetterIsoLanguageName) &&
                             (_threeLetterIsoLanguageName == "eng" || _threeLetterIsoLanguageName == "dan" || _threeLetterIsoLanguageName == "swe" || _threeLetterIsoLanguageName == "nld"))
                         {
-                            correct = DoSpell(word.TrimEnd('s'));
+                            var w = word.TrimEnd('s');
+                            correct = DoSpell(w);
+                            if (!correct && w.EndsWith('\''))
+                            {
+                                correct = DoSpell(w.Remove(w.Length - 1, 1));
+                            }
                         }
                     }
                     else

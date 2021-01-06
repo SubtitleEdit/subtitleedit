@@ -17,6 +17,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using Nikse.SubtitleEdit.Core.Translate.Service;
 
 namespace Nikse.SubtitleEdit.Forms.Options
 {
@@ -734,6 +735,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxSpellCheckOneLetterWords.Text = LanguageSettings.Current.SpellCheck.CheckOneLetterWords;
             checkBoxTreatINQuoteAsING.Text = LanguageSettings.Current.SpellCheck.TreatINQuoteAsING;
             checkBoxUseAlwaysToFile.Text = LanguageSettings.Current.SpellCheck.RememberUseAlwaysList;
+            checkBoxLiveSpellCheck.Text = LanguageSettings.Current.SpellCheck.LiveSpellCheck;
             buttonFixContinuationStyleSettings.Text = language.EditFixContinuationStyleSettings;
 
             groupBoxToolsAutoBr.Text = LanguageSettings.Current.Main.Controls.AutoBreak.Replace("&", string.Empty);
@@ -1234,7 +1236,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(toolsNode, LanguageSettings.Current.Main.Menu.Tools.JoinSubtitles, nameof(Configuration.Settings.Shortcuts.MainToolsJoin), true);
             AddNode(toolsNode, LanguageSettings.Current.Main.Menu.ContextMenu.AutoDurationCurrentLine, nameof(Configuration.Settings.Shortcuts.MainToolsAutoDuration));
             AddNode(toolsNode, language.ShowBeamer, nameof(Configuration.Settings.Shortcuts.MainToolsBeamer), true);
-            AddNode(toolsNode, language.ShowStyleManager, nameof(Configuration.Settings.Shortcuts.StyleManager));
+            AddNode(toolsNode, language.ShowStyleManager, nameof(Configuration.Settings.Shortcuts.MainToolsStyleManager));
             if (toolsNode.Nodes.Count > 0)
             {
                 _shortcuts.Nodes.Add(toolsNode);
@@ -3238,7 +3240,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void linkLabelBingSubscribe_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            UiUtil.OpenUrl(MicrosoftTranslator.SignUpUrl);
+            UiUtil.OpenUrl(MicrosoftTranslationService.SignUpUrl);
         }
 
         private void ValidateShortcut(object sender, EventArgs e)

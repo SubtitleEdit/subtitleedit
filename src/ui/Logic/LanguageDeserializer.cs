@@ -691,6 +691,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "BinEdit/SizeXY":
                     language.BinEdit.SizeXY = reader.Value;
                     break;
+                case "BinEdit/SetAspectRatio11":
+                    language.BinEdit.SetAspectRatio11 = reader.Value;
+                    break;
                 case "Bookmarks/EditBookmark":
                     language.Bookmarks.EditBookmark = reader.Value;
                     break;
@@ -1951,11 +1954,23 @@ namespace Nikse.SubtitleEdit.Logic
                 case "GoogleTranslate/MsClientSecretNeeded":
                     language.GoogleTranslate.MsClientSecretNeeded = reader.Value;
                     break;
-                case "GoogleTranslate/GoogleApiKeyNeeded":
-                    language.GoogleTranslate.GoogleApiKeyNeeded = reader.Value;
-                    break;
                 case "GoogleTranslate/GoogleNoApiKeyWarning":
                     language.GoogleTranslate.GoogleNoApiKeyWarning = reader.Value;
+                    break;
+                case "GoogleTranslate/Service":
+                    language.GoogleTranslate.Service = reader.Value;
+                    break;
+                case "GoogleTranslate/LineMergeHandling":
+                    language.GoogleTranslate.LineMergeHandling = reader.Value;
+                    break;
+                case "GoogleTranslate/ProcessorMergeNext":
+                    language.GoogleTranslate.ProcessorMergeNext = reader.Value;
+                    break;
+                case "GoogleTranslate/ProcessorSentence":
+                    language.GoogleTranslate.ProcessorSentence = reader.Value;
+                    break;
+                case "GoogleTranslate/ProcessorSingle":
+                    language.GoogleTranslate.ProcessorSingle = reader.Value;
                     break;
                 case "GoogleOrMicrosoftTranslate/Title":
                     language.GoogleOrMicrosoftTranslate.Title = reader.Value;
@@ -3781,14 +3796,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/AutoTranslate/Title":
                     language.Main.Menu.AutoTranslate.Title = reader.Value;
                     break;
-                case "Main/Menu/AutoTranslate/TranslatePoweredByGoogle":
-                    language.Main.Menu.AutoTranslate.TranslatePoweredByGoogle = reader.Value;
-                    break;
-                case "Main/Menu/AutoTranslate/TranslatePoweredByMicrosoft":
-                    language.Main.Menu.AutoTranslate.TranslatePoweredByMicrosoft = reader.Value;
-                    break;
-                case "Main/Menu/AutoTranslate/TranslateFromSwedishToDanish":
-                    language.Main.Menu.AutoTranslate.TranslateFromSwedishToDanish = reader.Value;
+                case "Main/Menu/AutoTranslate/AutoTranslate":
+                    language.Main.Menu.AutoTranslate.AutoTranslate = reader.Value;
                     break;
                 case "Main/Menu/Options/Title":
                     language.Main.Menu.Options.Title = reader.Value;
@@ -6516,6 +6525,12 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "SpellCheck/LiveSpellCheck":
                     language.SpellCheck.LiveSpellCheck = reader.Value;
+                    break;
+                case "SpellCheck/LiveSpellCheckLanguage":
+                    language.SpellCheck.LiveSpellCheckLanguage = reader.Value;
+                    break;
+                case "SpellCheck/NoDictionaryForLiveSpellCheck":
+                    language.SpellCheck.NoDictionaryForLiveSpellCheck = reader.Value;
                     break;
                 case "SpellCheck/ImageText":
                     language.SpellCheck.ImageText = reader.Value;

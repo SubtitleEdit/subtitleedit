@@ -399,6 +399,7 @@ namespace Nikse.SubtitleEdit.Logic
                 TopAlignSelectedLines = "Top align selected lines (keep horizontal position)",
                 BottomAlignSelectedLines = "Bottom align selected lines (keep horizontal position)",
                 SizeXY = "Size: {0}x{1}",
+                SetAspectRatio11 = "Set aspect ratio 1:1",
             };
 
             Bookmarks = new LanguageStructure.Bookmarks
@@ -934,7 +935,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             GoogleTranslate = new LanguageStructure.GoogleTranslate
             {
-                Title = "Google translate",
+                Title = "Translate",
                 From = "From:",
                 To = "To:",
                 Translate = "Translate",
@@ -944,10 +945,12 @@ namespace Nikse.SubtitleEdit.Logic
                 MsClientSecretNeeded = "Sorry, you need a Cognitive Services 'Translator Text' key from Microsoft to use the latest Microsoft Translator." + Environment.NewLine +
                                        Environment.NewLine +
                                        "Go to \"Options -> Settings -> Tools\" to enter your key.",
-                GoogleApiKeyNeeded = "Sorry, you need an API key from Google to use the latest Google Translate." + Environment.NewLine +
-                                     Environment.NewLine +
-                                     "Go to \"Options -> Settings -> Tools\" to enter your Google translate API key.",
-                GoogleNoApiKeyWarning = "Trying to translate without API key... (slow and limited data)"
+                GoogleNoApiKeyWarning = "Trying to translate without API key... (slow and limited data). " + Environment.NewLine + "To use an API key go to \"Options -> Settings -> Tools\" to enter your Google translate API key.",
+                Service = "Service:",
+                LineMergeHandling = "Line merge:",
+                ProcessorMergeNext = "Merge max two lines",
+                ProcessorSentence = "Merge sentences",
+                ProcessorSingle =  "No merging",
             };
 
             GoogleOrMicrosoftTranslate = new LanguageStructure.GoogleOrMicrosoftTranslate
@@ -1631,9 +1634,7 @@ namespace Nikse.SubtitleEdit.Logic
                     AutoTranslate = new LanguageStructure.Main.MainMenu.AutoTranslateMenu
                     {
                         Title = "Auto-translate",
-                        TranslatePoweredByGoogle = "Translate with Google...",
-                        TranslatePoweredByMicrosoft = "Translate with Bing...",
-                        TranslateFromSwedishToDanish = "Translate from Swedish to Danish (powered by nikse.dk)...",
+                        AutoTranslate = "Auto-translate..."
                     },
 
                     Options = new LanguageStructure.Main.MainMenu.OptionsMenu
@@ -2705,6 +2706,8 @@ can edit in same subtitle file (collaboration)",
                 TreatINQuoteAsING = "Treat word ending \" in' \" as \" ing \" (English only)",
                 RememberUseAlwaysList = "Remember \"Use always\" list",
                 LiveSpellCheck = "Live spell check",
+                LiveSpellCheckLanguage = "Live spell check - Working with language [{0}]",
+                NoDictionaryForLiveSpellCheck = "Live spell check - You don't have dictionaries for this language [{0}]",
                 ImageText = "Image text",
                 SpellCheckCompleted = "Spell check completed",
                 SpellCheckAborted = "Spell check aborted",

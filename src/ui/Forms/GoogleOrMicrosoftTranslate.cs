@@ -1,12 +1,11 @@
-﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Logic;
+﻿using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Translate;
+using Nikse.SubtitleEdit.Core.Translate.Service;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -14,18 +13,16 @@ namespace Nikse.SubtitleEdit.Forms
     {
         public string TranslatedText { get; set; }
 
+        private  GoogleTranslationService _googleTranslationService;
+        private  MicrosoftTranslationService _microsoftTranslationService;
+        private string _toLanguage;
+        private string _fromLanguage;
+
         public GoogleOrMicrosoftTranslate()
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            using (var gt = new GoogleTranslate())
-            {
-                gt.FillComboWithGoogleLanguages(comboBoxFrom);
-                gt.FillComboWithGoogleLanguages(comboBoxTo);
-            }
-            RemovedLanguagesNotInMicrosoftTranslate(comboBoxFrom);
-            RemovedLanguagesNotInMicrosoftTranslate(comboBoxTo);
 
             Text = LanguageSettings.Current.GoogleOrMicrosoftTranslate.Title;
             labelGoogleTranslate.Text = LanguageSettings.Current.GoogleOrMicrosoftTranslate.GoogleTranslate;
@@ -41,23 +38,54 @@ namespace Nikse.SubtitleEdit.Forms
             buttonGoogle.Text = string.Empty;
             buttonMicrosoft.Text = string.Empty;
         }
-
-        private static void RemovedLanguagesNotInMicrosoftTranslate(ComboBox comboBox)
+        
+        private void InitLanguageComboboxes()
         {
-            for (int i = comboBox.Items.Count - 1; i > 0; i--)
+            var googleSourceLanguages = new List<TranslationPair>();
+            var googleTargetLanguages = new List<TranslationPair>();
+
+            var microsoftSourceLanguages = new List<TranslationPair>();
+            var microsoftTargetLanguages = new List<TranslationPair>();
+
+
+            if (_googleTranslationService != null)
             {
-                var item = (GoogleTranslate.ComboBoxItem)comboBox.Items[i];
-                if (item.Value != FixMsLocale(item.Value))
-                {
-                    comboBox.Items.RemoveAt(i);
-                }
+                googleSourceLanguages = _googleTranslationService.GetSupportedSourceLanguages();
+                googleTargetLanguages = _googleTranslationService.GetSupportedSourceLanguages();
             }
+
+            if (_microsoftTranslationService != null)
+            {
+                microsoftSourceLanguages = _microsoftTranslationService.GetSupportedSourceLanguages();
+                microsoftTargetLanguages = _microsoftTranslationService.GetSupportedSourceLanguages();
+            }
+
+            IEnumerable<TranslationPair> targetLanguages;
+            IEnumerable<TranslationPair> fromLanguages;
+            if (_googleTranslationService == null || _microsoftTranslationService == null)
+            {
+                targetLanguages = googleTargetLanguages.Union(microsoftTargetLanguages);
+                fromLanguages = googleSourceLanguages.Union(microsoftSourceLanguages);
+            }
+            else
+            {
+                targetLanguages = googleTargetLanguages.Intersect(microsoftTargetLanguages);
+                fromLanguages = googleSourceLanguages.Intersect(microsoftSourceLanguages);
+            }
+
+            GenericTranslate.FillComboWithLanguages(comboBoxFrom, fromLanguages);
+            GenericTranslate.FillComboWithLanguages(comboBoxTo, targetLanguages);
+
+            GenericTranslate.SelectLanguageCode(comboBoxFrom, _fromLanguage);
+            GenericTranslate.SelectLanguageCode(comboBoxTo, _toLanguage);
         }
+
 
         internal void InitializeFromLanguage(string defaultFromLanguage)
         {
-            string defaultToLanguage = Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage;
-            if (defaultToLanguage == defaultFromLanguage)
+            _toLanguage = Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage;
+            _fromLanguage = defaultFromLanguage;
+            if (_toLanguage == defaultFromLanguage)
             {
                 foreach (string s in Utilities.GetDictionaryLanguages())
                 {
@@ -66,37 +94,13 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         temp = temp.Substring(temp.Length - 5, 2).ToLowerInvariant();
 
-                        if (temp != defaultToLanguage)
+                        if (temp != _toLanguage)
                         {
-                            defaultToLanguage = temp;
+                            _toLanguage = temp;
                             break;
                         }
                     }
                 }
-            }
-
-            int i = 0;
-            comboBoxFrom.SelectedIndex = 0;
-            foreach (GoogleTranslate.ComboBoxItem item in comboBoxFrom.Items)
-            {
-                if (item.Value == defaultFromLanguage)
-                {
-                    comboBoxFrom.SelectedIndex = i;
-                    break;
-                }
-                i++;
-            }
-
-            i = 0;
-            comboBoxTo.SelectedIndex = 0;
-            foreach (GoogleTranslate.ComboBoxItem item in comboBoxTo.Items)
-            {
-                if (item.Value == defaultToLanguage)
-                {
-                    comboBoxTo.SelectedIndex = i;
-                    break;
-                }
-                i++;
             }
         }
 
@@ -107,6 +111,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GoogleOrMicrosoftTranslate_Shown(object sender, EventArgs e)
         {
+            _googleTranslationService = GoogleTranslationInitializer.Init();
+            _microsoftTranslationService = MicrosoftTranslationInitializer.Init(true);
+
+            InitLanguageComboboxes();
+
             Refresh();
             Translate();
         }
@@ -116,35 +125,30 @@ namespace Nikse.SubtitleEdit.Forms
             Cursor = Cursors.WaitCursor;
             try
             {
-                string from = ((GoogleTranslate.ComboBoxItem)comboBoxFrom.SelectedItem).Value;
-                string to = ((GoogleTranslate.ComboBoxItem)comboBoxTo.SelectedItem).Value;
+
                 buttonGoogle.Text = string.Empty;
+                buttonMicrosoft.Text = string.Empty;
 
-                // google translate
-                buttonGoogle.Text = new GoogleTranslator1().Translate(from, to, new List<Paragraph> { new Paragraph { Text = textBoxSourceText.Text } }, new StringBuilder()).FirstOrDefault();
-
-                // ms translator
-                if (!string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorApiKey) && !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint))
+                if (_googleTranslationService != null || _microsoftTranslationService != null)
                 {
-                    var translator = new MicrosoftTranslator(Configuration.Settings.Tools.MicrosoftTranslatorApiKey, Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint, Configuration.Settings.Tools.MicrosoftTranslatorCategory);
-                    var result = translator.Translate(from, to, new List<Paragraph> { new Paragraph { Text = textBoxSourceText.Text } }, new StringBuilder());
-                    buttonMicrosoft.Text = result[0];
+                    _fromLanguage = ((TranslationPair)comboBoxFrom.SelectedItem).Code;
+                    _toLanguage = ((TranslationPair)comboBoxTo.SelectedItem).Code;
+
+                    if (_googleTranslationService != null)
+                    {
+                        buttonGoogle.Text = _googleTranslationService.Translate(_fromLanguage, _toLanguage, new List<Paragraph> { new Paragraph { Text = textBoxSourceText.Text } }).FirstOrDefault();
+                    }
+                    if (_microsoftTranslationService != null)
+                    {
+                        var result = _microsoftTranslationService.Translate(_fromLanguage, _toLanguage, new List<Paragraph> { new Paragraph { Text = textBoxSourceText.Text } });
+                        buttonMicrosoft.Text = result[0];
+                    }
                 }
             }
             finally
             {
                 Cursor = Cursors.Default;
             }
-        }
-
-        private static string FixMsLocale(string from)
-        {
-            if ("ar bg zh-CHS zh-CHT cs da nl en et fi fr de el ht he hu id it ja ko lv lt no pl pt ro ru sk sl es sv th tr uk vi".Contains(from))
-            {
-                return from;
-            }
-
-            return "en";
         }
 
         private void buttonTranslate_Click(object sender, EventArgs e)

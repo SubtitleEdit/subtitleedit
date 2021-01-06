@@ -1,18 +1,20 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
-using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
-namespace Nikse.SubtitleEdit.Core.Translate
+namespace Nikse.SubtitleEdit.Core.Translate.Service
 {
     /// <summary>
     /// Google translate via Google Cloud V3 API - see https://cloud.google.com/translate/
+    ///
+    /// brummochse: not used at the moment!?
     /// </summary>
-    public class GoogleTranslator3 : ITranslator
+    public class GoogleTranslator3 : ITranslationStrategy
     {
         private readonly string _apiKey;
         private readonly string _projectNumberOrId;
@@ -23,14 +25,20 @@ namespace Nikse.SubtitleEdit.Core.Translate
             _projectNumberOrId = projectNumberOrId;
         }
 
-        public List<TranslationPair> GetTranslationPairs()
-        {
-            return new GoogleTranslator2(null).GetTranslationPairs();
-        }
-
         public string GetName()
         {
-            return "Google translate V3";
+            return "Google Translate Cloud V3";
+        }
+        public int GetMaxTextSize()
+        {
+            return 1000; //brummochse: in the old code there is no value defined for Google trasnlate V3. this is simply the value from V2 in lack of better knowledge
+        }
+
+
+        public int GetMaximumRequestArraySize()
+        {
+            return 100; //brummochse: in the old code there is no value defined for Google trasnlate V3. this is simply the value from V2 in lack of better knowledge
+
         }
 
         public string GetUrl()
@@ -38,22 +46,16 @@ namespace Nikse.SubtitleEdit.Core.Translate
             return "https://translate.google.com/";
         }
 
-        public List<string> Translate(string sourceLanguage, string targetLanguage, List<Paragraph> paragraphs, StringBuilder log)
+        public List<string> Translate(string sourceLanguage, string targetLanguage, List<Paragraph> sourceParagraphs)
         {
             //TODO: Get access token...
 
             var input = new StringBuilder();
             var formatList = new List<Formatting>();
-            bool skipNext = false;
-            for (var index = 0; index < paragraphs.Count; index++)
+            for (var index = 0; index < sourceParagraphs.Count; index++)
             {
-                if (skipNext)
-                {
-                    skipNext = false;
-                    continue;
-                }
 
-                var p = paragraphs[index];
+                var p = sourceParagraphs[index];
                 var f = new Formatting();
                 formatList.Add(f);
                 if (input.Length > 0)
@@ -61,18 +63,8 @@ namespace Nikse.SubtitleEdit.Core.Translate
                     input.Append(",");
                 }
 
-                var nextText = string.Empty;
-                if (index < paragraphs.Count - 1 && paragraphs[index + 1].StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds < 200)
-                {
-                    nextText = paragraphs[index + 1].Text;
-                }
-
-                var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text, sourceLanguage), sourceLanguage, nextText);
-                skipNext = f.SkipNext;
-                if (!skipNext)
-                {
-                    text = f.UnBreak(text, p.Text);
-                }
+                var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text, sourceLanguage), sourceLanguage);
+                text = f.UnBreak(text, p.Text);
 
                 input.Append("\"" + Json.EncodeJsonText(text) + "\"");
             }
@@ -110,26 +102,17 @@ namespace Nikse.SubtitleEdit.Core.Translate
                                     {
                                         if (v2[innerKey2] is string translatedText)
                                         {
-                                            string nextText = null;
+
                                             translatedText = Regex.Unescape(translatedText);
                                             translatedText = string.Join(Environment.NewLine, translatedText.SplitToLines());
                                             translatedText = TranslationHelper.PostTranslate(translatedText, targetLanguage);
                                             if (resultList.Count - skipCount < formatList.Count)
                                             {
-                                                translatedText = formatList[resultList.Count - skipCount].ReAddFormatting(translatedText, out nextText);
-                                                if (nextText == null)
-                                                {
-                                                    translatedText = formatList[resultList.Count - skipCount].ReBreak(translatedText, targetLanguage);
-                                                }
+                                                translatedText = formatList[resultList.Count - skipCount].ReAddFormatting(translatedText);
+                                                translatedText = formatList[resultList.Count - skipCount].ReBreak(translatedText, targetLanguage);
                                             }
 
                                             resultList.Add(translatedText);
-
-                                            if (nextText != null)
-                                            {
-                                                resultList.Add(nextText);
-                                                skipCount++;
-                                            }
                                         }
                                     }
                                 }

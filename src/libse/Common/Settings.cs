@@ -138,11 +138,11 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string MicrosoftTranslatorTokenEndpoint { get; set; }
         public string MicrosoftTranslatorCategory { get; set; }
         public string GoogleApiV2Key { get; set; }
-        public bool GoogleApiV2KeyInfoShow { get; set; }
         public bool GoogleTranslateNoKeyWarningShow { get; set; }
         public int GoogleApiV1ChunkSize { get; set; }
         public string GoogleTranslateLastTargetLanguage { get; set; }
         public bool TranslateAllowSplit { get; set; }
+        public string TranslateLastService { get; set; }
         public bool ListViewSyntaxColorDurationSmall { get; set; }
         public bool ListViewSyntaxColorDurationBig { get; set; }
         public bool ListViewSyntaxColorOverlap { get; set; }
@@ -346,7 +346,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             OcrTrainMergedLetters = "ff ft fi fj fy fl rf rt rv rw ry rt rz ryt tt TV tw yt yw wy wf ryt xy";
             Interjections = "Ah;Ahem;Ahh;Ahhh;Ahhhh;Eh;Ehh;Ehhh;Hm;Hmm;Hmmm;Huh;Mm;Mmm;Mmmm;Phew;Gah;Oh;Ohh;Ohhh;Ow;Oww;Owww;Ugh;Ughh;Uh;Uhh;Uhhh;Whew";
             MicrosoftTranslatorTokenEndpoint = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
-            GoogleApiV2KeyInfoShow = true;
             GoogleTranslateNoKeyWarningShow = true;
             GoogleApiV1ChunkSize = 1500;
             GoogleTranslateLastTargetLanguage = "en";
@@ -1863,7 +1862,7 @@ $HorzAlign          =   Center
         public string MainToolsAppend { get; set; }
         public string MainToolsJoin { get; set; }
         public string MainToolsBeamer { get; set; }
-        public string StyleManager { get; set; }
+        public string MainToolsStyleManager { get; set; }
         public string MainVideoOpen { get; set; }
         public string MainVideoClose { get; set; }
         public string MainVideoPause { get; set; }
@@ -3767,12 +3766,6 @@ $HorzAlign          =   Center
                 settings.Tools.GoogleTranslateNoKeyWarningShow = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
-            subNode = node.SelectSingleNode("GoogleApiV2KeyInfoShow");
-            if (subNode != null)
-            {
-                settings.Tools.GoogleApiV2KeyInfoShow = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
-            }
-
             subNode = node.SelectSingleNode("GoogleApiV1ChunkSize");
             if (subNode != null)
             {
@@ -3789,6 +3782,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.TranslateAllowSplit = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("TranslateLastService");
+            if (subNode != null)
+            {
+                settings.Tools.TranslateLastService = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("ListViewSyntaxColorDurationSmall");
@@ -6657,10 +6656,10 @@ $HorzAlign          =   Center
                     shortcuts.MainToolsBeamer = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("StyleManager");
+                subNode = node.SelectSingleNode("MainToolsStyleManager");
                 if (subNode != null)
                 {
-                    shortcuts.StyleManager = subNode.InnerText;
+                    shortcuts.MainToolsStyleManager = subNode.InnerText;
                 }
 
                 subNode = node.SelectSingleNode("MainEditToggleTranslationOriginalInPreviews");
@@ -8051,11 +8050,11 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MicrosoftTranslatorTokenEndpoint", settings.Tools.MicrosoftTranslatorTokenEndpoint);
                 textWriter.WriteElementString("MicrosoftTranslatorCategory", settings.Tools.MicrosoftTranslatorCategory);
                 textWriter.WriteElementString("GoogleApiV2Key", settings.Tools.GoogleApiV2Key);
-                textWriter.WriteElementString("GoogleApiV2KeyInfoShow", settings.Tools.GoogleApiV2KeyInfoShow.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GoogleTranslateNoKeyWarningShow", settings.Tools.GoogleTranslateNoKeyWarningShow.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GoogleApiV1ChunkSize", settings.Tools.GoogleApiV1ChunkSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GoogleTranslateLastTargetLanguage", settings.Tools.GoogleTranslateLastTargetLanguage);
                 textWriter.WriteElementString("TranslateAllowSplit", settings.Tools.TranslateAllowSplit.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("TranslateLastService", settings.Tools.TranslateLastService);
                 textWriter.WriteElementString("ListViewSyntaxColorDurationSmall", settings.Tools.ListViewSyntaxColorDurationSmall.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorDurationBig", settings.Tools.ListViewSyntaxColorDurationBig.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorLongLines", settings.Tools.ListViewSyntaxColorLongLines.ToString(CultureInfo.InvariantCulture));
@@ -8603,7 +8602,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainToolsAppend", shortcuts.MainToolsAppend);
             textWriter.WriteElementString("MainToolsJoin", shortcuts.MainToolsJoin);
             textWriter.WriteElementString("MainToolsBeamer", shortcuts.MainToolsBeamer);
-            textWriter.WriteElementString("StyleManager", shortcuts.StyleManager);
+            textWriter.WriteElementString("MainToolsStyleManager", shortcuts.MainToolsStyleManager);
             textWriter.WriteElementString("MainEditToggleTranslationOriginalInPreviews", shortcuts.MainEditToggleTranslationOriginalInPreviews);
             textWriter.WriteElementString("MainEditInverseSelection", shortcuts.MainEditInverseSelection);
             textWriter.WriteElementString("MainEditModifySelection", shortcuts.MainEditModifySelection);
