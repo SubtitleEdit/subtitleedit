@@ -24157,6 +24157,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_subtitle == null || _subtitle.Paragraphs.Count == 0)
             {
                 InsertBefore();
+                textBoxListViewText.Focus();
             }
             else
             {
