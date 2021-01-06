@@ -736,8 +736,12 @@ Command line: {1} {2}
     <PoweredByGoogleTranslate>由谷歌翻译提供</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>由微软翻译提供</PoweredByMicrosoftTranslate>
     <MsClientSecretNeeded>抱歉，要想使用最新的微软翻译，你需要微软认知服务“翻译文本”密钥。转到“选项 -&gt; 设置 -&gt; 工具”输入你的密钥。</MsClientSecretNeeded>
-    <GoogleApiKeyNeeded>抱歉，要想使用最新的Google翻译服务，你需要一个API密钥。转到“选项 -&gt; 设置 -&gt; 工具”输入你的密钥。</GoogleApiKeyNeeded>
     <GoogleNoApiKeyWarning>正在尝试使用API密钥……（慢速且有限的数据）</GoogleNoApiKeyWarning>
+    <Service>服务商：</Service>
+    <LineMergeHandling>行的合并模式：</LineMergeHandling>
+    <ProcessorMergeNext>最多合并2行</ProcessorMergeNext>
+    <ProcessorSentence>合并句子</ProcessorSentence>
+    <ProcessorSingle>不合并</ProcessorSingle>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>谷歌 与 微软 翻译</Title>
@@ -1118,9 +1122,7 @@ Command line: {1} {2}
       </Synchronization>
       <AutoTranslate>
         <Title>自动翻译(&amp;A)</Title>
-        <TranslatePoweredByGoogle>翻译 (由谷歌提供)...</TranslatePoweredByGoogle>
-        <TranslatePoweredByMicrosoft>翻译 (由微软提供)...</TranslatePoweredByMicrosoft>
-        <TranslateFromSwedishToDanish>瑞典语翻译为丹麦语...</TranslateFromSwedishToDanish>
+        <AutoTranslate>自动翻译…</AutoTranslate>
       </AutoTranslate>
       <Options>
         <Title>选项(&amp;O)</Title>
