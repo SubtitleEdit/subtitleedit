@@ -5185,6 +5185,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/ToggleMode":
                     language.Settings.ToggleMode = reader.Value;
                     break;
+                case "Settings/TogglePreviewOnVideo":
+                    language.Settings.TogglePreviewOnVideo = reader.Value;
+                    break;
                 case "Settings/Help":
                     language.Settings.Help = reader.Value;
                     break;

@@ -1922,6 +1922,7 @@ can edit in same subtitle file (collaboration)</Information>
     <DuplicateLine>Duplicate line</DuplicateLine>
     <ToggleView>Toggle list/source view</ToggleView>
     <ToggleMode>Toggle translate/create/adjust mode</ToggleMode>
+    <TogglePreviewOnVideo>Toogle preview on video</TogglePreviewOnVideo>
     <Help>Help</Help>
     <FontInUi>UI Font</FontInUi>
     <ShowFrameRate>Show frame rate in toolbar</ShowFrameRate>
