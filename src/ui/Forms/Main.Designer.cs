@@ -225,6 +225,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemSetAudioTrack = new System.Windows.Forms.ToolStripMenuItem();
             this.closeVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openSecondSubtitleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.closeSecondSubtitleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setVideoOffsetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.smpteTimeModedropFrameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemImportChapters = new System.Windows.Forms.ToolStripMenuItem();
@@ -2099,6 +2100,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemSetAudioTrack,
             this.closeVideoToolStripMenuItem,
             this.openSecondSubtitleToolStripMenuItem,
+            this.closeSecondSubtitleToolStripMenuItem,
             this.setVideoOffsetToolStripMenuItem,
             this.smpteTimeModedropFrameToolStripMenuItem,
             this.toolStripMenuItemImportChapters,
@@ -2158,6 +2160,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.openSecondSubtitleToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
             this.openSecondSubtitleToolStripMenuItem.Text = "Open second subtitle...";
             this.openSecondSubtitleToolStripMenuItem.Click += new System.EventHandler(this.openSecondSubtitleToolStripMenuItem_Click);
+            // 
+            // closeSecondSubtitleToolStripMenuItem
+            // 
+            this.closeSecondSubtitleToolStripMenuItem.Name = "closeSecondSubtitleToolStripMenuItem";
+            this.closeSecondSubtitleToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+            this.closeSecondSubtitleToolStripMenuItem.Text = "Close second subtitle";
+            this.closeSecondSubtitleToolStripMenuItem.Visible = false;
+            this.closeSecondSubtitleToolStripMenuItem.Click += new System.EventHandler(this.closeSecondSubtitleToolStripMenuItem_Click);
             // 
             // setVideoOffsetToolStripMenuItem
             // 
@@ -5778,6 +5788,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem boxToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAssaStyles;
         private System.Windows.Forms.ToolStripMenuItem openSecondSubtitleToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem closeSecondSubtitleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aSSStylesToolStripMenuItem;
     }
 }

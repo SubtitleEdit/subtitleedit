@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
@@ -64,7 +65,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private IntPtr _mpvHandle;
         private Timer _videoLoadedTimer;
         private double? _pausePosition; // Hack to hold precise seeking when paused
-        private string _secondSubtitleFileName;
+        private string _secondSubtitleID;
 
         public override event EventHandler OnVideoLoaded;
         public override event EventHandler OnVideoEnded;
@@ -405,27 +406,65 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         public void LoadSubtitle(string fileName)
         {
             DoMpvCommand("sub-add", fileName, "select");
+            ShowSecondSubtitleIfLoaded();
         }
 
         public void LoadSecondSubtitle(string fileName)
         {
-            _secondSubtitleFileName = fileName;
-            DoMpvCommand("sub-add", fileName, "select");
+            if (string.IsNullOrEmpty(_secondSubtitleID))
+            {
+                DoMpvCommand("sub-add", fileName, "auto");
+                var subIDs = new List<string>();
+                var lpBuffer = IntPtr.Zero;
+                _mpvGetPropertyString(_mpvHandle, GetUtf8Bytes("track-list"), MpvFormatString, ref lpBuffer);
+                string trackListJson = Marshal.PtrToStringAnsi(lpBuffer);
+                foreach (var json in Json.ReadObjectArray(trackListJson))
+                {
+                    string trackType = Json.ReadTag(json, "type");
+                    int id = int.Parse(Json.ReadTag(json, "id"));
+                    if (trackType == "sub")
+                    {
+                        subIDs.Add(id.ToString());
+                    }
+                }
+                _mpvFree(lpBuffer);
+
+                _secondSubtitleID = subIDs.LastOrDefault();
+                if (!string.IsNullOrEmpty(_secondSubtitleID))
+                {
+                    _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("secondary-sid"), GetUtf8Bytes(_secondSubtitleID));
+                    _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("sub-font-size"), GetUtf8Bytes("40"));
+                } 
+            }
         }
 
         public void RemoveSubtitle()
         {
-            if (!string.IsNullOrEmpty(_secondSubtitleFileName))
-            {
-                return;
-            }
-
             DoMpvCommand("sub-remove");
+            ShowSecondSubtitleIfLoaded();
+        }
+
+        public void RemoveSecondSubtitle()
+        {
+            if (!string.IsNullOrEmpty(_secondSubtitleID))
+            {
+                DoMpvCommand("sub-remove", _secondSubtitleID);
+                _secondSubtitleID = null;
+            }
         }
 
         public void ReloadSubtitle()
         {
             DoMpvCommand("sub-reload");
+            ShowSecondSubtitleIfLoaded();
+        }
+
+        private void ShowSecondSubtitleIfLoaded()
+        {
+            if (!string.IsNullOrEmpty(_secondSubtitleID))
+            {
+                _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("secondary-sid"), GetUtf8Bytes(_secondSubtitleID));
+            }
         }
 
         public void HideCursor()
@@ -504,7 +543,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         public override void Initialize(Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
         {
-            _secondSubtitleFileName = null;
             if (LoadLib())
             {
                 LoadLibMpvDynamic();

@@ -1456,6 +1456,7 @@
                     public string ChooseAudioTrack { get; set; }
                     public string CloseVideo { get; set; }
                     public string OpenSecondSubtitle { get; set; }
+                    public string CloseSecondSubtitle { get; set; }
                     public string SetVideoOffset { get; set; }
                     public string SmptTimeMode { get; set; }
                     public string GenerateTextFromVideo { get; set; }

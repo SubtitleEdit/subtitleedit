@@ -1597,6 +1597,7 @@ namespace Nikse.SubtitleEdit.Logic
                         ChooseAudioTrack = "Choose audio track",
                         CloseVideo = "Close video file",
                         OpenSecondSubtitle = "Open second subtitle file...",
+                        CloseSecondSubtitle = "Close second subtitle file",
                         SetVideoOffset = "Set video offset...",
                         SmptTimeMode = "SMPTE timing (drop frame)",
                         GenerateTextFromVideo = "Generate text from video...",

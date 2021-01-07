@@ -1502,6 +1502,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemSetAudioTrack.Text = _language.Menu.Video.ChooseAudioTrack;
             closeVideoToolStripMenuItem.Text = _language.Menu.Video.CloseVideo;
             openSecondSubtitleToolStripMenuItem.Text = _language.Menu.Video.OpenSecondSubtitle;
+            closeSecondSubtitleToolStripMenuItem.Text = _language.Menu.Video.CloseSecondSubtitle;
             generateTextFromCurrentVideoToolStripMenuItem.Text = _language.Menu.Video.GenerateTextFromVideo;
 
             smpteTimeModedropFrameToolStripMenuItem.Text = _language.Menu.Video.SmptTimeMode;
@@ -29236,18 +29237,32 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (mediaPlayer.VideoPlayer is LibMpvDynamic libMpv)
             {
-                if (Configuration.Settings.General.MpvHandlesPreviewText)
-                {
-                    Configuration.Settings.General.MpvHandlesPreviewText = false;
-                    mediaPlayer.VideoPlayer = libMpv;
-                    mediaPlayer.SubtitleText = string.Empty;
-                }
-                libMpv.LoadSubtitle(openFileDialog1.FileName);
+                libMpv.LoadSecondSubtitle(openFileDialog1.FileName);
+                closeSecondSubtitleToolStripMenuItem.Visible = true;
             }
             else if (mediaPlayer.VideoPlayer is LibVlcDynamic libvlc)
             {
                 libvlc.LoadSecondSubtitle(openFileDialog1.FileName);
             }
+
+            openSecondSubtitleToolStripMenuItem.Enabled = false;
+        }
+
+        private void closeSecondSubtitleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (mediaPlayer.VideoPlayer is LibMpvDynamic libMpv)
+            {
+                libMpv.RemoveSecondSubtitle();
+                if (Configuration.Settings.General.MpvHandlesPreviewText)
+                {
+                    mediaPlayer.VideoPlayer = mediaPlayer.VideoPlayer;
+                    mediaPlayer.SetSubtitleText(string.Empty, null, _subtitle);
+                    ShowSubtitle(); 
+                }
+            }
+
+            closeSecondSubtitleToolStripMenuItem.Visible = false;
+            openSecondSubtitleToolStripMenuItem.Enabled = true;
         }
 
         private void aSSStylesToolStripMenuItem_Click(object sender, EventArgs e)

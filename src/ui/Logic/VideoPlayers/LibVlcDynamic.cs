@@ -1,5 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Forms;
+﻿using Nikse.SubtitleEdit.Forms;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -159,7 +158,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private libvlc_media_player_next_frame _libvlc_media_player_next_frame;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int libvlc_media_player_add_slave(IntPtr media, int type, byte[] filePath, bool select);
+        private delegate int libvlc_media_player_add_slave(IntPtr mediaPlayer, int type, byte[] filePath, bool select);
         private libvlc_media_player_add_slave _libvlc_media_player_add_slave;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
