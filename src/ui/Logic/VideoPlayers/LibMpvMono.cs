@@ -1,5 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -323,7 +322,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             Application.DoEvents();
             Pause();
         }
-
 
         public override void DisposeVideoPlayer()
         {
