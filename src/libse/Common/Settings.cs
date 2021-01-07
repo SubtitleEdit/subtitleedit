@@ -1811,6 +1811,7 @@ $HorzAlign          =   Center
         public string GeneralDuplicateLine { get; set; }
         public string GeneralToggleView { get; set; }
         public string GeneralToggleMode { get; set; }
+        public string GeneralTogglePreviewOnVideo { get; set; }
         public string GeneralHelp { get; set; }
         public string MainFileNew { get; set; }
         public string MainFileOpen { get; set; }
@@ -6386,6 +6387,12 @@ $HorzAlign          =   Center
                     shortcuts.GeneralToggleMode = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("GeneralTogglePreviewOnVideo");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralTogglePreviewOnVideo = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralHelp");
                 if (subNode != null)
                 {
@@ -8551,6 +8558,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("GeneralDuplicateLine", shortcuts.GeneralDuplicateLine);
             textWriter.WriteElementString("GeneralToggleView", shortcuts.GeneralToggleView);
             textWriter.WriteElementString("GeneralToggleMode", shortcuts.GeneralToggleMode);
+            textWriter.WriteElementString("GeneralTogglePreviewOnVideo", shortcuts.GeneralTogglePreviewOnVideo);
             textWriter.WriteElementString("GeneralHelp", shortcuts.GeneralHelp);
             textWriter.WriteElementString("MainFileNew", shortcuts.MainFileNew);
             textWriter.WriteElementString("MainFileOpen", shortcuts.MainFileOpen);

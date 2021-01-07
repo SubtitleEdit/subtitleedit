@@ -14464,6 +14464,22 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
+            else if (_shortcuts.MainGeneralTogglePreviewOnVideo == e.KeyData)
+            {
+                Configuration.Settings.General.MpvHandlesPreviewText = !Configuration.Settings.General.MpvHandlesPreviewText;
+                if (mediaPlayer.VideoPlayer is LibMpvDynamic libMpv)
+                {
+                    if (!Configuration.Settings.General.MpvHandlesPreviewText)
+                    {
+                        libMpv.RemoveSubtitle();
+                    }
+                    mediaPlayer.VideoPlayer = mediaPlayer.VideoPlayer;
+                    mediaPlayer.SetSubtitleText(string.Empty, null, _subtitle);
+                    ShowSubtitle();
+                }
+
+                e.SuppressKeyPress = true;
+            }
             else if (_shortcuts.MainGeneralFileSaveAll == e.KeyData)
             {
                 SaveAll();
