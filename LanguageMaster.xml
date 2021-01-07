@@ -2384,8 +2384,6 @@ Continue?</RestoreDefaultSettingsMsg>
     <TreatINQuoteAsING>Treat word ending " in' " as " ing " (English only)</TreatINQuoteAsING>
     <RememberUseAlwaysList>Remember "Use always" list</RememberUseAlwaysList>
     <LiveSpellCheck>Live spell check</LiveSpellCheck>
-    <LiveSpellCheckLanguage>Live spell check - Working with language [{0}]</LiveSpellCheckLanguage>
-    <NoDictionaryForLiveSpellCheck>Live spell check - You don't have dictionaries for this language [{0}]</NoDictionaryForLiveSpellCheck>
     <ImageText>Image text</ImageText>
     <SpellCheckCompleted>Spell check completed</SpellCheckCompleted>
     <SpellCheckAborted>Spell check aborted</SpellCheckAborted>
