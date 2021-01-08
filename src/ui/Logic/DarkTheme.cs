@@ -11,6 +11,41 @@ namespace Nikse.SubtitleEdit.Logic
 {
     public static class DarkTheme
     {
+        internal static readonly Color BackColor = Configuration.Settings.General.DarkThemeBackColor;
+        internal static readonly Color ForeColor = Configuration.Settings.General.DarkThemeForeColor;
+
+        private const int DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1 = 19;
+        private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
+        private static bool UseImmersiveDarkMode(IntPtr handle, bool enabled)
+        {
+            if (IsWindows10OrGreater(17763))
+            {
+                var attribute = DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1;
+                if (IsWindows10OrGreater(18985))
+                {
+                    attribute = DWMWA_USE_IMMERSIVE_DARK_MODE;
+                }
+
+                int useImmersiveDarkMode = enabled ? 1 : 0;
+                return NativeMethods.DwmSetWindowAttribute(handle, (int)attribute, ref useImmersiveDarkMode, sizeof(int)) == 0;
+            }
+
+            return false;
+        }
+
+        private static bool IsWindows10OrGreater(int build = -1)
+        {
+            return Configuration.IsRunningOnWindows && Environment.OSVersion.Version.Major >= 10 && Environment.OSVersion.Version.Build >= build;
+        }
+
+        private static void SetWindowThemeDark(Control control)
+        {
+            if (Configuration.IsRunningOnWindows)
+            {
+                NativeMethods.SetWindowTheme(control.Handle, "DarkMode_Explorer", null);
+            }
+        }
+
         public static IEnumerable<Control> GetAllControlByType(Control control, Type type)
         {
             var controls = control.Controls.Cast<Control>().ToList();
@@ -18,33 +53,6 @@ namespace Nikse.SubtitleEdit.Logic
             return controls.SelectMany(ctrl => GetAllControlByType(ctrl, type))
                                       .Concat(controls)
                                       .Where(c => c.GetType() == type);
-        }
-
-        internal static readonly Color BackColor = Configuration.Settings.General.DarkThemeBackColor;
-        internal static readonly Color ForeColor = Configuration.Settings.General.DarkThemeForeColor;
-
-        private static void TabControl1_DrawItem(object sender, DrawItemEventArgs e)
-        {
-            var sz = e.Graphics.MeasureString((sender as TabControl)?.TabPages[e.Index].Text, e.Font);
-            using (var br = new SolidBrush(BackColor))
-            {
-                e.Graphics.FillRectangle(br, e.Bounds);
-                e.Graphics.DrawString((sender as TabControl)?.TabPages[e.Index].Text, e.Font, Brushes.WhiteSmoke, e.Bounds.Left + (e.Bounds.Width - sz.Width) / 2, e.Bounds.Top + (e.Bounds.Height - sz.Height) / 2 + 1);
-
-                var rect = e.Bounds;
-                rect.Offset(0, 1);
-                rect.Inflate(0, -1);
-                e.Graphics.DrawRectangle(new Pen(ForeColor, 1), rect);
-                e.DrawFocusRectangle();
-            }
-        }
-
-        private static void TabPage_Paint(object sender, PaintEventArgs e)
-        {
-            using (var fillBrush = new SolidBrush(BackColor))
-            {
-                e.Graphics.FillRectangle(fillBrush, e.ClipRectangle);
-            }
         }
 
         private static List<T> GetSubControls<T>(Control c)
@@ -65,69 +73,9 @@ namespace Nikse.SubtitleEdit.Logic
                 return;
             }
 
-            if (ctrl is Form form) // https://www.dreamincode.net/forums/topic/64981-designing-a-custom-title-bar/
+            if (ctrl is Form form)
             {
-                //form.FormBorderStyle = FormBorderStyle.None;
-                //var title = new PictureBox
-                //{
-                //    Location = new Point(0, 0),
-                //    Width = form.Width,
-                //    Height = 50,
-                //    BackColor = Color.Black,
-                //    Anchor = AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Left
-                //};
-                //form.Controls.Add(title);
-                //title.SendToBack();
-                //title.MouseDown += (o, i) => { form.WindowState = FormWindowState.Minimized; };
-                //title.MouseUp += (o, i) => { form.WindowState = FormWindowState.Maximized; };
-                //title.MouseMove += (o, i) => { form.WindowState = FormWindowState.Normal; };
-
-                //var minimize = new Label
-                //{
-                //    Text = "🗕",
-                //    Location = new Point(form.Width - 60, 5),
-                //    ForeColor = ForeColor,
-                //    BackColor = Color.Black, // BackColor,
-                //    Width =  15,
-                //    Height = 15,
-                //    Anchor = AnchorStyles.Top | AnchorStyles.Right
-                //};
-                //minimize.Click += (o, i) => { form.WindowState = FormWindowState.Minimized; };
-                //form.Controls.Add(minimize);
-                //minimize.BringToFront();
-
-                //var maximize = new Label
-                //{
-                //    Text = "🗗", //🗗 Overlap or 🗖 maximize
-                //    Location = new Point(form.Width - 40, 5),
-                //    ForeColor = ForeColor,
-                //    BackColor = Color.Black, // BackColor,
-                //    Width = 15,
-                //    Height = 15,
-                //    Anchor = AnchorStyles.Top | AnchorStyles.Right
-                //};
-
-                //maximize.Click += (o, i) =>
-                //{
-                //    form.WindowState = form.WindowState == FormWindowState.Maximized ?  FormWindowState.Normal : FormWindowState.Maximized;
-                //    maximize.Text = form.WindowState == FormWindowState.Maximized ? "🗗" : "🗖";
-                //};
-                //form.Controls.Add(maximize);
-                //maximize.BringToFront();
-
-                //var close = new Label
-                //{
-                //    Text = "🗙",
-                //    Location = new Point(form.Width - 20, 5),
-                //    ForeColor = ForeColor,
-                //    BackColor = Color.Black, // BackColor,
-                //    Width = 15,
-                //    Height = 15,
-                //    Anchor = AnchorStyles.Top | AnchorStyles.Right
-                //};
-                //close.Click += (o, i) => { form.Close(); };
-                //form.Controls.Add(close);
-                //close.BringToFront();
+                UseImmersiveDarkMode(ctrl.Handle, true);
 
                 var contextMenus = GetSubControls<ContextMenuStrip>(form);
                 foreach (ContextMenuStrip cms in contextMenus)
@@ -207,16 +155,6 @@ namespace Nikse.SubtitleEdit.Logic
             FixControl(ctrl);
             foreach (Control c in GetSubControls<Control>(ctrl))
             {
-                if (c is TabControl tc)
-                {
-                    tc.DrawMode = TabDrawMode.OwnerDrawFixed;
-                    tc.DrawItem += TabControl1_DrawItem;
-                    foreach (TabPage tabPage in tc.TabPages)
-                    {
-                        tabPage.Paint += TabPage_Paint;
-                    }
-                }
-
                 FixControl(c);
             }
         }
@@ -287,11 +225,28 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
+            if (c is TreeView || c is ListBox)
+            {
+                SetWindowThemeDark(c);
+            }
+
+            if (c is TabControl tc)
+            {
+                tc.DrawMode = TabDrawMode.OwnerDrawFixed;
+                tc.DrawItem += TabControl1_DrawItem;
+                foreach (TabPage tabPage in tc.TabPages)
+                {
+                    tabPage.Paint += TabPage_Paint;
+                }
+            }
+
             if (c is SubtitleListView seLV)
             {
                 seLV.OwnerDraw = true;
                 seLV.DrawColumnHeader += ListView_DrawColumnHeader;
                 seLV.GridLines = Configuration.Settings.General.DarkThemeShowListViewGridLines;
+                seLV.HandleCreated += ListView_HandleCreated;
+                SetWindowThemeDark(seLV);
             }
             else if (c is ListView lv)
             {
@@ -300,6 +255,7 @@ namespace Nikse.SubtitleEdit.Logic
                 lv.DrawItem += ListView_DrawItem;
                 lv.DrawSubItem += ListView_DrawSubItem;
                 lv.DrawColumnHeader += ListView_DrawColumnHeader;
+                lv.HandleCreated += ListView_HandleCreated;
             }
         }
 
@@ -350,6 +306,30 @@ namespace Nikse.SubtitleEdit.Logic
                 };
 
                 TextRenderer.DrawText(e.Graphics, radioButton.Text, radioButton.Font, textRectangleValue, Color.DimGray, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+            }
+        }
+
+        private static void TabControl1_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            var sz = e.Graphics.MeasureString((sender as TabControl)?.TabPages[e.Index].Text, e.Font);
+            using (var br = new SolidBrush(BackColor))
+            {
+                e.Graphics.FillRectangle(br, e.Bounds);
+                e.Graphics.DrawString((sender as TabControl)?.TabPages[e.Index].Text, e.Font, Brushes.WhiteSmoke, e.Bounds.Left + (e.Bounds.Width - sz.Width) / 2, e.Bounds.Top + (e.Bounds.Height - sz.Height) / 2 + 1);
+
+                var rect = e.Bounds;
+                rect.Offset(0, 1);
+                rect.Inflate(0, -1);
+                e.Graphics.DrawRectangle(new Pen(ForeColor, 1), rect);
+                e.DrawFocusRectangle();
+            }
+        }
+
+        private static void TabPage_Paint(object sender, PaintEventArgs e)
+        {
+            using (var fillBrush = new SolidBrush(BackColor))
+            {
+                e.Graphics.FillRectangle(fillBrush, e.ClipRectangle);
             }
         }
 
@@ -478,6 +458,11 @@ namespace Nikse.SubtitleEdit.Logic
                     e.Graphics.DrawLine(new Pen(ForeColor), e.Bounds.X, e.Bounds.Y, e.Bounds.X, e.Bounds.Height);
                 }
             }
+        }
+
+        private static void ListView_HandleCreated(object sender, EventArgs e)
+        {
+            SetWindowThemeDark((Control)sender);
         }
 
         private class MyRenderer : ToolStripProfessionalRenderer
