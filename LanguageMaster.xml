@@ -2004,6 +2004,7 @@ can edit in same subtitle file (collaboration)</Information>
     <ShowStopButton>Show stop button</ShowStopButton>
     <ShowMuteButton>Show mute button</ShowMuteButton>
     <ShowFullscreenButton>Show fullscreen button</ShowFullscreenButton>
+    <PreviewFontName>Subtitle preview font name</PreviewFontName>
     <PreviewFontSize>Subtitle preview font size</PreviewFontSize>
     <MainWindowVideoControls>Main window video controls</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Custom search text and URL</CustomSearchTextAndUrl>
