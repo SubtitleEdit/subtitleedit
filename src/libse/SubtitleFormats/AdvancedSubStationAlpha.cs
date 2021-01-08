@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Xml;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -51,10 +51,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
+        public override bool HasStyleSupport => true;
+
         public override string Extension => ".ass";
 
         public const string NameOfFormat = "Advanced Sub Station Alpha";
-
         public override string Name => NameOfFormat;
 
         public override bool IsMine(List<string> lines, string fileName)
@@ -1731,7 +1732,7 @@ Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour,
 
         public static string GetSsaColorString(Color c)
         {
-            return $"&H{255 - c.A:X2}{c.B:X2}{c.G:X2}{c.R:X2}"; // ASS stores alpha in reverse (0=full itentity and 255=fully transparent)
+            return $"&H{255 - c.A:X2}{c.B:X2}{c.G:X2}{c.R:X2}"; // ASS stores alpha in reverse (0=full intensity and 255=fully transparent)
         }
 
         public static string CheckForErrors(string header)
@@ -2282,7 +2283,5 @@ Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour,
             }
             return new SsaStyle { Name = styleName };
         }
-
-        public override bool HasStyleSupport => true;
     }
 }

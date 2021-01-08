@@ -276,11 +276,14 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             comboBoxFontName.BeginUpdate();
             comboBoxSubtitleFont.BeginUpdate();
+            comboBoxVideoPlayerPreviewFontName.BeginUpdate();
             comboBoxFontName.Items.Clear();
             comboBoxSubtitleFont.Items.Clear();
+            comboBoxVideoPlayerPreviewFontName.Items.Clear();
             var comboBoxFontNameList = new List<string>();
             var comboBoxSubtitleFontList = new List<string>();
             var comboBoxSubtitleFontIndex = 0;
+            var comboBoxVideoPlayerPreviewFontIndex = 0;
             foreach (var x in FontFamily.Families.OrderBy(p => p.Name))
             {
                 comboBoxFontNameList.Add(x.Name);
@@ -291,13 +294,21 @@ namespace Nikse.SubtitleEdit.Forms.Options
                     {
                         comboBoxSubtitleFontIndex = comboBoxSubtitleFontList.Count - 1;
                     }
+
+                    if (x.Name.Equals(gs.VideoPlayerPreviewFontName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        comboBoxVideoPlayerPreviewFontIndex = comboBoxSubtitleFontList.Count - 1;
+                    }
                 }
             }
             comboBoxFontName.Items.AddRange(comboBoxFontNameList.ToArray<object>());
             comboBoxSubtitleFont.Items.AddRange(comboBoxSubtitleFontList.ToArray<object>());
+            comboBoxVideoPlayerPreviewFontName.Items.AddRange(comboBoxSubtitleFontList.ToArray<object>());
             comboBoxSubtitleFont.SelectedIndex = comboBoxSubtitleFontIndex;
+            comboBoxVideoPlayerPreviewFontName.SelectedIndex = comboBoxVideoPlayerPreviewFontIndex;
             comboBoxFontName.EndUpdate();
             comboBoxSubtitleFont.EndUpdate();
+            comboBoxVideoPlayerPreviewFontName.EndUpdate();
 
             var wordListSettings = Configuration.Settings.WordLists;
             checkBoxNamesOnline.Checked = wordListSettings.UseOnlineNames;
@@ -561,10 +572,17 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxVideoPlayerShowMuteButton.Text = language.ShowMuteButton;
             checkBoxVideoPlayerShowFullscreenButton.Text = language.ShowFullscreenButton;
 
+            labelVideoPlayerPreviewFontName.Text = language.PreviewFontName;
             labelVideoPlayerPreviewFontSize.Text = language.PreviewFontSize;
-            comboBoxlVideoPlayerPreviewFontSize.Left = labelVideoPlayerPreviewFontSize.Left + labelVideoPlayerPreviewFontSize.Width;
             checkBoxVideoPlayerPreviewFontBold.Text = language.SubtitleBold;
-            checkBoxVideoPlayerPreviewFontBold.Left = comboBoxlVideoPlayerPreviewFontSize.Left;
+            var leftPos = labelVideoPlayerPreviewFontName.Right;
+            if (leftPos < labelVideoPlayerPreviewFontName.Right)
+            {
+                leftPos = labelVideoPlayerPreviewFontSize.Right;
+            }
+            comboBoxVideoPlayerPreviewFontName.Left = leftPos;
+            comboBoxlVideoPlayerPreviewFontSize.Left = leftPos;
+            checkBoxVideoPlayerPreviewFontBold.Left = comboBoxlVideoPlayerPreviewFontSize.Right + 7;
 
             checkBoxVideoAutoOpen.Text = language.VideoAutoOpen;
             checkBoxAllowVolumeBoost.Text = language.AllowVolumeBoost;
@@ -1823,6 +1841,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             gs.VideoPlayerShowStopButton = checkBoxVideoPlayerShowStopButton.Checked;
             gs.VideoPlayerShowMuteButton = checkBoxVideoPlayerShowMuteButton.Checked;
             gs.VideoPlayerShowFullscreenButton = checkBoxVideoPlayerShowFullscreenButton.Checked;
+            gs.VideoPlayerPreviewFontName = comboBoxVideoPlayerPreviewFontName.SelectedItem.ToString();
             gs.VideoPlayerPreviewFontSize = int.Parse(comboBoxlVideoPlayerPreviewFontSize.Items[0].ToString()) + comboBoxlVideoPlayerPreviewFontSize.SelectedIndex;
             gs.VideoPlayerPreviewFontBold = checkBoxVideoPlayerPreviewFontBold.Checked;
             gs.DisableVideoAutoLoading = !checkBoxVideoAutoOpen.Checked;
