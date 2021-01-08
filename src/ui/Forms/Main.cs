@@ -4752,7 +4752,7 @@ namespace Nikse.SubtitleEdit.Forms
             string oldVideoPlayer = Configuration.Settings.General.VideoPlayer;
             string oldMpvVideoOutput = Configuration.Settings.General.MpvVideoOutputWindows;
             string oldListViewLineSeparatorString = Configuration.Settings.General.ListViewLineSeparatorString;
-            var oldCpsWhiteSpaceSetting = Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace;
+            bool oldCpsWhiteSpaceSetting = Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace;
             string oldSubtitleFontSettings = Configuration.Settings.General.SubtitleFontName +
                                              Configuration.Settings.General.SubtitleTextBoxFontBold +
                                              Configuration.Settings.General.CenterSubtitleInTextBox +

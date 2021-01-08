@@ -1088,6 +1088,7 @@ $HorzAlign          =   Center
         public string SpellCheckLanguage { get; set; }
         public string VideoPlayer { get; set; }
         public int VideoPlayerDefaultVolume { get; set; }
+        public string VideoPlayerPreviewFontName { get; set; }
         public int VideoPlayerPreviewFontSize { get; set; }
         public bool VideoPlayerPreviewFontBold { get; set; }
         public bool VideoPlayerShowStopButton { get; set; }
@@ -1253,6 +1254,7 @@ $HorzAlign          =   Center
             SpellCheckLanguage = null;
             VideoPlayer = string.Empty;
             VideoPlayerDefaultVolume = 75;
+            VideoPlayerPreviewFontName = string.Empty;
             VideoPlayerPreviewFontSize = 12;
             VideoPlayerPreviewFontBold = true;
             VideoPlayerShowStopButton = true;
@@ -3067,6 +3069,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.VideoPlayerDefaultVolume = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("VideoPlayerPreviewFontName");
+            if (subNode != null)
+            {
+                settings.General.VideoPlayerPreviewFontName = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("VideoPlayerPreviewFontSize");
@@ -7933,6 +7941,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("SpellCheckLanguage", settings.General.SpellCheckLanguage);
                 textWriter.WriteElementString("VideoPlayer", settings.General.VideoPlayer);
                 textWriter.WriteElementString("VideoPlayerDefaultVolume", settings.General.VideoPlayerDefaultVolume.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("VideoPlayerPreviewFontName", settings.General.VideoPlayerPreviewFontName);
                 textWriter.WriteElementString("VideoPlayerPreviewFontSize", settings.General.VideoPlayerPreviewFontSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VideoPlayerPreviewFontBold", settings.General.VideoPlayerPreviewFontBold.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VideoPlayerShowStopButton", settings.General.VideoPlayerShowStopButton.ToString(CultureInfo.InvariantCulture));
