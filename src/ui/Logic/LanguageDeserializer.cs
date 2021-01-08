@@ -5431,6 +5431,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/ShowFullscreenButton":
                     language.Settings.ShowFullscreenButton = reader.Value;
                     break;
+                case "Settings/PreviewFontName":
+                    language.Settings.PreviewFontName = reader.Value;
+                    break;
                 case "Settings/PreviewFontSize":
                     language.Settings.PreviewFontSize = reader.Value;
                     break;
