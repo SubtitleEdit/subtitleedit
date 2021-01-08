@@ -2173,6 +2173,7 @@
             public string ShowStopButton { get; set; }
             public string ShowMuteButton { get; set; }
             public string ShowFullscreenButton { get; set; }
+            public string PreviewFontName { get; set; }
             public string PreviewFontSize { get; set; }
             public string MainWindowVideoControls { get; set; }
             public string CustomSearchTextAndUrl { get; set; }
