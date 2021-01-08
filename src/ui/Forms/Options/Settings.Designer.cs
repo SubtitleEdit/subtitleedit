@@ -151,6 +151,8 @@
             this.checkBoxVideoPlayerPreviewFontBold = new System.Windows.Forms.CheckBox();
             this.checkBoxVideoPlayerShowFullscreenButton = new System.Windows.Forms.CheckBox();
             this.checkBoxVideoPlayerShowMuteButton = new System.Windows.Forms.CheckBox();
+            this.labelVideoPlayerPreviewFontName = new System.Windows.Forms.Label();
+            this.comboBoxVideoPlayerPreviewFontName = new System.Windows.Forms.ComboBox();
             this.labelVideoPlayerPreviewFontSize = new System.Windows.Forms.Label();
             this.comboBoxlVideoPlayerPreviewFontSize = new System.Windows.Forms.ComboBox();
             this.checkBoxVideoPlayerShowStopButton = new System.Windows.Forms.CheckBox();
@@ -2049,6 +2051,8 @@
             this.groupBoxVideoPlayerDefault.Controls.Add(this.checkBoxVideoPlayerPreviewFontBold);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.checkBoxVideoPlayerShowFullscreenButton);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.checkBoxVideoPlayerShowMuteButton);
+            this.groupBoxVideoPlayerDefault.Controls.Add(this.labelVideoPlayerPreviewFontName);
+            this.groupBoxVideoPlayerDefault.Controls.Add(this.comboBoxVideoPlayerPreviewFontName);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.labelVideoPlayerPreviewFontSize);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.comboBoxlVideoPlayerPreviewFontSize);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.checkBoxVideoPlayerShowStopButton);
@@ -2061,60 +2065,77 @@
             // checkBoxAllowVolumeBoost
             // 
             this.checkBoxAllowVolumeBoost.AutoSize = true;
-            this.checkBoxAllowVolumeBoost.Location = new System.Drawing.Point(334, 97);
+            this.checkBoxAllowVolumeBoost.Location = new System.Drawing.Point(9, 95);
             this.checkBoxAllowVolumeBoost.Name = "checkBoxAllowVolumeBoost";
             this.checkBoxAllowVolumeBoost.Size = new System.Drawing.Size(118, 17);
-            this.checkBoxAllowVolumeBoost.TabIndex = 25;
+            this.checkBoxAllowVolumeBoost.TabIndex = 4;
             this.checkBoxAllowVolumeBoost.Text = "Allow volume boost";
             this.checkBoxAllowVolumeBoost.UseVisualStyleBackColor = true;
             // 
             // checkBoxVideoAutoOpen
             // 
             this.checkBoxVideoAutoOpen.AutoSize = true;
-            this.checkBoxVideoAutoOpen.Location = new System.Drawing.Point(334, 74);
+            this.checkBoxVideoAutoOpen.Location = new System.Drawing.Point(9, 75);
             this.checkBoxVideoAutoOpen.Name = "checkBoxVideoAutoOpen";
             this.checkBoxVideoAutoOpen.Size = new System.Drawing.Size(213, 17);
-            this.checkBoxVideoAutoOpen.TabIndex = 24;
+            this.checkBoxVideoAutoOpen.TabIndex = 3;
             this.checkBoxVideoAutoOpen.Text = "Auto open video when opening subtitle";
             this.checkBoxVideoAutoOpen.UseVisualStyleBackColor = true;
             // 
             // checkBoxVideoPlayerPreviewFontBold
             // 
             this.checkBoxVideoPlayerPreviewFontBold.AutoSize = true;
-            this.checkBoxVideoPlayerPreviewFontBold.Location = new System.Drawing.Point(465, 45);
+            this.checkBoxVideoPlayerPreviewFontBold.Location = new System.Drawing.Point(593, 48);
             this.checkBoxVideoPlayerPreviewFontBold.Name = "checkBoxVideoPlayerPreviewFontBold";
             this.checkBoxVideoPlayerPreviewFontBold.Size = new System.Drawing.Size(46, 17);
-            this.checkBoxVideoPlayerPreviewFontBold.TabIndex = 23;
+            this.checkBoxVideoPlayerPreviewFontBold.TabIndex = 9;
             this.checkBoxVideoPlayerPreviewFontBold.Text = "Bold";
             this.checkBoxVideoPlayerPreviewFontBold.UseVisualStyleBackColor = true;
             // 
             // checkBoxVideoPlayerShowFullscreenButton
             // 
             this.checkBoxVideoPlayerShowFullscreenButton.AutoSize = true;
-            this.checkBoxVideoPlayerShowFullscreenButton.Location = new System.Drawing.Point(9, 65);
+            this.checkBoxVideoPlayerShowFullscreenButton.Location = new System.Drawing.Point(9, 55);
             this.checkBoxVideoPlayerShowFullscreenButton.Name = "checkBoxVideoPlayerShowFullscreenButton";
             this.checkBoxVideoPlayerShowFullscreenButton.Size = new System.Drawing.Size(136, 17);
-            this.checkBoxVideoPlayerShowFullscreenButton.TabIndex = 12;
+            this.checkBoxVideoPlayerShowFullscreenButton.TabIndex = 2;
             this.checkBoxVideoPlayerShowFullscreenButton.Text = "Show fullscreen button";
             this.checkBoxVideoPlayerShowFullscreenButton.UseVisualStyleBackColor = true;
             // 
             // checkBoxVideoPlayerShowMuteButton
             // 
             this.checkBoxVideoPlayerShowMuteButton.AutoSize = true;
-            this.checkBoxVideoPlayerShowMuteButton.Location = new System.Drawing.Point(9, 42);
+            this.checkBoxVideoPlayerShowMuteButton.Location = new System.Drawing.Point(9, 35);
             this.checkBoxVideoPlayerShowMuteButton.Name = "checkBoxVideoPlayerShowMuteButton";
             this.checkBoxVideoPlayerShowMuteButton.Size = new System.Drawing.Size(114, 17);
-            this.checkBoxVideoPlayerShowMuteButton.TabIndex = 11;
+            this.checkBoxVideoPlayerShowMuteButton.TabIndex = 1;
             this.checkBoxVideoPlayerShowMuteButton.Text = "Show mute button";
             this.checkBoxVideoPlayerShowMuteButton.UseVisualStyleBackColor = true;
+            // 
+            // labelVideoPlayerPreviewFontName
+            // 
+            this.labelVideoPlayerPreviewFontName.AutoSize = true;
+            this.labelVideoPlayerPreviewFontName.Location = new System.Drawing.Point(331, 21);
+            this.labelVideoPlayerPreviewFontName.Name = "labelVideoPlayerPreviewFontName";
+            this.labelVideoPlayerPreviewFontName.Size = new System.Drawing.Size(128, 13);
+            this.labelVideoPlayerPreviewFontName.TabIndex = 5;
+            this.labelVideoPlayerPreviewFontName.Text = "Subtitle preview font size";
+            // 
+            // comboBoxVideoPlayerPreviewFontName
+            // 
+            this.comboBoxVideoPlayerPreviewFontName.FormattingEnabled = true;
+            this.comboBoxVideoPlayerPreviewFontName.Location = new System.Drawing.Point(465, 18);
+            this.comboBoxVideoPlayerPreviewFontName.Name = "comboBoxVideoPlayerPreviewFontName";
+            this.comboBoxVideoPlayerPreviewFontName.Size = new System.Drawing.Size(188, 21);
+            this.comboBoxVideoPlayerPreviewFontName.TabIndex = 6;
             // 
             // labelVideoPlayerPreviewFontSize
             // 
             this.labelVideoPlayerPreviewFontSize.AutoSize = true;
-            this.labelVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(331, 21);
+            this.labelVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(331, 48);
             this.labelVideoPlayerPreviewFontSize.Name = "labelVideoPlayerPreviewFontSize";
             this.labelVideoPlayerPreviewFontSize.Size = new System.Drawing.Size(128, 13);
-            this.labelVideoPlayerPreviewFontSize.TabIndex = 14;
+            this.labelVideoPlayerPreviewFontSize.TabIndex = 7;
             this.labelVideoPlayerPreviewFontSize.Text = "Subtitle preview font size";
             // 
             // comboBoxlVideoPlayerPreviewFontSize
@@ -2145,18 +2166,18 @@
             "28",
             "29",
             "30"});
-            this.comboBoxlVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(465, 18);
+            this.comboBoxlVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(465, 45);
             this.comboBoxlVideoPlayerPreviewFontSize.Name = "comboBoxlVideoPlayerPreviewFontSize";
             this.comboBoxlVideoPlayerPreviewFontSize.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxlVideoPlayerPreviewFontSize.TabIndex = 13;
+            this.comboBoxlVideoPlayerPreviewFontSize.TabIndex = 8;
             // 
             // checkBoxVideoPlayerShowStopButton
             // 
             this.checkBoxVideoPlayerShowStopButton.AutoSize = true;
-            this.checkBoxVideoPlayerShowStopButton.Location = new System.Drawing.Point(9, 19);
+            this.checkBoxVideoPlayerShowStopButton.Location = new System.Drawing.Point(9, 15);
             this.checkBoxVideoPlayerShowStopButton.Name = "checkBoxVideoPlayerShowStopButton";
             this.checkBoxVideoPlayerShowStopButton.Size = new System.Drawing.Size(111, 17);
-            this.checkBoxVideoPlayerShowStopButton.TabIndex = 10;
+            this.checkBoxVideoPlayerShowStopButton.TabIndex = 0;
             this.checkBoxVideoPlayerShowStopButton.Text = "Show stop button";
             this.checkBoxVideoPlayerShowStopButton.UseVisualStyleBackColor = true;
             // 
@@ -5188,6 +5209,8 @@
         private System.Windows.Forms.ComboBox comboBoxMergeShortLineLength;
         private System.Windows.Forms.CheckBox checkBoxAutoWrapWhileTyping;
         private System.Windows.Forms.CheckBox checkBoxFixCommonOcrErrorsUsingHardcodedRules;
+        private System.Windows.Forms.Label labelVideoPlayerPreviewFontName;
+        private System.Windows.Forms.ComboBox comboBoxVideoPlayerPreviewFontName;
         private System.Windows.Forms.Label labelVideoPlayerPreviewFontSize;
         private System.Windows.Forms.ComboBox comboBoxlVideoPlayerPreviewFontSize;
         private System.Windows.Forms.GroupBox groupBoxShortcuts;
