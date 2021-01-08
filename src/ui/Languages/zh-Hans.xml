@@ -1913,6 +1913,7 @@ Command line: {1} {2}
     <DuplicateLine>创建副本行</DuplicateLine>
     <ToggleView>切换表格/源视图</ToggleView>
     <ToggleMode>切换翻译/创建/调整模式</ToggleMode>
+    <TogglePreviewOnVideo>切换视频预览</TogglePreviewOnVideo>
     <Help>帮助</Help>
     <FontInUi>用户界面字体</FontInUi>
     <ShowFrameRate>在工具栏显示帧率</ShowFrameRate>
@@ -2374,6 +2375,8 @@ Command line: {1} {2}
     <TreatINQuoteAsING>将词尾为‘in’‘as’‘ing’的词作视作同一个词 (仅对英文有效)</TreatINQuoteAsING>
     <RememberUseAlwaysList>记住 “始终使用”列表</RememberUseAlwaysList>
     <LiveSpellCheck>在线拼写检查</LiveSpellCheck>
+    <LiveSpellCheckLanguage>在线拼写检查 - 正在使用语言 [{0}]</LiveSpellCheckLanguage>
+    <NoDictionaryForLiveSpellCheck>在线拼写检查 - 没有语言 [{0}] 的辞典文件</NoDictionaryForLiveSpellCheck>
     <ImageText>图片文字</ImageText>
     <SpellCheckCompleted>拼写检查完成。</SpellCheckCompleted>
     <SpellCheckAborted>拼写检查中止</SpellCheckAborted>
