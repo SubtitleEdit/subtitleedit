@@ -14,19 +14,15 @@ IF /I "%~1" == "-?"     GOTO ShowHelp
 ECHO Getting latest changes...
 git pull
 ECHO.
-
-ECHO Check for new translation strings...
-SET "LanguageToolPath=src\UpdateLanguageFiles\bin\debug\UpdateLanguageFiles.exe"
-IF NOT EXIST "%LanguageToolPath%" (
-  ECHO Compile UpdateLanguageFiles!
-)
-"%LanguageToolPath%" "LanguageMaster.xml" "src\ui\Logic\LanguageDeserializer.cs"
-ECHO.
-
 ECHO Starting compilation...
 
+REM MAKE DIR/CLEAN
+IF NOT EXIST SubtitleEditBeta (
 MD SubtitleEditBeta
+)
+IF EXIST SubtitleEditBeta\SubtitleEditBeta.zip (
 DEL SubtitleEditBeta\SubtitleEditBeta.zip
+)
 
 REM Set environment variables for Visual Studio command line if necessary
 :SetVsCmdLineEnv
@@ -101,6 +97,18 @@ IF EXIST "%VSINSTALLDIR%MSBuild\Current\Bin\MSBuild.exe" (
   ECHO Cannot find Visual Studio 2019.
   GOTO EndWithError
 ))
+
+
+ECHO Check for new translation strings...
+"%MSBUILD%" src\UpdateLanguageFiles\UpdateLanguageFiles.csproj /r /t:Rebuild /p:Configuration=Debug /p:Platform="Any CPU"^
+ /maxcpucount /p:OutputPath=bin\debug /consoleloggerparameters:DisableMPLogging;Summary;Verbosity=minimal
+SET "LanguageToolPath=src\UpdateLanguageFiles\bin\debug\UpdateLanguageFiles.exe"
+IF NOT EXIST "%LanguageToolPath%" (
+  ECHO Compile UpdateLanguageFiles!
+)
+"%LanguageToolPath%" "LanguageMaster.xml" "src\ui\Logic\LanguageDeserializer.cs"
+ECHO.
+
 
 "%MSBUILD%" SubtitleEdit.sln /r /t:%BUILDTYPE% /p:Configuration=Release /p:Platform="Any CPU"^
  /maxcpucount /consoleloggerparameters:DisableMPLogging;Summary;Verbosity=minimal
