@@ -7,6 +7,7 @@
    * Add internal store for ASSA styles - thx Leon/z3us
    * Add dark theme - thx OmrSi/dvjrickkraft/MuhammadiJK
    * Add "Delete lines" to "Batch convert" - thx Milenko
+   * Add two new sub formats - thx Matthew
    * Add shortcut "Set start and set end of previous" - thx Jeff
    * Add shortcut "Play from beginning of video" - thx Kimberly
    * Add shortcut for toggle casing - thx LeonCheung
@@ -40,6 +41,8 @@
    * Enable "Add new" for nOCR char inspect
    * Add "Subtitle.Parse" methods for simpler loading of subtitles (libse)
    * Change ms to "Seconds" in Karaoke/Typewriter - thx frenchiveruti/OmrSi
+   * Add toggle preview on video (mpv) - thx LeonCheung/OmrSi
+   * Focus text box after first insert
 * FIXED:
    * Fix frame rate bug in FCP+image - thx Christopher
    * Fix bdsup right align export issue - thx von Suppé
