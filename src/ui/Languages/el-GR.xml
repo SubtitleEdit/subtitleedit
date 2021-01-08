@@ -58,7 +58,7 @@
     <CurrentSubtitle>Τρέχων υπότιτλος</CurrentSubtitle>
     <OriginalText>Αρχικό κείμενο</OriginalText>
     <OpenOriginalSubtitleFile>Άνοιγμα αρχικού αρχείου υποτίτλου...</OpenOriginalSubtitleFile>
-    <PleaseWait>Παρακαλώ περιμένετε...</PleaseWait>
+    <PleaseWait>Παρακαλώ, περιμένετε.</PleaseWait>
     <SessionKey>Κλειδί συνεδρίας</SessionKey>
     <UserName>Όνομα χρήστη</UserName>
     <UserNameAlreadyInUse>Μη διαθέσιμο όνομα</UserNameAlreadyInUse>
@@ -116,7 +116,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Δημιουργία δεδομένων κυματομορφής</Title>
     <SourceVideoFile>Πηγαίο αρχείο βίντεο:</SourceVideoFile>
     <GenerateWaveformData>Δημιουργία δεδομένων κυματομορφής</GenerateWaveformData>
-    <PleaseWait>Αυτό μπορεί να πάρει μερικά λεπτά - παρακαλώ περιμένετε</PleaseWait>
+    <PleaseWait>Χρειάζονται μερικά λεπτά. Παρακαλώ, περιμένετε.</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>Δεν βρέθηκε το πρόγραμμα VLC media player</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Χρήση του VLC media player 1.1.χ ή νεότερο για την εξαγωγή δεδομένων ήχου.</VlcMediaPlayerNotFound>
     <GoToVlcMediaPlayerHomePage>Μετάβαση στην αρχική σελίδα του VLC media player;</GoToVlcMediaPlayerHomePage>
@@ -200,7 +200,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixRtl>Διόρθωση RTL</FixRtl>
     <FixRtlAddUnicode>Διόρθωση RTL μέσω ετικετών Unicode</FixRtlAddUnicode>
     <FixRtlRemoveUnicode>Αφαίρεση ετικετών Unicode RTL</FixRtlRemoveUnicode>
-    <FixRtlReverseStartEnd>Αντιστροφή αρχής/τέλους RTL</FixRtlReverseStartEnd>
+    <FixRtlReverseStartEnd>Αντιστροφή έναρξης/τέλους RTL</FixRtlReverseStartEnd>
     <SplitLongLines>Διαχωρισμός μεγάλων γραμμών</SplitLongLines>
     <AutoBalance>Αυτόματη ισορροπία γραμμών</AutoBalance>
     <ScanFolder>Σάρωση φακέλου...</ScanFolder>
@@ -215,7 +215,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FilterContains>Το κείμενο περιέχει...</FilterContains>
     <FilterFileNameContains>Το όνομα αρχείου περιέχει...</FilterFileNameContains>
     <MkvLanguageCodeContains>Ο κωδικός γλώσσας Matroska (.mkv) περιέχει...</MkvLanguageCodeContains>
-    <FixCommonErrorsErrorX>Επιδιόρθωση σφαλμάτων: {0}</FixCommonErrorsErrorX>
+    <FixCommonErrorsErrorX>Διόρθωση σφαλμάτων: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Πολλαπλή αντικατάσταση: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Αυτόματη ισορρόπηση: {0}</AutoBalanceErrorX>
     <OffsetTimeCodes>Μετατόπιση κωδικών χρόνου</OffsetTimeCodes>
@@ -453,8 +453,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Teletext>Τηλεκείμενο</Teletext>
     <UseBox>Χρήση πλαισίου για το κείμενο</UseBox>
     <DoubleHeight>Χρήση διπλού ύψους για το κείμενο</DoubleHeight>
-    <Errors>Λάθη</Errors>
-    <ErrorsX>Λάθη: {0}</ErrorsX>
+    <Errors>Σφάλματα</Errors>
+    <ErrorsX>Σφάλματα: {0}</ErrorsX>
     <MaxLengthError>Η Γραμμή {0} υπερβαίνει το μέγιστο μήκος ({1}) κατά {2}: {3}</MaxLengthError>
     <TextUnchangedPresentation>Αμετάβλητη παρουσίαση</TextUnchangedPresentation>
     <TextLeftJustifiedText>Αριστερά στοιχισμένο κείμενο</TextLeftJustifiedText>
@@ -602,7 +602,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FindNext>Εύρεση ε&amp;πόμενου</FindNext>
   </FindSubtitleLine>
   <FixCommonErrors>
-    <Title>Επιδιόρθωση σφαλμάτων</Title>
+    <Title>Διόρθωση σφαλμάτων</Title>
     <Step1>Βήμα 1/2 - Επιλογή σφαλμάτων</Step1>
     <WhatToFix>Προς διόρθωση</WhatToFix>
     <Example>Παράδειγμα</Example>
@@ -611,7 +611,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Back>&lt; &amp;Πίσω</Back>
     <Next>&amp;Επόμενο &gt;</Next>
     <Step2>Βήμα 2/2 - Επαλήθευση διορθώσεων</Step2>
-    <Fixes>Επιδιορθώσεις</Fixes>
+    <Fixes>Διορθώσεις</Fixes>
     <Log>Αρχείο καταγραφής</Log>
     <Function>Συνάρτηση</Function>
     <RemovedEmptyLine>Αφαίρεση κενής γραμμής</RemovedEmptyLine>
@@ -619,56 +619,56 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemovedEmptyLineAtBottom>Αφαίρεση κενής γραμμής στο τέλος</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Αφαίρεση κενής γραμμής στο κέντρο</RemovedEmptyLineInMiddle>
     <RemovedEmptyLinesUnsedLineBreaks>Αφαίρεση κενών γραμμών/άχρηστες αλλαγές γραμμής</RemovedEmptyLinesUnsedLineBreaks>
-    <FixOverlappingDisplayTimes>Επιδιόρθωση επικαλυπτόμενων χρόνων εμφάνισης</FixOverlappingDisplayTimes>
-    <FixShortDisplayTimes>Επιδιόρθωση σύντομων χρόνων εμφάνισης</FixShortDisplayTimes>
-    <FixLongDisplayTimes>Επιδιόρθωση μεγάλων χρόνων εμφάνισης</FixLongDisplayTimes>
-    <FixShortGaps>Επιδιόρθωση μικρών κενών</FixShortGaps>
-    <FixInvalidItalicTags>Επιδιόρθωση λανθασμένων ετικετών πλαγιαστής γραφής</FixInvalidItalicTags>
+    <FixOverlappingDisplayTimes>Διόρθωση επικαλυπτόμενων χρόνων εμφάνισης</FixOverlappingDisplayTimes>
+    <FixShortDisplayTimes>Διόρθωση σύντομων χρόνων εμφάνισης</FixShortDisplayTimes>
+    <FixLongDisplayTimes>Διόρθωση μεγάλων χρόνων εμφάνισης</FixLongDisplayTimes>
+    <FixShortGaps>Διόρθωση μικρών κενών</FixShortGaps>
+    <FixInvalidItalicTags>Διόρθωση λανθασμένων ετικετών πλαγιαστής γραφής</FixInvalidItalicTags>
     <RemoveUnneededSpaces>Αφαίρεση περιττών διαστημάτων</RemoveUnneededSpaces>
     <RemoveUnneededPeriods>Αφαίρεση περιττών τελειών</RemoveUnneededPeriods>
-    <FixCommas>Επιδιόρθωση κομμάτων</FixCommas>
-    <FixMissingSpaces>Επιδιόρθωση διαστημάτων</FixMissingSpaces>
+    <FixCommas>Διόρθωση κομμάτων</FixCommas>
+    <FixMissingSpaces>Διόρθωση διαστημάτων</FixMissingSpaces>
     <BreakLongLines>Διάσπαση μεγάλων γραμμών</BreakLongLines>
     <RemoveLineBreaks>Αφαίρεση αλλαγών γραμμής σε μικρά κείμενα με μία μόνο πρόταση</RemoveLineBreaks>
     <RemoveLineBreaksAll>Αφαίρεση αλλαγών γραμμής σε μικρά κείμενα (εκτός διαλόγου)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Επιδιόρθωση κεφαλαίου 'i' σε πεζές λέξεις (σφάλμα OCR)</FixUppercaseIInsindeLowercaseWords>
-    <FixDoubleApostrophes>Επιδιόρθωση διπλής αποστρόφου ('') σε εισαγωγικό (")</FixDoubleApostrophes>
+    <FixUppercaseIInsindeLowercaseWords>Διόρθωση κεφαλαίου 'i' σε πεζές λέξεις (σφάλμα OCR)</FixUppercaseIInsindeLowercaseWords>
+    <FixDoubleApostrophes>Διόρθωση διπλής αποστρόφου ('') σε εισαγωγικό (")</FixDoubleApostrophes>
     <AddPeriods>Προσθήκη τελείας</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Έναρξη με κεφαλαίο γράμμα μετά από παράγραφο</StartWithUppercaseLetterAfterParagraph>
     <StartWithUppercaseLetterAfterPeriodInsideParagraph>Έναρξη με κεφαλαίο γράμμα μετά από τελεία</StartWithUppercaseLetterAfterPeriodInsideParagraph>
     <StartWithUppercaseLetterAfterColon>Έναρξη με κεφαλαίο γράμμα μετά από σημεία στίξης</StartWithUppercaseLetterAfterColon>
-    <FixLowercaseIToUppercaseI>Επιδιόρθωση πεζού 'i' σε 'Ι' (Αγγλικά)</FixLowercaseIToUppercaseI>
-    <FixCommonOcrErrors>Επιδιόρθωση κοινών σφαλμάτων OCR (με χρήση καταλόγου αντικατάστασης OCR)</FixCommonOcrErrors>
-    <CommonOcrErrorsFixed>Επιδιορθώσεις κοινών σφαλμάτων OCR (χρήση του αρχείου OcrReplaceList): {0}</CommonOcrErrorsFixed>
+    <FixLowercaseIToUppercaseI>Διόρθωση πεζού 'i' σε 'Ι' (Αγγλικά)</FixLowercaseIToUppercaseI>
+    <FixCommonOcrErrors>Διόρθωση σφαλμάτων OCR (χρήση καταλόγου αντικατάστασης OCR)</FixCommonOcrErrors>
+    <CommonOcrErrorsFixed>Διορθώσεις σφαλμάτων OCR (χρήση του αρχείου OcrReplaceList): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Αφαίρεση διαστήματος μεταξύ αριθμών</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Επιδιόρθωση διαλόγων</FixDialogsOnOneLine>
+    <FixDialogsOnOneLine>Διόρθωση διαλόγων</FixDialogsOnOneLine>
     <NormalizeStrings>Κανονικοποίηση συμβολοσειρών</NormalizeStrings>
-    <FixTurkishAnsi>Επιδιόρθωση Τουρκικών ANSI (Ισλανδικών) γραμμάτων σε Unicode</FixTurkishAnsi>
-    <FixDanishLetterI>Επιδιόρθωση δανικού γράμματος 'i'</FixDanishLetterI>
-    <FixSpanishInvertedQuestionAndExclamationMarks>Επιδιόρθωση ισπανικών αντεστραμμένων σημείων στίξης</FixSpanishInvertedQuestionAndExclamationMarks>
+    <FixTurkishAnsi>Διόρθωση Τουρκικών ANSI (Ισλανδικών) γραμμάτων σε Unicode</FixTurkishAnsi>
+    <FixDanishLetterI>Διόρθωση δανικού γράμματος 'i'</FixDanishLetterI>
+    <FixSpanishInvertedQuestionAndExclamationMarks>Διόρθωση ισπανικών αντεστραμμένων σημείων στίξης</FixSpanishInvertedQuestionAndExclamationMarks>
     <AddMissingQuote>Προσθήκη εισαγωγικού (")</AddMissingQuote>
     <AddMissingQuotes>Προσθήκη εισαγωγικών (")</AddMissingQuotes>
     <RemoveHyphensSingleLine>Αφαίρεση παύλας σε ενιαίες γραμμές</RemoveHyphensSingleLine>
-    <FixHyphensInDialogs>Επιδιόρθωση παυλών μέσω στυλ διαλόγου: {0}</FixHyphensInDialogs>
+    <FixHyphensInDialogs>Διόρθωση παυλών μέσω στυλ διαλόγου: {0}</FixHyphensInDialogs>
     <AddMissingQuotesExample>"Πώς είσαι; -&gt; "Πώς είσαι;"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Προσθήκη εισαγωγικών: {0}</XMissingQuotesAdded>
-    <Fix3PlusLines>Επιδιόρθωση υποτίτλων με περισσότερες από δύο γραμμές</Fix3PlusLines>
+    <Fix3PlusLines>Διόρθωση υποτίτλων περισσοτέρων των δύο γραμμών</Fix3PlusLines>
     <Analysing>Ανάλυση...</Analysing>
-    <NothingToFix>Τίποτα για επιδιόρθωση</NothingToFix>
-    <FixesFoundX>Εύρεση επιδιορθώσεων: {0}</FixesFoundX>
-    <XFixesApplied>Εφαρμοσμένες επιδιορθώσεις: {0}</XFixesApplied>
-    <NothingFixableBut>Τίποτα για αυτόματη επιδιόρθωση. Ο υπότιτλος περιέχει σφάλμα(τα) - προβολή αρχείου καταγραφής</NothingFixableBut>
-    <XFixedBut>Επιδιόρθωση {0} θέματος(ων), αλλά υπάρχουν ακόμη σφάλματα - προβολή αρχείου καταγραφής</XFixedBut>
-    <XCouldBeFixedBut>Επιδιόρθωση {0} θέματος(ων), αλλά θα υπάρχουν ακόμη σφάλματα - προβολή αρχείου καταγραφής</XCouldBeFixedBut>
-    <FixFirstLetterToUppercaseAfterParagraph>Επιδιόρθωση αρχικού γράμματος σε κεφαλαίο μετά από παράγραφο</FixFirstLetterToUppercaseAfterParagraph>
+    <NothingToFix>Τίποτα για διόρθωση</NothingToFix>
+    <FixesFoundX>Εύρεση διορθώσεων: {0}</FixesFoundX>
+    <XFixesApplied>Εφαρμοσμένες διορθώσεις: {0}</XFixesApplied>
+    <NothingFixableBut>Τίποτα για αυτόματη διόρθωση. Ο υπότιτλος περιέχει σφάλμα(τα). Προβολή αρχείου καταγραφής.</NothingFixableBut>
+    <XFixedBut>Διόρθωση {0} θέματος(ων), αλλά υπάρχουν ακόμη σφάλματα. Προβολή αρχείου καταγραφής.</XFixedBut>
+    <XCouldBeFixedBut>Διόρθωση {0} θέματος(ων), αλλά θα υπάρχουν ακόμη σφάλματα. Προβολή αρχείου καταγραφής.</XCouldBeFixedBut>
+    <FixFirstLetterToUppercaseAfterParagraph>Διόρθωση αρχικού γράμματος σε κεφαλαίο μετά από παράγραφο</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>Συγχώνευση γραμμών</MergeShortLine>
     <MergeShortLineAll>Συγχώνευση γραμμών (εκτός διαλόγου)</MergeShortLineAll>
     <BreakLongLine>Διάσπαση γραμμής</BreakLongLine>
-    <FixLongDisplayTime>Επιδιόρθωση μεγάλου χρόνου</FixLongDisplayTime>
-    <FixInvalidItalicTag>Επιδιόρθωση ετικέτας πλαγιαστής γραφής</FixInvalidItalicTag>
-    <FixShortDisplayTime>Επιδιόρθωση σύντομου χρόνου</FixShortDisplayTime>
-    <FixOverlappingDisplayTime>Επιδιόρθωση επικαλυπτόμενου χρόνου</FixOverlappingDisplayTime>
-    <FixShortGap>Επιδιόρθωση μικρών κενών</FixShortGap>
+    <FixLongDisplayTime>Διόρθωση μεγάλου χρόνου</FixLongDisplayTime>
+    <FixInvalidItalicTag>Διόρθωση ετικέτας πλαγιαστής γραφής</FixInvalidItalicTag>
+    <FixShortDisplayTime>Διόρθωση σύντομου χρόνου</FixShortDisplayTime>
+    <FixOverlappingDisplayTime>Διόρθωση επικαλυπτόμενου χρόνου</FixOverlappingDisplayTime>
+    <FixShortGap>Διόρθωση μικρών κενών</FixShortGap>
     <FixInvalidItalicTagsExample>&lt;i&gt;Δεν με ενδιαφέρει.&lt;i&gt; -&gt; &lt;i&gt;Δεν με ενδιαφέρει.&lt;/i&gt;</FixInvalidItalicTagsExample>
     <RemoveUnneededSpacesExample>Εσύ , εκεί. -&gt; Εσύ, εκεί.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Εσύ!. -&gt; Εσύ!</RemoveUnneededPeriodsExample>
@@ -676,22 +676,22 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixUppercaseIInsindeLowercaseWordsExample>The Earth is fIat. -&gt; The Earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Κείμενο με αριθμό {0}: Έναρξη αργότερα από λήξη: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
-    <UnableToFixStartTimeLaterThanEndTime>Αδυναμία επιδιόρθωσης του κειμένου με αριθμό {0}: Έναρξη αργότερα από λήξη: {1}</UnableToFixStartTimeLaterThanEndTime>
-    <XFixedToYZ>Επιδιόρθωση {0} σε: {1}{2}</XFixedToYZ>
-    <UnableToFixTextXY>Αδυναμία επιδιόρθωσης του κειμένου με αριθμό {0}: {1}</UnableToFixTextXY>
+    <UnableToFixStartTimeLaterThanEndTime>Αδυναμία διόρθωσης του κειμένου με αριθμό {0}: Έναρξη αργότερα από λήξη: {1}</UnableToFixStartTimeLaterThanEndTime>
+    <XFixedToYZ>Διόρθωση {0} σε: {1}{2}</XFixedToYZ>
+    <UnableToFixTextXY>Αδυναμία διόρθωσης του κειμένου με αριθμό {0}: {1}</UnableToFixTextXY>
     <UnneededSpace>Αχρείαστο διάστημα</UnneededSpace>
     <UnneededPeriod>Αχρείαστη τελεία</UnneededPeriod>
-    <FixMissingSpace>Επιδιόρθωση διαστήματος</FixMissingSpace>
-    <FixUppercaseIInsideLowercaseWord>Επιδιόρθωση κεφαλαίου 'i' μέσα σε λέξη</FixUppercaseIInsideLowercaseWord>
-    <FixMissingPeriodAtEndOfLine>Προσθήκη τελείας στο τέλος πρότασης</FixMissingPeriodAtEndOfLine>
+    <FixMissingSpace>Διόρθωση διαστήματος</FixMissingSpace>
+    <FixUppercaseIInsideLowercaseWord>Διόρθωση κεφαλαίου 'i' μέσα σε λέξη</FixUppercaseIInsideLowercaseWord>
+    <FixMissingPeriodAtEndOfLine>Προσθήκη τελείας</FixMissingPeriodAtEndOfLine>
     <RefreshFixes>Ανανέωση</RefreshFixes>
     <ApplyFixes>Εφαρμογή</ApplyFixes>
     <AutoBreak>&amp;Διάσπαση</AutoBreak>
     <Unbreak>&amp;Συνένωση</Unbreak>
-    <FixDoubleDash>Επιδιόρθωση '--' -&gt; '...'</FixDoubleDash>
+    <FixDoubleDash>Διόρθωση '--' -&gt; '...'</FixDoubleDash>
     <FixDoubleGreaterThan>Αφαίρεση '&gt;&gt;'</FixDoubleGreaterThan>
-    <FixEllipsesStart>Αφαίρεση αρχικού '...'</FixEllipsesStart>
-    <FixMissingOpenBracket>Επιδιόρθωση ελλιπής [</FixMissingOpenBracket>
+    <FixEllipsesStart>Αφαίρεση αρχικών '...'</FixEllipsesStart>
+    <FixMissingOpenBracket>Διόρθωση ελλιπής [</FixMissingOpenBracket>
     <FixMusicNotation>Αντικατάσταση μουσικού συμβόλου (π.χ. âTª)</FixMusicNotation>
     <FixDoubleDashExample>'Τι-- αα ναι!' -&gt; 'Τι... αα ναι!'</FixDoubleDashExample>
     <FixDoubleGreaterThanExample>'&gt;&gt; Ρόμπερτ: Τι τρέχει;' -&gt; 'Ρόμπερτ: Τι τρέχει;'</FixDoubleGreaterThanExample>
@@ -699,13 +699,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMissingOpenBracketExample>'κλανκ] Πρόσεξε!' -&gt; '[κλανκ] Πρόσεξε!'</FixMissingOpenBracketExample>
     <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '♫ sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} σημαντικό(ά) μήνυμα(τα) του αρχείου καταγραφής</NumberOfImportantLogMessages>
-    <FixedOkXY>Επιδιορθωμένα και εντάξει - '{0}': {1}</FixedOkXY>
+    <FixedOkXY>Διορθωμένα και εντάξει - '{0}': {1}</FixedOkXY>
     <FixOcrErrorExample>D0n't -&gt; Don't</FixOcrErrorExample>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Γεια, Τζον. - Γεια, Άιντα. -&gt; Γεια, Τζον.&lt;br/&gt; - Γεια, Άιντα.</FixDialogsOneLineExample>
     <SelectDefault>Προεπιλεγμένα</SelectDefault>
     <SetDefault>Ορισμός προεπιλεγμένων</SetDefault>
-    <FixContinuationStyleX>Επιδιόρθωση στυλ συνέχισης: {0}</FixContinuationStyleX>
+    <FixContinuationStyleX>Διόρθωση στυλ συνέχισης: {0}</FixContinuationStyleX>
     <FixUnnecessaryLeadingDots>Αφαίρεση αρχικών αποσιωπητικών</FixUnnecessaryLeadingDots>
   </FixCommonErrors>
   <GetDictionaries>
@@ -719,7 +719,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </GetDictionaries>
   <GetTesseractDictionaries>
     <Title>Χρήση λεξικών;</Title>
-    <DescriptionLine1>Βρείτε λεξικά Tesseract OCR από το διαδίκτυο</DescriptionLine1>
+    <DescriptionLine1>Εύρεση λεξικών Tesseract OCR μέσω διαδικτύου</DescriptionLine1>
     <DownloadFailed>Αποτυχία λήψης!</DownloadFailed>
     <GetDictionariesHere>Εύρεση λεξικών εδώ:</GetDictionariesHere>
     <ChooseLanguageAndClickDownload>Επιλογή γλώσσας και λήψη</ChooseLanguageAndClickDownload>
@@ -728,18 +728,21 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XDownloaded>Λήψη και εγκατάσταση {0}</XDownloaded>
   </GetTesseractDictionaries>
   <GoogleTranslate>
-    <Title>Μετάφραση Google</Title>
+    <Title>Μετάφραση</Title>
     <From>Από:</From>
     <To>Σε:</To>
     <Translate>Μετάφραση</Translate>
-    <PleaseWait>Παρακαλώ περιμένετε... αυτό μπορεί να αργήσει λίγο</PleaseWait>
-    <PoweredByGoogleTranslate>Τροφοδοτείται από τη Μετάφραση Google</PoweredByGoogleTranslate>
-    <PoweredByMicrosoftTranslate>Τροφοδοτείται από τη Μετάφραση Microsoft</PoweredByMicrosoftTranslate>
+    <PleaseWait>Παρακαλώ, περιμένετε. Χρειάζεται λίγη ώρα.</PleaseWait>
+    <PoweredByGoogleTranslate>Τροφοδοσία Google</PoweredByGoogleTranslate>
+    <PoweredByMicrosoftTranslate>Τροφοδοσία Bing</PoweredByMicrosoftTranslate>
     <MsClientSecretNeeded>Συγγνώμη, χρειάζεστε ένα γνωστικό κλειδί εξυπηρέτησης 'μετάφρασης κειμένου' από τη Microsoft για τη χρήση του.
 Μετάβαση σε "Επιλογές -&gt; Ρυθμίσεις -&gt; Εργαλεία" για την εισαγωγή κλειδιού.</MsClientSecretNeeded>
-    <GoogleApiKeyNeeded>Συγγνώμη, χρειάζεστε ένα κλειδί API από τη Google για τη χρήση του.
-Μετάβαση σε "Επιλογές -&gt; Ρυθμίσεις -&gt; Εργαλεία" για την εισαγωγή κλειδιού.</GoogleApiKeyNeeded>
     <GoogleNoApiKeyWarning>Μετάφραση χωρίς κλειδί API... (αργά και περιορισμένα δεδομένα)</GoogleNoApiKeyWarning>
+    <Service>Υπηρεσία:</Service>
+    <LineMergeHandling>Συγχώνευση γραμμής:</LineMergeHandling>
+    <ProcessorMergeNext>Συγχώνευση εώς δύο γραμμές</ProcessorMergeNext>
+    <ProcessorSentence>Συγχώνευση προτάσεων</ProcessorSentence>
+    <ProcessorSingle>Χωρίς συγχώνευση</ProcessorSingle>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Μετάφραση Google vs Bing</Title>
@@ -1035,7 +1038,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <MultipleReplace>&amp;Πολλαπλή αντικατάστση...</MultipleReplace>
         <GoToSubtitleNumber>&amp;Μετάβαση σε αριθμό υποτίτλου...</GoToSubtitleNumber>
         <RightToLeftMode>Λειτουργία από δεξιά προς αριστερά</RightToLeftMode>
-        <FixRtlViaUnicodeControlCharacters>Επιδιόρθωση RTL μέσω χαρακτήρων ελέγχου Unicode</FixRtlViaUnicodeControlCharacters>
+        <FixRtlViaUnicodeControlCharacters>Διόρθωση RTL μέσω χαρακτήρων ελέγχου Unicode</FixRtlViaUnicodeControlCharacters>
         <RemoveUnicodeControlCharacters>Αφαίρεση χαρακτήρων ελέγχου Unicode</RemoveUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Αντιστροφή έναρξης/λήξης του RTL</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Προβολή αρχικού κειμένου στις προεπισκοπήσεις ήχου/βίντεο</ShowOriginalTextInAudioAndVideoPreview>
@@ -1047,7 +1050,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <AdjustDisplayDuration>&amp;Προσαρμογή διαρκειών...</AdjustDisplayDuration>
         <ApplyDurationLimits>Εφαρμογή ορίων διάρκειας...</ApplyDurationLimits>
         <SubtitlesBridgeGaps>Ένωση κενών στις διάρκειες...</SubtitlesBridgeGaps>
-        <FixCommonErrors>&amp;Επιδιόρθωση σφαλμάτων...</FixCommonErrors>
+        <FixCommonErrors>&amp;Διόρθωση σφαλμάτων...</FixCommonErrors>
         <StartNumberingFrom>Επαναρίθμηση...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Αφαίρεση κειμένου για κωφούς...</RemoveTextForHearingImpaired>
         <ChangeCasing>Αλλαγή πεζών-κεφαλαίων...</ChangeCasing>
@@ -1120,9 +1123,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       </Synchronization>
       <AutoTranslate>
         <Title>Αυτόματη μετάφραση</Title>
-        <TranslatePoweredByGoogle>Μετάφραση Google...</TranslatePoweredByGoogle>
-        <TranslatePoweredByMicrosoft>Μετάφραση Bing...</TranslatePoweredByMicrosoft>
-        <TranslateFromSwedishToDanish>Μετάφραση από Σουηδικά σε Δανικά (τροφοδοτείται από nikse.dk)...</TranslateFromSwedishToDanish>
+        <AutoTranslate>Αυτόματη μετάφραση...</AutoTranslate>
       </AutoTranslate>
       <Options>
         <Title>Επιλογές</Title>
@@ -1150,7 +1151,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <SaveAs>Αποθήκευση ως</SaveAs>
         <Find>Εύρεση</Find>
         <Replace>Αντικατάσταση</Replace>
-        <FixCommonErrors>Διόρθωση συνηθισμένων σφαλμάτων</FixCommonErrors>
+        <FixCommonErrors>Διόρθωση σφαλμάτων</FixCommonErrors>
         <RemoveTextForHi>Αφαίρεση κειμένου για κωφούς</RemoveTextForHi>
         <VisualSync>Οπτικός συγχρονισμός</VisualSync>
         <SpellCheck>Ορθογραφικός έλεγχος</SpellCheck>
@@ -1224,10 +1225,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <KaraokeEffect>Εφέ καραόκε...</KaraokeEffect>
         <ShowSelectedLinesEarlierLater>Εμφάνιση γραμμών νωρίτερα/αργότερα...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Οπτικός συγχρονισμός γραμμών...</VisualSyncSelectedLines>
-        <GoogleAndMicrosoftTranslateSelectedLine>Μετάφραση αρχικής γραμμής μέσω Google/Microsoft</GoogleAndMicrosoftTranslateSelectedLine>
+        <GoogleAndMicrosoftTranslateSelectedLine>Μετάφραση αρχικής γραμμής μέσω Google/Bing</GoogleAndMicrosoftTranslateSelectedLine>
         <TranslateSelectedLines>Μετάφραση γραμμών...</TranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Προσαρμογή διαρκειών γραμμών...</AdjustDisplayDurationForSelectedLines>
-        <FixCommonErrorsInSelectedLines>Επιδιόρθωση κοινών σφαλμάτων στις γραμμές...</FixCommonErrorsInSelectedLines>
+        <FixCommonErrorsInSelectedLines>Διόρθωση σφαλμάτων στις γραμμές...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Αλλαγή πεζών-κεφαλαίων στις γραμμές...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Αποθήκευση γραμμών ως...</SaveSelectedLines>
         <WebVTTSetNewVoice>Καθορισμός νέας φωνής...</WebVTTSetNewVoice>
@@ -1284,7 +1285,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <AdjustedViaEndTime>Προσάρμοση μέσω χρόνου λήξης {0}</AdjustedViaEndTime>
       <SetEndTime>Ορισμός λή&amp;ξης</SetEndTime>
       <SetstartTimeAndOffsetOfRest>Έναρ&amp;ξη και μετατόπιση</SetstartTimeAndOffsetOfRest>
-      <SearchTextOnline>Αναζήτηση κειμένου διαδικτυακά</SearchTextOnline>
+      <SearchTextOnline>Διαδικτυακή αναζήτηση κειμένου</SearchTextOnline>
       <GoogleTranslate>Μετάφραση Google</GoogleTranslate>
       <GoogleIt>Αναζήτηση</GoogleIt>
       <SecondsBackShort>&lt;&lt;</SecondsBackShort>
@@ -1362,9 +1363,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DisplayTimeAdjustedX>Προσαρμοσμένος χρόνος εμφάνισης: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Προσαρμοσμένοι χρόνοι εμφάνισης: {0}</DisplayTimesAdjustedX>
     <StarTimeAdjustedX>Προσαρμοσμένος χρόνος έναρξης: {0}</StarTimeAdjustedX>
-    <BeforeCommonErrorFixes>Πριν από επιδιορθώσεις κοινών σφαλμάτων</BeforeCommonErrorFixes>
-    <CommonErrorsFixedInSelectedLines>Επιδιορθώσεις κοινών σφαλμάτων σε επιλεγμένες γραμμές</CommonErrorsFixedInSelectedLines>
-    <CommonErrorsFixed>Επιδιόρθωση κοινών σφαλμάτων</CommonErrorsFixed>
+    <BeforeCommonErrorFixes>Πριν από διορθώσεις σφαλμάτων</BeforeCommonErrorFixes>
+    <CommonErrorsFixedInSelectedLines>Διορθώσεις σφαλμάτων σε επιλεγμένες γραμμές</CommonErrorsFixedInSelectedLines>
+    <CommonErrorsFixed>Διόρθωση σφαλμάτων</CommonErrorsFixed>
     <BeforeRenumbering>Πριν επαναρίθμησης</BeforeRenumbering>
     <RenumberedStartingFromX>Έναρξη επαναρίθμησης από: {0}</RenumberedStartingFromX>
     <BeforeRemovalOfTextingForHearingImpaired>Πριν από αφαίρεση κειμένου για κωφούς</BeforeRemovalOfTextingForHearingImpaired>
@@ -1430,11 +1431,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <VideoFiles>Αρχεία βίντεο</VideoFiles>
     <NoSubtitlesFound>Αδυναμία εύρεσης υποτίτλων</NoSubtitlesFound>
     <NotAValidMatroskaFileX>Μη έγκυρο αρχείο Matroska: {0}</NotAValidMatroskaFileX>
-    <BlurayNotSubtitlesFound>Το αρχείο Blu-ray .sup δεν περιέχει υποτίτλους ή περιέχει σφάλματα - προσπαθήστε ξανά</BlurayNotSubtitlesFound>
+    <BlurayNotSubtitlesFound>Το αρχείο Blu-ray .sup δεν περιέχει υποτίτλους ή περιέχει σφάλματα. Προσπαθήστε ξανά.</BlurayNotSubtitlesFound>
     <ImportingChapters>Εισαγωγή κεφαλαίων...</ImportingChapters>
     <XChaptersImported>{0} εισαγωγή κεφαλαίου(ων)</XChaptersImported>
-    <ParsingMatroskaFile>Ανάλυση αρχείου Matroska. Παρακαλώ, περιμένετε...</ParsingMatroskaFile>
-    <ParsingTransportStreamFile>Ανάλυση αρχείου Trasport Stream. Παρακαλώ, περιμένετε...</ParsingTransportStreamFile>
+    <ParsingMatroskaFile>Ανάλυση αρχείου Matroska. Παρακαλώ, περιμένετε.</ParsingMatroskaFile>
+    <ParsingTransportStreamFile>Ανάλυση αρχείου Trasport Stream. Παρακαλώ, περιμένετε.</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Πριν από εισαγωγή υποτίτλου από αρχείο Matroska</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Εισαγωγή υποτίτλου από αρχείο Matroska</SubtitleImportedFromMatroskaFile>
     <DropFileXNotAccepted>Απόρριψη συρμένου αρχείου '{0}' - το αρχείο είναι πολύ μεγάλο</DropFileXNotAccepted>
@@ -1542,8 +1543,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeMergeLinesWithSameText>Πριν από συγχώνευση γραμμών ίδιου κειμένου</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Ο υπότιτλος με τους κώδικες χρόνου έχει διαφορετικό αριθμό γραμμών ({0}) από τον τρέχων υπότιτλο ({1}).
 Συνέχιση;</ImportTimeCodesDifferentNumberOfLinesWarning>
-    <ParsingTransportStream>Ανάλυση αρχείου TS - παρακαλώ, περιμένετε...</ParsingTransportStream>
-    <XPercentCompleted>{0}%</XPercentCompleted>
+    <ParsingTransportStream>Ανάλυση αρχείου TS. Παρακαλώ, περιμένετε.</ParsingTransportStream>
+    <XPercentCompleted>Πρόοδος {0}%</XPercentCompleted>
     <NextX>Επόμενο: {0}</NextX>
     <PromptInsertSubtitleOverlap>Η προσθήκη υποτίτλου στη θέση κυματομορφής
 θα προκαλέσει επικάλυψη. Συνέχιση;</PromptInsertSubtitleOverlap>
@@ -1572,7 +1573,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <MatroskaSubtitleChooser>
     <Title>Επιλογή υποτίτλου από αρχείο Matroska</Title>
     <TitleMp4>Επιλογή υπότιτλου από αρχείο MP4</TitleMp4>
-    <PleaseChoose>Βρέθηκαν περισσότεροι από έναν υπότιτλο. Παρακαλώ, επιλέξτε.</PleaseChoose>
+    <PleaseChoose>Εύρεση περισσοτέρων του ενός υποτίτλων.
+Παρακαλώ, επιλέξτε.</PleaseChoose>
     <TrackXLanguageYTypeZ>Κομμάτι {0} - γλώσσα: {1} - τύπος: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
@@ -1803,7 +1805,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Remove>&amp;Αφαίρεση</Remove>
     <UpdateAllX>Ενημέρωση όλων ({0})</UpdateAllX>
     <UnableToDownloadPluginListX>Αδυναμία λήψης λίστας πρόσθετων: {0}</UnableToDownloadPluginListX>
-    <NewVersionOfSubtitleEditRequired>Απαιτείται νεότερη έκδοση του Subtitle Edit!</NewVersionOfSubtitleEditRequired>
+    <NewVersionOfSubtitleEditRequired>Απαιτείται νεότερη έκδοση του Subtitle Edit.</NewVersionOfSubtitleEditRequired>
     <UpdateAvailable>[Διαθέσιμη ενημέρωση!]</UpdateAvailable>
     <UpdateAll>Ενημέρωση όλων</UpdateAll>
     <XPluginsUpdated>{0} πρόσθετο/α ενημερώθηκαν</XPluginsUpdated>
@@ -1917,6 +1919,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DuplicateLine>Αντιγραφή γραμμής</DuplicateLine>
     <ToggleView>Εναλλαγή λίστας/πηγαίας προβολής</ToggleView>
     <ToggleMode>Εναλλαγή λειτουργίας μετάφρασης/δημιουργίας/προσαρμογής</ToggleMode>
+    <TogglePreviewOnVideo>Εναλλαγή προεπισκόπησης σε βίντεο</TogglePreviewOnVideo>
     <Help>Βοήθεια</Help>
     <FontInUi>Γραμματοσειρά διεπαφής</FontInUi>
     <ShowFrameRate>Εμφάνιση ρυθμού καρέ στη γραμμή εργαλείων</ShowFrameRate>
@@ -2046,7 +2049,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Remove>Αφαίρεση</Remove>
     <AddPair>Προσθήκη ζευγαριού</AddPair>
     <UserWordList>Λίστα λέξεων χρήστη</UserWordList>
-    <OcrFixList>Λίστα επιδιορθώσεων OCR</OcrFixList>
+    <OcrFixList>Λίστα διορθώσεων OCR</OcrFixList>
     <Location>Τοποθεσία</Location>
     <UseOnlineNames>Χρήση διαδικτυακού αρχείου xml ονομάτων</UseOnlineNames>
     <WordAddedX>Λέξη προστέθηκε: {0}</WordAddedX>
@@ -2067,7 +2070,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <EndSceneIndex>Η τελική παράγραφος σκηνής είναι</EndSceneIndex>
     <FirstPlusX>Αρχή + {0}</FirstPlusX>
     <LastMinusX>Τέλος - {0}</LastMinusX>
-    <FixCommonerrors>Επιδιόρθωση κοινών σφαλμάτων</FixCommonerrors>
+    <FixCommonerrors>Διόρθωση σφαλμάτων</FixCommonerrors>
     <RemoveTextForHi>Αφαίρεση κειμένου για κωφούς</RemoveTextForHi>
     <MergeLinesShorterThan>Συνένωση γραμμών μικρότερες από</MergeLinesShorterThan>
     <DialogStyle>Στυλ διαλόγου</DialogStyle>
@@ -2085,9 +2088,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ContinuationStyleLeadingTrailingDashDots>Παύλα, αποσιωπητικά για παύσεις</ContinuationStyleLeadingTrailingDashDots>
     <MusicSymbol>Μουσικό σύμβολο</MusicSymbol>
     <MusicSymbolsReplace>Αντικατάσταση μουσικών συμβόλων (χωρισμένα με κόμμα)</MusicSymbolsReplace>
-    <FixCommonOcrErrorsUseHardcodedRules>Επιδιόρθωση κοινών σφαλμάτων OCR - χρήση ενσωματωμένων κανόνων</FixCommonOcrErrorsUseHardcodedRules>
-    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Επιδιόρθωση του σύντομου χρόνου εμφάνισης - αλλαγή χρόνου έναρξης</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
-    <FixCommonErrorsSkipStepOne>Παράβλεψη πρώτου βήματος (προκαθορισμένες επιλογές)</FixCommonErrorsSkipStepOne>
+    <FixCommonOcrErrorsUseHardcodedRules>Διόρθωση σφαλμάτων OCR - χρήση ενσωματωμένων κανόνων</FixCommonOcrErrorsUseHardcodedRules>
+    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Διόρθωση σύντομου χρόνου εμφάνισης - αλλαγή χρόνου έναρξης</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+    <FixCommonErrorsSkipStepOne>Παράβλεψη πρώτου βήματος (προεπιλεγμένα)</FixCommonErrorsSkipStepOne>
     <Shortcuts>Συντομεύσεις</Shortcuts>
     <Shortcut>Συντόμευση</Shortcut>
     <Control>Ctrl</Control>
@@ -2175,7 +2178,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CopyTextOnly>Αντιγραφή μόνο του κειμένου στο πρόχειρο (επιλεγμένες γραμμές)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Αντιγραφή κειμένου από αρχικό στον τρέχων</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Αυτόματη διάρκεια (επιλεγμένες γραμμές)</AutoDurationSelectedLines>
-    <FixRTLViaUnicodeChars>Επιδιόρθωση RTL μέσω χαρακτήρων ελέγχου Unicode</FixRTLViaUnicodeChars>
+    <FixRTLViaUnicodeChars>Διόρθωση RTL μέσω χαρακτήρων ελέγχου Unicode</FixRTLViaUnicodeChars>
     <RemoveRTLUnicodeChars>Αφαίρεση χαρακτήρων ελέγχου Unicode</RemoveRTLUnicodeChars>
     <ReverseStartAndEndingForRtl>Αντιστροφή έναρξης/λήξης RTL</ReverseStartAndEndingForRtl>
     <VerticalZoom>Κάθετη μεγέθυνση</VerticalZoom>
@@ -2293,11 +2296,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BreakEarlyForComma>Διάσπαση σε κόμμα</BreakEarlyForComma>
     <GoogleTranslate>Μετάφραση Google</GoogleTranslate>
     <GoogleTranslateApiKey>Κλειδί API</GoogleTranslateApiKey>
-    <MicrosoftBingTranslator>Μετάφραση Microsoft</MicrosoftBingTranslator>
+    <MicrosoftBingTranslator>Μετάφραση Bing</MicrosoftBingTranslator>
     <HowToSignUp>Βοήθεια εγγραφής</HowToSignUp>
     <MicrosoftTranslateApiKey>Κλειδί</MicrosoftTranslateApiKey>
     <MicrosoftTranslateTokenEndpoint>Δείγμα τελειώματος</MicrosoftTranslateTokenEndpoint>
-    <FontNote>Σημείωση: Οι ρυθμίσεις γραμματοσειράς αφορούν μόνο το περιβάλλον χρήση του Subtitle Edit.</FontNote>
+    <FontNote>Σημείωση: Οι ρυθμίσεις γραμματοσειράς αφορούν μόνο τη διεπαφή του Subtitle Edit.</FontNote>
     <RestoreDefaultSettings>Επαναφορά ρυθμίσεων</RestoreDefaultSettings>
     <RestoreDefaultSettingsMsg>Επαναφορά ρυθμίσεων σε προεπιλεγμένες τιμές.
 Συνέχιση;</RestoreDefaultSettingsMsg>
@@ -2315,12 +2318,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Λήψη mpv lib</DownloadMpv>
-    <DownloadMpvFailed>Αδυναμία λήψης mpv - παρακαλώ, προσπαθήστε αργότερα!</DownloadMpvFailed>
+    <DownloadMpvFailed>Αδυναμία λήψης mpv. Παρακαλώ, προσπαθήστε αργότερα.</DownloadMpvFailed>
     <DownloadMpvOk>Ολοκλήρωση λήψης mpv lib και έτοιμο προς χρήση.</DownloadMpvOk>
   </SettingsMpv>
   <SettingsFfmpeg>
     <Title>Λήψη FFmpeg</Title>
-    <XDownloadFailed>Αδυναμία λήψης {0} - παρακαλώ, προσπαθήστε αργότερα!</XDownloadFailed>
+    <XDownloadFailed>Αδυναμία λήψης {0}. Παρακαλώ, προσπαθήστε αργότερα.</XDownloadFailed>
     <XDownloadOk>Λήψη {0} και έτοιμο προς χρήση.</XDownloadOk>
   </SettingsFfmpeg>
   <SetVideoOffset>
@@ -2370,12 +2373,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <EditWordOnly>Επεξεργασία λέξης</EditWordOnly>
     <AddXToNames>Προσθήκη '{0}' στη λίστα ονομάτων</AddXToNames>
     <AddXToUserDictionary>Προσθήκη {0} στο λεξικό χρήστη</AddXToUserDictionary>
-    <AutoFixNames>Αυτόματη επιδιόρθωση ονομάτων μόνο για διαφορά πεζών-κεφαλαίων</AutoFixNames>
+    <AutoFixNames>Αυτόματη διόρθωση ονομάτων μόνο για διαφορά πεζών-κεφαλαίων</AutoFixNames>
     <AutoFixNamesViaSuggestions>Διόρθωση ονομάτων μέσω 'προτάσεων ορθογραφικού ελέγχου'</AutoFixNamesViaSuggestions>
     <CheckOneLetterWords>Ερώτηση για άγνωστες λέξεις ένός γράμματος</CheckOneLetterWords>
     <TreatINQuoteAsING>Αντιμετώπιση κατάληξης " in' " ως " ing " (Μόνο Αγγλικά)</TreatINQuoteAsING>
     <RememberUseAlwaysList>Απομνημόνευση λίστας "Χρήση πάντα"</RememberUseAlwaysList>
     <LiveSpellCheck>Απευθείας ορθογραφικός έλεγχος</LiveSpellCheck>
+    <LiveSpellCheckLanguage>Απευθείας ορθογραφικός έλεγχος - Χρήση με τη γλώσσα {0}</LiveSpellCheckLanguage>
+    <NoDictionaryForLiveSpellCheck>Απευθείας ορθογραφικός έλεγχος - Αδυναμία εύρεσης λεξικού γλώσσας [{0}]</NoDictionaryForLiveSpellCheck>
     <ImageText>Κείμενο εικόνας</ImageText>
     <SpellCheckCompleted>Ολοκλήρωση ορθογραφικού ελέγχου</SpellCheckCompleted>
     <SpellCheckAborted>Ματαίωση ορθογραφικού ελέγχου</SpellCheckAborted>
@@ -2385,7 +2390,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <NetflixQualityCheck>
     <GlyphCheckReport>Μη έγκυρος χαρακτήρας {0} στη στήλη {1}</GlyphCheckReport>
     <WhiteSpaceCheckReport>Μη έγκυρο κενό στη στήλη {0}</WhiteSpaceCheckReport>
-    <ReportPrompt>Δείτε την αναφορά εδώ: {0}.</ReportPrompt>
+    <ReportPrompt>Προβολή αναφοράς εδώ: {0}.</ReportPrompt>
     <OpenReportInFolder>Άνοιγμα φακέλου αναφοράς</OpenReportInFolder>
     <FoundXIssues>Ο έλεγχος ποιότητας Netflix εντόπισε {0:#,###} προβλήματα.</FoundXIssues>
     <CheckOk>Χωρίς προβλήματα</CheckOk>
@@ -2436,7 +2441,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <StartNumberingFrom>
     <Title>Επαναρίθμηση από...</Title>
     <StartFromNumber>Έναρξη από τον αριθμό:</StartFromNumber>
-    <PleaseEnterAValidNumber>Εισαγωγή έγκυρου αριθμού.</PleaseEnterAValidNumber>
+    <PleaseEnterAValidNumber>Εισάγετε έγκυρο αριθμό.</PleaseEnterAValidNumber>
   </StartNumberingFrom>
   <Statistics>
     <Title>Στατιστικά</Title>
@@ -2567,8 +2572,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Άγνωστος τύπος υποτίτλου</Title>
-    <Message>Αν θέλετε αυτό να φτιαχτεί, παρακαλώ στείλτε email στο mailto:niksedk@gmail.com
-και συμπεριλάβετε ένα αντίγραφο του υποτίτλου.</Message>
+    <Message>Αν θέλετε να φτιαχτεί, παρακαλώ, στείλτε e-mail στο mailto:niksedk@gmail.com
+και συμπεριλάβετε αντίγραφο του υποτίτλου.</Message>
     <ImportAsPlainText>Εισαγωγή ως απλό κείμενο...</ImportAsPlainText>
   </UnknownSubtitle>
   <VisualSync>
@@ -2640,12 +2645,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <PromptForUnknownWords>Ερώτηση για άγνωστες λέξεις</PromptForUnknownWords>
     <TryToGuessUnkownWords>Προσπάθεια μαντέματος άγνωστων λέξεων</TryToGuessUnkownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Αυτόματος διαχορισμός παραγράφου, εάν έχει περισσότερες από δύο γραμμές</AutoBreakSubtitleIfMoreThanTwoLines>
-    <AllFixes>Όλες οι επιδιορθώσεις</AllFixes>
+    <AllFixes>Όλες οι διορθώσεις</AllFixes>
     <GuessesUsed>Μαντεψιές</GuessesUsed>
     <UnknownWords>Άγνωστες λέξεις</UnknownWords>
     <UnknownWordToGuessInLine>{0} {1} μέσω λίστας διόρθωσης/αντικατάστασης OCR στη γραμμή: {2}</UnknownWordToGuessInLine>
     <OcrAutoCorrectionSpellChecking>Αυτόματη διόρθωση/ορθογραφικός έλεγχος OCR</OcrAutoCorrectionSpellChecking>
-    <FixOcrErrors>Επιδιόρθωση σφαλμάτων OCR</FixOcrErrors>
+    <FixOcrErrors>Διόρθωση σφαλμάτων OCR</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Εισαγωγή κειμένου με αντιστοιχία κωδικών χρόνου...</ImportTextWithMatchingTimeCodes>
     <ImportNewTimeCodes>Εισαγωγή νέων κωδικών χρόνου</ImportNewTimeCodes>
     <SaveSubtitleImageAs>Αποθήκευση εικόνας υποτίτλου ως...</SaveSubtitleImageAs>
