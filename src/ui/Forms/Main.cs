@@ -9542,7 +9542,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyData == _shortcuts.MainListViewToggleMusicSymbols)
             {
-                textBoxListViewText.Text = ToogleMusicSymbols("♪", textBoxListViewText.Text);
+                textBoxListViewText.Text = ToggleMusicSymbols("♪", textBoxListViewText.Text);
             }
             else if (e.KeyData == _shortcuts.MainInsertBefore)
             {
@@ -25953,12 +25953,12 @@ namespace Nikse.SubtitleEdit.Forms
                         var original = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleAlternate.Paragraphs);
                         if (original != null)
                         {
-                            original.Text = ToogleMusicSymbols(tag, original.Text);
+                            original.Text = ToggleMusicSymbols(tag, original.Text);
                             SubtitleListview1.SetAlternateText(i, original.Text);
                         }
                     }
 
-                    _subtitle.Paragraphs[i].Text = ToogleMusicSymbols(tag, _subtitle.Paragraphs[i].Text);
+                    _subtitle.Paragraphs[i].Text = ToggleMusicSymbols(tag, _subtitle.Paragraphs[i].Text);
                     SubtitleListview1.SetText(i, _subtitle.Paragraphs[i].Text);
                 }
 
@@ -25971,7 +25971,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private string ToogleMusicSymbols(string tag, string text)
+        private string ToggleMusicSymbols(string tag, string text)
         {
             string pre = string.Empty;
             string post = string.Empty;
