@@ -15430,7 +15430,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
 
-            //TABS: Create / adjust / translate
+            // TABS: Create / adjust / translate
 
             // create
             else if (_shortcuts.MainCreateInsertSubAtVideoPos == e.KeyData)
@@ -20691,7 +20691,7 @@ namespace Nikse.SubtitleEdit.Forms
         public void RunTranslateSearch(Action<string> act)
         {
             var text = textBoxSearchWord.Text;
-            if (panelTranslate.Visible)
+            if (!panelTranslate.Visible)
             {
                 var tb = GetFocusedTextBox();
                 if (tb.SelectionLength == 0)
