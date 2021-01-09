@@ -15430,7 +15430,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
 
-            //TABS: Create / adjust / translate
+            // TABS: Create / adjust / translate
 
             // create
             else if (_shortcuts.MainCreateInsertSubAtVideoPos == e.KeyData)
@@ -15669,33 +15669,33 @@ namespace Nikse.SubtitleEdit.Forms
             // translate
             else if (_shortcuts.MainTranslateGoogleIt == e.KeyData)
             {
-                e.SuppressKeyPress = true;
                 buttonGoogleIt_Click(null, null);
+                e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainTranslateCustomSearch1 == e.KeyData)
             {
-                e.SuppressKeyPress = true;
                 RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl1);
+                e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainTranslateCustomSearch2 == e.KeyData)
             {
-                e.SuppressKeyPress = true;
                 RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl2);
+                e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainTranslateCustomSearch3 == e.KeyData)
             {
-                e.SuppressKeyPress = true;
                 RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl3);
+                e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainTranslateCustomSearch4 == e.KeyData)
             {
-                e.SuppressKeyPress = true;
                 RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl4);
+                e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainTranslateCustomSearch5 == e.KeyData)
             {
-                e.SuppressKeyPress = true;
                 RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl5);
+                e.SuppressKeyPress = true;
             }
             // put new entries above tabs
         }
@@ -20691,7 +20691,7 @@ namespace Nikse.SubtitleEdit.Forms
         public void RunTranslateSearch(Action<string> act)
         {
             var text = textBoxSearchWord.Text;
-            if (panelTranslate.Visible)
+            if (!panelTranslate.Visible)
             {
                 var tb = GetFocusedTextBox();
                 if (tb.SelectionLength == 0)
