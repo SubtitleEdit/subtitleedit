@@ -378,7 +378,7 @@
             this.columnHeader7.Text = "Text";
             this.columnHeader7.Width = 300;
             // 
-            // columnHeader7
+            // columnHeader8
             // 
             this.columnHeader8.Text = "Suggested fix";
             this.columnHeader8.Width = 300;
@@ -411,6 +411,8 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "NetflixFixErrors";
+            this.ResizeEnd += new System.EventHandler(this.NetflixFixErrors_ResizeEnd);
+            this.Shown += new System.EventHandler(this.NetflixFixErrors_Shown);
             this.groupBoxRules.ResumeLayout(false);
             this.groupBoxRules.PerformLayout();
             this.ResumeLayout(false);
