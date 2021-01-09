@@ -1995,6 +1995,7 @@ Command line: {1} {2}
     <ShowStopButton>显示「停止」按钮</ShowStopButton>
     <ShowMuteButton>显示静音按钮</ShowMuteButton>
     <ShowFullscreenButton>显示全屏幕按钮</ShowFullscreenButton>
+    <PreviewFontName>预览字幕字体名</PreviewFontName>
     <PreviewFontSize>字幕预览字体大小</PreviewFontSize>
     <MainWindowVideoControls>主窗口视频控制</MainWindowVideoControls>
     <CustomSearchTextAndUrl>自定义搜索文本和网址</CustomSearchTextAndUrl>
