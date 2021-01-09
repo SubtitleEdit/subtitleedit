@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -828,7 +828,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (match.Success)
                 {
                     var startTime = ParseTimeCode(s.Substring(0, match.Length - 1));
-                    var text = GetSccText(s.Substring(match.Index), ref _errorCount);
+                    var text = GetSccText(s.Substring(match.Index).ToLowerInvariant(), ref _errorCount);
 
                     if (text == "942c 942c" || text == "942c")
                     {
