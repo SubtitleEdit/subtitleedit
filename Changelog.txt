@@ -63,6 +63,7 @@
    * Don't log tag info when no sub - thx Jamakmake
    * Fix ANSI writing for a few chars (…/®/©) - thx fr
    * Fix case-change issue in nOcr - thx Janusz
+   * Fix reading SCC with uppercase hex codes - thx Mike
 
 
 3.5.18 (9th November 2020)
