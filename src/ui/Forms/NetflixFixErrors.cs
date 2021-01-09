@@ -268,7 +268,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                Logic.UiUtil.OpenFolder(Path.GetDirectoryName(MakeReport()));
+                UiUtil.OpenFolder(Path.GetDirectoryName(MakeReport()));
             }
         }
 
@@ -278,6 +278,16 @@ namespace Nikse.SubtitleEdit.Forms
             var reportPath = Path.GetTempPath() + fileName + "_NetflixQualityCheck.csv";
             _netflixQualityController.SaveCsv(reportPath);
             return reportPath;
+        }
+
+        private void NetflixFixErrors_ResizeEnd(object sender, EventArgs e)
+        {
+            listViewFixes.Columns[listViewFixes.Columns.Count - 1].Width = -2;
+        }
+
+        private void NetflixFixErrors_Shown(object sender, EventArgs e)
+        {
+            NetflixFixErrors_ResizeEnd(this, EventArgs.Empty);
         }
     }
 }
