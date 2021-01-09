@@ -17,6 +17,7 @@ using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Forms.Networking;
 using Nikse.SubtitleEdit.Forms.Ocr;
 using Nikse.SubtitleEdit.Forms.Styles;
+using Nikse.SubtitleEdit.Forms.Translate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.CommandLineConvert;
 using Nikse.SubtitleEdit.Logic.Networking;
@@ -1631,6 +1632,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             toolStripMenuItemAutoTranslate.Text = _language.Menu.AutoTranslate.Title;
             genericTranslateToolStripMenuItem.Text = _language.Menu.AutoTranslate.AutoTranslate;
+            autotranslateViaCopypasteToolStripMenuItem.Text = _language.Menu.AutoTranslate.AutoTranslateViaCopyPaste;
             translateToolStripMenuItem.Text = _language.Menu.AutoTranslate.AutoTranslate;
             toolStripMenuItemTranslateSelected.Text = _language.Menu.ContextMenu.TranslateSelectedLines;
             adjustDisplayTimeForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.AdjustDisplayDurationForSelectedLines;
@@ -29339,8 +29341,8 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            bool isAlternateVisible = SubtitleListview1.IsAlternateTextColumnVisible; //brummochse: ?
-            ReloadFromSourceView(); //brummochse: ?
+            bool isAlternateVisible = SubtitleListview1.IsAlternateTextColumnVisible;
+            ReloadFromSourceView();
             using (var translateDialog = new GenericTranslate())
             {
                 SaveSubtitleListviewIndices();
@@ -29355,7 +29357,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     title += " - " + _language.SelectedLines;
-                    if (_subtitleAlternate != null) //brummochse: what is this alternate thing?
+                    if (_subtitleAlternate != null)
                     {
                         var paragraphs = new List<Paragraph>();
                         foreach (int index in SubtitleListview1.SelectedIndices)
@@ -29450,6 +29452,60 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.General.ShowOriginalAsPreviewIfAvailable = false;
                         audioVisualizer.Invalidate();
                     }
+                }
+            }
+        }
+
+        private void autotranslateViaCopypasteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!IsSubtitleLoaded)
+            {
+                DisplaySubtitleNotLoadedMessage();
+                return;
+            }
+
+            using (var form = new TranslateViaCopyPaste(_subtitle))
+            {
+                if (form.ShowDialog(this) != DialogResult.OK)
+                {
+                    return;
+                }
+
+                var isAlternateVisible = SubtitleListview1.IsAlternateTextColumnVisible;
+                SaveSubtitleListviewIndices();
+                MakeHistoryForUndo(_language.BeforeGoogleTranslation);
+                ShowSubtitleTimer.Stop();
+                var oldHash = _changeSubtitleHash;
+                _subtitleAlternate = new Subtitle(_subtitle);
+                _subtitleAlternateFileName = _fileName;
+                _fileName = null;
+                _subtitle.Paragraphs.Clear();
+                foreach (var p in form.TranslatedSubtitle.Paragraphs)
+                {
+                    _subtitle.Paragraphs.Add(new Paragraph(p));
+                }
+
+                ShowStatus(_language.SubtitleTranslated);
+                _changeAlternateSubtitleHash = oldHash;
+                _changeSubtitleHash = -1;
+                ShowSubtitleTimer.Start();
+                ShowSource();
+                SubtitleListview1.ShowAlternateTextColumn(_languageGeneral.OriginalText);
+                SubtitleListview1.AutoSizeAllColumns(this);
+                SetupAlternateEdit();
+                _changeAlternateSubtitleHash = oldHash;
+                SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                ResetHistory();
+                _fileName = null;
+                RestoreSubtitleListviewIndices();
+                _converted = true;
+                SetTitle();
+                SetEncoding(Encoding.UTF8);
+                if (!isAlternateVisible)
+                {
+                    toolStripMenuItemShowOriginalInPreview.Checked = false;
+                    Configuration.Settings.General.ShowOriginalAsPreviewIfAvailable = false;
+                    audioVisualizer.Invalidate();
                 }
             }
         }

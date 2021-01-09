@@ -144,6 +144,9 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string GoogleTranslateLastTargetLanguage { get; set; }
         public bool TranslateAllowSplit { get; set; }
         public string TranslateLastService { get; set; }
+        public string TranslateViaCopyPasteSeparator { get; set; }
+        public int TranslateViaCopyPasteMaxSize { get; set; }
+        public bool TranslateViaCopyPasteAutoCopyToClipboard { get; set; }
         public bool ListViewSyntaxColorDurationSmall { get; set; }
         public bool ListViewSyntaxColorDurationBig { get; set; }
         public bool ListViewSyntaxColorOverlap { get; set; }
@@ -351,6 +354,9 @@ namespace Nikse.SubtitleEdit.Core.Common
             GoogleApiV1ChunkSize = 1500;
             GoogleTranslateLastTargetLanguage = "en";
             TranslateAllowSplit = true;
+            TranslateViaCopyPasteAutoCopyToClipboard = true;
+            TranslateViaCopyPasteMaxSize = 5000;
+            TranslateViaCopyPasteSeparator = ".";
             CheckOneLetterWords = true;
             SpellCheckEnglishAllowInQuoteAsIng = false;
             SpellCheckShowCompletedMessage = true;
@@ -3797,6 +3803,24 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.TranslateLastService = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("TranslateViaCopyPasteSeparator");
+            if (subNode != null)
+            {
+                settings.Tools.TranslateViaCopyPasteSeparator = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("TranslateViaCopyPasteMaxSize");
+            if (subNode != null)
+            {
+                settings.Tools.TranslateViaCopyPasteMaxSize = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("TranslateViaCopyPasteAutoCopyToClipboard");
+            if (subNode != null)
+            {
+                settings.Tools.TranslateViaCopyPasteAutoCopyToClipboard = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("ListViewSyntaxColorDurationSmall");
@@ -8065,6 +8089,9 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("GoogleTranslateLastTargetLanguage", settings.Tools.GoogleTranslateLastTargetLanguage);
                 textWriter.WriteElementString("TranslateAllowSplit", settings.Tools.TranslateAllowSplit.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("TranslateLastService", settings.Tools.TranslateLastService);
+                textWriter.WriteElementString("TranslateViaCopyPasteSeparator", settings.Tools.TranslateViaCopyPasteSeparator);
+                textWriter.WriteElementString("TranslateViaCopyPasteMaxSize", settings.Tools.TranslateViaCopyPasteMaxSize.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("TranslateViaCopyPasteAutoCopyToClipboard", settings.Tools.TranslateViaCopyPasteAutoCopyToClipboard.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorDurationSmall", settings.Tools.ListViewSyntaxColorDurationSmall.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorDurationBig", settings.Tools.ListViewSyntaxColorDurationBig.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorLongLines", settings.Tools.ListViewSyntaxColorLongLines.ToString(CultureInfo.InvariantCulture));

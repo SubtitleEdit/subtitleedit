@@ -951,6 +951,11 @@ namespace Nikse.SubtitleEdit.Logic
                 ProcessorMergeNext = "Merge max two lines",
                 ProcessorSentence = "Merge sentences",
                 ProcessorSingle =  "No merging",
+                AutoTranslateViaCopyPaste = "Auto-translate via copy-paste",
+                CopyPasteMaxSize = "Max block size",
+                AutoCopyToClipboard = "Auto-copy to clipboard",
+                AutoCopyLineSeparator = "Line separator",
+                TranslateBlockXOfY = "Translate block {0} of {1}",
             };
 
             GoogleOrMicrosoftTranslate = new LanguageStructure.GoogleOrMicrosoftTranslate
@@ -1634,7 +1639,8 @@ namespace Nikse.SubtitleEdit.Logic
                     AutoTranslate = new LanguageStructure.Main.MainMenu.AutoTranslateMenu
                     {
                         Title = "Auto-translate",
-                        AutoTranslate = "Auto-translate..."
+                        AutoTranslate = "Auto-translate...",
+                        AutoTranslateViaCopyPaste = "Auto-translate via copy-paste...",
                     },
 
                     Options = new LanguageStructure.Main.MainMenu.OptionsMenu
