@@ -1605,7 +1605,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
                             if (word.Length > 4 && autoGuess == AutoGuessLevel.Aggressive)
                             {
-                                guesses.AddRange((List<string>)_ocrFixReplaceList.CreateGuessesFromLetters(word));
+                                guesses.AddRange((List<string>)_ocrFixReplaceList.CreateGuessesFromLetters(word, _threeLetterIsoLanguageName));
 
                                 if (word[0] == 'L')
                                 {
