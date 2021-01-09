@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.Dictionaries
 {
@@ -370,7 +370,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             }
         }
 
-        public IEnumerable<string> CreateGuessesFromLetters(string word)
+        public IEnumerable<string> CreateGuessesFromLetters(string word, string threeLetterIsoLanguageName)
         {
             var list = new List<string>();
             var previousGuesses = new List<string>();
@@ -444,7 +444,14 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 previousGuesses = new List<string>(list);
             }
 
-            // do not keep one letter consonants
+            if (threeLetterIsoLanguageName != "dan" &&
+                threeLetterIsoLanguageName != "eng" &&
+                threeLetterIsoLanguageName != "swe")
+            {
+                return list;
+            }
+
+            // do not keep one letter consonants for languages like Danish, English, Swedish
             var results = new List<string>();
             foreach (var s in list)
             {
@@ -1190,6 +1197,5 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             }
             return sb.ToString();
         }
-
     }
 }
