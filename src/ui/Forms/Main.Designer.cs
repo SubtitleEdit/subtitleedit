@@ -536,6 +536,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
+            this.autotranslateViaCopypasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -2311,7 +2312,8 @@ namespace Nikse.SubtitleEdit.Forms
             // toolStripMenuItemAutoTranslate
             // 
             this.toolStripMenuItemAutoTranslate.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.translateToolStripMenuItem});
+            this.translateToolStripMenuItem,
+            this.autotranslateViaCopypasteToolStripMenuItem});
             this.toolStripMenuItemAutoTranslate.Name = "toolStripMenuItemAutoTranslate";
             this.toolStripMenuItemAutoTranslate.Size = new System.Drawing.Size(94, 20);
             this.toolStripMenuItemAutoTranslate.Text = "Auto-translate";
@@ -2319,8 +2321,8 @@ namespace Nikse.SubtitleEdit.Forms
             // translateToolStripMenuItem
             // 
             this.translateToolStripMenuItem.Name = "translateToolStripMenuItem";
-            this.translateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.translateToolStripMenuItem.Text = "Generic Translate";
+            this.translateToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.translateToolStripMenuItem.Text = "Auto-translate...";
             this.translateToolStripMenuItem.Click += new System.EventHandler(this.TranslateToolStripMenuItemClick);
             // 
             // optionsToolStripMenuItem
@@ -4496,6 +4498,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxListViewTextAlternate.IsSpellCheckerInitialized = false;
             this.textBoxListViewTextAlternate.IsSpellCheckRequested = false;
             this.textBoxListViewTextAlternate.IsWrongWord = false;
+            this.textBoxListViewTextAlternate.LanguageChanged = false;
             this.textBoxListViewTextAlternate.Location = new System.Drawing.Point(946, 28);
             this.textBoxListViewTextAlternate.Multiline = true;
             this.textBoxListViewTextAlternate.Name = "textBoxListViewTextAlternate";
@@ -4920,6 +4923,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxListViewText.IsSpellCheckerInitialized = false;
             this.textBoxListViewText.IsSpellCheckRequested = false;
             this.textBoxListViewText.IsWrongWord = false;
+            this.textBoxListViewText.LanguageChanged = false;
             this.textBoxListViewText.Location = new System.Drawing.Point(236, 28);
             this.textBoxListViewText.Multiline = true;
             this.textBoxListViewText.Name = "textBoxListViewText";
@@ -5201,6 +5205,13 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
+            // 
+            // autotranslateViaCopypasteToolStripMenuItem
+            // 
+            this.autotranslateViaCopypasteToolStripMenuItem.Name = "autotranslateViaCopypasteToolStripMenuItem";
+            this.autotranslateViaCopypasteToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.autotranslateViaCopypasteToolStripMenuItem.Text = "Auto-translate via copy-paste...";
+            this.autotranslateViaCopypasteToolStripMenuItem.Click += new System.EventHandler(this.autotranslateViaCopypasteToolStripMenuItem_Click);
             // 
             // Main
             // 
@@ -5779,5 +5790,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAssaStyles;
         private System.Windows.Forms.ToolStripMenuItem openSecondSubtitleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aSSStylesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem autotranslateViaCopypasteToolStripMenuItem;
     }
 }

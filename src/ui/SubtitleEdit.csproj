@@ -253,10 +253,10 @@
     <Compile Include="Forms\ExportPngXmlDialogOpenFolder.Designer.cs">
       <DependentUpon>ExportPngXmlDialogOpenFolder.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\GenericTranslate.cs">
+    <Compile Include="Forms\Translate\GenericTranslate.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\GenericTranslate.Designer.cs">
+    <Compile Include="Forms\Translate\GenericTranslate.Designer.cs">
       <DependentUpon>GenericTranslate.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ImportCdg.cs">
@@ -937,6 +937,18 @@
     <Compile Include="Forms\Styles\TimedTextStyles.Designer.cs">
       <DependentUpon>TimedTextStyles.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Translate\TranslateBlock.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Translate\TranslateBlock.Designer.cs">
+      <DependentUpon>TranslateBlock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Translate\TranslateViaCopyPaste.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Translate\TranslateViaCopyPaste.Designer.cs">
+      <DependentUpon>TranslateViaCopyPaste.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\TransportStreamSubtitleChooser.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1246,7 +1258,7 @@
     <EmbeddedResource Include="Forms\ExportPngXmlDialogOpenFolder.resx">
       <DependentUpon>ExportPngXmlDialogOpenFolder.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\GenericTranslate.resx">
+    <EmbeddedResource Include="Forms\Translate\GenericTranslate.resx">
       <DependentUpon>GenericTranslate.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -1580,6 +1592,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Styles\TimedTextStyles.resx">
       <DependentUpon>TimedTextStyles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Translate\TranslateBlock.resx">
+      <DependentUpon>TranslateBlock.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Translate\TranslateViaCopyPaste.resx">
+      <DependentUpon>TranslateViaCopyPaste.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\TransportStreamSubtitleChooser.resx">
       <DependentUpon>TransportStreamSubtitleChooser.cs</DependentUpon>

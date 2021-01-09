@@ -820,6 +820,11 @@
             public string ProcessorMergeNext { get; set; }
             public string ProcessorSentence { get; set; }
             public string ProcessorSingle { get; set; }
+            public string AutoTranslateViaCopyPaste { get; set; }
+            public string CopyPasteMaxSize { get; set; }
+            public string AutoCopyToClipboard { get; set; }
+            public string AutoCopyLineSeparator { get; set; }
+            public string TranslateBlockXOfY { get; set; }
         }
 
         public class GoogleOrMicrosoftTranslate
@@ -1491,6 +1496,7 @@
                 {
                     public string Title { get; set; }
                     public string AutoTranslate { get; set; }
+                    public string AutoTranslateViaCopyPaste { get; set; }
                 }
                 public class OptionsMenu
                 {
