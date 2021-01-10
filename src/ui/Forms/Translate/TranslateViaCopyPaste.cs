@@ -37,16 +37,29 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             GeneratePreview();
             RestoreSettings();
 
-            if (listView1.Items.Count > 0)
+            if (listViewTranslate.Items.Count > 0)
             {
-                listView1.Items[0].Selected = true;
-                listView1.Items[0].Focused = true;
+                listViewTranslate.Items[0].Selected = true;
+                listViewTranslate.Items[0].Focused = true;
             }
+
+            listViewTranslate.Columns[0].Text = LanguageSettings.Current.General.LineNumber;
+            listViewTranslate.Columns[1].Text = LanguageSettings.Current.General.OriginalText;
+            listViewTranslate.Columns[2].Text = LanguageSettings.Current.General.Text;
 
             buttonTranslate.Text = LanguageSettings.Current.GoogleTranslate.Translate;
             buttonOk.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
-            UiUtil.InitializeSubtitleFont(listView1);
+
+            numericUpDownMaxBytes.Left = labelMaxTextSize.Left + labelMaxTextSize.Width + 5;
+            checkBoxAutoCopyToClipboard.Left = numericUpDownMaxBytes.Left + numericUpDownMaxBytes.Width + 25;
+            labelLineSeparator.Left = checkBoxAutoCopyToClipboard.Left + checkBoxAutoCopyToClipboard.Width + 20;
+            textBoxLineSeparator.Left = labelLineSeparator.Left + labelLineSeparator.Width + 5;
+            buttonTranslate.Left = textBoxLineSeparator.Left + textBoxLineSeparator.Width + 20;
+            progressBarTranslate.Left = buttonTranslate.Left + buttonTranslate.Width + 20;
+            progressBarTranslate.Width = Width - progressBarTranslate.Left - 28;
+
+            UiUtil.InitializeSubtitleFont(listViewTranslate);
             UiUtil.FixLargeFonts(this, buttonCancel);
         }
 
@@ -62,7 +75,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             try
             {
                 var log = new StringBuilder();
-                var selectedItems = listView1.SelectedItems;
+                var selectedItems = listViewTranslate.SelectedItems;
                 var startIndex = selectedItems.Count <= 0 ? 0 : selectedItems[0].Index;
                 var start = startIndex;
                 int index = startIndex;
@@ -106,31 +119,31 @@ namespace Nikse.SubtitleEdit.Forms.Translate
         private void FillTranslatedText(List<string> translatedLines, int start, int end)
         {
             int index = start;
-            listView1.BeginUpdate();
-            foreach (ListViewItem item in listView1.SelectedItems)
+            listViewTranslate.BeginUpdate();
+            foreach (ListViewItem item in listViewTranslate.SelectedItems)
             {
                 item.Selected = false;
             }
             foreach (string s in translatedLines)
             {
-                if (index < listView1.Items.Count)
+                if (index < listViewTranslate.Items.Count)
                 {
-                    var item = listView1.Items[index];
+                    var item = listViewTranslate.Items[index];
                     _subtitle.Paragraphs[index].Text = s;
                     item.SubItems[2].Text = s.Replace(Environment.NewLine, "<br />");
-                    if (listView1.CanFocus)
-                        listView1.EnsureVisible(index);
+                    if (listViewTranslate.CanFocus)
+                        listViewTranslate.EnsureVisible(index);
                 }
                 index++;
             }
 
-            if (index > 0 && index < listView1.Items.Count + 1)
+            if (index > 0 && index < listViewTranslate.Items.Count + 1)
             {
-                listView1.EnsureVisible(index - 1);
-                listView1.Items[index - 1].Selected = true;
+                listViewTranslate.EnsureVisible(index - 1);
+                listViewTranslate.Items[index - 1].Selected = true;
             }
 
-            listView1.EndUpdate();
+            listViewTranslate.EndUpdate();
         }
 
         private void GeneratePreview()
@@ -144,15 +157,15 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             {
                 _abort = false;
                 int start = 0;
-                if (listView1.SelectedItems.Count > 0)
+                if (listViewTranslate.SelectedItems.Count > 0)
                 {
-                    start = listView1.SelectedItems[0].Index;
+                    start = listViewTranslate.SelectedItems[0].Index;
                 }
                 for (int index = start; index < _subtitle.Paragraphs.Count; index++)
                 {
-                    if (index < listView1.Items.Count)
+                    if (index < listViewTranslate.Items.Count)
                     {
-                        var listViewItem = listView1.Items[index];
+                        var listViewItem = listViewTranslate.Items[index];
                         if (!string.IsNullOrWhiteSpace(listViewItem.SubItems[2].Text))
                         {
                             if (progressBarTranslate.Value < progressBarTranslate.Maximum)
@@ -179,7 +192,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             var item = new ListViewItem(p.Number.ToString(CultureInfo.InvariantCulture)) { Tag = p };
             item.SubItems.Add(p.Text.Replace(Environment.NewLine, "<br />"));
             item.SubItems.Add(after.Replace(Environment.NewLine, "<br />"));
-            listView1.Items.Add(item);
+            listViewTranslate.Items.Add(item);
         }
 
         private void buttonOk_Click(object sender, EventArgs e)
@@ -187,13 +200,6 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             SaveSettings();
             TranslatedSubtitle = new Subtitle(_subtitle);
             DialogResult = DialogResult.OK;
-        }
-
-        private void listView1_Resize(object sender, EventArgs e)
-        {
-            var size = (listView1.Width - listView1.Columns[0].Width) >> 2;
-            listView1.Columns[1].Width = size;
-            listView1.Columns[2].Width = -2;
         }
 
         private void buttonTranslate_Click(object sender, EventArgs e)
@@ -257,29 +263,23 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
         private void MainForm_Resize(object sender, EventArgs e)
         {
-            var subtract = listView1.Columns[0].Width + 20;
-            var width = listView1.Width / 2 - subtract;
-            listView1.Columns[1].Width = width;
-            listView1.Columns[1].Width = width;
-            listView1.Columns[2].Width = width;
-            listView1.Columns[1].Width = width;
-            listView1.Columns[1].Width = width;
+            var subtract = listViewTranslate.Columns[0].Width + 20;
+            var width = listViewTranslate.Width / 2 - subtract;
+            listViewTranslate.Columns[1].Width = width;
+            listViewTranslate.Columns[2].Width = -2;
         }
 
         private void MainForm_ResizeEnd(object sender, EventArgs e)
         {
-            MainForm_Resize(sender, e);
-            listView1.Columns[listView1.Columns.Count - 1].Width = -2;
-        }
-
-        private void MainForm_Load(object sender, EventArgs e)
-        {
-            MainForm_Resize(sender, e);
+            var subtract = listViewTranslate.Columns[0].Width + 20;
+            var width = listViewTranslate.Width / 2 - subtract;
+            listViewTranslate.Columns[1].Width = width;
+            listViewTranslate.Columns[2].Width = -2;
         }
 
         private void MainForm_Shown(object sender, EventArgs e)
         {
-            MainForm_Resize(sender, e);
+            MainForm_ResizeEnd(sender, e);
         }
     }
 }
