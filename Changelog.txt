@@ -6,6 +6,7 @@
    * Add edit/sync of bdsup with position - thx von Suppé/Janusz
    * Add internal store for ASSA styles - thx Leon/z3us
    * Add dark theme - thx OmrSi/dvjrickkraft/MuhammadiJK
+   * Add copy-paste translate
    * Add "Delete lines" to "Batch convert" - thx Milenko
    * Add two new sub formats - thx Matthew
    * Add shortcut "Set start and set end of previous" - thx Jeff
