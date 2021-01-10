@@ -16,7 +16,6 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
         public string Language { get; set; } = "en";
 
         public string VideoFileName { get; set; }
-
         public double FrameRate { get; set; } = 24;
 
         public int CharactersPerSecond
