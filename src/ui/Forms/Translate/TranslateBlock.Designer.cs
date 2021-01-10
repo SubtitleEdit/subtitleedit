@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             this.buttonCancel.Location = new System.Drawing.Point(452, 165);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 7;
+            this.buttonCancel.TabIndex = 2;
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -62,7 +62,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             this.buttonGetTargetGet.Location = new System.Drawing.Point(118, 55);
             this.buttonGetTargetGet.Name = "buttonGetTargetGet";
             this.buttonGetTargetGet.Size = new System.Drawing.Size(294, 67);
-            this.buttonGetTargetGet.TabIndex = 6;
+            this.buttonGetTargetGet.TabIndex = 0;
             this.buttonGetTargetGet.Text = "Get translated text from clipboard\r\n(Ctrl+V)";
             this.buttonGetTargetGet.UseVisualStyleBackColor = true;
             this.buttonGetTargetGet.Click += new System.EventHandler(this.buttonGetTargetGet_Click);
@@ -73,7 +73,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             this.buttonCopySourceTextToClipboard.Location = new System.Drawing.Point(211, 165);
             this.buttonCopySourceTextToClipboard.Name = "buttonCopySourceTextToClipboard";
             this.buttonCopySourceTextToClipboard.Size = new System.Drawing.Size(235, 23);
-            this.buttonCopySourceTextToClipboard.TabIndex = 5;
+            this.buttonCopySourceTextToClipboard.TabIndex = 1;
             this.buttonCopySourceTextToClipboard.Text = "Copy source text clipboard again";
             this.buttonCopySourceTextToClipboard.UseVisualStyleBackColor = true;
             this.buttonCopySourceTextToClipboard.Click += new System.EventHandler(this.buttonCopySourceTextToClipboard_Click);
