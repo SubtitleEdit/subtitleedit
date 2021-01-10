@@ -122,7 +122,7 @@
             // 
             this.buttonReplacesInverseSelection.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonReplacesInverseSelection.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonReplacesInverseSelection.Location = new System.Drawing.Point(91, 202);
+            this.buttonReplacesInverseSelection.Location = new System.Drawing.Point(89, 202);
             this.buttonReplacesInverseSelection.Name = "buttonReplacesInverseSelection";
             this.buttonReplacesInverseSelection.Size = new System.Drawing.Size(100, 23);
             this.buttonReplacesInverseSelection.TabIndex = 12;
@@ -134,7 +134,7 @@
             // 
             this.buttonReplacesSelectAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonReplacesSelectAll.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonReplacesSelectAll.Location = new System.Drawing.Point(10, 202);
+            this.buttonReplacesSelectAll.Location = new System.Drawing.Point(8, 202);
             this.buttonReplacesSelectAll.Name = "buttonReplacesSelectAll";
             this.buttonReplacesSelectAll.Size = new System.Drawing.Size(75, 23);
             this.buttonReplacesSelectAll.TabIndex = 11;
@@ -155,7 +155,7 @@
             this.columnHeader8});
             this.listViewFixes.FullRowSelect = true;
             this.listViewFixes.HideSelection = false;
-            this.listViewFixes.Location = new System.Drawing.Point(10, 21);
+            this.listViewFixes.Location = new System.Drawing.Point(8, 21);
             this.listViewFixes.Name = "listViewFixes";
             this.listViewFixes.Size = new System.Drawing.Size(1030, 177);
             this.listViewFixes.TabIndex = 10;
