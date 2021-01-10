@@ -87,7 +87,7 @@
             this.groupBoxRules.Controls.Add(this.checkBoxMaxDuration);
             this.groupBoxRules.Location = new System.Drawing.Point(12, 12);
             this.groupBoxRules.Name = "groupBoxRules";
-            this.groupBoxRules.Size = new System.Drawing.Size(1016, 254);
+            this.groupBoxRules.Size = new System.Drawing.Size(1016, 260);
             this.groupBoxRules.TabIndex = 0;
             this.groupBoxRules.TabStop = false;
             this.groupBoxRules.Text = "Rules";
@@ -373,7 +373,6 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewFixes.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader4,
             this.columnHeader5,
             this.columnHeader6,
             this.columnHeader7,
@@ -391,7 +390,7 @@
             // columnHeader4
             // 
             this.columnHeader4.Text = "Apply";
-            this.columnHeader4.Width = 38;
+            this.columnHeader4.Width = 50;
             // 
             // columnHeader5
             // 
@@ -401,17 +400,17 @@
             // columnHeader6
             // 
             this.columnHeader6.Text = "Function";
-            this.columnHeader6.Width = 169;
+            this.columnHeader6.Width = 225;
             // 
             // columnHeader7
             // 
             this.columnHeader7.Text = "Text";
-            this.columnHeader7.Width = 300;
+            this.columnHeader7.Width = 350;
             // 
             // columnHeader8
             // 
             this.columnHeader8.Text = "Suggested fix";
-            this.columnHeader8.Width = 300;
+            this.columnHeader8.Width = 350;
             // 
             // linkLabelOpenReportFolder
             // 

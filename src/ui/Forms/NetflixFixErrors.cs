@@ -28,6 +28,10 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
+            if (Configuration.Settings.General.UseDarkTheme)
+            {
+                listViewFixes.GridLines = Configuration.Settings.General.DarkThemeShowListViewGridLines;
+            }
 
             _subtitle = subtitle;
             _subtitleFormat = subtitleFormat;
@@ -152,8 +156,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddFixToListView(Paragraph p, string action, string before, string after)
         {
-            var item = new ListViewItem(string.Empty) { Checked = true, Tag = p };
-            item.SubItems.Add(p.Number.ToString());
+            // This code should be used when the "Applt" function is added.
+            // var item = new ListViewItem(string.Empty) { Checked = true, Tag = p };
+            // item.SubItems.Add(p.Number.ToString());
+
+            var item = new ListViewItem(p.Number.ToString());
             item.SubItems.Add(action);
             item.SubItems.Add(before.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
             item.SubItems.Add(after.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
