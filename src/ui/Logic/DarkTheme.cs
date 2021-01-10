@@ -374,7 +374,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 if (e.Item.Selected)
                 {
-                    var subtitleFont = UiUtil.GetDefaultFont();
+                    var subtitleFont = e.Item.Font;
                     Rectangle rect = e.Bounds;
                     if (Configuration.Settings != null)
                     {
@@ -423,14 +423,10 @@ namespace Nikse.SubtitleEdit.Logic
                 return;
             }
 
-            int addY;
-            if (sender is SubtitleListView)
+            int addY = 0;
+            if (e.Font.Name != Configuration.Settings.General.SubtitleFontName)
             {
-                addY = 0;
-            }
-            else
-            {
-                addY = 4;
+                addY = 5;
             }
 
             e.DrawDefault = false;
