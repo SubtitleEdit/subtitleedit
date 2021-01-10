@@ -15,18 +15,18 @@ namespace Nikse.SubtitleEdit.Core.Common
         public Subtitle OriginalSubtitle { get; set; }
         public string OriginalSubtitleFileName { get; set; }
         public List<Paragraph> RedoParagraphs { get; set; }
-        public List<Paragraph> RedoParagraphsAlternate { get; set; }
+        public List<Paragraph> RedoParagraphsOriginal { get; set; }
         public int RedoLineIndex { get; set; }
         public int RedoLinePosition { get; set; }
-        public int RedoLinePositionAlternate { get; set; }
+        public int RedoLinePositionOriginal { get; set; }
         public string RedoFileName { get; set; }
         public DateTime RedoFileModified { get; set; }
         public string RedoOriginalFileName { get; set; }
         public int LineIndex { get; set; }
         public int LinePosition { get; set; }
-        public int LinePositionAlternate { get; set; }
+        public int LinePositionOriginal { get; set; }
 
-        public HistoryItem(int index, Subtitle subtitle, string description, string fileName, DateTime fileModified, string subtitleFormatFriendlyName, Subtitle originalSubtitle, string originalSubtitleFileName, int lineIndex, int linePosition, int linePositionAlternate)
+        public HistoryItem(int index, Subtitle subtitle, string description, string fileName, DateTime fileModified, string subtitleFormatFriendlyName, Subtitle originalSubtitle, string originalSubtitleFileName, int lineIndex, int linePosition, int linePositionOriginal)
         {
             Index = index;
             Timestamp = DateTime.Now;
@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             OriginalSubtitleFileName = originalSubtitleFileName;
             LineIndex = lineIndex;
             LinePosition = linePosition;
-            LinePositionAlternate = linePositionAlternate;
+            LinePositionOriginal = linePositionOriginal;
             RedoLineIndex = -1;
             RedoLinePosition = -1;
         }

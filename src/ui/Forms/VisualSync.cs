@@ -15,11 +15,11 @@ namespace Nikse.SubtitleEdit.Forms
     public sealed partial class VisualSync : PositionAndSizeForm
     {
         private List<Paragraph> _paragraphs;
-        private List<Paragraph> _paragraphsAlternate;
+        private List<Paragraph> _paragraphsOriginal;
         private VideoInfo _videoInfo;
         private string _subtitleFileName;
         private Subtitle _inputSubtitle;
-        private Subtitle _inputAlternateSubtitle;
+        private Subtitle _inputOriginalSubtitle;
         private double _oldFrameRate;
         private bool _isStartSceneActive;
         private double _startGoBackPosition;
@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public List<Paragraph> Paragraphs => _paragraphs;
 
-        public List<Paragraph> ParagraphsAlternate => _paragraphsAlternate;
+        public List<Paragraph> ParagraphsOriginal => _paragraphsOriginal;
 
         public VisualSync()
         {
@@ -320,7 +320,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        internal void Initialize(Bitmap bitmap, Subtitle subtitle, Subtitle alternate, string fileName, string title, double frameRate)
+        internal void Initialize(Bitmap bitmap, Subtitle subtitle, Subtitle original, string fileName, string title, double frameRate)
         {
             if (bitmap != null)
             {
@@ -329,7 +329,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _inputSubtitle = subtitle;
-            _inputAlternateSubtitle = alternate;
+            _inputOriginalSubtitle = original;
             _oldFrameRate = frameRate;
             _subtitleFileName = fileName;
             Text = title;
@@ -343,12 +343,12 @@ namespace Nikse.SubtitleEdit.Forms
                 _paragraphs.Add(new Paragraph(p));
             }
 
-            if (_inputAlternateSubtitle != null)
+            if (_inputOriginalSubtitle != null)
             {
-                _paragraphsAlternate = new List<Paragraph>();
-                foreach (Paragraph p in _inputAlternateSubtitle.Paragraphs)
+                _paragraphsOriginal = new List<Paragraph>();
+                foreach (Paragraph p in _inputOriginalSubtitle.Paragraphs)
                 {
-                    _paragraphsAlternate.Add(new Paragraph(p));
+                    _paragraphsOriginal.Add(new Paragraph(p));
                 }
             }
 
@@ -455,9 +455,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 p.Adjust(factor, adjust);
             }
-            if (_inputAlternateSubtitle != null)
+            if (_inputOriginalSubtitle != null)
             {
-                foreach (Paragraph p in _paragraphsAlternate)
+                foreach (Paragraph p in _paragraphsOriginal)
                 {
                     p.Adjust(factor, adjust);
                 }
@@ -474,16 +474,16 @@ namespace Nikse.SubtitleEdit.Forms
             _paragraphs = tmpSubtitle.Paragraphs;
 
             // fix overlapping time codes for alternate subtitle (translation)
-            if (_inputAlternateSubtitle != null)
+            if (_inputOriginalSubtitle != null)
             {
                 tmpSubtitle = new Subtitle();
-                foreach (Paragraph p in _paragraphsAlternate)
+                foreach (Paragraph p in _paragraphsOriginal)
                 {
                     tmpSubtitle.Paragraphs.Add(new Paragraph(p));
                 }
 
                 new FixOverlappingDisplayTimes().Fix(tmpSubtitle, new EmptyFixCallback());
-                _paragraphsAlternate = tmpSubtitle.Paragraphs;
+                _paragraphsOriginal = tmpSubtitle.Paragraphs;
             }
 
             // update comboboxes
