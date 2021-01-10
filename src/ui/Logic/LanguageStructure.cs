@@ -825,6 +825,11 @@
             public string AutoCopyToClipboard { get; set; }
             public string AutoCopyLineSeparator { get; set; }
             public string TranslateBlockXOfY { get; set; }
+            public string TranslateBlockInfo { get; set; }
+            public string TranslateBlockGetFromClipboard { get; set; }
+            public string TranslateBlockCopySourceText { get; set; }
+            public string TranslateBlockClipboardError1 { get; set; }
+            public string TranslateBlockClipboardError2 { get; set; }
         }
 
         public class GoogleOrMicrosoftTranslate

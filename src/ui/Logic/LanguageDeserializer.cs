@@ -1972,6 +1972,36 @@ namespace Nikse.SubtitleEdit.Logic
                 case "GoogleTranslate/ProcessorSingle":
                     language.GoogleTranslate.ProcessorSingle = reader.Value;
                     break;
+                case "GoogleTranslate/AutoTranslateViaCopyPaste":
+                    language.GoogleTranslate.AutoTranslateViaCopyPaste = reader.Value;
+                    break;
+                case "GoogleTranslate/CopyPasteMaxSize":
+                    language.GoogleTranslate.CopyPasteMaxSize = reader.Value;
+                    break;
+                case "GoogleTranslate/AutoCopyToClipboard":
+                    language.GoogleTranslate.AutoCopyToClipboard = reader.Value;
+                    break;
+                case "GoogleTranslate/AutoCopyLineSeparator":
+                    language.GoogleTranslate.AutoCopyLineSeparator = reader.Value;
+                    break;
+                case "GoogleTranslate/TranslateBlockXOfY":
+                    language.GoogleTranslate.TranslateBlockXOfY = reader.Value;
+                    break;
+                case "GoogleTranslate/TranslateBlockInfo":
+                    language.GoogleTranslate.TranslateBlockInfo = reader.Value;
+                    break;
+                case "GoogleTranslate/TranslateBlockGetFromClipboard":
+                    language.GoogleTranslate.TranslateBlockGetFromClipboard = reader.Value;
+                    break;
+                case "GoogleTranslate/TranslateBlockCopySourceText":
+                    language.GoogleTranslate.TranslateBlockCopySourceText = reader.Value;
+                    break;
+                case "GoogleTranslate/TranslateBlockClipboardError1":
+                    language.GoogleTranslate.TranslateBlockClipboardError1 = reader.Value;
+                    break;
+                case "GoogleTranslate/TranslateBlockClipboardError2":
+                    language.GoogleTranslate.TranslateBlockClipboardError2 = reader.Value;
+                    break;
                 case "GoogleOrMicrosoftTranslate/Title":
                     language.GoogleOrMicrosoftTranslate.Title = reader.Value;
                     break;
@@ -3798,6 +3828,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Main/Menu/AutoTranslate/AutoTranslate":
                     language.Main.Menu.AutoTranslate.AutoTranslate = reader.Value;
+                    break;
+                case "Main/Menu/AutoTranslate/AutoTranslateViaCopyPaste":
+                    language.Main.Menu.AutoTranslate.AutoTranslateViaCopyPaste = reader.Value;
                     break;
                 case "Main/Menu/Options/Title":
                     language.Main.Menu.Options.Title = reader.Value;

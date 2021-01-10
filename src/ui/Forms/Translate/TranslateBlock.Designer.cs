@@ -70,9 +70,9 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             // buttonCopySourceTextToClipboard
             // 
             this.buttonCopySourceTextToClipboard.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCopySourceTextToClipboard.Location = new System.Drawing.Point(258, 165);
+            this.buttonCopySourceTextToClipboard.Location = new System.Drawing.Point(211, 165);
             this.buttonCopySourceTextToClipboard.Name = "buttonCopySourceTextToClipboard";
-            this.buttonCopySourceTextToClipboard.Size = new System.Drawing.Size(188, 23);
+            this.buttonCopySourceTextToClipboard.Size = new System.Drawing.Size(235, 23);
             this.buttonCopySourceTextToClipboard.TabIndex = 5;
             this.buttonCopySourceTextToClipboard.Text = "Copy source text clipboard again";
             this.buttonCopySourceTextToClipboard.UseVisualStyleBackColor = true;
