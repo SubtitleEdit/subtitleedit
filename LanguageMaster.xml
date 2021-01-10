@@ -746,6 +746,17 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
     <ProcessorMergeNext>Merge max two lines</ProcessorMergeNext>
     <ProcessorSentence>Merge sentences</ProcessorSentence>
     <ProcessorSingle>No merging</ProcessorSingle>
+    <AutoTranslateViaCopyPaste>Auto-translate via copy-paste</AutoTranslateViaCopyPaste>
+    <CopyPasteMaxSize>Max block size</CopyPasteMaxSize>
+    <AutoCopyToClipboard>Auto-copy to clipboard</AutoCopyToClipboard>
+    <AutoCopyLineSeparator>Line separator</AutoCopyLineSeparator>
+    <TranslateBlockXOfY>Translate block {0} of {1}</TranslateBlockXOfY>
+    <TranslateBlockInfo>Go to translator and paste text, copy result back to clipboard and click the button below</TranslateBlockInfo>
+    <TranslateBlockGetFromClipboard>Get translated text from clipboard
+(Ctrl + V)</TranslateBlockGetFromClipboard>
+    <TranslateBlockCopySourceText>Copy source text clipboard</TranslateBlockCopySourceText>
+    <TranslateBlockClipboardError1>Clipboard contains source text!</TranslateBlockClipboardError1>
+    <TranslateBlockClipboardError2>Go to translator and translate, the copy result to clipboard and click this button again.</TranslateBlockClipboardError2>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Google vs Microsoft translate</Title>
@@ -1127,6 +1138,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
       <AutoTranslate>
         <Title>Auto-translate</Title>
         <AutoTranslate>Auto-translate...</AutoTranslate>
+        <AutoTranslateViaCopyPaste>Auto-translate via copy-paste...</AutoTranslateViaCopyPaste>
       </AutoTranslate>
       <Options>
         <Title>Options</Title>

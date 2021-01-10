@@ -950,12 +950,17 @@ namespace Nikse.SubtitleEdit.Logic
                 LineMergeHandling = "Line merge:",
                 ProcessorMergeNext = "Merge max two lines",
                 ProcessorSentence = "Merge sentences",
-                ProcessorSingle =  "No merging",
+                ProcessorSingle = "No merging",
                 AutoTranslateViaCopyPaste = "Auto-translate via copy-paste",
                 CopyPasteMaxSize = "Max block size",
                 AutoCopyToClipboard = "Auto-copy to clipboard",
                 AutoCopyLineSeparator = "Line separator",
                 TranslateBlockXOfY = "Translate block {0} of {1}",
+                TranslateBlockInfo = "Go to translator and paste text, copy result back to clipboard and click the button below",
+                TranslateBlockGetFromClipboard = "Get translated text from clipboard" + Environment.NewLine + "(Ctrl + V)",
+                TranslateBlockCopySourceText = "Copy source text clipboard",
+                TranslateBlockClipboardError1 = "Clipboard contains source text!",
+                TranslateBlockClipboardError2 = "Go to translator and translate, the copy result to clipboard and click this button again.",
             };
 
             GoogleOrMicrosoftTranslate = new LanguageStructure.GoogleOrMicrosoftTranslate

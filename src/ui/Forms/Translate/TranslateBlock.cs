@@ -17,17 +17,19 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             InitializeComponent();
             UiUtil.FixFonts(this);
 
+            labelInfo.Text = LanguageSettings.Current.GoogleTranslate.TranslateBlockInfo;
+            buttonGetTargetGet.Text = LanguageSettings.Current.GoogleTranslate.TranslateBlockGetFromClipboard;
+            buttonCopySourceTextToClipboard.Text = LanguageSettings.Current.GoogleTranslate.TranslateBlockCopySourceText;
+
             _sourceBlock = source;
             Text = title;
             if (autoCopy)
             {
                 buttonCopySourceTextToClipboard_Click(null, null);
-                buttonCopySourceTextToClipboard.Text = "Copy source text clipboard again";
                 buttonCopySourceTextToClipboard.Font = new Font(Font.FontFamily.Name, buttonCopySourceTextToClipboard.Font.Size, FontStyle.Regular);
             }
             else
             {
-                buttonCopySourceTextToClipboard.Text = "Copy source text clipboard";
                 buttonCopySourceTextToClipboard.Font = new Font(Font.FontFamily.Name, buttonCopySourceTextToClipboard.Font.Size, FontStyle.Bold);
             }
         }
@@ -45,9 +47,9 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 var text = x.ToString();
                 if (text.Trim() == _sourceBlock.TargetText.Trim())
                 {
-                    MessageBox.Show("Clipboard contains source text!" + Environment.NewLine +
+                    MessageBox.Show(LanguageSettings.Current.GoogleTranslate.TranslateBlockClipboardError1 + Environment.NewLine +
                         Environment.NewLine +
-                        "Go to translator and translate, the copy result to clipboard and click this button again.");
+                        LanguageSettings.Current.GoogleTranslate.TranslateBlockClipboardError2);
                     return;
                 }
                 TargetText = text;
