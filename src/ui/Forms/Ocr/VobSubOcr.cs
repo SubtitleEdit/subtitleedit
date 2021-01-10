@@ -33,6 +33,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
     public sealed partial class VobSubOcr : PositionAndSizeForm, IBinaryParagraphList
     {
+        private static readonly Color _listViewGreen = Configuration.Settings.General.UseDarkTheme ? Color.Green : Color.LightGreen;
+        private static readonly Color _listViewYellow = Configuration.Settings.General.UseDarkTheme ? Color.FromArgb(218, 135, 32) : Color.Yellow;
+        private static readonly Color _listViewOrange = Configuration.Settings.General.UseDarkTheme ? Color.OrangeRed : Color.Orange;
+
         internal class CompareItem
         {
             public ManagedBitmap Bitmap { get; }
@@ -3729,23 +3733,23 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             if (wordsNotFound >= 2)
             {
-                subtitleListView1.SetBackgroundColor(index, Color.Orange);
+                subtitleListView1.SetBackgroundColor(index, _listViewOrange);
             }
             else if (wordsNotFound == 1 || line.Length == 1 || line.Contains('_') || HasSingleLetters(line))
             {
-                subtitleListView1.SetBackgroundColor(index, Color.Yellow);
+                subtitleListView1.SetBackgroundColor(index, _listViewYellow);
             }
             else if (wordsNotFound == 1)
             {
-                subtitleListView1.SetBackgroundColor(index, Color.Yellow);
+                subtitleListView1.SetBackgroundColor(index, _listViewYellow);
             }
             else if (string.IsNullOrWhiteSpace(line))
             {
-                subtitleListView1.SetBackgroundColor(index, Color.Orange);
+                subtitleListView1.SetBackgroundColor(index, _listViewOrange);
             }
             else
             {
-                subtitleListView1.SetBackgroundColor(index, Color.LightGreen);
+                subtitleListView1.SetBackgroundColor(index, _listViewGreen);
             }
         }
 
@@ -5717,8 +5721,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     line = _ocrFixEngine.FixOcrErrors(line, index, _lastLine, true, GetAutoGuessLevel());
                 }
 
-                int correctWords;
-                int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(line, out correctWords);
+                int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(line, out int correctWords);
                 int oldCorrectWords = correctWords;
 
                 if (wordsNotFound > 0 || correctWords == 0)
