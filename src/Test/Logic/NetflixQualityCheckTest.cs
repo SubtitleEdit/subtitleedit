@@ -196,7 +196,7 @@ namespace Test.Logic
         public void TestNetflixCheckNumberOfLines()
         {
             var sub = new Subtitle();
-            var p1 = new Paragraph("Lorem ipsum." + Environment.NewLine + "Line 2." + Environment.NewLine + "Line 3", 0, 832);
+            var p1 = new Paragraph("Lorem ipsum." + Environment.NewLine + "Line 2." + Environment.NewLine + "Line 3.", 0, 832);
             sub.Paragraphs.Add(p1);
             var p2 = new Paragraph("Lorem ipsum." + Environment.NewLine + "Line 2.", 0, 832);
             sub.Paragraphs.Add(p2);
@@ -209,7 +209,7 @@ namespace Test.Logic
             checker.Check(sub, controller);
 
             Assert.AreEqual(2, controller.Records.Count);
-            Assert.AreEqual(controller.Records[0].OriginalParagraph, p1);
+            Assert.AreEqual(controller.Records[0].FixedParagraph.Text, "Lorem ipsum. Line 2. Line 3.");
             Assert.AreEqual(controller.Records[1].FixedParagraph.Text, "Lorem ipsum. Line 2.");
         }
 
