@@ -89,7 +89,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             checkBoxSpeakerStyle.Text = checkBoxSpeakerStyleText;
 
-            checkBox17CharsPerSecond.Text = string.Format(LanguageSettings.Current.NetflixQualityCheck.MaximumXCharsPerSecond, _netflixQualityController.CharactersPerSecond);
+            checkBox20CharsPerSecond.Text = string.Format(LanguageSettings.Current.NetflixQualityCheck.MaximumXCharsPerSecond, _netflixQualityController.CharactersPerSecond);
             checkBoxMaxLineLength.Text = string.Format(LanguageSettings.Current.NetflixQualityCheck.MaximumLineLength, _netflixQualityController.SingleLineMaxLength);
         }
 
@@ -133,6 +133,10 @@ namespace Nikse.SubtitleEdit.Forms
             labelTotal.Text = string.Format(LanguageSettings.Current.NetflixQualityCheck.FoundXIssues, _netflixQualityController.Records.Count);
             linkLabelOpenReportFolder.Left = labelTotal.Left + labelTotal.Width + 15;
             linkLabelOpenReportFolder.Text = LanguageSettings.Current.NetflixQualityCheck.OpenReportInFolder;
+
+            var charactersPerSecond = checkBoxChildrenProgram.Checked ? _netflixQualityController.CharactersPerSecond - 3 : _netflixQualityController.CharactersPerSecond;
+            checkBox20CharsPerSecond.Text = string.Format(LanguageSettings.Current.NetflixQualityCheck.MaximumXCharsPerSecond, charactersPerSecond);
+
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
             foreach (var record in _netflixQualityController.Records)
@@ -189,9 +193,9 @@ namespace Nikse.SubtitleEdit.Forms
                 list.Add(new NetflixCheckMaxDuration());
             }
 
-            if (checkBox17CharsPerSecond.Checked)
+            if (checkBox20CharsPerSecond.Checked)
             {
-                list.Add(new NetflixCheckMaxCps());
+                list.Add(new NetflixCheckMaxCps(checkBoxChildrenProgram.Checked));
             }
 
             if (checkBoxGapMin.Checked)
@@ -212,6 +216,11 @@ namespace Nikse.SubtitleEdit.Forms
             if (checkBoxSpeakerStyle.Checked)
             {
                 list.Add(new NetflixCheckDialogHyphenSpace());
+            }
+
+            if (checkBoxEllipsesNotThreeDots.Checked)
+            {
+                list.Add(new NetflixCheckEllipsesNotThreeDots());
             }
 
             if (checkBoxSquareBracketForHi.Checked)
