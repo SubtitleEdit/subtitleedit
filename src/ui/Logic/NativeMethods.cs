@@ -55,6 +55,12 @@ namespace Nikse.SubtitleEdit.Logic
         [DllImport("user32.dll", EntryPoint = "SetWindowPos")]
         internal static extern IntPtr SetWindowPos(IntPtr hWnd, int hWndInsertAfter, int x, int y, int width, int height, int wFlags);
 
+        [DllImport("dwmapi.dll")]
+        internal static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
+
+        [DllImport("uxtheme.dll", CharSet = CharSet.Unicode)]
+        internal extern static int SetWindowTheme(IntPtr hWnd, string pszSubAppName, string pszSubIdList);
+
         #endregion Win32 API
 
         #region VLC
