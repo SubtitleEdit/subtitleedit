@@ -338,6 +338,7 @@
             this.buttonDarkThemeColor = new System.Windows.Forms.Button();
             this.labelFontNote = new System.Windows.Forms.Label();
             this.groupBoxFontTextBox = new System.Windows.Forms.GroupBox();
+            this.checkBoxLiveSpellCheck = new System.Windows.Forms.CheckBox();
             this.panelTextBoxAssColor = new System.Windows.Forms.Panel();
             this.buttonTextBoxAssColor = new System.Windows.Forms.Button();
             this.panelTextBoxHtmlColor = new System.Windows.Forms.Panel();
@@ -404,7 +405,6 @@
             this.buttonReset = new System.Windows.Forms.Button();
             this.toolTipContinuationPreview = new System.Windows.Forms.ToolTip(this.components);
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.checkBoxLiveSpellCheck = new System.Windows.Forms.CheckBox();
             this.panelGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
@@ -3574,8 +3574,8 @@
             this.listViewNames.TabIndex = 27;
             this.listViewNames.UseCompatibleStateImageBehavior = false;
             this.listViewNames.View = System.Windows.Forms.View.Details;
-            this.listViewNames.SelectedIndexChanged += new System.EventHandler(this.ListBoxNamesSelectedIndexChanged);
-            this.listViewNames.DoubleClick += new System.EventHandler(this.listBoxNames_DoubleClick);
+            this.listViewNames.SelectedIndexChanged += new System.EventHandler(this.ListViewNamesSelectedIndexChanged);
+            this.listViewNames.DoubleClick += new System.EventHandler(this.listViewNames_DoubleClick);
             this.listViewNames.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listViewNames_KeyDown);
             // 
             // columnHeaderNames
@@ -4181,6 +4181,16 @@
             this.groupBoxFontTextBox.TabIndex = 40;
             this.groupBoxFontTextBox.TabStop = false;
             this.groupBoxFontTextBox.Text = "Text box";
+            // 
+            // checkBoxLiveSpellCheck
+            // 
+            this.checkBoxLiveSpellCheck.AutoSize = true;
+            this.checkBoxLiveSpellCheck.Location = new System.Drawing.Point(437, 46);
+            this.checkBoxLiveSpellCheck.Name = "checkBoxLiveSpellCheck";
+            this.checkBoxLiveSpellCheck.Size = new System.Drawing.Size(99, 17);
+            this.checkBoxLiveSpellCheck.TabIndex = 35;
+            this.checkBoxLiveSpellCheck.Text = "Live spell check";
+            this.checkBoxLiveSpellCheck.UseVisualStyleBackColor = true;
             // 
             // panelTextBoxAssColor
             // 
@@ -4883,28 +4893,18 @@
             this.toolTipContinuationPreview.InitialDelay = 500;
             this.toolTipContinuationPreview.ReshowDelay = 100;
             // 
-            // checkBoxLiveSpellCheck
-            // 
-            this.checkBoxLiveSpellCheck.AutoSize = true;
-            this.checkBoxLiveSpellCheck.Location = new System.Drawing.Point(437, 46);
-            this.checkBoxLiveSpellCheck.Name = "checkBoxLiveSpellCheck";
-            this.checkBoxLiveSpellCheck.Size = new System.Drawing.Size(99, 17);
-            this.checkBoxLiveSpellCheck.TabIndex = 35;
-            this.checkBoxLiveSpellCheck.Text = "Live spell check";
-            this.checkBoxLiveSpellCheck.UseVisualStyleBackColor = true;
-            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
+            this.Controls.Add(this.panelWordLists);
             this.Controls.Add(this.panelFont);
             this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.panelToolBar);
             this.Controls.Add(this.panelWaveform);
             this.Controls.Add(this.panelSyntaxColoring);
-            this.Controls.Add(this.panelWordLists);
             this.Controls.Add(this.panelSsaStyle);
             this.Controls.Add(this.panelNetwork);
             this.Controls.Add(this.panelGeneral);

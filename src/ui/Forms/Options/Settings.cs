@@ -2233,7 +2233,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
         }
 
-        private void ListBoxNamesSelectedIndexChanged(object sender, EventArgs e)
+        private void ListViewNamesSelectedIndexChanged(object sender, EventArgs e)
         {
             buttonRemoveNameEtc.Enabled = listViewNames.SelectedItems.Count >= 1;
         }
@@ -3472,7 +3472,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             treeViewShortcuts.CollapseAll();
         }
 
-        private void listBoxNames_DoubleClick(object sender, EventArgs e)
+        private void listViewNames_DoubleClick(object sender, EventArgs e)
         {
             if (listViewNames.SelectedItems.Count == 0)
             {
