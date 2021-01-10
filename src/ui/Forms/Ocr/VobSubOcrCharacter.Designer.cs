@@ -245,7 +245,7 @@
             this.labelCharactersAsText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelCharactersAsText.AutoSize = true;
             this.labelCharactersAsText.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelCharactersAsText.Location = new System.Drawing.Point(9, 325);
+            this.labelCharactersAsText.Location = new System.Drawing.Point(10, 323);
             this.labelCharactersAsText.Name = "labelCharactersAsText";
             this.labelCharactersAsText.Size = new System.Drawing.Size(122, 13);
             this.labelCharactersAsText.TabIndex = 17;
@@ -256,7 +256,7 @@
             this.textBoxCharacters.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.textBoxCharacters.ContextMenuStrip = this.contextMenuStripLetters;
             this.textBoxCharacters.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxCharacters.Location = new System.Drawing.Point(12, 341);
+            this.textBoxCharacters.Location = new System.Drawing.Point(10, 341);
             this.textBoxCharacters.Name = "textBoxCharacters";
             this.textBoxCharacters.Size = new System.Drawing.Size(225, 27);
             this.textBoxCharacters.TabIndex = 0;
@@ -970,7 +970,7 @@
             this.labelCharacters.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelCharacters.AutoSize = true;
             this.labelCharacters.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelCharacters.Location = new System.Drawing.Point(14, 250);
+            this.labelCharacters.Location = new System.Drawing.Point(10, 250);
             this.labelCharacters.Name = "labelCharacters";
             this.labelCharacters.Size = new System.Drawing.Size(79, 13);
             this.labelCharacters.TabIndex = 19;
@@ -1005,7 +1005,7 @@
             // 
             this.buttonExpandSelection.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonExpandSelection.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonExpandSelection.Location = new System.Drawing.Point(453, 2);
+            this.buttonExpandSelection.Location = new System.Drawing.Point(453, 4);
             this.buttonExpandSelection.Name = "buttonExpandSelection";
             this.buttonExpandSelection.Size = new System.Drawing.Size(112, 23);
             this.buttonExpandSelection.TabIndex = 20;
@@ -1017,7 +1017,7 @@
             // 
             this.buttonShrinkSelection.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonShrinkSelection.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonShrinkSelection.Location = new System.Drawing.Point(335, 2);
+            this.buttonShrinkSelection.Location = new System.Drawing.Point(335, 4);
             this.buttonShrinkSelection.Name = "buttonShrinkSelection";
             this.buttonShrinkSelection.Size = new System.Drawing.Size(112, 23);
             this.buttonShrinkSelection.TabIndex = 21;
