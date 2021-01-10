@@ -447,22 +447,22 @@ namespace Nikse.SubtitleEdit.Forms
             this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.imageListBookmarks = new System.Windows.Forms.ImageList(this.components);
             this.groupBoxEdit = new System.Windows.Forms.GroupBox();
-            this.labelAlternateSingleLinePixels = new System.Windows.Forms.Label();
+            this.labelOriginalSingleLinePixels = new System.Windows.Forms.Label();
             this.labelSingleLinePixels = new System.Windows.Forms.Label();
             this.panelBookmark = new System.Windows.Forms.Panel();
             this.labelBookmark = new System.Windows.Forms.Label();
             this.pictureBoxBookmark = new System.Windows.Forms.PictureBox();
             this.labelSingleLine = new System.Windows.Forms.Label();
-            this.labelAlternateSingleLine = new System.Windows.Forms.Label();
+            this.labelOriginalSingleLine = new System.Windows.Forms.Label();
             this.labelDurationWarning = new System.Windows.Forms.Label();
             this.labelStartTimeWarning = new System.Windows.Forms.Label();
             this.buttonSplitLine = new System.Windows.Forms.Button();
-            this.labelAlternateCharactersPerSecond = new System.Windows.Forms.Label();
-            this.labelTextAlternateLineTotal = new System.Windows.Forms.Label();
-            this.labelTextAlternateLineLengths = new System.Windows.Forms.Label();
-            this.labelAlternateText = new System.Windows.Forms.Label();
+            this.labelOriginalCharactersPerSecond = new System.Windows.Forms.Label();
+            this.labelTextOriginalLineTotal = new System.Windows.Forms.Label();
+            this.labelTextOriginalLineLengths = new System.Windows.Forms.Label();
+            this.labelOriginalText = new System.Windows.Forms.Label();
             this.labelText = new System.Windows.Forms.Label();
-            this.textBoxListViewTextAlternate = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.textBoxListViewTextOriginal = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.contextMenuStripTextBoxListView = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripSeparatorSpellCheckSuggestions = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemSpellCheckSkipOnce = new System.Windows.Forms.ToolStripMenuItem();
@@ -535,7 +535,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.aSSStylesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
-            this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
+            this.timerOriginalTextUndo = new System.Windows.Forms.Timer(this.components);
             this.autotranslateViaCopypasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -4294,21 +4294,21 @@ namespace Nikse.SubtitleEdit.Forms
             // groupBoxEdit
             // 
             this.groupBoxEdit.BackColor = System.Drawing.SystemColors.Control;
-            this.groupBoxEdit.Controls.Add(this.labelAlternateSingleLinePixels);
+            this.groupBoxEdit.Controls.Add(this.labelOriginalSingleLinePixels);
             this.groupBoxEdit.Controls.Add(this.labelSingleLinePixels);
             this.groupBoxEdit.Controls.Add(this.panelBookmark);
             this.groupBoxEdit.Controls.Add(this.pictureBoxBookmark);
             this.groupBoxEdit.Controls.Add(this.labelSingleLine);
-            this.groupBoxEdit.Controls.Add(this.labelAlternateSingleLine);
+            this.groupBoxEdit.Controls.Add(this.labelOriginalSingleLine);
             this.groupBoxEdit.Controls.Add(this.labelDurationWarning);
             this.groupBoxEdit.Controls.Add(this.labelStartTimeWarning);
             this.groupBoxEdit.Controls.Add(this.buttonSplitLine);
-            this.groupBoxEdit.Controls.Add(this.labelAlternateCharactersPerSecond);
-            this.groupBoxEdit.Controls.Add(this.labelTextAlternateLineTotal);
-            this.groupBoxEdit.Controls.Add(this.labelTextAlternateLineLengths);
-            this.groupBoxEdit.Controls.Add(this.labelAlternateText);
+            this.groupBoxEdit.Controls.Add(this.labelOriginalCharactersPerSecond);
+            this.groupBoxEdit.Controls.Add(this.labelTextOriginalLineTotal);
+            this.groupBoxEdit.Controls.Add(this.labelTextOriginalLineLengths);
+            this.groupBoxEdit.Controls.Add(this.labelOriginalText);
             this.groupBoxEdit.Controls.Add(this.labelText);
-            this.groupBoxEdit.Controls.Add(this.textBoxListViewTextAlternate);
+            this.groupBoxEdit.Controls.Add(this.textBoxListViewTextOriginal);
             this.groupBoxEdit.Controls.Add(this.buttonAutoBreak);
             this.groupBoxEdit.Controls.Add(this.labelTextLineLengths);
             this.groupBoxEdit.Controls.Add(this.labelTextLineTotal);
@@ -4331,13 +4331,13 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // labelAlternateSingleLinePixels
             // 
-            this.labelAlternateSingleLinePixels.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.labelAlternateSingleLinePixels.AutoSize = true;
-            this.labelAlternateSingleLinePixels.Location = new System.Drawing.Point(870, 115);
-            this.labelAlternateSingleLinePixels.Name = "labelAlternateSingleLinePixels";
-            this.labelAlternateSingleLinePixels.Size = new System.Drawing.Size(62, 13);
-            this.labelAlternateSingleLinePixels.TabIndex = 43;
-            this.labelAlternateSingleLinePixels.Text = "AltSinLinPix";
+            this.labelOriginalSingleLinePixels.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelOriginalSingleLinePixels.AutoSize = true;
+            this.labelOriginalSingleLinePixels.Location = new System.Drawing.Point(870, 115);
+            this.labelOriginalSingleLinePixels.Name = "labelAlternateSingleLinePixels";
+            this.labelOriginalSingleLinePixels.Size = new System.Drawing.Size(62, 13);
+            this.labelOriginalSingleLinePixels.TabIndex = 43;
+            this.labelOriginalSingleLinePixels.Text = "AltSinLinPix";
             // 
             // labelSingleLinePixels
             // 
@@ -4393,13 +4393,13 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // labelAlternateSingleLine
             // 
-            this.labelAlternateSingleLine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.labelAlternateSingleLine.AutoSize = true;
-            this.labelAlternateSingleLine.Location = new System.Drawing.Point(839, 115);
-            this.labelAlternateSingleLine.Name = "labelAlternateSingleLine";
-            this.labelAlternateSingleLine.Size = new System.Drawing.Size(48, 13);
-            this.labelAlternateSingleLine.TabIndex = 36;
-            this.labelAlternateSingleLine.Text = "AltSinLin";
+            this.labelOriginalSingleLine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelOriginalSingleLine.AutoSize = true;
+            this.labelOriginalSingleLine.Location = new System.Drawing.Point(839, 115);
+            this.labelOriginalSingleLine.Name = "labelAlternateSingleLine";
+            this.labelOriginalSingleLine.Size = new System.Drawing.Size(48, 13);
+            this.labelOriginalSingleLine.TabIndex = 36;
+            this.labelOriginalSingleLine.Text = "AltSinLin";
             // 
             // labelDurationWarning
             // 
@@ -4436,43 +4436,43 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // labelAlternateCharactersPerSecond
             // 
-            this.labelAlternateCharactersPerSecond.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelAlternateCharactersPerSecond.AutoSize = true;
-            this.labelAlternateCharactersPerSecond.Location = new System.Drawing.Point(652, 11);
-            this.labelAlternateCharactersPerSecond.Name = "labelAlternateCharactersPerSecond";
-            this.labelAlternateCharactersPerSecond.Size = new System.Drawing.Size(64, 13);
-            this.labelAlternateCharactersPerSecond.TabIndex = 38;
-            this.labelAlternateCharactersPerSecond.Text = "altCharsSec";
+            this.labelOriginalCharactersPerSecond.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelOriginalCharactersPerSecond.AutoSize = true;
+            this.labelOriginalCharactersPerSecond.Location = new System.Drawing.Point(652, 11);
+            this.labelOriginalCharactersPerSecond.Name = "labelAlternateCharactersPerSecond";
+            this.labelOriginalCharactersPerSecond.Size = new System.Drawing.Size(64, 13);
+            this.labelOriginalCharactersPerSecond.TabIndex = 38;
+            this.labelOriginalCharactersPerSecond.Text = "altCharsSec";
             // 
             // labelTextAlternateLineTotal
             // 
-            this.labelTextAlternateLineTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelTextAlternateLineTotal.AutoSize = true;
-            this.labelTextAlternateLineTotal.Location = new System.Drawing.Point(698, 115);
-            this.labelTextAlternateLineTotal.Name = "labelTextAlternateLineTotal";
-            this.labelTextAlternateLineTotal.Size = new System.Drawing.Size(35, 13);
-            this.labelTextAlternateLineTotal.TabIndex = 37;
-            this.labelTextAlternateLineTotal.Text = "AltTot";
+            this.labelTextOriginalLineTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelTextOriginalLineTotal.AutoSize = true;
+            this.labelTextOriginalLineTotal.Location = new System.Drawing.Point(698, 115);
+            this.labelTextOriginalLineTotal.Name = "labelTextAlternateLineTotal";
+            this.labelTextOriginalLineTotal.Size = new System.Drawing.Size(35, 13);
+            this.labelTextOriginalLineTotal.TabIndex = 37;
+            this.labelTextOriginalLineTotal.Text = "AltTot";
             // 
             // labelTextAlternateLineLengths
             // 
-            this.labelTextAlternateLineLengths.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.labelTextAlternateLineLengths.AutoSize = true;
-            this.labelTextAlternateLineLengths.Location = new System.Drawing.Point(786, 115);
-            this.labelTextAlternateLineLengths.Name = "labelTextAlternateLineLengths";
-            this.labelTextAlternateLineLengths.Size = new System.Drawing.Size(57, 13);
-            this.labelTextAlternateLineLengths.TabIndex = 35;
-            this.labelTextAlternateLineLengths.Text = "AltLineLen";
+            this.labelTextOriginalLineLengths.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelTextOriginalLineLengths.AutoSize = true;
+            this.labelTextOriginalLineLengths.Location = new System.Drawing.Point(786, 115);
+            this.labelTextOriginalLineLengths.Name = "labelTextAlternateLineLengths";
+            this.labelTextOriginalLineLengths.Size = new System.Drawing.Size(57, 13);
+            this.labelTextOriginalLineLengths.TabIndex = 35;
+            this.labelTextOriginalLineLengths.Text = "AltLineLen";
             // 
             // labelAlternateText
             // 
-            this.labelAlternateText.AutoSize = true;
-            this.labelAlternateText.Location = new System.Drawing.Point(803, 11);
-            this.labelAlternateText.Name = "labelAlternateText";
-            this.labelAlternateText.Size = new System.Drawing.Size(28, 13);
-            this.labelAlternateText.TabIndex = 34;
-            this.labelAlternateText.Text = "Text";
-            this.labelAlternateText.Visible = false;
+            this.labelOriginalText.AutoSize = true;
+            this.labelOriginalText.Location = new System.Drawing.Point(803, 11);
+            this.labelOriginalText.Name = "labelAlternateText";
+            this.labelOriginalText.Size = new System.Drawing.Size(28, 13);
+            this.labelOriginalText.TabIndex = 34;
+            this.labelOriginalText.Text = "Text";
+            this.labelOriginalText.Visible = false;
             // 
             // labelText
             // 
@@ -4485,37 +4485,37 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // textBoxListViewTextAlternate
             // 
-            this.textBoxListViewTextAlternate.AllowDrop = true;
-            this.textBoxListViewTextAlternate.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.textBoxListViewTextOriginal.AllowDrop = true;
+            this.textBoxListViewTextOriginal.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxListViewTextAlternate.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxListViewTextAlternate.ContextMenuStrip = this.contextMenuStripTextBoxListView;
-            this.textBoxListViewTextAlternate.CurrentLineIndex = 0;
-            this.textBoxListViewTextAlternate.Enabled = false;
-            this.textBoxListViewTextAlternate.HideSelection = false;
-            this.textBoxListViewTextAlternate.IsDictionaryDownloaded = true;
-            this.textBoxListViewTextAlternate.IsSpellCheckerInitialized = false;
-            this.textBoxListViewTextAlternate.IsSpellCheckRequested = false;
-            this.textBoxListViewTextAlternate.IsWrongWord = false;
-            this.textBoxListViewTextAlternate.LanguageChanged = false;
-            this.textBoxListViewTextAlternate.Location = new System.Drawing.Point(946, 28);
-            this.textBoxListViewTextAlternate.Multiline = true;
-            this.textBoxListViewTextAlternate.Name = "textBoxListViewTextAlternate";
-            this.textBoxListViewTextAlternate.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxListViewTextAlternate.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.textBoxListViewTextAlternate.SelectedText = "";
-            this.textBoxListViewTextAlternate.SelectionLength = 0;
-            this.textBoxListViewTextAlternate.SelectionStart = 0;
-            this.textBoxListViewTextAlternate.Size = new System.Drawing.Size(16, 84);
-            this.textBoxListViewTextAlternate.TabIndex = 33;
-            this.textBoxListViewTextAlternate.Visible = false;
-            this.textBoxListViewTextAlternate.TextChanged += new System.EventHandler(this.textBoxListViewTextAlternate_TextChanged);
-            this.textBoxListViewTextAlternate.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxListViewTextAlternateKeyDown);
-            this.textBoxListViewTextAlternate.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxListViewTextAlternateMouseClick);
-            this.textBoxListViewTextAlternate.Enter += new System.EventHandler(this.TextBoxListViewTextAlternateEnter);
-            this.textBoxListViewTextAlternate.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TextBoxListViewTextAlternateKeyUp);
-            this.textBoxListViewTextAlternate.MouseMove += new System.Windows.Forms.MouseEventHandler(this.TextBoxListViewTextAlternateMouseMove);
+            this.textBoxListViewTextOriginal.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.textBoxListViewTextOriginal.ContextMenuStrip = this.contextMenuStripTextBoxListView;
+            this.textBoxListViewTextOriginal.CurrentLineIndex = 0;
+            this.textBoxListViewTextOriginal.Enabled = false;
+            this.textBoxListViewTextOriginal.HideSelection = false;
+            this.textBoxListViewTextOriginal.IsDictionaryDownloaded = true;
+            this.textBoxListViewTextOriginal.IsSpellCheckerInitialized = false;
+            this.textBoxListViewTextOriginal.IsSpellCheckRequested = false;
+            this.textBoxListViewTextOriginal.IsWrongWord = false;
+            this.textBoxListViewTextOriginal.LanguageChanged = false;
+            this.textBoxListViewTextOriginal.Location = new System.Drawing.Point(946, 28);
+            this.textBoxListViewTextOriginal.Multiline = true;
+            this.textBoxListViewTextOriginal.Name = "textBoxListViewTextAlternate";
+            this.textBoxListViewTextOriginal.Padding = new System.Windows.Forms.Padding(1);
+            this.textBoxListViewTextOriginal.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
+            this.textBoxListViewTextOriginal.SelectedText = "";
+            this.textBoxListViewTextOriginal.SelectionLength = 0;
+            this.textBoxListViewTextOriginal.SelectionStart = 0;
+            this.textBoxListViewTextOriginal.Size = new System.Drawing.Size(16, 84);
+            this.textBoxListViewTextOriginal.TabIndex = 33;
+            this.textBoxListViewTextOriginal.Visible = false;
+            this.textBoxListViewTextOriginal.TextChanged += new System.EventHandler(this.textBoxListViewTextOriginal_TextChanged);
+            this.textBoxListViewTextOriginal.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxListViewTextOriginalKeyDown);
+            this.textBoxListViewTextOriginal.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxListViewTextOriginalMouseClick);
+            this.textBoxListViewTextOriginal.Enter += new System.EventHandler(this.TextBoxListViewTextOriginalEnter);
+            this.textBoxListViewTextOriginal.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TextBoxListViewTextOriginalKeyUp);
+            this.textBoxListViewTextOriginal.MouseMove += new System.Windows.Forms.MouseEventHandler(this.TextBoxListViewTextOriginalMouseMove);
             // 
             // contextMenuStripTextBoxListView
             // 
@@ -5203,8 +5203,8 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // timerAlternateTextUndo
             // 
-            this.timerAlternateTextUndo.Interval = 700;
-            this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
+            this.timerOriginalTextUndo.Interval = 700;
+            this.timerOriginalTextUndo.Tick += new System.EventHandler(this.TimerOriginalTextUndoTick);
             // 
             // autotranslateViaCopypasteToolStripMenuItem
             // 
@@ -5553,11 +5553,11 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem insertLineToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem closeVideoToolStripMenuItem;
         private System.Windows.Forms.Label labelSingleLine;
-        private System.Windows.Forms.Label labelAlternateText;
-        private System.Windows.Forms.Label labelAlternateCharactersPerSecond;
-        private System.Windows.Forms.Label labelTextAlternateLineTotal;
-        private System.Windows.Forms.Label labelAlternateSingleLine;
-        private System.Windows.Forms.Label labelTextAlternateLineLengths;
+        private System.Windows.Forms.Label labelOriginalText;
+        private System.Windows.Forms.Label labelOriginalCharactersPerSecond;
+        private System.Windows.Forms.Label labelTextOriginalLineTotal;
+        private System.Windows.Forms.Label labelOriginalSingleLine;
+        private System.Windows.Forms.Label labelTextOriginalLineLengths;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator20;
         private System.Windows.Forms.ToolStripMenuItem saveOriginalToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveOriginalAstoolStripMenuItem;
@@ -5639,10 +5639,10 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInsertUnicodeSymbol;
         private System.Windows.Forms.ToolStripMenuItem setStylesForSelectedLinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem FindDoubleLinesToolStripMenuItem;
-        private Controls.SETextBox textBoxListViewTextAlternate;
+        private Controls.SETextBox textBoxListViewTextOriginal;
         private System.Windows.Forms.ToolStripMenuItem textCharssecToolStripMenuItem;
         private System.Windows.Forms.Timer timerTextUndo;
-        private System.Windows.Forms.Timer timerAlternateTextUndo;
+        private System.Windows.Forms.Timer timerOriginalTextUndo;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMergeDialog;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSurroundWithMusicSymbols;
         private System.Windows.Forms.ToolStripMenuItem superscriptToolStripMenuItem;
@@ -5777,7 +5777,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSetParagraphAsSelection;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRuby;
         private System.Windows.Forms.Label labelSingleLinePixels;
-        private System.Windows.Forms.Label labelAlternateSingleLinePixels;
+        private System.Windows.Forms.Label labelOriginalSingleLinePixels;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem extendBeforeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem extendAfterToolStripMenuItem;

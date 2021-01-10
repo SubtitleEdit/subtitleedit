@@ -306,7 +306,7 @@ namespace Nikse.SubtitleEdit.Core
             return subtitleFormat;
         }
 
-        public void MakeHistoryForUndo(string description, SubtitleFormat subtitleFormat, DateTime fileModified, Subtitle original, string originalSubtitleFileName, int lineNumber, int linePosition, int linePositionAlternate)
+        public void MakeHistoryForUndo(string description, SubtitleFormat subtitleFormat, DateTime fileModified, Subtitle original, string originalSubtitleFileName, int lineNumber, int linePosition, int linePositionOriginal)
         {
             // don't fill memory with history - use a max rollback points
             if (HistoryItems.Count > MaximumHistoryItems)
@@ -314,7 +314,7 @@ namespace Nikse.SubtitleEdit.Core
                 HistoryItems.RemoveAt(0);
             }
 
-            HistoryItems.Add(new HistoryItem(HistoryItems.Count, this, description, FileName, fileModified, subtitleFormat.FriendlyName, original, originalSubtitleFileName, lineNumber, linePosition, linePositionAlternate));
+            HistoryItems.Add(new HistoryItem(HistoryItems.Count, this, description, FileName, fileModified, subtitleFormat.FriendlyName, original, originalSubtitleFileName, lineNumber, linePosition, linePositionOriginal));
         }
 
         public string UndoHistory(int index, out string subtitleFormatFriendlyName, out DateTime fileModified, out Subtitle originalSubtitle, out string originalSubtitleFileName)
