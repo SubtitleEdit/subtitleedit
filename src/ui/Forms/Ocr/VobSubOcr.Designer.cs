@@ -445,7 +445,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(903, 544);
+            this.buttonOK.Location = new System.Drawing.Point(903, 550);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(83, 23);
             this.buttonOK.TabIndex = 1;
@@ -458,7 +458,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(992, 544);
+            this.buttonCancel.Location = new System.Drawing.Point(992, 550);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(85, 23);
             this.buttonCancel.TabIndex = 2;
@@ -1735,7 +1735,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.checkBoxUseTimeCodesFromIdx.AutoSize = true;
             this.checkBoxUseTimeCodesFromIdx.Location = new System.Drawing.Point(369, 295);
             this.checkBoxUseTimeCodesFromIdx.Name = "checkBoxUseTimeCodesFromIdx";
-            this.checkBoxUseTimeCodesFromIdx.Size = new System.Drawing.Size(186, 17);
+            this.checkBoxUseTimeCodesFromIdx.Size = new System.Drawing.Size(152, 17);
             this.checkBoxUseTimeCodesFromIdx.TabIndex = 3;
             this.checkBoxUseTimeCodesFromIdx.Text = "Use lines/time codes from .idx file";
             this.checkBoxUseTimeCodesFromIdx.UseVisualStyleBackColor = true;
@@ -1925,7 +1925,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1089, 579);
+            this.ClientSize = new System.Drawing.Size(1089, 582);
             this.Controls.Add(this.splitContainerBottom);
             this.Controls.Add(this.groupBoxSubtitleImage);
             this.Controls.Add(this.labelStatus);

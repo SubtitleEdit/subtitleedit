@@ -48,10 +48,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 dataGridView1.Columns.Add(string.Empty, string.Empty);
                 dataGridView1.Columns[dataGridView1.Columns.Count - 1].Width = 25;
-                dataGridView1.Columns[dataGridView1.Columns.Count - 1].DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter };
+                dataGridView1.Columns[dataGridView1.Columns.Count - 1].DefaultCellStyle = new DataGridViewCellStyle
+                {
+                    Alignment = DataGridViewContentAlignment.MiddleCenter,
+                    ForeColor = UiUtil.ForeColor,
+                    BackColor = UiUtil.BackColor
+                };
             }
             dataGridView1.Rows.Add(row1);
             dataGridView1.Rows.Add(row2);
+            dataGridView1.Rows[0].Height = dataGridView1.Height / 2;
+            dataGridView1.Rows[1].Height = dataGridView1.Height / 2;
 
             foreach (ToolStripItem toolStripItem in contextMenuStripLetters.Items)
             {
