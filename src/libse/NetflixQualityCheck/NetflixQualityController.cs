@@ -4,19 +4,18 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 
 namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 {
     public class NetflixQualityController
     {
-
         /// <summary>
         /// Two letter language code (e.g. "en" is English)
         /// </summary>
-
-        public string VideoFileName { get; set; } = string.Empty;
-        
         public string Language { get; set; } = "en";
+
+        public string VideoFileName { get; set; }
 
         public double FrameRate { get; set; } = 24;
 
@@ -89,30 +88,23 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
             }
         }
 
-        public bool DualSpeakersHasHyphenAndNoSpace
+        public DialogType SpeakerStyle
         {
             get
             {
-                if (!string.IsNullOrEmpty(Language))
+                switch (Language)
                 {
-                    if (Language == "cs") // Czech
-                    {
-                        return false;
-                    }
-                    if (Language == "fr") // French
-                    {
-                        return false;
-                    }
-                    if (Language == "ko") // Korean
-                    {
-                        return false;
-                    }
-                    if (Language == "ar") // Arabic
-                    {
-                        return false;
-                    }
+                    case "ar": // Arabic
+                    case "cs": // Czech
+                    case "fr": // French
+                    case "ko": // Korean
+                        return DialogType.DashBothLinesWithSpace;
+                    case "nl": // Dutch
+                    case "he": // Hebrew
+                        return DialogType.DashSecondLineWithoutSpace;
+                    default:
+                        return DialogType.DashBothLinesWithoutSpace;
                 }
-                return true;
             }
         }
 

@@ -43,7 +43,7 @@
             this.checkBoxWriteOutOneToTen = new System.Windows.Forms.CheckBox();
             this.checkBoxSpellOutStartNumbers = new System.Windows.Forms.CheckBox();
             this.checkBoxSquareBracketForHi = new System.Windows.Forms.CheckBox();
-            this.checkBoxDialogHypenNoSpace = new System.Windows.Forms.CheckBox();
+            this.checkBoxSpeakerStyle = new System.Windows.Forms.CheckBox();
             this.checkBoxTwoLinesMax = new System.Windows.Forms.CheckBox();
             this.checkBoxMinDuration = new System.Windows.Forms.CheckBox();
             this.checkBoxMaxDuration = new System.Windows.Forms.CheckBox();
@@ -77,7 +77,7 @@
             this.groupBoxRules.Controls.Add(this.checkBoxWriteOutOneToTen);
             this.groupBoxRules.Controls.Add(this.checkBoxSpellOutStartNumbers);
             this.groupBoxRules.Controls.Add(this.checkBoxSquareBracketForHi);
-            this.groupBoxRules.Controls.Add(this.checkBoxDialogHypenNoSpace);
+            this.groupBoxRules.Controls.Add(this.checkBoxSpeakerStyle);
             this.groupBoxRules.Controls.Add(this.checkBoxTwoLinesMax);
             this.groupBoxRules.Controls.Add(this.checkBoxMinDuration);
             this.groupBoxRules.Controls.Add(this.checkBoxMaxDuration);
@@ -263,18 +263,18 @@
             this.checkBoxSquareBracketForHi.UseVisualStyleBackColor = true;
             this.checkBoxSquareBracketForHi.CheckedChanged += new System.EventHandler(this.RuleCheckedChanged);
             // 
-            // checkBoxDialogHypenNoSpace
+            // checkBoxSpeakerStyle
             // 
-            this.checkBoxDialogHypenNoSpace.AutoSize = true;
-            this.checkBoxDialogHypenNoSpace.Checked = true;
-            this.checkBoxDialogHypenNoSpace.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxDialogHypenNoSpace.Location = new System.Drawing.Point(409, 54);
-            this.checkBoxDialogHypenNoSpace.Name = "checkBoxDialogHypenNoSpace";
-            this.checkBoxDialogHypenNoSpace.Size = new System.Drawing.Size(246, 17);
-            this.checkBoxDialogHypenNoSpace.TabIndex = 10;
-            this.checkBoxDialogHypenNoSpace.Text = "Dual Speakers: Use a hyphen without a space";
-            this.checkBoxDialogHypenNoSpace.UseVisualStyleBackColor = true;
-            this.checkBoxDialogHypenNoSpace.CheckedChanged += new System.EventHandler(this.RuleCheckedChanged);
+            this.checkBoxSpeakerStyle.AutoSize = true;
+            this.checkBoxSpeakerStyle.Checked = true;
+            this.checkBoxSpeakerStyle.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxSpeakerStyle.Location = new System.Drawing.Point(409, 54);
+            this.checkBoxSpeakerStyle.Name = "checkBoxSpeakerStyle";
+            this.checkBoxSpeakerStyle.Size = new System.Drawing.Size(246, 17);
+            this.checkBoxSpeakerStyle.TabIndex = 10;
+            this.checkBoxSpeakerStyle.Text = "Dual Speakers: Use a hyphen without a space";
+            this.checkBoxSpeakerStyle.UseVisualStyleBackColor = true;
+            this.checkBoxSpeakerStyle.CheckedChanged += new System.EventHandler(this.RuleCheckedChanged);
             // 
             // checkBoxTwoLinesMax
             // 
@@ -431,7 +431,7 @@
         private System.Windows.Forms.CheckBox checkBoxWriteOutOneToTen;
         private System.Windows.Forms.CheckBox checkBoxSpellOutStartNumbers;
         private System.Windows.Forms.CheckBox checkBoxSquareBracketForHi;
-        private System.Windows.Forms.CheckBox checkBoxDialogHypenNoSpace;
+        private System.Windows.Forms.CheckBox checkBoxSpeakerStyle;
         private System.Windows.Forms.CheckBox checkBoxTwoLinesMax;
         private System.Windows.Forms.CheckBox checkBoxMinDuration;
         private System.Windows.Forms.CheckBox checkBoxMaxDuration;
