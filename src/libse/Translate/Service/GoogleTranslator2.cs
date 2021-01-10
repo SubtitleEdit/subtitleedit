@@ -19,6 +19,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
         {
             return "Google Translate Cloud V2 API";
         }
+
         public int GetMaxTextSize()
         {
             return 1000; //brummochse: this value was the old translation method call. idk if this is really the correct value

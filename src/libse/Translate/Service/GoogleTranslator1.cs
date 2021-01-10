@@ -100,7 +100,6 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
             }
 
             return resultList;
-
         }
 
         private static List<string> ProcessPostFormattings(List<string> lines, string targetLanguage, List<Formatting> formatList)

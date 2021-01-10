@@ -35,14 +35,13 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
 
         public List<TranslationPair> GetSupportedSourceLanguages()
         {
-            return this.GetTranslationPairs();
+            return GetTranslationPairs();
         }
 
         public List<TranslationPair> GetSupportedTargetLanguages()
         {
-            return this.GetTranslationPairs();
+            return GetTranslationPairs();
         }
-
 
         public string GetUrl()
         {
@@ -172,7 +171,5 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
                 new TranslationPair("ZULU", "zu"),
             };
         }
-
-        
     }
 }
