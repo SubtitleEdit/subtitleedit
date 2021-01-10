@@ -13,7 +13,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
     public class LibMpvDynamic : VideoPlayer, IDisposable
     {
 
-        #region mpv dll methods - see https://github.com/mpv-player/mpv/blob/master/libmpv/client.h
+        #region LibMpv methods - see https://github.com/mpv-player/mpv/blob/master/libmpv/client.h
+
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate IntPtr MpvCreate();
         private MpvCreate _mpvCreate;
