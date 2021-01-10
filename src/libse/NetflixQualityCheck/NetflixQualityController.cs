@@ -26,6 +26,10 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
             {
                 if (!string.IsNullOrEmpty(Language))
                 {
+                    if (Language == "nl") // Dutch
+                    {
+                        return 17;
+                    }
                     if (Language == "ko") // Korean
                     {
                         return 12;

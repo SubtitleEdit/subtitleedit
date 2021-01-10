@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
     public class NetflixCheckMaxCps : INetflixQualityChecker
     {
         /// <summary>
-        /// Speed - max 17 (for most languages) characters per second
+        /// Speed - max 20 (for most languages) characters per second
         /// </summary>
         public void Check(Subtitle subtitle, NetflixQualityController controller)
         {
