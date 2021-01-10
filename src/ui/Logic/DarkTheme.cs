@@ -243,8 +243,8 @@ namespace Nikse.SubtitleEdit.Logic
             if (c is SubtitleListView seLV)
             {
                 seLV.OwnerDraw = true;
-                seLV.DrawColumnHeader += ListView_DrawColumnHeader;
                 seLV.GridLines = Configuration.Settings.General.DarkThemeShowListViewGridLines;
+                seLV.DrawColumnHeader += ListView_DrawColumnHeader;
                 seLV.HandleCreated += ListView_HandleCreated;
                 SetWindowThemeDark(seLV);
             }
@@ -255,6 +255,7 @@ namespace Nikse.SubtitleEdit.Logic
                 lv.DrawItem += ListView_DrawItem;
                 lv.DrawSubItem += ListView_DrawSubItem;
                 lv.DrawColumnHeader += ListView_DrawColumnHeader;
+                lv.EnabledChanged += ListView_EnabledChanged;
                 lv.HandleCreated += ListView_HandleCreated;
             }
         }
@@ -374,7 +375,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 if (e.Item.Selected)
                 {
-                    var subtitleFont = UiUtil.GetDefaultFont();
+                    var subtitleFont = e.Item.Font;
                     Rectangle rect = e.Bounds;
                     if (Configuration.Settings != null)
                     {
@@ -423,14 +424,10 @@ namespace Nikse.SubtitleEdit.Logic
                 return;
             }
 
-            int addY;
-            if (sender is SubtitleListView)
+            int addY = 0;
+            if (e.Font.Name != Configuration.Settings.General.SubtitleFontName)
             {
-                addY = 0;
-            }
-            else
-            {
-                addY = 4;
+                addY = 5;
             }
 
             e.DrawDefault = false;
@@ -457,6 +454,23 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     e.Graphics.DrawLine(new Pen(ForeColor), e.Bounds.X, e.Bounds.Y, e.Bounds.X, e.Bounds.Height);
                 }
+            }
+        }
+
+        // A hack to set the disabled backcolor of a ListView
+        private static void ListView_EnabledChanged(object sender, EventArgs e)
+        {
+            var listView = sender as ListView;
+            if (!listView.Enabled)
+            {
+                Bitmap disabledBackgroundImage = new Bitmap(listView.ClientSize.Width, listView.ClientSize.Height);
+                Graphics.FromImage(disabledBackgroundImage).Clear(Color.DimGray);
+                listView.BackgroundImage = disabledBackgroundImage;
+                listView.BackgroundImageTiled = true;
+            }
+            else if (listView.BackgroundImage != null)
+            {
+                listView.BackgroundImage = null;
             }
         }
 

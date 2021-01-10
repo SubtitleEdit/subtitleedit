@@ -22,6 +22,11 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
+            if (Configuration.Settings.General.UseDarkTheme)
+            {
+                listViewTranslate.GridLines = Configuration.Settings.General.DarkThemeShowListViewGridLines;
+            }
+
             Text = LanguageSettings.Current.GoogleTranslate.AutoTranslateViaCopyPaste;
             labelMaxTextSize.Text = LanguageSettings.Current.GoogleTranslate.CopyPasteMaxSize;
             checkBoxAutoCopyToClipboard.Text = LanguageSettings.Current.GoogleTranslate.AutoCopyToClipboard;
