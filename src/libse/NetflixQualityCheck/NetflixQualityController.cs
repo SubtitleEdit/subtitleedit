@@ -144,7 +144,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                     case "vi": // Vietnamese
                         return DialogType.DashBothLinesWithSpace;
                     case "nl": // Dutch
-                    case "fo": // Finnish
+                    case "fi": // Finnish
                     case "he": // Hebrew
                     case "sr": // Serbian
                         return DialogType.DashSecondLineWithoutSpace;
