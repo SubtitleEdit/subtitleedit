@@ -3,12 +3,11 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 {
+    /// <summary>
+    /// Two frames gap minimum.
+    /// </summary>
     public class NetflixCheckTwoFramesGap : INetflixQualityChecker
     {
-
-        /// <summary>
-        /// Two frames gap minimum
-        /// </summary>
         public void Check(Subtitle subtitle, NetflixQualityController controller)
         {
             if (controller.Language == "ja")

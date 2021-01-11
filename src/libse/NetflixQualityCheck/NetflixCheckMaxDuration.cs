@@ -2,12 +2,11 @@
 
 namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 {
+    /// <summary>
+    /// Maximum duration: 7 seconds per subtitle event.
+    /// </summary>
     public class NetflixCheckMaxDuration : INetflixQualityChecker
     {
-
-        /// <summary>
-        /// Maximum duration: 7 seconds per subtitle event
-        /// </summary>
         public void Check(Subtitle subtitle, NetflixQualityController controller)
         {
             foreach (Paragraph p in subtitle.Paragraphs)
