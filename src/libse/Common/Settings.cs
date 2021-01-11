@@ -15,7 +15,6 @@ namespace Nikse.SubtitleEdit.Core.Common
     // ...but the built-in serialization is too slow - so a custom (de-)serialization has been used!
 
     public class RecentFileEntry
-
     {
         public string FileName { get; set; }
         public string OriginalFileName { get; set; }

@@ -12,18 +12,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 {
     public class LibVlcDynamic : VideoPlayer, IDisposable
     {
-        private Timer _videoLoadedTimer;
-        private Timer _videoEndTimer;
-        private Timer _mouseTimer;
-
-        private IntPtr _libVlcDll;
-        private IntPtr _libVlc;
-        private IntPtr _mediaPlayer;
-        private Control _ownerControl;
-        private Form _parentForm;
-        private double? _pausePosition; // Hack to hold precise seeking when paused
-        private int _volume = -1;
-        private static readonly object DisposeLock = new object();
+        #region LibVlc methods
 
         // LibVLC Core - http://www.videolan.org/developers/vlc/doc/doxygen/html/group__libvlc__core.html
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -159,7 +148,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private libvlc_media_player_next_frame _libvlc_media_player_next_frame;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int libvlc_media_player_add_slave(IntPtr media, int type, byte[] filePath, bool select);
+        private delegate int libvlc_media_player_add_slave(IntPtr mediaPlayer, int type, byte[] filePath, bool select);
         private libvlc_media_player_add_slave _libvlc_media_player_add_slave;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -190,6 +179,21 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         /// <param name="picture">Private pointer returned from the LockCallback callback</param>
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void DisplayCallbackDelegate(IntPtr opaque, IntPtr picture);
+
+        #endregion
+
+        private Timer _videoLoadedTimer;
+        private Timer _videoEndTimer;
+        private Timer _mouseTimer;
+
+        private IntPtr _libVlcDll;
+        private IntPtr _libVlc;
+        private IntPtr _mediaPlayer;
+        private Control _ownerControl;
+        private Form _parentForm;
+        private double? _pausePosition; // Hack to hold precise seeking when paused
+        private int _volume = -1;
+        private static readonly object DisposeLock = new object();
 
         private object GetDllType(Type type, string name)
         {
