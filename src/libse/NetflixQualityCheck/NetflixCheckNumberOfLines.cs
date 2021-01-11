@@ -3,13 +3,12 @@ using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 {
+    /// <summary>
+    /// Two lines maximum.
+    /// Text should usually be kept to one line, unless it exceeds the character limitation.
+    /// </summary>
     public class NetflixCheckNumberOfLines : INetflixQualityChecker
     {
-
-        /// <summary>
-        /// Two lines maximum
-        /// Text should be on one line if it fits
-        /// </summary>
         public void Check(Subtitle subtitle, NetflixQualityController controller)
         {
             foreach (Paragraph p in subtitle.Paragraphs)

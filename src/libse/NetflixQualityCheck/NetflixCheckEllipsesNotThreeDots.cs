@@ -2,12 +2,11 @@
 
 namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 {
+    /// <summary>
+    /// When including ellipses in subtitles, use the single smart character (U+2026) as opposed to three dots/periods in a row.
+    /// </summary>
     public class NetflixCheckEllipsesNotThreeDots : INetflixQualityChecker
     {
-
-        /// <summary>
-        /// When including ellipses in subtitles, use the single smart character (U+2026) as opposed to three dots/periods in a row.
-        /// </summary>
         public void Check(Subtitle subtitle, NetflixQualityController controller)
         {
             string comment = "Use the single smart character (U+2026) as opposed to three dots/periods in a row";

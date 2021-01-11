@@ -3,16 +3,19 @@ using Nikse.SubtitleEdit.Core.Enums;
 
 namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 {
+    /// <summary>
+    /// Check speaker style depending on the language.
+    /// </summary>
     public class NetflixCheckDialogHyphenSpace : INetflixQualityChecker
     {
-
-        /// <summary>
-        /// Check speaker style depending on the language
-        /// </summary>
         public void Check(Subtitle subtitle, NetflixQualityController controller)
         {
-            var dialogHelper = new DialogSplitMerge { DialogStyle = controller.SpeakerStyle };
+            if (controller.Language == "ja")
+            {
+                return;
+            }
 
+            var dialogHelper = new DialogSplitMerge { DialogStyle = controller.SpeakerStyle };
             string comment = "Dual Speakers: Use a hyphen without a space";
             if (controller.SpeakerStyle == DialogType.DashBothLinesWithSpace)
             {

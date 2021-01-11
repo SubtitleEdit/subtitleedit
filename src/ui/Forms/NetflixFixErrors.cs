@@ -93,7 +93,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             checkBoxSpeakerStyle.Text = checkBoxSpeakerStyleText;
 
-            checkBox20CharsPerSecond.Text = string.Format(LanguageSettings.Current.NetflixQualityCheck.MaximumXCharsPerSecond, _netflixQualityController.CharactersPerSecond);
+            checkBox17CharsPerSecond.Text = string.Format(LanguageSettings.Current.NetflixQualityCheck.MaximumXCharsPerSecond, _netflixQualityController.CharactersPerSecond);
             checkBoxMaxLineLength.Text = string.Format(LanguageSettings.Current.NetflixQualityCheck.MaximumLineLength, _netflixQualityController.SingleLineMaxLength);
         }
 
@@ -137,9 +137,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelTotal.Text = string.Format(LanguageSettings.Current.NetflixQualityCheck.FoundXIssues, _netflixQualityController.Records.Count);
             linkLabelOpenReportFolder.Left = labelTotal.Left + labelTotal.Width + 15;
             linkLabelOpenReportFolder.Text = LanguageSettings.Current.NetflixQualityCheck.OpenReportInFolder;
-
-            var charactersPerSecond = checkBoxChildrenProgram.Checked ? _netflixQualityController.CharactersPerSecond - 3 : _netflixQualityController.CharactersPerSecond;
-            checkBox20CharsPerSecond.Text = string.Format(LanguageSettings.Current.NetflixQualityCheck.MaximumXCharsPerSecond, charactersPerSecond);
+            checkBox17CharsPerSecond.Text = string.Format(LanguageSettings.Current.NetflixQualityCheck.MaximumXCharsPerSecond, _netflixQualityController.CharactersPerSecond);
 
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
@@ -200,9 +198,9 @@ namespace Nikse.SubtitleEdit.Forms
                 list.Add(new NetflixCheckMaxDuration());
             }
 
-            if (checkBox20CharsPerSecond.Checked)
+            if (checkBox17CharsPerSecond.Checked)
             {
-                list.Add(new NetflixCheckMaxCps(checkBoxChildrenProgram.Checked));
+                list.Add(new NetflixCheckMaxCps());
             }
 
             if (checkBoxGapMin.Checked)
@@ -289,6 +287,13 @@ namespace Nikse.SubtitleEdit.Forms
             var languageItem = (LanguageItem)comboBoxLanguage.Items[comboBoxLanguage.SelectedIndex];
             RefreshCheckBoxes(languageItem.Code.TwoLetterISOLanguageName);
             _loading = false;
+            RuleCheckedChanged(null, null);
+        }
+
+        private void ReadingSpeedChanged(object sender, EventArgs e)
+        {
+            _netflixQualityController.IsChildrenProgram = checkBoxChildrenProgram.Checked;
+            _netflixQualityController.IsSDH = checkBoxSDH.Checked;
             RuleCheckedChanged(null, null);
         }
 

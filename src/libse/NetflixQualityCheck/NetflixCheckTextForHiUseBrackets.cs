@@ -3,12 +3,11 @@ using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 {
+    /// <summary>
+    /// Use brackets[] to enclose speaker IDs or sound effects.
+    /// </summary>
     public class NetflixCheckTextForHiUseBrackets : INetflixQualityChecker
     {
-
-        /// <summary>
-        /// Use brackets[] to enclose speaker IDs or sound effects
-        /// </summary>
         public void Check(Subtitle subtitle, NetflixQualityController controller)
         {
             if (controller.Language == "jp")
