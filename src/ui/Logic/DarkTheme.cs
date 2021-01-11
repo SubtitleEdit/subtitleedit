@@ -225,7 +225,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
-            if (c is TreeView || c is ListBox)
+            if (c is TreeView || c is ListBox || c is TextBox || c is RichTextBox)
             {
                 SetWindowThemeDark(c);
             }
