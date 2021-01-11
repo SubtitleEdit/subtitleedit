@@ -742,6 +742,16 @@ Command line: {1} {2}
     <ProcessorMergeNext>最多合并2行</ProcessorMergeNext>
     <ProcessorSentence>合并句子</ProcessorSentence>
     <ProcessorSingle>不合并</ProcessorSingle>
+    <AutoTranslateViaCopyPaste>通过复制粘贴自动翻译</AutoTranslateViaCopyPaste>
+    <CopyPasteMaxSize>最大块大小</CopyPasteMaxSize>
+    <AutoCopyToClipboard>自动复制到剪贴板</AutoCopyToClipboard>
+    <AutoCopyLineSeparator>行分离器</AutoCopyLineSeparator>
+    <TranslateBlockXOfY>翻译块{0}/{1}</TranslateBlockXOfY>
+    <TranslateBlockInfo>转到翻译器并粘贴文本，将结果复制回剪贴板，然后单击下面的按钮</TranslateBlockInfo>
+    <TranslateBlockGetFromClipboard>从剪贴板获取翻译(Ctrl + V)</TranslateBlockGetFromClipboard>
+    <TranslateBlockCopySourceText>复制源文本到剪贴板</TranslateBlockCopySourceText>
+    <TranslateBlockClipboardError1>剪贴板内包含源文本！</TranslateBlockClipboardError1>
+    <TranslateBlockClipboardError2>转到翻译器，将结果复制到剪贴板，然后再次单击此按钮。</TranslateBlockClipboardError2>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>谷歌 与 微软 翻译</Title>
@@ -1123,6 +1133,7 @@ Command line: {1} {2}
       <AutoTranslate>
         <Title>自动翻译(&amp;A)</Title>
         <AutoTranslate>自动翻译…</AutoTranslate>
+        <AutoTranslateViaCopyPaste>通过复制粘贴自动翻译…</AutoTranslateViaCopyPaste>
       </AutoTranslate>
       <Options>
         <Title>选项(&amp;O)</Title>
