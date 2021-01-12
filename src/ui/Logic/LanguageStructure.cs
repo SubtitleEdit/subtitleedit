@@ -261,14 +261,20 @@
             public string SetText { get; set; }
             public string QuickOcr { get; set; }
             public string ResizeBitmaps { get; set; }
+            public string ChangeBrightness { get; set; }
             public string ResizeBitmapsForSelectedLines { get; set; }
             public string ChangeColorForSelectedLines { get; set; }
+            public string ChangeBrightnessForSelectedLines { get; set; }
             public string AlignSelectedLines { get; set; }
             public string CenterSelectedLines { get; set; }
             public string TopAlignSelectedLines { get; set; }
             public string BottomAlignSelectedLines { get; set; }
             public string SizeXY { get; set; }
             public string SetAspectRatio11 { get; set; }
+            public string ChangeBrightnessTitle { get; set; }
+            public string BrightnessX { get; set; }
+            public string ResizeTitle { get; set; }
+            public string ResizeX { get; set; }
         }
 
         public class Bookmarks

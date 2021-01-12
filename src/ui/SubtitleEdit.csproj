@@ -136,6 +136,12 @@
     <Compile Include="Forms\BinaryEdit\BinEditNewText.Designer.cs">
       <DependentUpon>BinEditNewText.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\BinaryEdit\BinEditBrightness.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BinaryEdit\BinEditBrightness.Designer.cs">
+      <DependentUpon>BinEditBrightness.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\BinaryEdit\BinEditResize.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1199,6 +1205,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BinaryEdit\BinEditNewText.resx">
       <DependentUpon>BinEditNewText.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BinaryEdit\BinEditBrightness.resx">
+      <DependentUpon>BinEditBrightness.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BinaryEdit\BinEditResize.resx">
       <DependentUpon>BinEditResize.cs</DependentUpon>

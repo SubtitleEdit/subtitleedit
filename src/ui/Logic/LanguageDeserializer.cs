@@ -670,11 +670,17 @@ namespace Nikse.SubtitleEdit.Logic
                 case "BinEdit/ResizeBitmaps":
                     language.BinEdit.ResizeBitmaps = reader.Value;
                     break;
+                case "BinEdit/ChangeBrightness":
+                    language.BinEdit.ChangeBrightness = reader.Value;
+                    break;
                 case "BinEdit/ResizeBitmapsForSelectedLines":
                     language.BinEdit.ResizeBitmapsForSelectedLines = reader.Value;
                     break;
                 case "BinEdit/ChangeColorForSelectedLines":
                     language.BinEdit.ChangeColorForSelectedLines = reader.Value;
+                    break;
+                case "BinEdit/ChangeBrightnessForSelectedLines":
+                    language.BinEdit.ChangeBrightnessForSelectedLines = reader.Value;
                     break;
                 case "BinEdit/AlignSelectedLines":
                     language.BinEdit.AlignSelectedLines = reader.Value;
@@ -693,6 +699,18 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "BinEdit/SetAspectRatio11":
                     language.BinEdit.SetAspectRatio11 = reader.Value;
+                    break;
+                case "BinEdit/ChangeBrightnessTitle":
+                    language.BinEdit.ChangeBrightnessTitle = reader.Value;
+                    break;
+                case "BinEdit/BrightnessX":
+                    language.BinEdit.BrightnessX = reader.Value;
+                    break;
+                case "BinEdit/ResizeTitle":
+                    language.BinEdit.ResizeTitle = reader.Value;
+                    break;
+                case "BinEdit/ResizeX":
+                    language.BinEdit.ResizeX = reader.Value;
                     break;
                 case "Bookmarks/EditBookmark":
                     language.Bookmarks.EditBookmark = reader.Value;

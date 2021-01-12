@@ -1,5 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Logic;
+﻿using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -26,13 +25,18 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             FixAlignment = true;
             Alignment = ContentAlignment.BottomCenter;
             checkBoxFixAlignment.Checked = true;
+
+            Text = LanguageSettings.Current.BinEdit.ResizeTitle;
+            labelResize.Text = string.Format(LanguageSettings.Current.BinEdit.ResizeX, trackBarResize.Value);
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
         private void trackBarResize_Scroll(object sender, EventArgs e)
         {
             Factor = trackBarResize.Value / 100.0m;
-            labelResize.Text = "Resize in % - " + trackBarResize.Value + "%";
+            labelResize.Text = string.Format(LanguageSettings.Current.BinEdit.ResizeX, trackBarResize.Value);
             var bmp = ExportPngXml.ResizeBitmap(_bitmap, (int)Math.Round(_bitmap.Width * Factor), (int)Math.Round(_bitmap.Height * Factor));
             pictureBoxResized.Image?.Dispose();
             pictureBoxResized.Image = bmp;
