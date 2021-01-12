@@ -1,5 +1,5 @@
-﻿using System.Text.RegularExpressions;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 {
@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                     AddWhiteSpaceWarning(p, controller, m.Index + 1);
                 }
 
-                // 2+ consequent spaces
+                // 2+ consecutive spaces
                 foreach (Match m in TwoPlusConsequentSpaces.Matches(p.Text))
                 {
                     AddWhiteSpaceWarning(p, controller, m.Index);

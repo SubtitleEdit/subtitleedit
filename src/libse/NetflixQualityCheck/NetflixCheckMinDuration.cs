@@ -3,12 +3,11 @@ using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 {
+    /// <summary>
+    /// Minimum duration: 5/6 second (833 ms) - also see https://github.com/SubtitleEdit/plugins/issues/129
+    /// </summary>
     public class NetflixCheckMinDuration : INetflixQualityChecker
     {
-
-        /// <summary>
-        /// Minimum duration: 5/6 second (833 ms) - also see https://github.com/SubtitleEdit/plugins/issues/129
-        /// </summary>
         public void Check(Subtitle subtitle, NetflixQualityController controller)
         {
             for (int index = 0; index < subtitle.Paragraphs.Count; index++)

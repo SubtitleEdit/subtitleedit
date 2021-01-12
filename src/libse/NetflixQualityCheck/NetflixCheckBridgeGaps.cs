@@ -3,12 +3,12 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 {
+    /// <summary>
+    /// Close gaps between subtitles of 3-11 frames (inclusive) to 2 frames.
+    /// https://partnerhelp.netflixstudios.com/hc/en-us/articles/360051554394-Timed-Text-Style-Guide-Subtitle-Timing-Guidelines
+    /// </summary>
     public class NetflixCheckBridgeGaps : INetflixQualityChecker
     {
-        /// <summary>
-        /// Close gaps between subtitles of 3-11 frames (inclusive) to 2 frames.
-        /// https://partnerhelp.netflixstudios.com/hc/en-us/articles/360051554394-Timed-Text-Style-Guide-Subtitle-Timing-Guidelines
-        /// </summary>
         public void Check(Subtitle subtitle, NetflixQualityController controller)
         {
             if (controller.Language == "ja")

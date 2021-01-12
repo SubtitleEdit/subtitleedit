@@ -6,12 +6,12 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 {
+    /// <summary>
+    /// Check the newly-updated timing to Shot Changes rules.
+    /// https://partnerhelp.netflixstudios.com/hc/en-us/articles/360051554394-Timed-Text-Style-Guide-Subtitle-Timing-Guidelines
+    /// </summary>
     public class NetflixCheckSceneChange : INetflixQualityChecker
     {
-        /// <summary>
-        /// Check the newly-updated timing to Shot Changes rules.
-        /// https://partnerhelp.netflixstudios.com/hc/en-us/articles/360051554394-Timed-Text-Style-Guide-Subtitle-Timing-Guidelines
-        /// </summary>
         public void Check(Subtitle subtitle, NetflixQualityController controller)
         {
             if (!controller.VideoExists)

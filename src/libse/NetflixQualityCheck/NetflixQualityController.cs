@@ -1,41 +1,104 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 {
     public class NetflixQualityController
     {
-
         /// <summary>
         /// Two letter language code (e.g. "en" is English)
         /// </summary>
-
-        public string VideoFileName { get; set; } = string.Empty;
-        
         public string Language { get; set; } = "en";
 
         public double FrameRate { get; set; } = 24;
+        public string VideoFileName { get; set; }
+        public bool VideoExists => !string.IsNullOrEmpty(VideoFileName);
+
+        public bool IsChildrenProgram { get; set; }
+        public bool IsSDH { get; set; }
 
         public int CharactersPerSecond
         {
             get
             {
-                if (!string.IsNullOrEmpty(Language))
+                if (IsChildrenProgram && IsSDH)
                 {
-                    if (Language == "ko") // Korean
+                    switch (Language)
                     {
-                        return 12;
-                    }
-                    if (Language == "zh") // Chinese
-                    {
-                        return 9;
+                        case "ar": // Arabic
+                        case "hi": // Hindi
+                            return 20;
+                        case "ja": // Japanese
+                            return 7;
+                        case "ko": // Korean
+                            return 11;
+                        case "zh": // Chinese
+                            return 9;
+                        default:
+                            return 17;
                     }
                 }
-                return 20;
+                else if (IsChildrenProgram)
+                {
+                    switch (Language)
+                    {
+                        case "ar": // Arabic
+                        case "en": // English
+                            return 17;
+                        case "hi": // Hindi
+                            return 18;
+                        case "ja": // Japanese
+                            return 4;
+                        case "ko": // Korean
+                            return 9;
+                        case "zh": // Chinese
+                            return 7;
+                        default:
+                            return 13;
+                    }
+                }
+                else if (IsSDH)
+                {
+                    switch (Language)
+                    {
+                        case "ar": // Arabic
+                            return 23;
+                        case "hi": // Hindi
+                            return 25;
+                        case "ja": // Japanese
+                            return 7;
+                        case "ko": // Korean
+                            return 14;
+                        case "zh": // Chinese
+                            return 11;
+                        default:
+                            return 20;
+                    }
+                }
+                else
+                {
+                    switch (Language)
+                    {
+                        case "ar": // Arabic
+                        case "en": // English
+                            return 20;
+                        case "hi": // Hindi
+                            return 22;
+                        case "ja": // Japanese
+                            return 4;
+                        case "ko": // Korean
+                            return 12;
+                        case "zh": // Chinese
+                            return 9;
+                        default:
+                            return 17;
+                    }
+                }
             }
         }
 
@@ -43,22 +106,53 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
         {
             get
             {
-                if (!string.IsNullOrEmpty(Language))
+                switch (Language)
                 {
-                    if (Language == "ja") // Japanese
-                    {
+                    case "ja": // Japanese
                         return 23;
-                    }
-                    if (Language == "ko") // Korean
-                    {
+                    case "th": // Thai
+                        return 35;
+                    case "ko": // Korean
+                    case "zh": // Chinese
                         return 16;
-                    }
-                    if (Language == "zh") // Chinese
-                    {
-                        return 16;
-                    }
+                    default:
+                        return 42;
                 }
-                return 42;
+            }
+        }
+
+        public DialogType SpeakerStyle
+        {
+            get
+            {
+                switch (Language)
+                {
+                    case "ar": // Arabic
+                    case "cs": // Czech
+                    case "fr": // French
+                    case "hu": // Hungarian
+                    case "in": // Indonesian
+                    case "it": // Italian
+                    case "ko": // Korean
+                    case "ms": // Malay
+                    case "pl": // Polish
+                    case "ro": // Romanian
+                    case "ru": // Russian
+                    case "sk": // Slovak
+                    case "es": // Spanish
+                    case "th": // Thai
+                    case "vi": // Vietnamese
+                        return DialogType.DashBothLinesWithSpace;
+                    case "nl": // Dutch
+                    case "fi": // Finnish
+                    case "he": // Hebrew
+                    case "sr": // Serbian
+                        return DialogType.DashSecondLineWithoutSpace;
+                    case "bg": // Bulgarian 
+                        return DialogType.DashSecondLineWithSpace;
+                    default:
+                        return DialogType.DashBothLinesWithoutSpace;
+                }
             }
         }
 
@@ -68,53 +162,22 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
             {
                 if (!string.IsNullOrEmpty(Language))
                 {
-                    if (Language == "ko") // Korean
-                    {
-                        return false;
-                    }
-                    if (Language == "zh") // Chinese
-                    {
-                        return false;
-                    }
                     if (Language == "ar") // Arabic
                     {
                         return false;
                     }
-                }
-                return true;
-            }
-        }
-
-        public bool DualSpeakersHasHyphenAndNoSpace
-        {
-            get
-            {
-                if (!string.IsNullOrEmpty(Language))
-                {
-                    if (Language == "cs") // Czech
+                    else if (Language == "ko") // Korean
                     {
                         return false;
                     }
-                    if (Language == "fr") // French
-                    {
-                        return false;
-                    }
-                    if (Language == "ko") // Korean
-                    {
-                        return false;
-                    }
-                    if (Language == "ar") // Arabic
+                    else if (Language == "zh") // Chinese
                     {
                         return false;
                     }
                 }
+
                 return true;
             }
-        }
-
-        public bool VideoExists
-        {
-            get => string.IsNullOrEmpty(VideoFileName) ? false : true;
         }
 
         public class Record

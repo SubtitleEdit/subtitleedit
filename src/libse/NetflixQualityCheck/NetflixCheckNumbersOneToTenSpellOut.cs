@@ -4,14 +4,14 @@ using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 {
+    /// <summary>
+    /// From 1 to 10, numbers should be written out: one, two, three, etc.
+    /// </summary>
     public class NetflixCheckNumbersOneToTenSpellOut : INetflixQualityChecker
     {
         private static readonly Regex NumberOneToNine = new Regex(@"\b\d\b", RegexOptions.Compiled);
         private static readonly Regex NumberTen = new Regex(@"\b10\b", RegexOptions.Compiled);
 
-        /// <summary>
-        /// From 1 to 10, numbers should be written out: one, two, three, etc.
-        /// </summary>
         public void Check(Subtitle subtitle, NetflixQualityController controller)
         {
             if (controller.Language == "ja" || controller.Language == "ar")

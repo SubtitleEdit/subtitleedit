@@ -1,21 +1,23 @@
-﻿using System;
-using System.Globalization;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 {
+    /// <summary>
+    /// Reading speed - depends on the language.
+    /// </summary>
     public class NetflixCheckMaxCps : INetflixQualityChecker
     {
-        /// <summary>
-        /// Speed - max 17 (for most languages) characters per second
-        /// </summary>
         public void Check(Subtitle subtitle, NetflixQualityController controller)
         {
             var oldIgnoreWhiteSpace = Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace;
             try
             {
                 Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace = false;
+
+                int charactersPerSecond = controller.CharactersPerSecond;
+                string comment = "Maximum " + charactersPerSecond + " characters per second";
                 foreach (Paragraph p in subtitle.Paragraphs)
                 {
                     var jp = new Paragraph(p);
@@ -24,15 +26,16 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                         jp.Text = HtmlUtil.RemoveHtmlTags(jp.Text, true);
                         jp.Text = NetflixImsc11Japanese.RemoveTags(jp.Text);
                     }
+
                     var charactersPerSeconds = Utilities.GetCharactersPerSecond(jp);
-                    if (charactersPerSeconds > controller.CharactersPerSecond && !p.StartTime.IsMaxTime)
+                    if (charactersPerSeconds > charactersPerSecond && !p.StartTime.IsMaxTime)
                     {
                         var fixedParagraph = new Paragraph(p, false);
-                        while (Utilities.GetCharactersPerSecond(fixedParagraph) > controller.CharactersPerSecond)
+                        while (Utilities.GetCharactersPerSecond(fixedParagraph) > charactersPerSecond)
                         {
                             fixedParagraph.EndTime.TotalMilliseconds++;
                         }
-                        string comment = "Maximum " + controller.CharactersPerSecond  + " characters per second";
+                        
                         controller.AddRecord(p, fixedParagraph, comment, charactersPerSeconds.ToString(CultureInfo.InvariantCulture));
                     }
                 }
