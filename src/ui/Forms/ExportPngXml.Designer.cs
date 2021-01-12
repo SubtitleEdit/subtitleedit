@@ -142,7 +142,7 @@
             // 
             this.buttonExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonExport.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonExport.Location = new System.Drawing.Point(768, 597);
+            this.buttonExport.Location = new System.Drawing.Point(762, 597);
             this.buttonExport.Name = "buttonExport";
             this.buttonExport.Size = new System.Drawing.Size(126, 23);
             this.buttonExport.TabIndex = 6;
@@ -168,7 +168,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBar1.Location = new System.Drawing.Point(12, 599);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(750, 21);
+            this.progressBar1.Size = new System.Drawing.Size(744, 21);
             this.progressBar1.TabIndex = 5;
             this.progressBar1.Visible = false;
             // 
