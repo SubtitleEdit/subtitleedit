@@ -39,6 +39,9 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             SetFontSize();
             _loading = false;
             textBoxText.Text = text;
+
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 

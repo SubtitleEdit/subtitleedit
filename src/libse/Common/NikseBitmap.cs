@@ -1493,7 +1493,6 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return true;
             }
 
-
             for (int i = 0; i < _bitmapData.Length; i++)
             {
                 if (_bitmapData[i] != bitmap._bitmapData[i])
@@ -1517,6 +1516,34 @@ namespace Nikse.SubtitleEdit.Core.Common
                 if (_bitmapData[i + 3] == 0)
                 {
                     Buffer.BlockCopy(buffer, 0, _bitmapData, i, 4);
+                }
+            }
+        }
+
+        public void ChangeBrightness(decimal factor)
+        {
+            if (factor > 1)
+            {
+                for (int i = 0; i < _bitmapData.Length; i += 4)
+                {
+                    int r = _bitmapData[i + 2];
+                    int g = _bitmapData[i + 1];
+                    int b = _bitmapData[i];
+                    _bitmapData[i + 2] = (byte)Math.Min(byte.MaxValue, (int)(r * factor));
+                    _bitmapData[i + 1] = (byte)Math.Min(byte.MaxValue, (int)(g * factor));
+                    _bitmapData[i] = (byte)Math.Min(byte.MaxValue, (int)(b * factor));
+                }
+            }
+            else
+            {
+                for (int i = 0; i < _bitmapData.Length; i += 4)
+                {
+                    int r = _bitmapData[i + 2];
+                    int g = _bitmapData[i + 1];
+                    int b = _bitmapData[i];
+                    _bitmapData[i + 2] = (byte)Math.Max(0, (int)(r * factor));
+                    _bitmapData[i + 1] = (byte)Math.Max(0, (int)(g * factor));
+                    _bitmapData[i] = (byte)Math.Max(0, (int)(b * factor));
                 }
             }
         }

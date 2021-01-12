@@ -50,6 +50,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.trackBarResize.Name = "trackBarResize";
             this.trackBarResize.Size = new System.Drawing.Size(429, 45);
             this.trackBarResize.TabIndex = 0;
+            this.trackBarResize.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trackBarResize.Value = 100;
             this.trackBarResize.Scroll += new System.EventHandler(this.trackBarResize_Scroll);
             // 
