@@ -16701,19 +16701,17 @@ namespace Nikse.SubtitleEdit.Forms
 
             var prevGap = 0.0;
             var prev = _subtitle.GetParagraphOrDefault(i - 1);
+            var isClose = false;
             if (keepGapPrevIfClose && prev != null)
             {
-                if (prev.EndTime.TotalMilliseconds <= p.StartTime.TotalMilliseconds && prev.EndTime.TotalMilliseconds + 200 >= p.StartTime.TotalMilliseconds)
+                if (prev.EndTime.TotalMilliseconds <= p.StartTime.TotalMilliseconds && prev.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines >= p.StartTime.TotalMilliseconds)
                 {
+                    isClose = true;
                     prevGap = p.StartTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds;
                     if (ms < 0 && prev.Duration.TotalMilliseconds + ms < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
                     {
                         return;
                     }
-                }
-                else
-                {
-                    prev = null;
                 }
             }
 
@@ -16738,7 +16736,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                if (keepGapPrevIfClose || prev == null || p.StartTime.TotalMilliseconds - (Math.Abs(ms) + Configuration.Settings.General.MinimumMillisecondsBetweenLines) > prev.EndTime.TotalMilliseconds)
+                if (prev == null || keepGapPrevIfClose && isClose || p.StartTime.TotalMilliseconds - (Math.Abs(ms) + Configuration.Settings.General.MinimumMillisecondsBetweenLines) > prev.EndTime.TotalMilliseconds)
                 {
                     p.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + ms;
                 }
@@ -16758,7 +16756,7 @@ namespace Nikse.SubtitleEdit.Forms
             timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBoxTextChanged;
             SetDurationInSeconds(p.Duration.TotalSeconds);
 
-            if (keepGapPrevIfClose && prev != null)
+            if (keepGapPrevIfClose && isClose && prev != null)
             {
                 prev.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds - prevGap;
                 if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
@@ -16812,19 +16810,17 @@ namespace Nikse.SubtitleEdit.Forms
 
             var nextGap = 0.0;
             var next = _subtitle.GetParagraphOrDefault(i + 1);
+            var isClose = false;
             if (keepGapNextIfClose && next != null)
             {
-                if (next.StartTime.TotalMilliseconds >= p.EndTime.TotalMilliseconds && next.StartTime.TotalMilliseconds - 200 < p.EndTime.TotalMilliseconds)
+                if (p.EndTime.TotalMilliseconds <= next.StartTime.TotalMilliseconds && p.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines >= next.StartTime.TotalMilliseconds)
                 {
+                    isClose = true;
                     nextGap = next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds;
                     if (ms > 0 && next.Duration.TotalMilliseconds + ms < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
                     {
                         return;
                     }
-                }
-                else
-                {
-                    next = null;
                 }
             }
 
@@ -16835,7 +16831,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                if (keepGapNextIfClose || next == null || p.EndTime.TotalMilliseconds + ms + Configuration.Settings.General.MinimumMillisecondsBetweenLines < next.StartTime.TotalMilliseconds)
+                if (next == null || keepGapNextIfClose && isClose || p.EndTime.TotalMilliseconds + ms + Configuration.Settings.General.MinimumMillisecondsBetweenLines < next.StartTime.TotalMilliseconds)
                 {
                     p.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds + ms;
                 }
@@ -16864,7 +16860,7 @@ namespace Nikse.SubtitleEdit.Forms
             timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBoxTextChanged;
             SetDurationInSeconds(p.Duration.TotalSeconds);
 
-            if (keepGapNextIfClose && next != null)
+            if (keepGapNextIfClose && isClose && next != null)
             {
                 next.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds + nextGap;
                 if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
