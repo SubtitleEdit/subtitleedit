@@ -5,12 +5,11 @@ using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 {
+    /// <summary>
+    /// Maximum 42 chars per line for the majority of languages.
+    /// </summary>
     public class NetflixCheckMaxLineLength : INetflixQualityChecker
     {
-
-        /// <summary>
-        /// Maximum 42 chars per line for the majority of languages.
-        /// </summary>
         public void Check(Subtitle subtitle, NetflixQualityController controller)
         {
             foreach (var p in subtitle.Paragraphs)

@@ -50,7 +50,7 @@ namespace Test.Logic
         public void TestNetflixCheckDialogeHyphenNoSpace()
         {
             var sub = new Subtitle();
-            var p1 = new Paragraph("- Lorem ipsum dolor sit" + Environment.NewLine + "- nelit focasia venlit dokalalam dilars.", 0, 4000);
+            var p1 = new Paragraph("- Lorem ipsum dolor sit." + Environment.NewLine + "- Nelit focasia venlit dokalalam dilars.", 0, 4000);
             sub.Paragraphs.Add(p1);
             var p2 = new Paragraph("Lorem - ipsum.", 0, 1000);
             sub.Paragraphs.Add(p2);
@@ -61,14 +61,14 @@ namespace Test.Logic
             checker.Check(sub, controller);
 
             Assert.AreEqual(1, controller.Records.Count);
-            Assert.AreEqual(controller.Records[0].FixedParagraph.Text, "-Lorem ipsum dolor sit" + Environment.NewLine + "-nelit focasia venlit dokalalam dilars.");
+            Assert.AreEqual(controller.Records[0].FixedParagraph.Text, "-Lorem ipsum dolor sit." + Environment.NewLine + "-Nelit focasia venlit dokalalam dilars.");
         }
 
         [TestMethod]
         public void TestNetflixCheckDialogeHyphenNoSpaceItalic()
         {
             var sub = new Subtitle();
-            var p1 = new Paragraph("<i>- Lorem ipsum dolor sit</i>" + Environment.NewLine + "<i>- nelit focasia venlit dokalalam dilars.</i>", 0, 4000);
+            var p1 = new Paragraph("<i>- Lorem ipsum dolor sit.</i>" + Environment.NewLine + "<i>- Nelit focasia venlit dokalalam dilars.</i>", 0, 4000);
             sub.Paragraphs.Add(p1);
             var p2 = new Paragraph("Lorem - ipsum.", 0, 1000);
             sub.Paragraphs.Add(p2);
@@ -79,7 +79,7 @@ namespace Test.Logic
             checker.Check(sub, controller);
 
             Assert.AreEqual(1, controller.Records.Count);
-            Assert.AreEqual(controller.Records[0].FixedParagraph.Text, "<i>-Lorem ipsum dolor sit</i>" + Environment.NewLine + "<i>-nelit focasia venlit dokalalam dilars.</i>");
+            Assert.AreEqual(controller.Records[0].FixedParagraph.Text, "<i>-Lorem ipsum dolor sit.</i>" + Environment.NewLine + "<i>-Nelit focasia venlit dokalalam dilars.</i>");
         }
 
         [TestMethod]
@@ -196,7 +196,7 @@ namespace Test.Logic
         public void TestNetflixCheckNumberOfLines()
         {
             var sub = new Subtitle();
-            var p1 = new Paragraph("Lorem ipsum." + Environment.NewLine + "Line 2." + Environment.NewLine + "Line 3", 0, 832);
+            var p1 = new Paragraph("Lorem ipsum." + Environment.NewLine + "Line 2." + Environment.NewLine + "Line 3.", 0, 832);
             sub.Paragraphs.Add(p1);
             var p2 = new Paragraph("Lorem ipsum." + Environment.NewLine + "Line 2.", 0, 832);
             sub.Paragraphs.Add(p2);
@@ -209,7 +209,7 @@ namespace Test.Logic
             checker.Check(sub, controller);
 
             Assert.AreEqual(2, controller.Records.Count);
-            Assert.AreEqual(controller.Records[0].OriginalParagraph, p1);
+            Assert.AreEqual(controller.Records[0].FixedParagraph.Text, "Lorem ipsum. Line 2. Line 3.");
             Assert.AreEqual(controller.Records[1].FixedParagraph.Text, "Lorem ipsum. Line 2.");
         }
 

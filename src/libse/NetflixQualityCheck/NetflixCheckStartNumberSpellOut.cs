@@ -3,15 +3,15 @@ using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 {
+    /// <summary>
+    /// When a number begins a sentence, it should always be spelled out.
+    /// </summary>
     public class NetflixCheckStartNumberSpellOut : INetflixQualityChecker
     {
         private static readonly Regex NumberStart = new Regex(@"^\d+ [A-Za-z]", RegexOptions.Compiled);
         private static readonly Regex NumberStartInside = new Regex(@"[\.,!] \d+ [A-Za-z]", RegexOptions.Compiled);
         private static readonly Regex NumberStartInside2 = new Regex(@"[\.,!]\r\n\d+ [A-Za-z]", RegexOptions.Compiled);
 
-        /// <summary>
-        /// When a number begins a sentence, it should always be spelled out.
-        /// </summary>
         public void Check(Subtitle subtitle, NetflixQualityController controller)
         {
             foreach (Paragraph p in subtitle.Paragraphs)

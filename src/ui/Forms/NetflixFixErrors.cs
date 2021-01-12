@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.NetflixQualityCheck;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
@@ -27,6 +28,10 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
+            if (Configuration.Settings.General.UseDarkTheme)
+            {
+                listViewFixes.GridLines = Configuration.Settings.General.DarkThemeShowListViewGridLines;
+            }
 
             _subtitle = subtitle;
             _subtitleFormat = subtitleFormat;
@@ -71,7 +76,22 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxTtmlFrameRate.Checked = checkFrameRate;
             checkBoxTtmlFrameRate.Enabled = checkFrameRate;
 
-            checkBoxDialogHypenNoSpace.Text = !_netflixQualityController.DualSpeakersHasHyphenAndNoSpace ? "Dual Speakers: Use a hyphen with a space" : "Dual Speakers: Use a hyphen without a space";
+            var speakerStyle = _netflixQualityController.SpeakerStyle;
+            var checkBoxSpeakerStyleText = "Dual Speakers: Use a hyphen without a space";
+            if (speakerStyle == DialogType.DashBothLinesWithSpace)
+            {
+                checkBoxSpeakerStyleText = "Dual Speakers: Use a hyphen with a space";
+            }
+            else if (speakerStyle == DialogType.DashSecondLineWithSpace)
+            {
+                checkBoxSpeakerStyleText = "Dual Speakers: Use a hyphen with a space to denote the second speaker only";
+            }
+            else if (speakerStyle == DialogType.DashSecondLineWithoutSpace)
+            {
+                checkBoxSpeakerStyleText = "Dual Speakers: Use a hyphen without a space to denote the second speaker only";
+            }
+
+            checkBoxSpeakerStyle.Text = checkBoxSpeakerStyleText;
 
             checkBox17CharsPerSecond.Text = string.Format(LanguageSettings.Current.NetflixQualityCheck.MaximumXCharsPerSecond, _netflixQualityController.CharactersPerSecond);
             checkBoxMaxLineLength.Text = string.Format(LanguageSettings.Current.NetflixQualityCheck.MaximumLineLength, _netflixQualityController.SingleLineMaxLength);
@@ -117,6 +137,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelTotal.Text = string.Format(LanguageSettings.Current.NetflixQualityCheck.FoundXIssues, _netflixQualityController.Records.Count);
             linkLabelOpenReportFolder.Left = labelTotal.Left + labelTotal.Width + 15;
             linkLabelOpenReportFolder.Text = LanguageSettings.Current.NetflixQualityCheck.OpenReportInFolder;
+            checkBox17CharsPerSecond.Text = string.Format(LanguageSettings.Current.NetflixQualityCheck.MaximumXCharsPerSecond, _netflixQualityController.CharactersPerSecond);
+
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
             foreach (var record in _netflixQualityController.Records)
@@ -132,8 +154,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddFixToListView(Paragraph p, string action, string before, string after)
         {
-            var item = new ListViewItem(string.Empty) { Checked = true, Tag = p };
-            item.SubItems.Add(p.Number.ToString());
+            // This code should be used when the "Applt" function is added.
+            // var item = new ListViewItem(string.Empty) { Checked = true, Tag = p };
+            // item.SubItems.Add(p.Number.ToString());
+
+            var item = new ListViewItem(p.Number.ToString());
             item.SubItems.Add(action);
             item.SubItems.Add(before.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
             item.SubItems.Add(after.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
@@ -193,9 +218,14 @@ namespace Nikse.SubtitleEdit.Forms
                 list.Add(new NetflixCheckNumberOfLines());
             }
 
-            if (checkBoxDialogHypenNoSpace.Checked)
+            if (checkBoxSpeakerStyle.Checked)
             {
                 list.Add(new NetflixCheckDialogHyphenSpace());
+            }
+
+            if (checkBoxEllipsesNotThreeDots.Checked)
+            {
+                list.Add(new NetflixCheckEllipsesNotThreeDots());
             }
 
             if (checkBoxSquareBracketForHi.Checked)
@@ -257,6 +287,13 @@ namespace Nikse.SubtitleEdit.Forms
             var languageItem = (LanguageItem)comboBoxLanguage.Items[comboBoxLanguage.SelectedIndex];
             RefreshCheckBoxes(languageItem.Code.TwoLetterISOLanguageName);
             _loading = false;
+            RuleCheckedChanged(null, null);
+        }
+
+        private void ReadingSpeedChanged(object sender, EventArgs e)
+        {
+            _netflixQualityController.IsChildrenProgram = checkBoxChildrenProgram.Checked;
+            _netflixQualityController.IsSDH = checkBoxSDH.Checked;
             RuleCheckedChanged(null, null);
         }
 
