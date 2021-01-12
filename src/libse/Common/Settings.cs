@@ -1205,15 +1205,6 @@ $HorzAlign          =   Center
             DefaultFrameRate = 23.976;
             CurrentFrameRate = DefaultFrameRate;
             SubtitleFontName = "Tahoma";
-            if (Configuration.IsRunningOnLinux)
-            {
-                SubtitleFontName = Configuration.DefaultLinuxFontName;
-            }
-            else if (Environment.OSVersion.Version.Major < 6) // 6 == Vista/Win2008Server/Win7
-            {
-                SubtitleFontName = "Times New Roman";
-            }
-
             SubtitleTextBoxFontSize = 12;
             SubtitleListViewFontSize = 10;
             SubtitleTextBoxSyntaxColor = false;
@@ -1259,7 +1250,7 @@ $HorzAlign          =   Center
             SpellCheckLanguage = null;
             VideoPlayer = string.Empty;
             VideoPlayerDefaultVolume = 75;
-            VideoPlayerPreviewFontName = string.Empty;
+            VideoPlayerPreviewFontName = "Tahoma";
             VideoPlayerPreviewFontSize = 12;
             VideoPlayerPreviewFontBold = true;
             VideoPlayerShowStopButton = true;
@@ -1322,6 +1313,12 @@ $HorzAlign          =   Center
             NewEmptyDefaultMs = 2000;
             DialogStyle = DialogType.DashBothLinesWithSpace;
             ContinuationStyle = ContinuationStyle.None;
+
+            if (Configuration.IsRunningOnLinux)
+            {
+                SubtitleFontName = Configuration.DefaultLinuxFontName;
+                VideoPlayerPreviewFontName = Configuration.DefaultLinuxFontName;
+            }
 
             Profiles = new List<RulesProfile>();
             CurrentProfile = "Default";
