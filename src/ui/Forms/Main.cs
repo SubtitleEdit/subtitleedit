@@ -57,6 +57,7 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _inSourceView => textBoxSource.Visible;
 
         private Subtitle _subtitle = new Subtitle();
+        private int MinGapBetweenLines => Configuration.Settings.General.MinimumMillisecondsBetweenLines;
 
         private int _undoIndex = -1;
         private string _listViewTextUndoLast;
@@ -720,7 +721,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             var duration = Utilities.GetOptimalDisplayMilliseconds(line);
                             tmp.Paragraphs.Add(new Paragraph(line.Trim(), start, start + duration));
-                            start += duration + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                            start += duration + MinGapBetweenLines;
                         }
                     }
                 }
@@ -8566,7 +8567,7 @@ namespace Nikse.SubtitleEdit.Forms
                 firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
             }
 
-            int addMilliseconds = Configuration.Settings.General.MinimumMillisecondsBetweenLines + 1;
+            int addMilliseconds = MinGapBetweenLines + 1;
             if (addMilliseconds < 1)
             {
                 addMilliseconds = 1;
@@ -8620,8 +8621,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (next != null)
             {
-                newParagraph.StartTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - (2000 + Configuration.Settings.General.MinimumMillisecondsBetweenLines);
-                newParagraph.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                newParagraph.StartTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - (2000 + MinGapBetweenLines);
+                newParagraph.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - MinGapBetweenLines;
 
                 if (next.StartTime.IsMaxTime)
                 {
@@ -8706,7 +8707,7 @@ namespace Nikse.SubtitleEdit.Forms
             var next = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
             if (prev != null)
             {
-                int addMilliseconds = Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                int addMilliseconds = MinGapBetweenLines;
                 if (addMilliseconds < 1)
                 {
                     addMilliseconds = 1;
@@ -8716,7 +8717,7 @@ namespace Nikse.SubtitleEdit.Forms
                 newParagraph.EndTime.TotalMilliseconds = newParagraph.StartTime.TotalMilliseconds + Configuration.Settings.General.NewEmptyDefaultMs;
                 if (next != null && newParagraph.EndTime.TotalMilliseconds > next.StartTime.TotalMilliseconds)
                 {
-                    newParagraph.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                    newParagraph.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - MinGapBetweenLines;
                 }
 
                 if (newParagraph.StartTime.TotalMilliseconds > newParagraph.EndTime.TotalMilliseconds)
@@ -9771,9 +9772,9 @@ namespace Nikse.SubtitleEdit.Forms
 
                     double duration = Utilities.GetOptimalDisplayMilliseconds(textBoxListViewText.Text);
                     var next = _subtitle.GetParagraphOrDefault(index + 1);
-                    if (next != null && p.StartTime.TotalMilliseconds + duration + Configuration.Settings.General.MinimumMillisecondsBetweenLines > next.StartTime.TotalMilliseconds)
+                    if (next != null && p.StartTime.TotalMilliseconds + duration + MinGapBetweenLines > next.StartTime.TotalMilliseconds)
                     {
-                        duration = next.StartTime.TotalMilliseconds - p.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                        duration = next.StartTime.TotalMilliseconds - p.StartTime.TotalMilliseconds - MinGapBetweenLines;
                     }
 
                     if (duration > 500)
@@ -9800,9 +9801,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             double duration = Utilities.GetOptimalDisplayMilliseconds(textBoxListViewText.Text);
             var next = _subtitle.GetParagraphOrDefault(i + 1);
-            if (next != null && p.StartTime.TotalMilliseconds + duration + Configuration.Settings.General.MinimumMillisecondsBetweenLines > next.StartTime.TotalMilliseconds)
+            if (next != null && p.StartTime.TotalMilliseconds + duration + MinGapBetweenLines > next.StartTime.TotalMilliseconds)
             {
-                duration = next.StartTime.TotalMilliseconds - p.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                duration = next.StartTime.TotalMilliseconds - p.StartTime.TotalMilliseconds - MinGapBetweenLines;
                 if (duration < 400)
                 {
                     return;
@@ -10357,19 +10358,19 @@ namespace Nikse.SubtitleEdit.Forms
                 newParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
                 currentParagraph.EndTime.TotalMilliseconds = middle;
                 newParagraph.StartTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + 1;
-                if (Configuration.Settings.General.MinimumMillisecondsBetweenLines > 0)
+                if (MinGapBetweenLines > 0)
                 {
                     if (splitSeconds == null || Configuration.Settings.General.SplitBehavior == 1)
                     {
                         // SE decides split point (not user), so split gap time evenly
-                        var halfGap = (int)Math.Round(Configuration.Settings.General.MinimumMillisecondsBetweenLines / 2.0);
+                        var halfGap = (int)Math.Round(MinGapBetweenLines / 2.0);
                         currentParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds - halfGap;
                     }
                     else if (Configuration.Settings.General.SplitBehavior == 0)
                     {
-                        currentParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                        currentParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds - MinGapBetweenLines;
                     }
-                    newParagraph.StartTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                    newParagraph.StartTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + MinGapBetweenLines;
                 }
             }
         }
@@ -12738,7 +12739,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var next = subtitle.GetParagraphOrDefault(index + 1);
                 if (next != null && next.StartTime.TotalMilliseconds < p.EndTime.TotalMilliseconds)
                 {
-                    p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                    p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - MinGapBetweenLines;
                 }
             }
 
@@ -15490,9 +15491,9 @@ namespace Nikse.SubtitleEdit.Forms
 
                     var p = _subtitle.Paragraphs[index];
                     p.EndTime = TimeCode.FromSeconds(videoPosition);
-                    if (p.Duration.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
+                    if (p.Duration.TotalMilliseconds - MinGapBetweenLines > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
                     {
-                        var newEndTime = new TimeCode(p.EndTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines);
+                        var newEndTime = new TimeCode(p.EndTime.TotalMilliseconds - MinGapBetweenLines);
                         double charactersPerSecond = Utilities.GetCharactersPerSecond(new Paragraph(p) { EndTime = newEndTime });
                         if (charactersPerSecond <= Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                         {
@@ -15733,7 +15734,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             var oldParagraph = new Paragraph(p, false);
             MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + p.Number + " " + p.Text));
-            p.EndTime.TotalMilliseconds = positionInSeconds * TimeCode.BaseUnit - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+            p.EndTime.TotalMilliseconds = positionInSeconds * TimeCode.BaseUnit - MinGapBetweenLines;
             if (oldParagraph.StartTime.IsMaxTime)
             {
                 p.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds - Utilities.GetOptimalDisplayMilliseconds(p.Text);
@@ -15759,7 +15760,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var idx = SubtitleListview1.SelectedItems[0].Index;
                 var p = _subtitle.Paragraphs[idx];
                 var next = _subtitle.GetParagraphOrDefault(idx + 1);
-                if (next == null || next.StartTime.TotalMilliseconds > p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines)
+                if (next == null || next.StartTime.TotalMilliseconds > p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds + MinGapBetweenLines)
                 {
                     MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustExtendCurrentSubtitle));
                     historyAdded = true;
@@ -15769,7 +15770,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustExtendCurrentSubtitle));
                     historyAdded = true;
-                    p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                    p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - MinGapBetweenLines;
                 }
 
                 if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
@@ -15778,7 +15779,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (original != null)
                     {
                         var originalNext = _subtitleOriginal.GetParagraphOrDefault(_subtitleOriginal.GetIndex(original) + 1);
-                        if (originalNext == null || originalNext.StartTime.TotalMilliseconds > original.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines)
+                        if (originalNext == null || originalNext.StartTime.TotalMilliseconds > original.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds + MinGapBetweenLines)
                         {
                             if (!historyAdded)
                             {
@@ -15794,7 +15795,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustExtendCurrentSubtitle));
                             }
 
-                            original.EndTime.TotalMilliseconds = originalNext.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                            original.EndTime.TotalMilliseconds = originalNext.StartTime.TotalMilliseconds - MinGapBetweenLines;
                         }
                     }
                 }
@@ -15818,7 +15819,7 @@ namespace Nikse.SubtitleEdit.Forms
                         MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustExtendToNextSubtitle));
                         historyAdded = true;
                     }
-                    p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                    p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - MinGapBetweenLines;
                 }
 
                 if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
@@ -15835,7 +15836,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 historyAdded = true;
                             }
 
-                            original.EndTime.TotalMilliseconds = originalNext.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                            original.EndTime.TotalMilliseconds = originalNext.StartTime.TotalMilliseconds - MinGapBetweenLines;
                         }
                     }
                 }
@@ -15868,7 +15869,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     historyAdded = true;
                                 }
 
-                                original.StartTime.TotalMilliseconds = originalPrevious.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                                original.StartTime.TotalMilliseconds = originalPrevious.EndTime.TotalMilliseconds + MinGapBetweenLines;
                             }
                         }
                     }
@@ -15879,7 +15880,7 @@ namespace Nikse.SubtitleEdit.Forms
                         historyAdded = true;
                     }
 
-                    p.StartTime.TotalMilliseconds = previous.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                    p.StartTime.TotalMilliseconds = previous.EndTime.TotalMilliseconds + MinGapBetweenLines;
                 }
 
                 RefreshSelectedParagraphs();
@@ -15901,7 +15902,7 @@ namespace Nikse.SubtitleEdit.Forms
                         MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustExtendPreviousLineEndToCurrentStart));
                         historyAdded = true;
                     }
-                    previous.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                    previous.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds - MinGapBetweenLines;
                 }
 
                 if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
@@ -15918,7 +15919,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 historyAdded = true;
                             }
 
-                            originalPrevious.EndTime.TotalMilliseconds = original.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                            originalPrevious.EndTime.TotalMilliseconds = original.StartTime.TotalMilliseconds - MinGapBetweenLines;
                         }
                     }
                 }
@@ -15942,7 +15943,7 @@ namespace Nikse.SubtitleEdit.Forms
                         MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustExtendNextLineStartToCurrentEnd));
                         historyAdded = true;
                     }
-                    next.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                    next.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds + MinGapBetweenLines;
                 }
 
                 if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
@@ -15959,7 +15960,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 historyAdded = true;
                             }
 
-                            originalNext.StartTime.TotalMilliseconds = original.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                            originalNext.StartTime.TotalMilliseconds = original.EndTime.TotalMilliseconds + MinGapBetweenLines;
                         }
                     }
                 }
@@ -16000,9 +16001,9 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else
                             {
-                                if (nearestSceneChange * 1000 + Configuration.Settings.General.MinimumMillisecondsBetweenLines < p.EndTime.TotalMilliseconds)
+                                if (nearestSceneChange * 1000 + MinGapBetweenLines < p.EndTime.TotalMilliseconds)
                                 {
-                                    original.StartTime.TotalMilliseconds = nearestSceneChange * 1000 + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                                    original.StartTime.TotalMilliseconds = nearestSceneChange * 1000 + MinGapBetweenLines;
 
                                 }
                             }
@@ -16024,9 +16025,9 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        if (nearestSceneChange * 1000 + Configuration.Settings.General.MinimumMillisecondsBetweenLines < p.EndTime.TotalMilliseconds)
+                        if (nearestSceneChange * 1000 + MinGapBetweenLines < p.EndTime.TotalMilliseconds)
                         {
-                            p.StartTime.TotalMilliseconds = nearestSceneChange * 1000 + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                            p.StartTime.TotalMilliseconds = nearestSceneChange * 1000 + MinGapBetweenLines;
                         }
                     }
                 }
@@ -16062,9 +16063,9 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        if (nearestSceneChange * 1000 - Configuration.Settings.General.MinimumMillisecondsBetweenLines > p.StartTime.TotalMilliseconds)
+                        if (nearestSceneChange * 1000 - MinGapBetweenLines > p.StartTime.TotalMilliseconds)
                         {
-                            p.EndTime.TotalMilliseconds = nearestSceneChange * 1000 - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                            p.EndTime.TotalMilliseconds = nearestSceneChange * 1000 - MinGapBetweenLines;
                         }
                     }
 
@@ -16088,9 +16089,9 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else
                             {
-                                if (nearestSceneChange * 1000 - Configuration.Settings.General.MinimumMillisecondsBetweenLines > p.StartTime.TotalMilliseconds)
+                                if (nearestSceneChange * 1000 - MinGapBetweenLines > p.StartTime.TotalMilliseconds)
                                 {
-                                    original.EndTime.TotalMilliseconds = nearestSceneChange * 1000 - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                                    original.EndTime.TotalMilliseconds = nearestSceneChange * 1000 - MinGapBetweenLines;
 
                                 }
                             }
@@ -16114,7 +16115,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     var next = _subtitle.GetParagraphOrDefault(idx + 1);
                     double nearestSceneChange = nextSceneChanges.Aggregate((x, y) => Math.Abs(x - p.EndTime.TotalSeconds) < Math.Abs(y - p.EndTime.TotalSeconds) ? x : y);
-                    double nearestStartTimeWithGap = next != null ? next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines : Double.MaxValue;
+                    double nearestStartTimeWithGap = next != null ? next.StartTime.TotalMilliseconds - MinGapBetweenLines : Double.MaxValue;
 
                     if (!historyAdded)
                     {
@@ -16128,7 +16129,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        p.EndTime.TotalMilliseconds = Math.Min(nearestSceneChange * 1000 - Configuration.Settings.General.MinimumMillisecondsBetweenLines, nearestStartTimeWithGap);
+                        p.EndTime.TotalMilliseconds = Math.Min(nearestSceneChange * 1000 - MinGapBetweenLines, nearestStartTimeWithGap);
                     }
 
                     if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
@@ -16137,7 +16138,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (original != null)
                         {
                             var originalNext = _subtitleOriginal.GetParagraphOrDefault(_subtitleOriginal.GetIndex(original) + 1);
-                            double nearestOriginalStartTimeWithGap = originalNext != null ? originalNext.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines : Double.MaxValue;
+                            double nearestOriginalStartTimeWithGap = originalNext != null ? originalNext.StartTime.TotalMilliseconds - MinGapBetweenLines : Double.MaxValue;
 
                             if (!historyAdded)
                             {
@@ -16152,7 +16153,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else
                             {
-                                original.EndTime.TotalMilliseconds = Math.Min(nearestSceneChange * 1000 - Configuration.Settings.General.MinimumMillisecondsBetweenLines, nearestStartTimeWithGap);
+                                original.EndTime.TotalMilliseconds = Math.Min(nearestSceneChange * 1000 - MinGapBetweenLines, nearestStartTimeWithGap);
                             }
                         }
                     }
@@ -16174,7 +16175,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     var previous = _subtitle.GetParagraphOrDefault(idx - 1);
                     double nearestSceneChange = previousSceneChanges.Aggregate((x, y) => Math.Abs(x - p.StartTime.TotalSeconds) < Math.Abs(y - p.StartTime.TotalSeconds) ? x : y);
-                    double nearestEndTimeWithGap = previous != null ? previous.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines : -9999;
+                    double nearestEndTimeWithGap = previous != null ? previous.EndTime.TotalMilliseconds + MinGapBetweenLines : -9999;
 
                     if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
                     {
@@ -16182,7 +16183,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (original != null)
                         {
                             var originalPrevious = _subtitleOriginal.GetParagraphOrDefault(_subtitleOriginal.GetIndex(original) - 1);
-                            double nearestOriginalEndTimeWithGap = originalPrevious != null ? originalPrevious.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines : -9999;
+                            double nearestOriginalEndTimeWithGap = originalPrevious != null ? originalPrevious.EndTime.TotalMilliseconds + MinGapBetweenLines : -9999;
 
                             if (!historyAdded)
                             {
@@ -16196,7 +16197,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else
                             {
-                                original.StartTime.TotalMilliseconds = Math.Max(nearestSceneChange * 1000 + Configuration.Settings.General.MinimumMillisecondsBetweenLines, nearestOriginalEndTimeWithGap);
+                                original.StartTime.TotalMilliseconds = Math.Max(nearestSceneChange * 1000 + MinGapBetweenLines, nearestOriginalEndTimeWithGap);
                             }
                         }
                     }
@@ -16213,7 +16214,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        p.StartTime.TotalMilliseconds = Math.Max(nearestSceneChange * 1000 + Configuration.Settings.General.MinimumMillisecondsBetweenLines, nearestEndTimeWithGap);
+                        p.StartTime.TotalMilliseconds = Math.Max(nearestSceneChange * 1000 + MinGapBetweenLines, nearestEndTimeWithGap);
                     }
                 }
 
@@ -16307,9 +16308,9 @@ namespace Nikse.SubtitleEdit.Forms
 
                     var newStartTimeMs = pos * TimeCode.BaseUnit;
                     var prev = _subtitle.GetParagraphOrDefault(index - 1);
-                    if (prev != null && prev.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines >= newStartTimeMs)
+                    if (prev != null && prev.EndTime.TotalMilliseconds + MinGapBetweenLines >= newStartTimeMs)
                     {
-                        newStartTimeMs = prev.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                        newStartTimeMs = prev.EndTime.TotalMilliseconds + MinGapBetweenLines;
                         if (newStartTimeMs >= p.StartTime.TotalMilliseconds)
                         {
                             break; // cannot move start time
@@ -16343,7 +16344,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             var next = _subtitle.GetParagraphOrDefault(index + 1);
                             if (next == null ||
-                                next.StartTime.TotalMilliseconds > newStartTimeMs + p.Duration.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines)
+                                next.StartTime.TotalMilliseconds > newStartTimeMs + p.Duration.TotalMilliseconds + MinGapBetweenLines)
                             {
                                 newEndTimeMs = newStartTimeMs + p.Duration.TotalMilliseconds;
                             }
@@ -16704,7 +16705,7 @@ namespace Nikse.SubtitleEdit.Forms
             var isClose = false;
             if (keepGapPrevIfClose && prev != null)
             {
-                if (prev.EndTime.TotalMilliseconds <= p.StartTime.TotalMilliseconds && prev.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines >= p.StartTime.TotalMilliseconds)
+                if (prev.EndTime.TotalMilliseconds <= p.StartTime.TotalMilliseconds && prev.EndTime.TotalMilliseconds + MinGapBetweenLines >= p.StartTime.TotalMilliseconds)
                 {
                     isClose = true;
                     prevGap = p.StartTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds;
@@ -16736,13 +16737,13 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                if (prev == null || keepGapPrevIfClose && isClose || p.StartTime.TotalMilliseconds - (Math.Abs(ms) + Configuration.Settings.General.MinimumMillisecondsBetweenLines) > prev.EndTime.TotalMilliseconds)
+                if (prev == null || keepGapPrevIfClose && isClose || p.StartTime.TotalMilliseconds - (Math.Abs(ms) + MinGapBetweenLines) > prev.EndTime.TotalMilliseconds)
                 {
                     p.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + ms;
                 }
                 else
                 {
-                    var newStartMs = prev.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                    var newStartMs = prev.EndTime.TotalMilliseconds + MinGapBetweenLines;
                     if (newStartMs < p.StartTime.TotalMilliseconds)
                     {
                         p.StartTime.TotalMilliseconds = newStartMs;
@@ -16813,7 +16814,7 @@ namespace Nikse.SubtitleEdit.Forms
             var isClose = false;
             if (keepGapNextIfClose && next != null)
             {
-                if (p.EndTime.TotalMilliseconds <= next.StartTime.TotalMilliseconds && p.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines >= next.StartTime.TotalMilliseconds)
+                if (p.EndTime.TotalMilliseconds <= next.StartTime.TotalMilliseconds && p.EndTime.TotalMilliseconds + MinGapBetweenLines >= next.StartTime.TotalMilliseconds)
                 {
                     isClose = true;
                     nextGap = next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds;
@@ -16831,13 +16832,13 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                if (next == null || keepGapNextIfClose && isClose || p.EndTime.TotalMilliseconds + ms + Configuration.Settings.General.MinimumMillisecondsBetweenLines < next.StartTime.TotalMilliseconds)
+                if (next == null || keepGapNextIfClose && isClose || p.EndTime.TotalMilliseconds + ms + MinGapBetweenLines < next.StartTime.TotalMilliseconds)
                 {
                     p.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds + ms;
                 }
                 else
                 {
-                    var newEndMs = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                    var newEndMs = next.StartTime.TotalMilliseconds - MinGapBetweenLines;
                     if (newEndMs > p.EndTime.TotalMilliseconds)
                     {
                         p.EndTime.TotalMilliseconds = newEndMs;
@@ -17673,11 +17674,11 @@ namespace Nikse.SubtitleEdit.Forms
                         double addMs = 0;
                         if (lastParagraph.EndTime.TotalMilliseconds > tmp.Paragraphs[0].StartTime.TotalMilliseconds)
                         { // add time to pasted subtitles to prevent overlap, but only if necessary
-                            addMs = lastParagraph.EndTime.TotalMilliseconds - tmp.Paragraphs[0].StartTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                            addMs = lastParagraph.EndTime.TotalMilliseconds - tmp.Paragraphs[0].StartTime.TotalMilliseconds + MinGapBetweenLines;
                         }
                         else if (firstIndex <= _subtitle.Paragraphs.Count - 2 && _subtitle.Paragraphs[firstIndex + 1].StartTime.TotalMilliseconds < tmp.Paragraphs[0].StartTime.TotalMilliseconds)
                         { // inserting between two subtitle... with overlapping codes
-                            addMs = lastParagraph.EndTime.TotalMilliseconds - tmp.Paragraphs[0].StartTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                            addMs = lastParagraph.EndTime.TotalMilliseconds - tmp.Paragraphs[0].StartTime.TotalMilliseconds + MinGapBetweenLines;
                         }
 
                         var selectIndices = new List<int>();
@@ -20097,9 +20098,9 @@ namespace Nikse.SubtitleEdit.Forms
             var next = _subtitle.GetParagraphOrDefault(index);
             if (next != null)
             {
-                if (endTotalMilliseconds > next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines)
+                if (endTotalMilliseconds > next.StartTime.TotalMilliseconds - MinGapBetweenLines)
                 {
-                    endTotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                    endTotalMilliseconds = next.StartTime.TotalMilliseconds - MinGapBetweenLines;
                 }
             }
 
@@ -20142,9 +20143,9 @@ namespace Nikse.SubtitleEdit.Forms
                     var currentParagraph = _subtitle.Paragraphs[firstSelectedIndex];
                     var nextParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex + 1);
                     double duration = Utilities.GetOptimalDisplayMilliseconds(textBoxListViewText.Text);
-                    if (currentParagraph.StartTime.TotalMilliseconds + duration + Configuration.Settings.General.MinimumMillisecondsBetweenLines > nextParagraph?.StartTime.TotalMilliseconds)
+                    if (currentParagraph.StartTime.TotalMilliseconds + duration + MinGapBetweenLines > nextParagraph?.StartTime.TotalMilliseconds)
                     {
-                        var newEndTime = nextParagraph.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                        var newEndTime = nextParagraph.StartTime.TotalMilliseconds - MinGapBetweenLines;
                         if (newEndTime - currentParagraph.StartTime.TotalMilliseconds > 100)
                         {
                             duration = newEndTime - currentParagraph.StartTime.TotalMilliseconds;
@@ -20375,9 +20376,9 @@ namespace Nikse.SubtitleEdit.Forms
                     if (adjustMilliseconds >= 0)
                     {
                         var next = _subtitle.GetParagraphOrDefault(FirstSelectedIndex + 1);
-                        if (next != null && current.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines > next.StartTime.TotalMilliseconds - adjustMilliseconds)
+                        if (next != null && current.EndTime.TotalMilliseconds + MinGapBetweenLines > next.StartTime.TotalMilliseconds - adjustMilliseconds)
                         {
-                            var newAdjustMs = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines - current.EndTime.TotalMilliseconds;
+                            var newAdjustMs = next.StartTime.TotalMilliseconds - MinGapBetweenLines - current.EndTime.TotalMilliseconds;
                             if (newAdjustMs > 0)
                             {
                                 adjustMilliseconds = newAdjustMs;
@@ -20391,9 +20392,9 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                     {
                         var prev = _subtitle.GetParagraphOrDefault(FirstSelectedIndex - 1);
-                        if (prev != null && current.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines + adjustMilliseconds < prev.EndTime.TotalMilliseconds)
+                        if (prev != null && current.StartTime.TotalMilliseconds - MinGapBetweenLines + adjustMilliseconds < prev.EndTime.TotalMilliseconds)
                         {
-                            var newAdjustMs = prev.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines - current.StartTime.TotalMilliseconds;
+                            var newAdjustMs = prev.EndTime.TotalMilliseconds + MinGapBetweenLines - current.StartTime.TotalMilliseconds;
                             if (newAdjustMs < 0)
                             {
                                 adjustMilliseconds = newAdjustMs;
@@ -24133,7 +24134,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var newFirst = subtitle.GetParagraphOrDefault(0);
                     if (last != null && newFirst != null && newFirst.StartTime.TotalMilliseconds < last.EndTime.TotalMilliseconds)
                     {
-                        var addMilliseconds = last.EndTime.TotalMilliseconds - newFirst.StartTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                        var addMilliseconds = last.EndTime.TotalMilliseconds - newFirst.StartTime.TotalMilliseconds + MinGapBetweenLines;
                         subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(addMilliseconds));
                     }
 
@@ -24747,7 +24748,7 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle.Paragraphs[index].StartTime.TotalMilliseconds = TimeSpan.FromSeconds(videoPosition).TotalMilliseconds;
             if (prev != null && prev.EndTime.TotalMilliseconds > _subtitle.Paragraphs[index].StartTime.TotalMilliseconds)
             {
-                int minDiff = Configuration.Settings.General.MinimumMillisecondsBetweenLines + 1;
+                int minDiff = MinGapBetweenLines + 1;
                 if (minDiff < 1)
                 {
                     minDiff = 1;
@@ -24820,7 +24821,7 @@ namespace Nikse.SubtitleEdit.Forms
             SetDurationInSeconds(_subtitle.Paragraphs[index].Duration.TotalSeconds + 0.001);
             if (next != null)
             {
-                int addMilliseconds = Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                int addMilliseconds = MinGapBetweenLines;
                 if (addMilliseconds < 1 || addMilliseconds > 500)
                 {
                     addMilliseconds = 1;
@@ -29003,7 +29004,7 @@ namespace Nikse.SubtitleEdit.Forms
                 p.StartTime.TotalMilliseconds = audioVisualizer.NewSelectionParagraph.StartTime.TotalMilliseconds;
                 p.EndTime.TotalMilliseconds = audioVisualizer.NewSelectionParagraph.EndTime.TotalMilliseconds;
                 SubtitleListview1.SetStartTimeAndDuration(idx, p, _subtitle.GetParagraphOrDefault(idx - 1), _subtitle.GetParagraphOrDefault(idx + 1));
-                mediaPlayer.CurrentPosition = audioVisualizer.NewSelectionParagraph.EndTime.TotalSeconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines / 1000.0;
+                mediaPlayer.CurrentPosition = audioVisualizer.NewSelectionParagraph.EndTime.TotalSeconds + MinGapBetweenLines / 1000.0;
                 audioVisualizer.NewSelectionParagraph = null;
             }
         }
