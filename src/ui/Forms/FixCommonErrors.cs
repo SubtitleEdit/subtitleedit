@@ -1433,7 +1433,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.GetLineLengths(labelSingleLine, text);
 
             var s = text.Replace(Environment.NewLine, " ");
-            labelTextLineTotal.ForeColor = Color.Black;
+            labelTextLineTotal.ForeColor = UiUtil.ForeColor;
             buttonSplitLine.Visible = false;
             var abl = Utilities.AutoBreakLine(s, _autoDetectGoogleLanguage).SplitToLines();
             if (abl.Count > Configuration.Settings.General.MaxNumberOfLines || abl.Any(li => li.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) > Configuration.Settings.General.SubtitleLineMaximumLength))
