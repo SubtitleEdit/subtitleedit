@@ -1214,7 +1214,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.tabControlLogs.Controls.Add(this.tabPageUnknownWords);
             this.tabControlLogs.Controls.Add(this.tabPageAllFixes);
             this.tabControlLogs.Controls.Add(this.tabPageSuggestions);
-            this.tabControlLogs.Location = new System.Drawing.Point(11, 146);
+            this.tabControlLogs.Location = new System.Drawing.Point(8, 144);
             this.tabControlLogs.Name = "tabControlLogs";
             this.tabControlLogs.SelectedIndex = 0;
             this.tabControlLogs.Size = new System.Drawing.Size(383, 181);
@@ -1307,7 +1307,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.listBoxUnknownWords.HorizontalScrollbar = true;
             this.listBoxUnknownWords.Location = new System.Drawing.Point(3, 3);
             this.listBoxUnknownWords.Name = "listBoxUnknownWords";
-            this.listBoxUnknownWords.Size = new System.Drawing.Size(143, 147);
+            this.listBoxUnknownWords.Size = new System.Drawing.Size(143, 149);
             this.listBoxUnknownWords.TabIndex = 40;
             this.listBoxUnknownWords.SelectedIndexChanged += new System.EventHandler(this.ListBoxLogSelectedIndexChanged);
             this.listBoxUnknownWords.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBoxCopyToClipboard_KeyDown);

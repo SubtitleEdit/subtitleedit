@@ -238,8 +238,8 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(contextMenuStripListView);
             UiUtil.FixFonts(contextMenuStripTextBoxListView);
             UiUtil.FixFonts(contextMenuStripWaveform);
-            UiUtil.FixLargeFonts(panelMode, buttonAutoBreak);
-            UiUtil.FixLargeFonts(panelMode, buttonAutoBreak);
+            UiUtil.FixLargeFonts(panelModes, buttonAutoBreak);
+            UiUtil.FixLargeFonts(panelModes, buttonAutoBreak);
             UiUtil.FixLargeFonts(groupBoxEdit, buttonAutoBreak);
             UiUtil.InitializeSubtitleFont(textBoxSource);
             UiUtil.InitializeSubtitleFont(SubtitleListview1);
@@ -19519,21 +19519,21 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (audioVisualizer.Visible)
                     {
-                        audioVisualizer.Left = panelMode.Left + panelMode.Width + 5;
+                        audioVisualizer.Left = panelModes.Left + panelModes.Width + 5;
                     }
                     else
                     {
-                        panelVideoPlayer.Left = panelMode.Left + panelMode.Width + 5;
+                        panelVideoPlayer.Left = panelModes.Left + panelModes.Width + 5;
                     }
                 }
                 else if (audioVisualizer.Visible)
                 {
-                    audioVisualizer.Left = panelMode.Left + panelMode.Width + 5;
+                    audioVisualizer.Left = panelModes.Left + panelModes.Width + 5;
                 }
 
                 audioVisualizer.Width = groupBoxVideo.Width - (audioVisualizer.Left + 10);
 
-                checkBoxSyncListViewWithVideoWhilePlaying.Left = panelMode.Left + panelMode.Width + 5;
+                checkBoxSyncListViewWithVideoWhilePlaying.Left = panelModes.Left + panelModes.Width + 5;
                 panelWaveformControls.Left = audioVisualizer.Left;
                 trackBarWaveformPosition.Left = panelWaveformControls.Left + panelWaveformControls.Width + 5;
                 trackBarWaveformPosition.Width = audioVisualizer.Left + audioVisualizer.Width - trackBarWaveformPosition.Left + 5;
@@ -19623,7 +19623,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             panelVideoPlayer.Top = 32;
-            panelVideoPlayer.Left = panelMode.Left + panelMode.Width + 5;
+            panelVideoPlayer.Left = panelModes.Left + panelModes.Width + 5;
             panelVideoPlayer.Height = groupBoxVideo.Height - (panelVideoPlayer.Top + 5);
             panelVideoPlayer.Width = groupBoxVideo.Width - (panelVideoPlayer.Left + 5);
         }
@@ -20875,7 +20875,7 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonModeTranslate.Enabled = false;
                 panelTranslate.Visible = true;
                 panelTranslate.Focus();
-                panelMode.Width = groupBoxTranslateSearch.Left + groupBoxTranslateSearch.Width + 14;
+                panelModes.Width = groupBoxTranslateSearch.Left + groupBoxTranslateSearch.Width + 14;
                 Configuration.Settings.VideoControls.LastActiveTab = "Translate";
             }
             else if (clickedBtn == buttonModeCreate)
@@ -20883,7 +20883,7 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonModeCreate.Enabled = false;
                 panelCreate.Visible = true;
                 panelCreate.Focus();
-                panelMode.Width = buttonInsertNewText.Left + buttonInsertNewText.Width + 38;
+                panelModes.Width = buttonInsertNewText.Left + buttonInsertNewText.Width + 38;
                 Configuration.Settings.VideoControls.LastActiveTab = "Create";
             }
             else if (clickedBtn == buttonModeAdjust)
@@ -20891,7 +20891,7 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonModeAdjust.Enabled = false;
                 panelAdjust.Visible = true;
                 panelAdjust.Focus();
-                panelMode.Width = buttonInsertNewText.Left + buttonInsertNewText.Width + 38;
+                panelModes.Width = buttonInsertNewText.Left + buttonInsertNewText.Width + 38;
                 Configuration.Settings.VideoControls.LastActiveTab = "Adjust";
             }
 
@@ -20900,12 +20900,12 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (toolStripButtonToggleWaveform.Checked)
                 {
-                    audioVisualizer.Left = panelMode.Left + panelMode.Width + 5;
+                    audioVisualizer.Left = panelModes.Left + panelModes.Width + 5;
                 }
 
                 if (!toolStripButtonToggleWaveform.Checked && toolStripButtonToggleVideo.Checked)
                 {
-                    panelVideoPlayer.Left = panelMode.Left + panelMode.Width + 5;
+                    panelVideoPlayer.Left = panelModes.Left + panelModes.Width + 5;
                     panelVideoPlayer.Width = groupBoxVideo.Width - (panelVideoPlayer.Left + 10);
                 }
 
@@ -20914,7 +20914,7 @@ namespace Nikse.SubtitleEdit.Forms
                 trackBarWaveformPosition.Left = panelWaveformControls.Left + panelWaveformControls.Width + 5;
                 trackBarWaveformPosition.Width = groupBoxVideo.Width - (trackBarWaveformPosition.Left + 10);
                 Main_Resize(null, null);
-                checkBoxSyncListViewWithVideoWhilePlaying.Left = panelMode.Left + panelMode.Width + 5;
+                checkBoxSyncListViewWithVideoWhilePlaying.Left = panelModes.Left + panelModes.Width + 5;
                 if (!_loading)
                 {
                     Refresh();
@@ -20922,8 +20922,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_videoControlsUndocked != null && !_videoControlsUndocked.IsDisposed)
             {
-                _videoControlsUndocked.Width = panelMode.Width + 20;
-                _videoControlsUndocked.Height = panelMode.Height + 65;
+                _videoControlsUndocked.Width = panelModes.Width + 20;
+                _videoControlsUndocked.Height = panelModes.Height + 65;
             }
         }
 
@@ -23917,7 +23917,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void UnDockVideoButtons()
         {
             _videoControlsUndocked = new VideoControlsUndocked(this);
-            var control = panelMode;
+            var control = panelModes;
             groupBoxVideo.Controls.Remove(control);
             control.Top = 25;
             control.Left = 0;
@@ -23996,8 +23996,8 @@ namespace Nikse.SubtitleEdit.Forms
                 _videoControlsUndocked.WindowState = FormWindowState.Normal;
                 _videoControlsUndocked.Top = top + 40;
                 _videoControlsUndocked.Left = Math.Abs(left - 10);
-                _videoControlsUndocked.Width = panelMode.Width + 20;
-                _videoControlsUndocked.Height = panelMode.Height + 65;
+                _videoControlsUndocked.Width = panelModes.Width + 20;
+                _videoControlsUndocked.Height = panelModes.Height + 65;
             }
 
             _isVideoControlsUndocked = true;
