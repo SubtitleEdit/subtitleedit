@@ -246,14 +246,20 @@ Command line: {1} {2}
     <SetText>文本设置…</SetText>
     <QuickOcr>快速OCR文本（仅用于参考）</QuickOcr>
     <ResizeBitmaps>调整图片尺寸…</ResizeBitmaps>
+    <ChangeBrightness>调整亮度…</ChangeBrightness>
     <ResizeBitmapsForSelectedLines>为所选行调整图片尺寸…</ResizeBitmapsForSelectedLines>
     <ChangeColorForSelectedLines>修改所选行颜色…</ChangeColorForSelectedLines>
+    <ChangeBrightnessForSelectedLines>调整所选行亮度…</ChangeBrightnessForSelectedLines>
     <AlignSelectedLines>对齐所选行</AlignSelectedLines>
     <CenterSelectedLines>居中所选行（水平，保持垂直位置）</CenterSelectedLines>
     <TopAlignSelectedLines>顶部对齐所选行（保持水平位置）</TopAlignSelectedLines>
     <BottomAlignSelectedLines>底部对齐所选行（保持水平位置）</BottomAlignSelectedLines>
     <SizeXY>尺寸：{0}x{1}</SizeXY>
     <SetAspectRatio11>设置纵横比为1：1</SetAspectRatio11>
+    <ChangeBrightnessTitle>调整亮度</ChangeBrightnessTitle>
+    <BrightnessX>亮度：{}%</BrightnessX>
+    <ResizeTitle>调整图片尺寸</ResizeTitle>
+    <ResizeX>调整尺寸：{}%</ResizeX>
   </BinEdit>
   <Bookmarks>
     <EditBookmark>编辑书签</EditBookmark>
