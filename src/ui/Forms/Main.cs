@@ -275,6 +275,11 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxListViewText.BackColor = !IsSubtitleLoaded ? SystemColors.ActiveBorder : SystemColors.WindowFrame;
             textBoxListViewTextOriginal.BackColor = !IsSubtitleLoaded ? SystemColors.ActiveBorder : SystemColors.WindowFrame;
 
+            if (Configuration.IsRunningOnWindows && !Configuration.Settings.General.UseDarkTheme)
+            {
+                groupBoxEdit.BackColor = SystemColors.Window;
+            }
+
             base.OnLoad(e);
         }
 

@@ -4293,7 +4293,6 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // groupBoxEdit
             // 
-            this.groupBoxEdit.BackColor = System.Drawing.SystemColors.Control;
             this.groupBoxEdit.Controls.Add(this.labelOriginalSingleLinePixels);
             this.groupBoxEdit.Controls.Add(this.labelSingleLinePixels);
             this.groupBoxEdit.Controls.Add(this.panelBookmark);
