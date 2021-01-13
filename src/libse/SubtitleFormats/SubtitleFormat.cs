@@ -58,6 +58,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new DCinemaSmpte2007(),
                     new DCinemaSmpte2010(),
                     new DCinemaSmpte2014(),
+                    new DfxpBasic(),
                     new DigiBeta(),
                     new DvdStudioPro(),
                     new DvdStudioProSpaceOne(),
