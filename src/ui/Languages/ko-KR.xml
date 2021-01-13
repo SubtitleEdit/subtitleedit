@@ -237,6 +237,27 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
   <Beamer>
     <Title>프로젝터</Title>
   </Beamer>
+  <BinEdit>
+    <ImportImage>이미지 가져오기...</ImportImage>
+    <ExportImage>이미지 내보내기...</ExportImage>
+    <SetText>텍스트 설정...</SetText>
+    <QuickOcr>빠른 OCR 텍스트(개요용)</QuickOcr>
+    <ResizeBitmaps>이미지 크기 조정...</ResizeBitmaps>
+    <ChangeBrightness>밝기 변경...</ChangeBrightness>
+    <ResizeBitmapsForSelectedLines>선택한 줄의 이미지 크기 조정...</ResizeBitmapsForSelectedLines>
+    <ChangeColorForSelectedLines>선택한 줄의 색상 변경...</ChangeColorForSelectedLines>
+    <ChangeBrightnessForSelectedLines>선택한 줄의 밝기 변경...</ChangeBrightnessForSelectedLines>
+    <AlignSelectedLines>선택한 줄 정렬</AlignSelectedLines>
+    <CenterSelectedLines>중앙 정렬(수평, 수직 위치 유지)</CenterSelectedLines>
+    <TopAlignSelectedLines>상단 정렬(수평 위치 유지)</TopAlignSelectedLines>
+    <BottomAlignSelectedLines>하단 정렬(수평 위치 유지)</BottomAlignSelectedLines>
+    <SizeXY>크기: {0}x{1}</SizeXY>
+    <SetAspectRatio11>가로세로 비율 1:1 설정</SetAspectRatio11>
+    <ChangeBrightnessTitle>밝기 변경</ChangeBrightnessTitle>
+    <BrightnessX>밝기: {0}%</BrightnessX>
+    <ResizeTitle>이미지 크기 조정</ResizeTitle>
+    <ResizeX>크기 조정: {0}%</ResizeX>
+  </BinEdit>
   <Bookmarks>
     <EditBookmark>책갈피 편집</EditBookmark>
     <AddBookmark>책갈피 추가</AddBookmark>
@@ -316,6 +337,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
   </ColumnPaste>
   <CompareSubtitles>
     <Title>* 자막 비교</Title>
+    <Reload>새로 고침</Reload>
     <PreviousDifference>이전(&amp;P)...</PreviousDifference>
     <NextDifference>다음(&amp;N)...</NextDifference>
     <SubtitlesNotAlike>완전히 다른 자막입니다!</SubtitlesNotAlike>
@@ -599,7 +621,6 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <RemovedEmptyLineAtBottom>마지막 빈 줄 제거</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>가운데 빈 줄 제거</RemovedEmptyLineInMiddle>
     <RemovedEmptyLinesUnsedLineBreaks>빈 줄 및 불필요한 줄의 줄바꿈 제거</RemovedEmptyLinesUnsedLineBreaks>
-    <EmptyLinesRemovedX>제거한 빈 줄: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>중복된 표시시간 수정하기</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>짧은 표시시간 수정하기</FixShortDisplayTimes>
     <FixLongDisplayTimes>긴 표시시간 수정하기</FixLongDisplayTimes>
@@ -624,21 +645,16 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <RemoveSpaceBetweenNumber>숫자 사이의 공백 제거하기</RemoveSpaceBetweenNumber>
     <FixDialogsOnOneLine>한 줄 안에 많은 대화형식이 있을 때 수정하기</FixDialogsOnOneLine>
     <NormalizeStrings>문자열 정규화</NormalizeStrings>
-    <RemoveSpaceBetweenNumbersFixed>수정된 숫자 사이의 공백: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>유니코드로 터키의 ANSI (아이슬란드) 문자 수정하기</FixTurkishAnsi>
     <FixDanishLetterI>덴마크 문자 'i' 수정하기</FixDanishLetterI>
     <FixSpanishInvertedQuestionAndExclamationMarks>스페인어의 역물음표와 역감탄사 수정하기</FixSpanishInvertedQuestionAndExclamationMarks>
     <AddMissingQuote>누락된 따옴표('') 추가하기</AddMissingQuote>
     <AddMissingQuotes>누락된 따옴표("") 추가하기</AddMissingQuotes>
     <RemoveHyphensSingleLine>단일 라인의 대화 대시(-) 제거</RemoveHyphensSingleLine>
-    <XHyphensSingleLineRemoved>단일 라인에서 제거된 대화 대시(-): {0}</XHyphensSingleLineRemoved>
     <FixHyphensInDialogs>스타일을 통해 대화안의 대시(-) 수정: {0}</FixHyphensInDialogs>
-    <XHyphensInDialogsFixed>수정된 대시(-): {0}</XHyphensInDialogsFixed>
     <AddMissingQuotesExample>"힘들었지? -&gt; "힘들었지?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>누락된 따옴표 추가: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>3줄 이상의 자막 수정하기</Fix3PlusLines>
-    <Fix3PlusLine>3줄 이상의 자막 수정하기</Fix3PlusLine>
-    <X3PlusLinesFixed>수정된 3줄 이상의 자막: {0}</X3PlusLinesFixed>
     <Analysing>분석 중 . . .</Analysing>
     <NothingToFix>수정할 곳이 없습니다:</NothingToFix>
     <FixesFoundX>수정할 곳: {0}</FixesFoundX>
@@ -646,12 +662,9 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <NothingFixableBut>아무것도 자동으로 수정할 수 없음.  자막에 오류가 있습니다 - 자세한 내용은 로그를 참조하십시오.</NothingFixableBut>
     <XFixedBut>{0}개의 문제가 수정되었지만 자막에는 여전히 오류가 있습니다 - 자세한 내용은 로그를 참조하십시오.</XFixedBut>
     <XCouldBeFixedBut>{0}개의 문제를 수정할 수 있지만 자막에는 여전히 오류가 있을 것입니다.- 자세한 내용은 로그를 참조하십시오.</XCouldBeFixedBut>
-    <UncheckedFixLowercaseIToUppercaseI>"소문자 'i'를 대문자 'I'로 수정하기(영어)" 실행을 취소합니다.</UncheckedFixLowercaseIToUppercaseI>
-    <XIsChangedToUppercase>{0}개의 'i'가 대문자로 변환되었습니다.</XIsChangedToUppercase>
     <FixFirstLetterToUppercaseAfterParagraph>단락이 끝난 뒤에 나오는 첫글자를 대문자로 바꾸기</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>짧은 줄 병합 (단일 문장)</MergeShortLine>
     <MergeShortLineAll>짧은 줄 병합 (대화형식 제외)</MergeShortLineAll>
-    <XLineBreaksAdded>{0}개의 줄바꿈이 추가되었습니다.</XLineBreaksAdded>
     <BreakLongLine>긴 줄(행) 줄바꿈</BreakLongLine>
     <FixLongDisplayTime>긴 표시시간 수정하기</FixLongDisplayTime>
     <FixInvalidItalicTag>잘못된 기울임꼴 태그 수정하기</FixInvalidItalicTag>
@@ -668,23 +681,11 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <UnableToFixStartTimeLaterThanEndTime>텍스트 번호 {0}을 수정할 수 없음. 시작 시간이 종료 시간 {1} 보다 느림</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} 수정함: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>텍스트 번호 {0}을 수정할 수 없음: {1}</UnableToFixTextXY>
-    <XOverlappingTimestampsFixed>{0}개의 중복된 시간을 수정했습니다.</XOverlappingTimestampsFixed>
-    <XDisplayTimesProlonged>{0}개의 표시시간이 연장되었습니다.</XDisplayTimesProlonged>
-    <XInvalidHtmlTagsFixed>{0}개의 잘못된 HTML 태그가 수정되었습니다.</XInvalidHtmlTagsFixed>
-    <XDisplayTimesShortned>{0}개의 표시시간이 단축되었습니다.</XDisplayTimesShortned>
-    <XGapsFixed>{0}개의 짧은 간격이 수정되었습니다.</XGapsFixed>
-    <XLinesUnbreaked>{0}개가 줄바꿈 제거되었습니다.</XLinesUnbreaked>
     <UnneededSpace>불필요한 공백</UnneededSpace>
-    <XUnneededSpacesRemoved>{0}개의 불필요한 공백이 제거되었습니다.</XUnneededSpacesRemoved>
     <UnneededPeriod>불필요한 마침표</UnneededPeriod>
-    <XUnneededPeriodsRemoved>{0}개의 불필요한 마침표가 삭제되었습니다.</XUnneededPeriodsRemoved>
     <FixMissingSpace>잘못된 공백 수정하기</FixMissingSpace>
-    <XMissingSpacesAdded>{0}개의 잘못된 공백이 수정되었습니다.</XMissingSpacesAdded>
     <FixUppercaseIInsideLowercaseWord>한 단어 중간에 대문자 'I'가 쓰인 것 수정하기</FixUppercaseIInsideLowercaseWord>
-    <XPeriodsAdded>{0}개의 마침표가 추가되었습니다.</XPeriodsAdded>
     <FixMissingPeriodAtEndOfLine>줄 끝에 누락된 마침표 추가하기</FixMissingPeriodAtEndOfLine>
-    <XDoubleApostrophesFixed>{0}개의 따옴표("")가 수정되었습니다.</XDoubleApostrophesFixed>
-    <XUppercaseIsFoundInsideLowercaseWords>{0}개의 대문자 'I'가 단어 중간에 있습니다.</XUppercaseIsFoundInsideLowercaseWords>
     <RefreshFixes>새로 고침</RefreshFixes>
     <ApplyFixes>수정 적용하기</ApplyFixes>
     <AutoBreak>자동 줄바꿈(&amp;B)</AutoBreak>
@@ -694,11 +695,6 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <FixEllipsesStart>말머리에 쓰인 '...' 제거하기</FixEllipsesStart>
     <FixMissingOpenBracket>줄 안에 누락된 '[' 수정하기</FixMissingOpenBracket>
     <FixMusicNotation>음표(예: âTª)를 기본으로 바꾸기</FixMusicNotation>
-    <XFixDoubleDash>{0} '--'을 수정했습니다.</XFixDoubleDash>
-    <XFixDoubleGreaterThan>{0} &gt;&gt; 을 제거했습니다.</XFixDoubleGreaterThan>
-    <XFixEllipsesStart>{0} 말머리의 '...' 을 제거합니다.</XFixEllipsesStart>
-    <XFixMissingOpenBracket>{0} 줄 안에 누락된 '[' 가 수정됐습니다.</XFixMissingOpenBracket>
-    <XFixMusicNotation>{0} 줄 안에 있는 음표를 수정합니다.</XFixMusicNotation>
     <FixDoubleDashExample>'음-- 맛있구나!' -&gt; '음... 맛있구나!'</FixDoubleDashExample>
     <FixDoubleGreaterThanExample>'&gt;&gt; 영희: 뛰어!' -&gt; '영희: 뛰어!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'...그리고 우리는 ~' -&gt; '그리고 우리는 ~'</FixEllipsesStartExample>
@@ -712,9 +708,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SelectDefault>기본값 선택</SelectDefault>
     <SetDefault>현재 수정사항을 기본값으로 설정</SetDefault>
     <FixContinuationStyleX>연속 스타일 수정: {0}</FixContinuationStyleX>
-    <XFixContinuationStyle>{0} 개의 연속 스타일 수정됨</XFixContinuationStyle>
     <FixUnnecessaryLeadingDots>불필요한 선행 점 제거</FixUnnecessaryLeadingDots>
-    <XFixUnnecessaryLeadingDots>{0} 개의 불필요한 선행 점 제거됨.</XFixUnnecessaryLeadingDots>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>* 사전 다운로드</Title>
@@ -736,7 +730,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <XDownloaded>{0}을 다운로드하고 설치했습니다!</XDownloaded>
   </GetTesseractDictionaries>
   <GoogleTranslate>
-    <Title>Google 번역기</Title>
+    <Title>번역</Title>
     <From>번역 전:</From>
     <To>번역 후:</To>
     <Translate>번역</Translate>
@@ -746,10 +740,24 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <MsClientSecretNeeded>죄송합니다,  최신 Microsoft 번역기를 사용하려면, Microsoft에서 인지 가능한 'Translator Text' 키 필요합니다.
 
 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구" 로 이동하십시오.</MsClientSecretNeeded>
-    <GoogleApiKeyNeeded>죄송합니다, 최신 Google 번역기를 사용하려면 Google의 API 키가 필요합니다.
-
-Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구" 로 이동하십시오.</GoogleApiKeyNeeded>
-    <GoogleNoApiKeyWarning>API 키 없이 번역하기... (느리고 데이터가 제한됨)</GoogleNoApiKeyWarning>
+    <GoogleNoApiKeyWarning>API 키 없이 번역... (느리고 데이터가 제한됨)
+	
+	API 키를 사용하려면 "옵션 -&gt; 환경설정 -&gt; 도구"로 이동하여 Google 번역 API 키를 입력하십시오.</GoogleNoApiKeyWarning>
+    <Service>서비스:</Service>
+    <LineMergeHandling>줄 병합:</LineMergeHandling>
+    <ProcessorMergeNext>최대 두 줄 병합</ProcessorMergeNext>
+    <ProcessorSentence>문장 병합</ProcessorSentence>
+    <ProcessorSingle>병합 안함</ProcessorSingle>
+    <AutoTranslateViaCopyPaste>복사-붙여넣기를 통해 자동 번역</AutoTranslateViaCopyPaste>
+    <CopyPasteMaxSize>최대 블록 크기</CopyPasteMaxSize>
+    <AutoCopyToClipboard>클립보드에 자동 복사</AutoCopyToClipboard>
+    <AutoCopyLineSeparator>줄 분리기</AutoCopyLineSeparator>
+    <TranslateBlockXOfY>{1}의 {0} 블록 번역</TranslateBlockXOfY>
+    <TranslateBlockInfo>번역기로 가서 텍스트를 붙여넣고, 결과를 클립보드에 다시 복사하고 아래 단추를 누릅니다.</TranslateBlockInfo>
+    <TranslateBlockGetFromClipboard>클립보드에서 번역된 텍스트 가져오기 (Ctrl + V)</TranslateBlockGetFromClipboard>
+    <TranslateBlockCopySourceText>원본 텍스트 클립보드 복사</TranslateBlockCopySourceText>
+    <TranslateBlockClipboardError1>클립보드에 원본 텍스트가 있습니다!</TranslateBlockClipboardError1>
+    <TranslateBlockClipboardError2>번역기로 이동하여 번역하고, 클립보드로 결과를 복사하고 이 단추를 다시 클릭합니다.</TranslateBlockClipboardError2>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Google | Microsoft 번역기</Title>
@@ -1131,9 +1139,8 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
       </Synchronization>
       <AutoTranslate>
         <Title>번역</Title>
-        <TranslatePoweredByGoogle>Google 번역...</TranslatePoweredByGoogle>
-        <TranslatePoweredByMicrosoft>Bing 번역...</TranslatePoweredByMicrosoft>
-        <TranslateFromSwedishToDanish>스웨덴어를 덴마크어로 번역 (nikse.dk 제공)</TranslateFromSwedishToDanish>
+        <AutoTranslate>자동 번역...</AutoTranslate>
+        <AutoTranslateViaCopyPaste>복사-붙여넣기를 통해 자동 변역...</AutoTranslateViaCopyPaste>
       </AutoTranslate>
       <Options>
         <Title>옵션</Title>
@@ -1247,6 +1254,8 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
         <RemoveActors>배우 제거</RemoveActors>
         <EditBookmark>책갈피 편집</EditBookmark>
         <RemoveBookmark>책갈피 제거</RemoveBookmark>
+        <GoToSourceView>소스 보기로 이동</GoToSourceView>
+        <GoToListView>자막 보기로 이동</GoToListView>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1577,6 +1586,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <NoSupportHereVobSub>VobSub 파일은 여기서 지원되지 않습니다.</NoSupportHereVobSub>
     <NoSupportHereDivx>DivX 파일은 여기서 지원되지 않습니다.</NoSupportHereDivx>
     <NoChapters>비디오에 챕터가 없습니다.</NoChapters>
+    <DarkThemeRestart>어두운 테마 변경을 적용하려면 Subtitle Edit를 다시 시작하십시오</DarkThemeRestart>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>MATROSKA 파일 안에 있는 자막 선택하기</Title>
@@ -1916,8 +1926,6 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <SpellCheck>맞춤법</SpellCheck>
     <NetflixQualityCheck>Netflix 품질 검사</NetflixQualityCheck>
     <SettingsName>환경 설정</SettingsName>
-    <Help>도움말</Help>
-    <UnbreakNoSpace>공백없이 줄바꿈 제거 (CJK)</UnbreakNoSpace>
     <ToggleBookmarks>책갈피 전환</ToggleBookmarks>
     <ToggleBookmarksWithComment>책갈피 전환 - 설명 추가</ToggleBookmarksWithComment>
     <ClearBookmarks>책갈피 지우기</ClearBookmarks>
@@ -1926,6 +1934,10 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <GoToNextBookmark>다음 책갈피로 이동</GoToNextBookmark>
     <ChooseProfile>프로필 선택</ChooseProfile>
     <DuplicateLine>중복 줄</DuplicateLine>
+    <ToggleView>자막/소스 보기 전환</ToggleView>
+    <ToggleMode>번역/생성/조정 모드 전환</ToggleMode>
+    <TogglePreviewOnVideo>비디오 미리보기 전환</TogglePreviewOnVideo>
+    <Help>도움말</Help>
     <FontInUi>UI 글꼴</FontInUi>
     <ShowFrameRate>도구 모음에 프레임 속도 표시</ShowFrameRate>
     <DefaultFrameRate>기본 프레임 속도</DefaultFrameRate>
@@ -2006,6 +2018,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <ShowStopButton>정지 버튼 표시</ShowStopButton>
     <ShowMuteButton>음소거 버튼 표시</ShowMuteButton>
     <ShowFullscreenButton>전체 화면 버튼 표시</ShowFullscreenButton>
+    <PreviewFontName>자막 미리보기 글꼴 이름</PreviewFontName>
     <PreviewFontSize>미리 보기의 글자 크기:</PreviewFontSize>
     <MainWindowVideoControls>메인 창의 비디오 컨트롤</MainWindowVideoControls>
     <CustomSearchTextAndUrl>사용자 지정 검색 서비스 / URL</CustomSearchTextAndUrl>
@@ -2108,6 +2121,8 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <UseSyntaxColoring>구문 색상 사용</UseSyntaxColoring>
     <HtmlColor>Html 색상</HtmlColor>
     <AssaColor>ASSA 색상</AssaColor>
+    <DarkTheme>어두운 테마</DarkTheme>
+    <DarkThemeEnabled>어두운 테마 사용</DarkThemeEnabled>
     <UpdateShortcut>업데이트</UpdateShortcut>
     <FoucsSetVideoPosition>초점에 비디오 위치 설정</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>비디오 컨트롤 연결 | 해제</ToggleDockUndockOfVideoControls>
@@ -2273,6 +2288,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <ListViewColumnTextDown>문자열, 텍스트 아래로</ListViewColumnTextDown>
     <ListViewGoToNextError>다음 오류로 이동</ListViewGoToNextError>
     <ShowBeamer>전체 화면으로 자막 프로젝터 시작</ShowBeamer>
+    <ShowStyleManager>스타일 관리자 표시</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>마지막 단어를 아래로 이동</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>다음 줄의 첫 단어를 위로 이동</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>다음 줄의 첫 단어를 위로 이동 (현재 자막)</MainTextBoxMoveFirstWordUpCurrent>
@@ -2286,6 +2302,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <MainTextBoxAutoBreakFromPos>커서 위치에서 첫 번째 공간에 줄바꿈</MainTextBoxAutoBreakFromPos>
     <MainTextBoxAutoBreakFromPosAndGoToNext>커서 위치에서 첫 번째 공간에 줄바꿈하고 다음으로 이동</MainTextBoxAutoBreakFromPosAndGoToNext>
     <MainTextBoxUnbreak>줄바꿈 제거</MainTextBoxUnbreak>
+    <MainTextBoxUnbreakNoSpace>공백없이 줄바꿈 제거 (CJK)</MainTextBoxUnbreakNoSpace>
     <MainFileSaveAll>모두 저장</MainFileSaveAll>
     <Miscellaneous>기타</Miscellaneous>
     <CpsIncludesSpace>초당 문자수(CPS)에 공백도 포함</CpsIncludesSpace>
@@ -2321,7 +2338,6 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <UseXAsNewGap>"{0}" 밀리초를 새로운 최소 간격으로 사용하시겠습니까?</UseXAsNewGap>
   </Settings>
   <SettingsMpv>
-    <Title>mpv 설정</Title>
     <DownloadMpv>mpv lib 다운로드</DownloadMpv>
     <DownloadMpvFailed>mpv를 다운로드할 수 없음 - 나중에 다시 시도하십시오!</DownloadMpvFailed>
     <DownloadMpvOk>mpv lib를 다운로드하고 사용준비를 완료했습니다.</DownloadMpvOk>
@@ -2383,6 +2399,9 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <CheckOneLetterWords>알 수 없는 홑문자 단어 알림</CheckOneLetterWords>
     <TreatINQuoteAsING>단어 끝의 "in"→"ing"로 바꿈 (영어 전용)</TreatINQuoteAsING>
     <RememberUseAlwaysList>"항상 사용" 목록 기억</RememberUseAlwaysList>
+    <LiveSpellCheck>실시간 맞춤법 검사</LiveSpellCheck>
+    <LiveSpellCheckLanguage>실시간 맞춤법 검사 - 언어 작업 [{0}]</LiveSpellCheckLanguage>
+    <NoDictionaryForLiveSpellCheck>실시간 맞춤법 검사 - 이 언어에 대한 사전이 없습니다 [{0}]</NoDictionaryForLiveSpellCheck>
     <ImageText>이미지 텍스트</ImageText>
     <SpellCheckCompleted>맞춤법 검사 완료!</SpellCheckCompleted>
     <SpellCheckAborted>맞춤법 검사 중지!</SpellCheckAborted>
@@ -2531,7 +2550,8 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <Margins>여백</Margins>
     <MarginLeft>왼쪽 여백</MarginLeft>
     <MarginRight>오른쪽 여백</MarginRight>
-    <MarginVertical>수직 여백</MarginVertical>
+    <MarginVertical>세로 여백</MarginVertical>
+    <Vertical>세로</Vertical>
     <Border>테두리</Border>
     <PlusShadow>+ 그림자</PlusShadow>
     <OpaqueBox>불투명 상자 (테두리 색 사용)</OpaqueBox>
@@ -2549,6 +2569,11 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <StyleAlreadyExits>이미 존재하는 스타일: {0}</StyleAlreadyExits>
     <StyleXExportedToFileY>'{0}'스타일을 '{1}'파일로 내보냈습니다.</StyleXExportedToFileY>
     <StyleXImportedFromFileY>'{0}'스타일을 '{1}'파일에서 가져왔습니다.</StyleXImportedFromFileY>
+    <SetPreviewText>미리 보기 텍스트 설정...</SetPreviewText>
+    <AddToFile>파일에 추가</AddToFile>
+    <AddToStorage>저장소에 추가</AddToStorage>
+    <StyleStorage>저장소 스타일</StyleStorage>
+    <OverwriteX>{0}을 덮어쓰시겠습니까?</OverwriteX>
   </SubStationAlphaStyles>
   <PointSync>
     <Title>* 지점 동기화</Title>
