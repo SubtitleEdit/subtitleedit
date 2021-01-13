@@ -349,7 +349,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonWaveformPlay = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonLockCenter = new System.Windows.Forms.ToolStripButton();
             this.toolStripSplitButtonPlayRate = new System.Windows.Forms.ToolStripSplitButton();
-            this.panelMode = new System.Windows.Forms.Panel();
+            this.panelModes = new System.Windows.Forms.Panel();
             this.buttonModeTranslate = new System.Windows.Forms.Button();
             this.buttonModeCreate = new System.Windows.Forms.Button();
             this.buttonModeAdjust = new System.Windows.Forms.Button();
@@ -545,7 +545,7 @@ namespace Nikse.SubtitleEdit.Forms
             ((System.ComponentModel.ISupportInitialize)(this.trackBarWaveformPosition)).BeginInit();
             this.panelWaveformControls.SuspendLayout();
             this.toolStripWaveControls.SuspendLayout();
-            this.panelMode.SuspendLayout();
+            this.panelModes.SuspendLayout();
             this.panelTranslate.SuspendLayout();
             this.groupBoxTranslateSearch.SuspendLayout();
             this.groupBoxAutoContinue.SuspendLayout();
@@ -2983,7 +2983,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxVideo.Controls.Add(this.labelVideoInfo);
             this.groupBoxVideo.Controls.Add(this.trackBarWaveformPosition);
             this.groupBoxVideo.Controls.Add(this.panelWaveformControls);
-            this.groupBoxVideo.Controls.Add(this.panelMode);
+            this.groupBoxVideo.Controls.Add(this.panelModes);
             this.groupBoxVideo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBoxVideo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBoxVideo.Location = new System.Drawing.Point(0, 0);
@@ -3192,23 +3192,23 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSplitButtonPlayRate.Text = "Play rate (speed)";
             this.toolStripSplitButtonPlayRate.ButtonClick += new System.EventHandler(this.toolStripSplitButtonPlayRate_ButtonClick);
             // 
-            // panelMode
+            // panelModes
             // 
-            this.panelMode.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelMode.Controls.Add(this.buttonModeTranslate);
-            this.panelMode.Controls.Add(this.buttonModeCreate);
-            this.panelMode.Controls.Add(this.buttonModeAdjust);
-            this.panelMode.Controls.Add(this.panelTranslate);
-            this.panelMode.Controls.Add(this.panelCreate);
-            this.panelMode.Controls.Add(this.panelAdjust);
-            this.panelMode.Location = new System.Drawing.Point(8, 12);
-            this.panelMode.Name = "panelMode";
-            this.panelMode.Size = new System.Drawing.Size(467, 283);
-            this.panelMode.TabIndex = 0;
+            this.panelModes.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelModes.Controls.Add(this.buttonModeTranslate);
+            this.panelModes.Controls.Add(this.buttonModeCreate);
+            this.panelModes.Controls.Add(this.buttonModeAdjust);
+            this.panelModes.Controls.Add(this.panelTranslate);
+            this.panelModes.Controls.Add(this.panelCreate);
+            this.panelModes.Controls.Add(this.panelAdjust);
+            this.panelModes.Location = new System.Drawing.Point(4, 12);
+            this.panelModes.Name = "panelModes";
+            this.panelModes.Size = new System.Drawing.Size(467, 283);
+            this.panelModes.TabIndex = 0;
             // 
             // buttonModeTranslate
             // 
-            this.buttonModeTranslate.Location = new System.Drawing.Point(6, 8);
+            this.buttonModeTranslate.Location = new System.Drawing.Point(4, 4);
             this.buttonModeTranslate.Name = "buttonModeTranslate";
             this.buttonModeTranslate.Size = new System.Drawing.Size(65, 23);
             this.buttonModeTranslate.TabIndex = 0;
@@ -3217,7 +3217,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // buttonModeCreate
             // 
-            this.buttonModeCreate.Location = new System.Drawing.Point(73, 8);
+            this.buttonModeCreate.Location = new System.Drawing.Point(71, 4);
             this.buttonModeCreate.Name = "buttonModeCreate";
             this.buttonModeCreate.Size = new System.Drawing.Size(65, 23);
             this.buttonModeCreate.TabIndex = 1;
@@ -3226,7 +3226,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // buttonModeAdjust
             // 
-            this.buttonModeAdjust.Location = new System.Drawing.Point(140, 8);
+            this.buttonModeAdjust.Location = new System.Drawing.Point(138, 4);
             this.buttonModeAdjust.Name = "buttonModeAdjust";
             this.buttonModeAdjust.Size = new System.Drawing.Size(65, 23);
             this.buttonModeAdjust.TabIndex = 2;
@@ -3243,7 +3243,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.panelTranslate.Controls.Add(this.buttonPlayPrevious);
             this.panelTranslate.Controls.Add(this.buttonPlayCurrent);
             this.panelTranslate.Controls.Add(this.buttonPlayNext);
-            this.panelTranslate.Location = new System.Drawing.Point(4, 22);
+            this.panelTranslate.Location = new System.Drawing.Point(0, 20);
             this.panelTranslate.Name = "panelTranslate";
             this.panelTranslate.Padding = new System.Windows.Forms.Padding(3);
             this.panelTranslate.Size = new System.Drawing.Size(459, 257);
@@ -3498,7 +3498,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.panelCreate.Controls.Add(this.numericUpDownSec1);
             this.panelCreate.Controls.Add(this.labelVideoPosition);
             this.panelCreate.Controls.Add(this.buttonSecBack1);
-            this.panelCreate.Location = new System.Drawing.Point(4, 22);
+            this.panelCreate.Location = new System.Drawing.Point(6, 20);
             this.panelCreate.Name = "panelCreate";
             this.panelCreate.Padding = new System.Windows.Forms.Padding(3);
             this.panelCreate.Size = new System.Drawing.Size(214, 257);
@@ -3738,7 +3738,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.panelAdjust.Controls.Add(this.labelVideoPosition2);
             this.panelAdjust.Controls.Add(this.buttonAdjustGoToPosAndPause);
             this.panelAdjust.Controls.Add(this.buttonAdjustPlayBefore);
-            this.panelAdjust.Location = new System.Drawing.Point(4, 22);
+            this.panelAdjust.Location = new System.Drawing.Point(6, 20);
             this.panelAdjust.Name = "panelAdjust";
             this.panelAdjust.Size = new System.Drawing.Size(214, 257);
             this.panelAdjust.TabIndex = 5;
@@ -3842,7 +3842,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelAdjustF9.AutoSize = true;
             this.labelAdjustF9.ForeColor = System.Drawing.Color.Gray;
-            this.labelAdjustF9.Location = new System.Drawing.Point(188, 26);
+            this.labelAdjustF9.Location = new System.Drawing.Point(188, 18);
             this.labelAdjustF9.Name = "labelAdjustF9";
             this.labelAdjustF9.Size = new System.Drawing.Size(19, 13);
             this.labelAdjustF9.TabIndex = 61;
@@ -5247,7 +5247,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.panelWaveformControls.PerformLayout();
             this.toolStripWaveControls.ResumeLayout(false);
             this.toolStripWaveControls.PerformLayout();
-            this.panelMode.ResumeLayout(false);
+            this.panelModes.ResumeLayout(false);
             this.panelTranslate.ResumeLayout(false);
             this.panelTranslate.PerformLayout();
             this.groupBoxTranslateSearch.ResumeLayout(false);
@@ -5454,7 +5454,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem showhideVideoToolStripMenuItem;
         private System.Windows.Forms.Label labelVideoPosition;
         private Controls.TimeUpDown timeUpDownVideoPosition;
-        private System.Windows.Forms.Panel panelMode;
+        private System.Windows.Forms.Panel panelModes;
         private System.Windows.Forms.Button buttonModeTranslate;
         private System.Windows.Forms.Button buttonModeCreate;
         private System.Windows.Forms.Button buttonModeAdjust;
