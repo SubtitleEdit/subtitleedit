@@ -1,6 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using System.Globalization;
+using System;
 
 namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 {
@@ -35,8 +35,8 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                         {
                             fixedParagraph.EndTime.TotalMilliseconds++;
                         }
-                        
-                        controller.AddRecord(p, fixedParagraph, comment, charactersPerSeconds.ToString(CultureInfo.InvariantCulture));
+
+                        controller.AddRecord(p, fixedParagraph, comment, FormattableString.Invariant($"CPS={charactersPerSeconds:0.##}"));
                     }
                 }
             }

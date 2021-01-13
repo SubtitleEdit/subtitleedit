@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Core.Enums;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -182,6 +183,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 
         public class Record
         {
+            public string LineNumber { get; set; }
             public string TimeCode { get; set; }
             public string Context { get; set; }
             public string Comment { get; set; }
@@ -190,13 +192,15 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 
             public Record()
             {
+                LineNumber = string.Empty;
                 TimeCode = string.Empty;
                 Context = string.Empty;
                 Comment = string.Empty;
             }
 
-            public Record(string timeCode, string context, string comment)
+            public Record(string lineNumber, string timeCode, string context, string comment)
             {
+                LineNumber = lineNumber;
                 TimeCode = timeCode;
                 Context = context;
                 Comment = comment;
@@ -204,7 +208,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 
             public string ToCsvRow()
             {
-                return $"{TimeCode},{CsvTextEncode(Context)},{CsvTextEncode(Comment)}";
+                return $"{LineNumber},{TimeCode},{CsvTextEncode(Context)},{CsvTextEncode(Comment)}";
             }
 
             private static string CsvTextEncode(string s)
@@ -225,13 +229,14 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 
         public void AddRecord(Paragraph originalParagraph, string timeCode, string context, string comment)
         {
-            Records.Add(new Record(timeCode, context, comment) { OriginalParagraph = originalParagraph });
+            Records.Add(new Record(originalParagraph.Number.ToString(CultureInfo.InvariantCulture), timeCode, context, comment) { OriginalParagraph = originalParagraph });
         }
 
         public void AddRecord(Paragraph originalParagraph, string comment)
         {
             Records.Add(new Record
             {
+                LineNumber = originalParagraph.Number.ToString(CultureInfo.InvariantCulture),
                 Comment = comment,
                 OriginalParagraph = originalParagraph,
                 TimeCode = originalParagraph.StartTime.ToDisplayString()
@@ -245,6 +250,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 Context = context,
                 OriginalParagraph = originalParagraph,
                 FixedParagraph = fixedParagraph,
+                LineNumber = originalParagraph.Number.ToString(CultureInfo.InvariantCulture),
                 TimeCode = originalParagraph?.StartTime.ToDisplayString()
             });
         }
@@ -254,7 +260,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
             var csvBuilder = new StringBuilder();
 
             // Header
-            csvBuilder.AppendLine("Timecode,Context,Comment");
+            csvBuilder.AppendLine("LineNumber,TimeCode,Context,Comment");
 
             // Rows
             Records.ForEach(r => csvBuilder.AppendLine(r.ToCsvRow()));
