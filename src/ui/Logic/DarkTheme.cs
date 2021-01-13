@@ -401,12 +401,6 @@ namespace Nikse.SubtitleEdit.Logic
                 return;
             }
 
-            int addY = 0;
-            if (e.Font.Name != Configuration.Settings.General.SubtitleFontName)
-            {
-                addY = 5;
-            }
-
             e.DrawDefault = false;
             using (var b = new SolidBrush(Color.FromArgb(Math.Max(BackColor.R - 9, 0), Math.Max(BackColor.G - 9, 0), Math.Max(BackColor.B - 9, 0))))
             {
@@ -426,7 +420,8 @@ namespace Nikse.SubtitleEdit.Logic
 
             using (var fc = new SolidBrush(ForeColor))
             {
-                e.Graphics.DrawString(e.Header.Text, e.Font, fc, e.Bounds.X + 3, e.Bounds.Y + addY, strFormat);
+                int posY = Math.Abs(e.Bounds.Height - e.Font.Height) / 2;
+                e.Graphics.DrawString(e.Header.Text, e.Font, fc, e.Bounds.X + 3, posY, strFormat);
                 if (e.ColumnIndex != 0)
                 {
                     e.Graphics.DrawLine(new Pen(ForeColor), e.Bounds.X, e.Bounds.Y, e.Bounds.X, e.Bounds.Height);
