@@ -229,14 +229,14 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 
         public void AddRecord(Paragraph originalParagraph, string timeCode, string context, string comment)
         {
-            Records.Add(new Record(originalParagraph.Number.ToString(CultureInfo.InvariantCulture), timeCode, context, comment) { OriginalParagraph = originalParagraph });
+            Records.Add(new Record(originalParagraph?.Number.ToString(CultureInfo.InvariantCulture), timeCode, context, comment) { OriginalParagraph = originalParagraph });
         }
 
         public void AddRecord(Paragraph originalParagraph, string comment)
         {
             Records.Add(new Record
             {
-                LineNumber = originalParagraph.Number.ToString(CultureInfo.InvariantCulture),
+                LineNumber = originalParagraph?.Number.ToString(CultureInfo.InvariantCulture),
                 Comment = comment,
                 OriginalParagraph = originalParagraph,
                 TimeCode = originalParagraph.StartTime.ToDisplayString()
@@ -250,7 +250,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 Context = context,
                 OriginalParagraph = originalParagraph,
                 FixedParagraph = fixedParagraph,
-                LineNumber = originalParagraph.Number.ToString(CultureInfo.InvariantCulture),
+                LineNumber = originalParagraph?.Number.ToString(CultureInfo.InvariantCulture),
                 TimeCode = originalParagraph?.StartTime.ToDisplayString()
             });
         }
