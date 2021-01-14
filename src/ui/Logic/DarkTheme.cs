@@ -232,12 +232,8 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (c is TabControl tc)
             {
-                tc.DrawMode = TabDrawMode.OwnerDrawFixed;
-                tc.DrawItem += TabControl1_DrawItem;
-                foreach (TabPage tabPage in tc.TabPages)
-                {
-                    tabPage.Paint += TabPage_Paint;
-                }
+                SetStyle(tc, ControlStyles.UserPaint | ControlStyles.DoubleBuffer, true);
+                tc.Paint += TabControl_Paint;
             }
 
             if (c is SubtitleListView seLV)
@@ -310,28 +306,9 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        private static void TabControl1_DrawItem(object sender, DrawItemEventArgs e)
+        private static void TabControl_Paint(object sender, PaintEventArgs e)
         {
-            var sz = e.Graphics.MeasureString((sender as TabControl)?.TabPages[e.Index].Text, e.Font);
-            using (var br = new SolidBrush(BackColor))
-            {
-                e.Graphics.FillRectangle(br, e.Bounds);
-                e.Graphics.DrawString((sender as TabControl)?.TabPages[e.Index].Text, e.Font, Brushes.WhiteSmoke, e.Bounds.Left + (e.Bounds.Width - sz.Width) / 2, e.Bounds.Top + (e.Bounds.Height - sz.Height) / 2 + 1);
-
-                var rect = e.Bounds;
-                rect.Offset(0, 1);
-                rect.Inflate(0, -1);
-                e.Graphics.DrawRectangle(new Pen(ForeColor, 1), rect);
-                e.DrawFocusRectangle();
-            }
-        }
-
-        private static void TabPage_Paint(object sender, PaintEventArgs e)
-        {
-            using (var fillBrush = new SolidBrush(BackColor))
-            {
-                e.Graphics.FillRectangle(fillBrush, e.ClipRectangle);
-            }
+            new TabControlRenderer(sender as TabControl, e).Paint();
         }
 
         private static void ListView_DrawItem(object sender, DrawListViewItemEventArgs e)
@@ -424,12 +401,6 @@ namespace Nikse.SubtitleEdit.Logic
                 return;
             }
 
-            int addY = 0;
-            if (e.Font.Name != Configuration.Settings.General.SubtitleFontName)
-            {
-                addY = 5;
-            }
-
             e.DrawDefault = false;
             using (var b = new SolidBrush(Color.FromArgb(Math.Max(BackColor.R - 9, 0), Math.Max(BackColor.G - 9, 0), Math.Max(BackColor.B - 9, 0))))
             {
@@ -449,7 +420,8 @@ namespace Nikse.SubtitleEdit.Logic
 
             using (var fc = new SolidBrush(ForeColor))
             {
-                e.Graphics.DrawString(e.Header.Text, e.Font, fc, e.Bounds.X + 3, e.Bounds.Y + addY, strFormat);
+                int posY = Math.Abs(e.Bounds.Height - e.Font.Height) / 2;
+                e.Graphics.DrawString(e.Header.Text, e.Font, fc, e.Bounds.X + 3, posY, strFormat);
                 if (e.ColumnIndex != 0)
                 {
                     e.Graphics.DrawLine(new Pen(ForeColor), e.Bounds.X, e.Bounds.Y, e.Bounds.X, e.Bounds.Height);
@@ -562,6 +534,289 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
             }
+        }
+
+        // A dark theme for TabControl taken from gitextensions
+        // https://github.com/gitextensions/gitextensions/blob/master/GitExtUtils/GitUI/Theming/TabControlRenderer.cs
+        private class TabControlRenderer
+        {
+            private readonly Point _mouseCursor;
+            private readonly Graphics _graphics;
+            private readonly Rectangle _clipRectangle;
+            private readonly int _selectedIndex;
+            private readonly int _tabCount;
+            private readonly Size _imageSize;
+            private readonly Font _font;
+            private readonly bool _enabled;
+            private readonly Image[] _tabImages;
+            private readonly Rectangle[] _tabRects;
+            private readonly string[] _tabTexts;
+            private readonly Color[] _tabBackColors;
+            private readonly Size _size;
+            private readonly bool _failed;
+
+            private static readonly Color _selectedTabColor = Color.FromArgb(0, 122, 204);
+            private static readonly Color _highlightedTabColor = Color.FromArgb(28, 151, 234);
+
+            private static readonly int ImagePadding = 6;
+            private static readonly int SelectedTabPadding = 2;
+            private static readonly int BorderWidth = 1;
+
+            public TabControlRenderer(TabControl tabs, PaintEventArgs e)
+            {
+                _mouseCursor = tabs.PointToClient(Cursor.Position);
+                _graphics = e.Graphics;
+                _clipRectangle = e.ClipRectangle;
+                _size = tabs.Size;
+                _selectedIndex = tabs.SelectedIndex;
+                _tabCount = tabs.TabCount;
+                _font = tabs.Font;
+                _imageSize = tabs.ImageList?.ImageSize ?? Size.Empty;
+                _enabled = tabs.Enabled;
+
+                try
+                {
+                    _tabTexts = Enumerable.Range(0, _tabCount)
+                        .Select(i => tabs.TabPages[i].Text)
+                        .ToArray();
+                    _tabImages = Enumerable.Range(0, _tabCount)
+                        .Select(i => GetTabImage(tabs, i))
+                        .ToArray();
+                    _tabRects = Enumerable.Range(0, _tabCount)
+                        .Select(tabs.GetTabRect)
+                        .ToArray();
+                    _tabBackColors = Enumerable.Range(0, _tabCount)
+                        .Select(i => tabs.TabPages[i].BackColor)
+                        .ToArray();
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    _failed = true;
+                }
+            }
+
+            public void Paint()
+            {
+                if (_failed)
+                {
+                    return;
+                }
+
+                using (var canvasBrush = new SolidBrush(BackColor))
+                {
+                    _graphics.FillRectangle(canvasBrush, _clipRectangle);
+                }
+
+                RenderSelectedPageBackground();
+
+                IEnumerable<int> pageIndices;
+                if (_selectedIndex >= 0 && _selectedIndex < _tabCount)
+                {
+                    // Render tabs in pyramid order with selected on top
+                    pageIndices = Enumerable.Range(0, _selectedIndex)
+                        .Concat(Enumerable.Range(_selectedIndex, _tabCount - _selectedIndex).Reverse());
+                }
+                else
+                {
+                    pageIndices = Enumerable.Range(0, _tabCount);
+                }
+
+                foreach (var index in pageIndices)
+                {
+                    RenderTabBackground(index);
+                    RenderTabImage(index);
+                    RenderTabText(index, _tabImages[index] != null);
+                }
+            }
+
+            private void RenderTabBackground(int index)
+            {
+                var outerRect = GetOuterTabRect(index);
+                _graphics.FillRectangle(GetBackgroundBrush(index), outerRect);
+
+                var points = new List<Point>(4);
+                if (index <= _selectedIndex)
+                {
+                    points.Add(new Point(outerRect.Left, outerRect.Bottom - 1));
+                }
+
+                points.Add(new Point(outerRect.Left, outerRect.Top));
+                points.Add(new Point(outerRect.Right - 1, outerRect.Top));
+
+                if (index >= _selectedIndex)
+                {
+                    points.Add(new Point(outerRect.Right - 1, outerRect.Bottom - 1));
+                }
+                using (var borderPen = GetBorderPen())
+                {
+                    _graphics.DrawLines(borderPen, points.ToArray());
+                }
+            }
+
+            private void RenderTabImage(int index)
+            {
+                var image = _tabImages[index];
+                if (image is null)
+                {
+                    return;
+                }
+
+                var imgRect = GetTabImageRect(index);
+                _graphics.DrawImage(image, imgRect);
+            }
+
+            private Rectangle GetTabImageRect(int index)
+            {
+                var innerRect = _tabRects[index];
+                int imgHeight = _imageSize.Height;
+                var imgRect = new Rectangle(
+                    new Point(innerRect.X + ImagePadding,
+                        innerRect.Y + ((innerRect.Height - imgHeight) / 2)),
+                    _imageSize);
+
+                if (index == _selectedIndex)
+                {
+                    imgRect.Offset(0, -SelectedTabPadding);
+                }
+
+                return imgRect;
+            }
+
+            private static Image GetTabImage(TabControl tabs, int index)
+            {
+                var images = tabs.ImageList?.Images;
+                if (images is null)
+                {
+                    return null;
+                }
+
+                var page = tabs.TabPages[index];
+                if (!string.IsNullOrEmpty(page.ImageKey))
+                {
+                    return images[page.ImageKey];
+                }
+
+                if (page.ImageIndex >= 0 && page.ImageIndex < images.Count)
+                {
+                    return images[page.ImageIndex];
+                }
+
+                return null;
+            }
+
+            private void RenderTabText(int index, bool hasImage)
+            {
+                if (string.IsNullOrEmpty(_tabTexts[index]))
+                {
+                    return;
+                }
+
+                var textRect = GetTabTextRect(index, hasImage);
+
+                const TextFormatFlags format =
+                    TextFormatFlags.NoClipping |
+                    TextFormatFlags.NoPrefix |
+                    TextFormatFlags.VerticalCenter |
+                    TextFormatFlags.HorizontalCenter;
+
+                var textColor = _enabled
+                    ? ForeColor
+                    : SystemColors.GrayText;
+
+                TextRenderer.DrawText(_graphics, _tabTexts[index], _font, textRect, textColor, format);
+            }
+
+            private Rectangle GetTabTextRect(int index, bool hasImage)
+            {
+                var innerRect = _tabRects[index];
+                Rectangle textRect;
+                if (hasImage)
+                {
+                    int deltaWidth = _imageSize.Width + ImagePadding;
+                    textRect = new Rectangle(
+                        innerRect.X + deltaWidth,
+                        innerRect.Y,
+                        innerRect.Width - deltaWidth,
+                        innerRect.Height);
+                }
+                else
+                {
+                    textRect = innerRect;
+                }
+
+                if (index == _selectedIndex)
+                {
+                    textRect.Offset(0, -SelectedTabPadding);
+                }
+
+                return textRect;
+            }
+
+            private Rectangle GetOuterTabRect(int index)
+            {
+                var innerRect = _tabRects[index];
+
+                if (index == _selectedIndex)
+                {
+                    return Rectangle.FromLTRB(
+                        innerRect.Left - SelectedTabPadding,
+                        innerRect.Top - SelectedTabPadding,
+                        innerRect.Right + SelectedTabPadding,
+                        innerRect.Bottom + 1); // +1 to overlap tabs bottom line
+                }
+
+                return Rectangle.FromLTRB(
+                    innerRect.Left,
+                    innerRect.Top + 1,
+                    innerRect.Right,
+                    innerRect.Bottom);
+            }
+
+            private void RenderSelectedPageBackground()
+            {
+                if (_selectedIndex < 0 || _selectedIndex >= _tabCount)
+                {
+                    return;
+                }
+
+                var tabRect = _tabRects[_selectedIndex];
+                var pageRect = Rectangle.FromLTRB(0, tabRect.Bottom, _size.Width - 1,
+                    _size.Height - 1);
+
+                if (!_clipRectangle.IntersectsWith(pageRect))
+                {
+                    return;
+                }
+
+                using (var borderPen = GetBorderPen())
+                {
+                    _graphics.DrawRectangle(borderPen, pageRect);
+                }
+            }
+
+            private Brush GetBackgroundBrush(int index)
+            {
+                if (index == _selectedIndex)
+                {
+                    return _tabBackColors[index] == Color.Transparent
+                        ? SystemBrushes.Window
+                        : new SolidBrush(_selectedTabColor);
+                }
+
+                bool isHighlighted = _tabRects[index].Contains(_mouseCursor);
+
+                return isHighlighted
+                    ? new SolidBrush(_highlightedTabColor)
+                    : new SolidBrush(BackColor);
+            }
+
+            private Pen GetBorderPen() =>
+                new Pen(SystemBrushes.ControlDark, BorderWidth);
+        }
+
+        private static void SetStyle(Control control, ControlStyles styles, bool value)
+        {
+            typeof(TabControl).GetMethod("SetStyle", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(control, new object[] { styles, value });
         }
 
         internal static void SetDarkTheme(ToolStripItem item)
