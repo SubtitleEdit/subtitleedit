@@ -423,7 +423,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 int posY = Math.Abs(e.Bounds.Height - e.Font.Height) / 2;
                 e.Graphics.DrawString(e.Header.Text, e.Font, fc, e.Bounds.X + 3, posY, strFormat);
-                if (e.ColumnIndex != 0)
+                if (Configuration.Settings.General.DarkThemeShowListViewGridLines && e.ColumnIndex != 0)
                 {
                     e.Graphics.DrawLine(new Pen(ForeColor), e.Bounds.X, e.Bounds.Y, e.Bounds.X, e.Bounds.Height);
                 }
