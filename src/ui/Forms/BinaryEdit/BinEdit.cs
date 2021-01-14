@@ -37,6 +37,146 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             public Bitmap Bitmap { get; set; }
         }
 
+        public class BdnXmlParagraph : IBinaryParagraphWithPosition
+        {
+            public BdnXmlParagraph(Paragraph p, string fileName, int width, int height)
+            {
+                _p = p;
+                _dir = Path.GetDirectoryName(fileName);
+                _width = width;
+                _height = height;
+            }
+
+            private Paragraph _p;
+            private string _dir;
+            private int _width;
+            private int _height;
+
+            public bool IsForced => _p.Forced;
+
+            public TimeCode StartTimeCode => _p.StartTime;
+
+            public TimeCode EndTimeCode => _p.EndTime;
+
+            public Bitmap GetBitmap()
+            {
+                var fullPath = Path.Combine(_dir, _p.Text);
+                if (File.Exists(fullPath))
+                {
+                    return new Bitmap(fullPath);
+                }
+
+                return new Bitmap(1, 1);
+            }
+
+            public Position GetPosition()
+            {
+                if (string.IsNullOrEmpty(_p.Extra))
+                {
+                    return new Position(1, 1);
+                }
+
+                var coords = _p.Extra.Split(',');
+                if (coords.Length == 2)
+                {
+                    return new Position(int.Parse(coords[0]), int.Parse(coords[1]));
+                }
+
+                return new Position(1, 1);
+            }
+
+            public Size GetScreenSize()
+            {
+                return new Size(_width, _height);
+            }
+
+            public static Size GetResolution(string fileName)
+            {
+                var width = 1920;
+                var height = 1080;
+                try
+                {
+                    var bdnXmlDocument = new XmlDocument { XmlResolver = null };
+                    bdnXmlDocument.Load(fileName);
+
+                    var formatNode = bdnXmlDocument.DocumentElement.SelectSingleNode("Description/Format");
+                    var videoFormat = formatNode?.Attributes["VideoFormat"].InnerText;
+                    if (videoFormat == "480i" || videoFormat == "480p")
+                    {
+                        width = 720; // not certain
+                        height = 480;
+                    }
+                    else if (videoFormat == "576i" || videoFormat == "576p")
+                    {
+                        width = 720; // not certain
+                        height = 576;
+                    }
+                    else if (videoFormat == "720i" || videoFormat == "720p")
+                    {
+                        width = 1280;
+                        height = 720;
+                    }
+                    else if (videoFormat == "1080i" || videoFormat == "1080p")
+                    {
+                        width = 1920;
+                        height = 1080;
+                    }
+                    else if (videoFormat == "2160i" || videoFormat == "2160p")
+                    {
+                        width = 3840;
+                        height = 2160;
+                    }
+                    else if (videoFormat == "4320i" || videoFormat == "4320p")
+                    {
+                        width = 7680;
+                        height = 4320;
+                    }
+                    else if (videoFormat.Contains("x"))
+                    {
+                        var parts = videoFormat.Split('x');
+                        if (parts.Length == 2)
+                        {
+                            width = int.Parse(parts[0]);
+                            height = int.Parse(parts[1]);
+                        }
+                    }
+                }
+                catch
+                {
+                    width = 0;
+                    height = 0;
+                }
+
+                return new Size(width, height);
+            }
+
+
+            public static decimal GetFrameRate(string fileName)
+            {
+                try
+                {
+                    var bdnXmlDocument = new XmlDocument { XmlResolver = null };
+                    bdnXmlDocument.Load(fileName);
+
+                    var formatNode = bdnXmlDocument.DocumentElement.SelectSingleNode("Description/Format");
+                    var frameRateString = formatNode?.Attributes["FrameRate"].InnerText;
+                    if (!string.IsNullOrEmpty(frameRateString))
+                    {
+                        if (decimal.TryParse(frameRateString, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var n))
+                        {
+                            return n;
+                        }
+                    }
+                }
+                catch
+                {
+                    // ignore
+                }
+
+                return 25.0m;
+            }
+        }
+
         private readonly Keys _goToLine = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditGoToLineNumber);
         private readonly Keys _mainGeneralGoToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
         private readonly Keys _mainGeneralGoToPrevSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
@@ -214,6 +354,29 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
                 _subtitle.Renumber();
                 subtitleListView1.Fill(_subtitle);
+            }
+            else if (ext == ".xml")
+            {
+                var bdnXml = new BdnXml();
+                var enc = LanguageAutoDetect.GetEncodingFromFile(fileName, true);
+                var list = new List<string>(File.ReadAllLines(fileName, enc));
+                if (bdnXml.IsMine(list, fileName))
+                {
+                    _subtitle = new Subtitle();
+                    bdnXml.LoadSubtitle(_subtitle, list, fileName);
+                    _binSubtitles = new List<IBinaryParagraphWithPosition>();
+                    _extra = new List<Extra>();
+                    var res = BdnXmlParagraph.GetResolution(fileName);
+                    SetResolution(res);
+                    SetFrameRate(BdnXmlParagraph.GetFrameRate(fileName));
+                    foreach (var p in _subtitle.Paragraphs)
+                    {
+                        IBinaryParagraphWithPosition bp = new BdnXmlParagraph(p, fileName, res.Width, res.Height);
+                        _binSubtitles.Add(bp);
+                        _extra.Add(new Extra { IsForced = bp.IsForced, X = bp.GetPosition().Left, Y = bp.GetPosition().Top });
+                    }
+                    subtitleListView1.Fill(_subtitle);
+                }
             }
 
             if (_subtitle != null)
@@ -623,6 +786,22 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 default:
                     comboBoxFrameRate.SelectedIndex = 0;
                     break;
+            }
+        }
+
+        private void SetFrameRate(decimal frameRate)
+        {
+            for (int i = 0; i < comboBoxFrameRate.Items.Count; i++)
+            {
+                var v = comboBoxFrameRate.Items[i].ToString();
+                if (decimal.TryParse(v, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var n))
+                {
+                    if (frameRate == n)
+                    {
+                        comboBoxFrameRate.SelectedIndex = i;
+                        return;
+                    }
+                }
             }
         }
 
@@ -1047,7 +1226,8 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.Filter = LanguageSettings.Current.Main.BluRaySupFiles + "|*.sup|" +
                                      "Matroska|*.mkv;*.mks|" +
-                                     "Transport stream|*.ts;*.m2ts;*.mts;*.rec;*.mpeg;*.mpg";
+                                     "Transport stream|*.ts;*.m2ts;*.mts;*.rec;*.mpeg;*.mpg|" +
+                                     "BdnXml|*.xml";
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 OpenBinSubtitle(openFileDialog1.FileName);
