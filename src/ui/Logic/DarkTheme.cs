@@ -395,13 +395,14 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static void ListView_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
         {
+            e.DrawDefault = false;
+
             if (sender is ListView lv && lv.RightToLeftLayout)
             {
-                // Until we find a solution for drawing it in RTL
+                TextRenderer.DrawText(e.Graphics, $" {e.Header.Text}", e.Font, e.Bounds, ForeColor, TextFormatFlags.Left);
                 return;
             }
 
-            e.DrawDefault = false;
             using (var b = new SolidBrush(Color.FromArgb(Math.Max(BackColor.R - 9, 0), Math.Max(BackColor.G - 9, 0), Math.Max(BackColor.B - 9, 0))))
             {
                 e.Graphics.FillRectangle(b, e.Bounds);
@@ -429,7 +430,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        // A hack to set the disabled backcolor of a ListView
+        // A hack to set the backcolor of a disabled ListView
         private static void ListView_EnabledChanged(object sender, EventArgs e)
         {
             var listView = sender as ListView;
