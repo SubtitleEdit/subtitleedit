@@ -65,6 +65,8 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.resizeImagesForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.colorSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.changeBrightnessForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.changeAlphaForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.adjustAllTimesForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.adjustDisplayTimeForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -84,9 +86,10 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.applyDurationLimitsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.appendSubtitleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
+            this.alignmentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resizeBitmapsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeBrightnessToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.alignmentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.changeAlphaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.quickOCRTextsforOverviewOnlyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.videoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -113,7 +116,6 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.timerSubtitleOnVideo = new System.Windows.Forms.Timer(this.components);
             this.labelVideoInfo = new System.Windows.Forms.Label();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
-            this.changeBrightnessForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxCurrent.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).BeginInit();
@@ -417,6 +419,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.resizeImagesForSelectedLinesToolStripMenuItem,
             this.colorSelectedLinesToolStripMenuItem,
             this.changeBrightnessForSelectedLinesToolStripMenuItem,
+            this.changeAlphaForSelectedLinesToolStripMenuItem,
             this.toolStripSeparator6,
             this.adjustAllTimesForSelectedLinesToolStripMenuItem,
             this.adjustDisplayTimeForSelectedLinesToolStripMenuItem,
@@ -424,7 +427,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.toolStripSeparatorInsertSub,
             this.insertSubtitleAfterThisLineToolStripMenuItem});
             this.contextMenuStripListView.Name = "contextMenuStripListView";
-            this.contextMenuStripListView.Size = new System.Drawing.Size(377, 358);
+            this.contextMenuStripListView.Size = new System.Drawing.Size(377, 380);
             this.contextMenuStripListView.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripListView_Opening);
             // 
             // deleteToolStripMenuItem
@@ -499,6 +502,20 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.colorSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(376, 22);
             this.colorSelectedLinesToolStripMenuItem.Text = "Change color for selected lines...";
             this.colorSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.colorSelectedLinesToolStripMenuItem_Click);
+            // 
+            // changeBrightnessForSelectedLinesToolStripMenuItem
+            // 
+            this.changeBrightnessForSelectedLinesToolStripMenuItem.Name = "changeBrightnessForSelectedLinesToolStripMenuItem";
+            this.changeBrightnessForSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(376, 22);
+            this.changeBrightnessForSelectedLinesToolStripMenuItem.Text = "Change brightness for selected lines...";
+            this.changeBrightnessForSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.changeBrightnessForSelectedLinesToolStripMenuItem_Click);
+            // 
+            // changeAlphaForSelectedLinesToolStripMenuItem
+            // 
+            this.changeAlphaForSelectedLinesToolStripMenuItem.Name = "changeAlphaForSelectedLinesToolStripMenuItem";
+            this.changeAlphaForSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(376, 22);
+            this.changeAlphaForSelectedLinesToolStripMenuItem.Text = "Change alpha for selected lines...";
+            this.changeAlphaForSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.changeAlphaForSelectedLinesToolStripMenuItem_Click);
             // 
             // toolStripSeparator6
             // 
@@ -613,6 +630,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.alignmentToolStripMenuItem,
             this.resizeBitmapsToolStripMenuItem,
             this.changeBrightnessToolStripMenuItem,
+            this.changeAlphaToolStripMenuItem,
             this.toolStripSeparator5,
             this.quickOCRTextsforOverviewOnlyToolStripMenuItem});
             this.toolStripMenuItemTools.Name = "toolStripMenuItemTools";
@@ -645,6 +663,13 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.toolStripSeparator8.Name = "toolStripSeparator8";
             this.toolStripSeparator8.Size = new System.Drawing.Size(259, 6);
             // 
+            // alignmentToolStripMenuItem
+            // 
+            this.alignmentToolStripMenuItem.Name = "alignmentToolStripMenuItem";
+            this.alignmentToolStripMenuItem.Size = new System.Drawing.Size(262, 22);
+            this.alignmentToolStripMenuItem.Text = "Alignment...";
+            this.alignmentToolStripMenuItem.Click += new System.EventHandler(this.alignmentToolStripMenuItem_Click);
+            // 
             // resizeBitmapsToolStripMenuItem
             // 
             this.resizeBitmapsToolStripMenuItem.Name = "resizeBitmapsToolStripMenuItem";
@@ -659,12 +684,12 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.changeBrightnessToolStripMenuItem.Text = "Change brightness...";
             this.changeBrightnessToolStripMenuItem.Click += new System.EventHandler(this.changeBrightnessToolStripMenuItem_Click);
             // 
-            // alignmentToolStripMenuItem
+            // changeAlphaToolStripMenuItem
             // 
-            this.alignmentToolStripMenuItem.Name = "alignmentToolStripMenuItem";
-            this.alignmentToolStripMenuItem.Size = new System.Drawing.Size(262, 22);
-            this.alignmentToolStripMenuItem.Text = "Alignment...";
-            this.alignmentToolStripMenuItem.Click += new System.EventHandler(this.alignmentToolStripMenuItem_Click);
+            this.changeAlphaToolStripMenuItem.Name = "changeAlphaToolStripMenuItem";
+            this.changeAlphaToolStripMenuItem.Size = new System.Drawing.Size(262, 22);
+            this.changeAlphaToolStripMenuItem.Text = "Change alpha...";
+            this.changeAlphaToolStripMenuItem.Click += new System.EventHandler(this.changeAlphaToolStripMenuItem_Click);
             // 
             // toolStripSeparator5
             // 
@@ -892,13 +917,6 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.subtitleListView1.Click += new System.EventHandler(this.subtitleListView1_Click);
             this.subtitleListView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.subtitleListView1_KeyDown);
             // 
-            // changeBrightnessForSelectedLinesToolStripMenuItem
-            // 
-            this.changeBrightnessForSelectedLinesToolStripMenuItem.Name = "changeBrightnessForSelectedLinesToolStripMenuItem";
-            this.changeBrightnessForSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(376, 22);
-            this.changeBrightnessForSelectedLinesToolStripMenuItem.Text = "Change brightness for selected lines...";
-            this.changeBrightnessForSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.changeBrightnessForSelectedLinesToolStripMenuItem_Click);
-            // 
             // BinEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1028,5 +1046,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private System.Windows.Forms.ToolStripMenuItem setAspectRatio11ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem changeBrightnessToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem changeBrightnessForSelectedLinesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem changeAlphaToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem changeAlphaForSelectedLinesToolStripMenuItem;
     }
 }

@@ -673,6 +673,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "BinEdit/ChangeBrightness":
                     language.BinEdit.ChangeBrightness = reader.Value;
                     break;
+                case "BinEdit/ChangeAlpha":
+                    language.BinEdit.ChangeAlpha = reader.Value;
+                    break;
                 case "BinEdit/ResizeBitmapsForSelectedLines":
                     language.BinEdit.ResizeBitmapsForSelectedLines = reader.Value;
                     break;
@@ -681,6 +684,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "BinEdit/ChangeBrightnessForSelectedLines":
                     language.BinEdit.ChangeBrightnessForSelectedLines = reader.Value;
+                    break;
+                case "BinEdit/ChangeAlphaForSelectedLines":
+                    language.BinEdit.ChangeAlphaForSelectedLines = reader.Value;
                     break;
                 case "BinEdit/AlignSelectedLines":
                     language.BinEdit.AlignSelectedLines = reader.Value;
@@ -711,6 +717,12 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "BinEdit/ResizeX":
                     language.BinEdit.ResizeX = reader.Value;
+                    break;
+                case "BinEdit/ChangeAlphaTitle":
+                    language.BinEdit.ChangeAlphaTitle = reader.Value;
+                    break;
+                case "BinEdit/AlphaX":
+                    language.BinEdit.AlphaX = reader.Value;
                     break;
                 case "Bookmarks/EditBookmark":
                     language.Bookmarks.EditBookmark = reader.Value;
@@ -1737,6 +1749,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "FixCommonErrors/XMissingQuotesAdded":
                     language.FixCommonErrors.XMissingQuotesAdded = reader.Value;
+                    break;
+                case "FixCommonErrors/Fix3PlusLine":
+                    language.FixCommonErrors.Fix3PlusLine = reader.Value;
                     break;
                 case "FixCommonErrors/Fix3PlusLines":
                     language.FixCommonErrors.Fix3PlusLines = reader.Value;

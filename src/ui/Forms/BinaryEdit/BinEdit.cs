@@ -227,6 +227,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             appendSubtitleToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.Tools.AppendSubtitle;
             resizeBitmapsToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.ResizeBitmaps;
             changeBrightnessToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.ChangeBrightness;
+            changeAlphaToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.ChangeAlpha;
             alignmentToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.Alignment;
             quickOCRTextsforOverviewOnlyToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.QuickOcr;
             videoToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.Video.Title;
@@ -247,6 +248,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             resizeImagesForSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.ResizeBitmapsForSelectedLines;
             colorSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.ChangeColorForSelectedLines;
             changeBrightnessForSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.ChangeBrightnessForSelectedLines;
+            changeAlphaForSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.ChangeAlphaForSelectedLines;
             adjustAllTimesForSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.ShowSelectedLinesEarlierLater;
             adjustDisplayTimeForSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.AdjustDisplayDurationForSelectedLines;
             applyDurationLimitsForSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.AdjustDisplayDurationForSelectedLines;
@@ -2734,6 +2736,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 }
             }
         }
+
         private void changeBrightnessToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ChangeBrightness(false);
@@ -2742,6 +2745,56 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private void changeBrightnessForSelectedLinesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ChangeBrightness(true);
+        }
+
+        private void changeAlphaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ChangeAlpha(false);
+        }
+
+        private void ChangeAlpha(bool onlySelectedLines)
+        {
+            if (subtitleListView1.SelectedItems.Count < 1)
+            {
+                return;
+            }
+
+            var idx = subtitleListView1.SelectedItems[0].Index;
+            var extra = _extra[idx];
+            var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : GetBitmap(_binSubtitles[idx]);
+
+            using (var form = new BinEditAlpha(bmp))
+            {
+                if (form.ShowDialog(this) != DialogResult.OK)
+                {
+                    return;
+                }
+
+                var selectedIndices = GetIndices(onlySelectedLines);
+                foreach (var i in selectedIndices)
+                {
+                    var sub = _binSubtitles[i];
+                    extra = _extra[i];
+                    bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : GetBitmap(sub);
+                    var n = new NikseBitmap(bmp);
+                    n.ChangeAlpha(form.Factor);
+                    extra.Bitmap = n.GetBitmap();
+
+                    if (i == idx)
+                    {
+                        ShowCurrentScaledImage((Bitmap)extra.Bitmap.Clone(), extra);
+                        numericUpDownY.Value = extra.Y;
+                        numericUpDownX.Value = extra.X;
+                    }
+
+                    bmp.Dispose();
+                }
+            }
+        }
+
+        private void changeAlphaForSelectedLinesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ChangeAlpha(true);
         }
     }
 }

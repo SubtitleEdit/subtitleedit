@@ -393,9 +393,11 @@ namespace Nikse.SubtitleEdit.Logic
                 QuickOcr = "Quick OCR texts (for overview only)",
                 ResizeBitmaps = "Resize images...",
                 ChangeBrightness = "Change brightness...",
+                ChangeAlpha = "Change alpha...",
                 ResizeBitmapsForSelectedLines = "Resize images for selected lines...",
                 ChangeColorForSelectedLines = "Change color for selected lines...",
                 ChangeBrightnessForSelectedLines = "Change brightness for selected lines...",
+                ChangeAlphaForSelectedLines = "Change alpha for selected lines...",
                 AlignSelectedLines = "Align selected lines",
                 CenterSelectedLines = "Center selected lines (horizontally, keep vertical position)",
                 TopAlignSelectedLines = "Top align selected lines (keep horizontal position)",
@@ -406,6 +408,8 @@ namespace Nikse.SubtitleEdit.Logic
                 BrightnessX = "Brightness: {0}%",
                 ResizeTitle = "Resize images",
                 ResizeX = "Resize: {0}%",
+                ChangeAlphaTitle = "Change alpha",
+                AlphaX = "Alpha: {0}%",
             };
 
             Bookmarks = new LanguageStructure.Bookmarks
