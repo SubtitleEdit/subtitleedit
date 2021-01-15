@@ -2558,6 +2558,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             var bw = new BackgroundWorker { WorkerReportsProgress = true };
             bw.DoWork += (o, args) =>
             {
+                var isBdnXml = _binSubtitles[0] is BdnXmlParagraph;
                 Parallel.For(0, _subtitle.Paragraphs.Count, i =>
                 {
                     Interlocked.Increment(ref count);
@@ -2565,6 +2566,12 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                     var p = _subtitle.Paragraphs[i];
                     var s = _binSubtitles[i];
                     var extra = _extra[i];
+
+                    if (isBdnXml && extra.Bitmap == null)
+                    {
+                        extra.Bitmap = s.GetBitmap();
+                    }
+
                     OcrParagraph(extra, s, nOcrDb, p);
                 });
             };
