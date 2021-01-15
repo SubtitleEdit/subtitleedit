@@ -248,9 +248,11 @@ Note: Do check free disk space.</WaveFileMalformed>
     <QuickOcr>Quick OCR texts (for overview only)</QuickOcr>
     <ResizeBitmaps>Resize images...</ResizeBitmaps>
     <ChangeBrightness>Change brightness...</ChangeBrightness>
+    <ChangeAlpha>Change alpha...</ChangeAlpha>
     <ResizeBitmapsForSelectedLines>Resize images for selected lines...</ResizeBitmapsForSelectedLines>
     <ChangeColorForSelectedLines>Change color for selected lines...</ChangeColorForSelectedLines>
     <ChangeBrightnessForSelectedLines>Change brightness for selected lines...</ChangeBrightnessForSelectedLines>
+    <ChangeAlphaForSelectedLines>Change alpha for selected lines...</ChangeAlphaForSelectedLines>
     <AlignSelectedLines>Align selected lines</AlignSelectedLines>
     <CenterSelectedLines>Center selected lines (horizontally, keep vertical position)</CenterSelectedLines>
     <TopAlignSelectedLines>Top align selected lines (keep horizontal position)</TopAlignSelectedLines>
@@ -261,6 +263,8 @@ Note: Do check free disk space.</WaveFileMalformed>
     <BrightnessX>Brightness: {0}%</BrightnessX>
     <ResizeTitle>Resize images</ResizeTitle>
     <ResizeX>Resize: {0}%</ResizeX>
+    <ChangeAlphaTitle>Change alpha</ChangeAlphaTitle>
+    <AlphaX>Alpha: {0}%</AlphaX>
   </BinEdit>
   <Bookmarks>
     <EditBookmark>Edit bookmark</EditBookmark>
@@ -659,6 +663,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FixHyphensInDialogs>Fix dash in dialogs via style: {0}</FixHyphensInDialogs>
     <AddMissingQuotesExample>"How are you? -&gt; "How are you?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Missing quotes added: {0}</XMissingQuotesAdded>
+    <Fix3PlusLine>Fix subtitle with more than two lines</Fix3PlusLine>
     <Fix3PlusLines>Fix subtitles with more than two lines</Fix3PlusLines>
     <Analysing>Analyzing...</Analysing>
     <NothingToFix>Nothing to fix :)</NothingToFix>

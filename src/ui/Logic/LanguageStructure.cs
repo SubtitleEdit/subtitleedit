@@ -262,9 +262,11 @@
             public string QuickOcr { get; set; }
             public string ResizeBitmaps { get; set; }
             public string ChangeBrightness { get; set; }
+            public string ChangeAlpha { get; set; }
             public string ResizeBitmapsForSelectedLines { get; set; }
             public string ChangeColorForSelectedLines { get; set; }
             public string ChangeBrightnessForSelectedLines { get; set; }
+            public string ChangeAlphaForSelectedLines { get; set; }
             public string AlignSelectedLines { get; set; }
             public string CenterSelectedLines { get; set; }
             public string TopAlignSelectedLines { get; set; }
@@ -275,6 +277,8 @@
             public string BrightnessX { get; set; }
             public string ResizeTitle { get; set; }
             public string ResizeX { get; set; }
+            public string ChangeAlphaTitle { get; set; }
+            public string AlphaX { get; set; }
         }
 
         public class Bookmarks
@@ -2582,7 +2586,7 @@
             public string TreatINQuoteAsING { get; set; }
             public string RememberUseAlwaysList { get; set; }
             public string LiveSpellCheck { get; set; }
-            public string LiveSpellCheckLanguage{ get; set; }
+            public string LiveSpellCheckLanguage { get; set; }
             public string NoDictionaryForLiveSpellCheck { get; set; }
             public string ImageText { get; set; }
             public string SpellCheckCompleted { get; set; }

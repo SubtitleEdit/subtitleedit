@@ -1547,5 +1547,25 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
         }
+
+        public void ChangeAlpha(decimal factor)
+        {
+            if (factor > 1)
+            {
+                for (int i = 0; i < _bitmapData.Length; i += 4)
+                {
+                    int a = _bitmapData[i + 3];
+                    _bitmapData[i + 3] = (byte)Math.Min(byte.MaxValue, (int)(a * factor));
+                }
+            }
+            else
+            {
+                for (int i = 0; i < _bitmapData.Length; i += 4)
+                {
+                    int a = _bitmapData[i + 3];
+                    _bitmapData[i + 3] = (byte)Math.Max(0, (int)(a * factor));
+                }
+            }
+        }
     }
 }
