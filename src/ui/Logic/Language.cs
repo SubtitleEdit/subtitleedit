@@ -858,6 +858,7 @@ namespace Nikse.SubtitleEdit.Logic
                 FixHyphensInDialogs = "Fix dash in dialogs via style: {0}",
                 AddMissingQuotesExample = "\"How are you? -> \"How are you?\"",
                 XMissingQuotesAdded = "Missing quotes added: {0}",
+                Fix3PlusLine = "Fix subtitle with more than two lines",
                 Fix3PlusLines = "Fix subtitles with more than two lines",
                 Analysing = "Analyzing...",
                 NothingToFix = "Nothing to fix :)",
