@@ -247,23 +247,23 @@ Note: Do check free disk space.</WaveFileMalformed>
     <SetText>Set text...</SetText>
     <QuickOcr>Quick OCR texts (for overview only)</QuickOcr>
     <ResizeBitmaps>Resize images...</ResizeBitmaps>
-    <ChangeBrightness>Change brightness...</ChangeBrightness>
-    <ChangeAlpha>Change alpha...</ChangeAlpha>
+    <ChangeBrightness>Adjust brightness...</ChangeBrightness>
+    <ChangeAlpha>Adjust alpha...</ChangeAlpha>
     <ResizeBitmapsForSelectedLines>Resize images for selected lines...</ResizeBitmapsForSelectedLines>
     <ChangeColorForSelectedLines>Change color for selected lines...</ChangeColorForSelectedLines>
-    <ChangeBrightnessForSelectedLines>Change brightness for selected lines...</ChangeBrightnessForSelectedLines>
-    <ChangeAlphaForSelectedLines>Change alpha for selected lines...</ChangeAlphaForSelectedLines>
+    <ChangeBrightnessForSelectedLines>Adjust brightness for selected lines...</ChangeBrightnessForSelectedLines>
+    <ChangeAlphaForSelectedLines>Adjust alpha for selected lines...</ChangeAlphaForSelectedLines>
     <AlignSelectedLines>Align selected lines</AlignSelectedLines>
     <CenterSelectedLines>Center selected lines (horizontally, keep vertical position)</CenterSelectedLines>
     <TopAlignSelectedLines>Top align selected lines (keep horizontal position)</TopAlignSelectedLines>
     <BottomAlignSelectedLines>Bottom align selected lines (keep horizontal position)</BottomAlignSelectedLines>
     <SizeXY>Size: {0}x{1}</SizeXY>
     <SetAspectRatio11>Set aspect ratio 1:1</SetAspectRatio11>
-    <ChangeBrightnessTitle>Change brightness</ChangeBrightnessTitle>
+    <ChangeBrightnessTitle>Adjust brightness</ChangeBrightnessTitle>
     <BrightnessX>Brightness: {0}%</BrightnessX>
     <ResizeTitle>Resize images</ResizeTitle>
     <ResizeX>Resize: {0}%</ResizeX>
-    <ChangeAlphaTitle>Change alpha</ChangeAlphaTitle>
+    <ChangeAlphaTitle>Adjust alpha</ChangeAlphaTitle>
     <AlphaX>Alpha: {0}%</AlphaX>
   </BinEdit>
   <Bookmarks>
