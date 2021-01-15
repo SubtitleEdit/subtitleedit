@@ -436,59 +436,46 @@ namespace Nikse.SubtitleEdit.Controls
                 return;
             }
 
-            using (var sf = new StringFormat())
+            if (e.Item.Selected)
             {
-                switch (e.Header.TextAlign)
+
+                Rectangle rect = e.Bounds;
+                if (Configuration.Settings != null)
                 {
-                    case HorizontalAlignment.Center:
-                        sf.Alignment = StringAlignment.Center;
-                        break;
-                    case HorizontalAlignment.Right:
-                        sf.Alignment = StringAlignment.Far;
-                        break;
-                }
-
-                if (e.Item.Selected)
-                {
-
-                    Rectangle rect = e.Bounds;
-                    if (Configuration.Settings != null)
-                    {
-                        backgroundColor = backgroundColor == BackColor ? Configuration.Settings.Tools.ListViewUnfocusedSelectedColor : GetCustomColor(backgroundColor);
-                        var sb = new SolidBrush(backgroundColor);
-                        e.Graphics.FillRectangle(sb, rect);
-                    }
-                    else
-                    {
-                        e.Graphics.FillRectangle(Brushes.LightBlue, rect);
-                    }
-
-                    int addX = 0;
-
-                    if (e.ColumnIndex == 0 && StateImageList?.Images.Count > 0)
-                    {
-                        addX = 18;
-                    }
-
-                    if (e.ColumnIndex == 0 && e.Item.StateImageIndex >= 0 && StateImageList?.Images.Count > e.Item.StateImageIndex)
-                    {
-                        e.Graphics.DrawImage(StateImageList.Images[e.Item.StateImageIndex], new Rectangle(rect.X + 4, rect.Y + 2, 16, 16));
-                    }
-
-                    if (Columns[e.ColumnIndex].TextAlign == HorizontalAlignment.Right)
-                    {
-                        var stringWidth = (int)e.Graphics.MeasureString(e.Item.SubItems[e.ColumnIndex].Text, _subtitleFont).Width;
-                        TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, _subtitleFont, new Point(e.Bounds.Right - stringWidth - 7, e.Bounds.Top + 2), e.Item.ForeColor, TextFormatFlags.NoPrefix);
-                    }
-                    else
-                    {
-                        TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, _subtitleFont, new Point(e.Bounds.Left + 3 + addX, e.Bounds.Top + 2), e.Item.ForeColor, TextFormatFlags.NoPrefix);
-                    }
+                    backgroundColor = backgroundColor == BackColor ? Configuration.Settings.Tools.ListViewUnfocusedSelectedColor : GetCustomColor(backgroundColor);
+                    var sb = new SolidBrush(backgroundColor);
+                    e.Graphics.FillRectangle(sb, rect);
                 }
                 else
                 {
-                    e.DrawDefault = true;
+                    e.Graphics.FillRectangle(Brushes.LightBlue, rect);
                 }
+
+                int addX = 0;
+
+                if (e.ColumnIndex == 0 && StateImageList?.Images.Count > 0)
+                {
+                    addX = 18;
+                }
+
+                if (e.ColumnIndex == 0 && e.Item.StateImageIndex >= 0 && StateImageList?.Images.Count > e.Item.StateImageIndex)
+                {
+                    e.Graphics.DrawImage(StateImageList.Images[e.Item.StateImageIndex], new Rectangle(rect.X + 4, rect.Y + 2, 16, 16));
+                }
+
+                if (Columns[e.ColumnIndex].TextAlign == HorizontalAlignment.Right)
+                {
+                    var stringWidth = (int)e.Graphics.MeasureString(e.Item.SubItems[e.ColumnIndex].Text, _subtitleFont).Width;
+                    TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, _subtitleFont, new Point(e.Bounds.Right - stringWidth - 7, e.Bounds.Top + 2), e.Item.ForeColor, TextFormatFlags.NoPrefix);
+                }
+                else
+                {
+                    TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, _subtitleFont, new Point(e.Bounds.Left + 3 + addX, e.Bounds.Top + 2), e.Item.ForeColor, TextFormatFlags.NoPrefix);
+                }
+            }
+            else
+            {
+                e.DrawDefault = true;
             }
         }
 

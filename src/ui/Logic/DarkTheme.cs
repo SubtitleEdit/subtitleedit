@@ -338,58 +338,45 @@ namespace Nikse.SubtitleEdit.Logic
                 return;
             }
 
-            using (var sf = new StringFormat())
+            if (e.Item.Selected)
             {
-                switch (e.Header.TextAlign)
+                var subtitleFont = e.Item.Font;
+                Rectangle rect = e.Bounds;
+                if (Configuration.Settings != null)
                 {
-                    case HorizontalAlignment.Center:
-                        sf.Alignment = StringAlignment.Center;
-                        break;
-                    case HorizontalAlignment.Right:
-                        sf.Alignment = StringAlignment.Far;
-                        break;
-                }
-
-                if (e.Item.Selected)
-                {
-                    var subtitleFont = e.Item.Font;
-                    Rectangle rect = e.Bounds;
-                    if (Configuration.Settings != null)
+                    backgroundColor = backgroundColor == BackColor ? Configuration.Settings.Tools.ListViewUnfocusedSelectedColor : subBackgroundColor;
+                    using (var sb = new SolidBrush(backgroundColor))
                     {
-                        backgroundColor = backgroundColor == BackColor ? Configuration.Settings.Tools.ListViewUnfocusedSelectedColor : subBackgroundColor;
-                        using (var sb = new SolidBrush(backgroundColor))
-                        {
-                            e.Graphics.FillRectangle(sb, rect);
-                        }
-                    }
-                    else
-                    {
-                        e.Graphics.FillRectangle(Brushes.LightBlue, rect);
-                    }
-
-                    int addX = 0;
-
-                    if (e.ColumnIndex == 0 && lv.CheckBoxes)
-                    {
-                        addX = 16;
-                        var checkBoxState = e.Item.Checked ? System.Windows.Forms.VisualStyles.CheckBoxState.CheckedNormal : System.Windows.Forms.VisualStyles.CheckBoxState.UncheckedNormal;
-                        CheckBoxRenderer.DrawCheckBox(e.Graphics, new Point(e.Bounds.X + 4, e.Bounds.Y + 2), checkBoxState);
-                    }
-
-                    if (lv.Columns[e.ColumnIndex].TextAlign == HorizontalAlignment.Right)
-                    {
-                        var stringWidth = (int)e.Graphics.MeasureString(e.Item.SubItems[e.ColumnIndex].Text, subtitleFont).Width;
-                        TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, subtitleFont, new Point(e.Bounds.Right - stringWidth - 7, e.Bounds.Top + 2), e.Item.ForeColor, TextFormatFlags.NoPrefix);
-                    }
-                    else
-                    {
-                        TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, subtitleFont, new Point(e.Bounds.Left + 3 + addX, e.Bounds.Top + 2), e.Item.ForeColor, TextFormatFlags.NoPrefix);
+                        e.Graphics.FillRectangle(sb, rect);
                     }
                 }
                 else
                 {
-                    e.DrawDefault = true;
+                    e.Graphics.FillRectangle(Brushes.LightBlue, rect);
                 }
+
+                int addX = 0;
+
+                if (e.ColumnIndex == 0 && lv.CheckBoxes)
+                {
+                    addX = 16;
+                    var checkBoxState = e.Item.Checked ? System.Windows.Forms.VisualStyles.CheckBoxState.CheckedNormal : System.Windows.Forms.VisualStyles.CheckBoxState.UncheckedNormal;
+                    CheckBoxRenderer.DrawCheckBox(e.Graphics, new Point(e.Bounds.X + 4, e.Bounds.Y + 2), checkBoxState);
+                }
+
+                if (lv.Columns[e.ColumnIndex].TextAlign == HorizontalAlignment.Right)
+                {
+                    var stringWidth = (int)e.Graphics.MeasureString(e.Item.SubItems[e.ColumnIndex].Text, subtitleFont).Width;
+                    TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, subtitleFont, new Point(e.Bounds.Right - stringWidth - 7, e.Bounds.Top + 2), e.Item.ForeColor, TextFormatFlags.NoPrefix);
+                }
+                else
+                {
+                    TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, subtitleFont, new Point(e.Bounds.Left + 3 + addX, e.Bounds.Top + 2), e.Item.ForeColor, TextFormatFlags.NoPrefix);
+                }
+            }
+            else
+            {
+                e.DrawDefault = true;
             }
         }
 
@@ -403,29 +390,19 @@ namespace Nikse.SubtitleEdit.Logic
                 return;
             }
 
-            using (var b = new SolidBrush(Color.FromArgb(Math.Max(BackColor.R - 9, 0), Math.Max(BackColor.G - 9, 0), Math.Max(BackColor.B - 9, 0))))
+            using (var slightlyDarkerBrush = new SolidBrush(Color.FromArgb(Math.Max(BackColor.R - 9, 0), Math.Max(BackColor.G - 9, 0), Math.Max(BackColor.B - 9, 0))))
             {
-                e.Graphics.FillRectangle(b, e.Bounds);
+                e.Graphics.FillRectangle(slightlyDarkerBrush, e.Bounds);
             }
 
-            var strFormat = new StringFormat();
-            switch (e.Header.TextAlign)
-            {
-                case HorizontalAlignment.Center:
-                    strFormat.Alignment = StringAlignment.Center;
-                    break;
-                case HorizontalAlignment.Right:
-                    strFormat.Alignment = StringAlignment.Far;
-                    break;
-            }
+            int posY = Math.Abs(e.Bounds.Height - e.Font.Height) / 2;
+            TextRenderer.DrawText(e.Graphics, e.Header.Text, e.Font, new Point(e.Bounds.X + 3, posY), ForeColor);
 
-            using (var fc = new SolidBrush(ForeColor))
+            if (Configuration.Settings.General.DarkThemeShowListViewGridLines && e.ColumnIndex != 0)
             {
-                int posY = Math.Abs(e.Bounds.Height - e.Font.Height) / 2;
-                e.Graphics.DrawString(e.Header.Text, e.Font, fc, e.Bounds.X + 3, posY, strFormat);
-                if (Configuration.Settings.General.DarkThemeShowListViewGridLines && e.ColumnIndex != 0)
+                using (var foreColorPen = new Pen(ForeColor))
                 {
-                    e.Graphics.DrawLine(new Pen(ForeColor), e.Bounds.X, e.Bounds.Y, e.Bounds.X, e.Bounds.Height);
+                    e.Graphics.DrawLine(foreColorPen, e.Bounds.X, e.Bounds.Y, e.Bounds.X, e.Bounds.Height);
                 }
             }
         }
@@ -835,8 +812,14 @@ namespace Nikse.SubtitleEdit.Logic
             var toolStripSeparator = (ToolStripSeparator)sender;
             var width = toolStripSeparator.Width;
             var height = toolStripSeparator.Height;
-            e.Graphics.FillRectangle(new SolidBrush(BackColor), 0, 0, width, height);
-            e.Graphics.DrawLine(new Pen(ForeColor), 4, height / 2, width - 4, height / 2);
+            using (var backColorBrush = new SolidBrush(BackColor))
+            {
+                e.Graphics.FillRectangle(backColorBrush, 0, 0, width, height);
+            }
+            using (var foreColorPen = new Pen(ForeColor))
+            {
+                e.Graphics.DrawLine(foreColorPen, 4, height / 2, width - 4, height / 2);
+            }
         }
     }
 }
