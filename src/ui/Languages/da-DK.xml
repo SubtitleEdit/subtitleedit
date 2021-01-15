@@ -244,14 +244,24 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <SetText>Sæt tekst...</SetText>
     <QuickOcr>Hurtig OCR (kun til oversigt)</QuickOcr>
     <ResizeBitmaps>Ændr størrelse på billeder...</ResizeBitmaps>
+    <ChangeBrightness>Skift lysstyrke...</ChangeBrightness>
+    <ChangeAlpha>Skift alfa...</ChangeAlpha>
     <ResizeBitmapsForSelectedLines>Tilpas billedstørrelse for valgte linjer...</ResizeBitmapsForSelectedLines>
     <ChangeColorForSelectedLines>Skift farve for valgte linjer...</ChangeColorForSelectedLines>
+    <ChangeBrightnessForSelectedLines>Skift lysstyrke for valgte linjer...</ChangeBrightnessForSelectedLines>
+    <ChangeAlphaForSelectedLines>Skift alfa for valgte linjer...</ChangeAlphaForSelectedLines>
     <AlignSelectedLines>Juster valgte linjer</AlignSelectedLines>
     <CenterSelectedLines>Centrer valgte linjer (vandret, hold lodret position)</CenterSelectedLines>
     <TopAlignSelectedLines>Topjuster valgte linjer (hold vandret position)</TopAlignSelectedLines>
     <BottomAlignSelectedLines>Juster til bund for valgte linjer (hold vandret position)</BottomAlignSelectedLines>
     <SizeXY>Størrelse: {0} x {1}</SizeXY>
     <SetAspectRatio11>Indstil billedformat 1:1</SetAspectRatio11>
+    <ChangeBrightnessTitle>Skift lysstyrke</ChangeBrightnessTitle>
+    <BrightnessX>Lysstyrke: {0}%</BrightnessX>
+    <ResizeTitle>Ændr størrelsen på billeder</ResizeTitle>
+    <ResizeX>Ændr størrelse: {0}%</ResizeX>
+    <ChangeAlphaTitle>Skift alfa</ChangeAlphaTitle>
+    <AlphaX>Alfa: {0}%</AlphaX>
   </BinEdit>
   <Bookmarks>
     <EditBookmark>Rediger bogmærke</EditBookmark>
@@ -650,6 +660,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <FixHyphensInDialogs>Fix dialog-bindestreg via stil: {0}</FixHyphensInDialogs>
     <AddMissingQuotesExample>"Hvordan har du det? -&gt; "Hvordan har du det?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Manglende antal gåseøjne tilføjet: {0}</XMissingQuotesAdded>
+    <Fix3PlusLine>Ret tekst med mere end 2 linjer</Fix3PlusLine>
     <Fix3PlusLines>Ret tekster med mere end 2 linjer</Fix3PlusLines>
     <Analysing>Analyserer...</Analysing>
     <NothingToFix>Intet at rette :)</NothingToFix>
@@ -1928,7 +1939,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <DuplicateLine>Kopier linje</DuplicateLine>
     <ToggleView>Skift liste-/kildevisning</ToggleView>
     <ToggleMode>Skift oversæt/opret/juster tilstand</ToggleMode>
-    <TogglePreviewOnVideo></TogglePreviewOnVideo>
+    <TogglePreviewOnVideo>Ppreview på video til/fra</TogglePreviewOnVideo>
     <Help>Hjælp</Help>
     <FontInUi>UI-skrifttype</FontInUi>
     <ShowFrameRate>Vis frame rate i værktøjslinjen</ShowFrameRate>
