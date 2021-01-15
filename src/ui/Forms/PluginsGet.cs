@@ -1,4 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,6 @@ using System.Net;
 using System.Net.Cache;
 using System.Windows.Forms;
 using System.Xml;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -150,7 +149,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (_updateAllListUrls.Count > 0)
             {
-                buttonUpdateAll.BackColor = Color.LightGreen;
+                buttonUpdateAll.BackColor = Configuration.Settings.General.UseDarkTheme ? Color.Green : Color.LightGreen;
                 if (LanguageSettings.Current.PluginsGet.UpdateAllX != null)
                 {
                     buttonUpdateAll.Text = string.Format(LanguageSettings.Current.PluginsGet.UpdateAllX, _updateAllListUrls.Count);
@@ -185,7 +184,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (string.Compare(installed.Text, node.SelectSingleNode("Name").InnerText.Trim('.'), StringComparison.OrdinalIgnoreCase) == 0 && installedVer < currentVer)
                     {
-                        installed.BackColor = Color.LightPink;
+                        installed.BackColor = Configuration.Settings.General.UseDarkTheme ? Color.IndianRed : Color.LightPink;
                         installed.SubItems[1].Text = $"{_language.UpdateAvailable} {installed.SubItems[1].Text}";
                         buttonUpdateAll.Visible = true;
                         _updateAllListUrls.Add(item.Url);
