@@ -190,8 +190,7 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
     <UseStyleFromSource>Kaynak stilini kullan</UseStyleFromSource>
     <ConvertOptions>Dönüştürme seçenekleri</ConvertOptions>
     <RemoveFormatting>Biçimlendirme etiketlerini kaldır</RemoveFormatting>
-    <RemoveStyleActor>
-    </RemoveStyleActor>
+    <RemoveStyleActor>Stil/aktörü kaldır</RemoveStyleActor>
     <RemoveTextForHI>İşitme engelliler için olan metni kaldır</RemoveTextForHI>
     <OverwriteOriginalFiles>Orijinal dosyaların üzerine yaz (biçim değiştirilirse yeni uzantı)</OverwriteOriginalFiles>
     <RedoCasing>Harf durumunu yeniden yap</RedoCasing>
@@ -244,6 +243,27 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
   <Beamer>
     <Title>Dengeleyici</Title>
   </Beamer>
+  <BinEdit>
+    <ImportImage>Görüntüyü içe aktar...</ImportImage>
+    <ExportImage>Görüntüyü dışa aktar...</ExportImage>
+    <SetText>Metin ayarla...</SetText>
+    <QuickOcr>Hızlı OCR metinleri (yalnızca genel bakış için)</QuickOcr>
+    <ResizeBitmaps>Görüntüleri yeniden boyutlandır...</ResizeBitmaps>
+    <ChangeBrightness>Parlaklığı değiştir...</ChangeBrightness>
+    <ResizeBitmapsForSelectedLines>Resimleri seçili satırlar için yeniden boyutlandırın...</ResizeBitmapsForSelectedLines>
+    <ChangeColorForSelectedLines>Seçili satırlar için rengi değiştir...</ChangeColorForSelectedLines>
+    <ChangeBrightnessForSelectedLines>Seçili satırlar için parlaklığı değiştir...</ChangeBrightnessForSelectedLines>
+    <AlignSelectedLines>Seçili çizgileri hizala</AlignSelectedLines>
+    <CenterSelectedLines>Seçili satırları ortala (yatay olarak, dikey konumu koru)</CenterSelectedLines>
+    <TopAlignSelectedLines>Seçili satırları üstten hizala (yatay konumu koru)</TopAlignSelectedLines>
+    <BottomAlignSelectedLines>Seçili satırları alta hizala (yatay konumu koru)</BottomAlignSelectedLines>
+    <SizeXY>Boyut : {0}x{1}</SizeXY>
+    <SetAspectRatio11>1:1 en boy oranını ayarla</SetAspectRatio11>
+    <ChangeBrightnessTitle>Parlaklığı değiştir</ChangeBrightnessTitle>
+    <BrightnessX>Parlaklık:%{0}</BrightnessX>
+    <ResizeTitle>Görüntüleri yeniden boyutlandırın</ResizeTitle>
+    <ResizeX>Yeniden boyutlandır: %{0}</ResizeX>
+  </BinEdit>
   <Bookmarks>
     <EditBookmark>Yer imini düzenle</EditBookmark>
     <AddBookmark>Yer imi ekle</AddBookmark>
@@ -324,6 +344,7 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
   </ColumnPaste>
   <CompareSubtitles>
     <Title>Altyazıları karşılaştırma</Title>
+    <Reload>Yeniden yükle</Reload>
     <PreviousDifference>&amp;Önceki farklılık</PreviousDifference>
     <NextDifference>&amp;Sonraki farklılık</NextDifference>
     <SubtitlesNotAlike>Altyazıların hiçbir benzerliği yok</SubtitlesNotAlike>
@@ -608,7 +629,6 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
     <RemovedEmptyLineAtBottom>Alttaki boş satırı kaldır</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Aradaki boş satırı kaldır</RemovedEmptyLineInMiddle>
     <RemovedEmptyLinesUnsedLineBreaks>Boş satırları/kullanılmayan bölmeleri kaldırın</RemovedEmptyLinesUnsedLineBreaks>
-    <EmptyLinesRemovedX>Boş satırlar kaldırıldı: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Üst üste gelen görüntülenme sürelerini düzelt</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Kısa görüntülenme sürelerini düzelt</FixShortDisplayTimes>
     <FixLongDisplayTimes>Uzun görüntülenme sürelerini düzelt</FixLongDisplayTimes>
@@ -633,21 +653,16 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
     <RemoveSpaceBetweenNumber>Sayılar arasındaki boşluğu kaldır</RemoveSpaceBetweenNumber>
     <FixDialogsOnOneLine>Bir satırdaki diyalogları düzelt(tire ile yeni satıra ayırır)</FixDialogsOnOneLine>
     <NormalizeStrings>Dizeleri normalleştir</NormalizeStrings>
-    <RemoveSpaceBetweenNumbersFixed>Sayılar arasındaki kaldırılan boşluk: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>Türk ANSI (İzlanda) harfleri Unicode için düzelt</FixTurkishAnsi>
     <FixDanishLetterI>Danimarka 'i' harfini düzelt</FixDanishLetterI>
     <FixSpanishInvertedQuestionAndExclamationMarks>İspanyol ters soru ve ünlem işareti düzelt</FixSpanishInvertedQuestionAndExclamationMarks>
     <AddMissingQuote>Kayıp alıntıyı (") ekle</AddMissingQuote>
     <AddMissingQuotes>Kayıp alıntıları (") ekle</AddMissingQuotes>
     <RemoveHyphensSingleLine>Tek iletişim çizgilerini kaldırın (tire kaldır)</RemoveHyphensSingleLine>
-    <XHyphensSingleLineRemoved>Kaldırılan tek iletişim çizgisi: {0}</XHyphensSingleLineRemoved>
     <FixHyphensInDialogs>İletişim çizgisi ekleyerek diyalogları düzelt (tire ekle)</FixHyphensInDialogs>
-    <XHyphensInDialogsFixed>Düzeltilen iletişim çizgisi: {0}</XHyphensInDialogsFixed>
     <AddMissingQuotesExample>"Nasılsın? -&gt; "Nasılsın?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Kayıp alıntılar eklendi: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>İki satırdan fazla altyazıları düzelt</Fix3PlusLines>
-    <Fix3PlusLine>İki satırdan fazla altyazıyı düzelt</Fix3PlusLine>
-    <X3PlusLinesFixed>İki satırdan fazla altyazılar düzeltildi: {0}</X3PlusLinesFixed>
     <Analysing>Analiz ediliyor...</Analysing>
     <NothingToFix>Düzeltilecek bir şey yok :)</NothingToFix>
     <FixesFoundX>Düzeltmeler bulundu: {0}</FixesFoundX>
@@ -655,12 +670,9 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
     <NothingFixableBut>Hiçbir şey otomatik olarak düzeltilemedi. Altyazı hatalar içeriyor - ayrıntılar için günlüğe bakın</NothingFixableBut>
     <XFixedBut>{0} sorun düzeltildi ancak altyazı hala hatalar içeriyor - ayrıntılar için günlüğe bakın </XFixedBut>
     <XCouldBeFixedBut>{0} sorun düzeltilebilir ancak altyazı hala hatalar içerecektir - ayrıntılar için günlüğe bakın</XCouldBeFixedBut>
-    <UncheckedFixLowercaseIToUppercaseI>Kontrol edilmedi "küçük harf değiştirme 'i' dan 'I' (İngilizce)"</UncheckedFixLowercaseIToUppercaseI>
-    <XIsChangedToUppercase>{0} 'i' büyük harfe değişti</XIsChangedToUppercase>
     <FixFirstLetterToUppercaseAfterParagraph>Paragraftan sonraki ilk harfi büyük harf olarak düzelt</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>Kısa satırı birleştir (tek cümle)</MergeShortLine>
     <MergeShortLineAll>Kısa satırı birleştir (hepsi ama diyaloglar hariç)</MergeShortLineAll>
-    <XLineBreaksAdded>{0} Satır bölünmesi eklendi</XLineBreaksAdded>
     <BreakLongLine>Uzun satırları böl</BreakLongLine>
     <FixLongDisplayTime>Uzun görüntülenme sürelerini düzelt</FixLongDisplayTime>
     <FixInvalidItalicTag>Geçersiz italik etiketi düzelt</FixInvalidItalicTag>
@@ -677,23 +689,11 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
     <UnableToFixStartTimeLaterThanEndTime>Metin numarasını düzeltilemez {0}: Başlangıç zamanı bitiş zamanından sonra: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} düzeltildi: {1} den {2} ye</XFixedToYZ>
     <UnableToFixTextXY>Metin numarasını düzeltilemez {0}: {1}</UnableToFixTextXY>
-    <XOverlappingTimestampsFixed>{0} örtüşen zamanlar düzeltildi</XOverlappingTimestampsFixed>
-    <XDisplayTimesProlonged>{0} görüntülenme süreleri uzatıldı</XDisplayTimesProlonged>
-    <XInvalidHtmlTagsFixed>{0} geçersiz HTML etiketi düzeltildi</XInvalidHtmlTagsFixed>
-    <XDisplayTimesShortned>{0} görüntülenme süresi kısaltıldı</XDisplayTimesShortned>
-    <XGapsFixed>{0} kısa aralık düzeltildi</XGapsFixed>
-    <XLinesUnbreaked>{0} Satırlar sonlandırılamadı</XLinesUnbreaked>
     <UnneededSpace>Gereksiz boşluklar</UnneededSpace>
-    <XUnneededSpacesRemoved>{0} gereksiz boşluklar kaldırıldı</XUnneededSpacesRemoved>
     <UnneededPeriod>Gereksiz periyotlar</UnneededPeriod>
-    <XUnneededPeriodsRemoved>{0} gereksiz periyotlar kaldırıldı</XUnneededPeriodsRemoved>
     <FixMissingSpace>Eksik boşlukları düzelt</FixMissingSpace>
-    <XMissingSpacesAdded>{0} eksik boşluklar eklendi</XMissingSpacesAdded>
     <FixUppercaseIInsideLowercaseWord>Küçük kelime içindeki büyük 'i' harfini düzelt</FixUppercaseIInsideLowercaseWord>
-    <XPeriodsAdded>{0} periyotlar eklendi.</XPeriodsAdded>
     <FixMissingPeriodAtEndOfLine>Satır sonuna eksik noktayı ekleyin</FixMissingPeriodAtEndOfLine>
-    <XDoubleApostrophesFixed>{0} çift kesme işareti düzeltildi.</XDoubleApostrophesFixed>
-    <XUppercaseIsFoundInsideLowercaseWords>{0} küçük harfli kelimeler içinde büyük 'i' bulundu</XUppercaseIsFoundInsideLowercaseWords>
     <RefreshFixes>Mevcut düzeltmeleri yenile</RefreshFixes>
     <ApplyFixes>Seçilen düzeltmeleri uygula</ApplyFixes>
     <AutoBreak>Otoma&amp;tik boşluk ayarı</AutoBreak>
@@ -703,11 +703,6 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
     <FixEllipsesStart>Satır aralığı kaldır (Satır başındaki '...')</FixEllipsesStart>
     <FixMissingOpenBracket>Satırdaki eksik '['leri düzelt</FixMissingOpenBracket>
     <FixMusicNotation>Müzik sembolünü (ör. âTª) tercih edilen sembol ile değiştir</FixMusicNotation>
-    <XFixDoubleDash>{0} düzeltildi '--'</XFixDoubleDash>
-    <XFixDoubleGreaterThan>{0} kaldırıldı '&gt;&gt;'</XFixDoubleGreaterThan>
-    <XFixEllipsesStart>{0} başlayan '...' kaldırıldı</XFixEllipsesStart>
-    <XFixMissingOpenBracket>{0} Satırdaki eksik '['ler düzeltildi</XFixMissingOpenBracket>
-    <XFixMusicNotation>{0} satırdaki müzik notasyonunu düzelt</XFixMusicNotation>
     <FixDoubleDashExample>'Vaay-- tamam!' -&gt; 'Vaay... tamam!'</FixDoubleDashExample>
     <FixDoubleGreaterThanExample>'&gt;&gt; Mehmet: uyutulmuş!' -&gt; 'Mehmet: uyutulmuş!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... ve sonra biz' -&gt; 've sonra biz'</FixEllipsesStartExample>
@@ -721,9 +716,7 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
     <SelectDefault>Varsayılanı seç</SelectDefault>
     <SetDefault>Mevcut düzeltmeleri varsayılan olarak ayarla</SetDefault>
     <FixContinuationStyleX>Devam stilini düzelt (... kaldırır): {0}</FixContinuationStyleX>
-    <XFixContinuationStyle>{0} devam stili düzeltildi</XFixContinuationStyle>
     <FixUnnecessaryLeadingDots>Gereksiz önde gelen noktaları kaldırın (...)</FixUnnecessaryLeadingDots>
-    <XFixUnnecessaryLeadingDots>{0} gereksiz önde gelen noktaları kaldırdı (...)</XFixUnnecessaryLeadingDots>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Sözlüklere ihtiyacınız mı var?</Title>
@@ -757,11 +750,23 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
 
 
 Anahtarınızı girmek için "Seçenekler -&gt; Ayarlar -&gt; Araçlar" a gidin</MsClientSecretNeeded>
-    <GoogleApiKeyNeeded>Ne yazık ki, en son Google Translate'i kullanmak için Google'dan bir API anahtarına ihtiyacınız var.
-
-
-Google translate API anahtarınızı girmek için "Seçenekler -&gt; Ayarlar -&gt; Araçlar" a gidin.</GoogleApiKeyNeeded>
     <GoogleNoApiKeyWarning>API anahtarı olmadan çevirmeye çalışılıyor... (yavaş ve sınırlı veri)</GoogleNoApiKeyWarning>
+    <Service>Hizmet:</Service>
+    <LineMergeHandling>Satır birleştirme:</LineMergeHandling>
+    <ProcessorMergeNext>En fazla iki satırı birleştir</ProcessorMergeNext>
+    <ProcessorSentence>Cümleleri birleştir</ProcessorSentence>
+    <ProcessorSingle>Birleştirme yapma</ProcessorSingle>
+    <AutoTranslateViaCopyPaste>Kopyala-yapıştır yoluyla otomatik çeviri</AutoTranslateViaCopyPaste>
+    <CopyPasteMaxSize>Maksimum blok boyutu</CopyPasteMaxSize>
+    <AutoCopyToClipboard>Panoya otomatik kopyala</AutoCopyToClipboard>
+    <AutoCopyLineSeparator>Satır ayırıcı</AutoCopyLineSeparator>
+    <TranslateBlockXOfY>{0}/{1} bloğunu çevir</TranslateBlockXOfY>
+    <TranslateBlockInfo>Çevirmene gidin ve metni yapıştırın, sonucu panoya kopyalayın ve aşağıdaki düğmeye tıklayın</TranslateBlockInfo>
+    <TranslateBlockGetFromClipboard>Panodan çevrilmiş metni alın
+(Ctrl + V)</TranslateBlockGetFromClipboard>
+    <TranslateBlockCopySourceText>Kaynak metini panoya kopyala</TranslateBlockCopySourceText>
+    <TranslateBlockClipboardError1>Pano kaynak metin içeriyor!</TranslateBlockClipboardError1>
+    <TranslateBlockClipboardError2>Çevirmene gidin ve çevirin, sonucu panoya kopyalayın ve bu düğmeyi tekrar tıklayın.</TranslateBlockClipboardError2>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Google vs Microsoft çeviri</Title>
@@ -1018,6 +1023,7 @@ Google translate API anahtarınızı girmek için "Seçenekler -&gt; Ayarlar -&g
         <ImportText>Düz metin içe aktar...</ImportText>
         <ImportImages>Resimleri içe aktar...</ImportImages>
         <ImportTimecodes>Zamanlama kodları içe aktar...</ImportTimecodes>
+        <Import>İçe aktar</Import>
         <Export>Dışa aktar</Export>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
         <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
@@ -1141,9 +1147,8 @@ Google translate API anahtarınızı girmek için "Seçenekler -&gt; Ayarlar -&g
       </Synchronization>
       <AutoTranslate>
         <Title>Otomatik çeviri</Title>
-        <TranslatePoweredByGoogle>Google ile çevir...</TranslatePoweredByGoogle>
-        <TranslatePoweredByMicrosoft>Bing ile çevir...</TranslatePoweredByMicrosoft>
-        <TranslateFromSwedishToDanish>İsveççe'den Danca'ya çevir (nikse.dk tarafından desteklenmektedir)</TranslateFromSwedishToDanish>
+        <AutoTranslate>Otomatik çevir...</AutoTranslate>
+        <AutoTranslateViaCopyPaste>Kopyala-yapıştır yoluyla otomatik çevir...</AutoTranslateViaCopyPaste>
       </AutoTranslate>
       <Options>
         <Title>Seçenekler</Title>
@@ -1257,6 +1262,8 @@ Google translate API anahtarınızı girmek için "Seçenekler -&gt; Ayarlar -&g
         <RemoveActors>Aktörleri kaldır</RemoveActors>
         <EditBookmark>Yer imini düzenle</EditBookmark>
         <RemoveBookmark>Yer imini kaldır</RemoveBookmark>
+        <GoToSourceView>Kaynak görünümüne git</GoToSourceView>
+        <GoToListView>Liste görünümüne git</GoToListView>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1295,6 +1302,7 @@ Google translate API anahtarınızı girmek için "Seçenekler -&gt; Ayarlar -&g
       <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Video konumuna yeni altyazı ekle (metin kutusu odağı yok)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
       <Auto>Otomatik</Auto>
       <PlayFromJustBeforeText>Metnin hemen önünden o&amp;ynat</PlayFromJustBeforeText>
+      <PlayFromBeginning>Videonun başından itibaren oynat</PlayFromBeginning>
       <Pause>Duraklat</Pause>
       <GoToSubtitlePositionAndPause>Alt pozisyona git ve duraklat</GoToSubtitlePositionAndPause>
       <SetStartTime>Başl&amp;ama zamanını ayarla</SetStartTime>
@@ -1337,9 +1345,7 @@ Google translate API anahtarınızı girmek için "Seçenekler -&gt; Ayarlar -&g
     <SavedOriginalSubtitleX>{0} Orijinal altyazı kaydedildi</SavedOriginalSubtitleX>
     <FileOnDiskModified>Diskteki dosya değiştirilmiş</FileOnDiskModified>
     <OverwriteModifiedFile>{1} {2} {3} tarihinde değiştirilen {0} dosyasının üzerine, {4} {5} konumuna diskten yüklenmiş geçerli dosya yazılsın mı?</OverwriteModifiedFile>
-    <FileXIsReadOnly>Kaydedilemez {0}
-
-Dosya salt okunur!</FileXIsReadOnly>
+    <FileXIsReadOnly>Kaydedilemez {0}Dosya salt okunur!</FileXIsReadOnly>
     <UnableToSaveSubtitleX>Altyazı dosyası kaydedilemiyor {0}
 Altyazı boş görünüyor - geçerli bir altyazı üzerinde çalışıyorsanız yeniden kaydetmeyi deneyin!</UnableToSaveSubtitleX>
     <FormatXShouldUseUft8>{0} dosyaları kaydedilirken UTF-8 kodlaması kullanılmalıdır!</FormatXShouldUseUft8>
@@ -1586,6 +1592,7 @@ Eğer Subtitle Edit ile bu dosyayı düzenlediyseniz, menü öğesi dosyası üz
     <NoSupportHereVobSub>VobSub dosyaları burada desteklenmiyor.</NoSupportHereVobSub>
     <NoSupportHereDivx>Divx dosyaları burada desteklenmiyor.</NoSupportHereDivx>
     <NoChapters>Videoda bölüm bulunamadı.</NoChapters>
+    <DarkThemeRestart>Koyu tema değişikliklerinin etkili olması için Subtitle Edit'i yeniden başlatın.</DarkThemeRestart>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Matroska dosyasından altyazı seç</Title>
@@ -1598,6 +1605,7 @@ Eğer Subtitle Edit ile bu dosyayı düzenlediyseniz, menü öğesi dosyası üz
     <ConvertFrom>Bundan dönüştür</ConvertFrom>
     <ConvertTo>Buna dönüştür</ConvertTo>
     <CopyToClipboard>Panoya kopyala</CopyToClipboard>
+    <CloseOnInsert>*Ekte kapat</CloseOnInsert>
     <Length>Uzunluk</Length>
     <Mass>Kütle</Mass>
     <Volume>Hacim</Volume>
@@ -1621,8 +1629,7 @@ Eğer Subtitle Edit ile bu dosyayı düzenlediyseniz, menü öğesi dosyası üz
     <Yards>Yarda</Yards>
     <Feet>Fit</Feet>
     <Inches>İnç</Inches>
-    <Chains>
-    </Chains>
+    <Chains>Chains</Chains>
     <Fathoms>Kulaç</Fathoms>
     <Hands>El</Hands>
     <Rods>Çubuk</Rods>
@@ -1638,9 +1645,8 @@ Eğer Subtitle Edit ile bu dosyayı düzenlediyseniz, menü öğesi dosyası üz
     <Ounces>Ons</Ounces>
     <Carats>Karat</Carats>
     <Drams>Dirhem</Drams>
-    <Grains>Taneler</Grains>
-    <Stones>
-    </Stones>
+    <Grains>Grains</Grains>
+    <Stones>Stones</Stones>
     <CubicKilometers>Kübik kilometre</CubicKilometers>
     <CubicMeters>Metreküp</CubicMeters>
     <Litres>Litre</Litres>
@@ -1656,8 +1662,7 @@ Eğer Subtitle Edit ile bu dosyayı düzenlediyseniz, menü öğesi dosyası üz
     <PintsUS>Pint (ABD)</PintsUS>
     <FluidOuncesUS>Sıvı ons (ABD)</FluidOuncesUS>
     <Bushels>Buşel</Bushels>
-    <Pecks>
-    </Pecks>
+    <Pecks>Pecks</Pecks>
     <GallonsUK>Galon (İngiltere)</GallonsUK>
     <QuartsUK>Litre (İngiltere)</QuartsUK>
     <PintsUK>Pint (İngiltere)</PintsUK>
@@ -1927,16 +1932,18 @@ Yeni oturum başlatın (işbirliği)</Information>
     <SpellCheck>Yazım denetimi</SpellCheck>
     <NetflixQualityCheck>Netflix kalite kontrolü</NetflixQualityCheck>
     <SettingsName>Ayarlar</SettingsName>
-    <Help>Yardım</Help>
-    <UnbreakNoSpace>Boşluksuz birleştir (CJK)</UnbreakNoSpace>
     <ToggleBookmarks>Yer imlerini değiştir</ToggleBookmarks>
     <ToggleBookmarksWithComment>Yer imlerini değiştirin - yorum ekleyin</ToggleBookmarksWithComment>
     <ClearBookmarks>Yer imlerini temizle</ClearBookmarks>
     <GoToBookmark>Yer imine git</GoToBookmark>
     <GoToPreviousBookmark>Önceki yer imine git</GoToPreviousBookmark>
     <GoToNextBookmark>Sonraki yer imine git</GoToNextBookmark>
-    <GeneralChooseProfile>Profil seçin</GeneralChooseProfile>
-    <GeneralDuplicateLine>Yinelenen satır</GeneralDuplicateLine>
+    <ChooseProfile>Profil seçin</ChooseProfile>
+    <DuplicateLine>Yinelenen satır</DuplicateLine>
+    <ToggleView>Liste/kaynak görünümü değiştir</ToggleView>
+    <ToggleMode>Çevir/oluştur/ayarla modunu değiştir</ToggleMode>
+    <TogglePreviewOnVideo>Videoda önizlemeyi aç/kapat</TogglePreviewOnVideo>
+    <Help>Yardım</Help>
     <FontInUi>UI Font</FontInUi>
     <ShowFrameRate>Kare hızını araç çubuğunda göster</ShowFrameRate>
     <DefaultFrameRate>Varsayılan kare hızı</DefaultFrameRate>
@@ -2017,6 +2024,7 @@ Yeni oturum başlatın (işbirliği)</Information>
     <ShowStopButton>Durdur butonunu göster</ShowStopButton>
     <ShowMuteButton>Sesli/Sessiz butonunu göster</ShowMuteButton>
     <ShowFullscreenButton>Tam ekran butonunu göster</ShowFullscreenButton>
+    <PreviewFontName>Altyazı önizleme font adı</PreviewFontName>
     <PreviewFontSize>Altyazı önizleme font boyutu</PreviewFontSize>
     <MainWindowVideoControls>Video kontroller ana pencere</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Metin ve link için özel arama</CustomSearchTextAndUrl>
@@ -2090,18 +2098,18 @@ Yeni oturum başlatın (işbirliği)</Information>
     <RemoveTextForHi>İE için metin kaldır</RemoveTextForHi>
     <MergeLinesShorterThan>Daha kısa satırları birleştir                   %</MergeLinesShorterThan>
     <DialogStyle>Diyalog stili</DialogStyle>
-    <DialogStyleDashBothLinesWithSpace>Her iki çizgiye de boşluk bırak</DialogStyleDashBothLinesWithSpace>
-    <DialogStyleDashBothLinesWithoutSpace>Her iki çizgiyi de boşluk bırakmadan tire koyun</DialogStyleDashBothLinesWithoutSpace>
+    <DialogStyleDashBothLinesWithSpace>Her iki satırda da boşluk bırak</DialogStyleDashBothLinesWithSpace>
+    <DialogStyleDashBothLinesWithoutSpace>Her iki satırda da boşluk bırakmadan tire koyun</DialogStyleDashBothLinesWithoutSpace>
     <DialogStyleDashSecondLineWithSpace>İkinci satırda boşluk bırakın</DialogStyleDashSecondLineWithSpace>
     <DialogStyleDashSecondLineWithoutSpace>Boşluk olmadan ikinci satırda kısa çizgi</DialogStyleDashSecondLineWithoutSpace>
     <ContinuationStyle>Devam stili</ContinuationStyle>
     <ContinuationStyleNone>Yok</ContinuationStyleNone>
-    <ContinuationStyleNoneTrailingDots>Yok, duraklamalar için noktalar (yalnızca sonda)</ContinuationStyleNoneTrailingDots>
-    <ContinuationStyleNoneLeadingTrailingDots>Yok, duraklamalar için noktalar</ContinuationStyleNoneLeadingTrailingDots>
-    <ContinuationStyleOnlyTrailingDots>Noktalar (yalnızca sonda)</ContinuationStyleOnlyTrailingDots>
-    <ContinuationStyleLeadingTrailingDots>Noktalar</ContinuationStyleLeadingTrailingDots>
+    <ContinuationStyleNoneTrailingDots>Yok, duraklamalar için üç nokta (yalnızca sonda)</ContinuationStyleNoneTrailingDots>
+    <ContinuationStyleNoneLeadingTrailingDots>Yok, duraklamalar için üç nokta</ContinuationStyleNoneLeadingTrailingDots>
+    <ContinuationStyleOnlyTrailingDots>Üç nokta (yalnızca sonda)</ContinuationStyleOnlyTrailingDots>
+    <ContinuationStyleLeadingTrailingDots>Üç nokta</ContinuationStyleLeadingTrailingDots>
     <ContinuationStyleLeadingTrailingDash>Kısa çizgi</ContinuationStyleLeadingTrailingDash>
-    <ContinuationStyleLeadingTrailingDashDots>Kısa çizgi, ancak duraklamalar için noktalar</ContinuationStyleLeadingTrailingDashDots>
+    <ContinuationStyleLeadingTrailingDashDots>Kısa çizgi, ancak duraklamalar için üç nokta</ContinuationStyleLeadingTrailingDashDots>
     <MusicSymbol>Müzik sembolü</MusicSymbol>
     <MusicSymbolsReplace>Değiştirilecek müzik sembolleri (virgülle ayırın)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>OCR güncellemelerini düzelt. Ayrıca sabit kodlanmış kuralları kullan</FixCommonOcrErrorsUseHardcodedRules>
@@ -2119,6 +2127,8 @@ Yeni oturum başlatın (işbirliği)</Information>
     <UseSyntaxColoring>Sözdizimi renklendirmesini kullanın</UseSyntaxColoring>
     <HtmlColor>HTML rengi</HtmlColor>
     <AssaColor>ASSA rengi</AssaColor>
+    <DarkTheme>Koyu tema</DarkTheme>
+    <DarkThemeEnabled>Koyu tema kullan</DarkThemeEnabled>
     <UpdateShortcut>Güncelle</UpdateShortcut>
     <FoucsSetVideoPosition>Odak video konumunu ayarla</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Video kontrol geçişlerini azalt/azaltma</ToggleDockUndockOfVideoControls>
@@ -2284,6 +2294,7 @@ Yeni oturum başlatın (işbirliği)</Information>
     <ListViewColumnTextDown>Sütun, metin aşağı</ListViewColumnTextDown>
     <ListViewGoToNextError>Sonraki hataya git</ListViewGoToNextError>
     <ShowBeamer>Altyazı tam ekran akışını başlat</ShowBeamer>
+    <ShowStyleManager>Stil yöneticisini göster</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>Bir sonraki altyazı satırının son kelimesini aşağı taşı</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Bir sonraki altyazı satırından ilk kelimeyi yukarı taşı</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Bir sonraki satıra ilk kelimeyi taşı (geçerli altyazı)</MainTextBoxMoveFirstWordUpCurrent>
@@ -2297,6 +2308,7 @@ Yeni oturum başlatın (işbirliği)</Information>
     <MainTextBoxAutoBreakFromPos>İmleç konumundan sonraki ilk boşlukta böl.</MainTextBoxAutoBreakFromPos>
     <MainTextBoxAutoBreakFromPosAndGoToNext>İmleç konumundan sonraki ilk boşlukta böl ve sıradakine geç</MainTextBoxAutoBreakFromPosAndGoToNext>
     <MainTextBoxUnbreak>Metni bölme</MainTextBoxUnbreak>
+    <MainTextBoxUnbreakNoSpace>Boşluksuz bölme (CJK)</MainTextBoxUnbreakNoSpace>
     <MainFileSaveAll>Tümünü kaydet</MainFileSaveAll>
     <Miscellaneous>Çeşitli</Miscellaneous>
     <CpsIncludesSpace>Karakter/sn (CPS) boşluk içerir</CpsIncludesSpace>
@@ -2332,7 +2344,6 @@ Devam et?</RestoreDefaultSettingsMsg>
     <UseXAsNewGap>Yeni minimum aralık olarak "{0}" milisaniye kullanılsın mı?</UseXAsNewGap>
   </Settings>
   <SettingsMpv>
-    <Title>mpv İçin ayarlar</Title>
     <DownloadMpv>mpv Kitaplığı indir</DownloadMpv>
     <DownloadMpvFailed>mpv Karşıdan yüklenemiyor - Lütfen sonra yeniden deneyin!</DownloadMpvFailed>
     <DownloadMpvOk>mpv Kitaplığı indirildi ve  kullanıma hazır.</DownloadMpvOk>
@@ -2394,6 +2405,9 @@ Devam et?</RestoreDefaultSettingsMsg>
     <CheckOneLetterWords>Bilinmeyen "tek harf"leri kontrol et</CheckOneLetterWords>
     <TreatINQuoteAsING>Fiillerin sonundaki "ini'yi "ing"e çevir (sadece İngilizce'de)</TreatINQuoteAsING>
     <RememberUseAlwaysList>"Her zaman kullan" listesini hatırla</RememberUseAlwaysList>
+    <LiveSpellCheck>Anında yazım denetimi</LiveSpellCheck>
+    <LiveSpellCheckLanguage>Anında yazım denetimi - Dil ile çalışma [{0}]</LiveSpellCheckLanguage>
+    <NoDictionaryForLiveSpellCheck>Anında yazım denetimi - Bu dil için sözlüğünüz yok [{0}]</NoDictionaryForLiveSpellCheck>
     <ImageText>Görüntü metni</ImageText>
     <SpellCheckCompleted>Yazım denetimi tamamlandı.</SpellCheckCompleted>
     <SpellCheckAborted>Yazım denetimı iptal edildi</SpellCheckAborted>
@@ -2496,8 +2510,7 @@ Devam et?</RestoreDefaultSettingsMsg>
   <SubStationAlphaProperties>
     <Title>Gelişmiş Sub Station Alpha özellikleri</Title>
     <TitleSubstationAlpha>Sub Station Alpha özellikleri</TitleSubstationAlpha>
-    <Script>
-    </Script>
+    <Script>Betik</Script>
     <ScriptTitle>Başlık</ScriptTitle>
     <OriginalScript>Orijinal komut</OriginalScript>
     <Translation>Çeviri</Translation>
@@ -2544,6 +2557,7 @@ Devam et?</RestoreDefaultSettingsMsg>
     <MarginLeft>Sol boşluk</MarginLeft>
     <MarginRight>Sağ boşluk</MarginRight>
     <MarginVertical>Dikey boşluk</MarginVertical>
+    <Vertical>Dikey</Vertical>
     <Border>Kenarlık</Border>
     <PlusShadow>+ Gölge</PlusShadow>
     <OpaqueBox>Opak kutu (anahat rengini kullanır)</OpaqueBox>
@@ -2561,6 +2575,11 @@ Devam et?</RestoreDefaultSettingsMsg>
     <StyleAlreadyExits>Zaten var olan tarz: {0}</StyleAlreadyExits>
     <StyleXExportedToFileY>Tarz '{0}' dosyaya dışa aktarıldı '{1}'</StyleXExportedToFileY>
     <StyleXImportedFromFileY>Tarz '{0}' dosyadan içe aktarıldı '{1}'</StyleXImportedFromFileY>
+    <SetPreviewText>Önizleme metnini ayarla...</SetPreviewText>
+    <AddToFile>Dosyaya ekle</AddToFile>
+    <AddToStorage>Depoya ekle</AddToStorage>
+    <StyleStorage>Stil saklama</StyleStorage>
+    <OverwriteX>{0} üzerine yazılsın mı?</OverwriteX>
   </SubStationAlphaStyles>
   <PointSync>
     <Title>Nokta senkronlama</Title>
