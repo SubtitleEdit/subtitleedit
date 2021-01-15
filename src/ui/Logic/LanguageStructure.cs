@@ -730,6 +730,7 @@
             public string FixHyphensInDialogs { get; set; }
             public string AddMissingQuotesExample { get; set; }
             public string XMissingQuotesAdded { get; set; }
+            public string Fix3PlusLine { get; set; }
             public string Fix3PlusLines { get; set; }
             public string Analysing { get; set; }
             public string NothingToFix { get; set; }

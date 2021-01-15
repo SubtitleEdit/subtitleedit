@@ -524,7 +524,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelDuration.Left = timeUpDownStartTime.Left + timeUpDownStartTime.Width - 3;
 
             AddMissingQuotes.Language.AddMissingQuote = LanguageSettings.Current.FixCommonErrors.AddMissingQuote;
-            Fix3PlusLines.Language.Fix3PlusLine = LanguageSettings.Current.FixCommonErrors.XMissingQuotesAdded;
+            Fix3PlusLines.Language.Fix3PlusLine = LanguageSettings.Current.FixCommonErrors.Fix3PlusLine;
             Fix3PlusLines.Language.Fix3PlusLines = LanguageSettings.Current.FixCommonErrors.Fix3PlusLines;
             FixAloneLowercaseIToUppercaseI.Language.FixLowercaseIToUppercaseI = LanguageSettings.Current.FixCommonErrors.FixLowercaseIToUppercaseI;
             FixCommas.Language.FixCommas = LanguageSettings.Current.FixCommonErrors.FixCommas;
