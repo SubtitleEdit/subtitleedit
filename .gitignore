@@ -45,3 +45,4 @@ SubtitleEditBeta
 /src/ui/NHunspell*
 /TestResults
 /packages
+/src/ui/Languages/XmlContentTranslator.exe

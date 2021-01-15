@@ -2021,7 +2021,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <ShowStopButton>Vis stop-knap</ShowStopButton>
     <ShowMuteButton>Vis mute-knap</ShowMuteButton>
     <ShowFullscreenButton>Vis fuldskærm knap</ShowFullscreenButton>
-    <PreviewFontName></PreviewFontName>
+    <PreviewFontName>Fontnavn i undertekst preview</PreviewFontName>
     <PreviewFontSize>Undertekst preview skriftstørrelse</PreviewFontSize>
     <MainWindowVideoControls>Hovedvinduet video-kontrol</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Egen defineret søge titel og URL</CustomSearchTextAndUrl>
@@ -2403,8 +2403,8 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <TreatINQuoteAsING>Accepter ord der slutter med i' som ing (kun på engelsk)</TreatINQuoteAsING>
     <RememberUseAlwaysList>Husk "Brug altid" listen</RememberUseAlwaysList>
     <LiveSpellCheck>Live stavekontrol</LiveSpellCheck>
-    <LiveSpellCheckLanguage></LiveSpellCheckLanguage>
-    <NoDictionaryForLiveSpellCheck></NoDictionaryForLiveSpellCheck>
+    <LiveSpellCheckLanguage>Live stavekontrol - aktivt sprog [{0}]</LiveSpellCheckLanguage>
+    <NoDictionaryForLiveSpellCheck>Live stavekontrol - Du har ikke ordbøger for dette sprog [{0}]</NoDictionaryForLiveSpellCheck>
     <ImageText>Billede tekst</ImageText>
     <SpellCheckCompleted>Stavekontrol færdig</SpellCheckCompleted>
     <SpellCheckAborted>Stavekontrol afbrudt</SpellCheckAborted>
