@@ -798,7 +798,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 var v = comboBoxFrameRate.Items[i].ToString();
                 if (decimal.TryParse(v, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var n))
                 {
-                    if (frameRate == n)
+                    if (Math.Abs(frameRate -n) < 0.01m)
                     {
                         comboBoxFrameRate.SelectedIndex = i;
                         return;
@@ -1941,12 +1941,14 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
         private void comboBoxFrameRate_SelectedValueChanged(object sender, EventArgs e)
         {
-            _frameRate = double.Parse(comboBoxFrameRate.SelectedItem.ToString());
+            var s = comboBoxFrameRate.SelectedItem.ToString().Replace(',', '.');
+            _frameRate = double.Parse(s, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture);
         }
 
         private void comboBoxFrameRate_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _frameRate = double.Parse(comboBoxFrameRate.SelectedItem.ToString());
+            var s = comboBoxFrameRate.SelectedItem.ToString().Replace(',', '.');
+            _frameRate = double.Parse(s, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture);
         }
 
         private void numericUpDownScreenWidth_ValueChanged(object sender, EventArgs e)
