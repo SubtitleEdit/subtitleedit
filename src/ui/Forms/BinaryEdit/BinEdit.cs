@@ -1157,7 +1157,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                                     CompositionNumber = p.Number * 2,
                                     IsForced = extra.IsForced,
                                 };
-                                var buffer = BluRaySupPicture.CreateSupFrame(brSub, bmp, 25, 0, 0, 0, new Point(extra.X, extra.Y));
+                                var buffer = BluRaySupPicture.CreateSupFrame(brSub, bmp, _frameRate, 0, 0, 0, new Point(extra.X, extra.Y));
                                 if (extra.Bitmap == null)
                                 {
                                     bmp.Dispose();
