@@ -284,11 +284,6 @@ namespace Nikse.SubtitleEdit.Controls
             Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             AllowColumnReorder = true;
             HeaderStyle = ColumnHeaderStyle.Nonclickable;
-            _setLastColumnWidthTimer = new Timer
-            {
-                Interval = 50
-            };
-            _setLastColumnWidthTimer.Tick += _setLastColumnWidthTimer_Tick;
 
             ColumnIndexNumber = -1;
             ColumnIndexStart = -1;
@@ -387,20 +382,24 @@ namespace Nikse.SubtitleEdit.Controls
             DrawItem += SubtitleListView_DrawItem;
             DrawSubItem += SubtitleListView_DrawSubItem;
             DrawColumnHeader += SubtitleListView_DrawColumnHeader;
+
+            _setLastColumnWidthTimer = new Timer
+            {
+                Interval = 50
+            };
+            _setLastColumnWidthTimer.Tick += _setLastColumnWidthTimer_Tick;
         }
 
         private void _setLastColumnWidthTimer_Tick(object sender, EventArgs e)
         {
             _setLastColumnWidthTimer.Stop();
-
-            int width = 0;
-            for (int i = 0; i < Columns.Count - 1; i++)
-            {
-                width += Columns[i].Width;
-            }
-
             if (Columns.Count > 0)
             {
+                int width = 0;
+                for (int i = 0; i < Columns.Count - 1; i++)
+                {
+                    width += Columns[i].Width;
+                }
                 Columns[Columns.Count - 1].Width = ClientSize.Width - width;
             }
         }
@@ -1141,6 +1140,11 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SubtitleListViewLastColumnFill(object sender, EventArgs e)
         {
+            if (DesignMode || _setLastColumnWidthTimer == null || !Visible)
+            {
+                return;
+            }
+
             _setLastColumnWidthTimer.Stop();
             _setLastColumnWidthTimer.Start();
         }
