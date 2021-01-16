@@ -20,6 +20,10 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             numericUpDownMarginRight.Value = Configuration.Settings.Tools.BinEditRightMargin;
             numericUpDownMarginVertical.Value = Configuration.Settings.Tools.BinEditVerticalMargin;
             UiUtil.FixLargeFonts(this, buttonOK);
+
+            Text = LanguageSettings.Current.Settings.Title;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
