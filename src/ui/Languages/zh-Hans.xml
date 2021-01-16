@@ -247,9 +247,11 @@ Command line: {1} {2}
     <QuickOcr>快速OCR文本（仅用于参考）</QuickOcr>
     <ResizeBitmaps>调整图片尺寸…</ResizeBitmaps>
     <ChangeBrightness>调整亮度…</ChangeBrightness>
+    <ChangeAlpha>调整透明度…</ChangeAlpha>
     <ResizeBitmapsForSelectedLines>为所选行调整图片尺寸…</ResizeBitmapsForSelectedLines>
     <ChangeColorForSelectedLines>修改所选行颜色…</ChangeColorForSelectedLines>
     <ChangeBrightnessForSelectedLines>调整所选行亮度…</ChangeBrightnessForSelectedLines>
+    <ChangeAlphaForSelectedLines>调整所选行透明度…</ChangeAlphaForSelectedLines>
     <AlignSelectedLines>对齐所选行</AlignSelectedLines>
     <CenterSelectedLines>居中所选行（水平，保持垂直位置）</CenterSelectedLines>
     <TopAlignSelectedLines>顶部对齐所选行（保持水平位置）</TopAlignSelectedLines>
@@ -260,6 +262,8 @@ Command line: {1} {2}
     <BrightnessX>亮度：{}%</BrightnessX>
     <ResizeTitle>调整图片尺寸</ResizeTitle>
     <ResizeX>调整尺寸：{}%</ResizeX>
+    <ChangeAlphaTitle>调整透明度</ChangeAlphaTitle>
+    <AlphaX>透明度：{}%</AlphaX>
   </BinEdit>
   <Bookmarks>
     <EditBookmark>编辑书签</EditBookmark>
@@ -658,6 +662,7 @@ Command line: {1} {2}
     <FixHyphensInDialogs>用以修复对话连字符的样式: {0}</FixHyphensInDialogs>
     <AddMissingQuotesExample>"How are you? -&gt; "How are you?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>已添加丢失的引号: {0}</XMissingQuotesAdded>
+    <Fix3PlusLine>修复超过两行的字幕</Fix3PlusLine>
     <Fix3PlusLines>修复超过两行的字幕</Fix3PlusLines>
     <Analysing>正在分析...</Analysing>
     <NothingToFix>没有什么要修复 :)</NothingToFix>
