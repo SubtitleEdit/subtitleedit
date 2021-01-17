@@ -892,22 +892,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             UpdateProfileNames(gs.Profiles);
 
-            // Music notes / music symbols
-            if (!Utilities.IsRunningOnMono() && Environment.OSVersion.Version.Major < 6) // 6 == Vista/Win2008Server/Win7
-            {
-                float fontSize = comboBoxToolsMusicSymbol.Font.Size;
-                const string unicodeFontName = Utilities.WinXP2KUnicodeFontName;
-                listViewNames.Font = new Font(unicodeFontName, fontSize);
-                listBoxUserWordLists.Font = new Font(unicodeFontName, fontSize);
-                listBoxOcrFixList.Font = new Font(unicodeFontName, fontSize);
-                comboBoxToolsMusicSymbol.Font = new Font(unicodeFontName, fontSize);
-                textBoxMusicSymbolsToReplace.Font = new Font(unicodeFontName, fontSize);
-                textBoxNameEtc.Font = new Font(unicodeFontName, fontSize);
-                textBoxUserWord.Font = new Font(unicodeFontName, fontSize);
-                textBoxOcrFixKey.Font = new Font(unicodeFontName, fontSize);
-                textBoxOcrFixValue.Font = new Font(unicodeFontName, fontSize);
-            }
-
             comboBoxToolsMusicSymbol.Items.Clear();
             comboBoxToolsMusicSymbol.Items.Add("♪");
             comboBoxToolsMusicSymbol.Items.Add("♫");
