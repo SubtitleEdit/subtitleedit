@@ -18557,10 +18557,6 @@ namespace Nikse.SubtitleEdit.Forms
                     foreach (var s in Configuration.Settings.Tools.UnicodeSymbolsToInsert.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
                     {
                         toolStripMenuItemInsertUnicodeCharacter.DropDownItems.Add(s, null, InsertUnicodeGlyphAllowMultiLine);
-                        if (Environment.OSVersion.Version.Major < 6 && Configuration.Settings.General.SubtitleFontName == Utilities.WinXP2KUnicodeFontName) // 6 == Vista/Win2008Server/Win7
-                        {
-                            toolStripMenuItemInsertUnicodeCharacter.DropDownItems[toolStripMenuItemInsertUnicodeCharacter.DropDownItems.Count - 1].Font = new Font(Utilities.WinXP2KUnicodeFontName, toolStripMenuItemInsertUnicodeSymbol.Font.Size);
-                        }
                     }
 
                     UiUtil.FixFonts(toolStripMenuItemInsertUnicodeCharacter);
@@ -24986,10 +24982,6 @@ namespace Nikse.SubtitleEdit.Forms
                     foreach (var s in Configuration.Settings.Tools.UnicodeSymbolsToInsert.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
                     {
                         toolStripMenuItemInsertUnicodeSymbol.DropDownItems.Add(s, null, InsertUnicodeGlyph);
-                        if (Environment.OSVersion.Version.Major < 6 && Configuration.Settings.General.SubtitleFontName == Utilities.WinXP2KUnicodeFontName) // 6 == Vista/Win2008Server/Win7
-                        {
-                            toolStripMenuItemInsertUnicodeSymbol.DropDownItems[toolStripMenuItemInsertUnicodeSymbol.DropDownItems.Count - 1].Font = new Font(Utilities.WinXP2KUnicodeFontName, toolStripMenuItemInsertUnicodeSymbol.Font.Size);
-                        }
                     }
 
                     UiUtil.FixFonts(toolStripMenuItemInsertUnicodeSymbol);
@@ -25000,10 +24992,6 @@ namespace Nikse.SubtitleEdit.Forms
                     foreach (var s in Configuration.Settings.Tools.UnicodeSymbolsToInsert.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
                     {
                         insertUnicodeCharactersToolStripMenuItem.DropDownItems.Add(s, null, InsertUnicodeGlyph);
-                        if (Environment.OSVersion.Version.Major < 6 && Configuration.Settings.General.SubtitleFontName == Utilities.WinXP2KUnicodeFontName) // 6 == Vista/Win2008Server/Win7
-                        {
-                            insertUnicodeCharactersToolStripMenuItem.DropDownItems[insertUnicodeCharactersToolStripMenuItem.DropDownItems.Count - 1].Font = new Font(Utilities.WinXP2KUnicodeFontName, toolStripMenuItemInsertUnicodeSymbol.Font.Size);
-                        }
                     }
 
                     UiUtil.FixFonts(insertUnicodeCharactersToolStripMenuItem);
