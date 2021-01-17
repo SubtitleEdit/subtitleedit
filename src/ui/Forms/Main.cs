@@ -3743,9 +3743,10 @@ namespace Nikse.SubtitleEdit.Forms
                             lowerFileNameList.Add(file.FileName.ToLowerInvariant());
                         }
                     }
-                    UiUtil.FixFonts(dropDownItems[dropDownItems.Count - 1]);
                 }
+
                 reopenToolStripMenuItem.DropDownItems.AddRange(dropDownItems.ToArray());
+                UiUtil.FixFonts(reopenToolStripMenuItem);
             }
             else
             {
@@ -7558,7 +7559,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void ContextMenuStripListViewOpening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void ContextMenuStripListViewOpening(object sender, CancelEventArgs e)
         {
             var format = GetCurrentSubtitleFormat();
             var formatType = format.GetType();
@@ -7779,11 +7780,24 @@ namespace Nikse.SubtitleEdit.Forms
                 setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Clear();
                 foreach (var style in styles)
                 {
-                    setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Add(style, null, tsi_Click);
+                    setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Add(style, null, SetStyle);
+                    if (SubtitleListview1.SelectedItems.Count == 1 && _subtitle.GetParagraphOrDefault(SubtitleListview1.SelectedItems[0].Index).Extra == style)
+                    {
+                        ((ToolStripMenuItem)setStylesForSelectedLinesToolStripMenuItem.DropDownItems[setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Count - 1]).Checked = true;
+                    }
                 }
 
-                setStylesForSelectedLinesToolStripMenuItem.Visible = styles.Count > 1;
                 toolStripMenuItemAssStyles.Visible = true;
+                if (styles.Count > 1)
+                {
+                    setStylesForSelectedLinesToolStripMenuItem.Visible = true;
+                    UiUtil.FixFonts(setStylesForSelectedLinesToolStripMenuItem);
+                }
+                else
+                {
+                    setStylesForSelectedLinesToolStripMenuItem.Visible = false;
+                }
+
                 if (formatType == typeof(AdvancedSubStationAlpha))
                 {
                     toolStripMenuItemAssStyles.Text = _language.Menu.ContextMenu.AdvancedSubStationAlphaStyles;
@@ -7809,7 +7823,11 @@ namespace Nikse.SubtitleEdit.Forms
                 setActorForSelectedLinesToolStripMenuItem.DropDownItems.Clear();
                 foreach (var actor in actors)
                 {
-                    setActorForSelectedLinesToolStripMenuItem.DropDownItems.Add(actor, null, actor_Click);
+                    setActorForSelectedLinesToolStripMenuItem.DropDownItems.Add(actor, null, SetActor);
+                    if (SubtitleListview1.SelectedItems.Count == 1 && _subtitle.GetParagraphOrDefault(SubtitleListview1.SelectedItems[0].Index).Actor == actor)
+                    {
+                        ((ToolStripMenuItem)setActorForSelectedLinesToolStripMenuItem.DropDownItems[setActorForSelectedLinesToolStripMenuItem.DropDownItems.Count - 1]).Checked = true;
+                    }
                 }
 
                 if (actors.Count > 0)
@@ -7824,6 +7842,8 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     setActorForSelectedLinesToolStripMenuItem.DropDownItems.Add(_language.Menu.ContextMenu.RemoveActors, null, RemoveActors);
                 }
+
+                UiUtil.FixFonts(setActorForSelectedLinesToolStripMenuItem);
             }
             else if (((formatType == typeof(TimedText10) && Configuration.Settings.SubtitleSettings.TimedText10ShowStyleAndLanguage) || formatType == typeof(ItunesTimedText)) && SubtitleListview1.SelectedItems.Count > 0)
             {
@@ -7833,10 +7853,23 @@ namespace Nikse.SubtitleEdit.Forms
                 setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Clear();
                 foreach (var style in styles)
                 {
-                    setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Add(style, null, tsi_Click);
+                    setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Add(style, null, SetStyle);
+                    if (SubtitleListview1.SelectedItems.Count == 1 && _subtitle.GetParagraphOrDefault(SubtitleListview1.SelectedItems[0].Index).Style == style)
+                    {
+                        ((ToolStripMenuItem)setStylesForSelectedLinesToolStripMenuItem.DropDownItems[setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Count - 1]).Checked = true;
+                    }
                 }
 
-                setStylesForSelectedLinesToolStripMenuItem.Visible = styles.Count >= 1;
+                if (styles.Count >= 1)
+                {
+                    setStylesForSelectedLinesToolStripMenuItem.Visible = true;
+                    UiUtil.FixFonts(setStylesForSelectedLinesToolStripMenuItem);
+                }
+                else
+                {
+                    setStylesForSelectedLinesToolStripMenuItem.Visible = false;
+                }
+
                 toolStripMenuItemAssStyles.Visible = true;
                 setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.TimedTextSetStyle;
 
@@ -7854,10 +7887,17 @@ namespace Nikse.SubtitleEdit.Forms
                     toolStripMenuItemSetRegion.Visible = true;
                     foreach (var region in regions)
                     {
-                        toolStripMenuItemSetRegion.DropDownItems.Add(region, null, SetRegionClick);
+                        toolStripMenuItemSetRegion.DropDownItems.Add(region, null, SetRegion);
+                        if (SubtitleListview1.SelectedItems.Count == 1 && _subtitle.GetParagraphOrDefault(SubtitleListview1.SelectedItems[0].Index).Region == region)
+                        {
+                            ((ToolStripMenuItem)toolStripMenuItemSetRegion.DropDownItems[toolStripMenuItemSetRegion.DropDownItems.Count - 1]).Checked = true;
+                        }
                     }
 
-                    toolStripMenuItemSetRegion.DropDownItems.Add("-");
+                    var tss = new ToolStripSeparator();
+                    UiUtil.FixFonts(tss);
+                    toolStripMenuItemSetRegion.DropDownItems.Add(tss);
+
                     var clear = new ToolStripMenuItem(LanguageSettings.Current.DvdSubRip.Clear);
                     toolStripMenuItemSetRegion.DropDownItems.Add(clear);
                     clear.Click += (sender2, e2) =>
@@ -7869,6 +7909,8 @@ namespace Nikse.SubtitleEdit.Forms
                             SubtitleListview1.SetTimeAndText(index, _subtitle.Paragraphs[index], _subtitle.GetParagraphOrDefault(index + 1));
                         }
                     };
+
+                    UiUtil.FixFonts(toolStripMenuItemSetRegion);
                 }
                 else
                 {
@@ -7884,10 +7926,16 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     foreach (var language in languages)
                     {
-                        toolStripMenuItemSetLanguage.DropDownItems.Add(language, null, AddLanguageClick);
+                        toolStripMenuItemSetLanguage.DropDownItems.Add(language, null, SetLanguage);
+                        if (SubtitleListview1.SelectedItems.Count == 1 && _subtitle.GetParagraphOrDefault(SubtitleListview1.SelectedItems[0].Index).Language == language)
+                        {
+                            ((ToolStripMenuItem)toolStripMenuItemSetLanguage.DropDownItems[toolStripMenuItemSetLanguage.DropDownItems.Count - 1]).Checked = true;
+                        }
                     }
 
-                    toolStripMenuItemSetLanguage.DropDownItems.Add("-");
+                    var tss = new ToolStripSeparator();
+                    UiUtil.FixFonts(tss);
+                    toolStripMenuItemSetLanguage.DropDownItems.Add(tss);
                 }
 
                 var newItem = new ToolStripMenuItem(_language.New);
@@ -7940,6 +7988,8 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     };
                 }
+
+                UiUtil.FixFonts(toolStripMenuItemSetLanguage);
             }
             else if ((formatType == typeof(Sami) || formatType == typeof(SamiModern)) && SubtitleListview1.SelectedItems.Count > 0)
             {
@@ -7949,10 +7999,23 @@ namespace Nikse.SubtitleEdit.Forms
                 setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Clear();
                 foreach (var style in styles)
                 {
-                    setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Add(style, null, tsi_Click);
+                    setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Add(style, null, SetStyle);
+                    if (SubtitleListview1.SelectedItems.Count == 1 && _subtitle.GetParagraphOrDefault(SubtitleListview1.SelectedItems[0].Index).Extra == style)
+                    {
+                        ((ToolStripMenuItem)setStylesForSelectedLinesToolStripMenuItem.DropDownItems[setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Count - 1]).Checked = true;
+                    }
                 }
 
-                setStylesForSelectedLinesToolStripMenuItem.Visible = styles.Count > 1;
+                if (styles.Count > 1)
+                {
+                    setStylesForSelectedLinesToolStripMenuItem.Visible = true;
+                    UiUtil.FixFonts(setStylesForSelectedLinesToolStripMenuItem);
+                }
+                else
+                {
+                    setStylesForSelectedLinesToolStripMenuItem.Visible = false;
+                }
+                
                 toolStripMenuItemAssStyles.Visible = false;
                 setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SamiSetStyle;
             }
@@ -7963,9 +8026,16 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemWebVTT.Visible = true;
                 var voices = WebVTT.GetVoices(_subtitle);
                 toolStripMenuItemWebVTT.DropDownItems.Clear();
-                foreach (var style in voices)
+                foreach (var voice in voices)
                 {
-                    toolStripMenuItemWebVTT.DropDownItems.Add(style, null, WebVTTSetVoice);
+                    toolStripMenuItemWebVTT.DropDownItems.Add(voice, null, WebVTTSetVoice);
+                }
+
+                if (voices.Count > 0)
+                {
+                    var tss = new ToolStripSeparator();
+                    UiUtil.FixFonts(tss);
+                    toolStripMenuItemWebVTT.DropDownItems.Add(tss);
                 }
 
                 toolStripMenuItemWebVTT.DropDownItems.Add(_language.Menu.ContextMenu.WebVTTSetNewVoice, null, WebVTTSetNewVoice);
@@ -7973,8 +8043,10 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     toolStripMenuItemWebVTT.DropDownItems.Add(_language.Menu.ContextMenu.WebVTTRemoveVoices, null, WebVTTRemoveVoices);
                 }
+
+                UiUtil.FixFonts(toolStripMenuItemWebVTT);
             }
-            else if ((format.Name == "Nuendo" && SubtitleListview1.SelectedItems.Count > 0))
+            else if (format.Name == "Nuendo" && SubtitleListview1.SelectedItems.Count > 0)
             {
                 toolStripMenuItemWebVTT.Visible = false;
                 var styles = GetNuendoStyles();
@@ -7982,9 +8054,22 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (var style in styles)
                 {
                     setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Add(style, null, NuendoSetStyle);
+                    if (SubtitleListview1.SelectedItems.Count == 1 && _subtitle.GetParagraphOrDefault(SubtitleListview1.SelectedItems[0].Index).Extra == style)
+                    {
+                        ((ToolStripMenuItem)setStylesForSelectedLinesToolStripMenuItem.DropDownItems[setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Count - 1]).Checked = true;
+                    }
                 }
 
-                setStylesForSelectedLinesToolStripMenuItem.Visible = styles.Count > 1;
+                if (styles.Count > 1)
+                {
+                    setStylesForSelectedLinesToolStripMenuItem.Visible = true;
+                    UiUtil.FixFonts(setStylesForSelectedLinesToolStripMenuItem);
+                }
+                else
+                {
+                    setStylesForSelectedLinesToolStripMenuItem.Visible = false;
+                }
+                
                 toolStripMenuItemAssStyles.Visible = false;
                 setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.NuendoSetStyle;
             }
@@ -8130,7 +8215,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void tsi_Click(object sender, EventArgs e)
+        private void SetStyle(object sender, EventArgs e)
         {
             string style = (sender as ToolStripItem).Text;
             if (!string.IsNullOrEmpty(style))
@@ -8159,7 +8244,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void actor_Click(object sender, EventArgs e)
+        private void SetActor(object sender, EventArgs e)
         {
             string actor = (sender as ToolStripItem).Text;
             if (!string.IsNullOrEmpty(actor))
@@ -8174,7 +8259,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void SetRegionClick(object sender, EventArgs e)
+        private void SetRegion(object sender, EventArgs e)
         {
             string region = (sender as ToolStripItem).Text;
             if (!string.IsNullOrEmpty(region))
@@ -8188,7 +8273,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void AddLanguageClick(object sender, EventArgs e)
+        private void SetLanguage(object sender, EventArgs e)
         {
             string lang = (sender as ToolStripItem).Text;
             if (!string.IsNullOrEmpty(lang))
@@ -18500,11 +18585,9 @@ namespace Nikse.SubtitleEdit.Forms
                     foreach (var s in Configuration.Settings.Tools.UnicodeSymbolsToInsert.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
                     {
                         toolStripMenuItemInsertUnicodeCharacter.DropDownItems.Add(s, null, InsertUnicodeGlyphAllowMultiLine);
-                        if (Environment.OSVersion.Version.Major < 6 && Configuration.Settings.General.SubtitleFontName == Utilities.WinXP2KUnicodeFontName) // 6 == Vista/Win2008Server/Win7
-                        {
-                            toolStripMenuItemInsertUnicodeCharacter.DropDownItems[toolStripMenuItemInsertUnicodeCharacter.DropDownItems.Count - 1].Font = new Font(Utilities.WinXP2KUnicodeFontName, toolStripMenuItemInsertUnicodeSymbol.Font.Size);
-                        }
                     }
+
+                    UiUtil.FixFonts(toolStripMenuItemInsertUnicodeCharacter);
                 }
 
                 toolStripMenuItemInsertUnicodeCharacter.Visible = toolStripMenuItemInsertUnicodeCharacter.DropDownItems.Count > 0;
@@ -24293,11 +24376,12 @@ namespace Nikse.SubtitleEdit.Forms
                         toolStripMenuItemSetAudioTrack.DropDownItems[toolStripMenuItemSetAudioTrack.DropDownItems.Count - 1].Tag = at.Key.ToString(CultureInfo.InvariantCulture);
                         if (at.Key == VideoAudioTrackNumber)
                         {
-                            toolStripMenuItemSetAudioTrack.DropDownItems[toolStripMenuItemSetAudioTrack.DropDownItems.Count - 1].Select();
+                            ((ToolStripMenuItem)toolStripMenuItemSetAudioTrack.DropDownItems[toolStripMenuItemSetAudioTrack.DropDownItems.Count - 1]).Checked = true;
                         }
                     }
 
                     toolStripMenuItemSetAudioTrack.Visible = true;
+                    UiUtil.FixFonts(toolStripMenuItemSetAudioTrack);
                 }
             }
             else if (mediaPlayer.VideoPlayer is LibMpvDynamic libMpv)
@@ -24316,11 +24400,12 @@ namespace Nikse.SubtitleEdit.Forms
                         toolStripMenuItemSetAudioTrack.DropDownItems[toolStripMenuItemSetAudioTrack.DropDownItems.Count - 1].Tag = at.Key.ToString(CultureInfo.InvariantCulture);
                         if (i == VideoAudioTrackNumber)
                         {
-                            toolStripMenuItemSetAudioTrack.DropDownItems[toolStripMenuItemSetAudioTrack.DropDownItems.Count - 1].Select();
+                            ((ToolStripMenuItem)toolStripMenuItemSetAudioTrack.DropDownItems[toolStripMenuItemSetAudioTrack.DropDownItems.Count - 1]).Checked = true;
                         }
                     }
 
                     toolStripMenuItemSetAudioTrack.Visible = true;
+                    UiUtil.FixFonts(toolStripMenuItemSetAudioTrack);
                 }
             }
 
@@ -24925,11 +25010,9 @@ namespace Nikse.SubtitleEdit.Forms
                     foreach (var s in Configuration.Settings.Tools.UnicodeSymbolsToInsert.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
                     {
                         toolStripMenuItemInsertUnicodeSymbol.DropDownItems.Add(s, null, InsertUnicodeGlyph);
-                        if (Environment.OSVersion.Version.Major < 6 && Configuration.Settings.General.SubtitleFontName == Utilities.WinXP2KUnicodeFontName) // 6 == Vista/Win2008Server/Win7
-                        {
-                            toolStripMenuItemInsertUnicodeSymbol.DropDownItems[toolStripMenuItemInsertUnicodeSymbol.DropDownItems.Count - 1].Font = new Font(Utilities.WinXP2KUnicodeFontName, toolStripMenuItemInsertUnicodeSymbol.Font.Size);
-                        }
                     }
+
+                    UiUtil.FixFonts(toolStripMenuItemInsertUnicodeSymbol);
                 }
 
                 if (insertUnicodeCharactersToolStripMenuItem.DropDownItems.Count == 0)
@@ -24937,11 +25020,9 @@ namespace Nikse.SubtitleEdit.Forms
                     foreach (var s in Configuration.Settings.Tools.UnicodeSymbolsToInsert.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
                     {
                         insertUnicodeCharactersToolStripMenuItem.DropDownItems.Add(s, null, InsertUnicodeGlyph);
-                        if (Environment.OSVersion.Version.Major < 6 && Configuration.Settings.General.SubtitleFontName == Utilities.WinXP2KUnicodeFontName) // 6 == Vista/Win2008Server/Win7
-                        {
-                            insertUnicodeCharactersToolStripMenuItem.DropDownItems[insertUnicodeCharactersToolStripMenuItem.DropDownItems.Count - 1].Font = new Font(Utilities.WinXP2KUnicodeFontName, toolStripMenuItemInsertUnicodeSymbol.Font.Size);
-                        }
                     }
+
+                    UiUtil.FixFonts(insertUnicodeCharactersToolStripMenuItem);
                 }
 
                 toolStripMenuItemInsertUnicodeSymbol.Visible = toolStripMenuItemInsertUnicodeSymbol.DropDownItems.Count > 0;
@@ -24974,12 +25055,19 @@ namespace Nikse.SubtitleEdit.Forms
                     toolStripMenuItemWebVttVoice.DropDownItems.Add(style, null, WebVTTSetVoiceTextBox);
                 }
 
+                if (voices.Count > 0)
+                {
+                    var tss = new ToolStripSeparator();
+                    UiUtil.FixFonts(tss);
+                    toolStripMenuItemWebVttVoice.DropDownItems.Add(tss);
+                }
+
                 toolStripMenuItemWebVttVoice.DropDownItems.Add(_language.Menu.ContextMenu.WebVTTSetNewVoice, null, WebVTTSetNewVoiceTextBox);
+                UiUtil.FixFonts(toolStripMenuItemWebVttVoice);
             }
             else
             {
                 toolStripSeparatorWebVTT.Visible = false;
-                toolStripMenuItemWebVttVoice.Visible = false;
                 toolStripMenuItemWebVttVoice.Visible = false;
             }
 

@@ -583,6 +583,8 @@ namespace Nikse.SubtitleEdit.Forms
                         toolStripMenuItemMoveRulesToGroup.DropDownItems.Add(menuItem);
                     }
                 }
+
+                UiUtil.FixFonts(toolStripMenuItemMoveRulesToGroup);
             }
             else
             {

@@ -8,7 +8,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using System.Security.Authentication;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -18,8 +17,6 @@ namespace Nikse.SubtitleEdit.Core.Common
 {
     public static class Utilities
     {
-        public const string WinXP2KUnicodeFontName = "Times New Roman";
-
         /// <summary>
         /// Cached environment new line characters for faster lookup.
         /// </summary>

@@ -380,9 +380,10 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Timed Text - Styles";
-            this.ResizeEnd += new System.EventHandler(this.TimedTextStyles_ResizeEnd);
-            this.SizeChanged += new System.EventHandler(this.TimedTextStyles_SizeChanged);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TimedTextStyles_KeyDown);
+            this.ResizeEnd += new System.EventHandler(this.TimedTextStyles_ResizeEnd);
+            this.Shown += new System.EventHandler(this.TimedTextStyles_Shown);
+            this.SizeChanged += new System.EventHandler(this.TimedTextStyles_SizeChanged);
             this.groupBoxProperties.ResumeLayout(false);
             this.groupBoxProperties.PerformLayout();
             this.groupBoxPreview.ResumeLayout(false);
