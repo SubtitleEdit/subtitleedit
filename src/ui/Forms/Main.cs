@@ -15656,6 +15656,12 @@ namespace Nikse.SubtitleEdit.Forms
                 SetCurrentViaEndPositionAndGotoNext(FirstSelectedIndex, true);
                 e.SuppressKeyPress = true;
             }
+            else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustSetEndMinusGapAndStartNextHere == e.KeyData)
+            {
+                ShowNextSubtitleLabel();
+                SetEndMinusGapAndStartNextHere(FirstSelectedIndex);
+                e.SuppressKeyPress = true;
+            }
             else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustSetStartAutoDurationAndGoToNext == e.KeyData)
             {
                 SetCurrentStartAutoDurationAndGotoNext(FirstSelectedIndex);
@@ -24666,6 +24672,66 @@ namespace Nikse.SubtitleEdit.Forms
         public void PlayPause()
         {
             mediaPlayer.TogglePlayPause();
+        }
+
+        public void SetEndMinusGapAndStartNextHere(int index)
+        {
+            var p = _subtitle.GetParagraphOrDefault(index);
+            if (p == null)
+            {
+                return;
+            }
+
+            if (mediaPlayer.VideoPlayer == null || string.IsNullOrEmpty(VideoFileName))
+            {
+                MessageBox.Show(_languageGeneral.NoVideoLoaded);
+                return;
+            }
+
+            var oldParagraph = new Paragraph(p, false);
+
+            double totalMillisecondsEnd = mediaPlayer.CurrentPosition * TimeCode.BaseUnit - MinGapBetweenLines;
+            var newDurationMs = totalMillisecondsEnd - p.StartTime.TotalMilliseconds;
+            if (!p.StartTime.IsMaxTime &&
+                newDurationMs < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds &&
+                newDurationMs > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+            {
+                return;
+            }
+
+            var tc = new TimeCode(totalMillisecondsEnd);
+            MakeHistoryForUndo(_language.BeforeSetEndAndVideoPosition + "  " + tc);
+            _makeHistoryPaused = true;
+
+            if (p.StartTime.IsMaxTime)
+            {
+                p.EndTime.TotalMilliseconds = totalMillisecondsEnd;
+                p.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds - Utilities.GetOptimalDisplayMilliseconds(p.Text);
+            }
+            else
+            {
+                p.EndTime.TotalMilliseconds = totalMillisecondsEnd;
+            }
+
+            timeUpDownStartTime.TimeCode = p.StartTime;
+            var durationInSeconds = (decimal)p.Duration.TotalSeconds;
+            if (durationInSeconds >= numericUpDownDuration.Minimum && durationInSeconds <= numericUpDownDuration.Maximum)
+            {
+                SetDurationInSeconds((double)durationInSeconds);
+            }
+
+            UpdateOriginalTimeCodes(oldParagraph);
+            RestartHistory();
+
+            var next = _subtitle.GetParagraphOrDefault(index +1);
+            if (next != null)
+            {
+                next.StartTime.TotalMilliseconds = totalMillisecondsEnd + MinGapBetweenLines;
+            }
+
+            SubtitleListview1.SelectIndexAndEnsureVisible(index + 1, true);
+            ShowStatus(string.Format(_language.VideoControls.AdjustedViaEndTime, p.StartTime.ToShortString()));
+            audioVisualizer.Invalidate();
         }
 
         public void SetCurrentViaEndPositionAndGotoNext(int index, bool goToNext)
