@@ -1,5 +1,5 @@
-﻿using System;
-using Nikse.SubtitleEdit.Core.Translate.Processor;
+﻿using Nikse.SubtitleEdit.Core.Translate.Processor;
+using System;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {

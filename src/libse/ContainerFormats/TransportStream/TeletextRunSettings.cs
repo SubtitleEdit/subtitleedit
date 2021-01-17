@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 {

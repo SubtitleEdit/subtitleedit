@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {

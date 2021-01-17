@@ -1,5 +1,5 @@
-﻿using System.Globalization;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 {
