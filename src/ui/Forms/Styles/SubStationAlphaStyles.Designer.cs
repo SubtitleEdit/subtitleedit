@@ -1355,10 +1355,11 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Advanced SubStation Alpha styles";
-            this.ResizeEnd += new System.EventHandler(this.SubStationAlphaStyles_ResizeEnd);
-            this.SizeChanged += new System.EventHandler(this.SubStationAlphaStyles_SizeChanged);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SubStationAlphaStyles_KeyDown);
             this.Resize += new System.EventHandler(this.SubStationAlphaStyles_Resize);
+            this.ResizeEnd += new System.EventHandler(this.SubStationAlphaStyles_ResizeEnd);
+            this.Shown += new System.EventHandler(this.SubStationAlphaStyles_Shown);
+            this.SizeChanged += new System.EventHandler(this.SubStationAlphaStyles_SizeChanged);
             this.contextMenuStripFile.ResumeLayout(false);
             this.groupBoxStyles.ResumeLayout(false);
             this.groupBoxProperties.ResumeLayout(false);
