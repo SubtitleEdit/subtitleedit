@@ -7780,7 +7780,11 @@ namespace Nikse.SubtitleEdit.Forms
                 setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Clear();
                 foreach (var style in styles)
                 {
-                    setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Add(style, null, tsi_Click);
+                    setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Add(style, null, SetStyle);
+                    if (SubtitleListview1.SelectedItems.Count == 1 && _subtitle.GetParagraphOrDefault(SubtitleListview1.SelectedItems[0].Index).Extra == style)
+                    {
+                        ((ToolStripMenuItem)setStylesForSelectedLinesToolStripMenuItem.DropDownItems[setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Count - 1]).Checked = true;
+                    }
                 }
 
                 toolStripMenuItemAssStyles.Visible = true;
@@ -7819,7 +7823,11 @@ namespace Nikse.SubtitleEdit.Forms
                 setActorForSelectedLinesToolStripMenuItem.DropDownItems.Clear();
                 foreach (var actor in actors)
                 {
-                    setActorForSelectedLinesToolStripMenuItem.DropDownItems.Add(actor, null, actor_Click);
+                    setActorForSelectedLinesToolStripMenuItem.DropDownItems.Add(actor, null, SetActor);
+                    if (SubtitleListview1.SelectedItems.Count == 1 && _subtitle.GetParagraphOrDefault(SubtitleListview1.SelectedItems[0].Index).Actor == actor)
+                    {
+                        ((ToolStripMenuItem)setActorForSelectedLinesToolStripMenuItem.DropDownItems[setActorForSelectedLinesToolStripMenuItem.DropDownItems.Count - 1]).Checked = true;
+                    }
                 }
 
                 if (actors.Count > 0)
@@ -7845,7 +7853,11 @@ namespace Nikse.SubtitleEdit.Forms
                 setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Clear();
                 foreach (var style in styles)
                 {
-                    setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Add(style, null, tsi_Click);
+                    setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Add(style, null, SetStyle);
+                    if (SubtitleListview1.SelectedItems.Count == 1 && _subtitle.GetParagraphOrDefault(SubtitleListview1.SelectedItems[0].Index).Style == style)
+                    {
+                        ((ToolStripMenuItem)setStylesForSelectedLinesToolStripMenuItem.DropDownItems[setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Count - 1]).Checked = true;
+                    }
                 }
 
                 if (styles.Count >= 1)
@@ -7875,7 +7887,11 @@ namespace Nikse.SubtitleEdit.Forms
                     toolStripMenuItemSetRegion.Visible = true;
                     foreach (var region in regions)
                     {
-                        toolStripMenuItemSetRegion.DropDownItems.Add(region, null, SetRegionClick);
+                        toolStripMenuItemSetRegion.DropDownItems.Add(region, null, SetRegion);
+                        if (SubtitleListview1.SelectedItems.Count == 1 && _subtitle.GetParagraphOrDefault(SubtitleListview1.SelectedItems[0].Index).Region == region)
+                        {
+                            ((ToolStripMenuItem)toolStripMenuItemSetRegion.DropDownItems[toolStripMenuItemSetRegion.DropDownItems.Count - 1]).Checked = true;
+                        }
                     }
 
                     var tss = new ToolStripSeparator();
@@ -7910,7 +7926,11 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     foreach (var language in languages)
                     {
-                        toolStripMenuItemSetLanguage.DropDownItems.Add(language, null, AddLanguageClick);
+                        toolStripMenuItemSetLanguage.DropDownItems.Add(language, null, SetLanguage);
+                        if (SubtitleListview1.SelectedItems.Count == 1 && _subtitle.GetParagraphOrDefault(SubtitleListview1.SelectedItems[0].Index).Language == language)
+                        {
+                            ((ToolStripMenuItem)toolStripMenuItemSetLanguage.DropDownItems[toolStripMenuItemSetLanguage.DropDownItems.Count - 1]).Checked = true;
+                        }
                     }
 
                     var tss = new ToolStripSeparator();
@@ -7979,7 +7999,11 @@ namespace Nikse.SubtitleEdit.Forms
                 setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Clear();
                 foreach (var style in styles)
                 {
-                    setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Add(style, null, tsi_Click);
+                    setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Add(style, null, SetStyle);
+                    if (SubtitleListview1.SelectedItems.Count == 1 && _subtitle.GetParagraphOrDefault(SubtitleListview1.SelectedItems[0].Index).Extra == style)
+                    {
+                        ((ToolStripMenuItem)setStylesForSelectedLinesToolStripMenuItem.DropDownItems[setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Count - 1]).Checked = true;
+                    }
                 }
 
                 if (styles.Count > 1)
@@ -8002,9 +8026,9 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemWebVTT.Visible = true;
                 var voices = WebVTT.GetVoices(_subtitle);
                 toolStripMenuItemWebVTT.DropDownItems.Clear();
-                foreach (var style in voices)
+                foreach (var voice in voices)
                 {
-                    toolStripMenuItemWebVTT.DropDownItems.Add(style, null, WebVTTSetVoice);
+                    toolStripMenuItemWebVTT.DropDownItems.Add(voice, null, WebVTTSetVoice);
                 }
 
                 if (voices.Count > 0)
@@ -8022,7 +8046,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 UiUtil.FixFonts(toolStripMenuItemWebVTT);
             }
-            else if ((format.Name == "Nuendo" && SubtitleListview1.SelectedItems.Count > 0))
+            else if (format.Name == "Nuendo" && SubtitleListview1.SelectedItems.Count > 0)
             {
                 toolStripMenuItemWebVTT.Visible = false;
                 var styles = GetNuendoStyles();
@@ -8030,6 +8054,10 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (var style in styles)
                 {
                     setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Add(style, null, NuendoSetStyle);
+                    if (SubtitleListview1.SelectedItems.Count == 1 && _subtitle.GetParagraphOrDefault(SubtitleListview1.SelectedItems[0].Index).Extra == style)
+                    {
+                        ((ToolStripMenuItem)setStylesForSelectedLinesToolStripMenuItem.DropDownItems[setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Count - 1]).Checked = true;
+                    }
                 }
 
                 if (styles.Count > 1)
@@ -8187,7 +8215,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void tsi_Click(object sender, EventArgs e)
+        private void SetStyle(object sender, EventArgs e)
         {
             string style = (sender as ToolStripItem).Text;
             if (!string.IsNullOrEmpty(style))
@@ -8216,7 +8244,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void actor_Click(object sender, EventArgs e)
+        private void SetActor(object sender, EventArgs e)
         {
             string actor = (sender as ToolStripItem).Text;
             if (!string.IsNullOrEmpty(actor))
@@ -8231,7 +8259,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void SetRegionClick(object sender, EventArgs e)
+        private void SetRegion(object sender, EventArgs e)
         {
             string region = (sender as ToolStripItem).Text;
             if (!string.IsNullOrEmpty(region))
@@ -8245,7 +8273,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void AddLanguageClick(object sender, EventArgs e)
+        private void SetLanguage(object sender, EventArgs e)
         {
             string lang = (sender as ToolStripItem).Text;
             if (!string.IsNullOrEmpty(lang))
@@ -24348,7 +24376,7 @@ namespace Nikse.SubtitleEdit.Forms
                         toolStripMenuItemSetAudioTrack.DropDownItems[toolStripMenuItemSetAudioTrack.DropDownItems.Count - 1].Tag = at.Key.ToString(CultureInfo.InvariantCulture);
                         if (at.Key == VideoAudioTrackNumber)
                         {
-                            toolStripMenuItemSetAudioTrack.DropDownItems[toolStripMenuItemSetAudioTrack.DropDownItems.Count - 1].Select();
+                            ((ToolStripMenuItem)toolStripMenuItemSetAudioTrack.DropDownItems[toolStripMenuItemSetAudioTrack.DropDownItems.Count - 1]).Checked = true;
                         }
                     }
 
@@ -24372,7 +24400,7 @@ namespace Nikse.SubtitleEdit.Forms
                         toolStripMenuItemSetAudioTrack.DropDownItems[toolStripMenuItemSetAudioTrack.DropDownItems.Count - 1].Tag = at.Key.ToString(CultureInfo.InvariantCulture);
                         if (i == VideoAudioTrackNumber)
                         {
-                            toolStripMenuItemSetAudioTrack.DropDownItems[toolStripMenuItemSetAudioTrack.DropDownItems.Count - 1].Select();
+                            ((ToolStripMenuItem)toolStripMenuItemSetAudioTrack.DropDownItems[toolStripMenuItemSetAudioTrack.DropDownItems.Count - 1]).Checked = true;
                         }
                     }
 
