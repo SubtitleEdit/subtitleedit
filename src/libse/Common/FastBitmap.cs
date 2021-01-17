@@ -41,21 +41,6 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             _workingBitmap = inputBitmap;
 
-            if (_workingBitmap.PixelFormat != PixelFormat.Format32bppArgb &&
-                Environment.OSVersion.Version.Major < 6 && Configuration.Settings.General.SubtitleFontName == Utilities.WinXP2KUnicodeFontName) // 6 == Vista/Win2008Server/Win7
-            { // WinXp Fix
-                var newBitmap = new Bitmap(_workingBitmap.Width, _workingBitmap.Height, PixelFormat.Format32bppArgb);
-                for (int y = 0; y < _workingBitmap.Height; y++)
-                {
-                    for (int x = 0; x < _workingBitmap.Width; x++)
-                    {
-                        newBitmap.SetPixel(x, y, _workingBitmap.GetPixel(x, y));
-                    }
-                }
-
-                _workingBitmap = newBitmap;
-            }
-
             Width = inputBitmap.Width;
             Height = inputBitmap.Height;
         }

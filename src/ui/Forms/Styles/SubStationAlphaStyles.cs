@@ -1538,14 +1538,24 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             _lastFormWindowState = WindowState;
         }
 
+        private void SetLastColumnWidth()
+        {
+            listViewStyles.Columns[listViewStyles.Columns.Count - 1].Width = -2;
+            listViewStorage.Columns[listViewStorage.Columns.Count - 1].Width = -2;
+        }
+
         private void SubStationAlphaStyles_ResizeEnd(object sender, EventArgs e)
         {
-            listViewStyles.Columns[5].Width = -2;
-            listViewStorage.Columns[5].Width = -2;
+            SetLastColumnWidth();
             _backgroundImage?.Dispose();
             _backgroundImage = null;
             GeneratePreview();
             _lastFormWindowState = WindowState;
+        }
+
+        private void SubStationAlphaStyles_Shown(object sender, EventArgs e)
+        {
+            SetLastColumnWidth();
         }
 
         private void numericUpDownOutline_ValueChanged(object sender, EventArgs e)
