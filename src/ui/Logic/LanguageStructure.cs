@@ -1626,6 +1626,7 @@
                     public string GoogleAndMicrosoftTranslateSelectedLine { get; set; }
                     public string TranslateSelectedLines { get; set; }
                     public string AdjustDisplayDurationForSelectedLines { get; set; }
+                    public string ApplyDurationLimitsForSelectedLines { get; set; }
                     public string FixCommonErrorsInSelectedLines { get; set; }
                     public string ChangeCasingForSelectedLines { get; set; }
                     public string SaveSelectedLines { get; set; }

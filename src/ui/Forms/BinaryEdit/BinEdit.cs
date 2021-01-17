@@ -251,7 +251,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             changeAlphaForSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.ChangeAlphaForSelectedLines;
             adjustAllTimesForSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.ShowSelectedLinesEarlierLater;
             adjustDisplayTimeForSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.AdjustDisplayDurationForSelectedLines;
-            applyDurationLimitsForSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.AdjustDisplayDurationForSelectedLines;
+            applyDurationLimitsForSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.ApplyDurationLimitsForSelectedLines;
             setAspectRatio11ToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.SetAspectRatio11;
 
             labelStart.Text = LanguageSettings.Current.General.StartTime;

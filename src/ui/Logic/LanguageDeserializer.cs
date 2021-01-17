@@ -4147,6 +4147,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/ContextMenu/AdjustDisplayDurationForSelectedLines":
                     language.Main.Menu.ContextMenu.AdjustDisplayDurationForSelectedLines = reader.Value;
                     break;
+                case "Main/Menu/ContextMenu/ApplyDurationLimitsForSelectedLines":
+                    language.Main.Menu.ContextMenu.ApplyDurationLimitsForSelectedLines = reader.Value;
+                    break;
                 case "Main/Menu/ContextMenu/FixCommonErrorsInSelectedLines":
                     language.Main.Menu.ContextMenu.FixCommonErrorsInSelectedLines = reader.Value;
                     break;

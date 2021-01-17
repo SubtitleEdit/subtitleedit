@@ -1771,6 +1771,7 @@ namespace Nikse.SubtitleEdit.Logic
                         GoogleAndMicrosoftTranslateSelectedLine = "Google/Microsoft translate original line",
                         TranslateSelectedLines = "Translate selected lines...",
                         AdjustDisplayDurationForSelectedLines = "Adjust durations for selected lines...",
+                        ApplyDurationLimitsForSelectedLines = "Apply duration limits for selected lines...",
                         FixCommonErrorsInSelectedLines = "Fix common errors in selected lines...",
                         ChangeCasingForSelectedLines = "Change casing for selected lines...",
                         SaveSelectedLines = "Save selected lines as...",
