@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Nikse.SubtitleEdit.Core.SubtitleFormats
+﻿namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class SamiModern : Sami
     {

@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using System.Collections.Generic;
 using System.Drawing;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 {

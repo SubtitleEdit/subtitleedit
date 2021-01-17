@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,6 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Xml;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Test.Logic.SubtitleFormats
 {
