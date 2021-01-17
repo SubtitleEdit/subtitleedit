@@ -801,6 +801,16 @@ namespace Nikse.SubtitleEdit.Logic
         {
             item.BackColor = BackColor;
             item.ForeColor = ForeColor;
+
+            if (item is ToolStripDropDownItem dropDownMenu && dropDownMenu.DropDownItems.Count > 0)
+            {
+                foreach (ToolStripItem dropDownItem in dropDownMenu.DropDownItems)
+                {
+                    dropDownItem.ForeColor = ForeColor;
+                    dropDownItem.BackColor = BackColor;
+                }
+            }
+
             if (item is ToolStripSeparator)
             {
                 item.Paint += ToolStripSeparatorPaint;

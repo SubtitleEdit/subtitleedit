@@ -1626,6 +1626,7 @@
                     public string GoogleAndMicrosoftTranslateSelectedLine { get; set; }
                     public string TranslateSelectedLines { get; set; }
                     public string AdjustDisplayDurationForSelectedLines { get; set; }
+                    public string ApplyDurationLimitsForSelectedLines { get; set; }
                     public string FixCommonErrorsInSelectedLines { get; set; }
                     public string ChangeCasingForSelectedLines { get; set; }
                     public string SaveSelectedLines { get; set; }
@@ -2306,6 +2307,7 @@
             public string CreateSetEndAddNewAndGoToNew { get; set; }
             public string AdjustViaEndAutoStart { get; set; }
             public string AdjustViaEndAutoStartAndGoToNext { get; set; }
+            public string AdjustSetEndMinusGapAndStartNextHere { get; set; }
             public string AdjustSetEndTimeAndGoToNext { get; set; }
             public string AdjustSetEndTimeAndPause { get; set; }
             public string AdjustSetStartAutoDurationAndGoToNext { get; set; }
