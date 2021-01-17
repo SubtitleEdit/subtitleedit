@@ -1976,6 +1976,7 @@ $HorzAlign          =   Center
         public string MainAdjustSetEndAndGotoNext { get; set; }
         public string MainAdjustViaEndAutoStart { get; set; }
         public string MainAdjustViaEndAutoStartAndGoToNext { get; set; }
+        public string MainAdjustSetEndMinusGapAndStartNextHere { get; set; }
         public string MainAdjustSetStartAutoDurationAndGoToNext { get; set; }
         public string MainAdjustSetEndNextStartAndGoToNext { get; set; }
         public string MainAdjustStartDownEndUpAndGoToNext { get; set; }
@@ -7381,6 +7382,12 @@ $HorzAlign          =   Center
                     shortcuts.MainAdjustViaEndAutoStartAndGoToNext = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainAdjustSetEndMinusGapAndStartNextHere");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustSetEndMinusGapAndStartNextHere = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainAdjustSetStartAutoDurationAndGoToNext");
                 if (subNode != null)
                 {
@@ -8750,6 +8757,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainAdjustSetEndAndGotoNext", shortcuts.MainAdjustSetEndAndGotoNext);
             textWriter.WriteElementString("MainAdjustViaEndAutoStart", shortcuts.MainAdjustViaEndAutoStart);
             textWriter.WriteElementString("MainAdjustViaEndAutoStartAndGoToNext", shortcuts.MainAdjustViaEndAutoStartAndGoToNext);
+            textWriter.WriteElementString("MainAdjustSetEndMinusGapAndStartNextHere", shortcuts.MainAdjustSetEndMinusGapAndStartNextHere);
             textWriter.WriteElementString("MainAdjustSetStartAutoDurationAndGoToNext", shortcuts.MainAdjustSetStartAutoDurationAndGoToNext);
             textWriter.WriteElementString("MainAdjustSetEndNextStartAndGoToNext", shortcuts.MainAdjustSetEndNextStartAndGoToNext);
             textWriter.WriteElementString("MainAdjustStartDownEndUpAndGoToNext", shortcuts.MainAdjustStartDownEndUpAndGoToNext);
