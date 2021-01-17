@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using System;
@@ -8,7 +9,6 @@ using System.Drawing.Text;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Forms.Styles
 {
@@ -572,15 +572,25 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             DialogResult = DialogResult.Cancel;
         }
 
+        private void SetLastColumnWidth()
+        {
+            listViewStyles.Columns[listViewStyles.Columns.Count - 1].Width = -2;
+        }
+
         private void TimedTextStyles_ResizeEnd(object sender, EventArgs e)
         {
+            SetLastColumnWidth();
             GeneratePreview();
+        }
+
+        private void TimedTextStyles_Shown(object sender, EventArgs e)
+        {
+            SetLastColumnWidth();
         }
 
         private void TimedTextStyles_SizeChanged(object sender, EventArgs e)
         {
             GeneratePreview();
         }
-
     }
 }
