@@ -1651,6 +1651,11 @@ namespace Nikse.SubtitleEdit.Forms
             copyToolStripMenuItem.Text = _language.Menu.ContextMenu.Copy;
             pasteToolStripMenuItem.Text = _language.Menu.ContextMenu.Paste;
             deleteToolStripMenuItem.Text = _language.Menu.ContextMenu.Delete;
+            cutToolStripMenuItem1.Text = _language.Menu.ContextMenu.Cut;
+            copyToolStripMenuItem1.Text = _language.Menu.ContextMenu.Copy;
+            pasteToolStripMenuItem1.Text = _language.Menu.ContextMenu.Paste;
+            deleteToolStripMenuItem1.Text = _language.Menu.ContextMenu.Delete;
+            selectAllToolStripMenuItem1.Text = _language.Menu.ContextMenu.SelectAll;
             toolStripMenuItemSplitTextAtCursor.Text = _language.Menu.ContextMenu.SplitLineAtCursorPosition;
             toolStripMenuItemSpellCheckSkipOnce.Text = LanguageSettings.Current.SpellCheck.SkipOnce;
             toolStripMenuItemSpellCheckSkipAll.Text = LanguageSettings.Current.SpellCheck.SkipAll;
@@ -1666,7 +1671,9 @@ namespace Nikse.SubtitleEdit.Forms
             colorToolStripMenuItem1.Text = _language.Menu.ContextMenu.Color;
             fontNameToolStripMenuItem.Text = _language.Menu.ContextMenu.FontName;
             toolStripMenuItemInsertUnicodeSymbol.Text = _language.Menu.Edit.InsertUnicodeSymbol;
+            insertUnicodeCharactersToolStripMenuItem.Text = _language.Menu.Edit.InsertUnicodeSymbol;
             toolStripMenuItemInsertUnicodeControlCharacters.Text = _language.Menu.Edit.InsertUnicodeControlCharacters;
+            insertUnicodeControlCharactersToolStripMenuItem.Text = _language.Menu.Edit.InsertUnicodeControlCharacters;
             superscriptToolStripMenuItem.Text = _language.Menu.ContextMenu.Superscript;
             subscriptToolStripMenuItem.Text = _language.Menu.ContextMenu.Subscript;
             leftToolStripMenuItem.Text = _language.Menu.Edit.InsertUnicodeControlCharactersLRM;
@@ -24919,8 +24926,21 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
+                if (insertUnicodeCharactersToolStripMenuItem.DropDownItems.Count == 0)
+                {
+                    foreach (var s in Configuration.Settings.Tools.UnicodeSymbolsToInsert.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        insertUnicodeCharactersToolStripMenuItem.DropDownItems.Add(s, null, InsertUnicodeGlyph);
+                        if (Environment.OSVersion.Version.Major < 6 && Configuration.Settings.General.SubtitleFontName == Utilities.WinXP2KUnicodeFontName) // 6 == Vista/Win2008Server/Win7
+                        {
+                            insertUnicodeCharactersToolStripMenuItem.DropDownItems[insertUnicodeCharactersToolStripMenuItem.DropDownItems.Count - 1].Font = new Font(Utilities.WinXP2KUnicodeFontName, toolStripMenuItemInsertUnicodeSymbol.Font.Size);
+                        }
+                    }
+                }
+
                 toolStripMenuItemInsertUnicodeSymbol.Visible = toolStripMenuItemInsertUnicodeSymbol.DropDownItems.Count > 0;
                 toolStripSeparator25.Visible = toolStripMenuItemInsertUnicodeSymbol.DropDownItems.Count > 0;
+                toolStripSeparatorInsertUnicode.Visible = insertUnicodeCharactersToolStripMenuItem.DropDownItems.Count > 0;
 
                 superscriptToolStripMenuItem.Visible = tb.SelectionLength > 0;
                 subscriptToolStripMenuItem.Visible = tb.SelectionLength > 0;
@@ -24930,6 +24950,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 toolStripMenuItemInsertUnicodeSymbol.Visible = false;
                 toolStripSeparator25.Visible = false;
+                toolStripSeparatorInsertUnicode.Visible = false;
                 superscriptToolStripMenuItem.Visible = false;
                 subscriptToolStripMenuItem.Visible = false;
                 toolStripMenuItemInsertUnicodeControlCharacters.Visible = false;
