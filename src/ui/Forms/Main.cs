@@ -53,7 +53,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private Control ListView => splitContainerListViewAndText;
         private Control SourceView => textBoxSource;
-        private bool _inListView => splitContainerListViewAndText.Visible;
+        private bool _inListView => !textBoxSource.Visible;
         private bool _inSourceView => textBoxSource.Visible;
 
         private Subtitle _subtitle = new Subtitle();
@@ -8016,7 +8016,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     setStylesForSelectedLinesToolStripMenuItem.Visible = false;
                 }
-                
+
                 toolStripMenuItemAssStyles.Visible = false;
                 setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SamiSetStyle;
             }
@@ -8070,7 +8070,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     setStylesForSelectedLinesToolStripMenuItem.Visible = false;
                 }
-                
+
                 toolStripMenuItemAssStyles.Visible = false;
                 setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.NuendoSetStyle;
             }
@@ -20672,7 +20672,14 @@ namespace Nikse.SubtitleEdit.Forms
                                     labelStatus.Text = string.Format(_language.VideoControls.AutoContinueInXSeconds, _autoContinueDelayCount);
                                 }
 
-                                timerAutoContinue.Start();
+                                if (_autoContinueDelayCount <= 0)
+                                {
+                                    timerAutoContinue_Tick(null, null);
+                                }
+                                else
+                                {
+                                    timerAutoContinue.Start();
+                                }
                             }
                         }
                     }
@@ -20735,7 +20742,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _autoContinueDelayCount--;
 
-            if (_autoContinueDelayCount == 0)
+            if (_autoContinueDelayCount <= 0)
             {
                 timerAutoContinue.Stop();
 
@@ -24788,7 +24795,7 @@ namespace Nikse.SubtitleEdit.Forms
             UpdateOriginalTimeCodes(oldParagraph);
             RestartHistory();
 
-            var next = _subtitle.GetParagraphOrDefault(index +1);
+            var next = _subtitle.GetParagraphOrDefault(index + 1);
             if (next != null)
             {
                 next.StartTime.TotalMilliseconds = totalMillisecondsEnd + MinGapBetweenLines;
