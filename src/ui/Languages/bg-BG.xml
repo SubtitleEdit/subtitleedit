@@ -2405,7 +2405,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WhiteSpaceCheckReport>Невалидни интервали намерени в колона {0}.</WhiteSpaceCheckReport>
     <ReportPrompt>Виж пълният отчет тук: {0}.</ReportPrompt>
     <OpenReportInFolder>Отваряне на отчета в папка</OpenReportInFolder>
-    <FoundXIssues>Качественият контрол на Netflix е намерил {0:#,###} проблема.</FoundXIssues>
+    <FoundXIssues>Качественият контрол на Netflix е намерил {0:#,##0} проблема.</FoundXIssues>
     <CheckOk>Качественият контрол на Netflix е OK :)</CheckOk>
     <MaximumXCharsPerSecond>Максимален брой символи {0}/сек (без интервалите)</MaximumXCharsPerSecond>
     <MaximumLineLength>Максимална дължина на ред ({0})</MaximumLineLength>
