@@ -2238,7 +2238,7 @@ Probeer het later opnieuw.</XDownloadFailed>
     <WhiteSpaceCheckReport>Ongeldige witruimte gevonden in kolom {0}</WhiteSpaceCheckReport>
     <ReportPrompt>Zie volledige rapportage hier: {0}</ReportPrompt>
     <OpenReportInFolder>Rapportage in map openen</OpenReportInFolder>
-    <FoundXIssues>{0:#,###} problemen gevonden door Netflix-kwaliteitscontrole.</FoundXIssues>
+    <FoundXIssues>{0:#,##0} problemen gevonden door Netflix-kwaliteitscontrole.</FoundXIssues>
     <CheckOk>Netflix-kwaliteitscontrole oké :)</CheckOk>
     <MaximumXCharsPerSecond>Maximaal {0} tekens per seconde (zonder witruimte)</MaximumXCharsPerSecond>
     <MaximumLineLength>Maximale tekstlengte ({0})</MaximumLineLength>

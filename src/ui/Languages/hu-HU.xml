@@ -2275,7 +2275,7 @@ Folytatja?</RestoreDefaultSettingsMsg>
     <WhiteSpaceCheckReport>Érvénytelen üres hely a(z) {0} oszlopban.</WhiteSpaceCheckReport>
     <ReportPrompt>Kérjük, tekintse meg a teljes jelentést itt: {0}.</ReportPrompt>
     <OpenReportInFolder>Jelentés megnyitása a mappában</OpenReportInFolder>
-    <FoundXIssues>A Netflix minőségellenőrzés {0:#,###} problémát talált.</FoundXIssues>
+    <FoundXIssues>A Netflix minőségellenőrzés {0:#,##0} problémát talált.</FoundXIssues>
     <CheckOk>Netflix minőségellenőrzés OK :)</CheckOk>
     <MaximumXCharsPerSecond>Legfeljebb {0} karakter másodpercenként (szóközökkel együtt)</MaximumXCharsPerSecond>
     <MaximumLineLength>Maximális sorhosszúság ({0})</MaximumLineLength>

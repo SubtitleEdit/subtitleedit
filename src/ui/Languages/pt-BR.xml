@@ -2226,7 +2226,7 @@ Continuar?</RestoreDefaultSettingsMsg>
     <WhiteSpaceCheckReport>Espaço em branco inválido encontrado na coluna {0}.</WhiteSpaceCheckReport>
     <ReportPrompt>Por favor, veja o relatório completo aqui: {0}.</ReportPrompt>
     <OpenReportInFolder>Abrir relatório na pasta</OpenReportInFolder>
-    <FoundXIssues>Verificação de qualidade da Netflix encontrou {0:#,###} problemas.</FoundXIssues>
+    <FoundXIssues>Verificação de qualidade da Netflix encontrou {0:#,##0} problemas.</FoundXIssues>
     <CheckOk>Verificação de qualidade da Netflix OK :)</CheckOk>
     <MaximumXCharsPerSecond>Máximo de {0} caracteres por segundo (excl. espaços em branco)</MaximumXCharsPerSecond>
     <MaximumLineLength>Comprimento máxima da linha ({0})</MaximumLineLength>
