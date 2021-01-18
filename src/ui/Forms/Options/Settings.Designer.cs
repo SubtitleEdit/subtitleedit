@@ -4233,7 +4233,7 @@
             // checkBoxSubtitleTextBoxSyntaxColor
             // 
             this.checkBoxSubtitleTextBoxSyntaxColor.AutoSize = true;
-            this.checkBoxSubtitleTextBoxSyntaxColor.Location = new System.Drawing.Point(396, 20);
+            this.checkBoxSubtitleTextBoxSyntaxColor.Location = new System.Drawing.Point(418, 24);
             this.checkBoxSubtitleTextBoxSyntaxColor.Name = "checkBoxSubtitleTextBoxSyntaxColor";
             this.checkBoxSubtitleTextBoxSyntaxColor.Size = new System.Drawing.Size(120, 17);
             this.checkBoxSubtitleTextBoxSyntaxColor.TabIndex = 34;
