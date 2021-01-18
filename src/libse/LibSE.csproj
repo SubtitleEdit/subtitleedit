@@ -1,21 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net462;netstandard2.1</TargetFrameworks>
-    <TargetFrameworks Condition=" '$(VisualStudioVersion)' == '15.0' ">net462</TargetFrameworks>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <RootNamespace>Nikse.SubtitleEdit.Core</RootNamespace>
     <AssemblyName>libse</AssemblyName>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-    <PackageProjectUrl>https://github.com/SubtitleEdit/subtitleedit/tree/master/libse</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/SubtitleEdit/subtitleedit/tree/master/libse</RepositoryUrl>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageTags>subtitle subrip srt</PackageTags>
-    <Authors>Nikolaj Olsson</Authors>
-    <PackageIcon>SutittleEdit_Logo.png</PackageIcon>
-    <RepositoryType>git</RepositoryType>
-    <PackageReleaseNotes>First nuget package (based on SE 3.5.18)</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -50,13 +40,13 @@
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' ">
-    <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
+    <PackageReference Include="System.Drawing.Common" Version="5.0.0" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="4.7.0" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="UTF.Unknown" Version="2.3.0" />
     <PackageReference Include="zlib.net-mutliplatform" Version="1.0.4" />
-  </ItemGroup>
-
+  </ItemGroup>  
+  
 </Project>
