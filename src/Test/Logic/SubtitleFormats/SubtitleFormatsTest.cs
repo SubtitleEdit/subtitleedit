@@ -614,13 +614,46 @@ Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
         }
 
         [TestMethod]
-        public void AssSimpleFontColorAndItalic()
+        public void AssSimpleFontColorUnclosed()
         {
             var target = new AdvancedSubStationAlpha();
             var subtitle = new Subtitle();
-            target.LoadSubtitle(subtitle, GetAssLines(@"{\1c&HFFFF00&\i1}CYAN{\i0}"), null);
+            target.LoadSubtitle(subtitle, GetAssLines(@"start {\c&HFFFFFF&}Font end"), null);
             string actual = subtitle.Paragraphs[0].Text;
-            const string expected = "<font color=\"#00ffff\"><i>CYAN</i></font>";
+            const string expected = "start <font color=\"#ffffff\">Font end</font>";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void AssSimpleFontPrimaryColorAndItalic()
+        {
+            var target = new AdvancedSubStationAlpha();
+            var subtitle = new Subtitle();
+            target.LoadSubtitle(subtitle, GetAssLines(@"start {\1c&HFFFF00&\i1}CYAN{\i0}{\1c} end"), null);
+            string actual = subtitle.Paragraphs[0].Text;
+            const string expected = "start <font color=\"#00ffff\"><i>CYAN</i></font> end";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void AssSimpleFontPrimaryColorUnclosedAndItalic()
+        {
+            var target = new AdvancedSubStationAlpha();
+            var subtitle = new Subtitle();
+            target.LoadSubtitle(subtitle, GetAssLines(@"start {\1c&HFFFF00&\i1}CYAN{\i0} end"), null);
+            string actual = subtitle.Paragraphs[0].Text;
+            const string expected = "start <font color=\"#00ffff\"><i>CYAN</i> end</font>";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void AssNestedFormatting()
+        {
+            var target = new AdvancedSubStationAlpha();
+            var subtitle = new Subtitle();
+            target.LoadSubtitle(subtitle, GetAssLines(@"start {\fnFont Name}text1 {\fs10}text2{\fs}{\fn} {\1c&H112233}text3{\1c} text4 {\c&332211}text5{\c} end"), null);
+            string actual = subtitle.Paragraphs[0].Text;
+            const string expected = "start <font face=\"Font Name\">text1 <font size=\"10\">text2</font></font> <font color=\"#332211\">text3</font> text4 <font color=\"#112233\">text5</font> end";
             Assert.AreEqual(expected, actual);
         }
 
@@ -711,12 +744,54 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
 
         [TestMethod]
         public void SsaSimpleFontColorAndItalic()
-        {
+        { 
             var target = new SubStationAlpha();
             var subtitle = new Subtitle();
             target.LoadSubtitle(subtitle, GetSsaLines(@"{\c&HFFFF00&\i1}CYAN{\i0}"), null);
             string actual = subtitle.Paragraphs[0].Text;
             const string expected = "<font color=\"#00ffff\"><i>CYAN</i></font>";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void SsaLoadSubtitle_TestData()
+        {
+            SsaLoadSubtitle("[EvEnTs]\nDialogue: ,0:00:00.00,0:00:00.01,,,,,,,text".SplitToLines(), "text");  // label casing insensitivity
+            SsaLoadSubtitle("[Events]\n,0:00:00.00,0:00:00.01,,,,,,,labelless dialogue".SplitToLines(), "labelless dialogue"); // no "Dialogue:" label, it is optional
+            SsaLoadSubtitle("[Events]\nFormat: Text, Start, End, Layer, Effect, Style\nDialogue:reordered text,0:00:00.00,0:00:00.01".SplitToLines(), "reordered text"); // reordered formats
+
+            SsaLoadSubtitle(GetSsaLines(@"Cased TEXT"), "Cased TEXT"); // preserve text casing
+            SsaLoadSubtitle(GetSsaLines(@"  text  "), "  text  "); // do not trim text
+            SsaLoadSubtitle(GetSsaLines(@"text, more text"), "text, more text"); // append excess dialogue values (> 10) to text
+            SsaLoadSubtitle(GetSsaLines(@"start {\fnFont Name}text{\fn} end"), "start <font face=\"Font Name\">text</font> end"); // font name
+            SsaLoadSubtitle(GetSsaLines(@"start {\fs10}text{\fs} end"), "start <font size=\"10\">text</font> end"); // font size
+            SsaLoadSubtitle(GetSsaLines(@"start {\c&H112233}text{\c} end"), "start <font color=\"#332211\">text</font> end"); // color
+            SsaLoadSubtitle(GetSsaLines(@"start {\c&H112233}text end"), "start <font color=\"#332211\">text end</font>"); // unclosed color should span to end of line
+            SsaLoadSubtitle(GetSsaLines(@"start {\1c&H112233}text{\1c} end"), "start <font color=\"#332211\">text</font> end"); // primay color
+            SsaLoadSubtitle(GetSsaLines(@"start {\1c&H112233}text{\1c} end"), "start <font color=\"#332211\">text</font> end"); // unclosed primay color should span to end of line
+            SsaLoadSubtitle(GetSsaLines(@"start {\fnFont Name}text1 {\fs10}text2{\fs}{\fn} {\1c&H112233}text3{\1c} text4 {\c&332211}text5{\c} end"), "start <font face=\"Font Name\">text1 <font size=\"10\">text2</font></font> <font color=\"#332211\">text3</font> text4 <font color=\"#112233\">text5</font> end"); // nested formatting
+
+            //each line should have its own formatting
+            List<string> multipleDialogueLines = @"[Events]
+                Format: Layer, Start, End, Text
+                Dialogue: ,00:00:01:18,00:00:01:85,{\fnFont Name}dialogue0{\fn}
+                Dialogue: ,0:00:02.18,0:00:02.85,{\fs10}dialogue1{\fs}
+                Dialogue: ,0:00:03.18,0:00:03.85,dialogue2
+                ".SplitToLines();
+
+            SsaLoadSubtitle(multipleDialogueLines, "<font face=\"Font Name\">dialogue0</font>", 0);
+            SsaLoadSubtitle(multipleDialogueLines, "<font size=\"10\">dialogue1</font>", 1);
+            SsaLoadSubtitle(multipleDialogueLines, "dialogue2", 2);
+        }
+
+        private void SsaLoadSubtitle(List<string> lines, string expected, int paragraphIndex = 0)
+        {
+            var target = new SubStationAlpha();
+            var subtitle = new Subtitle();
+
+            target.LoadSubtitle(subtitle, lines, null);
+
+            string actual = subtitle.Paragraphs[paragraphIndex].Text;
             Assert.AreEqual(expected, actual);
         }
 
