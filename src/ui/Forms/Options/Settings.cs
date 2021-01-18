@@ -934,6 +934,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxTreatINQuoteAsING.Checked = toolsSettings.SpellCheckEnglishAllowInQuoteAsIng;
             checkBoxUseAlwaysToFile.Checked = toolsSettings.RememberUseAlwaysList;
             checkBoxLiveSpellCheck.Checked = toolsSettings.LiveSpellCheck;
+            checkBoxSubtitleTextBoxSyntaxColor_CheckedChanged(this, EventArgs.Empty);
             checkBoxUseDoNotBreakAfterList.Checked = toolsSettings.UseNoLineBreakAfter;
             checkBoxToolsBreakEarlyComma.Checked = toolsSettings.AutoBreakCommaBreakEarly;
             checkBoxToolsBreakEarlyDash.Checked = toolsSettings.AutoBreakDashEarly;
