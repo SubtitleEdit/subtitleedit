@@ -610,7 +610,10 @@ namespace Nikse.SubtitleEdit.Logic
             private void RenderTabBackground(int index)
             {
                 var outerRect = GetOuterTabRect(index);
-                _graphics.FillRectangle(GetBackgroundBrush(index), outerRect);
+                using (var sb = GetBackgroundBrush(index))
+                {
+                    _graphics.FillRectangle(sb, outerRect);
+                }
 
                 var points = new List<Point>(4);
                 if (index <= _selectedIndex)
@@ -625,6 +628,7 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     points.Add(new Point(outerRect.Right - 1, outerRect.Bottom - 1));
                 }
+
                 using (var borderPen = GetBorderPen())
                 {
                     _graphics.DrawLines(borderPen, points.ToArray());
@@ -776,13 +780,10 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 if (index == _selectedIndex)
                 {
-                    return _tabBackColors[index] == Color.Transparent
-                        ? SystemBrushes.Window
-                        : new SolidBrush(_selectedTabColor);
+                    return new SolidBrush(_selectedTabColor);
                 }
 
                 bool isHighlighted = _tabRects[index].Contains(_mouseCursor);
-
                 return isHighlighted
                     ? new SolidBrush(_highlightedTabColor)
                     : new SolidBrush(BackColor);
