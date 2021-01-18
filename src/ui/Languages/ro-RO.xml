@@ -2246,7 +2246,7 @@ Continui?</RestoreDefaultSettingsMsg>
     <WhiteSpaceCheckReport>Spațiu incorect găsit în coloana {0}.</WhiteSpaceCheckReport>
     <ReportPrompt>Vezi întregul raport aici: {0}.</ReportPrompt>
     <OpenReportInFolder>Deschide raportul</OpenReportInFolder>
-    <FoundXIssues>Verif. calității Netflix a găsit {0:#,###} rezultate.</FoundXIssues>
+    <FoundXIssues>Verif. calității Netflix a găsit {0:#,##0} rezultate.</FoundXIssues>
     <CheckOk>Verif. calității Netflix OK :)</CheckOk>
     <MaximumXCharsPerSecond>Maxim {0} caractere per secundă (excl. spațiile albe)</MaximumXCharsPerSecond>
     <MaximumLineLength>Lungimea max. a liniei ({0})</MaximumLineLength>

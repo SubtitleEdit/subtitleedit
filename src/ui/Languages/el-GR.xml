@@ -2410,7 +2410,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WhiteSpaceCheckReport>Μη έγκυρο κενό στη στήλη {0}</WhiteSpaceCheckReport>
     <ReportPrompt>Προβολή αναφοράς εδώ: {0}.</ReportPrompt>
     <OpenReportInFolder>Άνοιγμα φακέλου αναφοράς</OpenReportInFolder>
-    <FoundXIssues>Ο έλεγχος ποιότητας Netflix εντόπισε {0:#,###} προβλήματα.</FoundXIssues>
+    <FoundXIssues>Ο έλεγχος ποιότητας Netflix εντόπισε {0:#,##0} προβλήματα.</FoundXIssues>
     <CheckOk>Χωρίς προβλήματα</CheckOk>
     <MaximumXCharsPerSecond>Μέγιστοι {0} χαρακτήρες/ δευτ (εξαίρεση κενών)</MaximumXCharsPerSecond>
     <MaximumLineLength>Μέγιστο μήκος γραμμής ({0})</MaximumLineLength>
