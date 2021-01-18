@@ -2413,7 +2413,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <WhiteSpaceCheckReport>{0} 열에 잘못된 공백이 있습니다.</WhiteSpaceCheckReport>
     <ReportPrompt>여기 전체 보고서를 참조하십시오: {0}.</ReportPrompt>
     <OpenReportInFolder>폴더에서 보고서 열기</OpenReportInFolder>
-    <FoundXIssues>Netflix 품질 검사에서 {0:#,###} 문제가 발견되었습니다.</FoundXIssues>
+    <FoundXIssues>Netflix 품질 검사에서 {0:#,##0} 문제가 발견되었습니다.</FoundXIssues>
     <CheckOk>Netflix 품질 검사 OK :)</CheckOk>
     <MaximumXCharsPerSecond>초당 최대 문자수(공백 포함): {0} </MaximumXCharsPerSecond>
     <MaximumLineLength>최대 줄 길이: ({0})</MaximumLineLength>

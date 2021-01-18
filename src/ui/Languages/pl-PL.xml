@@ -2371,7 +2371,7 @@ Kontynuować?</RestoreDefaultSettingsMsg>
     <WhiteSpaceCheckReport>Znaleziono nieprawidłową spację w kolumnie {0}.</WhiteSpaceCheckReport>
     <ReportPrompt>Przeczytaj pełny raport tutaj: {0}.</ReportPrompt>
     <OpenReportInFolder>Otwórz raport w folderze</OpenReportInFolder>
-    <FoundXIssues>Kontrola jakości Netflix znalazła {0:#,###} problem/ów.</FoundXIssues>
+    <FoundXIssues>Kontrola jakości Netflix znalazła {0:#,##0} problem/ów.</FoundXIssues>
     <CheckOk>Kontrola jakości Netflix OK :-)</CheckOk>
     <MaximumXCharsPerSecond>Maksymalnie {0} znaków na sekundę (bez białych spacji)</MaximumXCharsPerSecond>
     <MaximumLineLength>Maksymalna długość linii ({0})</MaximumLineLength>
