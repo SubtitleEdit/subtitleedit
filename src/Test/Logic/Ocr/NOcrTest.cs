@@ -1,9 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic.Ocr;
 using System.Drawing;
 using System.IO;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Test.Logic.Ocr
 {

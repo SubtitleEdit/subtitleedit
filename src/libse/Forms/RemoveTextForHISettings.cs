@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Dictionaries;
+using System;
+using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Core.Forms
 {

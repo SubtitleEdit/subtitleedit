@@ -1,7 +1,7 @@
-﻿using System;
-using System.Globalization;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Interfaces;
+using System;
+using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {

@@ -1,8 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Test.Core
 {
