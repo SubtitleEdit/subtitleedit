@@ -994,7 +994,20 @@ Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour,
                                 text = text.Insert(start, "<font color=\"" + color + "\"" + extraTags + ">" + unknownTags);
                             }
 
-                            text += "</font>";
+                            int indexOfEndTag = text.IndexOf("{\\1c}", start, StringComparison.Ordinal);
+                            int indexOfNextColorTag = text.IndexOf("{\\1c&", start, StringComparison.Ordinal);
+                            if (indexOfNextColorTag > 0 && (indexOfNextColorTag < indexOfEndTag || indexOfEndTag == -1))
+                            {
+                                text = text.Insert(indexOfNextColorTag, "</font>");
+                            }
+                            else if (indexOfEndTag > 0)
+                            {
+                                text = text.Remove(indexOfEndTag, "{\\1c}".Length).Insert(indexOfEndTag, "</font>");
+                            }
+                            else
+                            {
+                                text += "</font>";
+                            }
                         }
                     }
                 }
