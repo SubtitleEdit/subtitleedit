@@ -17,13 +17,11 @@
 
 #region Using directives
 
-using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.ColorChooser;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Common;
 
 #endregion Using directives
 
