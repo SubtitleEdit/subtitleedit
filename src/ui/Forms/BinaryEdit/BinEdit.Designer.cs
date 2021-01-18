@@ -62,6 +62,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.centerSelectedLineshorizontallyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.topAlignSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bottomAlignSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toggleforcedForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.resizeImagesForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.colorSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -270,7 +271,9 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             // 
             this.timeUpDownEndTime.AutoSize = true;
             this.timeUpDownEndTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownEndTime.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
             this.timeUpDownEndTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.timeUpDownEndTime.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(155)))), ((int)(((byte)(155)))), ((int)(((byte)(155)))));
             this.timeUpDownEndTime.Location = new System.Drawing.Point(74, 50);
             this.timeUpDownEndTime.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownEndTime.Name = "timeUpDownEndTime";
@@ -290,7 +293,9 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             // 
             this.timeUpDownStartTime.AutoSize = true;
             this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownStartTime.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
             this.timeUpDownStartTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.timeUpDownStartTime.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(155)))), ((int)(((byte)(155)))), ((int)(((byte)(155)))));
             this.timeUpDownStartTime.Location = new System.Drawing.Point(74, 18);
             this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
@@ -415,6 +420,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.centerSelectedLineshorizontallyToolStripMenuItem,
             this.topAlignSelectedLinesToolStripMenuItem,
             this.bottomAlignSelectedLinesToolStripMenuItem,
+            this.toggleforcedForSelectedLinesToolStripMenuItem,
             this.toolStripSeparator7,
             this.resizeImagesForSelectedLinesToolStripMenuItem,
             this.colorSelectedLinesToolStripMenuItem,
@@ -427,7 +433,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.toolStripSeparatorInsertSub,
             this.insertSubtitleAfterThisLineToolStripMenuItem});
             this.contextMenuStripListView.Name = "contextMenuStripListView";
-            this.contextMenuStripListView.Size = new System.Drawing.Size(377, 380);
+            this.contextMenuStripListView.Size = new System.Drawing.Size(377, 402);
             this.contextMenuStripListView.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripListView_Opening);
             // 
             // deleteToolStripMenuItem
@@ -483,6 +489,13 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.bottomAlignSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(376, 22);
             this.bottomAlignSelectedLinesToolStripMenuItem.Text = "Bottom align selected lines (keep horizontal position)";
             this.bottomAlignSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.bottomAlignSelectedLinesToolStripMenuItem_Click);
+            // 
+            // toggleforcedForSelectedLinesToolStripMenuItem
+            // 
+            this.toggleforcedForSelectedLinesToolStripMenuItem.Name = "toggleforcedForSelectedLinesToolStripMenuItem";
+            this.toggleforcedForSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(376, 22);
+            this.toggleforcedForSelectedLinesToolStripMenuItem.Text = "Toggle \"forced\" for selected lines";
+            this.toggleforcedForSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.toggleforcedForSelectedLinesToolStripMenuItem_Click);
             // 
             // toolStripSeparator7
             // 
@@ -1048,5 +1061,6 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private System.Windows.Forms.ToolStripMenuItem changeBrightnessForSelectedLinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem changeAlphaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem changeAlphaForSelectedLinesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toggleforcedForSelectedLinesToolStripMenuItem;
     }
 }

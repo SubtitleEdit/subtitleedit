@@ -257,6 +257,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <CenterSelectedLines>Center selected lines (horizontally, keep vertical position)</CenterSelectedLines>
     <TopAlignSelectedLines>Top align selected lines (keep horizontal position)</TopAlignSelectedLines>
     <BottomAlignSelectedLines>Bottom align selected lines (keep horizontal position)</BottomAlignSelectedLines>
+    <ToggleForcedSelectedLines>Toggle "Forced" for selected lines</ToggleForcedSelectedLines>
     <SizeXY>Size: {0}x{1}</SizeXY>
     <SetAspectRatio11>Set aspect ratio 1:1</SetAspectRatio11>
     <ChangeBrightnessTitle>Adjust brightness</ChangeBrightnessTitle>
@@ -2424,7 +2425,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <WhiteSpaceCheckReport>Invalid white space found at column {0}.</WhiteSpaceCheckReport>
     <ReportPrompt>Please see full report here: {0}.</ReportPrompt>
     <OpenReportInFolder>Open report in folder</OpenReportInFolder>
-    <FoundXIssues>Netflix quality check found {0:#,###} issues.</FoundXIssues>
+    <FoundXIssues>Netflix quality check found {0:#,##0} issues.</FoundXIssues>
     <CheckOk>Netflix quality check OK :)</CheckOk>
     <MaximumXCharsPerSecond>Maximum {0} characters per second (incl. white spaces)</MaximumXCharsPerSecond>
     <MaximumLineLength>Maximum line length ({0})</MaximumLineLength>

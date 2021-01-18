@@ -700,6 +700,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "BinEdit/BottomAlignSelectedLines":
                     language.BinEdit.BottomAlignSelectedLines = reader.Value;
                     break;
+                case "BinEdit/ToggleForcedSelectedLines":
+                    language.BinEdit.ToggleForcedSelectedLines = reader.Value;
+                    break;
                 case "BinEdit/SizeXY":
                     language.BinEdit.SizeXY = reader.Value;
                     break;

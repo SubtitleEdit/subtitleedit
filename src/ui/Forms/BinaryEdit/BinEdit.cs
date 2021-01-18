@@ -245,6 +245,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             centerSelectedLineshorizontallyToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.CenterSelectedLines;
             topAlignSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.TopAlignSelectedLines;
             bottomAlignSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.BottomAlignSelectedLines;
+            toggleforcedForSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.ToggleForcedSelectedLines;
             resizeImagesForSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.ResizeBitmapsForSelectedLines;
             colorSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.ChangeColorForSelectedLines;
             changeBrightnessForSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.ChangeBrightnessForSelectedLines;
@@ -798,7 +799,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 var v = comboBoxFrameRate.Items[i].ToString();
                 if (decimal.TryParse(v, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var n))
                 {
-                    if (Math.Abs(frameRate -n) < 0.01m)
+                    if (Math.Abs(frameRate - n) < 0.01m)
                     {
                         comboBoxFrameRate.SelectedIndex = i;
                         return;
@@ -2797,6 +2798,36 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private void changeAlphaForSelectedLinesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ChangeAlpha(true);
+        }
+
+        private void toggleforcedForSelectedLinesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (subtitleListView1.SelectedItems.Count < 1)
+            {
+                return;
+            }
+
+            var idx = subtitleListView1.SelectedItems[0].Index;
+            var selectedIndices = GetIndices(true);
+            var first = true;
+            var toggleValue = true;
+            foreach (var i in selectedIndices)
+            {
+                var sub = _binSubtitles[i];
+                var extra = _extra[i];
+
+                if (first)
+                {
+                    toggleValue = !extra.IsForced;
+                    first = false;
+                }
+
+                extra.IsForced = toggleValue;
+                if (i == idx)
+                {
+                    checkBoxIsForced.Checked = extra.IsForced;
+                }
+            }
         }
     }
 }
