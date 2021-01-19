@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -103,7 +104,6 @@ namespace Nikse.SubtitleEdit.Controls
             _richTextBoxTemp = null;
             if (useSyntaxColoring)
             {
-
                 _richTextBoxTemp = new RichTextBox();
                 _uiTextBox = new RichTextBox { BorderStyle = BorderStyle.None, Multiline = true };
                 InitializeBackingControl(_uiTextBox);
@@ -294,11 +294,11 @@ namespace Nikse.SubtitleEdit.Controls
                         string textNoTags = HtmlUtil.RemoveHtmlTags(s, true);
                         if (textNoTags.EndsWith('،'))
                         {
-                            s = s.Replace("،", "\u202A،");
+                            s = Regex.Replace(s, "،$", "\u202A،");
                         }
                         else if (textNoTags.StartsWith('،'))
                         {
-                            s = s.Replace("،", "،\u202A");
+                            s = Regex.Replace(s, "^،", "،\u202A");
                         }
 
                         _fixedArabicComma = true;
