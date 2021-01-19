@@ -1,7 +1,7 @@
 ﻿;* Subtitle Edit - Installer script
 ;*
 ;* Copyright (C) 2010-2016 XhmikosR
-;* Copyright (C) 2010-2018 all the respective translators
+;* Copyright (C) 2010-2021 all the respective translators
 ;*
 ;* This file is part of Subtitle Edit.
 ;*
@@ -25,7 +25,7 @@
 [CustomMessages]
 ; English
 en.comp_translations=Translations
-en.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.6.2. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.6.2 now?
+en.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.7.2. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.7.2 now?
 en.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 en.msg_OptimizingPerformance=Optimizing performance...
 en.run_VisitWebsite=Visit Subtitle Edit's Website
@@ -43,7 +43,7 @@ en.types_default=Default installation
 #ifdef localize
 ; Arabic
 ar.comp_translations=Translations
-ar.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.6.2. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.6.2 now?
+ar.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.7.2. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.7.2 now?
 ar.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 ar.msg_OptimizingPerformance=Optimizing performance...
 ar.run_VisitWebsite=Visit Subtitle Edit's Website
@@ -60,7 +60,7 @@ ar.types_default=Default installation
 
 ; Bulgarian
 bg.comp_translations=Translations
-bg.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.6.2. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.6.2 now?
+bg.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.7.2. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.7.2 now?
 bg.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 bg.msg_OptimizingPerformance=Optimizing performance...
 bg.run_VisitWebsite=Visit Subtitle Edit's Website
@@ -77,7 +77,7 @@ bg.types_default=Default installation
 
 ; Catalan
 ca.comp_translations=Traduccions
-ca.msg_AskToDownNET=Subtitle Edit requereix .NET Framework 4.6.2. Si us plau descarrega i instal·la .NET Framework i torna a executar l'instal·lador de nou.%n%n¿Vols descarregar .NET Framework 4.6.2 ara?
+ca.msg_AskToDownNET=Subtitle Edit requereix .NET Framework 4.7.2. Si us plau descarrega i instal·la .NET Framework i torna a executar l'instal·lador de nou.%n%n¿Vols descarregar .NET Framework 4.7.2 ara?
 ca.msg_DeleteSettings=¿Vols també suprimir la configuració i qualsevol altre canvi que hages fet als diccionaris?%n%nSi tens planificat reinstal·lar Subtitle Edit no cal que els suprimisques.
 ca.msg_OptimizingPerformance=Optimitzant rendiment...
 ca.run_VisitWebsite=Visita la pàgina web de Subtitle Edit
@@ -94,7 +94,7 @@ ca.types_default=Instal·lació predeterminada
 
 ; Czech
 cs.comp_translations=Překlady
-cs.msg_AskToDownNET=Subtitle Edit vyžaduje .NET Framework 4.6.2. Stáhněte a nainstalujte .NET Framework a spusťte znovu instalaci.%n%nChcete nyní stáhnout .NET Framework 4.6.2?
+cs.msg_AskToDownNET=Subtitle Edit vyžaduje .NET Framework 4.7.2. Stáhněte a nainstalujte .NET Framework a spusťte znovu instalaci.%n%nChcete nyní stáhnout .NET Framework 4.7.2?
 cs.msg_DeleteSettings=Chcete také odstranit nastavení Subtitle Edit a všechny vlastní změny, které jste provedli ve slovnících?%n%nPokud zamýšlíte přeinstalaci Subtitle Edit, nemusíte je odstraňovat.
 cs.msg_OptimizingPerformance=Optimalizace výkonu...
 cs.run_VisitWebsite=Navštivte webovou stránku Subtitle Edit
@@ -111,7 +111,7 @@ cs.types_default=Výchozí instalace
 
 ; Danish
 da.comp_translations=Oversættelser
-da.msg_AskToDownNET=Subtitle Edit kræver .NET Framework 4.6.2 eller nyere. Download and installer .NET Framework og kør setup igen.%n%nVil du downloade .NET Framework 4.6.2 nu?
+da.msg_AskToDownNET=Subtitle Edit kræver .NET Framework 4.7.2 eller nyere. Download and installer .NET Framework og kør setup igen.%n%nVil du downloade .NET Framework 4.7.2 nu?
 da.msg_DeleteSettings=Vil du også slette Subtitle Edit's indstillinger og evt. ændringer i ordlister?%n%nHvis du vil geninstallere Subtitle Edit senere kan du beholde disse indstillinger.
 da.msg_OptimizingPerformance=Optimerer performance...
 da.run_VisitWebsite=Besøg Subtitle Edits Website
@@ -128,7 +128,7 @@ da.types_default=Default installation
 
 ; Deutsch
 de.comp_translations=Übersetzungen
-de.msg_AskToDownNET=Subtitle Edit benötigt .NET Framework 4.6.2. Bitte installieren Sie .NET Framework und starten Sie die Installation erneut.%n%nMöchten Sie .NET Framework 4.6.2 jetzt herunterladen?
+de.msg_AskToDownNET=Subtitle Edit benötigt .NET Framework 4.7.2. Bitte installieren Sie .NET Framework und starten Sie die Installation erneut.%n%nMöchten Sie .NET Framework 4.7.2 jetzt herunterladen?
 de.msg_DeleteSettings=Möchten Sie die Einstellungen und Änderungen der Wörterbücher ebenfalls löschen?%n%nWenn Sie Subtitle Edit erneut installieren wollen, müssen Sie nichts löschen.
 de.msg_OptimizingPerformance=Leistungsoptimierung...
 de.run_VisitWebsite=Besuchen Sie die Subtitle Edit Webseite
@@ -145,7 +145,7 @@ de.types_default=Standardinstallation
 
 ; Greek
 el.comp_translations=Μεταφράσεις
-el.msg_AskToDownNET=Το Subtitle Edit χρειάζεται το .NET Framework 4.6.2. Κατεβάστε και εγκαταστήστε το .NET Framework και επαναλάβετε την εγκατάσταση.%n%nΘέλετε να κατεβάσετε το .NET Framework 4.6.2 τώρα;
+el.msg_AskToDownNET=Το Subtitle Edit χρειάζεται το .NET Framework 4.7.2. Κατεβάστε και εγκαταστήστε το .NET Framework και επαναλάβετε την εγκατάσταση.%n%nΘέλετε να κατεβάσετε το .NET Framework 4.7.2 τώρα;
 el.msg_DeleteSettings=Θέλετε επίσης να διαγράψετε τις ρυθμίσεις του Subtitle Edit και οποιεσδήποτε τροποποιήσεις έχετε κάνει στους φακέλους;%n%nΑν σκοπεύετε να επανεγκαταστήσετε το Subtitle Edit δε χρειάζεται να τις διαγράψετε.
 el.msg_OptimizingPerformance=Βελτιστοποίηση απόδοσης...
 el.run_VisitWebsite=Επισκεφτείτε την Ιστοσελίδα του Subtitle Edit
@@ -162,7 +162,7 @@ el.types_default=Προεπιλεγμένη εγκατάσταση
 
 ; Spanish
 es.comp_translations=Traducciones
-es.msg_AskToDownNET=Subtitle Edit requiere .NET Framework 4.6.2. Por favor, descarga e instala .NET Framework y ejecuta la instalacion de nuevo.%n%n?Quieres descargar el .NET Framework 4.6.2 ahora?
+es.msg_AskToDownNET=Subtitle Edit requiere .NET Framework 4.7.2. Por favor, descarga e instala .NET Framework y ejecuta la instalacion de nuevo.%n%n?Quieres descargar el .NET Framework 4.7.2 ahora?
 es.msg_DeleteSettings=?Deseas tambien eliminar la configuracion de Subtitle Edit y los cambios personalizados realizados en los diccionarios?%n%nSi planeas reinstalar Subtitle Edit no tienes que eliminarlos.
 es.msg_OptimizingPerformance=Optimizando el rendimiento...
 es.run_VisitWebsite=Visita la pagina Web de Subtitle Edit
@@ -179,7 +179,7 @@ es.types_default=Instalacion predefinida
 
 ; Basque
 eu.comp_translations=Itzulpenak
-eu.msg_AskToDownNET=Subtitle Edit-ek beharrezkoa du .NET Framework 4.6.2. Mesedez jeitsi eta ezarri .NET Framework eta abiarazi berriro ezartzailea.%n%nNahi duzu .NET Framework 4.6.2 orain jeistea?
+eu.msg_AskToDownNET=Subtitle Edit-ek beharrezkoa du .NET Framework 4.7.2. Mesedez jeitsi eta ezarri .NET Framework eta abiarazi berriro ezartzailea.%n%nNahi duzu .NET Framework 4.7.2 orain jeistea?
 eu.msg_DeleteSettings=Nahi dituzu ere Subtitle Edit-en ezarpenak eta hiztegietan egin dituzun aldaketak ezabatzea?%n%nSubtitle Edit berriro ezartzeko asmoa baduzu ez dituzu ezabatu behar.
 eu.msg_OptimizingPerformance=Egintza hobereneratzen...
 eu.run_VisitWebsite=Ikusi Subtitle Edit Webgunea
@@ -196,7 +196,7 @@ eu.types_default=Berezko ezarpena
 
 ; Persian
 fa.comp_translations=ترجمه ها
-fa.msg_AskToDownNET=برنامه ویرایش زیرنویس به کتابخانه.NET Framework 4.6.2 نیاز دارد. لطفا آن را یا دانلود کنید یا نصب کنید و دوباره برنامه نصب را اجرا کنید%n%nآیا همین الان Framework 4.6.2 را دانلود میکنید?
+fa.msg_AskToDownNET=برنامه ویرایش زیرنویس به کتابخانه.NET Framework 4.7.2 نیاز دارد. لطفا آن را یا دانلود کنید یا نصب کنید و دوباره برنامه نصب را اجرا کنید%n%nآیا همین الان Framework 4.7.2 را دانلود میکنید?
 fa.msg_DeleteSettings=آیا میخواهید تمامی تنظیمات و گزینه های ایجاد شده توسط شما هم پاک شود?%n%nاگر شما قصد نصب دوباره را دارید نیازی به حذف آن ندارید
 fa.msg_OptimizingPerformance=بهینه سازی اجرا
 fa.run_VisitWebsite=سایت ویرایش زیرنویس را مشاهده کنید
@@ -213,7 +213,7 @@ fa.types_default=نصب پیشفرض
 
 ; Finnish
 fi.comp_translations=Käännökset
-fi.msg_AskToDownNET=Subtitle Edit tarvitsee .NET Framework 4.6.2. Lataa ja asenna .NET Framework ja suorita asennusohjelma uudelleen.%n%nHaluatko ladata .NET Framework 4.6.2 nyt?
+fi.msg_AskToDownNET=Subtitle Edit tarvitsee .NET Framework 4.7.2. Lataa ja asenna .NET Framework ja suorita asennusohjelma uudelleen.%n%nHaluatko ladata .NET Framework 4.7.2 nyt?
 fi.msg_DeleteSettings=Haluatko myös poistaa Subtitle Edit:n asetukset ja mukautetut sanakirjoihin tehdyt muutokset?%n%nJos aiot uudelleenasentaa Subtitle Edit'n sinun ei tarvitse poistaa niitä.
 fi.msg_OptimizingPerformance=Optimoidaan suorituskykyä...
 fi.run_VisitWebsite=Vieraile Subtitle Edit:n verkkosivuilla
@@ -230,7 +230,7 @@ fi.types_default=Oletusasennus
 
 ; French
 fr.comp_translations=Traductions
-fr.msg_AskToDownNET=Subtitle Edit requiert le logiciel .NET Framework 4.6.2. Téléchargez et installez .NET Framework et ré-exécutez l'installation.%n%nVoulez-vous télécharger .NET Framework 4.6.2 maintenant ?
+fr.msg_AskToDownNET=Subtitle Edit requiert le logiciel .NET Framework 4.7.2. Téléchargez et installez .NET Framework et ré-exécutez l'installation.%n%nVoulez-vous télécharger .NET Framework 4.7.2 maintenant ?
 fr.msg_DeleteSettings=Voulez-vous également supprimer tous les réglages et les adaptations personnelles apportées aux dictionnaires ? %n%nSi vous prévoyez de réinstaller Subtitle Edit, vous pouvez conserver ces éléments.
 fr.msg_OptimizingPerformance=Optimisation de la performance ...
 fr.run_VisitWebsite=Visitez le site web de Subtitle Edit
@@ -247,7 +247,7 @@ fr.types_default=Installation par défaut
 
 ; Croatian
 hr.comp_translations=Translations
-hr.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.6.2. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.6.2 now?
+hr.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.7.2. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.7.2 now?
 hr.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 hr.msg_OptimizingPerformance=Optimizing performance...
 hr.run_VisitWebsite=Visit Subtitle Edit's Website
@@ -264,7 +264,7 @@ hr.types_default=Default installation
 
 ; Hungarian
 hu.comp_translations=Translations
-hu.msg_AskToDownNET=A Subtitle Edit futtatásához .NET Framework 4.6.2 szükséges. Kérjük, töltse le és telepítse a .NET Framework keretprogramot és futtassa újra a telepítőt.%n%nLetölti a .NET Framework 4.6.2 telepítőt most?
+hu.msg_AskToDownNET=A Subtitle Edit futtatásához .NET Framework 4.7.2 szükséges. Kérjük, töltse le és telepítse a .NET Framework keretprogramot és futtassa újra a telepítőt.%n%nLetölti a .NET Framework 4.7.2 telepítőt most?
 hu.msg_DeleteSettings=Törölni szeretné a Subtitle Edit beállításait és a szótárakban végrehajtott egyéni módosításokat?%n%nHa a Subtitle Edit újratelepítését tervezi, Önnek nem kell törölni azt.
 hu.msg_OptimizingPerformance=Optimizing performance...
 hu.run_VisitWebsite=A Subtitle Edit weboldalának felkeresése
@@ -281,7 +281,7 @@ hu.types_default=Default installation
 
 ; Italian
 it.comp_translations=Traduzioni
-it.msg_AskToDownNET=Subtitle Edit richiede .NET Framework 4.6.2. Per favore scarica e installa .NET Framework ed esegui nuovamente l'installazione.%n%nVuoi scaricare .NET Framework 4.6.2 adesso?
+it.msg_AskToDownNET=Subtitle Edit richiede .NET Framework 4.7.2. Per favore scarica e installa .NET Framework ed esegui nuovamente l'installazione.%n%nVuoi scaricare .NET Framework 4.7.2 adesso?
 it.msg_DeleteSettings=Vuoi anche cancellare le impostazioni di Subtitle Edit e le modifiche che hai apportato ai dizionari?%n%nSe hai intenzione di reinstallare Subtitle Edit puoi non farlo.
 it.msg_OptimizingPerformance=Ottimizzazione prestazioni in corso...
 it.run_VisitWebsite=Visita il sito di Subtitle Edit
@@ -298,7 +298,7 @@ it.types_default=Installazione predefinita
 
 ; Japanese
 ja.comp_translations=翻訳
-ja.msg_AskToDownNET=Subtitle Editには .NET Framework 4.6.2 が必要です。.NET Framework のダウンロード、インストールを行ってからもう一度セットアップを実行してください。%n%n今すぐ .NET Framework 4.6.2 をダウンロードしますか？
+ja.msg_AskToDownNET=Subtitle Editには .NET Framework 4.7.2 が必要です。.NET Framework のダウンロード、インストールを行ってからもう一度セットアップを実行してください。%n%n今すぐ .NET Framework 4.7.2 をダウンロードしますか？
 ja.msg_DeleteSettings=Subtitle Editの設定や辞書で行ったカスタマイズの変更も削除しますか？%n%nSubtitle Editを再インストールする場合、これらを削除する必要はありません。
 ja.msg_OptimizingPerformance=パフォーマンスを最適化中...
 ja.run_VisitWebsite=Subtitle Editのwebサイトを開く
@@ -315,7 +315,7 @@ ja.types_default=デフォルトインストール
 
 ; Korean
 ko.comp_translations=번역
-ko.msg_AskToDownNET=Subtitle Edit는 .NET Framework 4.6.2이 필요합니다. .NET Framework를 다운 받아 설치하신 후, Subtitle Edit 설치 마법사를 다시 실행하시기 바랍니다.%n%n지금 .NET Framework 4.6.2을 다운로드하시겠습니까?
+ko.msg_AskToDownNET=Subtitle Edit는 .NET Framework 4.7.2이 필요합니다. .NET Framework를 다운 받아 설치하신 후, Subtitle Edit 설치 마법사를 다시 실행하시기 바랍니다.%n%n지금 .NET Framework 4.7.2을 다운로드하시겠습니까?
 ko.msg_DeleteSettings=Subtitle Edit의 설정 및 사전에 포함된 사용자 지정의 모든 변경 사항을 삭제하시겠습니까?%n%n만약 Subtitle Edit를 다시 설치할 계획이면 그것을 삭제할 필요가 없습니다.
 ko.msg_OptimizingPerformance=성능을 최적화하는 중...
 ko.run_VisitWebsite=Subtitle Edit 웹 사이트 방문
@@ -332,7 +332,7 @@ ko.types_default=기본 설치
 
 ; Macedonian
 mk.comp_translations=Преводи
-mk.msg_AskToDownNET=За користење на Subtitle Edit потребно е .NET Framework 4.6.2. Ве молиме, преземете и инсталирајте .NET Framework и пак започнете со инсталација.%n%nДали сакате сега да преземете .NET Framework 4.6.2?
+mk.msg_AskToDownNET=За користење на Subtitle Edit потребно е .NET Framework 4.7.2. Ве молиме, преземете и инсталирајте .NET Framework и пак започнете со инсталација.%n%nДали сакате сега да преземете .NET Framework 4.7.2?
 mk.msg_DeleteSettings=Дали сакате да ги избришете и поставките во Subtitle Edit и сите сопствени промени во речниците?%n%nАко планирате да го реинсталирате Subtitle Edit не треба да ги избришете.
 mk.msg_OptimizingPerformance=Оптимизирање на работата на програмот...
 mk.run_VisitWebsite=Посетете ја веб страницата на Subtitle Edit
@@ -349,7 +349,7 @@ mk.types_default=Стандардна инсталација
 
 ; Dutch
 nl.comp_translations=Vertalingen
-nl.msg_AskToDownNET=Subtitle Edit vereist .NET Framework 4.6.2. Download en instaleer deze software alstublieft en doe de setup opnieuw.%n%nWilt u nu .NET Framework 4.6.2 instaleren?
+nl.msg_AskToDownNET=Subtitle Edit vereist .NET Framework 4.7.2. Download en instaleer deze software alstublieft en doe de setup opnieuw.%n%nWilt u nu .NET Framework 4.7.2 instaleren?
 nl.msg_DeleteSettings=Wilt u de instellingen en persoonlijke aanpassingen in de woordenboeken van Subtitle Edit verwijderen?%n%nAls u Subtitle Edit opnieuw installeert hoeft u deze niet te verwijderen.
 nl.msg_OptimizingPerformance=Prestatie optimaliseren...
 nl.run_VisitWebsite=Bezoek Subtitle Edit Website
@@ -366,7 +366,7 @@ nl.types_default=Standaard installatie
 
 ; Polish
 pl.comp_translations=Tłumaczenia
-pl.msg_AskToDownNET=Subtitle Edit do poprawnej pracy wymaga .NET Framework 4.6.2. Pobierz i zainstaluj .NET Framework i uruchom ponownie instalator.%n%nCzy chcesz teraz pobrać .NET Framework 4.6.2?
+pl.msg_AskToDownNET=Subtitle Edit do poprawnej pracy wymaga .NET Framework 4.7.2. Pobierz i zainstaluj .NET Framework i uruchom ponownie instalator.%n%nCzy chcesz teraz pobrać .NET Framework 4.7.2?
 pl.msg_DeleteSettings=Czy chcesz także usunąć ustawienia Subtitle Edit oraz wszelkie niestandardowe zmiany wprowadzone w słownikach?%n%nJeśli planujesz ponowną instalację Subtitle Edit, nie musisz ich usuwać.
 pl.msg_OptimizingPerformance=Optymalizowanie wydajności...
 pl.run_VisitWebsite=Odwiedź stronę Subtitle Edit
@@ -383,7 +383,7 @@ pl.types_default=Instalacja domyślna
 
 ; Portuguese (Portugal)
 pt.comp_translations=Traduções
-pt.msg_AskToDownNET=O Subtitle Edit necessita do .NET Framework 4.6.2. Por favor, baixe e instale o .NET Framework, e execute a instalação novamente.%n%nDeseja baixar o .NET Framework 4.6.2 agora?
+pt.msg_AskToDownNET=O Subtitle Edit necessita do .NET Framework 4.7.2. Por favor, baixe e instale o .NET Framework, e execute a instalação novamente.%n%nDeseja baixar o .NET Framework 4.7.2 agora?
 pt.msg_DeleteSettings=Deseja remover as configurações do Subtitle Edit e quaisquer mudanças feitas nos dicionários?%n%nSe planeia reinstalar o Subtitle Edit não necessita remover estes itens.
 pt.msg_OptimizingPerformance=Otimizando performance...
 pt.run_VisitWebsite=Visitar o site do Subtitle Edit
@@ -400,7 +400,7 @@ pt.types_default=Instalação padrão
 
 ; Portuguese (Brazil)
 ptBR.comp_translations=Traduções
-ptBR.msg_AskToDownNET=O Subtitle Edit necessita do .NET Framework 4.6.2. Por favor, baixe e instale o .NET Framework e execute a instalação novamente.%n%nDeseja baixar o .NET Framework 4.6.2 agora?
+ptBR.msg_AskToDownNET=O Subtitle Edit necessita do .NET Framework 4.7.2. Por favor, baixe e instale o .NET Framework e execute a instalação novamente.%n%nDeseja baixar o .NET Framework 4.7.2 agora?
 ptBR.msg_DeleteSettings=Deseja também deletar as configurações do Subtitle Edit e quaisquer mudanças feitas nos dicionários?%n%nSe você planeja reinstalar o Subtitle Edit você não precisa deletar estes itens.
 ptBR.msg_OptimizingPerformance=Otimizando performance...
 ptBR.run_VisitWebsite=Visitar site do Subtitle Edit
@@ -417,7 +417,7 @@ ptBR.types_default=Instalação padrão
 
 ; Romanian
 ro.comp_translations=Traduceri
-ro.msg_AskToDownNET=Subtitle Edit necesită .NET Framework 4.6.2. Te rog să descarci şi să instalezi .NET Framework şi apoi să reiei instalarea.%n%nVrei să descarci acum .NET Framework 4.6.2?
+ro.msg_AskToDownNET=Subtitle Edit necesită .NET Framework 4.7.2. Te rog să descarci şi să instalezi .NET Framework şi apoi să reiei instalarea.%n%nVrei să descarci acum .NET Framework 4.7.2?
 ro.msg_DeleteSettings=Vrei să ştergi de asemenea setările şi personalizările făcute în dicţionare?%n%nDacă ai de gând să reinstalezi Subtitle Edit, nu este nevoie să le ştergi.
 ro.msg_OptimizingPerformance=Optimizare în desfășurare...
 ro.run_VisitWebsite=Vizitează pagina Web a programului Subtitle Edit
@@ -434,7 +434,7 @@ ro.types_default=Instalare predefinită
 
 ; Russian
 ru.comp_translations=Файлы локализации программы
-ru.msg_AskToDownNET=Для работы "Subtitle Edit" требуется установленный .NET Framework 4.6.2. Пожалуйста, загрузите и установите .NET Framework, а затем повторите инсталляцию.%n%nВыполнить загрузку .NET Framework 4.6.2 сейчас?
+ru.msg_AskToDownNET=Для работы "Subtitle Edit" требуется установленный .NET Framework 4.7.2. Пожалуйста, загрузите и установите .NET Framework, а затем повторите инсталляцию.%n%nВыполнить загрузку .NET Framework 4.7.2 сейчас?
 ru.msg_DeleteSettings=Следует ли также удалить ваши настройки программы и пользовательские словари?%n%nЕсли вы будете обновлять программу, то не удаляйте ваши настройки и словари.
 ru.msg_OptimizingPerformance=Оптимизация производительности...
 ru.run_VisitWebsite=Посетить домашнюю страницу
@@ -451,7 +451,7 @@ ru.types_default=Обычная установка
 
 ; Slovenian
 sl.comp_translations=Translations
-sl.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.6.2. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.6.2 now?
+sl.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.7.2. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.7.2 now?
 sl.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 sl.msg_OptimizingPerformance=Optimizing performance...
 sl.run_VisitWebsite=Visit Subtitle Edit's Website
@@ -468,7 +468,7 @@ sl.types_default=Default installation
 
 ; Serbian Cyrillic
 srC.comp_translations=Преводи
-srC.msg_AskToDownNET=Програм захтева .NET радни оквир 4.6.2. Инсталирајте га и поново покрените инсталацију.%n%nЖелите ли да преузмете захтевани програм сада?
+srC.msg_AskToDownNET=Програм захтева .NET радни оквир 4.7.2. Инсталирајте га и поново покрените инсталацију.%n%nЖелите ли да преузмете захтевани програм сада?
 srC.msg_DeleteSettings=Желите ли да обришете поставке и друге прилагођене измене које сте направили у речницима?%n%nАко планирате да поново инсталирате програм, не морате их брисати.
 srC.msg_OptimizingPerformance=Учитавам…
 srC.run_VisitWebsite=Посетите страницу пројекта
@@ -485,7 +485,7 @@ srC.types_default=Подразумевана инсталација
 
 ; Serbian Latin
 srL.comp_translations=Prevodi
-srL.msg_AskToDownNET=Program zahteva .NET radni okvir 4.6.2. Instalirajte ga i ponovo pokrenite instalaciju.%n%Želite li da preuzmete zahtevani program sada?
+srL.msg_AskToDownNET=Program zahteva .NET radni okvir 4.7.2. Instalirajte ga i ponovo pokrenite instalaciju.%n%Želite li da preuzmete zahtevani program sada?
 srL.msg_DeleteSettings=Želite li da obrišete postavke i druge prilagođene izmene koje ste napravili u rečnicima?%n%nAko planirate da ponovo instalirate program, ne morate ih brisati.
 srL.msg_OptimizingPerformance=Učitavam…
 srL.run_VisitWebsite=Posetite stranicu projekta
@@ -502,7 +502,7 @@ srL.types_default=Podrazumevana instalacija
 
 ; Swedish
 sv.comp_translations=Translations
-sv.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.6.2. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.6.2 now?
+sv.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.7.2. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.7.2 now?
 sv.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 sv.msg_OptimizingPerformance=Optimizing performance...
 sv.run_VisitWebsite=Visit Subtitle Edit's Website
@@ -519,7 +519,7 @@ sv.types_default=Default installation
 
 ; Thai
 th.comp_translations=Translations
-th.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.6.2. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.6.2 now?
+th.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.7.2. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.7.2 now?
 th.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 th.msg_OptimizingPerformance=Optimizing performance...
 th.run_VisitWebsite=Visit Subtitle Edit's Website
@@ -536,7 +536,7 @@ th.types_default=Default installation
 
 ; Turkish
 tr.comp_translations=Translations
-tr.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.6.2. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.6.2 now?
+tr.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.7.2. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.7.2 now?
 tr.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 tr.msg_OptimizingPerformance=Optimizing performance...
 tr.run_VisitWebsite=Visit Subtitle Edit's Website
@@ -553,7 +553,7 @@ tr.types_default=Default installation
 
 ; Ukrainian
 uk.comp_translations=Файли локалізації
-uk.msg_AskToDownNET=Subtitle Edit потребує для своєї роботи .NET Framework 4.6.2. Будь ласка, звантажте та встановіть .NET Framework і запустіть інсталяцію ще раз.%n%nБажаєте звантажити .NET Framework 4.6.2 зараз?
+uk.msg_AskToDownNET=Subtitle Edit потребує для своєї роботи .NET Framework 4.7.2. Будь ласка, звантажте та встановіть .NET Framework і запустіть інсталяцію ще раз.%n%nБажаєте звантажити .NET Framework 4.7.2 зараз?
 uk.msg_DeleteSettings=Бажаєте також видалити налаштування Subtitle Edit та будь-які зміни, які ви зробили у словниках?%n%nЯкщо ви плануєте перевстановлювати Subtitle Edit, вам не потрібно їх видаляти.
 uk.msg_OptimizingPerformance=Оптимізація швидкодії...
 uk.run_VisitWebsite=Відвідати веб-сторінку Subtitle Edit
@@ -570,7 +570,7 @@ uk.types_default=Типове встановлення
 
 ; Vietnamese
 vi.comp_translations=Translations
-vi.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.6.2. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.6.2 now?
+vi.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.7.2. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.7.2 now?
 vi.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 vi.msg_OptimizingPerformance=Optimizing performance...
 vi.run_VisitWebsite=Visit Subtitle Edit's Website
@@ -587,7 +587,7 @@ vi.types_default=Default installation
 
 ; Chinese Simplified
 zh.comp_translations=Translations
-zh.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.6.2. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.6.2 now?
+zh.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.7.2. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.7.2 now?
 zh.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 zh.msg_OptimizingPerformance=Optimizing performance...
 zh.run_VisitWebsite=Visit Subtitle Edit's Website
@@ -604,7 +604,7 @@ zh.types_default=Default installation
 
 ; Chinese Traditional
 zhTW.comp_translations=Translations
-zhTW.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.6.2. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.6.2 now?
+zhTW.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.7.2. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.7.2 now?
 zhTW.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 zhTW.msg_OptimizingPerformance=Optimizing performance...
 zhTW.run_VisitWebsite=Visit Subtitle Edit's Website
@@ -621,7 +621,7 @@ zhTW.types_default=Default installation
 
 ; Indonesian
 ;id.comp_translations=Terjemahan
-;id.msg_AskToDownNET=Subtitle Edit membutuhkan .NET Framework 4.6.2. Silakan unduh dan instal .NET Framework dan jalankan setup lagi.%n%nApakah Anda ingin mengunduh .NET Framework 4.6.2 sekarang?
+;id.msg_AskToDownNET=Subtitle Edit membutuhkan .NET Framework 4.7.2. Silakan unduh dan instal .NET Framework dan jalankan setup lagi.%n%nApakah Anda ingin mengunduh .NET Framework 4.7.2 sekarang?
 ;id.msg_DeleteSettings=Apakah Anda juga ingin menghapus pengaturan Subtitle Edit dan perubahan khusus yang Anda buat dalam kamus?%n%nBila Anda berencana menginstal ulang Subtitle Edit, Anda tidak perlu menghapusnya.
 ;id.msg_OptimizingPerformance=Mengoptimalkan kinerja...
 ;id.run_VisitWebsite=Kunjungi Situs Subtitle Edit

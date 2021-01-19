@@ -31,7 +31,7 @@
 #endif
 
 
-#define app_copyright "Copyright © 2001-2020, Nikse"
+#define app_copyright "Copyright © 2001-2021, Nikse"
 ; If you don't define "localize", i.e. comment out the following line then no translations
 ; for SubtitleEdit or the installer itself will be included in the installer
 #define localize
@@ -892,7 +892,7 @@ function InitializeSetup(): Boolean;
 var
   ErrorCode: Integer;
 begin
-  Result := IsDotNetDetected('v4.6.2', 0); //Returns True if .NET Framework version 4.6.2 is installed, or a compatible version such as 4.8
+  Result := IsDotNetDetected('v4.7.2', 0); //Returns True if .NET Framework version 4.7.2 is installed, or a compatible version such as 4.8
   if not Result then
   begin
     if not WizardSilent() then 
