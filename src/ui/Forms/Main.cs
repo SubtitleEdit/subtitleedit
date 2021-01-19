@@ -14140,12 +14140,6 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            if (e.Modifiers == Keys.Alt && e.KeyCode == (Keys.RButton | Keys.ShiftKey) && (textBoxListViewText.Focused || textBoxListViewTextOriginal.Focused))
-            { // annoying that focus leaves textbox while typing, when pressing Alt alone
-                e.SuppressKeyPress = true;
-                return;
-            }
-
             if (e.Modifiers == Keys.Alt && e.KeyCode == (Keys.RButton | Keys.ShiftKey))
             {
                 return;
