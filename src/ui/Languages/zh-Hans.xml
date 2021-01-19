@@ -256,6 +256,7 @@ Command line: {1} {2}
     <CenterSelectedLines>居中所选行（水平，保持垂直位置）</CenterSelectedLines>
     <TopAlignSelectedLines>顶部对齐所选行（保持水平位置）</TopAlignSelectedLines>
     <BottomAlignSelectedLines>底部对齐所选行（保持水平位置）</BottomAlignSelectedLines>
+    <ToggleForcedSelectedLines>切所选定行的“强制”状态</ToggleForcedSelectedLines>
     <SizeXY>尺寸：{0}x{1}</SizeXY>
     <SetAspectRatio11>设置纵横比为1：1</SetAspectRatio11>
     <ChangeBrightnessTitle>调整亮度</ChangeBrightnessTitle>
@@ -2128,12 +2129,13 @@ Command line: {1} {2}
     <ToggleDockUndockOfVideoControls>切换 停靠/不停靠 视频控件</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>设置终点，添加新点并转到新点</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>根据结束位置调节</AdjustViaEndAutoStart>
-    <AdjustViaEndAutoStartAndGoToNext>通过结束位置调整并转到下一个</AdjustViaEndAutoStartAndGoToNext>
-    <AdjustSetEndTimeAndGoToNext>设置结束点并转到下一个</AdjustSetEndTimeAndGoToNext>
+    <AdjustViaEndAutoStartAndGoToNext>通过结束位置调整并转到下一条</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustSetEndMinusGapAndStartNextHere>设置结束点（减去最小间隔），并转到下一条起点…</AdjustSetEndMinusGapAndStartNextHere>
+    <AdjustSetEndTimeAndGoToNext>设置结束点并转到下一条</AdjustSetEndTimeAndGoToNext>
     <AdjustSetEndTimeAndPause>设置结束点并暂停</AdjustSetEndTimeAndPause>
-    <AdjustSetStartAutoDurationAndGoToNext>调整设置时长起点及转到下个文本</AdjustSetStartAutoDurationAndGoToNext>
+    <AdjustSetStartAutoDurationAndGoToNext>调整设置时长起点并转到下一条</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>设置终点及下个起点并转到下一个</AdjustSetEndNextStartAndGoToNext>
-    <AdjustStartDownEndUpAndGoToNext>向下方向键=设置起点，向上方向键=设置终点，并转到下一个</AdjustStartDownEndUpAndGoToNext>
+    <AdjustStartDownEndUpAndGoToNext>向下方向键=设置起点，向上方向键=设置终点，并转到下一条</AdjustStartDownEndUpAndGoToNext>
     <AdjustSetStartAndEndOfPrevious>设置前一条的开始和结束（减去最小间隙）</AdjustSetStartAndEndOfPrevious>
     <AdjustSetStartAndEndOfPreviousAndGoToNext>设置前一条的开始和结束（减去最小间隙），并转到下一条</AdjustSetStartAndEndOfPreviousAndGoToNext>
     <AdjustSelected100MsForward>所选行前移 100ms</AdjustSelected100MsForward>
