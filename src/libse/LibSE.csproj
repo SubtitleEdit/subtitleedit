@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net462;netstandard2.1</TargetFrameworks>
-    <TargetFrameworks Condition=" '$(VisualStudioVersion)' == '15.0' ">net462</TargetFrameworks>
+    <TargetFrameworks>net472;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(VisualStudioVersion)' == '15.0' ">net472</TargetFrameworks>
     <RootNamespace>Nikse.SubtitleEdit.Core</RootNamespace>
     <AssemblyName>libse</AssemblyName>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
