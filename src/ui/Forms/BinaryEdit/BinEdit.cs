@@ -228,6 +228,8 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             resizeBitmapsToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.ResizeBitmaps;
             changeBrightnessToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.ChangeBrightness;
             changeAlphaToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.ChangeAlpha;
+            sortByToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.Tools.SortBy;
+            startTimeToolStripMenuItem.Text = LanguageSettings.Current.General.StartTime;
             alignmentToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.Alignment;
             quickOCRTextsforOverviewOnlyToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.QuickOcr;
             videoToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.Video.Title;
@@ -2828,6 +2830,39 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                     checkBoxIsForced.Checked = extra.IsForced;
                 }
             }
+        }
+
+        private void startTimeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            {
+                for (int j = 0; j < _subtitle.Paragraphs.Count - 1; j++)
+                {
+                    if (_subtitle.Paragraphs[j].StartTime.TotalMilliseconds > _subtitle.Paragraphs[j + 1].StartTime.TotalMilliseconds)
+                    {
+                        Swap(j, j + 1);
+                    }
+                }
+            }
+
+            _subtitle.Renumber();
+            subtitleListView1.Fill(_subtitle);
+            subtitleListView1.SelectIndexAndEnsureVisible(0, true);
+        }
+
+        private void Swap(int j, int v)
+        {
+            var bin = _binSubtitles[j];
+            var extra = _extra[j];
+            var p = _subtitle.Paragraphs[j];
+
+            _binSubtitles[j] = _binSubtitles[v];
+            _extra[j] = _extra[v];
+            _subtitle.Paragraphs[j] = _subtitle.Paragraphs[v];
+
+            _binSubtitles[v] = bin;
+            _extra[v] = extra;
+            _subtitle.Paragraphs[v] = p;
         }
     }
 }
