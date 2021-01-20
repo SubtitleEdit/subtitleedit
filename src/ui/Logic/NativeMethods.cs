@@ -39,9 +39,6 @@ namespace Nikse.SubtitleEdit.Logic
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool FreeLibrary(IntPtr hModule);
 
-        [DllImport("user32.dll")]
-        internal static extern short GetKeyState(int vKey);
-
         [DllImport("kernel32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool AttachConsole(int dwProcessId);
@@ -51,8 +48,15 @@ namespace Nikse.SubtitleEdit.Logic
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool FreeConsole();
 
+        [DllImport("user32.dll")]
+        internal static extern short GetKeyState(int vKey);
+
         [DllImport("user32.dll", EntryPoint = "SetWindowPos")]
         internal static extern IntPtr SetWindowPos(IntPtr hWnd, int hWndInsertAfter, int x, int y, int width, int height, int wFlags);
+
+        [DllImport("user32.dll")]
+        internal static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wp, IntPtr lp);
+        internal const int WM_SETREDRAW = 0x0b;
 
         [DllImport("dwmapi.dll")]
         internal static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
