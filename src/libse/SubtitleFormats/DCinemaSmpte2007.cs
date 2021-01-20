@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
@@ -608,7 +609,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 try
                 {
+                    var textLines = new List<DCinemaInterop.SubtitleLine>();
                     var pText = new StringBuilder();
+                    var vAlignment = string.Empty;
                     string lastVPosition = string.Empty;
                     foreach (XmlNode innerNode in node.ChildNodes)
                     {
@@ -616,12 +619,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             if (innerNode.Attributes["Vposition"] != null)
                             {
+                                var vAlignmentNode = innerNode.Attributes["Valign"];
+                                if (vAlignmentNode != null)
+                                {
+                                    vAlignment = vAlignmentNode.InnerText;
+                                }
+
                                 string vPosition = innerNode.Attributes["Vposition"].InnerText;
                                 if (vPosition != lastVPosition)
                                 {
                                     if (pText.Length > 0 && lastVPosition.Length > 0)
                                     {
-                                        pText.AppendLine();
+                                        textLines.Add(new DCinemaInterop.SubtitleLine(pText.ToString(), lastVPosition, vAlignment));
+                                        pText.Clear();
                                     }
 
                                     lastVPosition = vPosition;
@@ -754,13 +764,28 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             pText.Append(innerNode.InnerText);
                         }
                     }
+
+                    if (pText.Length > 0)
+                    {
+                        textLines.Add(new DCinemaInterop.SubtitleLine(pText.ToString(), lastVPosition, vAlignment));
+                    }
+
+                    string text;
+                    if (textLines.All(p => p.VerticalAlignment.ToLowerInvariant() == "bottom"))
+                    {
+                        text = string.Join(Environment.NewLine, textLines.OrderByDescending(p => p.GetVerticalPositionAsNumber()).Select(p => p.Text));
+                    }
+                    else
+                    {
+                        text = string.Join(Environment.NewLine, textLines.OrderBy(p => p.GetVerticalPositionAsNumber()).Select(p => p.Text));
+                    }
+
                     string start = node.Attributes["TimeIn"].InnerText;
                     string end = node.Attributes["TimeOut"].InnerText;
 
                     if (node.ParentNode.Name == "Font" && node.ParentNode.Attributes["Italic"] != null && node.ParentNode.Attributes["Italic"].InnerText.Equals("yes", StringComparison.OrdinalIgnoreCase) &&
                         !pText.ToString().Contains("<i>"))
                     {
-                        string text = pText.ToString();
                         if (text.StartsWith("{\\an") && text.Length > 6)
                         {
                             text = text.Insert(6, "<i>") + "</i>";
@@ -772,7 +797,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         pText = new StringBuilder(text);
                     }
 
-                    subtitle.Paragraphs.Add(new Paragraph(GetTimeCode(start), GetTimeCode(end), pText.ToString()));
+                    subtitle.Paragraphs.Add(new Paragraph(GetTimeCode(start), GetTimeCode(end), text));
                 }
                 catch (Exception ex)
                 {
