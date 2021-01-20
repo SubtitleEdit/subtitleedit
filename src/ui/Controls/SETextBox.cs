@@ -106,14 +106,20 @@ namespace Nikse.SubtitleEdit.Controls
                 _uiTextBox = new RichTextBox { BorderStyle = BorderStyle.None, Multiline = true };
                 InitializeBackingControl(_uiTextBox);
                 UpdateFontAndColors(_uiTextBox);
+                SetTextPosInRtbIfCentered();
 
                 _uiTextBox.TextChanged += TextChangedHighlight;
                 _uiTextBox.KeyPress += UiTextBox_KeyPress;
                 _uiTextBox.KeyDown += UiTextBox_KeyDown;
                 _uiTextBox.MouseDown += UiTextBox_MouseDown;
-                // avoid selection when centered and clicking to the left
+
+                _uiTextBox.HandleCreated += (sender, args) =>
+                {
+                    SetTextPosInRtbIfCentered();
+                };
                 _uiTextBox.MouseDown += (sender, args) =>
                 {
+                    // avoid selection when centered and clicking to the left
                     var charIndex = _uiTextBox.GetCharIndexFromPosition(args.Location);
                     if (Configuration.Settings.General.CenterSubtitleInTextBox &&
                         _mouseMoveSelectionLength == 0 &&
@@ -170,14 +176,6 @@ namespace Nikse.SubtitleEdit.Controls
                     else if (args.KeyData == Keys.PageDown && _uiTextBox.SelectionStart >= _uiTextBox.Text.Length)
                     {
                         args.SuppressKeyPress = true;
-                    }
-                };
-                _uiTextBox.Enter += (sender, args) =>
-                {
-                    var text = _uiTextBox.Text;
-                    if (string.IsNullOrWhiteSpace(text) || text.Length > 1000)
-                    {
-                        SetTextPosInRtbIfCentered();
                     }
                 };
             }
@@ -278,7 +276,7 @@ namespace Nikse.SubtitleEdit.Controls
                         string textNoTags = HtmlUtil.RemoveHtmlTags(s, true);
                         if (textNoTags.EndsWith('،'))
                         {
-                            s = Regex.Replace(s, @"،(?=(?:<[^>]+>)?(?:{[^}]+})?)", "\u202A،");
+                            s = Regex.Replace(s, @"،(?=(?:<[^>]+>)?(?:{[^}]+})?$)", "\u202A،");
                         }
                         else if (textNoTags.StartsWith('،'))
                         {
@@ -561,18 +559,6 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        protected override void OnRightToLeftChanged(EventArgs e)
-        {
-            base.OnRightToLeftChanged(e);
-
-            if (_simpleTextBox != null)
-            {
-                return;
-            }
-
-            SetTextPosInRtbIfCentered();
-        }
-
         private int GetIndexWithLineBreak(int index)
         {
             var text = _uiTextBox.Text;
@@ -769,11 +755,6 @@ namespace Nikse.SubtitleEdit.Controls
             _uiTextBox.SelectAll();
             _uiTextBox.SelectionColor = _uiTextBox.ForeColor;
             _uiTextBox.SelectionBackColor = _uiTextBox.BackColor;
-
-            if (Configuration.Settings.General.CenterSubtitleInTextBox)
-            {
-                _uiTextBox.SelectionAlignment = HorizontalAlignment.Center;
-            }
 
             bool htmlTagOn = false;
             bool htmlTagFontOn = false;
@@ -1300,8 +1281,8 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void UiTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (_isLiveSpellCheckEnabled && SplitChars.Contains(e.KeyChar)
-                && _uiTextBox.SelectionStart == _uiTextBox.Text.Length || _uiTextBox.SelectionStart != _uiTextBox.Text.Length)
+            if (_isLiveSpellCheckEnabled && (SplitChars.Contains(e.KeyChar)
+                && _uiTextBox.SelectionStart == _uiTextBox.Text.Length || _uiTextBox.SelectionStart != _uiTextBox.Text.Length))
             {
                 IsSpellCheckRequested = true;
                 if (e.KeyChar == '\b' || e.KeyChar == '\r' || e.KeyChar == '\n')
