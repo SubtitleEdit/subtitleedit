@@ -2700,6 +2700,10 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             {
                 setAspectRatio11ToolStripMenuItem_Click(null, null);
             }
+            else if (e.KeyData == Keys.F1)
+            {
+                UiUtil.ShowHelp("#bdsupedit");
+            }
         }
 
         private void ChangeBrightness(bool onlySelectedLines)
