@@ -407,9 +407,10 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 if (AllKeys.ContainsKey(k))
                 {
-                    resultKeys = resultKeys | AllKeys[k];
+                    resultKeys |= AllKeys[k];
                 }
             }
+
             return resultKeys;
         }
 
@@ -899,7 +900,16 @@ namespace Nikse.SubtitleEdit.Logic
             comboBoxEncoding.SelectedIndex = TextEncoding.Utf8WithBomIndex; // UTF-8 with BOM
         }
 
+        public static void BeginRichTextBoxUpdate(this RichTextBox richTextBox)
+        {
+            NativeMethods.SendMessage(richTextBox.Handle, NativeMethods.WM_SETREDRAW, (IntPtr)0, IntPtr.Zero);
+        }
 
+        public static void EndRichTextBoxUpdate(this RichTextBox richTextBox)
+        {
+            NativeMethods.SendMessage(richTextBox.Handle, NativeMethods.WM_SETREDRAW, (IntPtr)1, IntPtr.Zero);
+            richTextBox.Invalidate();
+        }
 
         private const string BreakChars = "\",:;.¡!¿?()[]{}<>♪♫-–—/#*|؟،";
 
