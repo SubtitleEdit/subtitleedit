@@ -5098,18 +5098,22 @@ namespace Nikse.SubtitleEdit.Forms
                 oldSubtitleTextBoxHtmlColor != Configuration.Settings.General.SubtitleTextBoxHtmlColor.ToArgb().ToString() ||
                 oldSubtitleTextBoxAssaColor != Configuration.Settings.General.SubtitleTextBoxAssColor.ToArgb().ToString())
             {
+                if (oldSubtitleTextBoxSyntaxColor && oldLiveSpellCheck)
+                {
+                    textBoxListViewText.DisposeHunspellAndDictionaries();
+                }
+
                 textBoxListViewText.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
                 textBoxListViewTextOriginal.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
                 RefreshSelectedParagraph();
             }
-            textBoxListViewText.BackColor = !IsSubtitleLoaded ? SystemColors.ActiveBorder : SystemColors.WindowFrame;
-            textBoxListViewTextOriginal.BackColor = !IsSubtitleLoaded ? SystemColors.ActiveBorder : SystemColors.WindowFrame;
-
-            if (oldLiveSpellCheck && oldLiveSpellCheck != Configuration.Settings.Tools.LiveSpellCheck
-                || oldSubtitleTextBoxSyntaxColor && oldSubtitleTextBoxSyntaxColor != Configuration.Settings.General.SubtitleTextBoxSyntaxColor)
+            else if (oldLiveSpellCheck && oldLiveSpellCheck != Configuration.Settings.Tools.LiveSpellCheck)
             {
                 textBoxListViewText.DisposeHunspellAndDictionaries();
             }
+
+            textBoxListViewText.BackColor = !IsSubtitleLoaded ? SystemColors.ActiveBorder : SystemColors.WindowFrame;
+            textBoxListViewTextOriginal.BackColor = !IsSubtitleLoaded ? SystemColors.ActiveBorder : SystemColors.WindowFrame;
 
             SubtitleListview1.SyntaxColorAllLines(_subtitle);
             mediaPlayer.LastParagraph = null;
@@ -7298,7 +7302,7 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxListViewText.LanguageChanged = false;
                 }
             }
-            else
+            else if (textBoxListViewText.IsSpellCheckerInitialized)
             {
                 textBoxListViewText.DisposeHunspellAndDictionaries();
                 textBoxListViewText.IsDictionaryDownloaded = true;
