@@ -88,6 +88,9 @@
     <Compile Include="Controls\SETextBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\AdvancedTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\SimpleTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
