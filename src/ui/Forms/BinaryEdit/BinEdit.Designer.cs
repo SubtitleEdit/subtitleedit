@@ -64,6 +64,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.bottomAlignSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.toggleforcedForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.selectOnlyForcedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.resizeImagesForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.colorSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -353,7 +354,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.comboBoxFrameRate.FormattingEnabled = true;
             this.comboBoxFrameRate.Location = new System.Drawing.Point(322, 20);
             this.comboBoxFrameRate.Name = "comboBoxFrameRate";
-            this.comboBoxFrameRate.Size = new System.Drawing.Size(102, 21);
+            this.comboBoxFrameRate.Size = new System.Drawing.Size(74, 21);
             this.comboBoxFrameRate.TabIndex = 5;
             this.comboBoxFrameRate.SelectedIndexChanged += new System.EventHandler(this.comboBoxFrameRate_SelectedIndexChanged);
             this.comboBoxFrameRate.SelectedValueChanged += new System.EventHandler(this.comboBoxFrameRate_SelectedValueChanged);
@@ -425,6 +426,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.bottomAlignSelectedLinesToolStripMenuItem,
             this.toolStripSeparator9,
             this.toggleforcedForSelectedLinesToolStripMenuItem,
+            this.selectOnlyForcedLinesToolStripMenuItem,
             this.toolStripSeparator7,
             this.resizeImagesForSelectedLinesToolStripMenuItem,
             this.colorSelectedLinesToolStripMenuItem,
@@ -437,7 +439,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.toolStripSeparatorInsertSub,
             this.insertSubtitleAfterThisLineToolStripMenuItem});
             this.contextMenuStripListView.Name = "contextMenuStripListView";
-            this.contextMenuStripListView.Size = new System.Drawing.Size(377, 386);
+            this.contextMenuStripListView.Size = new System.Drawing.Size(377, 408);
             this.contextMenuStripListView.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripListView_Opening);
             // 
             // deleteToolStripMenuItem
@@ -505,6 +507,13 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.toggleforcedForSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(376, 22);
             this.toggleforcedForSelectedLinesToolStripMenuItem.Text = "Toggle \"forced\" for selected lines";
             this.toggleforcedForSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.toggleforcedForSelectedLinesToolStripMenuItem_Click);
+            // 
+            // selectOnlyForcedLinesToolStripMenuItem
+            // 
+            this.selectOnlyForcedLinesToolStripMenuItem.Name = "selectOnlyForcedLinesToolStripMenuItem";
+            this.selectOnlyForcedLinesToolStripMenuItem.Size = new System.Drawing.Size(376, 22);
+            this.selectOnlyForcedLinesToolStripMenuItem.Text = "Select only forced lines";
+            this.selectOnlyForcedLinesToolStripMenuItem.Click += new System.EventHandler(this.selectOnlyForcedLinesToolStripMenuItem_Click);
             // 
             // toolStripSeparator7
             // 
@@ -1097,5 +1106,6 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private System.Windows.Forms.ToolStripMenuItem sortByToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem startTimeToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator10;
+        private System.Windows.Forms.ToolStripMenuItem selectOnlyForcedLinesToolStripMenuItem;
     }
 }
