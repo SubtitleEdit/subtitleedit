@@ -67,6 +67,7 @@
    * Fix ANSI writing for a few chars (…/®/©) - thx fr
    * Fix case-change issue in nOcr - thx Janusz
    * Fix reading SCC with uppercase hex codes - thx Mike
+   * Fix DCinema SMPTE line ordering - thx user024
 
 
 3.5.18 (9th November 2020)
