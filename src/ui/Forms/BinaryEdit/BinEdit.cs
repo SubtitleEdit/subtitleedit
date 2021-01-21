@@ -248,6 +248,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             topAlignSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.TopAlignSelectedLines;
             bottomAlignSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.BottomAlignSelectedLines;
             toggleforcedForSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.ToggleForcedSelectedLines;
+            selectOnlyForcedLinesToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.SelectForcedLines;
             resizeImagesForSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.ResizeBitmapsForSelectedLines;
             colorSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.ChangeColorForSelectedLines;
             changeBrightnessForSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.ChangeBrightnessForSelectedLines;
@@ -877,6 +878,11 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             var idx = subtitleListView1.SelectedItems[0].Index;
             var p = _subtitle.Paragraphs[idx];
             groupBoxCurrent.Text = $"{idx + 1} / {_subtitle.Paragraphs.Count}";
+            if (subtitleListView1.SelectedItems.Count > 1) 
+            {
+                groupBoxCurrent.Text += $" ({subtitleListView1.SelectedItems.Count})";
+            }
+
             if (videoPlayerContainer1.VideoPlayer != null && videoPlayerContainer1.IsPaused)
             {
                 videoPlayerContainer1.CurrentPosition = p.StartTime.TotalSeconds;
@@ -1746,6 +1752,8 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
             toolStripSeparatorInsertSub.Visible = selectedCount == 1 && subtitleListView1.SelectedItems[0].Index == subtitleListView1.Items.Count - 1;
             insertSubtitleAfterThisLineToolStripMenuItem.Visible = selectedCount == 1 && subtitleListView1.SelectedItems[0].Index == subtitleListView1.Items.Count - 1;
+
+            selectOnlyForcedLinesToolStripMenuItem.Visible = _extra.Any(p => p.IsForced);
 
             quickOCRTextsforOverviewOnlyToolStripMenuItem.Visible = File.Exists(_nOcrFileName);
         }
@@ -2867,6 +2875,31 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             _binSubtitles[v] = bin;
             _extra[v] = extra;
             _subtitle.Paragraphs[v] = p;
+        }
+
+        private void selectOnlyForcedLinesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            subtitleListView1.BeginUpdate();
+            subtitleListView1.SelectedIndexChanged -= subtitleListView1_SelectedIndexChanged;
+            subtitleListView1.SelectNone();
+            System.Collections.IList list = subtitleListView1.Items;
+            bool first = true;
+            for (int i = 0; i < list.Count; i++)
+            {
+                ListViewItem item = (ListViewItem)list[i];
+                if (_extra[i].IsForced)
+                {
+                    item.Selected = true;
+                    if (first)
+                    {
+                        subtitleListView1.SelectIndexAndEnsureVisible(i);
+                        first = false;
+                    }
+                }
+            }
+            subtitleListView1.SelectedIndexChanged += subtitleListView1_SelectedIndexChanged;
+            subtitleListView1.EndUpdate();
+            subtitleListView1_SelectedIndexChanged(null, null);
         }
     }
 }

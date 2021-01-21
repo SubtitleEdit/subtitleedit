@@ -403,6 +403,7 @@ namespace Nikse.SubtitleEdit.Logic
                 TopAlignSelectedLines = "Top align selected lines (keep horizontal position)",
                 BottomAlignSelectedLines = "Bottom align selected lines (keep horizontal position)",
                 ToggleForcedSelectedLines = "Toggle \"Forced\" for selected lines",
+                SelectForcedLines = "Select forced lines",
                 SizeXY = "Size: {0}x{1}",
                 SetAspectRatio11 = "Set aspect ratio 1:1",
                 ChangeBrightnessTitle = "Adjust brightness",
