@@ -270,7 +270,10 @@ namespace Nikse.SubtitleEdit.Forms
                     comboBoxAutoContinue.Top += xDiff;
                 }
             }
+
             labelAutoDuration.Left = labelDuration.Left - (labelAutoDuration.Width - 5);
+
+            buttonSplitLine.ForeColor = Color.Red;
 
             textBoxListViewText.BackColor = !IsSubtitleLoaded ? SystemColors.ActiveBorder : SystemColors.WindowFrame;
             textBoxListViewTextOriginal.BackColor = !IsSubtitleLoaded ? SystemColors.ActiveBorder : SystemColors.WindowFrame;
