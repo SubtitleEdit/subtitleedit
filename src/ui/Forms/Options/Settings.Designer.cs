@@ -1,4 +1,6 @@
-﻿namespace Nikse.SubtitleEdit.Forms.Options
+﻿using System.Windows.Forms;
+
+namespace Nikse.SubtitleEdit.Forms.Options
 {
     sealed partial class Settings
     {
@@ -2032,7 +2034,7 @@
             this.groupBoxVideoPlayerDefault.Controls.Add(this.labelVideoPlayerPreviewFontSize);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.comboBoxlVideoPlayerPreviewFontSize);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.checkBoxVideoPlayerShowStopButton);
-            this.groupBoxVideoPlayerDefault.Location = new System.Drawing.Point(0, 149);
+            this.groupBoxVideoPlayerDefault.Location = new System.Drawing.Point(0, 145);
             this.groupBoxVideoPlayerDefault.Name = "groupBoxVideoPlayerDefault";
             this.groupBoxVideoPlayerDefault.Size = new System.Drawing.Size(851, 120);
             this.groupBoxVideoPlayerDefault.TabIndex = 14;
@@ -2061,7 +2063,7 @@
             // checkBoxVideoPlayerPreviewFontBold
             // 
             this.checkBoxVideoPlayerPreviewFontBold.AutoSize = true;
-            this.checkBoxVideoPlayerPreviewFontBold.Location = new System.Drawing.Point(593, 48);
+            this.checkBoxVideoPlayerPreviewFontBold.Location = new System.Drawing.Point(593, 80);
             this.checkBoxVideoPlayerPreviewFontBold.Name = "checkBoxVideoPlayerPreviewFontBold";
             this.checkBoxVideoPlayerPreviewFontBold.Size = new System.Drawing.Size(46, 17);
             this.checkBoxVideoPlayerPreviewFontBold.TabIndex = 9;
@@ -2091,7 +2093,7 @@
             // labelVideoPlayerPreviewFontName
             // 
             this.labelVideoPlayerPreviewFontName.AutoSize = true;
-            this.labelVideoPlayerPreviewFontName.Location = new System.Drawing.Point(331, 21);
+            this.labelVideoPlayerPreviewFontName.Location = new System.Drawing.Point(331, 16);
             this.labelVideoPlayerPreviewFontName.Name = "labelVideoPlayerPreviewFontName";
             this.labelVideoPlayerPreviewFontName.Size = new System.Drawing.Size(128, 13);
             this.labelVideoPlayerPreviewFontName.TabIndex = 5;
@@ -2099,8 +2101,9 @@
             // 
             // comboBoxVideoPlayerPreviewFontName
             // 
+            this.comboBoxVideoPlayerPreviewFontName.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxVideoPlayerPreviewFontName.FormattingEnabled = true;
-            this.comboBoxVideoPlayerPreviewFontName.Location = new System.Drawing.Point(465, 18);
+            this.comboBoxVideoPlayerPreviewFontName.Location = new System.Drawing.Point(334, 33);
             this.comboBoxVideoPlayerPreviewFontName.Name = "comboBoxVideoPlayerPreviewFontName";
             this.comboBoxVideoPlayerPreviewFontName.Size = new System.Drawing.Size(188, 21);
             this.comboBoxVideoPlayerPreviewFontName.TabIndex = 6;
@@ -2108,7 +2111,7 @@
             // labelVideoPlayerPreviewFontSize
             // 
             this.labelVideoPlayerPreviewFontSize.AutoSize = true;
-            this.labelVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(331, 48);
+            this.labelVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(331, 61);
             this.labelVideoPlayerPreviewFontSize.Name = "labelVideoPlayerPreviewFontSize";
             this.labelVideoPlayerPreviewFontSize.Size = new System.Drawing.Size(128, 13);
             this.labelVideoPlayerPreviewFontSize.TabIndex = 7;
@@ -2142,7 +2145,7 @@
             "28",
             "29",
             "30"});
-            this.comboBoxlVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(465, 45);
+            this.comboBoxlVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(334, 78);
             this.comboBoxlVideoPlayerPreviewFontSize.Name = "comboBoxlVideoPlayerPreviewFontSize";
             this.comboBoxlVideoPlayerPreviewFontSize.Size = new System.Drawing.Size(121, 21);
             this.comboBoxlVideoPlayerPreviewFontSize.TabIndex = 8;
@@ -2227,7 +2230,7 @@
             // 
             // buttonVlcPathBrowse
             // 
-            this.buttonVlcPathBrowse.Location = new System.Drawing.Point(778, 44);
+            this.buttonVlcPathBrowse.Location = new System.Drawing.Point(778, 45);
             this.buttonVlcPathBrowse.Name = "buttonVlcPathBrowse";
             this.buttonVlcPathBrowse.Size = new System.Drawing.Size(29, 21);
             this.buttonVlcPathBrowse.TabIndex = 26;
@@ -2247,7 +2250,7 @@
             // labelVlcPath
             // 
             this.labelVlcPath.AutoSize = true;
-            this.labelVlcPath.Location = new System.Drawing.Point(379, 29);
+            this.labelVlcPath.Location = new System.Drawing.Point(410, 29);
             this.labelVlcPath.Name = "labelVlcPath";
             this.labelVlcPath.Size = new System.Drawing.Size(315, 13);
             this.labelVlcPath.TabIndex = 24;
@@ -4382,7 +4385,7 @@
             // 
             this.comboBoxSubtitleFont.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSubtitleFont.FormattingEnabled = true;
-            this.comboBoxSubtitleFont.Location = new System.Drawing.Point(210, 20);
+            this.comboBoxSubtitleFont.Location = new System.Drawing.Point(331, 20);
             this.comboBoxSubtitleFont.Name = "comboBoxSubtitleFont";
             this.comboBoxSubtitleFont.Size = new System.Drawing.Size(188, 21);
             this.comboBoxSubtitleFont.TabIndex = 29;
@@ -4590,6 +4593,7 @@
             // 
             // comboBoxFontName
             // 
+            this.comboBoxFontName.DropDownStyle = ComboBoxStyle.DropDownList;
             this.comboBoxFontName.FormattingEnabled = true;
             this.comboBoxFontName.Location = new System.Drawing.Point(121, 17);
             this.comboBoxFontName.Name = "comboBoxFontName";
