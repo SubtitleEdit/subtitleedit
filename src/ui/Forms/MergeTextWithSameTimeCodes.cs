@@ -55,7 +55,6 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.AutoSizeAllColumns(this);
             NumberOfMerges = 0;
             _subtitle = subtitle;
-            MergeTextWithSameTimeCodes_ResizeEnd(null, null);
             _language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
         }
 
@@ -200,6 +199,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MergeTextWithSameTimeCodes_Shown(object sender, EventArgs e)
         {
+            MergeTextWithSameTimeCodes_ResizeEnd(sender, e);
+
             GeneratePreview();
             listViewFixes.Focus();
             if (listViewFixes.Items.Count > 0)

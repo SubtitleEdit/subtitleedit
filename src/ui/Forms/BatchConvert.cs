@@ -2690,7 +2690,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void BatchConvert_Shown(object sender, EventArgs e)
         {
-            BatchConvert_ResizeEnd(this, EventArgs.Empty);
+            BatchConvert_ResizeEnd(sender, e);
         }
 
         private void BatchConvert_ResizeEnd(object sender, EventArgs e)

@@ -55,7 +55,6 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.AutoSizeAllColumns(this);
             NumberOfMerges = 0;
             _subtitle = subtitle;
-            MergeDoubleLines_ResizeEnd(null, null);
         }
 
         private void AddToListView(Paragraph p, string lineNumbers, string newText)
@@ -292,6 +291,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MergeDoubleLines_Shown(object sender, EventArgs e)
         {
+            MergeDoubleLines_ResizeEnd(sender, e);
+
             GeneratePreview();
             listViewFixes.Focus();
             if (listViewFixes.Items.Count > 0)

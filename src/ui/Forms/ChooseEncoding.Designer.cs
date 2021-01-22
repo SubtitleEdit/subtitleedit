@@ -170,8 +170,10 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Choose encoding";
-            this.Load += new System.EventHandler(this.ChooseEncoding_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormChooseEncoding_KeyDown);
+            this.Load += new System.EventHandler(this.ChooseEncoding_Load);
+            this.ResizeEnd += new System.EventHandler(this.ChooseEncoding_ResizeEnd);
+            this.Shown += new System.EventHandler(this.ChooseEncoding_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

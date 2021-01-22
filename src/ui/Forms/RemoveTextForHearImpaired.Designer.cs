@@ -480,9 +480,10 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Remove text for hearing impaired";
-            this.Load += new System.EventHandler(this.FormRemoveTextForHearImpaired_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormRemoveTextForHearImpaired_KeyDown);
+            this.Load += new System.EventHandler(this.FormRemoveTextForHearImpaired_Load);
             this.Resize += new System.EventHandler(this.FormRemoveTextForHearImpaired_Resize);
+            this.Shown += new System.EventHandler(this.FormRemoveTextForHearImpaired_Shown);
             this.groupBoxLinesFound.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);
             this.groupBoxRemoveTextConditions.ResumeLayout(false);

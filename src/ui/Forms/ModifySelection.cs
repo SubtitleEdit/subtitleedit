@@ -136,7 +136,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 listViewFixes.Columns.Remove(columnHeaderStyle);
             }
-            ModifySelection_Resize(null, null);
 
             _loading = false;
             Preview();
@@ -545,6 +544,12 @@ namespace Nikse.SubtitleEdit.Forms
         private void ModifySelection_Resize(object sender, EventArgs e)
         {
             listViewFixes.Columns[listViewFixes.Columns.Count - 1].Width = -2;
+            listViewStyles.Columns[listViewStyles.Columns.Count - 1].Width = -2;
+        }
+
+        private void ModifySelection_Shown(object sender, EventArgs e)
+        {
+            ModifySelection_Resize(sender, e);
         }
 
         private void listViewStyles_ItemChecked(object sender, ItemCheckedEventArgs e)

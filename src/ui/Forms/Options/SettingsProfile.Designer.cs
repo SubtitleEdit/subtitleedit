@@ -650,6 +650,8 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Profiles";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SettingsProfile_KeyDown);
+            this.ResizeEnd += new System.EventHandler(this.SettingsProfile_ResizeEnd);
+            this.Shown += new System.EventHandler(this.SettingsProfile_Shown);
             this.groupBoxStyles.ResumeLayout(false);
             this.groupBoxStyles.PerformLayout();
             this.groupBoxGeneralRules.ResumeLayout(false);

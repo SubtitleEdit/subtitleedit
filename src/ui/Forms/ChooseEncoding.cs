@@ -73,12 +73,30 @@ namespace Nikse.SubtitleEdit.Forms
             listView1.EndUpdate();
         }
 
+        private void ChooseEncoding_Load(object sender, EventArgs e)
+        {
+            if (listView1.SelectedItems.Count >= 1)
+            {
+                listView1.EnsureVisible(listView1.SelectedItems[0].Index);
+            }
+        }
+
         private void FormChooseEncoding_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
             {
                 DialogResult = DialogResult.Cancel;
             }
+        }
+
+        private void ChooseEncoding_ResizeEnd(object sender, EventArgs e)
+        {
+            listView1.Columns[listView1.Columns.Count - 1].Width = -2;
+        }
+
+        private void ChooseEncoding_Shown(object sender, EventArgs e)
+        {
+            ChooseEncoding_ResizeEnd(sender, e);
         }
 
         internal Encoding GetEncoding()
@@ -111,14 +129,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 textBoxPreview.Text = string.Empty;
                 LabelPreview.Text = string.Empty;
-            }
-        }
-
-        private void ChooseEncoding_Load(object sender, EventArgs e)
-        {
-            if (listView1.SelectedItems.Count >= 1)
-            {
-                listView1.EnsureVisible(listView1.SelectedItems[0].Index);
             }
         }
 

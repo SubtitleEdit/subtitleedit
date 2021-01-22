@@ -1075,10 +1075,10 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ExportPngXml";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ExportPngXml_FormClosing);
-            this.Shown += new System.EventHandler(this.ExportPngXml_Shown);
-            this.ResizeEnd += new System.EventHandler(this.ExportPngXml_ResizeEnd);
-            this.SizeChanged += new System.EventHandler(this.ExportPngXml_SizeChanged);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ExportPngXml_KeyDown);
+            this.ResizeEnd += new System.EventHandler(this.ExportPngXml_ResizeEnd);
+            this.Shown += new System.EventHandler(this.ExportPngXml_Shown);
+            this.SizeChanged += new System.EventHandler(this.ExportPngXml_SizeChanged);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
             this.groupBoxImageSettings.ResumeLayout(false);

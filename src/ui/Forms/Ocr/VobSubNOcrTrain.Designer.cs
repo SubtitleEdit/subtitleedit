@@ -385,6 +385,8 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "nOCR Train";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.VobSubNOcrTrain_FormClosing);
+            this.ResizeEnd += new System.EventHandler(this.VobSubNOcrTrain_ResizeEnd);
+            this.Shown += new System.EventHandler(this.VobSubNOcrTrain_Shown);
             this.groupBoxTrainingOptions.ResumeLayout(false);
             this.groupBoxTrainingOptions.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSegmentsPerCharacter)).EndInit();
