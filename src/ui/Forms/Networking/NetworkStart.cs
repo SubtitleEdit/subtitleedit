@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Forms.Networking
             Text = LanguageSettings.Current.NetworkStart.Title;
             labelInfo.Text = LanguageSettings.Current.NetworkStart.Information;
             labelSessionKey.Text = LanguageSettings.Current.General.SessionKey;
-            buttonGenerateNewKey.Text = LanguageSettings.Current.General.SessionKeyGenerate + " sfljasdflkjasflasldj";
+            buttonGenerateNewKey.Text = LanguageSettings.Current.General.SessionKeyGenerate;
             using (var graphics = CreateGraphics())
             {
                 var textSize = graphics.MeasureString(buttonGenerateNewKey.Text, Font);
