@@ -20,6 +20,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         public SubStationAlphaStylesExport(string header, bool isSubStationAlpha, SubtitleFormat format)
         {
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             _header = header;
             _isSubStationAlpha = isSubStationAlpha;
