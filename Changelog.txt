@@ -36,6 +36,7 @@
    * Improve SoftNi format - thx EduGomes
    * List possible Bing translator token endpoints
    * Internal project restructure + readying for .NET 5
+   * Networking feature now uses REST instead of WCF
    * Do not show full file path in title bar - thx Kristo
    * "File - Import" grouping - thx OmrSi/ivandrofly
    * Allow em-dash for sentence ending - thx Boulder08
@@ -63,7 +64,7 @@
    * Fix list view column auto size w style - thx Jamakmake
    * Fix Tesseract lang parameter in cmd line OCR on Linux - thx depeo
    * Fix crash in binOcr - thx jpinto0
-   * Don't log tag info when no sub - thx Jamakmake
+   * Don't log tag change info when no sub - thx Jamakmake
    * Fix ANSI writing for a few chars (…/®/©) - thx fr
    * Fix case-change issue in nOcr - thx Janusz
    * Fix reading SCC with uppercase hex codes - thx Mike

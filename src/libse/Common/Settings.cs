@@ -1773,7 +1773,7 @@ $HorzAlign          =   Center
         public NetworkSettings()
         {
             UserName = string.Empty;
-            SessionKey = "DemoSession";
+            SessionKey = Guid.NewGuid().ToString();
             WebApiUrl = "https://www.nikse.dk/api/SeNet";
             PollIntervalSeconds = 5;
         }

@@ -179,6 +179,7 @@ namespace Nikse.SubtitleEdit.Logic
                 OpenOriginalSubtitleFile = "Open original subtitle file...",
                 PleaseWait = "Please wait...",
                 SessionKey = "Session key",
+                SessionKeyGenerate ="Generate new key",
                 UserName = "Username",
                 UserNameAlreadyInUse = "Username already in use",
                 WebServiceUrl = "Webservice URL",

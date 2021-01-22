@@ -38,33 +38,36 @@
             this.labelStatus = new System.Windows.Forms.Label();
             this.labelSessionKey = new System.Windows.Forms.Label();
             this.textBoxSessionKey = new System.Windows.Forms.TextBox();
+            this.buttonGenerateNewKey = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // buttonCancel
             // 
+            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(312, 147);
+            this.buttonCancel.Location = new System.Drawing.Point(315, 210);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 4;
+            this.buttonCancel.TabIndex = 40;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
             // textBoxUserName
             // 
-            this.textBoxUserName.Location = new System.Drawing.Point(125, 83);
+            this.textBoxUserName.Location = new System.Drawing.Point(125, 119);
             this.textBoxUserName.Name = "textBoxUserName";
             this.textBoxUserName.Size = new System.Drawing.Size(262, 20);
-            this.textBoxUserName.TabIndex = 1;
+            this.textBoxUserName.TabIndex = 10;
             // 
             // buttonStart
             // 
+            this.buttonStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonStart.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonStart.Location = new System.Drawing.Point(231, 147);
+            this.buttonStart.Location = new System.Drawing.Point(234, 210);
             this.buttonStart.Name = "buttonStart";
             this.buttonStart.Size = new System.Drawing.Size(75, 23);
-            this.buttonStart.TabIndex = 3;
+            this.buttonStart.TabIndex = 30;
             this.buttonStart.Text = "&Start";
             this.buttonStart.UseVisualStyleBackColor = true;
             this.buttonStart.Click += new System.EventHandler(this.buttonStart_Click);
@@ -72,7 +75,7 @@
             // labelUserName
             // 
             this.labelUserName.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.labelUserName.Location = new System.Drawing.Point(5, 86);
+            this.labelUserName.Location = new System.Drawing.Point(5, 122);
             this.labelUserName.Name = "labelUserName";
             this.labelUserName.Size = new System.Drawing.Size(114, 16);
             this.labelUserName.TabIndex = 3;
@@ -85,15 +88,15 @@
             this.comboBoxWebServiceUrl.Items.AddRange(new object[] {
             "http://www.nikse.dk/se/SeService.asmx",
             "http://se-net.azurewebsites.net/seService.asmx"});
-            this.comboBoxWebServiceUrl.Location = new System.Drawing.Point(125, 109);
+            this.comboBoxWebServiceUrl.Location = new System.Drawing.Point(125, 145);
             this.comboBoxWebServiceUrl.Name = "comboBoxWebServiceUrl";
             this.comboBoxWebServiceUrl.Size = new System.Drawing.Size(262, 21);
-            this.comboBoxWebServiceUrl.TabIndex = 2;
+            this.comboBoxWebServiceUrl.TabIndex = 20;
             // 
             // labelWebServiceUrl
             // 
             this.labelWebServiceUrl.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.labelWebServiceUrl.Location = new System.Drawing.Point(5, 112);
+            this.labelWebServiceUrl.Location = new System.Drawing.Point(5, 148);
             this.labelWebServiceUrl.Name = "labelWebServiceUrl";
             this.labelWebServiceUrl.Size = new System.Drawing.Size(114, 16);
             this.labelWebServiceUrl.TabIndex = 8;
@@ -111,8 +114,9 @@
             // 
             // labelStatus
             // 
+            this.labelStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelStatus.AutoSize = true;
-            this.labelStatus.Location = new System.Drawing.Point(16, 167);
+            this.labelStatus.Location = new System.Drawing.Point(12, 220);
             this.labelStatus.Name = "labelStatus";
             this.labelStatus.Size = new System.Drawing.Size(59, 13);
             this.labelStatus.TabIndex = 10;
@@ -135,11 +139,24 @@
             this.textBoxSessionKey.Size = new System.Drawing.Size(262, 20);
             this.textBoxSessionKey.TabIndex = 0;
             // 
+            // buttonGenerateNewKey
+            // 
+            this.buttonGenerateNewKey.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonGenerateNewKey.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonGenerateNewKey.Location = new System.Drawing.Point(125, 83);
+            this.buttonGenerateNewKey.Name = "buttonGenerateNewKey";
+            this.buttonGenerateNewKey.Size = new System.Drawing.Size(147, 23);
+            this.buttonGenerateNewKey.TabIndex = 5;
+            this.buttonGenerateNewKey.Text = "Genereate new key";
+            this.buttonGenerateNewKey.UseVisualStyleBackColor = true;
+            this.buttonGenerateNewKey.Click += new System.EventHandler(this.buttonGenerateNewKey_Click);
+            // 
             // NetworkStart
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(402, 185);
+            this.ClientSize = new System.Drawing.Size(402, 245);
+            this.Controls.Add(this.buttonGenerateNewKey);
             this.Controls.Add(this.textBoxSessionKey);
             this.Controls.Add(this.labelSessionKey);
             this.Controls.Add(this.labelStatus);
@@ -176,5 +193,6 @@
         private System.Windows.Forms.Label labelStatus;
         private System.Windows.Forms.Label labelSessionKey;
         private System.Windows.Forms.TextBox textBoxSessionKey;
+        private System.Windows.Forms.Button buttonGenerateNewKey;
     }
 }

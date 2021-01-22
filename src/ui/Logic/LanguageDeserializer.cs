@@ -235,6 +235,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "General/SessionKey":
                     language.General.SessionKey = reader.Value;
                     break;
+                case "General/SessionKeyGenerate":
+                    language.General.SessionKeyGenerate = reader.Value;
+                    break;
                 case "General/UserName":
                     language.General.UserName = reader.Value;
                     break;
@@ -702,6 +705,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "BinEdit/ToggleForcedSelectedLines":
                     language.BinEdit.ToggleForcedSelectedLines = reader.Value;
+                    break;
+                case "BinEdit/SelectForcedLines":
+                    language.BinEdit.SelectForcedLines = reader.Value;
                     break;
                 case "BinEdit/SizeXY":
                     language.BinEdit.SizeXY = reader.Value;
