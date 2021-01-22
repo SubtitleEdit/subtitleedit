@@ -64,6 +64,7 @@
             public string OpenOriginalSubtitleFile { get; set; }
             public string PleaseWait { get; set; }
             public string SessionKey { get; set; }
+            public string SessionKeyGenerate { get; set; }
             public string UserName { get; set; }
             public string UserNameAlreadyInUse { get; set; }
             public string WebServiceUrl { get; set; }

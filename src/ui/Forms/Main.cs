@@ -21247,9 +21247,16 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.General.SplitContainer1SplitterDistance > 0 &&
                 Configuration.Settings.General.SplitContainerListViewAndTextSplitterDistance > 0)
             {
-                splitContainerMain.SplitterDistance = Configuration.Settings.General.SplitContainerMainSplitterDistance;
-                splitContainer1.SplitterDistance = Configuration.Settings.General.SplitContainer1SplitterDistance;
-                splitContainerListViewAndText.SplitterDistance = Configuration.Settings.General.SplitContainerListViewAndTextSplitterDistance;
+                try
+                {
+                    splitContainerMain.SplitterDistance = Configuration.Settings.General.SplitContainerMainSplitterDistance;
+                    splitContainer1.SplitterDistance = Configuration.Settings.General.SplitContainer1SplitterDistance;
+                    splitContainerListViewAndText.SplitterDistance = Configuration.Settings.General.SplitContainerListViewAndTextSplitterDistance;
+                }
+                catch
+                {
+                    // ignore
+                }
             }
 
             mediaPlayer.InitializeVolume(Configuration.Settings.General.VideoPlayerDefaultVolume);

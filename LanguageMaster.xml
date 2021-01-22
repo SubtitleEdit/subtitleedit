@@ -60,6 +60,7 @@
     <OpenOriginalSubtitleFile>Open original subtitle file...</OpenOriginalSubtitleFile>
     <PleaseWait>Please wait...</PleaseWait>
     <SessionKey>Session key</SessionKey>
+    <SessionKeyGenerate>Generate new key</SessionKeyGenerate>
     <UserName>Username</UserName>
     <UserNameAlreadyInUse>Username already in use</UserNameAlreadyInUse>
     <WebServiceUrl>Webservice URL</WebServiceUrl>
@@ -258,6 +259,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <TopAlignSelectedLines>Top align selected lines (keep horizontal position)</TopAlignSelectedLines>
     <BottomAlignSelectedLines>Bottom align selected lines (keep horizontal position)</BottomAlignSelectedLines>
     <ToggleForcedSelectedLines>Toggle "Forced" for selected lines</ToggleForcedSelectedLines>
+    <SelectForcedLines>Select forced lines</SelectForcedLines>
     <SizeXY>Size: {0}x{1}</SizeXY>
     <SetAspectRatio11>Set aspect ratio 1:1</SetAspectRatio11>
     <ChangeBrightnessTitle>Adjust brightness</ChangeBrightnessTitle>

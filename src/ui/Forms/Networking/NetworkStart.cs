@@ -22,6 +22,12 @@ namespace Nikse.SubtitleEdit.Forms.Networking
             Text = LanguageSettings.Current.NetworkStart.Title;
             labelInfo.Text = LanguageSettings.Current.NetworkStart.Information;
             labelSessionKey.Text = LanguageSettings.Current.General.SessionKey;
+            buttonGenerateNewKey.Text = LanguageSettings.Current.General.SessionKeyGenerate + " sfljasdflkjasflasldj";
+            using (var graphics = CreateGraphics())
+            {
+                var textSize = graphics.MeasureString(buttonGenerateNewKey.Text, Font);
+                buttonGenerateNewKey.Width = (int)textSize.Width + 15;
+            }
             labelUserName.Text = LanguageSettings.Current.General.UserName;
             labelWebServiceUrl.Text = LanguageSettings.Current.General.WebServiceUrl;
             buttonStart.Text = LanguageSettings.Current.NetworkStart.Start;
@@ -105,5 +111,11 @@ namespace Nikse.SubtitleEdit.Forms.Networking
             }
         }
 
+        private void buttonGenerateNewKey_Click(object sender, EventArgs e)
+        {
+            textBoxSessionKey.Text = Guid.NewGuid().ToString();
+            textBoxSessionKey.SelectAll();
+            textBoxSessionKey.Focus();
+        }
     }
 }
