@@ -342,6 +342,7 @@
             this.Text = "Create/modify selection";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ModifySelection_KeyDown);
             this.Resize += new System.EventHandler(this.ModifySelection_Resize);
+            this.Shown += new System.EventHandler(this.ModifySelection_Shown);
             this.groupBoxWhatToDo.ResumeLayout(false);
             this.groupBoxWhatToDo.PerformLayout();
             this.groupBoxRule.ResumeLayout(false);

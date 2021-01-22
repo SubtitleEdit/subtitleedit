@@ -714,8 +714,9 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Import text";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ImportText_FormClosing);
-            this.Shown += new System.EventHandler(this.ImportText_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ImportTextKeyDown);
+            this.ResizeEnd += new System.EventHandler(this.ImportText_ResizeEnd);
+            this.Shown += new System.EventHandler(this.ImportText_Shown);
             this.groupBoxImportText.ResumeLayout(false);
             this.groupBoxImportText.PerformLayout();
             this.contextMenuStripListView.ResumeLayout(false);

@@ -404,5 +404,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             Configuration.Settings.Tools.OcrTrainSrtFile = textBoxInputFile.Text;
             Configuration.Settings.Tools.OcrTrainMergedLetters = textBoxMerged.Text;
         }
+
+        private void VobSubNOcrTrain_ResizeEnd(object sender, EventArgs e)
+        {
+            listViewFonts.Columns[listViewFonts.Columns.Count - 1].Width = -2;
+        }
+
+        private void VobSubNOcrTrain_Shown(object sender, EventArgs e)
+        {
+            VobSubNOcrTrain_ResizeEnd(sender, e);
+        }
     }
 }

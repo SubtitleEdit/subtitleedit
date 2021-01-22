@@ -109,6 +109,8 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "YouTubeAnnotationsImport";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.YouTubeAnnotationsImport_KeyDown);
+            this.ResizeEnd += new System.EventHandler(this.YouTubeAnnotationsImport_ResizeEnd);
+            this.Shown += new System.EventHandler(this.YouTubeAnnotationsImport_Shown);
             this.ResumeLayout(false);
 
         }

@@ -260,8 +260,14 @@ namespace Nikse.SubtitleEdit.Forms
             GeneratePreview();
         }
 
+        private void ApplyDurationLimits_ResizeEnd(object sender, EventArgs e)
+        {
+            listViewFixes.Columns[listViewFixes.Columns.Count - 1].Width = -2;
+        }
+
         private void ApplyDurationLimits_Shown(object sender, EventArgs e)
         {
+            ApplyDurationLimits_ResizeEnd(sender, e);
             listViewFixes.Focus();
         }
 

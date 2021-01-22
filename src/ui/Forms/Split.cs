@@ -311,12 +311,8 @@ namespace Nikse.SubtitleEdit.Forms
         private void Split_Shown(object sender, EventArgs e)
         {
             _loading = false;
+            Split_ResizeEnd(sender, e);
             CalculateParts();
-        }
-
-        private void Split_Resize(object sender, EventArgs e)
-        {
-            columnHeaderFileName.Width = -2;
         }
 
         private void Split_KeyDown(object sender, KeyEventArgs e)

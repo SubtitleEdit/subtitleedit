@@ -74,6 +74,16 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void FormShowHistory_ResizeEnd(object sender, EventArgs e)
+        {
+            listViewHistory.Columns[listViewHistory.Columns.Count - 1].Width = -2;
+        }
+
+        private void FormShowHistory_Shown(object sender, EventArgs e)
+        {
+            FormShowHistory_ResizeEnd(sender, e);
+        }
+
         private void ButtonOkClick(object sender, EventArgs e)
         {
             if (listViewHistory.SelectedItems.Count > 0)

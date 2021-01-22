@@ -267,6 +267,8 @@
             this.ShowInTaskbar = false;
             this.Text = "AddWaveformBatch";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AddWaveformBatch_KeyDown);
+            this.ResizeEnd += new System.EventHandler(this.AddWaveformBatch_ResizeEnd);
+            this.Shown += new System.EventHandler(this.AddWaveformBatch_Shown);
             this.groupBoxInput.ResumeLayout(false);
             this.groupBoxInput.PerformLayout();
             this.contextMenuStripFiles.ResumeLayout(false);

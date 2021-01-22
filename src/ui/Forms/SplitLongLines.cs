@@ -355,8 +355,15 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void SplitLongLines_ResizeEnd(object sender, EventArgs e)
+        {
+            listViewFixes.Columns[listViewFixes.Columns.Count - 1].Width = -2;
+        }
+
         private void SplitLongLines_Shown(object sender, EventArgs e)
         {
+            SplitLongLines_ResizeEnd(sender, e);
+
             GeneratePreview(true);
             listViewFixes.Focus();
             if (listViewFixes.Items.Count > 0)

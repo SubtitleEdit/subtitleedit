@@ -184,6 +184,8 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "AutoBreakUnbreakLines";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AutoBreakUnbreakLinesKeyDown);
+            this.ResizeEnd += new System.EventHandler(this.AutoBreakUnbreakLines_ResizeEnd);
+            this.Shown += new System.EventHandler(this.AutoBreakUnbreakLines_Shown);
             this.groupBoxLinesFound.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);

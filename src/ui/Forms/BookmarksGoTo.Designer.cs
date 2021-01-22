@@ -110,6 +110,8 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "BookmarksGoTo";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.BookmarksGoTo_KeyDown);
+            this.ResizeEnd += new System.EventHandler(this.BookmarksGoTo_ResizeEnd);
+            this.Shown += new System.EventHandler(this.BookmarksGoTo_Shown);
             this.ResumeLayout(false);
 
         }
