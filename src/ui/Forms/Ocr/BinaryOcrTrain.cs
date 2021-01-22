@@ -350,6 +350,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _autoDetectFontText = text;
         }
 
+        private void BinaryOcrTrain_ResizeEnd(object sender, EventArgs e)
+        {
+            listViewFonts.Columns[listViewFonts.Columns.Count - 1].Width = -2;
+        }
+
         private void BinaryOcrTrain_Shown(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(_autoDetectFontText))
@@ -357,7 +362,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return;
             }
 
-            SelectAll_Click(null, null);
+            BinaryOcrTrain_ResizeEnd(sender, e);
+            SelectAll_Click(this, EventArgs.Empty);
             int numberOfCharactersLearned = 0;
             int numberOfCharactersSkipped = 0;
             foreach (ListViewItem fontItem in listViewFonts.CheckedItems)

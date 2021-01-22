@@ -224,9 +224,9 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "MergeTextWithSameTimeCodes";
-            this.Shown += new System.EventHandler(this.MergeTextWithSameTimeCodes_Shown);
-            this.ResizeEnd += new System.EventHandler(this.MergeTextWithSameTimeCodes_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MergeTextWithSameTimeCodes_KeyDown);
+            this.ResizeEnd += new System.EventHandler(this.MergeTextWithSameTimeCodes_ResizeEnd);
+            this.Shown += new System.EventHandler(this.MergeTextWithSameTimeCodes_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxMillisecondsBetweenLines)).EndInit();
             this.groupBoxLinesFound.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);

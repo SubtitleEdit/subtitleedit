@@ -308,7 +308,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxStep1.Visible = true;
             listView1.Columns[0].Width = 50;
             listView1.Columns[1].Width = 310;
-            listView1.Columns[2].Width = 400;
+            listView1.Columns[2].Width = -2;
 
             UiUtil.InitializeSubtitleFont(textBoxListViewText);
             UiUtil.InitializeSubtitleFont(subtitleListView1);
@@ -1781,6 +1781,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void ListViewFixesAutoSizeAllColumns()
         {
+            listView1.Columns[listView1.Columns.Count - 1].Width = -2;
+
             using (var graphics = CreateGraphics())
             {
                 var timestampSizeF = graphics.MeasureString(listViewFixes.Columns[0].Text, Font); // Apply

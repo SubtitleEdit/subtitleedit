@@ -119,6 +119,16 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
         }
 
+        private void SettingsProfile_ResizeEnd(object sender, EventArgs e)
+        {
+            listViewProfiles.Columns[listViewProfiles.Columns.Count - 1].Width = -2;
+        }
+
+        private void SettingsProfile_Shown(object sender, EventArgs e)
+        {
+            SettingsProfile_ResizeEnd(sender, e);
+        }
+
         private void buttonRemoveAll_Click(object sender, EventArgs e)
         {
             RulesProfiles.Clear();

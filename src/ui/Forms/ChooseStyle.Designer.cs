@@ -146,6 +146,8 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Choose style";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ChooseStyle_KeyDown);
+            this.ResizeEnd += new System.EventHandler(this.ChooseStyle_ResizeEnd);
+            this.Shown += new System.EventHandler(this.ChooseStyle_Shown);
             this.groupBoxStyles.ResumeLayout(false);
             this.ResumeLayout(false);
 

@@ -128,8 +128,9 @@
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ProfileChoose";
-            this.Shown += new System.EventHandler(this.ProfileChoose_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ProfileChoose_KeyDown);
+            this.ResizeEnd += new System.EventHandler(this.ProfileChoose_ResizeEnd);
+            this.Shown += new System.EventHandler(this.ProfileChoose_Shown);
             this.ResumeLayout(false);
 
         }

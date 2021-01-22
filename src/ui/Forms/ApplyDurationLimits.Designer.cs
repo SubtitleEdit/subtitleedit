@@ -320,8 +320,9 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Apply duration limits";
-            this.Shown += new System.EventHandler(this.ApplyDurationLimits_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ApplyDurationLimits_KeyDown);
+            this.ResizeEnd += new System.EventHandler(this.ApplyDurationLimits_ResizeEnd);
+            this.Shown += new System.EventHandler(this.ApplyDurationLimits_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMax)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMin)).EndInit();
             this.groupBoxFixesAvailable.ResumeLayout(false);

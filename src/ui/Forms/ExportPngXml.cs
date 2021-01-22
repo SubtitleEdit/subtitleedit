@@ -4898,7 +4898,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         private void ExportPngXml_Shown(object sender, EventArgs e)
         {
             _isLoading = false;
-            subtitleListView1_SelectedIndexChanged(null, null);
+            ExportPngXml_ResizeEnd(sender, e);
         }
 
         private void comboBoxHAlign_SelectedIndexChanged(object sender, EventArgs e)

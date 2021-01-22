@@ -165,6 +165,16 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void ImportImages_ResizeEnd(object sender, EventArgs e)
+        {
+            listViewInputFiles.Columns[listViewInputFiles.Columns.Count - 1].Width = -2;
+        }
+
+        private void ImportImages_Shown(object sender, EventArgs e)
+        {
+            ImportImages_ResizeEnd(sender, e);
+        }
+
         private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (listViewInputFiles.Items.Count == 0)

@@ -483,6 +483,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Binary image compare - train";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.BinaryOcrTrain_FormClosing);
+            this.ResizeEnd += new System.EventHandler(this.BinaryOcrTrain_ResizeEnd);
             this.Shown += new System.EventHandler(this.BinaryOcrTrain_Shown);
             this.groupBoxTrainingOptions.ResumeLayout(false);
             this.groupBoxTrainingOptions.PerformLayout();

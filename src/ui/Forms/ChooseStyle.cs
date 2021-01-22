@@ -47,6 +47,15 @@ namespace Nikse.SubtitleEdit.Forms
                 DialogResult = DialogResult.Cancel;
             }
         }
+        private void ChooseStyle_ResizeEnd(object sender, EventArgs e)
+        {
+            listViewStyles.Columns[listViewStyles.Columns.Count - 1].Width = -2;
+        }
+
+        private void ChooseStyle_Shown(object sender, EventArgs e)
+        {
+            ChooseStyle_ResizeEnd(sender, e);
+        }
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
