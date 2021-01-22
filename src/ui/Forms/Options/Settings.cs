@@ -575,13 +575,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelVideoPlayerPreviewFontName.Text = language.PreviewFontName;
             labelVideoPlayerPreviewFontSize.Text = language.PreviewFontSize;
             checkBoxVideoPlayerPreviewFontBold.Text = language.SubtitleBold;
-            var leftPos = labelVideoPlayerPreviewFontName.Right;
-            if (leftPos < labelVideoPlayerPreviewFontName.Right)
-            {
-                leftPos = labelVideoPlayerPreviewFontSize.Right;
-            }
-            comboBoxVideoPlayerPreviewFontName.Left = leftPos;
-            comboBoxlVideoPlayerPreviewFontSize.Left = leftPos;
             checkBoxVideoPlayerPreviewFontBold.Left = comboBoxlVideoPlayerPreviewFontSize.Right + 7;
 
             checkBoxVideoAutoOpen.Text = language.VideoAutoOpen;
