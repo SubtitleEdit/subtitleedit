@@ -1089,7 +1089,7 @@ namespace Nikse.SubtitleEdit.Forms
             //    }
             //}
 
-            if (index == _subtitleListViewIndex)
+            if (index == _subtitleListViewIndex && _subtitleListViewIndex != -1)
             {
                 // Make history item for rollback (change paragraph back for history + change again)
                 _subtitle.Paragraphs[index] = new Paragraph(beforeParagraph);
