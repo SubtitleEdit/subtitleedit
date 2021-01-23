@@ -4385,7 +4385,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             // 
             this.comboBoxSubtitleFont.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSubtitleFont.FormattingEnabled = true;
-            this.comboBoxSubtitleFont.Location = new System.Drawing.Point(331, 20);
+            this.comboBoxSubtitleFont.Location = new System.Drawing.Point(210, 20);
             this.comboBoxSubtitleFont.Name = "comboBoxSubtitleFont";
             this.comboBoxSubtitleFont.Size = new System.Drawing.Size(188, 21);
             this.comboBoxSubtitleFont.TabIndex = 29;
