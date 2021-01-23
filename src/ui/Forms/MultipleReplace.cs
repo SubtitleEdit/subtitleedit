@@ -114,6 +114,8 @@ namespace Nikse.SubtitleEdit.Forms
             moveToBottomToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.MoveToBottom;
             toolStripMenuItemRename.Text = LanguageSettings.Current.MultipleReplace.RenameGroup;
             deleteToolStripMenuItem1.Text = LanguageSettings.Current.MultipleReplace.Remove;
+            selectAllToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.SelectAll;
+            inverseSelectionToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.Edit.InverseSelection;
 
             radioButtonCaseSensitive.Left = radioButtonNormal.Left + radioButtonNormal.Width + 40;
             radioButtonRegEx.Left = radioButtonCaseSensitive.Left + radioButtonCaseSensitive.Width + 40;
@@ -1305,6 +1307,22 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 listViewFixes.InverseSelection();
                 e.SuppressKeyPress = true;
+            }
+        }
+
+        private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in listViewRules.Items)
+            {
+                item.Checked = true;
+            }
+        }
+
+        private void inverseSelectionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in listViewRules.Items)
+            {
+                item.Checked = !item.Checked;
             }
         }
     }
