@@ -60,6 +60,7 @@
     <OpenOriginalSubtitleFile>Άνοιγμα αρχικού αρχείου υποτίτλου...</OpenOriginalSubtitleFile>
     <PleaseWait>Παρακαλώ, περιμένετε.</PleaseWait>
     <SessionKey>Κλειδί συνεδρίας</SessionKey>
+    <SessionKeyGenerate>Δημιουργία νένου κλειδιού</SessionKeyGenerate>
     <UserName>Όνομα χρήστη</UserName>
     <UserNameAlreadyInUse>Μη διαθέσιμο όνομα</UserNameAlreadyInUse>
     <WebServiceUrl>Διεύθυνση ιστοσελίδας</WebServiceUrl>
@@ -246,20 +247,26 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SetText>Ορισμός κειμένου...</SetText>
     <QuickOcr>Γρήγορο OCR κειμένων (επισκόπηση μόνο)</QuickOcr>
     <ResizeBitmaps>Αλλαγή μεγέθους εικόνων...</ResizeBitmaps>
-    <ChangeBrightness>Αλλαγή φωτεινότητας...</ChangeBrightness>
+    <ChangeBrightness>Προσαρμογή φωτεινότητας...</ChangeBrightness>
+    <ChangeAlpha>Προσαρμογή άλφα...</ChangeAlpha>
     <ResizeBitmapsForSelectedLines>Αλλαγή μεγέθους εικόνων επιλεγμένων γραμμών...</ResizeBitmapsForSelectedLines>
     <ChangeColorForSelectedLines>Αλλαγή χρώματος επιλεγμένων γραμμών...</ChangeColorForSelectedLines>
-    <ChangeBrightnessForSelectedLines>Αλλαγή φωτεινότητας γραμμών...</ChangeBrightnessForSelectedLines>
+    <ChangeBrightnessForSelectedLines>Προσαρμογή φωτεινότητας γραμμών...</ChangeBrightnessForSelectedLines>
+    <ChangeAlphaForSelectedLines>Προσαρμογή άλφα επιλεγμένων γραμμών...</ChangeAlphaForSelectedLines>
     <AlignSelectedLines>Στοίχιση επιλεγμένων γραμμών</AlignSelectedLines>
     <CenterSelectedLines>Κεντράρισμα επιλεγμένων γραμμών (οριζόντια, κράτηση κάθετης θέσης)</CenterSelectedLines>
     <TopAlignSelectedLines>Άνω στοίχιση επιλεγμένων γραμμών (κράτηση οριζόντιας θέσης)</TopAlignSelectedLines>
     <BottomAlignSelectedLines>Κάτω στοίχιση επιλεγμένων γραμμών (κράτηση οριζόντιας θέσης)</BottomAlignSelectedLines>
+    <ToggleForcedSelectedLines>Εναλλαγή "Αναγκαστικοί" επιλεγμένων γραμμών</ToggleForcedSelectedLines>
+    <SelectForcedLines>Επιλογή αναγκαστικών γραμμών</SelectForcedLines>
     <SizeXY>Μέγεθος: {0}χ{1}</SizeXY>
     <SetAspectRatio11>Ορισμός λόγου διαστάσεων 1:1</SetAspectRatio11>
-    <ChangeBrightnessTitle>Αλλαγή φωτεινότητας</ChangeBrightnessTitle>
+    <ChangeBrightnessTitle>Προσαρμογή φωτεινότητας</ChangeBrightnessTitle>
     <BrightnessX>Φωτεινότητα: {0}%</BrightnessX>
     <ResizeTitle>Αλλαγή μεγέθους εικόνων</ResizeTitle>
     <ResizeX>Αλλαγή μεγέθους: {0}%</ResizeX>
+    <ChangeAlphaTitle>Προσαρμογή άλφα</ChangeAlphaTitle>
+    <AlphaX>Άλφα: {0}%</AlphaX>
   </BinEdit>
   <Bookmarks>
     <EditBookmark>Επεξεργασία σημείωσης</EditBookmark>
@@ -292,8 +299,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FrameRateNotChanged>Ο Ρυθμός καρέ είναι ίδιος - τίποτα για μετατροπή</FrameRateNotChanged>
   </ChangeFrameRate>
   <ChangeSpeedInPercent>
-    <Title>Ρύθμιση ταχύτητας σε ποσοστό</Title>
-    <TitleShort>Ρύθμιση ταχύτητας</TitleShort>
+    <Title>Προσαρμογή ταχύτητας σε ποσοστό</Title>
+    <TitleShort>Προσαρμογή ταχύτητας</TitleShort>
     <Info>Αλλαγή ταχύτητας των υποτίτλων σε ποσοστό</Info>
     <Custom>Προσαρμοσμένη</Custom>
     <ToDropFrame>Ρήξη καρέ</ToDropFrame>
@@ -557,7 +564,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <LineHeight>Ύψος γραμμής</LineHeight>
     <BoxSingleLine>Πλαίσιο - μονή γραμμή</BoxSingleLine>
     <BoxMultiLine>Πλαίσιο - πολλαπλή γραμμή</BoxMultiLine>
-    <Forced>Επιβολή</Forced>
+    <Forced>Αναγκαστικοί</Forced>
     <ChooseBackgroundColor>Επιλογή χρώματος φόντου</ChooseBackgroundColor>
     <SaveImageAs>Αποθήκευση εικόνας ως...</SaveImageAs>
     <FcpUseFullPathUrl>Χρήση πλήρης διεύθυνσης url εικόνας για FCP xml</FcpUseFullPathUrl>
@@ -658,6 +665,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixHyphensInDialogs>Διόρθωση παυλών μέσω στυλ διαλόγου: {0}</FixHyphensInDialogs>
     <AddMissingQuotesExample>"Πώς είσαι; -&gt; "Πώς είσαι;"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Προσθήκη εισαγωγικών: {0}</XMissingQuotesAdded>
+    <Fix3PlusLine>Διόρθωση υποτίτλου περισσοτέρων των δύο γραμμών</Fix3PlusLine>
     <Fix3PlusLines>Διόρθωση υποτίτλων περισσοτέρων των δύο γραμμών</Fix3PlusLines>
     <Analysing>Ανάλυση...</Analysing>
     <NothingToFix>Τίποτα για διόρθωση</NothingToFix>
@@ -1245,6 +1253,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <GoogleAndMicrosoftTranslateSelectedLine>Μετάφραση αρχικής γραμμής μέσω Google/Bing</GoogleAndMicrosoftTranslateSelectedLine>
         <TranslateSelectedLines>Μετάφραση γραμμών...</TranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Προσαρμογή διαρκειών γραμμών...</AdjustDisplayDurationForSelectedLines>
+        <ApplyDurationLimitsForSelectedLines>Εφαρμογή ορίων διάρκειας επιλεγμένων γραμμών...</ApplyDurationLimitsForSelectedLines>
         <FixCommonErrorsInSelectedLines>Διόρθωση σφαλμάτων των γραμμών...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Αλλαγή πεζών-κεφαλαίων στις γραμμές...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Αποθήκευση γραμμών ως...</SaveSelectedLines>
@@ -1299,7 +1308,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <GoToSubtitlePositionAndPause>Μετάβαση και παύση</GoToSubtitlePositionAndPause>
       <SetStartTime>Ορισμός έ&amp;ναρξης</SetStartTime>
       <SetEndTimeAndGoToNext>Ο&amp;ρισμός λήξης &amp;&amp; μετάβαση</SetEndTimeAndGoToNext>
-      <AdjustedViaEndTime>Προσάρμοση μέσω χρόνου λήξης {0}</AdjustedViaEndTime>
+      <AdjustedViaEndTime>Προσαρμογή μέσω χρόνου λήξης {0}</AdjustedViaEndTime>
       <SetEndTime>Ορισμός λή&amp;ξης</SetEndTime>
       <SetstartTimeAndOffsetOfRest>Έναρ&amp;ξη και μετατόπιση</SetstartTimeAndOffsetOfRest>
       <SearchTextOnline>Διαδικτυακή αναζήτηση κειμένου</SearchTextOnline>
@@ -1377,9 +1386,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CreateAdjustChangesApplied>Δημιουργία/προσαρμογή γραμμών εφαρμοσμένων αλλαγών</CreateAdjustChangesApplied>
     <SelectedLines>επιλεγμένες γραμμές</SelectedLines>
     <BeforeDisplayTimeAdjustment>Πριν από προσαρμογή χρόνου εμφάνισης</BeforeDisplayTimeAdjustment>
-    <DisplayTimeAdjustedX>Προσαρμοσμένος χρόνος εμφάνισης: {0}</DisplayTimeAdjustedX>
-    <DisplayTimesAdjustedX>Προσαρμοσμένοι χρόνοι εμφάνισης: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Προσαρμοσμένος χρόνος έναρξης: {0}</StarTimeAdjustedX>
+    <DisplayTimeAdjustedX>Χρόνος εμφάνισης προσαρμόστηκε: {0}</DisplayTimeAdjustedX>
+    <DisplayTimesAdjustedX>Χρόνοι εμφάνισης προσαρμόστηκαν: {0}</DisplayTimesAdjustedX>
+    <StarTimeAdjustedX>Χρόνος έναρξης προσαρμόστηκε: {0}</StarTimeAdjustedX>
     <BeforeCommonErrorFixes>Πριν από διορθώσεις σφαλμάτων</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Διορθώσεις σφαλμάτων επιλεγμένων γραμμών</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Σφάλματα διορθώθηκαν</CommonErrorsFixed>
@@ -1463,7 +1472,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CasingCompleteMessageOnlyNames>Σύνολο γραμμών με αλλαγή πεζών-κεφαλαίων με ονόματα: {0}/{1}</CasingCompleteMessageOnlyNames>
     <CasingCompleteMessage>Σύνολο γραμμών με αλλαγή πεζών-κεφαλαίων: {0}/{1}, αλλαγή πεζών-κεφαλαίων με ονόματα: {2}</CasingCompleteMessage>
     <BeforeChangeFrameRate>Πριν από αλλαγή ρυθμού καρέ</BeforeChangeFrameRate>
-    <BeforeAdjustSpeedInPercent>Πριν ρύθμισης της ταχύτητας σε ποσοστό</BeforeAdjustSpeedInPercent>
+    <BeforeAdjustSpeedInPercent>Πριν από προσαρμογή ταχύτητας σε ποσοστό</BeforeAdjustSpeedInPercent>
     <FrameRateChangedFromXToY>Αλλαγή ρυθμού καρέ από {0} σε {1}</FrameRateChangedFromXToY>
     <IdxFileNotFoundWarning>Αδυναμία εύρεσης {0}. Εισαγωγή αρχείου VobSub;</IdxFileNotFoundWarning>
     <InvalidVobSubHeader>Μη έγκυρη κεφαλίδα του αρχείου VobSub: {0}</InvalidVobSubHeader>
@@ -2127,12 +2136,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FoucsSetVideoPosition>Εστίαση ορισμού θέσης βίντεο</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Εναλλαγή αγκύστρωσης/απαγκύστρωσης των στοιχείων ελέγχου βίντεο</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Ορισμός τέλους, προσθήκη νέου και μετάβαση</CreateSetEndAddNewAndGoToNew>
-    <AdjustViaEndAutoStart>Προσαρμογή μέσω τελικής θέσης</AdjustViaEndAutoStart>
-    <AdjustViaEndAutoStartAndGoToNext>Προσαρμογή μέσω τελικής θέσης και επόμενο</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustViaEndAutoStart>Προσαρμογή μέσω θέσης λήξης</AdjustViaEndAutoStart>
+    <AdjustViaEndAutoStartAndGoToNext>Προσαρμογή μέσω θέσης λήξης και επόμενο</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustSetEndMinusGapAndStartNextHere>Ορισμός λήξης πλην κενού, μετάβαση σε επόμενο και έναρξη εδώ</AdjustSetEndMinusGapAndStartNextHere>
     <AdjustSetEndTimeAndGoToNext>Ορισμός λήξης και επόμενο</AdjustSetEndTimeAndGoToNext>
     <AdjustSetEndTimeAndPause>Ορισμός λήξης και παύση</AdjustSetEndTimeAndPause>
-    <AdjustSetStartAutoDurationAndGoToNext>Προσαρμογή μέσω αρχικής θέσης και επόμενο</AdjustSetStartAutoDurationAndGoToNext>
-    <AdjustSetEndNextStartAndGoToNext>Ορισμός λήξης, έναρξη επομένου εκκίνηση και επόμενο</AdjustSetEndNextStartAndGoToNext>
+    <AdjustSetStartAutoDurationAndGoToNext>Ορισμός έναρξης, αυτόματη διάρκεια και επόμενο</AdjustSetStartAutoDurationAndGoToNext>
+    <AdjustSetEndNextStartAndGoToNext>Ορισμός λήξης, έναρξη επόμενου και επόμενο</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>Κάτω βέλος = ορισμός έναρξης, Πάνω βέλος = ορισμός λήξης και μετάβαση σε επόμενο</AdjustStartDownEndUpAndGoToNext>
     <AdjustSetStartAndEndOfPrevious>Ορισμός έναρξης και λήξης προηγούμενου (πλην ελάχιστο κενό)</AdjustSetStartAndEndOfPrevious>
     <AdjustSetStartAndEndOfPreviousAndGoToNext>Ορισμός έναρξης και λήξης προηγούμενου και μετάβαση σε επόμενο (πλην ελάχιστο κενό)</AdjustSetStartAndEndOfPreviousAndGoToNext>
@@ -2153,10 +2163,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AdjustSetStartTimeKeepDuration>Ορισμός έναρξης, διατήρηση διάρκειας</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Ορισμός τέλους, μετατόπιση υπολοίπων</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Ορισμός τέλους, μετατόπιση υπολοίπων και μετάβαση σε επόμενο</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustSnapStartToNextSceneChange>Σπάσιμο έναρξης γραμμής σε επόμενη αλλαγή σκηνής</AdjustSnapStartToNextSceneChange>
-    <AdjustSnapStartToNextSceneChangeWithGap>Σπάσιμο έναρξης γραμμής σε επόμενη αλλαγή σκηνής με ελάχιστο κενό</AdjustSnapStartToNextSceneChangeWithGap>
-    <AdjustSnapEndToPreviousSceneChange>Σπάσιμο έναρξης γραμμής σε προηγούμενη αλλαγή σκηνής</AdjustSnapEndToPreviousSceneChange>
-    <AdjustSnapEndToPreviousSceneChangeWithGap>Σπάσιμο έναρξης γραμμής σε προηγούμενη αλλαγή σκηνής με ελάχιστο κενό</AdjustSnapEndToPreviousSceneChangeWithGap>
+    <AdjustSnapStartToNextSceneChange>Κλείδωμα έναρξης γραμμής σε επόμενη αλλαγή σκηνής</AdjustSnapStartToNextSceneChange>
+    <AdjustSnapStartToNextSceneChangeWithGap>Κλείδωμα έναρξης γραμμής σε επόμενη αλλαγή σκηνής με ελάχιστο κενό</AdjustSnapStartToNextSceneChangeWithGap>
+    <AdjustSnapEndToPreviousSceneChange>Κλείδωμα έναρξης γραμμής σε προηγούμενη αλλαγή σκηνής</AdjustSnapEndToPreviousSceneChange>
+    <AdjustSnapEndToPreviousSceneChangeWithGap>Κλείδωμα έναρξης γραμμής σε προηγούμενη αλλαγή σκηνής με ελάχιστο κενό</AdjustSnapEndToPreviousSceneChangeWithGap>
     <AdjustExtendToNextSceneChange>Επέκταση γραμμών μέχρι την επόμενη αλλαγή σκηνής (ή επόμενο υπότιτλο)</AdjustExtendToNextSceneChange>
     <AdjustExtendToNextSceneChangeWithGap>Επέκταση γραμμών σε επόμενη αλλαγή σκηνής με ελάχιστο κενό (ή επόμενο υπότιτλο)</AdjustExtendToNextSceneChangeWithGap>
     <AdjustExtendToPreviousSceneChange>Επέκταση γραμμών μέχρι την προηγούμενη αλλαγή σκηνής (ή προηγούμενο υπότιτλο)</AdjustExtendToPreviousSceneChange>
@@ -2410,7 +2420,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WhiteSpaceCheckReport>Μη έγκυρο κενό στη στήλη {0}</WhiteSpaceCheckReport>
     <ReportPrompt>Προβολή αναφοράς εδώ: {0}.</ReportPrompt>
     <OpenReportInFolder>Άνοιγμα φακέλου αναφοράς</OpenReportInFolder>
-    <FoundXIssues>Ο έλεγχος ποιότητας Netflix εντόπισε {0:#,##0} προβλήματα.</FoundXIssues>
+    <FoundXIssues>Ο έλεγχος ποιότητας Netflix εντόπισε {0:#,###} προβλήματα.</FoundXIssues>
     <CheckOk>Χωρίς προβλήματα</CheckOk>
     <MaximumXCharsPerSecond>Μέγιστοι {0} χαρακτήρες/ δευτ (εξαίρεση κενών)</MaximumXCharsPerSecond>
     <MaximumLineLength>Μέγιστο μήκος γραμμής ({0})</MaximumLineLength>
@@ -2677,7 +2687,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XImagesSavedInY>{0} εικόνες αποθηκεύτηκαν στο {1}</XImagesSavedInY>
     <DictionaryX>Λεξικό: {0}</DictionaryX>
     <RightToLeft>Δεξιά προς αριστερά</RightToLeft>
-    <ShowOnlyForcedSubtitles>Εμφάνιση μόνο υποχρεωτικών υποτίτλων</ShowOnlyForcedSubtitles>
+    <ShowOnlyForcedSubtitles>Εμφάνιση μόνο αναγκαστικών υποτίτλων</ShowOnlyForcedSubtitles>
     <UseTimeCodesFromIdx>Χρήση κωδικών χρόνου από αρχείο .idx</UseTimeCodesFromIdx>
     <NoMatch>&lt;Καμία αντιστοιχία&gt;</NoMatch>
     <AutoTransparentBackground>Αυτόματη διαφάνεια φόντου</AutoTransparentBackground>
