@@ -784,11 +784,11 @@
     <Compile Include="Forms\Ocr\OCRSpellCheck.Designer.cs">
       <DependentUpon>OCRSpellCheck.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\RemoveTextFromHearImpaired.cs">
+    <Compile Include="Forms\RemoveTextForHearImpaired.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\RemoveTextFromHearImpaired.Designer.cs">
-      <DependentUpon>RemoveTextFromHearImpaired.cs</DependentUpon>
+    <Compile Include="Forms\RemoveTextForHearImpaired.Designer.cs">
+      <DependentUpon>RemoveTextForHearImpaired.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ReplaceDialog.cs">
       <SubType>Form</SubType>
@@ -1529,8 +1529,8 @@
     <EmbeddedResource Include="Forms\MergeShortLines.resx">
       <DependentUpon>MergeShortLines.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\RemoveTextFromHearImpaired.resx">
-      <DependentUpon>RemoveTextFromHearImpaired.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\RemoveTextForHearImpaired.resx">
+      <DependentUpon>RemoveTextForHearImpaired.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ReplaceDialog.resx">

@@ -310,8 +310,9 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Change casing - Names";
-            this.Shown += new System.EventHandler(this.ChangeCasingNames_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ChangeCasingNames_KeyDown);
+            this.ResizeEnd += new System.EventHandler(this.ChangeCasingNames_ResizeEnd);
+            this.Shown += new System.EventHandler(this.ChangeCasingNames_Shown);
             this.groupBoxNames.ResumeLayout(false);
             this.groupBoxNames.PerformLayout();
             this.groupBoxLinesFound.ResumeLayout(false);

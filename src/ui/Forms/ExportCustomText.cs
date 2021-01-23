@@ -337,6 +337,16 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void ExportCustomText_ResizeEnd(object sender, EventArgs e)
+        {
+            listViewTemplates.Columns[listViewTemplates.Columns.Count - 1].Width = -2;
+        }
+
+        private void ExportCustomText_Shown(object sender, EventArgs e)
+        {
+            ExportCustomText_ResizeEnd(sender, e);
+        }
+
         private void buttonDelete_Click(object sender, EventArgs e)
         {
             Delete();

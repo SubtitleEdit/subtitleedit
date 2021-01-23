@@ -139,6 +139,8 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "History (for undo)";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormShowHistory_KeyDown);
+            this.ResizeEnd += new System.EventHandler(this.FormShowHistory_ResizeEnd);
+            this.Shown += new System.EventHandler(this.FormShowHistory_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -324,7 +324,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void NetflixFixErrors_Shown(object sender, EventArgs e)
         {
-            NetflixFixErrors_ResizeEnd(this, EventArgs.Empty);
+            NetflixFixErrors_ResizeEnd(sender, e);
         }
     }
 }

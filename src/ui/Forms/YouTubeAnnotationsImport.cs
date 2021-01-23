@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -50,6 +51,16 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 DialogResult = DialogResult.Cancel;
             }
+        }
+
+        private void YouTubeAnnotationsImport_ResizeEnd(object sender, EventArgs e)
+        {
+            listViewFixes.Columns[listViewFixes.Columns.Count - 1].Width = -2;
+        }
+
+        private void YouTubeAnnotationsImport_Shown(object sender, EventArgs e)
+        {
+            YouTubeAnnotationsImport_ResizeEnd(sender, e);
         }
     }
 }

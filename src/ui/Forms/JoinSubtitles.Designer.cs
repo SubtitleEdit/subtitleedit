@@ -250,9 +250,9 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Join subtitles";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.JoinSubtitles_FormClosing);
-            this.Shown += new System.EventHandler(this.JoinSubtitles_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.JoinSubtitles_KeyDown);
             this.Resize += new System.EventHandler(this.JoinSubtitles_Resize);
+            this.Shown += new System.EventHandler(this.JoinSubtitles_Shown);
             this.groupBoxPreview.ResumeLayout(false);
             this.groupBoxPreview.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAddMs)).EndInit();
