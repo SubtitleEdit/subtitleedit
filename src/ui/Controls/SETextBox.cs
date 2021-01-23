@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Controls
             _uiTextBox = null;
             if (useSyntaxColoring)
             {
-                _uiTextBox = new AdvancedTextBox{ BorderStyle = BorderStyle.None, Multiline = true };
+                _uiTextBox = new AdvancedTextBox { BorderStyle = BorderStyle.None, Multiline = true };
                 InitializeBackingControl(_uiTextBox);
                 UpdateFontAndColors(_uiTextBox);
             }
