@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Controls
         private string _currentDictionary;
         private string _uiTextBoxOldText;
 
-        private static readonly char[] SplitChars = { ' ', '.', ',', '?', '!', ':', ';', '"', '“', '”', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n', '\b', '¿', '¡', '…', '—', '–', '♪', '♫', '„', '«', '»', '‹', '›', '؛', '،', '؟' };
+        private static readonly char[] SplitChars = { ' ', '.', ',', '?', '!', ':', ';', '"', '“', '”', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '¿', '¡', '…', '—', '–', '♪', '♫', '„', '«', '»', '‹', '›', '؛', '،', '؟' };
 
         public int CurrentLineIndex { get; set; }
         public string CurrentLanguage { get; set; }
@@ -65,9 +65,12 @@ namespace Nikse.SubtitleEdit.Controls
             SetTextPosInRtbIfCentered();
 
             TextChanged += TextChangedHighlight;
-            KeyPress += UiTextBox_KeyPress;
-            KeyDown += UiTextBox_KeyDown;
-            MouseDown += UiTextBox_MouseDown;
+            if (_isLiveSpellCheckEnabled)
+            {
+                KeyPress += UiTextBox_KeyPress;
+                KeyDown += UiTextBox_KeyDown;
+                MouseDown += UiTextBox_MouseDown;
+            }
 
             HandleCreated += (sender, args) =>
             {
@@ -79,7 +82,7 @@ namespace Nikse.SubtitleEdit.Controls
                 var charIndex = GetCharIndexFromPosition(args.Location);
                 if (Configuration.Settings.General.CenterSubtitleInTextBox &&
                     _mouseMoveSelectionLength == 0 &&
-                    (charIndex == 0 || charIndex >= 0 && Text[charIndex - 1] == '\n'))
+                    (charIndex == 0 || charIndex >= 0 && base.Text[charIndex - 1] == '\n'))
                 {
                     SelectionLength = 0;
                 }
@@ -216,7 +219,7 @@ namespace Nikse.SubtitleEdit.Controls
                     return 0;
                 }
 
-                var text = Text;
+                var text = base.Text;
                 var extra = 0;
                 var start = SelectionStart;
                 for (int i = start; i < target + start && i < text.Length; i++)
@@ -238,7 +241,18 @@ namespace Nikse.SubtitleEdit.Controls
                     return;
                 }
 
-                base.SelectionLength = GetIndexWithLineBreak(value);
+                var text = base.Text;
+                var extra = 0;
+                var start = SelectionStart;
+                for (int i = start; i < target + start && i < text.Length; i++)
+                {
+                    if (text[i] == '\n')
+                    {
+                        extra++;
+                    }
+                }
+
+                base.SelectionLength = target - extra;
             }
         }
 
@@ -256,7 +270,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private int GetIndexWithLineBreak(int index)
         {
-            var text = Text;
+            var text = base.Text;
             var extra = 0;
             for (int i = 0; i < index && i < text.Length; i++)
             {
@@ -297,6 +311,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void TagsChangedCheck()
         {
+            // Request spell check if there is a change in tags to update highlighting indices.
             if (!string.IsNullOrEmpty(_uiTextBoxOldText)
                 && HtmlUtil.RemoveHtmlTags(_uiTextBoxOldText, true) == HtmlUtil.RemoveHtmlTags(Text, true))
             {
@@ -311,13 +326,16 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _checkRtfChange = false;
 
-                // Request spell check if there is a change in tags to update highlighting indices.
                 if (_isLiveSpellCheckEnabled)
                 {
                     TagsChangedCheck();
+                    DoFormattingActionOnRtb(() =>
+                    {
+                        HighlightHtmlText();
+                        HighlightSpellCheckWords();
+                    });
                 }
-
-                if (ContainsTags() || IsSpellCheckRequested)
+                else if (ContainsTags())
                 {
                     DoFormattingActionOnRtb(HighlightHtmlText);
                 }
@@ -438,21 +456,6 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 i++;
-            }
-
-            if (IsSpellCheckRequested)
-            {
-                DoLiveSpellCheck();
-                if (_wrongWords?.Count > 0)
-                {
-                    foreach (var wrongWord in _wrongWords)
-                    {
-                        Select(GetIndexWithLineBreak(wrongWord.Index), wrongWord.Length);
-                        SelectionColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
-                    }
-                }
-
-                IsSpellCheckRequested = false;
             }
         }
 
@@ -875,12 +878,15 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void UiTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (_isLiveSpellCheckEnabled && (SplitChars.Contains(e.KeyChar)
-                && SelectionStart == Text.Length || SelectionStart != Text.Length))
+            if (_isLiveSpellCheckEnabled)
             {
-                IsSpellCheckRequested = true;
-                if (e.KeyChar == '\b' || e.KeyChar == '\r' || e.KeyChar == '\n')
+                if (SplitChars.Contains(e.KeyChar) && SelectionStart == Text.Length || SelectionStart != Text.Length)
                 {
+                    IsSpellCheckRequested = true;
+                }
+                else if (e.KeyChar == '\b' && SelectionStart != Text.Length || e.KeyChar == '\r' || e.KeyChar == '\n')
+                {
+                    IsSpellCheckRequested = true;
                     TextChangedHighlight(this, EventArgs.Empty);
                 }
             }
@@ -986,6 +992,24 @@ namespace Nikse.SubtitleEdit.Controls
                     IsSpellCheckRequested = true;
                     TextChangedHighlight(this, EventArgs.Empty);
                 }
+            }
+        }
+
+        private void HighlightSpellCheckWords()
+        {
+            if (_isLiveSpellCheckEnabled)
+            {
+                DoLiveSpellCheck();
+                if (_wrongWords?.Count > 0)
+                {
+                    foreach (var wrongWord in _wrongWords)
+                    {
+                        Select(GetIndexWithLineBreak(wrongWord.Index), wrongWord.Length);
+                        SelectionColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                    }
+                }
+
+                IsSpellCheckRequested = false;
             }
         }
 
