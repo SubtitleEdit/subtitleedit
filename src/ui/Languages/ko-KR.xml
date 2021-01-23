@@ -60,6 +60,7 @@
     <OpenOriginalSubtitleFile>원본 자막 파일 열기</OpenOriginalSubtitleFile>
     <PleaseWait>잠시만 기다려 주십시오...</PleaseWait>
     <SessionKey>세션 키</SessionKey>
+    <SessionKeyGenerate>새 키 생성</SessionKeyGenerate>
     <UserName>사용자</UserName>
     <UserNameAlreadyInUse>사용자 이름이 이미 사용되고 있습니다!</UserNameAlreadyInUse>
     <WebServiceUrl>웹 서비스</WebServiceUrl>
@@ -243,20 +244,26 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SetText>텍스트 설정...</SetText>
     <QuickOcr>빠른 OCR 텍스트(개요용)</QuickOcr>
     <ResizeBitmaps>이미지 크기 조정...</ResizeBitmaps>
-    <ChangeBrightness>밝기 변경...</ChangeBrightness>
+    <ChangeBrightness>밝기 조정...</ChangeBrightness>
+    <ChangeAlpha>알파 조정...</ChangeAlpha>
     <ResizeBitmapsForSelectedLines>선택한 줄의 이미지 크기 조정...</ResizeBitmapsForSelectedLines>
     <ChangeColorForSelectedLines>선택한 줄의 색상 변경...</ChangeColorForSelectedLines>
-    <ChangeBrightnessForSelectedLines>선택한 줄의 밝기 변경...</ChangeBrightnessForSelectedLines>
+    <ChangeBrightnessForSelectedLines>선택한 줄의 밝기 조정...</ChangeBrightnessForSelectedLines>
+    <ChangeAlphaForSelectedLines>선택한 줄에 대한 알파 조정...</ChangeAlphaForSelectedLines>
     <AlignSelectedLines>선택한 줄 정렬</AlignSelectedLines>
     <CenterSelectedLines>중앙 정렬(수평, 수직 위치 유지)</CenterSelectedLines>
     <TopAlignSelectedLines>상단 정렬(수평 위치 유지)</TopAlignSelectedLines>
     <BottomAlignSelectedLines>하단 정렬(수평 위치 유지)</BottomAlignSelectedLines>
+    <ToggleForcedSelectedLines>선택한 줄의 "적용됨" 전환</ToggleForcedSelectedLines>
+    <SelectForcedLines>적용된 줄 선택</SelectForcedLines>
     <SizeXY>크기: {0}x{1}</SizeXY>
     <SetAspectRatio11>가로세로 비율 1:1 설정</SetAspectRatio11>
-    <ChangeBrightnessTitle>밝기 변경</ChangeBrightnessTitle>
+    <ChangeBrightnessTitle>밝기 조정</ChangeBrightnessTitle>
     <BrightnessX>밝기: {0}%</BrightnessX>
     <ResizeTitle>이미지 크기 조정</ResizeTitle>
     <ResizeX>크기 조정: {0}%</ResizeX>
+    <ChangeAlphaTitle>알파 조정</ChangeAlphaTitle>
+    <AlphaX>알파: {0}%</AlphaX>
   </BinEdit>
   <Bookmarks>
     <EditBookmark>책갈피 편집</EditBookmark>
@@ -654,6 +661,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <FixHyphensInDialogs>스타일을 통해 대화안의 대시(-) 수정: {0}</FixHyphensInDialogs>
     <AddMissingQuotesExample>"힘들었지? -&gt; "힘들었지?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>누락된 따옴표 추가: {0}</XMissingQuotesAdded>
+    <Fix3PlusLine>두 줄 이상의 자막 수정</Fix3PlusLine>
     <Fix3PlusLines>3줄 이상의 자막 수정하기</Fix3PlusLines>
     <Analysing>분석 중 . . .</Analysing>
     <NothingToFix>수정할 곳이 없습니다:</NothingToFix>
@@ -1078,7 +1086,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <SplitLongLines>긴 줄 분할하기</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>자막 사이의 최소 간격 설정...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>정렬 기준</SortBy>
-        <NetflixQualityCheck>Netflix 품질 검사...</NetflixQualityCheck>
+        <NetflixQualityCheck>넷플릭스 품질 검사...</NetflixQualityCheck>
         <Number>번호 순</Number>
         <StartTime>시작 시간</StartTime>
         <EndTime>종료 시간</EndTime>
@@ -1172,7 +1180,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <RemoveTextForHi>청각 장애인용 텍스트 삭제</RemoveTextForHi>
         <VisualSync>시각 동기화</VisualSync>
         <SpellCheck>맞춤법 검사</SpellCheck>
-        <NetflixQualityCheck>Netflix 품질 검사</NetflixQualityCheck>
+        <NetflixQualityCheck>넷플릭스 품질 검사</NetflixQualityCheck>
         <Settings>환경 설정</Settings>
         <Help>도움말</Help>
         <ShowHideWaveform>파형 표시 | 숨김</ShowHideWaveform>
@@ -1245,6 +1253,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <GoogleAndMicrosoftTranslateSelectedLine>Google/Microsoft 번역</GoogleAndMicrosoftTranslateSelectedLine>
         <TranslateSelectedLines>선택한 줄 번역...</TranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>표시시간 조정...</AdjustDisplayDurationForSelectedLines>
+        <ApplyDurationLimitsForSelectedLines>선택한 줄의 표시시간 제한 적용...</ApplyDurationLimitsForSelectedLines>
         <FixCommonErrorsInSelectedLines>일반 오류 수정...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>대/소문자 바꾸기</ChangeCasingForSelectedLines>
         <SaveSelectedLines>선택한 줄 저장...</SaveSelectedLines>
@@ -1924,7 +1933,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Replace>바꾸기</Replace>
     <VisualSync>시각 동기화</VisualSync>
     <SpellCheck>맞춤법</SpellCheck>
-    <NetflixQualityCheck>Netflix 품질 검사</NetflixQualityCheck>
+    <NetflixQualityCheck>넷플릭스 품질 검사</NetflixQualityCheck>
     <SettingsName>환경 설정</SettingsName>
     <ToggleBookmarks>책갈피 전환</ToggleBookmarks>
     <ToggleBookmarksWithComment>책갈피 전환 - 설명 추가</ToggleBookmarksWithComment>
@@ -2129,6 +2138,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <CreateSetEndAddNewAndGoToNew>끝 지점과 새로 추가할 지점을 정하고 새 지점으로 이동</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>끝 지점을 통해 조정</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>끝 지점을 통해 조정하고 다음으로 이동</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustSetEndMinusGapAndStartNextHere>끝 지점의 음수 간격 조정, 다음으로 이동하고 여기에서 다음 시작</AdjustSetEndMinusGapAndStartNextHere>
     <AdjustSetEndTimeAndGoToNext>끝 지점 정하고 다음으로 이동</AdjustSetEndTimeAndGoToNext>
     <AdjustSetEndTimeAndPause>끝 지점 정하고 일시 중지</AdjustSetEndTimeAndPause>
     <AdjustSetStartAutoDurationAndGoToNext>시작 지점과 표시시간을 정하고 다음으로 이동</AdjustSetStartAutoDurationAndGoToNext>
@@ -2413,8 +2423,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <WhiteSpaceCheckReport>{0} 열에 잘못된 공백이 있습니다.</WhiteSpaceCheckReport>
     <ReportPrompt>여기 전체 보고서를 참조하십시오: {0}.</ReportPrompt>
     <OpenReportInFolder>폴더에서 보고서 열기</OpenReportInFolder>
-    <FoundXIssues>Netflix 품질 검사에서 {0:#,##0} 문제가 발견되었습니다.</FoundXIssues>
-    <CheckOk>Netflix 품질 검사 OK :)</CheckOk>
+    <FoundXIssues>넷플릭스 품질 검사에서 {0:#,##0} 문제가 발견되었습니다.</FoundXIssues>
+    <CheckOk>넷플릭스 품질 검사 OK :)</CheckOk>
     <MaximumXCharsPerSecond>초당 최대 문자수(공백 포함): {0} </MaximumXCharsPerSecond>
     <MaximumLineLength>최대 줄 길이: ({0})</MaximumLineLength>
     <MinimumDuration>최소 표시시간: 5/6 초 (833 ms)</MinimumDuration>
