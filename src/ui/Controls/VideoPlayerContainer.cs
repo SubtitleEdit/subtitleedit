@@ -437,7 +437,17 @@ namespace Nikse.SubtitleEdit.Controls
                             }
                         }
 
-                        subtitle.Header = AdvancedSubStationAlpha.DefaultHeader;
+                        subtitle.Header = @"[Script Info]
+ScriptType: v4.00+
+Collisions: Normal
+PlayDepth: 0
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Default," + Configuration.Settings.General.VideoPlayerPreviewFontName + @"," + Configuration.Settings.General.VideoPlayerPreviewFontSize + @",&H00FFFFFF,&H0300FFFF,&H00000000,&H02000000," + (Configuration.Settings.General.VideoPlayerPreviewFontBold ? "-1" : "0") + @",0,0,0,100,100,0,0,1,2,1,2,10,10,10,1
+
+[Events]";
+
                         if (oldSub.Header != null && oldSub.Header.Length > 20 && oldSub.Header.Substring(3, 3) == "STL")
                         {
                             subtitle.Header = subtitle.Header.Replace("Style: Default,", "Style: Box,arial,20,&H00FFFFFF,&H0300FFFF,&H00000000,&H02000000,0,0,0,0,100,100,0,0,3,2,0,2,10,10,10,1" +
@@ -1759,7 +1769,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (VideoPlayer != null)
             {
-                _currentPositionToolTip.Hide(_pictureBoxProgressbarBackground); 
+                _currentPositionToolTip.Hide(_pictureBoxProgressbarBackground);
             }
         }
 
@@ -1776,7 +1786,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (VideoPlayer != null)
             {
-                _currentPositionToolTip.Hide(_pictureBoxProgressBar); 
+                _currentPositionToolTip.Hide(_pictureBoxProgressBar);
             }
         }
 
