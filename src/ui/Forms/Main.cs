@@ -4906,6 +4906,13 @@ namespace Nikse.SubtitleEdit.Forms
 
                 try
                 { // can have some problems with fonts...
+                    textBoxListViewText.BackColor = Configuration.Settings.General.SubtitleBackgroundColor;
+                    textBoxListViewTextOriginal.BackColor = Configuration.Settings.General.SubtitleBackgroundColor;
+                    textBoxListViewText.ForeColor = Configuration.Settings.General.SubtitleBackgroundColor;
+                    textBoxListViewTextOriginal.ForeColor = Configuration.Settings.General.SubtitleBackgroundColor;
+                    textBoxListViewText.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
+                    textBoxListViewTextOriginal.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
+
                     UiUtil.InitializeSubtitleFont(textBoxListViewText);
                     UiUtil.InitializeSubtitleFont(textBoxListViewTextOriginal);
                     UiUtil.InitializeSubtitleFont(textBoxSource);
