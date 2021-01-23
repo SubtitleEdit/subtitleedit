@@ -373,10 +373,9 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Split";
-            this.Shown += new System.EventHandler(this.Split_Shown);
-            this.ResizeEnd += new System.EventHandler(this.Split_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Split_KeyDown);
-            this.Resize += new System.EventHandler(this.Split_Resize);
+            this.ResizeEnd += new System.EventHandler(this.Split_ResizeEnd);
+            this.Shown += new System.EventHandler(this.Split_Shown);
             this.groupBoxSplitOptions.ResumeLayout(false);
             this.groupBoxSplitOptions.PerformLayout();
             this.groupBoxSubtitleInfo.ResumeLayout(false);

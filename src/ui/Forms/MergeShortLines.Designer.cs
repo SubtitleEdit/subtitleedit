@@ -272,8 +272,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "MergeShortLines";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MergeShortLines_FormClosing);
-            this.Shown += new System.EventHandler(this.MergeShortLines_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MergeShortLines_KeyDown);
+            this.ResizeEnd += new System.EventHandler(this.MergeShortLines_ResizeEnd);
+            this.Shown += new System.EventHandler(this.MergeShortLines_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharacters)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxMillisecondsBetweenLines)).EndInit();
             this.groupBoxLinesFound.ResumeLayout(false);

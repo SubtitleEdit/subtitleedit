@@ -175,6 +175,16 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void AutoBreakUnbreakLines_ResizeEnd(object sender, EventArgs e)
+        {
+            listViewFixes.Columns[listViewFixes.Columns.Count - 1].Width = -2;
+        }
+
+        private void AutoBreakUnbreakLines_Shown(object sender, EventArgs e)
+        {
+            AutoBreakUnbreakLines_ResizeEnd(sender, e);
+        }
+
         private void AddToListView(Paragraph p, string newText)
         {
             var item = new ListViewItem(string.Empty) { Tag = p, Checked = true };

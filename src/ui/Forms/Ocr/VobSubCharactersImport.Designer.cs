@@ -207,6 +207,7 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.ResizeEnd += new System.EventHandler(this.VobSubCharactersImport_ResizeEnd);
             this.Shown += new System.EventHandler(this.VobSubCharactersImport_Shown);
             this.groupBoxCurrentImage.ResumeLayout(false);
             this.groupBoxCurrentImage.PerformLayout();

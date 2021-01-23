@@ -322,8 +322,9 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Split long lines";
-            this.Shown += new System.EventHandler(this.SplitLongLines_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SplitLongLines_KeyDown);
+            this.ResizeEnd += new System.EventHandler(this.SplitLongLines_ResizeEnd);
+            this.Shown += new System.EventHandler(this.SplitLongLines_Shown);
             this.groupBoxLinesFound.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSingleLineMaxCharacters)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLineMaxCharacters)).EndInit();

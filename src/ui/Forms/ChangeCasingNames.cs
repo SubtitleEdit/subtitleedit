@@ -253,8 +253,15 @@ namespace Nikse.SubtitleEdit.Forms
             GeneratePreview();
         }
 
+        private void ChangeCasingNames_ResizeEnd(object sender, EventArgs e)
+        {
+            listViewFixes.Columns[listViewFixes.Columns.Count - 1].Width = -2;
+            listViewNames.Columns[listViewNames.Columns.Count - 1].Width = -2;
+        }
+
         private void ChangeCasingNames_Shown(object sender, EventArgs e)
         {
+            ChangeCasingNames_ResizeEnd(sender, e);
             listViewNames.ItemChecked += ListViewNamesItemChecked;
         }
 

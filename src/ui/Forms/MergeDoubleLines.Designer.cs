@@ -227,9 +227,9 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Merge lines with same text";
-            this.Shown += new System.EventHandler(this.MergeDoubleLines_Shown);
-            this.ResizeEnd += new System.EventHandler(this.MergeDoubleLines_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MergeDoubleLines_KeyDown);
+            this.ResizeEnd += new System.EventHandler(this.MergeDoubleLines_ResizeEnd);
+            this.Shown += new System.EventHandler(this.MergeDoubleLines_Shown);
             this.groupBoxLinesFound.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxMillisecondsBetweenLines)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);

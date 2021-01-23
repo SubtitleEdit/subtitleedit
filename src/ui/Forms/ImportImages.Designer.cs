@@ -197,6 +197,8 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ImportImages";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ImportImages_KeyDown);
+            this.ResizeEnd += new System.EventHandler(this.ImportImages_ResizeEnd);
+            this.Shown += new System.EventHandler(this.ImportImages_Shown);
             this.groupBoxInput.ResumeLayout(false);
             this.groupBoxInput.PerformLayout();
             this.contextMenuStrip1.ResumeLayout(false);

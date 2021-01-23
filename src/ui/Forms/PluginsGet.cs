@@ -411,7 +411,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void PluginsGet_Shown(object sender, EventArgs e)
         {
-            PluginsGet_ResizeEnd(this, EventArgs.Empty);
+            PluginsGet_ResizeEnd(sender, e);
         }
 
         private void buttonRemove_Click(object sender, EventArgs e)

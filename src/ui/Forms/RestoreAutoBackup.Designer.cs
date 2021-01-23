@@ -155,10 +155,9 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Restore auto-backup";
-            this.Shown += new System.EventHandler(this.RestoreAutoBackup_Shown);
-            this.ResizeEnd += new System.EventHandler(this.RestoreAutoBackup_ResizeEnd);
-            this.SizeChanged += new System.EventHandler(this.RestoreAutoBackup_SizeChanged);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.RestoreAutoBackup_KeyDown);
+            this.ResizeEnd += new System.EventHandler(this.RestoreAutoBackup_ResizeEnd);
+            this.Shown += new System.EventHandler(this.RestoreAutoBackup_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

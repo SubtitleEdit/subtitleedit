@@ -1323,8 +1323,15 @@ namespace Nikse.SubtitleEdit.Forms
             listViewInputFiles.Items.Clear();
         }
 
+        private void ImportText_ResizeEnd(object sender, EventArgs e)
+        {
+            listViewInputFiles.Columns[listViewInputFiles.Columns.Count - 1].Width = -2;
+        }
+
         private void ImportText_Shown(object sender, EventArgs e)
         {
+            ImportText_ResizeEnd(sender, e);
+
             if (textBoxText.Visible && textBoxText.Text.Length > 20)
             {
                 buttonOK.Focus();

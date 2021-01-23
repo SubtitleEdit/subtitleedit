@@ -160,6 +160,8 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Choose subtitle from Matroska file";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormMatroskaSubtitleChooser_KeyDown);
+            this.ResizeEnd += new System.EventHandler(this.FormMatroskaSubtitleChooser_ResizeEnd);
+            this.Shown += new System.EventHandler(this.FormMatroskaSubtitleChooser_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
 
