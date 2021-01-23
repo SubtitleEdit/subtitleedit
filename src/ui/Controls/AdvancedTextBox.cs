@@ -306,9 +306,6 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private bool ContainsTags() =>
-            Text.Length != HtmlUtil.RemoveHtmlTags(Text, true).Length;
-
         private void TagsChangedCheck()
         {
             // Request spell check if there is a change in tags to update highlighting indices.
@@ -335,7 +332,7 @@ namespace Nikse.SubtitleEdit.Controls
                         HighlightSpellCheckWords();
                     });
                 }
-                else if (ContainsTags())
+                else
                 {
                     DoFormattingActionOnRtb(HighlightHtmlText);
                 }
@@ -997,20 +994,17 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void HighlightSpellCheckWords()
         {
-            if (_isLiveSpellCheckEnabled)
+            DoLiveSpellCheck();
+            if (_wrongWords?.Count > 0)
             {
-                DoLiveSpellCheck();
-                if (_wrongWords?.Count > 0)
+                foreach (var wrongWord in _wrongWords)
                 {
-                    foreach (var wrongWord in _wrongWords)
-                    {
-                        Select(GetIndexWithLineBreak(wrongWord.Index), wrongWord.Length);
-                        SelectionColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
-                    }
+                    Select(GetIndexWithLineBreak(wrongWord.Index), wrongWord.Length);
+                    SelectionColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                 }
-
-                IsSpellCheckRequested = false;
             }
+
+            IsSpellCheckRequested = false;
         }
 
         #endregion
