@@ -1238,6 +1238,18 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return Encoding.GetEncoding(1254); // prefer 1254 over 28599 
                 }
 
+                if (!Configuration.Settings.General.DefaultEncoding.StartsWith("UTF-8", StringComparison.Ordinal))
+                {
+                    // Use default ANSI encoding
+                    foreach (var enc in Configuration.AvailableEncodings)
+                    {
+                        if (Configuration.Settings.General.DefaultEncoding.StartsWith(enc.CodePage + ":", StringComparison.Ordinal))
+                        {
+                            return enc;
+                        }
+                    }
+                }
+
                 return encoding;
             }
             catch
