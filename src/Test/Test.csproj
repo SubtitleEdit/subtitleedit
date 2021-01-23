@@ -101,6 +101,7 @@
     <Compile Include="Logic\SubtitleFormats\SubtitleFormatsTest.cs" />
     <Compile Include="Logic\UtilitiesTest.cs" />
     <Compile Include="Dictionaries\XmlDictionariesTest.cs" />
+    <Compile Include="SETextBoxControl\SeTextBoxTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Dictionaries\en_US.aff" />

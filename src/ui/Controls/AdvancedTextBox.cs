@@ -177,7 +177,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             get
             {
-                var text = Text;
+                var text = base.Text;
                 var extra = 0;
                 var target = base.SelectionStart;
                 for (int i = 0; i < target && i < text.Length; i++)
@@ -192,7 +192,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
             set
             {
-                var text = Text;
+                var text = base.Text;
                 var extra = 0;
                 for (int i = 0; i < value && i < text.Length; i++)
                 {
