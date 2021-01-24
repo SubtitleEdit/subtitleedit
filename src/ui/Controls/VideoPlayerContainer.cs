@@ -444,7 +444,7 @@ PlayDepth: 0
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Default," + Configuration.Settings.General.VideoPlayerPreviewFontName + @"," + Configuration.Settings.General.VideoPlayerPreviewFontSize + @",&H00FFFFFF,&H0300FFFF,&H00000000,&H02000000," + (Configuration.Settings.General.VideoPlayerPreviewFontBold ? "-1" : "0") + @",0,0,0,100,100,0,0,1,2,1,2,10,10,10,1
+Style: Default," + Configuration.Settings.General.VideoPlayerPreviewFontName + @"," + ((int)(Configuration.Settings.General.VideoPlayerPreviewFontSize * 0.85)) + @",&H00FFFFFF,&H0300FFFF,&H00000000,&H02000000," + (Configuration.Settings.General.VideoPlayerPreviewFontBold ? "-1" : "0") + @",0,0,0,100,100,0,0,1,1,1,2,10,10,10,1
 
 [Events]";
 
