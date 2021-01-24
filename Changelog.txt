@@ -17,6 +17,7 @@
    * Add toggle color shortcuts - thx Jan
    * Add optional syntax coloring for textbox w live spell check - thx OmrSi
    * Add compare reload - thx Leon/OmrSi
+   * Add split subtitle by "Time" - thx natasha
 * IMPROVED:
    * Update Greek translation - thx PMitsakis
    * Update Finnish translation - thx Teijo S
