@@ -1,5 +1,4 @@
 ﻿using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using System;
 using System.Drawing;
 using System.Globalization;
 using System.Text;
@@ -29,25 +28,24 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string RawLine { get; set; }
         public bool LoadedFromHeader { get; set; }
 
+        public const string DefaultAssStyleFormat = "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding";
+
         public SsaStyle()
         {
-            FontName = Configuration.Settings.SubtitleSettings.SsaFontName;
-            FontSize = (float)Configuration.Settings.SubtitleSettings.SsaFontSize;
-            Primary = Color.FromArgb(Configuration.Settings.SubtitleSettings.SsaFontColorArgb);
+            var ssaSettings = Configuration.Settings.SubtitleSettings;
+            FontName = ssaSettings.SsaFontName;
+            FontSize = (float)ssaSettings.SsaFontSize;
+            Primary = Color.FromArgb(ssaSettings.SsaFontColorArgb);
             Secondary = Color.Yellow;
             Outline = Color.Black;
             Background = Color.Black;
             Alignment = "2";
-            OutlineWidth = Configuration.Settings.SubtitleSettings.SsaOutline;
-            ShadowWidth = Configuration.Settings.SubtitleSettings.SsaShadow;
+            OutlineWidth = ssaSettings.SsaOutline;
+            ShadowWidth = ssaSettings.SsaShadow;
             MarginLeft = 10;
             MarginRight = 10;
             MarginVertical = 10;
-            BorderStyle = "1";
-            if (Configuration.Settings.SubtitleSettings.SsaOpaqueBox)
-            {
-                BorderStyle = "3";
-            }
+            BorderStyle = ssaSettings.SsaOpaqueBox? "3" : "1";
 
             RawLine = string.Empty;
             LoadedFromHeader = false;
@@ -124,15 +122,36 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else if (f == "bold")
                 {
-                    sb.Append(Convert.ToInt32(Bold));
+                    if (Bold)
+                    {
+                        sb.Append("-1");
+                    }
+                    else
+                    {
+                        sb.Append('0');
+                    }
                 }
                 else if (f == "italic")
                 {
-                    sb.Append(Convert.ToInt32(Italic));
+                    if (Italic)
+                    {
+                        sb.Append("-1");
+                    }
+                    else
+                    {
+                        sb.Append('0');
+                    }
                 }
                 else if (f == "underline")
                 {
-                    sb.Append(Convert.ToInt32(Underline));
+                    if (Underline)
+                    {
+                        sb.Append("-1");
+                    }
+                    else
+                    {
+                        sb.Append('0');
+                    }
                 }
                 else if (f == "outline")
                 {
@@ -231,15 +250,36 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else if (f == "bold")
                 {
-                    sb.Append(Convert.ToInt32(Bold));
+                    if (Bold)
+                    {
+                        sb.Append("-1");
+                    }
+                    else
+                    {
+                        sb.Append('0');
+                    }
                 }
                 else if (f == "italic")
                 {
-                    sb.Append(Convert.ToInt32(Italic));
+                    if (Italic)
+                    {
+                        sb.Append("-1");
+                    }
+                    else
+                    {
+                        sb.Append('0');
+                    }
                 }
                 else if (f == "underline")
                 {
-                    sb.Append(Convert.ToInt32(Underline));
+                    if (Underline)
+                    {
+                        sb.Append("-1");
+                    }
+                    else
+                    {
+                        sb.Append('0');
+                    }
                 }
                 else if (f == "outline")
                 {

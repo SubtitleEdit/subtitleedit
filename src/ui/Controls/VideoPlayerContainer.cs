@@ -437,16 +437,21 @@ namespace Nikse.SubtitleEdit.Controls
                             }
                         }
 
-                        subtitle.Header = @"[Script Info]
-ScriptType: v4.00+
-Collisions: Normal
-PlayDepth: 0
-
-[V4+ Styles]
-Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Default," + Configuration.Settings.General.VideoPlayerPreviewFontName + @"," + ((int)(Configuration.Settings.General.VideoPlayerPreviewFontSize * 0.85)) + @",&H00FFFFFF,&H0300FFFF,&H00000000,&H02000000," + (Configuration.Settings.General.VideoPlayerPreviewFontBold ? "-1" : "0") + @",0,0,0,100,100,0,0,1,1,1,2,10,10,10,1
-
-[Events]";
+                        var style = new SsaStyle
+                        {
+                            Name = "Default",
+                            FontName = Configuration.Settings.General.VideoPlayerPreviewFontName,
+                            FontSize = Configuration.Settings.General.VideoPlayerPreviewFontSize,
+                            Bold = Configuration.Settings.General.VideoPlayerPreviewFontBold,
+                            Primary = Color.FromArgb(Configuration.Settings.SubtitleSettings.SsaFontColorArgb),
+                            OutlineWidth = Configuration.Settings.SubtitleSettings.SsaOutline,
+                            ShadowWidth = Configuration.Settings.SubtitleSettings.SsaShadow,
+                            BorderStyle = Configuration.Settings.SubtitleSettings.SsaOpaqueBox ? "3" : "1",
+                            MarginLeft = Configuration.Settings.SubtitleSettings.SsaMarginLeft,
+                            MarginRight = Configuration.Settings.SubtitleSettings.SsaMarginRight,
+                            MarginVertical = Configuration.Settings.SubtitleSettings.SsaMarginTopBottom
+                        };
+                        subtitle.Header = string.Format(AdvancedSubStationAlpha.HeaderNoStyles, "MPV preview file", style.ToRawAss(SsaStyle.DefaultAssStyleFormat));
 
                         if (oldSub.Header != null && oldSub.Header.Length > 20 && oldSub.Header.Substring(3, 3) == "STL")
                         {
