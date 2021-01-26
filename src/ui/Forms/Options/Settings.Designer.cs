@@ -159,7 +159,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxVideoPlayerShowStopButton = new System.Windows.Forms.CheckBox();
             this.groupBoxVideoEngine = new System.Windows.Forms.GroupBox();
             this.checkBoxMpvHandlesPreviewText = new System.Windows.Forms.CheckBox();
-            this.buttonMpvPreviewSettings = new System.Windows.Forms.Button();
             this.labelMpvSettings = new System.Windows.Forms.Label();
             this.buttonMpvSettings = new System.Windows.Forms.Button();
             this.labelPlatform = new System.Windows.Forms.Label();
@@ -2165,7 +2164,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             // 
             this.groupBoxVideoEngine.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxVideoEngine.Controls.Add(this.buttonMpvPreviewSettings);
             this.groupBoxVideoEngine.Controls.Add(this.checkBoxMpvHandlesPreviewText);
             this.groupBoxVideoEngine.Controls.Add(this.labelMpvSettings);
             this.groupBoxVideoEngine.Controls.Add(this.buttonMpvSettings);
@@ -2197,18 +2195,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxMpvHandlesPreviewText.TabIndex = 31;
             this.checkBoxMpvHandlesPreviewText.Text = "mpv handles preview text";
             this.checkBoxMpvHandlesPreviewText.UseVisualStyleBackColor = true;
-            this.checkBoxMpvHandlesPreviewText.CheckedChanged += new System.EventHandler(checkBoxMpvHandlesPreviewText_CheckedChanged);
-            // 
-            // buttonMpvPreviewSettings
-            // 
-            this.buttonMpvPreviewSettings.Enabled = false;
-            this.buttonMpvPreviewSettings.Location = new System.Drawing.Point(320, 111);
-            this.buttonMpvPreviewSettings.Name = "buttonMpvPreviewSettings";
-            this.buttonMpvPreviewSettings.Size = new System.Drawing.Size(29, 20);
-            this.buttonMpvPreviewSettings.TabIndex = 32;
-            this.buttonMpvPreviewSettings.Text = "...";
-            this.buttonMpvPreviewSettings.UseVisualStyleBackColor = true;
-            this.buttonMpvPreviewSettings.Click += new System.EventHandler(buttonMpvPreviewSettings_Click);
             // 
             // labelMpvSettings
             // 
@@ -5349,7 +5335,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private System.Windows.Forms.NumericUpDown numericUpDownMaxWordsMin;
         private System.Windows.Forms.Label labelMaxWordsPerMin;
         private System.Windows.Forms.CheckBox checkBoxMpvHandlesPreviewText;
-        private System.Windows.Forms.Button buttonMpvPreviewSettings;
         private System.Windows.Forms.CheckBox checkBoxVideoAutoOpen;
         private System.Windows.Forms.Button buttonClearShortcut;
         private System.Windows.Forms.CheckBox checkBoxAllowVolumeBoost;
