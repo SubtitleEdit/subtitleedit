@@ -1147,6 +1147,15 @@ $HorzAlign          =   Center
         public string MpvExtraOption { get; set; }
         public bool MpvLogging { get; set; }
         public bool MpvHandlesPreviewText { get; set; }
+        public int MpvPreviewTextPrimaryColor { get; set; }
+        public int MpvPreviewTextOutlineColor { get; set; }
+        public int MpvPreviewTextBackColor { get; set; }
+        public decimal MpvPreviewTextOutlineWidth { get; set; }
+        public decimal MpvPreviewTextShadowWidth { get; set; }
+        public bool MpvPreviewTextOpaqueBox { get; set; }
+        public int MpvPreviewTextMarginLeft { get; set; }
+        public int MpvPreviewTextMarginRight { get; set; }
+        public int MpvPreviewTextMarginVertical { get; set; }
         public string MpcHcLocation { get; set; }
         public string MkvMergeLocation { get; set; }
         public bool UseFFmpegForWaveExtraction { get; set; }
@@ -1285,6 +1294,15 @@ $HorzAlign          =   Center
             MpvVideoOutputWindows = string.Empty; // could also be e.g. "gpu" or "directshow"
             MpvVideoOutputLinux = string.Empty; // could also be e.g. "x11";
             MpvHandlesPreviewText = true;
+            MpvPreviewTextPrimaryColor = Color.White.ToArgb();
+            MpvPreviewTextOutlineColor = Color.Black.ToArgb();
+            MpvPreviewTextBackColor = Color.Black.ToArgb();
+            MpvPreviewTextOutlineWidth = 2;
+            MpvPreviewTextShadowWidth = 1;
+            MpvPreviewTextOpaqueBox = false;
+            MpvPreviewTextMarginLeft = 10;
+            MpvPreviewTextMarginRight = 10;
+            MpvPreviewTextMarginVertical = 10;
             FFmpegSceneThreshold = "0.4"; // threshold for generating scene changes - 0.2 is sensitive (more scene change), 0.6 is less sensitive (fewer scene changes)
             UseTimeFormatHHMMSSFF = false;
             SplitBehavior = 1; // 0=take gap from left, 1=divide evenly, 2=take gap from right
@@ -3398,6 +3416,59 @@ $HorzAlign          =   Center
                 settings.General.MpvHandlesPreviewText = Convert.ToBoolean(subNode.InnerText.Trim());
             }
 
+            subNode = node.SelectSingleNode("MpvPreviewTextPrimaryColor");
+            if (subNode != null)
+            {
+                settings.General.MpvPreviewTextPrimaryColor = Convert.ToInt32(subNode.InnerText.Trim());
+            }
+
+            subNode = node.SelectSingleNode("MpvPreviewTextOutlineColor");
+            if (subNode != null)
+            {
+                settings.General.MpvPreviewTextOutlineColor = Convert.ToInt32(subNode.InnerText.Trim());
+            }
+
+            subNode = node.SelectSingleNode("MpvPreviewTextBackColor");
+            if (subNode != null)
+            {
+                settings.General.MpvPreviewTextBackColor = Convert.ToInt32(subNode.InnerText.Trim());
+            }
+
+            subNode = node.SelectSingleNode("MpvPreviewTextOutlineWidth");
+            if (subNode != null)
+            {
+                settings.General.MpvPreviewTextOutlineWidth = Convert.ToDecimal(subNode.InnerText.Trim());
+            }
+
+            subNode = node.SelectSingleNode("MpvPreviewTextShadowWidth");
+            if (subNode != null)
+            {
+                settings.General.MpvPreviewTextShadowWidth = Convert.ToDecimal(subNode.InnerText.Trim());
+            }
+
+            subNode = node.SelectSingleNode("MpvPreviewTextOpaqueBox");
+            if (subNode != null)
+            {
+                settings.General.MpvPreviewTextOpaqueBox = Convert.ToBoolean(subNode.InnerText.Trim());
+            }
+
+            subNode = node.SelectSingleNode("MpvPreviewTextMarginLeft");
+            if (subNode != null)
+            {
+                settings.General.MpvPreviewTextMarginLeft = Convert.ToInt32(subNode.InnerText.Trim());
+            }
+
+            subNode = node.SelectSingleNode("MpvPreviewTextMarginRight");
+            if (subNode != null)
+            {
+                settings.General.MpvPreviewTextMarginRight = Convert.ToInt32(subNode.InnerText.Trim());
+            }
+
+            subNode = node.SelectSingleNode("MpvPreviewTextMarginVertical");
+            if (subNode != null)
+            {
+                settings.General.MpvPreviewTextMarginVertical = Convert.ToInt32(subNode.InnerText.Trim());
+            }
             subNode = node.SelectSingleNode("MpcHcLocation");
             if (subNode != null)
             {
@@ -8021,6 +8092,15 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MpvExtraOption", settings.General.MpvExtraOption);
                 textWriter.WriteElementString("MpvLogging", settings.General.MpvLogging.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MpvHandlesPreviewText", settings.General.MpvHandlesPreviewText.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("MpvPreviewTextPrimaryColor", settings.General.MpvPreviewTextPrimaryColor.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("MpvPreviewTextOutlineColor", settings.General.MpvPreviewTextOutlineColor.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("MpvPreviewTextBackColor", settings.General.MpvPreviewTextBackColor.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("MpvPreviewTextOutlineWidth", settings.General.MpvPreviewTextOutlineWidth.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("MpvPreviewTextShadowWidth", settings.General.MpvPreviewTextShadowWidth.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("MpvPreviewTextOpaqueBox", settings.General.MpvPreviewTextOpaqueBox.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("MpvPreviewTextMarginLeft", settings.General.MpvPreviewTextMarginLeft.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("MpvPreviewTextMarginRight", settings.General.MpvPreviewTextMarginRight.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("MpvPreviewTextMarginVertical", settings.General.MpvPreviewTextMarginVertical.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MpcHcLocation", settings.General.MpcHcLocation);
                 textWriter.WriteElementString("MkvMergeLocation", settings.General.MkvMergeLocation);
                 textWriter.WriteElementString("UseFFmpegForWaveExtraction", settings.General.UseFFmpegForWaveExtraction.ToString(CultureInfo.InvariantCulture));

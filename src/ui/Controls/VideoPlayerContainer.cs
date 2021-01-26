@@ -47,6 +47,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public event EventHandler OnButtonClicked;
         public event EventHandler OnEmptyPlayerClicked;
+
         public Panel PanelPlayer { get; private set; }
         private Panel _panelSubtitle;
         private string _subtitleText = string.Empty;
@@ -399,6 +400,33 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        private SsaStyle _mpvStyle;
+        public void UpdateMpvStyle()
+        {
+            if (_mpvStyle != null)
+            {
+                _mpvStyle = null;
+            }
+
+            var gs = Configuration.Settings.General;
+            _mpvStyle = new SsaStyle
+            {
+                Name = "Default",
+                FontName = gs.VideoPlayerPreviewFontName,
+                FontSize = gs.VideoPlayerPreviewFontSize,
+                Bold = gs.VideoPlayerPreviewFontBold,
+                Primary = Color.FromArgb(gs.MpvPreviewTextPrimaryColor),
+                Outline = Color.FromArgb(gs.MpvPreviewTextOutlineColor),
+                Background = Color.FromArgb(gs.MpvPreviewTextBackColor),
+                OutlineWidth = gs.MpvPreviewTextOutlineWidth,
+                ShadowWidth = gs.MpvPreviewTextShadowWidth,
+                BorderStyle = gs.MpvPreviewTextOpaqueBox ? "3" : "1",
+                MarginLeft = gs.MpvPreviewTextMarginLeft,
+                MarginRight = gs.MpvPreviewTextMarginRight,
+                MarginVertical = gs.MpvPreviewTextMarginVertical
+            };
+        }
+
         private Subtitle _subtitlePrev;
         private string _mpvTextOld = string.Empty;
         private string _mpvTextFileName;
@@ -437,21 +465,12 @@ namespace Nikse.SubtitleEdit.Controls
                             }
                         }
 
-                        var style = new SsaStyle
+                        if (_mpvStyle is null)
                         {
-                            Name = "Default",
-                            FontName = Configuration.Settings.General.VideoPlayerPreviewFontName,
-                            FontSize = Configuration.Settings.General.VideoPlayerPreviewFontSize,
-                            Bold = Configuration.Settings.General.VideoPlayerPreviewFontBold,
-                            Primary = Color.FromArgb(Configuration.Settings.SubtitleSettings.SsaFontColorArgb),
-                            OutlineWidth = Configuration.Settings.SubtitleSettings.SsaOutline,
-                            ShadowWidth = Configuration.Settings.SubtitleSettings.SsaShadow,
-                            BorderStyle = Configuration.Settings.SubtitleSettings.SsaOpaqueBox ? "3" : "1",
-                            MarginLeft = Configuration.Settings.SubtitleSettings.SsaMarginLeft,
-                            MarginRight = Configuration.Settings.SubtitleSettings.SsaMarginRight,
-                            MarginVertical = Configuration.Settings.SubtitleSettings.SsaMarginTopBottom
-                        };
-                        subtitle.Header = string.Format(AdvancedSubStationAlpha.HeaderNoStyles, "MPV preview file", style.ToRawAss(SsaStyle.DefaultAssStyleFormat));
+                            UpdateMpvStyle();
+                        }
+
+                        subtitle.Header = string.Format(AdvancedSubStationAlpha.HeaderNoStyles, "MPV preview file", _mpvStyle.ToRawAss(SsaStyle.DefaultAssStyleFormat));
 
                         if (oldSub.Header != null && oldSub.Header.Length > 20 && oldSub.Header.Substring(3, 3) == "STL")
                         {
@@ -543,8 +562,8 @@ namespace Nikse.SubtitleEdit.Controls
                 int fontColorBegin = 0;
                 TextBox.Text = string.Empty;
                 int letterCount = 0;
-                var fontColorLookups = new System.Collections.Generic.Dictionary<Point, Color>();
-                var styleLookups = new System.Collections.Generic.Dictionary<int, FontStyle>(text.Length);
+                var fontColorLookups = new Dictionary<Point, Color>();
+                var styleLookups = new Dictionary<int, FontStyle>(text.Length);
                 for (int j = 0; j < text.Length; j++)
                 {
                     styleLookups.Add(j, Configuration.Settings.General.VideoPlayerPreviewFontBold ? FontStyle.Bold : FontStyle.Regular);
@@ -2088,6 +2107,7 @@ namespace Nikse.SubtitleEdit.Controls
             Pause();
             SubtitleText = string.Empty;
             Chapters = new List<MatroskaChapter>();
+            _mpvStyle = null;
             var temp = VideoPlayer;
             VideoPlayer = null;
             Application.DoEvents();

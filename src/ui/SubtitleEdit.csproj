@@ -832,6 +832,12 @@
     <Compile Include="Forms\Options\SettingsMpv.Designer.cs">
       <DependentUpon>SettingsMpv.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Options\SettingsMpvPreview.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Options\SettingsMpvPreview.Designer.cs">
+      <DependentUpon>SettingsMpvPreview.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Options\SettingsProfile.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1555,6 +1561,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Options\SettingsMpv.resx">
       <DependentUpon>SettingsMpv.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Options\SettingsMpvPreview.resx">
+      <DependentUpon>SettingsMpvPreview.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Options\SettingsProfile.resx">
       <DependentUpon>SettingsProfile.cs</DependentUpon>

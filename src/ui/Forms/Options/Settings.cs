@@ -656,7 +656,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelSsaFontSize.Text = ssaStyles.FontSize;
             labelFontName.Text = ssaStyles.FontName;
             buttonSsaColor.Text = LanguageSettings.Current.Settings.ChooseColor;
-            groupSsaBoxFont.Text = ssaStyles.Font;
+            groupBoxSsaFont.Text = ssaStyles.Font;
             groupBoxSsaBorder.Text = ssaStyles.Border;
             groupBoxMargins.Text = ssaStyles.Margins;
             labelMarginLeft.Text = ssaStyles.MarginLeft;
@@ -3222,10 +3222,19 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
         }
 
+        private void buttonMpvPreviewSettings_Click(object sender, EventArgs e)
+        {
+            using (var form = new SettingsMpvPreview())
+            {
+                form.ShowDialog(this);
+            }
+        }
+
         private void RefreshMpvSettings()
         {
             radioButtonVideoPlayerMPV.Enabled = LibMpvDynamic.IsInstalled;
-            checkBoxMpvHandlesPreviewText.Enabled = radioButtonVideoPlayerMPV.Enabled;
+            checkBoxMpvHandlesPreviewText.Enabled = radioButtonVideoPlayerMPV.Checked;
+            buttonMpvPreviewSettings.Enabled = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
             if (!radioButtonVideoPlayerMPV.Enabled)
             {
                 buttonMpvSettings.Font = new Font(buttonMpvSettings.Font.FontFamily, buttonMpvSettings.Font.Size, FontStyle.Bold);
@@ -3286,6 +3295,12 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private void radioButtonVideoPlayerMPV_CheckedChanged(object sender, EventArgs e)
         {
             checkBoxMpvHandlesPreviewText.Enabled = radioButtonVideoPlayerMPV.Checked;
+            buttonMpvPreviewSettings.Enabled = checkBoxMpvHandlesPreviewText.Enabled && checkBoxMpvHandlesPreviewText.Checked;
+        }
+
+        private void checkBoxMpvHandlesPreviewText_CheckedChanged(object sender, EventArgs e)
+        {
+            buttonMpvPreviewSettings.Enabled = checkBoxMpvHandlesPreviewText.Enabled && checkBoxMpvHandlesPreviewText.Checked;
         }
 
         private void buttonClearShortcut_Click(object sender, EventArgs e)
