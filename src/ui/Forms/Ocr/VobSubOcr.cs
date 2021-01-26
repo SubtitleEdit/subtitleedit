@@ -1840,11 +1840,22 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (_ocrMethodIndex == _ocrMethodTesseract4 && !_fromMenuItem)
             {
                 var nb = new NikseBitmap(returnBmp);
+
+                if (_preprocessingSettings != null && _preprocessingSettings.CropTransparentColors)
+                {
+                    nb.CropSidesAndBottom(2, Color.FromArgb(0, 0, 0, 0), true);
+                    nb.CropTop(2, Color.FromArgb(0, 0, 0, 0));
+                    nb.CropSidesAndBottom(2, Color.Transparent, true);
+                    nb.CropTop(2, Color.Transparent);
+                }
+
                 nb.AddMargin(10);
+
                 if (_preprocessingSettings != null && _preprocessingSettings.InvertColors)
                 {
                     nb.InvertColors();
                 }
+
                 if (_preprocessingSettings != null && _preprocessingSettings.ScalingPercent > 100)
                 {
                     var bTemp = nb.GetBitmap();
@@ -1853,7 +1864,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     bTemp.Dispose();
                     nb = new NikseBitmap(b);
                 }
-                nb.MakeTwoColor(_preprocessingSettings?.BinaryImageCompareThreshold ?? Configuration.Settings.Tools.OcrTesseract4RgbThreshold, Color.White, Color.Black);
+
+                if (_preprocessingSettings != null && _preprocessingSettings.InvertColors)
+                {
+                    nb.MakeTwoColor(_preprocessingSettings?.BinaryImageCompareThreshold ?? Configuration.Settings.Tools.OcrTesseract4RgbThreshold, Color.Black, Color.White);
+                }
+                else
+                {
+                    nb.MakeTwoColor(_preprocessingSettings?.BinaryImageCompareThreshold ?? Configuration.Settings.Tools.OcrTesseract4RgbThreshold, Color.White, Color.Black);
+                }
+
                 returnBmp.Dispose();
                 return nb.GetBitmap();
             }
@@ -8666,7 +8686,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             if (_ocrMethodIndex == _ocrMethodTesseract4)
             {
-                using (var form = new OcrPreprocessingT4(bmp, new PreprocessingSettings { BinaryImageCompareThreshold = Configuration.Settings.Tools.OcrTesseract4RgbThreshold }))
+                var ps = new PreprocessingSettings
+                {
+                    BinaryImageCompareThreshold = Configuration.Settings.Tools.OcrTesseract4RgbThreshold,
+                    InvertColors = _preprocessingSettings != null ? _preprocessingSettings.InvertColors : false,
+                    CropTransparentColors = _preprocessingSettings != null ? _preprocessingSettings.CropTransparentColors : false,
+                };
+                using (var form = new OcrPreprocessingT4(bmp, ps))
                 {
                     if (form.ShowDialog(this) == DialogResult.OK)
                     {
