@@ -35,20 +35,23 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
+            this.labelOriginalImage = new System.Windows.Forms.Label();
+            this.labelPostImage = new System.Windows.Forms.Label();
             this.groupBoxBinaryImageCompareThreshold = new System.Windows.Forms.GroupBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.numericUpDownScaling = new System.Windows.Forms.NumericUpDown();
             this.groupBoxColors = new System.Windows.Forms.GroupBox();
             this.checkBoxInvertColors = new System.Windows.Forms.CheckBox();
+            this.groupBoxCropping = new System.Windows.Forms.GroupBox();
+            this.checkBoxCropTransparent = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownThreshold)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBoxBinaryImageCompareThreshold.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownScaling)).BeginInit();
             this.groupBoxColors.SuspendLayout();
+            this.groupBoxCropping.SuspendLayout();
             this.SuspendLayout();
             // 
             // labelDescription
@@ -130,23 +133,23 @@
             this.pictureBox1.TabIndex = 17;
             this.pictureBox1.TabStop = false;
             // 
-            // label2
+            // labelOriginalImage
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 231);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(73, 13);
-            this.label2.TabIndex = 21;
-            this.label2.Text = "Original image";
+            this.labelOriginalImage.AutoSize = true;
+            this.labelOriginalImage.Location = new System.Drawing.Point(12, 231);
+            this.labelOriginalImage.Name = "labelOriginalImage";
+            this.labelOriginalImage.Size = new System.Drawing.Size(73, 13);
+            this.labelOriginalImage.TabIndex = 21;
+            this.labelOriginalImage.Text = "Original image";
             // 
-            // label3
+            // labelPostImage
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 396);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(132, 13);
-            this.label3.TabIndex = 22;
-            this.label3.Text = "Image after pre-processing";
+            this.labelPostImage.AutoSize = true;
+            this.labelPostImage.Location = new System.Drawing.Point(12, 396);
+            this.labelPostImage.Name = "labelPostImage";
+            this.labelPostImage.Size = new System.Drawing.Size(132, 13);
+            this.labelPostImage.TabIndex = 22;
+            this.labelPostImage.Text = "Image after pre-processing";
             // 
             // groupBoxBinaryImageCompareThreshold
             // 
@@ -209,7 +212,7 @@
             this.groupBoxColors.Controls.Add(this.checkBoxInvertColors);
             this.groupBoxColors.Location = new System.Drawing.Point(12, 12);
             this.groupBoxColors.Name = "groupBoxColors";
-            this.groupBoxColors.Size = new System.Drawing.Size(326, 216);
+            this.groupBoxColors.Size = new System.Drawing.Size(326, 164);
             this.groupBoxColors.TabIndex = 31;
             this.groupBoxColors.TabStop = false;
             this.groupBoxColors.Text = "Colors";
@@ -225,15 +228,37 @@
             this.checkBoxInvertColors.UseVisualStyleBackColor = true;
             this.checkBoxInvertColors.CheckedChanged += new System.EventHandler(this.checkBoxInvertColors_CheckedChanged);
             // 
+            // groupBoxCropping
+            // 
+            this.groupBoxCropping.Controls.Add(this.checkBoxCropTransparent);
+            this.groupBoxCropping.Location = new System.Drawing.Point(12, 182);
+            this.groupBoxCropping.Name = "groupBoxCropping";
+            this.groupBoxCropping.Size = new System.Drawing.Size(326, 46);
+            this.groupBoxCropping.TabIndex = 32;
+            this.groupBoxCropping.TabStop = false;
+            this.groupBoxCropping.Text = "Cropping";
+            // 
+            // checkBoxCropTransparent
+            // 
+            this.checkBoxCropTransparent.AutoSize = true;
+            this.checkBoxCropTransparent.Location = new System.Drawing.Point(9, 19);
+            this.checkBoxCropTransparent.Name = "checkBoxCropTransparent";
+            this.checkBoxCropTransparent.Size = new System.Drawing.Size(135, 17);
+            this.checkBoxCropTransparent.TabIndex = 29;
+            this.checkBoxCropTransparent.Text = "Crop transparent colors";
+            this.checkBoxCropTransparent.UseVisualStyleBackColor = true;
+            this.checkBoxCropTransparent.CheckedChanged += new System.EventHandler(this.checkBoxCropTransparent_CheckedChanged);
+            // 
             // OcrPreprocessingT4
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(828, 591);
+            this.Controls.Add(this.groupBoxCropping);
             this.Controls.Add(this.groupBoxColors);
             this.Controls.Add(this.groupBoxBinaryImageCompareThreshold);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.labelPostImage);
+            this.Controls.Add(this.labelOriginalImage);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.pictureBoxSubtitleImage);
             this.Controls.Add(this.buttonCancel);
@@ -255,6 +280,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownScaling)).EndInit();
             this.groupBoxColors.ResumeLayout(false);
             this.groupBoxColors.PerformLayout();
+            this.groupBoxCropping.ResumeLayout(false);
+            this.groupBoxCropping.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -269,13 +296,15 @@
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.ColorDialog colorDialog1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label labelOriginalImage;
+        private System.Windows.Forms.Label labelPostImage;
         private System.Windows.Forms.GroupBox groupBoxBinaryImageCompareThreshold;
         private System.Windows.Forms.GroupBox groupBoxColors;
         private System.Windows.Forms.CheckBox checkBoxInvertColors;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.NumericUpDown numericUpDownScaling;
+        private System.Windows.Forms.GroupBox groupBoxCropping;
+        private System.Windows.Forms.CheckBox checkBoxCropTransparent;
     }
 }
