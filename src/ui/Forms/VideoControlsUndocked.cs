@@ -16,6 +16,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             AutoScaleMode = AutoScaleMode.Dpi;
             InitializeComponent();
+            UiUtil.FixFonts(this);
             _mainForm = mainForm;
             Icon = (Icon)mainForm.Icon.Clone();
             _redockKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
