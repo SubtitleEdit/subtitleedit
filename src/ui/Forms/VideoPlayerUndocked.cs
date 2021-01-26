@@ -138,7 +138,7 @@ namespace Nikse.SubtitleEdit.Forms
             IsFullscreen = true;
             FormBorderStyle = FormBorderStyle.None;
             WindowState = FormWindowState.Maximized;
-            _videoPlayerContainer.FontSizeFactor = 1.5F;
+            _videoPlayerContainer.FontSizeFactor = 1.0F;
             _videoPlayerContainer.SetSubtitleFont();
             _videoPlayerContainer.SubtitleText = string.Empty;
             _videoPlayerContainer.ShowFullScreenControls();
@@ -152,7 +152,7 @@ namespace Nikse.SubtitleEdit.Forms
             IsFullscreen = false;
             FormBorderStyle = FormBorderStyle.SizableToolWindow;
             WindowState = FormWindowState.Normal;
-            _videoPlayerContainer.FontSizeFactor = 1.0F;
+            _videoPlayerContainer.FontSizeFactor = 1 / 1.5F;
             _videoPlayerContainer.SetSubtitleFont();
             _videoPlayerContainer.SubtitleText = string.Empty;
             _videoPlayerContainer.ShowFullscreenButton = Configuration.Settings.General.VideoPlayerShowFullscreenButton;

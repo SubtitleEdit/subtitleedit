@@ -109,7 +109,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.MediaPlayerStart.BackColor = System.Drawing.Color.Black;
             this.MediaPlayerStart.CurrentPosition = 0D;
-            this.MediaPlayerStart.FontSizeFactor = 1F;
+            this.MediaPlayerStart.FontSizeFactor = 1 / 1.5F;
             this.MediaPlayerStart.LastParagraph = null;
             this.MediaPlayerStart.Location = new System.Drawing.Point(6, 34);
             this.MediaPlayerStart.Name = "MediaPlayerStart";
@@ -217,7 +217,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.MediaPlayerEnd.BackColor = System.Drawing.Color.Black;
             this.MediaPlayerEnd.CurrentPosition = 0D;
-            this.MediaPlayerEnd.FontSizeFactor = 1F;
+            this.MediaPlayerEnd.FontSizeFactor = 1 / 1.5F;
             this.MediaPlayerEnd.LastParagraph = null;
             this.MediaPlayerEnd.Location = new System.Drawing.Point(6, 34);
             this.MediaPlayerEnd.Name = "MediaPlayerEnd";

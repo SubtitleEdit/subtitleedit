@@ -253,7 +253,7 @@ namespace Nikse.SubtitleEdit.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.videoPlayerContainer1.BackColor = System.Drawing.Color.Black;
             this.videoPlayerContainer1.CurrentPosition = 0D;
-            this.videoPlayerContainer1.FontSizeFactor = 1F;
+            this.videoPlayerContainer1.FontSizeFactor = 1 / 1.5F;
             this.videoPlayerContainer1.LastParagraph = null;
             this.videoPlayerContainer1.Location = new System.Drawing.Point(12, 267);
             this.videoPlayerContainer1.Name = "videoPlayerContainer1";

@@ -349,7 +349,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.mediaPlayer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(18)))), ((int)(((byte)(18)))));
             this.mediaPlayer.CurrentPosition = 0D;
-            this.mediaPlayer.FontSizeFactor = 1F;
+            this.mediaPlayer.FontSizeFactor = 1 / 1.5F;
             this.mediaPlayer.LastParagraph = null;
             this.mediaPlayer.Location = new System.Drawing.Point(369, 19);
             this.mediaPlayer.Margin = new System.Windows.Forms.Padding(0);

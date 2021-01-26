@@ -860,7 +860,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.videoPlayerContainer1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(18)))), ((int)(((byte)(18)))));
             this.videoPlayerContainer1.Chapters = null;
             this.videoPlayerContainer1.CurrentPosition = 0D;
-            this.videoPlayerContainer1.FontSizeFactor = 1F;
+            this.videoPlayerContainer1.FontSizeFactor = 1 / 1.5F;
             this.videoPlayerContainer1.LastParagraph = null;
             this.videoPlayerContainer1.Location = new System.Drawing.Point(31, 107);
             this.videoPlayerContainer1.Name = "videoPlayerContainer1";

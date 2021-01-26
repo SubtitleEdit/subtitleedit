@@ -53,7 +53,7 @@ namespace Nikse.SubtitleEdit.Controls
         private string _subtitleText = string.Empty;
         private VideoPlayer _videoPlayer;
 
-        public float FontSizeFactor { get; set; }
+        public float FontSizeFactor { get; set; } = (float)(1 / 1.5);
 
         public VideoPlayer VideoPlayer
         {
@@ -201,7 +201,6 @@ namespace Nikse.SubtitleEdit.Controls
         {
             _chapters = new List<MatroskaChapter>();
             SmpteMode = false;
-            FontSizeFactor = 1.0F;
             BorderStyle = BorderStyle.None;
             _resources = new System.ComponentModel.ComponentResourceManager(typeof(VideoPlayerContainer));
             _labelVolume.Text = Configuration.Settings.General.VideoPlayerDefaultVolume + "%";
