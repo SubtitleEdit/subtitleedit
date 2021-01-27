@@ -1,6 +1,4 @@
-﻿using System.Windows.Forms;
-
-namespace Nikse.SubtitleEdit.Forms.Options
+﻿namespace Nikse.SubtitleEdit.Forms.Options
 {
     sealed partial class Settings
     {
@@ -361,31 +359,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelSubtitleFontColor = new System.Windows.Forms.Label();
             this.panelSubtitleBackgroundColor = new System.Windows.Forms.Panel();
             this.labelSubtitleFontBackgroundColor = new System.Windows.Forms.Label();
-            this.panelSsaStyle = new System.Windows.Forms.Panel();
-            this.groupBoxSsaStyle = new System.Windows.Forms.GroupBox();
-            this.groupBoxSsaBorder = new System.Windows.Forms.GroupBox();
-            this.numericUpDownSsaOutline = new System.Windows.Forms.NumericUpDown();
-            this.labelSsaShadow = new System.Windows.Forms.Label();
-            this.numericUpDownSsaShadow = new System.Windows.Forms.NumericUpDown();
-            this.checkBoxSsaOpaqueBox = new System.Windows.Forms.CheckBox();
-            this.labelSsaOutline = new System.Windows.Forms.Label();
-            this.groupSsaBoxFont = new System.Windows.Forms.GroupBox();
-            this.checkBoxSsaFontBold = new System.Windows.Forms.CheckBox();
-            this.buttonSsaColor = new System.Windows.Forms.Button();
-            this.panelPrimaryColor = new System.Windows.Forms.Panel();
-            this.numericUpDownFontSize = new System.Windows.Forms.NumericUpDown();
-            this.comboBoxFontName = new System.Windows.Forms.ComboBox();
-            this.labelSsaFontSize = new System.Windows.Forms.Label();
-            this.labelFontName = new System.Windows.Forms.Label();
-            this.groupBoxMargins = new System.Windows.Forms.GroupBox();
-            this.numericUpDownSsaMarginVertical = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownSsaMarginRight = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownSsaMarginLeft = new System.Windows.Forms.NumericUpDown();
-            this.labelMarginVertical = new System.Windows.Forms.Label();
-            this.labelMarginRight = new System.Windows.Forms.Label();
-            this.labelMarginLeft = new System.Windows.Forms.Label();
-            this.groupBoxPreview = new System.Windows.Forms.GroupBox();
-            this.pictureBoxPreview = new System.Windows.Forms.PictureBox();
             this.panelNetwork = new System.Windows.Forms.Panel();
             this.groupBoxNetworkSession = new System.Windows.Forms.GroupBox();
             this.buttonNetworkSessionNewMessageSound = new System.Windows.Forms.Button();
@@ -469,19 +442,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBoxFontTextBox.SuspendLayout();
             this.groupBoxFontListViews.SuspendLayout();
             this.groupBoxFontGeneral.SuspendLayout();
-            this.panelSsaStyle.SuspendLayout();
-            this.groupBoxSsaStyle.SuspendLayout();
-            this.groupBoxSsaBorder.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaOutline)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaShadow)).BeginInit();
-            this.groupSsaBoxFont.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).BeginInit();
-            this.groupBoxMargins.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaMarginVertical)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaMarginRight)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaMarginLeft)).BeginInit();
-            this.groupBoxPreview.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
             this.panelNetwork.SuspendLayout();
             this.groupBoxNetworkSession.SuspendLayout();
             this.groupBoxProxySettings.SuspendLayout();
@@ -495,7 +455,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.buttonOK.Location = new System.Drawing.Point(733, 539);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 3;
+            this.buttonOK.TabIndex = 12;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
@@ -507,7 +467,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.buttonCancel.Location = new System.Drawing.Point(814, 539);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 2;
+            this.buttonCancel.TabIndex = 13;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -527,7 +487,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             "Wordlists",
             "Toolbar",
             "Font",
-            "ASS/SSA Style",
             "Network"});
             this.listBoxSection.Location = new System.Drawing.Point(10, 10);
             this.listBoxSection.Name = "listBoxSection";
@@ -4435,292 +4394,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelSubtitleFontBackgroundColor.TabIndex = 36;
             this.labelSubtitleFontBackgroundColor.Text = "Subtitle font background color";
             // 
-            // panelSsaStyle
-            // 
-            this.panelSsaStyle.Controls.Add(this.groupBoxSsaStyle);
-            this.panelSsaStyle.Location = new System.Drawing.Point(230, 6);
-            this.panelSsaStyle.Name = "panelSsaStyle";
-            this.panelSsaStyle.Padding = new System.Windows.Forms.Padding(3);
-            this.panelSsaStyle.Size = new System.Drawing.Size(864, 521);
-            this.panelSsaStyle.TabIndex = 10;
-            this.panelSsaStyle.Text = "SSA style";
-            // 
-            // groupBoxSsaStyle
-            // 
-            this.groupBoxSsaStyle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxSsaStyle.Controls.Add(this.groupBoxSsaBorder);
-            this.groupBoxSsaStyle.Controls.Add(this.groupSsaBoxFont);
-            this.groupBoxSsaStyle.Controls.Add(this.groupBoxMargins);
-            this.groupBoxSsaStyle.Controls.Add(this.groupBoxPreview);
-            this.groupBoxSsaStyle.Location = new System.Drawing.Point(0, 0);
-            this.groupBoxSsaStyle.Name = "groupBoxSsaStyle";
-            this.groupBoxSsaStyle.Size = new System.Drawing.Size(851, 521);
-            this.groupBoxSsaStyle.TabIndex = 0;
-            this.groupBoxSsaStyle.TabStop = false;
-            this.groupBoxSsaStyle.Text = "Sub Station Alpha style";
-            // 
-            // groupBoxSsaBorder
-            // 
-            this.groupBoxSsaBorder.Controls.Add(this.numericUpDownSsaOutline);
-            this.groupBoxSsaBorder.Controls.Add(this.labelSsaShadow);
-            this.groupBoxSsaBorder.Controls.Add(this.numericUpDownSsaShadow);
-            this.groupBoxSsaBorder.Controls.Add(this.checkBoxSsaOpaqueBox);
-            this.groupBoxSsaBorder.Controls.Add(this.labelSsaOutline);
-            this.groupBoxSsaBorder.Location = new System.Drawing.Point(329, 21);
-            this.groupBoxSsaBorder.Name = "groupBoxSsaBorder";
-            this.groupBoxSsaBorder.Size = new System.Drawing.Size(185, 96);
-            this.groupBoxSsaBorder.TabIndex = 8;
-            this.groupBoxSsaBorder.TabStop = false;
-            this.groupBoxSsaBorder.Text = "Border";
-            // 
-            // numericUpDownSsaOutline
-            // 
-            this.numericUpDownSsaOutline.Location = new System.Drawing.Point(64, 16);
-            this.numericUpDownSsaOutline.Maximum = new decimal(new int[] {
-            9,
-            0,
-            0,
-            0});
-            this.numericUpDownSsaOutline.Name = "numericUpDownSsaOutline";
-            this.numericUpDownSsaOutline.Size = new System.Drawing.Size(44, 21);
-            this.numericUpDownSsaOutline.TabIndex = 5;
-            this.numericUpDownSsaOutline.ValueChanged += new System.EventHandler(this.numericUpDownSsaOutline_ValueChanged);
-            // 
-            // labelSsaShadow
-            // 
-            this.labelSsaShadow.AutoSize = true;
-            this.labelSsaShadow.Location = new System.Drawing.Point(10, 45);
-            this.labelSsaShadow.Name = "labelSsaShadow";
-            this.labelSsaShadow.Size = new System.Drawing.Size(45, 13);
-            this.labelSsaShadow.TabIndex = 6;
-            this.labelSsaShadow.Text = "Shadow";
-            // 
-            // numericUpDownSsaShadow
-            // 
-            this.numericUpDownSsaShadow.Location = new System.Drawing.Point(64, 43);
-            this.numericUpDownSsaShadow.Maximum = new decimal(new int[] {
-            9,
-            0,
-            0,
-            0});
-            this.numericUpDownSsaShadow.Name = "numericUpDownSsaShadow";
-            this.numericUpDownSsaShadow.Size = new System.Drawing.Size(44, 21);
-            this.numericUpDownSsaShadow.TabIndex = 7;
-            this.numericUpDownSsaShadow.ValueChanged += new System.EventHandler(this.numericUpDownSsaShadow_ValueChanged);
-            // 
-            // checkBoxSsaOpaqueBox
-            // 
-            this.checkBoxSsaOpaqueBox.AutoSize = true;
-            this.checkBoxSsaOpaqueBox.Location = new System.Drawing.Point(13, 71);
-            this.checkBoxSsaOpaqueBox.Name = "checkBoxSsaOpaqueBox";
-            this.checkBoxSsaOpaqueBox.Size = new System.Drawing.Size(85, 17);
-            this.checkBoxSsaOpaqueBox.TabIndex = 8;
-            this.checkBoxSsaOpaqueBox.Text = "Opaque box";
-            this.checkBoxSsaOpaqueBox.UseVisualStyleBackColor = true;
-            this.checkBoxSsaOpaqueBox.CheckedChanged += new System.EventHandler(this.checkBoxSsaOpaqueBox_CheckedChanged);
-            // 
-            // labelSsaOutline
-            // 
-            this.labelSsaOutline.AutoSize = true;
-            this.labelSsaOutline.Location = new System.Drawing.Point(10, 20);
-            this.labelSsaOutline.Name = "labelSsaOutline";
-            this.labelSsaOutline.Size = new System.Drawing.Size(41, 13);
-            this.labelSsaOutline.TabIndex = 4;
-            this.labelSsaOutline.Text = "Outline";
-            // 
-            // groupSsaBoxFont
-            // 
-            this.groupSsaBoxFont.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupSsaBoxFont.Controls.Add(this.checkBoxSsaFontBold);
-            this.groupSsaBoxFont.Controls.Add(this.buttonSsaColor);
-            this.groupSsaBoxFont.Controls.Add(this.panelPrimaryColor);
-            this.groupSsaBoxFont.Controls.Add(this.numericUpDownFontSize);
-            this.groupSsaBoxFont.Controls.Add(this.comboBoxFontName);
-            this.groupSsaBoxFont.Controls.Add(this.labelSsaFontSize);
-            this.groupSsaBoxFont.Controls.Add(this.labelFontName);
-            this.groupSsaBoxFont.Location = new System.Drawing.Point(6, 20);
-            this.groupSsaBoxFont.Name = "groupSsaBoxFont";
-            this.groupSsaBoxFont.Size = new System.Drawing.Size(355, 97);
-            this.groupSsaBoxFont.TabIndex = 7;
-            this.groupSsaBoxFont.TabStop = false;
-            this.groupSsaBoxFont.Text = "Font";
-            // 
-            // checkBoxSsaFontBold
-            // 
-            this.checkBoxSsaFontBold.AutoSize = true;
-            this.checkBoxSsaFontBold.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBoxSsaFontBold.Location = new System.Drawing.Point(184, 45);
-            this.checkBoxSsaFontBold.Name = "checkBoxSsaFontBold";
-            this.checkBoxSsaFontBold.Size = new System.Drawing.Size(51, 17);
-            this.checkBoxSsaFontBold.TabIndex = 7;
-            this.checkBoxSsaFontBold.Text = "Bold";
-            this.checkBoxSsaFontBold.UseVisualStyleBackColor = true;
-            this.checkBoxSsaFontBold.CheckedChanged += new System.EventHandler(this.checkBoxSsaFontBold_CheckedChanged);
-            // 
-            // buttonSsaColor
-            // 
-            this.buttonSsaColor.Location = new System.Drawing.Point(6, 66);
-            this.buttonSsaColor.Name = "buttonSsaColor";
-            this.buttonSsaColor.Size = new System.Drawing.Size(109, 23);
-            this.buttonSsaColor.TabIndex = 6;
-            this.buttonSsaColor.Text = "Choose color";
-            this.buttonSsaColor.UseVisualStyleBackColor = true;
-            this.buttonSsaColor.Click += new System.EventHandler(this.buttonSsaColor_Click);
-            // 
-            // panelPrimaryColor
-            // 
-            this.panelPrimaryColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelPrimaryColor.Location = new System.Drawing.Point(121, 68);
-            this.panelPrimaryColor.Name = "panelPrimaryColor";
-            this.panelPrimaryColor.Size = new System.Drawing.Size(21, 20);
-            this.panelPrimaryColor.TabIndex = 4;
-            this.panelPrimaryColor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelPrimaryColor_MouseClick);
-            // 
-            // numericUpDownFontSize
-            // 
-            this.numericUpDownFontSize.Location = new System.Drawing.Point(121, 44);
-            this.numericUpDownFontSize.Maximum = new decimal(new int[] {
-            200,
-            0,
-            0,
-            0});
-            this.numericUpDownFontSize.Name = "numericUpDownFontSize";
-            this.numericUpDownFontSize.Size = new System.Drawing.Size(51, 21);
-            this.numericUpDownFontSize.TabIndex = 3;
-            this.numericUpDownFontSize.ValueChanged += new System.EventHandler(this.numericUpDownFontSize_ValueChanged);
-            // 
-            // comboBoxFontName
-            // 
-            this.comboBoxFontName.DropDownStyle = ComboBoxStyle.DropDownList;
-            this.comboBoxFontName.FormattingEnabled = true;
-            this.comboBoxFontName.Location = new System.Drawing.Point(121, 17);
-            this.comboBoxFontName.Name = "comboBoxFontName";
-            this.comboBoxFontName.Size = new System.Drawing.Size(188, 21);
-            this.comboBoxFontName.TabIndex = 1;
-            this.comboBoxFontName.TextChanged += new System.EventHandler(this.comboBoxFontName_TextChanged);
-            // 
-            // labelSsaFontSize
-            // 
-            this.labelSsaFontSize.AutoSize = true;
-            this.labelSsaFontSize.Location = new System.Drawing.Point(10, 46);
-            this.labelSsaFontSize.Name = "labelSsaFontSize";
-            this.labelSsaFontSize.Size = new System.Drawing.Size(50, 13);
-            this.labelSsaFontSize.TabIndex = 2;
-            this.labelSsaFontSize.Text = "Font size";
-            // 
-            // labelFontName
-            // 
-            this.labelFontName.AutoSize = true;
-            this.labelFontName.Location = new System.Drawing.Point(10, 20);
-            this.labelFontName.Name = "labelFontName";
-            this.labelFontName.Size = new System.Drawing.Size(58, 13);
-            this.labelFontName.TabIndex = 0;
-            this.labelFontName.Text = "Font name";
-            // 
-            // groupBoxMargins
-            // 
-            this.groupBoxMargins.Controls.Add(this.numericUpDownSsaMarginVertical);
-            this.groupBoxMargins.Controls.Add(this.numericUpDownSsaMarginRight);
-            this.groupBoxMargins.Controls.Add(this.numericUpDownSsaMarginLeft);
-            this.groupBoxMargins.Controls.Add(this.labelMarginVertical);
-            this.groupBoxMargins.Controls.Add(this.labelMarginRight);
-            this.groupBoxMargins.Controls.Add(this.labelMarginLeft);
-            this.groupBoxMargins.Location = new System.Drawing.Point(520, 20);
-            this.groupBoxMargins.Name = "groupBoxMargins";
-            this.groupBoxMargins.Size = new System.Drawing.Size(281, 97);
-            this.groupBoxMargins.TabIndex = 9;
-            this.groupBoxMargins.TabStop = false;
-            this.groupBoxMargins.Text = "Margins";
-            // 
-            // numericUpDownSsaMarginVertical
-            // 
-            this.numericUpDownSsaMarginVertical.Location = new System.Drawing.Point(168, 33);
-            this.numericUpDownSsaMarginVertical.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.numericUpDownSsaMarginVertical.Name = "numericUpDownSsaMarginVertical";
-            this.numericUpDownSsaMarginVertical.Size = new System.Drawing.Size(44, 21);
-            this.numericUpDownSsaMarginVertical.TabIndex = 5;
-            this.numericUpDownSsaMarginVertical.ValueChanged += new System.EventHandler(this.numericUpDownSsaMarginVertical_ValueChanged);
-            // 
-            // numericUpDownSsaMarginRight
-            // 
-            this.numericUpDownSsaMarginRight.Location = new System.Drawing.Point(93, 33);
-            this.numericUpDownSsaMarginRight.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.numericUpDownSsaMarginRight.Name = "numericUpDownSsaMarginRight";
-            this.numericUpDownSsaMarginRight.Size = new System.Drawing.Size(44, 21);
-            this.numericUpDownSsaMarginRight.TabIndex = 3;
-            // 
-            // numericUpDownSsaMarginLeft
-            // 
-            this.numericUpDownSsaMarginLeft.Location = new System.Drawing.Point(16, 33);
-            this.numericUpDownSsaMarginLeft.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.numericUpDownSsaMarginLeft.Name = "numericUpDownSsaMarginLeft";
-            this.numericUpDownSsaMarginLeft.Size = new System.Drawing.Size(44, 21);
-            this.numericUpDownSsaMarginLeft.TabIndex = 1;
-            // 
-            // labelMarginVertical
-            // 
-            this.labelMarginVertical.AutoSize = true;
-            this.labelMarginVertical.Location = new System.Drawing.Point(165, 17);
-            this.labelMarginVertical.Name = "labelMarginVertical";
-            this.labelMarginVertical.Size = new System.Drawing.Size(42, 13);
-            this.labelMarginVertical.TabIndex = 4;
-            this.labelMarginVertical.Text = "Vertical";
-            // 
-            // labelMarginRight
-            // 
-            this.labelMarginRight.AutoSize = true;
-            this.labelMarginRight.Location = new System.Drawing.Point(90, 16);
-            this.labelMarginRight.Name = "labelMarginRight";
-            this.labelMarginRight.Size = new System.Drawing.Size(32, 13);
-            this.labelMarginRight.TabIndex = 2;
-            this.labelMarginRight.Text = "Right";
-            // 
-            // labelMarginLeft
-            // 
-            this.labelMarginLeft.AutoSize = true;
-            this.labelMarginLeft.Location = new System.Drawing.Point(13, 16);
-            this.labelMarginLeft.Name = "labelMarginLeft";
-            this.labelMarginLeft.Size = new System.Drawing.Size(26, 13);
-            this.labelMarginLeft.TabIndex = 0;
-            this.labelMarginLeft.Text = "Left";
-            // 
-            // groupBoxPreview
-            // 
-            this.groupBoxPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxPreview.Controls.Add(this.pictureBoxPreview);
-            this.groupBoxPreview.Location = new System.Drawing.Point(6, 118);
-            this.groupBoxPreview.Name = "groupBoxPreview";
-            this.groupBoxPreview.Size = new System.Drawing.Size(839, 397);
-            this.groupBoxPreview.TabIndex = 10;
-            this.groupBoxPreview.TabStop = false;
-            this.groupBoxPreview.Text = "Preview";
-            // 
-            // pictureBoxPreview
-            // 
-            this.pictureBoxPreview.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pictureBoxPreview.Location = new System.Drawing.Point(3, 17);
-            this.pictureBoxPreview.Name = "pictureBoxPreview";
-            this.pictureBoxPreview.Size = new System.Drawing.Size(833, 377);
-            this.pictureBoxPreview.TabIndex = 0;
-            this.pictureBoxPreview.TabStop = false;
-            this.pictureBoxPreview.Click += new System.EventHandler(this.pictureBoxPreview_Click);
-            // 
             // panelNetwork
             // 
             this.panelNetwork.Controls.Add(this.groupBoxNetworkSession);
@@ -4729,7 +4402,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.panelNetwork.Name = "panelNetwork";
             this.panelNetwork.Padding = new System.Windows.Forms.Padding(3);
             this.panelNetwork.Size = new System.Drawing.Size(864, 521);
-            this.panelNetwork.TabIndex = 11;
+            this.panelNetwork.TabIndex = 10;
             this.panelNetwork.Text = "Network";
             // 
             // groupBoxNetworkSession
@@ -4873,7 +4546,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelStatus.Location = new System.Drawing.Point(12, 549);
             this.labelStatus.Name = "labelStatus";
             this.labelStatus.Size = new System.Drawing.Size(60, 13);
-            this.labelStatus.TabIndex = 1;
+            this.labelStatus.TabIndex = 11;
             this.labelStatus.Text = "labelStatus";
             // 
             // openFileDialogFFmpeg
@@ -4886,7 +4559,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.buttonReset.Location = new System.Drawing.Point(895, 539);
             this.buttonReset.Name = "buttonReset";
             this.buttonReset.Size = new System.Drawing.Size(185, 23);
-            this.buttonReset.TabIndex = 4;
+            this.buttonReset.TabIndex = 14;
             this.buttonReset.Text = "Restore default settings";
             this.buttonReset.UseVisualStyleBackColor = true;
             this.buttonReset.Click += new System.EventHandler(this.buttonReset_Click);
@@ -4909,7 +4582,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.Controls.Add(this.panelToolBar);
             this.Controls.Add(this.panelWaveform);
             this.Controls.Add(this.panelSyntaxColoring);
-            this.Controls.Add(this.panelSsaStyle);
             this.Controls.Add(this.panelNetwork);
             this.Controls.Add(this.panelGeneral);
             this.Controls.Add(this.panelShortcuts);
@@ -5019,22 +4691,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBoxFontListViews.PerformLayout();
             this.groupBoxFontGeneral.ResumeLayout(false);
             this.groupBoxFontGeneral.PerformLayout();
-            this.panelSsaStyle.ResumeLayout(false);
-            this.groupBoxSsaStyle.ResumeLayout(false);
-            this.groupBoxSsaBorder.ResumeLayout(false);
-            this.groupBoxSsaBorder.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaOutline)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaShadow)).EndInit();
-            this.groupSsaBoxFont.ResumeLayout(false);
-            this.groupSsaBoxFont.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).EndInit();
-            this.groupBoxMargins.ResumeLayout(false);
-            this.groupBoxMargins.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaMarginVertical)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaMarginRight)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaMarginLeft)).EndInit();
-            this.groupBoxPreview.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).EndInit();
             this.panelNetwork.ResumeLayout(false);
             this.groupBoxNetworkSession.ResumeLayout(false);
             this.groupBoxNetworkSession.PerformLayout();
@@ -5053,7 +4709,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.ListBox listBoxSection;
         private System.Windows.Forms.Panel panelGeneral;
-        private System.Windows.Forms.Panel panelSsaStyle;
         private System.Windows.Forms.GroupBox groupBoxMiscellaneous;
         private System.Windows.Forms.GroupBox groupBoxShowToolBarButtons;
         private System.Windows.Forms.PictureBox pictureBoxNew;
@@ -5091,7 +4746,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private System.Windows.Forms.ComboBox comboBoxFrameRate;
         private System.Windows.Forms.ComboBox comboBoxEncoding;
         private System.Windows.Forms.CheckBox checkBoxRememberRecentFiles;
-        private System.Windows.Forms.GroupBox groupBoxSsaStyle;
         private System.Windows.Forms.ColorDialog colorDialogSSAStyle;
         private System.Windows.Forms.CheckBox checkBoxStartInSourceView;
         private System.Windows.Forms.CheckBox checkBoxReopenLastOpened;
@@ -5254,13 +4908,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private System.Windows.Forms.Label labelWaveformBorderHitMs2;
         private System.Windows.Forms.NumericUpDown numericUpDownWaveformBorderHitMs;
         private System.Windows.Forms.Label labelWaveformBorderHitMs1;
-        private System.Windows.Forms.Label labelSsaOutline;
-        private System.Windows.Forms.NumericUpDown numericUpDownSsaShadow;
-        private System.Windows.Forms.NumericUpDown numericUpDownSsaOutline;
-        private System.Windows.Forms.Label labelSsaShadow;
-        private System.Windows.Forms.GroupBox groupBoxPreview;
-        private System.Windows.Forms.PictureBox pictureBoxPreview;
-        private System.Windows.Forms.CheckBox checkBoxSsaOpaqueBox;
         private System.Windows.Forms.CheckBox checkBoxSpellCheckOneLetterWords;
         private System.Windows.Forms.CheckBox checkBoxTreatINQuoteAsING;
         private System.Windows.Forms.GroupBox groupBoxFfmpeg;
@@ -5294,22 +4941,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private System.Windows.Forms.Button buttonNetworkSessionNewMessageSound;
         private System.Windows.Forms.TextBox textBoxNetworkSessionNewMessageSound;
         private System.Windows.Forms.Label labelNetworkSessionNewMessageSound;
-        private System.Windows.Forms.GroupBox groupBoxMargins;
-        private System.Windows.Forms.NumericUpDown numericUpDownSsaMarginVertical;
-        private System.Windows.Forms.NumericUpDown numericUpDownSsaMarginRight;
-        private System.Windows.Forms.NumericUpDown numericUpDownSsaMarginLeft;
-        private System.Windows.Forms.Label labelMarginVertical;
-        private System.Windows.Forms.Label labelMarginRight;
-        private System.Windows.Forms.Label labelMarginLeft;
-        private System.Windows.Forms.GroupBox groupBoxSsaBorder;
-        private System.Windows.Forms.GroupBox groupSsaBoxFont;
-        private System.Windows.Forms.NumericUpDown numericUpDownFontSize;
-        private System.Windows.Forms.ComboBox comboBoxFontName;
-        private System.Windows.Forms.Label labelSsaFontSize;
-        private System.Windows.Forms.Label labelFontName;
-        private System.Windows.Forms.Panel panelPrimaryColor;
-        private System.Windows.Forms.Button buttonSsaColor;
-        private System.Windows.Forms.CheckBox checkBoxSsaFontBold;
         private System.Windows.Forms.CheckBox checkBoxFceSkipStep1;
         private System.Windows.Forms.Button buttonMpvSettings;
         private System.Windows.Forms.Label labelMpvSettings;
