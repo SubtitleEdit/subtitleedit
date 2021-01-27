@@ -4788,6 +4788,10 @@ namespace Nikse.SubtitleEdit.Forms
                                              Configuration.Settings.General.SubtitleListViewFontBold.ToString() +
                                              Configuration.Settings.General.SubtitleListViewFontSize;
 
+            string oldMpvFontSettings = Configuration.Settings.General.MpvPreviewTextPrimaryColor +
+                                        Configuration.Settings.General.MpvPreviewTextOutlineWidth.ToString() +
+                                        Configuration.Settings.General.MpvPreviewTextOpaqueBox.ToString();
+
             bool oldUseTimeFormatHHMMSSFF = Configuration.Settings.General.UseTimeFormatHHMMSSFF;
 
             string oldSyntaxColoring = Configuration.Settings.Tools.ListViewSyntaxColorDurationSmall.ToString() +
@@ -4979,6 +4983,15 @@ namespace Nikse.SubtitleEdit.Forms
                 CloseVideoToolStripMenuItemClick(null, null);
                 OpenVideo(vfn);
             }
+
+            if (mediaPlayer.VideoPlayer != null && mediaPlayer.VideoPlayer is LibMpvDynamic && Configuration.Settings.General.MpvHandlesPreviewText
+                && oldMpvFontSettings != Configuration.Settings.General.MpvPreviewTextPrimaryColor +
+                Configuration.Settings.General.MpvPreviewTextOutlineWidth.ToString() +
+                Configuration.Settings.General.MpvPreviewTextOpaqueBox.ToString())
+            {
+                mediaPlayer.UpdateMpvStyle();
+            }
+
 
             StartOrStopAutoBackup();
 
