@@ -34,6 +34,13 @@ namespace Nikse.SubtitleEdit.Forms
             Text = LanguageSettings.Current.CompareSubtitles.Title;
             buttonReloadSubtitle1.Text = LanguageSettings.Current.CompareSubtitles.Reload;
             buttonReloadSubtitle2.Text = LanguageSettings.Current.CompareSubtitles.Reload;
+            using (var graphics = CreateGraphics())
+            {
+                var w = (int)graphics.MeasureString(buttonReloadSubtitle1.Text, Font).Width;
+                buttonReloadSubtitle1.Width = w + 17;
+                buttonReloadSubtitle2.Width = w + 17;
+            }
+
             buttonPreviousDifference.Text = LanguageSettings.Current.CompareSubtitles.PreviousDifference;
             buttonNextDifference.Text = LanguageSettings.Current.CompareSubtitles.NextDifference;
             checkBoxShowOnlyDifferences.Text = LanguageSettings.Current.CompareSubtitles.ShowOnlyDifferences;
