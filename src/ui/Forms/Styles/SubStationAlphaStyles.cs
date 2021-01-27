@@ -125,7 +125,12 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             buttonRemoveAll.Text = l.RemoveAll;
             groupBoxPreview.Text = LanguageSettings.Current.General.Preview;
 
+            // TODO: Add language tag.
             groupBoxStorage.Text = l.StyleStorage;
+            labelStorageCategory.Text = "Category";
+            buttonStorageCategoryNew.Text = l.New;
+            buttonStorageCategoryDelete.Text = l.Remove;
+            labelCategoryDefaultNote.Text = "Note: \"Default\" styles will be applied to new ASSA files";
             buttonStorageImport.Text = l.Import;
             buttonStorageExport.Text = l.Export;
             buttonStorageAdd.Text = l.New;
@@ -2048,7 +2053,22 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
         }
 
-        private bool StyleExistsInListView(string styleName, ListView listView)
+        private void buttonStorageCategoryDelete_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonStorageCategoryNew_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboboxStorageCategory_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+private bool StyleExistsInListView(string styleName, ListView listView)
         {
             foreach (ListViewItem item in listView.Items)
             {

@@ -129,6 +129,11 @@
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.labelCategoryDefaultNote = new System.Windows.Forms.Label();
+            this.buttonStorageCategoryDelete = new System.Windows.Forms.Button();
+            this.buttonStorageCategoryNew = new System.Windows.Forms.Button();
+            this.comboboxStorageCategory = new System.Windows.Forms.ComboBox();
+            this.labelStorageCategory = new System.Windows.Forms.Label();
             this.contextMenuStripStorage = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemStorageRemove = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemStorageRemoveAll = new System.Windows.Forms.ToolStripMenuItem();
@@ -1041,6 +1046,11 @@
             this.groupBoxStorage.Controls.Add(this.buttonStorageAdd);
             this.groupBoxStorage.Controls.Add(this.buttonStorageRemove);
             this.groupBoxStorage.Controls.Add(this.listViewStorage);
+            this.groupBoxStorage.Controls.Add(this.labelCategoryDefaultNote);
+            this.groupBoxStorage.Controls.Add(this.buttonStorageCategoryDelete);
+            this.groupBoxStorage.Controls.Add(this.buttonStorageCategoryNew);
+            this.groupBoxStorage.Controls.Add(this.comboboxStorageCategory);
+            this.groupBoxStorage.Controls.Add(this.labelStorageCategory);
             this.groupBoxStorage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBoxStorage.Location = new System.Drawing.Point(0, 0);
             this.groupBoxStorage.Name = "groupBoxStorage";
@@ -1056,7 +1066,7 @@
             this.buttonAddToFile.Location = new System.Drawing.Point(280, 222);
             this.buttonAddToFile.Name = "buttonAddToFile";
             this.buttonAddToFile.Size = new System.Drawing.Size(163, 52);
-            this.buttonAddToFile.TabIndex = 135;
+            this.buttonAddToFile.TabIndex = 12;
             this.buttonAddToFile.Text = "Add to file";
             this.buttonAddToFile.UseVisualStyleBackColor = true;
             this.buttonAddToFile.Click += new System.EventHandler(this.buttonAddToFile_Click);
@@ -1068,7 +1078,7 @@
             this.buttonStorageExport.Location = new System.Drawing.Point(6, 251);
             this.buttonStorageExport.Name = "buttonStorageExport";
             this.buttonStorageExport.Size = new System.Drawing.Size(82, 23);
-            this.buttonStorageExport.TabIndex = 140;
+            this.buttonStorageExport.TabIndex = 7;
             this.buttonStorageExport.Text = "Export...";
             this.buttonStorageExport.UseVisualStyleBackColor = true;
             this.buttonStorageExport.Click += new System.EventHandler(this.buttonStorageExport_Click);
@@ -1080,7 +1090,7 @@
             this.buttonStorageImport.Location = new System.Drawing.Point(6, 222);
             this.buttonStorageImport.Name = "buttonStorageImport";
             this.buttonStorageImport.Size = new System.Drawing.Size(82, 23);
-            this.buttonStorageImport.TabIndex = 120;
+            this.buttonStorageImport.TabIndex = 6;
             this.buttonStorageImport.Text = "Import...";
             this.buttonStorageImport.UseVisualStyleBackColor = true;
             this.buttonStorageImport.Click += new System.EventHandler(this.buttonStorageImport_Click);
@@ -1092,7 +1102,7 @@
             this.buttonStorageCopy.Location = new System.Drawing.Point(94, 251);
             this.buttonStorageCopy.Name = "buttonStorageCopy";
             this.buttonStorageCopy.Size = new System.Drawing.Size(82, 23);
-            this.buttonStorageCopy.TabIndex = 150;
+            this.buttonStorageCopy.TabIndex = 9;
             this.buttonStorageCopy.Text = "Copy";
             this.buttonStorageCopy.UseVisualStyleBackColor = true;
             this.buttonStorageCopy.Click += new System.EventHandler(this.buttonStorageCopy_Click);
@@ -1104,7 +1114,7 @@
             this.buttonStorageRemoveAll.Location = new System.Drawing.Point(182, 251);
             this.buttonStorageRemoveAll.Name = "buttonStorageRemoveAll";
             this.buttonStorageRemoveAll.Size = new System.Drawing.Size(92, 23);
-            this.buttonStorageRemoveAll.TabIndex = 160;
+            this.buttonStorageRemoveAll.TabIndex = 11;
             this.buttonStorageRemoveAll.Text = "Remove all";
             this.buttonStorageRemoveAll.UseVisualStyleBackColor = true;
             this.buttonStorageRemoveAll.Click += new System.EventHandler(this.buttonStorageRemoveAll_Click);
@@ -1116,7 +1126,7 @@
             this.buttonStorageAdd.Location = new System.Drawing.Point(94, 222);
             this.buttonStorageAdd.Name = "buttonStorageAdd";
             this.buttonStorageAdd.Size = new System.Drawing.Size(82, 23);
-            this.buttonStorageAdd.TabIndex = 125;
+            this.buttonStorageAdd.TabIndex = 8;
             this.buttonStorageAdd.Text = "New";
             this.buttonStorageAdd.UseVisualStyleBackColor = true;
             this.buttonStorageAdd.Click += new System.EventHandler(this.buttonStorageAdd_Click);
@@ -1128,7 +1138,7 @@
             this.buttonStorageRemove.Location = new System.Drawing.Point(182, 222);
             this.buttonStorageRemove.Name = "buttonStorageRemove";
             this.buttonStorageRemove.Size = new System.Drawing.Size(92, 23);
-            this.buttonStorageRemove.TabIndex = 130;
+            this.buttonStorageRemove.TabIndex = 10;
             this.buttonStorageRemove.Text = "Remove";
             this.buttonStorageRemove.UseVisualStyleBackColor = true;
             this.buttonStorageRemove.Click += new System.EventHandler(this.buttonStorageRemove_Click);
@@ -1148,11 +1158,11 @@
             this.listViewStorage.ContextMenuStrip = this.contextMenuStripStorage;
             this.listViewStorage.FullRowSelect = true;
             this.listViewStorage.HideSelection = false;
-            this.listViewStorage.Location = new System.Drawing.Point(6, 19);
+            this.listViewStorage.Location = new System.Drawing.Point(6, 68);
             this.listViewStorage.MultiSelect = false;
             this.listViewStorage.Name = "listViewStorage";
-            this.listViewStorage.Size = new System.Drawing.Size(545, 197);
-            this.listViewStorage.TabIndex = 110;
+            this.listViewStorage.Size = new System.Drawing.Size(545, 148);
+            this.listViewStorage.TabIndex = 5;
             this.listViewStorage.UseCompatibleStateImageBehavior = false;
             this.listViewStorage.View = System.Windows.Forms.View.Details;
             this.listViewStorage.SelectedIndexChanged += new System.EventHandler(this.listViewStorage_SelectedIndexChanged);
@@ -1188,6 +1198,57 @@
             // 
             this.columnHeader6.Text = "Outline";
             this.columnHeader6.Width = 55;
+            // 
+            // labelCategoryDefaultNote
+            // 
+            this.labelCategoryDefaultNote.AutoSize = true;
+            this.labelCategoryDefaultNote.Location = new System.Drawing.Point(10, 48);
+            this.labelCategoryDefaultNote.Name = "labelCategoryDefaultNote";
+            this.labelCategoryDefaultNote.Size = new System.Drawing.Size(59, 13);
+            this.labelCategoryDefaultNote.TabIndex = 4;
+            this.labelCategoryDefaultNote.Text = "Note: \"Default\" styles will be applied to new ASSA files";
+            // 
+            // buttonStorageCategoryDelete
+            // 
+            this.buttonStorageCategoryDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonStorageCategoryDelete.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonStorageCategoryDelete.Location = new System.Drawing.Point(365, 19);
+            this.buttonStorageCategoryDelete.Name = "buttonStorageRemove";
+            this.buttonStorageCategoryDelete.Size = new System.Drawing.Size(92, 23);
+            this.buttonStorageCategoryDelete.TabIndex = 3;
+            this.buttonStorageCategoryDelete.Text = "Remove";
+            this.buttonStorageCategoryDelete.UseVisualStyleBackColor = true;
+            this.buttonStorageCategoryDelete.Click += new System.EventHandler(this.buttonStorageCategoryDelete_Click);
+            // 
+            // buttonStorageCategoryNew
+            // 
+            this.buttonStorageCategoryNew.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonStorageCategoryNew.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonStorageCategoryNew.Location = new System.Drawing.Point(267, 19);
+            this.buttonStorageCategoryNew.Name = "buttonStorageCategoryNew";
+            this.buttonStorageCategoryNew.Size = new System.Drawing.Size(92, 23);
+            this.buttonStorageCategoryNew.TabIndex = 2;
+            this.buttonStorageCategoryNew.Text = "New";
+            this.buttonStorageCategoryNew.UseVisualStyleBackColor = true;
+            this.buttonStorageCategoryNew.Click += new System.EventHandler(this.buttonStorageCategoryNew_Click);
+            // 
+            // comboboxStorageCategory
+            // 
+            this.comboboxStorageCategory.FormattingEnabled = true;
+            this.comboboxStorageCategory.Location = new System.Drawing.Point(73, 19);
+            this.comboboxStorageCategory.Name = "comboboxStorageCategory";
+            this.comboboxStorageCategory.Size = new System.Drawing.Size(188, 21);
+            this.comboboxStorageCategory.TabIndex = 1;
+            this.comboboxStorageCategory.SelectedIndexChanged += new System.EventHandler(this.comboboxStorageCategory_SelectedIndexChanged);
+            // 
+            // labelStorageCategory
+            // 
+            this.labelStorageCategory.AutoSize = true;
+            this.labelStorageCategory.Location = new System.Drawing.Point(10, 21);
+            this.labelStorageCategory.Name = "labelStorageCategory";
+            this.labelStorageCategory.Size = new System.Drawing.Size(59, 13);
+            this.labelStorageCategory.TabIndex = 0;
+            this.labelStorageCategory.Text = "Category";
             // 
             // contextMenuStripStorage
             // 
@@ -1462,6 +1523,11 @@
         private System.Windows.Forms.Label labelStatus;
         private System.Windows.Forms.Timer timerClearStatus;
         private System.Windows.Forms.GroupBox groupBoxStorage;
+        private System.Windows.Forms.Label labelStorageCategory;
+        private System.Windows.Forms.ComboBox comboboxStorageCategory;
+        private System.Windows.Forms.Button buttonStorageCategoryNew;
+        private System.Windows.Forms.Button buttonStorageCategoryDelete;
+        private System.Windows.Forms.Label labelCategoryDefaultNote;
         private System.Windows.Forms.ListView listViewStorage;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
