@@ -2172,8 +2172,10 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             var bluePercent = color.B * 100 / total;
 
             var idx = subtitleListView1.SelectedItems[0].Index;
+            SetupProgressBar(GetIndices(true));
             for (int i = 0; i < subtitleListView1.SelectedIndices.Count; i++)
             {
+                progressBar1.Value++;
                 var index = subtitleListView1.SelectedIndices[i];
                 var extra = _extra[index];
                 var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : GetBitmap(_binSubtitles[index]);
@@ -2192,6 +2194,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
                 bmp.Dispose();
             }
+            progressBar1.Hide();
         }
 
         private Bitmap ColorBitmap(Bitmap bitmap, int redPercent, int greenPercent, int bluePercent)
@@ -2407,8 +2410,10 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
                 var idx = subtitleListView1.SelectedItems[0].Index;
                 var selectedIndices = GetIndices(onlySelectedLines);
+                SetupProgressBar(selectedIndices);
                 foreach (var index in selectedIndices)
                 {
+                    progressBar1.Value++;
                     var extra = _extra[index];
                     var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : GetBitmap(_binSubtitles[index]);
                     FixAlignment(f.Alignment, extra, bmp);
@@ -2422,6 +2427,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
                     bmp.Dispose();
                 }
+                progressBar1.Hide();
             }
         }
 
@@ -2660,8 +2666,10 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 }
 
                 var selectedIndices = GetIndices(onlySelectedLines);
+                SetupProgressBar(selectedIndices);
                 foreach (var i in selectedIndices)
                 {
+                    progressBar1.Value++;
                     var sub = _binSubtitles[i];
                     extra = _extra[i];
                     bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : GetBitmap(sub);
@@ -2680,6 +2688,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
                     bmp.Dispose();
                 }
+                progressBar1.Hide();
             }
         }
 
@@ -2733,8 +2742,10 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 }
 
                 var selectedIndices = GetIndices(onlySelectedLines);
+                SetupProgressBar(selectedIndices);
                 foreach (var i in selectedIndices)
                 {
+                    progressBar1.Value++;
                     var sub = _binSubtitles[i];
                     extra = _extra[i];
                     bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : GetBitmap(sub);
@@ -2751,6 +2762,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
                     bmp.Dispose();
                 }
+                progressBar1.Hide();
             }
         }
 
@@ -2788,8 +2800,10 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 }
 
                 var selectedIndices = GetIndices(onlySelectedLines);
+                SetupProgressBar(selectedIndices);
                 foreach (var i in selectedIndices)
                 {
+                    progressBar1.Value++;
                     var sub = _binSubtitles[i];
                     extra = _extra[i];
                     bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : GetBitmap(sub);
@@ -2806,6 +2820,17 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
                     bmp.Dispose();
                 }
+                progressBar1.Hide();
+            }
+        }
+
+        private void SetupProgressBar(List<int> selectedIndices)
+        {
+            if (selectedIndices.Count > 10)
+            {
+                progressBar1.Maximum = selectedIndices.Count;
+                progressBar1.Value = 0;
+                progressBar1.Visible = true;
             }
         }
 
