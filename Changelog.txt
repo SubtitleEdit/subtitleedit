@@ -31,6 +31,7 @@
    * Add Catalan installer translation - thx Juansa
    * Source view is now hidden (more space), use F2 to toggle view, thx omrSi
    * Update Tesseract 5 Alpha to "2020-11-27"
+   * Add more options to Tesseract image pre-processing - thx maknol
    * Translate: Refactor + paragraph handling strategies - thx Brummochse 
    * Set default subtitle text box font size to 12
    * Use "Min gap between subtitles" when loading scc - thx batatop
