@@ -366,6 +366,7 @@ namespace Nikse.SubtitleEdit.Forms
                 UpdateRecentFilesUI();
                 InitializeToolbar();
                 UpdateNetflixGlyphCheckToolsVisibility();
+                UpdateAssaToolsVisibility();
 
                 if (Configuration.Settings.General.RightToLeftMode)
                 {
@@ -1581,6 +1582,8 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonVisualSync.ToolTipText = _language.Menu.ToolBar.VisualSync;
             toolStripButtonSpellCheck.ToolTipText = _language.Menu.ToolBar.SpellCheck;
             toolStripButtonNetflixQualityCheck.ToolTipText = _language.Menu.ToolBar.NetflixQualityCheck;
+            toolStripButtonAssaStylesManager.ToolTipText = "Assa styles manager";
+            toolStripButtonAssaProperties.ToolTipText = "Assa properties";
             toolStripButtonSettings.ToolTipText = _language.Menu.ToolBar.Settings;
             toolStripButtonHelp.ToolTipText = _language.Menu.ToolBar.Help;
             toolStripButtonToggleWaveform.ToolTipText = _language.Menu.ToolBar.ShowHideWaveform;
@@ -4726,6 +4729,7 @@ namespace Nikse.SubtitleEdit.Forms
             ShowHideTextBasedFeatures(format);
 
             UpdateNetflixGlyphCheckToolsVisibility();
+            UpdateAssaToolsVisibility();
         }
 
         private static List<string> GetNuendoStyles()
@@ -4820,7 +4824,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 settings.Initialize(Icon, toolStripButtonFileNew.Image, toolStripButtonFileOpen.Image, toolStripButtonSave.Image, toolStripButtonSaveAs.Image, toolStripButtonFind.Image,
                     toolStripButtonReplace.Image, toolStripButtonFixCommonErrors.Image, toolStripButtonRemoveTextForHi.Image, toolStripButtonVisualSync.Image,
-                    toolStripButtonSpellCheck.Image, toolStripButtonNetflixQualityCheck.Image, toolStripButtonSettings.Image, toolStripButtonHelp.Image);
+                    toolStripButtonSpellCheck.Image, toolStripButtonNetflixQualityCheck.Image, toolStripButtonAssaStylesManager.Image, toolStripButtonAssaProperties.Image, toolStripButtonSettings.Image, toolStripButtonHelp.Image);
 
                 if (settings.ShowDialog(this) == DialogResult.Cancel)
                 {
@@ -5251,6 +5255,8 @@ namespace Nikse.SubtitleEdit.Forms
             TryLoadIcon(toolStripButtonVisualSync, "VisualSync");
             TryLoadIcon(toolStripButtonSpellCheck, "SpellCheck");
             TryLoadIcon(toolStripButtonNetflixQualityCheck, "NetflixGlyphCheck");
+            TryLoadIcon(toolStripButtonAssaStylesManager, "AssaStylesManager");
+            TryLoadIcon(toolStripButtonAssaProperties, "AssaProperties");
             TryLoadIcon(toolStripButtonSettings, "Settings");
             TryLoadIcon(toolStripButtonHelp, "Help");
 
@@ -5269,6 +5275,8 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonVisualSync.Visible = gs.ShowToolbarVisualSync;
             toolStripButtonSpellCheck.Visible = gs.ShowToolbarSpellCheck;
             toolStripButtonNetflixQualityCheck.Visible = gs.ShowToolbarNetflixGlyphCheck;
+            toolStripButtonAssaStylesManager.Visible = gs.ShowToolbarAssaStylesManager;
+            toolStripButtonAssaProperties.Visible = gs.ShowToolbarAssaProperties;
             toolStripButtonSettings.Visible = gs.ShowToolbarSettings;
             toolStripButtonHelp.Visible = gs.ShowToolbarHelp;
 
@@ -5286,6 +5294,7 @@ namespace Nikse.SubtitleEdit.Forms
                                  gs.ShowToolbarSettings || gs.ShowToolbarHelp;
 
             UpdateNetflixGlyphCheckToolsVisibility();
+            UpdateAssaToolsVisibility();
         }
 
         private void ToolStripButtonFileNewClick(object sender, EventArgs e)
@@ -28521,16 +28530,19 @@ namespace Nikse.SubtitleEdit.Forms
             IsMenuOpen = false;
         }
 
-        private void UpdateNetflixGlyphCheckToolsVisibility()
+        private bool IsNetflixGlyphCheckAvailable
         {
-            bool showTools = IsNetflixGlyphCheckAvailable();
-            toolStripButtonNetflixQualityCheck.Visible = showTools && Configuration.Settings.General.ShowToolbarNetflixGlyphCheck;
+            get
+            {
+                var formatType = GetCurrentSubtitleFormat().GetType();
+                return formatType == typeof(TimedText10) || formatType == typeof(NetflixTimedText) || formatType == typeof(NetflixImsc11Japanese) || formatType == typeof(Ebu);
+            }
         }
 
-        private bool IsNetflixGlyphCheckAvailable()
+        private void UpdateNetflixGlyphCheckToolsVisibility()
         {
-            var formatType = GetCurrentSubtitleFormat().GetType();
-            return formatType == typeof(TimedText10) || formatType == typeof(NetflixTimedText) || formatType == typeof(NetflixImsc11Japanese) || formatType == typeof(Ebu);
+            bool showTools = IsNetflixGlyphCheckAvailable;
+            toolStripButtonNetflixQualityCheck.Visible = showTools && Configuration.Settings.General.ShowToolbarNetflixGlyphCheck;
         }
 
         private void NetflixGlyphCheck(bool isSaving)
@@ -28579,11 +28591,6 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void netflixGlyphCheckToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            NetflixGlyphCheck(false);
-        }
-
-        private void toolStripButtonNetflixGlyphCheck_Click(object sender, EventArgs e)
         {
             NetflixGlyphCheck(false);
         }
@@ -29414,6 +29421,14 @@ namespace Nikse.SubtitleEdit.Forms
         private void toolStripMenuItemAssaStyles_Click(object sender, EventArgs e)
         {
             toolStripMenuItemAssStyles_Click(sender, e);
+        }
+
+        private void UpdateAssaToolsVisibility()
+        {
+            var formatType = GetCurrentSubtitleFormat().GetType();
+            bool showTools = formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha);
+            toolStripButtonAssaStylesManager.Visible = showTools && Configuration.Settings.General.ShowToolbarAssaStylesManager;
+            toolStripButtonAssaProperties.Visible = showTools && Configuration.Settings.General.ShowToolbarAssaStylesManager;
         }
 
         private void openSecondSubtitleToolStripMenuItem_Click(object sender, EventArgs e)

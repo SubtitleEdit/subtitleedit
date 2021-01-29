@@ -1025,6 +1025,8 @@ $HorzAlign          =   Center
         public bool ShowToolbarVisualSync { get; set; }
         public bool ShowToolbarSpellCheck { get; set; }
         public bool ShowToolbarNetflixGlyphCheck { get; set; }
+        public bool ShowToolbarAssaStylesManager { get; set; }
+        public bool ShowToolbarAssaProperties { get; set; }
         public bool ShowToolbarSettings { get; set; }
         public bool ShowToolbarHelp { get; set; }
 
@@ -1194,6 +1196,8 @@ $HorzAlign          =   Center
             ShowToolbarVisualSync = true;
             ShowToolbarSpellCheck = true;
             ShowToolbarNetflixGlyphCheck = true;
+            ShowToolbarAssaStylesManager = true;
+            ShowToolbarAssaProperties = true;
             ShowToolbarSettings = false;
             ShowToolbarHelp = true;
 
@@ -2677,6 +2681,18 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.ShowToolbarNetflixGlyphCheck = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("ShowToolbarAssaStylesManager");
+            if (subNode != null)
+            {
+                settings.General.ShowToolbarAssaStylesManager = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("ShowToolbarAssaProperties");
+            if (subNode != null)
+            {
+                settings.General.ShowToolbarAssaProperties = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("ShowToolbarSettings");
@@ -7904,6 +7920,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ShowToolbarVisualSync", settings.General.ShowToolbarVisualSync.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowToolbarSpellCheck", settings.General.ShowToolbarSpellCheck.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowToolbarNetflixGlyphCheck", settings.General.ShowToolbarNetflixGlyphCheck.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ShowToolbarAssaStylesManager", settings.General.ShowToolbarAssaStylesManager.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ShowToolbarAssaProperties", settings.General.ShowToolbarAssaProperties.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowToolbarSettings", settings.General.ShowToolbarSettings.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowToolbarHelp", settings.General.ShowToolbarHelp.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowFrameRate", settings.General.ShowFrameRate.ToString(CultureInfo.InvariantCulture));

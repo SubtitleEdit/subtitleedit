@@ -407,6 +407,12 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.buttonReset = new System.Windows.Forms.Button();
             this.toolTipContinuationPreview = new System.Windows.Forms.ToolTip(this.components);
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.pictureBoxAssaStylesManager = new System.Windows.Forms.PictureBox();
+            this.labelTBAssaStylesManager = new System.Windows.Forms.Label();
+            this.checkBoxAssaStylesManager = new System.Windows.Forms.CheckBox();
+            this.pictureBoxAssaProperties = new System.Windows.Forms.PictureBox();
+            this.checkBoxAssaProperties = new System.Windows.Forms.CheckBox();
+            this.labelTBAssaProperties = new System.Windows.Forms.Label();
             this.panelGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
@@ -450,6 +456,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.panelToolBar.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBoxShowToolBarButtons.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAssaProperties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAssaStylesManager)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNetflixQualityCheck)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBRemoveTextForHi)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBFixCommonErrors)).BeginInit();
@@ -3668,6 +3676,12 @@ namespace Nikse.SubtitleEdit.Forms.Options
             // 
             this.groupBoxShowToolBarButtons.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxShowToolBarButtons.Controls.Add(this.labelTBAssaProperties);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxAssaProperties);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.checkBoxAssaProperties);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.labelTBAssaStylesManager);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxAssaStylesManager);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.checkBoxAssaStylesManager);
             this.groupBoxShowToolBarButtons.Controls.Add(this.labelTBNetflixQualityCheck);
             this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxNetflixQualityCheck);
             this.groupBoxShowToolBarButtons.Controls.Add(this.checkBoxNetflixQualityCheck);
@@ -3713,6 +3727,60 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBoxShowToolBarButtons.TabIndex = 0;
             this.groupBoxShowToolBarButtons.TabStop = false;
             this.groupBoxShowToolBarButtons.Text = "Show toolbar buttons";
+            // 
+            // labelTBAssaProperties
+            // 
+            this.labelTBAssaProperties.AutoSize = true;
+            this.labelTBAssaProperties.Location = new System.Drawing.Point(736, 22);
+            this.labelTBAssaProperties.Name = "labelTBAssaProperties";
+            this.labelTBAssaProperties.Size = new System.Drawing.Size(103, 13);
+            this.labelTBAssaProperties.TabIndex = 48;
+            this.labelTBAssaProperties.Text = "Assa properties";
+            // 
+            // pictureBoxAssaProperties
+            // 
+            this.pictureBoxAssaProperties.Location = new System.Drawing.Point(759, 41);
+            this.pictureBoxAssaProperties.Name = "pictureBoxAssaProperties";
+            this.pictureBoxAssaProperties.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxAssaProperties.TabIndex = 47;
+            this.pictureBoxAssaProperties.TabStop = false;
+            // 
+            // checkBoxAssaProperties
+            // 
+            this.checkBoxAssaProperties.AutoSize = true;
+            this.checkBoxAssaProperties.Location = new System.Drawing.Point(762, 81);
+            this.checkBoxAssaProperties.Name = "checkBoxAssaProperties";
+            this.checkBoxAssaProperties.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxAssaProperties.TabIndex = 46;
+            this.checkBoxAssaProperties.Text = "Visible";
+            this.checkBoxAssaProperties.UseVisualStyleBackColor = true;
+            // 
+            // labelTBAssaStylesManager
+            // 
+            this.labelTBAssaStylesManager.AutoSize = true;
+            this.labelTBAssaStylesManager.Location = new System.Drawing.Point(616, 22);
+            this.labelTBAssaStylesManager.Name = "labelTBAssaStylesManager";
+            this.labelTBAssaStylesManager.Size = new System.Drawing.Size(103, 13);
+            this.labelTBAssaStylesManager.TabIndex = 45;
+            this.labelTBAssaStylesManager.Text = "Assa styles manager";
+            // 
+            // pictureBoxAssaStylesManager
+            // 
+            this.pictureBoxAssaStylesManager.Location = new System.Drawing.Point(629, 41);
+            this.pictureBoxAssaStylesManager.Name = "pictureBoxAssaStylesManager";
+            this.pictureBoxAssaStylesManager.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxAssaStylesManager.TabIndex = 44;
+            this.pictureBoxAssaStylesManager.TabStop = false;
+            // 
+            // checkBoxAssaStylesManager
+            // 
+            this.checkBoxAssaStylesManager.AutoSize = true;
+            this.checkBoxAssaStylesManager.Location = new System.Drawing.Point(632, 81);
+            this.checkBoxAssaStylesManager.Name = "checkBoxAssaStylesManager";
+            this.checkBoxAssaStylesManager.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxAssaStylesManager.TabIndex = 43;
+            this.checkBoxAssaStylesManager.Text = "Visible";
+            this.checkBoxAssaStylesManager.UseVisualStyleBackColor = true;
             // 
             // labelTBNetflixQualityCheck
             // 
@@ -4995,6 +5063,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBox2.PerformLayout();
             this.groupBoxShowToolBarButtons.ResumeLayout(false);
             this.groupBoxShowToolBarButtons.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAssaProperties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAssaStylesManager)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNetflixQualityCheck)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBRemoveTextForHi)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBFixCommonErrors)).EndInit();
@@ -5425,5 +5495,11 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private System.Windows.Forms.ColumnHeader columnHeaderNames;
         private System.Windows.Forms.Panel panelShortcuts;
         private System.Windows.Forms.CheckBox checkBoxLiveSpellCheck;
+        private System.Windows.Forms.PictureBox pictureBoxAssaStylesManager;
+        private System.Windows.Forms.CheckBox checkBoxAssaStylesManager;
+        private System.Windows.Forms.Label labelTBAssaStylesManager;
+        private System.Windows.Forms.PictureBox pictureBoxAssaProperties;
+        private System.Windows.Forms.CheckBox checkBoxAssaProperties;
+        private System.Windows.Forms.Label labelTBAssaProperties;
     }
 }
