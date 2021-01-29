@@ -164,6 +164,7 @@
             this.listViewFixes.TabIndex = 10;
             this.listViewFixes.UseCompatibleStateImageBehavior = false;
             this.listViewFixes.View = System.Windows.Forms.View.Details;
+            this.listViewFixes.ClientSizeChanged += new System.EventHandler(this.listViewFixes_ClientSizeChanged);
             this.listViewFixes.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listViewFixes_KeyDown);
             // 
             // columnHeader4
