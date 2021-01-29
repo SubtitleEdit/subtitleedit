@@ -16,13 +16,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
     {
         public class NameEdit
         {
+            public string OldName { get; set; }
+            public string NewName { get; set; }
+
             public NameEdit(string oldName, string newName)
             {
                 OldName = oldName;
                 NewName = newName;
             }
-            public string OldName { get; set; }
-            public string NewName { get; set; }
         }
 
         public List<NameEdit> RenameActions { get; set; }
@@ -701,15 +702,17 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private string GetStorageHeader()
         {
-            var header = AdvancedSubStationAlpha.DefaultHeader;
-            var end = header.IndexOf(Environment.NewLine + "Styles:");
-            header = header.Substring(0, end).Trim();
-            foreach (var style in _currentCategory.Styles)
+            var styles = string.Empty;
+            foreach (var currentCategoryStyle in _currentCategory.Styles)
             {
-                header = AdvancedSubStationAlpha.AddSsaStyle(style, header);
+                styles += currentCategoryStyle.ToRawAss();
+                if (_currentCategory.Styles.IndexOf(currentCategoryStyle) != _currentCategory.Styles.Count - 1)
+                {
+                    styles += Environment.NewLine;
+                }
             }
 
-            return header;
+            return string.Format(AdvancedSubStationAlpha.HeaderNoStyles, string.Empty, styles);
         }
 
         private void listViewStyles_SelectedIndexChanged(object sender, EventArgs e)
