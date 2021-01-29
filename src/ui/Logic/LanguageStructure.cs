@@ -2785,8 +2785,10 @@
             public string AddToStorage { get; set; }
             public string StyleStorage { get; set; }
             public string OverwriteX { get; set; }
+            public string Category { get; set; }
             public string NewCategory { get; set; }
             public string CategoryName { get; set; }
+            public string CategoryNote { get; set; }
         }
 
         public class PointSync

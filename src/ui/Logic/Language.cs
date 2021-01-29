@@ -1700,7 +1700,7 @@ namespace Nikse.SubtitleEdit.Logic
                         VisualSync = "Visual sync",
                         SpellCheck = "Spell check",
                         NetflixQualityCheck = "Netflix quality check",
-                        AssaStylesManager = "Assa Styles manager",
+                        AssaStylesManager = "Assa styles manager",
                         AssaProperties = "Assa properties",
                         Settings = "Settings",
                         Help = "Help",
@@ -2928,8 +2928,10 @@ can edit in same subtitle file (collaboration)",
                 AddToStorage = "Add to storage",
                 StyleStorage = "Style storage",
                 OverwriteX = "Overwrite {0}?",
+                Category = "Category",
                 NewCategory = "New category",
-                CategoryName = "Category name"
+                CategoryName = "Category name",
+                CategoryNote = "Note: \"Default\" styles will be applied to new ASSA files"
             };
 
             PointSync = new LanguageStructure.PointSync

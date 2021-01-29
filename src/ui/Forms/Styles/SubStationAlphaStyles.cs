@@ -121,12 +121,11 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             buttonRemoveAll.Text = l.RemoveAll;
             groupBoxPreview.Text = LanguageSettings.Current.General.Preview;
 
-            // TODO: Add language tag.
             groupBoxStorage.Text = l.StyleStorage;
-            labelStorageCategory.Text = "Category";
+            labelStorageCategory.Text = l.Category;
             buttonStorageCategoryNew.Text = l.New;
             buttonStorageCategoryDelete.Text = l.Remove;
-            labelCategoryDefaultNote.Text = "Note: \"Default\" styles will be applied to new ASSA files";
+            labelCategoryDefaultNote.Text = l.CategoryNote;
             buttonStorageImport.Text = l.Import;
             buttonStorageExport.Text = l.Export;
             buttonStorageAdd.Text = l.New;
