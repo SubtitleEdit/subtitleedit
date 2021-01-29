@@ -31,24 +31,20 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public SsaStyle()
         {
-            FontName = Configuration.Settings.SubtitleSettings.SsaFontName;
-            FontSize = (float)Configuration.Settings.SubtitleSettings.SsaFontSize;
-            Primary = Color.FromArgb(Configuration.Settings.SubtitleSettings.SsaFontColorArgb);
+            Name = "Default";
+            FontName = "Arial";
+            FontSize = 20F;
+            Primary = Color.White;
             Secondary = Color.Yellow;
             Outline = Color.Black;
             Background = Color.Black;
             Alignment = "2";
-            OutlineWidth = Configuration.Settings.SubtitleSettings.SsaOutline;
-            ShadowWidth = Configuration.Settings.SubtitleSettings.SsaShadow;
+            OutlineWidth = 1M;
+            ShadowWidth = 1M;
             MarginLeft = 10;
             MarginRight = 10;
             MarginVertical = 10;
             BorderStyle = "1";
-            if (Configuration.Settings.SubtitleSettings.SsaOpaqueBox)
-            {
-                BorderStyle = "3";
-            }
-
             RawLine = string.Empty;
             LoadedFromHeader = false;
         }
@@ -82,6 +78,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             LoadedFromHeader = ssaStyle.LoadedFromHeader;
         }
 
+        public const string DefaultAssStyleFormat = "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding";
+
         public string ToRawSsa(string styleFormat)
         {
             var sb = new StringBuilder();
@@ -113,10 +111,6 @@ namespace Nikse.SubtitleEdit.Core.Common
                 else if (f == "tertiarycolour")
                 {
                     sb.Append(ColorTranslator.ToWin32(Tertiary));
-                }
-                else if (f == "outlinecolour")
-                {
-                    sb.Append(ColorTranslator.ToWin32(Outline));
                 }
                 else if (f == "backcolour")
                 {
@@ -189,7 +183,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return s.Substring(0, s.Length - 1);
         }
 
-        public string ToRawAss(string styleFormat)
+        public string ToRawAss(string styleFormat = DefaultAssStyleFormat)
         {
             var sb = new StringBuilder();
             sb.Append("Style: ");
@@ -216,10 +210,6 @@ namespace Nikse.SubtitleEdit.Core.Common
                 else if (f == "secondarycolour")
                 {
                     sb.Append(AdvancedSubStationAlpha.GetSsaColorString(Secondary));
-                }
-                else if (f == "tertiarycolour")
-                {
-                    sb.Append(AdvancedSubStationAlpha.GetSsaColorString(Tertiary));
                 }
                 else if (f == "outlinecolour")
                 {

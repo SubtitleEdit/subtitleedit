@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Controls
         private bool _checkRtfChange = true;
         private int _mouseMoveSelectionLength;
 
-        private bool _isLiveSpellCheckEnabled => Configuration.Settings.Tools.LiveSpellCheck;
+        private bool IsLiveSpellCheckEnabled => Configuration.Settings.Tools.LiveSpellCheck;
         private Hunspell _hunspell;
         private SpellCheckWordLists _spellCheckWordLists;
         private List<SpellCheckWord> _words;
@@ -65,7 +65,7 @@ namespace Nikse.SubtitleEdit.Controls
             SetTextPosInRtbIfCentered();
 
             TextChanged += TextChangedHighlight;
-            if (_isLiveSpellCheckEnabled)
+            if (IsLiveSpellCheckEnabled)
             {
                 KeyPress += UiTextBox_KeyPress;
                 KeyDown += UiTextBox_KeyDown;
@@ -120,7 +120,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 else if (args.KeyData == Keys.Right && SelectionStart >= Text.Length)
                 {
-                    if (_isLiveSpellCheckEnabled)
+                    if (IsLiveSpellCheckEnabled)
                     {
                         IsSpellCheckRequested = true;
                         TextChangedHighlight(this, EventArgs.Empty);
@@ -323,7 +323,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _checkRtfChange = false;
 
-                if (_isLiveSpellCheckEnabled)
+                if (IsLiveSpellCheckEnabled)
                 {
                     TagsChangedCheck();
                     DoFormattingActionOnRtb(() =>
@@ -857,7 +857,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void UiTextBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if (_isLiveSpellCheckEnabled && e.KeyCode == Keys.Apps && _wrongWords?.Count > 0)
+            if (IsLiveSpellCheckEnabled && e.KeyCode == Keys.Apps && _wrongWords?.Count > 0)
             {
                 var cursorPos = SelectionStart;
                 var wrongWord = _wrongWords.Where(word => cursorPos > GetIndexWithLineBreak(word.Index) && cursorPos < GetIndexWithLineBreak(word.Index) + word.Length).FirstOrDefault();
@@ -875,7 +875,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void UiTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (_isLiveSpellCheckEnabled)
+            if (IsLiveSpellCheckEnabled)
             {
                 if (SplitChars.Contains(e.KeyChar) && SelectionStart == Text.Length || SelectionStart != Text.Length)
                 {

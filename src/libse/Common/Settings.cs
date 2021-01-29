@@ -492,17 +492,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
     public class SubtitleSettings
     {
-        public string SsaFontName { get; set; }
-        public double SsaFontSize { get; set; }
-        public int SsaFontColorArgb { get; set; }
-        public bool SsaFontBold { get; set; }
-        public decimal SsaOutline { get; set; }
-        public decimal SsaShadow { get; set; }
-        public bool SsaOpaqueBox { get; set; }
-        public int SsaMarginLeft { get; set; }
-        public int SsaMarginRight { get; set; }
-        public int SsaMarginTopBottom { get; set; }
-        public string AssaStyleStorage { get; set; }
+        public List<AssaStorageCategory> AssaStyleStorageCategories { get; set; }
 
         public string DCinemaFontFile { get; set; }
         public string DCinemaLoadFontResource { get; set; }
@@ -573,19 +563,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public SubtitleSettings()
         {
-            SsaFontName = "Arial";
-            if (Configuration.IsRunningOnLinux)
-            {
-                SsaFontName = Configuration.DefaultLinuxFontName;
-            }
-            SsaFontSize = 20;
-            SsaFontColorArgb = Color.FromArgb(255, 255, 255).ToArgb();
-            SsaOutline = 2;
-            SsaShadow = 1;
-            SsaOpaqueBox = false;
-            SsaMarginLeft = 10;
-            SsaMarginRight = 10;
-            SsaMarginTopBottom = 10;
+            AssaStyleStorageCategories = new List<AssaStorageCategory>();
 
             DCinemaFontFile = "Arial.ttf";
             DCinemaLoadFontResource = "urn:uuid:3dec6dc0-39d0-498d-97d0-928d2eb78391";
@@ -1762,6 +1740,13 @@ $HorzAlign          =   Center
         public List<MultipleSearchAndReplaceSetting> Rules { get; set; }
     }
 
+    public class AssaStorageCategory
+    {
+        public string Name { get; set; }
+        public bool IsDefault { get; set; }
+        public List<SsaStyle> Styles { get; set; }
+    }
+
     public class NetworkSettings
     {
         public string UserName { get; set; }
@@ -2286,7 +2271,7 @@ $HorzAlign          =   Center
 
         public void Save()
         {
-            //this is too slow: Serialize(Configuration.SettingsFileName, this);
+            // this is too slow: Serialize(Configuration.SettingsFileName, this);
             CustomSerialize(Configuration.SettingsFileName, this);
         }
 
@@ -4904,70 +4889,115 @@ $HorzAlign          =   Center
             node = doc.DocumentElement.SelectSingleNode("SubtitleSettings");
             if (node != null)
             {
-                subNode = node.SelectSingleNode("SsaFontName");
-                if (subNode != null)
+                foreach (XmlNode categoryNode in node.SelectNodes("AssaStyleStorageCategories/Category"))
                 {
-                    settings.SubtitleSettings.SsaFontName = subNode.InnerText;
-                }
+                    var category = new AssaStorageCategory
+                    {
+                        Styles = new List<SsaStyle>()
+                    };
+                    subNode = categoryNode.SelectSingleNode("Name");
+                    if (subNode != null)
+                    {
+                        category.Name = subNode.InnerText;
+                    }
 
-                subNode = node.SelectSingleNode("SsaFontSize");
-                if (subNode != null)
-                {
-                    settings.SubtitleSettings.SsaFontSize = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
-                }
+                    subNode = categoryNode.SelectSingleNode("IsDefault");
+                    if (subNode != null)
+                    {
+                        category.IsDefault = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                    }
 
-                subNode = node.SelectSingleNode("SsaFontColorArgb");
-                if (subNode != null)
-                {
-                    settings.SubtitleSettings.SsaFontColorArgb = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
-                }
+                    settings.SubtitleSettings.AssaStyleStorageCategories.Add(category);
 
-                subNode = node.SelectSingleNode("SsaFontBold");
-                if (subNode != null)
-                {
-                    settings.SubtitleSettings.SsaFontBold = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
-                }
+                    foreach (XmlNode listNode in categoryNode.SelectNodes("Style"))
+                    {
+                        var item = new SsaStyle();
+                        subNode = listNode.SelectSingleNode("Name");
+                        if (subNode != null)
+                        {
+                            item.Name = subNode.InnerText;
+                        }
 
-                subNode = node.SelectSingleNode("SsaOutline");
-                if (subNode != null)
-                {
-                    settings.SubtitleSettings.SsaOutline = Convert.ToDecimal(subNode.InnerText);
-                }
+                        subNode = listNode.SelectSingleNode("FontName");
+                        if (subNode != null)
+                        {
+                            item.FontName = subNode.InnerText;
+                        }
 
-                subNode = node.SelectSingleNode("SsaShadow");
-                if (subNode != null)
-                {
-                    settings.SubtitleSettings.SsaShadow = Convert.ToDecimal(subNode.InnerText);
-                }
+                        subNode = listNode.SelectSingleNode("FontSize");
+                        if (subNode != null)
+                        {
+                            item.FontSize = Convert.ToSingle(subNode.InnerText);
+                        }
 
-                subNode = node.SelectSingleNode("SsaOpaqueBox");
-                if (subNode != null)
-                {
-                    settings.SubtitleSettings.SsaOpaqueBox = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
-                }
+                        subNode = listNode.SelectSingleNode("Primary");
+                        if (subNode != null)
+                        {
+                            item.Primary = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+                        }
 
-                subNode = node.SelectSingleNode("SsaMarginLeft");
-                if (subNode != null)
-                {
-                    settings.SubtitleSettings.SsaMarginLeft = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
-                }
+                        subNode = listNode.SelectSingleNode("Secondary");
+                        if (subNode != null)
+                        {
+                            item.Secondary = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+                        }
 
-                subNode = node.SelectSingleNode("SsaMarginRight");
-                if (subNode != null)
-                {
-                    settings.SubtitleSettings.SsaMarginRight = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
-                }
+                        subNode = listNode.SelectSingleNode("Outline");
+                        if (subNode != null)
+                        {
+                            item.Outline = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+                        }
 
-                subNode = node.SelectSingleNode("SsaMarginTopBottom");
-                if (subNode != null)
-                {
-                    settings.SubtitleSettings.SsaMarginTopBottom = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
-                }
+                        subNode = listNode.SelectSingleNode("Background");
+                        if (subNode != null)
+                        {
+                            item.Background = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+                        }
 
-                subNode = node.SelectSingleNode("AssaStyleStorage");
-                if (subNode != null)
-                {
-                    settings.SubtitleSettings.AssaStyleStorage = subNode.InnerText;
+                        subNode = listNode.SelectSingleNode("ShadowWidth");
+                        if (subNode != null)
+                        {
+                            item.ShadowWidth = Convert.ToDecimal(subNode.InnerText);
+                        }
+
+                        subNode = listNode.SelectSingleNode("OutlineWidth");
+                        if (subNode != null)
+                        {
+                            item.OutlineWidth = Convert.ToDecimal(subNode.InnerText);
+                        }
+
+                        subNode = listNode.SelectSingleNode("Alignment");
+                        if (subNode != null)
+                        {
+                            item.Alignment = subNode.InnerText;
+                        }
+
+                        subNode = listNode.SelectSingleNode("MarginLeft");
+                        if (subNode != null)
+                        {
+                            item.MarginLeft = Convert.ToInt32(subNode.InnerText);
+                        }
+
+                        subNode = listNode.SelectSingleNode("MarginRight");
+                        if (subNode != null)
+                        {
+                            item.MarginRight = Convert.ToInt32(subNode.InnerText);
+                        }
+
+                        subNode = listNode.SelectSingleNode("MarginVertical");
+                        if (subNode != null)
+                        {
+                            item.MarginVertical = Convert.ToInt32(subNode.InnerText);
+                        }
+
+                        subNode = listNode.SelectSingleNode("BorderStyle");
+                        if (subNode != null)
+                        {
+                            item.BorderStyle = subNode.InnerText;
+                        }
+
+                        category.Styles.Add(item);
+                    }
                 }
 
                 subNode = node.SelectSingleNode("DCinemaFontFile");
@@ -8293,17 +8323,38 @@ $HorzAlign          =   Center
                 textWriter.WriteEndElement();
 
                 textWriter.WriteStartElement("SubtitleSettings", string.Empty);
-                textWriter.WriteElementString("SsaFontName", settings.SubtitleSettings.SsaFontName);
-                textWriter.WriteElementString("SsaFontSize", settings.SubtitleSettings.SsaFontSize.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SsaFontColorArgb", settings.SubtitleSettings.SsaFontColorArgb.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SsaFontBold", settings.SubtitleSettings.SsaFontBold.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SsaOutline", settings.SubtitleSettings.SsaOutline.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SsaShadow", settings.SubtitleSettings.SsaShadow.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SsaOpaqueBox", settings.SubtitleSettings.SsaOpaqueBox.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SsaMarginLeft", settings.SubtitleSettings.SsaMarginLeft.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SsaMarginRight", settings.SubtitleSettings.SsaMarginRight.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SsaMarginTopBottom", settings.SubtitleSettings.SsaMarginTopBottom.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AssaStyleStorage", settings.SubtitleSettings.AssaStyleStorage);
+                textWriter.WriteStartElement("AssaStyleStorageCategories", string.Empty);
+                foreach (var category in settings.SubtitleSettings.AssaStyleStorageCategories)
+                {
+                    if (!string.IsNullOrEmpty(category?.Name))
+                    {
+                        textWriter.WriteStartElement("Category", string.Empty);
+                        textWriter.WriteElementString("Name", category.Name);
+                        textWriter.WriteElementString("IsDefault", category.IsDefault.ToString(CultureInfo.InvariantCulture));
+                        foreach (var style in category.Styles)
+                        {
+                            textWriter.WriteStartElement("Style");
+                            textWriter.WriteElementString("Name", style.Name);
+                            textWriter.WriteElementString("FontName", style.FontName);
+                            textWriter.WriteElementString("FontSize", style.FontSize.ToString());
+                            textWriter.WriteElementString("Primary", style.Primary.ToArgb().ToString());
+                            textWriter.WriteElementString("Secondary", style.Secondary.ToArgb().ToString());
+                            textWriter.WriteElementString("Outline", style.Outline.ToArgb().ToString());
+                            textWriter.WriteElementString("Background", style.Background.ToArgb().ToString());
+                            textWriter.WriteElementString("ShadowWidth", style.ShadowWidth.ToString());
+                            textWriter.WriteElementString("OutlineWidth", style.OutlineWidth.ToString());
+                            textWriter.WriteElementString("Alignment", style.Alignment);
+                            textWriter.WriteElementString("MarginLeft", style.MarginLeft.ToString());
+                            textWriter.WriteElementString("MarginRight", style.MarginRight.ToString());
+                            textWriter.WriteElementString("MarginVertical", style.MarginVertical.ToString());
+                            textWriter.WriteElementString("BorderStyle", style.BorderStyle.ToString());
+                            textWriter.WriteEndElement();
+                        }
+                        textWriter.WriteEndElement();
+                    }
+                }
+                textWriter.WriteEndElement();
+
                 textWriter.WriteElementString("DCinemaFontFile", settings.SubtitleSettings.DCinemaFontFile);
                 textWriter.WriteElementString("DCinemaFontSize", settings.SubtitleSettings.DCinemaFontSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DCinemaBottomMargin", settings.SubtitleSettings.DCinemaBottomMargin.ToString(CultureInfo.InvariantCulture));

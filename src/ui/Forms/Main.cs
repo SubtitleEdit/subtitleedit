@@ -145,7 +145,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool _cleanupHasRun;
         private bool _cancelWordSpellCheck = true;
-        private bool _isLiveSpellCheckEnabled => Configuration.Settings.Tools.LiveSpellCheck
+        private bool IsLiveSpellCheckEnabled => Configuration.Settings.Tools.LiveSpellCheck
                                                  && Configuration.Settings.General.SubtitleTextBoxSyntaxColor;
 
         private bool _clearLastFind;
@@ -7792,6 +7792,10 @@ namespace Nikse.SubtitleEdit.Forms
                 actors = new List<string>();
                 toolStripMenuItemWebVTT.Visible = false;
                 var styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
+                if (styles.Count == 0)
+                {
+                    styles = AdvancedSubStationAlpha.GetStylesFromHeader(AdvancedSubStationAlpha.DefaultHeader);
+                }
                 setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Clear();
                 foreach (var style in styles)
                 {
@@ -9026,7 +9030,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var p = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
                 if (p != null)
                 {
-                    if (_isLiveSpellCheckEnabled)
+                    if (IsLiveSpellCheckEnabled)
                     {
                         textBoxListViewText.CurrentLineIndex = firstSelectedIndex;
                         textBoxListViewText.IsSpellCheckRequested = true;
@@ -19551,7 +19555,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Text = Text.RemoveChar('*').TrimEnd();
             }
 
-            if (_isLiveSpellCheckEnabled)
+            if (IsLiveSpellCheckEnabled)
             {
                 await InitializeLiveSpellChcek();
             }
@@ -25056,7 +25060,7 @@ namespace Nikse.SubtitleEdit.Forms
             var tb = GetFocusedTextBox();
             toolStripMenuItemSplitTextAtCursor.Visible = tb.Text.Length > 1;
 
-            if (_isLiveSpellCheckEnabled && textBoxListViewText.IsWrongWord && _inListView)
+            if (IsLiveSpellCheckEnabled && textBoxListViewText.IsWrongWord && _inListView)
             {
                 var oldItems = new ToolStripItem[contextMenuStripTextBoxListView.Items.Count];
                 contextMenuStripTextBoxListView.Items.CopyTo(oldItems, 0);
@@ -25233,7 +25237,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void contextMenuStripTextBoxListViewClosing(object sender, ToolStripDropDownClosingEventArgs e)
         {
-            if (_isLiveSpellCheckEnabled && textBoxListViewText.IsWrongWord
+            if (IsLiveSpellCheckEnabled && textBoxListViewText.IsWrongWord
                 && sender is ContextMenuStrip textBoxContextMenu && textBoxContextMenu.Name == "contextMenuStripTextBoxListView")
             {
                 var firstSpellCheckItemIndex = textBoxContextMenu.Items.IndexOfKey("toolStripSeparatorSpellCheckSuggestions");

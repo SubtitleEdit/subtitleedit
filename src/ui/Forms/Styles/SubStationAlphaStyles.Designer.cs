@@ -1,4 +1,6 @@
-﻿namespace Nikse.SubtitleEdit.Forms.Styles
+﻿using System.Windows.Forms;
+
+namespace Nikse.SubtitleEdit.Forms.Styles
 {
     sealed partial class SubStationAlphaStyles
     {
@@ -132,7 +134,7 @@
             this.labelCategoryDefaultNote = new System.Windows.Forms.Label();
             this.buttonStorageCategoryDelete = new System.Windows.Forms.Button();
             this.buttonStorageCategoryNew = new System.Windows.Forms.Button();
-            this.comboboxStorageCategory = new System.Windows.Forms.ComboBox();
+            this.comboboxStorageCategories = new System.Windows.Forms.ComboBox();
             this.labelStorageCategory = new System.Windows.Forms.Label();
             this.contextMenuStripStorage = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemStorageRemove = new System.Windows.Forms.ToolStripMenuItem();
@@ -1049,7 +1051,7 @@
             this.groupBoxStorage.Controls.Add(this.labelCategoryDefaultNote);
             this.groupBoxStorage.Controls.Add(this.buttonStorageCategoryDelete);
             this.groupBoxStorage.Controls.Add(this.buttonStorageCategoryNew);
-            this.groupBoxStorage.Controls.Add(this.comboboxStorageCategory);
+            this.groupBoxStorage.Controls.Add(this.comboboxStorageCategories);
             this.groupBoxStorage.Controls.Add(this.labelStorageCategory);
             this.groupBoxStorage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBoxStorage.Location = new System.Drawing.Point(0, 0);
@@ -1232,14 +1234,15 @@
             this.buttonStorageCategoryNew.UseVisualStyleBackColor = true;
             this.buttonStorageCategoryNew.Click += new System.EventHandler(this.buttonStorageCategoryNew_Click);
             // 
-            // comboboxStorageCategory
+            // comboboxStorageCategories
             // 
-            this.comboboxStorageCategory.FormattingEnabled = true;
-            this.comboboxStorageCategory.Location = new System.Drawing.Point(73, 19);
-            this.comboboxStorageCategory.Name = "comboboxStorageCategory";
-            this.comboboxStorageCategory.Size = new System.Drawing.Size(188, 21);
-            this.comboboxStorageCategory.TabIndex = 1;
-            this.comboboxStorageCategory.SelectedIndexChanged += new System.EventHandler(this.comboboxStorageCategory_SelectedIndexChanged);
+            this.comboboxStorageCategories.DropDownStyle = ComboBoxStyle.DropDownList;
+            this.comboboxStorageCategories.FormattingEnabled = true;
+            this.comboboxStorageCategories.Location = new System.Drawing.Point(73, 19);
+            this.comboboxStorageCategories.Name = "comboboxStorageCategories";
+            this.comboboxStorageCategories.Size = new System.Drawing.Size(188, 21);
+            this.comboboxStorageCategories.TabIndex = 1;
+            this.comboboxStorageCategories.SelectedIndexChanged += new System.EventHandler(this.comboboxStorageCategory_SelectedIndexChanged);
             // 
             // labelStorageCategory
             // 
@@ -1524,7 +1527,7 @@
         private System.Windows.Forms.Timer timerClearStatus;
         private System.Windows.Forms.GroupBox groupBoxStorage;
         private System.Windows.Forms.Label labelStorageCategory;
-        private System.Windows.Forms.ComboBox comboboxStorageCategory;
+        private System.Windows.Forms.ComboBox comboboxStorageCategories;
         private System.Windows.Forms.Button buttonStorageCategoryNew;
         private System.Windows.Forms.Button buttonStorageCategoryDelete;
         private System.Windows.Forms.Label labelCategoryDefaultNote;

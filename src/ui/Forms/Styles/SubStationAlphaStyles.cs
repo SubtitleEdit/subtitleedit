@@ -37,16 +37,11 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private Bitmap _fixedBackgroundImage;
         private bool _backgroundImageDark;
         private bool _fileStyleActive = true;
-        private List<SsaStyle> _storageStyles;
+        private List<AssaStorageCategory> _storageCategories;
+        private AssaStorageCategory _currentCategory;
         private FormWindowState _lastFormWindowState = FormWindowState.Normal;
 
-        private ListView ActiveListView
-        {
-            get
-            {
-                return _fileStyleActive ? listViewStyles : listViewStorage;
-            }
-        }
+        private ListView ActiveListView => _fileStyleActive ? listViewStyles : listViewStorage;
 
         public SubStationAlphaStyles(Subtitle subtitle, SubtitleFormat format)
             : base(subtitle)
@@ -207,23 +202,34 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
             else
             {
-                _storageStyles = new List<SsaStyle>();
-                var styles = AdvancedSubStationAlpha.GetStylesFromHeader(Configuration.Settings.SubtitleSettings.AssaStyleStorage);
-                foreach (var styleName in styles)
+                _storageCategories = new List<AssaStorageCategory>();
+
+                if (Configuration.Settings.SubtitleSettings.AssaStyleStorageCategories.Count == 0 || !Configuration.Settings.SubtitleSettings.AssaStyleStorageCategories.Exists(item => item.IsDefault))
                 {
-                    if (!string.IsNullOrEmpty(styleName))
-                    {
-                        var storageStyle = AdvancedSubStationAlpha.GetSsaStyle(styleName, Configuration.Settings.SubtitleSettings.AssaStyleStorage);
-                        _storageStyles.Add(storageStyle);
-                        AddStyle(listViewStorage, storageStyle, Subtitle, _isSubStationAlpha);
-                    }
+                    Configuration.Settings.SubtitleSettings.AssaStyleStorageCategories.Add(new AssaStorageCategory { Name = "Default", IsDefault = true, Styles = new List<SsaStyle>() });
                 }
+
+                var defaultCat = Configuration.Settings.SubtitleSettings.AssaStyleStorageCategories.Single(item => item.IsDefault);
+                if (defaultCat.Styles.Count == 0)
+                {
+                    defaultCat.Styles.Add(new SsaStyle());
+                }
+
+                foreach (var category in Configuration.Settings.SubtitleSettings.AssaStyleStorageCategories)
+                {
+                    comboboxStorageCategories.Items.Add(category.Name);
+                    _storageCategories.Add(category);
+                }
+
+                _currentCategory = _storageCategories.Single(item => item.IsDefault);
+                comboboxStorageCategories.SelectedItem = _currentCategory.Name;
             }
 
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
-            InitializeListView();
+            InitializeStylesListView();
+            listViewStorage_SelectedIndexChanged(this, EventArgs.Empty);
             UiUtil.FixLargeFonts(this, buttonCancel);
 
             comboBoxFontName.Left = labelFontName.Left + labelFontName.Width + 5;
@@ -346,7 +352,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             font.Dispose();
         }
 
-        private void InitializeListView()
+        private void InitializeStylesListView()
         {
             var styles = AdvancedSubStationAlpha.GetStylesFromHeader(_header);
             listViewStyles.Items.Clear();
@@ -453,7 +459,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         {
             if (!_fileStyleActive)
             {
-                var style = _storageStyles.FirstOrDefault(p => p.Name == styleName);
+                var style = _currentCategory.Styles.FirstOrDefault(p => p.Name == styleName);
                 if (style == null)
                 {
                     return false;
@@ -549,7 +555,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     style.Background = GetColorFromSsa(propertyValue);
                     return true;
                 }
-
 
                 return false;
             }
@@ -649,7 +654,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 return AdvancedSubStationAlpha.GetSsaStyle(styleName, _header);
             }
 
-            return _storageStyles.FirstOrDefault(p => p.Name == styleName);
+            return _currentCategory.Styles.FirstOrDefault(p => p.Name == styleName);
         }
 
         private void ResetHeader()
@@ -687,7 +692,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         {
             if (!_isSubStationAlpha)
             {
-                Configuration.Settings.SubtitleSettings.AssaStyleStorage = GetStorageHeader();
+                Configuration.Settings.SubtitleSettings.AssaStyleStorageCategories = _storageCategories;
             }
 
             LogNameChanges();
@@ -697,9 +702,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private string GetStorageHeader()
         {
             var header = AdvancedSubStationAlpha.DefaultHeader;
-            var end = header.IndexOf(Environment.NewLine + "Style:");
+            var end = header.IndexOf(Environment.NewLine + "Styles:");
             header = header.Substring(0, end).Trim();
-            foreach (var style in _storageStyles)
+            foreach (var style in _currentCategory.Styles)
             {
                 header = AdvancedSubStationAlpha.AddSsaStyle(style, header);
             }
@@ -1195,11 +1200,11 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 textBoxStyleName.BackColor = ActiveListView.BackColor;
                 ActiveListView.SelectedItems[0].Text = textBoxStyleName.Text.RemoveChar(',').TrimEnd();
                 var idx = ActiveListView.SelectedItems[0].Index;
-                _storageStyles[idx].Name = textBoxStyleName.Text.RemoveChar(',').TrimEnd();
+                _currentCategory.Styles[idx].Name = textBoxStyleName.Text.RemoveChar(',').TrimEnd();
 
-                for (int i = 0; i < _storageStyles.Count; i++)
+                for (int i = 0; i < _currentCategory.Styles.Count; i++)
                 {
-                    var storageName = _storageStyles[i].Name;
+                    var storageName = _currentCategory.Styles[i].Name;
                     if (idx != i && storageName == textBoxStyleName.Text.RemoveChar(',').TrimEnd())
                     {
                         textBoxStyleName.BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
@@ -1302,7 +1307,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 ass.LoadSubtitle(sub, lines, string.Empty);
                 _header = _header.Remove(_header.IndexOf("[V4+ Styles]", StringComparison.Ordinal)) + sub.Header.Substring(sub.Header.IndexOf("[V4+ Styles]", StringComparison.Ordinal));
             }
-            InitializeListView();
+            InitializeStylesListView();
         }
 
         private void comboBoxFontName_TextChanged(object sender, EventArgs e)
@@ -1745,8 +1750,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     return;
                 }
 
-                var idx = _storageStyles.IndexOf(_storageStyles.First(p => p.Name == styleName));
-                _storageStyles[idx] = style;
+                var idx = _currentCategory.Styles.IndexOf(_currentCategory.Styles.First(p => p.Name == styleName));
+                _currentCategory.Styles[idx] = style;
                 listViewStorage.Items.RemoveAt(idx);
                 AddStyle(listViewStorage, style, Subtitle, _isSubStationAlpha, idx);
                 listViewStorage.Items[idx].Selected = true;
@@ -1755,7 +1760,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 return;
             }
 
-            _storageStyles.Add(style);
+            _currentCategory.Styles.Add(style);
             AddStyle(listViewStorage, style, Subtitle, _isSubStationAlpha);
             listViewStorage.Items[listViewStorage.Items.Count - 1].Selected = true;
             listViewStorage.Items[listViewStorage.Items.Count - 1].EnsureVisible();
@@ -1772,15 +1777,16 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 _startName = styleName;
                 _editedName = null;
                 _oldSsaName = styleName;
-                SsaStyle style = _storageStyles.First(p => p.Name == styleName);
+                SsaStyle style = _currentCategory.Styles.First(p => p.Name == styleName);
                 SetControlsFromStyle(style);
                 _doUpdate = true;
                 groupBoxProperties.Enabled = true;
                 GeneratePreview();
-                buttonRemove.Enabled = listViewStorage.Items.Count > 1;
+                buttonStorageRemove.Enabled = listViewStorage.Items.Count > 1;
             }
             else
             {
+                buttonStorageRemove.Enabled = false;
                 groupBoxProperties.Enabled = false;
                 _doUpdate = false;
             }
@@ -1788,15 +1794,15 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void buttonStorageRemoveAll_Click(object sender, EventArgs e)
         {
-            if (_storageStyles.Count == 0)
+            if (_currentCategory.Styles.Count == 0)
             {
                 return;
             }
 
             string askText;
-            if (_storageStyles.Count > 1)
+            if (_currentCategory.Styles.Count > 1)
             {
-                askText = string.Format(LanguageSettings.Current.Main.DeleteXLinesPrompt, _storageStyles.Count);
+                askText = string.Format(LanguageSettings.Current.Main.DeleteXLinesPrompt, _currentCategory.Styles.Count);
             }
             else
             {
@@ -1808,8 +1814,12 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 return;
             }
 
-            _storageStyles.Clear();
             listViewStorage.Items.Clear();
+            _currentCategory.Styles.Clear();
+
+            var defaultStyle = new SsaStyle();
+            AddStyle(listViewStorage, defaultStyle, Subtitle, _isSubStationAlpha);
+            _currentCategory.Styles.Add(defaultStyle);
         }
 
         private void buttonStorageRemove_Click(object sender, EventArgs e)
@@ -1837,7 +1847,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             if (listViewStorage.SelectedItems.Count == 1)
             {
                 int index = listViewStorage.SelectedItems[0].Index;
-                _storageStyles.RemoveAt(index);
+                _currentCategory.Styles.RemoveAt(index);
                 listViewStorage.Items.RemoveAt(index);
 
                 if (listViewStorage.Items.Count == 0)
@@ -1858,14 +1868,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private void buttonStorageAdd_Click(object sender, EventArgs e)
         {
             var name = LanguageSettings.Current.SubStationAlphaStyles.New;
-            if (_storageStyles.Any(p => p.Name == name))
+            if (_currentCategory.Styles.Any(p => p.Name == name))
             {
                 int count = 2;
                 bool doRepeat = true;
                 while (doRepeat)
                 {
                     name = LanguageSettings.Current.SubStationAlphaStyles.New + count;
-                    doRepeat = _storageStyles.Any(p => p.Name == name);
+                    doRepeat = _currentCategory.Styles.Any(p => p.Name == name);
                     count++;
                 }
             }
@@ -1873,7 +1883,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             _doUpdate = false;
             var style = new SsaStyle { Name = name };
             AddStyle(listViewStorage, style, Subtitle, _isSubStationAlpha);
-            _storageStyles.Add(style);
+            _currentCategory.Styles.Add(style);
             listViewStorage.Items[listViewStorage.Items.Count - 1].Selected = true;
             listViewStorage.Items[listViewStorage.Items.Count - 1].EnsureVisible();
             listViewStorage.Items[listViewStorage.Items.Count - 1].Focused = true;
@@ -1892,23 +1902,23 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
 
             var index = listViewStorage.SelectedItems[0].Index;
-            SsaStyle oldStyle = _storageStyles[index];
+            SsaStyle oldStyle = _currentCategory.Styles[index];
             var style = new SsaStyle(oldStyle) { Name = string.Format(LanguageSettings.Current.SubStationAlphaStyles.CopyOfY, oldStyle.Name) }; // Copy contructor
             var styleName = style.Name;
-            if (_storageStyles.Any(p => p.Name == styleName))
+            if (_currentCategory.Styles.Any(p => p.Name == styleName))
             {
                 int count = 2;
                 bool doRepeat = true;
                 while (doRepeat)
                 {
                     style.Name = string.Format(LanguageSettings.Current.SubStationAlphaStyles.CopyXOfY, count, styleName);
-                    doRepeat = _storageStyles.Any(p => p.Name == styleName);
+                    doRepeat = _currentCategory.Styles.Any(p => p.Name == styleName);
                     count++;
                 }
             }
 
             _doUpdate = false;
-            _storageStyles.Add(style);
+            _currentCategory.Styles.Add(style);
             AddStyle(listViewStorage, style, Subtitle, _isSubStationAlpha);
             listViewStorage.Items[listViewStorage.Items.Count - 1].Selected = true;
             listViewStorage.Items[listViewStorage.Items.Count - 1].EnsureVisible();
@@ -1969,7 +1979,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                                 }
 
                                 _doUpdate = false;
-                                _storageStyles.Add(style);
+                                _currentCategory.Styles.Add(style);
                                 AddStyle(listViewStorage, style, Subtitle, _isSubStationAlpha);
                                 listViewStorage.Items[listViewStorage.Items.Count - 1].Selected = true;
                                 listViewStorage.Items[listViewStorage.Items.Count - 1].EnsureVisible();
@@ -2055,20 +2065,46 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void buttonStorageCategoryDelete_Click(object sender, EventArgs e)
         {
-
+            _storageCategories.Remove(_currentCategory);
+            comboboxStorageCategories.Items.Remove(_currentCategory.Name);
+            _currentCategory = _storageCategories.Single(x => x.IsDefault);
+            comboboxStorageCategories.SelectedItem = _currentCategory.Name;
         }
 
         private void buttonStorageCategoryNew_Click(object sender, EventArgs e)
         {
-
+            // TODO: Add language tags.
+            using (var form = new TextPrompt("New category", "Category name", string.Empty))
+            {
+                if (form.ShowDialog() == DialogResult.OK && !_storageCategories.Exists(x => x.Name == form.InputText))
+                {
+                    var newCategory = new AssaStorageCategory { Name = form.InputText, IsDefault = false, Styles = new List<SsaStyle>()};
+                    _storageCategories.Add(newCategory);
+                    comboboxStorageCategories.Items.Add(newCategory.Name);
+                    comboboxStorageCategories.SelectedItem = newCategory.Name;
+                    _currentCategory = newCategory;
+                }
+            }
         }
 
         private void comboboxStorageCategory_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            listViewStorage.BeginUpdate();
+            listViewStorage.Items.Clear();
+            var focusCategory = _storageCategories.FirstOrDefault(x => x.Name == comboboxStorageCategories.SelectedItem.ToString());
+            foreach (var style in focusCategory.Styles)
+            {
+                if (!string.IsNullOrEmpty(style.Name))
+                {
+                    AddStyle(listViewStorage, style, Subtitle, _isSubStationAlpha);
+                }
+            }
+            listViewStorage.EndUpdate();
+            _currentCategory = focusCategory;
+            buttonStorageCategoryDelete.Enabled = !focusCategory.IsDefault;
         }
 
-private bool StyleExistsInListView(string styleName, ListView listView)
+        private bool StyleExistsInListView(string styleName, ListView listView)
         {
             foreach (ListViewItem item in listView.Items)
             {
@@ -2100,7 +2136,7 @@ private bool StyleExistsInListView(string styleName, ListView listView)
             }
 
             string styleName = listViewStorage.SelectedItems[0].Text;
-            SsaStyle oldStyle = _storageStyles.FirstOrDefault(p => p.Name == styleName);
+            SsaStyle oldStyle = _currentCategory.Styles.FirstOrDefault(p => p.Name == styleName);
             var style = new SsaStyle(oldStyle);
 
             if (StyleExistsInListView(styleName, listViewStyles))
@@ -2156,9 +2192,9 @@ private bool StyleExistsInListView(string styleName, ListView listView)
             listView.Items.RemoveAt(idx);
             if (listView == listViewStorage)
             {
-                var style = _storageStyles[idx];
-                _storageStyles.RemoveAt(idx);
-                _storageStyles.Insert(idx - 1, style);
+                var style = _currentCategory.Styles[idx];
+                _currentCategory.Styles.RemoveAt(idx);
+                _currentCategory.Styles.Insert(idx - 1, style);
             }
 
             idx--;
@@ -2185,9 +2221,9 @@ private bool StyleExistsInListView(string styleName, ListView listView)
             listView.Items.RemoveAt(idx);
             if (listView == listViewStorage)
             {
-                var style = _storageStyles[idx];
-                _storageStyles.RemoveAt(idx);
-                _storageStyles.Insert(idx + 1, style);
+                var style = _currentCategory.Styles[idx];
+                _currentCategory.Styles.RemoveAt(idx);
+                _currentCategory.Styles.Insert(idx + 1, style);
             }
 
             idx++;
@@ -2214,9 +2250,9 @@ private bool StyleExistsInListView(string styleName, ListView listView)
             listView.Items.RemoveAt(idx);
             if (listView == listViewStorage)
             {
-                var style = _storageStyles[idx];
-                _storageStyles.RemoveAt(idx);
-                _storageStyles.Insert(0, style);
+                var style = _currentCategory.Styles[idx];
+                _currentCategory.Styles.RemoveAt(idx);
+                _currentCategory.Styles.Insert(0, style);
             }
 
             idx = 0;
@@ -2243,9 +2279,9 @@ private bool StyleExistsInListView(string styleName, ListView listView)
             listView.Items.RemoveAt(idx);
             if (listView == listViewStorage)
             {
-                var style = _storageStyles[idx];
-                _storageStyles.RemoveAt(idx);
-                _storageStyles.Insert(listView.Items.Count - 1, style);
+                var style = _currentCategory.Styles[idx];
+                _currentCategory.Styles.RemoveAt(idx);
+                _currentCategory.Styles.Insert(listView.Items.Count - 1, style);
             }
 
             idx = listView.Items.Count - 1;

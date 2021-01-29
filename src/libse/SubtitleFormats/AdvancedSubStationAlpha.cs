@@ -17,24 +17,25 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             get
             {
-                var borderStyle = "1"; // 1=normal, 3=opaque box
-                if (Configuration.Settings.SubtitleSettings.SsaOpaqueBox)
+                string defaultStyle = string.Empty;
+                var defaultCategory = Configuration.Settings.SubtitleSettings.AssaStyleStorageCategories.SingleOrDefault(item => item.IsDefault);
+                if (defaultCategory == null || defaultCategory.Styles.Count < 0)
                 {
-                    borderStyle = "3";
+                    defaultStyle = new SsaStyle().ToRawAss();
+                }
+                else
+                {
+                    foreach (var defaultCategoryStyle in defaultCategory.Styles)
+                    {
+                        defaultStyle += defaultCategoryStyle.ToRawAss();
+                        if (defaultCategory.Styles.IndexOf(defaultCategoryStyle) != defaultCategory.Styles.Count - 1)
+                        {
+                            defaultStyle += Environment.NewLine;
+                        }
+                    }
                 }
 
-                var boldStyle = "0"; // 0=regular
-                if (Configuration.Settings.SubtitleSettings.SsaFontBold)
-                {
-                    boldStyle = "-1";
-                }
-
-                var ssa = Configuration.Settings.SubtitleSettings;
-                return "Style: Default," + ssa.SsaFontName + "," +
-                       ssa.SsaFontSize.ToString(CultureInfo.InvariantCulture) + "," +
-                       GetSsaColorString(Color.FromArgb(ssa.SsaFontColorArgb)) + "," +
-                       "&H0300FFFF,&H00000000,&H02000000," + boldStyle + ",0,0,0,100,100,0,0," + borderStyle + "," + ssa.SsaOutline.ToString(CultureInfo.InvariantCulture) + "," +
-                       Configuration.Settings.SubtitleSettings.SsaShadow.ToString(CultureInfo.InvariantCulture) + ",2," + ssa.SsaMarginLeft + "," + ssa.SsaMarginRight + "," + ssa.SsaMarginTopBottom + ",1";
+                return defaultStyle;
             }
         }
 
@@ -698,6 +699,7 @@ Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour,
                     }
                 }
             }
+
             return list;
         }
 
@@ -2192,7 +2194,7 @@ Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour,
                         var format = line.Substring(6).Split(',');
                         for (int i = 0; i < format.Length; i++)
                         {
-                            string f = format[i].Trim().ToLowerInvariant();
+                            string f = format[i].Trim();
                             if (i == nameIndex)
                             {
                                 style.Name = format[i].Trim();
@@ -2294,6 +2296,7 @@ Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour,
                     }
                 }
             }
+
             return new SsaStyle { Name = styleName };
         }
     }
