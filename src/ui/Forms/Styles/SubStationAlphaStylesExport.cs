@@ -178,6 +178,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                         content = content.Trim() + Environment.NewLine +
                                   "Dialogue: 0,0:00:31.91,0:00:33.91,Default,,0,0,0,,My Styles:)";
                     }
+                    else if (!content.Contains("[Events]", StringComparison.OrdinalIgnoreCase))
+                    {
+                        content = content.Trim() + Environment.NewLine +
+                            Environment.NewLine +
+                            "[Events]" + Environment.NewLine +
+                            "Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text" + Environment.NewLine +
+                            "Dialogue: 0,0:00:31.91,0:00:33.91,Default,,0,0,0,,My Styles :)";
+                    }
                     File.WriteAllText(saveFileDialogStyle.FileName, content, Encoding.UTF8);
                     DialogResult = DialogResult.OK;
                 }

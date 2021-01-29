@@ -359,9 +359,13 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             listViewStyles.Items.Clear();
             foreach (var style in styles)
             {
-                SsaStyle ssaStyle = GetSsaStyle(style);
-                AddStyle(listViewStyles, ssaStyle, Subtitle, _isSubStationAlpha);
+                var ssaStyle = GetSsaStyle(style);
+                if (ssaStyle != null)
+                {
+                    AddStyle(listViewStyles, ssaStyle, Subtitle, _isSubStationAlpha);
+                }
             }
+
             if (listViewStyles.Items.Count > 0)
             {
                 listViewStyles.Items[0].Selected = true;
@@ -652,10 +656,20 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         {
             if (_fileStyleActive)
             {
-                return AdvancedSubStationAlpha.GetSsaStyle(styleName, _header);
+                return GetSsaStyleFile(styleName);
             }
 
-            return _currentCategory.Styles.FirstOrDefault(p => p.Name == styleName);
+            return GetSsaStyleStorage(styleName);
+        }
+
+        private SsaStyle GetSsaStyleFile(string styleName)
+        {
+            return AdvancedSubStationAlpha.GetSsaStyle(styleName, _header);
+        }
+
+        private SsaStyle GetSsaStyleStorage(string styleName)
+        {
+            return _storageStyles.FirstOrDefault(p => p.Name == styleName);
         }
 
         private void ResetHeader()
@@ -1267,17 +1281,17 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void buttonRemoveAll_Click(object sender, EventArgs e)
         {
-            string askText;
+            string askText = null;
             if (listViewStyles.Items.Count > 1)
             {
                 askText = string.Format(LanguageSettings.Current.Main.DeleteXLinesPrompt, listViewStyles.Items.Count);
             }
-            else
+            else if (listViewStyles.Items.Count == 1)
             {
                 askText = LanguageSettings.Current.Main.DeleteOneLinePrompt;
             }
 
-            if (MessageBox.Show(askText, string.Empty, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+            if (askText != null && MessageBox.Show(askText, string.Empty, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
             {
                 return;
             }
@@ -1651,13 +1665,13 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                                 foreach (var styleName in cs.SelectedStyleNames)
                                 {
                                     SsaStyle style = AdvancedSubStationAlpha.GetSsaStyle(styleName, s.Header);
-                                    if (GetSsaStyle(style.Name).LoadedFromHeader)
+                                    if (GetSsaStyleFile(style.Name) != null && GetSsaStyleFile(style.Name).LoadedFromHeader)
                                     {
                                         int count = 2;
-                                        bool doRepeat = GetSsaStyle(style.Name + count).LoadedFromHeader;
+                                        bool doRepeat = GetSsaStyleFile(style.Name + count).LoadedFromHeader;
                                         while (doRepeat)
                                         {
-                                            doRepeat = GetSsaStyle(style.Name + count).LoadedFromHeader;
+                                            doRepeat = GetSsaStyleFile(style.Name + count).LoadedFromHeader;
                                             count++;
                                         }
                                         style.RawLine = style.RawLine.Replace(" " + style.Name + ",", " " + style.Name + count + ",");
@@ -1960,22 +1974,15 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                         {
                             if (cs.ShowDialog(this) == DialogResult.OK && cs.SelectedStyleNames.Count > 0)
                             {
-                                var styleNames = string.Join(", ", cs.SelectedStyleNames.ToArray());
-
-                                foreach (var styleName in cs.SelectedStyleNames)
+                                SsaStyle style = AdvancedSubStationAlpha.GetSsaStyle(styleName, s.Header);
+                                if (GetSsaStyleStorage(style.Name) != null && GetSsaStyleStorage(style.Name).LoadedFromHeader)
                                 {
-                                    SsaStyle style = AdvancedSubStationAlpha.GetSsaStyle(styleName, s.Header);
-                                    if (GetSsaStyle(style.Name).LoadedFromHeader)
+                                    int count = 2;
+                                    bool doRepeat = GetSsaStyleStorage(style.Name + count) != null;
+                                    while (doRepeat)
                                     {
-                                        int count = 2;
-                                        bool doRepeat = GetSsaStyle(style.Name + count).LoadedFromHeader;
-                                        while (doRepeat)
-                                        {
-                                            doRepeat = GetSsaStyle(style.Name + count).LoadedFromHeader;
-                                            count++;
-                                        }
-                                        style.RawLine = style.RawLine.Replace(" " + style.Name + ",", " " + style.Name + count + ",");
-                                        style.Name += count;
+                                        doRepeat = GetSsaStyleStorage(style.Name + count) != null;
+                                        count++;
                                     }
 
                                     _doUpdate = false;
@@ -2349,6 +2356,33 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     GeneratePreview();
                 }
             }
+        }
+
+        private void contextMenuStripStorage_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            var isNotEmpty = listViewStorage.Items.Count > 0;
+            toolStripMenuItemStorageRemove.Visible = isNotEmpty;
+            toolStripMenuItemStorageRemoveAll.Visible = isNotEmpty;
+            toolStripSeparator2.Visible = isNotEmpty;
+            toolStripMenuItemStorageCopy.Visible = isNotEmpty;
+
+            var moreThanOne = listViewStorage.Items.Count > 1;
+            toolStripMenuItemStorageMoveUp.Visible = moreThanOne;
+            toolStripMenuItemStorageMoveBottom.Visible = moreThanOne;
+            toolStripMenuItemStorageMoveTop.Visible = moreThanOne;
+            toolStripMenuItemStorageMoveDown.Visible = moreThanOne;
+            toolStripSeparator5.Visible = moreThanOne;
+        }
+
+        private void contextMenuStripFile_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            var moreThanOne = listViewStorage.Items.Count > 1;
+            moveUpToolStripMenuItem.Visible = moreThanOne;
+            moveBottomToolStripMenuItem.Visible = moreThanOne;
+            moveTopToolStripMenuItem.Visible = moreThanOne;
+            moveDownToolStripMenuItem.Visible = moreThanOne;
+            toolStripSeparator3.Visible = moreThanOne;
+            toolStripMenuItemRemoveAll.Visible = moreThanOne;
         }
     }
 }

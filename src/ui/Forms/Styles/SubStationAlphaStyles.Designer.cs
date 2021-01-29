@@ -252,7 +252,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.toolStripMenuItemImport,
             this.toolStripMenuItemExport});
             this.contextMenuStripFile.Name = "contextMenuStrip1";
-            this.contextMenuStripFile.Size = new System.Drawing.Size(216, 270);
+            this.contextMenuStripFile.Size = new System.Drawing.Size(216, 292);
+            this.contextMenuStripFile.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripFile_Opening);
             // 
             // deleteToolStripMenuItem
             // 
@@ -1273,6 +1274,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.toolStripMenuItemStorageExport});
             this.contextMenuStripStorage.Name = "contextMenuStrip1";
             this.contextMenuStripStorage.Size = new System.Drawing.Size(216, 270);
+            this.contextMenuStripStorage.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripStorage_Opening);
             // 
             // toolStripMenuItemStorageRemove
             // 
