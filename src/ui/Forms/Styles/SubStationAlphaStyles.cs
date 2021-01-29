@@ -669,7 +669,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private SsaStyle GetSsaStyleStorage(string styleName)
         {
-            return _storageStyles.FirstOrDefault(p => p.Name == styleName);
+            return _currentCategory.Styles.FirstOrDefault(p => p.Name == styleName);
         }
 
         private void ResetHeader()
@@ -1799,7 +1799,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 _doUpdate = true;
                 groupBoxProperties.Enabled = true;
                 GeneratePreview();
-                buttonStorageRemove.Enabled = listViewStorage.Items.Count > 1;
+                buttonStorageRemove.Enabled = listViewStorage.Items.Count > 1 || !_currentCategory.IsDefault;
             }
             else
             {
@@ -1961,18 +1961,25 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 saveFileDialogStyle.FileName = "my_styles.ass";
             }
 
-            if (openFileDialogImport.ShowDialog(this) == DialogResult.OK)
+            if (openFileDialogImport.ShowDialog(this) != DialogResult.OK)
             {
-                var s = new Subtitle();
-                var format = s.LoadSubtitle(openFileDialogImport.FileName, out _, null);
-                if (format != null && format.HasStyleSupport)
+                return;
+            }
+
+            var s = new Subtitle();
+            var format = s.LoadSubtitle(openFileDialogImport.FileName, out _, null);
+            if (format != null && format.HasStyleSupport)
+            {
+                var styles = AdvancedSubStationAlpha.GetStylesFromHeader(s.Header);
+                if (styles.Count > 0)
                 {
-                    var styles = AdvancedSubStationAlpha.GetStylesFromHeader(s.Header);
-                    if (styles.Count > 0)
+                    using (var cs = new ChooseStyle(s, format.GetType() == typeof(SubStationAlpha)))
                     {
-                        using (var cs = new ChooseStyle(s, format.GetType() == typeof(SubStationAlpha)))
+                        if (cs.ShowDialog(this) == DialogResult.OK && cs.SelectedStyleNames.Count > 0)
                         {
-                            if (cs.ShowDialog(this) == DialogResult.OK && cs.SelectedStyleNames.Count > 0)
+                            var styleNames = string.Join(", ", cs.SelectedStyleNames.ToArray());
+
+                            foreach (var styleName in cs.SelectedStyleNames)
                             {
                                 SsaStyle style = AdvancedSubStationAlpha.GetSsaStyle(styleName, s.Header);
                                 if (GetSsaStyleStorage(style.Name) != null && GetSsaStyleStorage(style.Name).LoadedFromHeader)
@@ -1984,23 +1991,25 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                                         doRepeat = GetSsaStyleStorage(style.Name + count) != null;
                                         count++;
                                     }
-
-                                    _doUpdate = false;
-                                    _currentCategory.Styles.Add(style);
-                                    AddStyle(listViewStorage, style, Subtitle, _isSubStationAlpha);
-                                    listViewStorage.Items[listViewStorage.Items.Count - 1].Selected = true;
-                                    listViewStorage.Items[listViewStorage.Items.Count - 1].EnsureVisible();
-                                    listViewStorage.Items[listViewStorage.Items.Count - 1].Focused = true;
-                                    textBoxStyleName.Text = style.Name;
-                                    textBoxStyleName.Focus();
-                                    _doUpdate = true;
-                                    SetControlsFromStyle(style);
-                                    listViewStorage_SelectedIndexChanged(null, null);
+                                    style.RawLine = style.RawLine.Replace(" " + style.Name + ",", " " + style.Name + count + ",");
+                                    style.Name += count;
                                 }
 
-                                labelStatus.Text = string.Format(LanguageSettings.Current.SubStationAlphaStyles.StyleXImportedFromFileY, styleNames, openFileDialogImport.FileName);
-                                timerClearStatus.Start();
+                                _doUpdate = false;
+                                _currentCategory.Styles.Add(style);
+                                AddStyle(listViewStorage, style, Subtitle, _isSubStationAlpha);
+                                listViewStorage.Items[listViewStorage.Items.Count - 1].Selected = true;
+                                listViewStorage.Items[listViewStorage.Items.Count - 1].EnsureVisible();
+                                listViewStorage.Items[listViewStorage.Items.Count - 1].Focused = true;
+                                textBoxStyleName.Text = style.Name;
+                                textBoxStyleName.Focus();
+                                _doUpdate = true;
+                                SetControlsFromStyle(style);
+                                listViewStorage_SelectedIndexChanged(null, null);
                             }
+
+                            labelStatus.Text = string.Format(LanguageSettings.Current.SubStationAlphaStyles.StyleXImportedFromFileY, styleNames, openFileDialogImport.FileName);
+                            timerClearStatus.Start();
                         }
                     }
                 }
