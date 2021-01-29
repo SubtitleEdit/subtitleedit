@@ -1148,13 +1148,10 @@ $HorzAlign          =   Center
         public bool MpvLogging { get; set; }
         public bool MpvHandlesPreviewText { get; set; }
         public Color MpvPreviewTextPrimaryColor { get; set; }
-        public Color MpvPreviewTextOutlineColor { get; set; }
-        public Color MpvPreviewTextShadowColor { get; set; }
         public decimal MpvPreviewTextOutlineWidth { get; set; }
         public decimal MpvPreviewTextShadowWidth { get; set; }
         public bool MpvPreviewTextOpaqueBox { get; set; }
-        public int MpvPreviewTextMarginLeft { get; set; }
-        public int MpvPreviewTextMarginRight { get; set; }
+        public string MpvPreviewTextAlignment { get; set; }
         public int MpvPreviewTextMarginVertical { get; set; }
         public string MpcHcLocation { get; set; }
         public string MkvMergeLocation { get; set; }
@@ -1295,13 +1292,10 @@ $HorzAlign          =   Center
             MpvVideoOutputLinux = string.Empty; // could also be e.g. "x11";
             MpvHandlesPreviewText = true;
             MpvPreviewTextPrimaryColor = Color.White;
-            MpvPreviewTextOutlineColor = Color.Black;
-            MpvPreviewTextShadowColor = Color.Black;
             MpvPreviewTextOutlineWidth = 2;
             MpvPreviewTextShadowWidth = 1;
             MpvPreviewTextOpaqueBox = false;
-            MpvPreviewTextMarginLeft = 10;
-            MpvPreviewTextMarginRight = 10;
+            MpvPreviewTextAlignment = "2";
             MpvPreviewTextMarginVertical = 10;
             FFmpegSceneThreshold = "0.4"; // threshold for generating scene changes - 0.2 is sensitive (more scene change), 0.6 is less sensitive (fewer scene changes)
             UseTimeFormatHHMMSSFF = false;
@@ -3422,18 +3416,6 @@ $HorzAlign          =   Center
                 settings.General.MpvPreviewTextPrimaryColor = ColorTranslator.FromHtml(subNode.InnerText.Trim());
             }
 
-            subNode = node.SelectSingleNode("MpvPreviewTextOutlineColor");
-            if (subNode != null)
-            {
-                settings.General.MpvPreviewTextOutlineColor = ColorTranslator.FromHtml(subNode.InnerText.Trim());
-            }
-
-            subNode = node.SelectSingleNode("MpvPreviewTextShadowColor");
-            if (subNode != null)
-            {
-                settings.General.MpvPreviewTextShadowColor = ColorTranslator.FromHtml(subNode.InnerText.Trim());
-            }
-
             subNode = node.SelectSingleNode("MpvPreviewTextOutlineWidth");
             if (subNode != null)
             {
@@ -3452,16 +3434,10 @@ $HorzAlign          =   Center
                 settings.General.MpvPreviewTextOpaqueBox = Convert.ToBoolean(subNode.InnerText.Trim());
             }
 
-            subNode = node.SelectSingleNode("MpvPreviewTextMarginLeft");
+            subNode = node.SelectSingleNode("MpvPreviewTextAlignment");
             if (subNode != null)
             {
-                settings.General.MpvPreviewTextMarginLeft = Convert.ToInt32(subNode.InnerText.Trim());
-            }
-
-            subNode = node.SelectSingleNode("MpvPreviewTextMarginRight");
-            if (subNode != null)
-            {
-                settings.General.MpvPreviewTextMarginRight = Convert.ToInt32(subNode.InnerText.Trim());
+                settings.General.MpvPreviewTextAlignment = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("MpvPreviewTextMarginVertical");
@@ -8093,13 +8069,10 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MpvLogging", settings.General.MpvLogging.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MpvHandlesPreviewText", settings.General.MpvHandlesPreviewText.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MpvPreviewTextPrimaryColor", ColorTranslator.ToHtml(settings.General.MpvPreviewTextPrimaryColor));
-                textWriter.WriteElementString("MpvPreviewTextOutlineColor", ColorTranslator.ToHtml(settings.General.MpvPreviewTextOutlineColor));
-                textWriter.WriteElementString("MpvPreviewTextShadowColor", ColorTranslator.ToHtml(settings.General.MpvPreviewTextShadowColor));
                 textWriter.WriteElementString("MpvPreviewTextOutlineWidth", settings.General.MpvPreviewTextOutlineWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MpvPreviewTextShadowWidth", settings.General.MpvPreviewTextShadowWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MpvPreviewTextOpaqueBox", settings.General.MpvPreviewTextOpaqueBox.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("MpvPreviewTextMarginLeft", settings.General.MpvPreviewTextMarginLeft.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("MpvPreviewTextMarginRight", settings.General.MpvPreviewTextMarginRight.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("MpvPreviewTextAlignment", settings.General.MpvPreviewTextAlignment);
                 textWriter.WriteElementString("MpvPreviewTextMarginVertical", settings.General.MpvPreviewTextMarginVertical.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MpcHcLocation", settings.General.MpcHcLocation);
                 textWriter.WriteElementString("MkvMergeLocation", settings.General.MkvMergeLocation);

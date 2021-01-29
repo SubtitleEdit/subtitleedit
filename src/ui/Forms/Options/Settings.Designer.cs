@@ -158,8 +158,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.comboBoxlVideoPlayerPreviewFontSize = new System.Windows.Forms.ComboBox();
             this.buttonMpvPreviewTextColor = new System.Windows.Forms.Button();
             this.panelMpvPreviewTextColor = new System.Windows.Forms.Panel();
-            this.labelMpvPreviewOutlineWidth = new System.Windows.Forms.Label();
-            this.numericUpDownMpvPreviewOutlineWidth = new System.Windows.Forms.NumericUpDown();
             this.checkBoxMpvPreviewOpaqueBox = new System.Windows.Forms.CheckBox();
             this.groupBoxVideoPlayerMpvPreviewSettings = new System.Windows.Forms.GroupBox();
             this.checkBoxVideoPlayerShowStopButton = new System.Windows.Forms.CheckBox();
@@ -433,7 +431,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBoxMainWindowVideoControls.SuspendLayout();
             this.groupBoxVideoPlayerDefault.SuspendLayout();
             this.groupBoxVideoPlayerMpvPreviewSettings.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMpvPreviewOutlineWidth)).BeginInit();
             this.groupBoxVideoEngine.SuspendLayout();
             this.panelWaveform.SuspendLayout();
             this.groupBoxFfmpeg.SuspendLayout();
@@ -2165,8 +2162,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxVideoPlayerMpvPreviewSettings.Controls.Add(this.buttonMpvPreviewTextColor);
             this.groupBoxVideoPlayerMpvPreviewSettings.Controls.Add(this.panelMpvPreviewTextColor);
-            this.groupBoxVideoPlayerMpvPreviewSettings.Controls.Add(this.labelMpvPreviewOutlineWidth);
-            this.groupBoxVideoPlayerMpvPreviewSettings.Controls.Add(this.numericUpDownMpvPreviewOutlineWidth);
             this.groupBoxVideoPlayerMpvPreviewSettings.Controls.Add(this.checkBoxMpvPreviewOpaqueBox);
             this.groupBoxVideoPlayerMpvPreviewSettings.Location = new System.Drawing.Point(600, 12);
             this.groupBoxVideoPlayerMpvPreviewSettings.Name = "groupBoxVideoPlayerMpvPreviewSettings";
@@ -2177,7 +2172,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             // 
             // buttonMpvPreviewTextColor
             // 
-            this.buttonMpvPreviewTextColor.Location = new System.Drawing.Point(10, 19);
+            this.buttonMpvPreviewTextColor.Location = new System.Drawing.Point(10, 30);
             this.buttonMpvPreviewTextColor.Name = "buttonMpvPreviewTextColor";
             this.buttonMpvPreviewTextColor.Size = new System.Drawing.Size(109, 23);
             this.buttonMpvPreviewTextColor.TabIndex = 0;
@@ -2188,37 +2183,16 @@ namespace Nikse.SubtitleEdit.Forms.Options
             // panelMpvPreviewTextColor
             // 
             this.panelMpvPreviewTextColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelMpvPreviewTextColor.Location = new System.Drawing.Point(125, 21);
+            this.panelMpvPreviewTextColor.Location = new System.Drawing.Point(125, 32);
             this.panelMpvPreviewTextColor.Name = "panelMpvPreviewTextColor";
             this.panelMpvPreviewTextColor.Size = new System.Drawing.Size(21, 20);
             this.panelMpvPreviewTextColor.TabIndex = 1;
             this.panelMpvPreviewTextColor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.buttonMpvPreviewTextColor_Click);
             // 
-            // labelMpvPreviewOutlineWidth
-            // 
-            this.labelMpvPreviewOutlineWidth.AutoSize = true;
-            this.labelMpvPreviewOutlineWidth.Location = new System.Drawing.Point(10, 50);
-            this.labelMpvPreviewOutlineWidth.Name = "labelMpvPreviewOutlineWidth";
-            this.labelMpvPreviewOutlineWidth.Size = new System.Drawing.Size(41, 13);
-            this.labelMpvPreviewOutlineWidth.TabIndex = 2;
-            this.labelMpvPreviewOutlineWidth.Text = "Outline";
-            // 
-            // numericUpDownMpvPreviewOutlineWidth
-            // 
-            this.numericUpDownMpvPreviewOutlineWidth.Location = new System.Drawing.Point(64, 48);
-            this.numericUpDownMpvPreviewOutlineWidth.Maximum = new decimal(new int[] {
-            9,
-            0,
-            0,
-            0});
-            this.numericUpDownMpvPreviewOutlineWidth.Name = "numericUpDownMpvPreviewOutlineWidth";
-            this.numericUpDownMpvPreviewOutlineWidth.Size = new System.Drawing.Size(44, 21);
-            this.numericUpDownMpvPreviewOutlineWidth.TabIndex = 3;
-            // 
             // checkBoxMpvPreviewOpaqueBox
             // 
             this.checkBoxMpvPreviewOpaqueBox.AutoSize = true;
-            this.checkBoxMpvPreviewOpaqueBox.Location = new System.Drawing.Point(10, 74);
+            this.checkBoxMpvPreviewOpaqueBox.Location = new System.Drawing.Point(10, 65);
             this.checkBoxMpvPreviewOpaqueBox.Name = "checkBoxMpvPreviewOpaqueBox";
             this.checkBoxMpvPreviewOpaqueBox.Size = new System.Drawing.Size(85, 17);
             this.checkBoxMpvPreviewOpaqueBox.TabIndex = 4;
@@ -5031,7 +5005,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBoxVideoPlayerDefault.PerformLayout();
             this.groupBoxVideoPlayerMpvPreviewSettings.ResumeLayout(false);
             this.groupBoxVideoPlayerMpvPreviewSettings.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMpvPreviewOutlineWidth)).EndInit();
             this.groupBoxVideoEngine.ResumeLayout(false);
             this.groupBoxVideoEngine.PerformLayout();
             this.panelWaveform.ResumeLayout(false);
@@ -5284,8 +5257,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private System.Windows.Forms.GroupBox groupBoxVideoPlayerMpvPreviewSettings;
         private System.Windows.Forms.Button buttonMpvPreviewTextColor;
         private System.Windows.Forms.Panel panelMpvPreviewTextColor;
-        private System.Windows.Forms.Label labelMpvPreviewOutlineWidth;
-        private System.Windows.Forms.NumericUpDown numericUpDownMpvPreviewOutlineWidth;
         private System.Windows.Forms.CheckBox checkBoxMpvPreviewOpaqueBox;
         private System.Windows.Forms.GroupBox groupBoxShortcuts;
         private System.Windows.Forms.Button buttonUpdateShortcut;

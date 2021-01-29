@@ -260,7 +260,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             checkBoxVideoPlayerPreviewFontBold.Checked = gs.VideoPlayerPreviewFontBold;
             panelMpvPreviewTextColor.BackColor = gs.MpvPreviewTextPrimaryColor;
-            numericUpDownMpvPreviewOutlineWidth.Value = gs.MpvPreviewTextOutlineWidth;
             checkBoxMpvPreviewOpaqueBox.Checked = gs.MpvPreviewTextOpaqueBox;
 
             checkBoxVideoAutoOpen.Checked = !gs.DisableVideoAutoLoading;
@@ -580,7 +579,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxVideoPlayerPreviewFontBold.Text = language.SubtitleBold;
             groupBoxVideoPlayerMpvPreviewSettings.Text = language.MpvHandlesPreviewText;
             buttonMpvPreviewTextColor.Text = language.ChooseColor;
-            labelMpvPreviewOutlineWidth.Text = language.SsaOutline;
             checkBoxMpvPreviewOpaqueBox.Text = language.SsaOpaqueBox;
             checkBoxVideoPlayerPreviewFontBold.Left = comboBoxlVideoPlayerPreviewFontSize.Right + 7;
 
@@ -1833,7 +1831,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             gs.DisableVideoAutoLoading = !checkBoxVideoAutoOpen.Checked;
             gs.AllowVolumeBoost = checkBoxAllowVolumeBoost.Checked;
             gs.MpvPreviewTextPrimaryColor = panelMpvPreviewTextColor.BackColor;
-            gs.MpvPreviewTextOutlineWidth = numericUpDownMpvPreviewOutlineWidth.Value;
             gs.MpvPreviewTextOpaqueBox = checkBoxMpvPreviewOpaqueBox.Checked;
 
             Configuration.Settings.VideoControls.CustomSearchText1 = comboBoxCustomSearch1.Text;
