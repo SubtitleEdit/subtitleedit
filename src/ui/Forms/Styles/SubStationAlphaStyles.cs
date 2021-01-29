@@ -347,9 +347,13 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             listViewStyles.Items.Clear();
             foreach (var style in styles)
             {
-                SsaStyle ssaStyle = GetSsaStyle(style);
-                AddStyle(listViewStyles, ssaStyle, Subtitle, _isSubStationAlpha);
+                var ssaStyle = GetSsaStyle(style);
+                if (ssaStyle != null)
+                {
+                    AddStyle(listViewStyles, ssaStyle, Subtitle, _isSubStationAlpha);
+                }
             }
+
             if (listViewStyles.Items.Count > 0)
             {
                 listViewStyles.Items[0].Selected = true;
@@ -1264,17 +1268,17 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void buttonRemoveAll_Click(object sender, EventArgs e)
         {
-            string askText;
+            string askText = null;
             if (listViewStyles.Items.Count > 1)
             {
                 askText = string.Format(LanguageSettings.Current.Main.DeleteXLinesPrompt, listViewStyles.Items.Count);
             }
-            else
+            else if (listViewStyles.Items.Count == 1)
             {
                 askText = LanguageSettings.Current.Main.DeleteOneLinePrompt;
             }
 
-            if (MessageBox.Show(askText, string.Empty, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+            if (askText != null && MessageBox.Show(askText, string.Empty, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
             {
                 return;
             }
@@ -2303,6 +2307,33 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     GeneratePreview();
                 }
             }
+        }
+
+        private void contextMenuStripStorage_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            var isNotEmpty = listViewStorage.Items.Count > 0;
+            toolStripMenuItemStorageRemove.Visible = isNotEmpty;
+            toolStripMenuItemStorageRemoveAll.Visible = isNotEmpty;
+            toolStripSeparator2.Visible = isNotEmpty;
+            toolStripMenuItemStorageCopy.Visible = isNotEmpty;
+
+            var moreThanOne = listViewStorage.Items.Count > 1;
+            toolStripMenuItemStorageMoveUp.Visible = moreThanOne;
+            toolStripMenuItemStorageMoveBottom.Visible = moreThanOne;
+            toolStripMenuItemStorageMoveTop.Visible = moreThanOne;
+            toolStripMenuItemStorageMoveDown.Visible = moreThanOne;
+            toolStripSeparator5.Visible = moreThanOne;
+        }
+
+        private void contextMenuStripFile_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            var moreThanOne = listViewStorage.Items.Count > 1;
+            moveUpToolStripMenuItem.Visible = moreThanOne;
+            moveBottomToolStripMenuItem.Visible = moreThanOne;
+            moveTopToolStripMenuItem.Visible = moreThanOne;
+            moveDownToolStripMenuItem.Visible = moreThanOne;
+            toolStripSeparator3.Visible = moreThanOne;
+            toolStripMenuItemRemoveAll.Visible = moreThanOne;
         }
     }
 }
