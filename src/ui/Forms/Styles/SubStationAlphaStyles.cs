@@ -1661,7 +1661,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                                             count++;
                                         }
                                         style.RawLine = style.RawLine.Replace(" " + style.Name + ",", " " + style.Name + count + ",");
-                                        style.Name = style.Name + count;
+                                        style.Name += count;
                                     }
 
                                     _doUpdate = false;
@@ -1947,55 +1947,53 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 saveFileDialogStyle.FileName = "my_styles.ass";
             }
 
-            if (openFileDialogImport.ShowDialog(this) != DialogResult.OK)
+            if (openFileDialogImport.ShowDialog(this) == DialogResult.OK)
             {
-                return;
-            }
-
-            var s = new Subtitle();
-            var format = s.LoadSubtitle(openFileDialogImport.FileName, out _, null);
-            if (format != null && format.HasStyleSupport)
-            {
-                var styles = AdvancedSubStationAlpha.GetStylesFromHeader(s.Header);
-                if (styles.Count > 0)
+                var s = new Subtitle();
+                var format = s.LoadSubtitle(openFileDialogImport.FileName, out _, null);
+                if (format != null && format.HasStyleSupport)
                 {
-                    using (var cs = new ChooseStyle(s, format.GetType() == typeof(SubStationAlpha)))
+                    var styles = AdvancedSubStationAlpha.GetStylesFromHeader(s.Header);
+                    if (styles.Count > 0)
                     {
-                        if (cs.ShowDialog(this) == DialogResult.OK && cs.SelectedStyleNames.Count > 0)
+                        using (var cs = new ChooseStyle(s, format.GetType() == typeof(SubStationAlpha)))
                         {
-                            var styleNames = string.Join(", ", cs.SelectedStyleNames.ToArray());
-
-                            foreach (var styleName in cs.SelectedStyleNames)
+                            if (cs.ShowDialog(this) == DialogResult.OK && cs.SelectedStyleNames.Count > 0)
                             {
-                                SsaStyle style = AdvancedSubStationAlpha.GetSsaStyle(styleName, s.Header);
-                                if (GetSsaStyle(style.Name).LoadedFromHeader)
+                                var styleNames = string.Join(", ", cs.SelectedStyleNames.ToArray());
+
+                                foreach (var styleName in cs.SelectedStyleNames)
                                 {
-                                    int count = 2;
-                                    bool doRepeat = GetSsaStyle(style.Name + count).LoadedFromHeader;
-                                    while (doRepeat)
+                                    SsaStyle style = AdvancedSubStationAlpha.GetSsaStyle(styleName, s.Header);
+                                    if (GetSsaStyle(style.Name).LoadedFromHeader)
                                     {
-                                        doRepeat = GetSsaStyle(style.Name + count).LoadedFromHeader;
-                                        count++;
+                                        int count = 2;
+                                        bool doRepeat = GetSsaStyle(style.Name + count).LoadedFromHeader;
+                                        while (doRepeat)
+                                        {
+                                            doRepeat = GetSsaStyle(style.Name + count).LoadedFromHeader;
+                                            count++;
+                                        }
+                                        style.RawLine = style.RawLine.Replace(" " + style.Name + ",", " " + style.Name + count + ",");
+                                        style.Name += count;
                                     }
-                                    style.RawLine = style.RawLine.Replace(" " + style.Name + ",", " " + style.Name + count + ",");
-                                    style.Name = style.Name + count;
+
+                                    _doUpdate = false;
+                                    _currentCategory.Styles.Add(style);
+                                    AddStyle(listViewStorage, style, Subtitle, _isSubStationAlpha);
+                                    listViewStorage.Items[listViewStorage.Items.Count - 1].Selected = true;
+                                    listViewStorage.Items[listViewStorage.Items.Count - 1].EnsureVisible();
+                                    listViewStorage.Items[listViewStorage.Items.Count - 1].Focused = true;
+                                    textBoxStyleName.Text = style.Name;
+                                    textBoxStyleName.Focus();
+                                    _doUpdate = true;
+                                    SetControlsFromStyle(style);
+                                    listViewStorage_SelectedIndexChanged(null, null);
                                 }
 
-                                _doUpdate = false;
-                                _currentCategory.Styles.Add(style);
-                                AddStyle(listViewStorage, style, Subtitle, _isSubStationAlpha);
-                                listViewStorage.Items[listViewStorage.Items.Count - 1].Selected = true;
-                                listViewStorage.Items[listViewStorage.Items.Count - 1].EnsureVisible();
-                                listViewStorage.Items[listViewStorage.Items.Count - 1].Focused = true;
-                                textBoxStyleName.Text = style.Name;
-                                textBoxStyleName.Focus();
-                                _doUpdate = true;
-                                SetControlsFromStyle(style);
-                                listViewStorage_SelectedIndexChanged(null, null);
+                                labelStatus.Text = string.Format(LanguageSettings.Current.SubStationAlphaStyles.StyleXImportedFromFileY, styleNames, openFileDialogImport.FileName);
+                                timerClearStatus.Start();
                             }
-
-                            labelStatus.Text = string.Format(LanguageSettings.Current.SubStationAlphaStyles.StyleXImportedFromFileY, styleNames, openFileDialogImport.FileName);
-                            timerClearStatus.Start();
                         }
                     }
                 }

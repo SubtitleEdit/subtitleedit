@@ -161,7 +161,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                                     toLower = toLower.Replace(" :", ":");
                                 }
 
-                                if (toLower.StartsWith("style:" + styleName.ToLowerInvariant().Trim(), StringComparison.Ordinal))
+                                if (toLower.StartsWith("style:" + styleName.ToLowerInvariant().Trim() + ",", StringComparison.Ordinal))
                                 {
                                     sb.AppendLine(line);
                                 }
@@ -173,11 +173,10 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                         }
                     }
                     string content = sb.ToString();
-                    if (content.TrimEnd().EndsWith("[Events]", StringComparison.Ordinal))
+                    if (content.TrimEnd().EndsWith("Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text", StringComparison.Ordinal))
                     {
                         content = content.Trim() + Environment.NewLine +
-                            "Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text" + Environment.NewLine +
-                            "Dialogue: 0,0:00:31.91,0:00:33.91,Default,,0,0,0,,My Styles :)";
+                                  "Dialogue: 0,0:00:31.91,0:00:33.91,Default,,0,0,0,,My Styles:)";
                     }
                     File.WriteAllText(saveFileDialogStyle.FileName, content, Encoding.UTF8);
                     DialogResult = DialogResult.OK;
