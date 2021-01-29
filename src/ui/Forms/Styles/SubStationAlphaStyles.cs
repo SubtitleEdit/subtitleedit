@@ -641,9 +641,19 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         {
             if (_fileStyleActive)
             {
-                return AdvancedSubStationAlpha.GetSsaStyle(styleName, _header);
+                return GetSsaStyleFile(styleName);
             }
 
+            return GetSsaStyleStorage(styleName);
+        }
+
+        private SsaStyle GetSsaStyleFile(string styleName)
+        {
+            return AdvancedSubStationAlpha.GetSsaStyle(styleName, _header);
+        }
+
+        private SsaStyle GetSsaStyleStorage(string styleName)
+        {
             return _storageStyles.FirstOrDefault(p => p.Name == styleName);
         }
 
@@ -1638,13 +1648,13 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                                 foreach (var styleName in cs.SelectedStyleNames)
                                 {
                                     SsaStyle style = AdvancedSubStationAlpha.GetSsaStyle(styleName, s.Header);
-                                    if (GetSsaStyle(style.Name).LoadedFromHeader)
+                                    if (GetSsaStyleFile(style.Name) != null && GetSsaStyleFile(style.Name).LoadedFromHeader)
                                     {
                                         int count = 2;
-                                        bool doRepeat = GetSsaStyle(style.Name + count).LoadedFromHeader;
+                                        bool doRepeat = GetSsaStyleFile(style.Name + count).LoadedFromHeader;
                                         while (doRepeat)
                                         {
-                                            doRepeat = GetSsaStyle(style.Name + count).LoadedFromHeader;
+                                            doRepeat = GetSsaStyleFile(style.Name + count).LoadedFromHeader;
                                             count++;
                                         }
                                         style.RawLine = style.RawLine.Replace(" " + style.Name + ",", " " + style.Name + count + ",");
@@ -1950,13 +1960,13 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                             foreach (var styleName in cs.SelectedStyleNames)
                             {
                                 SsaStyle style = AdvancedSubStationAlpha.GetSsaStyle(styleName, s.Header);
-                                if (GetSsaStyle(style.Name).LoadedFromHeader)
+                                if (GetSsaStyleStorage(style.Name) != null && GetSsaStyleStorage(style.Name).LoadedFromHeader)
                                 {
                                     int count = 2;
-                                    bool doRepeat = GetSsaStyle(style.Name + count).LoadedFromHeader;
+                                    bool doRepeat = GetSsaStyleStorage(style.Name + count) != null;
                                     while (doRepeat)
                                     {
-                                        doRepeat = GetSsaStyle(style.Name + count).LoadedFromHeader;
+                                        doRepeat = GetSsaStyleStorage(style.Name + count) != null;
                                         count++;
                                     }
                                     style.RawLine = style.RawLine.Replace(" " + style.Name + ",", " " + style.Name + count + ",");
