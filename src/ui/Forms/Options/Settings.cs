@@ -399,9 +399,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelTBVisualSync.Text = language.VisualSync;
             labelTBSpellCheck.Text = language.SpellCheck;
             labelTBNetflixQualityCheck.Text = language.NetflixQualityCheck;
-            // TODO: Add language tags.
-            labelTBAssaStylesManager.Text = "Assa styles manager";
-            labelTBAssaProperties.Text = "Assa properties";
+            labelTBAssaStylesManager.Text = language.AssaStylesManager;
+            labelTBAssaProperties.Text = language.AssaProperties;
             labelTBSettings.Text = language.SettingsName;
             labelTBHelp.Text = language.Help;
             checkBoxToolbarNew.Text = LanguageSettings.Current.General.Visible;

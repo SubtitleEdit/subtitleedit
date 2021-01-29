@@ -1555,6 +1555,8 @@
                     public string VisualSync { get; set; }
                     public string SpellCheck { get; set; }
                     public string NetflixQualityCheck { get; set; }
+                    public string AssaStylesManager { get; set; }
+                    public string AssaProperties { get; set; }
                     public string Settings { get; set; }
                     public string Help { get; set; }
                     public string ShowHideWaveform { get; set; }
@@ -2103,6 +2105,8 @@
             public string VisualSync { get; set; }
             public string SpellCheck { get; set; }
             public string NetflixQualityCheck { get; set; }
+            public string AssaStylesManager { get; set; }
+            public string AssaProperties { get; set; }
             public string SettingsName { get; set; }
             public string ToggleBookmarks { get; set; }
             public string ToggleBookmarksWithComment { get; set; }
