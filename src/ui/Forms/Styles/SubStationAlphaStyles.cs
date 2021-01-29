@@ -2074,8 +2074,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void buttonStorageCategoryNew_Click(object sender, EventArgs e)
         {
-            // TODO: Add language tags.
-            using (var form = new TextPrompt("New category", "Category name", string.Empty))
+            using (var form = new TextPrompt(LanguageSettings.Current.SubStationAlphaStyles.NewCategory, LanguageSettings.Current.SubStationAlphaStyles.CategoryName, string.Empty))
             {
                 if (form.ShowDialog() == DialogResult.OK && !_storageCategories.Exists(x => x.Name == form.InputText))
                 {

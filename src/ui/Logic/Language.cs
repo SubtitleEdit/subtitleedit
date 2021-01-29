@@ -1700,6 +1700,8 @@ namespace Nikse.SubtitleEdit.Logic
                         VisualSync = "Visual sync",
                         SpellCheck = "Spell check",
                         NetflixQualityCheck = "Netflix quality check",
+                        AssaStylesManager = "Assa Styles manager",
+                        AssaProperties = "Assa properties",
                         Settings = "Settings",
                         Help = "Help",
                         ShowHideWaveform = "Show/hide waveform",
@@ -2247,6 +2249,8 @@ can edit in same subtitle file (collaboration)",
                 VisualSync = "Visual sync",
                 SpellCheck = "Spell check",
                 NetflixQualityCheck = "Netflix quality check",
+                AssaStylesManager = "Assa styles manager",
+                AssaProperties = "Assa properties",
                 SettingsName = "Settings",
                 ToggleBookmarks = "Toggle bookmarks",
                 ToggleBookmarksWithComment = "Toggle bookmarks - add comment",
@@ -2923,7 +2927,9 @@ can edit in same subtitle file (collaboration)",
                 AddToFile = "Add to file",
                 AddToStorage = "Add to storage",
                 StyleStorage = "Style storage",
-                OverwriteX = "Overwrite {0}?"
+                OverwriteX = "Overwrite {0}?",
+                NewCategory = "New category",
+                CategoryName = "Category name"
             };
 
             PointSync = new LanguageStructure.PointSync

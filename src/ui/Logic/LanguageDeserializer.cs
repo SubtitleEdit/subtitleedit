@@ -3946,6 +3946,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/ToolBar/NetflixQualityCheck":
                     language.Main.Menu.ToolBar.NetflixQualityCheck = reader.Value;
                     break;
+                case "Main/Menu/ToolBar/AssaStylesManager":
+                    language.Main.Menu.ToolBar.AssaStylesManager = reader.Value;
+                    break;
+                case "Main/Menu/ToolBar/AssaProperties":
+                    language.Main.Menu.ToolBar.AssaProperties = reader.Value;
+                    break;
                 case "Main/Menu/ToolBar/Settings":
                     language.Main.Menu.ToolBar.Settings = reader.Value;
                     break;
@@ -5229,6 +5235,12 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Settings/NetflixQualityCheck":
                     language.Settings.NetflixQualityCheck = reader.Value;
+                    break;
+                case "Settings/AssaStylesManager":
+                    language.Settings.AssaStylesManager = reader.Value;
+                    break;
+                case "Settings/AssaProperties":
+                    language.Settings.AssaProperties = reader.Value;
                     break;
                 case "Settings/SettingsName":
                     language.Settings.SettingsName = reader.Value;
@@ -7083,6 +7095,12 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "SubStationAlphaStyles/OverwriteX":
                     language.SubStationAlphaStyles.OverwriteX = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/NewCategory":
+                    language.SubStationAlphaStyles.NewCategory = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/CategoryName":
+                    language.SubStationAlphaStyles.CategoryName = reader.Value;
                     break;
                 case "PointSync/Title":
                     language.PointSync.Title = reader.Value;

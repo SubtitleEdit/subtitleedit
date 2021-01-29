@@ -1185,6 +1185,8 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <VisualSync>Visual sync</VisualSync>
         <SpellCheck>Spell check</SpellCheck>
         <NetflixQualityCheck>Netflix quality check</NetflixQualityCheck>
+        <AssaStylesManager>Assa Styles manager</AssaStylesManager>
+        <AssaProperties>Assa properties</AssaProperties>
         <Settings>Settings</Settings>
         <Help>Help</Help>
         <ShowHideWaveform>Show/hide waveform</ShowHideWaveform>
@@ -1938,6 +1940,8 @@ can edit in same subtitle file (collaboration)</Information>
     <VisualSync>Visual sync</VisualSync>
     <SpellCheck>Spell check</SpellCheck>
     <NetflixQualityCheck>Netflix quality check</NetflixQualityCheck>
+    <AssaStylesManager>Assa styles manager</AssaStylesManager>
+    <AssaProperties>Assa properties</AssaProperties>
     <SettingsName>Settings</SettingsName>
     <ToggleBookmarks>Toggle bookmarks</ToggleBookmarks>
     <ToggleBookmarksWithComment>Toggle bookmarks - add comment</ToggleBookmarksWithComment>
@@ -2588,6 +2592,8 @@ Continue?</RestoreDefaultSettingsMsg>
     <AddToStorage>Add to storage</AddToStorage>
     <StyleStorage>Style storage</StyleStorage>
     <OverwriteX>Overwrite {0}?</OverwriteX>
+    <NewCategory>New category</NewCategory>
+    <CategoryName>Category name</CategoryName>
   </SubStationAlphaStyles>
   <PointSync>
     <Title>Point synchronization</Title>
