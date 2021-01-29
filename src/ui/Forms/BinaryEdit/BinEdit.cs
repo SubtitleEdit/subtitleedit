@@ -878,7 +878,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             var idx = subtitleListView1.SelectedItems[0].Index;
             var p = _subtitle.Paragraphs[idx];
             groupBoxCurrent.Text = $"{idx + 1} / {_subtitle.Paragraphs.Count}";
-            if (subtitleListView1.SelectedItems.Count > 1) 
+            if (subtitleListView1.SelectedItems.Count > 1)
             {
                 groupBoxCurrent.Text += $" ({subtitleListView1.SelectedItems.Count})";
             }
@@ -1102,12 +1102,81 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             File.WriteAllText(fileName, FormatUtf8Xml(doc), Encoding.UTF8);
         }
 
+        private void WriteDostParagraph(Bitmap bitmap, StringBuilder sb, string path, string fileNameWithoutExtension, int i, Extra extra, Paragraph p)
+        {
+            string numberString = string.Format("{0:0000}", i);
+            var fileName = Path.Combine(path, fileNameWithoutExtension.Replace(" ", "_")) + "_" + numberString + ".png";
+
+            foreach (var encoder in ImageCodecInfo.GetImageEncoders())
+            {
+                if (encoder.FormatID == ImageFormat.Png.Guid)
+                {
+                    var parameters = new EncoderParameters();
+                    parameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.ColorDepth, 8);
+                    var nbmp = new NikseBitmap(bitmap);
+                    var b = nbmp.ConvertTo8BitsPerPixel();
+                    b.Save(fileName, encoder, parameters);
+                    b.Dispose();
+                    break;
+                }
+            }
+
+            const string paragraphWriteFormat = "{0}\t{1}\t{2}\t{4}\t{5}\t{3}\t0\t0";
+            int left = extra.X;
+            int top = extra.Y;
+            string startTime = ToHHMMSSFF(p.StartTime);
+            string endTime = ToHHMMSSFF(p.EndTime);
+            sb.AppendLine(string.Format(paragraphWriteFormat, numberString, startTime, endTime, Path.GetFileName(fileName), left, top));
+        }
+
+        private void WriteDostFile(StringBuilder sb, string fileName, int count)
+        {
+            string header = @"$FORMAT=480
+$VERSION=1.2
+$ULEAD=TRUE
+$DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
+"NO\tINTIME\t\tOUTTIME\t\tXPOS\tYPOS\tFILENAME\tFADEIN\tFADEOUT";
+
+            string dropValue = "30000";
+            if (Math.Abs(_frameRate - 23.98) < 0.01)
+            {
+                dropValue = "23976";
+            }
+            else if (Math.Abs(_frameRate - 24.0) < 0.01)
+            {
+                dropValue = "24000";
+            }
+            else if (Math.Abs(_frameRate - 25.0) < 0.01)
+            {
+                dropValue = "25000";
+            }
+            else if (Math.Abs(_frameRate - 29.97) < 0.01)
+            {
+                dropValue = "29970";
+            }
+            else if (Math.Abs(_frameRate - 30) < 0.01)
+            {
+                dropValue = "30000";
+            }
+            else if (Math.Abs(_frameRate - 59.94) < 0.01)
+            {
+                dropValue = "59940";
+            }
+            else if (Math.Abs(_frameRate - 60.00) < 0.01)
+            {
+                dropValue = "60000";
+            }
+
+            header = header.Replace("[DROPVALUE]", dropValue);
+            File.WriteAllText(fileName, header + Environment.NewLine + sb.ToString());
+        }
+
         private void saveFileAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            saveFileDialog1.Title = LanguageSettings.Current.ExportPngXml.SaveBluRraySupAs;
+            saveFileDialog1.Title = LanguageSettings.Current.Main.Menu.File.SaveAs.RemoveChar('&');
             saveFileDialog1.DefaultExt = "*.sup";
             saveFileDialog1.AddExtension = true;
-            saveFileDialog1.Filter = LanguageSettings.Current.Main.BluRaySupFiles + "|*.sup|BDN xml/png|*.xml";
+            saveFileDialog1.Filter = LanguageSettings.Current.Main.BluRaySupFiles + "|*.sup|BDN xml/png|*.xml|DOST|*.dost";
             if (saveFileDialog1.ShowDialog(this) != DialogResult.OK)
             {
                 return;
@@ -1146,7 +1215,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 };
                 bw.DoWork += (o, args) =>
                 {
-                    if (saveFileDialog1.FilterIndex == 1)
+                    if (saveFileDialog1.FilterIndex == 1) // Blu-ray .sup
                     {
                         using (var binarySubtitleFile = new FileStream(args.Argument.ToString(), FileMode.Create))
                         {
@@ -1176,7 +1245,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                             }
                         }
                     }
-                    else if (saveFileDialog1.FilterIndex == 2)
+                    else if (saveFileDialog1.FilterIndex == 2) // BDN XML
                     {
                         var path = Path.GetDirectoryName(saveFileDialog1.FileName);
                         var sb = new StringBuilder();
@@ -1191,6 +1260,23 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                             bmp.Dispose();
                         }
                         WriteBdnXmlFile(sb, saveFileDialog1.FileName, _extra.Count);
+                    }
+                    else if (saveFileDialog1.FilterIndex == 3) // DOST
+                    {
+                        var path = Path.GetDirectoryName(saveFileDialog1.FileName);
+                        var fileName = Path.GetFileNameWithoutExtension(saveFileDialog1.FileName);
+                        var sb = new StringBuilder();
+                        for (var index = 0; index < _subtitle.Paragraphs.Count; index++)
+                        {
+                            bw.ReportProgress(index);
+                            var p = _subtitle.Paragraphs[index];
+                            var bd = _binSubtitles[index];
+                            var extra = _extra[index];
+                            var bmp = extra.Bitmap ?? GetBitmap(bd);
+                            WriteDostParagraph(bmp, sb, path, fileName, index + 1, extra, p);
+                            bmp.Dispose();
+                        }
+                        WriteDostFile(sb, saveFileDialog1.FileName, _extra.Count);
                     }
                 };
                 bw.RunWorkerAsync(saveFileDialog1.FileName);
