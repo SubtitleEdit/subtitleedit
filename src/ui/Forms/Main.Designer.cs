@@ -1,6 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
-
-namespace Nikse.SubtitleEdit.Forms
+﻿namespace Nikse.SubtitleEdit.Forms
 {
     sealed partial class Main
     {
@@ -550,6 +548,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerOriginalTextUndo = new System.Windows.Forms.Timer(this.components);
+            this.toolStripButtonAssaStylesManager = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonAssaProperties = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -660,6 +660,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonVisualSync,
             this.toolStripButtonSpellCheck,
             this.toolStripButtonNetflixQualityCheck,
+            this.toolStripButtonAssaStylesManager,
+            this.toolStripButtonAssaProperties,
             this.toolStripButtonSettings,
             this.toolStripSeparatorHelp,
             this.toolStripButtonHelp,
@@ -828,7 +830,29 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonNetflixQualityCheck.Name = "toolStripButtonNetflixQualityCheck";
             this.toolStripButtonNetflixQualityCheck.Size = new System.Drawing.Size(36, 37);
             this.toolStripButtonNetflixQualityCheck.Text = "Netflix quality check";
-            this.toolStripButtonNetflixQualityCheck.Click += new System.EventHandler(this.toolStripButtonNetflixGlyphCheck_Click);
+            this.toolStripButtonNetflixQualityCheck.Click += new System.EventHandler(this.netflixGlyphCheckToolStripMenuItem_Click);
+            // 
+            // toolStripButtonAssaStylesManager
+            // 
+            this.toolStripButtonAssaStylesManager.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonAssaStylesManager.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonAssaStylesManager.Image")));
+            this.toolStripButtonAssaStylesManager.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripButtonAssaStylesManager.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonAssaStylesManager.Name = "toolStripButtonAssaStylesManager";
+            this.toolStripButtonAssaStylesManager.Size = new System.Drawing.Size(36, 37);
+            this.toolStripButtonAssaStylesManager.Text = "AssaStylesManager";
+            this.toolStripButtonAssaStylesManager.Click += new System.EventHandler(this.toolStripMenuItemAssaStyles_Click);
+            // 
+            // toolStripButtonAssaProperties
+            // 
+            this.toolStripButtonAssaProperties.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonAssaProperties.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonAssaProperties.Image")));
+            this.toolStripButtonAssaProperties.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripButtonAssaProperties.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonAssaProperties.Name = "toolStripButtonAssaProperties";
+            this.toolStripButtonAssaProperties.Size = new System.Drawing.Size(36, 37);
+            this.toolStripButtonAssaProperties.Text = "toolStripButtonAssaProperties";
+            this.toolStripButtonAssaProperties.Click += new System.EventHandler(this.toolStripMenuItemSubStationAlpha_Click);
             // 
             // toolStripButtonSettings
             // 
@@ -5914,5 +5938,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem startOfLefttorightOverrideLROToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem startOfRighttoleftOverrideRLOToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripButton toolStripButtonAssaStylesManager;
+        private System.Windows.Forms.ToolStripButton toolStripButtonAssaProperties;
     }
 }
