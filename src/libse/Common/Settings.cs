@@ -418,7 +418,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             ExportFcpPalNtsc = "PAL";
             ExportLastBorderWidth = 4;
             BinEditBackgroundColor = Color.Black;
-            BinEditImageBackgroundColor = Color.Black;
+            BinEditImageBackgroundColor = Color.Blue;
             BinEditVerticalMargin = 10;
             BinEditLeftMargin = 10;
             BinEditRightMargin = 10;
