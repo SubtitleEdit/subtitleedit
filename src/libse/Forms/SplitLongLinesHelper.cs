@@ -81,9 +81,9 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
                 // continue if paragraph doesn't contain exactly two lines
                 var lines = text.SplitToLines();
-                if (lines.Count > 2)
+                if (lines.Count > 2 || lines.Count == 1)
                 {
-                    continue; // ignore 3+ lines
+                    continue; // ignore 3+ lines or one liners
                 }
 
                 // calculate milliseconds per char
