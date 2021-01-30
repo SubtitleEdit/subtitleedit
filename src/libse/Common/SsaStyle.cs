@@ -28,6 +28,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string RawLine { get; set; }
         public bool LoadedFromHeader { get; set; }
 
+        public const string DefaultAssStyleFormat = "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding";
+
         public SsaStyle()
         {
             FontName = Configuration.Settings.SubtitleSettings.SsaFontName;

@@ -259,6 +259,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
 
             checkBoxVideoPlayerPreviewFontBold.Checked = gs.VideoPlayerPreviewFontBold;
+            checkBoxMpvPreviewOpaqueBox.Checked = gs.MpvPreviewTextOpaqueBox;
 
             checkBoxVideoAutoOpen.Checked = !gs.DisableVideoAutoLoading;
             checkBoxAllowVolumeBoost.Checked = gs.AllowVolumeBoost;
@@ -575,7 +576,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelVideoPlayerPreviewFontName.Text = language.PreviewFontName;
             labelVideoPlayerPreviewFontSize.Text = language.PreviewFontSize;
             checkBoxVideoPlayerPreviewFontBold.Text = language.SubtitleBold;
+            checkBoxMpvPreviewOpaqueBox.Text = language.SsaOpaqueBox;
             checkBoxVideoPlayerPreviewFontBold.Left = comboBoxlVideoPlayerPreviewFontSize.Right + 7;
+            checkBoxMpvPreviewOpaqueBox.Left = checkBoxVideoPlayerPreviewFontBold.Right + 5;
 
             checkBoxVideoAutoOpen.Text = language.VideoAutoOpen;
             checkBoxAllowVolumeBoost.Text = language.AllowVolumeBoost;
@@ -656,7 +659,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelSsaFontSize.Text = ssaStyles.FontSize;
             labelFontName.Text = ssaStyles.FontName;
             buttonSsaColor.Text = LanguageSettings.Current.Settings.ChooseColor;
-            groupSsaBoxFont.Text = ssaStyles.Font;
+            groupBoxSsaFont.Text = ssaStyles.Font;
             groupBoxSsaBorder.Text = ssaStyles.Border;
             groupBoxMargins.Text = ssaStyles.Margins;
             labelMarginLeft.Text = ssaStyles.MarginLeft;
@@ -1825,6 +1828,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             gs.VideoPlayerPreviewFontBold = checkBoxVideoPlayerPreviewFontBold.Checked;
             gs.DisableVideoAutoLoading = !checkBoxVideoAutoOpen.Checked;
             gs.AllowVolumeBoost = checkBoxAllowVolumeBoost.Checked;
+            gs.MpvPreviewTextOpaqueBox = checkBoxMpvPreviewOpaqueBox.Checked;
 
             Configuration.Settings.VideoControls.CustomSearchText1 = comboBoxCustomSearch1.Text;
             Configuration.Settings.VideoControls.CustomSearchText2 = comboBoxCustomSearch2.Text;
@@ -3225,7 +3229,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private void RefreshMpvSettings()
         {
             radioButtonVideoPlayerMPV.Enabled = LibMpvDynamic.IsInstalled;
-            checkBoxMpvHandlesPreviewText.Enabled = radioButtonVideoPlayerMPV.Enabled;
+            checkBoxMpvHandlesPreviewText.Enabled = radioButtonVideoPlayerMPV.Checked;
+            checkBoxMpvPreviewOpaqueBox.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
             if (!radioButtonVideoPlayerMPV.Enabled)
             {
                 buttonMpvSettings.Font = new Font(buttonMpvSettings.Font.FontFamily, buttonMpvSettings.Font.Size, FontStyle.Bold);
@@ -3286,6 +3291,12 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private void radioButtonVideoPlayerMPV_CheckedChanged(object sender, EventArgs e)
         {
             checkBoxMpvHandlesPreviewText.Enabled = radioButtonVideoPlayerMPV.Checked;
+            checkBoxMpvPreviewOpaqueBox.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
+        }
+
+        private void checkBoxMpvHandlesPreviewText_CheckedChanged(object sender, EventArgs e)
+        {
+            checkBoxMpvPreviewOpaqueBox.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
         }
 
         private void buttonClearShortcut_Click(object sender, EventArgs e)

@@ -4780,6 +4780,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string oldVideoPlayer = Configuration.Settings.General.VideoPlayer;
             string oldMpvVideoOutput = Configuration.Settings.General.MpvVideoOutputWindows;
+            bool oldMpvOpaueBox = Configuration.Settings.General.MpvPreviewTextOpaqueBox;
             string oldListViewLineSeparatorString = Configuration.Settings.General.ListViewLineSeparatorString;
             bool oldCpsWhiteSpaceSetting = Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace;
             string oldSubtitleFontSettings = Configuration.Settings.General.SubtitleFontName +
@@ -4791,7 +4792,6 @@ namespace Nikse.SubtitleEdit.Forms
                                              Configuration.Settings.General.SubtitleListViewFontBold.ToString() +
                                              Configuration.Settings.General.SubtitleListViewFontSize;
 
-            ;
             bool oldUseTimeFormatHHMMSSFF = Configuration.Settings.General.UseTimeFormatHHMMSSFF;
 
             string oldSyntaxColoring = Configuration.Settings.Tools.ListViewSyntaxColorDurationSmall.ToString() +
@@ -4982,6 +4982,12 @@ namespace Nikse.SubtitleEdit.Forms
                 string vfn = VideoFileName;
                 CloseVideoToolStripMenuItemClick(null, null);
                 OpenVideo(vfn);
+            }
+
+            if (mediaPlayer.VideoPlayer != null && mediaPlayer.VideoPlayer is LibMpvDynamic && Configuration.Settings.General.MpvHandlesPreviewText
+                && oldMpvOpaueBox != Configuration.Settings.General.MpvPreviewTextOpaqueBox)
+            {
+                mediaPlayer.UpdateMpvStyle();
             }
 
             StartOrStopAutoBackup();

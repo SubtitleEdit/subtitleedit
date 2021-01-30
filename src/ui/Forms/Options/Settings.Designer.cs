@@ -156,6 +156,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.comboBoxVideoPlayerPreviewFontName = new System.Windows.Forms.ComboBox();
             this.labelVideoPlayerPreviewFontSize = new System.Windows.Forms.Label();
             this.comboBoxlVideoPlayerPreviewFontSize = new System.Windows.Forms.ComboBox();
+            this.checkBoxMpvPreviewOpaqueBox = new System.Windows.Forms.CheckBox();
             this.checkBoxVideoPlayerShowStopButton = new System.Windows.Forms.CheckBox();
             this.groupBoxVideoEngine = new System.Windows.Forms.GroupBox();
             this.checkBoxMpvHandlesPreviewText = new System.Windows.Forms.CheckBox();
@@ -369,7 +370,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.numericUpDownSsaShadow = new System.Windows.Forms.NumericUpDown();
             this.checkBoxSsaOpaqueBox = new System.Windows.Forms.CheckBox();
             this.labelSsaOutline = new System.Windows.Forms.Label();
-            this.groupSsaBoxFont = new System.Windows.Forms.GroupBox();
+            this.groupBoxSsaFont = new System.Windows.Forms.GroupBox();
             this.checkBoxSsaFontBold = new System.Windows.Forms.CheckBox();
             this.buttonSsaColor = new System.Windows.Forms.Button();
             this.panelPrimaryColor = new System.Windows.Forms.Panel();
@@ -474,7 +475,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBoxSsaBorder.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaOutline)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaShadow)).BeginInit();
-            this.groupSsaBoxFont.SuspendLayout();
+            this.groupBoxSsaFont.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).BeginInit();
             this.groupBoxMargins.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaMarginVertical)).BeginInit();
@@ -2031,6 +2032,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBoxVideoPlayerDefault.Controls.Add(this.checkBoxVideoPlayerShowMuteButton);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.labelVideoPlayerPreviewFontName);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.comboBoxVideoPlayerPreviewFontName);
+            this.groupBoxVideoPlayerDefault.Controls.Add(this.checkBoxMpvPreviewOpaqueBox);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.labelVideoPlayerPreviewFontSize);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.comboBoxlVideoPlayerPreviewFontSize);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.checkBoxVideoPlayerShowStopButton);
@@ -2063,7 +2065,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             // checkBoxVideoPlayerPreviewFontBold
             // 
             this.checkBoxVideoPlayerPreviewFontBold.AutoSize = true;
-            this.checkBoxVideoPlayerPreviewFontBold.Location = new System.Drawing.Point(593, 80);
+            this.checkBoxVideoPlayerPreviewFontBold.Location = new System.Drawing.Point(466, 80);
             this.checkBoxVideoPlayerPreviewFontBold.Name = "checkBoxVideoPlayerPreviewFontBold";
             this.checkBoxVideoPlayerPreviewFontBold.Size = new System.Drawing.Size(46, 17);
             this.checkBoxVideoPlayerPreviewFontBold.TabIndex = 9;
@@ -2150,6 +2152,16 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.comboBoxlVideoPlayerPreviewFontSize.Size = new System.Drawing.Size(121, 21);
             this.comboBoxlVideoPlayerPreviewFontSize.TabIndex = 8;
             // 
+            // checkBoxMpvPreviewOpaqueBox
+            // 
+            this.checkBoxMpvPreviewOpaqueBox.AutoSize = true;
+            this.checkBoxMpvPreviewOpaqueBox.Location = new System.Drawing.Point(512, 80);
+            this.checkBoxMpvPreviewOpaqueBox.Name = "checkBoxMpvPreviewOpaqueBox";
+            this.checkBoxMpvPreviewOpaqueBox.Size = new System.Drawing.Size(85, 17);
+            this.checkBoxMpvPreviewOpaqueBox.TabIndex = 10;
+            this.checkBoxMpvPreviewOpaqueBox.Text = "Opaque box";
+            this.checkBoxMpvPreviewOpaqueBox.UseVisualStyleBackColor = true;
+            // 
             // checkBoxVideoPlayerShowStopButton
             // 
             this.checkBoxVideoPlayerShowStopButton.AutoSize = true;
@@ -2189,12 +2201,13 @@ namespace Nikse.SubtitleEdit.Forms.Options
             // checkBoxMpvHandlesPreviewText
             // 
             this.checkBoxMpvHandlesPreviewText.AutoSize = true;
-            this.checkBoxMpvHandlesPreviewText.Location = new System.Drawing.Point(169, 111);
+            this.checkBoxMpvHandlesPreviewText.Location = new System.Drawing.Point(169, 114);
             this.checkBoxMpvHandlesPreviewText.Name = "checkBoxMpvHandlesPreviewText";
             this.checkBoxMpvHandlesPreviewText.Size = new System.Drawing.Size(150, 17);
             this.checkBoxMpvHandlesPreviewText.TabIndex = 31;
             this.checkBoxMpvHandlesPreviewText.Text = "mpv handles preview text";
             this.checkBoxMpvHandlesPreviewText.UseVisualStyleBackColor = true;
+            this.checkBoxMpvHandlesPreviewText.CheckedChanged += new System.EventHandler(this.checkBoxMpvHandlesPreviewText_CheckedChanged);
             // 
             // labelMpvSettings
             // 
@@ -4450,7 +4463,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBoxSsaStyle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxSsaStyle.Controls.Add(this.groupBoxSsaBorder);
-            this.groupBoxSsaStyle.Controls.Add(this.groupSsaBoxFont);
+            this.groupBoxSsaStyle.Controls.Add(this.groupBoxSsaFont);
             this.groupBoxSsaStyle.Controls.Add(this.groupBoxMargins);
             this.groupBoxSsaStyle.Controls.Add(this.groupBoxPreview);
             this.groupBoxSsaStyle.Location = new System.Drawing.Point(0, 0);
@@ -4529,23 +4542,23 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelSsaOutline.TabIndex = 4;
             this.labelSsaOutline.Text = "Outline";
             // 
-            // groupSsaBoxFont
+            // groupBoxSsaFont
             // 
-            this.groupSsaBoxFont.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupBoxSsaFont.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupSsaBoxFont.Controls.Add(this.checkBoxSsaFontBold);
-            this.groupSsaBoxFont.Controls.Add(this.buttonSsaColor);
-            this.groupSsaBoxFont.Controls.Add(this.panelPrimaryColor);
-            this.groupSsaBoxFont.Controls.Add(this.numericUpDownFontSize);
-            this.groupSsaBoxFont.Controls.Add(this.comboBoxFontName);
-            this.groupSsaBoxFont.Controls.Add(this.labelSsaFontSize);
-            this.groupSsaBoxFont.Controls.Add(this.labelFontName);
-            this.groupSsaBoxFont.Location = new System.Drawing.Point(6, 20);
-            this.groupSsaBoxFont.Name = "groupSsaBoxFont";
-            this.groupSsaBoxFont.Size = new System.Drawing.Size(355, 97);
-            this.groupSsaBoxFont.TabIndex = 7;
-            this.groupSsaBoxFont.TabStop = false;
-            this.groupSsaBoxFont.Text = "Font";
+            this.groupBoxSsaFont.Controls.Add(this.checkBoxSsaFontBold);
+            this.groupBoxSsaFont.Controls.Add(this.buttonSsaColor);
+            this.groupBoxSsaFont.Controls.Add(this.panelPrimaryColor);
+            this.groupBoxSsaFont.Controls.Add(this.numericUpDownFontSize);
+            this.groupBoxSsaFont.Controls.Add(this.comboBoxFontName);
+            this.groupBoxSsaFont.Controls.Add(this.labelSsaFontSize);
+            this.groupBoxSsaFont.Controls.Add(this.labelFontName);
+            this.groupBoxSsaFont.Location = new System.Drawing.Point(6, 20);
+            this.groupBoxSsaFont.Name = "groupBoxSsaFont";
+            this.groupBoxSsaFont.Size = new System.Drawing.Size(355, 97);
+            this.groupBoxSsaFont.TabIndex = 7;
+            this.groupBoxSsaFont.TabStop = false;
+            this.groupBoxSsaFont.Text = "Font";
             // 
             // checkBoxSsaFontBold
             // 
@@ -5025,8 +5038,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBoxSsaBorder.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaOutline)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaShadow)).EndInit();
-            this.groupSsaBoxFont.ResumeLayout(false);
-            this.groupSsaBoxFont.PerformLayout();
+            this.groupBoxSsaFont.ResumeLayout(false);
+            this.groupBoxSsaFont.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).EndInit();
             this.groupBoxMargins.ResumeLayout(false);
             this.groupBoxMargins.PerformLayout();
@@ -5202,6 +5215,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private System.Windows.Forms.ComboBox comboBoxVideoPlayerPreviewFontName;
         private System.Windows.Forms.Label labelVideoPlayerPreviewFontSize;
         private System.Windows.Forms.ComboBox comboBoxlVideoPlayerPreviewFontSize;
+        private System.Windows.Forms.CheckBox checkBoxMpvPreviewOpaqueBox;
         private System.Windows.Forms.GroupBox groupBoxShortcuts;
         private System.Windows.Forms.Button buttonUpdateShortcut;
         private System.Windows.Forms.TreeView treeViewShortcuts;
@@ -5302,7 +5316,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private System.Windows.Forms.Label labelMarginRight;
         private System.Windows.Forms.Label labelMarginLeft;
         private System.Windows.Forms.GroupBox groupBoxSsaBorder;
-        private System.Windows.Forms.GroupBox groupSsaBoxFont;
+        private System.Windows.Forms.GroupBox groupBoxSsaFont;
         private System.Windows.Forms.NumericUpDown numericUpDownFontSize;
         private System.Windows.Forms.ComboBox comboBoxFontName;
         private System.Windows.Forms.Label labelSsaFontSize;
