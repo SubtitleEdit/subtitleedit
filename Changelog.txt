@@ -53,6 +53,7 @@
    * Fix frame rate bug in FCP+image - thx Christopher
    * Fix issues with ismt format - thx Bersu
    * Fix bdsup right align export issue - thx von Suppé
+   * Fix for "set start" (lmb+shift) for original in waveform - thx OmrSi
    * Fix export FAB image script save path - thx rotorwave
    * Fix crash loading Cheetah Caption - thx mook1975
    * Fix crash in video menu with video without audio - thx GrampaWildWilly

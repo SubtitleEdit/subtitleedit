@@ -252,7 +252,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.toolStripMenuItemImport,
             this.toolStripMenuItemExport});
             this.contextMenuStripFile.Name = "contextMenuStrip1";
-            this.contextMenuStripFile.Size = new System.Drawing.Size(216, 292);
+            this.contextMenuStripFile.Size = new System.Drawing.Size(216, 270);
             this.contextMenuStripFile.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripFile_Opening);
             // 
             // deleteToolStripMenuItem
@@ -1415,7 +1415,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.KeyPreview = true;
-            this.MinimumSize = new System.Drawing.Size(1020, 630);
+            this.MinimumSize = new System.Drawing.Size(1060, 630);
             this.Name = "SubStationAlphaStyles";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
