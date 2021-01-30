@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Xml;
 
@@ -65,7 +66,6 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             const string commentWriteFormat = "Comment: Marked={4},{0},{1},{3},{5},{6},{7},{8},{9},{2}";
 
             var sb = new StringBuilder();
-            Color fontColor = Color.FromArgb(Configuration.Settings.SubtitleSettings.SsaFontColorArgb);
             bool isValidAssHeader = !string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4 Styles]");
             var styles = new List<string>();
             if (isValidAssHeader)
@@ -91,23 +91,32 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             }
             else
             {
-                var ssa = Configuration.Settings.SubtitleSettings;
+                SsaStyle style = null;
+                var storageCategories = Configuration.Settings.SubtitleSettings.AssaStyleStorageCategories;
+                if (storageCategories.Count > 0 && storageCategories.Exists(x => x.IsDefault))
+                {
+                    var defaultStyle = storageCategories.SingleOrDefault(x => x.IsDefault).Styles.SingleOrDefault(x => x.Name.ToLowerInvariant() == "default");
+                    style = defaultStyle ?? storageCategories.SingleOrDefault(x => x.IsDefault).Styles[0];
+                }
+
+                style = style ?? new SsaStyle();
+
                 string boldStyle = "0"; // 0=regular
-                if (ssa.SsaFontBold)
+                if (style.Bold)
                 {
                     boldStyle = "-1"; // -1 = true, 0 is false
                 }
 
                 sb.AppendLine(string.Format(header,
                                             title,
-                                            ssa.SsaFontName,
-                                            (int)ssa.SsaFontSize,
-                                            ColorTranslator.ToWin32(fontColor),
-                                            ssa.SsaOutline,
-                                            ssa.SsaShadow,
-                                            ssa.SsaMarginLeft,
-                                            ssa.SsaMarginRight,
-                                            ssa.SsaMarginTopBottom,
+                                            style.FontName,
+                                            style.FontSize,
+                                            ColorTranslator.ToWin32(style.Primary),
+                                            style.OutlineWidth,
+                                            style.ShadowWidth,
+                                            style.MarginLeft,
+                                            style.MarginRight,
+                                            style.MarginVertical,
                                             boldStyle
                                             ));
             }
