@@ -1,5 +1,4 @@
 ﻿using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using System;
 using System.Drawing;
 using System.Globalization;
 using System.Text;
@@ -82,6 +81,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             LoadedFromHeader = ssaStyle.LoadedFromHeader;
         }
 
+        private static string BoolToRawSsa(bool value)
+        {
+            return value ? "-1" : "0";
+        }
+
         public string ToRawSsa(string styleFormat)
         {
             var sb = new StringBuilder();
@@ -124,15 +128,15 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else if (f == "bold")
                 {
-                    sb.Append(Convert.ToInt32(Bold));
+                    sb.Append(BoolToRawSsa(Bold));
                 }
                 else if (f == "italic")
                 {
-                    sb.Append(Convert.ToInt32(Italic));
+                    sb.Append(BoolToRawSsa(Italic));
                 }
                 else if (f == "underline")
                 {
-                    sb.Append(Convert.ToInt32(Underline));
+                    sb.Append(BoolToRawSsa(Underline));
                 }
                 else if (f == "outline")
                 {
@@ -231,15 +235,15 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else if (f == "bold")
                 {
-                    sb.Append(Convert.ToInt32(Bold));
+                    sb.Append(BoolToRawSsa(Bold));
                 }
                 else if (f == "italic")
                 {
-                    sb.Append(Convert.ToInt32(Italic));
+                    sb.Append(BoolToRawSsa(Italic));
                 }
                 else if (f == "underline")
                 {
-                    sb.Append(Convert.ToInt32(Underline));
+                    sb.Append(BoolToRawSsa(Underline));
                 }
                 else if (f == "outline")
                 {
