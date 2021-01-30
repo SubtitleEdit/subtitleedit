@@ -23978,7 +23978,7 @@ namespace Nikse.SubtitleEdit.Forms
         public void ReDockVideoPlayer(Control control)
         {
             groupBoxVideo.Controls.Add(control);
-            mediaPlayer.FontSizeFactor = 1.0F;
+            mediaPlayer.FontSizeFactor = 1 / 1.5F;
             mediaPlayer.SetSubtitleFont();
             mediaPlayer.SubtitleText = string.Empty;
         }
