@@ -1171,12 +1171,230 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             File.WriteAllText(fileName, header + Environment.NewLine + sb.ToString());
         }
 
+        private void WriteFcpParagraph(StringBuilder sb, Paragraph p, Bitmap bitmap, int i, string path, string fileName)
+        {
+            string numberString = string.Format(Path.GetFileNameWithoutExtension(Path.GetFileName(fileName)) + "{0:0000}", i).RemoveChar(' ');
+            var fileNameShort = numberString + ".png";
+            var targetImageFileName = Path.Combine(Path.GetDirectoryName(fileName), fileNameShort);
+            string fileNameNoPath = Path.GetFileName(fileNameShort);
+            string fileNameNoExt = Path.GetFileNameWithoutExtension(fileNameNoPath);
+            string pathUrl = "file://localhost/" + targetImageFileName.Replace("\\", "/").Replace(" ", "%20");
+            string template = " <clipitem id=\"" + System.Security.SecurityElement.Escape(fileNameNoPath) + "\">" + Environment.NewLine +
+@"            <name>" + System.Security.SecurityElement.Escape(fileNameNoPath) + @"</name>
+            <duration>[DURATION]</duration>
+            <rate>
+              <timebase>[TIMEBASE]</timebase>
+              <ntsc>[NTSC]</ntsc>
+            </rate>
+            <in>[IN]</in>
+            <out>[OUT]</out>
+            <start>[START]</start>
+            <end>[END]</end>
+            <pixelaspectratio>" + _screenWidth + "x" + _screenHeight + @"</pixelaspectratio>
+            <stillframe>TRUE</stillframe>
+            <anamorphic>FALSE</anamorphic>
+            <alphatype>straight</alphatype>
+            <masterclipid>" + System.Security.SecurityElement.Escape(fileNameNoPath) + @"1</masterclipid>" + Environment.NewLine +
+"           <file id=\"" + fileNameNoExt + "\">" + @"
+              <name>" + System.Security.SecurityElement.Escape(fileNameNoPath) + @"</name>
+              <pathurl>" + pathUrl + @"</pathurl>
+              <rate>
+                <timebase>[TIMEBASE]</timebase>
+                <ntsc>[NTSC]</ntsc>
+              </rate>
+              <duration>[DURATION]</duration>
+              <width>" + _screenWidth + @"</width>
+              <height>" + _screenHeight + @"</height>
+              <media>
+                <video>
+                  <duration>[DURATION]</duration>
+                  <stillframe>TRUE</stillframe>
+                  <samplecharacteristics>
+                    <width>" + _screenWidth + @"</width>
+                    <height>" + _screenHeight + @"</height>
+                  </samplecharacteristics>
+                </video>
+              </media>
+            </file>
+            <sourcetrack>
+              <mediatype>video</mediatype>
+            </sourcetrack>
+            <fielddominance>none</fielddominance>
+          </clipitem>";
+
+            bitmap.Save(Path.Combine(path, targetImageFileName), ImageFormat.Png);
+
+            int timeBase = 25;
+            string ntsc = "FALSE";
+            if (Math.Abs(_frameRate - 29.97) < 0.01)
+            {
+                timeBase = 30;
+                ntsc = "TRUE";
+            }
+            else if (Math.Abs(_frameRate - 23.976) < 0.01)
+            {
+                timeBase = 24;
+                ntsc = "TRUE";
+            }
+            else if (Math.Abs(_frameRate - 59.94) < 0.01)
+            {
+                timeBase = 60;
+                ntsc = "TRUE";
+            }
+
+            var duration = SubtitleFormat.MillisecondsToFrames(p.Duration.TotalMilliseconds, _frameRate);
+            var start = SubtitleFormat.MillisecondsToFrames(p.StartTime.TotalMilliseconds, _frameRate);
+            var end = SubtitleFormat.MillisecondsToFrames(p.EndTime.TotalMilliseconds, _frameRate);
+
+            template = template.Replace("[DURATION]", duration.ToString(CultureInfo.InvariantCulture));
+            template = template.Replace("[IN]", start.ToString(CultureInfo.InvariantCulture));
+            template = template.Replace("[OUT]", end.ToString(CultureInfo.InvariantCulture));
+            template = template.Replace("[START]", start.ToString(CultureInfo.InvariantCulture));
+            template = template.Replace("[END]", end.ToString(CultureInfo.InvariantCulture));
+            template = template.Replace("[TIMEBASE]", timeBase.ToString(CultureInfo.InvariantCulture));
+            template = template.Replace("[NTSC]", ntsc);
+            sb.AppendLine(template);
+        }
+
+        private void WriteFcpFile(int width, int height, StringBuilder sb, string fileName)
+        {
+            string fileNameNoPath = Path.GetFileName(fileName);
+            string fileNameNoExt = Path.GetFileNameWithoutExtension(fileNameNoPath);
+
+            int duration = 0;
+            if (_subtitle.Paragraphs.Count > 0)
+            {
+                duration = (int)Math.Round(_subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].EndTime.TotalSeconds * 25.0);
+            }
+
+            string s = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                       "<!DOCTYPE xmeml[]>" + Environment.NewLine +
+                       "<xmeml version=\"4\">" + Environment.NewLine +
+                       "  <sequence id=\"" + System.Security.SecurityElement.Escape(fileNameNoExt) + "\">" + Environment.NewLine +
+                       "    <updatebehavior>add</updatebehavior>" + Environment.NewLine +
+                       "    <name>" + System.Security.SecurityElement.Escape(fileNameNoExt) + @"</name>
+    <duration>" + duration.ToString(CultureInfo.InvariantCulture) + @"</duration>
+    <rate>
+      <ntsc>FALSE</ntsc>
+      <timebase>25</timebase>
+    </rate>
+    <timecode>
+      <rate>
+        <ntsc>FALSE</ntsc>
+        <timebase>25</timebase>
+      </rate>
+      <string>00:00:00:00</string>
+      <frame>0</frame>
+      <source>source</source>
+      <displayformat>NDF</displayformat>
+    </timecode>
+    <in>0</in>
+    <out>[OUT]</out>
+    <media>
+      <video>
+        <format>
+          <samplecharacteristics>
+            <rate>
+              <timebase>25</timebase>
+              <ntsc>FALSE</ntsc>
+            </rate>
+            <width>1920</width>
+            <height>1080</height>
+            <anamorphic>FALSE</anamorphic>
+            <pixelaspectratio>square</pixelaspectratio>
+            <fielddominance>none</fielddominance>
+            <colordepth>32</colordepth>
+          </samplecharacteristics>
+        </format>
+        <track>
+          <enabled>TRUE</enabled>
+          <locked>FALSE</locked>
+        </track>
+        <track>
+" + sb + @"   <enabled>TRUE</enabled>
+          <locked>FALSE</locked>
+        </track>
+      </video>
+      <audio>
+        <track>
+          <enabled>TRUE</enabled>
+          <locked>FALSE</locked>
+          <outputchannelindex>1</outputchannelindex>
+        </track>
+        <track>
+          <enabled>TRUE</enabled>
+          <locked>FALSE</locked>
+          <outputchannelindex>2</outputchannelindex>
+        </track>
+        <track>
+          <enabled>TRUE</enabled>
+          <locked>FALSE</locked>
+          <outputchannelindex>3</outputchannelindex>
+        </track>
+        <track>
+          <enabled>TRUE</enabled>
+          <locked>FALSE</locked>
+          <outputchannelindex>4</outputchannelindex>
+        </track>
+      </audio>
+    </media>
+    <ismasterclip>FALSE</ismasterclip>
+  </sequence>
+</xmeml>";
+            if (Math.Abs(_frameRate - 29.97) < 0.01)
+            {
+                s = s.Replace("<displayformat>NDF</displayformat>", "<displayformat>DF</displayformat>"); //Non Drop Frame or Drop Frame
+                s = s.Replace("<timebase>25</timebase>", "<timebase>30</timebase>");
+                s = s.Replace("<ntsc>FALSE</ntsc>", "<ntsc>TRUE</ntsc>");
+            }
+            else if (Math.Abs(_frameRate - 23.976) < 0.01)
+            {
+                s = s.Replace("<displayformat>NDF</displayformat>", "<displayformat>DF</displayformat>"); //Non Drop Frame or Drop Frame
+                s = s.Replace("<timebase>25</timebase>", "<timebase>24</timebase>");
+                s = s.Replace("<ntsc>FALSE</ntsc>", "<ntsc>TRUE</ntsc>");
+            }
+            else if (Math.Abs(_frameRate - 24) < 0.01)
+            {
+                s = s.Replace("<timebase>25</timebase>", "<timebase>24</timebase>");
+            }
+            else if (Math.Abs(_frameRate - 30) < 0.01)
+            {
+                s = s.Replace("<timebase>25</timebase>", "<timebase>30</timebase>");
+            }
+            else if (Math.Abs(_frameRate - 60) < 0.01)
+            {
+                s = s.Replace("<timebase>25</timebase>", "<timebase>60</timebase>");
+            }
+            else if (Math.Abs(_frameRate - 59.94) < 0.01)
+            {
+                s = s.Replace("<displayformat>NDF</displayformat>", "<displayformat>DF</displayformat>"); //Non Drop Frame or Drop Frame
+                s = s.Replace("<timebase>25</timebase>", "<timebase>60</timebase>");
+                s = s.Replace("<ntsc>FALSE</ntsc>", "<ntsc>TRUE</ntsc>");
+            }
+            else
+            {
+                s = s.Replace("<timebase>25</timebase>", "<timebase>" + comboBoxFrameRate.Text + "</timebase>");
+            }
+
+            if (_subtitle.Paragraphs.Count > 0)
+            {
+                var end = SubtitleFormat.MillisecondsToFrames(_subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].EndTime.TotalMilliseconds, _frameRate);
+                end++;
+                s = s.Replace("[OUT]", end.ToString(CultureInfo.InvariantCulture));
+            }
+
+            s = s.Replace("<width>1920</width>", "<width>" + width.ToString(CultureInfo.InvariantCulture) + "</width>");
+            s = s.Replace("<height>1080</height>", "<height>" + height.ToString(CultureInfo.InvariantCulture) + "</height>");
+
+            File.WriteAllText(fileName, s);
+        }
+
         private void saveFileAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             saveFileDialog1.Title = LanguageSettings.Current.Main.Menu.File.SaveAs.RemoveChar('&');
             saveFileDialog1.DefaultExt = "*.sup";
             saveFileDialog1.AddExtension = true;
-            saveFileDialog1.Filter = LanguageSettings.Current.Main.BluRaySupFiles + "|*.sup|BDN xml/png|*.xml|DOST|*.dost";
+            saveFileDialog1.Filter = LanguageSettings.Current.Main.BluRaySupFiles + "|*.sup|BDN xml/png|*.xml|DOST|*.dost|Final Cut Pro + image...|*.xml";
             if (saveFileDialog1.ShowDialog(this) != DialogResult.OK)
             {
                 return;
@@ -1277,6 +1495,23 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             bmp.Dispose();
                         }
                         WriteDostFile(sb, saveFileDialog1.FileName, _extra.Count);
+                    }
+                    else if (saveFileDialog1.FilterIndex == 4) // Final Cut Pro + image
+                    {
+                        var path = Path.GetDirectoryName(saveFileDialog1.FileName);
+                        var fileName = Path.GetFileNameWithoutExtension(saveFileDialog1.FileName);
+                        var sb = new StringBuilder();
+                        for (var index = 0; index < _subtitle.Paragraphs.Count; index++)
+                        {
+                            bw.ReportProgress(index);
+                            var p = _subtitle.Paragraphs[index];
+                            var bd = _binSubtitles[index];
+                            var extra = _extra[index];
+                            var bmp = extra.Bitmap ?? GetBitmap(bd);
+                            WriteFcpParagraph(sb, p, bmp, index + 1, path, fileName);
+                            bmp.Dispose();
+                        }
+                        WriteFcpFile(_screenWidth, _screenHeight, sb, saveFileDialog1.FileName);
                     }
                 };
                 bw.RunWorkerAsync(saveFileDialog1.FileName);
