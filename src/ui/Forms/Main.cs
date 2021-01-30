@@ -1120,7 +1120,12 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                timeUpDownStartTime.TimeCode = paragraph.StartTime;
+                if (original != null)
+                {
+                    original.StartTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds;
+                }
+
+                timeUpDownStartTime.TimeCode.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds;
                 var durationInSeconds = (decimal)paragraph.Duration.TotalSeconds;
                 if (durationInSeconds >= numericUpDownDuration.Minimum && durationInSeconds <= numericUpDownDuration.Maximum)
                 {
