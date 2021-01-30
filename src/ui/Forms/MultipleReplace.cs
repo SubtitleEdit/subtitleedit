@@ -1134,10 +1134,15 @@ namespace Nikse.SubtitleEdit.Forms
             SwapGroups(index, index + 1);
         }
 
-        private void MultipleReplace_ResizeEnd(object sender, EventArgs e)
+        private void ResizeListViewLastColumn()
         {
             listViewRules.Columns[listViewRules.Columns.Count - 1].Width = -2;
             listViewFixes.Columns[listViewFixes.Columns.Count - 1].Width = -2;
+        }
+
+        private void MultipleReplace_ResizeEnd(object sender, EventArgs e)
+        {
+            ResizeListViewLastColumn();
         }
 
         private void moveToTopToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1289,6 +1294,11 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonExportGroups_Click(object sender, EventArgs e)
         {
             exportToolStripMenuItem_Click(sender, e);
+        }
+
+        private void listViewFixes_ClientSizeChanged(object sender, EventArgs e)
+        {
+            ResizeListViewLastColumn();
         }
 
         private void listViewFixes_KeyDown(object sender, KeyEventArgs e)

@@ -31,6 +31,7 @@
    * Add Catalan installer translation - thx Juansa
    * Source view is now hidden (more space), use F2 to toggle view, thx omrSi
    * Update Tesseract 5 Alpha to "2020-11-27"
+   * Add more options to Tesseract image pre-processing - thx maknol
    * Translate: Refactor + paragraph handling strategies - thx Brummochse 
    * Set default subtitle text box font size to 12
    * Use "Min gap between subtitles" when loading scc - thx batatop
@@ -52,6 +53,7 @@
    * Fix frame rate bug in FCP+image - thx Christopher
    * Fix issues with ismt format - thx Bersu
    * Fix bdsup right align export issue - thx von Suppé
+   * Fix for "set start" (lmb+shift) for original in waveform - thx OmrSi
    * Fix export FAB image script save path - thx rotorwave
    * Fix crash loading Cheetah Caption - thx mook1975
    * Fix crash in video menu with video without audio - thx GrampaWildWilly

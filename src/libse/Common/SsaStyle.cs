@@ -80,6 +80,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             LoadedFromHeader = ssaStyle.LoadedFromHeader;
         }
 
+        private static string BoolToRawSsa(bool value)
+        {
+            return value ? "-1" : "0";
+        }
+
         public string ToRawSsa(string styleFormat)
         {
             var sb = new StringBuilder();
@@ -122,36 +127,15 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else if (f == "bold")
                 {
-                    if (Bold)
-                    {
-                        sb.Append("-1");
-                    }
-                    else
-                    {
-                        sb.Append('0');
-                    }
+                    sb.Append(BoolToRawSsa(Bold));
                 }
                 else if (f == "italic")
                 {
-                    if (Italic)
-                    {
-                        sb.Append("-1");
-                    }
-                    else
-                    {
-                        sb.Append('0');
-                    }
+                    sb.Append(BoolToRawSsa(Italic));
                 }
                 else if (f == "underline")
                 {
-                    if (Underline)
-                    {
-                        sb.Append("-1");
-                    }
-                    else
-                    {
-                        sb.Append('0');
-                    }
+                    sb.Append(BoolToRawSsa(Underline));
                 }
                 else if (f == "outline")
                 {
@@ -250,36 +234,15 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else if (f == "bold")
                 {
-                    if (Bold)
-                    {
-                        sb.Append("-1");
-                    }
-                    else
-                    {
-                        sb.Append('0');
-                    }
+                    sb.Append(BoolToRawSsa(Bold));
                 }
                 else if (f == "italic")
                 {
-                    if (Italic)
-                    {
-                        sb.Append("-1");
-                    }
-                    else
-                    {
-                        sb.Append('0');
-                    }
+                    sb.Append(BoolToRawSsa(Italic));
                 }
                 else if (f == "underline")
                 {
-                    if (Underline)
-                    {
-                        sb.Append("-1");
-                    }
-                    else
-                    {
-                        sb.Append('0');
-                    }
+                    sb.Append(BoolToRawSsa(Underline));
                 }
                 else if (f == "outline")
                 {

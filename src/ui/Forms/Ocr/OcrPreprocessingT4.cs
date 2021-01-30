@@ -11,7 +11,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
     public sealed partial class OcrPreprocessingT4 : Form
     {
         private readonly NikseBitmap _source;
-        public PreprocessingSettings PreprocessingSettings { get; }
+        private bool _loading = true;
+        public PreprocessingSettings PreprocessingSettings { get; }        
 
         public OcrPreprocessingT4(Bitmap bitmap, PreprocessingSettings preprocessingSettings)
         {
@@ -36,9 +37,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             Text = LanguageSettings.Current.OcrPreprocessing.Title;
             groupBoxBinaryImageCompareThreshold.Text = LanguageSettings.Current.OcrPreprocessing.BinaryThreshold;
+            groupBoxCropping.Text = LanguageSettings.Current.OcrPreprocessing.Cropping;
+            checkBoxCropTransparent.Text = LanguageSettings.Current.OcrPreprocessing.CropTransparentColors;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
-
+            labelOriginalImage.Text = LanguageSettings.Current.OcrPreprocessing.OriginalImage;
+            labelPostImage.Text = LanguageSettings.Current.OcrPreprocessing.PostImage;
+            checkBoxInvertColors.Checked = preprocessingSettings.InvertColors;
+            checkBoxCropTransparent.Checked = preprocessingSettings.CropTransparentColors;
+            _loading = false;
             RefreshImage();
             UiUtil.FixLargeFonts(this, buttonOK);
         }
@@ -61,19 +68,36 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void RefreshImage()
         {
+            if (_loading)
+            {
+                return;
+            }
+
             PreprocessingSettings.InvertColors = checkBoxInvertColors.Checked;
             PreprocessingSettings.BinaryImageCompareThreshold = (int)numericUpDownThreshold.Value;
             PreprocessingSettings.ScalingPercent = (int)numericUpDownScaling.Value;
+            PreprocessingSettings.CropTransparentColors = checkBoxCropTransparent.Checked;
 
             pictureBox1.Image?.Dispose();
             var n = new NikseBitmap(_source);
 
+            if (PreprocessingSettings.CropTransparentColors)
+            {
+                n.CropSidesAndBottom(2, Color.Transparent, true);
+                n.CropSidesAndBottom(2, Color.FromArgb(0, 0, 0, 0), true);
+                n.CropTop(2, Color.Transparent);
+                n.CropTop(2, Color.FromArgb(0, 0, 0, 0));
+            }
+
             if (PreprocessingSettings.InvertColors)
             {
                 n.InvertColors();
+                n.MakeTwoColor((int)numericUpDownThreshold.Value, Color.Black, Color.White);
             }
-
-            n.MakeTwoColor((int)numericUpDownThreshold.Value, Color.White, Color.Black);
+            else
+            {
+                n.MakeTwoColor((int)numericUpDownThreshold.Value, Color.White, Color.Black);
+            }
 
             if (PreprocessingSettings.ScalingPercent > 100)
             {
@@ -112,6 +136,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         }
 
         private void numericUpDownScaling_ValueChanged(object sender, EventArgs e)
+        {
+            RefreshImage();
+        }
+
+        private void checkBoxCropTransparent_CheckedChanged(object sender, EventArgs e)
         {
             RefreshImage();
         }

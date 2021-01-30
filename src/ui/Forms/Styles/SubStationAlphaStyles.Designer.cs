@@ -246,6 +246,7 @@
             this.toolStripMenuItemExport});
             this.contextMenuStripFile.Name = "contextMenuStrip1";
             this.contextMenuStripFile.Size = new System.Drawing.Size(216, 270);
+            this.contextMenuStripFile.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripFile_Opening);
             // 
             // deleteToolStripMenuItem
             // 
@@ -510,9 +511,9 @@
             this.groupBoxBorder.Controls.Add(this.numericUpDownShadowWidth);
             this.groupBoxBorder.Controls.Add(this.numericUpDownOutline);
             this.groupBoxBorder.Controls.Add(this.labelShadow);
-            this.groupBoxBorder.Location = new System.Drawing.Point(230, 143);
+            this.groupBoxBorder.Location = new System.Drawing.Point(244, 143);
             this.groupBoxBorder.Name = "groupBoxBorder";
-            this.groupBoxBorder.Size = new System.Drawing.Size(242, 93);
+            this.groupBoxBorder.Size = new System.Drawing.Size(228, 93);
             this.groupBoxBorder.TabIndex = 3;
             this.groupBoxBorder.TabStop = false;
             this.groupBoxBorder.Text = "Border";
@@ -547,7 +548,7 @@
             0,
             0,
             65536});
-            this.numericUpDownShadowWidth.Location = new System.Drawing.Point(150, 32);
+            this.numericUpDownShadowWidth.Location = new System.Drawing.Point(145, 32);
             this.numericUpDownShadowWidth.Name = "numericUpDownShadowWidth";
             this.numericUpDownShadowWidth.Size = new System.Drawing.Size(52, 20);
             this.numericUpDownShadowWidth.TabIndex = 3;
@@ -570,7 +571,7 @@
             // labelShadow
             // 
             this.labelShadow.AutoSize = true;
-            this.labelShadow.Location = new System.Drawing.Point(147, 16);
+            this.labelShadow.Location = new System.Drawing.Point(142, 16);
             this.labelShadow.Name = "labelShadow";
             this.labelShadow.Size = new System.Drawing.Size(46, 13);
             this.labelShadow.TabIndex = 2;
@@ -601,9 +602,9 @@
             this.groupBoxMargins.Controls.Add(this.labelMarginVertical);
             this.groupBoxMargins.Controls.Add(this.labelMarginRight);
             this.groupBoxMargins.Controls.Add(this.labelMarginLeft);
-            this.groupBoxMargins.Location = new System.Drawing.Point(105, 143);
+            this.groupBoxMargins.Location = new System.Drawing.Point(115, 143);
             this.groupBoxMargins.Name = "groupBoxMargins";
-            this.groupBoxMargins.Size = new System.Drawing.Size(119, 93);
+            this.groupBoxMargins.Size = new System.Drawing.Size(123, 93);
             this.groupBoxMargins.TabIndex = 2;
             this.groupBoxMargins.TabStop = false;
             this.groupBoxMargins.Text = "Margins";
@@ -782,7 +783,7 @@
             this.groupBoxAlignment.Controls.Add(this.radioButtonTopLeft);
             this.groupBoxAlignment.Location = new System.Drawing.Point(7, 143);
             this.groupBoxAlignment.Name = "groupBoxAlignment";
-            this.groupBoxAlignment.Size = new System.Drawing.Size(92, 93);
+            this.groupBoxAlignment.Size = new System.Drawing.Size(102, 93);
             this.groupBoxAlignment.TabIndex = 0;
             this.groupBoxAlignment.TabStop = false;
             this.groupBoxAlignment.Text = "Alignment";
@@ -1209,6 +1210,7 @@
             this.toolStripMenuItemStorageExport});
             this.contextMenuStripStorage.Name = "contextMenuStrip1";
             this.contextMenuStripStorage.Size = new System.Drawing.Size(216, 270);
+            this.contextMenuStripStorage.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripStorage_Opening);
             // 
             // toolStripMenuItemStorageRemove
             // 
@@ -1349,17 +1351,17 @@
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.KeyPreview = true;
-            this.MinimumSize = new System.Drawing.Size(1020, 630);
+            this.MinimumSize = new System.Drawing.Size(1060, 630);
             this.Name = "SubStationAlphaStyles";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Advanced SubStation Alpha styles";
+            this.Shown += new System.EventHandler(this.SubStationAlphaStyles_Shown);
+            this.ResizeEnd += new System.EventHandler(this.SubStationAlphaStyles_ResizeEnd);
+            this.SizeChanged += new System.EventHandler(this.SubStationAlphaStyles_SizeChanged);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SubStationAlphaStyles_KeyDown);
             this.Resize += new System.EventHandler(this.SubStationAlphaStyles_Resize);
-            this.ResizeEnd += new System.EventHandler(this.SubStationAlphaStyles_ResizeEnd);
-            this.Shown += new System.EventHandler(this.SubStationAlphaStyles_Shown);
-            this.SizeChanged += new System.EventHandler(this.SubStationAlphaStyles_SizeChanged);
             this.contextMenuStripFile.ResumeLayout(false);
             this.groupBoxStyles.ResumeLayout(false);
             this.groupBoxProperties.ResumeLayout(false);

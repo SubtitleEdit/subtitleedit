@@ -878,7 +878,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             var idx = subtitleListView1.SelectedItems[0].Index;
             var p = _subtitle.Paragraphs[idx];
             groupBoxCurrent.Text = $"{idx + 1} / {_subtitle.Paragraphs.Count}";
-            if (subtitleListView1.SelectedItems.Count > 1) 
+            if (subtitleListView1.SelectedItems.Count > 1)
             {
                 groupBoxCurrent.Text += $" ({subtitleListView1.SelectedItems.Count})";
             }
@@ -1102,12 +1102,299 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             File.WriteAllText(fileName, FormatUtf8Xml(doc), Encoding.UTF8);
         }
 
+        private void WriteDostParagraph(Bitmap bitmap, StringBuilder sb, string path, string fileNameWithoutExtension, int i, Extra extra, Paragraph p)
+        {
+            string numberString = string.Format("{0:0000}", i);
+            var fileName = Path.Combine(path, fileNameWithoutExtension.Replace(" ", "_")) + "_" + numberString + ".png";
+
+            foreach (var encoder in ImageCodecInfo.GetImageEncoders())
+            {
+                if (encoder.FormatID == ImageFormat.Png.Guid)
+                {
+                    var parameters = new EncoderParameters();
+                    parameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.ColorDepth, 8);
+                    var nbmp = new NikseBitmap(bitmap);
+                    var b = nbmp.ConvertTo8BitsPerPixel();
+                    b.Save(fileName, encoder, parameters);
+                    b.Dispose();
+                    break;
+                }
+            }
+
+            const string paragraphWriteFormat = "{0}\t{1}\t{2}\t{4}\t{5}\t{3}\t0\t0";
+            int left = extra.X;
+            int top = extra.Y;
+            string startTime = ToHHMMSSFF(p.StartTime);
+            string endTime = ToHHMMSSFF(p.EndTime);
+            sb.AppendLine(string.Format(paragraphWriteFormat, numberString, startTime, endTime, Path.GetFileName(fileName), left, top));
+        }
+
+        private void WriteDostFile(StringBuilder sb, string fileName, int count)
+        {
+            string header = @"$FORMAT=480
+$VERSION=1.2
+$ULEAD=TRUE
+$DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
+"NO\tINTIME\t\tOUTTIME\t\tXPOS\tYPOS\tFILENAME\tFADEIN\tFADEOUT";
+
+            string dropValue = "30000";
+            if (Math.Abs(_frameRate - 23.98) < 0.01)
+            {
+                dropValue = "23976";
+            }
+            else if (Math.Abs(_frameRate - 24.0) < 0.01)
+            {
+                dropValue = "24000";
+            }
+            else if (Math.Abs(_frameRate - 25.0) < 0.01)
+            {
+                dropValue = "25000";
+            }
+            else if (Math.Abs(_frameRate - 29.97) < 0.01)
+            {
+                dropValue = "29970";
+            }
+            else if (Math.Abs(_frameRate - 30) < 0.01)
+            {
+                dropValue = "30000";
+            }
+            else if (Math.Abs(_frameRate - 59.94) < 0.01)
+            {
+                dropValue = "59940";
+            }
+            else if (Math.Abs(_frameRate - 60.00) < 0.01)
+            {
+                dropValue = "60000";
+            }
+
+            header = header.Replace("[DROPVALUE]", dropValue);
+            File.WriteAllText(fileName, header + Environment.NewLine + sb.ToString());
+        }
+
+        private void WriteFcpParagraph(StringBuilder sb, Paragraph p, Bitmap bitmap, int i, string path, string fileName)
+        {
+            string numberString = string.Format(Path.GetFileNameWithoutExtension(Path.GetFileName(fileName)) + "{0:0000}", i).RemoveChar(' ');
+            var fileNameShort = numberString + ".png";
+            var targetImageFileName = Path.Combine(Path.GetDirectoryName(fileName), fileNameShort);
+            string fileNameNoPath = Path.GetFileName(fileNameShort);
+            string fileNameNoExt = Path.GetFileNameWithoutExtension(fileNameNoPath);
+            string pathUrl = "file://localhost/" + targetImageFileName.Replace("\\", "/").Replace(" ", "%20");
+            string template = " <clipitem id=\"" + System.Security.SecurityElement.Escape(fileNameNoPath) + "\">" + Environment.NewLine +
+@"            <name>" + System.Security.SecurityElement.Escape(fileNameNoPath) + @"</name>
+            <duration>[DURATION]</duration>
+            <rate>
+              <timebase>[TIMEBASE]</timebase>
+              <ntsc>[NTSC]</ntsc>
+            </rate>
+            <in>[IN]</in>
+            <out>[OUT]</out>
+            <start>[START]</start>
+            <end>[END]</end>
+            <pixelaspectratio>" + _screenWidth + "x" + _screenHeight + @"</pixelaspectratio>
+            <stillframe>TRUE</stillframe>
+            <anamorphic>FALSE</anamorphic>
+            <alphatype>straight</alphatype>
+            <masterclipid>" + System.Security.SecurityElement.Escape(fileNameNoPath) + @"1</masterclipid>" + Environment.NewLine +
+"           <file id=\"" + fileNameNoExt + "\">" + @"
+              <name>" + System.Security.SecurityElement.Escape(fileNameNoPath) + @"</name>
+              <pathurl>" + pathUrl + @"</pathurl>
+              <rate>
+                <timebase>[TIMEBASE]</timebase>
+                <ntsc>[NTSC]</ntsc>
+              </rate>
+              <duration>[DURATION]</duration>
+              <width>" + _screenWidth + @"</width>
+              <height>" + _screenHeight + @"</height>
+              <media>
+                <video>
+                  <duration>[DURATION]</duration>
+                  <stillframe>TRUE</stillframe>
+                  <samplecharacteristics>
+                    <width>" + _screenWidth + @"</width>
+                    <height>" + _screenHeight + @"</height>
+                  </samplecharacteristics>
+                </video>
+              </media>
+            </file>
+            <sourcetrack>
+              <mediatype>video</mediatype>
+            </sourcetrack>
+            <fielddominance>none</fielddominance>
+          </clipitem>";
+
+            bitmap.Save(Path.Combine(path, targetImageFileName), ImageFormat.Png);
+
+            int timeBase = 25;
+            string ntsc = "FALSE";
+            if (Math.Abs(_frameRate - 29.97) < 0.01)
+            {
+                timeBase = 30;
+                ntsc = "TRUE";
+            }
+            else if (Math.Abs(_frameRate - 23.976) < 0.01)
+            {
+                timeBase = 24;
+                ntsc = "TRUE";
+            }
+            else if (Math.Abs(_frameRate - 59.94) < 0.01)
+            {
+                timeBase = 60;
+                ntsc = "TRUE";
+            }
+
+            var duration = SubtitleFormat.MillisecondsToFrames(p.Duration.TotalMilliseconds, _frameRate);
+            var start = SubtitleFormat.MillisecondsToFrames(p.StartTime.TotalMilliseconds, _frameRate);
+            var end = SubtitleFormat.MillisecondsToFrames(p.EndTime.TotalMilliseconds, _frameRate);
+
+            template = template.Replace("[DURATION]", duration.ToString(CultureInfo.InvariantCulture));
+            template = template.Replace("[IN]", start.ToString(CultureInfo.InvariantCulture));
+            template = template.Replace("[OUT]", end.ToString(CultureInfo.InvariantCulture));
+            template = template.Replace("[START]", start.ToString(CultureInfo.InvariantCulture));
+            template = template.Replace("[END]", end.ToString(CultureInfo.InvariantCulture));
+            template = template.Replace("[TIMEBASE]", timeBase.ToString(CultureInfo.InvariantCulture));
+            template = template.Replace("[NTSC]", ntsc);
+            sb.AppendLine(template);
+        }
+
+        private void WriteFcpFile(int width, int height, StringBuilder sb, string fileName)
+        {
+            string fileNameNoPath = Path.GetFileName(fileName);
+            string fileNameNoExt = Path.GetFileNameWithoutExtension(fileNameNoPath);
+
+            int duration = 0;
+            if (_subtitle.Paragraphs.Count > 0)
+            {
+                duration = (int)Math.Round(_subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].EndTime.TotalSeconds * 25.0);
+            }
+
+            string s = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                       "<!DOCTYPE xmeml[]>" + Environment.NewLine +
+                       "<xmeml version=\"4\">" + Environment.NewLine +
+                       "  <sequence id=\"" + System.Security.SecurityElement.Escape(fileNameNoExt) + "\">" + Environment.NewLine +
+                       "    <updatebehavior>add</updatebehavior>" + Environment.NewLine +
+                       "    <name>" + System.Security.SecurityElement.Escape(fileNameNoExt) + @"</name>
+    <duration>" + duration.ToString(CultureInfo.InvariantCulture) + @"</duration>
+    <rate>
+      <ntsc>FALSE</ntsc>
+      <timebase>25</timebase>
+    </rate>
+    <timecode>
+      <rate>
+        <ntsc>FALSE</ntsc>
+        <timebase>25</timebase>
+      </rate>
+      <string>00:00:00:00</string>
+      <frame>0</frame>
+      <source>source</source>
+      <displayformat>NDF</displayformat>
+    </timecode>
+    <in>0</in>
+    <out>[OUT]</out>
+    <media>
+      <video>
+        <format>
+          <samplecharacteristics>
+            <rate>
+              <timebase>25</timebase>
+              <ntsc>FALSE</ntsc>
+            </rate>
+            <width>1920</width>
+            <height>1080</height>
+            <anamorphic>FALSE</anamorphic>
+            <pixelaspectratio>square</pixelaspectratio>
+            <fielddominance>none</fielddominance>
+            <colordepth>32</colordepth>
+          </samplecharacteristics>
+        </format>
+        <track>
+          <enabled>TRUE</enabled>
+          <locked>FALSE</locked>
+        </track>
+        <track>
+" + sb + @"   <enabled>TRUE</enabled>
+          <locked>FALSE</locked>
+        </track>
+      </video>
+      <audio>
+        <track>
+          <enabled>TRUE</enabled>
+          <locked>FALSE</locked>
+          <outputchannelindex>1</outputchannelindex>
+        </track>
+        <track>
+          <enabled>TRUE</enabled>
+          <locked>FALSE</locked>
+          <outputchannelindex>2</outputchannelindex>
+        </track>
+        <track>
+          <enabled>TRUE</enabled>
+          <locked>FALSE</locked>
+          <outputchannelindex>3</outputchannelindex>
+        </track>
+        <track>
+          <enabled>TRUE</enabled>
+          <locked>FALSE</locked>
+          <outputchannelindex>4</outputchannelindex>
+        </track>
+      </audio>
+    </media>
+    <ismasterclip>FALSE</ismasterclip>
+  </sequence>
+</xmeml>";
+            if (Math.Abs(_frameRate - 29.97) < 0.01)
+            {
+                s = s.Replace("<displayformat>NDF</displayformat>", "<displayformat>DF</displayformat>"); //Non Drop Frame or Drop Frame
+                s = s.Replace("<timebase>25</timebase>", "<timebase>30</timebase>");
+                s = s.Replace("<ntsc>FALSE</ntsc>", "<ntsc>TRUE</ntsc>");
+            }
+            else if (Math.Abs(_frameRate - 23.976) < 0.01)
+            {
+                s = s.Replace("<displayformat>NDF</displayformat>", "<displayformat>DF</displayformat>"); //Non Drop Frame or Drop Frame
+                s = s.Replace("<timebase>25</timebase>", "<timebase>24</timebase>");
+                s = s.Replace("<ntsc>FALSE</ntsc>", "<ntsc>TRUE</ntsc>");
+            }
+            else if (Math.Abs(_frameRate - 24) < 0.01)
+            {
+                s = s.Replace("<timebase>25</timebase>", "<timebase>24</timebase>");
+            }
+            else if (Math.Abs(_frameRate - 30) < 0.01)
+            {
+                s = s.Replace("<timebase>25</timebase>", "<timebase>30</timebase>");
+            }
+            else if (Math.Abs(_frameRate - 60) < 0.01)
+            {
+                s = s.Replace("<timebase>25</timebase>", "<timebase>60</timebase>");
+            }
+            else if (Math.Abs(_frameRate - 59.94) < 0.01)
+            {
+                s = s.Replace("<displayformat>NDF</displayformat>", "<displayformat>DF</displayformat>"); //Non Drop Frame or Drop Frame
+                s = s.Replace("<timebase>25</timebase>", "<timebase>60</timebase>");
+                s = s.Replace("<ntsc>FALSE</ntsc>", "<ntsc>TRUE</ntsc>");
+            }
+            else
+            {
+                s = s.Replace("<timebase>25</timebase>", "<timebase>" + comboBoxFrameRate.Text + "</timebase>");
+            }
+
+            if (_subtitle.Paragraphs.Count > 0)
+            {
+                var end = SubtitleFormat.MillisecondsToFrames(_subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].EndTime.TotalMilliseconds, _frameRate);
+                end++;
+                s = s.Replace("[OUT]", end.ToString(CultureInfo.InvariantCulture));
+            }
+
+            s = s.Replace("<width>1920</width>", "<width>" + width.ToString(CultureInfo.InvariantCulture) + "</width>");
+            s = s.Replace("<height>1080</height>", "<height>" + height.ToString(CultureInfo.InvariantCulture) + "</height>");
+
+            File.WriteAllText(fileName, s);
+        }
+
         private void saveFileAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            saveFileDialog1.Title = LanguageSettings.Current.ExportPngXml.SaveBluRraySupAs;
+            saveFileDialog1.Title = LanguageSettings.Current.Main.Menu.File.SaveAs.RemoveChar('&');
             saveFileDialog1.DefaultExt = "*.sup";
             saveFileDialog1.AddExtension = true;
-            saveFileDialog1.Filter = LanguageSettings.Current.Main.BluRaySupFiles + "|*.sup|BDN xml/png|*.xml";
+            saveFileDialog1.Filter = LanguageSettings.Current.Main.BluRaySupFiles + "|*.sup|BDN xml/png|*.xml|DOST|*.dost|Final Cut Pro + image...|*.xml";
             if (saveFileDialog1.ShowDialog(this) != DialogResult.OK)
             {
                 return;
@@ -1146,7 +1433,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 };
                 bw.DoWork += (o, args) =>
                 {
-                    if (saveFileDialog1.FilterIndex == 1)
+                    if (saveFileDialog1.FilterIndex == 1) // Blu-ray .sup
                     {
                         using (var binarySubtitleFile = new FileStream(args.Argument.ToString(), FileMode.Create))
                         {
@@ -1176,7 +1463,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                             }
                         }
                     }
-                    else if (saveFileDialog1.FilterIndex == 2)
+                    else if (saveFileDialog1.FilterIndex == 2) // BDN XML
                     {
                         var path = Path.GetDirectoryName(saveFileDialog1.FileName);
                         var sb = new StringBuilder();
@@ -1191,6 +1478,40 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                             bmp.Dispose();
                         }
                         WriteBdnXmlFile(sb, saveFileDialog1.FileName, _extra.Count);
+                    }
+                    else if (saveFileDialog1.FilterIndex == 3) // DOST
+                    {
+                        var path = Path.GetDirectoryName(saveFileDialog1.FileName);
+                        var fileName = Path.GetFileNameWithoutExtension(saveFileDialog1.FileName);
+                        var sb = new StringBuilder();
+                        for (var index = 0; index < _subtitle.Paragraphs.Count; index++)
+                        {
+                            bw.ReportProgress(index);
+                            var p = _subtitle.Paragraphs[index];
+                            var bd = _binSubtitles[index];
+                            var extra = _extra[index];
+                            var bmp = extra.Bitmap ?? GetBitmap(bd);
+                            WriteDostParagraph(bmp, sb, path, fileName, index + 1, extra, p);
+                            bmp.Dispose();
+                        }
+                        WriteDostFile(sb, saveFileDialog1.FileName, _extra.Count);
+                    }
+                    else if (saveFileDialog1.FilterIndex == 4) // Final Cut Pro + image
+                    {
+                        var path = Path.GetDirectoryName(saveFileDialog1.FileName);
+                        var fileName = Path.GetFileNameWithoutExtension(saveFileDialog1.FileName);
+                        var sb = new StringBuilder();
+                        for (var index = 0; index < _subtitle.Paragraphs.Count; index++)
+                        {
+                            bw.ReportProgress(index);
+                            var p = _subtitle.Paragraphs[index];
+                            var bd = _binSubtitles[index];
+                            var extra = _extra[index];
+                            var bmp = extra.Bitmap ?? GetBitmap(bd);
+                            WriteFcpParagraph(sb, p, bmp, index + 1, path, fileName);
+                            bmp.Dispose();
+                        }
+                        WriteFcpFile(_screenWidth, _screenHeight, sb, saveFileDialog1.FileName);
                     }
                 };
                 bw.RunWorkerAsync(saveFileDialog1.FileName);
@@ -2172,8 +2493,10 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             var bluePercent = color.B * 100 / total;
 
             var idx = subtitleListView1.SelectedItems[0].Index;
+            SetupProgressBar(GetIndices(true));
             for (int i = 0; i < subtitleListView1.SelectedIndices.Count; i++)
             {
+                progressBar1.Value++;
                 var index = subtitleListView1.SelectedIndices[i];
                 var extra = _extra[index];
                 var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : GetBitmap(_binSubtitles[index]);
@@ -2192,6 +2515,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
                 bmp.Dispose();
             }
+            progressBar1.Hide();
         }
 
         private Bitmap ColorBitmap(Bitmap bitmap, int redPercent, int greenPercent, int bluePercent)
@@ -2407,8 +2731,10 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
                 var idx = subtitleListView1.SelectedItems[0].Index;
                 var selectedIndices = GetIndices(onlySelectedLines);
+                SetupProgressBar(selectedIndices);
                 foreach (var index in selectedIndices)
                 {
+                    progressBar1.Value++;
                     var extra = _extra[index];
                     var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : GetBitmap(_binSubtitles[index]);
                     FixAlignment(f.Alignment, extra, bmp);
@@ -2422,6 +2748,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
                     bmp.Dispose();
                 }
+                progressBar1.Hide();
             }
         }
 
@@ -2660,8 +2987,10 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 }
 
                 var selectedIndices = GetIndices(onlySelectedLines);
+                SetupProgressBar(selectedIndices);
                 foreach (var i in selectedIndices)
                 {
+                    progressBar1.Value++;
                     var sub = _binSubtitles[i];
                     extra = _extra[i];
                     bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : GetBitmap(sub);
@@ -2680,6 +3009,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
                     bmp.Dispose();
                 }
+                progressBar1.Hide();
             }
         }
 
@@ -2733,8 +3063,10 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 }
 
                 var selectedIndices = GetIndices(onlySelectedLines);
+                SetupProgressBar(selectedIndices);
                 foreach (var i in selectedIndices)
                 {
+                    progressBar1.Value++;
                     var sub = _binSubtitles[i];
                     extra = _extra[i];
                     bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : GetBitmap(sub);
@@ -2751,6 +3083,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
                     bmp.Dispose();
                 }
+                progressBar1.Hide();
             }
         }
 
@@ -2788,8 +3121,10 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 }
 
                 var selectedIndices = GetIndices(onlySelectedLines);
+                SetupProgressBar(selectedIndices);
                 foreach (var i in selectedIndices)
                 {
+                    progressBar1.Value++;
                     var sub = _binSubtitles[i];
                     extra = _extra[i];
                     bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : GetBitmap(sub);
@@ -2806,6 +3141,17 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
                     bmp.Dispose();
                 }
+                progressBar1.Hide();
+            }
+        }
+
+        private void SetupProgressBar(List<int> selectedIndices)
+        {
+            if (selectedIndices.Count > 10)
+            {
+                progressBar1.Maximum = selectedIndices.Count;
+                progressBar1.Value = 0;
+                progressBar1.Visible = true;
             }
         }
 
