@@ -1123,7 +1123,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 // Make history item for rollback (change paragraph back for history + change again)
                 _subtitle.Paragraphs[index] = new Paragraph(beforeParagraph);
-                MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + paragraph.Number + " " + paragraph.Text));
+                MakeHistoryForUndoOnlyIfNotRecent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + paragraph.Number + " " + paragraph.Text));
                 _subtitle.Paragraphs[index] = paragraph;
                 _makeHistoryPaused = true;
 
@@ -1178,7 +1178,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     // Make history item for rollback (change paragraph back for history + change again)
                     _subtitleOriginal.Paragraphs[index] = new Paragraph(beforeParagraph);
-                    MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + paragraph.Number + " " + paragraph.Text));
+                    MakeHistoryForUndoOnlyIfNotRecent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + paragraph.Number + " " + paragraph.Text));
                     _subtitleOriginal.Paragraphs[index] = paragraph;
                     _makeHistoryPaused = true;
 
@@ -1211,7 +1211,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     // Make history item for rollback (change paragraph back for history + change again)
                     _subtitle.Paragraphs[index] = new Paragraph(beforeParagraph);
-                    MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + paragraph.Number + " " + paragraph.Text));
+                    MakeHistoryForUndoOnlyIfNotRecent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + paragraph.Number + " " + paragraph.Text));
                     _subtitle.Paragraphs[index] = paragraph;
                     _makeHistoryPaused = true;
 
@@ -1233,7 +1233,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     // Make history item for rollback (change paragraph back for history + change again)
                     _subtitle.Paragraphs[index] = new Paragraph(beforeParagraph);
-                    MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + paragraph.Number + " " + paragraph.Text));
+                    MakeHistoryForUndoOnlyIfNotRecent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + paragraph.Number + " " + paragraph.Text));
                     _subtitle.Paragraphs[index] = paragraph;
                     _makeHistoryPaused = true;
 
@@ -2224,7 +2224,7 @@ namespace Nikse.SubtitleEdit.Forms
         /// Add undo history - but only if last entry is older than 500 ms
         /// </summary>
         /// <param name="description">Undo description</param>
-        public void MakeHistoryForUndoOnlyIfNotResent(string description)
+        public void MakeHistoryForUndoOnlyIfNotRecent(string description)
         {
             if (_makeHistoryPaused)
             {
@@ -11356,7 +11356,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     temp.EndTime.TotalMilliseconds = currentParagraph.StartTime.TotalMilliseconds + GetDurationInMilliseconds();
 
-                    MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.DisplayTimeAdjustedX, "#" + currentParagraph.Number + ": " + oldDuration + " -> " + temp.Duration));
+                    MakeHistoryForUndoOnlyIfNotRecent(string.Format(_language.DisplayTimeAdjustedX, "#" + currentParagraph.Number + ": " + oldDuration + " -> " + temp.Duration));
 
                     currentParagraph.EndTime.TotalMilliseconds = temp.EndTime.TotalMilliseconds;
                     SubtitleListview1.SetDuration(firstSelectedIndex, currentParagraph, _subtitle.GetParagraphOrDefault(firstSelectedIndex + 1));
@@ -11467,7 +11467,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_subtitleListViewIndex >= 0)
             {
-                MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.StarTimeAdjustedX, "#" + (_subtitleListViewIndex + 1) + ": " + timeUpDownStartTime.TimeCode));
+                MakeHistoryForUndoOnlyIfNotRecent(string.Format(_language.StarTimeAdjustedX, "#" + (_subtitleListViewIndex + 1) + ": " + timeUpDownStartTime.TimeCode));
 
                 int firstSelectedIndex = FirstSelectedIndex;
                 var oldParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
@@ -15648,7 +15648,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     int index = SubtitleListview1.SelectedItems[0].Index;
-                    MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + _subtitle.Paragraphs[index].Number + " " + _subtitle.Paragraphs[index].Text));
+                    MakeHistoryForUndoOnlyIfNotRecent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + _subtitle.Paragraphs[index].Number + " " + _subtitle.Paragraphs[index].Text));
 
                     var p = _subtitle.Paragraphs[index];
                     p.EndTime = TimeCode.FromSeconds(videoPosition);
@@ -15900,7 +15900,7 @@ namespace Nikse.SubtitleEdit.Forms
             SetStartTime(false, mediaPlayer.CurrentPosition);
 
             var oldParagraph = new Paragraph(p, false);
-            MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + p.Number + " " + p.Text));
+            MakeHistoryForUndoOnlyIfNotRecent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + p.Number + " " + p.Text));
             p.EndTime.TotalMilliseconds = positionInSeconds * TimeCode.BaseUnit - MinGapBetweenLines;
             if (oldParagraph.StartTime.IsMaxTime)
             {
@@ -20155,7 +20155,7 @@ namespace Nikse.SubtitleEdit.Forms
                     videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay / TimeCode.BaseUnit;
                 }
 
-                MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + p.Number + " " + p.Text));
+                MakeHistoryForUndoOnlyIfNotRecent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + p.Number + " " + p.Text));
 
                 timeUpDownStartTime.TimeCode = TimeCode.FromSeconds(videoPosition);
 
@@ -20198,7 +20198,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 int index = SubtitleListview1.SelectedItems[0].Index;
-                MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + _subtitle.Paragraphs[index].Number + " " + _subtitle.Paragraphs[index].Text));
+                MakeHistoryForUndoOnlyIfNotRecent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + _subtitle.Paragraphs[index].Number + " " + _subtitle.Paragraphs[index].Text));
 
                 if (_subtitle.Paragraphs[index].StartTime.IsMaxTime)
                 {
@@ -24959,7 +24959,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + p.Number + " " + p.Text));
+            MakeHistoryForUndoOnlyIfNotRecent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + p.Number + " " + p.Text));
 
             timeUpDownStartTime.MaskedTextBox.TextChanged -= MaskedTextBoxTextChanged;
             var oldParagraph = new Paragraph(_subtitle.Paragraphs[index], false);
@@ -25009,7 +25009,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + p.Number + " " + p.Text));
+            MakeHistoryForUndoOnlyIfNotRecent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + p.Number + " " + p.Text));
             var p1 = new Paragraph(p, false);
             Paragraph p2 = null;
             if (next != null)
@@ -27115,7 +27115,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
-                    MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.BeforeGuessingTimeCodes));
+                    MakeHistoryForUndoOnlyIfNotRecent(string.Format(_language.BeforeGuessingTimeCodes));
 
                     double startFromSeconds = 0;
                     if (form.StartFromVideoPosition)
