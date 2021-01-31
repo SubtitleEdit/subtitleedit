@@ -5284,7 +5284,7 @@ namespace Nikse.SubtitleEdit.Forms
                 TryLoadIcon(toolStripButtonRemoveTextForHi, "RemoveTextForHi");
                 TryLoadIcon(toolStripButtonVisualSync, "VisualSync");
                 TryLoadIcon(toolStripButtonSpellCheck, "SpellCheck");
-                TryLoadIcon(toolStripButtonNetflixQualityCheck, "NetflixGlyphCheck");
+                TryLoadIcon(toolStripButtonNetflixQualityCheck, "Netflix");
                 TryLoadIcon(toolStripButtonAssStyleManager, "AssaStyle");
                 TryLoadIcon(toolStripButtonAssProperties, "AssaProperties");
                 TryLoadIcon(toolStripButtonSettings, "Settings");
