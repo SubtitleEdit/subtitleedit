@@ -104,6 +104,7 @@ namespace Nikse.SubtitleEdit.Controls
         public event ParagraphEventHandler OnPositionSelected;
 
         public event ParagraphEventHandler OnTimeChanged;
+        public event ParagraphEventHandler OnStartTimeChanged;
         public event ParagraphEventHandler OnTimeChangedAndOffsetRest;
 
         public event ParagraphEventHandler OnSingleClick;
@@ -1955,7 +1956,7 @@ namespace Nikse.SubtitleEdit.Controls
                                 _oldParagraph = new Paragraph(SelectedParagraph);
                                 _mouseDownParagraph = SelectedParagraph;
                                 _mouseDownParagraph.StartTime.TotalMilliseconds = milliseconds;
-                                OnTimeChanged?.Invoke(this, new ParagraphEventArgs(seconds, _mouseDownParagraph, _oldParagraph));
+                                OnStartTimeChanged?.Invoke(this, new ParagraphEventArgs(seconds, _mouseDownParagraph, _oldParagraph));
                             }
                         }
                         return;

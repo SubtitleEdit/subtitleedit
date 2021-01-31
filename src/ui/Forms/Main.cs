@@ -528,6 +528,7 @@ namespace Nikse.SubtitleEdit.Forms
                 audioVisualizer.OnDoubleClickNonParagraph += AudioWaveform_OnDoubleClickNonParagraph;
                 audioVisualizer.OnPositionSelected += AudioWaveform_OnPositionSelected;
                 audioVisualizer.OnTimeChanged += AudioWaveform_OnTimeChanged; // start and/or end position of paragraph changed
+                audioVisualizer.OnStartTimeChanged += AudioWaveform_OnStartTimeChanged;
                 audioVisualizer.OnNewSelectionRightClicked += AudioWaveform_OnNewSelectionRightClicked;
                 audioVisualizer.OnParagraphRightClicked += AudioWaveform_OnParagraphRightClicked;
                 audioVisualizer.OnNonParagraphRightClicked += AudioWaveform_OnNonParagraphRightClicked;
@@ -1052,6 +1053,37 @@ namespace Nikse.SubtitleEdit.Forms
             contextMenuStripWaveform.Show(MousePosition.X, MousePosition.Y);
         }
 
+
+        private void AudioWaveform_OnStartTimeChanged(object sender, AudioVisualizer.ParagraphEventArgs e)
+        {
+            if (e.Paragraph == null || e.BeforeParagraph == null)
+            {
+                return;
+            }
+
+            int index = FirstSelectedIndex;
+            var p = _subtitle.GetParagraphOrDefault(index);
+            if (p == null || index != _subtitle.Paragraphs.IndexOf(e.Paragraph))
+            {
+                return;
+            }
+
+            MakeHistoryForUndo(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + p.Number + " " + p.Text));
+            p.StartTime.TotalMilliseconds = e.Paragraph.StartTime.TotalMilliseconds;
+            if (_subtitleOriginal != null && SubtitleListview1.IsOriginalTextColumnVisible)
+            {
+                var original = Utilities.GetOriginalParagraph(index, e.BeforeParagraph, _subtitleOriginal.Paragraphs);
+                if (original != null)
+                {
+                    original.StartTime.TotalMilliseconds = e.Paragraph.StartTime.TotalMilliseconds;
+                }
+            }
+
+            InitializeListViewEditBoxTimeOnly(p);
+            SubtitleListview1.SetStartTimeAndDuration(index, p, _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
+            UpdateSourceView();
+        }
+
         private void AudioWaveform_OnTimeChanged(object sender, AudioVisualizer.ParagraphEventArgs e)
         {
             var paragraph = e.Paragraph;
@@ -1120,12 +1152,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (original != null)
-                {
-                    original.StartTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds;
-                }
-
-                timeUpDownStartTime.TimeCode.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds;
+                timeUpDownStartTime.TimeCode = paragraph.StartTime;
                 var durationInSeconds = (decimal)paragraph.Duration.TotalSeconds;
                 if (durationInSeconds >= numericUpDownDuration.Minimum && durationInSeconds <= numericUpDownDuration.Maximum)
                 {
@@ -11410,6 +11437,28 @@ namespace Nikse.SubtitleEdit.Forms
 
             StartUpdateListSyntaxColoring();
             ShowHideBookmark(p);
+        }
+
+        private void InitializeListViewEditBoxTimeOnly(Paragraph p)
+        {
+            timeUpDownStartTime.MaskedTextBox.TextChanged -= MaskedTextBoxTextChanged;
+            timeUpDownStartTime.TimeCode = p.StartTime;
+            timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBoxTextChanged;
+
+            numericUpDownDuration.ValueChanged -= NumericUpDownDurationValueChanged;
+            if (p.Duration.TotalSeconds > (double)numericUpDownDuration.Maximum)
+            {
+                SetDurationInSeconds((double)numericUpDownDuration.Maximum);
+            }
+            else
+            {
+                SetDurationInSeconds(p.Duration.TotalSeconds);
+            }
+
+            numericUpDownDuration.ValueChanged += NumericUpDownDurationValueChanged;
+
+            UpdateOverlapErrors(timeUpDownStartTime.TimeCode);
+            StartUpdateListSyntaxColoring();
         }
 
         private void MaskedTextBoxTextChanged(object sender, EventArgs e)
