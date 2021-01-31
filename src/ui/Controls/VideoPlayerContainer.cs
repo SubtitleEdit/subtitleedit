@@ -417,7 +417,7 @@ namespace Nikse.SubtitleEdit.Controls
                 MarginVertical = gs.MpvPreviewTextMarginVertical
             };
 
-            _mpvPreviewStyleHeader = string.Format(AdvancedSubStationAlpha.HeaderNoStyles, "MPV preview file", mpvStyle.ToRawAss(SsaStyle.DefaultAssStyleFormat));
+            MpvPreviewStyleHeader = string.Format(AdvancedSubStationAlpha.HeaderNoStyles, "MPV preview file", mpvStyle.ToRawAss(SsaStyle.DefaultAssStyleFormat));
         }
 
         private string _mpvPreviewStyleHeader;
@@ -432,6 +432,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                 return _mpvPreviewStyleHeader;
             }
+            set => _mpvPreviewStyleHeader = value;
         }
 
         private Subtitle _subtitlePrev;
@@ -2109,7 +2110,7 @@ namespace Nikse.SubtitleEdit.Controls
             Pause();
             SubtitleText = string.Empty;
             Chapters = new List<MatroskaChapter>();
-            _mpvPreviewStyleHeader = null;
+            MpvPreviewStyleHeader = null;
             var temp = VideoPlayer;
             VideoPlayer = null;
             Application.DoEvents();
