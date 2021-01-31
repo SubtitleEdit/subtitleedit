@@ -1068,7 +1068,10 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            _subtitle.Paragraphs[index] = new Paragraph(e.BeforeParagraph);
             MakeHistoryForUndo(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + p.Number + " " + p.Text));
+            _subtitle.Paragraphs[index] = p;
+
             p.StartTime.TotalMilliseconds = e.Paragraph.StartTime.TotalMilliseconds;
             if (_subtitleOriginal != null && SubtitleListview1.IsOriginalTextColumnVisible)
             {
