@@ -83,10 +83,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             LoadedFromHeader = ssaStyle.LoadedFromHeader;
         }
 
-        private static string BoolToRawSsa(bool value)
-        {
-            return value ? "-1" : "0";
-        }
+        private static string BoolToRawSsa(bool value) => value ? "-1" : "0";
 
         public string ToRawSsa(string styleFormat)
         {
