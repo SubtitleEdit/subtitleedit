@@ -400,16 +400,10 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private SsaStyle _mpvStyle;
         public void UpdateMpvStyle()
         {
-            if (_mpvStyle != null)
-            {
-                _mpvStyle = null;
-            }
-
             var gs = Configuration.Settings.General;
-            _mpvStyle = new SsaStyle
+            var mpvStyle = new SsaStyle
             {
                 Name = "Default",
                 FontName = gs.VideoPlayerPreviewFontName,
@@ -422,6 +416,22 @@ namespace Nikse.SubtitleEdit.Controls
                 Alignment = gs.MpvPreviewTextAlignment,
                 MarginVertical = gs.MpvPreviewTextMarginVertical
             };
+
+            _mpvPreviewStyleHeader = string.Format(AdvancedSubStationAlpha.HeaderNoStyles, "MPV preview file", mpvStyle.ToRawAss(SsaStyle.DefaultAssStyleFormat));
+        }
+
+        private string _mpvPreviewStyleHeader;
+        private string MpvPreviewStyleHeader
+        {
+            get
+            {
+                if (_mpvPreviewStyleHeader is null)
+                {
+                    UpdateMpvStyle();
+                }
+
+                return _mpvPreviewStyleHeader;
+            }
         }
 
         private Subtitle _subtitlePrev;
@@ -462,12 +472,7 @@ namespace Nikse.SubtitleEdit.Controls
                             }
                         }
 
-                        if (_mpvStyle is null)
-                        {
-                            UpdateMpvStyle();
-                        }
-
-                        subtitle.Header = string.Format(AdvancedSubStationAlpha.HeaderNoStyles, "MPV preview file", _mpvStyle.ToRawAss(SsaStyle.DefaultAssStyleFormat));
+                        subtitle.Header = MpvPreviewStyleHeader;
 
                         if (oldSub.Header != null && oldSub.Header.Length > 20 && oldSub.Header.Substring(3, 3) == "STL")
                         {
@@ -2104,7 +2109,7 @@ namespace Nikse.SubtitleEdit.Controls
             Pause();
             SubtitleText = string.Empty;
             Chapters = new List<MatroskaChapter>();
-            _mpvStyle = null;
+            _mpvPreviewStyleHeader = null;
             var temp = VideoPlayer;
             VideoPlayer = null;
             Application.DoEvents();
