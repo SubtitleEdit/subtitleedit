@@ -1608,8 +1608,8 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonVisualSync.ToolTipText = _language.Menu.ToolBar.VisualSync;
             toolStripButtonSpellCheck.ToolTipText = _language.Menu.ToolBar.SpellCheck;
             toolStripButtonNetflixQualityCheck.ToolTipText = _language.Menu.ToolBar.NetflixQualityCheck;
-            toolStripButtonAssStyleManager.ToolTipText = LanguageSettings.Current.SubStationAlphaProperties.Title;
-            toolStripButtonAssProperties.ToolTipText = LanguageSettings.Current.SubStationAlphaStyles.Title;
+            toolStripButtonAssStyleManager.ToolTipText = LanguageSettings.Current.SubStationAlphaStyles.Title;
+            toolStripButtonAssProperties.ToolTipText = LanguageSettings.Current.SubStationAlphaProperties.Title;
             toolStripButtonSettings.ToolTipText = _language.Menu.ToolBar.Settings;
             toolStripButtonHelp.ToolTipText = _language.Menu.ToolBar.Help;
             toolStripButtonToggleWaveform.ToolTipText = _language.Menu.ToolBar.ShowHideWaveform;
