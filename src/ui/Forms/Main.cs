@@ -5272,22 +5272,26 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var gs = Configuration.Settings.General;
 
-            TryLoadIcon(toolStripButtonFileNew, "New");
-            TryLoadIcon(toolStripButtonFileOpen, "Open");
-            TryLoadIcon(toolStripButtonSave, "Save");
-            TryLoadIcon(toolStripButtonSaveAs, "SaveAs");
-            TryLoadIcon(toolStripButtonFind, "Find");
-            TryLoadIcon(toolStripButtonReplace, "Replace");
-            TryLoadIcon(toolStripButtonFixCommonErrors, "FixCommonErrors");
-            TryLoadIcon(toolStripButtonRemoveTextForHi, "RemoveTextForHi");
-            TryLoadIcon(toolStripButtonVisualSync, "VisualSync");
-            TryLoadIcon(toolStripButtonSpellCheck, "SpellCheck");
-            TryLoadIcon(toolStripButtonNetflixQualityCheck, "NetflixGlyphCheck");
-            TryLoadIcon(toolStripButtonSettings, "Settings");
-            TryLoadIcon(toolStripButtonHelp, "Help");
-
-            TryLoadIcon(toolStripButtonToggleWaveform, "WaveformToggle");
-            TryLoadIcon(toolStripButtonToggleVideo, "VideoToggle");
+            if (Directory.Exists(Configuration.IconsDirectory))
+            {
+                TryLoadIcon(toolStripButtonFileNew, "New");
+                TryLoadIcon(toolStripButtonFileOpen, "Open");
+                TryLoadIcon(toolStripButtonSave, "Save");
+                TryLoadIcon(toolStripButtonSaveAs, "SaveAs");
+                TryLoadIcon(toolStripButtonFind, "Find");
+                TryLoadIcon(toolStripButtonReplace, "Replace");
+                TryLoadIcon(toolStripButtonFixCommonErrors, "FixCommonErrors");
+                TryLoadIcon(toolStripButtonRemoveTextForHi, "RemoveTextForHi");
+                TryLoadIcon(toolStripButtonVisualSync, "VisualSync");
+                TryLoadIcon(toolStripButtonSpellCheck, "SpellCheck");
+                TryLoadIcon(toolStripButtonNetflixQualityCheck, "NetflixGlyphCheck");
+                TryLoadIcon(toolStripButtonAssStyleManager, "AssaStyle");
+                TryLoadIcon(toolStripButtonAssProperties, "AssaProperties");
+                TryLoadIcon(toolStripButtonSettings, "Settings");
+                TryLoadIcon(toolStripButtonHelp, "Help");
+                TryLoadIcon(toolStripButtonToggleWaveform, "WaveformToggle");
+                TryLoadIcon(toolStripButtonToggleVideo, "VideoToggle");
+            }
 
             toolStripButtonFileNew.Visible = gs.ShowToolbarNew;
             toolStripButtonFileOpen.Visible = gs.ShowToolbarOpen;
