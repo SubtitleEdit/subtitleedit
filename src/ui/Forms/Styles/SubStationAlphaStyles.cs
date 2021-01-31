@@ -1055,7 +1055,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private void AddStyleToHeader(SsaStyle style)
         {
             var sb = new StringBuilder();
-            var format = "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding";
+            var format = SsaStyle.DefaultAssStyleFormat;
             foreach (var line in _header.Split(new[] { Environment.NewLine }, StringSplitOptions.None))
             {
                 if (line.Trim().StartsWith("Format:", StringComparison.OrdinalIgnoreCase))
@@ -1107,7 +1107,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         {
             var name = style.Name;
             var sb = new StringBuilder();
-            var format = "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding";
+            var format = SsaStyle.DefaultAssStyleFormat;
             foreach (var line in _header.Split(new[] { Environment.NewLine }, StringSplitOptions.None))
             {
                 if (line.Trim().StartsWith("Format:", StringComparison.OrdinalIgnoreCase))
