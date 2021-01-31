@@ -62,6 +62,8 @@ namespace Nikse.SubtitleEdit.Controls
 
         public AdvancedTextBox()
         {
+            DetectUrls = false;
+
             SetTextPosInRtbIfCentered();
 
             TextChanged += TextChangedHighlight;
