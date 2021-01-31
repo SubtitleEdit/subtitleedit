@@ -2334,6 +2334,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void ShowCurrentScaledImage(Bitmap bmp, Extra extra)
         {
+            if (panelBackground.Width <= 0)
+            {
+                return; // e.g. minimized
+            }
+
             var widthAspect = panelBackground.Width / numericUpDownScreenWidth.Value;
             var heightAspect = GetHeightAspect();
             var scaledBmp = new Bitmap((int)Math.Round(bmp.Width * widthAspect), (int)Math.Round(bmp.Height * heightAspect));
