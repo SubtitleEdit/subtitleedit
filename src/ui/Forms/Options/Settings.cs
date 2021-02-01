@@ -260,6 +260,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             checkBoxVideoPlayerPreviewFontBold.Checked = gs.VideoPlayerPreviewFontBold;
             checkBoxMpvPreviewOpaqueBox.Checked = gs.MpvPreviewTextOpaqueBox;
+            panelVideoPlayerPreviewFontColor.BackColor = gs.MpvPreviewTextPrimaryColor;
 
             checkBoxVideoAutoOpen.Checked = !gs.DisableVideoAutoLoading;
             checkBoxAllowVolumeBoost.Checked = gs.AllowVolumeBoost;
@@ -575,10 +576,16 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             labelVideoPlayerPreviewFontName.Text = language.PreviewFontName;
             labelVideoPlayerPreviewFontSize.Text = language.PreviewFontSize;
+            labelVideoPlayerPreviewFontColor.Text = language.SubtitleFontColor;
             checkBoxVideoPlayerPreviewFontBold.Text = language.SubtitleBold;
             checkBoxMpvPreviewOpaqueBox.Text = language.SsaOpaqueBox;
-            checkBoxVideoPlayerPreviewFontBold.Left = comboBoxlVideoPlayerPreviewFontSize.Right + 7;
-            checkBoxMpvPreviewOpaqueBox.Left = checkBoxVideoPlayerPreviewFontBold.Right + 5;
+            var left = labelVideoPlayerPreviewFontName.Left + 5 +
+                        Math.Max(labelVideoPlayerPreviewFontName.Width, Math.Max(labelVideoPlayerPreviewFontSize.Width, labelVideoPlayerPreviewFontColor.Width));
+            comboBoxVideoPlayerPreviewFontName.Left = left;
+            comboBoxlVideoPlayerPreviewFontSize.Left = left;
+            checkBoxVideoPlayerPreviewFontBold.Left = left;
+            checkBoxMpvPreviewOpaqueBox.Left = left;
+            panelVideoPlayerPreviewFontColor.Left = left;
 
             checkBoxVideoAutoOpen.Text = language.VideoAutoOpen;
             checkBoxAllowVolumeBoost.Text = language.AllowVolumeBoost;
@@ -1826,6 +1833,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             gs.VideoPlayerPreviewFontName = comboBoxVideoPlayerPreviewFontName.SelectedItem.ToString();
             gs.VideoPlayerPreviewFontSize = int.Parse(comboBoxlVideoPlayerPreviewFontSize.Items[0].ToString()) + comboBoxlVideoPlayerPreviewFontSize.SelectedIndex;
             gs.VideoPlayerPreviewFontBold = checkBoxVideoPlayerPreviewFontBold.Checked;
+            gs.MpvPreviewTextPrimaryColor = panelVideoPlayerPreviewFontColor.BackColor;
             gs.DisableVideoAutoLoading = !checkBoxVideoAutoOpen.Checked;
             gs.AllowVolumeBoost = checkBoxAllowVolumeBoost.Checked;
             gs.MpvPreviewTextOpaqueBox = checkBoxMpvPreviewOpaqueBox.Checked;
@@ -3230,7 +3238,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
         {
             radioButtonVideoPlayerMPV.Enabled = LibMpvDynamic.IsInstalled;
             checkBoxMpvHandlesPreviewText.Enabled = radioButtonVideoPlayerMPV.Checked;
-            checkBoxMpvPreviewOpaqueBox.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
             if (!radioButtonVideoPlayerMPV.Enabled)
             {
                 buttonMpvSettings.Font = new Font(buttonMpvSettings.Font.FontFamily, buttonMpvSettings.Font.Size, FontStyle.Bold);
@@ -3292,11 +3299,15 @@ namespace Nikse.SubtitleEdit.Forms.Options
         {
             checkBoxMpvHandlesPreviewText.Enabled = radioButtonVideoPlayerMPV.Checked;
             checkBoxMpvPreviewOpaqueBox.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
+            panelVideoPlayerPreviewFontColor.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
+            labelVideoPlayerPreviewFontColor.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
         }
 
         private void checkBoxMpvHandlesPreviewText_CheckedChanged(object sender, EventArgs e)
         {
             checkBoxMpvPreviewOpaqueBox.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
+            panelVideoPlayerPreviewFontColor.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
+            labelVideoPlayerPreviewFontColor.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
         }
 
         private void buttonClearShortcut_Click(object sender, EventArgs e)
@@ -3692,6 +3703,15 @@ namespace Nikse.SubtitleEdit.Forms.Options
             _listBoxSearchStringLastUsed = DateTime.UtcNow;
             FindAndSelectListViewItem(sender as ListView);
             e.SuppressKeyPress = true;
+        }
+
+        private void panelVideoPlayerPreviewFontColor_Click(object sender, EventArgs e)
+        {
+            colorDialogSSAStyle.Color = panelVideoPlayerPreviewFontColor.BackColor;
+            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            {
+                panelVideoPlayerPreviewFontColor.BackColor = colorDialogSSAStyle.Color;
+            }
         }
     }
 }

@@ -4812,7 +4812,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string oldVideoPlayer = Configuration.Settings.General.VideoPlayer;
             string oldMpvVideoOutput = Configuration.Settings.General.MpvVideoOutputWindows;
-            bool oldMpvOpaueBox = Configuration.Settings.General.MpvPreviewTextOpaqueBox;
             string oldListViewLineSeparatorString = Configuration.Settings.General.ListViewLineSeparatorString;
             bool oldCpsWhiteSpaceSetting = Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace;
             string oldSubtitleFontSettings = Configuration.Settings.General.SubtitleFontName +
@@ -5016,8 +5015,7 @@ namespace Nikse.SubtitleEdit.Forms
                 OpenVideo(vfn);
             }
 
-            if (mediaPlayer.VideoPlayer != null && mediaPlayer.VideoPlayer is LibMpvDynamic && Configuration.Settings.General.MpvHandlesPreviewText
-                && oldMpvOpaueBox != Configuration.Settings.General.MpvPreviewTextOpaqueBox)
+            if (mediaPlayer.VideoPlayer != null && mediaPlayer.VideoPlayer is LibMpvDynamic && Configuration.Settings.General.MpvHandlesPreviewText)
             {
                 mediaPlayer.UpdateMpvStyle();
             }
