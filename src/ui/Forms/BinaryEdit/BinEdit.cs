@@ -3043,7 +3043,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 setAspectRatio11ToolStripMenuItem_Click(null, null);
             }
-            else if (e.KeyData == Keys.F1)
+            else if (e.KeyData == UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralHelp))
             {
                 UiUtil.ShowHelp("#bdsupedit");
             }
