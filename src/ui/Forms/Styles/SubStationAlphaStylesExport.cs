@@ -90,7 +90,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                         var sb = new StringBuilder();
                         bool stylesOn = false;
                         bool done = false;
-                        string styleFormat = "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding";
+                        string styleFormat = SsaStyle.DefaultAssStyleFormat;
                         foreach (string line in File.ReadAllLines(saveFileDialogStyle.FileName))
                         {
                             if (line.StartsWith("format:", StringComparison.OrdinalIgnoreCase))
