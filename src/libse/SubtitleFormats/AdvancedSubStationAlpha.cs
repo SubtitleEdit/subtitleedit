@@ -108,7 +108,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
         public override string ToText(Subtitle subtitle, string title)
         {
             bool fromTtml = false;
-            string header = @"[Script Info]
+            string header = $@"[Script Info]
 ; This is an Advanced Sub Station Alpha v4+ script.
 Title: {0}
 ScriptType: v4.00+
@@ -116,8 +116,8 @@ Collisions: Normal
 PlayDepth: 0
 
 [V4+ Styles]
-Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-" + DefaultStyle + @"
+{SsaStyle.DefaultAssStyleFormat}
+{DefaultStyle}
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text";
@@ -277,7 +277,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
 
             return string.Format($@"{scriptInfo.Trim() + Environment.NewLine}
 [V4+ Styles]
-Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+{SsaStyle.DefaultAssStyleFormat}
 {style.Trim() + Environment.NewLine}
 [Events]");
         }
@@ -2037,7 +2037,7 @@ Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour,
             var sb = new StringBuilder();
             bool stylesStarted = false;
             bool styleAdded = false;
-            string styleFormat = "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding";
+            string styleFormat = SsaStyle.DefaultAssStyleFormat;
             foreach (string line in header.SplitToLines())
             {
                 if (line.Equals("[V4+ Styles]", StringComparison.OrdinalIgnoreCase) || line.Equals("[V4 Styles]", StringComparison.OrdinalIgnoreCase))
