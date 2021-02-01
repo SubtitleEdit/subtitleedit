@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
             {
                 var p = subtitle.Paragraphs[i];
                 string oldText = p.Text;
-                string newText = dialogHelper.FixDashesAndSpaces(p.Text);
+                string newText = dialogHelper.FixDashesAndSpaces(p.Text, p, subtitle.GetParagraphOrDefault(i-1));
                 if (newText != oldText)
                 {
                     var fixedParagraph = new Paragraph(p, false) { Text = newText };

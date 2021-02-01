@@ -193,5 +193,24 @@ namespace Test.Core
             var result = splitMerge.FixDashesAndSpaces($"-What are you?{Environment.NewLine}-I'm a{ Environment.NewLine}one-in-a-generation artist.");
             Assert.AreEqual($"What are you?{Environment.NewLine}- I'm a{ Environment.NewLine}one-in-a-generation artist.", result);
         }
+
+        [TestMethod]
+        public void FixHyphensTwoLinesWithSpaceMissingSecondLine()
+        {
+            var splitMerge = new DialogSplitMerge { DialogStyle = DialogType.DashBothLinesWithSpace };
+            var p = new Paragraph($"- You can't talk either.{Environment.NewLine}That's what I said.", 4000, 7000);
+            var result = splitMerge.FixDashesAndSpaces(p.Text, p, null);
+            Assert.AreEqual($"- You can't talk either.{Environment.NewLine}- That's what I said.", result);
+        }
+
+        [TestMethod]
+        public void FixHyphensTwoLinesWithSpaceMissingSecondLine3()
+        {
+            var splitMerge = new DialogSplitMerge { DialogStyle = DialogType.DashBothLinesWithSpace };
+            var prev = new Paragraph($"But I really think that -", 0, 3900);
+            var p = new Paragraph($"- you can't talk either.{Environment.NewLine}That's what I said.", 4000, 7000);
+            var result = splitMerge.FixDashesAndSpaces(p.Text, p, prev);
+            Assert.AreEqual($"- you can't talk either.{Environment.NewLine}That's what I said.", result);
+        }
     }
 }

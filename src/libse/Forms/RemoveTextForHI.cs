@@ -1108,7 +1108,15 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     text = Helper.FixHyphensRemoveForSingleLine(subtitle, text, index);
                 }
                 var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, ContinuationStyle = Configuration.Settings.General.ContinuationStyle };
-                text = dialogHelper.FixDashesAndSpaces(text);
+                if (subtitle != null && index >= 0)
+                {
+                    var prev = subtitle.GetParagraphOrDefault(index - 1);
+                    text = dialogHelper.FixDashesAndSpaces(text, subtitle.Paragraphs[index], prev);
+                }
+                else
+                {
+                    text = dialogHelper.FixDashesAndSpaces(text);
+                }
             }
 
             text = text.Trim();

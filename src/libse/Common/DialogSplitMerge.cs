@@ -20,6 +20,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return FixSpaces(FixDashes(input));
         }
 
+        public string FixDashesAndSpaces(string input, Paragraph p, Paragraph prev)
+        {
+            return FixSpaces(FixDashes(input, p, prev));
+        }
+
         public string FixSpaces(string input)
         {
             var lines = input.SplitToLines();
@@ -169,6 +174,102 @@ namespace Nikse.SubtitleEdit.Core.Common
                         {
                             var rest = l.Remove(0, l.IndexOf(GetDashChar()) + 1);
                             sb.AppendLine(pre + GetLineStartFromDashStyle(i) + rest.TrimStart());
+                        }
+                        else
+                        {
+                            sb.AppendLine(pre + l);
+                        }
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+            return sb.ToString().TrimEnd();
+        }
+
+        public string FixDashes(string input, Paragraph p, Paragraph prev)
+        {
+            var lines = input.SplitToLines();
+            if (!IsDialog(lines, p, prev))
+            {
+                return p.Text;
+            }
+
+            var isDialogThreeLinesTwoOne = lines.Count == 3 && IsDialogThreeLinesTwoOne(lines[0], lines[1], lines[2]);
+            var isDialogThreeLinesOneTwo = lines.Count == 3 && IsDialogThreeLinesOneTwo(lines[0], lines[1], lines[2]);
+
+            var sb = new StringBuilder();
+            for (int i = 0; i < lines.Count; i++)
+            {
+                var l = lines[i];
+                var pre = GetStartTags(l);
+                l = l.Remove(0, pre.Length);
+                switch (DialogStyle)
+                {
+                    case DialogType.DashBothLinesWithSpace:
+                        if (isDialogThreeLinesTwoOne && i == 1 || isDialogThreeLinesOneTwo && i == 2)
+                        {
+                            sb.AppendLine(pre + l);
+                        }
+                        else if (!l.TrimStart().StartsWith(GetDashChar()))
+                        {
+                            sb.AppendLine(pre + GetLineStartFromDashStyle(i) + l.TrimStart().TrimStart(GetAlternateDashChar()));
+                        }
+                        else
+                        {
+                            sb.AppendLine(pre + l);
+                        }
+                        break;
+                    case DialogType.DashSecondLineWithSpace:
+                        if (i > 0 && !l.TrimStart().StartsWith(GetDashChar()))
+                        {
+                            if (isDialogThreeLinesTwoOne && i == 1 || isDialogThreeLinesOneTwo && i == 2)
+                            {
+                                sb.AppendLine(pre + l);
+                            }
+                            else
+                            {
+                                sb.AppendLine(pre + GetLineStartFromDashStyle(i) + l.TrimStart().TrimStart(GetAlternateDashChar()));
+                            }
+                        }
+                        else if (i == 0 && l.TrimStart().StartsWith(GetDashChar()))
+                        {
+                            sb.AppendLine(pre + GetLineStartFromDashStyle(i) + l.Remove(0, l.IndexOf(GetDashChar()) + 1).TrimStart());
+                        }
+                        else
+                        {
+                            sb.AppendLine(pre + l);
+                        }
+                        break;
+                    case DialogType.DashBothLinesWithoutSpace:
+                        if (isDialogThreeLinesTwoOne && i == 1 || isDialogThreeLinesOneTwo && i == 2)
+                        {
+                            sb.AppendLine(pre + l);
+                        }
+                        else if (!l.TrimStart().StartsWith(GetDashChar()))
+                        {
+                            sb.AppendLine(pre + GetLineStartFromDashStyle(i) + l.TrimStart().TrimStart(GetAlternateDashChar()));
+                        }
+                        else
+                        {
+                            sb.AppendLine(pre + l);
+                        }
+                        break;
+                    case DialogType.DashSecondLineWithoutSpace:
+                        if (i > 0 && !l.TrimStart().StartsWith(GetDashChar()))
+                        {
+                            if (isDialogThreeLinesTwoOne && i == 1 || isDialogThreeLinesOneTwo && i == 2)
+                            {
+                                sb.AppendLine(pre + l);
+                            }
+                            else
+                            {
+                                sb.AppendLine(pre + GetLineStartFromDashStyle(i) + l.TrimStart().TrimStart(GetAlternateDashChar()));
+                            }
+                        }
+                        else if (i == 0 && l.TrimStart().StartsWith(GetDashChar()))
+                        {
+                            sb.AppendLine(pre + GetLineStartFromDashStyle(i) + l.Remove(0, l.IndexOf(GetDashChar()) + 1).TrimStart().TrimStart(GetAlternateDashChar()));
                         }
                         else
                         {
@@ -355,9 +456,76 @@ namespace Nikse.SubtitleEdit.Core.Common
             var l1 = HtmlUtil.RemoveHtmlTags(lines[1], true);
             var noLineEnding = SkipLineEndingCheck || LanguageAutoDetect.IsLanguageWithoutPeriods(TwoLetterLanguageCode);
 
-            if (lines.Count == 2 && (l0.HasSentenceEnding(TwoLetterLanguageCode) || noLineEnding) && (l1.TrimStart().StartsWith(GetDashChar()) || l1.TrimStart().StartsWith(GetAlternateDashChar())))
+            if (lines.Count == 2)
             {
-                return true;
+                if ((l0.HasSentenceEnding(TwoLetterLanguageCode) || noLineEnding) &&
+                    (l1.TrimStart().StartsWith(GetDashChar()) || l1.TrimStart().StartsWith(GetAlternateDashChar())))
+                {
+                    return true;
+                }
+            }
+
+            if (lines.Count == 3)
+            {
+                var l2 = HtmlUtil.RemoveHtmlTags(lines[2], true);
+
+                // - I'm fine today, but I would have
+                // been better if I had a some candy.
+                // - How are you?
+                if (IsDialogThreeLinesTwoOne(l0, l1, l2))
+                {
+                    return true;
+                }
+
+                // - How are you?
+                // - I'm fine today, but I would have
+                // been better if I had a some candy.
+                if (IsDialogThreeLinesOneTwo(l0, l1, l2))
+                {
+                    return true;
+                }
+
+                if ((l0.HasSentenceEnding(TwoLetterLanguageCode) || noLineEnding) &&
+                    (l1.TrimStart().StartsWith(GetDashChar()) || l1.TrimStart().StartsWith(GetAlternateDashChar())) &&
+                    (l1.HasSentenceEnding(TwoLetterLanguageCode) || noLineEnding) &&
+                    (l2.TrimStart().StartsWith(GetDashChar()) || l2.TrimStart().StartsWith(GetAlternateDashChar())))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+
+        public bool IsDialog(List<string> lines, Paragraph p, Paragraph prev)
+        {
+            if (lines.Count < 2 || lines.Count > 3)
+            {
+                return false;
+            }
+
+            var l0 = HtmlUtil.RemoveHtmlTags(lines[0]);
+            var l1 = HtmlUtil.RemoveHtmlTags(lines[1], true);
+            var noLineEnding = SkipLineEndingCheck || LanguageAutoDetect.IsLanguageWithoutPeriods(TwoLetterLanguageCode);
+
+            if (lines.Count == 2)
+            {
+                if ((l0.HasSentenceEnding(TwoLetterLanguageCode) || noLineEnding) &&
+                    (l1.TrimStart().StartsWith(GetDashChar()) || l1.TrimStart().StartsWith(GetAlternateDashChar())))
+                {
+                    return true;
+                }
+
+                var prevEnding = prev == null ||
+                    prev.Text.HasSentenceEnding(TwoLetterLanguageCode) ||
+                    p.StartTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds > 3000;
+                if (prevEnding &&
+                    (l0.StartsWith(GetDashChar()) || l0.StartsWith(GetAlternateDashChar())) &&
+                    l0.HasSentenceEnding(TwoLetterLanguageCode))
+                {
+                    return true;
+                }
             }
 
             if (lines.Count == 3)

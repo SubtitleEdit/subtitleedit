@@ -26,7 +26,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 if (callbacks.AllowFix(p, fixAction))
                 {
                     string oldText = p.Text;
-                    string text = dialogHelper.FixDashesAndSpaces(p.Text);
+                    var prev = subtitle.GetParagraphOrDefault(i - 1);
+                    string text = dialogHelper.FixDashesAndSpaces(p.Text, p, prev);
                     if (text != oldText)
                     {
                         p.Text = text;
