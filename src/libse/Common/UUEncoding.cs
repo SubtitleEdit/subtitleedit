@@ -101,9 +101,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
 
-            var result = new byte[bytearrayPosition];
-            Array.Copy(byteArray, 0, result, 0, bytearrayPosition);
-            return result;
+            Array.Resize(ref byteArray, bytearrayPosition);
+            return byteArray;
         }
     }
 }
