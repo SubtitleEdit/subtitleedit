@@ -147,6 +147,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.labelCustomSearch = new System.Windows.Forms.Label();
             this.comboBoxCustomSearch1 = new System.Windows.Forms.ComboBox();
             this.groupBoxVideoPlayerDefault = new System.Windows.Forms.GroupBox();
+            this.labelVideoPlayerPreviewFontColor = new System.Windows.Forms.Label();
+            this.panelVideoPlayerPreviewFontColor = new System.Windows.Forms.Panel();
             this.checkBoxAllowVolumeBoost = new System.Windows.Forms.CheckBox();
             this.checkBoxVideoAutoOpen = new System.Windows.Forms.CheckBox();
             this.checkBoxVideoPlayerPreviewFontBold = new System.Windows.Forms.CheckBox();
@@ -154,9 +156,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.checkBoxVideoPlayerShowMuteButton = new System.Windows.Forms.CheckBox();
             this.labelVideoPlayerPreviewFontName = new System.Windows.Forms.Label();
             this.comboBoxVideoPlayerPreviewFontName = new System.Windows.Forms.ComboBox();
+            this.checkBoxMpvPreviewOpaqueBox = new System.Windows.Forms.CheckBox();
             this.labelVideoPlayerPreviewFontSize = new System.Windows.Forms.Label();
             this.comboBoxlVideoPlayerPreviewFontSize = new System.Windows.Forms.ComboBox();
-            this.checkBoxMpvPreviewOpaqueBox = new System.Windows.Forms.CheckBox();
             this.checkBoxVideoPlayerShowStopButton = new System.Windows.Forms.CheckBox();
             this.groupBoxVideoEngine = new System.Windows.Forms.GroupBox();
             this.checkBoxMpvHandlesPreviewText = new System.Windows.Forms.CheckBox();
@@ -1835,9 +1837,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBoxMainWindowVideoControls.Controls.Add(this.textBoxCustomSearchUrl1);
             this.groupBoxMainWindowVideoControls.Controls.Add(this.labelCustomSearch);
             this.groupBoxMainWindowVideoControls.Controls.Add(this.comboBoxCustomSearch1);
-            this.groupBoxMainWindowVideoControls.Location = new System.Drawing.Point(0, 269);
+            this.groupBoxMainWindowVideoControls.Location = new System.Drawing.Point(0, 313);
             this.groupBoxMainWindowVideoControls.Name = "groupBoxMainWindowVideoControls";
-            this.groupBoxMainWindowVideoControls.Size = new System.Drawing.Size(851, 251);
+            this.groupBoxMainWindowVideoControls.Size = new System.Drawing.Size(851, 207);
             this.groupBoxMainWindowVideoControls.TabIndex = 15;
             this.groupBoxMainWindowVideoControls.TabStop = false;
             this.groupBoxMainWindowVideoControls.Text = "Main window video controls";
@@ -2025,6 +2027,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             // 
             this.groupBoxVideoPlayerDefault.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxVideoPlayerDefault.Controls.Add(this.labelVideoPlayerPreviewFontColor);
+            this.groupBoxVideoPlayerDefault.Controls.Add(this.panelVideoPlayerPreviewFontColor);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.checkBoxAllowVolumeBoost);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.checkBoxVideoAutoOpen);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.checkBoxVideoPlayerPreviewFontBold);
@@ -2036,11 +2040,29 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBoxVideoPlayerDefault.Controls.Add(this.labelVideoPlayerPreviewFontSize);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.comboBoxlVideoPlayerPreviewFontSize);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.checkBoxVideoPlayerShowStopButton);
-            this.groupBoxVideoPlayerDefault.Location = new System.Drawing.Point(0, 145);
+            this.groupBoxVideoPlayerDefault.Location = new System.Drawing.Point(0, 160);
             this.groupBoxVideoPlayerDefault.Name = "groupBoxVideoPlayerDefault";
-            this.groupBoxVideoPlayerDefault.Size = new System.Drawing.Size(851, 120);
+            this.groupBoxVideoPlayerDefault.Size = new System.Drawing.Size(851, 147);
             this.groupBoxVideoPlayerDefault.TabIndex = 14;
             this.groupBoxVideoPlayerDefault.TabStop = false;
+            // 
+            // labelVideoPlayerPreviewFontColor
+            // 
+            this.labelVideoPlayerPreviewFontColor.AutoSize = true;
+            this.labelVideoPlayerPreviewFontColor.Location = new System.Drawing.Point(331, 111);
+            this.labelVideoPlayerPreviewFontColor.Name = "labelVideoPlayerPreviewFontColor";
+            this.labelVideoPlayerPreviewFontColor.Size = new System.Drawing.Size(133, 13);
+            this.labelVideoPlayerPreviewFontColor.TabIndex = 12;
+            this.labelVideoPlayerPreviewFontColor.Text = "Subtitle preview font color";
+            // 
+            // panelVideoPlayerPreviewFontColor
+            // 
+            this.panelVideoPlayerPreviewFontColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelVideoPlayerPreviewFontColor.Location = new System.Drawing.Point(471, 107);
+            this.panelVideoPlayerPreviewFontColor.Name = "panelVideoPlayerPreviewFontColor";
+            this.panelVideoPlayerPreviewFontColor.Size = new System.Drawing.Size(21, 20);
+            this.panelVideoPlayerPreviewFontColor.TabIndex = 11;
+            this.panelVideoPlayerPreviewFontColor.Click += new System.EventHandler(this.panelVideoPlayerPreviewFontColor_Click);
             // 
             // checkBoxAllowVolumeBoost
             // 
@@ -2065,7 +2087,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             // checkBoxVideoPlayerPreviewFontBold
             // 
             this.checkBoxVideoPlayerPreviewFontBold.AutoSize = true;
-            this.checkBoxVideoPlayerPreviewFontBold.Location = new System.Drawing.Point(466, 80);
+            this.checkBoxVideoPlayerPreviewFontBold.Location = new System.Drawing.Point(471, 67);
             this.checkBoxVideoPlayerPreviewFontBold.Name = "checkBoxVideoPlayerPreviewFontBold";
             this.checkBoxVideoPlayerPreviewFontBold.Size = new System.Drawing.Size(46, 17);
             this.checkBoxVideoPlayerPreviewFontBold.TabIndex = 9;
@@ -2105,15 +2127,25 @@ namespace Nikse.SubtitleEdit.Forms.Options
             // 
             this.comboBoxVideoPlayerPreviewFontName.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxVideoPlayerPreviewFontName.FormattingEnabled = true;
-            this.comboBoxVideoPlayerPreviewFontName.Location = new System.Drawing.Point(334, 33);
+            this.comboBoxVideoPlayerPreviewFontName.Location = new System.Drawing.Point(471, 13);
             this.comboBoxVideoPlayerPreviewFontName.Name = "comboBoxVideoPlayerPreviewFontName";
             this.comboBoxVideoPlayerPreviewFontName.Size = new System.Drawing.Size(188, 21);
             this.comboBoxVideoPlayerPreviewFontName.TabIndex = 6;
             // 
+            // checkBoxMpvPreviewOpaqueBox
+            // 
+            this.checkBoxMpvPreviewOpaqueBox.AutoSize = true;
+            this.checkBoxMpvPreviewOpaqueBox.Location = new System.Drawing.Point(471, 87);
+            this.checkBoxMpvPreviewOpaqueBox.Name = "checkBoxMpvPreviewOpaqueBox";
+            this.checkBoxMpvPreviewOpaqueBox.Size = new System.Drawing.Size(85, 17);
+            this.checkBoxMpvPreviewOpaqueBox.TabIndex = 10;
+            this.checkBoxMpvPreviewOpaqueBox.Text = "Opaque box";
+            this.checkBoxMpvPreviewOpaqueBox.UseVisualStyleBackColor = true;
+            // 
             // labelVideoPlayerPreviewFontSize
             // 
             this.labelVideoPlayerPreviewFontSize.AutoSize = true;
-            this.labelVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(331, 61);
+            this.labelVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(331, 43);
             this.labelVideoPlayerPreviewFontSize.Name = "labelVideoPlayerPreviewFontSize";
             this.labelVideoPlayerPreviewFontSize.Size = new System.Drawing.Size(128, 13);
             this.labelVideoPlayerPreviewFontSize.TabIndex = 7;
@@ -2147,20 +2179,10 @@ namespace Nikse.SubtitleEdit.Forms.Options
             "28",
             "29",
             "30"});
-            this.comboBoxlVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(334, 78);
+            this.comboBoxlVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(471, 40);
             this.comboBoxlVideoPlayerPreviewFontSize.Name = "comboBoxlVideoPlayerPreviewFontSize";
             this.comboBoxlVideoPlayerPreviewFontSize.Size = new System.Drawing.Size(121, 21);
             this.comboBoxlVideoPlayerPreviewFontSize.TabIndex = 8;
-            // 
-            // checkBoxMpvPreviewOpaqueBox
-            // 
-            this.checkBoxMpvPreviewOpaqueBox.AutoSize = true;
-            this.checkBoxMpvPreviewOpaqueBox.Location = new System.Drawing.Point(512, 80);
-            this.checkBoxMpvPreviewOpaqueBox.Name = "checkBoxMpvPreviewOpaqueBox";
-            this.checkBoxMpvPreviewOpaqueBox.Size = new System.Drawing.Size(85, 17);
-            this.checkBoxMpvPreviewOpaqueBox.TabIndex = 10;
-            this.checkBoxMpvPreviewOpaqueBox.Text = "Opaque box";
-            this.checkBoxMpvPreviewOpaqueBox.UseVisualStyleBackColor = true;
             // 
             // checkBoxVideoPlayerShowStopButton
             // 
@@ -2193,7 +2215,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.groupBoxVideoEngine.Controls.Add(this.radioButtonVideoPlayerMpcHc);
             this.groupBoxVideoEngine.Location = new System.Drawing.Point(0, 0);
             this.groupBoxVideoEngine.Name = "groupBoxVideoEngine";
-            this.groupBoxVideoEngine.Size = new System.Drawing.Size(852, 143);
+            this.groupBoxVideoEngine.Size = new System.Drawing.Size(852, 158);
             this.groupBoxVideoEngine.TabIndex = 0;
             this.groupBoxVideoEngine.TabStop = false;
             this.groupBoxVideoEngine.Text = "Video engine";
@@ -4606,7 +4628,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             // 
             // comboBoxFontName
             // 
-            this.comboBoxFontName.DropDownStyle = ComboBoxStyle.DropDownList;
+            this.comboBoxFontName.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxFontName.FormattingEnabled = true;
             this.comboBoxFontName.Location = new System.Drawing.Point(121, 17);
             this.comboBoxFontName.Name = "comboBoxFontName";
@@ -4915,10 +4937,10 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
+            this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.panelWordLists);
             this.Controls.Add(this.panelFont);
             this.Controls.Add(this.panelTools);
-            this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.panelToolBar);
             this.Controls.Add(this.panelWaveform);
             this.Controls.Add(this.panelSyntaxColoring);
@@ -5439,5 +5461,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private System.Windows.Forms.ColumnHeader columnHeaderNames;
         private System.Windows.Forms.Panel panelShortcuts;
         private System.Windows.Forms.CheckBox checkBoxLiveSpellCheck;
+        private Label labelVideoPlayerPreviewFontColor;
+        private Panel panelVideoPlayerPreviewFontColor;
     }
 }
