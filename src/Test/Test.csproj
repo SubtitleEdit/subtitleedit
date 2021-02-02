@@ -61,6 +61,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\UUEncodingTest.cs" />
     <Compile Include="Core\CharUtilsTest.cs" />
     <Compile Include="Core\DialogTypeTest.cs" />
     <Compile Include="Core\SeJsonParserTest.cs" />
