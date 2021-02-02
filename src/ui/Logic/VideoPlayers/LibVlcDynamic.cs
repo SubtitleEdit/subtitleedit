@@ -376,7 +376,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             get => _libvlc_media_player_get_rate(_mediaPlayer);
             set
             {
-                if (value >= 0 && value <= 2.0)
+                if (value >= 0 && value <= 3.0)
                 {
                     _libvlc_media_player_set_rate(_mediaPlayer, (float)value);
                 }
