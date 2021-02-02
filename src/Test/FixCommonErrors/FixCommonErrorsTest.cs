@@ -70,29 +70,38 @@ namespace Test.FixCommonErrors
 
             var asm = System.Reflection.Assembly.GetExecutingAssembly();
             var stream = asm.GetManifestResourceStream("Test.Dictionaries.en_US.aff");
-            if (stream != null)
-            {
-                using (Stream file = File.OpenWrite(Path.Combine(dictionaryFolder, "en_US.aff")))
-                {
-                    CopyStream(stream, file);
-                }
-            }
+            WriteStream(stream, Path.Combine(dictionaryFolder, "en_US.aff"));
 
             stream = asm.GetManifestResourceStream("Test.Dictionaries.en_US.dic");
-            if (stream != null)
-            {
-                using (Stream file = File.OpenWrite(Path.Combine(dictionaryFolder, "en_US.dic")))
-                {
-                    CopyStream(stream, file);
-                }
-            }
+            WriteStream(stream, Path.Combine(dictionaryFolder, "en_US.dic"));
 
             stream = asm.GetManifestResourceStream("Test.Dictionaries.names.xml");
-            if (stream != null)
+            WriteStream(stream, Path.Combine(dictionaryFolder, "names.xml"));
+        }
+
+        private static readonly object WriteStreamLock = new Object();
+
+        private static void WriteStream(Stream stream, string fileName)
+        {
+            lock (WriteStreamLock)
             {
-                using (Stream file = File.OpenWrite(Path.Combine(dictionaryFolder, "names.xml")))
+                if (stream != null)
                 {
-                    CopyStream(stream, file);
+                    if (File.Exists(fileName))
+                    {
+                        try
+                        {
+                            File.Delete(fileName);
+                        }
+                        catch
+                        {
+                            return;
+                        }
+                    }
+                    using (Stream file = File.OpenWrite(fileName))
+                    {
+                        CopyStream(stream, file);
+                    }
                 }
             }
         }
