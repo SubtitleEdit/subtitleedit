@@ -4937,6 +4937,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
+            this.Controls.Add(this.panelGeneral);
             this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.panelWordLists);
             this.Controls.Add(this.panelFont);
@@ -4946,7 +4947,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             this.Controls.Add(this.panelSyntaxColoring);
             this.Controls.Add(this.panelSsaStyle);
             this.Controls.Add(this.panelNetwork);
-            this.Controls.Add(this.panelGeneral);
             this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.listBoxSection);
             this.Controls.Add(this.buttonReset);
