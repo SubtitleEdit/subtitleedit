@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 sb.AppendLine();
                 sb.Append("\t{ ");
                 sb.Append("\"from\":" + p.StartTime.TotalSeconds.ToString(CultureInfo.InvariantCulture) + ", ");
-                sb.Append("\"to\":" + p.StartTime.TotalSeconds.ToString(CultureInfo.InvariantCulture) + ", ");
+                sb.Append("\"to\":" + p.EndTime.TotalSeconds.ToString(CultureInfo.InvariantCulture) + ", ");
                 sb.Append("\"location\": 2, ");
                 sb.Append("\"content\":\"" + Json.EncodeJsonText(p.Text) + "\"");
                 sb.Append(" }");
