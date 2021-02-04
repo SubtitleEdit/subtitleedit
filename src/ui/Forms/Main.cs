@@ -278,7 +278,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (Configuration.IsRunningOnWindows && !Configuration.Settings.General.UseDarkTheme)
             {
-                groupBoxEdit.BackColor = SystemColors.Window;
+                ListView.BackColor = SystemColors.Window;
             }
 
             base.OnLoad(e);
