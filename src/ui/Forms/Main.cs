@@ -21337,6 +21337,7 @@ namespace Nikse.SubtitleEdit.Forms
             mediaPlayer.InitializeVolume(Configuration.Settings.General.VideoPlayerDefaultVolume);
             splitContainer1.Panel1.Invalidate();
 
+            Utilities.SetSecurityProtocol();
             if (string.IsNullOrEmpty(LanguageSettings.Current.CheckForUpdates.CheckingForUpdates))
             {
                 checkForUpdatesToolStripMenuItem.Visible = false;

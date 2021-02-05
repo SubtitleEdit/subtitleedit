@@ -132,6 +132,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return 0;
         }
 
+        public static void SetSecurityProtocol()
+        {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+        }
+
         /// <summary>
         /// Downloads the requested resource as a <see cref="String"/> using the configured <see cref="WebProxy"/>.
         /// </summary>
