@@ -2037,6 +2037,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             var sb = new StringBuilder();
             bool stylesStarted = false;
             bool styleAdded = false;
+            bool styleLinesStarted = false;
             string styleFormat = SsaStyle.DefaultAssStyleFormat;
             foreach (string line in header.SplitToLines())
             {
@@ -2050,15 +2051,20 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                     styleFormat = line;
                 }
 
+                if (!styleAdded && styleLinesStarted && !line.Trim().StartsWith("Style:", StringComparison.Ordinal))
+                {
+                    sb.AppendLine(style.ToRawAss(styleFormat));
+                    styleAdded = true;
+                }
+
                 if (!line.StartsWith("Style: " + style.Name + ",", StringComparison.Ordinal)) // overwrite existing style
                 {
                     sb.AppendLine(line);
                 }
 
-                if (!styleAdded && stylesStarted && line.TrimStart().StartsWith("style:", StringComparison.OrdinalIgnoreCase))
+                if (stylesStarted && line.Trim().StartsWith("Style:", StringComparison.Ordinal))
                 {
-                    sb.AppendLine(style.ToRawAss(styleFormat));
-                    styleAdded = true;
+                    styleLinesStarted = true;
                 }
             }
 
