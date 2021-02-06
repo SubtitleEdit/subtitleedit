@@ -285,6 +285,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Attachments";
+            this.Shown += new System.EventHandler(this.Attachments_Shown);
+            this.ResizeEnd += new System.EventHandler(this.Attachments_ResizeEnd);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Attachments_KeyDown);
             this.contextMenuStripAttachments.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
