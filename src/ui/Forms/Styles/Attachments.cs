@@ -577,5 +577,23 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         {
             DialogResult = DialogResult.Cancel;
         }
+
+        private void Attachments_Shown(object sender, EventArgs e)
+        {
+            Attachments_ResizeEnd(sender, e);
+        }
+
+        private void Attachments_ResizeEnd(object sender, EventArgs e)
+        {
+            listViewAttachments.Columns[listViewAttachments.Columns.Count - 1].Width = -2;
+        }
+
+        private void Attachments_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                DialogResult = DialogResult.Cancel;
+            }
+        }
     }
 }
