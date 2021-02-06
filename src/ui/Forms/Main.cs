@@ -15603,7 +15603,18 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
-
+            else if (e.KeyCode == Keys.A && e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift)) 
+            {
+                if (GetCurrentSubtitleFormat().GetType() == typeof(AdvancedSubStationAlpha))
+                {
+                    var source = new AdvancedSubStationAlpha().ToText(_subtitle, _fileName);
+                    using (var form = new Attachments(source))
+                    {
+                        form.ShowDialog(this);
+                    }
+                    e.SuppressKeyPress = true;
+                }
+            }
 
             // TABS: Create / adjust / translate
 
