@@ -697,10 +697,56 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             if (!_isSubStationAlpha)
             {
                 Configuration.Settings.SubtitleSettings.AssaStyleStorage = GetStorageHeader();
+                _header = GetFileHeader();
             }
 
             LogNameChanges();
             DialogResult = DialogResult.OK;
+        }
+
+        private string GetFileHeader()
+        {
+            var sb = new StringBuilder();
+            var format = SsaStyle.DefaultAssStyleFormat;
+            bool stylesAdded = false;
+            foreach (var line in _header.Split(new[] { Environment.NewLine }, StringSplitOptions.None))
+            {
+                if (line.Trim().StartsWith("Format:", StringComparison.OrdinalIgnoreCase))
+                {
+                    format = line.Trim();
+                }
+                else if (line.Trim() == "[Events]")
+                {
+                    break;
+                }
+                else if (!stylesAdded && line.Trim().StartsWith("Style:", StringComparison.OrdinalIgnoreCase))
+                {
+                    stylesAdded = true;
+                    foreach (ListViewItem item in listViewStyles.Items)
+                    {
+                        var style = GetSsaStyleFile(item.Text);
+                        if (style != null)
+                        {
+                            sb.AppendLine(style.ToRawAss(format));
+                        }
+                    }
+
+                    sb.AppendLine();
+                    continue;
+                }
+                else if (stylesAdded && line.Trim().StartsWith("Style:", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                sb.AppendLine(line);
+            }
+
+            sb = new StringBuilder(sb.ToString().TrimEnd());
+            sb.AppendLine();
+            sb.AppendLine();
+            sb.AppendLine("[Events]");
+            return sb.ToString();
         }
 
         private string GetStorageHeader()
