@@ -170,7 +170,7 @@ namespace Nikse.SubtitleEdit.Controls
                     return new TimeCode();
                 }
 
-                if (string.IsNullOrWhiteSpace(maskedTextBox1.Text.RemoveChar('.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, string.Empty).RemoveChar(',').RemoveChar(':')))
+                if (string.IsNullOrWhiteSpace(maskedTextBox1.Text.RemoveChar('.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, string.Empty).RemoveChar(',', ':')))
                 {
                     return new TimeCode(TimeCode.MaxTimeTotalMilliseconds);
                 }

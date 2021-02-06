@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.Common
@@ -452,6 +453,38 @@ namespace Nikse.SubtitleEdit.Core.Common
             return new string(array, 0, arrayIndex);
         }
 
+        public static string RemoveChar(this string value, char charToRemove, char charToRemove2)
+        {
+            char[] array = new char[value.Length];
+            int arrayIndex = 0;
+            for (int i = 0; i < value.Length; i++)
+            {
+                char ch = value[i];
+                if (ch != charToRemove && ch != charToRemove2)
+                {
+                    array[arrayIndex++] = ch;
+                }
+            }
+
+            return new string(array, 0, arrayIndex);
+        }
+
+        public static string RemoveChar(this string value, params char[] charsToRemove)
+        {
+            char[] array = new char[value.Length];
+            int arrayIndex = 0;
+            for (int i = 0; i < value.Length; i++)
+            {
+                char ch = value[i];
+                if (!charsToRemove.Contains(ch))
+                {
+                    array[arrayIndex++] = ch;
+                }
+            }
+
+            return new string(array, 0, arrayIndex);
+        }
+
         /// <summary>
         /// Count characters excl. white spaces, ssa-tags, html-tags, control-characters, normal spaces and
         /// Arabic diacritics depending on parameter.
@@ -547,8 +580,8 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             var last = s[s.Length - 1];
             return last == '.' || last == '!' || last == '?' || last == ']' || last == ')' || last == '…' || last == '♪' || last == '؟' ||
-                   twoLetterLanguageCode == "el" && last == ';' || twoLetterLanguageCode == "el" && last == '\u037E' || 
-                   last == '-' && s.Length > 3 && s.EndsWith("--", StringComparison.Ordinal) && char.IsLetter(s[s.Length-3]) ||
+                   twoLetterLanguageCode == "el" && last == ';' || twoLetterLanguageCode == "el" && last == '\u037E' ||
+                   last == '-' && s.Length > 3 && s.EndsWith("--", StringComparison.Ordinal) && char.IsLetter(s[s.Length - 3]) ||
                    last == '—' && s.Length > 2 && char.IsLetter(s[s.Length - 2]);
         }
     }

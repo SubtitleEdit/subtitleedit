@@ -791,21 +791,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             if (s.StartsWith("m ", StringComparison.Ordinal))
             {
                 var test = s.Remove(0, 2)
-                    .RemoveChar('0')
-                    .RemoveChar('1')
-                    .RemoveChar('2')
-                    .RemoveChar('3')
-                    .RemoveChar('4')
-                    .RemoveChar('5')
-                    .RemoveChar('6')
-                    .RemoveChar('7')
-                    .RemoveChar('8')
-                    .RemoveChar('9')
-                    .RemoveChar('-')
-                    .RemoveChar('l')
-                    .RemoveChar('m')
-                    .RemoveChar(' ')
-                    .RemoveChar('.');
+                    .RemoveChar('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', 'l', 'm', ' ', '.');
                 if (test.Length == 0)
                 {
                     return string.Empty;

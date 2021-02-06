@@ -73,11 +73,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (line != null && line.TrimStart().StartsWith("$VertAlign", StringComparison.OrdinalIgnoreCase))
                 {
-                    verticalAlign = line.RemoveChar(' ').RemoveChar('\t');
+                    verticalAlign = line.RemoveChar(' ', '\t');
                 }
                 else if (line != null && line.TrimStart().StartsWith("$HorzAlign", StringComparison.OrdinalIgnoreCase))
                 {
-                    horizontalAlign = line.RemoveChar(' ').RemoveChar('\t');
+                    horizontalAlign = line.RemoveChar(' ', '\t');
                 }
             }
         }

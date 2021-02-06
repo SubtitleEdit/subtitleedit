@@ -133,11 +133,11 @@ $ColorIndex4    = 3
                 }
                 else if (line.TrimStart().StartsWith("$VertAlign", StringComparison.OrdinalIgnoreCase))
                 {
-                    verticalAlign = line.RemoveChar(' ').RemoveChar('\t');
+                    verticalAlign = line.RemoveChar(' ', '\t');
                 }
                 else if (line.TrimStart().StartsWith("$HorzAlign", StringComparison.OrdinalIgnoreCase))
                 {
-                    horizontalAlign = line.RemoveChar(' ').RemoveChar('\t');
+                    horizontalAlign = line.RemoveChar(' ', '\t');
                 }
                 else if (!string.IsNullOrWhiteSpace(line) && !line.StartsWith("//", StringComparison.Ordinal) && !line.StartsWith('$'))
                 {
