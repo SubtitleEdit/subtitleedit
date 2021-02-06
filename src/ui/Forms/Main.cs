@@ -9241,7 +9241,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (Configuration.Settings.Tools.ListViewSyntaxColorWideLines)
                             {
-                                var totalLengthPixels = TextWidth.CalcPixelWidth(s);
+                                var totalLengthPixels = TextWidth.CalcPixelWidth(text);
                                 lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, string.Format("{0}     {1}", len, totalLengthPixels));
                             }
                             else
@@ -9260,7 +9260,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (Configuration.Settings.Tools.ListViewSyntaxColorWideLines)
                         {
-                            var totalLengthPixels = TextWidth.CalcPixelWidth(s);
+                            var totalLengthPixels = TextWidth.CalcPixelWidth(text);
                             lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, string.Format("{0}     {1}", len, totalLengthPixels));
                         }
                         else
@@ -9276,7 +9276,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (Configuration.Settings.Tools.ListViewSyntaxColorWideLines)
                         {
-                            var totalLengthPixels = TextWidth.CalcPixelWidth(s);
+                            var totalLengthPixels = TextWidth.CalcPixelWidth(text);
                             lineTotal.Text = string.Format(_languageGeneral.TotalLengthXSplitLine, string.Format("{0}     {1}", len, totalLengthPixels));
                         }
                         else
@@ -9291,7 +9291,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (Configuration.Settings.Tools.ListViewSyntaxColorWideLines)
                             {
-                                var totalLengthPixels = TextWidth.CalcPixelWidth(s);
+                                var totalLengthPixels = TextWidth.CalcPixelWidth(text);
                                 lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, string.Format("{0}     {1}", len, totalLengthPixels));
                             }
                             else
@@ -26047,13 +26047,14 @@ namespace Nikse.SubtitleEdit.Forms
 
             int lineBreakPos = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
             int pos = textBox.SelectionStart;
-            var s = HtmlUtil.RemoveHtmlTags(text, true).Replace(Environment.NewLine, string.Empty); // we don't count new line in total length... correct?
+            var textNoHtml = HtmlUtil.RemoveHtmlTags(text, true);
+            var s = textNoHtml.Replace(Environment.NewLine, string.Empty); // we don't count new line in total length... correct?
             int totalLength = s.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics);
             string totalL;
 
             if (Configuration.Settings.Tools.ListViewSyntaxColorWideLines)
             {
-                var totalLengthPixels = TextWidth.CalcPixelWidth(s);
+                var totalLengthPixels = TextWidth.CalcPixelWidth(textNoHtml);
                 totalL = "     " + string.Format(_languageGeneral.TotalLengthX, string.Format("{0}     {1}", totalLength, totalLengthPixels));
             }
             else
