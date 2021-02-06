@@ -1179,19 +1179,19 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             if (listViewStyles.SelectedItems.Count == 1 && _fileStyleActive)
             {
-                if (!GetSsaStyle(textBoxStyleName.Text.TrimEnd()).LoadedFromHeader ||
-                    _startName == textBoxStyleName.Text.RemoveChar(',').TrimEnd() ||
-                    ActiveListView.SelectedItems[0].Text == textBoxStyleName.Text.RemoveChar(',').TrimEnd())
+                if (!GetSsaStyle(textBoxStyleName.Text.Trim()).LoadedFromHeader ||
+                    _startName == textBoxStyleName.Text.RemoveChar(',').Trim() ||
+                    ActiveListView.SelectedItems[0].Text == textBoxStyleName.Text.RemoveChar(',').Trim())
                 {
                     textBoxStyleName.BackColor = ActiveListView.BackColor;
-                    ActiveListView.SelectedItems[0].Text = textBoxStyleName.Text.RemoveChar(',').TrimEnd();
-                    bool found = SetSsaStyle(_oldSsaName, "name", textBoxStyleName.Text.RemoveChar(',').TrimEnd());
+                    ActiveListView.SelectedItems[0].Text = textBoxStyleName.Text.RemoveChar(',').Trim();
+                    bool found = SetSsaStyle(_oldSsaName, "name", textBoxStyleName.Text.RemoveChar(',').Trim());
                     if (!found)
                     {
-                        SetSsaStyle(_oldSsaName, "name", textBoxStyleName.Text.RemoveChar(',').TrimEnd(), false);
+                        SetSsaStyle(_oldSsaName, "name", textBoxStyleName.Text.RemoveChar(',').Trim(), false);
                     }
 
-                    _oldSsaName = textBoxStyleName.Text.TrimEnd();
+                    _oldSsaName = textBoxStyleName.Text.Trim();
                     _editedName = _oldSsaName;
                 }
                 else
@@ -1202,20 +1202,20 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             else if (listViewStorage.SelectedItems.Count == 1 && !_fileStyleActive)
             {
                 textBoxStyleName.BackColor = ActiveListView.BackColor;
-                ActiveListView.SelectedItems[0].Text = textBoxStyleName.Text.RemoveChar(',').TrimEnd();
+                ActiveListView.SelectedItems[0].Text = textBoxStyleName.Text.RemoveChar(',').Trim();
                 var idx = ActiveListView.SelectedItems[0].Index;
-                _storageStyles[idx].Name = textBoxStyleName.Text.RemoveChar(',').TrimEnd();
+                _storageStyles[idx].Name = textBoxStyleName.Text.RemoveChar(',').Trim();
 
                 for (int i = 0; i < _storageStyles.Count; i++)
                 {
                     var storageName = _storageStyles[i].Name;
-                    if (idx != i && storageName == textBoxStyleName.Text.RemoveChar(',').TrimEnd())
+                    if (idx != i && storageName == textBoxStyleName.Text.RemoveChar(',').Trim())
                     {
                         textBoxStyleName.BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                     }
                 }
 
-                _oldSsaName = textBoxStyleName.Text.TrimEnd();
+                _oldSsaName = textBoxStyleName.Text.Trim();
                 _editedName = _oldSsaName;
             }
 
@@ -2239,11 +2239,11 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 var style = _storageStyles[idx];
                 _storageStyles.RemoveAt(idx);
-                _storageStyles.Insert(listView.Items.Count - 1, style);
+                _storageStyles.Add(style);
             }
 
+            listView.Items.Add(item);
             idx = listView.Items.Count - 1;
-            listView.Items.Insert(idx, item);
             listView.Items[idx].Selected = true;
             listView.Items[idx].EnsureVisible();
             listView.Items[idx].Focused = true;
