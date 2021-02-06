@@ -15610,7 +15610,10 @@ namespace Nikse.SubtitleEdit.Forms
                     var source = new AdvancedSubStationAlpha().ToText(_subtitle, _fileName);
                     using (var form = new Attachments(source))
                     {
-                        form.ShowDialog(this);
+                        if (form.ShowDialog(this) == DialogResult.OK)
+                        {
+                            _subtitle.Footer = form.NewFooter;
+                        }
                     }
                     e.SuppressKeyPress = true;
                 }
