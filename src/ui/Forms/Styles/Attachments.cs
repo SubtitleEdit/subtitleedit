@@ -14,7 +14,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 {
     public partial class Attachments : Form
     {
-        private List<byte[]> _attachments = new List<byte[]>();
+        private List<AssaAttachment> _attachments = new List<AssaAttachment>();
         private readonly List<string> _imageExtentions = new List<string>
         {
             ".png",
@@ -25,13 +25,15 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             ".ico"
         };
 
+        public string NewFooter { get; private set; }
+
         public Attachments(string source)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            _attachments = new List<byte[]>();
+            _attachments = new List<AssaAttachment>();
             ListAttachments(source.SplitToLines());
             if (listViewAttachments.Items.Count > 0)
             {
@@ -47,6 +49,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             bool attachmentOn = false;
             var attachmentContent = new StringBuilder();
             var attachmentFileName = string.Empty;
+            var category = string.Empty;
             foreach (var line in lines)
             {
                 var s = line.Trim();
@@ -54,20 +57,20 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 {
                     if (s == "[V4+ Styles]" || s == "[Events]")
                     {
-                        AddToListView(attachmentFileName, attachmentContent.ToString());
+                        AddToListView(attachmentFileName, attachmentContent.ToString(), category);
                         attachmentOn = false;
                         attachmentContent = new StringBuilder();
                         attachmentFileName = string.Empty;
                     }
                     else if (s == string.Empty)
                     {
-                        AddToListView(attachmentFileName, attachmentContent.ToString());
+                        AddToListView(attachmentFileName, attachmentContent.ToString(), category);
                         attachmentContent = new StringBuilder();
                         attachmentFileName = string.Empty;
                     }
                     else if (s.StartsWith("filename:") || s.StartsWith("fontname:"))
                     {
-                        AddToListView(attachmentFileName, attachmentContent.ToString());
+                        AddToListView(attachmentFileName, attachmentContent.ToString(), category);
                         attachmentContent = new StringBuilder();
                         attachmentFileName = s.Remove(0, 9).Trim();
                     }
@@ -78,16 +81,17 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 }
                 else if (s == "[Fonts]" || s == "[Graphics]")
                 {
+                    category = s;
                     attachmentOn = true;
                     attachmentContent = new StringBuilder();
                     attachmentFileName = string.Empty;
                 }
             }
 
-            AddToListView(attachmentFileName, attachmentContent.ToString());
+            AddToListView(attachmentFileName, attachmentContent.ToString(), category);
         }
 
-        private void AddToListView(string attachmentFileName, string attachmentContent)
+        private void AddToListView(string attachmentFileName, string attachmentContent, string category)
         {
             var content = attachmentContent.Trim();
             if (string.IsNullOrEmpty(attachmentFileName) || content.Length == 0)
@@ -97,7 +101,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             var item = new ListViewItem(attachmentFileName);
             var bytes = UUEncoding.UUDecode(content);
-            _attachments.Add(bytes);
+            _attachments.Add(new AssaAttachment { FileName = attachmentFileName, Bytes = bytes, Category = category, Content = content });
             item.SubItems.Add(GetType(attachmentFileName));
             item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(bytes.Length));
             listViewAttachments.Items.Add(item);
@@ -132,11 +136,11 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             var item = listViewAttachments.SelectedItems[0];
             if (item.SubItems[1].Text == "Font")
             {
-                ShowFont(_attachments[listViewAttachments.SelectedItems[0].Index]);
+                ShowFont(_attachments[listViewAttachments.SelectedItems[0].Index].Bytes);
             }
             else if (item.SubItems[1].Text == "Image")
             {
-                ShowImage(_attachments[listViewAttachments.SelectedItems[0].Index], item.SubItems[0].Text);
+                ShowImage(_attachments[listViewAttachments.SelectedItems[0].Index].Bytes, item.SubItems[0].Text);
             }
 
             UpdateAfterListViewChange();
@@ -215,17 +219,21 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.Filter = "Font|*.ttf";
             openFileDialog1.FilterIndex = 0;
+            openFileDialog1.Multiselect = true;
             var result = openFileDialog1.ShowDialog(this);
             if (result != DialogResult.OK || !File.Exists(openFileDialog1.FileName))
             {
                 return;
             }
 
-            var attachmentFileName = Path.GetFileName(openFileDialog1.FileName);
-            var attachmentContent = UUEncoding.UUEncode(FileUtil.ReadAllBytesShared(openFileDialog1.FileName));
-            AddToListView(attachmentFileName, attachmentContent);
-            listViewAttachments.Items[listViewAttachments.Items.Count - 1].Selected = true;
-            listViewAttachments.Items[listViewAttachments.Items.Count - 1].Focused = true;
+            foreach (var fileName in openFileDialog1.FileNames)
+            {
+                var attachmentFileName = Path.GetFileName(fileName);
+                var attachmentContent = UUEncoding.UUEncode(FileUtil.ReadAllBytesShared(fileName));
+                AddToListView(attachmentFileName, attachmentContent, "[Fonts]");
+                listViewAttachments.Items[listViewAttachments.Items.Count - 1].Selected = true;
+                listViewAttachments.Items[listViewAttachments.Items.Count - 1].Focused = true;
+            }
             UpdateAfterListViewChange();
         }
 
@@ -235,17 +243,22 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.Filter = "Images|*" + string.Join(";*", _imageExtentions).TrimEnd('*');
             openFileDialog1.FilterIndex = 0;
+            openFileDialog1.Multiselect = true;
             var result = openFileDialog1.ShowDialog(this);
             if (result != DialogResult.OK || !File.Exists(openFileDialog1.FileName))
             {
                 return;
             }
 
-            var attachmentFileName = Path.GetFileName(openFileDialog1.FileName);
-            var attachmentContent = UUEncoding.UUEncode(FileUtil.ReadAllBytesShared(openFileDialog1.FileName));
-            AddToListView(attachmentFileName, attachmentContent);
-            listViewAttachments.Items[listViewAttachments.Items.Count - 1].Selected = true;
-            listViewAttachments.Items[listViewAttachments.Items.Count - 1].Focused = true;
+            foreach (var fileName in openFileDialog1.FileNames)
+            {
+                var attachmentFileName = Path.GetFileName(fileName);
+                var attachmentContent = UUEncoding.UUEncode(FileUtil.ReadAllBytesShared(fileName));
+                AddToListView(attachmentFileName, attachmentContent, "[Graphics]");
+                listViewAttachments.Items[listViewAttachments.Items.Count - 1].Selected = true;
+                listViewAttachments.Items[listViewAttachments.Items.Count - 1].Focused = true;
+            }
+
             UpdateAfterListViewChange();
         }
 
@@ -490,7 +503,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 return;
             }
 
-            File.WriteAllBytes(saveFileDialog1.FileName, _attachments[index]);
+            File.WriteAllBytes(saveFileDialog1.FileName, _attachments[index].Bytes);
         }
 
         private void toolStripMenuItemStorageExport_Click(object sender, EventArgs e)
@@ -520,6 +533,49 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 listViewAttachments.InverseSelection();
                 e.SuppressKeyPress = true;
             }
+        }
+
+        private string UpdateFooter()
+        {
+            var sb = new StringBuilder();
+
+            var fonts = _attachments.Where(p => p.Category == "[Fonts]").ToList();
+            if (fonts.Count > 0)
+            {
+                sb.AppendLine("[Fonts]");
+                foreach (var font in fonts)
+                {
+                    sb.AppendLine("fontname: " + font.FileName);
+                    sb.AppendLine(font.Content.Trim());
+                }
+                sb.AppendLine();
+            }
+
+            var graphics = _attachments.Where(p => p.Category != "[Fonts]").ToList();
+            if (graphics.Count > 0)
+            {
+                sb = new StringBuilder(sb.ToString().Trim());
+                sb.AppendLine("[Graphics]");
+                foreach (var g in graphics)
+                {
+                    sb.AppendLine("filename: " + g.FileName);
+                    sb.AppendLine(g.Content.Trim());
+                }
+                sb.AppendLine();
+            }
+
+            return sb.ToString();
+        }
+
+        private void buttonOK_Click(object sender, EventArgs e)
+        {
+            NewFooter = UpdateFooter();
+            DialogResult = DialogResult.OK;
+        }
+
+        private void buttonCancel_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
         }
     }
 }
