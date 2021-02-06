@@ -8877,7 +8877,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         return;
                     }
 
-                    s = s.RemoveChar('?').RemoveChar('/').RemoveChar('*').RemoveChar('\\');
+                    s = s.RemoveChar('?', '/', '*', '\\');
                     if (string.IsNullOrEmpty(s))
                     {
                         return;

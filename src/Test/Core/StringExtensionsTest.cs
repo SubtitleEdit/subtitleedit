@@ -201,6 +201,22 @@ namespace Test.Core
         }
 
         [TestMethod]
+        public void RemoveChar3()
+        {
+            string input = " Hallo  world! ";
+            var res = input.RemoveChar(' ', '!');
+            Assert.AreEqual("Halloworld", res);
+        }
+
+        [TestMethod]
+        public void RemoveChar4()
+        {
+            string input = " Hallo  world! ";
+            var res = input.RemoveChar(' ', '!', 'H');
+            Assert.AreEqual("alloworld", res);
+        }
+
+        [TestMethod]
         public void CountLetters1()
         {
             string input = " Hallo  world! ";

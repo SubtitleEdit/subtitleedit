@@ -368,9 +368,8 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static bool ContainsLetters(string line)
         {
-            if (string.IsNullOrWhiteSpace(line.Replace("0", string.Empty).Replace("1", string.Empty).Replace("2", string.Empty).Replace("3", string.Empty).Replace("4", string.Empty).Replace("5", string.Empty).Replace("6", string.Empty)
-                .Replace("7", string.Empty).Replace("8", string.Empty).Replace("9", string.Empty).RemoveChar(':').RemoveChar('.').RemoveChar(',').
-                RemoveChar('-').RemoveChar('>').RemoveChar('/')))
+            if (string.IsNullOrWhiteSpace(line
+                .RemoveChar('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', '.', ',', '-', '>', '/')))
             {
                 return false;
             }

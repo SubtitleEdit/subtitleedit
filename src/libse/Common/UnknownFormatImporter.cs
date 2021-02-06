@@ -487,7 +487,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                     line = line.Replace(matches[0].ToString(), string.Empty);
                     line = line.Trim().TrimStart(']');
-                    if (Utilities.IsInteger(line.RemoveChar('[').RemoveChar(']')))
+                    if (Utilities.IsInteger(line.RemoveChar('[', ']')))
                     {
                         line = string.Empty;
                     }
@@ -522,7 +522,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     line = line.Replace(matches[0].ToString(), string.Empty);
                     line = line.Replace(matches[1].ToString(), string.Empty);
                     line = line.Trim().TrimStart(']');
-                    if (Utilities.IsInteger(line.RemoveChar('[').RemoveChar(']')))
+                    if (Utilities.IsInteger(line.RemoveChar('[', ']')))
                     {
                         line = string.Empty;
                     }
@@ -905,7 +905,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static string GetLineWithPerhapsOnlyNumbers(string line)
         {
-            return line.RemoveChar(' ').RemoveChar('.').RemoveChar(',').RemoveChar('\t').RemoveChar(':').RemoveChar(';').RemoveChar('{').RemoveChar('}').RemoveChar('[').RemoveChar(']').RemoveChar('-').RemoveChar('>').RemoveChar('<');
+            return line.RemoveChar(' ', '.', ',', '\t', ':', ';', '{', '}', '[', ']', '-', '>', '<');
         }
 
         private static TimeCode DecodeTime(string[] parts)

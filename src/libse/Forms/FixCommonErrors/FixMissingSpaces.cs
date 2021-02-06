@@ -247,9 +247,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     for (var lineIndex = 0; lineIndex < lines.Count; lineIndex++)
                     {
                         var lineNoHtmlAndMusicTags = HtmlUtil.RemoveHtmlTags(lines[lineIndex], true)
-                            .RemoveChar('#')
-                            .RemoveChar('♪')
-                            .RemoveChar('♫');
+                            .RemoveChar('#', '♪', '♫');
                         if (lineNoHtmlAndMusicTags.Length > 1)
                         {
                             foreach (var musicSymbol in musicSymbols)

@@ -54,8 +54,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var parts = line.Split(',');
                 if (parts.Length >= 3)
                 {
-                    var start = parts[0].RemoveChar(' ').RemoveChar('-');
-                    var end = parts[1].RemoveChar(' ').RemoveChar('-');
+                    var start = parts[0].RemoveChar(' ', '-');
+                    var end = parts[1].RemoveChar(' ', '-');
                     string text = line.Remove(0, parts[0].Length + 1 + parts[1].Length).Replace("///", Environment.NewLine).Replace("\"", string.Empty).Trim();
                     if (text.StartsWith(",", StringComparison.Ordinal))
                     {

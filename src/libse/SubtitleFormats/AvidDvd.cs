@@ -105,8 +105,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             string text = s.Remove(0, arr[0].Length + arr[1].Length + arr[2].Length + 2).Trim();
 
-                            if (string.IsNullOrWhiteSpace(text.Replace("0", string.Empty).Replace("1", string.Empty).Replace("2", string.Empty).Replace("3", string.Empty).Replace("4", string.Empty).Replace("5", string.Empty).
-                                Replace("6", string.Empty).Replace("7", string.Empty).Replace("8", string.Empty).Replace("9", string.Empty).RemoveChar('.').RemoveChar(':').RemoveChar(',')))
+                            if (string.IsNullOrWhiteSpace(text
+                                .RemoveChar('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', ':', ',')))
                             {
                                 _errorCount++;
                             }
