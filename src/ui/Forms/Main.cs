@@ -9315,7 +9315,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (Configuration.Settings.Tools.ListViewSyntaxColorWideLines)
                     {
-                        var totalLengthPixels = TextWidth.CalcPixelWidth(s.RemoveChar('\r', '\n'));
+                        var totalLengthPixels = TextWidth.CalcPixelWidth(text.RemoveChar('\r', '\n'));
                         lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, string.Format("{0}     {1}", len, totalLengthPixels));
                     }
                     else
