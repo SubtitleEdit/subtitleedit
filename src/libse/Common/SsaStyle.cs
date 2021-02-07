@@ -139,11 +139,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else if (f == "outline")
                 {
-                    sb.Append(Outline);
+                    sb.Append(ColorTranslator.ToWin32(Outline));
                 }
                 else if (f == "shadow")
                 {
-                    sb.Append(OutlineWidth);
+                    sb.Append(OutlineWidth.ToString(CultureInfo.InvariantCulture));
                 }
                 else if (f == "marginl")
                 {
@@ -246,11 +246,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else if (f == "outline")
                 {
-                    sb.Append(OutlineWidth);
+                    sb.Append(OutlineWidth.ToString(CultureInfo.InvariantCulture));
                 }
                 else if (f == "shadow")
                 {
-                    sb.Append(ShadowWidth);
+                    sb.Append(ShadowWidth.ToString(CultureInfo.InvariantCulture));
                 }
                 else if (f == "alignment")
                 {
