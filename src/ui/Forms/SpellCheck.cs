@@ -114,6 +114,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonGoogleIt.Text = LanguageSettings.Current.Main.VideoControls.GoogleIt;
             deleteToolStripMenuItem.Text = LanguageSettings.Current.General.DeleteCurrentLine;
             UiUtil.FixLargeFonts(this, buttonAbort);
+            richTextBoxParagraph.DetectUrls = false;
         }
 
         public void Initialize(string languageName, SpellCheckWord word, List<string> suggestions, string paragraph, string progress)

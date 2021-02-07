@@ -69,6 +69,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             buttonChangeAllWholeText.Text = LanguageSettings.Current.SpellCheck.ChangeAll;
             buttonGoogleIt.Text = LanguageSettings.Current.Main.VideoControls.GoogleIt;
             UiUtil.FixLargeFonts(this, buttonAddToNames);
+            richTextBoxParagraph.DetectUrls = false;
         }
 
         private void ButtonAbortClick(object sender, EventArgs e)
