@@ -15603,7 +15603,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyCode == Keys.A && e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift)) 
+            else if (e.KeyCode == Keys.A && e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift))
             {
                 if (GetCurrentSubtitleFormat().GetType() == typeof(AdvancedSubStationAlpha))
                 {
