@@ -16,7 +16,13 @@ namespace Nikse.SubtitleEdit.Logic
 
             using (var measureFont = new Font(Configuration.Settings.General.MeasureFontName, Configuration.Settings.General.MeasureFontSize, Configuration.Settings.General.MeasureFontBold ? FontStyle.Bold : FontStyle.Regular))
             {
-                return (int)Math.Round(TextRenderer.MeasureText(text, measureFont, Size.Empty, TextFormatFlags.NoPadding).Width * 0.969f /* Correction value to remove extra padding */) + 1 /* Border */;
+                /* TextRenderer.MeasureText adds padding, even when TextFormatFlags.NoPadding is set.
+                 * So, we'll calculate the length of 2x the text + padding, and substract the length of 1x the text + padding.
+                 * I.e. [ testtest ] - [ test ] = length of 'test' without padding. */
+                int measuredWidth = TextRenderer.MeasureText(text, measureFont, Size.Empty, TextFormatFlags.NoPadding).Width;
+                int measuredDoubleWidth = TextRenderer.MeasureText(text + text, measureFont, Size.Empty, TextFormatFlags.NoPadding).Width;
+
+                return measuredDoubleWidth - measuredWidth;
             }
         }
     }
