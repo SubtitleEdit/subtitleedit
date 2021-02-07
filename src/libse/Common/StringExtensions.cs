@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.Common
@@ -471,12 +470,13 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static string RemoveChar(this string value, params char[] charsToRemove)
         {
+            var h = new HashSet<char>(charsToRemove);
             char[] array = new char[value.Length];
             int arrayIndex = 0;
             for (int i = 0; i < value.Length; i++)
             {
                 char ch = value[i];
-                if (!charsToRemove.Contains(ch))
+                if (!h.Contains(ch))
                 {
                     array[arrayIndex++] = ch;
                 }
