@@ -94,6 +94,8 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _sourceViewChange;
         private int _changeSubtitleHash = -1;
         private int _changeOriginalSubtitleHash = -1;
+        private int _changeSubtitleTextHash = -1;
+        private Timer _liveSpellCheckTimer;
         private int _subtitleListViewIndex = -1;
         private Paragraph _oldSelectedParagraph;
         private bool _converted;
@@ -2241,10 +2243,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private bool IsSubtitleLoaded
-        {
-            get { return _subtitle != null && (_subtitle.Paragraphs.Count > 1 || (_subtitle.Paragraphs.Count == 1 && !string.IsNullOrWhiteSpace(_subtitle.Paragraphs[0].Text))); }
-        }
+        private bool IsSubtitleLoaded =>
+            _subtitle != null && (_subtitle.Paragraphs.Count > 1 || (_subtitle.Paragraphs.Count == 1 && !string.IsNullOrWhiteSpace(_subtitle.Paragraphs[0].Text)));
 
         private void ShowVisualSync(bool onlySelectedLines)
         {
@@ -4469,6 +4469,7 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle = new Subtitle(_subtitle.HistoryItems);
             _changeOriginalSubtitleHash = -1;
             _changeSubtitleHash = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
+            _changeSubtitleTextHash = -1;
             _subtitleOriginalFileName = null;
             textBoxSource.Text = string.Empty;
             SubtitleListview1.Items.Clear();
@@ -5160,6 +5161,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 textBoxListViewText.DisposeHunspellAndDictionaries();
             }
+
+            StartOrStopLiveSpellCheckTimer();
 
             textBoxListViewText.BackColor = !IsSubtitleLoaded ? SystemColors.ActiveBorder : SystemColors.WindowFrame;
             textBoxListViewTextOriginal.BackColor = !IsSubtitleLoaded ? SystemColors.ActiveBorder : SystemColors.WindowFrame;
@@ -7328,17 +7331,40 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void StartOrStopLiveSpellCheckTimer()
+        {
+            if (_liveSpellCheckTimer is null && IsLiveSpellCheckEnabled)
+            {
+                _liveSpellCheckTimer = new Timer { Interval = 2000 };
+                _liveSpellCheckTimer.Tick += LiveSpellCheckTimer_Tick;
+                _liveSpellCheckTimer.Start();
+            }
+            else
+            {
+                _liveSpellCheckTimer?.Dispose();
+            }
+        }
+
+        private async void LiveSpellCheckTimer_Tick(object sender, EventArgs e)
+        {
+            _liveSpellCheckTimer.Stop();
+            await InitializeLiveSpellChcek();
+            _liveSpellCheckTimer.Start();
+        }
+
         private async Task InitializeLiveSpellChcek()
         {
             if (IsSubtitleLoaded)
             {
-                if (textBoxListViewText.IsSpellCheckerInitialized || !textBoxListViewText.IsDictionaryDownloaded)
-                {
-                    await textBoxListViewText.CheckForLanguageChange(_subtitle);
-                }
-                else
+                var hash = _subtitle.GetFastHashCodeTextOnly();
+                if (!textBoxListViewText.IsSpellCheckerInitialized && textBoxListViewText.IsDictionaryDownloaded)
                 {
                     await textBoxListViewText.InitializeLiveSpellCheck(_subtitle, FirstSelectedIndex);
+                }
+                else if (_changeSubtitleTextHash != hash)
+                {
+                    await textBoxListViewText.CheckForLanguageChange(_subtitle);
+                    _changeSubtitleTextHash = hash;
                 }
 
                 if (textBoxListViewText.LanguageChanged)
@@ -19582,7 +19608,7 @@ namespace Nikse.SubtitleEdit.Forms
             GoBackSeconds(-60);
         }
 
-        private async void ShowSubtitleTimerTick(object sender, EventArgs e)
+        private void ShowSubtitleTimerTick(object sender, EventArgs e)
         {
             ShowSubtitleTimer.Stop();
 
@@ -19628,11 +19654,6 @@ namespace Nikse.SubtitleEdit.Forms
             else if (Text.Contains('*'))
             {
                 Text = Text.RemoveChar('*').TrimEnd();
-            }
-
-            if (IsLiveSpellCheckEnabled)
-            {
-                await InitializeLiveSpellChcek();
             }
 
             ShowSubtitleTimer.Start();
@@ -21272,6 +21293,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonToggleVideo_Click(null, null);
 
             StartOrStopAutoBackup();
+            StartOrStopLiveSpellCheckTimer();
 
             SetPositionFromXYString(Configuration.Settings.General.UndockedVideoPosition, "VideoPlayerUndocked");
             SetPositionFromXYString(Configuration.Settings.General.UndockedWaveformPosition, "WaveformUndocked");
@@ -22165,7 +22187,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string _lastWrittenAutoBackup = string.Empty;
         private bool _showAutoBackupError = true;
-
         private void TimerAutoBackupTick(object sender, EventArgs e)
         {
             string currentText = string.Empty;

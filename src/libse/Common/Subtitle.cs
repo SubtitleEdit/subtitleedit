@@ -789,6 +789,27 @@ namespace Nikse.SubtitleEdit.Core
                         hash = hash * 23 + p.Actor.GetHashCode();
                     }
                 }
+
+                return hash;
+            }
+        }
+
+        /// <summary>
+        /// Fast hash code for subtitle text.
+        /// </summary>
+        /// <returns>Hash value that can be used for quick text compare</returns>
+        public int GetFastHashCodeTextOnly()
+        {
+            unchecked // Overflow is fine, just wrap
+            {
+                int hash = 17;
+                var max = Paragraphs.Count;
+                for (int i = 0; i < max; i++)
+                {
+                    var p = Paragraphs[i];
+                    hash = hash * 23 + p.Text.GetHashCode();
+                }
+
                 return hash;
             }
         }
