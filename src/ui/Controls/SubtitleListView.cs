@@ -95,6 +95,17 @@ namespace Nikse.SubtitleEdit.Controls
         private bool _saveColumnWidthChanges;
         private Timer _setLastColumnWidthTimer;
 
+        public class SyntaxColorLineParamter
+        {
+            public List<Paragraph> Paragraphs { get; set; }
+            public int Index { get; set; }
+            public Paragraph Paragraph { get; set; }
+        }
+
+        private List<SyntaxColorLineParamter> _syntaxColorList = new List<SyntaxColorLineParamter>();
+        private object _syntaxColorListLock = new object();
+        private Timer _syntaxColorLineTimer = null;
+
         public int FirstVisibleIndex { get; set; } = -1;
 
         public void InitializeLanguage(LanguageStructure.General general, Settings settings)
@@ -370,6 +381,9 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 ShowGapColumn(LanguageSettings.Current.General.Gap);
             }
+
+            _syntaxColorLineTimer = new Timer() { Interval = 50 };
+            _syntaxColorLineTimer.Tick += SyntaxColorLineTimerTick;
 
             SubtitleListViewLastColumnFill(this, null);
 
@@ -1278,12 +1292,38 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        private void SyntaxColorLineTimerTick(object sender, EventArgs e)
+        {
+            var hashSet = new HashSet<int>();
+            lock (_syntaxColorListLock)
+            {
+                _syntaxColorLineTimer.Stop();
+                foreach (var item in _syntaxColorList)
+                {
+                    if (!hashSet.Contains(item.Index))
+                    {
+                        if (IsValidIndex(item.Index))
+                        {
+                            SyntaxColorListViewItem(item.Paragraphs, item.Index, item.Paragraph, Items[item.Index]);
+                        }
+                        hashSet.Add(item.Index);
+                    }
+                }
+            }
+        }
+
         public void SyntaxColorLine(List<Paragraph> paragraphs, int i, Paragraph paragraph)
         {
-            if (UseSyntaxColoring && _settings != null && IsValidIndex(i))
+            if (!UseSyntaxColoring || _settings == null)
             {
-                var item = Items[i];
-                SyntaxColorListViewItem(paragraphs, i, paragraph, item);
+                return;
+            }
+
+            lock (_syntaxColorListLock)
+            {
+                _syntaxColorList.Add(new SyntaxColorLineParamter { Index = i, Paragraphs = paragraphs, Paragraph = paragraph });
+                _syntaxColorLineTimer.Stop();
+                _syntaxColorLineTimer.Start();
             }
         }
 
