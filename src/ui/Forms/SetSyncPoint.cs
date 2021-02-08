@@ -258,7 +258,7 @@ namespace Nikse.SubtitleEdit.Forms
                 GoBackSeconds(-0.1, videoPlayerContainer1.VideoPlayer);
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyCode == UiUtil.HelpKeys)
+            else if (e.KeyData == UiUtil.HelpKeys)
             {
                 UiUtil.ShowHelp("#sync");
                 e.SuppressKeyPress = true;

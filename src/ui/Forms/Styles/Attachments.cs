@@ -513,7 +513,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void listViewAttachments_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == UiUtil.HelpKeys)
+            if (e.KeyData == UiUtil.HelpKeys)
             {
                 UiUtil.ShowHelp(null);
                 e.SuppressKeyPress = true;

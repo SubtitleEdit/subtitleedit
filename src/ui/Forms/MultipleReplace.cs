@@ -188,7 +188,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 buttonCancel_Click(null, null);
             }
-            else if (e.KeyCode == UiUtil.HelpKeys)
+            else if (e.KeyData == UiUtil.HelpKeys)
             {
                 UiUtil.ShowHelp("#multiple_replace");
             }

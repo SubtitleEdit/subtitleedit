@@ -54,7 +54,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Close();
             }
-            else if (e.KeyCode == UiUtil.HelpKeys)
+            else if (e.KeyData == UiUtil.HelpKeys)
             {
                 UiUtil.ShowHelp("#sync");
                 e.SuppressKeyPress = true;
