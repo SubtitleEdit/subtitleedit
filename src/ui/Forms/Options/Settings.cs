@@ -2007,7 +2007,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
             else if (e.KeyCode == UiUtil.HelpKeys)
             {
-                UiUtil.ShowHelp("#Settings");
+                UiUtil.ShowHelp("#settings");
                 e.SuppressKeyPress = true;
             }
         }
