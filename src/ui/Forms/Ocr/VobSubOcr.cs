@@ -6901,7 +6901,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void VobSubOcr_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == UiUtil.HelpKeys)
+            if (e.KeyData == UiUtil.HelpKeys)
             {
                 UiUtil.ShowHelp("#importvobsub");
                 e.SuppressKeyPress = true;
