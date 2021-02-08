@@ -104,7 +104,7 @@ namespace Nikse.SubtitleEdit.Forms.Networking
             {
                 DialogResult = DialogResult.Cancel;
             }
-            else if (e.KeyCode == UiUtil.HelpKeys)
+            else if (e.KeyData == UiUtil.HelpKeys)
             {
                 UiUtil.ShowHelp("#networking");
                 e.SuppressKeyPress = true;

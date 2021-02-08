@@ -629,7 +629,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 DialogResult = DialogResult.Cancel;
             }
-            else if (e.KeyCode == UiUtil.HelpKeys)
+            else if (e.KeyData == UiUtil.HelpKeys)
             {
                 UiUtil.ShowHelp("#visual_sync");
             }

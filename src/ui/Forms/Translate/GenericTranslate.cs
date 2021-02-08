@@ -475,7 +475,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _breakTranslation = true;
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyCode == UiUtil.HelpKeys)
+            else if (e.KeyData == UiUtil.HelpKeys)
             {
                 UiUtil.ShowHelp("#translation");
             }

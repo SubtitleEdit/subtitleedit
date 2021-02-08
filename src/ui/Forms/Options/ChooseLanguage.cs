@@ -132,7 +132,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             {
                 DialogResult = DialogResult.Cancel;
             }
-            else if (e.KeyCode == UiUtil.HelpKeys)
+            else if (e.KeyData == UiUtil.HelpKeys)
             {
                 UiUtil.ShowHelp("#translate");
                 e.SuppressKeyPress = true;
