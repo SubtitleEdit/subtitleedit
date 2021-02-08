@@ -4468,7 +4468,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.General.CurrentVideoOffsetInMs = 0;
             _subtitle = new Subtitle(_subtitle.HistoryItems);
             _changeOriginalSubtitleHash = -1;
-            _changeSubtitleHash = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
+            _changeSubtitleHash = -1;
             _changeSubtitleTextHash = -1;
             _subtitleOriginalFileName = null;
             textBoxSource.Text = string.Empty;
