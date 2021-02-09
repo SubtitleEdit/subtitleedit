@@ -54,6 +54,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.buttonExport = new System.Windows.Forms.Button();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.labelInfo = new System.Windows.Forms.Label();
+            this.textBoxInfo = new System.Windows.Forms.TextBox();
+            this.labelImageResizedToFit = new System.Windows.Forms.Label();
             this.contextMenuStripAttachments.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -267,11 +270,41 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.buttonExport.UseVisualStyleBackColor = true;
             this.buttonExport.Click += new System.EventHandler(this.buttonExport_Click);
             // 
+            // labelInfo
+            // 
+            this.labelInfo.AutoSize = true;
+            this.labelInfo.Location = new System.Drawing.Point(483, 19);
+            this.labelInfo.Name = "labelInfo";
+            this.labelInfo.Size = new System.Drawing.Size(47, 13);
+            this.labelInfo.TabIndex = 13;
+            this.labelInfo.Text = "labelInfo";
+            // 
+            // textBoxInfo
+            // 
+            this.textBoxInfo.Location = new System.Drawing.Point(537, 14);
+            this.textBoxInfo.Name = "textBoxInfo";
+            this.textBoxInfo.Size = new System.Drawing.Size(194, 20);
+            this.textBoxInfo.TabIndex = 14;
+            // 
+            // labelImageResizedToFit
+            // 
+            this.labelImageResizedToFit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelImageResizedToFit.AutoSize = true;
+            this.labelImageResizedToFit.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.labelImageResizedToFit.Location = new System.Drawing.Point(483, 460);
+            this.labelImageResizedToFit.Name = "labelImageResizedToFit";
+            this.labelImageResizedToFit.Size = new System.Drawing.Size(120, 13);
+            this.labelImageResizedToFit.TabIndex = 15;
+            this.labelImageResizedToFit.Text = "labelImageResizedToFit";
+            // 
             // Attachments
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(894, 495);
+            this.Controls.Add(this.labelImageResizedToFit);
+            this.Controls.Add(this.textBoxInfo);
+            this.Controls.Add(this.labelInfo);
             this.Controls.Add(this.buttonExport);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.buttonAttachGraphics);
@@ -291,6 +324,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.contextMenuStripAttachments.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -320,5 +354,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStorageExport;
         private System.Windows.Forms.Button buttonExport;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.Label labelInfo;
+        private System.Windows.Forms.TextBox textBoxInfo;
+        private System.Windows.Forms.Label labelImageResizedToFit;
     }
 }

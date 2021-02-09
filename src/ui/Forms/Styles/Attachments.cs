@@ -33,6 +33,12 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             InitializeComponent();
             UiUtil.FixFonts(this);
 
+            labelInfo.Visible = false;
+            textBoxInfo.Visible = false;
+            textBoxInfo.ReadOnly = true;
+            labelImageResizedToFit.Visible = false;
+            labelImageResizedToFit.Text = "Image resized to fit current window";
+
             _attachments = new List<AssaAttachment>();
             ListAttachments(source.SplitToLines());
             if (listViewAttachments.Items.Count > 0)
@@ -125,6 +131,10 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void listViewAttachments_SelectedIndexChanged(object sender, EventArgs e)
         {
+            labelInfo.Visible = false;
+            textBoxInfo.Visible = false;
+            labelImageResizedToFit.Visible = false;
+
             if (listViewAttachments.SelectedItems.Count == 0)
             {
                 pictureBox1.Image?.Dispose();
@@ -148,7 +158,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         public void ShowFont(byte[] fontBytes)
         {
-            if (pictureBox1.Width < 1 || pictureBox1.Height < 1)
+            if (pictureBox1.Width <= 1 || pictureBox1.Height <= 1)
             {
                 return;
             }
@@ -171,6 +181,12 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 return;
             }
 
+            labelInfo.Text = "Font name:";
+            textBoxInfo.Text = fontFamily.Name;
+            textBoxInfo.Left = labelInfo.Left + labelInfo.Width + 5;
+            labelInfo.Visible = true;
+            textBoxInfo.Visible = true;
+
             pictureBox1.Image?.Dispose();
             pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
             using (var font = new Font(fontFamily, 25, FontStyle.Regular))
@@ -188,6 +204,11 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         public void ShowImage(byte[] imageBytes, string fileName)
         {
+            if (pictureBox1.Width <= 1 || pictureBox1.Height <= 1)
+            {
+                return;
+            }
+
             var ext = Path.GetExtension(fileName).ToLowerInvariant();
 
             if (ext == ".ico")
@@ -196,11 +217,19 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 {
                     var icon = new Icon(ms);
                     pictureBox1.Image?.Dispose();
+                    pictureBox1.SizeMode = PictureBoxSizeMode.Normal;
                     pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
                     using (var G = Graphics.FromImage(pictureBox1.Image))
                     {
                         G.DrawIcon(icon, 12, 23);
                     }
+
+                    labelInfo.Text = "Icon name:";
+                    textBoxInfo.Text = fileName;
+                    textBoxInfo.Left = labelInfo.Left + labelInfo.Width + 5;
+                    labelInfo.Visible = true;
+                    textBoxInfo.Visible = true;
+                    icon.Dispose();
                 }
                 return;
             }
@@ -210,6 +239,23 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 var image = Image.FromStream(ms);
                 pictureBox1.Image?.Dispose();
                 pictureBox1.Image = image;
+
+                if (pictureBox1.Width > image.Width && pictureBox1.Height > image.Height)
+                {
+                    pictureBox1.SizeMode = PictureBoxSizeMode.Normal;
+                }
+                else
+                {
+                    pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+                    labelImageResizedToFit.Top = pictureBox1.Top + pictureBox1.Height + 5;
+                    labelImageResizedToFit.Visible = true;
+                }
+
+                labelInfo.Text = $"Image name ({image.Width}x{image.Height}):";
+                textBoxInfo.Text = fileName;
+                textBoxInfo.Left = labelInfo.Left + labelInfo.Width + 5;
+                labelInfo.Visible = true;
+                textBoxInfo.Visible = true;
             }
         }
 
@@ -585,6 +631,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void Attachments_ResizeEnd(object sender, EventArgs e)
         {
+            listViewAttachments_SelectedIndexChanged(null, null);
             listViewAttachments.Columns[listViewAttachments.Columns.Count - 1].Width = -2;
         }
 
