@@ -315,8 +315,9 @@ namespace Nikse.SubtitleEdit.Controls
                 && HtmlUtil.RemoveHtmlTags(_uiTextBoxOldText, true) == HtmlUtil.RemoveHtmlTags(Text, true))
             {
                 IsSpellCheckRequested = true;
-                _uiTextBoxOldText = Text;
             }
+
+            _uiTextBoxOldText = Text;
         }
 
         private void TextChangedHighlight(object sender, EventArgs e)
@@ -862,7 +863,7 @@ namespace Nikse.SubtitleEdit.Controls
             if (IsLiveSpellCheckEnabled && e.KeyCode == Keys.Apps && _wrongWords?.Count > 0)
             {
                 var cursorPos = SelectionStart;
-                var wrongWord = _wrongWords.Where(word => cursorPos > GetIndexWithLineBreak(word.Index) && cursorPos < GetIndexWithLineBreak(word.Index) + word.Length).FirstOrDefault();
+                var wrongWord = _wrongWords.Where(word => cursorPos > word.Index && cursorPos < word.Index + word.Length).FirstOrDefault();
                 if (wrongWord != null)
                 {
                     IsWrongWord = true;
@@ -879,14 +880,14 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (IsLiveSpellCheckEnabled)
             {
-                if (SplitChars.Contains(e.KeyChar) && SelectionStart == Text.Length || SelectionStart != Text.Length)
-                {
-                    IsSpellCheckRequested = true;
-                }
-                else if (e.KeyChar == '\b' && SelectionStart != Text.Length || e.KeyChar == '\r' || e.KeyChar == '\n')
+                if (e.KeyChar == '\b' && SelectionStart != Text.Length || e.KeyChar == '\r' || e.KeyChar == '\n')
                 {
                     IsSpellCheckRequested = true;
                     TextChangedHighlight(this, EventArgs.Empty);
+                }
+                else if (SplitChars.Contains(e.KeyChar) && SelectionStart == Text.Length || SelectionStart != Text.Length)
+                {
+                    IsSpellCheckRequested = true;
                 }
             }
         }
@@ -896,7 +897,7 @@ namespace Nikse.SubtitleEdit.Controls
             if (_wrongWords?.Count > 0 && e.Clicks == 1 && e.Button == MouseButtons.Right)
             {
                 int positionToSearch = GetCharIndexFromPosition(new Point(e.X, e.Y));
-                var wrongWord = _wrongWords.Where(word => positionToSearch > GetIndexWithLineBreak(word.Index) && positionToSearch < GetIndexWithLineBreak(word.Index) + word.Length).FirstOrDefault();
+                var wrongWord = _wrongWords.Where(word => positionToSearch > word.Index && positionToSearch < word.Index + word.Length).FirstOrDefault();
                 if (wrongWord != null)
                 {
                     IsWrongWord = true;
@@ -954,7 +955,7 @@ namespace Nikse.SubtitleEdit.Controls
             var correctWord = item.Text;
             var text = Text;
             var cursorPos = SelectionStart;
-            var wordIndex = GetIndexWithLineBreak(_currentWord.Index);
+            var wordIndex = _currentWord.Index;
             text = text.Remove(wordIndex, _currentWord.Length);
             text = text.Insert(wordIndex, correctWord);
             Text = text;
