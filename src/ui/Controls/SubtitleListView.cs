@@ -1310,7 +1310,10 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        public void SyntaxColorLine(List<Paragraph> paragraphs, int i, Paragraph paragraph)
+        /// <summary>
+        /// Can handle multiple events to same line - but not line adding/splitting.
+        /// </summary>
+        public void SyntaxColorLineBackground(List<Paragraph> paragraphs, int i, Paragraph paragraph)
         {
             if (!UseSyntaxColoring || _settings == null)
             {
@@ -1322,6 +1325,14 @@ namespace Nikse.SubtitleEdit.Controls
                 _syntaxColorList.Add(new SyntaxColorLineParamter { Index = i, Paragraphs = paragraphs, Paragraph = paragraph });
                 _syntaxColorLineTimer.Stop();
                 _syntaxColorLineTimer.Start();
+            }
+        }
+
+        public void SyntaxColorLine(List<Paragraph> paragraphs, int i, Paragraph paragraph)
+        {
+            if (UseSyntaxColoring && _settings != null && IsValidIndex(i))
+            {
+                SyntaxColorListViewItem(paragraphs, i, paragraph, Items[i]);
             }
         }
 
