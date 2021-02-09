@@ -1243,7 +1243,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _makeHistoryPaused = true;
 
                     MovePrevNext(e, beforeParagraph, index);
-                    SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, index, paragraph);
+                    SubtitleListview1.SyntaxColorLineBackground(_subtitle.Paragraphs, index, paragraph);
 
                     if (_subtitleOriginal != null)
                     {
@@ -16999,7 +16999,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, i, p);
+            SubtitleListview1.SyntaxColorLineBackground(_subtitle.Paragraphs, i, p);
         }
 
         private void MoveEndCurrent(int ms, bool keepGapNextIfClose)
@@ -17103,7 +17103,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, i, p);
+            SubtitleListview1.SyntaxColorLineBackground(_subtitle.Paragraphs, i, p);
         }
 
         private void ShowNextSubtitleLabel()
