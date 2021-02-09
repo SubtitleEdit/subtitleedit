@@ -382,7 +382,7 @@ namespace Nikse.SubtitleEdit.Controls
                 ShowGapColumn(LanguageSettings.Current.General.Gap);
             }
 
-            _syntaxColorLineTimer = new Timer() { Interval = 50 };
+            _syntaxColorLineTimer = new Timer { Interval = 50 };
             _syntaxColorLineTimer.Tick += SyntaxColorLineTimerTick;
 
             SubtitleListViewLastColumnFill(this, null);
@@ -397,14 +397,11 @@ namespace Nikse.SubtitleEdit.Controls
             DrawSubItem += SubtitleListView_DrawSubItem;
             DrawColumnHeader += SubtitleListView_DrawColumnHeader;
 
-            _setLastColumnWidthTimer = new Timer
-            {
-                Interval = 50
-            };
-            _setLastColumnWidthTimer.Tick += _setLastColumnWidthTimer_Tick;
+            _setLastColumnWidthTimer = new Timer { Interval = 50 };
+            _setLastColumnWidthTimer.Tick += SetLastColumnWidthTimer_Tick;
         }
 
-        private void _setLastColumnWidthTimer_Tick(object sender, EventArgs e)
+        private void SetLastColumnWidthTimer_Tick(object sender, EventArgs e)
         {
             _setLastColumnWidthTimer.Stop();
             if (Columns.Count > 0)
@@ -1298,8 +1295,9 @@ namespace Nikse.SubtitleEdit.Controls
             lock (_syntaxColorListLock)
             {
                 _syntaxColorLineTimer.Stop();
-                foreach (var item in _syntaxColorList)
+                for (int i = _syntaxColorList.Count - 1; i >= 0; i--)
                 {
+                    SyntaxColorLineParamter item = _syntaxColorList[i];
                     if (!hashSet.Contains(item.Index))
                     {
                         if (IsValidIndex(item.Index))
