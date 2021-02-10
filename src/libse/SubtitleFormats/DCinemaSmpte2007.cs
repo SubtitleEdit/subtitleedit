@@ -432,6 +432,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
                         }
                         textNode.InnerXml = html.ToString();
+                        if (html.Length == 0)
+                        {
+                            textNode.InnerText = " "; // We need to have at least a single space character on exporting empty subtitles, because otherwise I will get errors on import.ou need to have at least a single space character on exporting empty subtitles, otherwise we will get errors on import.
+                        }
 
                         subNode.AppendChild(textNode);
                         if (alignVTop)
