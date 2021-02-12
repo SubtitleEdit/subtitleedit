@@ -625,258 +625,261 @@ namespace Nikse.SubtitleEdit.Core.Common
             int italicBeginTagCount = Utilities.CountTagInText(text, beginTag);
             int italicEndTagCount = Utilities.CountTagInText(text, endTag);
             int noOfLines = Utilities.GetNumberOfLines(text);
-            if (italicBeginTagCount + italicEndTagCount > 0)
+            if (italicBeginTagCount + italicEndTagCount == 0)
             {
-                if (italicBeginTagCount == 1 && italicEndTagCount == 1 && text.IndexOf(beginTag, StringComparison.Ordinal) > text.IndexOf(endTag, StringComparison.Ordinal))
-                {
-                    const string pattern = "___________@";
-                    text = text.Replace(beginTag, pattern);
-                    text = text.Replace(endTag, beginTag);
-                    text = text.Replace(pattern, endTag);
-                }
+                return preTags + text;
+            }
 
-                if (italicBeginTagCount == 2 && italicEndTagCount == 0)
+            if (italicBeginTagCount == 1 && italicEndTagCount == 1 && text.IndexOf(beginTag, StringComparison.Ordinal) > text.IndexOf(endTag, StringComparison.Ordinal))
+            {
+                const string pattern = "___________@";
+                text = text.Replace(beginTag, pattern);
+                text = text.Replace(endTag, beginTag);
+                text = text.Replace(pattern, endTag);
+            }
+
+            if (italicBeginTagCount == 2 && italicEndTagCount == 0)
+            {
+                int firstIndex = text.IndexOf(beginTag, StringComparison.Ordinal);
+                int lastIndex = text.LastIndexOf(beginTag, StringComparison.Ordinal);
+                int lastIndexWithNewLine = text.LastIndexOf(Environment.NewLine + beginTag, StringComparison.Ordinal) + Environment.NewLine.Length;
+                if (noOfLines == 2 && lastIndex == lastIndexWithNewLine && firstIndex < 2)
                 {
-                    int firstIndex = text.IndexOf(beginTag, StringComparison.Ordinal);
+                    text = text.Replace(Environment.NewLine, endTag + Environment.NewLine) + endTag;
+                }
+                else
+                {
+                    text = text.Remove(lastIndex, beginTag.Length).Insert(lastIndex, endTag);
+                }
+            }
+
+            if (italicBeginTagCount == 1 && italicEndTagCount == 2)
+            {
+                int firstIndex = text.IndexOf(endTag, StringComparison.Ordinal);
+                if (text.StartsWith("</i>-<i>-", StringComparison.Ordinal) ||
+                    text.StartsWith("</i>- <i>-", StringComparison.Ordinal) ||
+                    text.StartsWith("</i>- <i> -", StringComparison.Ordinal) ||
+                    text.StartsWith("</i>-<i> -", StringComparison.Ordinal))
+                {
+                    text = text.Remove(0, 5);
+                }
+                else if (firstIndex == 0)
+                {
+                    text = text.Remove(0, 4);
+                }
+                else
+                {
+                    text = text.Substring(0, firstIndex) + text.Substring(firstIndex + endTag.Length);
+                }
+            }
+
+            if (italicBeginTagCount == 2 && italicEndTagCount == 1)
+            {
+                var lines = text.SplitToLines();
+                if (lines.Count == 2 && lines[0].StartsWith(beginTag, StringComparison.Ordinal) && lines[0].EndsWith(endTag, StringComparison.Ordinal) &&
+                    lines[1].StartsWith(beginTag, StringComparison.Ordinal))
+                {
+                    text = text.TrimEnd() + endTag;
+                }
+                else
+                {
                     int lastIndex = text.LastIndexOf(beginTag, StringComparison.Ordinal);
-                    int lastIndexWithNewLine = text.LastIndexOf(Environment.NewLine + beginTag, StringComparison.Ordinal) + Environment.NewLine.Length;
-                    if (noOfLines == 2 && lastIndex == lastIndexWithNewLine && firstIndex < 2)
+                    if (text.Length > lastIndex + endTag.Length)
                     {
-                        text = text.Replace(Environment.NewLine, endTag + Environment.NewLine) + endTag;
+                        text = text.Substring(0, lastIndex) + text.Substring(lastIndex - 1 + endTag.Length);
                     }
                     else
                     {
-                        text = text.Remove(lastIndex, beginTag.Length).Insert(lastIndex, endTag);
+                        text = text.Substring(0, lastIndex - 1) + endTag;
                     }
                 }
-
-                if (italicBeginTagCount == 1 && italicEndTagCount == 2)
+                if (text.StartsWith(beginTag, StringComparison.Ordinal) && text.EndsWith(endTag, StringComparison.Ordinal) && text.Contains(endTag + Environment.NewLine + beginTag))
                 {
-                    int firstIndex = text.IndexOf(endTag, StringComparison.Ordinal);
-                    if (text.StartsWith("</i>-<i>-", StringComparison.Ordinal) ||
-                        text.StartsWith("</i>- <i>-", StringComparison.Ordinal) ||
-                        text.StartsWith("</i>- <i> -", StringComparison.Ordinal) ||
-                        text.StartsWith("</i>-<i> -", StringComparison.Ordinal))
-                    {
-                        text = text.Remove(0, 5);
-                    }
-                    else if (firstIndex == 0)
-                    {
-                        text = text.Remove(0, 4);
-                    }
-                    else
-                    {
-                        text = text.Substring(0, firstIndex) + text.Substring(firstIndex + endTag.Length);
-                    }
+                    text = text.Replace(endTag + Environment.NewLine + beginTag, Environment.NewLine);
+                }
+            }
+
+            if (italicBeginTagCount == 1 && italicEndTagCount == 0)
+            {
+                int lastIndexWithNewLine = text.LastIndexOf(Environment.NewLine + beginTag, StringComparison.Ordinal) + Environment.NewLine.Length;
+                int lastIndex = text.LastIndexOf(beginTag, StringComparison.Ordinal);
+
+                if (text.StartsWith(beginTag, StringComparison.Ordinal))
+                {
+                    text += endTag;
+                }
+                else if (noOfLines == 2 && lastIndex == lastIndexWithNewLine)
+                {
+                    text += endTag;
+                }
+                else
+                {
+                    text = text.Replace(beginTag, string.Empty);
+                }
+            }
+
+            if (italicBeginTagCount == 0 && italicEndTagCount == 1)
+            {
+                var cleanText = RemoveOpenCloseTags(text, TagItalic, TagBold, TagUnderline, TagCyrillicI);
+                bool isFixed = false;
+
+                // Foo.</i>
+                if (text.EndsWith(endTag, StringComparison.Ordinal) && !cleanText.StartsWith('-') && !cleanText.Contains(Environment.NewLine + "-"))
+                {
+                    text = beginTag + text;
+                    isFixed = true;
                 }
 
-                if (italicBeginTagCount == 2 && italicEndTagCount == 1)
+                // - Foo</i> | - Foo.
+                // - Bar.    | - Foo.</i>
+                if (!isFixed && Utilities.GetNumberOfLines(cleanText) == 2)
                 {
-                    var lines = text.SplitToLines();
-                    if (lines.Count == 2 && lines[0].StartsWith(beginTag, StringComparison.Ordinal) && lines[0].EndsWith(endTag, StringComparison.Ordinal) &&
-                        lines[1].StartsWith(beginTag, StringComparison.Ordinal))
+                    int newLineIndex = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
+                    if (newLineIndex > 0)
                     {
-                        text = text.TrimEnd() + endTag;
-                    }
-                    else
-                    {
-                        int lastIndex = text.LastIndexOf(beginTag, StringComparison.Ordinal);
-                        if (text.Length > lastIndex + endTag.Length)
+                        var firstLine = text.Substring(0, newLineIndex).Trim();
+                        var secondLine = text.Substring(newLineIndex + 2).Trim();
+                        if (firstLine.EndsWith(endTag, StringComparison.Ordinal))
                         {
-                            text = text.Substring(0, lastIndex) + text.Substring(lastIndex - 1 + endTag.Length);
+                            firstLine = beginTag + firstLine;
+                            isFixed = true;
                         }
-                        else
+                        if (secondLine.EndsWith(endTag, StringComparison.Ordinal))
                         {
-                            text = text.Substring(0, lastIndex - 1) + endTag;
+                            secondLine = beginTag + secondLine;
+                            isFixed = true;
                         }
-                    }
-                    if (text.StartsWith(beginTag, StringComparison.Ordinal) && text.EndsWith(endTag, StringComparison.Ordinal) && text.Contains(endTag + Environment.NewLine + beginTag))
-                    {
-                        text = text.Replace(endTag + Environment.NewLine + beginTag, Environment.NewLine);
+                        text = firstLine + Environment.NewLine + secondLine;
                     }
                 }
-
-                if (italicBeginTagCount == 1 && italicEndTagCount == 0)
-                {
-                    int lastIndexWithNewLine = text.LastIndexOf(Environment.NewLine + beginTag, StringComparison.Ordinal) + Environment.NewLine.Length;
-                    int lastIndex = text.LastIndexOf(beginTag, StringComparison.Ordinal);
-
-                    if (text.StartsWith(beginTag, StringComparison.Ordinal))
-                    {
-                        text += endTag;
-                    }
-                    else if (noOfLines == 2 && lastIndex == lastIndexWithNewLine)
-                    {
-                        text += endTag;
-                    }
-                    else
-                    {
-                        text = text.Replace(beginTag, string.Empty);
-                    }
-                }
-
-                if (italicBeginTagCount == 0 && italicEndTagCount == 1)
-                {
-                    var cleanText = RemoveOpenCloseTags(text, TagItalic, TagBold, TagUnderline, TagCyrillicI);
-                    bool isFixed = false;
-
-                    // Foo.</i>
-                    if (text.EndsWith(endTag, StringComparison.Ordinal) && !cleanText.StartsWith('-') && !cleanText.Contains(Environment.NewLine + "-"))
-                    {
-                        text = beginTag + text;
-                        isFixed = true;
-                    }
-
-                    // - Foo</i> | - Foo.
-                    // - Bar.    | - Foo.</i>
-                    if (!isFixed && Utilities.GetNumberOfLines(cleanText) == 2)
-                    {
-                        int newLineIndex = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
-                        if (newLineIndex > 0)
-                        {
-                            var firstLine = text.Substring(0, newLineIndex).Trim();
-                            var secondLine = text.Substring(newLineIndex + 2).Trim();
-                            if (firstLine.EndsWith(endTag, StringComparison.Ordinal))
-                            {
-                                firstLine = beginTag + firstLine;
-                                isFixed = true;
-                            }
-                            if (secondLine.EndsWith(endTag, StringComparison.Ordinal))
-                            {
-                                secondLine = beginTag + secondLine;
-                                isFixed = true;
-                            }
-                            text = firstLine + Environment.NewLine + secondLine;
-                        }
-                    }
-                    if (!isFixed)
-                    {
-                        text = text.Replace(endTag, string.Empty);
-                    }
-                }
-
-                // - foo.</i>
-                // - bar.</i>
-                if (italicBeginTagCount == 0 && italicEndTagCount == 2 && text.Contains(endTag + Environment.NewLine, StringComparison.Ordinal) && text.EndsWith(endTag, StringComparison.Ordinal))
+                if (!isFixed)
                 {
                     text = text.Replace(endTag, string.Empty);
-                    text = beginTag + text + endTag;
                 }
+            }
 
-                if (italicBeginTagCount == 0 && italicEndTagCount == 2 && text.StartsWith(endTag, StringComparison.Ordinal) && text.EndsWith(endTag, StringComparison.Ordinal))
-                {
-                    int firstIndex = text.IndexOf(endTag, StringComparison.Ordinal);
-                    text = text.Remove(firstIndex, endTag.Length).Insert(firstIndex, beginTag);
-                }
+            // - foo.</i>
+            // - bar.</i>
+            if (italicBeginTagCount == 0 && italicEndTagCount == 2 && text.Contains(endTag + Environment.NewLine, StringComparison.Ordinal) && text.EndsWith(endTag, StringComparison.Ordinal))
+            {
+                text = text.Replace(endTag, string.Empty);
+                text = beginTag + text + endTag;
+            }
 
-                // <i>Foo</i>
-                // <i>Bar</i>
-                if (italicBeginTagCount == 2 && italicEndTagCount == 2 && noOfLines == 2)
+            if (italicBeginTagCount == 0 && italicEndTagCount == 2)
+            {
+                int firstIndex = text.IndexOf(endTag, StringComparison.Ordinal);
+                text = text.Remove(firstIndex, endTag.Length).Insert(firstIndex, beginTag);
+            }
+
+            // <i>Foo</i>
+            // <i>Bar</i>
+            if (italicBeginTagCount == 2 && italicEndTagCount == 2 && noOfLines == 2)
+            {
+                int index = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
+                if (index > 0 && text.Length > index + (beginTag.Length + endTag.Length))
                 {
-                    int index = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
-                    if (index > 0 && text.Length > index + (beginTag.Length + endTag.Length))
+                    var firstLine = text.Substring(0, index).Trim();
+                    var secondLine = text.Substring(index + Environment.NewLine.Length).Trim();
+
+                    if (firstLine.Length > 10 && firstLine.StartsWith("- <i>", StringComparison.Ordinal) && firstLine.EndsWith(endTag, StringComparison.Ordinal))
                     {
-                        var firstLine = text.Substring(0, index).Trim();
-                        var secondLine = text.Substring(index + Environment.NewLine.Length).Trim();
-
-                        if (firstLine.Length > 10 && firstLine.StartsWith("- <i>", StringComparison.Ordinal) && firstLine.EndsWith(endTag, StringComparison.Ordinal))
-                        {
-                            text = "<i>- " + firstLine.Remove(0, 5) + Environment.NewLine + secondLine;
-                            text = text.Replace("<i>-  ", "<i>- ");
-                            index = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
-                            firstLine = text.Substring(0, index).Trim();
-                            secondLine = text.Substring(index + Environment.NewLine.Length).Trim();
-                        }
-                        if (secondLine.Length > 10 && secondLine.StartsWith("- <i>", StringComparison.Ordinal) && secondLine.EndsWith(endTag, StringComparison.Ordinal))
-                        {
-                            text = firstLine + Environment.NewLine + "<i>- " + secondLine.Remove(0, 5);
-                            text = text.Replace("<i>-  ", "<i>- ");
-                            index = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
-                            firstLine = text.Substring(0, index).Trim();
-                            secondLine = text.Substring(index + Environment.NewLine.Length).Trim();
-                        }
-
-                        if (Utilities.StartsAndEndsWithTag(firstLine, beginTag, endTag) && Utilities.StartsAndEndsWithTag(secondLine, beginTag, endTag))
-                        {
-                            text = text.Replace(beginTag, string.Empty).Replace(endTag, string.Empty).Trim();
-                            text = beginTag + text + endTag;
-                        }
+                        text = "<i>- " + firstLine.Remove(0, 5) + Environment.NewLine + secondLine;
+                        text = text.Replace("<i>-  ", "<i>- ");
+                        index = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
+                        firstLine = text.Substring(0, index).Trim();
+                        secondLine = text.Substring(index + Environment.NewLine.Length).Trim();
+                    }
+                    if (secondLine.Length > 10 && secondLine.StartsWith("- <i>", StringComparison.Ordinal) && secondLine.EndsWith(endTag, StringComparison.Ordinal))
+                    {
+                        text = firstLine + Environment.NewLine + "<i>- " + secondLine.Remove(0, 5);
+                        text = text.Replace("<i>-  ", "<i>- ");
+                        index = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
+                        firstLine = text.Substring(0, index).Trim();
+                        secondLine = text.Substring(index + Environment.NewLine.Length).Trim();
                     }
 
-                    //FALCONE:<i> I didn't think</i><br /><i>it was going to be you,</i>
-                    var colIdx = text.IndexOf(':');
-                    if (colIdx >= 0 && Utilities.CountTagInText(text, beginTag) + Utilities.CountTagInText(text, endTag) == 4 && text.Length > colIdx + 1 && !char.IsDigit(text[colIdx + 1]))
+                    if (Utilities.StartsAndEndsWithTag(firstLine, beginTag, endTag) && Utilities.StartsAndEndsWithTag(secondLine, beginTag, endTag))
                     {
-                        var firstLine = text.Substring(0, index);
-                        var secondLine = text.Substring(index).TrimStart();
-
-                        var secIdxCol = secondLine.IndexOf(':');
-                        if (secIdxCol < 0 || !Utilities.IsBetweenNumbers(secondLine, secIdxCol))
-                        {
-                            var idx = firstLine.IndexOf(':');
-                            if (idx > 1)
-                            {
-                                var pre = text.Substring(0, idx + 1).TrimStart();
-                                text = text.Remove(0, idx + 1);
-                                text = FixInvalidItalicTags(text).Trim();
-                                if (text.StartsWith("<i> ", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    text = Utilities.RemoveSpaceBeforeAfterTag(text, beginTag);
-                                }
-
-                                text = pre + " " + text;
-                            }
-                        }
-                    }
-                }
-
-                //<i>- You think they're they gone?<i>
-                //<i>- That can't be.</i>
-                if (italicBeginTagCount == 3 && italicEndTagCount == 1 && noOfLines == 2)
-                {
-                    var newLineIdx = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
-                    var firstLine = text.Substring(0, newLineIdx).Trim();
-                    var secondLine = text.Substring(newLineIdx).Trim();
-
-                    if ((Utilities.StartsAndEndsWithTag(firstLine, beginTag, beginTag) && Utilities.StartsAndEndsWithTag(secondLine, beginTag, endTag)) ||
-                        (Utilities.StartsAndEndsWithTag(secondLine, beginTag, beginTag) && Utilities.StartsAndEndsWithTag(firstLine, beginTag, endTag)))
-                    {
-                        text = text.Replace(beginTag, string.Empty);
-                        text = text.Replace(endTag, string.Empty);
-                        text = text.Replace("  ", " ").Trim();
+                        text = text.Replace(beginTag, string.Empty).Replace(endTag, string.Empty).Trim();
                         text = beginTag + text + endTag;
                     }
                 }
 
-                if (noOfLines == 3)
+                //FALCONE:<i> I didn't think</i><br /><i>it was going to be you,</i>
+                var colIdx = text.IndexOf(':');
+                if (colIdx >= 0 && Utilities.CountTagInText(text, beginTag) + Utilities.CountTagInText(text, endTag) == 4 && text.Length > colIdx + 1 && !char.IsDigit(text[colIdx + 1]))
                 {
-                    var lines = text.SplitToLines();
-                    if ((italicBeginTagCount == 3 && italicEndTagCount == 2) || (italicBeginTagCount == 2 && italicEndTagCount == 3))
+                    var firstLine = text.Substring(0, index);
+                    var secondLine = text.Substring(index).TrimStart();
+
+                    var secIdxCol = secondLine.IndexOf(':');
+                    if (secIdxCol < 0 || !Utilities.IsBetweenNumbers(secondLine, secIdxCol))
                     {
-                        int numberOfItalics = 0;
-                        foreach (var line in lines)
+                        var idx = firstLine.IndexOf(':');
+                        if (idx > 1)
                         {
-                            if (line.StartsWith(beginTag, StringComparison.Ordinal))
+                            var pre = text.Substring(0, idx + 1).TrimStart();
+                            text = text.Remove(0, idx + 1);
+                            text = FixInvalidItalicTags(text).Trim();
+                            if (text.StartsWith("<i> ", StringComparison.OrdinalIgnoreCase))
                             {
-                                numberOfItalics++;
+                                text = Utilities.RemoveSpaceBeforeAfterTag(text, beginTag);
                             }
 
-                            if (line.EndsWith(endTag, StringComparison.Ordinal))
-                            {
-                                numberOfItalics++;
-                            }
-                        }
-                        if (numberOfItalics == 5)
-                        { // fix missing tag
-                            text = "<i>" + text.Replace("<i>", string.Empty).Replace("</i>", string.Empty) + "</i>";
+                            text = pre + " " + text;
                         }
                     }
                 }
-
-                text = text.Replace("<i></i>", string.Empty);
-                text = text.Replace("<i> </i>", string.Empty);
-                text = text.Replace("<i>  </i>", string.Empty);
             }
+
+            //<i>- You think they're they gone?<i>
+            //<i>- That can't be.</i>
+            if (italicBeginTagCount == 3 && italicEndTagCount == 1 && noOfLines == 2)
+            {
+                var newLineIdx = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
+                var firstLine = text.Substring(0, newLineIdx).Trim();
+                var secondLine = text.Substring(newLineIdx).Trim();
+
+                if ((Utilities.StartsAndEndsWithTag(firstLine, beginTag, beginTag) && Utilities.StartsAndEndsWithTag(secondLine, beginTag, endTag)) ||
+                    (Utilities.StartsAndEndsWithTag(secondLine, beginTag, beginTag) && Utilities.StartsAndEndsWithTag(firstLine, beginTag, endTag)))
+                {
+                    text = text.Replace(beginTag, string.Empty);
+                    text = text.Replace(endTag, string.Empty);
+                    text = text.Replace("  ", " ").Trim();
+                    text = beginTag + text + endTag;
+                }
+            }
+
+            if (noOfLines == 3)
+            {
+                var lines = text.SplitToLines();
+                if ((italicBeginTagCount == 3 && italicEndTagCount == 2) || (italicBeginTagCount == 2 && italicEndTagCount == 3))
+                {
+                    int numberOfItalics = 0;
+                    foreach (var line in lines)
+                    {
+                        if (line.StartsWith(beginTag, StringComparison.Ordinal))
+                        {
+                            numberOfItalics++;
+                        }
+
+                        if (line.EndsWith(endTag, StringComparison.Ordinal))
+                        {
+                            numberOfItalics++;
+                        }
+                    }
+                    if (numberOfItalics == 5)
+                    { // fix missing tag
+                        text = "<i>" + text.Replace("<i>", string.Empty).Replace("</i>", string.Empty) + "</i>";
+                    }
+                }
+            }
+
+            text = text.Replace("<i></i>", string.Empty);
+            text = text.Replace("<i> </i>", string.Empty);
+            text = text.Replace("<i>  </i>", string.Empty);
+
             return preTags + text;
         }
 
