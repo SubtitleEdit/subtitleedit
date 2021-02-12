@@ -54,6 +54,7 @@ namespace Nikse.SubtitleEdit.Forms
             richTextBoxAbout1.Text = aboutText;
 
             SetHeight();
+            pictureBoxSE.Image = Properties.Resources.SubtitleEditFormIcon.ToBitmap();
         }
 
         private void SetHeight()
