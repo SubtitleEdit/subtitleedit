@@ -53,6 +53,7 @@
    * Add FCP xml 1.9 - thx Dvid
    * Allow blank lines in DCinema - thx Axel
    * Autodetect encoding in .mxf files - thx Markus
+   * Netflix quality check improved - thx OmrSi/Flitskikker
 * FIXED:
    * Fix frame rate bug in FCP+image - thx Christopher
    * Fix issues with ismt format - thx Bersu
@@ -76,7 +77,7 @@
    * Fix case-change issue in nOcr - thx Janusz
    * Fix reading SCC with uppercase hex codes - thx Mike
    * Fix DCinema SMPTE line ordering - thx user024
-   * Fix laggy Dragging Issue with Syntax Coloring - thx LeonCheung
+   * Fix laggy waveform when dragging sub w syntax error - thx LeonCheung
 
 
 3.5.18 (9th November 2020)
