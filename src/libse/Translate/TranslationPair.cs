@@ -35,9 +35,8 @@ namespace Nikse.SubtitleEdit.Core.Translate
 
         public bool Equals(TranslationPair other)
         {
-            return this.Code.Equals(other.Code);
+            return Code.Equals(other.Code);
         }
-
 
         public override int GetHashCode()
         {
