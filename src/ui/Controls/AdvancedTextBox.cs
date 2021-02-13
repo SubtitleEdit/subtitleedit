@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Controls
         private bool _checkRtfChange = true;
         private int _mouseMoveSelectionLength;
 
-        private bool IsLiveSpellCheckEnabled => Configuration.Settings.Tools.LiveSpellCheck;
+        private bool IsLiveSpellCheckEnabled => Configuration.Settings.Tools.LiveSpellCheck && Parent?.Name == "textBoxListViewText";
         private Hunspell _hunspell;
         private SpellCheckWordLists _spellCheckWordLists;
         private List<SpellCheckWord> _words;
@@ -66,14 +66,12 @@ namespace Nikse.SubtitleEdit.Controls
 
             SetTextPosInRtbIfCentered();
 
-            TextChanged += TextChangedHighlight;
-            if (IsLiveSpellCheckEnabled)
-            {
-                KeyPress += UiTextBox_KeyPress;
-                KeyDown += UiTextBox_KeyDown;
-                MouseDown += UiTextBox_MouseDown;
-            }
+            // Live spell check events.
+            KeyPress += UiTextBox_KeyPress;
+            KeyDown += UiTextBox_KeyDown;
+            MouseDown += UiTextBox_MouseDown;
 
+            TextChanged += TextChangedHighlight;
             HandleCreated += (sender, args) =>
             {
                 SetTextPosInRtbIfCentered();
@@ -622,10 +620,8 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private async Task LoadDictionariesAsync(string languageName)
-        {
+        private async Task LoadDictionariesAsync(string languageName) =>
             await Task.Run(() => LoadDictionaries(languageName));
-        }
 
         private void LoadDictionaries(string languageName)
         {
@@ -894,10 +890,10 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void UiTextBox_MouseDown(object sender, MouseEventArgs e)
         {
-            if (_wrongWords?.Count > 0 && e.Clicks == 1 && e.Button == MouseButtons.Right)
+            if (IsLiveSpellCheckEnabled && _wrongWords?.Count > 0 && e.Clicks == 1 && e.Button == MouseButtons.Right)
             {
                 int positionToSearch = GetCharIndexFromPosition(new Point(e.X, e.Y));
-                var wrongWord = _wrongWords.Where(word => positionToSearch > word.Index && positionToSearch < word.Index + word.Length).FirstOrDefault();
+                var wrongWord = _wrongWords.Where(word => positionToSearch > GetIndexWithLineBreak(word.Index) && positionToSearch < GetIndexWithLineBreak(word.Index) + word.Length).FirstOrDefault();
                 if (wrongWord != null)
                 {
                     IsWrongWord = true;

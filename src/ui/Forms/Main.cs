@@ -7333,15 +7333,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void StartOrStopLiveSpellCheckTimer()
         {
-            if (_liveSpellCheckTimer is null && IsLiveSpellCheckEnabled)
+            _liveSpellCheckTimer?.Dispose();
+            if (IsLiveSpellCheckEnabled)
             {
                 _liveSpellCheckTimer = new Timer { Interval = 2000 };
                 _liveSpellCheckTimer.Tick += LiveSpellCheckTimer_Tick;
                 _liveSpellCheckTimer.Start();
-            }
-            else
-            {
-                _liveSpellCheckTimer?.Dispose();
             }
         }
 
@@ -25157,19 +25154,23 @@ namespace Nikse.SubtitleEdit.Forms
             var tb = GetFocusedTextBox();
             toolStripMenuItemSplitTextAtCursor.Visible = tb.Text.Length > 1;
 
-            if (IsLiveSpellCheckEnabled && textBoxListViewText.IsWrongWord && InListView)
+            if (IsLiveSpellCheckEnabled && InListView)
             {
-                var oldItems = new ToolStripItem[contextMenuStripTextBoxListView.Items.Count];
-                contextMenuStripTextBoxListView.Items.CopyTo(oldItems, 0);
-                contextMenuStripTextBoxListView.Items.Clear();
-                tb.AddSuggestionsToMenu();
-                contextMenuStripTextBoxListView.Items.AddRange(oldItems);
-                toolStripSeparatorSpellCheckSuggestions.Visible = true;
-                toolStripMenuItemSpellCheckSkipOnce.Visible = true;
-                toolStripMenuItemSpellCheckSkipAll.Visible = true;
-                toolStripMenuItemSpellCheckAddToDictionary.Visible = true;
-                toolStripMenuItemSpellCheckAddToNames.Visible = true;
-                toolStripSeparatorSpellCheck.Visible = true;
+                var sourceTextBox = ((ContextMenuStrip)sender).SourceControl.Parent;
+                if (sourceTextBox == textBoxListViewText && textBoxListViewText.IsWrongWord)
+                {
+                    var oldItems = new ToolStripItem[contextMenuStripTextBoxListView.Items.Count];
+                    contextMenuStripTextBoxListView.Items.CopyTo(oldItems, 0);
+                    contextMenuStripTextBoxListView.Items.Clear();
+                    tb.AddSuggestionsToMenu();
+                    contextMenuStripTextBoxListView.Items.AddRange(oldItems);
+                    toolStripSeparatorSpellCheckSuggestions.Visible = true;
+                    toolStripMenuItemSpellCheckSkipOnce.Visible = true;
+                    toolStripMenuItemSpellCheckSkipAll.Visible = true;
+                    toolStripMenuItemSpellCheckAddToDictionary.Visible = true;
+                    toolStripMenuItemSpellCheckAddToNames.Visible = true;
+                    toolStripSeparatorSpellCheck.Visible = true;
+                }
             }
 
             if (IsUnicode)
