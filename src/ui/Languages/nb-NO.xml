@@ -1480,8 +1480,8 @@ Hvis du har redigert denne filen i Subtitle Edit, kan du kanskje finne en backup
     <EndsWith>Slutter med</EndsWith>
     <NoContains>Inneholder ikke</NoContains>
     <RegEx>Vanlige uttrykk</RegEx>
-    <UnequalLines>Linjer med oddetall</UnequalLines>
-    <EqualLines>Linjer med partall</EqualLines>
+    <OddLines>Linjer med oddetall</OddLines>
+    <EvenLines>Linjer med partall</EvenLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Erstatt flere</Title>

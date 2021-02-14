@@ -1473,8 +1473,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <EndsWith>Закінчується на</EndsWith>
     <NoContains>Не містить</NoContains>
     <RegEx>Регулярний вираз</RegEx>
-    <UnequalLines>Непарні рядки</UnequalLines>
-    <EqualLines>Парні рядки</EqualLines>
+    <OddLines>Непарні рядки</OddLines>
+    <EvenLines>Парні рядки</EvenLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Множинна заміна</Title>

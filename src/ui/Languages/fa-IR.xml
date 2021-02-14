@@ -1571,8 +1571,8 @@ Continue anyway?</PromptInsertSubtitleOverlap>
     <EndsWith>پایان با</EndsWith>
     <NoContains>شامل نیست</NoContains>
     <RegEx>عبارات منظم</RegEx>
-    <UnequalLines>خطوط با شماره فرد</UnequalLines>
-    <EqualLines>خطوط با شماره زوج</EqualLines>
+    <OddLines>خطوط با شماره فرد</OddLines>
+    <EvenLines>خطوط با شماره زوج</EvenLines>
     <DurationLessThan>Duration less than</DurationLessThan>
     <DurationGreaterThan>Duration greater than</DurationGreaterThan>
   </ModifySelection>

@@ -1742,8 +1742,8 @@ Hvis du har redigeret denne fil med Subtitle Edit du måske finde en backup via 
     <EndsWith>Ender med</EndsWith>
     <NoContains>Indeholder ikke</NoContains>
     <RegEx>Regulært udtryk</RegEx>
-    <UnequalLines>Ulige linjer</UnequalLines>
-    <EqualLines>Lige linjer</EqualLines>
+    <OddLines>Ulige linjer</OddLines>
+    <EvenLines>Lige linjer</EvenLines>
     <DurationLessThan>Varighed mindre end</DurationLessThan>
     <DurationGreaterThan>Varighed større end</DurationGreaterThan>
     <MoreThanTwoLines>Mere end to linjer</MoreThanTwoLines>

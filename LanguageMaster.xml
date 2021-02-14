@@ -1752,8 +1752,8 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <EndsWith>Ends with</EndsWith>
     <NoContains>Not contains</NoContains>
     <RegEx>Regular expression</RegEx>
-    <UnequalLines>Odd-numbered lines</UnequalLines>
-    <EqualLines>Even-numbered lines</EqualLines>
+    <OddLines>Odd-numbered lines</OddLines>
+    <EvenLines>Even-numbered lines</EvenLines>
     <DurationLessThan>Duration less than</DurationLessThan>
     <DurationGreaterThan>Duration greater than</DurationGreaterThan>
     <MoreThanTwoLines>More than two lines</MoreThanTwoLines>

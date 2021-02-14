@@ -1616,8 +1616,8 @@ Indien u dit bestand met Subtitle Edit hebt bewerkt, kunt u een vorige versie vi
     <EndsWith>Eindigt met</EndsWith>
     <NoContains>Bevat niet</NoContains>
     <RegEx>Reguliere expressie</RegEx>
-    <UnequalLines>Oneven regelnummers</UnequalLines>
-    <EqualLines>Even regelnummers</EqualLines>
+    <OddLines>Oneven regelnummers</OddLines>
+    <EvenLines>Even regelnummers</EvenLines>
     <DurationLessThan>Tĳdsduur korter dan</DurationLessThan>
     <DurationGreaterThan>Tĳdsduur langer dan</DurationGreaterThan>
   </ModifySelection>

@@ -1613,8 +1613,8 @@ Dacă ai de editat acest fișier cu S.E. poți descoperi un backup realizat prin
     <EndsWith>Oprește cu</EndsWith>
     <NoContains>Niciun conținut</NoContains>
     <RegEx>Expresie uzuală</RegEx>
-    <UnequalLines>Linii neechivalente</UnequalLines>
-    <EqualLines>Linii echivalente</EqualLines>
+    <OddLines>Linii neechivalente</OddLines>
+    <EvenLines>Linii echivalente</EvenLines>
     <DurationLessThan>Durată mai mică de</DurationLessThan>
     <DurationGreaterThan>Durata mai mare de</DurationGreaterThan>
     <MoreThanTwoLines>Mai mult de două linii</MoreThanTwoLines>

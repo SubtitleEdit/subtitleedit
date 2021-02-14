@@ -1637,8 +1637,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <EndsWith>Заканчивается на</EndsWith>
     <NoContains>Не содержит</NoContains>
     <RegEx>Регулярные выражения</RegEx>
-    <UnequalLines>Неравные строки</UnequalLines>
-    <EqualLines>Равные строки</EqualLines>
+    <OddLines>Неравные строки</OddLines>
+    <EvenLines>Равные строки</EvenLines>
     <DurationLessThan>Продолжите-ность меньше</DurationLessThan>
     <DurationGreaterThan>Продолжите-ность больше</DurationGreaterThan>
     <MoreThanTwoLines>Более двух строк</MoreThanTwoLines>

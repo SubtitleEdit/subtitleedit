@@ -1707,8 +1707,8 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <EndsWith>Päättyen</EndsWith>
     <NoContains>Ei sisällä</NoContains>
     <RegEx>Säännöllinen lauseke (RegExp)</RegEx>
-    <UnequalLines>Erilaiset rivit</UnequalLines>
-    <EqualLines>Samanlaiset rivit</EqualLines>
+    <OddLines>Erilaiset rivit</OddLines>
+    <EvenLines>Samanlaiset rivit</EvenLines>
     <DurationLessThan>Kesto alle</DurationLessThan>
     <DurationGreaterThan>Kesto yli</DurationGreaterThan>
     <MoreThanTwoLines>Enemmän kuin kaksi riviä</MoreThanTwoLines>
