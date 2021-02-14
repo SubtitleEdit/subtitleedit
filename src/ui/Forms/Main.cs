@@ -316,7 +316,7 @@ namespace Nikse.SubtitleEdit.Forms
                 UiUtil.PreInitialize(this);
                 InitializeComponent();
 
-                Icon = Properties.Resources.SubtitleEditFormIcon;
+                Icon = Properties.Resources.SEIcon;
 
                 textBoxListViewTextOriginal.Visible = false;
                 labelOriginalText.Visible = false;

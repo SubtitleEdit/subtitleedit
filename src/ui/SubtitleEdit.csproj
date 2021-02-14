@@ -4,7 +4,7 @@
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <ApplicationIcon>Icons\SE.ico</ApplicationIcon>
+    <ApplicationIcon>SE.ico</ApplicationIcon>
     <AssemblyName>SubtitleEdit</AssemblyName>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -1749,6 +1749,8 @@
   <ItemGroup>
     <Content Include="DLLs\Voikkox64.dll" />
     <Content Include="DLLs\Voikkox86.dll" />
+    <None Include="Resources\SE.ico" />
+    <Content Include="SE.ico" />
     <None Include="Hunspellx64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

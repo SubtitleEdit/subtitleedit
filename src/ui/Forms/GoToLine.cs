@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            Icon = Properties.Resources.SubtitleEditFormIcon;
+            Icon = Properties.Resources.SEIcon;
             Text = LanguageSettings.Current.GoToLine.Title;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
