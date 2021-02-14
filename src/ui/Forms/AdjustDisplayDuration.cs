@@ -50,7 +50,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            Icon = Properties.Resources.SubtitleEditFormIcon;
+            Icon = Properties.Resources.SEIcon;
 
             numericUpDownSeconds.Enabled = false;
             numericUpDownPercent.Enabled = false;
