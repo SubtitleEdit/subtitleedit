@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SpellCheck;
+using Nikse.SubtitleEdit.Forms;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.SpellCheck;
 using System;
@@ -23,7 +24,7 @@ namespace Nikse.SubtitleEdit.Controls
         private bool _checkRtfChange = true;
         private int _mouseMoveSelectionLength;
 
-        private bool IsLiveSpellCheckEnabled => Configuration.Settings.Tools.LiveSpellCheck && Parent?.Name == "textBoxListViewText";
+        private bool IsLiveSpellCheckEnabled => Configuration.Settings.Tools.LiveSpellCheck && Parent?.Name == Main.MainTextBox;
         private Hunspell _hunspell;
         private SpellCheckWordLists _spellCheckWordLists;
         private List<SpellCheckWord> _words;

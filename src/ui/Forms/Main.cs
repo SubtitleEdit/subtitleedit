@@ -51,6 +51,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        public static string MainTextBox => nameof(textBoxListViewText);
+
         private Control ListView => splitContainerListViewAndText;
         private Control SourceView => textBoxSource;
         private bool InListView => !textBoxSource.Visible;
