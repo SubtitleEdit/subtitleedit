@@ -29021,6 +29021,7 @@ namespace Nikse.SubtitleEdit.Forms
             menuItem.Click += (sender2, e2) => { ClearBookmarks(); };
             _bookmarkContextMenu.Items.Add(menuItem);
 
+            UiUtil.FixFonts(_bookmarkContextMenu);
             pictureBoxBookmark.ContextMenuStrip = _bookmarkContextMenu;
         }
 
