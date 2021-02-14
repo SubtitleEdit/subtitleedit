@@ -637,65 +637,20 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        public async Task CheckForLanguageChange(Subtitle subtitle)
-        {
-            if (_uiTextBox is null)
-            {
-                return;
-            }
+        public async Task CheckForLanguageChange(Subtitle subtitle) =>
+            await _uiTextBox?.CheckForLanguageChange(subtitle);
 
-            await _uiTextBox.CheckForLanguageChange(subtitle);
-        }
+        public async Task InitializeLiveSpellCheck(Subtitle subtitle, int lineNumber) =>
+            await _uiTextBox?.InitializeLiveSpellCheck(subtitle, lineNumber);
 
-        public async Task InitializeLiveSpellCheck(Subtitle subtitle, int lineNumber)
-        {
-            if (_uiTextBox is null)
-            {
-                return;
-            }
+        public void DisposeHunspellAndDictionaries() =>
+            _uiTextBox?.DisposeHunspellAndDictionaries();
 
-            await _uiTextBox.InitializeLiveSpellCheck(subtitle, lineNumber);
-        }
+        public void AddSuggestionsToMenu() =>
+            _uiTextBox?.AddSuggestionsToMenu();
 
-        public void DisposeHunspellAndDictionaries()
-        {
-            if (_uiTextBox is null)
-            {
-                return;
-            }
-
-            _uiTextBox.DisposeHunspellAndDictionaries();
-        }
-
-        public void DoLiveSpellCheck()
-        {
-            if (_uiTextBox is null)
-            {
-                return;
-            }
-
-            _uiTextBox.DoLiveSpellCheck();
-        }
-
-        public void AddSuggestionsToMenu()
-        {
-            if (_uiTextBox is null)
-            {
-                return;
-            }
-
-            _uiTextBox.AddSuggestionsToMenu();
-        }
-
-        public void DoAction(SpellCheckAction action)
-        {
-            if (_uiTextBox is null)
-            {
-                return;
-            }
-
-            _uiTextBox.DoAction(action);
-        }
+        public void DoAction(SpellCheckAction action) =>
+            _uiTextBox?.DoAction(action);
 
         #endregion
     }
