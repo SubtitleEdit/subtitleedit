@@ -259,7 +259,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void JoinSubtitles_Resize(object sender, EventArgs e)
         {
-            JoinSubtitles_Resize(this, EventArgs.Empty);
+            columnHeaderFileName.Width = -2;
         }
 
         private void ButtonAddSubtitleClick(object sender, EventArgs e)
