@@ -1894,6 +1894,7 @@
             public string DurationLessThan { get; set; }
             public string DurationGreaterThan { get; set; }
             public string MoreThanTwoLines { get; set; }
+            public string Bookmarked { get; set; }
         }
 
         public class MultipleReplace
