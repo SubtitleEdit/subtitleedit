@@ -1736,8 +1736,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <EndsWith>Завършващи с</EndsWith>
     <NoContains>Не съдържащи</NoContains>
     <RegEx>С правилен израз</RegEx>
-    <UnequalLines>С различни редове</UnequalLines>
-    <EqualLines>С еднакви редове</EqualLines>
+    <OddLines>С различни редове</OddLines>
+    <EvenLines>С еднакви редове</EvenLines>
     <DurationLessThan>Продължителност по-малка от</DurationLessThan>
     <DurationGreaterThan>Продължителност по-голяма от</DurationGreaterThan>
     <MoreThanTwoLines>Повече от два реда</MoreThanTwoLines>

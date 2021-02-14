@@ -1578,8 +1578,8 @@ Ako je datoteka uređivana Subtitle Editom, mogli biste da pronađete njenu sigu
     <EndsWith>Završava sa</EndsWith>
     <NoContains>Ne sadrži</NoContains>
     <RegEx>Regularni izraz</RegEx>
-    <UnequalLines>Neparne linije</UnequalLines>
-    <EqualLines>Parne linije</EqualLines>
+    <OddLines>Neparne linije</OddLines>
+    <EvenLines>Parne linije</EvenLines>
     <DurationLessThan>Trajanje manje od</DurationLessThan>
     <DurationGreaterThan>Trajanje veće od</DurationGreaterThan>
   </ModifySelection>

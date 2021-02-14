@@ -1745,8 +1745,8 @@ Eğer Subtitle Edit ile bu dosyayı düzenlediyseniz, menü öğesi dosyası üz
     <EndsWith>Bununla bitir</EndsWith>
     <NoContains>İçerik yok</NoContains>
     <RegEx>Düzenli ifadeler</RegEx>
-    <UnequalLines>Tek sayılı satırlar</UnequalLines>
-    <EqualLines>Çift sayılı satırlar</EqualLines>
+    <OddLines>Tek sayılı satırlar</OddLines>
+    <EvenLines>Çift sayılı satırlar</EvenLines>
     <DurationLessThan>Daha kısa süre</DurationLessThan>
     <DurationGreaterThan>Daha uzun süre</DurationGreaterThan>
     <MoreThanTwoLines>İkiden fazla satır</MoreThanTwoLines>

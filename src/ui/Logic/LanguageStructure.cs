@@ -1889,8 +1889,8 @@
             public string EndsWith { get; set; }
             public string NoContains { get; set; }
             public string RegEx { get; set; }
-            public string UnequalLines { get; set; }
-            public string EqualLines { get; set; }
+            public string OddLines { get; set; }
+            public string EvenLines { get; set; }
             public string DurationLessThan { get; set; }
             public string DurationGreaterThan { get; set; }
             public string MoreThanTwoLines { get; set; }

@@ -1563,8 +1563,8 @@ Pokud jste upravili tento soubor v Subtitle Edit, možná budete moci najít zá
     <EndsWith>Končí</EndsWith>
     <NoContains>Neobsahuje</NoContains>
     <RegEx>Regulární výraz</RegEx>
-    <UnequalLines>Řádky s lichými čísly</UnequalLines>
-    <EqualLines>Řádky se sudými čísly</EqualLines>
+    <OddLines>Řádky s lichými čísly</OddLines>
+    <EvenLines>Řádky se sudými čísly</EvenLines>
     <DurationLessThan>Trvání menší než</DurationLessThan>
     <DurationGreaterThan>Trvání větší než</DurationGreaterThan>
   </ModifySelection>

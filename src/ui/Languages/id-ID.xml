@@ -1540,8 +1540,8 @@ Bila Anda telah mengedit file ini dgn Subtitle Edit Anda bisa menemukan cadangan
     <EndsWith>Diakhiri dgn</EndsWith>
     <NoContains>Tidak berisi</NoContains>
     <RegEx>Ekspresi reguler</RegEx>
-    <UnequalLines>Baris bernomor ganjil</UnequalLines>
-    <EqualLines>Baris bernomor genap</EqualLines>
+    <OddLines>Baris bernomor ganjil</OddLines>
+    <EvenLines>Baris bernomor genap</EvenLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Ganti banyak</Title>
