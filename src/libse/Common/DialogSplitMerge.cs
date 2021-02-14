@@ -192,7 +192,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             var lines = input.SplitToLines();
             if (!IsDialog(lines, p, prev))
             {
-                return p.Text;
+                return input;
             }
 
             var isDialogThreeLinesTwoOne = lines.Count == 3 && IsDialogThreeLinesTwoOne(lines[0], lines[1], lines[2]);

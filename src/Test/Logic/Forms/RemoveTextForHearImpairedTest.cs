@@ -634,6 +634,22 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
+        public void RemoveColonOnlyOnSeparateLineDoRemove()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = true;
+            target.Settings.ColonSeparateLine = false;
+            const string text = "MICHAEL: How are you?";
+            const string expected = "How are you?";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
         public void RemoveLineIfAllUppercase1()
         {
             var target = GetRemoveTextForHiLib();
