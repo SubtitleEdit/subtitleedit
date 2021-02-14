@@ -1757,6 +1757,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <DurationLessThan>Duration less than</DurationLessThan>
     <DurationGreaterThan>Duration greater than</DurationGreaterThan>
     <MoreThanTwoLines>More than two lines</MoreThanTwoLines>
+    <Bookmarked>Bookmarked</Bookmarked>
   </ModifySelection>
   <MultipleReplace>
     <Title>Multiple replace</Title>

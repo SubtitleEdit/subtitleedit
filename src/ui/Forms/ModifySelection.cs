@@ -29,8 +29,9 @@ namespace Nikse.SubtitleEdit.Forms
         private const int FunctionDurationLessThan = 8;
         private const int FunctionDurationGreaterThan = 9;
         private const int FunctionMoreThanTwoLines = 10;
-        private const int FunctionStyle = 11;
-        private const int FunctionActor = 12;
+        private const int FunctionBookmarked = 11;
+        private const int FunctionStyle = 12;
+        private const int FunctionActor = 13;
 
         public ModifySelection(Subtitle subtitle, SubtitleFormat format, SubtitleListView subtitleListView)
         {
@@ -76,6 +77,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.DurationLessThan);
             comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.DurationGreaterThan);
             comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.MoreThanTwoLines);
+            comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.Bookmarked);
             if (_format.HasStyleSupport)
             {
                 comboBoxRule.Items.Add(LanguageSettings.Current.General.Style);
@@ -118,6 +120,10 @@ namespace Nikse.SubtitleEdit.Forms
             else if (Configuration.Settings.Tools.ModifySelectionRule == "More than two lines")
             {
                 comboBoxRule.SelectedIndex = FunctionMoreThanTwoLines;
+            }
+            else if (Configuration.Settings.Tools.ModifySelectionRule == "Bookmarked")
+            {
+                comboBoxRule.SelectedIndex = FunctionBookmarked;
             }
             else if (Configuration.Settings.Tools.ModifySelectionRule == "Style" && _format.HasStyleSupport)
             {
@@ -196,6 +202,10 @@ namespace Nikse.SubtitleEdit.Forms
             else if (comboBoxRule.SelectedIndex == FunctionMoreThanTwoLines)
             {
                 Configuration.Settings.Tools.ModifySelectionRule = "More than two lines";
+            }
+            else if (comboBoxRule.SelectedIndex == FunctionBookmarked)
+            {
+                Configuration.Settings.Tools.ModifySelectionRule = "Bookmarked";
             }
             else if (comboBoxRule.SelectedIndex == FunctionStyle)
             {
@@ -364,6 +374,13 @@ namespace Nikse.SubtitleEdit.Forms
                             listViewItems.Add(MakeListViewItem(p, i));
                         }
                     }
+                    else if (comboBoxRule.SelectedIndex == FunctionBookmarked) // Bookmarked
+                    {
+                        if (p.Bookmark != null)
+                        {
+                            listViewItems.Add(MakeListViewItem(p, i));
+                        }
+                    }
                     else if (comboBoxRule.SelectedIndex == FunctionStyle) // select styles
                     {
                         if (styles.Contains(string.IsNullOrEmpty(p.Style) ? p.Extra : p.Style))
@@ -434,25 +451,11 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxText.ContextMenuStrip = FindReplaceDialogHelper.GetRegExContextMenu(textBoxText);
                 checkBoxCaseSensitive.Enabled = false;
             }
-            else if (comboBoxRule.SelectedIndex == FunctionUnequal || comboBoxRule.SelectedIndex == FunctionEqual || comboBoxRule.SelectedIndex == FunctionMoreThanTwoLines)
+            else if (comboBoxRule.SelectedIndex == FunctionUnequal || comboBoxRule.SelectedIndex == FunctionEqual || comboBoxRule.SelectedIndex == FunctionMoreThanTwoLines || comboBoxRule.SelectedIndex == FunctionBookmarked)
             {
+                checkBoxCaseSensitive.Enabled = false;
                 textBoxText.ContextMenuStrip = null;
-                checkBoxCaseSensitive.Enabled = false;
                 textBoxText.Visible = false;
-            }
-            else if (comboBoxRule.SelectedIndex == FunctionStyle)
-            {
-                checkBoxCaseSensitive.Enabled = false;
-                listViewStyles.Visible = true;
-                listViewStyles.BringToFront();
-                FillStyles();
-            }
-            else if (comboBoxRule.SelectedIndex == FunctionActor)
-            {
-                checkBoxCaseSensitive.Enabled = false;
-                listViewStyles.Visible = true;
-                listViewStyles.BringToFront();
-                FillActors();
             }
             else if (comboBoxRule.SelectedIndex == FunctionDurationLessThan || comboBoxRule.SelectedIndex == FunctionDurationGreaterThan || comboBoxRule.SelectedIndex == FunctionAlUppercase)
             {
@@ -477,6 +480,20 @@ namespace Nikse.SubtitleEdit.Forms
                         numericUpDownDuration.Value = Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
                     }
                 }
+            }
+            else if (comboBoxRule.SelectedIndex == FunctionStyle)
+            {
+                checkBoxCaseSensitive.Enabled = false;
+                listViewStyles.Visible = true;
+                listViewStyles.BringToFront();
+                FillStyles();
+            }
+            else if (comboBoxRule.SelectedIndex == FunctionActor)
+            {
+                checkBoxCaseSensitive.Enabled = false;
+                listViewStyles.Visible = true;
+                listViewStyles.BringToFront();
+                FillActors();
             }
             else
             {
