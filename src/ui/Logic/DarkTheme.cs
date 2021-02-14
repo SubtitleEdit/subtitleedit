@@ -508,8 +508,9 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        // A dark theme for TabControl taken from gitextensions
-        // https://github.com/gitextensions/gitextensions/blob/master/GitExtUtils/GitUI/Theming/TabControlRenderer.cs
+        /// <summary>
+        /// A dark theme for TabControl.
+        /// </summary>
         private class TabControlRenderer
         {
             private readonly Point _mouseCursor;
