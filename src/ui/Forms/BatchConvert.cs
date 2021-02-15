@@ -747,70 +747,53 @@ namespace Nikse.SubtitleEdit.Forms
                         listViewInputFiles.Items.Add(item);
                     }
 
-                    foreach (var lang in mkvPgs)
+                    var mkvSubFormats = new Dictionary<string, List<string>>
                     {
-                        if (comboBoxFilter.SelectedIndex == 5 && textBoxFilter.Text.Length > 0 && !lang.Contains(textBoxFilter.Text, StringComparison.OrdinalIgnoreCase))
+                        { nameof(mkvPgs), mkvPgs },
+                        { nameof(mkvVobSub), mkvVobSub },
+                        { nameof(mkvSrt), mkvSrt },
+                        { nameof(mkvSsa), mkvSsa },
+                        { nameof(mkvAss), mkvAss }
+                    };
+
+                    foreach (var mkvSubFormat in mkvSubFormats)
+                    {
+                        StringBuilder formatName = new StringBuilder("Matroska/");
+                        switch (mkvSubFormat.Key)
                         {
-                            continue;
+                            case nameof(mkvPgs):
+                                formatName.Append("PGS");
+                                break;
+                            case nameof(mkvVobSub):
+                                formatName.Append("VobSub");
+                                break;
+                            case nameof(mkvSrt):
+                                formatName.Append("SRT");
+                                break;
+                            case nameof(mkvSsa):
+                                formatName.Append("SSA");
+                                break;
+                            case nameof(mkvAss):
+                                formatName.Append("ASS");
+                                break;
                         }
 
-                        item = new ListViewItem(fileName);
-                        item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
-                        listViewInputFiles.Items.Add(item);
-                        item.SubItems.Add("Matroska/PGS - " + lang);
-                        item.SubItems.Add("-");
-                    }
-                    foreach (var lang in mkvVobSub)
-                    {
-                        if (comboBoxFilter.SelectedIndex == 5 && textBoxFilter.Text.Length > 0 && !lang.Contains(textBoxFilter.Text, StringComparison.OrdinalIgnoreCase))
-                        {
-                            continue;
-                        }
+                        formatName.Append(" - ");
 
-                        item = new ListViewItem(fileName);
-                        item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
-                        listViewInputFiles.Items.Add(item);
-                        item.SubItems.Add("Matroska/VobSub - " + lang);
-                        item.SubItems.Add("-");
-                    }
-                    foreach (var lang in mkvSrt)
-                    {
-                        if (comboBoxFilter.SelectedIndex == 5 && textBoxFilter.Text.Length > 0 && !lang.Contains(textBoxFilter.Text, StringComparison.OrdinalIgnoreCase))
+                        foreach (var lang in mkvSubFormat.Value)
                         {
-                            continue;
-                        }
+                            if (comboBoxFilter.SelectedIndex == 5 && textBoxFilter.Text.Length > 0 &&
+                                !lang.Contains(textBoxFilter.Text, StringComparison.OrdinalIgnoreCase))
+                            {
+                                continue;
+                            }
 
-                        item = new ListViewItem(fileName);
-                        item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
-                        listViewInputFiles.Items.Add(item);
-                        item.SubItems.Add("Matroska/SRT - " + lang);
-                        item.SubItems.Add("-");
-                    }
-                    foreach (var lang in mkvSsa)
-                    {
-                        if (comboBoxFilter.SelectedIndex == 5 && textBoxFilter.Text.Length > 0 && !lang.Contains(textBoxFilter.Text, StringComparison.OrdinalIgnoreCase))
-                        {
-                            continue;
+                            item = new ListViewItem(fileName);
+                            item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
+                            listViewInputFiles.Items.Add(item);
+                            item.SubItems.Add($"{formatName}{lang}");
+                            item.SubItems.Add("-");
                         }
-
-                        item = new ListViewItem(fileName);
-                        item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
-                        listViewInputFiles.Items.Add(item);
-                        item.SubItems.Add("Matroska/SSA - " + lang);
-                        item.SubItems.Add("-");
-                    }
-                    foreach (var lang in mkvAss)
-                    {
-                        if (comboBoxFilter.SelectedIndex == 5 && textBoxFilter.Text.Length > 0 && !lang.Contains(textBoxFilter.Text, StringComparison.OrdinalIgnoreCase))
-                        {
-                            continue;
-                        }
-
-                        item = new ListViewItem(fileName);
-                        item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
-                        listViewInputFiles.Items.Add(item);
-                        item.SubItems.Add("Matroska/ASS - " + lang);
-                        item.SubItems.Add("-");
                     }
                 }
                 else if (isTs)
