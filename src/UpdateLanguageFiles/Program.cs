@@ -57,7 +57,7 @@ namespace UpdateLanguageFiles
                     Console.Write(" {0} generated...", Path.GetFileName(args[0]));
                 }
 
-                var languageDeserializerContent = LanguageDeserializerGenerator.GenerateCSharpXmlDeserializerForLanguage();
+                var languageDeserializerContent = LanguageDeserializerGenerator.GenerateCSharpXmlDeserializerForLanguage().Replace("\r", String.Empty);
                 var oldLanguageDeserializerContent = string.Empty;
                 if (File.Exists(args[1]))
                 {
