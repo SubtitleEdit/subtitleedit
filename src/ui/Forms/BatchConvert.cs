@@ -749,6 +749,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                     foreach (var lang in mkvPgs)
                     {
+                        if (comboBoxFilter.SelectedIndex == 5 && textBoxFilter.Text.Length > 0 && !lang.Contains(textBoxFilter.Text, StringComparison.OrdinalIgnoreCase))
+                        {
+                            continue;
+                        }
+
                         item = new ListViewItem(fileName);
                         item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
                         listViewInputFiles.Items.Add(item);
@@ -757,6 +762,11 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     foreach (var lang in mkvVobSub)
                     {
+                        if (comboBoxFilter.SelectedIndex == 5 && textBoxFilter.Text.Length > 0 && !lang.Contains(textBoxFilter.Text, StringComparison.OrdinalIgnoreCase))
+                        {
+                            continue;
+                        }
+
                         item = new ListViewItem(fileName);
                         item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
                         listViewInputFiles.Items.Add(item);
@@ -769,6 +779,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             continue;
                         }
+
                         item = new ListViewItem(fileName);
                         item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
                         listViewInputFiles.Items.Add(item);
@@ -777,6 +788,11 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     foreach (var lang in mkvSsa)
                     {
+                        if (comboBoxFilter.SelectedIndex == 5 && textBoxFilter.Text.Length > 0 && !lang.Contains(textBoxFilter.Text, StringComparison.OrdinalIgnoreCase))
+                        {
+                            continue;
+                        }
+
                         item = new ListViewItem(fileName);
                         item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
                         listViewInputFiles.Items.Add(item);
@@ -785,6 +801,11 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     foreach (var lang in mkvAss)
                     {
+                        if (comboBoxFilter.SelectedIndex == 5 && textBoxFilter.Text.Length > 0 && !lang.Contains(textBoxFilter.Text, StringComparison.OrdinalIgnoreCase))
+                        {
+                            continue;
+                        }
+
                         item = new ListViewItem(fileName);
                         item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
                         listViewInputFiles.Items.Add(item);
