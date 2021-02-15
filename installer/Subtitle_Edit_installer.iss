@@ -77,7 +77,7 @@
 [Setup]
 AppID=SubtitleEdit
 AppCopyright={#app_copyright}
-AppContact=https://www.nikse.dk/SubtitleEdit/
+AppContact=https://www.nikse.dk/SubtitleEdit/Help
 AppName=Subtitle Edit
 AppVerName=Subtitle Edit {#app_ver}
 AppVersion={#app_ver_full}
