@@ -25770,7 +25770,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemExportUniPac_Click(object sender, EventArgs e)
         {
-            var uniPac = new PacUnicode();
+            var uniPac = new Pac().SetUniPac();
             saveFileDialog1.Filter = uniPac.Name + "|*" + uniPac.Extension;
             saveFileDialog1.Title = _language.SaveSubtitleAs;
             saveFileDialog1.DefaultExt = "*" + uniPac.Extension;

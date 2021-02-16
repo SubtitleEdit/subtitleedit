@@ -1094,7 +1094,7 @@ namespace Nikse.SubtitleEdit.Logic
             AddExtension(sb, ".dost");
             AddExtension(sb, new FinalDraftTemplate2().Extension);
             AddExtension(sb, new Ayato().Extension);
-            AddExtension(sb, new PacUnicode().Extension);
+            AddExtension(sb, new Pac().SetUniPac().Extension);
             AddExtension(sb, new WinCaps32().Extension);
             AddExtension(sb, new IsmtDfxp().Extension);
             AddExtension(sb, new PlayCaptionsFreeEditor().Extension);

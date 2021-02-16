@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static bool IsValidCodePage(int codePage)
         {
-            return 0 <= codePage && codePage <= 11;
+            return 0 <= codePage && codePage <= 12;
         }
         public const int CodePageLatin = 0;
         public const int CodePageGreek = 1;
@@ -41,6 +41,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public const int CodePageKorean = 9;
         public const int CodePageJapanese = 10;
         public const int CodePageLatinTurkish = 11;
+        public const int CodePageUnicode = 12;
 
         public const int EncodingChineseSimplified = 936;
         public const int EncodingChineseTraditional = 950;
@@ -1002,9 +1003,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private string _fileName = string.Empty;
 
-        public int CodePage { get; set; } = -1;
+        private int _codePage = -1;
+        public int CodePage {
+            get => _fileName.EndsWith(".fpc", StringComparison.OrdinalIgnoreCase) ? CodePageUnicode : _codePage;
+            set { _codePage = value; }
+        }
+        public Pac SetUniPac()
+        {
+            CodePage = CodePageUnicode;
+            return this;
+        }
 
-        public override string Extension => ".pac";
+        public override string Extension => CodePage == CodePageUnicode ? ".fpc" : ".pac";
 
         public const string NameOfFormat = "PAC (Screen Electronics)";
 
@@ -1270,7 +1280,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             //buffer[21] < 10 && // start from number
                             //buffer[22] == 0 &&
                             (buffer[23] >= 0x60 && buffer[23] <= 0x70) &&
-                            fileName.EndsWith(".pac", StringComparison.OrdinalIgnoreCase))
+                            (fileName.EndsWith(".pac", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".fpc", StringComparison.OrdinalIgnoreCase)))
                         {
                             return true;
                         }
@@ -1532,6 +1542,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (CodePage == CodePageThai)
                 {
                     sb.Append(GetEncoding(CodePage).GetString(buffer, index, 1).Replace("€", "ต"));
+                }
+                else if (CodePage == CodePageUnicode)
+                {
+                    int len = 1;
+                    byte b = buffer[index];
+                    if (b >= 0xE0)
+                        len = 3;
+                    else if (b >= 0xC0)
+                        len = 2;
+                    sb.Append(Encoding.UTF8.GetString(buffer, index, len));
+                    index += len - 1;
                 }
                 else
                 {

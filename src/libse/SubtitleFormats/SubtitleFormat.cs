@@ -581,7 +581,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 new Ebu { BatchMode = batchMode },
                 new Pac { BatchMode = batchMode },
-                new PacUnicode(),
                 new Cavena890 { BatchMode = batchMode },
                 new Spt(),
                 new CheetahCaption(),

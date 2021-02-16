@@ -51,7 +51,10 @@
             "Chinese Traditional (Big5)",
             "Chinese Simplified (gb2312)",
             "Korean",
-            "Japanese"});
+            "Japanese",
+            "Latin Turkish",
+            "Unicode"
+            });
             this.comboBoxCodePage.Location = new System.Drawing.Point(12, 37);
             this.comboBoxCodePage.Name = "comboBoxCodePage";
             this.comboBoxCodePage.Size = new System.Drawing.Size(203, 21);
