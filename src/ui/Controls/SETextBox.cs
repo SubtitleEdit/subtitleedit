@@ -637,20 +637,31 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        public async Task CheckForLanguageChange(Subtitle subtitle) =>
-            await _uiTextBox?.CheckForLanguageChange(subtitle);
+        public async Task CheckForLanguageChange(Subtitle subtitle)
+        {
+            if (_uiTextBox == null)
+            {
+                return;
+            }
 
-        public async Task InitializeLiveSpellCheck(Subtitle subtitle, int lineNumber) =>
-            await _uiTextBox?.InitializeLiveSpellCheck(subtitle, lineNumber);
+            await _uiTextBox.CheckForLanguageChange(subtitle);
+        }
 
-        public void DisposeHunspellAndDictionaries() =>
-            _uiTextBox?.DisposeHunspellAndDictionaries();
+        public async Task InitializeLiveSpellCheck(Subtitle subtitle, int lineNumber)
+        {
+            if (_uiTextBox == null)
+            {
+                return;
+            }
 
-        public void AddSuggestionsToMenu() =>
-            _uiTextBox?.AddSuggestionsToMenu();
+            await _uiTextBox.InitializeLiveSpellCheck(subtitle, lineNumber);
+        }
 
-        public void DoAction(SpellCheckAction action) =>
-            _uiTextBox?.DoAction(action);
+        public void DisposeHunspellAndDictionaries() => _uiTextBox?.DisposeHunspellAndDictionaries();
+
+        public void AddSuggestionsToMenu() => _uiTextBox?.AddSuggestionsToMenu();
+
+        public void DoAction(SpellCheckAction action) => _uiTextBox?.DoAction(action);
 
         #endregion
     }
