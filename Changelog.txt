@@ -33,6 +33,8 @@
    * Update Tesseract 5 Alpha to "2020-11-27"
    * Add more options to Tesseract image pre-processing - thx maknol
    * Translate: Refactor + paragraph handling strategies - thx Brummochse 
+   * Add new SE icon - thx LeonCheung
+   * Add installer graphics - thx LeonCheung
    * Add toolbar icons for ASSA style+properties - thx LeonCheung
    * Set default subtitle text box font size to 12
    * Use "Min gap between subtitles" when loading scc - thx batatop
