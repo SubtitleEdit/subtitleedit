@@ -499,15 +499,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public int CurrentLineIndex
         {
-            get
-            {
-                if (_uiTextBox != null)
-                {
-                    return _uiTextBox.CurrentLineIndex;
-                }
-
-                return 0;
-            }
+            get => _uiTextBox?.CurrentLineIndex ?? 0;
             set
             {
                 if (_uiTextBox != null)
@@ -519,15 +511,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public string CurrentLanguage
         {
-            get
-            {
-                if (_uiTextBox != null)
-                {
-                    return _uiTextBox.CurrentLanguage;
-                }
-
-                return string.Empty;
-            }
+            get => _uiTextBox?.CurrentLanguage ?? string.Empty;
             set
             {
                 if (_uiTextBox != null)
@@ -539,15 +523,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public bool LanguageChanged
         {
-            get
-            {
-                if (_uiTextBox != null)
-                {
-                    return _uiTextBox.LanguageChanged;
-                }
-
-                return false;
-            }
+            get => _uiTextBox?.LanguageChanged ?? false;
             set
             {
                 if (_uiTextBox != null)
@@ -559,15 +535,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public bool IsWrongWord
         {
-            get
-            {
-                if (_uiTextBox != null)
-                {
-                    return _uiTextBox.IsWrongWord;
-                }
-
-                return false;
-            }
+            get => _uiTextBox?.IsWrongWord ?? false;
             set
             {
                 if (_uiTextBox != null)
@@ -579,15 +547,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public bool IsSpellCheckerInitialized
         {
-            get
-            {
-                if (_uiTextBox != null)
-                {
-                    return _uiTextBox.IsSpellCheckerInitialized;
-                }
-
-                return false;
-            }
+            get => _uiTextBox?.IsSpellCheckerInitialized ?? false;
             set
             {
                 if (_uiTextBox != null)
@@ -599,15 +559,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public bool IsDictionaryDownloaded
         {
-            get
-            {
-                if (_uiTextBox != null)
-                {
-                    return _uiTextBox.IsDictionaryDownloaded;
-                }
-
-                return true;
-            }
+            get => _uiTextBox?.IsDictionaryDownloaded ?? true;
             set
             {
                 if (_uiTextBox != null)
@@ -619,15 +571,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public bool IsSpellCheckRequested
         {
-            get
-            {
-                if (_uiTextBox != null)
-                {
-                    return _uiTextBox.IsSpellCheckRequested;
-                }
-
-                return false;
-            }
+            get => _uiTextBox?.IsSpellCheckRequested ?? false;
             set
             {
                 if (_uiTextBox != null)
@@ -637,25 +581,11 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        public async Task CheckForLanguageChange(Subtitle subtitle)
-        {
-            if (_uiTextBox == null)
-            {
-                return;
-            }
+        public async Task CheckForLanguageChange(Subtitle subtitle) =>
+            await (_uiTextBox?.CheckForLanguageChange(subtitle) ?? Task.CompletedTask);
 
-            await _uiTextBox.CheckForLanguageChange(subtitle);
-        }
-
-        public async Task InitializeLiveSpellCheck(Subtitle subtitle, int lineNumber)
-        {
-            if (_uiTextBox == null)
-            {
-                return;
-            }
-
-            await _uiTextBox.InitializeLiveSpellCheck(subtitle, lineNumber);
-        }
+        public async Task InitializeLiveSpellCheck(Subtitle subtitle, int lineNumber) =>
+            await (_uiTextBox?.InitializeLiveSpellCheck(subtitle, lineNumber) ?? Task.CompletedTask);
 
         public void DisposeHunspellAndDictionaries() => _uiTextBox?.DisposeHunspellAndDictionaries();
 
