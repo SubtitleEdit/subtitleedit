@@ -33,10 +33,8 @@ namespace Nikse.SubtitleEdit.Logic
             return false;
         }
 
-        private static bool IsWindows10OrGreater(int build = -1)
-        {
-            return Configuration.IsRunningOnWindows && Environment.OSVersion.Version.Major >= 10 && Environment.OSVersion.Version.Build >= build;
-        }
+        private static bool IsWindows10OrGreater(int build = -1) =>
+            Configuration.IsRunningOnWindows && Environment.OSVersion.Version.Major >= 10 && Environment.OSVersion.Version.Build >= build;
 
         private static void SetWindowThemeDark(Control control)
         {
@@ -306,10 +304,8 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        private static void TabControl_Paint(object sender, PaintEventArgs e)
-        {
+        private static void TabControl_Paint(object sender, PaintEventArgs e) =>
             new TabControlRenderer(sender as TabControl, e).Paint();
-        }
 
         private static void ListView_DrawItem(object sender, DrawListViewItemEventArgs e)
         {
@@ -424,10 +420,8 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        private static void ListView_HandleCreated(object sender, EventArgs e)
-        {
+        private static void ListView_HandleCreated(object sender, EventArgs e) =>
             SetWindowThemeDark((Control)sender);
-        }
 
         private class MyRenderer : ToolStripProfessionalRenderer
         {
@@ -514,8 +508,9 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        // A dark theme for TabControl taken from gitextensions
-        // https://github.com/gitextensions/gitextensions/blob/master/GitExtUtils/GitUI/Theming/TabControlRenderer.cs
+        /// <summary>
+        /// A dark theme for TabControl.
+        /// </summary>
         private class TabControlRenderer
         {
             private readonly Point _mouseCursor;
@@ -529,7 +524,6 @@ namespace Nikse.SubtitleEdit.Logic
             private readonly Image[] _tabImages;
             private readonly Rectangle[] _tabRects;
             private readonly string[] _tabTexts;
-            private readonly Color[] _tabBackColors;
             private readonly Size _size;
             private readonly bool _failed;
 
@@ -562,9 +556,6 @@ namespace Nikse.SubtitleEdit.Logic
                         .ToArray();
                     _tabRects = Enumerable.Range(0, _tabCount)
                         .Select(tabs.GetTabRect)
-                        .ToArray();
-                    _tabBackColors = Enumerable.Range(0, _tabCount)
-                        .Select(i => tabs.TabPages[i].BackColor)
                         .ToArray();
                 }
                 catch (ArgumentOutOfRangeException)
@@ -793,10 +784,9 @@ namespace Nikse.SubtitleEdit.Logic
                 new Pen(SystemBrushes.ControlDark, BorderWidth);
         }
 
-        private static void SetStyle(Control control, ControlStyles styles, bool value)
-        {
-            typeof(TabControl).GetMethod("SetStyle", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(control, new object[] { styles, value });
-        }
+        private static void SetStyle(Control control, ControlStyles styles, bool value) =>
+            typeof(TabControl).GetMethod("SetStyle", BindingFlags.Instance | BindingFlags.NonPublic)
+            .Invoke(control, new object[] { styles, value });
 
         internal static void SetDarkTheme(ToolStripItem item)
         {
