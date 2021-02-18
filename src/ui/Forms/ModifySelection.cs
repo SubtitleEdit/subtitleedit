@@ -22,15 +22,31 @@ namespace Nikse.SubtitleEdit.Forms
         private const int FunctionStartsWith = 1;
         private const int FunctionEndsWith = 2;
         private const int FunctionNotContains = 3;
-        private const int FunctionAlUppercase = 4;
+        private const int FunctionAllUppercase = 4;
         private const int FunctionRegEx = 5;
-        private const int FunctionUnequal = 6;
-        private const int FunctionEqual = 7;
+        private const int FunctionOdd = 6;
+        private const int FunctionEven = 7;
         private const int FunctionDurationLessThan = 8;
         private const int FunctionDurationGreaterThan = 9;
         private const int FunctionMoreThanTwoLines = 10;
-        private const int FunctionStyle = 11;
-        private const int FunctionActor = 12;
+        private const int FunctionBookmarked = 11;
+        private const int FunctionStyle = 12;
+        private const int FunctionActor = 13;
+
+        private const string ContainsString = "Contains";
+        private const string StartsWith = "Starts with";
+        private const string EndsWith = "Ends with";
+        private const string NotContains = "Not contains";
+        private const string AllUppercase = "AllUppercase";
+        private const string RegEx = "RegEx";
+        private const string Odd = "Odd";
+        private const string Even = "Even";
+        private const string DurationLessThan = "Duration <";
+        private const string DurationGreaterThan = "Duration >";
+        private const string MoreThanTwoLines = "More than two lines";
+        private const string Bookmarked = "Bookmarked";
+        private const string Style = "Style";
+        private const string Actor = "Actor";
 
         public ModifySelection(Subtitle subtitle, SubtitleFormat format, SubtitleListView subtitleListView)
         {
@@ -71,11 +87,12 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.NoContains);
             comboBoxRule.Items.Add(LanguageSettings.Current.ChangeCasing.AllUppercase);
             comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.RegEx);
-            comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.UnequalLines);
-            comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.EqualLines);
+            comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.OddLines);
+            comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.EvenLines);
             comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.DurationLessThan);
             comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.DurationGreaterThan);
             comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.MoreThanTwoLines);
+            comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.Bookmarked);
             if (_format.HasStyleSupport)
             {
                 comboBoxRule.Items.Add(LanguageSettings.Current.General.Style);
@@ -87,49 +104,50 @@ namespace Nikse.SubtitleEdit.Forms
 
             checkBoxCaseSensitive.Checked = Configuration.Settings.Tools.ModifySelectionCaseSensitive;
             textBoxText.Text = Configuration.Settings.Tools.ModifySelectionText;
-            if (Configuration.Settings.Tools.ModifySelectionRule == "Starts with")
+            switch (Configuration.Settings.Tools.ModifySelectionRule)
             {
-                comboBoxRule.SelectedIndex = FunctionStartsWith;
-            }
-            else if (Configuration.Settings.Tools.ModifySelectionRule == "Ends with")
-            {
-                comboBoxRule.SelectedIndex = FunctionEndsWith;
-            }
-            else if (Configuration.Settings.Tools.ModifySelectionRule == "Not contains")
-            {
-                comboBoxRule.SelectedIndex = FunctionNotContains;
-            }
-            else if (Configuration.Settings.Tools.ModifySelectionRule == "AllUppercase")
-            {
-                comboBoxRule.SelectedIndex = FunctionAlUppercase;
-            }
-            else if (Configuration.Settings.Tools.ModifySelectionRule == "RegEx")
-            {
-                comboBoxRule.SelectedIndex = FunctionRegEx;
-            }
-            else if (Configuration.Settings.Tools.ModifySelectionRule == "Duration <")
-            {
-                comboBoxRule.SelectedIndex = FunctionDurationLessThan;
-            }
-            else if (Configuration.Settings.Tools.ModifySelectionRule == "Duration >")
-            {
-                comboBoxRule.SelectedIndex = FunctionDurationGreaterThan;
-            }
-            else if (Configuration.Settings.Tools.ModifySelectionRule == "More than two lines")
-            {
-                comboBoxRule.SelectedIndex = FunctionMoreThanTwoLines;
-            }
-            else if (Configuration.Settings.Tools.ModifySelectionRule == "Style" && _format.HasStyleSupport)
-            {
-                comboBoxRule.SelectedIndex = FunctionStyle;
-            }
-            else if (Configuration.Settings.Tools.ModifySelectionRule == "Actor" && (_format.GetType() == typeof(AdvancedSubStationAlpha) || _format.GetType() == typeof(SubStationAlpha)))
-            {
-                comboBoxRule.SelectedIndex = FunctionActor;
-            }
-            else
-            {
-                comboBoxRule.SelectedIndex = 0;
+                case StartsWith:
+                    comboBoxRule.SelectedIndex = FunctionStartsWith;
+                    break;
+                case EndsWith:
+                    comboBoxRule.SelectedIndex = FunctionEndsWith;
+                    break;
+                case NotContains:
+                    comboBoxRule.SelectedIndex = FunctionNotContains;
+                    break;
+                case AllUppercase:
+                    comboBoxRule.SelectedIndex = FunctionAllUppercase;
+                    break;
+                case RegEx:
+                    comboBoxRule.SelectedIndex = FunctionRegEx;
+                    break;
+                case Odd:
+                    comboBoxRule.SelectedIndex = FunctionOdd;
+                    break;
+                case Even:
+                    comboBoxRule.SelectedIndex = FunctionEven;
+                    break;
+                case DurationLessThan:
+                    comboBoxRule.SelectedIndex = FunctionDurationLessThan;
+                    break;
+                case DurationGreaterThan:
+                    comboBoxRule.SelectedIndex = FunctionDurationGreaterThan;
+                    break;
+                case MoreThanTwoLines:
+                    comboBoxRule.SelectedIndex = FunctionMoreThanTwoLines;
+                    break;
+                case Bookmarked:
+                    comboBoxRule.SelectedIndex = FunctionBookmarked;
+                    break;
+                case Style when _format.HasStyleSupport:
+                    comboBoxRule.SelectedIndex = FunctionStyle;
+                    break;
+                case Actor when _format.GetType() == typeof(AdvancedSubStationAlpha) || _format.GetType() == typeof(SubStationAlpha):
+                    comboBoxRule.SelectedIndex = FunctionActor;
+                    break;
+                default:
+                    comboBoxRule.SelectedIndex = FunctionContains;
+                    break;
             }
 
             if (!_format.HasStyleSupport)
@@ -161,49 +179,50 @@ namespace Nikse.SubtitleEdit.Forms
 
             Configuration.Settings.Tools.ModifySelectionCaseSensitive = checkBoxCaseSensitive.Checked;
             Configuration.Settings.Tools.ModifySelectionText = textBoxText.Text;
-            if (comboBoxRule.SelectedIndex == FunctionContains)
+            switch (comboBoxRule.SelectedIndex)
             {
-                Configuration.Settings.Tools.ModifySelectionRule = "Contains";
-            }
-            else if (comboBoxRule.SelectedIndex == FunctionStartsWith)
-            {
-                Configuration.Settings.Tools.ModifySelectionRule = "Starts with";
-            }
-            else if (comboBoxRule.SelectedIndex == FunctionEndsWith)
-            {
-                Configuration.Settings.Tools.ModifySelectionRule = "Ends with";
-            }
-            else if (comboBoxRule.SelectedIndex == FunctionNotContains)
-            {
-                Configuration.Settings.Tools.ModifySelectionRule = "Not contains";
-            }
-            else if (comboBoxRule.SelectedIndex == FunctionAlUppercase)
-            {
-                Configuration.Settings.Tools.ModifySelectionRule = "AllUppercase";
-            }
-            else if (comboBoxRule.SelectedIndex == FunctionRegEx)
-            {
-                Configuration.Settings.Tools.ModifySelectionRule = "RegEx";
-            }
-            else if (comboBoxRule.SelectedIndex == FunctionDurationLessThan)
-            {
-                Configuration.Settings.Tools.ModifySelectionRule = "Duration <";
-            }
-            else if (comboBoxRule.SelectedIndex == FunctionDurationGreaterThan)
-            {
-                Configuration.Settings.Tools.ModifySelectionRule = "Duration >";
-            }
-            else if (comboBoxRule.SelectedIndex == FunctionMoreThanTwoLines)
-            {
-                Configuration.Settings.Tools.ModifySelectionRule = "More than two lines";
-            }
-            else if (comboBoxRule.SelectedIndex == FunctionStyle)
-            {
-                Configuration.Settings.Tools.ModifySelectionRule = "Style";
-            }
-            else if (comboBoxRule.SelectedIndex == FunctionActor)
-            {
-                Configuration.Settings.Tools.ModifySelectionRule = "Actor";
+                case FunctionStartsWith:
+                    Configuration.Settings.Tools.ModifySelectionRule = StartsWith;
+                    break;
+                case FunctionEndsWith:
+                    Configuration.Settings.Tools.ModifySelectionRule = EndsWith;
+                    break;
+                case FunctionNotContains:
+                    Configuration.Settings.Tools.ModifySelectionRule = NotContains;
+                    break;
+                case FunctionAllUppercase:
+                    Configuration.Settings.Tools.ModifySelectionRule = AllUppercase;
+                    break;
+                case FunctionRegEx:
+                    Configuration.Settings.Tools.ModifySelectionRule = RegEx;
+                    break;
+                case FunctionOdd:
+                    Configuration.Settings.Tools.ModifySelectionRule = Odd;
+                    break;
+                case FunctionEven:
+                    Configuration.Settings.Tools.ModifySelectionRule = Even;
+                    break;
+                case FunctionDurationLessThan:
+                    Configuration.Settings.Tools.ModifySelectionRule = DurationLessThan;
+                    break;
+                case FunctionDurationGreaterThan:
+                    Configuration.Settings.Tools.ModifySelectionRule = DurationGreaterThan;
+                    break;
+                case FunctionMoreThanTwoLines:
+                    Configuration.Settings.Tools.ModifySelectionRule = MoreThanTwoLines;
+                    break;
+                case FunctionBookmarked:
+                    Configuration.Settings.Tools.ModifySelectionRule = Bookmarked;
+                    break;
+                case FunctionStyle:
+                    Configuration.Settings.Tools.ModifySelectionRule = Style;
+                    break;
+                case FunctionActor:
+                    Configuration.Settings.Tools.ModifySelectionRule = Actor;
+                    break;
+                default:
+                    Configuration.Settings.Tools.ModifySelectionRule = ContainsString;
+                    break;
             }
         }
 
@@ -244,7 +263,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             var styles = new List<string>();
             var actors = new List<string>();
-            if (comboBoxRule.SelectedIndex == FunctionStyle) // select styles
+            if (comboBoxRule.SelectedIndex == FunctionStyle) // Select styles
             {
                 foreach (ListViewItem item in listViewStyles.Items)
                 {
@@ -254,7 +273,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            else if (comboBoxRule.SelectedIndex == FunctionActor) // select actors
+            else if (comboBoxRule.SelectedIndex == FunctionActor) // Select actors
             {
                 foreach (ListViewItem item in listViewStyles.Items)
                 {
@@ -322,28 +341,28 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
                     }
-                    if (comboBoxRule.SelectedIndex == FunctionUnequal) // select unequal lines
+                    if (comboBoxRule.SelectedIndex == FunctionOdd) // Select odd lines
                     {
                         if (i % 2 == 0)
                         {
                             listViewItems.Add(MakeListViewItem(p, i));
                         }
                     }
-                    else if (comboBoxRule.SelectedIndex == FunctionEqual) // select equal lines
+                    else if (comboBoxRule.SelectedIndex == FunctionEven) // Select even lines
                     {
                         if (i % 2 == 1)
                         {
                             listViewItems.Add(MakeListViewItem(p, i));
                         }
                     }
-                    else if (comboBoxRule.SelectedIndex == FunctionDurationLessThan) // duration less than
+                    else if (comboBoxRule.SelectedIndex == FunctionDurationLessThan) // Duration less than
                     {
                         if (p.Duration.TotalMilliseconds < (double)numericUpDownDuration.Value)
                         {
                             listViewItems.Add(MakeListViewItem(p, i));
                         }
                     }
-                    else if (comboBoxRule.SelectedIndex == FunctionDurationGreaterThan) // duration greater than
+                    else if (comboBoxRule.SelectedIndex == FunctionDurationGreaterThan) // Duration greater than
                     {
                         if (p.Duration.TotalMilliseconds > (double)numericUpDownDuration.Value)
                         {
@@ -357,21 +376,28 @@ namespace Nikse.SubtitleEdit.Forms
                             listViewItems.Add(MakeListViewItem(p, i));
                         }
                     }
-                    else if (comboBoxRule.SelectedIndex == FunctionAlUppercase) // all uppercase
+                    else if (comboBoxRule.SelectedIndex == FunctionAllUppercase) // All uppercase
                     {
                         if (HtmlUtil.RemoveHtmlTags(p.Text, true) == HtmlUtil.RemoveHtmlTags(p.Text, true).ToUpperInvariant() && p.Text != p.Text.ToLowerInvariant())
                         {
                             listViewItems.Add(MakeListViewItem(p, i));
                         }
                     }
-                    else if (comboBoxRule.SelectedIndex == FunctionStyle) // select styles
+                    else if (comboBoxRule.SelectedIndex == FunctionBookmarked) // Bookmarked
+                    {
+                        if (p.Bookmark != null)
+                        {
+                            listViewItems.Add(MakeListViewItem(p, i));
+                        }
+                    }
+                    else if (comboBoxRule.SelectedIndex == FunctionStyle) // Select styles
                     {
                         if (styles.Contains(string.IsNullOrEmpty(p.Style) ? p.Extra : p.Style))
                         {
                             listViewItems.Add(MakeListViewItem(p, i));
                         }
                     }
-                    else if (comboBoxRule.SelectedIndex == FunctionActor) // select actors
+                    else if (comboBoxRule.SelectedIndex == FunctionActor) // Select actors
                     {
                         if (actors.Contains(p.Actor))
                         {
@@ -429,32 +455,18 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxText.Visible = true;
             listViewStyles.Visible = false;
             numericUpDownDuration.Visible = comboBoxRule.SelectedIndex == FunctionDurationLessThan || comboBoxRule.SelectedIndex == FunctionDurationGreaterThan;
-            if (comboBoxRule.SelectedIndex == FunctionRegEx) // regex
+            if (comboBoxRule.SelectedIndex == FunctionRegEx) // RegEx
             {
                 textBoxText.ContextMenuStrip = FindReplaceDialogHelper.GetRegExContextMenu(textBoxText);
                 checkBoxCaseSensitive.Enabled = false;
             }
-            else if (comboBoxRule.SelectedIndex == FunctionUnequal || comboBoxRule.SelectedIndex == FunctionEqual || comboBoxRule.SelectedIndex == FunctionMoreThanTwoLines)
+            else if (comboBoxRule.SelectedIndex == FunctionOdd || comboBoxRule.SelectedIndex == FunctionEven || comboBoxRule.SelectedIndex == FunctionMoreThanTwoLines || comboBoxRule.SelectedIndex == FunctionBookmarked)
             {
-                textBoxText.ContextMenuStrip = null;
                 checkBoxCaseSensitive.Enabled = false;
+                textBoxText.ContextMenuStrip = null;
                 textBoxText.Visible = false;
             }
-            else if (comboBoxRule.SelectedIndex == FunctionStyle)
-            {
-                checkBoxCaseSensitive.Enabled = false;
-                listViewStyles.Visible = true;
-                listViewStyles.BringToFront();
-                FillStyles();
-            }
-            else if (comboBoxRule.SelectedIndex == FunctionActor)
-            {
-                checkBoxCaseSensitive.Enabled = false;
-                listViewStyles.Visible = true;
-                listViewStyles.BringToFront();
-                FillActors();
-            }
-            else if (comboBoxRule.SelectedIndex == FunctionDurationLessThan || comboBoxRule.SelectedIndex == FunctionDurationGreaterThan || comboBoxRule.SelectedIndex == FunctionAlUppercase)
+            else if (comboBoxRule.SelectedIndex == FunctionDurationLessThan || comboBoxRule.SelectedIndex == FunctionDurationGreaterThan || comboBoxRule.SelectedIndex == FunctionAllUppercase)
             {
                 checkBoxCaseSensitive.Enabled = false;
                 listViewStyles.Visible = false;
@@ -477,6 +489,20 @@ namespace Nikse.SubtitleEdit.Forms
                         numericUpDownDuration.Value = Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
                     }
                 }
+            }
+            else if (comboBoxRule.SelectedIndex == FunctionStyle)
+            {
+                checkBoxCaseSensitive.Enabled = false;
+                listViewStyles.Visible = true;
+                listViewStyles.BringToFront();
+                FillStyles();
+            }
+            else if (comboBoxRule.SelectedIndex == FunctionActor)
+            {
+                checkBoxCaseSensitive.Enabled = false;
+                listViewStyles.Visible = true;
+                listViewStyles.BringToFront();
+                FillActors();
             }
             else
             {

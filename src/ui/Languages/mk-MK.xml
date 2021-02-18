@@ -1625,8 +1625,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <EndsWith>Завршува со</EndsWith>
     <NoContains>Не содржи</NoContains>
     <RegEx>Регуларен израз</RegEx>
-    <UnequalLines>Линии со непарни редни бр.</UnequalLines>
-    <EqualLines>Линии со парни редни бр.</EqualLines>
+    <OddLines>Линии со непарни редни бр.</OddLines>
+    <EvenLines>Линии со парни редни бр.</EvenLines>
     <DurationLessThan>Траење помало од</DurationLessThan>
     <DurationGreaterThan>Траење поголемо од</DurationGreaterThan>
     <MoreThanTwoLines>Повеќе од два реда</MoreThanTwoLines>

@@ -1549,8 +1549,8 @@ Si vous avez modifié ce fichier avec Subtitle Edit vous pourriez trouver une sa
     <EndsWith>Se termine par</EndsWith>
     <NoContains>Ne contient pas</NoContains>
     <RegEx>Expression régulière</RegEx>
-    <UnequalLines>Lignes différentes</UnequalLines>
-    <EqualLines>Lignes égales</EqualLines>
+    <OddLines>Lignes différentes</OddLines>
+    <EvenLines>Lignes égales</EvenLines>
     <DurationLessThan>Durée inférieure à</DurationLessThan>
     <DurationGreaterThan>Durée supérieure à</DurationGreaterThan>
   </ModifySelection>

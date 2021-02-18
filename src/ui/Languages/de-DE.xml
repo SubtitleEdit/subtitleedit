@@ -1575,8 +1575,8 @@ Falls Sie diese Datei mit Subtitle Edit bearbeitet haben, dürfte eine Sicherung
     <EndsWith>Endet mit</EndsWith>
     <NoContains>Beinhaltet nicht</NoContains>
     <RegEx>Regulärer Ausdruck</RegEx>
-    <UnequalLines>Ungleiche Texte</UnequalLines>
-    <EqualLines>Gleiche Texte</EqualLines>
+    <OddLines>Ungleiche Texte</OddLines>
+    <EvenLines>Gleiche Texte</EvenLines>
     <DurationLessThan>Dauer unter</DurationLessThan>
     <DurationGreaterThan>Dauer über</DurationGreaterThan>
   </ModifySelection>

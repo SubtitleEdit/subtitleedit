@@ -1394,8 +1394,8 @@
     <EndsWith>ลงท้ายด้วย</EndsWith>
     <NoContains>ไม่มี</NoContains>
     <RegEx>เรกูลาร์เอ็กซ์เพรสชัน</RegEx>
-    <UnequalLines>บรรทัดที่ไม่เท่ากัน</UnequalLines>
-    <EqualLines>บรรทัดที่เท่ากัน</EqualLines>
+    <OddLines>บรรทัดที่ไม่เท่ากัน</OddLines>
+    <EvenLines>บรรทัดที่เท่ากัน</EvenLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>แทนที่เป็นชุด</Title>

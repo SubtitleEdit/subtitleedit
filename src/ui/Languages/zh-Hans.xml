@@ -1743,8 +1743,8 @@ Command line: {1} {2}
     <EndsWith>止于</EndsWith>
     <NoContains>不包含</NoContains>
     <RegEx>正则表达式</RegEx>
-    <UnequalLines>差异行</UnequalLines>
-    <EqualLines>匹配行</EqualLines>
+    <OddLines>差异行</OddLines>
+    <EvenLines>匹配行</EvenLines>
     <DurationLessThan>时长小于</DurationLessThan>
     <DurationGreaterThan>时长大于</DurationGreaterThan>
     <MoreThanTwoLines>超过两行</MoreThanTwoLines>

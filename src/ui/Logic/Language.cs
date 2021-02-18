@@ -2029,11 +2029,12 @@ namespace Nikse.SubtitleEdit.Logic
                 EndsWith = "Ends with",
                 NoContains = "Not contains",
                 RegEx = "Regular expression",
-                UnequalLines = "Odd-numbered lines",
-                EqualLines = "Even-numbered lines",
+                OddLines = "Odd-numbered lines",
+                EvenLines = "Even-numbered lines",
                 DurationLessThan = "Duration less than",
                 DurationGreaterThan = "Duration greater than",
                 MoreThanTwoLines = "More than two lines",
+                Bookmarked = "Bookmarked"
             };
 
             MultipleReplace = new LanguageStructure.MultipleReplace

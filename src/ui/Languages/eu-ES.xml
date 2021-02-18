@@ -1601,8 +1601,8 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <EndsWith>Amaitzen da</EndsWith>
     <NoContains>Ez du</NoContains>
     <RegEx>Esaera arrunta</RegEx>
-    <UnequalLines>Lerro ezberdinak</UnequalLines>
-    <EqualLines>Lerro berdinak</EqualLines>
+    <OddLines>Lerro ezberdinak</OddLines>
+    <EvenLines>Lerro berdinak</EvenLines>
     <DurationLessThan>Iraupena hau baino gutxiago</DurationLessThan>
     <DurationGreaterThan>Iraupena hau baino gehiago</DurationGreaterThan>
     <MoreThanTwoLines>Bi lerro baino gehiago</MoreThanTwoLines>

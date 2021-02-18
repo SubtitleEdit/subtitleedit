@@ -1584,8 +1584,8 @@ Si ha editado este archivo con Subtitle Edit es posible que pueda encontrar una 
     <EndsWith>Terminan con</EndsWith>
     <NoContains>No contienen</NoContains>
     <RegEx>Expresión regular</RegEx>
-    <UnequalLines>Líneas desiguales</UnequalLines>
-    <EqualLines>Líneas iguales</EqualLines>
+    <OddLines>Líneas desiguales</OddLines>
+    <EvenLines>Líneas iguales</EvenLines>
     <DurationLessThan>Duración menor a</DurationLessThan>
     <DurationGreaterThan>Duración mayor a</DurationGreaterThan>
   </ModifySelection>

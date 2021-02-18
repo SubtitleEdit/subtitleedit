@@ -1606,8 +1606,8 @@ Se você editou este arquivo com o Subtitle Edit você poderá encontrar um back
     <EndsWith>Termina com</EndsWith>
     <NoContains>Não contém</NoContains>
     <RegEx>Expressão regular</RegEx>
-    <UnequalLines>Linhas não iguais</UnequalLines>
-    <EqualLines>Linhas iguais</EqualLines>
+    <OddLines>Linhas não iguais</OddLines>
+    <EvenLines>Linhas iguais</EvenLines>
     <DurationLessThan>Duração menor que</DurationLessThan>
     <DurationGreaterThan>Duração maior que</DurationGreaterThan>
   </ModifySelection>

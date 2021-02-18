@@ -1748,8 +1748,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <EndsWith>Τελειώνει με</EndsWith>
     <NoContains>Δεν περιέχει</NoContains>
     <RegEx>Τυπική έκφραση</RegEx>
-    <UnequalLines>Άνισες γραμμές</UnequalLines>
-    <EqualLines>Ίσες γραμμές</EqualLines>
+    <OddLines>Άνισες γραμμές</OddLines>
+    <EvenLines>Ίσες γραμμές</EvenLines>
     <DurationLessThan>Διάρκεια μικρότερη από</DurationLessThan>
     <DurationGreaterThan>Διάρκεια μεγαλύτερη από</DurationGreaterThan>
     <MoreThanTwoLines>Πάνω από δύο γραμμές</MoreThanTwoLines>

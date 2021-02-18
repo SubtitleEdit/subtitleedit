@@ -1752,8 +1752,8 @@ Se editou este ficheiro no Subtitle Edit é possível que encontre a cópia de s
     <EndsWith>Termina com</EndsWith>
     <NoContains>Não Contém</NoContains>
     <RegEx>Expressão regular</RegEx>
-    <UnequalLines>Linhas com números ímpares</UnequalLines>
-    <EqualLines>Linhas com números pares</EqualLines>
+    <OddLines>Linhas com números ímpares</OddLines>
+    <EvenLines>Linhas com números pares</EvenLines>
     <DurationLessThan>Duração menor que</DurationLessThan>
     <DurationGreaterThan>Duração maior que</DurationGreaterThan>
     <MoreThanTwoLines>Mais de duas linhas</MoreThanTwoLines>

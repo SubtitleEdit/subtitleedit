@@ -1518,8 +1518,8 @@ koji bi trebao biti usklađen s video datotekom.
     <EndsWith>Završava sa</EndsWith>
     <NoContains>Ne sadrži</NoContains>
     <RegEx>Normalan izraz</RegEx>
-    <UnequalLines>Neparne linije</UnequalLines>
-    <EqualLines>Parne linije</EqualLines>
+    <OddLines>Neparne linije</OddLines>
+    <EvenLines>Parne linije</EvenLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Višestruka zamjena</Title>

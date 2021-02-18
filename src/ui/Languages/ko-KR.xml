@@ -1748,8 +1748,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <EndsWith>다음 텍스트로 끝나는 줄</EndsWith>
     <NoContains>다음 텍스트가 없는(無) 줄</NoContains>
     <RegEx>정규 표현식</RegEx>
-    <UnequalLines>홀수 라인</UnequalLines>
-    <EqualLines>짝수 라인</EqualLines>
+    <OddLines>홀수 라인</OddLines>
+    <EvenLines>짝수 라인</EvenLines>
     <DurationLessThan>표시시간 미달</DurationLessThan>
     <DurationGreaterThan>표시시간 초과</DurationGreaterThan>
     <MoreThanTwoLines>두 줄 이상</MoreThanTwoLines>
