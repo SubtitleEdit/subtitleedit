@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat
                     stream.Seek(next, SeekOrigin.Begin);
                     var klv = new KlvPacket(stream);
                     next += klv.TotalSize;
-                    if (klv.IdentifierType == KeyIdentifier.EssenceElement && klv.DataSize < 500000)
+                    if ((klv.IdentifierType == KeyIdentifier.EssenceElement || klv.IdentifierType == KeyIdentifier.Unknown) && klv.DataSize < 500000)
                     {
                         stream.Seek(klv.DataPosition, SeekOrigin.Begin);
                         var buffer = new byte[klv.DataSize];
