@@ -30,12 +30,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private const int WordListsSection = 6;
         private const int ToolbarSection = 7;
         private const int FontSection = 8;
-        private const int SsaStyleSection = 9;
-        private const int NetworkSection = 10;
+        private const int NetworkSection = 9;
 
-        private string _ssaFontName;
-        private double _ssaFontSize;
-        private int _ssaFontColor;
         private string _listBoxSearchString = string.Empty;
         private DateTime _listBoxSearchStringLastUsed = DateTime.UtcNow;
         private List<string> _wordListNames = new List<string>();
@@ -47,8 +43,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private bool _oldListViewShowWpm;
         private readonly Dictionary<ShortcutHelper, string> _newShortcuts = new Dictionary<ShortcutHelper, string>();
         private List<RulesProfile> _rulesProfiles;
-        private bool _loading = true;
-        private bool _backgroundImageDark;
 
         private class ComboBoxLanguage
         {
@@ -120,11 +114,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         public void Init()
         {
-            _loading = true;
             labelStatus.Text = string.Empty;
             _rulesProfiles = new List<RulesProfile>(Configuration.Settings.General.Profiles);
             var gs = Configuration.Settings.General;
-            _backgroundImageDark = Configuration.Settings.General.UseDarkTheme;
 
             listBoxSection.SelectedIndex = GeneralSection;
 
@@ -276,19 +268,15 @@ namespace Nikse.SubtitleEdit.Forms.Options
             textBoxCustomSearchUrl4.Text = Configuration.Settings.VideoControls.CustomSearchUrl4;
             textBoxCustomSearchUrl5.Text = Configuration.Settings.VideoControls.CustomSearchUrl5;
 
-            comboBoxFontName.BeginUpdate();
             comboBoxSubtitleFont.BeginUpdate();
             comboBoxVideoPlayerPreviewFontName.BeginUpdate();
-            comboBoxFontName.Items.Clear();
             comboBoxSubtitleFont.Items.Clear();
             comboBoxVideoPlayerPreviewFontName.Items.Clear();
-            var comboBoxFontNameList = new List<string>();
             var comboBoxSubtitleFontList = new List<string>();
             var comboBoxSubtitleFontIndex = 0;
             var comboBoxVideoPlayerPreviewFontIndex = 0;
             foreach (var x in FontFamily.Families.OrderBy(p => p.Name))
             {
-                comboBoxFontNameList.Add(x.Name);
                 if (x.IsStyleAvailable(FontStyle.Regular) && x.IsStyleAvailable(FontStyle.Bold))
                 {
                     comboBoxSubtitleFontList.Add(x.Name);
@@ -303,41 +291,16 @@ namespace Nikse.SubtitleEdit.Forms.Options
                     }
                 }
             }
-            comboBoxFontName.Items.AddRange(comboBoxFontNameList.ToArray<object>());
             comboBoxSubtitleFont.Items.AddRange(comboBoxSubtitleFontList.ToArray<object>());
             comboBoxVideoPlayerPreviewFontName.Items.AddRange(comboBoxSubtitleFontList.ToArray<object>());
             comboBoxSubtitleFont.SelectedIndex = comboBoxSubtitleFontIndex;
             comboBoxVideoPlayerPreviewFontName.SelectedIndex = comboBoxVideoPlayerPreviewFontIndex;
-            comboBoxFontName.EndUpdate();
             comboBoxSubtitleFont.EndUpdate();
             comboBoxVideoPlayerPreviewFontName.EndUpdate();
 
             var wordListSettings = Configuration.Settings.WordLists;
             checkBoxNamesOnline.Checked = wordListSettings.UseOnlineNames;
             textBoxNamesOnline.Text = wordListSettings.NamesUrl;
-
-            var ssa = Configuration.Settings.SubtitleSettings;
-            _ssaFontName = ssa.SsaFontName;
-            _ssaFontSize = ssa.SsaFontSize;
-            _ssaFontColor = ssa.SsaFontColorArgb;
-            if (ssa.SsaOutline >= numericUpDownSsaOutline.Minimum && ssa.SsaOutline <= numericUpDownSsaOutline.Maximum)
-            {
-                numericUpDownSsaOutline.Value = ssa.SsaOutline;
-            }
-
-            if (ssa.SsaShadow >= numericUpDownSsaShadow.Minimum && ssa.SsaShadow <= numericUpDownSsaShadow.Maximum)
-            {
-                numericUpDownSsaShadow.Value = ssa.SsaShadow;
-            }
-
-            numericUpDownSsaMarginLeft.Value = ssa.SsaMarginLeft;
-            numericUpDownSsaMarginRight.Value = ssa.SsaMarginRight;
-            numericUpDownSsaMarginVertical.Value = ssa.SsaMarginTopBottom;
-            checkBoxSsaFontBold.Checked = ssa.SsaFontBold;
-            checkBoxSsaOpaqueBox.Checked = ssa.SsaOpaqueBox;
-            numericUpDownFontSize.Value = (decimal)ssa.SsaFontSize;
-            comboBoxFontName.Text = ssa.SsaFontName;
-            panelPrimaryColor.BackColor = Color.FromArgb(_ssaFontColor);
 
             var proxy = Configuration.Settings.Proxy;
             textBoxProxyAddress.Text = proxy.ProxyAddress;
@@ -372,7 +335,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             listBoxSection.Items[WordListsSection] = language.WordLists;
             listBoxSection.Items[ToolbarSection] = language.Toolbar;
             listBoxSection.Items[FontSection] = LanguageSettings.Current.DCinemaProperties.Font;
-            listBoxSection.Items[SsaStyleSection] = language.SsaStyle;
             listBoxSection.Items[NetworkSection] = language.Network;
 
             Text = language.Title;
@@ -381,7 +343,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             panelWaveform.Text = language.WaveformAndSpectrogram;
             panelWordLists.Text = language.WordLists;
             panelTools.Text = language.Tools;
-            panelSsaStyle.Text = language.SsaStyle;
             panelNetwork.Text = language.Network;
             panelToolBar.Text = language.Toolbar;
             panelFont.Text = LanguageSettings.Current.DCinemaProperties.Font;
@@ -659,39 +620,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
 
             labelFFmpegPath.Text = language.WaveformFFmpegPath;
-
-            groupBoxSsaStyle.Text = language.SubStationAlphaStyle;
-
-            var ssaStyles = LanguageSettings.Current.SubStationAlphaStyles;
-            labelSsaFontSize.Text = ssaStyles.FontSize;
-            labelFontName.Text = ssaStyles.FontName;
-            buttonSsaColor.Text = LanguageSettings.Current.Settings.ChooseColor;
-            groupBoxSsaFont.Text = ssaStyles.Font;
-            groupBoxSsaBorder.Text = ssaStyles.Border;
-            groupBoxMargins.Text = ssaStyles.Margins;
-            labelMarginLeft.Text = ssaStyles.MarginLeft;
-            labelMarginRight.Text = ssaStyles.MarginRight;
-            labelMarginVertical.Text = ssaStyles.MarginVertical;
-            labelSsaOutline.Text = language.SsaOutline;
-            labelSsaShadow.Text = language.SsaShadow;
-            checkBoxSsaOpaqueBox.Text = language.SsaOpaqueBox;
-            checkBoxSsaFontBold.Text = LanguageSettings.Current.General.Bold;
-
-            groupBoxPreview.Text = LanguageSettings.Current.General.Preview;
-
-            numericUpDownSsaOutline.Left = labelSsaOutline.Left + labelSsaOutline.Width + 4;
-            numericUpDownSsaShadow.Left = labelSsaShadow.Left + labelSsaShadow.Width + 4;
-            if (Math.Abs(numericUpDownSsaOutline.Left - numericUpDownSsaShadow.Left) < 9)
-            {
-                if (numericUpDownSsaOutline.Left > numericUpDownSsaShadow.Left)
-                {
-                    numericUpDownSsaShadow.Left = numericUpDownSsaOutline.Left;
-                }
-                else
-                {
-                    numericUpDownSsaOutline.Left = numericUpDownSsaShadow.Left;
-                }
-            }
 
             groupBoxWordLists.Text = language.WordLists;
             labelWordListLanguage.Text = language.Language;
@@ -1046,9 +974,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             _oldListViewShowWpm = Configuration.Settings.Tools.ListViewShowColumnWordsPerMin;
 
             labelPlatform.Text = (IntPtr.Size * 8) + "-bit";
-
-            _loading = false;
-            UpdateSsaExample();
         }
 
         private void SetDialogStyle(DialogType dialogStyle)
@@ -1923,18 +1848,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 }
             }
 
-            var ssa = Configuration.Settings.SubtitleSettings;
-            ssa.SsaFontName = _ssaFontName;
-            ssa.SsaFontSize = _ssaFontSize;
-            ssa.SsaFontColorArgb = _ssaFontColor;
-            ssa.SsaFontBold = checkBoxSsaFontBold.Checked;
-            ssa.SsaOutline = (int)numericUpDownSsaOutline.Value;
-            ssa.SsaShadow = (int)numericUpDownSsaShadow.Value;
-            ssa.SsaOpaqueBox = checkBoxSsaOpaqueBox.Checked;
-            ssa.SsaMarginLeft = (int)numericUpDownSsaMarginLeft.Value;
-            ssa.SsaMarginRight = (int)numericUpDownSsaMarginRight.Value;
-            ssa.SsaMarginTopBottom = (int)numericUpDownSsaMarginVertical.Value;
-
             var proxy = Configuration.Settings.Proxy;
             proxy.ProxyAddress = textBoxProxyAddress.Text;
             proxy.UserName = textBoxProxyUserName.Text;
@@ -2010,74 +1923,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 UiUtil.ShowHelp("#settings");
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void UpdateSsaExample()
-        {
-            GeneratePreviewReal();
-        }
-
-        private void GeneratePreviewReal()
-        {
-            if (_loading)
-            {
-                return;
-            }
-
-            pictureBoxPreview.Image?.Dispose();
-            var backgroundImage = TextDesigner.MakeBackgroundImage(pictureBoxPreview.Width, pictureBoxPreview.Height, 9, _backgroundImageDark);
-            var outlineWidth = (float)numericUpDownSsaOutline.Value;
-            var shadowWidth = (float)numericUpDownSsaShadow.Value;
-            var outlineColor = Color.Black;
-
-            Font font;
-            try
-            {
-                font = new Font(comboBoxFontName.Text, (float)numericUpDownFontSize.Value * 1.1f, checkBoxSsaFontBold.Checked ? FontStyle.Bold : FontStyle.Regular);
-            }
-            catch
-            {
-                font = new Font(Font, FontStyle.Regular);
-            }
-
-            var measureBmp = TextDesigner.MakeTextBitmapAssa(
-                Configuration.Settings.General.PreviewAssaText,
-                0,
-                0,
-                font,
-                pictureBoxPreview.Width,
-                pictureBoxPreview.Height,
-                outlineWidth,
-                shadowWidth,
-                null,
-                panelPrimaryColor.BackColor,
-                outlineColor,
-                Color.FromArgb(100, Color.Black),
-                checkBoxSsaOpaqueBox.Checked);
-            var nBmp = new NikseBitmap(measureBmp);
-            var measuredWidth = nBmp.GetNonTransparentWidth();
-            var measuredHeight = nBmp.GetNonTransparentHeight();
-
-            float left = (pictureBoxPreview.Width - measuredWidth) / 2.0f;
-            float top = pictureBoxPreview.Height - measuredHeight - (int)numericUpDownSsaMarginVertical.Value;
-            var designedText = TextDesigner.MakeTextBitmapAssa(
-                Configuration.Settings.General.PreviewAssaText,
-                (int)Math.Round(left),
-                (int)Math.Round(top),
-                font,
-                pictureBoxPreview.Width,
-                pictureBoxPreview.Height,
-                outlineWidth,
-                shadowWidth,
-                backgroundImage,
-                panelPrimaryColor.BackColor,
-                Color.Black,
-                Color.FromArgb(200, Color.Black),
-                checkBoxSsaOpaqueBox.Checked);
-
-            pictureBoxPreview.Image?.Dispose();
-            pictureBoxPreview.Image = designedText;
-            font.Dispose();
         }
 
         private void ComboBoxWordListLanguageSelectedIndexChanged(object sender, EventArgs e)
@@ -2580,7 +2425,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             panelWordLists.Visible = false;
             panelToolBar.Visible = false;
             panelFont.Visible = false;
-            panelSsaStyle.Visible = false;
             panelNetwork.Visible = false;
 
             var section = panelGeneral;
@@ -2609,9 +2453,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
                     break;
                 case FontSection:
                     section = panelFont;
-                    break;
-                case SsaStyleSection:
-                    section = panelSsaStyle;
                     break;
                 case NetworkSection:
                     section = panelNetwork;
@@ -3062,23 +2903,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
         }
 
-        private void numericUpDownSsaOutline_ValueChanged(object sender, EventArgs e)
-        {
-            UpdateSsaExample();
-        }
-
-        private void numericUpDownSsaShadow_ValueChanged(object sender, EventArgs e)
-        {
-            UpdateSsaExample();
-        }
-
-        private void checkBoxSsaOpaqueBox_CheckedChanged(object sender, EventArgs e)
-        {
-            numericUpDownSsaOutline.Enabled = !checkBoxSsaOpaqueBox.Checked;
-            numericUpDownSsaShadow.Enabled = !checkBoxSsaOpaqueBox.Checked;
-            UpdateSsaExample();
-        }
-
         private void buttonBrowseToFFmpeg_Click(object sender, EventArgs e)
         {
             openFileDialogFFmpeg.FileName = string.Empty;
@@ -3174,44 +2998,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             {
                 textBoxNetworkSessionNewMessageSound.Text = openFileDialogFFmpeg.FileName;
             }
-        }
-
-        private void panelPrimaryColor_MouseClick(object sender, MouseEventArgs e)
-        {
-            colorDialogSSAStyle.Color = Color.FromArgb(_ssaFontColor);
-            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
-            {
-                _ssaFontColor = colorDialogSSAStyle.Color.ToArgb();
-                panelPrimaryColor.BackColor = colorDialogSSAStyle.Color;
-                UpdateSsaExample();
-            }
-        }
-
-        private void numericUpDownSsaMarginVertical_ValueChanged(object sender, EventArgs e)
-        {
-            UpdateSsaExample();
-        }
-
-        private void comboBoxFontName_TextChanged(object sender, EventArgs e)
-        {
-            _ssaFontName = comboBoxFontName.Text;
-            UpdateSsaExample();
-        }
-
-        private void numericUpDownFontSize_ValueChanged(object sender, EventArgs e)
-        {
-            _ssaFontSize = (int)numericUpDownFontSize.Value;
-            UpdateSsaExample();
-        }
-
-        private void buttonSsaColor_Click(object sender, EventArgs e)
-        {
-            panelPrimaryColor_MouseClick(sender, null);
-        }
-
-        private void checkBoxSsaFontBold_CheckedChanged(object sender, EventArgs e)
-        {
-            UpdateSsaExample();
         }
 
         private void buttonMpvSettings_Click(object sender, EventArgs e)
@@ -3595,12 +3381,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
                                 exception.StackTrace);
                 SeLogger.Error(exception, "Failed to export shortcuts");
             }
-        }
-
-        private void pictureBoxPreview_Click(object sender, EventArgs e)
-        {
-            _backgroundImageDark = !_backgroundImageDark;
-            GeneratePreviewReal();
         }
 
         private void buttonTextBoxHtmlColor_Click(object sender, EventArgs e)

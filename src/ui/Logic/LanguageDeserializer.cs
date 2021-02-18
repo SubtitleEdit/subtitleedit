@@ -7087,6 +7087,18 @@ namespace Nikse.SubtitleEdit.Logic
                 case "SubStationAlphaStyles/OverwriteX":
                     language.SubStationAlphaStyles.OverwriteX = reader.Value;
                     break;
+                case "SubStationAlphaStyles/Category":
+                    language.SubStationAlphaStyles.Category = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/NewCategory":
+                    language.SubStationAlphaStyles.NewCategory = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/CategoryName":
+                    language.SubStationAlphaStyles.CategoryName = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/CategoryNote":
+                    language.SubStationAlphaStyles.CategoryNote = reader.Value;
+                    break;
                 case "PointSync/Title":
                     language.PointSync.Title = reader.Value;
                     break;

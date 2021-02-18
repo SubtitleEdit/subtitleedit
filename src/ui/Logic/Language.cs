@@ -2924,7 +2924,11 @@ can edit in same subtitle file (collaboration)",
                 AddToFile = "Add to file",
                 AddToStorage = "Add to storage",
                 StyleStorage = "Style storage",
-                OverwriteX = "Overwrite {0}?"
+                OverwriteX = "Overwrite {0}?",
+                Category = "Category",
+                NewCategory = "New category",
+                CategoryName = "Category name",
+                CategoryNote = "Note: \"Default\" styles will be applied to new ASSA files"
             };
 
             PointSync = new LanguageStructure.PointSync

@@ -7860,6 +7860,10 @@ namespace Nikse.SubtitleEdit.Forms
                 actors = new List<string>();
                 toolStripMenuItemWebVTT.Visible = false;
                 var styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
+                if (styles.Count == 0)
+                {
+                    styles = AdvancedSubStationAlpha.GetStylesFromHeader(AdvancedSubStationAlpha.DefaultHeader);
+                }
                 setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Clear();
                 foreach (var style in styles)
                 {
