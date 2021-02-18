@@ -613,7 +613,7 @@
             public string CenterRightJustify { get; set; }
             public string BottomMargin { get; set; }
             public string LeftRightMargin { get; set; }
-            public string SaveBluRraySupAs { get; set; }
+            public string SaveBluRaySupAs { get; set; }
             public string SaveVobSubAs { get; set; }
             public string SaveFabImageScriptAs { get; set; }
             public string SaveDvdStudioProStlAs { get; set; }

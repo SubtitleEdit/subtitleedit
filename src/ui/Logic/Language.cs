@@ -742,7 +742,7 @@ namespace Nikse.SubtitleEdit.Logic
                 CenterRightJustify = "Center, right justify",
                 BottomMargin = "Bottom margin",
                 LeftRightMargin = "Left/right margin",
-                SaveBluRraySupAs = "Choose Blu-ray sup file name",
+                SaveBluRaySupAs = "Choose Blu-ray sup file name",
                 SaveVobSubAs = "Choose VobSub file name",
                 SaveFabImageScriptAs = "Choose FAB image script file name",
                 SaveDvdStudioProStlAs = "Choose DVD Studio Pro STL file name",

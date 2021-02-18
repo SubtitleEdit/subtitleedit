@@ -418,7 +418,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <Center>中</Center>
     <BottomMargin>底部邊界</BottomMargin>
     <LeftRightMargin>左/右邊界</LeftRightMargin>
-    <SaveBluRraySupAs>選擇藍光 sup 檔案名稱</SaveBluRraySupAs>
+    <SaveBluRaySupAs>選擇藍光 sup 檔案名稱</SaveBluRaySupAs>
     <SaveVobSubAs>選擇 VobSub 檔案名稱</SaveVobSubAs>
     <SaveFabImageScriptAs>選擇 FAB image script file name 檔案名稱</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>選擇 DVD Studio Pro STL 檔案名稱</SaveDvdStudioProStlAs>
