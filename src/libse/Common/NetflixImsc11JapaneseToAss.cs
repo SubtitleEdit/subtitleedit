@@ -542,13 +542,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 finalSub.Paragraphs.AddRange(SplitToAssRenderLines(paragraph, width, height));
             }
 
-            var oldFontSize = Configuration.Settings.SubtitleSettings.SsaFontSize;
-            var oldFontBold = Configuration.Settings.SubtitleSettings.SsaFontBold;
-            Configuration.Settings.SubtitleSettings.SsaFontSize = 40; // font size
-            Configuration.Settings.SubtitleSettings.SsaFontBold = false;
-            finalSub.Header = AdvancedSubStationAlpha.DefaultHeader;
-            Configuration.Settings.SubtitleSettings.SsaFontSize = oldFontSize;
-            Configuration.Settings.SubtitleSettings.SsaFontBold = oldFontBold;
+            var style = new SsaStyle{ FontSize = 40, Bold = false};
+            finalSub.Header = string.Format(AdvancedSubStationAlpha.HeaderNoStyles, string.Empty, style.ToRawAss());
 
             finalSub.Header = finalSub.Header.Replace("PlayDepth: 0", @"PlayDepth: 0
 PlayResX: 1280

@@ -2589,6 +2589,10 @@ Continue?</RestoreDefaultSettingsMsg>
     <AddToStorage>Add to storage</AddToStorage>
     <StyleStorage>Style storage</StyleStorage>
     <OverwriteX>Overwrite {0}?</OverwriteX>
+    <Category>Category</Category>
+    <NewCategory>New category</NewCategory>
+    <CategoryName>Category name</CategoryName>
+    <CategoryNote>Note: "Default" styles will be applied to new ASSA files</CategoryNote>
   </SubStationAlphaStyles>
   <PointSync>
     <Title>Point synchronization</Title>
