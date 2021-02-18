@@ -1355,8 +1355,8 @@ Nadaljujem?</SubtitleAppendPrompt>
     <EndsWith>Konča z</EndsWith>
     <NoContains>Ne vsebuje</NoContains>
     <RegEx>Pravilni izraz</RegEx>
-    <UnequalLines>Neenake vrstice</UnequalLines>
-    <EqualLines>Enake vrstice</EqualLines>
+    <OddLines>Neenake vrstice</OddLines>
+    <EvenLines>Enake vrstice</EvenLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Množična zamenjava</Title>

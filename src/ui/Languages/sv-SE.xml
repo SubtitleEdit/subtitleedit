@@ -1573,8 +1573,8 @@ Om du har redigerat den här filen med Subtitle Edit kan du hitta en backup via 
     <EndsWith>Slutar med</EndsWith>
     <NoContains>Innehåller ej</NoContains>
     <RegEx>Reguljärt uttryck</RegEx>
-    <UnequalLines>Ojämna radnummer</UnequalLines>
-    <EqualLines>Jämna radnummer</EqualLines>
+    <OddLines>Ojämna radnummer</OddLines>
+    <EvenLines>Jämna radnummer</EvenLines>
     <DurationLessThan>Varaktighet kortare än</DurationLessThan>
     <DurationGreaterThan>Varaktighet längre än</DurationGreaterThan>
   </ModifySelection>

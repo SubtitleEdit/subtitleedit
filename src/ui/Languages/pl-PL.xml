@@ -1752,8 +1752,8 @@ Jeśli edytowałeś ten plik w Subtitle Edit, to możesz odszukać kopię zapaso
     <EndsWith>Kończy się na</EndsWith>
     <NoContains>Nie zawiera</NoContains>
     <RegEx>Wyrażenie regularne</RegEx>
-    <UnequalLines>Linie o numerach nieparzystych</UnequalLines>
-    <EqualLines>Linie o numerach parzystych</EqualLines>
+    <OddLines>Linie o numerach nieparzystych</OddLines>
+    <EvenLines>Linie o numerach parzystych</EvenLines>
     <DurationLessThan>Czas trwania krótszy niż</DurationLessThan>
     <DurationGreaterThan>Czas trwania dłuższy niż</DurationGreaterThan>
     <MoreThanTwoLines>Więcej niż dwie linie</MoreThanTwoLines>

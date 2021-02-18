@@ -4768,11 +4768,11 @@ namespace Nikse.SubtitleEdit.Logic
                 case "ModifySelection/RegEx":
                     language.ModifySelection.RegEx = reader.Value;
                     break;
-                case "ModifySelection/UnequalLines":
-                    language.ModifySelection.UnequalLines = reader.Value;
+                case "ModifySelection/OddLines":
+                    language.ModifySelection.OddLines = reader.Value;
                     break;
-                case "ModifySelection/EqualLines":
-                    language.ModifySelection.EqualLines = reader.Value;
+                case "ModifySelection/EvenLines":
+                    language.ModifySelection.EvenLines = reader.Value;
                     break;
                 case "ModifySelection/DurationLessThan":
                     language.ModifySelection.DurationLessThan = reader.Value;
@@ -4782,6 +4782,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "ModifySelection/MoreThanTwoLines":
                     language.ModifySelection.MoreThanTwoLines = reader.Value;
+                    break;
+                case "ModifySelection/Bookmarked":
+                    language.ModifySelection.Bookmarked = reader.Value;
                     break;
                 case "MultipleReplace/Title":
                     language.MultipleReplace.Title = reader.Value;

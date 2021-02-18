@@ -1477,8 +1477,8 @@ M'ho peus kemmet ar restr gant Subtitle Edit gellout a rafec'h kavout une enroll
     <EndsWith>A echu gant</EndsWith>
     <NoContains>Na endalc'h ket</NoContains>
     <RegEx>Tro-lavar reoliataet</RegEx>
-    <UnequalLines>Linennoù disheñvel</UnequalLines>
-    <EqualLines>Linennoù heñvel</EqualLines>
+    <OddLines>Linennoù disheñvel</OddLines>
+    <EvenLines>Linennoù heñvel</EvenLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Lies-erlec'hiañ</Title>

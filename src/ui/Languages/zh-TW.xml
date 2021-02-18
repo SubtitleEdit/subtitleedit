@@ -1450,8 +1450,8 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <EndsWith>止於</EndsWith>
     <NoContains>不包含</NoContains>
     <RegEx>正則表達式</RegEx>
-    <UnequalLines>相異的行</UnequalLines>
-    <EqualLines>相同的行</EqualLines>
+    <OddLines>相異的行</OddLines>
+    <EvenLines>相同的行</EvenLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>多重取代</Title>

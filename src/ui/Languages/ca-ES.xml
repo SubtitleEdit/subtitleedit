@@ -1705,8 +1705,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <EndsWith>Finalitza amb</EndsWith>
     <NoContains>No conté</NoContains>
     <RegEx>Expressió regular</RegEx>
-    <UnequalLines>Línies no iguals</UnequalLines>
-    <EqualLines>Línies iguals</EqualLines>
+    <OddLines>Línies no iguals</OddLines>
+    <EvenLines>Línies iguals</EvenLines>
     <DurationLessThan>Durada menor que</DurationLessThan>
     <DurationGreaterThan>Durada major que</DurationGreaterThan>
     <MoreThanTwoLines>Més de dues línies</MoreThanTwoLines>

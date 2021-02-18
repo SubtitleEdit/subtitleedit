@@ -1623,8 +1623,8 @@ Ha ezt a fájlt a Subtitle Edit programmal módosította, akkor lehet, hogy megt
     <EndsWith>ezzel végződik</EndsWith>
     <NoContains>Nem tartalmazza</NoContains>
     <RegEx>Reguláris kifejezés</RegEx>
-    <UnequalLines>Páratlan számú sorok</UnequalLines>
-    <EqualLines>Páros számú sorok</EqualLines>
+    <OddLines>Páratlan számú sorok</OddLines>
+    <EvenLines>Páros számú sorok</EvenLines>
     <DurationLessThan>Időtartama kevesebb, mint</DurationLessThan>
     <DurationGreaterThan>Időtartama nagyobb, mint</DurationGreaterThan>
     <MoreThanTwoLines>Több, mint két sor</MoreThanTwoLines>

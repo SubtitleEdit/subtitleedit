@@ -1458,8 +1458,8 @@ la codifica ANSI andranno perse. Salvare comunque?</UnicodeCharactersAnsiWarning
     <EndsWith>Finisce con</EndsWith>
     <NoContains>Non contiene</NoContains>
     <RegEx>Espressione regolare</RegEx>
-    <UnequalLines>Linee differenti</UnequalLines>
-    <EqualLines>Linee uguali</EqualLines>
+    <OddLines>Linee differenti</OddLines>
+    <EvenLines>Linee uguali</EvenLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Sostituzione multipla</Title>
