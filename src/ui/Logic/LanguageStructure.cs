@@ -2782,6 +2782,7 @@
             public string AddToFile { get; set; }
             public string AddToStorage { get; set; }
             public string StyleStorage { get; set; }
+            public string StyleCurrentFile { get; set; }
             public string OverwriteX { get; set; }
             public string Category { get; set; }
             public string NewCategory { get; set; }

@@ -2589,6 +2589,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <AddToFile>Add to file</AddToFile>
     <AddToStorage>Add to storage</AddToStorage>
     <StyleStorage>Style storage</StyleStorage>
+    <StyleCurrentFile>Styles in current file</StyleCurrentFile>
     <OverwriteX>Overwrite {0}?</OverwriteX>
     <Category>Category</Category>
     <NewCategory>New category</NewCategory>

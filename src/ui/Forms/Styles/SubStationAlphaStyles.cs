@@ -78,7 +78,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             var l = LanguageSettings.Current.SubStationAlphaStyles;
             Text = l.Title;
-            groupBoxStyles.Text = l.Styles;
+            groupBoxStyles.Text = _isSubStationAlpha ? l.Styles : l.StyleCurrentFile;
             listViewStyles.Columns[0].Text = l.Name;
             listViewStyles.Columns[1].Text = l.FontName;
             listViewStyles.Columns[2].Text = l.FontSize;
@@ -780,6 +780,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             if (listViewStyles.SelectedItems.Count == 1)
             {
+                textBoxStyleName.Enabled = true;
                 string styleName = listViewStyles.SelectedItems[0].Text;
                 _startName = styleName;
                 _editedName = null;
@@ -1845,6 +1846,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 groupBoxProperties.Enabled = true;
                 GeneratePreview();
                 buttonStorageRemove.Enabled = listViewStorage.Items.Count > 1 || !_currentCategory.IsDefault;
+                textBoxStyleName.Enabled = styleName != "Default";
             }
             else
             {
@@ -2139,7 +2141,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 if (form.ShowDialog() == DialogResult.OK && !_storageCategories.Exists(x => x.Name == form.InputText))
                 {
-                    var newCategory = new AssaStorageCategory { Name = form.InputText, IsDefault = false, Styles = new List<SsaStyle>()};
+                    var newCategory = new AssaStorageCategory { Name = form.InputText, IsDefault = false, Styles = new List<SsaStyle>() };
                     _storageCategories.Add(newCategory);
                     comboboxStorageCategories.Items.Add(newCategory.Name);
                     comboboxStorageCategories.SelectedItem = newCategory.Name;
