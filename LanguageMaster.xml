@@ -1333,6 +1333,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
     <SaveChangesToOriginalX>Save changes to original {0}?</SaveChangesToOriginalX>
     <SaveSubtitleAs>Save subtitle as...</SaveSubtitleAs>
     <SaveOriginalSubtitleAs>Save original subtitle as...</SaveOriginalSubtitleAs>
+    <CannotSaveEmptySubtitle>Cannot save empty subtitle</CannotSaveEmptySubtitle>
     <NoSubtitleLoaded>No subtitle loaded</NoSubtitleLoaded>
     <VisualSyncSelectedLines>Visual sync - selected lines</VisualSyncSelectedLines>
     <VisualSyncTitle>Visual sync</VisualSyncTitle>
