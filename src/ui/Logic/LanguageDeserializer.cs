@@ -1447,8 +1447,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "ExportPngXml/LeftRightMargin":
                     language.ExportPngXml.LeftRightMargin = reader.Value;
                     break;
-                case "ExportPngXml/SaveBluRraySupAs":
-                    language.ExportPngXml.SaveBluRraySupAs = reader.Value;
+                case "ExportPngXml/SaveBluRaySupAs":
+                    language.ExportPngXml.SaveBluRaySupAs = reader.Value;
                     break;
                 case "ExportPngXml/SaveVobSubAs":
                     language.ExportPngXml.SaveVobSubAs = reader.Value;

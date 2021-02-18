@@ -549,7 +549,7 @@ Command line: {1} {2}
     <CenterRightJustify>集中, 右对齐</CenterRightJustify>
     <BottomMargin>底边距</BottomMargin>
     <LeftRightMargin>左/右边距</LeftRightMargin>
-    <SaveBluRraySupAs>选择 Blu-ray sup 文件名</SaveBluRraySupAs>
+    <SaveBluRaySupAs>选择 Blu-ray sup 文件名</SaveBluRaySupAs>
     <SaveVobSubAs>选择 VobSub 文件名</SaveVobSubAs>
     <SaveFabImageScriptAs>选择蓝光 sup 文件名</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>选择 DVD Studio Pro STL 文件名</SaveDvdStudioProStlAs>

@@ -395,7 +395,7 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <CenterTopJustify>中央、上端揃え</CenterTopJustify>
     <BottomMargin>下の余白</BottomMargin>
     <LeftRightMargin>左右の余白</LeftRightMargin>
-    <SaveBluRraySupAs>Blu-ray sup ファイルの名前の選択</SaveBluRraySupAs>
+    <SaveBluRaySupAs>Blu-ray sup ファイルの名前の選択</SaveBluRaySupAs>
     <SaveVobSubAs>VobSub ファイルの名前の選択</SaveVobSubAs>
     <SaveFabImageScriptAs>FAB イメージ スクリプト ファイルの名前の選択</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>DVD Studio Pro STL ファイルの名前の選択</SaveDvdStudioProStlAs>

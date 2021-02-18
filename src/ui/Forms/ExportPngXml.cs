@@ -526,7 +526,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (_exportType == ExportFormats.BluraySup)
             {
-                saveFileDialog1.Title = LanguageSettings.Current.ExportPngXml.SaveBluRraySupAs;
+                saveFileDialog1.Title = LanguageSettings.Current.ExportPngXml.SaveBluRaySupAs;
                 saveFileDialog1.DefaultExt = "*.sup";
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "Blu-Ray sup|*.sup";

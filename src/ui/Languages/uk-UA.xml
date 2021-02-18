@@ -434,7 +434,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Center>По центру</Center>
     <BottomMargin>Нижній відступ</BottomMargin>
     <LeftRightMargin>Лів/прав відступ</LeftRightMargin>
-    <SaveBluRraySupAs>Оберіть назву для Blu-ray sup-файлу</SaveBluRraySupAs>
+    <SaveBluRaySupAs>Оберіть назву для Blu-ray sup-файлу</SaveBluRaySupAs>
     <SaveVobSubAs>Оберіть назву для VobSub-файлу</SaveVobSubAs>
     <SaveFabImageScriptAs>Оберіть ім'я для файлу FAB image script</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Оберіть ім'я для файлу DVD Studio Pro STL</SaveDvdStudioProStlAs>

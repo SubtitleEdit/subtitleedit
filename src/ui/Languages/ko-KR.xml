@@ -547,7 +547,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <CenterRightJustify>가운데, 오른쪽 맞춤</CenterRightJustify>
     <BottomMargin>하단 여백</BottomMargin>
     <LeftRightMargin>좌/우 여백</LeftRightMargin>
-    <SaveBluRraySupAs>블루레이 자막 (sup) 파일로 저장</SaveBluRraySupAs>
+    <SaveBluRaySupAs>블루레이 자막 (sup) 파일로 저장</SaveBluRaySupAs>
     <SaveVobSubAs>VobSub 파일로 저장</SaveVobSubAs>
     <SaveFabImageScriptAs>FAB 이미지 스크립트 파일 이름 선택</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>DVD Studio Pro STL로 저장</SaveDvdStudioProStlAs>
