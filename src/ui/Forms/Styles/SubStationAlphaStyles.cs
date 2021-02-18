@@ -780,7 +780,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             if (listViewStyles.SelectedItems.Count == 1)
             {
-                textBoxStyleName.Enabled = true;
                 string styleName = listViewStyles.SelectedItems[0].Text;
                 _startName = styleName;
                 _editedName = null;
@@ -1846,7 +1845,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 groupBoxProperties.Enabled = true;
                 GeneratePreview();
                 buttonStorageRemove.Enabled = listViewStorage.Items.Count > 1 || !_currentCategory.IsDefault;
-                textBoxStyleName.Enabled = styleName != "Default";
             }
             else
             {
