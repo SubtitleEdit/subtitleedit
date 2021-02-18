@@ -1223,6 +1223,7 @@ namespace Nikse.SubtitleEdit.Logic
                 SaveChangesToOriginalX = "Save changes to original {0}?",
                 SaveSubtitleAs = "Save subtitle as...",
                 SaveOriginalSubtitleAs = "Save original subtitle as...",
+                CannotSaveEmptySubtitle = "Cannot save empty subtitle",
                 NoSubtitleLoaded = "No subtitle loaded",
                 VisualSyncSelectedLines = "Visual sync - selected lines",
                 VisualSyncTitle = "Visual sync",

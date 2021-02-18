@@ -3970,6 +3970,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (!IsSubtitleLoaded)
             {
+                ShowStatus(_language.CannotSaveEmptySubtitle);
                 return;
             }
 
@@ -3982,6 +3983,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (!IsSubtitleLoaded)
             {
+                ShowStatus(_language.CannotSaveEmptySubtitle);
                 return;
             }
 
@@ -5359,6 +5361,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (!IsSubtitleLoaded)
             {
+                ShowStatus(_language.CannotSaveEmptySubtitle);
                 return;
             }
 

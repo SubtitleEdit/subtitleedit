@@ -1095,6 +1095,7 @@
             public string SaveChangesToOriginalX { get; set; }
             public string SaveSubtitleAs { get; set; }
             public string SaveOriginalSubtitleAs { get; set; }
+            public string CannotSaveEmptySubtitle { get; set; }
             public string NoSubtitleLoaded { get; set; }
             public string VisualSyncSelectedLines { get; set; }
             public string VisualSyncTitle { get; set; }
