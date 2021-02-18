@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string xmlStructure =
                 "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + Environment.NewLine +
                 "<tmx version=\"1.4\">" + Environment.NewLine +
-                "  <header creationtool=\"Subtitle Edit\" creationtoolversion=\"3.5\" datatype=\"html\" segtype=\"sentence\" adminlang=\"en-us\" srclang=\"EN\" o-encoding=\"utf-8\">" + Environment.NewLine +
+                "  <header creationtool=\"Subtitle Edit\" creationtoolversion=\"3.6\" datatype=\"html\" segtype=\"sentence\" adminlang=\"en-us\" srclang=\"EN\" o-encoding=\"utf-8\">" + Environment.NewLine +
                 "    <note>This is a subtitle</note>" + Environment.NewLine +
                 "  </header>" + Environment.NewLine +
                 "  <body />" + Environment.NewLine +

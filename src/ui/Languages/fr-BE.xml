@@ -2,7 +2,7 @@
 <Language Name="Français - Belgique">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.18</Version>
+    <Version>3.6.0</Version>
     <TranslatedBy>Traduction de Pierre le Lidgeu.</TranslatedBy>
     <CultureName>fr-BE</CultureName>
     <HelpFile>HelpFR.html</HelpFile>
@@ -173,8 +173,8 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <TitleAutoBreak>Auto-équilibrer les lignes sélectionnées</TitleAutoBreak>
     <TitleUnbreak>Supprimer les sauts de ligne dans la sélection</TitleUnbreak>
     <LinesFoundX>Lignes trouvées : {0}</LinesFoundX>
-    <OnlyBreakLinesLongerThan>Ne scinder que les lignes > à</OnlyBreakLinesLongerThan>
-    <OnlyUnbreakLinesLongerThan>Ne pas scinder que les lignes > à</OnlyUnbreakLinesLongerThan>
+    <OnlyBreakLinesLongerThan>Ne scinder que les lignes &gt; à</OnlyBreakLinesLongerThan>
+    <OnlyUnbreakLinesLongerThan>Ne pas scinder que les lignes &gt; à</OnlyUnbreakLinesLongerThan>
   </AutoBreakUnbreakLines>
   <BatchConvert>
     <Title>Conversion par lots</Title>
@@ -445,8 +445,8 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <TextLeftJustifiedText>Texte aligné à gauche</TextLeftJustifiedText>
     <TextCenteredText>Texte centré</TextCenteredText>
     <TextRightJustifiedText>Texte aligné à droite</TextRightJustifiedText>
-     <UseBoxForOneNewLine>Ne cocher 'Encadrer le texte' que pour UN saut de ligne</UseBoxForOneNewLine>
- </EbuSaveOptions>
+    <UseBoxForOneNewLine>Ne cocher 'Encadrer le texte' que pour UN saut de ligne</UseBoxForOneNewLine>
+  </EbuSaveOptions>
   <EffectKaraoke>
     <Title>Effet Karaoké</Title>
     <ChooseColor>Choisir la couleur :</ChooseColor>
@@ -1736,8 +1736,8 @@ Si vous avez édité ce fichier avec Subtitle Edit, vous pourriez trouver une sa
     <DurationLessThan>Durée &lt; que</DurationLessThan>
     <DurationGreaterThan>Durée &gt; que</DurationGreaterThan>
     <MoreThanTwoLines>Plus de 2 lignes</MoreThanTwoLines>
-    </ModifySelection>
-    <MultipleReplace>
+  </ModifySelection>
+  <MultipleReplace>
     <Title>Remplacements multiples</Title>
     <FindWhat>Rechercher :</FindWhat>
     <ReplaceWith>Remplacer par :</ReplaceWith>
@@ -2192,9 +2192,9 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <WaveformSeekSilenceForward>Recherche de silence avant</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Recherche de silence arrière</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Ajouter le texte ici (pour une nouvelle sélection)</WaveformAddTextHere>
-    <WaveformAddTextHereFromClipboard>Ajouter le texte ici (à partir de presse-papiers)</WaveformAddTextHereFromClipboard> 
+    <WaveformAddTextHereFromClipboard>Ajouter le texte ici (à partir de presse-papiers)</WaveformAddTextHereFromClipboard>
     <SetParagraphAsSelection>Fixer l'actuel comme nouvelle sélection</SetParagraphAsSelection>
-	<WaveformPlayNewSelection>Lecture de la sélection</WaveformPlayNewSelection>
+    <WaveformPlayNewSelection>Lecture de la sélection</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Lecture de la fin de la sélection</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Lecture du premier sous-titre sélectionné</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Focus sur le panneau Mode liste</WaveformFocusListView>
@@ -2224,10 +2224,10 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <PlayCurrent>Lire le sous-titre actuel</PlayCurrent>
     <WaveformGoToPrevSubtitle>Aller au sous-titre précédent (depuis la position vidéo)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Aller au sous-titre suivant (depuis la position vidéo)</WaveformGoToNextSubtitle>
-     <WaveformGoToPrevChapter>Aller au chapitre précédent</WaveformGoToPrevChapter>
+    <WaveformGoToPrevChapter>Aller au chapitre précédent</WaveformGoToPrevChapter>
     <WaveformGoToNextChapter>Aller au chapitre suivant</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>Sélectionner le sous-titre suivant la position vidéo (rester positionné)</WaveformSelectNextSubtitle>
-   <TogglePlayPause>Commuter lecture / pause</TogglePlayPause>
+    <TogglePlayPause>Commuter lecture / pause</TogglePlayPause>
     <Pause>Pause</Pause>
     <Fullscreen>Plein écran</Fullscreen>
     <PlayRateSlower>Vitesse de lecture plus lente</PlayRateSlower>
@@ -2555,7 +2555,7 @@ Continuer ?</RestoreDefaultSettingsMsg>
     <StyleXImportedFromFileY>Style '{0}' importé du fichier '{1}'</StyleXImportedFromFileY>
   </SubStationAlphaStyles>
   <PointSync>
-  <Title>Synchronisation par points</Title>
+    <Title>Synchronisation par points</Title>
     <TitleViaOtherSubtitle>Synchronisation par points via un autre sous-titre</TitleViaOtherSubtitle>
     <SyncHelp>Fixez au moins 2 points de synchro pour esquisser la synchro</SyncHelp>
     <SetSyncPoint>Définir un point</SetSyncPoint>
