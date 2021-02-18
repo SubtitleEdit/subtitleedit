@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.6.0 (xth February 2021) BETA
+3.6.0 (18th February 2021)
 * NEW:
    * Use dotnet framework 4.7.2 (WinXP/Vista no longer supported)
    * Add edit/sync of bdsup with position - thx von Suppé/Janusz
