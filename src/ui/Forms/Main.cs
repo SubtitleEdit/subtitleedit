@@ -4852,6 +4852,7 @@ namespace Nikse.SubtitleEdit.Forms
             var oldUseDarkTheme = Configuration.Settings.General.UseDarkTheme;
             var oldUseDarkForeColor = Configuration.Settings.General.DarkThemeForeColor;
             var oldUseDarkBackColor = Configuration.Settings.General.DarkThemeBackColor;
+            var oldDarkThemeShowListViewGridLines = Configuration.Settings.General.DarkThemeShowListViewGridLines;
             using (var settings = new Options.Settings())
             {
                 settings.Initialize(Icon, toolStripButtonFileNew.Image, toolStripButtonFileOpen.Image, toolStripButtonSave.Image, toolStripButtonSaveAs.Image, toolStripButtonFind.Image,
@@ -5048,7 +5049,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (oldUseDarkTheme != Configuration.Settings.General.UseDarkTheme ||
                 oldUseDarkForeColor != Configuration.Settings.General.DarkThemeForeColor ||
-                oldUseDarkBackColor != Configuration.Settings.General.DarkThemeBackColor)
+                oldUseDarkBackColor != Configuration.Settings.General.DarkThemeBackColor ||
+                oldDarkThemeShowListViewGridLines != Configuration.Settings.General.DarkThemeShowListViewGridLines)
             {
                 var darkThemeBackColor = Configuration.Settings.General.DarkThemeBackColor;
                 var darkThemeForeColor = Configuration.Settings.General.DarkThemeForeColor;

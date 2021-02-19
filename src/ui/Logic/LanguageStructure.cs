@@ -2319,6 +2319,7 @@
             public string AssaColor { get; set; }
             public string DarkTheme { get; set; }
             public string DarkThemeEnabled { get; set; }
+            public string DarkThemeShowGridViewLines { get; set; }
             public string UpdateShortcut { get; set; }
             public string FoucsSetVideoPosition { get; set; }
             public string ToggleDockUndockOfVideoControls { get; set; }
