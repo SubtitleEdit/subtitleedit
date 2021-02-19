@@ -5298,6 +5298,7 @@ namespace Nikse.SubtitleEdit.Forms
                 TryLoadIcon(toolStripButtonNetflixQualityCheck, "Netflix");
                 TryLoadIcon(toolStripButtonAssStyleManager, "AssaStyle");
                 TryLoadIcon(toolStripButtonAssProperties, "AssaProperties");
+                TryLoadIcon(toolStripButtonAssAttachments, "AssaAttachments");
                 TryLoadIcon(toolStripButtonSettings, "Settings");
                 TryLoadIcon(toolStripButtonHelp, "Help");
                 TryLoadIcon(toolStripButtonToggleWaveform, "WaveformToggle");
@@ -15635,21 +15636,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyCode == Keys.A && e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift))
-            {
-                if (GetCurrentSubtitleFormat().GetType() == typeof(AdvancedSubStationAlpha))
-                {
-                    var source = new AdvancedSubStationAlpha().ToText(_subtitle, _fileName);
-                    using (var form = new Attachments(source))
-                    {
-                        if (form.ShowDialog(this) == DialogResult.OK)
-                        {
-                            _subtitle.Footer = form.NewFooter;
-                        }
-                    }
-                    e.SuppressKeyPress = true;
-                }
-            }
+
 
             // TABS: Create / adjust / translate
 
@@ -28640,6 +28627,7 @@ namespace Nikse.SubtitleEdit.Forms
             var assFormatOn = formatType == typeof(AdvancedSubStationAlpha);
             toolStripButtonAssStyleManager.Visible = assFormatOn;
             toolStripButtonAssProperties.Visible = assFormatOn;
+            toolStripButtonAssAttachments.Visible = assFormatOn;
         }
 
         private void NetflixGlyphCheck(bool isSaving)
@@ -29819,6 +29807,18 @@ namespace Nikse.SubtitleEdit.Forms
         private void toolStripButtonAssStyleManager_Click(object sender, EventArgs e)
         {
             toolStripMenuItemAssStyles_Click(sender, e);
+        }
+
+        private void toolStripButtonAssAttachments_Click(object sender, EventArgs e)
+        {
+            var source = new AdvancedSubStationAlpha().ToText(_subtitle, _fileName);
+            using (var form = new Attachments(source))
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    _subtitle.Footer = form.NewFooter;
+                }
+            }
         }
     }
 }

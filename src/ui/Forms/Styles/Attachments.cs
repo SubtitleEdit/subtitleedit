@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             textBoxInfo.Visible = false;
             textBoxInfo.ReadOnly = true;
             labelImageResizedToFit.Visible = false;
-            labelImageResizedToFit.Text = "Image resized to fit current window";
+            labelImageResizedToFit.Text = LanguageSettings.Current.AssaAttachments.ImageResized;
 
             _attachments = new List<AssaAttachment>();
             ListAttachments(source.SplitToLines());
@@ -48,6 +48,11 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
 
             UpdateAfterListViewChange();
+            buttonAttachFont.Text = LanguageSettings.Current.AssaAttachments.AttachFont;
+            buttonAttachGraphics.Text = LanguageSettings.Current.AssaAttachments.AttachGraphics;
+            buttonExport.Text = LanguageSettings.Current.MultipleReplace.Export;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
         }
 
         private void ListAttachments(List<string> lines)
@@ -118,15 +123,15 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             var ext = Path.GetExtension(attachmentFileName).ToLowerInvariant();
             if (ext == ".ttf")
             {
-                return "Font";
+                return LanguageSettings.Current.AssaAttachments.Font;
             }
 
             if (_imageExtentions.Contains(ext))
             {
-                return "Image";
+                return LanguageSettings.Current.AssaAttachments.Graphics;
             }
 
-            return "Unkown";
+            return "Unknown";
         }
 
         private void listViewAttachments_SelectedIndexChanged(object sender, EventArgs e)
@@ -137,18 +142,20 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             if (listViewAttachments.SelectedItems.Count == 0)
             {
-                pictureBox1.Image?.Dispose();
-                pictureBox1.Image = new Bitmap(1, 1);
+                pictureBoxPreview.Image?.Dispose();
+                pictureBoxPreview.Image = new Bitmap(1, 1);
                 buttonExport.Enabled = false;
                 return;
             }
 
             var item = listViewAttachments.SelectedItems[0];
-            if (item.SubItems[1].Text == "Font")
+            pictureBoxPreview.ContextMenuStrip = null;
+            if (item.SubItems[1].Text == LanguageSettings.Current.AssaAttachments.Font)
             {
                 ShowFont(_attachments[listViewAttachments.SelectedItems[0].Index].Bytes);
+                pictureBoxPreview.ContextMenuStrip = contextMenuStripPreview;
             }
-            else if (item.SubItems[1].Text == "Image")
+            else if (item.SubItems[1].Text == LanguageSettings.Current.AssaAttachments.Graphics)
             {
                 ShowImage(_attachments[listViewAttachments.SelectedItems[0].Index].Bytes, item.SubItems[0].Text);
             }
@@ -158,7 +165,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         public void ShowFont(byte[] fontBytes)
         {
-            if (pictureBox1.Width <= 1 || pictureBox1.Height <= 1)
+            if (pictureBoxPreview.Width <= 1 || pictureBoxPreview.Height <= 1)
             {
                 return;
             }
@@ -181,30 +188,28 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 return;
             }
 
-            labelInfo.Text = "Font name:";
+            labelInfo.Text = LanguageSettings.Current.AssaAttachments.FontName;
             textBoxInfo.Text = fontFamily.Name;
             textBoxInfo.Left = labelInfo.Left + labelInfo.Width + 5;
             labelInfo.Visible = true;
             textBoxInfo.Visible = true;
 
-            pictureBox1.Image?.Dispose();
-            pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+            pictureBoxPreview.Image?.Dispose();
+            pictureBoxPreview.Image = new Bitmap(pictureBoxPreview.Width, pictureBoxPreview.Height);
             using (var font = new Font(fontFamily, 25, FontStyle.Regular))
-            using (var G = Graphics.FromImage(pictureBox1.Image))
+            using (var graphics = Graphics.FromImage(pictureBoxPreview.Image))
             {
-                G.DrawString(fontFamily.Name + Environment.NewLine +
+                graphics.DrawString(fontFamily.Name + Environment.NewLine +
                     Environment.NewLine +
-                    "Hello World!" + Environment.NewLine +
-                    "こんにちは世界" + Environment.NewLine +
-                    "你好世界！" + Environment.NewLine +
-                    "1234567890", font, Brushes.Orange, 12f, 23);
+                    Configuration.Settings.Tools.AssaAttachmentFontTextPreview,
+                    font, Brushes.Orange, 12f, 23);
             }
             privateFontCollection.Dispose();
         }
 
         public void ShowImage(byte[] imageBytes, string fileName)
         {
-            if (pictureBox1.Width <= 1 || pictureBox1.Height <= 1)
+            if (pictureBoxPreview.Width <= 1 || pictureBoxPreview.Height <= 1)
             {
                 return;
             }
@@ -216,15 +221,15 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 using (var ms = new MemoryStream(imageBytes))
                 {
                     var icon = new Icon(ms);
-                    pictureBox1.Image?.Dispose();
-                    pictureBox1.SizeMode = PictureBoxSizeMode.Normal;
-                    pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
-                    using (var G = Graphics.FromImage(pictureBox1.Image))
+                    pictureBoxPreview.Image?.Dispose();
+                    pictureBoxPreview.SizeMode = PictureBoxSizeMode.Normal;
+                    pictureBoxPreview.Image = new Bitmap(pictureBoxPreview.Width, pictureBoxPreview.Height);
+                    using (var G = Graphics.FromImage(pictureBoxPreview.Image))
                     {
                         G.DrawIcon(icon, 12, 23);
                     }
 
-                    labelInfo.Text = "Icon name:";
+                    labelInfo.Text = LanguageSettings.Current.AssaAttachments.IconName;
                     textBoxInfo.Text = fileName;
                     textBoxInfo.Left = labelInfo.Left + labelInfo.Width + 5;
                     labelInfo.Visible = true;
@@ -237,21 +242,21 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             using (var ms = new MemoryStream(imageBytes))
             {
                 var image = Image.FromStream(ms);
-                pictureBox1.Image?.Dispose();
-                pictureBox1.Image = image;
+                pictureBoxPreview.Image?.Dispose();
+                pictureBoxPreview.Image = image;
 
-                if (pictureBox1.Width > image.Width && pictureBox1.Height > image.Height)
+                if (pictureBoxPreview.Width > image.Width && pictureBoxPreview.Height > image.Height)
                 {
-                    pictureBox1.SizeMode = PictureBoxSizeMode.Normal;
+                    pictureBoxPreview.SizeMode = PictureBoxSizeMode.Normal;
                 }
                 else
                 {
-                    pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
-                    labelImageResizedToFit.Top = pictureBox1.Top + pictureBox1.Height + 5;
+                    pictureBoxPreview.SizeMode = PictureBoxSizeMode.Zoom;
+                    labelImageResizedToFit.Top = pictureBoxPreview.Top + pictureBoxPreview.Height + 5;
                     labelImageResizedToFit.Visible = true;
                 }
 
-                labelInfo.Text = $"Image name ({image.Width}x{image.Height}):";
+                labelInfo.Text = string.Format(LanguageSettings.Current.AssaAttachments.ImageName, image.Width, image.Height);
                 textBoxInfo.Text = fileName;
                 textBoxInfo.Left = labelInfo.Left + labelInfo.Width + 5;
                 labelInfo.Visible = true;
@@ -261,7 +266,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void buttonAttachFont_Click(object sender, EventArgs e)
         {
-            openFileDialog1.Title = "Open...";
+            openFileDialog1.Title = LanguageSettings.Current.Main.Menu.File.Open.RemoveChar('&');
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.Filter = "Font|*.ttf";
             openFileDialog1.FilterIndex = 0;
@@ -285,7 +290,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void buttonAttachGraphics_Click(object sender, EventArgs e)
         {
-            openFileDialog1.Title = "Open...";
+            openFileDialog1.Title = LanguageSettings.Current.Main.Menu.File.Open.RemoveChar('&');
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.Filter = "Images|*" + string.Join(";*", _imageExtentions).TrimEnd('*');
             openFileDialog1.FilterIndex = 0;
@@ -392,8 +397,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 return;
             }
 
-            pictureBox1.Image?.Dispose();
-            pictureBox1.Image = new Bitmap(1, 1);
+            pictureBoxPreview.Image?.Dispose();
+            pictureBoxPreview.Image = new Bitmap(1, 1);
             buttonExport.Enabled = false;
         }
 
@@ -539,7 +544,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             var index = listViewAttachments.SelectedItems[0].Index;
             var item = listViewAttachments.Items[index];
             var ext = Path.GetExtension(item.SubItems[0].Text);
-            saveFileDialog1.Title = "Save as...";
+            saveFileDialog1.Title = LanguageSettings.Current.Main.Menu.File.SaveAs.RemoveChar('&');
             saveFileDialog1.FileName = item.SubItems[0].Text;
             saveFileDialog1.Filter = item.SubItems[1].Text + "|*" + ext;
             saveFileDialog1.FilterIndex = 0;
@@ -640,6 +645,20 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             if (e.KeyCode == Keys.Escape)
             {
                 DialogResult = DialogResult.Cancel;
+            }
+        }
+
+        private void contextMenuStripPreview_Click(object sender, EventArgs e)
+        {
+            using (var form = new AttachmentPreviewText(Configuration.Settings.Tools.AssaAttachmentFontTextPreview))
+            {
+                if (form.ShowDialog(this) != DialogResult.OK)
+                {
+                    return;
+                }
+
+                Configuration.Settings.Tools.AssaAttachmentFontTextPreview = form.PreviewText;
+                listViewAttachments_SelectedIndexChanged(null, null);
             }
         }
     }

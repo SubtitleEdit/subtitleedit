@@ -439,6 +439,33 @@ namespace Nikse.SubtitleEdit.Logic
                 case "ApplyDurationLimits/UnableToFix":
                     language.ApplyDurationLimits.UnableToFix = reader.Value;
                     break;
+                case "AssaAttachments/Title":
+                    language.AssaAttachments.Title = reader.Value;
+                    break;
+                case "AssaAttachments/AttachFont":
+                    language.AssaAttachments.AttachFont = reader.Value;
+                    break;
+                case "AssaAttachments/AttachGraphics":
+                    language.AssaAttachments.AttachGraphics = reader.Value;
+                    break;
+                case "AssaAttachments/Graphics":
+                    language.AssaAttachments.Graphics = reader.Value;
+                    break;
+                case "AssaAttachments/Font":
+                    language.AssaAttachments.Font = reader.Value;
+                    break;
+                case "AssaAttachments/ImageName":
+                    language.AssaAttachments.ImageName = reader.Value;
+                    break;
+                case "AssaAttachments/IconName":
+                    language.AssaAttachments.IconName = reader.Value;
+                    break;
+                case "AssaAttachments/FontName":
+                    language.AssaAttachments.FontName = reader.Value;
+                    break;
+                case "AssaAttachments/ImageResized":
+                    language.AssaAttachments.ImageResized = reader.Value;
+                    break;
                 case "AudioToText/Title":
                     language.AudioToText.Title = reader.Value;
                     break;

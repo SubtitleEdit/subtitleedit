@@ -161,6 +161,17 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FixesAvailable>Fixes available: {0}</FixesAvailable>
     <UnableToFix>Unable to fix: {0}</UnableToFix>
   </ApplyDurationLimits>
+  <AssaAttachments>
+    <Title>Attachments</Title>
+    <AttachFont>Attach fonts</AttachFont>
+    <AttachGraphics>Attach graphics</AttachGraphics>
+    <Graphics>Graphics</Graphics>
+    <Font>Font</Font>
+    <ImageName>Image name ({0}x{1}):</ImageName>
+    <IconName>Icon name:</IconName>
+    <FontName>Font name:</FontName>
+    <ImageResized>Image resized to fit current window</ImageResized>
+  </AssaAttachments>
   <AudioToText>
     <Title>Audio to text</Title>
     <ExtractingAudioUsingX>Extracting audio using {0}...</ExtractingAudioUsingX>

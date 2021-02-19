@@ -50,15 +50,18 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonAttachFont = new System.Windows.Forms.Button();
             this.buttonAttachGraphics = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pictureBoxPreview = new System.Windows.Forms.PictureBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.buttonExport = new System.Windows.Forms.Button();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.labelInfo = new System.Windows.Forms.Label();
             this.textBoxInfo = new System.Windows.Forms.TextBox();
             this.labelImageResizedToFit = new System.Windows.Forms.Label();
+            this.contextMenuStripPreview = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.setPreviewTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripAttachments.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
+            this.contextMenuStripPreview.SuspendLayout();
             this.SuspendLayout();
             // 
             // listViewAttachments
@@ -243,16 +246,16 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.buttonAttachGraphics.UseVisualStyleBackColor = true;
             this.buttonAttachGraphics.Click += new System.EventHandler(this.buttonAttachGraphics_Click);
             // 
-            // pictureBox1
+            // pictureBoxPreview
             // 
-            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.pictureBoxPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox1.Location = new System.Drawing.Point(480, 38);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(402, 416);
-            this.pictureBox1.TabIndex = 10;
-            this.pictureBox1.TabStop = false;
+            this.pictureBoxPreview.Location = new System.Drawing.Point(480, 38);
+            this.pictureBoxPreview.Name = "pictureBoxPreview";
+            this.pictureBoxPreview.Size = new System.Drawing.Size(402, 416);
+            this.pictureBoxPreview.TabIndex = 10;
+            this.pictureBoxPreview.TabStop = false;
             // 
             // openFileDialog1
             // 
@@ -297,6 +300,20 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.labelImageResizedToFit.TabIndex = 15;
             this.labelImageResizedToFit.Text = "labelImageResizedToFit";
             // 
+            // contextMenuStripPreview
+            // 
+            this.contextMenuStripPreview.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.setPreviewTextToolStripMenuItem});
+            this.contextMenuStripPreview.Name = "contextMenuStripPreview";
+            this.contextMenuStripPreview.Size = new System.Drawing.Size(181, 48);
+            this.contextMenuStripPreview.Click += new System.EventHandler(this.contextMenuStripPreview_Click);
+            // 
+            // setPreviewTextToolStripMenuItem
+            // 
+            this.setPreviewTextToolStripMenuItem.Name = "setPreviewTextToolStripMenuItem";
+            this.setPreviewTextToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.setPreviewTextToolStripMenuItem.Text = "Set preview text...";
+            // 
             // Attachments
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -306,7 +323,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.Controls.Add(this.textBoxInfo);
             this.Controls.Add(this.labelInfo);
             this.Controls.Add(this.buttonExport);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.pictureBoxPreview);
             this.Controls.Add(this.buttonAttachGraphics);
             this.Controls.Add(this.buttonAttachFont);
             this.Controls.Add(this.buttonCancel);
@@ -322,7 +339,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.ResizeEnd += new System.EventHandler(this.Attachments_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Attachments_KeyDown);
             this.contextMenuStripAttachments.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).EndInit();
+            this.contextMenuStripPreview.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -338,7 +356,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonAttachFont;
         private System.Windows.Forms.Button buttonAttachGraphics;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox pictureBoxPreview;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripAttachments;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStorageRemove;
@@ -357,5 +375,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private System.Windows.Forms.Label labelInfo;
         private System.Windows.Forms.TextBox textBoxInfo;
         private System.Windows.Forms.Label labelImageResizedToFit;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripPreview;
+        private System.Windows.Forms.ToolStripMenuItem setPreviewTextToolStripMenuItem;
     }
 }

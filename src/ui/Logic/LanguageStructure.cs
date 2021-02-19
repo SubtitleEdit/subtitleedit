@@ -166,6 +166,19 @@
             public string UnableToFix { get; set; }
         }
 
+        public class AssaAttachments
+        {
+            public string Title { get; set; }
+            public string AttachFont { get; set; }
+            public string AttachGraphics { get; set; }
+            public string Graphics { get; set; }
+            public string Font { get; set; }
+            public string ImageName { get; set; }
+            public string IconName { get; set; }
+            public string FontName { get; set; }
+            public string ImageResized { get; set; }
+        }
+
         public class AudioToText
         {
             public string Title { get; set; }
