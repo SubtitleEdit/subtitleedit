@@ -40,9 +40,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode4 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode5 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode6 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode3 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.labelStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripSelected = new System.Windows.Forms.ToolStripStatusLabel();
@@ -63,6 +63,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonSpellCheck = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonAssStyleManager = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonAssProperties = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonAssAttachments = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonNetflixQualityCheck = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonSettings = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparatorHelp = new System.Windows.Forms.ToolStripSeparator();
@@ -552,7 +553,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerOriginalTextUndo = new System.Windows.Forms.Timer(this.components);
-            this.toolStripButtonAssAttachments = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -849,6 +849,18 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonAssProperties.Text = "Netflix quality check";
             this.toolStripButtonAssProperties.ToolTipText = "ASS properties";
             this.toolStripButtonAssProperties.Click += new System.EventHandler(this.toolStripButtonAssProperties_Click);
+            // 
+            // toolStripButtonAssAttachments
+            // 
+            this.toolStripButtonAssAttachments.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonAssAttachments.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonAssAttachments.Image")));
+            this.toolStripButtonAssAttachments.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripButtonAssAttachments.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonAssAttachments.Name = "toolStripButtonAssAttachments";
+            this.toolStripButtonAssAttachments.Size = new System.Drawing.Size(36, 37);
+            this.toolStripButtonAssAttachments.Text = "Netflix quality check";
+            this.toolStripButtonAssAttachments.ToolTipText = "ASS properties";
+            this.toolStripButtonAssAttachments.Click += new System.EventHandler(this.toolStripButtonAssAttachments_Click);
             // 
             // toolStripButtonNetflixQualityCheck
             // 
@@ -3539,14 +3551,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.timeUpDownVideoPosition.Name = "timeUpDownVideoPosition";
             this.timeUpDownVideoPosition.Size = new System.Drawing.Size(111, 27);
             this.timeUpDownVideoPosition.TabIndex = 12;
-            timeCode4.Hours = 0;
-            timeCode4.Milliseconds = 0;
-            timeCode4.Minutes = 0;
-            timeCode4.Seconds = 0;
-            timeCode4.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode4.TotalMilliseconds = 0D;
-            timeCode4.TotalSeconds = 0D;
-            this.timeUpDownVideoPosition.TimeCode = timeCode4;
+            timeCode1.Hours = 0;
+            timeCode1.Milliseconds = 0;
+            timeCode1.Minutes = 0;
+            timeCode1.Seconds = 0;
+            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode1.TotalMilliseconds = 0D;
+            timeCode1.TotalSeconds = 0D;
+            this.timeUpDownVideoPosition.TimeCode = timeCode1;
             this.timeUpDownVideoPosition.UseVideoOffset = false;
             // 
             // buttonGotoSub
@@ -3779,14 +3791,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.timeUpDownVideoPositionAdjust.Name = "timeUpDownVideoPositionAdjust";
             this.timeUpDownVideoPositionAdjust.Size = new System.Drawing.Size(111, 27);
             this.timeUpDownVideoPositionAdjust.TabIndex = 13;
-            timeCode5.Hours = 0;
-            timeCode5.Milliseconds = 0;
-            timeCode5.Minutes = 0;
-            timeCode5.Seconds = 0;
-            timeCode5.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode5.TotalMilliseconds = 0D;
-            timeCode5.TotalSeconds = 0D;
-            this.timeUpDownVideoPositionAdjust.TimeCode = timeCode5;
+            timeCode2.Hours = 0;
+            timeCode2.Milliseconds = 0;
+            timeCode2.Minutes = 0;
+            timeCode2.Seconds = 0;
+            timeCode2.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode2.TotalMilliseconds = 0D;
+            timeCode2.TotalSeconds = 0D;
+            this.timeUpDownVideoPositionAdjust.TimeCode = timeCode2;
             this.timeUpDownVideoPositionAdjust.UseVideoOffset = false;
             // 
             // buttonAdjustSetEndTime
@@ -4993,14 +5005,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
             this.timeUpDownStartTime.Size = new System.Drawing.Size(111, 27);
             this.timeUpDownStartTime.TabIndex = 0;
-            timeCode6.Hours = 0;
-            timeCode6.Milliseconds = 0;
-            timeCode6.Minutes = 0;
-            timeCode6.Seconds = 0;
-            timeCode6.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode6.TotalMilliseconds = 0D;
-            timeCode6.TotalSeconds = 0D;
-            this.timeUpDownStartTime.TimeCode = timeCode6;
+            timeCode3.Hours = 0;
+            timeCode3.Milliseconds = 0;
+            timeCode3.Minutes = 0;
+            timeCode3.Seconds = 0;
+            timeCode3.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode3.TotalMilliseconds = 0D;
+            timeCode3.TotalSeconds = 0D;
+            this.timeUpDownStartTime.TimeCode = timeCode3;
             this.timeUpDownStartTime.UseVideoOffset = false;
             // 
             // numericUpDownDuration
@@ -5354,18 +5366,6 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.timerOriginalTextUndo.Interval = 700;
             this.timerOriginalTextUndo.Tick += new System.EventHandler(this.TimerOriginalTextUndoTick);
-            // 
-            // toolStripButtonAssAttachments
-            // 
-            this.toolStripButtonAssAttachments.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonAssAttachments.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonAssAttachments.Image")));
-            this.toolStripButtonAssAttachments.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolStripButtonAssAttachments.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonAssAttachments.Name = "toolStripButtonAssAttachments";
-            this.toolStripButtonAssAttachments.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButtonAssAttachments.Text = "Netflix quality check";
-            this.toolStripButtonAssAttachments.ToolTipText = "ASS properties";
-            this.toolStripButtonAssAttachments.Click += new System.EventHandler(this.toolStripButtonAssAttachments_Click);
             // 
             // Main
             // 
