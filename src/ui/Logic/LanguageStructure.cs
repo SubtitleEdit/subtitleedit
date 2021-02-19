@@ -2132,6 +2132,7 @@
             public string TogglePreviewOnVideo { get; set; }
             public string Help { get; set; }
             public string FontInUi { get; set; }
+            public string Appearance { get; set; }
             public string ShowFrameRate { get; set; }
             public string DefaultFrameRate { get; set; }
             public string DefaultFileEncoding { get; set; }

@@ -332,15 +332,19 @@
             this.pictureBoxNew = new System.Windows.Forms.PictureBox();
             this.checkBoxToolbarNew = new System.Windows.Forms.CheckBox();
             this.panelFont = new System.Windows.Forms.Panel();
-            this.groupBoxFont = new System.Windows.Forms.GroupBox();
-            this.groupBoxDarkTheme = new System.Windows.Forms.GroupBox();
-            this.checkBoxDarkThemeShowListViewGridLines = new System.Windows.Forms.CheckBox();
-            this.checkBoxDarkThemeEnabled = new System.Windows.Forms.CheckBox();
-            this.panelDarkThemeBackColor = new System.Windows.Forms.Panel();
-            this.buttonDarkThemeBackColor = new System.Windows.Forms.Button();
-            this.panelDarkThemeColor = new System.Windows.Forms.Panel();
-            this.buttonDarkThemeColor = new System.Windows.Forms.Button();
-            this.labelFontNote = new System.Windows.Forms.Label();
+            this.groupBoxAppearance = new System.Windows.Forms.GroupBox();
+            this.groupBoxFontInUI = new System.Windows.Forms.GroupBox();
+            this.groupBoxFontGeneral = new System.Windows.Forms.GroupBox();
+            this.comboBoxSubtitleFont = new System.Windows.Forms.ComboBox();
+            this.labelSubtitleFont = new System.Windows.Forms.Label();
+            this.panelSubtitleFontColor = new System.Windows.Forms.Panel();
+            this.labelSubtitleFontColor = new System.Windows.Forms.Label();
+            this.panelSubtitleBackgroundColor = new System.Windows.Forms.Panel();
+            this.labelSubtitleFontBackgroundColor = new System.Windows.Forms.Label();
+            this.groupBoxFontListViews = new System.Windows.Forms.GroupBox();
+            this.labelSubtitleListViewFontSize = new System.Windows.Forms.Label();
+            this.comboBoxSubtitleListViewFontSize = new System.Windows.Forms.ComboBox();
+            this.checkBoxSubtitleListViewFontBold = new System.Windows.Forms.CheckBox();
             this.groupBoxFontTextBox = new System.Windows.Forms.GroupBox();
             this.checkBoxLiveSpellCheck = new System.Windows.Forms.CheckBox();
             this.panelTextBoxAssColor = new System.Windows.Forms.Panel();
@@ -352,17 +356,14 @@
             this.comboBoxSubtitleFontSize = new System.Windows.Forms.ComboBox();
             this.checkBoxSubtitleFontBold = new System.Windows.Forms.CheckBox();
             this.checkBoxSubtitleCenter = new System.Windows.Forms.CheckBox();
-            this.groupBoxFontListViews = new System.Windows.Forms.GroupBox();
-            this.labelSubtitleListViewFontSize = new System.Windows.Forms.Label();
-            this.comboBoxSubtitleListViewFontSize = new System.Windows.Forms.ComboBox();
-            this.checkBoxSubtitleListViewFontBold = new System.Windows.Forms.CheckBox();
-            this.groupBoxFontGeneral = new System.Windows.Forms.GroupBox();
-            this.comboBoxSubtitleFont = new System.Windows.Forms.ComboBox();
-            this.labelSubtitleFont = new System.Windows.Forms.Label();
-            this.panelSubtitleFontColor = new System.Windows.Forms.Panel();
-            this.labelSubtitleFontColor = new System.Windows.Forms.Label();
-            this.panelSubtitleBackgroundColor = new System.Windows.Forms.Panel();
-            this.labelSubtitleFontBackgroundColor = new System.Windows.Forms.Label();
+            this.groupBoxDarkTheme = new System.Windows.Forms.GroupBox();
+            this.checkBoxDarkThemeShowListViewGridLines = new System.Windows.Forms.CheckBox();
+            this.checkBoxDarkThemeEnabled = new System.Windows.Forms.CheckBox();
+            this.panelDarkThemeBackColor = new System.Windows.Forms.Panel();
+            this.buttonDarkThemeBackColor = new System.Windows.Forms.Button();
+            this.panelDarkThemeColor = new System.Windows.Forms.Panel();
+            this.buttonDarkThemeColor = new System.Windows.Forms.Button();
+            this.labelFontNote = new System.Windows.Forms.Label();
             this.panelNetwork = new System.Windows.Forms.Panel();
             this.groupBoxNetworkSession = new System.Windows.Forms.GroupBox();
             this.buttonNetworkSessionNewMessageSound = new System.Windows.Forms.Button();
@@ -441,11 +442,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOpen)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNew)).BeginInit();
             this.panelFont.SuspendLayout();
-            this.groupBoxFont.SuspendLayout();
-            this.groupBoxDarkTheme.SuspendLayout();
-            this.groupBoxFontTextBox.SuspendLayout();
-            this.groupBoxFontListViews.SuspendLayout();
+            this.groupBoxAppearance.SuspendLayout();
+            this.groupBoxFontInUI.SuspendLayout();
             this.groupBoxFontGeneral.SuspendLayout();
+            this.groupBoxFontListViews.SuspendLayout();
+            this.groupBoxFontTextBox.SuspendLayout();
+            this.groupBoxDarkTheme.SuspendLayout();
             this.panelNetwork.SuspendLayout();
             this.groupBoxNetworkSession.SuspendLayout();
             this.groupBoxProxySettings.SuspendLayout();
@@ -459,7 +461,7 @@
             this.buttonOK.Location = new System.Drawing.Point(733, 539);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 12;
+            this.buttonOK.TabIndex = 990;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
@@ -471,7 +473,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(814, 539);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 13;
+            this.buttonCancel.TabIndex = 993;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -4062,314 +4064,39 @@
             // 
             // panelFont
             // 
-            this.panelFont.Controls.Add(this.groupBoxFont);
+            this.panelFont.Controls.Add(this.groupBoxAppearance);
             this.panelFont.Location = new System.Drawing.Point(230, 6);
             this.panelFont.Name = "panelFont";
             this.panelFont.Size = new System.Drawing.Size(864, 521);
             this.panelFont.TabIndex = 9;
             this.panelFont.Text = "Font";
             // 
-            // groupBoxFont
+            // groupBoxAppearance
             // 
-            this.groupBoxFont.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.groupBoxAppearance.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxFont.Controls.Add(this.groupBoxDarkTheme);
-            this.groupBoxFont.Controls.Add(this.labelFontNote);
-            this.groupBoxFont.Controls.Add(this.groupBoxFontTextBox);
-            this.groupBoxFont.Controls.Add(this.groupBoxFontListViews);
-            this.groupBoxFont.Controls.Add(this.groupBoxFontGeneral);
-            this.groupBoxFont.Location = new System.Drawing.Point(0, 0);
-            this.groupBoxFont.Name = "groupBoxFont";
-            this.groupBoxFont.Size = new System.Drawing.Size(852, 521);
-            this.groupBoxFont.TabIndex = 0;
-            this.groupBoxFont.TabStop = false;
-            this.groupBoxFont.Text = "Font in UI";
+            this.groupBoxAppearance.Controls.Add(this.groupBoxFontInUI);
+            this.groupBoxAppearance.Controls.Add(this.groupBoxDarkTheme);
+            this.groupBoxAppearance.Controls.Add(this.labelFontNote);
+            this.groupBoxAppearance.Location = new System.Drawing.Point(0, 0);
+            this.groupBoxAppearance.Name = "groupBoxAppearance";
+            this.groupBoxAppearance.Size = new System.Drawing.Size(852, 521);
+            this.groupBoxAppearance.TabIndex = 0;
+            this.groupBoxAppearance.TabStop = false;
+            this.groupBoxAppearance.Text = "Appearance";
             // 
-            // groupBoxDarkTheme
+            // groupBoxFontInUI
             // 
-            this.groupBoxDarkTheme.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxDarkTheme.Controls.Add(this.checkBoxDarkThemeShowListViewGridLines);
-            this.groupBoxDarkTheme.Controls.Add(this.checkBoxDarkThemeEnabled);
-            this.groupBoxDarkTheme.Controls.Add(this.panelDarkThemeBackColor);
-            this.groupBoxDarkTheme.Controls.Add(this.buttonDarkThemeBackColor);
-            this.groupBoxDarkTheme.Controls.Add(this.panelDarkThemeColor);
-            this.groupBoxDarkTheme.Controls.Add(this.buttonDarkThemeColor);
-            this.groupBoxDarkTheme.Location = new System.Drawing.Point(13, 349);
-            this.groupBoxDarkTheme.Name = "groupBoxDarkTheme";
-            this.groupBoxDarkTheme.Size = new System.Drawing.Size(832, 132);
-            this.groupBoxDarkTheme.TabIndex = 40;
-            this.groupBoxDarkTheme.TabStop = false;
-            this.groupBoxDarkTheme.Text = "Dark theme";
-            // 
-            // checkBoxDarkThemeShowListViewGridLines
-            // 
-            this.checkBoxDarkThemeShowListViewGridLines.AutoSize = true;
-            this.checkBoxDarkThemeShowListViewGridLines.Location = new System.Drawing.Point(17, 109);
-            this.checkBoxDarkThemeShowListViewGridLines.Name = "checkBoxDarkThemeShowListViewGridLines";
-            this.checkBoxDarkThemeShowListViewGridLines.Size = new System.Drawing.Size(138, 17);
-            this.checkBoxDarkThemeShowListViewGridLines.TabIndex = 44;
-            this.checkBoxDarkThemeShowListViewGridLines.Text = "Show list view grid lines";
-            this.checkBoxDarkThemeShowListViewGridLines.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxDarkThemeEnabled
-            // 
-            this.checkBoxDarkThemeEnabled.AutoSize = true;
-            this.checkBoxDarkThemeEnabled.Location = new System.Drawing.Point(16, 25);
-            this.checkBoxDarkThemeEnabled.Name = "checkBoxDarkThemeEnabled";
-            this.checkBoxDarkThemeEnabled.Size = new System.Drawing.Size(101, 17);
-            this.checkBoxDarkThemeEnabled.TabIndex = 43;
-            this.checkBoxDarkThemeEnabled.Text = "Use dark theme";
-            this.checkBoxDarkThemeEnabled.UseVisualStyleBackColor = true;
-            this.checkBoxDarkThemeEnabled.CheckedChanged += new System.EventHandler(this.checkBoxDarkThemeEnabled_CheckedChanged);
-            // 
-            // panelDarkThemeBackColor
-            // 
-            this.panelDarkThemeBackColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelDarkThemeBackColor.Location = new System.Drawing.Point(139, 78);
-            this.panelDarkThemeBackColor.Name = "panelDarkThemeBackColor";
-            this.panelDarkThemeBackColor.Size = new System.Drawing.Size(21, 20);
-            this.panelDarkThemeBackColor.TabIndex = 42;
-            this.panelDarkThemeBackColor.Click += new System.EventHandler(this.buttonDarkThemeBackColor_Click);
-            // 
-            // buttonDarkThemeBackColor
-            // 
-            this.buttonDarkThemeBackColor.Location = new System.Drawing.Point(15, 77);
-            this.buttonDarkThemeBackColor.Name = "buttonDarkThemeBackColor";
-            this.buttonDarkThemeBackColor.Size = new System.Drawing.Size(112, 23);
-            this.buttonDarkThemeBackColor.TabIndex = 40;
-            this.buttonDarkThemeBackColor.Text = "Back color";
-            this.buttonDarkThemeBackColor.UseVisualStyleBackColor = true;
-            this.buttonDarkThemeBackColor.Click += new System.EventHandler(this.buttonDarkThemeBackColor_Click);
-            // 
-            // panelDarkThemeColor
-            // 
-            this.panelDarkThemeColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelDarkThemeColor.Location = new System.Drawing.Point(139, 49);
-            this.panelDarkThemeColor.Name = "panelDarkThemeColor";
-            this.panelDarkThemeColor.Size = new System.Drawing.Size(21, 20);
-            this.panelDarkThemeColor.TabIndex = 41;
-            this.panelDarkThemeColor.Click += new System.EventHandler(this.buttonDarkThemeColor_Click);
-            // 
-            // buttonDarkThemeColor
-            // 
-            this.buttonDarkThemeColor.Location = new System.Drawing.Point(15, 48);
-            this.buttonDarkThemeColor.Name = "buttonDarkThemeColor";
-            this.buttonDarkThemeColor.Size = new System.Drawing.Size(112, 23);
-            this.buttonDarkThemeColor.TabIndex = 39;
-            this.buttonDarkThemeColor.Text = "Color";
-            this.buttonDarkThemeColor.UseVisualStyleBackColor = true;
-            this.buttonDarkThemeColor.Click += new System.EventHandler(this.buttonDarkThemeColor_Click);
-            // 
-            // labelFontNote
-            // 
-            this.labelFontNote.AutoSize = true;
-            this.labelFontNote.Location = new System.Drawing.Point(10, 492);
-            this.labelFontNote.Name = "labelFontNote";
-            this.labelFontNote.Size = new System.Drawing.Size(278, 13);
-            this.labelFontNote.TabIndex = 41;
-            this.labelFontNote.Text = "Note: This is only to set the font in the Subtitle Edit UI...";
-            // 
-            // groupBoxFontTextBox
-            // 
-            this.groupBoxFontTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxFontTextBox.Controls.Add(this.checkBoxLiveSpellCheck);
-            this.groupBoxFontTextBox.Controls.Add(this.panelTextBoxAssColor);
-            this.groupBoxFontTextBox.Controls.Add(this.buttonTextBoxAssColor);
-            this.groupBoxFontTextBox.Controls.Add(this.panelTextBoxHtmlColor);
-            this.groupBoxFontTextBox.Controls.Add(this.buttonTextBoxHtmlColor);
-            this.groupBoxFontTextBox.Controls.Add(this.checkBoxSubtitleTextBoxSyntaxColor);
-            this.groupBoxFontTextBox.Controls.Add(this.labelSubtitleFontSize);
-            this.groupBoxFontTextBox.Controls.Add(this.comboBoxSubtitleFontSize);
-            this.groupBoxFontTextBox.Controls.Add(this.checkBoxSubtitleFontBold);
-            this.groupBoxFontTextBox.Controls.Add(this.checkBoxSubtitleCenter);
-            this.groupBoxFontTextBox.Location = new System.Drawing.Point(14, 196);
-            this.groupBoxFontTextBox.Name = "groupBoxFontTextBox";
-            this.groupBoxFontTextBox.Size = new System.Drawing.Size(832, 143);
-            this.groupBoxFontTextBox.TabIndex = 40;
-            this.groupBoxFontTextBox.TabStop = false;
-            this.groupBoxFontTextBox.Text = "Text box";
-            // 
-            // checkBoxLiveSpellCheck
-            // 
-            this.checkBoxLiveSpellCheck.AutoSize = true;
-            this.checkBoxLiveSpellCheck.Location = new System.Drawing.Point(437, 46);
-            this.checkBoxLiveSpellCheck.Name = "checkBoxLiveSpellCheck";
-            this.checkBoxLiveSpellCheck.Size = new System.Drawing.Size(99, 17);
-            this.checkBoxLiveSpellCheck.TabIndex = 35;
-            this.checkBoxLiveSpellCheck.Text = "Live spell check";
-            this.checkBoxLiveSpellCheck.UseVisualStyleBackColor = true;
-            // 
-            // panelTextBoxAssColor
-            // 
-            this.panelTextBoxAssColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelTextBoxAssColor.Location = new System.Drawing.Point(561, 103);
-            this.panelTextBoxAssColor.Name = "panelTextBoxAssColor";
-            this.panelTextBoxAssColor.Size = new System.Drawing.Size(21, 20);
-            this.panelTextBoxAssColor.TabIndex = 38;
-            this.panelTextBoxAssColor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelTextBoxAssColor_MouseClick);
-            // 
-            // buttonTextBoxAssColor
-            // 
-            this.buttonTextBoxAssColor.Location = new System.Drawing.Point(437, 102);
-            this.buttonTextBoxAssColor.Name = "buttonTextBoxAssColor";
-            this.buttonTextBoxAssColor.Size = new System.Drawing.Size(112, 23);
-            this.buttonTextBoxAssColor.TabIndex = 37;
-            this.buttonTextBoxAssColor.Text = "ASSA color";
-            this.buttonTextBoxAssColor.UseVisualStyleBackColor = true;
-            this.buttonTextBoxAssColor.Click += new System.EventHandler(this.buttonTextBoxAssColor_Click);
-            // 
-            // panelTextBoxHtmlColor
-            // 
-            this.panelTextBoxHtmlColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelTextBoxHtmlColor.Location = new System.Drawing.Point(561, 74);
-            this.panelTextBoxHtmlColor.Name = "panelTextBoxHtmlColor";
-            this.panelTextBoxHtmlColor.Size = new System.Drawing.Size(21, 20);
-            this.panelTextBoxHtmlColor.TabIndex = 37;
-            this.panelTextBoxHtmlColor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelTextBoxHtmlColor_MouseClick);
-            // 
-            // buttonTextBoxHtmlColor
-            // 
-            this.buttonTextBoxHtmlColor.Location = new System.Drawing.Point(437, 73);
-            this.buttonTextBoxHtmlColor.Name = "buttonTextBoxHtmlColor";
-            this.buttonTextBoxHtmlColor.Size = new System.Drawing.Size(112, 23);
-            this.buttonTextBoxHtmlColor.TabIndex = 36;
-            this.buttonTextBoxHtmlColor.Text = "Html color";
-            this.buttonTextBoxHtmlColor.UseVisualStyleBackColor = true;
-            this.buttonTextBoxHtmlColor.Click += new System.EventHandler(this.buttonTextBoxHtmlColor_Click);
-            // 
-            // checkBoxSubtitleTextBoxSyntaxColor
-            // 
-            this.checkBoxSubtitleTextBoxSyntaxColor.AutoSize = true;
-            this.checkBoxSubtitleTextBoxSyntaxColor.Location = new System.Drawing.Point(418, 24);
-            this.checkBoxSubtitleTextBoxSyntaxColor.Name = "checkBoxSubtitleTextBoxSyntaxColor";
-            this.checkBoxSubtitleTextBoxSyntaxColor.Size = new System.Drawing.Size(120, 17);
-            this.checkBoxSubtitleTextBoxSyntaxColor.TabIndex = 34;
-            this.checkBoxSubtitleTextBoxSyntaxColor.Text = "Use syntax coloring";
-            this.checkBoxSubtitleTextBoxSyntaxColor.UseVisualStyleBackColor = true;
-            this.checkBoxSubtitleTextBoxSyntaxColor.CheckedChanged += new System.EventHandler(this.checkBoxSubtitleTextBoxSyntaxColor_CheckedChanged);
-            // 
-            // labelSubtitleFontSize
-            // 
-            this.labelSubtitleFontSize.AutoSize = true;
-            this.labelSubtitleFontSize.Location = new System.Drawing.Point(18, 17);
-            this.labelSubtitleFontSize.Name = "labelSubtitleFontSize";
-            this.labelSubtitleFontSize.Size = new System.Drawing.Size(87, 13);
-            this.labelSubtitleFontSize.TabIndex = 30;
-            this.labelSubtitleFontSize.Text = "Subtitle font size";
-            // 
-            // comboBoxSubtitleFontSize
-            // 
-            this.comboBoxSubtitleFontSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxSubtitleFontSize.FormattingEnabled = true;
-            this.comboBoxSubtitleFontSize.Items.AddRange(new object[] {
-            "7",
-            "8",
-            "9",
-            "10",
-            "11",
-            "12",
-            "13",
-            "14",
-            "15",
-            "16",
-            "17",
-            "18",
-            "19",
-            "20",
-            "21",
-            "22",
-            "23",
-            "24",
-            "25",
-            "26",
-            "27",
-            "28",
-            "29",
-            "30"});
-            this.comboBoxSubtitleFontSize.Location = new System.Drawing.Point(215, 14);
-            this.comboBoxSubtitleFontSize.Name = "comboBoxSubtitleFontSize";
-            this.comboBoxSubtitleFontSize.Size = new System.Drawing.Size(73, 21);
-            this.comboBoxSubtitleFontSize.TabIndex = 31;
-            // 
-            // checkBoxSubtitleFontBold
-            // 
-            this.checkBoxSubtitleFontBold.AutoSize = true;
-            this.checkBoxSubtitleFontBold.Location = new System.Drawing.Point(215, 41);
-            this.checkBoxSubtitleFontBold.Name = "checkBoxSubtitleFontBold";
-            this.checkBoxSubtitleFontBold.Size = new System.Drawing.Size(46, 17);
-            this.checkBoxSubtitleFontBold.TabIndex = 32;
-            this.checkBoxSubtitleFontBold.Text = "Bold";
-            this.checkBoxSubtitleFontBold.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxSubtitleCenter
-            // 
-            this.checkBoxSubtitleCenter.AutoSize = true;
-            this.checkBoxSubtitleCenter.Location = new System.Drawing.Point(215, 64);
-            this.checkBoxSubtitleCenter.Name = "checkBoxSubtitleCenter";
-            this.checkBoxSubtitleCenter.Size = new System.Drawing.Size(59, 17);
-            this.checkBoxSubtitleCenter.TabIndex = 33;
-            this.checkBoxSubtitleCenter.Text = "Center";
-            this.checkBoxSubtitleCenter.UseVisualStyleBackColor = true;
-            // 
-            // groupBoxFontListViews
-            // 
-            this.groupBoxFontListViews.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxFontListViews.Controls.Add(this.labelSubtitleListViewFontSize);
-            this.groupBoxFontListViews.Controls.Add(this.comboBoxSubtitleListViewFontSize);
-            this.groupBoxFontListViews.Controls.Add(this.checkBoxSubtitleListViewFontBold);
-            this.groupBoxFontListViews.Location = new System.Drawing.Point(14, 132);
-            this.groupBoxFontListViews.Name = "groupBoxFontListViews";
-            this.groupBoxFontListViews.Size = new System.Drawing.Size(832, 58);
-            this.groupBoxFontListViews.TabIndex = 39;
-            this.groupBoxFontListViews.TabStop = false;
-            this.groupBoxFontListViews.Text = "List view";
-            // 
-            // labelSubtitleListViewFontSize
-            // 
-            this.labelSubtitleListViewFontSize.AutoSize = true;
-            this.labelSubtitleListViewFontSize.Location = new System.Drawing.Point(13, 17);
-            this.labelSubtitleListViewFontSize.Name = "labelSubtitleListViewFontSize";
-            this.labelSubtitleListViewFontSize.Size = new System.Drawing.Size(87, 13);
-            this.labelSubtitleListViewFontSize.TabIndex = 33;
-            this.labelSubtitleListViewFontSize.Text = "Subtitle font size";
-            // 
-            // comboBoxSubtitleListViewFontSize
-            // 
-            this.comboBoxSubtitleListViewFontSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxSubtitleListViewFontSize.FormattingEnabled = true;
-            this.comboBoxSubtitleListViewFontSize.Items.AddRange(new object[] {
-            "7",
-            "8",
-            "9",
-            "10",
-            "11",
-            "12",
-            "13",
-            "14",
-            "15",
-            "16",
-            "17",
-            "18",
-            "19",
-            "20"});
-            this.comboBoxSubtitleListViewFontSize.Location = new System.Drawing.Point(210, 14);
-            this.comboBoxSubtitleListViewFontSize.Name = "comboBoxSubtitleListViewFontSize";
-            this.comboBoxSubtitleListViewFontSize.Size = new System.Drawing.Size(73, 21);
-            this.comboBoxSubtitleListViewFontSize.TabIndex = 34;
-            // 
-            // checkBoxSubtitleListViewFontBold
-            // 
-            this.checkBoxSubtitleListViewFontBold.AutoSize = true;
-            this.checkBoxSubtitleListViewFontBold.Location = new System.Drawing.Point(289, 20);
-            this.checkBoxSubtitleListViewFontBold.Name = "checkBoxSubtitleListViewFontBold";
-            this.checkBoxSubtitleListViewFontBold.Size = new System.Drawing.Size(46, 17);
-            this.checkBoxSubtitleListViewFontBold.TabIndex = 35;
-            this.checkBoxSubtitleListViewFontBold.Text = "Bold";
-            this.checkBoxSubtitleListViewFontBold.UseVisualStyleBackColor = true;
+            this.groupBoxFontInUI.Controls.Add(this.groupBoxFontGeneral);
+            this.groupBoxFontInUI.Controls.Add(this.groupBoxFontListViews);
+            this.groupBoxFontInUI.Controls.Add(this.groupBoxFontTextBox);
+            this.groupBoxFontInUI.Location = new System.Drawing.Point(6, 20);
+            this.groupBoxFontInUI.Name = "groupBoxFontInUI";
+            this.groupBoxFontInUI.Size = new System.Drawing.Size(838, 281);
+            this.groupBoxFontInUI.TabIndex = 5;
+            this.groupBoxFontInUI.TabStop = false;
+            this.groupBoxFontInUI.Text = "Font in UI";
             // 
             // groupBoxFontGeneral
             // 
@@ -4381,10 +4108,10 @@
             this.groupBoxFontGeneral.Controls.Add(this.labelSubtitleFontColor);
             this.groupBoxFontGeneral.Controls.Add(this.panelSubtitleBackgroundColor);
             this.groupBoxFontGeneral.Controls.Add(this.labelSubtitleFontBackgroundColor);
-            this.groupBoxFontGeneral.Location = new System.Drawing.Point(14, 20);
+            this.groupBoxFontGeneral.Location = new System.Drawing.Point(6, 20);
             this.groupBoxFontGeneral.Name = "groupBoxFontGeneral";
-            this.groupBoxFontGeneral.Size = new System.Drawing.Size(832, 106);
-            this.groupBoxFontGeneral.TabIndex = 38;
+            this.groupBoxFontGeneral.Size = new System.Drawing.Size(408, 97);
+            this.groupBoxFontGeneral.TabIndex = 10;
             this.groupBoxFontGeneral.TabStop = false;
             this.groupBoxFontGeneral.Text = "General";
             // 
@@ -4441,6 +4168,291 @@
             this.labelSubtitleFontBackgroundColor.Size = new System.Drawing.Size(151, 13);
             this.labelSubtitleFontBackgroundColor.TabIndex = 36;
             this.labelSubtitleFontBackgroundColor.Text = "Subtitle font background color";
+            // 
+            // groupBoxFontListViews
+            // 
+            this.groupBoxFontListViews.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxFontListViews.Controls.Add(this.labelSubtitleListViewFontSize);
+            this.groupBoxFontListViews.Controls.Add(this.comboBoxSubtitleListViewFontSize);
+            this.groupBoxFontListViews.Controls.Add(this.checkBoxSubtitleListViewFontBold);
+            this.groupBoxFontListViews.Location = new System.Drawing.Point(427, 20);
+            this.groupBoxFontListViews.Name = "groupBoxFontListViews";
+            this.groupBoxFontListViews.Size = new System.Drawing.Size(405, 97);
+            this.groupBoxFontListViews.TabIndex = 20;
+            this.groupBoxFontListViews.TabStop = false;
+            this.groupBoxFontListViews.Text = "List view";
+            // 
+            // labelSubtitleListViewFontSize
+            // 
+            this.labelSubtitleListViewFontSize.AutoSize = true;
+            this.labelSubtitleListViewFontSize.Location = new System.Drawing.Point(13, 17);
+            this.labelSubtitleListViewFontSize.Name = "labelSubtitleListViewFontSize";
+            this.labelSubtitleListViewFontSize.Size = new System.Drawing.Size(87, 13);
+            this.labelSubtitleListViewFontSize.TabIndex = 33;
+            this.labelSubtitleListViewFontSize.Text = "Subtitle font size";
+            // 
+            // comboBoxSubtitleListViewFontSize
+            // 
+            this.comboBoxSubtitleListViewFontSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxSubtitleListViewFontSize.FormattingEnabled = true;
+            this.comboBoxSubtitleListViewFontSize.Items.AddRange(new object[] {
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "20"});
+            this.comboBoxSubtitleListViewFontSize.Location = new System.Drawing.Point(16, 38);
+            this.comboBoxSubtitleListViewFontSize.Name = "comboBoxSubtitleListViewFontSize";
+            this.comboBoxSubtitleListViewFontSize.Size = new System.Drawing.Size(73, 21);
+            this.comboBoxSubtitleListViewFontSize.TabIndex = 34;
+            // 
+            // checkBoxSubtitleListViewFontBold
+            // 
+            this.checkBoxSubtitleListViewFontBold.AutoSize = true;
+            this.checkBoxSubtitleListViewFontBold.Location = new System.Drawing.Point(95, 44);
+            this.checkBoxSubtitleListViewFontBold.Name = "checkBoxSubtitleListViewFontBold";
+            this.checkBoxSubtitleListViewFontBold.Size = new System.Drawing.Size(46, 17);
+            this.checkBoxSubtitleListViewFontBold.TabIndex = 35;
+            this.checkBoxSubtitleListViewFontBold.Text = "Bold";
+            this.checkBoxSubtitleListViewFontBold.UseVisualStyleBackColor = true;
+            // 
+            // groupBoxFontTextBox
+            // 
+            this.groupBoxFontTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxFontTextBox.Controls.Add(this.checkBoxLiveSpellCheck);
+            this.groupBoxFontTextBox.Controls.Add(this.panelTextBoxAssColor);
+            this.groupBoxFontTextBox.Controls.Add(this.buttonTextBoxAssColor);
+            this.groupBoxFontTextBox.Controls.Add(this.panelTextBoxHtmlColor);
+            this.groupBoxFontTextBox.Controls.Add(this.buttonTextBoxHtmlColor);
+            this.groupBoxFontTextBox.Controls.Add(this.checkBoxSubtitleTextBoxSyntaxColor);
+            this.groupBoxFontTextBox.Controls.Add(this.labelSubtitleFontSize);
+            this.groupBoxFontTextBox.Controls.Add(this.comboBoxSubtitleFontSize);
+            this.groupBoxFontTextBox.Controls.Add(this.checkBoxSubtitleFontBold);
+            this.groupBoxFontTextBox.Controls.Add(this.checkBoxSubtitleCenter);
+            this.groupBoxFontTextBox.Location = new System.Drawing.Point(7, 121);
+            this.groupBoxFontTextBox.Name = "groupBoxFontTextBox";
+            this.groupBoxFontTextBox.Size = new System.Drawing.Size(825, 154);
+            this.groupBoxFontTextBox.TabIndex = 30;
+            this.groupBoxFontTextBox.TabStop = false;
+            this.groupBoxFontTextBox.Text = "Text box";
+            // 
+            // checkBoxLiveSpellCheck
+            // 
+            this.checkBoxLiveSpellCheck.AutoSize = true;
+            this.checkBoxLiveSpellCheck.Location = new System.Drawing.Point(181, 57);
+            this.checkBoxLiveSpellCheck.Name = "checkBoxLiveSpellCheck";
+            this.checkBoxLiveSpellCheck.Size = new System.Drawing.Size(99, 17);
+            this.checkBoxLiveSpellCheck.TabIndex = 35;
+            this.checkBoxLiveSpellCheck.Text = "Live spell check";
+            this.checkBoxLiveSpellCheck.UseVisualStyleBackColor = true;
+            // 
+            // panelTextBoxAssColor
+            // 
+            this.panelTextBoxAssColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelTextBoxAssColor.Location = new System.Drawing.Point(305, 114);
+            this.panelTextBoxAssColor.Name = "panelTextBoxAssColor";
+            this.panelTextBoxAssColor.Size = new System.Drawing.Size(21, 20);
+            this.panelTextBoxAssColor.TabIndex = 38;
+            this.panelTextBoxAssColor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelTextBoxAssColor_MouseClick);
+            // 
+            // buttonTextBoxAssColor
+            // 
+            this.buttonTextBoxAssColor.Location = new System.Drawing.Point(181, 113);
+            this.buttonTextBoxAssColor.Name = "buttonTextBoxAssColor";
+            this.buttonTextBoxAssColor.Size = new System.Drawing.Size(112, 23);
+            this.buttonTextBoxAssColor.TabIndex = 37;
+            this.buttonTextBoxAssColor.Text = "ASSA color";
+            this.buttonTextBoxAssColor.UseVisualStyleBackColor = true;
+            this.buttonTextBoxAssColor.Click += new System.EventHandler(this.buttonTextBoxAssColor_Click);
+            // 
+            // panelTextBoxHtmlColor
+            // 
+            this.panelTextBoxHtmlColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelTextBoxHtmlColor.Location = new System.Drawing.Point(305, 85);
+            this.panelTextBoxHtmlColor.Name = "panelTextBoxHtmlColor";
+            this.panelTextBoxHtmlColor.Size = new System.Drawing.Size(21, 20);
+            this.panelTextBoxHtmlColor.TabIndex = 37;
+            this.panelTextBoxHtmlColor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelTextBoxHtmlColor_MouseClick);
+            // 
+            // buttonTextBoxHtmlColor
+            // 
+            this.buttonTextBoxHtmlColor.Location = new System.Drawing.Point(181, 84);
+            this.buttonTextBoxHtmlColor.Name = "buttonTextBoxHtmlColor";
+            this.buttonTextBoxHtmlColor.Size = new System.Drawing.Size(112, 23);
+            this.buttonTextBoxHtmlColor.TabIndex = 36;
+            this.buttonTextBoxHtmlColor.Text = "Html color";
+            this.buttonTextBoxHtmlColor.UseVisualStyleBackColor = true;
+            this.buttonTextBoxHtmlColor.Click += new System.EventHandler(this.buttonTextBoxHtmlColor_Click);
+            // 
+            // checkBoxSubtitleTextBoxSyntaxColor
+            // 
+            this.checkBoxSubtitleTextBoxSyntaxColor.AutoSize = true;
+            this.checkBoxSubtitleTextBoxSyntaxColor.Location = new System.Drawing.Point(162, 35);
+            this.checkBoxSubtitleTextBoxSyntaxColor.Name = "checkBoxSubtitleTextBoxSyntaxColor";
+            this.checkBoxSubtitleTextBoxSyntaxColor.Size = new System.Drawing.Size(120, 17);
+            this.checkBoxSubtitleTextBoxSyntaxColor.TabIndex = 34;
+            this.checkBoxSubtitleTextBoxSyntaxColor.Text = "Use syntax coloring";
+            this.checkBoxSubtitleTextBoxSyntaxColor.UseVisualStyleBackColor = true;
+            this.checkBoxSubtitleTextBoxSyntaxColor.CheckedChanged += new System.EventHandler(this.checkBoxSubtitleTextBoxSyntaxColor_CheckedChanged);
+            // 
+            // labelSubtitleFontSize
+            // 
+            this.labelSubtitleFontSize.AutoSize = true;
+            this.labelSubtitleFontSize.Location = new System.Drawing.Point(18, 17);
+            this.labelSubtitleFontSize.Name = "labelSubtitleFontSize";
+            this.labelSubtitleFontSize.Size = new System.Drawing.Size(87, 13);
+            this.labelSubtitleFontSize.TabIndex = 30;
+            this.labelSubtitleFontSize.Text = "Subtitle font size";
+            // 
+            // comboBoxSubtitleFontSize
+            // 
+            this.comboBoxSubtitleFontSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxSubtitleFontSize.FormattingEnabled = true;
+            this.comboBoxSubtitleFontSize.Items.AddRange(new object[] {
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23",
+            "24",
+            "25",
+            "26",
+            "27",
+            "28",
+            "29",
+            "30"});
+            this.comboBoxSubtitleFontSize.Location = new System.Drawing.Point(21, 35);
+            this.comboBoxSubtitleFontSize.Name = "comboBoxSubtitleFontSize";
+            this.comboBoxSubtitleFontSize.Size = new System.Drawing.Size(73, 21);
+            this.comboBoxSubtitleFontSize.TabIndex = 31;
+            // 
+            // checkBoxSubtitleFontBold
+            // 
+            this.checkBoxSubtitleFontBold.AutoSize = true;
+            this.checkBoxSubtitleFontBold.Location = new System.Drawing.Point(21, 62);
+            this.checkBoxSubtitleFontBold.Name = "checkBoxSubtitleFontBold";
+            this.checkBoxSubtitleFontBold.Size = new System.Drawing.Size(46, 17);
+            this.checkBoxSubtitleFontBold.TabIndex = 32;
+            this.checkBoxSubtitleFontBold.Text = "Bold";
+            this.checkBoxSubtitleFontBold.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxSubtitleCenter
+            // 
+            this.checkBoxSubtitleCenter.AutoSize = true;
+            this.checkBoxSubtitleCenter.Location = new System.Drawing.Point(21, 85);
+            this.checkBoxSubtitleCenter.Name = "checkBoxSubtitleCenter";
+            this.checkBoxSubtitleCenter.Size = new System.Drawing.Size(59, 17);
+            this.checkBoxSubtitleCenter.TabIndex = 33;
+            this.checkBoxSubtitleCenter.Text = "Center";
+            this.checkBoxSubtitleCenter.UseVisualStyleBackColor = true;
+            // 
+            // groupBoxDarkTheme
+            // 
+            this.groupBoxDarkTheme.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxDarkTheme.Controls.Add(this.checkBoxDarkThemeShowListViewGridLines);
+            this.groupBoxDarkTheme.Controls.Add(this.checkBoxDarkThemeEnabled);
+            this.groupBoxDarkTheme.Controls.Add(this.panelDarkThemeBackColor);
+            this.groupBoxDarkTheme.Controls.Add(this.buttonDarkThemeBackColor);
+            this.groupBoxDarkTheme.Controls.Add(this.panelDarkThemeColor);
+            this.groupBoxDarkTheme.Controls.Add(this.buttonDarkThemeColor);
+            this.groupBoxDarkTheme.Location = new System.Drawing.Point(5, 307);
+            this.groupBoxDarkTheme.Name = "groupBoxDarkTheme";
+            this.groupBoxDarkTheme.Size = new System.Drawing.Size(839, 125);
+            this.groupBoxDarkTheme.TabIndex = 40;
+            this.groupBoxDarkTheme.TabStop = false;
+            this.groupBoxDarkTheme.Text = "Dark theme";
+            // 
+            // checkBoxDarkThemeShowListViewGridLines
+            // 
+            this.checkBoxDarkThemeShowListViewGridLines.AutoSize = true;
+            this.checkBoxDarkThemeShowListViewGridLines.Location = new System.Drawing.Point(191, 82);
+            this.checkBoxDarkThemeShowListViewGridLines.Name = "checkBoxDarkThemeShowListViewGridLines";
+            this.checkBoxDarkThemeShowListViewGridLines.Size = new System.Drawing.Size(138, 17);
+            this.checkBoxDarkThemeShowListViewGridLines.TabIndex = 46;
+            this.checkBoxDarkThemeShowListViewGridLines.Text = "Show list view grid lines";
+            this.checkBoxDarkThemeShowListViewGridLines.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxDarkThemeEnabled
+            // 
+            this.checkBoxDarkThemeEnabled.AutoSize = true;
+            this.checkBoxDarkThemeEnabled.Location = new System.Drawing.Point(16, 25);
+            this.checkBoxDarkThemeEnabled.Name = "checkBoxDarkThemeEnabled";
+            this.checkBoxDarkThemeEnabled.Size = new System.Drawing.Size(101, 17);
+            this.checkBoxDarkThemeEnabled.TabIndex = 41;
+            this.checkBoxDarkThemeEnabled.Text = "Use dark theme";
+            this.checkBoxDarkThemeEnabled.UseVisualStyleBackColor = true;
+            this.checkBoxDarkThemeEnabled.CheckedChanged += new System.EventHandler(this.checkBoxDarkThemeEnabled_CheckedChanged);
+            // 
+            // panelDarkThemeBackColor
+            // 
+            this.panelDarkThemeBackColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelDarkThemeBackColor.Location = new System.Drawing.Point(313, 51);
+            this.panelDarkThemeBackColor.Name = "panelDarkThemeBackColor";
+            this.panelDarkThemeBackColor.Size = new System.Drawing.Size(21, 20);
+            this.panelDarkThemeBackColor.TabIndex = 45;
+            this.panelDarkThemeBackColor.Click += new System.EventHandler(this.buttonDarkThemeBackColor_Click);
+            // 
+            // buttonDarkThemeBackColor
+            // 
+            this.buttonDarkThemeBackColor.Location = new System.Drawing.Point(189, 50);
+            this.buttonDarkThemeBackColor.Name = "buttonDarkThemeBackColor";
+            this.buttonDarkThemeBackColor.Size = new System.Drawing.Size(112, 23);
+            this.buttonDarkThemeBackColor.TabIndex = 44;
+            this.buttonDarkThemeBackColor.Text = "Back color";
+            this.buttonDarkThemeBackColor.UseVisualStyleBackColor = true;
+            this.buttonDarkThemeBackColor.Click += new System.EventHandler(this.buttonDarkThemeBackColor_Click);
+            // 
+            // panelDarkThemeColor
+            // 
+            this.panelDarkThemeColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelDarkThemeColor.Location = new System.Drawing.Point(313, 22);
+            this.panelDarkThemeColor.Name = "panelDarkThemeColor";
+            this.panelDarkThemeColor.Size = new System.Drawing.Size(21, 20);
+            this.panelDarkThemeColor.TabIndex = 43;
+            this.panelDarkThemeColor.Click += new System.EventHandler(this.buttonDarkThemeColor_Click);
+            // 
+            // buttonDarkThemeColor
+            // 
+            this.buttonDarkThemeColor.Location = new System.Drawing.Point(189, 21);
+            this.buttonDarkThemeColor.Name = "buttonDarkThemeColor";
+            this.buttonDarkThemeColor.Size = new System.Drawing.Size(112, 23);
+            this.buttonDarkThemeColor.TabIndex = 42;
+            this.buttonDarkThemeColor.Text = "Color";
+            this.buttonDarkThemeColor.UseVisualStyleBackColor = true;
+            this.buttonDarkThemeColor.Click += new System.EventHandler(this.buttonDarkThemeColor_Click);
+            // 
+            // labelFontNote
+            // 
+            this.labelFontNote.AutoSize = true;
+            this.labelFontNote.Location = new System.Drawing.Point(10, 457);
+            this.labelFontNote.Name = "labelFontNote";
+            this.labelFontNote.Size = new System.Drawing.Size(278, 13);
+            this.labelFontNote.TabIndex = 41;
+            this.labelFontNote.Text = "Note: This is only to set the font in the Subtitle Edit UI...";
             // 
             // panelNetwork
             // 
@@ -4607,7 +4619,7 @@
             this.buttonReset.Location = new System.Drawing.Point(895, 539);
             this.buttonReset.Name = "buttonReset";
             this.buttonReset.Size = new System.Drawing.Size(185, 23);
-            this.buttonReset.TabIndex = 14;
+            this.buttonReset.TabIndex = 996;
             this.buttonReset.Text = "Restore default settings";
             this.buttonReset.UseVisualStyleBackColor = true;
             this.buttonReset.Click += new System.EventHandler(this.buttonReset_Click);
@@ -4729,16 +4741,17 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOpen)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNew)).EndInit();
             this.panelFont.ResumeLayout(false);
-            this.groupBoxFont.ResumeLayout(false);
-            this.groupBoxFont.PerformLayout();
-            this.groupBoxDarkTheme.ResumeLayout(false);
-            this.groupBoxDarkTheme.PerformLayout();
-            this.groupBoxFontTextBox.ResumeLayout(false);
-            this.groupBoxFontTextBox.PerformLayout();
-            this.groupBoxFontListViews.ResumeLayout(false);
-            this.groupBoxFontListViews.PerformLayout();
+            this.groupBoxAppearance.ResumeLayout(false);
+            this.groupBoxAppearance.PerformLayout();
+            this.groupBoxFontInUI.ResumeLayout(false);
             this.groupBoxFontGeneral.ResumeLayout(false);
             this.groupBoxFontGeneral.PerformLayout();
+            this.groupBoxFontListViews.ResumeLayout(false);
+            this.groupBoxFontListViews.PerformLayout();
+            this.groupBoxFontTextBox.ResumeLayout(false);
+            this.groupBoxFontTextBox.PerformLayout();
+            this.groupBoxDarkTheme.ResumeLayout(false);
+            this.groupBoxDarkTheme.PerformLayout();
             this.panelNetwork.ResumeLayout(false);
             this.groupBoxNetworkSession.ResumeLayout(false);
             this.groupBoxNetworkSession.PerformLayout();
@@ -5019,7 +5032,7 @@
         private System.Windows.Forms.Button buttonClearShortcut;
         private System.Windows.Forms.CheckBox checkBoxAllowVolumeBoost;
         private System.Windows.Forms.Panel panelFont;
-        private System.Windows.Forms.GroupBox groupBoxFont;
+        private System.Windows.Forms.GroupBox groupBoxAppearance;
         private System.Windows.Forms.CheckBox checkBoxSubtitleCenter;
         private System.Windows.Forms.Panel panelSubtitleFontColor;
         private System.Windows.Forms.Panel panelSubtitleBackgroundColor;
@@ -5108,5 +5121,6 @@
         private System.Windows.Forms.Label labelVideoPlayerPreviewFontColor;
         private System.Windows.Forms.Panel panelVideoPlayerPreviewFontColor;
         private System.Windows.Forms.CheckBox checkBoxDarkThemeShowListViewGridLines;
+        private System.Windows.Forms.GroupBox groupBoxFontInUI;
     }
 }
