@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private const int ToolsSection = 5;
         private const int WordListsSection = 6;
         private const int ToolbarSection = 7;
-        private const int FontSection = 8;
+        private const int AppearanceSection = 8;
         private const int NetworkSection = 9;
 
         private string _listBoxSearchString = string.Empty;
@@ -335,7 +335,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             listBoxSection.Items[ToolsSection] = language.Tools;
             listBoxSection.Items[WordListsSection] = language.WordLists;
             listBoxSection.Items[ToolbarSection] = language.Toolbar;
-            listBoxSection.Items[FontSection] = LanguageSettings.Current.DCinemaProperties.Font;
+            listBoxSection.Items[AppearanceSection] = language.Appearance;
             listBoxSection.Items[NetworkSection] = language.Network;
 
             Text = language.Title;
@@ -389,7 +389,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelMaxCharsPerSecond.Text = language.MaximumCharactersPerSecond;
             labelMaxWordsPerMin.Text = language.MaximumWordssPerMinute;
             checkBoxAutoWrapWhileTyping.Text = language.AutoWrapWhileTyping;
-            groupBoxFont.Text = language.FontInUi;
+            groupBoxAppearance.Text = language.Appearance;
+            groupBoxFontInUI.Text = language.FontInUi;
             groupBoxFontGeneral.Text = language.General;
             groupBoxFontListViews.Text = language.ListView;
             groupBoxFontTextBox.Text = language.TextBox;
@@ -459,6 +460,12 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxStartInSourceView.Text = language.StartInSourceView;
             checkBoxRemoveBlankLinesWhenOpening.Text = language.RemoveBlankLinesWhenOpening;
             checkBoxRememberWindowPosition.Text = language.RememberPositionAndSize;
+
+            var apperanceSubFontLeft = labelSubtitleFont.Left+ 9 + 
+                Math.Max(Math.Max(labelSubtitleFont.Width, labelSubtitleFontColor.Width), labelSubtitleFontBackgroundColor.Width);
+            comboBoxSubtitleFont.Left = apperanceSubFontLeft;
+            panelSubtitleFontColor.Left = apperanceSubFontLeft;
+            panelSubtitleBackgroundColor.Left = apperanceSubFontLeft;
 
             labelShowLineBreaksAs.Text = language.ShowLineBreaksAs;
             textBoxShowLineBreaksAs.Left = labelShowLineBreaksAs.Left + labelShowLineBreaksAs.Width;
@@ -2454,7 +2461,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 case ToolbarSection:
                     section = panelToolBar;
                     break;
-                case FontSection:
+                case AppearanceSection:
                     section = panelFont;
                     break;
                 case NetworkSection:
