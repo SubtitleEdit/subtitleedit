@@ -325,6 +325,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool MergeShortLinesOnlyContinuous { get; set; }
         public string ColumnPasteColumn { get; set; }
         public string ColumnPasteOverwriteMode { get; set; }
+        public string AssaAttachmentFontTextPreview { get; set; }
 
         public ToolsSettings()
         {
@@ -455,6 +456,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             MergeShortLinesOnlyContinuous = true;
             ColumnPasteColumn = "all";
             ColumnPasteOverwriteMode = "overwrite";
+            AssaAttachmentFontTextPreview =
+                "Hello World!" + Environment.NewLine +
+                "こんにちは世界" + Environment.NewLine +
+                "你好世界！" + Environment.NewLine +
+                "1234567890";
         }
     }
 

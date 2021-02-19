@@ -18,6 +18,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.AddWaveformBatch AddWaveformBatch;
         public LanguageStructure.AdjustDisplayDuration AdjustDisplayDuration;
         public LanguageStructure.ApplyDurationLimits ApplyDurationLimits;
+        public LanguageStructure.AssaAttachments AssaAttachments;
         public LanguageStructure.AudioToText AudioToText;
         public LanguageStructure.AutoBreakUnbreakLines AutoBreakUnbreakLines;
         public LanguageStructure.BatchConvert BatchConvert;
@@ -295,6 +296,19 @@ namespace Nikse.SubtitleEdit.Logic
                 Title = "Apply duration limits",
                 FixesAvailable = "Fixes available: {0}",
                 UnableToFix = "Unable to fix: {0}",
+            };
+
+            AssaAttachments = new LanguageStructure.AssaAttachments
+            {
+                Title = "Attachments",
+                AttachFont = "Attach fonts",
+                AttachGraphics = "Attach graphics",
+                FontName = "Font name:",
+                IconName = "Icon name:",
+                ImageName = "Image name ({0}x{1}):",
+                ImageResized = "Image resized to fit current window",
+                Font = "Font",
+                Graphics = "Graphics",
             };
 
             AudioToText = new LanguageStructure.AudioToText
