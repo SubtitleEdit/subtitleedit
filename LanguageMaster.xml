@@ -2149,6 +2149,7 @@ can edit in same subtitle file (collaboration)</Information>
     <AssaColor>ASSA color</AssaColor>
     <DarkTheme>Dark theme</DarkTheme>
     <DarkThemeEnabled>Use dark theme</DarkThemeEnabled>
+    <DarkThemeShowGridViewLines>Show list view grid lines</DarkThemeShowGridViewLines>
     <UpdateShortcut>Update</UpdateShortcut>
     <FoucsSetVideoPosition>Focus set video position</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Toggle dock/undock of video controls</ToggleDockUndockOfVideoControls>

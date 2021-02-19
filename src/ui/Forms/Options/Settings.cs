@@ -159,6 +159,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             panelDarkThemeBackColor.BackColor = gs.DarkThemeBackColor;
             panelDarkThemeColor.BackColor = gs.DarkThemeForeColor;
             checkBoxDarkThemeEnabled.Checked = gs.UseDarkTheme;
+            checkBoxDarkThemeShowListViewGridLines.Checked = gs.DarkThemeShowListViewGridLines;
             checkBoxSubtitleListViewFontBold.Checked = gs.SubtitleListViewFontBold;
             checkBoxSubtitleCenter.Checked = gs.CenterSubtitleInTextBox;
             panelSubtitleFontColor.BackColor = gs.SubtitleFontColor;
@@ -442,6 +443,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             buttonTextBoxAssColor.Text = language.AssaColor;
             groupBoxDarkTheme.Text = language.DarkTheme;
             checkBoxDarkThemeEnabled.Text = language.DarkThemeEnabled;
+            checkBoxDarkThemeShowListViewGridLines.Text = language.DarkThemeShowGridViewLines;
             buttonDarkThemeColor.Text = language.WaveformTextColor;
             buttonDarkThemeBackColor.Text = language.WaveformBackgroundColor;
             checkBoxSubtitleListViewFontBold.Text = language.SubtitleBold;
@@ -1660,6 +1662,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             gs.DarkThemeBackColor = panelDarkThemeBackColor.BackColor;
             gs.DarkThemeForeColor = panelDarkThemeColor.BackColor;
             gs.UseDarkTheme = checkBoxDarkThemeEnabled.Checked;
+            gs.DarkThemeShowListViewGridLines = checkBoxDarkThemeShowListViewGridLines.Checked;
             gs.SubtitleListViewFontBold = checkBoxSubtitleListViewFontBold.Checked;
             gs.CenterSubtitleInTextBox = checkBoxSubtitleCenter.Checked;
             gs.SubtitleFontColor = panelSubtitleFontColor.BackColor;
@@ -3492,6 +3495,16 @@ namespace Nikse.SubtitleEdit.Forms.Options
             {
                 panelVideoPlayerPreviewFontColor.BackColor = colorDialogSSAStyle.Color;
             }
+        }
+
+        private void checkBoxDarkThemeEnabled_CheckedChanged(object sender, EventArgs e)
+        {
+            var enabled = checkBoxDarkThemeEnabled.Checked;
+            buttonDarkThemeColor.Enabled = enabled;
+            panelDarkThemeColor.Enabled = enabled;
+            buttonDarkThemeBackColor.Enabled = enabled;
+            panelDarkThemeBackColor.Enabled = enabled;
+            checkBoxDarkThemeShowListViewGridLines.Enabled = enabled;
         }
     }
 }

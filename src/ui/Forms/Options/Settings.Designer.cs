@@ -334,6 +334,7 @@
             this.panelFont = new System.Windows.Forms.Panel();
             this.groupBoxFont = new System.Windows.Forms.GroupBox();
             this.groupBoxDarkTheme = new System.Windows.Forms.GroupBox();
+            this.checkBoxDarkThemeShowListViewGridLines = new System.Windows.Forms.CheckBox();
             this.checkBoxDarkThemeEnabled = new System.Windows.Forms.CheckBox();
             this.panelDarkThemeBackColor = new System.Windows.Forms.Panel();
             this.buttonDarkThemeBackColor = new System.Windows.Forms.Button();
@@ -4089,6 +4090,7 @@
             // 
             this.groupBoxDarkTheme.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxDarkTheme.Controls.Add(this.checkBoxDarkThemeShowListViewGridLines);
             this.groupBoxDarkTheme.Controls.Add(this.checkBoxDarkThemeEnabled);
             this.groupBoxDarkTheme.Controls.Add(this.panelDarkThemeBackColor);
             this.groupBoxDarkTheme.Controls.Add(this.buttonDarkThemeBackColor);
@@ -4096,10 +4098,20 @@
             this.groupBoxDarkTheme.Controls.Add(this.buttonDarkThemeColor);
             this.groupBoxDarkTheme.Location = new System.Drawing.Point(13, 349);
             this.groupBoxDarkTheme.Name = "groupBoxDarkTheme";
-            this.groupBoxDarkTheme.Size = new System.Drawing.Size(832, 112);
+            this.groupBoxDarkTheme.Size = new System.Drawing.Size(832, 132);
             this.groupBoxDarkTheme.TabIndex = 40;
             this.groupBoxDarkTheme.TabStop = false;
             this.groupBoxDarkTheme.Text = "Dark theme";
+            // 
+            // checkBoxDarkThemeShowListViewGridLines
+            // 
+            this.checkBoxDarkThemeShowListViewGridLines.AutoSize = true;
+            this.checkBoxDarkThemeShowListViewGridLines.Location = new System.Drawing.Point(17, 109);
+            this.checkBoxDarkThemeShowListViewGridLines.Name = "checkBoxDarkThemeShowListViewGridLines";
+            this.checkBoxDarkThemeShowListViewGridLines.Size = new System.Drawing.Size(138, 17);
+            this.checkBoxDarkThemeShowListViewGridLines.TabIndex = 44;
+            this.checkBoxDarkThemeShowListViewGridLines.Text = "Show list view grid lines";
+            this.checkBoxDarkThemeShowListViewGridLines.UseVisualStyleBackColor = true;
             // 
             // checkBoxDarkThemeEnabled
             // 
@@ -4110,11 +4122,12 @@
             this.checkBoxDarkThemeEnabled.TabIndex = 43;
             this.checkBoxDarkThemeEnabled.Text = "Use dark theme";
             this.checkBoxDarkThemeEnabled.UseVisualStyleBackColor = true;
+            this.checkBoxDarkThemeEnabled.CheckedChanged += new System.EventHandler(this.checkBoxDarkThemeEnabled_CheckedChanged);
             // 
             // panelDarkThemeBackColor
             // 
             this.panelDarkThemeBackColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelDarkThemeBackColor.Location = new System.Drawing.Point(140, 78);
+            this.panelDarkThemeBackColor.Location = new System.Drawing.Point(139, 78);
             this.panelDarkThemeBackColor.Name = "panelDarkThemeBackColor";
             this.panelDarkThemeBackColor.Size = new System.Drawing.Size(21, 20);
             this.panelDarkThemeBackColor.TabIndex = 42;
@@ -4122,7 +4135,7 @@
             // 
             // buttonDarkThemeBackColor
             // 
-            this.buttonDarkThemeBackColor.Location = new System.Drawing.Point(16, 77);
+            this.buttonDarkThemeBackColor.Location = new System.Drawing.Point(15, 77);
             this.buttonDarkThemeBackColor.Name = "buttonDarkThemeBackColor";
             this.buttonDarkThemeBackColor.Size = new System.Drawing.Size(112, 23);
             this.buttonDarkThemeBackColor.TabIndex = 40;
@@ -4133,7 +4146,7 @@
             // panelDarkThemeColor
             // 
             this.panelDarkThemeColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelDarkThemeColor.Location = new System.Drawing.Point(140, 49);
+            this.panelDarkThemeColor.Location = new System.Drawing.Point(139, 49);
             this.panelDarkThemeColor.Name = "panelDarkThemeColor";
             this.panelDarkThemeColor.Size = new System.Drawing.Size(21, 20);
             this.panelDarkThemeColor.TabIndex = 41;
@@ -4141,7 +4154,7 @@
             // 
             // buttonDarkThemeColor
             // 
-            this.buttonDarkThemeColor.Location = new System.Drawing.Point(16, 48);
+            this.buttonDarkThemeColor.Location = new System.Drawing.Point(15, 48);
             this.buttonDarkThemeColor.Name = "buttonDarkThemeColor";
             this.buttonDarkThemeColor.Size = new System.Drawing.Size(112, 23);
             this.buttonDarkThemeColor.TabIndex = 39;
@@ -4152,7 +4165,7 @@
             // labelFontNote
             // 
             this.labelFontNote.AutoSize = true;
-            this.labelFontNote.Location = new System.Drawing.Point(10, 473);
+            this.labelFontNote.Location = new System.Drawing.Point(10, 492);
             this.labelFontNote.Name = "labelFontNote";
             this.labelFontNote.Size = new System.Drawing.Size(278, 13);
             this.labelFontNote.TabIndex = 41;
@@ -4610,15 +4623,15 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
+            this.Controls.Add(this.panelFont);
+            this.Controls.Add(this.panelNetwork);
             this.Controls.Add(this.panelGeneral);
             this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.panelWordLists);
-            this.Controls.Add(this.panelFont);
             this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelToolBar);
             this.Controls.Add(this.panelWaveform);
             this.Controls.Add(this.panelSyntaxColoring);
-            this.Controls.Add(this.panelNetwork);
             this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.listBoxSection);
             this.Controls.Add(this.buttonReset);
@@ -5094,5 +5107,6 @@
         private System.Windows.Forms.CheckBox checkBoxLiveSpellCheck;
         private System.Windows.Forms.Label labelVideoPlayerPreviewFontColor;
         private System.Windows.Forms.Panel panelVideoPlayerPreviewFontColor;
+        private System.Windows.Forms.CheckBox checkBoxDarkThemeShowListViewGridLines;
     }
 }
