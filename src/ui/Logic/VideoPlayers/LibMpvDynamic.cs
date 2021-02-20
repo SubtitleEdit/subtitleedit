@@ -550,7 +550,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 }
 
                 _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("keep-open"), GetUtf8Bytes("always")); // don't auto close video
-                _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("no-sub"), GetUtf8Bytes("")); // don't load subtitles (does not seem to work anymore)
+                _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("no-sub"), GetUtf8Bytes(string.Empty)); // don't load subtitles (does not seem to work anymore)
                 _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("sid"), GetUtf8Bytes("no")); // don't load subtitles
 
                 if (videoFileName.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
@@ -573,7 +573,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                             }
                             else
                             {
-                                _mpvSetOptionString(_mpvHandle, GetUtf8Bytes(option), GetUtf8Bytes(""));
+                                _mpvSetOptionString(_mpvHandle, GetUtf8Bytes(option), GetUtf8Bytes(string.Empty));
                             }
                         }
                     }
