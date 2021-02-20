@@ -1,5 +1,18 @@
 ﻿Subtitle Edit Changelog
 
+3.6.1 (xth May 2021) BETA
+* NEW:
+   * Add ASSA attachments manager - thx LeonCheung
+   * Auto load ASSA styles - thx z3us/OmrSi
+   * Add Categories for ASSA styles - thx /OmrSi
+   * Add bookmarked to modify selection - thx moob158/OmrSi
+* IMPROVED:
+   * Update Polish translation - thx admas
+   * Minor tweaks for font/appearance settings
+* FIXED:
+   * Only color listview backcolor if visual styles are enabled - thx ask2018/OmrSi
+
+
 3.6.0 (18th February 2021)
 * NEW:
    * Use dotnet framework 4.7.2 (WinXP/Vista no longer supported)
