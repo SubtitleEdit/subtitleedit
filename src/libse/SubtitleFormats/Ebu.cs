@@ -23,6 +23,48 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private const string LanguageCodeChinese = "75";
 
+        private static readonly Dictionary<int, SpecialCharacter> SpecialASCIICodes = new Dictionary<int, SpecialCharacter>
+        {
+            { 0xd3, new SpecialCharacter("©")},
+            { 0xd4, new SpecialCharacter("™")},
+            { 0xd5, new SpecialCharacter("♪")},
+
+            { 0xe0, new SpecialCharacter("Ω")},
+            { 0xe1, new SpecialCharacter("Æ")},
+            { 0xe2, new SpecialCharacter("Ð")},
+            { 0xe3, new SpecialCharacter("ª")},
+            { 0xe4, new SpecialCharacter("Ħ")},
+
+            { 0xe6, new SpecialCharacter("Ĳ")},
+            { 0xe7, new SpecialCharacter("Ŀ")},
+            { 0xe8, new SpecialCharacter("Ł")},
+            { 0xe9, new SpecialCharacter("Ø")},
+            { 0xea, new SpecialCharacter("Œ")},
+            { 0xeb, new SpecialCharacter("º")},
+            { 0xec, new SpecialCharacter("Þ")},
+            { 0xed, new SpecialCharacter("Ŧ")},
+            { 0xee, new SpecialCharacter("Ŋ")},
+            { 0xef, new SpecialCharacter("ŉ")},
+
+            { 0xf0, new SpecialCharacter("ĸ")},
+            { 0xf1, new SpecialCharacter("æ")},
+            { 0xf2, new SpecialCharacter("đ")},
+            { 0xf3, new SpecialCharacter("ð")},
+            { 0xf4, new SpecialCharacter("ħ")},
+            { 0xf5, new SpecialCharacter("ı")},
+            { 0xf6, new SpecialCharacter("ĳ")},
+            { 0xf7, new SpecialCharacter("ŀ")},
+            { 0xf8, new SpecialCharacter("ł")},
+            { 0xf9, new SpecialCharacter("ø")},
+            { 0xfa, new SpecialCharacter("œ")},
+            { 0xfb, new SpecialCharacter("ß")},
+            { 0xfc, new SpecialCharacter("þ")},
+            { 0xfd, new SpecialCharacter("ŧ")},
+            { 0xfe, new SpecialCharacter("ŋ")},
+
+        };
+
+
         public interface IEbuUiHelper
         {
             void Initialize(EbuGeneralSubtitleInformation header, byte justificationCode, string fileName, Subtitle subtitle);
@@ -426,9 +468,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 TextField = TextField.Replace("</BOX>", boxingOff);
                 if (header.CharacterCodeTableNumber == "00")
                 {
-                    TextField = TextField.Replace("©", encoding.GetString(new byte[] { 0xd3 }));
-                    TextField = TextField.Replace("™", encoding.GetString(new byte[] { 0xd4 }));
-                    TextField = TextField.Replace("♪", encoding.GetString(new byte[] { 0xd5 }));
+                    foreach (KeyValuePair<int, SpecialCharacter> entry in SpecialASCIICodes)
+                    {
+                        string s = entry.Value.Character;
+                        int k = entry.Key;
+                        TextField = TextField.Replace(s, encoding.GetString(new byte[] { (byte)k }));
+                    }
                 }
 
                 TextField = EncodeText(TextField, encoding, header.DisplayStandardCode);
@@ -766,6 +811,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public const string NameOfFormat = "EBU STL";
 
         public override string Name => NameOfFormat;
+
+        internal struct SpecialCharacter
+        {
+            internal SpecialCharacter(string character, bool switchOrder = false, int priority = 2)
+            {
+                Character = character;
+                SwitchOrder = switchOrder;
+                Priority = priority;
+            }
+
+            internal string Character { get; set; }
+            internal bool SwitchOrder { get; set; }
+            internal int Priority { get; set; }
+        }
 
         public bool Save(string fileName, Subtitle subtitle)
         {
@@ -1152,19 +1211,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (header.CharacterCodeTableNumber == "00")
             {
                 var b = buffer[index];
-                if (b == 0xd3)
+                if (SpecialASCIICodes.ContainsKey(b))
                 {
-                    return "©";
-                }
-
-                if (b == 0xd4)
-                {
-                    return "™";
-                }
-
-                if (b == 0xd5)
-                {
-                    return "♪";
+                    return SpecialASCIICodes[b].Character;
                 }
 
                 Encoding encoding;
