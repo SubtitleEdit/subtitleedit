@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            TimeCode timeCode1 = new TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
@@ -735,8 +735,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // groupBoxVerticalPosition
             // 
-            this.groupBoxVerticalPosition.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupBoxVerticalPosition.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxVerticalPosition.Controls.Add(this.labelUseBox);
             this.groupBoxVerticalPosition.Controls.Add(this.numericUpDownNewLineRows);
@@ -912,7 +911,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxErrors.Name = "textBoxErrors";
             this.textBoxErrors.ReadOnly = true;
             this.textBoxErrors.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxErrors.Size = new System.Drawing.Size(729, 386);
+            this.textBoxErrors.Size = new System.Drawing.Size(729, 418);
             this.textBoxErrors.TabIndex = 13;
             // 
             // labelErrors
