@@ -1037,9 +1037,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public void LoadSubtitle(Subtitle subtitle, byte[] buffer)
         {
             subtitle.Paragraphs.Clear();
-            subtitle.Header = null;
             var header = ReadHeader(buffer);
-            subtitle.Header = Encoding.UTF8.GetString(buffer);
+            subtitle.Header = header.ToString();
             Paragraph last = null;
             byte lastExtensionBlockNumber = 0xff;
             JustificationCodes = new List<int>();
@@ -1120,7 +1119,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return header;
         }
 
-        private static Encoding GetEncoding(string codePageNumber)
+        public static Encoding GetEncoding(string codePageNumber)
         {
             try
             {
