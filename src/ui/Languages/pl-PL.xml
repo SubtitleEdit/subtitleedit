@@ -161,6 +161,17 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <FixesAvailable>Dostępne poprawki: {0}</FixesAvailable>
     <UnableToFix>Nie można poprawić: {0}</UnableToFix>
   </ApplyDurationLimits>
+  <AssaAttachments>
+    <Title>Załączniki</Title>
+    <AttachFont>Dołącz czcionki</AttachFont>
+    <AttachGraphics>Dołącz grafikę</AttachGraphics>
+    <Graphics>Grafika</Graphics>
+    <Font>Czcionka</Font>
+    <ImageName>Nazwa obrazu ({0}x{1}):</ImageName>
+    <IconName>Nazwa ikony:</IconName>
+    <FontName>Nazwa czcionki:</FontName>
+    <ImageResized>Obraz został zmieniony w celu dopasowania do bieżącego okna</ImageResized>
+  </AssaAttachments>
   <AudioToText>
     <Title>Audio na tekst</Title>
     <ExtractingAudioUsingX>Wyodrębnianie audio przy użyciu {0}...</ExtractingAudioUsingX>
@@ -192,7 +203,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <RemoveStyleActor>Usuń styl/aktora</RemoveStyleActor>
     <RemoveTextForHI>Usuń tekst dla osób niedosłyszących (HI)</RemoveTextForHI>
     <OverwriteOriginalFiles>Nadpisz oryginalne pliki (nowe rozszerzenie w przypadku zmiany formatu)</OverwriteOriginalFiles>
-    <RedoCasing>Ponów wielkie litery</RedoCasing>
+    <RedoCasing>Ponów duże litery</RedoCasing>
     <Convert>Konwertuj</Convert>
     <NothingToConvert>Nie ma nic do konwersji!</NothingToConvert>
     <PleaseChooseOutputFolder>Proszę wybrać folder wyjściowy</PleaseChooseOutputFolder>
@@ -277,11 +288,11 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
   <ChangeCasing>
     <Title>Zmiana pisowni</Title>
     <ChangeCasingTo>Zmień pisownię wg</ChangeCasingTo>
-    <NormalCasing>Normalna pisownia. Zdania zaczynają się z wielkiej litery.</NormalCasing>
+    <NormalCasing>Normalna pisownia. Zdania zaczynają się z dużej litery.</NormalCasing>
     <FixNamesCasing>Popraw pisownię nazw własnych (za pomocą Dictionaries\names.xml)</FixNamesCasing>
     <FixOnlyNamesCasing>Popraw pisownię tylko nazw własnych (za pomocą Dictionaries\names.xml)</FixOnlyNamesCasing>
-    <OnlyChangeAllUppercaseLines>Zmień tylko wszystkie linie pisane wielkimi literami</OnlyChangeAllUppercaseLines>
-    <AllUppercase>WSZYSTKIE WIELKIE LITERY</AllUppercase>
+    <OnlyChangeAllUppercaseLines>Zmień tylko wszystkie linie pisane dużymi literami</OnlyChangeAllUppercaseLines>
+    <AllUppercase>WSZYSTKIE DUŻE LITERY</AllUppercase>
     <AllLowercase>wszystkie małe litery</AllLowercase>
   </ChangeCasing>
   <ChangeCasingNames>
@@ -645,12 +656,12 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <BreakLongLines>Przełam zbyt długie linie</BreakLongLines>
     <RemoveLineBreaks>Usuń łamanie linii w krótkich tekstach z tylko jednym zdaniem</RemoveLineBreaks>
     <RemoveLineBreaksAll>Usuń łamanie linii w krótkich tekstach (wszystkie, z wyjątkiem dialogów)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Popraw wielkie litery 'i' wewnątrz małych liter (błąd OCR)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsindeLowercaseWords>Popraw duże litery 'i' wewnątrz małych liter (błąd OCR)</FixUppercaseIInsindeLowercaseWords>
     <FixDoubleApostrophes>Popraw podwójny znak apostrofu ('') na pojedynczy cudzysłów (")</FixDoubleApostrophes>
     <AddPeriods>Dodaj kropkę po liniach, gdy następna linia rozpoczyna się z dużej litery</AddPeriods>
-    <StartWithUppercaseLetterAfterParagraph>Rozpocznij z wielkiej litery po akapicie</StartWithUppercaseLetterAfterParagraph>
-    <StartWithUppercaseLetterAfterPeriodInsideParagraph>Rozpocznij z wielkiej litery po kropce wewnątrz akapitu</StartWithUppercaseLetterAfterPeriodInsideParagraph>
-    <StartWithUppercaseLetterAfterColon>Rozpocznij z wielkiej litery po dwukropku/średniku</StartWithUppercaseLetterAfterColon>
+    <StartWithUppercaseLetterAfterParagraph>Rozpocznij z dużej litery po akapicie</StartWithUppercaseLetterAfterParagraph>
+    <StartWithUppercaseLetterAfterPeriodInsideParagraph>Rozpocznij z dużej litery po kropce wewnątrz akapitu</StartWithUppercaseLetterAfterPeriodInsideParagraph>
+    <StartWithUppercaseLetterAfterColon>Rozpocznij z dużej litery po dwukropku/średniku</StartWithUppercaseLetterAfterColon>
     <FixLowercaseIToUppercaseI>Popraw osamotnione małe litery 'i' na 'I' (angielski)</FixLowercaseIToUppercaseI>
     <FixCommonOcrErrors>Popraw najczęstsze błędy OCR (używając listy zamienników OCR)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Poprawiono błędów OCR (używając listy zamienników OCR): {0}</CommonOcrErrorsFixed>
@@ -675,7 +686,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <NothingFixableBut>Nic nie mogło zostać naprawione automatycznie. Napisy zawierają błędy - szczegółowe informacje znajdują się w dzienniku.</NothingFixableBut>
     <XFixedBut>{0} problem(-y/-ów) zostało naprawionych, ale napisy nadal zawierają błędy - szczegółowe informacje znajdują się w dzienniku</XFixedBut>
     <XCouldBeFixedBut>{0} problem (-y/-ów) może zostać naprawionych, ale napisy nadal będą zawierały błędy - szczegółowe informacje znajdują się w dzienniku</XCouldBeFixedBut>
-    <FixFirstLetterToUppercaseAfterParagraph>Popraw pierwszą literę na wielką po akapicie</FixFirstLetterToUppercaseAfterParagraph>
+    <FixFirstLetterToUppercaseAfterParagraph>Popraw pierwszą literę na dużą po akapicie</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>Połącz krótką linię (jedno zdanie)</MergeShortLine>
     <MergeShortLineAll>Połącz krótkie linie (wszystkie, z wyjątkiem dialogów)</MergeShortLineAll>
     <BreakLongLine>Przełam długą linię</BreakLongLine>
@@ -697,7 +708,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <UnneededSpace>Niepotrzebne spacje</UnneededSpace>
     <UnneededPeriod>Niepotrzebne kropki</UnneededPeriod>
     <FixMissingSpace>Popraw brakujące spacje</FixMissingSpace>
-    <FixUppercaseIInsideLowercaseWord>Popraw wielką literę 'i' wewnątrz słowa pisanego małymi literami</FixUppercaseIInsideLowercaseWord>
+    <FixUppercaseIInsideLowercaseWord>Popraw dużą literę 'i' wewnątrz słowa pisanego małymi literami</FixUppercaseIInsideLowercaseWord>
     <FixMissingPeriodAtEndOfLine>Dodaj brakującą kropkę na końcu linii</FixMissingPeriodAtEndOfLine>
     <RefreshFixes>Odśwież dostępne poprawki</RefreshFixes>
     <ApplyFixes>Zastosuj wybrane poprawki</ApplyFixes>
@@ -1333,6 +1344,7 @@ Aby użyć klucza API przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby
     <SaveChangesToOriginalX>Zapisać zmiany w oryginale {0}?</SaveChangesToOriginalX>
     <SaveSubtitleAs>Zapisz napisy jako...</SaveSubtitleAs>
     <SaveOriginalSubtitleAs>Zapisz oryginalne napisy jako...</SaveOriginalSubtitleAs>
+    <CannotSaveEmptySubtitle>Nie można zapisać pustych napisów</CannotSaveEmptySubtitle>
     <NoSubtitleLoaded>Nie wczytano napisów</NoSubtitleLoaded>
     <VisualSyncSelectedLines>Synchronizacja wizualna - zaznaczone linie</VisualSyncSelectedLines>
     <VisualSyncTitle>Synchronizacja wizualna</VisualSyncTitle>
@@ -1757,6 +1769,7 @@ Jeśli edytowałeś ten plik w Subtitle Edit, to możesz odszukać kopię zapaso
     <DurationLessThan>Czas trwania krótszy niż</DurationLessThan>
     <DurationGreaterThan>Czas trwania dłuższy niż</DurationGreaterThan>
     <MoreThanTwoLines>Więcej niż dwie linie</MoreThanTwoLines>
+    <Bookmarked>Dodano do zakładek</Bookmarked>
   </ModifySelection>
   <MultipleReplace>
     <Title>Wielokrotne zastępowanie</Title>
@@ -1865,11 +1878,11 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <QuestionMarks>'?' i '?'</QuestionMarks>
     <And>i</And>
     <RemoveTextBeforeColon>Usuń tekst przed dwukropkiem (':')</RemoveTextBeforeColon>
-    <OnlyIfTextIsUppercase>Tylko, jeśli tekst jest WIELKIMI LITERAMI</OnlyIfTextIsUppercase>
+    <OnlyIfTextIsUppercase>Tylko, jeśli tekst jest DUŻYMI LITERAMI</OnlyIfTextIsUppercase>
     <OnlyIfInSeparateLine>Tylko jeśli w oddzielnej linii</OnlyIfInSeparateLine>
     <LinesFoundX>Znaleziono linii: {0}</LinesFoundX>
     <RemoveTextIfContains>Usuń tekst, jeśli zawiera:</RemoveTextIfContains>
-    <RemoveTextIfAllUppercase>Usuń linię, jeśli pisana WIELKIMI LITERAMI</RemoveTextIfAllUppercase>
+    <RemoveTextIfAllUppercase>Usuń linię, jeśli pisana DUŻYMI LITERAMI</RemoveTextIfAllUppercase>
     <RemoveInterjections>Usuń przerywniki (cii, hmm, itp.)</RemoveInterjections>
     <EditInterjections>Edytuj...</EditInterjections>
   </RemoveTextFromHearImpaired>
@@ -2136,6 +2149,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <AssaColor>Kolor ASSA</AssaColor>
     <DarkTheme>Ciemny motyw</DarkTheme>
     <DarkThemeEnabled>Użyj ciemnego motywu</DarkThemeEnabled>
+    <DarkThemeShowGridViewLines>Pokaż linie siatki widoku listy</DarkThemeShowGridViewLines>
     <UpdateShortcut>Aktualizuj</UpdateShortcut>
     <FoucsSetVideoPosition>Koncentruj się na ustawionej pozycji wideo</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Przełączanie "Zadokuj"/"Oddokuj" panelu sterowania wideo</ToggleDockUndockOfVideoControls>
@@ -2308,8 +2322,8 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <MainTextBoxMoveFirstWordUpCurrent>Przenieś do góry pierwsze słowo z następnej linii napisów (bieżące napisy)</MainTextBoxMoveFirstWordUpCurrent>
     <MainTextBoxMoveLastWordDownCurrent>Przenieś w dół ostatnie słowo z pierwszej linii (bieżące napisy)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Zaznacz do małych liter</MainTextBoxSelectionToLower>
-    <MainTextBoxSelectionToUpper>Zaznacz do wielkich liter</MainTextBoxSelectionToUpper>
-    <MainTextBoxSelectionToggleCasing>Przełącz wielkość liter (prawidłowa wielkość liter/wielkie litery/małe litery)</MainTextBoxSelectionToggleCasing>
+    <MainTextBoxSelectionToUpper>Zaznacz do dużych liter</MainTextBoxSelectionToUpper>
+    <MainTextBoxSelectionToggleCasing>Przełącz wielkość liter (prawidłowa wielkość liter/duże litery/małe litery)</MainTextBoxSelectionToggleCasing>
     <MainTextBoxSelectionToRuby>Zaznacz do Ruby (japoński)</MainTextBoxSelectionToRuby>
     <MainTextBoxToggleAutoDuration>Przełącz automatyczny czas trwania</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Automatyczne łamanie tekstu</MainTextBoxAutoBreak>
@@ -2342,7 +2356,7 @@ Kontynuować?</RestoreDefaultSettingsMsg>
     <RemoveTimeCodes>Usuń kody czasowe</RemoveTimeCodes>
     <EditFixContinuationStyleSettings>Edytuj ustawienia poprawek stylu kontynuacji...</EditFixContinuationStyleSettings>
     <FixContinuationStyleSettings>Ustawienia poprawek stylu kontynuacji</FixContinuationStyleSettings>
-    <UncheckInsertsAllCaps>Wykryj i odznacz linie pisane tylko wielkimi literami (na przykład: BRAK WEJŚCIA)</UncheckInsertsAllCaps>
+    <UncheckInsertsAllCaps>Wykryj i odznacz linie pisane tylko dużymi literami (na przykład: BRAK WEJŚCIA)</UncheckInsertsAllCaps>
     <UncheckInsertsItalic>Wykryj i odznacz linie z kursywą lub symbolami muzycznymi</UncheckInsertsItalic>
     <UncheckInsertsLowercase>Wykryj i odznacz linie z symbolami muzycznymi pisane małymi literami</UncheckInsertsLowercase>
     <HideContinuationCandidatesWithoutName>Ukryj mało prawdopodobne znaki interpunkcyjne kontynuacji zdań</HideContinuationCandidatesWithoutName>
@@ -2587,7 +2601,12 @@ Kontynuować?</RestoreDefaultSettingsMsg>
     <AddToFile>Dodaj do pliku</AddToFile>
     <AddToStorage>Dodaj do magazynu</AddToStorage>
     <StyleStorage>Przechowywanie stylu</StyleStorage>
+    <StyleCurrentFile>Style w bieżącym pliku</StyleCurrentFile>
     <OverwriteX>Nadpisać {0}?</OverwriteX>
+    <Category>Kategoria</Category>
+    <NewCategory>Nowa kategoria</NewCategory>
+    <CategoryName>Nazwa kategorii</CategoryName>
+    <CategoryNote>Uwaga: style "Domyślne" zostaną zastosowane do nowych plików ASSA</CategoryNote>
   </SubStationAlphaStyles>
   <PointSync>
     <Title>Punkty synchronizacji</Title>
