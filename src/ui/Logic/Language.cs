@@ -2946,6 +2946,7 @@ can edit in same subtitle file (collaboration)",
                 Category = "Category",
                 NewCategory = "New category",
                 CategoryName = "Category name",
+                CategorySetDefault = "Set as default",
                 CategoryNote = "Note: \"Default\" styles will be applied to new ASSA files"
             };
 

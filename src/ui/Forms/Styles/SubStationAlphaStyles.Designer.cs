@@ -1,6 +1,4 @@
-﻿using System.Windows.Forms;
-
-namespace Nikse.SubtitleEdit.Forms.Styles
+﻿namespace Nikse.SubtitleEdit.Forms.Styles
 {
     sealed partial class SubStationAlphaStyles
     {
@@ -132,6 +130,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.labelCategoryDefaultNote = new System.Windows.Forms.Label();
+            this.buttonStorageCategorySetDefault = new System.Windows.Forms.Button();
             this.buttonStorageCategoryDelete = new System.Windows.Forms.Button();
             this.buttonStorageCategoryNew = new System.Windows.Forms.Button();
             this.comboboxStorageCategories = new System.Windows.Forms.ComboBox();
@@ -1050,6 +1049,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.groupBoxStorage.Controls.Add(this.buttonStorageRemove);
             this.groupBoxStorage.Controls.Add(this.listViewStorage);
             this.groupBoxStorage.Controls.Add(this.labelCategoryDefaultNote);
+            this.groupBoxStorage.Controls.Add(this.buttonStorageCategorySetDefault);
             this.groupBoxStorage.Controls.Add(this.buttonStorageCategoryDelete);
             this.groupBoxStorage.Controls.Add(this.buttonStorageCategoryNew);
             this.groupBoxStorage.Controls.Add(this.comboboxStorageCategories);
@@ -1069,7 +1069,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.buttonAddToFile.Location = new System.Drawing.Point(280, 222);
             this.buttonAddToFile.Name = "buttonAddToFile";
             this.buttonAddToFile.Size = new System.Drawing.Size(163, 52);
-            this.buttonAddToFile.TabIndex = 12;
+            this.buttonAddToFile.TabIndex = 13;
             this.buttonAddToFile.Text = "Add to file";
             this.buttonAddToFile.UseVisualStyleBackColor = true;
             this.buttonAddToFile.Click += new System.EventHandler(this.buttonAddToFile_Click);
@@ -1081,7 +1081,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.buttonStorageExport.Location = new System.Drawing.Point(6, 251);
             this.buttonStorageExport.Name = "buttonStorageExport";
             this.buttonStorageExport.Size = new System.Drawing.Size(82, 23);
-            this.buttonStorageExport.TabIndex = 7;
+            this.buttonStorageExport.TabIndex = 8;
             this.buttonStorageExport.Text = "Export...";
             this.buttonStorageExport.UseVisualStyleBackColor = true;
             this.buttonStorageExport.Click += new System.EventHandler(this.buttonStorageExport_Click);
@@ -1093,7 +1093,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.buttonStorageImport.Location = new System.Drawing.Point(6, 222);
             this.buttonStorageImport.Name = "buttonStorageImport";
             this.buttonStorageImport.Size = new System.Drawing.Size(82, 23);
-            this.buttonStorageImport.TabIndex = 6;
+            this.buttonStorageImport.TabIndex = 7;
             this.buttonStorageImport.Text = "Import...";
             this.buttonStorageImport.UseVisualStyleBackColor = true;
             this.buttonStorageImport.Click += new System.EventHandler(this.buttonStorageImport_Click);
@@ -1105,7 +1105,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.buttonStorageCopy.Location = new System.Drawing.Point(94, 251);
             this.buttonStorageCopy.Name = "buttonStorageCopy";
             this.buttonStorageCopy.Size = new System.Drawing.Size(82, 23);
-            this.buttonStorageCopy.TabIndex = 9;
+            this.buttonStorageCopy.TabIndex = 10;
             this.buttonStorageCopy.Text = "Copy";
             this.buttonStorageCopy.UseVisualStyleBackColor = true;
             this.buttonStorageCopy.Click += new System.EventHandler(this.buttonStorageCopy_Click);
@@ -1117,7 +1117,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.buttonStorageRemoveAll.Location = new System.Drawing.Point(182, 251);
             this.buttonStorageRemoveAll.Name = "buttonStorageRemoveAll";
             this.buttonStorageRemoveAll.Size = new System.Drawing.Size(92, 23);
-            this.buttonStorageRemoveAll.TabIndex = 11;
+            this.buttonStorageRemoveAll.TabIndex = 12;
             this.buttonStorageRemoveAll.Text = "Remove all";
             this.buttonStorageRemoveAll.UseVisualStyleBackColor = true;
             this.buttonStorageRemoveAll.Click += new System.EventHandler(this.buttonStorageRemoveAll_Click);
@@ -1129,7 +1129,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.buttonStorageAdd.Location = new System.Drawing.Point(94, 222);
             this.buttonStorageAdd.Name = "buttonStorageAdd";
             this.buttonStorageAdd.Size = new System.Drawing.Size(82, 23);
-            this.buttonStorageAdd.TabIndex = 8;
+            this.buttonStorageAdd.TabIndex = 9;
             this.buttonStorageAdd.Text = "New";
             this.buttonStorageAdd.UseVisualStyleBackColor = true;
             this.buttonStorageAdd.Click += new System.EventHandler(this.buttonStorageAdd_Click);
@@ -1141,7 +1141,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.buttonStorageRemove.Location = new System.Drawing.Point(182, 222);
             this.buttonStorageRemove.Name = "buttonStorageRemove";
             this.buttonStorageRemove.Size = new System.Drawing.Size(92, 23);
-            this.buttonStorageRemove.TabIndex = 10;
+            this.buttonStorageRemove.TabIndex = 11;
             this.buttonStorageRemove.Text = "Remove";
             this.buttonStorageRemove.UseVisualStyleBackColor = true;
             this.buttonStorageRemove.Click += new System.EventHandler(this.buttonStorageRemove_Click);
@@ -1165,7 +1165,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.listViewStorage.MultiSelect = false;
             this.listViewStorage.Name = "listViewStorage";
             this.listViewStorage.Size = new System.Drawing.Size(545, 148);
-            this.listViewStorage.TabIndex = 5;
+            this.listViewStorage.TabIndex = 6;
             this.listViewStorage.UseCompatibleStateImageBehavior = false;
             this.listViewStorage.View = System.Windows.Forms.View.Details;
             this.listViewStorage.SelectedIndexChanged += new System.EventHandler(this.listViewStorage_SelectedIndexChanged);
@@ -1208,14 +1208,26 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.labelCategoryDefaultNote.Location = new System.Drawing.Point(10, 48);
             this.labelCategoryDefaultNote.Name = "labelCategoryDefaultNote";
             this.labelCategoryDefaultNote.Size = new System.Drawing.Size(59, 13);
-            this.labelCategoryDefaultNote.TabIndex = 4;
+            this.labelCategoryDefaultNote.TabIndex = 5;
             this.labelCategoryDefaultNote.Text = "Note: \"Default\" styles will be applied to new ASSA files";
+            // 
+            // buttonStorageCategorySetDefault
+            // 
+            this.buttonStorageCategorySetDefault.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonStorageCategorySetDefault.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonStorageCategorySetDefault.Location = new System.Drawing.Point(455, 19);
+            this.buttonStorageCategorySetDefault.Name = "buttonStorageRemove";
+            this.buttonStorageCategorySetDefault.Size = new System.Drawing.Size(94, 23);
+            this.buttonStorageCategorySetDefault.TabIndex = 4;
+            this.buttonStorageCategorySetDefault.Text = "Set as default";
+            this.buttonStorageCategorySetDefault.UseVisualStyleBackColor = true;
+            this.buttonStorageCategorySetDefault.Click += new System.EventHandler(this.buttonStorageCategorySetDefault_Click);
             // 
             // buttonStorageCategoryDelete
             // 
             this.buttonStorageCategoryDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonStorageCategoryDelete.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonStorageCategoryDelete.Location = new System.Drawing.Point(365, 19);
+            this.buttonStorageCategoryDelete.Location = new System.Drawing.Point(357, 19);
             this.buttonStorageCategoryDelete.Name = "buttonStorageRemove";
             this.buttonStorageCategoryDelete.Size = new System.Drawing.Size(92, 23);
             this.buttonStorageCategoryDelete.TabIndex = 3;
@@ -1227,7 +1239,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             // 
             this.buttonStorageCategoryNew.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonStorageCategoryNew.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonStorageCategoryNew.Location = new System.Drawing.Point(267, 19);
+            this.buttonStorageCategoryNew.Location = new System.Drawing.Point(259, 19);
             this.buttonStorageCategoryNew.Name = "buttonStorageCategoryNew";
             this.buttonStorageCategoryNew.Size = new System.Drawing.Size(92, 23);
             this.buttonStorageCategoryNew.TabIndex = 2;
@@ -1237,13 +1249,13 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             // 
             // comboboxStorageCategories
             // 
-            this.comboboxStorageCategories.DropDownStyle = ComboBoxStyle.DropDownList;
+            this.comboboxStorageCategories.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboboxStorageCategories.FormattingEnabled = true;
             this.comboboxStorageCategories.Location = new System.Drawing.Point(73, 19);
             this.comboboxStorageCategories.Name = "comboboxStorageCategories";
-            this.comboboxStorageCategories.Size = new System.Drawing.Size(188, 21);
+            this.comboboxStorageCategories.Size = new System.Drawing.Size(180, 21);
             this.comboboxStorageCategories.TabIndex = 1;
-            this.comboboxStorageCategories.SelectedIndexChanged += new System.EventHandler(this.comboboxStorageCategory_SelectedIndexChanged);
+            this.comboboxStorageCategories.SelectedIndexChanged += new System.EventHandler(this.comboboxStorageCategories_SelectedIndexChanged);
             // 
             // labelStorageCategory
             // 
@@ -1532,6 +1544,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private System.Windows.Forms.ComboBox comboboxStorageCategories;
         private System.Windows.Forms.Button buttonStorageCategoryNew;
         private System.Windows.Forms.Button buttonStorageCategoryDelete;
+        private System.Windows.Forms.Button buttonStorageCategorySetDefault;
         private System.Windows.Forms.Label labelCategoryDefaultNote;
         private System.Windows.Forms.ListView listViewStorage;
         private System.Windows.Forms.ColumnHeader columnHeader1;

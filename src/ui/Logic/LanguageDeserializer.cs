@@ -7135,6 +7135,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "SubStationAlphaStyles/CategoryName":
                     language.SubStationAlphaStyles.CategoryName = reader.Value;
                     break;
+                case "SubStationAlphaStyles/CategorySetDefault":
+                    language.SubStationAlphaStyles.CategorySetDefault = reader.Value;
+                    break;
                 case "SubStationAlphaStyles/CategoryNote":
                     language.SubStationAlphaStyles.CategoryNote = reader.Value;
                     break;

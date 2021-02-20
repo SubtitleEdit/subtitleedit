@@ -2802,6 +2802,7 @@
             public string Category { get; set; }
             public string NewCategory { get; set; }
             public string CategoryName { get; set; }
+            public string CategorySetDefault { get; set; }
             public string CategoryNote { get; set; }
         }
 
