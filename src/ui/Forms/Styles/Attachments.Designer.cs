@@ -1,7 +1,7 @@
 ﻿
 namespace Nikse.SubtitleEdit.Forms.Styles
 {
-    partial class Attachments
+    sealed partial class Attachments
     {
         /// <summary>
         /// Required designer variable.

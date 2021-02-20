@@ -162,7 +162,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <UnableToFix>Unable to fix: {0}</UnableToFix>
   </ApplyDurationLimits>
   <AssaAttachments>
-    <Title>Attachments</Title>
+    <Title>Advanced Sub Station Alpha attachments</Title>
     <AttachFont>Attach fonts</AttachFont>
     <AttachGraphics>Attach graphics</AttachGraphics>
     <Graphics>Graphics</Graphics>

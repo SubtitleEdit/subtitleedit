@@ -833,7 +833,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonAssStyleManager.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonAssStyleManager.Name = "toolStripButtonAssStyleManager";
             this.toolStripButtonAssStyleManager.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButtonAssStyleManager.Text = "Netflix quality check";
+            this.toolStripButtonAssStyleManager.Text = "ASS style manager";
             this.toolStripButtonAssStyleManager.ToolTipText = "ASS style manager";
             this.toolStripButtonAssStyleManager.Visible = false;
             this.toolStripButtonAssStyleManager.Click += new System.EventHandler(this.toolStripButtonAssStyleManager_Click);
@@ -846,7 +846,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonAssProperties.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonAssProperties.Name = "toolStripButtonAssProperties";
             this.toolStripButtonAssProperties.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButtonAssProperties.Text = "Netflix quality check";
+            this.toolStripButtonAssProperties.Text = "ASS properties";
             this.toolStripButtonAssProperties.ToolTipText = "ASS properties";
             this.toolStripButtonAssProperties.Click += new System.EventHandler(this.toolStripButtonAssProperties_Click);
             // 
@@ -858,8 +858,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonAssAttachments.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonAssAttachments.Name = "toolStripButtonAssAttachments";
             this.toolStripButtonAssAttachments.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButtonAssAttachments.Text = "Netflix quality check";
-            this.toolStripButtonAssAttachments.ToolTipText = "ASS properties";
+            this.toolStripButtonAssAttachments.Text = "Attachments";
+            this.toolStripButtonAssAttachments.ToolTipText = "Attachments";
             this.toolStripButtonAssAttachments.Click += new System.EventHandler(this.toolStripButtonAssAttachments_Click);
             // 
             // toolStripButtonNetflixQualityCheck
