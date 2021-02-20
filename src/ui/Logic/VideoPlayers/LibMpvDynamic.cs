@@ -559,16 +559,23 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("ytdl"), GetUtf8Bytes("yes"));
                 }
 
-                if (!string.IsNullOrEmpty(Configuration.Settings.General.MpvExtraOption))
+                if (!string.IsNullOrEmpty(Configuration.Settings.General.MpvExtraOptions))
                 {
-                    var parts = Configuration.Settings.General.MpvExtraOption.Split('=');
-                    if (parts.Length == 2)
+                    var options = Configuration.Settings.General.MpvExtraOptions.Split(' ');
+                    if (options?.Length > 0)
                     {
-                        _mpvSetOptionString(_mpvHandle, GetUtf8Bytes(parts[0]), GetUtf8Bytes(parts[1]));
-                    }
-                    else
-                    {
-                        _mpvSetOptionString(_mpvHandle, GetUtf8Bytes(Configuration.Settings.General.MpvExtraOption), GetUtf8Bytes(""));
+                        foreach (var option in options)
+                        {
+                            var parts = option.TrimStart('-').Split('=');
+                            if (parts.Length == 2)
+                            {
+                                _mpvSetOptionString(_mpvHandle, GetUtf8Bytes(parts[0]), GetUtf8Bytes(parts[1]));
+                            }
+                            else
+                            {
+                                _mpvSetOptionString(_mpvHandle, GetUtf8Bytes(option), GetUtf8Bytes(""));
+                            }
+                        }
                     }
                 }
 
