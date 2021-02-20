@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private Bitmap _fixedBackgroundImage;
         private bool _backgroundImageDark;
         private bool _fileStyleActive = true;
-        private List<AssaStorageCategory> _storageCategories;
+        private readonly List<AssaStorageCategory> _storageCategories;
         private AssaStorageCategory _currentCategory;
         private FormWindowState _lastFormWindowState = FormWindowState.Normal;
 
@@ -125,6 +125,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             labelStorageCategory.Text = l.Category;
             buttonStorageCategoryNew.Text = l.New;
             buttonStorageCategoryDelete.Text = l.Remove;
+            buttonStorageCategorySetDefault.Text = l.CategorySetDefault;
             labelCategoryDefaultNote.Text = l.CategoryNote;
             buttonStorageImport.Text = l.Import;
             buttonStorageExport.Text = l.Export;
@@ -221,7 +222,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     _storageCategories.Add(category);
                 }
 
-                _currentCategory = _storageCategories.Single(item => item.IsDefault);
+                _currentCategory = _storageCategories.Single(category => category.IsDefault);
                 comboboxStorageCategories.SelectedItem = _currentCategory.Name;
             }
 
@@ -774,6 +775,13 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             return string.Format(AdvancedSubStationAlpha.HeaderNoStyles, string.Empty, styles);
         }
 
+        private void UpdateSelectedIndex(ListView listview)
+        {
+            listview.Items[listview.Items.Count - 1].Selected = true;
+            listview.Items[listview.Items.Count - 1].EnsureVisible();
+            listview.Items[listview.Items.Count - 1].Focused = true;
+        }
+
         private void listViewStyles_SelectedIndexChanged(object sender, EventArgs e)
         {
             LogNameChanges();
@@ -1099,9 +1107,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
                 _doUpdate = false;
                 AddStyle(listViewStyles, style, Subtitle, _isSubStationAlpha);
-                listViewStyles.Items[listViewStyles.Items.Count - 1].Selected = true;
-                listViewStyles.Items[listViewStyles.Items.Count - 1].EnsureVisible();
-                listViewStyles.Items[listViewStyles.Items.Count - 1].Focused = true;
+                UpdateSelectedIndex(listViewStyles);
                 textBoxStyleName.Text = style.Name;
                 textBoxStyleName.Focus();
                 AddStyleToHeader(style);
@@ -1217,9 +1223,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             _doUpdate = false;
             AddStyle(listViewStyles, style, Subtitle, _isSubStationAlpha);
-            listViewStyles.Items[listViewStyles.Items.Count - 1].Selected = true;
-            listViewStyles.Items[listViewStyles.Items.Count - 1].EnsureVisible();
-            listViewStyles.Items[listViewStyles.Items.Count - 1].Focused = true;
+            UpdateSelectedIndex(listViewStyles);
             textBoxStyleName.Focus();
             AddStyleToHeader(style);
             _doUpdate = true;
@@ -1369,6 +1373,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 ass.LoadSubtitle(sub, lines, string.Empty);
                 _header = _header.Remove(_header.IndexOf("[V4+ Styles]", StringComparison.Ordinal)) + sub.Header.Substring(sub.Header.IndexOf("[V4+ Styles]", StringComparison.Ordinal));
             }
+
             InitializeStylesListView();
         }
 
@@ -1737,9 +1742,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                                         _header = _header.Trim() + Environment.NewLine + style.RawLine + Environment.NewLine;
                                     }
 
-                                    listViewStyles.Items[listViewStyles.Items.Count - 1].Selected = true;
-                                    listViewStyles.Items[listViewStyles.Items.Count - 1].EnsureVisible();
-                                    listViewStyles.Items[listViewStyles.Items.Count - 1].Focused = true;
+                                    UpdateSelectedIndex(listViewStyles);
                                     textBoxStyleName.Text = style.Name;
                                     textBoxStyleName.Focus();
                                     _doUpdate = true;
@@ -1824,9 +1827,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             _currentCategory.Styles.Add(style);
             AddStyle(listViewStorage, style, Subtitle, _isSubStationAlpha);
-            listViewStorage.Items[listViewStorage.Items.Count - 1].Selected = true;
-            listViewStorage.Items[listViewStorage.Items.Count - 1].EnsureVisible();
-            listViewStorage.Items[listViewStorage.Items.Count - 1].Focused = true;
+            UpdateSelectedIndex(listViewStorage);
         }
 
         private void listViewStorage_SelectedIndexChanged(object sender, EventArgs e)
@@ -1946,9 +1947,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             var style = new SsaStyle { Name = name };
             AddStyle(listViewStorage, style, Subtitle, _isSubStationAlpha);
             _currentCategory.Styles.Add(style);
-            listViewStorage.Items[listViewStorage.Items.Count - 1].Selected = true;
-            listViewStorage.Items[listViewStorage.Items.Count - 1].EnsureVisible();
-            listViewStorage.Items[listViewStorage.Items.Count - 1].Focused = true;
+            UpdateSelectedIndex(listViewStorage);
             textBoxStyleName.Focus();
             _doUpdate = true;
             textBoxStyleName.Text = style.Name;
@@ -1982,9 +1981,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             _doUpdate = false;
             _currentCategory.Styles.Add(style);
             AddStyle(listViewStorage, style, Subtitle, _isSubStationAlpha);
-            listViewStorage.Items[listViewStorage.Items.Count - 1].Selected = true;
-            listViewStorage.Items[listViewStorage.Items.Count - 1].EnsureVisible();
-            listViewStorage.Items[listViewStorage.Items.Count - 1].Focused = true;
+            UpdateSelectedIndex(listViewStorage);
             textBoxStyleName.Text = style.Name;
             textBoxStyleName.Focus();
             _doUpdate = true;
@@ -2043,9 +2040,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                                 _doUpdate = false;
                                 _currentCategory.Styles.Add(style);
                                 AddStyle(listViewStorage, style, Subtitle, _isSubStationAlpha);
-                                listViewStorage.Items[listViewStorage.Items.Count - 1].Selected = true;
-                                listViewStorage.Items[listViewStorage.Items.Count - 1].EnsureVisible();
-                                listViewStorage.Items[listViewStorage.Items.Count - 1].Focused = true;
+                                UpdateSelectedIndex(listViewStorage);
                                 textBoxStyleName.Text = style.Name;
                                 textBoxStyleName.Focus();
                                 _doUpdate = true;
@@ -2133,6 +2128,23 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             comboboxStorageCategories.SelectedItem = _currentCategory.Name;
         }
 
+        private void buttonStorageCategorySetDefault_Click(object sender, EventArgs e)
+        {
+            var oldDefaultCategory = _storageCategories.Single(category => category.IsDefault);
+            oldDefaultCategory.IsDefault = false;
+            _currentCategory.IsDefault = true;
+            buttonStorageCategorySetDefault.Enabled = false;
+            buttonStorageCategoryDelete.Enabled = false;
+
+            if (_currentCategory.Styles.Count == 0)
+            {
+                var defaultStyle = new SsaStyle();
+                _currentCategory.Styles.Add(defaultStyle);
+                AddStyle(listViewStorage, defaultStyle, Subtitle, _isSubStationAlpha);
+                UpdateSelectedIndex(listViewStorage);
+            }
+        }
+
         private void buttonStorageCategoryNew_Click(object sender, EventArgs e)
         {
             using (var form = new TextPrompt(LanguageSettings.Current.SubStationAlphaStyles.NewCategory, LanguageSettings.Current.SubStationAlphaStyles.CategoryName, string.Empty))
@@ -2148,7 +2160,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
         }
 
-        private void comboboxStorageCategory_SelectedIndexChanged(object sender, EventArgs e)
+        private void comboboxStorageCategories_SelectedIndexChanged(object sender, EventArgs e)
         {
             listViewStorage.BeginUpdate();
             listViewStorage.Items.Clear();
@@ -2161,8 +2173,11 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 }
             }
             listViewStorage.EndUpdate();
+
             _currentCategory = focusCategory;
-            buttonStorageCategoryDelete.Enabled = !focusCategory.IsDefault;
+            buttonStorageRemove.Enabled = listViewStorage.SelectedItems.Count > 0;
+            buttonStorageCategoryDelete.Enabled = !_currentCategory.IsDefault;
+            buttonStorageCategorySetDefault.Enabled = !_currentCategory.IsDefault;
         }
 
         private bool StyleExistsInListView(string styleName, ListView listView)
@@ -2226,9 +2241,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             AddStyle(listViewStyles, style, Subtitle, _isSubStationAlpha);
             AddStyleToHeader(style);
-            listViewStyles.Items[listViewStyles.Items.Count - 1].Selected = true;
-            listViewStyles.Items[listViewStyles.Items.Count - 1].EnsureVisible();
-            listViewStyles.Items[listViewStyles.Items.Count - 1].Focused = true;
+            UpdateSelectedIndex(listViewStyles);
         }
 
         private void moveUpToolStripMenuItem_Click(object sender, EventArgs e)
