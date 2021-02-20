@@ -2607,6 +2607,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <Category>Category</Category>
     <NewCategory>New category</NewCategory>
     <CategoryName>Category name</CategoryName>
+    <CategorySetDefault>Set as default</CategorySetDefault>
     <CategoryNote>Note: "Default" styles will be applied to new ASSA files</CategoryNote>
   </SubStationAlphaStyles>
   <PointSync>
