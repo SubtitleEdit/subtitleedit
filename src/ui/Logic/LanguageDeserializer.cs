@@ -5305,6 +5305,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/FontInUi":
                     language.Settings.FontInUi = reader.Value;
                     break;
+                case "Settings/Appearance":
+                    language.Settings.Appearance = reader.Value;
+                    break;
                 case "Settings/ShowFrameRate":
                     language.Settings.ShowFrameRate = reader.Value;
                     break;

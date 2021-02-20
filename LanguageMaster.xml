@@ -1965,6 +1965,7 @@ can edit in same subtitle file (collaboration)</Information>
     <TogglePreviewOnVideo>Toggle preview on video</TogglePreviewOnVideo>
     <Help>Help</Help>
     <FontInUi>UI Font</FontInUi>
+    <Appearance>Appearance</Appearance>
     <ShowFrameRate>Show frame rate in toolbar</ShowFrameRate>
     <DefaultFrameRate>Default frame rate</DefaultFrameRate>
     <DefaultFileEncoding>Default file encoding</DefaultFileEncoding>
