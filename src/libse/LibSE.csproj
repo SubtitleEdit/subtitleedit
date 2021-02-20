@@ -11,11 +11,13 @@
     <PackageProjectUrl>https://github.com/SubtitleEdit/subtitleedit/tree/master/libse</PackageProjectUrl>
     <RepositoryUrl>https://github.com/SubtitleEdit/subtitleedit/tree/master/libse</RepositoryUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageTags>subtitle subrip srt</PackageTags>
+    <PackageTags>subtitle subtitles subrip srt blu-ray sup</PackageTags>
     <Authors>Nikolaj Olsson</Authors>
-    <PackageIcon>SutittleEdit_Logo.png</PackageIcon>
+    <PackageIcon>Icon.png</PackageIcon>
     <RepositoryType>git</RepositoryType>
-    <PackageReleaseNotes>First nuget package (based on SE 3.5.18)</PackageReleaseNotes>
+    <PackageReleaseNotes>SE 3.6.0
+- faster bd sup writing
+- new subtitle formats</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -57,6 +59,17 @@
   <ItemGroup>
     <PackageReference Include="UTF.Unknown" Version="2.3.0" />
     <PackageReference Include="zlib.net-mutliplatform" Version="1.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="Icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
