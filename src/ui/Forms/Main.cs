@@ -28439,7 +28439,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (_subtitle != null && _subtitle.Header != null && (_subtitle.Header.Contains("STL2") || _subtitle.Header.Contains("STL3")))
                 {
-                    var header = Ebu.ReadHeader(Encoding.UTF8.GetBytes(_subtitle.Header));
+                    var encoding = Ebu.GetEncoding(_subtitle.Header.Substring(0, 3));
+                    var buffer = encoding.GetBytes(_subtitle.Header);
+                    var header = Ebu.ReadHeader(buffer);
                     properties.Initialize(header, Ebu.EbuUiHelper.JustificationCode, null, _subtitle);
                 }
                 else
