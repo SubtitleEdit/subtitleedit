@@ -1128,7 +1128,7 @@ $HorzAlign          =   Center
         public string VlcLocationRelative { get; set; }
         public string MpvVideoOutputWindows { get; set; }
         public string MpvVideoOutputLinux { get; set; }
-        public string MpvExtraOption { get; set; }
+        public string MpvExtraOptions { get; set; }
         public bool MpvLogging { get; set; }
         public bool MpvHandlesPreviewText { get; set; }
         public Color MpvPreviewTextPrimaryColor { get; set; }
@@ -3383,10 +3383,10 @@ $HorzAlign          =   Center
                 settings.General.MpvVideoOutputLinux = subNode.InnerText.Trim();
             }
 
-            subNode = node.SelectSingleNode("MpvExtraOption");
+            subNode = node.SelectSingleNode("MpvExtraOptions");
             if (subNode != null)
             {
-                settings.General.MpvExtraOption = subNode.InnerText.Trim();
+                settings.General.MpvExtraOptions = subNode.InnerText.Trim();
             }
 
             subNode = node.SelectSingleNode("MpvLogging");
@@ -8101,7 +8101,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("VlcLocationRelative", settings.General.VlcLocationRelative);
                 textWriter.WriteElementString("MpvVideoOutputWindows", settings.General.MpvVideoOutputWindows);
                 textWriter.WriteElementString("MpvVideoOutputLinux", settings.General.MpvVideoOutputLinux);
-                textWriter.WriteElementString("MpvExtraOption", settings.General.MpvExtraOption);
+                textWriter.WriteElementString("MpvExtraOptions", settings.General.MpvExtraOptions);
                 textWriter.WriteElementString("MpvLogging", settings.General.MpvLogging.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MpvHandlesPreviewText", settings.General.MpvHandlesPreviewText.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MpvPreviewTextPrimaryColor", ColorTranslator.ToHtml(settings.General.MpvPreviewTextPrimaryColor));
