@@ -61,6 +61,7 @@
     <OpenOriginalSubtitleFile>Отваряне на оригиналния файл със субтитри...</OpenOriginalSubtitleFile>
     <PleaseWait>Моля, изчакайте...</PleaseWait>
     <SessionKey>Ключ за сесията</SessionKey>
+    <SessionKeyGenerate>Генериране на нов ключ</SessionKeyGenerate>
     <UserName>Потребител</UserName>
     <UserNameAlreadyInUse>Потребителското име е заето</UserNameAlreadyInUse>
     <WebServiceUrl>URL на услугата</WebServiceUrl>
@@ -243,6 +244,33 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <Beamer>
     <Title>Проектор</Title>
   </Beamer>
+  <BinEdit>
+    <ImportImage>Импортиране на изображение...</ImportImage>
+    <ExportImage>Експорт на изображение...</ExportImage>
+    <SetText>Задаване на текст...</SetText>
+    <QuickOcr>Бързи OCR текстове (само за преглед)</QuickOcr>
+    <ResizeBitmaps>Преоразмеряване на изображения...</ResizeBitmaps>
+    <ChangeBrightness>Регулиране на яркостта...</ChangeBrightness>
+    <ChangeAlpha>Регулиране на алфа...</ChangeAlpha>
+    <ResizeBitmapsForSelectedLines>Преоразмеряване на изображения за избраните редове...</ResizeBitmapsForSelectedLines>
+    <ChangeColorForSelectedLines>Промяна цвета за избрани линии...</ChangeColorForSelectedLines>
+    <ChangeBrightnessForSelectedLines>Регулиране яркостта за избраните редове...</ChangeBrightnessForSelectedLines>
+    <ChangeAlphaForSelectedLines>Регулиране на алфа за избраните редове...</ChangeAlphaForSelectedLines>
+    <AlignSelectedLines>Подравняване на избраните редове</AlignSelectedLines>
+    <CenterSelectedLines>Центриране на избраните редове (хоризонтално, запазвайки вертикалната позиция)</CenterSelectedLines>
+    <TopAlignSelectedLines>Подравняване на избраните редове отгоре (запазвайки хоризонталната позиция)</TopAlignSelectedLines>
+    <BottomAlignSelectedLines>Подравняване на избраните редове отдолу (запазвайки хоризонталната позиция)</BottomAlignSelectedLines>
+    <ToggleForcedSelectedLines>Превключване "Принудително" за избраните редове</ToggleForcedSelectedLines>
+    <SelectForcedLines>Избор на принудителните редове</SelectForcedLines>
+    <SizeXY>Размер: {0}x{1}</SizeXY>
+    <SetAspectRatio11>Задаване съотношение на пропорциите 1:1</SetAspectRatio11>
+    <ChangeBrightnessTitle>Регулиране на яркостта</ChangeBrightnessTitle>
+    <BrightnessX>Яркост: {0}%</BrightnessX>
+    <ResizeTitle>Преоразмеряване на изображенията</ResizeTitle>
+    <ResizeX>Преоразмеряване: {0}%</ResizeX>
+    <ChangeAlphaTitle>Регулиране на алфа</ChangeAlphaTitle>
+    <AlphaX>Алфа: {0}%</AlphaX>
+  </BinEdit>
   <Bookmarks>
     <EditBookmark>Редактиране на отметка</EditBookmark>
     <AddBookmark>Добавяне на отметка</AddBookmark>
@@ -322,6 +350,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </ColumnPaste>
   <CompareSubtitles>
     <Title>Сравняване на субтитри</Title>
+    <Reload>Презареждане</Reload>
     <PreviousDifference>Предишна разлика</PreviousDifference>
     <NextDifference>Следваща разлика</NextDifference>
     <SubtitlesNotAlike>Субтитрите не са еднакви</SubtitlesNotAlike>
@@ -451,13 +480,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <EffectKaraoke>
     <Title>Ефект караоке</Title>
     <ChooseColor>Избор на цвят:</ChooseColor>
-    <TotalMilliseconds>Общо милисек.:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Задържане в края (милисек.):</EndDelayInMilliseconds>
+    <TotalSeconds>Общо секунди:</TotalSeconds>
+    <EndDelayInSeconds>Задържане в края (сек.):</EndDelayInSeconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Ефект на пишеща машина</Title>
-    <TotalMilliseconds>Общо милисек.:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Задържане в края (милисек.):</EndDelayInMilliseconds>
+    <TotalSeconds>Общо секунди:</TotalSeconds>
+    <EndDelayInSeconds>Задържане в края (сек.):</EndDelayInSeconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Експорт на личен текст формат</Title>
@@ -606,7 +635,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemovedEmptyLineAtBottom>Премахнат празен ред отдолу</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Премахнат празен ред в средата</RemovedEmptyLineInMiddle>
     <RemovedEmptyLinesUnsedLineBreaks>Премахване на празни редове (ненужни прекъсвания на редовете)</RemovedEmptyLinesUnsedLineBreaks>
-    <EmptyLinesRemovedX>Премахнати празни редове: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Поправяне на застъпващи се времена на показване</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Поправяне на кратки времена на показване</FixShortDisplayTimes>
     <FixLongDisplayTimes>Поправяне на дълги времена на показване</FixLongDisplayTimes>
@@ -631,21 +659,17 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveSpaceBetweenNumber>Премахване на интервал между цифри</RemoveSpaceBetweenNumber>
     <FixDialogsOnOneLine>Разделяне на диалози, които са на един ред</FixDialogsOnOneLine>
     <NormalizeStrings>Нормализиране на низовете</NormalizeStrings>
-    <RemoveSpaceBetweenNumbersFixed>Премахнати интервали между цифри: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>Поправяне на турски ANSI (Исландски) букви в Unicod</FixTurkishAnsi>
     <FixDanishLetterI>Поправяне на датската буква »i«</FixDanishLetterI>
     <FixSpanishInvertedQuestionAndExclamationMarks>Поправяне на испански обърнати "?" и "!"</FixSpanishInvertedQuestionAndExclamationMarks>
     <AddMissingQuote>Добавяне на липсваща кавичка (")</AddMissingQuote>
     <AddMissingQuotes>Добавяне на липсващи кавички (")</AddMissingQuotes>
     <RemoveHyphensSingleLine>Премахване на диалоговите тирета в единични редове</RemoveHyphensSingleLine>
-    <XHyphensSingleLineRemoved>Премахнато е диалогово тире в единични редове: {0}</XHyphensSingleLineRemoved>
     <FixHyphensInDialogs>Поправяне на тире в диалозите чрез стил: {0}</FixHyphensInDialogs>
-    <XHyphensInDialogsFixed>Поправени тирета: {0}</XHyphensInDialogsFixed>
     <AddMissingQuotesExample>"Как си? -&gt; "Как си?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Добавени липсващи кавички: {0}</XMissingQuotesAdded>
-    <Fix3PlusLines>Поправяне на субтитри с повече от два реда</Fix3PlusLines>
     <Fix3PlusLine>Поправяне на субтитри с повече от два реда</Fix3PlusLine>
-    <X3PlusLinesFixed>Поправени субтитри с повече от два реда: {0}</X3PlusLinesFixed>
+    <Fix3PlusLines>Поправяне на субтитри с повече от два реда</Fix3PlusLines>
     <Analysing>Анализиране...</Analysing>
     <NothingToFix>Няма нищо за поправяне :)</NothingToFix>
     <FixesFoundX>Намерени грешки: {0}</FixesFoundX>
@@ -653,12 +677,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NothingFixableBut>Нищо не може да бъде поправено автоматично.  Подзаглавието съдържа грешки - вижте отчета за подробности</NothingFixableBut>
     <XFixedBut>{0} проблем(и) поправен(и), но субтитрите все още съдържат грешки - вижте отчета за подробности</XFixedBut>
     <XCouldBeFixedBut>{0} проблем(и) може да се поправи(ят), но субтитрите все още ще съдържат грешки-вижте отчета</XCouldBeFixedBut>
-    <UncheckedFixLowercaseIToUppercaseI>Опцията «Поправяне на единична малка буква "i" към "I" (на англ.) не е избрана»</UncheckedFixLowercaseIToUppercaseI>
-    <XIsChangedToUppercase>Направена замяна на буквите "i" на Главни: {0}</XIsChangedToUppercase>
     <FixFirstLetterToUppercaseAfterParagraph>Поправяне на началната буква на Главна след абзац</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>Обединяване на кратки редове (едно изречение)</MergeShortLine>
     <MergeShortLineAll>Обединяване на кратки редове (всички освен диалозите)</MergeShortLineAll>
-    <XLineBreaksAdded>{0} прекъсвания на ред са добавени</XLineBreaksAdded>
     <BreakLongLine>Прекъсване на дълги редове (пренасяне)</BreakLongLine>
     <FixLongDisplayTime>Поправяне на дълго време на показване</FixLongDisplayTime>
     <FixInvalidItalicTag>Поправяне на невалиден курсив таг</FixInvalidItalicTag>
@@ -675,23 +696,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <UnableToFixStartTimeLaterThanEndTime>Не може да се поправи текст с № {0}: Началното време е по-късно от крайното време: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} са поправени към: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>Не може да се поправи текст с № {0}: {1}</UnableToFixTextXY>
-    <XOverlappingTimestampsFixed>{0} застъпващи се времена са поправени</XOverlappingTimestampsFixed>
-    <XDisplayTimesProlonged>{0} времена на показване са удължени</XDisplayTimesProlonged>
-    <XInvalidHtmlTagsFixed>{0} невалидни HTML тага са поправени</XInvalidHtmlTagsFixed>
-    <XDisplayTimesShortned>{0} времена на показване са намалени</XDisplayTimesShortned>
-    <XGapsFixed>{0} кратки интервали са поправени</XGapsFixed>
-    <XLinesUnbreaked>{0} редове са обединени</XLinesUnbreaked>
     <UnneededSpace>Ненужни интервали</UnneededSpace>
-    <XUnneededSpacesRemoved>{0} ненужни интервала са премахнати</XUnneededSpacesRemoved>
     <UnneededPeriod>Ненужни точки</UnneededPeriod>
-    <XUnneededPeriodsRemoved>{0} ненужни точки са премахнати</XUnneededPeriodsRemoved>
     <FixMissingSpace>Поправяне на липсващ интервал</FixMissingSpace>
-    <XMissingSpacesAdded>{0} липсващи интервала са добавени</XMissingSpacesAdded>
     <FixUppercaseIInsideLowercaseWord>Поправяне на Главна буква "i" в дума с малки букви</FixUppercaseIInsideLowercaseWord>
-    <XPeriodsAdded>{0} точки са добавени.</XPeriodsAdded>
     <FixMissingPeriodAtEndOfLine>Добавяне на липсващи точки в края на ред</FixMissingPeriodAtEndOfLine>
-    <XDoubleApostrophesFixed>{0} поправени двойни апострофи.</XDoubleApostrophesFixed>
-    <XUppercaseIsFoundInsideLowercaseWords>{0} големи букви "i" са намерени в думи с малки букви</XUppercaseIsFoundInsideLowercaseWords>
     <RefreshFixes>Обнови наличните поправки</RefreshFixes>
     <ApplyFixes>Приложи за избраните поправки</ApplyFixes>
     <AutoBreak>Прекъсни ред</AutoBreak>
@@ -701,11 +710,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixEllipsesStart>Изтриване на многоточие (...) в началото на реда</FixEllipsesStart>
     <FixMissingOpenBracket>Поправяне на липсваща скоба [ в ред</FixMissingOpenBracket>
     <FixMusicNotation>Замяна на музикални символи (напр. âTª) с избрания в Настройки/Инструменти символ</FixMusicNotation>
-    <XFixDoubleDash>{0} поправени тирета(--)</XFixDoubleDash>
-    <XFixDoubleGreaterThan>{0} премахнати &gt;&gt;</XFixDoubleGreaterThan>
-    <XFixEllipsesStart>{0} премахнати многоточия в началото на реда (...)</XFixEllipsesStart>
-    <XFixMissingOpenBracket>{0} поправени липсващи [ в ред</XFixMissingOpenBracket>
-    <XFixMusicNotation>{0} поправени музикални символи в ред</XFixMusicNotation>
     <FixDoubleDashExample>'Whoa-- um yeah!' -&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
     <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' -&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... and then we' -&gt; 'and then we'</FixEllipsesStartExample>
@@ -719,9 +723,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SelectDefault>Изб. поПодразб.</SelectDefault>
     <SetDefault>Задаване текущите корекции по подразбиране</SetDefault>
     <FixContinuationStyleX>Поправяне стила на продължение: {0}</FixContinuationStyleX>
-    <XFixContinuationStyle>{0} поправен стил на продължение</XFixContinuationStyle>
     <FixUnnecessaryLeadingDots>Премахване ненужните допълнителни точки</FixUnnecessaryLeadingDots>
-    <XFixUnnecessaryLeadingDots>{0} премахнати ненужните допълнителни точки</XFixUnnecessaryLeadingDots>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Кой речник желаете?</Title>
@@ -753,10 +755,23 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MsClientSecretNeeded>Трябва ви ключ за Bing клиента от Microsoft, за да използвате последния Bing преводач.
 
 Отворете "Опции -&gt; Настройки -&gt; Инструменти", за да въведете вашия ключ за Bing.</MsClientSecretNeeded>
-    <GoogleApiKeyNeeded>Трябва ви API ключ от Google, за да използвате последния Google преводач.
-
-Отворете "Опции -&gt; Настройки -&gt; Инструменти", за да въведете вашия API ключ за Google преводач.</GoogleApiKeyNeeded>
     <GoogleNoApiKeyWarning>Трудно се превежда без API ключ... (бавни и ограничени данни)</GoogleNoApiKeyWarning>
+    <Service>Услуги:</Service>
+    <LineMergeHandling>Обединяване на редове:</LineMergeHandling>
+    <ProcessorMergeNext>Обединяване на максимум два реда</ProcessorMergeNext>
+    <ProcessorSentence>Обединяване на изречения</ProcessorSentence>
+    <ProcessorSingle>Без обединяване</ProcessorSingle>
+    <AutoTranslateViaCopyPaste>Авт. превод чрез копиране и поставяне</AutoTranslateViaCopyPaste>
+    <CopyPasteMaxSize>Максимален размер на блока</CopyPasteMaxSize>
+    <AutoCopyToClipboard>Авт. копиране в клипборда</AutoCopyToClipboard>
+    <AutoCopyLineSeparator>Разделител на редове</AutoCopyLineSeparator>
+    <TranslateBlockXOfY>Превод на блок {0} от {1}</TranslateBlockXOfY>
+    <TranslateBlockInfo>Отидете в преводача и поставете текста, копирайте резултата обратно в клипборда и кликнете върху бутона по-долу</TranslateBlockInfo>
+    <TranslateBlockGetFromClipboard>Получаване преведения текст от клипборда
+(Ctrl + V)</TranslateBlockGetFromClipboard>
+    <TranslateBlockCopySourceText>Копиране оригиналния текст в клипборда</TranslateBlockCopySourceText>
+    <TranslateBlockClipboardError1>Клипборда съдържа оригиналния текст!</TranslateBlockClipboardError1>
+    <TranslateBlockClipboardError2>Отидете в преводача и преведете, копирайте резултата в клипборда и кликнете отново върху този бутон.</TranslateBlockClipboardError2>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Превод с Google или Microsoft</Title>
@@ -1010,10 +1025,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ImportOcrFromDvd>Импортиране/OCR на субтитри от VOB/IFO (DVD)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Импортиране/OCR на субтитри VobSub (sub/idx)...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Импортиране/OCR на субтитри от Blu-ray (sup)...</ImportBluRaySupFile>
+        <ImportBluRaySupFileEdit>Blu-ray (.sup) файл със субтитри за редактиране...</ImportBluRaySupFileEdit>
         <ImportSubtitleWithManualChosenEncoding>Импортиране на субтитри с ръчно избрано кодиране...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Импортиране на обикновен текст...</ImportText>
         <ImportImages>Импортиране на изображения...</ImportImages>
         <ImportTimecodes>Импортиране на времеви кодове...</ImportTimecodes>
+        <Import>Импорт</Import>
         <Export>Експорт</Export>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
         <ExportBluRaySup>Blu-ray sup</ExportBluRaySup>
@@ -1137,9 +1154,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       </Synchronization>
       <AutoTranslate>
         <Title>Автоматичен превод</Title>
-        <TranslatePoweredByGoogle>Превод (с помощта на Google)...</TranslatePoweredByGoogle>
-        <TranslatePoweredByMicrosoft>Превод (с помощта на Microsoft)...</TranslatePoweredByMicrosoft>
-        <TranslateFromSwedishToDanish>Превод от шведски към датски (с помощта на nikse.dk)...</TranslateFromSwedishToDanish>
+        <AutoTranslate>Автоматичен превод...</AutoTranslate>
+        <AutoTranslateViaCopyPaste>Авт. превод чрез копиране и поставяне...</AutoTranslateViaCopyPaste>
       </AutoTranslate>
       <Options>
         <Title>Опции</Title>
@@ -1244,6 +1260,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <GoogleAndMicrosoftTranslateSelectedLine>Google/Microsoft превод на оригиналния ред</GoogleAndMicrosoftTranslateSelectedLine>
         <TranslateSelectedLines>Превод на избраните редове...</TranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Настройка на времетраенето за избраните редове...</AdjustDisplayDurationForSelectedLines>
+        <ApplyDurationLimitsForSelectedLines>Прилагане на ограничения за продължителността на избраните редове...</ApplyDurationLimitsForSelectedLines>
         <FixCommonErrorsInSelectedLines>Поправяне на грешки в избраните редове...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Промяна големината на буквите в избраните редове...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Запис на избраните редове като...</SaveSelectedLines>
@@ -1253,6 +1270,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <RemoveActors>Премахване на актьорите</RemoveActors>
         <EditBookmark>Редактиране на отметка</EditBookmark>
         <RemoveBookmark>Премахване на отметката</RemoveBookmark>
+        <GoToSourceView>Към първоначалния изглед</GoToSourceView>
+        <GoToListView>Преглед на списъка</GoToListView>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1291,6 +1310,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Вмъкни суб. в позиция видео (без фокус на текстовото поле)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
       <Auto>Автоматично</Auto>
       <PlayFromJustBeforeText>ПусниМалкоПредиТекста</PlayFromJustBeforeText>
+      <PlayFromBeginning>Възпроизвеждане от началото на видеото</PlayFromBeginning>
       <Pause>Пауза</Pause>
       <GoToSubtitlePositionAndPause>Отиди до субпоз. и пауза</GoToSubtitlePositionAndPause>
       <SetStartTime>Задай начално време</SetStartTime>
@@ -1316,6 +1336,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SaveChangesToOriginalX>Да се запишат ли промените в оригиналния {0}?</SaveChangesToOriginalX>
     <SaveSubtitleAs>Запис на файл със субтитри като...</SaveSubtitleAs>
     <SaveOriginalSubtitleAs>Запис на оригиналните субтитри като...</SaveOriginalSubtitleAs>
+    <CannotSaveEmptySubtitle>Не може да се записват празни субтитри</CannotSaveEmptySubtitle>
     <NoSubtitleLoaded>Няма заредени субтитри!</NoSubtitleLoaded>
     <VisualSyncSelectedLines>Визуална синхр. – избраните редове</VisualSyncSelectedLines>
     <VisualSyncTitle>Визуална синхронизация</VisualSyncTitle>
@@ -1585,6 +1606,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NoSupportHereVobSub>Тук не се поддържат VobSub файлове</NoSupportHereVobSub>
     <NoSupportHereDivx>Тук не се поддържат DivX файлове</NoSupportHereDivx>
     <NoChapters>Няма намерени глави във видеото.</NoChapters>
+    <DarkThemeRestart>Рестартирайте Subtitle Edit, за да влязат в сила промените в тъмната тема.</DarkThemeRestart>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Избор на субтитри от файл Matroska</Title>
@@ -1597,6 +1619,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ConvertFrom>Конвертиране от</ConvertFrom>
     <ConvertTo>Конвертиране към</ConvertTo>
     <CopyToClipboard>Копиране в клипборда</CopyToClipboard>
+    <CloseOnInsert>Затвори при вмъкване</CloseOnInsert>
     <Length>Дължина</Length>
     <Mass>Тегло</Mass>
     <Volume>Сила на звука</Volume>
@@ -1653,7 +1676,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <PintsUS>Пинта (САЩ)</PintsUS>
     <FluidOuncesUS>Течни унции (САЩ)</FluidOuncesUS>
     <Bushels>Бушели</Bushels>
-    <Pecks>Pecks</Pecks>
+    <Pecks>Пекове</Pecks>
     <GallonsUK>Галони (Великобритания)</GallonsUK>
     <QuartsUK>Кварти (Великобритания)</QuartsUK>
     <PintsUK>Пинта (Великобритания)</PintsUK>
@@ -1736,11 +1759,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <EndsWith>Завършващи с</EndsWith>
     <NoContains>Не съдържащи</NoContains>
     <RegEx>С правилен израз</RegEx>
-    <OddLines>С различни редове</OddLines>
-    <EvenLines>С еднакви редове</EvenLines>
+    <OddLines>Редове с нечетни номера</OddLines>
+    <EvenLines>Редове с четни номера</EvenLines>
     <DurationLessThan>Продължителност по-малка от</DurationLessThan>
     <DurationGreaterThan>Продължителност по-голяма от</DurationGreaterThan>
     <MoreThanTwoLines>Повече от два реда</MoreThanTwoLines>
+    <Bookmarked>Маркирани</Bookmarked>
   </ModifySelection>
   <MultipleReplace>
     <Title>Множествена замяна</Title>
@@ -1923,16 +1947,18 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SpellCheck>Правопис</SpellCheck>
     <NetflixQualityCheck>Качествен контрол на Netflix</NetflixQualityCheck>
     <SettingsName>Настройки</SettingsName>
-    <Help>Помощ</Help>
-    <UnbreakNoSpace>Прекъсване без интервал (CJK)</UnbreakNoSpace>
     <ToggleBookmarks>Превключване на отметки</ToggleBookmarks>
     <ToggleBookmarksWithComment>Превключване на отметки - добавяне на коментар</ToggleBookmarksWithComment>
     <ClearBookmarks>Изчистване на отметките</ClearBookmarks>
     <GoToBookmark>Преминаване на отметка</GoToBookmark>
     <GoToPreviousBookmark>Преминаване на предишната отметка</GoToPreviousBookmark>
     <GoToNextBookmark>Преминаване до следващата отметка</GoToNextBookmark>
-    <GeneralChooseProfile>Избор на профил</GeneralChooseProfile>
-    <GeneralDuplicateLine>Дублиран ред</GeneralDuplicateLine>
+    <ChooseProfile>Избор на профил</ChooseProfile>
+    <DuplicateLine>Дублиран ред</DuplicateLine>
+    <ToggleView>Превключване на списък/първоначален изглед</ToggleView>
+    <ToggleMode>Превключване на режим за превод /създаване/ регулиране</ToggleMode>
+    <TogglePreviewOnVideo>Превключване на преглед за видеото</TogglePreviewOnVideo>
+    <Help>Помощ</Help>
     <FontInUi>Шрифт на потребителския интерфейс</FontInUi>
     <ShowFrameRate>Показване честотата на кадрите в лентата с инструменти</ShowFrameRate>
     <DefaultFrameRate>Честота на кадрите (fps) по подр.</DefaultFrameRate>
@@ -2013,6 +2039,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ShowStopButton>Показване на бутон «Стоп»</ShowStopButton>
     <ShowMuteButton>Показване на бутон «Без звук»</ShowMuteButton>
     <ShowFullscreenButton>Показване на бутон «На цял екран»</ShowFullscreenButton>
+    <PreviewFontName>Име на шрифта за преглед на субтитрите</PreviewFontName>
     <PreviewFontSize>Размер на шрифта за преглед на субтитрите</PreviewFontSize>
     <MainWindowVideoControls>Бутон за търсене на текст в Интернет при превод</MainWindowVideoControls>
     <CustomSearchTextAndUrl>URL адрес за търсене на текст</CustomSearchTextAndUrl>
@@ -2116,19 +2143,22 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <UseSyntaxColoring>Оцветяване на синтаксиса</UseSyntaxColoring>
     <HtmlColor>Html цвят</HtmlColor>
     <AssaColor>ASSA цвят</AssaColor>
+    <DarkTheme>Тъмна тема</DarkTheme>
+    <DarkThemeEnabled>Използване на тъмна тема</DarkThemeEnabled>
     <UpdateShortcut>Обнови</UpdateShortcut>
     <FoucsSetVideoPosition>Задаване на фокус позицията на видеото</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Превключване положението на видео регулаторите</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Задаване край, добавяне нов и преминаване към него</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Регулиране чрез крайно положение</AdjustViaEndAutoStart>
-    <AdjustViaEndAutoStartAndGoToNext>Задаване крайно време в позицията на курсора и преминаване към следващия субтитър</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustViaEndAutoStartAndGoToNext>Задаване крайно време в позицията на курсора и преминаване на следващия субтитър</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustSetEndMinusGapAndStartNextHere>Задаване на край минус интервал, преминаване на следващ и започване на следващия тук</AdjustSetEndMinusGapAndStartNextHere>
     <AdjustSetEndTimeAndGoToNext>Задаване на край и преминаване на следващ</AdjustSetEndTimeAndGoToNext>
     <AdjustSetEndTimeAndPause>Задаване на край и пауза</AdjustSetEndTimeAndPause>
-    <AdjustSetStartAutoDurationAndGoToNext>Задаване начало, авт. продължителност и преминаване на следващото</AdjustSetStartAutoDurationAndGoToNext>
+    <AdjustSetStartAutoDurationAndGoToNext>Задаване начало, авт. продължителност и преминаване на следващия</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Задаване край, следващо начало и преминаване на следващия</AdjustSetEndNextStartAndGoToNext>
-    <AdjustStartDownEndUpAndGoToNext>Клавиш надолу=задаване начало. Клавиш нагоре=задаване край и преминаване на следващ</AdjustStartDownEndUpAndGoToNext>
+    <AdjustStartDownEndUpAndGoToNext>Клавиш надолу=задаване начало. Клавиш нагоре=задаване край и преминаване на следващия</AdjustStartDownEndUpAndGoToNext>
     <AdjustSetStartAndEndOfPrevious>Задаване начало и край на предишния (минус мин. разлика)</AdjustSetStartAndEndOfPrevious>
-    <AdjustSetStartAndEndOfPreviousAndGoToNext>Задаване начало и край на предишния и преминаване към следващия (минус минимална разлика)</AdjustSetStartAndEndOfPreviousAndGoToNext>
+    <AdjustSetStartAndEndOfPreviousAndGoToNext>Задаване начало и край на предишния и преминаване на следващия (минус минимална разлика)</AdjustSetStartAndEndOfPreviousAndGoToNext>
     <AdjustSelected100MsForward>Преместване избраното със 100 мс НАПРЕД</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Преместване избраното със 100 мс НАЗАД</AdjustSelected100MsBack>
     <AdjustStartXMsBack>Преместване на старта с {0} мс  НАЗАД</AdjustStartXMsBack>
@@ -2173,6 +2203,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GoToPrevSubtitleAndPlay>Преминаване на предишния ред и възпроизвеждане</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>Преминаване на следващия ред и възпроизвеждане</GoToNextSubtitleAndPlay>
     <ToggleFocus>Превключване фокуса между изглед на списъка и реда за писане</ToggleFocus>
+    <ToggleFocusWaveform>Превключване фокуса между изглед на списъка и Wav форма на вълната/спектрограма</ToggleFocusWaveform>
     <ToggleDialogDashes>Размяна на диалоговите тирета</ToggleDialogDashes>
     <ToggleMusicSymbols>Превключване на музикални символи</ToggleMusicSymbols>
     <Alignment>Подравняване (редовете в момента)</Alignment>
@@ -2202,7 +2233,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WaveformPlayNewSelection>Възпроизвеждане на избраното</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Възпроизвеждане края на избраното</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Възпроизвеждане на първия избран субтитър</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Фокусиране върху изгледа на списъка</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>Преминаване към предишната промяна на сцената</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Преминаване към следващата промяна на сцена</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Превключване промяна на сцените</WaveformToggleSceneChange>
@@ -2281,9 +2311,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ListViewColumnPaste>Колона, поставяне</ListViewColumnPaste>
     <ListViewColumnTextUp>Колона, текста нагоре</ListViewColumnTextUp>
     <ListViewColumnTextDown>Колона, текста надолу</ListViewColumnTextDown>
-    <ListViewFocusWaveform>Фокус на wave формата/спектограмата</ListViewFocusWaveform>
     <ListViewGoToNextError>Преминаване към следващата грешка</ListViewGoToNextError>
     <ShowBeamer>Пускане на субтитрите при пълноекранен режим на проектора</ShowBeamer>
+    <ShowStyleManager>Показване мениджър на стилове</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>Преместване последната дума в следващия субтитърен ред</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Преместване първата дума от следващият субтитърен ред нагоре</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Преместване първата дума от следващия ред нагоре (текущия субтитър)</MainTextBoxMoveFirstWordUpCurrent>
@@ -2297,6 +2327,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MainTextBoxAutoBreakFromPos>Прекъсване първо място от позицията на курсора</MainTextBoxAutoBreakFromPos>
     <MainTextBoxAutoBreakFromPosAndGoToNext>Прекъсване първо място от позицията на курсора и преминаване към следващото</MainTextBoxAutoBreakFromPosAndGoToNext>
     <MainTextBoxUnbreak>Без прекъсване на текста</MainTextBoxUnbreak>
+    <MainTextBoxUnbreakNoSpace>Прекъсване без пространство (CJK) /Chinese, Japanese &amp; Korean символи/</MainTextBoxUnbreakNoSpace>
     <MainFileSaveAll>Запис на всички</MainFileSaveAll>
     <Miscellaneous>Разни</Miscellaneous>
     <CpsIncludesSpace>Символи/сек (CPS-Chars per Second), включително интервалите</CpsIncludesSpace>
@@ -2332,7 +2363,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <UseXAsNewGap>Използване "{0}" милисекунди като нова минимална разлика?</UseXAsNewGap>
   </Settings>
   <SettingsMpv>
-    <Title>Настройки за mpv</Title>
     <DownloadMpv>Изтегляне на mpv</DownloadMpv>
     <DownloadMpvFailed>Неуспешно изтегляне на библиотеката mpv - моля, опитайте по-късно!</DownloadMpvFailed>
     <DownloadMpvOk>mpv беше зареден и е готов за употреба.</DownloadMpvOk>
@@ -2394,6 +2424,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CheckOneLetterWords>Питане за непозната буква</CheckOneLetterWords>
     <TreatINQuoteAsING>Промяна опред.член на думи,завършващи на "in"като"ing"(Само за англ.)</TreatINQuoteAsING>
     <RememberUseAlwaysList>Запомняне на списъка „Използване винаги“</RememberUseAlwaysList>
+    <LiveSpellCheck>Проверка на правописа на живо</LiveSpellCheck>
+    <LiveSpellCheckLanguage>Проверка на правописа на живо - Работа с език [{0}]</LiveSpellCheckLanguage>
+    <NoDictionaryForLiveSpellCheck>Проверка на правописа на живо - нямате речници за този език [{0}]</NoDictionaryForLiveSpellCheck>
     <ImageText>Изображение с текст</ImageText>
     <SpellCheckCompleted>Проверката на правопис завърши</SpellCheckCompleted>
     <SpellCheckAborted>Проверката на правопис е прекратена</SpellCheckAborted>
@@ -2543,6 +2576,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MarginLeft>Ляво поле</MarginLeft>
     <MarginRight>Дясно поле</MarginRight>
     <MarginVertical>Вертикално поле</MarginVertical>
+    <Vertical>Вертикално</Vertical>
     <Border>Граница (Рамка)</Border>
     <PlusShadow>+ Сянка</PlusShadow>
     <OpaqueBox>Непрозрачно поле (използва външния цвят)</OpaqueBox>
@@ -2560,6 +2594,16 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <StyleAlreadyExits>Стилът вече съществува: {0}</StyleAlreadyExits>
     <StyleXExportedToFileY>Стила "{0}" е изнесен във файла "{1}"</StyleXExportedToFileY>
     <StyleXImportedFromFileY>Стила "{0}" е внесен от файла "{1}"</StyleXImportedFromFileY>
+    <SetPreviewText>Задаване предварителен преглед на текста...</SetPreviewText>
+    <AddToFile>Добавяне към файла</AddToFile>
+    <AddToStorage>Добавяне към хранилището</AddToStorage>
+    <StyleStorage>Съхранение на стил</StyleStorage>
+    <StyleCurrentFile>Стилове в текущия файл</StyleCurrentFile>
+    <OverwriteX>Презаписване на {0}?</OverwriteX>
+    <Category>Категория</Category>
+    <NewCategory>Нова категория</NewCategory>
+    <CategoryName>Име на категорията</CategoryName>
+    <CategoryNote>Забележка: Стиловете по подразбиране ще бъдат приложени към новите ASSA файлове</CategoryNote>
   </SubStationAlphaStyles>
   <PointSync>
     <Title>Точкова синхронизация</Title>
@@ -2744,9 +2788,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Generate>Създай</Generate>
     <Remove>Премахни</Remove>
     <BeforeWatermark>Пред «Водния знак»</BeforeWatermark>
-    <ErrorUnicodeEncodingOnly>Водния знак работи само с Unicode кодиране.</ErrorUnicodeEncodingOnly>
+    <ErrorUnicodeEncodingOnly>Водния знак работи само с Unicode кодиране на файловете.</ErrorUnicodeEncodingOnly>
   </Watermark>
   <Waveform>
+    <AddWaveformAndSpectrogram>Добавяне Wav форма на вълната/спектрограма</AddWaveformAndSpectrogram>
     <ClickToAddWaveform>Щракнете тук за добавяне вълнова форма на звуковия сигнал (извличане *.Wav файл)</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Щракнете, за да добавите форма на зв. сигнал/спектрограма</ClickToAddWaveformAndSpectrogram>
     <Seconds>секунди</Seconds>
