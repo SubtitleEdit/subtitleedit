@@ -300,7 +300,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             AssaAttachments = new LanguageStructure.AssaAttachments
             {
-                Title = "Attachments",
+                Title = "Advanced Sub Station Alpha attachments",
                 AttachFont = "Attach fonts",
                 AttachGraphics = "Attach graphics",
                 FontName = "Font name:",

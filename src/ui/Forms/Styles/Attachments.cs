@@ -12,10 +12,10 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.Styles
 {
-    public partial class Attachments : Form
+    public sealed partial class Attachments : Form
     {
-        private List<AssaAttachment> _attachments = new List<AssaAttachment>();
-        private readonly List<string> _imageExtentions = new List<string>
+        private readonly List<AssaAttachment> _attachments;
+        private readonly List<string> _imageExtensions = new List<string>
         {
             ".png",
             ".gif",
@@ -48,6 +48,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
 
             UpdateAfterListViewChange();
+            Text = LanguageSettings.Current.AssaAttachments.Title;
             buttonAttachFont.Text = LanguageSettings.Current.AssaAttachments.AttachFont;
             buttonAttachGraphics.Text = LanguageSettings.Current.AssaAttachments.AttachGraphics;
             buttonExport.Text = LanguageSettings.Current.MultipleReplace.Export;
@@ -120,13 +121,13 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private string GetType(string attachmentFileName)
         {
-            var ext = Path.GetExtension(attachmentFileName).ToLowerInvariant();
+            var ext = Path.GetExtension(attachmentFileName)?.ToLowerInvariant();
             if (ext == ".ttf")
             {
                 return LanguageSettings.Current.AssaAttachments.Font;
             }
 
-            if (_imageExtentions.Contains(ext))
+            if (_imageExtensions.Contains(ext))
             {
                 return LanguageSettings.Current.AssaAttachments.Graphics;
             }
@@ -214,7 +215,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 return;
             }
 
-            var ext = Path.GetExtension(fileName).ToLowerInvariant();
+            var ext = Path.GetExtension(fileName)?.ToLowerInvariant();
 
             if (ext == ".ico")
             {
@@ -224,9 +225,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     pictureBoxPreview.Image?.Dispose();
                     pictureBoxPreview.SizeMode = PictureBoxSizeMode.Normal;
                     pictureBoxPreview.Image = new Bitmap(pictureBoxPreview.Width, pictureBoxPreview.Height);
-                    using (var G = Graphics.FromImage(pictureBoxPreview.Image))
+                    using (var graphics = Graphics.FromImage(pictureBoxPreview.Image))
                     {
-                        G.DrawIcon(icon, 12, 23);
+                        graphics.DrawIcon(icon, 12, 23);
                     }
 
                     labelInfo.Text = LanguageSettings.Current.AssaAttachments.IconName;
@@ -292,7 +293,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         {
             openFileDialog1.Title = LanguageSettings.Current.Main.Menu.File.Open.RemoveChar('&');
             openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = "Images|*" + string.Join(";*", _imageExtentions).TrimEnd('*');
+            openFileDialog1.Filter = "Images|*" + string.Join(";*", _imageExtensions).TrimEnd('*');
             openFileDialog1.FilterIndex = 0;
             openFileDialog1.Multiselect = true;
             var result = openFileDialog1.ShowDialog(this);
