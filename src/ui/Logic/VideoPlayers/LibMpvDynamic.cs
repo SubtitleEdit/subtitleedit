@@ -332,24 +332,28 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             get
             {
-                if (_audioTrackIds == null)
+                if (_audioTrackIds != null)
                 {
-                    _audioTrackIds = new List<KeyValuePair<int, string>>();
-                    var lpBuffer = IntPtr.Zero;
-                    _mpvGetPropertyString(_mpvHandle, GetUtf8Bytes("track-list"), MpvFormatString, ref lpBuffer);
-                    string trackListJson = Marshal.PtrToStringAnsi(lpBuffer);
-                    foreach (var json in Json.ReadObjectArray(trackListJson))
+                    return _audioTrackIds;
+                }
+
+                _audioTrackIds = new List<KeyValuePair<int, string>>();
+                var lpBuffer = IntPtr.Zero;
+                _mpvGetPropertyString(_mpvHandle, GetUtf8Bytes("track-list"), MpvFormatString, ref lpBuffer);
+                string trackListJson = Marshal.PtrToStringAnsi(lpBuffer);
+                foreach (var json in Json.ReadObjectArray(trackListJson))
+                {
+                    var trackType = Json.ReadTag(json, "type");
+                    if (trackType == "audio")
                     {
-                        string trackType = Json.ReadTag(json, "type");
-                        int id = int.Parse(Json.ReadTag(json, "id"));
-                        if (trackType == "audio")
+                        var lang = Json.ReadTag(json, "lang");
+                        if (int.TryParse(Json.ReadTag(json, "id"), out var id))
                         {
-                            string lang = Json.ReadTag(json, "lang");
                             _audioTrackIds.Add(new KeyValuePair<int, string>(id, lang));
                         }
                     }
-                    _mpvFree(lpBuffer);
                 }
+                _mpvFree(lpBuffer);
                 return _audioTrackIds;
             }
         }
