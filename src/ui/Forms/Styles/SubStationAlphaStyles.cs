@@ -41,10 +41,11 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private readonly List<AssaStorageCategory> _storageCategories;
         private AssaStorageCategory _currentCategory;
         private FormWindowState _lastFormWindowState = FormWindowState.Normal;
+        private Main _mainForm;
 
         private ListView ActiveListView => _fileStyleActive ? listViewStyles : listViewStorage;
 
-        public SubStationAlphaStyles(Subtitle subtitle, SubtitleFormat format)
+        public SubStationAlphaStyles(Subtitle subtitle, SubtitleFormat format, Main mainForm)
             : base(subtitle)
         {
             UiUtil.PreInitialize(this);
@@ -55,6 +56,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             labelStatus.Text = string.Empty;
             _header = subtitle.Header;
             _format = format;
+            _mainForm = mainForm;
+            buttonApply.Visible = _mainForm != null;
             _isSubStationAlpha = _format.Name == SubStationAlpha.NameOfFormat;
             _backgroundImageDark = Configuration.Settings.General.UseDarkTheme;
 
@@ -226,6 +229,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 comboboxStorageCategories.SelectedItem = _currentCategory.Name;
             }
 
+            buttonApply.Text = LanguageSettings.Current.General.Apply;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
@@ -2450,6 +2454,18 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             moveDownToolStripMenuItem.Visible = moreThanOne;
             toolStripSeparator3.Visible = moreThanOne;
             toolStripMenuItemRemoveAll.Visible = moreThanOne;
+        }
+
+        private void buttonApply_Click(object sender, EventArgs e)
+        {
+            if (!_isSubStationAlpha)
+            {
+                Configuration.Settings.SubtitleSettings.AssaStyleStorageCategories = _storageCategories;
+                _header = GetFileHeader();
+            }
+
+            LogNameChanges();
+            _mainForm?.ApplyAssaStyles(this);
         }
     }
 }
