@@ -1129,9 +1129,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                         textBoxStyleName.BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                     }
                 }
-
-                _oldSsaName = textBoxStyleName.Text.Trim();
-                _editedName = _oldSsaName;
             }
 
             if (textBoxStyleName.Text.Contains(','))
@@ -1661,14 +1658,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void listViewStorage_SelectedIndexChanged(object sender, EventArgs e)
         {
-            LogNameChanges();
-
             if (listViewStorage.SelectedItems.Count == 1)
             {
                 string styleName = listViewStorage.SelectedItems[0].Text;
-                _startName = styleName;
-                _editedName = null;
-                _oldSsaName = styleName;
                 SsaStyle style = _currentCategory.Styles.First(p => p.Name == styleName);
                 SetControlsFromStyle(style);
                 _doUpdate = true;
