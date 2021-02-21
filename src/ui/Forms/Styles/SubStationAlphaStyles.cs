@@ -30,6 +30,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private string _startName;
         private string _editedName;
         private string _header;
+        private readonly List<SsaStyle> _currentFileStyles;
         private bool _doUpdate;
         private string _oldSsaName;
         private readonly SubtitleFormat _format;
@@ -41,7 +42,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private readonly List<AssaStorageCategory> _storageCategories;
         private AssaStorageCategory _currentCategory;
         private FormWindowState _lastFormWindowState = FormWindowState.Normal;
-        private Main _mainForm;
+        private readonly Main _mainForm;
 
         private ListView ActiveListView => _fileStyleActive ? listViewStyles : listViewStorage;
 
@@ -71,6 +72,16 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             if (_header == null || !_header.Contains("style:", StringComparison.OrdinalIgnoreCase))
             {
                 ResetHeader();
+            }
+
+            _currentFileStyles = new List<SsaStyle>();
+            foreach (var styleName in AdvancedSubStationAlpha.GetStylesFromHeader(_header))
+            {
+                var style = AdvancedSubStationAlpha.GetSsaStyle(styleName, _header);
+                if (style != null)
+                {
+                    _currentFileStyles.Add(style);
+                }
             }
 
             comboBoxFontName.Items.Clear();
@@ -227,6 +238,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
                 _currentCategory = _storageCategories.Single(category => category.IsDefault);
                 comboboxStorageCategories.SelectedItem = _currentCategory.Name;
+                SetStorageButtonsEnabled(false);
             }
 
             buttonApply.Text = LanguageSettings.Current.General.Apply;
@@ -249,7 +261,25 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             checkBoxFontUnderline.Left = checkBoxFontItalic.Left + checkBoxFontItalic.Width + 12;
         }
 
-        public override string Header => _header;
+        public override string Header => GetFileHeader();
+
+        private void ResetHeader()
+        {
+            SubtitleFormat format;
+            if (_isSubStationAlpha)
+            {
+                format = new SubStationAlpha();
+            }
+            else
+            {
+                format = new AdvancedSubStationAlpha();
+            }
+            var sub = new Subtitle();
+            string text = format.ToText(sub, string.Empty);
+            var lines = text.SplitToLines();
+            format.LoadSubtitle(sub, lines, string.Empty);
+            _header = sub.Header;
+        }
 
         protected override void GeneratePreviewReal()
         {
@@ -359,15 +389,15 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void InitializeStylesListView()
         {
-            var styles = AdvancedSubStationAlpha.GetStylesFromHeader(_header);
-            listViewStyles.Items.Clear();
-            foreach (var style in styles)
+            if (_currentFileStyles.Count == 0)
             {
-                var ssaStyle = GetSsaStyle(style);
-                if (ssaStyle != null)
-                {
-                    AddStyle(listViewStyles, ssaStyle, Subtitle, _isSubStationAlpha);
-                }
+                AddStyleToHeader(new SsaStyle());
+            }
+
+            listViewStyles.Items.Clear();
+            foreach (var style in _currentFileStyles)
+            {
+                AddStyle(listViewStyles, style, Subtitle, _isSubStationAlpha);
             }
 
             if (listViewStyles.Items.Count > 0)
@@ -378,7 +408,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         public static void AddStyle(ListView lv, SsaStyle ssaStyle, Subtitle subtitle, bool isSubstationAlpha)
         {
-            AddStyle(lv, ssaStyle, subtitle, isSubstationAlpha, lv.Items.Count); ;
+            AddStyle(lv, ssaStyle, subtitle, isSubstationAlpha, lv.Items.Count);
         }
 
         public static void AddStyle(ListView lv, SsaStyle ssaStyle, Subtitle subtitle, bool isSubstationAlpha, int insertAt)
@@ -466,194 +496,90 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private bool SetSsaStyle(string styleName, string propertyName, string propertyValue, bool trimStyles = true)
         {
-            if (!_fileStyleActive)
+            var style = _fileStyleActive ? _currentFileStyles.FirstOrDefault(p => p.Name == styleName) : _currentCategory.Styles.FirstOrDefault(p => p.Name == styleName);
+            if (style == null)
             {
-                var style = _currentCategory.Styles.FirstOrDefault(p => p.Name == styleName);
-                if (style == null)
-                {
-                    return false;
-                }
-
-                if (propertyName == "name")
-                {
-                    style.Name = propertyValue;
-                    return true;
-                }
-                else if (propertyName == "fontname")
-                {
-                    style.FontName = propertyValue;
-                    return true;
-                }
-                else if (propertyName == "fontsize")
-                {
-                    style.FontSize = float.Parse(propertyValue, CultureInfo.InvariantCulture);
-                    return true;
-                }
-                else if (propertyName == "bold")
-                {
-                    style.Bold = propertyValue != "0";
-                    return true;
-                }
-                else if (propertyName == "italic")
-                {
-                    style.Italic = propertyValue != "0";
-                    return true;
-                }
-                else if (propertyName == "underline")
-                {
-                    style.Underline = propertyValue != "0";
-                    return true;
-                }
-                else if (propertyName == "alignment")
-                {
-                    style.Alignment = propertyValue;
-                    return true;
-                }
-                else if (propertyName == "marginl")
-                {
-                    style.MarginLeft = int.Parse(propertyValue, CultureInfo.InvariantCulture);
-                    return true;
-                }
-                else if (propertyName == "marginr")
-                {
-                    style.MarginRight = int.Parse(propertyValue, CultureInfo.InvariantCulture);
-                    return true;
-                }
-                else if (propertyName == "marginv")
-                {
-                    style.MarginVertical = int.Parse(propertyValue, CultureInfo.InvariantCulture);
-                    return true;
-                }
-                else if (propertyName == "outline")
-                {
-                    style.OutlineWidth = decimal.Parse(propertyValue, CultureInfo.InvariantCulture);
-                    return true;
-                }
-                else if (propertyName == "shadow")
-                {
-                    style.ShadowWidth = decimal.Parse(propertyValue, CultureInfo.InvariantCulture);
-                    return true;
-                }
-                else if (propertyName == "borderstyle")
-                {
-                    style.BorderStyle = propertyValue;
-                    return true;
-                }
-                else if (propertyName == "primarycolour")
-                {
-                    style.Primary = GetColorFromSsa(propertyValue);
-                    return true;
-                }
-                else if (propertyName == "secondarycolour")
-                {
-                    style.Secondary = GetColorFromSsa(propertyValue);
-                    return true;
-                }
-                else if (propertyName == "outlinecolour")
-                {
-                    style.Outline = GetColorFromSsa(propertyValue);
-                    return true;
-                }
-                else if (propertyName == "tertiarycolour")
-                {
-                    style.Tertiary = GetColorFromSsa(propertyValue);
-                    return true;
-                }
-                else if (propertyName == "backcolour")
-                {
-                    style.Background = GetColorFromSsa(propertyValue);
-                    return true;
-                }
-
                 return false;
             }
 
-
-            bool found = false;
-            int propertyIndex = -1;
-            int nameIndex = -1;
-            var sb = new StringBuilder();
-            foreach (var line in _header.Split(Utilities.NewLineChars, StringSplitOptions.None))
+            if (propertyName == "name")
             {
-                string s = line.Trim().ToLowerInvariant();
-                if (s.StartsWith("format:", StringComparison.Ordinal))
-                {
-                    if (line.Length > 10)
-                    {
-                        var format = line.ToLowerInvariant().Substring(8).Split(',');
-                        for (int i = 0; i < format.Length; i++)
-                        {
-                            string f = format[i].Trim().ToLowerInvariant();
-                            if (f == "name")
-                            {
-                                nameIndex = i;
-                            }
-                            if (f == propertyName)
-                            {
-                                propertyIndex = i;
-                            }
-                        }
-                    }
-                    sb.AppendLine(line);
-                }
-                else if (s.RemoveChar(' ').StartsWith("style:", StringComparison.Ordinal))
-                {
-                    if (line.Length > 10)
-                    {
-                        bool correctLine = false;
-                        var format = line.Substring(6).Trim().Split(',');
-                        for (int i = 0; i < format.Length; i++)
-                        {
-                            string f = format[i];
-                            if (trimStyles)
-                            {
-                                f = f.Trim();
-                            }
-                            if (i == nameIndex)
-                            {
-                                correctLine = f.Equals(styleName, StringComparison.OrdinalIgnoreCase);
-                            }
-                        }
-                        if (correctLine)
-                        {
-                            sb.Append(line.Substring(0, 6) + " ");
-                            format = line.Substring(6).Split(',');
-                            for (int i = 0; i < format.Length; i++)
-                            {
-                                string f = format[i].Trim();
-                                if (i == propertyIndex)
-                                {
-                                    sb.Append(propertyValue);
-                                    found = true;
-                                }
-                                else
-                                {
-                                    sb.Append(f);
-                                }
-                                if (i < format.Length - 1)
-                                {
-                                    sb.Append(',');
-                                }
-                            }
-                            sb.AppendLine();
-                        }
-                        else
-                        {
-                            sb.AppendLine(line);
-                        }
-                    }
-                    else
-                    {
-                        sb.AppendLine(line);
-                    }
-                }
-                else
-                {
-                    sb.AppendLine(line);
-                }
+                style.Name = propertyValue;
             }
-            _header = sb.ToString().Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-            return found;
+            else if (propertyName == "fontname")
+            {
+                style.FontName = propertyValue;
+            }
+            else if (propertyName == "fontsize")
+            {
+                style.FontSize = float.Parse(propertyValue, CultureInfo.InvariantCulture);
+            }
+            else if (propertyName == "bold")
+            {
+                style.Bold = propertyValue != "0";
+            }
+            else if (propertyName == "italic")
+            {
+                style.Italic = propertyValue != "0";
+            }
+            else if (propertyName == "underline")
+            {
+                style.Underline = propertyValue != "0";
+            }
+            else if (propertyName == "alignment")
+            {
+                style.Alignment = propertyValue;
+            }
+            else if (propertyName == "marginl")
+            {
+                style.MarginLeft = int.Parse(propertyValue, CultureInfo.InvariantCulture);
+            }
+            else if (propertyName == "marginr")
+            {
+                style.MarginRight = int.Parse(propertyValue, CultureInfo.InvariantCulture);
+            }
+            else if (propertyName == "marginv")
+            {
+                style.MarginVertical = int.Parse(propertyValue, CultureInfo.InvariantCulture);
+            }
+            else if (propertyName == "outline")
+            {
+                style.OutlineWidth = decimal.Parse(propertyValue, CultureInfo.InvariantCulture);
+            }
+            else if (propertyName == "shadow")
+            {
+                style.ShadowWidth = decimal.Parse(propertyValue, CultureInfo.InvariantCulture);
+            }
+            else if (propertyName == "borderstyle")
+            {
+                style.BorderStyle = propertyValue;
+            }
+            else if (propertyName == "primarycolour")
+            {
+                style.Primary = GetColorFromSsa(propertyValue);
+            }
+            else if (propertyName == "secondarycolour")
+            {
+                style.Secondary = GetColorFromSsa(propertyValue);
+            }
+            else if (propertyName == "outlinecolour")
+            {
+                style.Outline = GetColorFromSsa(propertyValue);
+            }
+            else if (propertyName == "tertiarycolour")
+            {
+                style.Tertiary = GetColorFromSsa(propertyValue);
+            }
+            else if (propertyName == "backcolour")
+            {
+                style.Background = GetColorFromSsa(propertyValue);
+            }
+            else
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private SsaStyle GetSsaStyle(string styleName)
@@ -668,30 +594,12 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private SsaStyle GetSsaStyleFile(string styleName)
         {
-            return AdvancedSubStationAlpha.GetSsaStyle(styleName, _header);
+            return _currentFileStyles.FirstOrDefault(p => p.Name == styleName);
         }
 
         private SsaStyle GetSsaStyleStorage(string styleName)
         {
             return _currentCategory.Styles.FirstOrDefault(p => p.Name == styleName);
-        }
-
-        private void ResetHeader()
-        {
-            SubtitleFormat format;
-            if (_isSubStationAlpha)
-            {
-                format = new SubStationAlpha();
-            }
-            else
-            {
-                format = new AdvancedSubStationAlpha();
-            }
-            var sub = new Subtitle();
-            string text = format.ToText(sub, string.Empty);
-            var lines = text.SplitToLines();
-            format.LoadSubtitle(sub, lines, string.Empty);
-            _header = sub.Header;
         }
 
         private void SubStationAlphaStyles_KeyDown(object sender, KeyEventArgs e)
@@ -707,7 +615,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             DialogResult = DialogResult.Cancel;
         }
 
-        private void buttonNextFinish_Click(object sender, EventArgs e)
+        private void buttonOK_Click(object sender, EventArgs e)
         {
             if (!_isSubStationAlpha)
             {
@@ -737,13 +645,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 else if (!stylesAdded && line.Trim().StartsWith("Style:", StringComparison.OrdinalIgnoreCase))
                 {
                     stylesAdded = true;
-                    foreach (ListViewItem item in listViewStyles.Items)
+                    foreach (var style in _currentFileStyles)
                     {
-                        var style = GetSsaStyleFile(item.Text);
-                        if (style != null)
-                        {
-                            sb.AppendLine(style.ToRawAss(format));
-                        }
+                        sb.AppendLine(style.ToRawAss(format));
+                    }
+
+                    if (_currentFileStyles.Count == 0)
+                    {
+                        sb.AppendLine(new SsaStyle().ToRawAss(format));
                     }
 
                     sb.AppendLine();
@@ -801,13 +710,15 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 _doUpdate = true;
                 groupBoxProperties.Enabled = true;
                 GeneratePreview();
-                buttonRemove.Enabled = listViewStyles.Items.Count > 1;
             }
             else
             {
                 groupBoxProperties.Enabled = false;
                 _doUpdate = false;
             }
+
+            buttonRemove.Enabled = _fileStyleActive && listViewStyles.Items.Count > 1;
+            buttonRemoveAll.Enabled = _fileStyleActive && listViewStyles.Items.Count > 1;
         }
 
         private void LogNameChanges()
@@ -1093,28 +1004,28 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         {
             if (listViewStyles.SelectedItems.Count == 1)
             {
-                string styleName = listViewStyles.SelectedItems[0].Text;
-                SsaStyle oldStyle = GetSsaStyle(styleName);
-                var style = new SsaStyle(oldStyle) { Name = string.Format(LanguageSettings.Current.SubStationAlphaStyles.CopyOfY, styleName) }; // Copy contructor
+                var styleName = listViewStyles.SelectedItems[0].Text;
+                var oldStyle = GetSsaStyle(styleName);
+                var style = new SsaStyle(oldStyle) { Name = string.Format(LanguageSettings.Current.SubStationAlphaStyles.CopyOfY, styleName) }; // Copy constructor
 
-                if (GetSsaStyle(style.Name).LoadedFromHeader)
+                if (GetSsaStyle(style.Name) != null)
                 {
                     int count = 2;
                     bool doRepeat = true;
                     while (doRepeat)
                     {
                         style.Name = string.Format(LanguageSettings.Current.SubStationAlphaStyles.CopyXOfY, count, styleName);
-                        doRepeat = GetSsaStyle(style.Name).LoadedFromHeader;
+                        doRepeat = GetSsaStyle(style.Name) != null;
                         count++;
                     }
                 }
 
                 _doUpdate = false;
                 AddStyle(listViewStyles, style, Subtitle, _isSubStationAlpha);
+                AddStyleToHeader(style);
                 UpdateSelectedIndex(listViewStyles);
                 textBoxStyleName.Text = style.Name;
                 textBoxStyleName.Focus();
-                AddStyleToHeader(style);
                 _doUpdate = true;
                 listViewStyles_SelectedIndexChanged(null, null);
             }
@@ -1122,87 +1033,25 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void AddStyleToHeader(SsaStyle style)
         {
-            var sb = new StringBuilder();
-            var format = SsaStyle.DefaultAssStyleFormat;
-            foreach (var line in _header.Split(new[] { Environment.NewLine }, StringSplitOptions.None))
-            {
-                if (line.Trim().StartsWith("Format:", StringComparison.OrdinalIgnoreCase))
-                {
-                    format = line.Trim();
-                }
-                else if (line.Trim() == "[Events]")
-                {
-                    break;
-                }
-
-                sb.AppendLine(line);
-            }
-
-            sb = new StringBuilder(sb.ToString().TrimEnd());
-            sb.AppendLine();
-
-            if (_isSubStationAlpha)
-            {
-                sb.AppendLine(style.ToRawSsa(format));
-            }
-            else
-            {
-                sb.AppendLine(style.ToRawAss(format));
-            }
-
-            sb.AppendLine();
-            sb.AppendLine("[Events]");
-            _header = sb.ToString();
+            _currentFileStyles.Add(style);
         }
-
 
         private void RemoveStyleFromHeader(string name)
         {
-            var sb = new StringBuilder();
-            foreach (var line in _header.Split(new[] { Environment.NewLine }, StringSplitOptions.None))
-            {
-                var lineIsStyle = line.ToLowerInvariant().RemoveChar(' ').StartsWith("style:" + name.ToLowerInvariant().RemoveChar(' ') + ",", StringComparison.Ordinal) &&
-                                  line.ToLowerInvariant().Contains(name.ToLowerInvariant());
-                if (!lineIsStyle)
-                {
-                    sb.AppendLine(line);
-                }
-            }
-            _header = sb.ToString();
+            _currentFileStyles.Remove(_currentFileStyles.FirstOrDefault(p => p.Name == name));
         }
 
         private void ReplaceStyleInHeader(SsaStyle style)
         {
-            var name = style.Name;
-            var sb = new StringBuilder();
-            var format = SsaStyle.DefaultAssStyleFormat;
-            foreach (var line in _header.Split(new[] { Environment.NewLine }, StringSplitOptions.None))
+            var hit = _currentFileStyles.FirstOrDefault(p => p.Name == style.Name);
+            if (hit == null)
             {
-                if (line.Trim().StartsWith("Format:", StringComparison.OrdinalIgnoreCase))
-                {
-                    format = line.Trim();
-                }
-
-                var lineIsStyle = line.ToLowerInvariant().RemoveChar(' ').StartsWith("style:" + name.ToLowerInvariant().RemoveChar(' ') + ",", StringComparison.Ordinal) &&
-                                  line.ToLowerInvariant().Contains(name.ToLowerInvariant());
-                if (!lineIsStyle)
-                {
-                    sb.AppendLine(line);
-                }
-                else
-                {
-                    if (_isSubStationAlpha)
-                    {
-                        sb.AppendLine(style.ToRawAss(format));
-                    }
-                    else
-                    {
-                        sb.AppendLine(style.ToRawSsa(format));
-                    }
-                }
-
+                return;
             }
-            _header = sb.ToString();
+
+            var index = _currentFileStyles.IndexOf(hit);
+            _currentFileStyles.RemoveAt(index);
+            _currentFileStyles.Insert(index, style);
         }
 
         private void buttonAdd_Click(object sender, EventArgs e)
@@ -1213,23 +1062,23 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
 
             var style = new SsaStyle { Name = LanguageSettings.Current.SubStationAlphaStyles.New };
-            if (GetSsaStyle(style.Name).LoadedFromHeader)
+            if (GetSsaStyle(style.Name) != null)
             {
                 int count = 2;
                 bool doRepeat = true;
                 while (doRepeat)
                 {
                     style = new SsaStyle { Name = LanguageSettings.Current.SubStationAlphaStyles.New + count };
-                    doRepeat = GetSsaStyle(style.Name).LoadedFromHeader;
+                    doRepeat = GetSsaStyle(style.Name) != null;
                     count++;
                 }
             }
 
             _doUpdate = false;
             AddStyle(listViewStyles, style, Subtitle, _isSubStationAlpha);
+            AddStyleToHeader(style);
             UpdateSelectedIndex(listViewStyles);
             textBoxStyleName.Focus();
-            AddStyleToHeader(style);
             _doUpdate = true;
             textBoxStyleName.Text = style.Name;
             SetControlsFromStyle(style);
@@ -1245,7 +1094,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             if (listViewStyles.SelectedItems.Count == 1 && _fileStyleActive)
             {
-                if (!GetSsaStyle(textBoxStyleName.Text.Trim()).LoadedFromHeader ||
+                if (GetSsaStyle(textBoxStyleName.Text.Trim()) == null ||
                     _startName == textBoxStyleName.Text.RemoveChar(',').Trim() ||
                     ActiveListView.SelectedItems[0].Text == textBoxStyleName.Text.RemoveChar(',').Trim())
                 {
@@ -1330,6 +1179,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 }
                 listViewStyles.Items[index].Selected = true;
             }
+
+            listViewStyles_SelectedIndexChanged(null, null);
         }
 
         private void buttonRemoveAll_Click(object sender, EventArgs e)
@@ -1350,35 +1201,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
 
             listViewStyles.Items.Clear();
-            var sub = new Subtitle();
-            if (_isSubStationAlpha)
-            {
-                var ssa = new SubStationAlpha();
-                var text = ssa.ToText(sub, string.Empty);
-                var lineArray = text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-                var lines = new List<string>();
-                foreach (string line in lineArray)
-                {
-                    lines.Add(line);
-                }
-                ssa.LoadSubtitle(sub, lines, string.Empty);
-                _header = _header.Remove(_header.IndexOf("[V4 Styles]", StringComparison.Ordinal)) + sub.Header.Substring(sub.Header.IndexOf("[V4 Styles]", StringComparison.Ordinal));
-            }
-            else
-            {
-                var ass = new AdvancedSubStationAlpha();
-                var text = ass.ToText(sub, string.Empty);
-                var lineArray = text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-                var lines = new List<string>();
-                foreach (string line in lineArray)
-                {
-                    lines.Add(line);
-                }
-                ass.LoadSubtitle(sub, lines, string.Empty);
-                _header = _header.Remove(_header.IndexOf("[V4+ Styles]", StringComparison.Ordinal)) + sub.Header.Substring(sub.Header.IndexOf("[V4+ Styles]", StringComparison.Ordinal));
-            }
-
+            _currentFileStyles.Clear();
             InitializeStylesListView();
+            listViewStyles_SelectedIndexChanged(null, null);
         }
 
         private void comboBoxFontName_TextChanged(object sender, EventArgs e)
@@ -1718,14 +1543,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
                                 foreach (var styleName in cs.SelectedStyleNames)
                                 {
-                                    SsaStyle style = AdvancedSubStationAlpha.GetSsaStyle(styleName, s.Header);
-                                    if (GetSsaStyleFile(style.Name) != null && GetSsaStyleFile(style.Name).LoadedFromHeader)
+                                    var style = AdvancedSubStationAlpha.GetSsaStyle(styleName, s.Header);
+                                    if (GetSsaStyleFile(style.Name) != null && GetSsaStyleFile(style.Name) != null)
                                     {
                                         int count = 2;
-                                        bool doRepeat = GetSsaStyleFile(style.Name + count).LoadedFromHeader;
+                                        bool doRepeat = GetSsaStyleFile(style.Name + count) != null;
                                         while (doRepeat)
                                         {
-                                            doRepeat = GetSsaStyleFile(style.Name + count).LoadedFromHeader;
+                                            doRepeat = GetSsaStyleFile(style.Name + count) != null;
                                             count++;
                                         }
                                         style.RawLine = style.RawLine.Replace(" " + style.Name + ",", " " + style.Name + count + ",");
@@ -1849,7 +1674,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 _doUpdate = true;
                 groupBoxProperties.Enabled = true;
                 GeneratePreview();
-                buttonStorageRemove.Enabled = listViewStorage.Items.Count > 1 || !_currentCategory.IsDefault;
             }
             else
             {
@@ -1857,6 +1681,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 groupBoxProperties.Enabled = false;
                 _doUpdate = false;
             }
+
+            buttonStorageRemove.Enabled = listViewStorage.Items.Count > 1 || !_currentCategory.IsDefault;
+            buttonStorageRemoveAll.Enabled = listViewStorage.Items.Count > 1 || !_currentCategory.IsDefault;
         }
 
         private void buttonStorageRemoveAll_Click(object sender, EventArgs e)
@@ -2027,8 +1854,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
                             foreach (var styleName in cs.SelectedStyleNames)
                             {
-                                SsaStyle style = AdvancedSubStationAlpha.GetSsaStyle(styleName, s.Header);
-                                if (GetSsaStyleStorage(style.Name) != null && GetSsaStyleStorage(style.Name).LoadedFromHeader)
+                                var style = AdvancedSubStationAlpha.GetSsaStyle(styleName, s.Header);
+                                if (GetSsaStyleStorage(style.Name) != null && GetSsaStyleStorage(style.Name) != null)
                                 {
                                     int count = 2;
                                     bool doRepeat = GetSsaStyleStorage(style.Name + count) != null;
@@ -2085,8 +1912,30 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             _fileStyleActive = true;
             listViewStyles_SelectedIndexChanged(null, null);
 
-            buttonAddStyleToStorage.Enabled = true;
-            buttonAddToFile.Enabled = false;
+            SetStorageButtonsEnabled(false);
+            SetCurrentFileButtonsEnabled(true);
+        }
+
+        private void SetCurrentFileButtonsEnabled(bool enabled)
+        {
+            buttonImport.Enabled = enabled;
+            buttonAdd.Enabled = enabled;
+            buttonRemove.Enabled = enabled;
+            buttonExport.Enabled = enabled;
+            buttonCopy.Enabled = enabled;
+            buttonRemoveAll.Enabled = enabled;
+            buttonAddStyleToStorage.Enabled = enabled;
+        }
+
+        private void SetStorageButtonsEnabled(bool enabled)
+        {
+            buttonStorageImport.Enabled = enabled;
+            buttonStorageAdd.Enabled = enabled;
+            buttonStorageRemove.Enabled = enabled;
+            buttonStorageExport.Enabled = enabled;
+            buttonStorageCopy.Enabled = enabled;
+            buttonStorageRemoveAll.Enabled = enabled;
+            buttonAddToFile.Enabled = enabled;
         }
 
         private void listViewStorage_Enter(object sender, EventArgs e)
@@ -2096,8 +1945,10 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             _fileStyleActive = false;
             listViewStorage_SelectedIndexChanged(null, null);
 
-            buttonAddStyleToStorage.Enabled = false;
-            buttonAddToFile.Enabled = true;
+            SetStorageButtonsEnabled(true);
+            SetCurrentFileButtonsEnabled(false);
+            //buttonAddStyleToStorage.Enabled = false;
+            //buttonAddToFile.Enabled = true;
         }
 
         private void listViewStyles_KeyDown(object sender, KeyEventArgs e)
