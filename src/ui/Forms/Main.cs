@@ -26686,39 +26686,10 @@ namespace Nikse.SubtitleEdit.Forms
                 var formatType = format.GetType();
                 if (formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha))
                 {
-                    styles = new SubStationAlphaStyles(_subtitle, format);
+                    styles = new SubStationAlphaStyles(_subtitle, format, this);
                     if (styles.ShowDialog(this) == DialogResult.OK)
                     {
-                        if (_subtitle.Header != styles.Header)
-                        {
-                            MakeHistoryForUndo(styles.Text);
-                        }
-
-                        _subtitle.Header = styles.Header;
-                        var styleList = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
-                        if ((styles as SubStationAlphaStyles).RenameActions.Count > 0)
-                        {
-                            foreach (var renameAction in (styles as SubStationAlphaStyles).RenameActions)
-                            {
-                                for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
-                                {
-                                    var p = _subtitle.Paragraphs[i];
-                                    if (p.Extra == renameAction.OldName)
-                                    {
-                                        p.Extra = renameAction.NewName;
-                                    }
-                                }
-                            }
-
-                            CleanRemovedStyles(styleList);
-                            SaveSubtitleListviewIndices();
-                            SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
-                            RestoreSubtitleListviewIndices();
-                        }
-                        else
-                        {
-                            CleanRemovedStyles(styleList);
-                        }
+                        ApplyAssaStyles(styles);
                     }
                 }
                 else if (formatType == typeof(TimedText10) || formatType == typeof(ItunesTimedText))
@@ -26740,6 +26711,40 @@ namespace Nikse.SubtitleEdit.Forms
                 mediaPlayer.LastParagraph = null;
                 UiUtil.ShowSubtitle(_subtitle, mediaPlayer);
                 styles?.Dispose();
+            }
+        }
+
+        public void ApplyAssaStyles(StylesForm styles)
+        {
+            if (_subtitle.Header != styles.Header)
+            {
+                MakeHistoryForUndo(styles.Text);
+            }
+
+            _subtitle.Header = styles.Header;
+            var styleList = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
+            if ((styles as SubStationAlphaStyles).RenameActions.Count > 0)
+            {
+                foreach (var renameAction in (styles as SubStationAlphaStyles).RenameActions)
+                {
+                    for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
+                    {
+                        var p = _subtitle.Paragraphs[i];
+                        if (p.Extra == renameAction.OldName)
+                        {
+                            p.Extra = renameAction.NewName;
+                        }
+                    }
+                }
+
+                CleanRemovedStyles(styleList);
+                SaveSubtitleListviewIndices();
+                SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                RestoreSubtitleListviewIndices();
+            }
+            else
+            {
+                CleanRemovedStyles(styleList);
             }
         }
 

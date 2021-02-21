@@ -129,12 +129,6 @@
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.labelCategoryDefaultNote = new System.Windows.Forms.Label();
-            this.buttonStorageCategorySetDefault = new System.Windows.Forms.Button();
-            this.buttonStorageCategoryDelete = new System.Windows.Forms.Button();
-            this.buttonStorageCategoryNew = new System.Windows.Forms.Button();
-            this.comboboxStorageCategories = new System.Windows.Forms.ComboBox();
-            this.labelStorageCategory = new System.Windows.Forms.Label();
             this.contextMenuStripStorage = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemStorageRemove = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemStorageRemoveAll = new System.Windows.Forms.ToolStripMenuItem();
@@ -151,7 +145,14 @@
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemStorageImport = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemStorageExport = new System.Windows.Forms.ToolStripMenuItem();
+            this.labelCategoryDefaultNote = new System.Windows.Forms.Label();
+            this.buttonStorageCategorySetDefault = new System.Windows.Forms.Button();
+            this.buttonStorageCategoryDelete = new System.Windows.Forms.Button();
+            this.buttonStorageCategoryNew = new System.Windows.Forms.Button();
+            this.comboboxStorageCategories = new System.Windows.Forms.ComboBox();
+            this.labelStorageCategory = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.buttonApply = new System.Windows.Forms.Button();
             this.contextMenuStripFile.SuspendLayout();
             this.groupBoxStyles.SuspendLayout();
             this.groupBoxProperties.SuspendLayout();
@@ -179,8 +180,8 @@
             // 
             // listViewStyles
             // 
-            this.listViewStyles.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.listViewStyles.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewStyles.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeaderName,
@@ -369,7 +370,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(977, 578);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 5;
+            this.buttonCancel.TabIndex = 6;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -381,7 +382,7 @@
             this.buttonOK.Location = new System.Drawing.Point(896, 578);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 4;
+            this.buttonOK.TabIndex = 5;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonNextFinish_Click);
@@ -490,8 +491,8 @@
             // 
             // groupBoxProperties
             // 
-            this.groupBoxProperties.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.groupBoxProperties.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxProperties.Controls.Add(this.groupBoxBorder);
             this.groupBoxProperties.Controls.Add(this.textBoxStyleName);
@@ -510,7 +511,7 @@
             // 
             // groupBoxBorder
             // 
-            this.groupBoxBorder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.groupBoxBorder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxBorder.Controls.Add(this.radioButtonOpaqueBox);
             this.groupBoxBorder.Controls.Add(this.radioButtonOutline);
@@ -683,7 +684,7 @@
             // 
             // groupBoxColors
             // 
-            this.groupBoxColors.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.groupBoxColors.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxColors.Controls.Add(this.panelBackColor);
             this.groupBoxColors.Controls.Add(this.buttonBackColor);
@@ -888,8 +889,8 @@
             // 
             // groupBoxPreview
             // 
-            this.groupBoxPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.groupBoxPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxPreview.Controls.Add(this.pictureBoxPreview);
             this.groupBoxPreview.Location = new System.Drawing.Point(7, 310);
@@ -926,7 +927,7 @@
             // 
             // groupBoxFont
             // 
-            this.groupBoxFont.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.groupBoxFont.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxFont.Controls.Add(this.checkBoxFontUnderline);
             this.groupBoxFont.Controls.Add(this.numericUpDownFontSize);
@@ -1148,8 +1149,8 @@
             // 
             // listViewStorage
             // 
-            this.listViewStorage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.listViewStorage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewStorage.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
@@ -1201,70 +1202,6 @@
             // 
             this.columnHeader6.Text = "Outline";
             this.columnHeader6.Width = 55;
-            // 
-            // labelCategoryDefaultNote
-            // 
-            this.labelCategoryDefaultNote.AutoSize = true;
-            this.labelCategoryDefaultNote.Location = new System.Drawing.Point(10, 48);
-            this.labelCategoryDefaultNote.Name = "labelCategoryDefaultNote";
-            this.labelCategoryDefaultNote.Size = new System.Drawing.Size(59, 13);
-            this.labelCategoryDefaultNote.TabIndex = 5;
-            this.labelCategoryDefaultNote.Text = "Note: \"Default\" styles will be applied to new ASSA files";
-            // 
-            // buttonStorageCategorySetDefault
-            // 
-            this.buttonStorageCategorySetDefault.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonStorageCategorySetDefault.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonStorageCategorySetDefault.Location = new System.Drawing.Point(455, 19);
-            this.buttonStorageCategorySetDefault.Name = "buttonStorageRemove";
-            this.buttonStorageCategorySetDefault.Size = new System.Drawing.Size(94, 23);
-            this.buttonStorageCategorySetDefault.TabIndex = 4;
-            this.buttonStorageCategorySetDefault.Text = "Set as default";
-            this.buttonStorageCategorySetDefault.UseVisualStyleBackColor = true;
-            this.buttonStorageCategorySetDefault.Click += new System.EventHandler(this.buttonStorageCategorySetDefault_Click);
-            // 
-            // buttonStorageCategoryDelete
-            // 
-            this.buttonStorageCategoryDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonStorageCategoryDelete.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonStorageCategoryDelete.Location = new System.Drawing.Point(357, 19);
-            this.buttonStorageCategoryDelete.Name = "buttonStorageRemove";
-            this.buttonStorageCategoryDelete.Size = new System.Drawing.Size(92, 23);
-            this.buttonStorageCategoryDelete.TabIndex = 3;
-            this.buttonStorageCategoryDelete.Text = "Remove";
-            this.buttonStorageCategoryDelete.UseVisualStyleBackColor = true;
-            this.buttonStorageCategoryDelete.Click += new System.EventHandler(this.buttonStorageCategoryDelete_Click);
-            // 
-            // buttonStorageCategoryNew
-            // 
-            this.buttonStorageCategoryNew.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonStorageCategoryNew.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonStorageCategoryNew.Location = new System.Drawing.Point(259, 19);
-            this.buttonStorageCategoryNew.Name = "buttonStorageCategoryNew";
-            this.buttonStorageCategoryNew.Size = new System.Drawing.Size(92, 23);
-            this.buttonStorageCategoryNew.TabIndex = 2;
-            this.buttonStorageCategoryNew.Text = "New";
-            this.buttonStorageCategoryNew.UseVisualStyleBackColor = true;
-            this.buttonStorageCategoryNew.Click += new System.EventHandler(this.buttonStorageCategoryNew_Click);
-            // 
-            // comboboxStorageCategories
-            // 
-            this.comboboxStorageCategories.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboboxStorageCategories.FormattingEnabled = true;
-            this.comboboxStorageCategories.Location = new System.Drawing.Point(73, 19);
-            this.comboboxStorageCategories.Name = "comboboxStorageCategories";
-            this.comboboxStorageCategories.Size = new System.Drawing.Size(180, 21);
-            this.comboboxStorageCategories.TabIndex = 1;
-            this.comboboxStorageCategories.SelectedIndexChanged += new System.EventHandler(this.comboboxStorageCategories_SelectedIndexChanged);
-            // 
-            // labelStorageCategory
-            // 
-            this.labelStorageCategory.AutoSize = true;
-            this.labelStorageCategory.Location = new System.Drawing.Point(10, 21);
-            this.labelStorageCategory.Name = "labelStorageCategory";
-            this.labelStorageCategory.Size = new System.Drawing.Size(59, 13);
-            this.labelStorageCategory.TabIndex = 0;
-            this.labelStorageCategory.Text = "Category";
             // 
             // contextMenuStripStorage
             // 
@@ -1395,9 +1332,70 @@
             this.toolStripMenuItemStorageExport.Text = "Export...";
             this.toolStripMenuItemStorageExport.Click += new System.EventHandler(this.buttonStorageExport_Click);
             // 
+            // labelCategoryDefaultNote
+            // 
+            this.labelCategoryDefaultNote.AutoSize = true;
+            this.labelCategoryDefaultNote.Location = new System.Drawing.Point(10, 48);
+            this.labelCategoryDefaultNote.Name = "labelCategoryDefaultNote";
+            this.labelCategoryDefaultNote.Size = new System.Drawing.Size(265, 13);
+            this.labelCategoryDefaultNote.TabIndex = 5;
+            this.labelCategoryDefaultNote.Text = "Note: \"Default\" styles will be applied to new ASSA files";
+            // 
+            // buttonStorageCategorySetDefault
+            // 
+            this.buttonStorageCategorySetDefault.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonStorageCategorySetDefault.Location = new System.Drawing.Point(455, 19);
+            this.buttonStorageCategorySetDefault.Name = "buttonStorageCategorySetDefault";
+            this.buttonStorageCategorySetDefault.Size = new System.Drawing.Size(94, 23);
+            this.buttonStorageCategorySetDefault.TabIndex = 4;
+            this.buttonStorageCategorySetDefault.Text = "Set as default";
+            this.buttonStorageCategorySetDefault.UseVisualStyleBackColor = true;
+            this.buttonStorageCategorySetDefault.Click += new System.EventHandler(this.buttonStorageCategorySetDefault_Click);
+            // 
+            // buttonStorageCategoryDelete
+            // 
+            this.buttonStorageCategoryDelete.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonStorageCategoryDelete.Location = new System.Drawing.Point(357, 19);
+            this.buttonStorageCategoryDelete.Name = "buttonStorageCategoryDelete";
+            this.buttonStorageCategoryDelete.Size = new System.Drawing.Size(92, 23);
+            this.buttonStorageCategoryDelete.TabIndex = 3;
+            this.buttonStorageCategoryDelete.Text = "Remove";
+            this.buttonStorageCategoryDelete.UseVisualStyleBackColor = true;
+            this.buttonStorageCategoryDelete.Click += new System.EventHandler(this.buttonStorageCategoryDelete_Click);
+            // 
+            // buttonStorageCategoryNew
+            // 
+            this.buttonStorageCategoryNew.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonStorageCategoryNew.Location = new System.Drawing.Point(259, 19);
+            this.buttonStorageCategoryNew.Name = "buttonStorageCategoryNew";
+            this.buttonStorageCategoryNew.Size = new System.Drawing.Size(92, 23);
+            this.buttonStorageCategoryNew.TabIndex = 2;
+            this.buttonStorageCategoryNew.Text = "New";
+            this.buttonStorageCategoryNew.UseVisualStyleBackColor = true;
+            this.buttonStorageCategoryNew.Click += new System.EventHandler(this.buttonStorageCategoryNew_Click);
+            // 
+            // comboboxStorageCategories
+            // 
+            this.comboboxStorageCategories.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboboxStorageCategories.FormattingEnabled = true;
+            this.comboboxStorageCategories.Location = new System.Drawing.Point(73, 19);
+            this.comboboxStorageCategories.Name = "comboboxStorageCategories";
+            this.comboboxStorageCategories.Size = new System.Drawing.Size(180, 21);
+            this.comboboxStorageCategories.TabIndex = 1;
+            this.comboboxStorageCategories.SelectedIndexChanged += new System.EventHandler(this.comboboxStorageCategories_SelectedIndexChanged);
+            // 
+            // labelStorageCategory
+            // 
+            this.labelStorageCategory.AutoSize = true;
+            this.labelStorageCategory.Location = new System.Drawing.Point(10, 21);
+            this.labelStorageCategory.Name = "labelStorageCategory";
+            this.labelStorageCategory.Size = new System.Drawing.Size(49, 13);
+            this.labelStorageCategory.TabIndex = 0;
+            this.labelStorageCategory.Text = "Category";
+            // 
             // splitContainer1
             // 
-            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.splitContainer1.Location = new System.Drawing.Point(12, 4);
             this.splitContainer1.Name = "splitContainer1";
@@ -1416,11 +1414,24 @@
             this.splitContainer1.SplitterDistance = 284;
             this.splitContainer1.TabIndex = 8;
             // 
+            // buttonApply
+            // 
+            this.buttonApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonApply.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonApply.Location = new System.Drawing.Point(785, 578);
+            this.buttonApply.Name = "buttonApply";
+            this.buttonApply.Size = new System.Drawing.Size(105, 23);
+            this.buttonApply.TabIndex = 4;
+            this.buttonApply.Text = "&Apply";
+            this.buttonApply.UseVisualStyleBackColor = true;
+            this.buttonApply.Click += new System.EventHandler(this.buttonApply_Click);
+            // 
             // SubStationAlphaStyles
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1064, 611);
+            this.Controls.Add(this.buttonApply);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.groupBoxProperties);
@@ -1461,6 +1472,7 @@
             this.groupBoxFont.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).EndInit();
             this.groupBoxStorage.ResumeLayout(false);
+            this.groupBoxStorage.PerformLayout();
             this.contextMenuStripStorage.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -1596,5 +1608,6 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStripPreview;
         private System.Windows.Forms.ToolStripMenuItem setPreviewTextToolStripMenuItem;
         private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.Button buttonApply;
     }
 }
