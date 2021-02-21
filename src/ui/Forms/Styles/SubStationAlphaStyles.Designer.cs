@@ -1346,7 +1346,7 @@
             this.buttonStorageCategorySetDefault.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonStorageCategorySetDefault.Location = new System.Drawing.Point(455, 19);
             this.buttonStorageCategorySetDefault.Name = "buttonStorageCategorySetDefault";
-            this.buttonStorageCategorySetDefault.Size = new System.Drawing.Size(94, 23);
+            this.buttonStorageCategorySetDefault.Size = new System.Drawing.Size(98, 23);
             this.buttonStorageCategorySetDefault.TabIndex = 4;
             this.buttonStorageCategorySetDefault.Text = "Set as default";
             this.buttonStorageCategorySetDefault.UseVisualStyleBackColor = true;

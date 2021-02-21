@@ -7141,6 +7141,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "SubStationAlphaStyles/CategoryNote":
                     language.SubStationAlphaStyles.CategoryNote = reader.Value;
                     break;
+                case "SubStationAlphaStyles/CategoryDelete":
+                    language.SubStationAlphaStyles.CategoryDelete = reader.Value;
+                    break;
                 case "PointSync/Title":
                     language.PointSync.Title = reader.Value;
                     break;
