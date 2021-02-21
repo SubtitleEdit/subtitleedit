@@ -1977,10 +1977,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void buttonStorageCategoryDelete_Click(object sender, EventArgs e)
         {
-            _storageCategories.Remove(_currentCategory);
-            comboboxStorageCategories.Items.Remove(_currentCategory.Name);
-            _currentCategory = _storageCategories.Single(x => x.IsDefault);
-            comboboxStorageCategories.SelectedItem = _currentCategory.Name;
+            var result = MessageBox.Show(LanguageSettings.Current.SubStationAlphaStyles.CategoryDelete, string.Empty, MessageBoxButtons.YesNoCancel);
+            if (result == DialogResult.Yes)
+            {
+                _storageCategories.Remove(_currentCategory);
+                comboboxStorageCategories.Items.Remove(_currentCategory.Name);
+                _currentCategory = _storageCategories.Single(x => x.IsDefault);
+                comboboxStorageCategories.SelectedItem = _currentCategory.Name;
+            }
         }
 
         private void buttonStorageCategorySetDefault_Click(object sender, EventArgs e)

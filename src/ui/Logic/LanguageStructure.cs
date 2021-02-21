@@ -2804,6 +2804,7 @@
             public string CategoryName { get; set; }
             public string CategorySetDefault { get; set; }
             public string CategoryNote { get; set; }
+            public string CategoryDelete { get; set; }
         }
 
         public class PointSync
