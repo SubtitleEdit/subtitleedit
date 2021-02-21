@@ -305,13 +305,13 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.contextMenuStripPreview.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.setPreviewTextToolStripMenuItem});
             this.contextMenuStripPreview.Name = "contextMenuStripPreview";
-            this.contextMenuStripPreview.Size = new System.Drawing.Size(181, 48);
+            this.contextMenuStripPreview.Size = new System.Drawing.Size(167, 26);
             this.contextMenuStripPreview.Click += new System.EventHandler(this.contextMenuStripPreview_Click);
             // 
             // setPreviewTextToolStripMenuItem
             // 
             this.setPreviewTextToolStripMenuItem.Name = "setPreviewTextToolStripMenuItem";
-            this.setPreviewTextToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.setPreviewTextToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
             this.setPreviewTextToolStripMenuItem.Text = "Set preview text...";
             // 
             // Attachments
@@ -329,7 +329,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.listViewAttachments);
-            this.MinimumSize = new System.Drawing.Size(640, 480);
+            this.MinimumSize = new System.Drawing.Size(910, 534);
             this.Name = "Attachments";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
