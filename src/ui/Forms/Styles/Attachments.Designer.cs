@@ -229,7 +229,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.buttonAttachFont.Location = new System.Drawing.Point(11, 460);
             this.buttonAttachFont.Name = "buttonAttachFont";
             this.buttonAttachFont.Size = new System.Drawing.Size(133, 23);
-            this.buttonAttachFont.TabIndex = 8;
+            this.buttonAttachFont.TabIndex = 2;
             this.buttonAttachFont.Text = "Attach font";
             this.buttonAttachFont.UseVisualStyleBackColor = true;
             this.buttonAttachFont.Click += new System.EventHandler(this.buttonAttachFont_Click);
@@ -241,7 +241,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.buttonAttachGraphics.Location = new System.Drawing.Point(150, 460);
             this.buttonAttachGraphics.Name = "buttonAttachGraphics";
             this.buttonAttachGraphics.Size = new System.Drawing.Size(133, 23);
-            this.buttonAttachGraphics.TabIndex = 9;
+            this.buttonAttachGraphics.TabIndex = 3;
             this.buttonAttachGraphics.Text = "Attach graphics";
             this.buttonAttachGraphics.UseVisualStyleBackColor = true;
             this.buttonAttachGraphics.Click += new System.EventHandler(this.buttonAttachGraphics_Click);
@@ -268,7 +268,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.buttonExport.Location = new System.Drawing.Point(289, 460);
             this.buttonExport.Name = "buttonExport";
             this.buttonExport.Size = new System.Drawing.Size(133, 23);
-            this.buttonExport.TabIndex = 12;
+            this.buttonExport.TabIndex = 4;
             this.buttonExport.Text = "Export...";
             this.buttonExport.UseVisualStyleBackColor = true;
             this.buttonExport.Click += new System.EventHandler(this.buttonExport_Click);
@@ -287,7 +287,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.textBoxInfo.Location = new System.Drawing.Point(537, 14);
             this.textBoxInfo.Name = "textBoxInfo";
             this.textBoxInfo.Size = new System.Drawing.Size(194, 20);
-            this.textBoxInfo.TabIndex = 14;
+            this.textBoxInfo.TabIndex = 1;
             // 
             // labelImageResizedToFit
             // 
@@ -297,7 +297,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.labelImageResizedToFit.Location = new System.Drawing.Point(483, 460);
             this.labelImageResizedToFit.Name = "labelImageResizedToFit";
             this.labelImageResizedToFit.Size = new System.Drawing.Size(120, 13);
-            this.labelImageResizedToFit.TabIndex = 15;
+            this.labelImageResizedToFit.TabIndex = 5;
             this.labelImageResizedToFit.Text = "labelImageResizedToFit";
             // 
             // contextMenuStripPreview
@@ -329,6 +329,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.listViewAttachments);
+            this.KeyPreview = true;
             this.MinimumSize = new System.Drawing.Size(910, 534);
             this.Name = "Attachments";
             this.ShowIcon = false;
