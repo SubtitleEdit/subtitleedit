@@ -1129,9 +1129,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                         textBoxStyleName.BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                     }
                 }
-
-                _oldSsaName = textBoxStyleName.Text.Trim();
-                _editedName = _oldSsaName;
             }
 
             if (textBoxStyleName.Text.Contains(','))
@@ -1661,14 +1658,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void listViewStorage_SelectedIndexChanged(object sender, EventArgs e)
         {
-            LogNameChanges();
-
             if (listViewStorage.SelectedItems.Count == 1)
             {
                 string styleName = listViewStorage.SelectedItems[0].Text;
-                _startName = styleName;
-                _editedName = null;
-                _oldSsaName = styleName;
                 SsaStyle style = _currentCategory.Styles.First(p => p.Name == styleName);
                 SetControlsFromStyle(style);
                 _doUpdate = true;
@@ -1977,10 +1969,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void buttonStorageCategoryDelete_Click(object sender, EventArgs e)
         {
-            _storageCategories.Remove(_currentCategory);
-            comboboxStorageCategories.Items.Remove(_currentCategory.Name);
-            _currentCategory = _storageCategories.Single(x => x.IsDefault);
-            comboboxStorageCategories.SelectedItem = _currentCategory.Name;
+            var result = MessageBox.Show(LanguageSettings.Current.SubStationAlphaStyles.CategoryDelete, string.Empty, MessageBoxButtons.YesNoCancel);
+            if (result == DialogResult.Yes)
+            {
+                _storageCategories.Remove(_currentCategory);
+                comboboxStorageCategories.Items.Remove(_currentCategory.Name);
+                _currentCategory = _storageCategories.Single(x => x.IsDefault);
+                comboboxStorageCategories.SelectedItem = _currentCategory.Name;
+            }
         }
 
         private void buttonStorageCategorySetDefault_Click(object sender, EventArgs e)
@@ -2298,7 +2294,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void contextMenuStripFile_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            var moreThanOne = listViewStorage.Items.Count > 1;
+            var moreThanOne = listViewStyles.Items.Count > 1;
             moveUpToolStripMenuItem.Visible = moreThanOne;
             moveBottomToolStripMenuItem.Visible = moreThanOne;
             moveTopToolStripMenuItem.Visible = moreThanOne;
