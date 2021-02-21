@@ -2298,7 +2298,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void contextMenuStripFile_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            var moreThanOne = listViewStorage.Items.Count > 1;
+            var moreThanOne = listViewStyles.Items.Count > 1;
             moveUpToolStripMenuItem.Visible = moreThanOne;
             moveBottomToolStripMenuItem.Visible = moreThanOne;
             moveTopToolStripMenuItem.Visible = moreThanOne;
