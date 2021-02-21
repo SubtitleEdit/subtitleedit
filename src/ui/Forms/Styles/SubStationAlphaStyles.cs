@@ -238,7 +238,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
                 _currentCategory = _storageCategories.Single(category => category.IsDefault);
                 comboboxStorageCategories.SelectedItem = _currentCategory.Name;
-                SetStorageButtonsEnabled(false);
             }
 
             buttonApply.Text = LanguageSettings.Current.General.Apply;
@@ -717,8 +716,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 _doUpdate = false;
             }
 
-            buttonRemove.Enabled = _fileStyleActive && listViewStyles.Items.Count > 1;
-            buttonRemoveAll.Enabled = _fileStyleActive && listViewStyles.Items.Count > 1;
+            UpdateCurrentFileButtonsState();
         }
 
         private void LogNameChanges()
@@ -1669,13 +1667,11 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
             else
             {
-                buttonStorageRemove.Enabled = false;
                 groupBoxProperties.Enabled = false;
                 _doUpdate = false;
             }
 
-            buttonStorageRemove.Enabled = listViewStorage.Items.Count > 1 || !_currentCategory.IsDefault;
-            buttonStorageRemoveAll.Enabled = listViewStorage.Items.Count > 1 || !_currentCategory.IsDefault;
+            UpdateStorageButtonsState();
         }
 
         private void buttonStorageRemoveAll_Click(object sender, EventArgs e)
@@ -1706,6 +1702,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             var defaultStyle = new SsaStyle();
             AddStyle(listViewStorage, defaultStyle, Subtitle, _isSubStationAlpha);
             _currentCategory.Styles.Add(defaultStyle);
+            UpdateStorageButtonsState();
         }
 
         private void buttonStorageRemove_Click(object sender, EventArgs e)
@@ -1749,6 +1746,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     listViewStorage.Items[index].Selected = true;
                 }
             }
+
+            UpdateStorageButtonsState();
         }
 
         private void buttonStorageAdd_Click(object sender, EventArgs e)
@@ -1903,31 +1902,26 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             groupBoxStyles.Font = new Font(groupBoxStyles.Font, FontStyle.Bold);
             _fileStyleActive = true;
             listViewStyles_SelectedIndexChanged(null, null);
-
-            SetStorageButtonsEnabled(false);
-            SetCurrentFileButtonsEnabled(true);
         }
 
-        private void SetCurrentFileButtonsEnabled(bool enabled)
+        private void UpdateCurrentFileButtonsState()
         {
-            buttonImport.Enabled = enabled;
-            buttonAdd.Enabled = enabled;
-            buttonRemove.Enabled = enabled;
-            buttonExport.Enabled = enabled;
-            buttonCopy.Enabled = enabled;
-            buttonRemoveAll.Enabled = enabled;
-            buttonAddStyleToStorage.Enabled = enabled;
+            bool onlyOneSelected = listViewStyles.SelectedItems.Count == 1;
+            buttonRemove.Enabled = onlyOneSelected || !_currentCategory.IsDefault;
+            buttonCopy.Enabled = onlyOneSelected;
+            buttonAddStyleToStorage.Enabled = onlyOneSelected;
         }
 
-        private void SetStorageButtonsEnabled(bool enabled)
+        private void UpdateStorageButtonsState()
         {
-            buttonStorageImport.Enabled = enabled;
-            buttonStorageAdd.Enabled = enabled;
-            buttonStorageRemove.Enabled = enabled;
-            buttonStorageExport.Enabled = enabled;
-            buttonStorageCopy.Enabled = enabled;
-            buttonStorageRemoveAll.Enabled = enabled;
-            buttonAddToFile.Enabled = enabled;
+            bool onlyOneSelected = listViewStorage.SelectedItems.Count == 1;
+            buttonStorageRemove.Enabled = onlyOneSelected || !_currentCategory.IsDefault;
+            buttonStorageCopy.Enabled = onlyOneSelected;
+            buttonAddToFile.Enabled = onlyOneSelected;
+
+            bool containsStyles = listViewStorage.Items.Count > 0;
+            buttonStorageRemoveAll.Enabled = containsStyles;
+            buttonStorageExport.Enabled = containsStyles;
         }
 
         private void listViewStorage_Enter(object sender, EventArgs e)
@@ -1936,11 +1930,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             groupBoxStorage.Font = new Font(groupBoxStyles.Font, FontStyle.Bold);
             _fileStyleActive = false;
             listViewStorage_SelectedIndexChanged(null, null);
-
-            SetStorageButtonsEnabled(true);
-            SetCurrentFileButtonsEnabled(false);
-            //buttonAddStyleToStorage.Enabled = false;
-            //buttonAddToFile.Enabled = true;
         }
 
         private void listViewStyles_KeyDown(object sender, KeyEventArgs e)
@@ -2029,6 +2018,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             buttonStorageRemove.Enabled = listViewStorage.SelectedItems.Count > 0;
             buttonStorageCategoryDelete.Enabled = !_currentCategory.IsDefault;
             buttonStorageCategorySetDefault.Enabled = !_currentCategory.IsDefault;
+            UpdateStorageButtonsState();
         }
 
         private bool StyleExistsInListView(string styleName, ListView listView)
