@@ -194,13 +194,13 @@
             this.listViewStyles.FullRowSelect = true;
             this.listViewStyles.HideSelection = false;
             this.listViewStyles.Location = new System.Drawing.Point(6, 19);
-            this.listViewStyles.MultiSelect = false;
             this.listViewStyles.Name = "listViewStyles";
             this.listViewStyles.Size = new System.Drawing.Size(545, 201);
             this.listViewStyles.TabIndex = 0;
             this.listViewStyles.UseCompatibleStateImageBehavior = false;
             this.listViewStyles.View = System.Windows.Forms.View.Details;
             this.listViewStyles.SelectedIndexChanged += new System.EventHandler(this.listViewStyles_SelectedIndexChanged);
+            this.listViewStyles.ClientSizeChanged += new System.EventHandler(this.listViewStyles_ClientSizeChanged);
             this.listViewStyles.Enter += new System.EventHandler(this.listViewStyles_Enter);
             this.listViewStyles.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listViewStyles_KeyDown);
             // 
@@ -1163,13 +1163,13 @@
             this.listViewStorage.FullRowSelect = true;
             this.listViewStorage.HideSelection = false;
             this.listViewStorage.Location = new System.Drawing.Point(6, 68);
-            this.listViewStorage.MultiSelect = false;
             this.listViewStorage.Name = "listViewStorage";
             this.listViewStorage.Size = new System.Drawing.Size(545, 148);
             this.listViewStorage.TabIndex = 6;
             this.listViewStorage.UseCompatibleStateImageBehavior = false;
             this.listViewStorage.View = System.Windows.Forms.View.Details;
             this.listViewStorage.SelectedIndexChanged += new System.EventHandler(this.listViewStorage_SelectedIndexChanged);
+            this.listViewStorage.ClientSizeChanged += new System.EventHandler(this.listViewStorage_ClientSizeChanged);
             this.listViewStorage.Enter += new System.EventHandler(this.listViewStorage_Enter);
             this.listViewStorage.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listViewStorage_KeyDown);
             // 
