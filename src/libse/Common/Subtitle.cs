@@ -768,6 +768,10 @@ namespace Nikse.SubtitleEdit.Core
                 {
                     hash = hash * 23 + Header.Trim().GetHashCode();
                 }
+                if (Footer != null)
+                {
+                    hash = hash * 23 + Footer.Trim().GetHashCode();
+                }
                 var max = Paragraphs.Count;
                 for (int i = 0; i < max; i++)
                 {
