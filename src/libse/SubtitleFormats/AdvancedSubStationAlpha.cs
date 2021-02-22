@@ -1677,7 +1677,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             //Blue = &HFF0000&
             //White = &HFFFFFF&
             //Black = &H000000&
-            string s = f.Trim().Trim('&');
+            var s = f.Trim().Trim('&').ToLowerInvariant();
 
             if (s.StartsWith('h') && s.Length < 7)
             {
