@@ -29821,8 +29821,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripButtonAssAttachments_Click(object sender, EventArgs e)
         {
-            var source = new AdvancedSubStationAlpha().ToText(_subtitle, _fileName);
-            using (var form = new Attachments(source))
+            using (var form = new Attachments(_subtitle.Footer))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
