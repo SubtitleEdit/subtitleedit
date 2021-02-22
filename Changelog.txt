@@ -5,6 +5,7 @@
    * ASSA attachments manager - thx LeonCheung
    * Add Categories for ASSA styles - thx ChocOranger/OmrSi
    * Auto load ASSA styles for new files - thx z3us/OmrSi
+   * Add "Apply" button for ASSA styles - thx LeonCheung
    * Add bookmarked to modify selection - thx moob158/OmrSi
 * IMPROVED:
    * Update Polish translation - thx admas

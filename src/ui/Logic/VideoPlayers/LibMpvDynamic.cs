@@ -337,6 +337,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     return _audioTrackIds;
                 }
 
+                if (_mpvHandle == IntPtr.Zero)
+                {
+                    return new List<KeyValuePair<int, string>>();
+                }
+
                 _audioTrackIds = new List<KeyValuePair<int, string>>();
                 var lpBuffer = IntPtr.Zero;
                 _mpvGetPropertyString(_mpvHandle, GetUtf8Bytes("track-list"), MpvFormatString, ref lpBuffer);
@@ -362,6 +367,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             get
             {
+                if (_mpvHandle == IntPtr.Zero)
+                {
+                    return 0;
+                }
+
                 var lpBuffer = IntPtr.Zero;
                 _mpvGetPropertyString(_mpvHandle, GetUtf8Bytes("aid"), MpvFormatString, ref lpBuffer);
                 var numberString = Marshal.PtrToStringAnsi(lpBuffer);
