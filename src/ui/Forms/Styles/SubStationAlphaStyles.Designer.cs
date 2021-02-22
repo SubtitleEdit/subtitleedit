@@ -102,6 +102,7 @@
             this.contextMenuStripPreview = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.setPreviewTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxFont = new System.Windows.Forms.GroupBox();
+            this.buttonPickAttachmentFont = new System.Windows.Forms.Button();
             this.checkBoxFontUnderline = new System.Windows.Forms.CheckBox();
             this.numericUpDownFontSize = new System.Windows.Forms.NumericUpDown();
             this.checkBoxFontItalic = new System.Windows.Forms.CheckBox();
@@ -929,6 +930,7 @@
             // 
             this.groupBoxFont.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxFont.Controls.Add(this.buttonPickAttachmentFont);
             this.groupBoxFont.Controls.Add(this.checkBoxFontUnderline);
             this.groupBoxFont.Controls.Add(this.numericUpDownFontSize);
             this.groupBoxFont.Controls.Add(this.checkBoxFontItalic);
@@ -942,6 +944,16 @@
             this.groupBoxFont.TabIndex = 3;
             this.groupBoxFont.TabStop = false;
             this.groupBoxFont.Text = "Font";
+            // 
+            // buttonPickAttachmentFont
+            // 
+            this.buttonPickAttachmentFont.Location = new System.Drawing.Point(267, 17);
+            this.buttonPickAttachmentFont.Name = "buttonPickAttachmentFont";
+            this.buttonPickAttachmentFont.Size = new System.Drawing.Size(24, 23);
+            this.buttonPickAttachmentFont.TabIndex = 6;
+            this.buttonPickAttachmentFont.Text = "...";
+            this.buttonPickAttachmentFont.UseVisualStyleBackColor = true;
+            this.buttonPickAttachmentFont.Click += new System.EventHandler(this.buttonPickAttachmentFont_Click);
             // 
             // checkBoxFontUnderline
             // 
@@ -958,7 +970,7 @@
             // numericUpDownFontSize
             // 
             this.numericUpDownFontSize.DecimalPlaces = 1;
-            this.numericUpDownFontSize.Location = new System.Drawing.Point(331, 18);
+            this.numericUpDownFontSize.Location = new System.Drawing.Point(374, 18);
             this.numericUpDownFontSize.Maximum = new decimal(new int[] {
             200,
             0,
@@ -1006,7 +1018,7 @@
             // labelFontSize
             // 
             this.labelFontSize.AutoSize = true;
-            this.labelFontSize.Location = new System.Drawing.Point(276, 20);
+            this.labelFontSize.Location = new System.Drawing.Point(319, 20);
             this.labelFontSize.Name = "labelFontSize";
             this.labelFontSize.Size = new System.Drawing.Size(49, 13);
             this.labelFontSize.TabIndex = 2;
@@ -1609,5 +1621,6 @@
         private System.Windows.Forms.ToolStripMenuItem setPreviewTextToolStripMenuItem;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Button buttonApply;
+        private System.Windows.Forms.Button buttonPickAttachmentFont;
     }
 }

@@ -283,6 +283,12 @@
     <Compile Include="Forms\Styles\Attachments.Designer.cs">
       <DependentUpon>Attachments.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Styles\ChooseFontName.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Styles\ChooseFontName.Designer.cs">
+      <DependentUpon>ChooseFontName.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Translate\GenericTranslate.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1299,6 +1305,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Styles\Attachments.resx">
       <DependentUpon>Attachments.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Styles\ChooseFontName.resx">
+      <DependentUpon>ChooseFontName.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Translate\GenericTranslate.resx">
       <DependentUpon>GenericTranslate.cs</DependentUpon>
