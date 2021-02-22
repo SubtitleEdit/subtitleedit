@@ -157,7 +157,7 @@ namespace Nikse.SubtitleEdit.Controls
             set
             {
                 _fixedArabicComma = false;
-                var s = value;
+                var s = value ?? string.Empty;
                 if (!Configuration.Settings.General.RightToLeftMode && !s.ContainsUnicodeControlChars())
                 {
                     string textNoTags = HtmlUtil.RemoveHtmlTags(s, true);
