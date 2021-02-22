@@ -1400,6 +1400,30 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
         }
 
+        private void SetLastColumnWidth()
+        {
+            listViewStyles.Columns[listViewStyles.Columns.Count - 1].Width = -2;
+            listViewStorage.Columns[listViewStorage.Columns.Count - 1].Width = -2;
+        }
+
+        private void listViewStyles_ClientSizeChanged(object sender, EventArgs e)
+        {
+            SetLastColumnWidth();
+        }
+
+        private void listViewStorage_ClientSizeChanged(object sender, EventArgs e)
+        {
+            SetLastColumnWidth();
+        }
+
+        private void SubStationAlphaStyles_ResizeEnd(object sender, EventArgs e)
+        {
+            _backgroundImage?.Dispose();
+            _backgroundImage = null;
+            GeneratePreview();
+            _lastFormWindowState = WindowState;
+        }
+
         private void SubStationAlphaStyles_Resize(object sender, EventArgs e)
         {
             if (WindowState == FormWindowState.Maximized)
@@ -1416,21 +1440,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 });
             }
 
-            _lastFormWindowState = WindowState;
-        }
-
-        private void SetLastColumnWidth()
-        {
-            listViewStyles.Columns[listViewStyles.Columns.Count - 1].Width = -2;
-            listViewStorage.Columns[listViewStorage.Columns.Count - 1].Width = -2;
-        }
-
-        private void SubStationAlphaStyles_ResizeEnd(object sender, EventArgs e)
-        {
-            SetLastColumnWidth();
-            _backgroundImage?.Dispose();
-            _backgroundImage = null;
-            GeneratePreview();
             _lastFormWindowState = WindowState;
         }
 

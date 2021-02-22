@@ -200,6 +200,7 @@
             this.listViewStyles.UseCompatibleStateImageBehavior = false;
             this.listViewStyles.View = System.Windows.Forms.View.Details;
             this.listViewStyles.SelectedIndexChanged += new System.EventHandler(this.listViewStyles_SelectedIndexChanged);
+            this.listViewStyles.ClientSizeChanged += new System.EventHandler(this.listViewStyles_ClientSizeChanged);
             this.listViewStyles.Enter += new System.EventHandler(this.listViewStyles_Enter);
             this.listViewStyles.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listViewStyles_KeyDown);
             // 
@@ -1168,6 +1169,7 @@
             this.listViewStorage.UseCompatibleStateImageBehavior = false;
             this.listViewStorage.View = System.Windows.Forms.View.Details;
             this.listViewStorage.SelectedIndexChanged += new System.EventHandler(this.listViewStorage_SelectedIndexChanged);
+            this.listViewStorage.ClientSizeChanged += new System.EventHandler(this.listViewStorage_ClientSizeChanged);
             this.listViewStorage.Enter += new System.EventHandler(this.listViewStorage_Enter);
             this.listViewStorage.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listViewStorage_KeyDown);
             // 
