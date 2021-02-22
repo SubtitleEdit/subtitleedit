@@ -18,7 +18,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private readonly List<string> _imageExtensions = new List<string>
         {
             ".png",
-            ".gif",
             ".jpg" ,
             ".gif" ,
             ".bmp" ,
