@@ -194,7 +194,6 @@
             this.listViewStyles.FullRowSelect = true;
             this.listViewStyles.HideSelection = false;
             this.listViewStyles.Location = new System.Drawing.Point(6, 19);
-            this.listViewStyles.MultiSelect = false;
             this.listViewStyles.Name = "listViewStyles";
             this.listViewStyles.Size = new System.Drawing.Size(545, 201);
             this.listViewStyles.TabIndex = 0;
@@ -1163,7 +1162,6 @@
             this.listViewStorage.FullRowSelect = true;
             this.listViewStorage.HideSelection = false;
             this.listViewStorage.Location = new System.Drawing.Point(6, 68);
-            this.listViewStorage.MultiSelect = false;
             this.listViewStorage.Name = "listViewStorage";
             this.listViewStorage.Size = new System.Drawing.Size(545, 148);
             this.listViewStorage.TabIndex = 6;
