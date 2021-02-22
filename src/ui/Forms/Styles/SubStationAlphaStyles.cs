@@ -5,8 +5,10 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 
@@ -43,6 +45,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private AssaStorageCategory _currentCategory;
         private FormWindowState _lastFormWindowState = FormWindowState.Normal;
         private readonly Main _mainForm;
+        private readonly List<AssaAttachmentFont> _fontAttachments;
 
         private ListView ActiveListView => _fileStyleActive ? listViewStyles : listViewStorage;
 
@@ -82,6 +85,12 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 {
                     _currentFileStyles.Add(style);
                 }
+            }
+
+            _fontAttachments = new List<AssaAttachmentFont>();
+            if (subtitle.Footer != null)
+            {
+                GetFonts(subtitle.Footer.SplitToLines());
             }
 
             comboBoxFontName.Items.Clear();
@@ -249,7 +258,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             UiUtil.FixLargeFonts(this, buttonCancel);
 
             comboBoxFontName.Left = labelFontName.Left + labelFontName.Width + 5;
-            labelFontSize.Left = comboBoxFontName.Left + comboBoxFontName.Width + 20;
+            buttonPickAttachmentFont.Left = comboBoxFontName.Left + comboBoxFontName.Width + 3;
+            labelFontSize.Left = buttonPickAttachmentFont.Left + buttonPickAttachmentFont.Width + 17;
             numericUpDownFontSize.Left = labelFontSize.Left + labelFontSize.Width + 5;
 
             numericUpDownOutline.Left = radioButtonOutline.Left + radioButtonOutline.Width + 5;
@@ -258,6 +268,10 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             listViewStyles.Columns[5].Width = -2;
             checkBoxFontItalic.Left = checkBoxFontBold.Left + checkBoxFontBold.Width + 12;
             checkBoxFontUnderline.Left = checkBoxFontItalic.Left + checkBoxFontItalic.Width + 12;
+
+            buttonPickAttachmentFont.Visible = subtitle.Footer != null &&
+                                               subtitle.Footer.Contains("[Fonts]") &&
+                                               subtitle.Footer.Contains("fontname:");
         }
 
         public override string Header => GetFileHeader();
@@ -278,6 +292,92 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             var lines = text.SplitToLines();
             format.LoadSubtitle(sub, lines, string.Empty);
             _header = sub.Header;
+        }
+
+        private void GetFonts(List<string> lines)
+        {
+            bool attachmentOn = false;
+            var attachmentContent = new StringBuilder();
+            var attachmentFileName = string.Empty;
+            var category = string.Empty;
+            foreach (var line in lines)
+            {
+                var s = line.Trim();
+                if (attachmentOn)
+                {
+                    if (s == "[V4+ Styles]" || s == "[Events]")
+                    {
+                        SaveFontNames(attachmentFileName, attachmentContent.ToString(), category);
+                        attachmentOn = false;
+                        attachmentContent = new StringBuilder();
+                        attachmentFileName = string.Empty;
+                    }
+                    else if (s == string.Empty)
+                    {
+                        SaveFontNames(attachmentFileName, attachmentContent.ToString(), category);
+                        attachmentContent = new StringBuilder();
+                        attachmentFileName = string.Empty;
+                    }
+                    else if (s.StartsWith("filename:") || s.StartsWith("fontname:"))
+                    {
+                        SaveFontNames(attachmentFileName, attachmentContent.ToString(), category);
+                        attachmentContent = new StringBuilder();
+                        attachmentFileName = s.Remove(0, 9).Trim();
+                    }
+                    else
+                    {
+                        attachmentContent.AppendLine(s);
+                    }
+                }
+                else if (s == "[Fonts]" || s == "[Graphics]")
+                {
+                    category = s;
+                    attachmentOn = true;
+                    attachmentContent = new StringBuilder();
+                    attachmentFileName = string.Empty;
+                }
+            }
+
+            SaveFontNames(attachmentFileName, attachmentContent.ToString(), category);
+        }
+
+        private void SaveFontNames(string attachmentFileName, string attachmentContent, string category)
+        {
+            var content = attachmentContent.Trim();
+            if (string.IsNullOrEmpty(attachmentFileName) || content.Length == 0 || !attachmentFileName.ToLowerInvariant().EndsWith(".ttf"))
+            {
+                return;
+            }
+
+            var bytes = UUEncoding.UUDecode(content);
+            foreach (var fontName in GetFontNames(bytes))
+            {
+                _fontAttachments.Add(new AssaAttachmentFont { FileName = attachmentFileName, FontName = fontName, Bytes = bytes, Category = category, Content = content });
+            }
+        }
+
+        private List<string> GetFontNames(byte[] fontBytes)
+        {
+            var privateFontCollection = new PrivateFontCollection();
+            var handle = GCHandle.Alloc(fontBytes, GCHandleType.Pinned);
+            var pointer = handle.AddrOfPinnedObject();
+            try
+            {
+                privateFontCollection.AddMemoryFont(pointer, fontBytes.Length);
+            }
+            finally
+            {
+                handle.Free();
+            }
+
+            var resultList = new List<string>();
+            foreach (var font in privateFontCollection.Families)
+            {
+                resultList.Add(font.Name);
+            }
+
+            privateFontCollection.Dispose();
+            return resultList;
         }
 
         protected override void GeneratePreviewReal()
@@ -302,18 +402,59 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             var shadowWidth = (float)numericUpDownShadowWidth.Value;
             var outlineColor = _isSubStationAlpha ? panelBackColor.BackColor : panelOutlineColor.BackColor;
 
-            Font font;
+            Font font = null;
+            var privateFontCollection = new PrivateFontCollection();
             try
             {
-                font = new Font(comboBoxFontName.Text, (float)numericUpDownFontSize.Value * 1.1f, checkBoxFontBold.Checked ? FontStyle.Bold : FontStyle.Regular);
-                if (checkBoxFontItalic.Checked)
+                var fontName = comboBoxFontName.Text;
+
+                // try to load font from memory
+                var fontAttachment = _fontAttachments.FirstOrDefault(p => p.FontName == fontName);
+                if (fontAttachment != null)
                 {
-                    font = new Font(comboBoxFontName.Text, (float)numericUpDownFontSize.Value * 1.1f, font.Style | FontStyle.Italic);
+                    var handle = GCHandle.Alloc(fontAttachment.Bytes, GCHandleType.Pinned);
+                    var pointer = handle.AddrOfPinnedObject();
+                    try
+                    {
+                        privateFontCollection.AddMemoryFont(pointer, fontAttachment.Bytes.Length);
+                        var fontFamily = privateFontCollection.Families.FirstOrDefault();
+                        if (fontFamily != null)
+                        {
+                            font = new Font(fontFamily, (float)numericUpDownFontSize.Value * 1.1f, checkBoxFontBold.Checked ? FontStyle.Bold : FontStyle.Regular);
+                            if (checkBoxFontItalic.Checked)
+                            {
+                                font = new Font(fontFamily, (float)numericUpDownFontSize.Value * 1.1f, font.Style | FontStyle.Italic);
+                            }
+
+                            if (checkBoxFontUnderline.Checked)
+                            {
+                                font = new Font(fontFamily, (float)numericUpDownFontSize.Value * 1.1f, font.Style | FontStyle.Underline);
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        font = null;
+                    }
+                    finally
+                    {
+                        handle.Free();
+                    }
                 }
-                if (checkBoxFontUnderline.Checked)
+
+                if (font == null)
                 {
-                    font = new Font(comboBoxFontName.Text, (float)numericUpDownFontSize.Value * 1.1f, font.Style | FontStyle.Underline);
+                    font = new Font(fontName, (float)numericUpDownFontSize.Value * 1.1f, checkBoxFontBold.Checked ? FontStyle.Bold : FontStyle.Regular);
+                    if (checkBoxFontItalic.Checked)
+                    {
+                        font = new Font(fontName, (float)numericUpDownFontSize.Value * 1.1f, font.Style | FontStyle.Italic);
+                    }
+                    if (checkBoxFontUnderline.Checked)
+                    {
+                        font = new Font(fontName, (float)numericUpDownFontSize.Value * 1.1f, font.Style | FontStyle.Underline);
+                    }
                 }
+
             }
             catch
             {
@@ -384,6 +525,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             pictureBoxPreview.Image?.Dispose();
             pictureBoxPreview.Image = designedText;
             font.Dispose();
+            privateFontCollection.Dispose();
         }
 
         private void InitializeStylesListView()
@@ -493,7 +635,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
         }
 
-        private bool SetSsaStyle(string styleName, string propertyName, string propertyValue, bool trimStyles = true)
+        private bool SetSsaStyle(string styleName, string propertyName, string propertyValue)
         {
             var style = _fileStyleActive ? _currentFileStyles.FirstOrDefault(p => p.Name == styleName) : _currentCategory.Styles.FirstOrDefault(p => p.Name == styleName);
             if (style == null)
@@ -1094,7 +1236,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     bool found = SetSsaStyle(_oldSsaName, "name", textBoxStyleName.Text.RemoveChar(',').Trim());
                     if (!found)
                     {
-                        SetSsaStyle(_oldSsaName, "name", textBoxStyleName.Text.RemoveChar(',').Trim(), false);
+                        SetSsaStyle(_oldSsaName, "name", textBoxStyleName.Text.RemoveChar(',').Trim());
                     }
 
                     _oldSsaName = textBoxStyleName.Text.Trim();
@@ -1138,7 +1280,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             string askText = listViewStyles.SelectedItems.Count > 1 ?
                 string.Format(LanguageSettings.Current.Main.DeleteXLinesPrompt, listViewStyles.SelectedItems.Count) :
                 LanguageSettings.Current.Main.DeleteOneLinePrompt;
-            
+
             if (Configuration.Settings.General.PromptDeleteLines &&
                 MessageBox.Show(askText, string.Empty, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
             {
@@ -2291,6 +2433,17 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             LogNameChanges();
             _mainForm?.ApplyAssaStyles(this);
+        }
+
+        private void buttonPickAttachmentFont_Click(object sender, EventArgs e)
+        {
+            using (var form = new ChooseFontName(_fontAttachments))
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    comboBoxFontName.Text = form.FontName;
+                }
+            }
         }
     }
 }
