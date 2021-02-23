@@ -95,7 +95,15 @@ namespace Nikse.SubtitleEdit.Controls
             KeyDown += (sender, args) =>
             {
                 // fix annoying "beeps" when moving cursor position
-                if ((args.KeyData == Keys.Left || args.KeyData == Keys.PageUp) && SelectionStart == 0)
+                var startOfLineDirection = Keys.Left;
+                var endOfLineDirection = Keys.Right;
+                if (Configuration.Settings.General.RightToLeftMode)
+                {
+                    startOfLineDirection = Keys.Right;
+                    endOfLineDirection = Keys.Left;
+                }
+
+                if ((args.KeyData == startOfLineDirection || args.KeyData == Keys.PageUp) && SelectionStart == 0 && SelectionLength == 0)
                 {
                     args.SuppressKeyPress = true;
                 }
@@ -111,7 +119,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     args.SuppressKeyPress = true;
                 }
-                else if (args.KeyData == Keys.End && (SelectionStart >= Text.Length || SelectionStart + 1 < Text.Length && Text[SelectionStart] == '\n'))
+                else if (args.KeyData == Keys.End && (SelectionStart >= Text.Length || SelectionStart + 1 < Text.Length && Text[SelectionStart + 1] == '\n'))
                 {
                     args.SuppressKeyPress = true;
                 }
@@ -119,7 +127,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     args.SuppressKeyPress = true;
                 }
-                else if (args.KeyData == Keys.Right && SelectionStart >= Text.Length)
+                else if (args.KeyData == endOfLineDirection && SelectionStart >= Text.Length)
                 {
                     if (IsLiveSpellCheckEnabled)
                     {
