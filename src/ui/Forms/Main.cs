@@ -14335,6 +14335,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
+            else if (e.KeyData == _shortcuts.MainToggleVideoControls)
+            {
+                ToggleVideoControlsOnOff();
+                e.SuppressKeyPress = true;
+            }
             else if (e.KeyData == _shortcuts.VideoPlayFirstSelected && !string.IsNullOrEmpty(VideoFileName))
             {
                 PlayFirstSelectedSubtitle();
@@ -15915,6 +15920,26 @@ namespace Nikse.SubtitleEdit.Forms
                 e.SuppressKeyPress = true;
             }
             // put new entries above tabs
+        }
+
+        private void ToggleVideoControlsOnOff()
+        {
+            if (!_isVideoControlsUndocked)
+            {
+                tabControlModes.Visible = !tabControlModes.Visible;
+                var left = 5;
+                if (tabControlModes.Visible)
+                {
+                    left = tabControlModes.Width + 10;
+                }
+
+                audioVisualizer.Left = left;
+                audioVisualizer.Width = groupBoxVideo.Width - (audioVisualizer.Left + 10);
+                checkBoxSyncListViewWithVideoWhilePlaying.Left = left;
+                panelWaveformControls.Left = left;
+                trackBarWaveformPosition.Left = left + panelWaveformControls.Width;
+                trackBarWaveformPosition.Width = audioVisualizer.Left + audioVisualizer.Width - trackBarWaveformPosition.Left + 5;
+            }
         }
 
         private void SetStartAndEndOfPrevious(double positionInSeconds, bool goToNext)
