@@ -800,21 +800,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             return sb.ToString();
         }
 
-        private string GetStorageHeader()
-        {
-            var styles = string.Empty;
-            foreach (var currentCategoryStyle in _currentCategory.Styles)
-            {
-                styles += currentCategoryStyle.ToRawAss();
-                if (_currentCategory.Styles.IndexOf(currentCategoryStyle) != _currentCategory.Styles.Count - 1)
-                {
-                    styles += Environment.NewLine;
-                }
-            }
-
-            return string.Format(AdvancedSubStationAlpha.HeaderNoStyles, string.Empty, styles);
-        }
-
         private void AddDefaultStyleToStorage()
         {
             var defaultStyle = new SsaStyle();
@@ -1721,7 +1706,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 return;
             }
 
-            using (var form = new SubStationAlphaStylesExport(_header, _isSubStationAlpha, _format))
+            using (var form = new SubStationAlphaStylesExport(_currentFileStyles, _isSubStationAlpha, _format))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
@@ -2005,7 +1990,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 return;
             }
 
-            using (var form = new SubStationAlphaStylesExport(GetStorageHeader(), _isSubStationAlpha, _format))
+            using (var form = new SubStationAlphaStylesExport(_currentCategory.Styles, _isSubStationAlpha, _format))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
