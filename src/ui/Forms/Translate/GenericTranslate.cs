@@ -572,11 +572,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
         private void GenericTranslate_FormClosing(object sender, FormClosingEventArgs e)
         {
             Configuration.Settings.Tools.TranslateLastService = _translationService.GetType().ToString();
-
-            if (comboBoxParagraphHandling.SelectedIndex >= 0)
-            {
-                Configuration.Settings.Tools.TranslateMergeStrategy = comboBoxParagraphHandling.Text;
-            }
+            Configuration.Settings.Tools.TranslateMergeStrategy = comboBoxParagraphHandling.Text;
         }
 
         private void comboBoxTranslationServices_SelectedIndexChanged(object sender, EventArgs e)
