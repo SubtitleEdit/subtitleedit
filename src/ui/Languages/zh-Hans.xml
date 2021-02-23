@@ -60,6 +60,7 @@
     <OpenOriginalSubtitleFile>打开原始字幕文件...</OpenOriginalSubtitleFile>
     <PleaseWait>请稍候...</PleaseWait>
     <SessionKey>会话密钥</SessionKey>
+    <SessionKeyGenerate>生成新密钥</SessionKeyGenerate>
     <UserName>用户名</UserName>
     <UserNameAlreadyInUse>用户名已被使用</UserNameAlreadyInUse>
     <WebServiceUrl>Web 服务网址</WebServiceUrl>
@@ -159,6 +160,17 @@ Command line: {1} {2}
     <FixesAvailable>可用修复: {0}</FixesAvailable>
     <UnableToFix>无法修复 {0}</UnableToFix>
   </ApplyDurationLimits>
+  <AssaAttachments>
+    <Title>Advanced Sub Station Alpha字幕附件</Title>
+    <AttachFont>附加字体</AttachFont>
+    <AttachGraphics>附加图形</AttachGraphics>
+    <Graphics>图形</Graphics>
+    <Font>字体</Font>
+    <ImageName>图像名 ({0}x{1}):</ImageName>
+    <IconName>图标名:</IconName>
+    <FontName>字体名:</FontName>
+    <ImageResized>调整图像大小以适合当前窗口</ImageResized>
+  </AssaAttachments>
   <AudioToText>
     <Title>音频转文字</Title>
     <ExtractingAudioUsingX>使用{0}提取音频...</ExtractingAudioUsingX>
@@ -1327,6 +1339,7 @@ Command line: {1} {2}
     <SaveChangesToOriginalX>保存更改到原始 "{0}" 吗？</SaveChangesToOriginalX>
     <SaveSubtitleAs>字幕另存为...</SaveSubtitleAs>
     <SaveOriginalSubtitleAs>原始字幕另存为...</SaveOriginalSubtitleAs>
+    <CannotSaveEmptySubtitle>无法保存空字幕</CannotSaveEmptySubtitle>
     <NoSubtitleLoaded>尚未加载字幕</NoSubtitleLoaded>
     <VisualSyncSelectedLines>影音对照同步 - 所选行</VisualSyncSelectedLines>
     <VisualSyncTitle>影音对照同步</VisualSyncTitle>
@@ -1748,6 +1761,7 @@ Command line: {1} {2}
     <DurationLessThan>时长小于</DurationLessThan>
     <DurationGreaterThan>时长大于</DurationGreaterThan>
     <MoreThanTwoLines>超过两行</MoreThanTwoLines>
+    <Bookmarked>已收藏</Bookmarked>
   </ModifySelection>
   <MultipleReplace>
     <Title>多项替换</Title>
@@ -1941,6 +1955,7 @@ Command line: {1} {2}
     <TogglePreviewOnVideo>切换视频预览</TogglePreviewOnVideo>
     <Help>帮助</Help>
     <FontInUi>用户界面字体</FontInUi>
+    <Appearance>外观</Appearance>
     <ShowFrameRate>在工具栏显示帧率</ShowFrameRate>
     <DefaultFrameRate>默认帧率</DefaultFrameRate>
     <DefaultFileEncoding>默认文件编码</DefaultFileEncoding>
@@ -2125,6 +2140,7 @@ Command line: {1} {2}
     <AssaColor>ASSA配色</AssaColor>
     <DarkTheme>暗色主题</DarkTheme>
     <DarkThemeEnabled>使用暗色主题</DarkThemeEnabled>
+    <DarkThemeShowGridViewLines>显示列表视图网格线</DarkThemeShowGridViewLines>
     <UpdateShortcut>更新</UpdateShortcut>
     <FoucsSetVideoPosition>将焦点处设为视频位置</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>切换 停靠/不停靠 视频控件</ToggleDockUndockOfVideoControls>
@@ -2575,7 +2591,14 @@ Command line: {1} {2}
     <AddToFile>添加到文件</AddToFile>
     <AddToStorage>添加到样式库</AddToStorage>
     <StyleStorage>样式库</StyleStorage>
+    <StyleCurrentFile>当前文件中的样式</StyleCurrentFile>
     <OverwriteX>确定要覆盖{0}吗?</OverwriteX>
+    <Category>类别</Category>
+    <NewCategory>新建类别</NewCategory>
+    <CategoryName>类别名</CategoryName>
+    <CategorySetDefault>设为默认</CategorySetDefault>
+    <CategoryNote>注意：“默认”样式将应用于新的ASSA文件</CategoryNote>
+    <CategoryDelete>确定要删除此类别吗？</CategoryDelete>
   </SubStationAlphaStyles>
   <PointSync>
     <Title>取点同步</Title>
