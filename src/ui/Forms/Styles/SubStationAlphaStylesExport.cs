@@ -5,6 +5,7 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
@@ -12,25 +13,24 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 {
     public sealed partial class SubStationAlphaStylesExport : Form
     {
-        private readonly string _header;
+        private readonly List<SsaStyle> _stylesToExport;
         private readonly bool _isSubStationAlpha;
         private readonly SubtitleFormat _format;
         public List<string> ExportedStyles { get; set; }
 
-        public SubStationAlphaStylesExport(string header, bool isSubStationAlpha, SubtitleFormat format)
+        public SubStationAlphaStylesExport(List<SsaStyle> stylesToExport, bool isSubStationAlpha, SubtitleFormat format)
         {
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            _header = header;
+            _stylesToExport = stylesToExport;
             _isSubStationAlpha = isSubStationAlpha;
             _format = format;
-            var styles = AdvancedSubStationAlpha.GetStylesFromHeader(_header);
 
             listViewExportStyles.Columns[0].Width = listViewExportStyles.Width - 20;
-            foreach (var style in styles)
+            foreach (var style in stylesToExport)
             {
-                listViewExportStyles.Items.Add(new ListViewItem(style) { Checked = true });
+                listViewExportStyles.Items.Add(new ListViewItem(style.Name) { Checked = true });
             }
 
             Text = LanguageSettings.Current.SubStationAlphaStyles.Export;
@@ -106,7 +106,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                                 done = true;
                                 foreach (var styleName in ExportedStyles)
                                 {
-                                    SsaStyle style = AdvancedSubStationAlpha.GetSsaStyle(styleName, _header);
+                                    SsaStyle style = _stylesToExport.Single(styleItem => styleItem.Name == styleName);
                                     if (_isSubStationAlpha)
                                     {
                                         sb.AppendLine(style.ToRawSsa(styleFormat));
@@ -144,54 +144,15 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 else
                 {
                     var sb = new StringBuilder();
-                    foreach (var line in _header.Replace(Environment.NewLine, "\n").Split('\n'))
+                    foreach (var styleName in ExportedStyles)
                     {
-                        if (line.StartsWith("style:", StringComparison.OrdinalIgnoreCase))
-                        {
-                            foreach (var styleName in ExportedStyles)
-                            {
-                                var toLower = line.Trim().ToLowerInvariant();
-                                while (toLower.Contains(": "))
-                                {
-                                    toLower = toLower.Replace(": ", ":");
-                                }
+                        var style = _stylesToExport.Single(styleItem => styleItem.Name == styleName);
+                        sb.Append(style.ToRawAss());
+                        sb.Append(Environment.NewLine);
+                    }
 
-                                while (toLower.Contains(" :"))
-                                {
-                                    toLower = toLower.Replace(" :", ":");
-                                }
-
-                                if (toLower.StartsWith("style:" + styleName.ToLowerInvariant().Trim() + ",", StringComparison.Ordinal))
-                                {
-                                    sb.AppendLine(line);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            sb.AppendLine(line);
-                        }
-                    }
-                    string content = sb.ToString();
-                    if (content.TrimEnd().EndsWith("[Events]", StringComparison.Ordinal))
-                    {
-                        content = content.Trim() + Environment.NewLine +
-                                  "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text" + Environment.NewLine +
-                                  "Dialogue: 0,0:00:31.91,0:00:33.91,Default,,0,0,0,,My Styles :)";
-                    }
-                    else if (content.TrimEnd().EndsWith("Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text", StringComparison.Ordinal))
-                    {
-                        content = content.Trim() + Environment.NewLine +
-                                  "Dialogue: 0,0:00:31.91,0:00:33.91,Default,,0,0,0,,My Styles :)";
-                    }
-                    else if (!content.Contains("[Events]", StringComparison.OrdinalIgnoreCase))
-                    {
-                        content = content.Trim() + Environment.NewLine +
-                            Environment.NewLine +
-                            "[Events]" + Environment.NewLine +
-                            "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text" + Environment.NewLine +
-                            "Dialogue: 0,0:00:31.91,0:00:33.91,Default,,0,0,0,,My Styles :)";
-                    }
+                    string content = string.Format(AdvancedSubStationAlpha.HeaderNoStyles, "Subtitle Edit styles file", sb.ToString().Trim());
+                    content = content.Trim() + Environment.NewLine + "Dialogue: 0,0:00:31.91,0:00:33.91,Default,,0,0,0,,My Styles :)";
                     File.WriteAllText(saveFileDialogStyle.FileName, content, Encoding.UTF8);
                     DialogResult = DialogResult.OK;
                 }
