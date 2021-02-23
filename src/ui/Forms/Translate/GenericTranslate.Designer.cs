@@ -1,6 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Controls;
 
-namespace Nikse.SubtitleEdit.Forms
+namespace Nikse.SubtitleEdit.Forms.Translate
 {
     sealed partial class GenericTranslate
     {
@@ -197,7 +197,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxTranslationServices.FormattingEnabled = true;
             this.comboBoxTranslationServices.Location = new System.Drawing.Point(84, 36);
             this.comboBoxTranslationServices.Name = "comboBoxTranslationServices";
-            this.comboBoxTranslationServices.Size = new System.Drawing.Size(142, 21);
+            this.comboBoxTranslationServices.Size = new System.Drawing.Size(152, 21);
             this.comboBoxTranslationServices.TabIndex = 13;
             this.comboBoxTranslationServices.SelectedIndexChanged += new System.EventHandler(this.comboBoxTranslationServices_SelectedIndexChanged);
             // 
