@@ -1849,6 +1849,7 @@ $HorzAlign          =   Center
         public string MainEditFixRTLViaUnicodeChars { get; set; }
         public string MainEditRemoveRTLUnicodeChars { get; set; }
         public string MainEditReverseStartAndEndingForRTL { get; set; }
+        public string MainToggleVideoControls { get; set; }
         public string MainEditToggleTranslationOriginalInPreviews { get; set; }
         public string MainEditInverseSelection { get; set; }
         public string MainEditModifySelection { get; set; }
@@ -7310,6 +7311,12 @@ $HorzAlign          =   Center
                     shortcuts.MainEditReverseStartAndEndingForRTL = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainToggleVideoControls");
+                if (subNode != null)
+                {
+                    shortcuts.MainToggleVideoControls = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainTextBoxItalic");
                 if (subNode != null)
                 {
@@ -8848,6 +8855,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainEditFixRTLViaUnicodeChars", shortcuts.MainEditFixRTLViaUnicodeChars);
             textWriter.WriteElementString("MainEditRemoveRTLUnicodeChars", shortcuts.MainEditRemoveRTLUnicodeChars);
             textWriter.WriteElementString("MainEditReverseStartAndEndingForRTL", shortcuts.MainEditReverseStartAndEndingForRTL);
+            textWriter.WriteElementString("MainToggleVideoControls", shortcuts.MainToggleVideoControls);
             textWriter.WriteElementString("MainTextBoxItalic", shortcuts.MainTextBoxItalic);
             textWriter.WriteElementString("MainTextBoxSplitAtCursor", shortcuts.MainTextBoxSplitAtCursor);
             textWriter.WriteElementString("MainTextBoxSplitAtCursorAndVideoPos", shortcuts.MainTextBoxSplitAtCursorAndVideoPos);

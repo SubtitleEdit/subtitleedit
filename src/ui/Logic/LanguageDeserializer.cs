@@ -6229,6 +6229,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/VideoResetSpeedAndZoom":
                     language.Settings.VideoResetSpeedAndZoom = reader.Value;
                     break;
+                case "Settings/MainToggleVideoControls":
+                    language.Settings.MainToggleVideoControls = reader.Value;
+                    break;
                 case "Settings/CustomSearch1":
                     language.Settings.CustomSearch1 = reader.Value;
                     break;
