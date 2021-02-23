@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Translate;
 using Nikse.SubtitleEdit.Core.Translate.Service;
+using Nikse.SubtitleEdit.Forms.Translate;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
@@ -13,8 +14,8 @@ namespace Nikse.SubtitleEdit.Forms
     {
         public string TranslatedText { get; set; }
 
-        private  GoogleTranslationService _googleTranslationService;
-        private  MicrosoftTranslationService _microsoftTranslationService;
+        private GoogleTranslationService _googleTranslationService;
+        private MicrosoftTranslationService _microsoftTranslationService;
         private string _toLanguage;
         private string _fromLanguage;
 
@@ -38,7 +39,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonGoogle.Text = string.Empty;
             buttonMicrosoft.Text = string.Empty;
         }
-        
+
         private void InitLanguageComboboxes()
         {
             var googleSourceLanguages = new List<TranslationPair>();

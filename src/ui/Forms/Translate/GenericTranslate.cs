@@ -13,7 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Nikse.SubtitleEdit.Forms
+namespace Nikse.SubtitleEdit.Forms.Translate
 {
     public sealed partial class GenericTranslate : PositionAndSizeForm
     {
@@ -120,7 +120,20 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (comboBoxParagraphHandling.Items.Count > 0)
             {
-                comboBoxParagraphHandling.SelectedIndex = 0;
+                for (var index = 0; index < comboBoxParagraphHandling.Items.Count; index++)
+                {
+                    var item = comboBoxParagraphHandling.Items[index].ToString();
+                    if (item == Configuration.Settings.Tools.TranslateMergeStrategy)
+                    {
+                        comboBoxParagraphHandling.SelectedIndex = index;
+                        break;
+                    }
+                }
+
+                if (comboBoxParagraphHandling.SelectedIndex == -1)
+                {
+                    comboBoxParagraphHandling.SelectedIndex = 0;
+                }
             }
         }
 
@@ -559,6 +572,11 @@ namespace Nikse.SubtitleEdit.Forms
         private void GenericTranslate_FormClosing(object sender, FormClosingEventArgs e)
         {
             Configuration.Settings.Tools.TranslateLastService = _translationService.GetType().ToString();
+
+            if (comboBoxParagraphHandling.SelectedIndex >= 0)
+            {
+                Configuration.Settings.Tools.TranslateMergeStrategy = comboBoxParagraphHandling.Text;
+            }
         }
 
         private void comboBoxTranslationServices_SelectedIndexChanged(object sender, EventArgs e)

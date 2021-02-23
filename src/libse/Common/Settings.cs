@@ -143,6 +143,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string GoogleTranslateLastTargetLanguage { get; set; }
         public bool TranslateAllowSplit { get; set; }
         public string TranslateLastService { get; set; }
+        public string TranslateMergeStrategy { get; set; }
         public string TranslateViaCopyPasteSeparator { get; set; }
         public int TranslateViaCopyPasteMaxSize { get; set; }
         public bool TranslateViaCopyPasteAutoCopyToClipboard { get; set; }
@@ -3838,6 +3839,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.TranslateLastService = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("TranslateMergeStrategy");
+            if (subNode != null)
+            {
+                settings.Tools.TranslateMergeStrategy = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("TranslateViaCopyPasteSeparator");
@@ -8181,6 +8188,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("GoogleTranslateLastTargetLanguage", settings.Tools.GoogleTranslateLastTargetLanguage);
                 textWriter.WriteElementString("TranslateAllowSplit", settings.Tools.TranslateAllowSplit.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("TranslateLastService", settings.Tools.TranslateLastService);
+                textWriter.WriteElementString("TranslateMergeStrategy", settings.Tools.TranslateMergeStrategy);
                 textWriter.WriteElementString("TranslateViaCopyPasteSeparator", settings.Tools.TranslateViaCopyPasteSeparator);
                 textWriter.WriteElementString("TranslateViaCopyPasteMaxSize", settings.Tools.TranslateViaCopyPasteMaxSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("TranslateViaCopyPasteAutoCopyToClipboard", settings.Tools.TranslateViaCopyPasteAutoCopyToClipboard.ToString(CultureInfo.InvariantCulture));
