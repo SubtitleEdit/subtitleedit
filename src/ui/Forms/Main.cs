@@ -11443,7 +11443,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     textBoxListViewTextOriginal.Enabled = true;
-                    textBoxListViewTextOriginal.BackColor = textBoxListViewText.Focused ? SystemColors.Highlight : SystemColors.WindowFrame;
+                    textBoxListViewTextOriginal.BackColor = textBoxListViewTextOriginal.Focused ? SystemColors.Highlight : SystemColors.WindowFrame;
                     textBoxListViewTextOriginal.TextChanged -= TextBoxListViewTextOriginalTextChanged;
                     textBoxListViewTextOriginal.Text = original.Text;
                     textBoxListViewTextOriginal.TextChanged += TextBoxListViewTextOriginalTextChanged;
