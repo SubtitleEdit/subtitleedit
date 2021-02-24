@@ -15924,22 +15924,27 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToggleVideoControlsOnOff()
         {
-            if (!_isVideoControlsUndocked)
+            if (_isVideoControlsUndocked)
             {
-                tabControlModes.Visible = !tabControlModes.Visible;
-                var left = 5;
-                if (tabControlModes.Visible)
-                {
-                    left = tabControlModes.Width + 10;
-                }
-
-                audioVisualizer.Left = left;
-                audioVisualizer.Width = groupBoxVideo.Width - (audioVisualizer.Left + 10);
-                checkBoxSyncListViewWithVideoWhilePlaying.Left = left;
-                panelWaveformControls.Left = left;
-                trackBarWaveformPosition.Left = left + panelWaveformControls.Width;
-                trackBarWaveformPosition.Width = audioVisualizer.Left + audioVisualizer.Width - trackBarWaveformPosition.Left + 5;
+                return;
             }
+
+            groupBoxVideo.SuspendLayout();
+            tabControlModes.Visible = !tabControlModes.Visible;
+            var left = 5;
+            if (tabControlModes.Visible)
+            {
+                left = tabControlModes.Width + 10;
+            }
+
+            audioVisualizer.Left = left;
+            audioVisualizer.Width = groupBoxVideo.Width - (audioVisualizer.Left + 10);
+            checkBoxSyncListViewWithVideoWhilePlaying.Left = left;
+            panelWaveformControls.Left = left;
+            trackBarWaveformPosition.Left = left + panelWaveformControls.Width;
+            trackBarWaveformPosition.Width = audioVisualizer.Left + audioVisualizer.Width - trackBarWaveformPosition.Left + 5;
+            groupBoxVideo.ResumeLayout();
+            audioVisualizer.Invalidate();
         }
 
         private void SetStartAndEndOfPrevious(double positionInSeconds, bool goToNext)
