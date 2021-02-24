@@ -15174,7 +15174,15 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.MainVideoFoucsSetVideoPosition)
             {
-                timeUpDownVideoPositionAdjust.Focus();
+                if (tabControlModes.SelectedTab == tabPageAdjust)
+                {
+                    timeUpDownVideoPositionAdjust.Focus();
+                }
+                else if (tabControlModes.SelectedTab == tabPageCreate)
+                {
+                    timeUpDownVideoPosition.Focus();
+                }
+
                 e.SuppressKeyPress = true;
             }
             else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video1FrameLeft)
