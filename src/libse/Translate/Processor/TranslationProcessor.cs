@@ -54,10 +54,11 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
 
         protected abstract IEnumerable<TTranslationBaseUnit> ConstructTranslationBaseUnits(List<Paragraph> sourceParagraphs);
 
+        //TODO: Should not use "Number"... should use "Index" or "Id" or similar instead
         protected abstract Dictionary<int, string> GetTargetParagraphs(List<TTranslationBaseUnit> sourceTranslationUnits, List<string> targetTexts);
 
         protected abstract string GetName();
-        
+
         public string TranslatedName { get; set; }
 
         public override string ToString()
@@ -67,16 +68,19 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
 
         public List<string> Translate(ITranslationService translationService, string sourceLanguageIsoCode, string targetLanguageIsoCode, List<Paragraph> sourceParagraphs, TranslationProcessCancelStatus processCancelStatus)
         {
-            IEnumerable<TTranslationBaseUnit> translationBaseUnits = ConstructTranslationBaseUnits(sourceParagraphs);
+            //remove empty paragraphs
+            sourceParagraphs = sourceParagraphs.Where(p => !string.IsNullOrWhiteSpace(p.Text)).ToList();
+
+            var translationBaseUnits = ConstructTranslationBaseUnits(sourceParagraphs);
             var translationChunks = BuildTranslationChunks(translationBaseUnits, translationService);
 
-            Dictionary<int, string> targetParagraphs = new Dictionary<int, string>();
+            var targetParagraphs = new Dictionary<int, string>();
 
-            foreach (TranslationChunk translationChunk in translationChunks)
+            foreach (var translationChunk in translationChunks)
             {
-                List<string> result = translationService.Translate(sourceLanguageIsoCode, targetLanguageIsoCode, translationChunk.TranslationUnits.ConvertAll(x => new Paragraph() { Text = x.Text }));
-                Dictionary<int, string> newTargetParagraphs = GetTargetParagraphs(translationChunk.TranslationUnits, result);
-                foreach (KeyValuePair<int, string> newTargetParagraph in newTargetParagraphs)
+                var result = translationService.Translate(sourceLanguageIsoCode, targetLanguageIsoCode, translationChunk.TranslationUnits.ConvertAll(x => new Paragraph() { Text = x.Text }));
+                var newTargetParagraphs = GetTargetParagraphs(translationChunk.TranslationUnits, result);
+                foreach (var newTargetParagraph in newTargetParagraphs)
                 {
                     targetParagraphs[newTargetParagraph.Key] = newTargetParagraph.Value;
                 }
