@@ -65,6 +65,9 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 Text = title;
             }
 
+            // required in translation engine atm
+            subtitle.Renumber();
+
             labelPleaseWait.Visible = false;
             progressBar1.Visible = false;
             _subtitle = subtitle;
