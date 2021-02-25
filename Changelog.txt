@@ -3,18 +3,23 @@
 3.6.1 (xth May 2021) BETA
 * NEW:
    * ASSA attachments manager - thx LeonCheung
-   * Add Categories for ASSA styles - thx ChocOranger/OmrSi
+   * Add Categories in ASSA style manager - thx ChocOranger/OmrSi
    * Auto load ASSA styles for new files - thx z3us/OmrSi
-   * Add "Apply" button for ASSA styles - thx LeonCheung
+   * Add support for attached fonts in ASSA style manager
+   * Add "Apply" button in ASSA style manager - thx LeonCheung
    * Add bookmarked to modify selection - thx moob158/OmrSi
 * IMPROVED:
    * Update Polish translation - thx admas
    * Update Bulgarian translation - thx Калин
+   * Update Chinese translation - thx nkh0472
    * Minor tweaks for font/appearance settings
    * Only set listview backcolor if visual styles enabled - thx ask2018/OmrSi
+   * Optimize merge lines with same text/time
 * FIXED:
    * Fix show (correct) EBU properties for current file - thx Emilien
    * Fix non-ASCII chars when enc 20269 is unavailable (Linux) - thx jason
+   * Fix a few crashes in translation engine - thx howblast
+   * Fix a crash in RTL when activating syntax coloring - thx OmrSi
 
 
 3.6.0 (18th February 2021)
