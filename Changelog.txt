@@ -15,6 +15,9 @@
    * Minor tweaks for font/appearance settings
    * Only set listview backcolor if visual styles enabled - thx ask2018/OmrSi
    * Optimize merge lines with same text/time
+   * Minor update of icon/install image - thx LeonCheung
+   * Save translate merge options - thx chorong761
+   * Allow multiple selection in Assa style manager - thx OmrSi
 * FIXED:
    * Fix show (correct) EBU properties for current file - thx Emilien
    * Fix non-ASCII chars when enc 20269 is unavailable (Linux) - thx jason
