@@ -2263,6 +2263,7 @@ Command line: {1} {2}
     <PlayRateSlower>减慢播放速度</PlayRateSlower>
     <PlayRateFaster>加快播放速度</PlayRateFaster>
     <VideoResetSpeedAndZoom>重置速度/缩放</VideoResetSpeedAndZoom>
+    <MainToggleVideoControls>切换视频控件</MainToggleVideoControls>
     <CustomSearch1>翻译、自定义搜索 1</CustomSearch1>
     <CustomSearch2>翻译、自定义搜索 2</CustomSearch2>
     <CustomSearch3>翻译、自定义搜索 3</CustomSearch3>
