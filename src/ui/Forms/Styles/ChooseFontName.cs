@@ -69,6 +69,10 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 DialogResult = DialogResult.Cancel;
             }
+            else if (e.KeyCode == Keys.Enter)
+            {
+                buttonOK_Click(null, null);
+            }
         }
     }
 }
