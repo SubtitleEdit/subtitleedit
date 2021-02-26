@@ -195,7 +195,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             // 
             this.comboBoxTranslationServices.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxTranslationServices.FormattingEnabled = true;
-            this.comboBoxTranslationServices.Location = new System.Drawing.Point(84, 36);
+            this.comboBoxTranslationServices.Location = new System.Drawing.Point(84, 34);
             this.comboBoxTranslationServices.Name = "comboBoxTranslationServices";
             this.comboBoxTranslationServices.Size = new System.Drawing.Size(152, 21);
             this.comboBoxTranslationServices.TabIndex = 13;
