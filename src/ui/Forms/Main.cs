@@ -16143,19 +16143,16 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (SubtitleListview1.SelectedItems.Count == 1)
             {
-                var historyAdded = false;
                 var idx = SubtitleListview1.SelectedItems[0].Index;
                 var p = _subtitle.Paragraphs[idx];
                 var previous = _subtitle.GetParagraphOrDefault(idx - 1);
-                if (previous != null)
+                if (previous is null)
                 {
-                    if (!historyAdded)
-                    {
-                        MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustExtendPreviousLineEndToCurrentStart));
-                        historyAdded = true;
-                    }
-                    previous.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds - MinGapBetweenLines;
+                    return;
                 }
+
+                MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustExtendPreviousLineEndToCurrentStart));
+                previous.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds - MinGapBetweenLines;
 
                 if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
                 {
@@ -16165,18 +16162,13 @@ namespace Nikse.SubtitleEdit.Forms
                         var originalPrevious = _subtitleOriginal.GetParagraphOrDefault(_subtitleOriginal.GetIndex(original) - 1);
                         if (originalPrevious != null)
                         {
-                            if (!historyAdded)
-                            {
-                                MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustExtendPreviousLineEndToCurrentStart));
-                                historyAdded = true;
-                            }
-
                             originalPrevious.EndTime.TotalMilliseconds = original.StartTime.TotalMilliseconds - MinGapBetweenLines;
                         }
                     }
                 }
 
-                SubtitleListview1.SetStartTimeAndDuration(idx - 1, previous, _subtitle.GetParagraphOrDefault(idx), _subtitle.GetParagraphOrDefault(idx - 2));
+                SubtitleListview1.SetStartTimeAndDuration(idx - 1, previous, p, _subtitle.GetParagraphOrDefault(idx - 2));
+                SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, idx - 1, previous);
             }
         }
 
@@ -16184,19 +16176,16 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (SubtitleListview1.SelectedItems.Count == 1)
             {
-                var historyAdded = false;
                 var idx = SubtitleListview1.SelectedItems[0].Index;
                 var p = _subtitle.Paragraphs[idx];
                 var next = _subtitle.GetParagraphOrDefault(idx + 1);
-                if (next != null)
+                if (next is null)
                 {
-                    if (!historyAdded)
-                    {
-                        MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustExtendNextLineStartToCurrentEnd));
-                        historyAdded = true;
-                    }
-                    next.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds + MinGapBetweenLines;
+                    return;
                 }
+
+                MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustExtendNextLineStartToCurrentEnd));
+                next.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds + MinGapBetweenLines;
 
                 if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
                 {
@@ -16206,18 +16195,13 @@ namespace Nikse.SubtitleEdit.Forms
                         var originalNext = _subtitleOriginal.GetParagraphOrDefault(_subtitleOriginal.GetIndex(original) + 1);
                         if (originalNext != null)
                         {
-                            if (!historyAdded)
-                            {
-                                MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustExtendNextLineStartToCurrentEnd));
-                                historyAdded = true;
-                            }
-
                             originalNext.StartTime.TotalMilliseconds = original.EndTime.TotalMilliseconds + MinGapBetweenLines;
                         }
                     }
                 }
 
-                SubtitleListview1.SetStartTimeAndDuration(idx + 1, next, _subtitle.GetParagraphOrDefault(idx + 2), _subtitle.GetParagraphOrDefault(idx));
+                SubtitleListview1.SetStartTimeAndDuration(idx + 1, next, _subtitle.GetParagraphOrDefault(idx + 2), p);
+                SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, idx + 1, next);
             }
         }
 
@@ -17020,6 +17004,7 @@ namespace Nikse.SubtitleEdit.Forms
                         original.EndTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds;
                     }
                 }
+
                 SubtitleListview1.SetStartTimeAndDuration(i - 1, prev, p, _subtitle.GetParagraphOrDefault(i - 2));
             }
 
@@ -17124,6 +17109,7 @@ namespace Nikse.SubtitleEdit.Forms
                         original.StartTime.TotalMilliseconds = next.StartTime.TotalMilliseconds;
                     }
                 }
+
                 SubtitleListview1.SetStartTimeAndDuration(i + 1, next, _subtitle.GetParagraphOrDefault(i + 2), p);
             }
 
