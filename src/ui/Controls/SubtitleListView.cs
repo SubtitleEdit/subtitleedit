@@ -406,12 +406,7 @@ namespace Nikse.SubtitleEdit.Controls
             _setLastColumnWidthTimer.Stop();
             if (Columns.Count > 0)
             {
-                int width = 0;
-                for (int i = 0; i < Columns.Count - 1; i++)
-                {
-                    width += Columns[i].Width;
-                }
-                Columns[Columns.Count - 1].Width = ClientSize.Width - width;
+                Columns[Columns.Count - 1].Width = -2;
             }
         }
 
