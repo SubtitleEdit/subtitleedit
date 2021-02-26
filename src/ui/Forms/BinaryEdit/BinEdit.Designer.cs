@@ -121,7 +121,12 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.timerSubtitleOnVideo = new System.Windows.Forms.Timer(this.components);
             this.labelVideoInfo = new System.Windows.Forms.Label();
-            this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
+            this.subtitleListView1 = new System.Windows.Forms.ListView();
+            this.columnHeaderForced = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderNumber = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderStart = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderDuration = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderText = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBoxCurrent.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).BeginInit();
@@ -506,7 +511,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.toggleforcedForSelectedLinesToolStripMenuItem.Name = "toggleforcedForSelectedLinesToolStripMenuItem";
             this.toggleforcedForSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(376, 22);
             this.toggleforcedForSelectedLinesToolStripMenuItem.Text = "Toggle \"forced\" for selected lines";
-            this.toggleforcedForSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.toggleforcedForSelectedLinesToolStripMenuItem_Click);
+            this.toggleforcedForSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.toggleForcedForSelectedLinesToolStripMenuItem_Click);
             // 
             // selectOnlyForcedLinesToolStripMenuItem
             // 
@@ -945,43 +950,59 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             // 
             // subtitleListView1
             // 
-            this.subtitleListView1.AllowColumnReorder = true;
             this.subtitleListView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.subtitleListView1.CheckBoxes = true;
+            this.subtitleListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeaderForced,
+            this.columnHeaderNumber,
+            this.columnHeaderStart,
+            this.columnHeaderDuration,
+            this.columnHeaderText});
             this.subtitleListView1.ContextMenuStrip = this.contextMenuStripListView;
-            this.subtitleListView1.FirstVisibleIndex = -1;
-            this.subtitleListView1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.subtitleListView1.FullRowSelect = true;
             this.subtitleListView1.GridLines = true;
             this.subtitleListView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.subtitleListView1.HideSelection = false;
-            this.subtitleListView1.Location = new System.Drawing.Point(12, 27);
+            this.subtitleListView1.Location = new System.Drawing.Point(13, 28);
             this.subtitleListView1.Name = "subtitleListView1";
-            this.subtitleListView1.OwnerDraw = true;
-            this.subtitleListView1.Size = new System.Drawing.Size(494, 358);
-            this.subtitleListView1.SubtitleFontBold = false;
-            this.subtitleListView1.SubtitleFontName = "Tahoma";
-            this.subtitleListView1.SubtitleFontSize = 8;
-            this.subtitleListView1.TabIndex = 1;
+            this.subtitleListView1.Size = new System.Drawing.Size(492, 357);
+            this.subtitleListView1.TabIndex = 10;
             this.subtitleListView1.UseCompatibleStateImageBehavior = false;
-            this.subtitleListView1.UseSyntaxColoring = true;
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
+            this.subtitleListView1.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.subtitleListView1_ItemChecked);
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.subtitleListView1_SelectedIndexChanged);
             this.subtitleListView1.Click += new System.EventHandler(this.subtitleListView1_Click);
             this.subtitleListView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.subtitleListView1_KeyDown);
+            // 
+            // columnHeaderForced
+            // 
+            this.columnHeaderForced.Text = "Forced";
+            // 
+            // columnHeaderStart
+            // 
+            this.columnHeaderStart.Width = 105;
+            // 
+            // columnHeaderDuration
+            // 
+            this.columnHeaderDuration.Width = 65;
+            // 
+            // columnHeaderText
+            // 
+            this.columnHeaderText.Width = 208;
             // 
             // BinEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1161, 582);
+            this.Controls.Add(this.subtitleListView1);
             this.Controls.Add(this.labelVideoInfo);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.panelBackground);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBoxCurrent);
-            this.Controls.Add(this.subtitleListView1);
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
             this.MinimumSize = new System.Drawing.Size(800, 500);
@@ -1016,8 +1037,6 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         }
 
         #endregion
-
-        private Controls.SubtitleListView subtitleListView1;
         private System.Windows.Forms.GroupBox groupBoxCurrent;
         private System.Windows.Forms.CheckBox checkBoxIsForced;
         private Controls.TimeUpDown timeUpDownEndTime;
@@ -1107,5 +1126,11 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private System.Windows.Forms.ToolStripMenuItem startTimeToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator10;
         private System.Windows.Forms.ToolStripMenuItem selectOnlyForcedLinesToolStripMenuItem;
+        private System.Windows.Forms.ListView subtitleListView1;
+        private System.Windows.Forms.ColumnHeader columnHeaderForced;
+        private System.Windows.Forms.ColumnHeader columnHeaderNumber;
+        private System.Windows.Forms.ColumnHeader columnHeaderStart;
+        private System.Windows.Forms.ColumnHeader columnHeaderDuration;
+        private System.Windows.Forms.ColumnHeader columnHeaderText;
     }
 }
