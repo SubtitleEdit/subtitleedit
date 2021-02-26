@@ -16008,22 +16008,19 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (SubtitleListview1.SelectedItems.Count == 1)
             {
-                var historyAdded = false;
                 var idx = SubtitleListview1.SelectedItems[0].Index;
                 var p = _subtitle.Paragraphs[idx];
                 var next = _subtitle.GetParagraphOrDefault(idx + 1);
                 if (next == null || next.StartTime.TotalMilliseconds > p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds + MinGapBetweenLines)
                 {
-                    MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustExtendCurrentSubtitle));
-                    historyAdded = true;
                     p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
                 }
                 else
                 {
-                    MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustExtendCurrentSubtitle));
-                    historyAdded = true;
                     p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - MinGapBetweenLines;
                 }
+
+                MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustExtendCurrentSubtitle));
 
                 if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
                 {
@@ -16033,20 +16030,10 @@ namespace Nikse.SubtitleEdit.Forms
                         var originalNext = _subtitleOriginal.GetParagraphOrDefault(_subtitleOriginal.GetIndex(original) + 1);
                         if (originalNext == null || originalNext.StartTime.TotalMilliseconds > original.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds + MinGapBetweenLines)
                         {
-                            if (!historyAdded)
-                            {
-                                MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustExtendCurrentSubtitle));
-                            }
-
                             original.EndTime.TotalMilliseconds = original.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
                         }
                         else
                         {
-                            if (!historyAdded)
-                            {
-                                MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustExtendCurrentSubtitle));
-                            }
-
                             original.EndTime.TotalMilliseconds = originalNext.StartTime.TotalMilliseconds - MinGapBetweenLines;
                         }
                     }
