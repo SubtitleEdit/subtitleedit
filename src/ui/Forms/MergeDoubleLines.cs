@@ -339,7 +339,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MergeDoubleLines_ResizeEnd(object sender, EventArgs e)
         {
-            columnHeaderText.Width = -2;
+            listViewFixes.AutoSizeListViewLastColumn();
         }
 
         private void toolStripMenuItemSelectAll_Click(object sender, EventArgs e)

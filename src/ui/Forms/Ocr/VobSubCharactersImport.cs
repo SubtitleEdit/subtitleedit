@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void VobSubCharactersImport_ResizeEnd(object sender, EventArgs e)
         {
-            listView1.Columns[listView1.Columns.Count - 1].Width = -2;
+            listView1.AutoSizeListViewLastColumn();
         }
 
         private void VobSubCharactersImport_Shown(object sender, EventArgs e)

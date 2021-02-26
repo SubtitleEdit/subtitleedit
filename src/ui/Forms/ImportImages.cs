@@ -167,7 +167,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ImportImages_ResizeEnd(object sender, EventArgs e)
         {
-            listViewInputFiles.Columns[listViewInputFiles.Columns.Count - 1].Width = -2;
+            listViewInputFiles.AutoSizeListViewLastColumn();
         }
 
         private void ImportImages_Shown(object sender, EventArgs e)

@@ -319,7 +319,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void NetflixFixErrors_ResizeEnd(object sender, EventArgs e)
         {
-            listViewFixes.Columns[listViewFixes.Columns.Count - 1].Width = -2;
+            listViewFixes.AutoSizeListViewLastColumn();
         }
 
         private void NetflixFixErrors_Shown(object sender, EventArgs e)

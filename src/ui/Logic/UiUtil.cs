@@ -1170,6 +1170,15 @@ namespace Nikse.SubtitleEdit.Logic
             lv.EndUpdate();
         }
 
+        public static void AutoSizeListViewLastColumn(this ListView listView)
+        {
+            var columnsCount = listView.Columns.Count;
+            if (columnsCount > 0)
+            {
+                listView.Columns[columnsCount - 1].Width = -2;
+            }
+        }
+
         internal static void CleanUpMenuItemPlugin(ToolStripMenuItem tsmi)
         {
             if (tsmi == null)

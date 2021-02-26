@@ -338,7 +338,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void Split_ResizeEnd(object sender, EventArgs e)
         {
-            columnHeaderFileName.Width = -2;
+            listViewParts.AutoSizeListViewLastColumn();
         }
 
         private void buttonChooseFolder_Click(object sender, EventArgs e)

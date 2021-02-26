@@ -407,7 +407,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void VobSubNOcrTrain_ResizeEnd(object sender, EventArgs e)
         {
-            listViewFonts.Columns[listViewFonts.Columns.Count - 1].Width = -2;
+            listViewFonts.AutoSizeListViewLastColumn();
         }
 
         private void VobSubNOcrTrain_Shown(object sender, EventArgs e)

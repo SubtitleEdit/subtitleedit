@@ -241,7 +241,7 @@ namespace Nikse.SubtitleEdit.Forms
                 width += SubtitleListview1.Columns[i].Width;
             }
             SubtitleListview1.Columns[columnsCount - 1].Width = SubtitleListview1.Width - (width + lastColumnWidth);
-            SubtitleListview1.Columns[columnsCount].Width = -2;
+            SubtitleListview1.AutoSizeListViewLastColumn();
         }
 
         public void InitializeSettingsOnly()

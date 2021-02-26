@@ -403,7 +403,7 @@ namespace Nikse.SubtitleEdit.Controls
             _setLastColumnWidthTimer.Stop();
             if (Columns.Count > 0)
             {
-                Columns[Columns.Count - 1].Width = -2;
+                this.AutoSizeListViewLastColumn();
             }
         }
 

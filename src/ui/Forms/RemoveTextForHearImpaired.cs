@@ -272,7 +272,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             int availableWidth = (listViewFixes.Width - (columnHeaderApply.Width + columnHeaderLine.Width + 20)) / 2;
             columnHeaderBefore.Width = availableWidth;
-            columnHeaderAfter.Width = -2;
+            listViewFixes.AutoSizeListViewLastColumn();
         }
 
         private void FormRemoveTextForHearImpaired_Shown(object sender, EventArgs e)

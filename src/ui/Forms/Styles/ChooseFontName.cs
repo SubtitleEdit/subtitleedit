@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void ChooseFontName_ResizeEnd(object sender, EventArgs e)
         {
-            listViewAttachments.Columns[listViewAttachments.Columns.Count - 1].Width = -2;
+            listViewAttachments.AutoSizeListViewLastColumn();
         }
 
         private void ChooseFontName_KeyDown(object sender, KeyEventArgs e)

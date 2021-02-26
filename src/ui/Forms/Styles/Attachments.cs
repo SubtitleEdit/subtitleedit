@@ -637,7 +637,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private void Attachments_ResizeEnd(object sender, EventArgs e)
         {
             listViewAttachments_SelectedIndexChanged(null, null);
-            listViewAttachments.Columns[listViewAttachments.Columns.Count - 1].Width = -2;
+            listViewAttachments.AutoSizeListViewLastColumn();
         }
 
         private void Attachments_KeyDown(object sender, KeyEventArgs e)

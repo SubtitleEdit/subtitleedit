@@ -1781,7 +1781,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void ListViewFixesAutoSizeAllColumns()
         {
-            listView1.Columns[listView1.Columns.Count - 1].Width = -2;
+            listView1.AutoSizeListViewLastColumn();
 
             using (var graphics = CreateGraphics())
             {

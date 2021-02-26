@@ -232,7 +232,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MergeTextWithSameTimeCodes_ResizeEnd(object sender, EventArgs e)
         {
-            columnHeaderText.Width = -2;
+            listViewFixes.AutoSizeListViewLastColumn();
         }
 
         private void MergeTextWithSameTimeCodes_Shown(object sender, EventArgs e)

@@ -55,7 +55,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void YouTubeAnnotationsImport_ResizeEnd(object sender, EventArgs e)
         {
-            listViewFixes.Columns[listViewFixes.Columns.Count - 1].Width = -2;
+            listViewFixes.AutoSizeListViewLastColumn();
         }
 
         private void YouTubeAnnotationsImport_Shown(object sender, EventArgs e)

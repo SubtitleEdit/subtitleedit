@@ -75,7 +75,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void BookmarksGoTo_ResizeEnd(object sender, EventArgs e)
         {
-            listViewBookmarks.Columns[listViewBookmarks.Columns.Count - 1].Width = -2;
+            listViewBookmarks.AutoSizeListViewLastColumn();
         }
 
         private void BookmarksGoTo_Shown(object sender, EventArgs e)

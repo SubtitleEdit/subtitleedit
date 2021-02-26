@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
         private void ChooseStyle_ResizeEnd(object sender, EventArgs e)
         {
-            listViewStyles.Columns[listViewStyles.Columns.Count - 1].Width = -2;
+            listViewStyles.AutoSizeListViewLastColumn();
         }
 
         private void ChooseStyle_Shown(object sender, EventArgs e)

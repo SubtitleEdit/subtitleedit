@@ -515,7 +515,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FillStyles()
         {
-            listViewStyles.Columns[listViewStyles.Columns.Count - 1].Width = -2;
+            listViewStyles.AutoSizeListViewLastColumn();
             var styles = new List<string>();
             var formatType = _format.GetType();
             if (formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha))
@@ -540,7 +540,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FillActors()
         {
-            listViewStyles.Columns[listViewStyles.Columns.Count - 1].Width = -2;
+            listViewStyles.AutoSizeListViewLastColumn();
             var actors = new List<string>();
             foreach (var paragraph in _subtitle.Paragraphs)
             {
@@ -569,8 +569,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ModifySelection_Resize(object sender, EventArgs e)
         {
-            listViewFixes.Columns[listViewFixes.Columns.Count - 1].Width = -2;
-            listViewStyles.Columns[listViewStyles.Columns.Count - 1].Width = -2;
+            listViewFixes.AutoSizeListViewLastColumn();
+            listViewStyles.AutoSizeListViewLastColumn();
         }
 
         private void ModifySelection_Shown(object sender, EventArgs e)

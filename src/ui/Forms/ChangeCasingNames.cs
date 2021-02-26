@@ -255,8 +255,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ChangeCasingNames_ResizeEnd(object sender, EventArgs e)
         {
-            listViewFixes.Columns[listViewFixes.Columns.Count - 1].Width = -2;
-            listViewNames.Columns[listViewNames.Columns.Count - 1].Width = -2;
+            listViewFixes.AutoSizeListViewLastColumn();
+            listViewNames.AutoSizeListViewLastColumn();
         }
 
         private void ChangeCasingNames_Shown(object sender, EventArgs e)

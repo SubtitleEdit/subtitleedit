@@ -1529,8 +1529,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void SetLastColumnWidth()
         {
-            listViewStyles.Columns[listViewStyles.Columns.Count - 1].Width = -2;
-            listViewStorage.Columns[listViewStorage.Columns.Count - 1].Width = -2;
+            listViewStyles.AutoSizeListViewLastColumn();
+            listViewStorage.AutoSizeListViewLastColumn();
         }
 
         private void listViewStyles_ClientSizeChanged(object sender, EventArgs e)

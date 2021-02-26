@@ -352,7 +352,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void BinaryOcrTrain_ResizeEnd(object sender, EventArgs e)
         {
-            listViewFonts.Columns[listViewFonts.Columns.Count - 1].Width = -2;
+            listViewFonts.AutoSizeListViewLastColumn();
         }
 
         private void BinaryOcrTrain_Shown(object sender, EventArgs e)

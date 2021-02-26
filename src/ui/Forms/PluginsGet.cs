@@ -405,8 +405,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void PluginsGet_ResizeEnd(object sender, EventArgs e)
         {
-            listViewGetPlugins.Columns[listViewGetPlugins.Columns.Count - 1].Width = -2;
-            listViewInstalledPlugins.Columns[listViewInstalledPlugins.Columns.Count - 1].Width = -2;
+            listViewGetPlugins.AutoSizeListViewLastColumn();
+            listViewInstalledPlugins.AutoSizeListViewLastColumn();
         }
 
         private void PluginsGet_Shown(object sender, EventArgs e)
