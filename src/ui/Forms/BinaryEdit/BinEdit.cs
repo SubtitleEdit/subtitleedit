@@ -1,5 +1,4 @@
-﻿using Nikse.SubtitleEdit.Controls;
-using Nikse.SubtitleEdit.Core;
+﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
@@ -47,10 +46,10 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 _height = height;
             }
 
-            private Paragraph _p;
-            private string _dir;
-            private int _width;
-            private int _height;
+            private readonly Paragraph _p;
+            private readonly string _dir;
+            private readonly int _width;
+            private readonly int _height;
 
             public bool IsForced => _p.Forced;
 
@@ -191,7 +190,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private int _screenWidth;
         private int _screenHeight;
         private string _lastSaveHash;
-        private string _nOcrFileName;
+        private readonly string _nOcrFileName;
 
         public BinEdit(string fileName)
         {
@@ -200,13 +199,12 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             UiUtil.FixFonts(this);
             UiUtil.FixLargeFonts(this, buttonExportImage);
             UiUtil.InitializeSubtitleFont(subtitleListView1);
+            subtitleListView1.Columns[0].Text = LanguageSettings.Current.ExportPngXml.Forced;
+            subtitleListView1.Columns[1].Text = "#";
+            subtitleListView1.Columns[2].Text = LanguageSettings.Current.General.StartTime;
+            subtitleListView1.Columns[3].Text = LanguageSettings.Current.General.Duration;
+            subtitleListView1.Columns[4].Text = LanguageSettings.Current.General.Text;
             videoPlayerContainer1.Visible = false;
-            subtitleListView1.InitializeLanguage(LanguageSettings.Current.General, Configuration.Settings);
-            subtitleListView1.HideColumn(SubtitleListView.SubtitleColumn.CharactersPerSeconds);
-            subtitleListView1.HideColumn(SubtitleListView.SubtitleColumn.Actor);
-            subtitleListView1.HideColumn(SubtitleListView.SubtitleColumn.WordsPerMinute);
-            subtitleListView1.HideColumn(SubtitleListView.SubtitleColumn.Region);
-            subtitleListView1.AutoSizeColumns();
             progressBar1.Visible = false;
             OpenBinSubtitle(fileName);
             pictureBoxMovableImage.SizeMode = PictureBoxSizeMode.Normal;
@@ -338,7 +336,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
                 _binSubtitles = new List<IBinaryParagraphWithPosition>(bluRaySubtitles);
                 _subtitle.Renumber();
-                subtitleListView1.Fill(_subtitle);
+                FillListView(_subtitle);
             }
             else if (ext == ".mkv" || ext == ".mks")
             {
@@ -348,7 +346,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 }
 
                 _subtitle.Renumber();
-                subtitleListView1.Fill(_subtitle);
+                FillListView(_subtitle);
             }
             else if (ext == ".m2ts" || ext == ".ts" || ext == ".mts" || ext == ".rec" || ext == ".mpeg" || ext == ".mpg" ||
                      (fileInfo.Length < 100_000_000 && TransportStreamParser.IsDvbSup(fileName)))
@@ -359,7 +357,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 }
 
                 _subtitle.Renumber();
-                subtitleListView1.Fill(_subtitle);
+                FillListView(_subtitle);
             }
             else if (ext == ".xml")
             {
@@ -381,17 +379,61 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                         _binSubtitles.Add(bp);
                         _extra.Add(new Extra { IsForced = bp.IsForced, X = bp.GetPosition().Left, Y = bp.GetPosition().Top });
                     }
-                    subtitleListView1.Fill(_subtitle);
+                    FillListView(_subtitle);
                 }
             }
 
             if (_subtitle != null)
             {
-                subtitleListView1.SelectIndexAndEnsureVisible(0, true);
+                SelectIndexAndEnsureVisible(0);
             }
 
             _lastSaveHash = GetStateHash();
             Text = Path.GetFileName(fileName) + " - " + LanguageSettings.Current.General.Title;
+        }
+
+        private void FillListView(Subtitle subtitle)
+        {
+            var listViewItems = new List<ListViewItem>();
+            for (var index = 0; index < subtitle.Paragraphs.Count; index++)
+            {
+                var extra = _extra[index];
+                var paragraph = subtitle.Paragraphs[index];
+                var item = new ListViewItem { Checked = extra.IsForced };
+                item.SubItems.Add((index + 1).ToString(CultureInfo.InvariantCulture));
+                item.SubItems.Add(paragraph.StartTime.ToDisplayString());
+                item.SubItems.Add(paragraph.Duration.ToShortDisplayString());
+                item.SubItems.Add(paragraph.Text);
+                listViewItems.Add(item);
+            }
+
+            subtitleListView1.Items.Clear();
+            subtitleListView1.Items.AddRange(listViewItems.ToArray());
+        }
+
+        private void SelectIndexAndEnsureVisible(int index)
+        {
+            if (index < 0 || index >= subtitleListView1.Items.Count)
+            {
+                return;
+            }
+
+            subtitleListView1.SelectedIndices.Clear();
+            subtitleListView1.Items[index].Selected = true;
+            subtitleListView1.Items[index].Focused = true;
+            subtitleListView1.EnsureVisible(index);
+        }
+
+        private void SetStartTimeAndDuration(int index, Paragraph paragraph)
+        {
+            if (index < 0 || index >= subtitleListView1.Items.Count)
+            {
+                return;
+            }
+
+            var item = subtitleListView1.Items[index];
+            item.SubItems[2].Text = paragraph.StartTime.ToDisplayString();
+            item.SubItems[3].Text = paragraph.Duration.ToShortDisplayString();
         }
 
         private static Bitmap GetBitmap(IBinaryParagraphWithPosition s)
@@ -830,8 +872,8 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.NewEmptyDefaultMs;
                 _subtitle.Paragraphs.Add(p);
                 _extra.Add(new Extra { Bitmap = new Bitmap(2, 2), IsForced = checkBoxIsForced.Checked, X = (int)numericUpDownX.Value, Y = (int)numericUpDownY.Value });
-                subtitleListView1.Fill(_subtitle);
-                subtitleListView1.SelectIndexAndEnsureVisible(0, true);
+                FillListView(_subtitle);
+                SelectIndexAndEnsureVisible(0);
                 return;
             }
 
@@ -854,8 +896,8 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
                 p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.NewEmptyDefaultMs;
                 _binSubtitles.Insert(idx, new BluRaySupParser.PcsData());
-                subtitleListView1.Fill(_subtitle);
-                subtitleListView1.SelectIndexAndEnsureVisible(idx, true);
+                FillListView(_subtitle);
+                SelectIndexAndEnsureVisible(idx);
             }
         }
 
@@ -927,7 +969,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 _subtitle.Paragraphs.RemoveAt(removeIndex);
             }
             _subtitle.Renumber();
-            subtitleListView1.Fill(_subtitle);
+            FillListView(_subtitle);
 
             if (idx >= _subtitle.Paragraphs.Count && idx > 0)
             {
@@ -936,7 +978,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
             if (idx >= 0)
             {
-                subtitleListView1.SelectIndexAndEnsureVisible(idx, true);
+                SelectIndexAndEnsureVisible(idx);
             }
         }
 
@@ -971,14 +1013,14 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             }
             else if (e.KeyCode == Keys.Home && e.Modifiers == Keys.Control) // Go to first sub
             {
-                subtitleListView1.SelectIndexAndEnsureVisible(0, true);
+                SelectIndexAndEnsureVisible(0);
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyCode == Keys.End && e.Modifiers == Keys.Control) // Go to last sub
             {
                 if (subtitleListView1.Items.Count >= 0)
                 {
-                    subtitleListView1.SelectIndexAndEnsureVisible(subtitleListView1.Items.Count - 1, true);
+                    SelectIndexAndEnsureVisible(subtitleListView1.Items.Count - 1);
                 }
 
                 e.SuppressKeyPress = true;
@@ -995,7 +1037,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                     selectedIndex = subtitleListView1.SelectedItems[0].Index;
                     selectedIndex++;
                 }
-                subtitleListView1.SelectIndexAndEnsureVisible(selectedIndex, true);
+                SelectIndexAndEnsureVisible(selectedIndex);
             }
             else if (_mainGeneralGoToPrevSubtitle == e.KeyData || (e.KeyCode == Keys.Up && e.Modifiers == Keys.Alt))
             {
@@ -1005,7 +1047,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                     selectedIndex = subtitleListView1.SelectedItems[0].Index;
                     selectedIndex--;
                 }
-                subtitleListView1.SelectIndexAndEnsureVisible(selectedIndex, true);
+                SelectIndexAndEnsureVisible(selectedIndex);
             }
         }
 
@@ -1016,7 +1058,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 goToLine.Initialize(1, subtitleListView1.Items.Count);
                 if (goToLine.ShowDialog(this) == DialogResult.OK)
                 {
-                    subtitleListView1.SelectNone();
+                    subtitleListView1.SelectedIndices.Clear();
                     subtitleListView1.Items[goToLine.LineNumber - 1].Selected = true;
                     subtitleListView1.Items[goToLine.LineNumber - 1].EnsureVisible();
                     subtitleListView1.Items[goToLine.LineNumber - 1].Focused = true;
@@ -1168,7 +1210,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
 
             header = header.Replace("[DROPVALUE]", dropValue);
-            File.WriteAllText(fileName, header + Environment.NewLine + sb.ToString());
+            File.WriteAllText(fileName, header + Environment.NewLine + sb);
         }
 
         private void WriteFcpParagraph(StringBuilder sb, Paragraph p, Bitmap bitmap, int i, string path, string fileName)
@@ -1626,6 +1668,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             var extra = _extra[idx];
             extra.IsForced = checkBoxIsForced.Checked;
+            subtitleListView1.Items[idx].Checked = checkBoxIsForced.Checked;
         }
 
         private void BinEdit_Shown(object sender, EventArgs e)
@@ -1645,8 +1688,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
 
                 p.StartTime.TotalMilliseconds = timeUpDownStartTime.TimeCode.TotalMilliseconds;
-                subtitleListView1.SetStartTimeAndDuration(idx, p, _subtitle.GetParagraphOrDefault(idx + 1), _subtitle.GetParagraphOrDefault(idx - 1));
-                subtitleListView1.SyntaxColorLine(_subtitle.Paragraphs, idx, p);
+                SetStartTimeAndDuration(idx, p);
             };
             timeUpDownEndTime.MaskedTextBox.TextChanged += (o, args) =>
             {
@@ -1663,9 +1705,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
 
                 p.EndTime.TotalMilliseconds = timeUpDownEndTime.TimeCode.TotalMilliseconds;
-                subtitleListView1.SetStartTimeAndDuration(idx, p, _subtitle.GetParagraphOrDefault(idx + 1), _subtitle.GetParagraphOrDefault(idx - 1));
-                subtitleListView1.SyntaxColorLine(_subtitle.Paragraphs, idx, p);
+                SetStartTimeAndDuration(idx, p);
             };
+            subtitleListView1.Columns[subtitleListView1.Columns.Count - 1].Width = -2;
         }
 
         private void adjustAllTimesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1715,8 +1757,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
 
             var idx = subtitleListView1.SelectedItems[0].Index;
-            subtitleListView1.Fill(_subtitle);
-            subtitleListView1.SelectIndexAndEnsureVisible(idx, true);
+            FillListView(_subtitle);
+            SelectIndexAndEnsureVisible(idx);
         }
 
         private void ShowEarlierOrLaterParagraph(double adjustMilliseconds, int i)
@@ -1726,7 +1768,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 p.StartTime.TotalMilliseconds += adjustMilliseconds;
                 p.EndTime.TotalMilliseconds += adjustMilliseconds;
-                subtitleListView1.SetStartTimeAndDuration(i, p, _subtitle.GetParagraphOrDefault(i + 1), _subtitle.GetParagraphOrDefault(i - 1));
+                SetStartTimeAndDuration(i, p);
             }
         }
 
@@ -1763,7 +1805,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                 if (format == null)
                 {
-                    format = timeCodeSubtitle.LoadSubtitle(openFileDialog1.FileName, out var encoding, null);
+                    format = timeCodeSubtitle.LoadSubtitle(openFileDialog1.FileName, out _, null);
                 }
 
                 if (format == null)
@@ -1808,8 +1850,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                 MessageBox.Show(string.Format(LanguageSettings.Current.Main.TimeCodeImportedFromXY, Path.GetFileName(openFileDialog1.FileName), count));
                 var idx = subtitleListView1.SelectedItems[0].Index;
-                subtitleListView1.Fill(_subtitle);
-                subtitleListView1.SelectIndexAndEnsureVisible(idx, true);
+                FillListView(_subtitle);
+                SelectIndexAndEnsureVisible(idx);
             }
         }
 
@@ -1830,8 +1872,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     _subtitle.ChangeFrameRate(oldFrameRate, newFrameRate);
                     MessageBox.Show(string.Format(LanguageSettings.Current.Main.FrameRateChangedFromXToY, oldFrameRate, newFrameRate));
                     var idx = subtitleListView1.SelectedItems[0].Index;
-                    subtitleListView1.Fill(_subtitle);
-                    subtitleListView1.SelectIndexAndEnsureVisible(idx, true);
+                    FillListView(_subtitle);
+                    SelectIndexAndEnsureVisible(idx);
                 }
             }
         }
@@ -1864,8 +1906,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     }
 
                     var idx = subtitleListView1.SelectedItems[0].Index;
-                    subtitleListView1.Fill(_subtitle);
-                    subtitleListView1.SelectIndexAndEnsureVisible(idx, true);
+                    FillListView(_subtitle);
+                    SelectIndexAndEnsureVisible(idx);
                 }
             }
         }
@@ -2043,11 +2085,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
 
             _subtitle.Renumber();
-            subtitleListView1.Fill(_subtitle);
+            FillListView(_subtitle);
 
             if (_subtitle != null)
             {
-                subtitleListView1.SelectIndexAndEnsureVisible(idx, true);
+                SelectIndexAndEnsureVisible(idx);
             }
         }
 
@@ -2156,7 +2198,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 if (_lastPlayParagraph != sub)
                 {
-                    subtitleListView1.SelectIndexAndEnsureVisible(_subtitle.Paragraphs.IndexOf(sub), true);
+                    SelectIndexAndEnsureVisible(_subtitle.Paragraphs.IndexOf(sub));
                     _lastPlayParagraph = sub;
                 }
                 pictureBoxMovableImage.Show();
@@ -2267,7 +2309,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 extra.IsForced = s.IsForced;
                 extra.X = pos.Left;
                 extra.Y = pos.Top;
-                subtitleListView1.SelectIndexAndEnsureVisible(idx, true);
+                SelectIndexAndEnsureVisible(idx);
             }
         }
 
@@ -2594,8 +2636,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     }
                 }
 
-                subtitleListView1.Fill(_subtitle);
-                subtitleListView1.SelectIndexAndEnsureVisible(idx, true);
+                FillListView(_subtitle);
+                SelectIndexAndEnsureVisible(idx);
                 if (onlySelectedLines)
                 {
                     foreach (var i in selectedIndices)
@@ -2653,8 +2695,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             _subtitle.Paragraphs[index] = applyDurationLimits.FixedSubtitle.Paragraphs[i];
                             i++;
                         }
-
-                        subtitleListView1.SyntaxColorAllLines(_subtitle);
                     }
                     else
                     {
@@ -2664,9 +2704,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             _subtitle.Paragraphs.Add(new Paragraph(p));
                         }
 
-                        subtitleListView1.Fill(_subtitle);
+                        FillListView(_subtitle);
                     }
-                    subtitleListView1.SelectIndexAndEnsureVisible(idx, true);
+                    SelectIndexAndEnsureVisible(idx);
                     foreach (var i in selectedIndices)
                     {
                         subtitleListView1.Items[i].Selected = true;
@@ -2684,7 +2724,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         {
             if (subtitleListView1.Items.Count > 0)
             {
-                subtitleListView1.SelectIndexAndEnsureVisible(subtitleListView1.Items.Count - 1, true);
+                SelectIndexAndEnsureVisible(subtitleListView1.Items.Count - 1);
             }
             insertSubtitleAfterThisLineToolStripMenuItem_Click_1(null, null);
         }
@@ -2939,8 +2979,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 {
                     idx = subtitleListView1.SelectedItems[0].Index;
                 }
-                subtitleListView1.Fill(_subtitle);
-                subtitleListView1.SelectIndexAndEnsureVisible(idx, true);
+                FillListView(_subtitle);
+                SelectIndexAndEnsureVisible(idx);
                 quickOCRTextsforOverviewOnlyToolStripMenuItem.Enabled = true;
             };
             bw.RunWorkerAsync();
@@ -3165,7 +3205,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             ChangeAlpha(true);
         }
 
-        private void toggleforcedForSelectedLinesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void toggleForcedForSelectedLinesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (subtitleListView1.SelectedItems.Count < 1)
             {
@@ -3178,7 +3218,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             var toggleValue = true;
             foreach (var i in selectedIndices)
             {
-                var sub = _binSubtitles[i];
                 var extra = _extra[i];
 
                 if (first)
@@ -3209,8 +3248,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
 
             _subtitle.Renumber();
-            subtitleListView1.Fill(_subtitle);
-            subtitleListView1.SelectIndexAndEnsureVisible(0, true);
+            FillListView(_subtitle);
+            SelectIndexAndEnsureVisible(0);
         }
 
         private void Swap(int j, int v)
@@ -3232,18 +3271,18 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         {
             subtitleListView1.BeginUpdate();
             subtitleListView1.SelectedIndexChanged -= subtitleListView1_SelectedIndexChanged;
-            subtitleListView1.SelectNone();
+            subtitleListView1.SelectedIndices.Clear();
             System.Collections.IList list = subtitleListView1.Items;
             bool first = true;
             for (int i = 0; i < list.Count; i++)
             {
-                ListViewItem item = (ListViewItem)list[i];
+                var item = (ListViewItem)list[i];
                 if (_extra[i].IsForced)
                 {
                     item.Selected = true;
                     if (first)
                     {
-                        subtitleListView1.SelectIndexAndEnsureVisible(i);
+                        SelectIndexAndEnsureVisible(i);
                         first = false;
                     }
                 }
@@ -3251,6 +3290,27 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             subtitleListView1.SelectedIndexChanged += subtitleListView1_SelectedIndexChanged;
             subtitleListView1.EndUpdate();
             subtitleListView1_SelectedIndexChanged(null, null);
+        }
+
+        private void subtitleListView1_ItemChecked(object sender, ItemCheckedEventArgs e)
+        {
+            if (_binSubtitles == null)
+            {
+                return;
+            }
+
+            var extra = _extra[e.Item.Index];
+            extra.IsForced = e.Item.Checked;
+            if (subtitleListView1.SelectedItems.Count <= 0)
+            {
+                return;
+            }
+
+            var idx = subtitleListView1.SelectedItems[0].Index;
+            if (idx == e.Item.Index)
+            {
+                checkBoxIsForced.Checked = e.Item.Checked;
+            }
         }
     }
 }
