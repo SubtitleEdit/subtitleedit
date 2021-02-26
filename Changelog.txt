@@ -7,7 +7,7 @@
    * Auto load ASSA styles for new files - thx z3us/OmrSi
    * Add support for attached fonts in ASSA style manager
    * Add "Apply" button in ASSA style manager - thx LeonCheung
-   * Add bookmarked to modify selection - thx moob158/OmrSi
+   * Add bookmarks to modify selection - thx moob158/OmrSi
 * IMPROVED:
    * Update Polish translation - thx admas
    * Update Bulgarian translation - thx Калин
