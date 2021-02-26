@@ -30,10 +30,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private List<SubtitleColumn> SubtitleColumns { get; }
 
-        public int GetColumnIndex(SubtitleColumn column)
-        {
-            return SubtitleColumns.IndexOf(column);
-        }
+        public int GetColumnIndex(SubtitleColumn column) => SubtitleColumns.IndexOf(column);
 
         public int ColumnIndexNumber { get; private set; }
         public int ColumnIndexStart { get; private set; }
@@ -70,7 +67,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public bool SubtitleFontBold
         {
-            get { return _subtitleFontBold; }
+            get => _subtitleFontBold;
             set
             {
                 _subtitleFontBold = value;
@@ -93,7 +90,7 @@ namespace Nikse.SubtitleEdit.Controls
         public bool UseSyntaxColoring { get; set; }
         private Settings _settings;
         private bool _saveColumnWidthChanges;
-        private Timer _setLastColumnWidthTimer;
+        private readonly Timer _setLastColumnWidthTimer;
 
         public class SyntaxColorLineParamter
         {
@@ -2069,10 +2066,7 @@ namespace Nikse.SubtitleEdit.Controls
             Resize += handler;
         }
 
-        private bool IsValidIndex(int index)
-        {
-            return index >= 0 && index < Items.Count;
-        }
+        private bool IsValidIndex(int index) => index >= 0 && index < Items.Count;
 
         private FontStyle GetFontStyle() => SubtitleFontBold ? FontStyle.Bold : FontStyle.Regular;
 
