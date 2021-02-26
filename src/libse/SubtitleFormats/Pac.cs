@@ -1,4 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -1685,14 +1685,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 var dictionary = new Dictionary<int, string>
                 {
-                    { CodePageLatin, "en-da-no-sv-es-it-fr-pt-de-nl-pl-bg-sq-hr" },
+                    { CodePageLatin, "en-da-no-sv-es-it-fr-pt-de-nl-pl-sq-hr-sr-ro-id" },
                     { CodePageGreek, "el" },
-                    { CodePageLatinCzech, "cz" },
+                    { CodePageLatinCzech, "cs-sk" },
                     { CodePageLatinTurkish, "tr" },
-                    { CodePageArabic, "ar" },
+                    { CodePageCyrillic, "bg-ru-uk-mk" },
                     { CodePageHebrew, "he" },
                     { CodePageThai, "th" },
-                    { CodePageCyrillic, "ru-uk-mk" },
+                    { CodePageArabic, "ar" },
                     { CodePageKorean, "ko" },
                     { CodePageChineseTraditional, "zh" },
                     { CodePageChineseSimplified, "zh" },
