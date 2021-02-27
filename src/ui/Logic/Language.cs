@@ -135,6 +135,8 @@ namespace Nikse.SubtitleEdit.Logic
                 SubtitleFiles = "Subtitle files",
                 AllFiles = "All files",
                 VideoFiles = "Video files",
+                Images = "Images",
+                Fonts = "Fonts",
                 AudioFiles = "Audio files",
                 OpenSubtitle = "Open subtitle...",
                 OpenVideoFile = "Open video file...",
@@ -288,7 +290,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Note = "Note: Display time will not overlap start time of next text",
                 Fixed = "Fixed",
                 Milliseconds = "Milliseconds",
-                ExtendOnly = "Extend only"
+                ExtendOnly = "Extend only",
             };
 
             ApplyDurationLimits = new LanguageStructure.ApplyDurationLimits
@@ -301,14 +303,17 @@ namespace Nikse.SubtitleEdit.Logic
             AssaAttachments = new LanguageStructure.AssaAttachments
             {
                 Title = "Advanced Sub Station Alpha attachments",
-                AttachFont = "Attach fonts",
-                AttachGraphics = "Attach graphics",
+                AttachFiles = "Attach files...",
+                FontsAndImages = "Fonts and images",
                 FontName = "Font name:",
                 IconName = "Icon name:",
                 ImageName = "Image name ({0}x{1}):",
                 ImageResized = "Image resized to fit current window",
                 Font = "Font",
                 Graphics = "Graphics",
+                FilesSkippedX = "Files skipped: {0}",
+                RemoveOneAttachment = "Remove one attachment?",
+                RemoveXAttachments = "Remove {0} attachments?",
             };
 
             AudioToText = new LanguageStructure.AudioToText

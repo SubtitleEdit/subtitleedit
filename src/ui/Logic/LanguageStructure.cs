@@ -19,6 +19,8 @@
             public string SubtitleFiles { get; set; }
             public string AllFiles { get; set; }
             public string VideoFiles { get; set; }
+            public string Images { get; set; }
+            public string Fonts { get; set; }
             public string AudioFiles { get; set; }
             public string OpenSubtitle { get; set; }
             public string OpenVideoFile { get; set; }
@@ -169,14 +171,17 @@
         public class AssaAttachments
         {
             public string Title { get; set; }
-            public string AttachFont { get; set; }
-            public string AttachGraphics { get; set; }
+            public string AttachFiles { get; set; }
+            public string FontsAndImages { get; set; }
             public string Graphics { get; set; }
             public string Font { get; set; }
             public string ImageName { get; set; }
             public string IconName { get; set; }
             public string FontName { get; set; }
             public string ImageResized { get; set; }
+            public string FilesSkippedX { get; set; }
+            public string RemoveOneAttachment { get; set; }
+            public string RemoveXAttachments { get; set; }
         }
 
         public class AudioToText

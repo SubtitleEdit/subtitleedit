@@ -442,12 +442,6 @@ namespace Nikse.SubtitleEdit.Logic
                 case "AssaAttachments/Title":
                     language.AssaAttachments.Title = reader.Value;
                     break;
-                case "AssaAttachments/AttachFont":
-                    language.AssaAttachments.AttachFont = reader.Value;
-                    break;
-                case "AssaAttachments/AttachGraphics":
-                    language.AssaAttachments.AttachGraphics = reader.Value;
-                    break;
                 case "AssaAttachments/Graphics":
                     language.AssaAttachments.Graphics = reader.Value;
                     break;
