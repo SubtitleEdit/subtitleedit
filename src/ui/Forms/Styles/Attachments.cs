@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         };
 
         public string NewFooter { get; private set; }
+        private bool _loading = true;
 
         public Attachments(string source)
         {
@@ -35,28 +37,44 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             labelInfo.Visible = false;
             textBoxInfo.Visible = false;
             textBoxInfo.ReadOnly = true;
+            labelFontsAndImages.Text = LanguageSettings.Current.AssaAttachments.FontsAndImages;
             labelImageResizedToFit.Visible = false;
             labelImageResizedToFit.Text = LanguageSettings.Current.AssaAttachments.ImageResized;
 
-            _attachments = new List<AssaAttachment>();
-            ListAttachments(source.SplitToLines());
+            _attachments = ListAttachments(source.SplitToLines());
+            foreach (var attachment in _attachments)
+            {
+                AddToListView(attachment);
+            }
+
+            _loading = false;
             if (listViewAttachments.Items.Count > 0)
             {
                 listViewAttachments.Items[0].Selected = true;
                 listViewAttachments.Items[0].Focused = true;
             }
 
-            UpdateAfterListViewChange();
+            toolStripMenuItemStorageMoveUp.Text = LanguageSettings.Current.DvdSubRip.MoveUp;
+            toolStripMenuItemStorageMoveDown.Text = LanguageSettings.Current.DvdSubRip.MoveDown;
+            toolStripMenuItemStorageMoveTop.Text = LanguageSettings.Current.MultipleReplace.MoveToTop;
+            toolStripMenuItemStorageMoveBottom.Text = LanguageSettings.Current.MultipleReplace.MoveToBottom;
+            toolStripMenuItemStorageAttach.Text = LanguageSettings.Current.AssaAttachments.AttachFiles;
+            importToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.Import;
+            toolStripMenuItemStorageExport.Text = LanguageSettings.Current.MultipleReplace.Export;
+
             Text = LanguageSettings.Current.AssaAttachments.Title;
-            buttonAttachFont.Text = LanguageSettings.Current.AssaAttachments.AttachFont;
-            buttonAttachGraphics.Text = LanguageSettings.Current.AssaAttachments.AttachGraphics;
+            buttonAttachFile.Text = LanguageSettings.Current.AssaAttachments.AttachFiles;
+            buttonImport.Text = LanguageSettings.Current.MultipleReplace.Import;
             buttonExport.Text = LanguageSettings.Current.MultipleReplace.Export;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+
+            UpdateAfterListViewChange();
         }
 
-        private void ListAttachments(List<string> lines)
+        private List<AssaAttachment> ListAttachments(List<string> lines)
         {
+            var attachments = new List<AssaAttachment>();
             bool attachmentOn = false;
             var attachmentContent = new StringBuilder();
             var attachmentFileName = string.Empty;
@@ -68,20 +86,20 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 {
                     if (s == "[V4+ Styles]" || s == "[Events]")
                     {
-                        AddToListView(attachmentFileName, attachmentContent.ToString(), category);
+                        AddToListIfNotEmpty(attachmentContent.ToString(), attachmentFileName, attachments, category);
                         attachmentOn = false;
                         attachmentContent = new StringBuilder();
                         attachmentFileName = string.Empty;
                     }
                     else if (s == string.Empty)
                     {
-                        AddToListView(attachmentFileName, attachmentContent.ToString(), category);
+                        AddToListIfNotEmpty(attachmentContent.ToString(), attachmentFileName, attachments, category);
                         attachmentContent = new StringBuilder();
                         attachmentFileName = string.Empty;
                     }
                     else if (s.StartsWith("filename:") || s.StartsWith("fontname:"))
                     {
-                        AddToListView(attachmentFileName, attachmentContent.ToString(), category);
+                        AddToListIfNotEmpty(attachmentContent.ToString(), attachmentFileName, attachments, category);
                         attachmentContent = new StringBuilder();
                         attachmentFileName = s.Remove(0, 9).Trim();
                     }
@@ -99,22 +117,25 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 }
             }
 
-            AddToListView(attachmentFileName, attachmentContent.ToString(), category);
+            AddToListIfNotEmpty(attachmentContent.ToString(), attachmentFileName, attachments, category);
+            return attachments;
         }
 
-        private void AddToListView(string attachmentFileName, string attachmentContent, string category)
+        private static void AddToListIfNotEmpty(string attachmentContent, string attachmentFileName, List<AssaAttachment> attachments, string category)
         {
             var content = attachmentContent.Trim();
-            if (string.IsNullOrEmpty(attachmentFileName) || content.Length == 0)
+            if (!string.IsNullOrWhiteSpace(attachmentFileName) && !string.IsNullOrEmpty(content))
             {
-                return;
+                var bytes = UUEncoding.UUDecode(content);
+                attachments.Add(new AssaAttachment { FileName = attachmentFileName, Bytes = bytes, Category = category, Content = content });
             }
+        }
 
-            var item = new ListViewItem(attachmentFileName);
-            var bytes = UUEncoding.UUDecode(content);
-            _attachments.Add(new AssaAttachment { FileName = attachmentFileName, Bytes = bytes, Category = category, Content = content });
-            item.SubItems.Add(GetType(attachmentFileName));
-            item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(bytes.Length));
+        private void AddToListView(AssaAttachment attachment)
+        {
+            var item = new ListViewItem(attachment.FileName);
+            item.SubItems.Add(GetType(attachment.FileName));
+            item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(attachment.Bytes.Length));
             listViewAttachments.Items.Add(item);
         }
 
@@ -136,15 +157,20 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void listViewAttachments_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (_loading)
+            {
+                return;
+            }
+
             labelInfo.Visible = false;
             textBoxInfo.Visible = false;
             labelImageResizedToFit.Visible = false;
+            buttonExport.Enabled = listViewAttachments.SelectedItems.Count == 1;
 
             if (listViewAttachments.SelectedItems.Count == 0)
             {
                 pictureBoxPreview.Image?.Dispose();
                 pictureBoxPreview.Image = new Bitmap(1, 1);
-                buttonExport.Enabled = false;
                 return;
             }
 
@@ -264,11 +290,11 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
         }
 
-        private void buttonAttachFont_Click(object sender, EventArgs e)
+        private void buttonAttachFile_Click(object sender, EventArgs e)
         {
             openFileDialog1.Title = LanguageSettings.Current.Main.Menu.File.Open.RemoveChar('&');
             openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = "Font|*.ttf";
+            openFileDialog1.Filter = $"{LanguageSettings.Current.AssaAttachments.FontsAndImages}|*.ttf;*{string.Join(";*", _imageExtensions).TrimEnd('*')}|{LanguageSettings.Current.General.Fonts}|*.ttf|{LanguageSettings.Current.General.Images}|*{string.Join(";*", _imageExtensions).TrimEnd('*')}";
             openFileDialog1.FilterIndex = 0;
             openFileDialog1.Multiselect = true;
             var result = openFileDialog1.ShowDialog(this);
@@ -277,40 +303,102 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 return;
             }
 
+            int skipCount = 0;
+            var skipFiles = new List<string>();
+            var newAttachments = new List<AssaAttachment>();
             foreach (var fileName in openFileDialog1.FileNames)
             {
                 var attachmentFileName = Path.GetFileName(fileName);
                 var attachmentContent = UUEncoding.UUEncode(FileUtil.ReadAllBytesShared(fileName));
-                AddToListView(attachmentFileName, attachmentContent, "[Fonts]");
-                listViewAttachments.Items[listViewAttachments.Items.Count - 1].Selected = true;
-                listViewAttachments.Items[listViewAttachments.Items.Count - 1].Focused = true;
+                var ext = Path.GetExtension(attachmentFileName)?.ToLowerInvariant();
+                if (ext == ".ttf")
+                {
+                    AddToListIfNotEmpty(attachmentContent, attachmentFileName, newAttachments, GetType(attachmentFileName));
+                }
+                else if (_imageExtensions.Contains(ext))
+                {
+                    AddToListIfNotEmpty(attachmentContent, attachmentFileName, newAttachments, GetType(attachmentFileName));
+                }
+                else
+                {
+                    skipFiles.Add(attachmentFileName);
+                    skipCount++;
+                }
             }
+
+            var first = true;
+            foreach (var attachment in newAttachments)
+            {
+                _attachments.Add(attachment);
+                AddToListView(attachment);
+                var idx = listViewAttachments.Items.Count - 1;
+                if (first)
+                {
+                    listViewAttachments.SelectedIndices.Clear();
+                    listViewAttachments.EnsureVisible(idx);
+                    listViewAttachments.Items[idx].Focused = true;
+                    first = false;
+                }
+                listViewAttachments.Items[idx].Selected = true;
+            }
+
             UpdateAfterListViewChange();
+            if (skipCount > 0)
+            {
+                MessageBox.Show(string.Format(LanguageSettings.Current.AssaAttachments.FilesSkippedX, skipCount + Environment.NewLine +
+                                                Environment.NewLine +
+                                                string.Join(Environment.NewLine, skipFiles)));
+            }
         }
 
-        private void buttonAttachGraphics_Click(object sender, EventArgs e)
+        private void buttonImport_Click(object sender, EventArgs e)
         {
             openFileDialog1.Title = LanguageSettings.Current.Main.Menu.File.Open.RemoveChar('&');
             openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = "Images|*" + string.Join(";*", _imageExtensions).TrimEnd('*');
+            openFileDialog1.Filter = AdvancedSubStationAlpha.NameOfFormat + " |*.ass";
             openFileDialog1.FilterIndex = 0;
-            openFileDialog1.Multiselect = true;
+            openFileDialog1.Multiselect = false;
             var result = openFileDialog1.ShowDialog(this);
             if (result != DialogResult.OK || !File.Exists(openFileDialog1.FileName))
             {
                 return;
             }
 
-            foreach (var fileName in openFileDialog1.FileNames)
+            int skipCount = 0;
+            var skipFiles = new List<string>();
+            var encoding = LanguageAutoDetect.GetEncodingFromFile(openFileDialog1.FileName);
+            var newAttachments = ListAttachments(FileUtil.ReadAllLinesShared(openFileDialog1.FileName, encoding));
+            var first = true;
+            foreach (var attachment in newAttachments)
             {
-                var attachmentFileName = Path.GetFileName(fileName);
-                var attachmentContent = UUEncoding.UUEncode(FileUtil.ReadAllBytesShared(fileName));
-                AddToListView(attachmentFileName, attachmentContent, "[Graphics]");
-                listViewAttachments.Items[listViewAttachments.Items.Count - 1].Selected = true;
-                listViewAttachments.Items[listViewAttachments.Items.Count - 1].Focused = true;
+                if (_attachments.Any(p => p.FileName.ToLowerInvariant() == attachment.FileName.ToLowerInvariant()))
+                {
+                    skipCount++;
+                    skipFiles.Add(attachment.FileName);
+                    continue;
+                }
+
+                _attachments.Add(attachment);
+                AddToListView(attachment);
+                var idx = listViewAttachments.Items.Count - 1;
+                if (first)
+                {
+                    listViewAttachments.SelectedIndices.Clear();
+                    listViewAttachments.EnsureVisible(idx);
+                    listViewAttachments.Items[idx].Focused = true;
+                    first = false;
+                }
+                listViewAttachments.Items[idx].Selected = true;
             }
 
             UpdateAfterListViewChange();
+            if (skipCount > 0)
+            {
+                MessageBox.Show(string.Format(LanguageSettings.Current.AssaAttachments.FilesSkippedX, skipCount + Environment.NewLine +
+                              Environment.NewLine +
+                              string.Join(Environment.NewLine, skipFiles)));
+            }
+
         }
 
         private void toolStripMenuItemStorageRemove_Click(object sender, EventArgs e)
@@ -320,14 +408,15 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 return;
             }
 
+            _loading = true;
             string askText;
             if (listViewAttachments.SelectedItems.Count > 1)
             {
-                askText = string.Format(LanguageSettings.Current.Main.DeleteXLinesPrompt, listViewAttachments.SelectedItems.Count);
+                askText = string.Format(LanguageSettings.Current.AssaAttachments.RemoveXAttachments, listViewAttachments.SelectedItems.Count);
             }
             else
             {
-                askText = LanguageSettings.Current.Main.DeleteOneLinePrompt;
+                askText = LanguageSettings.Current.AssaAttachments.RemoveOneAttachment;
             }
 
             if (Configuration.Settings.General.PromptDeleteLines && MessageBox.Show(askText, string.Empty, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
@@ -335,6 +424,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 return;
             }
 
+            var idx = listViewAttachments.SelectedItems[0].Index;
             var list = new List<int>();
             foreach (int i in listViewAttachments.SelectedIndices)
             {
@@ -347,16 +437,13 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 listViewAttachments.Items.RemoveAt(index);
             }
 
-            var min = list.Min();
-            if (min >= listViewAttachments.Items.Count)
-            {
-                min--;
-            }
-
+            _loading = false;
+            idx = Math.Min(idx, listViewAttachments.Items.Count - 1);
             if (listViewAttachments.Items.Count > 0)
             {
-                listViewAttachments.Items[min].Selected = true;
-                listViewAttachments.Items[min].Focused = true;
+                listViewAttachments.SelectedIndices.Clear();
+                listViewAttachments.Items[idx].Selected = true;
+                listViewAttachments.Items[idx].Focused = true;
             }
 
             UpdateAfterListViewChange();
@@ -372,11 +459,11 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             string askText;
             if (_attachments.Count > 1)
             {
-                askText = string.Format(LanguageSettings.Current.Main.DeleteXLinesPrompt, _attachments.Count);
+                askText = string.Format(LanguageSettings.Current.AssaAttachments.RemoveXAttachments, _attachments.Count);
             }
             else
             {
-                askText = LanguageSettings.Current.Main.DeleteOneLinePrompt;
+                askText = LanguageSettings.Current.AssaAttachments.RemoveOneAttachment;
             }
 
             if (MessageBox.Show(askText, string.Empty, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
@@ -391,15 +478,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void UpdateAfterListViewChange()
         {
+            buttonExport.Enabled = listViewAttachments.SelectedItems.Count == 1;
             if (listViewAttachments.Items.Count > 0)
             {
-                buttonExport.Enabled = true;
                 return;
             }
 
             pictureBoxPreview.Image?.Dispose();
             pictureBoxPreview.Image = new Bitmap(1, 1);
-            buttonExport.Enabled = false;
         }
 
         private void MoveUp(ListView listView)
@@ -526,12 +612,12 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void toolStripMenuItemStorageImport_Click(object sender, EventArgs e)
         {
-            buttonAttachFont_Click(null, null);
+            buttonAttachFile_Click(null, null);
         }
 
         private void attachGraphicsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            buttonAttachGraphics_Click(null, null);
+            buttonImport_Click(null, null);
         }
 
         private void buttonExport_Click(object sender, EventArgs e)
@@ -660,6 +746,21 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 Configuration.Settings.Tools.AssaAttachmentFontTextPreview = form.PreviewText;
                 listViewAttachments_SelectedIndexChanged(null, null);
             }
+        }
+
+        private void contextMenuStripAttachments_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            toolStripMenuItemStorageRemove.Visible = listViewAttachments.SelectedItems.Count > 0;
+            toolStripMenuItemStorageRemoveAll.Visible = listViewAttachments.Items.Count > 1;
+            toolStripSeparator7.Visible = listViewAttachments.SelectedItems.Count > 0 || listViewAttachments.Items.Count > 1;
+
+            var allowMove = listViewAttachments.SelectedItems.Count == 1 && listViewAttachments.SelectedItems.Count > 0;
+            toolStripMenuItemStorageMoveUp.Visible = allowMove;
+            toolStripMenuItemStorageMoveDown.Visible = allowMove;
+            toolStripMenuItemStorageMoveTop.Visible = allowMove;
+            toolStripMenuItemStorageMoveBottom.Visible = allowMove;
+            toolStripSeparator5.Visible = allowMove;
+            toolStripMenuItemStorageExport.Visible = allowMove;
         }
     }
 }

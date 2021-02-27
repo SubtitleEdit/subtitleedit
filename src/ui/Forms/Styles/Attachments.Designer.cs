@@ -43,13 +43,12 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.toolStripMenuItemStorageMoveTop = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemStorageMoveBottom = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItemStorageImport = new System.Windows.Forms.ToolStripMenuItem();
-            this.attachGraphicsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemStorageAttach = new System.Windows.Forms.ToolStripMenuItem();
+            this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemStorageExport = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
-            this.buttonAttachFont = new System.Windows.Forms.Button();
-            this.buttonAttachGraphics = new System.Windows.Forms.Button();
+            this.buttonAttachFile = new System.Windows.Forms.Button();
             this.pictureBoxPreview = new System.Windows.Forms.PictureBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.buttonExport = new System.Windows.Forms.Button();
@@ -59,6 +58,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.labelImageResizedToFit = new System.Windows.Forms.Label();
             this.contextMenuStripPreview = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.setPreviewTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.buttonImport = new System.Windows.Forms.Button();
+            this.labelFontsAndImages = new System.Windows.Forms.Label();
             this.contextMenuStripAttachments.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
             this.contextMenuStripPreview.SuspendLayout();
@@ -110,11 +111,12 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.toolStripMenuItemStorageMoveTop,
             this.toolStripMenuItemStorageMoveBottom,
             this.toolStripSeparator5,
-            this.toolStripMenuItemStorageImport,
-            this.attachGraphicsToolStripMenuItem,
+            this.toolStripMenuItemStorageAttach,
+            this.importToolStripMenuItem,
             this.toolStripMenuItemStorageExport});
             this.contextMenuStripAttachments.Name = "contextMenuStrip1";
-            this.contextMenuStripAttachments.Size = new System.Drawing.Size(216, 214);
+            this.contextMenuStripAttachments.Size = new System.Drawing.Size(216, 236);
+            this.contextMenuStripAttachments.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripAttachments_Opening);
             // 
             // toolStripMenuItemStorageRemove
             // 
@@ -173,21 +175,20 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.toolStripSeparator5.Name = "toolStripSeparator5";
             this.toolStripSeparator5.Size = new System.Drawing.Size(212, 6);
             // 
-            // toolStripMenuItemStorageImport
+            // toolStripMenuItemStorageAttach
             // 
-            this.toolStripMenuItemStorageImport.Name = "toolStripMenuItemStorageImport";
-            this.toolStripMenuItemStorageImport.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
-            this.toolStripMenuItemStorageImport.Size = new System.Drawing.Size(215, 22);
-            this.toolStripMenuItemStorageImport.Text = "Attach font...";
-            this.toolStripMenuItemStorageImport.Click += new System.EventHandler(this.toolStripMenuItemStorageImport_Click);
+            this.toolStripMenuItemStorageAttach.Name = "toolStripMenuItemStorageAttach";
+            this.toolStripMenuItemStorageAttach.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
+            this.toolStripMenuItemStorageAttach.Size = new System.Drawing.Size(215, 22);
+            this.toolStripMenuItemStorageAttach.Text = "Attach file...";
+            this.toolStripMenuItemStorageAttach.Click += new System.EventHandler(this.toolStripMenuItemStorageImport_Click);
             // 
-            // attachGraphicsToolStripMenuItem
+            // importToolStripMenuItem
             // 
-            this.attachGraphicsToolStripMenuItem.Name = "attachGraphicsToolStripMenuItem";
-            this.attachGraphicsToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
-            this.attachGraphicsToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
-            this.attachGraphicsToolStripMenuItem.Text = "Attach graphics...";
-            this.attachGraphicsToolStripMenuItem.Click += new System.EventHandler(this.attachGraphicsToolStripMenuItem_Click);
+            this.importToolStripMenuItem.Name = "importToolStripMenuItem";
+            this.importToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
+            this.importToolStripMenuItem.Text = "Import...";
+            this.importToolStripMenuItem.Click += new System.EventHandler(this.attachGraphicsToolStripMenuItem_Click);
             // 
             // toolStripMenuItemStorageExport
             // 
@@ -222,29 +223,17 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
-            // buttonAttachFont
+            // buttonAttachFile
             // 
-            this.buttonAttachFont.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonAttachFont.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonAttachFont.Location = new System.Drawing.Point(11, 460);
-            this.buttonAttachFont.Name = "buttonAttachFont";
-            this.buttonAttachFont.Size = new System.Drawing.Size(133, 23);
-            this.buttonAttachFont.TabIndex = 2;
-            this.buttonAttachFont.Text = "Attach font";
-            this.buttonAttachFont.UseVisualStyleBackColor = true;
-            this.buttonAttachFont.Click += new System.EventHandler(this.buttonAttachFont_Click);
-            // 
-            // buttonAttachGraphics
-            // 
-            this.buttonAttachGraphics.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonAttachGraphics.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonAttachGraphics.Location = new System.Drawing.Point(150, 460);
-            this.buttonAttachGraphics.Name = "buttonAttachGraphics";
-            this.buttonAttachGraphics.Size = new System.Drawing.Size(133, 23);
-            this.buttonAttachGraphics.TabIndex = 3;
-            this.buttonAttachGraphics.Text = "Attach graphics";
-            this.buttonAttachGraphics.UseVisualStyleBackColor = true;
-            this.buttonAttachGraphics.Click += new System.EventHandler(this.buttonAttachGraphics_Click);
+            this.buttonAttachFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonAttachFile.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonAttachFile.Location = new System.Drawing.Point(11, 460);
+            this.buttonAttachFile.Name = "buttonAttachFile";
+            this.buttonAttachFile.Size = new System.Drawing.Size(133, 23);
+            this.buttonAttachFile.TabIndex = 2;
+            this.buttonAttachFile.Text = "Attach file";
+            this.buttonAttachFile.UseVisualStyleBackColor = true;
+            this.buttonAttachFile.Click += new System.EventHandler(this.buttonAttachFile_Click);
             // 
             // pictureBoxPreview
             // 
@@ -269,7 +258,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.buttonExport.Name = "buttonExport";
             this.buttonExport.Size = new System.Drawing.Size(133, 23);
             this.buttonExport.TabIndex = 4;
-            this.buttonExport.Text = "Export...";
+            this.buttonExport.Text = "Export";
             this.buttonExport.UseVisualStyleBackColor = true;
             this.buttonExport.Click += new System.EventHandler(this.buttonExport_Click);
             // 
@@ -314,18 +303,40 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             this.setPreviewTextToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
             this.setPreviewTextToolStripMenuItem.Text = "Set preview text...";
             // 
+            // buttonImport
+            // 
+            this.buttonImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonImport.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonImport.Location = new System.Drawing.Point(150, 460);
+            this.buttonImport.Name = "buttonImport";
+            this.buttonImport.Size = new System.Drawing.Size(133, 23);
+            this.buttonImport.TabIndex = 3;
+            this.buttonImport.Text = "Import";
+            this.buttonImport.UseVisualStyleBackColor = true;
+            this.buttonImport.Click += new System.EventHandler(this.buttonImport_Click);
+            // 
+            // labelFontsAndImages
+            // 
+            this.labelFontsAndImages.AutoSize = true;
+            this.labelFontsAndImages.Location = new System.Drawing.Point(12, 19);
+            this.labelFontsAndImages.Name = "labelFontsAndImages";
+            this.labelFontsAndImages.Size = new System.Drawing.Size(108, 13);
+            this.labelFontsAndImages.TabIndex = 14;
+            this.labelFontsAndImages.Text = "labelFontsAndImages";
+            // 
             // Attachments
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(894, 495);
+            this.Controls.Add(this.labelFontsAndImages);
             this.Controls.Add(this.labelImageResizedToFit);
             this.Controls.Add(this.textBoxInfo);
             this.Controls.Add(this.labelInfo);
             this.Controls.Add(this.buttonExport);
             this.Controls.Add(this.pictureBoxPreview);
-            this.Controls.Add(this.buttonAttachGraphics);
-            this.Controls.Add(this.buttonAttachFont);
+            this.Controls.Add(this.buttonImport);
+            this.Controls.Add(this.buttonAttachFile);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.listViewAttachments);
@@ -355,8 +366,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private System.Windows.Forms.ColumnHeader columnHeaderFileSize;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
-        private System.Windows.Forms.Button buttonAttachFont;
-        private System.Windows.Forms.Button buttonAttachGraphics;
+        private System.Windows.Forms.Button buttonAttachFile;
         private System.Windows.Forms.PictureBox pictureBoxPreview;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripAttachments;
@@ -368,8 +378,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStorageMoveTop;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStorageMoveBottom;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStorageImport;
-        private System.Windows.Forms.ToolStripMenuItem attachGraphicsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStorageAttach;
+        private System.Windows.Forms.ToolStripMenuItem importToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStorageExport;
         private System.Windows.Forms.Button buttonExport;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
@@ -378,5 +388,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private System.Windows.Forms.Label labelImageResizedToFit;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripPreview;
         private System.Windows.Forms.ToolStripMenuItem setPreviewTextToolStripMenuItem;
+        private System.Windows.Forms.Button buttonImport;
+        private System.Windows.Forms.Label labelFontsAndImages;
     }
 }
