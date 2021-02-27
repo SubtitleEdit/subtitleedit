@@ -100,6 +100,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "General/VideoFiles":
                     language.General.VideoFiles = reader.Value;
                     break;
+                case "General/Images":
+                    language.General.Images = reader.Value;
+                    break;
+                case "General/Fonts":
+                    language.General.Fonts = reader.Value;
+                    break;
                 case "General/AudioFiles":
                     language.General.AudioFiles = reader.Value;
                     break;
@@ -442,6 +448,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "AssaAttachments/Title":
                     language.AssaAttachments.Title = reader.Value;
                     break;
+                case "AssaAttachments/AttachFiles":
+                    language.AssaAttachments.AttachFiles = reader.Value;
+                    break;
+                case "AssaAttachments/FontsAndImages":
+                    language.AssaAttachments.FontsAndImages = reader.Value;
+                    break;
                 case "AssaAttachments/Graphics":
                     language.AssaAttachments.Graphics = reader.Value;
                     break;
@@ -459,6 +471,15 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "AssaAttachments/ImageResized":
                     language.AssaAttachments.ImageResized = reader.Value;
+                    break;
+                case "AssaAttachments/FilesSkippedX":
+                    language.AssaAttachments.FilesSkippedX = reader.Value;
+                    break;
+                case "AssaAttachments/RemoveOneAttachment":
+                    language.AssaAttachments.RemoveOneAttachment = reader.Value;
+                    break;
+                case "AssaAttachments/RemoveXAttachments":
+                    language.AssaAttachments.RemoveXAttachments = reader.Value;
                     break;
                 case "AudioToText/Title":
                     language.AudioToText.Title = reader.Value;
