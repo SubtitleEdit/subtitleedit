@@ -15,6 +15,8 @@
     <SubtitleFiles>Subtitle files</SubtitleFiles>
     <AllFiles>All files</AllFiles>
     <VideoFiles>Video files</VideoFiles>
+    <Images>Images</Images>
+    <Fonts>Fonts</Fonts>
     <AudioFiles>Audio files</AudioFiles>
     <OpenSubtitle>Open subtitle...</OpenSubtitle>
     <OpenVideoFile>Open video file...</OpenVideoFile>
@@ -163,14 +165,17 @@ Note: Do check free disk space.</WaveFileMalformed>
   </ApplyDurationLimits>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha attachments</Title>
-    <AttachFont>Attach fonts</AttachFont>
-    <AttachGraphics>Attach graphics</AttachGraphics>
+    <AttachFiles>Attach files...</AttachFiles>
+    <FontsAndImages>Fonts and images</FontsAndImages>
     <Graphics>Graphics</Graphics>
     <Font>Font</Font>
     <ImageName>Image name ({0}x{1}):</ImageName>
     <IconName>Icon name:</IconName>
     <FontName>Font name:</FontName>
     <ImageResized>Image resized to fit current window</ImageResized>
+    <FilesSkippedX>Files skipped: {0}</FilesSkippedX>
+    <RemoveOneAttachment>Remove one attachment?</RemoveOneAttachment>
+    <RemoveXAttachments>Remove {0} attachments?</RemoveXAttachments>
   </AssaAttachments>
   <AudioToText>
     <Title>Audio to text</Title>
