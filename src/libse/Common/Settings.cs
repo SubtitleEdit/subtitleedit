@@ -327,6 +327,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string ColumnPasteColumn { get; set; }
         public string ColumnPasteOverwriteMode { get; set; }
         public string AssaAttachmentFontTextPreview { get; set; }
+        public string VisualSyncStartSize { get; set; }
 
         public ToolsSettings()
         {
@@ -4934,6 +4935,18 @@ $HorzAlign          =   Center
                 settings.Tools.ColumnPasteOverwriteMode = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("AssaAttachmentFontTextPreview");
+            if (subNode != null)
+            {
+                settings.Tools.AssaAttachmentFontTextPreview = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("VisualSyncStartSize");
+            if (subNode != null)
+            {
+                settings.Tools.VisualSyncStartSize = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("FindHistory");
             if (subNode != null)
             {
@@ -8376,6 +8389,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MergeShortLinesOnlyContinuous", settings.Tools.MergeShortLinesOnlyContinuous.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ColumnPasteColumn", settings.Tools.ColumnPasteColumn);
                 textWriter.WriteElementString("ColumnPasteOverwriteMode", settings.Tools.ColumnPasteOverwriteMode);
+                textWriter.WriteElementString("AssaAttachmentFontTextPreview", settings.Tools.AssaAttachmentFontTextPreview);
+                textWriter.WriteElementString("VisualSyncStartSize", settings.Tools.VisualSyncStartSize);
 
                 if (settings.Tools.FindHistory != null && settings.Tools.FindHistory.Count > 0)
                 {
