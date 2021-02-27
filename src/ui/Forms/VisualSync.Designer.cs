@@ -30,6 +30,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(VisualSync));
             this.buttonOpenMovie = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.buttonOK = new System.Windows.Forms.Button();
@@ -108,6 +109,7 @@ namespace Nikse.SubtitleEdit.Forms
             // MediaPlayerStart
             // 
             this.MediaPlayerStart.BackColor = System.Drawing.Color.Black;
+            this.MediaPlayerStart.Chapters = ((System.Collections.Generic.List<Nikse.SubtitleEdit.Core.ContainerFormats.Matroska.MatroskaChapter>)(resources.GetObject("MediaPlayerStart.Chapters")));
             this.MediaPlayerStart.CurrentPosition = 0D;
             this.MediaPlayerStart.FontSizeFactor = 1F;
             this.MediaPlayerStart.LastParagraph = null;
@@ -216,6 +218,7 @@ namespace Nikse.SubtitleEdit.Forms
             // MediaPlayerEnd
             // 
             this.MediaPlayerEnd.BackColor = System.Drawing.Color.Black;
+            this.MediaPlayerEnd.Chapters = ((System.Collections.Generic.List<Nikse.SubtitleEdit.Core.ContainerFormats.Matroska.MatroskaChapter>)(resources.GetObject("MediaPlayerEnd.Chapters")));
             this.MediaPlayerEnd.CurrentPosition = 0D;
             this.MediaPlayerEnd.FontSizeFactor = 1F;
             this.MediaPlayerEnd.LastParagraph = null;

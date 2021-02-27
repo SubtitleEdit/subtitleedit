@@ -2330,11 +2330,6 @@ namespace Nikse.SubtitleEdit.Forms
                         ShowStatus(_language.VisualSyncPerformed);
                     }
 
-                    if (visualSync.FrameRateChanged)
-                    {
-                        toolStripComboBoxFrameRate.Text = string.Format("{0:0.###}", visualSync.FrameRate);
-                    }
-
                     UpdateSourceView();
                     SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
                     RestoreSubtitleListviewIndices();

@@ -20,7 +20,6 @@ namespace Nikse.SubtitleEdit.Forms
         private string _subtitleFileName;
         private Subtitle _inputSubtitle;
         private Subtitle _inputOriginalSubtitle;
-        private double _oldFrameRate;
         private bool _isStartSceneActive;
         private double _startGoBackPosition;
         private double _startStopPosition = -1.0;
@@ -35,8 +34,6 @@ namespace Nikse.SubtitleEdit.Forms
         public int AudioTrackNumber { get; set; }
 
         public bool OkPressed { get; set; }
-
-        public bool FrameRateChanged { get; private set; }
 
         public double FrameRate => _videoInfo?.FramesPerSecond ?? 0;
 
@@ -79,6 +76,18 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = _languageGeneral.Cancel;
             labelTip.Text = _language.Tip;
             UiUtil.FixLargeFonts(this, buttonCancel);
+
+            var arr = Configuration.Settings.Tools.VisualSyncStartSize?.Split(';');
+            if (arr != null && arr.Length == 2 && int.TryParse(arr[0], out var x) && int.TryParse(arr[1], out var y))
+            {
+                var bounds = Screen.FromControl(this).Bounds;
+                if (x >= MinimumSize.Width && x < bounds.Width && y > MinimumSize.Height && y < bounds.Height)
+                {
+                    Width = x;
+                    Height = y;
+                }
+            }
+
             _timerHideSyncLabel.Tick += timerHideSyncLabel_Tick;
             _timerHideSyncLabel.Interval = 1000;
         }
@@ -90,15 +99,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GotoSubtitlePosition(VideoPlayerContainer mediaPlayer)
         {
-            int index;
-            if (mediaPlayer == MediaPlayerStart)
-            {
-                index = comboBoxStartTexts.SelectedIndex;
-            }
-            else
-            {
-                index = comboBoxEndTexts.SelectedIndex;
-            }
+            var index = mediaPlayer == MediaPlayerStart ? comboBoxStartTexts.SelectedIndex : comboBoxEndTexts.SelectedIndex;
 
             mediaPlayer.Pause();
             if (index != -1)
@@ -146,7 +147,7 @@ namespace Nikse.SubtitleEdit.Forms
                     MediaPlayerEnd.VideoPlayer.DisposeVideoPlayer();
                 }
 
-                VideoInfo videoInfo = ShowVideoInfo(fileName);
+                var videoInfo = ShowVideoInfo(fileName);
                 UiUtil.InitializeVideoPlayerAndContainer(fileName, videoInfo, MediaPlayerStart, VideoStartLoaded, VideoStartEnded);
             }
         }
@@ -160,14 +161,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             MediaPlayerStart.Pause();
             GotoSubtitlePosition(MediaPlayerStart);
-
-            _startGoBackPosition = MediaPlayerStart.CurrentPosition;
-            _startStopPosition = _startGoBackPosition + 0.1;
-            MediaPlayerStart.Play();
-
-            if (MediaPlayerStart.VideoPlayer.GetType() == typeof(LibVlcDynamic))
+            if (MediaPlayerStart.VideoPlayer is LibVlcDynamic vlc)
             {
-                MediaPlayerEnd.VideoPlayer = (MediaPlayerStart.VideoPlayer as LibVlcDynamic).MakeSecondMediaPlayer(MediaPlayerEnd.PanelPlayer, VideoFileName, VideoEndLoaded, VideoEndEnded);
+                MediaPlayerEnd.VideoPlayer = vlc.MakeSecondMediaPlayer(MediaPlayerEnd.PanelPlayer, VideoFileName, VideoEndLoaded, VideoEndEnded);
             }
             else
             {
@@ -176,14 +172,12 @@ namespace Nikse.SubtitleEdit.Forms
             timer1.Start();
             timerProgressBarRefresh.Start();
 
-            if (AudioTrackNumber >= 0 && MediaPlayerStart.VideoPlayer is LibVlcDynamic)
+            if (AudioTrackNumber >= 0 && MediaPlayerStart.VideoPlayer is LibVlcDynamic libVlc)
             {
-                var libVlc = (LibVlcDynamic)MediaPlayerStart.VideoPlayer;
                 libVlc.AudioTrackNumber = AudioTrackNumber;
             }
-            else if (AudioTrackNumber >= 0 && MediaPlayerStart.VideoPlayer is LibMpvDynamic)
+            else if (AudioTrackNumber >= 0 && MediaPlayerStart.VideoPlayer is LibMpvDynamic libMpv)
             {
-                var libMpv = (LibMpvDynamic)MediaPlayerStart.VideoPlayer;
                 libMpv.AudioTrackNumber = AudioTrackNumber;
             }
         }
@@ -197,19 +191,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             MediaPlayerEnd.Pause();
             GotoSubtitlePosition(MediaPlayerEnd);
-
-            _endGoBackPosition = MediaPlayerEnd.CurrentPosition;
-            _endStopPosition = _endGoBackPosition + 0.1;
-            MediaPlayerEnd.Play();
-
-            if (AudioTrackNumber >= 0 && MediaPlayerEnd.VideoPlayer is LibVlcDynamic)
+            if (AudioTrackNumber >= 0 && MediaPlayerEnd.VideoPlayer is LibVlcDynamic libVlc)
             {
-                var libVlc = (LibVlcDynamic)MediaPlayerEnd.VideoPlayer;
                 libVlc.AudioTrackNumber = AudioTrackNumber;
             }
-            else if (AudioTrackNumber >= 0 && MediaPlayerEnd.VideoPlayer is LibMpvDynamic)
+            else if (AudioTrackNumber >= 0 && MediaPlayerEnd.VideoPlayer is LibMpvDynamic libMpv)
             {
-                var libMpv = (LibMpvDynamic)MediaPlayerEnd.VideoPlayer;
                 libMpv.AudioTrackNumber = AudioTrackNumber;
             }
         }
@@ -278,6 +265,7 @@ namespace Nikse.SubtitleEdit.Forms
             MediaPlayerStart?.Pause();
             MediaPlayerEnd?.Pause();
 
+            Configuration.Settings.Tools.VisualSyncStartSize = Width + ";" + Height;
             bool change = false;
             for (int i = 0; i < _paragraphs.Count; i++)
             {
@@ -294,15 +282,9 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            DialogResult dr;
-            if (DialogResult == DialogResult.OK)
-            {
-                dr = DialogResult.Yes;
-            }
-            else
-            {
-                dr = MessageBox.Show(_language.KeepChangesMessage, _language.KeepChangesTitle, MessageBoxButtons.YesNoCancel);
-            }
+            var dr = DialogResult == DialogResult.OK ?
+                DialogResult.Yes :
+                MessageBox.Show(_language.KeepChangesMessage, _language.KeepChangesTitle, MessageBoxButtons.YesNoCancel);
 
             if (dr == DialogResult.Cancel)
             {
@@ -330,7 +312,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             _inputSubtitle = subtitle;
             _inputOriginalSubtitle = original;
-            _oldFrameRate = frameRate;
             _subtitleFileName = fileName;
             Text = title;
         }
@@ -338,7 +319,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void LoadAndShowOriginalSubtitle()
         {
             _paragraphs = new List<Paragraph>();
-            foreach (Paragraph p in _inputSubtitle.Paragraphs)
+            foreach (var p in _inputSubtitle.Paragraphs)
             {
                 _paragraphs.Add(new Paragraph(p));
             }
@@ -346,7 +327,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_inputOriginalSubtitle != null)
             {
                 _paragraphsOriginal = new List<Paragraph>();
-                foreach (Paragraph p in _inputOriginalSubtitle.Paragraphs)
+                foreach (var p in _inputOriginalSubtitle.Paragraphs)
                 {
                     _paragraphsOriginal.Add(new Paragraph(p));
                 }
@@ -486,7 +467,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _paragraphsOriginal = tmpSubtitle.Paragraphs;
             }
 
-            // update comboboxes
+            // update combo boxes
             int startSaveIdx = comboBoxStartTexts.SelectedIndex;
             int endSaveIdx = comboBoxEndTexts.SelectedIndex;
             FillStartAndEndTexts();
@@ -684,80 +665,32 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.Left)
                 {
-                    if (_isStartSceneActive)
-                    {
-                        GoBackSeconds(0.5, MediaPlayerStart);
-                    }
-                    else
-                    {
-                        GoBackSeconds(0.5, MediaPlayerEnd);
-                    }
-
+                    GoBackSeconds(0.5, _isStartSceneActive ? MediaPlayerStart : MediaPlayerEnd);
                     e.SuppressKeyPress = true;
                 }
                 else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.Right)
                 {
-                    if (_isStartSceneActive)
-                    {
-                        GoBackSeconds(-0.5, MediaPlayerStart);
-                    }
-                    else
-                    {
-                        GoBackSeconds(-0.5, MediaPlayerEnd);
-                    }
-
+                    GoBackSeconds(-0.5, _isStartSceneActive ? MediaPlayerStart : MediaPlayerEnd);
                     e.SuppressKeyPress = true;
                 }
                 else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Left)
                 {
-                    if (_isStartSceneActive)
-                    {
-                        GoBackSeconds(0.1, MediaPlayerStart);
-                    }
-                    else
-                    {
-                        GoBackSeconds(0.1, MediaPlayerEnd);
-                    }
-
+                    GoBackSeconds(0.1, _isStartSceneActive ? MediaPlayerStart : MediaPlayerEnd);
                     e.SuppressKeyPress = true;
                 }
                 else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Right)
                 {
-                    if (_isStartSceneActive)
-                    {
-                        GoBackSeconds(-0.1, MediaPlayerStart);
-                    }
-                    else
-                    {
-                        GoBackSeconds(-0.1, MediaPlayerEnd);
-                    }
-
+                    GoBackSeconds(-0.1, _isStartSceneActive ? MediaPlayerStart : MediaPlayerEnd);
                     e.SuppressKeyPress = true;
                 }
                 else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.Right)
                 {
-                    if (_isStartSceneActive)
-                    {
-                        GoBackSeconds(1.0, MediaPlayerStart);
-                    }
-                    else
-                    {
-                        GoBackSeconds(1.0, MediaPlayerEnd);
-                    }
-
+                    GoBackSeconds(1.0, _isStartSceneActive ? MediaPlayerStart : MediaPlayerEnd);
                     e.SuppressKeyPress = true;
                 }
                 else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.Left)
                 {
-                    if (_isStartSceneActive)
-                    {
-                        GoBackSeconds(-1.0, MediaPlayerStart);
-                    }
-                    else
-                    {
-                        GoBackSeconds(-1.0, MediaPlayerEnd);
-                    }
-
+                    GoBackSeconds(-1.0, _isStartSceneActive ? MediaPlayerStart : MediaPlayerEnd);
                     e.SuppressKeyPress = true;
                 }
                 else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Space)
@@ -783,7 +716,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonStartVerifyClick(object sender, EventArgs e)
         {
-            if (MediaPlayerStart != null && MediaPlayerStart.VideoPlayer != null)
+            if (MediaPlayerStart?.VideoPlayer != null)
             {
                 _startGoBackPosition = MediaPlayerStart.CurrentPosition;
                 _startStopPosition = _startGoBackPosition + Configuration.Settings.Tools.VerifyPlaySeconds;
@@ -793,7 +726,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonEndVerifyClick(object sender, EventArgs e)
         {
-            if (MediaPlayerEnd != null && MediaPlayerEnd.VideoPlayer != null)
+            if (MediaPlayerEnd?.VideoPlayer != null)
             {
                 _endGoBackPosition = MediaPlayerEnd.CurrentPosition;
                 _endStopPosition = _endGoBackPosition + Configuration.Settings.Tools.VerifyPlaySeconds;
@@ -875,24 +808,23 @@ namespace Nikse.SubtitleEdit.Forms
             _adjustInfo = string.Empty;
             if (videoPlayerCurrentEndPos > videoPlayerCurrentStartPos)
             {
-                double subStart = _paragraphs[comboBoxStartTexts.SelectedIndex].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
-                double subEnd = _paragraphs[comboBoxEndTexts.SelectedIndex].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
+                var subStart = _paragraphs[comboBoxStartTexts.SelectedIndex].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
+                var subEnd = _paragraphs[comboBoxEndTexts.SelectedIndex].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
 
-                double subDiff = subEnd - subStart;
-                double realDiff = videoPlayerCurrentEndPos - videoPlayerCurrentStartPos;
+                var subDiff = subEnd - subStart;
+                var realDiff = videoPlayerCurrentEndPos - videoPlayerCurrentStartPos;
 
                 // speed factor
-                double factor = realDiff / subDiff;
+                var factor = realDiff / subDiff;
 
                 // adjust to starting position
-                double adjust = videoPlayerCurrentStartPos - subStart * factor;
+                var adjust = videoPlayerCurrentStartPos - subStart * factor;
 
                 if (Math.Abs(adjust) > 0.001 || (Math.Abs(1 - factor)) > 0.001)
                 {
-                    _adjustInfo = string.Format("*{0:0.000}, {1:+0.000;-0.000}", factor, adjust);
+                    _adjustInfo = $"*{factor:0.000}, {adjust:+0.000;-0.000}";
                 }
             }
         }
-
     }
 }
