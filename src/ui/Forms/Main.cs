@@ -2257,7 +2257,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            using (var visualSync = new VisualSync())
+            using (var visualSync = new VisualSync(this))
             {
                 visualSync.VideoFileName = VideoFileName;
                 visualSync.AudioTrackNumber = VideoAudioTrackNumber;
@@ -7021,7 +7021,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (format != null && subtitleToAppend.Paragraphs.Count > 1)
                         {
-                            using (var visualSync = new VisualSync())
+                            using (var visualSync = new VisualSync(this))
                             {
                                 visualSync.Initialize(toolStripButtonVisualSync.Image as Bitmap, subtitleToAppend, null, _fileName, _language.AppendViaVisualSyncTitle, CurrentFrameRate);
                                 visualSync.ShowDialog(this);
