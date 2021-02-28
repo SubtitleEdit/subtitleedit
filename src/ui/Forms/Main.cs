@@ -4622,7 +4622,11 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 _subtitle.MakeHistoryForUndo(string.Format(_language.BeforeConvertingToX, format.FriendlyName), _oldSubtitleFormat, _fileDateTime, _subtitleOriginal, _subtitleOriginalFileName, _subtitleListViewIndex, textBoxListViewText.SelectionStart, textBoxListViewTextOriginal.SelectionStart);
-                _oldSubtitleFormat.RemoveNativeFormatting(_subtitle, format);
+                if (_oldSubtitleFormat?.GetType() != format.GetType())
+                {
+                    _oldSubtitleFormat.RemoveNativeFormatting(_subtitle, format);
+                }
+
                 SaveSubtitleListviewIndices();
                 SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
                 RestoreSubtitleListviewIndices();
