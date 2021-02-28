@@ -700,9 +700,33 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             // go to segment
             _stream.Seek(_segmentElement.DataPosition, SeekOrigin.Begin);
 
-            Element element;
-            while (_stream.Position < _segmentElement.EndPosition && (element = ReadElement()) != null)
+            while (_stream.Position < _segmentElement.EndPosition)
             {
+                var beforeReadElementIdPosition = _stream.Position;
+                var id = (ElementId)ReadVariableLengthUInt(false);
+                if (id == ElementId.None && beforeReadElementIdPosition + 1000 < _stream.Length)
+                {
+                    // Error mode: search for start of next cluster, will be very slow
+                    const int maxErrors = 5_000_000;
+                    var errors = 0;
+                    var max = _stream.Length;
+                    while (id != ElementId.Cluster && beforeReadElementIdPosition + 1000 < max)
+                    {
+                        errors++;
+                        if (errors > maxErrors)
+                        {
+                            return; // we give up
+                        }
+
+                        beforeReadElementIdPosition++;
+                        _stream.Seek(beforeReadElementIdPosition, SeekOrigin.Begin);
+                        id = (ElementId)ReadVariableLengthUInt(false);
+                    }
+                }
+
+                var size = (long)ReadVariableLengthUInt();
+                var element = new Element(id, _stream.Position, size);
+
                 if (element.Id == ElementId.Cluster)
                 {
                     ReadCluster(element);
@@ -719,7 +743,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         private Element ReadElement()
         {
             var id = (ElementId)ReadVariableLengthUInt(false);
-            if (id <= ElementId.None)
+            if (id == ElementId.None)
             {
                 return null;
             }
