@@ -5290,6 +5290,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/ClearBookmarks":
                     language.Settings.ClearBookmarks = reader.Value;
                     break;
+                case "Settings/ExportBookmarks":
+                    language.Settings.ExportBookmarks = reader.Value;
+                    break;
                 case "Settings/GoToBookmark":
                     language.Settings.GoToBookmark = reader.Value;
                     break;

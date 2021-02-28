@@ -29035,6 +29035,11 @@ namespace Nikse.SubtitleEdit.Forms
             menuItem.Click += (sender2, e2) => { ClearBookmarks(); };
             _bookmarkContextMenu.Items.Add(menuItem);
 
+            // export bookmarks
+            menuItem = new ToolStripMenuItem(LanguageSettings.Current.Settings.ExportBookmarks);
+            menuItem.Click += (sender2, e2) => { BookmarksGoTo.ExportBookmarksAsCsv(_subtitle, this); };
+            _bookmarkContextMenu.Items.Add(menuItem);
+
             UiUtil.FixFonts(_bookmarkContextMenu);
             pictureBoxBookmark.ContextMenuStrip = _bookmarkContextMenu;
         }

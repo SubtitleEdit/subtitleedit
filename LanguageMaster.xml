@@ -1281,7 +1281,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <WebVTTRemoveVoices>Remove voices</WebVTTRemoveVoices>
         <NewActor>New actor...</NewActor>
         <RemoveActors>Remove actors</RemoveActors>
-        <EditBookmark>Edit bookmark</EditBookmark>
+        <EditBookmark>Edit bookmark...</EditBookmark>
         <RemoveBookmark>Remove bookmark</RemoveBookmark>
         <GoToSourceView>Go to source view</GoToSourceView>
         <GoToListView>Go to list view</GoToListView>
@@ -1960,7 +1960,8 @@ can edit in same subtitle file (collaboration)</Information>
     <ToggleBookmarks>Toggle bookmarks</ToggleBookmarks>
     <ToggleBookmarksWithComment>Toggle bookmarks - add comment</ToggleBookmarksWithComment>
     <ClearBookmarks>Clear bookmarks</ClearBookmarks>
-    <GoToBookmark>Go to bookmark</GoToBookmark>
+    <ExportBookmarks>Export bookmarks...</ExportBookmarks>
+    <GoToBookmark>Go to bookmark...</GoToBookmark>
     <GoToPreviousBookmark>Go to previous bookmark</GoToPreviousBookmark>
     <GoToNextBookmark>Go to next bookmark</GoToNextBookmark>
     <ChooseProfile>Choose profile</ChooseProfile>
@@ -1982,7 +1983,7 @@ can edit in same subtitle file (collaboration)</Information>
     <SubtitleLineMaximumLength>Single line max. length</SubtitleLineMaximumLength>
     <OptimalCharactersPerSecond>Optimal chars/sec</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>Max. chars/sec</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>Max. words/min</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>Max. words/min</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>Auto-wrap while typing</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Min. duration, milliseconds</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Max. duration, milliseconds</DurationMaximumMilliseconds>
