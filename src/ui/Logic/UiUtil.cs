@@ -1068,10 +1068,10 @@ namespace Nikse.SubtitleEdit.Logic
         {
             var sb = new StringBuilder();
             sb.Append(LanguageSettings.Current.General.SubtitleFiles + "|");
-            foreach (SubtitleFormat s in SubtitleFormat.AllSubtitleFormats)
+            foreach (var s in SubtitleFormat.AllSubtitleFormats.Concat(SubtitleFormat.GetTextOtherFormats()))
             {
                 AddExtension(sb, s.Extension);
-                foreach (string ext in s.AlternateExtensions)
+                foreach (var ext in s.AlternateExtensions)
                 {
                     AddExtension(sb, ext);
                 }
@@ -1091,7 +1091,6 @@ namespace Nikse.SubtitleEdit.Logic
             AddExtension(sb, ".mks");
             AddExtension(sb, ".mxf");
             AddExtension(sb, ".sup");
-            AddExtension(sb, ".dost");
             AddExtension(sb, new FinalDraftTemplate2().Extension);
             AddExtension(sb, new Ayato().Extension);
             AddExtension(sb, new PacUnicode().Extension);
