@@ -1032,7 +1032,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <CloseOriginal>Close original subtitle</CloseOriginal>
         <OpenContainingFolder>Open containing folder</OpenContainingFolder>
         <Compare>&amp;Compare...</Compare>
-        <Statistics>Statisti&amp;cs...</Statistics>
+        <Statistics>S&amp;tatistics...</Statistics>
         <Plugins>Plugins...</Plugins>
         <ImportSubtitleFromVideoFile>Subtitle from video file...</ImportSubtitleFromVideoFile>
         <ImportOcrFromDvd>Subtitle from VOB/IFO (DVD)...</ImportOcrFromDvd>
@@ -2441,7 +2441,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <SpellCheckCompleted>Spell check completed</SpellCheckCompleted>
     <SpellCheckAborted>Spell check aborted</SpellCheckAborted>
     <SpacesNotAllowed>Spaces not allowed in single word!</SpacesNotAllowed>
-    <UndoX>Undo: {0}</UndoX>
+    <UndoX>Undo: "{0}"</UndoX>
   </SpellCheck>
   <NetflixQualityCheck>
     <GlyphCheckReport>Invalid character {0} found at column {1}</GlyphCheckReport>
