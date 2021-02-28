@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             using (var pacEncoding = new PacEncoding(previewBuffer, fileName))
             {
-                if (pacEncoding.ShowDialog(_parent) == System.Windows.Forms.DialogResult.OK)
+                if (pacEncoding.ShowDialog(_parent) == DialogResult.OK)
                 {
                     Configuration.Settings.General.LastPacCodePage = pacEncoding.CodePageIndex;
                     return pacEncoding.CodePageIndex;
