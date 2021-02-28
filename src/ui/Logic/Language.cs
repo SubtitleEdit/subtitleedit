@@ -1531,7 +1531,7 @@ namespace Nikse.SubtitleEdit.Logic
                         CloseOriginal = "Close original subtitle",
                         OpenContainingFolder = "Open containing folder",
                         Compare = "&Compare...",
-                        Statistics = "Statisti&cs...",
+                        Statistics = "S&tatistics...",
                         Plugins = "Plugins...",
                         ImportSubtitleFromVideoFile = "Subtitle from video file...",
                         ImportOcrFromDvd = "Subtitle from VOB/IFO (DVD)...",
@@ -2764,7 +2764,7 @@ can edit in same subtitle file (collaboration)",
                 SpellCheckCompleted = "Spell check completed",
                 SpellCheckAborted = "Spell check aborted",
                 SpacesNotAllowed = "Spaces not allowed in single word!",
-                UndoX = "Undo: {0}",
+                UndoX = "Undo: \"{0}\"",
             };
 
             NetflixQualityCheck = new LanguageStructure.NetflixQualityCheck

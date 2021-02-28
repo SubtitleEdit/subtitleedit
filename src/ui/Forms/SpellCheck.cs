@@ -1160,12 +1160,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             string format = LanguageSettings.Current.SpellCheck.UndoX;
-            if (string.IsNullOrEmpty(format))
-            {
-                format = "Undo: {0}";
-            }
-
-            string undoText = string.Format(format, text);
+            string undoText = string.Format(format, text.RemoveChar('&'));
 
             _undoList.Add(new UndoObject
             {
