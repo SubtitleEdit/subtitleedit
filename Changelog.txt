@@ -8,6 +8,8 @@
    * Add support for attached fonts in ASSA style manager
    * Add "Apply" button in ASSA style manager - thx LeonCheung
    * Add bookmarks to modify selection - thx moob158/OmrSi
+   * Add shortcut for toggling video controls on/off
+   * Add export to csv of bookmarks - thx kjaerlige
 * IMPROVED:
    * Update Polish translation - thx admas
    * Update Bulgarian translation - thx Калин
@@ -18,6 +20,7 @@
    * Minor update of icon/install image - thx LeonCheung
    * Save translate merge options - thx chorong761
    * Allow multiple selection in Assa style manager - thx OmrSi
+   * Allow some errors when reading mkv files - thx Ian
 * FIXED:
    * Fix show (correct) EBU properties for current file - thx Emilien
    * Fix non-ASCII chars when enc 20269 is unavailable (Linux) - thx jason
