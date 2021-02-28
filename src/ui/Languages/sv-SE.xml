@@ -1777,7 +1777,7 @@ kan redigera i samma undertextfil (samarbete)</Information>
     <SubtitleLineMaximumLength>Maximal undertextlängd</SubtitleLineMaximumLength>
     <OptimalCharactersPerSecond>Optimal tecken/sek</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>Max tecken/sek</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>Max ord/min</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>Max ord/min</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>Byt rad automatiskt när du skriver</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Minsta längd, millisekunder</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Maximala längd, millisekunder</DurationMaximumMilliseconds>

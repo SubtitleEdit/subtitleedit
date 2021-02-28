@@ -1959,7 +1959,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SubtitleLineMaximumLength>Μέγιστο μήκος γραμμής</SubtitleLineMaximumLength>
     <OptimalCharactersPerSecond>Βέλτιστοι χαρακτήρες/δευτ.</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>Μέγιστοι χαρακτήρες/δευτ.</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>Μέγιστος αριθμός λέξεων/λεπτό</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>Μέγιστος αριθμός λέξεων/λεπτό</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>Αυτόματη διάσπαση</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Ελάχιστη διάρκεια, χιλ. δευτ.</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Μέγιστη διάρκεια, χιλ. δευτ.</DurationMaximumMilliseconds>

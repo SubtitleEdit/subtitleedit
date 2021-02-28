@@ -1967,7 +1967,7 @@ Command line: {1} {2}
     <SubtitleLineMaximumLength>单行最大长度</SubtitleLineMaximumLength>
     <OptimalCharactersPerSecond>最佳每秒字节数</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>最大每秒字频</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>最大每分词频 </MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>最大每分词频 </MaximumWordsPerMinute>
     <AutoWrapWhileTyping>打字时自动换行</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>最小时长，毫秒</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>最大时长，毫秒</DurationMaximumMilliseconds>

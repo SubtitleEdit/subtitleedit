@@ -1742,7 +1742,7 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <AutoDetectAnsiEncoding>Codage ANSI détection auto.</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Longueur maxi. de ligne</SubtitleLineMaximumLength>
     <MaximumCharactersPerSecond>Caractères maxi./seconde</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>Mots maxi./minute</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>Mots maxi./minute</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>Défilement auto. à la frappe</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Durée mini. en millisecondes</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Durée maxi. en millisecondes</DurationMaximumMilliseconds>

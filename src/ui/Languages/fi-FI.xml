@@ -1914,7 +1914,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <SubtitleLineMaximumLength>Yhden rivin suurin pituus</SubtitleLineMaximumLength>
     <OptimalCharactersPerSecond>Optimaaliset merk./sek.</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>Maks. merk./sek.</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>Maks. sanoja/min.</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>Maks. sanoja/min.</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>Automaattinen rivitys kirjoitettaessa</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Pienin kesto, millisekuntia</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Suurin kesto, millisekuntia</DurationMaximumMilliseconds>

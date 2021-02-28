@@ -1789,7 +1789,7 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <SubtitleLineMaximumLength>Longitud máxima línea simple</SubtitleLineMaximumLength>
     <OptimalCharactersPerSecond>Caracteres óptimos/s</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>Max. caracteres/seg</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>Max. de palabras/min</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>Max. de palabras/min</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>Autoajuste de línea durante escritura</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Mín. milisegundos de duración,</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Max. milisegundos de duración,</DurationMaximumMilliseconds>

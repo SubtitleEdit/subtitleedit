@@ -1956,7 +1956,7 @@ Yeni oturum başlatın (işbirliği)</Information>
     <SubtitleLineMaximumLength>Tek satırda en çok harf sayısı</SubtitleLineMaximumLength>
     <OptimalCharactersPerSecond>Optimal karakter/saniye</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>En çok harf sayısı (sn)</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>En çok kelime sayısı (dk)</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>En çok kelime sayısı (dk)</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>Yazarken otomatik kaydır</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>En az altyazı süresi (ms)</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>En çok altyazı süresi (ms)</DurationMaximumMilliseconds>

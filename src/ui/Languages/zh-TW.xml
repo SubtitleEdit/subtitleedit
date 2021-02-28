@@ -1633,7 +1633,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <AutoDetectAnsiEncoding>自動偵測 ANSI 編碼</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>單行最大長度</SubtitleLineMaximumLength>
     <MaximumCharactersPerSecond>每秒最大字元數</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>每分鐘最大單字數</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>每分鐘最大單字數</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>打字時自動換行</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>最小持續時間 (毫秒)</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>最大持續時間 (毫秒)</DurationMaximumMilliseconds>

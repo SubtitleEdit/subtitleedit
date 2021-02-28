@@ -1806,7 +1806,7 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <SubtitleLineMaximumLength>Lerro bakarraren geh. luzera:</SubtitleLineMaximumLength>
     <OptimalCharactersPerSecond>Hizkirri/seg hoberena</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>Geh. hizkirri/seg:</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>Geh. hitz/min</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>Geh. hitz/min</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>Berez-bildu idazterakoan</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Gutx. iraupena segumil-etan:</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Geh. iraupena segumil-etan:</DurationMaximumMilliseconds>

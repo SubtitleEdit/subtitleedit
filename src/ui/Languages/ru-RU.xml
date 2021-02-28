@@ -1846,7 +1846,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <SubtitleLineMaximumLength>Макс. число символов в строке</SubtitleLineMaximumLength>
     <OptimalCharactersPerSecond>Оптимально симв./сек</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>Макс. симв./сек</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>Макс. слов/мин</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>Макс. слов/мин</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>Перенос по словам</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Мин. продолжительность, мс</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Макс. продолжительность, мс</DurationMaximumMilliseconds>

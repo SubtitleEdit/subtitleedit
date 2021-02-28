@@ -1731,7 +1731,7 @@ bisa mengedit dlm file subjudul yg sama (kolaborasi)</Information>
     <AutoDetectAnsiEncoding>Oto. deteksi pengkodean ANSI</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Panjang maks. baris tunggal</SubtitleLineMaximumLength>
     <MaximumCharactersPerSecond>Maks. karakter/dtk</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>Maks. kata/mnt</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>Maks. kata/mnt</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>Oto. bungkus saat mengetik</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Min. durasi, milidetik</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Maks. durasi, milidetik</DurationMaximumMilliseconds>

@@ -1983,7 +1983,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SubtitleLineMaximumLength>Макс. дълж. на един ред (бр.симв.)</SubtitleLineMaximumLength>
     <OptimalCharactersPerSecond>Оптимални симв./сек</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>Макс. символи/сек.</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>Макс. думи/мин.</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>Макс. думи/мин.</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>Авт. пренасяне на нов ред при писане</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Мин. времетраене (милисек.)</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Макс. времетраене (милисек.)</DurationMaximumMilliseconds>

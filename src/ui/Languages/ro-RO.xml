@@ -1820,7 +1820,7 @@ pot edita acelasi fișier de subtitrare (colaborare)</Information>
     <SubtitleLineMaximumLength>Lung. max. (linie unică)</SubtitleLineMaximumLength>
     <OptimalCharactersPerSecond>Nr. optim caract./sec.</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>Maxim de caract./sec.</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>Maxim de cuvinte/min.</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>Maxim de cuvinte/min.</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>Auto-încadrare în timpul tastării</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Durată minimă, în milisecunde</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Durată maximă, în milisecunde</DurationMaximumMilliseconds>

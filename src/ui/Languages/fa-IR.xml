@@ -1774,7 +1774,7 @@ Continue anyway?</PromptInsertSubtitleOverlap>
     <SubtitleLineMaximumLength>حداکثر طول یک خط</SubtitleLineMaximumLength>
     <OptimalCharactersPerSecond>Optimal chars/sec</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>حداکثر کاراکتر/ثانیه</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>حداکثر کلمه/دقیقه</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>حداکثر کلمه/دقیقه</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>بسته بندی خودکار در حال تایپ</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>بیشترین.مدت،میلی ثانیه</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>بیشترین.مدت،میلی ثانیه</DurationMaximumMilliseconds>

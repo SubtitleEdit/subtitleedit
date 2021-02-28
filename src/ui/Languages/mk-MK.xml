@@ -1834,7 +1834,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SubtitleLineMaximumLength>Максимум знаци во еден ред</SubtitleLineMaximumLength>
     <OptimalCharactersPerSecond>Оптимални знаци/сек</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>Максимум знаци/сек</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>Максимум зборови/мин</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>Максимум зборови/мин</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>Автоматски прелом во тек на пишување</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Мин. траење на линија .мс</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Макс. траење на линија .мс</DurationMaximumMilliseconds>

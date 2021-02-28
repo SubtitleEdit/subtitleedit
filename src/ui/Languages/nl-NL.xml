@@ -1822,7 +1822,7 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <SubtitleLineMaximumLength>Maximale lengte enkele regel</SubtitleLineMaximumLength>
     <OptimalCharactersPerSecond>Optimaal aantal tekens/sec.</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>Maximaal aantal tekens/sec.</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>Maximaal aantal woorden/min.</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>Maximaal aantal woorden/min.</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>Tekstomloop tĳdens het typen</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Min. tĳdsduur in milliseconden</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Max. tĳdsduur in milliseconden</DurationMaximumMilliseconds>
