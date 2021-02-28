@@ -15,6 +15,8 @@
     <SubtitleFiles>字幕文件</SubtitleFiles>
     <AllFiles>所有文件</AllFiles>
     <VideoFiles>视频文件</VideoFiles>
+    <Images>图像</Images>
+    <Fonts>字体</Fonts>
     <AudioFiles>音频文件</AudioFiles>
     <OpenSubtitle>打开字幕...</OpenSubtitle>
     <OpenVideoFile>打开视频文件...</OpenVideoFile>
@@ -162,14 +164,17 @@ Command line: {1} {2}
   </ApplyDurationLimits>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha字幕附件</Title>
-    <AttachFont>附加字体</AttachFont>
-    <AttachGraphics>附加图形</AttachGraphics>
+    <AttachFiles>添加附件…</AttachFiles>
+    <FontsAndImages>字体和图像</FontsAndImages>
     <Graphics>图形</Graphics>
     <Font>字体</Font>
     <ImageName>图像名 ({0}x{1}):</ImageName>
     <IconName>图标名:</IconName>
     <FontName>字体名:</FontName>
     <ImageResized>调整图像大小以适合当前窗口</ImageResized>
+    <FilesSkippedX>已跳过文件: {0}</FilesSkippedX>
+    <RemoveOneAttachment>删除一个附件？</RemoveOneAttachment>
+    <RemoveXAttachments>删除{0}个附件？</RemoveXAttachments>
   </AssaAttachments>
   <AudioToText>
     <Title>音频转文字</Title>
@@ -1945,6 +1950,7 @@ Command line: {1} {2}
     <ToggleBookmarks>使用书签</ToggleBookmarks>
     <ToggleBookmarksWithComment>使用书签 - 添加注释</ToggleBookmarksWithComment>
     <ClearBookmarks>清空书签</ClearBookmarks>
+    <ExportBookmarks>导出书签...</ExportBookmarks>
     <GoToBookmark>转到书签</GoToBookmark>
     <GoToPreviousBookmark>转到上一书签</GoToPreviousBookmark>
     <GoToNextBookmark>转到下一书签</GoToNextBookmark>
