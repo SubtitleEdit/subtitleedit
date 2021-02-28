@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelSubMaxLen.Text = language.SubtitleLineMaximumLength;
             labelOptimalCharsPerSecond.Text = language.OptimalCharactersPerSecond;
             labelMaxCharsPerSecond.Text = language.MaximumCharactersPerSecond;
-            labelMaxWordsPerMin.Text = language.MaximumWordssPerMinute;
+            labelMaxWordsPerMin.Text = language.MaximumWordsPerMinute;
             labelMinDuration.Text = language.DurationMinimumMilliseconds;
             labelMaxDuration.Text = language.DurationMaximumMilliseconds;
             labelMinGapMs.Text = language.MinimumGapMilliseconds;

@@ -2,6 +2,9 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using System;
+using System.IO;
+using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -16,10 +19,13 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
             Text = LanguageSettings.Current.Bookmarks.GoToBookmark;
+            buttonExport.Text = LanguageSettings.Current.MultipleReplace.Export;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             columnHeaderNumber.Text = LanguageSettings.Current.General.NumberSymbol;
             columnHeaderStartTime.Text = LanguageSettings.Current.General.StartTime;
             columnHeaderText.Text = LanguageSettings.Current.General.Text;
+
 
             _subtitle = subtitle;
             foreach (var p in subtitle.Paragraphs)
@@ -81,6 +87,65 @@ namespace Nikse.SubtitleEdit.Forms
         private void BookmarksGoTo_Shown(object sender, EventArgs e)
         {
             BookmarksGoTo_ResizeEnd(sender, e);
+            listViewBookmarks.Focus();
+        }
+
+        private void buttonExport_Click(object sender, EventArgs e)
+        {
+            ExportBookmarksAsCsv(_subtitle, this);
+        }
+
+        public static void ExportBookmarksAsCsv(Subtitle subtitle, Form form)
+        {
+            using (var saveDialog = new SaveFileDialog { FileName = string.Empty, Filter = "CSV|*.csv" })
+            {
+                if (saveDialog.ShowDialog(form) != DialogResult.OK)
+                {
+                    return;
+                }
+
+                var sb = new StringBuilder();
+                foreach (var p in subtitle.Paragraphs.Where(p => p.Bookmark != null))
+                {
+                    sb.AppendLine(MakeParagraphCsvLine(p));
+                }
+
+                File.WriteAllText(saveDialog.FileName, sb.ToString());
+            }
+        }
+
+        private static string MakeParagraphCsvLine(Paragraph paragraph)
+        {
+            const string separator = ";";
+            var sb = new StringBuilder();
+            sb.Append(paragraph.Number + separator);
+            sb.Append(ToCsvText(paragraph.StartTime.ToDisplayString()) + separator);
+            sb.Append(ToCsvText(paragraph.EndTime.ToDisplayString()) + separator);
+            sb.Append(ToCsvText(paragraph.Duration.ToShortDisplayString()) + separator);
+            sb.Append(ToCsvText(paragraph.Text) + separator);
+            sb.Append(ToCsvText(paragraph.Bookmark) + separator);
+            return sb.ToString();
+        }
+
+        private static string ToCsvText(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                return string.Empty;
+            }
+
+            var sb = new StringBuilder();
+            sb.Append("\"");
+            foreach (var nextChar in input)
+            {
+                sb.Append(nextChar);
+                if (nextChar == '"')
+                {
+                    sb.Append("\"");
+                }
+            }
+            sb.Append("\"");
+            return sb.ToString();
         }
     }
 }
