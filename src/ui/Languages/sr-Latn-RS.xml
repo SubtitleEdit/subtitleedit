@@ -1783,7 +1783,7 @@ da uređujete određeni prevod sa drugim ljudima.</Information>
     <SubtitleLineMaximumLength>Max. dužina jedne linije</SubtitleLineMaximumLength>
     <OptimalCharactersPerSecond>Najpogodnije karak/sek</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>Max. karaktera/sek</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>Max. reči/min</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>Max. reči/min</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>Auto-prebacivanje tokom kucanja</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Min. trajanje, milisekundi</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Max. trajanje, milisekundi</DurationMaximumMilliseconds>

@@ -387,7 +387,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelSubMaxLen.Text = language.SubtitleLineMaximumLength;
             labelOptimalCharsPerSecond.Text = language.OptimalCharactersPerSecond;
             labelMaxCharsPerSecond.Text = language.MaximumCharactersPerSecond;
-            labelMaxWordsPerMin.Text = language.MaximumWordssPerMinute;
+            labelMaxWordsPerMin.Text = language.MaximumWordsPerMinute;
             checkBoxAutoWrapWhileTyping.Text = language.AutoWrapWhileTyping;
             groupBoxAppearance.Text = language.Appearance;
             groupBoxFontInUI.Text = language.FontInUi;

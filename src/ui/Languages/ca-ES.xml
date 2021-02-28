@@ -1912,7 +1912,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SubtitleLineMaximumLength>Màx. llargaria línia única</SubtitleLineMaximumLength>
     <OptimalCharactersPerSecond>Caracters/segon òptims</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>Caracters/segon màxims</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>Mots/minut màxims</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>Mots/minut màxims</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>Auto-empaqueta mentre s'escriu</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Min. durada, mil·lisegons</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Màx. durada, mil·lisegons</DurationMaximumMilliseconds>

@@ -1571,7 +1571,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <ExportProfiles>プロファイルをエクスポート</ExportProfiles>
     <SubtitleLineMaximumLength>各行の最大文字数</SubtitleLineMaximumLength>
     <MaximumCharactersPerSecond>1 秒あたりの最大文字数</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>1分あたりの最大単語数</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>1分あたりの最大単語数</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>入力中に自動改行する</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>最小表示時間 (ミリ秒)</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>最大表示時間 (ミリ秒)</DurationMaximumMilliseconds>

@@ -1780,7 +1780,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <SubtitleLineMaximumLength>Max. Einzelzeilenlänge</SubtitleLineMaximumLength>
     <OptimalCharactersPerSecond>Opt. Zeichen/Sek.</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>Max. Zeichen/Sek.</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>Max. Wörter/Min.</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>Max. Wörter/Min.</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>Auto Umbruch beim Tippen</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Min. Länge, Millisekunden</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Max. Länge, Millisekunden</DurationMaximumMilliseconds>

@@ -1953,7 +1953,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <SubtitleLineMaximumLength>Linje max. længde</SubtitleLineMaximumLength>
     <OptimalCharactersPerSecond>Optimale tegn/sek</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>Maks tegn/sek</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>Maks ord/min</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>Maks ord/min</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>Auto-ombryd tekst mens du skriver</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Min. varighed, millisekunder</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Max. varighed, millisekunder</DurationMaximumMilliseconds>

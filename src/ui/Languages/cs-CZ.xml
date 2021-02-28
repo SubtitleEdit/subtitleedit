@@ -1762,7 +1762,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <AutoDetectAnsiEncoding>Automaticky rozpoznat kódování ANSI</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Maximální délka jednotlivého řádku</SubtitleLineMaximumLength>
     <MaximumCharactersPerSecond>Max. znaků/s</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>Max. slov/min</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>Max. slov/min</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>Automaticky zalamovat během psaní</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Min. trvání, milisekundy</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Max. trvání, milisekundy</DurationMaximumMilliseconds>

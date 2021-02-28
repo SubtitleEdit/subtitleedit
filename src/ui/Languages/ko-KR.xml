@@ -1959,7 +1959,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SubtitleLineMaximumLength>줄당 최대 문자수</SubtitleLineMaximumLength>
     <OptimalCharactersPerSecond>최적 문자/초</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>초당 최대 문자수</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>분당 최대 문자수</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>분당 최대 문자수</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>타이핑시 자동 줄바꿈</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>최소 표시시간 (밀리초)</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>최대 표시시간 (밀리초)</DurationMaximumMilliseconds>

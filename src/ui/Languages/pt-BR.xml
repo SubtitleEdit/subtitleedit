@@ -1812,7 +1812,7 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <SubtitleLineMaximumLength>Comp. máx. linha única</SubtitleLineMaximumLength>
     <OptimalCharactersPerSecond>Ideal de caracteres/seg</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>Máx. caract./seg</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>Máx. palavras/min</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>Máx. palavras/min</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>Auto-ajustar linha durante digitação</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Duração mín., milissegundos</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Duração máx., milissegundos</DurationMaximumMilliseconds>

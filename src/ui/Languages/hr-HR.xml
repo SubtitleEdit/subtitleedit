@@ -1703,7 +1703,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <AutoDetectAnsiEncoding>Samoprepoznavanje kodiranja:</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Najveća dužina podnaslova:</SubtitleLineMaximumLength>
     <MaximumCharactersPerSecond>Maks. znakova/sek</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>Maksimalno riječi/min</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>Maksimalno riječi/min</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>p&amp;relamaj pri tipkanju</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Min. trajanje, milisekunde</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Maks. trajanje, milisekunde</DurationMaximumMilliseconds>

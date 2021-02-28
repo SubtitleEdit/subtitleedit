@@ -1963,7 +1963,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <SubtitleLineMaximumLength>Comprimento máximo de linha</SubtitleLineMaximumLength>
     <OptimalCharactersPerSecond>Caracteres/seg ideais</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>Máximo caracteres/seg</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>Máximo palavras/min</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>Máximo palavras/min</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>Moldar o texto ao escrever</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Duração mínima, milisseg</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Duração máxima, milisseg</DurationMaximumMilliseconds>

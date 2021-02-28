@@ -1976,7 +1976,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <SubtitleLineMaximumLength>Max. długość pojedynczej linii:</SubtitleLineMaximumLength>
     <OptimalCharactersPerSecond>Optymalnie znaków/sekundę</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>Maksymalnie znaków/sekundę</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>Maksymalnie słów/minutę</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>Maksymalnie słów/minutę</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>Automatycznie zawijaj wiersze podczas pisania</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Minimalny czas trwania, w ms</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Maksymalny czas trwania, w ms</DurationMaximumMilliseconds>

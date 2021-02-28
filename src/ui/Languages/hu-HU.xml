@@ -1832,7 +1832,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <SubtitleLineMaximumLength>Felirat maximális hossza</SubtitleLineMaximumLength>
     <OptimalCharactersPerSecond>Optimális karakter/mp</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>Max. karakter/mp</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>Max. szó/perc</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>Max. szó/perc</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>Automatikus sortörés gépelés közben</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Min. időtartam ezredmásodpercben</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Max. időtartam ezredmásodpercben</DurationMaximumMilliseconds>
