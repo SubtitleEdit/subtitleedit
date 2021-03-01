@@ -758,7 +758,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         {
             SsaLoadSubtitle("[EvEnTs]\nDialogue: ,0:00:00.00,0:00:00.01,,,,,,,text".SplitToLines(), "text");  // label casing insensitivity
             SsaLoadSubtitle("[Events]\n,0:00:00.00,0:00:00.01,,,,,,,labelless dialogue".SplitToLines(), "labelless dialogue"); // no "Dialogue:" label, it is optional
-            SsaLoadSubtitle("[Events]\nFormat: Text, Start, End, Layer, Effect, Style\nDialogue:reordered text,0:00:00.00,0:00:00.01".SplitToLines(), "reordered text"); // reordered formats
+            SsaLoadSubtitle("[Events]\nFormat: Text, Start, End, Layer, Effect, Style\nDialogue: reordered text,0:00:00.00,0:00:00.01".SplitToLines(), "reordered text"); // reordered formats
 
             SsaLoadSubtitle(GetSsaLines(@"Cased TEXT"), "Cased TEXT"); // preserve text casing
             SsaLoadSubtitle(GetSsaLines(@"  text  "), "  text  "); // do not trim text
