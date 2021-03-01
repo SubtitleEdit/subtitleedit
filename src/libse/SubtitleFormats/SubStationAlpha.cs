@@ -471,65 +471,75 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                         var effect = string.Empty;
                         var name = string.Empty;
 
-                        string[] splittedLine;
+                        string[] splitLine;
                         if (s.StartsWith("dialog:", StringComparison.Ordinal))
                         {
-                            splittedLine = line.Remove(0, 7).Split(',');
+                            var dialog = line.Remove(0, 7);
+                            if (dialog.StartsWith(' '))
+                            {
+                                dialog = dialog.Remove(0, 1);
+                            }
+                            splitLine = dialog.Split(',');
                         }
                         else if (s.StartsWith("dialogue:", StringComparison.Ordinal))
                         {
-                            splittedLine = line.Remove(0, 9).Split(',');
+                            var dialog = line.Remove(0, 9);
+                            if (dialog.StartsWith(' '))
+                            {
+                                dialog = dialog.Remove(0, 1);
+                            }
+                            splitLine = dialog.Split(',');
                         }
                         else
                         {
-                            splittedLine = line.Split(',');
+                            splitLine = line.Split(',');
                         }
 
-                        for (int i = 0; i < splittedLine.Length; i++)
+                        for (int i = 0; i < splitLine.Length; i++)
                         {
                             if (i == indexStart)
                             {
-                                start = splittedLine[i].Trim();
+                                start = splitLine[i].Trim();
                             }
                             else if (i == indexEnd)
                             {
-                                end = splittedLine[i].Trim();
+                                end = splitLine[i].Trim();
                             }
                             else if (i == indexLayer)
                             {
-                                int.TryParse(splittedLine[i], out layer);
+                                int.TryParse(splitLine[i], out layer);
                             }
                             else if (i == indexEffect)
                             {
-                                effect = splittedLine[i];
+                                effect = splitLine[i];
                             }
                             else if (i == indexText)
                             {
-                                text = splittedLine[i];
+                                text = splitLine[i];
                             }
                             else if (i == indexStyle)
                             {
-                                style = splittedLine[i];
+                                style = splitLine[i];
                             }
                             else if (i == indexMarginL)
                             {
-                                marginL = splittedLine[i].Trim();
+                                marginL = splitLine[i].Trim();
                             }
                             else if (i == indexMarginR)
                             {
-                                marginR = splittedLine[i].Trim();
+                                marginR = splitLine[i].Trim();
                             }
                             else if (i == indexMarginV)
                             {
-                                marginV = splittedLine[i].Trim();
+                                marginV = splitLine[i].Trim();
                             }
                             else if (i == indexName)
                             {
-                                name = splittedLine[i];
+                                name = splitLine[i];
                             }
                             else if (i > indexText)
                             {
-                                text += "," + splittedLine[i];
+                                text += "," + splitLine[i];
                             }
                         }
 
