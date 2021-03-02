@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class Edl : SubtitleFormat
     {
-        private static readonly Regex Regex = new Regex(@"^\d+\s+[A-Z]{2}\s+[A-Z]\s+[A-Z]\s+\d\d:\d\d:\d\d:\d\d\s+\d\d:\d\d:\d\d:\d\d\s+\d\d:\d\d:\d\d:\d\d\s+\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
+        private static readonly Regex Regex = new Regex(@"^\d+\s+[a-zA-Z0-9_.-]{2,250}\s+[A-Z]\s+[A-Z]\s+\d\d:\d\d:\d\d:\d\d\s+\d\d:\d\d:\d\d:\d\d\s+\d\d:\d\d:\d\d:\d\d\s+\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
         private const string TextPrefix = "* FROM CLIP NAME: ";
 
         public override string Extension => ".edl";
@@ -79,7 +79,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (line.Length > 0)
                 {
                     bool success = false;
-                    if (line.Length > 65 && line.Length < 85 && line.IndexOf(':') > 20)
+                    if (line.Length > 65 && line.Length < 500 && line.IndexOf(':') > 20)
                     {
                         var match = Regex.Match(line);
                         if (match.Success)

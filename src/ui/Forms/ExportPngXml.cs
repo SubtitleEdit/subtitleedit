@@ -1741,6 +1741,17 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     {
                         // 001  7M6C7986 V     C        14:14:55:21 14:15:16:24 01:00:10:18 01:00:31:21
                         var fileName1 = "IMG" + i.ToString(CultureInfo.InvariantCulture).PadLeft(5, '0');
+                        if (!string.IsNullOrEmpty(_outputFileName))
+                        {
+                            var prefix = Path.GetFileNameWithoutExtension(_outputFileName);
+                            if (!string.IsNullOrEmpty(prefix))
+                            {
+                                fileName1 = prefix
+                                    .Replace(' ', '_')
+                                    .Replace('.', '_')
+                                    + "_" + fileName1;
+                            }
+                        }
 
                         var fullSize = new Bitmap(param.ScreenWidth, param.ScreenHeight);
                         using (var g = Graphics.FromImage(fullSize))
