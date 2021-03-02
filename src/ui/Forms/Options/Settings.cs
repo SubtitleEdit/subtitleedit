@@ -1323,7 +1323,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             var translateNode = new ShortcutNode(LanguageSettings.Current.Main.VideoControls.Translate);
             AddNode(translateNode, LanguageSettings.Current.Main.VideoControls.GoogleIt, nameof(Configuration.Settings.Shortcuts.MainTranslateGoogleIt));
-            AddNode(translateNode, LanguageSettings.Current.Main.VideoControls.GoogleTranslate, nameof(Configuration.Settings.Shortcuts.MainTranslateGoogleTranslate), true);
+            AddNode(translateNode, LanguageSettings.Current.Main.VideoControls.AutoTranslate, nameof(Configuration.Settings.Shortcuts.MainAutoTranslate), true);
             AddNode(translateNode, language.CustomSearch1, nameof(Configuration.Settings.Shortcuts.MainTranslateCustomSearch1));
             AddNode(translateNode, language.CustomSearch2, nameof(Configuration.Settings.Shortcuts.MainTranslateCustomSearch2));
             AddNode(translateNode, language.CustomSearch3, nameof(Configuration.Settings.Shortcuts.MainTranslateCustomSearch3));

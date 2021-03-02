@@ -1860,6 +1860,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                     GoogleIt = "Google it",
                     GoogleTranslate = "Google translate",
+                    AutoTranslate = "Auto-translate",
                     OriginalText = "Original text",
                     SearchTextOnline = "Search text online",
                     SecondsBackShort = "<<",

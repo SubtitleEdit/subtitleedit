@@ -4366,6 +4366,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/VideoControls/GoogleTranslate":
                     language.Main.VideoControls.GoogleTranslate = reader.Value;
                     break;
+                case "Main/VideoControls/AutoTranslate":
+                    language.Main.VideoControls.AutoTranslate = reader.Value;
+                    break;
                 case "Main/VideoControls/GoogleIt":
                     language.Main.VideoControls.GoogleIt = reader.Value;
                     break;

@@ -1333,6 +1333,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
       <SetstartTimeAndOffsetOfRest>Set sta&amp;rt and offset the rest</SetstartTimeAndOffsetOfRest>
       <SearchTextOnline>Search text online</SearchTextOnline>
       <GoogleTranslate>Google translate</GoogleTranslate>
+      <AutoTranslate>Auto-translate</AutoTranslate>
       <GoogleIt>Google it</GoogleIt>
       <SecondsBackShort>&lt;&lt;</SecondsBackShort>
       <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>

@@ -2050,7 +2050,7 @@ $HorzAlign          =   Center
         public string Waveform1000MsLeft { get; set; }
         public string Waveform1000MsRight { get; set; }
         public string MainTranslateGoogleIt { get; set; }
-        public string MainTranslateGoogleTranslate { get; set; }
+        public string MainAutoTranslate { get; set; }
         public string MainTranslateCustomSearch1 { get; set; }
         public string MainTranslateCustomSearch2 { get; set; }
         public string MainTranslateCustomSearch3 { get; set; }
@@ -2121,7 +2121,7 @@ $HorzAlign          =   Center
             MainWaveformInsertAtCurrentPosition = "Insert";
             MainInsertBefore = "Control+Shift+Insert";
             MainTextBoxAutoBreak = "Control+R";
-            MainTranslateGoogleTranslate = "Control+Shift+G";
+            MainAutoTranslate = "Control+Shift+G";
             MainAdjustExtendToNextSubtitle = "Control+Shift+E";
             MainAdjustExtendToPreviousSubtitle = "Alt+Shift+E";
             WaveformVerticalZoom = "Shift+Add";
@@ -2368,7 +2368,7 @@ $HorzAlign          =   Center
                              settings.Version.StartsWith("3.5.14", StringComparison.Ordinal) ||
                              settings.Version.StartsWith("3.5.13", StringComparison.Ordinal))
                     {
-                        settings.Shortcuts.MainTranslateGoogleTranslate = "Control+Shift+G";
+                        settings.Shortcuts.MainAutoTranslate = "Control+Shift+G";
                         settings.Tools.MicrosoftTranslatorTokenEndpoint = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
                     }
                 }
@@ -7901,10 +7901,10 @@ $HorzAlign          =   Center
                     shortcuts.MainTranslateGoogleIt = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("MainTranslateGoogleTranslate");
+                subNode = node.SelectSingleNode("MainAutoTranslate");
                 if (subNode != null)
                 {
-                    shortcuts.MainTranslateGoogleTranslate = subNode.InnerText;
+                    shortcuts.MainAutoTranslate = subNode.InnerText;
                 }
 
                 subNode = node.SelectSingleNode("MainTranslateCustomSearch1");
@@ -8973,7 +8973,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("Waveform1000MsLeft", shortcuts.Waveform1000MsLeft);
             textWriter.WriteElementString("Waveform1000MsRight", shortcuts.Waveform1000MsRight);
             textWriter.WriteElementString("MainTranslateGoogleIt", shortcuts.MainTranslateGoogleIt);
-            textWriter.WriteElementString("MainTranslateGoogleTranslate", shortcuts.MainTranslateGoogleTranslate);
+            textWriter.WriteElementString("MainAutoTranslate", shortcuts.MainAutoTranslate);
             textWriter.WriteElementString("MainTranslateCustomSearch1", shortcuts.MainTranslateCustomSearch1);
             textWriter.WriteElementString("MainTranslateCustomSearch2", shortcuts.MainTranslateCustomSearch2);
             textWriter.WriteElementString("MainTranslateCustomSearch3", shortcuts.MainTranslateCustomSearch3);
