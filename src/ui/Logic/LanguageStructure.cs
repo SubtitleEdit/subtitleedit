@@ -1732,6 +1732,7 @@
 
                 public string SearchTextOnline { get; set; }
                 public string GoogleTranslate { get; set; }
+                public string AutoTranslate { get; set; }
                 public string GoogleIt { get; set; }
                 public string SecondsBackShort { get; set; }
                 public string SecondsForwardShort { get; set; }
