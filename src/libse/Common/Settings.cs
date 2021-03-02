@@ -1838,6 +1838,7 @@ $HorzAlign          =   Center
         public string MainFileImportTimeCodes { get; set; }
         public string MainFileExportEbu { get; set; }
         public string MainFileExportPac { get; set; }
+        public string MainFileExportEdlClip { get; set; }
         public string MainFileExportPlainText { get; set; }
         public string MainEditUndo { get; set; }
         public string MainEditRedo { get; set; }
@@ -6628,6 +6629,12 @@ $HorzAlign          =   Center
                     shortcuts.MainFileExportPac = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainFileExportEdlClip");
+                if (subNode != null)
+                {
+                    shortcuts.MainFileExportEdlClip = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainFileExportPlainText");
                 if (subNode != null)
                 {
@@ -8756,6 +8763,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainFileExportPlainText", shortcuts.MainFileExportPlainText);
             textWriter.WriteElementString("MainFileExportEbu", shortcuts.MainFileExportEbu);
             textWriter.WriteElementString("MainFileExportPac", shortcuts.MainFileExportPac);
+            textWriter.WriteElementString("MainFileExportEdlClip", shortcuts.MainFileExportEdlClip);
             textWriter.WriteElementString("MainEditUndo", shortcuts.MainEditUndo);
             textWriter.WriteElementString("MainEditRedo", shortcuts.MainEditRedo);
             textWriter.WriteElementString("MainEditFind", shortcuts.MainEditFind);

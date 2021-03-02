@@ -2868,6 +2868,30 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            if (ext == ".edl")
+            {
+                try
+                {
+                    var f = new Edl();
+                    var list = new List<string>(File.ReadAllLines(fileName, encodingFromFile));
+                    if (f.IsMine(list, fileName))
+                    {
+                        var edlSub = new Subtitle();
+                        f.LoadSubtitle(edlSub, list, fileName);
+                        var pngCount = edlSub.Paragraphs.Count(p => p.Text.EndsWith(".png", StringComparison.OrdinalIgnoreCase));
+                        if (pngCount > 1 && pngCount > edlSub.Paragraphs.Count - 2 && ContinueNewOrExit())
+                        {
+                            ImportAndOcrDost(fileName, f, list);
+                            return;
+                        }
+                    }
+                }
+                catch
+                {
+                    format = null;
+                }
+            }
+
             if (format == null)
             {
                 try
@@ -21564,6 +21588,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemImportTimeCodes.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileImportTimeCodes);
             toolStripMenuItemExportEBUSTL.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileExportEbu);
             toolStripMenuItemExportPACScreenElectronics.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileExportPac);
+            toolStripMenuItemExportEdlClipName.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileExportEdlClip);
             toolStripMenuItemExportPlainText.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileExportPlainText);
 
             toolStripMenuItemUndo.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditUndo);
