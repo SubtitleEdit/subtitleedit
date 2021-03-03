@@ -567,12 +567,6 @@ namespace Nikse.SubtitleEdit.Forms
             Preview();
         }
 
-        private void ModifySelection_Resize(object sender, EventArgs e)
-        {
-            listViewFixes.Columns[listViewFixes.Columns.Count - 1].Width = -2;
-            listViewStyles.Columns[listViewStyles.Columns.Count - 1].Width = -2;
-        }
-
         private void ModifySelection_Shown(object sender, EventArgs e)
         {
             ModifySelection_Resize(sender, e);
@@ -602,6 +596,34 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 item.Checked = !item.Checked;
             }
+        }
+
+        private void ModifySelection_Resize(object sender, EventArgs e)
+        {
+            ModifySelection_ResizeEnd(null, null);
+        }
+
+        private void ModifySelection_ResizeEnd(object sender, EventArgs e)
+        {
+            listViewFixes.Columns[0].Width = 50;
+            listViewFixes.Columns[1].Width = 80;
+
+            if (_format.HasStyleSupport)
+            {
+                listViewFixes.Columns[2].Width = listViewFixes.Width
+                                                 - listViewFixes.Columns[0].Width
+                                                 - listViewFixes.Columns[1].Width
+                                                 - listViewFixes.Columns[3].Width
+                                                 - 30;
+                return;
+            }
+
+            listViewFixes.Columns[0].Width = 50;
+            listViewFixes.Columns[1].Width = 80;
+            listViewFixes.Columns[2].Width = listViewFixes.Width
+                                             - listViewFixes.Columns[0].Width
+                                             - listViewFixes.Columns[1].Width
+                                             - 30;
         }
     }
 }
