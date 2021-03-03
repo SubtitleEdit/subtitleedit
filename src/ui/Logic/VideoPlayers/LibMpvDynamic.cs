@@ -496,6 +496,12 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 if (Configuration.IsRunningOnWindows)
                 {
                     _libMpvDll = NativeMethods.CrossLoadLibrary(GetMpvPath("mpv-1.dll"));
+                    if (_libMpvDll == IntPtr.Zero)
+                    {
+                        // to work with e.g. cyrillic characters!
+                        Directory.SetCurrentDirectory(Configuration.DataDirectory);
+                        _libMpvDll = NativeMethods.CrossLoadLibrary("mpv-1.dll");
+                    }
                 }
                 else
                 {
