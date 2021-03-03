@@ -948,5 +948,84 @@
     <RegEx find="\Bi(log[ao]s?\b)" replaceWith="í$1" />
     <RegEx find="\bIes\b" replaceWith="les" />
     <RegEx find="\bIos\b" replaceWith="los" />
+    	<!--  Diálogos en una sola línea  -->
+    <RegEx find="^(-.+)(-.+(\!|\?|\.))$(?!\n.)" replaceWith="$1$2" />
+    <!--  Repeticiones palabras o frases  -->
+    <!--  Ej. «No, no, no, no, no.» por «No, no, no.»  -->
+    <RegEx find="([,\.]\s.{2})\1(?=[\.,\s\?\!])" replaceWith="$1" />
+    <!--  Ej. «¡está aquí, está aquí, está aquí!» por «¡está aquí!»  -->
+    <RegEx find="([,\.]\s(.{3,}))\1(?=[\.,\s\?\!])" replaceWith="" />
+    <!--  Meses y días van en minúsculas  -->
+    <RegEx find="([^\n\.][«'\s]\b)E(nero\b)" replaceWith="$1e$2" />
+    <RegEx find="([^\n\.][«'\s]\b)F(ebrero\b)" replaceWith="$1f$2" />
+    <RegEx find="([^\n\.][«'\s]\b)M((arzo|ayo|artes|iércoles)\b)" replaceWith="$1m$2" />
+    <RegEx find="([^\n\.][«'\s]\b)A((bril|gosto)\b)" replaceWith="$1a$2" />
+    <RegEx find="([^\n\.][«'\s]\b)J((unio|ulio|ueves)\b)" replaceWith="$1j$2" />
+    <RegEx find="([^\n\.][«'\s]\b)S((eptiembre|ábado)\b)" replaceWith="$1s$2" />
+    <RegEx find="([^\n\.][«'\s]\b)O(ctubre\b)" replaceWith="$1o$2" />
+    <RegEx find="([^\n\.][«'\s]\b)N(oviembre\b)" replaceWith="$1n$2" />
+    <RegEx find="([^\n\.][«'\s]\b)D((iciembre|omingo)\b)" replaceWith="$1d$2" />
+    <RegEx find="([^\n\.][«'\s]\b)L(unes\b)" replaceWith="$1l$2" />
+    <RegEx find="([^\n\.][«'\s]\b)V(iernes\b)" replaceWith="$1v$2" />
+    <!-- Extranjerismos -->
+    <RegEx find="(\blistill)([oa]\b)" replaceWith="$1*$2" />
+    <RegEx find="(\b[Ff]lirte)([\wá-ú]{1,8})" replaceWith="$1*$2" />
+    <RegEx find="(\b[Cc]abre)(a[\wá-ú]{0,6})" replaceWith="$1*$2" />
+    <RegEx find="(\b[Gg]ilipo)([\w]{4,6})" replaceWith="$1*$2" />
+    <RegEx find="(\b[Pp]ill)([\wá-ú]{1,8})" replaceWith="$1*$2" />
+    <RegEx find="(\b[Ff]oll)(([aeéoó][nsdr]?[^\wáé])|(\bfoll([eéaá][ibsrdo][\wáé]))|(\bfoll[\wá-ú]{4,10})|(folleta))" replaceWith="$1*$2" />
+    <RegEx find="(\b[Cc]apu)(llos?\b)" replaceWith="$1*$2" />
+    <RegEx find="(\b[Pp]elotud)([\wá-ú]{1,8})" replaceWith="$1*$2" />
+    <RegEx find="(\b[Ww]e)(on\b)" replaceWith="$1*$2" />
+    <RegEx find="(\b[Oo]s)(tias?\b)" replaceWith="$1*$2" />
+    <RegEx find="(\b[Vv])í(deos?\b)" replaceWith="$1i$2" />
+    <RegEx find="(\b[Cc]he)(vere\b)" replaceWith="$1*$2" />
+    <RegEx find="(\b[Cc]otill)([\wá-ú]{1,8})" replaceWith="$1*$2" />
+    <RegEx find="\bCurro(s?\b)" replaceWith="Trabajo$1" />
+    <RegEx find="\bcurro(s?\b)" replaceWith="trabajo$1" />
+    <RegEx find="\bFurgo((netas?|nes)\b)" replaceWith="Camio$1" />
+    <RegEx find="\bfurgo((netas?|nes)\b)" replaceWith="camio$1" />
+    <RegEx find="\bZumo(s?[ao]?s?)" replaceWith="Jugo$1" />
+    <RegEx find="\bzumo(s?[ao]?s?)" replaceWith="jugo$1" />
+    <RegEx find="\b\sa\spor\s\b" replaceWith=" por " />
+    <RegEx find="(\bA\spor\s\b)" replaceWith="Por" />
+    <RegEx find="(\b[Vv]a)(le\b)" replaceWith="$1*$2" />
+    <RegEx find="(\b[Vv]en)(ga\b)" replaceWith="$1*$2" />
+    <RegEx find="(\b[Vv]o)(s\b)" replaceWith="$1*$2" />
+    <RegEx find="(\b[Oo])(s\b)" replaceWith="$1*$2" />
+    <RegEx find="(\b[Oo])([Kk]\b)" replaceWith="$1*$2" />
+    <RegEx find="(\b[Mm]e\scago\sen\sla\sleche\b)" replaceWith="Me lleva la chingada" />
+    <RegEx find="\b[Ee]res\sla\sleche\b" replaceWith="Eres*fenomenal" />
+    <RegEx find="\b[Mm]ala\sleche\b" replaceWith="Mal*genio" />
+    <!-- Terminaciones en «aos» -->
+    <RegEx find="(\b(daos|[\wá-úñ]{2,15}aos)\b)" replaceWith="$1*" />
+    <!-- Terminaciones en «íos» -->
+    <RegEx find="(\b(([ru][en]|o)íos|(\w{2}[^dvpc]|[pdlmr][euo][cd])íos|([^abcdt]\w{3}|[tadc][ureibñtovsñ]\w[lutrpnmd]|atav)íos|([^s]\w{2}|\w\w[^m])[^fn\s][^f]íos|\w{3}(\w[^af]|[br]a)[\wñ]íos|[^m]\w{3}[^v][^f]\wíos|\w{6}[^f]\wíos|[^h]\w{8}íos|[^h]\w{9}íos|\w{11}íos)\b)" replaceWith="$1*" />
+    <!-- Terminaciones en «dlo» y «dla» -->
+    <RegEx find="(([á-ú]|\B)dl[oa]\b)" replaceWith="$1*" />
+    <!-- Terminaciones en «osla» y «oslo» -->
+    <RegEx find="(\Bosl[ao]\b)" replaceWith="$1*" />
+    <!-- Terminaciones en «dme» -->
+    <RegEx find="((\B|[á-ú])dme\b)" replaceWith="$1*" />
+    <!-- Terminaciones en «ís» -->
+    <RegEx find="((\B|\b)([^nah]|un)ís\b)" replaceWith="$1*" />
+    <!-- Terminaciones en «ois» -->
+    <RegEx find="(\Bois\b)" replaceWith="$1*" />
+    <!-- Terminaciones en «eis», «éis», «ais» y «áis» -->
+    <RegEx find="([eéaá]is\b)" replaceWith="$1*" />
+    <!-- Terminaciones con «id». -->
+    <RegEx find="(\b)(([Rr]e|[Uu][nñ]|[Hh]u|[Aa]s)?|([B-Db-d]\w[^v]|[E-Ze-z][\w][\wñ]|[Aa]br)|([B-Zb-z]\w{2}[\wñ]|[Aa][a-ce-zñ][\wü]{2}|[Aa]du\w)|[\wñü]{5,13})([ií]d\b)" replaceWith="$1$2*$6" />
+    <!-- Terminaciones con «ed». -->
+    <RegEx find="(\b)([SsVv]|[CcLlOoRr][aeol]|([A-Sa-s][\w][a-qs-zñ]|[Tt][oear][ajmnsñ]|[VvYy]\w{2})|([A-Ca-c]\w{3}|[D-Ld-l][\wñ]{3}|[N-Zn-z][\wé]{3}|[Mm]ord)|[\wñ]{5,13})(ed\b)" replaceWith="$1$2*$5" />
+    <!-- Terminaciones con «ad». -->
+    <RegEx find="(\b((\w[e-z]|d)|[\wñ]{3}|(\w{2}[^ieur][\wñ]|[AaBbE-Je-jL-Ol-oQ-Tq-tYyZz][\wñ]{3}|[CcUuPp][^in][\wñ]{2}|[DdVv][^e]\w{2}|[Pp]\w[^e]\w|[Vv]ers)|(\w{3}[^ie][\wñ]|\w{4}[^d]|[AaBbFfTtRrOo][^saq][\wñü]{3}|[EeLl][na][^t]\w{2}|[SsPp][ea]ñ[ae][lrt])|(\w{4}[^ie][\wñ]|[A-Za-z][\wñü]{4}[^d]|[AaHh][^fgmnj][\wñ]{4})|(\w{5,14}[^ie][\wñ]|[A-Za-z][\wñü]{5,14}[^d])))(ad\b)" replaceWith="$1*$8" />
+    <!--  Minúscula después de «,» seguida de «¿» o «¡»  -->
+    <RegEx find="(,\s[¿¡]\n?)([A-ZÁ-ÚÑ])" replaceWith="$1*$2" />
+    <!--  Onomatopeyas  -->
+    <RegEx find="^([\s\!\?¿¡\.,;:—–'\x22\n\r-]|\x3C/?[IiBbUuCc]\x3E|\x3Cc:#[0-9a-fA-F]{6}\x3E|[Aa]+[Hh]+|[Oo]+[Hh]+|(meh|MEH)|[Ee]+[Hh]+|(hm|HM)+|([Gg]|[Aa]+[Rr])[Rr]+|([Aa]+|[Oo]+|[Ee]+)[Ww]+|[Bb]?[Pp]?[Gg]?(ah|AH)+|(phe|PHE)+[Ww]+|[Oo]+(uch|UCH)|(yack|YACK)|[Nn]*[Hh]*[Uu]+[Nn]*[Hh]+|[Rr]*([Uu]+|[Aa]+)[Rr]*[Nn]*[Gg]*[Hh]+|[Rr]+(aa|AA)+|([Ee]|[Hh]?[Ii]*|(hi|HI)*-)(ya|YA)+[Hh]*|(heh|HEH)*|[Aa]*(ha|HA)+[Hh]*|(oo|OO)+([Ff]|[Hh])|(he|HE)+[Yy]|(hyuh|HYUH)|(whe|whe)+[Ww]|[Ss]+([Ss]|[Hh])[Hh]+|[Bb]?(zz|ZZ)+[Tt]?|(mm|MM)+|(wh|WH)?((oo|OO)+|[Aa]+|[Oo]+[Aa]+)[Hh]?[Ww]?|(wo|WO)+[Hh]?[Ww]?|(bla|BLA)+[Hh]*|(whoo|WHOO)+(sh|SH)|(tsk	TSK)|(oi|OI)|(mwah|MWAH)+|(pff|PFF)+[Tt]*|(ps|PS)+([Hh]|[Tt])?|(um|UM)+|(ahem|AHEM)|(wh|WH)?[Oo]+-(ho|HO)+|((wh|WH)?)?(oo|OO)+(ps|PS)?((ie|IE)|[Yy])?|[Ee]+[Uu]+(gh|GH)+|[Yy]+(ee|EE)+|(bo|BO)+[Mm]|(guau|GUAU))+$" replaceWith="" />
+    <!--  Espacios después del guión  -->
+    <RegEx find="(^|\n|\s)(-)([^\s])" replaceWith="$1$2 $3" />
+    <!--  Punto antes del guión  -->
+    <RegEx find="([^\.\?\!]) - " replaceWith="$1. - " />
   </RegularExpressions>
 </OCRFixReplaceList>
