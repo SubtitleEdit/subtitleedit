@@ -1328,6 +1328,7 @@ Command line: {1} {2}
       <SetstartTimeAndOffsetOfRest>设为起始时间并偏移其余(&amp;R)</SetstartTimeAndOffsetOfRest>
       <SearchTextOnline>在网上搜索文本</SearchTextOnline>
       <GoogleTranslate>谷歌翻译</GoogleTranslate>
+      <AutoTranslate>自动翻译</AutoTranslate>
       <GoogleIt>谷歌搜索该行</GoogleIt>
       <SecondsBackShort>&lt;&lt;</SecondsBackShort>
       <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
