@@ -14,6 +14,7 @@
    * Update Polish translation - thx admas
    * Update Bulgarian translation - thx Калин
    * Update Chinese translation - thx nkh0472
+   * Update Spanish translations - thx paconaranjo
    * Minor tweaks for font/appearance settings
    * Only set listview backcolor if visual styles enabled - thx ask2018/OmrSi
    * Optimize merge lines with same text/time
@@ -21,11 +22,15 @@
    * Save translate merge options - thx chorong761
    * Allow multiple selection in Assa style manager - thx OmrSi
    * Allow some errors when reading mkv files - thx Ian
+   * Improve Bulgarian language auto detect - thx josdion
+   * A few improvements for EDL/CLIPNAME - thx Chungyu
 * FIXED:
+   * Fix mpv dll loading from a folder with e.g. cyrillic chars - thx Zoran
    * Fix show (correct) EBU properties for current file - thx Emilien
    * Fix non-ASCII chars when enc 20269 is unavailable (Linux) - thx jason
    * Fix a few crashes in translation engine - thx howblast
    * Fix a crash in RTL when activating syntax coloring - thx OmrSi
+   * Fix auto translate shortcut - thx xmrea
 
 
 3.6.0 (18th February 2021)
