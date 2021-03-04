@@ -7,6 +7,7 @@
    * Auto load ASSA styles for new files - thx z3us/OmrSi
    * Add support for attached fonts in ASSA style manager
    * Add "Apply" button in ASSA style manager - thx LeonCheung
+   * Allow multiple selection in ASSA style manager - thx OmrSi
    * Add bookmarks to modify selection - thx moob158/OmrSi
    * Add shortcut for toggling video controls on/off
    * Add export to csv of bookmarks - thx kjaerlige
@@ -20,7 +21,6 @@
    * Optimize merge lines with same text/time
    * Minor update of icon/install image - thx LeonCheung
    * Save translate merge options - thx chorong761
-   * Allow multiple selection in Assa style manager - thx OmrSi
    * Allow some errors when reading mkv files - thx Ian
    * Improve Bulgarian language auto detect - thx josdion
    * A few improvements for EDL/CLIPNAME - thx Chungyu
