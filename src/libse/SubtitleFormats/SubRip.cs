@@ -220,7 +220,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     else if (!string.IsNullOrWhiteSpace(line) || IsText(next) || IsText(nextNext) || nextNextNext == GetLastNumber(_paragraph))
                     {
-                        if (_isWsrt && !string.IsNullOrEmpty(line))
+                        if (_isWsrt && !string.IsNullOrEmpty(line) && HasNumericTag(line))
                         {
                             for (int i = 30; i < 40; i++)
                             {
@@ -260,6 +260,32 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     break;
             }
+        }
+
+        private static bool HasNumericTag(string input)
+        {
+            int len = input.Length;
+            if (len < 3)
+            {
+                return false;
+            }
+            for (int i = len - 1; i >= 0; i--)
+            {
+                char ch = input[i];
+                if (ch == '<' && i + 1 < len)
+                {
+                    if (input[i + 1] == '3')
+                    {
+                        return true;
+                    }
+                    if (i + 2 < len && input[i + 1] == '/' && input[i + 2] == '3')
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         private static string GetLastNumber(Paragraph p)
