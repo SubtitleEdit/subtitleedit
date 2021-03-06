@@ -2819,7 +2819,7 @@
             public string ChooseCategories { get; set; }
             public string ImportCategoriesTitle { get; set; }
             public string ExportCategoriesTitle { get; set; }
-            public string MoveTOCategory { get; set; }
+            public string MoveToCategory { get; set; }
         }
 
         public class PointSync

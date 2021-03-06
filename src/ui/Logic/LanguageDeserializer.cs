@@ -7186,8 +7186,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "SubStationAlphaStyles/ExportCategoriesTitle":
                     language.SubStationAlphaStyles.ExportCategoriesTitle = reader.Value;
                     break;
-                case "SubStationAlphaStyles/MoveTOCategory":
-                    language.SubStationAlphaStyles.MoveTOCategory = reader.Value;
+                case "SubStationAlphaStyles/MoveToCategory":
+                    language.SubStationAlphaStyles.MoveToCategory = reader.Value;
                     break;
                 case "PointSync/Title":
                     language.PointSync.Title = reader.Value;

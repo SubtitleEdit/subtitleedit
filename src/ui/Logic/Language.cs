@@ -2960,10 +2960,10 @@ can edit in same subtitle file (collaboration)",
                 CategoryDelete = "Are you sure you want to delete this category?",
                 CategoryRename = "Rename category",
                 CategoriesManage = "Manage",
-                ChooseCategories = "Choose style to {0}",
-                ImportCategoriesTitle = "{0} categories from...",
+                ChooseCategories = "Choose categories to {0}",
+                ImportCategoriesTitle = "Import categories from...",
                 ExportCategoriesTitle = "Export categories to...",
-                MoveTOCategory = "Move selected styles to category..."
+                MoveToCategory = "Move selected styles to category..."
             };
 
             PointSync = new LanguageStructure.PointSync
