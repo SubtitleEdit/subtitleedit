@@ -2962,7 +2962,8 @@ can edit in same subtitle file (collaboration)",
                 CategoriesManage = "Manage",
                 ChooseCategories = "Choose style to {0}",
                 ImportCategoriesTitle = "{0} categories from...",
-                ExportCategoriesTitle = "Export categories to..."
+                ExportCategoriesTitle = "Export categories to...",
+                MoveTOCategory = "Move selected styles to category..."
             };
 
             PointSync = new LanguageStructure.PointSync
