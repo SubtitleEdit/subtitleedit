@@ -11,6 +11,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 {
     public sealed partial class SubStationAlphaStylesCategoriesManager : Form
     {
+        internal static readonly Color _defaultCategoryColor = Configuration.Settings.General.UseDarkTheme? Color.LimeGreen : Color.Green;
+
         internal const string Category = "Category";
         internal const string CategoryName = "Name";
         internal const string CategoryIsDefault = "CategoryIsDefault";
@@ -32,11 +34,11 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private const string TemplateFilterExtension = "|*.template";
 
-        public AssaStorageCategory SelectedCategory =>
-            GetCategoryByName(listViewCategories.SelectedItems?[0].Text);
-
         private List<AssaStorageCategory> _assaCategories;
         private readonly List<AssaStorageCategory> _oldAssaCategories = new List<AssaStorageCategory>();
+
+        public AssaStorageCategory SelectedCategory =>
+            GetCategoryByName(listViewCategories.SelectedItems?[0].Text);
 
         public SubStationAlphaStylesCategoriesManager(List<AssaStorageCategory> currentAssaCategories, string focusCategory)
         {
@@ -48,6 +50,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             foreach (var category in currentAssaCategories)
             {
                 var lvi = new ListViewItem(category.Name);
+                SetCategoryListViewItemDefaultColor(lvi, category.IsDefault);
+
                 if (category.Name == focusCategory)
                 {
                     lvi.Selected = true;
@@ -87,6 +91,15 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private AssaStorageCategory GetCategoryByName(string categoryName) =>
             categoryName != null ?_assaCategories.SingleOrDefault(category => category.Name == categoryName) : null;
+
+        private void SetCategoryListViewItemDefaultColor(ListViewItem lvi, bool isDefault)
+        {
+            if (isDefault)
+            {
+                lvi.Font = new Font(listViewCategories.Font, FontStyle.Bold);
+                lvi.ForeColor = _defaultCategoryColor;
+            }
+        }
 
         private void UpdateSelectedIndices(int startingIndex = -1, int numberOfSelectedItems = 1)
         {
@@ -185,7 +198,10 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                         newCategory.Styles.Add(new SsaStyle());
                     }
                     _assaCategories.Insert(insertIndex, newCategory);
-                    listViewCategories.Items.Insert(insertIndex, new ListViewItem(newName));
+
+                    var lvi = new ListViewItem(newName);
+                    SetCategoryListViewItemDefaultColor(lvi, overridingDefault);
+                    listViewCategories.Items.Insert(insertIndex, lvi);
                     UpdateSelectedIndices(insertIndex);
                 }
             }
@@ -211,7 +227,18 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         {
             var oldDefaultCategory = _assaCategories.Single(category => category.IsDefault);
             oldDefaultCategory.IsDefault = false;
-            SelectedCategory.IsDefault = true;
+
+            var oldDefaultCategoryListViewItemIndex = _assaCategories.IndexOf(oldDefaultCategory);
+            listViewCategories.Items[oldDefaultCategoryListViewItemIndex].ForeColor = UiUtil.ForeColor;
+            listViewCategories.Items[oldDefaultCategoryListViewItemIndex].Font = listViewCategories.Font;
+
+            var newDefault = SelectedCategory;
+            newDefault.IsDefault = true;
+
+            var newDefaultCategoryListViewItemIndex = _assaCategories.IndexOf(newDefault);
+            listViewCategories.Items[newDefaultCategoryListViewItemIndex].ForeColor = _defaultCategoryColor;
+            listViewCategories.Items[newDefaultCategoryListViewItemIndex].Font = new Font(listViewCategories.Font, FontStyle.Bold);
+
             buttonSetDefaultCategory.Enabled = false;
             buttonRemoveCategory.Enabled = false;
 
@@ -284,9 +311,12 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                                     }
                                 }
 
-                                importCategory.IsDefault = false;
+                                importCategory.IsDefault = overridingDefault;
                                 _assaCategories.Insert(insertIndex, importCategory);
-                                listViewCategories.Items.Insert(insertIndex, new ListViewItem(importedName));
+
+                                var lvi = new ListViewItem(importedName);
+                                SetCategoryListViewItemDefaultColor(lvi, overridingDefault);
+                                listViewCategories.Items.Insert(insertIndex, lvi);
                             }
 
                             UpdateSelectedIndices(oldCategorySelectedIndex);
