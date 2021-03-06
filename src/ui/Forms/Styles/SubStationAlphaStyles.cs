@@ -2149,7 +2149,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         {
             listViewStorage.BeginUpdate();
             listViewStorage.Items.Clear();
-            var focusCategory = _storageCategories.FirstOrDefault(x => x.Name == comboboxStorageCategories.SelectedItem.ToString());
+            var focusCategory = _storageCategories[comboboxStorageCategories.SelectedIndex];
             foreach (var style in focusCategory.Styles)
             {
                 if (!string.IsNullOrEmpty(style.Name))
@@ -2160,6 +2160,11 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             listViewStorage.EndUpdate();
 
             _currentCategory = focusCategory;
+
+            labelStorageCategory.ForeColor = focusCategory.IsDefault ?
+                SubStationAlphaStylesCategoriesManager._defaultCategoryColor : 
+                UiUtil.ForeColor;
+
             buttonStorageRemove.Enabled = listViewStorage.SelectedItems.Count > 0;
             buttonStorageCategoryDelete.Enabled = !_currentCategory.IsDefault;
             UpdateStorageButtonsState();
