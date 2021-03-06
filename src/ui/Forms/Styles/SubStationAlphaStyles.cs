@@ -2413,31 +2413,79 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
         }
 
+        private void contextMenuStripFile_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            var isNotEmpty = listViewStyles.Items.Count > 0;
+            toolStripMenuItemRemoveAll.Visible = isNotEmpty;
+            toolStripSeparator4.Visible = isNotEmpty;
+            toolStripMenuItemExport.Visible = isNotEmpty;
+
+            var oneOrMoreSelected = listViewStyles.SelectedItems.Count > 0;
+            deleteToolStripMenuItem.Visible = oneOrMoreSelected;
+            addToStorageToolStripMenuItem1.Visible = oneOrMoreSelected;
+            copyToolStripMenuItemCopy.Visible = oneOrMoreSelected;
+
+            var moreThanOneExists = listViewStyles.Items.Count > 1;
+            moveUpToolStripMenuItem.Visible = oneOrMoreSelected && moreThanOneExists;
+            moveBottomToolStripMenuItem.Visible = oneOrMoreSelected && moreThanOneExists;
+            moveTopToolStripMenuItem.Visible = oneOrMoreSelected && moreThanOneExists;
+            moveDownToolStripMenuItem.Visible = oneOrMoreSelected && moreThanOneExists;
+            toolStripSeparator3.Visible = oneOrMoreSelected && moreThanOneExists;
+        }
+
         private void contextMenuStripStorage_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             var isNotEmpty = listViewStorage.Items.Count > 0;
-            toolStripMenuItemStorageRemove.Visible = isNotEmpty;
             toolStripMenuItemStorageRemoveAll.Visible = isNotEmpty;
             toolStripSeparator2.Visible = isNotEmpty;
-            toolStripMenuItemStorageCopy.Visible = isNotEmpty;
+            toolStripMenuItemStorageExport.Visible = isNotEmpty;
 
-            var moreThanOne = listViewStorage.Items.Count > 1;
-            toolStripMenuItemStorageMoveUp.Visible = moreThanOne;
-            toolStripMenuItemStorageMoveBottom.Visible = moreThanOne;
-            toolStripMenuItemStorageMoveTop.Visible = moreThanOne;
-            toolStripMenuItemStorageMoveDown.Visible = moreThanOne;
-            toolStripSeparator5.Visible = moreThanOne;
+            var oneOrMoreSelected = listViewStorage.SelectedItems.Count > 0;
+            toolStripMenuItemStorageRemove.Visible = oneOrMoreSelected;
+            addToFileStylesToolStripMenuItem.Visible = oneOrMoreSelected;
+            toolStripSeparator7.Visible = oneOrMoreSelected;
+            toolStripMenuItemStorageCopy.Visible = oneOrMoreSelected;
+
+            var moreThanOneExists = listViewStorage.Items.Count > 1;
+            toolStripMenuItemStorageMoveUp.Visible = oneOrMoreSelected && moreThanOneExists;
+            toolStripMenuItemStorageMoveDown.Visible = oneOrMoreSelected && moreThanOneExists;
+            toolStripMenuItemStorageMoveTop.Visible = oneOrMoreSelected && moreThanOneExists;
+            toolStripMenuItemStorageMoveBottom.Visible = oneOrMoreSelected && moreThanOneExists;
+            toolStripSeparator5.Visible = oneOrMoreSelected && moreThanOneExists;
+
+            var canMove = oneOrMoreSelected && _storageCategories.Count > 1 && (!_currentCategory.IsDefault || _currentCategory.IsDefault && listViewStorage.SelectedItems.Count < _currentCategory.Styles.Count);
+            toolStripMenuItemStorageMoveStylesToCategory.Visible = canMove;
+            toolStripSeparator9.Visible = canMove;
+            if (canMove)
+            {
+                toolStripMenuItemStorageMoveStylesToCategory.DropDownItems.Clear();
+                foreach (var assaStorageCategory in _storageCategories)
+                {
+                    if (assaStorageCategory != _currentCategory)
+                    {
+                        var menuItem = new ToolStripMenuItem(assaStorageCategory.Name) { Tag = assaStorageCategory };
+                        menuItem.Click += (s, args) => { MoveStylesToCategory(assaStorageCategory); };
+                        toolStripMenuItemStorageMoveStylesToCategory.DropDownItems.Add(menuItem);
+                    }
+                }
+
+                UiUtil.FixFonts(toolStripMenuItemStorageMoveStylesToCategory);
+            }
         }
 
-        private void contextMenuStripFile_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void MoveStylesToCategory(AssaStorageCategory destinationCategory)
         {
-            var moreThanOne = listViewStyles.Items.Count > 1;
-            moveUpToolStripMenuItem.Visible = moreThanOne;
-            moveBottomToolStripMenuItem.Visible = moreThanOne;
-            moveTopToolStripMenuItem.Visible = moreThanOne;
-            moveDownToolStripMenuItem.Visible = moreThanOne;
-            toolStripSeparator3.Visible = moreThanOne;
-            toolStripMenuItemRemoveAll.Visible = moreThanOne;
+            var lastItemIndex = listViewStorage.SelectedItems[listViewStorage.SelectedItems.Count - 1].Index;
+            listViewStorage.BeginUpdate();
+            foreach (ListViewItem item in listViewStorage.SelectedItems)
+            {
+                var style = _currentCategory.Styles[item.Index];
+                _currentCategory.Styles.Remove(style);
+                listViewStorage.Items.RemoveAt(item.Index);
+                destinationCategory.Styles.Add(style);
+            }
+            listViewStorage.EndUpdate();
+            UpdateSelectedIndices(listViewStorage, lastItemIndex);
         }
 
         private void buttonApply_Click(object sender, EventArgs e)

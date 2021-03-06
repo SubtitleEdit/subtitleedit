@@ -2624,6 +2624,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <ChooseCategories>Choose style to {0}</ChooseCategories>
     <ImportCategoriesTitle>{0} categories from...</ImportCategoriesTitle>
     <ExportCategoriesTitle>Export categories to...</ExportCategoriesTitle>
+    <MoveTOCategory>Move selected styles to category...</MoveTOCategory>
   </SubStationAlphaStyles>
   <PointSync>
     <Title>Point synchronization</Title>

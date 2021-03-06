@@ -136,6 +136,8 @@
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.addToFileStylesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItemStorageMoveStylesToCategory = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemStorageMoveUp = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemStorageMoveDown = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemStorageMoveTop = new System.Windows.Forms.ToolStripMenuItem();
@@ -1223,6 +1225,8 @@
             this.toolStripSeparator2,
             this.addToFileStylesToolStripMenuItem,
             this.toolStripSeparator7,
+            this.toolStripMenuItemStorageMoveStylesToCategory,
+            this.toolStripSeparator9,
             this.toolStripMenuItemStorageMoveUp,
             this.toolStripMenuItemStorageMoveDown,
             this.toolStripMenuItemStorageMoveTop,
@@ -1269,6 +1273,17 @@
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
             this.toolStripSeparator7.Size = new System.Drawing.Size(212, 6);
+            // 
+            // toolStripMenuItemStorageMoveStylesToCategory
+            // 
+            this.toolStripMenuItemStorageMoveStylesToCategory.Name = "toolStripMenuItemStorageMoveStylesToCategory";
+            this.toolStripMenuItemStorageMoveStylesToCategory.Size = new System.Drawing.Size(215, 22);
+            this.toolStripMenuItemStorageMoveStylesToCategory.Text = "Move selected styles to category...";
+            // 
+            // toolStripSeparator9
+            // 
+            this.toolStripSeparator9.Name = "toolStripSeparator9";
+            this.toolStripSeparator9.Size = new System.Drawing.Size(212, 6);
             // 
             // toolStripMenuItemStorageMoveUp
             // 
@@ -1603,6 +1618,8 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStorageRemove;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStorageRemoveAll;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStorageMoveStylesToCategory;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStorageMoveUp;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStorageMoveDown;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStorageMoveTop;
