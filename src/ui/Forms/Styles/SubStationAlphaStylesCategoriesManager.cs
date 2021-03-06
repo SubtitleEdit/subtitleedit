@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private const string TemplateFilterExtension = "|*.template";
 
-        private List<AssaStorageCategory> _assaCategories;
+        private readonly List<AssaStorageCategory> _assaCategories;
         private readonly List<AssaStorageCategory> _oldAssaCategories = new List<AssaStorageCategory>();
 
         public AssaStorageCategory SelectedCategory =>
@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 }
 
                 listViewCategories.Items.Add(lvi);
-                _oldAssaCategories.Add(category);
+                _oldAssaCategories.Add(new AssaStorageCategory() { Name = category.Name, IsDefault = category.IsDefault, Styles = category.Styles });
             }
 
             listViewCategories.Focus();
@@ -607,7 +607,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void ButtonCancel_Click(object sender, EventArgs e)
         {
-            _assaCategories = _oldAssaCategories;
+            _assaCategories.Clear();
+            _oldAssaCategories.ForEach(category => _assaCategories.Add(category));
             DialogResult = DialogResult.Cancel;
         }
 
