@@ -147,7 +147,7 @@
             this.toolStripMenuItemStorageImport = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemStorageExport = new System.Windows.Forms.ToolStripMenuItem();
             this.labelCategoryDefaultNote = new System.Windows.Forms.Label();
-            this.buttonStorageCategorySetDefault = new System.Windows.Forms.Button();
+            this.buttonStorageManageCategories = new System.Windows.Forms.Button();
             this.buttonStorageCategoryDelete = new System.Windows.Forms.Button();
             this.buttonStorageCategoryNew = new System.Windows.Forms.Button();
             this.comboboxStorageCategories = new System.Windows.Forms.ComboBox();
@@ -1062,7 +1062,7 @@
             this.groupBoxStorage.Controls.Add(this.buttonStorageRemove);
             this.groupBoxStorage.Controls.Add(this.listViewStorage);
             this.groupBoxStorage.Controls.Add(this.labelCategoryDefaultNote);
-            this.groupBoxStorage.Controls.Add(this.buttonStorageCategorySetDefault);
+            this.groupBoxStorage.Controls.Add(this.buttonStorageManageCategories);
             this.groupBoxStorage.Controls.Add(this.buttonStorageCategoryDelete);
             this.groupBoxStorage.Controls.Add(this.buttonStorageCategoryNew);
             this.groupBoxStorage.Controls.Add(this.comboboxStorageCategories);
@@ -1353,16 +1353,16 @@
             this.labelCategoryDefaultNote.TabIndex = 5;
             this.labelCategoryDefaultNote.Text = "Note: \"Default\" styles will be applied to new ASSA files";
             // 
-            // buttonStorageCategorySetDefault
+            // buttonStorageManageCategories
             // 
-            this.buttonStorageCategorySetDefault.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonStorageCategorySetDefault.Location = new System.Drawing.Point(455, 19);
-            this.buttonStorageCategorySetDefault.Name = "buttonStorageCategorySetDefault";
-            this.buttonStorageCategorySetDefault.Size = new System.Drawing.Size(98, 23);
-            this.buttonStorageCategorySetDefault.TabIndex = 4;
-            this.buttonStorageCategorySetDefault.Text = "Set as default";
-            this.buttonStorageCategorySetDefault.UseVisualStyleBackColor = true;
-            this.buttonStorageCategorySetDefault.Click += new System.EventHandler(this.buttonStorageCategorySetDefault_Click);
+            this.buttonStorageManageCategories.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonStorageManageCategories.Location = new System.Drawing.Point(455, 19);
+            this.buttonStorageManageCategories.Name = "buttonStorageManageCategories";
+            this.buttonStorageManageCategories.Size = new System.Drawing.Size(98, 23);
+            this.buttonStorageManageCategories.TabIndex = 4;
+            this.buttonStorageManageCategories.Text = "Manage categories";
+            this.buttonStorageManageCategories.UseVisualStyleBackColor = true;
+            this.buttonStorageManageCategories.Click += new System.EventHandler(this.buttonStorageManageCategories_Click);
             // 
             // buttonStorageCategoryDelete
             // 
@@ -1568,7 +1568,7 @@
         private System.Windows.Forms.ComboBox comboboxStorageCategories;
         private System.Windows.Forms.Button buttonStorageCategoryNew;
         private System.Windows.Forms.Button buttonStorageCategoryDelete;
-        private System.Windows.Forms.Button buttonStorageCategorySetDefault;
+        private System.Windows.Forms.Button buttonStorageManageCategories;
         private System.Windows.Forms.Label labelCategoryDefaultNote;
         private System.Windows.Forms.ListView listViewStorage;
         private System.Windows.Forms.ColumnHeader columnHeader1;

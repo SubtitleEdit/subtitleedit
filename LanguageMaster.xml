@@ -2613,11 +2613,17 @@ Continue?</RestoreDefaultSettingsMsg>
     <StyleCurrentFile>Styles in current file</StyleCurrentFile>
     <OverwriteX>Overwrite {0}?</OverwriteX>
     <Category>Category</Category>
+    <Categories>Categories</Categories>
     <NewCategory>New category</NewCategory>
     <CategoryName>Category name</CategoryName>
     <CategorySetDefault>Set as default</CategorySetDefault>
     <CategoryNote>Note: "Default" styles will be applied to new ASSA files</CategoryNote>
     <CategoryDelete>Are you sure you want to delete this category?</CategoryDelete>
+    <CategoryRename>Rename category</CategoryRename>
+    <CategoriesManage>Manage</CategoriesManage>
+    <ChooseCategories>Choose style to {0}</ChooseCategories>
+    <ImportCategoriesTitle>{0} categories from...</ImportCategoriesTitle>
+    <ExportCategoriesTitle>Export categories to...</ExportCategoriesTitle>
   </SubStationAlphaStyles>
   <PointSync>
     <Title>Point synchronization</Title>

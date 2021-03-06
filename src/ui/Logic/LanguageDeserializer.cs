@@ -7153,6 +7153,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "SubStationAlphaStyles/Category":
                     language.SubStationAlphaStyles.Category = reader.Value;
                     break;
+                case "SubStationAlphaStyles/Categories":
+                    language.SubStationAlphaStyles.Categories = reader.Value;
+                    break;
                 case "SubStationAlphaStyles/NewCategory":
                     language.SubStationAlphaStyles.NewCategory = reader.Value;
                     break;
@@ -7167,6 +7170,21 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "SubStationAlphaStyles/CategoryDelete":
                     language.SubStationAlphaStyles.CategoryDelete = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/CategoryRename":
+                    language.SubStationAlphaStyles.CategoryRename = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/CategoriesManage":
+                    language.SubStationAlphaStyles.CategoriesManage = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/ChooseCategories":
+                    language.SubStationAlphaStyles.ChooseCategories = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/ImportCategoriesTitle":
+                    language.SubStationAlphaStyles.ImportCategoriesTitle = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/ExportCategoriesTitle":
+                    language.SubStationAlphaStyles.ExportCategoriesTitle = reader.Value;
                     break;
                 case "PointSync/Title":
                     language.PointSync.Title = reader.Value;
