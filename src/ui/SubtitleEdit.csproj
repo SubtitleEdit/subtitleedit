@@ -289,6 +289,18 @@
     <Compile Include="Forms\Styles\ChooseFontName.Designer.cs">
       <DependentUpon>ChooseFontName.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Styles\SubStationAlphaStylesCategoriesImportExport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Styles\SubStationAlphaStylesCategoriesImportExport.Designer.cs">
+      <DependentUpon>SubStationAlphaStylesCategoriesImportExport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Styles\SubStationAlphaStylesCategoriesManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Styles\SubStationAlphaStylesCategoriesManager.Designer.cs">
+      <DependentUpon>SubStationAlphaStylesCategoriesManager.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Translate\GenericTranslate.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1308,6 +1320,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Styles\ChooseFontName.resx">
       <DependentUpon>ChooseFontName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Styles\SubStationAlphaStylesCategoriesImportExport.resx">
+      <DependentUpon>SubStationAlphaStylesCategoriesImportExport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Styles\SubStationAlphaStylesCategoriesManager.resx">
+      <DependentUpon>SubStationAlphaStylesCategoriesManager.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Translate\GenericTranslate.resx">
       <DependentUpon>GenericTranslate.cs</DependentUpon>

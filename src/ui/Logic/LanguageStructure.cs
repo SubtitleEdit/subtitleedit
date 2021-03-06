@@ -2808,11 +2808,17 @@
             public string StyleCurrentFile { get; set; }
             public string OverwriteX { get; set; }
             public string Category { get; set; }
+            public string Categories { get; set; }
             public string NewCategory { get; set; }
             public string CategoryName { get; set; }
             public string CategorySetDefault { get; set; }
             public string CategoryNote { get; set; }
             public string CategoryDelete { get; set; }
+            public string CategoryRename { get; set; }
+            public string CategoriesManage { get; set; }
+            public string ChooseCategories { get; set; }
+            public string ImportCategoriesTitle { get; set; }
+            public string ExportCategoriesTitle { get; set; }
         }
 
         public class PointSync

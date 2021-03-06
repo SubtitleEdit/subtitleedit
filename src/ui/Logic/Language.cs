@@ -2952,11 +2952,17 @@ can edit in same subtitle file (collaboration)",
                 StyleCurrentFile = "Styles in current file",
                 OverwriteX = "Overwrite {0}?",
                 Category = "Category",
+                Categories = "Categories",
                 NewCategory = "New category",
                 CategoryName = "Category name",
                 CategorySetDefault = "Set as default",
                 CategoryNote = "Note: \"Default\" styles will be applied to new ASSA files",
-                CategoryDelete = "Are you sure you want to delete this category?"
+                CategoryDelete = "Are you sure you want to delete this category?",
+                CategoryRename = "Rename category",
+                CategoriesManage = "Manage",
+                ChooseCategories = "Choose style to {0}",
+                ImportCategoriesTitle = "{0} categories from...",
+                ExportCategoriesTitle = "Export categories to..."
             };
 
             PointSync = new LanguageStructure.PointSync
