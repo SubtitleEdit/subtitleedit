@@ -2057,6 +2057,21 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 buttonRemove_Click(null, null);
             }
+            else if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control)
+            {
+                listViewStyles.SelectAll();
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.D && e.Modifiers == Keys.Control)
+            {
+                listViewStyles.SelectFirstSelectedItemOnly();
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.I && e.Modifiers == (Keys.Control | Keys.Shift))
+            {
+                listViewStyles.InverseSelection();
+                e.SuppressKeyPress = true;
+            }
         }
 
         private void listViewStorage_KeyDown(object sender, KeyEventArgs e)
@@ -2068,6 +2083,21 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Delete)
             {
                 buttonStorageRemove_Click(null, null);
+            }
+            else if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control)
+            {
+                listViewStorage.SelectAll();
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.D && e.Modifiers == Keys.Control)
+            {
+                listViewStorage.SelectFirstSelectedItemOnly();
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.I && e.Modifiers == (Keys.Control | Keys.Shift))
+            {
+                listViewStorage.InverseSelection();
+                e.SuppressKeyPress = true;
             }
         }
 
