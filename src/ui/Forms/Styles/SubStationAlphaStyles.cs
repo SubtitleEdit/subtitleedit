@@ -228,18 +228,19 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 _storageCategories = new List<AssaStorageCategory>();
 
-                if (Configuration.Settings.SubtitleSettings.AssaStyleStorageCategories.Count == 0 || !Configuration.Settings.SubtitleSettings.AssaStyleStorageCategories.Exists(item => item.IsDefault))
+                var storedCategories = Configuration.Settings.SubtitleSettings.AssaStyleStorageCategories;
+                if (storedCategories.Count == 0 || !storedCategories.Exists(item => item.IsDefault))
                 {
-                    Configuration.Settings.SubtitleSettings.AssaStyleStorageCategories.Add(new AssaStorageCategory { Name = "Default", IsDefault = true, Styles = new List<SsaStyle>() });
+                    storedCategories.Add(new AssaStorageCategory { Name = SubStationAlphaStylesCategoriesManager.FixDuplicateName("Default", storedCategories), IsDefault = true, Styles = new List<SsaStyle>() });
                 }
 
-                var defaultCat = Configuration.Settings.SubtitleSettings.AssaStyleStorageCategories.Single(item => item.IsDefault);
+                var defaultCat = storedCategories.Single(item => item.IsDefault);
                 if (defaultCat.Styles.Count == 0)
                 {
                     defaultCat.Styles.Add(new SsaStyle());
                 }
 
-                foreach (var category in Configuration.Settings.SubtitleSettings.AssaStyleStorageCategories)
+                foreach (var category in storedCategories)
                 {
                     comboboxStorageCategories.Items.Add(category.Name);
                     _storageCategories.Add(category);
