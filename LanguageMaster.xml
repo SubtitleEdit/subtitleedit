@@ -2617,7 +2617,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <NewCategory>New category</NewCategory>
     <CategoryName>Category name</CategoryName>
     <CategorySetDefault>Set as default</CategorySetDefault>
-    <CategoryNote>Note: "Default" styles will be applied to new ASSA files</CategoryNote>
+    <CategoryNote>Note: The styles in the default category (colored in green) will be applied to new ASSA files</CategoryNote>
     <CategoryDelete>Are you sure you want to delete this category?</CategoryDelete>
     <CategoryRename>Rename category</CategoryRename>
     <CategoriesManage>Manage</CategoriesManage>

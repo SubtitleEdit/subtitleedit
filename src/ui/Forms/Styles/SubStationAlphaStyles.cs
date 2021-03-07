@@ -804,8 +804,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private void AddDefaultStyleToStorage()
         {
             var defaultStyle = new SsaStyle();
-            AddStyle(listViewStorage, defaultStyle, Subtitle, _isSubStationAlpha);
             _currentCategory.Styles.Add(defaultStyle);
+            AddStyle(listViewStorage, defaultStyle, Subtitle, _isSubStationAlpha);
         }
 
         private void UpdateSelectedIndices(ListView listview, int startingIndex = -1, int numberOfSelectedItems = 1)
@@ -1167,7 +1167,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     _doUpdate = true;
                 }
 
-                UpdateSelectedIndices(listViewStyles, selectionCount);
+                UpdateSelectedIndices(listViewStyles, numberOfSelectedItems: selectionCount);
             }
         }
 
@@ -1899,18 +1899,17 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 foreach (ListViewItem selectedItem in listViewStorage.SelectedItems)
                 {
-                    var index = selectedItem.Index;
-                    SsaStyle oldStyle = _currentCategory.Styles[index];
-                    var style = new SsaStyle(oldStyle) { Name = string.Format(LanguageSettings.Current.SubStationAlphaStyles.CopyOfY, oldStyle.Name) }; // Copy contructor
-                    var styleName = style.Name;
-                    if (_currentCategory.Styles.Any(p => p.Name == styleName))
+                    var styleName = selectedItem.Text;
+                    var oldStyle = _currentCategory.Styles[selectedItem.Index];
+                    var style = new SsaStyle(oldStyle) { Name = string.Format(LanguageSettings.Current.SubStationAlphaStyles.CopyOfY, styleName) }; // Copy contructor
+                    if (_currentCategory.Styles.Any(p => p.Name == style.Name))
                     {
                         int count = 2;
                         bool doRepeat = true;
                         while (doRepeat)
                         {
                             style.Name = string.Format(LanguageSettings.Current.SubStationAlphaStyles.CopyXOfY, count, styleName);
-                            doRepeat = _currentCategory.Styles.Any(p => p.Name == styleName);
+                            doRepeat = _currentCategory.Styles.Any(p => p.Name == style.Name);
                             count++;
                         }
                     }
@@ -1921,7 +1920,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     _doUpdate = true;
                 }
 
-                UpdateSelectedIndices(listViewStorage, selectionCount);
+                UpdateSelectedIndices(listViewStorage, numberOfSelectedItems: selectionCount);
             }
         }
 
