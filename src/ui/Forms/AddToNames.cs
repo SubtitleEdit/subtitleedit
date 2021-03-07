@@ -57,6 +57,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 textBoxAddName.Enabled = false;
                 buttonOK.Enabled = false;
+                MessageBox.Show($"No spell check dictionaries found in {Configuration.DictionariesDirectory}");
                 return;
             }
 
