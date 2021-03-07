@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -13,6 +14,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private int _lineNumber;
         private bool _isMsFrames;
         private bool _isWsrt;
+        private static Regex _regExWsrtItalicStart;
+        private static Regex _regExWsrtItalicEnd;
 
         private enum ExpectingLine
         {
@@ -220,13 +223,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     else if (!string.IsNullOrWhiteSpace(line) || IsText(next) || IsText(nextNext) || nextNextNext == GetLastNumber(_paragraph))
                     {
-                        if (_isWsrt && !string.IsNullOrEmpty(line))
+                        if (_isWsrt && !string.IsNullOrEmpty(line) && line.Contains("<3", StringComparison.Ordinal))
                         {
-                            for (int i = 30; i < 40; i++)
+                            if (_regExWsrtItalicStart == null)
                             {
-                                line = line.Replace("<" + i + ">", "<i>");
-                                line = line.Replace("</" + i + ">", "</i>");
+                                _regExWsrtItalicStart = new Regex(@"<3\d>", RegexOptions.Compiled);
                             }
+
+                            if (_regExWsrtItalicEnd == null)
+                            {
+                                _regExWsrtItalicEnd = new Regex(@"</3\d>", RegexOptions.Compiled);
+                            }
+
+                            line = _regExWsrtItalicStart.Replace(line, "<i>");
+                            line = _regExWsrtItalicEnd.Replace(line, "</i>");
                         }
 
                         if (_paragraph.Text.Length > 0)
