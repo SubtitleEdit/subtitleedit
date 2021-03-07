@@ -1366,7 +1366,7 @@
             this.labelCategoryDefaultNote.Name = "labelCategoryDefaultNote";
             this.labelCategoryDefaultNote.Size = new System.Drawing.Size(265, 13);
             this.labelCategoryDefaultNote.TabIndex = 5;
-            this.labelCategoryDefaultNote.Text = "Note: \"Default\" styles will be applied to new ASSA files";
+            this.labelCategoryDefaultNote.Text = "Note: The styles in the default category (colored in green) will be applied to new ASSA files";
             // 
             // buttonStorageManageCategories
             // 
