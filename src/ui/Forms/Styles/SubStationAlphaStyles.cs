@@ -548,6 +548,25 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
         }
 
+        private static string FixDuplicateStyleName(string newStyleName, List<SsaStyle> existingStyles)
+        {
+            if (existingStyles.All(p => p.Name != newStyleName))
+            {
+                return newStyleName;
+            }
+
+            for (int i = 1; i < int.MaxValue; i++)
+            {
+                var name = $"{newStyleName}_{i}";
+                if (existingStyles.All(p => p.Name != name))
+                {
+                    return name;
+                }
+            }
+
+            return Guid.NewGuid().ToString();
+        }
+
         public static void AddStyle(ListView lv, SsaStyle ssaStyle, Subtitle subtitle, bool isSubstationAlpha)
         {
             AddStyle(lv, ssaStyle, subtitle, isSubstationAlpha, lv.Items.Count);
@@ -1251,17 +1270,23 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             else if (listViewStorage.SelectedItems.Count == 1 && !_fileStyleActive)
             {
                 textBoxStyleName.BackColor = ActiveListView.BackColor;
-                ActiveListView.SelectedItems[0].Text = textBoxStyleName.Text.RemoveChar(',').Trim();
-                var idx = ActiveListView.SelectedItems[0].Index;
-                _currentCategory.Styles[idx].Name = textBoxStyleName.Text.RemoveChar(',').Trim();
 
+                var found = false;
+                var idx = ActiveListView.SelectedItems[0].Index;
                 for (int i = 0; i < _currentCategory.Styles.Count; i++)
                 {
                     var storageName = _currentCategory.Styles[i].Name;
                     if (idx != i && storageName == textBoxStyleName.Text.RemoveChar(',').Trim())
                     {
+                        found = true;
                         textBoxStyleName.BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                     }
+                }
+
+                if (!found)
+                {
+                    ActiveListView.SelectedItems[0].Text = textBoxStyleName.Text.RemoveChar(',').Trim();
+                    _currentCategory.Styles[idx].Name = textBoxStyleName.Text.RemoveChar(',').Trim();
                 }
             }
 
@@ -2514,10 +2539,30 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             listViewStorage.BeginUpdate();
             foreach (ListViewItem item in listViewStorage.SelectedItems)
             {
-                var style = _currentCategory.Styles[item.Index];
-                _currentCategory.Styles.Remove(style);
-                listViewStorage.Items.RemoveAt(item.Index);
-                destinationCategory.Styles.Add(style);
+                var insertIndex = destinationCategory.Styles.Count;
+                SsaStyle movedStyle = _currentCategory.Styles[item.Index];
+                if (destinationCategory.Styles.Exists(style => style.Name == movedStyle.Name))
+                {
+                    var result = MessageBox.Show(string.Format(LanguageSettings.Current.SubStationAlphaStyles.OverwriteX, movedStyle.Name), string.Empty, MessageBoxButtons.YesNoCancel);
+                    if (result == DialogResult.Yes)
+                    {
+                        var overriddenStyle = destinationCategory.Styles.Single(st => st.Name == movedStyle.Name);
+                        insertIndex = destinationCategory.Styles.IndexOf(overriddenStyle);
+                        destinationCategory.Styles.Remove(overriddenStyle);
+                    }
+                    else if (result == DialogResult.No)
+                    {
+                        movedStyle.Name = FixDuplicateStyleName(movedStyle.Name, destinationCategory.Styles);
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+
+                _currentCategory.Styles.Remove(movedStyle);
+                listViewStorage.Items.Remove(item);
+                destinationCategory.Styles.Insert(insertIndex, movedStyle);
             }
             listViewStorage.EndUpdate();
             UpdateSelectedIndices(listViewStorage, lastItemIndex);
