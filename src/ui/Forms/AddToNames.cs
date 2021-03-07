@@ -53,11 +53,18 @@ namespace Nikse.SubtitleEdit.Forms
             string languageName = LanguageAutoDetect.AutoDetectLanguageName(Configuration.Settings.General.SpellCheckLanguage, _subtitle);
             int selIndex = -1;
             var dictionaries = Utilities.GetDictionaryLanguagesCultureNeutral();
+            if (dictionaries.Count == 0)
+            {
+                textBoxAddName.Enabled = false;
+                buttonOK.Enabled = false;
+                return;
+            }
+
             for (var index = 0; index < dictionaries.Count; index++)
             {
-                string name = dictionaries[index];
+                var name = dictionaries[index];
                 comboBoxDictionaries.Items.Add(name);
-                if (selIndex == -1 && languageName.Length > 1 &&  name.Contains("[" + languageName.Substring(0, 2) + "]"))
+                if (selIndex == -1 && languageName.Length > 1 && name.Contains("[" + languageName.Substring(0, 2) + "]"))
                 {
                     selIndex = index;
                 }
@@ -111,6 +118,5 @@ namespace Nikse.SubtitleEdit.Forms
             var nameList = new NameList(Configuration.DictionariesDirectory, languageName, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
             DialogResult = nameList.Add(textBoxAddName.Text) ? DialogResult.OK : DialogResult.Cancel;
         }
-
     }
 }
