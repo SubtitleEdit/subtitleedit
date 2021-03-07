@@ -134,11 +134,15 @@ namespace Nikse.SubtitleEdit.Forms
 
             foreach (var group in Configuration.Settings.MultipleSearchAndReplaceGroups)
             {
-                var oldGroup = new MultipleSearchAndReplaceGroup { Name = group.Name, Enabled = group.Enabled, Rules = new List<MultipleSearchAndReplaceSetting>() };
-                foreach (var rule in group.Rules)
+                var oldGroup = new MultipleSearchAndReplaceGroup { Name = group.Name, Enabled = group.Enabled };
+                oldGroup.Rules = group.Rules.ConvertAll(rule => new MultipleSearchAndReplaceSetting()
                 {
-                    oldGroup.Rules.Add(rule);
-                }
+                    Enabled = rule.Enabled,
+                    FindWhat = rule.FindWhat,
+                    ReplaceWith = rule.ReplaceWith,
+                    SearchType = rule.SearchType,
+                    Description = rule.Description
+                });
                 _oldMultipleSearchAndReplaceGroups.Add(oldGroup);
             }
 
