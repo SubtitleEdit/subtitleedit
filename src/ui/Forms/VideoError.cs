@@ -25,6 +25,10 @@ namespace Nikse.SubtitleEdit.Forms
             sb.AppendLine();
 
             var currentVideoPlayer = Configuration.Settings.General.VideoPlayer;
+            if (string.IsNullOrEmpty(currentVideoPlayer))
+            {
+                currentVideoPlayer = "DirectShow";
+            }
 
             var isLibMpvInstalled = LibMpvDynamic.IsInstalled;
             if (currentVideoPlayer == "MPV" && !isLibMpvInstalled)
