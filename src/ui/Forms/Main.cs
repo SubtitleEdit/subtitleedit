@@ -10043,6 +10043,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SplitSelectedParagraph(double? splitSeconds, int? textIndex)
         {
+            int maxSingleLineLength = Configuration.Settings.General.SubtitleLineMaximumLength;
             string language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
             int? originalTextIndex = null;
             if (textBoxListViewTextOriginal.Focused)
@@ -10091,8 +10092,10 @@ namespace Nikse.SubtitleEdit.Forms
                         b = DialogSplitMerge.RemoveStartDash(b);
                     }
 
-                    currentParagraph.Text = a;
-                    newParagraph.Text = b;
+                    currentParagraph.Text = a.SplitToLines().Any(line => line.Length > maxSingleLineLength) ?
+                        Utilities.AutoBreakLine(a, language) : a ;
+                    newParagraph.Text = b.SplitToLines().Any(line => line.Length > maxSingleLineLength) ?
+                        Utilities.AutoBreakLine(b, language) : b;
                 }
                 else
                 {
@@ -10290,8 +10293,14 @@ namespace Nikse.SubtitleEdit.Forms
                         oldText = originalCurrent.Text;
                         if (originalTextIndex != null && originalTextIndex.Value > 1 && originalTextIndex.Value < oldText.Length - 1)
                         {
-                            originalCurrent.Text = oldText.Substring(0, originalTextIndex.Value).Trim();
-                            originalNew.Text = oldText.Substring(originalTextIndex.Value).Trim();
+                            var firstPart = oldText.Substring(0, originalTextIndex.Value).Trim();
+                            var secondPart = oldText.Substring(originalTextIndex.Value).Trim();
+                            originalCurrent.Text = firstPart.SplitToLines().Any(line => line.Length > maxSingleLineLength) ?
+                                Utilities.AutoBreakLine(firstPart, language) :
+                                firstPart;
+                            originalNew.Text = secondPart.SplitToLines().Any(line => line.Length > maxSingleLineLength) ? 
+                                Utilities.AutoBreakLine(secondPart, language) :
+                                secondPart;
                             if (originalCurrent.Text.Contains("<i>", StringComparison.Ordinal) && !originalCurrent.Text.Contains("</i>", StringComparison.Ordinal) &&
                                 originalNew.Text.Contains("</i>", StringComparison.Ordinal) && !originalNew.Text.Contains("<i>", StringComparison.Ordinal))
                             {
