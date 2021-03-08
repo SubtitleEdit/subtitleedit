@@ -145,7 +145,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             groupBoxPreview.Text = LanguageSettings.Current.General.Preview;
 
             groupBoxStorage.Text = l.StyleStorage;
-            labelStorageCategory.Text = l.Category;
+            labelStorageCategory.Text = LanguageSettings.Current.SubStationAlphaStylesCategoriesManager.Category;
             buttonStorageCategoryNew.Text = l.New;
             buttonStorageCategoryDelete.Text = l.Remove;
             buttonStorageManageCategories.Text = l.CategoriesManage;
@@ -2128,7 +2128,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private void buttonStorageCategoryDelete_Click(object sender, EventArgs e)
         {
             var result = Configuration.Settings.General.PromptDeleteLines ?
-                MessageBox.Show(LanguageSettings.Current.SubStationAlphaStyles.CategoryDelete, string.Empty, MessageBoxButtons.YesNoCancel) :
+                MessageBox.Show(LanguageSettings.Current.SubStationAlphaStylesCategoriesManager.CategoryDelete, string.Empty, MessageBoxButtons.YesNoCancel) :
                 DialogResult.Yes;
             if (result == DialogResult.Yes)
             {
@@ -2159,7 +2159,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void buttonStorageCategoryNew_Click(object sender, EventArgs e)
         {
-            using (var form = new TextPrompt(LanguageSettings.Current.SubStationAlphaStyles.NewCategory, LanguageSettings.Current.SubStationAlphaStyles.CategoryName, string.Empty))
+            using (var form = new TextPrompt(LanguageSettings.Current.SubStationAlphaStylesCategoriesManager.NewCategory, LanguageSettings.Current.SubStationAlphaStylesCategoriesManager.CategoryName, string.Empty))
             {
                 if (form.ShowDialog() == DialogResult.OK)
                 {

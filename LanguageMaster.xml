@@ -2612,20 +2612,24 @@ Continue?</RestoreDefaultSettingsMsg>
     <StyleStorage>Style storage</StyleStorage>
     <StyleCurrentFile>Styles in current file</StyleCurrentFile>
     <OverwriteX>Overwrite {0}?</OverwriteX>
+    <CategoryNote>Note: The styles in the default category (colored in green) will be applied to new ASSA files</CategoryNote>
+    <CategoriesManage>Manage</CategoriesManage>
+    <MoveToCategory>Move selected styles to category...</MoveToCategory>
+  </SubStationAlphaStyles>
+  <SubStationAlphaStylesCategoriesManager>
     <Category>Category</Category>
     <Categories>Categories</Categories>
-    <NewCategory>New category</NewCategory>
     <CategoryName>Category name</CategoryName>
-    <CategorySetDefault>Set as default</CategorySetDefault>
-    <CategoryNote>Note: The styles in the default category (colored in green) will be applied to new ASSA files</CategoryNote>
-    <CategoryDelete>Are you sure you want to delete this category?</CategoryDelete>
+    <CategoryDelete>Are you sure you want to delete the selected category/categories?</CategoryDelete>
+    <NewCategory>New category</NewCategory>
     <CategoryRename>Rename category</CategoryRename>
-    <CategoriesManage>Manage</CategoriesManage>
+    <CategorySetDefault>Set as default</CategorySetDefault>
+    <NumberOfStyles>Number of styles</NumberOfStyles>
+    <CategoryDefault>Default</CategoryDefault>
     <ChooseCategories>Choose categories to {0}</ChooseCategories>
     <ImportCategoriesTitle>Import categories from...</ImportCategoriesTitle>
     <ExportCategoriesTitle>Export categories to...</ExportCategoriesTitle>
-    <MoveToCategory>Move selected styles to category...</MoveToCategory>
-  </SubStationAlphaStyles>
+  </SubStationAlphaStylesCategoriesManager>
   <PointSync>
     <Title>Point synchronization</Title>
     <TitleViaOtherSubtitle>Point sync via other subtitle</TitleViaOtherSubtitle>
