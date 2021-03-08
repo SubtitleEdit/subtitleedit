@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private readonly List<AssaStorageCategory> _oldAssaCategories = new List<AssaStorageCategory>();
 
         public AssaStorageCategory SelectedCategory =>
-            GetCategoryByName(listViewCategories.SelectedItems?[0].Text);
+            GetCategoryByName(listViewCategories.SelectedItems.Count > 0 ? listViewCategories.SelectedItems[0].Text : listViewCategories.Items[0].Text);
 
         public SubStationAlphaStylesCategoriesManager(List<AssaStorageCategory> currentAssaCategories, string focusCategory)
         {
@@ -198,6 +198,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
             else
             {
+                buttonRemoveCategory.Enabled = false;
                 buttonSetDefaultCategory.Enabled = false;
             }
         }
@@ -208,8 +209,13 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 if (form.ShowDialog() == DialogResult.OK)
                 {
-                    int insertIndex = listViewCategories.Items.Count;
                     var newName = form.InputText;
+                    if (string.IsNullOrWhiteSpace(newName))
+                    {
+                        return;
+                    }
+
+                    var insertIndex = listViewCategories.Items.Count;
                     var overridingDefault = false;
                     if (_assaCategories.Exists(category => category.Name == newName))
                     {
@@ -530,6 +536,11 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 if (form.ShowDialog() == DialogResult.OK)
                 {
                     var newName = form.InputText;
+                    if (string.IsNullOrWhiteSpace(newName))
+                    {
+                        return;
+                    }
+
                     newName = FixDuplicateName(newName, _assaCategories);
                     SelectedCategory.Name = newName;
                     listViewCategories.SelectedItems[0].Text = newName;
