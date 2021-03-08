@@ -2163,8 +2163,13 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 if (form.ShowDialog() == DialogResult.OK)
                 {
-                    int insertIndex = comboboxStorageCategories.Items.Count;
                     var newName = form.InputText;
+                    if (string.IsNullOrWhiteSpace(newName))
+                    {
+                        return;
+                    }
+
+                    var insertIndex = comboboxStorageCategories.Items.Count;
                     var overridingDefault = false;
                     if (_storageCategories.Exists(category => category.Name == form.InputText))
                     {
