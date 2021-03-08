@@ -1719,14 +1719,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemRtlUnicodeControlChars.Name = "toolStripMenuItemRtlUnicodeControlChars";
             this.toolStripMenuItemRtlUnicodeControlChars.Size = new System.Drawing.Size(301, 22);
             this.toolStripMenuItemRtlUnicodeControlChars.Text = "Fix RTL via Unicode tags";
-            this.toolStripMenuItemRtlUnicodeControlChars.Click += new System.EventHandler(this.toolStripMenuItemRtlUnicodeControlChar_Click);
+            this.toolStripMenuItemRtlUnicodeControlChars.Click += new System.EventHandler(this.toolStripMenuItemRtlUnicodeControlChars_Click);
             // 
             // toolStripMenuItemRemoveUnicodeControlChars
             // 
             this.toolStripMenuItemRemoveUnicodeControlChars.Name = "toolStripMenuItemRemoveUnicodeControlChars";
             this.toolStripMenuItemRemoveUnicodeControlChars.Size = new System.Drawing.Size(301, 22);
             this.toolStripMenuItemRemoveUnicodeControlChars.Text = "Remove Unicode tags";
-            this.toolStripMenuItemRemoveUnicodeControlChars.Click += new System.EventHandler(this.toolStripMenuItemRemoveUnicodeControlChar_Click);
+            this.toolStripMenuItemRemoveUnicodeControlChars.Click += new System.EventHandler(this.toolStripMenuItemRemoveUnicodeControlChars_Click);
             // 
             // toolStripMenuItemReverseRightToLeftStartEnd
             // 

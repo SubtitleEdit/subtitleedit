@@ -14424,12 +14424,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (!toolStripMenuItemRtlUnicodeControlChars.Visible && _shortcuts.MainEditFixRTLViaUnicodeChars == e.KeyData && InListView)
             {
-                toolStripMenuItemRtlUnicodeControlChar_Click(null, null);
+                toolStripMenuItemRtlUnicodeControlChars_Click(null, null);
                 e.SuppressKeyPress = true;
             }
             else if (!toolStripMenuItemRemoveUnicodeControlChars.Visible && _shortcuts.MainEditRemoveRTLUnicodeChars == e.KeyData && InListView)
             {
-                toolStripMenuItemRemoveUnicodeControlChar_Click(null, null);
+                toolStripMenuItemRemoveUnicodeControlChars_Click(null, null);
                 e.SuppressKeyPress = true;
             }
             else if (!toolStripMenuItemReverseRightToLeftStartEnd.Visible && _shortcuts.MainEditReverseStartAndEndingForRtl == e.KeyData && InListView)
@@ -28261,10 +28261,11 @@ namespace Nikse.SubtitleEdit.Forms
             PasteIntoActiveTextBox("\u202E");
         }
 
-        private void toolStripMenuItemRtlUnicodeControlChar_Click(object sender, EventArgs e)
+        private void toolStripMenuItemRtlUnicodeControlChars_Click(object sender, EventArgs e)
         {
             if (IsUnicode)
             {
+                MakeHistoryForUndo(toolStripMenuItemRtlUnicodeControlChars.Text);
                 int selectedIndex = FirstSelectedIndex;
                 foreach (int index in SubtitleListview1.SelectedIndices)
                 {
@@ -28281,10 +28282,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void toolStripMenuItemRemoveUnicodeControlChar_Click(object sender, EventArgs e)
+        private void toolStripMenuItemRemoveUnicodeControlChars_Click(object sender, EventArgs e)
         {
             if (IsUnicode)
             {
+                MakeHistoryForUndo(toolStripMenuItemRemoveUnicodeControlChars.Text);
                 int selectedIndex = FirstSelectedIndex;
                 foreach (int index in SubtitleListview1.SelectedIndices)
                 {
