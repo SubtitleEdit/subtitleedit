@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             Text = export ?
                 LanguageSettings.Current.SubStationAlphaStyles.Export :
                 LanguageSettings.Current.SubStationAlphaStyles.Import;
-            labelCategories.Text = string.Format(LanguageSettings.Current.SubStationAlphaStyles.ChooseCategories, Text.ToLowerInvariant());
+            labelCategories.Text = string.Format(LanguageSettings.Current.SubStationAlphaStylesCategoriesManager.ChooseCategories, Text.ToLowerInvariant());
             toolStripMenuItemSelectAll.Text = LanguageSettings.Current.FixCommonErrors.SelectAll;
             toolStripMenuItemInverseSelection.Text = LanguageSettings.Current.FixCommonErrors.InverseSelection;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
@@ -71,8 +71,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             saveFileDialog.InitialDirectory = Configuration.DataDirectory;
             saveFileDialog.FileName = "my_assa_categories.template";
-            saveFileDialog.Title = LanguageSettings.Current.SubStationAlphaStyles.ExportCategoriesTitle;
-            saveFileDialog.Filter = LanguageSettings.Current.SubStationAlphaStyles.Categories + "|*.template";
+            saveFileDialog.Title = LanguageSettings.Current.SubStationAlphaStylesCategoriesManager.ExportCategoriesTitle;
+            saveFileDialog.Filter = LanguageSettings.Current.SubStationAlphaStylesCategoriesManager.Categories + "|*.template";
 
             if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
             {

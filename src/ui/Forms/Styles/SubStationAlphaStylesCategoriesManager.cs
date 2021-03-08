@@ -45,13 +45,12 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             InitializeComponent();
             UiUtil.FixFonts(this);
             InitializeLanguage();
+            SetControlsSize();
 
             _assaCategories = currentAssaCategories;
             foreach (var category in currentAssaCategories)
             {
-                var lvi = new ListViewItem(category.Name);
-                SetCategoryListViewItemDefaultColor(lvi, category.IsDefault);
-
+                var lvi = GetCategoryListViewItem(category);
                 if (category.Name == focusCategory)
                 {
                     lvi.Selected = true;
@@ -68,15 +67,19 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void InitializeLanguage()
         {
-            groupBoxCategories.Text = LanguageSettings.Current.SubStationAlphaStyles.Categories;
+            groupBoxCategories.Text = LanguageSettings.Current.SubStationAlphaStylesCategoriesManager.Categories;
             buttonNewCategory.Text = LanguageSettings.Current.SubStationAlphaStyles.New;
             buttonRemoveCategory.Text = LanguageSettings.Current.SubStationAlphaStyles.Remove;
-            buttonSetDefaultCategory.Text = LanguageSettings.Current.SubStationAlphaStyles.CategorySetDefault;
+            buttonSetDefaultCategory.Text = LanguageSettings.Current.SubStationAlphaStylesCategoriesManager.CategorySetDefault;
             buttonExportCategories.Text = LanguageSettings.Current.SubStationAlphaStyles.Export;
             buttonImportCategories.Text = LanguageSettings.Current.SubStationAlphaStyles.Import;
 
-            newToolStripMenuItem.Text = LanguageSettings.Current.SubStationAlphaStyles.NewCategory;
-            toolStripMenuItemRename.Text = LanguageSettings.Current.SubStationAlphaStyles.CategoryRename;
+            columnHeaderForName.Text = LanguageSettings.Current.SubStationAlphaStylesCategoriesManager.CategoryName;
+            columnHeaderForStyles.Text = LanguageSettings.Current.SubStationAlphaStylesCategoriesManager.NumberOfStyles;
+            columnHeaderForDefault.Text = LanguageSettings.Current.SubStationAlphaStylesCategoriesManager.CategoryDefault;
+
+            newToolStripMenuItem.Text = LanguageSettings.Current.SubStationAlphaStylesCategoriesManager.NewCategory;
+            toolStripMenuItemRename.Text = LanguageSettings.Current.SubStationAlphaStylesCategoriesManager.CategoryRename;
             deleteToolStripMenuItem1.Text = LanguageSettings.Current.SubStationAlphaStyles.Remove;
             moveUpToolStripMenuItem.Text = LanguageSettings.Current.DvdSubRip.MoveUp;
             moveDownToolStripMenuItem.Text = LanguageSettings.Current.DvdSubRip.MoveDown;
@@ -89,16 +92,53 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
         }
 
+        private void SetControlsSize()
+        {
+            var firstButtonLeft = listViewCategories.Left;
+            var singleButtonWidth = listViewCategories.Width;
+            var twoButtonsWidth = (listViewCategories.Width / 2) - 3;
+
+            buttonNewCategory.Left = firstButtonLeft;
+            buttonNewCategory.Width = twoButtonsWidth;
+
+            buttonRemoveCategory.Left = buttonNewCategory.Right + 7;
+            buttonRemoveCategory.Width = twoButtonsWidth;
+
+            buttonSetDefaultCategory.Left = firstButtonLeft;
+            buttonSetDefaultCategory.Width = singleButtonWidth;
+
+            buttonImportCategories.Left = firstButtonLeft;
+            buttonImportCategories.Width = twoButtonsWidth;
+
+            buttonExportCategories.Left = buttonImportCategories.Right + 7;
+            buttonExportCategories.Width = twoButtonsWidth;
+
+            var singleColumnWidth = listViewCategories.ClientSize.Width / listViewCategories.Columns.Count;
+            foreach (ColumnHeader column in listViewCategories.Columns)
+            {
+                column.Width = singleColumnWidth;
+            }
+
+            listViewCategories.Columns[listViewCategories.Columns.Count - 1].Width = -2;
+        }
+
         private AssaStorageCategory GetCategoryByName(string categoryName) =>
             categoryName != null ?_assaCategories.SingleOrDefault(category => category.Name == categoryName) : null;
 
-        private void SetCategoryListViewItemDefaultColor(ListViewItem lvi, bool isDefault)
+        private ListViewItem GetCategoryListViewItem(AssaStorageCategory category)
         {
-            if (isDefault)
-            {
-                lvi.Font = new Font(listViewCategories.Font, FontStyle.Bold);
-                lvi.ForeColor = _defaultCategoryColor;
-            }
+            var lvi = new ListViewItem(category.Name);
+            lvi.SubItems.Add(category.Styles.Count.ToString());
+            lvi.SubItems.Add(category.IsDefault.ToString());
+            SetDefaultSubItemColor(lvi, category.IsDefault);
+            return lvi;
+        }
+
+        private void SetDefaultSubItemColor(ListViewItem lvi, bool isDefault)
+        {
+            lvi.UseItemStyleForSubItems = !isDefault;
+            lvi.SubItems[lvi.SubItems.Count - 1].Font = new Font(listViewCategories.Font, isDefault ? FontStyle.Bold : FontStyle.Regular);
+            lvi.SubItems[lvi.SubItems.Count - 1].ForeColor = isDefault ? _defaultCategoryColor : UiUtil.ForeColor;
         }
 
         private void UpdateSelectedIndices(int startingIndex = -1, int numberOfSelectedItems = 1)
@@ -164,7 +204,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void ButtonNewCategory_Click(object sender, EventArgs e)
         {
-            using (var form = new TextPrompt(LanguageSettings.Current.SubStationAlphaStyles.NewCategory, LanguageSettings.Current.SubStationAlphaStyles.CategoryName, string.Empty))
+            using (var form = new TextPrompt(LanguageSettings.Current.SubStationAlphaStylesCategoriesManager.NewCategory, LanguageSettings.Current.SubStationAlphaStylesCategoriesManager.CategoryName, string.Empty))
             {
                 if (form.ShowDialog() == DialogResult.OK)
                 {
@@ -199,8 +239,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     }
                     _assaCategories.Insert(insertIndex, newCategory);
 
-                    var lvi = new ListViewItem(newName);
-                    SetCategoryListViewItemDefaultColor(lvi, overridingDefault);
+                    var lvi = GetCategoryListViewItem(newCategory);
                     listViewCategories.Items.Insert(insertIndex, lvi);
                     UpdateSelectedIndices(insertIndex);
                 }
@@ -209,44 +248,48 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void ButtonRemoveCategory_Click(object sender, EventArgs e)
         {
-            foreach (ListViewItem selectedItem in listViewCategories.SelectedItems)
+            var result = Configuration.Settings.General.PromptDeleteLines ?
+                MessageBox.Show(LanguageSettings.Current.SubStationAlphaStylesCategoriesManager.CategoryDelete, string.Empty, MessageBoxButtons.YesNo) :
+                DialogResult.Yes;
+            if (result == DialogResult.Yes)
             {
-                if (GetCategoryByName(selectedItem.Text).IsDefault)
+                foreach (ListViewItem selectedItem in listViewCategories.SelectedItems)
                 {
-                    continue;
+                    if (GetCategoryByName(selectedItem.Text).IsDefault)
+                    {
+                        continue;
+                    }
+
+                    listViewCategories.Items.Remove(selectedItem);
+                    _assaCategories.RemoveAll(category => category.Name == selectedItem.Text);
                 }
 
-                listViewCategories.Items.Remove(selectedItem);
-                _assaCategories.RemoveAll(category => category.Name == selectedItem.Text);
+                UpdateSelectedIndices();
             }
-
-            UpdateSelectedIndices();
         }
 
         private void ButtonSetDefaultCategory_Click(object sender, EventArgs e)
         {
             var oldDefaultCategory = _assaCategories.Single(category => category.IsDefault);
+            var oldDefaultCategoryListViewItem = listViewCategories.Items[_assaCategories.IndexOf(oldDefaultCategory)];
             oldDefaultCategory.IsDefault = false;
-
-            var oldDefaultCategoryListViewItemIndex = _assaCategories.IndexOf(oldDefaultCategory);
-            listViewCategories.Items[oldDefaultCategoryListViewItemIndex].ForeColor = UiUtil.ForeColor;
-            listViewCategories.Items[oldDefaultCategoryListViewItemIndex].Font = listViewCategories.Font;
+            oldDefaultCategoryListViewItem.SubItems[columnHeaderForDefault.Index].Text = oldDefaultCategory.IsDefault.ToString();
+            SetDefaultSubItemColor(oldDefaultCategoryListViewItem, oldDefaultCategory.IsDefault);
 
             var newDefault = SelectedCategory;
+            var newDefaultCategoryListViewItem = listViewCategories.Items[_assaCategories.IndexOf(newDefault)];
             newDefault.IsDefault = true;
-
-            var newDefaultCategoryListViewItemIndex = _assaCategories.IndexOf(newDefault);
-            listViewCategories.Items[newDefaultCategoryListViewItemIndex].ForeColor = _defaultCategoryColor;
-            listViewCategories.Items[newDefaultCategoryListViewItemIndex].Font = new Font(listViewCategories.Font, FontStyle.Bold);
-
-            buttonSetDefaultCategory.Enabled = false;
-            buttonRemoveCategory.Enabled = false;
-
-            if (SelectedCategory.Styles.Count == 0)
+            if (newDefault.Styles.Count == 0)
             {
                 var defaultStyle = new SsaStyle();
                 SelectedCategory.Styles.Add(defaultStyle);
             }
+            newDefaultCategoryListViewItem.SubItems[columnHeaderForStyles.Index].Text = newDefault.Styles.Count.ToString();
+            newDefaultCategoryListViewItem.SubItems[columnHeaderForDefault.Index].Text = newDefault.IsDefault.ToString();
+            SetDefaultSubItemColor(newDefaultCategoryListViewItem, newDefault.IsDefault);
+
+            buttonSetDefaultCategory.Enabled = false;
+            buttonRemoveCategory.Enabled = false;
 
             listViewCategories.Focus();
         }
@@ -266,8 +309,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void ButtonImportCategories_Click(object sender, EventArgs e)
         {
-            openFileDialogImport.Title = LanguageSettings.Current.SubStationAlphaStyles.ImportCategoriesTitle;
-            openFileDialogImport.Filter = LanguageSettings.Current.SubStationAlphaStyles.Categories + TemplateFilterExtension;
+            openFileDialogImport.Title = LanguageSettings.Current.SubStationAlphaStylesCategoriesManager.ImportCategoriesTitle;
+            openFileDialogImport.Filter = LanguageSettings.Current.SubStationAlphaStylesCategoriesManager.Categories + TemplateFilterExtension;
             if (openFileDialogImport.ShowDialog(this) == DialogResult.OK)
             {
                 try
@@ -314,8 +357,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                                 importCategory.IsDefault = overridingDefault;
                                 _assaCategories.Insert(insertIndex, importCategory);
 
-                                var lvi = new ListViewItem(importedName);
-                                SetCategoryListViewItemDefaultColor(lvi, overridingDefault);
+                                var lvi = GetCategoryListViewItem(importCategory);
                                 listViewCategories.Items.Insert(insertIndex, lvi);
                             }
 
@@ -483,7 +525,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 return;
             }
 
-            using (var form = new TextPrompt(string.Empty, LanguageSettings.Current.SubStationAlphaStyles.CategoryName, listViewCategories.SelectedItems[0].Text))
+            using (var form = new TextPrompt(string.Empty, LanguageSettings.Current.SubStationAlphaStylesCategoriesManager.CategoryName, listViewCategories.SelectedItems[0].Text))
             {
                 if (form.ShowDialog() == DialogResult.OK)
                 {
@@ -648,14 +690,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
         }
 
-        private void SubStationAlphaStylesCategoriesManager_Shown(object sender, EventArgs e)
-        {
-            SubStationAlphaStylesCategoriesManager_ResizeEnd(sender, e);
-        }
-
         private void SubStationAlphaStylesCategoriesManager_ResizeEnd(object sender, EventArgs e)
         {
-            listViewCategories.Columns[listViewCategories.Columns.Count - 1].Width = listViewCategories.ClientSize.Width;
+            SetControlsSize();
         }
     }
 }
