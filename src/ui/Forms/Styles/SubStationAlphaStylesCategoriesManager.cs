@@ -190,11 +190,13 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void ListViewCategories_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (listViewCategories.SelectedItems.Count == 1)
+            if (listViewCategories.SelectedItems.Count > 0)
             {
-                var isDefaultCategory = !SelectedCategory.IsDefault;
-                buttonSetDefaultCategory.Enabled = isDefaultCategory;
-                buttonRemoveCategory.Enabled = isDefaultCategory;
+                var onlyOneSelected = listViewCategories.SelectedItems.Count == 1;
+                var moreThanOneSelected = listViewCategories.SelectedItems.Count > 1;
+                var selectedIsNotDefault = onlyOneSelected && !SelectedCategory.IsDefault;
+                buttonSetDefaultCategory.Enabled = selectedIsNotDefault;
+                buttonRemoveCategory.Enabled = selectedIsNotDefault || moreThanOneSelected;
             }
             else
             {
