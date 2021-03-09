@@ -136,6 +136,8 @@
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.addToFileStylesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItemStorageMoveStylesToCategory = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemStorageMoveUp = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemStorageMoveDown = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemStorageMoveTop = new System.Windows.Forms.ToolStripMenuItem();
@@ -147,7 +149,7 @@
             this.toolStripMenuItemStorageImport = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemStorageExport = new System.Windows.Forms.ToolStripMenuItem();
             this.labelCategoryDefaultNote = new System.Windows.Forms.Label();
-            this.buttonStorageCategorySetDefault = new System.Windows.Forms.Button();
+            this.buttonStorageManageCategories = new System.Windows.Forms.Button();
             this.buttonStorageCategoryDelete = new System.Windows.Forms.Button();
             this.buttonStorageCategoryNew = new System.Windows.Forms.Button();
             this.comboboxStorageCategories = new System.Windows.Forms.ComboBox();
@@ -1062,7 +1064,7 @@
             this.groupBoxStorage.Controls.Add(this.buttonStorageRemove);
             this.groupBoxStorage.Controls.Add(this.listViewStorage);
             this.groupBoxStorage.Controls.Add(this.labelCategoryDefaultNote);
-            this.groupBoxStorage.Controls.Add(this.buttonStorageCategorySetDefault);
+            this.groupBoxStorage.Controls.Add(this.buttonStorageManageCategories);
             this.groupBoxStorage.Controls.Add(this.buttonStorageCategoryDelete);
             this.groupBoxStorage.Controls.Add(this.buttonStorageCategoryNew);
             this.groupBoxStorage.Controls.Add(this.comboboxStorageCategories);
@@ -1223,6 +1225,8 @@
             this.toolStripSeparator2,
             this.addToFileStylesToolStripMenuItem,
             this.toolStripSeparator7,
+            this.toolStripMenuItemStorageMoveStylesToCategory,
+            this.toolStripSeparator9,
             this.toolStripMenuItemStorageMoveUp,
             this.toolStripMenuItemStorageMoveDown,
             this.toolStripMenuItemStorageMoveTop,
@@ -1269,6 +1273,17 @@
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
             this.toolStripSeparator7.Size = new System.Drawing.Size(212, 6);
+            // 
+            // toolStripMenuItemStorageMoveStylesToCategory
+            // 
+            this.toolStripMenuItemStorageMoveStylesToCategory.Name = "toolStripMenuItemStorageMoveStylesToCategory";
+            this.toolStripMenuItemStorageMoveStylesToCategory.Size = new System.Drawing.Size(215, 22);
+            this.toolStripMenuItemStorageMoveStylesToCategory.Text = "Move selected styles to category...";
+            // 
+            // toolStripSeparator9
+            // 
+            this.toolStripSeparator9.Name = "toolStripSeparator9";
+            this.toolStripSeparator9.Size = new System.Drawing.Size(212, 6);
             // 
             // toolStripMenuItemStorageMoveUp
             // 
@@ -1351,18 +1366,18 @@
             this.labelCategoryDefaultNote.Name = "labelCategoryDefaultNote";
             this.labelCategoryDefaultNote.Size = new System.Drawing.Size(265, 13);
             this.labelCategoryDefaultNote.TabIndex = 5;
-            this.labelCategoryDefaultNote.Text = "Note: \"Default\" styles will be applied to new ASSA files";
+            this.labelCategoryDefaultNote.Text = "Note: The styles in the default category (colored in green) will be applied to new ASSA files";
             // 
-            // buttonStorageCategorySetDefault
+            // buttonStorageManageCategories
             // 
-            this.buttonStorageCategorySetDefault.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonStorageCategorySetDefault.Location = new System.Drawing.Point(455, 19);
-            this.buttonStorageCategorySetDefault.Name = "buttonStorageCategorySetDefault";
-            this.buttonStorageCategorySetDefault.Size = new System.Drawing.Size(98, 23);
-            this.buttonStorageCategorySetDefault.TabIndex = 4;
-            this.buttonStorageCategorySetDefault.Text = "Set as default";
-            this.buttonStorageCategorySetDefault.UseVisualStyleBackColor = true;
-            this.buttonStorageCategorySetDefault.Click += new System.EventHandler(this.buttonStorageCategorySetDefault_Click);
+            this.buttonStorageManageCategories.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonStorageManageCategories.Location = new System.Drawing.Point(455, 19);
+            this.buttonStorageManageCategories.Name = "buttonStorageManageCategories";
+            this.buttonStorageManageCategories.Size = new System.Drawing.Size(98, 23);
+            this.buttonStorageManageCategories.TabIndex = 4;
+            this.buttonStorageManageCategories.Text = "Manage categories";
+            this.buttonStorageManageCategories.UseVisualStyleBackColor = true;
+            this.buttonStorageManageCategories.Click += new System.EventHandler(this.buttonStorageManageCategories_Click);
             // 
             // buttonStorageCategoryDelete
             // 
@@ -1568,7 +1583,7 @@
         private System.Windows.Forms.ComboBox comboboxStorageCategories;
         private System.Windows.Forms.Button buttonStorageCategoryNew;
         private System.Windows.Forms.Button buttonStorageCategoryDelete;
-        private System.Windows.Forms.Button buttonStorageCategorySetDefault;
+        private System.Windows.Forms.Button buttonStorageManageCategories;
         private System.Windows.Forms.Label labelCategoryDefaultNote;
         private System.Windows.Forms.ListView listViewStorage;
         private System.Windows.Forms.ColumnHeader columnHeader1;
@@ -1603,6 +1618,8 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStorageRemove;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStorageRemoveAll;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStorageMoveStylesToCategory;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStorageMoveUp;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStorageMoveDown;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStorageMoveTop;

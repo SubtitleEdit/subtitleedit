@@ -99,6 +99,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.Statistics Statistics;
         public LanguageStructure.SubStationAlphaProperties SubStationAlphaProperties;
         public LanguageStructure.SubStationAlphaStyles SubStationAlphaStyles;
+        public LanguageStructure.SubStationAlphaStylesCategoriesManager SubStationAlphaStylesCategoriesManager;
         public LanguageStructure.PointSync PointSync;
         public LanguageStructure.TransportStreamSubtitleChooser TransportStreamSubtitleChooser;
         public LanguageStructure.UnknownSubtitle UnknownSubtitle;
@@ -2951,12 +2952,25 @@ can edit in same subtitle file (collaboration)",
                 StyleStorage = "Style storage",
                 StyleCurrentFile = "Styles in current file",
                 OverwriteX = "Overwrite {0}?",
+                CategoryNote = "Note: The styles in the default category (colored in green) will be applied to new ASSA files",
+                CategoriesManage = "Manage",
+                MoveToCategory = "Move selected styles to category..."
+            };
+
+            SubStationAlphaStylesCategoriesManager = new LanguageStructure.SubStationAlphaStylesCategoriesManager
+            {
                 Category = "Category",
-                NewCategory = "New category",
+                Categories = "Categories",
                 CategoryName = "Category name",
+                CategoryDelete = "Are you sure you want to delete the selected category/categories?",
+                NewCategory = "New category",
+                CategoryRename = "Rename category",
                 CategorySetDefault = "Set as default",
-                CategoryNote = "Note: \"Default\" styles will be applied to new ASSA files",
-                CategoryDelete = "Are you sure you want to delete this category?"
+                NumberOfStyles = "Number of styles",
+                CategoryDefault = "Default",
+                ChooseCategories = "Choose categories to {0}",
+                ImportCategoriesTitle = "Import categories from...",
+                ExportCategoriesTitle = "Export categories to...",
             };
 
             PointSync = new LanguageStructure.PointSync
