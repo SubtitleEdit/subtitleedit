@@ -608,22 +608,14 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Columns[0].Width = 50;
             listViewFixes.Columns[1].Width = 80;
 
+            var remainingWidth = listViewFixes.ClientSize.Width - listViewFixes.Columns[0].Width - listViewFixes.Columns[1].Width;
             if (_format.HasStyleSupport)
             {
-                listViewFixes.Columns[2].Width = listViewFixes.Width
-                                                 - listViewFixes.Columns[0].Width
-                                                 - listViewFixes.Columns[1].Width
-                                                 - listViewFixes.Columns[3].Width
-                                                 - 30;
-                return;
+                listViewFixes.Columns[2].Width = 4 * remainingWidth / 5;
+                remainingWidth -= listViewFixes.Columns[2].Width;
             }
 
-            listViewFixes.Columns[0].Width = 50;
-            listViewFixes.Columns[1].Width = 80;
-            listViewFixes.Columns[2].Width = listViewFixes.Width
-                - listViewFixes.Columns[0].Width
-                - listViewFixes.Columns[1].Width
-                - 30;
+            listViewFixes.Columns[listViewFixes.Columns.Count - 1].Width = remainingWidth;
         }
     }
 }
