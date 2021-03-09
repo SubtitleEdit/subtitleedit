@@ -1271,9 +1271,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private static string FixDuplicateName(string newGroupName, List<MultipleSearchAndReplaceGroup> existinGroups)
+        private static string FixDuplicateName(string newGroupName, List<MultipleSearchAndReplaceGroup> existingGroups)
         {
-            if (existinGroups.All(p => p.Name != newGroupName))
+            if (existingGroups.All(p => p.Name != newGroupName))
             {
                 return newGroupName;
             }
@@ -1281,7 +1281,7 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 1; i < int.MaxValue; i++)
             {
                 var name = $"{newGroupName}_{i}";
-                if (existinGroups.All(p => p.Name != name))
+                if (existingGroups.All(p => p.Name != name))
                 {
                     return name;
                 }

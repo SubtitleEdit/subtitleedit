@@ -7150,23 +7150,50 @@ namespace Nikse.SubtitleEdit.Logic
                 case "SubStationAlphaStyles/OverwriteX":
                     language.SubStationAlphaStyles.OverwriteX = reader.Value;
                     break;
-                case "SubStationAlphaStyles/Category":
-                    language.SubStationAlphaStyles.Category = reader.Value;
-                    break;
-                case "SubStationAlphaStyles/NewCategory":
-                    language.SubStationAlphaStyles.NewCategory = reader.Value;
-                    break;
-                case "SubStationAlphaStyles/CategoryName":
-                    language.SubStationAlphaStyles.CategoryName = reader.Value;
-                    break;
-                case "SubStationAlphaStyles/CategorySetDefault":
-                    language.SubStationAlphaStyles.CategorySetDefault = reader.Value;
-                    break;
                 case "SubStationAlphaStyles/CategoryNote":
                     language.SubStationAlphaStyles.CategoryNote = reader.Value;
                     break;
-                case "SubStationAlphaStyles/CategoryDelete":
-                    language.SubStationAlphaStyles.CategoryDelete = reader.Value;
+                case "SubStationAlphaStyles/CategoriesManage":
+                    language.SubStationAlphaStyles.CategoriesManage = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/MoveToCategory":
+                    language.SubStationAlphaStyles.MoveToCategory = reader.Value;
+                    break;
+                case "SubStationAlphaStylesCategoriesManager/Category":
+                    language.SubStationAlphaStylesCategoriesManager.Category = reader.Value;
+                    break;
+                case "SubStationAlphaStylesCategoriesManager/Categories":
+                    language.SubStationAlphaStylesCategoriesManager.Categories = reader.Value;
+                    break;
+                case "SubStationAlphaStylesCategoriesManager/CategoryName":
+                    language.SubStationAlphaStylesCategoriesManager.CategoryName = reader.Value;
+                    break;
+                case "SubStationAlphaStylesCategoriesManager/CategoryDelete":
+                    language.SubStationAlphaStylesCategoriesManager.CategoryDelete = reader.Value;
+                    break;
+                case "SubStationAlphaStylesCategoriesManager/NewCategory":
+                    language.SubStationAlphaStylesCategoriesManager.NewCategory = reader.Value;
+                    break;
+                case "SubStationAlphaStylesCategoriesManager/CategoryRename":
+                    language.SubStationAlphaStylesCategoriesManager.CategoryRename = reader.Value;
+                    break;
+                case "SubStationAlphaStylesCategoriesManager/CategorySetDefault":
+                    language.SubStationAlphaStylesCategoriesManager.CategorySetDefault = reader.Value;
+                    break;
+                case "SubStationAlphaStylesCategoriesManager/NumberOfStyles":
+                    language.SubStationAlphaStylesCategoriesManager.NumberOfStyles = reader.Value;
+                    break;
+                case "SubStationAlphaStylesCategoriesManager/CategoryDefault":
+                    language.SubStationAlphaStylesCategoriesManager.CategoryDefault = reader.Value;
+                    break;
+                case "SubStationAlphaStylesCategoriesManager/ChooseCategories":
+                    language.SubStationAlphaStylesCategoriesManager.ChooseCategories = reader.Value;
+                    break;
+                case "SubStationAlphaStylesCategoriesManager/ImportCategoriesTitle":
+                    language.SubStationAlphaStylesCategoriesManager.ImportCategoriesTitle = reader.Value;
+                    break;
+                case "SubStationAlphaStylesCategoriesManager/ExportCategoriesTitle":
+                    language.SubStationAlphaStylesCategoriesManager.ExportCategoriesTitle = reader.Value;
                     break;
                 case "PointSync/Title":
                     language.PointSync.Title = reader.Value;
