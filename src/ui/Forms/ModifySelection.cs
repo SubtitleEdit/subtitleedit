@@ -615,18 +615,15 @@ namespace Nikse.SubtitleEdit.Forms
                                                  - listViewFixes.Columns[1].Width
                                                  - listViewFixes.Columns[3].Width
                                                  - 30;
-            }
-            else
-            {
-                listViewFixes.Columns[0].Width = 50;
-                listViewFixes.Columns[1].Width = 80;
-                listViewFixes.Columns[2].Width = listViewFixes.Width
-                                                 - listViewFixes.Columns[0].Width
-                                                 - listViewFixes.Columns[1].Width
-                                                 - 30;
+                return;
             }
 
-            listViewFixes.Columns[listViewFixes.Columns.Count - 1].Width = -2;
+            listViewFixes.Columns[0].Width = 50;
+            listViewFixes.Columns[1].Width = 80;
+            listViewFixes.Columns[2].Width = listViewFixes.Width
+                - listViewFixes.Columns[0].Width
+                - listViewFixes.Columns[1].Width
+                - 30;
         }
     }
 }
