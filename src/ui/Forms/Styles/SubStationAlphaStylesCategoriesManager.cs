@@ -119,7 +119,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 column.Width = singleColumnWidth;
             }
 
-            listViewCategories.Columns[listViewCategories.Columns.Count - 1].Width = -2;
+            listViewCategories.AutoSizeLastColumn();
         }
 
         private AssaStorageCategory GetCategoryByName(string categoryName) =>

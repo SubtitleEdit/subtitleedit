@@ -121,7 +121,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ProfileChoose_ResizeEnd(object sender, EventArgs e)
         {
-            listViewProfiles.Columns[listViewProfiles.Columns.Count - 1].Width = -2;
+            listViewProfiles.AutoSizeLastColumn();
         }
 
         private void ProfileChoose_Shown(object sender, EventArgs e)

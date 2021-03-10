@@ -1325,7 +1325,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ImportText_ResizeEnd(object sender, EventArgs e)
         {
-            listViewInputFiles.Columns[listViewInputFiles.Columns.Count - 1].Width = -2;
+            listViewInputFiles.AutoSizeLastColumn();
         }
 
         private void ImportText_Shown(object sender, EventArgs e)

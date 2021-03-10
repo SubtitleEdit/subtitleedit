@@ -574,7 +574,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void SetLastColumnWidth()
         {
-            listViewStyles.Columns[listViewStyles.Columns.Count - 1].Width = -2;
+            listViewStyles.AutoSizeLastColumn();
         }
 
         private void TimedTextStyles_ResizeEnd(object sender, EventArgs e)

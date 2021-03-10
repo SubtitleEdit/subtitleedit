@@ -2678,8 +2678,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void BatchConvert_ResizeEnd(object sender, EventArgs e)
         {
-            listViewInputFiles.Columns[listViewInputFiles.Columns.Count - 1].Width = -2;
-            listViewConvertOptions.Columns[listViewConvertOptions.Columns.Count - 1].Width = -2;
+            listViewInputFiles.AutoSizeLastColumn();
+            listViewConvertOptions.AutoSizeLastColumn();
         }
 
         private void comboBoxFilter_SelectedIndexChanged(object sender, EventArgs e)
