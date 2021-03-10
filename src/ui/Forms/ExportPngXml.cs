@@ -4937,7 +4937,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         private void ExportPngXml_ResizeEnd(object sender, EventArgs e)
         {
             subtitleListView1_SelectedIndexChanged(null, null);
-            subtitleListView1.Columns[subtitleListView1.Columns.Count - 1].Width = -2;
+            subtitleListView1.AutoSizeLastColumn();
         }
 
         private void comboBoxBottomMargin_SelectedIndexChanged(object sender, EventArgs e)
@@ -4953,7 +4953,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         private void ExportPngXml_SizeChanged(object sender, EventArgs e)
         {
             subtitleListView1_SelectedIndexChanged(null, null);
-            subtitleListView1.Columns[subtitleListView1.Columns.Count - 1].Width = -2;
+            subtitleListView1.AutoSizeLastColumn();
         }
 
         private void ExportPngXml_FormClosing(object sender, FormClosingEventArgs e)

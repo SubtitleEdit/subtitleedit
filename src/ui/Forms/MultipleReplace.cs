@@ -1140,8 +1140,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ResizeListViewLastColumn()
         {
-            listViewRules.Columns[listViewRules.Columns.Count - 1].Width = -2;
-            listViewFixes.Columns[listViewFixes.Columns.Count - 1].Width = -2;
+            listViewRules.AutoSizeLastColumn();
+            listViewFixes.AutoSizeLastColumn();
         }
 
         private void MultipleReplace_ResizeEnd(object sender, EventArgs e)
