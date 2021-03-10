@@ -60,19 +60,21 @@
             this.textBoxError.Name = "textBoxError";
             this.textBoxError.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxError.Size = new System.Drawing.Size(661, 116);
-            this.textBoxError.TabIndex = 0;
+            this.textBoxError.TabIndex = 10;
             // 
             // richTextBoxMessage
             // 
             this.richTextBoxMessage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBoxMessage.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.richTextBoxMessage.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.richTextBoxMessage.Location = new System.Drawing.Point(13, 23);
             this.richTextBoxMessage.Name = "richTextBoxMessage";
             this.richTextBoxMessage.ReadOnly = true;
             this.richTextBoxMessage.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
             this.richTextBoxMessage.Size = new System.Drawing.Size(674, 87);
             this.richTextBoxMessage.TabIndex = 1;
+            this.richTextBoxMessage.TabStop = false;
             this.richTextBoxMessage.Text = "";
             this.richTextBoxMessage.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.richTextBoxMessage_LinkClicked);
             // 
@@ -84,7 +86,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(612, 328);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 11;
+            this.buttonCancel.TabIndex = 0;
             this.buttonCancel.Text = "&OK";
             this.buttonCancel.UseVisualStyleBackColor = true;
             // 
@@ -124,6 +126,7 @@
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(700, 350);
             this.Name = "VideoError";
+            this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Error playing video file - ";
