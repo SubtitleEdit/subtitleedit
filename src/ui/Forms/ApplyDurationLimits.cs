@@ -262,7 +262,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ApplyDurationLimits_ResizeEnd(object sender, EventArgs e)
         {
-            listViewFixes.Columns[listViewFixes.Columns.Count - 1].Width = -2;
+            listViewFixes.AutoSizeLastColumn();
         }
 
         private void ApplyDurationLimits_Shown(object sender, EventArgs e)

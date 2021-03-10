@@ -79,7 +79,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FormMatroskaSubtitleChooser_ResizeEnd(object sender, EventArgs e)
         {
-            listView1.Columns[listView1.Columns.Count - 1].Width = -2;
+            listView1.AutoSizeLastColumn();
         }
 
         private void FormMatroskaSubtitleChooser_Shown(object sender, EventArgs e)

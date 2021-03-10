@@ -410,6 +410,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Items.AddRange(listViewItems.ToArray());
             listViewFixes.EndUpdate();
             groupBoxPreview.Text = string.Format(LanguageSettings.Current.ModifySelection.MatchingLinesX, listViewFixes.Items.Count);
+            listViewFixes.AutoSizeLastColumn();
         }
 
         private void ApplySelection()
@@ -515,7 +516,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FillStyles()
         {
-            listViewStyles.Columns[listViewStyles.Columns.Count - 1].Width = -2;
+            listViewStyles.AutoSizeLastColumn();
             var styles = new List<string>();
             var formatType = _format.GetType();
             if (formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha))
@@ -540,7 +541,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FillActors()
         {
-            listViewStyles.Columns[listViewStyles.Columns.Count - 1].Width = -2;
+            listViewStyles.AutoSizeLastColumn();
             var actors = new List<string>();
             foreach (var paragraph in _subtitle.Paragraphs)
             {
@@ -608,22 +609,14 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Columns[0].Width = 50;
             listViewFixes.Columns[1].Width = 80;
 
+            var remainingWidth = listViewFixes.ClientSize.Width - listViewFixes.Columns[0].Width - listViewFixes.Columns[1].Width;
             if (_format.HasStyleSupport)
             {
-                listViewFixes.Columns[2].Width = listViewFixes.Width
-                                                 - listViewFixes.Columns[0].Width
-                                                 - listViewFixes.Columns[1].Width
-                                                 - listViewFixes.Columns[3].Width
-                                                 - 30;
-                return;
+                listViewFixes.Columns[2].Width = 4 * remainingWidth / 5;
+                remainingWidth -= listViewFixes.Columns[2].Width;
             }
 
-            listViewFixes.Columns[0].Width = 50;
-            listViewFixes.Columns[1].Width = 80;
-            listViewFixes.Columns[2].Width = listViewFixes.Width
-                                             - listViewFixes.Columns[0].Width
-                                             - listViewFixes.Columns[1].Width
-                                             - 30;
+            listViewFixes.Columns[listViewFixes.Columns.Count - 1].Width = remainingWidth;
         }
     }
 }

@@ -266,7 +266,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             numericUpDownOutline.Left = radioButtonOutline.Left + radioButtonOutline.Width + 5;
             labelShadow.Left = numericUpDownOutline.Left + numericUpDownOutline.Width + 5;
             numericUpDownShadowWidth.Left = numericUpDownOutline.Left + numericUpDownOutline.Width + 5;
-            listViewStyles.Columns[5].Width = -2;
             checkBoxFontItalic.Left = checkBoxFontBold.Left + checkBoxFontBold.Width + 12;
             checkBoxFontUnderline.Left = checkBoxFontItalic.Left + checkBoxFontItalic.Width + 12;
 
@@ -1567,8 +1566,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void SetLastColumnWidth()
         {
-            listViewStyles.Columns[listViewStyles.Columns.Count - 1].Width = -2;
-            listViewStorage.Columns[listViewStorage.Columns.Count - 1].Width = -2;
+            listViewStyles.AutoSizeLastColumn();
+            listViewStorage.AutoSizeLastColumn();
         }
 
         private void listViewStyles_ClientSizeChanged(object sender, EventArgs e)

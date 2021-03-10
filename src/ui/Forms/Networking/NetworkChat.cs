@@ -122,8 +122,8 @@ namespace Nikse.SubtitleEdit.Forms.Networking
 
         private void NetworkChat_ResizeEnd(object sender, EventArgs e)
         {
-            listViewChat.Columns[listViewChat.Columns.Count - 1].Width = -2;
-            listViewUsers.Columns[listViewUsers.Columns.Count - 1].Width = -2;
+            listViewChat.AutoSizeLastColumn();
+            listViewUsers.AutoSizeLastColumn();
         }
 
         private void NetworkChat_Shown(object sender, EventArgs e)

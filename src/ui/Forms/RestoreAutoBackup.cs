@@ -137,7 +137,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RestoreAutoBackup_ResizeEnd(object sender, EventArgs e)
         {
-            listViewBackups.Columns[listViewBackups.Columns.Count - 1].Width = -2;
+            listViewBackups.AutoSizeLastColumn();
         }
 
         private void linkLabelOpenContainingFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

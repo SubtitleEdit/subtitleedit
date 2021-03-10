@@ -121,7 +121,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void SettingsProfile_ResizeEnd(object sender, EventArgs e)
         {
-            listViewProfiles.Columns[listViewProfiles.Columns.Count - 1].Width = -2;
+            listViewProfiles.AutoSizeLastColumn();
         }
 
         private void SettingsProfile_Shown(object sender, EventArgs e)
