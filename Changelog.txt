@@ -25,10 +25,11 @@
    * Improve Bulgarian language auto detect - thx josdion
    * A few improvements for EDL/CLIPNAME - thx Chungyu
 * FIXED:
+   * Fix for reading bdsup position - thx akaicat
+   * Fix a few crashes in translation engine - thx howblast/Laís
    * Fix mpv dll loading from a folder with e.g. cyrillic chars - thx Zoran
    * Fix show (correct) EBU properties for current file - thx Emilien
    * Fix non-ASCII chars when enc 20269 is unavailable (Linux) - thx jason
-   * Fix a few crashes in translation engine - thx howblast
    * Fix a crash in RTL when activating syntax coloring - thx OmrSi
    * Fix auto translate shortcut - thx xmrea
 
