@@ -2050,6 +2050,7 @@ $HorzAlign          =   Center
         public string Waveform1000MsLeft { get; set; }
         public string Waveform1000MsRight { get; set; }
         public string MainTranslateGoogleIt { get; set; }
+        public string MainTranslateGoogleTranslateIt { get; set; }
         public string MainAutoTranslate { get; set; }
         public string MainTranslateCustomSearch1 { get; set; }
         public string MainTranslateCustomSearch2 { get; set; }
@@ -7901,6 +7902,12 @@ $HorzAlign          =   Center
                     shortcuts.MainTranslateGoogleIt = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainTranslateGoogleTranslateIt");
+                if (subNode != null)
+                {
+                    shortcuts.MainTranslateGoogleTranslateIt = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainAutoTranslate");
                 if (subNode != null)
                 {
@@ -8973,6 +8980,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("Waveform1000MsLeft", shortcuts.Waveform1000MsLeft);
             textWriter.WriteElementString("Waveform1000MsRight", shortcuts.Waveform1000MsRight);
             textWriter.WriteElementString("MainTranslateGoogleIt", shortcuts.MainTranslateGoogleIt);
+            textWriter.WriteElementString("MainTranslateGoogleTranslateIt", shortcuts.MainTranslateGoogleTranslateIt);
             textWriter.WriteElementString("MainAutoTranslate", shortcuts.MainAutoTranslate);
             textWriter.WriteElementString("MainTranslateCustomSearch1", shortcuts.MainTranslateCustomSearch1);
             textWriter.WriteElementString("MainTranslateCustomSearch2", shortcuts.MainTranslateCustomSearch2);
