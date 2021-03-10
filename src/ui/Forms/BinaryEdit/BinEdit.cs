@@ -1707,7 +1707,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 p.EndTime.TotalMilliseconds = timeUpDownEndTime.TimeCode.TotalMilliseconds;
                 SetStartTimeAndDuration(idx, p);
             };
-            subtitleListView1.Columns[subtitleListView1.Columns.Count - 1].Width = -2;
+            subtitleListView1.AutoSizeLastColumn();
         }
 
         private void adjustAllTimesToolStripMenuItem_Click(object sender, EventArgs e)

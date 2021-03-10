@@ -287,7 +287,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MergeShortLines_ResizeEnd(object sender, EventArgs e)
         {
-            listViewFixes.Columns[listViewFixes.Columns.Count - 1].Width = -2;
+            listViewFixes.AutoSizeLastColumn();
         }
 
         private void MergeShortLines_Shown(object sender, EventArgs e)

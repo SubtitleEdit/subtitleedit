@@ -410,7 +410,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Items.AddRange(listViewItems.ToArray());
             listViewFixes.EndUpdate();
             groupBoxPreview.Text = string.Format(LanguageSettings.Current.ModifySelection.MatchingLinesX, listViewFixes.Items.Count);
-            listViewFixes.Columns[listViewFixes.Columns.Count - 1].Width = -2;
+            listViewFixes.AutoSizeLastColumn();
         }
 
         private void ApplySelection()
@@ -516,7 +516,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FillStyles()
         {
-            listViewStyles.Columns[listViewStyles.Columns.Count - 1].Width = -2;
+            listViewStyles.AutoSizeLastColumn();
             var styles = new List<string>();
             var formatType = _format.GetType();
             if (formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha))
@@ -541,7 +541,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FillActors()
         {
-            listViewStyles.Columns[listViewStyles.Columns.Count - 1].Width = -2;
+            listViewStyles.AutoSizeLastColumn();
             var actors = new List<string>();
             foreach (var paragraph in _subtitle.Paragraphs)
             {

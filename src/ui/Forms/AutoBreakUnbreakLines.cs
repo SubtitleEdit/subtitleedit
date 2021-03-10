@@ -177,7 +177,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AutoBreakUnbreakLines_ResizeEnd(object sender, EventArgs e)
         {
-            listViewFixes.Columns[listViewFixes.Columns.Count - 1].Width = -2;
+            listViewFixes.AutoSizeLastColumn();
         }
 
         private void AutoBreakUnbreakLines_Shown(object sender, EventArgs e)

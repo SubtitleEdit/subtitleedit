@@ -339,7 +339,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ExportCustomText_ResizeEnd(object sender, EventArgs e)
         {
-            listViewTemplates.Columns[listViewTemplates.Columns.Count - 1].Width = -2;
+            listViewTemplates.AutoSizeLastColumn();
         }
 
         private void ExportCustomText_Shown(object sender, EventArgs e)

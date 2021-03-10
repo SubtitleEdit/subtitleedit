@@ -1120,9 +1120,14 @@ namespace Nikse.SubtitleEdit.Logic
             return sb.ToString();
         }
 
-        public static string GetListViewTextFromString(string s) => s.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString);
+        public static string GetListViewTextFromString(string s) =>
+            s.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString);
 
-        public static string GetStringFromListViewText(string lviText) => lviText.Replace(Configuration.Settings.General.ListViewLineSeparatorString, Environment.NewLine);
+        public static string GetStringFromListViewText(string lviText) =>
+            lviText.Replace(Configuration.Settings.General.ListViewLineSeparatorString, Environment.NewLine);
+
+        public static void AutoSizeLastColumn(this ListView listView) =>
+            listView.Columns[listView.Columns.Count - 1].Width = -2;
 
         public static void SelectAll(this ListView lv)
         {
