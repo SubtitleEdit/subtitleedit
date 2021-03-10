@@ -316,7 +316,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             {
                 if (PcsObjects.Count > 0)
                 {
-                    return new Position(PcsObjects[0].Origin.X, PcsObjects[0].Origin.Y);
+                    return new Position(PcsObjects.Min(p => p.Origin.X), PcsObjects.Min(p => p.Origin.Y));
                 }
 
                 return new Position(0, 0);
