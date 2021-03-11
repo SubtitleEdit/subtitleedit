@@ -10,6 +10,8 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class VideoError : Form
     {
+        public bool VideoPlayerInstalled { get; set; }
+
         public VideoError()
         {
             UiUtil.PreInitialize(this);
@@ -18,14 +20,18 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixLargeFonts(this, buttonCancel);
         }
 
-        public void Initialize(string fileName, Exception exception)
+        public void Initialize(string fileName)
         {
+            Text += fileName;
             var sb = new StringBuilder();
             sb.Append("SE was unable to play the video/audio file (or file is not a valid video/audio file).");
 
             var currentVideoPlayer = Configuration.Settings.General.VideoPlayer;
             if (string.IsNullOrEmpty(currentVideoPlayer))
             {
+                Text = "Please install video player";
+                sb.Clear();
+                sb.Append("Subtitle Edit needs a video player.");
                 currentVideoPlayer = "DirectShow";
             }
 
@@ -69,8 +75,6 @@ namespace Nikse.SubtitleEdit.Forms
                     buttonMpvSettings.Text = "Use \"mpv\" as video player";
                 }
             }
-
-            Text += fileName;
         }
 
         private void VideoError_KeyDown(object sender, KeyEventArgs e)
@@ -94,6 +98,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
+                    VideoPlayerInstalled = true;
                     Configuration.Settings.General.VideoPlayer = "MPV";
                     DialogResult = DialogResult.OK;
                 }
