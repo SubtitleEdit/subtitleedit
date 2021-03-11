@@ -15934,6 +15934,11 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonGoogleIt_Click(null, null);
                 e.SuppressKeyPress = true;
             }
+            else if (_shortcuts .MainTranslateGoogleTranslateIt == e.KeyData)
+            {
+                buttonGoogleTranslateIt_Click(null, null);
+                e.SuppressKeyPress = true;
+            }
             else if (_shortcuts.MainTranslateCustomSearch1 == e.KeyData)
             {
                 RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl1);
