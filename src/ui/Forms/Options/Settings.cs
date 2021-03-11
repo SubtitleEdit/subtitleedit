@@ -1757,7 +1757,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             {
                 gs.VideoPlayer = "VLC";
             }
-            else
+            else if (!string.IsNullOrEmpty(gs.VideoPlayer))
             {
                 gs.VideoPlayer = "DirectShow";
             }

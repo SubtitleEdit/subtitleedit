@@ -242,34 +242,52 @@ namespace Nikse.SubtitleEdit.Logic
         {
             try
             {
-                videoPlayerContainer.VideoPlayer = GetVideoPlayer();
-                videoPlayerContainer.VideoPlayer.Initialize(videoPlayerContainer.PanelPlayer, fileName, onVideoLoaded, onVideoEnded);
-                videoPlayerContainer.ShowStopButton = Configuration.Settings.General.VideoPlayerShowStopButton;
-                videoPlayerContainer.ShowFullscreenButton = false;
-                videoPlayerContainer.ShowMuteButton = Configuration.Settings.General.VideoPlayerShowMuteButton;
-                videoPlayerContainer.Volume = Configuration.Settings.General.VideoPlayerDefaultVolume;
-                videoPlayerContainer.EnableMouseWheelStep();
-                if (fileName != null && (fileName.StartsWith("https://", StringComparison.OrdinalIgnoreCase) || fileName.StartsWith("http://", StringComparison.OrdinalIgnoreCase)))
-                {
-                    // we don't have videoInfo for streams...
-                }
-                else
-                {
-                    videoPlayerContainer.VideoWidth = videoInfo.Width;
-                    videoPlayerContainer.VideoHeight = videoInfo.Height;
-                    videoPlayerContainer.VideoPlayer.Resize(videoPlayerContainer.PanelPlayer.Width, videoPlayerContainer.PanelPlayer.Height);
-                }
-
+                DoInitializeVideoPlayer(fileName, videoInfo, videoPlayerContainer, onVideoLoaded, onVideoEnded);
                 return true;
             }
             catch (Exception exception)
             {
                 videoPlayerContainer.VideoPlayer = null;
                 var videoError = new VideoError();
-                videoError.Initialize(fileName, exception);
+                videoError.Initialize(fileName);
                 videoError.ShowDialog();
                 SeLogger.Error(exception, "InitializeVideoPlayerAndContainer failed to load video player");
+
+                if (videoError.VideoPlayerInstalled)
+                {
+                    try
+                    {
+                        DoInitializeVideoPlayer(fileName, videoInfo, videoPlayerContainer, onVideoLoaded, onVideoEnded);
+                        return true;
+                    }
+                    catch
+                    {
+                        // ignore second error
+                    }
+                }
+
                 return false;
+            }
+        }
+
+        private static void DoInitializeVideoPlayer(string fileName, VideoInfo videoInfo, VideoPlayerContainer videoPlayerContainer, EventHandler onVideoLoaded, EventHandler onVideoEnded)
+        {
+            videoPlayerContainer.VideoPlayer = GetVideoPlayer();
+            videoPlayerContainer.VideoPlayer.Initialize(videoPlayerContainer.PanelPlayer, fileName, onVideoLoaded, onVideoEnded);
+            videoPlayerContainer.ShowStopButton = Configuration.Settings.General.VideoPlayerShowStopButton;
+            videoPlayerContainer.ShowFullscreenButton = false;
+            videoPlayerContainer.ShowMuteButton = Configuration.Settings.General.VideoPlayerShowMuteButton;
+            videoPlayerContainer.Volume = Configuration.Settings.General.VideoPlayerDefaultVolume;
+            videoPlayerContainer.EnableMouseWheelStep();
+            if (fileName != null && (fileName.StartsWith("https://", StringComparison.OrdinalIgnoreCase) || fileName.StartsWith("http://", StringComparison.OrdinalIgnoreCase)))
+            {
+                // we don't have videoInfo for streams...
+            }
+            else
+            {
+                videoPlayerContainer.VideoWidth = videoInfo.Width;
+                videoPlayerContainer.VideoHeight = videoInfo.Height;
+                videoPlayerContainer.VideoPlayer.Resize(videoPlayerContainer.PanelPlayer.Width, videoPlayerContainer.PanelPlayer.Height);
             }
         }
 
