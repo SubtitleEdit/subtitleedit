@@ -147,9 +147,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool _cleanupHasRun;
         private bool _cancelWordSpellCheck = true;
-        private bool IsLiveSpellCheckEnabled => Configuration.Settings.Tools.LiveSpellCheck
-                                                 && Configuration.Settings.General.SubtitleTextBoxSyntaxColor;
-
+        private bool IsLiveSpellCheckEnabled => Configuration.Settings.Tools.LiveSpellCheck &&
+                                                Configuration.Settings.General.SubtitleTextBoxSyntaxColor;
         private bool _clearLastFind;
         private FindType _clearLastFindType = FindType.Normal;
         private string _clearLastFindText = string.Empty;
@@ -174,6 +173,8 @@ namespace Nikse.SubtitleEdit.Forms
         private long _winLeftDownTicks = -1;
         private long _winRightDownTicks = -1;
         private FormWindowState _lastFormWindowState = FormWindowState.Normal;
+        private readonly List<string> _filesToDelete = new List<string>();
+        private bool _restorePreviewAfterSecondSubtitle;
 
         public bool IsMenuOpen { get; private set; }
 
@@ -2382,6 +2383,7 @@ namespace Nikse.SubtitleEdit.Forms
                 OpenSubtitle(openFileDialog1.FileName, null);
             }
 
+            CheckSecondSubtitleReset();
             _openFileDialogOn = false;
         }
 
@@ -3904,6 +3906,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
+                CheckSecondSubtitleReset();
                 SubtitleListview1.BeginUpdate();
                 if (rfe == null)
                 {
@@ -4618,6 +4621,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 MakeHistoryForUndo(_language.BeforeNew);
                 ResetSubtitle(true);
+                CheckSecondSubtitleReset();
             }
         }
 
@@ -10093,7 +10097,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     currentParagraph.Text = a.SplitToLines().Any(line => line.Length > maxSingleLineLength) ?
-                        Utilities.AutoBreakLine(a, language) : a ;
+                        Utilities.AutoBreakLine(a, language) : a;
                     newParagraph.Text = b.SplitToLines().Any(line => line.Length > maxSingleLineLength) ?
                         Utilities.AutoBreakLine(b, language) : b;
                 }
@@ -10298,7 +10302,7 @@ namespace Nikse.SubtitleEdit.Forms
                             originalCurrent.Text = firstPart.SplitToLines().Any(line => line.Length > maxSingleLineLength) ?
                                 Utilities.AutoBreakLine(firstPart, language) :
                                 firstPart;
-                            originalNew.Text = secondPart.SplitToLines().Any(line => line.Length > maxSingleLineLength) ? 
+                            originalNew.Text = secondPart.SplitToLines().Any(line => line.Length > maxSingleLineLength) ?
                                 Utilities.AutoBreakLine(secondPart, language) :
                                 secondPart;
                             if (originalCurrent.Text.Contains("<i>", StringComparison.Ordinal) && !originalCurrent.Text.Contains("</i>", StringComparison.Ordinal) &&
@@ -11609,77 +11613,89 @@ namespace Nikse.SubtitleEdit.Forms
             if (!ContinueNewOrExit())
             {
                 e.Cancel = true;
+                return;
             }
-            else
+
+            if (_networkSession != null)
             {
-                if (_networkSession != null)
+                try
                 {
-                    try
-                    {
-                        _networkSession.TimerStop();
-                        _networkSession.Leave();
-                    }
-                    catch
-                    {
-                    }
+                    _networkSession.TimerStop();
+                    _networkSession.Leave();
                 }
-
-                if (Configuration.Settings.General.StartRememberPositionAndSize && WindowState != FormWindowState.Minimized)
+                catch
                 {
-                    Configuration.Settings.General.StartPosition = Left + ";" + Top;
-                    if (WindowState == FormWindowState.Maximized)
-                    {
-                        Configuration.Settings.General.StartSize = "Maximized";
-                    }
-                    else
-                    {
-                        Configuration.Settings.General.StartSize = Width + ";" + Height;
-                    }
-
-                    Configuration.Settings.General.SplitContainerMainSplitterDistance = splitContainerMain.SplitterDistance;
-                    Configuration.Settings.General.SplitContainer1SplitterDistance = splitContainer1.SplitterDistance;
-                    Configuration.Settings.General.SplitContainerListViewAndTextSplitterDistance = splitContainerListViewAndText.SplitterDistance;
                 }
+            }
 
-                Configuration.Settings.General.AutoRepeatOn = checkBoxAutoRepeatOn.Checked;
-                if (int.TryParse(comboBoxAutoRepeat.Text, out var autoRepeat))
+            if (Configuration.Settings.General.StartRememberPositionAndSize && WindowState != FormWindowState.Minimized)
+            {
+                Configuration.Settings.General.StartPosition = Left + ";" + Top;
+                if (WindowState == FormWindowState.Maximized)
                 {
-                    Configuration.Settings.General.AutoRepeatCount = autoRepeat;
-                }
-
-                Configuration.Settings.General.AutoContinueOn = checkBoxAutoContinue.Checked;
-                Configuration.Settings.General.AutoContinueDelay = comboBoxAutoContinue.SelectedIndex;
-                Configuration.Settings.General.SyncListViewWithVideoWhilePlaying = checkBoxSyncListViewWithVideoWhilePlaying.Checked;
-                Configuration.Settings.General.ShowWaveform = audioVisualizer.ShowWaveform;
-                Configuration.Settings.General.ShowSpectrogram = audioVisualizer.ShowSpectrogram;
-                if (Configuration.Settings.General.ShowRecentFiles)
-                {
-                    if (!string.IsNullOrEmpty(_fileName))
-                    {
-                        Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
-                    }
-                    else if (Configuration.Settings.RecentFiles.Files.Count > 0)
-                    {
-                        Configuration.Settings.RecentFiles.Add(null, null, null);
-                    }
-                }
-
-                if (SubtitleListview1.StateImageList?.Images.Count > 0)
-                {
-                    Configuration.Settings.General.ListViewNumberWidth = SubtitleListview1.Columns[SubtitleListview1.ColumnIndexNumber].Width - 18;
+                    Configuration.Settings.General.StartSize = "Maximized";
                 }
                 else
                 {
-                    Configuration.Settings.General.ListViewNumberWidth = SubtitleListview1.Columns[SubtitleListview1.ColumnIndexNumber].Width;
+                    Configuration.Settings.General.StartSize = Width + ";" + Height;
                 }
 
-                SaveUndockedPositions();
-                SaveListViewWidths();
-                Configuration.Settings.Save();
+                Configuration.Settings.General.SplitContainerMainSplitterDistance = splitContainerMain.SplitterDistance;
+                Configuration.Settings.General.SplitContainer1SplitterDistance = splitContainer1.SplitterDistance;
+                Configuration.Settings.General.SplitContainerListViewAndTextSplitterDistance = splitContainerListViewAndText.SplitterDistance;
+            }
 
-                if (mediaPlayer.VideoPlayer != null)
+            Configuration.Settings.General.AutoRepeatOn = checkBoxAutoRepeatOn.Checked;
+            if (int.TryParse(comboBoxAutoRepeat.Text, out var autoRepeat))
+            {
+                Configuration.Settings.General.AutoRepeatCount = autoRepeat;
+            }
+
+            Configuration.Settings.General.AutoContinueOn = checkBoxAutoContinue.Checked;
+            Configuration.Settings.General.AutoContinueDelay = comboBoxAutoContinue.SelectedIndex;
+            Configuration.Settings.General.SyncListViewWithVideoWhilePlaying = checkBoxSyncListViewWithVideoWhilePlaying.Checked;
+            Configuration.Settings.General.ShowWaveform = audioVisualizer.ShowWaveform;
+            Configuration.Settings.General.ShowSpectrogram = audioVisualizer.ShowSpectrogram;
+            if (Configuration.Settings.General.ShowRecentFiles)
+            {
+                if (!string.IsNullOrEmpty(_fileName))
                 {
-                    mediaPlayer.PauseAndDisposePlayer();
+                    Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
+                }
+                else if (Configuration.Settings.RecentFiles.Files.Count > 0)
+                {
+                    Configuration.Settings.RecentFiles.Add(null, null, null);
+                }
+            }
+
+            if (SubtitleListview1.StateImageList?.Images.Count > 0)
+            {
+                Configuration.Settings.General.ListViewNumberWidth = SubtitleListview1.Columns[SubtitleListview1.ColumnIndexNumber].Width - 18;
+            }
+            else
+            {
+                Configuration.Settings.General.ListViewNumberWidth = SubtitleListview1.Columns[SubtitleListview1.ColumnIndexNumber].Width;
+            }
+
+            SaveUndockedPositions();
+            SaveListViewWidths();
+            CheckSecondSubtitleReset();
+            Configuration.Settings.Save();
+
+            if (mediaPlayer.VideoPlayer != null)
+            {
+                mediaPlayer.PauseAndDisposePlayer();
+            }
+
+            foreach (var fileToDelete in _filesToDelete)
+            {
+                try
+                {
+                    File.Delete(fileToDelete);
+                }
+                catch
+                {
+                    // ignore
                 }
             }
         }
@@ -15934,7 +15950,7 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonGoogleIt_Click(null, null);
                 e.SuppressKeyPress = true;
             }
-            else if (_shortcuts .MainTranslateGoogleTranslateIt == e.KeyData)
+            else if (_shortcuts.MainTranslateGoogleTranslateIt == e.KeyData)
             {
                 buttonGoogleTranslateIt_Click(null, null);
                 e.SuppressKeyPress = true;
@@ -19410,6 +19426,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
+                CheckSecondSubtitleReset();
                 ShowSubtitleTimer.Stop();
                 Cursor = Cursors.WaitCursor;
                 VideoFileName = fileName;
@@ -24478,6 +24495,7 @@ namespace Nikse.SubtitleEdit.Forms
             timeUpDownVideoPositionAdjust.Enabled = false;
             timeUpDownVideoPosition.TimeCode = new TimeCode();
             timeUpDownVideoPosition.Enabled = false;
+            CheckSecondSubtitleReset();
         }
 
         private void ToolStripMenuItemVideoDropDownOpening(object sender, EventArgs e)
@@ -29581,6 +29599,18 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemAssStyles_Click(sender, e);
         }
 
+        private void CheckSecondSubtitleReset()
+        {
+            if (!_restorePreviewAfterSecondSubtitle)
+            {
+                return;
+            }
+
+            Configuration.Settings.General.MpvHandlesPreviewText = true;
+            mediaPlayer.SubtitleText = string.Empty;
+            _restorePreviewAfterSecondSubtitle = false;
+        }
+
         private void openSecondSubtitleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             openFileDialog1.Title = _languageGeneral.OpenSubtitle;
@@ -29598,8 +29628,25 @@ namespace Nikse.SubtitleEdit.Forms
                     Configuration.Settings.General.MpvHandlesPreviewText = false;
                     mediaPlayer.VideoPlayer = libMpv;
                     mediaPlayer.SubtitleText = string.Empty;
+                    _restorePreviewAfterSecondSubtitle = true;
                 }
-                libMpv.LoadSubtitle(openFileDialog1.FileName);
+
+                var ext = Path.GetExtension(openFileDialog1.FileName).ToLowerInvariant();
+                if (ext == ".srt" || ext == ".ass")
+                {
+                    libMpv.LoadSubtitle(openFileDialog1.FileName);
+                }
+                else
+                {
+                    var sub = Subtitle.Parse(openFileDialog1.FileName);
+                    if (sub != null)
+                    {
+                        var tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".srt");
+                        File.WriteAllText(tempFile, new SubRip().ToText(sub, "untitled"));
+                        libMpv.LoadSubtitle(tempFile);
+                        _filesToDelete.Add(tempFile);
+                    }
+                }
             }
             else if (mediaPlayer.VideoPlayer is LibVlcDynamic libvlc)
             {
