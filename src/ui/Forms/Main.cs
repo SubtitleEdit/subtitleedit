@@ -21007,29 +21007,29 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void fileToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
-            toolStripMenuItemOpenContainingFolder.Visible = !string.IsNullOrEmpty(_fileName) && File.Exists(_fileName);
+            toolStripMenuItemOpenContainingFolder.Enabled = !string.IsNullOrEmpty(_fileName) && File.Exists(_fileName);
             bool subtitleLoaded = IsSubtitleLoaded;
-            toolStripMenuItemStatistics.Visible = subtitleLoaded;
-            toolStripMenuItemExport.Visible = subtitleLoaded;
-            openOriginalToolStripMenuItem.Visible = subtitleLoaded;
-            toolStripMenuItemOpenKeepVideo.Visible = VideoFileName != null;
+            toolStripMenuItemStatistics.Enabled = subtitleLoaded;
+            toolStripMenuItemExport.Enabled = subtitleLoaded;
+            openOriginalToolStripMenuItem.Enabled = subtitleLoaded;
+            toolStripMenuItemOpenKeepVideo.Enabled = VideoFileName != null;
             if (subtitleLoaded && Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0)
             {
-                saveOriginalToolStripMenuItem.Visible = true;
-                saveOriginalAstoolStripMenuItem.Visible = true;
-                removeOriginalToolStripMenuItem.Visible = true;
+                saveOriginalToolStripMenuItem.Enabled = true;
+                saveOriginalAstoolStripMenuItem.Enabled = true;
+                removeOriginalToolStripMenuItem.Enabled = true;
             }
             else
             {
-                saveOriginalToolStripMenuItem.Visible = false;
-                saveOriginalAstoolStripMenuItem.Visible = false;
+                saveOriginalToolStripMenuItem.Enabled = false;
+                saveOriginalAstoolStripMenuItem.Enabled = false;
                 if (subtitleLoaded && SubtitleListview1.IsOriginalTextColumnVisible && _subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0)
                 {
-                    removeOriginalToolStripMenuItem.Visible = true;
+                    removeOriginalToolStripMenuItem.Enabled = true;
                 }
                 else
                 {
-                    removeOriginalToolStripMenuItem.Visible = false;
+                    removeOriginalToolStripMenuItem.Enabled = false;
                 }
             }
 
@@ -24488,9 +24488,9 @@ namespace Nikse.SubtitleEdit.Forms
                 redockVideoControlsToolStripMenuItem.ShortcutKeys = Keys.None;
             }
 
-            closeVideoToolStripMenuItem.Visible = !string.IsNullOrEmpty(VideoFileName);
-            setVideoOffsetToolStripMenuItem.Visible = !string.IsNullOrEmpty(VideoFileName);
-            smpteTimeModedropFrameToolStripMenuItem.Visible = !string.IsNullOrEmpty(VideoFileName);
+            closeVideoToolStripMenuItem.Enabled = !string.IsNullOrEmpty(VideoFileName);
+            setVideoOffsetToolStripMenuItem.Enabled = !string.IsNullOrEmpty(VideoFileName);
+            smpteTimeModedropFrameToolStripMenuItem.Enabled = !string.IsNullOrEmpty(VideoFileName);
             if (!string.IsNullOrEmpty(VideoFileName))
             {
                 if (Configuration.Settings.General.CurrentVideoOffsetInMs != 0)
@@ -24505,7 +24505,7 @@ namespace Nikse.SubtitleEdit.Forms
                 smpteTimeModedropFrameToolStripMenuItem.Checked = mediaPlayer.SmpteMode;
             }
 
-            toolStripMenuItemOpenVideoFromUrl.Visible = Configuration.Settings.General.VideoPlayer.Trim().Equals("MPV", StringComparison.OrdinalIgnoreCase) &&
+            toolStripMenuItemOpenVideoFromUrl.Enabled = Configuration.Settings.General.VideoPlayer.Trim().Equals("MPV", StringComparison.OrdinalIgnoreCase) &&
                                                         LibMpvDynamic.IsInstalled &&
                                                         File.Exists(Path.Combine(Configuration.DataDirectory, "youtube-dl.exe"));
 
