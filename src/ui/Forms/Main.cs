@@ -822,7 +822,6 @@ namespace Nikse.SubtitleEdit.Forms
             splitToolStripMenuItem1.Visible = false;
             mergeWithPreviousToolStripMenuItem.Visible = false;
             mergeWithNextToolStripMenuItem.Visible = false;
-            toolStripSeparator11.Visible = false;
             extendToPreviousToolStripMenuItem.Visible = false;
             extendToNextToolStripMenuItem.Visible = false;
             toolStripSeparator6.Visible = false;
@@ -21129,8 +21128,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             toolStripMenuItemNuendoProperties.Visible = format.Name == "Nuendo";
             toolStripMenuItemFcpProperties.Visible = ft == typeof(FinalCutProXml);
-
-            toolStripSeparator20.Visible = subtitleLoaded;
         }
 
         private void toolStripMenuItemOpenContainingFolder_Click(object sender, EventArgs e)
