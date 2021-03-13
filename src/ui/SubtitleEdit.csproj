@@ -1788,7 +1788,6 @@
     <None Include="Resources\SE2.ico" />
     <Content Include="SE2.ico" />
     <None Include="Resources\SE.ico" />
-    <Content Include="SE.ico" />
     <None Include="Hunspellx64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
