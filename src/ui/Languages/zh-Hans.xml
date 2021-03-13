@@ -2601,13 +2601,24 @@ Command line: {1} {2}
     <StyleStorage>样式库</StyleStorage>
     <StyleCurrentFile>当前文件中的样式</StyleCurrentFile>
     <OverwriteX>确定要覆盖{0}吗?</OverwriteX>
-    <Category>类别</Category>
-    <NewCategory>新建类别</NewCategory>
-    <CategoryName>类别名</CategoryName>
-    <CategorySetDefault>设为默认</CategorySetDefault>
     <CategoryNote>注意：“默认”样式将应用于新的ASSA文件</CategoryNote>
-    <CategoryDelete>确定要删除此类别吗？</CategoryDelete>
+    <CategoriesManage>管理</CategoriesManage>
+    <MoveToCategory>将选定的样式移到类别...</MoveToCategory>
   </SubStationAlphaStyles>
+  <SubStationAlphaStylesCategoriesManager>
+    <Category>类别</Category>
+    <Categories>类别</Categories>
+    <CategoryName>类别名</CategoryName>
+    <CategoryDelete>您确定要删除所选的类别吗？</CategoryDelete>
+    <NewCategory>新建类别</NewCategory>
+    <CategoryRename>重命名类别</CategoryRename>
+    <CategorySetDefault>设为默认</CategorySetDefault>
+    <NumberOfStyles>样式数</NumberOfStyles>
+    <CategoryDefault>默认</CategoryDefault>
+    <ChooseCategories>选择类别到{0}</ChooseCategories>
+    <ImportCategoriesTitle>导入类别从...</ImportCategoriesTitle>
+    <ExportCategoriesTitle>导出类别到...</ExportCategoriesTitle>
+  </SubStationAlphaStylesCategoriesManager>
   <PointSync>
     <Title>取点同步</Title>
     <TitleViaOtherSubtitle>通过其它字幕进行取点同步</TitleViaOtherSubtitle>
