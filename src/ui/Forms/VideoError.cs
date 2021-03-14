@@ -83,6 +83,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 DialogResult = DialogResult.Cancel;
             }
+            else if (e.KeyData == UiUtil.HelpKeys)
+            {
+                UiUtil.ShowHelp("#settings_video");
+            }
         }
 
         private void buttonMpvSettings_Click(object sender, EventArgs e)
