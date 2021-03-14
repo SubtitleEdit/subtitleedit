@@ -107,7 +107,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             get => _mediaPosition.Rate;
             set
             {
-                if (value >= 0 && value <= 2.0)
+                if (value >= 0 && value <= 3.0)
                 {
                     _mediaPosition.Rate = value;
                 }

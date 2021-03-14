@@ -28,6 +28,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
         private Timer _positionTimer;
         private double _positionInSeconds;
         private double _durationInSeconds;
+        private double _currentPlayRate = 1.0;
         private MessageHandlerWindow _form;
         private int _initialWidth;
         private int _initialHeight;
@@ -62,6 +63,19 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
         {
             get => _positionInSeconds;
             set => SendMpcMessage(MpcHcCommand.SetPosition, string.Format(CultureInfo.InvariantCulture, "{0:0.000}", value));
+        }
+
+        public override double PlayRate
+        {
+            get => _currentPlayRate;
+            set
+            {
+                if (value >= 0 && value <= 3.0)
+                {
+                    SendMpcMessage(MpcHcCommand.SetSpeed, value.ToString(CultureInfo.InvariantCulture));
+                    _currentPlayRate = value;
+                }
+            }
         }
 
         public override void Play()
