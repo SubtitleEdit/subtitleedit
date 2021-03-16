@@ -629,6 +629,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 new KaraokeCdgCreatorText(),
                 new VidIcelandic(),
                 new JsonArchtime(), 
+                new MacCaption10(),
             };
         }
 

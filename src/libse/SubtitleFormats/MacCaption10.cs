@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Cea708;
+using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class MacCaption : SubtitleFormat
+    public class MacCaption10 : SubtitleFormat
     {
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d\t", RegexOptions.Compiled);
 
@@ -62,14 +63,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = subtitle.Paragraphs[i];
-                sb.AppendLine(string.Format("{0}\t{1}", ToTimeCode(p.StartTime.TotalMilliseconds), p.Text)); // TODO: Encode text - how???
+                var p = subtitle.Paragraphs[i];
+                sb.AppendLine($"{ToTimeCode(p.StartTime.TotalMilliseconds)}\t{p.Text}"); // TODO: Encode text - how???
                 sb.AppendLine();
 
-                Paragraph next = subtitle.GetParagraphOrDefault(i + 1);
+                var next = subtitle.GetParagraphOrDefault(i + 1);
                 if (next == null || Math.Abs(next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds) > 100)
                 {
-                    sb.AppendLine(string.Format("{0}\t???", ToTimeCode(p.EndTime.TotalMilliseconds))); // TODO: Some end text???
+                    sb.AppendLine($"{ToTimeCode(p.EndTime.TotalMilliseconds)}\t???"); // TODO: Some end text???
                     sb.AppendLine();
                 }
             }
@@ -78,7 +79,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string ToTimeCode(double totalMilliseconds)
         {
-            TimeSpan ts = TimeSpan.FromMilliseconds(totalMilliseconds);
+            var ts = TimeSpan.FromMilliseconds(totalMilliseconds);
             return $"{ts.Hours:00}:{ts.Minutes:00}:{ts.Seconds:00}:{MillisecondsToFramesMaxFrameRate(ts.Milliseconds):00}";
         }
 
@@ -88,10 +89,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             Paragraph p = null;
             var header = new StringBuilder();
             char[] splitChars = { ':', ';', ',' };
-            foreach (string line in lines)
+            foreach (var line in lines)
             {
-                string s = line.Trim();
-
+                var s = line.Trim();
                 if (string.IsNullOrEmpty(s) || s.StartsWith("//", StringComparison.Ordinal) || s.StartsWith("File Format=MacCaption_MCC", StringComparison.Ordinal) || s.StartsWith("UUID=", StringComparison.Ordinal) ||
                     s.StartsWith("Creation Program=") || s.StartsWith("Creation Date=") || s.StartsWith("Creation Time=") ||
                     s.StartsWith("Code Rate=", StringComparison.Ordinal) || s.StartsWith("Time Code Rate=", StringComparison.Ordinal))
@@ -101,30 +101,30 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else
                 {
                     var match = RegexTimeCodes.Match(s);
-                    if (match.Success)
+                    if (!match.Success)
                     {
-                        TimeCode startTime = DecodeTimeCodeFrames(s.Substring(0, match.Length - 1), splitChars);
-                        string text = GetSccText(s.Substring(match.Index));
-
-                        if (text == "942c 942c" || text == "942c")
-                        {
-                            if (p != null)
-                            {
-                                p.EndTime = new TimeCode(startTime.TotalMilliseconds);
-                            }
-                        }
-                        else
-                        {
-                            p = new Paragraph(startTime, new TimeCode(startTime.TotalMilliseconds), text);
-                            subtitle.Paragraphs.Add(p);
-                        }
+                        continue;
                     }
+
+                    var startTime = DecodeTimeCodeFrames(s.Substring(0, match.Length - 1), splitChars);
+                    var text = GetText(s.Substring(match.Index + match.Length).Trim());
+                    if (string.IsNullOrEmpty(text))
+                    {
+                        if (p != null)
+                        {
+                            p.EndTime = new TimeCode(startTime.TotalMilliseconds);
+                        }
+                        continue;
+                    }
+
+                    p = new Paragraph(startTime, new TimeCode(startTime.TotalMilliseconds), text);
+                    subtitle.Paragraphs.Add(p);
                 }
             }
-            for (int i = subtitle.Paragraphs.Count - 2; i >= 0; i--)
+            for (var i = subtitle.Paragraphs.Count - 2; i >= 0; i--)
             {
                 p = subtitle.GetParagraphOrDefault(i);
-                Paragraph next = subtitle.GetParagraphOrDefault(i + 1);
+                var next = subtitle.GetParagraphOrDefault(i + 1);
                 if (p != null && next != null && Math.Abs(p.EndTime.TotalMilliseconds - p.StartTime.TotalMilliseconds) < 0.001)
                 {
                     p.EndTime = new TimeCode(next.StartTime.TotalMilliseconds);
@@ -144,70 +144,69 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
-        public static string GetSccText(string s)
+        public static string GetText(string input)
         {
-            string[] parts = s.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+            var hexString = GetHex(input);
+            var bytes = HexStringToByteArray(hexString);
+            if (bytes.Length < 10)
+            {
+                return string.Empty;
+            }
+
+            var cea708 = new Smpte291M(bytes);
+            return cea708.GetText();
+        }
+
+        private static string GetHex(string input)
+        {
+            // ANC data bytes may be represented by one ASCII character according to the following schema:
+            var dictionary = new Dictionary<char, string>
+            {
+                { 'G', "FA0000" },
+                { 'H', "FA0000FA0000" },
+                { 'I', "FA0000FA0000FA0000" },
+                { 'J', "FA0000FA0000FA0000FA0000" },
+                { 'K', "FA0000FA0000FA0000FA0000FA0000" },
+                { 'L', "FA0000FA0000FA0000FA0000FA0000FA0000" },
+                { 'M', "FA0000FA0000FA0000FA0000FA0000FA0000FA0000" },
+                { 'N', "FA0000FA0000FA0000FA0000FA0000FA0000FA0000FA0000" },
+                { 'O', "FA0000FA0000FA0000FA0000FA0000FA0000FA0000FA0000FA0000" },
+                { 'P', "FB8080" },
+                { 'Q', "FC8080" },
+                { 'R', "FD8080" },
+                { 'S', "9669" },
+                { 'T', "6101" },
+                { 'U', "E1000000" },
+                { 'Z', "00" },
+            };
+
             var sb = new StringBuilder();
-            foreach (string part in ExecuteReplacesAndGetParts(parts))
+            foreach (var ch in input)
             {
-                try
+                if (dictionary.TryGetValue(ch, out var hexValue))
                 {
-                    // TODO: How to decode???
-                    int num = int.Parse(part, System.Globalization.NumberStyles.HexNumber);
-                    if (num >= 32 && num <= 255)
-                    {
-                        var encoding = Encoding.GetEncoding("ISO-8859-1");
-                        byte[] bytes = new byte[1];
-                        bytes[0] = (byte)num;
-                        sb.Append(encoding.GetString(bytes));
-                    }
+                    sb.Append(hexValue);
                 }
-                catch
+                else
                 {
-                    // ignored
+                    sb.Append(ch);
                 }
             }
-            string res = sb.ToString().Replace("<i></i>", string.Empty).Replace("</i><i>", string.Empty);
-            res = res.Replace("♪♪", "♪");
-            res = res.Replace("'''", "'");
-            res = res.Replace("  ", " ").Replace("  ", " ").Replace(Environment.NewLine + " ", Environment.NewLine).Trim();
-            return HtmlUtil.FixInvalidItalicTags(res);
+
+            return sb.ToString();
         }
 
-        private static List<string> ExecuteReplacesAndGetParts(string[] parts)
+
+        private static byte[] HexStringToByteArray(string hex)
         {
-            var list = new List<string>();
-            if (parts.Length != 2)
+            var numberChars = hex.Length;
+            var bytes = new byte[numberChars / 2];
+            for (var i = 0; i < numberChars - 1; i += 2)
             {
-                return list;
+                bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
             }
-            string s = parts[1];
-            s = s.Replace("G", "FA0000");
-            s = s.Replace("H", "FA0000FA0000");
-            s = s.Replace("I", "FA0000FA0000FA0000");
-            s = s.Replace("J", "FA0000FA0000FA0000FA0000");
-            s = s.Replace("K", "FA0000FA0000FA0000FA0000FA0000");
-            s = s.Replace("L", "FA0000FA0000FA0000FA0000FA0000FA0000");
-            s = s.Replace("M", "FA0000FA0000FA0000FA0000FA0000FA0000FA0000");
-            s = s.Replace("N", "FA0000FA0000FA0000FA0000FA0000FA0000FA0000FA0000");
-            s = s.Replace("O", "FA0000FA0000FA0000FA0000FA0000FA0000FA0000FA0000FA0000");
-            s = s.Replace("P", "FB8080");
-            s = s.Replace("Q", "FC8080");
-            s = s.Replace("R", "FD80h80");
-            s = s.Replace("S", "9669");
-            s = s.Replace("T", "6101");
-            s = s.Replace("U", "E10000");
-            s = s.Replace("Z", "00");
-            for (int i = 0; i < s.Length; i += 4)
-            {
-                string sub = s.Substring(i);
-                if (sub.Length >= 2)
-                {
-                    list.Add(sub.Substring(0, 2));
-                }
-            }
-            return list;
-        }
 
+            return bytes;
+        }
     }
 }
