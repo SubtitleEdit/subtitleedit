@@ -163,6 +163,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "General/HourMinutesSecondsFrames":
                     language.General.HourMinutesSecondsFrames = reader.Value;
                     break;
+                case "General/XSeconds":
+                    language.General.XSeconds = reader.Value;
+                    break;
                 case "General/Bold":
                     language.General.Bold = reader.Value;
                     break;

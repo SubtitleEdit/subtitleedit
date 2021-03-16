@@ -34,8 +34,9 @@
     <NumberSymbol>#</NumberSymbol>
     <Number>Number</Number>
     <Text>Text</Text>
-    <HourMinutesSecondsMilliseconds>Hour:min:sec:ms</HourMinutesSecondsMilliseconds>
+    <HourMinutesSecondsDecimalSeparatorMilliseconds>Hour:min:sec{0}ms</HourMinutesSecondsDecimalSeparatorMilliseconds>
     <HourMinutesSecondsFrames>Hour:min:sec:frames</HourMinutesSecondsFrames>
+    <XSeconds>{0:0.0##} seconds</XSeconds>
     <Bold>Bold</Bold>
     <Italic>Italic</Italic>
     <Underline>Underline</Underline>
