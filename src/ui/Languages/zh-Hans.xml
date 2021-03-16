@@ -34,7 +34,7 @@
     <NumberSymbol>编号</NumberSymbol>
     <Number>编号</Number>
     <Text>文本</Text>
-    <HourMinutesSecondsMilliseconds>时:分:秒:毫秒</HourMinutesSecondsMilliseconds>
+    <HourMinutesSecondsDecimalSeparatorMilliseconds>时:分:秒{0}毫秒</HourMinutesSecondsDecimalSeparatorMilliseconds>
     <HourMinutesSecondsFrames>时:分:秒:帧</HourMinutesSecondsFrames>
     <Bold>粗体</Bold>
     <Italic>斜体</Italic>
