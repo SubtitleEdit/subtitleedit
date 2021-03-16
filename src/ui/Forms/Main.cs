@@ -14621,12 +14621,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_shortcuts.MainGeneralGoToStartOfCurrentSubtitle == e.KeyData)
             {
-                if (SubtitleListview1.SelectedItems.Count == 1 && mediaPlayer.VideoPlayer != null)
-                {
-                    mediaPlayer.CurrentPosition = _subtitle.Paragraphs[SubtitleListview1.SelectedItems[0].Index].StartTime.TotalSeconds;
-                    e.SuppressKeyPress = true;
-                }
-
+                GotoSubPositionAndPause();
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainGeneralGoToEndOfCurrentSubtitle == e.KeyData)
@@ -15186,10 +15181,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_shortcuts.MainVideoGoToStartCurrent == e.KeyData)
             {
-                if (mediaPlayer.VideoPlayer != null)
-                {
-                    GotoSubPositionAndPause();
-                }
+                GotoSubPositionAndPause();
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainVideo3000MsLeft == e.KeyData)
@@ -20567,6 +20559,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GotoSubPositionAndPause(double adjustSeconds)
         {
+            if (mediaPlayer.VideoPlayer is null)
+            {
+                return;
+            }
+
             if (SubtitleListview1.SelectedItems.Count > 0)
             {
                 int index = SubtitleListview1.SelectedItems[0].Index;
