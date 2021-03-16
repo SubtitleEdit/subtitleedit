@@ -20948,6 +20948,10 @@ namespace Nikse.SubtitleEdit.Forms
                                     timerAutoContinue.Start();
                                 }
                             }
+                            else if (Configuration.Settings.General.ReturnToStartAfterRepeat)
+                            {
+                                GotoSubPositionAndPause();
+                            }
                         }
                     }
                 }

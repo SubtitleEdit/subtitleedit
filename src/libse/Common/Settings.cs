@@ -1095,6 +1095,7 @@ $HorzAlign          =   Center
         public int AutoRepeatCount { get; set; }
         public bool AutoContinueOn { get; set; }
         public int AutoContinueDelay { get; set; }
+        public bool ReturnToStartAfterRepeat { get; set; }
         public bool SyncListViewWithVideoWhilePlaying { get; set; }
         public int AutoBackupSeconds { get; set; }
         public int AutoBackupDeleteAfterMonths { get; set; }
@@ -1257,6 +1258,7 @@ $HorzAlign          =   Center
             AutoRepeatCount = 2;
             AutoContinueOn = false;
             AutoContinueDelay = 2;
+            ReturnToStartAfterRepeat = false;
             SyncListViewWithVideoWhilePlaying = false;
             AutoBackupSeconds = 60 * 5;
             AutoBackupDeleteAfterMonths = 3;
@@ -3172,16 +3174,22 @@ $HorzAlign          =   Center
                 settings.General.SyncListViewWithVideoWhilePlaying = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("AutoContinueOn");
+            if (subNode != null)
+            {
+                settings.General.AutoContinueOn = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("AutoContinueDelay");
             if (subNode != null)
             {
                 settings.General.AutoContinueDelay = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
-            subNode = node.SelectSingleNode("AutoContinueOn");
+            subNode = node.SelectSingleNode("ReturnToStartAfterRepeat");
             if (subNode != null)
             {
-                settings.General.AutoContinueOn = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                settings.General.ReturnToStartAfterRepeat = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("AutoBackupSeconds");
@@ -8108,6 +8116,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AutoRepeatCount", settings.General.AutoRepeatCount.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AutoContinueOn", settings.General.AutoContinueOn.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AutoContinueDelay", settings.General.AutoContinueDelay.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ReturnToStartAfterRepeat", settings.General.ReturnToStartAfterRepeat.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SyncListViewWithVideoWhilePlaying", settings.General.SyncListViewWithVideoWhilePlaying.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AutoBackupSeconds", settings.General.AutoBackupSeconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AutoBackupDeleteAfterMonths", settings.General.AutoBackupDeleteAfterMonths.ToString(CultureInfo.InvariantCulture));
