@@ -157,8 +157,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "General/Text":
                     language.General.Text = reader.Value;
                     break;
-                case "General/HourMinutesSecondsMilliseconds":
-                    language.General.HourMinutesSecondsMilliseconds = reader.Value;
+                case "General/HourMinutesSecondsDecimalSeparatorMilliseconds":
+                    language.General.HourMinutesSecondsDecimalSeparatorMilliseconds = reader.Value;
                     break;
                 case "General/HourMinutesSecondsFrames":
                     language.General.HourMinutesSecondsFrames = reader.Value;

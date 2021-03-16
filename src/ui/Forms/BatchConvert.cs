@@ -144,7 +144,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxSpeed.Text = LanguageSettings.Current.ChangeSpeedInPercent.TitleShort;
             labelFromFrameRate.Text = LanguageSettings.Current.ChangeFrameRate.FromFrameRate;
             labelToFrameRate.Text = LanguageSettings.Current.ChangeFrameRate.ToFrameRate;
-            labelHourMinSecMilliSecond.Text = Configuration.Settings.General.UseTimeFormatHHMMSSFF ? LanguageSettings.Current.General.HourMinutesSecondsFrames : LanguageSettings.Current.General.HourMinutesSecondsMilliseconds;
+            labelHourMinSecMilliSecond.Text = Configuration.Settings.General.UseTimeFormatHHMMSSFF ? LanguageSettings.Current.General.HourMinutesSecondsFrames : string.Format(LanguageSettings.Current.General.HourMinutesSecondsDecimalSeparatorMilliseconds, UiUtil.DecimalSeparator);
             openContainingFolderToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.File.OpenContainingFolder;
             removeToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.Remove;
             removeAllToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.RemoveAll;
