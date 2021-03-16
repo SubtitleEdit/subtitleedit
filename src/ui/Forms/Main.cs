@@ -600,13 +600,11 @@ namespace Nikse.SubtitleEdit.Forms
                 ListViewToggleTag(HtmlUtil.TagUnderline);
                 e.SuppressKeyPress = true;
             }
-
             else if (e.KeyData == removeAllFormattingsToolStripMenuItem.ShortcutKeys)
             {
                 removeAllFormattingsToolStripMenuItem_Click(null, null);
                 e.SuppressKeyPress = true;
             }
-
             else if (e.KeyData == _shortcuts.MainListViewAlignmentN1)
             {
                 SetAlignment("{\\an1}", false);
@@ -654,22 +652,22 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyData == _shortcuts.MainListViewColor1)
             {
-                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color1));
+                SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color1));
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainListViewColor2)
             {
-                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color2));
+                SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color2));
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainListViewColor3)
             {
-                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color3));
+                SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color3));
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainListViewColor4)
             {
-                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color4));
+                SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color4));
                 e.SuppressKeyPress = true;
             }
         }
@@ -9748,22 +9746,22 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyData == _shortcuts.MainListViewColor1)
             {
-                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color1));
+                SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color1), true);
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainListViewColor2)
             {
-                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color2));
+                SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color2), true);
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainListViewColor3)
             {
-                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color3));
+                SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color3), true);
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainListViewColor4)
             {
-                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color4));
+                SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color4), true);
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainListViewToggleMusicSymbols)
@@ -12271,7 +12269,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
             {
-
                 string color;
                 var formatType = GetCurrentSubtitleFormat().GetType();
                 if (formatType == typeof(Ebu))
@@ -12308,60 +12305,162 @@ namespace Nikse.SubtitleEdit.Forms
                     color = Utilities.ColorToHex(colorDialog1.Color);
                 }
 
-                SetListViewColor(color);
+                SetColor(color);
             }
         }
 
-        private void SetListViewColor(string color)
+        private void SetColor(string color, bool selectedText = false)
         {
-            MakeHistoryForUndo(_language.BeforeSettingColor);
-            var remove = true;
-
-            foreach (ListViewItem item in SubtitleListview1.SelectedItems)
+            if (selectedText)
             {
-                var p = _subtitle.GetParagraphOrDefault(item.Index);
-                if (p != null)
-                {
-                    var s = Utilities.RemoveSsaTags(p.Text);
-                    if (!s.StartsWith("<font ", StringComparison.OrdinalIgnoreCase) || !s.Contains(color, StringComparison.OrdinalIgnoreCase))
-                    {
-                        remove = false;
-                        break;
-                    }
-                }
+                SetSelectedTextColor(color);
             }
-
-            foreach (ListViewItem item in SubtitleListview1.SelectedItems)
+            else
             {
-                var p = _subtitle.GetParagraphOrDefault(item.Index);
-                if (p != null)
-                {
-                    if (remove)
-                    {
-                        p.Text = HtmlUtil.RemoveOpenCloseTags(p.Text, HtmlUtil.TagFont);
-                    }
-                    else
-                    {
-                        SetFontColor(p, color);
-                    }
+                MakeHistoryForUndo(_language.BeforeSettingColor);
+                var remove = true;
+                var removeOriginal = true;
 
-                    SubtitleListview1.SetText(item.Index, p.Text);
-                    if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsOriginalTextColumnVisible)
+                foreach (ListViewItem item in SubtitleListview1.SelectedItems)
+                {
+                    var p = _subtitle.GetParagraphOrDefault(item.Index);
+                    if (p != null)
                     {
-                        var original = Utilities.GetOriginalParagraph(item.Index, p, _subtitleOriginal.Paragraphs);
-                        if (original != null)
+                        var s = Utilities.RemoveSsaTags(p.Text);
+                        if (!s.StartsWith("<font ", StringComparison.OrdinalIgnoreCase) || !s.Contains(color, StringComparison.OrdinalIgnoreCase))
                         {
-                            SetFontColor(original, color);
-                            SubtitleListview1.SetOriginalText(item.Index, original.Text);
+                            remove = false;
+                            break;
                         }
                     }
                 }
-            }
 
-            RefreshSelectedParagraph();
+                if (_subtitleOriginal != null)
+                {
+                    foreach (ListViewItem item in SubtitleListview1.SelectedItems)
+                    {
+                        var p = _subtitle.GetParagraphOrDefault(item.Index);
+                        if (p != null)
+                        {
+                            var original = Utilities.GetOriginalParagraph(item.Index, p, _subtitleOriginal.Paragraphs);
+                            if (original != null)
+                            {
+                                var s = Utilities.RemoveSsaTags(original.Text);
+                                if (!s.StartsWith("<font ", StringComparison.OrdinalIgnoreCase) || !s.Contains(color, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    removeOriginal = false;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                foreach (ListViewItem item in SubtitleListview1.SelectedItems)
+                {
+                    var p = _subtitle.GetParagraphOrDefault(item.Index);
+                    if (p != null)
+                    {
+                        if (remove)
+                        {
+                            p.Text = HtmlUtil.RemoveOpenCloseTags(p.Text, HtmlUtil.TagFont);
+                        }
+                        else
+                        {
+                            SetParagraphFontColor(p, color);
+                        }
+
+                        SubtitleListview1.SetText(item.Index, p.Text);
+
+                        if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsOriginalTextColumnVisible)
+                        {
+                            var original = Utilities.GetOriginalParagraph(item.Index, p, _subtitleOriginal.Paragraphs);
+                            if (original != null)
+                            {
+                                if (removeOriginal)
+                                {
+                                    original.Text = HtmlUtil.RemoveOpenCloseTags(original.Text, HtmlUtil.TagFont);
+                                }
+                                else
+                                {
+                                    SetParagraphFontColor(original, color);
+                                }
+
+                                SubtitleListview1.SetOriginalText(item.Index, original.Text);
+                            }
+                        }
+                    }
+                }
+
+                RefreshSelectedParagraph();
+            }
         }
 
-        private static void SetFontColor(Paragraph p, string color)
+        private void SetSelectedTextColor(string color)
+        {
+            var tb = GetFocusedTextBox();
+            string text = tb.SelectedText;
+            if (string.IsNullOrEmpty(text) && tb.Text.Length > 0)
+            {
+                text = tb.Text;
+                tb.SelectAll();
+            }
+
+            int selectionStart = tb.SelectionStart;
+            int selectionLength = tb.SelectionLength;
+            bool done = false;
+            string pre = string.Empty;
+            if (selectionStart == 0 && text.StartsWith("{\\", StringComparison.Ordinal) && text.IndexOf('}') >= 0)
+            {
+                int endIndex = text.IndexOf('}') + 1;
+                pre = text.Substring(0, endIndex);
+                text = text.Remove(0, endIndex);
+            }
+
+            string s = text;
+            if (s.StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
+            {
+                int end = s.IndexOf('>');
+                if (end > 0)
+                {
+                    string f = s.Substring(0, end);
+                    if (f.Contains(" face=", StringComparison.OrdinalIgnoreCase) && !f.Contains(" color=", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var start = s.IndexOf(" face=", StringComparison.OrdinalIgnoreCase);
+                        s = s.Insert(start, string.Format(" color=\"{0}\"", color));
+                        text = s;
+                        done = true;
+                    }
+                    else if (f.Contains(" color=", StringComparison.OrdinalIgnoreCase))
+                    {
+                        int colorStart = f.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
+                        if (s.IndexOf('"', colorStart + " color=".Length + 1) > 0)
+                        {
+                            end = s.IndexOf('"', colorStart + " color=".Length + 1);
+                        }
+
+                        s = s.Substring(0, colorStart) + string.Format(" color=\"{0}", color) + s.Substring(end);
+                        text = s;
+                        done = true;
+                    }
+                }
+            }
+
+            if (!done)
+            {
+                text = $"{pre}<font color=\"{color}\">{text}</font>";
+            }
+            else
+            {
+                text = pre + text;
+            }
+
+            tb.SelectedText = text;
+            tb.SelectionStart = selectionStart;
+            tb.SelectionLength = text.Length;
+        }
+
+        private static void SetParagraphFontColor(Paragraph p, string color)
         {
             if (p == null)
             {
@@ -17906,22 +18005,22 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyData == _shortcuts.MainListViewColor1)
             {
-                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color1));
+                SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color1));
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainListViewColor2)
             {
-                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color2));
+                SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color2));
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainListViewColor3)
             {
-                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color3));
+                SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color3));
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainListViewColor4)
             {
-                SetListViewColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color4));
+                SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color4));
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainListViewGoToNextError)
@@ -21670,6 +21769,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemChangeFrameRate2.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationChangeFrameRate);
             italicToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewItalic);
             removeAllFormattingsToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainRemoveFormatting);
+            normalToolStripMenuItem1.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainRemoveFormatting);
             boldToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewBold);
             boldToolStripMenuItem1.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewBold);
             underlineToolStripMenuItem1.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewUnderline);
@@ -23310,15 +23410,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ColorToolStripMenuItem1Click(object sender, EventArgs e)
         {
-            var tb = GetFocusedTextBox();
-            string text = tb.SelectedText;
-            if (string.IsNullOrEmpty(text) && tb.Text.Length > 0)
-            {
-                text = tb.Text;
-                tb.SelectAll();
-            }
-            int selectionStart = tb.SelectionStart;
-
             string color;
             var formatType = GetCurrentSubtitleFormat().GetType();
             if (formatType == typeof(Ebu))
@@ -23355,56 +23446,7 @@ namespace Nikse.SubtitleEdit.Forms
                 color = Utilities.ColorToHex(colorDialog1.Color);
             }
 
-            bool done = false;
-            string pre = string.Empty;
-            if (selectionStart == 0 && text.StartsWith("{\\", StringComparison.Ordinal) && text.IndexOf('}') >= 0)
-            {
-                int endIndex = text.IndexOf('}') + 1;
-                pre = text.Substring(0, endIndex);
-                text = text.Remove(0, endIndex);
-            }
-
-            string s = text;
-            if (s.StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
-            {
-                int end = s.IndexOf('>');
-                if (end > 0)
-                {
-                    string f = s.Substring(0, end);
-                    if (f.Contains(" face=", StringComparison.OrdinalIgnoreCase) && !f.Contains(" color=", StringComparison.OrdinalIgnoreCase))
-                    {
-                        var start = s.IndexOf(" face=", StringComparison.OrdinalIgnoreCase);
-                        s = s.Insert(start, string.Format(" color=\"{0}\"", color));
-                        text = s;
-                        done = true;
-                    }
-                    else if (f.Contains(" color=", StringComparison.OrdinalIgnoreCase))
-                    {
-                        int colorStart = f.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
-                        if (s.IndexOf('"', colorStart + " color=".Length + 1) > 0)
-                        {
-                            end = s.IndexOf('"', colorStart + " color=".Length + 1);
-                        }
-
-                        s = s.Substring(0, colorStart) + string.Format(" color=\"{0}", color) + s.Substring(end);
-                        text = s;
-                        done = true;
-                    }
-                }
-            }
-
-            if (!done)
-            {
-                text = $"{pre}<font color=\"{color}\">{text}</font>";
-            }
-            else
-            {
-                text = pre + text;
-            }
-
-            tb.SelectedText = text;
-            tb.SelectionStart = selectionStart;
-            tb.SelectionLength = text.Length;
+            SetSelectedTextColor(color);
         }
 
         private void FontNameToolStripMenuItemClick(object sender, EventArgs e)
@@ -24686,7 +24728,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
-
             else if (e.KeyData == _shortcuts.MainTextBoxBreakAtCursorPosition)
             {
                 textBoxListViewText.Text = Utilities.ReSplit(textBoxListViewText.Text, textBoxListViewText.SelectionStart);
@@ -24760,6 +24801,71 @@ namespace Nikse.SubtitleEdit.Forms
             else if (_shortcuts.MainTextBoxSplitAtCursorAndVideoPos == e.KeyData && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
             {
                 toolStripMenuItemSplitViaWaveform_Click(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewAlignmentN1)
+            {
+                SetAlignment("{\\an1}", false);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewAlignmentN2)
+            {
+                SetAlignment("", false);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewAlignmentN3)
+            {
+                SetAlignment("{\\an3}", false);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewAlignmentN4)
+            {
+                SetAlignment("{\\an4}", false);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewAlignmentN5)
+            {
+                SetAlignment("{\\an5}", false);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewAlignmentN6)
+            {
+                SetAlignment("{\\an6}", false);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewAlignmentN7)
+            {
+                SetAlignment("{\\an7}", false);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewAlignmentN8)
+            {
+                SetAlignment("{\\an8}", false);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewAlignmentN9)
+            {
+                SetAlignment("{\\an9}", false);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewColor1)
+            {
+                SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color1), true);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewColor2)
+            {
+                SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color2), true);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewColor3)
+            {
+                SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color3), true);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewColor4)
+            {
+                SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color4), true);
                 e.SuppressKeyPress = true;
             }
 
