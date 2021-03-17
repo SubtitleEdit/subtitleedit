@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using Nikse.SubtitleEdit.Core.Cea708.Commands;
 
 namespace Nikse.SubtitleEdit.Core.Cea708
 {
@@ -36,27 +37,18 @@ namespace Nikse.SubtitleEdit.Core.Cea708
             }
         }
 
-        public string GetText()
+        public string GetText(CommandState state, bool flush)
         {
             var hex = new StringBuilder();
-            for (var i = 0; i < CcData.Length; i++)
+            foreach (var cc in CcData)
             {
-                var cc = CcData[i];
                 if (cc.Valid && cc.Type == 2)
                 {
                     hex.Append($"{cc.Data1:X2}{cc.Data2:X2}");
                 }
             }
 
-           
-
-
-            //if (hex.ToString() == "8AFF0000")
-            //{
-            //    return string.Empty;
-            //}
-
-            var text = Cea708.Decode(HexStringToByteArray(hex.ToString()));
+            var text = Cea708.Decode(HexStringToByteArray(hex.ToString()), state, flush);
             return text;
         }
 

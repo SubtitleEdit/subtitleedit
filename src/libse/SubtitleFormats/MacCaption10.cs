@@ -86,11 +86,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
+            subtitle.Paragraphs.Clear();
             Paragraph p = null;
             var header = new StringBuilder();
             char[] splitChars = { ':', ';', ',' };
-            foreach (var line in lines)
+            for (var index = 0; index < lines.Count; index++)
             {
+                var line = lines[index];
                 var s = line.Trim();
                 if (string.IsNullOrEmpty(s) || s.StartsWith("//", StringComparison.Ordinal) || s.StartsWith("File Format=MacCaption_MCC", StringComparison.Ordinal) || s.StartsWith("UUID=", StringComparison.Ordinal) ||
                     s.StartsWith("Creation Program=") || s.StartsWith("Creation Date=") || s.StartsWith("Creation Time=") ||
@@ -107,13 +109,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
 
                     var startTime = DecodeTimeCodeFrames(s.Substring(0, match.Length - 1), splitChars);
-                    var text = GetText(s.Substring(match.Index + match.Length).Trim());
+                    var text = GetText(s.Substring(match.Index + match.Length).Trim(), index == lines.Count - 1);
                     if (string.IsNullOrEmpty(text))
                     {
                         if (p != null)
                         {
                             p.EndTime = new TimeCode(startTime.TotalMilliseconds);
                         }
+
                         continue;
                     }
 
@@ -121,6 +124,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     subtitle.Paragraphs.Add(p);
                 }
             }
+
             for (var i = subtitle.Paragraphs.Count - 2; i >= 0; i--)
             {
                 p = subtitle.GetParagraphOrDefault(i);
@@ -144,7 +148,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
-        public static string GetText(string input)
+        public static string GetText(string input, bool flush)
         {
             var hexString = GetHex(input);
             var bytes = HexStringToByteArray(hexString);
@@ -154,7 +158,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             var cea708 = new Smpte291M(bytes);
-            return cea708.GetText();
+            return cea708.GetText(flush);
         }
 
         private static string GetHex(string input)
