@@ -19667,9 +19667,9 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            if (mediaPlayer.VideoPlayer is LibMpvDynamic && !Configuration.Settings.General.MpvHandlesPreviewText)
+            if (mediaPlayer.VideoPlayer is LibMpvDynamic libMpv && !Configuration.Settings.General.MpvHandlesPreviewText)
             {
-                (mediaPlayer.VideoPlayer as LibMpvDynamic)?.RemoveSubtitle();
+                libMpv?.RemoveSubtitle();
             }
 
             if (trackBarWaveformPosition.Maximum <= 0)
@@ -28666,6 +28666,11 @@ namespace Nikse.SubtitleEdit.Forms
             using (var form = new AddWaveformBatch())
             {
                 form.ShowDialog(this);
+            }
+
+            if (VideoFileName != null)
+            {
+                ReloadWaveform(VideoFileName, VideoAudioTrackNumber);
             }
         }
 
