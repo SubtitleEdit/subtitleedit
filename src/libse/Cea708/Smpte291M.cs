@@ -1,4 +1,6 @@
-﻿namespace Nikse.SubtitleEdit.Core.Cea708
+﻿using Nikse.SubtitleEdit.Core.Cea708.Commands;
+
+namespace Nikse.SubtitleEdit.Core.Cea708
 {
     public class Smpte291M
     {
@@ -22,6 +24,8 @@
         public int CaptionDistributionPacketFooterSection { get; set; }
         public int CaptionDistributionPacketHeaderSequenceCounter2 { get; set; }
         public int CaptionDistributionPacketChecksum { get; set; }
+
+        private CommandState _state;
 
         public string GetFrameRateDisplay()
         {
@@ -71,11 +75,13 @@
             CaptionDistributionPacketFooterSection = bytes[1 + idx];
             CaptionDistributionPacketHeaderSequenceCounter2 = (bytes[2 + idx] << 8) + bytes[3 + idx];
             CaptionDistributionPacketChecksum = bytes[4 + idx];
+
+            _state = new CommandState();
         }
 
-        public string GetText()
+        public string GetText(bool flush)
         {
-            return CaptionDistributionPacketCcData.GetText();
+            return CaptionDistributionPacketCcData.GetText(_state, flush);
         }
     }
 }
