@@ -86,8 +86,8 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
         // selectedColor is the actual value selected
         // by the user. fullColor is the same color,
         // with its brightness set to 255.
-        private ColorHandler.HSV _hsv;
-        private ColorHandler.ARGB _argb;
+        private ColorHandler.Hsv _hsv;
+        private ColorHandler.Argb _argb;
 
         // Locations for the two "pointers" on the form.
 
@@ -167,7 +167,7 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
 
         public Color Color => _selectedColor;
 
-        protected void OnColorChanged(ColorHandler.ARGB argb, ColorHandler.HSV hsv)
+        protected void OnColorChanged(ColorHandler.Argb argb, ColorHandler.Hsv hsv)
         {
             var e = new ColorChangedEventArgs(argb, hsv);
             ColorChanged(this, e);
@@ -180,7 +180,7 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             _currentState = MouseState.MouseUp;
         }
 
-        public void Draw(Graphics g, ColorHandler.HSV hsv)
+        public void Draw(Graphics g, ColorHandler.Hsv hsv)
         {
             // Given HSV values, update the screen.
             _g = g;
@@ -189,11 +189,11 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             UpdateDisplay();
         }
 
-        public void Draw(Graphics g, ColorHandler.ARGB argb)
+        public void Draw(Graphics g, ColorHandler.Argb argb)
         {
             // Given RGB values, calculate HSV and then update the screen.
             _g = g;
-            _hsv = ColorHandler.RGBtoHSV(argb);
+            _hsv = ColorHandler.RgbToHsv(argb);
             CalcCoordsAndUpdate(_hsv);
             UpdateDisplay();
         }
@@ -259,7 +259,7 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
                         _brightness = (int)((_brightnessMax - newPoint.Y) * _brightnessScaling);
                         _hsv.Value = _brightness;
                         _brightness = byte.MaxValue;
-                        _argb = ColorHandler.HSVtoRGB(_hsv);
+                        _argb = ColorHandler.HsvToRgb(_hsv);
                         _brightness = (_argb.Red + _argb.Green + _argb.Blue) / 3;
                         break;
 
@@ -299,17 +299,17 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
                         _hsv.Saturation = (int)(distance * 255);
                         _brightness = byte.MaxValue;
                         _hsv.Value = _brightness;
-                        _argb = ColorHandler.HSVtoRGB(_hsv);
+                        _argb = ColorHandler.HsvToRgb(_hsv);
                         if (_argb.Red < 0 || _argb.Red > byte.MaxValue || _argb.Green < 0 || _argb.Green > byte.MaxValue || _argb.Blue < 0 || _argb.Blue > byte.MaxValue)
                         {
                             UpdateDisplay();
                             return;
                         }
                         _brightness = (_argb.Red + _argb.Green + _argb.Blue) / 3;
-                        _fullColor = ColorHandler.HSVtoColor(_hsv.Alpha, _hsv.Hue, _hsv.Saturation, 255);
+                        _fullColor = ColorHandler.HsvToColor(_hsv.Alpha, _hsv.Hue, _hsv.Saturation, 255);
                         break;
                 }
-                _selectedColor = ColorHandler.HSVtoColor(_hsv);
+                _selectedColor = ColorHandler.HsvToColor(_hsv);
 
                 // Raise an event back to the parent form,
                 // so the form can update any UI it's using
@@ -379,7 +379,7 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             }
         }
 
-        private void CalcCoordsAndUpdate(ColorHandler.HSV hsv)
+        private void CalcCoordsAndUpdate(ColorHandler.Hsv hsv)
         {
             // Convert color to real-world coordinates and then calculate
             // the various points. HSV.Hue represents the degrees (0 to 360),
@@ -400,13 +400,13 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
 
             // Store information about the selected color.
             _brightness = hsv.Value;
-            _selectedColor = ColorHandler.HSVtoColor(hsv);
-            _argb = ColorHandler.HSVtoRGB(hsv);
+            _selectedColor = ColorHandler.HsvToColor(hsv);
+            _argb = ColorHandler.HsvToRgb(hsv);
 
             // The full color is the same as HSV, except that the
             // brightness is set to full (255). This is the top-most
             // color in the brightness gradient.
-            _fullColor = ColorHandler.HSVtoColor(hsv.Alpha, hsv.Hue, hsv.Saturation, 255);
+            _fullColor = ColorHandler.HsvToColor(hsv.Alpha, hsv.Hue, hsv.Saturation, 255);
         }
 
         private void DrawLinearGradient(Color topColor)
@@ -500,7 +500,7 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             var colors = new Color[ColorCount];
             for (int i = 0; i <= ColorCount - 1; i++)
             {
-                colors[i] = ColorHandler.HSVtoColor(255, (int)((double)(i * 255) / ColorCount), 255, 255);
+                colors[i] = ColorHandler.HsvToColor(255, (int)((double)(i * 255) / ColorCount), 255, 255);
             }
             return colors;
         }
