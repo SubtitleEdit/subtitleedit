@@ -36,6 +36,7 @@
     <Text>文本</Text>
     <HourMinutesSecondsDecimalSeparatorMilliseconds>时:分:秒{0}毫秒</HourMinutesSecondsDecimalSeparatorMilliseconds>
     <HourMinutesSecondsFrames>时:分:秒:帧</HourMinutesSecondsFrames>
+    <XSeconds>{0:0.0##}秒</XSeconds>
     <Bold>粗体</Bold>
     <Italic>斜体</Italic>
     <Underline>下划线</Underline>
@@ -1995,6 +1996,7 @@ Command line: {1} {2}
     <RememberPositionAndSize>记住主窗口的位置和大小</RememberPositionAndSize>
     <StartInSourceView>在源视图中开始</StartInSourceView>
     <RemoveBlankLinesWhenOpening>打开字幕时删除空行</RemoveBlankLinesWhenOpening>
+    <RemoveBlankLines>删除空行</RemoveBlankLines>
     <ShowLineBreaksAs>列表视图中的换行符显示为</ShowLineBreaksAs>
     <SaveAsFileNameFrom>“另存为...”使用的文件名来源</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>双击主窗口中的行时，列表视图将</MainListViewDoubleClickAction>
@@ -2177,6 +2179,7 @@ Command line: {1} {2}
     <AdjustEndOneFrameBackKeepGapNext>将结束点后移1帧 (若与后行之间的间隙较小, 则平移间隙)</AdjustEndOneFrameBackKeepGapNext>
     <AdjustEndOneFrameForwardKeepGapNext>将结束点前移1帧 (若与后行之间的间隙较小, 则平移间隙)</AdjustEndOneFrameForwardKeepGapNext>
     <AdjustSetStartTimeKeepDuration>设置结束时间，偏移其后的所有值</AdjustSetStartTimeKeepDuration>
+    <AdjustSetStartAndOffsetTheWholeSubtitle>设置开始时间，偏移所有字幕</AdjustSetStartAndOffsetTheWholeSubtitle>
     <AdjustSetEndAndOffsetTheRest>设置结束时间，偏移其后的所有时间</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>设置结束时间，偏移其后的所有时间并转到下一行</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <AdjustSnapStartToNextSceneChange>将选定行的开始时间设为下一个场景变化处</AdjustSnapStartToNextSceneChange>
