@@ -1328,7 +1328,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <SetEndTimeAndGoToNext>Задай край и продължи</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Настройване чрез крайно време {0}</AdjustedViaEndTime>
       <SetEndTime>Задай крайно време</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>НачалоИизместиОстаналите</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>НачалоИизместиОстаналите</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Търсене на текст в Интернет</SearchTextOnline>
       <GoogleTranslate>Google преводач</GoogleTranslate>
       <GoogleIt>Търсене с Google</GoogleIt>

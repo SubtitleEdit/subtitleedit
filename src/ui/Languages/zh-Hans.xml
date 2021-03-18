@@ -1325,7 +1325,7 @@ Command line: {1} {2}
       <SetEndTimeAndGoToNext>设为结束时间并转到下一行(&amp;E)</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>通过结束时间调整 {0}</AdjustedViaEndTime>
       <SetEndTime>设为结束时间(&amp;N)</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>设为起始时间并偏移其余(&amp;R)</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>设为起始时间并偏移其余(&amp;R)</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>在网上搜索文本</SearchTextOnline>
       <GoogleTranslate>谷歌翻译</GoogleTranslate>
       <AutoTranslate>自动翻译</AutoTranslate>

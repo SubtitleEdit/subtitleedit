@@ -4360,8 +4360,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/VideoControls/SetEndTime":
                     language.Main.VideoControls.SetEndTime = reader.Value;
                     break;
-                case "Main/VideoControls/SetstartTimeAndOffsetOfRest":
-                    language.Main.VideoControls.SetstartTimeAndOffsetOfRest = reader.Value;
+                case "Main/VideoControls/SetStartTimeAndOffsetTheRest":
+                    language.Main.VideoControls.SetStartTimeAndOffsetTheRest = reader.Value;
                     break;
                 case "Main/VideoControls/SearchTextOnline":
                     language.Main.VideoControls.SearchTextOnline = reader.Value;
@@ -5973,6 +5973,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Settings/AdjustSetStartTimeKeepDuration":
                     language.Settings.AdjustSetStartTimeKeepDuration = reader.Value;
+                    break;
+                case "Settings/AdjustSetStartAndOffsetTheWholeSubtitle":
+                    language.Settings.AdjustSetStartAndOffsetTheWholeSubtitle = reader.Value;
                     break;
                 case "Settings/AdjustSetEndAndOffsetTheRest":
                     language.Settings.AdjustSetEndAndOffsetTheRest = reader.Value;

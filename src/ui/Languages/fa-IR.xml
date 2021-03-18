@@ -1232,7 +1232,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <SetEndTimeAndGoToNext>تنظیم و پایان و و رفتن به آینده</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Adjusted via end time {0}</AdjustedViaEndTime>
       <SetEndTime>نامه تنظیم و زمان دوم</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>تنظیم &amp;sta rt افست و استراحت</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>تنظیم &amp;sta rt افست و استراحت</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>جستجوی متن آنلاین</SearchTextOnline>
       <GoogleTranslate>مترجم گوگل</GoogleTranslate>
       <GoogleIt>گوگل آن را</GoogleIt>

@@ -1078,7 +1078,7 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
       <SetEndTimeAndGoToNext>終了時間に設定して次へ移動(&amp;E)</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>終了時間 {0} から調整ました</AdjustedViaEndTime>
       <SetEndTime>終了時間に設定(&amp;N)</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>開始時間に設定して残りを補正(&amp;R)</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>開始時間に設定して残りを補正(&amp;R)</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>テキストのオンライン検索</SearchTextOnline>
       <GoogleTranslate>Google 翻訳</GoogleTranslate>
       <GoogleIt>ググる</GoogleIt>

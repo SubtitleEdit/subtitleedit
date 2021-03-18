@@ -1234,7 +1234,7 @@ Gå till "Alternativ -&gt; Inställningar -&gt; Verktyg" för att ange din Googl
       <SetEndTimeAndGoToNext>Sätt slut tid &amp;&amp; gå till nästa</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Justeras via sluttid {0}</AdjustedViaEndTime>
       <SetEndTime>Sätt slut tid</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Sätt start tid och kompensera resten</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Sätt start tid och kompensera resten</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Sök text online</SearchTextOnline>
       <GoogleTranslate>Google översätt</GoogleTranslate>
       <GoogleIt>Google</GoogleIt>

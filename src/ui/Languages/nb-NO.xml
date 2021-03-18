@@ -1138,7 +1138,7 @@ Tips: Se om du har noe plass igjen på harddisken.</WaveFileMalformed>
       <SetEndTimeAndGoToNext>Sett &amp;sluttid &amp;&amp; hopp til neste</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Justert gjennom sluttiden {0}</AdjustedViaEndTime>
       <SetEndTime>Sett s&amp;luttid</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Sett sta&amp;rt and sett avvik til resten</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Sett sta&amp;rt and sett avvik til resten</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Søk opp tekst på nettet</SearchTextOnline>
       <GoogleTranslate>Google-oversett</GoogleTranslate>
       <GoogleIt>Google opp</GoogleIt>

@@ -1310,7 +1310,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
       <SetEndTimeAndGoToNext>종료점 정하고 다음으로(&amp;E)</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>종료 시간 {0}을(를) 통해 조정했습니다.</AdjustedViaEndTime>
       <SetEndTime>종료 시간 설정(&amp;N)</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>시작점 정하고 나머지를 보정(&amp;R)</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>시작점 정하고 나머지를 보정(&amp;R)</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>인터넷으로 텍스트 검색</SearchTextOnline>
       <GoogleTranslate>Google 번역</GoogleTranslate>
       <GoogleIt>GoogleIt</GoogleIt>

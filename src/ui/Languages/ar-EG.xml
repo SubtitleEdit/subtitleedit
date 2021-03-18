@@ -754,7 +754,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <SetEndTimeAndGoToNext>تعيين وانتقل إلى نهاية التالى</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>{معدل عن طريق وقت النهاية {0</AdjustedViaEndTime>
       <SetEndTime>ضبط وقت النهاية</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>بدء تعيين وتعويض بقية</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>بدء تعيين وتعويض بقية</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>البحث عن النص على الانترنت</SearchTextOnline>
       <GoogleTranslate>ترجمة جوجل</GoogleTranslate>
       <GoogleIt>صفحة جوجل</GoogleIt>

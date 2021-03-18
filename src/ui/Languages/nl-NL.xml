@@ -1269,7 +1269,7 @@ Open ‘Instellingen -&gt; Voorkeuren -&gt; Extra’ voor meer informatie.</Goog
       <SetEndTimeAndGoToNext>Eindtĳd instellen en naar volgende</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Gecorrigeerd via eindtĳd {0}</AdjustedViaEndTime>
       <SetEndTime>Eindtĳd instellen</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Begintĳd instellen en rest opschuiven</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Begintĳd instellen en rest opschuiven</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Tekst online zoeken</SearchTextOnline>
       <GoogleTranslate>Google vertalen</GoogleTranslate>
       <GoogleIt>Op Google zoeken</GoogleIt>

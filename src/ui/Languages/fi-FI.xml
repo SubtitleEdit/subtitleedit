@@ -1279,7 +1279,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
       <SetEndTimeAndGoToNext>Aseta loppu ja siirry seuraavaan</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Tarkista loppuajan {0} mukaan</AdjustedViaEndTime>
       <SetEndTime>Aseta päättymisaika</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Aseta käynnistysaika</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Aseta käynnistysaika</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Etsi netistä merkkijonoa</SearchTextOnline>
       <GoogleTranslate>Google-kääntäjä</GoogleTranslate>
       <GoogleIt>Google-haku</GoogleIt>
