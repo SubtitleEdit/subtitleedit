@@ -15959,10 +15959,14 @@ namespace Nikse.SubtitleEdit.Forms
                 MoveEndCurrent((int)Math.Round(1000.0 / CurrentFrameRate), true);
                 e.SuppressKeyPress = true;
             }
-
             else if (mediaPlayer.VideoPlayer != null && (_shortcuts.MainAdjustSetStartAndOffsetTheRest == e.KeyData || _shortcuts.MainAdjustSetStartAndOffsetTheRest2 == e.KeyData))
             {
                 ButtonSetStartAndOffsetRestClick(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustSetStartAndOffsetTheWholeSubtitle == e.KeyData)
+            {
+                SetStartAndOffsetTheWholeSubtitle();
                 e.SuppressKeyPress = true;
             }
             else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustSetEndAndOffsetTheRest == e.KeyData)
@@ -17415,80 +17419,6 @@ namespace Nikse.SubtitleEdit.Forms
                 mediaPlayer.CurrentPosition = startSeconds;
                 ShowSubtitle();
                 mediaPlayer.Play();
-            }
-        }
-
-        private void SetEndAndOffsetTheRest(bool goToNext)
-        {
-            if (SubtitleListview1.SelectedItems.Count > 0)
-            {
-                bool oldSync = checkBoxSyncListViewWithVideoWhilePlaying.Checked;
-                checkBoxSyncListViewWithVideoWhilePlaying.Checked = false;
-
-                int index = SubtitleListview1.SelectedItems[0].Index;
-                int lastLineNumber = SubtitleListview1.SelectedItems.Count == 1 ? SubtitleListview1.Items.Count : index + SubtitleListview1.SelectedItems.Count;
-                double videoPosition = mediaPlayer.CurrentPosition;
-                if (!mediaPlayer.IsPaused)
-                {
-                    videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay / TimeCode.BaseUnit;
-                }
-
-                var tc = TimeCode.FromSeconds(videoPosition);
-
-                double offset = tc.TotalMilliseconds - _subtitle.Paragraphs[index].EndTime.TotalMilliseconds;
-                if (_subtitle.Paragraphs[index].StartTime.TotalMilliseconds + 100 > tc.TotalMilliseconds || offset > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
-                {
-                    return;
-                }
-
-                MakeHistoryForUndo(_language.BeforeSetEndTimeAndOffsetTheRest + @"  " + _subtitle.Paragraphs[index].Number + @" - " + tc);
-
-                numericUpDownDuration.ValueChanged -= NumericUpDownDurationValueChanged;
-                _subtitle.Paragraphs[index].EndTime.TotalSeconds = videoPosition;
-                SubtitleListview1.SetDuration(index, _subtitle.Paragraphs[index], _subtitle.GetParagraphOrDefault(index + 1));
-                checkBoxSyncListViewWithVideoWhilePlaying.Checked = oldSync;
-                numericUpDownDuration.Value = (decimal)_subtitle.Paragraphs[index].Duration.TotalSeconds;
-                numericUpDownDuration.ValueChanged += NumericUpDownDurationValueChanged;
-                RefreshSelectedParagraph();
-
-                for (int i = index + 1; i < lastLineNumber; i++)
-                {
-                    if (!_subtitle.Paragraphs[i].StartTime.IsMaxTime)
-                    {
-                        _subtitle.Paragraphs[i].StartTime = new TimeCode(_subtitle.Paragraphs[i].StartTime.TotalMilliseconds + offset);
-                        _subtitle.Paragraphs[i].EndTime = new TimeCode(_subtitle.Paragraphs[i].EndTime.TotalMilliseconds + offset);
-                        SubtitleListview1.SetDuration(i, _subtitle.Paragraphs[i], _subtitle.GetParagraphOrDefault(i + 1));
-                    }
-                }
-
-                if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0)
-                {
-                    var original = Utilities.GetOriginalParagraph(index, _subtitle.Paragraphs[index], _subtitleOriginal.Paragraphs);
-                    if (original != null)
-                    {
-                        index = _subtitleOriginal.GetIndex(original);
-                        for (int i = index; i < lastLineNumber; i++)
-                        {
-                            if (!_subtitleOriginal.Paragraphs[i].StartTime.IsMaxTime)
-                            {
-                                _subtitleOriginal.Paragraphs[i].StartTime = new TimeCode(_subtitleOriginal.Paragraphs[i].StartTime.TotalMilliseconds + offset);
-                                _subtitleOriginal.Paragraphs[i].EndTime = new TimeCode(_subtitleOriginal.Paragraphs[i].EndTime.TotalMilliseconds + offset);
-                            }
-                        }
-                    }
-                }
-
-                checkBoxSyncListViewWithVideoWhilePlaying.Checked = oldSync;
-
-                if (goToNext)
-                {
-                    _subtitleListViewIndex = -1;
-                    SubtitleListview1.SelectIndexAndEnsureVisible(index + 1, true);
-                    if (mediaPlayer.IsPaused && index + 1 < _subtitle.Paragraphs.Count)
-                    {
-                        mediaPlayer.CurrentPosition = _subtitle.Paragraphs[index + 1].StartTime.TotalSeconds;
-                    }
-                }
             }
         }
 
@@ -21366,6 +21296,102 @@ namespace Nikse.SubtitleEdit.Forms
                 UpdateSourceView();
                 checkBoxSyncListViewWithVideoWhilePlaying.Checked = oldSync;
                 timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBoxTextChanged;
+            }
+        }
+
+        private void SetStartAndOffsetTheWholeSubtitle()
+        {
+            if (SubtitleListview1.SelectedItems.Count == 1)
+            {
+                var idx = SubtitleListview1.SelectedItems[0].Index;
+                var p = _subtitle.GetParagraphOrDefault(idx);
+                if (p is null)
+                {
+                    return;
+                }
+
+                var videoPosition = mediaPlayer.CurrentPosition;
+                if (!mediaPlayer.IsPaused)
+                {
+                    videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay / TimeCode.BaseUnit;
+                }
+
+                var offset = TimeCode.FromSeconds(videoPosition).TotalMilliseconds - p.StartTime.TotalMilliseconds;
+                ShowEarlierOrLater(offset, SelectionChoice.AllLines);
+            }
+        }
+
+        private void SetEndAndOffsetTheRest(bool goToNext)
+        {
+            if (SubtitleListview1.SelectedItems.Count > 0)
+            {
+                bool oldSync = checkBoxSyncListViewWithVideoWhilePlaying.Checked;
+                checkBoxSyncListViewWithVideoWhilePlaying.Checked = false;
+
+                int index = SubtitleListview1.SelectedItems[0].Index;
+                int lastLineNumber = SubtitleListview1.SelectedItems.Count == 1 ? SubtitleListview1.Items.Count : index + SubtitleListview1.SelectedItems.Count;
+                double videoPosition = mediaPlayer.CurrentPosition;
+                if (!mediaPlayer.IsPaused)
+                {
+                    videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay / TimeCode.BaseUnit;
+                }
+
+                var tc = TimeCode.FromSeconds(videoPosition);
+
+                double offset = tc.TotalMilliseconds - _subtitle.Paragraphs[index].EndTime.TotalMilliseconds;
+                if (_subtitle.Paragraphs[index].StartTime.TotalMilliseconds + 100 > tc.TotalMilliseconds || offset > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                {
+                    return;
+                }
+
+                MakeHistoryForUndo(_language.BeforeSetEndTimeAndOffsetTheRest + @"  " + _subtitle.Paragraphs[index].Number + @" - " + tc);
+
+                numericUpDownDuration.ValueChanged -= NumericUpDownDurationValueChanged;
+                _subtitle.Paragraphs[index].EndTime.TotalSeconds = videoPosition;
+                SubtitleListview1.SetDuration(index, _subtitle.Paragraphs[index], _subtitle.GetParagraphOrDefault(index + 1));
+                checkBoxSyncListViewWithVideoWhilePlaying.Checked = oldSync;
+                numericUpDownDuration.Value = (decimal)_subtitle.Paragraphs[index].Duration.TotalSeconds;
+                numericUpDownDuration.ValueChanged += NumericUpDownDurationValueChanged;
+                RefreshSelectedParagraph();
+
+                for (int i = index + 1; i < lastLineNumber; i++)
+                {
+                    if (!_subtitle.Paragraphs[i].StartTime.IsMaxTime)
+                    {
+                        _subtitle.Paragraphs[i].StartTime = new TimeCode(_subtitle.Paragraphs[i].StartTime.TotalMilliseconds + offset);
+                        _subtitle.Paragraphs[i].EndTime = new TimeCode(_subtitle.Paragraphs[i].EndTime.TotalMilliseconds + offset);
+                        SubtitleListview1.SetDuration(i, _subtitle.Paragraphs[i], _subtitle.GetParagraphOrDefault(i + 1));
+                    }
+                }
+
+                if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0)
+                {
+                    var original = Utilities.GetOriginalParagraph(index, _subtitle.Paragraphs[index], _subtitleOriginal.Paragraphs);
+                    if (original != null)
+                    {
+                        index = _subtitleOriginal.GetIndex(original);
+                        for (int i = index; i < lastLineNumber; i++)
+                        {
+                            if (!_subtitleOriginal.Paragraphs[i].StartTime.IsMaxTime)
+                            {
+                                _subtitleOriginal.Paragraphs[i].StartTime = new TimeCode(_subtitleOriginal.Paragraphs[i].StartTime.TotalMilliseconds + offset);
+                                _subtitleOriginal.Paragraphs[i].EndTime = new TimeCode(_subtitleOriginal.Paragraphs[i].EndTime.TotalMilliseconds + offset);
+                            }
+                        }
+                    }
+                }
+
+                checkBoxSyncListViewWithVideoWhilePlaying.Checked = oldSync;
+
+                if (goToNext)
+                {
+                    _subtitleListViewIndex = -1;
+                    SubtitleListview1.SelectIndexAndEnsureVisible(index + 1, true);
+                    if (mediaPlayer.IsPaused && index + 1 < _subtitle.Paragraphs.Count)
+                    {
+                        mediaPlayer.CurrentPosition = _subtitle.Paragraphs[index + 1].StartTime.TotalSeconds;
+                    }
+                }
             }
         }
 

@@ -2358,6 +2358,7 @@
             public string AdjustEndOneFrameBackKeepGapNext { get; set; }
             public string AdjustEndOneFrameForwardKeepGapNext { get; set; }
             public string AdjustSetStartTimeKeepDuration { get; set; }
+            public string AdjustSetStartAndOffsetTheWholeSubtitle { get; set; }
             public string AdjustSetEndAndOffsetTheRest { get; set; }
             public string AdjustSetEndAndOffsetTheRestAndGoToNext { get; set; }
             public string AdjustSnapStartToNextSceneChange { get; set; }
