@@ -1,6 +1,4 @@
-﻿#region #Disclaimer
-
-// Author: Adalberto L. Simeone (Taranto, Italy)
+﻿// Author: Adalberto L. Simeone (Taranto, Italy)
 // E-Mail: avengerdragon@gmail.com
 // Website: http://www.avengersutd.com/blog
 //
@@ -13,62 +11,56 @@
 // projects, without the express and written consent of
 // the Author.
 
-#endregion #Disclaimer
-
-#region Using directives
-
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.ColorChooser;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-#endregion Using directives
-
 namespace Nikse.SubtitleEdit.Forms
 {
-    /// <summary>
-    ///   Summary description for ColorChooser.
-    /// </summary>
     public sealed class ColorChooser : Form
     {
         /// <summary>
         ///   Required designer variable.
         /// </summary>
-        private ColorHandler.ARGB argb;
-        private ChangeStyle changeType = ChangeStyle.None;
-        private FlowLayoutPanel flowLayoutPanel1;
-        private ColorHandler.HSV hsv;
-        private Label label1;
-        private Label label2;
-        private Label labelRed;
-        private Label labelGreen;
-        private Label label5;
-        private Label labelBlue;
-        private Label labelAlpha1;
-        private Label lblAlpha2;
-        private Label lblBlue;
-        private Label lblGreen;
-        private Label lblHue;
-        private Label lblRed;
-        private Label lblSaturation;
-        private Label lblValue;
-        private ColorWheel myColorWheel;
-        private Panel pnlBrightness;
-        private Panel pnlColor;
-        private Panel pnlSelectedColor;
-        private Point selectedPoint;
-        private TrackBar tbAlpha;
-        private TrackBar tbBlue;
-        private TrackBar tbGreen;
-        private TextBox tbHexCode;
-        private TrackBar tbHue;
-        private TrackBar tbRed;
-        private TrackBar tbSaturation;
-        private Button buttonCancel;
-        private Button buttonOK;
-        private TrackBar tbValue;
+        private ColorHandler.Argb _alphaRedGreenBlue;
+        private ChangeStyle _changeType = ChangeStyle.None;
+        private FlowLayoutPanel _flowLayoutPanel1;
+        private ColorHandler.Hsv _hsv;
+        private Label _label1;
+        private Label _label2;
+        private Label _labelRed;
+        private Label _labelGreen;
+        private Label _label5;
+        private Label _labelBlue;
+        private Label _labelAlpha1;
+        private Label _lblAlpha2;
+        private Label _lblBlue;
+        private Label _lblGreen;
+        private Label _lblHue;
+        private Label _lblRed;
+        private Label _lblSaturation;
+        private Label _lblValue;
+        private ColorWheel _myColorWheel;
+        private Panel _pnlBrightness;
+        private Panel _pnlColor;
+        private Panel _pnlSelectedColor;
+        private Point _selectedPoint;
+        private TrackBar _tbAlpha;
+        private TrackBar _tbBlue;
+        private TrackBar _tbGreen;
+        private TextBox _tbHexCode;
+        private TrackBar _tbHue;
+        private TrackBar _tbRed;
+        private TrackBar _tbSaturation;
+        private Button _buttonCancel;
+        private Button _buttonOk;
+        private TrackBar _tbValue;
         private bool _showAlpha = true;
+        private readonly Timer _hexCodeEditTimer;
+        private bool _hexEditOn;
 
         public ColorChooser()
         {
@@ -77,37 +69,42 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(this);
 
             Text = LanguageSettings.Current.ColorChooser.Title;
-            labelRed.Text = LanguageSettings.Current.ColorChooser.Red;
-            labelGreen.Text = LanguageSettings.Current.ColorChooser.Green;
-            labelBlue.Text = LanguageSettings.Current.ColorChooser.Blue;
-            labelAlpha1.Text = LanguageSettings.Current.ColorChooser.Alpha;
-            buttonOK.Text = LanguageSettings.Current.General.Ok;
-            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            _labelRed.Text = LanguageSettings.Current.ColorChooser.Red;
+            _labelGreen.Text = LanguageSettings.Current.ColorChooser.Green;
+            _labelBlue.Text = LanguageSettings.Current.ColorChooser.Blue;
+            _labelAlpha1.Text = LanguageSettings.Current.ColorChooser.Alpha;
+            _buttonOk.Text = LanguageSettings.Current.General.Ok;
+            _buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            _hexCodeEditTimer = new Timer { Interval = 100 };
+            _hexCodeEditTimer.Tick += (sender, args) =>
+            {
+                if (_hexEditOn)
+                {
+                    CheckValidHexInput();
+                }
+            };
         }
 
         public bool ShowAlpha
         {
-            get
-            {
-                return _showAlpha;
-            }
+            get => _showAlpha;
             set
             {
                 if (!value && ShowAlpha)
                 {
                     Height -= 40;
-                    buttonOK.Top -= 40;
-                    buttonCancel.Top -= 40;
+                    _buttonOk.Top -= 40;
+                    _buttonCancel.Top -= 40;
                 }
                 else if (value && !ShowAlpha)
                 {
                     Height += 40;
-                    buttonOK.Top += 40;
-                    buttonCancel.Top += 40;
+                    _buttonOk.Top += 40;
+                    _buttonCancel.Top += 40;
                 }
-                labelAlpha1.Visible = value;
-                lblAlpha2.Visible = value;
-                tbAlpha.Visible = value;
+                _labelAlpha1.Visible = value;
+                _lblAlpha2.Visible = value;
+                _tbAlpha.Visible = value;
                 _showAlpha = value;
             }
         }
@@ -116,18 +113,15 @@ namespace Nikse.SubtitleEdit.Forms
         {
             // Get or set the color to be
             // displayed in the color wheel.
-            get
-            {
-                return Color.FromArgb(tbAlpha.Value, tbRed.Value, tbGreen.Value, tbBlue.Value);
-            }
+            get => Color.FromArgb(_tbAlpha.Value, _tbRed.Value, _tbGreen.Value, _tbBlue.Value);
             set
             {
                 // Indicate the color change type. Either RGB or HSV
                 // will cause the color wheel to update the position
                 // of the pointer.
-                changeType = ChangeStyle.RGB;
-                argb = new ColorHandler.ARGB(value.A, value.R, value.G, value.B);
-                hsv = ColorHandler.RGBtoHSV(argb);
+                _changeType = ChangeStyle.RGB;
+                _alphaRedGreenBlue = new ColorHandler.Argb(value.A, value.R, value.G, value.B);
+                _hsv = ColorHandler.RgbToHsv(_alphaRedGreenBlue);
             }
         }
 
@@ -142,26 +136,26 @@ namespace Nikse.SubtitleEdit.Forms
             // have to be set to false in order for the Paint
             // event to be able to display their contents.
             // Never hurts to make sure they're invisible.
-            pnlSelectedColor.Visible = false;
-            pnlBrightness.Visible = false;
-            pnlColor.Visible = false;
+            _pnlSelectedColor.Visible = false;
+            _pnlBrightness.Visible = false;
+            _pnlColor.Visible = false;
 
             // Calculate the coordinates of the three
             // required regions on the form.
-            Rectangle selectedColorRectangle = new Rectangle(pnlSelectedColor.Location, pnlSelectedColor.Size);
-            Rectangle brightnessRectangle = new Rectangle(pnlBrightness.Location, pnlBrightness.Size);
-            Rectangle colorRectangle = new Rectangle(pnlColor.Location, pnlColor.Size);
+            var selectedColorRectangle = new Rectangle(_pnlSelectedColor.Location, _pnlSelectedColor.Size);
+            var brightnessRectangle = new Rectangle(_pnlBrightness.Location, _pnlBrightness.Size);
+            var colorRectangle = new Rectangle(_pnlColor.Location, _pnlColor.Size);
 
             // Create the new ColorWheel class, indicating
             // the locations of the color wheel itself, the
             // brightness area, and the position of the selected color.
-            myColorWheel = new ColorWheel(colorRectangle, brightnessRectangle, selectedColorRectangle);
-            myColorWheel.ColorChanged += MyColorWheelColorChanged;
+            _myColorWheel = new ColorWheel(colorRectangle, brightnessRectangle, selectedColorRectangle);
+            _myColorWheel.ColorChanged += MyColorWheelColorChanged;
 
             // Set the RGB and HSV values
             // of the NumericUpDown controls.
-            SetRGB(argb);
-            SetHSV(hsv);
+            SetRgb(_alphaRedGreenBlue);
+            SetHsv(_hsv);
         }
 
         private void HandleMouse(object sender, MouseEventArgs e)
@@ -174,59 +168,59 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            changeType = ChangeStyle.MouseMove;
-            selectedPoint = new Point(e.X, e.Y);
+            _changeType = ChangeStyle.MouseMove;
+            _selectedPoint = new Point(e.X, e.Y);
             Invalidate();
         }
 
         private void FormMainMouseUp(object sender, MouseEventArgs e)
         {
-            myColorWheel.SetMouseUp();
-            changeType = ChangeStyle.None;
+            _myColorWheel.SetMouseUp();
+            _changeType = ChangeStyle.None;
         }
 
-        private void SetRGBLabels(ColorHandler.ARGB argb)
+        private void SetRgbLabels(ColorHandler.Argb argb)
         {
-            RefreshText(lblRed, argb.Red);
-            RefreshText(lblBlue, argb.Blue);
-            RefreshText(lblGreen, argb.Green);
-            RefreshText(lblAlpha2, argb.Alpha);
+            RefreshText(_lblRed, argb.Red);
+            RefreshText(_lblBlue, argb.Blue);
+            RefreshText(_lblGreen, argb.Green);
+            RefreshText(_lblAlpha2, argb.Alpha);
             if (_showAlpha)
             {
-                tbHexCode.Text = string.Format("{0:X2}{1:X2}{2:X2}{3:X2}", argb.Alpha, argb.Red, argb.Green, argb.Blue);
+                _tbHexCode.Text = $"{argb.Alpha:X2}{argb.Red:X2}{argb.Green:X2}{argb.Blue:X2}";
             }
             else
             {
-                tbHexCode.Text = string.Format("{0:X2}{1:X2}{2:X2}", argb.Red, argb.Green, argb.Blue);
+                _tbHexCode.Text = $"{argb.Red:X2}{argb.Green:X2}{argb.Blue:X2}";
             }
         }
 
-        private void SetHSVLabels(ColorHandler.HSV HSV)
+        private void SetHsvLabels(ColorHandler.Hsv hsv)
         {
-            RefreshText(lblHue, HSV.Hue);
-            RefreshText(lblSaturation, HSV.Saturation);
-            RefreshText(lblValue, HSV.Value);
-            RefreshText(lblAlpha2, HSV.Alpha);
+            RefreshText(_lblHue, hsv.Hue);
+            RefreshText(_lblSaturation, hsv.Saturation);
+            RefreshText(_lblValue, hsv.Value);
+            RefreshText(_lblAlpha2, hsv.Alpha);
         }
 
-        private void SetRGB(ColorHandler.ARGB argb)
+        private void SetRgb(ColorHandler.Argb argb)
         {
             // Update the RGB values on the form.
-            RefreshValue(tbRed, argb.Red);
-            RefreshValue(tbBlue, argb.Blue);
-            RefreshValue(tbGreen, argb.Green);
-            RefreshValue(tbAlpha, argb.Alpha);
-            SetRGBLabels(argb);
+            RefreshValue(_tbRed, argb.Red);
+            RefreshValue(_tbBlue, argb.Blue);
+            RefreshValue(_tbGreen, argb.Green);
+            RefreshValue(_tbAlpha, argb.Alpha);
+            SetRgbLabels(argb);
         }
 
-        private void SetHSV(ColorHandler.HSV HSV)
+        private void SetHsv(ColorHandler.Hsv hsv)
         {
             // Update the HSV values on the form.
-            RefreshValue(tbHue, HSV.Hue);
-            RefreshValue(tbSaturation, HSV.Saturation);
-            RefreshValue(tbValue, HSV.Value);
-            RefreshValue(tbAlpha, HSV.Alpha);
-            SetHSVLabels(HSV);
+            RefreshValue(_tbHue, hsv.Hue);
+            RefreshValue(_tbSaturation, hsv.Saturation);
+            RefreshValue(_tbValue, hsv.Value);
+            RefreshValue(_tbAlpha, hsv.Alpha);
+            SetHsvLabels(hsv);
         }
 
         private static void RefreshValue(TrackBar hsv, int value)
@@ -241,44 +235,44 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MyColorWheelColorChanged(object sender, ColorChangedEventArgs e)
         {
-            SetRGB(e.ARGB);
-            SetHSV(e.HSV);
+            SetRgb(e.ARGB);
+            SetHsv(e.HSV);
         }
 
-        private void HandleHSVScroll(object sender, EventArgs e)
+        private void HandleHsvScroll(object sender, EventArgs e)
         // If the H, S, or V values change, use this
         // code to update the RGB values and invalidate
         // the color wheel (so it updates the pointers).
         // Check the isInUpdate flag to avoid recursive events
         // when you update the NumericUpdownControls.
         {
-            changeType = ChangeStyle.HSV;
-            hsv = new ColorHandler.HSV(tbAlpha.Value, tbHue.Value, tbSaturation.Value, tbValue.Value);
-            SetRGB(ColorHandler.HSVtoRGB(hsv));
-            SetHSVLabels(hsv);
+            _changeType = ChangeStyle.HSV;
+            _hsv = new ColorHandler.Hsv(_tbAlpha.Value, _tbHue.Value, _tbSaturation.Value, _tbValue.Value);
+            SetRgb(ColorHandler.HsvToRgb(_hsv));
+            SetHsvLabels(_hsv);
             Invalidate();
         }
 
-        private void HandleRGBScroll(object sender, EventArgs e)
+        private void HandleRgbScroll(object sender, EventArgs e)
         {
             // If the R, G, or B values change, use this
             // code to update the HSV values and invalidate
             // the color wheel (so it updates the pointers).
             // Check the isInUpdate flag to avoid recursive events
             // when you update the NumericUpdownControls.
-            changeType = ChangeStyle.RGB;
-            argb = new ColorHandler.ARGB(tbAlpha.Value, tbRed.Value, tbGreen.Value, tbBlue.Value);
-            SetHSV(ColorHandler.RGBtoHSV(argb));
-            SetRGBLabels(argb);
+            _changeType = ChangeStyle.RGB;
+            _alphaRedGreenBlue = new ColorHandler.Argb(_tbAlpha.Value, _tbRed.Value, _tbGreen.Value, _tbBlue.Value);
+            SetHsv(ColorHandler.RgbToHsv(_alphaRedGreenBlue));
+            SetRgbLabels(_alphaRedGreenBlue);
             Invalidate();
         }
 
         private void TbAlphaScroll(object sender, EventArgs e)
         {
-            changeType = ChangeStyle.RGB;
-            argb = new ColorHandler.ARGB(tbAlpha.Value, tbRed.Value, tbGreen.Value, tbBlue.Value);
-            RefreshText(lblAlpha2, tbAlpha.Value);
-            tbHexCode.Text = string.Format("{0:X2}{1:X2}{2:X2}{3:X2}", argb.Alpha, argb.Red, argb.Green, argb.Blue);
+            _changeType = ChangeStyle.RGB;
+            _alphaRedGreenBlue = new ColorHandler.Argb(_tbAlpha.Value, _tbRed.Value, _tbGreen.Value, _tbBlue.Value);
+            RefreshText(_lblAlpha2, _tbAlpha.Value);
+            _tbHexCode.Text = $"{_alphaRedGreenBlue.Alpha:X2}{_alphaRedGreenBlue.Red:X2}{_alphaRedGreenBlue.Green:X2}{_alphaRedGreenBlue.Blue:X2}";
             Invalidate();
         }
 
@@ -286,25 +280,25 @@ namespace Nikse.SubtitleEdit.Forms
         {
             // Depending on the circumstances, force a repaint
             // of the color wheel passing different information.
-            switch (changeType)
+            switch (_changeType)
             {
                 case ChangeStyle.HSV:
-                    myColorWheel.Draw(e.Graphics, hsv);
+                    _myColorWheel.Draw(e.Graphics, _hsv);
                     break;
                 case ChangeStyle.MouseMove:
                 case ChangeStyle.None:
-                    myColorWheel.Draw(e.Graphics, selectedPoint);
+                    _myColorWheel.Draw(e.Graphics, _selectedPoint);
                     break;
                 case ChangeStyle.RGB:
-                    myColorWheel.Draw(e.Graphics, argb);
+                    _myColorWheel.Draw(e.Graphics, _alphaRedGreenBlue);
                     break;
             }
         }
 
         private void TbHexCodeMouseDown(object sender, MouseEventArgs e)
         {
-            tbHexCode.SelectionStart = 0;
-            tbHexCode.SelectionLength = tbHexCode.Text.Length;
+            _tbHexCode.SelectionStart = 0;
+            _tbHexCode.SelectionLength = _tbHexCode.Text.Length;
         }
 
         #region Windows Form Designer generated code
@@ -315,393 +309,396 @@ namespace Nikse.SubtitleEdit.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            this.lblBlue = new System.Windows.Forms.Label();
-            this.lblGreen = new System.Windows.Forms.Label();
-            this.lblRed = new System.Windows.Forms.Label();
-            this.lblValue = new System.Windows.Forms.Label();
-            this.lblSaturation = new System.Windows.Forms.Label();
-            this.lblHue = new System.Windows.Forms.Label();
-            this.pnlColor = new System.Windows.Forms.Panel();
-            this.label5 = new System.Windows.Forms.Label();
-            this.pnlBrightness = new System.Windows.Forms.Panel();
-            this.lblAlpha2 = new System.Windows.Forms.Label();
-            this.tbHexCode = new System.Windows.Forms.TextBox();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.labelRed = new System.Windows.Forms.Label();
-            this.tbRed = new System.Windows.Forms.TrackBar();
-            this.labelGreen = new System.Windows.Forms.Label();
-            this.tbGreen = new System.Windows.Forms.TrackBar();
-            this.labelBlue = new System.Windows.Forms.Label();
-            this.tbBlue = new System.Windows.Forms.TrackBar();
-            this.labelAlpha1 = new System.Windows.Forms.Label();
-            this.tbAlpha = new System.Windows.Forms.TrackBar();
-            this.tbHue = new System.Windows.Forms.TrackBar();
-            this.label1 = new System.Windows.Forms.Label();
-            this.tbSaturation = new System.Windows.Forms.TrackBar();
-            this.label2 = new System.Windows.Forms.Label();
-            this.tbValue = new System.Windows.Forms.TrackBar();
-            this.pnlSelectedColor = new System.Windows.Forms.Panel();
-            this.buttonCancel = new System.Windows.Forms.Button();
-            this.buttonOK = new System.Windows.Forms.Button();
-            this.flowLayoutPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tbRed)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbGreen)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbBlue)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbAlpha)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbHue)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbSaturation)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbValue)).BeginInit();
+            this._lblBlue = new System.Windows.Forms.Label();
+            this._lblGreen = new System.Windows.Forms.Label();
+            this._lblRed = new System.Windows.Forms.Label();
+            this._lblValue = new System.Windows.Forms.Label();
+            this._lblSaturation = new System.Windows.Forms.Label();
+            this._lblHue = new System.Windows.Forms.Label();
+            this._pnlColor = new System.Windows.Forms.Panel();
+            this._label5 = new System.Windows.Forms.Label();
+            this._pnlBrightness = new System.Windows.Forms.Panel();
+            this._lblAlpha2 = new System.Windows.Forms.Label();
+            this._tbHexCode = new System.Windows.Forms.TextBox();
+            this._flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this._labelRed = new System.Windows.Forms.Label();
+            this._tbRed = new System.Windows.Forms.TrackBar();
+            this._labelGreen = new System.Windows.Forms.Label();
+            this._tbGreen = new System.Windows.Forms.TrackBar();
+            this._labelBlue = new System.Windows.Forms.Label();
+            this._tbBlue = new System.Windows.Forms.TrackBar();
+            this._labelAlpha1 = new System.Windows.Forms.Label();
+            this._tbAlpha = new System.Windows.Forms.TrackBar();
+            this._tbHue = new System.Windows.Forms.TrackBar();
+            this._label1 = new System.Windows.Forms.Label();
+            this._tbSaturation = new System.Windows.Forms.TrackBar();
+            this._label2 = new System.Windows.Forms.Label();
+            this._tbValue = new System.Windows.Forms.TrackBar();
+            this._pnlSelectedColor = new System.Windows.Forms.Panel();
+            this._buttonCancel = new System.Windows.Forms.Button();
+            this._buttonOk = new System.Windows.Forms.Button();
+            this._flowLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this._tbRed)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this._tbGreen)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this._tbBlue)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this._tbAlpha)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this._tbHue)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this._tbSaturation)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this._tbValue)).BeginInit();
             this.SuspendLayout();
             // 
-            // lblBlue
+            // _lblBlue
             // 
-            this.lblBlue.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblBlue.Location = new System.Drawing.Point(340, 70);
-            this.lblBlue.Name = "lblBlue";
-            this.lblBlue.Size = new System.Drawing.Size(39, 23);
-            this.lblBlue.TabIndex = 54;
-            this.lblBlue.Text = "Blue";
-            this.lblBlue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this._lblBlue.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this._lblBlue.Location = new System.Drawing.Point(340, 70);
+            this._lblBlue.Name = "_lblBlue";
+            this._lblBlue.Size = new System.Drawing.Size(39, 23);
+            this._lblBlue.TabIndex = 54;
+            this._lblBlue.Text = "Blue";
+            this._lblBlue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // lblGreen
+            // _lblGreen
             // 
-            this.lblGreen.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblGreen.Location = new System.Drawing.Point(340, 35);
-            this.lblGreen.Name = "lblGreen";
-            this.lblGreen.Size = new System.Drawing.Size(39, 23);
-            this.lblGreen.TabIndex = 53;
-            this.lblGreen.Text = "Green";
-            this.lblGreen.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this._lblGreen.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this._lblGreen.Location = new System.Drawing.Point(340, 35);
+            this._lblGreen.Name = "_lblGreen";
+            this._lblGreen.Size = new System.Drawing.Size(39, 23);
+            this._lblGreen.TabIndex = 53;
+            this._lblGreen.Text = "Green";
+            this._lblGreen.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // lblRed
+            // _lblRed
             // 
-            this.lblRed.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblRed.Location = new System.Drawing.Point(340, 0);
-            this.lblRed.Name = "lblRed";
-            this.lblRed.Size = new System.Drawing.Size(39, 23);
-            this.lblRed.TabIndex = 52;
-            this.lblRed.Text = "Red";
-            this.lblRed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this._lblRed.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this._lblRed.Location = new System.Drawing.Point(340, 0);
+            this._lblRed.Name = "_lblRed";
+            this._lblRed.Size = new System.Drawing.Size(39, 23);
+            this._lblRed.TabIndex = 52;
+            this._lblRed.Text = "Red";
+            this._lblRed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // lblValue
+            // _lblValue
             // 
-            this.lblValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblValue.Location = new System.Drawing.Point(623, 217);
-            this.lblValue.Name = "lblValue";
-            this.lblValue.Size = new System.Drawing.Size(39, 23);
-            this.lblValue.TabIndex = 51;
-            this.lblValue.Text = "Value";
-            this.lblValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblValue.Visible = false;
+            this._lblValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this._lblValue.Location = new System.Drawing.Point(623, 217);
+            this._lblValue.Name = "_lblValue";
+            this._lblValue.Size = new System.Drawing.Size(39, 23);
+            this._lblValue.TabIndex = 51;
+            this._lblValue.Text = "Value";
+            this._lblValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this._lblValue.Visible = false;
             // 
-            // lblSaturation
+            // _lblSaturation
             // 
-            this.lblSaturation.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSaturation.Location = new System.Drawing.Point(623, 182);
-            this.lblSaturation.Name = "lblSaturation";
-            this.lblSaturation.Size = new System.Drawing.Size(39, 23);
-            this.lblSaturation.TabIndex = 50;
-            this.lblSaturation.Text = "Sat";
-            this.lblSaturation.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblSaturation.Visible = false;
+            this._lblSaturation.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this._lblSaturation.Location = new System.Drawing.Point(623, 182);
+            this._lblSaturation.Name = "_lblSaturation";
+            this._lblSaturation.Size = new System.Drawing.Size(39, 23);
+            this._lblSaturation.TabIndex = 50;
+            this._lblSaturation.Text = "Sat";
+            this._lblSaturation.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this._lblSaturation.Visible = false;
             // 
-            // lblHue
+            // _lblHue
             // 
-            this.lblHue.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblHue.Location = new System.Drawing.Point(623, 155);
-            this.lblHue.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
-            this.lblHue.Name = "lblHue";
-            this.lblHue.Size = new System.Drawing.Size(41, 23);
-            this.lblHue.TabIndex = 49;
-            this.lblHue.Text = "Hue";
-            this.lblHue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblHue.Visible = false;
+            this._lblHue.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this._lblHue.Location = new System.Drawing.Point(623, 155);
+            this._lblHue.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
+            this._lblHue.Name = "_lblHue";
+            this._lblHue.Size = new System.Drawing.Size(41, 23);
+            this._lblHue.TabIndex = 49;
+            this._lblHue.Text = "Hue";
+            this._lblHue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this._lblHue.Visible = false;
             // 
-            // pnlColor
+            // _pnlColor
             // 
-            this.pnlColor.Location = new System.Drawing.Point(5, 8);
-            this.pnlColor.Name = "pnlColor";
-            this.pnlColor.Size = new System.Drawing.Size(224, 216);
-            this.pnlColor.TabIndex = 38;
-            this.pnlColor.Visible = false;
+            this._pnlColor.Location = new System.Drawing.Point(5, 8);
+            this._pnlColor.Name = "_pnlColor";
+            this._pnlColor.Size = new System.Drawing.Size(224, 216);
+            this._pnlColor.TabIndex = 38;
+            this._pnlColor.Visible = false;
             // 
-            // label5
+            // _label5
             // 
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(304, 155);
-            this.label5.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(72, 18);
-            this.label5.TabIndex = 35;
-            this.label5.Text = "Hue";
-            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label5.Visible = false;
+            this._label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this._label5.Location = new System.Drawing.Point(304, 155);
+            this._label5.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
+            this._label5.Name = "_label5";
+            this._label5.Size = new System.Drawing.Size(72, 18);
+            this._label5.TabIndex = 35;
+            this._label5.Text = "Hue";
+            this._label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this._label5.Visible = false;
             // 
-            // pnlBrightness
+            // _pnlBrightness
             // 
-            this.pnlBrightness.Location = new System.Drawing.Point(254, 8);
-            this.pnlBrightness.Name = "pnlBrightness";
-            this.pnlBrightness.Size = new System.Drawing.Size(24, 216);
-            this.pnlBrightness.TabIndex = 39;
-            this.pnlBrightness.Visible = false;
+            this._pnlBrightness.Location = new System.Drawing.Point(254, 8);
+            this._pnlBrightness.Name = "_pnlBrightness";
+            this._pnlBrightness.Size = new System.Drawing.Size(24, 216);
+            this._pnlBrightness.TabIndex = 39;
+            this._pnlBrightness.Visible = false;
             // 
-            // lblAlpha2
+            // _lblAlpha2
             // 
-            this.lblAlpha2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblAlpha2.Location = new System.Drawing.Point(340, 111);
-            this.lblAlpha2.Name = "lblAlpha2";
-            this.lblAlpha2.Size = new System.Drawing.Size(39, 24);
-            this.lblAlpha2.TabIndex = 57;
-            this.lblAlpha2.Text = "Alpha";
-            this.lblAlpha2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this._lblAlpha2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this._lblAlpha2.Location = new System.Drawing.Point(340, 111);
+            this._lblAlpha2.Name = "_lblAlpha2";
+            this._lblAlpha2.Size = new System.Drawing.Size(39, 24);
+            this._lblAlpha2.TabIndex = 57;
+            this._lblAlpha2.Text = "Alpha";
+            this._lblAlpha2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // tbHexCode
+            // _tbHexCode
             // 
-            this.tbHexCode.BackColor = System.Drawing.Color.White;
-            this.tbHexCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbHexCode.Location = new System.Drawing.Point(295, 50);
-            this.tbHexCode.MaxLength = 8;
-            this.tbHexCode.Name = "tbHexCode";
-            this.tbHexCode.ReadOnly = true;
-            this.tbHexCode.Size = new System.Drawing.Size(96, 22);
-            this.tbHexCode.TabIndex = 58;
-            this.tbHexCode.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TbHexCodeMouseDown);
+            this._tbHexCode.BackColor = System.Drawing.Color.White;
+            this._tbHexCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this._tbHexCode.Location = new System.Drawing.Point(295, 50);
+            this._tbHexCode.MaxLength = 8;
+            this._tbHexCode.Name = "_tbHexCode";
+            this._tbHexCode.ReadOnly = true;
+            this._tbHexCode.Size = new System.Drawing.Size(96, 22);
+            this._tbHexCode.TabIndex = 58;
+            this._tbHexCode.TextChanged += new System.EventHandler(this._tbHexCode_TextChanged);
+            this._tbHexCode.Enter += new System.EventHandler(this._tbHexCode_Enter);
+            this._tbHexCode.Leave += new System.EventHandler(this._tbHexCode_Leave);
+            this._tbHexCode.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TbHexCodeMouseDown);
             // 
-            // flowLayoutPanel1
+            // _flowLayoutPanel1
             // 
-            this.flowLayoutPanel1.Controls.Add(this.labelRed);
-            this.flowLayoutPanel1.Controls.Add(this.tbRed);
-            this.flowLayoutPanel1.Controls.Add(this.lblRed);
-            this.flowLayoutPanel1.Controls.Add(this.labelGreen);
-            this.flowLayoutPanel1.Controls.Add(this.tbGreen);
-            this.flowLayoutPanel1.Controls.Add(this.lblGreen);
-            this.flowLayoutPanel1.Controls.Add(this.labelBlue);
-            this.flowLayoutPanel1.Controls.Add(this.tbBlue);
-            this.flowLayoutPanel1.Controls.Add(this.lblBlue);
-            this.flowLayoutPanel1.Controls.Add(this.labelAlpha1);
-            this.flowLayoutPanel1.Controls.Add(this.tbAlpha);
-            this.flowLayoutPanel1.Controls.Add(this.lblAlpha2);
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(5, 232);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(396, 157);
-            this.flowLayoutPanel1.TabIndex = 59;
+            this._flowLayoutPanel1.Controls.Add(this._labelRed);
+            this._flowLayoutPanel1.Controls.Add(this._tbRed);
+            this._flowLayoutPanel1.Controls.Add(this._lblRed);
+            this._flowLayoutPanel1.Controls.Add(this._labelGreen);
+            this._flowLayoutPanel1.Controls.Add(this._tbGreen);
+            this._flowLayoutPanel1.Controls.Add(this._lblGreen);
+            this._flowLayoutPanel1.Controls.Add(this._labelBlue);
+            this._flowLayoutPanel1.Controls.Add(this._tbBlue);
+            this._flowLayoutPanel1.Controls.Add(this._lblBlue);
+            this._flowLayoutPanel1.Controls.Add(this._labelAlpha1);
+            this._flowLayoutPanel1.Controls.Add(this._tbAlpha);
+            this._flowLayoutPanel1.Controls.Add(this._lblAlpha2);
+            this._flowLayoutPanel1.Location = new System.Drawing.Point(5, 232);
+            this._flowLayoutPanel1.Name = "_flowLayoutPanel1";
+            this._flowLayoutPanel1.Size = new System.Drawing.Size(396, 157);
+            this._flowLayoutPanel1.TabIndex = 59;
             // 
-            // labelRed
+            // _labelRed
             // 
-            this.labelRed.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelRed.Location = new System.Drawing.Point(3, 8);
-            this.labelRed.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
-            this.labelRed.Name = "labelRed";
-            this.labelRed.Size = new System.Drawing.Size(72, 18);
-            this.labelRed.TabIndex = 42;
-            this.labelRed.Text = "Red";
-            this.labelRed.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this._labelRed.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this._labelRed.Location = new System.Drawing.Point(3, 8);
+            this._labelRed.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
+            this._labelRed.Name = "_labelRed";
+            this._labelRed.Size = new System.Drawing.Size(72, 18);
+            this._labelRed.TabIndex = 42;
+            this._labelRed.Text = "Red";
+            this._labelRed.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // tbRed
+            // _tbRed
             // 
-            this.tbRed.AutoSize = false;
-            this.tbRed.LargeChange = 16;
-            this.tbRed.Location = new System.Drawing.Point(78, 3);
-            this.tbRed.Margin = new System.Windows.Forms.Padding(0, 3, 3, 0);
-            this.tbRed.Maximum = 255;
-            this.tbRed.Name = "tbRed";
-            this.tbRed.Size = new System.Drawing.Size(256, 32);
-            this.tbRed.TabIndex = 43;
-            this.tbRed.TickFrequency = 32;
-            this.tbRed.Scroll += new System.EventHandler(this.HandleRGBScroll);
+            this._tbRed.AutoSize = false;
+            this._tbRed.LargeChange = 16;
+            this._tbRed.Location = new System.Drawing.Point(78, 3);
+            this._tbRed.Margin = new System.Windows.Forms.Padding(0, 3, 3, 0);
+            this._tbRed.Maximum = 255;
+            this._tbRed.Name = "_tbRed";
+            this._tbRed.Size = new System.Drawing.Size(256, 32);
+            this._tbRed.TabIndex = 43;
+            this._tbRed.TickFrequency = 32;
+            this._tbRed.Scroll += new System.EventHandler(this.HandleRgbScroll);
             // 
-            // labelGreen
+            // _labelGreen
             // 
-            this.labelGreen.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelGreen.Location = new System.Drawing.Point(3, 43);
-            this.labelGreen.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
-            this.labelGreen.Name = "labelGreen";
-            this.labelGreen.Size = new System.Drawing.Size(72, 18);
-            this.labelGreen.TabIndex = 44;
-            this.labelGreen.Text = "Green";
-            this.labelGreen.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this._labelGreen.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this._labelGreen.Location = new System.Drawing.Point(3, 43);
+            this._labelGreen.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
+            this._labelGreen.Name = "_labelGreen";
+            this._labelGreen.Size = new System.Drawing.Size(72, 18);
+            this._labelGreen.TabIndex = 44;
+            this._labelGreen.Text = "Green";
+            this._labelGreen.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // tbGreen
+            // _tbGreen
             // 
-            this.tbGreen.AutoSize = false;
-            this.tbGreen.LargeChange = 16;
-            this.tbGreen.Location = new System.Drawing.Point(78, 38);
-            this.tbGreen.Margin = new System.Windows.Forms.Padding(0, 3, 3, 0);
-            this.tbGreen.Maximum = 255;
-            this.tbGreen.Name = "tbGreen";
-            this.tbGreen.Size = new System.Drawing.Size(256, 32);
-            this.tbGreen.TabIndex = 45;
-            this.tbGreen.TickFrequency = 32;
-            this.tbGreen.Scroll += new System.EventHandler(this.HandleRGBScroll);
+            this._tbGreen.AutoSize = false;
+            this._tbGreen.LargeChange = 16;
+            this._tbGreen.Location = new System.Drawing.Point(78, 38);
+            this._tbGreen.Margin = new System.Windows.Forms.Padding(0, 3, 3, 0);
+            this._tbGreen.Maximum = 255;
+            this._tbGreen.Name = "_tbGreen";
+            this._tbGreen.Size = new System.Drawing.Size(256, 32);
+            this._tbGreen.TabIndex = 45;
+            this._tbGreen.TickFrequency = 32;
+            this._tbGreen.Scroll += new System.EventHandler(this.HandleRgbScroll);
             // 
-            // labelBlue
+            // _labelBlue
             // 
-            this.labelBlue.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelBlue.Location = new System.Drawing.Point(3, 78);
-            this.labelBlue.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
-            this.labelBlue.Name = "labelBlue";
-            this.labelBlue.Size = new System.Drawing.Size(72, 18);
-            this.labelBlue.TabIndex = 46;
-            this.labelBlue.Text = "Blue";
-            this.labelBlue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this._labelBlue.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this._labelBlue.Location = new System.Drawing.Point(3, 78);
+            this._labelBlue.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
+            this._labelBlue.Name = "_labelBlue";
+            this._labelBlue.Size = new System.Drawing.Size(72, 18);
+            this._labelBlue.TabIndex = 46;
+            this._labelBlue.Text = "Blue";
+            this._labelBlue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // tbBlue
+            // _tbBlue
             // 
-            this.tbBlue.AutoSize = false;
-            this.tbBlue.LargeChange = 16;
-            this.tbBlue.Location = new System.Drawing.Point(78, 73);
-            this.tbBlue.Margin = new System.Windows.Forms.Padding(0, 3, 3, 6);
-            this.tbBlue.Maximum = 255;
-            this.tbBlue.Name = "tbBlue";
-            this.tbBlue.Size = new System.Drawing.Size(256, 32);
-            this.tbBlue.TabIndex = 47;
-            this.tbBlue.TickFrequency = 32;
-            this.tbBlue.Scroll += new System.EventHandler(this.HandleRGBScroll);
+            this._tbBlue.AutoSize = false;
+            this._tbBlue.LargeChange = 16;
+            this._tbBlue.Location = new System.Drawing.Point(78, 73);
+            this._tbBlue.Margin = new System.Windows.Forms.Padding(0, 3, 3, 6);
+            this._tbBlue.Maximum = 255;
+            this._tbBlue.Name = "_tbBlue";
+            this._tbBlue.Size = new System.Drawing.Size(256, 32);
+            this._tbBlue.TabIndex = 47;
+            this._tbBlue.TickFrequency = 32;
+            this._tbBlue.Scroll += new System.EventHandler(this.HandleRgbScroll);
             // 
-            // labelAlpha1
+            // _labelAlpha1
             // 
-            this.labelAlpha1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelAlpha1.Location = new System.Drawing.Point(3, 119);
-            this.labelAlpha1.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
-            this.labelAlpha1.Name = "labelAlpha1";
-            this.labelAlpha1.Size = new System.Drawing.Size(72, 18);
-            this.labelAlpha1.TabIndex = 55;
-            this.labelAlpha1.Text = "Alpha";
-            this.labelAlpha1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this._labelAlpha1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this._labelAlpha1.Location = new System.Drawing.Point(3, 119);
+            this._labelAlpha1.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
+            this._labelAlpha1.Name = "_labelAlpha1";
+            this._labelAlpha1.Size = new System.Drawing.Size(72, 18);
+            this._labelAlpha1.TabIndex = 55;
+            this._labelAlpha1.Text = "Alpha";
+            this._labelAlpha1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // tbAlpha
+            // _tbAlpha
             // 
-            this.tbAlpha.AutoSize = false;
-            this.tbAlpha.LargeChange = 16;
-            this.tbAlpha.Location = new System.Drawing.Point(78, 114);
-            this.tbAlpha.Margin = new System.Windows.Forms.Padding(0, 3, 3, 0);
-            this.tbAlpha.Maximum = 255;
-            this.tbAlpha.Name = "tbAlpha";
-            this.tbAlpha.Size = new System.Drawing.Size(256, 32);
-            this.tbAlpha.TabIndex = 56;
-            this.tbAlpha.TickFrequency = 32;
-            this.tbAlpha.Scroll += new System.EventHandler(this.TbAlphaScroll);
+            this._tbAlpha.AutoSize = false;
+            this._tbAlpha.LargeChange = 16;
+            this._tbAlpha.Location = new System.Drawing.Point(78, 114);
+            this._tbAlpha.Margin = new System.Windows.Forms.Padding(0, 3, 3, 0);
+            this._tbAlpha.Maximum = 255;
+            this._tbAlpha.Name = "_tbAlpha";
+            this._tbAlpha.Size = new System.Drawing.Size(256, 32);
+            this._tbAlpha.TabIndex = 56;
+            this._tbAlpha.TickFrequency = 32;
+            this._tbAlpha.Scroll += new System.EventHandler(this.TbAlphaScroll);
             // 
-            // tbHue
+            // _tbHue
             // 
-            this.tbHue.AutoSize = false;
-            this.tbHue.LargeChange = 16;
-            this.tbHue.Location = new System.Drawing.Point(379, 150);
-            this.tbHue.Margin = new System.Windows.Forms.Padding(0, 3, 3, 0);
-            this.tbHue.Maximum = 255;
-            this.tbHue.Name = "tbHue";
-            this.tbHue.Size = new System.Drawing.Size(238, 32);
-            this.tbHue.TabIndex = 36;
-            this.tbHue.TickFrequency = 32;
-            this.tbHue.Visible = false;
-            this.tbHue.Scroll += new System.EventHandler(this.HandleHSVScroll);
+            this._tbHue.AutoSize = false;
+            this._tbHue.LargeChange = 16;
+            this._tbHue.Location = new System.Drawing.Point(379, 150);
+            this._tbHue.Margin = new System.Windows.Forms.Padding(0, 3, 3, 0);
+            this._tbHue.Maximum = 255;
+            this._tbHue.Name = "_tbHue";
+            this._tbHue.Size = new System.Drawing.Size(238, 32);
+            this._tbHue.TabIndex = 36;
+            this._tbHue.TickFrequency = 32;
+            this._tbHue.Visible = false;
+            this._tbHue.Scroll += new System.EventHandler(this.HandleHsvScroll);
             // 
-            // label1
+            // _label1
             // 
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(304, 190);
-            this.label1.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(72, 18);
-            this.label1.TabIndex = 38;
-            this.label1.Text = "Saturation";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label1.Visible = false;
+            this._label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this._label1.Location = new System.Drawing.Point(304, 190);
+            this._label1.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
+            this._label1.Name = "_label1";
+            this._label1.Size = new System.Drawing.Size(72, 18);
+            this._label1.TabIndex = 38;
+            this._label1.Text = "Saturation";
+            this._label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this._label1.Visible = false;
             // 
-            // tbSaturation
+            // _tbSaturation
             // 
-            this.tbSaturation.AutoSize = false;
-            this.tbSaturation.LargeChange = 16;
-            this.tbSaturation.Location = new System.Drawing.Point(379, 185);
-            this.tbSaturation.Margin = new System.Windows.Forms.Padding(0, 3, 3, 0);
-            this.tbSaturation.Maximum = 255;
-            this.tbSaturation.Name = "tbSaturation";
-            this.tbSaturation.Size = new System.Drawing.Size(238, 32);
-            this.tbSaturation.TabIndex = 39;
-            this.tbSaturation.TickFrequency = 32;
-            this.tbSaturation.Visible = false;
-            this.tbSaturation.Scroll += new System.EventHandler(this.HandleHSVScroll);
+            this._tbSaturation.AutoSize = false;
+            this._tbSaturation.LargeChange = 16;
+            this._tbSaturation.Location = new System.Drawing.Point(379, 185);
+            this._tbSaturation.Margin = new System.Windows.Forms.Padding(0, 3, 3, 0);
+            this._tbSaturation.Maximum = 255;
+            this._tbSaturation.Name = "_tbSaturation";
+            this._tbSaturation.Size = new System.Drawing.Size(238, 32);
+            this._tbSaturation.TabIndex = 39;
+            this._tbSaturation.TickFrequency = 32;
+            this._tbSaturation.Visible = false;
+            this._tbSaturation.Scroll += new System.EventHandler(this.HandleHsvScroll);
             // 
-            // label2
+            // _label2
             // 
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(304, 225);
-            this.label2.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(72, 18);
-            this.label2.TabIndex = 40;
-            this.label2.Text = "Value";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label2.Visible = false;
+            this._label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this._label2.Location = new System.Drawing.Point(304, 225);
+            this._label2.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
+            this._label2.Name = "_label2";
+            this._label2.Size = new System.Drawing.Size(72, 18);
+            this._label2.TabIndex = 40;
+            this._label2.Text = "Value";
+            this._label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this._label2.Visible = false;
             // 
-            // tbValue
+            // _tbValue
             // 
-            this.tbValue.AutoSize = false;
-            this.tbValue.LargeChange = 16;
-            this.tbValue.Location = new System.Drawing.Point(379, 220);
-            this.tbValue.Margin = new System.Windows.Forms.Padding(0, 3, 3, 6);
-            this.tbValue.Maximum = 255;
-            this.tbValue.Name = "tbValue";
-            this.tbValue.Size = new System.Drawing.Size(238, 32);
-            this.tbValue.TabIndex = 41;
-            this.tbValue.TickFrequency = 32;
-            this.tbValue.Visible = false;
-            this.tbValue.Scroll += new System.EventHandler(this.HandleHSVScroll);
+            this._tbValue.AutoSize = false;
+            this._tbValue.LargeChange = 16;
+            this._tbValue.Location = new System.Drawing.Point(379, 220);
+            this._tbValue.Margin = new System.Windows.Forms.Padding(0, 3, 3, 6);
+            this._tbValue.Maximum = 255;
+            this._tbValue.Name = "_tbValue";
+            this._tbValue.Size = new System.Drawing.Size(238, 32);
+            this._tbValue.TabIndex = 41;
+            this._tbValue.TickFrequency = 32;
+            this._tbValue.Visible = false;
+            this._tbValue.Scroll += new System.EventHandler(this.HandleHsvScroll);
             // 
-            // pnlSelectedColor
+            // _pnlSelectedColor
             // 
-            this.pnlSelectedColor.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.pnlSelectedColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlSelectedColor.Location = new System.Drawing.Point(295, 12);
-            this.pnlSelectedColor.Name = "pnlSelectedColor";
-            this.pnlSelectedColor.Size = new System.Drawing.Size(96, 32);
-            this.pnlSelectedColor.TabIndex = 40;
-            this.pnlSelectedColor.Visible = false;
+            this._pnlSelectedColor.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this._pnlSelectedColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this._pnlSelectedColor.Location = new System.Drawing.Point(295, 12);
+            this._pnlSelectedColor.Name = "_pnlSelectedColor";
+            this._pnlSelectedColor.Size = new System.Drawing.Size(96, 32);
+            this._pnlSelectedColor.TabIndex = 40;
+            this._pnlSelectedColor.Visible = false;
             // 
-            // buttonCancel
+            // _buttonCancel
             // 
-            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(321, 406);
-            this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(80, 23);
-            this.buttonCancel.TabIndex = 61;
-            this.buttonCancel.Text = "C&ancel";
-            this.buttonCancel.UseVisualStyleBackColor = true;
-            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
+            this._buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this._buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this._buttonCancel.Location = new System.Drawing.Point(321, 406);
+            this._buttonCancel.Name = "_buttonCancel";
+            this._buttonCancel.Size = new System.Drawing.Size(80, 23);
+            this._buttonCancel.TabIndex = 61;
+            this._buttonCancel.Text = "C&ancel";
+            this._buttonCancel.UseVisualStyleBackColor = true;
+            this._buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
-            // buttonOK
+            // _buttonOk
             // 
-            this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(235, 406);
-            this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(80, 23);
-            this.buttonOK.TabIndex = 60;
-            this.buttonOK.Text = "&OK";
-            this.buttonOK.UseVisualStyleBackColor = true;
-            this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
+            this._buttonOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this._buttonOk.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this._buttonOk.Location = new System.Drawing.Point(235, 406);
+            this._buttonOk.Name = "_buttonOk";
+            this._buttonOk.Size = new System.Drawing.Size(80, 23);
+            this._buttonOk.TabIndex = 60;
+            this._buttonOk.Text = "&OK";
+            this._buttonOk.UseVisualStyleBackColor = true;
+            this._buttonOk.Click += new System.EventHandler(this.buttonOK_Click);
             // 
             // ColorChooser
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.ClientSize = new System.Drawing.Size(413, 441);
-            this.Controls.Add(this.buttonCancel);
-            this.Controls.Add(this.buttonOK);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.tbHue);
-            this.Controls.Add(this.tbHexCode);
-            this.Controls.Add(this.lblHue);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.tbSaturation);
-            this.Controls.Add(this.pnlColor);
-            this.Controls.Add(this.lblSaturation);
-            this.Controls.Add(this.pnlSelectedColor);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.pnlBrightness);
-            this.Controls.Add(this.tbValue);
-            this.Controls.Add(this.flowLayoutPanel1);
-            this.Controls.Add(this.lblValue);
+            this.Controls.Add(this._buttonCancel);
+            this.Controls.Add(this._buttonOk);
+            this.Controls.Add(this._label5);
+            this.Controls.Add(this._tbHue);
+            this.Controls.Add(this._tbHexCode);
+            this.Controls.Add(this._lblHue);
+            this.Controls.Add(this._label1);
+            this.Controls.Add(this._tbSaturation);
+            this.Controls.Add(this._pnlColor);
+            this.Controls.Add(this._lblSaturation);
+            this.Controls.Add(this._pnlSelectedColor);
+            this.Controls.Add(this._label2);
+            this.Controls.Add(this._pnlBrightness);
+            this.Controls.Add(this._tbValue);
+            this.Controls.Add(this._flowLayoutPanel1);
+            this.Controls.Add(this._lblValue);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
             this.MaximizeBox = false;
@@ -717,14 +714,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.HandleMouse);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.HandleMouse);
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.FormMainMouseUp);
-            this.flowLayoutPanel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.tbRed)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbGreen)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbBlue)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbAlpha)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbHue)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbSaturation)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbValue)).EndInit();
+            this._flowLayoutPanel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this._tbRed)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this._tbGreen)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this._tbBlue)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this._tbAlpha)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this._tbHue)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this._tbSaturation)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this._tbValue)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -766,14 +763,79 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (disposing)
             {
+                _hexCodeEditTimer.Dispose();
                 base.Dispose(true);
-                if (myColorWheel != null)
+                if (_myColorWheel != null)
                 {
-                    myColorWheel.Dispose();
-                    myColorWheel = null;
+                    _myColorWheel.Dispose();
+                    _myColorWheel = null;
                 }
             }
         }
 
+        private void _tbHexCode_TextChanged(object sender, EventArgs e)
+        {
+            if (_hexEditOn)
+            {
+                CheckValidHexInput();
+            }
+        }
+
+        private void _tbHexCode_Enter(object sender, EventArgs e)
+        {
+            _hexEditOn = true;
+            _tbHexCode.ReadOnly = false;
+        }
+
+        private void _tbHexCode_Leave(object sender, EventArgs e)
+        {
+            _hexEditOn = false;
+            _tbHexCode.BackColor = UiUtil.BackColor;
+        }
+
+        private void CheckValidHexInput()
+        {
+            var hexString = _tbHexCode.Text.Trim();
+            if (hexString.Length == 6 && !_showAlpha && IsValidHexString(hexString))
+            {
+                UpdateRgb("ff" + hexString);
+            }
+            else if (hexString.Length == 8 && _showAlpha && IsValidHexString(hexString))
+            {
+                UpdateRgb(hexString);
+            }
+            else
+            {
+                _tbHexCode.BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+            }
+        }
+
+        private void UpdateRgb(string hexString)
+        {
+            _tbAlpha.Value = Convert.ToInt32(hexString.Substring(0, 2), 16);
+            _tbRed.Value = Convert.ToInt32(hexString.Substring(2, 2), 16);
+            _tbGreen.Value = Convert.ToInt32(hexString.Substring(4, 2), 16);
+            _tbBlue.Value = Convert.ToInt32(hexString.Substring(6, 2), 16);
+            _tbHexCode.BackColor = UiUtil.BackColor;
+            HandleRgbScroll(null, null);
+        }
+
+        private bool IsValidHexString(string hexString)
+        {
+            if (hexString.Length % 2 != 0)
+            {
+                return false;
+            }
+
+            foreach (var ch in hexString)
+            {
+                if (!CharUtils.IsHexadecimal(ch))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 }
