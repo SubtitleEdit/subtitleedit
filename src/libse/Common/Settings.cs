@@ -1980,6 +1980,7 @@ $HorzAlign          =   Center
         public string MainCreateStartDownEndUp { get; set; }
         public string MainAdjustSetStartAndOffsetTheRest { get; set; }
         public string MainAdjustSetStartAndOffsetTheRest2 { get; set; }
+        public string MainAdjustSetStartAndOffsetTheWholeSubtitle { get; set; }
         public string MainAdjustSetEndAndOffsetTheRest { get; set; }
         public string MainAdjustSetEndAndOffsetTheRestAndGoToNext { get; set; }
         public string MainAdjustSetEndAndGotoNext { get; set; }
@@ -7478,6 +7479,12 @@ $HorzAlign          =   Center
                     shortcuts.MainAdjustSetStartAndOffsetTheRest2 = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainAdjustSetStartAndOffsetTheWholeSubtitle");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustSetStartAndOffsetTheWholeSubtitle = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainAdjustSetEndAndOffsetTheRest");
                 if (subNode != null)
                 {
@@ -8917,6 +8924,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainCreateStartDownEndUp", shortcuts.MainCreateStartDownEndUp);
             textWriter.WriteElementString("MainAdjustSetStartAndOffsetTheRest", shortcuts.MainAdjustSetStartAndOffsetTheRest);
             textWriter.WriteElementString("MainAdjustSetStartAndOffsetTheRest2", shortcuts.MainAdjustSetStartAndOffsetTheRest2);
+            textWriter.WriteElementString("MainAdjustSetStartAndOffsetTheWholeSubtitle", shortcuts.MainAdjustSetStartAndOffsetTheWholeSubtitle);
             textWriter.WriteElementString("MainAdjustSetEndAndOffsetTheRest", shortcuts.MainAdjustSetEndAndOffsetTheRest);
             textWriter.WriteElementString("MainAdjustSetEndAndOffsetTheRestAndGoToNext", shortcuts.MainAdjustSetEndAndOffsetTheRestAndGoToNext);
             textWriter.WriteElementString("MainAdjustSetEndAndGotoNext", shortcuts.MainAdjustSetEndAndGotoNext);
