@@ -1281,7 +1281,7 @@ Lépjen az "Opciók -&gt; Beállítások -&gt; Eszközök" lapra a Google fordí
       <SetEndTimeAndGoToNext>Befejezés/következőre ugrás</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Beállítva a befejezési időn keresztül {0}</AdjustedViaEndTime>
       <SetEndTime>Befejezési idő beállítása</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Kezdési idő és eltolás beállítása</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Kezdési idő és eltolás beállítása</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Online szövegkeresés</SearchTextOnline>
       <GoogleTranslate>Google fordítás</GoogleTranslate>
       <GoogleIt>Google</GoogleIt>

@@ -1309,7 +1309,7 @@ Anahtarınızı girmek için "Seçenekler -&gt; Ayarlar -&gt; Araçlar" a gidin<
       <SetEndTimeAndGoToNext>Bitişi &amp;ayarla &amp;&amp; sonrakine git</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>{0} bitiş zamanı ile ayarlandı</AdjustedViaEndTime>
       <SetEndTime>Bitiş&amp; zamanını ayarla</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Başlama&amp; ve bitiş kalanını ayarla</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Başlama&amp; ve bitiş kalanını ayarla</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Çevrimiçi metin ara</SearchTextOnline>
       <GoogleTranslate>Google çeviri</GoogleTranslate>
       <GoogleIt>Google'da arat</GoogleIt>

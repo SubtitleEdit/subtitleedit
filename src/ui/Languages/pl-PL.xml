@@ -1325,7 +1325,7 @@ Aby użyć klucza API przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby
       <SetEndTimeAndGoToNext>Ustaw koni&amp;ec &amp;&amp; Idź do następ.</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Dostosowano za pomocą czasu zakończenia {0}</AdjustedViaEndTime>
       <SetEndTime>Ustaw c&amp;zas zakończenia</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Ustaw start &amp;&amp; Prze&amp;suń pozost.</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Ustaw start &amp;&amp; Prze&amp;suń pozost.</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Wyszukaj tekst online</SearchTextOnline>
       <GoogleTranslate>Tłumacz Google</GoogleTranslate>
       <GoogleIt>Sprawdź w Google</GoogleIt>

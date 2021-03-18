@@ -1191,7 +1191,7 @@ Catatan: Periksa ruang kosong disk.</WaveFileMalformed>
       <SetEndTimeAndGoToNext>Atur &amp;akhir &amp;&amp; ke brktnya</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Disesuaikan melalui waktu akhir {0}</AdjustedViaEndTime>
       <SetEndTime>Atur &amp;waktu akhir</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Atur &amp;mulai dan off-set sisanya</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Atur &amp;mulai dan off-set sisanya</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Cari teks daring</SearchTextOnline>
       <GoogleTranslate>Google terjemahan</GoogleTranslate>
       <GoogleIt>Cari di Google</GoogleIt>

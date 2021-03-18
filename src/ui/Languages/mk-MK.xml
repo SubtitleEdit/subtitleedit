@@ -1277,7 +1277,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <SetEndTimeAndGoToNext>Постави крајно време и продолжи</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Прилагоди преку крајно време {0}</AdjustedViaEndTime>
       <SetEndTime>Постави крајно време</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Постави почеток и крај и неутрализирај остаток</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Постави почеток и крај и неутрализирај остаток</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Побарај го текстот на интернет</SearchTextOnline>
       <GoogleTranslate>Google translate</GoogleTranslate>
       <GoogleIt>Google</GoogleIt>

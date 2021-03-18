@@ -1044,7 +1044,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
       <SetEndTimeAndGoToNext>Nastavi končni čas in pojdi naprej</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Prilagojeno končnemu času {0}</AdjustedViaEndTime>
       <SetEndTime>Nastavi končni čas</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Nastavi začetni čas in odznači ostalo</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Nastavi začetni čas in odznači ostalo</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Poišči besedilo na spletu</SearchTextOnline>
       <GoogleTranslate>Google prevod</GoogleTranslate>
       <GoogleIt>PoGooglaj</GoogleIt>

@@ -1306,7 +1306,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
       <SetEndTimeAndGoToNext>Sæt slut &amp;&amp; gå til næste</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Justeret via sluttid {0}</AdjustedViaEndTime>
       <SetEndTime>Sæt slut tid</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Set start og juster resten</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Set start og juster resten</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Søg tekst online</SearchTextOnline>
       <GoogleTranslate>Google oversæt</GoogleTranslate>
       <GoogleIt>Google</GoogleIt>

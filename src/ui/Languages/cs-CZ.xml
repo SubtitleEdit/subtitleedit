@@ -1223,7 +1223,7 @@ Přejděte na "Volby -&gt; Nastavení -&gt; Nástroje" pro zadání vašeho klí
       <SetEndTimeAndGoToNext>Nastavit konec a &amp;přejít na další</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Nastaveno pomocí času konce {0}</AdjustedViaEndTime>
       <SetEndTime>Nastavit čas &amp;konce</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Nastavit začátek a &amp;posunout zbytek</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Nastavit začátek a &amp;posunout zbytek</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Vyhledat text online</SearchTextOnline>
       <GoogleTranslate>Překladač Google</GoogleTranslate>
       <GoogleIt>Vygooglit</GoogleIt>

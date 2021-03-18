@@ -1782,7 +1782,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelVideoPosition.Text = _language.VideoControls.VideoPosition;
             labelVideoPosition2.Text = _language.VideoControls.VideoPosition;
 
-            buttonSetStartAndOffsetRest.Text = _language.VideoControls.SetstartTimeAndOffsetOfRest;
+            buttonSetStartAndOffsetRest.Text = _language.VideoControls.SetStartTimeAndOffsetTheRest;
             buttonSetEndAndGoToNext.Text = _language.VideoControls.SetEndTimeAndGoToNext;
             buttonAdjustSetStartTime.Text = _language.VideoControls.SetStartTime;
             buttonAdjustSetEndTime.Text = _language.VideoControls.SetEndTime;

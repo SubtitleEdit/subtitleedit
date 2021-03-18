@@ -1116,7 +1116,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
       <SetEndTimeAndGoToNext>設定結束時間並移至下一行(&amp;E)</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>已透過結束時間 {0} 調整</AdjustedViaEndTime>
       <SetEndTime>設定結束時間(&amp;N)</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>設定起始時間並偏移其餘部份(&amp;R)</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>設定起始時間並偏移其餘部份(&amp;R)</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>在網上搜尋文字</SearchTextOnline>
       <GoogleTranslate>谷歌翻譯</GoogleTranslate>
       <GoogleIt>谷歌翻譯該行</GoogleIt>

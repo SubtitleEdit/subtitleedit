@@ -1858,7 +1858,7 @@ namespace Nikse.SubtitleEdit.Logic
                     SetEndTimeAndGoToNext = "Set &end && go to next",
                     AdjustedViaEndTime = "Adjusted via end time {0}",
                     SetEndTime = "Set e&nd time",
-                    SetstartTimeAndOffsetOfRest = "Set sta&rt and offset the rest",
+                    SetStartTimeAndOffsetTheRest = "Set sta&rt and offset the rest",
 
                     GoogleIt = "Google it",
                     GoogleTranslate = "Google translate",

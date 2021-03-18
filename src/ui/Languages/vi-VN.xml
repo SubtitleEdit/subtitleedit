@@ -925,7 +925,7 @@ Hộp thư: Gửi thư tới: nikse.dk@gmail.com</AboutText1>
       <SetEndTimeAndGoToNext>Thiết đặt đến thời điểm &amp;&amp;kết thúc</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Điều chỉnh thời gian kết thúc {0}</AdjustedViaEndTime>
       <SetEndTime>Thiết đặt &amp;thời gian kết thúc</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Thiết đặt bắt đầu &amp;và tắt các thiết lập khác</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Thiết đặt bắt đầu &amp;và tắt các thiết lập khác</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Tìm kiếm văn bản trực tuyến</SearchTextOnline>
       <GoogleTranslate>Google dịch</GoogleTranslate>
       <GoogleIt>Google It</GoogleIt>

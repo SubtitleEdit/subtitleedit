@@ -1729,7 +1729,7 @@
                 public string SetEndTimeAndGoToNext { get; set; }
                 public string AdjustedViaEndTime { get; set; }
                 public string SetEndTime { get; set; }
-                public string SetstartTimeAndOffsetOfRest { get; set; }
+                public string SetStartTimeAndOffsetTheRest { get; set; }
 
                 public string SearchTextOnline { get; set; }
                 public string GoogleTranslate { get; set; }
