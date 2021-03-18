@@ -1202,7 +1202,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
       <SetEndTimeAndGoToNext>Définir &amp;fin et aller au suivant</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Ajusté par rapport au dernier temps {0}</AdjustedViaEndTime>
       <SetEndTime>Définir f&amp;in</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Définir déb&amp;ut et décaler la suite</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Définir déb&amp;ut et décaler la suite</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Chercher texte en ligne</SearchTextOnline>
       <GoogleTranslate>Traduction Google</GoogleTranslate>
       <GoogleIt>Google</GoogleIt>

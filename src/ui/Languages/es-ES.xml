@@ -1324,7 +1324,7 @@ Ve a "Opciones -&gt; Ajustes -&gt; Herramientas" para introducir tu clave.</MsCl
       <SetEndTimeAndGoToNext>Ajustar ti&amp;empo final / siguiente</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Ajustado via tiempo final {0}</AdjustedViaEndTime>
       <SetEndTime>Ajustar tiempo fi&amp;nal</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Ajusta&amp;r inicio y compensar el resto</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Ajusta&amp;r inicio y compensar el resto</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Buscar texto en línea</SearchTextOnline>
       <GoogleTranslate>Traductor Google</GoogleTranslate>
       <AutoTranslate>Autotraducir</AutoTranslate>

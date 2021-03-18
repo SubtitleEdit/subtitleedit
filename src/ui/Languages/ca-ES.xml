@@ -1280,7 +1280,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <SetEndTimeAndGoToNext>Estableix temps final &amp;&amp; Aneu al següent</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Ajusta via temps final {0}</AdjustedViaEndTime>
       <SetEndTime>Estableix temps final</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Estableix inici i reprodueix la resta</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Estableix inici i reprodueix la resta</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Cerca text en línia</SearchTextOnline>
       <GoogleTranslate>Traductor Google</GoogleTranslate>
       <GoogleIt>Google it</GoogleIt>

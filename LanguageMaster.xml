@@ -1331,7 +1331,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
       <SetEndTimeAndGoToNext>Set &amp;end &amp;&amp; go to next</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Adjusted via end time {0}</AdjustedViaEndTime>
       <SetEndTime>Set e&amp;nd time</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Set sta&amp;rt and offset the rest</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Set sta&amp;rt and offset the rest</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Search text online</SearchTextOnline>
       <GoogleTranslate>Google translate</GoogleTranslate>
       <AutoTranslate>Auto-translate</AutoTranslate>

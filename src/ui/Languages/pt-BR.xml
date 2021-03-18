@@ -1328,7 +1328,7 @@ Para usar uma chave API, acesse "Opções -&gt; Configurações -&gt; Ferramenta
 			<SetEndTimeAndGoToNext>Ajustar t&amp;empo final/seguinte</SetEndTimeAndGoToNext>
 			<AdjustedViaEndTime>Ajustado pelo tempo final {0}</AdjustedViaEndTime>
 			<SetEndTime>Ajustar tempo fi&amp;nal</SetEndTime>
-			<SetstartTimeAndOffsetOfRest>Ajusta&amp;r início e compensar o resto</SetstartTimeAndOffsetOfRest>
+			<SetStartTimeAndOffsetTheRest>Ajusta&amp;r início e compensar o resto</SetStartTimeAndOffsetTheRest>
 			<SearchTextOnline>Localizar texto online</SearchTextOnline>
 			<GoogleTranslate>Google Tradutor</GoogleTranslate>
 			<AutoTranslate>Auto-traduzir</AutoTranslate>

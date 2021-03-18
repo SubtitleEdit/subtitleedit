@@ -1290,7 +1290,7 @@ https://github.com/SubtitleEdit/subtitleedit
       <SetEndTimeAndGoToNext>Уст. конец и перейти далее</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Настроено через конечное время {0}</AdjustedViaEndTime>
       <SetEndTime>Установить конечное время</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Сместить начальное время</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Сместить начальное время</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Поиск текста онлайн</SearchTextOnline>
       <GoogleTranslate>Переводчик Google</GoogleTranslate>
       <GoogleIt>Сайт Google</GoogleIt>

@@ -1267,7 +1267,7 @@ Joan "Aukerk -&gt; Ezarpenak -&gt; Tresnak" zure Google itzulpena API gakoa sart
       <SetEndTimeAndGoToNext>Ezarri amaiera eta &amp;joan hurreng</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Zehaztu amaiera denboraren bidez {0}</AdjustedViaEndTime>
       <SetEndTime>Ezarri a&amp;maiera denbora</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Ezarri hasiera eta &amp;orekatu gainontzekoa</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Ezarri hasiera eta &amp;orekatu gainontzekoa</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Bilatu idatzia online</SearchTextOnline>
       <GoogleTranslate>Google itzultzailea</GoogleTranslate>
       <GoogleIt>Google bera</GoogleIt>
