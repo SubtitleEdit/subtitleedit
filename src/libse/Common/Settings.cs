@@ -1957,6 +1957,7 @@ $HorzAlign          =   Center
         public string MainListViewColumnTextUp { get; set; }
         public string MainListViewColumnTextDown { get; set; }
         public string MainListViewGoToNextError { get; set; }
+        public string MainListViewRemoveBlankLines { get; set; }
         public string MainListViewRemoveTimeCodes { get; set; }
         public string MainTextBoxItalic { get; set; }
         public string MainTextBoxSplitAtCursor { get; set; }
@@ -7317,6 +7318,12 @@ $HorzAlign          =   Center
                     shortcuts.MainListViewGoToNextError = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainListViewRemoveBlankLines");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewRemoveBlankLines = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainListViewRemoveTimeCodes");
                 if (subNode != null)
                 {
@@ -8897,6 +8904,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainListViewColumnTextUp", shortcuts.MainListViewColumnTextUp);
             textWriter.WriteElementString("MainListViewColumnTextDown", shortcuts.MainListViewColumnTextDown);
             textWriter.WriteElementString("MainListViewGoToNextError", shortcuts.MainListViewGoToNextError);
+            textWriter.WriteElementString("MainListViewRemoveBlankLines", shortcuts.MainListViewRemoveBlankLines);
             textWriter.WriteElementString("MainListViewRemoveTimeCodes", shortcuts.MainListViewRemoveTimeCodes);
             textWriter.WriteElementString("MainEditFixRTLViaUnicodeChars", shortcuts.MainEditFixRTLViaUnicodeChars);
             textWriter.WriteElementString("MainEditRemoveRTLUnicodeChars", shortcuts.MainEditRemoveRTLUnicodeChars);

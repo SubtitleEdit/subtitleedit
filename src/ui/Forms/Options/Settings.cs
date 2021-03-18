@@ -461,11 +461,11 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxRemoveBlankLinesWhenOpening.Text = language.RemoveBlankLinesWhenOpening;
             checkBoxRememberWindowPosition.Text = language.RememberPositionAndSize;
 
-            var apperanceSubFontLeft = labelSubtitleFont.Left+ 9 + 
+            var appearanceSubFontLeft = labelSubtitleFont.Left+ 9 + 
                 Math.Max(Math.Max(labelSubtitleFont.Width, labelSubtitleFontColor.Width), labelSubtitleFontBackgroundColor.Width);
-            comboBoxSubtitleFont.Left = apperanceSubFontLeft;
-            panelSubtitleFontColor.Left = apperanceSubFontLeft;
-            panelSubtitleBackgroundColor.Left = apperanceSubFontLeft;
+            comboBoxSubtitleFont.Left = appearanceSubFontLeft;
+            panelSubtitleFontColor.Left = appearanceSubFontLeft;
+            panelSubtitleBackgroundColor.Left = appearanceSubFontLeft;
 
             labelShowLineBreaksAs.Text = language.ShowLineBreaksAs;
             textBoxShowLineBreaksAs.Left = labelShowLineBreaksAs.Left + labelShowLineBreaksAs.Width;
@@ -1108,6 +1108,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(generalNode, language.ToggleView, nameof(Configuration.Settings.Shortcuts.GeneralToggleView));
             AddNode(generalNode, language.ToggleMode, nameof(Configuration.Settings.Shortcuts.GeneralToggleMode));
             AddNode(generalNode, language.TogglePreviewOnVideo, nameof(Configuration.Settings.Shortcuts.GeneralTogglePreviewOnVideo));
+            AddNode(generalNode, language.RemoveBlankLines, nameof(Configuration.Settings.Shortcuts.MainListViewRemoveBlankLines));
             AddNode(generalNode, language.Help, nameof(Configuration.Settings.Shortcuts.GeneralHelp), true);
             if (generalNode.Nodes.Count > 0)
             {

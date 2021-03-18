@@ -2175,6 +2175,7 @@
             public string RememberPositionAndSize { get; set; }
             public string StartInSourceView { get; set; }
             public string RemoveBlankLinesWhenOpening { get; set; }
+            public string RemoveBlankLines { get; set; }
             public string ShowLineBreaksAs { get; set; }
             public string SaveAsFileNameFrom { get; set; }
             public string MainListViewDoubleClickAction { get; set; }
