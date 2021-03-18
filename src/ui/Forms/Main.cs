@@ -15756,6 +15756,20 @@ namespace Nikse.SubtitleEdit.Forms
                 GoToNextSyntaxError();
                 e.SuppressKeyPress = true;
             }
+            else if (e.KeyData == _shortcuts.MainListViewRemoveBlankLines)
+            {
+                if (_subtitle != null && _subtitle.Paragraphs.Any(p => string.IsNullOrWhiteSpace(p.Text)))
+                {
+                    ShowStatus(LanguageSettings.Current.Settings.RemoveBlankLines);
+                    MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.RemoveBlankLines));
+                    SaveSubtitleListviewIndices();
+                    _subtitle.RemoveEmptyLines();
+                    SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                    RestoreSubtitleListviewIndices();
+                    RefreshSelectedParagraph();
+                }
+                e.SuppressKeyPress = true;
+            }
             else if (e.KeyData == _shortcuts.MainWaveformAdd)
             {
                 if (audioVisualizer.WavePeaks == null)
