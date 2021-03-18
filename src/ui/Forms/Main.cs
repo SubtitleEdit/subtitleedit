@@ -178,15 +178,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public bool IsMenuOpen { get; private set; }
 
-        private bool AutoRepeatContinueOn
-        {
-            get { return tabControlModes.SelectedIndex == 0 && checkBoxAutoContinue.Checked; }
-        }
+        private bool AutoRepeatContinueOn => tabControlModes.SelectedIndex == 0 && checkBoxAutoContinue.Checked;
 
-        private bool AutoRepeatOn
-        {
-            get { return tabControlModes.SelectedIndex == 0 && checkBoxAutoRepeatOn.Checked; }
-        }
+        private bool AutoRepeatOn => tabControlModes.SelectedIndex == 0 && checkBoxAutoRepeatOn.Checked;
 
         public string Title
         {
@@ -2005,31 +1999,11 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxSubtitleFormats.SelectedIndexChanged += ComboBoxSubtitleFormatsSelectedIndexChanged;
         }
 
-        private int FirstSelectedIndex
-        {
-            get
-            {
-                if (SubtitleListview1.SelectedItems.Count == 0)
-                {
-                    return -1;
-                }
+        private int FirstSelectedIndex =>
+            SubtitleListview1.SelectedItems.Count == 0 ? -1 : SubtitleListview1.SelectedItems[0].Index;
 
-                return SubtitleListview1.SelectedItems[0].Index;
-            }
-        }
-
-        private int FirstVisibleIndex
-        {
-            get
-            {
-                if (SubtitleListview1.Items.Count == 0 || SubtitleListview1.TopItem == null)
-                {
-                    return -1;
-                }
-
-                return SubtitleListview1.TopItem.Index;
-            }
-        }
+        private int FirstVisibleIndex =>
+            SubtitleListview1.Items.Count == 0 || SubtitleListview1.TopItem == null ? -1 : SubtitleListview1.TopItem.Index;
 
         private long _lastAutoSave;
 
