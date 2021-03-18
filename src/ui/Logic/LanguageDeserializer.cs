@@ -5428,6 +5428,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/RemoveBlankLinesWhenOpening":
                     language.Settings.RemoveBlankLinesWhenOpening = reader.Value;
                     break;
+                case "Settings/RemoveBlankLines":
+                    language.Settings.RemoveBlankLines = reader.Value;
+                    break;
                 case "Settings/ShowLineBreaksAs":
                     language.Settings.ShowLineBreaksAs = reader.Value;
                     break;
