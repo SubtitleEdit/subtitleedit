@@ -744,7 +744,7 @@
       <SetEndTimeAndGoToNext>Поста&amp;ви крај и иди на идуће</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Прилагођено преко завршног времена {0}</AdjustedViaEndTime>
       <SetEndTime>По&amp;стави завршетак</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Пос&amp;тави почетак и помакни</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Пос&amp;тави почетак и помакни</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Претрага текста на мрежи</SearchTextOnline>
       <GoogleTranslate>Пр&amp;еведи</GoogleTranslate>
       <GoogleIt>П&amp;ретражи</GoogleIt>

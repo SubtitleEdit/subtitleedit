@@ -1239,7 +1239,7 @@ Idite na "Opcije -&gt; Podešavanja -&gt; Alatke" i unesite vaš API ključ.</Go
       <SetEndTimeAndGoToNext>Posta&amp;vi kraj &amp;i &amp;idi na iduće</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Podešava se krajnjim vremenom {0}</AdjustedViaEndTime>
       <SetEndTime>Postavi&amp; završetak</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Postavi st&amp;art i pomeri ostatak</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Postavi st&amp;art i pomeri ostatak</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Pretraži tekst na mreži</SearchTextOnline>
       <GoogleTranslate>Google prevodilac</GoogleTranslate>
       <GoogleIt>Google</GoogleIt>

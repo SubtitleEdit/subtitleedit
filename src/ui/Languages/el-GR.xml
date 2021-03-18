@@ -1310,7 +1310,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <SetEndTimeAndGoToNext>Ο&amp;ρισμός λήξης &amp;&amp; μετάβαση</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Προσαρμογή μέσω χρόνου λήξης {0}</AdjustedViaEndTime>
       <SetEndTime>Ορισμός λή&amp;ξης</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Έναρ&amp;ξη και μετατόπιση</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Έναρ&amp;ξη και μετατόπιση</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Διαδικτυακή αναζήτηση κειμένου</SearchTextOnline>
       <GoogleTranslate>Μετάφραση Google</GoogleTranslate>
       <GoogleIt>Αναζήτηση</GoogleIt>

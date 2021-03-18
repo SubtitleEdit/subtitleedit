@@ -1130,7 +1130,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <SetEndTimeAndGoToNext>Встан. &amp;кінець &amp;&amp; йти до наст.</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Посунено через встановлення кінцевої позиції {0}</AdjustedViaEndTime>
       <SetEndTime>Встановити &amp;кінець</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Встан. по&amp;чаток і посун. решту</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Встан. по&amp;чаток і посун. решту</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Шукати текст онлайн</SearchTextOnline>
       <GoogleTranslate>Google-перекладач</GoogleTranslate>
       <GoogleIt>Заґуґлити</GoogleIt>

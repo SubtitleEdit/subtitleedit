@@ -1119,7 +1119,7 @@ Nota: Controlla lo spazio libero sul disco.</WaveFileMalformed>
       <SetEndTimeAndGoToNext>Imposta tempo &amp;finale e vai al prox</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Regolato via tempo finale {0}</AdjustedViaEndTime>
       <SetEndTime>Imposta t&amp;empo finale</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Imposta ini&amp;zio e sposta il resto</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Imposta ini&amp;zio e sposta il resto</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Cerca testo online</SearchTextOnline>
       <GoogleTranslate>Traduttore Google</GoogleTranslate>
       <GoogleIt>Google it</GoogleIt>

@@ -1075,7 +1075,7 @@
       <SetEndTimeAndGoToNext>กำหนด&amp;จุดสิ้นสุด &amp; ไปต่อไป</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>ปรับจากจุดสิ้นสุด {0}</AdjustedViaEndTime>
       <SetEndTime>กำหนด&amp;เวลาสิ้นสุด</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>กำหนด&amp;เวลาเริ่มและออฟเซ็ตส่วนที่เหลือ</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>กำหนด&amp;เวลาเริ่มและออฟเซ็ตส่วนที่เหลือ</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>ค้นหาข้อความออนไลน์</SearchTextOnline>
       <GoogleTranslate>กูเกิ้ลแปลภาษา</GoogleTranslate>
       <GoogleIt>หาด้วยกูเกิ้ล</GoogleIt>

@@ -1233,7 +1233,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
       <SetEndTimeAndGoToNext>&amp;Endzeit setzen und weiter</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Angepasst mit Endzeit {0}</AdjustedViaEndTime>
       <SetEndTime>Als E&amp;ndzeit setzen</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Sta&amp;rt setzen und Rest versch.</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Sta&amp;rt setzen und Rest versch.</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Text online suchen</SearchTextOnline>
       <GoogleTranslate>Google Übersetzung</GoogleTranslate>
       <GoogleIt>Google Suche</GoogleIt>

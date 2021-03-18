@@ -1729,7 +1729,7 @@
                 public string SetEndTimeAndGoToNext { get; set; }
                 public string AdjustedViaEndTime { get; set; }
                 public string SetEndTime { get; set; }
-                public string SetstartTimeAndOffsetOfRest { get; set; }
+                public string SetStartTimeAndOffsetTheRest { get; set; }
 
                 public string SearchTextOnline { get; set; }
                 public string GoogleTranslate { get; set; }
@@ -2358,6 +2358,7 @@
             public string AdjustEndOneFrameBackKeepGapNext { get; set; }
             public string AdjustEndOneFrameForwardKeepGapNext { get; set; }
             public string AdjustSetStartTimeKeepDuration { get; set; }
+            public string AdjustSetStartAndOffsetTheWholeSubtitle { get; set; }
             public string AdjustSetEndAndOffsetTheRest { get; set; }
             public string AdjustSetEndAndOffsetTheRestAndGoToNext { get; set; }
             public string AdjustSnapStartToNextSceneChange { get; set; }
