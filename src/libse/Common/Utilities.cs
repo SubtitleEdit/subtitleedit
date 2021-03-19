@@ -72,6 +72,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return format;
                 }
             }
+
             return null;
         }
 

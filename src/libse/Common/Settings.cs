@@ -1022,6 +1022,8 @@ $HorzAlign          =   Center
         public double DefaultFrameRate { get; set; }
         public double CurrentFrameRate { get; set; }
         public string DefaultSubtitleFormat { get; set; }
+        public string DefaultSaveAsFormat { get; set; }
+        public string FavoriteSubtitleFormats { get; set; }
         public string DefaultEncoding { get; set; }
         public bool AutoConvertToUtf8 { get; set; }
         public bool AutoGuessAnsiEncoding { get; set; }
@@ -2744,10 +2746,23 @@ $HorzAlign          =   Center
 
                 settings.General.CurrentFrameRate = settings.General.DefaultFrameRate;
             }
+
             subNode = node.SelectSingleNode("DefaultSubtitleFormat");
             if (subNode != null)
             {
                 settings.General.DefaultSubtitleFormat = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("DefaultSaveAsFormat");
+            if (subNode != null)
+            {
+                settings.General.DefaultSaveAsFormat = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("FavoriteSubtitleFormats");
+            if (subNode != null)
+            {
+                settings.General.FavoriteSubtitleFormats = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("DefaultEncoding");
@@ -8059,6 +8074,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ShowSpectrogram", settings.General.ShowSpectrogram.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DefaultFrameRate", settings.General.DefaultFrameRate.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DefaultSubtitleFormat", settings.General.DefaultSubtitleFormat);
+                textWriter.WriteElementString("DefaultSaveAsFormat", settings.General.DefaultSaveAsFormat);
+                textWriter.WriteElementString("FavoriteSubtitleFormats", settings.General.FavoriteSubtitleFormats);
                 textWriter.WriteElementString("DefaultEncoding", settings.General.DefaultEncoding);
                 textWriter.WriteElementString("AutoConvertToUtf8", settings.General.AutoConvertToUtf8.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AutoGuessAnsiEncoding", settings.General.AutoGuessAnsiEncoding.ToString(CultureInfo.InvariantCulture));

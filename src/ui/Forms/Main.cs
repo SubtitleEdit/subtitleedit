@@ -3988,7 +3988,11 @@ namespace Nikse.SubtitleEdit.Forms
         private DialogResult FileSaveAs(bool allowUsingLastSaveAsFormat)
         {
             SubtitleFormat currentFormat = null;
-            if (allowUsingLastSaveAsFormat && !string.IsNullOrEmpty(Configuration.Settings.General.LastSaveAsFormat))
+            if (!string.IsNullOrEmpty(Configuration.Settings.General.DefaultSaveAsFormat))
+            {
+                currentFormat = Utilities.GetSubtitleFormatByFriendlyName(Configuration.Settings.General.DefaultSaveAsFormat);
+            }
+            else if (allowUsingLastSaveAsFormat && !string.IsNullOrEmpty(Configuration.Settings.General.LastSaveAsFormat))
             {
                 currentFormat = Utilities.GetSubtitleFormatByFriendlyName(Configuration.Settings.General.LastSaveAsFormat);
             }
@@ -4658,7 +4662,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _oldSubtitleFormat = format;
-            Configuration.Settings.General.LastSaveAsFormat = format.Name;
 
             if ((formatType == typeof(AdvancedSubStationAlpha) ||
                  formatType == typeof(SubStationAlpha) ||
@@ -5147,7 +5150,8 @@ namespace Nikse.SubtitleEdit.Forms
                     MessageBox.Show(LanguageSettings.Current.Main.DarkThemeRestart);
                 }
             }
-            else if (oldSubtitleTextBoxSyntaxColor != Configuration.Settings.General.SubtitleTextBoxSyntaxColor ||
+
+            if (oldSubtitleTextBoxSyntaxColor != Configuration.Settings.General.SubtitleTextBoxSyntaxColor ||
                 oldSubtitleFontSize != Configuration.Settings.General.SubtitleTextBoxFontSize ||
                 oldSubtitleAlignment != Configuration.Settings.General.CenterSubtitleInTextBox ||
                 oldSubtitleTextBoxHtmlColor != Configuration.Settings.General.SubtitleTextBoxHtmlColor.ToArgb().ToString() ||

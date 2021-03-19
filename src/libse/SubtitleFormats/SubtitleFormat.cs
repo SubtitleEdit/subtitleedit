@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml;
 
@@ -353,6 +354,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                     }
                 }
+
+                // Move the favorite formats to the top is they exist.
+                IEnumerable<SubtitleFormat> selectedFormats = new[] { Utilities.GetSubtitleFormatByFriendlyName(Configuration.Settings.General.DefaultSubtitleFormat) };
+                if (!string.IsNullOrEmpty(Configuration.Settings.General.FavoriteSubtitleFormats))
+                {
+                    selectedFormats = selectedFormats.Union(Configuration.Settings.General.FavoriteSubtitleFormats.Split(';').Select(formatName => Utilities.GetSubtitleFormatByFriendlyName(formatName)));
+                }
+
+                _allSubtitleFormats = selectedFormats.Union(_allSubtitleFormats).ToList();
 
                 return _allSubtitleFormats;
             }

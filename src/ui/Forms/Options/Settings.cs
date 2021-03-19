@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Core.Enums;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.Translate.Service;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
@@ -22,15 +23,16 @@ namespace Nikse.SubtitleEdit.Forms.Options
     public sealed partial class Settings : PositionAndSizeForm
     {
         private const int GeneralSection = 0;
-        private const int ShortcutsSection = 1;
-        private const int SyntaxColoringSection = 2;
-        private const int VideoPlayerSection = 3;
-        private const int WaveformAndSpectrogramSection = 4;
-        private const int ToolsSection = 5;
-        private const int WordListsSection = 6;
-        private const int ToolbarSection = 7;
-        private const int AppearanceSection = 8;
-        private const int NetworkSection = 9;
+        private const int SubtitleFormatsSection = 1;
+        private const int ShortcutsSection = 2;
+        private const int SyntaxColoringSection = 3;
+        private const int VideoPlayerSection = 4;
+        private const int WaveformAndSpectrogramSection = 5;
+        private const int ToolsSection = 6;
+        private const int WordListsSection = 7;
+        private const int ToolbarSection = 8;
+        private const int AppearanceSection = 9;
+        private const int NetworkSection = 10;
 
         private string _listBoxSearchString = string.Empty;
         private DateTime _listBoxSearchStringLastUsed = DateTime.UtcNow;
@@ -325,9 +327,10 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxSyntaxColorGapTooSmall.Checked = Configuration.Settings.Tools.ListViewSyntaxColorGap;
             panelListViewSyntaxColorError.BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
 
-            // Language
+            // Language and controls initialization
             var language = LanguageSettings.Current.Settings;
             listBoxSection.Items[GeneralSection] = language.General;
+            listBoxSection.Items[SubtitleFormatsSection] = language.SubtitleFormats;
             listBoxSection.Items[ShortcutsSection] = language.Shortcuts;
             listBoxSection.Items[SyntaxColoringSection] = language.SyntaxColoring;
             listBoxSection.Items[VideoPlayerSection] = language.VideoPlayer;
@@ -340,6 +343,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             Text = language.Title;
             panelGeneral.Text = language.General;
+            panelSubtitleFormats.Text = language.SubtitleFormats;
             panelVideoPlayer.Text = language.VideoPlayer;
             panelWaveform.Text = language.WaveformAndSpectrogram;
             panelWordLists.Text = language.WordLists;
@@ -942,6 +946,65 @@ namespace Nikse.SubtitleEdit.Forms.Options
             textBoxShortcutSearch.Left = labelShortcutsSearch.Left + labelShortcutsSearch.Width + 5;
             buttonShortcutsClear.Left = textBoxShortcutSearch.Left + textBoxShortcutSearch.Width + 5;
 
+            // Subtitle formats
+            groupBoxSubtitleFormats.Text = language.SubtitleFormats;
+            labelDefaultSubtitleFormat.Text = language.DefaultFormat;
+            labelDefaultSaveAsFormat.Text = language.DefaultSaveAsFormat;
+            groupBoxFavoriteSubtitleFormats.Text = language.Favorites;
+            labelFavoriteFormats.Text = language.FavoriteFormats;
+            buttonRemoveFromFavoriteFormats.Text = LanguageSettings.Current.MultipleReplace.Remove;
+            labelFormats.Text = LanguageSettings.Current.ExportCustomText.Formats;
+            labelFavoriteSubtitleFormatsNote.Text = language.FavoriteSubtitleFormatsNote;
+
+            deleteToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.Remove;
+            deleteAllToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.RemoveAll;
+            moveUpToolStripMenuItem.Text = LanguageSettings.Current.DvdSubRip.MoveUp;
+            moveDownToolStripMenuItem.Text = LanguageSettings.Current.DvdSubRip.MoveDown;
+            moveToTopToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.MoveToTop;
+            moveToBottomToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.MoveToBottom;
+
+            labelFavoriteFormats.Left = listBoxFavoriteSubtitleFormats.Left;
+            labelFormats.Left = listBoxSubtitleFormats.Left;
+            var cmoboBoxLeft = labelDefaultSubtitleFormat.Right > labelDefaultSaveAsFormat.Right ? labelDefaultSubtitleFormat.Right + 5 : labelDefaultSaveAsFormat.Right + 5;
+            comboBoxSubtitleFormats.Left = cmoboBoxLeft;
+            comboBoxSubtitleSaveAsFormats.Left = cmoboBoxLeft;
+
+            UiUtil.InitializeSubtitleFormatComboBox(comboBoxSubtitleFormats, Configuration.Settings.General.DefaultSubtitleFormat);
+            UiUtil.InitializeSubtitleFormatComboBox(comboBoxSubtitleSaveAsFormats, Configuration.Settings.General.DefaultSaveAsFormat);
+            if (string.IsNullOrEmpty(Configuration.Settings.General.DefaultSaveAsFormat))
+            {
+                comboBoxSubtitleSaveAsFormats.ResetText();
+                comboBoxSubtitleSaveAsFormats.SelectedIndex = -1;
+            }
+
+            var formatNames = SubtitleFormat.AllSubtitleFormats.Where(format => !format.IsVobSubIndexFile).Select(format => format.FriendlyName);
+            listBoxSubtitleFormats.Items.AddRange(formatNames.ToArray<object>());
+
+            if (!string.IsNullOrEmpty(Configuration.Settings.General.FavoriteSubtitleFormats))
+            {
+                var favoriteFormats = Configuration.Settings.General.FavoriteSubtitleFormats.Split(';');
+                if (favoriteFormats.Length > 0)
+                {
+                    listBoxFavoriteSubtitleFormats.Items.AddRange(favoriteFormats.ToArray<object>());
+                }
+            }
+
+            using (var graphics = Graphics.FromHwnd(IntPtr.Zero))
+            {
+                var comboBoxSubtitleFormatsTextWidth = graphics.MeasureString(comboBoxSubtitleFormats.Text, comboBoxSubtitleFormats.Font);
+                if (comboBoxSubtitleFormatsTextWidth.Width > comboBoxSubtitleFormats.Width)
+                {
+                    comboBoxSubtitleFormats.Width = (int)Math.Round(comboBoxSubtitleFormatsTextWidth.Width + 17.5);
+                }
+
+                var comboBoxSubtitleSaveFormatsTextWidth = graphics.MeasureString(comboBoxSubtitleSaveAsFormats.Text, comboBoxSubtitleSaveAsFormats.Font);
+                if (comboBoxSubtitleSaveFormatsTextWidth.Width > comboBoxSubtitleSaveAsFormats.Width)
+                {
+                    comboBoxSubtitleSaveAsFormats.Width = (int)Math.Round(comboBoxSubtitleSaveFormatsTextWidth.Width + 17.5);
+                }
+            }
+
+            // Shortcuts
             groupBoxShortcuts.Text = language.Shortcuts;
             labelShortcut.Text = language.Shortcut;
             checkBoxShortcutsControl.Text = language.Control;
@@ -1815,6 +1878,24 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 gs.SubtitleFontName = comboBoxSubtitleFont.SelectedItem.ToString();
             }
 
+            gs.DefaultSubtitleFormat = comboBoxSubtitleFormats.Text;
+            gs.DefaultSaveAsFormat = comboBoxSubtitleSaveAsFormats.Text;
+            if (listBoxFavoriteSubtitleFormats.Items.Count >= 0)
+            {
+                var sb = new StringBuilder();
+                for (int i = 0; i < listBoxFavoriteSubtitleFormats.Items.Count; i++)
+                {
+                    sb.Append(listBoxFavoriteSubtitleFormats.Items[i]);
+                    if (i < listBoxFavoriteSubtitleFormats.Items.Count - 1)
+                    {
+                        sb.Append(";");
+                    }
+                }
+
+                gs.FavoriteSubtitleFormats = sb.ToString();
+            }
+
+
             var toolsSettings = Configuration.Settings.Tools;
             toolsSettings.VerifyPlaySeconds = comboBoxToolsVerifySeconds.SelectedIndex + 2;
             toolsSettings.StartSceneIndex = comboBoxToolsStartSceneIndex.SelectedIndex;
@@ -2432,6 +2513,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelStatus.Text = string.Empty;
 
             panelGeneral.Visible = false;
+            panelSubtitleFormats.Visible = false;
             panelShortcuts.Visible = false;
             panelSyntaxColoring.Visible = false;
             panelVideoPlayer.Visible = false;
@@ -2445,6 +2527,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             var section = panelGeneral;
             switch (listBoxSection.SelectedIndex)
             {
+                case SubtitleFormatsSection:
+                    section = panelSubtitleFormats;
+                    break;
                 case ShortcutsSection:
                     section = panelShortcuts;
                     break;
@@ -3284,7 +3369,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             var idx = listViewNames.SelectedItems[0].Index;
             if (idx >= 0)
             {
-                textBoxNameEtc.Text = (string)listViewNames.Items[idx].Text;
+                textBoxNameEtc.Text = listViewNames.Items[idx].Text;
             }
         }
 
@@ -3517,6 +3602,158 @@ namespace Nikse.SubtitleEdit.Forms.Options
             buttonDarkThemeBackColor.Enabled = enabled;
             panelDarkThemeBackColor.Enabled = enabled;
             checkBoxDarkThemeShowListViewGridLines.Enabled = enabled;
+        }
+
+        private void listBoxFavoriteSubtitleFormats_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == (Keys.Control | Keys.A))
+            {
+                listBoxFavoriteSubtitleFormats.SelectAll();
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == (Keys.Control | Keys.Shift | Keys.I))
+            {
+                listBoxFavoriteSubtitleFormats.InverseSelection();
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        private void listBoxFavoriteSubtitleFormats_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            buttonRemoveFromFavoriteFormats.Enabled = listBoxFavoriteSubtitleFormats.SelectedItems.Count > 0;
+        }
+
+        private void buttonMoveToFavorites_Click(object sender, EventArgs e)
+        {
+            foreach (var selectedItem in listBoxSubtitleFormats.SelectedItems)
+            {
+                if (!listBoxFavoriteSubtitleFormats.Items.Contains(selectedItem))
+                {
+                    listBoxFavoriteSubtitleFormats.Items.Add(selectedItem);
+                }
+            }
+        }
+
+        private void buttonRemoveFromFavoriteFormats_Click(object sender, EventArgs e)
+        {
+            if (listBoxFavoriteSubtitleFormats.SelectedIndices.Count < 1)
+            {
+                return;
+            }
+
+            for (int i = listBoxFavoriteSubtitleFormats.SelectedIndices.Count - 1; i >= 0; i--)
+            {
+                listBoxFavoriteSubtitleFormats.Items.RemoveAt(listBoxFavoriteSubtitleFormats.SelectedIndices[i]);
+            }
+        }
+
+        private void listBoxSubtitleFormats_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            buttonMoveToFavoriteFormats.Enabled = listBoxSubtitleFormats.SelectedItems.Count > 0;
+        }
+
+        private void contextMenuStripFavoriteFormats_Opening(object sender, CancelEventArgs e)
+        {
+            var oneOrMoreSelected = listBoxFavoriteSubtitleFormats.SelectedItems.Count > 0;
+            deleteToolStripMenuItem.Enabled = oneOrMoreSelected;
+
+            var oneOrMoreExist = listBoxFavoriteSubtitleFormats.Items.Count > 0;
+            deleteAllToolStripMenuItem.Enabled = oneOrMoreExist;
+
+            var onlyOneSelected = listBoxFavoriteSubtitleFormats.SelectedItems.Count == 1;
+            var moreThanOneExist = listBoxFavoriteSubtitleFormats.Items.Count > 1;
+            moveUpToolStripMenuItem.Enabled = onlyOneSelected && moreThanOneExist;
+            moveDownToolStripMenuItem.Enabled = onlyOneSelected && moreThanOneExist;
+            moveToTopToolStripMenuItem.Enabled = onlyOneSelected && moreThanOneExist;
+            moveToBottomToolStripMenuItem.Enabled = onlyOneSelected && moreThanOneExist;
+        }
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            buttonRemoveFromFavoriteFormats_Click(sender, e);
+        }
+
+        private void deleteAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            listBoxFavoriteSubtitleFormats.Items.Clear();
+        }
+
+        private void moveUpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (listBoxFavoriteSubtitleFormats.SelectedItems.Count != 1 || listBoxFavoriteSubtitleFormats.Items.Count < 2)
+            {
+                return;
+            }
+
+            var idx = listBoxFavoriteSubtitleFormats.SelectedIndex;
+            if (idx <= 0)
+            {
+                return;
+            }
+
+            var item = listBoxFavoriteSubtitleFormats.SelectedItem;
+            listBoxFavoriteSubtitleFormats.Items.RemoveAt(idx);
+            idx--;
+            listBoxFavoriteSubtitleFormats.Items.Insert(idx, item);
+            listBoxFavoriteSubtitleFormats.SetSelected(idx, true);
+        }
+
+        private void moveDownToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (listBoxFavoriteSubtitleFormats.SelectedItems.Count != 1 || listBoxFavoriteSubtitleFormats.Items.Count < 2)
+            {
+                return;
+            }
+
+            var idx = listBoxFavoriteSubtitleFormats.SelectedIndex;
+            if (idx >= listBoxFavoriteSubtitleFormats.Items.Count - 1)
+            {
+                return;
+            }
+
+            var item = listBoxFavoriteSubtitleFormats.SelectedItem;
+            listBoxFavoriteSubtitleFormats.Items.RemoveAt(idx);
+            idx++;
+            listBoxFavoriteSubtitleFormats.Items.Insert(idx, item);
+            listBoxFavoriteSubtitleFormats.SetSelected(idx, true);
+        }
+
+        private void moveToTopToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (listBoxFavoriteSubtitleFormats.SelectedItems.Count != 1 || listBoxFavoriteSubtitleFormats.Items.Count < 2)
+            {
+                return;
+            }
+
+            var idx = listBoxFavoriteSubtitleFormats.SelectedIndex;
+            if (idx == 0)
+            {
+                return;
+            }
+
+            var item = listBoxFavoriteSubtitleFormats.SelectedItem;
+            listBoxFavoriteSubtitleFormats.Items.RemoveAt(idx);
+            listBoxFavoriteSubtitleFormats.Items.Insert(0, item);
+            listBoxFavoriteSubtitleFormats.SetSelected(0, true);
+        }
+
+        private void moveToBottomToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (listBoxFavoriteSubtitleFormats.SelectedItems.Count != 1 || listBoxFavoriteSubtitleFormats.Items.Count < 2)
+            {
+                return;
+            }
+
+            var idx = listBoxFavoriteSubtitleFormats.SelectedIndex;
+            if (idx == listBoxFavoriteSubtitleFormats.Items.Count - 1)
+            {
+                return;
+            }
+
+            var item = listBoxFavoriteSubtitleFormats.SelectedItem;
+            listBoxFavoriteSubtitleFormats.Items.RemoveAt(idx);
+            listBoxFavoriteSubtitleFormats.Items.Insert(listBoxFavoriteSubtitleFormats.Items.Count, item);
+            listBoxFavoriteSubtitleFormats.SetSelected(listBoxFavoriteSubtitleFormats.Items.Count - 1, true);
         }
     }
 }
