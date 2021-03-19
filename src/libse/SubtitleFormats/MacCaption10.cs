@@ -109,7 +109,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
 
                     var startTime = DecodeTimeCodeFrames(s.Substring(0, match.Length - 1), splitChars);
-                    var text = GetText(s.Substring(match.Index + match.Length).Trim(), index == lines.Count - 1);
+                    var text = GetText(index, s.Substring(match.Index + match.Length).Trim(), index == lines.Count - 1);
                     if (string.IsNullOrEmpty(text))
                     {
                         if (p != null)
@@ -148,7 +148,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
-        public static string GetText(string input, bool flush)
+        public static string GetText(int lineIndex, string input, bool flush)
         {
             var hexString = GetHex(input);
             var bytes = HexStringToByteArray(hexString);
@@ -158,7 +158,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             var cea708 = new Smpte291M(bytes);
-            return cea708.GetText(flush);
+            return cea708.GetText(lineIndex, flush);
         }
 
         private static string GetHex(string input)

@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Core.Cea708.Commands
 {
-    public class PenColor
+    public class PenColor : CommandBase
     {
         public int ForegroundColorBlue { get; set; }
         public int ForegroundColorGreen { get; set; }
@@ -18,8 +18,10 @@
         public int EdgeOpacity { get; set; }
 
 
-        public PenColor(byte[] bytes, int index)
+        public PenColor(int lineIndex, byte[] bytes, int index)
         {
+            LineIndex = lineIndex;
+
             ForegroundColorBlue = bytes[index] & 0b00000011;
             ForegroundColorGreen = (bytes[index] & 0b00001100) >> 2;
             ForegroundColorRed = (bytes[index] & 0b00110000) >> 4;
@@ -32,7 +34,7 @@
 
             EdgeColorBlue = bytes[index + 2] & 0b00000011;
             EdgeColorGreen = (bytes[index + 2] & 0b00001100) >> 2;
-            EdgeColorRed = (bytes[index + 2] & 0b00110000) >> 4;
+            EdgeColorRed = (bytes[index + 2] & 0b11110000) >> 4;
             EdgeOpacity = ForegroundOpacity;
         }
 

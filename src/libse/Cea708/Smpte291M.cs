@@ -79,9 +79,9 @@ namespace Nikse.SubtitleEdit.Core.Cea708
             _state = new CommandState();
         }
 
-        public string GetText(bool flush)
+        public string GetText(int lineIndex, bool flush)
         {
-            return CaptionDistributionPacketCcData.GetText(_state, flush);
+            return CaptionDistributionPacketCcData.GetText(lineIndex, _state, flush);
         }
     }
 }

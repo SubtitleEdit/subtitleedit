@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Core.Cea708.Commands
 {
-    public class Window
+    public class Window : CommandBase
     {
         public bool Active { get; set; }
 
@@ -23,8 +23,10 @@
             //TODO: set default values...
         }
 
-        public Window(byte[] bytes, int index)
+        public Window(int lineIndex, byte[] bytes, int index)
         {
+            LineIndex = lineIndex;
+
             Priority = bytes[index] & 0b00000111;
             ColumnLock = (bytes[index] & 0b00001000) > 0;
             RowLock = (bytes[index] & 0b00010000) > 0;

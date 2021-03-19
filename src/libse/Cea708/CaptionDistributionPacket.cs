@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Cea708.Commands;
+using System;
 using System.Text;
-using Nikse.SubtitleEdit.Core.Cea708.Commands;
 
 namespace Nikse.SubtitleEdit.Core.Cea708
 {
@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
             }
         }
 
-        public string GetText(CommandState state, bool flush)
+        public string GetText(int lineIndex, CommandState state, bool flush)
         {
             var hex = new StringBuilder();
             foreach (var cc in CcData)
@@ -48,7 +48,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 }
             }
 
-            var text = Cea708.Decode(HexStringToByteArray(hex.ToString()), state, flush);
+            var text = Cea708.Decode(lineIndex, HexStringToByteArray(hex.ToString()), state, flush);
             return text;
         }
 
