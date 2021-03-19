@@ -274,7 +274,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
             { 255, "ÿ" },
         };
 
-        public static string Decode(byte[] bytes, CommandState state, bool flush)
+        public static string Decode(int lineIndex, byte[] bytes, CommandState state, bool flush)
         {
             var i = 0;
             var sb = new StringBuilder();
@@ -286,203 +286,175 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 // Commands
                 if (b == 0x03)
                 {
+                    //The EndOfText command is a Null Command which can be used to flush any buffered text to the current window. All commands force a flush of any buffered text to the current window, so this command is only needed when no other command is pending.
                     if (DebugMode)
                     {
                         sb.Append("{EndOfText}");
                     }
-                    //The EndOfText command is a Null Command which can be used to flush any buffered text to the current window. All commands force a flush of any buffered text to the current window, so this command is only needed when no other command is pending.
 
                     FlushText(sb, state);
                 }
                 else if (b >= 0x80 && b <= 0x87)
                 {
-                    if (DebugMode)
-                    {
-                        sb.Append("{SetCurrentWindow}");
-                    }
-
-                    state.CurrentWindow = b - 0x80;
-
                     //SetCurrentWindow tells the caption decoder which window the following commands describe: SetWindowAttributes, SetPenAttributes, SetPenColor, SetPenLocation. If the window specified has not already been created with a DefineWindow command then
                     //SetCurrentWindow and the window property commands can be safely ignored. 
+                    var currentWindow = new CurrentWindow(lineIndex, b - 0x80);
+                    state.Commands.Add(currentWindow);
+                    if (DebugMode)
+                    {
+                        sb.Append("{SetCurrentWindow:" + currentWindow.Index + "}");
+                    }
                 }
                 else if (b == 0x88)
                 {
+                    // ClearWindows clears all the windows specified in the 8 bit window bitmap.
+                    var clearWindows = new ClearWindows(lineIndex, bytes, i + 1);
+                    state.Commands.Add(clearWindows);
                     if (DebugMode)
                     {
                         sb.Append("{ClearWindows}");
                     }
 
-                    var windows = bytes[i + 1];
-                    if ((windows & 0b00000001) > 0) state.Windows[0] = new Window();
-                    if ((windows & 0b00000010) > 0) state.Windows[1] = new Window();
-                    if ((windows & 0b00000100) > 0) state.Windows[2] = new Window();
-                    if ((windows & 0b00001000) > 0) state.Windows[3] = new Window();
-                    if ((windows & 0b00010000) > 0) state.Windows[4] = new Window();
-                    if ((windows & 0b00100000) > 0) state.Windows[5] = new Window();
-                    if ((windows & 0b01000000) > 0) state.Windows[6] = new Window();
-                    if ((windows & 0b10000000) > 0) state.Windows[7] = new Window();
-
-                    // ClearWindows clears all the windows specified in the 8 bit window bitmap.
                     i++;
                 }
                 else if (b == 0x89)
                 {
+                    // DisplayWindows displays all the windows specified in the 8 bit window bitmap.
+                    var displayWindows = new DisplayWindows(lineIndex, bytes, i + 1);
+                    state.Commands.Add(displayWindows);
                     if (DebugMode)
                     {
                         sb.Append("{DisplayWindows}");
                     }
 
-                    var windows = bytes[i + 1];
-                    if ((windows & 0b00000001) > 0) state.Windows[0].Active = true;
-                    if ((windows & 0b00000010) > 0) state.Windows[1].Active = true;
-                    if ((windows & 0b00000100) > 0) state.Windows[2].Active = true;
-                    if ((windows & 0b00001000) > 0) state.Windows[3].Active = true;
-                    if ((windows & 0b00010000) > 0) state.Windows[4].Active = true;
-                    if ((windows & 0b00100000) > 0) state.Windows[5].Active = true;
-                    if ((windows & 0b01000000) > 0) state.Windows[6].Active = true;
-                    if ((windows & 0b10000000) > 0) state.Windows[7].Active = true;
-
-                    // DisplayWindows displays all the windows specified in the 8 bit window bitmap.
                     i++;
                 }
                 else if (b == 0x8A)
                 {
+                    // HideWindows hides all the windows specified in the 8 bit window bitmap.
+                    var hideWindows = new HideWindows(lineIndex, bytes, i + 1);
+                    state.Commands.Add(hideWindows);
                     if (DebugMode)
                     {
                         sb.Append("{HideWindows}");
                     }
 
-                    var windows = bytes[i + 1];
-                    if ((windows & 0b00000001) > 0) state.Windows[0].Active = false;
-                    if ((windows & 0b00000010) > 0) state.Windows[1].Active = false;
-                    if ((windows & 0b00000100) > 0) state.Windows[2].Active = false;
-                    if ((windows & 0b00001000) > 0) state.Windows[3].Active = false;
-                    if ((windows & 0b00010000) > 0) state.Windows[4].Active = false;
-                    if ((windows & 0b00100000) > 0) state.Windows[5].Active = false;
-                    if ((windows & 0b01000000) > 0) state.Windows[6].Active = false;
-                    if ((windows & 0b10000000) > 0) state.Windows[7].Active = false;
-
-                    // HideWindows hides all the windows specified in the 8 bit window bitmap.
                     i++;
                 }
                 else if (b == 0x8B)
                 {
+                    // ToggleWindows hides all displayed windows, and displays all hidden windows specified in the 8 bit window bitmap.
+                    var toggleWindows = new ToggleWindows(lineIndex, bytes, i + 1);
+                    state.Commands.Add(toggleWindows);
                     if (DebugMode)
                     {
                         sb.Append("{ToggleWindows}");
                     }
 
-                    var windows = bytes[i + 1];
-                    if ((windows & 0b00000001) > 0) state.Windows[0].Active = !state.Windows[0].Active;
-                    if ((windows & 0b00000010) > 0) state.Windows[1].Active = !state.Windows[1].Active;
-                    if ((windows & 0b00000100) > 0) state.Windows[2].Active = !state.Windows[2].Active;
-                    if ((windows & 0b00001000) > 0) state.Windows[3].Active = !state.Windows[3].Active;
-                    if ((windows & 0b00010000) > 0) state.Windows[4].Active = !state.Windows[4].Active;
-                    if ((windows & 0b00100000) > 0) state.Windows[5].Active = !state.Windows[5].Active;
-                    if ((windows & 0b01000000) > 0) state.Windows[6].Active = !state.Windows[6].Active;
-                    if ((windows & 0b10000000) > 0) state.Windows[7].Active = !state.Windows[7].Active;
-
-                    // ToggleWindows hides all displayed windows, and displays all hidden windows specified in the 8 bit window bitmap.
                     i++;
                 }
                 else if (b == 0x8C)
                 {
+                    // DeleteWindows deletes all the windows specified in the 8 bit window bitmap.If the current window, as specified by the last SetCurrentWindow command, is deleted then the current window becomes undefined and the window attribute commands should have no effect until after the next SetCurrentWindow or DefineWindow command.
+                    var deleteWindows = new DeleteWindows(lineIndex, bytes, i + 1);
+                    state.Commands.Add(deleteWindows);
                     if (DebugMode)
                     {
                         sb.Append("{DeleteWindows}");
                     }
 
-                    var windows = bytes[i + 1];
-                    if ((windows & 0b00000001) > 0) state.Windows[0] = new Window();
-                    if ((windows & 0b00000010) > 0) state.Windows[1] = new Window();
-                    if ((windows & 0b00000100) > 0) state.Windows[2] = new Window();
-                    if ((windows & 0b00001000) > 0) state.Windows[3] = new Window();
-                    if ((windows & 0b00010000) > 0) state.Windows[4] = new Window();
-                    if ((windows & 0b00100000) > 0) state.Windows[5] = new Window();
-                    if ((windows & 0b01000000) > 0) state.Windows[6] = new Window();
-                    if ((windows & 0b10000000) > 0) state.Windows[7] = new Window();
-
-                    // DeleteWindows deletes all the windows specified in the 8 bit window bitmap.If the current window, as specified by the last SetCurrentWindow command, is deleted then the current window becomes undefined and the window attribute commands should have no effect until after the next SetCurrentWindow or DefineWindow command.
                     i++;
                 }
                 else if (b == 0x8D)
                 {
+                    // Delay suspends all processing of the current service, except for DelayCancel and Reset scanning.The period of suspension is set to by the one byte parameter.The parameter specifies the delay in tenths of a second, so the minimum delay is 0.1 seconds, and the maximum delay is 25.5 seconds.A zero second delay can safely be ignored in a decoder, but should not be emitted from an encoder.A delay should be cancelled if the caption decoder's input buffer becomes full, a DelayCancel or Reset is received, or the specified delay time elapses.
+                    var delay = new Delay(lineIndex, bytes, i + 1);
+                    state.Commands.Add(delay);
                     if (DebugMode)
                     {
-                        sb.Append("{Delay}");
+                        sb.Append("{Delay:" + delay.Milliseconds + "ms}");
                     }
-                    // Delay suspends all processing of the current service, except for DelayCancel and Reset scanning.The period of suspension is set to by the one byte parameter.The parameter specifies the delay in tenths of a second, so the minimum delay is 0.1 seconds, and the maximum delay is 25.5 seconds.A zero second delay can safely be ignored in a decoder, but should not be emitted from an encoder.A delay should be cancelled if the caption decoder's input buffer becomes full, a DelayCancel or Reset is received, or the specified delay time elapses.
+
                     i++;
                 }
                 else if (b == 0x8E)
                 {
-                    var delayMilliseconds = bytes[i + 1] * 100;
-
+                    // DelayCancel terminates any active delay and resumes normal command processing. DelayCancel should be scanned for during a Delay.
+                    var delayCancel = new DelayCancel(lineIndex);
+                    state.Commands.Add(delayCancel);
                     if (DebugMode)
                     {
-                        sb.Append("{DelayCancel:"+ delayMilliseconds + "ms}");
+                        sb.Append("{DelayCancel}");
                     }
-
-                    // DelayCancel terminates any active delay and resumes normal command processing. DelayCancel should be scanned for during a Delay.
                 }
                 else if (b == 0x8F)
                 {
+                    // Reset deletes all windows, cancels any active delay, and clears the buffer before the Reset command. Reset should be scanned for during a Delay. 
+                    var reset = new Reset(lineIndex);
+                    state.Commands.Add(reset);
                     if (DebugMode)
                     {
                         sb.Append("{Reset}");
                     }
-                    // Reset deletes all windows, cancels any active delay, and clears the buffer before the Reset command. Reset should be scanned for during a Delay. 
                 }
                 else if (b == 0x90)
                 {
+                    // The SetPenAttributes command specifies how certain attributes of subsequent characters are to be rendered in the current window, until the next SetPenAttributes command.
+                    var penAttributes = new PenAttributes(lineIndex, bytes, i + 1);
+                    state.Commands.Add(penAttributes);
                     if (DebugMode)
                     {
-                        sb.Append("{SetPenAttributes}");
+                        sb.Append("{SetPenAttributes:italic=" + penAttributes.Italics + "}");
                     }
-                    // The SetPenAttributes command specifies how certain attributes of subsequent characters are to be rendered in the current window, until the next SetPenAttributes command.
+
                     i += 2;
                 }
                 else if (b == 0x91)
                 {
-                    var penColor = new PenColor(bytes, i + 1);
-
+                    // SetPenColor sets the foreground, background, and edge color for the subsequent characters. Color is specified with 6 bits, 2 for each of blue, green and red. The lowest order bits are for blue, the next two for green and the highest order bits represent red. Opacity is represented by two bits, they represent SOLID=0, FLASH=1, TRANSLUCENT=2, and TRANSPARENT=3. The edge color is the color of the outlined edges of the text, but the outline shares its opacity with the foreground, so the highest order bits of the third parameter byte should both be cleared.
+                    var penColor = new PenColor(lineIndex, bytes, i + 1);
+                    state.Commands.Add(penColor);
                     if (DebugMode)
                     {
-                        sb.Append("{SetPenColor}");
+                        sb.Append("{SetPenColor:color=r" + penColor.ForegroundColorRed + " g" + penColor.ForegroundColorGreen + " b" + penColor.ForegroundColorBlue + "}");
                     }
-                    // SetPenColor sets the foreground, background, and edge color for the subsequent characters. Color is specified with 6 bits, 2 for each of blue, green and red. The lowest order bits are for blue, the next two for green and the highest order bits represent red. Opacity is represented by two bits, they represent SOLID=0, FLASH=1, TRANSLUCENT=2, and TRANSPARENT=3. The edge color is the color of the outlined edges of the text, but the outline shares its opacity with the foreground, so the highest order bits of the third parameter byte should both be cleared.
+
                     i += 3;
                 }
                 else if (b == 0x92)
                 {
-                    var penLocation = new PenLocation(bytes, i + 1);
+                    // SetPenLocation sets the location of for the next bit of appended text in the current window. It has two parameters, row and column. If a window is not locked (see Define Window) and the SMALL font is in effect the location can be outside the otherwise valid addresses. 
+                    var penLocation = new PenLocation(lineIndex, bytes, i + 1);
+                    state.Commands.Add(penLocation);
                     if (DebugMode)
                     {
                         sb.Append("{SetPenLocation:" + penLocation.Row + "," + penLocation.Column + "}");
                     }
 
-                    // SetPenLocation sets the location of for the next bit of appended text in the current window. It has two parameters, row and column. If a window is not locked (see Define Window) and the SMALL font is in effect the location can be outside the otherwise valid addresses. 
                     i += 2;
                 }
                 else if (b == 0x97)
                 {
+                    // SetWindowAttributes Sets the window attributes of the current window. Fill Color is specified with 6 bits, 2 for each of blue, green and red. The lowest order bits are for blue, the next two for green and the highest order bits represent red. Fill Opacity is represented by two bits, they represent SOLID=0, FLASH=1, TRANSLUCENT=2, and TRANSPARENT=3. The window's Border Color is specified the same way. However, the Border Type is split into two fields. They should be combined, with border type 01 representing the low order bits, and border type 2 the high order bit. Once combined the Border Type has 6 valid values: NONE=0, RAISED=1, DEPRESSED=2, UNIFORM=3, SHADOW_LEFT=4, and SHADOW_RIGHT=5. 
+                    var windowAttributes = new WindowAttributes(lineIndex, bytes, i + 1);
+                    state.Commands.Add(windowAttributes);
                     if (DebugMode)
                     {
                         sb.Append("{SetWindowAttributes}");
                     }
-                    // SetWindowAttributes Sets the window attributes of the current window. Fill Color is specified with 6 bits, 2 for each of blue, green and red. The lowest order bits are for blue, the next two for green and the highest order bits represent red. Fill Opacity is represented by two bits, they represent SOLID=0, FLASH=1, TRANSLUCENT=2, and TRANSPARENT=3. The window's Border Color is specified the same way. However, the Border Type is split into two fields. They should be combined, with border type 01 representing the low order bits, and border type 2 the high order bit. Once combined the Border Type has 6 valid values: NONE=0, RAISED=1, DEPRESSED=2, UNIFORM=3, SHADOW_LEFT=4, and SHADOW_RIGHT=5. 
+
                     i += 4;
                 }
                 else if (b >= 0x98 && b <= 0x9F)
                 {
-                    var window = new Window(bytes, i + 1);
-
+                    //DefineWindow0-7 creates one of the eight windows used by a caption decoder. This command should be sent periodically by a caption encoder even for pre-existing windows so that a newly tuned in caption decoder can begin displaying captions. When issued on a pre-existing window the pen style and window style can be left null, this tells the decoder not to change the current styles if they exist, and initialize both to style 1 if the window does not exist in its context
+                    var window = new Window(lineIndex, bytes, i + 1);
+                    state.Commands.Add(window);
                     if (DebugMode)
                     {
                         sb.Append("{DefineWindow}");
                     }
-                    //DefineWindow0-7 creates one of the eight windows used by a caption decoder. This command should be sent periodically by a caption encoder even for pre-existing windows so that a newly tuned in caption decoder can begin displaying captions. When issued on a pre-existing window the pen style and window style can be left null, this tells the decoder not to change the current styles if they exist, and initialize both to style 1 if the window does not exist in its context
+
                     i += 6;
                 }
 
