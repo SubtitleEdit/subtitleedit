@@ -25,8 +25,6 @@ namespace Nikse.SubtitleEdit.Core.Cea708
         public int CaptionDistributionPacketHeaderSequenceCounter2 { get; set; }
         public int CaptionDistributionPacketChecksum { get; set; }
 
-        private CommandState _state;
-
         public string GetFrameRateDisplay()
         {
             switch (CaptionDistributionPacketFramingRate)
@@ -75,13 +73,11 @@ namespace Nikse.SubtitleEdit.Core.Cea708
             CaptionDistributionPacketFooterSection = bytes[1 + idx];
             CaptionDistributionPacketHeaderSequenceCounter2 = (bytes[2 + idx] << 8) + bytes[3 + idx];
             CaptionDistributionPacketChecksum = bytes[4 + idx];
-
-            _state = new CommandState();
         }
 
-        public string GetText(int lineIndex, bool flush)
+        public string GetText(int lineIndex, bool flush, CommandState state)
         {
-            return CaptionDistributionPacketCcData.GetText(lineIndex, _state, flush);
+            return CaptionDistributionPacketCcData.GetText(lineIndex, state, flush);
         }
     }
 }
