@@ -5230,6 +5230,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/General":
                     language.Settings.General = reader.Value;
                     break;
+                case "Settings/SubtitleFormats":
+                    language.Settings.SubtitleFormats = reader.Value;
+                    break;
                 case "Settings/Toolbar":
                     language.Settings.Toolbar = reader.Value;
                     break;
@@ -5844,6 +5847,21 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Settings/FixCommonErrorsSkipStepOne":
                     language.Settings.FixCommonErrorsSkipStepOne = reader.Value;
+                    break;
+                case "Settings/DefaultFormat":
+                    language.Settings.DefaultFormat = reader.Value;
+                    break;
+                case "Settings/DefaultSaveAsFormat":
+                    language.Settings.DefaultSaveAsFormat = reader.Value;
+                    break;
+                case "Settings/Favorites":
+                    language.Settings.Favorites = reader.Value;
+                    break;
+                case "Settings/FavoriteFormats":
+                    language.Settings.FavoriteFormats = reader.Value;
+                    break;
+                case "Settings/FavoriteSubtitleFormatsNote":
+                    language.Settings.FavoriteSubtitleFormatsNote = reader.Value;
                     break;
                 case "Settings/Shortcuts":
                     language.Settings.Shortcuts = reader.Value;
