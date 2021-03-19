@@ -2,6 +2,16 @@
 {
     public class Window : CommandBase
     {
+        public const int AnchorUpperLeft = 0;
+        public const int AnchorUpperCenter = 1;
+        public const int AnchorUpperRight = 2;
+        public const int AnchorMiddleLeft = 3;
+        public const int AnchorMiddleCenter = 4;
+        public const int AnchorMiddleRight = 5;
+        public const int AnchorLowerLeft = 6;
+        public const int AnchorLowerCenter = 7;
+        public const int AnchorLowerRight = 8;
+
         public bool Active { get; set; }
 
         public int WindowId { get; set; }

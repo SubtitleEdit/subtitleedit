@@ -2,12 +2,12 @@
 {
     public class CurrentWindow : CommandBase
     {
-        public int Index { get; set; }
+        public int WindowIndex { get; set; }
 
         public CurrentWindow(int lineIndex, int index)
         {
             LineIndex = lineIndex;
-            Index = index;
+            WindowIndex = index;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Cea708.Commands;
+﻿using System;
+using Nikse.SubtitleEdit.Core.Cea708.Commands;
 using System.Collections.Generic;
 using System.Text;
 
@@ -9,7 +10,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
     /// </summary>
     public static class Cea708
     {
-        public static bool DebugMode { get; set; } = true;
+        public static bool DebugMode { get; set; } = false;
 
         private static readonly Dictionary<byte, string> SingleCharLookupTable = new Dictionary<byte, string>
         {
@@ -277,7 +278,8 @@ namespace Nikse.SubtitleEdit.Core.Cea708
         public static string Decode(int lineIndex, byte[] bytes, CommandState state, bool flush)
         {
             var i = 0;
-            var sb = new StringBuilder();
+            var debugBuilder = new StringBuilder();
+            var textBuilder = new StringBuilder();
 
             while (i < bytes.Length)
             {
@@ -289,10 +291,10 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     //The EndOfText command is a Null Command which can be used to flush any buffered text to the current window. All commands force a flush of any buffered text to the current window, so this command is only needed when no other command is pending.
                     if (DebugMode)
                     {
-                        sb.Append("{EndOfText}");
+                        debugBuilder.Append("{EndOfText}");
                     }
 
-                    FlushText(sb, state);
+                    FlushText(debugBuilder, state, lineIndex);
                 }
                 else if (b >= 0x80 && b <= 0x87)
                 {
@@ -302,7 +304,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     state.Commands.Add(currentWindow);
                     if (DebugMode)
                     {
-                        sb.Append("{SetCurrentWindow:" + currentWindow.Index + "}");
+                        debugBuilder.Append("{SetCurrentWindow:" + currentWindow.WindowIndex + "}");
                     }
                 }
                 else if (b == 0x88)
@@ -312,7 +314,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     state.Commands.Add(clearWindows);
                     if (DebugMode)
                     {
-                        sb.Append("{ClearWindows}");
+                        debugBuilder.Append("{ClearWindows}");
                     }
 
                     i++;
@@ -324,19 +326,21 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     state.Commands.Add(displayWindows);
                     if (DebugMode)
                     {
-                        sb.Append("{DisplayWindows}");
+                        debugBuilder.Append("{DisplayWindows}");
                     }
 
                     i++;
                 }
                 else if (b == 0x8A)
                 {
+                    FlushText(textBuilder, state, lineIndex);
+
                     // HideWindows hides all the windows specified in the 8 bit window bitmap.
                     var hideWindows = new HideWindows(lineIndex, bytes, i + 1);
                     state.Commands.Add(hideWindows);
                     if (DebugMode)
                     {
-                        sb.Append("{HideWindows}");
+                        debugBuilder.Append("{HideWindows}");
                     }
 
                     i++;
@@ -348,7 +352,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     state.Commands.Add(toggleWindows);
                     if (DebugMode)
                     {
-                        sb.Append("{ToggleWindows}");
+                        debugBuilder.Append("{ToggleWindows}");
                     }
 
                     i++;
@@ -360,7 +364,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     state.Commands.Add(deleteWindows);
                     if (DebugMode)
                     {
-                        sb.Append("{DeleteWindows}");
+                        debugBuilder.Append("{DeleteWindows}");
                     }
 
                     i++;
@@ -372,7 +376,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     state.Commands.Add(delay);
                     if (DebugMode)
                     {
-                        sb.Append("{Delay:" + delay.Milliseconds + "ms}");
+                        debugBuilder.Append("{Delay:" + delay.Milliseconds + "ms}");
                     }
 
                     i++;
@@ -384,7 +388,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     state.Commands.Add(delayCancel);
                     if (DebugMode)
                     {
-                        sb.Append("{DelayCancel}");
+                        debugBuilder.Append("{DelayCancel}");
                     }
                 }
                 else if (b == 0x8F)
@@ -394,29 +398,39 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     state.Commands.Add(reset);
                     if (DebugMode)
                     {
-                        sb.Append("{Reset}");
+                        debugBuilder.Append("{Reset}");
                     }
                 }
                 else if (b == 0x90)
                 {
+                    //if (bytes.Length - i < 2)
+                    //{
+                    //    break;
+                    //}
+
                     // The SetPenAttributes command specifies how certain attributes of subsequent characters are to be rendered in the current window, until the next SetPenAttributes command.
                     var penAttributes = new PenAttributes(lineIndex, bytes, i + 1);
                     state.Commands.Add(penAttributes);
                     if (DebugMode)
                     {
-                        sb.Append("{SetPenAttributes:italic=" + penAttributes.Italics + "}");
+                        debugBuilder.Append("{SetPenAttributes:italic=" + penAttributes.Italics + "}");
                     }
 
                     i += 2;
                 }
                 else if (b == 0x91)
                 {
+                    //if (bytes.Length - i < 3)
+                    //{
+                    //    break;
+                    //}
+
                     // SetPenColor sets the foreground, background, and edge color for the subsequent characters. Color is specified with 6 bits, 2 for each of blue, green and red. The lowest order bits are for blue, the next two for green and the highest order bits represent red. Opacity is represented by two bits, they represent SOLID=0, FLASH=1, TRANSLUCENT=2, and TRANSPARENT=3. The edge color is the color of the outlined edges of the text, but the outline shares its opacity with the foreground, so the highest order bits of the third parameter byte should both be cleared.
                     var penColor = new PenColor(lineIndex, bytes, i + 1);
                     state.Commands.Add(penColor);
                     if (DebugMode)
                     {
-                        sb.Append("{SetPenColor:color=r" + penColor.ForegroundColorRed + " g" + penColor.ForegroundColorGreen + " b" + penColor.ForegroundColorBlue + "}");
+                        debugBuilder.Append("{SetPenColor:color=r" + penColor.ForegroundColorRed + " g" + penColor.ForegroundColorGreen + " b" + penColor.ForegroundColorBlue + "}");
                     }
 
                     i += 3;
@@ -428,31 +442,41 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     state.Commands.Add(penLocation);
                     if (DebugMode)
                     {
-                        sb.Append("{SetPenLocation:" + penLocation.Row + "," + penLocation.Column + "}");
+                        debugBuilder.Append("{SetPenLocation:" + penLocation.Column + "," + penLocation.Row + "}");
                     }
 
                     i += 2;
                 }
                 else if (b == 0x97)
                 {
+                    //if (bytes.Length - i < 4)
+                    //{
+                    //    break;
+                    //}
+
                     // SetWindowAttributes Sets the window attributes of the current window. Fill Color is specified with 6 bits, 2 for each of blue, green and red. The lowest order bits are for blue, the next two for green and the highest order bits represent red. Fill Opacity is represented by two bits, they represent SOLID=0, FLASH=1, TRANSLUCENT=2, and TRANSPARENT=3. The window's Border Color is specified the same way. However, the Border Type is split into two fields. They should be combined, with border type 01 representing the low order bits, and border type 2 the high order bit. Once combined the Border Type has 6 valid values: NONE=0, RAISED=1, DEPRESSED=2, UNIFORM=3, SHADOW_LEFT=4, and SHADOW_RIGHT=5. 
                     var windowAttributes = new WindowAttributes(lineIndex, bytes, i + 1);
                     state.Commands.Add(windowAttributes);
                     if (DebugMode)
                     {
-                        sb.Append("{SetWindowAttributes}");
+                        debugBuilder.Append("{SetWindowAttributes}");
                     }
 
                     i += 4;
                 }
                 else if (b >= 0x98 && b <= 0x9F)
                 {
+                    //if (bytes.Length - i < 6)
+                    //{
+                    //    break;
+                    //}
+
                     //DefineWindow0-7 creates one of the eight windows used by a caption decoder. This command should be sent periodically by a caption encoder even for pre-existing windows so that a newly tuned in caption decoder can begin displaying captions. When issued on a pre-existing window the pen style and window style can be left null, this tells the decoder not to change the current styles if they exist, and initialize both to style 1 if the window does not exist in its context
                     var window = new Window(lineIndex, bytes, i + 1);
                     state.Commands.Add(window);
                     if (DebugMode)
                     {
-                        sb.Append("{DefineWindow}");
+                        debugBuilder.Append("{DefineWindow:AnchorId="+ window.AnchorId + "}");
                     }
 
                     i += 6;
@@ -485,7 +509,9 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 else if (b <= 0x1F)
                 {
                     // CL Group: C0: Subset of ASCII Control Codes
-                    sb.Append(SingleCharLookupTable[b]);
+                    var text = new TextCommand(lineIndex, SingleCharLookupTable[b]);
+                    state.Commands.Add(text);
+                    debugBuilder.Append(text.Content);
 
                     //TODO: ???
                     //if (b >= 0x10 && b <= 0x17)
@@ -500,27 +526,100 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 else if (b >= 0x20 && b <= 0x7F)
                 {
                     // Modified version of ANSI X3.4 Printable Character Set(ASCII)
-                    sb.Append(SingleCharLookupTable[b]);
+                    var text = new TextCommand(lineIndex, SingleCharLookupTable[b]);
+                    state.Commands.Add(text);
+                    debugBuilder.Append(text.Content);
                 }
                 else if (b >= 0x80 && b <= 0x9f)
                 {
                     // CR Group: C1: Caption Control Codes
-                    sb.Append(SingleCharLookupTable[b]);
+                    var text = new TextCommand(lineIndex, SingleCharLookupTable[b]);
+                    state.Commands.Add(text);
+                    debugBuilder.Append(text.Content);
                 }
                 else if (b >= 0xA0 && b <= 0xFF)
                 {
                     // ISO 8859 - 1 Latin 1 Characters
-                    sb.Append(SingleCharLookupTable[b]);
+                    var text = new TextCommand(lineIndex, SingleCharLookupTable[b]);
+                    state.Commands.Add(text);
+                    debugBuilder.Append(text.Content);
                 }
 
                 i++;
             }
 
-            return sb.ToString();
+            if (flush)
+            {
+                FlushText(textBuilder, state, lineIndex);
+            }
+
+            return DebugMode ? debugBuilder.ToString() : textBuilder.ToString();
         }
 
-        private static void FlushText(StringBuilder sb, CommandState state)
+        private static void FlushText(StringBuilder text, CommandState state, int lineIndex)
         {
+            var commands = new List<CommandBase>();
+            var y = 0;
+            var italicOn = false;
+            foreach (var command in state.Commands)
+            {
+                if (command is TextCommand textCommand)
+                {
+                    if (!string.IsNullOrEmpty(textCommand.Content))
+                    {
+                        if (text.Length == 0)
+                        {
+                            state.StartLineIndex = textCommand.LineIndex;
+                        }
+
+                        if (italicOn && IsItalicOn(text.ToString()))
+                        {
+                            text.Append("<i>");
+                        }
+                        else if (!italicOn && IsItalicOn(text.ToString()))
+                        {
+                            text.Append("</i>");
+                        }
+                        text.Append(textCommand.Content);
+                    }
+                }
+                else
+                {
+                    if (command is PenLocation location)
+                    {
+                        if (text.Length > 0 && location.Row > y)
+                        {
+                            text.AppendLine();
+                        }
+
+                        y = location.Row;
+                    }
+                    else if (command is PenAttributes attributes)
+                    {
+                        italicOn = attributes.Italics;
+                    }
+
+                    commands.Add(command);
+                }
+            }
+
+            if (IsItalicOn(text.ToString()))
+            {
+                text.Append("</i>");
+            }
+
+            state.Commands = commands;
+        }
+
+        private static bool IsItalicOn(string s)
+        {
+            if (!s.Contains("<i>"))
+            {
+                return false;
+            }
+
+            return s.IndexOf("<i>", StringComparison.Ordinal) > 
+                   s.IndexOf("</i>", StringComparison.Ordinal);
         }
     }
 }

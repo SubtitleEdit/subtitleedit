@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Cea708;
+using Nikse.SubtitleEdit.Core.Cea708.Commands;
 using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
@@ -87,8 +88,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
             subtitle.Paragraphs.Clear();
+            var timeCodeList = new List<TimeCode>();
             Paragraph p = null;
             var header = new StringBuilder();
+            var state = new CommandState();
             char[] splitChars = { ':', ';', ',' };
             for (var index = 0; index < lines.Count; index++)
             {
@@ -109,46 +112,23 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
 
                     var startTime = DecodeTimeCodeFrames(s.Substring(0, match.Length - 1), splitChars);
-                    var text = GetText(index, s.Substring(match.Index + match.Length).Trim(), index == lines.Count - 1);
+                    var text = GetText(timeCodeList.Count, s.Substring(match.Index + match.Length).Trim(), index == lines.Count - 1, state);
+                    timeCodeList.Add(startTime);
                     if (string.IsNullOrEmpty(text))
                     {
-                        if (p != null)
-                        {
-                            p.EndTime = new TimeCode(startTime.TotalMilliseconds);
-                        }
-
                         continue;
                     }
 
-                    p = new Paragraph(startTime, new TimeCode(startTime.TotalMilliseconds), text);
+                    p = new Paragraph(new TimeCode(timeCodeList[state.StartLineIndex].TotalMilliseconds), new TimeCode(startTime.TotalMilliseconds), text);
                     subtitle.Paragraphs.Add(p);
                 }
             }
 
-            for (var i = subtitle.Paragraphs.Count - 2; i >= 0; i--)
-            {
-                p = subtitle.GetParagraphOrDefault(i);
-                var next = subtitle.GetParagraphOrDefault(i + 1);
-                if (p != null && next != null && Math.Abs(p.EndTime.TotalMilliseconds - p.StartTime.TotalMilliseconds) < 0.001)
-                {
-                    p.EndTime = new TimeCode(next.StartTime.TotalMilliseconds);
-                }
-
-                if (next != null && string.IsNullOrEmpty(next.Text))
-                {
-                    subtitle.Paragraphs.Remove(next);
-                }
-            }
-            p = subtitle.GetParagraphOrDefault(0);
-            if (p != null && string.IsNullOrEmpty(p.Text))
-            {
-                subtitle.Paragraphs.Remove(p);
-            }
-
+            subtitle.RemoveEmptyLines();
             subtitle.Renumber();
         }
 
-        public static string GetText(int lineIndex, string input, bool flush)
+        public static string GetText(int lineIndex, string input, bool flush, CommandState state)
         {
             var hexString = GetHex(input);
             var bytes = HexStringToByteArray(hexString);
@@ -158,7 +138,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             var cea708 = new Smpte291M(bytes);
-            return cea708.GetText(lineIndex, flush);
+            return cea708.GetText(lineIndex, flush, state);
         }
 
         private static string GetHex(string input)

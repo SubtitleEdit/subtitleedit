@@ -2,8 +2,15 @@
 {
     public class PenLocation : CommandBase
     {
-        public int Row { get; set; }
+        /// <summary>
+        /// X coordinate.
+        /// </summary>
         public int Column { get; set; }
+
+        /// <summary>
+        /// Y coordinate
+        /// </summary>
+        public int Row { get; set; }
 
         public PenLocation(int lineIndex, byte[] bytes, int index)
         {
