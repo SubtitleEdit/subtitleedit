@@ -2555,6 +2555,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <UpdateDetails>Update details</UpdateDetails>
     <Resolution>Resolution</Resolution>
     <VideoResolution>Video resolution</VideoResolution>
+    <FromCurrentVideo>From current video</FromCurrentVideo>
     <Options>Options</Options>
     <WrapStyle>Wrap style</WrapStyle>
     <Collision>Collision</Collision>
