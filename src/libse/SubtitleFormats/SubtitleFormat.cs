@@ -11,7 +11,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public abstract class SubtitleFormat
     {
+        public static bool SubtitleFormatsOrderChanged { get; set; }
+
         private static IList<SubtitleFormat> _allSubtitleFormats;
+        private static IList<SubtitleFormat> _subtitleFormatsWithDefaultOrder;
 
         protected static readonly char[] SplitCharColon = { ':' };
 
@@ -24,6 +27,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 if (_allSubtitleFormats != null)
                 {
+                    if (SubtitleFormatsOrderChanged)
+                    {
+                        SubtitleFormatsOrderChanged = false;
+                        _allSubtitleFormats = GetOrderedFormatsList(_subtitleFormatsWithDefaultOrder);
+                    }
+
                     return _allSubtitleFormats;
                 }
 
@@ -355,14 +364,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
 
-                // Move the favorite formats to the top is they exist.
-                IEnumerable<SubtitleFormat> selectedFormats = new[] { Utilities.GetSubtitleFormatByFriendlyName(Configuration.Settings.General.DefaultSubtitleFormat) };
-                if (!string.IsNullOrEmpty(Configuration.Settings.General.FavoriteSubtitleFormats))
-                {
-                    selectedFormats = selectedFormats.Union(Configuration.Settings.General.FavoriteSubtitleFormats.Split(';').Select(formatName => Utilities.GetSubtitleFormatByFriendlyName(formatName)));
-                }
-
-                _allSubtitleFormats = selectedFormats.Union(_allSubtitleFormats).ToList();
+                _subtitleFormatsWithDefaultOrder = new List<SubtitleFormat>(_allSubtitleFormats);
+                _allSubtitleFormats = GetOrderedFormatsList(_subtitleFormatsWithDefaultOrder);
 
                 return _allSubtitleFormats;
             }
@@ -672,6 +675,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             return null;
+        }
+
+        private static IList<SubtitleFormat> GetOrderedFormatsList(IList<SubtitleFormat> unorderedFormatsList)
+        {
+            IEnumerable<SubtitleFormat> newSelectedFormats = new[] { Utilities.GetSubtitleFormatByFriendlyName(Configuration.Settings.General.DefaultSubtitleFormat) };
+            if (!string.IsNullOrEmpty(Configuration.Settings.General.FavoriteSubtitleFormats))
+            {
+                newSelectedFormats = newSelectedFormats.Union(Configuration.Settings.General.FavoriteSubtitleFormats.Split(';').Select(formatName => Utilities.GetSubtitleFormatByFriendlyName(formatName)));
+            }
+
+            return newSelectedFormats.Union(unorderedFormatsList).ToList();
         }
     }
 }
