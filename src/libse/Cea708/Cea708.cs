@@ -633,7 +633,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 var dic = new Dictionary<string, byte>();
                 foreach (var kvp in SingleCharLookupTable)
                 {
-                    if (!string.IsNullOrEmpty(kvp.Value) && dic.ContainsKey(kvp.Value))
+                    if (!string.IsNullOrEmpty(kvp.Value) && !dic.ContainsKey(kvp.Value))
                     {
                         dic.Add(kvp.Value, kvp.Key);
                     }
@@ -642,8 +642,16 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 _textLookupTable = dic;
             }
 
-            // set text...
-            return null;
+            var bytes = new List<byte>();
+            foreach (var ch in input)
+            {
+                if (_textLookupTable.TryGetValue(ch.ToString(), out var b))
+                {
+                    bytes.Add(b);
+                }
+            }
+
+            return bytes.ToArray();
         }
     }
 }

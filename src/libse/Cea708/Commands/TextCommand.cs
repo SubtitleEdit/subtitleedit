@@ -14,7 +14,7 @@
 
         public byte[] GetBytes()
         {
-            throw new System.NotImplementedException();
+            return Cea708.EncodeText(Content);
         }
     }
 }

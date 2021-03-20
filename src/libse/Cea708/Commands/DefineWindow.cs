@@ -21,7 +21,6 @@
 
         public bool Active { get; set; }
 
-        public int WindowId { get; set; }
         public int Priority { get; set; }
         public bool ColumnLock { get; set; }
         public bool RowLock { get; set; }
@@ -44,17 +43,22 @@
         {
             LineIndex = lineIndex;
 
-            Id = bytes[index] & 0b00000111;
+            Id = bytes[index];
             Priority = bytes[index + 1] & 0b00000111;
             ColumnLock = (bytes[index + 1] & 0b00001000) > 0;
             RowLock = (bytes[index + 1] & 0b00010000) > 0;
             Visible = (bytes[index + 1] & 0b00100000) > 0;
+
             AnchorVertical = bytes[index + 2] & 0b01111111;
             RelativePositioning = (bytes[index + 2] & 0b10000000) > 0;
+
             AnchorHorizontal = bytes[index + 3];
+
             RowCount = bytes[index + 4] & 0b00001111;
             AnchorId = bytes[index + 4] >> 4;
+
             ColumnCount = bytes[index + 5] & 0b00111111;
+
             PenStyleId = bytes[index + 6] & 0b00000111;
             WindowStyleId = bytes[index + 6] >> 3;
         }
@@ -72,7 +76,7 @@
                        (RelativePositioning ? 0b10000000 : 0)),
                 (byte)AnchorHorizontal,
                 (byte)(RowCount |
-                       (AnchorId >> 4)),
+                       (AnchorId << 4)),
                 (byte)ColumnCount,
                 (byte)(PenStyleId |
                        (WindowStyleId << 3)),
