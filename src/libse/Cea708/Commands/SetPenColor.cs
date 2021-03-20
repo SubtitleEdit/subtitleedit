@@ -55,8 +55,7 @@
                        ((BackgroundOpacity & 0b00000011) << 6)),
                 (byte)  ((EdgeColorBlue & 0b00000011) |
                         ((EdgeColorGreen & 0b00000011) << 2) |
-                        ((EdgeColorRed & 0b00000011) << 4) |
-                        ((ForegroundOpacity & 0b00000011) << 6)),
+                        ((EdgeColorRed & 0b00000011) << 4)),
             };
         }
     }

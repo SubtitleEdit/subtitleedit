@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708.Commands
 
         public byte[] GetBytes()
         {
-            return new[] { (byte)Id, (byte)Math.Round(Milliseconds / 10.0) };
+            return new[] { (byte)Id, (byte)(Milliseconds / 100) };
         }
     }
 }

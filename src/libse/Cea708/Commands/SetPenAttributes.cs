@@ -21,7 +21,7 @@
             Offset = (bytes[index] & 0b00001100) >> 2;
             TextTag = bytes[index] >> 4;
             FontTag = bytes[index + 1] & 0b00000111;
-            EdgeType = (bytes[index + 1] & 0b00111000) >> 2;
+            EdgeType = (bytes[index + 1] & 0b00111000) >> 3;
             Underline = (bytes[index + 1] & 0b01000000) > 0;
             Italics = (bytes[index + 1] & 0b10000000) > 0;
         }
