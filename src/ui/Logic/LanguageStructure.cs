@@ -2748,6 +2748,7 @@
             public string UpdateDetails { get; set; }
             public string Resolution { get; set; }
             public string VideoResolution { get; set; }
+            public string FromCurrentVideo { get; set; }
             public string Options { get; set; }
             public string WrapStyle { get; set; }
             public string Collision { get; set; }

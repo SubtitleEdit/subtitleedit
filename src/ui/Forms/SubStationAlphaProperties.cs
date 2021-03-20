@@ -15,8 +15,9 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly Subtitle _subtitle;
         private readonly bool _isSubStationAlpha;
         private readonly string _videoFileName;
+        private readonly VideoInfo _currentVideoInfo;
 
-        public SubStationAlphaProperties(Subtitle subtitle, SubtitleFormat format, string videoFileName, string subtitleFileName)
+        public SubStationAlphaProperties(Subtitle subtitle, SubtitleFormat format, string videoFileName, VideoInfo currentVideoInfo, string subtitleFileName)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -24,6 +25,7 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle = subtitle;
             _isSubStationAlpha = format.Name == SubStationAlpha.NameOfFormat;
             _videoFileName = videoFileName;
+            _currentVideoInfo = currentVideoInfo;
 
             var l = LanguageSettings.Current.SubStationAlphaProperties;
             if (_isSubStationAlpha)
@@ -149,6 +151,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelUpdateDetails.Text = l.UpdateDetails;
             groupBoxResolution.Text = l.Resolution;
             labelVideoResolution.Text = l.VideoResolution;
+            buttonGetResolutionFromCurrentVideo.Text = l.FromCurrentVideo;
             groupBoxOptions.Text = l.Options;
             labelCollision.Text = l.Collision;
             labelWrapStyle.Text = l.WrapStyle;
@@ -158,6 +161,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
             UiUtil.FixLargeFonts(this, buttonCancel);
+
+            buttonGetResolutionFromCurrentVideo.Enabled = !string.IsNullOrEmpty(videoFileName);
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -305,5 +310,15 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void buttonGetResolutionFromCurrentVideo_Click(object sender, EventArgs e)
+        {
+            if (_currentVideoInfo is null)
+            {
+                return;
+            }
+
+            numericUpDownVideoWidth.Value = _currentVideoInfo.Width;
+            numericUpDownVideoHeight.Value = _currentVideoInfo.Height;
+        }
     }
 }

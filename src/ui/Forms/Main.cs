@@ -26954,7 +26954,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ReloadFromSourceView();
             }
 
-            using (var properties = new SubStationAlphaProperties(_subtitle, GetCurrentSubtitleFormat(), VideoFileName, _fileName))
+            using (var properties = new SubStationAlphaProperties(_subtitle, GetCurrentSubtitleFormat(), VideoFileName, _videoInfo, _fileName))
             {
                 if (properties.ShowDialog(this) == DialogResult.OK)
                 {
