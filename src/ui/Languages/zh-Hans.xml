@@ -2544,6 +2544,7 @@ Command line: {1} {2}
     <UpdateDetails>更新详情</UpdateDetails>
     <Resolution>分辨率</Resolution>
     <VideoResolution>视频分辨率</VideoResolution>
+    <FromCurrentVideo>从当前视频/FromCurrentVideo>
     <Options>选项</Options>
     <WrapStyle>翻卷样式</WrapStyle>
     <Collision>冲突</Collision>
