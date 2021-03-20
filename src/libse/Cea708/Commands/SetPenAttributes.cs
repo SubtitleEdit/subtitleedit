@@ -30,7 +30,14 @@
         {
             return new[]
             {
-                (byte)0
+                (byte)Id,
+                (byte)((PenSize & 0b00000011) |
+                       ((Offset & 0b00000011) << 2) |
+                       (TextTag << 4)),
+                (byte)((FontTag & 0b00000111) |
+                       ((EdgeType & 0b00000111) << 3) |
+                       (Underline ? 0b01000000 : 0) |
+                       (Italics ? 0b10000000 : 0)),
             };
         }
     }

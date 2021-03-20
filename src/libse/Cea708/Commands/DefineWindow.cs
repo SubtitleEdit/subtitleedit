@@ -17,6 +17,8 @@
         public const int AnchorLowerCenter = 7;
         public const int AnchorLowerRight = 8;
 
+        public int Id { get; set; }
+
         public bool Active { get; set; }
 
         public int WindowId { get; set; }
@@ -42,25 +44,38 @@
         {
             LineIndex = lineIndex;
 
-            Priority = bytes[index] & 0b00000111;
-            ColumnLock = (bytes[index] & 0b00001000) > 0;
-            RowLock = (bytes[index] & 0b00010000) > 0;
-            Visible = (bytes[index] & 0b00100000) > 0;
-            AnchorVertical = bytes[index + 1] & 0b01111111;
-            RelativePositioning = (bytes[index + 1] & 0b10000000) > 0;
-            AnchorHorizontal = bytes[index + 2];
-            RowCount = bytes[index + 3] & 0b00001111;
-            AnchorId = bytes[index + 3] >> 4;
-            ColumnCount = bytes[index + 3] & 0b00111111;
-            PenStyleId = bytes[index + 4] & 0b00000111;
-            WindowStyleId = bytes[index + 4] >> 3;
+            Id = bytes[index] & 0b00000111;
+            Priority = bytes[index + 1] & 0b00000111;
+            ColumnLock = (bytes[index + 1] & 0b00001000) > 0;
+            RowLock = (bytes[index + 1] & 0b00010000) > 0;
+            Visible = (bytes[index + 1] & 0b00100000) > 0;
+            AnchorVertical = bytes[index + 2] & 0b01111111;
+            RelativePositioning = (bytes[index + 2] & 0b10000000) > 0;
+            AnchorHorizontal = bytes[index + 3];
+            RowCount = bytes[index + 4] & 0b00001111;
+            AnchorId = bytes[index + 4] >> 4;
+            ColumnCount = bytes[index + 5] & 0b00111111;
+            PenStyleId = bytes[index + 6] & 0b00000111;
+            WindowStyleId = bytes[index + 6] >> 3;
         }
 
         public byte[] GetBytes()
         {
             return new[]
             {
-                (byte)0
+                (byte)Id,
+                (byte)(Priority |
+                       (ColumnLock ? 0b00001000 : 0) |
+                       (RowLock ? 0b00010000 : 0) |
+                       (Visible ? 0b00100000 : 0)),
+                (byte)(AnchorVertical |
+                       (RelativePositioning ? 0b10000000 : 0)),
+                (byte)AnchorHorizontal,
+                (byte)(RowCount |
+                       (AnchorId >> 4)),
+                (byte)ColumnCount,
+                (byte)(PenStyleId |
+                       (WindowStyleId << 3)),
             };
         }
     }

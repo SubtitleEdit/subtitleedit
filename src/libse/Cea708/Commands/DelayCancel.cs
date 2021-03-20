@@ -13,7 +13,7 @@
 
         public byte[] GetBytes()
         {
-            throw new System.NotImplementedException();
+            return new[] { (byte)Id };
         }
     }
 }
