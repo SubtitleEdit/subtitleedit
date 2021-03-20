@@ -6985,6 +6985,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "SubStationAlphaProperties/VideoResolution":
                     language.SubStationAlphaProperties.VideoResolution = reader.Value;
                     break;
+                case "SubStationAlphaProperties/FromCurrentVideo":
+                    language.SubStationAlphaProperties.FromCurrentVideo = reader.Value;
+                    break;
                 case "SubStationAlphaProperties/Options":
                     language.SubStationAlphaProperties.Options = reader.Value;
                     break;
