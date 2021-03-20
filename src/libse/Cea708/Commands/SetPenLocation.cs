@@ -26,7 +26,7 @@
 
         public byte[] GetBytes()
         {
-            return new[] { (byte)Row, (byte)Column };
+            return new[] { (byte)Id, (byte)Row, (byte)Column };
         }
     }
 }

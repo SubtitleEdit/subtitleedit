@@ -60,7 +60,22 @@
         {
             return new[]
             {
-                (byte)0
+                (byte)Id,
+                (byte) ((FillColorBlue & 0b00000011) |
+                       ((FillColorGreen & 0b00000011) << 2) |
+                       ((FillColorRed & 0b00000011) << 4) |
+                       ((FillOpacity & 0b00000011) << 6)),
+                (byte)((BorderColorBlue & 0b00000011) |
+                       ((BorderColorGreen & 0b00000011) << 2) |
+                       ((BorderColorRed & 0b00000011) << 4) |
+                       ((BorderType & 0b00000011) << 6)),
+                (byte)((Justify & 0b00000011) |
+                       ((ScrollDirection & 0b00000011) << 2) |
+                       ((PrintDirection & 0b00000011) << 4) |
+                       ((Wordwrap & 0b00000011) << 6)),
+                (byte)((DisplayEffect & 0b00000011) |
+                       ((EffectDirection & 0b00000011) << 2) |
+                       ((EffectSpeed & 0b00001111) << 4)),
             };
         }
 

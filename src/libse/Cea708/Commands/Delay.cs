@@ -1,4 +1,6 @@
-﻿namespace Nikse.SubtitleEdit.Core.Cea708.Commands
+﻿using System;
+
+namespace Nikse.SubtitleEdit.Core.Cea708.Commands
 {
     public class Delay : ICommand
     {
@@ -16,7 +18,7 @@
 
         public byte[] GetBytes()
         {
-            return new[] { (byte)Id };
+            return new[] { (byte)Id, (byte)Math.Round(Milliseconds / 10.0) };
         }
     }
 }

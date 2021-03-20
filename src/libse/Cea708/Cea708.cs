@@ -474,7 +474,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     //}
 
                     //DefineWindow0-7 creates one of the eight windows used by a caption decoder. This command should be sent periodically by a caption encoder even for pre-existing windows so that a newly tuned in caption decoder can begin displaying captions. When issued on a pre-existing window the pen style and window style can be left null, this tells the decoder not to change the current styles if they exist, and initialize both to style 1 if the window does not exist in its context
-                    var defineWindow = new DefineWindow(lineIndex, bytes, i + 1);
+                    var defineWindow = new DefineWindow(lineIndex, bytes, i);
                     state.Commands.Add(defineWindow);
                     if (DebugMode)
                     {

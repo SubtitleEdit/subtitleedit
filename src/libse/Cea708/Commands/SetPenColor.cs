@@ -19,8 +19,7 @@
         public int EdgeColorBlue { get; set; }
         public int EdgeColorGreen { get; set; }
         public int EdgeColorRed { get; set; }
-        public int EdgeOpacity { get; set; }
-
+        public int EdgeOpacity => ForegroundOpacity;
 
         public SetPenColor(int lineIndex, byte[] bytes, int index)
         {
@@ -39,14 +38,25 @@
             EdgeColorBlue = bytes[index + 2] & 0b00000011;
             EdgeColorGreen = (bytes[index + 2] & 0b00001100) >> 2;
             EdgeColorRed = (bytes[index + 2] & 0b11110000) >> 4;
-            EdgeOpacity = ForegroundOpacity;
         }
 
         public byte[] GetBytes()
         {
             return new[]
             {
-                (byte)0
+                (byte)Id,
+                (byte)((ForegroundColorBlue & 0b00000011) |
+                       ((ForegroundColorGreen & 0b00000011) << 2) |
+                       ((ForegroundColorRed & 0b00000011) << 4) |
+                       ((ForegroundOpacity & 0b00000011) << 6)),
+                (byte) ((BackgroundColorBlue & 0b00000011) |
+                       ((BackgroundColorGreen & 0b00000011) << 2) |
+                       ((BackgroundColorRed & 0b00000011) << 4) |
+                       ((BackgroundOpacity & 0b00000011) << 6)),
+                (byte)  ((EdgeColorBlue & 0b00000011) |
+                        ((EdgeColorGreen & 0b00000011) << 2) |
+                        ((EdgeColorRed & 0b00000011) << 4) |
+                        ((ForegroundOpacity & 0b00000011) << 6)),
             };
         }
     }

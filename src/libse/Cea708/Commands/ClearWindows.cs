@@ -27,7 +27,18 @@
 
         public byte[] GetBytes()
         {
-            throw new System.NotImplementedException();
+            return new[] 
+            {
+                (byte)Id,
+                (byte)((Flags[0] ? 0b00000001 : 0) |
+                     (Flags[1] ? 0b00000010 : 0) |
+                     (Flags[2] ? 0b00000100 : 0) |
+                     (Flags[3] ? 0b00001000 : 0) |
+                     (Flags[4] ? 0b00010000 : 0) |
+                     (Flags[5] ? 0b00100000 : 0) |
+                     (Flags[6] ? 0b01000000 : 0) |
+                     (Flags[7] ? 0b10000000 : 0)),
+            };
         }
     }
 }

@@ -5,6 +5,7 @@
         public static readonly int IdStart = 0x80;
         public static readonly int IdEnd = 0x87;
 
+        public int Id { get; set; }
         public int LineIndex { get; set; }
         public int WindowIndex { get; set; }
 
@@ -12,11 +13,12 @@
         {
             LineIndex = lineIndex;
             WindowIndex = index;
+            Id = index + 0x80;
         }
 
         public byte[] GetBytes()
         {
-            throw new System.NotImplementedException();
+            return new[] { (byte)Id };
         }
     }
 }
