@@ -4840,6 +4840,7 @@ namespace Nikse.SubtitleEdit.Forms
                                        Configuration.Settings.General.MaxNumberOfLines +
                                        Configuration.Settings.Tools.ListViewSyntaxErrorColor.ToArgb();
 
+            var oldFavoriteFormats = Configuration.Settings.General.FavoriteSubtitleFormats;
             var oldAllowEditOfOriginalSubtitle = Configuration.Settings.General.AllowEditOfOriginalSubtitle;
             var oldShowColumnEndTime = Configuration.Settings.Tools.ListViewShowColumnEndTime;
             var oldShowcolumnDuration = Configuration.Settings.Tools.ListViewShowColumnDuration;
@@ -5005,6 +5006,11 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 Main_ResizeEnd(null, null);
+            }
+
+            if (oldFavoriteFormats != Configuration.Settings.General.FavoriteSubtitleFormats)
+            {
+                UiUtil.InitializeSubtitleFormatComboBox(comboBoxSubtitleFormats, String.Empty);
             }
 
             SetLanguage(Configuration.Settings.General.Language);

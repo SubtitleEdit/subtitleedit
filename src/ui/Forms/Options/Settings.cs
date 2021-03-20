@@ -954,6 +954,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelFavoriteFormats.Text = language.FavoriteFormats;
             buttonRemoveFromFavoriteFormats.Text = LanguageSettings.Current.MultipleReplace.Remove;
             labelFormats.Text = LanguageSettings.Current.ExportCustomText.Formats;
+            labelFormatsSearch.Text = LanguageSettings.Current.General.Search;
+            buttonFormatsSearchClear.Text = LanguageSettings.Current.DvdSubRip.Clear;
             labelFavoriteSubtitleFormatsNote.Text = language.FavoriteSubtitleFormatsNote;
 
             deleteToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.Remove;
@@ -974,7 +976,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             if (string.IsNullOrEmpty(Configuration.Settings.General.DefaultSaveAsFormat))
             {
                 comboBoxSubtitleSaveAsFormats.ResetText();
+                comboBoxSubtitleSaveAsFormats.SelectedItem = null;
                 comboBoxSubtitleSaveAsFormats.SelectedIndex = -1;
+                comboBoxSubtitleSaveAsFormats.SelectedText = "- Auto -";
             }
 
             var formatNames = SubtitleFormat.AllSubtitleFormats.Where(format => !format.IsVobSubIndexFile).Select(format => format.FriendlyName);
@@ -1003,6 +1007,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
                     comboBoxSubtitleSaveAsFormats.Width = (int)Math.Round(comboBoxSubtitleSaveFormatsTextWidth.Width + 17.5);
                 }
             }
+
+            buttonClearShortcut.Left = buttonUpdateShortcut.Left + buttonUpdateShortcut.Width + 15;
 
             // Shortcuts
             groupBoxShortcuts.Text = language.Shortcuts;
@@ -1879,7 +1885,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
 
             gs.DefaultSubtitleFormat = comboBoxSubtitleFormats.Text;
-            gs.DefaultSaveAsFormat = comboBoxSubtitleSaveAsFormats.Text;
+            gs.DefaultSaveAsFormat = comboBoxSubtitleSaveAsFormats.Text == "- Auto -" ? string.Empty : comboBoxSubtitleSaveAsFormats.Text;
             if (listBoxFavoriteSubtitleFormats.Items.Count >= 0)
             {
                 var sb = new StringBuilder();
@@ -1892,7 +1898,12 @@ namespace Nikse.SubtitleEdit.Forms.Options
                     }
                 }
 
-                gs.FavoriteSubtitleFormats = sb.ToString();
+                var favorites = sb.ToString();
+                if (favorites != Configuration.Settings.General.FavoriteSubtitleFormats)
+                {
+                    gs.FavoriteSubtitleFormats = favorites;
+                    SubtitleFormat.SubtitleFormatsOrderChanged = true;
+                }
             }
 
 
@@ -3218,14 +3229,13 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void textBoxShortcutSearch_TextChanged(object sender, EventArgs e)
         {
-            var selected = treeViewShortcuts.SelectedNode?.Tag as ShortcutHelper;
             var oldControl = checkBoxShortcutsControl.Checked;
             var oldAlt = checkBoxShortcutsAlt.Checked;
             var oldShift = checkBoxShortcutsShift.Checked;
             var oldKeyIndex = comboBoxShortcutKey.SelectedIndex;
             ShowShortcutsTreeView();
             buttonShortcutsClear.Enabled = textBoxShortcutSearch.Text.Length > 0;
-            if (selected != null)
+            if (treeViewShortcuts.SelectedNode?.Tag is ShortcutHelper selected)
             {
                 foreach (TreeNode parentNode in treeViewShortcuts.Nodes)
                 {
@@ -3604,6 +3614,11 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxDarkThemeShowListViewGridLines.Enabled = enabled;
         }
 
+        private void listBoxFavoriteSubtitleFormats_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            buttonRemoveFromFavoriteFormats.Enabled = listBoxFavoriteSubtitleFormats.SelectedItems.Count > 0;
+        }
+
         private void listBoxFavoriteSubtitleFormats_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyData == (Keys.Control | Keys.A))
@@ -3618,9 +3633,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
         }
 
-        private void listBoxFavoriteSubtitleFormats_SelectedIndexChanged(object sender, EventArgs e)
+        private void listBoxFavoriteSubtitleFormats_LostFocus(object sender, EventArgs e)
         {
-            buttonRemoveFromFavoriteFormats.Enabled = listBoxFavoriteSubtitleFormats.SelectedItems.Count > 0;
+            listBoxFavoriteSubtitleFormats.Update();
         }
 
         private void buttonMoveToFavorites_Click(object sender, EventArgs e)
@@ -3647,9 +3662,42 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
         }
 
+        private void textBoxFormatsSearch_TextChanged(object sender, EventArgs e)
+        {
+            listBoxSubtitleFormats.BeginUpdate();
+            listBoxSubtitleFormats.Items.Clear();
+            if (textBoxFormatsSearch.Text.Length > 0)
+            {
+                buttonFormatsSearchClear.Enabled = true;
+                var results = SubtitleFormat.AllSubtitleFormats.Where(format => !format.IsVobSubIndexFile && format.FriendlyName.Contains(textBoxFormatsSearch.Text)).Select(format => format.FriendlyName);
+                listBoxSubtitleFormats.Items.AddRange(results.ToArray<object>());
+            }
+            else
+            {
+                var formatNames = SubtitleFormat.AllSubtitleFormats.Where(format => !format.IsVobSubIndexFile).Select(format => format.FriendlyName);
+                listBoxSubtitleFormats.Items.AddRange(formatNames.ToArray<object>());
+                buttonFormatsSearchClear.Enabled = false;
+            }
+            listBoxSubtitleFormats.EndUpdate();
+
+            buttonMoveToFavoriteFormats.Enabled = listBoxSubtitleFormats.SelectedItems.Count > 0;
+        }
+
+        private void buttonFormatsSearchClear_Click(object sender, EventArgs e)
+        {
+            textBoxFormatsSearch.Text = string.Empty;
+            labelFormatsSearch.Focus();
+        }
+
         private void listBoxSubtitleFormats_SelectedIndexChanged(object sender, EventArgs e)
         {
             buttonMoveToFavoriteFormats.Enabled = listBoxSubtitleFormats.SelectedItems.Count > 0;
+        }
+
+        private void listBoxSubtitleFormats_LostFocus(object sender, EventArgs e)
+        {
+            // avoid flickering when losing focus
+            listBoxSubtitleFormats.Update();
         }
 
         private void contextMenuStripFavoriteFormats_Opening(object sender, CancelEventArgs e)
