@@ -80,7 +80,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             newToolStripMenuItem.Text = LanguageSettings.Current.SubStationAlphaStylesCategoriesManager.NewCategory;
             toolStripMenuItemRename.Text = LanguageSettings.Current.SubStationAlphaStylesCategoriesManager.CategoryRename;
-            deleteToolStripMenuItem1.Text = LanguageSettings.Current.SubStationAlphaStyles.Remove;
+            deleteToolStripMenuItem.Text = LanguageSettings.Current.SubStationAlphaStyles.Remove;
+            deleteAllToolStripMenuItem.Text = LanguageSettings.Current.SubStationAlphaStyles.RemoveAll;
             moveUpToolStripMenuItem.Text = LanguageSettings.Current.DvdSubRip.MoveUp;
             moveDownToolStripMenuItem.Text = LanguageSettings.Current.DvdSubRip.MoveDown;
             moveToTopToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.MoveToTop; ;
@@ -323,7 +324,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 try
                 {
-                    var importCategories = ImportGroupsFile(openFileDialogImport.FileName);
+                    var importCategories = ImportCategoriesFile(openFileDialogImport.FileName);
                     if (importCategories.Count == 0)
                     {
                         MessageBox.Show(LanguageSettings.Current.MultipleReplace.NothingToImport);
@@ -381,7 +382,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
         }
 
-        private List<AssaStorageCategory> ImportGroupsFile(string fileName)
+        private List<AssaStorageCategory> ImportCategoriesFile(string fileName)
         {
             var list = new List<AssaStorageCategory>();
             var doc = new XmlDocument { XmlResolver = null };
@@ -500,13 +501,13 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             return list;
         }
 
-        private void ContextMenuStripGroups_Opening(object sender, EventArgs e)
+        private void ContextMenuStripCategories_Opening(object sender, EventArgs e)
         {
             var onlyOneSelected = listViewCategories.SelectedItems.Count == 1;
-            toolStripMenuItemRename.Enabled = onlyOneSelected;
-            toolStripMenuItemRename.Enabled = onlyOneSelected;
+            toolStripMenuItemRename.Visible = onlyOneSelected;
 
             var moreThanOneExist = listViewCategories.Items.Count > 1;
+            deleteAllToolStripMenuItem.Visible = moreThanOneExist;
             toolStripSeparator.Visible = onlyOneSelected && moreThanOneExist;
             moveUpToolStripMenuItem.Visible = onlyOneSelected && moreThanOneExist;
             moveDownToolStripMenuItem.Visible = onlyOneSelected && moreThanOneExist;
@@ -514,11 +515,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             moveToBottomToolStripMenuItem.Visible = onlyOneSelected && moreThanOneExist;
 
             var moreThanOneSelected = listViewCategories.SelectedItems.Count > 1;
-            deleteToolStripMenuItem1.Visible = moreThanOneSelected;
-
-            var isDefaultCategory = listViewCategories.SelectedItems.Count == 1 &&
-                                    !_assaCategories.Single(category => category.Name == listViewCategories.SelectedItems[0].Text).IsDefault;
-            deleteToolStripMenuItem1.Visible = isDefaultCategory;
+            var selectedIsNotDefault = onlyOneSelected && !SelectedCategory.IsDefault;
+            deleteToolStripMenuItem.Visible = selectedIsNotDefault || moreThanOneSelected;
         }
 
         private void NewToolStripMenuItem_Click(object sender, EventArgs e)
@@ -553,6 +551,28 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private void DeleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ButtonRemoveCategory_Click(sender, e);
+        }
+
+        private void DeleteAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var result = Configuration.Settings.General.PromptDeleteLines ?
+                MessageBox.Show(LanguageSettings.Current.SubStationAlphaStylesCategoriesManager.CategoryDelete, string.Empty, MessageBoxButtons.YesNo) :
+                DialogResult.Yes;
+            if (result == DialogResult.Yes)
+            {
+                foreach (ListViewItem item in listViewCategories.Items)
+                {
+                    if (GetCategoryByName(item.Text).IsDefault)
+                    {
+                        continue;
+                    }
+
+                    listViewCategories.Items.Remove(item);
+                    _assaCategories.RemoveAll(category => category.Name == item.Text);
+                }
+
+                UpdateSelectedIndices();
+            }
         }
 
         private void MoveUpToolStripMenuItem_Click(object sender, EventArgs e)

@@ -42,7 +42,8 @@
             this.contextMenuStripCategories = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemRename = new System.Windows.Forms.ToolStripMenuItem();
-            this.deleteToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.moveUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.moveDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -176,7 +177,8 @@
             this.contextMenuStripCategories.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newToolStripMenuItem,
             this.toolStripMenuItemRename,
-            this.deleteToolStripMenuItem1,
+            this.deleteToolStripMenuItem,
+            this.deleteAllToolStripMenuItem,
             this.toolStripSeparator,
             this.moveUpToolStripMenuItem,
             this.moveDownToolStripMenuItem,
@@ -187,7 +189,7 @@
             this.exportToolStripMenuItem});
             this.contextMenuStripCategories.Name = "contextMenuStripCategories";
             this.contextMenuStripCategories.Size = new System.Drawing.Size(216, 214);
-            this.contextMenuStripCategories.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripGroups_Opening);
+            this.contextMenuStripCategories.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripCategories_Opening);
             // 
             // newToolStripMenuItem
             // 
@@ -206,13 +208,20 @@
             this.toolStripMenuItemRename.Text = "Rename...";
             this.toolStripMenuItemRename.Click += new System.EventHandler(this.ToolStripMenuItemRenameClick);
             // 
-            // deleteToolStripMenuItem1
+            // deleteToolStripMenuItem
             // 
-            this.deleteToolStripMenuItem1.Name = "deleteToolStripMenuItem1";
-            this.deleteToolStripMenuItem1.ShortcutKeys = System.Windows.Forms.Keys.Delete;
-            this.deleteToolStripMenuItem1.Size = new System.Drawing.Size(215, 22);
-            this.deleteToolStripMenuItem1.Text = "Delete...";
-            this.deleteToolStripMenuItem1.Click += new System.EventHandler(this.DeleteToolStripMenuItem_Click);
+            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            this.deleteToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Delete;
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
+            this.deleteToolStripMenuItem.Text = "Delete...";
+            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.DeleteToolStripMenuItem_Click);
+            // 
+            // deleteAllToolStripMenuItem
+            // 
+            this.deleteAllToolStripMenuItem.Name = "deleteAllToolStripMenuItem";
+            this.deleteAllToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
+            this.deleteAllToolStripMenuItem.Text = "Delete all...";
+            this.deleteAllToolStripMenuItem.Click += new System.EventHandler(this.DeleteAllToolStripMenuItem_Click);
             // 
             // toolStripSeparator
             // 
@@ -333,7 +342,8 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStripCategories;
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRename;
-        private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteAllToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator;
         private System.Windows.Forms.ToolStripMenuItem moveUpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem moveDownToolStripMenuItem;
