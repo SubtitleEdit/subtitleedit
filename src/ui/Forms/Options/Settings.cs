@@ -981,7 +981,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 comboBoxSubtitleSaveAsFormats.SelectedText = "- Auto -";
             }
 
-            var formatNames = SubtitleFormat.AllSubtitleFormats.Where(format => !format.IsVobSubIndexFile).Select(format => format.FriendlyName);
+            var formatNames = GetSubtitleFormats();
             listBoxSubtitleFormats.Items.AddRange(formatNames.ToArray<object>());
 
             if (!string.IsNullOrEmpty(Configuration.Settings.General.FavoriteSubtitleFormats))
@@ -1007,8 +1007,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
                     comboBoxSubtitleSaveAsFormats.Width = (int)Math.Round(comboBoxSubtitleSaveFormatsTextWidth.Width + 17.5);
                 }
             }
-
-            buttonClearShortcut.Left = buttonUpdateShortcut.Left + buttonUpdateShortcut.Width + 15;
 
             // Shortcuts
             groupBoxShortcuts.Text = language.Shortcuts;
@@ -3635,6 +3633,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void listBoxFavoriteSubtitleFormats_LostFocus(object sender, EventArgs e)
         {
+            // avoid flickering when losing focus
             listBoxFavoriteSubtitleFormats.Update();
         }
 
@@ -3674,7 +3673,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
             else
             {
-                var formatNames = SubtitleFormat.AllSubtitleFormats.Where(format => !format.IsVobSubIndexFile).Select(format => format.FriendlyName);
+                var formatNames = GetSubtitleFormats();
                 listBoxSubtitleFormats.Items.AddRange(formatNames.ToArray<object>());
                 buttonFormatsSearchClear.Enabled = false;
             }
@@ -3803,5 +3802,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             listBoxFavoriteSubtitleFormats.Items.Insert(listBoxFavoriteSubtitleFormats.Items.Count, item);
             listBoxFavoriteSubtitleFormats.SetSelected(listBoxFavoriteSubtitleFormats.Items.Count - 1, true);
         }
+
+        private IEnumerable<string> GetSubtitleFormats() => SubtitleFormat.AllSubtitleFormats.Where(format => !format.IsVobSubIndexFile).Select(format => format.FriendlyName);
     }
 }
