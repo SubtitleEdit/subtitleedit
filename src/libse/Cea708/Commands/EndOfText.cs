@@ -1,17 +1,16 @@
 ﻿namespace Nikse.SubtitleEdit.Core.Cea708.Commands
 {
-    public class Delay : ICommand
+    public class EndOfText : ICommand
     {
-        public static readonly int Id = 0x8D;
+        public static readonly int Id = 0x03;
 
         public int LineIndex { get; set; }
 
         public int Milliseconds { get; set; }
 
-        public Delay(int lineIndex, byte[] bytes, int index)
+        public EndOfText(int lineIndex)
         {
             LineIndex = lineIndex;
-            Milliseconds = bytes[index] * 100;
         }
 
         public byte[] GetBytes()

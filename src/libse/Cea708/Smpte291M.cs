@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Cea708.Commands;
+﻿using System.Linq;
+using Nikse.SubtitleEdit.Core.Cea708.Commands;
 
 namespace Nikse.SubtitleEdit.Core.Cea708
 {
@@ -18,8 +19,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
         public bool CaptionDistributionPacketServiceInfoEnd { get; set; }
         public bool CaptionDistributionPacketContainsCaptions { get; set; }
         public int CaptionDistributionPacketHeaderSequenceCounter { get; set; }
-        public int CaptionDistributionPacketDataSection { get; set; }
-        public CaptionDistributionPacket CaptionDistributionPacketCcData { get; set; }
+        public CcDataSection CcDataSectionCcData { get; set; }
         public CcServiceInfoSection CcServiceInfoSection { get; set; }
         public int CaptionDistributionPacketFooterSection { get; set; }
         public int CaptionDistributionPacketHeaderSequenceCounter2 { get; set; }
@@ -58,11 +58,10 @@ namespace Nikse.SubtitleEdit.Core.Cea708
             CaptionDistributionPacketServiceInfoEnd = (bytes[7] & 0b00000100) > 0;
             CaptionDistributionPacketContainsCaptions = (bytes[7] & 0b00000010) > 0;
             CaptionDistributionPacketHeaderSequenceCounter = (bytes[8] << 8) + bytes[9];
-            CaptionDistributionPacketDataSection = bytes[10];
 
-            CaptionDistributionPacketCcData = new CaptionDistributionPacket(bytes, 10);
+            CcDataSectionCcData = new CcDataSection(bytes, 10);
 
-            var idx = 9 + CaptionDistributionPacketCcData.GetLength();
+            var idx = 9 + CcDataSectionCcData.GetLength();
 
             if (CaptionDistributionPacketServiceInfoAdded)
             {
@@ -77,7 +76,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
 
         public string GetText(int lineIndex, bool flush, CommandState state)
         {
-            return CaptionDistributionPacketCcData.GetText(lineIndex, state, flush);
+            return CcDataSectionCcData.GetText(lineIndex, state, flush);
         }
 
         public byte[] GetBytes()
@@ -103,8 +102,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 flags,
                 (byte)(CaptionDistributionPacketHeaderSequenceCounter >> 8),
                 (byte)(CaptionDistributionPacketHeaderSequenceCounter & 0b0000000011111111),
-                (byte)CaptionDistributionPacketDataSection,
-            };
+            }.Concat(CcDataSectionCcData.GetBytes()).ToArray();
         }
     }
 }

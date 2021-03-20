@@ -4,12 +4,12 @@ namespace Nikse.SubtitleEdit.Core.Cea708.Commands
 {
     public class CommandState
     {
-        public List<CommandBase> Commands { get; set; }
+        public List<ICommand> Commands { get; set; }
         public int StartLineIndex { get; set; }
 
         public CommandState()
         {
-            Commands = new List<CommandBase>();
+            Commands = new List<ICommand>();
         }
     }
 }

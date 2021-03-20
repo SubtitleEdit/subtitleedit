@@ -1,7 +1,11 @@
 ﻿namespace Nikse.SubtitleEdit.Core.Cea708.Commands
 {
-    public class WindowAttributes : CommandBase
+    public class SetWindowAttributes : ICommand
     {
+        public static readonly int Id = 0x97;
+
+        public int LineIndex { get; set; }
+
         public const int JustifyLeft = 0;
         public const int JustifyRight = 1;
         public const int JustifyCenter = 2;
@@ -28,7 +32,7 @@
         public int EffectDirection { get; set; }
         public int EffectSpeed { get; set; }
 
-        public WindowAttributes(int lineIndex, byte[] bytes, int index)
+        public SetWindowAttributes(int lineIndex, byte[] bytes, int index)
         {
             LineIndex = lineIndex;
 

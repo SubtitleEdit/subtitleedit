@@ -1,7 +1,11 @@
 ﻿namespace Nikse.SubtitleEdit.Core.Cea708.Commands
 {
-    public class PenColor : CommandBase
+    public class SetPenColor : ICommand
     {
+        public static readonly int Id = 0x91;
+
+        public int LineIndex { get; set; }
+
         public int ForegroundColorBlue { get; set; }
         public int ForegroundColorGreen { get; set; }
         public int ForegroundColorRed { get; set; }
@@ -18,7 +22,7 @@
         public int EdgeOpacity { get; set; }
 
 
-        public PenColor(int lineIndex, byte[] bytes, int index)
+        public SetPenColor(int lineIndex, byte[] bytes, int index)
         {
             LineIndex = lineIndex;
 

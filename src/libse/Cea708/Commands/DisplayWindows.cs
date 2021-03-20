@@ -1,10 +1,14 @@
 ﻿namespace Nikse.SubtitleEdit.Core.Cea708.Commands
 {
-    public class ClearWindows : CommandBase
+    public class DisplayWindows : ICommand
     {
+        public static readonly int Id = 0x89;
+
+        public int LineIndex { get; set; }
+
         public bool[] Flags { get; set; }
 
-        public ClearWindows(int lineIndex, byte[] bytes, int index)
+        public DisplayWindows(int lineIndex, byte[] bytes, int index)
         {
             LineIndex = lineIndex;
             var b = bytes[index];
@@ -19,6 +23,11 @@
                 (b & 0b01000000) > 0,
                 (b & 0b10000000) > 0,
             };
+        }
+
+        public byte[] GetBytes()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

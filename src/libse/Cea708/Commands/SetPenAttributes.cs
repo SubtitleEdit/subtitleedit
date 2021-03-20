@@ -1,7 +1,11 @@
 ﻿namespace Nikse.SubtitleEdit.Core.Cea708.Commands
 {
-    public class PenAttributes : CommandBase
+    public class SetPenAttributes : ICommand
     {
+        public static readonly int Id = 0x90;
+
+        public int LineIndex { get; set; }
+
         public int PenSize { get; set; }
         public int Offset { get; set; }
         public int TextTag { get; set; }
@@ -10,7 +14,7 @@
         public bool Underline { get; set; }
         public bool Italics { get; set; }
 
-        public PenAttributes(int lineIndex, byte[] bytes, int index)
+        public SetPenAttributes(int lineIndex, byte[] bytes, int index)
         {
             LineIndex = lineIndex;
             PenSize = bytes[index] & 0b00000011;
