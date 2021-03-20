@@ -1,12 +1,14 @@
 ﻿using Nikse.SubtitleEdit.Core.Cea708.Commands;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.Cea708
 {
-    public class CaptionDistributionPacket
+    public class CcDataSection
     {
-        public int DataSection { get; set; }
+        public int DataSection { get; set; } // 0x72
         public bool ProcessEmData { get; set; }
         public bool ProcessCcData { get; set; }
         public bool AdditionalData { get; set; }
@@ -17,7 +19,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
             return 2 + CcData.Length * 3;
         }
 
-        public CaptionDistributionPacket(byte[] bytes, int index)
+        public CcDataSection(byte[] bytes, int index)
         {
             DataSection = bytes[index];
             ProcessEmData = (bytes[index + 1] & 0b10000000) > 0;
@@ -66,6 +68,12 @@ namespace Nikse.SubtitleEdit.Core.Cea708
 
         public byte[] GetBytes()
         {
+            var ccDataBytes = new List<byte>();
+            foreach (var ccData in CcData)
+            {
+                ccDataBytes.AddRange(ccData.GetBytes());
+            }
+
             return new[]
             {
                 (byte)DataSection,
@@ -73,7 +81,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                        (ProcessCcData ? 0b01000000 : 0) |
                        (AdditionalData ? 0b00100000 : 0) |
                        CcData.Length),
-            };
+            }.Concat(ccDataBytes).ToArray();
         }
     }
 }

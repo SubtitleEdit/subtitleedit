@@ -1,13 +1,20 @@
 ﻿namespace Nikse.SubtitleEdit.Core.Cea708.Commands
 {
-    public class TextCommand : CommandBase
+    public class TextCommand : ICommand
     {
+        public int LineIndex { get; set; }
+
         public string Content { get; set; }
 
         public TextCommand(int lineIndex, string content)
         {
             LineIndex = lineIndex;
             Content = content;
+        }
+
+        public byte[] GetBytes()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

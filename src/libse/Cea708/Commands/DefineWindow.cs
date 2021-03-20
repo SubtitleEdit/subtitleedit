@@ -1,7 +1,12 @@
 ﻿namespace Nikse.SubtitleEdit.Core.Cea708.Commands
 {
-    public class Window : CommandBase
+    public class DefineWindow : ICommand
     {
+        public static readonly int IdStart = 0x98;
+        public static readonly int IdEnd = 0x9F;
+
+        public int LineIndex { get; set; }
+
         public const int AnchorUpperLeft = 0;
         public const int AnchorUpperCenter = 1;
         public const int AnchorUpperRight = 2;
@@ -28,12 +33,12 @@
         public int PenStyleId { get; set; }
         public int WindowStyleId { get; set; }
 
-        public Window()
+        public DefineWindow()
         {
             //TODO: set default values...
         }
 
-        public Window(int lineIndex, byte[] bytes, int index)
+        public DefineWindow(int lineIndex, byte[] bytes, int index)
         {
             LineIndex = lineIndex;
 

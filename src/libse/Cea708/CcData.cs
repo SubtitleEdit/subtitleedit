@@ -23,5 +23,15 @@
                     return "unknown";
             }
         }
+
+        public byte[] GetBytes()
+        {
+            return new[]
+            {
+                (byte)(0b00011111 | (Valid ? 0b01000000 : 0) | (Type << 6)),
+                Data1,
+                Data2
+            };
+        }
     }
 }

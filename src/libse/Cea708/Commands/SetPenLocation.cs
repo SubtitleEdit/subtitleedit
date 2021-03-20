@@ -1,7 +1,11 @@
 ﻿namespace Nikse.SubtitleEdit.Core.Cea708.Commands
 {
-    public class PenLocation : CommandBase
+    public class SetPenLocation : ICommand
     {
+        public static readonly int Id = 0x92;
+
+        public int LineIndex { get; set; }
+
         /// <summary>
         /// X coordinate.
         /// </summary>
@@ -12,7 +16,7 @@
         /// </summary>
         public int Row { get; set; }
 
-        public PenLocation(int lineIndex, byte[] bytes, int index)
+        public SetPenLocation(int lineIndex, byte[] bytes, int index)
         {
             LineIndex = lineIndex;
 

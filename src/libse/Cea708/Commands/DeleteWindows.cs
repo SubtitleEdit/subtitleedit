@@ -1,7 +1,11 @@
 ﻿namespace Nikse.SubtitleEdit.Core.Cea708.Commands
 {
-    public class DeleteWindows : CommandBase
+    public class DeleteWindows : ICommand
     {
+        public static readonly int Id = 0x8C;
+
+        public int LineIndex { get; set; }
+
         public bool[] Flags { get; set; }
 
         public DeleteWindows(int lineIndex, byte[] bytes, int index)
@@ -19,6 +23,11 @@
                 (b & 0b01000000) > 0,
                 (b & 0b10000000) > 0,
             };
+        }
+
+        public byte[] GetBytes()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
