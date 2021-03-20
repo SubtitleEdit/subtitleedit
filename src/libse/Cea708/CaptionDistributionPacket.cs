@@ -63,5 +63,17 @@ namespace Nikse.SubtitleEdit.Core.Cea708
 
             return bytes;
         }
+
+        public byte[] GetBytes()
+        {
+            return new[]
+            {
+                (byte)DataSection,
+                (byte)((ProcessEmData ? 0b10000000 : 0) |
+                       (ProcessCcData ? 0b01000000 : 0) |
+                       (AdditionalData ? 0b00100000 : 0) |
+                       CcData.Length),
+            };
+        }
     }
 }
