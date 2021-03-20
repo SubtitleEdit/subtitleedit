@@ -2107,6 +2107,7 @@
         {
             public string Title { get; set; }
             public string General { get; set; }
+            public string SubtitleFormats { get; set; }
             public string Toolbar { get; set; }
             public string VideoPlayer { get; set; }
             public string WaveformAndSpectrogram { get; set; }
@@ -2315,6 +2316,13 @@
             public string FixCommonOcrErrorsUseHardcodedRules { get; set; }
             public string FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime { get; set; }
             public string FixCommonErrorsSkipStepOne { get; set; }
+
+            public string DefaultFormat { get; set; }
+            public string DefaultSaveAsFormat { get; set; }
+            public string Favorites { get; set; }
+            public string FavoriteFormats { get; set; }
+            public string FavoriteSubtitleFormatsNote { get; set; }
+
             public string Shortcuts { get; set; }
             public string Shortcut { get; set; }
             public string Control { get; set; }

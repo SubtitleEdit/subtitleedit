@@ -95,6 +95,31 @@
             this.labelDefaultFileEncoding = new System.Windows.Forms.Label();
             this.comboBoxFrameRate = new System.Windows.Forms.ComboBox();
             this.labelDefaultFrameRate = new System.Windows.Forms.Label();
+            this.panelSubtitleFormats = new System.Windows.Forms.Panel();
+            this.groupBoxSubtitleFormats = new System.Windows.Forms.GroupBox();
+            this.labelDefaultSubtitleFormat = new System.Windows.Forms.Label();
+            this.comboBoxSubtitleFormats = new System.Windows.Forms.ComboBox();
+            this.labelDefaultSaveAsFormat = new System.Windows.Forms.Label();
+            this.comboBoxSubtitleSaveAsFormats = new System.Windows.Forms.ComboBox();
+            this.groupBoxFavoriteSubtitleFormats = new System.Windows.Forms.GroupBox();
+            this.labelFavoriteFormats = new System.Windows.Forms.Label();
+            this.listBoxFavoriteSubtitleFormats = new System.Windows.Forms.ListBox();
+            this.buttonMoveToFavoriteFormats = new System.Windows.Forms.Button();
+            this.buttonRemoveFromFavoriteFormats = new System.Windows.Forms.Button();
+            this.labelFormats = new System.Windows.Forms.Label();
+            this.labelFormatsSearch = new System.Windows.Forms.Label();
+            this.textBoxFormatsSearch = new System.Windows.Forms.TextBox();
+            this.buttonFormatsSearchClear = new System.Windows.Forms.Button();
+            this.listBoxSubtitleFormats = new System.Windows.Forms.ListBox();
+            this.labelFavoriteSubtitleFormatsNote = new System.Windows.Forms.Label();
+            this.contextMenuStripFavoriteFormats = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.moveUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.moveDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.moveToTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.moveToBottomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panelShortcuts = new System.Windows.Forms.Panel();
             this.groupBoxShortcuts = new System.Windows.Forms.GroupBox();
             this.buttonShortcutsClear = new System.Windows.Forms.Button();
@@ -396,6 +421,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMinGapMs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharsSec)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSubtitleLineMaximumLength)).BeginInit();
+            this.panelSubtitleFormats.SuspendLayout();
+            this.groupBoxSubtitleFormats.SuspendLayout();
+            this.groupBoxFavoriteSubtitleFormats.SuspendLayout();
+            this.contextMenuStripFavoriteFormats.SuspendLayout();
             this.panelShortcuts.SuspendLayout();
             this.groupBoxShortcuts.SuspendLayout();
             this.contextMenuStripShortcuts.SuspendLayout();
@@ -461,7 +490,7 @@
             this.buttonOK.Location = new System.Drawing.Point(733, 539);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 990;
+            this.buttonOK.TabIndex = 13;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
@@ -473,7 +502,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(814, 539);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 993;
+            this.buttonCancel.TabIndex = 14;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -485,6 +514,7 @@
             this.listBoxSection.ItemHeight = 16;
             this.listBoxSection.Items.AddRange(new object[] {
             "General",
+            "Subtitle formats",
             "Shortcuts",
             "Syntax coloring",
             "Video player",
@@ -1293,6 +1323,260 @@
             this.labelDefaultFrameRate.TabIndex = 1;
             this.labelDefaultFrameRate.Text = "Default frame rate";
             // 
+            // panelSubtitleFormats
+            // 
+            this.panelSubtitleFormats.Controls.Add(this.groupBoxSubtitleFormats);
+            this.panelSubtitleFormats.Location = new System.Drawing.Point(230, 6);
+            this.panelSubtitleFormats.Name = "panelSubtitleFormats";
+            this.panelSubtitleFormats.Padding = new System.Windows.Forms.Padding(3);
+            this.panelSubtitleFormats.Size = new System.Drawing.Size(864, 521);
+            this.panelSubtitleFormats.TabIndex = 2;
+            this.panelSubtitleFormats.Text = "Subtite formats";
+            // 
+            // groupBoxSubtitleFormats
+            // 
+            this.groupBoxSubtitleFormats.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxSubtitleFormats.Controls.Add(this.groupBoxFavoriteSubtitleFormats);
+            this.groupBoxSubtitleFormats.Controls.Add(this.comboBoxSubtitleSaveAsFormats);
+            this.groupBoxSubtitleFormats.Controls.Add(this.labelDefaultSaveAsFormat);
+            this.groupBoxSubtitleFormats.Controls.Add(this.comboBoxSubtitleFormats);
+            this.groupBoxSubtitleFormats.Controls.Add(this.labelDefaultSubtitleFormat);
+            this.groupBoxSubtitleFormats.Location = new System.Drawing.Point(0, 0);
+            this.groupBoxSubtitleFormats.Name = "groupBoxSubtitleFormats";
+            this.groupBoxSubtitleFormats.Size = new System.Drawing.Size(851, 521);
+            this.groupBoxSubtitleFormats.TabIndex = 2;
+            this.groupBoxSubtitleFormats.TabStop = false;
+            this.groupBoxSubtitleFormats.Text = "Subtitle formats";
+            // 
+            // labelDefaultSubtitleFormat
+            // 
+            this.labelDefaultSubtitleFormat.AutoSize = true;
+            this.labelDefaultSubtitleFormat.Location = new System.Drawing.Point(8, 30);
+            this.labelDefaultSubtitleFormat.Name = "labelDefaultSubtitleFormat";
+            this.labelDefaultSubtitleFormat.Size = new System.Drawing.Size(86, 13);
+            this.labelDefaultSubtitleFormat.TabIndex = 0;
+            this.labelDefaultSubtitleFormat.Text = "Default format";
+            // 
+            // comboBoxSubtitleFormats
+            // 
+            this.comboBoxSubtitleFormats.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxSubtitleFormats.FormattingEnabled = true;
+            this.comboBoxSubtitleFormats.Location = new System.Drawing.Point(100, 26);
+            this.comboBoxSubtitleFormats.Name = "comboBoxSubtitleFormats";
+            this.comboBoxSubtitleFormats.Size = new System.Drawing.Size(200, 21);
+            this.comboBoxSubtitleFormats.TabIndex = 1;
+            // 
+            // labelDefaultSaveAsFormat
+            // 
+            this.labelDefaultSaveAsFormat.AutoSize = true;
+            this.labelDefaultSaveAsFormat.Location = new System.Drawing.Point(8, 64);
+            this.labelDefaultSaveAsFormat.Name = "labelDefaultSaveAsFormat";
+            this.labelDefaultSaveAsFormat.Size = new System.Drawing.Size(86, 13);
+            this.labelDefaultSaveAsFormat.TabIndex = 2;
+            this.labelDefaultSaveAsFormat.Text = "Default save as format";
+            // 
+            // comboBoxSubtitleSaveAsFormats
+            // 
+            this.comboBoxSubtitleSaveAsFormats.FormattingEnabled = true;
+            this.comboBoxSubtitleSaveAsFormats.Location = new System.Drawing.Point(100, 60);
+            this.comboBoxSubtitleSaveAsFormats.Name = "comboBoxSubtitleSaveAsFormats";
+            this.comboBoxSubtitleSaveAsFormats.Size = new System.Drawing.Size(200, 21);
+            this.comboBoxSubtitleSaveAsFormats.TabIndex = 3;
+            // 
+            // groupBoxFavoriteSubtitleFormats
+            // 
+            this.groupBoxFavoriteSubtitleFormats.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxFavoriteSubtitleFormats.Controls.Add(this.labelFavoriteSubtitleFormatsNote);
+            this.groupBoxFavoriteSubtitleFormats.Controls.Add(this.listBoxSubtitleFormats);
+            this.groupBoxFavoriteSubtitleFormats.Controls.Add(this.buttonFormatsSearchClear);
+            this.groupBoxFavoriteSubtitleFormats.Controls.Add(this.textBoxFormatsSearch);
+            this.groupBoxFavoriteSubtitleFormats.Controls.Add(this.labelFormatsSearch);
+            this.groupBoxFavoriteSubtitleFormats.Controls.Add(this.labelFormats);
+            this.groupBoxFavoriteSubtitleFormats.Controls.Add(this.buttonRemoveFromFavoriteFormats);
+            this.groupBoxFavoriteSubtitleFormats.Controls.Add(this.buttonMoveToFavoriteFormats);
+            this.groupBoxFavoriteSubtitleFormats.Controls.Add(this.listBoxFavoriteSubtitleFormats);
+            this.groupBoxFavoriteSubtitleFormats.Controls.Add(this.labelFavoriteFormats);
+            this.groupBoxFavoriteSubtitleFormats.Location = new System.Drawing.Point(6, 92);
+            this.groupBoxFavoriteSubtitleFormats.Name = "groupBoxFavoriteSubtitleFormats";
+            this.groupBoxFavoriteSubtitleFormats.Size = new System.Drawing.Size(838, 420);
+            this.groupBoxFavoriteSubtitleFormats.TabIndex = 4;
+            this.groupBoxFavoriteSubtitleFormats.TabStop = false;
+            this.groupBoxFavoriteSubtitleFormats.Text = "Favorites";
+            // 
+            // labelFavoriteFormats
+            // 
+            this.labelFavoriteFormats.AutoSize = true;
+            this.labelFavoriteFormats.Location = new System.Drawing.Point(48, 34);
+            this.labelFavoriteFormats.Name = "labelFavoriteFormats";
+            this.labelFavoriteFormats.Size = new System.Drawing.Size(86, 13);
+            this.labelFavoriteFormats.TabIndex = 0;
+            this.labelFavoriteFormats.Text = "Favorite formats";
+            // 
+            // listBoxFavoriteSubtitleFormats
+            // 
+            this.listBoxFavoriteSubtitleFormats.ContextMenuStrip = contextMenuStripFavoriteFormats;
+            this.listBoxFavoriteSubtitleFormats.FormattingEnabled = true;
+            this.listBoxFavoriteSubtitleFormats.ItemHeight = 16;
+            this.listBoxFavoriteSubtitleFormats.Location = new System.Drawing.Point(48, 50);
+            this.listBoxFavoriteSubtitleFormats.Name = "listBoxFavoriteSubtitleFormats";
+            this.listBoxFavoriteSubtitleFormats.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.listBoxFavoriteSubtitleFormats.Size = new System.Drawing.Size(300, 277);
+            this.listBoxFavoriteSubtitleFormats.TabIndex = 1;
+            this.listBoxFavoriteSubtitleFormats.SelectedIndexChanged += new System.EventHandler(this.listBoxFavoriteSubtitleFormats_SelectedIndexChanged);
+            this.listBoxFavoriteSubtitleFormats.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBoxFavoriteSubtitleFormats_KeyDown);
+            this.listBoxFavoriteSubtitleFormats.LostFocus += new System.EventHandler(listBoxFavoriteSubtitleFormats_LostFocus);
+            // 
+            // buttonMoveToFavoriteFormats
+            // 
+            this.buttonMoveToFavoriteFormats.Enabled = false;
+            this.buttonMoveToFavoriteFormats.Location = new System.Drawing.Point(363, 153);
+            this.buttonMoveToFavoriteFormats.Name = "buttonMoveToFavoriteFormats";
+            this.buttonMoveToFavoriteFormats.Size = new System.Drawing.Size(111, 23);
+            this.buttonMoveToFavoriteFormats.TabIndex = 2;
+            this.buttonMoveToFavoriteFormats.Text = " < ";
+            this.buttonMoveToFavoriteFormats.UseVisualStyleBackColor = true;
+            this.buttonMoveToFavoriteFormats.Click += new System.EventHandler(this.buttonMoveToFavorites_Click);
+            // 
+            // buttonRemoveFromFavoriteFormats
+            // 
+            this.buttonRemoveFromFavoriteFormats.Enabled = false;
+            this.buttonRemoveFromFavoriteFormats.Location = new System.Drawing.Point(363, 202);
+            this.buttonRemoveFromFavoriteFormats.Name = "buttonRemoveFromFavoriteFormats";
+            this.buttonRemoveFromFavoriteFormats.Size = new System.Drawing.Size(111, 23);
+            this.buttonRemoveFromFavoriteFormats.TabIndex = 3;
+            this.buttonRemoveFromFavoriteFormats.Text = "Remove";
+            this.buttonRemoveFromFavoriteFormats.UseVisualStyleBackColor = true;
+            this.buttonRemoveFromFavoriteFormats.Click += new System.EventHandler(this.buttonRemoveFromFavoriteFormats_Click);
+            // 
+            // labelFormats
+            // 
+            this.labelFormats.AutoSize = true;
+            this.labelFormats.Location = new System.Drawing.Point(489, 34);
+            this.labelFormats.Name = "labelFormats";
+            this.labelFormats.Size = new System.Drawing.Size(86, 13);
+            this.labelFormats.TabIndex = 4;
+            this.labelFormats.Text = "Formats";
+            // 
+            // labelFormatsSearch
+            // 
+            this.labelFormatsSearch.AutoSize = true;
+            this.labelFormatsSearch.Location = new System.Drawing.Point(489, 56);
+            this.labelFormatsSearch.Name = "labelFormatsSearch";
+            this.labelFormatsSearch.Size = new System.Drawing.Size(40, 13);
+            this.labelFormatsSearch.TabIndex = 5;
+            this.labelFormatsSearch.Text = "Search";
+            // 
+            // textBoxFormatsSearch
+            // 
+            this.textBoxFormatsSearch.Location = new System.Drawing.Point(529, 52);
+            this.textBoxFormatsSearch.Name = "textBoxShortcutSearch";
+            this.textBoxFormatsSearch.Size = new System.Drawing.Size(151, 21);
+            this.textBoxFormatsSearch.TabIndex = 6;
+            this.textBoxFormatsSearch.TextChanged += new System.EventHandler(this.textBoxFormatsSearch_TextChanged);
+            // 
+            // buttonFormatsSearchClear
+            // 
+            this.buttonFormatsSearchClear.Enabled = false;
+            this.buttonFormatsSearchClear.Location = new System.Drawing.Point(683, 52);
+            this.buttonFormatsSearchClear.Name = "buttonFormatsSearchClear";
+            this.buttonFormatsSearchClear.Size = new System.Drawing.Size(105, 21);
+            this.buttonFormatsSearchClear.TabIndex = 7;
+            this.buttonFormatsSearchClear.Text = "&Clear";
+            this.buttonFormatsSearchClear.UseVisualStyleBackColor = true;
+            this.buttonFormatsSearchClear.Click += new System.EventHandler(this.buttonFormatsSearchClear_Click);
+            // 
+            // listBoxSubtitleFormats
+            // 
+            this.listBoxSubtitleFormats.FormattingEnabled = true;
+            this.listBoxSubtitleFormats.ItemHeight = 16;
+            this.listBoxSubtitleFormats.Location = new System.Drawing.Point(489, 76);
+            this.listBoxSubtitleFormats.Name = "listBoxSubtitleFormats";
+            this.listBoxSubtitleFormats.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.listBoxSubtitleFormats.Size = new System.Drawing.Size(300, 260);
+            this.listBoxSubtitleFormats.TabIndex = 8;
+            this.listBoxSubtitleFormats.SelectedIndexChanged += new System.EventHandler(this.listBoxSubtitleFormats_SelectedIndexChanged);
+            this.listBoxSubtitleFormats.LostFocus += new System.EventHandler(this.listBoxSubtitleFormats_LostFocus);
+            // 
+            // labelFavoriteSubtitleFormatsNote
+            // 
+            this.labelFavoriteSubtitleFormatsNote.AutoSize = true;
+            this.labelFavoriteSubtitleFormatsNote.Location = new System.Drawing.Point(10, 367);
+            this.labelFavoriteSubtitleFormatsNote.Name = "labelFavoriteSubtitleFormatsNote";
+            this.labelFavoriteSubtitleFormatsNote.Size = new System.Drawing.Size(278, 13);
+            this.labelFavoriteSubtitleFormatsNote.TabIndex = 9;
+            this.labelFavoriteSubtitleFormatsNote.Text = "Note: favorite formats will be shown first when selecting a format, the default format will always be shown first";
+            // 
+            // contextMenuStripFavoriteFormats
+            // 
+            this.contextMenuStripFavoriteFormats.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+                this.deleteToolStripMenuItem,
+            this.deleteAllToolStripMenuItem,
+            this.toolStripSeparator,
+            this.moveUpToolStripMenuItem,
+            this.moveDownToolStripMenuItem,
+            this.moveToTopToolStripMenuItem,
+            this.moveToBottomToolStripMenuItem});
+            this.contextMenuStripFavoriteFormats.Name = "contextMenuStripFavoriteFormats";
+            this.contextMenuStripFavoriteFormats.Size = new System.Drawing.Size(216, 214);
+            this.contextMenuStripFavoriteFormats.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripFavoriteFormats_Opening);
+            // 
+            // deleteToolStripMenuItem
+            // 
+            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            this.deleteToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Delete;
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
+            this.deleteToolStripMenuItem.Text = "Delete...";
+            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
+            // 
+            // deleteAllToolStripMenuItem
+            // 
+            this.deleteAllToolStripMenuItem.Name = "deleteAllToolStripMenuItem";
+            this.deleteAllToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
+            this.deleteAllToolStripMenuItem.Text = "Delete all";
+            this.deleteAllToolStripMenuItem.Click += new System.EventHandler(this.deleteAllToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator
+            // 
+            this.toolStripSeparator.Name = "toolStripSeparator";
+            this.toolStripSeparator.Size = new System.Drawing.Size(212, 6);
+            // 
+            // moveUpToolStripMenuItem
+            // 
+            this.moveUpToolStripMenuItem.Name = "moveUpToolStripMenuItem";
+            this.moveUpToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Up)));
+            this.moveUpToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
+            this.moveUpToolStripMenuItem.Text = "Move up";
+            this.moveUpToolStripMenuItem.Click += new System.EventHandler(this.moveUpToolStripMenuItem_Click);
+            // 
+            // moveDownToolStripMenuItem
+            // 
+            this.moveDownToolStripMenuItem.Name = "moveDownToolStripMenuItem";
+            this.moveDownToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Down)));
+            this.moveDownToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
+            this.moveDownToolStripMenuItem.Text = "Move down";
+            this.moveDownToolStripMenuItem.Click += new System.EventHandler(this.moveDownToolStripMenuItem_Click);
+            // 
+            // moveToTopToolStripMenuItem
+            // 
+            this.moveToTopToolStripMenuItem.Name = "moveToTopToolStripMenuItem";
+            this.moveToTopToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Home)));
+            this.moveToTopToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
+            this.moveToTopToolStripMenuItem.Text = "Move to top";
+            this.moveToTopToolStripMenuItem.Click += new System.EventHandler(this.moveToTopToolStripMenuItem_Click);
+            // 
+            // moveToBottomToolStripMenuItem
+            // 
+            this.moveToBottomToolStripMenuItem.Name = "moveToBottomToolStripMenuItem";
+            this.moveToBottomToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.End)));
+            this.moveToBottomToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
+            this.moveToBottomToolStripMenuItem.Text = "Move to bottom";
+            this.moveToBottomToolStripMenuItem.Click += new System.EventHandler(this.moveToBottomToolStripMenuItem_Click);
+            // 
+            // 
             // panelShortcuts
             // 
             this.panelShortcuts.Controls.Add(this.groupBoxShortcuts);
@@ -1300,7 +1584,7 @@
             this.panelShortcuts.Name = "panelShortcuts";
             this.panelShortcuts.Padding = new System.Windows.Forms.Padding(3);
             this.panelShortcuts.Size = new System.Drawing.Size(864, 521);
-            this.panelShortcuts.TabIndex = 2;
+            this.panelShortcuts.TabIndex = 3;
             this.panelShortcuts.Text = "Shortcuts";
             // 
             // groupBoxShortcuts
@@ -1642,7 +1926,7 @@
             this.panelSyntaxColoring.Name = "panelSyntaxColoring";
             this.panelSyntaxColoring.Padding = new System.Windows.Forms.Padding(3);
             this.panelSyntaxColoring.Size = new System.Drawing.Size(864, 521);
-            this.panelSyntaxColoring.TabIndex = 3;
+            this.panelSyntaxColoring.TabIndex = 4;
             this.panelSyntaxColoring.Text = "Syntax coloring";
             // 
             // groupBoxListViewSyntaxColoring
@@ -1775,7 +2059,7 @@
             this.panelVideoPlayer.Name = "panelVideoPlayer";
             this.panelVideoPlayer.Padding = new System.Windows.Forms.Padding(3);
             this.panelVideoPlayer.Size = new System.Drawing.Size(864, 521);
-            this.panelVideoPlayer.TabIndex = 4;
+            this.panelVideoPlayer.TabIndex = 5;
             this.panelVideoPlayer.Text = "Video player";
             // 
             // groupBoxMainWindowVideoControls
@@ -2351,7 +2635,7 @@
             this.panelWaveform.Location = new System.Drawing.Point(230, 6);
             this.panelWaveform.Name = "panelWaveform";
             this.panelWaveform.Size = new System.Drawing.Size(864, 521);
-            this.panelWaveform.TabIndex = 5;
+            this.panelWaveform.TabIndex = 6;
             this.panelWaveform.Text = "Waveform/spectrogram";
             // 
             // groupBoxFfmpeg
@@ -2838,7 +3122,7 @@
             this.panelTools.Name = "panelTools";
             this.panelTools.Padding = new System.Windows.Forms.Padding(3);
             this.panelTools.Size = new System.Drawing.Size(864, 521);
-            this.panelTools.TabIndex = 6;
+            this.panelTools.TabIndex = 7;
             this.panelTools.Text = "Tools";
             // 
             // groupBoxGoogleTranslate
@@ -3368,7 +3652,7 @@
             this.panelWordLists.Name = "panelWordLists";
             this.panelWordLists.Padding = new System.Windows.Forms.Padding(3);
             this.panelWordLists.Size = new System.Drawing.Size(864, 521);
-            this.panelWordLists.TabIndex = 7;
+            this.panelWordLists.TabIndex = 8;
             this.panelWordLists.Text = "Word lists";
             // 
             // groupBoxWordLists
@@ -3636,7 +3920,7 @@
             this.panelToolBar.Name = "panelToolBar";
             this.panelToolBar.Padding = new System.Windows.Forms.Padding(3);
             this.panelToolBar.Size = new System.Drawing.Size(864, 521);
-            this.panelToolBar.TabIndex = 8;
+            this.panelToolBar.TabIndex = 9;
             this.panelToolBar.Text = "Toolbar ";
             // 
             // groupBox2
@@ -4068,7 +4352,7 @@
             this.panelFont.Location = new System.Drawing.Point(230, 6);
             this.panelFont.Name = "panelFont";
             this.panelFont.Size = new System.Drawing.Size(864, 521);
-            this.panelFont.TabIndex = 9;
+            this.panelFont.TabIndex = 10;
             this.panelFont.Text = "Font";
             // 
             // groupBoxAppearance
@@ -4462,7 +4746,7 @@
             this.panelNetwork.Name = "panelNetwork";
             this.panelNetwork.Padding = new System.Windows.Forms.Padding(3);
             this.panelNetwork.Size = new System.Drawing.Size(864, 521);
-            this.panelNetwork.TabIndex = 10;
+            this.panelNetwork.TabIndex = 11;
             this.panelNetwork.Text = "Network";
             // 
             // groupBoxNetworkSession
@@ -4606,7 +4890,7 @@
             this.labelStatus.Location = new System.Drawing.Point(12, 549);
             this.labelStatus.Name = "labelStatus";
             this.labelStatus.Size = new System.Drawing.Size(60, 13);
-            this.labelStatus.TabIndex = 11;
+            this.labelStatus.TabIndex = 12;
             this.labelStatus.Text = "labelStatus";
             // 
             // openFileDialogFFmpeg
@@ -4619,7 +4903,7 @@
             this.buttonReset.Location = new System.Drawing.Point(895, 539);
             this.buttonReset.Name = "buttonReset";
             this.buttonReset.Size = new System.Drawing.Size(185, 23);
-            this.buttonReset.TabIndex = 996;
+            this.buttonReset.TabIndex = 15;
             this.buttonReset.Text = "Restore default settings";
             this.buttonReset.UseVisualStyleBackColor = true;
             this.buttonReset.Click += new System.EventHandler(this.buttonReset_Click);
@@ -4637,6 +4921,7 @@
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.panelFont);
             this.Controls.Add(this.panelNetwork);
+            this.Controls.Add(this.panelSubtitleFormats);
             this.Controls.Add(this.panelGeneral);
             this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.panelWordLists);
@@ -4673,6 +4958,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMinGapMs)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharsSec)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSubtitleLineMaximumLength)).EndInit();
+            this.panelSubtitleFormats.ResumeLayout(false);
+            this.groupBoxSubtitleFormats.ResumeLayout(false);
+            this.groupBoxSubtitleFormats.PerformLayout();
+            this.groupBoxFavoriteSubtitleFormats.ResumeLayout(false);
+            this.groupBoxFavoriteSubtitleFormats.PerformLayout();
+            this.contextMenuStripFavoriteFormats.ResumeLayout(false);
             this.panelShortcuts.ResumeLayout(false);
             this.groupBoxShortcuts.ResumeLayout(false);
             this.groupBoxShortcuts.PerformLayout();
@@ -5116,6 +5407,31 @@
         private System.Windows.Forms.Button buttonDarkThemeColor;
         private System.Windows.Forms.ListView listViewNames;
         private System.Windows.Forms.ColumnHeader columnHeaderNames;
+        private System.Windows.Forms.Panel panelSubtitleFormats;
+        private System.Windows.Forms.GroupBox groupBoxSubtitleFormats;
+        private System.Windows.Forms.Label labelDefaultSubtitleFormat;
+        private System.Windows.Forms.ComboBox comboBoxSubtitleFormats;
+        private System.Windows.Forms.Label labelDefaultSaveAsFormat;
+        private System.Windows.Forms.ComboBox comboBoxSubtitleSaveAsFormats;
+        private System.Windows.Forms.GroupBox groupBoxFavoriteSubtitleFormats;
+        private System.Windows.Forms.Label labelFavoriteFormats;
+        private System.Windows.Forms.ListBox listBoxFavoriteSubtitleFormats;
+        private System.Windows.Forms.Button buttonMoveToFavoriteFormats;
+        private System.Windows.Forms.Button buttonRemoveFromFavoriteFormats;
+        private System.Windows.Forms.Label labelFormats;
+        private System.Windows.Forms.Label labelFormatsSearch;
+        private System.Windows.Forms.TextBox textBoxFormatsSearch;
+        private System.Windows.Forms.Button buttonFormatsSearchClear;
+        private System.Windows.Forms.ListBox listBoxSubtitleFormats;
+        private System.Windows.Forms.Label labelFavoriteSubtitleFormatsNote;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripFavoriteFormats;
+        private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteAllToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator;
+        private System.Windows.Forms.ToolStripMenuItem moveUpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem moveDownToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem moveToTopToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem moveToBottomToolStripMenuItem;
         private System.Windows.Forms.Panel panelShortcuts;
         private System.Windows.Forms.CheckBox checkBoxLiveSpellCheck;
         private System.Windows.Forms.Label labelVideoPlayerPreviewFontColor;

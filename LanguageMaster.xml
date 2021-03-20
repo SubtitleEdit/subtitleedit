@@ -1940,6 +1940,7 @@ can edit in same subtitle file (collaboration)</Information>
   <Settings>
     <Title>Settings</Title>
     <General>General</General>
+    <SubtitleFormats>Subtitle formats</SubtitleFormats>
     <Toolbar>Toolbar</Toolbar>
     <VideoPlayer>Video player</VideoPlayer>
     <WaveformAndSpectrogram>Waveform/spectrogram</WaveformAndSpectrogram>
@@ -2145,6 +2146,11 @@ can edit in same subtitle file (collaboration)</Information>
     <FixCommonOcrErrorsUseHardcodedRules>Fix common OCR errors - also use hard-coded rules</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Fix short display time - allow move of start time</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Skip step one (choose fix rules)</FixCommonErrorsSkipStepOne>
+    <DefaultFormat>Default format</DefaultFormat>
+    <DefaultSaveAsFormat>Default save as format</DefaultSaveAsFormat>
+    <Favorites>Favorites</Favorites>
+    <FavoriteFormats>Favorite formats</FavoriteFormats>
+    <FavoriteSubtitleFormatsNote>Note: favorite formats will be shown first when selecting a format, the default format will always be shown first</FavoriteSubtitleFormatsNote>
     <Shortcuts>Shortcuts</Shortcuts>
     <Shortcut>Shortcut</Shortcut>
     <Control>Control</Control>
