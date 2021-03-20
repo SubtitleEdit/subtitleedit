@@ -1,5 +1,5 @@
-﻿using System;
-using Nikse.SubtitleEdit.Core.Cea708.Commands;
+﻿using Nikse.SubtitleEdit.Core.Cea708.Commands;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -294,7 +294,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                         debugBuilder.Append("{EndOfText}");
                     }
 
-                    FlushText(debugBuilder, state, lineIndex);
+                    FlushText(debugBuilder, state);
                 }
                 else if (b >= 0x80 && b <= 0x87)
                 {
@@ -333,7 +333,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 }
                 else if (b == 0x8A)
                 {
-                    FlushText(textBuilder, state, lineIndex);
+                    FlushText(textBuilder, state);
 
                     // HideWindows hides all the windows specified in the 8 bit window bitmap.
                     var hideWindows = new HideWindows(lineIndex, bytes, i + 1);
@@ -476,7 +476,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     state.Commands.Add(window);
                     if (DebugMode)
                     {
-                        debugBuilder.Append("{DefineWindow:AnchorId="+ window.AnchorId + "}");
+                        debugBuilder.Append("{DefineWindow:AnchorId=" + window.AnchorId + "}");
                     }
 
                     i += 6;
@@ -550,13 +550,13 @@ namespace Nikse.SubtitleEdit.Core.Cea708
 
             if (flush)
             {
-                FlushText(textBuilder, state, lineIndex);
+                FlushText(textBuilder, state);
             }
 
             return DebugMode ? debugBuilder.ToString() : textBuilder.ToString();
         }
 
-        private static void FlushText(StringBuilder text, CommandState state, int lineIndex)
+        private static void FlushText(StringBuilder text, CommandState state)
         {
             var commands = new List<CommandBase>();
             var y = 0;
@@ -565,23 +565,25 @@ namespace Nikse.SubtitleEdit.Core.Cea708
             {
                 if (command is TextCommand textCommand)
                 {
-                    if (!string.IsNullOrEmpty(textCommand.Content))
+                    if (string.IsNullOrEmpty(textCommand.Content))
                     {
-                        if (text.Length == 0)
-                        {
-                            state.StartLineIndex = textCommand.LineIndex;
-                        }
-
-                        if (italicOn && IsItalicOn(text.ToString()))
-                        {
-                            text.Append("<i>");
-                        }
-                        else if (!italicOn && IsItalicOn(text.ToString()))
-                        {
-                            text.Append("</i>");
-                        }
-                        text.Append(textCommand.Content);
+                        continue;
                     }
+
+                    if (text.Length == 0)
+                    {
+                        state.StartLineIndex = textCommand.LineIndex;
+                    }
+
+                    if (italicOn && !IsItalicOn(text.ToString()))
+                    {
+                        text.Append("<i>");
+                    }
+                    else if (!italicOn && IsItalicOn(text.ToString()))
+                    {
+                        text.Append("</i>");
+                    }
+                    text.Append(textCommand.Content);
                 }
                 else
                 {
@@ -611,15 +613,15 @@ namespace Nikse.SubtitleEdit.Core.Cea708
             state.Commands = commands;
         }
 
-        private static bool IsItalicOn(string s)
+        private static bool IsItalicOn(string text)
         {
-            if (!s.Contains("<i>"))
+            if (!text.Contains("<i>"))
             {
                 return false;
             }
 
-            return s.IndexOf("<i>", StringComparison.Ordinal) > 
-                   s.IndexOf("</i>", StringComparison.Ordinal);
+            return text.LastIndexOf("<i>", StringComparison.Ordinal) >
+                   text.LastIndexOf("</i>", StringComparison.Ordinal);
         }
     }
 }

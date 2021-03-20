@@ -79,5 +79,32 @@ namespace Nikse.SubtitleEdit.Core.Cea708
         {
             return CaptionDistributionPacketCcData.GetText(lineIndex, state, flush);
         }
+
+        public byte[] GetBytes()
+        {
+            var flags = (byte)((CaptionDistributionPacketTimeCodeAdded ? 0b10000000 : 0) |
+                     (CaptionDistributionPacketDataBlockAdded ? 0b01000000 : 0) |
+                     (CaptionDistributionPacketServiceInfoAdded ? 0b00100000 : 0) |
+                     (CaptionDistributionPacketServiceInfoStart ? 0b00010000 : 0) |
+                     (CaptionDistributionPacketServiceInfoChanged ? 0b00001000 : 0) |
+                     (CaptionDistributionPacketServiceInfoEnd ? 0b00000100 : 0) |
+                     (CaptionDistributionPacketContainsCaptions ? 0b00000010 : 0) |
+                     0b00000001);
+
+            return new[]
+            {
+                (byte)DataId,
+                (byte)SecondaryDataId,
+                (byte)DataCount,
+                (byte)(CaptionDistributionPacketId >> 8),
+                (byte)(CaptionDistributionPacketId & 0b0000000011111111),
+                (byte)CaptionDistributionPacketDataCount,
+                (byte)((CaptionDistributionPacketFramingRate << 4) & 0b11111111),
+                flags,
+                (byte)(CaptionDistributionPacketHeaderSequenceCounter >> 8),
+                (byte)(CaptionDistributionPacketHeaderSequenceCounter & 0b0000000011111111),
+                (byte)CaptionDistributionPacketDataSection,
+            };
+        }
     }
 }
