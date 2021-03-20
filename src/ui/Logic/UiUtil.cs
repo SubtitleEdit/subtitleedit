@@ -804,8 +804,10 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                     }
                 }
+
                 comboBox.DropDownWidth = (int)Math.Round(maxWidth + 7.5);
             }
+
             comboBox.BeginUpdate();
             comboBox.Items.Clear();
             comboBox.Items.AddRange(formatNames.ToArray<object>());
@@ -1190,6 +1192,26 @@ namespace Nikse.SubtitleEdit.Logic
                 item.Selected = !item.Selected;
             }
             lv.EndUpdate();
+        }
+
+        public static void SelectAll(this ListBox listbox)
+        {
+            listbox.BeginUpdate();
+            for (int i = 0; i < listbox.Items.Count; i++)
+            {
+                listbox.SetSelected(i, true);
+            }
+            listbox.EndUpdate();
+        }
+
+        public static void InverseSelection(this ListBox listbox)
+        {
+            listbox.BeginUpdate();
+            for (int i = 0; i < listbox.Items.Count; i++)
+            {
+                listbox.SetSelected(i, !listbox.GetSelected(i));
+            }
+            listbox.EndUpdate();
         }
 
         internal static void CleanUpMenuItemPlugin(ToolStripMenuItem tsmi)
