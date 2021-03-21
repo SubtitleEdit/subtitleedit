@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Nikse.SubtitleEdit.Core.Cea708;
 using Nikse.SubtitleEdit.Core.Cea708.Commands;
 
 namespace Test.Logic.SubtitleFormats
@@ -178,6 +179,40 @@ namespace Test.Logic.SubtitleFormats
             Assert.AreEqual(bytes.Length, 2);
             Assert.AreEqual(bytes[0], ToggleWindows.Id);
             Assert.AreEqual(bytes[1], 145);
+        }
+
+        [TestMethod]
+        public void CcDataSectionTest()
+        {
+            var input = new byte[] { 0x72, 0xF4, 0xFC, 0x94, 0x2F, 0xFD, 0x80, 0x80, 0xFF, 0x0C, 0x34, 0xFE, 0x8C, 0xFF, 0xFE, 0x98, 0x00, 0xFE, 0x3C, 0x41, 0xFE, 0x02, 0x29, 0xFE, 0x11, 0x97, 0xFE, 0xD5, 0x15, 0xFE, 0x0C, 0x20, 0xFE, 0x92, 0x00, 0xFE, 0x02, 0x90, 0xFE, 0x05, 0x00, 0xFE, 0x00, 0x00, 0xFA, 0x00, 0x00, 0xFA, 0x00, 0x00, 0xFA, 0x00, 0x00, 0xFA, 0x00, 0x00, 0xFA, 0x00, 0x00, 0xFA, 0x00, 0x00 };
+            var ccDataSection = new CcDataSection(input, 0);
+            var bytes = ccDataSection.GetBytes();
+            Assert.AreEqual(20, ccDataSection.CcData.Length);
+            Assert.AreEqual(bytes.Length, input.Length);
+            for (var index = 0; index < input.Length; index++)
+            {
+                Assert.AreEqual(input[index], bytes[index]);
+            }
+        }
+
+        [TestMethod]
+        public void CcServiceInfoSectionTest()
+        {
+            var input = new byte[] { 0x73, 0xF2, 0xE0, 0x20, 0x20, 0x20, 0x7E, 0x7F, 0xFF, 0xE1, 0x65, 0x6E, 0x67, 0xC1, 0x7F, 0xFF };
+            var serviceInfoSection = new CcServiceInfoSection(input, 0);
+            var bytes = serviceInfoSection.GetBytes();
+            Assert.AreEqual(2, serviceInfoSection.CcServiceInfoSectionElement.Length);
+            Assert.AreEqual(bytes.Length, input.Length);
+            for (var index = 0; index < input.Length; index++)
+            {
+                Assert.AreEqual(input[index], bytes[index]);
+            }
+        }
+
+        [TestMethod]
+        public void Smpte291MTest()
+        {
+           
         }
     }
 }

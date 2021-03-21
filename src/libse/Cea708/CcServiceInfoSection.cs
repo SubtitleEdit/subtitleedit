@@ -1,4 +1,7 @@
-﻿namespace Nikse.SubtitleEdit.Core.Cea708
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace Nikse.SubtitleEdit.Core.Cea708
 {
     public class CcServiceInfoSection
     {
@@ -28,7 +31,7 @@
             {
                 CcServiceInfoSectionElement[i] = new CcServiceInfoSectionElement
                 {
-                    CaptionServiceNumber = bytes[index + i * 7 + 1] & 0b00011111,
+                    CaptionServiceNumber = bytes[index + i * 7 + 2] & 0b00011111,
                     ServiceDataByte =
                     {
                         [0] = bytes[index + i * 7 + 3],
@@ -40,6 +43,29 @@
                     }
                 };
             }
+        }
+
+        public byte[] GetBytes()
+        {
+            var elementBytes = new List<byte>();
+            foreach (var element in CcServiceInfoSectionElement)
+            {
+                elementBytes.Add((byte)(0b11100000 | (element.CaptionServiceNumber & 0b00011111)));
+                foreach (var b in element.ServiceDataByte)
+                {
+                    elementBytes.Add(b);
+                }
+            }
+
+            return new[]
+            {
+                Id,
+                (byte)(0b10000000 |
+                       (ServiceCount & 0b00001111) |
+                       (Complete ? 0b00010000 : 0) |
+                       (Change ? 0b00100000 : 0) |
+                       (Start ? 0b01000000 : 0)),
+            }.Concat(elementBytes).ToArray();
         }
     }
 }

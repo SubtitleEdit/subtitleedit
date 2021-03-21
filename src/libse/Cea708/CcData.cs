@@ -28,7 +28,7 @@
         {
             return new[]
             {
-                (byte)(0b00011111 | (Valid ? 0b01000000 : 0) | (Type << 6)),
+                (byte)(0b11111000 | (Type & 0b00000011) | (Valid ? 0b00000100 : 0)),
                 Data1,
                 Data2
             };
