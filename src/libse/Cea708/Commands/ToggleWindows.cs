@@ -8,6 +8,21 @@
 
         public bool[] Flags { get; set; }
 
+        public ToggleWindows(bool toggleAll)
+        {
+            Flags = new[]
+            {
+                toggleAll,
+                toggleAll,
+                toggleAll,
+                toggleAll,
+                toggleAll,
+                toggleAll,
+                toggleAll,
+                toggleAll,
+            };
+        }
+
         public ToggleWindows(int lineIndex, byte[] bytes, int index)
         {
             LineIndex = lineIndex;

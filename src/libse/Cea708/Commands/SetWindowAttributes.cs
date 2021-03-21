@@ -32,6 +32,10 @@
         public int EffectDirection { get; set; }
         public int EffectSpeed { get; set; }
 
+        public SetWindowAttributes()
+        {
+        }
+
         public SetWindowAttributes(int lineIndex, byte[] bytes, int index)
         {
             LineIndex = lineIndex;

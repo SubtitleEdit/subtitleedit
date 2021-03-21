@@ -41,6 +41,54 @@ namespace Nikse.SubtitleEdit.Core.Cea708
             }
         }
 
+        public CcDataSection(int ccDataCount, byte[] bytes)
+        {
+            DataSection = 0x72;
+            ProcessEmData = true;
+            ProcessEmData = true;
+            ProcessEmData = true;
+
+            CcData = new CcData[ccDataCount];
+            for (int i = 0; i < ccDataCount; i++)
+            {
+                if (i == 0)
+                {
+                    CcData[i] = new CcData
+                    {
+                        Valid = true,
+                        Type = 0,
+                        Data1 = 0x97,
+                        Data2 = 0xa2,
+                    };
+                }
+                else if (i == 1)
+                {
+                    CcData[i] = new CcData
+                    {
+                        Valid = true,
+                        Type = 1,
+                        Data1 = 0x80,
+                        Data2 = 0x80,
+                    };
+                }
+                else if (i == 2)
+                {
+                    CcData[i] = new CcData
+                    {
+                        Valid = true,
+                        Type = 3,
+                        Data1 = 0x0b,
+                        Data2 = 0x33,
+                    };
+                }
+                else 
+                {
+                    CcData[i] = new CcData { Type = 2 };
+                }
+            }
+
+        }
+
         public string GetText(int lineIndex, CommandState state, bool flush)
         {
             var hex = new StringBuilder();

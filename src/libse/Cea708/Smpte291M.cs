@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Nikse.SubtitleEdit.Core.Cea708.Commands;
 
 namespace Nikse.SubtitleEdit.Core.Cea708
 {
@@ -17,6 +20,9 @@ namespace Nikse.SubtitleEdit.Core.Cea708
         public bool CaptionDistributionPacketServiceInfoChanged { get; set; }
         public bool CaptionDistributionPacketServiceInfoEnd { get; set; }
         public bool CaptionDistributionPacketContainsCaptions { get; set; }
+        /// <summary>
+        /// Should start with zero and count one up for each packet.
+        /// </summary>
         public int CaptionDistributionPacketHeaderSequenceCounter { get; set; }
         public CcDataSection CcDataSectionCcData { get; set; }
         public CcServiceInfoSection CcServiceInfoSection { get; set; }
@@ -39,6 +45,26 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 default:
                     return "unknown";
             }
+        }
+
+        public Smpte291M(int sequenceCount, int ccDataCount, byte[] bytes)
+        {
+            DataId = 0x61;
+            SecondaryDataId = 1;
+            DataCount = 0x59;
+            CaptionDistributionPacketId = 0x9669;
+            CaptionDistributionPacketDataCount = 0x59;
+            CaptionDistributionPacketFramingRate = 4; // 29.97
+            CaptionDistributionPacketTimeCodeAdded = false;
+            CaptionDistributionPacketDataBlockAdded = true;
+            CaptionDistributionPacketServiceInfoAdded = true;
+            CaptionDistributionPacketServiceInfoStart = true;
+            CaptionDistributionPacketServiceInfoChanged = true;
+            CaptionDistributionPacketServiceInfoEnd = true;
+            CaptionDistributionPacketContainsCaptions = true;
+            CaptionDistributionPacketHeaderSequenceCounter = sequenceCount;
+
+            CcDataSectionCcData = new CcDataSection(ccDataCount, bytes);
         }
 
         public Smpte291M(byte[] bytes)

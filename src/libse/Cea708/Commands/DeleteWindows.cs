@@ -8,6 +8,21 @@
 
         public bool[] Flags { get; set; }
 
+        public DeleteWindows(bool deleteAll)
+        {
+            Flags = new[]
+            {
+                deleteAll,
+                deleteAll,
+                deleteAll,
+                deleteAll,
+                deleteAll,
+                deleteAll,
+                deleteAll,
+                deleteAll,
+            };
+        }
+
         public DeleteWindows(int lineIndex, byte[] bytes, int index)
         {
             LineIndex = lineIndex;
