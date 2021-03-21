@@ -16,6 +16,10 @@
         /// </summary>
         public int Row { get; set; }
 
+        public SetPenLocation()
+        {
+        }
+
         public SetPenLocation(int lineIndex, byte[] bytes, int index)
         {
             LineIndex = lineIndex;

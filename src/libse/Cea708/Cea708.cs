@@ -511,7 +511,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 else if (b <= 0x1F)
                 {
                     // CL Group: C0: Subset of ASCII Control Codes
-                    var text = new TextCommand(lineIndex, SingleCharLookupTable[b]);
+                    var text = new SetText(lineIndex, SingleCharLookupTable[b]);
                     state.Commands.Add(text);
                     debugBuilder.Append(text.Content);
 
@@ -528,21 +528,21 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 else if (b >= 0x20 && b <= 0x7F)
                 {
                     // Modified version of ANSI X3.4 Printable Character Set(ASCII)
-                    var text = new TextCommand(lineIndex, SingleCharLookupTable[b]);
+                    var text = new SetText(lineIndex, SingleCharLookupTable[b]);
                     state.Commands.Add(text);
                     debugBuilder.Append(text.Content);
                 }
                 else if (b >= 0x80 && b <= 0x9f)
                 {
                     // CR Group: C1: Caption Control Codes
-                    var text = new TextCommand(lineIndex, SingleCharLookupTable[b]);
+                    var text = new SetText(lineIndex, SingleCharLookupTable[b]);
                     state.Commands.Add(text);
                     debugBuilder.Append(text.Content);
                 }
                 else if (b >= 0xA0 && b <= 0xFF)
                 {
                     // ISO 8859 - 1 Latin 1 Characters
-                    var text = new TextCommand(lineIndex, SingleCharLookupTable[b]);
+                    var text = new SetText(lineIndex, SingleCharLookupTable[b]);
                     state.Commands.Add(text);
                     debugBuilder.Append(text.Content);
                 }
@@ -565,7 +565,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
             var italicOn = false;
             foreach (var command in state.Commands)
             {
-                if (command is TextCommand textCommand)
+                if (command is SetText textCommand)
                 {
                     if (string.IsNullOrEmpty(textCommand.Content))
                     {

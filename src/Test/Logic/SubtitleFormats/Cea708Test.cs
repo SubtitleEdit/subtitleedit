@@ -160,7 +160,7 @@ namespace Test.Logic.SubtitleFormats
         [TestMethod]
         public void CommandTextCommand()
         {
-            var command = new TextCommand(0, "Hallo!");
+            var command = new SetText(0, "Hallo!");
             var bytes = command.GetBytes();
             Assert.AreEqual(bytes.Length, 6);
             Assert.AreEqual(bytes[0], 72);

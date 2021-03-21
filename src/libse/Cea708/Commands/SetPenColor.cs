@@ -21,6 +21,10 @@
         public int EdgeColorRed { get; set; }
         public int EdgeOpacity => ForegroundOpacity;
 
+        public SetPenColor()
+        {
+        }
+
         public SetPenColor(int lineIndex, byte[] bytes, int index)
         {
             LineIndex = lineIndex;

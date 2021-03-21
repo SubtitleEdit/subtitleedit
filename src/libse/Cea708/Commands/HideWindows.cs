@@ -8,6 +8,21 @@
 
         public bool[] Flags { get; set; }
 
+        public HideWindows(bool hideAll)
+        {
+            Flags = new[]
+            {
+                hideAll,
+                hideAll,
+                hideAll,
+                hideAll,
+                hideAll,
+                hideAll,
+                hideAll,
+                hideAll,
+            };
+        }
+
         public HideWindows(int lineIndex, byte[] bytes, int index)
         {
             LineIndex = lineIndex;
