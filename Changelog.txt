@@ -2,6 +2,7 @@
 
 3.6.1 (xth May 2021) BETA
 * NEW:
+   * Add "Subtitle formats" settings - thx OmrSi
    * ASSA attachments manager - thx LeonCheung
    * Add Categories in ASSA style manager - thx ChocOranger/OmrSi
    * Auto load ASSA styles for new files - thx z3us/OmrSi
@@ -10,12 +11,16 @@
    * Allow multiple selection in ASSA style manager - thx OmrSi
    * Add bookmarks to modify selection - thx moob158/OmrSi
    * Add shortcut for toggling video controls on/off
+   * Add a quick way to remove blank lines via shortcut
+   * Add "Set start, offset all" shortcut - thx QuentinNetherwood/OmrSi
    * Add export to csv of bookmarks - thx kjaerlige
 * IMPROVED:
    * Update Polish translation - thx admas
    * Update Bulgarian translation - thx Калин
    * Update Chinese translation - thx nkh0472
    * Update Spanish translations - thx paconaranjo
+   * Update Romanian translation - thx Mircea
+   * Update Basque translation - thx Azpidatziak
    * Minor tweaks for font/appearance settings
    * Only set listview backcolor if visual styles enabled - thx ask2018/OmrSi
    * Optimize merge lines with same text/time
@@ -24,10 +29,14 @@
    * Allow some errors when reading mkv files - thx Ian
    * Improve Bulgarian language auto detect - thx josdion
    * A few improvements for EDL/CLIPNAME - thx Chungyu
+   * Allow hex color paste in advanced color dialog
+   * Improve labels in "Show earlier/later" - thx PM
+   * Make "load second subtitle" work with more subtitle formats - thx PM
 * FIXED:
    * Fix for reading bdsup position - thx akaicat
    * Fix a few crashes in translation engine - thx howblast/Laís
    * Fix mpv dll loading from a folder with e.g. cyrillic chars - thx Zoran
+   * Fix for EBU time code writing - thx milenko
    * Fix show (correct) EBU properties for current file - thx Emilien
    * Fix non-ASCII chars when enc 20269 is unavailable (Linux) - thx jason
    * Fix a crash in RTL when activating syntax coloring - thx OmrSi
