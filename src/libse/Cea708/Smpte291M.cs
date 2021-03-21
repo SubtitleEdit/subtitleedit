@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using Nikse.SubtitleEdit.Core.Cea708.Commands;
 
 namespace Nikse.SubtitleEdit.Core.Cea708
 {
@@ -90,7 +89,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                      (CaptionDistributionPacketContainsCaptions ? 0b00000010 : 0) |
                      0b00000001);
 
-            return new[]
+            var result = new[]
             {
                 (byte)DataId,
                 (byte)SecondaryDataId,
@@ -102,7 +101,27 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 flags,
                 (byte)(CaptionDistributionPacketHeaderSequenceCounter >> 8),
                 (byte)(CaptionDistributionPacketHeaderSequenceCounter & 0b0000000011111111),
-            }.Concat(CcDataSectionCcData.GetBytes()).ToArray();
+            }
+                .Concat(CcDataSectionCcData.GetBytes())
+                .Concat(new byte[]
+                {
+                    0x74, // footer id
+                    (byte)(CaptionDistributionPacketHeaderSequenceCounter2 >> 8),
+                    (byte)(CaptionDistributionPacketHeaderSequenceCounter2 & 0b11111111),
+                    0, // checksum
+                    0xbb
+                }).ToArray();
+
+            // Calculate number that will make the checksum zero
+            long total = 0;
+            for (var i = 3; i < result.Length - 3; i++)
+            {
+                total += result[i];
+            }
+            var checksumToZero = (byte)(256 - total % 256);
+            result[result.Length - 2] = checksumToZero;
+
+            return result;
         }
     }
 }
