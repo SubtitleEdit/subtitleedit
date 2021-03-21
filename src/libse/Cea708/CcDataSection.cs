@@ -7,7 +7,10 @@ namespace Nikse.SubtitleEdit.Core.Cea708
 {
     public class CcDataSection
     {
-        public int DataSection { get; set; } // 0x72
+        /// <summary>
+        /// Should be 0x72 (114).
+        /// </summary>
+        public int DataSection { get; set; } 
         public bool ProcessEmData { get; set; }
         public bool ProcessCcData { get; set; }
         public bool AdditionalData { get; set; }
