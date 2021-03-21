@@ -48,7 +48,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
             DataCount = bytes[2];
             CaptionDistributionPacketId = (bytes[3] << 8) + bytes[4];
             CaptionDistributionPacketDataCount = bytes[5];
-            CaptionDistributionPacketFramingRate = (bytes[6] >> 4);
+            CaptionDistributionPacketFramingRate = bytes[6] >> 4;
             CaptionDistributionPacketTimeCodeAdded = (bytes[7] & 0b10000000) > 0;
             CaptionDistributionPacketDataBlockAdded = (bytes[7] & 0b01000000) > 0;
             CaptionDistributionPacketServiceInfoAdded = (bytes[7] & 0b00100000) > 0;
@@ -97,12 +97,13 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 (byte)(CaptionDistributionPacketId >> 8),
                 (byte)(CaptionDistributionPacketId & 0b0000000011111111),
                 (byte)CaptionDistributionPacketDataCount,
-                (byte)((CaptionDistributionPacketFramingRate << 4) & 0b11111111),
+                (byte)((CaptionDistributionPacketFramingRate << 4) | 0b00001111),
                 flags,
                 (byte)(CaptionDistributionPacketHeaderSequenceCounter >> 8),
                 (byte)(CaptionDistributionPacketHeaderSequenceCounter & 0b0000000011111111),
             }
                 .Concat(CcDataSectionCcData.GetBytes())
+                .Concat(CcServiceInfoSection.GetBytes())
                 .Concat(new byte[]
                 {
                     0x74, // footer id
