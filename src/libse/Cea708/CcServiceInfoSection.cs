@@ -10,11 +10,33 @@ namespace Nikse.SubtitleEdit.Core.Cea708
         public bool Change { get; set; }
         public bool Complete { get; set; }
         public int ServiceCount { get; set; }
-        public CcServiceInfoSectionElement[] CcServiceInfoSectionElement { get; set; }
+        public CcServiceInfoSectionElement[] CcServiceInfoSectionElements { get; set; }
 
         public int GetLength()
         {
             return 2 + ServiceCount * 7;
+        }
+
+        public CcServiceInfoSection()
+        {
+            Id = 0x73;
+            Start = true;
+            Change = true;
+            Complete = true;
+            ServiceCount = 2;
+            CcServiceInfoSectionElements = new[]
+            {
+                new CcServiceInfoSectionElement
+                {
+                    CaptionServiceNumber = 0,
+                    ServiceDataByte = new byte[] { 32, 32, 32, 126, 127, 255},
+                },
+                new CcServiceInfoSectionElement
+                {
+                    CaptionServiceNumber = 1,
+                    ServiceDataByte = new byte[] { 101, 110, 103, 193, 127, 255},
+                },
+            };
         }
 
         public CcServiceInfoSection(byte[] bytes, int index)
@@ -26,10 +48,10 @@ namespace Nikse.SubtitleEdit.Core.Cea708
             Complete = (bytes[index + 1] & 0b00010000) > 0;
             ServiceCount = bytes[index + 1] & 0b00001111;
 
-            CcServiceInfoSectionElement = new CcServiceInfoSectionElement[ServiceCount];
+            CcServiceInfoSectionElements = new CcServiceInfoSectionElement[ServiceCount];
             for (int i = 0; i < ServiceCount; i++)
             {
-                CcServiceInfoSectionElement[i] = new CcServiceInfoSectionElement
+                CcServiceInfoSectionElements[i] = new CcServiceInfoSectionElement
                 {
                     CaptionServiceNumber = bytes[index + i * 7 + 2] & 0b00011111,
                     ServiceDataByte =
@@ -48,7 +70,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
         public byte[] GetBytes()
         {
             var elementBytes = new List<byte>();
-            foreach (var element in CcServiceInfoSectionElement)
+            foreach (var element in CcServiceInfoSectionElements)
             {
                 elementBytes.Add((byte)(0b11100000 | (element.CaptionServiceNumber & 0b00011111)));
                 foreach (var b in element.ServiceDataByte)

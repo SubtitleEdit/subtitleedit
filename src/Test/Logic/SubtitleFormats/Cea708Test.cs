@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Core.Cea708;
 using Nikse.SubtitleEdit.Core.Cea708.Commands;
+using System;
 
 namespace Test.Logic.SubtitleFormats
 {
@@ -201,7 +202,7 @@ namespace Test.Logic.SubtitleFormats
             var input = new byte[] { 0x73, 0xF2, 0xE0, 0x20, 0x20, 0x20, 0x7E, 0x7F, 0xFF, 0xE1, 0x65, 0x6E, 0x67, 0xC1, 0x7F, 0xFF };
             var serviceInfoSection = new CcServiceInfoSection(input, 0);
             var bytes = serviceInfoSection.GetBytes();
-            Assert.AreEqual(2, serviceInfoSection.CcServiceInfoSectionElement.Length);
+            Assert.AreEqual(2, serviceInfoSection.CcServiceInfoSectionElements.Length);
             Assert.AreEqual(bytes.Length, input.Length);
             for (var index = 0; index < input.Length; index++)
             {
@@ -220,6 +221,27 @@ namespace Test.Logic.SubtitleFormats
             {
                 Assert.AreEqual(input[index], bytes[index]);
             }
+        }
+
+        [TestMethod]
+        public void VancTest()
+        {
+            var s = VancDataWriter.GenerateLinesFromText("Hi!", 0)[0];
+            var smpte291M = new Smpte291M(HexStringToByteArray(s));
+            var result = smpte291M.GetText(0, true, new CommandState());
+            Assert.AreEqual("Hi!", result);
+        }
+
+        private static byte[] HexStringToByteArray(string hex)
+        {
+            var numberChars = hex.Length;
+            var bytes = new byte[numberChars / 2];
+            for (var i = 0; i < numberChars - 1; i += 2)
+            {
+                bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
+            }
+
+            return bytes;
         }
     }
 }

@@ -179,7 +179,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return sb.ToString();
         }
 
-
         private static byte[] HexStringToByteArray(string hex)
         {
             var numberChars = hex.Length;

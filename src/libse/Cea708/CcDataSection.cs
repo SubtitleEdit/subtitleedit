@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
         /// <summary>
         /// Should be 0x72 (114).
         /// </summary>
-        public int DataSection { get; set; } 
+        public int DataSection { get; set; }
         public bool ProcessEmData { get; set; }
         public bool ProcessCcData { get; set; }
         public bool AdditionalData { get; set; }
@@ -48,7 +48,13 @@ namespace Nikse.SubtitleEdit.Core.Cea708
             ProcessEmData = true;
             ProcessEmData = true;
 
+            if (bytes.Length / 2 > 16)
+            {
+                throw new Exception("Too many bytes for CCData!");
+            }
+
             CcData = new CcData[ccDataCount];
+            int bytesIndex = 0;
             for (int i = 0; i < ccDataCount; i++)
             {
                 if (i == 0)
@@ -81,9 +87,23 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                         Data2 = 0x33,
                     };
                 }
-                else 
+                else
                 {
                     CcData[i] = new CcData { Type = 2 };
+                    if (bytesIndex < bytes.Length)
+                    {
+                        CcData[i].Valid = true;
+
+                        CcData[i].Data1 = bytes[bytesIndex];
+                        bytesIndex++;
+
+                        if (bytesIndex < bytes.Length)
+                        {
+                            CcData[i].Data2 = bytes[bytesIndex];
+                        }
+
+                        bytesIndex++;
+                    }
                 }
             }
 

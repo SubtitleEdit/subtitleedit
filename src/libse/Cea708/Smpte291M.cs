@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Nikse.SubtitleEdit.Core.Cea708.Commands;
+﻿using System.Linq;
 
 namespace Nikse.SubtitleEdit.Core.Cea708
 {
@@ -65,6 +62,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
             CaptionDistributionPacketHeaderSequenceCounter = sequenceCount;
 
             CcDataSectionCcData = new CcDataSection(ccDataCount, bytes);
+            CcServiceInfoSection = new CcServiceInfoSection();
         }
 
         public Smpte291M(byte[] bytes)
