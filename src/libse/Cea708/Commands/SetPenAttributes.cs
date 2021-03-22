@@ -14,8 +14,15 @@
         public bool Underline { get; set; }
         public bool Italics { get; set; }
 
-        public SetPenAttributes()
+        public SetPenAttributes(bool italic)
         {
+            PenSize = 1;
+            Offset = 1;
+            TextTag = 0;
+            FontTag = 0;
+            EdgeType = 0;
+            Underline = false;
+            Italics = italic;
         }
 
         public SetPenAttributes(int lineIndex, byte[] bytes, int index)

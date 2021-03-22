@@ -18,9 +18,6 @@
         public const int AnchorLowerRight = 8;
 
         public int Id { get; set; }
-
-        public bool Active { get; set; }
-
         public int Priority { get; set; }
         public bool ColumnLock { get; set; }
         public bool RowLock { get; set; }
@@ -28,15 +25,36 @@
         public int AnchorVertical { get; set; }
         public bool RelativePositioning { get; set; }
         public int AnchorHorizontal { get; set; }
-        public int RowCount { get; set; }
-        public int AnchorId { get; set; }
+
+        /// <summary>
+        /// The range is 0-15.
+        /// </summary>
         public int ColumnCount { get; set; }
+
+        /// <summary>
+        /// The range is 0-31 for 4:3 streams, and 0-41 for 16:9 streams.
+        /// </summary>
+        public int RowCount { get; set; }
+
+        public int AnchorId { get; set; }
         public int PenStyleId { get; set; }
         public int WindowStyleId { get; set; }
 
-        public DefineWindow()
+        public DefineWindow(int numberOfLines)
         {
-            //TODO: set default values...
+            Id = 0x99;
+            AnchorId = 0;
+            AnchorVertical = 65;
+            AnchorHorizontal = 70;
+            ColumnCount = 41;
+            RowCount = numberOfLines - 1;
+            RowLock = false;
+            ColumnLock = false;
+            PenStyleId = 1;
+            Priority = 0;
+            RelativePositioning = false;
+            Visible = false;
+            WindowStyleId = 2;
         }
 
         public DefineWindow(int lineIndex, byte[] bytes, int index)

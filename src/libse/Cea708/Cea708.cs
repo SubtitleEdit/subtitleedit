@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.Cea708
 {
@@ -10,7 +11,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
     /// </summary>
     public static class Cea708
     {
-        public static bool DebugMode { get; set; } = false;
+        public static bool DebugMode { get; set; } = Configuration.Settings.SubtitleSettings.MccDebug;
 
         private static readonly Dictionary<byte, string> SingleCharLookupTable = new Dictionary<byte, string>
         {
@@ -316,7 +317,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     state.Commands.Add(clearWindows);
                     if (DebugMode)
                     {
-                        debugBuilder.Append("{ClearWindows}");
+                        debugBuilder.Append("{ClearWindows:" + clearWindows.Flags[0] + "," + clearWindows.Flags[1] + "," + clearWindows.Flags[2] + "," + clearWindows.Flags[3] + "," + clearWindows.Flags[4] + "," + clearWindows.Flags[5] + "," + clearWindows.Flags[6] + "," + clearWindows.Flags[7] + "}");
                     }
 
                     i++;
@@ -328,7 +329,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     state.Commands.Add(displayWindows);
                     if (DebugMode)
                     {
-                        debugBuilder.Append("{DisplayWindows}");
+                        debugBuilder.Append("{DisplayWindows:" + displayWindows.Flags[0] + "," + displayWindows.Flags[1] + "," + displayWindows.Flags[2] + "," + displayWindows.Flags[3] + "," + displayWindows.Flags[4] + "," + displayWindows.Flags[5] + "," + displayWindows.Flags[6] + "," + displayWindows.Flags[7] + "}");
                     }
 
                     i++;
@@ -342,7 +343,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     state.Commands.Add(hideWindows);
                     if (DebugMode)
                     {
-                        debugBuilder.Append("{HideWindows}");
+                        debugBuilder.Append("{HideWindows:" + hideWindows.Flags[0] + "," + hideWindows.Flags[1] + "," + hideWindows.Flags[2] + "," + hideWindows.Flags[3] + "," + hideWindows.Flags[4] + "," + hideWindows.Flags[5] + "," + hideWindows.Flags[6] + "," + hideWindows.Flags[7] + "}");
                     }
 
                     i++;
@@ -354,7 +355,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     state.Commands.Add(toggleWindows);
                     if (DebugMode)
                     {
-                        debugBuilder.Append("{ToggleWindows}");
+                        debugBuilder.Append("{ToggleWindows:" + toggleWindows.Flags[0] + "," + toggleWindows.Flags[1] + "," + toggleWindows.Flags[2] + "," + toggleWindows.Flags[3] + "," + toggleWindows.Flags[4] + "," + toggleWindows.Flags[5] + "," + toggleWindows.Flags[6] + "," + toggleWindows.Flags[7] + "}");
                     }
 
                     i++;
@@ -366,7 +367,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     state.Commands.Add(deleteWindows);
                     if (DebugMode)
                     {
-                        debugBuilder.Append("{DeleteWindows}");
+                        debugBuilder.Append("{DeleteWindows:" + deleteWindows.Flags[0] + "," + deleteWindows.Flags[1] + "," + deleteWindows.Flags[2] + "," + deleteWindows.Flags[3] + "," + deleteWindows.Flags[4] + "," + deleteWindows.Flags[5] + "," + deleteWindows.Flags[6] + "," + deleteWindows.Flags[7] + "}");
                     }
 
                     i++;
@@ -415,7 +416,15 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     state.Commands.Add(penAttributes);
                     if (DebugMode)
                     {
-                        debugBuilder.Append("{SetPenAttributes:italic=" + penAttributes.Italics + "}");
+                        //public int  { get; set; }
+                        //public int Offset { get; set; }
+                        //public int TextTag { get; set; }
+                        //public int FontTag { get; set; }
+                        //public int EdgeType { get; set; }
+                        //public bool Underline { get; set; }
+                        //public bool Italics { get; set; }
+
+                        debugBuilder.Append($"{{SetPenAttributes:PenSize={penAttributes.PenSize},Offset={penAttributes.Offset},TextTag={penAttributes.TextTag},FontTag={penAttributes.FontTag},EdgeType={penAttributes.EdgeType},Underline={penAttributes.Underline},Italic={penAttributes.Italics}}}");
                     }
 
                     i += 2;
@@ -432,7 +441,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     state.Commands.Add(penColor);
                     if (DebugMode)
                     {
-                        debugBuilder.Append("{SetPenColor:color=r" + penColor.ForegroundColorRed + " g" + penColor.ForegroundColorGreen + " b" + penColor.ForegroundColorBlue + "}");
+                        debugBuilder.Append($"{{SetPenColor:Foreground=r{penColor.ForegroundColorRed} g{penColor.ForegroundColorGreen} b{penColor.ForegroundColorBlue} op-{penColor.ForegroundOpacity}, Background=r{penColor.BackgroundColorRed} g{penColor.BackgroundColorGreen} b{penColor.BackgroundColorBlue} op-{penColor.BackgroundOpacity}, Edge=r{penColor.EdgeColorRed} g{penColor.EdgeColorGreen} b{penColor.EdgeColorBlue}}}");
                     }
 
                     i += 3;
@@ -461,7 +470,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     state.Commands.Add(windowAttributes);
                     if (DebugMode)
                     {
-                        debugBuilder.Append("{SetWindowAttributes}");
+                        debugBuilder.Append($"{{SetWindowAttributes:Justify={windowAttributes.Justify}, PrintDirection={windowAttributes.PrintDirection}, ScrollDirection={windowAttributes.ScrollDirection}, Wordwrap={windowAttributes.Wordwrap}, DisplayEffect={windowAttributes.DisplayEffect}, EffectDirection={windowAttributes.EffectDirection}, EffectSpeed={windowAttributes.EffectSpeed}, FillColorRed={windowAttributes.FillColorRed}, FillColorGreen={windowAttributes.FillColorGreen}, FillColorBlue={windowAttributes.FillColorBlue}, FillOpacity={windowAttributes.FillOpacity}, BorderType={windowAttributes.BorderType}, BorderColorRed={windowAttributes.BorderColorRed}, BorderColorGreen={windowAttributes.BorderColorGreen}, BorderColorBlue={windowAttributes.BorderColorBlue}}}");
                     }
 
                     i += 4;
@@ -478,7 +487,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     state.Commands.Add(defineWindow);
                     if (DebugMode)
                     {
-                        debugBuilder.Append("{DefineWindow:AnchorId=" + defineWindow.AnchorId + "}");
+                        debugBuilder.Append($"{{DefineWindow:AnchorId={defineWindow.AnchorId}, AnchorV={defineWindow.AnchorVertical}, AnchorH={defineWindow.AnchorHorizontal}, Id={defineWindow.Id:X2}, Columns={defineWindow.ColumnCount}, Rows={defineWindow.RowCount}, RowLock={defineWindow.RowLock}, ColumnLock={defineWindow.ColumnLock}, PenStyleId={defineWindow.PenStyleId}, Priority={defineWindow.Priority}, RelativePositioning={defineWindow.RelativePositioning}, Visible={defineWindow.Visible}, WindowStyleId={defineWindow.WindowStyleId}}}");
                     }
 
                     i += 6;

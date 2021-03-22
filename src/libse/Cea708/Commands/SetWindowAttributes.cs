@@ -32,8 +32,23 @@
         public int EffectDirection { get; set; }
         public int EffectSpeed { get; set; }
 
-        public SetWindowAttributes()
+        public SetWindowAttributes(int justify)
         {
+            Justify = justify;
+            PrintDirection = PrintDirectionTop;
+            ScrollDirection = 3;
+            Wordwrap = 0;
+            DisplayEffect = 0;
+            EffectDirection = 0;
+            EffectSpeed = 2;
+            FillColorRed = 1;
+            FillColorGreen = 1;
+            FillColorBlue = 1;
+            FillOpacity = 3;
+            BorderType = 0;
+            BorderColorRed = 1;
+            BorderColorGreen = 1;
+            BorderColorBlue = 1;
         }
 
         public SetWindowAttributes(int lineIndex, byte[] bytes, int index)

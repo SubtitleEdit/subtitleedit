@@ -23,6 +23,19 @@
 
         public SetPenColor()
         {
+            ForegroundColorRed = 2;
+            ForegroundColorGreen = 2;
+            ForegroundColorBlue = 2;
+            ForegroundOpacity = 0;
+
+            BackgroundColorRed = 0;
+            BackgroundColorGreen = 0;
+            BackgroundColorBlue = 0;
+            BackgroundOpacity = 0;
+
+            EdgeColorRed = 1;
+            EdgeColorGreen = 1;
+            EdgeColorBlue = 1;
         }
 
         public SetPenColor(int lineIndex, byte[] bytes, int index)

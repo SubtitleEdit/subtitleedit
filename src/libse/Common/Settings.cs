@@ -568,6 +568,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public long WebVttTimescale { get; set; }
 
         public bool TeletextItalicFix { get; set; }
+        public bool MccDebug { get; set; }
 
         public SubtitleSettings()
         {
@@ -5281,6 +5282,12 @@ $HorzAlign          =   Center
                     settings.SubtitleSettings.TeletextItalicFix = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
                 }
 
+                subNode = node.SelectSingleNode("MccDebug");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.MccDebug = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
                 subNode = node.SelectSingleNode("WebVttUseXTimestampMap");
                 if (subNode != null)
                 {
@@ -8528,6 +8535,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("NuendoCharacterListFile", settings.SubtitleSettings.NuendoCharacterListFile);
                 textWriter.WriteElementString("WebVttTimescale", settings.SubtitleSettings.WebVttTimescale.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("TeletextItalicFix", settings.SubtitleSettings.TeletextItalicFix.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("MccDebug", settings.SubtitleSettings.MccDebug.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WebVttUseXTimestampMap", settings.SubtitleSettings.WebVttUseXTimestampMap.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteEndElement();
 
