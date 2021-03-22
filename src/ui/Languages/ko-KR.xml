@@ -15,6 +15,8 @@
     <SubtitleFiles>자막 파일</SubtitleFiles>
     <AllFiles>모든 파일</AllFiles>
     <VideoFiles>비디오 파일</VideoFiles>
+    <Images>이미지</Images>
+    <Fonts>글꼴</Fonts>
     <AudioFiles>오디오 파일</AudioFiles>
     <OpenSubtitle>자막 열기</OpenSubtitle>
     <OpenVideoFile>비디오 열기</OpenVideoFile>
@@ -32,8 +34,9 @@
     <NumberSymbol>번호</NumberSymbol>
     <Number>번호</Number>
     <Text>텍스트</Text>
-    <HourMinutesSecondsMilliseconds>시:분:초:밀리초</HourMinutesSecondsMilliseconds>
+    <HourMinutesSecondsDecimalSeparatorMilliseconds>시간:분:초{0}밀리초</HourMinutesSecondsDecimalSeparatorMilliseconds>
     <HourMinutesSecondsFrames>시:분:초:프레임</HourMinutesSecondsFrames>
+    <XSeconds>{0:0.0##} 초</XSeconds>
     <Bold>굵게</Bold>
     <Italic>기울임꼴</Italic>
     <Underline>밑줄</Underline>
@@ -157,6 +160,20 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <FixesAvailable>수리 가능: {0}</FixesAvailable>
     <UnableToFix>수리 불가: {0}</UnableToFix>
   </ApplyDurationLimits>
+  <AssaAttachments>
+    <Title>Advanced Sub Station Alpha 첨부파일</Title>
+    <AttachFiles>파일 첨부...</AttachFiles>
+    <FontsAndImages>글꼴 및 이미지</FontsAndImages>
+    <Graphics>그래픽</Graphics>
+    <Font>글꼴</Font>
+    <ImageName>이미지 이름 ({0}x{1}):</ImageName>
+    <IconName>아이콘 이름:</IconName>
+    <FontName>글꼴 이름:</FontName>
+    <ImageResized>현재 창에 맞게 이미지 크기 조정</ImageResized>
+    <FilesSkippedX>파일 건너뛰기 : {0}</FilesSkippedX>
+    <RemoveOneAttachment>하나의 첨부 파일을 제거하시겠습니까?</RemoveOneAttachment>
+    <RemoveXAttachments>{0} 첨부파일을 제거하시겠습니까?</RemoveXAttachments>
+  </AssaAttachments>
   <AudioToText>
     <Title>오디오를 텍스트로</Title>
     <ExtractingAudioUsingX>{0}을 사용하여 오디오를 추출하는 중...</ExtractingAudioUsingX>
@@ -266,9 +283,9 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <AlphaX>알파: {0}%</AlphaX>
   </BinEdit>
   <Bookmarks>
-    <EditBookmark>책갈피 편집</EditBookmark>
-    <AddBookmark>책갈피 추가</AddBookmark>
-    <GoToBookmark>책갈피로 이동</GoToBookmark>
+    <EditBookmark>북마크 편집</EditBookmark>
+    <AddBookmark>북마크 추가</AddBookmark>
+    <GoToBookmark>북마크로 이동</GoToBookmark>
   </Bookmarks>
   <ChangeCasing>
     <Title>* 대/소문자 바꾸기</Title>
@@ -1012,7 +1029,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <CloseOriginal>원본 자막 닫기</CloseOriginal>
         <OpenContainingFolder>현재 폴더 열기</OpenContainingFolder>
         <Compare>자막 비교(&amp;C)...</Compare>
-        <Statistics>통계 자료(&amp;S)...</Statistics>
+        <Statistics>통계 자료(&amp;T)...</Statistics>
         <Plugins>플러그 인...</Plugins>
         <ImportSubtitleFromVideoFile>비디오 파일에서 자막...</ImportSubtitleFromVideoFile>
         <ImportOcrFromDvd>DVD(VOB/IFO)에서 자막...</ImportOcrFromDvd>
@@ -1261,8 +1278,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <WebVTTRemoveVoices>음성 제거</WebVTTRemoveVoices>
         <NewActor>새 배우...</NewActor>
         <RemoveActors>배우 제거</RemoveActors>
-        <EditBookmark>책갈피 편집</EditBookmark>
-        <RemoveBookmark>책갈피 제거</RemoveBookmark>
+        <EditBookmark>북마크 편집</EditBookmark>
+        <RemoveBookmark>북마크 제거</RemoveBookmark>
         <GoToSourceView>소스 보기로 이동</GoToSourceView>
         <GoToListView>자막 보기로 이동</GoToListView>
       </ContextMenu>
@@ -1313,6 +1330,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
       <SetStartTimeAndOffsetTheRest>시작점 정하고 나머지를 보정(&amp;R)</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>인터넷으로 텍스트 검색</SearchTextOnline>
       <GoogleTranslate>Google 번역</GoogleTranslate>
+      <AutoTranslate>자동 번역</AutoTranslate>
       <GoogleIt>GoogleIt</GoogleIt>
       <SecondsBackShort>&lt;&lt;</SecondsBackShort>
       <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
@@ -1329,6 +1347,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SaveChangesToOriginalX>원본 자막을 {0} 이름으로 저장하시겠습니까?</SaveChangesToOriginalX>
     <SaveSubtitleAs>자막 저장...</SaveSubtitleAs>
     <SaveOriginalSubtitleAs>원본 자막을 다른 이름으로 저장...</SaveOriginalSubtitleAs>
+    <CannotSaveEmptySubtitle>빈 자막을 저장할 수 없습니다</CannotSaveEmptySubtitle>
     <NoSubtitleLoaded>로드된 자막이 없습니다!</NoSubtitleLoaded>
     <VisualSyncSelectedLines>시각 동기화 - 선택한 줄</VisualSyncSelectedLines>
     <VisualSyncTitle>시각 동기화</VisualSyncTitle>
@@ -1753,6 +1772,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <DurationLessThan>표시시간 미달</DurationLessThan>
     <DurationGreaterThan>표시시간 초과</DurationGreaterThan>
     <MoreThanTwoLines>두 줄 이상</MoreThanTwoLines>
+    <Bookmarked>북마크됨</Bookmarked>
   </ModifySelection>
   <MultipleReplace>
     <Title>다중 바꾸기</Title>
@@ -1916,6 +1936,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
   <Settings>
     <Title>환경 설정</Title>
     <General>일반</General>
+    <SubtitleFormats>자막 형식</SubtitleFormats>
     <Toolbar>도구 모음</Toolbar>
     <VideoPlayer>비디오 플레이어</VideoPlayer>
     <WaveformAndSpectrogram>파형 | 스펙트로그램</WaveformAndSpectrogram>
@@ -1935,12 +1956,13 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SpellCheck>맞춤법</SpellCheck>
     <NetflixQualityCheck>넷플릭스 품질 검사</NetflixQualityCheck>
     <SettingsName>환경 설정</SettingsName>
-    <ToggleBookmarks>책갈피 전환</ToggleBookmarks>
-    <ToggleBookmarksWithComment>책갈피 전환 - 설명 추가</ToggleBookmarksWithComment>
-    <ClearBookmarks>책갈피 지우기</ClearBookmarks>
-    <GoToBookmark>책갈피로 이동</GoToBookmark>
-    <GoToPreviousBookmark>이전 책갈피로 이동</GoToPreviousBookmark>
-    <GoToNextBookmark>다음 책갈피로 이동</GoToNextBookmark>
+    <ToggleBookmarks>북마크 전환</ToggleBookmarks>
+    <ToggleBookmarksWithComment>북마크 전환 - 설명 추가</ToggleBookmarksWithComment>
+    <ClearBookmarks>북마크 지우기</ClearBookmarks>
+    <ExportBookmarks>북마크 내보내기...</ExportBookmarks>
+    <GoToBookmark>북마크로 이동</GoToBookmark>
+    <GoToPreviousBookmark>이전 북마크로 이동</GoToPreviousBookmark>
+    <GoToNextBookmark>다음 북마크로 이동</GoToNextBookmark>
     <ChooseProfile>프로필 선택</ChooseProfile>
     <DuplicateLine>중복 줄</DuplicateLine>
     <ToggleView>자막/소스 보기 전환</ToggleView>
@@ -1948,6 +1970,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <TogglePreviewOnVideo>비디오 미리보기 전환</TogglePreviewOnVideo>
     <Help>도움말</Help>
     <FontInUi>UI 글꼴</FontInUi>
+    <Appearance>모양</Appearance>
     <ShowFrameRate>도구 모음에 프레임 속도 표시</ShowFrameRate>
     <DefaultFrameRate>기본 프레임 속도</DefaultFrameRate>
     <DefaultFileEncoding>기본 파일 인코딩</DefaultFileEncoding>
@@ -1980,6 +2003,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <RememberPositionAndSize>메인 창의 위치 및 크기 기억</RememberPositionAndSize>
     <StartInSourceView>「소스 보기」로 시작</StartInSourceView>
     <RemoveBlankLinesWhenOpening>자막 열 때, 빈 줄 제거</RemoveBlankLinesWhenOpening>
+    <RemoveBlankLines>빈 줄 제거</RemoveBlankLines>
     <ShowLineBreaksAs>다음 기호로 줄바꿈 표시</ShowLineBreaksAs>
     <SaveAsFileNameFrom>"다른 이름으로 저장..."에서 사용하는 파일 이름</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>「자막 보기」에서 줄을 더블 클릭하면 다음 실행:</MainListViewDoubleClickAction>
@@ -2118,6 +2142,11 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <FixCommonOcrErrorsUseHardcodedRules>일반적인 OCR 오류 해결 - 하드 코딩 규칙 포함</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>짧은 표시시간 수정 - 시작 시간 이동을 허용</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>1 단계 건너뛰기 (수정 규칙 선택)</FixCommonErrorsSkipStepOne>
+    <DefaultFormat>기본 형식</DefaultFormat>
+    <DefaultSaveAsFormat>기본값으로 저장</DefaultSaveAsFormat>
+    <Favorites>즐겨찾기</Favorites>
+    <FavoriteFormats>즐겨찾기 형식</FavoriteFormats>
+    <FavoriteSubtitleFormatsNote>참고: 형식을 선택할 때 즐겨찾기 형식이 먼저 표시되며 기본 형식이 항상 먼저 표시될 것입니다.</FavoriteSubtitleFormatsNote>
     <Shortcuts>단축키</Shortcuts>
     <Shortcut>단축키</Shortcut>
     <Control>Ctrl</Control>
@@ -2132,6 +2161,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <AssaColor>ASSA 색상</AssaColor>
     <DarkTheme>어두운 테마</DarkTheme>
     <DarkThemeEnabled>어두운 테마 사용</DarkThemeEnabled>
+    <DarkThemeShowGridViewLines>목록 보기 그리드 선 표시</DarkThemeShowGridViewLines>
     <UpdateShortcut>업데이트</UpdateShortcut>
     <FoucsSetVideoPosition>초점에 비디오 위치 설정</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>비디오 컨트롤 연결 | 해제</ToggleDockUndockOfVideoControls>
@@ -2161,6 +2191,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <AdjustEndOneFrameBackKeepGapNext>끝을 1프레임 뒤로 이동 (가까운 경우 다음과 간격 유지)</AdjustEndOneFrameBackKeepGapNext>
     <AdjustEndOneFrameForwardKeepGapNext>끝을 1프레임 앞으로 이동 (가까운 경우 다음과 간격 유지)</AdjustEndOneFrameForwardKeepGapNext>
     <AdjustSetStartTimeKeepDuration>시작 설정, 간격 유지</AdjustSetStartTimeKeepDuration>
+    <AdjustSetStartAndOffsetTheWholeSubtitle>시작 시간을 설정하고 전체 자막을 오프셋합니다.</AdjustSetStartAndOffsetTheWholeSubtitle>
     <AdjustSetEndAndOffsetTheRest>끝 설정, 나머지 보충</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>끝 설정, 나머지 보충하고 다음으로 이동</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <AdjustSnapStartToNextSceneChange>선택한 줄의 시작을 다음 장면 변경에 맞춤</AdjustSnapStartToNextSceneChange>
@@ -2254,6 +2285,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <PlayRateSlower>재생 속도 느리게</PlayRateSlower>
     <PlayRateFaster>재생 속도 빠르게</PlayRateFaster>
     <VideoResetSpeedAndZoom>속도/줌 재설정</VideoResetSpeedAndZoom>
+    <MainToggleVideoControls>비디오 컨트롤 전환</MainToggleVideoControls>
     <CustomSearch1>번역, 사용자 지정 검색 1</CustomSearch1>
     <CustomSearch2>번역, 사용자 지정 검색 2</CustomSearch2>
     <CustomSearch3>번역, 사용자 지정 검색 3</CustomSearch3>
@@ -2416,7 +2448,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SpellCheckCompleted>맞춤법 검사 완료!</SpellCheckCompleted>
     <SpellCheckAborted>맞춤법 검사 중지!</SpellCheckAborted>
     <SpacesNotAllowed>한 단어에서 공백은 허용되지 않습니다!</SpacesNotAllowed>
-    <UndoX>실행 취소: {0}</UndoX>
+    <UndoX>실행 취소: "{0}"</UndoX>
   </SpellCheck>
   <NetflixQualityCheck>
     <GlyphCheckReport>{1} 열에 잘못된 문자 {0}이(가) 발견되었습니다.</GlyphCheckReport>
@@ -2525,6 +2557,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <UpdateDetails>업데이트 정보</UpdateDetails>
     <Resolution>해상도</Resolution>
     <VideoResolution>비디오 해상도</VideoResolution>
+    <FromCurrentVideo>현재 비디오에서</FromCurrentVideo>
     <Options>옵션</Options>
     <WrapStyle>배치 스타일</WrapStyle>
     <Collision>충돌</Collision>
@@ -2583,8 +2616,26 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <AddToFile>파일에 추가</AddToFile>
     <AddToStorage>저장소에 추가</AddToStorage>
     <StyleStorage>저장소 스타일</StyleStorage>
+    <StyleCurrentFile>현재 파일의 스타일</StyleCurrentFile>
     <OverwriteX>{0}을 덮어쓰시겠습니까?</OverwriteX>
+    <CategoryNote>참고: 기본 카테고리(녹색 색상)의 스타일이 새로운 ASSA 파일에 적용됩니다.</CategoryNote>
+    <CategoriesManage>관리</CategoriesManage>
+    <MoveToCategory>선택한 스타일을 카테고리로 이동...</MoveToCategory>
   </SubStationAlphaStyles>
+  <SubStationAlphaStylesCategoriesManager>
+    <Category>카테고리 </Category>
+    <Categories>카테고리</Categories>
+    <CategoryName>카테고리 이름</CategoryName>
+    <CategoryDelete>선택한 카테고리/카테고리를 삭제 하시겠습니까?</CategoryDelete>
+    <NewCategory>새 카테고리</NewCategory>
+    <CategoryRename>카테고리 이름바꾸기</CategoryRename>
+    <CategorySetDefault>기본값으로 설정</CategorySetDefault>
+    <NumberOfStyles>스타일 수</NumberOfStyles>
+    <CategoryDefault>기본값</CategoryDefault>
+    <ChooseCategories>카테고리를 {0}으로 선택</ChooseCategories>
+    <ImportCategoriesTitle>카테고리 가져오기...</ImportCategoriesTitle>
+    <ExportCategoriesTitle>카테고리 내보내기...</ExportCategoriesTitle>
+  </SubStationAlphaStylesCategoriesManager>
   <PointSync>
     <Title>* 지점 동기화</Title>
     <TitleViaOtherSubtitle>다른 자막을 통해 지점 동기화</TitleViaOtherSubtitle>
