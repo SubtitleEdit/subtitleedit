@@ -3985,16 +3985,19 @@ namespace Nikse.SubtitleEdit.Forms
             FileSaveAs(true);
         }
 
-        private DialogResult FileSaveAs(bool allowUsingLastSaveAsFormat)
+        private DialogResult FileSaveAs(bool allowUsingDefaultOrLastSaveAsFormat)
         {
             SubtitleFormat currentFormat = null;
-            if (!string.IsNullOrEmpty(Configuration.Settings.General.DefaultSaveAsFormat))
+            if (allowUsingDefaultOrLastSaveAsFormat)
             {
-                currentFormat = Utilities.GetSubtitleFormatByFriendlyName(Configuration.Settings.General.DefaultSaveAsFormat);
-            }
-            else if (allowUsingLastSaveAsFormat && !string.IsNullOrEmpty(Configuration.Settings.General.LastSaveAsFormat))
-            {
-                currentFormat = Utilities.GetSubtitleFormatByFriendlyName(Configuration.Settings.General.LastSaveAsFormat);
+                if (!string.IsNullOrEmpty(Configuration.Settings.General.DefaultSaveAsFormat))
+                {
+                    currentFormat = Utilities.GetSubtitleFormatByFriendlyName(Configuration.Settings.General.DefaultSaveAsFormat);
+                }
+                else if (!string.IsNullOrEmpty(Configuration.Settings.General.LastSaveAsFormat))
+                {
+                    currentFormat = Utilities.GetSubtitleFormatByFriendlyName(Configuration.Settings.General.LastSaveAsFormat);
+                } 
             }
 
             if (currentFormat == null)
