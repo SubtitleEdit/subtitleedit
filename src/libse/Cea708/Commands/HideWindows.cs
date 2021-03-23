@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Core.Cea708.Commands
 {
-    public class HideWindows : ICommand
+    public class HideWindows : ICea708Command
     {
         public static readonly int Id = 0x8A;
 

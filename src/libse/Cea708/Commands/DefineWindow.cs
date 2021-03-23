@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Core.Cea708.Commands
 {
-    public class DefineWindow : ICommand
+    public class DefineWindow : ICea708Command
     {
         public static readonly int IdStart = 0x98;
         public static readonly int IdEnd = 0x9F;

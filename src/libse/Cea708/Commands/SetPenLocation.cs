@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Core.Cea708.Commands
 {
-    public class SetPenLocation : ICommand
+    public class SetPenLocation : ICea708Command
     {
         public static readonly int Id = 0x92;
 

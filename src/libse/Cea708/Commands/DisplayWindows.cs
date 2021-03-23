@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Core.Cea708.Commands
 {
-    public class DisplayWindows : ICommand
+    public class DisplayWindows : ICea708Command
     {
         public static readonly int Id = 0x89;
 

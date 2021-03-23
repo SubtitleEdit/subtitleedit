@@ -295,9 +295,13 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     if (DebugMode)
                     {
                         debugBuilder.Append("{EndOfText}");
+                        FlushText(debugBuilder, state);
+                    }
+                    else
+                    {
+                        FlushText(textBuilder, state);
                     }
 
-                    FlushText(debugBuilder, state);
                 }
                 else if (b >= SetCurrentWindow.IdStart && b <= SetCurrentWindow.IdEnd)
                 {
@@ -336,7 +340,14 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 }
                 else if (b == HideWindows.Id)
                 {
-                    FlushText(textBuilder, state);
+                    if (DebugMode)
+                    {
+                        FlushText(debugBuilder, state);
+                    }
+                    else
+                    {
+                        FlushText(textBuilder, state);
+                    }
 
                     // HideWindows hides all the windows specified in the 8 bit window bitmap.
                     var hideWindows = new HideWindows(lineIndex, bytes, i + 1);
@@ -569,7 +580,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
 
         private static void FlushText(StringBuilder text, CommandState state)
         {
-            var commands = new List<ICommand>();
+            var commands = new List<ICea708Command>();
             var y = 0;
             var italicOn = false;
             foreach (var command in state.Commands)

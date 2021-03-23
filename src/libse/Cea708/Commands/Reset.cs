@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Core.Cea708.Commands
 {
-    public class Reset : ICommand
+    public class Reset : ICea708Command
     {
         public static readonly int Id = 0x8F;
 
