@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Core.Cea708.Commands
 {
-    public class SetText : ICommand
+    public class SetText : ICea708Command
     {
         public int LineIndex { get; set; }
 

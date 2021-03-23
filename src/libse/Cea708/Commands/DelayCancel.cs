@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Core.Cea708.Commands
 {
-    public class DelayCancel : ICommand
+    public class DelayCancel : ICea708Command
     {
         public static readonly int Id = 0x8E;
 

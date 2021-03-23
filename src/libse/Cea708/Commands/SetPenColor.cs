@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Core.Cea708.Commands
 {
-    public class SetPenColor : ICommand
+    public class SetPenColor : ICea708Command
     {
         public static readonly int Id = 0x91;
 

@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
     {
         public static string GenerateTextInit(int counter)
         {
-            var commands = new List<ICommand>
+            var commands = new List<ICea708Command>
             {
                 new HideWindows(true),
                 new ToggleWindows(true),
@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
             var italic = text.StartsWith("<i>");
             text = HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagItalic);
             var lines = text.SplitToLines();
-            var commands = new List<ICommand>
+            var commands = new List<ICea708Command>
             {
                 new DefineWindow(lines.Count),
                 new SetWindowAttributes(SetWindowAttributes.JustifyCenter),
