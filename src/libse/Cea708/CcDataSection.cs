@@ -55,6 +55,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
 
             CcData = new CcData[ccDataCount];
             int bytesIndex = 0;
+            var lastContent = true;
             for (int i = 0; i < ccDataCount; i++)
             {
                 if (i == 0)
@@ -103,6 +104,11 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                         }
 
                         bytesIndex++;
+                    }
+                    else if (lastContent)
+                    {
+                        CcData[i].Valid = true;
+                        lastContent = false;
                     }
                 }
             }

@@ -28,17 +28,21 @@ namespace Nikse.SubtitleEdit.Core.Cea708
             return hex;
         }
 
-        public static string[] GenerateLinesFromText(string text, int counter)
+        public static string[] GenerateLinesFromText(string input, int counter)
         {
-            //TODO: chunk in max 32 bytes chunks (do not split commands)
+            //TODO: improve italic support
+            var text = Utilities.RemoveSsaTags(input);
+            text = HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagFont, HtmlUtil.TagBold);
             var results = new List<string>();
             var bytes = new List<byte>();
+            var italic = text.StartsWith("<i>");
+            text = HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagItalic);
             var lines = text.SplitToLines();
             var commands = new List<ICommand>
             {
                 new DefineWindow(lines.Count),
                 new SetWindowAttributes(SetWindowAttributes.JustifyCenter),
-                new SetPenAttributes(false),
+                new SetPenAttributes(italic),
                 new SetPenColor(),
             };
             foreach (var command in commands)

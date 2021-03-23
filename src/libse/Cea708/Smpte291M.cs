@@ -60,6 +60,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
             CaptionDistributionPacketServiceInfoEnd = true;
             CaptionDistributionPacketContainsCaptions = true;
             CaptionDistributionPacketHeaderSequenceCounter = sequenceCount;
+            CaptionDistributionPacketHeaderSequenceCounter2 = sequenceCount;
 
             CcDataSectionCcData = new CcDataSection(ccDataCount, bytes);
             CcServiceInfoSection = new CcServiceInfoSection();
@@ -133,7 +134,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     0x74, // footer id
                     (byte)(CaptionDistributionPacketHeaderSequenceCounter2 >> 8),
                     (byte)(CaptionDistributionPacketHeaderSequenceCounter2 & 0b11111111),
-                    0, // checksum
+                    0, // checksum - will be replaced below
                     0xbb
                 }).ToArray();
 

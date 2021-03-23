@@ -61,18 +61,25 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             sb.AppendLine("Creation Time=" + DateTime.Now.ToShortTimeString());
             sb.AppendLine();
 
+            int counter = 0;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 var p = subtitle.Paragraphs[i];
-                sb.AppendLine($"{ToTimeCode(p.StartTime.TotalMilliseconds)}\t{p.Text}"); // TODO: Encode text - how???
-                sb.AppendLine();
-
-                var next = subtitle.GetParagraphOrDefault(i + 1);
-                if (next == null || Math.Abs(next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds) > 100)
+                if (i == 0)
                 {
-                    sb.AppendLine($"{ToTimeCode(p.EndTime.TotalMilliseconds)}\t???"); // TODO: Some end text???
-                    sb.AppendLine();
+                    var firstText = VancDataWriter.GenerateTextInit(counter++);
+                    sb.AppendLine($"{ToTimeCode(p.StartTime.TotalMilliseconds)}\t{CompressHex(firstText)}");
                 }
+
+                var lines = VancDataWriter.GenerateLinesFromText(p.Text, counter);
+                counter += lines.Length;
+                foreach (var line in lines)
+                {
+                    sb.AppendLine($"{ToTimeCode(p.StartTime.TotalMilliseconds)}\t{CompressHex(line)}");
+                }
+
+                var endTimeText = VancDataWriter.GenerateTextInit(counter++);
+                sb.AppendLine($"{ToTimeCode(p.EndTime.TotalMilliseconds)}\t{CompressHex(endTimeText)}");
             }
             return sb.ToString();
         }
@@ -88,7 +95,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             subtitle.Paragraphs.Clear();
             var timeCodeList = new List<TimeCode>();
-            Paragraph p = null;
             var header = new StringBuilder();
             var state = new CommandState();
             char[] splitChars = { ':', ';', ',' };
@@ -118,7 +124,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         continue;
                     }
 
-                    p = new Paragraph(new TimeCode(timeCodeList[state.StartLineIndex].TotalMilliseconds), new TimeCode(startTime.TotalMilliseconds), text);
+                    var p = new Paragraph(new TimeCode(timeCodeList[state.StartLineIndex].TotalMilliseconds), new TimeCode(startTime.TotalMilliseconds), text);
                     subtitle.Paragraphs.Add(p);
                 }
             }
@@ -177,6 +183,27 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             return sb.ToString();
+        }
+
+        private static string CompressHex(string input)
+        {
+            return input
+                .Replace("FA0000FA0000FA0000FA0000FA0000FA0000FA0000FA0000FA0000", "O")
+                .Replace("FA0000FA0000FA0000FA0000FA0000FA0000FA0000FA0000", "N")
+                .Replace("FA0000FA0000FA0000FA0000FA0000FA0000FA0000", "M")
+                .Replace("FA0000FA0000FA0000FA0000FA0000FA0000", "L")
+                .Replace("FA0000FA0000FA0000FA0000FA0000", "K")
+                .Replace("FA0000FA0000FA0000FA0000", "J")
+                .Replace("FA0000FA0000FA0000", "I")
+                .Replace("FA0000FA0000", "H")
+                .Replace("FA0000", "G")
+                .Replace("FB8080", "P")
+                .Replace("FC8080", "Q")
+                .Replace("FD8080", "R")
+                .Replace("9669", "S")
+                .Replace("6101", "T")
+                .Replace("E1000000", "U")
+                .Replace("00", "Z");
         }
 
         private static byte[] HexStringToByteArray(string hex)
