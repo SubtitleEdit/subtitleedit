@@ -14396,6 +14396,13 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            // Ignore Alt alone key presses, doesn't work with RichTextBox
+            if (!Configuration.Settings.General.SubtitleTextBoxSyntaxColor && e.Modifiers == Keys.Alt && e.KeyCode == (Keys.RButton | Keys.ShiftKey) && (textBoxListViewText.Focused || textBoxListViewTextOriginal.Focused))
+            {
+                e.SuppressKeyPress = true;
+                return;
+            }
+
             if (e.Modifiers == Keys.Alt && e.KeyCode == (Keys.RButton | Keys.ShiftKey))
             {
                 return;
