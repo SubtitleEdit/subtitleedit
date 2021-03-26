@@ -10722,7 +10722,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var tb = textBoxListViewText;
-            var lines = tb.Text.SplitToLines();
+            var lines = tb.Text.Trim().SplitToLines();
             if (lines.Count != 2 || tb.SelectionLength < 3 || lines[0].Length < 2 || lines[1].Length < 2)
             {
                 return;
@@ -10740,8 +10740,7 @@ namespace Nikse.SubtitleEdit.Forms
             var oldText = p.Text;
             string text1 = lines[0].Substring(0, start).Trim() + Environment.NewLine + lines[1].Substring(0, end - indexOfNewLine - 2).Trim();
             string text2 = lines[0].Remove(0, start).Trim() + Environment.NewLine + lines[1].Remove(0, end - indexOfNewLine - 2).Trim();
-            var newParagraph = new Paragraph(p);
-            newParagraph.NewSection = false;
+            var newParagraph = new Paragraph(p) { NewSection = false };
             double? splitPos = null;
             if (!string.IsNullOrEmpty(VideoFileName))
             {
