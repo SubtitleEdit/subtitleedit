@@ -3332,7 +3332,10 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 // Seungki end
 
-                textBoxSource.Text = _subtitle.ToText(format);
+                if (InSourceView || _loading && Configuration.Settings.General.StartInSourceView)
+                {
+                    textBoxSource.Text = _subtitle.ToText(format);
+                }
                 SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
                 if (SubtitleListview1.Items.Count > 0)
                 {
