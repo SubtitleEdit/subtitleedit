@@ -25106,15 +25106,16 @@ namespace Nikse.SubtitleEdit.Forms
                 SetDurationInSeconds((double)durationInSeconds);
             }
 
-            UpdateOriginalTimeCodes(oldParagraph);
             RestartHistory();
 
             var next = _subtitle.GetParagraphOrDefault(index + 1);
+            var oldNextParagraph = new Paragraph(next, false);
             if (next != null)
             {
                 next.StartTime.TotalMilliseconds = totalMillisecondsEnd + MinGapBetweenLines;
             }
 
+            UpdateOriginalTimeCodes(oldParagraph, oldNextParagraph);
             SubtitleListview1.SelectIndexAndEnsureVisible(index + 1, true);
             ShowStatus(string.Format(_language.VideoControls.AdjustedViaEndTime, p.StartTime.ToShortString()));
             audioVisualizer.Invalidate();
