@@ -350,12 +350,14 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         _simpleTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
                     }
-
-                    _simpleTextBox.ScrollBars = System.Windows.Forms.ScrollBars.None;
+                    else
+                    {
+                        _simpleTextBox.ScrollBars = System.Windows.Forms.ScrollBars.None;
+                    }
                 }
                 else if (_uiTextBox != null)
                 {
-                    _uiTextBox.ScrollBars = value;
+                    // auto show/hide for rich text box just works
                 }
             }
         }

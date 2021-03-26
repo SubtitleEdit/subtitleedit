@@ -4000,7 +4000,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (!string.IsNullOrEmpty(Configuration.Settings.General.LastSaveAsFormat))
                 {
                     currentFormat = Utilities.GetSubtitleFormatByFriendlyName(Configuration.Settings.General.LastSaveAsFormat);
-                } 
+                }
             }
 
             if (currentFormat == null)
@@ -9427,6 +9427,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static void FixVerticalScrollBars(SETextBox tb, ref int lastNumberOfNewLines)
         {
+            if (!tb.Visible)
+            {
+                return;
+            }
+
             var noOfNewLines = Utilities.GetNumberOfLines(tb.Text);
             if (noOfNewLines == lastNumberOfNewLines)
             {
@@ -9436,7 +9441,8 @@ namespace Nikse.SubtitleEdit.Forms
             lastNumberOfNewLines = noOfNewLines;
             try
             {
-                if (noOfNewLines <= 1 && tb.Text.Length <= 300 || TextRenderer.MeasureText(tb.Text, tb.Font).Height < tb.Height)
+                if (noOfNewLines <= 1 && tb.Text.Length <= 300 ||
+                    TextRenderer.MeasureText(tb.Text, tb.Font).Height + (tb.Font.Bold ? 17 : 5) < tb.Height)
                 {
                     tb.ScrollBars = RichTextBoxScrollBars.None;
                 }
@@ -21472,6 +21478,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             splitContainerListViewAndText.SplitterMoved += splitContainerListViewAndText_SplitterMoved;
             splitContainerListViewAndText.SizeChanged += splitContainerListViewAndText_SizeChanged;
+            textBoxListViewText.SizeChanged += TextBoxListViewText_SizeChanged;
 
             imageListBookmarks.Images.Add(pictureBoxBookmark.Image);
             SetListViewStateImages();
@@ -21637,6 +21644,12 @@ namespace Nikse.SubtitleEdit.Forms
             RemoveNotExistingFilesFromRecentFilesUI();
             ShowSubtitleTimer.Start();
             textBoxSource.SelectionLength = 0;
+        }
+
+        private void TextBoxListViewText_SizeChanged(object sender, EventArgs e)
+        {
+            _lastNumberOfNewLines = -1;
+            FixVerticalScrollBars(textBoxListViewText, ref _lastNumberOfNewLines);
         }
 
         private void InitializePlayRateDropDown()
