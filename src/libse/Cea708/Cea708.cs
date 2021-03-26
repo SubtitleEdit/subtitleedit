@@ -1,8 +1,8 @@
 ﻿using Nikse.SubtitleEdit.Core.Cea708.Commands;
+using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.Cea708
 {
@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
     /// </summary>
     public static class Cea708
     {
-        public static bool DebugMode { get; set; } = Configuration.Settings.SubtitleSettings.MccDebug;
+        public static bool DebugMode => Configuration.Settings.SubtitleSettings.MccDebug;
 
         private static readonly Dictionary<byte, string> SingleCharLookupTable = new Dictionary<byte, string>
         {
@@ -292,16 +292,11 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 if (b == EndOfText.Id)
                 {
                     //The EndOfText command is a Null Command which can be used to flush any buffered text to the current window. All commands force a flush of any buffered text to the current window, so this command is only needed when no other command is pending.
-                    if (DebugMode)
-                    {
-                        debugBuilder.Append("{EndOfText}");
-                        FlushText(debugBuilder, state);
-                    }
-                    else
-                    {
-                        FlushText(textBuilder, state);
-                    }
 
+                   if (DebugMode)
+                   {
+                       debugBuilder.Append("{EndOfText}");
+                   }
                 }
                 else if (b >= SetCurrentWindow.IdStart && b <= SetCurrentWindow.IdEnd)
                 {
@@ -340,14 +335,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 }
                 else if (b == HideWindows.Id)
                 {
-                    if (DebugMode)
-                    {
-                        FlushText(debugBuilder, state);
-                    }
-                    else
-                    {
-                        FlushText(textBuilder, state);
-                    }
+                    FlushText(DebugMode ? debugBuilder : textBuilder, state);
 
                     // HideWindows hides all the windows specified in the 8 bit window bitmap.
                     var hideWindows = new HideWindows(lineIndex, bytes, i + 1);
@@ -361,6 +349,8 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 }
                 else if (b == ToggleWindows.Id)
                 {
+                    FlushText(DebugMode ? debugBuilder : textBuilder, state);
+
                     // ToggleWindows hides all displayed windows, and displays all hidden windows specified in the 8 bit window bitmap.
                     var toggleWindows = new ToggleWindows(lineIndex, bytes, i + 1);
                     state.Commands.Add(toggleWindows);
@@ -373,6 +363,8 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 }
                 else if (b == DeleteWindows.Id)
                 {
+                    FlushText(DebugMode ? debugBuilder : textBuilder, state);
+
                     // DeleteWindows deletes all the windows specified in the 8 bit window bitmap.If the current window, as specified by the last SetCurrentWindow command, is deleted then the current window becomes undefined and the window attribute commands should have no effect until after the next SetCurrentWindow or DefineWindow command.
                     var deleteWindows = new DeleteWindows(lineIndex, bytes, i + 1);
                     state.Commands.Add(deleteWindows);
@@ -417,24 +409,16 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 }
                 else if (b == SetPenAttributes.Id)
                 {
-                    //if (bytes.Length - i < 2)
-                    //{
-                    //    break;
-                    //}
+                    if (bytes.Length - i < 3)
+                    {
+                        break;
+                    }
 
                     // The SetPenAttributes command specifies how certain attributes of subsequent characters are to be rendered in the current window, until the next SetPenAttributes command.
                     var penAttributes = new SetPenAttributes(lineIndex, bytes, i + 1);
                     state.Commands.Add(penAttributes);
                     if (DebugMode)
                     {
-                        //public int  { get; set; }
-                        //public int Offset { get; set; }
-                        //public int TextTag { get; set; }
-                        //public int FontTag { get; set; }
-                        //public int EdgeType { get; set; }
-                        //public bool Underline { get; set; }
-                        //public bool Italics { get; set; }
-
                         debugBuilder.Append($"{{SetPenAttributes:PenSize={penAttributes.PenSize},Offset={penAttributes.Offset},TextTag={penAttributes.TextTag},FontTag={penAttributes.FontTag},EdgeType={penAttributes.EdgeType},Underline={penAttributes.Underline},Italic={penAttributes.Italics}}}");
                     }
 
@@ -442,10 +426,10 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 }
                 else if (b == SetPenColor.Id)
                 {
-                    //if (bytes.Length - i < 3)
-                    //{
-                    //    break;
-                    //}
+                    if (bytes.Length - i < 4)
+                    {
+                        break;
+                    }
 
                     // SetPenColor sets the foreground, background, and edge color for the subsequent characters. Color is specified with 6 bits, 2 for each of blue, green and red. The lowest order bits are for blue, the next two for green and the highest order bits represent red. Opacity is represented by two bits, they represent SOLID=0, FLASH=1, TRANSLUCENT=2, and TRANSPARENT=3. The edge color is the color of the outlined edges of the text, but the outline shares its opacity with the foreground, so the highest order bits of the third parameter byte should both be cleared.
                     var penColor = new SetPenColor(lineIndex, bytes, i + 1);
@@ -459,6 +443,11 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 }
                 else if (b == SetPenLocation.Id)
                 {
+                    if (bytes.Length - i < 3)
+                    {
+                        break;
+                    }
+
                     // SetPenLocation sets the location of for the next bit of appended text in the current window. It has two parameters, row and column. If a window is not locked (see Define Window) and the SMALL font is in effect the location can be outside the otherwise valid addresses. 
                     var penLocation = new SetPenLocation(lineIndex, bytes, i + 1);
                     state.Commands.Add(penLocation);
@@ -471,10 +460,10 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 }
                 else if (b == SetWindowAttributes.Id)
                 {
-                    //if (bytes.Length - i < 4)
-                    //{
-                    //    break;
-                    //}
+                    if (bytes.Length - i < 5)
+                    {
+                        break;
+                    }
 
                     // SetWindowAttributes Sets the window attributes of the current window. Fill Color is specified with 6 bits, 2 for each of blue, green and red. The lowest order bits are for blue, the next two for green and the highest order bits represent red. Fill Opacity is represented by two bits, they represent SOLID=0, FLASH=1, TRANSLUCENT=2, and TRANSPARENT=3. The window's Border Color is specified the same way. However, the Border Type is split into two fields. They should be combined, with border type 01 representing the low order bits, and border type 2 the high order bit. Once combined the Border Type has 6 valid values: NONE=0, RAISED=1, DEPRESSED=2, UNIFORM=3, SHADOW_LEFT=4, and SHADOW_RIGHT=5. 
                     var windowAttributes = new SetWindowAttributes(lineIndex, bytes, i + 1);
@@ -488,10 +477,10 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 }
                 else if (b >= DefineWindow.IdStart && b <= DefineWindow.IdEnd)
                 {
-                    //if (bytes.Length - i < 6)
-                    //{
-                    //    break;
-                    //}
+                    if (bytes.Length - i < 7)
+                    {
+                        break;
+                    }
 
                     //DefineWindow0-7 creates one of the eight windows used by a caption decoder. This command should be sent periodically by a caption encoder even for pre-existing windows so that a newly tuned in caption decoder can begin displaying captions. When issued on a pre-existing window the pen style and window style can be left null, this tells the decoder not to change the current styles if they exist, and initialize both to style 1 if the window does not exist in its context
                     var defineWindow = new DefineWindow(lineIndex, bytes, i);
@@ -533,7 +522,10 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     // CL Group: C0: Subset of ASCII Control Codes
                     var text = new SetText(lineIndex, SingleCharLookupTable[b]);
                     state.Commands.Add(text);
-                    debugBuilder.Append(text.Content);
+                    if (DebugMode)
+                    {
+                        debugBuilder.Append($"{{SetText CL Group C0:Text={text.Content}}}");
+                    }
 
                     //TODO: ???
                     //if (b >= 0x10 && b <= 0x17)
@@ -550,21 +542,33 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     // Modified version of ANSI X3.4 Printable Character Set(ASCII)
                     var text = new SetText(lineIndex, SingleCharLookupTable[b]);
                     state.Commands.Add(text);
-                    debugBuilder.Append(text.Content);
+
+                    if (DebugMode)
+                    {
+                        debugBuilder.Append($"{{SetText ANSI:Text={text.Content}}}");
+                    }
                 }
                 else if (b >= 0x80 && b <= 0x9f)
                 {
                     // CR Group: C1: Caption Control Codes
                     var text = new SetText(lineIndex, SingleCharLookupTable[b]);
                     state.Commands.Add(text);
-                    debugBuilder.Append(text.Content);
+
+                    if (DebugMode)
+                    {
+                        debugBuilder.Append($"{{SetText:Text CR Group C1={text.Content}}}");
+                    }
                 }
                 else if (b >= 0xA0 && b <= 0xFF)
                 {
                     // ISO 8859 - 1 Latin 1 Characters
                     var text = new SetText(lineIndex, SingleCharLookupTable[b]);
                     state.Commands.Add(text);
-                    debugBuilder.Append(text.Content);
+
+                    if (DebugMode)
+                    {
+                        debugBuilder.Append($"{{SetText:Text ISO 8859={text.Content}}}");
+                    }
                 }
 
                 i++;
@@ -572,7 +576,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
 
             if (flush)
             {
-                FlushText(textBuilder, state);
+                FlushText(DebugMode ? debugBuilder : textBuilder, state);
             }
 
             return DebugMode ? debugBuilder.ToString() : textBuilder.ToString();
