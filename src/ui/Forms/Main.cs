@@ -29889,7 +29889,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var selectedLines = new Subtitle();
                     foreach (int index in SubtitleListview1.SelectedIndices)
                     {
-                        selectedLines.Paragraphs.Add(_subtitle.Paragraphs[index]);
+                        selectedLines.Paragraphs.Add(new Paragraph(_subtitle.Paragraphs[index], false));
                     }
 
                     title += " - " + _language.SelectedLines;
@@ -29901,7 +29901,7 @@ namespace Nikse.SubtitleEdit.Forms
                             var original = Utilities.GetOriginalParagraph(index, _subtitle.Paragraphs[index], _subtitleOriginal.Paragraphs);
                             if (original != null)
                             {
-                                paragraphs.Add(original);
+                                paragraphs.Add(new Paragraph(original, false));
                             }
                         }
 
@@ -29935,7 +29935,7 @@ namespace Nikse.SubtitleEdit.Forms
                         int i = 0;
                         foreach (int index in SubtitleListview1.SelectedIndices)
                         {
-                            _subtitle.Paragraphs[index] = translateDialog.TranslatedSubtitle.Paragraphs[i];
+                            _subtitle.Paragraphs[index].Text = translateDialog.TranslatedSubtitle.Paragraphs[i].Text;
                             i++;
                         }
 
