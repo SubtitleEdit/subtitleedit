@@ -14417,7 +14417,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var fc = FindFocusedControl(this);
-            if (fc != null && e.Modifiers != Keys.Control && e.Modifiers != Keys.Alt && e.Modifiers != (Keys.Control | Keys.Shift) && e.Modifiers != (Keys.Control | Keys.Alt) && e.Modifiers != (Keys.Control | Keys.Shift | Keys.Alt))
+            if (fc != null && (e.Modifiers == Keys.None || e.Modifiers == Keys.Shift))
             {
                 // do not check for shortcuts if text is being entered and a textbox is focused
                 if ((fc.Parent.Name == textBoxListViewText.Name || fc.Parent.Name == textBoxListViewTextOriginal.Name || fc.Name == textBoxSearchWord.Name) &&
