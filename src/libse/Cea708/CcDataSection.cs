@@ -41,12 +41,12 @@ namespace Nikse.SubtitleEdit.Core.Cea708
             }
         }
 
-        public CcDataSection(int ccDataCount, byte[] bytes)
+        public CcDataSection(int ccDataCount, byte[] bytes, int sequenceCount)
         {
             DataSection = 0x72;
             ProcessEmData = true;
-            ProcessEmData = true;
-            ProcessEmData = true;
+            ProcessCcData = true;
+            AdditionalData = true;
 
             if (bytes.Length / 2 > 16)
             {
@@ -80,11 +80,14 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 }
                 else if (i == 2)
                 {
+                    var rollingSequence = sequenceCount % 4; // rolling sequence 0-3
+                    var ccContentLength = bytes.Length / 2 + 2;
+                    var x = (byte)((rollingSequence << 6) + ccContentLength);
                     CcData[i] = new CcData
                     {
                         Valid = true,
                         Type = 3,
-                        Data1 = 0x0b,
+                        Data1 = (byte)x,
                         Data2 = 0x33,
                     };
                 }

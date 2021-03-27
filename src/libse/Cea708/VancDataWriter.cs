@@ -32,10 +32,6 @@ namespace Nikse.SubtitleEdit.Core.Cea708
         {
             var bytes = new List<byte>();
             var smpte291M = new Smpte291M(counter, 20, bytes.ToArray());
-            smpte291M.CcDataSectionCcData.CcData[2].Valid = false;
-            smpte291M.CcDataSectionCcData.CcData[2].Type = 2;
-            smpte291M.CcDataSectionCcData.CcData[2].Data1 = 0;
-            smpte291M.CcDataSectionCcData.CcData[2].Data2 = 0;
             var resultBytes = smpte291M.GetBytes();
             var hex = ByteArrayToHexString(resultBytes);
             return hex;

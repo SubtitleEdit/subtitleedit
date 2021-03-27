@@ -62,7 +62,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
             CaptionDistributionPacketHeaderSequenceCounter = sequenceCount;
             CaptionDistributionPacketHeaderSequenceCounter2 = sequenceCount;
 
-            CcDataSectionCcData = new CcDataSection(ccDataCount, bytes);
+            CcDataSectionCcData = new CcDataSection(ccDataCount, bytes, sequenceCount);
             CcServiceInfoSection = new CcServiceInfoSection();
         }
 
