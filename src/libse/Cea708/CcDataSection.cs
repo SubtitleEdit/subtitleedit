@@ -64,8 +64,8 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     {
                         Valid = true,
                         Type = 0,
-                        Data1 = 0x97,
-                        Data2 = 0xa2,
+                        Data1 = 0x80,
+                        Data2 = 0x80,
                     };
                 }
                 else if (i == 1)
@@ -82,13 +82,13 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 {
                     var rollingSequence = sequenceCount % 4; // rolling sequence 0-3
                     var ccContentLength = bytes.Length / 2 + 2;
-                    var x = (byte)((rollingSequence << 6) + ccContentLength);
+                    var sequenceAndLength = (byte)((rollingSequence << 6) + ccContentLength);
                     CcData[i] = new CcData
                     {
                         Valid = true,
                         Type = 3,
-                        Data1 = (byte)x,
-                        Data2 = 0x33,
+                        Data1 = sequenceAndLength,
+                        Data2 = 0x33, // What is this?
                     };
                 }
                 else
