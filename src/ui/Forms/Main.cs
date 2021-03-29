@@ -4618,8 +4618,8 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            _converted = true;
             var format = GetCurrentSubtitleFormat();
+            _converted = format != _oldSubtitleFormat;
             if (format == null)
             {
                 format = new SubRip();
@@ -4666,7 +4666,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             UpdateSourceView();
-            ShowStatus(string.Format(_language.ConvertedToX, format.FriendlyName));
+            if (_converted)
+            {
+                ShowStatus(string.Format(_language.ConvertedToX, format.FriendlyName));
+            }
+
             if (_fileName != null && _oldSubtitleFormat != null && _fileName.EndsWith(_oldSubtitleFormat.Extension, StringComparison.Ordinal))
             {
                 _fileName = _fileName.Substring(0, _fileName.Length - _oldSubtitleFormat.Extension.Length) + format.Extension;
@@ -4770,7 +4774,9 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.ShowExtraColumn(_languageGeneral.Style);
                 }
 
+                SaveSubtitleListviewIndices();
                 SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                RestoreSubtitleListviewIndices();
             }
 
             ShowHideTextBasedFeatures(format);
@@ -5403,12 +5409,12 @@ namespace Nikse.SubtitleEdit.Forms
                 SaveOriginalToolStripMenuItemClick(null, null);
                 _disableShowStatus = false;
                 ShowStatus(string.Format(_language.SavedSubtitleX, Path.GetFileName(_fileName)) + " + " +
-                           string.Format(_language.SavedOriginalSubtitleX, Path.GetFileName(_subtitleOriginalFileName)));
+                           string.Format(_language.SavedOriginalSubtitleX, $"\"{_subtitleOriginalFileName}\""));
                 return;
             }
 
             _disableShowStatus = false;
-            ShowStatus(string.Format(_language.SavedSubtitleX, Path.GetFileName(_fileName)));
+            ShowStatus(string.Format(_language.SavedSubtitleX, $"\"{_fileName}\""));
 
             if (Configuration.Settings.General.ShowNegativeDurationInfoOnSave)
             {
@@ -28902,7 +28908,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    ShowStatus(string.Format(_language.SavedSubtitleX, _fileName) + " - " +
+                    ShowStatus(string.Format(_language.SavedSubtitleX, $"\"{_fileName}\"") + " - " +
                                string.Format(LanguageSettings.Current.NetflixQualityCheck.FoundXIssues, netflixController.Records.Count));
                 }
             }
