@@ -220,7 +220,12 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (name == format.FriendlyName)
                     {
+                        var oldIdx = comboBoxSubtitleFormats.SelectedIndex;
                         comboBoxSubtitleFormats.SelectedIndex = index;
+                        if (oldIdx == comboBoxSubtitleFormats.SelectedIndex)
+                        {
+                            ComboBoxSubtitleFormatsSelectedIndexChanged(null, null);
+                        }
                         return;
                     }
 
