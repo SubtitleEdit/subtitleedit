@@ -63,11 +63,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                     var buffer = new byte[outZStream.TotalOut];
                     outStream.Position = 0;
                     outStream.Read(buffer, 0, buffer.Length);
-                    return Encoding.UTF8.GetString(buffer);
+                    return Encoding.UTF8.GetString(buffer).TrimEnd('\0');
                 }
                 catch
                 {
-                    return Encoding.UTF8.GetString(CodecPrivateRaw);
+                    return Encoding.UTF8.GetString(CodecPrivateRaw).TrimEnd('\0');
                 }
                 finally
                 {
@@ -75,7 +75,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                     inStream.Close();
                 }
             }
-            return Encoding.UTF8.GetString(CodecPrivateRaw);
+
+            return Encoding.UTF8.GetString(CodecPrivateRaw).TrimEnd('\0');
         }
     }
 }
