@@ -48,7 +48,6 @@ namespace Nikse.SubtitleEdit.Core.Cea708
         {
             DataId = 0x61;
             SecondaryDataId = 1;
-            DataCount = 0x59;
             CaptionDistributionPacketId = 0x9669;
             CaptionDistributionPacketDataCount = 0x59;
             CaptionDistributionPacketFramingRate = 4; // 29.97
@@ -64,6 +63,8 @@ namespace Nikse.SubtitleEdit.Core.Cea708
 
             CcDataSectionCcData = new CcDataSection(ccDataCount, bytes, sequenceCount);
             CcServiceInfoSection = new CcServiceInfoSection();
+
+            DataCount = 8 + CcDataSectionCcData.GetLength() + CcServiceInfoSection.GetLength();
         }
 
         public Smpte291M(byte[] bytes)
@@ -138,9 +139,13 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     0xbb
                 }).ToArray();
 
+            // Data count
+            result[2] = (byte)(result.Length - 4);
+            result[5] = (byte)(result.Length - 4);
+
             // Calculate number that will make the checksum zero
             long total = 0;
-            for (var i = 3; i < result.Length - 3; i++)
+            for (var i = 3; i < result.Length - 2; i++)
             {
                 total += result[i];
             }

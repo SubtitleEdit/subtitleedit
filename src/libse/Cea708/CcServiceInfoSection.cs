@@ -23,18 +23,13 @@ namespace Nikse.SubtitleEdit.Core.Cea708
             Start = true;
             Change = true;
             Complete = true;
-            ServiceCount = 2;
+            ServiceCount = 1;
             CcServiceInfoSectionElements = new[]
             {
                 new CcServiceInfoSectionElement
                 {
                     CaptionServiceNumber = 0,
-                    ServiceDataByte = new byte[] { 32, 32, 32, 126, 127, 255},
-                },
-                new CcServiceInfoSectionElement
-                {
-                    CaptionServiceNumber = 1,
-                    ServiceDataByte = new byte[] { 101, 110, 103, 193, 127, 255},
+                    ServiceDataByte = new byte[] { 0x65, 0x6e, 0x67, 0xc1, 0xff, 0xff },
                 },
             };
         }
