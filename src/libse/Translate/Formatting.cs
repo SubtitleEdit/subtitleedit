@@ -19,6 +19,8 @@ namespace Nikse.SubtitleEdit.Core.Translate
         private bool AutoBreak { get; set; }
         private bool SquareBrackets { get; set; }
         private bool SquareBracketsUppercase { get; set; }
+        public bool Parentheses { get; set; }
+        public bool ParenthesesUppercase { get; set; }
         private int BreakNumberOfLines { get; set; }
         private bool BreakSplitAtLineEnding { get; set; }
         private bool BreakIsDialog { get; set; }
@@ -65,9 +67,10 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 text = text.Remove(text.Length - "</font>".Length);
             }
 
+            int lineCount = Utilities.GetNumberOfLines(text);
             // Square brackets
             if (text.StartsWith("[", StringComparison.Ordinal) && text.EndsWith("]", StringComparison.Ordinal) &&
-                Utilities.GetNumberOfLines(text) == 1 && Utilities.CountTagInText(text, "[") == 1 &&
+                lineCount == 1 && Utilities.CountTagInText(text, "[") == 1 &&
                 Utilities.CountTagInText(text, "]") == 1)
             {
                 if (text == text.ToUpperInvariant())
@@ -78,8 +81,25 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 {
                     SquareBrackets = true;
                 }
-                
+
                 // [foobar] => foobar
+                text = text.Substring(1, text.Length - 2);
+            }
+            // parentheses
+            else if (text.StartsWith("(", StringComparison.Ordinal) && text.EndsWith(")", StringComparison.Ordinal) &&
+                     lineCount == 1 && Utilities.CountTagInText(text, "(") == 1 &&
+                     Utilities.CountTagInText(text, ")") == 1)
+            {
+                if (text == text.ToUpperInvariant())
+                {
+                    ParenthesesUppercase = true;
+                }
+                else
+                {
+                    Parentheses = true;
+                }
+
+                // (foobar) => foobar
                 text = text.Substring(1, text.Length - 2);
             }
 
@@ -117,6 +137,16 @@ namespace Nikse.SubtitleEdit.Core.Translate
             else if (SquareBrackets)
             {
                 text = "[" + text.Trim() + "]";
+            }
+
+            // parentheses
+            if (ParenthesesUppercase)
+            {
+                text = "(" + text.ToUpperInvariant().Trim() + ")";
+            }
+            else if (Parentheses)
+            {
+                text = "(" + text.Trim() + ")";
             }
 
             // Italic tags
