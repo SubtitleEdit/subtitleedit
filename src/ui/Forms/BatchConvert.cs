@@ -135,7 +135,7 @@ namespace Nikse.SubtitleEdit.Forms
             linkLabelOpenOutputFolder.Text = LanguageSettings.Current.Main.Menu.File.Open;
             buttonSearchFolder.Text = l.ScanFolder;
             buttonConvert.Text = l.Convert;
-            buttonCancel.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             checkBoxScanFolderRecursive.Text = l.Recursive;
             checkBoxScanFolderRecursive.Left = buttonSearchFolder.Left - checkBoxScanFolderRecursive.Width - 5;
             buttonTransportStreamSettings.Text = l.TransportStreamSettingsButton;
