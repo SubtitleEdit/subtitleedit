@@ -30096,5 +30096,13 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
         }
+
+        public bool ProcessCmdKeyFromChildForm(ref Message msg, Keys keyData)
+        {
+            Message messageCopy = msg;
+            messageCopy.HWnd = Handle;
+
+            return ProcessCmdKey(ref messageCopy, keyData);
+        }
     }
 }
