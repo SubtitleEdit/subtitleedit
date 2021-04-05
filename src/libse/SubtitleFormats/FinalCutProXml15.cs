@@ -500,7 +500,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
-        private static TimeCode DecodeTime(XmlAttribute duration)
+        internal static TimeCode DecodeTime(XmlAttribute duration)
         {
             // e.g. 220220/60000s
             if (duration != null)
