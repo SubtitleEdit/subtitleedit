@@ -168,5 +168,14 @@ namespace Nikse.SubtitleEdit.Forms
             Refresh();
         }
 
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (_mainForm.ProcessCmdKeyFromChildForm(ref msg, keyData))
+            {
+                return true;
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
     }
 }
