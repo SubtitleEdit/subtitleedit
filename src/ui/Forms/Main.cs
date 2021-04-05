@@ -15831,7 +15831,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (tabControlModes.SelectedTab == tabPageCreate && e.Modifiers == Keys.Alt && e.KeyCode == Keys.F9)
             {
                 StopAutoDuration();
-                ButtonSetEndClick(null, null);
+                SetEndTime();
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainCreateSetStart == e.KeyData)
@@ -15842,14 +15842,24 @@ namespace Nikse.SubtitleEdit.Forms
             else if (_shortcuts.MainCreateSetEnd == e.KeyData)
             {
                 StopAutoDuration();
-                ButtonSetEndClick(null, null);
+                SetEndTime();
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainAdjustVideoSetStartForAppropriateLine == e.KeyData && mediaPlayer.VideoPlayer != null)
+            {
+                VideoSetStartForAppropriateLine(mediaPlayer.CurrentPosition);
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainAdjustVideoSetEndForAppropriateLine == e.KeyData && mediaPlayer.VideoPlayer != null)
+            {
+                VideoSetEndForAppropriateLine(mediaPlayer.CurrentPosition);
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainAdjustSetEndAndPause == e.KeyData)
             {
                 StopAutoDuration();
                 mediaPlayer.Pause();
-                ButtonSetEndClick(null, null);
+                SetEndTime();
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainCreateSetEndAddNewAndGoToNew == e.KeyData)
@@ -20334,7 +20344,40 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void VideoSetStartForAppropriateLine(double videoPosition)
+        {
+            var p = _subtitle.Paragraphs.LastOrDefault(paragraph => videoPosition > paragraph.StartTime.TotalSeconds);
+            if (p != null)
+            {
+                var index = _subtitle.Paragraphs.IndexOf(p);
+                if (videoPosition < p.EndTime.TotalSeconds)
+                {
+                    SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
+                    SetStartTime(false, videoPosition);
+                }
+                else
+                {
+                    var next = _subtitle.GetParagraphOrDefault(index + 1);
+                    if (next != null)
+                    {
+                        SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.Paragraphs.IndexOf(next), true);
+                        SetStartTime(false, videoPosition);
+                    }
+                }
+            }
+            else if (_subtitle.Paragraphs.Count > 0)
+            {
+                SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
+                SetStartTime(false, videoPosition);
+            }
+        }
+
         private void ButtonSetEndClick(object sender, EventArgs e)
+        {
+            SetEndTime();
+        }
+
+        private void SetEndTime()
         {
             if (SubtitleListview1.SelectedItems.Count == 1)
             {
@@ -20368,6 +20411,17 @@ namespace Nikse.SubtitleEdit.Forms
 
                 SubtitleListview1.SetStartTimeAndDuration(index, _subtitle.Paragraphs[index], _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
                 SetDurationInSeconds(_subtitle.Paragraphs[index].Duration.TotalSeconds);
+            }
+        }
+
+        private void VideoSetEndForAppropriateLine(double videoPosition)
+        {
+            var p = _subtitle.Paragraphs.LastOrDefault(paragraph => videoPosition > paragraph.StartTime.TotalSeconds);
+            if (p != null)
+            {
+                var index = _subtitle.Paragraphs.IndexOf(p);
+                SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
+                SetEndTime();
             }
         }
 
@@ -26420,7 +26474,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var p = _subtitle.Paragraphs[_subtitleListViewIndex];
                 if (p.ToString() == _mainCreateStartDownEndUpParagraph.ToString())
                 {
-                    ButtonSetEndClick(null, null);
+                    SetEndTime();
                 }
 
                 _mainCreateStartDownEndUpParagraph = null;
@@ -26433,7 +26487,7 @@ namespace Nikse.SubtitleEdit.Forms
                     double videoPositionInSeconds = mediaPlayer.CurrentPosition;
                     if (p.StartTime.TotalSeconds + 0.1 < videoPositionInSeconds)
                     {
-                        ButtonSetEndClick(null, null);
+                        SetEndTime();
                     }
 
                     SubtitleListview1.SelectIndexAndEnsureVisible(_subtitleListViewIndex + 1, true);
