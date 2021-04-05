@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Interfaces;
+﻿using System.Linq;
+using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
@@ -35,6 +36,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         .Replace('\u2014', '-') // — Em dash (\u2014)
                         .Replace('\u2015', '-') // ― Horizontal bar (\u2015)
                         ;
+
+                var cyrillicLanguages = new[] { "ru" };
+                if (!cyrillicLanguages.Contains(twoLetterLanguageCode))
+                {
+                    text = text
+                            .Replace('\u0435', 'e') // Cyrillic Small Letter Ie: "е"
+                        ;
+                }
 
                 if (twoLetterLanguageCode != "el")
                 {
