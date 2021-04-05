@@ -123,7 +123,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 (byte)(CaptionDistributionPacketId >> 8),
                 (byte)(CaptionDistributionPacketId & 0b0000000011111111),
                 (byte)CaptionDistributionPacketDataCount,
-                (byte)((CaptionDistributionPacketFramingRate << 4) | 0b00001111),
+                (byte)((CaptionDistributionPacketFramingRate << 4) + 0b00001111),
                 flags,
                 (byte)(CaptionDistributionPacketHeaderSequenceCounter >> 8),
                 (byte)(CaptionDistributionPacketHeaderSequenceCounter & 0b0000000011111111),
