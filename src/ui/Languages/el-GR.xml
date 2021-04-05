@@ -15,6 +15,8 @@
     <SubtitleFiles>Αρχεία υποτίτλου</SubtitleFiles>
     <AllFiles>Όλα τα αρχεία</AllFiles>
     <VideoFiles>Αρχεία βίντεο</VideoFiles>
+    <Images>Εικόνες</Images>
+    <Fonts>Γραμματοσειρές</Fonts>
     <AudioFiles>Αρχεία ήχου</AudioFiles>
     <OpenSubtitle>Άνοιγμα υποτίτλου...</OpenSubtitle>
     <OpenVideoFile>Άνοιγμα αρχείου βίντεο...</OpenVideoFile>
@@ -32,8 +34,9 @@
     <NumberSymbol>#</NumberSymbol>
     <Number>Αριθμός</Number>
     <Text>Κείμενο</Text>
-    <HourMinutesSecondsMilliseconds>Ώρες:λεπτά:δευτ.:χιλ.</HourMinutesSecondsMilliseconds>
+    <HourMinutesSecondsDecimalSeparatorMilliseconds>Ώρες:λεπτά:δευτ{0}χ.δ.</HourMinutesSecondsDecimalSeparatorMilliseconds>
     <HourMinutesSecondsFrames>Ώρες:λεπτά:δευτ:καρέ</HourMinutesSecondsFrames>
+    <XSeconds>{0:0.0##} δευτερόλεπτα</XSeconds>
     <Bold>Έντονα</Bold>
     <Italic>Πλαγιαστά</Italic>
     <Underline>Υπογραμμισμένα</Underline>
@@ -160,6 +163,20 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixesAvailable>Διαθέσιμες διορθώσεις: {0}</FixesAvailable>
     <UnableToFix>Αδυναμία διόρθωσης: {0}</UnableToFix>
   </ApplyDurationLimits>
+  <AssaAttachments>
+    <Title>Προσαρτήσεις Advanced Sub Station Alpha</Title>
+    <AttachFiles>Προσάρτηση αρχείων...</AttachFiles>
+    <FontsAndImages>Γραμματοσειρές και εικόνες</FontsAndImages>
+    <Graphics>Γραφικά</Graphics>
+    <Font>Γραμματοσειρά</Font>
+    <ImageName>Όνομα εικόνας ({0}χ{1}):</ImageName>
+    <IconName>Όνομα εικονίδιου:</IconName>
+    <FontName>Όνομα γραμματοσειράς</FontName>
+    <ImageResized>Η εικόνα άλλαξε διαστάσεις, για να ταιριάζει με το τρέχον παράθυρο.</ImageResized>
+    <FilesSkippedX>Εικόνες που παραλείφθηκαν: {0}</FilesSkippedX>
+    <RemoveOneAttachment>Αφαίρεση προσάρτησης;</RemoveOneAttachment>
+    <RemoveXAttachments>Αφαίρεση {0} προσαρτήσεων;</RemoveXAttachments>
+  </AssaAttachments>
   <AudioToText>
     <Title>Ήχος σε κείμενο</Title>
     <ExtractingAudioUsingX>Εξαγωγή ήχου χρησιμοποιώντας {0}...</ExtractingAudioUsingX>
@@ -1310,9 +1327,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <SetEndTimeAndGoToNext>Ο&amp;ρισμός λήξης &amp;&amp; μετάβαση</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Προσαρμογή μέσω χρόνου λήξης {0}</AdjustedViaEndTime>
       <SetEndTime>Ορισμός λή&amp;ξης</SetEndTime>
-      <SetStartTimeAndOffsetTheRest>Έναρ&amp;ξη και μετατόπιση</SetStartTimeAndOffsetTheRest>
+      <SetStartTimeAndOffsetTheRest>Ορισμός έναρξ&amp;ης και μετατώπιση των υπολοίπων</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Διαδικτυακή αναζήτηση κειμένου</SearchTextOnline>
       <GoogleTranslate>Μετάφραση Google</GoogleTranslate>
+      <AutoTranslate>Αυτόματη μετάφραση</AutoTranslate>
       <GoogleIt>Αναζήτηση</GoogleIt>
       <SecondsBackShort>&lt;&lt;</SecondsBackShort>
       <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
@@ -1329,6 +1347,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SaveChangesToOriginalX>Αποθήκευση αλλαγών στον αρχικό {0};</SaveChangesToOriginalX>
     <SaveSubtitleAs>Αποθήκευση υποτίτλου ως...</SaveSubtitleAs>
     <SaveOriginalSubtitleAs>Αποθήκευση αρχικού υποτίτλου ως...</SaveOriginalSubtitleAs>
+    <CannotSaveEmptySubtitle>Αδυναμία αποθήκευσης κενού υποτίτλου</CannotSaveEmptySubtitle>
     <NoSubtitleLoaded>Μη φορτωμένος υπότιτλος</NoSubtitleLoaded>
     <VisualSyncSelectedLines>Οπτικός συγχρονισμός - επιλεγμένες γραμμές</VisualSyncSelectedLines>
     <VisualSyncTitle>Οπτικός συγχρονισμός</VisualSyncTitle>
@@ -1753,6 +1772,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DurationLessThan>Διάρκεια μικρότερη από</DurationLessThan>
     <DurationGreaterThan>Διάρκεια μεγαλύτερη από</DurationGreaterThan>
     <MoreThanTwoLines>Πάνω από δύο γραμμές</MoreThanTwoLines>
+    <Bookmarked>Σημειωμένο</Bookmarked>
   </ModifySelection>
   <MultipleReplace>
     <Title>Πολλαπλή αντικατάσταση</Title>
@@ -1916,6 +1936,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <Settings>
     <Title>Ρυθμίσεις</Title>
     <General>Γενικά</General>
+    <SubtitleFormats>Μορφή υποτίτλων</SubtitleFormats>
     <Toolbar>Γραμμή εργαλείων</Toolbar>
     <VideoPlayer>Πρόγραμμα αναπαραγωγής</VideoPlayer>
     <WaveformAndSpectrogram>Κυματομορφή/φασματογράφημα</WaveformAndSpectrogram>
@@ -1938,6 +1959,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ToggleBookmarks>Εναλλαγή σημειώσεων</ToggleBookmarks>
     <ToggleBookmarksWithComment>Εναλλαγή σημειώσεων - προσθήκη σχόλιου</ToggleBookmarksWithComment>
     <ClearBookmarks>Καθαρισμός σημειώσεων</ClearBookmarks>
+    <ExportBookmarks>Εξαγωγή σημειώσεων...</ExportBookmarks>
     <GoToBookmark>Μετάβαση σε σημείωση</GoToBookmark>
     <GoToPreviousBookmark>Προηγούμενη σημείωση</GoToPreviousBookmark>
     <GoToNextBookmark>Επόμενη σημείωση</GoToNextBookmark>
@@ -1948,6 +1970,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TogglePreviewOnVideo>Εναλλαγή προεπισκόπησης σε βίντεο</TogglePreviewOnVideo>
     <Help>Βοήθεια</Help>
     <FontInUi>Γραμματοσειρά διεπαφής</FontInUi>
+    <Appearance>Εμφάνιση</Appearance>
     <ShowFrameRate>Εμφάνιση ρυθμού καρέ στη γραμμή εργαλείων</ShowFrameRate>
     <DefaultFrameRate>Προεπιλεγμένος ρυθμός καρέ</DefaultFrameRate>
     <DefaultFileEncoding>Προεπιλεγμένη κωδικοποίηση</DefaultFileEncoding>
@@ -1980,6 +2003,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RememberPositionAndSize>Απομνημόνευση θέσης και μεγέθους κύριου παραθύρου</RememberPositionAndSize>
     <StartInSourceView>Έναρξη σε προβολή πηγής</StartInSourceView>
     <RemoveBlankLinesWhenOpening>Αφαίρεση κενών γραμμών κατά το άνοιγμα</RemoveBlankLinesWhenOpening>
+    <RemoveBlankLines>Αφαίρεση κενών γραμμών</RemoveBlankLines>
     <ShowLineBreaksAs>Εμφάνιση διασπάσεων σε προβολή λίστας ως</ShowLineBreaksAs>
     <SaveAsFileNameFrom>Η "Αποθήκευση ως..." έχει το όνομα από</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>Ενέργεια διπλού κλικ σε γραμμή στο κύριο παράθυρο προβολής λίστας</MainListViewDoubleClickAction>
@@ -2118,6 +2142,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixCommonOcrErrorsUseHardcodedRules>Διόρθωση σφαλμάτων OCR - χρήση ενσωματωμένων κανόνων</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Διόρθωση σύντομου χρόνου εμφάνισης - αλλαγή χρόνου έναρξης</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Παράβλεψη πρώτου βήματος (προεπιλεγμένα)</FixCommonErrorsSkipStepOne>
+    <DefaultFormat>Προεπιλεγμένη μορφή</DefaultFormat>
+    <DefaultSaveAsFormat>Προεπιλεγμένη μορφή αποθήκευσης ως</DefaultSaveAsFormat>
+    <Favorites>Αγαπημένες</Favorites>
+    <FavoriteFormats>Αγαπημένες μορφες</FavoriteFormats>
+    <FavoriteSubtitleFormatsNote>Σημείωση: Οι αγαπημένες μορφές εμφανίζονται πρώτες στη λίστα. Η προκαθορισμένη μορφή εμφανίζεται πάντα πρώτη.</FavoriteSubtitleFormatsNote>
     <Shortcuts>Συντομεύσεις</Shortcuts>
     <Shortcut>Συντόμευση</Shortcut>
     <Control>Ctrl</Control>
@@ -2132,6 +2161,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AssaColor>Χρώμα ASSA</AssaColor>
     <DarkTheme>Σκούρο θέμα</DarkTheme>
     <DarkThemeEnabled>Χρήση σκούρου θέματος</DarkThemeEnabled>
+    <DarkThemeShowGridViewLines>Εμφάνιση γραμμών προβολής λίστας</DarkThemeShowGridViewLines>
     <UpdateShortcut>Ενημέρωση</UpdateShortcut>
     <FoucsSetVideoPosition>Εστίαση ορισμού θέσης βίντεο</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Εναλλαγή αγκύστρωσης/απαγκύστρωσης των στοιχείων ελέγχου βίντεο</ToggleDockUndockOfVideoControls>
@@ -2161,6 +2191,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AdjustEndOneFrameBackKeepGapNext>Μετακίνηση λήξης 1 καρέ  πίσω (κράτημα κενού στο επόμενο)</AdjustEndOneFrameBackKeepGapNext>
     <AdjustEndOneFrameForwardKeepGapNext>Μετακίνηση λήξης 1 καρέ εμπρός (κράτημα κενού στο επόμενο)</AdjustEndOneFrameForwardKeepGapNext>
     <AdjustSetStartTimeKeepDuration>Ορισμός έναρξης, διατήρηση διάρκειας</AdjustSetStartTimeKeepDuration>
+    <AdjustSetStartAndOffsetTheWholeSubtitle>Ορισμός χρόνου έναρξης, μετατώπιση όλου του υποτίτλου</AdjustSetStartAndOffsetTheWholeSubtitle>
     <AdjustSetEndAndOffsetTheRest>Ορισμός τέλους, μετατόπιση υπολοίπων</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Ορισμός τέλους, μετατόπιση υπολοίπων και μετάβαση σε επόμενο</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <AdjustSnapStartToNextSceneChange>Κλείδωμα έναρξης γραμμής σε επόμενη αλλαγή σκηνής</AdjustSnapStartToNextSceneChange>
@@ -2254,6 +2285,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <PlayRateSlower>Πιο αργός ρυθμός αναπαραγωγής</PlayRateSlower>
     <PlayRateFaster>Ταχύτερος ρυθμός αναπαραγωγής</PlayRateFaster>
     <VideoResetSpeedAndZoom>Επαναφορά ταχύτητας/μεγένθυσης</VideoResetSpeedAndZoom>
+    <MainToggleVideoControls>Εναλλαγή ελέγχων βίντεο</MainToggleVideoControls>
     <CustomSearch1>Μετάφραση, προσαρμοσμένη αναζήτηση 1</CustomSearch1>
     <CustomSearch2>Μετάφραση, προσαρμοσμένη αναζήτηση 2</CustomSearch2>
     <CustomSearch3>Μετάφραση, προσαρμοσμένη αναζήτηση 3</CustomSearch3>
@@ -2522,6 +2554,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <UpdateDetails>Λεπτομέρειες ενημέρωσης</UpdateDetails>
     <Resolution>Ανάλυση</Resolution>
     <VideoResolution>Ανάλυση βίντεοVideo resolution</VideoResolution>
+    <FromCurrentVideo>Από το τρέχων βίντεο</FromCurrentVideo>
     <Options>Επιλογές</Options>
     <WrapStyle>Στυλ αναδίπλωσης</WrapStyle>
     <Collision>Σύγκρουση</Collision>
@@ -2580,8 +2613,26 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AddToFile>Προσθήκη σε αρχείο</AddToFile>
     <AddToStorage>Προσθήκη σε μνήμη</AddToStorage>
     <StyleStorage>Στυλ μνήμης</StyleStorage>
+    <StyleCurrentFile>Στυλ σε τρέχον αρχείο</StyleCurrentFile>
     <OverwriteX>Αντικατάσταση {0};</OverwriteX>
+    <CategoryNote>Σημείωση: Τα προεπιλεγμένα στυλ εφαρμόζονται σε νέα αρχεία ASSA.</CategoryNote>
+    <CategoriesManage>Διαχείριση</CategoriesManage>
+    <MoveToCategory>Αλλαγή κατηγορίας επιλεγμένων στυλ...</MoveToCategory>
   </SubStationAlphaStyles>
+  <SubStationAlphaStylesCategoriesManager>
+    <Category>Κατηγορία</Category>
+    <Categories>Κατηγορίες</Categories>
+    <CategoryName>Όνομα κατηγορίας</CategoryName>
+    <CategoryDelete>Διαγραφή των επιλεγμένων κατηγοριών;</CategoryDelete>
+    <NewCategory>Νέα κατηγορία</NewCategory>
+    <CategoryRename>Μετονομασία κατηγορίας</CategoryRename>
+    <CategorySetDefault>Ορισμός προεπιλεγμένης</CategorySetDefault>
+    <NumberOfStyles>Αριθμός στυλ</NumberOfStyles>
+    <CategoryDefault>Προεπιλεγμένη</CategoryDefault>
+    <ChooseCategories>Επιλογή κατηγοριών σε {0}</ChooseCategories>
+    <ImportCategoriesTitle>Εισαγωγή κατηγοριών...</ImportCategoriesTitle>
+    <ExportCategoriesTitle>Εξαγωγή κατηγοριών...</ExportCategoriesTitle>
+  </SubStationAlphaStylesCategoriesManager>
   <PointSync>
     <Title>Συγχρονισμός σημείων</Title>
     <TitleViaOtherSubtitle>Συγχρονισμός σημείων μέσω άλλου υποτίτλου</TitleViaOtherSubtitle>
