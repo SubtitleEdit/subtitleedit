@@ -671,7 +671,7 @@
             // 
             // buttonGapChoose
             // 
-            this.buttonGapChoose.Location = new System.Drawing.Point(265, 213);
+            this.buttonGapChoose.Location = new System.Drawing.Point(264, 213);
             this.buttonGapChoose.Name = "buttonGapChoose";
             this.buttonGapChoose.Size = new System.Drawing.Size(28, 23);
             this.buttonGapChoose.TabIndex = 46;
