@@ -91,6 +91,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new FinalCutProXml(),
                     new FinalCutProXXml(),
                     new FinalCutProXmlGap(),
+                    new FinalCutProXmlName(),
                     new FinalCutProXCM(),
                     new FinalCutProXml13(),
                     new FinalCutProXml14(),
