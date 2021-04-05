@@ -5995,6 +5995,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/AdjustSetStartTimeKeepDuration":
                     language.Settings.AdjustSetStartTimeKeepDuration = reader.Value;
                     break;
+                case "Settings/AdjustVideoSetStartForAppropriateLine":
+                    language.Settings.AdjustVideoSetStartForAppropriateLine = reader.Value;
+                    break;
+                case "Settings/AdjustVideoSetEndForAppropriateLine":
+                    language.Settings.AdjustVideoSetEndForAppropriateLine = reader.Value;
+                    break;
                 case "Settings/AdjustSetStartAndOffsetTheWholeSubtitle":
                     language.Settings.AdjustSetStartAndOffsetTheWholeSubtitle = reader.Value;
                     break;
