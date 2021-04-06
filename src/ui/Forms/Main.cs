@@ -25660,6 +25660,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolStripMenuItemMakeEmptyFromCurrentClick(object sender, EventArgs e)
         {
+            if (!IsSubtitleLoaded)
+            {
+                DisplaySubtitleNotLoadedMessage();
+                return;
+            }
+
             if (ContinueNewOrExit())
             {
                 bool isOriginalVisible = SubtitleListview1.IsOriginalTextColumnVisible;
