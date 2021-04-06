@@ -25132,9 +25132,10 @@ namespace Nikse.SubtitleEdit.Forms
             RestartHistory();
 
             var next = _subtitle.GetParagraphOrDefault(index + 1);
-            var oldNextParagraph = new Paragraph(next, false);
+            Paragraph oldNextParagraph = null;
             if (next != null)
             {
+                oldNextParagraph = new Paragraph(next, false);
                 next.StartTime.TotalMilliseconds = totalMillisecondsEnd + MinGapBetweenLines;
             }
 
