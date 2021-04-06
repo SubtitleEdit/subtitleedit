@@ -1960,6 +1960,32 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
+        public void RemoveTextForHiSecondDialogEmpty()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBetweenBrackets = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            string actual = target.RemoveTextFromHearImpaired("- Oh. No." + Environment.NewLine + "-");
+            Assert.AreEqual("Oh. No.", actual);
+        }
+
+        [TestMethod]
+        public void RemoveTextForHiFirstDialogEmpty()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBetweenBrackets = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            string actual = target.RemoveTextFromHearImpaired("-" + Environment.NewLine + "- Oh. No.");
+            Assert.AreEqual("Oh. No.", actual);
+        }
+
+        [TestMethod]
         public void RemoveInterjectionsAfterComma()
         {
             string actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("Hey, ahhhh.", onlyInSeparatedLine: false));
