@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                         Valid = true,
                         Type = 3,
                         Data1 = sequenceAndLength,
-                        Data2 = 0x33, // What is this?
+                        Data2 = 0x00, // What is this?
                     };
                 }
                 else

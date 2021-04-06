@@ -380,6 +380,82 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxNetflixQualityCheck.Text = LanguageSettings.Current.General.Visible;
             checkBoxSettings.Text = LanguageSettings.Current.General.Visible;
             checkBoxHelp.Text = LanguageSettings.Current.General.Visible;
+            if (labelTBNew.Right > labelTBOpen.Left)
+            {
+                labelTBOpen.Left = labelTBNew.Right + 15;
+                pictureBoxOpen.Left = labelTBOpen.Left;
+                checkBoxToolbarOpen.Left = labelTBOpen.Left;
+            }
+
+            if (labelTBOpen.Right > labelTBSave.Left)
+            {
+                labelTBSave.Left = labelTBOpen.Right + 15;
+                pictureBoxSave.Left = labelTBSave.Left;
+                checkBoxToolbarSave.Left = labelTBSave.Left;
+            }
+
+            if (labelTBSave.Right > labelTBSaveAs.Left)
+            {
+                labelTBSaveAs.Left = labelTBSave.Right + 15;
+                pictureBoxSaveAs.Left = labelTBSaveAs.Left;
+                checkBoxToolbarSaveAs.Left = labelTBSaveAs.Left;
+            }
+
+            if (labelTBSaveAs.Right > labelTBFind.Left)
+            {
+                labelTBFind.Left = labelTBSaveAs.Right + 15;
+                pictureBoxFind.Left = labelTBFind.Left;
+                checkBoxToolbarFind.Left = labelTBFind.Left;
+            }
+
+            if (labelTBFind.Right > labelTBReplace.Left)
+            {
+                labelTBReplace.Left = labelTBFind.Right + 15;
+                pictureBoxReplace.Left = labelTBReplace.Left;
+                checkBoxReplace.Left = labelTBReplace.Left;
+            }
+
+            if (labelTBFixCommonErrors.Right > labelTBRemoveTextForHi.Left)
+            {
+                labelTBRemoveTextForHi.Left = labelTBFixCommonErrors.Right + 15;
+                pictureBoxTBRemoveTextForHi.Left = labelTBRemoveTextForHi.Left;
+                checkBoxTBRemoveTextForHi.Left = labelTBRemoveTextForHi.Left;
+            }
+
+            if (labelTBRemoveTextForHi.Right > labelTBVisualSync.Left)
+            {
+                labelTBVisualSync.Left = labelTBRemoveTextForHi.Right + 15;
+                pictureBoxVisualSync.Left = labelTBVisualSync.Left;
+                checkBoxVisualSync.Left = labelTBVisualSync.Left;
+            }
+
+            if (labelTBVisualSync.Right > labelTBSpellCheck.Left)
+            {
+                labelTBSpellCheck.Left = labelTBVisualSync.Right + 15;
+                pictureBoxSpellCheck.Left = labelTBSpellCheck.Left;
+                checkBoxSpellCheck.Left = labelTBSpellCheck.Left;
+            }
+
+            if (labelTBSpellCheck.Right > labelTBSettings.Left)
+            {
+                labelTBSettings.Left = labelTBSpellCheck.Right + 15;
+                pictureBoxSettings.Left = labelTBSettings.Left;
+                checkBoxSettings.Left = labelTBSettings.Left;
+            }
+
+            if (labelTBSettings.Right > labelTBHelp.Left)
+            {
+                labelTBHelp.Left = labelTBSettings.Right + 15;
+                pictureBoxHelp.Left = labelTBHelp.Left;
+                checkBoxHelp.Left = labelTBHelp.Left;
+            }
+
+            if (labelTBHelp.Right > labelTBNetflixQualityCheck.Left)
+            {
+                labelTBNetflixQualityCheck.Left = labelTBHelp.Right + 15;
+                pictureBoxNetflixQualityCheck.Left = labelTBNetflixQualityCheck.Left;
+                checkBoxNetflixQualityCheck.Left = labelTBNetflixQualityCheck.Left;
+            }
 
             groupBoxMiscellaneous.Text = language.General;
             groupBoxGeneralRules.Text = language.Rules;
@@ -402,7 +478,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelMinDuration.Text = language.DurationMinimumMilliseconds;
             labelMaxDuration.Text = language.DurationMaximumMilliseconds;
             labelMinGapMs.Text = language.MinimumGapMilliseconds;
-            buttonGapChoose.Left = numericUpDownMinGapMs.Left + numericUpDownMinGapMs.Width + 5;
             labelMaxLines.Text = language.MaximumLines;
             if (labelSubMaxLen.Left + labelSubMaxLen.Width > numericUpDownSubtitleLineMaximumLength.Left)
             {
@@ -432,6 +507,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             if (labelMinGapMs.Left + labelMinGapMs.Width > numericUpDownMinGapMs.Left)
             {
                 numericUpDownMinGapMs.Left = labelMinGapMs.Left + labelMinGapMs.Width + 3;
+                buttonGapChoose.Left = numericUpDownMinGapMs.Left + numericUpDownMinGapMs.Width + 5;
             }
 
             if (labelMergeShortLines.Left + labelMergeShortLines.Width > comboBoxMergeShortLineLength.Left)
@@ -965,11 +1041,17 @@ namespace Nikse.SubtitleEdit.Forms.Options
             moveToTopToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.MoveToTop;
             moveToBottomToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.MoveToBottom;
 
-            labelFavoriteFormats.Left = listBoxFavoriteSubtitleFormats.Left;
-            labelFormats.Left = listBoxSubtitleFormats.Left;
             var cmoboBoxLeft = labelDefaultSubtitleFormat.Right > labelDefaultSaveAsFormat.Right ? labelDefaultSubtitleFormat.Right + 5 : labelDefaultSaveAsFormat.Right + 5;
             comboBoxSubtitleFormats.Left = cmoboBoxLeft;
             comboBoxSubtitleSaveAsFormats.Left = cmoboBoxLeft;
+            labelFavoriteFormats.Left = listBoxFavoriteSubtitleFormats.Left;
+            labelFormats.Left = listBoxSubtitleFormats.Left;
+            if (labelFormatsSearch.Right > textBoxFormatsSearch.Left)
+            {
+                textBoxFormatsSearch.Left = labelFormatsSearch.Right + 4;
+                buttonFormatsSearchClear.Left = textBoxFormatsSearch.Right + 4;
+                buttonFormatsSearchClear.Width = listBoxFavoriteSubtitleFormats.Width - labelFormatsSearch.Width - textBoxFormatsSearch.Width - 9;
+            }
 
             UiUtil.InitializeSubtitleFormatComboBox(comboBoxSubtitleFormats, Configuration.Settings.General.DefaultSubtitleFormat);
             UiUtil.InitializeSubtitleFormatComboBox(comboBoxSubtitleSaveAsFormats, Configuration.Settings.General.DefaultSaveAsFormat);
@@ -1409,6 +1491,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(createAndAdjustNode, language.MainCreateStartDownEndUp, nameof(Configuration.Settings.Shortcuts.MainCreateStartDownEndUp));
             AddNode(createAndAdjustNode, LanguageSettings.Current.Main.VideoControls.SetStartTime, nameof(Configuration.Settings.Shortcuts.MainCreateSetStart));
             AddNode(createAndAdjustNode, language.AdjustSetStartTimeKeepDuration, nameof(Configuration.Settings.Shortcuts.MainAdjustSetStartKeepDuration));
+            AddNode(createAndAdjustNode, language.AdjustVideoSetStartForAppropriateLine, nameof(Configuration.Settings.Shortcuts.MainAdjustVideoSetStartForAppropriateLine));
+            AddNode(createAndAdjustNode, language.AdjustVideoSetEndForAppropriateLine, nameof(Configuration.Settings.Shortcuts.MainAdjustVideoSetEndForAppropriateLine));
             AddNode(createAndAdjustNode, LanguageSettings.Current.Main.VideoControls.SetStartTimeAndOffsetTheRest, nameof(Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest));
             AddNode(createAndAdjustNode, LanguageSettings.Current.Main.VideoControls.SetStartTimeAndOffsetTheRest, nameof(Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest2));
             AddNode(createAndAdjustNode, language.AdjustSetStartAndOffsetTheWholeSubtitle, nameof(Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheWholeSubtitle));

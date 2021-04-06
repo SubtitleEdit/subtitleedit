@@ -833,6 +833,24 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 pre = pre.Replace(Settings.CustomStart, string.Empty);
                 post = post.Replace(Settings.CustomEnd, string.Empty);
             }
+
+            // fix empty ending dialog line "-"
+            var inputLines = text.SplitToLines();
+            if (inputLines.Count == 2)
+            {
+                if (inputLines[0].HasSentenceEnding() && inputLines[1] == "-")
+                {
+                    text = inputLines[0].TrimStart('-').TrimStart();
+                }
+            }
+            else if (inputLines.Count == 3)
+            {
+                if (inputLines[1].HasSentenceEnding() && inputLines[2] == "-")
+                {
+                    text = inputLines[0] + Environment.NewLine + inputLines[1];
+                }
+            }
+
             var st = new StrippableText(text, pre, post);
             var sb = new StringBuilder();
             var parts = st.StrippedText.Trim().SplitToLines();

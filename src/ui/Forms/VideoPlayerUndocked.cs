@@ -12,6 +12,8 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly Controls.VideoPlayerContainer _videoPlayerContainer;
         private readonly Keys _redockKeys;
 
+        private bool _autoSized;
+
         public bool RedockOnFullscreenEnd { get; set; }
 
         public Panel PanelContainer => panelContainer;
@@ -81,14 +83,31 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.A)
             {
-                if (_videoPlayerContainer.VideoWidth > 0 && _videoPlayerContainer.VideoHeight > 0)
+                if (_videoPlayerContainer.VideoWidth > 0 && _videoPlayerContainer.VideoHeight > 0 && !_autoSized)
                 {
                     int wDiff = _videoPlayerContainer.VideoWidth - _videoPlayerContainer.PanelPlayer.Width;
                     int hDiff = _videoPlayerContainer.VideoHeight - _videoPlayerContainer.PanelPlayer.Height;
                     Width += wDiff;
                     Height += hDiff;
-                    e.SuppressKeyPress = true;
+                    _autoSized = true;
                 }
+                else
+                {
+                    var parts = Configuration.Settings.General.UndockedVideoPosition.Split(';');
+                    if (parts.Length == 4)
+                    {
+                        if (int.TryParse(parts[2], out var width)
+                            && int.TryParse(parts[3], out var height))
+                        {
+                            Width = width;
+                            Height = height;
+                        }
+                    }
+
+                    _autoSized = false;
+                }
+
+                e.SuppressKeyPress = true;
             }
             else if (e.KeyCode == Keys.Up && e.Modifiers == Keys.Alt && IsFullscreen)
             {
@@ -168,5 +187,14 @@ namespace Nikse.SubtitleEdit.Forms
             Refresh();
         }
 
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (_mainForm.ProcessCmdKeyFromChildForm(ref msg, keyData))
+            {
+                return true;
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
     }
 }

@@ -15831,7 +15831,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (tabControlModes.SelectedTab == tabPageCreate && e.Modifiers == Keys.Alt && e.KeyCode == Keys.F9)
             {
                 StopAutoDuration();
-                ButtonSetEndClick(null, null);
+                SetEndTime();
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainCreateSetStart == e.KeyData)
@@ -15842,14 +15842,24 @@ namespace Nikse.SubtitleEdit.Forms
             else if (_shortcuts.MainCreateSetEnd == e.KeyData)
             {
                 StopAutoDuration();
-                ButtonSetEndClick(null, null);
+                SetEndTime();
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainAdjustVideoSetStartForAppropriateLine == e.KeyData && mediaPlayer.VideoPlayer != null)
+            {
+                VideoSetStartForAppropriateLine(mediaPlayer.CurrentPosition);
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainAdjustVideoSetEndForAppropriateLine == e.KeyData && mediaPlayer.VideoPlayer != null)
+            {
+                VideoSetEndForAppropriateLine(mediaPlayer.CurrentPosition);
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainAdjustSetEndAndPause == e.KeyData)
             {
                 StopAutoDuration();
                 mediaPlayer.Pause();
-                ButtonSetEndClick(null, null);
+                SetEndTime();
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainCreateSetEndAddNewAndGoToNew == e.KeyData)
@@ -16500,7 +16510,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var idx = selectedItem.Index;
                 var p = _subtitle.Paragraphs[idx];
-                List<double> nextSceneChanges = audioVisualizer.SceneChanges.Count > 0 ? audioVisualizer.SceneChanges.Where(x => x > p.EndTime.TotalSeconds + 0.01).ToList() : new List<double>();
+                var endTime = p.EndTime.TotalSeconds + (withGap ? MinGapBetweenLines / TimeCode.BaseUnit + 0.01 : 0.01);
+                List<double> nextSceneChanges = audioVisualizer.SceneChanges.Count > 0 ? audioVisualizer.SceneChanges.Where(x => x > endTime).ToList() : new List<double>();
                 if (nextSceneChanges.Count > 0)
                 {
                     var next = _subtitle.GetParagraphOrDefault(idx + 1);
@@ -16560,7 +16571,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var idx = selectedItem.Index;
                 var p = _subtitle.Paragraphs[idx];
-                List<double> previousSceneChanges = audioVisualizer.SceneChanges.Count > 0 ? audioVisualizer.SceneChanges.Where(x => x < p.StartTime.TotalSeconds - 0.01).ToList() : new List<double>();
+                var startTime = p.StartTime.TotalSeconds - (withGap ? MinGapBetweenLines / TimeCode.BaseUnit + 0.01 : 0.01);
+                List<double> previousSceneChanges = audioVisualizer.SceneChanges.Count > 0 ? audioVisualizer.SceneChanges.Where(x => x < startTime).ToList() : new List<double>();
                 if (previousSceneChanges.Count > 0)
                 {
                     var previous = _subtitle.GetParagraphOrDefault(idx - 1);
@@ -20334,7 +20346,40 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void VideoSetStartForAppropriateLine(double videoPosition)
+        {
+            var p = _subtitle.Paragraphs.LastOrDefault(paragraph => videoPosition > paragraph.StartTime.TotalSeconds);
+            if (p != null)
+            {
+                var index = _subtitle.Paragraphs.IndexOf(p);
+                if (videoPosition < p.EndTime.TotalSeconds)
+                {
+                    SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
+                    SetStartTime(false, videoPosition);
+                }
+                else
+                {
+                    var next = _subtitle.GetParagraphOrDefault(index + 1);
+                    if (next != null)
+                    {
+                        SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.Paragraphs.IndexOf(next), true);
+                        SetStartTime(false, videoPosition);
+                    }
+                }
+            }
+            else if (_subtitle.Paragraphs.Count > 0)
+            {
+                SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
+                SetStartTime(false, videoPosition);
+            }
+        }
+
         private void ButtonSetEndClick(object sender, EventArgs e)
+        {
+            SetEndTime();
+        }
+
+        private void SetEndTime()
         {
             if (SubtitleListview1.SelectedItems.Count == 1)
             {
@@ -20368,6 +20413,17 @@ namespace Nikse.SubtitleEdit.Forms
 
                 SubtitleListview1.SetStartTimeAndDuration(index, _subtitle.Paragraphs[index], _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
                 SetDurationInSeconds(_subtitle.Paragraphs[index].Duration.TotalSeconds);
+            }
+        }
+
+        private void VideoSetEndForAppropriateLine(double videoPosition)
+        {
+            var p = _subtitle.Paragraphs.LastOrDefault(paragraph => videoPosition > paragraph.StartTime.TotalSeconds);
+            if (p != null)
+            {
+                var index = _subtitle.Paragraphs.IndexOf(p);
+                SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
+                SetEndTime();
             }
         }
 
@@ -25132,9 +25188,10 @@ namespace Nikse.SubtitleEdit.Forms
             RestartHistory();
 
             var next = _subtitle.GetParagraphOrDefault(index + 1);
-            var oldNextParagraph = new Paragraph(next, false);
+            Paragraph oldNextParagraph = null;
             if (next != null)
             {
+                oldNextParagraph = new Paragraph(next, false);
                 next.StartTime.TotalMilliseconds = totalMillisecondsEnd + MinGapBetweenLines;
             }
 
@@ -25660,6 +25717,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolStripMenuItemMakeEmptyFromCurrentClick(object sender, EventArgs e)
         {
+            if (!IsSubtitleLoaded)
+            {
+                DisplaySubtitleNotLoadedMessage();
+                return;
+            }
+
             if (ContinueNewOrExit())
             {
                 bool isOriginalVisible = SubtitleListview1.IsOriginalTextColumnVisible;
@@ -26420,7 +26483,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var p = _subtitle.Paragraphs[_subtitleListViewIndex];
                 if (p.ToString() == _mainCreateStartDownEndUpParagraph.ToString())
                 {
-                    ButtonSetEndClick(null, null);
+                    SetEndTime();
                 }
 
                 _mainCreateStartDownEndUpParagraph = null;
@@ -26433,7 +26496,7 @@ namespace Nikse.SubtitleEdit.Forms
                     double videoPositionInSeconds = mediaPlayer.CurrentPosition;
                     if (p.StartTime.TotalSeconds + 0.1 < videoPositionInSeconds)
                     {
-                        ButtonSetEndClick(null, null);
+                        SetEndTime();
                     }
 
                     SubtitleListview1.SelectIndexAndEnsureVisible(_subtitleListViewIndex + 1, true);
@@ -30095,6 +30158,14 @@ namespace Nikse.SubtitleEdit.Forms
                     _subtitle.Footer = form.NewFooter;
                 }
             }
+        }
+
+        public bool ProcessCmdKeyFromChildForm(ref Message msg, Keys keyData)
+        {
+            Message messageCopy = msg;
+            messageCopy.HWnd = Handle;
+
+            return ProcessCmdKey(ref messageCopy, keyData);
         }
     }
 }

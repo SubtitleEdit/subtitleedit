@@ -243,7 +243,13 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 foreach (var category in storedCategories)
                 {
                     comboboxStorageCategories.Items.Add(category.Name);
-                    _storageCategories.Add(category);
+                    var categoryCopy = new AssaStorageCategory
+                    {
+                        IsDefault = category.IsDefault,
+                        Name = category.Name,
+                        Styles = category.Styles.ConvertAll(style => new SsaStyle(style))
+                    };
+                    _storageCategories.Add(categoryCopy);
                 }
 
                 _currentCategory = _storageCategories.Single(category => category.IsDefault);
