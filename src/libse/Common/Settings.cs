@@ -1979,6 +1979,8 @@ $HorzAlign          =   Center
         public string MainCreateInsertSubAtVideoPosNoTextBoxFocus { get; set; }
         public string MainCreateSetStart { get; set; }
         public string MainCreateSetEnd { get; set; }
+        public string MainAdjustVideoSetStartForAppropriateLine { get; set; }
+        public string MainAdjustVideoSetEndForAppropriateLine { get; set; }
         public string MainAdjustSetEndAndPause { get; set; }
         public string MainCreateSetEndAddNewAndGoToNew { get; set; }
         public string MainCreateStartDownEndUp { get; set; }
@@ -7478,6 +7480,18 @@ $HorzAlign          =   Center
                     shortcuts.MainCreateSetEnd = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainAdjustVideoSetStartForAppropriateLine");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustVideoSetStartForAppropriateLine = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustVideoSetEndForAppropriateLine");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustVideoSetEndForAppropriateLine = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainAdjustSetEndAndPause");
                 if (subNode != null)
                 {
@@ -8952,6 +8966,8 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainCreateInsertSubAtVideoPosNoTextBoxFocus", shortcuts.MainCreateInsertSubAtVideoPosNoTextBoxFocus);
             textWriter.WriteElementString("MainCreateSetStart", shortcuts.MainCreateSetStart);
             textWriter.WriteElementString("MainCreateSetEnd", shortcuts.MainCreateSetEnd);
+            textWriter.WriteElementString("MainAdjustVideoSetStartForAppropriateLine", shortcuts.MainAdjustVideoSetStartForAppropriateLine);
+            textWriter.WriteElementString("MainAdjustVideoSetEndForAppropriateLine", shortcuts.MainAdjustVideoSetEndForAppropriateLine);
             textWriter.WriteElementString("MainAdjustSetEndAndPause", shortcuts.MainAdjustSetEndAndPause);
             textWriter.WriteElementString("MainCreateSetEndAddNewAndGoToNew", shortcuts.MainCreateSetEndAddNewAndGoToNew);
             textWriter.WriteElementString("MainCreateStartDownEndUp", shortcuts.MainCreateStartDownEndUp);

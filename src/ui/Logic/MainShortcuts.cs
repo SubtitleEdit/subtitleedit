@@ -93,6 +93,8 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainCreateInsertSubAtVideoPosNoTextBoxFocus { get; set; }
         public Keys MainCreateSetStart { get; set; }
         public Keys MainCreateSetEnd { get; set; }
+        public Keys MainAdjustVideoSetStartForAppropriateLine { get; set; }
+        public Keys MainAdjustVideoSetEndForAppropriateLine { get; set; }
         public Keys MainAdjustSetEndAndPause { get; set; }
         public Keys MainCreateStartDownEndUp { get; set; }
         public Keys MainCreateSetEndAddNewAndGoToNew { get; set; }
@@ -311,6 +313,8 @@ namespace Nikse.SubtitleEdit.Logic
             MainCreateInsertSubAtVideoPosNoTextBoxFocus = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateInsertSubAtVideoPosNoTextBoxFocus);
             MainCreateSetStart = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetStart);
             MainCreateSetEnd = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetEnd);
+            MainAdjustVideoSetStartForAppropriateLine = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustVideoSetStartForAppropriateLine);
+            MainAdjustVideoSetEndForAppropriateLine = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustVideoSetEndForAppropriateLine);
             MainAdjustSetEndAndPause = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndPause);
             MainCreateStartDownEndUp = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateStartDownEndUp);
             MainCreateSetEndAddNewAndGoToNew = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetEndAddNewAndGoToNew);
