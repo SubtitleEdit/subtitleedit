@@ -4674,9 +4674,18 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowStatus(string.Format(_language.ConvertedToX, format.FriendlyName));
             }
 
-            if (_fileName != null && _oldSubtitleFormat != null && _fileName.EndsWith(_oldSubtitleFormat.Extension, StringComparison.Ordinal))
+            if (_fileName != null && _oldSubtitleFormat != null)
             {
-                _fileName = _fileName.Substring(0, _fileName.Length - _oldSubtitleFormat.Extension.Length) + format.Extension;
+                if (_fileName.Contains('.'))
+                {
+                    _fileName = _fileName.Substring(0, _fileName.LastIndexOf('.')) + format.Extension;
+                }
+                else
+                {
+                    _fileName += format.Extension;
+                }
+
+                SetTitle();
             }
 
             if ((formatType == typeof(AdvancedSubStationAlpha) ||
