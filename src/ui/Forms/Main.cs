@@ -3293,6 +3293,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.General.CurrentVideoOffsetInMs = 0;
 
                 var oldSaveFormat = Configuration.Settings.General.LastSaveAsFormat;
+                _oldSubtitleFormat = format;
                 SetCurrentFormat(format);
                 Configuration.Settings.General.LastSaveAsFormat = oldSaveFormat;
 
@@ -4143,6 +4144,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
 
+                    _oldSubtitleFormat = format;
                     return DialogResult.OK;
                 }
 
@@ -4313,6 +4315,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.Save();
                 new BookmarkPersistence(_subtitle, _fileName).Save();
                 _fileDateTime = File.GetLastWriteTime(_fileName);
+                _oldSubtitleFormat = format;
                 ShowStatus(string.Format(_language.SavedSubtitleX, _fileName));
                 if (formatType == typeof(NetflixTimedText))
                 {
@@ -4676,8 +4679,6 @@ namespace Nikse.SubtitleEdit.Forms
                 _fileName = _fileName.Substring(0, _fileName.Length - _oldSubtitleFormat.Extension.Length) + format.Extension;
             }
 
-            _oldSubtitleFormat = format;
-
             if ((formatType == typeof(AdvancedSubStationAlpha) ||
                  formatType == typeof(SubStationAlpha) ||
                  formatType == typeof(CsvNuendo)) && (_subtitle.Paragraphs.Any(p => !string.IsNullOrEmpty(p.Actor)) ||
@@ -4778,6 +4779,10 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
                 RestoreSubtitleListviewIndices();
             }
+            else
+            {
+                SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.Extra);
+            }
 
             ShowHideTextBasedFeatures(format);
 
@@ -4792,15 +4797,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             return new List<string>();
-        }
-
-        private void ComboBoxSubtitleFormatsEnter(object sender, EventArgs e)
-        {
-            SubtitleFormat format = GetCurrentSubtitleFormat();
-            if (format != null)
-            {
-                _oldSubtitleFormat = format;
-            }
         }
 
         private SubtitleFormat GetCurrentSubtitleFormat()
@@ -29678,7 +29674,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void comboBoxSubtitleFormats_DropDownClosed(object sender, EventArgs e)
         {
             MenuClosed(sender, e);
-            if (_oldSubtitleFormat.FriendlyName != GetCurrentSubtitleFormat().FriendlyName)
+            if (_oldSubtitleFormat == null || _oldSubtitleFormat.FriendlyName != GetCurrentSubtitleFormat().FriendlyName)
             {
                 ComboBoxSubtitleFormatsSelectedIndexChanged(sender, e);
             }
@@ -29686,7 +29682,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void comboBoxSubtitleFormats_DropDown(object sender, EventArgs e)
         {
-            _oldSubtitleFormat = GetCurrentSubtitleFormat();
             MenuOpened(sender, e);
         }
 
