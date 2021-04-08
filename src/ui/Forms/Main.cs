@@ -9697,30 +9697,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyData == _shortcuts.MainTextBoxBreakAtCursorPosition)
             {
-                var text = Utilities.ReSplit(textBoxListViewText.Text, textBoxListViewText.SelectionStart);
-                if (text != textBoxListViewText.Text)
-                {
-                    MakeHistoryForUndo(string.Format(_language.BeforeReplace, LanguageSettings.Current.Settings.MainTextBoxAutoBreakFromPos));
-                    textBoxListViewText.Text = text;
-                    var lines = textBoxListViewText.Text.SplitToLines();
-                    if (lines.Count > 0)
-                    {
-                        textBoxListViewText.SelectionStart = lines[0].Length;
-                    }
-                }
-
+                AutoBreakAtFirstSpaceFromPos(textBoxListViewText);
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainTextBoxBreakAtCursorPositionAndGoToNext)
             {
-                var text = Utilities.ReSplit(textBoxListViewText.Text, textBoxListViewText.SelectionStart);
-                if (text != textBoxListViewText.Text)
-                {
-                    MakeHistoryForUndo(string.Format(_language.BeforeReplace, LanguageSettings.Current.Settings.MainTextBoxAutoBreakFromPosAndGoToNext));
-                    textBoxListViewText.Text = text;
-                    ButtonNextClick(null, null);
-                }
-
+                AutoBreakAtFirstSpaceFromPos(textBoxListViewText, true);
                 e.SuppressKeyPress = true;
             }
             else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.I)
@@ -12099,6 +12081,29 @@ namespace Nikse.SubtitleEdit.Forms
             if (textCaretPos > 0)
             {
                 textBoxListViewText.SelectionStart = textCaretPos;
+            }
+        }
+
+        private void AutoBreakAtFirstSpaceFromPos(SETextBox textBox, bool goToNext = false)
+        {
+            var text = Utilities.ReSplit(textBox.Text, textBox.SelectionStart);
+            if (text != textBox.Text)
+            {
+                MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.MainTextBoxAutoBreakFromPos));
+                textBox.Text = text;
+
+                if (goToNext)
+                {
+                    ButtonNextClick(null, null);
+                }
+                else
+                {
+                    var lines = textBox.Text.SplitToLines();
+                    if (lines.Count > 0)
+                    {
+                        textBox.SelectionStart = lines[0].Length;
+                    }
+                }
             }
         }
 
@@ -24895,19 +24900,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyData == _shortcuts.MainTextBoxBreakAtCursorPosition)
             {
-                textBoxListViewTextOriginal.Text = Utilities.ReSplit(textBoxListViewTextOriginal.Text, textBoxListViewTextOriginal.SelectionStart);
-                var lines = textBoxListViewTextOriginal.Text.SplitToLines();
-                if (lines.Count > 0)
-                {
-                    textBoxListViewTextOriginal.SelectionStart = lines[0].Length;
-                }
-
+                AutoBreakAtFirstSpaceFromPos(textBoxListViewTextOriginal);
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainTextBoxBreakAtCursorPositionAndGoToNext)
             {
-                textBoxListViewText.Text = Utilities.ReSplit(textBoxListViewText.Text, textBoxListViewText.SelectionStart);
-                ButtonNextClick(null, null);
+                AutoBreakAtFirstSpaceFromPos(textBoxListViewTextOriginal, true);
                 e.SuppressKeyPress = true;
             }
             else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.I)
