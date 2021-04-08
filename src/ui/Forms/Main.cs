@@ -24881,7 +24881,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _shortcuts.MainTextBoxBreakAtCursorPosition)
+            else if (e.KeyData == _shortcuts.MainTextBoxBreakAtCursorPositionAndGoToNext)
             {
                 textBoxListViewText.Text = Utilities.ReSplit(textBoxListViewText.Text, textBoxListViewText.SelectionStart);
                 ButtonNextClick(null, null);
