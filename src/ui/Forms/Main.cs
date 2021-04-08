@@ -3791,6 +3791,19 @@ namespace Nikse.SubtitleEdit.Forms
 
                 reopenToolStripMenuItem.DropDownItems.AddRange(dropDownItems.ToArray());
                 UiUtil.FixFonts(reopenToolStripMenuItem);
+
+                var tss = new ToolStripSeparator();
+                UiUtil.FixFonts(tss);
+                reopenToolStripMenuItem.DropDownItems.Add(tss);
+
+                var clearHistoryMenuItem = new ToolStripMenuItem(LanguageSettings.Current.DvdSubRip.Clear);
+                clearHistoryMenuItem.Click += (sender, args) =>
+                {
+                    Configuration.Settings.RecentFiles.Files.Clear();
+                    UpdateRecentFilesUI();
+                };
+                UiUtil.FixFonts(clearHistoryMenuItem);
+                reopenToolStripMenuItem.DropDownItems.Add(clearHistoryMenuItem);
             }
             else
             {
@@ -3835,12 +3848,20 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Configuration.Settings.RecentFiles.Files = Configuration.Settings.RecentFiles.Files
                         .Where(p => !notExistingFiles.Contains(p.FileName)).ToList();
-                    for (var index = reopenToolStripMenuItem.DropDownItems.Count - 1; index >= 0; index--)
+                    if (Configuration.Settings.RecentFiles.Files.Count == 0)
                     {
-                        ToolStripItem item = reopenToolStripMenuItem.DropDownItems[index];
-                        if (notExistingFiles.Contains((string)item.Tag))
+                        reopenToolStripMenuItem.DropDownItems.Clear();
+                        reopenToolStripMenuItem.Visible = false;
+                    }
+                    else
+                    {
+                        for (var index = reopenToolStripMenuItem.DropDownItems.Count - 1; index >= 0; index--)
                         {
-                            reopenToolStripMenuItem.DropDownItems.RemoveAt(index);
+                            ToolStripItem item = reopenToolStripMenuItem.DropDownItems[index];
+                            if (notExistingFiles.Contains((string)item.Tag))
+                            {
+                                reopenToolStripMenuItem.DropDownItems.RemoveAt(index);
+                            }
                         }
                     }
                 }
@@ -7731,9 +7752,11 @@ namespace Nikse.SubtitleEdit.Forms
                 cm.Items.Add(tss);
 
                 // End time
-                var contextMenuStripLvHeaderEndTimeToolStripMenuItem = new ToolStripMenuItem(LanguageSettings.Current.General.EndTime);
-                contextMenuStripLvHeaderEndTimeToolStripMenuItem.CheckOnClick = true;
-                contextMenuStripLvHeaderEndTimeToolStripMenuItem.Checked = Configuration.Settings.Tools.ListViewShowColumnEndTime;
+                var contextMenuStripLvHeaderEndTimeToolStripMenuItem = new ToolStripMenuItem(LanguageSettings.Current.General.EndTime)
+                {
+                    CheckOnClick = true,
+                    Checked = Configuration.Settings.Tools.ListViewShowColumnEndTime
+                };
                 contextMenuStripLvHeaderEndTimeToolStripMenuItem.Click += (sender2, e2) =>
                 {
                     SubtitleListview1.BeginUpdate();
