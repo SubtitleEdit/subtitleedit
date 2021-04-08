@@ -69,6 +69,7 @@ namespace Nikse.SubtitleEdit.Forms
         private long _listViewTextTicks = -1;
         private string _listViewOriginalTextUndoLast;
         private long _listViewOriginalTextTicks = -1;
+        private long _sourceTextTicks = -1;
 
         private int _videoAudioTrackNumber = -1;
         public int VideoAudioTrackNumber
@@ -5511,6 +5512,7 @@ namespace Nikse.SubtitleEdit.Forms
             ShowSourceLineNumber();
             _sourceViewChange = true;
             labelStatus.Text = string.Empty;
+            _sourceTextTicks = DateTime.UtcNow.Ticks;
         }
 
         private bool ShowProfileInStatusBar => Configuration.Settings.General.CurrentProfile != "Default";
@@ -6631,6 +6633,36 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
                 RestoreSubtitleListviewIndices();
             }
+        }
+
+        private void ReloadFromSourceInSourceView()
+        {
+            if (!_sourceViewChange || string.IsNullOrWhiteSpace(textBoxSource.Text))
+            {
+                return;
+            }
+
+            SaveSubtitleListviewIndices();
+            var format = GetCurrentSubtitleFormat();
+            var list = textBoxSource.Lines.ToList();
+            format = new Subtitle().ReloadLoadSubtitle(list, null, format);
+            if (format == null)
+            {
+                return;
+            }
+
+            _sourceViewChange = false;
+            MakeHistoryForUndo(_language.BeforeChangesMadeInSourceView);
+            _subtitle.ReloadLoadSubtitle(list, null, format);
+
+            if (Configuration.Settings.General.CurrentVideoOffsetInMs != 0)
+            {
+                _subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-Configuration.Settings.General.CurrentVideoOffsetInMs));
+            }
+
+            _subtitleListViewIndex = -1;
+            SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+            RestoreSubtitleListviewIndices();
         }
 
         private void HelpToolStripMenuItem1Click(object sender, EventArgs e)
@@ -19774,6 +19806,11 @@ namespace Nikse.SubtitleEdit.Forms
                 Text = Text.RemoveChar('*').TrimEnd();
             }
 
+            if (InSourceView && (DateTime.UtcNow.Ticks - _sourceTextTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
+            {
+                ReloadFromSourceInSourceView();
+            }
+
             ShowSubtitleTimer.Start();
         }
 
@@ -22874,6 +22911,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             textBoxListViewText.Focus();
             audioVisualizer.NewSelectionParagraph = null;
+            UpdateSourceView();
 
             ShowStatus(string.Format(_language.VideoControls.NewTextInsertAtX, newParagraph.StartTime.ToShortString()));
             audioVisualizer.Invalidate();
