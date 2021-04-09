@@ -6675,8 +6675,16 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ReloadFromSourceInSourceView()
         {
-            if (!_sourceViewChange || string.IsNullOrWhiteSpace(textBoxSource.Text))
+            if (!_sourceViewChange)
             {
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(textBoxSource.Text))
+            {
+                _sourceViewChange = false;
+                MakeHistoryForUndo(_language.BeforeChangesMadeInSourceView);
+                _subtitle.Paragraphs.Clear();
                 return;
             }
 
@@ -19858,6 +19866,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 ReloadFromSourceInSourceView();
                 _sourceTextTicks = -1;
+                audioVisualizer.Invalidate();
             }
 
             ShowSubtitleTimer.Start();
@@ -20525,8 +20534,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             var newParagraph = InsertNewTextAtVideoPosition();
 
-            textBoxListViewText.Focus();
-            timerAutoDuration.Start();
+            if (!InSourceView)
+            {
+                textBoxListViewText.Focus();
+                timerAutoDuration.Start();
+            }
 
             ShowStatus(string.Format(_language.VideoControls.NewTextInsertAtX, newParagraph.StartTime.ToShortString()));
         }
