@@ -77,6 +77,7 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.labelStatus = new System.Windows.Forms.Label();
+            this.checkBoxUseTimeCodeFromCurrentFile = new System.Windows.Forms.CheckBox();
             this.groupBoxImportText.SuspendLayout();
             this.contextMenuStripListView.SuspendLayout();
             this.groupBoxImportOptions.SuspendLayout();
@@ -203,6 +204,7 @@
             this.groupBoxImportOptions.Controls.Add(this.checkBoxRemoveLinesWithoutLetters);
             this.groupBoxImportOptions.Controls.Add(this.groupBoxSplitting);
             this.groupBoxImportOptions.Controls.Add(this.checkBoxRemoveEmptyLines);
+            this.groupBoxImportOptions.Controls.Add(this.checkBoxUseTimeCodeFromCurrentFile);
             this.groupBoxImportOptions.Location = new System.Drawing.Point(642, 12);
             this.groupBoxImportOptions.Name = "groupBoxImportOptions";
             this.groupBoxImportOptions.Size = new System.Drawing.Size(402, 410);
@@ -693,6 +695,18 @@
             this.labelStatus.TabIndex = 106;
             this.labelStatus.Text = "labelStatus";
             // 
+            // checkBoxUseTimeCodeFromCurrentFile
+            // 
+            this.checkBoxUseTimeCodeFromCurrentFile.AutoSize = true;
+            this.checkBoxUseTimeCodeFromCurrentFile.Enabled = false;
+            this.checkBoxUseTimeCodeFromCurrentFile.Location = new System.Drawing.Point(157, 250);
+            this.checkBoxUseTimeCodeFromCurrentFile.Name = "checkBoxUseTimeCodeFromCurrentFile";
+            this.checkBoxUseTimeCodeFromCurrentFile.Size = new System.Drawing.Size(152, 17);
+            this.checkBoxUseTimeCodeFromCurrentFile.TabIndex = 8;
+            this.checkBoxUseTimeCodeFromCurrentFile.Text = "Take time from current file";
+            this.checkBoxUseTimeCodeFromCurrentFile.UseVisualStyleBackColor = true;
+            this.checkBoxUseTimeCodeFromCurrentFile.CheckedChanged += new System.EventHandler(this.checkBoxUseTimeCodeFromCurrentFile_CheckedChanged);
+            // 
             // ImportText
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -714,9 +728,9 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Import text";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ImportText_FormClosing);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ImportTextKeyDown);
-            this.ResizeEnd += new System.EventHandler(this.ImportText_ResizeEnd);
             this.Shown += new System.EventHandler(this.ImportText_Shown);
+            this.ResizeEnd += new System.EventHandler(this.ImportText_ResizeEnd);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ImportTextKeyDown);
             this.groupBoxImportText.ResumeLayout(false);
             this.groupBoxImportText.PerformLayout();
             this.contextMenuStripListView.ResumeLayout(false);
@@ -791,5 +805,6 @@
         private System.Windows.Forms.ComboBox comboBoxLineMode;
         private System.Windows.Forms.CheckBox checkBoxTakeTimeFromFileNames;
         private System.Windows.Forms.Label labelStatus;
+        private System.Windows.Forms.CheckBox checkBoxUseTimeCodeFromCurrentFile;
     }
 }

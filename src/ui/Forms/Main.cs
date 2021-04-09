@@ -5494,11 +5494,28 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxSource.SelectAll();
                 e.SuppressKeyPress = true;
             }
-
-            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.D)
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.D)
             {
                 textBoxSource.SelectionLength = 0;
                 e.SuppressKeyPress = true;
+            }
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.I)
+            {
+                var start = textBoxSource.SelectionStart;
+                string text;
+                if (textBoxSource.SelectedText.StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
+                {
+                    text = HtmlUtil.RemoveOpenCloseTags(textBoxSource.SelectedText, HtmlUtil.TagItalic);
+                    textBoxSource.SelectedText = text;
+                }
+                else
+                {
+                    text = "<i>" + textBoxSource.SelectedText + "</i>";
+                    textBoxSource.SelectedText = "<i>" + textBoxSource.SelectedText + "</i>";
+                }
+                e.SuppressKeyPress = true;
+                textBoxSource.SelectionStart = start;
+                textBoxSource.SelectionLength = text.Length;
             }
         }
 
@@ -15930,6 +15947,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.SetStartTimeAndDuration(index, _subtitle.Paragraphs[index], _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
                     SetDurationInSeconds(_subtitle.Paragraphs[index].Duration.TotalSeconds);
                     ButtonInsertNewTextClick(null, null);
+                    UpdateSourceView();
                 }
             }
             else if (_shortcuts.MainCreateStartDownEndUp == e.KeyData)
@@ -17222,6 +17240,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             SubtitleListview1.SyntaxColorLineBackground(_subtitle.Paragraphs, i, p);
+            UpdateSourceView();
         }
 
         private void MoveEndCurrent(int ms, bool keepGapNextIfClose)
@@ -17327,6 +17346,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             SubtitleListview1.SyntaxColorLineBackground(_subtitle.Paragraphs, i, p);
+            UpdateSourceView();
         }
 
         private void ShowNextSubtitleLabel()
@@ -18989,7 +19009,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ImportPlainText(string fileName)
         {
-            using (var importText = new ImportText(fileName, this))
+            using (var importText = new ImportText(fileName, _subtitle, this))
             {
                 if (importText.ShowDialog(this) == DialogResult.OK)
                 {
@@ -19806,9 +19826,10 @@ namespace Nikse.SubtitleEdit.Forms
                 Text = Text.RemoveChar('*').TrimEnd();
             }
 
-            if (InSourceView && (DateTime.UtcNow.Ticks - _sourceTextTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
+            if (InSourceView && _sourceTextTicks != -1 && (DateTime.UtcNow.Ticks - _sourceTextTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
             {
                 ReloadFromSourceInSourceView();
+                _sourceTextTicks = -1;
             }
 
             ShowSubtitleTimer.Start();
@@ -20455,6 +20476,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 SubtitleListview1.SetStartTimeAndDuration(index, _subtitle.Paragraphs[index], _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
                 SetDurationInSeconds(_subtitle.Paragraphs[index].Duration.TotalSeconds);
+                UpdateSourceView();
             }
         }
 
@@ -20541,6 +20563,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
+            UpdateSourceView();
             return newParagraph;
         }
 
@@ -20873,17 +20896,19 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void UpdateSourceView()
         {
-            if (InSourceView)
+            if (!InSourceView)
             {
-                var textBoxSourceFocused = textBoxSource.Focused;
-                var caretPosition = textBoxSource.SelectionStart;
-                ShowSource();
-                textBoxSource.SelectionStart = caretPosition;
-                textBoxSource.ScrollToCaret();
-                if (textBoxSourceFocused)
-                {
-                    textBoxSource.Focus();
-                }
+                return;
+            }
+
+            var textBoxSourceFocused = textBoxSource.Focused;
+            var caretPosition = textBoxSource.SelectionStart;
+            ShowSource();
+            textBoxSource.SelectionStart = caretPosition;
+            textBoxSource.ScrollToCaret();
+            if (textBoxSourceFocused)
+            {
+                textBoxSource.Focus();
             }
         }
 
@@ -21558,6 +21583,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 _makeHistoryPaused = false;
+                UpdateSourceView();
             }
         }
 
@@ -22934,7 +22960,19 @@ namespace Nikse.SubtitleEdit.Forms
         private void addParagraphAndPasteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             addParagraphHereToolStripMenuItem_Click(sender, e);
-            textBoxListViewText.Text = Clipboard.GetText();
+            if (InSourceView)
+            {
+                var idx = FirstSelectedIndex;
+                if (FirstSelectedIndex >= 0)
+                {
+                    _subtitle.Paragraphs[idx].Text = Clipboard.GetText();
+                }
+                UpdateSourceView();
+            }
+            else
+            {
+                textBoxListViewText.Text = Clipboard.GetText();
+            }
         }
 
         private void mergeWithPreviousToolStripMenuItem_Click(object sender, EventArgs e)
@@ -25242,6 +25280,7 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.SelectIndexAndEnsureVisible(index + 1, true);
             ShowStatus(string.Format(_language.VideoControls.AdjustedViaEndTime, p.StartTime.ToShortString()));
             audioVisualizer.Invalidate();
+            UpdateSourceView();
         }
 
         public void SetCurrentViaEndPositionAndGotoNext(int index, bool goToNext)
@@ -25302,6 +25341,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             ShowStatus(string.Format(_language.VideoControls.AdjustedViaEndTime, p.StartTime.ToShortString()));
             audioVisualizer.Invalidate();
+            UpdateSourceView();
         }
 
         public void SetCurrentStartAutoDurationAndGotoNext(int index)
@@ -25361,6 +25401,7 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitleListViewIndex = -1;
             SubtitleListview1.SelectIndexAndEnsureVisible(index + 1, true);
             audioVisualizer.Invalidate();
+            UpdateSourceView();
         }
 
         public void SetCurrentEndNextStartAndGoToNext(int index)
@@ -25437,6 +25478,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             UpdateOriginalTimeCodes(p1, p2);
             audioVisualizer.Invalidate();
+            UpdateSourceView();
         }
 
         private void EditSelectAllToolStripMenuItemClick(object sender, EventArgs e)
@@ -27787,7 +27829,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            using (var importText = new ImportText())
+            using (var importText = new ImportText(null, _subtitle, null))
             {
                 if (importText.ShowDialog(this) == DialogResult.OK)
                 {

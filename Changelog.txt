@@ -22,6 +22,7 @@
    * Update Romanian translation - thx Mircea
    * Update Basque translation - thx Azpidatziak
    * Update Korean translation - thx domddol
+   * Update Portuguese translation - thx hugok79
    * Minor tweaks for font/appearance settings
    * Only set listview backcolor if visual styles enabled - thx ask2018/OmrSi
    * Optimize merge lines with same text/time
@@ -42,6 +43,7 @@
    * Fix non-ASCII chars when enc 20269 is unavailable (Linux) - thx jason
    * Fix a crash in RTL when activating syntax coloring - thx OmrSi
    * Fix auto translate shortcut - thx xmrea
+   * Some fixes for editing source view - thx PreetM07
 
 
 3.6.0 (18th February 2021)
