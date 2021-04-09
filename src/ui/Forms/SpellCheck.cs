@@ -105,7 +105,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonAbort.Text = LanguageSettings.Current.SpellCheck.Abort;
             buttonEditWholeText.Text = LanguageSettings.Current.SpellCheck.EditWholeText;
             checkBoxAutoChangeNames.Text = LanguageSettings.Current.SpellCheck.AutoFixNames;
-            checkBoxAutoChangeNames.Checked = Configuration.Settings.Tools.SpellCheckAutoChangeNames;
+            checkBoxAutoChangeNames.Checked = Configuration.Settings.Tools.SpellCheckAutoChangeNameCasing;
             groupBoxEditWholeText.Text = LanguageSettings.Current.SpellCheck.EditWholeText;
             buttonChangeWholeText.Text = LanguageSettings.Current.SpellCheck.Change;
             buttonSkipText.Text = LanguageSettings.Current.SpellCheck.SkipOnce;
@@ -319,7 +319,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SpellCheck_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Configuration.Settings.Tools.SpellCheckAutoChangeNames = AutoFixNames;
+            Configuration.Settings.Tools.SpellCheckAutoChangeNameCasing = AutoFixNames;
             if (e.CloseReason == CloseReason.UserClosing)
             {
                 DialogResult = DialogResult.Abort;
