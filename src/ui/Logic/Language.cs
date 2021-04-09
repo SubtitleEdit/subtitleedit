@@ -1059,6 +1059,7 @@ namespace Nikse.SubtitleEdit.Logic
                 RemoveEmptyLines = "Remove empty lines",
                 RemoveLinesWithoutLetters = "Remove lines without letters",
                 GenerateTimeCodes = "Generate time codes",
+                TakeTimeFromCurrentFile = "Take time from current file",
                 TakeTimeFromFileName = "Take time from file name",
                 GapBetweenSubtitles = "Gap between subtitles (milliseconds)",
                 Auto = "Auto",
