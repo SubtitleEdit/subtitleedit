@@ -117,7 +117,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string MusicSymbol { get; set; }
         public string MusicSymbolReplace { get; set; }
         public string UnicodeSymbolsToInsert { get; set; }
-        public bool SpellCheckAutoChangeNames { get; set; }
+        public bool SpellCheckAutoChangeNameCasing { get; set; }
         public bool SpellCheckAutoChangeNamesUseSuggestions { get; set; }
         public bool CheckOneLetterWords { get; set; }
         public bool SpellCheckEnglishAllowInQuoteAsIng { get; set; }
@@ -341,8 +341,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                                  "<s M/>,<s m/>," + // music symbols by subtitle creator
                                  "#,*,¶"; // common music symbols
             UnicodeSymbolsToInsert = "♪;♫;°;☺;☹;♥;©;☮;☯;Σ;∞;≡;⇒;π";
-            SpellCheckAutoChangeNames = true;
-            SpellCheckAutoChangeNamesUseSuggestions = true;
+            SpellCheckAutoChangeNameCasing = false;
+            SpellCheckAutoChangeNamesUseSuggestions = false;
             OcrFixUseHardcodedRules = true;
             OcrBinaryImageCompareRgbThreshold = 200;
             OcrTesseract4RgbThreshold = 200;
@@ -3717,10 +3717,10 @@ $HorzAlign          =   Center
                 settings.Tools.UnicodeSymbolsToInsert = subNode.InnerText;
             }
 
-            subNode = node.SelectSingleNode("SpellCheckAutoChangeNames");
+            subNode = node.SelectSingleNode("SpellCheckAutoChangeNameCasing");
             if (subNode != null)
             {
-                settings.Tools.SpellCheckAutoChangeNames = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                settings.Tools.SpellCheckAutoChangeNameCasing = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("SpellCheckAutoChangeNamesUseSuggestions");
@@ -8257,7 +8257,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MusicSymbol", settings.Tools.MusicSymbol);
                 textWriter.WriteElementString("MusicSymbolReplace", settings.Tools.MusicSymbolReplace);
                 textWriter.WriteElementString("UnicodeSymbolsToInsert", settings.Tools.UnicodeSymbolsToInsert);
-                textWriter.WriteElementString("SpellCheckAutoChangeNames", settings.Tools.SpellCheckAutoChangeNames.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("SpellCheckAutoChangeNameCasing", settings.Tools.SpellCheckAutoChangeNameCasing.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SpellCheckAutoChangeNamesUseSuggestions", settings.Tools.SpellCheckAutoChangeNamesUseSuggestions.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SpellCheckOneLetterWords", settings.Tools.CheckOneLetterWords.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SpellCheckEnglishAllowInQuoteAsIng", settings.Tools.SpellCheckEnglishAllowInQuoteAsIng.ToString(CultureInfo.InvariantCulture));
