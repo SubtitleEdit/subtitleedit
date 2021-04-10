@@ -841,6 +841,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
     <RemoveEmptyLines>Remove empty lines</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>Remove lines without letters</RemoveLinesWithoutLetters>
     <GenerateTimeCodes>Generate time codes</GenerateTimeCodes>
+    <TakeTimeFromCurrentFile>Take time from current file</TakeTimeFromCurrentFile>
     <TakeTimeFromFileName>Take time from file name</TakeTimeFromFileName>
     <GapBetweenSubtitles>Gap between subtitles (milliseconds)</GapBetweenSubtitles>
     <Auto>Auto</Auto>
