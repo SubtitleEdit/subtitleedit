@@ -2062,29 +2062,9 @@ namespace Nikse.SubtitleEdit.Core.Common
                 text = text.Remove(text.Length - 6, 1);
             }
 
-            while (text.EndsWith(" !</i>", StringComparison.Ordinal))
-            {
-                text = text.Remove(text.Length - 6, 1);
-            }
-
-            while (text.EndsWith(" ?</i>", StringComparison.Ordinal))
-            {
-                text = text.Remove(text.Length - 6, 1);
-            }
-
             while (text.Contains(" .</i>" + Environment.NewLine))
             {
                 text = text.Replace(" .</i>" + Environment.NewLine, ".</i>" + Environment.NewLine);
-            }
-
-            while (text.Contains(" !</i>" + Environment.NewLine))
-            {
-                text = text.Replace(" !</i>" + Environment.NewLine, "!</i>" + Environment.NewLine);
-            }
-
-            while (text.Contains(" ?</i>" + Environment.NewLine))
-            {
-                text = text.Replace(" ?</i>" + Environment.NewLine, "?</i>" + Environment.NewLine);
             }
 
             if (text.StartsWith("- ... ", StringComparison.Ordinal))
@@ -2099,6 +2079,26 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             if (language != "fr") // special rules for French
             {
+                while (text.EndsWith(" !</i>", StringComparison.Ordinal))
+                {
+                    text = text.Remove(text.Length - 6, 1);
+                }
+
+                while (text.EndsWith(" ?</i>", StringComparison.Ordinal))
+                {
+                    text = text.Remove(text.Length - 6, 1);
+                }
+
+                while (text.Contains(" !</i>" + Environment.NewLine))
+                {
+                    text = text.Replace(" !</i>" + Environment.NewLine, "!</i>" + Environment.NewLine);
+                }
+
+                while (text.Contains(" ?</i>" + Environment.NewLine))
+                {
+                    text = text.Replace(" ?</i>" + Environment.NewLine, "?</i>" + Environment.NewLine);
+                }
+
                 text = text.Replace("... ?", "...?");
                 text = text.Replace("... !", "...!");
 
@@ -2173,7 +2173,6 @@ namespace Nikse.SubtitleEdit.Core.Common
                     text = text.Replace(" ?", "?");
                 }
             }
-
 
             if (language == "ar") // special rules for Arabic
             {
