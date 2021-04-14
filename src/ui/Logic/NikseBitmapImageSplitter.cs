@@ -549,7 +549,7 @@ namespace Nikse.SubtitleEdit.Logic
                     if (keysInSequence > 2 && lastTransparentY - startY > minLineHeight)
                     {
                         var part = bmp.CopyRectangle(new Rectangle(0, startY, bmp.Width, lastTransparentY - startY - 1));
-                        if (!part.IsImageOnlyTransparent() && part.GetNonTransparentHeight() >= minLineHeight)
+                        if (!part.IsImageOnlyTransparent() && part.GetNonTransparentHeight() + keysInSequence * 0.4 >= minLineHeight)
                         {
                             var croppedTop = part.CropTopTransparent(0);
                             parts.Add(new ImageSplitterItem(0, startY + croppedTop, part));
