@@ -123,6 +123,8 @@ namespace Nikse.SubtitleEdit.Controls
         private readonly Label _labelVideoPlayerName = new Label();
         private readonly Label _labelVolume = new Label();
         private readonly ToolTip _currentPositionToolTip = new ToolTip();
+        private int _lastCurrentPositionToolTipX;
+        private int _lastCurrentPositionToolTipY;
         private List<MatroskaChapter> _chapters = null;
 
         public List<MatroskaChapter> Chapters
@@ -1788,7 +1790,12 @@ namespace Nikse.SubtitleEdit.Controls
             if (VideoPlayer != null)
             {
                 string toolTiptext = CurrentPositionToolTipText(e.X - 4);
-                _currentPositionToolTip.Show(toolTiptext, _pictureBoxProgressbarBackground, e.X - 10, e.Y - 25);
+                if (e.X != _lastCurrentPositionToolTipX || e.Y != _lastCurrentPositionToolTipY)
+                {
+                    _currentPositionToolTip.Show(toolTiptext, _pictureBoxProgressbarBackground, e.X - 10, e.Y - 25);
+                    _lastCurrentPositionToolTipX = e.X;
+                    _lastCurrentPositionToolTipY = e.Y;
+                }
             }
         }
 
