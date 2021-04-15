@@ -124,8 +124,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 return null; // probably not correct index
             }
-
-            int maxIndex = timeStartIndex + 10 + textLength;
+            
+            int maxIndex = timeStartIndex + 11 + textLength;
 
             var sb = new StringBuilder();
             index = feIndex + 3;
@@ -147,8 +147,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
 
                         sb.AppendLine(Encoding.UTF8.GetString(buffer, textBegin, textIndex - textBegin));
-                        textBegin = textIndex + 7;
-                        textIndex += 6;
+                        textBegin = textIndex + 1;
                     }
                 }
                 else if (buffer[textIndex] == 0xFF)
