@@ -4123,6 +4123,7 @@ namespace Nikse.SubtitleEdit.Forms
                             Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
                             Configuration.Settings.Save();
                             UpdateRecentFilesUI();
+                            _changeSubtitleHash = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
                         }
 
                         break;
