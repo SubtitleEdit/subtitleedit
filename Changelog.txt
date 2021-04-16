@@ -14,6 +14,7 @@
    * Add a quick way to remove blank lines via shortcut
    * Add "Set start, offset all" shortcut - thx QuentinNetherwood/OmrSi
    * Add export to csv of bookmarks - thx kjaerlige
+   * Add basic read support of .mcc files - thx Bern
 * IMPROVED:
    * Update Polish translation - thx admas
    * Update Bulgarian translation - thx Калин
@@ -34,6 +35,9 @@
    * Allow hex color paste in advanced color dialog
    * Improve labels in "Show earlier/later" - thx PM
    * Make "load second subtitle" work with more subtitle formats - thx PM
+   * Improve compare colors for dark theme - thx OmrSi
+   * Minor UI improvements for nOCR character inspect
+   * Add clear to File - Recent files - thx Dominiquini/OmrSi
 * FIXED:
    * Fix for reading bdsup position - thx akaicat
    * Fix a few crashes in translation engine - thx howblast/Laís
@@ -44,6 +48,8 @@
    * Fix a crash in RTL when activating syntax coloring - thx OmrSi
    * Fix auto translate shortcut - thx xmrea
    * Some fixes for editing source view - thx PreetM07
+   * Fix bug converting vtt two line color text to srt
+   * Fix FCE issue w missing spaces/French language - thx  kyrpasto/OmrSi
 
 
 3.6.0 (18th February 2021)
