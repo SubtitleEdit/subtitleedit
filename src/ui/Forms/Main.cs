@@ -4697,7 +4697,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowStatus(string.Format(_language.ConvertedToX, format.FriendlyName));
             }
 
-            if (_fileName != null && _oldSubtitleFormat != null)
+            if (!string.IsNullOrEmpty(_fileName) && _oldSubtitleFormat != null)
             {
                 if (_fileName.Contains('.'))
                 {
