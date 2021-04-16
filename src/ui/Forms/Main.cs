@@ -225,7 +225,9 @@ namespace Nikse.SubtitleEdit.Forms
                         comboBoxSubtitleFormats.SelectedIndex = index;
                         if (oldIdx == comboBoxSubtitleFormats.SelectedIndex)
                         {
+                            _makeHistoryPaused = true;
                             ComboBoxSubtitleFormatsSelectedIndexChanged(null, null);
+                            _makeHistoryPaused = false;
                         }
                         return;
                     }
