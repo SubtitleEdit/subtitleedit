@@ -836,7 +836,8 @@ Command line: {1} {2}
     <RemoveEmptyLines>删除空行</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>删除无字母的行</RemoveLinesWithoutLetters>
     <GenerateTimeCodes>生成时间码</GenerateTimeCodes>
-    <TakeTimeFromFileName>不在文件名中加入时间</TakeTimeFromFileName>
+    <TakeTimeFromCurrentFile>从当前文件中提取时间码</TakeTimeFromCurrentFile>
+    <TakeTimeFromFileName>从文件名中提取时间码</TakeTimeFromFileName>
     <GapBetweenSubtitles>字幕间隔 (毫秒)</GapBetweenSubtitles>
     <Auto>自动</Auto>
     <Fixed>固定</Fixed>
@@ -2185,6 +2186,8 @@ Command line: {1} {2}
     <AdjustEndOneFrameBackKeepGapNext>将结束点后移1帧 (若与后行之间的间隙较小, 则平移间隙)</AdjustEndOneFrameBackKeepGapNext>
     <AdjustEndOneFrameForwardKeepGapNext>将结束点前移1帧 (若与后行之间的间隙较小, 则平移间隙)</AdjustEndOneFrameForwardKeepGapNext>
     <AdjustSetStartTimeKeepDuration>设置结束时间，偏移其后的所有值</AdjustSetStartTimeKeepDuration>
+    <AdjustVideoSetStartForAppropriateLine>为适当的行设置开始时间</AdjustVideoSetStartForAppropriateLine>
+    <AdjustVideoSetEndForAppropriateLine>为适当的行设置结束时间</AdjustVideoSetEndForAppropriateLine>
     <AdjustSetStartAndOffsetTheWholeSubtitle>设置开始时间，偏移所有字幕</AdjustSetStartAndOffsetTheWholeSubtitle>
     <AdjustSetEndAndOffsetTheRest>设置结束时间，偏移其后的所有时间</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>设置结束时间，偏移其后的所有时间并转到下一行</AdjustSetEndAndOffsetTheRestAndGoToNext>
