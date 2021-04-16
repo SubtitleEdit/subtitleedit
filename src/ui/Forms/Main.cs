@@ -17937,11 +17937,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0)
             {
                 text += separator;
-                if (string.IsNullOrEmpty(_fileName))
-                {
-                    text = text + _language.New + " + ";
-                }
-
+               
                 if (!string.IsNullOrEmpty(_subtitleOriginalFileName))
                 {
                     text += Path.GetFileName(_subtitleOriginalFileName);
@@ -25878,6 +25874,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _fileName = null;
                 SetupOriginalEdit();
                 ResetHistory();
+                SetTitle();
 
                 if (!isOriginalVisible || toolStripMenuItemShowOriginalInPreview.Checked)
                 {
