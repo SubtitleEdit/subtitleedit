@@ -6973,13 +6973,10 @@ namespace Nikse.SubtitleEdit.Forms
             MakeHistoryForUndo(messageForUndo);
             _subtitle.Paragraphs.Clear();
             _subtitle.Paragraphs.AddRange(subtitle.Paragraphs);
-            _subtitleListViewIndex = -1;
             UpdateSourceView();
             SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
-            if (_subtitle.Paragraphs.Count > 0)
-            {
-                SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
-            }
+            _subtitleListViewIndex = -1;
+            SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
         }
 
         private void RemoveTextForHearImpairedToolStripMenuItemClick(object sender, EventArgs e)
@@ -13027,13 +13024,10 @@ namespace Nikse.SubtitleEdit.Forms
                 return true;
             }
 
-            SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
-            if (_subtitle.Paragraphs.Count > 0)
-            {
-                SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
-            }
-
             UpdateSourceView();
+            SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+            _subtitleListViewIndex = -1;
+            SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
             return true;
         }
 
@@ -13101,13 +13095,10 @@ namespace Nikse.SubtitleEdit.Forms
                 return true;
             }
 
-            SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
-            if (_subtitle.Paragraphs.Count > 0)
-            {
-                SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
-            }
-
             UpdateSourceView();
+            SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+            _subtitleListViewIndex = -1;
+            SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
             return true;
         }
 
@@ -13845,13 +13836,10 @@ namespace Nikse.SubtitleEdit.Forms
                 SetTitle();
                 _fileDateTime = new DateTime();
                 _converted = true;
-                SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
-                if (_subtitle.Paragraphs.Count > 0)
-                {
-                    SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
-                }
-
                 UpdateSourceView();
+                SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                _subtitleListViewIndex = -1;
+                SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
             }
         }
 
@@ -17937,7 +17925,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0)
             {
                 text += separator;
-               
+
                 if (!string.IsNullOrEmpty(_subtitleOriginalFileName))
                 {
                     text += Path.GetFileName(_subtitleOriginalFileName);
@@ -19409,10 +19397,8 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.Save();
                 UpdateRecentFilesUI();
                 MainResize();
-                if (SubtitleListview1.SelectedIndices.Count == 0)
-                {
-                    SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
-                }
+                _subtitleListViewIndex = -1;
+                SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
                 RefreshSelectedParagraph();
             }
         }
