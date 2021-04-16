@@ -197,12 +197,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void SetCurrentFormat(string formatName)
+        private void SetCurrentFormat(string formatName, bool subscribed = true)
         {
-            SetCurrentFormat(SubtitleFormat.FromName(formatName, new SubRip()));
+            SetCurrentFormat(SubtitleFormat.FromName(formatName, new SubRip()), subscribed);
         }
 
-        private void SetCurrentFormat(SubtitleFormat format)
+        private void SetCurrentFormat(SubtitleFormat format, bool subscribed = true)
         {
             if (format.IsVobSubIndexFile)
             {
@@ -221,12 +221,15 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (name == format.FriendlyName)
                     {
-                        var oldIdx = comboBoxSubtitleFormats.SelectedIndex;
-                        comboBoxSubtitleFormats.SelectedIndex = index;
-                        if (oldIdx == comboBoxSubtitleFormats.SelectedIndex)
+                        if (index == comboBoxSubtitleFormats.SelectedIndex && subscribed)
                         {
                             ComboBoxSubtitleFormatsSelectedIndexChanged(null, null);
                         }
+                        else
+                        {
+                            comboBoxSubtitleFormats.SelectedIndex = index;
+                        }
+
                         return;
                     }
 
@@ -7346,7 +7349,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     comboBoxSubtitleFormats.SelectedIndexChanged -= ComboBoxSubtitleFormatsSelectedIndexChanged;
-                    SetCurrentFormat(subtitleFormatFriendlyName);
+                    SetCurrentFormat(subtitleFormatFriendlyName, false);
                     comboBoxSubtitleFormats.SelectedIndexChanged += ComboBoxSubtitleFormatsSelectedIndexChanged;
 
                     UpdateSourceView();
@@ -13004,7 +13007,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             comboBoxSubtitleFormats.SelectedIndexChanged -= ComboBoxSubtitleFormatsSelectedIndexChanged;
-            SetCurrentFormat(format);
+            SetCurrentFormat(format, false);
             comboBoxSubtitleFormats.SelectedIndexChanged += ComboBoxSubtitleFormatsSelectedIndexChanged;
             _oldSubtitleFormat = format;
             SetEncoding(Encoding.UTF8);
@@ -13077,7 +13080,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             comboBoxSubtitleFormats.SelectedIndexChanged -= ComboBoxSubtitleFormatsSelectedIndexChanged;
-            SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+            SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat, false);
             comboBoxSubtitleFormats.SelectedIndexChanged += ComboBoxSubtitleFormatsSelectedIndexChanged;
             SetEncoding(Encoding.UTF8);
             ShowStatus(_language.SubtitleImportedFromMatroskaFile);
