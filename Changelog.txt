@@ -38,6 +38,7 @@
    * Improve compare colors for dark theme - thx OmrSi
    * Minor UI improvements for nOCR character inspect
    * Add clear to File - Recent files - thx Dominiquini/OmrSi
+   * Make bd sup edit work better with full frame images - thx peter-qgd
 * FIXED:
    * Fix for reading bdsup position - thx akaicat
    * Fix a few crashes in translation engine - thx howblast/Laís
