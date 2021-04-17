@@ -2541,10 +2541,18 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             var idx = subtitleListView1.SelectedItems[0].Index;
             SetupProgressBar(GetIndices(true));
-            for (int i = 0; i < subtitleListView1.SelectedIndices.Count; i++)
+
+            int count = 0;
+            var lockObject = new object();
+            var selectedIndices = GetIndices(true);
+            Parallel.ForEach(selectedIndices, index =>
             {
-                progressBar1.Value++;
-                var index = subtitleListView1.SelectedIndices[i];
+                Interlocked.Increment(ref count);
+                lock (lockObject)
+                {
+                    progressBar1.Value = count;
+                }
+
                 var extra = _extra[index];
                 var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : GetBitmap(_binSubtitles[index]);
 
@@ -2561,7 +2569,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
 
                 bmp.Dispose();
-            }
+                lock (lockObject)
+                {
+                    progressBar1.Refresh();
+                    Application.DoEvents();
+                }
+            });
             progressBar1.Hide();
         }
 
