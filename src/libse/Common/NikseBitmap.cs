@@ -839,7 +839,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             _bitmapData = newBitmapData;
         }
 
-        public int CropTopTransparent(int maximumCropping)
+        public int CropTopTransparent(int minimumMargin)
         {
             bool done = false;
             int newTop = 0;
@@ -853,7 +853,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     if (alpha > 10)
                     {
                         done = true;
-                        newTop = y - maximumCropping;
+                        newTop = y - minimumMargin;
                         if (newTop < 0)
                         {
                             newTop = 0;

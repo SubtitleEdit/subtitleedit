@@ -3033,27 +3033,39 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                 var selectedIndices = GetIndices(onlySelectedLines);
                 SetupProgressBar(selectedIndices);
-                foreach (var i in selectedIndices)
+                int count = 0;
+                var lockObject = new object();
+                Parallel.ForEach(selectedIndices, i =>
                 {
-                    progressBar1.Value++;
+                    Interlocked.Increment(ref count);
+                    lock (lockObject)
+                    {
+                        progressBar1.Value = count;
+                    }
+
                     var sub = _binSubtitles[i];
-                    extra = _extra[i];
-                    bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : GetBitmap(sub);
-                    extra.Bitmap = ExportPngXml.ResizeBitmap(bmp, (int)Math.Round(bmp.Width * form.Factor), (int)Math.Round(bmp.Height * form.Factor));
+                    var extraInner = _extra[i];
+                    var bmpInner = extraInner.Bitmap != null ? (Bitmap)extraInner.Bitmap.Clone() : GetBitmap(sub);
+                    extraInner.Bitmap = ExportPngXml.ResizeBitmap(bmpInner, (int)Math.Round(bmpInner.Width * form.Factor), (int)Math.Round(bmpInner.Height * form.Factor));
                     if (form.FixAlignment)
                     {
-                        FixAlignment(form.Alignment, extra, extra.Bitmap);
+                        FixAlignment(form.Alignment, extraInner, extraInner.Bitmap);
                     }
 
                     if (i == idx)
                     {
-                        ShowCurrentScaledImage((Bitmap)extra.Bitmap.Clone(), extra);
-                        numericUpDownY.Value = extra.Y;
-                        numericUpDownX.Value = extra.X;
+                        ShowCurrentScaledImage((Bitmap)extraInner.Bitmap.Clone(), extraInner);
+                        numericUpDownY.Value = extraInner.Y;
+                        numericUpDownX.Value = extraInner.X;
                     }
 
-                    bmp.Dispose();
-                }
+                    bmpInner.Dispose();
+                    lock (lockObject)
+                    {
+                        progressBar1.Refresh();
+                        Application.DoEvents();
+                    }
+                });
                 progressBar1.Hide();
             }
         }
@@ -3109,25 +3121,38 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                 var selectedIndices = GetIndices(onlySelectedLines);
                 SetupProgressBar(selectedIndices);
-                foreach (var i in selectedIndices)
+
+                int count = 0;
+                var lockObject = new object();
+                Parallel.ForEach(selectedIndices, i =>
                 {
-                    progressBar1.Value++;
+                    Interlocked.Increment(ref count);
+                    lock (lockObject)
+                    {
+                        progressBar1.Value = count;
+                    }
                     var sub = _binSubtitles[i];
-                    extra = _extra[i];
-                    bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : GetBitmap(sub);
-                    var n = new NikseBitmap(bmp);
+                    var extraInner = _extra[i];
+                    var bmpInner = extraInner.Bitmap != null ? (Bitmap)extraInner.Bitmap.Clone() : GetBitmap(sub);
+                    var n = new NikseBitmap(bmpInner);
                     n.ChangeBrightness(form.Factor);
-                    extra.Bitmap = n.GetBitmap();
+                    extraInner.Bitmap = n.GetBitmap();
 
                     if (i == idx)
                     {
-                        ShowCurrentScaledImage((Bitmap)extra.Bitmap.Clone(), extra);
-                        numericUpDownY.Value = extra.Y;
-                        numericUpDownX.Value = extra.X;
+                        ShowCurrentScaledImage((Bitmap)extraInner.Bitmap.Clone(), extraInner);
+                        numericUpDownY.Value = extraInner.Y;
+                        numericUpDownX.Value = extraInner.X;
                     }
 
-                    bmp.Dispose();
-                }
+                    bmpInner.Dispose();
+                    lock (lockObject)
+                    {
+                        progressBar1.Refresh();
+                        Application.DoEvents();
+                    }
+                });
+
                 progressBar1.Hide();
             }
         }
@@ -3167,25 +3192,37 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                 var selectedIndices = GetIndices(onlySelectedLines);
                 SetupProgressBar(selectedIndices);
-                foreach (var i in selectedIndices)
+                int count = 0;
+                var lockObject = new object();
+                Parallel.ForEach(selectedIndices, i =>
                 {
-                    progressBar1.Value++;
+                    Interlocked.Increment(ref count);
+                    lock (lockObject)
+                    {
+                        progressBar1.Value = count;
+                    }
+
                     var sub = _binSubtitles[i];
-                    extra = _extra[i];
-                    bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : GetBitmap(sub);
-                    var n = new NikseBitmap(bmp);
+                    var extraInner = _extra[i];
+                    var bmpInner = extraInner.Bitmap != null ? (Bitmap)extraInner.Bitmap.Clone() : GetBitmap(sub);
+                    var n = new NikseBitmap(bmpInner);
                     n.ChangeAlpha(form.Factor);
-                    extra.Bitmap = n.GetBitmap();
+                    extraInner.Bitmap = n.GetBitmap();
 
                     if (i == idx)
                     {
-                        ShowCurrentScaledImage((Bitmap)extra.Bitmap.Clone(), extra);
-                        numericUpDownY.Value = extra.Y;
-                        numericUpDownX.Value = extra.X;
+                        ShowCurrentScaledImage((Bitmap)extraInner.Bitmap.Clone(), extra);
+                        numericUpDownY.Value = extraInner.Y;
+                        numericUpDownX.Value = extraInner.X;
                     }
 
-                    bmp.Dispose();
-                }
+                    bmpInner.Dispose();
+                    lock (lockObject)
+                    {
+                        progressBar1.Refresh();
+                    }
+                    Application.DoEvents();
+                });
                 progressBar1.Hide();
             }
         }

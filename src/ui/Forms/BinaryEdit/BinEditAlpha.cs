@@ -21,8 +21,12 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             InitializeComponent();
             UiUtil.FixFonts(this);
 
+            var nikseBitmap = new NikseBitmap(bitmap);
+            nikseBitmap.CropTransparentSidesAndBottom(99999, true);
+            nikseBitmap.CropTopTransparent(2);
+            _bitmap = nikseBitmap.GetBitmap();
+
             _backgroundImageDark = Configuration.Settings.General.UseDarkTheme;
-            _bitmap = bitmap;
             trackBarAlpha_Scroll(null, null);
             Factor = 1.0m;
             Alignment = ContentAlignment.BottomCenter;

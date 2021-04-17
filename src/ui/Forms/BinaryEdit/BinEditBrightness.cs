@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 {
-    public partial class BinEditBrightness : Form
+    public sealed partial class BinEditBrightness : Form
     {
         private readonly Bitmap _bitmap;
 
@@ -19,7 +19,11 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            _bitmap = bitmap;
+            var nikseBitmap = new NikseBitmap(bitmap);
+            nikseBitmap.CropTransparentSidesAndBottom(99999, true);
+            nikseBitmap.CropTopTransparent(2);
+            _bitmap = nikseBitmap.GetBitmap();
+
             trackBarBrightness_Scroll(null, null);
             Factor = 1.0m;
             Alignment = ContentAlignment.BottomCenter;
