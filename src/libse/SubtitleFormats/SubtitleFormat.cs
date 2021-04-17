@@ -138,7 +138,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new KanopyHtml(),
                     new LambdaCap(),
                     new Lrc(),
-                    new MacCaption10(),
                     new MacSub(),
                     new MediaTransData(),
                     new MicroDvd(),
@@ -643,7 +642,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 new TranscriptiveJson(),
                 new KaraokeCdgCreatorText(),
                 new VidIcelandic(),
-                new JsonArchtime(), 
+                new JsonArchtime(),
+                new MacCaption10(),
             };
         }
 
