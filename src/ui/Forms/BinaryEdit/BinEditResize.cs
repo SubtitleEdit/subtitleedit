@@ -2,6 +2,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 {
@@ -19,7 +20,11 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            _bitmap = bitmap;
+            var nikseBitmap = new NikseBitmap(bitmap);
+            nikseBitmap.CropTransparentSidesAndBottom(99999, true);
+            nikseBitmap.CropTopTransparent(2);
+            _bitmap = nikseBitmap.GetBitmap();
+
             trackBarResize_Scroll(null, null);
             Factor = 1.0m;
             FixAlignment = true;

@@ -1,7 +1,7 @@
 ﻿
 namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 {
-    partial class BinEditBrightness
+    sealed partial class BinEditBrightness
     {
         /// <summary>
         /// Required designer variable.
@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBoxPreview.Location = new System.Drawing.Point(6, 102);
             this.pictureBoxPreview.Name = "pictureBoxPreview";
-            this.pictureBoxPreview.Size = new System.Drawing.Size(832, 161);
+            this.pictureBoxPreview.Size = new System.Drawing.Size(866, 234);
             this.pictureBoxPreview.TabIndex = 1;
             this.pictureBoxPreview.TabStop = false;
             // 
@@ -75,7 +75,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(685, 269);
+            this.buttonOK.Location = new System.Drawing.Point(719, 342);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 8;
@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(769, 269);
+            this.buttonCancel.Location = new System.Drawing.Point(803, 342);
             this.buttonCancel.MinimumSize = new System.Drawing.Size(75, 23);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(856, 304);
+            this.ClientSize = new System.Drawing.Size(890, 377);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.labelChangeBrightness);
