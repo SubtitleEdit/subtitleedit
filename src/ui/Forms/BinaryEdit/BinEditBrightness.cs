@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private readonly Bitmap _bitmap;
 
         public decimal Factor { get; private set; }
-        public ContentAlignment Alignment { get; private set; }
+        public ContentAlignment Alignment { get; }
 
         public BinEditBrightness(Bitmap bitmap)
         {

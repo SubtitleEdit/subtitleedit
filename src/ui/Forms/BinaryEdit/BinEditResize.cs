@@ -6,7 +6,7 @@ using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 {
-    public partial class BinEditResize : Form
+    public sealed partial class BinEditResize : Form
     {
         private readonly Bitmap _bitmap;
 

@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 {
     public partial class BinEditNewText : Form
     {
-        private bool _loading = true;
+        private readonly bool _loading;
         private readonly Dictionary<string, int> _lineHeights;
 
         public Bitmap Bitmap { get; set; }
@@ -22,6 +22,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             InitializeComponent();
             UiUtil.FixFonts(this);
 
+            _loading = true;
             _lineHeights = new Dictionary<string, int>();
             panelColor.BackColor = Color.FromArgb(byte.MaxValue, Configuration.Settings.Tools.ExportFontColor);
             panelBorderColor.BackColor = Configuration.Settings.Tools.ExportBorderColor;
@@ -159,7 +160,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
         private void buttonColor_Click(object sender, EventArgs e)
         {
-            bool showAlpha = true;
+            const bool showAlpha = true;
             using (var colorChooser = new ColorChooser { Color = panelColor.BackColor, ShowAlpha = showAlpha })
             {
                 if (colorChooser.ShowDialog() == DialogResult.OK)

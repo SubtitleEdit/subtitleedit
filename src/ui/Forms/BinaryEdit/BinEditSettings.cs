@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 {
-    public partial class BinEditSettings : Form
+    public sealed partial class BinEditSettings : Form
     {
         public BinEditSettings()
         {
