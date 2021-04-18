@@ -125,7 +125,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return null; // probably not correct index
             }
 
-            int maxIndex = timeStartIndex + 10 + textLength;
+            int maxIndex = timeStartIndex + 11 + textLength;
 
             var sb = new StringBuilder();
             index = feIndex + 3;
@@ -142,13 +142,29 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             if (buffer[j] == 0xff)
                             {
+                                // I never hit this on a breakpoint...
                                 buffer[j] = 0x2e; // replace end of line marker
                             }
                         }
-
+                        
                         sb.AppendLine(Encoding.UTF8.GetString(buffer, textBegin, textIndex - textBegin));
-                        textBegin = textIndex + 7;
-                        textIndex += 6;
+                        for (var v = 0; v < 5; v++)
+                        {
+                            if (buffer[textIndex + 1 + v] == 0x1F &&
+                                buffer[textIndex + 2 + v] == 0xEF &&
+                                buffer[textIndex + 3 + v] == 0xBB &&
+                                buffer[textIndex + 4 + v] == 0xBF)
+                            {
+                                // skip utf8 BOM
+                                textBegin = textIndex + 7;
+                                textIndex += 6;
+                            }
+                            else
+                            {
+                                // ASCI or Header Paragraph no BOM 
+                                textBegin = textIndex + 1;
+                            }
+                        }
                     }
                 }
                 else if (buffer[textIndex] == 0xFF)
