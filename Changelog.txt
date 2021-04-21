@@ -37,8 +37,9 @@
    * Make "load second subtitle" work with more subtitle formats - thx PM
    * Improve compare colors for dark theme - thx OmrSi
    * Minor UI improvements for nOCR character inspect
-   * Add clear to File - Recent files - thx Dominiquini/OmrSi
+   * Add "Clear" to File - Recent files - thx Dominiquini/OmrSi
    * Make bd sup edit work better with full frame images - thx peter-qgd
+   * Point sync now also works on original subtitle - thx Rene
 * FIXED:
    * Fix for reading bdsup position - thx akaicat
    * Fix a few crashes in translation engine - thx howblast/Laís

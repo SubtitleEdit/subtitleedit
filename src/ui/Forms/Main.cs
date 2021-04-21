@@ -19083,11 +19083,24 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     _subtitleListViewIndex = -1;
                     MakeHistoryForUndo(_language.BeforePointSynchronization);
+                    var oldParagraphs = new List<Paragraph>(_subtitle.Paragraphs);
                     _subtitle.Paragraphs.Clear();
-                    foreach (var p in pointSync.FixedSubtitle.Paragraphs)
+                    for (var index = 0; index < pointSync.FixedSubtitle.Paragraphs.Count; index++)
                     {
+                        var p = pointSync.FixedSubtitle.Paragraphs[index];
                         _subtitle.Paragraphs.Add(p);
+                        if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsOriginalTextColumnVisible)
+                        {
+                            var oldP = oldParagraphs[index];
+                            var original = Utilities.GetOriginalParagraph(index, oldP, _subtitleOriginal.Paragraphs);
+                            if (original != null)
+                            {
+                                original.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds;
+                                original.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds;
+                            }
+                        }
                     }
+
                     ShowStatus(_language.PointSynchronizationDone);
                     UpdateSourceView();
                     SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
@@ -19238,11 +19251,24 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _subtitleListViewIndex = -1;
                         MakeHistoryForUndo(_language.BeforePointSynchronization);
+                        var oldParagraphs = new List<Paragraph>(_subtitle.Paragraphs);
                         _subtitle.Paragraphs.Clear();
-                        foreach (var p in pointSync.FixedSubtitle.Paragraphs)
+                        for (var index = 0; index < pointSync.FixedSubtitle.Paragraphs.Count; index++)
                         {
+                            var p = pointSync.FixedSubtitle.Paragraphs[index];
                             _subtitle.Paragraphs.Add(p);
+                            if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsOriginalTextColumnVisible)
+                            {
+                                var oldP = oldParagraphs[index];
+                                var original = Utilities.GetOriginalParagraph(index, oldP, _subtitleOriginal.Paragraphs);
+                                if (original != null)
+                                {
+                                    original.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds;
+                                    original.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds;
+                                }
+                            }
                         }
+
                         ShowStatus(_language.PointSynchronizationDone);
                         UpdateSourceView();
                         SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
