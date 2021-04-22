@@ -688,7 +688,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     richTextBox1.SelectionStart = i;
                     richTextBox1.SelectionLength = 1;
-                    richTextBox1.SelectionColor = _backDifferenceColor;
+                    richTextBox1.SelectionColor = _foregroundDifferenceColor;
                     if (" .,".Contains(richTextBox1.SelectedText))
                     {
                         richTextBox1.SelectionBackColor = _backDifferenceColor;
