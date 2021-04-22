@@ -89,6 +89,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
 
+                if (!string.IsNullOrWhiteSpace(Configuration.Settings.SubtitleSettings.WebVttOverrideCueSetting))
+                {
+                    positionInfo = " " + Configuration.Settings.SubtitleSettings.WebVttOverrideCueSetting;
+                }
+
                 sb.AppendLine(string.Format(paragraphWriteFormat, start, end, positionInfo, FormatText(p), style, Environment.NewLine));
             }
             return sb.ToString().Trim();
