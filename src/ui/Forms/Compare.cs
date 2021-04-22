@@ -86,6 +86,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 try
                 {
+                    buttonReloadSubtitle1.Enabled = true;
                     openFileDialog1.InitialDirectory = Path.GetDirectoryName(subtitleFileName1);
                 }
                 catch
