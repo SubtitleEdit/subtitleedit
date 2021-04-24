@@ -37,7 +37,7 @@
    * Make "load second subtitle" work with more subtitle formats - thx PM
    * Improve compare colors for dark theme - thx OmrSi
    * Minor UI improvements for nOCR character inspect
-   * Add "Clear" to File - Recent files - thx Dominiquini/OmrSi
+   * Add "Clear" to "File - Recent files" - thx Dominiquini/OmrSi
    * Make bd sup edit work better with full frame images - thx peter-qgd
    * Point sync now also works on original subtitle - thx Rene
 * FIXED:
@@ -52,6 +52,7 @@
    * Some fixes for editing source view - thx PreetM07
    * Fix bug converting vtt two line color text to srt
    * Fix FCE issue w missing spaces/French language - thx  kyrpasto/OmrSi
+   * Fix crash in karoke/typewriter effect due to invalid color - thx PM
 
 
 3.6.0 (18th February 2021)
