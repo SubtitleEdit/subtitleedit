@@ -1,5 +1,4 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -661,22 +660,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             return defaultFormat;
-        }
-
-        public static SubtitleFormat BinaryPersistableFromName(string formatName, bool batchMode)
-        {
-            string trimmedFormatName = formatName.Trim();
-            foreach (var format in GetBinaryFormats(batchMode))
-            {
-                if (format is IBinaryPersistableSubtitle &&
-                    format.Name.Trim().Equals(trimmedFormatName, StringComparison.OrdinalIgnoreCase) ||
-                    format.FriendlyName.Trim().Equals(trimmedFormatName, StringComparison.OrdinalIgnoreCase))
-                {
-                    return format;
-                }
-            }
-
-            return null;
         }
 
         private static IList<SubtitleFormat> GetOrderedFormatsList(IList<SubtitleFormat> unorderedFormatsList)
