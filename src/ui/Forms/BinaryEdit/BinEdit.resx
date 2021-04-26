@@ -138,4 +138,7 @@
   <metadata name="timerSubtitleOnVideo.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>813, 25</value>
   </metadata>
+  <metadata name="timerSyntaxColor.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>1197, 25</value>
+  </metadata>
 </root>
