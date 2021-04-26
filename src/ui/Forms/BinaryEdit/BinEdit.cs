@@ -192,6 +192,16 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private string _lastSaveHash;
         private readonly string _nOcrFileName;
 
+        private int _columnIndexForced = 0;
+        private int _columnIndexNumber = 1;
+        private int _columnIndexStart = 2;
+        private int _columnIndexText = -1;
+        private int _columnIndexEnd = 3;
+        private int _columnIndexDuration = 4;
+        private int _columnIndexGap = -1;
+        private int _columnIndexCps = -1;
+        private int _columnIndexWpm = -1;
+
         public BinEdit(string fileName)
         {
             UiUtil.PreInitialize(this);
@@ -199,17 +209,14 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             UiUtil.FixFonts(this);
             UiUtil.FixLargeFonts(this, buttonExportImage);
             UiUtil.InitializeSubtitleFont(subtitleListView1);
-            subtitleListView1.Columns[0].Text = LanguageSettings.Current.ExportPngXml.Forced;
-            subtitleListView1.Columns[1].Text = "#";
-            subtitleListView1.Columns[2].Text = LanguageSettings.Current.General.StartTime;
-            subtitleListView1.Columns[3].Text = LanguageSettings.Current.General.Duration;
-            subtitleListView1.Columns[4].Text = LanguageSettings.Current.General.Text;
+            UpdateListViewColumns();
             videoPlayerContainer1.Visible = false;
             progressBar1.Visible = false;
             OpenBinSubtitle(fileName);
             pictureBoxMovableImage.SizeMode = PictureBoxSizeMode.Normal;
             labelVideoInfo.Text = string.Empty;
             panelBackground.BackColor = Configuration.Settings.Tools.BinEditBackgroundColor;
+            labelSyntaxError.Text = string.Empty;
 
             fileToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.File.Title;
             openFileToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.File.Open;
@@ -394,21 +401,201 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
         private void FillListView(Subtitle subtitle)
         {
+            if (subtitle == null)
+            {
+                return;
+            }
+
             var listViewItems = new List<ListViewItem>();
+            subtitleListView1.CheckBoxes = _columnIndexForced >= 0;
+            var startIndex = _columnIndexForced >= 0 ? 1 : 0;
             for (var index = 0; index < subtitle.Paragraphs.Count; index++)
             {
                 var extra = _extra[index];
                 var paragraph = subtitle.Paragraphs[index];
-                var item = new ListViewItem { Checked = extra.IsForced };
-                item.SubItems.Add((index + 1).ToString(CultureInfo.InvariantCulture));
-                item.SubItems.Add(paragraph.StartTime.ToDisplayString());
-                item.SubItems.Add(paragraph.Duration.ToShortDisplayString());
-                item.SubItems.Add(paragraph.Text);
+                var item = new ListViewItem { UseItemStyleForSubItems = false, Checked = extra.IsForced && _columnIndexForced >= 0 };
+
+                int count = startIndex;
+                if (_columnIndexNumber >= 0)
+                {
+                    count = AddListViewSubItem(item, count, (index + 1).ToString(CultureInfo.InvariantCulture));
+                }
+
+                if (_columnIndexStart >= 0)
+                {
+                    count = AddListViewSubItem(item, count, paragraph.StartTime.ToDisplayString());
+                }
+
+                if (_columnIndexEnd >= 0)
+                {
+                    count = AddListViewSubItem(item, count, paragraph.EndTime.ToDisplayString());
+                }
+
+                if (_columnIndexDuration >= 0)
+                {
+                    count = AddListViewSubItem(item, count, paragraph.Duration.ToShortDisplayString());
+                }
+
+                if (_columnIndexGap >= 0)
+                {
+                    count = AddListViewSubItem(item, count, GetGap(paragraph, subtitle.GetParagraphOrDefault(index + 1)));
+                }
+
+                if (_columnIndexCps >= 0)
+                {
+                    count = AddListViewSubItem(item, count, $"{Utilities.GetCharactersPerSecond(paragraph):0.00}");
+                }
+
+                if (_columnIndexWpm >= 0)
+                {
+                    count = AddListViewSubItem(item, count, GetGap(paragraph, subtitle.GetParagraphOrDefault(index + 1)));
+                }
+
+                if (_columnIndexText >= 0)
+                {
+                    AddListViewSubItem(item, count, paragraph.Text);
+                }
+
+                SyntaxColorListViewItem(index, paragraph, item);
                 listViewItems.Add(item);
             }
 
             subtitleListView1.Items.Clear();
             subtitleListView1.Items.AddRange(listViewItems.ToArray());
+        }
+
+        private static int AddListViewSubItem(ListViewItem item, int count, string text)
+        {
+            if (count == 0)
+            {
+                item.Text = text;
+            }
+            else
+            {
+                item.SubItems.Add(text);
+            }
+
+            count++;
+            return count;
+        }
+
+        private static string GetGap(Paragraph paragraph, Paragraph next)
+        {
+            if (next == null || paragraph == null || next.StartTime.IsMaxTime || paragraph.EndTime.IsMaxTime)
+            {
+                return string.Empty;
+            }
+
+            return new TimeCode(next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds).ToShortDisplayString();
+        }
+
+
+        private void SyntaxColorListViewItem(int i, Paragraph paragraph, ListViewItem item)
+        {
+            var backColor = subtitleListView1.BackColor;
+
+            if (item.UseItemStyleForSubItems)
+            {
+                item.UseItemStyleForSubItems = false;
+                item.SubItems[_columnIndexDuration].BackColor = backColor;
+            }
+
+            var colorStart = false;
+            var colorEnd = false;
+            var colorDuration = false;
+            var colorGap = false;
+
+            if (_columnIndexStart >= 0)
+            {
+                var prev = _subtitle.GetParagraphOrDefault(i - 1);
+                if (prev != null && prev.EndTime.TotalMilliseconds > paragraph.StartTime.TotalMilliseconds)
+                {
+                    colorStart = true;
+                }
+            }
+
+            if (_columnIndexEnd >= 0)
+            {
+                var next = _subtitle.GetParagraphOrDefault(i + 1);
+                if (next != null && next.StartTime.TotalMilliseconds < paragraph.EndTime.TotalMilliseconds)
+                {
+                    colorEnd = true;
+                }
+            }
+
+            if (_columnIndexDuration >= 0)
+            {
+                if (paragraph.Duration.TotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds && _columnIndexDuration >= 0)
+                {
+                    colorDuration = true;
+                }
+                else if (paragraph.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                {
+                    colorDuration = true;
+                }
+            }
+
+            if (_columnIndexGap >= 0)
+            {
+                var next = _subtitle.GetParagraphOrDefault(i + 1);
+                if (next != null)
+                {
+                    var gap = next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                    if (gap < Configuration.Settings.General.ListViewGapWidth)
+                    {
+                        colorGap = true;
+                    }
+                }
+            }
+
+            // fix list view background colors
+            if (_columnIndexStart >= 0)
+            {
+                if (colorStart && item.SubItems[_columnIndexStart].BackColor != Configuration.Settings.Tools.ListViewSyntaxErrorColor)
+                {
+                    item.SubItems[_columnIndexStart].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                }
+                else if (!colorStart && item.SubItems[_columnIndexStart].BackColor != backColor)
+                {
+                    item.SubItems[_columnIndexStart].BackColor = backColor;
+                }
+            }
+
+            if (_columnIndexEnd >= 0)
+            {
+                if (colorEnd && item.SubItems[_columnIndexEnd].BackColor != Configuration.Settings.Tools.ListViewSyntaxErrorColor)
+                {
+                    item.SubItems[_columnIndexEnd].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                }
+                else if (!colorEnd && item.SubItems[_columnIndexEnd].BackColor != backColor)
+                {
+                    item.SubItems[_columnIndexEnd].BackColor = backColor;
+                }
+            }
+
+            if (_columnIndexDuration >= 0)
+            {
+                if (colorDuration && item.SubItems[_columnIndexDuration].BackColor != Configuration.Settings.Tools.ListViewSyntaxErrorColor)
+                {
+                    item.SubItems[_columnIndexDuration].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                }
+                else if (!colorDuration && item.SubItems[_columnIndexDuration].BackColor != backColor)
+                {
+                    item.SubItems[_columnIndexDuration].BackColor = backColor;
+                }
+            }
+
+            if (_columnIndexGap >= 0)
+            {
+                if (colorGap && item.SubItems[_columnIndexGap].BackColor != Configuration.Settings.Tools.ListViewSyntaxErrorColor)
+                {
+                    item.SubItems[_columnIndexGap].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                }
+                else if (!colorGap && item.SubItems[_columnIndexGap].BackColor != backColor)
+                {
+                    item.SubItems[_columnIndexGap].BackColor = backColor;
+                }
+            }
         }
 
         private void SelectIndexAndEnsureVisible(int index)
@@ -432,8 +619,38 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             }
 
             var item = subtitleListView1.Items[index];
-            item.SubItems[2].Text = paragraph.StartTime.ToDisplayString();
-            item.SubItems[3].Text = paragraph.Duration.ToShortDisplayString();
+            if (_columnIndexStart >= 0)
+            {
+                item.SubItems[_columnIndexStart].Text = paragraph.StartTime.ToDisplayString();
+            }
+
+            if (_columnIndexEnd >= 0)
+            {
+                item.SubItems[_columnIndexEnd].Text = paragraph.EndTime.ToDisplayString();
+            }
+
+            if (_columnIndexDuration >= 0)
+            {
+                item.SubItems[_columnIndexDuration].Text = paragraph.Duration.ToShortDisplayString();
+            }
+
+            if (_columnIndexGap >= 0 && _subtitle != null)
+            {
+                var next = _subtitle.GetParagraphOrDefault(index + 1);
+                item.SubItems[_columnIndexGap].Text = GetGap(paragraph, next);
+
+                if (index > 0)
+                {
+                    var prev = _subtitle.GetParagraphOrDefault(index - 1);
+                    subtitleListView1.Items[index - 1].SubItems[_columnIndexGap].Text = GetGap(prev, paragraph);
+                }
+
+                if (index + 1 < _subtitle.Paragraphs.Count)
+                {
+                    var nextNext = _subtitle.GetParagraphOrDefault(index + 2);
+                    subtitleListView1.Items[index + 1].SubItems[_columnIndexGap].Text = GetGap(next, nextNext);
+                }
+            }
         }
 
         private static Bitmap GetBitmap(IBinaryParagraphWithPosition s)
@@ -909,6 +1126,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 timeUpDownEndTime.TimeCode = new TimeCode();
                 numericUpDownX.Value = 0;
                 numericUpDownY.Value = 0;
+                labelSyntaxError.Text = string.Empty;
                 groupBoxCurrent.Text = string.Empty;
                 if (subtitleListView1.Items.Count == 0)
                 {
@@ -943,6 +1161,8 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 labelCurrentSize.Text = string.Format(LanguageSettings.Current.BinEdit.SizeXY, bmp.Width, bmp.Height);
                 ShowCurrentScaledImage(bmp, extra);
             }
+
+            SyntaxColorLabel(idx);
         }
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1708,6 +1928,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 SetStartTimeAndDuration(idx, p);
             };
             subtitleListView1.AutoSizeLastColumn();
+            timerSyntaxColor.Start();
         }
 
         private void adjustAllTimesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2109,6 +2330,104 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void contextMenuStripListView_Opening(object sender, CancelEventArgs e)
         {
+            var coordinates = subtitleListView1.PointToClient(Cursor.Position);
+            var hitTest = subtitleListView1.HitTest(coordinates);
+            if (coordinates.Y < 19 || (hitTest.Item != null && hitTest.Item.Index == 0 && coordinates.Y < hitTest.Item.Position.Y))
+            {
+                e.Cancel = true;
+                var cm = new ContextMenuStrip();
+                UiUtil.FixFonts(cm);
+
+                // Forced
+                var contextMenuStripLvHeaderForcedToolStripMenuItem = new ToolStripMenuItem(LanguageSettings.Current.ExportPngXml.Forced)
+                {
+                    Checked = _columnIndexForced >= 0,
+                };
+                contextMenuStripLvHeaderForcedToolStripMenuItem.Click += (sender2, e2) =>
+                {
+                    _columnIndexForced = _columnIndexForced >= 0 ? -1 : 0;
+                    (sender2 as ToolStripMenuItem).Checked = _columnIndexForced >= 0;
+                    UpdateListViewColumns();
+                };
+                cm.Items.Add(contextMenuStripLvHeaderForcedToolStripMenuItem);
+
+                // Number
+                var contextMenuStripLvHeaderNumberToolStripMenuItem = new ToolStripMenuItem(LanguageSettings.Current.General.Number)
+                {
+                    Checked = _columnIndexNumber >= 0,
+                };
+                contextMenuStripLvHeaderNumberToolStripMenuItem.Click += (sender2, e2) =>
+                {
+                    _columnIndexNumber = _columnIndexNumber >= 0 ? -1 : 0;
+                    (sender2 as ToolStripMenuItem).Checked = _columnIndexNumber >= 0;
+                    UpdateListViewColumns();
+                };
+                cm.Items.Add(contextMenuStripLvHeaderNumberToolStripMenuItem);
+
+                // Start time
+                var contextMenuStripLvHeaderStartTimeToolStripMenuItem = new ToolStripMenuItem(LanguageSettings.Current.General.StartTime)
+                {
+                    Checked = _columnIndexStart >= 0,
+                };
+                contextMenuStripLvHeaderStartTimeToolStripMenuItem.Click += (sender2, e2) =>
+                {
+                    _columnIndexStart = _columnIndexStart >= 0 ? -1 : 0;
+                    (sender2 as ToolStripMenuItem).Checked = _columnIndexStart >= 0;
+                    UpdateListViewColumns();
+                };
+                cm.Items.Add(contextMenuStripLvHeaderStartTimeToolStripMenuItem);
+
+                // End time
+                var contextMenuStripLvHeaderEndTimeToolStripMenuItem = new ToolStripMenuItem(LanguageSettings.Current.General.EndTime)
+                {
+                    Checked = _columnIndexEnd >= 0,
+                };
+                contextMenuStripLvHeaderEndTimeToolStripMenuItem.Click += (sender2, e2) =>
+                {
+                    _columnIndexEnd = _columnIndexEnd >= 0 ? -1 : 0;
+                    (sender2 as ToolStripMenuItem).Checked = _columnIndexEnd >= 0;
+                    UpdateListViewColumns();
+                };
+                cm.Items.Add(contextMenuStripLvHeaderEndTimeToolStripMenuItem);
+
+                // Duration
+                var contextMenuStripLvHeaderDurationToolStripMenuItem = new ToolStripMenuItem(LanguageSettings.Current.General.Duration);
+                contextMenuStripLvHeaderDurationToolStripMenuItem.Checked = _columnIndexDuration >= 0;
+                contextMenuStripLvHeaderDurationToolStripMenuItem.Click += (sender2, e2) =>
+                {
+                    _columnIndexDuration = _columnIndexDuration >= 0 ? -1 : 0;
+                    (sender2 as ToolStripMenuItem).Checked = _columnIndexDuration >= 0;
+                    UpdateListViewColumns();
+                };
+                cm.Items.Add(contextMenuStripLvHeaderDurationToolStripMenuItem);
+
+                // GAP
+                var contextMenuStripLvHeaderGapToolStripMenuItem = new ToolStripMenuItem(LanguageSettings.Current.General.Gap);
+                contextMenuStripLvHeaderGapToolStripMenuItem.Checked = _columnIndexGap >= 0;
+                contextMenuStripLvHeaderGapToolStripMenuItem.Click += (sender2, e2) =>
+                {
+                    _columnIndexGap = _columnIndexGap >= 0 ? -1 : 0;
+                    (sender2 as ToolStripMenuItem).Checked = _columnIndexGap >= 0;
+                    UpdateListViewColumns();
+                };
+                cm.Items.Add(contextMenuStripLvHeaderGapToolStripMenuItem);
+                cm.Show(subtitleListView1, coordinates);
+
+                // Text
+                var contextMenuStripLvHeaderTextToolStripMenuItem = new ToolStripMenuItem(LanguageSettings.Current.General.Text);
+                contextMenuStripLvHeaderTextToolStripMenuItem.Checked = _columnIndexText >= 0;
+                contextMenuStripLvHeaderTextToolStripMenuItem.Click += (sender2, e2) =>
+                {
+                    _columnIndexText = _columnIndexText >= 0 ? -1 : 0;
+                    (sender2 as ToolStripMenuItem).Checked = _columnIndexText >= 0;
+                    UpdateListViewColumns();
+                };
+                cm.Items.Add(contextMenuStripLvHeaderTextToolStripMenuItem);
+
+                cm.Show(subtitleListView1, coordinates);
+                return;
+            }
+
             var selectedCount = subtitleListView1.SelectedItems.Count;
             insertToolStripMenuItem.Visible = selectedCount == 1;
             insertAfterToolStripMenuItem.Visible = selectedCount == 1;
@@ -2119,6 +2438,75 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             selectOnlyForcedLinesToolStripMenuItem.Visible = _extra.Any(p => p.IsForced);
 
             quickOCRTextsforOverviewOnlyToolStripMenuItem.Visible = File.Exists(_nOcrFileName);
+        }
+
+        private void UpdateListViewColumns()
+        {
+            var index = 0;
+            subtitleListView1.BeginUpdate();
+            subtitleListView1.Items.Clear();
+            subtitleListView1.Columns.Clear();
+            if (_columnIndexForced >= 0)
+            {
+                subtitleListView1.CheckBoxes = true;
+                _columnIndexForced = index++;
+                subtitleListView1.Columns.Add("forced", LanguageSettings.Current.ExportPngXml.Forced, 60);
+            }
+            else
+            {
+                subtitleListView1.CheckBoxes = false;
+            }
+
+            if (_columnIndexNumber >= 0)
+            {
+                _columnIndexNumber = index++;
+                subtitleListView1.Columns.Add("number", LanguageSettings.Current.General.NumberSymbol, 42);
+            }
+
+            if (_columnIndexStart >= 0)
+            {
+                _columnIndexStart = index++;
+                subtitleListView1.Columns.Add("start", LanguageSettings.Current.General.StartTime, 95);
+            }
+
+            if (_columnIndexEnd >= 0)
+            {
+                _columnIndexEnd = index++;
+                subtitleListView1.Columns.Add("end", LanguageSettings.Current.General.EndTime, 95);
+            }
+
+            if (_columnIndexDuration >= 0)
+            {
+                _columnIndexDuration = index++;
+                subtitleListView1.Columns.Add("dur", LanguageSettings.Current.General.Duration, 60);
+            }
+
+            if (_columnIndexGap >= 0)
+            {
+                _columnIndexGap = index++;
+                subtitleListView1.Columns.Add("gap", LanguageSettings.Current.General.Gap, 60);
+            }
+
+            if (_columnIndexCps >= 0)
+            {
+                _columnIndexCps = index++;
+                subtitleListView1.Columns.Add("cps", LanguageSettings.Current.General.CharsPerSec, 75);
+            }
+
+            if (_columnIndexWpm >= 0)
+            {
+                _columnIndexWpm = index++;
+                subtitleListView1.Columns.Add("wpm", LanguageSettings.Current.General.WordsPerMin, 75);
+            }
+
+            if (_columnIndexText >= 0)
+            {
+                _columnIndexText = index;
+                subtitleListView1.Columns.Add("text", LanguageSettings.Current.General.Text, 200);
+            }
+
+            FillListView(_subtitle);
+            subtitleListView1.EndUpdate();
         }
 
         private void openVideoToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2943,11 +3331,17 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             return result.Text;
         }
 
-        private void quickOCRTextsforOverviewOnlyToolStripMenuItem_Click(object sender, EventArgs e)
+        private void quickOcrTextsForOverviewOnlyToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (subtitleListView1.Items.Count < 1)
             {
                 return;
+            }
+
+            if (_columnIndexText < 0)
+            {
+                _columnIndexText = 10;
+                UpdateListViewColumns();
             }
 
             progressBar1.Value = 0;
@@ -3362,5 +3756,74 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 checkBoxIsForced.Checked = e.Item.Checked;
             }
         }
+
+        private void timerSyntaxColor_Tick(object sender, EventArgs e)
+        {
+            if (subtitleListView1.SelectedItems.Count < 1 || _subtitle == null)
+            {
+                return;
+            }
+
+            var idx = subtitleListView1.SelectedItems[0].Index;
+
+            SyntaxColorLabel(idx);
+
+            if (idx > 0)
+            {
+                SyntaxColorListViewItem(idx - 1, _subtitle.Paragraphs[idx - 1], subtitleListView1.Items[idx - 1]);
+            }
+
+            SyntaxColorListViewItem(idx, _subtitle.Paragraphs[idx], subtitleListView1.Items[idx]);
+
+            if (idx < _subtitle.Paragraphs.Count - 1)
+            {
+                SyntaxColorListViewItem(idx + 1, _subtitle.Paragraphs[idx + 1], subtitleListView1.Items[idx + 1]);
+            }
+
+        }
+
+        private void SyntaxColorLabel(int idx)
+        {
+            var paragraph = _subtitle.GetParagraphOrDefault(idx);
+            if (paragraph == null)
+            {
+                return;
+            }
+
+            var errorText = string.Empty;
+
+            var prev = _subtitle.GetParagraphOrDefault(idx - 1);
+            if (prev != null && prev.EndTime.TotalMilliseconds > paragraph.StartTime.TotalMilliseconds)
+            {
+                errorText = "Overlap with previous";
+            }
+
+            if (string.IsNullOrEmpty(errorText))
+            {
+                var next = _subtitle.GetParagraphOrDefault(idx + 1);
+                if (next != null && next.StartTime.TotalMilliseconds < paragraph.EndTime.TotalMilliseconds)
+                {
+                    errorText = "Overlap with next";
+                }
+            }
+
+            if (string.IsNullOrEmpty(errorText))
+            {
+                if (paragraph.Duration.TotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds && _columnIndexDuration >= 0)
+                {
+                    errorText = "Duration too small";
+                }
+                else if (paragraph.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds && _columnIndexDuration >= 0)
+                {
+                    errorText = "Duration too large";
+                }
+            }
+
+            if (errorText != labelSyntaxError.Text)
+            {
+                labelSyntaxError.Text = errorText;
+            }
+        }
     }
 }
+
