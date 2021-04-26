@@ -210,6 +210,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             UiUtil.FixLargeFonts(this, buttonExportImage);
             UiUtil.InitializeSubtitleFont(subtitleListView1);
             UpdateListViewColumns();
+            subtitleListView1.AllowColumnReorder = true;
             videoPlayerContainer1.Visible = false;
             progressBar1.Visible = false;
             OpenBinSubtitle(fileName);
