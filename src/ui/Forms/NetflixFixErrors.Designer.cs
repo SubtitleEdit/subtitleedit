@@ -103,7 +103,7 @@
             this.checkBoxGapBridge.Name = "checkBoxGapBridge";
             this.checkBoxGapBridge.Size = new System.Drawing.Size(210, 17);
             this.checkBoxGapBridge.TabIndex = 8;
-            this.checkBoxGapBridge.Text = "Frame gap:  3 to 11 frames => 2 frames";
+            this.checkBoxGapBridge.Text = "Frame gap: 3 to 11 frames => 2 frames";
             this.checkBoxGapBridge.UseVisualStyleBackColor = true;
             this.checkBoxGapBridge.CheckedChanged += new System.EventHandler(this.RuleCheckedChanged);
             // 
