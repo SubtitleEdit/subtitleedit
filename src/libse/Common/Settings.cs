@@ -1971,6 +1971,7 @@ $HorzAlign          =   Center
         public string MainTextBoxMoveFirstWordFromNextUp { get; set; }
         public string MainTextBoxMoveLastWordDownCurrent { get; set; }
         public string MainTextBoxMoveFirstWordUpCurrent { get; set; }
+        public string MainTextBoxMoveFromCursorToNext { get; set; }
         public string MainTextBoxSelectionToLower { get; set; }
         public string MainTextBoxSelectionToUpper { get; set; }
         public string MainTextBoxSelectionToggleCasing { get; set; }
@@ -7433,6 +7434,12 @@ $HorzAlign          =   Center
                     shortcuts.MainTextBoxMoveFirstWordUpCurrent = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainTextBoxMoveFromCursorToNext");
+                if (subNode != null)
+                {
+                    shortcuts.MainTextBoxMoveFromCursorToNext = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainTextBoxSelectionToLower");
                 if (subNode != null)
                 {
@@ -8965,6 +8972,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainTextBoxMoveFirstWordFromNextUp", shortcuts.MainTextBoxMoveFirstWordFromNextUp);
             textWriter.WriteElementString("MainTextBoxMoveLastWordDownCurrent", shortcuts.MainTextBoxMoveLastWordDownCurrent);
             textWriter.WriteElementString("MainTextBoxMoveFirstWordUpCurrent", shortcuts.MainTextBoxMoveFirstWordUpCurrent);
+            textWriter.WriteElementString("MainTextBoxMoveFromCursorToNext", shortcuts.MainTextBoxMoveFromCursorToNext);
             textWriter.WriteElementString("MainTextBoxSelectionToLower", shortcuts.MainTextBoxSelectionToLower);
             textWriter.WriteElementString("MainTextBoxSelectionToUpper", shortcuts.MainTextBoxSelectionToUpper);
             textWriter.WriteElementString("MainTextBoxSelectionToggleCasing", shortcuts.MainTextBoxSelectionToggleCasing);

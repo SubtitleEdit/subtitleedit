@@ -15801,6 +15801,18 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
+            else if (e.KeyData == _shortcuts.MainTextBoxMoveFromCursorToNext)
+            {
+                if (textBoxListViewTextOriginal.Focused)
+                {
+                    MoveTextFromCursorToNext(textBoxListViewTextOriginal);
+                }
+                else
+                {
+                    MoveTextFromCursorToNext(textBoxListViewText);
+                }
+                e.SuppressKeyPress = true;
+            }
             else if (_shortcuts.MainAutoCalcCurrentDuration == e.KeyData)
             {
                 e.SuppressKeyPress = true;
@@ -17048,6 +17060,54 @@ namespace Nikse.SubtitleEdit.Forms
 
             SetListViewStateImages();
             new BookmarkPersistence(_subtitle, _fileName).Save();
+        }
+
+        private void MoveTextFromCursorToNext(SETextBox tb)
+        {
+            int firstIndex = FirstSelectedIndex;
+            if (firstIndex < 0)
+            {
+                return;
+            }
+
+            var p = _subtitle.GetParagraphOrDefault(firstIndex);
+            var next = _subtitle.GetParagraphOrDefault(firstIndex + 1);
+            if (tb == textBoxListViewTextOriginal)
+            {
+                p = Utilities.GetOriginalParagraph(firstIndex, p, _subtitleOriginal.Paragraphs);
+                next = Utilities.GetOriginalParagraph(firstIndex + 1, next, _subtitleOriginal.Paragraphs);
+            }
+
+            if (p == null || next == null)
+            {
+                return;
+            }
+
+            var text1 = string.Empty;
+            var text2 = p.Text;
+
+            if (tb.SelectionStart > 0)
+            {
+                text1 = p.Text.Substring(0, Math.Min(p.Text.Length, tb.SelectionStart)).Trim();
+                text2 = p.Text.Remove(0, Math.Min(p.Text.Length, tb.SelectionStart)).Trim();
+            }
+
+            p.Text = text1;
+            next.Text = (text2 + Environment.NewLine + next.Text.Trim()).Trim();
+
+            MakeHistoryForUndo(_language.BeforeLineUpdatedInListView);
+
+            tb.Text = p.Text;
+            if (tb == textBoxListViewTextOriginal)
+            {
+                SubtitleListview1.SetOriginalText(firstIndex, p.Text);
+                SubtitleListview1.SetOriginalText(firstIndex + 1, next.Text);
+            }
+            else
+            {
+                SubtitleListview1.SetText(firstIndex, p.Text);
+                SubtitleListview1.SetText(firstIndex + 1, next.Text);
+            }
         }
 
         private void MoveWordUpDownInCurrent(bool down, SETextBox tb)
