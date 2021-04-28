@@ -20,10 +20,11 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly SubtitleFormat _subtitleFormat;
         private readonly string _subtitleFileName;
         private readonly string _videoFileName;
+        private readonly double _frameRate;
         private bool _loading;
         private NetflixQualityController _netflixQualityController;
 
-        public NetflixFixErrors(Subtitle subtitle, SubtitleFormat subtitleFormat, string subtitleFileName, string videoFileName)
+        public NetflixFixErrors(Subtitle subtitle, SubtitleFormat subtitleFormat, string subtitleFileName, string videoFileName, double frameRate)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -37,6 +38,7 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitleFormat = subtitleFormat;
             _subtitleFileName = subtitleFileName;
             _videoFileName = videoFileName;
+            _frameRate = frameRate;
 
             labelTotal.Text = string.Empty;
             linkLabelOpenReportFolder.Text = string.Empty;
@@ -56,21 +58,24 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RefreshCheckBoxes(string language)
         {
-            _netflixQualityController = new NetflixQualityController { Language = language, VideoFileName = _videoFileName };
+            _netflixQualityController = new NetflixQualityController { Language = language, VideoFileName = _videoFileName, FrameRate = _frameRate};
 
             checkBoxNoItalics.Checked = !_netflixQualityController.AllowItalics;
             checkBoxNoItalics.Enabled = !_netflixQualityController.AllowItalics;
 
-            var sceneChangesExists = false;
+            int halfSecGapInFrames = (int)Math.Round(_frameRate / 2);
+            checkBoxGapBridge.Text = $"Frame gap: 3 to {halfSecGapInFrames - 1} frames => 2 frames";
+
+            var sceneChangesExist = false;
             if (_netflixQualityController.VideoExists)
             {
                 if (SceneChangeHelper.FromDisk(_videoFileName).Count > 0)
                 {
-                    sceneChangesExists = true;
+                    sceneChangesExist = true;
                 }
             }
-            checkBoxSceneChange.Checked = _netflixQualityController.VideoExists && sceneChangesExists;
-            checkBoxSceneChange.Enabled = _netflixQualityController.VideoExists && sceneChangesExists;
+            checkBoxSceneChange.Checked = sceneChangesExist;
+            checkBoxSceneChange.Enabled = sceneChangesExist;
 
             var checkFrameRate = _subtitleFormat.GetType() == new NetflixTimedText().GetType();
             checkBoxTtmlFrameRate.Checked = checkFrameRate;
