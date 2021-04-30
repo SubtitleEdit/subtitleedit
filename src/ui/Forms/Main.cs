@@ -5433,7 +5433,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SaveAll(bool useOnly0AForNewLine = false)
         {
-            if (!IsSubtitleLoaded)
+            if (_subtitle == null || _subtitle.Paragraphs.Count == 0)
             {
                 ShowStatus(_language.CannotSaveEmptySubtitle);
                 return;
