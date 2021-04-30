@@ -1474,6 +1474,8 @@ Continue?</SubtitleAppendPrompt>
     <LineSplitted>Line was split</LineSplitted>
     <BeforeMergeLines>Before merge lines</BeforeMergeLines>
     <LinesMerged>Lines merged</LinesMerged>
+    <MergeSentences>Merge sentences...</MergeSentences>
+    <MergeSentencesXLines>Merge sentences - lines merged: {0}</MergeSentencesXLines>
     <BeforeSettingColor>Before setting color</BeforeSettingColor>
     <BeforeSettingFontName>Before setting font name</BeforeSettingFontName>
     <BeforeTypeWriterEffect>Before typewriter effect</BeforeTypeWriterEffect>
@@ -2341,6 +2343,7 @@ can edit in same subtitle file (collaboration)</Information>
     <MainTextBoxMoveLastWordDown>Move last word to next subtitle</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Fetch first word from next subtitle</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Move first word from next line up (current subtitle)</MainTextBoxMoveFirstWordUpCurrent>
+    <MainTextBoxMoveFromCursorToNext>Move text after cursor position to next subtitle and go to next</MainTextBoxMoveFromCursorToNext>
     <MainTextBoxMoveLastWordDownCurrent>Move last word from first line down (current subtitle)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Selection to lowercase</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Selection to uppercase</MainTextBoxSelectionToUpper>

@@ -1512,6 +1512,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemMergeDuplicateText.Text = _language.Menu.Tools.MergeDuplicateText;
             toolStripMenuItemMergeLinesWithSameTimeCodes.Text = _language.Menu.Tools.MergeSameTimeCodes;
             toolStripMenuItemAutoSplitLongLines.Text = _language.Menu.Tools.SplitLongLines;
+            breaksplitLongLinesToolStripMenuItem.Text = _language.Menu.Tools.SplitLongLines;
             setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem.Text = _language.Menu.Tools.MinimumDisplayTimeBetweenParagraphs;
             toolStripMenuItemSortBy.Text = _language.Menu.Tools.SortBy;
             netflixQualityCheckToolStripMenuItem.Text = _language.Menu.Tools.NetflixQualityCheck;
@@ -15801,7 +15802,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _shortcuts.MainTextBoxMoveFromCursorToNext)
+            else if (e.KeyData == _shortcuts.MainTextBoxMoveFromCursorToNextAndGoToNext)
             {
                 if (textBoxListViewTextOriginal.Focused)
                 {
@@ -17107,6 +17108,17 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 SubtitleListview1.SetText(firstIndex, p.Text);
                 SubtitleListview1.SetText(firstIndex + 1, next.Text);
+            }
+
+            if (firstIndex + 1 < _subtitle.Paragraphs.Count)
+            {
+                _subtitleListViewIndex = -1;
+                var index = firstIndex + 1;
+                SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
+                if (mediaPlayer.IsPaused && index < _subtitle.Paragraphs.Count)
+                {
+                    mediaPlayer.CurrentPosition = _subtitle.Paragraphs[index].StartTime.TotalSeconds;
+                }
             }
         }
 
@@ -30378,6 +30390,55 @@ namespace Nikse.SubtitleEdit.Forms
         private int GetFastSubtitleHash()
         {
             return _subtitle.GetFastHashCode(_fileName + GetCurrentEncoding().BodyName);
+        }
+
+        private void mergeSentencesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
+            var mergedSubtitle = new Subtitle();
+            var index = 0;
+            Paragraph next = null;
+            while (index < _subtitle.Paragraphs.Count)
+            {
+                var paragraph = next ?? new Paragraph(_subtitle.Paragraphs[index]);
+                index++;
+                if (index >= _subtitle.Paragraphs.Count)
+                {
+                    mergedSubtitle.Paragraphs.Add(paragraph);
+                    break;
+                }
+
+                next = new Paragraph(_subtitle.Paragraphs[index]);
+                if (paragraph.Text.HasSentenceEnding(language) || next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds > Configuration.Settings.Tools.MergeShortLinesMaxGap)
+                {
+                    mergedSubtitle.Paragraphs.Add(paragraph);
+                    continue;
+                }
+
+                next.Text = Utilities.UnbreakLine(paragraph.Text + Environment.NewLine + next.Text);
+                next.StartTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds;
+            }
+
+            int linesMergedCount = _subtitle.Paragraphs.Count - mergedSubtitle.Paragraphs.Count;
+            ShowStatus(string.Format(_language.MergeSentencesXLines, linesMergedCount));
+            if (linesMergedCount > 0)
+            {
+                MakeHistoryForUndo(string.Format(_language.BeforeX, _language.MergeSentences));
+            }
+            else
+            {
+                return;
+            }
+
+            _subtitle.Paragraphs.Clear();
+            _subtitle.Paragraphs.AddRange(mergedSubtitle.Paragraphs);
+            _subtitle.Renumber();
+            SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+        }
+
+        private void breaksplitLongLinesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            toolStripMenuItemAutoSplitLongLines_Click(sender, e);
         }
     }
 }
