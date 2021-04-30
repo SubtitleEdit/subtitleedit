@@ -78,7 +78,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
             }
             catch (WebException webException)
             {
-                string message = "";
+                var message = string.Empty;
                 if (webException.Message.Contains("(400) Bad Request"))
                 {
                     message = "API key invalid (or perhaps billing is not enabled)?";

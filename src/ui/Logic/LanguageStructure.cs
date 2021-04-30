@@ -1228,6 +1228,8 @@
             public string LineSplitted { get; set; }
             public string BeforeMergeLines { get; set; }
             public string LinesMerged { get; set; }
+            public string MergeSentences { get; set; }
+            public string MergeSentencesXLines { get; set; }
             public string BeforeSettingColor { get; set; }
             public string BeforeSettingFontName { get; set; }
             public string BeforeTypeWriterEffect { get; set; }

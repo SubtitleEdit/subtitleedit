@@ -3067,6 +3067,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/LinesMerged":
                     language.Main.LinesMerged = reader.Value;
                     break;
+                case "Main/MergeSentences":
+                    language.Main.MergeSentences = reader.Value;
+                    break;
+                case "Main/MergeSentencesXLines":
+                    language.Main.MergeSentencesXLines = reader.Value;
+                    break;
                 case "Main/BeforeSettingColor":
                     language.Main.BeforeSettingColor = reader.Value;
                     break;
@@ -6432,6 +6438,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Settings/MainTextBoxMoveFirstWordUpCurrent":
                     language.Settings.MainTextBoxMoveFirstWordUpCurrent = reader.Value;
+                    break;
+                case "Settings/MainTextBoxMoveFromCursorToNext":
+                    language.Settings.MainTextBoxMoveFromCursorToNext = reader.Value;
                     break;
                 case "Settings/MainTextBoxMoveLastWordDownCurrent":
                     language.Settings.MainTextBoxMoveLastWordDownCurrent = reader.Value;
