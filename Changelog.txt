@@ -11,6 +11,8 @@
    * Allow multiple selection in ASSA style manager - thx OmrSi
    * Add bookmarks to modify selection - thx moob158/OmrSi
    * Add shortcut for toggling video controls on/off
+   * Add "Show/hide waveform" shortcut - thx AbsenceJam
+   * Add "Move parts after cursor position to next subtitle" shortcut - thx Leon
    * Add a quick way to remove blank lines via shortcut
    * Add "Set start, offset all" shortcut - thx QuentinNetherwood/OmrSi
    * Add export to csv of bookmarks - thx kjaerlige
