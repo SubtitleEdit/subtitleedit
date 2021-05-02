@@ -1466,6 +1466,8 @@ Command line: {1} {2}
     <LineSplitted>行已分割</LineSplitted>
     <BeforeMergeLines>合并行之前</BeforeMergeLines>
     <LinesMerged>行已合并</LinesMerged>
+    <MergeSentences>合并句子…</MergeSentences>
+    <MergeSentencesXLines>合并句子-已合并{0}行</MergeSentencesXLines>
     <BeforeSettingColor>设置颜色之前</BeforeSettingColor>
     <BeforeSettingFontName>设置字体名称之前</BeforeSettingFontName>
     <BeforeTypeWriterEffect>打字机效果之前</BeforeTypeWriterEffect>
@@ -2332,6 +2334,7 @@ Command line: {1} {2}
     <MainTextBoxMoveLastWordDown>将上一行的最后一个单词移到下一行</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>将下一行的第一个单词移到上一行</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>将次行行首的词上移至首行行末（单条字幕内）</MainTextBoxMoveFirstWordUpCurrent>
+    <MainTextBoxMoveFromCursorToNext>将光标位置之后的文本移动到下一条字幕，然后转到下一条</MainTextBoxMoveFromCursorToNext>
     <MainTextBoxMoveLastWordDownCurrent>将首行行末的词下移至次行行首（单条字幕内）</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>选中的内容转小写</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>选中的内容转大写</MainTextBoxSelectionToUpper>
