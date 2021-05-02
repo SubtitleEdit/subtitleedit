@@ -442,23 +442,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                             color = node.Attributes["tts:color"].Value.Trim();
                         }
 
-                        Color c = Color.White;
-                        try
-                        {
-                            if (color.StartsWith("rgb(", StringComparison.Ordinal))
-                            {
-                                string[] arr = color.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                                c = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
-                            }
-                            else
-                            {
-                                c = ColorTranslator.FromHtml(color);
-                            }
-                        }
-                        catch
-                        {
-                            // ignored
-                        }
+                        var c = HtmlUtil.GetColorFromString(color);
 
                         string fontSize = "20";
                         if (node.Attributes["tts:fontSize"] != null)
@@ -589,23 +573,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                             color = node.Attributes["tts:color"].Value.Trim();
                         }
 
-                        Color c = Color.White;
-                        try
-                        {
-                            if (color.StartsWith("rgb(", StringComparison.Ordinal))
-                            {
-                                string[] arr = color.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                                c = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
-                            }
-                            else
-                            {
-                                c = ColorTranslator.FromHtml(color);
-                            }
-                        }
-                        catch
-                        {
-                            // ignored
-                        }
+                        var c = HtmlUtil.GetColorFromString(color);
 
                         string fontSize = "20";
                         if (node.Attributes["tts:fontSize"] != null)
@@ -802,15 +770,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                     string subTag = fontTag.Substring(fontStart + tag.Length, fontEnd - (fontStart + tag.Length));
                     if (tag.Contains("color"))
                     {
-                        Color c;
-                        try
-                        {
-                            c = ColorTranslator.FromHtml(subTag);
-                        }
-                        catch
-                        {
-                            c = Color.White;
-                        }
+                        var c = HtmlUtil.GetColorFromString(subTag);
                         subTag = (c.B.ToString("X2") + c.G.ToString("X2") + c.R.ToString("X2")).ToLowerInvariant(); // use bbggrr
                     }
                     fontTag = fontTag.Remove(fontStart, fontEnd - fontStart + 1);

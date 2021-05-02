@@ -1,7 +1,7 @@
 ﻿
 namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 {
-    partial class BinEditSettings
+    sealed partial class BinEditSettings
     {
         /// <summary>
         /// Required designer variable.

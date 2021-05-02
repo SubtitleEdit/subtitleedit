@@ -1656,6 +1656,23 @@ VÄLKOMMEN TILL TEXAS
             Assert.AreEqual("<font color=\"#008000\">This is hex colored</font>", subtitle.Paragraphs[2].Text);
         }
 
+
+        [TestMethod]
+        public void WebVttFontColor3()
+        {
+            var target = new WebVTT();
+            var subtitle = new Subtitle();
+            var raw = @"WEBVTT
+
+00:00:28.800 --> 00:00:30.880 line:83% align:center
+<c.cyan.bg_black>(Amanda): line2.1</c>
+<c.cyan.bg_black>line 2.2</c>";
+            target.LoadSubtitle(subtitle, raw.SplitToLines(), null);
+            target.RemoveNativeFormatting(subtitle, new SubRip());
+            Assert.AreEqual("<font color=\"cyan\">(Amanda): line2.1</font>" + Environment.NewLine +
+                            "<font color=\"cyan\">line 2.2</font>", subtitle.Paragraphs[0].Text);
+        }
+
         [TestMethod]
         public void WebVttEscapeEncoding()
         {

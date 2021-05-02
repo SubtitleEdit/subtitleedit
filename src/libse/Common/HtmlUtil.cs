@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -907,6 +908,29 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
             return text;
+        }
+
+        public static Color GetColorFromString(string color)
+        {
+            Color c = Color.White;
+            try
+            {
+                if (color.StartsWith("rgb(", StringComparison.Ordinal))
+                {
+                    string[] arr = color.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                    c = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
+                }
+                else
+                {
+                    c = ColorTranslator.FromHtml(color);
+                }
+            }
+            catch
+            {
+                // ignored
+            }
+
+            return c;
         }
 
     }

@@ -1,5 +1,4 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -138,7 +137,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new KanopyHtml(),
                     new LambdaCap(),
                     new Lrc(),
-                    new MacCaption10(),
                     new MacSub(),
                     new MediaTransData(),
                     new MicroDvd(),
@@ -643,7 +641,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 new TranscriptiveJson(),
                 new KaraokeCdgCreatorText(),
                 new VidIcelandic(),
-                new JsonArchtime(), 
+                new JsonArchtime(),
+                new MacCaption10(),
+                new Rdf1(),
             };
         }
 
@@ -660,22 +660,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             return defaultFormat;
-        }
-
-        public static SubtitleFormat BinaryPersistableFromName(string formatName, bool batchMode)
-        {
-            string trimmedFormatName = formatName.Trim();
-            foreach (var format in GetBinaryFormats(batchMode))
-            {
-                if (format is IBinaryPersistableSubtitle &&
-                    format.Name.Trim().Equals(trimmedFormatName, StringComparison.OrdinalIgnoreCase) ||
-                    format.FriendlyName.Trim().Equals(trimmedFormatName, StringComparison.OrdinalIgnoreCase))
-                {
-                    return format;
-                }
-            }
-
-            return null;
         }
 
         private static IList<SubtitleFormat> GetOrderedFormatsList(IList<SubtitleFormat> unorderedFormatsList)

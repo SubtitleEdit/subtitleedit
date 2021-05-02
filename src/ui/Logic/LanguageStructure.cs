@@ -1228,6 +1228,8 @@
             public string LineSplitted { get; set; }
             public string BeforeMergeLines { get; set; }
             public string LinesMerged { get; set; }
+            public string MergeSentences { get; set; }
+            public string MergeSentencesXLines { get; set; }
             public string BeforeSettingColor { get; set; }
             public string BeforeSettingFontName { get; set; }
             public string BeforeTypeWriterEffect { get; set; }
@@ -2514,6 +2516,7 @@
             public string MainTextBoxMoveLastWordDown { get; set; }
             public string MainTextBoxMoveFirstWordFromNextUp { get; set; }
             public string MainTextBoxMoveFirstWordUpCurrent { get; set; }
+            public string MainTextBoxMoveFromCursorToNext { get; set; }
             public string MainTextBoxMoveLastWordDownCurrent { get; set; }
             public string MainTextBoxSelectionToLower { get; set; }
             public string MainTextBoxSelectionToUpper { get; set; }

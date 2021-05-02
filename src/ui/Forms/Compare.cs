@@ -20,8 +20,10 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly Keys _mainGeneralGoToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
         private readonly Keys _mainGeneralGoToPrevSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
         private string _language;
-        private readonly Color _backDifferenceColor = Color.FromArgb(255, 90, 90);
-        private readonly Color _foregroundDifferenceColor = Color.FromArgb(225, 0, 0);
+        private static readonly Color _backDifferenceColor = Color.FromArgb(255, 90, 90);
+        private static readonly Color _foregroundDifferenceColor = Color.FromArgb(225, 0, 0);
+        private static readonly Color _listViewGreen = Configuration.Settings.General.UseDarkTheme ? Color.Green : Color.LightGreen;
+        private static readonly Color _listViewRed = Configuration.Settings.General.UseDarkTheme ? Color.DarkRed : Color.Salmon;
         private bool _loadingConfig = true;
 
         public Compare()
@@ -84,6 +86,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 try
                 {
+                    buttonReloadSubtitle1.Enabled = true;
                     openFileDialog1.InitialDirectory = Path.GetDirectoryName(subtitleFileName1);
                 }
                 catch
@@ -285,18 +288,18 @@ namespace Nikse.SubtitleEdit.Forms
                     if (p1.IsDefault)
                     {
                         addIndexToDifferences = true;
-                        subtitleListView1.ColorOut(index, Color.Salmon);
+                        subtitleListView1.ColorOut(index, _listViewRed);
                     }
                     else if (p2.IsDefault)
                     {
                         addIndexToDifferences = true;
-                        subtitleListView2.ColorOut(index, Color.Salmon);
+                        subtitleListView2.ColorOut(index, _listViewRed);
                     }
                     else if (FixWhitespace(p1.Text) != FixWhitespace(p2.Text))
                     {
                         addIndexToDifferences = true;
-                        subtitleListView1.SetBackgroundColor(index, Color.LightGreen, subtitleListView1.ColumnIndexText);
-                        subtitleListView2.SetBackgroundColor(index, Color.LightGreen, subtitleListView2.ColumnIndexText);
+                        subtitleListView1.SetBackgroundColor(index, _listViewGreen, subtitleListView1.ColumnIndexText);
+                        subtitleListView2.SetBackgroundColor(index, _listViewGreen, subtitleListView2.ColumnIndexText);
                     }
                     if (addIndexToDifferences)
                     {
@@ -317,12 +320,12 @@ namespace Nikse.SubtitleEdit.Forms
                     if (p1.IsDefault)
                     {
                         addIndexToDifferences = true;
-                        subtitleListView1.ColorOut(index, Color.Salmon);
+                        subtitleListView1.ColorOut(index, _listViewRed);
                     }
                     else if (p2.IsDefault)
                     {
                         addIndexToDifferences = true;
-                        subtitleListView2.ColorOut(index, Color.Salmon);
+                        subtitleListView2.ColorOut(index, _listViewRed);
                     }
                     else
                     {
@@ -331,8 +334,8 @@ namespace Nikse.SubtitleEdit.Forms
                         if (columnsAlike == 0)
                         {
                             addIndexToDifferences = true;
-                            subtitleListView1.SetBackgroundColor(index, Color.LightGreen);
-                            subtitleListView2.SetBackgroundColor(index, Color.LightGreen);
+                            subtitleListView1.SetBackgroundColor(index, _listViewGreen);
+                            subtitleListView2.SetBackgroundColor(index, _listViewGreen);
                             subtitleListView1.SetBackgroundColor(index, subtitleListView1.BackColor, subtitleListView1.ColumnIndexNumber);
                             subtitleListView2.SetBackgroundColor(index, subtitleListView2.BackColor, subtitleListView2.ColumnIndexNumber);
                         }
@@ -342,26 +345,26 @@ namespace Nikse.SubtitleEdit.Forms
                             // Start time
                             if (Math.Abs(p1.StartTime.TotalMilliseconds - p2.StartTime.TotalMilliseconds) > tolerance)
                             {
-                                subtitleListView1.SetBackgroundColor(index, Color.LightGreen, subtitleListView1.ColumnIndexStart);
-                                subtitleListView2.SetBackgroundColor(index, Color.LightGreen, subtitleListView2.ColumnIndexStart);
+                                subtitleListView1.SetBackgroundColor(index, _listViewGreen, subtitleListView1.ColumnIndexStart);
+                                subtitleListView2.SetBackgroundColor(index, _listViewGreen, subtitleListView2.ColumnIndexStart);
                             }
                             // End time
                             if (Math.Abs(p1.EndTime.TotalMilliseconds - p2.EndTime.TotalMilliseconds) > tolerance)
                             {
-                                subtitleListView1.SetBackgroundColor(index, Color.LightGreen, subtitleListView1.ColumnIndexEnd);
-                                subtitleListView2.SetBackgroundColor(index, Color.LightGreen, subtitleListView2.ColumnIndexEnd);
+                                subtitleListView1.SetBackgroundColor(index, _listViewGreen, subtitleListView1.ColumnIndexEnd);
+                                subtitleListView2.SetBackgroundColor(index, _listViewGreen, subtitleListView2.ColumnIndexEnd);
                             }
                             // Duration
                             if (Math.Abs(p1.Duration.TotalMilliseconds - p2.Duration.TotalMilliseconds) > tolerance)
                             {
-                                subtitleListView1.SetBackgroundColor(index, Color.LightGreen, subtitleListView1.ColumnIndexDuration);
-                                subtitleListView2.SetBackgroundColor(index, Color.LightGreen, subtitleListView2.ColumnIndexDuration);
+                                subtitleListView1.SetBackgroundColor(index, _listViewGreen, subtitleListView1.ColumnIndexDuration);
+                                subtitleListView2.SetBackgroundColor(index, _listViewGreen, subtitleListView2.ColumnIndexDuration);
                             }
                             // Text
                             if (FixWhitespace(p1.Text.Trim()) != FixWhitespace(p2.Text.Trim()))
                             {
-                                subtitleListView1.SetBackgroundColor(index, Color.LightGreen, subtitleListView1.ColumnIndexText);
-                                subtitleListView2.SetBackgroundColor(index, Color.LightGreen, subtitleListView2.ColumnIndexText);
+                                subtitleListView1.SetBackgroundColor(index, _listViewGreen, subtitleListView1.ColumnIndexText);
+                                subtitleListView2.SetBackgroundColor(index, _listViewGreen, subtitleListView2.ColumnIndexText);
                             }
                         }
                         // Number
@@ -391,11 +394,11 @@ namespace Nikse.SubtitleEdit.Forms
                     if (!onlyTextDiff)
                     {
                         listView.SetBackgroundColor(i, Color.FromArgb(255, 200, 100), listView.ColumnIndexNumber);
-                        listView.SetBackgroundColor(i, Color.LightGreen, listView.ColumnIndexStart);
-                        listView.SetBackgroundColor(i, Color.LightGreen, listView.ColumnIndexEnd);
-                        listView.SetBackgroundColor(i, Color.LightGreen, listView.ColumnIndexDuration);
+                        listView.SetBackgroundColor(i, _listViewGreen, listView.ColumnIndexStart);
+                        listView.SetBackgroundColor(i, _listViewGreen, listView.ColumnIndexEnd);
+                        listView.SetBackgroundColor(i, _listViewGreen, listView.ColumnIndexDuration);
                     }
-                    listView.SetBackgroundColor(i, Color.LightGreen, listView.ColumnIndexText);
+                    listView.SetBackgroundColor(i, _listViewGreen, listView.ColumnIndexText);
                 }
             }
 
@@ -685,7 +688,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     richTextBox1.SelectionStart = i;
                     richTextBox1.SelectionLength = 1;
-                    richTextBox1.SelectionColor = _backDifferenceColor;
+                    richTextBox1.SelectionColor = _foregroundDifferenceColor;
                     if (" .,".Contains(richTextBox1.SelectedText))
                     {
                         richTextBox1.SelectionBackColor = _backDifferenceColor;

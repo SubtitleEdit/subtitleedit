@@ -194,7 +194,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 int length = rtb.Text.Length;
                 richTextBoxPreview.Text += text;
-                _colorList.Add(new ColorEntry { Start = length, Length = text.Length, Color = string.IsNullOrWhiteSpace(color) ? Color.White : ColorTranslator.FromHtml(color) });
+                _colorList.Add(new ColorEntry { Start = length, Length = text.Length, Color = HtmlUtil.GetColorFromString(color) });
 
                 var fontStyle = new FontStyle();
                 if (underline)
