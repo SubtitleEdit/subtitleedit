@@ -37,7 +37,7 @@ Email: mailto:hugokarvalho@hotmail.com</TranslatedBy>
     <Text>Texto</Text>
     <HourMinutesSecondsDecimalSeparatorMilliseconds>Hora:min:seg{0}ms</HourMinutesSecondsDecimalSeparatorMilliseconds>
     <HourMinutesSecondsFrames>Hora:min:seg:fotogramas</HourMinutesSecondsFrames>
-	<XSeconds>{0:0.0##} segundos</XSeconds>
+    <XSeconds>{0:0.0##} segundos</XSeconds>
     <Bold>Negrito</Bold>
     <Italic>Itálico</Italic>
     <Underline>Sublinhado</Underline>
@@ -166,18 +166,18 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <UnableToFix>Incapaz de corrigir: {0}</UnableToFix>
   </ApplyDurationLimits>
   <AssaAttachments>
-	<Title>Anexos Advanced Sub Station Alpha</Title>
-	<AttachFiles>Anexar ficheiros...</AttachFiles>
-	<FontsAndImages>Anexar tipos de letra e imagens</FontsAndImages>
-	<Graphics>Gráficos</Graphics>
-	<Font>Tipo de letra</Font>
-	<ImageName>Nome Imagem ({0}x{1}):</ImageName>
-	<IconName>Nome icon:</IconName>
-	<FontName>Nome tipo de letra:</FontName>
-	<ImageResized>Redimensionar imagem para caber na janela</ImageResized>
-	<FilesSkippedX>Ficheiros ignorados: {0}</FilesSkippedX>
-	<RemoveOneAttachment>Eliminar um anexo?</RemoveOneAttachment>
-	<RemoveXAttachments>Eliminar {0} anexos?</RemoveXAttachments>
+    <Title>Anexos Advanced Sub Station Alpha</Title>
+    <AttachFiles>Anexar ficheiros...</AttachFiles>
+    <FontsAndImages>Anexar tipos de letra e imagens</FontsAndImages>
+    <Graphics>Gráficos</Graphics>
+    <Font>Tipo de letra</Font>
+    <ImageName>Nome Imagem ({0}x{1}):</ImageName>
+    <IconName>Nome icon:</IconName>
+    <FontName>Nome tipo de letra:</FontName>
+    <ImageResized>Redimensionar imagem para caber na janela</ImageResized>
+    <FilesSkippedX>Ficheiros ignorados: {0}</FilesSkippedX>
+    <RemoveOneAttachment>Eliminar um anexo?</RemoveOneAttachment>
+    <RemoveXAttachments>Eliminar {0} anexos?</RemoveXAttachments>
   </AssaAttachments>
   <AudioToText>
     <Title>Áudio para texto</Title>
@@ -1138,7 +1138,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <OpenDvd>Abrir DVD...</OpenDvd>
         <ChooseAudioTrack>Seleccione a faixa de áudio</ChooseAudioTrack>
         <CloseVideo>Fechar ficheiro de vídeo</CloseVideo>
-   	    <OpenSecondSubtitle>Abrir segunda legenda...</OpenSecondSubtitle>
+        <OpenSecondSubtitle>Abrir segunda legenda...</OpenSecondSubtitle>
         <SetVideoOffset>Definir o deslocamento do vídeo...</SetVideoOffset>
         <SmptTimeMode>SMPTE temporização (drop frame)</SmptTimeMode>
         <GenerateTextFromVideo>Gerar texto a partir do vídeo...</GenerateTextFromVideo>
@@ -1336,7 +1336,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
       <SetStartTimeAndOffsetTheRest>Defini&amp;r início e compensar o resto</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Procurar texto online</SearchTextOnline>
       <GoogleTranslate>Google Tradutor</GoogleTranslate>
-	  <AutoTranslate>Tradução automática</AutoTranslate>
+      <AutoTranslate>Tradução automática</AutoTranslate>
       <GoogleIt>Pesquisa Google</GoogleIt>
       <SecondsBackShort>&lt;&lt;</SecondsBackShort>
       <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
@@ -1353,7 +1353,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
     <SaveChangesToOriginalX>Guardar alterações originais ao {0}?</SaveChangesToOriginalX>
     <SaveSubtitleAs>Guardar legenda como...</SaveSubtitleAs>
     <SaveOriginalSubtitleAs>Guardar legenda original como..</SaveOriginalSubtitleAs>
-	<CannotSaveEmptySubtitle>Não é possível guardar legenda vazia</CannotSaveEmptySubtitle>
+    <CannotSaveEmptySubtitle>Não é possível guardar legenda vazia</CannotSaveEmptySubtitle>
     <NoSubtitleLoaded>Legenda não detectada</NoSubtitleLoaded>
     <VisualSyncSelectedLines>Sincronia visual - linhas seleccionadas</VisualSyncSelectedLines>
     <VisualSyncTitle>Sincronia visual</VisualSyncTitle>
@@ -1475,6 +1475,8 @@ Deseja continuar?</SubtitleAppendPrompt>
     <LineSplitted>Linha foi dividida</LineSplitted>
     <BeforeMergeLines>Antes de combinar as linhas</BeforeMergeLines>
     <LinesMerged>Linhas combinadas</LinesMerged>
+    <MergeSentences>Combinar frases...</MergeSentences>
+    <MergeSentencesXLines>Combinar frases - linhas combinadas: {0}</MergeSentencesXLines>
     <BeforeSettingColor>Antes de definir a cor</BeforeSettingColor>
     <BeforeSettingFontName>Antes de definir o tipo de letra</BeforeSettingFontName>
     <BeforeTypeWriterEffect>Antes do efeito máquina de escrever</BeforeTypeWriterEffect>
@@ -1942,7 +1944,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
   <Settings>
     <Title>Definições</Title>
     <General>Geral</General>
-	<SubtitleFormats>Formatos de legendas</SubtitleFormats>
+    <SubtitleFormats>Formatos de legendas</SubtitleFormats>
     <Toolbar>Barra de ferramentas</Toolbar>
     <VideoPlayer>Reprodutor de vídeo</VideoPlayer>
     <WaveformAndSpectrogram>Waveform/espectrograma</WaveformAndSpectrogram>
@@ -1965,7 +1967,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ToggleBookmarks>Alternar marcadores</ToggleBookmarks>
     <ToggleBookmarksWithComment>Alternar marcadores - adicionar comentário</ToggleBookmarksWithComment>
     <ClearBookmarks>Eliminar marcadores</ClearBookmarks>
-	<ExportBookmarks>Exportar marcadores...</ExportBookmarks>
+    <ExportBookmarks>Exportar marcadores...</ExportBookmarks>
     <GoToBookmark>Ir para o marcador</GoToBookmark>
     <GoToPreviousBookmark>Ir para o marcador anterior</GoToPreviousBookmark>
     <GoToNextBookmark>Ir para o marcador seguinte</GoToNextBookmark>
@@ -2009,7 +2011,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <RememberPositionAndSize>Lembrar tamanho e posição da janela principal</RememberPositionAndSize>
     <StartInSourceView>Iniciar no separador (Original) da janela principal</StartInSourceView>
     <RemoveBlankLinesWhenOpening>Eliminar linhas em branco ao abrir a legenda</RemoveBlankLinesWhenOpening>
-	<RemoveBlankLines>Eliminar linhas em branco</RemoveBlankLines>
+    <RemoveBlankLines>Eliminar linhas em branco</RemoveBlankLines>
     <ShowLineBreaksAs>Ver quebras de linha na "Lista" da janela principal como:</ShowLineBreaksAs>
     <SaveAsFileNameFrom>"Guardar como..." usa o nome do ficheiro de:</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>Ao clicar duas vezes na linha de texto na janela principal irá...</MainListViewDoubleClickAction>
@@ -2148,11 +2150,11 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <FixCommonOcrErrorsUseHardcodedRules>Corrigir erros frequentes de OCR - também utilizar regras codificadas</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Corrigir o tempo curto de exibição - permitir o movimento do tempo inicial</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Ignorar a fase um (escolher regras de correcção)</FixCommonErrorsSkipStepOne>
-	<DefaultFormat>Formato predefinido</DefaultFormat>
-	<DefaultSaveAsFormat>Guardar como formato predefinido</DefaultSaveAsFormat>
-	<Favorites>Favoritos</Favorites>
-	<FavoriteFormats>Formatos favoritos</FavoriteFormats>
-	<FavoriteSubtitleFormatsNote>Nota: os formatos favoritos serão mostrados primeiro ao seleccionar um formato, o formato predefinido será sempre mostrado primeiro</FavoriteSubtitleFormatsNote>
+    <DefaultFormat>Formato predefinido</DefaultFormat>
+    <DefaultSaveAsFormat>Guardar como formato predefinido</DefaultSaveAsFormat>
+    <Favorites>Favoritos</Favorites>
+    <FavoriteFormats>Formatos favoritos</FavoriteFormats>
+    <FavoriteSubtitleFormatsNote>Nota: os formatos favoritos serão mostrados primeiro ao seleccionar um formato, o formato predefinido será sempre mostrado primeiro</FavoriteSubtitleFormatsNote>
     <Shortcuts>Atalhos</Shortcuts>
     <Shortcut>Atalho</Shortcut>
     <Control>Ctrl</Control>
@@ -2293,7 +2295,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <PlayRateSlower>Taxa de velocidade lenta</PlayRateSlower>
     <PlayRateFaster>Taxa de velocidade rápida</PlayRateFaster>
     <VideoResetSpeedAndZoom>Repor velocidade/zoom</VideoResetSpeedAndZoom>
-	<MainToggleVideoControls>Alternar controlos vídeo</MainToggleVideoControls>
+    <MainToggleVideoControls>Alternar controlos vídeo</MainToggleVideoControls>
     <CustomSearch1>Traduzir, pesquisa personalizada 1</CustomSearch1>
     <CustomSearch2>Traduzir, pesquisa personalizada 2</CustomSearch2>
     <CustomSearch3>Traduzir, pesquisa personalizada 3</CustomSearch3>
@@ -2342,6 +2344,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <MainTextBoxMoveLastWordDown>Mover a última palavra até à próxima linha da legenda</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Buscar a primeira palavra da próxima linha da legenda</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Mover a primeira palavra da linha de cima (linha actual)</MainTextBoxMoveFirstWordUpCurrent>
+    <MainTextBoxMoveFromCursorToNext>Mover o texto após a posição do cursor para a próxima legenda e ir para a próxima</MainTextBoxMoveFromCursorToNext>
     <MainTextBoxMoveLastWordDownCurrent>Mover a primeira palavra da linha de baixo (linha actual)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Selecção para minúsculas</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Selecção para maiúsculas</MainTextBoxSelectionToUpper>
@@ -2566,7 +2569,7 @@ Continuar?</RestoreDefaultSettingsMsg>
     <UpdateDetails>Actualizar detalhes</UpdateDetails>
     <Resolution>Resolução</Resolution>
     <VideoResolution>Resolução de Vídeo</VideoResolution>
-	<FromCurrentVideo>Do vídeo actual</FromCurrentVideo>
+    <FromCurrentVideo>Do vídeo actual</FromCurrentVideo>
     <Options>Opções</Options>
     <WrapStyle>Estilo moldado</WrapStyle>
     <Collision>Colisão</Collision>
