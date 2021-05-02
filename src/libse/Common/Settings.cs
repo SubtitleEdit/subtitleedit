@@ -1890,6 +1890,7 @@ $HorzAlign          =   Center
         public string MainVideoPlayFromBeginning { get; set; }
         public string MainVideoPlayPauseToggle { get; set; }
         public string MainVideoShowHideVideo { get; set; }
+        public string MainVideoShowWaveform { get; set; }
         public string MainVideoFoucsSetVideoPosition { get; set; }
         public string MainVideoToggleVideoControls { get; set; }
         public string MainVideo1FrameLeft { get; set; }
@@ -6918,6 +6919,12 @@ $HorzAlign          =   Center
                     shortcuts.MainVideoShowHideVideo = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainVideoShowWaveform");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoShowWaveform = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainVideoFoucsSetVideoPosition");
                 if (subNode != null)
                 {
@@ -8887,6 +8894,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainVideoPlayFromBeginning", shortcuts.MainVideoPlayFromBeginning);
             textWriter.WriteElementString("MainVideoPlayPauseToggle", shortcuts.MainVideoPlayPauseToggle);
             textWriter.WriteElementString("MainVideoShowHideVideo", shortcuts.MainVideoShowHideVideo);
+            textWriter.WriteElementString("MainVideoShowWaveform", shortcuts.MainVideoShowWaveform);
             textWriter.WriteElementString("MainVideoFoucsSetVideoPosition", shortcuts.MainVideoFoucsSetVideoPosition);
             textWriter.WriteElementString("MainVideoToggleVideoControls", shortcuts.MainVideoToggleVideoControls);
             textWriter.WriteElementString("MainVideo1FrameLeft", shortcuts.MainVideo1FrameLeft);
