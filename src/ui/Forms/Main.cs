@@ -5751,10 +5751,23 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     int textBoxStart = tb.SelectionStart;
-                    if (_findHelper.SelectedPosition - 1 == tb.SelectionStart && tb.SelectionLength > 0 ||
-                        _findHelper.FindText.Equals(tb.SelectedText, StringComparison.OrdinalIgnoreCase))
+                    // Note: The logic in the following "else" clause is not valid for
+                    // regex searches and may result in endlessly looping on the first
+                    // found instance, but simply moving the start index up by 1. It is
+                    // not uncommon for a regex to match string+0, string+1, string+2 ...
+                    if (_findHelper.FindReplaceType.FindType == FindType.RegEx)
                     {
-                        textBoxStart = tb.SelectionStart + 1;
+                        // Move beyond the first instance, not just 1 character beyond the start
+                        // of the found instance,
+                        textBoxStart += tb.SelectionLength;
+                    }
+                    else
+                    {
+                        if (_findHelper.SelectedPosition - 1 == tb.SelectionStart && tb.SelectionLength > 0 ||
+                            _findHelper.FindText.Equals(tb.SelectedText, StringComparison.OrdinalIgnoreCase))
+                        {
+                            textBoxStart = tb.SelectionStart + 1;
+                        }
                     }
 
                     if (_findHelper.FindNext(_subtitle, _subtitleOriginal, selectedIndex, textBoxStart, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
