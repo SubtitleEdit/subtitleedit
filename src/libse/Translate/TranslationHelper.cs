@@ -28,6 +28,9 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 s = s.Replace("Gonna ", "Vil ");
 
                 s = s.Replace("Ked af.", "Undskyld.");
+
+                s = s.Replace("Vente.", "Vent.");
+                s = s.Replace("Vente,", "Vent,");
             }
 
             return FixTags(s);

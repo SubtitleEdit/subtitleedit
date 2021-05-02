@@ -328,13 +328,20 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return;
             }
 
+            var match = _matchList[listBoxInspectItems.SelectedIndex];
+            if (match?.ExpandCount > 1) // expand match
+            {
+                addBetterMultiMatchToolStripMenuItem_Click(null, null);
+                return;
+            }
+
             using (var vobSubOcrNOcrCharacter = new VobSubOcrNOcrCharacter())
             {
                 var text = textBoxText.Text;
-                vobSubOcrNOcrCharacter.Initialize(_bitmap, img, new Point(0, 0), checkBoxItalic.Checked, true, expandSelectionList.Count > 1, text);
+                vobSubOcrNOcrCharacter.Initialize(_bitmap, img, new Point(-1, -1), checkBoxItalic.Checked, true, expandSelectionList.Count > 1, text);
                 DialogResult result = vobSubOcrNOcrCharacter.ShowDialog(this);
-                bool expandSelection = false;
-                bool shrinkSelection = false;
+                var expandSelection = false;
+                var shrinkSelection = false;
                 if (result == DialogResult.OK && vobSubOcrNOcrCharacter.ExpandSelection)
                 {
                     expandSelection = true;

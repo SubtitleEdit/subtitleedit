@@ -566,6 +566,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public bool WebVttUseXTimestampMap { get; set; }
         public long WebVttTimescale { get; set; }
+        public string WebVttOverrideCueSetting { get; set; }
 
         public bool TeletextItalicFix { get; set; }
         public bool MccDebug { get; set; }
@@ -1889,6 +1890,7 @@ $HorzAlign          =   Center
         public string MainVideoPlayFromBeginning { get; set; }
         public string MainVideoPlayPauseToggle { get; set; }
         public string MainVideoShowHideVideo { get; set; }
+        public string MainVideoShowWaveform { get; set; }
         public string MainVideoFoucsSetVideoPosition { get; set; }
         public string MainVideoToggleVideoControls { get; set; }
         public string MainVideo1FrameLeft { get; set; }
@@ -1970,6 +1972,7 @@ $HorzAlign          =   Center
         public string MainTextBoxMoveFirstWordFromNextUp { get; set; }
         public string MainTextBoxMoveLastWordDownCurrent { get; set; }
         public string MainTextBoxMoveFirstWordUpCurrent { get; set; }
+        public string MainTextBoxMoveFromCursorToNextAndGoToNext { get; set; }
         public string MainTextBoxSelectionToLower { get; set; }
         public string MainTextBoxSelectionToUpper { get; set; }
         public string MainTextBoxSelectionToggleCasing { get; set; }
@@ -5278,6 +5281,12 @@ $HorzAlign          =   Center
                     settings.SubtitleSettings.WebVttTimescale = long.Parse(subNode.InnerText, CultureInfo.InvariantCulture);
                 }
 
+                subNode = node.SelectSingleNode("WebVttOverrideCueSetting");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.WebVttOverrideCueSetting = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("TeletextItalicFix");
                 if (subNode != null)
                 {
@@ -6910,6 +6919,12 @@ $HorzAlign          =   Center
                     shortcuts.MainVideoShowHideVideo = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainVideoShowWaveform");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoShowWaveform = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainVideoFoucsSetVideoPosition");
                 if (subNode != null)
                 {
@@ -7424,6 +7439,12 @@ $HorzAlign          =   Center
                 if (subNode != null)
                 {
                     shortcuts.MainTextBoxMoveFirstWordUpCurrent = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainTextBoxMoveFromCursorToNext");
+                if (subNode != null)
+                {
+                    shortcuts.MainTextBoxMoveFromCursorToNextAndGoToNext = subNode.InnerText;
                 }
 
                 subNode = node.SelectSingleNode("MainTextBoxSelectionToLower");
@@ -8548,6 +8569,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("CheetahCaptionAlwayWriteEndTime", settings.SubtitleSettings.CheetahCaptionAlwayWriteEndTime.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("NuendoCharacterListFile", settings.SubtitleSettings.NuendoCharacterListFile);
                 textWriter.WriteElementString("WebVttTimescale", settings.SubtitleSettings.WebVttTimescale.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("WebVttOverrideCueSetting", settings.SubtitleSettings.WebVttOverrideCueSetting);
                 textWriter.WriteElementString("TeletextItalicFix", settings.SubtitleSettings.TeletextItalicFix.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MccDebug", settings.SubtitleSettings.MccDebug.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WebVttUseXTimestampMap", settings.SubtitleSettings.WebVttUseXTimestampMap.ToString(CultureInfo.InvariantCulture));
@@ -8872,6 +8894,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainVideoPlayFromBeginning", shortcuts.MainVideoPlayFromBeginning);
             textWriter.WriteElementString("MainVideoPlayPauseToggle", shortcuts.MainVideoPlayPauseToggle);
             textWriter.WriteElementString("MainVideoShowHideVideo", shortcuts.MainVideoShowHideVideo);
+            textWriter.WriteElementString("MainVideoShowWaveform", shortcuts.MainVideoShowWaveform);
             textWriter.WriteElementString("MainVideoFoucsSetVideoPosition", shortcuts.MainVideoFoucsSetVideoPosition);
             textWriter.WriteElementString("MainVideoToggleVideoControls", shortcuts.MainVideoToggleVideoControls);
             textWriter.WriteElementString("MainVideo1FrameLeft", shortcuts.MainVideo1FrameLeft);
@@ -8957,6 +8980,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainTextBoxMoveFirstWordFromNextUp", shortcuts.MainTextBoxMoveFirstWordFromNextUp);
             textWriter.WriteElementString("MainTextBoxMoveLastWordDownCurrent", shortcuts.MainTextBoxMoveLastWordDownCurrent);
             textWriter.WriteElementString("MainTextBoxMoveFirstWordUpCurrent", shortcuts.MainTextBoxMoveFirstWordUpCurrent);
+            textWriter.WriteElementString("MainTextBoxMoveFromCursorToNext", shortcuts.MainTextBoxMoveFromCursorToNextAndGoToNext);
             textWriter.WriteElementString("MainTextBoxSelectionToLower", shortcuts.MainTextBoxSelectionToLower);
             textWriter.WriteElementString("MainTextBoxSelectionToUpper", shortcuts.MainTextBoxSelectionToUpper);
             textWriter.WriteElementString("MainTextBoxSelectionToggleCasing", shortcuts.MainTextBoxSelectionToggleCasing);

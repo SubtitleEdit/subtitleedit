@@ -6,14 +6,14 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 {
-    public partial class BinEditAlpha : Form
+    public sealed partial class BinEditAlpha : Form
     {
         private readonly Bitmap _bitmap;
         private Bitmap _backgroundImage;
         private bool _backgroundImageDark;
 
         public decimal Factor { get; private set; }
-        public ContentAlignment Alignment { get; private set; }
+        public ContentAlignment Alignment { get; }
 
         public BinEditAlpha(Bitmap bitmap)
         {
@@ -21,8 +21,12 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             InitializeComponent();
             UiUtil.FixFonts(this);
 
+            var nikseBitmap = new NikseBitmap(bitmap);
+            nikseBitmap.CropTransparentSidesAndBottom(99999, true);
+            nikseBitmap.CropTopTransparent(2);
+            _bitmap = nikseBitmap.GetBitmap();
+
             _backgroundImageDark = Configuration.Settings.General.UseDarkTheme;
-            _bitmap = bitmap;
             trackBarAlpha_Scroll(null, null);
             Factor = 1.0m;
             Alignment = ContentAlignment.BottomCenter;

@@ -176,21 +176,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var c = Color.White;
                 if (!string.IsNullOrWhiteSpace(color))
                 {
-                    try
-                    {
-                        c = ColorTranslator.FromHtml(color);
-                    }
-                    catch
-                    {
-                        try
-                        {
-                            c = ColorTranslator.FromHtml("#" + color.Trim('#', ' ', '"', '\''));
-                        }
-                        catch
-                        {
-                            c = Color.White;
-                        }
-                    }
+                    c = HtmlUtil.GetColorFromString(color);
                 }
 
                 _colorList.Add(new EffectKaraoke.ColorEntry { Start = length, Length = text.Length, Color = c });
