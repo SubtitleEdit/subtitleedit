@@ -42,6 +42,7 @@
    * Add "Clear" to "File - Recent files" - thx Dominiquini/OmrSi
    * Make bd sup edit work better with full frame images - thx peter-qgd
    * Point sync now also works on original subtitle - thx Rene
+   * Keep Text box height when resizing - thx AbsenceJam/darnn
 * FIXED:
    * Fix for reading bdsup position - thx akaicat
    * Fix a few crashes in translation engine - thx howblast/Laís

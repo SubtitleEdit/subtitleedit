@@ -20239,13 +20239,10 @@ namespace Nikse.SubtitleEdit.Forms
                 splitContainerListViewAndText.SplitterDistance = splitContainerListViewAndText.Height - _textHeightResize;
             }
 
+            _textHeightResizeIgnoreUpdate = DateTime.UtcNow.Ticks;
             SubtitleListview1.AutoSizeAllColumns(this);
-            if (WindowState != _lastFormWindowState)
-            {
-                _textHeightResizeIgnoreUpdate = DateTime.UtcNow.Ticks;
-            }
 
-            if (WindowState == FormWindowState.Maximized || 
+            if (WindowState == FormWindowState.Maximized ||
                 WindowState == FormWindowState.Normal && _lastFormWindowState == FormWindowState.Maximized)
             {
                 System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(25), () =>
@@ -20262,13 +20259,17 @@ namespace Nikse.SubtitleEdit.Forms
             panelVideoPlayer.Invalidate();
         }
 
-
         private int _textHeightResize = -1;
         private long _textHeightResizeIgnoreUpdate = 0;
 
         private void Main_ResizeBegin(object sender, EventArgs e)
         {
             _textHeightResizeIgnoreUpdate = DateTime.UtcNow.Ticks;
+            if (_loading)
+            {
+                return;
+            }
+
             _textHeightResize = splitContainerListViewAndText.Height - splitContainerListViewAndText.SplitterDistance;
         }
 
@@ -20890,6 +20891,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripButtonToggleVideo_Click(object sender, EventArgs e)
         {
+            _textHeightResize = splitContainerListViewAndText.Height - splitContainerListViewAndText.SplitterDistance;
+            _textHeightResizeIgnoreUpdate = DateTime.UtcNow.Ticks;
+
             toolStripButtonToggleVideo.Checked = !toolStripButtonToggleVideo.Checked;
             panelVideoPlayer.Visible = toolStripButtonToggleVideo.Checked;
             mediaPlayer.BringToFront();
@@ -20918,6 +20922,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripButtonToggleWaveform_Click(object sender, EventArgs e)
         {
+            _textHeightResize = splitContainerListViewAndText.Height - splitContainerListViewAndText.SplitterDistance;
+            _textHeightResizeIgnoreUpdate = DateTime.UtcNow.Ticks;
+
             toolStripButtonToggleWaveform.Checked = !toolStripButtonToggleWaveform.Checked;
             audioVisualizer.Visible = toolStripButtonToggleWaveform.Checked;
             trackBarWaveformPosition.Visible = toolStripButtonToggleWaveform.Checked;
@@ -21874,9 +21881,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 try
                 {
+                    _textHeightResizeIgnoreUpdate = DateTime.UtcNow.Ticks;
                     splitContainerMain.SplitterDistance = Configuration.Settings.General.SplitContainerMainSplitterDistance;
                     splitContainer1.SplitterDistance = Configuration.Settings.General.SplitContainer1SplitterDistance;
                     splitContainerListViewAndText.SplitterDistance = Configuration.Settings.General.SplitContainerListViewAndTextSplitterDistance;
+                    _textHeightResize = splitContainerListViewAndText.Height - splitContainerListViewAndText.SplitterDistance;
                 }
                 catch
                 {
