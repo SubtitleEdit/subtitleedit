@@ -20240,17 +20240,13 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             SubtitleListview1.AutoSizeAllColumns(this);
-            if (WindowState == FormWindowState.Maximized)
+            if (WindowState != _lastFormWindowState)
             {
-                Main_ResizeEnd(sender, e);
-                _lastFormWindowState = WindowState;
-                if (_textHeightResize >= 1)
-                {
-                    splitContainerListViewAndText.SplitterDistance = splitContainerListViewAndText.Height - _textHeightResize;
-                }
-                return;
+                _textHeightResizeIgnoreUpdate = DateTime.UtcNow.Ticks;
             }
-            else if (WindowState == FormWindowState.Normal && _lastFormWindowState == FormWindowState.Maximized)
+
+            if (WindowState == FormWindowState.Maximized || 
+                WindowState == FormWindowState.Normal && _lastFormWindowState == FormWindowState.Maximized)
             {
                 System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(25), () =>
                 {
@@ -20259,26 +20255,26 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         splitContainerListViewAndText.SplitterDistance = splitContainerListViewAndText.Height - _textHeightResize;
                     }
+                    _lastFormWindowState = WindowState;
                 });
             }
 
-            _lastFormWindowState = WindowState;
             panelVideoPlayer.Invalidate();
         }
 
 
         private int _textHeightResize = -1;
-        private bool _textHeightResizeIgnoreUpdate = false;
+        private long _textHeightResizeIgnoreUpdate = 0;
 
         private void Main_ResizeBegin(object sender, EventArgs e)
         {
-            _textHeightResizeIgnoreUpdate = true;
+            _textHeightResizeIgnoreUpdate = DateTime.UtcNow.Ticks;
             _textHeightResize = splitContainerListViewAndText.Height - splitContainerListViewAndText.SplitterDistance;
         }
 
         private void Main_ResizeEnd(object sender, EventArgs e)
         {
-            _textHeightResizeIgnoreUpdate = false;
+            _textHeightResizeIgnoreUpdate = 0;
             if (_loading)
             {
                 return;
@@ -26134,6 +26130,10 @@ namespace Nikse.SubtitleEdit.Forms
         private void SplitContainerMainSplitterMoved(object sender, SplitterEventArgs e)
         {
             mediaPlayer.Refresh();
+            if (_textHeightResize >= 1)
+            {
+                splitContainerListViewAndText.SplitterDistance = splitContainerListViewAndText.Height - _textHeightResize;
+            }
         }
 
         private void FindDoubleLinesToolStripMenuItemClick(object sender, EventArgs e)
@@ -30186,7 +30186,9 @@ namespace Nikse.SubtitleEdit.Forms
                 splitContainerListViewAndText.SplitterDistance = splitContainerListViewAndText.Height - Configuration.Settings.General.SubtitleTextBoxMaxHeight;
             }
 
-            if (!_textHeightResizeIgnoreUpdate && WindowState == _lastFormWindowState)
+            var diff = DateTime.UtcNow.Ticks - _textHeightResizeIgnoreUpdate;
+            if (diff > 10_000 * 750 && // 750 ms
+                WindowState == _lastFormWindowState)
             {
                 _textHeightResize = splitContainerListViewAndText.Height - splitContainerListViewAndText.SplitterDistance;
             }
@@ -30495,14 +30497,9 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemAutoSplitLongLines_Click(sender, e);
         }
 
-        private void Main_MouseDown(object sender, MouseEventArgs e)
+        private void splitContainerMain_SplitterMoving(object sender, SplitterCancelEventArgs e)
         {
-            _textHeightResize = splitContainerListViewAndText.Height - splitContainerListViewAndText.SplitterDistance;
-        }
-
-        private void Main_MouseClick(object sender, MouseEventArgs e)
-        {
-            _textHeightResize = splitContainerListViewAndText.Height - splitContainerListViewAndText.SplitterDistance;
+            _textHeightResizeIgnoreUpdate = DateTime.UtcNow.Ticks;
         }
     }
 }
