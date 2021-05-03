@@ -20030,6 +20030,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowVideoPlayer()
         {
+            int textHeight = splitContainerListViewAndText.Height - splitContainerListViewAndText.SplitterDistance;
             if (_isVideoControlsUndocked)
             {
                 ShowHideUndockedVideoControls();
@@ -20078,6 +20079,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             Main_Resize(null, null);
+
+            if (!_isVideoControlsUndocked)
+            {
+                splitContainerListViewAndText.SplitterDistance = splitContainerListViewAndText.Height - textHeight;
+            }
         }
 
         private void ShowHideUndockedVideoControls()
@@ -20228,11 +20234,20 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            if (_textHeightResize >= 1)
+            {
+                splitContainerListViewAndText.SplitterDistance = splitContainerListViewAndText.Height - _textHeightResize;
+            }
+
             SubtitleListview1.AutoSizeAllColumns(this);
             if (WindowState == FormWindowState.Maximized)
             {
                 Main_ResizeEnd(sender, e);
                 _lastFormWindowState = WindowState;
+                if (_textHeightResize >= 1)
+                {
+                    splitContainerListViewAndText.SplitterDistance = splitContainerListViewAndText.Height - _textHeightResize;
+                }
                 return;
             }
             else if (WindowState == FormWindowState.Normal && _lastFormWindowState == FormWindowState.Maximized)
@@ -20240,6 +20255,10 @@ namespace Nikse.SubtitleEdit.Forms
                 System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(25), () =>
                 {
                     MainResize();
+                    if (_textHeightResize >= 1)
+                    {
+                        splitContainerListViewAndText.SplitterDistance = splitContainerListViewAndText.Height - _textHeightResize;
+                    }
                 });
             }
 
@@ -20247,8 +20266,19 @@ namespace Nikse.SubtitleEdit.Forms
             panelVideoPlayer.Invalidate();
         }
 
+
+        private int _textHeightResize = -1;
+        private bool _textHeightResizeIgnoreUpdate = false;
+
+        private void Main_ResizeBegin(object sender, EventArgs e)
+        {
+            _textHeightResizeIgnoreUpdate = true;
+            _textHeightResize = splitContainerListViewAndText.Height - splitContainerListViewAndText.SplitterDistance;
+        }
+
         private void Main_ResizeEnd(object sender, EventArgs e)
         {
+            _textHeightResizeIgnoreUpdate = false;
             if (_loading)
             {
                 return;
@@ -20256,6 +20286,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             SuspendLayout();
             MainResize();
+
+            if (_textHeightResize >= 1)
+            {
+                splitContainerListViewAndText.SplitterDistance = splitContainerListViewAndText.Height - _textHeightResize;
+            }
 
             // Due to strange bug in listview when maximizing
             SaveSubtitleListviewIndices();
@@ -30150,6 +30185,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 splitContainerListViewAndText.SplitterDistance = splitContainerListViewAndText.Height - Configuration.Settings.General.SubtitleTextBoxMaxHeight;
             }
+
+            if (!_textHeightResizeIgnoreUpdate && WindowState == _lastFormWindowState)
+            {
+                _textHeightResize = splitContainerListViewAndText.Height - splitContainerListViewAndText.SplitterDistance;
+            }
         }
 
         private void splitContainerListViewAndText_SizeChanged(object sender, EventArgs e)
@@ -30453,6 +30493,16 @@ namespace Nikse.SubtitleEdit.Forms
         private void breaksplitLongLinesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             toolStripMenuItemAutoSplitLongLines_Click(sender, e);
+        }
+
+        private void Main_MouseDown(object sender, MouseEventArgs e)
+        {
+            _textHeightResize = splitContainerListViewAndText.Height - splitContainerListViewAndText.SplitterDistance;
+        }
+
+        private void Main_MouseClick(object sender, MouseEventArgs e)
+        {
+            _textHeightResize = splitContainerListViewAndText.Height - splitContainerListViewAndText.SplitterDistance;
         }
     }
 }
