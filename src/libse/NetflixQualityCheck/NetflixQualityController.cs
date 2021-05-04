@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
         /// </summary>
         public string Language { get; set; } = "en";
 
-        public double FrameRate { get; set; } = 24;
+        public double FrameRate { get; set; } = Configuration.Settings.General.CurrentFrameRate;
         public string VideoFileName { get; set; }
         public bool VideoExists => !string.IsNullOrEmpty(VideoFileName);
 
