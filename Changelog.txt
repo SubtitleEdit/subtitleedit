@@ -57,6 +57,7 @@
    * Fix FCE issue w missing spaces/French language - thx  kyrpasto/OmrSi
    * Fix crash in karoke/typewriter effect due to invalid color - thx PM
    * Fix spell check replace with Unicode hidden spaces - thx zildan 
+   * Netflix quality check - use current frame rate - thx Filip
 
 
 3.6.0 (18th February 2021)
