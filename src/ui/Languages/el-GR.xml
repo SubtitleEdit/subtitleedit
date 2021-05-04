@@ -218,7 +218,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixRtl>Διόρθωση RTL</FixRtl>
     <FixRtlAddUnicode>Διόρθωση RTL μέσω ετικετών Unicode</FixRtlAddUnicode>
     <FixRtlRemoveUnicode>Αφαίρεση ετικετών Unicode RTL</FixRtlRemoveUnicode>
-    <FixRtlReverseStartEnd>Αντιστροφή έναρξης/τέλους RTL</FixRtlReverseStartEnd>
+    <FixRtlReverseStartEnd>Αντιστροφή έναρξης/λήξης RTL</FixRtlReverseStartEnd>
     <SplitLongLines>Διαχωρισμός μεγάλων γραμμών</SplitLongLines>
     <AutoBalance>Αυτόματη ισορροπία γραμμών</AutoBalance>
     <ScanFolder>Σάρωση φακέλου...</ScanFolder>
@@ -416,8 +416,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BridgeGapsSmallerThanXPart2Frames>καρέ</BridgeGapsSmallerThanXPart2Frames>
     <MinMillisecondsBetweenLines>Ελάχιστα χιλ. δευτ. μεταξύ γραμμών</MinMillisecondsBetweenLines>
     <MinFramesBetweenLines>Ελάχιστα καρέ μεταξύ γραμμών</MinFramesBetweenLines>
-    <ProlongEndTime>Το προηγούμενο κείμενο παίρνει όλα τα κενά χρόνου</ProlongEndTime>
-    <DivideEven>Το κείμενο χωρίζει τα κενά χρόνου</DivideEven>
+    <ProlongEndTime>Μεταφορά χρόνου κενών σε προηγούμενο κείμενο</ProlongEndTime>
+    <DivideEven>Χωρισμός κενών χρόνου από κείμενο</DivideEven>
   </DurationsBridgeGaps>
   <DvdSubRip>
     <Title>Αντιγραφή υποτίτλων από IFO/VOB (DVD)</Title>
@@ -837,6 +837,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveEmptyLines>Αφαίρεση κενών γραμμών</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>Αφαίρεση γραμμών χωρίς γράμματα</RemoveLinesWithoutLetters>
     <GenerateTimeCodes>Δημιουργία κωδικών χρόνου</GenerateTimeCodes>
+    <TakeTimeFromCurrentFile>Μεταφορά χρόνου από τρέχον αρχείο</TakeTimeFromCurrentFile>
     <TakeTimeFromFileName>Μεταφορά χρόνου από όνομα αρχείου</TakeTimeFromFileName>
     <GapBetweenSubtitles>Κενό υποτίτλων (χιλ. δευτερολέπτου)</GapBetweenSubtitles>
     <Auto>Αυτόματο</Auto>
@@ -845,7 +846,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TextFiles>Αρχεία κειμένου</TextFiles>
     <PreviewLinesModifiedX>Προεπισκόπηση - τροποποιημένοι υπότιτλοι: {0}</PreviewLinesModifiedX>
     <TimeCodes>Κώδικες χρόνων</TimeCodes>
-    <SplitAtEndChars>Διαχωρισμός στο τέλος χαρακτήρων</SplitAtEndChars>
+    <SplitAtEndChars>Διαχωρισμός στη λήξη χαρακτήρων</SplitAtEndChars>
   </ImportText>
   <Interjections>
     <Title>Παρεμβολές</Title>
@@ -1425,7 +1426,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AppendSynchronizedSubtitlePrompt>Προσάρτηση του συγχρονισμένου υποτίτλου;</AppendSynchronizedSubtitlePrompt>
     <BeforeAppend>Πριν από προσάρτηση</BeforeAppend>
     <SubtitleAppendedX>Προσάρτηση υποτίτλου: {0}</SubtitleAppendedX>
-    <SubtitleNotAppended>Μη προσάρτηση υποτίτλου.</SubtitleNotAppended>
+    <SubtitleNotAppended>Ο υπότιτλος δεν προσαρτήστηκε.</SubtitleNotAppended>
     <GoogleTranslate>Μετάφραση Google</GoogleTranslate>
     <MicrosoftTranslate>Μετάφραση Bing</MicrosoftTranslate>
     <BeforeGoogleTranslation>Πριν από μετάφραση Google</BeforeGoogleTranslation>
@@ -1467,6 +1468,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <LineSplitted>Γραμμή διαχωρίστηκε</LineSplitted>
     <BeforeMergeLines>Πριν από συγχώνευση γραμμών</BeforeMergeLines>
     <LinesMerged>Γραμμές συγχωνεύτηκαν</LinesMerged>
+    <MergeSentences>Συγχώνευση προτάσεων...</MergeSentences>
+    <MergeSentencesXLines>Συγχώνευση προτάσεων - συγχωνευμένες γραμμές: {0}</MergeSentencesXLines>
     <BeforeSettingColor>Πριν από ρύθμιση χρώματος</BeforeSettingColor>
     <BeforeSettingFontName>Πριν από ρύθμιση ονόματος γραμματοσειράς</BeforeSettingFontName>
     <BeforeTypeWriterEffect>Πριν από εφέ γραφομηχανής</BeforeTypeWriterEffect>
@@ -2165,7 +2168,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <UpdateShortcut>Ενημέρωση</UpdateShortcut>
     <FoucsSetVideoPosition>Εστίαση ορισμού θέσης βίντεο</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Εναλλαγή αγκύστρωσης/απαγκύστρωσης των στοιχείων ελέγχου βίντεο</ToggleDockUndockOfVideoControls>
-    <CreateSetEndAddNewAndGoToNew>Ορισμός τέλους, προσθήκη νέου και μετάβαση</CreateSetEndAddNewAndGoToNew>
+    <CreateSetEndAddNewAndGoToNew>Ορισμός λήξης, προσθήκη νέου και μετάβαση</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Προσαρμογή μέσω θέσης λήξης</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Προσαρμογή μέσω θέσης λήξης και επόμενο</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndMinusGapAndStartNextHere>Ορισμός λήξης πλην κενού, μετάβαση σε επόμενο και έναρξη εδώ</AdjustSetEndMinusGapAndStartNextHere>
@@ -2191,9 +2194,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AdjustEndOneFrameBackKeepGapNext>Μετακίνηση λήξης 1 καρέ  πίσω (κράτημα κενού στο επόμενο)</AdjustEndOneFrameBackKeepGapNext>
     <AdjustEndOneFrameForwardKeepGapNext>Μετακίνηση λήξης 1 καρέ εμπρός (κράτημα κενού στο επόμενο)</AdjustEndOneFrameForwardKeepGapNext>
     <AdjustSetStartTimeKeepDuration>Ορισμός έναρξης, διατήρηση διάρκειας</AdjustSetStartTimeKeepDuration>
+    <AdjustVideoSetStartForAppropriateLine>Ορισμός έναρξης για κατάλληλη γραμμή</AdjustVideoSetStartForAppropriateLine>
+    <AdjustVideoSetEndForAppropriateLine>Ορισμός λήξης για κατάλληλη γραμμή</AdjustVideoSetEndForAppropriateLine>
     <AdjustSetStartAndOffsetTheWholeSubtitle>Ορισμός χρόνου έναρξης, μετατώπιση όλου του υποτίτλου</AdjustSetStartAndOffsetTheWholeSubtitle>
-    <AdjustSetEndAndOffsetTheRest>Ορισμός τέλους, μετατόπιση υπολοίπων</AdjustSetEndAndOffsetTheRest>
-    <AdjustSetEndAndOffsetTheRestAndGoToNext>Ορισμός τέλους, μετατόπιση υπολοίπων και μετάβαση σε επόμενο</AdjustSetEndAndOffsetTheRestAndGoToNext>
+    <AdjustSetEndAndOffsetTheRest>Ορισμός λήξης, μετατόπιση υπολοίπων</AdjustSetEndAndOffsetTheRest>
+    <AdjustSetEndAndOffsetTheRestAndGoToNext>Ορισμός λήξης, μετατόπιση υπολοίπων και μετάβαση σε επόμενο</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <AdjustSnapStartToNextSceneChange>Κλείδωμα έναρξης γραμμής σε επόμενη αλλαγή σκηνής</AdjustSnapStartToNextSceneChange>
     <AdjustSnapStartToNextSceneChangeWithGap>Κλείδωμα έναρξης γραμμής σε επόμενη αλλαγή σκηνής με ελάχιστο κενό</AdjustSnapStartToNextSceneChangeWithGap>
     <AdjustSnapEndToPreviousSceneChange>Κλείδωμα έναρξης γραμμής σε προηγούμενη αλλαγή σκηνής</AdjustSnapEndToPreviousSceneChange>
@@ -2214,7 +2219,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GoToNextCursorAtEnd>Μετάβαση σε επόμενη γραμμή και ορισμός δείκτη στη λήξη</GoToNextCursorAtEnd>
     <GoToPrevious>Μετάβαση σε προηγούμενη γραμμή</GoToPrevious>
     <GoToCurrentSubtitleStart>Μετάβαση στην αρχή της τρέχουσας γραμμής</GoToCurrentSubtitleStart>
-    <GoToCurrentSubtitleEnd>Μετάβαση στο τέλος της τρέχουσας γραμμής</GoToCurrentSubtitleEnd>
+    <GoToCurrentSubtitleEnd>Μετάβαση στη λήξη της τρέχουσας γραμμής</GoToCurrentSubtitleEnd>
     <GoToPreviousSubtitleAndFocusVideo>Μετάβαση σε προηγούμενη γραμμή και ορισμός θέσης βίντεο</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Μετάβαση σε επόμενη γραμμή και ορισμός θέσης βίντεο</GoToNextSubtitleAndFocusVideo>
     <GoToPrevSubtitleAndPlay>Μετάβαση σε προηγούμενη γραμμή και αναπαραγωγή</GoToPrevSubtitleAndPlay>
@@ -2334,6 +2339,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MainTextBoxMoveLastWordDown>Μετακίνηση τελευταίας λέξης στην επόμενη γραμμή</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Μετακίνηση πρώτης λέξης από την επόμενη γραμμή επάνω</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Μετακίνηση πρώτης λέξης της κάτω γραμμής πάνω</MainTextBoxMoveFirstWordUpCurrent>
+    <MainTextBoxMoveFromCursorToNext>Μετακίνηση κειμένου μετά τον δείκτη στον επόμενο υπότιτλο και μετάβαση σε επόμενο</MainTextBoxMoveFromCursorToNext>
     <MainTextBoxMoveLastWordDownCurrent>Μετακίνηση τελευταίας λέξης της άνω γραμμής κάτω</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Επιλογή σε μικρά</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Επιλογή σε κεφαλαία</MainTextBoxSelectionToUpper>
@@ -2651,7 +2657,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Άγνωστος τύπος υποτίτλου</Title>
-    <Message>Αν θέλετε να φτιαχτεί, παρακαλώ, στείλτε e-mail στο mailto:niksedk@gmail.com
+    <Message>Αν θέλετε να διορθωθεί, παρακαλώ, στείλτε e-mail στο mailto:niksedk@gmail.com
 και συμπεριλάβετε αντίγραφο του υποτίτλου.</Message>
     <ImportAsPlainText>Εισαγωγή ως απλό κείμενο...</ImportAsPlainText>
   </UnknownSubtitle>
