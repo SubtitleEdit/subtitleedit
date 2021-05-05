@@ -297,7 +297,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             "všeč", "videti", "stanovanje", "službo", "prosim", "naredila", "moram", "domov", "Vrzi", "Povej", "številko", "zaporu",
             "ugrabila", "ubila", "tvoja", "tudi", "tečna", "stvari", "rusko", "povedala", "obraz", "nalogo", "mislim", "govoriš",
             "Seveda", "Razmišljam", "Potem", "Nič", "Nisem", "Mogoče", "žensko", "žalostna", "človek", "Čisto", "znaš",
-            "zlomi", "zgodilo", "zdaj", "zajtrk", "utrujena","ustrelila"
+            "zlomi", "zgodilo", "zdaj", "zajtrk", "utrujena","ustrelila", "srečna", "čarovnik", "zaživeti"
         };
 
         private static readonly string[] AutoDetectWordsLatvian =
@@ -502,9 +502,20 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 int croatianCount = GetCount(text, AutoDetectWordsCroatian);
                 int serbianCount = GetCount(text, AutoDetectWordsSerbian);
+                var slovenianCount = GetCount(text, AutoDetectWordsSlovenian);
                 if (croatianCount > serbianCount)
                 {
+                    if (slovenianCount > croatianCount)
+                    {
+                        return "sl";
+                    }
+
                     return "hr"; // Croatian
+                }
+
+                if (slovenianCount > count)
+                {
+                    return "sl";
                 }
 
                 return "sr"; // Serbian
@@ -1380,7 +1391,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         /// <summary>
         /// Will try to determine if buffer is utf-8 encoded or not.
-        /// If any non-utf8 sequences are found then false is returned, if no utf8 multibytes sequences are found then false is returned.
+        /// If any non-utf8 sequences are found then false is returned, if no utf8 multi bytes sequences are found then false is returned.
         /// </summary>
         private static bool IsUtf8(byte[] buffer, out bool couldBeUtf8)
         {
