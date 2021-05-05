@@ -317,7 +317,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     default:
                         if (ch > 127)
                         {
-                            encoded.Append("&#" + (int)ch + ";");
+                            encoded.Append("&#").Append((int)ch).Append(';');
                         }
                         else
                         {

@@ -94,7 +94,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public Paragraph GetParagraphOrDefaultById(string id)
         {
-            return Paragraphs.FirstOrDefault(p => p.Id == id);
+            return Paragraphs.Find(p => p.Id == id);
         }
 
         public SubtitleFormat ReloadLoadSubtitle(List<string> lines, string fileName, SubtitleFormat format)

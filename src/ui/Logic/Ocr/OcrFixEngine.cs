@@ -1703,7 +1703,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             }
                             else
                             {
-                                if (word.ToUpperInvariant() != "LT'S" && word.ToUpperInvariant() != "SOX'S") // TODO: Get fixed nhunspell
+                                if (!string.Equals(word, "LT'S", StringComparison.InvariantCultureIgnoreCase) && !string.Equals(word, "SOX'S", StringComparison.InvariantCultureIgnoreCase)) // TODO: Get fixed nhunspell
                                 {
                                     suggestions = DoSuggest(word); // 0.9.6 fails on "Lt'S"
                                 }

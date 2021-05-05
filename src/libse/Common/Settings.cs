@@ -92,16 +92,16 @@ namespace Nikse.SubtitleEdit.Core.Common
             RecentFileEntry existingEntry;
             if (string.IsNullOrEmpty(originalFileName))
             {
-                existingEntry = Files.FirstOrDefault(p => !string.IsNullOrEmpty(p.FileName) &&
-                                                          string.IsNullOrEmpty(p.OriginalFileName) &&
-                                                          p.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase));
+                existingEntry = Files.Find(p => !string.IsNullOrEmpty(p.FileName) &&
+                                                string.IsNullOrEmpty(p.OriginalFileName) &&
+                                                p.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase));
             }
             else
             {
-                existingEntry = Files.FirstOrDefault(p => !string.IsNullOrEmpty(p.FileName) &&
-                                                          !string.IsNullOrEmpty(p.OriginalFileName) &&
-                                                          p.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase) &&
-                                                          p.OriginalFileName.Equals(originalFileName, StringComparison.OrdinalIgnoreCase));
+                existingEntry = Files.Find(p => !string.IsNullOrEmpty(p.FileName) &&
+                                                !string.IsNullOrEmpty(p.OriginalFileName) &&
+                                                p.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase) &&
+                                                p.OriginalFileName.Equals(originalFileName, StringComparison.OrdinalIgnoreCase));
             }
             return existingEntry;
         }
@@ -2568,7 +2568,7 @@ $HorzAlign          =   Center
                     {
                         var lookup = new List<RulesProfile>();
                         GeneralSettings.AddExtraProfiles(lookup);
-                        var match = lookup.FirstOrDefault(LookupProfile => LookupProfile.Name == listNode.SelectSingleNode("Name").InnerText);
+                        var match = lookup.Find(LookupProfile => LookupProfile.Name == listNode.SelectSingleNode("Name").InnerText);
                         if (match != null)
                         {
                             dialogStyle = match.DialogStyle; // update style when upgrading from 3.5.13 or below
@@ -2591,7 +2591,7 @@ $HorzAlign          =   Center
                     {
                         var lookup = new List<RulesProfile>();
                         GeneralSettings.AddExtraProfiles(lookup);
-                        var match = lookup.FirstOrDefault(LookupProfile => LookupProfile.Name == listNode.SelectSingleNode("Name").InnerText);
+                        var match = lookup.Find(LookupProfile => LookupProfile.Name == listNode.SelectSingleNode("Name").InnerText);
                         if (match != null)
                         {
                             continuationStyle = match.ContinuationStyle; // update style when upgrading from 3.5.13 or below
@@ -8532,7 +8532,7 @@ $HorzAlign          =   Center
                             textWriter.WriteElementString("MarginLeft", style.MarginLeft.ToString());
                             textWriter.WriteElementString("MarginRight", style.MarginRight.ToString());
                             textWriter.WriteElementString("MarginVertical", style.MarginVertical.ToString());
-                            textWriter.WriteElementString("BorderStyle", style.BorderStyle.ToString());
+                            textWriter.WriteElementString("BorderStyle", style.BorderStyle);
                             textWriter.WriteEndElement();
                         }
                         textWriter.WriteEndElement();

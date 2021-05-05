@@ -306,6 +306,5 @@ namespace Nikse.SubtitleEdit.Forms
                 LoadDictionaryList("Nikse.SubtitleEdit.Resources.HunspellBackupDictionaries.xml.gz");
             }
         }
-
     }
 }
