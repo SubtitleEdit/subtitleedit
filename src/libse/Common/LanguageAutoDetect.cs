@@ -1437,7 +1437,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return true;
         }
 
-        private static readonly char[] RightToLeftLetters = string.Join(string.Empty, AutoDetectWordsArabic.Concat(AutoDetectWordsHebrew).Concat(AutoDetectWordsFarsi).Concat(AutoDetectWordsUrdu)).Distinct().ToArray();
+        private static readonly char[] RightToLeftLetters = string.Concat(AutoDetectWordsArabic.Concat(AutoDetectWordsHebrew).Concat(AutoDetectWordsFarsi).Concat(AutoDetectWordsUrdu)).Distinct().ToArray();
 
         public static bool CouldBeRightToLeftLanguage(Subtitle subtitle)
         {
