@@ -45,7 +45,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(315, 210);
+            this.buttonCancel.Location = new System.Drawing.Point(315, 199);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 40;
@@ -64,7 +64,7 @@
             // 
             this.buttonStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonStart.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonStart.Location = new System.Drawing.Point(234, 210);
+            this.buttonStart.Location = new System.Drawing.Point(234, 199);
             this.buttonStart.Name = "buttonStart";
             this.buttonStart.Size = new System.Drawing.Size(75, 23);
             this.buttonStart.TabIndex = 30;
@@ -86,7 +86,8 @@
             // 
             this.comboBoxWebServiceUrl.FormattingEnabled = true;
             this.comboBoxWebServiceUrl.Items.AddRange(new object[] {
-            "https://www.nikse.dk/api/senet/"});
+            "https://www.nikse.dk/api/senet/",
+            "https://senet20210506190838.azurewebsites.net/senet/"});
             this.comboBoxWebServiceUrl.Location = new System.Drawing.Point(125, 145);
             this.comboBoxWebServiceUrl.Name = "comboBoxWebServiceUrl";
             this.comboBoxWebServiceUrl.Size = new System.Drawing.Size(262, 21);
@@ -115,7 +116,7 @@
             // 
             this.labelStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelStatus.AutoSize = true;
-            this.labelStatus.Location = new System.Drawing.Point(12, 220);
+            this.labelStatus.Location = new System.Drawing.Point(12, 222);
             this.labelStatus.Name = "labelStatus";
             this.labelStatus.Size = new System.Drawing.Size(59, 13);
             this.labelStatus.TabIndex = 10;
