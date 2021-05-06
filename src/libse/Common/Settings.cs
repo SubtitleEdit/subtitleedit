@@ -1934,6 +1934,8 @@ $HorzAlign          =   Center
         public string MainListViewBold { get; set; }
         public string MainListViewUnderline { get; set; }
         public string MainListViewBox { get; set; }
+        public string MainListViewToggleQuotes { get; set; }
+        public string MainListViewToggleHiTags { get; set; }
         public string MainListViewSplit { get; set; }
         public string MainListViewToggleDashes { get; set; }
         public string MainListViewToggleMusicSymbols { get; set; }
@@ -7183,6 +7185,18 @@ $HorzAlign          =   Center
                     shortcuts.MainListViewBox = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainListViewToggleQuotes");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewToggleQuotes = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewToggleHiTags");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewToggleHiTags = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainListViewSplit");
                 if (subNode != null)
                 {
@@ -8938,6 +8952,8 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainListViewBold", shortcuts.MainListViewBold);
             textWriter.WriteElementString("MainListViewUnderline", shortcuts.MainListViewUnderline);
             textWriter.WriteElementString("MainListViewBox", shortcuts.MainListViewBox);
+            textWriter.WriteElementString("MainListViewToggleQuotes", shortcuts.MainListViewToggleQuotes);
+            textWriter.WriteElementString("MainListViewToggleHiTags", shortcuts.MainListViewToggleHiTags);
             textWriter.WriteElementString("MainListViewSplit", shortcuts.MainListViewSplit);
             textWriter.WriteElementString("MainListViewToggleDashes", shortcuts.MainListViewToggleDashes);
             textWriter.WriteElementString("MainListViewToggleMusicSymbols", shortcuts.MainListViewToggleMusicSymbols);
