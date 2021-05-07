@@ -6103,6 +6103,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/ToggleDialogDashes":
                     language.Settings.ToggleDialogDashes = reader.Value;
                     break;
+                case "Settings/ToggleQuotes":
+                    language.Settings.ToggleQuotes = reader.Value;
+                    break;
+                case "Settings/ToggleHiTags":
+                    language.Settings.ToggleHiTags = reader.Value;
+                    break;
                 case "Settings/ToggleMusicSymbols":
                     language.Settings.ToggleMusicSymbols = reader.Value;
                     break;
