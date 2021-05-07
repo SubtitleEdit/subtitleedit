@@ -2231,6 +2231,8 @@ can edit in same subtitle file (collaboration)</Information>
     <ToggleFocus>Toggle focus between list view and subtitle text box</ToggleFocus>
     <ToggleFocusWaveform>Toggle focus between list view and waveform/spectrogram</ToggleFocusWaveform>
     <ToggleDialogDashes>Toggle dialog dashes</ToggleDialogDashes>
+    <ToggleQuotes>Toggle quotes</ToggleQuotes>
+    <ToggleHiTags>Toggle HI tags</ToggleHiTags>
     <ToggleMusicSymbols>Toggle music symbols</ToggleMusicSymbols>
     <Alignment>Alignment (selected lines)</Alignment>
     <AlignmentN1>Alignment bottom left - {\an1}</AlignmentN1>

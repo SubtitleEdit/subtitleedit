@@ -2403,6 +2403,8 @@
             public string ToggleFocus { get; set; }
             public string ToggleFocusWaveform { get; set; }
             public string ToggleDialogDashes { get; set; }
+            public string ToggleQuotes { get; set; }
+            public string ToggleHiTags { get; set; }
             public string ToggleMusicSymbols { get; set; }
             public string Alignment { get; set; }
             public string AlignmentN1 { get; set; }

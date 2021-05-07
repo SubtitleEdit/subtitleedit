@@ -9868,7 +9868,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyData == _shortcuts.MainListViewToggleMusicSymbols)
             {
-                textBoxListViewText.Text = ToggleMusicSymbols("♪", textBoxListViewText.Text);
+                SurroundWithTag(Configuration.Settings.Tools.MusicSymbol, selectedTextOnly: true);
+                e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainInsertBefore)
             {
@@ -12531,7 +12532,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             int selectionStart = tb.SelectionStart;
-            int selectionLength = tb.SelectionLength;
             bool done = false;
             string pre = string.Empty;
             if (selectionStart == 0 && text.StartsWith("{\\", StringComparison.Ordinal) && text.IndexOf('}') >= 0)
@@ -14656,6 +14656,32 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     ToggleDashes();
+                }
+
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainListViewToggleQuotes == e.KeyData && InListView)
+            {
+                if (textBoxListViewText.Focused || textBoxListViewTextOriginal.Focused)
+                {
+                    SurroundWithTag("\"", selectedTextOnly: true);
+                }
+                else
+                {
+                    SurroundWithTag("\"");
+                }
+
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainListViewToggleHiTags == e.KeyData && InListView)
+            {
+                if (textBoxListViewText.Focused || textBoxListViewTextOriginal.Focused)
+                {
+                    SurroundWithTag("[", "]", true);
+                }
+                else
+                {
+                    SurroundWithTag("[", "]");
                 }
 
                 e.SuppressKeyPress = true;
@@ -18008,6 +18034,45 @@ namespace Nikse.SubtitleEdit.Forms
                         s = s.Remove(0, endFont + 1);
                         updated = true;
                     }
+                }
+            }
+
+            return s;
+        }
+
+        private static string SplitEndTags(string line, ref string post)
+        {
+            var s = line;
+            if (s.EndsWith("{\\r}", StringComparison.Ordinal))
+            {
+                post = s.Substring(s.Length - 4, 4);
+                s = s.Remove(s.Length - 4, 4);
+            }
+
+            bool updated = true;
+            while (updated)
+            {
+                updated = false;
+                if (s.EndsWith(' '))
+                {
+                    post += ' ';
+                    s = s.Remove(s.Length - 1, 1);
+                    updated = true;
+                }
+                else if (s.EndsWith("</i>", StringComparison.OrdinalIgnoreCase) ||
+                         s.EndsWith("</b>", StringComparison.OrdinalIgnoreCase) ||
+                         s.EndsWith("</u>", StringComparison.OrdinalIgnoreCase))
+                {
+                    post += s.Substring(s.Length - 4, 4);
+                    s = s.Remove(s.Length - 4, 4);
+                    updated = true;
+                }
+                else if (s.EndsWith("</font>", StringComparison.OrdinalIgnoreCase))
+                {
+                    var endFontTag = "</font>";
+                    post += endFontTag;
+                    s = s.Remove(s.Length - endFontTag.Length, endFontTag.Length);
+                    updated = true;
                 }
             }
 
@@ -26781,101 +26846,106 @@ namespace Nikse.SubtitleEdit.Forms
         private void ToolStripMenuItemSurroundWithMusicSymbolsClick(object sender, EventArgs e)
         {
             string tag = Configuration.Settings.Tools.MusicSymbol;
-            if (string.IsNullOrWhiteSpace(tag))
-            {
-                return;
-            }
-
-            if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
-            {
-                SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
-                MakeHistoryForUndo(string.Format(_language.BeforeAddingTagX, tag));
-
-                var indices = new List<int>();
-                foreach (ListViewItem item in SubtitleListview1.SelectedItems)
-                {
-                    indices.Add(item.Index);
-                }
-
-                SubtitleListview1.BeginUpdate();
-                foreach (int i in indices)
-                {
-                    if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
-                    {
-                        var original = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleOriginal.Paragraphs);
-                        if (original != null)
-                        {
-                            original.Text = ToggleMusicSymbols(tag, original.Text);
-                            SubtitleListview1.SetOriginalText(i, original.Text);
-                        }
-                    }
-
-                    _subtitle.Paragraphs[i].Text = ToggleMusicSymbols(tag, _subtitle.Paragraphs[i].Text);
-                    SubtitleListview1.SetText(i, _subtitle.Paragraphs[i].Text);
-                }
-
-                SubtitleListview1.EndUpdate();
-
-                ShowStatus(string.Format(_language.TagXAdded, tag));
-                UpdateSourceView();
-                RefreshSelectedParagraph();
-                SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
-            }
+            SurroundWithTag(tag);
         }
 
-        private string ToggleMusicSymbols(string tag, string text)
+        private void SurroundWithTag(string tag, string endTag = "", bool selectedTextOnly = false)
         {
-            string pre = string.Empty;
-            string post = string.Empty;
-            var indexOfEndBracket = text.IndexOf('}');
-            if (text.StartsWith("{\\", StringComparison.Ordinal) && indexOfEndBracket > 1)
+            if (selectedTextOnly)
             {
-                pre = text.Substring(0, indexOfEndBracket + 1);
-                text = text.Remove(0, indexOfEndBracket + 1);
-            }
-
-            bool updated = true;
-            while (updated)
-            {
-                updated = false;
-                if (text.StartsWith(' '))
+                var tb = GetFocusedTextBox();
+                var text = tb.SelectedText;
+                if (string.IsNullOrEmpty(text) && tb.Text.Length > 0)
                 {
-                    pre += ' ';
-                    text = text.Remove(0, 1);
-                    updated = true;
+                    text = tb.Text;
+                    tb.SelectAll();
                 }
-                else if (text.StartsWith("<font", StringComparison.OrdinalIgnoreCase))
-                {
-                    int endFont = text.IndexOf('>');
-                    if (endFont > 0)
-                    {
-                        pre += text.Substring(0, endFont + 1);
-                        text = text.Remove(0, endFont + 1);
-                        updated = true;
-                    }
 
-                    if (text.EndsWith("</font>", StringComparison.OrdinalIgnoreCase))
-                    {
-                        var endTag = "</font>";
-                        post += endTag;
-                        text = text.Remove(text.Length - endTag.Length, endTag.Length);
-                    }
-                }
-            }
-
-            if (text.Contains(tag))
-            {
-                text = pre + text.Replace(tag, string.Empty).Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim() + post;
+                int selectionStart = tb.SelectionStart;
+                text = ToggleSymbols(tag, text, endTag);
+                tb.SelectedText = text;
+                tb.SelectionStart = selectionStart;
+                tb.SelectionLength = text.Length;
             }
             else
             {
-                if (Configuration.Settings.Tools.MusicSymbolStyle.Equals("single", StringComparison.OrdinalIgnoreCase))
+                if (string.IsNullOrWhiteSpace(tag))
                 {
-                    text = string.Format("{0}{1} {2}{3}", pre, tag, text.Replace(Environment.NewLine, Environment.NewLine + tag + " "), post);
+                    return;
+                }
+
+                if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
+                {
+                    SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
+                    MakeHistoryForUndo(string.Format(_language.BeforeAddingTagX, tag));
+
+                    var indices = new List<int>();
+                    foreach (ListViewItem item in SubtitleListview1.SelectedItems)
+                    {
+                        indices.Add(item.Index);
+                    }
+
+                    SubtitleListview1.BeginUpdate();
+                    foreach (int i in indices)
+                    {
+                        if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                        {
+                            var original = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleOriginal.Paragraphs);
+                            if (original != null)
+                            {
+                                original.Text = ToggleSymbols(tag, original.Text, endTag);
+                                SubtitleListview1.SetOriginalText(i, original.Text);
+                            }
+                        }
+
+                        _subtitle.Paragraphs[i].Text = ToggleSymbols(tag, _subtitle.Paragraphs[i].Text, endTag);
+                        SubtitleListview1.SetText(i, _subtitle.Paragraphs[i].Text);
+                    }
+
+                    SubtitleListview1.EndUpdate();
+
+                    ShowStatus(string.Format(_language.TagXAdded, tag));
+                    UpdateSourceView();
+                    RefreshSelectedParagraph();
+                    SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
+                }
+            }
+        }
+
+        private string ToggleSymbols(string tag, string text, string endTag = "")
+        {
+            string pre = string.Empty;
+            string post = string.Empty;
+            text = SplitStartTags(text, ref pre);
+            text = SplitEndTags(text, ref post);
+
+            if (text.Contains(tag))
+            {
+                if (string.IsNullOrEmpty(endTag))
+                {
+                    text = pre + text.Replace(tag, string.Empty).Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim() + post;
                 }
                 else
                 {
-                    text = string.Format("{0}{1} {2} {1}{3}", pre, tag, text.Replace(Environment.NewLine, " " + tag + Environment.NewLine + tag + " "), post);
+                    text = pre + text.Replace(tag, string.Empty).Replace(endTag, string.Empty).Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim() + post;
+                }
+            }
+            else
+            {
+                if (tag == Configuration.Settings.Tools.MusicSymbol)
+                {
+                    if (Configuration.Settings.Tools.MusicSymbolStyle.Equals("single", StringComparison.OrdinalIgnoreCase))
+                    {
+                        text = string.Format("{0}{1} {2}{3}", pre, tag, text.Replace(Environment.NewLine, Environment.NewLine + tag + " "), post);
+                    }
+                    else
+                    {
+                        text = string.Format("{0}{1} {2} {1}{3}", pre, tag, text.Replace(Environment.NewLine, " " + tag + Environment.NewLine + tag + " "), post);
+                    }
+                }
+                else
+                {
+                    text = string.Format("{0}{1}{2}{3}{4}", pre, tag, text, string.IsNullOrEmpty(endTag) ? tag : endTag, post);
                 }
             }
 
