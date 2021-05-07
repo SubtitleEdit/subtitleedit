@@ -17,6 +17,7 @@
    * Add "Set start, offset all" shortcut - thx QuentinNetherwood/OmrSi
    * Add export to csv of bookmarks - thx kjaerlige
    * Add basic read support of .mcc files - thx Bern
+   * Add toggle quotes and HI tags shortcuts
 * IMPROVED:
    * Update Polish translation - thx admas
    * Update Bulgarian translation - thx Калин
@@ -43,6 +44,7 @@
    * Make bd sup edit work better with full frame images - thx peter-qgd
    * Point sync now also works on original subtitle - thx Rene
    * Keep Text box height when resizing - thx AbsenceJam/darnn
+   * Add "Slovenian" to language auto detect - thx Milenko
 * FIXED:
    * Fix for reading bdsup position - thx akaicat
    * Fix a few crashes in translation engine - thx howblast/Laís
