@@ -2221,6 +2221,8 @@ Command line: {1} {2}
     <ToggleFocus>在列表视图和文本输入框之间切换焦点</ToggleFocus>
     <ToggleFocusWaveform>在列表视图和波形/频谱视图之间切换焦点</ToggleFocusWaveform>
     <ToggleDialogDashes>在对话内容前使用破折号</ToggleDialogDashes>
+    <ToggleQuotes>切换引号</ToggleQuotes>
+    <ToggleHiTags>切换HI标签</ToggleHiTags>
     <ToggleMusicSymbols>使用音乐符号</ToggleMusicSymbols>
     <Alignment>对齐 (所选行)</Alignment>
     <AlignmentN1>左下对齐 - {\an1}</AlignmentN1>
