@@ -1773,7 +1773,7 @@ Hvis du har redigeret denne fil med Subtitle Edit du måske finde en backup via 
     <DurationLessThan>Varighed mindre end</DurationLessThan>
     <DurationGreaterThan>Varighed større end</DurationGreaterThan>
     <MoreThanTwoLines>Mere end to linjer</MoreThanTwoLines>
-    <Bookmarked></Bookmarked>
+    <Bookmarked>Bogmærket</Bookmarked>
   </ModifySelection>
   <MultipleReplace>
     <Title>Multi søg og erstat</Title>
@@ -1937,7 +1937,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
   <Settings>
     <Title>Indstillinger</Title>
     <General>General</General>
-    <SubtitleFormats></SubtitleFormats>
+    <SubtitleFormats>Undertekstformater</SubtitleFormats>
     <Toolbar>Toolbar</Toolbar>
     <VideoPlayer>Videoafspiller</VideoPlayer>
     <WaveformAndSpectrogram>Waveform/spektrogram</WaveformAndSpectrogram>
@@ -1960,7 +1960,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <ToggleBookmarks>Tilføj/fjern bogmærker</ToggleBookmarks>
     <ToggleBookmarksWithComment>Tilføj/fjern bogmærker medj kommentar</ToggleBookmarksWithComment>
     <ClearBookmarks>Ryd bogmærker</ClearBookmarks>
-    <ExportBookmarks></ExportBookmarks>
+    <ExportBookmarks>Eksporter bogmærker...</ExportBookmarks>
     <GoToBookmark>Gå til bogmærke</GoToBookmark>
     <GoToPreviousBookmark>Gå til tidligere bogmærke</GoToPreviousBookmark>
     <GoToNextBookmark>Gå til næste bogmærke</GoToNextBookmark>
@@ -1971,7 +1971,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <TogglePreviewOnVideo>Ppreview på video til/fra</TogglePreviewOnVideo>
     <Help>Hjælp</Help>
     <FontInUi>UI-skrifttype</FontInUi>
-    <Appearance></Appearance>
+    <Appearance>Udseende</Appearance>
     <ShowFrameRate>Vis frame rate i værktøjslinjen</ShowFrameRate>
     <DefaultFrameRate>Standard frame rate</DefaultFrameRate>
     <DefaultFileEncoding>Standard filkodningen</DefaultFileEncoding>
@@ -2004,7 +2004,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <RememberPositionAndSize>Husk hovedvinduet position og størrelse</RememberPositionAndSize>
     <StartInSourceView>Start i kilde visning</StartInSourceView>
     <RemoveBlankLinesWhenOpening>Fjern tomme linjer, når undertekst åbnes</RemoveBlankLinesWhenOpening>
-    <RemoveBlankLines></RemoveBlankLines>
+    <RemoveBlankLines>Fjern blanke linjer</RemoveBlankLines>
     <ShowLineBreaksAs>Vis linjeskift i listevisning som</ShowLineBreaksAs>
     <SaveAsFileNameFrom>"Gem som..." bruger filnavn fra</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>Dobbeltklik på linje i hovedvinduet listevisning starter</MainListViewDoubleClickAction>
@@ -2143,11 +2143,11 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <FixCommonOcrErrorsUseHardcodedRules>Ret normale OCR fejl - Inkluder hardcodede regler</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Fix kort visningstid - tillad flytning af starttidspunkt</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Spring trin 1 over (vælg fix regler)</FixCommonErrorsSkipStepOne>
-    <DefaultFormat></DefaultFormat>
-    <DefaultSaveAsFormat></DefaultSaveAsFormat>
-    <Favorites></Favorites>
-    <FavoriteFormats></FavoriteFormats>
-    <FavoriteSubtitleFormatsNote></FavoriteSubtitleFormatsNote>
+    <DefaultFormat>Standardformat</DefaultFormat>
+    <DefaultSaveAsFormat>Standard gem som format</DefaultSaveAsFormat>
+    <Favorites>Foretrukne</Favorites>
+    <FavoriteFormats>Favoritformater</FavoriteFormats>
+    <FavoriteSubtitleFormatsNote>Bemærk: favoritformater vises først, når du vælger et format, standardformatet vises altid først</FavoriteSubtitleFormatsNote>
     <Shortcuts>Genveje</Shortcuts>
     <Shortcut>Genvej</Shortcut>
     <Control>Control</Control>
@@ -2162,14 +2162,14 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <AssaColor>ASSA farve</AssaColor>
     <DarkTheme>Mørkt tema</DarkTheme>
     <DarkThemeEnabled>Brug mørkt tema</DarkThemeEnabled>
-    <DarkThemeShowGridViewLines></DarkThemeShowGridViewLines>
+    <DarkThemeShowGridViewLines>Vis gitterlinjer for listevisning</DarkThemeShowGridViewLines>
     <UpdateShortcut>Opdater</UpdateShortcut>
     <FoucsSetVideoPosition>Fokus, sæt videoposition</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Skift dok/frigør af video kontrol</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Sæt slut, tilføj ny og gå til ny</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Juster via slut-position</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Juster via slutposition og gå til næste</AdjustViaEndAutoStartAndGoToNext>
-    <AdjustSetEndMinusGapAndStartNextHere></AdjustSetEndMinusGapAndStartNextHere>
+    <AdjustSetEndMinusGapAndStartNextHere>Indstil slut minus gap, gå til næste og start næste her</AdjustSetEndMinusGapAndStartNextHere>
     <AdjustSetEndTimeAndGoToNext>Set slut og gå til næste</AdjustSetEndTimeAndGoToNext>
     <AdjustSetEndTimeAndPause>Set slut og pause</AdjustSetEndTimeAndPause>
     <AdjustSetStartAutoDurationAndGoToNext>Sæt start, auto varighed og gå til næste</AdjustSetStartAutoDurationAndGoToNext>
@@ -2192,9 +2192,9 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <AdjustEndOneFrameBackKeepGapNext>Flyt ende 1 frame tilbage (hold afstand til næste hvis tæt)</AdjustEndOneFrameBackKeepGapNext>
     <AdjustEndOneFrameForwardKeepGapNext>Flyt ende 1 frame fremad (hold afstand til næste, hvis tæt)</AdjustEndOneFrameForwardKeepGapNext>
     <AdjustSetStartTimeKeepDuration>Sæt starttid, behold varighed</AdjustSetStartTimeKeepDuration>
-    <AdjustVideoSetStartForAppropriateLine></AdjustVideoSetStartForAppropriateLine>
-    <AdjustVideoSetEndForAppropriateLine></AdjustVideoSetEndForAppropriateLine>
-    <AdjustSetStartAndOffsetTheWholeSubtitle></AdjustSetStartAndOffsetTheWholeSubtitle>
+    <AdjustVideoSetStartForAppropriateLine>Indstil start til passende linje</AdjustVideoSetStartForAppropriateLine>
+    <AdjustVideoSetEndForAppropriateLine>Indstil slutningen for den passende linje</AdjustVideoSetEndForAppropriateLine>
+    <AdjustSetStartAndOffsetTheWholeSubtitle>Indstil starttid, forskyd hele underteksten</AdjustSetStartAndOffsetTheWholeSubtitle>
     <AdjustSetEndAndOffsetTheRest>Set sluttid, juster resten</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Set sluttid, juster resten og gå til næste</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <AdjustSnapStartToNextSceneChange>Snap valgte linjer start til næste sceneændring</AdjustSnapStartToNextSceneChange>
@@ -2225,6 +2225,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <ToggleFocus>Skift fokus imellem liste visning og undertekst tekstboks</ToggleFocus>
     <ToggleFocusWaveform>Skift fokus mellem listevisning og bølgeform/spektrogram</ToggleFocusWaveform>
     <ToggleDialogDashes>Toggle dialog tankestreger</ToggleDialogDashes>
+    <ToggleQuotes>Skift gåseøjne</ToggleQuotes>
+    <ToggleHiTags>Skift HI-tags</ToggleHiTags>
     <ToggleMusicSymbols>Skift musik symboler</ToggleMusicSymbols>
     <Alignment>Justering (valgte linier)</Alignment>
     <AlignmentN1>Justering bund venstre left - {\an1}</AlignmentN1>
@@ -2288,7 +2290,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <PlayRateSlower>Afspilningshastigheden langsommere</PlayRateSlower>
     <PlayRateFaster>Afspilningshastighed hurtigere</PlayRateFaster>
     <VideoResetSpeedAndZoom>Nulstil hastighed/zoom</VideoResetSpeedAndZoom>
-    <MainToggleVideoControls></MainToggleVideoControls>
+    <MainToggleVideoControls>Toggle videokontrol</MainToggleVideoControls>
     <CustomSearch1>Oversæt, brugerdefineret søgning 1</CustomSearch1>
     <CustomSearch2>Oversæt, brugerdefineret søgning 2</CustomSearch2>
     <CustomSearch3>Oversæt, brugerdefineret søgning 3</CustomSearch3>
@@ -2338,7 +2340,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <MainTextBoxMoveLastWordDown>Flyt sidste ord ned til næste linje</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Flyt første ord fra næste linje op</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Flyt første ord fra næste linje op (nuværende undertekst)</MainTextBoxMoveFirstWordUpCurrent>
-    <MainTextBoxMoveFromCursorToNext></MainTextBoxMoveFromCursorToNext>
+    <MainTextBoxMoveFromCursorToNext>Flyt tekst efter markørposition til næste undertekst, og gå til næste</MainTextBoxMoveFromCursorToNext>
     <MainTextBoxMoveLastWordDownCurrent>Flyt sidste ord fra første linje ned (nuværende undertekst)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Markering til små bogstaver</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Markering til store bogstaver</MainTextBoxSelectionToUpper>
@@ -2561,7 +2563,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <UpdateDetails>Opdatering detaljer</UpdateDetails>
     <Resolution>Opløsning</Resolution>
     <VideoResolution>Videoopløsning</VideoResolution>
-    <FromCurrentVideo></FromCurrentVideo>
+    <FromCurrentVideo>Fra aktuelle video</FromCurrentVideo>
     <Options>Indstillinger</Options>
     <WrapStyle>Wrap stil</WrapStyle>
     <Collision>Kollision</Collision>
@@ -2620,25 +2622,25 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <AddToFile>Tilføj til fil</AddToFile>
     <AddToStorage>Føj til lager</AddToStorage>
     <StyleStorage>Stil lager</StyleStorage>
-    <StyleCurrentFile></StyleCurrentFile>
+    <StyleCurrentFile>Stilarter i den aktuelle fil</StyleCurrentFile>
     <OverwriteX>Overskriv {0}?</OverwriteX>
-    <CategoryNote></CategoryNote>
-    <CategoriesManage></CategoriesManage>
-    <MoveToCategory></MoveToCategory>
+    <CategoryNote>Bemærk: Stilarterne i standardkategorien (farvet i grønt) anvendes på nye ASSA-filer</CategoryNote>
+    <CategoriesManage>Styre</CategoriesManage>
+    <MoveToCategory>Flyt valgte stilarter til kategori...</MoveToCategory>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
-    <Category></Category>
-    <Categories></Categories>
-    <CategoryName></CategoryName>
-    <CategoryDelete></CategoryDelete>
-    <NewCategory></NewCategory>
-    <CategoryRename></CategoryRename>
-    <CategorySetDefault></CategorySetDefault>
-    <NumberOfStyles></NumberOfStyles>
-    <CategoryDefault></CategoryDefault>
-    <ChooseCategories></ChooseCategories>
-    <ImportCategoriesTitle></ImportCategoriesTitle>
-    <ExportCategoriesTitle></ExportCategoriesTitle>
+    <Category>Kategori</Category>
+    <Categories>Kategorier</Categories>
+    <CategoryName>Kategorinavn</CategoryName>
+    <CategoryDelete>Er du sikker på, at du vil slette den valgte kategori/kategorier?</CategoryDelete>
+    <NewCategory>Ny kategori</NewCategory>
+    <CategoryRename>Omdøb kategori</CategoryRename>
+    <CategorySetDefault>Indstillet som standard</CategorySetDefault>
+    <NumberOfStyles>Antal stilarter</NumberOfStyles>
+    <CategoryDefault>Standard</CategoryDefault>
+    <ChooseCategories>Vælg kategorier til {0}</ChooseCategories>
+    <ImportCategoriesTitle>Importér kategorier fra...</ImportCategoriesTitle>
+    <ExportCategoriesTitle>Eksportér kategorier til...</ExportCategoriesTitle>
   </SubStationAlphaStylesCategoriesManager>
   <PointSync>
     <Title>Punkt synkronisering</Title>
