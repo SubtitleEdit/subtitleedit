@@ -3756,7 +3756,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             if (textBoxFormatsSearch.Text.Length > 0)
             {
                 buttonFormatsSearchClear.Enabled = true;
-                var results = SubtitleFormat.AllSubtitleFormats.Where(format => !format.IsVobSubIndexFile && format.FriendlyName.Contains(textBoxFormatsSearch.Text)).Select(format => format.FriendlyName);
+                var results = SubtitleFormat.AllSubtitleFormats.Where(format => !format.IsVobSubIndexFile && format.FriendlyName.Contains(textBoxFormatsSearch.Text, StringComparison.OrdinalIgnoreCase)).Select(format => format.FriendlyName);
                 listBoxSubtitleFormats.Items.AddRange(results.ToArray<object>());
             }
             else
