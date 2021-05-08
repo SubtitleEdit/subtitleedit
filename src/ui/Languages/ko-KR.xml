@@ -837,6 +837,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <RemoveEmptyLines>빈 줄 제거</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>문자 없는 줄 제거</RemoveLinesWithoutLetters>
     <GenerateTimeCodes>타임코드 생성</GenerateTimeCodes>
+    <TakeTimeFromCurrentFile>현재 파일에서 타임코드 얻기</TakeTimeFromCurrentFile>
     <TakeTimeFromFileName>파일 이름에서 시간 얻기</TakeTimeFromFileName>
     <GapBetweenSubtitles>자막 간격 (ms)</GapBetweenSubtitles>
     <Auto>자동</Auto>
@@ -1467,6 +1468,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <LineSplitted>줄을 분할했습니다.</LineSplitted>
     <BeforeMergeLines>줄 병합 전</BeforeMergeLines>
     <LinesMerged>줄이 병합되었습니다.</LinesMerged>
+    <MergeSentences>문장 병합...</MergeSentences>
+    <MergeSentencesXLines>문장 병합 - 병합된 줄: {0}</MergeSentencesXLines>
     <BeforeSettingColor>색상 설정 전</BeforeSettingColor>
     <BeforeSettingFontName>글꼴 설정 전</BeforeSettingFontName>
     <BeforeTypeWriterEffect>타자기 효과 전</BeforeTypeWriterEffect>
@@ -2191,6 +2194,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <AdjustEndOneFrameBackKeepGapNext>끝을 1프레임 뒤로 이동 (가까운 경우 다음과 간격 유지)</AdjustEndOneFrameBackKeepGapNext>
     <AdjustEndOneFrameForwardKeepGapNext>끝을 1프레임 앞으로 이동 (가까운 경우 다음과 간격 유지)</AdjustEndOneFrameForwardKeepGapNext>
     <AdjustSetStartTimeKeepDuration>시작 설정, 간격 유지</AdjustSetStartTimeKeepDuration>
+    <AdjustVideoSetStartForAppropriateLine>적절한 줄에 대한 시작 설정</AdjustVideoSetStartForAppropriateLine>
+    <AdjustVideoSetEndForAppropriateLine>적절한 줄에 대한 끝 설정</AdjustVideoSetEndForAppropriateLine>
     <AdjustSetStartAndOffsetTheWholeSubtitle>시작 시간을 설정하고 전체 자막을 오프셋합니다.</AdjustSetStartAndOffsetTheWholeSubtitle>
     <AdjustSetEndAndOffsetTheRest>끝 설정, 나머지 보충</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>끝 설정, 나머지 보충하고 다음으로 이동</AdjustSetEndAndOffsetTheRestAndGoToNext>
@@ -2222,6 +2227,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ToggleFocus>목록 보기와 자막 텍스트 상자 간의 포커스 전환</ToggleFocus>
     <ToggleFocusWaveform>목록 보기와 파형/스펙트로그램 간의 포커스 전환</ToggleFocusWaveform>
     <ToggleDialogDashes>대화의 대시('-') 전환</ToggleDialogDashes>
+    <ToggleQuotes>따옴표 전환</ToggleQuotes>
+    <ToggleHiTags>HI 태그 전환</ToggleHiTags>
     <ToggleMusicSymbols>음악 기호 전환</ToggleMusicSymbols>
     <Alignment>정렬 (선택한 줄)</Alignment>
     <AlignmentN1>좌측 하단 정렬 - {\an1}</AlignmentN1>
@@ -2334,6 +2341,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <MainTextBoxMoveLastWordDown>마지막 단어를 아래로 이동</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>다음 줄의 첫 단어를 위로 이동</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>다음 줄의 첫 단어를 위로 이동 (현재 자막)</MainTextBoxMoveFirstWordUpCurrent>
+    <MainTextBoxMoveFromCursorToNext>커서 위치를 다음 자막에 둔 후 텍스트 이동하고 다음으로 이동</MainTextBoxMoveFromCursorToNext>
     <MainTextBoxMoveLastWordDownCurrent>첫째 줄의 마지막 단어를 아래로 이동 (현재 자막)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>선택한 영역 소문자로...</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>선택한 영역 대문자로...</MainTextBoxSelectionToUpper>
@@ -2478,7 +2486,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
   </Split>
   <SplitLongLines>
     <Title>* 긴 줄 분할/줄바꿈</Title>
-    <SingleLineMaximumLength>한 줄의 문자수가 다음 이상이면 분할:</SingleLineMaximumLength>
+    <SingleLineMaximumLength>줄의 문자수가 다음 이상이면 분할:</SingleLineMaximumLength>
     <LineMaximumLength>다음 문자수 이상인 자막 분할:</LineMaximumLength>
     <LineContinuationBeginEndStrings>줄의 시작/끝부분에 다음 문자열 추가:</LineContinuationBeginEndStrings>
     <NumberOfSplits>분할/줄바꿈: {0}개</NumberOfSplits>
