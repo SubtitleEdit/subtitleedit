@@ -15961,6 +15961,24 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
+            else if (e.KeyData == _shortcuts.MainVideoToggleBrightness)
+            {
+                if (mediaPlayer.VideoPlayer is LibMpvDynamic libMpv)
+                {
+                    ShowStatus(string.Format("Brightness: {0}", libMpv.ToggleBrightness()), false);
+                }
+
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainVideoToggleContrast)
+            {
+                if (mediaPlayer.VideoPlayer is LibMpvDynamic libMpv)
+                {
+                    ShowStatus(string.Format("Contrast: {0}", libMpv.ToggleContrast()), false);
+                }
+
+                e.SuppressKeyPress = true;
+            }
 
 
             // TABS: Create / adjust / translate

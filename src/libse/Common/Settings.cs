@@ -1922,6 +1922,8 @@ $HorzAlign          =   Center
         public string MainVideoSlower { get; set; }
         public string MainVideoFaster { get; set; }
         public string MainVideoReset { get; set; }
+        public string MainVideoToggleBrightness { get; set; }
+        public string MainVideoToggleContrast { get; set; }
         public string MainSpellCheck { get; set; }
         public string MainSpellCheckFindDoubleWords { get; set; }
         public string MainSpellCheckAddWordToNames { get; set; }
@@ -7113,6 +7115,18 @@ $HorzAlign          =   Center
                     shortcuts.MainVideoReset = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainVideoToggleBrightness");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoToggleBrightness = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideoToggleContrast");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoToggleContrast = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainSpellCheck");
                 if (subNode != null)
                 {
@@ -8940,6 +8954,8 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainVideoSlower", shortcuts.MainVideoSlower);
             textWriter.WriteElementString("MainVideoFaster", shortcuts.MainVideoFaster);
             textWriter.WriteElementString("MainVideoReset", shortcuts.MainVideoReset);
+            textWriter.WriteElementString("MainVideoToggleBrightness", shortcuts.MainVideoToggleBrightness);
+            textWriter.WriteElementString("MainVideoToggleContrast", shortcuts.MainVideoToggleContrast);
             textWriter.WriteElementString("MainSpellCheck", shortcuts.MainSpellCheck);
             textWriter.WriteElementString("MainSpellCheckFindDoubleWords", shortcuts.MainSpellCheckFindDoubleWords);
             textWriter.WriteElementString("MainSpellCheckAddWordToNames", shortcuts.MainSpellCheckAddWordToNames);
