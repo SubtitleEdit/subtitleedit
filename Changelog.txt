@@ -27,6 +27,8 @@
    * Update Basque translation - thx Azpidatziak
    * Update Korean translation - thx domddol
    * Update Portuguese translation - thx hugok79
+   * Update Greek translation - thx PMitsakis
+   * Update Turkish translation - thx ismail0100
    * Minor tweaks for font/appearance settings
    * Only set listview backcolor if visual styles enabled - thx ask2018/OmrSi
    * Optimize merge lines with same text/time
