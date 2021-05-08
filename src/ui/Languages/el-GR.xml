@@ -206,7 +206,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ConvertOptions>Επιλογές μετατροπής</ConvertOptions>
     <RemoveFormatting>Αφαίρεση ετικετών μορφοποίησης</RemoveFormatting>
     <RemoveStyleActor>Αφαίρεση στυλ/ηθοποιού</RemoveStyleActor>
-    <RemoveTextForHI>Αφαίρεση κειμένου για κωφούς</RemoveTextForHI>
+    <RemoveTextForHI>Αφαίρεση κειμένου για ανθρώπους με πρόβλημα ακοής</RemoveTextForHI>
     <OverwriteOriginalFiles>Αντικατάσταση αρχικών αρχείων (νέα επέκταση, για αλλαγμένη μορφή)</OverwriteOriginalFiles>
     <RedoCasing>Επανάληψη αρχικού γράμματος</RedoCasing>
     <Convert>Μετατροπή</Convert>
@@ -328,7 +328,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CheckingForUpdates>Έλεγχος για ενημερώσεις...</CheckingForUpdates>
     <CheckingForUpdatesFailedX>Αποτυχία ελέγχου ενημέρωσης: {0}</CheckingForUpdatesFailedX>
     <CheckingForUpdatesNoneAvailable>Χρήση της τελευταία έκδοσης Subtitle Edit</CheckingForUpdatesNoneAvailable>
-    <CheckingForUpdatesNewVersion>Διαθέσιμη νέα έκδοση.</CheckingForUpdatesNewVersion>
+    <CheckingForUpdatesNewVersion>Νέα έκδοση διαθέσιμη.</CheckingForUpdatesNewVersion>
     <InstallUpdate>Μετάβαση στην ιστοσελίδα λήψης</InstallUpdate>
     <NoUpdates>Ακύρωση ενημέρωσης</NoUpdates>
   </CheckForUpdates>
@@ -355,7 +355,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <ColumnPaste>
     <Title>Επικόλληση στηλών</Title>
     <ChooseColumn>Επιλογή στήλης</ChooseColumn>
-    <OverwriteShiftCellsDown>Αντικατάσταση/Μετατόπιση κελιών κάτω</OverwriteShiftCellsDown>
+    <OverwriteShiftCellsDown>Αντικατάσταση/μετατόπιση κελιών κάτω</OverwriteShiftCellsDown>
     <Overwrite>Αντικατάσταση</Overwrite>
     <ShiftCellsDown>Μετατόπιση κελιών κάτω</ShiftCellsDown>
     <TimeCodesOnly>Μόνο την κωδικοποίηση χρόνων</TimeCodesOnly>
@@ -594,7 +594,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <None>Κανένα</None>
     <MergeAllLines>Συγχώνευση όλων των γραμμών</MergeAllLines>
     <UnbreakLines>Συνένωση γραμμών</UnbreakLines>
-    <RemoveStyling>Αφαίρεση ύφους</RemoveStyling>
+    <RemoveStyling>Αφαίρεση στυλ</RemoveStyling>
     <ShowLineNumbers>Προβολή αριθμών γραμμής</ShowLineNumbers>
     <AddNewLineAfterLineNumber>Προσθήκη νέας γραμμής μετά του αριθμού</AddNewLineAfterLineNumber>
     <ShowTimeCode>Εμφάνιση κωδικοποίησης χρόνου</ShowTimeCode>
@@ -648,7 +648,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemovedEmptyLineAtTop>Αφαίρεση κενής γραμμής στην αρχή</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Αφαίρεση κενής γραμμής στο τέλος</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Αφαίρεση κενής γραμμής στο κέντρο</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Αφαίρεση κενών γραμμών/άχρηστων αλλαγών γραμμής</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnsedLineBreaks>Αφαίρεση κενών γραμμών/περιττών αλλαγών γραμμής</RemovedEmptyLinesUnsedLineBreaks>
     <FixOverlappingDisplayTimes>Διόρθωση επικαλυπτόμενων χρόνων εμφάνισης</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Διόρθωση σύντομων χρόνων εμφάνισης</FixShortDisplayTimes>
     <FixLongDisplayTimes>Διόρθωση μεγάλων χρόνων εμφάνισης</FixLongDisplayTimes>
@@ -1094,7 +1094,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <SubtitlesBridgeGaps>Ένωση κενών στις διάρκειες...</SubtitlesBridgeGaps>
         <FixCommonErrors>&amp;Διόρθωση σφαλμάτων...</FixCommonErrors>
         <StartNumberingFrom>Επαναρίθμηση...</StartNumberingFrom>
-        <RemoveTextForHearingImpaired>Αφαίρεση κειμένου για κωφούς...</RemoveTextForHearingImpaired>
+        <RemoveTextForHearingImpaired>Αφαίρεση κειμένου για ανθρώπους με πρόβλημα ακοής...</RemoveTextForHearingImpaired>
         <ChangeCasing>Αλλαγή πεζών-κεφαλαίων...</ChangeCasing>
         <ChangeFrameRate>Αλλαγή ρυθμού καρέ...</ChangeFrameRate>
         <ChangeSpeedInPercent>Αλλαγή ταχύτητας (επί τοις εκατό)...</ChangeSpeedInPercent>
@@ -1195,7 +1195,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Find>Εύρεση</Find>
         <Replace>Αντικατάσταση</Replace>
         <FixCommonErrors>Διόρθωση σφαλμάτων</FixCommonErrors>
-        <RemoveTextForHi>Αφαίρεση κειμένου για κωφούς</RemoveTextForHi>
+        <RemoveTextForHi>Αφαίρεση κειμένου για ανθρώπους με πρόβλημα ακοής</RemoveTextForHi>
         <VisualSync>Οπτικός συγχρονισμός</VisualSync>
         <SpellCheck>Ορθογραφικός έλεγχος</SpellCheck>
         <NetflixQualityCheck>Έλεγχος ποιότητας Netflix</NetflixQualityCheck>
@@ -1415,8 +1415,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeRenumbering>Πριν επαναρίθμησης</BeforeRenumbering>
     <RenumberedStartingFromX>Έναρξη επαναρίθμησης από: {0}</RenumberedStartingFromX>
     <BeforeRemovalOfTextingForHearingImpaired>Πριν από αφαίρεση κειμένου για κωφούς</BeforeRemovalOfTextingForHearingImpaired>
-    <TextingForHearingImpairedRemovedOneLine>Αφαίρεση κειμένου για κωφούς: Μία γραμμή</TextingForHearingImpairedRemovedOneLine>
-    <TextingForHearingImpairedRemovedXLines>Αφαίρεση κειμένου για κωφούς: {0} γραμμές</TextingForHearingImpairedRemovedXLines>
+    <TextingForHearingImpairedRemovedOneLine>Αφαίρεση κειμένου για ανθρώπους με πρόβλημα ακοής: Μία γραμμή</TextingForHearingImpairedRemovedOneLine>
+    <TextingForHearingImpairedRemovedXLines>Αφαίρεση κειμένου για ανθρώπους με πρόβλημα ακοής: {0} γραμμές</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Διαχώριση υποτίτλου</SubtitleSplitted>
     <SubtitleAppendPrompt>Προσάρτηση υποτίτλου στον φορτωμένο υπότιτλο που ίσως
 είναι ήδη συγχρονισμένος με το αρχείο βίντεο. Συνέχιση;</SubtitleAppendPrompt>
@@ -1875,7 +1875,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NotInCharacterGroup>Όχι στο σύνολο χαρακτήρων ([^δοκιμή])</NotInCharacterGroup>
   </RegularExpressionContextMenu>
   <RemoveTextFromHearImpaired>
-    <Title>Αφαίρεση κειμένου για κωφούς</Title>
+    <Title>Αφαίρεση κειμένου για ανθρώπους με πρόβλημα ακοής</Title>
     <RemoveTextConditions>Αφαίρεση συνθηκών κειμένου</RemoveTextConditions>
     <RemoveTextBetween>Αφαίρεση κειμένου μεταξύ</RemoveTextBetween>
     <SquareBrackets>'[' και ']'</SquareBrackets>
@@ -1999,7 +1999,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SubtitleCenter>Κέντρο</SubtitleCenter>
     <SubtitleFontColor>Χρώμα γραμματοσειράς υποτίτλου</SubtitleFontColor>
     <SubtitleBackgroundColor>Χρώμα φόντου υποτίτλου</SubtitleBackgroundColor>
-    <SpellChecker>Ορθογραφικός έλεγκτής</SpellChecker>
+    <SpellChecker>Ορθογραφικός ελεγκτής</SpellChecker>
     <RememberRecentFiles>Εμφάνιση πρόσφατων αρχείων</RememberRecentFiles>
     <StartWithLastFileLoaded>Έναρξη με φόρτωση τελευταίου αρχείου</StartWithLastFileLoaded>
     <RememberSelectedLine>Απομνημόνευση γραμμής</RememberSelectedLine>
@@ -2125,7 +2125,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FirstPlusX>Αρχή + {0}</FirstPlusX>
     <LastMinusX>Τέλος - {0}</LastMinusX>
     <FixCommonerrors>Διόρθωση σφαλμάτων</FixCommonerrors>
-    <RemoveTextForHi>Αφαίρεση κειμένου για κωφούς</RemoveTextForHi>
+    <RemoveTextForHi>Αφαίρεση κειμένου για ανθρώπους με πρόβλημα ακοής</RemoveTextForHi>
     <MergeLinesShorterThan>Συνένωση γραμμών μικρότερες από</MergeLinesShorterThan>
     <DialogStyle>Στυλ διαλόγου</DialogStyle>
     <DialogStyleDashBothLinesWithSpace>Παύλες με κενό</DialogStyleDashBothLinesWithSpace>
@@ -2227,6 +2227,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ToggleFocus>Εναλλαγή εστίασης μεταξύ λίστας προβολής και πλαισίου κειμένου</ToggleFocus>
     <ToggleFocusWaveform>Εναλλαγή εστίασης μεταξύ λίστας προβολής και κυματομορφής</ToggleFocusWaveform>
     <ToggleDialogDashes>Εναλλαγή γραμμών διαλόγου</ToggleDialogDashes>
+    <ToggleQuotes>Εναλλαγή εισαγωγικών</ToggleQuotes>
+    <ToggleHiTags>Εναλλαγή ετικετών προβλημάτων ακοής</ToggleHiTags>
     <ToggleMusicSymbols>Εναλλαγή μουσικών συμβόλων</ToggleMusicSymbols>
     <Alignment>Στοίχιση (επιλεγμένες γραμμές)</Alignment>
     <AlignmentN1>Στοίχιση κάτω αριστερά - {\an1}</AlignmentN1>
@@ -2864,7 +2866,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DeleteLines>Διαγραφή γραμμών</DeleteLines>
     <FromCurrentVideoPosition>Από την τρέχουσα θέση βίντεο</FromCurrentVideoPosition>
     <DetectOptions>Εντοπισμός επιλογών</DetectOptions>
-    <ScanBlocksOfMs>Σάρωση των μπλοκ χιλιοστών του δευτερολέπτου</ScanBlocksOfMs>
+    <ScanBlocksOfMs>Σάρωση των μπλοκ χιλιοστών δευτερολέπτου</ScanBlocksOfMs>
     <BlockAverageVolMin1>Η μέση τιμή των μπλοκ έντασης πρέπει να είναι πάνω από</BlockAverageVolMin1>
     <BlockAverageVolMin2>% από τη μέση συνολική ένταση</BlockAverageVolMin2>
     <BlockAverageVolMax1>Η μέση τιμή των μπλοκ έντασης πρέπει να είναι κάτω από</BlockAverageVolMax1>
