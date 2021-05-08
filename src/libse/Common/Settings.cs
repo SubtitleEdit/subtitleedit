@@ -1164,6 +1164,7 @@ $HorzAlign          =   Center
         public DateTime LastCheckForUpdates { get; set; }
         public bool AutoSave { get; set; }
         public string PreviewAssaText { get; set; }
+        public string TagsInToggleHiTags { get; set; }
         public bool ShowProgress { get; set; }
         public bool ShowNegativeDurationInfoOnSave { get; set; }
         public bool ShowFormatRequiresUtf8Warning { get; set; }
@@ -1312,6 +1313,7 @@ $HorzAlign          =   Center
             MeasurementConverterCloseOnInsert = true;
             MeasurementConverterCategories = "Length;Kilometers;Meters";
             PreviewAssaText = "ABCDEFGHIJKL abcdefghijkl 123";
+            TagsInToggleHiTags = "[;]";
             SubtitleTextBoxMaxHeight = 200;
             ShowBetaStuff = false;
             NewEmptyDefaultMs = 2000;
@@ -3582,6 +3584,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.PreviewAssaText = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("TagsInToggleHiTags");
+            if (subNode != null)
+            {
+                settings.General.TagsInToggleHiTags = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("ShowProgress");
@@ -8280,6 +8288,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("LastCheckForUpdates", settings.General.LastCheckForUpdates.ToString("yyyy-MM-dd"));
                 textWriter.WriteElementString("AutoSave", settings.General.AutoSave.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("PreviewAssaText", settings.General.PreviewAssaText);
+                textWriter.WriteElementString("TagsInToggleHiTags", settings.General.TagsInToggleHiTags);
                 textWriter.WriteElementString("ShowProgress", settings.General.ShowProgress.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowNegativeDurationInfoOnSave", settings.General.ShowNegativeDurationInfoOnSave.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowFormatRequiresUtf8Warning", settings.General.ShowFormatRequiresUtf8Warning.ToString(CultureInfo.InvariantCulture));
