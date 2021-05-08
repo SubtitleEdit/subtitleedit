@@ -102,6 +102,7 @@ namespace Nikse.SubtitleEdit.Forms
         private int _subtitleListViewIndex = -1;
         private Paragraph _oldSelectedParagraph;
         private bool _converted;
+        private bool _formatManuallyChanged;
         private SubtitleFormat _oldSubtitleFormat;
         private List<int> _selectedIndices;
         private LanguageStructure.Main _language;
@@ -2430,6 +2431,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             _lastAutoSave = DateTime.UtcNow.Ticks;
             bool videoFileLoaded = false;
+            _formatManuallyChanged = false;
             var file = new FileInfo(fileName);
             var ext = file.Extension.ToLowerInvariant();
 
@@ -4143,7 +4145,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (string.IsNullOrEmpty(_fileName) || _converted)
             {
-                return FileSaveAs(false);
+                return FileSaveAs(_converted && !_formatManuallyChanged);
             }
 
             try
@@ -4169,6 +4171,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     _oldSubtitleFormat = format;
+                    _formatManuallyChanged = false;
                     return DialogResult.OK;
                 }
 
@@ -4340,6 +4343,7 @@ namespace Nikse.SubtitleEdit.Forms
                 new BookmarkPersistence(_subtitle, _fileName).Save();
                 _fileDateTime = File.GetLastWriteTime(_fileName);
                 _oldSubtitleFormat = format;
+                _formatManuallyChanged = false;
                 ShowStatus(string.Format(_language.SavedSubtitleX, _fileName));
                 if (formatType == typeof(NetflixTimedText))
                 {
@@ -30023,6 +30027,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_oldSubtitleFormat == null || _oldSubtitleFormat.FriendlyName != GetCurrentSubtitleFormat().FriendlyName)
             {
                 ComboBoxSubtitleFormatsSelectedIndexChanged(sender, e);
+                _formatManuallyChanged = true;
             }
         }
 
