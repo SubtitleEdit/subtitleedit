@@ -445,7 +445,7 @@
             this.textBoxMovieTitle.Name = "textBoxMovieTitle";
             this.textBoxMovieTitle.Size = new System.Drawing.Size(224, 20);
             this.textBoxMovieTitle.TabIndex = 2;
-            this.textBoxMovieTitle.Text = "Bedtime For Bonzo";
+            this.textBoxMovieTitle.Text = "";
             // 
             // labelMovieTitle
             // 
