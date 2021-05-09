@@ -47,13 +47,9 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             {
                 textBoxSubtitleID.Text = ss.CurrentDCinemaSubtitleId;
                 textBoxMovieTitle.Text = ss.CurrentDCinemaMovieTitle;
-                int number;
-                if (int.TryParse(ss.CurrentDCinemaReelNumber, out number))
+                if (int.TryParse(ss.CurrentDCinemaReelNumber, out var number) && numericUpDownReelNumber.Minimum <= number && numericUpDownReelNumber.Maximum >= number)
                 {
-                    if (numericUpDownReelNumber.Minimum <= number && numericUpDownReelNumber.Maximum >= number)
-                    {
-                        numericUpDownReelNumber.Value = number;
-                    }
+                    numericUpDownReelNumber.Value = number;
                 }
                 comboBoxLanguage.Text = ss.CurrentDCinemaLanguage;
                 textBoxFontID.Text = ss.CurrentDCinemaFontId;
@@ -147,7 +143,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             var ss = Configuration.Settings.SubtitleSettings;
             ss.CurrentDCinemaSubtitleId = textBoxSubtitleID.Text;
             ss.CurrentDCinemaMovieTitle = textBoxMovieTitle.Text;
-            ss.CurrentDCinemaReelNumber = numericUpDownReelNumber.Value.ToString();
+            ss.CurrentDCinemaReelNumber = Convert.ToInt32(numericUpDownReelNumber.Value).ToString(CultureInfo.InvariantCulture);
             ss.CurrentDCinemaLanguage = comboBoxLanguage.Text;
             ss.CurrentDCinemaFontId = textBoxFontID.Text;
             ss.CurrentDCinemaFontUri = textBoxFontUri.Text;
