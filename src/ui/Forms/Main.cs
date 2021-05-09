@@ -14679,13 +14679,32 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_shortcuts.MainListViewToggleHiTags == e.KeyData && InListView)
             {
+                var tags = Configuration.Settings.General.TagsInToggleHiTags.Split(';');
+                string openingTag;
+                string closingTag;
+                switch (tags.Length)
+                {
+                    case 1:
+                        openingTag = tags[0];
+                        closingTag = openingTag;
+                        break;
+                    case 2:
+                        openingTag = tags[0];
+                        closingTag = tags[1];
+                        break;
+                    default:
+                        openingTag = "[";
+                        closingTag = "]";
+                        break;
+                }
+
                 if (textBoxListViewText.Focused || textBoxListViewTextOriginal.Focused)
                 {
-                    SurroundWithTag("[", "]", true);
+                    SurroundWithTag(openingTag, closingTag, true);
                 }
                 else
                 {
-                    SurroundWithTag("[", "]");
+                    SurroundWithTag(openingTag, closingTag);
                 }
 
                 e.SuppressKeyPress = true;
