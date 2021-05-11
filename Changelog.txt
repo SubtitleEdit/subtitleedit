@@ -47,6 +47,7 @@
    * Point sync now also works on original subtitle - thx Rene
    * Keep Text box height when resizing - thx AbsenceJam/darnn
    * Add "Slovenian" to language auto detect - thx Milenko
+   * Update Tesseract 5 Alpha to "2021-05-06" - thx iGom
 * FIXED:
    * Fix for reading bdsup position - thx akaicat
    * Fix a few crashes in translation engine - thx howblast/Laís
