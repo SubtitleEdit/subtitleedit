@@ -56,11 +56,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
 
                 if (_runningOnWindows)
                 {
-                    if (run302)
-                    {
-                        process.StartInfo.WorkingDirectory = tesseractDirectory;
-                    }
-                    else
+                    process.StartInfo.WorkingDirectory = tesseractDirectory;
+                    if (!run302)
                     {
                         process.ErrorDataReceived += TesseractErrorReceived;
                         process.StartInfo.Arguments = $@"--tessdata-dir ""{Path.Combine(tesseractDirectory, "tessdata")}"" {process.StartInfo.Arguments.Trim()}";
