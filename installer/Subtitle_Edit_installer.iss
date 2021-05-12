@@ -690,6 +690,8 @@ begin
       DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20210506\libffi-6.dll'));
       DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20210506\libfontconfig-1.dll'));
       DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20210506\libfreetype-6.dll'));
+      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20210506\libgcc_s_dw2-1.dll'));
+      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20210506\libgcc_s_sjlj-1.dll'));
       DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20210506\libgif-7.dll'));
       DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20210506\libglib-2.0-0.dll'));
       DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20210506\libgobject-2.0-0.dll'));
