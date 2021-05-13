@@ -1970,7 +1970,6 @@ $HorzAlign          =   Center
         public string MainListViewGoToNextError { get; set; }
         public string MainListViewRemoveBlankLines { get; set; }
         public string MainListViewRemoveTimeCodes { get; set; }
-        public string MainTextBoxItalic { get; set; }
         public string MainTextBoxSplitAtCursor { get; set; }
         public string MainTextBoxSplitAtCursorAndVideoPos { get; set; }
         public string MainTextBoxSplitSelectedLineBilingual { get; set; }
@@ -2118,7 +2117,6 @@ $HorzAlign          =   Center
             MainSynchronizationVisualSync = "Control+Shift+V";
             MainSynchronizationPointSync = "Control+Shift+P";
             MainListViewItalic = "Control+I";
-            MainTextBoxItalic = "Control+I";
             MainTextBoxSplitAtCursor = "Control+Alt+V";
             MainTextBoxSelectionToLower = "Control+U";
             MainTextBoxSelectionToUpper = "Control+Shift+U";
@@ -7429,12 +7427,6 @@ $HorzAlign          =   Center
                     shortcuts.MainToggleVideoControls = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("MainTextBoxItalic");
-                if (subNode != null)
-                {
-                    shortcuts.MainTextBoxItalic = subNode.InnerText;
-                }
-
                 subNode = node.SelectSingleNode("MainTextBoxSplitAtCursor");
                 if (subNode != null)
                 {
@@ -9013,7 +9005,6 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainEditRemoveRTLUnicodeChars", shortcuts.MainEditRemoveRTLUnicodeChars);
             textWriter.WriteElementString("MainEditReverseStartAndEndingForRTL", shortcuts.MainEditReverseStartAndEndingForRTL);
             textWriter.WriteElementString("MainToggleVideoControls", shortcuts.MainToggleVideoControls);
-            textWriter.WriteElementString("MainTextBoxItalic", shortcuts.MainTextBoxItalic);
             textWriter.WriteElementString("MainTextBoxSplitAtCursor", shortcuts.MainTextBoxSplitAtCursor);
             textWriter.WriteElementString("MainTextBoxSplitAtCursorAndVideoPos", shortcuts.MainTextBoxSplitAtCursorAndVideoPos);
             textWriter.WriteElementString("MainTextBoxSplitSelectedLineBilingual", shortcuts.MainTextBoxSplitSelectedLineBilingual);
