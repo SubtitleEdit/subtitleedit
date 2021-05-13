@@ -1270,6 +1270,16 @@ namespace Test.FixCommonErrors
             }
         }
 
+        public void FixEmptyLinesTest3()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "\\U202C");
+                new FixEmptyLines().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(0, _subtitle.Paragraphs.Count);
+            }
+        }
+
         #endregion Fix EmptyLines
 
         #region Fix missing periods at end of line
