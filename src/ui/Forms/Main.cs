@@ -27866,6 +27866,10 @@ namespace Nikse.SubtitleEdit.Forms
                     audioVisualizer.GenerateTimeCodes(_subtitle, startFromSeconds, form.BlockSize, form.VolumeMinimum, form.VolumeMaximum, form.DefaultMilliseconds);
                     SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
                     RefreshSelectedParagraph();
+                    if (FirstSelectedIndex < 0)
+                    {
+                        SubtitleListview1.SelectIndexAndEnsureVisible(0);
+                    }
                 }
             }
         }
