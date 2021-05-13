@@ -2893,7 +2893,6 @@ namespace Nikse.SubtitleEdit.Forms
             // italicToolStripMenuItem
             // 
             this.italicToolStripMenuItem.Name = "italicToolStripMenuItem";
-            this.italicToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
             this.italicToolStripMenuItem.Size = new System.Drawing.Size(284, 22);
             this.italicToolStripMenuItem.Text = "Italic";
             this.italicToolStripMenuItem.Click += new System.EventHandler(this.ItalicToolStripMenuItemClick);
@@ -4755,7 +4754,6 @@ namespace Nikse.SubtitleEdit.Forms
             // italicToolStripMenuItem1
             // 
             this.italicToolStripMenuItem1.Name = "italicToolStripMenuItem1";
-            this.italicToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
             this.italicToolStripMenuItem1.Size = new System.Drawing.Size(273, 22);
             this.italicToolStripMenuItem1.Text = "Italic";
             this.italicToolStripMenuItem1.Click += new System.EventHandler(this.ItalicToolStripMenuItem1Click);
