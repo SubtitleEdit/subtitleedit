@@ -636,6 +636,17 @@ Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
         }
 
         [TestMethod]
+        public void AssSimpleFontPrimaryColorAndItalic2()
+        {
+            var target = new AdvancedSubStationAlpha();
+            var subtitle = new Subtitle();
+            target.LoadSubtitle(subtitle, GetAssLines(@"{\i1\c&H00ffff&}Italic and color{\c}{\i0}"), null);
+            var actual = subtitle.Paragraphs[0].Text;
+            const string expected = "<i><font color=\"#ffff00\">Italic and color</font></i>";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
         public void AssSimpleFontPrimaryColorUnclosedAndItalic()
         {
             var target = new AdvancedSubStationAlpha();

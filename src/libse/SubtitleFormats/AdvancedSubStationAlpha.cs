@@ -794,6 +794,12 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 for (int i = 0; i < 10; i++) // just look ten times...
                 {
                     bool italic;
+                    if (text.Contains(@"{\i1\"))
+                    {
+                        var start = text.IndexOf(@"{\i1\", StringComparison.Ordinal);
+                        text = text.Remove(start, 4).Insert(start, "<i>{");
+                    }
+
                     if (text.Contains(@"{\fn"))
                     {
                         int start = text.IndexOf(@"{\fn", StringComparison.Ordinal);
@@ -1056,22 +1062,22 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
         {
             italic = false;
             unknownTags = string.Empty;
-            int indexOfSPlit = tagName.IndexOf('\\');
-            if (indexOfSPlit > 0)
+            var indexOfSplit = tagName.IndexOf('\\');
+            if (indexOfSplit > 0)
             {
-                string rest = tagName.Substring(indexOfSPlit).TrimStart('\\');
-                tagName = tagName.Remove(indexOfSPlit);
+                string rest = tagName.Substring(indexOfSplit).TrimStart('\\');
+                tagName = tagName.Remove(indexOfSplit);
 
                 for (int i = 0; i < 10; i++)
                 {
                     if (rest.StartsWith("fs", StringComparison.Ordinal) && rest.Length > 2)
                     {
-                        indexOfSPlit = rest.IndexOf('\\');
+                        indexOfSplit = rest.IndexOf('\\');
                         string fontSize = rest;
-                        if (indexOfSPlit > 0)
+                        if (indexOfSplit > 0)
                         {
-                            fontSize = rest.Substring(0, indexOfSPlit);
-                            rest = rest.Substring(indexOfSPlit).TrimStart('\\');
+                            fontSize = rest.Substring(0, indexOfSplit);
+                            rest = rest.Substring(indexOfSplit).TrimStart('\\');
                         }
                         else
                         {
@@ -1081,12 +1087,12 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                     }
                     else if (rest.StartsWith("fn", StringComparison.Ordinal) && rest.Length > 2)
                     {
-                        indexOfSPlit = rest.IndexOf('\\');
+                        indexOfSplit = rest.IndexOf('\\');
                         string fontName = rest;
-                        if (indexOfSPlit > 0)
+                        if (indexOfSplit > 0)
                         {
-                            fontName = rest.Substring(0, indexOfSPlit);
-                            rest = rest.Substring(indexOfSPlit).TrimStart('\\');
+                            fontName = rest.Substring(0, indexOfSplit);
+                            rest = rest.Substring(indexOfSplit).TrimStart('\\');
                         }
                         else
                         {
@@ -1096,12 +1102,12 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                     }
                     else if (rest.StartsWith('c') && rest.Length > 2)
                     {
-                        indexOfSPlit = rest.IndexOf('\\');
+                        indexOfSplit = rest.IndexOf('\\');
                         string fontColor = rest;
-                        if (indexOfSPlit > 0)
+                        if (indexOfSplit > 0)
                         {
-                            fontColor = rest.Substring(0, indexOfSPlit);
-                            rest = rest.Substring(indexOfSPlit).TrimStart('\\');
+                            fontColor = rest.Substring(0, indexOfSplit);
+                            rest = rest.Substring(indexOfSplit).TrimStart('\\');
                         }
                         else
                         {
@@ -1119,11 +1125,11 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                     }
                     else if (rest.StartsWith("i1", StringComparison.Ordinal) && rest.Length > 1)
                     {
-                        indexOfSPlit = rest.IndexOf('\\');
+                        indexOfSplit = rest.IndexOf('\\');
                         italic = true;
-                        if (indexOfSPlit > 0)
+                        if (indexOfSplit > 0)
                         {
-                            rest = rest.Substring(indexOfSPlit).TrimStart('\\');
+                            rest = rest.Substring(indexOfSplit).TrimStart('\\');
                         }
                         else
                         {
@@ -1132,10 +1138,10 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                     }
                     else if (rest.Length > 0 && rest.Contains("\\"))
                     {
-                        indexOfSPlit = rest.IndexOf('\\');
-                        var unknowntag = rest.Substring(0, indexOfSPlit);
-                        unknownTags += "\\" + unknowntag;
-                        rest = rest.Substring(indexOfSPlit).TrimStart('\\');
+                        indexOfSplit = rest.IndexOf('\\');
+                        var unknownTag = rest.Substring(0, indexOfSplit);
+                        unknownTags += "\\" + unknownTag;
+                        rest = rest.Substring(indexOfSplit).TrimStart('\\');
                     }
                     else if (!string.IsNullOrEmpty(rest))
                     {
