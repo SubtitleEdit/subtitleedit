@@ -3,7 +3,7 @@ using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core.Common;
 using System;
 
-namespace Test.Core
+namespace Test.SETextBoxControl
 {
     [TestClass]
     public class SeTextBoxTests
