@@ -61,6 +61,7 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonImport = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.contextMenuStripLetters = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.groupBoxCurrentCompareImage.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.contextMenuStripLinesBackground.SuspendLayout();
@@ -335,6 +336,7 @@
             // 
             // textBoxText
             // 
+            this.textBoxText.ContextMenuStrip = this.contextMenuStripLetters;
             this.textBoxText.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxText.Location = new System.Drawing.Point(14, 35);
             this.textBoxText.Name = "textBoxText";
@@ -389,6 +391,11 @@
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // contextMenuStripLetters
+            // 
+            this.contextMenuStripLetters.Name = "contextMenuStripLetters";
+            this.contextMenuStripLetters.Size = new System.Drawing.Size(61, 4);
             // 
             // VobSubNOcrEdit
             // 
@@ -458,5 +465,6 @@
         private System.Windows.Forms.Label labelNOcrCharInfo;
         private System.Windows.Forms.ToolStripMenuItem clearToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clearToolStripMenuItem1;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripLetters;
     }
 }

@@ -28,25 +28,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
+            VobSubEditCharacters.MakeToolStripLetters(contextMenuStripLetters, InsertLanguageCharacter);
             UiUtil.FixFonts(this);
             UiUtil.FixLargeFonts(this, buttonCancel);
             checkBoxAutoSubmitOfFirstChar.Text = LanguageSettings.Current.VobSubOcrCharacter.AutoSubmitOnFirstChar;
             labelItalicOn.Visible = false;
-
-            foreach (ToolStripItem toolStripItem in contextMenuStripLetters.Items)
-            {
-                if (toolStripItem is ToolStripDropDownItem i && i.HasDropDownItems)
-                {
-                    foreach (ToolStripItem item in i.DropDownItems)
-                    {
-                        item.Click += InsertLanguageCharacter;
-                    }
-                }
-                else
-                {
-                    toolStripItem.Click += InsertLanguageCharacter;
-                }
-            }
         }
 
         private void InsertLanguageCharacter(object sender, EventArgs e)
@@ -153,7 +139,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
                     {
                         var c = nbmp.GetPixel(point.X, point.Y);
-                        if (c.A > 150) 
+                        if (c.A > 150)
                         {
                         }
                         else
@@ -837,7 +823,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
             }
 
-            foreach (var i in indicesToDelete.OrderByDescending(p=>p))
+            foreach (var i in indicesToDelete.OrderByDescending(p => p))
             {
                 lines.RemoveAt(i);
             }

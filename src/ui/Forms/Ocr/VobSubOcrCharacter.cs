@@ -18,6 +18,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
+            VobSubEditCharacters.MakeToolStripLetters(contextMenuStripLetters, InsertLanguageCharacter);
             UiUtil.FixFonts(this);
 
             var language = LanguageSettings.Current.VobSubOcrCharacter;
@@ -35,9 +36,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             buttonAbort.Text = language.Abort;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonSkip.Text = language.Skip;
-            nordicToolStripMenuItem.Text = language.Nordic;
-            spanishToolStripMenuItem.Text = language.Spanish;
-            germanToolStripMenuItem.Text = language.German;
             checkBoxAutoSubmitOfFirstChar.Text = language.AutoSubmitOnFirstChar;
 
             dataGridView1.Columns.Clear();
@@ -58,22 +56,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             dataGridView1.Rows.Add(row2);
             dataGridView1.Rows[0].Height = dataGridView1.Height / 2;
             dataGridView1.Rows[1].Height = dataGridView1.Height / 2;
-
-            foreach (ToolStripItem toolStripItem in contextMenuStripLetters.Items)
-            {
-                if (toolStripItem is ToolStripDropDownItem i && i.HasDropDownItems)
-                {
-                    foreach (ToolStripItem item in i.DropDownItems)
-                    {
-                        item.Click += InsertLanguageCharacter;
-                    }
-                }
-                else
-                {
-                    toolStripItem.Click += InsertLanguageCharacter;
-                }
-            }
-
             UiUtil.FixLargeFonts(this, buttonSkip);
         }
 

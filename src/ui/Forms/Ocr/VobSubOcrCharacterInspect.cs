@@ -30,6 +30,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
+            VobSubEditCharacters.MakeToolStripLetters(contextMenuStripLetters, InsertLanguageCharacter);
             UiUtil.FixFonts(this);
 
             labelCount.Text = string.Empty;
@@ -47,24 +48,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             labelDoubleSize.Text = LanguageSettings.Current.VobSubEditCharacters.ImageDoubleSize;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
-
-            foreach (ToolStripItem toolStripItem in contextMenuStripLetters.Items)
-            {
-                if (toolStripItem is ToolStripDropDownItem i && i.HasDropDownItems)
-                {
-                    foreach (ToolStripItem item in i.DropDownItems)
-                    {
-                        item.Click += InsertLanguageCharacter;
-                    }
-                }
-                else
-                {
-                    toolStripItem.Click += InsertLanguageCharacter;
-                }
-            }
-
             UiUtil.FixLargeFonts(this, buttonOK);
-
             buttonDetectFont.Visible = Configuration.Settings.General.ShowBetaStuff;
         }
 

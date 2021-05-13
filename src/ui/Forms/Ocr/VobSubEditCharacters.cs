@@ -18,6 +18,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
+            MakeToolStripLetters(contextMenuStripLetters, InsertLanguageCharacter);
             UiUtil.FixFonts(this);
 
             labelExpandCount.Text = string.Empty;
@@ -57,20 +58,55 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
             buttonImport.Visible = binOcrDb != null;
+        }
 
-            foreach (ToolStripItem toolStripItem in contextMenuStripLetters.Items)
+        public static void MakeToolStripLetters(ContextMenuStrip contextMenu, EventHandler clickAction)
+        {
+            contextMenu.Items.Clear();
+            var l = LanguageSettings.Current.VobSubOcrCharacter;
+            MakeToolStripLetterItem(contextMenu, "Catalan", "àÀéÉèÈíÍïÏóÓòÒúÚüÜçÇ");
+            MakeToolStripLetterItem(contextMenu, "French", "àâèéêëîïôœŒùûçÇ");
+            MakeToolStripLetterItem(contextMenu, l.German, "äÄöÖüÜß");
+            MakeToolStripLetterItem(contextMenu, "Italian", "àÀèÈéÉìÌòÒùÙ");
+            MakeToolStripLetterItem(contextMenu, l.Nordic, "æÆøØåÅäÄöÖ");
+            MakeToolStripLetterItem(contextMenu, "Polish", "ąĄćĆęĘłŁńŃóÓśŚźŹżŻ");
+            MakeToolStripLetterItem(contextMenu, "Portuguese", "ãÃõÕáÁéÉíÍóÓúÚâÂêÊôÔàÀçÇ");
+            MakeToolStripLetterItem(contextMenu, l.Spanish, "áÁéÉíÍóÓúÚüÜñÑ¿¡");
+            MakeToolStripLetterItem(contextMenu, string.Empty, "♪♫");
+
+            foreach (ToolStripItem toolStripItem in contextMenu.Items)
             {
                 if (toolStripItem is ToolStripDropDownItem i && i.HasDropDownItems)
                 {
                     foreach (ToolStripItem item in i.DropDownItems)
                     {
-                        item.Click += InsertLanguageCharacter;
+                        item.Click += clickAction;
                     }
                 }
                 else
                 {
-                    toolStripItem.Click += InsertLanguageCharacter;
+                    toolStripItem.Click += clickAction;
                 }
+            }
+        }
+
+        private static void MakeToolStripLetterItem(ToolStrip contextMenu, string text, string letters)
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                foreach (var letter in letters)
+                {
+                    contextMenu.Items.Add(letter.ToString());
+                }
+
+                return;
+            }
+
+            var menuItem = new ToolStripMenuItem(text);
+            contextMenu.Items.Add(menuItem);
+            foreach (var letter in letters)
+            {
+                menuItem.DropDownItems.Add(letter.ToString());
             }
         }
 

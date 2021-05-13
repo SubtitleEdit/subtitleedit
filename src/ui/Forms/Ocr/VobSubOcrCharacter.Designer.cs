@@ -29,124 +29,27 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle21 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle22 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle23 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle24 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle25 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle26 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle27 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle28 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle29 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle30 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonSkip = new System.Windows.Forms.Button();
             this.pictureBoxSubtitleImage = new System.Windows.Forms.PictureBox();
             this.labelCharactersAsText = new System.Windows.Forms.Label();
             this.textBoxCharacters = new System.Windows.Forms.TextBox();
             this.contextMenuStripLetters = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.latinToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.àToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.àToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.éToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.éToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.èToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.èToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.íToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.íToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ïToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.ïToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.óToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.óToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.òToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.òToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.úToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.úToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.üToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.üToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.çToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.çToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.germanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.äToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.äToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.öToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.öToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.üToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.üToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.ßToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.italianToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.àToolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
-            this.àToolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
-            this.èToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.èToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.éToolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
-            this.éToolStripMenuItem7 = new System.Windows.Forms.ToolStripMenuItem();
-            this.ìToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ìToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.òToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.òToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.ùToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ùToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.nordicToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aeToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.AeToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.øToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.øToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.åToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.åToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.äToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.äToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.öToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.öToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.portugueseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ãToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ãToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.õToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.õToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.áToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.áToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.éToolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
-            this.éToolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
-            this.íToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.íToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.óToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.óToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.úToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.úToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.âToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.âToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.êToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.êToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.ôToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.ôToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.àToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.àToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.çToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.çToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.spanishToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.áToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.áToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.éToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.éToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem8 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem9 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem10 = new System.Windows.Forms.ToolStripMenuItem();
-            this.ñToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ñToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemMusicSymbol1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemMusicSymbol2 = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBoxCharacter = new System.Windows.Forms.PictureBox();
             this.labelCharacters = new System.Windows.Forms.Label();
             this.buttonAbort = new System.Windows.Forms.Button();
@@ -176,27 +79,7 @@
             this.Column15 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.labelItalicOn2 = new System.Windows.Forms.Label();
             this.labelSubtitleImage = new System.Windows.Forms.Label();
-            this.polishToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ąToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ąToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.ćToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ćToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.ęToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ęToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.łToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.łToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.ńToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ńToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.óToolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
-            this.óToolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
-            this.śToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.śToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.źToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.źToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.żToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.żToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
-            this.contextMenuStripLetters.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCharacter)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLastEdit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -265,695 +148,8 @@
             // 
             // contextMenuStripLetters
             // 
-            this.contextMenuStripLetters.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.latinToolStripMenuItem,
-            this.germanToolStripMenuItem,
-            this.italianToolStripMenuItem,
-            this.nordicToolStripMenuItem,
-            this.polishToolStripMenuItem,
-            this.portugueseToolStripMenuItem,
-            this.spanishToolStripMenuItem,
-            this.toolStripMenuItemMusicSymbol1,
-            this.toolStripMenuItemMusicSymbol2});
             this.contextMenuStripLetters.Name = "contextMenuStripLetters";
-            this.contextMenuStripLetters.Size = new System.Drawing.Size(135, 202);
-            // 
-            // latinToolStripMenuItem
-            // 
-            this.latinToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.àToolStripMenuItem1,
-            this.àToolStripMenuItem,
-            this.éToolStripMenuItem3,
-            this.éToolStripMenuItem2,
-            this.èToolStripMenuItem1,
-            this.èToolStripMenuItem,
-            this.íToolStripMenuItem1,
-            this.íToolStripMenuItem,
-            this.ïToolStripMenuItem1,
-            this.ïToolStripMenuItem,
-            this.óToolStripMenuItem1,
-            this.óToolStripMenuItem,
-            this.òToolStripMenuItem,
-            this.òToolStripMenuItem1,
-            this.úToolStripMenuItem1,
-            this.úToolStripMenuItem,
-            this.üToolStripMenuItem2,
-            this.üToolStripMenuItem3,
-            this.çToolStripMenuItem1,
-            this.çToolStripMenuItem});
-            this.latinToolStripMenuItem.Name = "latinToolStripMenuItem";
-            this.latinToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.latinToolStripMenuItem.Text = "Catalan";
-            // 
-            // àToolStripMenuItem1
-            // 
-            this.àToolStripMenuItem1.Name = "àToolStripMenuItem1";
-            this.àToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
-            this.àToolStripMenuItem1.Text = "à";
-            // 
-            // àToolStripMenuItem
-            // 
-            this.àToolStripMenuItem.Name = "àToolStripMenuItem";
-            this.àToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
-            this.àToolStripMenuItem.Text = "À";
-            // 
-            // éToolStripMenuItem3
-            // 
-            this.éToolStripMenuItem3.Name = "éToolStripMenuItem3";
-            this.éToolStripMenuItem3.Size = new System.Drawing.Size(83, 22);
-            this.éToolStripMenuItem3.Text = "é";
-            // 
-            // éToolStripMenuItem2
-            // 
-            this.éToolStripMenuItem2.Name = "éToolStripMenuItem2";
-            this.éToolStripMenuItem2.Size = new System.Drawing.Size(83, 22);
-            this.éToolStripMenuItem2.Text = "É";
-            // 
-            // èToolStripMenuItem1
-            // 
-            this.èToolStripMenuItem1.Name = "èToolStripMenuItem1";
-            this.èToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
-            this.èToolStripMenuItem1.Text = "è";
-            // 
-            // èToolStripMenuItem
-            // 
-            this.èToolStripMenuItem.Name = "èToolStripMenuItem";
-            this.èToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
-            this.èToolStripMenuItem.Text = "È";
-            // 
-            // íToolStripMenuItem1
-            // 
-            this.íToolStripMenuItem1.Name = "íToolStripMenuItem1";
-            this.íToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
-            this.íToolStripMenuItem1.Text = "í";
-            // 
-            // íToolStripMenuItem
-            // 
-            this.íToolStripMenuItem.Name = "íToolStripMenuItem";
-            this.íToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
-            this.íToolStripMenuItem.Text = "Í";
-            // 
-            // ïToolStripMenuItem1
-            // 
-            this.ïToolStripMenuItem1.Name = "ïToolStripMenuItem1";
-            this.ïToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
-            this.ïToolStripMenuItem1.Text = "ï";
-            // 
-            // ïToolStripMenuItem
-            // 
-            this.ïToolStripMenuItem.Name = "ïToolStripMenuItem";
-            this.ïToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
-            this.ïToolStripMenuItem.Text = "Ï";
-            // 
-            // óToolStripMenuItem1
-            // 
-            this.óToolStripMenuItem1.Name = "óToolStripMenuItem1";
-            this.óToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
-            this.óToolStripMenuItem1.Text = "ó";
-            // 
-            // óToolStripMenuItem
-            // 
-            this.óToolStripMenuItem.Name = "óToolStripMenuItem";
-            this.óToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
-            this.óToolStripMenuItem.Text = "Ó";
-            // 
-            // òToolStripMenuItem
-            // 
-            this.òToolStripMenuItem.Name = "òToolStripMenuItem";
-            this.òToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
-            this.òToolStripMenuItem.Text = "ò";
-            // 
-            // òToolStripMenuItem1
-            // 
-            this.òToolStripMenuItem1.Name = "òToolStripMenuItem1";
-            this.òToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
-            this.òToolStripMenuItem1.Text = "Ò";
-            // 
-            // úToolStripMenuItem1
-            // 
-            this.úToolStripMenuItem1.Name = "úToolStripMenuItem1";
-            this.úToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
-            this.úToolStripMenuItem1.Text = "ú";
-            // 
-            // úToolStripMenuItem
-            // 
-            this.úToolStripMenuItem.Name = "úToolStripMenuItem";
-            this.úToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
-            this.úToolStripMenuItem.Text = "Ú";
-            // 
-            // üToolStripMenuItem2
-            // 
-            this.üToolStripMenuItem2.Name = "üToolStripMenuItem2";
-            this.üToolStripMenuItem2.Size = new System.Drawing.Size(83, 22);
-            this.üToolStripMenuItem2.Text = "ü";
-            // 
-            // üToolStripMenuItem3
-            // 
-            this.üToolStripMenuItem3.Name = "üToolStripMenuItem3";
-            this.üToolStripMenuItem3.Size = new System.Drawing.Size(83, 22);
-            this.üToolStripMenuItem3.Text = "Ü";
-            // 
-            // çToolStripMenuItem1
-            // 
-            this.çToolStripMenuItem1.Name = "çToolStripMenuItem1";
-            this.çToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
-            this.çToolStripMenuItem1.Text = "ç";
-            // 
-            // çToolStripMenuItem
-            // 
-            this.çToolStripMenuItem.Name = "çToolStripMenuItem";
-            this.çToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
-            this.çToolStripMenuItem.Text = "Ç";
-            // 
-            // germanToolStripMenuItem
-            // 
-            this.germanToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.äToolStripMenuItem2,
-            this.äToolStripMenuItem3,
-            this.öToolStripMenuItem2,
-            this.öToolStripMenuItem3,
-            this.üToolStripMenuItem,
-            this.üToolStripMenuItem1,
-            this.ßToolStripMenuItem});
-            this.germanToolStripMenuItem.Name = "germanToolStripMenuItem";
-            this.germanToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.germanToolStripMenuItem.Text = "German";
-            // 
-            // äToolStripMenuItem2
-            // 
-            this.äToolStripMenuItem2.Name = "äToolStripMenuItem2";
-            this.äToolStripMenuItem2.Size = new System.Drawing.Size(83, 22);
-            this.äToolStripMenuItem2.Text = "ä";
-            // 
-            // äToolStripMenuItem3
-            // 
-            this.äToolStripMenuItem3.Name = "äToolStripMenuItem3";
-            this.äToolStripMenuItem3.Size = new System.Drawing.Size(83, 22);
-            this.äToolStripMenuItem3.Text = "Ä";
-            // 
-            // öToolStripMenuItem2
-            // 
-            this.öToolStripMenuItem2.Name = "öToolStripMenuItem2";
-            this.öToolStripMenuItem2.Size = new System.Drawing.Size(83, 22);
-            this.öToolStripMenuItem2.Text = "ö";
-            // 
-            // öToolStripMenuItem3
-            // 
-            this.öToolStripMenuItem3.Name = "öToolStripMenuItem3";
-            this.öToolStripMenuItem3.Size = new System.Drawing.Size(83, 22);
-            this.öToolStripMenuItem3.Text = "Ö";
-            // 
-            // üToolStripMenuItem
-            // 
-            this.üToolStripMenuItem.Name = "üToolStripMenuItem";
-            this.üToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
-            this.üToolStripMenuItem.Text = "ü";
-            // 
-            // üToolStripMenuItem1
-            // 
-            this.üToolStripMenuItem1.Name = "üToolStripMenuItem1";
-            this.üToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
-            this.üToolStripMenuItem1.Text = "Ü";
-            // 
-            // ßToolStripMenuItem
-            // 
-            this.ßToolStripMenuItem.Name = "ßToolStripMenuItem";
-            this.ßToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
-            this.ßToolStripMenuItem.Text = "ß";
-            // 
-            // italianToolStripMenuItem
-            // 
-            this.italianToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.àToolStripMenuItem4,
-            this.àToolStripMenuItem5,
-            this.èToolStripMenuItem2,
-            this.èToolStripMenuItem3,
-            this.éToolStripMenuItem6,
-            this.éToolStripMenuItem7,
-            this.ìToolStripMenuItem,
-            this.ìToolStripMenuItem1,
-            this.òToolStripMenuItem2,
-            this.òToolStripMenuItem3,
-            this.ùToolStripMenuItem,
-            this.ùToolStripMenuItem1});
-            this.italianToolStripMenuItem.Name = "italianToolStripMenuItem";
-            this.italianToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.italianToolStripMenuItem.Text = "Italian";
-            // 
-            // àToolStripMenuItem4
-            // 
-            this.àToolStripMenuItem4.Name = "àToolStripMenuItem4";
-            this.àToolStripMenuItem4.Size = new System.Drawing.Size(83, 22);
-            this.àToolStripMenuItem4.Text = "à";
-            // 
-            // àToolStripMenuItem5
-            // 
-            this.àToolStripMenuItem5.Name = "àToolStripMenuItem5";
-            this.àToolStripMenuItem5.Size = new System.Drawing.Size(83, 22);
-            this.àToolStripMenuItem5.Text = "À";
-            // 
-            // èToolStripMenuItem2
-            // 
-            this.èToolStripMenuItem2.Name = "èToolStripMenuItem2";
-            this.èToolStripMenuItem2.Size = new System.Drawing.Size(83, 22);
-            this.èToolStripMenuItem2.Text = "è";
-            // 
-            // èToolStripMenuItem3
-            // 
-            this.èToolStripMenuItem3.Name = "èToolStripMenuItem3";
-            this.èToolStripMenuItem3.Size = new System.Drawing.Size(83, 22);
-            this.èToolStripMenuItem3.Text = "È";
-            // 
-            // éToolStripMenuItem6
-            // 
-            this.éToolStripMenuItem6.Name = "éToolStripMenuItem6";
-            this.éToolStripMenuItem6.Size = new System.Drawing.Size(83, 22);
-            this.éToolStripMenuItem6.Text = "é";
-            // 
-            // éToolStripMenuItem7
-            // 
-            this.éToolStripMenuItem7.Name = "éToolStripMenuItem7";
-            this.éToolStripMenuItem7.Size = new System.Drawing.Size(83, 22);
-            this.éToolStripMenuItem7.Text = "É";
-            // 
-            // ìToolStripMenuItem
-            // 
-            this.ìToolStripMenuItem.Name = "ìToolStripMenuItem";
-            this.ìToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
-            this.ìToolStripMenuItem.Text = "ì";
-            // 
-            // ìToolStripMenuItem1
-            // 
-            this.ìToolStripMenuItem1.Name = "ìToolStripMenuItem1";
-            this.ìToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
-            this.ìToolStripMenuItem1.Text = "Ì";
-            // 
-            // òToolStripMenuItem2
-            // 
-            this.òToolStripMenuItem2.Name = "òToolStripMenuItem2";
-            this.òToolStripMenuItem2.Size = new System.Drawing.Size(83, 22);
-            this.òToolStripMenuItem2.Text = "ò";
-            // 
-            // òToolStripMenuItem3
-            // 
-            this.òToolStripMenuItem3.Name = "òToolStripMenuItem3";
-            this.òToolStripMenuItem3.Size = new System.Drawing.Size(83, 22);
-            this.òToolStripMenuItem3.Text = "Ò";
-            // 
-            // ùToolStripMenuItem
-            // 
-            this.ùToolStripMenuItem.Name = "ùToolStripMenuItem";
-            this.ùToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
-            this.ùToolStripMenuItem.Text = "ù";
-            // 
-            // ùToolStripMenuItem1
-            // 
-            this.ùToolStripMenuItem1.Name = "ùToolStripMenuItem1";
-            this.ùToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
-            this.ùToolStripMenuItem1.Text = "Ù";
-            // 
-            // nordicToolStripMenuItem
-            // 
-            this.nordicToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.aeToolStripMenuItem1,
-            this.AeToolStripMenuItem2,
-            this.øToolStripMenuItem,
-            this.øToolStripMenuItem1,
-            this.åToolStripMenuItem,
-            this.åToolStripMenuItem1,
-            this.äToolStripMenuItem,
-            this.äToolStripMenuItem1,
-            this.öToolStripMenuItem,
-            this.öToolStripMenuItem1});
-            this.nordicToolStripMenuItem.Name = "nordicToolStripMenuItem";
-            this.nordicToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.nordicToolStripMenuItem.Text = "Nordic";
-            // 
-            // aeToolStripMenuItem1
-            // 
-            this.aeToolStripMenuItem1.Name = "aeToolStripMenuItem1";
-            this.aeToolStripMenuItem1.Size = new System.Drawing.Size(84, 22);
-            this.aeToolStripMenuItem1.Text = "æ";
-            // 
-            // AeToolStripMenuItem2
-            // 
-            this.AeToolStripMenuItem2.Name = "AeToolStripMenuItem2";
-            this.AeToolStripMenuItem2.Size = new System.Drawing.Size(84, 22);
-            this.AeToolStripMenuItem2.Text = "Æ";
-            // 
-            // øToolStripMenuItem
-            // 
-            this.øToolStripMenuItem.Name = "øToolStripMenuItem";
-            this.øToolStripMenuItem.Size = new System.Drawing.Size(84, 22);
-            this.øToolStripMenuItem.Text = "ø";
-            // 
-            // øToolStripMenuItem1
-            // 
-            this.øToolStripMenuItem1.Name = "øToolStripMenuItem1";
-            this.øToolStripMenuItem1.Size = new System.Drawing.Size(84, 22);
-            this.øToolStripMenuItem1.Text = "Ø";
-            // 
-            // åToolStripMenuItem
-            // 
-            this.åToolStripMenuItem.Name = "åToolStripMenuItem";
-            this.åToolStripMenuItem.Size = new System.Drawing.Size(84, 22);
-            this.åToolStripMenuItem.Text = "å";
-            // 
-            // åToolStripMenuItem1
-            // 
-            this.åToolStripMenuItem1.Name = "åToolStripMenuItem1";
-            this.åToolStripMenuItem1.Size = new System.Drawing.Size(84, 22);
-            this.åToolStripMenuItem1.Text = "Å";
-            // 
-            // äToolStripMenuItem
-            // 
-            this.äToolStripMenuItem.Name = "äToolStripMenuItem";
-            this.äToolStripMenuItem.Size = new System.Drawing.Size(84, 22);
-            this.äToolStripMenuItem.Text = "ä";
-            // 
-            // äToolStripMenuItem1
-            // 
-            this.äToolStripMenuItem1.Name = "äToolStripMenuItem1";
-            this.äToolStripMenuItem1.Size = new System.Drawing.Size(84, 22);
-            this.äToolStripMenuItem1.Text = "Ä";
-            // 
-            // öToolStripMenuItem
-            // 
-            this.öToolStripMenuItem.Name = "öToolStripMenuItem";
-            this.öToolStripMenuItem.Size = new System.Drawing.Size(84, 22);
-            this.öToolStripMenuItem.Text = "ö";
-            // 
-            // öToolStripMenuItem1
-            // 
-            this.öToolStripMenuItem1.Name = "öToolStripMenuItem1";
-            this.öToolStripMenuItem1.Size = new System.Drawing.Size(84, 22);
-            this.öToolStripMenuItem1.Text = "Ö";
-            // 
-            // portugueseToolStripMenuItem
-            // 
-            this.portugueseToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ãToolStripMenuItem,
-            this.ãToolStripMenuItem1,
-            this.õToolStripMenuItem,
-            this.õToolStripMenuItem1,
-            this.áToolStripMenuItem2,
-            this.áToolStripMenuItem3,
-            this.éToolStripMenuItem4,
-            this.éToolStripMenuItem5,
-            this.íToolStripMenuItem2,
-            this.íToolStripMenuItem3,
-            this.óToolStripMenuItem2,
-            this.óToolStripMenuItem3,
-            this.úToolStripMenuItem2,
-            this.úToolStripMenuItem3,
-            this.âToolStripMenuItem,
-            this.âToolStripMenuItem1,
-            this.êToolStripMenuItem,
-            this.êToolStripMenuItem1,
-            this.ôToolStripMenuItem1,
-            this.ôToolStripMenuItem,
-            this.àToolStripMenuItem2,
-            this.àToolStripMenuItem3,
-            this.çToolStripMenuItem2,
-            this.çToolStripMenuItem3});
-            this.portugueseToolStripMenuItem.Name = "portugueseToolStripMenuItem";
-            this.portugueseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.portugueseToolStripMenuItem.Text = "Portuguese";
-            // 
-            // ãToolStripMenuItem
-            // 
-            this.ãToolStripMenuItem.Name = "ãToolStripMenuItem";
-            this.ãToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
-            this.ãToolStripMenuItem.Text = "ã";
-            // 
-            // ãToolStripMenuItem1
-            // 
-            this.ãToolStripMenuItem1.Name = "ãToolStripMenuItem1";
-            this.ãToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
-            this.ãToolStripMenuItem1.Text = "Ã";
-            // 
-            // õToolStripMenuItem
-            // 
-            this.õToolStripMenuItem.Name = "õToolStripMenuItem";
-            this.õToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
-            this.õToolStripMenuItem.Text = "õ";
-            // 
-            // õToolStripMenuItem1
-            // 
-            this.õToolStripMenuItem1.Name = "õToolStripMenuItem1";
-            this.õToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
-            this.õToolStripMenuItem1.Text = "Õ";
-            // 
-            // áToolStripMenuItem2
-            // 
-            this.áToolStripMenuItem2.Name = "áToolStripMenuItem2";
-            this.áToolStripMenuItem2.Size = new System.Drawing.Size(83, 22);
-            this.áToolStripMenuItem2.Text = "á";
-            // 
-            // áToolStripMenuItem3
-            // 
-            this.áToolStripMenuItem3.Name = "áToolStripMenuItem3";
-            this.áToolStripMenuItem3.Size = new System.Drawing.Size(83, 22);
-            this.áToolStripMenuItem3.Text = "Á";
-            // 
-            // éToolStripMenuItem4
-            // 
-            this.éToolStripMenuItem4.Name = "éToolStripMenuItem4";
-            this.éToolStripMenuItem4.Size = new System.Drawing.Size(83, 22);
-            this.éToolStripMenuItem4.Text = "é";
-            // 
-            // éToolStripMenuItem5
-            // 
-            this.éToolStripMenuItem5.Name = "éToolStripMenuItem5";
-            this.éToolStripMenuItem5.Size = new System.Drawing.Size(83, 22);
-            this.éToolStripMenuItem5.Text = "É";
-            // 
-            // íToolStripMenuItem2
-            // 
-            this.íToolStripMenuItem2.Name = "íToolStripMenuItem2";
-            this.íToolStripMenuItem2.Size = new System.Drawing.Size(83, 22);
-            this.íToolStripMenuItem2.Text = "í";
-            // 
-            // íToolStripMenuItem3
-            // 
-            this.íToolStripMenuItem3.Name = "íToolStripMenuItem3";
-            this.íToolStripMenuItem3.Size = new System.Drawing.Size(83, 22);
-            this.íToolStripMenuItem3.Text = "Í";
-            // 
-            // óToolStripMenuItem2
-            // 
-            this.óToolStripMenuItem2.Name = "óToolStripMenuItem2";
-            this.óToolStripMenuItem2.Size = new System.Drawing.Size(83, 22);
-            this.óToolStripMenuItem2.Text = "ó";
-            // 
-            // óToolStripMenuItem3
-            // 
-            this.óToolStripMenuItem3.Name = "óToolStripMenuItem3";
-            this.óToolStripMenuItem3.Size = new System.Drawing.Size(83, 22);
-            this.óToolStripMenuItem3.Text = "Ó";
-            // 
-            // úToolStripMenuItem2
-            // 
-            this.úToolStripMenuItem2.Name = "úToolStripMenuItem2";
-            this.úToolStripMenuItem2.Size = new System.Drawing.Size(83, 22);
-            this.úToolStripMenuItem2.Text = "ú";
-            // 
-            // úToolStripMenuItem3
-            // 
-            this.úToolStripMenuItem3.Name = "úToolStripMenuItem3";
-            this.úToolStripMenuItem3.Size = new System.Drawing.Size(83, 22);
-            this.úToolStripMenuItem3.Text = "Ú";
-            // 
-            // âToolStripMenuItem
-            // 
-            this.âToolStripMenuItem.Name = "âToolStripMenuItem";
-            this.âToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
-            this.âToolStripMenuItem.Text = "â";
-            // 
-            // âToolStripMenuItem1
-            // 
-            this.âToolStripMenuItem1.Name = "âToolStripMenuItem1";
-            this.âToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
-            this.âToolStripMenuItem1.Text = "Â";
-            // 
-            // êToolStripMenuItem
-            // 
-            this.êToolStripMenuItem.Name = "êToolStripMenuItem";
-            this.êToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
-            this.êToolStripMenuItem.Text = "ê";
-            // 
-            // êToolStripMenuItem1
-            // 
-            this.êToolStripMenuItem1.Name = "êToolStripMenuItem1";
-            this.êToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
-            this.êToolStripMenuItem1.Text = "Ê";
-            // 
-            // ôToolStripMenuItem1
-            // 
-            this.ôToolStripMenuItem1.Name = "ôToolStripMenuItem1";
-            this.ôToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
-            this.ôToolStripMenuItem1.Text = "ô";
-            // 
-            // ôToolStripMenuItem
-            // 
-            this.ôToolStripMenuItem.Name = "ôToolStripMenuItem";
-            this.ôToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
-            this.ôToolStripMenuItem.Text = "Ô";
-            // 
-            // àToolStripMenuItem2
-            // 
-            this.àToolStripMenuItem2.Name = "àToolStripMenuItem2";
-            this.àToolStripMenuItem2.Size = new System.Drawing.Size(83, 22);
-            this.àToolStripMenuItem2.Text = "à";
-            // 
-            // àToolStripMenuItem3
-            // 
-            this.àToolStripMenuItem3.Name = "àToolStripMenuItem3";
-            this.àToolStripMenuItem3.Size = new System.Drawing.Size(83, 22);
-            this.àToolStripMenuItem3.Text = "À";
-            // 
-            // çToolStripMenuItem2
-            // 
-            this.çToolStripMenuItem2.Name = "çToolStripMenuItem2";
-            this.çToolStripMenuItem2.Size = new System.Drawing.Size(83, 22);
-            this.çToolStripMenuItem2.Text = "ç";
-            // 
-            // çToolStripMenuItem3
-            // 
-            this.çToolStripMenuItem3.Name = "çToolStripMenuItem3";
-            this.çToolStripMenuItem3.Size = new System.Drawing.Size(83, 22);
-            this.çToolStripMenuItem3.Text = "Ç";
-            // 
-            // spanishToolStripMenuItem
-            // 
-            this.spanishToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.áToolStripMenuItem,
-            this.áToolStripMenuItem1,
-            this.éToolStripMenuItem,
-            this.éToolStripMenuItem1,
-            this.toolStripMenuItem1,
-            this.toolStripMenuItem6,
-            this.toolStripMenuItem4,
-            this.toolStripMenuItem7,
-            this.toolStripMenuItem5,
-            this.toolStripMenuItem8,
-            this.toolStripMenuItem9,
-            this.toolStripMenuItem10,
-            this.ñToolStripMenuItem,
-            this.ñToolStripMenuItem1,
-            this.toolStripMenuItem2,
-            this.toolStripMenuItem3});
-            this.spanishToolStripMenuItem.Name = "spanishToolStripMenuItem";
-            this.spanishToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.spanishToolStripMenuItem.Text = "Spanish";
-            // 
-            // áToolStripMenuItem
-            // 
-            this.áToolStripMenuItem.Name = "áToolStripMenuItem";
-            this.áToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
-            this.áToolStripMenuItem.Text = "á";
-            // 
-            // áToolStripMenuItem1
-            // 
-            this.áToolStripMenuItem1.Name = "áToolStripMenuItem1";
-            this.áToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
-            this.áToolStripMenuItem1.Text = "Á";
-            // 
-            // éToolStripMenuItem
-            // 
-            this.éToolStripMenuItem.Name = "éToolStripMenuItem";
-            this.éToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
-            this.éToolStripMenuItem.Text = "é";
-            // 
-            // éToolStripMenuItem1
-            // 
-            this.éToolStripMenuItem1.Name = "éToolStripMenuItem1";
-            this.éToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
-            this.éToolStripMenuItem1.Text = "É";
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
-            this.toolStripMenuItem1.Text = "í";
-            // 
-            // toolStripMenuItem6
-            // 
-            this.toolStripMenuItem6.Name = "toolStripMenuItem6";
-            this.toolStripMenuItem6.Size = new System.Drawing.Size(83, 22);
-            this.toolStripMenuItem6.Text = "Í";
-            // 
-            // toolStripMenuItem4
-            // 
-            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(83, 22);
-            this.toolStripMenuItem4.Text = "ó";
-            // 
-            // toolStripMenuItem7
-            // 
-            this.toolStripMenuItem7.Name = "toolStripMenuItem7";
-            this.toolStripMenuItem7.Size = new System.Drawing.Size(83, 22);
-            this.toolStripMenuItem7.Text = "Ó";
-            // 
-            // toolStripMenuItem5
-            // 
-            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(83, 22);
-            this.toolStripMenuItem5.Text = "ú";
-            // 
-            // toolStripMenuItem8
-            // 
-            this.toolStripMenuItem8.Name = "toolStripMenuItem8";
-            this.toolStripMenuItem8.Size = new System.Drawing.Size(83, 22);
-            this.toolStripMenuItem8.Text = "Ú";
-            // 
-            // toolStripMenuItem9
-            // 
-            this.toolStripMenuItem9.Name = "toolStripMenuItem9";
-            this.toolStripMenuItem9.Size = new System.Drawing.Size(83, 22);
-            this.toolStripMenuItem9.Text = "ü";
-            // 
-            // toolStripMenuItem10
-            // 
-            this.toolStripMenuItem10.Name = "toolStripMenuItem10";
-            this.toolStripMenuItem10.Size = new System.Drawing.Size(83, 22);
-            this.toolStripMenuItem10.Text = "Ü";
-            // 
-            // ñToolStripMenuItem
-            // 
-            this.ñToolStripMenuItem.Name = "ñToolStripMenuItem";
-            this.ñToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
-            this.ñToolStripMenuItem.Text = "ñ";
-            // 
-            // ñToolStripMenuItem1
-            // 
-            this.ñToolStripMenuItem1.Name = "ñToolStripMenuItem1";
-            this.ñToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
-            this.ñToolStripMenuItem1.Text = "Ñ";
-            // 
-            // toolStripMenuItem2
-            // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(83, 22);
-            this.toolStripMenuItem2.Text = "¿";
-            // 
-            // toolStripMenuItem3
-            // 
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(83, 22);
-            this.toolStripMenuItem3.Text = "¡";
-            // 
-            // toolStripMenuItemMusicSymbol1
-            // 
-            this.toolStripMenuItemMusicSymbol1.Name = "toolStripMenuItemMusicSymbol1";
-            this.toolStripMenuItemMusicSymbol1.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItemMusicSymbol1.Text = "♪";
-            // 
-            // toolStripMenuItemMusicSymbol2
-            // 
-            this.toolStripMenuItemMusicSymbol2.Name = "toolStripMenuItemMusicSymbol2";
-            this.toolStripMenuItemMusicSymbol2.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItemMusicSymbol2.Text = "♫";
+            this.contextMenuStripLetters.Size = new System.Drawing.Size(181, 26);
             // 
             // pictureBoxCharacter
             // 
@@ -1127,8 +323,8 @@
             // 
             // Column1
             // 
-            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column1.DefaultCellStyle = dataGridViewCellStyle16;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column1.DefaultCellStyle = dataGridViewCellStyle1;
             this.Column1.HeaderText = "Column1";
             this.Column1.Name = "Column1";
             this.Column1.ReadOnly = true;
@@ -1137,8 +333,8 @@
             // 
             // Column2
             // 
-            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column2.DefaultCellStyle = dataGridViewCellStyle17;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column2.DefaultCellStyle = dataGridViewCellStyle2;
             this.Column2.HeaderText = "Column2";
             this.Column2.Name = "Column2";
             this.Column2.ReadOnly = true;
@@ -1147,8 +343,8 @@
             // 
             // Column3
             // 
-            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column3.DefaultCellStyle = dataGridViewCellStyle18;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column3.DefaultCellStyle = dataGridViewCellStyle3;
             this.Column3.HeaderText = "Column3";
             this.Column3.Name = "Column3";
             this.Column3.ReadOnly = true;
@@ -1157,8 +353,8 @@
             // 
             // Column4
             // 
-            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column4.DefaultCellStyle = dataGridViewCellStyle19;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column4.DefaultCellStyle = dataGridViewCellStyle4;
             this.Column4.HeaderText = "Column4";
             this.Column4.Name = "Column4";
             this.Column4.ReadOnly = true;
@@ -1167,8 +363,8 @@
             // 
             // Column5
             // 
-            dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column5.DefaultCellStyle = dataGridViewCellStyle20;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column5.DefaultCellStyle = dataGridViewCellStyle5;
             this.Column5.HeaderText = "Column5";
             this.Column5.Name = "Column5";
             this.Column5.ReadOnly = true;
@@ -1177,8 +373,8 @@
             // 
             // Column6
             // 
-            dataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column6.DefaultCellStyle = dataGridViewCellStyle21;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column6.DefaultCellStyle = dataGridViewCellStyle6;
             this.Column6.HeaderText = "Column6";
             this.Column6.Name = "Column6";
             this.Column6.ReadOnly = true;
@@ -1187,8 +383,8 @@
             // 
             // Column7
             // 
-            dataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column7.DefaultCellStyle = dataGridViewCellStyle22;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column7.DefaultCellStyle = dataGridViewCellStyle7;
             this.Column7.HeaderText = "Column7";
             this.Column7.Name = "Column7";
             this.Column7.ReadOnly = true;
@@ -1197,8 +393,8 @@
             // 
             // Column8
             // 
-            dataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column8.DefaultCellStyle = dataGridViewCellStyle23;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column8.DefaultCellStyle = dataGridViewCellStyle8;
             this.Column8.HeaderText = "Column8";
             this.Column8.Name = "Column8";
             this.Column8.ReadOnly = true;
@@ -1207,8 +403,8 @@
             // 
             // Column9
             // 
-            dataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column9.DefaultCellStyle = dataGridViewCellStyle24;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column9.DefaultCellStyle = dataGridViewCellStyle9;
             this.Column9.HeaderText = "Column9";
             this.Column9.Name = "Column9";
             this.Column9.ReadOnly = true;
@@ -1217,8 +413,8 @@
             // 
             // Column10
             // 
-            dataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column10.DefaultCellStyle = dataGridViewCellStyle25;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column10.DefaultCellStyle = dataGridViewCellStyle10;
             this.Column10.HeaderText = "Column10";
             this.Column10.Name = "Column10";
             this.Column10.ReadOnly = true;
@@ -1227,8 +423,8 @@
             // 
             // Column11
             // 
-            dataGridViewCellStyle26.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column11.DefaultCellStyle = dataGridViewCellStyle26;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column11.DefaultCellStyle = dataGridViewCellStyle11;
             this.Column11.HeaderText = "Column11";
             this.Column11.Name = "Column11";
             this.Column11.ReadOnly = true;
@@ -1237,8 +433,8 @@
             // 
             // Column12
             // 
-            dataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column12.DefaultCellStyle = dataGridViewCellStyle27;
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column12.DefaultCellStyle = dataGridViewCellStyle12;
             this.Column12.HeaderText = "Column12";
             this.Column12.Name = "Column12";
             this.Column12.ReadOnly = true;
@@ -1247,8 +443,8 @@
             // 
             // Column13
             // 
-            dataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column13.DefaultCellStyle = dataGridViewCellStyle28;
+            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column13.DefaultCellStyle = dataGridViewCellStyle13;
             this.Column13.HeaderText = "Column13";
             this.Column13.Name = "Column13";
             this.Column13.ReadOnly = true;
@@ -1257,8 +453,8 @@
             // 
             // Column14
             // 
-            dataGridViewCellStyle29.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column14.DefaultCellStyle = dataGridViewCellStyle29;
+            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column14.DefaultCellStyle = dataGridViewCellStyle14;
             this.Column14.HeaderText = "Column14";
             this.Column14.Name = "Column14";
             this.Column14.ReadOnly = true;
@@ -1267,8 +463,8 @@
             // 
             // Column15
             // 
-            dataGridViewCellStyle30.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column15.DefaultCellStyle = dataGridViewCellStyle30;
+            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column15.DefaultCellStyle = dataGridViewCellStyle15;
             this.Column15.HeaderText = "Column15";
             this.Column15.Name = "Column15";
             this.Column15.ReadOnly = true;
@@ -1296,139 +492,6 @@
             this.labelSubtitleImage.Size = new System.Drawing.Size(88, 13);
             this.labelSubtitleImage.TabIndex = 29;
             this.labelSubtitleImage.Text = "subtitle image";
-            // 
-            // polishToolStripMenuItem
-            // 
-            this.polishToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ąToolStripMenuItem,
-            this.ąToolStripMenuItem1,
-            this.ćToolStripMenuItem,
-            this.ćToolStripMenuItem1,
-            this.ęToolStripMenuItem,
-            this.ęToolStripMenuItem1,
-            this.łToolStripMenuItem,
-            this.łToolStripMenuItem1,
-            this.ńToolStripMenuItem,
-            this.ńToolStripMenuItem1,
-            this.óToolStripMenuItem4,
-            this.óToolStripMenuItem5,
-            this.śToolStripMenuItem,
-            this.śToolStripMenuItem1,
-            this.źToolStripMenuItem,
-            this.źToolStripMenuItem1,
-            this.żToolStripMenuItem,
-            this.żToolStripMenuItem1});
-            this.polishToolStripMenuItem.Name = "polishToolStripMenuItem";
-            this.polishToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
-            this.polishToolStripMenuItem.Text = "Polish";
-            // 
-            // ąToolStripMenuItem
-            // 
-            this.ąToolStripMenuItem.Name = "ąToolStripMenuItem";
-            this.ąToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.ąToolStripMenuItem.Text = "ą";
-            // 
-            // ąToolStripMenuItem1
-            // 
-            this.ąToolStripMenuItem1.Name = "ąToolStripMenuItem1";
-            this.ąToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
-            this.ąToolStripMenuItem1.Text = "Ą";
-            // 
-            // ćToolStripMenuItem
-            // 
-            this.ćToolStripMenuItem.Name = "ćToolStripMenuItem";
-            this.ćToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.ćToolStripMenuItem.Text = "ć";
-            // 
-            // ćToolStripMenuItem1
-            // 
-            this.ćToolStripMenuItem1.Name = "ćToolStripMenuItem1";
-            this.ćToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
-            this.ćToolStripMenuItem1.Text = "Ć";
-            // 
-            // ęToolStripMenuItem
-            // 
-            this.ęToolStripMenuItem.Name = "ęToolStripMenuItem";
-            this.ęToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.ęToolStripMenuItem.Text = "ę";
-            // 
-            // ęToolStripMenuItem1
-            // 
-            this.ęToolStripMenuItem1.Name = "ęToolStripMenuItem1";
-            this.ęToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
-            this.ęToolStripMenuItem1.Text = "Ę";
-            // 
-            // łToolStripMenuItem
-            // 
-            this.łToolStripMenuItem.Name = "łToolStripMenuItem";
-            this.łToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.łToolStripMenuItem.Text = "ł";
-            // 
-            // łToolStripMenuItem1
-            // 
-            this.łToolStripMenuItem1.Name = "łToolStripMenuItem1";
-            this.łToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
-            this.łToolStripMenuItem1.Text = "Ł";
-            // 
-            // ńToolStripMenuItem
-            // 
-            this.ńToolStripMenuItem.Name = "ńToolStripMenuItem";
-            this.ńToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.ńToolStripMenuItem.Text = "ń";
-            // 
-            // ńToolStripMenuItem1
-            // 
-            this.ńToolStripMenuItem1.Name = "ńToolStripMenuItem1";
-            this.ńToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
-            this.ńToolStripMenuItem1.Text = "Ń";
-            // 
-            // óToolStripMenuItem4
-            // 
-            this.óToolStripMenuItem4.Name = "óToolStripMenuItem4";
-            this.óToolStripMenuItem4.Size = new System.Drawing.Size(180, 22);
-            this.óToolStripMenuItem4.Text = "ó";
-            // 
-            // óToolStripMenuItem5
-            // 
-            this.óToolStripMenuItem5.Name = "óToolStripMenuItem5";
-            this.óToolStripMenuItem5.Size = new System.Drawing.Size(180, 22);
-            this.óToolStripMenuItem5.Text = "Ó";
-            // 
-            // śToolStripMenuItem
-            // 
-            this.śToolStripMenuItem.Name = "śToolStripMenuItem";
-            this.śToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.śToolStripMenuItem.Text = "ś";
-            // 
-            // śToolStripMenuItem1
-            // 
-            this.śToolStripMenuItem1.Name = "śToolStripMenuItem1";
-            this.śToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
-            this.śToolStripMenuItem1.Text = "Ś";
-            // 
-            // źToolStripMenuItem
-            // 
-            this.źToolStripMenuItem.Name = "źToolStripMenuItem";
-            this.źToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.źToolStripMenuItem.Text = "ź";
-            // 
-            // źToolStripMenuItem1
-            // 
-            this.źToolStripMenuItem1.Name = "źToolStripMenuItem1";
-            this.źToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
-            this.źToolStripMenuItem1.Text = "Ź";
-            // 
-            // żToolStripMenuItem
-            // 
-            this.żToolStripMenuItem.Name = "żToolStripMenuItem";
-            this.żToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.żToolStripMenuItem.Text = "ż";
-            // 
-            // żToolStripMenuItem1
-            // 
-            this.żToolStripMenuItem1.Name = "żToolStripMenuItem1";
-            this.żToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
-            this.żToolStripMenuItem1.Text = "Ż";
             // 
             // VobSubOcrCharacter
             // 
@@ -1469,7 +532,6 @@
             this.Shown += new System.EventHandler(this.VobSubOcrCharacter_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.VobSubOcrCharacter_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).EndInit();
-            this.contextMenuStripLetters.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCharacter)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLastEdit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
@@ -1495,92 +557,8 @@
         private System.Windows.Forms.PictureBox pictureBoxLastEdit;
         private System.Windows.Forms.Button buttonGuess;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripLetters;
-        private System.Windows.Forms.ToolStripMenuItem nordicToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem aeToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem AeToolStripMenuItem2;
-        private System.Windows.Forms.ToolStripMenuItem øToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem øToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem åToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem åToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem äToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem äToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem öToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem öToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem germanToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem äToolStripMenuItem2;
-        private System.Windows.Forms.ToolStripMenuItem äToolStripMenuItem3;
-        private System.Windows.Forms.ToolStripMenuItem öToolStripMenuItem2;
-        private System.Windows.Forms.ToolStripMenuItem öToolStripMenuItem3;
-        private System.Windows.Forms.ToolStripMenuItem üToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem üToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem ßToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem spanishToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem áToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem áToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem éToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem éToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem ñToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem ñToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem5;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem6;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem7;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem8;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem9;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem10;
         private System.Windows.Forms.CheckBox checkBoxAutoSubmitOfFirstChar;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMusicSymbol1;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMusicSymbol2;
         private System.Windows.Forms.Label labelItalicOn;
-        private System.Windows.Forms.ToolStripMenuItem latinToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem àToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem àToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem éToolStripMenuItem3;
-        private System.Windows.Forms.ToolStripMenuItem éToolStripMenuItem2;
-        private System.Windows.Forms.ToolStripMenuItem èToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem èToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem íToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem íToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem ïToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem ïToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem óToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem óToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem òToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem òToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem úToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem úToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem üToolStripMenuItem2;
-        private System.Windows.Forms.ToolStripMenuItem üToolStripMenuItem3;
-        private System.Windows.Forms.ToolStripMenuItem çToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem çToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem portugueseToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem ãToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem ãToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem õToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem õToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem áToolStripMenuItem2;
-        private System.Windows.Forms.ToolStripMenuItem áToolStripMenuItem3;
-        private System.Windows.Forms.ToolStripMenuItem éToolStripMenuItem4;
-        private System.Windows.Forms.ToolStripMenuItem éToolStripMenuItem5;
-        private System.Windows.Forms.ToolStripMenuItem íToolStripMenuItem2;
-        private System.Windows.Forms.ToolStripMenuItem íToolStripMenuItem3;
-        private System.Windows.Forms.ToolStripMenuItem óToolStripMenuItem2;
-        private System.Windows.Forms.ToolStripMenuItem óToolStripMenuItem3;
-        private System.Windows.Forms.ToolStripMenuItem úToolStripMenuItem2;
-        private System.Windows.Forms.ToolStripMenuItem úToolStripMenuItem3;
-        private System.Windows.Forms.ToolStripMenuItem âToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem âToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem êToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem êToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem ôToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem ôToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem àToolStripMenuItem2;
-        private System.Windows.Forms.ToolStripMenuItem àToolStripMenuItem3;
-        private System.Windows.Forms.ToolStripMenuItem çToolStripMenuItem2;
-        private System.Windows.Forms.ToolStripMenuItem çToolStripMenuItem3;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
@@ -1597,39 +575,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column13;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column14;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column15;
-        private System.Windows.Forms.ToolStripMenuItem italianToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem àToolStripMenuItem5;
-        private System.Windows.Forms.ToolStripMenuItem àToolStripMenuItem4;
-        private System.Windows.Forms.ToolStripMenuItem èToolStripMenuItem3;
-        private System.Windows.Forms.ToolStripMenuItem èToolStripMenuItem2;
-        private System.Windows.Forms.ToolStripMenuItem éToolStripMenuItem7;
-        private System.Windows.Forms.ToolStripMenuItem éToolStripMenuItem6;
-        private System.Windows.Forms.ToolStripMenuItem ìToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem ìToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem òToolStripMenuItem3;
-        private System.Windows.Forms.ToolStripMenuItem òToolStripMenuItem2;
-        private System.Windows.Forms.ToolStripMenuItem ùToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem ùToolStripMenuItem;
         private System.Windows.Forms.Label labelItalicOn2;
         private System.Windows.Forms.Label labelSubtitleImage;
-        private System.Windows.Forms.ToolStripMenuItem polishToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem ąToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem ąToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem ćToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem ćToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem ęToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem ęToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem łToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem łToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem ńToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem ńToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem óToolStripMenuItem4;
-        private System.Windows.Forms.ToolStripMenuItem óToolStripMenuItem5;
-        private System.Windows.Forms.ToolStripMenuItem śToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem śToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem źToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem źToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem żToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem żToolStripMenuItem1;
     }
 }
