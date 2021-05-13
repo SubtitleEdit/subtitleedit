@@ -48,6 +48,7 @@
    * Keep Text box height when resizing - thx AbsenceJam/darnn
    * Add "Slovenian" to language auto detect - thx Milenko
    * Update Tesseract 5 Alpha to "2021-05-06" - thx iGom
+   * Add French letters in OCR char inspect - thx tormento
 * FIXED:
    * Fix for reading bdsup position - thx akaicat
    * Fix a few crashes in translation engine - thx howblast/Laís
