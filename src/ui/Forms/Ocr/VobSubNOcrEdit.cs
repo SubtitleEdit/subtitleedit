@@ -30,6 +30,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
+            VobSubEditCharacters.MakeToolStripLetters(contextMenuStripLetters, InsertLanguageCharacter);
             UiUtil.FixFonts(this);
 
             _nOcrDb = nOcrDb;
@@ -53,6 +54,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (comboBoxTexts.Items.Count > 0)
             {
                 comboBoxTexts.SelectedIndex = 0;
+            }
+        }
+
+        private void InsertLanguageCharacter(object sender, EventArgs e)
+        {
+            if (sender is ToolStripMenuItem toolStripMenuItem)
+            {
+                var start = textBoxText.SelectionStart;
+                textBoxText.SelectedText = toolStripMenuItem.Text;
+                textBoxText.SelectionLength = 0;
+                textBoxText.SelectionStart = start + toolStripMenuItem.Text.Length;
             }
         }
 
