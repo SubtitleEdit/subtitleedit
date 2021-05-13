@@ -9762,25 +9762,6 @@ namespace Nikse.SubtitleEdit.Forms
                 AutoBreakAtFirstSpaceFromPos(textBoxListViewText, true);
                 e.SuppressKeyPress = true;
             }
-            else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.I)
-            {
-                if (textBoxListViewText.SelectionLength == 0)
-                {
-                    if (textBoxListViewText.Text.Contains("<i>", StringComparison.Ordinal))
-                    {
-                        textBoxListViewText.Text = HtmlUtil.RemoveOpenCloseTags(textBoxListViewText.Text, HtmlUtil.TagItalic);
-                    }
-                    else
-                    {
-                        textBoxListViewText.Text = string.Format("<i>{0}</i>", textBoxListViewText.Text);
-                    }
-                }
-                else
-                {
-                    TextBoxListViewToggleTag(HtmlUtil.TagItalic);
-                    e.SuppressKeyPress = true;
-                }
-            }
 
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.D)
             {
@@ -22241,6 +22222,7 @@ namespace Nikse.SubtitleEdit.Forms
             pointSyncViaOtherSubtitleToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationPointSyncViaFile);
             toolStripMenuItemChangeFrameRate2.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationChangeFrameRate);
             italicToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewItalic);
+            italicToolStripMenuItem1.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewItalic);
             removeAllFormattingsToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainRemoveFormatting);
             normalToolStripMenuItem1.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainRemoveFormatting);
             boldToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewBold);
@@ -22261,7 +22243,6 @@ namespace Nikse.SubtitleEdit.Forms
             moveTextUpToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColumnTextUp);
             moveTextDownToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColumnTextDown);
             toolStripMenuItemReverseRightToLeftStartEnd.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
-            italicToolStripMenuItem1.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
             translateToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAutoTranslate);
 
             audioVisualizer.InsertAtVideoPositionShortcut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition);
@@ -25212,25 +25193,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 AutoBreakAtFirstSpaceFromPos(textBoxListViewTextOriginal, true);
                 e.SuppressKeyPress = true;
-            }
-            else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.I)
-            {
-                if (textBoxListViewTextOriginal.SelectionLength == 0)
-                {
-                    if (textBoxListViewTextOriginal.Text.Contains("<i>"))
-                    {
-                        textBoxListViewTextOriginal.Text = HtmlUtil.RemoveOpenCloseTags(textBoxListViewTextOriginal.Text, HtmlUtil.TagItalic);
-                    }
-                    else
-                    {
-                        textBoxListViewTextOriginal.Text = string.Format("<i>{0}</i>", textBoxListViewTextOriginal.Text);
-                    }
-                }
-                else
-                {
-                    TextBoxListViewToggleTag(HtmlUtil.TagItalic);
-                    e.SuppressKeyPress = true;
-                }
             }
 
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.D)
