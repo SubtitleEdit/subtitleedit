@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
             for (int i = subtitle.Paragraphs.Count - 1; i >= 0; i--)
             {
-                Paragraph p = subtitle.Paragraphs[i];
+                var p = subtitle.Paragraphs[i];
                 if (!string.IsNullOrEmpty(p.Text))
                 {
                     string text = p.Text.Trim(' ');
@@ -87,15 +87,15 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         }
                     }
 
-                    if (callbacks.AllowFix(p, fixAction1) && text.StartsWith(Environment.NewLine, StringComparison.Ordinal))
+                    if (callbacks.AllowFix(p, fixAction1) && text.TrimStart(StringExtensions.UnicodeControlChars).StartsWith(Environment.NewLine, StringComparison.Ordinal))
                     {
                         if (pre.Length > 0)
                         {
-                            text = pre + text.TrimStart(Utilities.NewLineChars);
+                            text = pre + text.TrimStart(StringExtensions.UnicodeControlChars).TrimStart(Utilities.NewLineChars);
                         }
                         else
                         {
-                            text = text.TrimStart(Utilities.NewLineChars);
+                            text = text.TrimStart(StringExtensions.UnicodeControlChars).TrimStart(Utilities.NewLineChars);
                         }
 
                         p.Text = text;
@@ -107,15 +107,15 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         text = pre + text;
                     }
 
-                    if (callbacks.AllowFix(p, fixAction2) && text.EndsWith(Environment.NewLine, StringComparison.Ordinal))
+                    if (callbacks.AllowFix(p, fixAction2) && text.TrimEnd(StringExtensions.UnicodeControlChars).EndsWith(Environment.NewLine, StringComparison.Ordinal))
                     {
                         if (post.Length > 0)
                         {
-                            text = text.TrimEnd(Utilities.NewLineChars) + post;
+                            text = text.TrimEnd(StringExtensions.UnicodeControlChars).TrimEnd(Utilities.NewLineChars) + post;
                         }
                         else
                         {
-                            text = text.TrimEnd(Utilities.NewLineChars);
+                            text = text.TrimEnd(StringExtensions.UnicodeControlChars).TrimEnd(Utilities.NewLineChars);
                         }
 
                         p.Text = text;
@@ -142,9 +142,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             // this must be the very last action done, or line numbers will be messed up!!!
             for (int i = subtitle.Paragraphs.Count - 1; i >= 0; i--)
             {
-                Paragraph p = subtitle.Paragraphs[i];
+                var p = subtitle.Paragraphs[i];
                 var text = HtmlUtil.RemoveHtmlTags(p.Text, true).Trim();
-                if (callbacks.AllowFix(p, fixAction0) && string.IsNullOrEmpty(text.RemoveControlCharacters()))
+                if (callbacks.AllowFix(p, fixAction0) && string.IsNullOrEmpty(text.RemoveControlCharacters().RemoveChar(StringExtensions.UnicodeControlChars)))
                 {
                     subtitle.Paragraphs.RemoveAt(i);
                     emptyLinesRemoved++;
