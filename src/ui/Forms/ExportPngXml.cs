@@ -5344,7 +5344,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void subtitleListView1_KeyDown(object sender, KeyEventArgs e)
         {
-            var italicShortCut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
+            var italicShortCut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewItalic);
             if (e.KeyData == italicShortCut)
             {
                 ListViewToggleTag("i");
