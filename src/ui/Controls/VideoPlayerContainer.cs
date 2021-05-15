@@ -439,6 +439,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private Subtitle _subtitlePrev;
         private string _mpvTextOld = string.Empty;
+        private int _mpvSubOldHash = -1; 
         private string _mpvTextFileName;
         private int _retryCount = 3;
         private void RefreshMpv(LibMpvDynamic mpv, Subtitle subtitle)
@@ -492,7 +493,17 @@ namespace Nikse.SubtitleEdit.Controls
                             }
                         }
                     }
-                    text = subtitle.ToText(format);
+
+                    var hash = subtitle.GetFastHashCode(null);
+                    if (hash != _mpvSubOldHash || string.IsNullOrEmpty(_mpvTextOld))
+                    {
+                        text = subtitle.ToText(format);
+                        _mpvSubOldHash = hash;
+                    }
+                    else
+                    {
+                        text = _mpvTextOld;
+                    }
                 }
 
 
