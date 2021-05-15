@@ -51,6 +51,7 @@
    * Add French letters in OCR char inspect - thx tormento
    * Handle Unicode control char in "Remove empty lines" - thx igenaya
 * FIXED:
+   * Fix for unwanted line copy with alt+arrow-up/down fast - thx Nathália
    * Fix for reading bdsup position - thx akaicat
    * Fix a few crashes in translation engine - thx howblast/Laís
    * Fix mpv dll loading from a folder with e.g. cyrillic chars - thx Zoran

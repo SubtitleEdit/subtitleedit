@@ -9269,25 +9269,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private long _lastSubtitleListviewSelectedIndexChangedTick = -1;
-        private long _lastLastSubtitleListviewSelectedIndexChangedTick = -1;
-
         private void SubtitleListview1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (SubtitleListview1.SelectedIndices.Count == 0)
             {
                 _listViewTextUndoIndex = -1;
-                return;
-            }
-
-            if (DateTime.UtcNow.Ticks - _lastLastSubtitleListviewSelectedIndexChangedTick < 10000 * 50) // only if last change was less ago than 50 milliseconds
-            {
-                SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
-                System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(50), () =>
-                {
-                    SubtitleListview1_SelectedIndexChanged(null, null);
-                    SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
-                });
                 return;
             }
 
@@ -9309,9 +9295,6 @@ namespace Nikse.SubtitleEdit.Forms
                 _findHelper.ReplaceFromPosition = 0;
                 _findHelper.MatchInOriginal = false;
             }
-
-            _lastLastSubtitleListviewSelectedIndexChangedTick = _lastSubtitleListviewSelectedIndexChangedTick;
-            _lastSubtitleListviewSelectedIndexChangedTick = DateTime.UtcNow.Ticks;
         }
 
         private void ShowLineInformationListView()
