@@ -10132,8 +10132,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
 
                 var currentParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
-                var newParagraph = new Paragraph(currentParagraph);
-                newParagraph.NewSection = false;
+                var newParagraph = new Paragraph(currentParagraph) { NewSection = false };
 
                 currentParagraph.Text = currentParagraph.Text.Replace("< /i>", "</i>");
                 currentParagraph.Text = currentParagraph.Text.Replace("< i>", "<i>");
@@ -10158,7 +10157,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     string aTrimmed = HtmlUtil.RemoveHtmlTags(a).TrimEnd('"').TrimEnd().TrimEnd('\'').TrimEnd();
-                    if (Configuration.Settings.General.SplitRemovesDashes && (aTrimmed.EndsWith('.') || aTrimmed.EndsWith('!') || aTrimmed.EndsWith('?') || aTrimmed.EndsWith('؟')))
+                    if (Configuration.Settings.General.SplitRemovesDashes && (aTrimmed.EndsWith('.') || aTrimmed.EndsWith('!') || aTrimmed.EndsWith('?') || aTrimmed.EndsWith('…') || aTrimmed.EndsWith('؟')))
                     {
                         a = DialogSplitMerge.RemoveStartDash(a);
                         b = DialogSplitMerge.RemoveStartDash(b);
@@ -10177,7 +10176,7 @@ namespace Nikse.SubtitleEdit.Forms
                         l0 = HtmlUtil.RemoveHtmlTags(lines[0], true).Trim().TrimEnd('"', '\'').TrimEnd();
                     }
 
-                    if (lines.Count == 2 && (l0.EndsWith('.') || l0.EndsWith('!') || l0.EndsWith('?') || l0.EndsWith('؟')))
+                    if (lines.Count == 2 && (l0.EndsWith('.') || l0.EndsWith('!') || l0.EndsWith('?') || l0.EndsWith('…') || l0.EndsWith('؟')))
                     {
                         currentParagraph.Text = Utilities.AutoBreakLine(lines[0], language);
                         newParagraph.Text = Utilities.AutoBreakLine(lines[1], language);
@@ -10351,8 +10350,7 @@ namespace Nikse.SubtitleEdit.Forms
                         string languageOriginal = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleOriginal);
 
                         originalCurrent.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
-                        var originalNew = new Paragraph(newParagraph);
-                        originalNew.NewSection = false;
+                        var originalNew = new Paragraph(newParagraph) { NewSection = false };
 
                         lines = originalCurrent.Text.SplitToLines();
 
@@ -10394,7 +10392,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 originalNew.Text = "<b>" + originalNew.Text;
                             }
 
-                            if (Configuration.Settings.General.SplitRemovesDashes && (l0Trimmed.EndsWith('.') || l0Trimmed.EndsWith('!') || l0Trimmed.EndsWith('?') || l0Trimmed.EndsWith('؟')))
+                            if (Configuration.Settings.General.SplitRemovesDashes && (l0Trimmed.EndsWith('.') || l0Trimmed.EndsWith('!') || l0Trimmed.EndsWith('?') || l0Trimmed.EndsWith('…') || l0Trimmed.EndsWith('؟')))
                             {
                                 originalCurrent.Text = DialogSplitMerge.RemoveStartDash(originalCurrent.Text);
                                 originalNew.Text = DialogSplitMerge.RemoveStartDash(originalNew.Text);
@@ -10402,7 +10400,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                             lines.Clear();
                         }
-                        else if (lines.Count == 2 && (l0Trimmed.EndsWith('.') || l0Trimmed.EndsWith('!') || l0Trimmed.EndsWith('?') || l0Trimmed.EndsWith('؟')))
+                        else if (lines.Count == 2 && (l0Trimmed.EndsWith('.') || l0Trimmed.EndsWith('!') || l0Trimmed.EndsWith('?') || l0Trimmed.EndsWith('…') || l0Trimmed.EndsWith('؟')))
                         {
                             string a = lines[0].Trim();
                             string b = lines[1].Trim();
@@ -10477,7 +10475,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 b = "<b>" + b;
                             }
 
-                            if (Configuration.Settings.General.SplitRemovesDashes && (l0Trimmed.EndsWith('.') || l0Trimmed.EndsWith('!') || l0Trimmed.EndsWith('?') || l0Trimmed.EndsWith('؟')))
+                            if (Configuration.Settings.General.SplitRemovesDashes && (l0Trimmed.EndsWith('.') || l0Trimmed.EndsWith('!') || l0Trimmed.EndsWith('?') || l0Trimmed.EndsWith('…') || l0Trimmed.EndsWith('؟')))
                             {
                                 a = DialogSplitMerge.RemoveStartDash(a);
                                 b = DialogSplitMerge.RemoveStartDash(b);
