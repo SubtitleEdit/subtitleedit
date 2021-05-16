@@ -25023,49 +25023,68 @@ namespace Nikse.SubtitleEdit.Forms
             openSecondSubtitleToolStripMenuItem.Visible = false;
             if (mediaPlayer.VideoPlayer is LibVlcDynamic libVlc)
             {
-                openSecondSubtitleToolStripMenuItem.Visible = true;
-                var audioTracks = libVlc.GetAudioTracks();
-                VideoAudioTrackNumber = libVlc.AudioTrackNumber;
-                if (audioTracks.Count > 1)
+                try
                 {
-                    toolStripMenuItemSetAudioTrack.DropDownItems.Clear();
-                    for (int i = 0; i < audioTracks.Count; i++)
+                    openSecondSubtitleToolStripMenuItem.Visible = true;
+                    var audioTracks = libVlc.GetAudioTracks();
+                    VideoAudioTrackNumber = libVlc.AudioTrackNumber;
+                    if (audioTracks.Count > 1)
                     {
-                        var at = audioTracks[i];
-                        toolStripMenuItemSetAudioTrack.DropDownItems.Add(string.IsNullOrWhiteSpace(at.Value) ? at.Key.ToString(CultureInfo.InvariantCulture) : at.Value, null, ChooseAudioTrack);
-                        toolStripMenuItemSetAudioTrack.DropDownItems[toolStripMenuItemSetAudioTrack.DropDownItems.Count - 1].Tag = at.Key.ToString(CultureInfo.InvariantCulture);
-                        if (at.Key == VideoAudioTrackNumber)
+                        toolStripMenuItemSetAudioTrack.DropDownItems.Clear();
+                        for (int i = 0; i < audioTracks.Count; i++)
                         {
-                            ((ToolStripMenuItem)toolStripMenuItemSetAudioTrack.DropDownItems[toolStripMenuItemSetAudioTrack.DropDownItems.Count - 1]).Checked = true;
+                            var at = audioTracks[i];
+                            toolStripMenuItemSetAudioTrack.DropDownItems.Add(string.IsNullOrWhiteSpace(at.Value) ? at.Key.ToString(CultureInfo.InvariantCulture) : at.Value, null, ChooseAudioTrack);
+                            toolStripMenuItemSetAudioTrack.DropDownItems[toolStripMenuItemSetAudioTrack.DropDownItems.Count - 1].Tag = at.Key.ToString(CultureInfo.InvariantCulture);
+                            if (at.Key == VideoAudioTrackNumber)
+                            {
+                                ((ToolStripMenuItem)toolStripMenuItemSetAudioTrack.DropDownItems[toolStripMenuItemSetAudioTrack.DropDownItems.Count - 1]).Checked = true;
+                            }
                         }
-                    }
 
-                    toolStripMenuItemSetAudioTrack.Visible = true;
-                    UiUtil.FixFonts(toolStripMenuItemSetAudioTrack);
+                        toolStripMenuItemSetAudioTrack.Visible = true;
+                        UiUtil.FixFonts(toolStripMenuItemSetAudioTrack);
+                    }
+                }
+                catch (Exception exception)
+                {
+                    openSecondSubtitleToolStripMenuItem.Visible = false;
+                    toolStripMenuItemSetAudioTrack.Visible = false;
+                    SeLogger.Error(exception, "VideoDropDownOpening failed getting audio tracks from vlc");
                 }
             }
             else if (mediaPlayer.VideoPlayer is LibMpvDynamic libMpv)
             {
-                openSecondSubtitleToolStripMenuItem.Visible = true;
-                var audioTracks = libMpv.AudioTracks;
-                VideoAudioTrackNumber = libMpv.AudioTrackNumber;
-                if (audioTracks.Count > 1)
+                try
                 {
-                    toolStripMenuItemSetAudioTrack.DropDownItems.Clear();
-                    for (int i = 0; i < audioTracks.Count; i++)
+                    openSecondSubtitleToolStripMenuItem.Visible = true;
+                    var audioTracks = libMpv.AudioTracks;
+                    VideoAudioTrackNumber = libMpv.AudioTrackNumber;
+                    if (audioTracks.Count > 1)
                     {
-                        var at = audioTracks[i];
-                        var trackText = string.IsNullOrWhiteSpace(at.Value) ? at.Key.ToString(CultureInfo.InvariantCulture) : "Track " + at.Key + " - " + char.ToUpper(at.Value[0]) + at.Value.Substring(1);
-                        toolStripMenuItemSetAudioTrack.DropDownItems.Add(trackText, null, ChooseAudioTrack);
-                        toolStripMenuItemSetAudioTrack.DropDownItems[toolStripMenuItemSetAudioTrack.DropDownItems.Count - 1].Tag = at.Key.ToString(CultureInfo.InvariantCulture);
-                        if (i == VideoAudioTrackNumber)
+                        toolStripMenuItemSetAudioTrack.DropDownItems.Clear();
+                        for (int i = 0; i < audioTracks.Count; i++)
                         {
-                            ((ToolStripMenuItem)toolStripMenuItemSetAudioTrack.DropDownItems[toolStripMenuItemSetAudioTrack.DropDownItems.Count - 1]).Checked = true;
+                            var at = audioTracks[i];
+                            var trackText = string.IsNullOrWhiteSpace(at.Value) ? at.Key.ToString(CultureInfo.InvariantCulture) : "Track " + at.Key + " - " + char.ToUpper(at.Value[0]) + at.Value.Substring(1);
+                            toolStripMenuItemSetAudioTrack.DropDownItems.Add(trackText, null, ChooseAudioTrack);
+                            toolStripMenuItemSetAudioTrack.DropDownItems[toolStripMenuItemSetAudioTrack.DropDownItems.Count - 1].Tag = at.Key.ToString(CultureInfo.InvariantCulture);
+                            if (i == VideoAudioTrackNumber)
+                            {
+                                ((ToolStripMenuItem)toolStripMenuItemSetAudioTrack.DropDownItems[toolStripMenuItemSetAudioTrack.DropDownItems.Count - 1]).Checked = true;
+                            }
                         }
-                    }
 
-                    toolStripMenuItemSetAudioTrack.Visible = true;
-                    UiUtil.FixFonts(toolStripMenuItemSetAudioTrack);
+                        toolStripMenuItemSetAudioTrack.Visible = true;
+                        UiUtil.FixFonts(toolStripMenuItemSetAudioTrack);
+                    }
+                }
+                catch (Exception exception)
+                {
+                    toolStripMenuItemSetAudioTrack.Visible = false;
+                    openSecondSubtitleToolStripMenuItem.Visible = false;
+                    toolStripMenuItemSetAudioTrack.Visible = false;
+                    SeLogger.Error(exception, "VideoDropDownOpening failed getting audio tracks from mpv");
                 }
             }
 
