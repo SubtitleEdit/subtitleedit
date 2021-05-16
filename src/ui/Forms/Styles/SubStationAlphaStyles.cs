@@ -2493,6 +2493,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             var oneOrMoreSelected = listViewStyles.SelectedItems.Count > 0;
             deleteToolStripMenuItem.Visible = oneOrMoreSelected;
             addToStorageToolStripMenuItem1.Visible = oneOrMoreSelected;
+            toolStripSeparator4.Visible = oneOrMoreSelected;
             copyToolStripMenuItemCopy.Visible = oneOrMoreSelected;
 
             var moreThanOneExists = listViewStyles.Items.Count > 1;
