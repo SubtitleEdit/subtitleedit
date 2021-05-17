@@ -9023,12 +9023,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_subtitle.Paragraphs.Count > 0)
             {
-                InsertAfter(string.Empty);
+                InsertAfter(string.Empty, true);
                 textBoxListViewText.Focus();
             }
         }
 
-        private void InsertAfter(string text)
+        private void InsertAfter(string text, bool goToNewLine)
         {
             MakeHistoryForUndo(_language.BeforeInsertLine);
 
@@ -9135,9 +9135,12 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
             }
 
-            SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex, true);
-            UpdateSourceView();
-            ShowStatus(_language.LineInserted);
+            if (goToNewLine)
+            {
+                SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex, true);
+                UpdateSourceView();
+                ShowStatus(_language.LineInserted);
+            }
         }
 
         private void SetStyleForNewParagraph(Paragraph newParagraph, int nearestIndex)
@@ -9846,7 +9849,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyData == _shortcuts.MainInsertAfter)
             {
-                InsertAfter(string.Empty);
+                InsertAfter(string.Empty, true);
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainListViewRemoveTimeCodes)
@@ -14594,7 +14597,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_shortcuts.MainInsertAfter == e.KeyData && InListView)
             {
-                InsertAfter(string.Empty);
+                InsertAfter(string.Empty, true);
                 e.SuppressKeyPress = true;
                 textBoxListViewText.Focus();
             }
@@ -17115,9 +17118,23 @@ namespace Nikse.SubtitleEdit.Forms
                 next = Utilities.GetOriginalParagraph(firstIndex + 1, next, _subtitleOriginal.Paragraphs);
             }
 
-            if (p == null || next == null)
+            if (p == null)
             {
                 return;
+            }
+
+            MakeHistoryForUndo(_language.BeforeLineUpdatedInListView);
+
+            if (next == null)
+            {
+                _makeHistoryPaused = true;
+                InsertAfter(string.Empty, false);
+                _makeHistoryPaused = false;
+                next = _subtitle.GetParagraphOrDefault(firstIndex + 1);
+                if (tb == textBoxListViewTextOriginal)
+                {
+                    next = Utilities.GetOriginalParagraph(firstIndex + 1, next, _subtitleOriginal.Paragraphs);
+                }
             }
 
             var text1 = string.Empty;
@@ -17131,9 +17148,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             p.Text = text1;
             next.Text = (text2 + Environment.NewLine + next.Text.Trim()).Trim();
-
-            MakeHistoryForUndo(_language.BeforeLineUpdatedInListView);
-
             tb.Text = p.Text;
             if (tb == textBoxListViewTextOriginal)
             {
@@ -18359,7 +18373,7 @@ namespace Nikse.SubtitleEdit.Forms
                             if (!string.IsNullOrWhiteSpace(line))
                             {
                                 var s = line.Trim().Length > Configuration.Settings.General.SubtitleLineMaximumLength ? Utilities.AutoBreakLine(line) : line.Trim();
-                                InsertAfter(s);
+                                InsertAfter(s, true);
                             }
                         }
                         SubtitleListview1.EndUpdate();
@@ -18424,7 +18438,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyData == _shortcuts.MainInsertAfter)
             {
-                InsertAfter(string.Empty);
+                InsertAfter(string.Empty, true);
                 e.SuppressKeyPress = true;
             }
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Home)
@@ -24953,7 +24967,7 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.Paragraphs.Count - 1, true);
-                InsertAfter(string.Empty);
+                InsertAfter(string.Empty, true);
                 SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.Paragraphs.Count - 1, true);
             }
         }
