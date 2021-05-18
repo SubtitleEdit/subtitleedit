@@ -23,6 +23,8 @@ namespace Nikse.SubtitleEdit.Forms
             set => numericUpDownMinMsBetweenLines.Value = value;
         }
 
+        private static readonly Color _listViewGreen = Configuration.Settings.General.UseDarkTheme ? Color.Green : Color.LightGreen;
+
         public bool PreviousSubtitleTakesAllTime => radioButtonProlongEndTime.Checked;
 
         public DurationsBridgeGaps(Subtitle subtitle)
@@ -179,7 +181,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             foreach (var index in fixedIndexes)
             {
-                SubtitleListview1.SetBackgroundColor(index, Color.LightGreen);
+                SubtitleListview1.SetBackgroundColor(index, _listViewGreen);
             }
 
             SubtitleListview1.EndUpdate();
