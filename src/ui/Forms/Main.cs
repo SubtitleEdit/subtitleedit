@@ -20101,7 +20101,14 @@ namespace Nikse.SubtitleEdit.Forms
             splitContainerMain.Panel2Collapsed = true;
             Main_Resize(null, null);
 
-            splitContainerListViewAndText.SplitterDistance = splitContainerListViewAndText.Height - textHeight;
+            try
+            {
+                splitContainerListViewAndText.SplitterDistance = splitContainerListViewAndText.Height - textHeight;
+            }
+            catch
+            {
+                // ignore
+            }
         }
 
         private void ShowVideoPlayer()
@@ -20158,7 +20165,14 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!_isVideoControlsUndocked)
             {
-                splitContainerListViewAndText.SplitterDistance = splitContainerListViewAndText.Height - textHeight;
+                try
+                {
+                    splitContainerListViewAndText.SplitterDistance = splitContainerListViewAndText.Height - textHeight;
+                }
+                catch
+                {
+                    // ignore
+                }
             }
         }
 
@@ -20312,7 +20326,14 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (_textHeightResize >= 1)
             {
-                splitContainerListViewAndText.SplitterDistance = splitContainerListViewAndText.Height - _textHeightResize;
+                try
+                {
+                    splitContainerListViewAndText.SplitterDistance = splitContainerListViewAndText.Height - _textHeightResize;
+                }
+                catch
+                {
+                    // ignore
+                }
             }
 
             _textHeightResizeIgnoreUpdate = DateTime.UtcNow.Ticks;
@@ -20326,7 +20347,14 @@ namespace Nikse.SubtitleEdit.Forms
                     MainResize();
                     if (_textHeightResize >= 1)
                     {
-                        splitContainerListViewAndText.SplitterDistance = splitContainerListViewAndText.Height - _textHeightResize;
+                        try
+                        {
+                            splitContainerListViewAndText.SplitterDistance = splitContainerListViewAndText.Height - _textHeightResize;
+                        }
+                        catch
+                        {
+                            // ignore
+                        }
                     }
                     _lastFormWindowState = WindowState;
                 });
@@ -20362,7 +20390,14 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (_textHeightResize >= 1)
             {
-                splitContainerListViewAndText.SplitterDistance = splitContainerListViewAndText.Height - _textHeightResize;
+                try
+                {
+                    splitContainerListViewAndText.SplitterDistance = splitContainerListViewAndText.Height - _textHeightResize;
+                }
+                catch
+                {
+                    // ignore
+                }
             }
 
             // Due to strange bug in listview when maximizing
@@ -24731,7 +24766,15 @@ namespace Nikse.SubtitleEdit.Forms
             var top = Math.Max(Top, 0);
             var left = Math.Max(Left, 0);
             UnDockVideoPlayer();
-            splitContainerListViewAndText.SplitterDistance = splitContainerListViewAndText.Height - 109;
+            try
+            {
+                splitContainerListViewAndText.SplitterDistance = splitContainerListViewAndText.Height - 109;
+            }
+            catch
+            {
+                // ignore
+            }
+
             if (toolStripButtonToggleVideo.Checked)
             {
                 _videoPlayerUndocked.Show(this);
@@ -24845,9 +24888,16 @@ namespace Nikse.SubtitleEdit.Forms
             redockVideoControlsToolStripMenuItem.Visible = false;
             SubtitleListview1.SelectIndexAndEnsureVisible(_subtitleListViewIndex, true);
 
-            splitContainerMain.SplitterDistance = Configuration.Settings.General.SplitContainerMainSplitterDistance;
-            splitContainer1.SplitterDistance = Configuration.Settings.General.SplitContainer1SplitterDistance;
-            splitContainerListViewAndText.SplitterDistance = Configuration.Settings.General.SplitContainerListViewAndTextSplitterDistance;
+            try
+            {
+                splitContainerMain.SplitterDistance = Configuration.Settings.General.SplitContainerMainSplitterDistance;
+                splitContainer1.SplitterDistance = Configuration.Settings.General.SplitContainer1SplitterDistance;
+                splitContainerListViewAndText.SplitterDistance = Configuration.Settings.General.SplitContainerListViewAndTextSplitterDistance;
+            }
+            catch
+            {
+                // ignore
+            }
         }
 
         private void Bw_DoWork(object sender, DoWorkEventArgs e)
@@ -26216,7 +26266,15 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_textHeightResize >= 1)
             {
-                splitContainerListViewAndText.SplitterDistance = splitContainerListViewAndText.Height - _textHeightResize;
+                try
+                {
+                    splitContainerListViewAndText.SplitterDistance = splitContainerListViewAndText.Height - _textHeightResize;
+                }
+                catch
+                {
+                    // ignore
+                }
+
                 mediaPlayer.Invalidate();
             }
         }
@@ -30278,7 +30336,14 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (splitContainerListViewAndText.Panel2.Height > Configuration.Settings.General.SubtitleTextBoxMaxHeight)
             {
-                splitContainerListViewAndText.SplitterDistance = splitContainerListViewAndText.Height - Configuration.Settings.General.SubtitleTextBoxMaxHeight;
+                try
+                {
+                    splitContainerListViewAndText.SplitterDistance = splitContainerListViewAndText.Height - Configuration.Settings.General.SubtitleTextBoxMaxHeight;
+                }
+                catch
+                {
+                    // ignore
+                }
             }
 
             var diff = DateTime.UtcNow.Ticks - _textHeightResizeIgnoreUpdate;
