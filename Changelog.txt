@@ -63,7 +63,7 @@
    * Some fixes for editing source view - thx PreetM07
    * Fix bug converting vtt two line color text to srt
    * Fix FCE issue w missing spaces/French language - thx  kyrpasto/OmrSi
-   * Fix crash in karoke/typewriter effect due to invalid color - thx PM
+   * Fix crash in karaoke/typewriter effect due to invalid color - thx PM
    * Fix spell check replace with Unicode hidden spaces - thx zildan 
    * Netflix quality check - use current frame rate - thx Filip
 
