@@ -2,7 +2,7 @@
 <Language Name="română">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.0</Version>
+    <Version>3.6.1</Version>
     <TranslatedBy>Tradus de Mircea Voiculescu</TranslatedBy>
     <CultureName>ro-RO</CultureName>
     <HelpFile />
@@ -34,9 +34,11 @@
     <NumberSymbol>#</NumberSymbol>
     <Number>Număr</Number>
     <Text>Text</Text>
-    <HourMinutesSecondsDecimalSeparatorMilliseconds></HourMinutesSecondsDecimalSeparatorMilliseconds>
+    <HourMinutesSecondsDecimalSeparatorMilliseconds>
+    </HourMinutesSecondsDecimalSeparatorMilliseconds>
     <HourMinutesSecondsFrames>Oră:min:sec:cadre</HourMinutesSecondsFrames>
-    <XSeconds></XSeconds>
+    <XSeconds>
+    </XSeconds>
     <Bold>Aldine</Bold>
     <Italic>Cursive</Italic>
     <Underline>Subliniat</Underline>
@@ -514,14 +516,22 @@ Notă: Verifică spațiul liber al discului.</WaveFileMalformed>
     <SubtitleExportedInCustomFormatToX>Subtitrare personalizată exportată la: {0}</SubtitleExportedInCustomFormatToX>
   </ExportCustomText>
   <ExportCustomTextFormat>
-    <Title></Title>
-    <Template></Template>
-    <Header></Header>
-    <TextLine></TextLine>
-    <TimeCode></TimeCode>
-    <NewLine></NewLine>
-    <Footer></Footer>
-    <DoNotModify></DoNotModify>
+    <Title>
+    </Title>
+    <Template>
+    </Template>
+    <Header>
+    </Header>
+    <TextLine>
+    </TextLine>
+    <TimeCode>
+    </TimeCode>
+    <NewLine>
+    </NewLine>
+    <Footer>
+    </Footer>
+    <DoNotModify>
+    </DoNotModify>
   </ExportCustomTextFormat>
   <ExportFcpXmlAdvanced>
     <Title>Export Final Cut Pro XML avansat</Title>
@@ -568,7 +578,8 @@ Notă: Verifică spațiul liber al discului.</WaveFileMalformed>
     <CenterRightJustify>Aliniere uniformă centru-dreapta</CenterRightJustify>
     <BottomMargin>Margine inferioară</BottomMargin>
     <LeftRightMargin>Margine stânga/dreapta</LeftRightMargin>
-    <SaveBluRaySupAs></SaveBluRaySupAs>
+    <SaveBluRaySupAs>
+    </SaveBluRaySupAs>
     <SaveVobSubAs>Alege fișier VobSub</SaveVobSubAs>
     <SaveFabImageScriptAs>Alege script imagine FAB</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Alege fișier DVD Studio Pro STL</SaveDvdStudioProStlAs>
@@ -1213,7 +1224,8 @@ Pentru folosirea unui cod API de la Google Translate, accesează "Opțiuni -&gt;
         <SubStationAlphaSetStyle>Sub Station Alpha - setare stil</SubStationAlphaSetStyle>
         <SetActor>Setare actor</SetActor>
         <SubStationAlphaStyles>Stiluri Sub Station Alpha...</SubStationAlphaStyles>
-        <AdvancedSubStationAlphaStyles></AdvancedSubStationAlphaStyles>
+        <AdvancedSubStationAlphaStyles>
+        </AdvancedSubStationAlphaStyles>
         <TimedTextSetRegion>Text temporizat - setare regiune</TimedTextSetRegion>
         <TimedTextSetStyle>Text temporizat - setare stil</TimedTextSetStyle>
         <TimedTextStyles>Stiluri text temporizat...</TimedTextStyles>
@@ -1478,8 +1490,10 @@ Continui?</SubtitleAppendPrompt>
     <BeforeTypeWriterEffect>Înaintea efectului „mașină de scris”</BeforeTypeWriterEffect>
     <BeforeKaraokeEffect>Înaintea efectului Karaoke</BeforeKaraokeEffect>
     <BeforeImportingDvdSubtitle>Înaintea importării subtitrării de pe DVD</BeforeImportingDvdSubtitle>
-    <OpenSubtitleVideoFile></OpenSubtitleVideoFile>
-    <VideoFiles></VideoFiles>
+    <OpenSubtitleVideoFile>
+    </OpenSubtitleVideoFile>
+    <VideoFiles>
+    </VideoFiles>
     <NoSubtitlesFound>Nicio subtitrare găsită</NoSubtitlesFound>
     <NotAValidMatroskaFileX>Nu-i valabil fișierul Matroska: {0}</NotAValidMatroskaFileX>
     <BlurayNotSubtitlesFound>Fișierul Blu-ray sup nu conține vreo subtitrare sau conține erori - încearcă iar demuxing.</BlurayNotSubtitlesFound>
@@ -1985,7 +1999,8 @@ pot edita aceeași subtitrare (colaborare)</Information>
     <SubtitleLineMaximumLength>Lungime maximă (linie unică)</SubtitleLineMaximumLength>
     <OptimalCharactersPerSecond>Număr optim de caractere/sec.</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>Maxim de caractere/sec.</MaximumCharactersPerSecond>
-    <MaximumWordsPerMinute></MaximumWordsPerMinute>
+    <MaximumWordsPerMinute>
+    </MaximumWordsPerMinute>
     <AutoWrapWhileTyping>Auto-încadrare în timpul tastării</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Durată minimă, în milisecunde</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Durată maximă, în milisecunde</DurationMaximumMilliseconds>
@@ -2614,22 +2629,36 @@ Continui?</RestoreDefaultSettingsMsg>
     <StyleCurrentFile>Stiluri în fișierul actual</StyleCurrentFile>
     <OverwriteX>Suprascrii {0}?</OverwriteX>
     <CategoryNote>Notă: Stilurile "Implicite" se vor aplica noilor fișiere ASSA</CategoryNote>
-    <CategoriesManage></CategoriesManage>
-    <MoveToCategory></MoveToCategory>
+    <CategoriesManage>
+    </CategoriesManage>
+    <MoveToCategory>
+    </MoveToCategory>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
-    <Category></Category>
-    <Categories></Categories>
-    <CategoryName></CategoryName>
-    <CategoryDelete></CategoryDelete>
-    <NewCategory></NewCategory>
-    <CategoryRename></CategoryRename>
-    <CategorySetDefault></CategorySetDefault>
-    <NumberOfStyles></NumberOfStyles>
-    <CategoryDefault></CategoryDefault>
-    <ChooseCategories></ChooseCategories>
-    <ImportCategoriesTitle></ImportCategoriesTitle>
-    <ExportCategoriesTitle></ExportCategoriesTitle>
+    <Category>
+    </Category>
+    <Categories>
+    </Categories>
+    <CategoryName>
+    </CategoryName>
+    <CategoryDelete>
+    </CategoryDelete>
+    <NewCategory>
+    </NewCategory>
+    <CategoryRename>
+    </CategoryRename>
+    <CategorySetDefault>
+    </CategorySetDefault>
+    <NumberOfStyles>
+    </NumberOfStyles>
+    <CategoryDefault>
+    </CategoryDefault>
+    <ChooseCategories>
+    </ChooseCategories>
+    <ImportCategoriesTitle>
+    </ImportCategoriesTitle>
+    <ExportCategoriesTitle>
+    </ExportCategoriesTitle>
   </SubStationAlphaStylesCategoriesManager>
   <PointSync>
     <Title>Punct de sincronizare</Title>
@@ -2788,8 +2817,10 @@ Reții schimbările?</KeepChangesMessage>
     <Message>Nume dosar nou ptr. baza de date caractere</Message>
   </VobSubOcrNewFolder>
   <VobSubOcrSetItalicAngle>
-    <Title></Title>
-    <Description></Description>
+    <Title>
+    </Title>
+    <Description>
+    </Description>
   </VobSubOcrSetItalicAngle>
   <OcrPreprocessing>
     <Title>Preprocesarea imaginii OCR</Title>

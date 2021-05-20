@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.6.1 (xth May 2021) BETA
+3.6.1 (20th May 2021)
 * NEW:
    * Add "Subtitle formats" settings - thx OmrSi
    * ASSA attachments manager - thx LeonCheung
