@@ -233,7 +233,7 @@
             // 
             this.numericUpDownPercent.Location = new System.Drawing.Point(182, 89);
             this.numericUpDownPercent.Maximum = new decimal(new int[] {
-            150,
+            999,
             0,
             0,
             0});
