@@ -263,6 +263,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             adjustDisplayTimeForSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.AdjustDisplayDurationForSelectedLines;
             applyDurationLimitsForSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.ApplyDurationLimitsForSelectedLines;
             setAspectRatio11ToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.SetAspectRatio11;
+            saveImageAsToolStripMenuItem.Text = LanguageSettings.Current.VobSubOcr.SaveSubtitleImageAs;
 
             labelStart.Text = LanguageSettings.Current.General.StartTime;
             labelEndTime.Text = LanguageSettings.Current.General.EndTime;
@@ -3823,6 +3824,63 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             if (errorText != labelSyntaxError.Text)
             {
                 labelSyntaxError.Text = errorText;
+            }
+        }
+
+        private void saveImageAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (subtitleListView1.SelectedItems.Count < 1)
+            {
+                return;
+            }
+
+            var index = subtitleListView1.SelectedIndices[0];
+            saveFileDialog1.Title = LanguageSettings.Current.VobSubOcr.SaveSubtitleImageAs;
+            saveFileDialog1.AddExtension = true;
+            saveFileDialog1.FileName = "Image" + (index + 1);
+            saveFileDialog1.Filter = "PNG image|*.png|BMP image|*.bmp|GIF image|*.gif|TIFF image|*.tiff";
+            saveFileDialog1.FilterIndex = 0;
+            var result = saveFileDialog1.ShowDialog(this);
+            if (result != DialogResult.OK)
+            {
+                return;
+            }
+
+            var extra = _extra[index];
+            var bd = _binSubtitles[index];
+            var bmp = extra.Bitmap ?? GetBitmap(bd);
+            if (bmp == null)
+            {
+                MessageBox.Show("No image!");
+                return;
+            }
+
+            try
+            {
+                if (saveFileDialog1.FilterIndex == 0)
+                {
+                    bmp.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Png);
+                }
+                else if (saveFileDialog1.FilterIndex == 1)
+                {
+                    bmp.Save(saveFileDialog1.FileName);
+                }
+                else if (saveFileDialog1.FilterIndex == 2)
+                {
+                    bmp.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Gif);
+                }
+                else
+                {
+                    bmp.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Tiff);
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message);
+            }
+            finally
+            {
+                bmp.Dispose();
             }
         }
     }
