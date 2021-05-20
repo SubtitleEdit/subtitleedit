@@ -5044,7 +5044,25 @@ $HorzAlign          =   Center
                         subNode = listNode.SelectSingleNode("FontSize");
                         if (subNode != null)
                         {
-                            item.FontSize = Convert.ToSingle(subNode.InnerText);
+                            item.FontSize = Convert.ToSingle(subNode.InnerText, CultureInfo.InvariantCulture);
+                        }
+
+                        subNode = listNode.SelectSingleNode("Bold");
+                        if (subNode != null)
+                        {
+                            item.Bold = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                        }
+
+                        subNode = listNode.SelectSingleNode("Italic");
+                        if (subNode != null)
+                        {
+                            item.Italic = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                        }
+
+                        subNode = listNode.SelectSingleNode("Underline");
+                        if (subNode != null)
+                        {
+                            item.Underline = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
                         }
 
                         subNode = listNode.SelectSingleNode("Primary");
@@ -5074,13 +5092,13 @@ $HorzAlign          =   Center
                         subNode = listNode.SelectSingleNode("ShadowWidth");
                         if (subNode != null)
                         {
-                            item.ShadowWidth = Convert.ToDecimal(subNode.InnerText);
+                            item.ShadowWidth = Convert.ToDecimal(subNode.InnerText, CultureInfo.InvariantCulture);
                         }
 
                         subNode = listNode.SelectSingleNode("OutlineWidth");
                         if (subNode != null)
                         {
-                            item.OutlineWidth = Convert.ToDecimal(subNode.InnerText);
+                            item.OutlineWidth = Convert.ToDecimal(subNode.InnerText, CultureInfo.InvariantCulture);
                         }
 
                         subNode = listNode.SelectSingleNode("Alignment");
@@ -5092,19 +5110,19 @@ $HorzAlign          =   Center
                         subNode = listNode.SelectSingleNode("MarginLeft");
                         if (subNode != null)
                         {
-                            item.MarginLeft = Convert.ToInt32(subNode.InnerText);
+                            item.MarginLeft = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
                         }
 
                         subNode = listNode.SelectSingleNode("MarginRight");
                         if (subNode != null)
                         {
-                            item.MarginRight = Convert.ToInt32(subNode.InnerText);
+                            item.MarginRight = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
                         }
 
                         subNode = listNode.SelectSingleNode("MarginVertical");
                         if (subNode != null)
                         {
-                            item.MarginVertical = Convert.ToInt32(subNode.InnerText);
+                            item.MarginVertical = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
                         }
 
                         subNode = listNode.SelectSingleNode("BorderStyle");
@@ -8550,17 +8568,20 @@ $HorzAlign          =   Center
                             textWriter.WriteStartElement("Style");
                             textWriter.WriteElementString("Name", style.Name);
                             textWriter.WriteElementString("FontName", style.FontName);
-                            textWriter.WriteElementString("FontSize", style.FontSize.ToString());
-                            textWriter.WriteElementString("Primary", style.Primary.ToArgb().ToString());
-                            textWriter.WriteElementString("Secondary", style.Secondary.ToArgb().ToString());
-                            textWriter.WriteElementString("Outline", style.Outline.ToArgb().ToString());
-                            textWriter.WriteElementString("Background", style.Background.ToArgb().ToString());
-                            textWriter.WriteElementString("ShadowWidth", style.ShadowWidth.ToString());
-                            textWriter.WriteElementString("OutlineWidth", style.OutlineWidth.ToString());
+                            textWriter.WriteElementString("FontSize", style.FontSize.ToString(CultureInfo.InvariantCulture));
+                            textWriter.WriteElementString("Bold", style.Bold.ToString(CultureInfo.InvariantCulture));
+                            textWriter.WriteElementString("Italic", style.Italic.ToString(CultureInfo.InvariantCulture));
+                            textWriter.WriteElementString("Underline", style.Underline.ToString(CultureInfo.InvariantCulture));
+                            textWriter.WriteElementString("Primary", style.Primary.ToArgb().ToString(CultureInfo.InvariantCulture));
+                            textWriter.WriteElementString("Secondary", style.Secondary.ToArgb().ToString(CultureInfo.InvariantCulture));
+                            textWriter.WriteElementString("Outline", style.Outline.ToArgb().ToString(CultureInfo.InvariantCulture));
+                            textWriter.WriteElementString("Background", style.Background.ToArgb().ToString(CultureInfo.InvariantCulture));
+                            textWriter.WriteElementString("ShadowWidth", style.ShadowWidth.ToString(CultureInfo.InvariantCulture));
+                            textWriter.WriteElementString("OutlineWidth", style.OutlineWidth.ToString(CultureInfo.InvariantCulture));
                             textWriter.WriteElementString("Alignment", style.Alignment);
-                            textWriter.WriteElementString("MarginLeft", style.MarginLeft.ToString());
-                            textWriter.WriteElementString("MarginRight", style.MarginRight.ToString());
-                            textWriter.WriteElementString("MarginVertical", style.MarginVertical.ToString());
+                            textWriter.WriteElementString("MarginLeft", style.MarginLeft.ToString(CultureInfo.InvariantCulture));
+                            textWriter.WriteElementString("MarginRight", style.MarginRight.ToString(CultureInfo.InvariantCulture));
+                            textWriter.WriteElementString("MarginVertical", style.MarginVertical.ToString(CultureInfo.InvariantCulture));
                             textWriter.WriteElementString("BorderStyle", style.BorderStyle);
                             textWriter.WriteEndElement();
                         }
