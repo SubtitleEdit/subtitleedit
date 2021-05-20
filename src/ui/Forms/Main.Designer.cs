@@ -324,7 +324,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemUnbreakLines = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorBreakLines = new System.Windows.Forms.ToolStripSeparator();
             this.typeEffectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.karokeeEffectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.karaokeEffectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorAdvancedFunctions = new System.Windows.Forms.ToolStripSeparator();
             this.showSelectedLinesEarlierlaterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.visualSyncSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -2565,7 +2565,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemUnbreakLines,
             this.toolStripSeparatorBreakLines,
             this.typeEffectToolStripMenuItem,
-            this.karokeeEffectToolStripMenuItem,
+            this.karaokeEffectToolStripMenuItem,
             this.toolStripSeparatorAdvancedFunctions,
             this.showSelectedLinesEarlierlaterToolStripMenuItem,
             this.visualSyncSelectedLinesToolStripMenuItem,
@@ -2970,12 +2970,12 @@ namespace Nikse.SubtitleEdit.Forms
             this.typeEffectToolStripMenuItem.Text = "Typewriter effect...";
             this.typeEffectToolStripMenuItem.Click += new System.EventHandler(this.TypeEffectToolStripMenuItemClick);
             // 
-            // karokeeEffectToolStripMenuItem
+            // karaokeEffectToolStripMenuItem
             // 
-            this.karokeeEffectToolStripMenuItem.Name = "karokeeEffectToolStripMenuItem";
-            this.karokeeEffectToolStripMenuItem.Size = new System.Drawing.Size(284, 22);
-            this.karokeeEffectToolStripMenuItem.Text = "Karaoke effect...";
-            this.karokeeEffectToolStripMenuItem.Click += new System.EventHandler(this.KarokeeEffectToolStripMenuItemClick);
+            this.karaokeEffectToolStripMenuItem.Name = "karaokeEffectToolStripMenuItem";
+            this.karaokeEffectToolStripMenuItem.Size = new System.Drawing.Size(284, 22);
+            this.karaokeEffectToolStripMenuItem.Text = "Karaoke effect...";
+            this.karaokeEffectToolStripMenuItem.Click += new System.EventHandler(this.KaraokeEffectToolStripMenuItemClick);
             // 
             // toolStripSeparatorAdvancedFunctions
             // 
@@ -5556,7 +5556,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Label labelTextLineTotal;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem typeEffectToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem karokeeEffectToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem karaokeEffectToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator10;
         private Nikse.SubtitleEdit.Controls.TimeUpDown timeUpDownStartTime;
         private System.Windows.Forms.ToolStripMenuItem ChangeCasingToolStripMenuItem;

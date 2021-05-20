@@ -1676,7 +1676,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemAutoBreakLines.Text = _language.Menu.ContextMenu.AutoBalanceSelectedLines;
             toolStripMenuItemUnbreakLines.Text = _language.Menu.ContextMenu.RemoveLineBreaksFromSelectedLines;
             typeEffectToolStripMenuItem.Text = _language.Menu.ContextMenu.TypewriterEffect;
-            karokeeEffectToolStripMenuItem.Text = _language.Menu.ContextMenu.KaraokeEffect;
+            karaokeEffectToolStripMenuItem.Text = _language.Menu.ContextMenu.KaraokeEffect;
             showSelectedLinesEarlierlaterToolStripMenuItem.Text = _language.Menu.ContextMenu.ShowSelectedLinesEarlierLater;
             visualSyncSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.VisualSyncSelectedLines;
             toolStripMenuItemGoogleMicrosoftTranslateSelLine.Text = _language.Menu.ContextMenu.GoogleAndMicrosoftTranslateSelectedLine;
@@ -8366,7 +8366,7 @@ namespace Nikse.SubtitleEdit.Forms
                 splitLineToolStripMenuItem.Visible = true;
                 toolStripSeparator7.Visible = true;
                 typeEffectToolStripMenuItem.Visible = noNetWorkSession;
-                karokeeEffectToolStripMenuItem.Visible = noNetWorkSession;
+                karaokeEffectToolStripMenuItem.Visible = noNetWorkSession;
                 toolStripSeparatorAdvancedFunctions.Visible = noNetWorkSession;
                 adjustDisplayTimeForSelectedLinesToolStripMenuItem.Visible = true;
                 visualSyncSelectedLinesToolStripMenuItem.Visible = true;
@@ -12729,7 +12729,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void KarokeeEffectToolStripMenuItemClick(object sender, EventArgs e)
+        private void KaraokeEffectToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (SubtitleListview1.SelectedItems.Count > 0)
             {
