@@ -21508,7 +21508,6 @@ namespace Nikse.SubtitleEdit.Forms
             bool subtitleLoaded = IsSubtitleLoaded;
             toolStripMenuItemStatistics.Enabled = subtitleLoaded;
             toolStripMenuItemExport.Enabled = subtitleLoaded;
-            openOriginalToolStripMenuItem.Enabled = subtitleLoaded;
             toolStripMenuItemOpenKeepVideo.Enabled = VideoFileName != null;
             if (subtitleLoaded && Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0)
             {
