@@ -1513,6 +1513,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemMergeLinesWithSameTimeCodes.Text = _language.Menu.Tools.MergeSameTimeCodes;
             toolStripMenuItemAutoSplitLongLines.Text = _language.Menu.Tools.SplitLongLines;
             breaksplitLongLinesToolStripMenuItem.Text = _language.Menu.Tools.SplitLongLines;
+            mergeSentencesToolStripMenuItem.Text = _language.MergeSentences;
             setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem.Text = _language.Menu.Tools.MinimumDisplayTimeBetweenParagraphs;
             toolStripMenuItemSortBy.Text = _language.Menu.Tools.SortBy;
             netflixQualityCheckToolStripMenuItem.Text = _language.Menu.Tools.NetflixQualityCheck;
