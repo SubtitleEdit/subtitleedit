@@ -391,6 +391,9 @@ namespace Nikse.SubtitleEdit.Core.Common
             BatchConvertTsFileNameAppend = ".{two-letter-country-code}";
             ModifySelectionRule = "Contains";
             ModifySelectionText = string.Empty;
+            ImportTextDurationAuto = true;
+            ImportTextGap = 84;
+            ImportTextFixedDuration = 2500;
             GenerateTimeCodePatterns = "HH:mm:ss;yyyy-MM-dd;dddd dd MMMM yyyy <br>HH:mm:ss;dddd dd MMMM yyyy <br>hh:mm:ss tt;s";
             MusicSymbolStyle = "Double"; // 'Double' or 'Single'
             ExportFontColor = Color.White;
