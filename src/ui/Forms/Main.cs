@@ -10651,6 +10651,11 @@ namespace Nikse.SubtitleEdit.Forms
                 newParagraph.StartTime.TotalMilliseconds = TimeCode.MaxTimeTotalMilliseconds;
                 newParagraph.EndTime.TotalMilliseconds = TimeCode.MaxTimeTotalMilliseconds;
             }
+            else if (currentParagraph.Duration.TotalMilliseconds <= 1)
+            {
+                newParagraph.StartTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
+                newParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
+            }
             else
             {
                 if (splitSeconds.HasValue && splitSeconds.Value > (currentParagraph.StartTime.TotalSeconds + 0.2) && splitSeconds.Value < (currentParagraph.EndTime.TotalSeconds - 0.2))
