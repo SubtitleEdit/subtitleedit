@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.Common
@@ -352,7 +353,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             for (int index = 0; index < max; index++)
             {
                 var ch = s[index];
-                if (!char.IsControl(ch) && !char.IsWhiteSpace(ch))
+                if (!char.IsControl(ch) && !char.IsWhiteSpace(ch) && !UnicodeControlChars.Contains(ch))
                 {
                     return false;
                 }

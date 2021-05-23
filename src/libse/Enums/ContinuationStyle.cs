@@ -4,9 +4,11 @@
     {
         None,
         NoneTrailingDots,
+        NoneEllipsisForPauses,
         NoneLeadingTrailingDots,
         OnlyTrailingDots,
         LeadingTrailingDots,
+        LeadingTrailingEllipsis,
         LeadingTrailingDash,
         LeadingTrailingDashDots,
     }

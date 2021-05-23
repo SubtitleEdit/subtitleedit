@@ -97,21 +97,16 @@
             this.labelDefaultFrameRate = new System.Windows.Forms.Label();
             this.panelSubtitleFormats = new System.Windows.Forms.Panel();
             this.groupBoxSubtitleFormats = new System.Windows.Forms.GroupBox();
-            this.labelDefaultSubtitleFormat = new System.Windows.Forms.Label();
-            this.comboBoxSubtitleFormats = new System.Windows.Forms.ComboBox();
-            this.labelDefaultSaveAsFormat = new System.Windows.Forms.Label();
-            this.comboBoxSubtitleSaveAsFormats = new System.Windows.Forms.ComboBox();
             this.groupBoxFavoriteSubtitleFormats = new System.Windows.Forms.GroupBox();
-            this.labelFavoriteFormats = new System.Windows.Forms.Label();
-            this.listBoxFavoriteSubtitleFormats = new System.Windows.Forms.ListBox();
-            this.buttonMoveToFavoriteFormats = new System.Windows.Forms.Button();
-            this.buttonRemoveFromFavoriteFormats = new System.Windows.Forms.Button();
-            this.labelFormats = new System.Windows.Forms.Label();
-            this.labelFormatsSearch = new System.Windows.Forms.Label();
-            this.textBoxFormatsSearch = new System.Windows.Forms.TextBox();
-            this.buttonFormatsSearchClear = new System.Windows.Forms.Button();
-            this.listBoxSubtitleFormats = new System.Windows.Forms.ListBox();
             this.labelFavoriteSubtitleFormatsNote = new System.Windows.Forms.Label();
+            this.listBoxSubtitleFormats = new System.Windows.Forms.ListBox();
+            this.buttonFormatsSearchClear = new System.Windows.Forms.Button();
+            this.textBoxFormatsSearch = new System.Windows.Forms.TextBox();
+            this.labelFormatsSearch = new System.Windows.Forms.Label();
+            this.labelFormats = new System.Windows.Forms.Label();
+            this.buttonRemoveFromFavoriteFormats = new System.Windows.Forms.Button();
+            this.buttonMoveToFavoriteFormats = new System.Windows.Forms.Button();
+            this.listBoxFavoriteSubtitleFormats = new System.Windows.Forms.ListBox();
             this.contextMenuStripFavoriteFormats = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -120,6 +115,11 @@
             this.moveDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.moveToTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.moveToBottomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.labelFavoriteFormats = new System.Windows.Forms.Label();
+            this.comboBoxSubtitleSaveAsFormats = new System.Windows.Forms.ComboBox();
+            this.labelDefaultSaveAsFormat = new System.Windows.Forms.Label();
+            this.comboBoxSubtitleFormats = new System.Windows.Forms.ComboBox();
+            this.labelDefaultSubtitleFormat = new System.Windows.Forms.Label();
             this.panelShortcuts = new System.Windows.Forms.Panel();
             this.groupBoxShortcuts = new System.Windows.Forms.GroupBox();
             this.buttonShortcutsClear = new System.Windows.Forms.Button();
@@ -1336,7 +1336,7 @@
             // groupBoxSubtitleFormats
             // 
             this.groupBoxSubtitleFormats.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxSubtitleFormats.Controls.Add(this.groupBoxFavoriteSubtitleFormats);
             this.groupBoxSubtitleFormats.Controls.Add(this.comboBoxSubtitleSaveAsFormats);
@@ -1350,45 +1350,10 @@
             this.groupBoxSubtitleFormats.TabStop = false;
             this.groupBoxSubtitleFormats.Text = "Subtitle formats";
             // 
-            // labelDefaultSubtitleFormat
-            // 
-            this.labelDefaultSubtitleFormat.AutoSize = true;
-            this.labelDefaultSubtitleFormat.Location = new System.Drawing.Point(8, 30);
-            this.labelDefaultSubtitleFormat.Name = "labelDefaultSubtitleFormat";
-            this.labelDefaultSubtitleFormat.Size = new System.Drawing.Size(86, 13);
-            this.labelDefaultSubtitleFormat.TabIndex = 0;
-            this.labelDefaultSubtitleFormat.Text = "Default format";
-            // 
-            // comboBoxSubtitleFormats
-            // 
-            this.comboBoxSubtitleFormats.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxSubtitleFormats.FormattingEnabled = true;
-            this.comboBoxSubtitleFormats.Location = new System.Drawing.Point(100, 26);
-            this.comboBoxSubtitleFormats.Name = "comboBoxSubtitleFormats";
-            this.comboBoxSubtitleFormats.Size = new System.Drawing.Size(200, 21);
-            this.comboBoxSubtitleFormats.TabIndex = 1;
-            // 
-            // labelDefaultSaveAsFormat
-            // 
-            this.labelDefaultSaveAsFormat.AutoSize = true;
-            this.labelDefaultSaveAsFormat.Location = new System.Drawing.Point(8, 64);
-            this.labelDefaultSaveAsFormat.Name = "labelDefaultSaveAsFormat";
-            this.labelDefaultSaveAsFormat.Size = new System.Drawing.Size(86, 13);
-            this.labelDefaultSaveAsFormat.TabIndex = 2;
-            this.labelDefaultSaveAsFormat.Text = "Default save as format";
-            // 
-            // comboBoxSubtitleSaveAsFormats
-            // 
-            this.comboBoxSubtitleSaveAsFormats.FormattingEnabled = true;
-            this.comboBoxSubtitleSaveAsFormats.Location = new System.Drawing.Point(100, 60);
-            this.comboBoxSubtitleSaveAsFormats.Name = "comboBoxSubtitleSaveAsFormats";
-            this.comboBoxSubtitleSaveAsFormats.Size = new System.Drawing.Size(200, 21);
-            this.comboBoxSubtitleSaveAsFormats.TabIndex = 3;
-            // 
             // groupBoxFavoriteSubtitleFormats
             // 
-            this.groupBoxFavoriteSubtitleFormats.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.groupBoxFavoriteSubtitleFormats.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxFavoriteSubtitleFormats.Controls.Add(this.labelFavoriteSubtitleFormatsNote);
             this.groupBoxFavoriteSubtitleFormats.Controls.Add(this.listBoxSubtitleFormats);
@@ -1407,76 +1372,26 @@
             this.groupBoxFavoriteSubtitleFormats.TabStop = false;
             this.groupBoxFavoriteSubtitleFormats.Text = "Favorites";
             // 
-            // labelFavoriteFormats
+            // labelFavoriteSubtitleFormatsNote
             // 
-            this.labelFavoriteFormats.AutoSize = true;
-            this.labelFavoriteFormats.Location = new System.Drawing.Point(48, 34);
-            this.labelFavoriteFormats.Name = "labelFavoriteFormats";
-            this.labelFavoriteFormats.Size = new System.Drawing.Size(86, 13);
-            this.labelFavoriteFormats.TabIndex = 0;
-            this.labelFavoriteFormats.Text = "Favorite formats";
+            this.labelFavoriteSubtitleFormatsNote.AutoSize = true;
+            this.labelFavoriteSubtitleFormatsNote.Location = new System.Drawing.Point(10, 367);
+            this.labelFavoriteSubtitleFormatsNote.Name = "labelFavoriteSubtitleFormatsNote";
+            this.labelFavoriteSubtitleFormatsNote.Size = new System.Drawing.Size(540, 13);
+            this.labelFavoriteSubtitleFormatsNote.TabIndex = 9;
+            this.labelFavoriteSubtitleFormatsNote.Text = "Note: favorite formats will be shown first when selecting a format, the default f" +
+    "ormat will always be shown first";
             // 
-            // listBoxFavoriteSubtitleFormats
+            // listBoxSubtitleFormats
             // 
-            this.listBoxFavoriteSubtitleFormats.ContextMenuStrip = contextMenuStripFavoriteFormats;
-            this.listBoxFavoriteSubtitleFormats.FormattingEnabled = true;
-            this.listBoxFavoriteSubtitleFormats.ItemHeight = 16;
-            this.listBoxFavoriteSubtitleFormats.Location = new System.Drawing.Point(48, 50);
-            this.listBoxFavoriteSubtitleFormats.Name = "listBoxFavoriteSubtitleFormats";
-            this.listBoxFavoriteSubtitleFormats.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.listBoxFavoriteSubtitleFormats.Size = new System.Drawing.Size(300, 277);
-            this.listBoxFavoriteSubtitleFormats.TabIndex = 1;
-            this.listBoxFavoriteSubtitleFormats.SelectedIndexChanged += new System.EventHandler(this.listBoxFavoriteSubtitleFormats_SelectedIndexChanged);
-            this.listBoxFavoriteSubtitleFormats.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBoxFavoriteSubtitleFormats_KeyDown);
-            this.listBoxFavoriteSubtitleFormats.LostFocus += new System.EventHandler(listBoxFavoriteSubtitleFormats_LostFocus);
-            // 
-            // buttonMoveToFavoriteFormats
-            // 
-            this.buttonMoveToFavoriteFormats.Enabled = false;
-            this.buttonMoveToFavoriteFormats.Location = new System.Drawing.Point(363, 153);
-            this.buttonMoveToFavoriteFormats.Name = "buttonMoveToFavoriteFormats";
-            this.buttonMoveToFavoriteFormats.Size = new System.Drawing.Size(111, 23);
-            this.buttonMoveToFavoriteFormats.TabIndex = 2;
-            this.buttonMoveToFavoriteFormats.Text = " < ";
-            this.buttonMoveToFavoriteFormats.UseVisualStyleBackColor = true;
-            this.buttonMoveToFavoriteFormats.Click += new System.EventHandler(this.buttonMoveToFavorites_Click);
-            // 
-            // buttonRemoveFromFavoriteFormats
-            // 
-            this.buttonRemoveFromFavoriteFormats.Enabled = false;
-            this.buttonRemoveFromFavoriteFormats.Location = new System.Drawing.Point(363, 202);
-            this.buttonRemoveFromFavoriteFormats.Name = "buttonRemoveFromFavoriteFormats";
-            this.buttonRemoveFromFavoriteFormats.Size = new System.Drawing.Size(111, 23);
-            this.buttonRemoveFromFavoriteFormats.TabIndex = 3;
-            this.buttonRemoveFromFavoriteFormats.Text = "Remove";
-            this.buttonRemoveFromFavoriteFormats.UseVisualStyleBackColor = true;
-            this.buttonRemoveFromFavoriteFormats.Click += new System.EventHandler(this.buttonRemoveFromFavoriteFormats_Click);
-            // 
-            // labelFormats
-            // 
-            this.labelFormats.AutoSize = true;
-            this.labelFormats.Location = new System.Drawing.Point(489, 34);
-            this.labelFormats.Name = "labelFormats";
-            this.labelFormats.Size = new System.Drawing.Size(86, 13);
-            this.labelFormats.TabIndex = 4;
-            this.labelFormats.Text = "Formats";
-            // 
-            // labelFormatsSearch
-            // 
-            this.labelFormatsSearch.AutoSize = true;
-            this.labelFormatsSearch.Location = new System.Drawing.Point(489, 56);
-            this.labelFormatsSearch.Name = "labelFormatsSearch";
-            this.labelFormatsSearch.Size = new System.Drawing.Size(40, 13);
-            this.labelFormatsSearch.TabIndex = 5;
-            this.labelFormatsSearch.Text = "Search";
-            // 
-            // textBoxFormatsSearch
-            // 
-            this.textBoxFormatsSearch.Location = new System.Drawing.Point(529, 52);
-            this.textBoxFormatsSearch.Name = "textBoxShortcutSearch";
-            this.textBoxFormatsSearch.Size = new System.Drawing.Size(151, 21);
-            this.textBoxFormatsSearch.TabIndex = 6;
-            this.textBoxFormatsSearch.TextChanged += new System.EventHandler(this.textBoxFormatsSearch_TextChanged);
+            this.listBoxSubtitleFormats.FormattingEnabled = true;
+            this.listBoxSubtitleFormats.Location = new System.Drawing.Point(489, 76);
+            this.listBoxSubtitleFormats.Name = "listBoxSubtitleFormats";
+            this.listBoxSubtitleFormats.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.listBoxSubtitleFormats.Size = new System.Drawing.Size(300, 251);
+            this.listBoxSubtitleFormats.TabIndex = 8;
+            this.listBoxSubtitleFormats.SelectedIndexChanged += new System.EventHandler(this.listBoxSubtitleFormats_SelectedIndexChanged);
+            this.listBoxSubtitleFormats.LostFocus += new System.EventHandler(this.listBoxSubtitleFormats_LostFocus);
             // 
             // buttonFormatsSearchClear
             // 
@@ -1489,31 +1404,71 @@
             this.buttonFormatsSearchClear.UseVisualStyleBackColor = true;
             this.buttonFormatsSearchClear.Click += new System.EventHandler(this.buttonFormatsSearchClear_Click);
             // 
-            // listBoxSubtitleFormats
+            // textBoxFormatsSearch
             // 
-            this.listBoxSubtitleFormats.FormattingEnabled = true;
-            this.listBoxSubtitleFormats.ItemHeight = 16;
-            this.listBoxSubtitleFormats.Location = new System.Drawing.Point(489, 76);
-            this.listBoxSubtitleFormats.Name = "listBoxSubtitleFormats";
-            this.listBoxSubtitleFormats.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.listBoxSubtitleFormats.Size = new System.Drawing.Size(300, 260);
-            this.listBoxSubtitleFormats.TabIndex = 8;
-            this.listBoxSubtitleFormats.SelectedIndexChanged += new System.EventHandler(this.listBoxSubtitleFormats_SelectedIndexChanged);
-            this.listBoxSubtitleFormats.LostFocus += new System.EventHandler(this.listBoxSubtitleFormats_LostFocus);
+            this.textBoxFormatsSearch.Location = new System.Drawing.Point(529, 52);
+            this.textBoxFormatsSearch.Name = "textBoxFormatsSearch";
+            this.textBoxFormatsSearch.Size = new System.Drawing.Size(151, 21);
+            this.textBoxFormatsSearch.TabIndex = 6;
+            this.textBoxFormatsSearch.TextChanged += new System.EventHandler(this.textBoxFormatsSearch_TextChanged);
             // 
-            // labelFavoriteSubtitleFormatsNote
+            // labelFormatsSearch
             // 
-            this.labelFavoriteSubtitleFormatsNote.AutoSize = true;
-            this.labelFavoriteSubtitleFormatsNote.Location = new System.Drawing.Point(10, 367);
-            this.labelFavoriteSubtitleFormatsNote.Name = "labelFavoriteSubtitleFormatsNote";
-            this.labelFavoriteSubtitleFormatsNote.Size = new System.Drawing.Size(278, 13);
-            this.labelFavoriteSubtitleFormatsNote.TabIndex = 9;
-            this.labelFavoriteSubtitleFormatsNote.Text = "Note: favorite formats will be shown first when selecting a format, the default format will always be shown first";
+            this.labelFormatsSearch.AutoSize = true;
+            this.labelFormatsSearch.Location = new System.Drawing.Point(489, 56);
+            this.labelFormatsSearch.Name = "labelFormatsSearch";
+            this.labelFormatsSearch.Size = new System.Drawing.Size(40, 13);
+            this.labelFormatsSearch.TabIndex = 5;
+            this.labelFormatsSearch.Text = "Search";
+            // 
+            // labelFormats
+            // 
+            this.labelFormats.AutoSize = true;
+            this.labelFormats.Location = new System.Drawing.Point(489, 34);
+            this.labelFormats.Name = "labelFormats";
+            this.labelFormats.Size = new System.Drawing.Size(46, 13);
+            this.labelFormats.TabIndex = 4;
+            this.labelFormats.Text = "Formats";
+            // 
+            // buttonRemoveFromFavoriteFormats
+            // 
+            this.buttonRemoveFromFavoriteFormats.Enabled = false;
+            this.buttonRemoveFromFavoriteFormats.Location = new System.Drawing.Point(363, 202);
+            this.buttonRemoveFromFavoriteFormats.Name = "buttonRemoveFromFavoriteFormats";
+            this.buttonRemoveFromFavoriteFormats.Size = new System.Drawing.Size(111, 23);
+            this.buttonRemoveFromFavoriteFormats.TabIndex = 3;
+            this.buttonRemoveFromFavoriteFormats.Text = "Remove";
+            this.buttonRemoveFromFavoriteFormats.UseVisualStyleBackColor = true;
+            this.buttonRemoveFromFavoriteFormats.Click += new System.EventHandler(this.buttonRemoveFromFavoriteFormats_Click);
+            // 
+            // buttonMoveToFavoriteFormats
+            // 
+            this.buttonMoveToFavoriteFormats.Enabled = false;
+            this.buttonMoveToFavoriteFormats.Location = new System.Drawing.Point(363, 153);
+            this.buttonMoveToFavoriteFormats.Name = "buttonMoveToFavoriteFormats";
+            this.buttonMoveToFavoriteFormats.Size = new System.Drawing.Size(111, 23);
+            this.buttonMoveToFavoriteFormats.TabIndex = 2;
+            this.buttonMoveToFavoriteFormats.Text = " < ";
+            this.buttonMoveToFavoriteFormats.UseVisualStyleBackColor = true;
+            this.buttonMoveToFavoriteFormats.Click += new System.EventHandler(this.buttonMoveToFavorites_Click);
+            // 
+            // listBoxFavoriteSubtitleFormats
+            // 
+            this.listBoxFavoriteSubtitleFormats.ContextMenuStrip = this.contextMenuStripFavoriteFormats;
+            this.listBoxFavoriteSubtitleFormats.FormattingEnabled = true;
+            this.listBoxFavoriteSubtitleFormats.Location = new System.Drawing.Point(48, 50);
+            this.listBoxFavoriteSubtitleFormats.Name = "listBoxFavoriteSubtitleFormats";
+            this.listBoxFavoriteSubtitleFormats.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.listBoxFavoriteSubtitleFormats.Size = new System.Drawing.Size(300, 277);
+            this.listBoxFavoriteSubtitleFormats.TabIndex = 1;
+            this.listBoxFavoriteSubtitleFormats.SelectedIndexChanged += new System.EventHandler(this.listBoxFavoriteSubtitleFormats_SelectedIndexChanged);
+            this.listBoxFavoriteSubtitleFormats.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBoxFavoriteSubtitleFormats_KeyDown);
+            this.listBoxFavoriteSubtitleFormats.LostFocus += new System.EventHandler(this.listBoxFavoriteSubtitleFormats_LostFocus);
             // 
             // contextMenuStripFavoriteFormats
             // 
             this.contextMenuStripFavoriteFormats.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-                this.deleteToolStripMenuItem,
+            this.deleteToolStripMenuItem,
             this.deleteAllToolStripMenuItem,
             this.toolStripSeparator,
             this.moveUpToolStripMenuItem,
@@ -1521,7 +1476,7 @@
             this.moveToTopToolStripMenuItem,
             this.moveToBottomToolStripMenuItem});
             this.contextMenuStripFavoriteFormats.Name = "contextMenuStripFavoriteFormats";
-            this.contextMenuStripFavoriteFormats.Size = new System.Drawing.Size(216, 214);
+            this.contextMenuStripFavoriteFormats.Size = new System.Drawing.Size(216, 142);
             this.contextMenuStripFavoriteFormats.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripFavoriteFormats_Opening);
             // 
             // deleteToolStripMenuItem
@@ -1576,6 +1531,49 @@
             this.moveToBottomToolStripMenuItem.Text = "Move to bottom";
             this.moveToBottomToolStripMenuItem.Click += new System.EventHandler(this.moveToBottomToolStripMenuItem_Click);
             // 
+            // labelFavoriteFormats
+            // 
+            this.labelFavoriteFormats.AutoSize = true;
+            this.labelFavoriteFormats.Location = new System.Drawing.Point(48, 34);
+            this.labelFavoriteFormats.Name = "labelFavoriteFormats";
+            this.labelFavoriteFormats.Size = new System.Drawing.Size(87, 13);
+            this.labelFavoriteFormats.TabIndex = 0;
+            this.labelFavoriteFormats.Text = "Favorite formats";
+            // 
+            // comboBoxSubtitleSaveAsFormats
+            // 
+            this.comboBoxSubtitleSaveAsFormats.FormattingEnabled = true;
+            this.comboBoxSubtitleSaveAsFormats.Location = new System.Drawing.Point(100, 60);
+            this.comboBoxSubtitleSaveAsFormats.Name = "comboBoxSubtitleSaveAsFormats";
+            this.comboBoxSubtitleSaveAsFormats.Size = new System.Drawing.Size(200, 21);
+            this.comboBoxSubtitleSaveAsFormats.TabIndex = 3;
+            // 
+            // labelDefaultSaveAsFormat
+            // 
+            this.labelDefaultSaveAsFormat.AutoSize = true;
+            this.labelDefaultSaveAsFormat.Location = new System.Drawing.Point(8, 64);
+            this.labelDefaultSaveAsFormat.Name = "labelDefaultSaveAsFormat";
+            this.labelDefaultSaveAsFormat.Size = new System.Drawing.Size(117, 13);
+            this.labelDefaultSaveAsFormat.TabIndex = 2;
+            this.labelDefaultSaveAsFormat.Text = "Default save as format";
+            // 
+            // comboBoxSubtitleFormats
+            // 
+            this.comboBoxSubtitleFormats.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxSubtitleFormats.FormattingEnabled = true;
+            this.comboBoxSubtitleFormats.Location = new System.Drawing.Point(100, 26);
+            this.comboBoxSubtitleFormats.Name = "comboBoxSubtitleFormats";
+            this.comboBoxSubtitleFormats.Size = new System.Drawing.Size(200, 21);
+            this.comboBoxSubtitleFormats.TabIndex = 1;
+            // 
+            // labelDefaultSubtitleFormat
+            // 
+            this.labelDefaultSubtitleFormat.AutoSize = true;
+            this.labelDefaultSubtitleFormat.Location = new System.Drawing.Point(8, 30);
+            this.labelDefaultSubtitleFormat.Name = "labelDefaultSubtitleFormat";
+            this.labelDefaultSubtitleFormat.Size = new System.Drawing.Size(77, 13);
+            this.labelDefaultSubtitleFormat.TabIndex = 0;
+            this.labelDefaultSubtitleFormat.Text = "Default format";
             // 
             // panelShortcuts
             // 
@@ -4919,10 +4917,10 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
+            this.Controls.Add(this.panelGeneral);
             this.Controls.Add(this.panelFont);
             this.Controls.Add(this.panelNetwork);
             this.Controls.Add(this.panelSubtitleFormats);
-            this.Controls.Add(this.panelGeneral);
             this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.panelWordLists);
             this.Controls.Add(this.panelTools);

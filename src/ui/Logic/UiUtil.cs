@@ -1350,6 +1350,10 @@ namespace Nikse.SubtitleEdit.Logic
                     return LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingDash;
                 case ContinuationStyle.LeadingTrailingDashDots:
                     return LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingDashDots;
+                case ContinuationStyle.LeadingTrailingEllipsis:
+                    return LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingEllipsis;
+                case ContinuationStyle.NoneEllipsisForPauses:
+                    return LanguageSettings.Current.Settings.ContinuationStyleNoneTrailingEllipsis;
                 default:
                     return LanguageSettings.Current.Settings.ContinuationStyleNone;
             }

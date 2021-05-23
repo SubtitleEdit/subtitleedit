@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         private ContinuationUtilities.ContinuationProfile _continuationProfile;
         private List<string> _names;
-        public string FixAction { get; set; }        
+        public string FixAction { get; set; }
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
@@ -36,12 +36,12 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 _continuationProfile.SuffixApplyIfComma = false;
                 _continuationProfile.GapSuffixApplyIfComma = false;
 
-                if (_continuationProfile.Prefix == "...")
+                if (_continuationProfile.Prefix == "..." || _continuationProfile.Prefix == "…")
                 {
                     _continuationProfile.PrefixAddSpace = true;
                 }
 
-                if (_continuationProfile.GapPrefix == "...")
+                if (_continuationProfile.GapPrefix == "..." || _continuationProfile.GapPrefix == "…")
                 {
                     _continuationProfile.GapPrefixAddSpace = true;
                 }
@@ -52,11 +52,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             bool inSentence = false;
             bool? inItalicSentence = null;
 
-            // Loop paragraphs
             for (int i = 0; i < subtitle.Paragraphs.Count - 1; i++)
             {
-                Paragraph p = subtitle.Paragraphs[i];
-                Paragraph pNext = subtitle.Paragraphs[i + 1];
+                var p = subtitle.Paragraphs[i];
+                var pNext = subtitle.Paragraphs[i + 1];
                 var oldText = p.Text;
                 var oldTextNext = pNext.Text;
                 var text = ContinuationUtilities.SanitizeString(p.Text);
@@ -279,13 +278,13 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         {
             if (_names == null)
             {
-                NameList nameList = new NameList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
+                var nameList = new NameList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
                 _names = nameList.GetAllNames();
             }
 
             if (_names != null)
             {
-                foreach (string name in _names)
+                foreach (var name in _names)
                 {
                     if (input.StartsWith(name + " ", StringComparison.Ordinal) || input.StartsWith(name + ",", StringComparison.Ordinal) || input.StartsWith(name + ":", StringComparison.Ordinal))
                     {
