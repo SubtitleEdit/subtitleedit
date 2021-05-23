@@ -1366,7 +1366,7 @@ $HorzAlign          =   Center
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
                 DialogStyle = DialogType.DashBothLinesWithoutSpace,
-                ContinuationStyle = ContinuationStyle.NoneTrailingDots
+                ContinuationStyle = ContinuationStyle.NoneEllipsisForPauses
             });
             profiles.Add(new RulesProfile
             {
@@ -1382,7 +1382,7 @@ $HorzAlign          =   Center
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
                 DialogStyle = DialogType.DashBothLinesWithSpace,
-                ContinuationStyle = ContinuationStyle.NoneTrailingDots
+                ContinuationStyle = ContinuationStyle.NoneEllipsisForPauses
             });
             profiles.Add(new RulesProfile
             {
@@ -1398,7 +1398,71 @@ $HorzAlign          =   Center
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
                 DialogStyle = DialogType.DashSecondLineWithoutSpace,
-                ContinuationStyle = ContinuationStyle.LeadingTrailingDots
+                ContinuationStyle = ContinuationStyle.LeadingTrailingEllipsis
+            });
+            profiles.Add(new RulesProfile
+            {
+                Name = "Amazon Prime (English/Spanish/French)",
+                SubtitleLineMaximumLength = 42,
+                MaxNumberOfLines = 2,
+                MergeLinesShorterThan = 40,
+                SubtitleMaximumCharactersPerSeconds = 17,
+                SubtitleOptimalCharactersPerSeconds = 12,
+                SubtitleMaximumDisplayMilliseconds = 7000,
+                SubtitleMinimumDisplayMilliseconds = 1000,
+                SubtitleMaximumWordsPerMinute = 300,
+                CpsIncludesSpace = true,
+                MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
+                DialogStyle = DialogType.DashBothLinesWithSpace,
+                ContinuationStyle = ContinuationStyle.NoneEllipsisForPauses,
+            });
+            profiles.Add(new RulesProfile
+            {
+                Name = "Amazon Prime (Arabic)",
+                SubtitleLineMaximumLength = 42,
+                MaxNumberOfLines = 2,
+                MergeLinesShorterThan = 40,
+                SubtitleMaximumCharactersPerSeconds = 20,
+                SubtitleOptimalCharactersPerSeconds = 12,
+                SubtitleMaximumDisplayMilliseconds = 7000,
+                SubtitleMinimumDisplayMilliseconds = 1000,
+                SubtitleMaximumWordsPerMinute = 300,
+                CpsIncludesSpace = true,
+                MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
+                DialogStyle = DialogType.DashBothLinesWithSpace,
+                ContinuationStyle = ContinuationStyle.NoneEllipsisForPauses,
+            });
+            profiles.Add(new RulesProfile
+            {
+                Name = "Amazon Prime (Danish)",
+                SubtitleLineMaximumLength = 42,
+                MaxNumberOfLines = 2,
+                MergeLinesShorterThan = 40,
+                SubtitleMaximumCharactersPerSeconds = 17,
+                SubtitleOptimalCharactersPerSeconds = 12,
+                SubtitleMaximumDisplayMilliseconds = 7000,
+                SubtitleMinimumDisplayMilliseconds = 1000,
+                SubtitleMaximumWordsPerMinute = 300,
+                CpsIncludesSpace = true,
+                MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
+                DialogStyle = DialogType.DashBothLinesWithoutSpace,
+                ContinuationStyle = ContinuationStyle.NoneEllipsisForPauses,
+            });
+            profiles.Add(new RulesProfile
+            {
+                Name = "Amazon Prime (Dutch)",
+                SubtitleLineMaximumLength = 42,
+                MaxNumberOfLines = 2,
+                MergeLinesShorterThan = 40,
+                SubtitleMaximumCharactersPerSeconds = 17,
+                SubtitleOptimalCharactersPerSeconds = 12,
+                SubtitleMaximumDisplayMilliseconds = 7000,
+                SubtitleMinimumDisplayMilliseconds = 1000,
+                SubtitleMaximumWordsPerMinute = 300,
+                CpsIncludesSpace = true,
+                MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
+                DialogStyle = DialogType.DashSecondLineWithoutSpace,
+                ContinuationStyle = ContinuationStyle.NoneEllipsisForPauses,
             });
             profiles.Add(new RulesProfile
             {

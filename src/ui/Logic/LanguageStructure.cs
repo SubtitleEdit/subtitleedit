@@ -2312,6 +2312,8 @@
             public string ContinuationStyleNoneLeadingTrailingDots { get; set; }
             public string ContinuationStyleOnlyTrailingDots { get; set; }
             public string ContinuationStyleLeadingTrailingDots { get; set; }
+            public string ContinuationStyleLeadingTrailingEllipsis { get; set; }
+            public string ContinuationStyleNoneTrailingEllipsis { get; set; }
             public string ContinuationStyleLeadingTrailingDash { get; set; }
             public string ContinuationStyleLeadingTrailingDashDots { get; set; }
             public string MusicSymbol { get; set; }
