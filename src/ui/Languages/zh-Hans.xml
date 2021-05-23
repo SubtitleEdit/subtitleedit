@@ -2132,6 +2132,8 @@ Command line: {1} {2}
     <ContinuationStyleNoneLeadingTrailingDots>无, 在停顿处加点</ContinuationStyleNoneLeadingTrailingDots>
     <ContinuationStyleOnlyTrailingDots>无, 加点 (仅添补)</ContinuationStyleOnlyTrailingDots>
     <ContinuationStyleLeadingTrailingDots>点</ContinuationStyleLeadingTrailingDots>
+    <ContinuationStyleLeadingTrailingEllipsis>省略号</ContinuationStyleLeadingTrailingEllipsis>
+    <ContinuationStyleNoneTrailingEllipsis>无, 但在停顿处加省略号</ContinuationStyleNoneTrailingEllipsis>
     <ContinuationStyleLeadingTrailingDash>连字符</ContinuationStyleLeadingTrailingDash>
     <ContinuationStyleLeadingTrailingDashDots>连字符, 但在停顿处加点</ContinuationStyleLeadingTrailingDashDots>
     <MusicSymbol>音符</MusicSymbol>
@@ -2287,6 +2289,8 @@ Command line: {1} {2}
     <PlayRateFaster>加快播放速度</PlayRateFaster>
     <VideoResetSpeedAndZoom>重置速度/缩放</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>切换视频控件</MainToggleVideoControls>
+    <VideoToggleContrast>切换对比度（仅适用于MPV）</VideoToggleContrast>
+    <VideoToggleBrightness>切换亮度（仅限mpv）</VideoToggleBrightness>
     <CustomSearch1>翻译、自定义搜索 1</CustomSearch1>
     <CustomSearch2>翻译、自定义搜索 2</CustomSearch2>
     <CustomSearch3>翻译、自定义搜索 3</CustomSearch3>
