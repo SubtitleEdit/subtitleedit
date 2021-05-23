@@ -2299,6 +2299,8 @@ can edit in same subtitle file (collaboration)</Information>
     <PlayRateFaster>Play rate faster</PlayRateFaster>
     <VideoResetSpeedAndZoom>Reset speed/zoom</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>Toggle video controls</MainToggleVideoControls>
+    <VideoToggleContrast>Toggle contrast (mpv only)</VideoToggleContrast>
+    <VideoToggleBrightness>Toggle brightness (mpv only)</VideoToggleBrightness>
     <CustomSearch1>Translate, custom search 1</CustomSearch1>
     <CustomSearch2>Translate, custom search 2</CustomSearch2>
     <CustomSearch3>Translate, custom search 3</CustomSearch3>
