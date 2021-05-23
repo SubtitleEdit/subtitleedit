@@ -877,6 +877,10 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     string newText = stSub.StrippedText;
 
                     newText = RemoveHearImpairedTags(newText);
+                    if (newText.IsOnlyControlCharactersOrWhiteSpace())
+                    {
+                        newText = string.Empty;
+                    }
 
                     if (stSub.StrippedText.Length - newText.Length > 2)
                     {
