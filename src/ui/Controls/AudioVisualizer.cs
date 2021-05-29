@@ -326,6 +326,23 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        public void UseSmpteDropFrameTime()
+        {
+            if (_wavePeaks != null)
+            {
+                var list = new List<WavePeak>();
+                for (int i = 0; i < _wavePeaks.Peaks.Count; i++)
+                {
+                    if (i % 1001 != 0)
+                    {
+                        list.Add(_wavePeaks.Peaks[i]);
+                    }
+                }
+
+                _wavePeaks = new WavePeakData(_wavePeaks.SampleRate, list);
+            }
+        }
+
         public void SetSpectrogram(SpectrogramData spectrogramData)
         {
             InitializeSpectrogram(spectrogramData);
