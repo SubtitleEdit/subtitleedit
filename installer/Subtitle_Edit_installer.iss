@@ -15,10 +15,10 @@
 ;* GNU General Public License for more details.
 ;*
 ;* You should have received a copy of the GNU General Public License
-;* along with Subtitle Edit.  If not, see <http://www.gnu.org/licenses/>.
+;* along with Subtitle Edit.  If not, see <https://www.gnu.org/licenses/>.
 
 ; Requirements:
-; Inno Setup Unicode: http://www.jrsoftware.org/isdl.php
+; Inno Setup Unicode: https://jrsoftware.org/isdl.php
 
 
 ; preprocessor checks
@@ -405,19 +405,22 @@ Type: dirifempty; Name: {app}\Languages;                Check: not IsComponentSe
 
 
 [Run]
-Filename: {win}\Microsoft.NET\Framework\v4.0.30319\ngen.exe; Parameters: "install ""{app}\SubtitleEdit.exe"""; StatusMsg: {cm:msg_OptimizingPerformance}; Flags: runhidden runascurrentuser skipifdoesntexist
-Filename: {app}\SubtitleEdit.exe;            Description: {cm:LaunchProgram,Subtitle Edit}; WorkingDir: {app}; Flags: nowait postinstall skipifsilent unchecked
+Filename: {win}\Microsoft.NET\Framework\v4.0.30319\ngen.exe;   Parameters: "install ""{app}\SubtitleEdit.exe"""; StatusMsg: {cm:msg_OptimizingPerformance}; Flags: runhidden runascurrentuser skipifdoesntexist; Check: not IsWin64
+Filename: {win}\Microsoft.NET\Framework64\v4.0.30319\ngen.exe; Parameters: "install ""{app}\SubtitleEdit.exe"""; StatusMsg: {cm:msg_OptimizingPerformance}; Flags: runhidden runascurrentuser skipifdoesntexist; Check: IsWin64
+Filename: {app}\SubtitleEdit.exe;             Description: {cm:LaunchProgram,Subtitle Edit}; WorkingDir: {app}; Flags: nowait postinstall skipifsilent unchecked
 Filename: https://www.nikse.dk/SubtitleEdit/; Description: {cm:run_VisitWebsite};                               Flags: nowait postinstall skipifsilent unchecked shellexec
 
 
 [UninstallRun]
-Filename: {win}\Microsoft.NET\Framework\v4.0.30319\ngen.exe; Parameters: "uninstall ""{app}\SubtitleEdit.exe"""; Flags: runhidden runascurrentuser skipifdoesntexist
+Filename: {win}\Microsoft.NET\Framework\v4.0.30319\ngen.exe;   Parameters: "uninstall ""{app}\SubtitleEdit.exe"""; Flags: runhidden runascurrentuser skipifdoesntexist; Check: not IsWin64
+Filename: {win}\Microsoft.NET\Framework64\v4.0.30319\ngen.exe; Parameters: "uninstall ""{app}\SubtitleEdit.exe"""; Flags: runhidden runascurrentuser skipifdoesntexist; Check: IsWin64
 
 
 [Registry]
 #include bindirres + "\Resources.h"
 #define rcicon(id) "{app}\SubtitleEdit.resources.dll,-" + Str(id)
 #define rctext(id) "@{app}\SubtitleEdit.resources.dll,-" + Str(id)
+
 Root: HKLM; Subkey: "{#keyAppPaths}\SubtitleEdit.exe"; ValueType: string; ValueName: ""; ValueData: "{app}\SubtitleEdit.exe"; Flags: deletekey uninsdeletekey; Check: HklmKeyExists('{#keyAppPaths}')
 Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe"; ValueType: string; ValueName: ""; ValueData: "{#SetupSetting('AppName')} {#app_ver_full}"; Flags: deletekey uninsdeletekey; Check: HklmKeyExists('{#keyApps}')
 Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\SubtitleEdit.exe"" ""%1"""; Check: HklmKeyExists('{#keyApps}')
@@ -759,19 +762,19 @@ begin
       DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20210506\tessdata\tessconfigs\nobatch'));
       DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20210506\tessdata\tessconfigs\segdemo'));
       DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20210506\tessdata\*.traineddata'), False, True, False);
-      
+
       DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract411\tesseract.exe'));
       DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract411\tessdata\configs\hocr'));
       DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract411\tessdata\*.traineddata'), False, True, False);
-      
+
       DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract410\tesseract.exe'));
       DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract410\tessdata\configs\hocr'));
       DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract410\tessdata\*.traineddata'), False, True, False);
-      
+
       DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract4\tesseract.exe'));
       DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract4\tessdata\configs\hocr'));
       DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract4\tessdata\*.traineddata'), False, True, False);
-      
+
       DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract302\msvcp90.dll'));
       DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract302\msvcr90.dll'));
       DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract302\tesseract.exe'));
@@ -897,10 +900,11 @@ function InitializeSetup(): Boolean;
 var
   ErrorCode: Integer;
 begin
-  Result := IsDotNetDetected('v4.7.2', 0); //Returns True if .NET Framework version 4.7.2 is installed, or a compatible version such as 4.8
+  // Returns True if .NET Framework version 4.7.2 is installed, or a compatible version such as 4.8
+  Result := IsDotNetDetected('v4.7.2', 0);
   if not Result then
   begin
-    if not WizardSilent() then 
+    if not WizardSilent() then
     begin
       if SuppressibleMsgBox(CustomMessage('msg_AskToDownNET'), mbCriticalError, MB_YESNO or MB_DEFBUTTON1, IDNO) = IDYES then
         ShellExec('open','https://go.microsoft.com/fwlink/?LinkId=2085155','','',SW_SHOWNORMAL,ewNoWait,ErrorCode);
