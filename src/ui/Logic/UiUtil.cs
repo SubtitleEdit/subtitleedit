@@ -170,7 +170,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        public static bool IsMpcHcInstalled
+        public static bool IsMpcInstalled
         {
             get
             {
@@ -181,7 +181,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 try
                 {
-                    return MpcHc.GetMpcHcFileName() != null;
+                    return MpcHc.GetMpcFileName() != null;
                 }
                 catch (FileNotFoundException)
                 {
