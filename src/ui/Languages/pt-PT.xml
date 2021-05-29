@@ -2139,12 +2139,14 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <DialogStyleDashSecondLineWithoutSpace>Travessão só na segunda linha sem espaço</DialogStyleDashSecondLineWithoutSpace>
     <ContinuationStyle>Estilo de continuação</ContinuationStyle>
     <ContinuationStyleNone>Nenhum</ContinuationStyleNone>
-    <ContinuationStyleNoneTrailingDots>Nenhum, reticências para pausas (apenas para continuação)</ContinuationStyleNoneTrailingDots>
-    <ContinuationStyleNoneLeadingTrailingDots>Nenhum, reticências para pausas</ContinuationStyleNoneLeadingTrailingDots>
-    <ContinuationStyleOnlyTrailingDots>Reticências (apenas para continuação de frases)</ContinuationStyleOnlyTrailingDots>
-    <ContinuationStyleLeadingTrailingDots>Reticências</ContinuationStyleLeadingTrailingDots>
+    <ContinuationStyleNoneTrailingDots>Nenhum, pontos para pausas (apenas para continuação)</ContinuationStyleNoneTrailingDots>
+    <ContinuationStyleNoneLeadingTrailingDots>Nenhum, pontos para pausas</ContinuationStyleNoneLeadingTrailingDots>
+    <ContinuationStyleOnlyTrailingDots>Pontos (apenas para continuação de frases)</ContinuationStyleOnlyTrailingDots>
+    <ContinuationStyleLeadingTrailingDots>Pontos</ContinuationStyleLeadingTrailingDots>
+    <ContinuationStyleLeadingTrailingEllipsis>Reticências</ContinuationStyleLeadingTrailingEllipsis>
+    <ContinuationStyleNoneTrailingEllipsis>Nenhum, reticências para pausas</ContinuationStyleNoneTrailingEllipsis>
     <ContinuationStyleLeadingTrailingDash>Travessão</ContinuationStyleLeadingTrailingDash>
-    <ContinuationStyleLeadingTrailingDashDots>Travessão, mas reticências para pausas</ContinuationStyleLeadingTrailingDashDots>
+    <ContinuationStyleLeadingTrailingDashDots>Travessão, mas pontos para pausas</ContinuationStyleLeadingTrailingDashDots>
     <MusicSymbol>Símbolo musical</MusicSymbol>
     <MusicSymbolsReplace>Símbolos musicais para substituir (separados por vírgula)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Corrigir erros frequentes de OCR - também utilizar regras codificadas</FixCommonOcrErrorsUseHardcodedRules>
@@ -2296,6 +2298,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <PlayRateFaster>Taxa de velocidade rápida</PlayRateFaster>
     <VideoResetSpeedAndZoom>Repor velocidade/zoom</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>Alternar controlos vídeo</MainToggleVideoControls>
+    <VideoToggleContrast>Alternar contraste (apenas mpv)</VideoToggleContrast>
+    <VideoToggleBrightness>Alternar luminosidade (apenas mpv)</VideoToggleBrightness>
     <CustomSearch1>Traduzir, pesquisa personalizada 1</CustomSearch1>
     <CustomSearch2>Traduzir, pesquisa personalizada 2</CustomSearch2>
     <CustomSearch3>Traduzir, pesquisa personalizada 3</CustomSearch3>
