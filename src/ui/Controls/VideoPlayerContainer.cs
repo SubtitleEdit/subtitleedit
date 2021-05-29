@@ -2037,12 +2037,10 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     if (SmpteMode)
                     {
-                        return VideoPlayer.CurrentPosition / 1.001;
+                        return VideoPlayer.CurrentPosition / 1.001001001001001001001001;
                     }
-                    else
-                    {
-                        return VideoPlayer.CurrentPosition;
-                    }
+
+                    return VideoPlayer.CurrentPosition;
                 }
                 return 0;
             }
@@ -2052,7 +2050,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     if (SmpteMode)
                     {
-                        VideoPlayer.CurrentPosition = value * 1.001;
+                        VideoPlayer.CurrentPosition = value * 1.001001001001001001001001;
                     }
                     else
                     {

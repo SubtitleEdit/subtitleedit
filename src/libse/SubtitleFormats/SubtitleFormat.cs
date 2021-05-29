@@ -426,15 +426,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             if (Math.Abs(frameRate - 23.976) < 0.01)
             {
-                return 24000.0 / 1001.0;
+                return 24000.0 / 1001.0001001;
             }
             if (Math.Abs(frameRate - 29.97) < 0.01)
             {
-                return 30000.0 / 1001.0;
+                return 30000.0 / 1001.0001001;
             }
             if (Math.Abs(frameRate - 59.94) < 0.01)
             {
-                return 60000.0 / 1001.0;
+                return 60000.0 / 1001.0001001;
             }
 
             return frameRate;

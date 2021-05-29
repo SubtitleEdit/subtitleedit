@@ -23094,6 +23094,10 @@ namespace Nikse.SubtitleEdit.Forms
                         audioVisualizer.VerticalZoomFactor = 1.0;
                         SelectZoomTextInComboBox();
                         audioVisualizer.WavePeaks = addWaveform.Peaks;
+                        if (smpteTimeModedropFrameToolStripMenuItem.Checked)
+                        {
+                            audioVisualizer.UseSmpteDropFrameTime();
+                        }
                         audioVisualizer.SetSpectrogram(addWaveform.Spectrogram);
                         timerWaveform.Start();
                     }
@@ -23148,6 +23152,11 @@ namespace Nikse.SubtitleEdit.Forms
                 audioVisualizer.SceneChanges = SceneChangeHelper.FromDisk(VideoFileName);
                 SetWaveformPosition(0, 0, 0);
                 timerWaveform.Start();
+            }
+
+            if (smpteTimeModedropFrameToolStripMenuItem.Checked)
+            {
+                audioVisualizer.UseSmpteDropFrameTime();
             }
         }
 
@@ -29546,6 +29555,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             smpteTimeModedropFrameToolStripMenuItem.Checked = !smpteTimeModedropFrameToolStripMenuItem.Checked;
             mediaPlayer.SmpteMode = smpteTimeModedropFrameToolStripMenuItem.Checked;
+            if (audioVisualizer.WavePeaks != null)
+            {
+                ReloadWaveform(VideoFileName, VideoAudioTrackNumber);
+            }
         }
 
         private void moveTextUpToolStripMenuItem_Click(object sender, EventArgs e)
