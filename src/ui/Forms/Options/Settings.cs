@@ -197,7 +197,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             {
                 radioButtonVideoPlayerMPV.Checked = true;
             }
-            else if (gs.VideoPlayer.Trim().Equals("MPC-HC", StringComparison.OrdinalIgnoreCase) && UiUtil.IsMpcHcInstalled)
+            else if (gs.VideoPlayer.Trim().Equals("MPC-HC", StringComparison.OrdinalIgnoreCase) && UiUtil.IsMpcInstalled)
             {
                 radioButtonVideoPlayerMpcHc.Checked = true;
             }
@@ -224,7 +224,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 radioButtonVideoPlayerDirectShow.Enabled = false;
             }
 
-            if (Logic.VideoPlayers.MpcHC.MpcHc.GetMpcHcFileName() == null)
+            if (Logic.VideoPlayers.MpcHC.MpcHc.GetMpcFileName() == null)
             {
                 radioButtonVideoPlayerMpcHc.Enabled = false;
             }
