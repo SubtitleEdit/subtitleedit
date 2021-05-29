@@ -17723,6 +17723,8 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            _textHeightResize = splitContainerListViewAndText.Height - splitContainerListViewAndText.SplitterDistance;
+            _textHeightResizeIgnoreUpdate = DateTime.UtcNow.Ticks;
             mediaPlayer.ShowFullScreenControls();
             bool setRedockOnFullscreenEnd = false;
 
@@ -24844,6 +24846,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            _textHeightResizeIgnoreUpdate = DateTime.UtcNow.Ticks;
             mediaPlayer.ShowNonFullScreenControls();
 
             SaveUndockedPositions();
@@ -24902,16 +24905,8 @@ namespace Nikse.SubtitleEdit.Forms
             redockVideoControlsToolStripMenuItem.Visible = false;
             SubtitleListview1.SelectIndexAndEnsureVisible(_subtitleListViewIndex, true);
 
-            try
-            {
-                splitContainerMain.SplitterDistance = Configuration.Settings.General.SplitContainerMainSplitterDistance;
-                splitContainer1.SplitterDistance = Configuration.Settings.General.SplitContainer1SplitterDistance;
-                splitContainerListViewAndText.SplitterDistance = Configuration.Settings.General.SplitContainerListViewAndTextSplitterDistance;
-            }
-            catch
-            {
-                // ignore
-            }
+            _textHeightResizeIgnoreUpdate = 0;
+            Main_ResizeEnd(null, null);
         }
 
         private void Bw_DoWork(object sender, DoWorkEventArgs e)
@@ -30245,8 +30240,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch
                 {
-                    // Ignore
-                }
+                // Ignore
+            }
             });
         }
 
