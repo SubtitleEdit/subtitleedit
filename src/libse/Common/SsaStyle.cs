@@ -24,6 +24,10 @@ namespace Nikse.SubtitleEdit.Core.Common
         public int MarginLeft { get; set; }
         public int MarginRight { get; set; }
         public int MarginVertical { get; set; }
+        public decimal ScaleX { get; set; }
+        public decimal ScaleY { get; set; }
+        public decimal Spacing { get; set; }
+        public decimal Angle { get; set; }
         public string BorderStyle { get; set; }
         public string RawLine { get; set; }
         public bool LoadedFromHeader { get; set; }
@@ -48,6 +52,10 @@ namespace Nikse.SubtitleEdit.Core.Common
             BorderStyle = "1";
             RawLine = string.Empty;
             LoadedFromHeader = false;
+            ScaleX = 100;
+            ScaleY = 100;
+            Spacing = 0;
+            Angle = 0;
         }
 
         public SsaStyle(SsaStyle ssaStyle)
@@ -73,6 +81,10 @@ namespace Nikse.SubtitleEdit.Core.Common
             MarginLeft = ssaStyle.MarginLeft;
             MarginRight = ssaStyle.MarginRight;
             MarginVertical = ssaStyle.MarginVertical;
+            ScaleX = ssaStyle.ScaleX;
+            ScaleY = ssaStyle.ScaleY;
+            Spacing = ssaStyle.Spacing;
+            Angle = ssaStyle.Angle;
 
             BorderStyle = ssaStyle.BorderStyle;
             RawLine = ssaStyle.RawLine;
@@ -163,24 +175,25 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else if (f == "scalex")
                 {
-                    sb.Append("100");
+                    sb.Append(ScaleX.ToString(CultureInfo.InvariantCulture));
                 }
                 else if (f == "scaley")
                 {
-                    sb.Append("100");
+                    sb.Append(ScaleY.ToString(CultureInfo.InvariantCulture));
                 }
                 else if (f == "spacing")
                 {
-                    sb.Append('0');
+                    sb.Append(Spacing.ToString(CultureInfo.InvariantCulture));
                 }
                 else if (f == "angle")
                 {
-                    sb.Append('0');
+                    sb.Append(Angle.ToString(CultureInfo.InvariantCulture));
                 }
 
                 sb.Append(',');
             }
-            string s = sb.ToString().Trim();
+
+            var s = sb.ToString().Trim();
             return s.Substring(0, s.Length - 1);
         }
 
@@ -270,24 +283,25 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else if (f == "scalex")
                 {
-                    sb.Append("100");
+                    sb.Append(ScaleX.ToString(CultureInfo.InvariantCulture));
                 }
                 else if (f == "scaley")
                 {
-                    sb.Append("100");
+                    sb.Append(ScaleY.ToString(CultureInfo.InvariantCulture));
                 }
                 else if (f == "spacing")
                 {
-                    sb.Append('0');
+                    sb.Append(Spacing.ToString(CultureInfo.InvariantCulture));
                 }
                 else if (f == "angle")
                 {
-                    sb.Append('0');
+                    sb.Append(Angle.ToString(CultureInfo.InvariantCulture));
                 }
 
                 sb.Append(',');
             }
-            string s = sb.ToString().Trim();
+
+            var s = sb.ToString().Trim();
             return s.Substring(0, s.Length - 1);
         }
     }
