@@ -102,6 +102,7 @@ namespace Nikse.SubtitleEdit.Controls
         public event ParagraphEventHandler OnParagraphRightClicked;
         public event ParagraphEventHandler OnNonParagraphRightClicked;
         public event ParagraphEventHandler OnPositionSelected;
+        public event ParagraphEventHandler OnSelectParagraph;
 
         public event ParagraphEventHandler OnTimeChanged;
         public event ParagraphEventHandler OnStartTimeChanged;
@@ -1295,7 +1296,7 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                     else
                     {
-                        Paragraph p = GetParagraphAtMilliseconds(milliseconds);
+                        var p = GetParagraphAtMilliseconds(milliseconds);
                         RightClickedParagraph = p;
                         RightClickedSeconds = seconds;
                         if (p != null)

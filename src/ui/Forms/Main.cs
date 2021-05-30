@@ -112,6 +112,7 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _exitWhenLoaded;
         private int _repeatCount = -1;
         private double _endSeconds = -1;
+        private int _playSelectionIndex = -1;
         private double _endSecondsNewPosition = -1;
         private long _endSecondsNewPositionTicks;
         private const double EndDelay = 0.05;
@@ -848,6 +849,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (mediaPlayer.VideoPlayer != null)
             {
                 _endSeconds = -1;
+                _playSelectionIndex = -1;
                 if (e.Paragraph == null)
                 {
                     if (Configuration.Settings.VideoControls.WaveformDoubleClickOnNonParagraphAction == "PlayPause")
@@ -931,6 +933,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void AudioWaveform_OnPause(object sender, EventArgs e)
         {
             _endSeconds = -1;
+            _playSelectionIndex = -1;
             if (mediaPlayer.VideoPlayer != null)
             {
                 mediaPlayer.Pause();
@@ -941,6 +944,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             timerWaveform.Stop();
             _endSeconds = -1;
+            _playSelectionIndex = -1;
             if (mediaPlayer.VideoPlayer != null)
             {
                 mediaPlayer.Pause();
@@ -966,6 +970,37 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AudioWaveform_OnParagraphRightClicked(object sender, AudioVisualizer.ParagraphEventArgs e)
         {
+            if (ModifierKeys == Keys.Control)
+            {
+                // toggle selection
+                var idx = _subtitle.GetIndex(e.Paragraph);
+                if (idx >= 0 && idx < SubtitleListview1.Items.Count)
+                {
+                    SubtitleListview1.Items[idx].Selected = !SubtitleListview1.Items[idx].Selected;
+                }
+
+                return;
+            }
+
+            if ((ModifierKeys & Keys.Shift) != 0)
+            {
+                // select range
+                var start = FirstSelectedIndex;
+                var idx = _subtitle.GetIndex(e.Paragraph);
+                if (idx >= 0 && idx < SubtitleListview1.Items.Count && start != idx)
+                {
+                    SubtitleListview1.SelectNone();
+                    var end = Math.Max(start, idx);
+                    start = Math.Min(start, idx);
+                    for (int i = start; i <= end; i++)
+                    {
+                        SubtitleListview1.Items[i].Selected = true;
+                    }
+                }
+
+                return;
+            }
+
             SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.GetIndex(e.Paragraph), true);
 
             addParagraphHereToolStripMenuItem.Visible = false;
@@ -2276,6 +2311,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 _endSeconds = -1;
+                _playSelectionIndex = -1;
                 mediaPlayer.Pause();
                 if (visualSync.ShowDialog(this) == DialogResult.OK)
                 {
@@ -3565,7 +3601,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (!videoFileLoaded && mediaPlayer.VideoPlayer != null)
             {
                 mediaPlayer.PauseAndDisposePlayer();
-                timer1.Stop();
             }
 
             ResetShowEarlierOrLater();
@@ -14441,7 +14476,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             bool waveformEnabled = timerWaveform.Enabled;
             timerWaveform.Stop();
-            timer1.Stop();
 
             _showEarlierOrLater = new ShowEarlierLater();
             if (!_showEarlierOrLater.IsPositionAndSizeSaved)
@@ -14455,7 +14489,6 @@ namespace Nikse.SubtitleEdit.Forms
             _showEarlierOrLater.Show(this);
 
             timerWaveform.Enabled = waveformEnabled;
-            timer1.Start();
 
             RefreshSelectedParagraph();
         }
@@ -14817,6 +14850,7 @@ namespace Nikse.SubtitleEdit.Forms
                         ShowSubtitle();
                         mediaPlayer.Play();
                         _endSeconds = p.EndTime.TotalSeconds;
+                        _playSelectionIndex = -1;
                     }
 
                     e.SuppressKeyPress = true;
@@ -14840,6 +14874,7 @@ namespace Nikse.SubtitleEdit.Forms
                         ShowSubtitle();
                         mediaPlayer.Play();
                         _endSeconds = p.EndTime.TotalSeconds;
+                        _playSelectionIndex = -1;
                     }
 
                     e.SuppressKeyPress = true;
@@ -15167,6 +15202,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     _endSeconds = -1;
+                    _playSelectionIndex = -1;
                     e.SuppressKeyPress = true;
                     System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(1), () => mediaPlayer.TogglePlayPause());
                 }
@@ -15176,6 +15212,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (mediaPlayer.VideoPlayer != null)
                 {
                     _endSeconds = -1;
+                    _playSelectionIndex = -1;
                     mediaPlayer.Pause();
                     e.SuppressKeyPress = true;
                 }
@@ -15222,6 +15259,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (audioVisualizer.Focused || mediaPlayer.Focused || SubtitleListview1.Focused)
                     {
                         _endSeconds = -1;
+                        _playSelectionIndex = -1;
                         mediaPlayer.TogglePlayPause();
                         e.SuppressKeyPress = true;
                     }
@@ -15310,6 +15348,7 @@ namespace Nikse.SubtitleEdit.Forms
                         ShowSubtitle();
                         mediaPlayer.Play();
                         _endSeconds = p.EndTime.TotalSeconds;
+                        _playSelectionIndex = -1;
                     }
                 }
                 e.SuppressKeyPress = true;
@@ -15490,6 +15529,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     double startSeconds = mediaPlayer.CurrentPosition - (1.0 / Configuration.Settings.General.CurrentFrameRate);
                     _endSeconds = startSeconds + (1.0 / Configuration.Settings.General.CurrentFrameRate);
+                    _playSelectionIndex = -1;
                     _endSecondsNewPosition = startSeconds;
                     mediaPlayer.CurrentPosition = startSeconds;
                     UiUtil.ShowSubtitle(_subtitle, mediaPlayer);
@@ -15504,6 +15544,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     double startSeconds = mediaPlayer.CurrentPosition + (1.0 / Configuration.Settings.General.CurrentFrameRate);
                     _endSeconds = startSeconds + (1.0 / Configuration.Settings.General.CurrentFrameRate);
+                    _playSelectionIndex = -1;
                     _endSecondsNewPosition = startSeconds;
                     mediaPlayer.CurrentPosition = startSeconds;
                     UiUtil.ShowSubtitle(_subtitle, mediaPlayer);
@@ -17678,6 +17719,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var paragraph = _subtitle.Paragraphs[_subtitleListViewIndex];
                 double startSeconds = paragraph.StartTime.TotalSeconds;
                 _endSeconds = paragraph.EndTime.TotalSeconds;
+                _playSelectionIndex = -1;
                 mediaPlayer.CurrentPosition = startSeconds;
                 ShowSubtitle();
                 mediaPlayer.Play();
@@ -19779,6 +19821,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 _endSeconds = -1;
+                _playSelectionIndex = -1;
 
                 _videoInfo = UiUtil.GetVideoInfo(fileName);
                 if (_videoInfo.FramesPerSecond > 0)
@@ -19887,7 +19930,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             mediaPlayer.Volume = Configuration.Settings.General.VideoPlayerDefaultVolume;
-            timer1.Start();
 
             trackBarWaveformPosition.Maximum = (int)mediaPlayer.Duration;
 
@@ -20025,8 +20067,9 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowSubtitleTimer.Interval = 17;
             }
 
-            if (mediaPlayer.VideoPlayer != null)
+            if (mediaPlayer.VideoPlayer != null && !mediaPlayer.IsDisposed)
             {
+                var currentPosition = mediaPlayer.CurrentPosition;
                 int oldIndex = FirstSelectedIndex;
                 int index = ShowSubtitle();
                 if (index != -1 && checkBoxSyncListViewWithVideoWhilePlaying.Checked && oldIndex != index)
@@ -20035,12 +20078,148 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (_endSeconds <= 0 || !checkBoxAutoRepeatOn.Checked)
                         {
-                            if (!timerAutoDuration.Enabled && !mediaPlayer.IsPaused && (mediaPlayer.CurrentPosition > 0.2 || index > 0))
+                            if (!timerAutoDuration.Enabled && !mediaPlayer.IsPaused && (currentPosition > 0.2 || index > 0))
                             {
                                 SubtitleListview1.SelectIndexAndEnsureVisibleFaster(index);
                             }
                         }
                     }
+                }
+
+                if (!mediaPlayer.IsPaused)
+                {
+                    timeUpDownVideoPosition.Enabled = false;
+                    timeUpDownVideoPositionAdjust.Enabled = false;
+                    var autoOn = AutoRepeatContinueOn || AutoRepeatOn;
+                    if (_endSeconds >= 0 && currentPosition >= _endSeconds && (!autoOn || _playSelectionIndex >= 0))
+                    {
+                        mediaPlayer.Pause();
+                        if (_playSelectionIndex < 0)
+                        {
+                            if (_endSecondsNewPosition >= 0 && _endSecondsNewPositionTicks > DateTime.UtcNow.Ticks - (10000 * 900)) // 900 ms
+                            {
+                                mediaPlayer.CurrentPosition = _endSecondsNewPosition;
+                            }
+                            else
+                            {
+                                mediaPlayer.CurrentPosition = _endSeconds + EndDelay;
+                            }
+                        }
+
+                        _endSeconds = -1;
+                        if (_playSelectionIndex >= 0)
+                        {
+                            var nextIndex = SubtitleListview1.GetSelectedIndices().OrderBy(pix => pix).FirstOrDefault(pix => pix > _playSelectionIndex);
+                            var p = _subtitle.GetParagraphOrDefault(nextIndex);
+                            if (p != null && _playSelectionIndex < nextIndex && SubtitleListview1.Items[nextIndex].Selected)
+                            {
+                                _endSeconds = p.EndTime.TotalSeconds;
+                                mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
+                                UiUtil.ShowSubtitle(_subtitle, mediaPlayer);
+                                mediaPlayer.Play();
+                                _playSelectionIndex = nextIndex;
+                            }
+                            else
+                            {
+                                _playSelectionIndex = -1;
+                            }
+                        }
+                        else
+                        {
+                            _endSecondsNewPosition = -1;
+                            _endSecondsNewPositionTicks = 0;
+                        }
+                    }
+
+                    if (AutoRepeatContinueOn || AutoRepeatOn)
+                    {
+                        if (_endSeconds >= 0 && currentPosition >= _endSeconds && checkBoxAutoRepeatOn.Checked)
+                        {
+                            mediaPlayer.Pause();
+                            _endSeconds = -1;
+
+                            if (checkBoxAutoRepeatOn.Checked && _repeatCount > 0)
+                            {
+                                if (_repeatCount == 1)
+                                {
+                                    labelStatus.Text = _language.VideoControls.RepeatingLastTime;
+                                }
+                                else
+                                {
+                                    labelStatus.Text = string.Format(_language.VideoControls.RepeatingXTimesLeft, _repeatCount);
+                                }
+
+                                _repeatCount--;
+                                if (_subtitleListViewIndex >= 0 && _subtitleListViewIndex < _subtitle.Paragraphs.Count)
+                                {
+                                    PlayPart(_subtitle.Paragraphs[_subtitleListViewIndex]);
+                                }
+                            }
+                            else if (checkBoxAutoContinue.Checked)
+                            {
+                                _autoContinueDelayCount = int.Parse(comboBoxAutoContinue.Text);
+                                if (_repeatCount == 1)
+                                {
+                                    labelStatus.Text = _language.VideoControls.AutoContinueInOneSecond;
+                                }
+                                else
+                                {
+                                    labelStatus.Text = string.Format(_language.VideoControls.AutoContinueInXSeconds, _autoContinueDelayCount);
+                                }
+
+                                if (_autoContinueDelayCount <= 0)
+                                {
+                                    timerAutoContinue_Tick(null, null);
+                                }
+                                else
+                                {
+                                    timerAutoContinue.Start();
+                                }
+                            }
+                            else if (Configuration.Settings.General.ReturnToStartAfterRepeat)
+                            {
+                                GotoSubPositionAndPause();
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    timeUpDownVideoPosition.Enabled = true;
+                    timeUpDownVideoPositionAdjust.Enabled = true;
+                }
+
+                var pos = currentPosition * TimeCode.BaseUnit;
+                if (!timeUpDownVideoPosition.MaskedTextBox.Focused && timeUpDownVideoPosition.TimeCode.TotalMilliseconds != pos)
+                {
+                    timeUpDownVideoPosition.TimeCode = new TimeCode(pos);
+                }
+
+                if (!timeUpDownVideoPositionAdjust.MaskedTextBox.Focused && timeUpDownVideoPositionAdjust.TimeCode.TotalMilliseconds != pos)
+                {
+                    timeUpDownVideoPositionAdjust.TimeCode = new TimeCode(pos);
+                }
+
+                mediaPlayer.RefreshProgressBar();
+
+                trackBarWaveformPosition.ValueChanged -= trackBarWaveformPosition_ValueChanged;
+                int value = (int)currentPosition;
+                if (value > trackBarWaveformPosition.Maximum)
+                {
+                    value = trackBarWaveformPosition.Maximum;
+                }
+
+                if (value < trackBarWaveformPosition.Minimum)
+                {
+                    value = trackBarWaveformPosition.Minimum;
+                }
+
+                trackBarWaveformPosition.Value = value;
+                trackBarWaveformPosition.ValueChanged += trackBarWaveformPosition_ValueChanged;
+
+                if (labelNextWord.Visible && _labelNextTicks + 100000000 < DateTime.UtcNow.Ticks)
+                {
+                    labelNextWord.Visible = false;
                 }
             }
 
@@ -20645,6 +20824,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 _endSeconds = paragraph.EndTime.TotalSeconds;
+                _playSelectionIndex = -1;
                 if (mediaPlayer.Duration > _endSeconds + 0.05)
                 {
                     _endSeconds += 0.05; // go a little forward
@@ -21258,127 +21438,6 @@ namespace Nikse.SubtitleEdit.Forms
             _showEarlierOrLater.Show(this);
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            if (mediaPlayer.VideoPlayer != null)
-            {
-                if (!mediaPlayer.IsPaused)
-                {
-                    timeUpDownVideoPosition.Enabled = false;
-                    timeUpDownVideoPositionAdjust.Enabled = false;
-
-                    if (_endSeconds >= 0 && mediaPlayer.CurrentPosition > _endSeconds && !(AutoRepeatContinueOn || AutoRepeatOn))
-                    {
-                        mediaPlayer.Pause();
-                        if (_endSecondsNewPosition >= 0 && _endSecondsNewPositionTicks > DateTime.UtcNow.Ticks - (10000 * 900)) // 900 ms
-                        {
-                            mediaPlayer.CurrentPosition = _endSecondsNewPosition;
-                        }
-                        else
-                        {
-                            mediaPlayer.CurrentPosition = _endSeconds + EndDelay;
-                        }
-
-                        _endSeconds = -1;
-                        _endSecondsNewPosition = -1;
-                        _endSecondsNewPositionTicks = 0;
-                    }
-
-                    if (AutoRepeatContinueOn || AutoRepeatOn)
-                    {
-                        if (_endSeconds >= 0 && mediaPlayer.CurrentPosition > _endSeconds && checkBoxAutoRepeatOn.Checked)
-                        {
-                            mediaPlayer.Pause();
-                            _endSeconds = -1;
-
-                            if (checkBoxAutoRepeatOn.Checked && _repeatCount > 0)
-                            {
-                                if (_repeatCount == 1)
-                                {
-                                    labelStatus.Text = _language.VideoControls.RepeatingLastTime;
-                                }
-                                else
-                                {
-                                    labelStatus.Text = string.Format(_language.VideoControls.RepeatingXTimesLeft, _repeatCount);
-                                }
-
-                                _repeatCount--;
-                                if (_subtitleListViewIndex >= 0 && _subtitleListViewIndex < _subtitle.Paragraphs.Count)
-                                {
-                                    PlayPart(_subtitle.Paragraphs[_subtitleListViewIndex]);
-                                }
-                            }
-                            else if (checkBoxAutoContinue.Checked)
-                            {
-                                _autoContinueDelayCount = int.Parse(comboBoxAutoContinue.Text);
-                                if (_repeatCount == 1)
-                                {
-                                    labelStatus.Text = _language.VideoControls.AutoContinueInOneSecond;
-                                }
-                                else
-                                {
-                                    labelStatus.Text = string.Format(_language.VideoControls.AutoContinueInXSeconds, _autoContinueDelayCount);
-                                }
-
-                                if (_autoContinueDelayCount <= 0)
-                                {
-                                    timerAutoContinue_Tick(null, null);
-                                }
-                                else
-                                {
-                                    timerAutoContinue.Start();
-                                }
-                            }
-                            else if (Configuration.Settings.General.ReturnToStartAfterRepeat)
-                            {
-                                GotoSubPositionAndPause();
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    timeUpDownVideoPosition.Enabled = true;
-                    timeUpDownVideoPositionAdjust.Enabled = true;
-                }
-
-                int index = ShowSubtitle();
-
-                double pos = mediaPlayer.CurrentPosition * TimeCode.BaseUnit;
-                if (!timeUpDownVideoPosition.MaskedTextBox.Focused && timeUpDownVideoPosition.TimeCode.TotalMilliseconds != pos)
-                {
-                    timeUpDownVideoPosition.TimeCode = new TimeCode(pos);
-                }
-
-                if (!timeUpDownVideoPositionAdjust.MaskedTextBox.Focused && timeUpDownVideoPositionAdjust.TimeCode.TotalMilliseconds != pos)
-                {
-                    timeUpDownVideoPositionAdjust.TimeCode = new TimeCode(pos);
-                }
-
-                mediaPlayer.RefreshProgressBar();
-
-                trackBarWaveformPosition.ValueChanged -= trackBarWaveformPosition_ValueChanged;
-                int value = (int)mediaPlayer.CurrentPosition;
-                if (value > trackBarWaveformPosition.Maximum)
-                {
-                    value = trackBarWaveformPosition.Maximum;
-                }
-
-                if (value < trackBarWaveformPosition.Minimum)
-                {
-                    value = trackBarWaveformPosition.Minimum;
-                }
-
-                trackBarWaveformPosition.Value = value;
-                trackBarWaveformPosition.ValueChanged += trackBarWaveformPosition_ValueChanged;
-
-                if (labelNextWord.Visible && _labelNextTicks + 100000000 < DateTime.UtcNow.Ticks)
-                {
-                    labelNextWord.Visible = false;
-                }
-            }
-        }
-
         private void StopAutoDuration()
         {
             timerAutoDuration.Stop();
@@ -21505,6 +21564,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonStop_Click(object sender, EventArgs e)
         {
             _endSeconds = -1;
+            _playSelectionIndex = -1;
             timerAutoContinue.Stop();
             mediaPlayer.Pause();
             labelStatus.Text = string.Empty;
@@ -23438,6 +23498,8 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     double startSeconds = p.StartTime.TotalSeconds;
                     _endSeconds = p.EndTime.TotalSeconds;
+                    _playSelectionIndex = _subtitle.GetIndex(p);
+
                     if (nearEnd)
                     {
                         startSeconds = Math.Max(startSeconds, _endSeconds - 1.0);
@@ -25033,7 +25095,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void CloseVideoToolStripMenuItemClick(object sender, EventArgs e)
         {
-            timer1.Stop();
             if (mediaPlayer.VideoPlayer != null)
             {
                 mediaPlayer.PauseAndDisposePlayer();
@@ -28770,6 +28831,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     _endSeconds = -1;
+                    _playSelectionIndex = -1;
 
                     _videoInfo = new VideoInfo();
                     _videoInfo.Width = 720;
@@ -29532,6 +29594,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         _endSeconds = -1;
+                        _playSelectionIndex = -1;
                         UiUtil.InitializeVideoPlayerAndContainer(url, _videoInfo, mediaPlayer, VideoLoaded, VideoEnded);
                         mediaPlayer.Volume = 0;
                         mediaPlayer.ShowFullscreenButton = Configuration.Settings.General.VideoPlayerShowFullscreenButton;
@@ -30240,8 +30303,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch
                 {
-                // Ignore
-            }
+                    // Ignore
+                }
             });
         }
 
