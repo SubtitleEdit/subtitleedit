@@ -474,13 +474,24 @@ namespace Nikse.SubtitleEdit.Core.Common
                     int dataByteOffset = 0;
                     while (dataByteOffset < fileReadByteCount)
                     {
-                        float value = 0F;
+                        float valuePositive = 0F;
+                        float valueNegative = -0F;
                         for (int iChannel = 0; iChannel < _header.NumberOfChannels; iChannel++)
                         {
-                            value += readSampleDataValue(data, ref dataByteOffset);
+                            var v = readSampleDataValue(data, ref dataByteOffset);
+                            if (v < 0)
+                            {
+                                valueNegative += v;
+                            }
+                            else
+                            {
+                                valuePositive += v;
+                            }
                         }
+
+                        var value = valuePositive > Math.Abs(valueNegative) ? valuePositive : valueNegative;
                         chunkSamples[chunkSampleOffset] = value * sampleAndChannelScale;
-                        chunkSampleOffset += 1;
+                        chunkSampleOffset++;
                     }
                 }
 
@@ -541,17 +552,16 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return new WavePeak();
             }
 
-            float max = chunk[0];
-            float min = chunk[0];
-            for (int i = 1; i < count; i++)
+            var max = chunk[0];
+            var min = chunk[0];
+            for (var i = 1; i < count; i++)
             {
-                float value = chunk[i];
+                var value = chunk[i];
                 if (value > max)
                 {
                     max = value;
                 }
-
-                if (value < min)
+                else if (value < min)
                 {
                     min = value;
                 }
