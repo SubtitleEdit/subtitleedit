@@ -13,6 +13,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool Italic { get; set; }
         public bool Bold { get; set; }
         public bool Underline { get; set; }
+        public bool StrikeOut { get; set; }
         public Color Primary { get; set; }
         public Color Secondary { get; set; }
         public Color Tertiary { get; set; }
@@ -67,6 +68,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             Italic = ssaStyle.Italic;
             Bold = ssaStyle.Bold;
             Underline = ssaStyle.Underline;
+            StrikeOut = ssaStyle.StrikeOut;
 
             Primary = ssaStyle.Primary;
             Secondary = ssaStyle.Secondary;
@@ -244,6 +246,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                 else if (f == "underline")
                 {
                     sb.Append(BoolToRawSsa(Underline));
+                }
+                else if (f == "strikeout")
+                {
+                    sb.Append(BoolToRawSsa(StrikeOut));
                 }
                 else if (f == "outline")
                 {

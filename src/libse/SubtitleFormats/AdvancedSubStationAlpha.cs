@@ -1725,6 +1725,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             int boldIndex = -1;
             int italicIndex = -1;
             int underlineIndex = -1;
+            int strikeOutIndex = -1;
             int outlineIndex = -1;
             int shadowIndex = -1;
             int alignmentIndex = -1;
@@ -1788,6 +1789,10 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                             else if (f == "underline")
                             {
                                 underlineIndex = i;
+                            }
+                            else if (f == "strikeout")
+                            {
+                                strikeOutIndex = i;
                             }
                             else if (f == "outline")
                             {
@@ -1931,6 +1936,14 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                                     if (Utilities.AllLetters.Contains(f))
                                     {
                                         sb.AppendLine("'Underline' incorrect: " + rawLine);
+                                        sb.AppendLine();
+                                    }
+                                }
+                                else if (i == strikeOutIndex)
+                                {
+                                    if (Utilities.AllLetters.Contains(f))
+                                    {
+                                        sb.AppendLine("'StrikeOut' incorrect: " + rawLine);
                                         sb.AppendLine();
                                     }
                                 }
@@ -2099,6 +2112,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             int boldIndex = -1;
             int italicIndex = -1;
             int underlineIndex = -1;
+            int strikOutIndex = -1;
             int outlineIndex = -1;
             int shadowIndex = -1;
             int alignmentIndex = -1;
@@ -2170,6 +2184,10 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                             else if (f == "underline")
                             {
                                 underlineIndex = i;
+                            }
+                            else if (f == "strikeout")
+                            {
+                                strikOutIndex = i;
                             }
                             else if (f == "outline")
                             {
@@ -2273,6 +2291,10 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                             else if (i == underlineIndex)
                             {
                                 style.Underline = f == "-1" || f == "1";
+                            }
+                            else if (i == strikOutIndex)
+                            {
+                                style.StrikeOut = f == "-1" || f == "1";
                             }
                             else if (i == outlineIndex)
                             {
