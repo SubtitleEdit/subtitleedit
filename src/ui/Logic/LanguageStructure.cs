@@ -44,6 +44,7 @@
             public string Bold { get; set; }
             public string Italic { get; set; }
             public string Underline { get; set; }
+            public string Strikeout { get; set; }
             public string Visible { get; set; }
             public string FrameRate { get; set; }
             public string Name { get; set; }
