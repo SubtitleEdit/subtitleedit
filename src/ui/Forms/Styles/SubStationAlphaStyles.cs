@@ -122,6 +122,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             checkBoxFontItalic.Text = LanguageSettings.Current.General.Italic;
             checkBoxFontBold.Text = LanguageSettings.Current.General.Bold;
             checkBoxFontUnderline.Text = LanguageSettings.Current.General.Underline;
+            checkBoxStrikeout.Text = LanguageSettings.Current.General.Strikeout;
             groupBoxAlignment.Text = l.Alignment;
             groupBoxColors.Text = l.Colors;
             buttonPrimaryColor.Text = l.Primary;
@@ -215,6 +216,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 buttonBackColor.Text = l.Back;
                 listViewStyles.Columns[5].Text = l.Back;
                 checkBoxFontUnderline.Visible = false;
+                checkBoxStrikeout.Visible = false;
                 numericUpDownOutline.Increment = 1;
                 numericUpDownOutline.DecimalPlaces = 0;
                 numericUpDownShadowWidth.Increment = 1;
@@ -265,8 +267,12 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             UiUtil.FixLargeFonts(this, buttonCancel);
 
             comboBoxFontName.Left = labelFontName.Left + labelFontName.Width + 5;
+            buttonPickAttachmentFont.Visible = subtitle.Footer != null &&
+                                               subtitle.Footer.Contains("[Fonts]") &&
+                                               subtitle.Footer.Contains("fontname:");
             buttonPickAttachmentFont.Left = comboBoxFontName.Left + comboBoxFontName.Width + 3;
-            labelFontSize.Left = buttonPickAttachmentFont.Left + buttonPickAttachmentFont.Width + 17;
+            var controlLeftOfFontSize = buttonPickAttachmentFont.Visible ? (Control)buttonPickAttachmentFont : (Control)comboBoxFontName;
+            labelFontSize.Left = controlLeftOfFontSize.Left + controlLeftOfFontSize.Width + 15;
             numericUpDownFontSize.Left = labelFontSize.Left + labelFontSize.Width + 5;
 
             numericUpDownOutline.Left = radioButtonOutline.Left + radioButtonOutline.Width + 5;
@@ -274,10 +280,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             numericUpDownShadowWidth.Left = numericUpDownOutline.Left + numericUpDownOutline.Width + 5;
             checkBoxFontItalic.Left = checkBoxFontBold.Left + checkBoxFontBold.Width + 12;
             checkBoxFontUnderline.Left = checkBoxFontItalic.Left + checkBoxFontItalic.Width + 12;
-
-            buttonPickAttachmentFont.Visible = subtitle.Footer != null &&
-                                               subtitle.Footer.Contains("[Fonts]") &&
-                                               subtitle.Footer.Contains("fontname:");
+            checkBoxStrikeout.Left = checkBoxFontUnderline.Left + checkBoxFontUnderline.Width + 12;
         }
 
         public override string Header => GetFileHeader();
@@ -436,6 +439,11 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                             {
                                 font = new Font(fontFamily, (float)numericUpDownFontSize.Value * 1.1f, font.Style | FontStyle.Underline);
                             }
+
+                            if (checkBoxStrikeout.Checked)
+                            {
+                                font = new Font(fontFamily, (float)numericUpDownFontSize.Value * 1.1f, font.Style | FontStyle.Strikeout);
+                            }
                         }
                     }
                     catch
@@ -458,6 +466,10 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     if (checkBoxFontUnderline.Checked)
                     {
                         font = new Font(fontName, (float)numericUpDownFontSize.Value * 1.1f, font.Style | FontStyle.Underline);
+                    }
+                    if (checkBoxStrikeout.Checked)
+                    {
+                        font = new Font(fontName, (float)numericUpDownFontSize.Value * 1.1f, font.Style | FontStyle.Strikeout);
                     }
                 }
 
@@ -692,6 +704,10 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 style.Underline = propertyValue != "0";
             }
+            else if (propertyName == "strikeout")
+            {
+                style.StrikeOut = propertyValue != "0";
+            }
             else if (propertyName == "alignment")
             {
                 style.Alignment = propertyValue;
@@ -878,6 +894,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 groupBoxProperties.Enabled = false;
                 _doUpdate = false;
+                pictureBoxPreview.Image?.Dispose();
+                pictureBoxPreview.Image = new Bitmap(1,1);
             }
 
             UpdateCurrentFileButtonsState();
@@ -901,6 +919,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             checkBoxFontItalic.Checked = style.Italic;
             checkBoxFontBold.Checked = style.Bold;
             checkBoxFontUnderline.Checked = style.Underline;
+            checkBoxStrikeout.Checked = style.StrikeOut;
 
             if (style.FontSize > 0 && style.FontSize <= (float)numericUpDownFontSize.Maximum)
             {
@@ -1450,6 +1469,17 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
         }
 
+        private void checkBoxStrikeout_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveListView.SelectedItems.Count == 1 && _doUpdate)
+            {
+                string name = ActiveListView.SelectedItems[0].Text;
+                SetSsaStyle(name, "strikeout", checkBoxStrikeout.Checked ? "-1" : "0");
+                UpdateListViewFontStyle(GetSsaStyle(name));
+                GeneratePreview();
+            }
+        }
+
         private void radioButtonBottomLeft_CheckedChanged(object sender, EventArgs e)
         {
             if (ActiveListView.SelectedItems.Count == 1 && _doUpdate && ((RadioButton)sender).Checked)
@@ -1840,6 +1870,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 groupBoxProperties.Enabled = false;
                 _doUpdate = false;
+                pictureBoxPreview.Image?.Dispose();
+                pictureBoxPreview.Image = new Bitmap(1, 1);
             }
 
             UpdateStorageButtonsState();

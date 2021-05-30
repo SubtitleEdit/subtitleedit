@@ -156,6 +156,7 @@
             this.labelStorageCategory = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.buttonApply = new System.Windows.Forms.Button();
+            this.checkBoxStrikeout = new System.Windows.Forms.CheckBox();
             this.contextMenuStripFile.SuspendLayout();
             this.groupBoxStyles.SuspendLayout();
             this.groupBoxProperties.SuspendLayout();
@@ -932,6 +933,7 @@
             // 
             this.groupBoxFont.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxFont.Controls.Add(this.checkBoxStrikeout);
             this.groupBoxFont.Controls.Add(this.buttonPickAttachmentFont);
             this.groupBoxFont.Controls.Add(this.checkBoxFontUnderline);
             this.groupBoxFont.Controls.Add(this.numericUpDownFontSize);
@@ -1238,58 +1240,58 @@
             this.toolStripMenuItemStorageImport,
             this.toolStripMenuItemStorageExport});
             this.contextMenuStripStorage.Name = "contextMenuStrip1";
-            this.contextMenuStripStorage.Size = new System.Drawing.Size(216, 270);
+            this.contextMenuStripStorage.Size = new System.Drawing.Size(255, 298);
             this.contextMenuStripStorage.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripStorage_Opening);
             // 
             // toolStripMenuItemStorageRemove
             // 
             this.toolStripMenuItemStorageRemove.Name = "toolStripMenuItemStorageRemove";
             this.toolStripMenuItemStorageRemove.ShortcutKeys = System.Windows.Forms.Keys.Delete;
-            this.toolStripMenuItemStorageRemove.Size = new System.Drawing.Size(215, 22);
+            this.toolStripMenuItemStorageRemove.Size = new System.Drawing.Size(254, 22);
             this.toolStripMenuItemStorageRemove.Text = "Remove";
             this.toolStripMenuItemStorageRemove.Click += new System.EventHandler(this.buttonStorageRemove_Click);
             // 
             // toolStripMenuItemStorageRemoveAll
             // 
             this.toolStripMenuItemStorageRemoveAll.Name = "toolStripMenuItemStorageRemoveAll";
-            this.toolStripMenuItemStorageRemoveAll.Size = new System.Drawing.Size(215, 22);
+            this.toolStripMenuItemStorageRemoveAll.Size = new System.Drawing.Size(254, 22);
             this.toolStripMenuItemStorageRemoveAll.Text = "Remove all";
             this.toolStripMenuItemStorageRemoveAll.Click += new System.EventHandler(this.buttonStorageRemoveAll_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(212, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(251, 6);
             // 
             // addToFileStylesToolStripMenuItem
             // 
             this.addToFileStylesToolStripMenuItem.Name = "addToFileStylesToolStripMenuItem";
             this.addToFileStylesToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F4;
-            this.addToFileStylesToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
+            this.addToFileStylesToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.addToFileStylesToolStripMenuItem.Text = "Add to file styles";
             this.addToFileStylesToolStripMenuItem.Click += new System.EventHandler(this.buttonAddToFile_Click);
             // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(212, 6);
+            this.toolStripSeparator7.Size = new System.Drawing.Size(251, 6);
             // 
             // toolStripMenuItemStorageMoveStylesToCategory
             // 
             this.toolStripMenuItemStorageMoveStylesToCategory.Name = "toolStripMenuItemStorageMoveStylesToCategory";
-            this.toolStripMenuItemStorageMoveStylesToCategory.Size = new System.Drawing.Size(215, 22);
+            this.toolStripMenuItemStorageMoveStylesToCategory.Size = new System.Drawing.Size(254, 22);
             this.toolStripMenuItemStorageMoveStylesToCategory.Text = "Move selected styles to category...";
             // 
             // toolStripSeparator9
             // 
             this.toolStripSeparator9.Name = "toolStripSeparator9";
-            this.toolStripSeparator9.Size = new System.Drawing.Size(212, 6);
+            this.toolStripSeparator9.Size = new System.Drawing.Size(251, 6);
             // 
             // toolStripMenuItemStorageMoveUp
             // 
             this.toolStripMenuItemStorageMoveUp.Name = "toolStripMenuItemStorageMoveUp";
             this.toolStripMenuItemStorageMoveUp.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Up)));
-            this.toolStripMenuItemStorageMoveUp.Size = new System.Drawing.Size(215, 22);
+            this.toolStripMenuItemStorageMoveUp.Size = new System.Drawing.Size(254, 22);
             this.toolStripMenuItemStorageMoveUp.Text = "Move up";
             this.toolStripMenuItemStorageMoveUp.Click += new System.EventHandler(this.toolStripMenuItem3_Click);
             // 
@@ -1297,7 +1299,7 @@
             // 
             this.toolStripMenuItemStorageMoveDown.Name = "toolStripMenuItemStorageMoveDown";
             this.toolStripMenuItemStorageMoveDown.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Down)));
-            this.toolStripMenuItemStorageMoveDown.Size = new System.Drawing.Size(215, 22);
+            this.toolStripMenuItemStorageMoveDown.Size = new System.Drawing.Size(254, 22);
             this.toolStripMenuItemStorageMoveDown.Text = "Move down";
             this.toolStripMenuItemStorageMoveDown.Click += new System.EventHandler(this.toolStripMenuItemStorageMoveDown_Click);
             // 
@@ -1305,7 +1307,7 @@
             // 
             this.toolStripMenuItemStorageMoveTop.Name = "toolStripMenuItemStorageMoveTop";
             this.toolStripMenuItemStorageMoveTop.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Home)));
-            this.toolStripMenuItemStorageMoveTop.Size = new System.Drawing.Size(215, 22);
+            this.toolStripMenuItemStorageMoveTop.Size = new System.Drawing.Size(254, 22);
             this.toolStripMenuItemStorageMoveTop.Text = "Move to top";
             this.toolStripMenuItemStorageMoveTop.Click += new System.EventHandler(this.toolStripMenuItemStorageMoveTop_Click);
             // 
@@ -1313,20 +1315,20 @@
             // 
             this.toolStripMenuItemStorageMoveBottom.Name = "toolStripMenuItemStorageMoveBottom";
             this.toolStripMenuItemStorageMoveBottom.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.End)));
-            this.toolStripMenuItemStorageMoveBottom.Size = new System.Drawing.Size(215, 22);
+            this.toolStripMenuItemStorageMoveBottom.Size = new System.Drawing.Size(254, 22);
             this.toolStripMenuItemStorageMoveBottom.Text = "Move to bottom";
             this.toolStripMenuItemStorageMoveBottom.Click += new System.EventHandler(this.toolStripMenuItemStorageMoveBottom_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(212, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(251, 6);
             // 
             // toolStripMenuItemStorageNew
             // 
             this.toolStripMenuItemStorageNew.Name = "toolStripMenuItemStorageNew";
             this.toolStripMenuItemStorageNew.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.toolStripMenuItemStorageNew.Size = new System.Drawing.Size(215, 22);
+            this.toolStripMenuItemStorageNew.Size = new System.Drawing.Size(254, 22);
             this.toolStripMenuItemStorageNew.Text = "New";
             this.toolStripMenuItemStorageNew.Click += new System.EventHandler(this.buttonStorageAdd_Click);
             // 
@@ -1334,20 +1336,20 @@
             // 
             this.toolStripMenuItemStorageCopy.Name = "toolStripMenuItemStorageCopy";
             this.toolStripMenuItemStorageCopy.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.toolStripMenuItemStorageCopy.Size = new System.Drawing.Size(215, 22);
+            this.toolStripMenuItemStorageCopy.Size = new System.Drawing.Size(254, 22);
             this.toolStripMenuItemStorageCopy.Text = "Copy";
             this.toolStripMenuItemStorageCopy.Click += new System.EventHandler(this.buttonStorageCopy_Click);
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(212, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(251, 6);
             // 
             // toolStripMenuItemStorageImport
             // 
             this.toolStripMenuItemStorageImport.Name = "toolStripMenuItemStorageImport";
             this.toolStripMenuItemStorageImport.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
-            this.toolStripMenuItemStorageImport.Size = new System.Drawing.Size(215, 22);
+            this.toolStripMenuItemStorageImport.Size = new System.Drawing.Size(254, 22);
             this.toolStripMenuItemStorageImport.Text = "Import...";
             this.toolStripMenuItemStorageImport.Click += new System.EventHandler(this.buttonStorageImport_Click);
             // 
@@ -1355,7 +1357,7 @@
             // 
             this.toolStripMenuItemStorageExport.Name = "toolStripMenuItemStorageExport";
             this.toolStripMenuItemStorageExport.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.E)));
-            this.toolStripMenuItemStorageExport.Size = new System.Drawing.Size(215, 22);
+            this.toolStripMenuItemStorageExport.Size = new System.Drawing.Size(254, 22);
             this.toolStripMenuItemStorageExport.Text = "Export...";
             this.toolStripMenuItemStorageExport.Click += new System.EventHandler(this.buttonStorageExport_Click);
             // 
@@ -1364,9 +1366,10 @@
             this.labelCategoryDefaultNote.AutoSize = true;
             this.labelCategoryDefaultNote.Location = new System.Drawing.Point(10, 48);
             this.labelCategoryDefaultNote.Name = "labelCategoryDefaultNote";
-            this.labelCategoryDefaultNote.Size = new System.Drawing.Size(265, 13);
+            this.labelCategoryDefaultNote.Size = new System.Drawing.Size(433, 13);
             this.labelCategoryDefaultNote.TabIndex = 5;
-            this.labelCategoryDefaultNote.Text = "Note: The styles in the default category (colored in green) will be applied to new ASSA files";
+            this.labelCategoryDefaultNote.Text = "Note: The styles in the default category (colored in green) will be applied to ne" +
+    "w ASSA files";
             // 
             // buttonStorageManageCategories
             // 
@@ -1452,6 +1455,18 @@
             this.buttonApply.Text = "&Apply";
             this.buttonApply.UseVisualStyleBackColor = true;
             this.buttonApply.Click += new System.EventHandler(this.buttonApply_Click);
+            // 
+            // checkBoxStrikeout
+            // 
+            this.checkBoxStrikeout.AutoSize = true;
+            this.checkBoxStrikeout.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Strikeout, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBoxStrikeout.Location = new System.Drawing.Point(246, 54);
+            this.checkBoxStrikeout.Name = "checkBoxStrikeout";
+            this.checkBoxStrikeout.Size = new System.Drawing.Size(68, 17);
+            this.checkBoxStrikeout.TabIndex = 7;
+            this.checkBoxStrikeout.Text = "Strikeout";
+            this.checkBoxStrikeout.UseVisualStyleBackColor = true;
+            this.checkBoxStrikeout.CheckedChanged += new System.EventHandler(this.checkBoxStrikeout_CheckedChanged);
             // 
             // SubStationAlphaStyles
             // 
@@ -1639,5 +1654,6 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Button buttonApply;
         private System.Windows.Forms.Button buttonPickAttachmentFont;
+        private System.Windows.Forms.CheckBox checkBoxStrikeout;
     }
 }

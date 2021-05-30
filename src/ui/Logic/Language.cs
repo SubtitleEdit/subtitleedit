@@ -161,6 +161,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Bold = "Bold",
                 Italic = "Italic",
                 Underline = "Underline",
+                Strikeout = "Strikeout",
                 Visible = "Visible",
                 FrameRate = "Frame rate",
                 Name = "Name",
