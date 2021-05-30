@@ -1,7 +1,7 @@
 ﻿namespace Nikse.SubtitleEdit.Logic
 {
     // The language classes are built for easy xml-serialization (makes save/load code simple)
-    public class LanguageStructure
+    public static class LanguageStructure
     {
         public class General
         {
