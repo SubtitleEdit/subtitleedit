@@ -356,7 +356,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             string wavePeakName;
             if (trackNumber > 0)
             {
-                wavePeakName = MovieHasher.GenerateHash(videoFileName) + "-" + trackNumber + ".wav"; 
+                wavePeakName = MovieHasher.GenerateHash(videoFileName) + "-" + trackNumber + ".wav";
             }
             else
             {
@@ -439,7 +439,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             long fileSampleOffset = -delaySampleCount;
             int chunkSampleCount = _header.SampleRate / peaksPerSecond;
             byte[] data = new byte[chunkSampleCount * _header.BlockAlign];
-            float[] chunkSamples = new float[chunkSampleCount];
+            float[] chunkSamples = new float[chunkSampleCount * 2];
 
             _stream.Seek(_header.DataStartPosition, SeekOrigin.Begin);
 
@@ -489,14 +489,15 @@ namespace Nikse.SubtitleEdit.Core.Common
                             }
                         }
 
-                        var value = valuePositive > Math.Abs(valueNegative) ? valuePositive : valueNegative;
-                        chunkSamples[chunkSampleOffset] = value * sampleAndChannelScale;
+                        chunkSamples[chunkSampleOffset] = valueNegative * sampleAndChannelScale;
+                        chunkSampleOffset++;
+                        chunkSamples[chunkSampleOffset] = valuePositive * sampleAndChannelScale;
                         chunkSampleOffset++;
                     }
                 }
 
                 // calculate peaks
-                peaks.Add(CalculatePeak(chunkSamples, fileReadSampleCount));
+                peaks.Add(CalculatePeak(chunkSamples, fileReadSampleCount * 2));
             }
 
             // save results to file
