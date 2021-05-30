@@ -62,6 +62,7 @@ namespace Test.Logic.Dictionaries
             Assert.IsFalse(exists);
         }
 
+        [TestMethod]
         public void NamesListAddWordReload()
         {
             // Arrange
