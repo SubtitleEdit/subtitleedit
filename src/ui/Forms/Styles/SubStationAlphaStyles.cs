@@ -271,7 +271,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                                                subtitle.Footer.Contains("[Fonts]") &&
                                                subtitle.Footer.Contains("fontname:");
             buttonPickAttachmentFont.Left = comboBoxFontName.Left + comboBoxFontName.Width + 3;
-            var controlLeftOfFontSize = buttonPickAttachmentFont.Visible ? (Control)buttonPickAttachmentFont : (Control)comboBoxFontName;
+            var controlLeftOfFontSize = buttonPickAttachmentFont.Visible ? buttonPickAttachmentFont : (Control)comboBoxFontName;
             labelFontSize.Left = controlLeftOfFontSize.Left + controlLeftOfFontSize.Width + 15;
             numericUpDownFontSize.Left = labelFontSize.Left + labelFontSize.Width + 5;
 
@@ -353,7 +353,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private void SaveFontNames(string attachmentFileName, string attachmentContent, string category)
         {
             var content = attachmentContent.Trim();
-            if (string.IsNullOrEmpty(attachmentFileName) || content.Length == 0 || !attachmentFileName.ToLowerInvariant().EndsWith(".ttf"))
+            if (string.IsNullOrEmpty(attachmentFileName) || content.Length == 0 || !attachmentFileName.EndsWith(".ttf", StringComparison.InvariantCultureIgnoreCase))
             {
                 return;
             }
