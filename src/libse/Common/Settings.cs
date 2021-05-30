@@ -5198,6 +5198,30 @@ $HorzAlign          =   Center
                             item.BorderStyle = subNode.InnerText;
                         }
 
+                        subNode = listNode.SelectSingleNode("ScaleX");
+                        if (subNode != null)
+                        {
+                            item.ScaleX = Convert.ToDecimal(subNode.InnerText, CultureInfo.InvariantCulture);
+                        }
+
+                        subNode = listNode.SelectSingleNode("ScaleY");
+                        if (subNode != null)
+                        {
+                            item.ScaleY = Convert.ToDecimal(subNode.InnerText, CultureInfo.InvariantCulture);
+                        }
+
+                        subNode = listNode.SelectSingleNode("Spacing");
+                        if (subNode != null)
+                        {
+                            item.Spacing = Convert.ToDecimal(subNode.InnerText, CultureInfo.InvariantCulture);
+                        }
+
+                        subNode = listNode.SelectSingleNode("Angle");
+                        if (subNode != null)
+                        {
+                            item.Angle = Convert.ToDecimal(subNode.InnerText, CultureInfo.InvariantCulture);
+                        }
+
                         category.Styles.Add(item);
                     }
                 }
@@ -8650,6 +8674,10 @@ $HorzAlign          =   Center
                             textWriter.WriteElementString("MarginRight", style.MarginRight.ToString(CultureInfo.InvariantCulture));
                             textWriter.WriteElementString("MarginVertical", style.MarginVertical.ToString(CultureInfo.InvariantCulture));
                             textWriter.WriteElementString("BorderStyle", style.BorderStyle);
+                            textWriter.WriteElementString("ScaleX", style.ScaleX.ToString(CultureInfo.InvariantCulture));
+                            textWriter.WriteElementString("ScaleY", style.ScaleX.ToString(CultureInfo.InvariantCulture));
+                            textWriter.WriteElementString("Spacing", style.ScaleX.ToString(CultureInfo.InvariantCulture));
+                            textWriter.WriteElementString("Angle", style.ScaleX.ToString(CultureInfo.InvariantCulture));
                             textWriter.WriteEndElement();
                         }
                         textWriter.WriteEndElement();
