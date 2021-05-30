@@ -1,5 +1,25 @@
 ﻿Subtitle Edit Changelog
 
+3.6.2 BETA (xth July 2021)
+* NEW:
+   * Shortcuts for video contrast/brightness (mpv only)
+* IMPROVED:
+   * Update Bulgarian translation - thx Калин
+   * Update Chinese translation - thx nkh0472
+   * Update Polish translation - thx admas
+   * Update Portuguese translation - thx hugok79
+   * Update Hungarian translation - thx Zityi
+   * Add a few profiles for Amazon Prime
+   * Use ngen64 on 64-bit - thx XhmikosR
+   * ASSA: Some support for ScalingX/ScalingY/Spacing/Angle/StrikeOut - thx ausencia
+   * MPC: Try to search for mpc-be too - thx Fábio
+* FIXED:
+   * Fix load/save some ASSA storage style settings - thx Andrebavila
+   * Try to pick best image w SUP PGS/fading - thx peter-qgd
+   * Minor fix for "Remove text for HI" - thx igenaya
+   * Minor fix for split with zero time codes - thx darnn
+
+
 3.6.1 (20th May 2021)
 * NEW:
    * Add "Subtitle formats" settings - thx OmrSi
