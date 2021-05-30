@@ -844,7 +844,10 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 }
             }
 
-            // merge images that are the same (probably due to fade)
+            // Merge images that are the same (probably due to fade)
+            // First we find groups with same pixels
+            var removeIndices = new List<DeleteIndex>();
+            int deleteNo = 0;
             for (int pcsIndex = pcsList.Count - 1; pcsIndex > 0; pcsIndex--)
             {
                 var cur = pcsList[pcsIndex];
@@ -879,9 +882,36 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
 
                         if (remove)
                         {
-                            prev.EndTime = cur.EndTime;
-                            pcsList.RemoveAt(pcsIndex);
+                            if (!removeIndices.Any(p => p.Number == deleteNo && p.Index == pcsIndex - 1))
+                            {
+                                removeIndices.Add(new DeleteIndex { Number = deleteNo, Index = pcsIndex - 1 });
+                            }
+                            if (!removeIndices.Any(p => p.Number == deleteNo && p.Index == pcsIndex))
+                            {
+                                removeIndices.Add(new DeleteIndex { Number = deleteNo, Index = pcsIndex });
+                            }
                         }
+                    }
+                }
+                else
+                {
+                    deleteNo++;
+                }
+            }
+
+            // Use the middle image of each group with same pixels
+            foreach (var group in removeIndices.GroupBy(p => p.Number).OrderBy(p => p.Key))
+            {
+                var arr = group.OrderByDescending(p => p.Index).ToArray();
+                var middle = (int)Math.Round(group.Count() / 2.0);
+                var middleElement = arr[middle];
+                pcsList[middleElement.Index].StartTime = pcsList[arr.Last().Index].StartTime;
+                pcsList[middleElement.Index].EndTime = pcsList[arr.First().Index].EndTime;
+                foreach (var deleteIndex in group.OrderByDescending(p => p.Index))
+                {
+                    if (deleteIndex != middleElement)
+                    {
+                        pcsList.RemoveAt(deleteIndex.Index);
                     }
                 }
             }
@@ -897,6 +927,12 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             }
 
             return pcsList;
+        }
+
+        public class DeleteIndex
+        {
+            public int Number { get; set; }
+            public int Index { get; set; }
         }
 
         private static bool ByteArraysEqual(byte[] b1, byte[] b2)
