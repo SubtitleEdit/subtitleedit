@@ -5132,6 +5132,12 @@ $HorzAlign          =   Center
                             item.Underline = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
                         }
 
+                        subNode = listNode.SelectSingleNode("StrikeOut");
+                        if (subNode != null)
+                        {
+                            item.StrikeOut = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                        }
+
                         subNode = listNode.SelectSingleNode("Primary");
                         if (subNode != null)
                         {
@@ -8663,6 +8669,7 @@ $HorzAlign          =   Center
                             textWriter.WriteElementString("Bold", style.Bold.ToString(CultureInfo.InvariantCulture));
                             textWriter.WriteElementString("Italic", style.Italic.ToString(CultureInfo.InvariantCulture));
                             textWriter.WriteElementString("Underline", style.Underline.ToString(CultureInfo.InvariantCulture));
+                            textWriter.WriteElementString("StrikeOut", style.StrikeOut.ToString(CultureInfo.InvariantCulture));
                             textWriter.WriteElementString("Primary", style.Primary.ToArgb().ToString(CultureInfo.InvariantCulture));
                             textWriter.WriteElementString("Secondary", style.Secondary.ToArgb().ToString(CultureInfo.InvariantCulture));
                             textWriter.WriteElementString("Outline", style.Outline.ToArgb().ToString(CultureInfo.InvariantCulture));
