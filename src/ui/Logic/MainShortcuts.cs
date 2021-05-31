@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainVideo3000MsLeft { get; set; }
         public Keys MainVideoGoToStartCurrent { get; set; }
         public Keys MainVideoToggleStartEndCurrent { get; set; }
-        public Keys MainVideoPlayCurrent { get; set; }
+        public Keys MainVideoPlaySelectedLines { get; set; }
         public Keys VideoGoToPrevSubtitle { get; set; }
         public Keys VideoGoToNextSubtitle { get; set; }
         public Keys VideoGoToPrevChapter { get; set; }
@@ -251,7 +251,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainVideo3000MsLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo3000MsLeft);
             MainVideoGoToStartCurrent = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoGoToStartCurrent);
             MainVideoToggleStartEndCurrent = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleStartEndCurrent);
-            MainVideoPlayCurrent = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlayCurrent);
+            MainVideoPlaySelectedLines = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlaySelectedLines);
             VideoGoToPrevSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoGoToPrevSubtitle);
             VideoGoToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoGoToNextSubtitle);
             VideoGoToPrevChapter = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoGoToPrevChapter);
