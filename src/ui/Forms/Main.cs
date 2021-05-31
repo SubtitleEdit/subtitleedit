@@ -4673,6 +4673,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 MakeHistoryForUndo(_language.BeforeNew);
+                toolStripStatusLabelProgress.Visible = false;
                 ResetSubtitle(true);
                 CheckSecondSubtitleReset();
             }
