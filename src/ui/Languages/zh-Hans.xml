@@ -40,6 +40,7 @@
     <Bold>粗体</Bold>
     <Italic>斜体</Italic>
     <Underline>下划线</Underline>
+    <Strikeout>删除线</Strikeout>
     <Visible>可见</Visible>
     <FrameRate>帧率</FrameRate>
     <Name>名称</Name>
@@ -2276,7 +2277,7 @@ Command line: {1} {2}
     <GoBack3Second>回退 3 秒</GoBack3Second>
     <GoToStartCurrent>设定视频位置定位到当前字幕的起始点</GoToStartCurrent>
     <ToggleStartEndCurrent>让视频位置在当前字幕的起始点与结束点间切换跳转</ToggleStartEndCurrent>
-    <PlayCurrent>播放当前字幕</PlayCurrent>
+    <PlaySelectedLines>播放选定的行</PlaySelectedLines>
     <WaveformGoToPrevSubtitle>转到上一条字幕（从当前视频位置起）</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>转到下一条字幕（从当前视频位置起）</WaveformGoToNextSubtitle>
     <WaveformGoToPrevChapter>转到上一章节</WaveformGoToPrevChapter>
