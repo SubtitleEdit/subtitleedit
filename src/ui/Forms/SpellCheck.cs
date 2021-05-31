@@ -612,6 +612,10 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _noOfCorrectWords++;
                     }
+                    else if (_postfix.Length > 0 && _spellCheckWordLists.HasUserWord(_currentWord + _postfix))
+                    {
+                        _noOfCorrectWords++;
+                    }
                     else if (_changeAllDictionary.ContainsKey(_currentWord))
                     {
                         _noOfChangedWords++;
