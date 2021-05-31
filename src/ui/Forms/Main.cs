@@ -15338,7 +15338,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
-            else if (_shortcuts.MainVideoPlayCurrent == e.KeyData)
+            else if (_shortcuts.MainVideoPlaySelectedLines == e.KeyData)
             {
                 if (SubtitleListview1.SelectedItems.Count > 0 && _subtitle != null && mediaPlayer.VideoPlayer != null)
                 {
@@ -15349,7 +15349,7 @@ namespace Nikse.SubtitleEdit.Forms
                         ShowSubtitle();
                         mediaPlayer.Play();
                         _endSeconds = p.EndTime.TotalSeconds;
-                        _playSelectionIndex = -1;
+                        _playSelectionIndex = _subtitle.GetIndex(p);
                     }
                 }
                 e.SuppressKeyPress = true;

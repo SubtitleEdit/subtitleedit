@@ -6269,7 +6269,7 @@ namespace Nikse.SubtitleEdit.Logic
                     language.Settings.ToggleStartEndCurrent = reader.Value;
                     break;
                 case "Settings/PlayCurrent":
-                    language.Settings.PlayCurrent = reader.Value;
+                    language.Settings.PlaySelectedLines = reader.Value;
                     break;
                 case "Settings/WaveformGoToPrevSubtitle":
                     language.Settings.WaveformGoToPrevSubtitle = reader.Value;
