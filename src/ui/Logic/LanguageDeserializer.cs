@@ -175,6 +175,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "General/Underline":
                     language.General.Underline = reader.Value;
                     break;
+                case "General/Strikeout":
+                    language.General.Strikeout = reader.Value;
+                    break;
                 case "General/Visible":
                     language.General.Visible = reader.Value;
                     break;
@@ -6268,7 +6271,7 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/ToggleStartEndCurrent":
                     language.Settings.ToggleStartEndCurrent = reader.Value;
                     break;
-                case "Settings/PlayCurrent":
+                case "Settings/PlaySelectedLines":
                     language.Settings.PlaySelectedLines = reader.Value;
                     break;
                 case "Settings/WaveformGoToPrevSubtitle":

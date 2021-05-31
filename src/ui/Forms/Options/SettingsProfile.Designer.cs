@@ -101,7 +101,7 @@
             this.groupBoxStyles.Controls.Add(this.listViewProfiles);
             this.groupBoxStyles.Location = new System.Drawing.Point(12, 12);
             this.groupBoxStyles.Name = "groupBoxStyles";
-            this.groupBoxStyles.Size = new System.Drawing.Size(927, 445);
+            this.groupBoxStyles.Size = new System.Drawing.Size(946, 445);
             this.groupBoxStyles.TabIndex = 1;
             this.groupBoxStyles.TabStop = false;
             // 
@@ -109,7 +109,7 @@
             // 
             this.labelName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelName.AutoSize = true;
-            this.labelName.Location = new System.Drawing.Point(616, 19);
+            this.labelName.Location = new System.Drawing.Point(635, 19);
             this.labelName.Name = "labelName";
             this.labelName.Size = new System.Drawing.Size(35, 13);
             this.labelName.TabIndex = 53;
@@ -118,7 +118,7 @@
             // textBoxName
             // 
             this.textBoxName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxName.Location = new System.Drawing.Point(619, 35);
+            this.textBoxName.Location = new System.Drawing.Point(638, 35);
             this.textBoxName.Name = "textBoxName";
             this.textBoxName.Size = new System.Drawing.Size(250, 20);
             this.textBoxName.TabIndex = 80;
@@ -151,9 +151,9 @@
             this.groupBoxGeneralRules.Controls.Add(this.numericUpDownMaxCharsSec);
             this.groupBoxGeneralRules.Controls.Add(this.labelMinGapMs);
             this.groupBoxGeneralRules.Controls.Add(this.numericUpDownSubtitleLineMaximumLength);
-            this.groupBoxGeneralRules.Location = new System.Drawing.Point(619, 61);
+            this.groupBoxGeneralRules.Location = new System.Drawing.Point(621, 61);
             this.groupBoxGeneralRules.Name = "groupBoxGeneralRules";
-            this.groupBoxGeneralRules.Size = new System.Drawing.Size(302, 348);
+            this.groupBoxGeneralRules.Size = new System.Drawing.Size(319, 348);
             this.groupBoxGeneralRules.TabIndex = 90;
             this.groupBoxGeneralRules.TabStop = false;
             this.groupBoxGeneralRules.Text = "Rules";
@@ -161,8 +161,9 @@
             // comboBoxContinuationStyle
             // 
             this.comboBoxContinuationStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxContinuationStyle.DropDownWidth = 260;
             this.comboBoxContinuationStyle.FormattingEnabled = true;
-            this.comboBoxContinuationStyle.Location = new System.Drawing.Point(102, 286);
+            this.comboBoxContinuationStyle.Location = new System.Drawing.Point(132, 286);
             this.comboBoxContinuationStyle.Name = "comboBoxContinuationStyle";
             this.comboBoxContinuationStyle.Size = new System.Drawing.Size(174, 21);
             this.comboBoxContinuationStyle.TabIndex = 195;
@@ -189,13 +190,14 @@
             // comboBoxDialogStyle
             // 
             this.comboBoxDialogStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxDialogStyle.DropDownWidth = 260;
             this.comboBoxDialogStyle.FormattingEnabled = true;
             this.comboBoxDialogStyle.Items.AddRange(new object[] {
             "Dash both lines with space",
             "Dash both lines without space",
             "Dash second line with space",
             "Dash second line without space"});
-            this.comboBoxDialogStyle.Location = new System.Drawing.Point(73, 257);
+            this.comboBoxDialogStyle.Location = new System.Drawing.Point(103, 257);
             this.comboBoxDialogStyle.Name = "comboBoxDialogStyle";
             this.comboBoxDialogStyle.Size = new System.Drawing.Size(203, 21);
             this.comboBoxDialogStyle.TabIndex = 194;
@@ -229,7 +231,7 @@
             0,
             0,
             65536});
-            this.numericUpDownOptimalCharsSec.Location = new System.Drawing.Point(203, 41);
+            this.numericUpDownOptimalCharsSec.Location = new System.Drawing.Point(233, 41);
             this.numericUpDownOptimalCharsSec.Minimum = new decimal(new int[] {
             4,
             0,
@@ -256,7 +258,7 @@
             // 
             // numericUpDownMaxWordsMin
             // 
-            this.numericUpDownMaxWordsMin.Location = new System.Drawing.Point(203, 95);
+            this.numericUpDownMaxWordsMin.Location = new System.Drawing.Point(233, 95);
             this.numericUpDownMaxWordsMin.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -306,7 +308,7 @@
             // 
             // numericUpDownMaxNumberOfLines
             // 
-            this.numericUpDownMaxNumberOfLines.Location = new System.Drawing.Point(203, 201);
+            this.numericUpDownMaxNumberOfLines.Location = new System.Drawing.Point(233, 201);
             this.numericUpDownMaxNumberOfLines.Maximum = new decimal(new int[] {
             25,
             0,
@@ -347,7 +349,7 @@
             // 
             // numericUpDownDurationMin
             // 
-            this.numericUpDownDurationMin.Location = new System.Drawing.Point(203, 122);
+            this.numericUpDownDurationMin.Location = new System.Drawing.Point(233, 122);
             this.numericUpDownDurationMin.Maximum = new decimal(new int[] {
             2000,
             0,
@@ -370,7 +372,7 @@
             // 
             // numericUpDownDurationMax
             // 
-            this.numericUpDownDurationMax.Location = new System.Drawing.Point(203, 148);
+            this.numericUpDownDurationMax.Location = new System.Drawing.Point(233, 148);
             this.numericUpDownDurationMax.Maximum = new decimal(new int[] {
             50000,
             0,
@@ -395,7 +397,7 @@
             // 
             this.comboBoxMergeShortLineLength.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxMergeShortLineLength.FormattingEnabled = true;
-            this.comboBoxMergeShortLineLength.Location = new System.Drawing.Point(203, 229);
+            this.comboBoxMergeShortLineLength.Location = new System.Drawing.Point(233, 229);
             this.comboBoxMergeShortLineLength.Name = "comboBoxMergeShortLineLength";
             this.comboBoxMergeShortLineLength.Size = new System.Drawing.Size(73, 21);
             this.comboBoxMergeShortLineLength.TabIndex = 180;
@@ -412,7 +414,7 @@
             // 
             // numericUpDownMinGapMs
             // 
-            this.numericUpDownMinGapMs.Location = new System.Drawing.Point(203, 174);
+            this.numericUpDownMinGapMs.Location = new System.Drawing.Point(233, 174);
             this.numericUpDownMinGapMs.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -436,7 +438,7 @@
             0,
             0,
             65536});
-            this.numericUpDownMaxCharsSec.Location = new System.Drawing.Point(203, 68);
+            this.numericUpDownMaxCharsSec.Location = new System.Drawing.Point(233, 68);
             this.numericUpDownMaxCharsSec.Minimum = new decimal(new int[] {
             4,
             0,
@@ -463,7 +465,7 @@
             // 
             // numericUpDownSubtitleLineMaximumLength
             // 
-            this.numericUpDownSubtitleLineMaximumLength.Location = new System.Drawing.Point(203, 14);
+            this.numericUpDownSubtitleLineMaximumLength.Location = new System.Drawing.Point(233, 14);
             this.numericUpDownSubtitleLineMaximumLength.Maximum = new decimal(new int[] {
             999,
             0,
@@ -573,7 +575,7 @@
             this.listViewProfiles.Location = new System.Drawing.Point(6, 19);
             this.listViewProfiles.MultiSelect = false;
             this.listViewProfiles.Name = "listViewProfiles";
-            this.listViewProfiles.Size = new System.Drawing.Size(604, 390);
+            this.listViewProfiles.Size = new System.Drawing.Size(609, 390);
             this.listViewProfiles.TabIndex = 10;
             this.listViewProfiles.UseCompatibleStateImageBehavior = false;
             this.listViewProfiles.View = System.Windows.Forms.View.Details;
@@ -609,7 +611,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(864, 468);
+            this.buttonCancel.Location = new System.Drawing.Point(877, 468);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 205;
@@ -620,7 +622,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(783, 468);
+            this.buttonOK.Location = new System.Drawing.Point(796, 468);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 200;
@@ -638,7 +640,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(951, 503);
+            this.ClientSize = new System.Drawing.Size(964, 503);
             this.Controls.Add(this.groupBoxStyles);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
@@ -649,9 +651,9 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Profiles";
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SettingsProfile_KeyDown);
-            this.ResizeEnd += new System.EventHandler(this.SettingsProfile_ResizeEnd);
             this.Shown += new System.EventHandler(this.SettingsProfile_Shown);
+            this.ResizeEnd += new System.EventHandler(this.SettingsProfile_ResizeEnd);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SettingsProfile_KeyDown);
             this.groupBoxStyles.ResumeLayout(false);
             this.groupBoxStyles.PerformLayout();
             this.groupBoxGeneralRules.ResumeLayout(false);
