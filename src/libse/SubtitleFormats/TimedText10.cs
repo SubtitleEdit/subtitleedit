@@ -162,6 +162,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 catch
                 {
+                    // ignore
                 }
                 if (!hasStyleHead && (subtitle.Header.Contains("[V4+ Styles]") || subtitle.Header.Contains("[V4 Styles]")))
                 {
@@ -1238,18 +1239,28 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 s = s.TrimEnd('m');
                 return new TimeCode(double.Parse(s.Replace(",", "."), CultureInfo.InvariantCulture));
             }
+
             if (s.EndsWith('s'))
             {
                 Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource = "seconds";
                 s = s.TrimEnd('s');
                 return TimeCode.FromSeconds(double.Parse(s.Replace(",", "."), CultureInfo.InvariantCulture));
             }
+
             if (s.EndsWith('t'))
             {
                 Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource = "ticks";
                 s = s.TrimEnd('t');
                 var ts = TimeSpan.FromTicks(long.Parse(s, CultureInfo.InvariantCulture));
                 return new TimeCode(ts.TotalMilliseconds);
+            }
+
+            if (s.EndsWith('f') && !s.Contains(':') && !s.Contains('.') && !s.Contains(','))
+            {
+                Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource = "frames";
+                s = s.TrimEnd('f');
+                var totalFrames = long.Parse(s, CultureInfo.InvariantCulture);
+                return new TimeCode(FramesToMilliseconds(totalFrames));
             }
 
             var parts = s.Split(':', '.', ',', ';');
