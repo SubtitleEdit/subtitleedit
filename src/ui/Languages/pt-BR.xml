@@ -1983,7 +1983,7 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <AutoWrapWhileTyping>Auto-ajustar linha durante digitação</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Duração mínima em milissegundos</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Duração máxima em milissegundos</DurationMaximumMilliseconds>
-    <MinimumGapMilliseconds>Diferença mínima entre legendas (em milissegundos)</MinimumGapMilliseconds>
+    <MinimumGapMilliseconds>Diferença mínima entre legendas (ms)</MinimumGapMilliseconds>
     <MaximumLines>Número máximo de linhas</MaximumLines>
     <SubtitleFont>Fonte da legenda</SubtitleFont>
     <SubtitleFontSize>Tamanho da fonte da legenda</SubtitleFontSize>
