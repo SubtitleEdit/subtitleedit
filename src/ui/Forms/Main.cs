@@ -21458,14 +21458,14 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 timerAutoContinue.Stop();
 
-                if (timerStillTyping.Enabled)
-                {
-                    labelStatus.Text = _language.VideoControls.StillTypingAutoContinueStopped;
-                }
-                else
+                if ((DateTime.UtcNow.Ticks - _lastTextKeyDownTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
                 {
                     labelStatus.Text = string.Empty;
                     PlayNext();
+                }
+                else
+                {
+                    labelStatus.Text = _language.VideoControls.StillTypingAutoContinueStopped;
                 }
             }
             else
@@ -21479,11 +21479,6 @@ namespace Nikse.SubtitleEdit.Forms
                     labelStatus.Text = string.Format(_language.VideoControls.AutoContinueInXSeconds, _autoContinueDelayCount);
                 }
             }
-        }
-
-        private void timerStillTyping_Tick(object sender, EventArgs e)
-        {
-            timerStillTyping.Stop();
         }
 
         private void textBoxListViewText_MouseMove(object sender, MouseEventArgs e)

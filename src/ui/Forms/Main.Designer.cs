@@ -413,7 +413,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.ShowSubtitleTimer = new System.Windows.Forms.Timer(this.components);
             this.timerAutoDuration = new System.Windows.Forms.Timer(this.components);
             this.timerAutoContinue = new System.Windows.Forms.Timer(this.components);
-            this.timerStillTyping = new System.Windows.Forms.Timer(this.components);
             this.timerWaveform = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStripWaveform = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.addParagraphHereToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -3951,11 +3950,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.timerAutoContinue.Interval = 1000;
             this.timerAutoContinue.Tick += new System.EventHandler(this.timerAutoContinue_Tick);
             // 
-            // timerStillTyping
-            // 
-            this.timerStillTyping.Interval = 1500;
-            this.timerStillTyping.Tick += new System.EventHandler(this.timerStillTyping_Tick);
-            // 
             // timerWaveform
             // 
             this.timerWaveform.Tick += new System.EventHandler(this.timerWaveform_Tick);
@@ -5619,7 +5613,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAdjustAllTimes;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAutoTranslate;
         private System.Windows.Forms.ToolStripMenuItem translateToolStripMenuItem;
-        private System.Windows.Forms.Timer timerStillTyping;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemVideo;
         private System.Windows.Forms.ToolStripMenuItem openVideoToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
