@@ -106,11 +106,29 @@ namespace Nikse.SubtitleEdit.Forms
             var subtitles = new List<Subtitle>();
             for (int k = 0; k < _fileNamesToJoin.Count; k++)
             {
-                string fileName = _fileNamesToJoin[k];
+                var fileName = _fileNamesToJoin[k];
                 try
                 {
                     var sub = new Subtitle();
-                    SubtitleFormat format;
+                    SubtitleFormat format = null;
+
+                    if (fileName.EndsWith(".ismt", StringComparison.InvariantCultureIgnoreCase) ||
+                        fileName.EndsWith(".mp4", StringComparison.InvariantCultureIgnoreCase) ||
+                        fileName.EndsWith(".m4v", StringComparison.InvariantCultureIgnoreCase) ||
+                        fileName.EndsWith(".3gp", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        format = new IsmtDfxp();
+                        if (format.IsMine(null, fileName))
+                        {
+                            var s = new Subtitle();
+                            format.LoadSubtitle(s, null, fileName);
+                            if (s.Paragraphs.Count > 0)
+                            {
+                                lastFormat = format;
+                            }
+                        }
+                    }
+
                     var lines = FileUtil.ReadAllLinesShared(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName));
                     if (lastFormat != null && lastFormat.IsMine(lines, fileName))
                     {
@@ -118,7 +136,10 @@ namespace Nikse.SubtitleEdit.Forms
                         format.LoadSubtitle(sub, lines, fileName);
                     }
 
-                    format = sub.LoadSubtitle(fileName, out _, null);
+                    if (sub.Paragraphs.Count == 0 || format == null)
+                    {
+                        format = sub.LoadSubtitle(fileName, out _, null);
+                    }
 
                     if (format == null)
                     {
