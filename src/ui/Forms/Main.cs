@@ -2557,7 +2557,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            if ((ext == ".mp4" || ext == ".m4v" || ext == ".3gp") && file.Length > 10000)
+            if ((ext == ".mp4" || ext == ".m4v" || ext == ".3gp") && file.Length > 2000)
             {
                 if (!new IsmtDfxp().IsMine(null, fileName))
                 {
@@ -2641,7 +2641,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            if (ext == ".ismt")
+            if (ext == ".ismt" || ext == ".mp4" || ext == ".m4v" || ext == ".3gp")
             {
                 var f = new IsmtDfxp();
                 if (f.IsMine(null, fileName))

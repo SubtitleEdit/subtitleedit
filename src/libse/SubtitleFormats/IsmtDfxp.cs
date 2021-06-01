@@ -34,8 +34,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     return false;
                 }
 
+                // ftypisml, ftypdash, ftyppiff, stypiso6 or ?
                 var str = Encoding.ASCII.GetString(buffer, 4, 8);
-                if (!str.StartsWith("ftyp", StringComparison.Ordinal)) // ftypisml, ftypdash, ftyppiff or ?
+                if (!str.StartsWith("ftyp", StringComparison.Ordinal) && !str.StartsWith("styp", StringComparison.Ordinal))
                 {
                     return false;
                 }
