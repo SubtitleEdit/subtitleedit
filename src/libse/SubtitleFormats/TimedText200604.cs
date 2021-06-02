@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
+using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -18,7 +19,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
-            string xmlAsString = sb.ToString().Replace("http://www.w3.org/2006/04/ttaf1#styling\"xml:lang", "http://www.w3.org/2006/04/ttaf1#styling\" xml:lang").Trim();
+            var xmlAsString = sb.ToString().Replace("http://www.w3.org/2006/04/ttaf1#styling\"xml:lang", "http://www.w3.org/2006/04/ttaf1#styling\" xml:lang").Trim();
 
             if (xmlAsString.Contains("http://www.w3.org/2006/10"))
             {
@@ -30,43 +31,43 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return false;
             }
 
-            if (xmlAsString.Contains("http://www.w3.org/") &&
-                xmlAsString.Contains("/ttaf1"))
+            if (!xmlAsString.Contains("http://www.w3.org/") || !xmlAsString.Contains("/ttaf1"))
             {
-                var xml = new XmlDocument { XmlResolver = null };
-                try
-                {
-                    xml.LoadXml(xmlAsString.RemoveControlCharactersButWhiteSpace());
-
-                    var nsmgr = new XmlNamespaceManager(xml.NameTable);
-                    nsmgr.AddNamespace("ttaf1", xml.DocumentElement.NamespaceURI);
-
-                    XmlNode div;
-                    var body = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr);
-                    if (body == null)
-                    {
-                        div = xml.DocumentElement;
-                    }
-                    else
-                    {
-                        div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).SelectSingleNode("ttaf1:div", nsmgr);
-                    }
-
-                    if (div == null)
-                    {
-                        div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).FirstChild;
-                    }
-
-                    int numberOfParagraphs = div.ChildNodes.Count;
-                    return numberOfParagraphs > 0;
-                }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine(ex.Message);
-                    return false;
-                }
+                return false;
             }
-            return false;
+
+            var xml = new XmlDocument { XmlResolver = null };
+            try
+            {
+                xml.LoadXml(xmlAsString.RemoveControlCharactersButWhiteSpace());
+
+                var nsmgr = new XmlNamespaceManager(xml.NameTable);
+                nsmgr.AddNamespace("ttaf1", xml.DocumentElement.NamespaceURI);
+
+                XmlNode div;
+                var body = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr);
+                if (body == null)
+                {
+                    div = xml.DocumentElement;
+                }
+                else
+                {
+                    div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).SelectSingleNode("ttaf1:div", nsmgr);
+                }
+
+                if (div == null)
+                {
+                    div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).FirstChild;
+                }
+
+                var numberOfParagraphs = div.ChildNodes.Count;
+                return numberOfParagraphs > 0;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+                return false;
+            }
         }
 
         private static string ConvertToTimeString(TimeCode time)
@@ -76,7 +77,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            string xmlStructure =
+            var xmlStructure =
                 "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + Environment.NewLine +
                 "<tt xmlns=\"http://www.w3.org/2006/04/ttaf1\" xmlns:tts=\"http://www.w3.org/2006/04/ttaf1#styling\">" + Environment.NewLine +
                 "   <head>" + Environment.NewLine +
@@ -161,7 +162,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var nsmgr = new XmlNamespaceManager(xml.NameTable);
             nsmgr.AddNamespace("ttaf1", xml.DocumentElement.NamespaceURI);
-
+            var fixOverlap = false;
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("//ttaf1:p", nsmgr))
             {
                 try
@@ -214,21 +215,28 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 break;
                         }
                     }
-                    string start = node.Attributes["begin"].InnerText;
-                    string text = pText.ToString();
+                    var start = node.Attributes["begin"].InnerText;
+                    var text = pText.ToString();
                     text = text.Replace(Environment.NewLine + "</i>", "</i>" + Environment.NewLine);
                     text = text.Replace("<i></i>", string.Empty);
                     if (node.Attributes["end"] != null)
                     {
-                        string end = node.Attributes["end"].InnerText;
+                        var end = node.Attributes["end"].InnerText;
                         subtitle.Paragraphs.Add(new Paragraph(TimedText10.GetTimeCode(start, false), TimedText10.GetTimeCode(end, false), text));
                     }
                     else if (node.Attributes["dur"] != null)
                     {
-                        TimeCode duration = TimedText10.GetTimeCode(node.Attributes["dur"].InnerText, false);
-                        TimeCode startTime = TimedText10.GetTimeCode(start, false);
+                        var duration = TimedText10.GetTimeCode(node.Attributes["dur"].InnerText, false);
+                        var startTime = TimedText10.GetTimeCode(start, false);
                         var endTime = new TimeCode(startTime.TotalMilliseconds + duration.TotalMilliseconds);
                         subtitle.Paragraphs.Add(new Paragraph(startTime, endTime, text));
+                    }
+                    else
+                    {
+                        var startTimeCode = TimedText10.GetTimeCode(start, false);
+                        var endTimeCode = new TimeCode(startTimeCode.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(text));
+                        subtitle.Paragraphs.Add(new Paragraph(startTimeCode, endTimeCode, text));
+                        fixOverlap = true;
                     }
                 }
                 catch (Exception ex)
@@ -237,8 +245,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     _errorCount++;
                 }
             }
-            bool allBelow100 = true;
-            foreach (Paragraph p in subtitle.Paragraphs)
+
+            var allBelow100 = true;
+            foreach (var p in subtitle.Paragraphs)
             {
                 p.Text = Utilities.RemoveUnneededSpaces(p.Text, null).Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
                 if (p.StartTime.Milliseconds >= 100 || p.EndTime.Milliseconds >= 100)
@@ -248,14 +257,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             if (allBelow100)
             {
-                foreach (Paragraph p in subtitle.Paragraphs)
+                foreach (var p in subtitle.Paragraphs)
                 {
                     p.StartTime.Milliseconds *= 10;
                     p.EndTime.Milliseconds *= 10;
                 }
             }
+
+            if (fixOverlap)
+            {
+                new FixOverlappingDisplayTimes().Fix(subtitle, new EmptyFixCallback());
+            }
+
             subtitle.Renumber();
         }
-
     }
 }
