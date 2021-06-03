@@ -92,6 +92,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             return s;
         }
 
-        private static bool IsSentenceEndingChar(char ch) => ch == '.' || ch == '!' || ch == '?' || ch == ')' || ch == ']' || ch == ']' || ch == '؟';
+        private static bool IsSentenceEndingChar(char ch) => ch == '.' || ch == '!' || ch == '?' || ch == ')' || ch == ']' || ch == '؟';
     }
 }
