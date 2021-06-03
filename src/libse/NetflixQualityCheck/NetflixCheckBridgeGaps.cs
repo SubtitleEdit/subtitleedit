@@ -18,6 +18,9 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 return;
             }
 
+            double twoFramesGap = 1000.0 / controller.FrameRate * 2.0;
+            int halfSecGap = (int)Math.Round(controller.FrameRate / 2);
+
             for (int index = 0; index < subtitle.Paragraphs.Count; index++)
             {
                 var p = subtitle.Paragraphs[index];
@@ -27,9 +30,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                     continue;
                 }
 
-                double twoFramesGap = 1000.0 / controller.FrameRate * 2.0;
-                int halfSecGap = (int)Math.Round(controller.FrameRate / 2);
-                var gapInFrames = SubtitleFormat.MillisecondsToFrames(next.StartTime.TotalMilliseconds) - SubtitleFormat.MillisecondsToFrames(p.EndTime.TotalMilliseconds);
+                var gapInFrames = SubtitleFormat.MillisecondsToFrames(next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds);
                 if (gapInFrames > 2 && gapInFrames < halfSecGap && !p.StartTime.IsMaxTime)
                 {
                     var fixedParagraph = new Paragraph(p, false) { EndTime = { TotalMilliseconds = next.StartTime.TotalMilliseconds - twoFramesGap } };
