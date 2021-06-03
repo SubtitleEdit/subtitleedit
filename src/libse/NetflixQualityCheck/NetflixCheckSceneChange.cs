@@ -86,11 +86,11 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 if (nextEndSceneChanges.Count > 0)
                 {
                     double nearestEndNextSceneChange = nextEndSceneChanges.Aggregate((x, y) => Math.Abs(x - p.EndTime.TotalSeconds) < Math.Abs(y - p.EndTime.TotalSeconds) ? x : y);
-                    if (SubtitleFormat.MillisecondsToFrames(nearestEndNextSceneChange * 1000 - p.EndTime.TotalMilliseconds) - 1 < halfSecGapInFrames &&
+                    if (SubtitleFormat.MillisecondsToFrames(nearestEndNextSceneChange * 1000 - p.EndTime.TotalMilliseconds) < halfSecGapInFrames &&
                         SubtitleFormat.MillisecondsToFrames(p.EndTime.TotalMilliseconds) != SubtitleFormat.MillisecondsToFrames(nearestEndNextSceneChange * 1000 - twoFramesGap))
                     {
                         fixedParagraph.EndTime.TotalMilliseconds = nearestEndNextSceneChange * 1000 - twoFramesGap;
-                        comment = $"The out-cue is within {halfSecGapInFrames} frames of the last frame before the shot change";
+                        comment = $"The out-cue is within {halfSecGapInFrames} frames of the shot change";
                         controller.AddRecord(p, fixedParagraph, comment);
                     }
                 }
