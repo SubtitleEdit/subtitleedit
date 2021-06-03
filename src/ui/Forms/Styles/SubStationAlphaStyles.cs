@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Text;
 using System.Globalization;
@@ -11,6 +12,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Logic.VideoPlayers;
+using System.IO;
 
 namespace Nikse.SubtitleEdit.Forms.Styles
 {
@@ -38,14 +41,15 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private readonly SubtitleFormat _format;
         private readonly bool _isSubStationAlpha;
         private Bitmap _backgroundImage;
-        private Bitmap _fixedBackgroundImage;
         private bool _backgroundImageDark;
         private bool _fileStyleActive = true;
         private readonly List<AssaStorageCategory> _storageCategories;
         private AssaStorageCategory _currentCategory;
-        private FormWindowState _lastFormWindowState = FormWindowState.Normal;
+        private FormWindowState _lastFormWindowState;
         private readonly Main _mainForm;
         private readonly List<AssaAttachmentFont> _fontAttachments;
+        private LibMpvDynamic _mpv;
+        private string _mpvTextFileName;
 
         private ListView ActiveListView => _fileStyleActive ? listViewStyles : listViewStorage;
 
@@ -145,6 +149,19 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             buttonRemoveAll.Text = l.RemoveAll;
             groupBoxPreview.Text = LanguageSettings.Current.General.Preview;
 
+            labelScaleX.Text = l.ScaleX;
+            labelScaleY.Text = l.ScaleY;
+            labelSpacing.Text = l.Spacing;
+            labelAngle.Text = l.Angle;
+            labelScaleX.Text = l.ScaleX;
+            numericUpDownScaleX.Left = labelScaleX.Left + labelScaleX.Width + 4;
+            labelScaleY.Left = numericUpDownScaleX.Left + numericUpDownScaleX.Width + 9;
+            numericUpDownScaleY.Left = labelScaleY.Left + labelScaleY.Width + 4;
+            labelSpacing.Left = numericUpDownScaleY.Left + numericUpDownScaleY.Width + 9;
+            numericUpDownSpacing.Left = labelSpacing.Left + labelSpacing.Width + 4;
+            labelAngle.Left = numericUpDownSpacing.Left + numericUpDownSpacing.Width + 9;
+            numericUpDownAngle.Left = labelAngle.Left + labelAngle.Width + 4;
+
             groupBoxStorage.Text = l.StyleStorage;
             labelStorageCategory.Text = LanguageSettings.Current.SubStationAlphaStylesCategoriesManager.Category;
             buttonStorageCategoryNew.Text = l.New;
@@ -217,6 +234,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 listViewStyles.Columns[5].Text = l.Back;
                 checkBoxFontUnderline.Visible = false;
                 checkBoxStrikeout.Visible = false;
+                labelScaleX.Visible = false;
+                labelScaleY.Visible = false;
+                labelSpacing.Visible = false;
+                labelAngle.Visible = false;
+                numericUpDownScaleX.Visible = false;
+                numericUpDownScaleY.Visible = false;
+                numericUpDownSpacing.Visible = false;
+                numericUpDownAngle.Visible = false;
                 numericUpDownOutline.Increment = 1;
                 numericUpDownOutline.DecimalPlaces = 0;
                 numericUpDownShadowWidth.Increment = 1;
@@ -283,7 +308,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             checkBoxStrikeout.Left = checkBoxFontUnderline.Left + checkBoxFontUnderline.Width + 12;
         }
 
-        public override string Header => GetFileHeader();
+        public override string Header => GetFileHeader(_currentFileStyles);
 
         private void ResetHeader()
         {
@@ -389,16 +414,95 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             return resultList;
         }
 
+        private bool GeneratePreviewViaMpv()
+        {
+            var fileName = Path.Combine(Configuration.DataDirectory, "preview.mp4");
+            if (!File.Exists(fileName))
+            {
+                var isFfmpegAvailable = !Configuration.IsRunningOnWindows || !string.IsNullOrEmpty(Configuration.Settings.General.FFmpegLocation) && File.Exists(Configuration.Settings.General.FFmpegLocation);
+                if (!isFfmpegAvailable)
+                {
+                    return false;
+                }
+
+                using (var p = GetFFmpegProcess(fileName))
+                {
+                    p.Start();
+                    p.WaitForExit();
+                }
+            }
+
+            if (!LibMpvDynamic.IsInstalled)
+            {
+                return false;
+            }
+
+            if (_mpv == null)
+            {
+                _mpv = new LibMpvDynamic();
+                _mpv.Initialize(pictureBoxPreview, fileName, VideoStartLoaded, null);
+            }
+            else
+            {
+                VideoStartLoaded(null, null);
+            }
+
+            return true;
+        }
+
+        public static Process GetFFmpegProcess(string outputFileName)
+        {
+            var ffmpegLocation = Configuration.Settings.General.FFmpegLocation;
+            if (!Configuration.IsRunningOnWindows && (string.IsNullOrEmpty(ffmpegLocation) || !File.Exists(ffmpegLocation)))
+            {
+                ffmpegLocation = "ffmpeg";
+            }
+
+            return new Process
+            {
+                StartInfo =
+                {
+                    FileName = ffmpegLocation,
+                    Arguments = $"-t 1 -f lavfi -i color=c=blue:s=720x480 -c:v libx264 -tune stillimage -pix_fmt yuv420p \"{outputFileName}\"",
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+        }
+
+        private void VideoStartLoaded(object sender, EventArgs e)
+        {
+            var format = new AdvancedSubStationAlpha();
+            var subtitle = new Subtitle();
+            var p = new Paragraph(Configuration.Settings.General.PreviewAssaText, 0, 10000);
+            subtitle.Paragraphs.Add(p);
+            try
+            {
+                p.Extra = ActiveListView.SelectedItems[0].Text;
+            }
+            catch
+            {
+                return;
+            }
+            subtitle.Header = GetFileHeader(_fileStyleActive ? _currentFileStyles : _currentCategory.Styles);
+            var text = subtitle.ToText(format);
+            _mpvTextFileName = FileUtil.GetTempFileName(format.Extension);
+            File.WriteAllText(_mpvTextFileName, text);
+            _mpv.LoadSubtitle(_mpvTextFileName);
+            _mpv.Pause();
+            _mpv.CurrentPosition = 0.5;
+        }
+
         protected override void GeneratePreviewReal()
         {
-            if (listViewStyles.SelectedItems.Count != 1 || pictureBoxPreview.Width <= 0 || pictureBoxPreview.Height <= 0)
+            if (ActiveListView.SelectedItems.Count != 1 || pictureBoxPreview.Width <= 0 || pictureBoxPreview.Height <= 0)
             {
                 return;
             }
 
-            if (_fixedBackgroundImage != null)
+            if (GeneratePreviewViaMpv())
             {
-                _backgroundImage = (Bitmap)_fixedBackgroundImage.Clone();
+                return;
             }
 
             if (_backgroundImage == null)
@@ -706,7 +810,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
             else if (propertyName == "strikeout")
             {
-                style.StrikeOut = propertyValue != "0";
+                style.Strikeout = propertyValue != "0";
             }
             else if (propertyName == "alignment")
             {
@@ -756,6 +860,22 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 style.Background = GetColorFromSsa(propertyValue);
             }
+            else if (propertyName == "scalex")
+            {
+                style.ScaleX = decimal.Parse(propertyValue, CultureInfo.InvariantCulture);
+            }
+            else if (propertyName == "scaley")
+            {
+                style.ScaleY = decimal.Parse(propertyValue, CultureInfo.InvariantCulture);
+            }
+            else if (propertyName == "spacing")
+            {
+                style.Spacing = decimal.Parse(propertyValue, CultureInfo.InvariantCulture);
+            }
+            else if (propertyName == "angle")
+            {
+                style.Angle = decimal.Parse(propertyValue, CultureInfo.InvariantCulture);
+            }
             else
             {
                 return false;
@@ -788,14 +908,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             if (!_isSubStationAlpha)
             {
                 Configuration.Settings.SubtitleSettings.AssaStyleStorageCategories = _storageCategories;
-                _header = GetFileHeader();
+                _header = Header;
             }
 
             LogNameChanges();
             DialogResult = DialogResult.OK;
         }
 
-        private string GetFileHeader()
+        private string GetFileHeader(List<SsaStyle> styles)
         {
             var sb = new StringBuilder();
             var format = SsaStyle.DefaultAssStyleFormat;
@@ -813,12 +933,12 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 else if (!stylesAdded && line.Trim().StartsWith("Style:", StringComparison.OrdinalIgnoreCase))
                 {
                     stylesAdded = true;
-                    foreach (var style in _currentFileStyles)
+                    foreach (var style in styles)
                     {
                         sb.AppendLine(style.ToRawAss(format));
                     }
 
-                    if (_currentFileStyles.Count == 0)
+                    if (styles.Count == 0)
                     {
                         sb.AppendLine(new SsaStyle().ToRawAss(format));
                     }
@@ -895,7 +1015,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 groupBoxProperties.Enabled = false;
                 _doUpdate = false;
                 pictureBoxPreview.Image?.Dispose();
-                pictureBoxPreview.Image = new Bitmap(1,1);
+                pictureBoxPreview.Image = new Bitmap(1, 1);
             }
 
             UpdateCurrentFileButtonsState();
@@ -919,7 +1039,11 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             checkBoxFontItalic.Checked = style.Italic;
             checkBoxFontBold.Checked = style.Bold;
             checkBoxFontUnderline.Checked = style.Underline;
-            checkBoxStrikeout.Checked = style.StrikeOut;
+            checkBoxStrikeout.Checked = style.Strikeout;
+            numericUpDownScaleX.Value = style.ScaleX;
+            numericUpDownScaleY.Value = style.ScaleY;
+            numericUpDownSpacing.Value = style.Spacing;
+            numericUpDownAngle.Value = style.Angle;
 
             if (style.FontSize > 0 && style.FontSize <= (float)numericUpDownFontSize.Maximum)
             {
@@ -1425,6 +1549,11 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 if (style.Underline)
                 {
                     fontStyle |= FontStyle.Underline;
+                }
+
+                if (style.Strikeout)
+                {
+                    fontStyle |= FontStyle.Strikeout;
                 }
 
                 var subItem = ActiveListView.SelectedItems[0].SubItems[5];
@@ -2259,7 +2388,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             _currentCategory = focusCategory;
 
             labelStorageCategory.ForeColor = focusCategory.IsDefault ?
-                SubStationAlphaStylesCategoriesManager._defaultCategoryColor : 
+                SubStationAlphaStylesCategoriesManager._defaultCategoryColor :
                 UiUtil.ForeColor;
 
             buttonStorageRemove.Enabled = listViewStorage.SelectedItems.Count > 0;
@@ -2490,19 +2619,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             MoveToBottom(listViewStorage);
         }
 
-        private void chooseBackgroundImageToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            openFileDialogImport.Filter = "Images|*.png;*.jpg";
-            openFileDialogImport.FileName = string.Empty;
-            if (openFileDialogImport.ShowDialog(this) != DialogResult.OK)
-            {
-                return;
-            }
-
-            _fixedBackgroundImage = ExportPngXml.ResizeBitmap((Bitmap)Image.FromFile(openFileDialogImport.FileName), pictureBoxPreview.Width, pictureBoxPreview.Height);
-            GeneratePreview();
-        }
-
         private void setPreviewTextToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using (var form = new TextPrompt(string.Empty, LanguageSettings.Current.SubStationAlphaStyles.SetPreviewText.TrimEnd('.'), Configuration.Settings.General.PreviewAssaText))
@@ -2616,7 +2732,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             if (!_isSubStationAlpha)
             {
                 Configuration.Settings.SubtitleSettings.AssaStyleStorageCategories = _storageCategories;
-                _header = GetFileHeader();
+                _header = Header;
             }
 
             LogNameChanges();
@@ -2631,6 +2747,55 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 {
                     comboBoxFontName.Text = form.FontName;
                 }
+            }
+        }
+
+        private void SubStationAlphaStyles_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            _mpv.Dispose();
+        }
+
+        private void numericUpDownScaleX_ValueChanged(object sender, EventArgs e)
+        {
+            if (ActiveListView.SelectedItems.Count == 1 && _doUpdate)
+            {
+                var name = ActiveListView.SelectedItems[0].Text;
+                SetSsaStyle(name, "scalex", numericUpDownScaleX.Value.ToString(CultureInfo.InvariantCulture));
+                UpdateListViewFontStyle(GetSsaStyle(name));
+                GeneratePreview();
+            }
+        }
+
+        private void numericUpDownScaleY_ValueChanged(object sender, EventArgs e)
+        {
+            if (ActiveListView.SelectedItems.Count == 1 && _doUpdate)
+            {
+                var name = ActiveListView.SelectedItems[0].Text;
+                SetSsaStyle(name, "scaley", numericUpDownScaleY.Value.ToString(CultureInfo.InvariantCulture));
+                UpdateListViewFontStyle(GetSsaStyle(name));
+                GeneratePreview();
+            }
+        }
+
+        private void numericUpDownSpacing_ValueChanged(object sender, EventArgs e)
+        {
+            if (ActiveListView.SelectedItems.Count == 1 && _doUpdate)
+            {
+                var name = ActiveListView.SelectedItems[0].Text;
+                SetSsaStyle(name, "spacing", numericUpDownSpacing.Value.ToString(CultureInfo.InvariantCulture));
+                UpdateListViewFontStyle(GetSsaStyle(name));
+                GeneratePreview();
+            }
+        }
+
+        private void numericUpDownAngle_ValueChanged(object sender, EventArgs e)
+        {
+            if (ActiveListView.SelectedItems.Count == 1 && _doUpdate)
+            {
+                var name = ActiveListView.SelectedItems[0].Text;
+                SetSsaStyle(name, "angle", numericUpDownAngle.Value.ToString(CultureInfo.InvariantCulture));
+                UpdateListViewFontStyle(GetSsaStyle(name));
+                GeneratePreview();
             }
         }
     }

@@ -2294,7 +2294,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                             }
                             else if (i == strikOutIndex)
                             {
-                                style.StrikeOut = f == "-1" || f == "1";
+                                style.Strikeout = f == "-1" || f == "1";
                             }
                             else if (i == outlineIndex)
                             {

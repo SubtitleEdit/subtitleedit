@@ -2977,7 +2977,11 @@ can edit in same subtitle file (collaboration)",
                 OverwriteX = "Overwrite {0}?",
                 CategoryNote = "Note: The styles in the default category (colored in green) will be applied to new ASSA files",
                 CategoriesManage = "Manage",
-                MoveToCategory = "Move selected styles to category..."
+                MoveToCategory = "Move selected styles to category...",
+                ScaleX = "ScaleX",
+                ScaleY = "ScaleY",
+                Spacing = "Spacing",
+                Angle = "Angle",
             };
 
             SubStationAlphaStylesCategoriesManager = new LanguageStructure.SubStationAlphaStylesCategoriesManager
