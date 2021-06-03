@@ -7228,6 +7228,18 @@ namespace Nikse.SubtitleEdit.Logic
                 case "SubStationAlphaStyles/MoveToCategory":
                     language.SubStationAlphaStyles.MoveToCategory = reader.Value;
                     break;
+                case "SubStationAlphaStyles/ScaleX":
+                    language.SubStationAlphaStyles.ScaleX = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/ScaleY":
+                    language.SubStationAlphaStyles.ScaleY = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/Spacing":
+                    language.SubStationAlphaStyles.Spacing = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/Angle":
+                    language.SubStationAlphaStyles.Angle = reader.Value;
+                    break;
                 case "SubStationAlphaStylesCategoriesManager/Category":
                     language.SubStationAlphaStylesCategoriesManager.Category = reader.Value;
                     break;
