@@ -275,7 +275,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ffmpegLocation = "ffmpeg";
             }
 
-            var process = new Process
+            return new Process
             {
                 StartInfo =
                 {
@@ -285,7 +285,6 @@ namespace Nikse.SubtitleEdit.Forms
                     CreateNoWindow = true
                 }
             };
-            return process;
         }
 
         public Process GetMkvMergeProcess(string videoFileName, string subtitleFileName, string outputFileName)

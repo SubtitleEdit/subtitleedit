@@ -2835,6 +2835,10 @@
             public string CategoryNote { get; set; }
             public string CategoriesManage { get; set; }
             public string MoveToCategory { get; set; }
+            public string ScaleX { get; set; }
+            public string ScaleY { get; set; }
+            public string Spacing { get; set; }
+            public string Angle { get; set; }
         }
 
         public class SubStationAlphaStylesCategoriesManager

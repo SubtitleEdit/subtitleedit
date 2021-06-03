@@ -5135,7 +5135,7 @@ $HorzAlign          =   Center
                         subNode = listNode.SelectSingleNode("StrikeOut");
                         if (subNode != null)
                         {
-                            item.StrikeOut = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                            item.Strikeout = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
                         }
 
                         subNode = listNode.SelectSingleNode("Primary");
@@ -8669,7 +8669,7 @@ $HorzAlign          =   Center
                             textWriter.WriteElementString("Bold", style.Bold.ToString(CultureInfo.InvariantCulture));
                             textWriter.WriteElementString("Italic", style.Italic.ToString(CultureInfo.InvariantCulture));
                             textWriter.WriteElementString("Underline", style.Underline.ToString(CultureInfo.InvariantCulture));
-                            textWriter.WriteElementString("StrikeOut", style.StrikeOut.ToString(CultureInfo.InvariantCulture));
+                            textWriter.WriteElementString("StrikeOut", style.Strikeout.ToString(CultureInfo.InvariantCulture));
                             textWriter.WriteElementString("Primary", style.Primary.ToArgb().ToString(CultureInfo.InvariantCulture));
                             textWriter.WriteElementString("Secondary", style.Secondary.ToArgb().ToString(CultureInfo.InvariantCulture));
                             textWriter.WriteElementString("Outline", style.Outline.ToArgb().ToString(CultureInfo.InvariantCulture));
@@ -8682,9 +8682,9 @@ $HorzAlign          =   Center
                             textWriter.WriteElementString("MarginVertical", style.MarginVertical.ToString(CultureInfo.InvariantCulture));
                             textWriter.WriteElementString("BorderStyle", style.BorderStyle);
                             textWriter.WriteElementString("ScaleX", style.ScaleX.ToString(CultureInfo.InvariantCulture));
-                            textWriter.WriteElementString("ScaleY", style.ScaleX.ToString(CultureInfo.InvariantCulture));
-                            textWriter.WriteElementString("Spacing", style.ScaleX.ToString(CultureInfo.InvariantCulture));
-                            textWriter.WriteElementString("Angle", style.ScaleX.ToString(CultureInfo.InvariantCulture));
+                            textWriter.WriteElementString("ScaleY", style.ScaleY.ToString(CultureInfo.InvariantCulture));
+                            textWriter.WriteElementString("Spacing", style.Spacing.ToString(CultureInfo.InvariantCulture));
+                            textWriter.WriteElementString("Angle", style.Angle.ToString(CultureInfo.InvariantCulture));
                             textWriter.WriteEndElement();
                         }
                         textWriter.WriteEndElement();
