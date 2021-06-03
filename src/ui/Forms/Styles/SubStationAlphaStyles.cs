@@ -154,13 +154,13 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             labelSpacing.Text = l.Spacing;
             labelAngle.Text = l.Angle;
             labelScaleX.Text = l.ScaleX;
-            numericUpDownScaleX.Left = labelScaleX.Left + labelScaleX.Width + 4;
+            numericUpDownScaleX.Left = labelScaleX.Left + labelScaleX.Width + 2;
             labelScaleY.Left = numericUpDownScaleX.Left + numericUpDownScaleX.Width + 9;
-            numericUpDownScaleY.Left = labelScaleY.Left + labelScaleY.Width + 4;
+            numericUpDownScaleY.Left = labelScaleY.Left + labelScaleY.Width + 2;
             labelSpacing.Left = numericUpDownScaleY.Left + numericUpDownScaleY.Width + 9;
-            numericUpDownSpacing.Left = labelSpacing.Left + labelSpacing.Width + 4;
+            numericUpDownSpacing.Left = labelSpacing.Left + labelSpacing.Width + 2;
             labelAngle.Left = numericUpDownSpacing.Left + numericUpDownSpacing.Width + 9;
-            numericUpDownAngle.Left = labelAngle.Left + labelAngle.Width + 4;
+            numericUpDownAngle.Left = labelAngle.Left + labelAngle.Width + 2;
 
             groupBoxStorage.Text = l.StyleStorage;
             labelStorageCategory.Text = LanguageSettings.Current.SubStationAlphaStylesCategoriesManager.Category;
@@ -291,18 +291,18 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             listViewStorage_SelectedIndexChanged(this, EventArgs.Empty);
             UiUtil.FixLargeFonts(this, buttonCancel);
 
-            comboBoxFontName.Left = labelFontName.Left + labelFontName.Width + 5;
+            comboBoxFontName.Left = labelFontName.Left + labelFontName.Width + 2;
             buttonPickAttachmentFont.Visible = subtitle.Footer != null &&
                                                subtitle.Footer.Contains("[Fonts]") &&
                                                subtitle.Footer.Contains("fontname:");
             buttonPickAttachmentFont.Left = comboBoxFontName.Left + comboBoxFontName.Width + 3;
             var controlLeftOfFontSize = buttonPickAttachmentFont.Visible ? buttonPickAttachmentFont : (Control)comboBoxFontName;
             labelFontSize.Left = controlLeftOfFontSize.Left + controlLeftOfFontSize.Width + 15;
-            numericUpDownFontSize.Left = labelFontSize.Left + labelFontSize.Width + 5;
+            numericUpDownFontSize.Left = labelFontSize.Left + labelFontSize.Width + 2;
 
-            numericUpDownOutline.Left = radioButtonOutline.Left + radioButtonOutline.Width + 5;
-            labelShadow.Left = numericUpDownOutline.Left + numericUpDownOutline.Width + 5;
-            numericUpDownShadowWidth.Left = numericUpDownOutline.Left + numericUpDownOutline.Width + 5;
+            numericUpDownOutline.Left = radioButtonOutline.Left + radioButtonOutline.Width + 3;
+            labelShadow.Left = numericUpDownOutline.Left + numericUpDownOutline.Width + 3;
+            numericUpDownShadowWidth.Left = numericUpDownOutline.Left + numericUpDownOutline.Width + 3;
             checkBoxFontItalic.Left = checkBoxFontBold.Left + checkBoxFontBold.Width + 12;
             checkBoxFontUnderline.Left = checkBoxFontItalic.Left + checkBoxFontItalic.Width + 12;
             checkBoxStrikeout.Left = checkBoxFontUnderline.Left + checkBoxFontUnderline.Width + 12;

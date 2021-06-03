@@ -2638,6 +2638,10 @@ Continue?</RestoreDefaultSettingsMsg>
     <CategoryNote>Note: The styles in the default category (colored in green) will be applied to new ASSA files</CategoryNote>
     <CategoriesManage>Manage</CategoriesManage>
     <MoveToCategory>Move selected styles to category...</MoveToCategory>
+    <ScaleX>ScaleX</ScaleX>
+    <ScaleY>ScaleY</ScaleY>
+    <Spacing>Spacing</Spacing>
+    <Angle>Angle</Angle>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
     <Category>Category</Category>
