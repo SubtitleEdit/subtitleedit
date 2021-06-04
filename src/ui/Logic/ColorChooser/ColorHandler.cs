@@ -16,7 +16,7 @@ using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Logic.ColorChooser
 {
-    public class ColorHandler
+    public static class ColorHandler
     {
         // Handle conversions between RGB and HSV
         // (and Color types, as well).
