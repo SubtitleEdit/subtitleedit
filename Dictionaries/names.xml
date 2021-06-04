@@ -71,7 +71,6 @@ This file is case sensitive.
   <name>Adipex</name>
   <name>Aditya</name>
   <name>Adolf</name>
-  <name>Adolf Hitler</name>
   <name>Adolfo</name>
   <name>Adolph</name>
   <name>Adolphus</name>
@@ -1171,7 +1170,6 @@ This file is case sensitive.
   <name>Chantix</name>
   <name>Chapman</name>
   <name>Charles</name>
-  <name>Charles Darwin</name>
   <name>Charleston</name>
   <name>Charley</name>
   <name>Charlie</name>
@@ -1763,7 +1761,6 @@ This file is case sensitive.
   <name>Ed Sheeran</name>
   <name>Eddard</name>
   <name>Eddie</name>
-  <name>Eddie Thawne</name>
   <name>Eddies</name>
   <name>Edgar</name>
   <name>Edgington</name>
@@ -2103,7 +2100,6 @@ This file is case sensitive.
   <name>Gale</name>
   <name>Galilei</name>
   <name>Galileo</name>
-  <name>Galileo Galilei</name>
   <name>Gallagher</name>
   <name>Galloway</name>
   <name>Galotti</name>
@@ -2513,7 +2509,6 @@ This file is case sensitive.
   <name>Honda</name>
   <name>Hong</name>
   <name>Hong Kong</name>
-  <name>Hongkong</name>
   <name>Honiara</name>
   <name>Honolulu</name>
   <name>Hoodia</name>
@@ -2604,7 +2599,6 @@ This file is case sensitive.
   <name>Irvings</name>
   <name>Irvy</name>
   <name>Isaac</name>
-  <name>Isaac Newton</name>
   <name>Isaacs</name>
   <name>Isabel</name>
   <name>Isabell</name>
@@ -2659,7 +2653,6 @@ This file is case sensitive.
   <name>Jacksons</name>
   <name>Jacksonville</name>
   <name>Jacob</name>
-  <name>Jacob Zuma</name>
   <name>Jacobs</name>
   <name>Jacobson</name>
   <name>Jacoby</name>
@@ -2948,7 +2941,6 @@ This file is case sensitive.
   <name>Katrina</name>
   <name>Katrine</name>
   <name>Katy</name>
-  <name>Katy Perry</name>
   <name>Katya</name>
   <name>Kaufman</name>
   <name>Kayla</name>
@@ -3193,7 +3185,6 @@ This file is case sensitive.
   <name>Leonard</name>
   <name>Leonardo</name>
   <name>Leonardo da Vinci</name>
-  <name>Leonardo DiCaprio</name>
   <name>Leone</name>
   <name>Leoni</name>
   <name>Leopold</name>
@@ -3343,6 +3334,7 @@ This file is case sensitive.
   <name>Luka</name>
   <name>Lukas</name>
   <name>Luke</name>
+  <name>Luke Cage</name>
   <name>Lulu</name>
   <name>Lundy</name>
   <name>Lunesta</name>
@@ -3483,7 +3475,6 @@ This file is case sensitive.
   <name>Marci</name>
   <name>Marcie</name>
   <name>Marco</name>
-  <name>Marco Polo</name>
   <name>Marcus</name>
   <name>Marcy</name>
   <name>Margaret</name>
@@ -3869,7 +3860,6 @@ This file is case sensitive.
   <name>Mor'du</name>
   <name>Moreau</name>
   <name>Morgan</name>
-  <name>Morgan Freeman</name>
   <name>Moritz</name>
   <name>Mormonism</name>
   <name>Moroccan</name>
@@ -4079,7 +4069,6 @@ This file is case sensitive.
   <name>Niklas</name>
   <name>Niklaus</name>
   <name>Nikola</name>
-  <name>Nikola Tesla</name>
   <name>Nikolai</name>
   <name>Nikolaj</name>
   <name>Nikolas</name>
@@ -4481,6 +4470,7 @@ This file is case sensitive.
   <name>R&amp;D</name>
   <name>Rabat</name>
   <name>Rachel</name>
+  <name>Rachel Grey</name>
   <name>Rachelle</name>
   <name>Rachels</name>
   <name>Raczynski</name>
@@ -4770,9 +4760,6 @@ This file is case sensitive.
   <name>Samuels</name>
   <name>Samuelson</name>
   <name>San</name>
-  <name>San Jose</name>
-  <name>San Marino</name>
-  <name>San Salvador</name>
   <name>Sana'a</name>
   <name>Sanchez</name>
   <name>Sánchez</name>
@@ -4945,7 +4932,6 @@ This file is case sensitive.
   <name>Sierra Leone</name>
   <name>SiggeMcKvack</name>
   <name>Sigmund</name>
-  <name>Sigmund Freud</name>
   <name>Signe</name>
   <name>Silas</name>
   <name>Silberman</name>
@@ -5281,6 +5267,7 @@ This file is case sensitive.
   <name>Thailand</name>
   <name>Thailands</name>
   <name>Thanksgiving</name>
+  <name>Thanos</name>
   <name>Thatcher</name>
   <name>Thawne</name>
   <name>Theia</name>
@@ -5517,6 +5504,7 @@ This file is case sensitive.
   <name>Vicky</name>
   <name>Vicodin</name>
   <name>Victor</name>
+  <name>Victor Von Doom</name>
   <name>Victoria</name>
   <name>Victorias</name>
   <name>Victors</name>
