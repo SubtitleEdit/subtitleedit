@@ -2627,6 +2627,10 @@ Command line: {1} {2}
     <CategoryNote>注意：“默认”样式将应用于新的ASSA文件</CategoryNote>
     <CategoriesManage>管理</CategoriesManage>
     <MoveToCategory>将选定的样式移到类别...</MoveToCategory>
+    <ScaleX>X轴缩放</ScaleX>
+    <ScaleY>Y轴缩放</ScaleY>
+    <Spacing>间距</Spacing>
+    <Angle>角度</Angle>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
     <Category>类别</Category>
