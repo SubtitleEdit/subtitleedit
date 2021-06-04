@@ -729,8 +729,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         #endregion Windows Form Designer generated code
 
-        #region Nested type: ChangeStyle
-
         private enum ChangeStyle
         {
             MouseMove,
@@ -738,8 +736,6 @@ namespace Nikse.SubtitleEdit.Forms
             HSV,
             None
         }
-
-        #endregion Nested type: ChangeStyle
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
