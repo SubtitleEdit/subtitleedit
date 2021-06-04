@@ -2752,7 +2752,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void SubStationAlphaStyles_FormClosing(object sender, FormClosingEventArgs e)
         {
-            _mpv.Dispose();
+            _mpv?.Dispose();
         }
 
         private void numericUpDownScaleX_ValueChanged(object sender, EventArgs e)
