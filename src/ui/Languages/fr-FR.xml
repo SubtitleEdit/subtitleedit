@@ -1323,8 +1323,8 @@ Poursuivre ?</SubtitleAppendPrompt>
     <SpellCheck>Correcteur d'orthographe</SpellCheck>
     <BeforeSpellCheck>Avant la vérification orthographique</BeforeSpellCheck>
     <SpellCheckChangedXToY>Vérification orthographique: Changé '{0}' en '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Avant d'ajouter &lt;{0}&gt; tag</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; tags ajoutés</TagXAdded>
+    <BeforeAddingTagX>Avant d'ajouter '{0}' tag</BeforeAddingTagX>
+    <TagXAdded>'{0}' tag ajoutés</TagXAdded>
     <LineXOfY>ligne {0}/{1}</LineXOfY>
     <XLinesSavedAsY>{0} lignes enregistrée comme {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} lignes supprimées</XLinesDeleted>

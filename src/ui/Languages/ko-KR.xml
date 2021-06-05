@@ -1451,8 +1451,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SpellCheck>맞춤법 검사</SpellCheck>
     <BeforeSpellCheck>맞춤법 검사 전</BeforeSpellCheck>
     <SpellCheckChangedXToY>'{0}'에서 '{1}'로 맞춤법 변경!</SpellCheckChangedXToY>
-    <BeforeAddingTagX>&lt;{0}&gt; 태그 추가 전</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; 태그 추가함</TagXAdded>
+    <BeforeAddingTagX>'{0}' 태그 추가 전</BeforeAddingTagX>
+    <TagXAdded>'{0}' 태그 추가함</TagXAdded>
     <LineXOfY>{0}/{1}</LineXOfY>
     <XLinesSavedAsY>'{0}'줄을 {1}로 저장했습니다!</XLinesSavedAsY>
     <XLinesDeleted>'{0}'줄이 삭제되었습니다!</XLinesDeleted>

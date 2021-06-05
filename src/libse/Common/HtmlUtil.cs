@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -884,9 +885,37 @@ namespace Nikse.SubtitleEdit.Core.Common
             return preTags + text;
         }
 
-        public static string ToggleTag(string input, string tag)
+        public static string ToggleTag(string input, string tag, bool wholeLine, bool assa)
         {
             var text = input;
+
+            if (assa)
+            {
+                var onOffTags = new List<string> { "i", "b", "u", "s", "be" };
+                if (wholeLine)
+                {
+                    onOffTags.Clear();
+                }
+
+                if (text.Contains("\\" + tag))
+                {
+                    if (onOffTags.Contains(tag))
+                    {
+                        text = text.Replace($"{{\\{tag}1}}", string.Empty);
+                        text = text.Replace($"{{\\{tag}0}}", string.Empty);
+                    }
+                    text = text.Replace($"{{\\{tag}}}", string.Empty);
+
+                    text = text.Replace("\\tag", string.Empty);
+                }
+                else
+                {
+                    text = onOffTags.Contains(tag) ? $"{{\\{tag}1}}{text}{{\\{tag}0}}" : $"{{\\{tag}}}{text}";
+                }
+
+                return text;
+            }
+
             if (text.IndexOf("<" + tag + ">", StringComparison.OrdinalIgnoreCase) >= 0 ||
                 text.IndexOf("</" + tag + ">", StringComparison.OrdinalIgnoreCase) >= 0)
             {

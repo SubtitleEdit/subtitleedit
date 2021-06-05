@@ -1456,8 +1456,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <SpellCheck>Проверка на правопис</SpellCheck>
     <BeforeSpellCheck>Преди проверката на правопис</BeforeSpellCheck>
     <SpellCheckChangedXToY>Проверка на правопис: Променени '{0}' на '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Преди добавянето на тага &lt;{0}&gt;</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; добавени тагове</TagXAdded>
+    <BeforeAddingTagX>Преди добавянето на тага '{0}'</BeforeAddingTagX>
+    <TagXAdded>'{0}' добавени тагове</TagXAdded>
     <LineXOfY>ред {0} на {1}</LineXOfY>
     <XLinesSavedAsY>{0} реда са записани като {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} изтрити реда</XLinesDeleted>

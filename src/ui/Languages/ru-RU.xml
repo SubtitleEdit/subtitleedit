@@ -1414,8 +1414,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <SpellCheck>Проверка орфографии</SpellCheck>
     <BeforeSpellCheck>Перед проверкой орфографии</BeforeSpellCheck>
     <SpellCheckChangedXToY>Проверка орфографии: "{0}" изменено на "{1}"</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Перед добавлением &lt;{0}&gt; тега</BeforeAddingTagX>
-    <TagXAdded>Добавлены &lt;{0}&gt; теги</TagXAdded>
+    <BeforeAddingTagX>Перед добавлением '{0}' тега</BeforeAddingTagX>
+    <TagXAdded>Добавлены '{0}' теги</TagXAdded>
     <LineXOfY>строка {0} из {1}</LineXOfY>
     <XLinesSavedAsY>{0} строк записано как {1}</XLinesSavedAsY>
     <XLinesDeleted>Удалено строк: {0}</XLinesDeleted>

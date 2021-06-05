@@ -1356,8 +1356,8 @@ Fortsätta?</SubtitleAppendPrompt>
     <SpellCheck>Stavningskontroll</SpellCheck>
     <BeforeSpellCheck>Före stavningskontroll</BeforeSpellCheck>
     <SpellCheckChangedXToY>Stavningskontroll: Ändrade '{0} "till" {1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Innan du tillägger &lt;{0}&gt; tag</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt;-taggar tillagda</TagXAdded>
+    <BeforeAddingTagX>Innan du tillägger '{0}' tag</BeforeAddingTagX>
+    <TagXAdded>'{0}'-tag tillagda</TagXAdded>
     <LineXOfY>Rad {0} av {1}</LineXOfY>
     <XLinesSavedAsY>{0} Rader sparas som {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} Rader borttagna</XLinesDeleted>

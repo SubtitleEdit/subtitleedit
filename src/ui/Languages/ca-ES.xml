@@ -1394,8 +1394,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SpellCheck>Corrector ortogràfic</SpellCheck>
     <BeforeSpellCheck>Abans correció ortogràfica</BeforeSpellCheck>
     <SpellCheckChangedXToY>Corrector ortogràfic: Canviat '{0}' a '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Abans afegeix &lt;{0}&gt; etiqueta</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; etiquetes afegides</TagXAdded>
+    <BeforeAddingTagX>Abans afegeix '{0}' etiqueta</BeforeAddingTagX>
+    <TagXAdded>'{0}' etiquetes afegides</TagXAdded>
     <LineXOfY>línia {0} de {1}</LineXOfY>
     <XLinesSavedAsY>{0} línies desades com {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} línies suprimides</XLinesDeleted>

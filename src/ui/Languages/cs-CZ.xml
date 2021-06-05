@@ -1346,8 +1346,8 @@ Pokračovat?</SubtitleAppendPrompt>
     <SpellCheck>Kontrola pravopisu</SpellCheck>
     <BeforeSpellCheck>Před kontrolou pravopisu</BeforeSpellCheck>
     <SpellCheckChangedXToY>Kontrola pravopisu: Změněno '{0}' na '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Před přidáním značky &lt;{0}&gt;</BeforeAddingTagX>
-    <TagXAdded>Přidány značky &lt;{0}&gt;</TagXAdded>
+    <BeforeAddingTagX>Před přidáním značky '{0}'</BeforeAddingTagX>
+    <TagXAdded>Přidány značky '{0}'</TagXAdded>
     <LineXOfY>řádek {0} z {1}</LineXOfY>
     <XLinesSavedAsY>{0} řádků uloženo jako {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} řádků odstraněno</XLinesDeleted>

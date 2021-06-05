@@ -1449,8 +1449,8 @@ con el archivo de vídeo, al subtítulo actual cargado.
     <SpellCheck>Revisión ortográfica</SpellCheck>
     <BeforeSpellCheck>Antes de la revisión ortográfica</BeforeSpellCheck>
     <SpellCheckChangedXToY>Revisión ortográfica: Cambiado '{0}' por '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Antes de añadir &lt;{0}&gt; etiqueta</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; Etiquetas añadidas</TagXAdded>
+    <BeforeAddingTagX>Antes de añadir '{0}' etiqueta</BeforeAddingTagX>
+    <TagXAdded>'{0}' Etiquetas añadidas</TagXAdded>
     <LineXOfY>línea {0} de {1}</LineXOfY>
     <XLinesSavedAsY>{0} líneas guardará como {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} líneas eliminadas</XLinesDeleted>

@@ -1450,8 +1450,8 @@ Command line: {1} {2}
     <SpellCheck>拼写检查</SpellCheck>
     <BeforeSpellCheck>拼写检查之前</BeforeSpellCheck>
     <SpellCheckChangedXToY>拼写检查: '{0}' 已改为 '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>添加 &lt;{0}&gt; 标签之前</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; 标签已删除</TagXAdded>
+    <BeforeAddingTagX>添加 '{0}' 标签之前</BeforeAddingTagX>
+    <TagXAdded>'{0}' 标签已删除</TagXAdded>
     <LineXOfY>行 {0}/{1}</LineXOfY>
     <XLinesSavedAsY>{0} 行已另存为 {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} 行已删除</XLinesDeleted>

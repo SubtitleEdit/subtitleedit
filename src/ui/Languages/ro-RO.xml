@@ -1468,8 +1468,8 @@ Continui?</SubtitleAppendPrompt>
     <SpellCheck>Verificare ortografică</SpellCheck>
     <BeforeSpellCheck>Înaintea verificării ortografice</BeforeSpellCheck>
     <SpellCheckChangedXToY>Verificat ortografic: Schimbat '{0}' la '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Înaintea adăugării mărcii &lt;{0}&gt;</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; mărci adăugate</TagXAdded>
+    <BeforeAddingTagX>Înaintea adăugării mărcii '{0}'</BeforeAddingTagX>
+    <TagXAdded>'{0}' mărci adăugate</TagXAdded>
     <LineXOfY>linia {0} din {1}</LineXOfY>
     <XLinesSavedAsY>{0} linii salvate ca {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} linii șterse</XLinesDeleted>

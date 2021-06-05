@@ -775,10 +775,10 @@ namespace Nikse.SubtitleEdit.Controls
                     }
 
                     if (i > 0 && i < _words.Count && _words.ElementAtOrDefault(i + 1) != null &&
-                        _words[i - 1].Text.ToLowerInvariant() == "www" &&
-                        (_words[i + 1].Text.ToLowerInvariant() == "com" ||
-                         _words[i + 1].Text.ToLowerInvariant() == "org" ||
-                         _words[i + 1].Text.ToLowerInvariant() == "net") &&
+                        string.Equals(_words[i - 1].Text, "www", StringComparison.InvariantCultureIgnoreCase) &&
+                        (string.Equals(_words[i + 1].Text, "com", StringComparison.InvariantCultureIgnoreCase) ||
+                         string.Equals(_words[i + 1].Text, "org", StringComparison.InvariantCultureIgnoreCase) ||
+                         string.Equals(_words[i + 1].Text, "net", StringComparison.InvariantCultureIgnoreCase)) &&
                         Text.IndexOf(_words[i - 1].Text + "." + currentWordText + "." +
                                      _words[i + 1].Text, StringComparison.OrdinalIgnoreCase) >= 0)
                     {

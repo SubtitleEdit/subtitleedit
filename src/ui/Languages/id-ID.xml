@@ -1316,8 +1316,8 @@ Lanjutkan?</SubtitleAppendPrompt>
     <SpellCheck>Periksa ejaan</SpellCheck>
     <BeforeSpellCheck>Sebelum periksa ejaan</BeforeSpellCheck>
     <SpellCheckChangedXToY>Periksa ejaan: Diubah '{0}' ke '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Sebelum menambahkan tag &lt;{0}&gt;</BeforeAddingTagX>
-    <TagXAdded>Tag &lt;{0}&gt; ditambahkan</TagXAdded>
+    <BeforeAddingTagX>Sebelum menambahkan tag '{0}'</BeforeAddingTagX>
+    <TagXAdded>Tag '{0}' ditambahkan</TagXAdded>
     <LineXOfY>baris {0} dari {1}</LineXOfY>
     <XLinesSavedAsY>{0} baris disimpan sebagai {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} baris dihapus</XLinesDeleted>

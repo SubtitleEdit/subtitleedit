@@ -1266,8 +1266,8 @@ Vil du fortsette?</SubtitleAppendPrompt>
     <SpellCheck>Stavesjekk</SpellCheck>
     <BeforeSpellCheck>Før stavesjekk</BeforeSpellCheck>
     <SpellCheckChangedXToY>Stavesjekk: Endret '{0}' til '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Før markering av &lt;{0}&gt;</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; markeringer lagt til</TagXAdded>
+    <BeforeAddingTagX>Før markering av '{0}'</BeforeAddingTagX>
+    <TagXAdded>'{0}' markering lagt til</TagXAdded>
     <LineXOfY>linje {0} av {1}</LineXOfY>
     <XLinesSavedAsY>{0} linjer lagret som {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} linjer slettet</XLinesDeleted>

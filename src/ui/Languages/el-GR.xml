@@ -1451,8 +1451,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SpellCheck>Ορθογραφικός έλεγχος</SpellCheck>
     <BeforeSpellCheck>Πριν από ορθογραφικό έλεγχο</BeforeSpellCheck>
     <SpellCheckChangedXToY>Ορθογραφικός έλεγχος: Αλλαγή του '{0}' σε '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Πριν από προσθήκη ετικετών &lt;{0}&gt;</BeforeAddingTagX>
-    <TagXAdded>Προσθήκη &lt;{0}&gt; ετικετών</TagXAdded>
+    <BeforeAddingTagX>Πριν από προσθήκη ετικετών '{0}'</BeforeAddingTagX>
+    <TagXAdded>Προσθήκη '{0}' ετικετών</TagXAdded>
     <LineXOfY>Γραμμή {0} από {1}</LineXOfY>
     <XLinesSavedAsY>Αποθήκευση {0} γραμμών ως {1}</XLinesSavedAsY>
     <XLinesDeleted>Διαγραφή {0} γραμμών</XLinesDeleted>

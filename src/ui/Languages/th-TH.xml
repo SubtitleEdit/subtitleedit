@@ -1197,8 +1197,8 @@
     <SpellCheck>ตรวจคำ</SpellCheck>
     <BeforeSpellCheck>ก่อนตรวจคำ</BeforeSpellCheck>
     <SpellCheckChangedXToY>ตรวจคำ: เปลี่ยน '{0}' เป็น '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>ก่อนเพิ่มแท็ก &lt;{0}&gt;</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; แท็กถูกเพิ่มแล้ว</TagXAdded>
+    <BeforeAddingTagX>ก่อนเพิ่มแท็ก '{0}'</BeforeAddingTagX>
+    <TagXAdded>'{0}' แท็กถูกเพิ่มแล้ว</TagXAdded>
     <LineXOfY>บรรทัด {0} จาก {1}</LineXOfY>
     <XLinesSavedAsY>{0} บรรทัดบันทึกเป็น {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} บรรทัดที่ถูกลบ</XLinesDeleted>

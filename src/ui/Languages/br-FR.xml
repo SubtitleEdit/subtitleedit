@@ -1257,8 +1257,8 @@ Kenderc'hel ?</SubtitleAppendPrompt>
     <SpellCheck>Reizher reizhskrivadurel</SpellCheck>
     <BeforeSpellCheck>A-raok ar wiriekadenn reizhskrivadurel</BeforeSpellCheck>
     <SpellCheckChangedXToY>Gwiriekadenn reizhskrivadurel : Cheñchet '{0}' en '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>A-raok ouzhpennañ &lt;{0}&gt; tag</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; tags ouzhpennet</TagXAdded>
+    <BeforeAddingTagX>A-raok ouzhpennañ '{0}' tag</BeforeAddingTagX>
+    <TagXAdded>'{0}' tag ouzhpennet</TagXAdded>
     <LineXOfY>linenn {0}/{1}</LineXOfY>
     <XLinesSavedAsY>{0} linennoù enrollet evel {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} linennoù diverket</XLinesDeleted>

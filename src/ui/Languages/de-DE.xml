@@ -1356,8 +1356,8 @@ Fortfahren?</SubtitleAppendPrompt>
     <SpellCheck>Rechtschreibung</SpellCheck>
     <BeforeSpellCheck>Vor Rechtschreibprüfung</BeforeSpellCheck>
     <SpellCheckChangedXToY>Rechtschreibprüfung: '{0}' zu '{1}' geändert</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Vor Hinzufügen des &lt;{0}&gt; Tags</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; Tag hinzugefügt</TagXAdded>
+    <BeforeAddingTagX>Vor Hinzufügen des '{0}' Tags</BeforeAddingTagX>
+    <TagXAdded>'{0}' Tag hinzugefügt</TagXAdded>
     <LineXOfY>Text {0} von {1}</LineXOfY>
     <XLinesSavedAsY>{0} Texte gespeichert als {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} Texte gelöscht</XLinesDeleted>
