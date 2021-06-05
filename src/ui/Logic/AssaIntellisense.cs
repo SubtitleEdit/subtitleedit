@@ -43,8 +43,6 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static readonly List<IntellisenseItem> DictionaryList = new List<IntellisenseItem>(new[]
         {
-            new IntellisenseItem("\\n",  "New line (soft)"),
-            new IntellisenseItem("\\N",  "New line (hard)"),
             new IntellisenseItem("{\\b}",  "Bold"),
             new IntellisenseItem("{\\b0}",  "Bold off"),
             new IntellisenseItem("{\\b1}",  "Bold on"),
