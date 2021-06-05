@@ -1777,6 +1777,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "FixCommonErrors/FixDialogsOnOneLine":
                     language.FixCommonErrors.FixDialogsOnOneLine = reader.Value;
                     break;
+                case "FixCommonErrors/RemoveDialogFirstInNonDialogs":
+                    language.FixCommonErrors.RemoveDialogFirstInNonDialogs = reader.Value;
+                    break;
                 case "FixCommonErrors/NormalizeStrings":
                     language.FixCommonErrors.NormalizeStrings = reader.Value;
                     break;
@@ -1962,6 +1965,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "FixCommonErrors/FixDialogsOneLineExample":
                     language.FixCommonErrors.FixDialogsOneLineExample = reader.Value;
+                    break;
+                case "FixCommonErrors/RemoveDialogFirstInNonDialogsExample":
+                    language.FixCommonErrors.RemoveDialogFirstInNonDialogsExample = reader.Value;
                     break;
                 case "FixCommonErrors/SelectDefault":
                     language.FixCommonErrors.SelectDefault = reader.Value;
