@@ -179,6 +179,7 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly List<string> _filesToDelete = new List<string>();
         private bool _restorePreviewAfterSecondSubtitle;
         private ListBox _intellisenceList;
+        private ListBox _intellisenceListOriginal;
 
         public bool IsMenuOpen { get; private set; }
 
@@ -9783,67 +9784,9 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            else if (_shortcuts.MainTextBoxAssaIntellisense == e.KeyData && IsAssa())
+            if (_shortcuts.MainTextBoxAssaIntellisense == e.KeyData && IsAssa())
             {
-                if (_intellisenceList == null)
-                {
-                    _intellisenceList = new ListBox();
-                    Controls.Add(_intellisenceList);
-                    _intellisenceList.KeyDown += (o, args) =>
-                    {
-                        if (args.KeyCode == Keys.Enter && _intellisenceList.SelectedIndex >= 0)
-                        {
-                            var item = _intellisenceList.Items[_intellisenceList.SelectedIndex] as AssaIntellisense.IntellisenseItem;
-                            if (item != null)
-                            {
-                                MakeHistoryForUndo(string.Format(_language.BeforeAddingTagX, item.Value));
-                                textBoxListViewText.SelectedText = item.Value.Remove(0, item.TypedWord.Length);
-                                ShowStatus(string.Format(_language.TagXAdded, item.Value));
-                                AssaIntellisense.AddUsedTag(item.Value);
-                            }
-                            args.SuppressKeyPress = true;
-                            _intellisenceList.Hide();
-                            textBoxListViewText.Focus();
-                        }
-                        else if (args.KeyCode == Keys.Escape)
-                        {
-                            args.SuppressKeyPress = true;
-                            _intellisenceList.Hide();
-                            textBoxListViewText.Focus();
-                        }
-                    };
-                    _intellisenceList.KeyPress += (o, args) =>
-                    {
-                        var x = args.KeyChar.ToString();
-                        if (!string.IsNullOrEmpty(x) && x != "\r" && x != "\n" && x != "\u001b" && x != " ")
-                        {
-                            if (x == "{")
-                            {
-                                x = "{{}";
-                            }
-                            else if (x == "}")
-                            {
-                                x = "{}}";
-                            }
-                            textBoxListViewText.Focus();
-                            SendKeys.SendWait(x);
-                            args.Handled = true;
-                            AssaIntellisense.AutoCompleteTextBox(textBoxListViewText, _intellisenceList);
-                            _intellisenceList.Focus();
-                        }
-                    };
-                    _intellisenceList.LostFocus += (o, args) => _intellisenceList.Hide();
-                }
-
-                if (AssaIntellisense.AutoCompleteTextBox(textBoxListViewText, _intellisenceList))
-                {
-                    var p = GetPositionInForm(textBoxListViewText);
-                    _intellisenceList.Location = new Point(p.X + 10, p.Y + 40);
-                    _intellisenceList.Show();
-                    _intellisenceList.BringToFront();
-                    _intellisenceList.Focus();
-                }
-
+                _intellisenceList = DoIntellisense(textBoxListViewText, _intellisenceList);
                 e.SuppressKeyPress = true;
                 return;
             }
@@ -10028,6 +9971,90 @@ namespace Nikse.SubtitleEdit.Forms
             _lastTextKeyDownTicks = DateTime.UtcNow.Ticks;
 
             UpdatePositionAndTotalLength(labelTextLineTotal, textBoxListViewText);
+        }
+
+        private ListBox DoIntellisense(SETextBox tb, ListBox intellisenseListBox)
+        {
+            if (intellisenseListBox == null)
+            {
+                intellisenseListBox = new ListBox();
+                Controls.Add(intellisenseListBox);
+                intellisenseListBox.KeyDown += (o, args) =>
+                {
+                    if (args.KeyCode == Keys.Enter && intellisenseListBox.SelectedIndex >= 0)
+                    {
+                        var item = intellisenseListBox.Items[intellisenseListBox.SelectedIndex] as AssaIntellisense.IntellisenseItem;
+                        if (item != null)
+                        {
+                            MakeHistoryForUndo(string.Format(_language.BeforeAddingTagX, item.Value));
+                            tb.SelectedText = item.Value.Remove(0, item.TypedWord.Length);
+                            ShowStatus(string.Format(_language.TagXAdded, item.Value));
+                            AssaIntellisense.AddUsedTag(item.Value);
+                        }
+
+                        args.SuppressKeyPress = true;
+                        intellisenseListBox.Hide();
+                        tb.Focus();
+                    }
+                    else if (args.KeyCode == Keys.Escape)
+                    {
+                        args.SuppressKeyPress = true;
+                        intellisenseListBox.Hide();
+                        tb.Focus();
+                    }
+                };
+                intellisenseListBox.Click += (o, args) =>
+                {
+                    int index = intellisenseListBox.IndexFromPoint((args as MouseEventArgs).Location);
+                    if (index != ListBox.NoMatches)
+                    {
+                        var item = intellisenseListBox.Items[index] as AssaIntellisense.IntellisenseItem;
+                        if (item != null)
+                        {
+                            MakeHistoryForUndo(string.Format(_language.BeforeAddingTagX, item.Value));
+                            tb.SelectedText = item.Value.Remove(0, item.TypedWord.Length);
+                            ShowStatus(string.Format(_language.TagXAdded, item.Value));
+                            AssaIntellisense.AddUsedTag(item.Value);
+                        }
+
+                        intellisenseListBox.Hide();
+                        tb.Focus();
+                    }
+                };
+                intellisenseListBox.KeyPress += (o, args) =>
+                {
+                    var x = args.KeyChar.ToString();
+                    if (!string.IsNullOrEmpty(x) && x != "\r" && x != "\n" && x != "\u001b" && x != " ")
+                    {
+                        if (x == "{")
+                        {
+                            x = "{{}";
+                        }
+                        else if (x == "}")
+                        {
+                            x = "{}}";
+                        }
+
+                        tb.Focus();
+                        SendKeys.SendWait(x);
+                        args.Handled = true;
+                        AssaIntellisense.AutoCompleteTextBox(tb, intellisenseListBox);
+                        intellisenseListBox.Focus();
+                    }
+                };
+                intellisenseListBox.LostFocus += (o, args) => intellisenseListBox.Hide();
+            }
+
+            if (AssaIntellisense.AutoCompleteTextBox(tb, intellisenseListBox))
+            {
+                var p = GetPositionInForm(tb);
+                intellisenseListBox.Location = new Point(p.X + 10, p.Y + 40);
+                intellisenseListBox.Show();
+                intellisenseListBox.BringToFront();
+                intellisenseListBox.Focus();
+            }
+
+            return intellisenseListBox;
         }
 
         private string ToggleCasing(string text)
@@ -25521,6 +25548,13 @@ namespace Nikse.SubtitleEdit.Forms
                 Application.DoEvents();
                 _listViewOriginalTextTicks = 0;
                 TimerOriginalTextUndoTick(sender, e);
+                return;
+            }
+
+            if (_shortcuts.MainTextBoxAssaIntellisense == e.KeyData && IsAssa())
+            {
+                _intellisenceListOriginal = DoIntellisense(textBoxListViewTextOriginal, _intellisenceListOriginal);
+                e.SuppressKeyPress = true;
                 return;
             }
 
