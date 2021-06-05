@@ -6496,6 +6496,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/MainTextBoxUnbreakNoSpace":
                     language.Settings.MainTextBoxUnbreakNoSpace = reader.Value;
                     break;
+                case "Settings/MainTextBoxAssaIntellisense":
+                    language.Settings.MainTextBoxAssaIntellisense = reader.Value;
+                    break;
                 case "Settings/MainFileSaveAll":
                     language.Settings.MainFileSaveAll = reader.Value;
                     break;

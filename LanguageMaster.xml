@@ -1459,7 +1459,7 @@ Continue?</SubtitleAppendPrompt>
     <BeforeSpellCheck>Before spell check</BeforeSpellCheck>
     <SpellCheckChangedXToY>Spell check: Changed '{0}' to '{1}'</SpellCheckChangedXToY>
     <BeforeAddingTagX>Before adding &lt;{0}&gt; tag</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; tags added</TagXAdded>
+    <TagXAdded>{0} tag added</TagXAdded>
     <LineXOfY>line {0} of {1}</LineXOfY>
     <XLinesSavedAsY>{0} lines saved as {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} lines deleted</XLinesDeleted>
@@ -2362,6 +2362,7 @@ can edit in same subtitle file (collaboration)</Information>
     <MainTextBoxAutoBreakFromPosAndGoToNext>Break at first space from cursor position and go to next</MainTextBoxAutoBreakFromPosAndGoToNext>
     <MainTextBoxUnbreak>Unbreak text</MainTextBoxUnbreak>
     <MainTextBoxUnbreakNoSpace>Unbreak without space (CJK)</MainTextBoxUnbreakNoSpace>
+    <MainTextBoxAssaIntellisense>Show ASSA intellisense</MainTextBoxAssaIntellisense>
     <MainFileSaveAll>Save all</MainFileSaveAll>
     <Miscellaneous>Misc.</Miscellaneous>
     <CpsIncludesSpace>Chars/sec (CPS) includes spaces</CpsIncludesSpace>
