@@ -520,7 +520,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BreakLongLines>Розбити довгі рядки</BreakLongLines>
     <RemoveLineBreaks>Вилучити розбиття рядків із коротких текстів, що містять лише одне речення</RemoveLineBreaks>
     <RemoveLineBreaksAll>Вилучити розбиття рядків із коротких текстів (усіх, окрім діалогів)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Виправити велику 'i' всередині слів з маленьких літер (помилка розпізнавання тексту)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>Виправити велику 'i' всередині слів з маленьких літер (помилка розпізнавання тексту)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Замінити подвійні апострофи ('') на лапки (")</FixDoubleApostrophes>
     <AddPeriods>Додати крапку після рядків, після яких наступний рядок починається з великої літери</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Починати з великої літери після субтитру</StartWithUppercaseLetterAfterParagraph>
@@ -568,7 +568,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveUnneededSpacesExample>Не   йди , стій. -&gt; Не йди, стій.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Агов, ти!. -&gt; Агов, ти!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Агов.Ти. -&gt; Агов. Ти.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Текст номер {0}: Початок розташований пізніше за кінець: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Неможливо виправити текст номер {0}: Початок розташований пізніше за кінець: {1}</UnableToFixStartTimeLaterThanEndTime>

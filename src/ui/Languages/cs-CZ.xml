@@ -573,7 +573,7 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <BreakLongLines>Zalomit dlouhé řádky</BreakLongLines>
     <RemoveLineBreaks>Odebrat zalomení řádků v krátkých textech s jedinou větou</RemoveLineBreaks>
     <RemoveLineBreaksAll>Odbrat zalomení řádků v krátkých textech (všechny kromě dialogů)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Opravit velká 'i' uvnitř slov malými písmeny (chyba OCR)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>Opravit velká 'i' uvnitř slov malými písmeny (chyba OCR)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Opravit dvojité znaky apostrofu ('') na uvozovky (")</FixDoubleApostrophes>
     <AddPeriods>Přidat tečku za řádky, kde další řádek začíná velkým písmenem</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Začít velkým písmenem po odstavci</StartWithUppercaseLetterAfterParagraph>
@@ -619,7 +619,7 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <RemoveUnneededSpacesExample>Hej , chlape. -&gt; Hej, chlape.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hej, chlape!. -&gt; Hej, chlape!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hej.Chlape. -&gt; Hej. Chlape.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>Země je pIacatá. -&gt; Země je placatá.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>Země je pIacatá. -&gt; Země je placatá.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Text číslo {0}: Čas začátku je později než čas konce: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Nelze opravit text číslo {0}: Čas začátku je později než čas konce: {1}</UnableToFixStartTimeLaterThanEndTime>

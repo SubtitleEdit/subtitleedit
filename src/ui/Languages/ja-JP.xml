@@ -464,7 +464,7 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <BreakLongLines>長い行を改行する</BreakLongLines>
     <RemoveLineBreaks>1 文しかない短いテキストの改行を削除する</RemoveLineBreaks>
     <RemoveLineBreaksAll>短いテキストの改行を削除する (会話を除くすべて)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>小文字の単語中の大文字の 'i' (OCR エラー) を修正する</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>小文字の単語中の大文字の 'i' (OCR エラー) を修正する</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>二重のアポストロフィ ('') を二重引用符 (") に修正する</FixDoubleApostrophes>
     <AddPeriods>次の行が大文字で始まる行の後にピリオドを追加する</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>段落の後を大文字で始める</StartWithUppercaseLetterAfterParagraph>
@@ -510,7 +510,7 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <RemoveUnneededSpacesExample>Hey   you , there. -&gt; Hey you, there.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>テキスト番号 {0}: 開始時間が終了時間より遅いです: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>テキスト番号 {0} を修正することができません: 開始時間が終了時間より遅いです: {1}</UnableToFixStartTimeLaterThanEndTime>

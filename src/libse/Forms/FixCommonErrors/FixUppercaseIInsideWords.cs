@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         public static class Language
         {
             public static string FixUppercaseIInsideLowercaseWord { get; set; } = "Fix uppercase 'i' inside lowercase word";
-            public static string FixUppercaseIInsindeLowercaseWords { get; set; } = "Fix uppercase 'i' inside lowercase words (OCR error)";
+            public static string FixUppercaseIInsideLowercaseWords { get; set; } = "Fix uppercase 'i' inside lowercase words (OCR error)";
         }
 
         private static readonly Regex ReAfterLowercaseLetter = new Regex(@"\p{Ll}I", RegexOptions.Compiled);
@@ -114,7 +114,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     match = match.NextMatch();
                 }
             }
-            callbacks.UpdateFixStatus(uppercaseIsInsideLowercaseWords, Language.FixUppercaseIInsindeLowercaseWords);
+            callbacks.UpdateFixStatus(uppercaseIsInsideLowercaseWords, Language.FixUppercaseIInsideLowercaseWords);
         }
 
         private static string GetWholeWord(string text, int index)

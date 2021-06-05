@@ -526,7 +526,7 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
     <BreakLongLines>Troc'hañ al linennoù hir</BreakLongLines>
     <RemoveLineBreaks>Diverkañ al lammoù-linennoù e-barzh ar rannbennadoù berr gant ur frazenn</RemoveLineBreaks>
     <RemoveLineBreaksAll>Tennañ an distro al linenn e-barzh an testennoù berr (war-bouez an divizoù)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Reizhañ ar 'i' pennlizherennoù e-diabarzh ar gerioù (Fazi OCR)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>Reizhañ ar 'i' pennlizherennoù e-diabarzh ar gerioù (Fazi OCR)</FixUppercaseIInsideLowercaseWords>
     <AddPeriods>Ouzhpennañ ur poent pa grog al linenn da-heul gant ur bennlizherenn</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Kregiñ gant ur bennlizherenn goude ur rannbennad</StartWithUppercaseLetterAfterParagraph>
     <StartWithUppercaseLetterAfterPeriodInsideParagraph>Lakaat pennlizherennoù goude ur poent e-barzh ur rannbennad</StartWithUppercaseLetterAfterPeriodInsideParagraph>
@@ -573,7 +573,7 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
     <RemoveUnneededSpacesExample>Hey tu , du se. -&gt; Hey te, du-se.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>He te !. -&gt; He te !</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>He.Te. -&gt; He. Te.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>Tost emañ ar fIn. -&gt; Tost emañ ar fin.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>Tost emañ ar fIn. -&gt; Tost emañ ar fin.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Testenn n°{0}: An amzer deraouek a zeu war-lerc'h an amzer fin : {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Dibosupl da reizhañ an destenn n°{0}: amzer deraoeuk &gt; amzer fin : {1}</UnableToFixStartTimeLaterThanEndTime>

@@ -478,7 +478,7 @@
     <BreakLongLines>แยกบรรทัดที่ยาว</BreakLongLines>
     <RemoveLineBreaks>ลบตัวแบ่งบรรทัดในข้อความที่สั้นเพียงประโยคเดียว</RemoveLineBreaks>
     <RemoveLineBreaksAll>ลบตัวแบ่งบรรทัดในข้อความที่สั้น (ยกเว้นไดอะล็อก)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>แก้ตัวพิมพ์ใหญ่ 'i' ที่อยู่ในกลุ่มคำตัวพิมพ์เล็ก (ข้อผิดพลาดของ OCR)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>แก้ตัวพิมพ์ใหญ่ 'i' ที่อยู่ในกลุ่มคำตัวพิมพ์เล็ก (ข้อผิดพลาดของ OCR)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>แก้อะพอสทรอฟีคู่ ('') เป็นอัญประกาศเดี่ยว (")</FixDoubleApostrophes>
     <AddPeriods>เพิ่มจุดหลังบรรทัดที่บรรทัดถัดไปขึ้นต้นด้วยตัวพิมพ์ใหญ่</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>เริ่มต้นด้วยตัวพิมพ์ใหญ่หลังย่อหน้า</StartWithUppercaseLetterAfterParagraph>
@@ -526,7 +526,7 @@
     <RemoveUnneededSpacesExample>Hey   you , there. -&gt; Hey you, there.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>ข้อความที่ {0}: เวลาเริ่มต้นอยู่หลังเวลาสิ้นสุด: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>ไม่สามารถแก้ข้อความที่ {0}: เวลาเริ่มต้นอยู่หลังเวลาสิ้นสุด: {1}</UnableToFixStartTimeLaterThanEndTime>

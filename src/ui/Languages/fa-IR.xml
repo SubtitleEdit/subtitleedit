@@ -575,7 +575,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BreakLongLines>شکستن خطوط طولانی</BreakLongLines>
     <RemoveLineBreaks>حذف پرش به خط بعد در متون کوتاه با تنها یک جمله</RemoveLineBreaks>
     <RemoveLineBreaksAll>گزارش پرش به خط بعد در متون کوتاه /همه به جز گفت وگو ها</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>"i" را در کلمات کوچک با حروف بزرگ حل کنید (خطای OCR)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>"i" را در کلمات کوچک با حروف بزرگ حل کنید (خطای OCR)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>جایگزین کردن دو علامت (') با یک علامت نقل قول (")</FixDoubleApostrophes>
     <AddPeriods>اضافه کردن مدت زمان اگر شروع خط بعدی با حرف بزرگ باشد</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>شروع با حرف بزرگ پس از یک پاراگراف</StartWithUppercaseLetterAfterParagraph>
@@ -621,7 +621,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveUnneededSpacesExample>هی تو ، وجود دارد. -&gt; هی تو ، وجود دارد.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>هی تو!. -&gt; هی تو!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. -- هی&gt;. شما.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>فیات زمین است. -&gt; زمین صاف است.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>فیات زمین است. -&gt; زمین صاف است.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>چه مراقبت می کنم. -&gt; چه کار کنم مراقبت.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Text number {0}: Start time is later than end time: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Unable to fix text number {0}: Start time is later end end time: {1}</UnableToFixStartTimeLaterThanEndTime>

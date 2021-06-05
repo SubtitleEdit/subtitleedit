@@ -662,7 +662,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <BreakLongLines>Katkaise pitkät rivit</BreakLongLines>
     <RemoveLineBreaks>Poista rivinvaihdot lyhyistä teksteistä, joissa on vain yksi lause</RemoveLineBreaks>
     <RemoveLineBreaksAll>Poista rivinvaihdot lyhyistä teksteistä (kaikki paitsi vuoropuhelut)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Korjaa iso 'i' pienikirjaimisten sanojen sisällä (tekstintunnistusvirhe)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>Korjaa iso 'i' pienikirjaimisten sanojen sisällä (tekstintunnistusvirhe)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Korjaa kaksinkertaiset heittomerkit (' ') lainausmerkillä (")</FixDoubleApostrophes>
     <AddPeriods>Lisää piste rivin jälkeen, jos seuraava rivi alkaa isolla kirjaimella</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Aloita kappale isolla kirjaimella</StartWithUppercaseLetterAfterParagraph>
@@ -705,7 +705,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <RemoveUnneededSpacesExample>Hei sinä , siellä. -&gt; Hei sinä, siellä.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hei siellä!. -&gt; Hei siellä!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hei.Sinä. -&gt; Hei. Sinä.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>Maa on tasaInen. -&gt; Maa on tasainen.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>Maa on tasaInen. -&gt; Maa on tasainen.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>Mitä kalle välittää. -&gt; Mitä Kalle välittää.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Tekstinumero {0}: Alkamisaika on myöhäisempi kuin loppumisaika: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Ei pysty korjaamaan tekstinumeroa {0}: Aloitusaika on myöhemmin kuin päättymisaika: {1}</UnableToFixStartTimeLaterThanEndTime>

@@ -272,7 +272,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BreakLongLines>انقطاع أسطر طويلة</BreakLongLines>
     <RemoveLineBreaks>إزالة فواصل الأسطر في نصوص قصيرة مع جملة واحدة فقط</RemoveLineBreaks>
     <RemoveLineBreaksAll>(إزالة فواصل الأسطر في نصوص قصيرة (كافة باستثناء الحوارات</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>داخل عبارة صغيرة 'i' الإصلاح الكبيرة OCR الخطأ</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>داخل عبارة صغيرة 'i' الإصلاح الكبيرة OCR الخطأ</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>(") إصلاح الأحرف الفاصلة المزدوجة ('') لاقتباس واحد</FixDoubleApostrophes>
     <AddPeriods>إضافة فترة ما بعد خطوط السطر التالي حيث تبدأ بحرف كبير</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>تبدأ بالأحرف الكبيرة بعد الفقرة</StartWithUppercaseLetterAfterParagraph>
@@ -317,7 +317,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveUnneededSpacesExample>Hey   you , there. -&gt;يا أنت، هناك.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. -&gt;! يا أنت</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. -&gt;يا أنت.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt;الأرض مسطحة.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>The earth is fIat. -&gt;الأرض مسطحة.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; ماذا يهمني.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>{رقم النص {0}: إبدأ الوقت التالي من وقت النهاية: {4}{1} -&gt; {2} {3</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>{غير قادر على إصلاح عدد النص {0}: وقت البدء والنهاية في وقت لاحق نهاية الوقت: {1</UnableToFixStartTimeLaterThanEndTime>

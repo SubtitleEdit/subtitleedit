@@ -576,7 +576,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <BreakLongLines>Lange Texte umbrechen</BreakLongLines>
     <RemoveLineBreaks>Zeilenumbrüche in kurzen Texten mit nur einem Satz entfernen</RemoveLineBreaks>
     <RemoveLineBreaksAll>Zeilenumbrüche in kurzen Texten (außer Dialoge) entfernen</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Großes 'i' in klein geschriebenen Wörtern (OCR Fehler) korrigieren</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>Großes 'i' in klein geschriebenen Wörtern (OCR Fehler) korrigieren</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Doppelte Apostrophe ('') zu Anführungszeichen (") korrigieren</FixDoubleApostrophes>
     <AddPeriods>Punkt am Ende einfügen, wenn nächste Zeile mit Großbuchstaben beginnt.</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Mit Großbuchstaben nach einem Punkt beginnen</StartWithUppercaseLetterAfterParagraph>
@@ -622,7 +622,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <RemoveUnneededSpacesExample>Hey du , da drüben. -&gt; Hey du, da drüben.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey du!. -&gt; Hey du!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.Du. -&gt; Hey. Du.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>Die Erde ist fIach. -&gt; Die Erde ist flach.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>Die Erde ist fIach. -&gt; Die Erde ist flach.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Textnummer {0}: Startzeit kommt nach Endzeit: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Konnte Textnummer {0} nicht korrigieren: Startzeit kommt nach Endzeit: {1}</UnableToFixStartTimeLaterThanEndTime>

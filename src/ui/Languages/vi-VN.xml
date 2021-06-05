@@ -383,7 +383,7 @@ Hộp thư: Gửi thư tới: nikse.dk@gmail.com</AboutText1>
     <BreakLongLines>Ngắt dòng do dòng quá dài</BreakLongLines>
     <RemoveLineBreaks>Gỡ bỏ ngắt dòng trong văn bản ngắn chỉ có một câu</RemoveLineBreaks>
     <RemoveLineBreaksAll>Gỡ bỏ ngắt dòng trong đoạn văn ngắn (tất cả ngoại trừ các cuộc đối thoại)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Sữa lỗi in hoa 'i' trong dạng chữ thường (lỗi OCR)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>Sữa lỗi in hoa 'i' trong dạng chữ thường (lỗi OCR)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Sữa lỗi lặp ký tự dấu cặp dấu nháy đơn ('') trong 1 lần duy nhất (")</FixDoubleApostrophes>
     <AddPeriods>Thêm thời gian sau dòng tiếp theo với dòng bắt đầu viết bằng chữ cái viết hoa</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Chữ cái sẽ viết hoa bắt đầu sau đoạn</StartWithUppercaseLetterAfterParagraph>
@@ -431,7 +431,7 @@ Hộp thư: Gửi thư tới: nikse.dk@gmail.com</AboutText1>
     <RemoveUnneededSpacesExample>Này cậu , ở đây. -&gt; Này cậu, ở đây.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care . -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Số văn bản {0}: Thời gian bắt đầu ở sau thời gian kết thúc: {4} {1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Không thể sửa lỗi văn bản số {0}: Thời gian bắt đầu ở sau thời gian kết thúc: {1}</UnableToFixStartTimeLaterThanEndTime>

@@ -612,7 +612,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <BreakLongLines>Вставить перенос для слишком длинных строк</BreakLongLines>
     <RemoveLineBreaks>Удалить перенос, если короткий субтитр является одним предложением</RemoveLineBreaks>
     <RemoveLineBreaksAll>Удалить переносы в коротких субтитрах (во всех, за исключением диалогов)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Исправить заглавные буквы "i" внутри слов (ошибка OCR)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>Исправить заглавные буквы "i" внутри слов (ошибка OCR)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Исправить удвоенный символ апострофа ('') на кавычки (")</FixDoubleApostrophes>
     <AddPeriods>Добавить точку, если следующая строка начинается с заглавной буквы</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Начать с заглавной буквы новый абзац</StartWithUppercaseLetterAfterParagraph>
@@ -662,7 +662,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <RemoveUnneededSpacesExample>Hey   you , there. -&gt; Hey you, there.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Номер текста {0}: Начальное время позже, чем конечное время: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Не удается исправить номер текста {0}: Начальное время позже, чем конечное время: {1}</UnableToFixStartTimeLaterThanEndTime>

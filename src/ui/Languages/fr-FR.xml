@@ -565,7 +565,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <BreakLongLines>Couper les lignes longues</BreakLongLines>
     <RemoveLineBreaks>Supprimer les sauts de lignes dans les paragraphes courts avec une seule phrase</RemoveLineBreaks>
     <RemoveLineBreaksAll>Retirer les retours à la ligne dans les textes courts (sauf dialogue)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Corriger le 'i' majuscule à l'intérieur des mots (erreur OCR)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>Corriger le 'i' majuscule à l'intérieur des mots (erreur OCR)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Remplacer les apostrophes doubles ('') par un guillemet (")</FixDoubleApostrophes>
     <AddPeriods>Ajouter un point quand la ligne suivante commence par une majuscule</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Commencer par une majuscule après un paragraphe</StartWithUppercaseLetterAfterParagraph>
@@ -611,7 +611,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <RemoveUnneededSpacesExample>Hé   toi , là bas. -&gt; Hé toi, là bas.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hé toi !. -&gt; Hé toi !</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hé.Toi. -&gt; Hé. Toi.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>La fIn est proche. -&gt; La fin est proche.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>La fIn est proche. -&gt; La fin est proche.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Texte n°{0}: Le temps initial est postérieur au temps final: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Impossible de corriger le texte n°{0}: temps initial &gt; temps final: {1}</UnableToFixStartTimeLaterThanEndTime>

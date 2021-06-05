@@ -736,7 +736,7 @@
             public string BreakLongLines { get; set; }
             public string RemoveLineBreaks { get; set; }
             public string RemoveLineBreaksAll { get; set; }
-            public string FixUppercaseIInsindeLowercaseWords { get; set; }
+            public string FixUppercaseIInsideLowercaseWords { get; set; }
             public string FixDoubleApostrophes { get; set; }
             public string AddPeriods { get; set; }
             public string StartWithUppercaseLetterAfterParagraph { get; set; }
@@ -747,6 +747,7 @@
             public string CommonOcrErrorsFixed { get; set; }
             public string RemoveSpaceBetweenNumber { get; set; }
             public string FixDialogsOnOneLine { get; set; }
+            public string RemoveDialogFirstInNonDialogs { get; set; }
             public string NormalizeStrings { get; set; }
             public string FixTurkishAnsi { get; set; }
             public string FixDanishLetterI { get; set; }
@@ -779,7 +780,7 @@
             public string RemoveUnneededSpacesExample { get; set; }
             public string RemoveUnneededPeriodsExample { get; set; }
             public string FixMissingSpacesExample { get; set; }
-            public string FixUppercaseIInsindeLowercaseWordsExample { get; set; }
+            public string FixUppercaseIInsideLowercaseWordsExample { get; set; }
             public string FixLowercaseIToUppercaseIExample { get; set; }
             public string StartTimeLaterThanEndTime { get; set; }
             public string UnableToFixStartTimeLaterThanEndTime { get; set; }
@@ -809,6 +810,7 @@
             public string FixOcrErrorExample { get; set; }
             public string FixSpaceBetweenNumbersExample { get; set; }
             public string FixDialogsOneLineExample { get; set; }
+            public string RemoveDialogFirstInNonDialogsExample { get; set; }
             public string SelectDefault { get; set; }
             public string SetDefault { get; set; }
             public string FixContinuationStyleX { get; set; }

@@ -665,7 +665,7 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
     <BreakLongLines>Uzun satırları böl</BreakLongLines>
     <RemoveLineBreaks>Tek cümle olan kısa metinleri, tek satırda birleştir</RemoveLineBreaks>
     <RemoveLineBreaksAll>Tüm kısa metinleri, tek satırda birleştir (diyaloglar hariç)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Kelime içinde büyük harf, küçük harf düzeltme 'i' (OCR hatası)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>Kelime içinde büyük harf, küçük harf düzeltme 'i' (OCR hatası)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Çift tırnak (''), tek tırnak karakterini düzelt (")</FixDoubleApostrophes>
     <AddPeriods>Sonraki satır büyük harfle başlıyorsa bulunan satırın sonuna nokta ekleyin</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Paragraftan sonra büyük harfle başlayın</StartWithUppercaseLetterAfterParagraph>
@@ -708,7 +708,7 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
     <RemoveUnneededSpacesExample>Hey  sen , oradaki. -&gt; Hey sen, oradaki.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey sen!. -&gt; Hey sen!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.Sen. -&gt; Hey. Sen.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>Dünya yuvarIak. -&gt; Dünya yuvarlak.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>Dünya yuvarIak. -&gt; Dünya yuvarlak.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>Umrumda değil. -&gt; Umrumda değIl.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Metin numarası {0}: Başlangıç zamanı bitiş zamanından sonra: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Metin numarasını düzeltilemez {0}: Başlangıç zamanı bitiş zamanından sonra: {1}</UnableToFixStartTimeLaterThanEndTime>

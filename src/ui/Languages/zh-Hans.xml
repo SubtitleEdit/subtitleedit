@@ -662,7 +662,7 @@ Command line: {1} {2}
     <BreakLongLines>断开长行</BreakLongLines>
     <RemoveLineBreaks>删除只有一个句子的短文本中的换行符</RemoveLineBreaks>
     <RemoveLineBreaksAll>删除除对话外所有短文本中的换行符</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>修复小写单词中的 'i' 为大写 (OCR 错误)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>修复小写单词中的 'i' 为大写 (OCR 错误)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>修复两个单引号字符 ('') 为一个双引号 (")</FixDoubleApostrophes>
     <AddPeriods>在下一行以大写字母开头的行后面添加句号</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>段落后以大写字母开头</StartWithUppercaseLetterAfterParagraph>
@@ -705,7 +705,7 @@ Command line: {1} {2}
     <RemoveUnneededSpacesExample>Hey   you , there. -&gt; Hey you, there.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>文本编号 {0}: 起始时间晚于结束时间: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>无法修复文本编号 {0}: 起始时间晚于结束时间: {1}</UnableToFixStartTimeLaterThanEndTime>

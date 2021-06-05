@@ -579,7 +579,7 @@ Napomena: Proverite slobodan prostor na disku.</WaveFileMalformed>
     <BreakLongLines>Razdvoji duge linije</BreakLongLines>
     <RemoveLineBreaks>Ukloni redove u kratkim tekstovima (samo jedna rečenica)</RemoveLineBreaks>
     <RemoveLineBreaksAll>Ukloni redove u kratkim tekstovima (sve osim dijaloga)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Ispravi veliko latinično slovo 'I' nasred reči</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>Ispravi veliko latinično slovo 'I' nasred reči</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Promeni duple apostrofe ('') u navodnike (")</FixDoubleApostrophes>
     <AddPeriods>Dodaj tačku posle linija gde sledeća počinje velikim slovom</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Počni velikim slovom posle novog reda</StartWithUppercaseLetterAfterParagraph>
@@ -625,7 +625,7 @@ Napomena: Proverite slobodan prostor na disku.</WaveFileMalformed>
     <RemoveUnneededSpacesExample>Hej , vi  tamo. -&gt; Hej, vi tamo.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hej ti!. -&gt; Hej ti!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Zdravo.Šta radiš? -&gt; Zdravo. Šta radiš?</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>VrIina. -&gt; Vrlina.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>VrIina. -&gt; Vrlina.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Tekst broj {0}:  Završno vreme se pojavljuje pre početnog: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Ne mogu da ispravim tekst pod brojem {0}: Završno vreme je pre početnog: {1}</UnableToFixStartTimeLaterThanEndTime>

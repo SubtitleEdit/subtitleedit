@@ -52,8 +52,9 @@ namespace Nikse.SubtitleEdit.Forms
         private const int IndexUppercaseIInsideLowercaseWord = 28;
         private const int IndexRemoveSpaceBetweenNumbers = 29;
         private const int IndexDialogsOnOneLine = 30;
-        private const int IndexNormalizeStrings = 31;
-        private const int IndexFixEllipsesStart = 32;
+        private const int IndexRemoveDashFirstLine = 31;
+        private const int IndexNormalizeStrings = 32;
+        private const int IndexFixEllipsesStart = 33;
         private int _indexAloneLowercaseIToUppercaseIEnglish = -1;
         private int _turkishAnsiIndex = -1;
         private int _danishLetterIIndex = -1;
@@ -406,9 +407,10 @@ namespace Nikse.SubtitleEdit.Forms
                 }.Fix(Subtitle, this), ce.FixContinuationStyleTicked),
                 new FixItem(_language.FixMissingOpenBracket, _language.FixMissingOpenBracketExample, () => new FixMissingOpenBracket().Fix(Subtitle, this), ce.FixMissingOpenBracketTicked),
                 new FixItem(_language.FixCommonOcrErrors, _language.FixOcrErrorExample, () => FixOcrErrorsViaReplaceList(threeLetterIsoLanguageName), ce.FixOcrErrorsViaReplaceListTicked),
-                new FixItem(_language.FixUppercaseIInsindeLowercaseWords, _language.FixUppercaseIInsindeLowercaseWordsExample, () => new FixUppercaseIInsideWords().Fix(Subtitle, this), ce.UppercaseIInsideLowercaseWordTicked),
+                new FixItem(_language.FixUppercaseIInsideLowercaseWords, _language.FixUppercaseIInsideLowercaseWordsExample, () => new FixUppercaseIInsideWords().Fix(Subtitle, this), ce.UppercaseIInsideLowercaseWordTicked),
                 new FixItem(_language.RemoveSpaceBetweenNumber, _language.FixSpaceBetweenNumbersExample, () => new RemoveSpaceBetweenNumbers().Fix(Subtitle, this), ce.RemoveSpaceBetweenNumberTicked),
                 new FixItem(_language.FixDialogsOnOneLine, _language.FixDialogsOneLineExample, () => new FixDialogsOnOneLine().Fix(Subtitle, this), ce.FixDialogsOnOneLineTicked),
+                new FixItem(_language.RemoveDialogFirstInNonDialogs, _language.RemoveDialogFirstInNonDialogsExample, () => new RemoveDialogFirstLineInNonDialogs().Fix(Subtitle, this), ce.RemoveDialogFirstLineInNonDialogs),
                 new FixItem(_language.NormalizeStrings, string.Empty, () => new NormalizeStrings().Fix(Subtitle, this), ce.NormalizeStringsTicked),
             };
 
@@ -531,6 +533,7 @@ namespace Nikse.SubtitleEdit.Forms
             FixContinuationStyle.Language.FixUnnecessaryLeadingDots = LanguageSettings.Current.FixCommonErrors.FixUnnecessaryLeadingDots;
             FixDanishLetterI.Language.FixDanishLetterI = LanguageSettings.Current.FixCommonErrors.FixDanishLetterI;
             FixDialogsOnOneLine.Language.FixDialogsOnOneLine = LanguageSettings.Current.FixCommonErrors.FixDialogsOnOneLine;
+            RemoveDialogFirstLineInNonDialogs.Language.RemoveDialogFirstInNonDialogs = LanguageSettings.Current.FixCommonErrors.RemoveDialogFirstInNonDialogs;
             FixDoubleApostrophes.Language.FixDoubleApostrophes = LanguageSettings.Current.FixCommonErrors.FixDoubleApostrophes;
             FixDoubleDash.Language.FixDoubleDash = LanguageSettings.Current.FixCommonErrors.FixDoubleDash;
             FixDoubleGreaterThan.Language.FixDoubleGreaterThan = LanguageSettings.Current.FixCommonErrors.FixDoubleGreaterThan;
@@ -579,7 +582,7 @@ namespace Nikse.SubtitleEdit.Forms
             FixUnneededSpaces.Language.RemoveUnneededSpaces = LanguageSettings.Current.FixCommonErrors.RemoveUnneededSpaces;
             FixUnneededSpaces.Language.UnneededSpace = LanguageSettings.Current.FixCommonErrors.UnneededSpace;
             FixUppercaseIInsideWords.Language.FixUppercaseIInsideLowercaseWord = LanguageSettings.Current.FixCommonErrors.FixUppercaseIInsideLowercaseWord;
-            FixUppercaseIInsideWords.Language.FixUppercaseIInsindeLowercaseWords = LanguageSettings.Current.FixCommonErrors.FixUppercaseIInsindeLowercaseWords;
+            FixUppercaseIInsideWords.Language.FixUppercaseIInsideLowercaseWords = LanguageSettings.Current.FixCommonErrors.FixUppercaseIInsideLowercaseWords;
             NormalizeStrings.Language.NormalizeStrings = LanguageSettings.Current.FixCommonErrors.NormalizeStrings;
 
             FixLargeFonts();
@@ -1167,6 +1170,7 @@ namespace Nikse.SubtitleEdit.Forms
             ce.FixOcrErrorsViaReplaceListTicked = listView1.Items[IndexFixOcrErrorsViaReplaceList].Checked;
             ce.RemoveSpaceBetweenNumberTicked = listView1.Items[IndexRemoveSpaceBetweenNumbers].Checked;
             ce.FixDialogsOnOneLineTicked = listView1.Items[IndexDialogsOnOneLine].Checked;
+            ce.RemoveDialogFirstLineInNonDialogs = listView1.Items[IndexRemoveDashFirstLine].Checked;
             ce.NormalizeStringsTicked = listView1.Items[IndexNormalizeStrings].Checked;
             if (_danishLetterIIndex >= 0)
             {
