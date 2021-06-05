@@ -663,7 +663,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <BreakLongLines>Break long lines</BreakLongLines>
     <RemoveLineBreaks>Remove line breaks in short texts with only one sentence</RemoveLineBreaks>
     <RemoveLineBreaksAll>Remove line breaks in short texts (all except dialogs)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Fix uppercase 'i' inside lowercase words (OCR error)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>Fix uppercase 'i' inside lowercase words (OCR error)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Fix double apostrophe characters ('') to a single quote (")</FixDoubleApostrophes>
     <AddPeriods>Add period after lines where next line start with uppercase letter</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Start with uppercase letter after paragraph</StartWithUppercaseLetterAfterParagraph>
@@ -674,6 +674,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <CommonOcrErrorsFixed>Common OCR errors fixed (OcrReplaceList file used): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Remove space between numbers</RemoveSpaceBetweenNumber>
     <FixDialogsOnOneLine>Fix dialogs on one line</FixDialogsOnOneLine>
+    <RemoveDialogFirstInNonDialogs>Remove start dash in first line for non dialogs</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>Normalize strings</NormalizeStrings>
     <FixTurkishAnsi>Fix Turkish ANSI (Icelandic) letters to Unicode</FixTurkishAnsi>
     <FixDanishLetterI>Fix Danish letter 'i'</FixDanishLetterI>
@@ -706,7 +707,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <RemoveUnneededSpacesExample>Hey   you , there. -&gt; Hey you, there.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Text number {0}: Start time is later than end time: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Unable to fix text number {0}: Start time is later than end time: {1}</UnableToFixStartTimeLaterThanEndTime>
@@ -736,6 +737,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FixOcrErrorExample>D0n't -&gt; Don't</FixOcrErrorExample>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Hi John! - Hi Ida! -&gt; Hi John!&lt;br /&gt;- Hi Ida!</FixDialogsOneLineExample>
+    <RemoveDialogFirstInNonDialogsExample>- How are you? -&gt; How are you?</RemoveDialogFirstInNonDialogsExample>
     <SelectDefault>Select default</SelectDefault>
     <SetDefault>Set current fixes as default</SetDefault>
     <FixContinuationStyleX>Fix continuation style: {0}</FixContinuationStyleX>
