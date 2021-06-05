@@ -674,6 +674,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <CommonOcrErrorsFixed>Erros frequentes de OCR corrigidos (ficheiro OcrReplaceList usado): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Eliminar espaços entre números</RemoveSpaceBetweenNumber>
     <FixDialogsOnOneLine>Corrigir diálogos numa linha</FixDialogsOnOneLine>
+    <RemoveDialogFirstInNonDialogs>Remover o travessão inicial na primeira linha para não diálogos</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>Normalizar linhas</NormalizeStrings>
     <FixTurkishAnsi>Corrigir ANSI turco (Islandês) caracteres para Unicode</FixTurkishAnsi>
     <FixDanishLetterI>Corrigir caractere Dinamarquês 'i'</FixDanishLetterI>
@@ -736,6 +737,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <FixOcrErrorExample>NÃo -&gt; Não</FixOcrErrorExample>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Olá João! - Olá Olga! -&gt; Olá João!&lt;br /&gt;- Olá Olga!</FixDialogsOneLineExample>
+    <RemoveDialogFirstInNonDialogsExample>- Como estás? -&gt; Como estás?</RemoveDialogFirstInNonDialogsExample>
     <SelectDefault>Predefinição</SelectDefault>
     <SetDefault>Definir correcções actuais como padrão</SetDefault>
     <FixContinuationStyleX>Corrigir estilo de continuação: {0}</FixContinuationStyleX>
@@ -1459,8 +1461,8 @@ Deseja continuar?</SubtitleAppendPrompt>
     <BeforeSpellCheck>Antes da verificação ortográfica</BeforeSpellCheck>
     <SpellCheckChangedXToY>Verificação ortográfica: Alterado '{0}' para '{1}'</SpellCheckChangedXToY>
     <BeforeAddingTagX>Antes de adicionar '{0}' etiqueta</BeforeAddingTagX>
-    <TagXAdded>'{0}' etiqueta adicionadas</TagXAdded>
-    <LineXOfY>line {0} de {1}</LineXOfY>
+    <TagXAdded>'{0}' etiqueta adicionada</TagXAdded>
+    <LineXOfY>linha {0} de {1}</LineXOfY>
     <XLinesSavedAsY>{0} linhas guardadas como {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} linhas eliminadas</XLinesDeleted>
     <BeforeDeletingXLines>Antes de eliminar {0:#,##0} linhas</BeforeDeletingXLines>
@@ -2637,6 +2639,10 @@ Continuar?</RestoreDefaultSettingsMsg>
     <CategoryNote>Nota: Os estilos "Predefinidos" (a verde) serão aplicados aos novos ficheiros ASSA</CategoryNote>
     <CategoriesManage>Gerir</CategoriesManage>
     <MoveToCategory>Mover estilos seleccionados para categoria...</MoveToCategory>
+    <ScaleX>EscalaX</ScaleX>
+    <ScaleY>EscalaY</ScaleY>
+    <Spacing>Espaçamento</Spacing>
+    <Angle>Ângulo</Angle>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
     <Category>Categoria</Category>
