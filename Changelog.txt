@@ -2,8 +2,11 @@
 
 3.6.2 BETA (xth July 2021)
 * NEW:
+   * Keep all ASSA tags (no html for italic etc.)
+   * ASSA tag helper/intellisense shortcut
    * Shortcuts for video contrast/brightness (mpv only)
    * Waveform "Right-click + Ctrl" will toggle select of a subtitle
+   * Waveform "Right-click + Shift" will select a range subtitles
    * Add a few profiles for Amazon Prime
 * IMPROVED:
    * Update Bulgarian translation - thx Калин
