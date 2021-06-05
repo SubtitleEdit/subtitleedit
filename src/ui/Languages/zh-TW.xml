@@ -507,7 +507,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <BreakLongLines>長行換行</BreakLongLines>
     <RemoveLineBreaks>移除只有一個句子的短文字中的換行字元</RemoveLineBreaks>
     <RemoveLineBreaksAll>移除除對話外所有短文字中的換行字元</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>修復小寫單字中的 'i' 為大寫 (OCR 錯誤)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>修復小寫單字中的 'i' 為大寫 (OCR 錯誤)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>修復兩個單引號字元 ('') 為一個雙引號 (")</FixDoubleApostrophes>
     <AddPeriods>在下一個以大寫字母開頭的行後面加入句號</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>在段落後以大寫字母開頭</StartWithUppercaseLetterAfterParagraph>
@@ -555,7 +555,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <RemoveUnneededSpacesExample>Hey   you , there. -&gt; Hey you, there.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>文字編號 {0}: 起始時間晚於結束時間: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>無法修復文字編號 {0}: 起始時間晚於結束時間: {1}</UnableToFixStartTimeLaterThanEndTime>

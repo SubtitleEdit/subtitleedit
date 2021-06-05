@@ -657,7 +657,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <BreakLongLines>긴 줄 줄바꿈</BreakLongLines>
     <RemoveLineBreaks>짧은 단일 문장의 줄바꿈 제거하기</RemoveLineBreaks>
     <RemoveLineBreaksAll>짧은 문장의 줄바꿈 제거하기 (대화형식은 제외)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>한 단어 중간에 대문자 'I'가 쓰인 것 수정하기 (OCR 오류)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>한 단어 중간에 대문자 'I'가 쓰인 것 수정하기 (OCR 오류)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>두개의 작은 따옴표(')를 큰 따옴표(")로 수정하기</FixDoubleApostrophes>
     <AddPeriods>다음 줄이 대문자로 시작하면 줄 끝에 마침표 추가하기</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>단락이 끝나면 대문자로 시작하기</StartWithUppercaseLetterAfterParagraph>
@@ -700,7 +700,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <RemoveUnneededSpacesExample>넌  정말  최고야! -&gt; 넌 정말 최고야!</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>안돼!. -&gt; 안돼!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>여보세요.나는 -&gt; 여보세요. 나는</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>텍스트 번호 {0}: 시작 시간이 종료 시간보다 느림: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>텍스트 번호 {0}을 수정할 수 없음. 시작 시간이 종료 시간 {1} 보다 느림</UnableToFixStartTimeLaterThanEndTime>

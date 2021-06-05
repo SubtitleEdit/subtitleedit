@@ -605,7 +605,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BreakLongLines>Divideix línies llargues</BreakLongLines>
     <RemoveLineBreaks>Suprimeix salts de línia en textos curts amb una sola frase</RemoveLineBreaks>
     <RemoveLineBreaksAll>Suprimeix salts de línia en textos curts (tots excepte els diàlegs)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Arregla majúscula 'i' dins de mots en minúscules (error OCR)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>Arregla majúscula 'i' dins de mots en minúscules (error OCR)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Arregla caràcters de doble apòstrof ('') amb una cometa (")</FixDoubleApostrophes>
     <AddPeriods>Afegeix espai després de línia quan la següent comença amb majúscula</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Comença paràgraf amb majúscula</StartWithUppercaseLetterAfterParagraph>
@@ -655,7 +655,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveUnneededSpacesExample>Hey   you , there. -&gt; Hey you, there.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Nombre text {0}: Temps d'inici posterior a temps final: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>No pot Arreglar-se nombre text {0}: Temps d'inici posterior a temps final: {1}</UnableToFixStartTimeLaterThanEndTime>

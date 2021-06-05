@@ -1744,8 +1744,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "FixCommonErrors/RemoveLineBreaksAll":
                     language.FixCommonErrors.RemoveLineBreaksAll = reader.Value;
                     break;
-                case "FixCommonErrors/FixUppercaseIInsindeLowercaseWords":
-                    language.FixCommonErrors.FixUppercaseIInsindeLowercaseWords = reader.Value;
+                case "FixCommonErrors/FixUppercaseIInsideLowercaseWords":
+                    language.FixCommonErrors.FixUppercaseIInsideLowercaseWords = reader.Value;
                     break;
                 case "FixCommonErrors/FixDoubleApostrophes":
                     language.FixCommonErrors.FixDoubleApostrophes = reader.Value;
@@ -1873,8 +1873,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "FixCommonErrors/FixMissingSpacesExample":
                     language.FixCommonErrors.FixMissingSpacesExample = reader.Value;
                     break;
-                case "FixCommonErrors/FixUppercaseIInsindeLowercaseWordsExample":
-                    language.FixCommonErrors.FixUppercaseIInsindeLowercaseWordsExample = reader.Value;
+                case "FixCommonErrors/FixUppercaseIInsideLowercaseWordsExample":
+                    language.FixCommonErrors.FixUppercaseIInsideLowercaseWordsExample = reader.Value;
                     break;
                 case "FixCommonErrors/FixLowercaseIToUppercaseIExample":
                     language.FixCommonErrors.FixLowercaseIToUppercaseIExample = reader.Value;

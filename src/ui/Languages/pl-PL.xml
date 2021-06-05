@@ -662,7 +662,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <BreakLongLines>Przełam zbyt długie linie</BreakLongLines>
     <RemoveLineBreaks>Usuń łamanie linii w krótkich tekstach z tylko jednym zdaniem</RemoveLineBreaks>
     <RemoveLineBreaksAll>Usuń łamanie linii w krótkich tekstach (wszystkie, z wyjątkiem dialogów)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Popraw duże litery 'i' wewnątrz małych liter (błąd OCR)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>Popraw duże litery 'i' wewnątrz małych liter (błąd OCR)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Popraw podwójny znak apostrofu ('') na pojedynczy cudzysłów (")</FixDoubleApostrophes>
     <AddPeriods>Dodaj kropkę po liniach, gdy następna linia rozpoczyna się z dużej litery</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Rozpocznij z dużej litery po akapicie</StartWithUppercaseLetterAfterParagraph>
@@ -705,7 +705,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <RemoveUnneededSpacesExample>Hej   ty , tam. -&gt; Hej ty, tam.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hej ty!. -&gt; Hej ty!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hej.Ty. -&gt; Hej. Ty.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>Tam jest kIatka. -&gt; Tam jest klatka.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>Tam jest kIatka. -&gt; Tam jest klatka.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Numer linii tekstu {0}: Czas rozpoczęcia zachodzi na czas zakończenia: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Nie udało się poprawić linii tekstu o numerze {0}: Czas rozpoczęcia jest późniejszy niż czas zakończenia: {1}</UnableToFixStartTimeLaterThanEndTime>

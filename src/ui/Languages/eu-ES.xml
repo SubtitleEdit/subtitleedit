@@ -658,7 +658,7 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <BreakLongLines>Hautsi lerro luzeak</BreakLongLines>
     <RemoveLineBreaks>Kendu lerro hautsiak esaldi bakarreko idatzi laburretan</RemoveLineBreaks>
     <RemoveLineBreaksAll>Kendu lerro hautsiak idatzi laburretan (elkarrizketak izan ezik)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Zuzendu hitz xeheen barneko hizki larriak (idaz akatsa)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>Zuzendu hitz xeheen barneko hizki larriak (idaz akatsa)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Zuzendu adartxo bikoitzak ('') aipamen bakarrera (")</FixDoubleApostrophes>
     <AddPeriods>Gehitu puntua hurrengo lerroa hizki larriz hastean lerroen ondoren</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Hasi hizki larriz esaldi baten ondoren</StartWithUppercaseLetterAfterParagraph>
@@ -701,7 +701,7 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <RemoveUnneededSpacesExample>Kaixo  Xabier , han. -&gt; Kaixo Xabier, han.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Kaixo Xabier!. -&gt; Kaixo Xabier!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Kaixo.Xabier -&gt; Kaixo. Xabier.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>Zerekin joIasten duzu? -&gt; Zerekin jolasten duzu?</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>Zerekin joIasten duzu? -&gt; Zerekin jolasten duzu?</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Idatzi zenbakia {0}: Hasiera denbora amaiera denboraren ondoren da: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Ezgaitu idatzi zenbakia zuzentzea {0}: Hasiera denbora amaiera denbora amaitu ondoren da: {1}</UnableToFixStartTimeLaterThanEndTime>

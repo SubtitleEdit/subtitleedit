@@ -1,5 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.Interfaces;
+﻿using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
@@ -12,12 +11,12 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            string fixAction = Language.FixDialogsOnOneLine;
-            int noOfFixes = 0;
+            var fixAction = Language.FixDialogsOnOneLine;
+            var noOfFixes = 0;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = subtitle.Paragraphs[i];
-                string oldText = p.Text;
+                var p = subtitle.Paragraphs[i];
+                var oldText = p.Text;
                 var text = Helper.FixDialogsOnOneLine(oldText, callbacks.Language);
                 if (oldText != text && callbacks.AllowFix(p, fixAction))
                 {

@@ -712,6 +712,7 @@ $HorzAlign          =   Center
         public bool FixOcrErrorsViaReplaceListTicked { get; set; }
         public bool RemoveSpaceBetweenNumberTicked { get; set; }
         public bool FixDialogsOnOneLineTicked { get; set; }
+        public bool RemoveDialogFirstLineInNonDialogs { get; set; }
         public bool TurkishAnsiTicked { get; set; }
         public bool DanishLetterITicked { get; set; }
         public bool SpanishInvertedQuestionAndExclamationMarksTicked { get; set; }

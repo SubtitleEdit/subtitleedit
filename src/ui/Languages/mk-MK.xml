@@ -603,7 +603,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BreakLongLines>Стави во два реда долги линии</BreakLongLines>
     <RemoveLineBreaks>Стави во еден ред кратки текстови со една реченица</RemoveLineBreaks>
     <RemoveLineBreaksAll>Стави во еден ред кратки текстови (сите освен дијалози)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Поправи голема буква за 'i' во зборови кои содржат мали букви (OCR грешка)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>Поправи голема буква за 'i' во зборови кои содржат мали букви (OCR грешка)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Поправи двоен знак за апостроф ('') во самостојни наводници (")</FixDoubleApostrophes>
     <AddPeriods>Додај точка по линиите каде што следната почнува со голема буква</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Започни со голема буква после параграф</StartWithUppercaseLetterAfterParagraph>
@@ -652,7 +652,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveUnneededSpacesExample>Еј  ти ,таму .-&gt; Еј ти, таму.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Еј ти!. -&gt; Еј ти!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Еј.Ти. -&gt; Еј. Ти.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>The earth Is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>The earth Is fIat. -&gt; The earth is flat.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Реден бр. на текст{0}: Почетното време доцни во однос на крајното: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Не може да се поправи текстот со реден бр.{0}: Почетокот доцни во однос на крајот: {1}</UnableToFixStartTimeLaterThanEndTime>

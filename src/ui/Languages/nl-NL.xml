@@ -598,7 +598,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <BreakLongLines>Lange regels afbreken</BreakLongLines>
     <RemoveLineBreaks>Regeleinde in korte tekst met slechts één zin verwĳderen</RemoveLineBreaks>
     <RemoveLineBreaksAll>Regeleinde in korte tekst (behalve dialogen) verwĳderen</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Hoofdletter i in woorden in kleine letters (OCR-fout) corrigeren</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>Hoofdletter i in woorden in kleine letters (OCR-fout) corrigeren</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Dubbele apostrof ('') door aanhalingsteken (") vervangen</FixDoubleApostrophes>
     <AddPeriods>Punt invoegen indien de volgende regel met een hoofdletter begint</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Na een alinea met een hoofdletter beginnen</StartWithUppercaseLetterAfterParagraph>
@@ -647,7 +647,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <RemoveUnneededSpacesExample>Hey   you , there. ⇒ Hey you, there.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. ⇒ Hey you!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. ⇒ Hey. You.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. ⇒ The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>The earth is fIat. ⇒ The earth is flat.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. ⇒ What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Titel {0}: Begintĳd is later dan eindtĳd: {4} {1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Kan titel {0} niet corrigeren: begintĳd is later dan eindtĳd: {1}</UnableToFixStartTimeLaterThanEndTime>

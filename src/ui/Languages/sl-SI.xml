@@ -452,7 +452,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <BreakLongLines>Prelomi dolge vrstice</BreakLongLines>
     <RemoveLineBreaks>Odstrani lome vrstic v kratkih besedilih v enem stavku</RemoveLineBreaks>
     <RemoveLineBreaksAll>Odstrani lome vrstic v kratkih besedilih (vse, razen dialogi)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Popravi veliko začetnico "i" v besedah z malo začetnico (OCR napake)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>Popravi veliko začetnico "i" v besedah z malo začetnico (OCR napake)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Spremeni dvojni apostrof ('') v enojnega, navednice (")</FixDoubleApostrophes>
     <AddPeriods>Dodaj piko za vrstico tam, kjer se lačne nova vrstica z veliko začetnico</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Za odstavkom začni z veliko začetnico</StartWithUppercaseLetterAfterParagraph>
@@ -500,7 +500,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <RemoveUnneededSpacesExample>Poglej,  tja. -&gt; Poglej, tja.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Tam gori!. -&gt; Tam gori!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Tam.Gori. -&gt; Tam. Gori.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>ZemIja je ravna. -&gt; Zemlja je ravna. (veliki "I" z mali "l")</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>ZemIja je ravna. -&gt; Zemlja je ravna. (veliki "I" z mali "l")</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Številka vrstice {0}: Začetni čas je manjši od končnega: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Ne gre popraviti št. vrstice {0}: Začetni čas je manjši od končnega: {1}</UnableToFixStartTimeLaterThanEndTime>

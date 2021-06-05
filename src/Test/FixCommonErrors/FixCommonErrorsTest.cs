@@ -3315,5 +3315,42 @@ namespace Test.FixCommonErrors
         }
 
         #endregion Fix continuation style
+
+
+        [TestMethod]
+        public void RemoveDialogFirstLineInNonDialogs1()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "- They wanted to test!");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.LeadingTrailingDots;
+                new RemoveDialogFirstLineInNonDialogs().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("They wanted to test!", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
+        public void RemoveDialogFirstLineInNonDialogs2()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "<i>- They wanted to test!</i>");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.LeadingTrailingDots;
+                new RemoveDialogFirstLineInNonDialogs().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("<i>They wanted to test!</i>", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
+        public void RemoveDialogFirstLineInNonDialogs3()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "- They wanted to test!" + Environment.NewLine  + "But not Kal-El.");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.LeadingTrailingDots;
+                new RemoveDialogFirstLineInNonDialogs().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("They wanted to test!" + Environment.NewLine + "But not Kal-El.", _subtitle.Paragraphs[0].Text);
+            }
+        }
     }
 }

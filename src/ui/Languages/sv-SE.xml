@@ -576,7 +576,7 @@ Obs: Kontrollera ledigt utrymme.</WaveFileMalformed>
     <BreakLongLines>Bryt långa rader</BreakLongLines>
     <RemoveLineBreaks>Ta bort radbrytningar i korta stycken med bara en mening</RemoveLineBreaks>
     <RemoveLineBreaksAll>Ta bort radbrytningar i korta stycken (alla utom dialoger)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Fixa versalt 'i' inuti gemena ord (OCR-fel)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>Fixa versalt 'i' inuti gemena ord (OCR-fel)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Fixa dubbla apostroftecken ('') till en enda apostrof (")</FixDoubleApostrophes>
     <AddPeriods>Lägg till punkt efter rad där nästa rad börjar med versal bokstav</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Börja med versal bokstav efter punkt</StartWithUppercaseLetterAfterParagraph>
@@ -622,7 +622,7 @@ Obs: Kontrollera ledigt utrymme.</WaveFileMalformed>
     <RemoveUnneededSpacesExample>Hey   you , there. -&gt; Hey you, there.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Textnummer {0}: Starttid är senare än sluttid: {4} {1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Det går inte att fixa nummer {0}: Starttid är senare än sluttid: {1}</UnableToFixStartTimeLaterThanEndTime>

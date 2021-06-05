@@ -559,7 +559,7 @@ Catatan: Periksa ruang kosong disk.</WaveFileMalformed>
     <BreakLongLines>Jeda baris yg panjang</BreakLongLines>
     <RemoveLineBreaks>Buang jeda baris dlm teks singkat hanya dgn satu kalimat</RemoveLineBreaks>
     <RemoveLineBreaksAll>Buang jeda baris dlm teks singkat (semua kecuali dialog)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Perbaiki huruf besar 'i' dlm kata huruf kecil (eror OCR)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>Perbaiki huruf besar 'i' dlm kata huruf kecil (eror OCR)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Perbaiki karakter apostrop ganda ('') ke satu kutipan (")</FixDoubleApostrophes>
     <AddPeriods>Tambah tanda titik sesudah baris berikutnya dimulai dgn huruf besar</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Mulai dgn huruf besar sesudah paragraf</StartWithUppercaseLetterAfterParagraph>
@@ -607,7 +607,7 @@ Catatan: Periksa ruang kosong disk.</WaveFileMalformed>
     <RemoveUnneededSpacesExample>Hei  kamu, di sana. -&gt; Hei kamu, disana.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hei kamu!. -&gt; Hei kamu!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hei.Kamu. -&gt; Hei. Kamu.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>Bumi itu dAtar. -&gt; Bumi itu datar.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>Bumi itu dAtar. -&gt; Bumi itu datar.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>Apa peduli. -&gt; Apa Peduliku.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Teks nomor {0}: Waktu mulai lebih lambat dari waktu akhir: {4}{1} -&gt; {2}{3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Gagal memperbaiki teks nomor {0}: Waktu mulai adalah waktu akhir: {1}</UnableToFixStartTimeLaterThanEndTime>
