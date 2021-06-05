@@ -40,8 +40,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
 
-                var start = p.StartTime.ToDisplayString().Replace(",", ".");
-                var end = p.EndTime.ToDisplayString().Replace(",", ".");
+                var start = p.StartTime.ToString().Replace(",", ".");
+                var end = p.EndTime.ToString().Replace(",", ".");
                 var text = HtmlUtil.RemoveHtmlTags(p.Text, true);
                 sb.AppendLine(string.Format(writeFormat, start, end, Environment.NewLine, text, count));
             }
