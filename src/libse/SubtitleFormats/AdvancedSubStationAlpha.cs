@@ -1402,7 +1402,9 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                             {
                                 StartTime = GetTimeCodeFromString(start),
                                 EndTime = GetTimeCodeFromString(end),
-                                Text = text,
+                                Text = text
+                                    .Replace("\\n",Environment.NewLine)
+                                    .Replace("\\N", Environment.NewLine),
                             };
 
                             if (!string.IsNullOrEmpty(style))
