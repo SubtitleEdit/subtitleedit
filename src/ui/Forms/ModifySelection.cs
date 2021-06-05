@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly SubtitleListView _subtitleListView;
         private readonly Subtitle _subtitle;
         private readonly SubtitleFormat _format;
-        private readonly bool _loading;
+        private bool _loading;
 
         private const int FunctionContains = 0;
         private const int FunctionStartsWith = 1;
@@ -255,7 +255,7 @@ namespace Nikse.SubtitleEdit.Forms
             var listViewItems = new List<ListViewItem>();
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
-            string text = textBoxText.Text;
+            var text = textBoxText.Text;
             if (comboBoxRule.SelectedIndex != FunctionRegEx)
             {
                 text = text.Replace("\\r\\n", Environment.NewLine);
@@ -341,6 +341,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
                     }
+
                     if (comboBoxRule.SelectedIndex == FunctionOdd) // Select odd lines
                     {
                         if (i % 2 == 0)
@@ -427,7 +428,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (item.Checked)
                     {
-                        int index = Convert.ToInt32(item.Tag);
+                        var index = Convert.ToInt32(item.Tag);
                         _subtitleListView.Items[index].Selected = true;
                     }
                 }
@@ -438,7 +439,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (item.Checked)
                     {
-                        int index = Convert.ToInt32(item.Tag);
+                        var index = Convert.ToInt32(item.Tag);
                         _subtitleListView.Items[index].Selected = false;
                     }
                 }
@@ -532,11 +533,10 @@ namespace Nikse.SubtitleEdit.Forms
                 styles = _subtitle.Header == null ? Sami.GetStylesFromSubtitle(_subtitle) : Sami.GetStylesFromHeader(_subtitle.Header);
             }
 
+            _loading = true;
             listViewStyles.Items.Clear();
-            foreach (var style in styles.OrderBy(p => p))
-            {
-                listViewStyles.Items.Add(style);
-            }
+            listViewStyles.Items.AddRange(styles.OrderBy(p => p).Select(p => new ListViewItem { Text = p }).ToArray());
+            _loading = false;
         }
 
         private void FillActors()
@@ -551,11 +551,10 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            _loading = true;
             listViewStyles.Items.Clear();
-            foreach (var style in actors.OrderBy(p => p))
-            {
-                listViewStyles.Items.Add(style);
-            }
+            listViewStyles.Items.AddRange(actors.OrderBy(p => p).Select(p => new ListViewItem { Text = p }).ToArray());
+            _loading = false;
         }
 
         private void checkBoxCaseSensitive_CheckedChanged(object sender, EventArgs e)
