@@ -1458,8 +1458,8 @@ Deseja continuar?</SubtitleAppendPrompt>
     <SpellCheck>Verificação ortográfica</SpellCheck>
     <BeforeSpellCheck>Antes da verificação ortográfica</BeforeSpellCheck>
     <SpellCheckChangedXToY>Verificação ortográfica: Alterado '{0}' para '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Antes de adicionar &lt;{0}&gt; etiqueta</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; etiquetas adicionadas</TagXAdded>
+    <BeforeAddingTagX>Antes de adicionar '{0}' etiqueta</BeforeAddingTagX>
+    <TagXAdded>'{0}' etiqueta adicionadas</TagXAdded>
     <LineXOfY>line {0} de {1}</LineXOfY>
     <XLinesSavedAsY>{0} linhas guardadas como {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} linhas eliminadas</XLinesDeleted>

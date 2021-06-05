@@ -862,8 +862,8 @@
     <SpellCheck>Провера писања</SpellCheck>
     <BeforeSpellCheck>Проверено писање</BeforeSpellCheck>
     <SpellCheckChangedXToY>Провера писања: „{0}“ је измењен у „{1}“</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Додато &lt;{0}&gt; ознака</BeforeAddingTagX>
-    <TagXAdded>Додато ознака: &lt;{0}&gt;</TagXAdded>
+    <BeforeAddingTagX>Додато '{0}' ознака</BeforeAddingTagX>
+    <TagXAdded>Додато ознака: '{0}'</TagXAdded>
     <LineXOfY>линија {0} од {1}</LineXOfY>
     <XLinesDeleted>Обрисано линија: {0}</XLinesDeleted>
     <BeforeDeletingXLines>Обрисано линија: {0}</BeforeDeletingXLines>

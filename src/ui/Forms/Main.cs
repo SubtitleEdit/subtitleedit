@@ -178,6 +178,7 @@ namespace Nikse.SubtitleEdit.Forms
         private FormWindowState _lastFormWindowState = FormWindowState.Normal;
         private readonly List<string> _filesToDelete = new List<string>();
         private bool _restorePreviewAfterSecondSubtitle;
+        private ListBox _intellisenceList;
 
         public bool IsMenuOpen { get; private set; }
 
@@ -8745,6 +8746,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 SubtitleListview1.BeginUpdate();
+                var isAssa = IsAssa();
                 foreach (int i in indices)
                 {
                     var p = _subtitle.GetParagraphOrDefault(i);
@@ -8755,19 +8757,19 @@ namespace Nikse.SubtitleEdit.Forms
                             var original = Utilities.GetOriginalParagraph(i, p, _subtitleOriginal.Paragraphs);
                             if (original != null)
                             {
-                                original.Text = HtmlUtil.ToggleTag(original.Text, tag);
+                                original.Text = HtmlUtil.ToggleTag(original.Text, tag, true, isAssa);
                                 SubtitleListview1.SetOriginalText(i, original.Text);
                             }
                         }
 
-                        p.Text = HtmlUtil.ToggleTag(p.Text, tag);
+                        p.Text = HtmlUtil.ToggleTag(p.Text, tag, true, isAssa);
                         SubtitleListview1.SetText(i, p.Text);
                     }
                 }
 
                 SubtitleListview1.EndUpdate();
 
-                ShowStatus(string.Format(_language.TagXAdded, tag));
+                ShowStatus(string.Format(_language.TagXAdded, isAssa ? tag : "<" + tag + ">"));
                 UpdateSourceView();
                 RefreshSelectedParagraph();
                 SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
@@ -9748,6 +9750,18 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        public Point GetPositionInForm(Control ctrl)
+        {
+            Point p = ctrl.Location;
+            Control parent = ctrl.Parent;
+            while (!(parent is Form))
+            {
+                p.Offset(parent.Location.X, parent.Location.Y);
+                parent = parent.Parent;
+            }
+            return p;
+        }
+
         private void TextBoxListViewTextKeyDown(object sender, KeyEventArgs e)
         {
             _listViewTextTicks = DateTime.UtcNow.Ticks;
@@ -9766,6 +9780,71 @@ namespace Nikse.SubtitleEdit.Forms
                 Application.DoEvents();
                 _listViewTextTicks = 0;
                 TimerTextUndoTick(sender, e);
+                return;
+            }
+
+            else if (_shortcuts.MainTextBoxAssaIntellisense == e.KeyData && IsAssa())
+            {
+                if (_intellisenceList == null)
+                {
+                    _intellisenceList = new ListBox();
+                    Controls.Add(_intellisenceList);
+                    _intellisenceList.KeyDown += (o, args) =>
+                    {
+                        if (args.KeyCode == Keys.Enter && _intellisenceList.SelectedIndex >= 0)
+                        {
+                            var item = _intellisenceList.Items[_intellisenceList.SelectedIndex] as AssaIntellisense.IntellisenseItem;
+                            if (item != null)
+                            {
+                                MakeHistoryForUndo(string.Format(_language.BeforeAddingTagX, item.Value));
+                                textBoxListViewText.SelectedText = item.Value.Remove(0, item.TypedWord.Length);
+                                ShowStatus(string.Format(_language.TagXAdded, item.Value));
+                                AssaIntellisense.AddUsedTag(item.Value);
+                            }
+                            args.SuppressKeyPress = true;
+                            _intellisenceList.Hide();
+                            textBoxListViewText.Focus();
+                        }
+                        else if (args.KeyCode == Keys.Escape)
+                        {
+                            args.SuppressKeyPress = true;
+                            _intellisenceList.Hide();
+                            textBoxListViewText.Focus();
+                        }
+                    };
+                    _intellisenceList.KeyPress += (o, args) =>
+                    {
+                        var x = args.KeyChar.ToString();
+                        if (!string.IsNullOrEmpty(x) && x != "\r" && x != "\n" && x != "\u001b" && x != " ")
+                        {
+                            if (x == "{")
+                            {
+                                x = "{{}";
+                            }
+                            else if (x == "}")
+                            {
+                                x = "{}}";
+                            }
+                            textBoxListViewText.Focus();
+                            SendKeys.SendWait(x);
+                            args.Handled = true;
+                            AssaIntellisense.AutoCompleteTextBox(textBoxListViewText, _intellisenceList);
+                            _intellisenceList.Focus();
+                        }
+                    };
+                    _intellisenceList.LostFocus += (o, args) => _intellisenceList.Hide();
+                }
+
+                if (AssaIntellisense.AutoCompleteTextBox(textBoxListViewText, _intellisenceList))
+                {
+                    var p = GetPositionInForm(textBoxListViewText);
+                    _intellisenceList.Location = new Point(p.X + 10, p.Y + 40);
+                    _intellisenceList.Show();
+                    _intellisenceList.BringToFront();
+                    _intellisenceList.Focus();
+                }
+
+                e.SuppressKeyPress = true;
                 return;
             }
 
@@ -12447,6 +12526,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetColor(string color, bool selectedText = false)
         {
+            var isAssa = IsAssa();
             if (selectedText)
             {
                 SetSelectedTextColor(color);
@@ -12457,21 +12537,53 @@ namespace Nikse.SubtitleEdit.Forms
                 var remove = true;
                 var removeOriginal = true;
 
+                var assaColor = string.Empty;
+                if (isAssa)
+                {
+                    try
+                    {
+                        var c = ColorTranslator.FromHtml(color);
+                        assaColor = AdvancedSubStationAlpha.GetSsaColorStringForEvent(c);
+                    }
+                    catch
+                    {
+                        // ignore
+                    }
+                }
+
                 foreach (ListViewItem item in SubtitleListview1.SelectedItems)
                 {
                     var p = _subtitle.GetParagraphOrDefault(item.Index);
                     if (p != null)
                     {
-                        var s = Utilities.RemoveSsaTags(p.Text);
-                        if (!s.StartsWith("<font ", StringComparison.OrdinalIgnoreCase) || !s.Contains(color, StringComparison.OrdinalIgnoreCase))
+
+                        if (isAssa)
                         {
-                            remove = false;
-                            break;
+                            if (!p.Text.Contains(assaColor, StringComparison.OrdinalIgnoreCase))
+                            {
+                                remove = false;
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            var s = Utilities.RemoveSsaTags(p.Text);
+                            if (!s.StartsWith("<font ", StringComparison.OrdinalIgnoreCase) || !s.Contains(color, StringComparison.OrdinalIgnoreCase))
+                            {
+                                remove = false;
+                                break;
+                            }
+
+                            if (assaColor.Length > 0 && !s.Contains(assaColor))
+                            {
+                                remove = false;
+                                break;
+                            }
                         }
                     }
                 }
 
-                if (_subtitleOriginal != null)
+                if (_subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0)
                 {
                     foreach (ListViewItem item in SubtitleListview1.SelectedItems)
                     {
@@ -12499,11 +12611,21 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (remove)
                         {
-                            p.Text = HtmlUtil.RemoveOpenCloseTags(p.Text, HtmlUtil.TagFont);
+                            if (isAssa)
+                            {
+                                p.Text = Regex.Replace(p.Text, "{\\\\1c&[abcdefghABCDEFGH\\d]*&}", string.Empty);
+                                p.Text = Regex.Replace(p.Text, "{\\\\c&[abcdefghABCDEFGH\\d]*&}", string.Empty);
+                                p.Text = Regex.Replace(p.Text, "\\\\c&[abcdefghABCDEFGH\\d]*&", string.Empty);
+                                p.Text = Regex.Replace(p.Text, "\\\\1c&[abcdefghABCDEFGH\\d]*&", string.Empty);
+                            }
+                            else
+                            {
+                                p.Text = HtmlUtil.RemoveOpenCloseTags(p.Text, HtmlUtil.TagFont);
+                            }
                         }
                         else
                         {
-                            SetParagraphFontColor(p, color);
+                            SetParagraphFontColor(p, color, isAssa);
                         }
 
                         SubtitleListview1.SetText(item.Index, p.Text);
@@ -12535,14 +12657,45 @@ namespace Nikse.SubtitleEdit.Forms
         private void SetSelectedTextColor(string color)
         {
             var tb = GetFocusedTextBox();
+            bool allSelected = false;
             string text = tb.SelectedText;
             if (string.IsNullOrEmpty(text) && tb.Text.Length > 0)
             {
                 text = tb.Text;
                 tb.SelectAll();
+                allSelected = true;
+            }
+            else
+            {
+                allSelected = tb.SelectionLength == tb.Text.Length;
             }
 
             int selectionStart = tb.SelectionStart;
+
+            if (IsAssa())
+            {
+                var c = ColorTranslator.FromHtml(color);
+                var assaColor = AdvancedSubStationAlpha.GetSsaColorStringForEvent(c);
+                if (allSelected)
+                {
+                    text = $"{{\\c{assaColor}&}}{text}";
+                }
+                else
+                {
+                    var p = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);
+                    if (p != null)
+                    {
+                        var style = AdvancedSubStationAlpha.GetSsaStyle(p.Extra, _subtitle.Header);
+                        text = $"{{\\c{assaColor}&}}{text}{{\\c{AdvancedSubStationAlpha.GetSsaColorStringForEvent(style.Primary)}&}}";
+                    }
+                }
+
+                tb.SelectedText = text;
+                tb.SelectionStart = selectionStart;
+                tb.SelectionLength = text.Length;
+                return;
+            }
+
             bool done = false;
             string pre = string.Empty;
             if (selectionStart == 0 && text.StartsWith("{\\", StringComparison.Ordinal) && text.IndexOf('}') >= 0)
@@ -12595,10 +12748,29 @@ namespace Nikse.SubtitleEdit.Forms
             tb.SelectionLength = text.Length;
         }
 
-        private static void SetParagraphFontColor(Paragraph p, string color)
+        private void SetParagraphFontColor(Paragraph p, string color, bool isAssa = false)
         {
             if (p == null)
             {
+                return;
+            }
+
+            if (isAssa)
+            {
+                try
+                {
+                    var c = ColorTranslator.FromHtml(color);
+                    p.Text = Regex.Replace(p.Text, "{\\\\1c&[abcdefghABCDEFGH\\d]*&}", string.Empty);
+                    p.Text = Regex.Replace(p.Text, "{\\\\c&[abcdefghABCDEFGH\\d]*&}", string.Empty);
+                    p.Text = Regex.Replace(p.Text, "\\\\c&[abcdefghABCDEFGH\\d]*&", string.Empty);
+                    p.Text = Regex.Replace(p.Text, "\\\\1c&[abcdefghABCDEFGH\\d]*&", string.Empty);
+                    p.Text = "{\\c" + AdvancedSubStationAlpha.GetSsaColorStringForEvent(c) + "&}" + p.Text;
+                }
+                catch
+                {
+                    // ignore
+                }
+
                 return;
             }
 
@@ -12684,6 +12856,15 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (p == null)
             {
+                return;
+            }
+
+            var isAssa = IsAssa();
+            if (isAssa)
+            {
+                p.Text = Regex.Replace(p.Text, "{\\\\fn[^\\\\]+}", string.Empty);
+                p.Text = Regex.Replace(p.Text, "\\\\fn[a-zA-Z \\d]+\\\\", string.Empty);
+                p.Text = "{\\fn" + fontName + "}" + p.Text;
                 return;
             }
 
@@ -23833,7 +24014,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (tb.SelectionLength == 0)
             {
-                var allText = HtmlUtil.RemoveHtmlTags(tb.Text);
+                var allText = HtmlUtil.RemoveHtmlTags(tb.Text, true);
                 allText = NetflixImsc11Japanese.RemoveTags(allText);
                 tb.Text = allText;
                 return;
@@ -23841,7 +24022,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             string text = tb.SelectedText;
             int selectionStart = tb.SelectionStart;
-            text = HtmlUtil.RemoveHtmlTags(text);
+            text = HtmlUtil.RemoveHtmlTags(text, true);
             text = NetflixImsc11Japanese.RemoveTags(text);
             tb.SelectedText = text;
             tb.SelectionStart = selectionStart;
@@ -23864,6 +24045,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             string text;
             int selectionStart = tb.SelectionStart;
+            var isAssa = IsAssa();
 
             // No text selected.
             if (tb.SelectedText.Length == 0)
@@ -23900,12 +24082,12 @@ namespace Nikse.SubtitleEdit.Forms
                 // If is dialog, only toggle/Untoggle line where caret/cursor is current at.
                 if (isDialog)
                 {
-                    lines[selectedLineIdx] = HtmlUtil.ToggleTag(selectedLine, tag);
+                    lines[selectedLineIdx] = HtmlUtil.ToggleTag(selectedLine, tag, false, isAssa);
                     text = string.Join(Environment.NewLine, lines);
                 }
                 else
                 {
-                    text = HtmlUtil.ToggleTag(text, tag);
+                    text = HtmlUtil.ToggleTag(text, tag, false, isAssa);
                 }
 
                 tb.Text = text;
@@ -23945,7 +24127,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                text = HtmlUtil.ToggleTag(text, tag);
+                text = HtmlUtil.ToggleTag(text, tag, false, isAssa);
                 // Update text and maintain selection.
                 if (pre.Length > 0)
                 {
@@ -23955,13 +24137,18 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (post.Length > 0)
                 {
-                    text = text + post;
+                    text += post;
                 }
 
                 tb.SelectedText = text;
                 tb.SelectionStart = selectionStart;
                 tb.SelectionLength = text.Length;
             }
+        }
+
+        private bool IsAssa()
+        {
+            return GetCurrentSubtitleFormat().GetType() == typeof(AdvancedSubStationAlpha);
         }
 
         private void BoldToolStripMenuItem1Click(object sender, EventArgs e)
@@ -24026,11 +24213,18 @@ namespace Nikse.SubtitleEdit.Forms
 
             // font name
             string text = tb.SelectedText;
+            bool allSelected;
             if (string.IsNullOrEmpty(text) && tb.Text.Length > 0)
             {
                 text = tb.Text;
                 tb.SelectAll();
+                allSelected = true;
             }
+            else
+            {
+                allSelected = tb.Text.Length == tb.SelectionLength;
+            }
+
             int selectionStart = tb.SelectionStart;
 
             using (var form = new ChooseFontName())
@@ -24038,6 +24232,28 @@ namespace Nikse.SubtitleEdit.Forms
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     bool done = false;
+
+                    if (IsAssa())
+                    {
+                        if (allSelected)
+                        {
+                            text = $"{{\\fn{form.FontName}}}{text}";
+                        }
+                        else
+                        {
+                            var p = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);
+                            if (p != null)
+                            {
+                                var style = AdvancedSubStationAlpha.GetSsaStyle(p.Extra, _subtitle.Header);
+                                text = $"{{\\fn{form.FontName}}}{text}{{\\fn{style.FontName}}}";
+                            }
+                        }
+
+                        tb.SelectedText = text;
+                        tb.SelectionStart = selectionStart;
+                        tb.SelectionLength = text.Length;
+                        return;
+                    }
 
                     string pre = string.Empty;
                     if (selectionStart == 0 && text.StartsWith("{\\", StringComparison.Ordinal) && text.IndexOf('}') >= 0)
@@ -29958,7 +30174,10 @@ namespace Nikse.SubtitleEdit.Forms
                 return p.Text.Replace("<b>", string.Empty)
                     .Replace("<B>", string.Empty)
                     .Replace("</b>", string.Empty)
-                    .Replace("</B>", string.Empty);
+                    .Replace("</B>", string.Empty)
+                    .Replace("{\\b}", string.Empty)
+                    .Replace("{\\b0}", string.Empty)
+                    .Replace("{\\b1}", string.Empty);
             }, string.Format(_language.BeforeX, _language.Menu.ContextMenu.RemoveFormattingBold));
         }
 
@@ -29969,7 +30188,10 @@ namespace Nikse.SubtitleEdit.Forms
                 return p.Text.Replace("<i>", string.Empty)
                     .Replace("<I>", string.Empty)
                     .Replace("</i>", string.Empty)
-                    .Replace("</I>", string.Empty);
+                    .Replace("</I>", string.Empty)
+                    .Replace("{\\i}", string.Empty)
+                    .Replace("{\\i0}", string.Empty)
+                    .Replace("{\\i1}", string.Empty);
             }, string.Format(_language.BeforeX, _language.Menu.ContextMenu.RemoveFormattingItalic));
         }
 
@@ -29980,7 +30202,10 @@ namespace Nikse.SubtitleEdit.Forms
                 return p.Text.Replace("<u>", string.Empty)
                     .Replace("<U>", string.Empty)
                     .Replace("</u>", string.Empty)
-                    .Replace("</U>", string.Empty);
+                    .Replace("</U>", string.Empty)
+                    .Replace("{\\u}", string.Empty)
+                    .Replace("{\\u0}", string.Empty)
+                    .Replace("{\\u1}", string.Empty);
             }, string.Format(_language.BeforeX, _language.Menu.ContextMenu.RemoveFormattingUnderline));
         }
 
@@ -29990,7 +30215,16 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (!p.Text.Contains("<font", StringComparison.OrdinalIgnoreCase))
                 {
-                    return p.Text;
+                    var x = p.Text;
+                    if (x.Contains("\\c") || x.Contains("\\1c"))
+                    {
+                        x = Regex.Replace(x, "{\\\\1c&[abcdefghABCDEFGH\\d]*&}", string.Empty);
+                        x = Regex.Replace(x, "{\\\\c&[abcdefghABCDEFGH\\d]*&}", string.Empty);
+                        x = Regex.Replace(x, "\\\\c&[abcdefghABCDEFGH\\d]*&", string.Empty);
+                        x = Regex.Replace(x, "\\\\1c&[abcdefghABCDEFGH\\d]*&", string.Empty);
+                    }
+
+                    return x;
                 }
 
                 var r = new Regex("[ ]*(COLOR|color|Color)=[\"']*[#\\dA-Za-z]*[\"']*[ ]*");
@@ -30030,7 +30264,14 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (!p.Text.Contains("<font", StringComparison.OrdinalIgnoreCase))
                 {
-                    return p.Text;
+                    var x = p.Text;
+                    if (x.Contains("\\fn"))
+                    {
+                        x = Regex.Replace(x, "{\\\\fn[a-zA-Z \\d]*}", string.Empty);
+                        x = Regex.Replace(x, "\\\\fn[a-zA-Z \\d]\\\\", string.Empty);
+                    }
+
+                    return x;
                 }
 
                 var r = new Regex("[ ]*(FACE|face|Face)=[\"']*[\\d\\p{L} ]*[\"']*[ ]*");
@@ -30265,7 +30506,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void boxToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             var tb = GetFocusedTextBox();
-            tb.Text = HtmlUtil.ToggleTag(tb.Text, "box");
+            tb.Text = HtmlUtil.ToggleTag(tb.Text, "box", false, false);
         }
 
         private void toolStripMenuItemPreview_Click(object sender, EventArgs e)

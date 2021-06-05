@@ -1303,8 +1303,8 @@ koji bi trebao biti usklađen s video datotekom.
     <SpellCheck>Provjera pravopisa</SpellCheck>
     <BeforeSpellCheck>Prije provjere pravopisa</BeforeSpellCheck>
     <SpellCheckChangedXToY>Provjera pravopisa: „{0}“ je izmijenjen u „{1}“</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Dodano &lt;{0}&gt; oznaka</BeforeAddingTagX>
-    <TagXAdded>Dodano oznaka: &lt;{0}&gt;</TagXAdded>
+    <BeforeAddingTagX>Dodano '{0}' oznaka</BeforeAddingTagX>
+    <TagXAdded>Dodano oznaka: '{0}'</TagXAdded>
     <LineXOfY>Linija {0} od {1}</LineXOfY>
     <XLinesSavedAsY>{0} linija spremljeno kao {1}</XLinesSavedAsY>
     <XLinesDeleted>Obrisano linija: {0}</XLinesDeleted>

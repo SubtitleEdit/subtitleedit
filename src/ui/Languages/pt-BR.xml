@@ -1451,8 +1451,8 @@ Deseja continuar?</SubtitleAppendPrompt>
     <SpellCheck>Revisão ortográfica</SpellCheck>
     <BeforeSpellCheck>Antes da revisão ortográfica</BeforeSpellCheck>
     <SpellCheckChangedXToY>Revisão ortográfica: Alterado '{0}' para '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Antes de adicionar tag &lt;{0}&gt;</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; tags adicionadas</TagXAdded>
+    <BeforeAddingTagX>Antes de adicionar tag '{0}'</BeforeAddingTagX>
+    <TagXAdded>'{0}' tag adicionadas</TagXAdded>
     <LineXOfY>linha {0} de {1}</LineXOfY>
     <XLinesSavedAsY>{0} linhas salvas como {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} linhas eliminadas</XLinesDeleted>

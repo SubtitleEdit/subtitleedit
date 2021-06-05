@@ -1361,8 +1361,8 @@ Nastaviti?</SubtitleAppendPrompt>
     <SpellCheck>Provera pravopisa</SpellCheck>
     <BeforeSpellCheck>Pre provere pravopisa</BeforeSpellCheck>
     <SpellCheckChangedXToY>Provera pravopisa: Izmenjeno '{0}' u '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Pre dodavanja &lt;{0}&gt; oznaka</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; oznaka dodato</TagXAdded>
+    <BeforeAddingTagX>Pre dodavanja '{0}' oznaka</BeforeAddingTagX>
+    <TagXAdded>'{0}' oznaka dodato</TagXAdded>
     <LineXOfY>linija {0} od {1}</LineXOfY>
     <XLinesSavedAsY>{0} linija sačuvano kao {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} linija izbrisano</XLinesDeleted>

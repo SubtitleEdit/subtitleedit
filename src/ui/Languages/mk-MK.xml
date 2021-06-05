@@ -1402,8 +1402,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SpellCheck>Проверка на правопис</SpellCheck>
     <BeforeSpellCheck>Пред проверка на правопис</BeforeSpellCheck>
     <SpellCheckChangedXToY>Проверка на правопис: Промените '{0}' во '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Пред додавање на &lt;{0}&gt; таг</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; тагови додадени</TagXAdded>
+    <BeforeAddingTagX>Пред додавање на '{0}' таг</BeforeAddingTagX>
+    <TagXAdded>'{0}' тагови додадени</TagXAdded>
     <LineXOfY>линија {0} од {1}</LineXOfY>
     <XLinesSavedAsY>{0} линии зачувани како {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} избришани линии</XLinesDeleted>

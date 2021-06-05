@@ -1459,8 +1459,8 @@ Devam edilsin mi?</SubtitleAppendPrompt>
     <SpellCheck>Yazımı denetle</SpellCheck>
     <BeforeSpellCheck>Yazımı denetlemeden önce</BeforeSpellCheck>
     <SpellCheckChangedXToY>Yazım denetimi: değişmiş '{0}' dan '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>&lt;{0}&gt; etiketi eklemeden önce</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; etiket eklendi</TagXAdded>
+    <BeforeAddingTagX>'{0}' etiketi eklemeden önce</BeforeAddingTagX>
+    <TagXAdded>'{0}' etiket eklendi</TagXAdded>
     <LineXOfY>Satır {0} nin {1}</LineXOfY>
     <XLinesSavedAsY>{0} satır {1} olarak kaydedildi</XLinesSavedAsY>
     <XLinesDeleted>{0} satır silindi</XLinesDeleted>

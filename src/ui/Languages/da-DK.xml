@@ -1452,8 +1452,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <SpellCheck>Stavekontrol</SpellCheck>
     <BeforeSpellCheck>Før stavekontrol</BeforeSpellCheck>
     <SpellCheckChangedXToY>Stavekontrol: Ændret '{0}' til '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Før du tilføjer &lt;{0}&gt; tag</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; tags tilføjet</TagXAdded>
+    <BeforeAddingTagX>Før du tilføjer '{0}' tag</BeforeAddingTagX>
+    <TagXAdded>'{0}' tags tilføjet</TagXAdded>
     <LineXOfY>linje {0} af {1}</LineXOfY>
     <XLinesSavedAsY>{0} linjer gemt som {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} slettet linjer</XLinesDeleted>

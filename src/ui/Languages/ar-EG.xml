@@ -872,8 +872,8 @@ Continue?</SubtitleAppendPrompt>
     <SpellCheck>التدقيق الإملائي</SpellCheck>
     <BeforeSpellCheck>قبل التدقيق الإملائي</BeforeSpellCheck>
     <SpellCheckChangedXToY>{التدقيق الإملائي : تم تغيير '{0}' إلى '{1'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>قبل إضافة &lt;{0}&gt; العلامة</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; العلامات إضيفت</TagXAdded>
+    <BeforeAddingTagX>قبل إضافة '{0}' العلامة</BeforeAddingTagX>
+    <TagXAdded>'{0}' العلامات إضيفت</TagXAdded>
     <LineXOfY>{السطر {0} من {1</LineXOfY>
     <XLinesDeleted>{0} الأسطر المحذوفة</XLinesDeleted>
     <BeforeDeletingXLines>قبل حذف {0} الأسطر</BeforeDeletingXLines>

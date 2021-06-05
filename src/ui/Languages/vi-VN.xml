@@ -1047,8 +1047,8 @@ Bạn có muốn bắt đầu từ phía trên cùng của tài liệu và tiế
     <SpellCheck>Kiểm tra chính tả</SpellCheck>
     <BeforeSpellCheck>Trước khi kiểm tra chính tả</BeforeSpellCheck>
     <SpellCheckChangedXToY>kiểm tra chính tả: Thay đổi '{0}' thành '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Trước khi thêm &lt;{0}&gt; thẻ</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; thêm thẻ</TagXAdded>
+    <BeforeAddingTagX>Trước khi thêm '{0}' thẻ</BeforeAddingTagX>
+    <TagXAdded>'{0}' thêm thẻ</TagXAdded>
     <LineXOfY>{0} {1}</LineXOfY>
     <XLinesSavedAsY>{0} lưu dòng này dưới dạng {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} xóa dòng này</XLinesDeleted>

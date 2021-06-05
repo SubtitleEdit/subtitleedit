@@ -1242,8 +1242,8 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <SpellCheck>拼寫檢查</SpellCheck>
     <BeforeSpellCheck>拼寫檢查之前</BeforeSpellCheck>
     <SpellCheckChangedXToY>拼寫檢查: '{0}' 已變更為 '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>加入 &lt;{0}&gt; 標籤之前</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; 標籤已加入</TagXAdded>
+    <BeforeAddingTagX>加入 '{0}' 標籤之前</BeforeAddingTagX>
+    <TagXAdded>'{0}' 標籤已加入</TagXAdded>
     <LineXOfY>行 {0}/{1}</LineXOfY>
     <XLinesSavedAsY>{0} 行已另存為 {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} 行已刪除</XLinesDeleted>

@@ -1447,8 +1447,8 @@ Haluatko aloittaa asiakirjan alusta ja hakea kerran vielä?</FindContinue>
     <SpellCheck>Oikoluku</SpellCheck>
     <BeforeSpellCheck>Ennen oikeinkirjoituksen tarkistusta</BeforeSpellCheck>
     <SpellCheckChangedXToY>Oikoluku: Muutettu '{0}' -&gt; {1}</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Ennen tunnisteen &lt;{0}&gt;  lisäämistä</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; tunnistetta lisätty</TagXAdded>
+    <BeforeAddingTagX>Ennen tunnisteen '{0}' lisäämistä</BeforeAddingTagX>
+    <TagXAdded>'{0}' tunnistetta lisätty</TagXAdded>
     <LineXOfY>rivi {0} / {1}</LineXOfY>
     <XLinesSavedAsY>{0} riviä tallennettu {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} riviä poistettu</XLinesDeleted>

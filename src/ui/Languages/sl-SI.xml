@@ -1167,8 +1167,8 @@ Nadaljujem?</SubtitleAppendPrompt>
     <SpellCheck>Črkovalnik</SpellCheck>
     <BeforeSpellCheck>Pred črkovanjem</BeforeSpellCheck>
     <SpellCheckChangedXToY>Črkovalnik: Spremenjenih '{0}' to '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Pred dodajanjem &lt;{0}&gt; tag</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; dodanih oznak</TagXAdded>
+    <BeforeAddingTagX>Pred dodajanjem '{0}' tag</BeforeAddingTagX>
+    <TagXAdded>'{0}' dodanih oznak</TagXAdded>
     <LineXOfY>vrstice {0} od {1}</LineXOfY>
     <XLinesSavedAsY>{0} vrstic shranjenih kot {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} izbrisanih vrstic</XLinesDeleted>

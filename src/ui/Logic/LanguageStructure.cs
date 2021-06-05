@@ -2535,6 +2535,7 @@
             public string MainTextBoxAutoBreakFromPosAndGoToNext { get; set; }
             public string MainTextBoxUnbreak { get; set; }
             public string MainTextBoxUnbreakNoSpace { get; set; }
+            public string MainTextBoxAssaIntellisense { get; set; }
             public string MainFileSaveAll { get; set; }
             public string Miscellaneous { get; set; }
             public string CpsIncludesSpace { get; set; }

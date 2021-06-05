@@ -1457,8 +1457,8 @@ Folytatja?</SubtitleAppendPrompt>
     <SpellCheck>Helyesírás-ellenőrzés</SpellCheck>
     <BeforeSpellCheck>Helyesírás-ellenőrzés előtti állapotra</BeforeSpellCheck>
     <SpellCheckChangedXToY>Helyesírás-ellenőrzés: '{0}' módosítva erre: '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>A(z) &lt;{0}&gt; címke hozzáadása előtti állapotra</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; címke hozzáadva</TagXAdded>
+    <BeforeAddingTagX>A(z) '{0}' címke hozzáadása előtti állapotra</BeforeAddingTagX>
+    <TagXAdded>'{0}' címke hozzáadva</TagXAdded>
     <LineXOfY>{0} - {1} sor</LineXOfY>
     <XLinesSavedAsY>{0} sor mentve {1}-ként</XLinesSavedAsY>
     <XLinesDeleted>{0} sor törölve</XLinesDeleted>

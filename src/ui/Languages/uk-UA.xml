@@ -1259,8 +1259,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SpellCheck>Перевірка правопису</SpellCheck>
     <BeforeSpellCheck>Перед перевіркою правопису</BeforeSpellCheck>
     <SpellCheckChangedXToY>Перевірка правопису: Замінено '{0}' на '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Перед додаванням тегу &lt;{0}&gt;</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; теги додано</TagXAdded>
+    <BeforeAddingTagX>Перед додаванням тегу '{0}'</BeforeAddingTagX>
+    <TagXAdded>'{0}' теги додано</TagXAdded>
     <LineXOfY>рядок {0} із {1}</LineXOfY>
     <XLinesSavedAsY>{0} рядків збережено як {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} рядків видалено</XLinesDeleted>

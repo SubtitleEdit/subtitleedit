@@ -1457,8 +1457,8 @@ Kontynuować?</SubtitleAppendPrompt>
     <SpellCheck>Sprawdź pisownię</SpellCheck>
     <BeforeSpellCheck>Przed sprawdzeniem pisowni</BeforeSpellCheck>
     <SpellCheckChangedXToY>Sprawdzenie pisowni: zmieniono "{0}" na "{1}"</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Przed dodaniem tagu &lt;{0}&gt;</BeforeAddingTagX>
-    <TagXAdded>Dodano &lt;{0}&gt; tagów</TagXAdded>
+    <BeforeAddingTagX>Przed dodaniem tagu '{0}'</BeforeAddingTagX>
+    <TagXAdded>Dodano '{0}' tagu</TagXAdded>
     <LineXOfY>linia {0} z {1}</LineXOfY>
     <XLinesSavedAsY>{0} linii zapisanych jako {1}</XLinesSavedAsY>
     <XLinesDeleted>Usunięto {0} linii</XLinesDeleted>

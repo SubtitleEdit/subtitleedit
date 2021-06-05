@@ -9592,12 +9592,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 // If is dialog, only toggle/Untoggle line where caret/cursor is current at.
                 if (isDialog)
                 {
-                    lines[selectedLineIdx] = HtmlUtil.ToggleTag(selectedLine, tag);
+                    lines[selectedLineIdx] = HtmlUtil.ToggleTag(selectedLine, tag, false, false);
                     text = string.Join(Environment.NewLine, lines);
                 }
                 else
                 {
-                    text = HtmlUtil.ToggleTag(text, tag);
+                    text = HtmlUtil.ToggleTag(text, tag, false, false);
                 }
 
                 tb.Text = text;
@@ -9637,7 +9637,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
                 }
 
-                text = HtmlUtil.ToggleTag(text, tag);
+                text = HtmlUtil.ToggleTag(text, tag, false, false);
                 // Update text and maintain selection.
                 if (pre.Length > 0)
                 {

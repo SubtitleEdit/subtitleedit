@@ -1354,8 +1354,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SpellCheck>بررسی املا</SpellCheck>
     <BeforeSpellCheck>قبل از بررسی املا</BeforeSpellCheck>
     <SpellCheckChangedXToY>Spell check: Changed '{0}' to '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>قبل از اضافه کردن &lt;{0}&gt; برچسب</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; برچسب ها اضافه شده</TagXAdded>
+    <BeforeAddingTagX>قبل از اضافه کردن '{0}' برچسب</BeforeAddingTagX>
+    <TagXAdded>'{0}' برچسب ها اضافه شده</TagXAdded>
     <LineXOfY>خط {0} از {1}</LineXOfY>
     <XLinesSavedAsY>{0} خط ذخیره شده به عنوان {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} حذف خطوط</XLinesDeleted>

@@ -1248,8 +1248,8 @@ Continuare?</SubtitleAppendPrompt>
     <SpellCheck>Controllo ortografico</SpellCheck>
     <BeforeSpellCheck>Prima del controllo ortografico</BeforeSpellCheck>
     <SpellCheckChangedXToY>Controllo ortografico: Sostituire '{0}' con '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Prima di aggiungere &lt;{0}&gt; tag</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; tag aggiunti.</TagXAdded>
+    <BeforeAddingTagX>Prima di aggiungere '{0}' tag</BeforeAddingTagX>
+    <TagXAdded>'{0}' tag aggiunti.</TagXAdded>
     <LineXOfY>linea {0} di {1}</LineXOfY>
     <XLinesSavedAsY>{0} linee salvate come {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} linee eliminate</XLinesDeleted>

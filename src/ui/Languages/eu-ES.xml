@@ -1445,8 +1445,8 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <SpellCheck>Idaz-egiaztapena</SpellCheck>
     <BeforeSpellCheck>Idaz-egiaztapenaren aurretik</BeforeSpellCheck>
     <SpellCheckChangedXToY>Idaz-egiaztapena: Aldatuta '{0}' -&gt; '{1}'-ra</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Gehitu aurretik &lt;{0}&gt; etiketa</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; etiketa gehituta</TagXAdded>
+    <BeforeAddingTagX>Gehitu aurretik '{0}' etiketa</BeforeAddingTagX>
+    <TagXAdded>'{0}' etiketa gehituta</TagXAdded>
     <LineXOfY>{0} lerro {1}-tik</LineXOfY>
     <XLinesSavedAsY>{0} lerro gordeta honela {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} lerro ezabatuta</XLinesDeleted>
