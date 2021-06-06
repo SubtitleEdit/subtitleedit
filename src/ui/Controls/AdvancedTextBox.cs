@@ -519,12 +519,17 @@ namespace Nikse.SubtitleEdit.Controls
                     colorStart++;
                 }
 
-                int colorEnd = text.IndexOf('&', colorStart + 1);
+                int colorEnd = text.IndexOfAny(new char[] {'}', '\\', '&'}, colorStart + 1);
                 if (colorEnd > 0)
                 {
                     var color = text.Substring(colorStart, colorEnd - colorStart);
                     try
                     {
+                        if (color.Length > 0 && color.Length < 6)
+                        {
+                            color = color.PadLeft(6, '0');
+                        }
+
                         if (color.Length == 6)
                         {
                             var rgbColor = string.Concat("#", color[4], color[5], color[2], color[3], color[0], color[1]); var c = ColorTranslator.FromHtml(rgbColor);

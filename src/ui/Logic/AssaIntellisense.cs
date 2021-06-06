@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Core.Common;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Controls;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -41,7 +42,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        private static readonly List<IntellisenseItem> DictionaryList = new List<IntellisenseItem>(new[]
+        private static readonly List<IntellisenseItem> Keywords = new List<IntellisenseItem>
         {
             new IntellisenseItem("{\\b}",  "Bold"),
             new IntellisenseItem("{\\b0}",  "Bold off"),
@@ -81,10 +82,10 @@ namespace Nikse.SubtitleEdit.Logic
             new IntellisenseItem("{\\2c&H<bbggrr>}",  "Color for outline"),
             new IntellisenseItem("{\\3c&H<bbggrr>}",  "Color for opaque box"),
             new IntellisenseItem("{\\4c&H<bbggrr>}",  "Color for shadow"),
-            new IntellisenseItem("{\\alpha&H<aa>&}",  "Alpha (00=fully visible, ff=fully transparent)"),
-            new IntellisenseItem("{\\a2&H<aa>&}",  "Alpha for outline (00=fully visible, ff=fully transparent)"),
-            new IntellisenseItem("{\\a3&H<aa>&}",  "Alpha for opaque box (00=fully visible, ff=fully transparent)"),
-            new IntellisenseItem("{\\a4&H<aa>&}",  "Alpha for shadow (00=fully visible, ff=fully transparent)"),
+            new IntellisenseItem("{\\alpha&H<aa>&}",  "Alpha (00=fully visible, ff=transparent)"),
+            new IntellisenseItem("{\\a2&H<aa>&}",  "Alpha for outline (00=fully visible, ff=transparent)"),
+            new IntellisenseItem("{\\a3&H<aa>&}",  "Alpha for opaque box (00=fully visible, ff=transparent)"),
+            new IntellisenseItem("{\\a4&H<aa>&}",  "Alpha for shadow (00=fully visible, ff=transparent)"),
             new IntellisenseItem("{\\an7}",  "Align top left"),
             new IntellisenseItem("{\\an8}",  "Align top center"),
             new IntellisenseItem("{\\an9}",  "Align top right"),
@@ -107,7 +108,40 @@ namespace Nikse.SubtitleEdit.Logic
             new IntellisenseItem("{\\t(<accel,style modifiers>)}",  "Animated transform"),
             new IntellisenseItem("{\\t(<t1,t2,style modifiers>)}",  "Animated transform"),
             new IntellisenseItem("{\\t(<t1,t2,accel,style modifiers>)}",  "Animated transform"),
-        }.ToList());
+        };
+
+        private static readonly List<IntellisenseItem> TransformKeywords = new List<IntellisenseItem>
+        {
+            new IntellisenseItem("\\fs<font_size>",  "Font size"),
+            new IntellisenseItem("\\fscx<percent>",  "Scale X percentage"),
+            new IntellisenseItem("\\fscy<percent>",  "Scale Y percentage"),
+            new IntellisenseItem("\\fsp<pixels>",  "Spacing between letters in pixels"),
+            new IntellisenseItem("\\fr<degree>",  "Angle (z axis for text rotation)"),
+            new IntellisenseItem("\\frx<degree>",  "Angle (x axis for text rotation)"),
+            new IntellisenseItem("\\fry<degree>",  "Angle (y axis for text rotation)"),
+            new IntellisenseItem("\\frz<degree>",  "Angle (z axis for text rotation)"),
+            new IntellisenseItem("\\bord<width>",  "Border"),
+            new IntellisenseItem("\\xbord<x>",  "Border width"),
+            new IntellisenseItem("\\ybord<y>",  "Border height"),
+            new IntellisenseItem("\\shad<depth>",  "Shadow"),
+            new IntellisenseItem("\\xshad<x>",  "Shadow width"),
+            new IntellisenseItem("\\yshad<y>",  "Shadow height"),
+            new IntellisenseItem("\\c&H<bbggrr>",  "Color"),
+            new IntellisenseItem("\\2c&H<bbggrr>",  "Color for outline"),
+            new IntellisenseItem("\\3c&H<bbggrr>",  "Color for opaque box"),
+            new IntellisenseItem("\\4c&H<bbggrr>",  "Color for shadow"),
+            new IntellisenseItem("\\alpha&H<aa>&",  "Alpha (00=fully visible, ff=transparent)"),
+            new IntellisenseItem("\\a2&H<aa>&",  "Alpha for outline (00=fully visible, ff=transparent)"),
+            new IntellisenseItem("\\a3&H<aa>&",  "Alpha for opaque box (00=fully visible, ff=transparent)"),
+            new IntellisenseItem("\\a4&H<aa>&",  "Alpha for shadow (00=fully visible, ff=transparent)"),
+            new IntellisenseItem("\\be",  "Blur edges"),
+            new IntellisenseItem("\\be0",  "Blur edges off"),
+            new IntellisenseItem("\\be1",  "Blur edges on"),
+            new IntellisenseItem("\\fax<degree>",  "Shearing transformation (x axis)"),
+            new IntellisenseItem("\\fay<degree>",  "Shearing transformation (y axis)"),
+            new IntellisenseItem("\\clip(x1,y1,x2,y2)",  "Clips (hides) any drawing outside the rectangle defined by the parameters."),
+            new IntellisenseItem("\\iclip(x1,y1,x2,y2)",  "Clips (hides) any drawing inside the rectangle defined by the parameters."),
+        };
 
         private static readonly List<string> LastAddedTags = new List<string>();
 
@@ -120,10 +154,30 @@ namespace Nikse.SubtitleEdit.Logic
         {
             var text = string.IsNullOrEmpty(textBox.Text) ? string.Empty : textBox.Text.Substring(0, textBox.SelectionStart);
             var lastWord = GetLastString(text) ?? string.Empty;
-            var filteredList = DictionaryList
+            var keywords = Keywords;
+
+            if (text.EndsWith("\\t(", StringComparison.Ordinal))
+            {
+                // use smaller list inside transformation
+                keywords = TransformKeywords;
+                lastWord = string.Empty;
+            }
+
+            var filteredList = keywords
                 .Where(n => string.IsNullOrEmpty(lastWord) || n.Value.StartsWith(GetLastString(lastWord), StringComparison.OrdinalIgnoreCase))
                 .OrderBy(p => p.Value)
                 .ToList();
+
+            if (filteredList.Count == 0 && lastWord.EndsWith("\\"))
+            {
+                // continuing ass tag, remove "{\" + "}"
+                lastWord = string.Empty;
+                filteredList = keywords
+                    .OrderBy(p => p.Value)
+                    .Select(p => new IntellisenseItem(p.Value.Replace("{\\", string.Empty).RemoveChar('}'), p.Hint))
+                    .ToList();
+            }
+
             listBox.Items.Clear();
             listBox.Width = 480;
             listBox.Height = 200;
@@ -227,14 +281,14 @@ namespace Nikse.SubtitleEdit.Logic
             if (lastSeparatorIndex >= 0)
             {
                 s = s.Remove(0, lastSeparatorIndex - 1);
-                if (DictionaryList.Any(p => p.Value.StartsWith(s, StringComparison.OrdinalIgnoreCase)))
+                if (Keywords.Any(p => p.Value.StartsWith(s, StringComparison.OrdinalIgnoreCase)))
                 {
                     return s;
                 }
             }
             else
             {
-                if (DictionaryList.Any(p => p.Value.StartsWith(s, StringComparison.OrdinalIgnoreCase)))
+                if (Keywords.Any(p => p.Value.StartsWith(s, StringComparison.OrdinalIgnoreCase)))
                 {
                     return s;
                 }
