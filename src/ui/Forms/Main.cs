@@ -9793,7 +9793,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             int numberOfLines = Utilities.GetNumberOfLines(textBoxListViewText.Text);
 
-            if (e.Modifiers == Keys.None && e.KeyCode == Keys.Enter && numberOfLines > Configuration.Settings.General.MaxNumberOfLines)
+            if (e.Modifiers == Keys.None && e.KeyCode == Keys.Enter && numberOfLines >= Configuration.Settings.General.MaxNumberOfLines)
             {
                 e.SuppressKeyPress = true;
             }
@@ -25581,7 +25581,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             int numberOfLines = Utilities.GetNumberOfLines(textBoxListViewTextOriginal.Text);
 
-            if (e.Modifiers == Keys.None && e.KeyCode == Keys.Enter && numberOfLines > Configuration.Settings.General.MaxNumberOfLines)
+            if (e.Modifiers == Keys.None && e.KeyCode == Keys.Enter && numberOfLines >= Configuration.Settings.General.MaxNumberOfLines)
             {
                 e.SuppressKeyPress = true;
             }
