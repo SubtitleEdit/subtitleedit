@@ -10041,7 +10041,7 @@ namespace Nikse.SubtitleEdit.Forms
                 intellisenseListBox.KeyPress += (o, args) =>
                 {
                     var x = args.KeyChar.ToString();
-                    if (!string.IsNullOrEmpty(x) && x != "\r" && x != "\n" && x != "\u001b" && x != " ")
+                    { if (!string.IsNullOrEmpty(x) && x != "\r" && x != "\n" && x != "\u001b" && x != " ")
                     {
                         if (x == "{")
                         {
@@ -10057,7 +10057,7 @@ namespace Nikse.SubtitleEdit.Forms
                         args.Handled = true;
                         AssaIntellisense.AutoCompleteTextBox(tb, intellisenseListBox);
                         intellisenseListBox.Focus();
-                    }
+                    }}
                 };
                 intellisenseListBox.LostFocus += (o, args) => intellisenseListBox.Hide();
             }
@@ -12657,10 +12657,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (isAssa)
                             {
-                                p.Text = Regex.Replace(p.Text, "{\\\\1c&[abcdefghABCDEFGH\\d]*&}", string.Empty);
-                                p.Text = Regex.Replace(p.Text, "{\\\\c&[abcdefghABCDEFGH\\d]*&}", string.Empty);
-                                p.Text = Regex.Replace(p.Text, "\\\\c&[abcdefghABCDEFGH\\d]*&", string.Empty);
-                                p.Text = Regex.Replace(p.Text, "\\\\1c&[abcdefghABCDEFGH\\d]*&", string.Empty);
+                                p.Text = RemoveAssaColor(p.Text);
                             }
                             else
                             {
@@ -12804,10 +12801,7 @@ namespace Nikse.SubtitleEdit.Forms
                 try
                 {
                     var c = ColorTranslator.FromHtml(color);
-                    p.Text = Regex.Replace(p.Text, "{\\\\1c&[abcdefghABCDEFGH\\d]*&}", string.Empty);
-                    p.Text = Regex.Replace(p.Text, "{\\\\c&[abcdefghABCDEFGH\\d]*&}", string.Empty);
-                    p.Text = Regex.Replace(p.Text, "\\\\c&[abcdefghABCDEFGH\\d]*&", string.Empty);
-                    p.Text = Regex.Replace(p.Text, "\\\\1c&[abcdefghABCDEFGH\\d]*&", string.Empty);
+                    p.Text = RemoveAssaColor(p.Text);
                     p.Text = "{\\c" + AdvancedSubStationAlpha.GetSsaColorStringForEvent(c) + "&}" + p.Text;
                 }
                 catch
@@ -12858,6 +12852,16 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             p.Text = $"{pre}<font color=\"{color}\">{p.Text}</font>";
+        }
+
+        private static string RemoveAssaColor(string input)
+        {
+            var text = input;
+            text = Regex.Replace(text, "{\\\\1c&[abcdefghABCDEFGH\\d]*&}", string.Empty);
+            text = Regex.Replace(text, "{\\\\c&[abcdefghABCDEFGH\\d]*&}", string.Empty);
+            text = Regex.Replace(text, "\\\\c&[abcdefghABCDEFGH\\d]*&", string.Empty);
+            text = Regex.Replace(text, "\\\\1c&[abcdefghABCDEFGH\\d]*&", string.Empty);
+            return text;
         }
 
         private void toolStripMenuItemFont_Click(object sender, EventArgs e)
@@ -30269,10 +30273,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var x = p.Text;
                     if (x.Contains("\\c") || x.Contains("\\1c"))
                     {
-                        x = Regex.Replace(x, "{\\\\1c&[abcdefghABCDEFGH\\d]*&}", string.Empty);
-                        x = Regex.Replace(x, "{\\\\c&[abcdefghABCDEFGH\\d]*&}", string.Empty);
-                        x = Regex.Replace(x, "\\\\c&[abcdefghABCDEFGH\\d]*&", string.Empty);
-                        x = Regex.Replace(x, "\\\\1c&[abcdefghABCDEFGH\\d]*&", string.Empty);
+                        x = RemoveAssaColor(x);
                     }
 
                     return x;
