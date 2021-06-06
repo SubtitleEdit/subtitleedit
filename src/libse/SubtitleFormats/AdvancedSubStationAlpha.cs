@@ -163,7 +163,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             }
             else
             {
-                sb.AppendLine(string.Format(header, title));
+                sb.AppendFormat(header, title).AppendLine();
             }
             foreach (var p in subtitle.Paragraphs)
             {
@@ -212,11 +212,11 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
 
                 if (p.IsComment)
                 {
-                    sb.AppendLine(string.Format(commentWriteFormat, start, end, FormatText(p), style, actor, marginL, marginR, marginV, effect, p.Layer));
+                    sb.AppendFormat(commentWriteFormat, start, end, FormatText(p), style, actor, marginL, marginR, marginV, effect, p.Layer).AppendLine();
                 }
                 else
                 {
-                    sb.AppendLine(string.Format(paragraphWriteFormat, start, end, FormatText(p), style, actor, marginL, marginR, marginV, effect, p.Layer));
+                    sb.AppendFormat(paragraphWriteFormat, start, end, FormatText(p), style, actor, marginL, marginR, marginV, effect, p.Layer).AppendLine();
                 }
             }
 
@@ -366,7 +366,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                             break;
                     }
 
-                    ttStyles.Append($"Style: {ssaStyle.Name},{ssaStyle.FontName},{ssaStyle.FontSize},{GetSsaColorString(ssaStyle.Primary)},{GetSsaColorString(ssaStyle.Secondary)},{GetSsaColorString(ssaStyle.Outline)},{GetSsaColorString(ssaStyle.Background)},{bold},{italic},{underline},0,{scaleX},{scaleY},{spacing},{angle},{ssaStyle.BorderStyle},{ssaStyle.OutlineWidth.ToString(CultureInfo.InvariantCulture)},{ssaStyle.ShadowWidth.ToString(CultureInfo.InvariantCulture)},{newAlignment},{ssaStyle.MarginLeft},{ssaStyle.MarginRight},{ssaStyle.MarginVertical},1").AppendLine();
+                    ttStyles.Append("Style: ").Append(ssaStyle.Name).Append(',').Append(ssaStyle.FontName).Append(',').Append(ssaStyle.FontSize).Append(',').Append(GetSsaColorString(ssaStyle.Primary)).Append(',').Append(GetSsaColorString(ssaStyle.Secondary)).Append(',').Append(GetSsaColorString(ssaStyle.Outline)).Append(',').Append(GetSsaColorString(ssaStyle.Background)).Append(',').Append(bold).Append(',').Append(italic).Append(',').Append(underline).Append(",0,").Append(scaleX).Append(',').Append(scaleY).Append(',').Append(spacing).Append(',').Append(angle).Append(',').Append(ssaStyle.BorderStyle).Append(',').Append(ssaStyle.OutlineWidth.ToString(CultureInfo.InvariantCulture)).Append(',').Append(ssaStyle.ShadowWidth.ToString(CultureInfo.InvariantCulture)).Append(',').Append(newAlignment).Append(',').Append(ssaStyle.MarginLeft).Append(',').Append(ssaStyle.MarginRight).Append(',').Append(ssaStyle.MarginVertical).AppendLine(",1");
                 }
                 catch
                 {
@@ -469,7 +469,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                         }
 
                         const string styleFormat = "Style: {0},{1},{2},{3},&H0300FFFF,&H00000000,&H02000000,{4},{5},0,0,100,100,0,0,1,2,2,2,10,10,10,1";
-                        ttStyles.AppendLine(string.Format(styleFormat, name, fontFamily, fSize, GetSsaColorString(c), bold, italic));
+                        ttStyles.AppendFormat(styleFormat, name, fontFamily, fSize, GetSsaColorString(c), bold, italic).AppendLine();
                         styleNames.Add(name);
                     }
                 }
@@ -1446,7 +1446,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                             _errorCount++;
                             if (errors.Length < 2000)
                             {
-                                errors.AppendLine(string.Format(FormatLanguage.LineNumberXErrorReadingTimeCodeFromSourceLineY, lineNumber, line));
+                                errors.AppendFormat(FormatLanguage.LineNumberXErrorReadingTimeCodeFromSourceLineY, lineNumber, line).AppendLine();
                             }
                             else if (subtitle.Paragraphs.Count == 0)
                             {

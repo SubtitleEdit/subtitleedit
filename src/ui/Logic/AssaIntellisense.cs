@@ -179,9 +179,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
 
             listBox.Items.Clear();
-            listBox.Width = 480;
-            listBox.Height = 200;
-            DarkTheme.SetDarkTheme(listBox);
+
             foreach (var item in filteredList)
             {
                 item.TypedWord = lastWord;
@@ -194,17 +192,11 @@ namespace Nikse.SubtitleEdit.Logic
                 return false;
             }
 
-            var height = listBox.Items.Count * listBox.ItemHeight + listBox.Items.Count + listBox.ItemHeight;
-            if (height < listBox.Height)
-            {
-                listBox.Height = height;
-            }
-
             listBox.SelectedIndex = 0;
             var endTag = GetEndTagFromLastTagInText(text);
             if (!string.IsNullOrEmpty(endTag))
             {
-                var item = filteredList.FirstOrDefault(p => p.Value == endTag);
+                var item = filteredList.Find(p => p.Value == endTag);
                 if (item != null)
                 {
                     listBox.SelectedIndex = filteredList.IndexOf(item);
@@ -212,15 +204,27 @@ namespace Nikse.SubtitleEdit.Logic
             }
             else if (IsLastTwoTagsEqual())
             {
-                var item = filteredList.FirstOrDefault(p => p.Value == LastAddedTags.Last());
+                var item = filteredList.Find(p => p.Value == LastAddedTags.Last());
                 if (item != null)
                 {
                     listBox.SelectedIndex = filteredList.IndexOf(item);
                 }
             }
 
+            if (Configuration.Settings.General.UseDarkTheme)
+            {
+                DarkTheme.SetDarkTheme(listBox);
+            }
+
+            listBox.Width = 480;
+            listBox.Height = 200;
+            var height = listBox.Items.Count * listBox.ItemHeight + listBox.Items.Count + listBox.ItemHeight;
+            if (height < listBox.Height)
+            {
+                listBox.Height = height;
+            }
+
             listBox.Visible = true;
-            DarkTheme.SetDarkTheme(listBox);
             return true;
         }
 
