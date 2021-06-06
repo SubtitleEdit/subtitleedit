@@ -346,13 +346,13 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                         attachmentContent = new StringBuilder();
                         attachmentFileName = string.Empty;
                     }
-                    else if (s == string.Empty)
+                    else if (s.Length == 0)
                     {
                         SaveFontNames(attachmentFileName, attachmentContent.ToString(), category);
                         attachmentContent = new StringBuilder();
                         attachmentFileName = string.Empty;
                     }
-                    else if (s.StartsWith("filename:") || s.StartsWith("fontname:"))
+                    else if (s.StartsWith("filename:", StringComparison.Ordinal) || s.StartsWith("fontname:", StringComparison.Ordinal))
                     {
                         SaveFontNames(attachmentFileName, attachmentContent.ToString(), category);
                         attachmentContent = new StringBuilder();
@@ -522,7 +522,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 var fontName = comboBoxFontName.Text;
 
                 // try to load font from memory
-                var fontAttachment = _fontAttachments.FirstOrDefault(p => p.FontName == fontName);
+                var fontAttachment = _fontAttachments.Find(p => p.FontName == fontName);
                 if (fontAttachment != null)
                 {
                     var handle = GCHandle.Alloc(fontAttachment.Bytes, GCHandleType.Pinned);
@@ -778,7 +778,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private bool SetSsaStyle(string styleName, string propertyName, string propertyValue)
         {
-            var style = _fileStyleActive ? _currentFileStyles.FirstOrDefault(p => p.Name == styleName) : _currentCategory.Styles.FirstOrDefault(p => p.Name == styleName);
+            var style = _fileStyleActive ? _currentFileStyles.Find(p => p.Name == styleName) : _currentCategory.Styles.Find(p => p.Name == styleName);
             if (style == null)
             {
                 return false;
@@ -886,9 +886,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private SsaStyle GetSsaStyle(string styleName) => _fileStyleActive ? GetSsaStyleFile(styleName) : GetSsaStyleStorage(styleName);
 
-        private SsaStyle GetSsaStyleFile(string styleName) => _currentFileStyles.FirstOrDefault(p => p.Name == styleName);
+        private SsaStyle GetSsaStyleFile(string styleName) => _currentFileStyles.Find(p => p.Name == styleName);
 
-        private SsaStyle GetSsaStyleStorage(string styleName) => _currentCategory.Styles.FirstOrDefault(p => p.Name == styleName);
+        private SsaStyle GetSsaStyleStorage(string styleName) => _currentCategory.Styles.Find(p => p.Name == styleName);
 
         private void SubStationAlphaStyles_KeyDown(object sender, KeyEventArgs e)
         {
@@ -1345,12 +1345,12 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void RemoveStyleFromHeader(string name)
         {
-            _currentFileStyles.Remove(_currentFileStyles.FirstOrDefault(p => p.Name == name));
+            _currentFileStyles.Remove(_currentFileStyles.Find(p => p.Name == name));
         }
 
         private void ReplaceStyleInHeader(SsaStyle style)
         {
-            var hit = _currentFileStyles.FirstOrDefault(p => p.Name == style.Name);
+            var hit = _currentFileStyles.Find(p => p.Name == style.Name);
             if (hit == null)
             {
                 return;

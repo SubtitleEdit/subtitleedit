@@ -324,7 +324,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                                     !s.Remove(0, indexOfEnd).StartsWith("<font", StringComparison.Ordinal))
                                 {
                                     s = s.Remove(indexOfEnd + 1, 1);
-                                    sb.AppendLine("<i>" + s + "</i>"); // italic + font tag
+                                    sb.Append("<i>").Append(s).AppendLine("</i>"); // italic + font tag
                                     continue;
                                 }
 
@@ -334,7 +334,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
                             if (s.StartsWith('<'))
                             {
-                                sb.AppendLine("<i>" + s.Remove(0, 1) + "</i>");
+                                sb.Append("<i>").Append(s.Remove(0, 1)).AppendLine("</i>");
                             }
                             else
                             {

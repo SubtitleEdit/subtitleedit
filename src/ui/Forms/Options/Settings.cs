@@ -3023,14 +3023,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void AddToSaveList(ShortcutHelper helper, string shortcutText)
         {
-            if (_newShortcuts.ContainsKey(helper))
-            {
-                _newShortcuts[helper] = GetShortcut(shortcutText);
-            }
-            else
-            {
-                _newShortcuts.Add(helper, GetShortcut(shortcutText));
-            }
+            _newShortcuts[helper] = GetShortcut(shortcutText);
         }
 
         private void buttonListViewSyntaxColorError_Click(object sender, EventArgs e)

@@ -267,14 +267,8 @@ namespace Nikse.SubtitleEdit.Controls
 
         public new string SelectedText
         {
-            get
-            {
-                return string.Join(Environment.NewLine, base.SelectedText.SplitToLines());
-            }
-            set
-            {
-                base.SelectedText = value;
-            }
+            get => string.Join(Environment.NewLine, base.SelectedText.SplitToLines());
+            set => base.SelectedText = value;
         }
 
         private int GetIndexWithLineBreak(int index)
@@ -519,7 +513,7 @@ namespace Nikse.SubtitleEdit.Controls
                     colorStart++;
                 }
 
-                int colorEnd = text.IndexOfAny(new char[] {'}', '\\', '&'}, colorStart + 1);
+                int colorEnd = text.IndexOfAny(new[] {'}', '\\', '&'}, colorStart + 1);
                 if (colorEnd > 0)
                 {
                     var color = text.Substring(colorStart, colorEnd - colorStart);
@@ -614,7 +608,7 @@ namespace Nikse.SubtitleEdit.Controls
                     IsDictionaryDownloaded = true;
 
                     var languageName = LanguageAutoDetect.AutoDetectLanguageName(string.Empty, subtitle);
-                    if (languageName.Split(new char[] { '_', '-' })[0] != detectedLanguage)
+                    if (languageName.Split('_', '-')[0] != detectedLanguage)
                     {
                         return;
                     }
@@ -873,7 +867,7 @@ namespace Nikse.SubtitleEdit.Controls
             if (IsLiveSpellCheckEnabled && e.KeyCode == Keys.Apps && _wrongWords?.Count > 0)
             {
                 var cursorPos = SelectionStart;
-                var wrongWord = _wrongWords.Where(word => cursorPos > word.Index && cursorPos < word.Index + word.Length).FirstOrDefault();
+                var wrongWord = _wrongWords.Find(word => cursorPos > word.Index && cursorPos < word.Index + word.Length);
                 if (wrongWord != null)
                 {
                     IsWrongWord = true;
@@ -907,7 +901,7 @@ namespace Nikse.SubtitleEdit.Controls
             if (IsLiveSpellCheckEnabled && _wrongWords?.Count > 0 && e.Clicks == 1 && e.Button == MouseButtons.Right)
             {
                 int positionToSearch = GetCharIndexFromPosition(new Point(e.X, e.Y));
-                var wrongWord = _wrongWords.Where(word => positionToSearch > GetIndexWithLineBreak(word.Index) && positionToSearch < GetIndexWithLineBreak(word.Index) + word.Length).FirstOrDefault();
+                var wrongWord = _wrongWords.Find(word => positionToSearch > GetIndexWithLineBreak(word.Index) && positionToSearch < GetIndexWithLineBreak(word.Index) + word.Length);
                 if (wrongWord != null)
                 {
                     IsWrongWord = true;
