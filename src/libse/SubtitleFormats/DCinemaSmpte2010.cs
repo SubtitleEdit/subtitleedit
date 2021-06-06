@@ -420,7 +420,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 italic.InnerText = "yes";
                                 fontNode.Attributes.Append(italic);
 
-                                fontNode.InnerText = HtmlUtil.RemoveHtmlTags(line);
+                                fontNode.InnerText = HtmlUtil.RemoveHtmlTags(txt.ToString());
                                 html.Append(fontNode.OuterXml);
                             }
                         }
