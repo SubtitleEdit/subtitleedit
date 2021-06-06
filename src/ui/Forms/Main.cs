@@ -9979,6 +9979,23 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 intellisenseListBox = new ListBox();
                 Controls.Add(intellisenseListBox);
+                intellisenseListBox.PreviewKeyDown += (o, args) =>
+                {
+                    if (args.KeyCode == Keys.Tab && intellisenseListBox.SelectedIndex >= 0)
+                    {
+                        var item = intellisenseListBox.Items[intellisenseListBox.SelectedIndex] as AssaIntellisense.IntellisenseItem;
+                        if (item != null)
+                        {
+                            MakeHistoryForUndo(string.Format(_language.BeforeAddingTagX, item.Value));
+                            tb.SelectedText = item.Value.Remove(0, item.TypedWord.Length);
+                            ShowStatus(string.Format(_language.TagXAdded, item.Value));
+                            AssaIntellisense.AddUsedTag(item.Value);
+                        }
+
+                        intellisenseListBox.Hide();
+                        System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(10), () => tb.Focus());
+                    }
+                };
                 intellisenseListBox.KeyDown += (o, args) =>
                 {
                     if (args.KeyCode == Keys.Enter && intellisenseListBox.SelectedIndex >= 0)
@@ -9996,7 +10013,7 @@ namespace Nikse.SubtitleEdit.Forms
                         intellisenseListBox.Hide();
                         tb.Focus();
                     }
-                    else if (args.KeyCode == Keys.Escape)
+                    else if (args.KeyCode == Keys.Escape || _shortcuts.MainTextBoxAssaIntellisense == args.KeyData)
                     {
                         args.SuppressKeyPress = true;
                         intellisenseListBox.Hide();
