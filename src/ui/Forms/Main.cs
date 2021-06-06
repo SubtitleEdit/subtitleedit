@@ -10041,7 +10041,7 @@ namespace Nikse.SubtitleEdit.Forms
                 intellisenseListBox.KeyPress += (o, args) =>
                 {
                     var x = args.KeyChar.ToString();
-                    { if (!string.IsNullOrEmpty(x) && x != "\r" && x != "\n" && x != "\u001b" && x != " ")
+                    if (!string.IsNullOrEmpty(x) && x != "\r" && x != "\n" && x != "\u001b" && x != " ")
                     {
                         if (x == "{")
                         {
@@ -10057,7 +10057,7 @@ namespace Nikse.SubtitleEdit.Forms
                         args.Handled = true;
                         AssaIntellisense.AutoCompleteTextBox(tb, intellisenseListBox);
                         intellisenseListBox.Focus();
-                    }}
+                    }
                 };
                 intellisenseListBox.LostFocus += (o, args) => intellisenseListBox.Hide();
             }
