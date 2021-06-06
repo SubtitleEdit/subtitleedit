@@ -735,11 +735,12 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                                 if (!correct)
                                 {
-                                    correct = _spellCheckWordLists.HasUserWord(wordWithDash);
-                                }
-                                if (!correct)
-                                {
                                     correct = _spellCheckWordLists.HasUserWord(wordWithDash.Replace("‑", "-"));
+                                }
+                                if (!correct && _spellCheckWordLists.HasName(wordWithDash.Replace("‑", "-")))
+                                {
+                                    correct = true;
+                                    _noOfNames++;
                                 }
                             }
                         }
