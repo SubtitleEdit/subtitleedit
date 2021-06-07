@@ -2,12 +2,13 @@
 
 3.6.2 BETA (xth July 2021)
 * NEW:
-   * Keep all ASSA tags (no html for italic etc.)
+   * Keep ASSA tags (no html for italic etc.)
    * ASSA tag helper/intellisense shortcut
    * Shortcuts for video contrast/brightness (mpv only)
    * Waveform "Right-click + Ctrl" will toggle select of a subtitle
    * Waveform "Right-click + Shift" will select a range subtitles
    * Add a few profiles for Amazon Prime
+   * Add new FCE rule: "Remove first dash in non-dialogs" 
 * IMPROVED:
    * Update Bulgarian translation - thx Калин
    * Update Chinese translation - thx nkh0472
@@ -18,11 +19,14 @@
    * ASSA: Some support for ScalingX/ScalingY/Spacing/Angle/Strikeout - thx ausencia
    * MPC: Try to search for mpc-be too - thx Fábio
    * Shortcut F5 is now "Play selected lines"
-   * Support read of time codes with format "12529f" in TTML - thx LeonCheung
+   * Support read of time codes with format "<number>f" in TTML - thx LeonCheung
    * Improve waveform support for SMPTE timing (drop frame) - thx Paulo
+   * Try to pick best image w SUP PGS/fading - thx peter-qgd
+   * Adhere to max number of lines - thx Andrebavila
+   * Optimize "modify selection - styles"
 * FIXED:
    * Fix load/save some ASSA storage style settings - thx Andrebavila
-   * Try to pick best image w SUP PGS/fading - thx peter-qgd
+   * Fix for italic in DCinemaSmpte2007/DCinemaSmpte2010/DCinemaSmpte2014 - thx Marko
    * Minor fix for "Remove text for HI" - thx igenaya
    * Minor fix for split with zero time codes - thx darnn
 
