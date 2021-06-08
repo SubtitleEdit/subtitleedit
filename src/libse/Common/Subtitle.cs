@@ -1,13 +1,12 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.Enums;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Nikse.SubtitleEdit.Core.Enums;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
-namespace Nikse.SubtitleEdit.Core
+namespace Nikse.SubtitleEdit.Core.Common
 {
     public class Subtitle
     {
@@ -54,17 +53,22 @@ namespace Nikse.SubtitleEdit.Core
         /// <param name="subtitle">Subtitle to copy</param>
         /// <param name="generateNewId">Generate new ID (guid) for paragraphs</param>
         public Subtitle(Subtitle subtitle, bool generateNewId = true)
-            : this()
         {
+            HistoryItems = new List<HistoryItem>();
+
             if (subtitle == null)
             {
+                FileName = "Untitled";
+                Paragraphs = new List<Paragraph>();
                 return;
             }
 
+            Paragraphs = new List<Paragraph>(subtitle.Paragraphs.Count);
             foreach (var p in subtitle.Paragraphs)
             {
                 Paragraphs.Add(new Paragraph(p, generateNewId));
             }
+
             Header = subtitle.Header;
             Footer = subtitle.Footer;
             FileName = subtitle.FileName;

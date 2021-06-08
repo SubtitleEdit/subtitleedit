@@ -1,4 +1,6 @@
-﻿namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
+﻿using Nikse.SubtitleEdit.Core.Common;
+
+namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 {
     public interface INetflixQualityChecker
     {
