@@ -1,4 +1,6 @@
-﻿namespace Nikse.SubtitleEdit.Core.Interfaces
+﻿using Nikse.SubtitleEdit.Core.Common;
+
+namespace Nikse.SubtitleEdit.Core.Interfaces
 {
     public interface IFixCommonError
     {

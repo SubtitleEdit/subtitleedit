@@ -451,6 +451,16 @@ namespace Nikse.SubtitleEdit.Controls
 
             try
             {
+                if (SmpteMode)
+                {
+                    subtitle = new Subtitle(subtitle, false);
+                    foreach (var paragraph in subtitle.Paragraphs)
+                    {
+                        //paragraph.StartTime.TotalMilliseconds *= 1.001;
+                        //paragraph.EndTime.TotalMilliseconds *= 1.001;
+                    }
+                }
+
                 var format = new AdvancedSubStationAlpha();
                 string text;
 
