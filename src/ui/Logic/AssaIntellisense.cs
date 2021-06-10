@@ -139,6 +139,52 @@ namespace Nikse.SubtitleEdit.Logic
             LastAddedTags.Add(tag);
         }
 
+        public static void CompleteItem(SETextBox tb, IntellisenseItem item)
+        {
+            var textToPaste = item.Value.Remove(0, item.TypedWord.Length);
+
+            var deleteCount = 0;
+            if (tb.SelectionLength == 0 && item.ActiveTagAtCursor.Length > 0 && !(item.ActiveTagAtCursor == "\\" && item.TypedWord.Length == 0))
+            {
+                deleteCount = item.ActiveTagAtCursor.Length - item.TypedWord.Length + 1;
+            }
+
+            var originalStart = tb.SelectionStart;
+            tb.SelectedText = textToPaste;
+
+            if (deleteCount > 0)
+            {
+                var start = tb.SelectionStart;
+                tb.SelectionLength = deleteCount;
+                tb.Text = tb.Text.Remove(start, deleteCount);
+                tb.SelectionStart = start;
+            }
+
+            if (originalStart > 0)
+            {
+                var start = tb.SelectionStart;
+                var before = tb.Text.Substring(0, originalStart);
+                var end = originalStart + textToPaste.Length;
+                if (end < tb.Text.Length && tb.Text[end] == '}')
+                {
+                    tb.Text = tb.Text.Remove(end, 1);
+                }
+
+                if (before.EndsWith('}'))
+                {
+                    tb.Text = tb.Text.Remove(originalStart - 1, 2);
+                    tb.SelectionStart = start - 2;
+                }
+                else if (before.EndsWith('\\') && textToPaste.StartsWith("{\\", StringComparison.Ordinal))
+                {
+                    tb.Text = tb.Text.Remove(originalStart - 1, 2);
+                    tb.SelectionStart = start - 2;
+                }
+            }
+
+            AddUsedTag(item.Value);
+        }
+
         public static bool AutoCompleteTextBox(SETextBox textBox, ListBox listBox)
         {
             var textBeforeCursor = string.IsNullOrEmpty(textBox.Text) ? string.Empty : textBox.Text.Substring(0, textBox.SelectionStart);
@@ -219,16 +265,18 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static string GetInsideTag(SETextBox textBox, string before)
         {
-            var lastStart = before.LastIndexOf("\\", StringComparison.Ordinal);
+            var lastIndexOfStartBracket = before.LastIndexOf("{", StringComparison.Ordinal);
+            var lastStart = Math.Max(before.LastIndexOf("\\", StringComparison.Ordinal), lastIndexOfStartBracket);
             if (lastStart < 0)
             {
                 return string.Empty;
             }
 
-            var endTagIndex = textBox.Text.IndexOfAny(new[] { '\\', '}' }, textBox.SelectionStart);
+            var extra = (lastIndexOfStartBracket == lastStart ? 1 : 0);
+            var endTagIndex = textBox.Text.IndexOfAny(new[] { '\\', '}' }, textBox.SelectionStart + extra);
             if (endTagIndex > 0)
             {
-                var s = textBox.Text.Substring(lastStart, endTagIndex - lastStart);
+                var s = textBox.Text.Substring(lastStart, endTagIndex - lastStart + extra);
                 return s;
             }
 
@@ -242,31 +290,31 @@ namespace Nikse.SubtitleEdit.Logic
         }
         private static string GetEndTagFromLastTagInText(string text)
         {
-            var lastIdx = text.LastIndexOf("{\\", StringComparison.Ordinal);
+            var lastIdx = text.LastIndexOf("\\", StringComparison.Ordinal);
             if (lastIdx >= 0)
             {
                 var s = text.Substring(lastIdx);
-                if (s.StartsWith("{\\i1}"))
+                if (s.StartsWith("\\i1}"))
                 {
                     return "{\\i0}";
                 }
 
-                if (s.StartsWith("{\\u1}"))
+                if (s.StartsWith("\\u1}"))
                 {
                     return "{\\u0}";
                 }
 
-                if (s.StartsWith("{\\b1}"))
+                if (s.StartsWith("\\b1}"))
                 {
                     return "{\\b0}";
                 }
 
-                if (s.StartsWith("{\\s1}"))
+                if (s.StartsWith("\\s1}"))
                 {
                     return "{\\s0}";
                 }
 
-                if (s.StartsWith("{\\be1}"))
+                if (s.StartsWith("\\be1}"))
                 {
                     return "{\\be0}";
                 }
@@ -283,7 +331,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
 
             var lastIndexOfStartBracket = s.LastIndexOf('\\');
-            var lastSeparatorIndex = s.LastIndexOfAny(new[] { ' ', ',', '.', '"', '\'', '}' });
+            var lastSeparatorIndex = s.LastIndexOfAny(new[] { '{', '}' });
             if (lastIndexOfStartBracket > lastSeparatorIndex)
             {
                 return s.Remove(0, lastIndexOfStartBracket);
