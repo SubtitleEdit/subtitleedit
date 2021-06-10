@@ -2,7 +2,7 @@
 
 3.6.2 BETA (xth July 2021)
 * NEW:
-   * Keep ASSA tags (no html for italic etc.)
+   * Keep ASSA tags (no html for italic/font etc.)
    * ASSA tag helper/intellisense shortcut
    * Shortcuts for video contrast/brightness (mpv only)
    * Waveform "Right-click + Ctrl" will toggle select of a subtitle
@@ -16,17 +16,18 @@
    * Update Portuguese translation - thx hugok79
    * Update Hungarian translation - thx Zityi
    * Use ngen64 on 64-bit - thx XhmikosR
-   * ASSA: Some support for ScalingX/ScalingY/Spacing/Angle/Strikeout - thx ausencia
+   * ASSA: Support for ScalingX/ScalingY/Spacing/Angle/Strikeout - thx ausencia
    * MPC: Try to search for mpc-be too - thx Fábio
    * Shortcut F5 is now "Play selected lines"
    * Support read of time codes with format "<number>f" in TTML - thx LeonCheung
    * Improve waveform support for SMPTE timing (drop frame) - thx Paulo
-   * Try to pick best image w SUP PGS/fading - thx peter-qgd
+   * Try to pick best image for bdsup with fading - thx peter-qgd
    * Adhere to max number of lines - thx Andrebavila
    * Optimize "modify selection - styles"
+   * Update installer from Inno Setup version 5 to version 6
 * FIXED:
    * Fix load/save some ASSA storage style settings - thx Andrebavila
-   * Fix for italic in DCinemaSmpte2007/DCinemaSmpte2010/DCinemaSmpte2014 - thx Marko
+   * Fix for italic in DCinemaSmpte2007/2010/2014 - thx Marko
    * Minor fix for "Remove text for HI" - thx igenaya
    * Minor fix for split with zero time codes - thx darnn
 
