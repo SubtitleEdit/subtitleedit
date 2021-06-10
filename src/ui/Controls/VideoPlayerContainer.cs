@@ -1,5 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
@@ -439,7 +438,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private Subtitle _subtitlePrev;
         private string _mpvTextOld = string.Empty;
-        private int _mpvSubOldHash = -1; 
+        private int _mpvSubOldHash = -1;
         private string _mpvTextFileName;
         private int _retryCount = 3;
         private void RefreshMpv(LibMpvDynamic mpv, Subtitle subtitle)
@@ -456,8 +455,8 @@ namespace Nikse.SubtitleEdit.Controls
                     subtitle = new Subtitle(subtitle, false);
                     foreach (var paragraph in subtitle.Paragraphs)
                     {
-                        //paragraph.StartTime.TotalMilliseconds *= 1.001;
-                        //paragraph.EndTime.TotalMilliseconds *= 1.001;
+                        paragraph.StartTime.TotalMilliseconds *= 1.001;
+                        paragraph.EndTime.TotalMilliseconds *= 1.001;
                     }
                 }
 
