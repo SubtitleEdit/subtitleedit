@@ -9986,9 +9986,8 @@ namespace Nikse.SubtitleEdit.Forms
                         if (item != null)
                         {
                             MakeHistoryForUndo(string.Format(_language.BeforeAddingTagX, item.Value));
-                            tb.SelectedText = item.Value.Remove(0, item.TypedWord.Length);
+                            AssaIntellisense.CompleteItem(tb, item);
                             ShowStatus(string.Format(_language.TagXAdded, item.Value));
-                            AssaIntellisense.AddUsedTag(item.Value);
                         }
 
                         intellisenseListBox.Hide();
@@ -10003,9 +10002,8 @@ namespace Nikse.SubtitleEdit.Forms
                         if (item != null)
                         {
                             MakeHistoryForUndo(string.Format(_language.BeforeAddingTagX, item.Value));
-                            tb.SelectedText = item.Value.Remove(0, item.TypedWord.Length);
+                            AssaIntellisense.CompleteItem(tb, item);
                             ShowStatus(string.Format(_language.TagXAdded, item.Value));
-                            AssaIntellisense.AddUsedTag(item.Value);
                         }
 
                         args.SuppressKeyPress = true;
@@ -10028,9 +10026,8 @@ namespace Nikse.SubtitleEdit.Forms
                         if (item != null)
                         {
                             MakeHistoryForUndo(string.Format(_language.BeforeAddingTagX, item.Value));
-                            tb.SelectedText = item.Value.Remove(0, item.TypedWord.Length);
+                            AssaIntellisense.CompleteItem(tb, item);
                             ShowStatus(string.Format(_language.TagXAdded, item.Value));
-                            AssaIntellisense.AddUsedTag(item.Value);
                         }
 
                         intellisenseListBox.Hide();
@@ -10064,7 +10061,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (AssaIntellisense.AutoCompleteTextBox(tb, intellisenseListBox))
             {
                 var p = GetPositionInForm(tb);
-                intellisenseListBox.Location = new Point(p.X + 10, p.Y + 40);
+                intellisenseListBox.Location = new Point(p.X + 10, p.Y + 40); //TODO: improve position
                 intellisenseListBox.Show();
                 intellisenseListBox.BringToFront();
                 intellisenseListBox.Focus();
