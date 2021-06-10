@@ -14,13 +14,16 @@ namespace Nikse.SubtitleEdit.Logic
         {
             public string Value { get; set; }
             public string Hint { get; set; }
+            public bool AllowInTransformations { get; set; }
             public string TypedWord { get; set; }
+            public string ActiveTagAtCursor { get; set; }
             public Font Font { get; set; }
 
-            public IntellisenseItem(string value, string hint)
+            public IntellisenseItem(string value, string hint, bool allowInTransformations)
             {
                 Value = value;
                 Hint = hint;
+                AllowInTransformations = allowInTransformations;
             }
 
             public override string ToString()
@@ -44,103 +47,89 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static readonly List<IntellisenseItem> Keywords = new List<IntellisenseItem>
         {
-            new IntellisenseItem("{\\b}",  "Bold"),
-            new IntellisenseItem("{\\b0}",  "Bold off"),
-            new IntellisenseItem("{\\b1}",  "Bold on"),
-            new IntellisenseItem("{\\i}",  "Italic"),
-            new IntellisenseItem("{\\i0}",  "Italic off"),
-            new IntellisenseItem("{\\i1}",  "Italic on"),
-            new IntellisenseItem("{\\u}",  "Underline"),
-            new IntellisenseItem("{\\u0}",  "Underline off"),
-            new IntellisenseItem("{\\u1}",  "Underline on"),
-            new IntellisenseItem("{\\s}",  "Strikeout"),
-            new IntellisenseItem("{\\s0}",  "Strikeout off"),
-            new IntellisenseItem("{\\s1}",  "Strikeout on"),
-            new IntellisenseItem("{\\bord<width>}",  "Border"),
-            new IntellisenseItem("{\\xbord<x>}",  "Border width"),
-            new IntellisenseItem("{\\ybord<y>}",  "Border height"),
-            new IntellisenseItem("{\\shad<depth>}",  "Shadow"),
-            new IntellisenseItem("{\\xshad<x>}",  "Shadow width"),
-            new IntellisenseItem("{\\yshad<y>}",  "Shadow height"),
-            new IntellisenseItem("{\\be}",  "Blur edges"),
-            new IntellisenseItem("{\\be0}",  "Blur edges off"),
-            new IntellisenseItem("{\\be1}",  "Blur edges on"),
-            new IntellisenseItem("{\\fn<font_name>}",  "Font name"),
-            new IntellisenseItem("{\\fs<font_size>}",  "Font size"),
-            new IntellisenseItem("{\\fscx<percent>}",  "Scale X percentage"),
-            new IntellisenseItem("{\\fscy<percent>}",  "Scale Y percentage"),
-            new IntellisenseItem("{\\fsp<pixels>}",  "Spacing between letters in pixels"),
-            new IntellisenseItem("{\\fr<degree>}",  "Angle (z axis for text rotation)"),
-            new IntellisenseItem("{\\frx<degree>}",  "Angle (x axis for text rotation)"),
-            new IntellisenseItem("{\\fry<degree>}",  "Angle (y axis for text rotation)"),
-            new IntellisenseItem("{\\frz<degree>}",  "Angle (z axis for text rotation)"),
-            new IntellisenseItem("{\\org<x,y>}",  "Set origin point for rotation"),
-            new IntellisenseItem("{\\fax<degree>}",  "Shearing transformation (x axis)"),
-            new IntellisenseItem("{\\fay<degree>}",  "Shearing transformation (y axis)"),
-            new IntellisenseItem("{\\fe<charset>}",  "Encoding"),
-            new IntellisenseItem("{\\c&H<bbggrr>&}",  "Color"),
-            new IntellisenseItem("{\\2c&H<bbggrr>&}",  "Color for outline"),
-            new IntellisenseItem("{\\3c&H<bbggrr>&}",  "Color for opaque box"),
-            new IntellisenseItem("{\\4c&H<bbggrr>&}",  "Color for shadow"),
-            new IntellisenseItem("{\\alpha&H<aa>&}",  "Alpha (00=fully visible, ff=transparent)"),
-            new IntellisenseItem("{\\a2&H<aa>&}",  "Alpha for outline (00=fully visible, ff=transparent)"),
-            new IntellisenseItem("{\\a3&H<aa>&}",  "Alpha for opaque box (00=fully visible, ff=transparent)"),
-            new IntellisenseItem("{\\a4&H<aa>&}",  "Alpha for shadow (00=fully visible, ff=transparent)"),
-            new IntellisenseItem("{\\an7}",  "Align top left"),
-            new IntellisenseItem("{\\an8}",  "Align top center"),
-            new IntellisenseItem("{\\an9}",  "Align top right"),
-            new IntellisenseItem("{\\an4}",  "Align center left"),
-            new IntellisenseItem("{\\an5}",  "Align center middle"),
-            new IntellisenseItem("{\\an6}",  "Align center right"),
-            new IntellisenseItem("{\\an1}",  "Align bottom left"),
-            new IntellisenseItem("{\\an2}",  "Align bottom middle"),
-            new IntellisenseItem("{\\an3}",  "Align bottom right"),
-            new IntellisenseItem("{\\k<duration>}",  "Karaoke, delay in 100th of a second (10ms)"),
-            new IntellisenseItem("{\\K<duration>}",  "Karaoke right to left, delay in 100th of a second (10ms)"),
-            new IntellisenseItem("{\\mov(x1,y1,x2,y2,start,end)}",  "Move"),
-            new IntellisenseItem("{\\pos(x,y)}",  "Set position"),
-            new IntellisenseItem("{\\fade(a1,a2,a3,t1,t2,t3,t4)}",  "Fade advanced"),
-            new IntellisenseItem("{\\fad(fadein time,fadeout time>}",  "Fade"),
-            new IntellisenseItem("{\\clip(x1,y1,x2,y2)}",  "Clips (hides) any drawing outside the rectangle defined by the parameters."),
-            new IntellisenseItem("{\\iclip(x1,y1,x2,y2)}",  "Clips (hides) any drawing inside the rectangle defined by the parameters."),
-            new IntellisenseItem("{\\r}",  "Reset inline styles"),
-            new IntellisenseItem("{\\t(<style modifiers>)}",  "Animated transform"),
-            new IntellisenseItem("{\\t(<accel,style modifiers>)}",  "Animated transform"),
-            new IntellisenseItem("{\\t(<t1,t2,style modifiers>)}",  "Animated transform"),
-            new IntellisenseItem("{\\t(<t1,t2,accel,style modifiers>)}",  "Animated transform"),
-        };
+            new IntellisenseItem("{\\i1}",  "Italic on", false),
+            new IntellisenseItem("{\\i0}",  "Italic off", false),
 
-        private static readonly List<IntellisenseItem> TransformKeywords = new List<IntellisenseItem>
-        {
-            new IntellisenseItem("\\fs<font_size>",  "Font size"),
-            new IntellisenseItem("\\fscx<percent>",  "Scale X percentage"),
-            new IntellisenseItem("\\fscy<percent>",  "Scale Y percentage"),
-            new IntellisenseItem("\\fsp<pixels>",  "Spacing between letters in pixels"),
-            new IntellisenseItem("\\fr<degree>",  "Angle (z axis for text rotation)"),
-            new IntellisenseItem("\\frx<degree>",  "Angle (x axis for text rotation)"),
-            new IntellisenseItem("\\fry<degree>",  "Angle (y axis for text rotation)"),
-            new IntellisenseItem("\\frz<degree>",  "Angle (z axis for text rotation)"),
-            new IntellisenseItem("\\bord<width>",  "Border"),
-            new IntellisenseItem("\\xbord<x>",  "Border width"),
-            new IntellisenseItem("\\ybord<y>",  "Border height"),
-            new IntellisenseItem("\\shad<depth>",  "Shadow"),
-            new IntellisenseItem("\\xshad<x>",  "Shadow width"),
-            new IntellisenseItem("\\yshad<y>",  "Shadow height"),
-            new IntellisenseItem("\\c&H<bbggrr>",  "Color"),
-            new IntellisenseItem("\\2c&H<bbggrr>",  "Color for outline"),
-            new IntellisenseItem("\\3c&H<bbggrr>",  "Color for opaque box"),
-            new IntellisenseItem("\\4c&H<bbggrr>",  "Color for shadow"),
-            new IntellisenseItem("\\alpha&H<aa>&",  "Alpha (00=fully visible, ff=transparent)"),
-            new IntellisenseItem("\\a2&H<aa>&",  "Alpha for outline (00=fully visible, ff=transparent)"),
-            new IntellisenseItem("\\a3&H<aa>&",  "Alpha for opaque box (00=fully visible, ff=transparent)"),
-            new IntellisenseItem("\\a4&H<aa>&",  "Alpha for shadow (00=fully visible, ff=transparent)"),
-            new IntellisenseItem("\\be",  "Blur edges"),
-            new IntellisenseItem("\\be0",  "Blur edges off"),
-            new IntellisenseItem("\\be1",  "Blur edges on"),
-            new IntellisenseItem("\\fax<degree>",  "Shearing transformation (x axis)"),
-            new IntellisenseItem("\\fay<degree>",  "Shearing transformation (y axis)"),
-            new IntellisenseItem("\\clip(x1,y1,x2,y2)",  "Clips (hides) any drawing outside the rectangle defined by the parameters."),
-            new IntellisenseItem("\\iclip(x1,y1,x2,y2)",  "Clips (hides) any drawing inside the rectangle defined by the parameters."),
+            new IntellisenseItem("{\\b1}",  "Bold on", false),
+            new IntellisenseItem("{\\b0}",  "Bold off", false),
+
+            new IntellisenseItem("{\\u1}",  "Underline on", false),
+            new IntellisenseItem("{\\u0}",  "Underline off", false),
+
+            new IntellisenseItem("{\\s1}",  "Strikeout on", false),
+            new IntellisenseItem("{\\s0}",  "Strikeout off", false),
+
+            new IntellisenseItem("{\\mov(x1,y1,x2,y2,start,end)}",  "Move", false),
+            new IntellisenseItem("{\\pos(x,y)}",  "Set position", false),
+
+            new IntellisenseItem("{\\c&Hbbggrr&}",  "Color", true),
+            new IntellisenseItem("{\\2c&Hbbggrr&}",  "Color for outline", true),
+            new IntellisenseItem("{\\3c&Hbbggrr&}",  "Color for opaque box", true),
+            new IntellisenseItem("{\\4c&Hbbggrr&}",  "Color for shadow", true),
+
+            new IntellisenseItem("{\\fade(a1,a2,a3,t1,t2,t3,t4)}",  "Fade advanced", false),
+            new IntellisenseItem("{\\fad(fadein time,fadeout time>}",  "Fade", false),
+
+            new IntellisenseItem("{\\fn<font_name>}",  "Font name", false),
+
+            new IntellisenseItem("{\\fs<font_size>}",  "Font size", true),
+
+            new IntellisenseItem("{\\an7}",  "Align top left", false),
+            new IntellisenseItem("{\\an8}",  "Align top center", false),
+            new IntellisenseItem("{\\an9}",  "Align top right", false),
+            new IntellisenseItem("{\\an4}",  "Align center left", false),
+            new IntellisenseItem("{\\an5}",  "Align center middle", false),
+            new IntellisenseItem("{\\an6}",  "Align center right", false),
+            new IntellisenseItem("{\\an1}",  "Align bottom left", false),
+            new IntellisenseItem("{\\an2}",  "Align bottom middle", false),
+            new IntellisenseItem("{\\an3}",  "Align bottom right", false),
+
+            new IntellisenseItem("{\\bord<width>}",  "Border", true),
+            new IntellisenseItem("{\\xbord<x>}",  "Border width", true),
+            new IntellisenseItem("{\\ybord<y>}",  "Border height", true),
+
+            new IntellisenseItem("{\\shad<depth>}",  "Shadow", true),
+            new IntellisenseItem("{\\xshad<x>}",  "Shadow width", true),
+            new IntellisenseItem("{\\yshad<y>}",  "Shadow height", true),
+
+            new IntellisenseItem("{\\be}",  "Blur edges", true),
+            new IntellisenseItem("{\\be0}",  "Blur edges off", true),
+            new IntellisenseItem("{\\be1}",  "Blur edges on", true),
+
+            new IntellisenseItem("{\\fscx<percent>}",  "Scale X percentage", true),
+            new IntellisenseItem("{\\fscy<percent>}",  "Scale Y percentage", true),
+
+            new IntellisenseItem("{\\fsp<pixels>}",  "Spacing between letters in pixels", true),
+
+            new IntellisenseItem("{\\fr<degree>}",  "Angle (z axis for text rotation)", true),
+            new IntellisenseItem("{\\frx<degree>}",  "Angle (x axis for text rotation)", true),
+            new IntellisenseItem("{\\fry<degree>}",  "Angle (y axis for text rotation)", true),
+            new IntellisenseItem("{\\frz<degree>}",  "Angle (z axis for text rotation)", true),
+
+            new IntellisenseItem("{\\org<x,y>}",  "Set origin point for rotation", false),
+
+            new IntellisenseItem("{\\fax<degree>}",  "Shearing transformation (x axis)", true),
+            new IntellisenseItem("{\\fay<degree>}",  "Shearing transformation (y axis)", true),
+
+            new IntellisenseItem("{\\fe<charset>}",  "Encoding", false),
+
+            new IntellisenseItem("{\\alpha&Haa&}",  "Alpha (00=fully visible, ff=transparent)", true),
+            new IntellisenseItem("{\\a2&Haa&}",  "Alpha for outline (00=fully visible, ff=transparent)", true),
+            new IntellisenseItem("{\\a3&Haa&}",  "Alpha for opaque box (00=fully visible, ff=transparent)", true),
+            new IntellisenseItem("{\\a4&Haa&}",  "Alpha for shadow (00=fully visible, ff=transparent)", true),
+
+            new IntellisenseItem("{\\k<duration>}",  "Karaoke, delay in 100th of a second (10ms)", false),
+            new IntellisenseItem("{\\K<duration>}",  "Karaoke right to left, delay in 100th of a second (10ms)", false),
+
+            new IntellisenseItem("{\\clip(x1,y1,x2,y2)}",  "Clips (hides) any drawing outside the rectangle defined by the parameters.", true),
+            new IntellisenseItem("{\\iclip(x1,y1,x2,y2)}",  "Clips (hides) any drawing inside the rectangle defined by the parameters.", true),
+
+            new IntellisenseItem("{\\r}",  "Reset inline styles", false),
+
+            new IntellisenseItem("{\\t(<style modifiers>)}",  "Animated transform", false),
+            new IntellisenseItem("{\\t(<accel,style modifiers>)}",  "Animated transform", false),
+            new IntellisenseItem("{\\t(<t1,t2,style modifiers>)}",  "Animated transform", false),
+            new IntellisenseItem("{\\t(<t1,t2,accel,style modifiers>)}",  "Animated transform", false),
         };
 
         private static readonly List<string> LastAddedTags = new List<string>();
@@ -152,29 +141,28 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static bool AutoCompleteTextBox(SETextBox textBox, ListBox listBox)
         {
-            var text = string.IsNullOrEmpty(textBox.Text) ? string.Empty : textBox.Text.Substring(0, textBox.SelectionStart);
-            var lastWord = GetLastString(text) ?? string.Empty;
-            var keywords = Keywords;
+            var textBeforeCursor = string.IsNullOrEmpty(textBox.Text) ? string.Empty : textBox.Text.Substring(0, textBox.SelectionStart);
+            var activeTagAtCursor = GetInsideTag(textBox, textBeforeCursor);
+            var activeTagToCursor = GetLastString(textBeforeCursor) ?? string.Empty;
+            var keywords = (activeTagToCursor.StartsWith('\\') ? Keywords.Select(p => new IntellisenseItem(p.Value.TrimStart('{'), p.Hint, p.AllowInTransformations)) : Keywords.Select(p => p)).ToList();
 
-            if (text.EndsWith("\\t(", StringComparison.Ordinal))
+            if (textBeforeCursor.EndsWith("\\t(", StringComparison.Ordinal))
             {
                 // use smaller list inside transformation
-                keywords = TransformKeywords;
-                lastWord = string.Empty;
+                keywords = Keywords.Where(p => p.AllowInTransformations).Select(p => new IntellisenseItem(p.Value.TrimStart('{'), p.Hint, p.AllowInTransformations)).ToList();
+                activeTagToCursor = string.Empty;
             }
 
             var filteredList = keywords
-                .Where(n => string.IsNullOrEmpty(lastWord) || n.Value.StartsWith(GetLastString(lastWord), StringComparison.OrdinalIgnoreCase))
-                .OrderBy(p => p.Value)
+                .Where(n => string.IsNullOrEmpty(activeTagToCursor) || n.Value.StartsWith(GetLastString(activeTagToCursor), StringComparison.OrdinalIgnoreCase))
                 .ToList();
 
-            if (filteredList.Count == 0 && lastWord.EndsWith("\\"))
+            if (filteredList.Count == 0 && activeTagToCursor.EndsWith("\\"))
             {
                 // continuing ass tag, remove "{\" + "}"
-                lastWord = string.Empty;
+                activeTagToCursor = string.Empty;
                 filteredList = keywords
-                    .OrderBy(p => p.Value)
-                    .Select(p => new IntellisenseItem(p.Value.Replace("{\\", string.Empty).RemoveChar('}'), p.Hint))
+                    .Select(p => new IntellisenseItem(p.Value.Replace("{\\", string.Empty).RemoveChar('}'), p.Hint, p.AllowInTransformations))
                     .ToList();
             }
 
@@ -182,7 +170,8 @@ namespace Nikse.SubtitleEdit.Logic
 
             foreach (var item in filteredList)
             {
-                item.TypedWord = lastWord;
+                item.TypedWord = activeTagToCursor;
+                item.ActiveTagAtCursor = activeTagAtCursor;
                 item.Font = listBox.Font;
                 listBox.Items.Add(item);
             }
@@ -193,7 +182,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
 
             listBox.SelectedIndex = 0;
-            var endTag = GetEndTagFromLastTagInText(text);
+            var endTag = GetEndTagFromLastTagInText(textBeforeCursor);
             if (!string.IsNullOrEmpty(endTag))
             {
                 var item = filteredList.Find(p => p.Value == endTag);
@@ -226,6 +215,24 @@ namespace Nikse.SubtitleEdit.Logic
 
             listBox.Visible = true;
             return true;
+        }
+
+        private static string GetInsideTag(SETextBox textBox, string before)
+        {
+            var lastStart = before.LastIndexOf("\\", StringComparison.Ordinal);
+            if (lastStart < 0)
+            {
+                return string.Empty;
+            }
+
+            var endTagIndex = textBox.Text.IndexOfAny(new[] { '\\', '}' }, textBox.SelectionStart);
+            if (endTagIndex > 0)
+            {
+                var s = textBox.Text.Substring(lastStart, endTagIndex - lastStart);
+                return s;
+            }
+
+            return string.Empty;
         }
 
         private static bool IsLastTwoTagsEqual()
@@ -270,12 +277,12 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static string GetLastString(string s)
         {
-            if (s.TrimEnd().EndsWith("}"))
+            if (s.TrimEnd().EndsWith('\\') || s.TrimEnd().EndsWith('\\'))
             {
                 return string.Empty;
             }
 
-            var lastIndexOfStartBracket = s.LastIndexOf('{');
+            var lastIndexOfStartBracket = s.LastIndexOf('\\');
             var lastSeparatorIndex = s.LastIndexOfAny(new[] { ' ', ',', '.', '"', '\'', '}' });
             if (lastIndexOfStartBracket > lastSeparatorIndex)
             {
