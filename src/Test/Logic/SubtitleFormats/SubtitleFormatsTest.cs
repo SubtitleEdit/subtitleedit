@@ -835,7 +835,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
             var subtitle = new Subtitle();
             subtitle.Paragraphs.Add(new Paragraph("<i>Italic</i>", 1000, 5000));
             string text = target.ToText(subtitle, "title");
-            Assert.IsTrue(text.Contains("<dcst:Font Italic=\"yes\">Italic</dcst:Font>"));
+            Assert.IsTrue(text.Contains("<Font Italic=\"yes\">Italic</Font>"));
         }
 
         [TestMethod]
@@ -845,7 +845,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
             var subtitle = new Subtitle();
             subtitle.Paragraphs.Add(new Paragraph("<font color=\"#ff0000\"><i>Red</i></font>", 1000, 5000));
             string text = target.ToText(subtitle, "title");
-            Assert.IsTrue(text.Contains("<dcst:Font Italic=\"yes\" Color=\"FFFF0000\">Red</dcst:Font>"));
+            Assert.IsTrue(text.Contains("<Font Italic=\"yes\" Color=\"FFFF0000\">Red</Font>"));
         }
 
         #endregion DCinema smpte (.xml)
