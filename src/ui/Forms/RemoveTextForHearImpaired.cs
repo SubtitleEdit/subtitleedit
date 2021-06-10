@@ -22,6 +22,7 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly List<Paragraph> _unchecked = new List<Paragraph>();
         private readonly List<Paragraph> _edited = new List<Paragraph>();
         private readonly List<Paragraph> _editedOld = new List<Paragraph>();
+        private static readonly Color _listBackMarkColor = Configuration.Settings.General.UseDarkTheme? Color.PaleVioletRed : Color.PeachPuff;
 
         public FormRemoveTextForHearImpaired(Main main, Subtitle subtitle)
         {
@@ -145,7 +146,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_removeTextForHiLib.Warnings != null && _removeTextForHiLib.Warnings.Contains(_removeTextForHiLib.WarningIndex))
             {
                 item.UseItemStyleForSubItems = true;
-                item.BackColor = Color.PeachPuff;
+                item.BackColor = _listBackMarkColor;
             }
             item.SubItems.Add(p.Number.ToString(CultureInfo.InvariantCulture));
             item.SubItems.Add(UiUtil.GetListViewTextFromString(p.Text));
