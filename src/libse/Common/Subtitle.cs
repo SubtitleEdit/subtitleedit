@@ -398,7 +398,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public void AdjustDisplayTimeUsingSeconds(double seconds, List<int> selectedIndexes)
         {
-            if (Math.Abs(seconds) < 0.01)
+            if (Math.Abs(seconds) < 0.001)
             {
                 return;
             }
