@@ -112,6 +112,7 @@ DisableProgramGroupPage=auto
 CloseApplications=true
 SetupMutex='subtitle_edit_setup_mutex'
 ArchitecturesInstallIn64BitMode=x64
+WizardStyle=modern
 
 [Languages]
 Name: "en"; MessagesFile: "compiler:Default.isl"
@@ -153,9 +154,9 @@ Name: "zhTW"; MessagesFile: "Languages\ChineseTraditional.isl"
 #include "Custom_Messages.iss"
 
 [Messages]
-BeveledLabel=Subtitle Edit {#app_ver} by Nikse
+;BeveledLabel=Subtitle Edit {#app_ver} by Nikse
 SetupAppTitle=Setup - Subtitle Edit
-SetupWindowTitle=Setup - Subtitle Edit
+SetupWindowTitle=Setup - Subtitle Edit {#app_ver}
 
 
 [Types]
