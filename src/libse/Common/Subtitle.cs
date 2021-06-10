@@ -182,7 +182,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// Check "OriginalEncoding" to see what text encoding was used.
         /// </summary>
         /// <param name="fileName">File name of subtitle to load.</param>
-        /// <param name="formatsToLookfor">List of subtitle formats to use.</param>
+        /// <param name="formatsToLookFor">List of subtitle formats to use.</param>
         /// <returns>Loaded subtitle, null if file is not matched by any format in formatsToLookFor.</returns>
         public static Subtitle Parse(string fileName, List<SubtitleFormat> formatsToLookFor)
         {
