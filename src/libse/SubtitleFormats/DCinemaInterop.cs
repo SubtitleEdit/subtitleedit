@@ -763,7 +763,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
 
                     string text;
-                    if (textLines.All(p => p.VerticalAlignment.ToLowerInvariant() == "bottom"))
+                    if (textLines.All(p => string.Equals(p.VerticalAlignment, "bottom", StringComparison.InvariantCultureIgnoreCase)))
                     {
                         text = string.Join(Environment.NewLine, textLines.OrderByDescending(p => p.GetVerticalPositionAsNumber()).Select(p => p.Text));
                     }
