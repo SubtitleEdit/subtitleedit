@@ -2109,6 +2109,7 @@ $HorzAlign          =   Center
         public string MainTextBoxUnbreak { get; set; }
         public string MainTextBoxUnbreakNoSpace { get; set; }
         public string MainTextBoxAssaIntellisense { get; set; }
+        public string MainTextBoxAssaRemoveTag { get; set; }
         public string MainWaveformInsertAtCurrentPosition { get; set; }
         public string MainInsertBefore { get; set; }
         public string MainMergeDialog { get; set; }
@@ -7970,6 +7971,12 @@ $HorzAlign          =   Center
                     shortcuts.MainTextBoxAssaIntellisense = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainTextBoxAssaRemoveTag");
+                if (subNode != null)
+                {
+                    shortcuts.MainTextBoxAssaRemoveTag = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainWaveformInsertAtCurrentPosition");
                 if (subNode != null)
                 {
@@ -9207,6 +9214,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainTextBoxUnbreak", shortcuts.MainTextBoxUnbreak);
             textWriter.WriteElementString("MainTextBoxUnbrekNoSpace", shortcuts.MainTextBoxUnbreakNoSpace);
             textWriter.WriteElementString("MainTextBoxAssaIntellisense", shortcuts.MainTextBoxAssaIntellisense);
+            textWriter.WriteElementString("MainTextBoxAssaRemoveTag", shortcuts.MainTextBoxAssaRemoveTag);
             textWriter.WriteElementString("MainWaveformInsertAtCurrentPosition", shortcuts.MainWaveformInsertAtCurrentPosition);
             textWriter.WriteElementString("MainInsertBefore", shortcuts.MainInsertBefore);
             textWriter.WriteElementString("MainMergeDialog", shortcuts.MainMergeDialog);
