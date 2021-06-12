@@ -141,48 +141,137 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static void CompleteItem(SETextBox tb, IntellisenseItem item)
         {
-            var textToPaste = item.Value.Remove(0, item.TypedWord.Length);
+            tb.SuspendLayout();
 
-            var deleteCount = 0;
-            if (tb.SelectionLength == 0 && item.ActiveTagAtCursor.Length > 0 && !(item.ActiveTagAtCursor == "\\" && item.TypedWord.Length == 0))
+            // remove old tag if any
+            if (!string.IsNullOrEmpty(item.ActiveTagAtCursor) && tb.SelectionLength == 0)
             {
-                deleteCount = item.ActiveTagAtCursor.Length - item.TypedWord.Length + 1;
+                RemoveTagAtCursor(tb);
             }
 
-            var originalStart = tb.SelectionStart;
-            tb.SelectedText = textToPaste;
-
-            if (deleteCount > 0)
+            // insert new tag
+            var oldStart = tb.SelectionStart;
+            if (item.TypedWord.Length > 0)
             {
-                var start = tb.SelectionStart;
-                tb.SelectionLength = deleteCount;
-                tb.Text = tb.Text.Remove(start, deleteCount);
-                tb.SelectionStart = start;
+                tb.SelectedText = item.Value.Remove(0, item.TypedWord.Length);
             }
-
-            if (originalStart > 0)
+            else
             {
-                var start = tb.SelectionStart;
-                var before = tb.Text.Substring(0, originalStart);
-                var end = originalStart + textToPaste.Length;
-                if (end < tb.Text.Length && tb.Text[end] == '}')
-                {
-                    tb.Text = tb.Text.Remove(end, 1);
-                }
-
-                if (before.EndsWith('}'))
-                {
-                    tb.Text = tb.Text.Remove(originalStart - 1, 2);
-                    tb.SelectionStart = start - 2;
-                }
-                else if (before.EndsWith('\\') && textToPaste.StartsWith("{\\", StringComparison.Ordinal))
-                {
-                    tb.Text = tb.Text.Remove(originalStart - 1, 2);
-                    tb.SelectionStart = start - 2;
-                }
+                tb.SelectedText = item.Value;
             }
+            var newStart = oldStart + item.Value.Length;
+
+            // merge tags before/after
+            var subtract = MergeTagAtCursor(tb, oldStart);
+            subtract += MergeTagAtCursor(tb, newStart);
+            tb.SelectionStart = newStart - subtract - item.TypedWord.Length;
+
+            tb.ResumeLayout();
 
             AddUsedTag(item.Value);
+        }
+
+        public static void RemoveTagAtCursor(SETextBox tb)
+        {
+            if (tb.SelectionStart == 0 || tb.SelectedText.Length > 0)
+            {
+                return;
+            }
+
+            var before = tb.Text.Substring(0, tb.SelectionStart);
+            var after = tb.Text.Remove(0, tb.SelectionStart);
+
+            // no tag?
+            var lastIndexOfEndBracket = before.LastIndexOf('}');
+            var lastIndexOfBackslash = before.LastIndexOf('\\');
+            if (lastIndexOfEndBracket > lastIndexOfBackslash ||
+                lastIndexOfBackslash == -1 && lastIndexOfEndBracket == -1 && !before.EndsWith('{') && after.StartsWith('\\'))
+            {
+                return;
+            }
+
+
+            var start = lastIndexOfBackslash;
+            var extra = 0;
+            if (start == -1) // cursor right after "{"
+            {
+                if (tb.Text.Length > 2)
+                {
+                    var nextEndTagIndex = tb.Text.IndexOfAny(new[] { '\\', '}' }, 2);
+                    if (nextEndTagIndex <= 0 || tb.Text[nextEndTagIndex] != '\\')
+                    {
+                        start = 0;
+                        extra = 1;
+                    }
+                    else
+                    {
+                        start = 1;
+                    }
+                }
+                else
+                {
+                    start = 0;
+                    extra = 1;
+                }
+            }
+            else if (start > 0 && tb.Text[start - 1] == '{')
+            {
+                var nextEndTagIndex = tb.Text.IndexOfAny(new[] { '\\', '}' }, start + 1);
+                if (nextEndTagIndex <= 0 || tb.Text[nextEndTagIndex] != '\\')
+                {
+                    start--;
+                    extra = 1;
+                }
+            }
+
+            var startLetter = tb.Text[start];
+            if (start + 1 > tb.Text.Length)
+            {
+                return;
+            }
+
+            var endTagIndex = tb.Text.IndexOfAny(new[] { '\\', '}' }, start + 1 + extra);
+            if (endTagIndex > 0)
+            {
+                if (startLetter == '\\')
+                {
+                    tb.Text = tb.Text.Remove(start, endTagIndex - start);
+                }
+                else
+                {
+                    tb.Text = tb.Text.Remove(start, endTagIndex - start + 1);
+                }
+
+                tb.SelectionStart = start; // position cursor
+            }
+        }
+
+        public static int MergeTagAtCursor(SETextBox tb, int cursorPosition)
+        {
+            if (cursorPosition >= tb.Text.Length)
+            {
+                return 0;
+            }
+
+            if (cursorPosition > 0 && tb.Text[cursorPosition - 1] == '}' && tb.Text[cursorPosition] == '{')
+            {
+                tb.Text = tb.Text.Remove(cursorPosition - 1, 2);
+                return 2;
+            }
+
+            if (cursorPosition > 0 && tb.Text[cursorPosition - 1] == '\\' && tb.Text[cursorPosition] == '{')
+            {
+                tb.Text = tb.Text.Remove(cursorPosition - 1, 2);
+                return 2;
+            }
+
+            if (cursorPosition > 1 && tb.Text[cursorPosition - 2] == '}' && tb.Text[cursorPosition - 1] == '{')
+            {
+                tb.Text = tb.Text.Remove(cursorPosition - 2, 2);
+                return 2;
+            }
+
+            return 0;
         }
 
         public static bool AutoCompleteTextBox(SETextBox textBox, ListBox listBox)
@@ -327,6 +416,11 @@ namespace Nikse.SubtitleEdit.Logic
         {
             if (s.TrimEnd().EndsWith('\\') || s.TrimEnd().EndsWith('\\'))
             {
+                if (s.EndsWith("{\\", StringComparison.OrdinalIgnoreCase))
+                {
+                    return "{\\";
+                }
+
                 return string.Empty;
             }
 
@@ -337,7 +431,7 @@ namespace Nikse.SubtitleEdit.Logic
                 return s.Remove(0, lastIndexOfStartBracket);
             }
 
-            if (lastSeparatorIndex >= 0)
+            if (lastSeparatorIndex > 0)
             {
                 s = s.Remove(0, lastSeparatorIndex - 1);
                 if (Keywords.Any(p => p.Value.StartsWith(s, StringComparison.OrdinalIgnoreCase)))
