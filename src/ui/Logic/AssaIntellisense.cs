@@ -147,6 +147,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (!string.IsNullOrEmpty(item.ActiveTagAtCursor) && tb.SelectionLength == 0)
             {
                 RemoveTagAtCursor(tb);
+                item.TypedWord = string.Empty;
             }
 
             // insert new tag
