@@ -27544,6 +27544,7 @@ namespace Nikse.SubtitleEdit.Forms
                     ResetSubtitle();
                     _subtitle.Paragraphs.Clear();
                     _subtitle.Paragraphs.AddRange(joinSubtitles.JoinedSubtitle.Paragraphs);
+                    _subtitle.Header = joinSubtitles.JoinedSubtitle.Header;
                     SetCurrentFormat(joinSubtitles.JoinedFormat);
                     SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
                     SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
