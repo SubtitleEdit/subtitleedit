@@ -6505,6 +6505,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/MainTextBoxAssaIntellisense":
                     language.Settings.MainTextBoxAssaIntellisense = reader.Value;
                     break;
+                case "Settings/MainTextBoxAssaRemoveTag":
+                    language.Settings.MainTextBoxAssaRemoveTag = reader.Value;
+                    break;
                 case "Settings/MainFileSaveAll":
                     language.Settings.MainFileSaveAll = reader.Value;
                     break;

@@ -109,6 +109,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
     public class ToolsSettings
     {
+        public List<AssaTemplateItem> AssaTagTemplates { get; set; }
         public int StartSceneIndex { get; set; }
         public int EndSceneIndex { get; set; }
         public int VerifyPlaySeconds { get; set; }
@@ -331,6 +332,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public ToolsSettings()
         {
+            AssaTagTemplates = new List<AssaTemplateItem>();
             StartSceneIndex = 1;
             EndSceneIndex = 1;
             VerifyPlaySeconds = 2;
@@ -3752,6 +3754,27 @@ $HorzAlign          =   Center
 
             // Tools
             node = doc.DocumentElement.SelectSingleNode("Tools");
+
+            // ASSA templates (by user)
+            int assaTagTemplateCount = 0;
+            foreach (XmlNode listNode in node.SelectNodes("AssTagTemplates/Template"))
+            {
+                if (assaTagTemplateCount == 0)
+                {
+                    settings.Tools.AssaTagTemplates = new List<AssaTemplateItem>();
+                }
+
+                var template = new AssaTemplateItem();
+                template.Tag = listNode.SelectSingleNode("Tag")?.InnerText;
+                template.Hint = listNode.SelectSingleNode("Hint")?.InnerText;
+                if (!string.IsNullOrEmpty(template.Tag))
+                {
+                    settings.Tools.AssaTagTemplates.Add(template);
+                }
+
+                assaTagTemplateCount++;
+            }
+
             subNode = node.SelectSingleNode("StartSceneIndex");
             if (subNode != null)
             {
@@ -8429,6 +8452,17 @@ $HorzAlign          =   Center
                 textWriter.WriteEndElement();
 
                 textWriter.WriteStartElement("Tools", string.Empty);
+
+                textWriter.WriteStartElement("AssTagTemplates", string.Empty);
+                foreach (var template in settings.Tools.AssaTagTemplates)
+                {
+                    textWriter.WriteStartElement("Template");
+                    textWriter.WriteElementString("Tag", template.Tag);
+                    textWriter.WriteElementString("Hint", template.Hint);
+                    textWriter.WriteEndElement();
+                }
+                textWriter.WriteEndElement();
+
                 textWriter.WriteElementString("StartSceneIndex", settings.Tools.StartSceneIndex.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("EndSceneIndex", settings.Tools.EndSceneIndex.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VerifyPlaySeconds", settings.Tools.VerifyPlaySeconds.ToString(CultureInfo.InvariantCulture));

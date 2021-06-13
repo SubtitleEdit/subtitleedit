@@ -9792,7 +9792,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (_shortcuts.MainTextBoxAssaRemoveTag == e.KeyData && IsAssa())
             {
                 MakeHistoryForUndo("text change"); //TODO: fix language tag
-                AssaIntellisense.RemoveTagAtCursor(textBoxListViewText);
+                AssaTagHelper.RemoveTagAtCursor(textBoxListViewText);
                 e.SuppressKeyPress = true;
                 return;
             }
@@ -9989,11 +9989,11 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (args.KeyCode == Keys.Tab && intellisenseListBox.SelectedIndex >= 0)
                     {
-                        var item = intellisenseListBox.Items[intellisenseListBox.SelectedIndex] as AssaIntellisense.IntellisenseItem;
+                        var item = intellisenseListBox.Items[intellisenseListBox.SelectedIndex] as AssaTagHelper.IntellisenseItem;
                         if (item != null)
                         {
                             MakeHistoryForUndo(string.Format(_language.BeforeAddingTagX, item.Value));
-                            AssaIntellisense.CompleteItem(tb, item);
+                            AssaTagHelper.CompleteItem(tb, item);
                             ShowStatus(string.Format(_language.TagXAdded, item.Value));
                         }
 
@@ -10005,11 +10005,11 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (args.KeyCode == Keys.Enter && intellisenseListBox.SelectedIndex >= 0)
                     {
-                        var item = intellisenseListBox.Items[intellisenseListBox.SelectedIndex] as AssaIntellisense.IntellisenseItem;
+                        var item = intellisenseListBox.Items[intellisenseListBox.SelectedIndex] as AssaTagHelper.IntellisenseItem;
                         if (item != null)
                         {
                             MakeHistoryForUndo(string.Format(_language.BeforeAddingTagX, item.Value));
-                            AssaIntellisense.CompleteItem(tb, item);
+                            AssaTagHelper.CompleteItem(tb, item);
                             ShowStatus(string.Format(_language.TagXAdded, item.Value));
                         }
 
@@ -10029,11 +10029,11 @@ namespace Nikse.SubtitleEdit.Forms
                     int index = intellisenseListBox.IndexFromPoint((args as MouseEventArgs).Location);
                     if (index != ListBox.NoMatches)
                     {
-                        var item = intellisenseListBox.Items[index] as AssaIntellisense.IntellisenseItem;
+                        var item = intellisenseListBox.Items[index] as AssaTagHelper.IntellisenseItem;
                         if (item != null)
                         {
                             MakeHistoryForUndo(string.Format(_language.BeforeAddingTagX, item.Value));
-                            AssaIntellisense.CompleteItem(tb, item);
+                            AssaTagHelper.CompleteItem(tb, item);
                             ShowStatus(string.Format(_language.TagXAdded, item.Value));
                         }
 
@@ -10058,14 +10058,14 @@ namespace Nikse.SubtitleEdit.Forms
                         tb.Focus();
                         SendKeys.SendWait(x);
                         args.Handled = true;
-                        AssaIntellisense.AutoCompleteTextBox(tb, intellisenseListBox);
+                        AssaTagHelper.AutoCompleteTextBox(tb, intellisenseListBox);
                         intellisenseListBox.Focus();
                     }
                 };
                 intellisenseListBox.LostFocus += (o, args) => intellisenseListBox.Hide();
             }
 
-            if (AssaIntellisense.AutoCompleteTextBox(tb, intellisenseListBox))
+            if (AssaTagHelper.AutoCompleteTextBox(tb, intellisenseListBox))
             {
                 var p = GetPositionInForm(tb);
                 intellisenseListBox.Location = new Point(p.X + 10, p.Y + 40); //TODO: improve position
@@ -25584,7 +25584,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (_shortcuts.MainTextBoxAssaRemoveTag == e.KeyData && IsAssa())
             {
                 MakeHistoryForUndo("text change"); //TODO: fix language tag
-                AssaIntellisense.RemoveTagAtCursor(textBoxListViewTextOriginal);
+                AssaTagHelper.RemoveTagAtCursor(textBoxListViewTextOriginal);
                 e.SuppressKeyPress = true;
                 return;
             }
