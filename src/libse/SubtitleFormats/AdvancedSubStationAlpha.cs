@@ -284,6 +284,64 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
 [Events]");
         }
 
+        public static string GetHeaderAndStylesFromAdvancedSubStationAlpha(string header, List<SsaStyle> styles)
+        {
+            var scriptInfo = string.Empty;
+            if (header != null &&
+                header.Contains("[Script Info]") &&
+                header.Contains("ScriptType: v4.00+"))
+            {
+                var sb = new StringBuilder();
+                var scriptInfoOn = false;
+                foreach (var line in header.SplitToLines())
+                {
+                    if (line.RemoveChar(' ').Contains("Styles]", StringComparison.OrdinalIgnoreCase))
+                    {
+                        break;
+                    }
+
+                    if (line.Equals("[Script Info]", StringComparison.OrdinalIgnoreCase))
+                    {
+                        scriptInfoOn = true;
+                    }
+
+                    if (scriptInfoOn)
+                    {
+                        if (line.StartsWith("ScriptType:", StringComparison.OrdinalIgnoreCase))
+                        {
+                            sb.AppendLine("ScriptType: v4.00+");
+                        }
+                        else if (line.Equals("; This is a Sub Station Alpha v4 script.", StringComparison.OrdinalIgnoreCase))
+                        {
+                            sb.AppendLine("; This is an Advanced Sub Station Alpha v4+ script.");
+                        }
+                        else
+                        {
+                            sb.AppendLine(line);
+                        }
+                    }
+                }
+                scriptInfo = sb.ToString();
+            }
+
+            var style = new StringBuilder();
+            foreach (var ssaStyle in styles)
+            {
+                style.AppendLine(ssaStyle.ToRawAss());
+            }
+
+            if (string.IsNullOrEmpty(scriptInfo) || style.Length == 0)
+            {
+                return DefaultHeader;
+            }
+
+            return string.Format($@"{scriptInfo.Trim() + Environment.NewLine}
+[V4+ Styles]
+{SsaStyle.DefaultAssStyleFormat}
+{style.ToString().Trim() + Environment.NewLine}
+[Events]");
+        }
+
         private static void LoadStylesFromSubstationAlpha(Subtitle subtitle, string title, string header, string headerNoStyles, StringBuilder sb)
         {
             try
@@ -640,6 +698,84 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 sb.AppendFormat(header, title).AppendLine();
             }
         }
+
+        public static string GetTag(string tagName, string section, string header)
+        {
+            var sectionOn = false;
+            foreach (var line in header.SplitToLines())
+            {
+                var s = line.Trim();
+                if (s.StartsWith('['))
+                {
+                    if (s.Equals(section, StringComparison.OrdinalIgnoreCase))
+                    {
+                        sectionOn = true;
+                    }
+                }
+                else if (sectionOn &&
+                         s.StartsWith(tagName, StringComparison.OrdinalIgnoreCase) &&
+                         s.RemoveChar(' ').StartsWith(tagName + ":", StringComparison.OrdinalIgnoreCase))
+                {
+                    return s;
+                }
+            }
+
+            return null;
+        }
+
+        public static string AddTagToHeader(string tagName, string tagAndValue, string section, string header)
+        {
+            var sectionOn = false;
+            var sb = new StringBuilder();
+            var added = false;
+            foreach (var line in header.SplitToLines())
+            {
+                var s = line.Trim();
+                if (s.StartsWith('['))
+                {
+                    if (s.Equals(section, StringComparison.OrdinalIgnoreCase))
+                    {
+                        sectionOn = true;
+                    }
+                    else if (sectionOn)
+                    {
+                        if (!added)
+                        {
+                            sb.AppendLine(tagAndValue);
+                            sb.AppendLine();
+                            added = true;
+                        }
+
+                        sectionOn = false;
+                    }
+                }
+                else if (sectionOn && !added &&
+                         s.StartsWith(tagName, StringComparison.OrdinalIgnoreCase) &&
+                         s.RemoveChar(' ').StartsWith(tagName + ":", StringComparison.OrdinalIgnoreCase))
+                {
+                    sb.AppendLine(tagAndValue);
+                    added = true;
+                    continue;
+                }
+                else if (sectionOn && !added && s.Length == 0)
+                {
+                    sb.AppendLine(tagAndValue);
+                    sb.AppendLine();
+                    added = true;
+                    continue;
+                }
+
+                sb.AppendLine(line);
+            }
+
+            if (!added)
+            {
+                sb.AppendLine(tagAndValue);
+            }
+
+            return sb.ToString();
+        }
+
 
         public static List<string> GetStylesFromHeader(string headerLines)
         {
