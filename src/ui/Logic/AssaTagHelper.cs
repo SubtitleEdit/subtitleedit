@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Forms.Assa;
 
 namespace Nikse.SubtitleEdit.Logic
 {
-    public static class AssaIntellisense
+    public static class AssaTagHelper
     {
         public class IntellisenseItem
         {
@@ -43,6 +44,8 @@ namespace Nikse.SubtitleEdit.Logic
                     return v + "\t " + Hint;
                 }
             }
+
+            public static IntellisenseItem IntellisenseItemEdit = new IntellisenseItem("- Edit custom templates -", string.Empty, false);
         }
 
         private static readonly List<IntellisenseItem> Keywords = new List<IntellisenseItem>
@@ -141,6 +144,17 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static void CompleteItem(SETextBox tb, IntellisenseItem item)
         {
+            if (item == IntellisenseItem.IntellisenseItemEdit)
+            {
+                using (var form = new AssaTagTemplate())
+                {
+                    form.ShowDialog();
+                }
+
+                return;
+            }
+
+
             tb.SuspendLayout();
 
             // remove old tag if any
@@ -280,7 +294,10 @@ namespace Nikse.SubtitleEdit.Logic
             var textBeforeCursor = string.IsNullOrEmpty(textBox.Text) ? string.Empty : textBox.Text.Substring(0, textBox.SelectionStart);
             var activeTagAtCursor = GetInsideTag(textBox, textBeforeCursor);
             var activeTagToCursor = GetLastString(textBeforeCursor) ?? string.Empty;
-            var keywords = (activeTagToCursor.StartsWith('\\') ? Keywords.Select(p => new IntellisenseItem(p.Value.TrimStart('{'), p.Hint, p.AllowInTransformations)) : Keywords.Select(p => p)).ToList();
+
+            var keywords = Configuration.Settings.Tools.AssaTagTemplates.Select(p => new IntellisenseItem(p.Tag, p.Hint, false)).ToList();
+            keywords.AddRange(Keywords);
+            keywords = (activeTagToCursor.StartsWith('\\') ? keywords.Select(p => new IntellisenseItem(p.Value.TrimStart('{'), p.Hint, p.AllowInTransformations)) : keywords.Select(p => p)).ToList();
 
             if (textBeforeCursor.EndsWith("\\t(", StringComparison.Ordinal))
             {
@@ -335,6 +352,9 @@ namespace Nikse.SubtitleEdit.Logic
                     listBox.SelectedIndex = filteredList.IndexOf(item);
                 }
             }
+
+            IntellisenseItem.IntellisenseItemEdit.Font = textBox.Font;
+            listBox.Items.Add(IntellisenseItem.IntellisenseItemEdit);
 
             if (Configuration.Settings.General.UseDarkTheme)
             {

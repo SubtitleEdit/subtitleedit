@@ -2364,7 +2364,8 @@ can edit in same subtitle file (collaboration)</Information>
     <MainTextBoxAutoBreakFromPosAndGoToNext>Break at first space from cursor position and go to next</MainTextBoxAutoBreakFromPosAndGoToNext>
     <MainTextBoxUnbreak>Unbreak text</MainTextBoxUnbreak>
     <MainTextBoxUnbreakNoSpace>Unbreak without space (CJK)</MainTextBoxUnbreakNoSpace>
-    <MainTextBoxAssaIntellisense>Show ASSA intellisense</MainTextBoxAssaIntellisense>
+    <MainTextBoxAssaIntellisense>Show ASSA tag helper</MainTextBoxAssaIntellisense>
+    <MainTextBoxAssaRemoveTag>Remove ASSA tag at cursor</MainTextBoxAssaRemoveTag>
     <MainFileSaveAll>Save all</MainFileSaveAll>
     <Miscellaneous>Misc.</Miscellaneous>
     <CpsIncludesSpace>Chars/sec (CPS) includes spaces</CpsIncludesSpace>

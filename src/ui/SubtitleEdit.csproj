@@ -115,6 +115,12 @@
     <Compile Include="Forms\AlignmentPickerJapanese.Designer.cs">
       <DependentUpon>AlignmentPickerJapanese.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Assa\AssaTagTemplate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Assa\AssaTagTemplate.Designer.cs">
+      <DependentUpon>AssaTagTemplate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\BatchConvertMkvEnding.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1135,7 +1141,7 @@
     <Compile Include="Forms\YouTubeAnnotationsImport.Designer.cs">
       <DependentUpon>YouTubeAnnotationsImport.cs</DependentUpon>
     </Compile>
-    <Compile Include="Logic\AssaIntellisense.cs" />
+    <Compile Include="Logic\AssaTagHelper.cs" />
     <Compile Include="Logic\ColorChooser\ColorChangedEventArgs.cs" />
     <Compile Include="Logic\ColorChooser\ColorHandler.cs" />
     <Compile Include="Logic\ColorChooser\ColorWheel.cs" />
@@ -1233,6 +1239,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AlignmentPickerJapanese.resx">
       <DependentUpon>AlignmentPickerJapanese.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Assa\AssaTagTemplate.resx">
+      <DependentUpon>AssaTagTemplate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BatchConvertMkvEnding.resx">
       <DependentUpon>BatchConvertMkvEnding.cs</DependentUpon>
