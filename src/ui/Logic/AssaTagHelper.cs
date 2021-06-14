@@ -310,12 +310,12 @@ namespace Nikse.SubtitleEdit.Logic
 
             var keywords = Configuration.Settings.Tools.AssaTagTemplates.Select(p => new IntellisenseItem(p.Tag, p.Hint, false)).ToList();
             keywords.AddRange(Keywords);
-            keywords = (activeTagToCursor.StartsWith('\\') ? keywords.Select(p => new IntellisenseItem(p.Value.TrimStart('{'), p.Hint, p.AllowInTransformations)) : keywords.Select(p => p)).ToList();
+            keywords = (activeTagToCursor.StartsWith('\\') ? keywords.Select(p => new IntellisenseItem(p.Value.TrimStart('{'), p.Hint, p.AllowInTransformations, p.HelpLink)) : keywords.Select(p => p)).ToList();
 
             if (textBeforeCursor.EndsWith("\\t(", StringComparison.Ordinal))
             {
                 // use smaller list inside transformation
-                keywords = Keywords.Where(p => p.AllowInTransformations).Select(p => new IntellisenseItem(p.Value.TrimStart('{'), p.Hint, p.AllowInTransformations)).ToList();
+                keywords = Keywords.Where(p => p.AllowInTransformations).Select(p => new IntellisenseItem(p.Value.TrimStart('{'), p.Hint, p.AllowInTransformations, p.HelpLink)).ToList();
                 activeTagToCursor = string.Empty;
             }
 
@@ -328,7 +328,7 @@ namespace Nikse.SubtitleEdit.Logic
                 // continuing ass tag, remove "{\" + "}"
                 activeTagToCursor = string.Empty;
                 filteredList = keywords
-                    .Select(p => new IntellisenseItem(p.Value.Replace("{\\", string.Empty).RemoveChar('}'), p.Hint, p.AllowInTransformations))
+                    .Select(p => new IntellisenseItem(p.Value.Replace("{\\", string.Empty).RemoveChar('}'), p.Hint, p.AllowInTransformations, p.HelpLink))
                     .ToList();
             }
 
