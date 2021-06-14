@@ -19,12 +19,14 @@ namespace Nikse.SubtitleEdit.Logic
             public string TypedWord { get; set; }
             public string ActiveTagAtCursor { get; set; }
             public Font Font { get; set; }
+            public string HelpLink { get; set; }
 
-            public IntellisenseItem(string value, string hint, bool allowInTransformations)
+            public IntellisenseItem(string value, string hint, bool allowInTransformations, string helpLink = null)
             {
                 Value = value;
                 Hint = hint;
                 AllowInTransformations = allowInTransformations;
+                HelpLink = helpLink;
             }
 
             public override string ToString()
@@ -50,17 +52,17 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static readonly List<IntellisenseItem> Keywords = new List<IntellisenseItem>
         {
-            new IntellisenseItem("{\\i1}",  "Italic on", false),
-            new IntellisenseItem("{\\i0}",  "Italic off", false),
+            new IntellisenseItem("{\\i1}",  "Italic on", false, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#italic"),
+            new IntellisenseItem("{\\i0}",  "Italic off", false,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#italic"),
 
-            new IntellisenseItem("{\\b1}",  "Bold on", false),
-            new IntellisenseItem("{\\b0}",  "Bold off", false),
+            new IntellisenseItem("{\\b1}",  "Bold on", false,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#bold"),
+            new IntellisenseItem("{\\b0}",  "Bold off", false,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#bold"),
 
-            new IntellisenseItem("{\\u1}",  "Underline on", false),
-            new IntellisenseItem("{\\u0}",  "Underline off", false),
+            new IntellisenseItem("{\\u1}",  "Underline on", false,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#underline"),
+            new IntellisenseItem("{\\u0}",  "Underline off", false,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#underline"),
 
-            new IntellisenseItem("{\\s1}",  "Strikeout on", false),
-            new IntellisenseItem("{\\s0}",  "Strikeout off", false),
+            new IntellisenseItem("{\\s1}",  "Strikeout on", false,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#strikeout"),
+            new IntellisenseItem("{\\s0}",  "Strikeout off", false,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#strikeout"),
 
             new IntellisenseItem("{\\mov(x1,y1,x2,y2,start,end)}",  "Move", false),
             new IntellisenseItem("{\\pos(x,y)}",  "Set position", false),
@@ -172,13 +174,20 @@ namespace Nikse.SubtitleEdit.Logic
             }
             else
             {
-                tb.SelectedText = item.Value;
+                if (tb.SelectionStart > 0 && tb.Text[tb.SelectionStart-1] == '}' && item.Value.StartsWith('\\'))
+                {
+                    tb.SelectedText = "{" + item.Value;
+                }
+                else
+                {
+                    tb.SelectedText = item.Value;
+                }
             }
             var newStart = oldStart + item.Value.Length;
 
             // merge tags before/after
-            var subtract = MergeTagAtCursor(tb, oldStart);
-            subtract += MergeTagAtCursor(tb, newStart);
+            var subtract = MergeTagAtCursor(tb, oldStart, true);
+            subtract += MergeTagAtCursor(tb, newStart, false);
             tb.SelectionStart = newStart - subtract - item.TypedWord.Length;
 
             tb.ResumeLayout();
@@ -257,11 +266,16 @@ namespace Nikse.SubtitleEdit.Logic
                     tb.Text = tb.Text.Remove(start, endTagIndex - start + 1);
                 }
 
+                if (tb.Text[start] == '}')
+                {
+                    start++;
+                }
+
                 tb.SelectionStart = start; // position cursor
             }
         }
 
-        public static int MergeTagAtCursor(SETextBox tb, int cursorPosition)
+        public static int MergeTagAtCursor(SETextBox tb, int cursorPosition, bool before)
         {
             if (cursorPosition >= tb.Text.Length)
             {
@@ -271,7 +285,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (cursorPosition > 0 && tb.Text[cursorPosition - 1] == '}' && tb.Text[cursorPosition] == '{')
             {
                 tb.Text = tb.Text.Remove(cursorPosition - 1, 2);
-                return 2;
+                return before ? 2 : 0;
             }
 
             if (cursorPosition > 0 && tb.Text[cursorPosition - 1] == '\\' && tb.Text[cursorPosition] == '{')
