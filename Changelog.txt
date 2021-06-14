@@ -2,11 +2,11 @@
 
 3.6.2 BETA (xth July 2021)
 * NEW:
-   * Keep ASSA override tags (no html for italic/font etc. in text box)
+   * Keep ASSA override tags (no html for italic/font etc.)
    * ASSA override tag helper (shortcut + custom templates)
    * Shortcuts for video contrast/brightness (mpv only)
    * Waveform "Right-click + Ctrl" will toggle select of a subtitle
-   * Waveform "Right-click + Shift" will select a range subtitles
+   * Waveform "Right-click + Shift" will select a range of subtitles
    * Add a few profiles for Amazon Prime
    * Add new FCE rule: "Remove first dash in non-dialogs" 
 * IMPROVED:
@@ -30,6 +30,7 @@
    * Fix for italic in DCinemaSmpte2007/2010/2014 - thx Marko
    * Minor fix for "Remove text for HI" - thx igenaya
    * Minor fix for split with zero time codes - thx darnn
+   * Try to fix Tools - Join... with different ASSA styles - thx Joe
 
 
 3.6.1 (20th May 2021)
