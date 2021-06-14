@@ -2355,7 +2355,8 @@ Command line: {1} {2}
     <MainTextBoxAutoBreakFromPosAndGoToNext>在指针后的第一个空格处换行，并转到下一行</MainTextBoxAutoBreakFromPosAndGoToNext>
     <MainTextBoxUnbreak>取消换行</MainTextBoxUnbreak>
     <MainTextBoxUnbreakNoSpace>取消断行且不带空格（用于中日韩等语言）</MainTextBoxUnbreakNoSpace>
-    <MainTextBoxAssaIntellisense>显示 ASSA 智能感知</MainTextBoxAssaIntellisense>
+    <MainTextBoxAssaIntellisense>显示ASSA标签助手</MainTextBoxAssaIntellisense>
+    <MainTextBoxAssaRemoveTag>在光标处移除ASSA标签</MainTextBoxAssaRemoveTag>
     <MainFileSaveAll>显示全部</MainFileSaveAll>
     <Miscellaneous>杂项</Miscellaneous>
     <CpsIncludesSpace>字词/秒 （CPS）含空格</CpsIncludesSpace>
