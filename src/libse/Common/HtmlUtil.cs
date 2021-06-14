@@ -892,25 +892,31 @@ namespace Nikse.SubtitleEdit.Core.Common
             if (assa)
             {
                 var onOffTags = new List<string> { "i", "b", "u", "s", "be" };
-                if (wholeLine)
+                if (onOffTags.Contains(tag))
                 {
-                    onOffTags.Clear();
-                }
-
-                if (text.Contains("\\" + tag))
-                {
-                    if (onOffTags.Contains(tag))
+                    if (text.Contains($"\\{tag}1"))
                     {
                         text = text.Replace($"{{\\{tag}1}}", string.Empty);
                         text = text.Replace($"{{\\{tag}0}}", string.Empty);
+                        text = text.Replace($"\\{tag}1", string.Empty);
+                        text = text.Replace($"\\{tag}0", string.Empty);
                     }
-                    text = text.Replace($"{{\\{tag}1}}", string.Empty);
-
-                    text = text.Replace($"\\{tag}1", string.Empty);
+                    else
+                    {
+                        text = wholeLine ? $"{{\\{tag}1}}{text}" : $"{{\\{tag}1}}{text}{{\\{tag}0}}";
+                    }
                 }
                 else
                 {
-                    text = onOffTags.Contains(tag) || !wholeLine ? $"{{\\{tag}1}}{text}{{\\{tag}0}}" : $"{{\\{tag}1}}{text}";
+                    if (text.Contains($"\\{tag}"))
+                    {
+                        text = text.Replace($"{{\\{tag}}}", string.Empty);
+                        text = text.Replace($"\\{tag}", string.Empty);
+                    }
+                    else
+                    {
+                        text = $"{{\\{tag}}}{text}";
+                    }
                 }
 
                 return text;
