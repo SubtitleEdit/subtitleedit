@@ -103,7 +103,6 @@ namespace Nikse.SubtitleEdit.Forms
             string header = null;
             SubtitleFormat lastFormat = null;
             var subtitles = new List<Subtitle>();
-            var isAssa = false;
             for (int k = 0; k < _fileNamesToJoin.Count; k++)
             {
                 var fileName = _fileNamesToJoin[k];
