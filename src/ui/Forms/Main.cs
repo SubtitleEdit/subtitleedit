@@ -6781,6 +6781,26 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void HelpToolStripMenuItem1Click(object sender, EventArgs e)
         {
+            if (_intellisenceList != null && _intellisenceList.Focused)
+            {
+                var item = _intellisenceList.Items[_intellisenceList.SelectedIndex] as AssaTagHelper.IntellisenseItem;
+                if (item != null && !string.IsNullOrEmpty(item.HelpLink))
+                {
+                    UiUtil.OpenUrl(item.HelpLink);
+                }
+                return;
+            }
+
+            if (_intellisenceListOriginal != null && _intellisenceListOriginal.Focused)
+            {
+                var item = _intellisenceListOriginal.Items[_intellisenceListOriginal.SelectedIndex] as AssaTagHelper.IntellisenseItem;
+                if (item != null && !string.IsNullOrEmpty(item.HelpLink))
+                {
+                    UiUtil.OpenUrl(item.HelpLink);
+                }
+                return;
+            }
+
             ReloadFromSourceView();
             UiUtil.ShowHelp(string.Empty);
         }
