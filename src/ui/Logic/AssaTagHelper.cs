@@ -64,34 +64,33 @@ namespace Nikse.SubtitleEdit.Logic
             new IntellisenseItem("{\\s1}",  "Strikeout on", false,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#strikeout"),
             new IntellisenseItem("{\\s0}",  "Strikeout off", false,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#strikeout"),
 
+            new IntellisenseItem("{\\bord<width>}",  "Border", true,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#border"),
+            new IntellisenseItem("{\\xbord<x>}",  "Border width", true,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#border-width"),
+            new IntellisenseItem("{\\ybord<y>}",  "Border height", true,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#border-height"),
+
             new IntellisenseItem("{\\mov(x1,y1,x2,y2,start,end)}",  "Move", false),
             new IntellisenseItem("{\\pos(x,y)}",  "Set position", false),
 
-            new IntellisenseItem("{\\c&Hbbggrr&}",  "Color", true),
-            new IntellisenseItem("{\\2c&Hbbggrr&}",  "Color for outline", true),
-            new IntellisenseItem("{\\3c&Hbbggrr&}",  "Color for opaque box", true),
-            new IntellisenseItem("{\\4c&Hbbggrr&}",  "Color for shadow", true),
+            new IntellisenseItem("{\\c&Hbbggrr&}",  "Color", true,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#primary-color"),
+//            new IntellisenseItem("{\\2c&Hbbggrr&}",  "Color for karaoke", true),
+            new IntellisenseItem("{\\3c&Hbbggrr&}",  "Color for outline/opaque box", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#outline-color"),
+            new IntellisenseItem("{\\4c&Hbbggrr&}",  "Color for shadow", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#shadow-color"),
 
             new IntellisenseItem("{\\fade(a1,a2,a3,t1,t2,t3,t4)}",  "Fade advanced", false),
             new IntellisenseItem("{\\fad(fadein time,fadeout time>}",  "Fade", false),
 
-            new IntellisenseItem("{\\fn<font_name>}",  "Font name", false),
+            new IntellisenseItem("{\\fn<font_name>}",  "Font name", false,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#font-name"),
+            new IntellisenseItem("{\\fs<font_size>}",  "Font size", true,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#font-size"),
 
-            new IntellisenseItem("{\\fs<font_size>}",  "Font size", true),
-
-            new IntellisenseItem("{\\an7}",  "Align top left", false),
-            new IntellisenseItem("{\\an8}",  "Align top center", false),
-            new IntellisenseItem("{\\an9}",  "Align top right", false),
-            new IntellisenseItem("{\\an4}",  "Align center left", false),
-            new IntellisenseItem("{\\an5}",  "Align center middle", false),
-            new IntellisenseItem("{\\an6}",  "Align center right", false),
-            new IntellisenseItem("{\\an1}",  "Align bottom left", false),
-            new IntellisenseItem("{\\an2}",  "Align bottom middle", false),
-            new IntellisenseItem("{\\an3}",  "Align bottom right", false),
-
-            new IntellisenseItem("{\\bord<width>}",  "Border", true),
-            new IntellisenseItem("{\\xbord<x>}",  "Border width", true),
-            new IntellisenseItem("{\\ybord<y>}",  "Border height", true),
+            new IntellisenseItem("{\\an7}",  "Align top left", false,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#aligment"),
+            new IntellisenseItem("{\\an8}",  "Align top center", false,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#aligment"),
+            new IntellisenseItem("{\\an9}",  "Align top right", false,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#aligment"),
+            new IntellisenseItem("{\\an4}",  "Align center left", false,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#aligment"),
+            new IntellisenseItem("{\\an5}",  "Align center middle", false,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#aligment"),
+            new IntellisenseItem("{\\an6}",  "Align center right", false,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#aligment"),
+            new IntellisenseItem("{\\an1}",  "Align bottom left", false,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#aligment"),
+            new IntellisenseItem("{\\an2}",  "Align bottom middle", false,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#aligment"),
+            new IntellisenseItem("{\\an3}",  "Align bottom right", false,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#aligment"),
 
             new IntellisenseItem("{\\shad<depth>}",  "Shadow", true),
             new IntellisenseItem("{\\xshad<x>}",  "Shadow width", true),
