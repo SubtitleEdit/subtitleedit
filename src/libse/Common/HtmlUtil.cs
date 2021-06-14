@@ -904,13 +904,13 @@ namespace Nikse.SubtitleEdit.Core.Common
                         text = text.Replace($"{{\\{tag}1}}", string.Empty);
                         text = text.Replace($"{{\\{tag}0}}", string.Empty);
                     }
-                    text = text.Replace($"{{\\{tag}}}", string.Empty);
+                    text = text.Replace($"{{\\{tag}1}}", string.Empty);
 
-                    text = text.Replace("\\tag", string.Empty);
+                    text = text.Replace($"\\{tag}1", string.Empty);
                 }
                 else
                 {
-                    text = onOffTags.Contains(tag) ? $"{{\\{tag}1}}{text}{{\\{tag}0}}" : $"{{\\{tag}}}{text}";
+                    text = onOffTags.Contains(tag) || !wholeLine ? $"{{\\{tag}1}}{text}{{\\{tag}0}}" : $"{{\\{tag}1}}{text}";
                 }
 
                 return text;
