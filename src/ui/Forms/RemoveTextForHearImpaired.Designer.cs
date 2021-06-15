@@ -285,9 +285,9 @@
             "♫",
             "♪,♫"});
             this.comboBoxRemoveIfTextContains.Location = new System.Drawing.Point(427, 131);
-            this.comboBoxRemoveIfTextContains.MaxLength = 10;
+            this.comboBoxRemoveIfTextContains.MaxLength = 25;
             this.comboBoxRemoveIfTextContains.Name = "comboBoxRemoveIfTextContains";
-            this.comboBoxRemoveIfTextContains.Size = new System.Drawing.Size(100, 21);
+            this.comboBoxRemoveIfTextContains.Size = new System.Drawing.Size(122, 21);
             this.comboBoxRemoveIfTextContains.TabIndex = 15;
             this.comboBoxRemoveIfTextContains.Text = "¶";
             this.comboBoxRemoveIfTextContains.TextChanged += new System.EventHandler(this.CheckBoxRemoveTextBetweenCheckedChanged);
@@ -480,10 +480,10 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Remove text for hearing impaired";
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormRemoveTextForHearImpaired_KeyDown);
             this.Load += new System.EventHandler(this.FormRemoveTextForHearImpaired_Load);
-            this.Resize += new System.EventHandler(this.FormRemoveTextForHearImpaired_Resize);
             this.Shown += new System.EventHandler(this.FormRemoveTextForHearImpaired_Shown);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormRemoveTextForHearImpaired_KeyDown);
+            this.Resize += new System.EventHandler(this.FormRemoveTextForHearImpaired_Resize);
             this.groupBoxLinesFound.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);
             this.groupBoxRemoveTextConditions.ResumeLayout(false);

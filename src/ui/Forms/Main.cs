@@ -7058,12 +7058,47 @@ namespace Nikse.SubtitleEdit.Forms
         internal void ReloadFromSubtitle(Subtitle subtitle, string messageForUndo)
         {
             MakeHistoryForUndo(messageForUndo);
+            var firstSelected = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);
             _subtitle.Paragraphs.Clear();
             _subtitle.Paragraphs.AddRange(subtitle.Paragraphs);
             UpdateSourceView();
             SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
             _subtitleListViewIndex = -1;
+            if (firstSelected != null)
+            {
+                var newSelected = GetFirstAlike(firstSelected);
+                if (newSelected != null)
+                {
+                    SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.GetIndex(newSelected), true);
+                    return;
+                }
+            }
+
             SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
+        }
+
+        public Paragraph GetFirstAlike(Paragraph p)
+        {
+            foreach (var item in _subtitle.Paragraphs)
+            {
+                if (Math.Abs(p.StartTime.TotalMilliseconds - item.StartTime.TotalMilliseconds) < 0.1 &&
+                    Math.Abs(p.EndTime.TotalMilliseconds - item.EndTime.TotalMilliseconds) < 0.1 &&
+                    p.Text == item.Text)
+                {
+                    return item;
+                }
+            }
+
+            foreach (var item in _subtitle.Paragraphs)
+            {
+                if (Math.Abs(p.StartTime.TotalMilliseconds - item.StartTime.TotalMilliseconds) < 0.1 &&
+                    Math.Abs(p.EndTime.TotalMilliseconds - item.EndTime.TotalMilliseconds) < 0.1)
+                {
+                    return item;
+                }
+            }
+
+            return null;
         }
 
         private void RemoveTextForHearImpairedToolStripMenuItemClick(object sender, EventArgs e)
