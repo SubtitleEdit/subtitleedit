@@ -1,11 +1,11 @@
 ﻿using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Forms.Assa;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Forms.Assa;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -68,16 +68,15 @@ namespace Nikse.SubtitleEdit.Logic
             new IntellisenseItem("{\\xbord<x>}",  "Border width", true,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#border"),
             new IntellisenseItem("{\\ybord<y>}",  "Border height", true,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#border"),
 
-            new IntellisenseItem("{\\mov(x1,y1,x2,y2,start,end)}",  "Move", false),
             new IntellisenseItem("{\\pos(x,y)}",  "Set position", false, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#pos"),
 
             new IntellisenseItem("{\\c&Hbbggrr&}",  "Color", true,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#primary-color"),
-//            new IntellisenseItem("{\\2c&Hbbggrr&}",  "Color for karaoke", true),
+            // Is this used? new IntellisenseItem("{\\2c&Hbbggrr&}",  "Color for karaoke", true),
             new IntellisenseItem("{\\3c&Hbbggrr&}",  "Color for outline/opaque box", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#outline-color"),
             new IntellisenseItem("{\\4c&Hbbggrr&}",  "Color for shadow", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#shadow-color"),
 
-            new IntellisenseItem("{\\fade(a1,a2,a3,t1,t2,t3,t4)}",  "Fade advanced", false),
-            new IntellisenseItem("{\\fad(fadein time,fadeout time>}",  "Fade", false),
+            // Seems overly complex... new IntellisenseItem("{\\fade(a1,a2,a3,t1,t2,t3,t4)}",  "Fade advanced",false, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#fade-in-out"),
+            new IntellisenseItem("{\\fad(fadein time,fadeout time>}",  "Fade in/out in milliseconds", false, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#fade-in-out"),
 
             new IntellisenseItem("{\\fn<font_name>}",  "Font name", false,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#font-name"),
             new IntellisenseItem("{\\fs<font_size>}",  "Font size", true,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#font-size"),
@@ -110,25 +109,28 @@ namespace Nikse.SubtitleEdit.Logic
             new IntellisenseItem("{\\fry<degree>}",  "Angle (y axis for text rotation)", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#text-rotation"),
             new IntellisenseItem("{\\frz<degree>}",  "Angle (z axis for text rotation)", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#text-rotation"),
 
-            new IntellisenseItem("{\\org<x,y>}",  "Set origin point for rotation", false),
+            new IntellisenseItem("{\\org<x,y>}",  "Set origin point for rotation", false, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#origin"),
 
             new IntellisenseItem("{\\fax<degree>}",  "Shearing transformation (x axis)", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#text-shearing"),
             new IntellisenseItem("{\\fay<degree>}",  "Shearing transformation (y axis)", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#text-shearing"),
 
             //Obsolete... use Unicode: new IntellisenseItem("{\\fe<charset>}",  "Encoding", false),
 
-            new IntellisenseItem("{\\alpha&aa&}",  "Alpha (00=fully visible, ff=transparent)", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#alpha"),
-            new IntellisenseItem("{\\a1&Haa&}",  "Alpha for text (00=fully visible, ff=transparent)", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#alpha"),
-            new IntellisenseItem("{\\a3&Haa&}",  "Alpha for outline box (00=fully visible, ff=transparent)", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#alpha"),
-            new IntellisenseItem("{\\a4&Haa&}",  "Alpha for shadow (00=fully visible, ff=transparent)", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#alpha"),
+            new IntellisenseItem("{\\alpha&Haa}",  "Alpha (00=fully visible, ff=transparent)", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#alpha"),
+            new IntellisenseItem("{\\1a&Haa}",  "Alpha for text (00=fully visible, ff=transparent)", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#alpha"),
+            // 2a&Haa --- skip ? Karaoke
+            new IntellisenseItem("{\\3a&Haa}",  "Alpha for outline box (00=fully visible, ff=transparent)", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#alpha"),
+            new IntellisenseItem("{\\4a&Haa}",  "Alpha for shadow (00=fully visible, ff=transparent)", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#alpha"),
 
-            new IntellisenseItem("{\\k<duration>}",  "Karaoke, delay in 100th of a second (10ms)", false),
-            new IntellisenseItem("{\\K<duration>}",  "Karaoke right to left, delay in 100th of a second (10ms)", false),
+            //skip?  new IntellisenseItem("{\\k<duration>}",  "Karaoke, delay in 100th of a second (10ms)", false),
+            //skip?  new IntellisenseItem("{\\K<duration>}",  "Karaoke right to left, delay in 100th of a second (10ms)", false),
 
             new IntellisenseItem("{\\clip(x1,y1,x2,y2)}",  "Clips (hides) any drawing outside the rectangle defined by the parameters.", true),
             new IntellisenseItem("{\\iclip(x1,y1,x2,y2)}",  "Clips (hides) any drawing inside the rectangle defined by the parameters.", true),
 
             new IntellisenseItem("{\\r}",  "Reset inline styles", false, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#reset"),
+
+            new IntellisenseItem("{\\mov(x1,y1,x2,y2,start,end)}",  "Move", false, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#move"),
 
             new IntellisenseItem("{\\t(<style modifiers>)}",  "Animated transform", false),
             new IntellisenseItem("{\\t(<accel,style modifiers>)}",  "Animated transform", false),
