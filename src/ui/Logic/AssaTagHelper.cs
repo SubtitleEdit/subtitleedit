@@ -65,11 +65,11 @@ namespace Nikse.SubtitleEdit.Logic
             new IntellisenseItem("{\\s0}",  "Strikeout off", false,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#strikeout"),
 
             new IntellisenseItem("{\\bord<width>}",  "Border", true,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#border"),
-            new IntellisenseItem("{\\xbord<x>}",  "Border width", true,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#border-width"),
-            new IntellisenseItem("{\\ybord<y>}",  "Border height", true,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#border-height"),
+            new IntellisenseItem("{\\xbord<x>}",  "Border width", true,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#border"),
+            new IntellisenseItem("{\\ybord<y>}",  "Border height", true,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#border"),
 
             new IntellisenseItem("{\\mov(x1,y1,x2,y2,start,end)}",  "Move", false),
-            new IntellisenseItem("{\\pos(x,y)}",  "Set position", false),
+            new IntellisenseItem("{\\pos(x,y)}",  "Set position", false, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#pos"),
 
             new IntellisenseItem("{\\c&Hbbggrr&}",  "Color", true,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#primary-color"),
 //            new IntellisenseItem("{\\2c&Hbbggrr&}",  "Color for karaoke", true),
@@ -92,35 +92,35 @@ namespace Nikse.SubtitleEdit.Logic
             new IntellisenseItem("{\\an2}",  "Align bottom middle", false,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#alignment"),
             new IntellisenseItem("{\\an3}",  "Align bottom right", false,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#alignment"),
 
-            new IntellisenseItem("{\\shad<depth>}",  "Shadow", true),
-            new IntellisenseItem("{\\xshad<x>}",  "Shadow width", true),
-            new IntellisenseItem("{\\yshad<y>}",  "Shadow height", true),
+            new IntellisenseItem("{\\shad<depth>}",  "Shadow", true,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#shadow"),
+            new IntellisenseItem("{\\xshad<x>}",  "Shadow width", true,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#shadow"),
+            new IntellisenseItem("{\\yshad<y>}",  "Shadow height", true,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#shadow"),
 
-            new IntellisenseItem("{\\be}",  "Blur edges", true),
-            new IntellisenseItem("{\\be0}",  "Blur edges off", true),
-            new IntellisenseItem("{\\be1}",  "Blur edges on", true),
+            new IntellisenseItem("{\\be}",  "Blur edges", true,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#blur-edges"),
+            new IntellisenseItem("{\\be0}",  "Blur edges off", true,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#blur-edges"),
+            new IntellisenseItem("{\\be1}",  "Blur edges on", true,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#blur-edges"),
 
-            new IntellisenseItem("{\\fscx<percent>}",  "Scale X percentage", true),
-            new IntellisenseItem("{\\fscy<percent>}",  "Scale Y percentage", true),
+            new IntellisenseItem("{\\fscx<percent>}",  "Scale X percentage", true,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#font-scale"),
+            new IntellisenseItem("{\\fscy<percent>}",  "Scale Y percentage", true,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#font-scale"),
 
-            new IntellisenseItem("{\\fsp<pixels>}",  "Spacing between letters in pixels", true),
+            new IntellisenseItem("{\\fsp<pixels>}",  "Spacing between letters in pixels", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#font-spacing"),
 
-            new IntellisenseItem("{\\fr<degree>}",  "Angle (z axis for text rotation)", true),
-            new IntellisenseItem("{\\frx<degree>}",  "Angle (x axis for text rotation)", true),
-            new IntellisenseItem("{\\fry<degree>}",  "Angle (y axis for text rotation)", true),
-            new IntellisenseItem("{\\frz<degree>}",  "Angle (z axis for text rotation)", true),
+            new IntellisenseItem("{\\fr<degree>}",  "Angle (z axis for text rotation)", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#text-rotation"),
+            new IntellisenseItem("{\\frx<degree>}",  "Angle (x axis for text rotation)", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#text-rotation"),
+            new IntellisenseItem("{\\fry<degree>}",  "Angle (y axis for text rotation)", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#text-rotation"),
+            new IntellisenseItem("{\\frz<degree>}",  "Angle (z axis for text rotation)", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#text-rotation"),
 
             new IntellisenseItem("{\\org<x,y>}",  "Set origin point for rotation", false),
 
-            new IntellisenseItem("{\\fax<degree>}",  "Shearing transformation (x axis)", true),
-            new IntellisenseItem("{\\fay<degree>}",  "Shearing transformation (y axis)", true),
+            new IntellisenseItem("{\\fax<degree>}",  "Shearing transformation (x axis)", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#text-shearing"),
+            new IntellisenseItem("{\\fay<degree>}",  "Shearing transformation (y axis)", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#text-shearing"),
 
-            new IntellisenseItem("{\\fe<charset>}",  "Encoding", false),
+            //Obsolete... use Unicode: new IntellisenseItem("{\\fe<charset>}",  "Encoding", false),
 
-            new IntellisenseItem("{\\alpha&Haa&}",  "Alpha (00=fully visible, ff=transparent)", true),
-            new IntellisenseItem("{\\a2&Haa&}",  "Alpha for outline (00=fully visible, ff=transparent)", true),
-            new IntellisenseItem("{\\a3&Haa&}",  "Alpha for opaque box (00=fully visible, ff=transparent)", true),
-            new IntellisenseItem("{\\a4&Haa&}",  "Alpha for shadow (00=fully visible, ff=transparent)", true),
+            new IntellisenseItem("{\\alpha&aa&}",  "Alpha (00=fully visible, ff=transparent)", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#alpha"),
+            new IntellisenseItem("{\\a1&Haa&}",  "Alpha for text (00=fully visible, ff=transparent)", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#alpha"),
+            new IntellisenseItem("{\\a3&Haa&}",  "Alpha for outline box (00=fully visible, ff=transparent)", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#alpha"),
+            new IntellisenseItem("{\\a4&Haa&}",  "Alpha for shadow (00=fully visible, ff=transparent)", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#alpha"),
 
             new IntellisenseItem("{\\k<duration>}",  "Karaoke, delay in 100th of a second (10ms)", false),
             new IntellisenseItem("{\\K<duration>}",  "Karaoke right to left, delay in 100th of a second (10ms)", false),
@@ -128,7 +128,7 @@ namespace Nikse.SubtitleEdit.Logic
             new IntellisenseItem("{\\clip(x1,y1,x2,y2)}",  "Clips (hides) any drawing outside the rectangle defined by the parameters.", true),
             new IntellisenseItem("{\\iclip(x1,y1,x2,y2)}",  "Clips (hides) any drawing inside the rectangle defined by the parameters.", true),
 
-            new IntellisenseItem("{\\r}",  "Reset inline styles", false),
+            new IntellisenseItem("{\\r}",  "Reset inline styles", false, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#reset"),
 
             new IntellisenseItem("{\\t(<style modifiers>)}",  "Animated transform", false),
             new IntellisenseItem("{\\t(<accel,style modifiers>)}",  "Animated transform", false),
@@ -173,7 +173,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
             else
             {
-                if (tb.SelectionStart > 0 && tb.Text[tb.SelectionStart-1] == '}' && item.Value.StartsWith('\\'))
+                if (tb.SelectionStart > 0 && tb.Text[tb.SelectionStart - 1] == '}' && item.Value.StartsWith('\\'))
                 {
                     tb.SelectedText = "{" + item.Value;
                 }
