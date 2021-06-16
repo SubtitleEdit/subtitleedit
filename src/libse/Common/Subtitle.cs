@@ -626,6 +626,30 @@ namespace Nikse.SubtitleEdit.Core.Common
             return null;
         }
 
+        public Paragraph GetNearestAlike(Paragraph p)
+        {
+            foreach (var item in Paragraphs)
+            {
+                if (Math.Abs(p.StartTime.TotalMilliseconds - item.StartTime.TotalMilliseconds) < 0.1 &&
+                    Math.Abs(p.EndTime.TotalMilliseconds - item.EndTime.TotalMilliseconds) < 0.1 &&
+                    p.Text == item.Text)
+                {
+                    return item;
+                }
+            }
+
+            foreach (var item in Paragraphs)
+            {
+                if (Math.Abs(p.StartTime.TotalMilliseconds - item.StartTime.TotalMilliseconds) < 0.1 &&
+                    Math.Abs(p.EndTime.TotalMilliseconds - item.EndTime.TotalMilliseconds) < 0.1)
+                {
+                    return item;
+                }
+            }
+
+            return Paragraphs.OrderBy(s => Math.Abs(s.StartTime.TotalMilliseconds - p.StartTime.TotalMilliseconds)).FirstOrDefault();
+        }
+
         public int RemoveEmptyLines()
         {
             int count = Paragraphs.Count;
