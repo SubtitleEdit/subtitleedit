@@ -7066,7 +7066,7 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitleListViewIndex = -1;
             if (firstSelected != null)
             {
-                var newSelected = GetFirstAlike(firstSelected);
+                var newSelected = _subtitle.GetNearestAlike(firstSelected);
                 if (newSelected != null)
                 {
                     SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.GetIndex(newSelected), true);
@@ -7075,30 +7075,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
-        }
-
-        public Paragraph GetFirstAlike(Paragraph p)
-        {
-            foreach (var item in _subtitle.Paragraphs)
-            {
-                if (Math.Abs(p.StartTime.TotalMilliseconds - item.StartTime.TotalMilliseconds) < 0.1 &&
-                    Math.Abs(p.EndTime.TotalMilliseconds - item.EndTime.TotalMilliseconds) < 0.1 &&
-                    p.Text == item.Text)
-                {
-                    return item;
-                }
-            }
-
-            foreach (var item in _subtitle.Paragraphs)
-            {
-                if (Math.Abs(p.StartTime.TotalMilliseconds - item.StartTime.TotalMilliseconds) < 0.1 &&
-                    Math.Abs(p.EndTime.TotalMilliseconds - item.EndTime.TotalMilliseconds) < 0.1)
-                {
-                    return item;
-                }
-            }
-
-            return null;
         }
 
         private void RemoveTextForHearImpairedToolStripMenuItemClick(object sender, EventArgs e)
