@@ -8436,13 +8436,11 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripSeparator7.Visible = true;
                 typeEffectToolStripMenuItem.Visible = noNetWorkSession;
                 karaokeEffectToolStripMenuItem.Visible = noNetWorkSession;
-                toolStripSeparatorAdvancedFunctions.Visible = noNetWorkSession;
                 adjustDisplayTimeForSelectedLinesToolStripMenuItem.Visible = true;
                 visualSyncSelectedLinesToolStripMenuItem.Visible = true;
                 toolStripMenuItemGoogleMicrosoftTranslateSelLine.Visible = false;
                 toolStripMenuItemUnbreakLines.Visible = true;
                 toolStripMenuItemAutoBreakLines.Visible = true;
-                toolStripSeparatorBreakLines.Visible = true;
                 toolStripMenuItemSurroundWithMusicSymbols.Visible = IsUnicode || Configuration.Settings.Tools.MusicSymbol == "#" || Configuration.Settings.Tools.MusicSymbol == "*";
                 if (SubtitleListview1.SelectedItems.Count == 1)
                 {
@@ -8450,7 +8448,6 @@ namespace Nikse.SubtitleEdit.Forms
                     visualSyncSelectedLinesToolStripMenuItem.Visible = false;
                     toolStripMenuItemUnbreakLines.Visible = false;
                     toolStripMenuItemAutoBreakLines.Visible = false;
-                    toolStripSeparatorBreakLines.Visible = false;
                     if (_subtitleOriginal != null && noNetWorkSession && !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorApiKey))
                     {
                         toolStripMenuItemGoogleMicrosoftTranslateSelLine.Visible = true;
@@ -8504,11 +8501,6 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     toolStripMenuItemMergeDialog.Visible = false;
-                }
-
-                if (formatType != typeof(SubRip))
-                {
-                    toolStripSeparatorAdvancedFunctions.Visible = SubtitleListview1.SelectedItems.Count == 1 && noNetWorkSession;
                 }
             }
 
