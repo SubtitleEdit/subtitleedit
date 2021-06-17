@@ -62,7 +62,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             comboBoxMergeShortLineLength.BeginUpdate();
             comboBoxMergeShortLineLength.Items.Clear();
-            for (int i = 10; i < 100; i++)
+            for (int i = 1; i < 100; i++)
             {
                 comboBoxMergeShortLineLength.Items.Add(i.ToString(CultureInfo.InvariantCulture));
             }
@@ -204,7 +204,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             RulesProfiles[idx].MaxNumberOfLines = (int)numericUpDownMaxNumberOfLines.Value;
             RulesProfiles[idx].SubtitleMaximumWordsPerMinute = (int)numericUpDownMaxWordsMin.Value;
             RulesProfiles[idx].CpsIncludesSpace = checkBoxCpsIncludeWhiteSpace.Checked;
-            RulesProfiles[idx].MergeLinesShorterThan = comboBoxMergeShortLineLength.SelectedIndex + 10;
+            RulesProfiles[idx].MergeLinesShorterThan = comboBoxMergeShortLineLength.SelectedIndex + 1;
             RulesProfiles[idx].DialogStyle = DialogSplitMerge.GetDialogStyleFromIndex(comboBoxDialogStyle.SelectedIndex);
             RulesProfiles[idx].ContinuationStyle = ContinuationUtilities.GetContinuationStyleFromIndex(comboBoxContinuationStyle.SelectedIndex);
             UpdateRulesProfilesLine(idx);
@@ -262,9 +262,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 numericUpDownMaxWordsMin.Value = p.SubtitleMaximumWordsPerMinute;
             }
             checkBoxCpsIncludeWhiteSpace.Checked = RulesProfiles[idx].CpsIncludesSpace;
-            if (RulesProfiles[idx].MergeLinesShorterThan >= 10 && RulesProfiles[idx].MergeLinesShorterThan - 10 < comboBoxMergeShortLineLength.Items.Count)
+            if (RulesProfiles[idx].MergeLinesShorterThan >= 1 && RulesProfiles[idx].MergeLinesShorterThan - 1 < comboBoxMergeShortLineLength.Items.Count)
             {
-                comboBoxMergeShortLineLength.SelectedIndex = RulesProfiles[idx].MergeLinesShorterThan - 10;
+                comboBoxMergeShortLineLength.SelectedIndex = RulesProfiles[idx].MergeLinesShorterThan - 1;
             }
             else
             {

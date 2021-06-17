@@ -900,7 +900,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             if (gs.MergeLinesShorterThan >= 1 && gs.MergeLinesShorterThan < comboBoxMergeShortLineLength.Items.Count)
             {
-                comboBoxMergeShortLineLength.SelectedIndex = gs.MergeLinesShorterThan;
+                comboBoxMergeShortLineLength.SelectedIndex = gs.MergeLinesShorterThan - 1;
             }
             else
             {
@@ -1964,7 +1964,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             toolsSettings.VerifyPlaySeconds = comboBoxToolsVerifySeconds.SelectedIndex + 2;
             toolsSettings.StartSceneIndex = comboBoxToolsStartSceneIndex.SelectedIndex;
             toolsSettings.EndSceneIndex = comboBoxToolsEndSceneIndex.SelectedIndex;
-            gs.MergeLinesShorterThan = comboBoxMergeShortLineLength.SelectedIndex;
+            gs.MergeLinesShorterThan = comboBoxMergeShortLineLength.SelectedIndex + 1;
             if (gs.MergeLinesShorterThan > gs.SubtitleLineMaximumLength + 1)
             {
                 gs.MergeLinesShorterThan = gs.SubtitleLineMaximumLength;
@@ -3354,7 +3354,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             if (profile.MergeLinesShorterThan >= 1 && profile.MergeLinesShorterThan < comboBoxMergeShortLineLength.Items.Count)
             {
-                comboBoxMergeShortLineLength.SelectedIndex = profile.MergeLinesShorterThan;
+                comboBoxMergeShortLineLength.SelectedIndex = profile.MergeLinesShorterThan - 1;
             }
             else
             {
