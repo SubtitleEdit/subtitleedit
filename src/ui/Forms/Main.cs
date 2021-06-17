@@ -28006,63 +28006,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolStripMenuItemSaveSelectedLinesClick(object sender, EventArgs e)
         {
-            var newSub = new Subtitle(_subtitle);
-            newSub.Header = _subtitle.Header;
-            newSub.Paragraphs.Clear();
-            foreach (int index in SubtitleListview1.SelectedIndices)
-            {
-                newSub.Paragraphs.Add(_subtitle.Paragraphs[index]);
-            }
 
-            SubtitleFormat currentFormat = GetCurrentSubtitleFormat();
-            UiUtil.SetSaveDialogFilter(saveFileDialog1, currentFormat);
-            saveFileDialog1.Title = _language.SaveSubtitleAs;
-            saveFileDialog1.DefaultExt = "*" + currentFormat.Extension;
-            saveFileDialog1.AddExtension = true;
-            if (!string.IsNullOrEmpty(_fileName))
-            {
-                saveFileDialog1.InitialDirectory = Path.GetDirectoryName(_fileName);
-            }
-
-            if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
-            {
-                int index = 0;
-                foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
-                {
-                    if (saveFileDialog1.FilterIndex == index + 1)
-                    {
-                        // only allow current extension or ".txt"
-                        string fileName = saveFileDialog1.FileName;
-                        string ext = Path.GetExtension(fileName).ToLowerInvariant();
-                        bool extOk = ext.Equals(format.Extension, StringComparison.OrdinalIgnoreCase) || format.AlternateExtensions.Contains(ext) || ext == ".txt";
-                        if (!extOk)
-                        {
-                            if (fileName.EndsWith('.'))
-                            {
-                                fileName = fileName.TrimEnd('.');
-                            }
-
-                            fileName += format.Extension;
-                        }
-
-                        if (format.IsTextBased)
-                        {
-                            string allText = GetSaveSubtitle(newSub).ToText(format);
-                            File.WriteAllText(fileName, allText, GetCurrentEncoding());
-                            ShowStatus(string.Format(_language.XLinesSavedAsY, newSub.Paragraphs.Count, fileName));
-                            return;
-                        }
-                        else if (format.GetType() == typeof(Ebu))
-                        {
-                            new Ebu().Save(fileName, GetSaveSubtitle(newSub));
-                            ShowStatus(string.Format(_language.XLinesSavedAsY, newSub.Paragraphs.Count, fileName));
-                            return;
-                        }
-                    }
-
-                    index++;
-                }
-            }
         }
 
         private void GuessTimeCodesToolStripMenuItemClick(object sender, EventArgs e)
