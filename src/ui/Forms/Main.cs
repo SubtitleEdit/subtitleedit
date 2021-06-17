@@ -12992,89 +12992,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void TypeEffectToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (SubtitleListview1.SelectedItems.Count > 0)
-            {
-                using (var typewriter = new EffectTypewriter())
-                {
-                    typewriter.Initialize(SubtitleListview1.GetSelectedParagraph(_subtitle));
 
-                    if (typewriter.ShowDialog(this) == DialogResult.OK)
-                    {
-                        MakeHistoryForUndo(_language.BeforeTypeWriterEffect);
-                        bool isframeBased = GetCurrentSubtitleFormat().IsFrameBased;
-                        int lastSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
-                        int i = SubtitleListview1.SelectedItems.Count - 1;
-                        while (i >= 0)
-                        {
-                            var item = SubtitleListview1.SelectedItems[i];
-                            var p = _subtitle.GetParagraphOrDefault(item.Index);
-                            if (p != null)
-                            {
-                                typewriter.Initialize(p);
-                                typewriter.MakeAnimation();
-                                int index = item.Index;
-                                _subtitle.Paragraphs.RemoveAt(index);
-                                foreach (var tp in typewriter.TypewriterParagraphs)
-                                {
-                                    _subtitle.Paragraphs.Insert(index, tp);
-                                    index++;
-                                }
-                            }
-
-                            i--;
-                        }
-
-                        _subtitle.Renumber();
-                        _subtitleListViewIndex = -1;
-                        UpdateSourceView();
-                        SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
-                        SubtitleListview1.SelectIndexAndEnsureVisible(lastSelectedIndex, true);
-                    }
-                }
-            }
         }
 
         private void KaraokeEffectToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (SubtitleListview1.SelectedItems.Count > 0)
-            {
-                using (var karaoke = new EffectKaraoke())
-                {
-                    karaoke.Initialize(SubtitleListview1.GetSelectedParagraph(_subtitle));
 
-                    if (karaoke.ShowDialog(this) == DialogResult.OK)
-                    {
-                        MakeHistoryForUndo(_language.BeforeKaraokeEffect);
-                        int lastSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
-                        bool isframeBased = GetCurrentSubtitleFormat().IsFrameBased;
-
-                        int i = SubtitleListview1.SelectedItems.Count - 1;
-                        while (i >= 0)
-                        {
-                            var item = SubtitleListview1.SelectedItems[i];
-                            var p = _subtitle.GetParagraphOrDefault(item.Index);
-                            if (p != null)
-                            {
-                                int index = item.Index;
-                                _subtitle.Paragraphs.RemoveAt(index);
-                                foreach (var kp in karaoke.MakeAnimation(p))
-                                {
-                                    _subtitle.Paragraphs.Insert(index, kp);
-                                    index++;
-                                }
-                            }
-
-                            i--;
-                        }
-
-                        _subtitle.Renumber();
-                        _subtitleListViewIndex = -1;
-                        UpdateSourceView();
-                        SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
-                        SubtitleListview1.SelectIndexAndEnsureVisible(lastSelectedIndex, true);
-                    }
-                }
-            }
         }
 
         private void ImportSubtitleFromMatroskaFile(string fileName)
@@ -14725,36 +14648,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowSelectedLinesEarlierlaterToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (!IsSubtitleLoaded)
-            {
-                DisplaySubtitleNotLoadedMessage();
-                return;
-            }
 
-            if (_showEarlierOrLater != null && !_showEarlierOrLater.IsDisposed)
-            {
-                _showEarlierOrLater.WindowState = FormWindowState.Normal;
-                _showEarlierOrLater.Focus();
-                return;
-            }
-
-            bool waveformEnabled = timerWaveform.Enabled;
-            timerWaveform.Stop();
-
-            _showEarlierOrLater = new ShowEarlierLater();
-            if (!_showEarlierOrLater.IsPositionAndSizeSaved)
-            {
-                _showEarlierOrLater.Top = Top + 100;
-                _showEarlierOrLater.Left = Left + (Width / 2) - (_showEarlierOrLater.Width / 3);
-            }
-
-            _showEarlierOrLater.Initialize(ShowEarlierOrLater, true);
-            MakeHistoryForUndo(_language.BeforeShowSelectedLinesEarlierLater);
-            _showEarlierOrLater.Show(this);
-
-            timerWaveform.Enabled = waveformEnabled;
-
-            RefreshSelectedParagraph();
         }
 
         public static Control FindFocusedControl(Control control)
@@ -19140,44 +19034,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolStripMenuItemUnbreakLinesClick(object sender, EventArgs e)
         {
-            if (!IsSubtitleLoaded)
-            {
-                DisplaySubtitleNotLoadedMessage();
-                return;
-            }
 
-            ReloadFromSourceView();
-            using (var autoBreakUnbreakLines = new AutoBreakUnbreakLines())
-            {
-                var selectedLines = new Subtitle();
-                foreach (int index in SubtitleListview1.SelectedIndices)
-                {
-                    selectedLines.Paragraphs.Add(_subtitle.Paragraphs[index]);
-                }
-
-                autoBreakUnbreakLines.Initialize(selectedLines, false);
-
-                if (autoBreakUnbreakLines.ShowDialog() == DialogResult.OK && autoBreakUnbreakLines.FixedText.Count > 0)
-                {
-                    MakeHistoryForUndo(_language.BeforeRemoveLineBreaksInSelectedLines);
-
-                    SubtitleListview1.BeginUpdate();
-                    foreach (int index in SubtitleListview1.SelectedIndices)
-                    {
-                        var p = _subtitle.GetParagraphOrDefault(index);
-                        if (autoBreakUnbreakLines.FixedText.ContainsKey(p.Id))
-                        {
-                            p.Text = autoBreakUnbreakLines.FixedText[p.Id];
-                            SubtitleListview1.SetText(index, p.Text);
-                            SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, index, p);
-                        }
-                    }
-
-                    SubtitleListview1.EndUpdate();
-                    RefreshSelectedParagraph();
-                    ShowStatus(string.Format(_language.NumberOfWithRemovedLineBreakX, autoBreakUnbreakLines.FixedText.Count));
-                }
-            }
         }
 
         private void MultipleReplaceToolStripMenuItemClick(object sender, EventArgs e)
