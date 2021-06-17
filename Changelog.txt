@@ -25,7 +25,8 @@
    * Optimize "modify selection - styles"
    * Installer: Update Inno Setup from version 5 to version 6
    * Installer: Use ngen64 on 64-bit - thx XhmikosR
-   * Keep selected line after "Remove text for HI" - thx Atlantis
+   * Keep selected line (nearest) after "Remove text for HI" - thx Atlantis
+   * Improve FPC compatibility + PAC refactor - thx ngaullier
 * FIXED:
    * Fix load/save some ASSA storage style settings - thx Andrebavila
    * Fix for italic in DCinemaSmpte2007/2010/2014 - thx Marko
