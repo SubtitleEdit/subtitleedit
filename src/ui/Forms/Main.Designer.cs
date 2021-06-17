@@ -320,12 +320,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemAlignment = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSurroundWithMusicSymbols = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItemAutoBreakLines = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemUnbreakLines = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparatorBreakLines = new System.Windows.Forms.ToolStripSeparator();
             this.typeEffectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.karaokeEffectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparatorAdvancedFunctions = new System.Windows.Forms.ToolStripSeparator();
             this.showSelectedLinesEarlierlaterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.visualSyncSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemGoogleMicrosoftTranslateSelLine = new System.Windows.Forms.ToolStripMenuItem();
@@ -554,6 +551,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerOriginalTextUndo = new System.Windows.Forms.Timer(this.components);
+            this.toolStripMenuItemSelectedLines = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemAutoBreakLines = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -2559,12 +2558,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemAlignment,
             this.toolStripMenuItemSurroundWithMusicSymbols,
             this.toolStripSeparator2,
-            this.toolStripMenuItemAutoBreakLines,
+            this.toolStripMenuItemSelectedLines,
             this.toolStripMenuItemUnbreakLines,
-            this.toolStripSeparatorBreakLines,
             this.typeEffectToolStripMenuItem,
             this.karaokeEffectToolStripMenuItem,
-            this.toolStripSeparatorAdvancedFunctions,
             this.showSelectedLinesEarlierlaterToolStripMenuItem,
             this.visualSyncSelectedLinesToolStripMenuItem,
             this.toolStripMenuItemGoogleMicrosoftTranslateSelLine,
@@ -2574,7 +2571,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.changeCasingForSelectedLinesToolStripMenuItem,
             this.toolStripMenuItemSaveSelectedLines});
             this.contextMenuStripListView.Name = "contextMenuStripListView";
-            this.contextMenuStripListView.Size = new System.Drawing.Size(285, 986);
+            this.contextMenuStripListView.Size = new System.Drawing.Size(285, 996);
             this.contextMenuStripListView.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
             this.contextMenuStripListView.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListViewOpening);
             this.contextMenuStripListView.Opened += new System.EventHandler(this.MenuOpened);
@@ -2942,24 +2939,12 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(281, 6);
             // 
-            // toolStripMenuItemAutoBreakLines
-            // 
-            this.toolStripMenuItemAutoBreakLines.Name = "toolStripMenuItemAutoBreakLines";
-            this.toolStripMenuItemAutoBreakLines.Size = new System.Drawing.Size(284, 22);
-            this.toolStripMenuItemAutoBreakLines.Text = "Auto balance selected lines...";
-            this.toolStripMenuItemAutoBreakLines.Click += new System.EventHandler(this.ToolStripMenuItemAutoBreakLinesClick);
-            // 
             // toolStripMenuItemUnbreakLines
             // 
             this.toolStripMenuItemUnbreakLines.Name = "toolStripMenuItemUnbreakLines";
             this.toolStripMenuItemUnbreakLines.Size = new System.Drawing.Size(284, 22);
             this.toolStripMenuItemUnbreakLines.Text = "Remove line-breaks in selected lines...";
             this.toolStripMenuItemUnbreakLines.Click += new System.EventHandler(this.ToolStripMenuItemUnbreakLinesClick);
-            // 
-            // toolStripSeparatorBreakLines
-            // 
-            this.toolStripSeparatorBreakLines.Name = "toolStripSeparatorBreakLines";
-            this.toolStripSeparatorBreakLines.Size = new System.Drawing.Size(281, 6);
             // 
             // typeEffectToolStripMenuItem
             // 
@@ -2974,11 +2959,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.karaokeEffectToolStripMenuItem.Size = new System.Drawing.Size(284, 22);
             this.karaokeEffectToolStripMenuItem.Text = "Karaoke effect...";
             this.karaokeEffectToolStripMenuItem.Click += new System.EventHandler(this.KaraokeEffectToolStripMenuItemClick);
-            // 
-            // toolStripSeparatorAdvancedFunctions
-            // 
-            this.toolStripSeparatorAdvancedFunctions.Name = "toolStripSeparatorAdvancedFunctions";
-            this.toolStripSeparatorAdvancedFunctions.Size = new System.Drawing.Size(281, 6);
             // 
             // showSelectedLinesEarlierlaterToolStripMenuItem
             // 
@@ -4602,7 +4582,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.insertUnicodeCharactersToolStripMenuItem,
             this.insertUnicodeControlCharactersToolStripMenuItem});
             this.contextMenuStripTextBoxListView.Name = "contextMenuStripTextBoxListView";
-            this.contextMenuStripTextBoxListView.Size = new System.Drawing.Size(274, 634);
+            this.contextMenuStripTextBoxListView.Size = new System.Drawing.Size(274, 612);
             this.contextMenuStripTextBoxListView.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
             this.contextMenuStripTextBoxListView.Closing += new System.Windows.Forms.ToolStripDropDownClosingEventHandler(this.contextMenuStripTextBoxListViewClosing);
             this.contextMenuStripTextBoxListView.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripTextBoxListViewOpening);
@@ -5379,6 +5359,21 @@ namespace Nikse.SubtitleEdit.Forms
             this.timerOriginalTextUndo.Interval = 700;
             this.timerOriginalTextUndo.Tick += new System.EventHandler(this.TimerOriginalTextUndoTick);
             // 
+            // toolStripMenuItemSelectedLines
+            // 
+            this.toolStripMenuItemSelectedLines.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemAutoBreakLines});
+            this.toolStripMenuItemSelectedLines.Name = "toolStripMenuItemSelectedLines";
+            this.toolStripMenuItemSelectedLines.Size = new System.Drawing.Size(284, 22);
+            this.toolStripMenuItemSelectedLines.Text = "Selected lines";
+            // 
+            // toolStripMenuItemAutoBreakLines
+            // 
+            this.toolStripMenuItemAutoBreakLines.Name = "toolStripMenuItemAutoBreakLines";
+            this.toolStripMenuItemAutoBreakLines.Size = new System.Drawing.Size(226, 22);
+            this.toolStripMenuItemAutoBreakLines.Text = "Auto balance selected lines...";
+            this.toolStripMenuItemAutoBreakLines.Click += new System.EventHandler(this.ToolStripMenuItemAutoBreakLinesClick);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -5549,7 +5544,6 @@ namespace Nikse.SubtitleEdit.Forms
         private Nikse.SubtitleEdit.Controls.TimeUpDown timeUpDownStartTime;
         private System.Windows.Forms.ToolStripMenuItem ChangeCasingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMergeLines;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparatorAdvancedFunctions;
         private System.Windows.Forms.ToolStripMenuItem visualSyncSelectedLinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showSelectedLinesEarlierlaterToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem adjustDisplayTimeForSelectedLinesToolStripMenuItem;
@@ -5568,8 +5562,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator12;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemCompare;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemUnbreakLines;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAutoBreakLines;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparatorBreakLines;
         private System.Windows.Forms.ToolStripMenuItem multipleReplaceToolStripMenuItem;
         private System.Windows.Forms.ToolStripStatusLabel toolStripSelected;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInsertUnicodeCharacter;
@@ -5974,5 +5966,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem mergeSentencesToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator26;
         private System.Windows.Forms.ToolStripMenuItem breaksplitLongLinesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSelectedLines;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAutoBreakLines;
     }
 }
