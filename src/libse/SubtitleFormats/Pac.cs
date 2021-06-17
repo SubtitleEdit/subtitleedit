@@ -1284,7 +1284,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             buffer[20] == 0 &&
                             //buffer[21] < 10 && // start from number
                             //buffer[22] == 0 &&
-                            (buffer[23] >= 0x60 && buffer[23] <= 0x70) &&
+                            //(buffer[23] >= 0x60 && buffer[23] <= 0x70) &&
                             fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
                         {
                             return true;
