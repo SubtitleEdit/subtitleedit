@@ -40,9 +40,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode4 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode5 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode6 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode7 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode8 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode9 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.labelStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripSelected = new System.Windows.Forms.ToolStripStatusLabel();
@@ -323,7 +323,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemGoogleMicrosoftTranslateSelLine = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemTranslateSelected = new System.Windows.Forms.ToolStripMenuItem();
             this.genericTranslateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.adjustDisplayTimeForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fixCommonErrorsInSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeCasingForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSaveSelectedLines = new System.Windows.Forms.ToolStripMenuItem();
@@ -553,6 +552,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.karaokeEffectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showSelectedLinesEarlierlaterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.visualSyncSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.adjustDisplayTimeForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -2561,12 +2561,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemSelectedLines,
             this.toolStripMenuItemGoogleMicrosoftTranslateSelLine,
             this.toolStripMenuItemTranslateSelected,
-            this.adjustDisplayTimeForSelectedLinesToolStripMenuItem,
             this.fixCommonErrorsInSelectedLinesToolStripMenuItem,
             this.changeCasingForSelectedLinesToolStripMenuItem,
             this.toolStripMenuItemSaveSelectedLines});
             this.contextMenuStripListView.Name = "contextMenuStripListView";
-            this.contextMenuStripListView.Size = new System.Drawing.Size(285, 886);
+            this.contextMenuStripListView.Size = new System.Drawing.Size(285, 864);
             this.contextMenuStripListView.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
             this.contextMenuStripListView.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListViewOpening);
             this.contextMenuStripListView.Opened += new System.EventHandler(this.MenuOpened);
@@ -2955,13 +2954,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.genericTranslateToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
             this.genericTranslateToolStripMenuItem.Text = "translate...";
             this.genericTranslateToolStripMenuItem.Click += new System.EventHandler(this.TranslateSelectedLinesToolStripMenuItemClick);
-            // 
-            // adjustDisplayTimeForSelectedLinesToolStripMenuItem
-            // 
-            this.adjustDisplayTimeForSelectedLinesToolStripMenuItem.Name = "adjustDisplayTimeForSelectedLinesToolStripMenuItem";
-            this.adjustDisplayTimeForSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(284, 22);
-            this.adjustDisplayTimeForSelectedLinesToolStripMenuItem.Text = "Adjust display time for selected lines...";
-            this.adjustDisplayTimeForSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.AdjustDisplayTimeForSelectedLinesToolStripMenuItemClick);
             // 
             // fixCommonErrorsInSelectedLinesToolStripMenuItem
             // 
@@ -3508,14 +3500,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.timeUpDownVideoPosition.Name = "timeUpDownVideoPosition";
             this.timeUpDownVideoPosition.Size = new System.Drawing.Size(111, 27);
             this.timeUpDownVideoPosition.TabIndex = 12;
-            timeCode4.Hours = 0;
-            timeCode4.Milliseconds = 0;
-            timeCode4.Minutes = 0;
-            timeCode4.Seconds = 0;
-            timeCode4.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode4.TotalMilliseconds = 0D;
-            timeCode4.TotalSeconds = 0D;
-            this.timeUpDownVideoPosition.TimeCode = timeCode4;
+            timeCode7.Hours = 0;
+            timeCode7.Milliseconds = 0;
+            timeCode7.Minutes = 0;
+            timeCode7.Seconds = 0;
+            timeCode7.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode7.TotalMilliseconds = 0D;
+            timeCode7.TotalSeconds = 0D;
+            this.timeUpDownVideoPosition.TimeCode = timeCode7;
             this.timeUpDownVideoPosition.UseVideoOffset = false;
             // 
             // buttonGotoSub
@@ -3748,14 +3740,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.timeUpDownVideoPositionAdjust.Name = "timeUpDownVideoPositionAdjust";
             this.timeUpDownVideoPositionAdjust.Size = new System.Drawing.Size(111, 27);
             this.timeUpDownVideoPositionAdjust.TabIndex = 13;
-            timeCode5.Hours = 0;
-            timeCode5.Milliseconds = 0;
-            timeCode5.Minutes = 0;
-            timeCode5.Seconds = 0;
-            timeCode5.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode5.TotalMilliseconds = 0D;
-            timeCode5.TotalSeconds = 0D;
-            this.timeUpDownVideoPositionAdjust.TimeCode = timeCode5;
+            timeCode8.Hours = 0;
+            timeCode8.Milliseconds = 0;
+            timeCode8.Minutes = 0;
+            timeCode8.Seconds = 0;
+            timeCode8.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode8.TotalMilliseconds = 0D;
+            timeCode8.TotalSeconds = 0D;
+            this.timeUpDownVideoPositionAdjust.TimeCode = timeCode8;
             this.timeUpDownVideoPositionAdjust.UseVideoOffset = false;
             // 
             // buttonAdjustSetEndTime
@@ -4957,14 +4949,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
             this.timeUpDownStartTime.Size = new System.Drawing.Size(111, 27);
             this.timeUpDownStartTime.TabIndex = 0;
-            timeCode6.Hours = 0;
-            timeCode6.Milliseconds = 0;
-            timeCode6.Minutes = 0;
-            timeCode6.Seconds = 0;
-            timeCode6.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode6.TotalMilliseconds = 0D;
-            timeCode6.TotalSeconds = 0D;
-            this.timeUpDownStartTime.TimeCode = timeCode6;
+            timeCode9.Hours = 0;
+            timeCode9.Milliseconds = 0;
+            timeCode9.Minutes = 0;
+            timeCode9.Seconds = 0;
+            timeCode9.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode9.TotalMilliseconds = 0D;
+            timeCode9.TotalSeconds = 0D;
+            this.timeUpDownStartTime.TimeCode = timeCode9;
             this.timeUpDownStartTime.UseVideoOffset = false;
             // 
             // numericUpDownDuration
@@ -5322,6 +5314,7 @@ namespace Nikse.SubtitleEdit.Forms
             // toolStripMenuItemSelectedLines
             // 
             this.toolStripMenuItemSelectedLines.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.adjustDisplayTimeForSelectedLinesToolStripMenuItem,
             this.visualSyncSelectedLinesToolStripMenuItem,
             this.showSelectedLinesEarlierlaterToolStripMenuItem,
             this.karaokeEffectToolStripMenuItem,
@@ -5373,6 +5366,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.visualSyncSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
             this.visualSyncSelectedLinesToolStripMenuItem.Text = "Visual sync selected lines...";
             this.visualSyncSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.VisualSyncSelectedLinesToolStripMenuItemClick);
+            // 
+            // adjustDisplayTimeForSelectedLinesToolStripMenuItem
+            // 
+            this.adjustDisplayTimeForSelectedLinesToolStripMenuItem.Name = "adjustDisplayTimeForSelectedLinesToolStripMenuItem";
+            this.adjustDisplayTimeForSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
+            this.adjustDisplayTimeForSelectedLinesToolStripMenuItem.Text = "Adjust display time for selected lines...";
+            this.adjustDisplayTimeForSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.AdjustDisplayTimeForSelectedLinesToolStripMenuItemClick);
             // 
             // Main
             // 
@@ -5542,7 +5542,6 @@ namespace Nikse.SubtitleEdit.Forms
         private Nikse.SubtitleEdit.Controls.TimeUpDown timeUpDownStartTime;
         private System.Windows.Forms.ToolStripMenuItem ChangeCasingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMergeLines;
-        private System.Windows.Forms.ToolStripMenuItem adjustDisplayTimeForSelectedLinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fixCommonErrorsInSelectedLinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem changeCasingForSelectedLinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSortBy;
@@ -5968,5 +5967,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem karaokeEffectToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemUnbreakLines;
         private System.Windows.Forms.ToolStripMenuItem typeEffectToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem adjustDisplayTimeForSelectedLinesToolStripMenuItem;
     }
 }
