@@ -1737,9 +1737,9 @@ namespace Nikse.SubtitleEdit.Logic
                     ContextMenu = new LanguageStructure.Main.MainMenu.ListViewContextMenu
                     {
                         SizeAllColumnsToFit = "Size all columns to fit",
-                        AdvancedSubStationAlphaSetStyle = "Advanced Sub Station Alpha - set style",
-                        SubStationAlphaSetStyle = "Sub Station Alpha - set style",
+                        SetStyle = "Set style",
                         SetActor = "Set actor",
+                        SetOverrideTags = "Set override tags",
                         AdvancedSubStationAlphaStyles = "Advanced Sub Station Alpha styles...",
                         SubStationAlphaStyles = "Sub Station Alpha styles...",
                         TimedTextStyles = "Timed Text styles...",

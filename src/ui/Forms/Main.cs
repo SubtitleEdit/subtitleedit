@@ -1663,8 +1663,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             toolStripMenuItemAssStyles.Text = _language.Menu.ContextMenu.SubStationAlphaStyles;
             toolStripMenuItemAssaStyles.Text = _language.Menu.ContextMenu.SubStationAlphaStyles;
-            setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SubStationAlphaSetStyle;
+            setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SetStyle;
             setActorForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SetActor;
+            toolStripMenuItemAssaOverrideTags.Text = _language.Menu.ContextMenu.SetOverrideTags;
 
             toolStripMenuItemDelete.Text = _language.Menu.ContextMenu.Delete;
             insertLineToolStripMenuItem.Text = _language.Menu.ContextMenu.InsertFirstLine;
@@ -8107,12 +8108,12 @@ namespace Nikse.SubtitleEdit.Forms
                 if (formatType == typeof(AdvancedSubStationAlpha))
                 {
                     toolStripMenuItemAssStyles.Text = _language.Menu.ContextMenu.AdvancedSubStationAlphaStyles;
-                    setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.AdvancedSubStationAlphaSetStyle;
+                    setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SetStyle;
                 }
                 else
                 {
                     toolStripMenuItemAssStyles.Text = _language.Menu.ContextMenu.SubStationAlphaStyles;
-                    setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SubStationAlphaSetStyle;
+                    setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SetStyle;
                 }
 
                 // actor
@@ -8426,6 +8427,7 @@ namespace Nikse.SubtitleEdit.Forms
                 bool noNetWorkSession = _networkSession == null;
 
                 toolStripMenuItemSaveSelectedLines.Visible = false;
+                toolStripMenuItemInsert.Visible = true;
                 toolStripMenuItemInsertBefore.Visible = true;
                 toolStripMenuItemInsertAfter.Visible = true;
                 toolStripMenuItemInsertSubtitle.Visible = noNetWorkSession;
@@ -8457,6 +8459,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (SubtitleListview1.SelectedItems.Count == 2)
                 {
+                    toolStripMenuItemInsert.Visible = false;
                     toolStripMenuItemInsertBefore.Visible = false;
                     toolStripMenuItemInsertAfter.Visible = false;
                     toolStripMenuItemInsertSubtitle.Visible = false;
@@ -8468,6 +8471,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (SubtitleListview1.SelectedItems.Count >= 2)
                 {
                     toolStripMenuItemSaveSelectedLines.Visible = true;
+                    toolStripMenuItemInsert.Visible = false;
                     toolStripMenuItemInsertBefore.Visible = false;
                     toolStripMenuItemInsertAfter.Visible = false;
                     toolStripMenuItemInsertSubtitle.Visible = false;
@@ -8509,6 +8513,19 @@ namespace Nikse.SubtitleEdit.Forms
             if (string.IsNullOrEmpty(Configuration.Settings.Tools.MusicSymbol))
             {
                 toolStripMenuItemSurroundWithMusicSymbols.Visible = false;
+            }
+
+            // final tuning for ASSA
+            if (formatType == typeof(AdvancedSubStationAlpha))
+            {
+                toolStripMenuItemAssaOverrideTags.Visible = true;
+                toolStripSeparatorAssa.Visible = true;
+                toolStripMenuItemAssStyles.Visible = false; // Use toolbar instead
+            }
+            else
+            {
+                toolStripMenuItemAssaOverrideTags.Visible = false;
+                toolStripSeparatorAssa.Visible = false;
             }
         }
 
@@ -12984,12 +13001,89 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void TypeEffectToolStripMenuItemClick(object sender, EventArgs e)
         {
+            if (SubtitleListview1.SelectedItems.Count > 0)
+            {
+                using (var typewriter = new EffectTypewriter())
+                {
+                    typewriter.Initialize(SubtitleListview1.GetSelectedParagraph(_subtitle));
 
+                    if (typewriter.ShowDialog(this) == DialogResult.OK)
+                    {
+                        MakeHistoryForUndo(_language.BeforeTypeWriterEffect);
+                        bool isframeBased = GetCurrentSubtitleFormat().IsFrameBased;
+                        int lastSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
+                        int i = SubtitleListview1.SelectedItems.Count - 1;
+                        while (i >= 0)
+                        {
+                            var item = SubtitleListview1.SelectedItems[i];
+                            var p = _subtitle.GetParagraphOrDefault(item.Index);
+                            if (p != null)
+                            {
+                                typewriter.Initialize(p);
+                                typewriter.MakeAnimation();
+                                int index = item.Index;
+                                _subtitle.Paragraphs.RemoveAt(index);
+                                foreach (var tp in typewriter.TypewriterParagraphs)
+                                {
+                                    _subtitle.Paragraphs.Insert(index, tp);
+                                    index++;
+                                }
+                            }
+
+                            i--;
+                        }
+
+                        _subtitle.Renumber();
+                        _subtitleListViewIndex = -1;
+                        UpdateSourceView();
+                        SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                        SubtitleListview1.SelectIndexAndEnsureVisible(lastSelectedIndex, true);
+                    }
+                }
+            }
         }
 
         private void KaraokeEffectToolStripMenuItemClick(object sender, EventArgs e)
         {
+            if (SubtitleListview1.SelectedItems.Count > 0)
+            {
+                using (var karaoke = new EffectKaraoke())
+                {
+                    karaoke.Initialize(SubtitleListview1.GetSelectedParagraph(_subtitle));
 
+                    if (karaoke.ShowDialog(this) == DialogResult.OK)
+                    {
+                        MakeHistoryForUndo(_language.BeforeKaraokeEffect);
+                        int lastSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
+                        bool isframeBased = GetCurrentSubtitleFormat().IsFrameBased;
+
+                        int i = SubtitleListview1.SelectedItems.Count - 1;
+                        while (i >= 0)
+                        {
+                            var item = SubtitleListview1.SelectedItems[i];
+                            var p = _subtitle.GetParagraphOrDefault(item.Index);
+                            if (p != null)
+                            {
+                                int index = item.Index;
+                                _subtitle.Paragraphs.RemoveAt(index);
+                                foreach (var kp in karaoke.MakeAnimation(p))
+                                {
+                                    _subtitle.Paragraphs.Insert(index, kp);
+                                    index++;
+                                }
+                            }
+
+                            i--;
+                        }
+
+                        _subtitle.Renumber();
+                        _subtitleListViewIndex = -1;
+                        UpdateSourceView();
+                        SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                        SubtitleListview1.SelectIndexAndEnsureVisible(lastSelectedIndex, true);
+                    }
+                }
+            }
         }
 
         private void ImportSubtitleFromMatroskaFile(string fileName)
@@ -14640,7 +14734,36 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowSelectedLinesEarlierlaterToolStripMenuItemClick(object sender, EventArgs e)
         {
+            if (!IsSubtitleLoaded)
+            {
+                DisplaySubtitleNotLoadedMessage();
+                return;
+            }
 
+            if (_showEarlierOrLater != null && !_showEarlierOrLater.IsDisposed)
+            {
+                _showEarlierOrLater.WindowState = FormWindowState.Normal;
+                _showEarlierOrLater.Focus();
+                return;
+            }
+
+            bool waveformEnabled = timerWaveform.Enabled;
+            timerWaveform.Stop();
+
+            _showEarlierOrLater = new ShowEarlierLater();
+            if (!_showEarlierOrLater.IsPositionAndSizeSaved)
+            {
+                _showEarlierOrLater.Top = Top + 100;
+                _showEarlierOrLater.Left = Left + (Width / 2) - (_showEarlierOrLater.Width / 3);
+            }
+
+            _showEarlierOrLater.Initialize(ShowEarlierOrLater, true);
+            MakeHistoryForUndo(_language.BeforeShowSelectedLinesEarlierLater);
+            _showEarlierOrLater.Show(this);
+
+            timerWaveform.Enabled = waveformEnabled;
+
+            RefreshSelectedParagraph();
         }
 
         public static Control FindFocusedControl(Control control)
@@ -19026,7 +19149,44 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolStripMenuItemUnbreakLinesClick(object sender, EventArgs e)
         {
+            if (!IsSubtitleLoaded)
+            {
+                DisplaySubtitleNotLoadedMessage();
+                return;
+            }
 
+            ReloadFromSourceView();
+            using (var autoBreakUnbreakLines = new AutoBreakUnbreakLines())
+            {
+                var selectedLines = new Subtitle();
+                foreach (int index in SubtitleListview1.SelectedIndices)
+                {
+                    selectedLines.Paragraphs.Add(_subtitle.Paragraphs[index]);
+                }
+
+                autoBreakUnbreakLines.Initialize(selectedLines, false);
+
+                if (autoBreakUnbreakLines.ShowDialog() == DialogResult.OK && autoBreakUnbreakLines.FixedText.Count > 0)
+                {
+                    MakeHistoryForUndo(_language.BeforeRemoveLineBreaksInSelectedLines);
+
+                    SubtitleListview1.BeginUpdate();
+                    foreach (int index in SubtitleListview1.SelectedIndices)
+                    {
+                        var p = _subtitle.GetParagraphOrDefault(index);
+                        if (autoBreakUnbreakLines.FixedText.ContainsKey(p.Id))
+                        {
+                            p.Text = autoBreakUnbreakLines.FixedText[p.Id];
+                            SubtitleListview1.SetText(index, p.Text);
+                            SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, index, p);
+                        }
+                    }
+
+                    SubtitleListview1.EndUpdate();
+                    RefreshSelectedParagraph();
+                    ShowStatus(string.Format(_language.NumberOfWithRemovedLineBreakX, autoBreakUnbreakLines.FixedText.Count));
+                }
+            }
         }
 
         private void MultipleReplaceToolStripMenuItemClick(object sender, EventArgs e)
@@ -28006,7 +28166,63 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolStripMenuItemSaveSelectedLinesClick(object sender, EventArgs e)
         {
+            var newSub = new Subtitle(_subtitle);
+            newSub.Header = _subtitle.Header;
+            newSub.Paragraphs.Clear();
+            foreach (int index in SubtitleListview1.SelectedIndices)
+            {
+                newSub.Paragraphs.Add(_subtitle.Paragraphs[index]);
+            }
 
+            SubtitleFormat currentFormat = GetCurrentSubtitleFormat();
+            UiUtil.SetSaveDialogFilter(saveFileDialog1, currentFormat);
+            saveFileDialog1.Title = _language.SaveSubtitleAs;
+            saveFileDialog1.DefaultExt = "*" + currentFormat.Extension;
+            saveFileDialog1.AddExtension = true;
+            if (!string.IsNullOrEmpty(_fileName))
+            {
+                saveFileDialog1.InitialDirectory = Path.GetDirectoryName(_fileName);
+            }
+
+            if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
+            {
+                int index = 0;
+                foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
+                {
+                    if (saveFileDialog1.FilterIndex == index + 1)
+                    {
+                        // only allow current extension or ".txt"
+                        string fileName = saveFileDialog1.FileName;
+                        string ext = Path.GetExtension(fileName).ToLowerInvariant();
+                        bool extOk = ext.Equals(format.Extension, StringComparison.OrdinalIgnoreCase) || format.AlternateExtensions.Contains(ext) || ext == ".txt";
+                        if (!extOk)
+                        {
+                            if (fileName.EndsWith('.'))
+                            {
+                                fileName = fileName.TrimEnd('.');
+                            }
+
+                            fileName += format.Extension;
+                        }
+
+                        if (format.IsTextBased)
+                        {
+                            string allText = GetSaveSubtitle(newSub).ToText(format);
+                            File.WriteAllText(fileName, allText, GetCurrentEncoding());
+                            ShowStatus(string.Format(_language.XLinesSavedAsY, newSub.Paragraphs.Count, fileName));
+                            return;
+                        }
+                        else if (format.GetType() == typeof(Ebu))
+                        {
+                            new Ebu().Save(fileName, GetSaveSubtitle(newSub));
+                            ShowStatus(string.Format(_language.XLinesSavedAsY, newSub.Paragraphs.Count, fileName));
+                            return;
+                        }
+                    }
+
+                    index++;
+                }
+            }
         }
 
         private void GuessTimeCodesToolStripMenuItemClick(object sender, EventArgs e)

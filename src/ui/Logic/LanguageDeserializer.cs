@@ -4027,27 +4027,6 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/ContextMenu/SizeAllColumnsToFit":
                     language.Main.Menu.ContextMenu.SizeAllColumnsToFit = reader.Value;
                     break;
-                case "Main/Menu/ContextMenu/AdvancedSubStationAlphaSetStyle":
-                    language.Main.Menu.ContextMenu.AdvancedSubStationAlphaSetStyle = reader.Value;
-                    break;
-                case "Main/Menu/ContextMenu/SubStationAlphaSetStyle":
-                    language.Main.Menu.ContextMenu.SubStationAlphaSetStyle = reader.Value;
-                    break;
-                case "Main/Menu/ContextMenu/SetActor":
-                    language.Main.Menu.ContextMenu.SetActor = reader.Value;
-                    break;
-                case "Main/Menu/ContextMenu/SubStationAlphaStyles":
-                    language.Main.Menu.ContextMenu.SubStationAlphaStyles = reader.Value;
-                    break;
-                case "Main/Menu/ContextMenu/AdvancedSubStationAlphaStyles":
-                    language.Main.Menu.ContextMenu.AdvancedSubStationAlphaStyles = reader.Value;
-                    break;
-                case "Main/Menu/ContextMenu/TimedTextSetRegion":
-                    language.Main.Menu.ContextMenu.TimedTextSetRegion = reader.Value;
-                    break;
-                case "Main/Menu/ContextMenu/TimedTextSetStyle":
-                    language.Main.Menu.ContextMenu.TimedTextSetStyle = reader.Value;
-                    break;
                 case "Main/Menu/ContextMenu/TimedTextStyles":
                     language.Main.Menu.ContextMenu.TimedTextStyles = reader.Value;
                     break;

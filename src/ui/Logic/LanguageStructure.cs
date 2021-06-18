@@ -1590,9 +1590,9 @@
                 public class ListViewContextMenu
                 {
                     public string SizeAllColumnsToFit { get; set; }
-                    public string AdvancedSubStationAlphaSetStyle { get; set; }
-                    public string SubStationAlphaSetStyle { get; set; }
+                    public string SetStyle { get; set; }
                     public string SetActor { get; set; }
+                    public string SetOverrideTags { get; set; }
                     public string SubStationAlphaStyles { get; set; }
                     public string AdvancedSubStationAlphaStyles { get; set; }
                     public string TimedTextSetRegion { get; set; }
