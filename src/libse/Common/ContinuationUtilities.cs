@@ -670,7 +670,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
             newFirstWord = newFirstWord.Trim();
 
-            string result;
+            string result = null;
 
             // If we can find it...
             if (originalText.IndexOf(firstWord, StringComparison.Ordinal) >= 0)
@@ -678,7 +678,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 // Replace it
                 result = ReplaceFirstOccurrence(originalText, firstWord, newFirstWord);
             }
-            else
+            else if (newFirstWord.Length > 0)
             {
                 // Just remove whatever prefix we need to remove
                 var prefix = firstWord.Replace(newFirstWord, "");
