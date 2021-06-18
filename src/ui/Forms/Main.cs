@@ -9823,13 +9823,13 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            if (_shortcuts.MainTextBoxAssaIntellisense == e.KeyData && IsAssa())
+            if (_shortcuts.MainTextBoxAssaIntellisense == e.KeyData)
             {
                 _intellisenceList = DoIntellisense(textBoxListViewText, _intellisenceList);
                 e.SuppressKeyPress = true;
                 return;
             }
-            else if (_shortcuts.MainTextBoxAssaRemoveTag == e.KeyData && IsAssa())
+            else if (_shortcuts.MainTextBoxAssaRemoveTag == e.KeyData)
             {
                 MakeHistoryForUndo("text change"); //TODO: fix language tag
                 AssaTagHelper.RemoveTagAtCursor(textBoxListViewText);
@@ -25615,13 +25615,13 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            if (_shortcuts.MainTextBoxAssaIntellisense == e.KeyData && IsAssa())
+            if (_shortcuts.MainTextBoxAssaIntellisense == e.KeyData)
             {
                 _intellisenceListOriginal = DoIntellisense(textBoxListViewTextOriginal, _intellisenceListOriginal);
                 e.SuppressKeyPress = true;
                 return;
             }
-            else if (_shortcuts.MainTextBoxAssaRemoveTag == e.KeyData && IsAssa())
+            else if (_shortcuts.MainTextBoxAssaRemoveTag == e.KeyData)
             {
                 MakeHistoryForUndo("text change"); //TODO: fix language tag
                 AssaTagHelper.RemoveTagAtCursor(textBoxListViewTextOriginal);
