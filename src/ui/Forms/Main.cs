@@ -1663,8 +1663,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             toolStripMenuItemAssStyles.Text = _language.Menu.ContextMenu.SubStationAlphaStyles;
             toolStripMenuItemAssaStyles.Text = _language.Menu.ContextMenu.SubStationAlphaStyles;
-            setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SubStationAlphaSetStyle;
+            setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SetStyle;
             setActorForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SetActor;
+            toolStripMenuItemAssaOverrideTags.Text = _language.Menu.ContextMenu.SetOverrideTags;
 
             toolStripMenuItemDelete.Text = _language.Menu.ContextMenu.Delete;
             insertLineToolStripMenuItem.Text = _language.Menu.ContextMenu.InsertFirstLine;
@@ -8107,12 +8108,12 @@ namespace Nikse.SubtitleEdit.Forms
                 if (formatType == typeof(AdvancedSubStationAlpha))
                 {
                     toolStripMenuItemAssStyles.Text = _language.Menu.ContextMenu.AdvancedSubStationAlphaStyles;
-                    setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.AdvancedSubStationAlphaSetStyle;
+                    setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SetStyle;
                 }
                 else
                 {
                     toolStripMenuItemAssStyles.Text = _language.Menu.ContextMenu.SubStationAlphaStyles;
-                    setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SubStationAlphaSetStyle;
+                    setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SetStyle;
                 }
 
                 // actor
@@ -8426,6 +8427,7 @@ namespace Nikse.SubtitleEdit.Forms
                 bool noNetWorkSession = _networkSession == null;
 
                 toolStripMenuItemSaveSelectedLines.Visible = false;
+                toolStripMenuItemInsert.Visible = true;
                 toolStripMenuItemInsertBefore.Visible = true;
                 toolStripMenuItemInsertAfter.Visible = true;
                 toolStripMenuItemInsertSubtitle.Visible = noNetWorkSession;
@@ -8436,13 +8438,11 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripSeparator7.Visible = true;
                 typeEffectToolStripMenuItem.Visible = noNetWorkSession;
                 karaokeEffectToolStripMenuItem.Visible = noNetWorkSession;
-                toolStripSeparatorAdvancedFunctions.Visible = noNetWorkSession;
                 adjustDisplayTimeForSelectedLinesToolStripMenuItem.Visible = true;
                 visualSyncSelectedLinesToolStripMenuItem.Visible = true;
                 toolStripMenuItemGoogleMicrosoftTranslateSelLine.Visible = false;
                 toolStripMenuItemUnbreakLines.Visible = true;
                 toolStripMenuItemAutoBreakLines.Visible = true;
-                toolStripSeparatorBreakLines.Visible = true;
                 toolStripMenuItemSurroundWithMusicSymbols.Visible = IsUnicode || Configuration.Settings.Tools.MusicSymbol == "#" || Configuration.Settings.Tools.MusicSymbol == "*";
                 if (SubtitleListview1.SelectedItems.Count == 1)
                 {
@@ -8450,7 +8450,6 @@ namespace Nikse.SubtitleEdit.Forms
                     visualSyncSelectedLinesToolStripMenuItem.Visible = false;
                     toolStripMenuItemUnbreakLines.Visible = false;
                     toolStripMenuItemAutoBreakLines.Visible = false;
-                    toolStripSeparatorBreakLines.Visible = false;
                     if (_subtitleOriginal != null && noNetWorkSession && !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorApiKey))
                     {
                         toolStripMenuItemGoogleMicrosoftTranslateSelLine.Visible = true;
@@ -8460,6 +8459,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (SubtitleListview1.SelectedItems.Count == 2)
                 {
+                    toolStripMenuItemInsert.Visible = false;
                     toolStripMenuItemInsertBefore.Visible = false;
                     toolStripMenuItemInsertAfter.Visible = false;
                     toolStripMenuItemInsertSubtitle.Visible = false;
@@ -8471,6 +8471,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (SubtitleListview1.SelectedItems.Count >= 2)
                 {
                     toolStripMenuItemSaveSelectedLines.Visible = true;
+                    toolStripMenuItemInsert.Visible = false;
                     toolStripMenuItemInsertBefore.Visible = false;
                     toolStripMenuItemInsertAfter.Visible = false;
                     toolStripMenuItemInsertSubtitle.Visible = false;
@@ -8505,11 +8506,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                     toolStripMenuItemMergeDialog.Visible = false;
                 }
-
-                if (formatType != typeof(SubRip))
-                {
-                    toolStripSeparatorAdvancedFunctions.Visible = SubtitleListview1.SelectedItems.Count == 1 && noNetWorkSession;
-                }
             }
 
             toolStripMenuItemPasteSpecial.Visible = Clipboard.ContainsText();
@@ -8517,6 +8513,19 @@ namespace Nikse.SubtitleEdit.Forms
             if (string.IsNullOrEmpty(Configuration.Settings.Tools.MusicSymbol))
             {
                 toolStripMenuItemSurroundWithMusicSymbols.Visible = false;
+            }
+
+            // final tuning for ASSA
+            if (formatType == typeof(AdvancedSubStationAlpha))
+            {
+                toolStripMenuItemAssaOverrideTags.Visible = true;
+                toolStripSeparatorAssa.Visible = true;
+                toolStripMenuItemAssStyles.Visible = false; // Use toolbar instead
+            }
+            else
+            {
+                toolStripMenuItemAssaOverrideTags.Visible = false;
+                toolStripSeparatorAssa.Visible = false;
             }
         }
 
@@ -26438,38 +26447,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolStripMenuItemGoogleMicrosoftTranslateSelLineClick(object sender, EventArgs e)
         {
-            int firstSelectedIndex = FirstSelectedIndex;
-            if (firstSelectedIndex >= 0)
-            {
-                var p = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
-                if (p != null)
-                {
-                    string defaultFromLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
-                    if (_subtitleOriginal != null)
-                    {
-                        var o = Utilities.GetOriginalParagraph(firstSelectedIndex, p, _subtitleOriginal.Paragraphs);
-                        if (o != null)
-                        {
-                            p = o;
-                            defaultFromLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleOriginal);
-                        }
-                    }
 
-                    Cursor = Cursors.WaitCursor;
-                    if (_googleOrMicrosoftTranslate == null || _googleOrMicrosoftTranslate.IsDisposed)
-                    {
-                        _googleOrMicrosoftTranslate = new GoogleOrMicrosoftTranslate();
-                        _googleOrMicrosoftTranslate.InitializeFromLanguage(defaultFromLanguage);
-                    }
-
-                    _googleOrMicrosoftTranslate.Initialize(p);
-                    Cursor = Cursors.Default;
-                    if (_googleOrMicrosoftTranslate.ShowDialog() == DialogResult.OK)
-                    {
-                        textBoxListViewText.Text = _googleOrMicrosoftTranslate.TranslatedText;
-                    }
-                }
-            }
         }
 
         private void NumericUpDownSec1ValueChanged(object sender, EventArgs e)
