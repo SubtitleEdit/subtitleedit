@@ -132,11 +132,13 @@ namespace Nikse.SubtitleEdit.Logic
             new IntellisenseItem("{\\t(<t1,t2,style modifiers>)}",  "Animated transform", false, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#transform"),
             new IntellisenseItem("{\\t(<t1,t2,accel,style modifiers>)}",  "Animated transform", false, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#transform"),
 
-            // Karaoke
+            // TODO: Karaoke
             // 2a&Haa --- fix
             //fix  new IntellisenseItem("{\\k<duration>}",  "Karaoke, delay in 100th of a second (10ms)", false),
             //fix  new IntellisenseItem("{\\K<duration>}",  "Karaoke right to left, delay in 100th of a second (10ms)", false),
             // Is this used? new IntellisenseItem("{\\2c&Hbbggrr&}",  "Color for karaoke", true),
+
+            // TODO: Drawing
         };
 
         private static readonly List<string> LastAddedTags = new List<string>();

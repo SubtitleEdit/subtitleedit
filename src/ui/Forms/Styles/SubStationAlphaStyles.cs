@@ -1,19 +1,18 @@
-﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Text;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic.VideoPlayers;
-using System.IO;
 
 namespace Nikse.SubtitleEdit.Forms.Styles
 {
@@ -312,17 +311,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void ResetHeader()
         {
-            SubtitleFormat format;
-            if (_isSubStationAlpha)
-            {
-                format = new SubStationAlpha();
-            }
-            else
-            {
-                format = new AdvancedSubStationAlpha();
-            }
+            var format = _isSubStationAlpha ? (SubtitleFormat)new SubStationAlpha() : new AdvancedSubStationAlpha();
             var sub = new Subtitle();
-            string text = format.ToText(sub, string.Empty);
+            var text = format.ToText(sub, string.Empty);
             var lines = text.SplitToLines();
             format.LoadSubtitle(sub, lines, string.Empty);
             _header = sub.Header;
@@ -2498,6 +2489,12 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 _currentCategory.Styles.RemoveAt(idx);
                 _currentCategory.Styles.Insert(idx - 1, style);
             }
+            else
+            {
+                var style = _currentFileStyles[idx];
+                _currentFileStyles.RemoveAt(idx);
+                _currentFileStyles.Insert(idx - 1, style);
+            }
 
             idx--;
             listView.Items.Insert(idx, item);
@@ -2524,6 +2521,12 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 var style = _currentCategory.Styles[idx];
                 _currentCategory.Styles.RemoveAt(idx);
                 _currentCategory.Styles.Insert(idx + 1, style);
+            }
+            else
+            {
+                var style = _currentFileStyles[idx];
+                _currentFileStyles.RemoveAt(idx);
+                _currentFileStyles.Insert(idx + 1, style);
             }
 
             idx++;
@@ -2552,6 +2555,12 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 _currentCategory.Styles.RemoveAt(idx);
                 _currentCategory.Styles.Insert(0, style);
             }
+            else
+            {
+                var style = _currentFileStyles[idx];
+                _currentFileStyles.RemoveAt(idx);
+                _currentFileStyles.Insert(0, style);
+            }
 
             idx = 0;
             listView.Items.Insert(idx, item);
@@ -2578,6 +2587,12 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 var style = _currentCategory.Styles[idx];
                 _currentCategory.Styles.RemoveAt(idx);
                 _currentCategory.Styles.Add(style);
+            }
+            else
+            {
+                var style = _currentFileStyles[idx];
+                _currentFileStyles.RemoveAt(idx);
+                _currentFileStyles.Add(style);
             }
 
             listView.Items.Add(item);

@@ -26447,7 +26447,38 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolStripMenuItemGoogleMicrosoftTranslateSelLineClick(object sender, EventArgs e)
         {
+            int firstSelectedIndex = FirstSelectedIndex;
+            if (firstSelectedIndex >= 0)
+            {
+                var p = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
+                if (p != null)
+                {
+                    string defaultFromLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
+                    if (_subtitleOriginal != null)
+                    {
+                        var o = Utilities.GetOriginalParagraph(firstSelectedIndex, p, _subtitleOriginal.Paragraphs);
+                        if (o != null)
+                        {
+                            p = o;
+                            defaultFromLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleOriginal);
+                        }
+                    }
 
+                    Cursor = Cursors.WaitCursor;
+                    if (_googleOrMicrosoftTranslate == null || _googleOrMicrosoftTranslate.IsDisposed)
+                    {
+                        _googleOrMicrosoftTranslate = new GoogleOrMicrosoftTranslate();
+                        _googleOrMicrosoftTranslate.InitializeFromLanguage(defaultFromLanguage);
+                    }
+
+                    _googleOrMicrosoftTranslate.Initialize(p);
+                    Cursor = Cursors.Default;
+                    if (_googleOrMicrosoftTranslate.ShowDialog() == DialogResult.OK)
+                    {
+                        textBoxListViewText.Text = _googleOrMicrosoftTranslate.TranslatedText;
+                    }
+                }
+            }
         }
 
         private void NumericUpDownSec1ValueChanged(object sender, EventArgs e)
