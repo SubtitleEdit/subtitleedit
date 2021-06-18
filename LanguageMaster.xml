@@ -1213,9 +1213,9 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
       </ToolBar>
       <ContextMenu>
         <SizeAllColumnsToFit>Size all columns to fit</SizeAllColumnsToFit>
-        <AdvancedSubStationAlphaSetStyle>Advanced Sub Station Alpha - set style</AdvancedSubStationAlphaSetStyle>
-        <SubStationAlphaSetStyle>Sub Station Alpha - set style</SubStationAlphaSetStyle>
+        <SetStyle>Set style</SetStyle>
         <SetActor>Set actor</SetActor>
+        <SetOverrideTags>Set override tags</SetOverrideTags>
         <SubStationAlphaStyles>Sub Station Alpha styles...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Advanced Sub Station Alpha styles...</AdvancedSubStationAlphaStyles>
         <TimedTextSetRegion>Timed Text - set region</TimedTextSetRegion>
