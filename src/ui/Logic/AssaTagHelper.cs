@@ -71,11 +71,10 @@ namespace Nikse.SubtitleEdit.Logic
             new IntellisenseItem("{\\pos(x,y)}",  "Set position", false, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#pos"),
 
             new IntellisenseItem("{\\c&Hbbggrr&}",  "Color", true,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#primary-color"),
-            // Is this used? new IntellisenseItem("{\\2c&Hbbggrr&}",  "Color for karaoke", true),
             new IntellisenseItem("{\\3c&Hbbggrr&}",  "Color for outline/opaque box", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#outline-color"),
             new IntellisenseItem("{\\4c&Hbbggrr&}",  "Color for shadow", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#shadow-color"),
 
-            // Seems overly complex... new IntellisenseItem("{\\fade(a1,a2,a3,t1,t2,t3,t4)}",  "Fade advanced",false, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#fade-in-out"),
+            new IntellisenseItem("{\\fade(a1,a2,a3,t1,t2,t3,t4)}",  "Fade advanced",false, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#fade-in-out"),
             new IntellisenseItem("{\\fad(fadein time,fadeout time>}",  "Fade in/out in milliseconds", false, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#fade-in-out"),
 
             new IntellisenseItem("{\\fn<font_name>}",  "Font name", false,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#font-name"),
@@ -118,24 +117,26 @@ namespace Nikse.SubtitleEdit.Logic
 
             new IntellisenseItem("{\\alpha&Haa}",  "Alpha (00=fully visible, ff=transparent)", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#alpha"),
             new IntellisenseItem("{\\1a&Haa}",  "Alpha for text (00=fully visible, ff=transparent)", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#alpha"),
-            // 2a&Haa --- skip ? Karaoke
             new IntellisenseItem("{\\3a&Haa}",  "Alpha for outline box (00=fully visible, ff=transparent)", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#alpha"),
             new IntellisenseItem("{\\4a&Haa}",  "Alpha for shadow (00=fully visible, ff=transparent)", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#alpha"),
 
-            //skip?  new IntellisenseItem("{\\k<duration>}",  "Karaoke, delay in 100th of a second (10ms)", false),
-            //skip?  new IntellisenseItem("{\\K<duration>}",  "Karaoke right to left, delay in 100th of a second (10ms)", false),
-
-            new IntellisenseItem("{\\clip(x1,y1,x2,y2)}",  "Clips (hides) any drawing outside the rectangle defined by the parameters.", true),
-            new IntellisenseItem("{\\iclip(x1,y1,x2,y2)}",  "Clips (hides) any drawing inside the rectangle defined by the parameters.", true),
+            new IntellisenseItem("{\\clip(x1,y1,x2,y2)}",  "Clips (hides) any drawing outside the rectangle defined by the parameters.", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#clip"),
+            new IntellisenseItem("{\\iclip(x1,y1,x2,y2)}",  "Clips (hides) any drawing inside the rectangle defined by the parameters.", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#clip"),
 
             new IntellisenseItem("{\\r}",  "Reset inline styles", false, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#reset"),
 
-            new IntellisenseItem("{\\mov(x1,y1,x2,y2,start,end)}",  "Move", false, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#move"),
+            new IntellisenseItem("{\\move(x1,y1,x2,y2,start,end)}",  "Move", false, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#move"),
 
-            new IntellisenseItem("{\\t(<style modifiers>)}",  "Animated transform", false),
-            new IntellisenseItem("{\\t(<accel,style modifiers>)}",  "Animated transform", false),
-            new IntellisenseItem("{\\t(<t1,t2,style modifiers>)}",  "Animated transform", false),
-            new IntellisenseItem("{\\t(<t1,t2,accel,style modifiers>)}",  "Animated transform", false),
+            new IntellisenseItem("{\\t(<style modifiers>)}",  "Animated transform", false, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#transform"),
+            new IntellisenseItem("{\\t(<accel,style modifiers>)}",  "Animated transform", false, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#transform"),
+            new IntellisenseItem("{\\t(<t1,t2,style modifiers>)}",  "Animated transform", false, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#transform"),
+            new IntellisenseItem("{\\t(<t1,t2,accel,style modifiers>)}",  "Animated transform", false, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#transform"),
+
+            // Karaoke
+            // 2a&Haa --- fix
+            //fix  new IntellisenseItem("{\\k<duration>}",  "Karaoke, delay in 100th of a second (10ms)", false),
+            //fix  new IntellisenseItem("{\\K<duration>}",  "Karaoke right to left, delay in 100th of a second (10ms)", false),
+            // Is this used? new IntellisenseItem("{\\2c&Hbbggrr&}",  "Color for karaoke", true),
         };
 
         private static readonly List<string> LastAddedTags = new List<string>();
@@ -397,7 +398,12 @@ namespace Nikse.SubtitleEdit.Logic
                 return string.Empty;
             }
 
-            var extra = (lastIndexOfStartBracket == lastStart ? 1 : 0);
+            var extra = lastIndexOfStartBracket == lastStart ? 1 : 0;
+            if (textBox.SelectionStart + extra > textBox.Text.Length)
+            {
+                return string.Empty;
+            }
+
             var endTagIndex = textBox.Text.IndexOfAny(new[] { '\\', '}' }, textBox.SelectionStart + extra);
             if (endTagIndex > 0)
             {
