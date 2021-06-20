@@ -1656,6 +1656,7 @@
                     public string TranslateSelectedLines { get; set; }
                     public string AdjustDisplayDurationForSelectedLines { get; set; }
                     public string ApplyDurationLimitsForSelectedLines { get; set; }
+                    public string ApplyCustomOverrideTag { get; set; }
                     public string FixCommonErrorsInSelectedLines { get; set; }
                     public string ChangeCasingForSelectedLines { get; set; }
                     public string SaveSelectedLines { get; set; }
@@ -2183,6 +2184,7 @@
             public string StartInSourceView { get; set; }
             public string RemoveBlankLinesWhenOpening { get; set; }
             public string RemoveBlankLines { get; set; }
+            public string ApplyAssaOverrideTags { get; set; }
             public string ShowLineBreaksAs { get; set; }
             public string SaveAsFileNameFrom { get; set; }
             public string MainListViewDoubleClickAction { get; set; }
