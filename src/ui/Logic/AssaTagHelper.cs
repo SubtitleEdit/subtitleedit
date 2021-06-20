@@ -270,7 +270,7 @@ namespace Nikse.SubtitleEdit.Logic
                     tb.Text = tb.Text.Remove(start, endTagIndex - start + 1);
                 }
 
-                if (tb.Text[start] == '}')
+                if (tb.Text.Length > start && tb.Text[start] == '}')
                 {
                     start++;
                 }
