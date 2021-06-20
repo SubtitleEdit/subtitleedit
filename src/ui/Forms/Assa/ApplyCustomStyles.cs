@@ -2,22 +2,31 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using System;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic.VideoPlayers;
 
 namespace Nikse.SubtitleEdit.Forms.Assa
 {
-    public partial class ApplyCustomStyles : Form
+    public sealed partial class ApplyCustomStyles : Form
     {
         public Subtitle UpdatedSubtitle { get; private set; }
         private readonly Subtitle _subtitle;
         private ListBox _intellisenseList;
         private readonly int[] _selectedIndices;
         private int[] _advancedIndices;
-        private Keys MainTextBoxAssaIntellisense { get; set; }
-        private Keys MainTextBoxAssaRemoveTag { get; set; }
-
+        private LibMpvDynamic _mpv;
+        private string _mpvTextFileName;
+        private const int PreviewHeight = 394;
+        private readonly int _originalHeight;
+        private Keys MainTextBoxAssaIntellisense { get; }
+        private Keys MainTextBoxAssaRemoveTag { get; }
+        private bool _closing;
+        private bool _videoLoaded;
 
         public ApplyCustomStyles(Subtitle subtitle, int[] selectedIndices)
         {
@@ -46,6 +55,18 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             radioButtonAdvancedSelection_CheckedChanged(null, null);
             radioButtonSelectedLines.Text = string.Format("Selected lines: {0}", _selectedIndices.Length);
+
+            groupBoxPreview.Visible = false;
+            _originalHeight = Height;
+            MinimumSize = new Size(MinimumSize.Width, _originalHeight);
+
+            seTextBox1.TextChanged += (sender, args) =>
+            {
+                if (_videoLoaded)
+                {
+                    VideoLoaded(null, null);
+                }
+            };
         }
 
         private void ApplyCustomStyles_KeyDown(object sender, KeyEventArgs e)
@@ -217,15 +238,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
 
             UpdatedSubtitle = new Subtitle(subtitle, false);
-            var indices = _selectedIndices;
-            if (radioButtonAllLines.Checked)
-            {
-                indices = Enumerable.Range(0, subtitle.Paragraphs.Count).ToArray();
-            }
-            else if (radioButtonAdvancedSelection.Checked)
-            {
-                indices = _advancedIndices;
-            }
+            var indices = GetIndices(subtitle);
 
             for (int i = 0; i < UpdatedSubtitle.Paragraphs.Count; i++)
             {
@@ -244,6 +257,21 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                     p.Text = styleToApply + p.Text;
                 }
             }
+        }
+
+        private int[] GetIndices(Subtitle subtitle)
+        {
+            var indices = _selectedIndices;
+            if (radioButtonAllLines.Checked)
+            {
+                indices = Enumerable.Range(0, subtitle.Paragraphs.Count).ToArray();
+            }
+            else if (radioButtonAdvancedSelection.Checked)
+            {
+                indices = _advancedIndices;
+            }
+
+            return indices;
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -283,6 +311,145 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             buttonAdvancedSelection.Enabled = radioButtonAdvancedSelection.Checked;
             labelAdvancedSelection.Enabled = radioButtonAdvancedSelection.Checked;
+        }
+
+        private void buttonTogglePreview_Click(object sender, EventArgs e)
+        {
+            if (groupBoxPreview.Visible)
+            {
+                buttonTogglePreview.Text = "Show preview";
+                MinimumSize = new Size(MinimumSize.Width, _originalHeight);
+                Height = _originalHeight;
+                groupBoxPreview.Visible = false;
+            }
+            else
+            {
+                MinimumSize = new Size(MinimumSize.Width, _originalHeight + PreviewHeight);
+                buttonTogglePreview.Text = "Hide preview";
+                Height = _originalHeight + PreviewHeight;
+                groupBoxPreview.Height = buttonTogglePreview.Top - groupBoxPreview.Top - 10;
+                groupBoxPreview.Visible = true;
+                if (_mpv == null)
+                {
+                    GeneratePreviewViaMpv();
+                }
+            }
+        }
+
+        private bool GeneratePreviewViaMpv()
+        {
+            var fileName = Path.Combine(Configuration.DataDirectory, "preview.mp4");
+            if (!File.Exists(fileName))
+            {
+                var isFfmpegAvailable = !Configuration.IsRunningOnWindows || !string.IsNullOrEmpty(Configuration.Settings.General.FFmpegLocation) && File.Exists(Configuration.Settings.General.FFmpegLocation);
+                if (!isFfmpegAvailable)
+                {
+                    return false;
+                }
+
+                using (var p = GetFFmpegProcess(fileName))
+                {
+                    p.Start();
+                    p.WaitForExit();
+                }
+            }
+
+            if (!LibMpvDynamic.IsInstalled)
+            {
+                return false;
+            }
+
+            if (_mpv == null)
+            {
+                _mpv = new LibMpvDynamic();
+                _mpv.Initialize(pictureBoxPreview, fileName, VideoLoaded, null);
+            }
+            else
+            {
+                VideoLoaded(null, null);
+            }
+
+            return true;
+        }
+
+        public static Process GetFFmpegProcess(string outputFileName)
+        {
+            var ffmpegLocation = Configuration.Settings.General.FFmpegLocation;
+            if (!Configuration.IsRunningOnWindows && (string.IsNullOrEmpty(ffmpegLocation) || !File.Exists(ffmpegLocation)))
+            {
+                ffmpegLocation = "ffmpeg";
+            }
+
+            return new Process
+            {
+                StartInfo =
+                {
+                    FileName = ffmpegLocation,
+                    Arguments = $"-t 1 -f lavfi -i color=c=blue:s=720x480 -c:v libx264 -tune stillimage -pix_fmt yuv420p \"{outputFileName}\"",
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+        }
+
+        private void VideoLoaded(object sender, EventArgs e)
+        {
+            var format = new AdvancedSubStationAlpha();
+            var subtitle = new Subtitle();
+            var indices = GetIndices(subtitle);
+            var styleToApply = seTextBox1.Text;
+            if (indices.Length > 0)
+            {
+                var p = new Paragraph(_subtitle.Paragraphs[indices[0]])
+                {
+                    StartTime = { TotalMilliseconds = 0 }, 
+                    EndTime = { TotalMilliseconds = 1000 }
+                };
+                p.Text = styleToApply + p.Text;
+                subtitle.Paragraphs.Add(p);
+            }
+            else
+            {
+                var p = new Paragraph(Configuration.Settings.General.PreviewAssaText, 0, 1000);
+                p.Text = styleToApply + p.Text;
+                subtitle.Paragraphs.Add(p);
+            }
+
+            subtitle.Header = _subtitle.Header ?? AdvancedSubStationAlpha.DefaultHeader;
+            var text = subtitle.ToText(format);
+            _mpvTextFileName = FileUtil.GetTempFileName(format.Extension);
+            File.WriteAllText(_mpvTextFileName, text);
+            _mpv.LoadSubtitle(_mpvTextFileName);
+            _mpv.Play();
+
+            if (!_videoLoaded)
+            {
+                timer1.Start();
+                _videoLoaded = true;
+            }
+        }
+
+        private void ApplyCustomStyles_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            _closing = true;
+            Application.DoEvents();
+            _mpv?.Dispose();
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (_mpv == null || _closing)
+            {
+                return;
+            }
+
+            if (_mpv.IsPlaying)
+            {
+                return;
+            }
+
+            _mpv?.Stop();
+            _mpv?.Play();
         }
     }
 }

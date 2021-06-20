@@ -1,7 +1,7 @@
 ﻿
 namespace Nikse.SubtitleEdit.Forms.Assa
 {
-    partial class ApplyCustomStyles
+    sealed partial class ApplyCustomStyles
     {
         /// <summary>
         /// Required designer variable.
@@ -29,6 +29,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.labelAdvancedSelection = new System.Windows.Forms.Label();
             this.buttonAdvancedSelection = new System.Windows.Forms.Button();
@@ -36,12 +37,17 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.radioButtonAllLines = new System.Windows.Forms.RadioButton();
             this.radioButtonSelectedLines = new System.Windows.Forms.RadioButton();
             this.groupBoxPreview = new System.Windows.Forms.GroupBox();
+            this.pictureBoxPreview = new System.Windows.Forms.PictureBox();
             this.labelOverrideTags = new System.Windows.Forms.Label();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonHistory = new System.Windows.Forms.Button();
+            this.buttonTogglePreview = new System.Windows.Forms.Button();
             this.seTextBox1 = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.groupBox1.SuspendLayout();
+            this.groupBoxPreview.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -118,12 +124,22 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.groupBoxPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxPreview.Controls.Add(this.pictureBoxPreview);
             this.groupBoxPreview.Location = new System.Drawing.Point(12, 211);
             this.groupBoxPreview.Name = "groupBoxPreview";
-            this.groupBoxPreview.Size = new System.Drawing.Size(774, 394);
+            this.groupBoxPreview.Size = new System.Drawing.Size(774, 0);
             this.groupBoxPreview.TabIndex = 2;
             this.groupBoxPreview.TabStop = false;
             this.groupBoxPreview.Text = "Preview";
+            // 
+            // pictureBoxPreview
+            // 
+            this.pictureBoxPreview.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBoxPreview.Location = new System.Drawing.Point(3, 16);
+            this.pictureBoxPreview.Name = "pictureBoxPreview";
+            this.pictureBoxPreview.Size = new System.Drawing.Size(768, 0);
+            this.pictureBoxPreview.TabIndex = 0;
+            this.pictureBoxPreview.TabStop = false;
             // 
             // labelOverrideTags
             // 
@@ -138,7 +154,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(630, 611);
+            this.buttonOK.Location = new System.Drawing.Point(630, 216);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 4;
@@ -151,7 +167,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(711, 611);
+            this.buttonCancel.Location = new System.Drawing.Point(711, 216);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 5;
@@ -169,6 +185,18 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonHistory.Text = "History";
             this.buttonHistory.UseVisualStyleBackColor = true;
             this.buttonHistory.Click += new System.EventHandler(this.buttonHistory_Click);
+            // 
+            // buttonTogglePreview
+            // 
+            this.buttonTogglePreview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonTogglePreview.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonTogglePreview.Location = new System.Drawing.Point(481, 216);
+            this.buttonTogglePreview.Name = "buttonTogglePreview";
+            this.buttonTogglePreview.Size = new System.Drawing.Size(140, 23);
+            this.buttonTogglePreview.TabIndex = 7;
+            this.buttonTogglePreview.Text = "Show preview";
+            this.buttonTogglePreview.UseVisualStyleBackColor = true;
+            this.buttonTogglePreview.Click += new System.EventHandler(this.buttonTogglePreview_Click);
             // 
             // seTextBox1
             // 
@@ -194,11 +222,16 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.seTextBox1.Size = new System.Drawing.Size(522, 156);
             this.seTextBox1.TabIndex = 0;
             // 
+            // timer1
+            // 
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // ApplyCustomStyles
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(798, 646);
+            this.ClientSize = new System.Drawing.Size(798, 251);
+            this.Controls.Add(this.buttonTogglePreview);
             this.Controls.Add(this.buttonHistory);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
@@ -207,15 +240,18 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.seTextBox1);
             this.KeyPreview = true;
-            this.MinimumSize = new System.Drawing.Size(800, 600);
+            this.MinimumSize = new System.Drawing.Size(800, 245);
             this.Name = "ApplyCustomStyles";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ApplyCustomStyles";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ApplyCustomStyles_FormClosing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ApplyCustomStyles_KeyDown);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.groupBoxPreview.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -235,5 +271,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private System.Windows.Forms.RadioButton radioButtonAdvancedSelection;
         private System.Windows.Forms.RadioButton radioButtonAllLines;
         private System.Windows.Forms.RadioButton radioButtonSelectedLines;
+        private System.Windows.Forms.Button buttonTogglePreview;
+        private System.Windows.Forms.PictureBox pictureBoxPreview;
+        private System.Windows.Forms.Timer timer1;
     }
 }
