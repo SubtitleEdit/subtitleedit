@@ -22781,6 +22781,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.CleanUpMenuItemPlugin(toolStripMenuItemSynchronization);
             UiUtil.CleanUpMenuItemPlugin(toolStripMenuItemAutoTranslate);
             UiUtil.CleanUpMenuItemPlugin(toolStripMenuItemTranslateSelected);
+            UiUtil.CleanUpMenuItemPlugin(toolStripMenuItemAssaOverrideTags);
 
             var fileMenuItems = new List<ToolStripMenuItem>();
             var toolsMenuItems = new List<ToolStripMenuItem>();
@@ -22788,6 +22789,7 @@ namespace Nikse.SubtitleEdit.Forms
             var translateSelectedLinesMenuItems = new List<ToolStripMenuItem>();
             var syncMenuItems = new List<ToolStripMenuItem>();
             var spellCheckMenuItems = new List<ToolStripMenuItem>();
+            var assaOverrideTagsMenuItems = new List<ToolStripMenuItem>();
 
             foreach (var pluginFileName in Directory.GetFiles(path, "*.DLL"))
             {
@@ -22843,6 +22845,11 @@ namespace Nikse.SubtitleEdit.Forms
                             item.Click += PluginClickNoFormatChange;
                             spellCheckMenuItems.Add(item);
                         }
+                        else if (actionType.Equals("AssaOverrideTags", StringComparison.OrdinalIgnoreCase))
+                        {
+                            item.Click += CallPluginAssa;
+                            assaOverrideTagsMenuItems.Add(item);
+                        }
                     }
                 }
                 catch (Exception exception)
@@ -22859,6 +22866,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemTranslateSelected.DropDownItems.AddRange(translateSelectedLinesMenuItems.OrderBy(p => p.Text).ToArray());
             toolStripMenuItemSynchronization.DropDownItems.AddRange(syncMenuItems.OrderBy(p => p.Text).ToArray());
             toolStripMenuItemSpellCheckMain.DropDownItems.AddRange(spellCheckMenuItems.OrderBy(p => p.Text).ToArray());
+            toolStripMenuItemAssaOverrideTags.DropDownItems.AddRange(assaOverrideTagsMenuItems.OrderBy(p => p.Text).ToArray());
         }
 
         private void AddSeparator(int pluginCount, ToolStripMenuItem parent, int? relativeOffset = null)
@@ -23126,6 +23134,86 @@ namespace Nikse.SubtitleEdit.Forms
                         UpdateSourceView();
                         SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
                         RestoreSubtitleListviewIndices();
+                        ShowStatus(string.Format(_language.PluginXExecuted, name));
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message + Environment.NewLine + exception.StackTrace);
+                if (exception.InnerException != null)
+                {
+                    MessageBox.Show(exception.InnerException.Message + Environment.NewLine + exception.InnerException.StackTrace);
+                }
+            }
+        }
+
+        private void CallPluginAssa(object sender, EventArgs e)
+        {
+            try
+            {
+                var item = (ToolStripItem)sender;
+                var pluginObject = GetPropertiesAndDoAction(item.Tag.ToString(), out var name, out var text, out var version, out var description, out var actionType, out var shortcut, out var mi);
+                if (mi == null)
+                {
+                    return;
+                }
+
+                SaveSubtitleListviewIndices();
+                var beforeParagraphCount = _subtitle.Paragraphs.Count;
+
+                // Add "SelectedLines" section
+                var selectedLines = SubtitleListview1.GetSelectedIndices();
+                var sub = new Subtitle(_subtitle);
+                SubtitleFormat format = new AdvancedSubStationAlpha();
+                var selectedIndicesText = string.Join(",", selectedLines);
+                if (string.IsNullOrEmpty(sub.Header))
+                {
+                    sub.Header = AdvancedSubStationAlpha.DefaultHeader;
+                }
+
+                sub.Header = AdvancedSubStationAlpha.AddTagToHeader("SelectedLines", "SelectedLines: " + selectedIndicesText, "[Script Info]", sub.Header);
+                var rawText = sub.ToText(format);
+
+                string pluginResult = (string)mi.Invoke(pluginObject,
+                    new object[]
+                    {
+                        this,
+                        sub.ToText(new SubRip()),
+                        Configuration.Settings.General.CurrentFrameRate,
+                        Configuration.Settings.General.ListViewLineSeparatorString,
+                        _fileName,
+                        VideoFileName,
+                        rawText
+                    });
+
+                if (!string.IsNullOrEmpty(pluginResult) && pluginResult.Length > 10 && text != pluginResult)
+                {
+                    var lines = new List<string>(pluginResult.SplitToLines());
+                    MakeHistoryForUndo(string.Format(_language.BeforeRunningPluginXVersionY, name, version));
+                    var s = new Subtitle();
+                    var f = new AdvancedSubStationAlpha();
+                    if (f.IsMine(lines, null))
+                    {
+                        f.LoadSubtitle(s, lines, null);
+
+                        _subtitle.Paragraphs.Clear();
+                        _subtitle.Paragraphs.AddRange(s.Paragraphs);
+                        _subtitle.Header = AdvancedSubStationAlpha.RemoveTagFromHeader("SelectedLines", "[Script Info]", s.Header);
+                        _subtitle.Footer = s.Footer;
+
+                        UpdateSourceView();
+                        SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+
+                        if (beforeParagraphCount == _subtitle.Paragraphs.Count)
+                        {
+                            RestoreSubtitleListviewIndices();
+                        }
+                        else
+                        {
+                            SubtitleListview1.SelectIndexAndEnsureVisible(0);
+                        }
+
                         ShowStatus(string.Format(_language.PluginXExecuted, name));
                     }
                 }

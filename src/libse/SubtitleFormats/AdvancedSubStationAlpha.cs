@@ -723,6 +723,14 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             return null;
         }
 
+        /// <summary>
+        /// Add tag to header.
+        /// </summary>
+        /// <param name="tagName">Tag to add</param>
+        /// <param name="tagAndValue">Tag name + value of tag, e.g. "SelectedLines: 0,1,2"</param>
+        /// <param name="section">Section name - include square brackets, e.g. "[Script Info]"</param>
+        /// <param name="header">Header to update</param>
+        /// <returns>Header with updated section</returns>
         public static string AddTagToHeader(string tagName, string tagAndValue, string section, string header)
         {
             var sectionOn = false;
@@ -776,6 +784,43 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Remove tag from header.
+        /// </summary>
+        /// <param name="tagName">Tag to remove</param>
+        /// <param name="section">Section name - include square brackets, e.g. "[Script Info]"</param>
+        /// <param name="header">Header to update</param>
+        /// <returns>Header with updated section</returns>
+        public static string RemoveTagFromHeader(string tagName, string section, string header)
+        {
+            var sectionOn = false;
+            var sb = new StringBuilder();
+            foreach (var line in header.SplitToLines())
+            {
+                var s = line.Trim();
+                if (s.StartsWith('['))
+                {
+                    if (s.Equals(section, StringComparison.OrdinalIgnoreCase))
+                    {
+                        sectionOn = true;
+                    }
+                    else if (sectionOn)
+                    {
+                        sectionOn = false;
+                    }
+                }
+                else if (sectionOn && 
+                         s.StartsWith(tagName, StringComparison.OrdinalIgnoreCase) &&
+                         s.RemoveChar(' ').StartsWith(tagName + ":", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                sb.AppendLine(line);
+            }
+
+            return sb.ToString();
+        }
 
         public static List<string> GetStylesFromHeader(string headerLines)
         {

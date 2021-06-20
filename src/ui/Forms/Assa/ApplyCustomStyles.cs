@@ -11,9 +11,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
     public partial class ApplyCustomStyles : Form
     {
         public Subtitle UpdatedSubtitle { get; private set; }
-        private Subtitle _subtitle;
-        private ListBox _intellisenceList;
-        private int[] _selectedIndices;
+        private readonly Subtitle _subtitle;
+        private ListBox _intellisenseList;
+        private readonly int[] _selectedIndices;
         private int[] _advancedIndices;
         private Keys MainTextBoxAssaIntellisense { get; set; }
         private Keys MainTextBoxAssaRemoveTag { get; set; }
@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             if (e.KeyCode == Keys.Escape)
             {
-                if (_intellisenceList != null && _intellisenceList.Focused)
+                if (_intellisenseList != null && _intellisenseList.Focused)
                 {
                     return;
                 }
@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
             else if (e.KeyData == UiUtil.HelpKeys)
             {
-                if (_intellisenceList != null && _intellisenceList.Focused)
+                if (_intellisenseList != null && _intellisenseList.Focused)
                 {
                     return;
                 }
@@ -71,13 +71,13 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
             else if (MainTextBoxAssaIntellisense == e.KeyData)
             {
-                if (_intellisenceList != null && _intellisenceList.Focused)
+                if (_intellisenseList != null && _intellisenseList.Focused)
                 {
-                    _intellisenceList.Hide();
+                    _intellisenseList.Hide();
                 }
                 else
                 {
-                    _intellisenceList = DoIntellisense(seTextBox1, _intellisenceList);
+                    _intellisenseList = DoIntellisense(seTextBox1, _intellisenseList);
                 }
 
                 e.SuppressKeyPress = true;
@@ -99,8 +99,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 {
                     if (args.KeyCode == Keys.Tab && intellisenseListBox.SelectedIndex >= 0)
                     {
-                        var item = intellisenseListBox.Items[intellisenseListBox.SelectedIndex] as AssaTagHelper.IntellisenseItem;
-                        if (item != null)
+                        if (intellisenseListBox.Items[intellisenseListBox.SelectedIndex] is AssaTagHelper.IntellisenseItem item)
                         {
                             AssaTagHelper.CompleteItem(tb, item);
                         }
@@ -113,8 +112,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 {
                     if (args.KeyCode == Keys.Enter && intellisenseListBox.SelectedIndex >= 0)
                     {
-                        var item = intellisenseListBox.Items[intellisenseListBox.SelectedIndex] as AssaTagHelper.IntellisenseItem;
-                        if (item != null)
+                        if (intellisenseListBox.Items[intellisenseListBox.SelectedIndex] is AssaTagHelper.IntellisenseItem item)
                         {
                             AssaTagHelper.CompleteItem(tb, item);
                         }
@@ -134,11 +132,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 };
                 intellisenseListBox.Click += (o, args) =>
                 {
-                    int index = intellisenseListBox.IndexFromPoint((args as MouseEventArgs).Location);
+                    var index = intellisenseListBox.IndexFromPoint(((MouseEventArgs)args).Location);
                     if (index != ListBox.NoMatches)
                     {
-                        var item = intellisenseListBox.Items[index] as AssaTagHelper.IntellisenseItem;
-                        if (item != null)
+                        if (intellisenseListBox.Items[index] is AssaTagHelper.IntellisenseItem item)
                         {
                             AssaTagHelper.CompleteItem(tb, item);
                         }
@@ -197,17 +194,18 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            ApplyOverrideTags(_subtitle, _selectedIndices);
-            DialogResult = DialogResult.OK;
-        }
-
-        private void ApplyOverrideTags(Subtitle subtitle, int[] selectedIndices)
-        {
-            var styleToApply = seTextBox1.Text;
-            if (string.IsNullOrWhiteSpace(styleToApply))
+            if (string.IsNullOrWhiteSpace(seTextBox1.Text))
             {
                 return;
             }
+
+            ApplyOverrideTags(_subtitle);
+            DialogResult = DialogResult.OK;
+        }
+
+        private void ApplyOverrideTags(Subtitle subtitle)
+        {
+            var styleToApply = seTextBox1.Text;
 
             Configuration.Settings.SubtitleSettings.AssaOverrideTagHistory = Configuration.Settings.SubtitleSettings.AssaOverrideTagHistory
                 .Where(p => p != styleToApply)
