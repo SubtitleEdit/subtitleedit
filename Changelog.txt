@@ -34,6 +34,7 @@
    * Minor fix for "Remove text for HI" - thx igenaya
    * Minor fix for split with zero time codes - thx darnn
    * Try to fix Tools - Join... with different ASSA styles - thx Joe
+   * Fix crash in "Continuation style" - thx ivandrofly
 
 
 3.6.1 (20th May 2021)
