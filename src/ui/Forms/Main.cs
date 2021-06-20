@@ -30254,13 +30254,12 @@ namespace Nikse.SubtitleEdit.Forms
                 return; // nothing changed
             }
 
-            var firstIdx = FirstSelectedIndex;
+            SaveSubtitleListviewIndices();
             _subtitle.Renumber();
             _subtitleOriginal?.Renumber();
             SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
             UpdateSourceView();
-            SubtitleListview1.SelectIndexAndEnsureVisibleFaster(firstIdx);
-            RefreshSelectedParagraph();
+            RestoreSubtitleListviewIndices();
             ShowStatus(string.Format(_language.LinesUpdatedX, linesUpdated));
         }
 
