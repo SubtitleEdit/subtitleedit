@@ -273,8 +273,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.setActorForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAssaOverrideTags = new System.Windows.Forms.ToolStripMenuItem();
             this.applyCustomStylesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.fadeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.setPositionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAssStyles = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorAssa = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemSetRegion = new System.Windows.Forms.ToolStripMenuItem();
@@ -2585,9 +2583,7 @@ namespace Nikse.SubtitleEdit.Forms
             // toolStripMenuItemAssaOverrideTags
             // 
             this.toolStripMenuItemAssaOverrideTags.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.applyCustomStylesToolStripMenuItem,
-            this.fadeToolStripMenuItem,
-            this.setPositionToolStripMenuItem});
+            this.applyCustomStylesToolStripMenuItem});
             this.toolStripMenuItemAssaOverrideTags.Name = "toolStripMenuItemAssaOverrideTags";
             this.toolStripMenuItemAssaOverrideTags.Size = new System.Drawing.Size(284, 22);
             this.toolStripMenuItemAssaOverrideTags.Text = "Set override tags";
@@ -2598,18 +2594,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.applyCustomStylesToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
             this.applyCustomStylesToolStripMenuItem.Text = "Apply custom tags...";
             this.applyCustomStylesToolStripMenuItem.Click += new System.EventHandler(this.applyCustomStylesToolStripMenuItem_Click);
-            // 
-            // fadeToolStripMenuItem
-            // 
-            this.fadeToolStripMenuItem.Name = "fadeToolStripMenuItem";
-            this.fadeToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
-            this.fadeToolStripMenuItem.Text = "Fade...";
-            // 
-            // setPositionToolStripMenuItem
-            // 
-            this.setPositionToolStripMenuItem.Name = "setPositionToolStripMenuItem";
-            this.setPositionToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
-            this.setPositionToolStripMenuItem.Text = "Set position...";
             // 
             // toolStripMenuItemAssStyles
             // 
@@ -6014,7 +5998,5 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInsertBefore;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInsertSubtitle;
         private System.Windows.Forms.ToolStripMenuItem applyCustomStylesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem fadeToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem setPositionToolStripMenuItem;
     }
 }

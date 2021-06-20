@@ -75,7 +75,7 @@ namespace Nikse.SubtitleEdit.Logic
             new IntellisenseItem("{\\4c&Hbbggrr&}",  "Color for shadow", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#shadow-color"),
 
             new IntellisenseItem("{\\fade(a1,a2,a3,t1,t2,t3,t4)}",  "Fade advanced",false, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#fade-in-out"),
-            new IntellisenseItem("{\\fad(fadein time,fadeout time>}",  "Fade in/out in milliseconds", false, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#fade-in-out"),
+            new IntellisenseItem("{\\fad(fadein time,fadeout time)}",  "Fade in/out in milliseconds", false, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#fade-in-out"),
 
             new IntellisenseItem("{\\fn<font_name>}",  "Font name", false,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#font-name"),
             new IntellisenseItem("{\\fs<font_size>}",  "Font size", true,"https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#font-size"),
