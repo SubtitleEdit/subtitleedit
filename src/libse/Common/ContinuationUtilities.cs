@@ -1173,7 +1173,15 @@ namespace Nikse.SubtitleEdit.Core.Common
                     "mais", "car", "donc", "parce que", "par exemple"
                 };
             }
-
+            else if (language == "pt")
+            {
+                conjunctions = new List<string>
+                {
+                    "mas", "nem", "por exemplo", "e", "bem com", "todavia", "no entanto", "mas também", "como também",
+                    "bem como", "porém", "por isso", "porque", "portanto"
+                };
+            }
+            
             if (conjunctions != null)
             {
                 foreach (string conjunction in conjunctions)
