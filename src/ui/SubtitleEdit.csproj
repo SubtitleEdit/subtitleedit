@@ -115,11 +115,29 @@
     <Compile Include="Forms\AlignmentPickerJapanese.Designer.cs">
       <DependentUpon>AlignmentPickerJapanese.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Assa\AdvancedSelectionHelper.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Assa\AdvancedSelectionHelper.Designer.cs">
+      <DependentUpon>AdvancedSelectionHelper.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Assa\ApplyCustomStyles.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Assa\ApplyCustomStyles.Designer.cs">
+      <DependentUpon>ApplyCustomStyles.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Assa\AssaTagTemplate.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\Assa\AssaTagTemplate.Designer.cs">
       <DependentUpon>AssaTagTemplate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Assa\TagHistory.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Assa\TagHistory.Designer.cs">
+      <DependentUpon>TagHistory.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\BatchConvertMkvEnding.cs">
       <SubType>Form</SubType>
@@ -1240,8 +1258,17 @@
     <EmbeddedResource Include="Forms\AlignmentPickerJapanese.resx">
       <DependentUpon>AlignmentPickerJapanese.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Assa\AdvancedSelectionHelper.resx">
+      <DependentUpon>AdvancedSelectionHelper.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Assa\ApplyCustomStyles.resx">
+      <DependentUpon>ApplyCustomStyles.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Assa\AssaTagTemplate.resx">
       <DependentUpon>AssaTagTemplate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Assa\TagHistory.resx">
+      <DependentUpon>TagHistory.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BatchConvertMkvEnding.resx">
       <DependentUpon>BatchConvertMkvEnding.cs</DependentUpon>

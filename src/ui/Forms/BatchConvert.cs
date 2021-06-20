@@ -2387,6 +2387,11 @@ namespace Nikse.SubtitleEdit.Forms
                 listViewInputFiles.InverseSelection();
                 e.SuppressKeyPress = true;
             }
+            else if (e.KeyData == UiUtil.HelpKeys)
+            {
+                UiUtil.ShowHelp("#batchconvert");
+                e.SuppressKeyPress = true;
+            }
         }
 
         private void BatchConvert_FormClosing(object sender, FormClosingEventArgs e)

@@ -506,6 +506,7 @@ namespace Nikse.SubtitleEdit.Core.Common
     public class SubtitleSettings
     {
         public List<AssaStorageCategory> AssaStyleStorageCategories { get; set; }
+        public List<string> AssaOverrideTagHistory { get; set; }
 
         public string DCinemaFontFile { get; set; }
         public string DCinemaLoadFontResource { get; set; }
@@ -579,6 +580,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public SubtitleSettings()
         {
             AssaStyleStorageCategories = new List<AssaStorageCategory>();
+            AssaOverrideTagHistory = new List<string>();
 
             DCinemaFontFile = "Arial.ttf";
             DCinemaLoadFontResource = "urn:uuid:3dec6dc0-39d0-498d-97d0-928d2eb78391";
@@ -2039,6 +2041,7 @@ $HorzAlign          =   Center
         public string MainListViewColumnTextDown { get; set; }
         public string MainListViewGoToNextError { get; set; }
         public string MainListViewRemoveBlankLines { get; set; }
+        public string ApplyAssaOverrideTags { get; set; }
         public string MainListViewRemoveTimeCodes { get; set; }
         public string MainTextBoxSplitAtCursor { get; set; }
         public string MainTextBoxSplitAtCursorAndVideoPos { get; set; }
@@ -5258,6 +5261,15 @@ $HorzAlign          =   Center
                     }
                 }
 
+                foreach (XmlNode tagNode in node.SelectNodes("AssaApplyOverrideTags/Tag"))
+                {
+                    var tag = tagNode.InnerText;
+                    if (!string.IsNullOrWhiteSpace(tag))
+                    {
+                        settings.SubtitleSettings.AssaOverrideTagHistory.Add(tag);
+                    }
+                }
+
                 subNode = node.SelectSingleNode("DCinemaFontFile");
                 if (subNode != null)
                 {
@@ -7538,6 +7550,12 @@ $HorzAlign          =   Center
                     shortcuts.MainListViewRemoveBlankLines = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("ApplyAssaOverrideTags");
+                if (subNode != null)
+                {
+                    shortcuts.ApplyAssaOverrideTags = subNode.InnerText;
+                }                
+
                 subNode = node.SelectSingleNode("MainListViewRemoveTimeCodes");
                 if (subNode != null)
                 {
@@ -8741,6 +8759,13 @@ $HorzAlign          =   Center
                 }
                 textWriter.WriteEndElement();
 
+                textWriter.WriteStartElement("AssaApplyOverrideTags", string.Empty);
+                foreach (var tag in settings.SubtitleSettings.AssaOverrideTagHistory)
+                {
+                    textWriter.WriteElementString("Tag", tag);
+                }
+                textWriter.WriteEndElement();
+
                 textWriter.WriteElementString("DCinemaFontFile", settings.SubtitleSettings.DCinemaFontFile);
                 textWriter.WriteElementString("DCinemaFontSize", settings.SubtitleSettings.DCinemaFontSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DCinemaBottomMargin", settings.SubtitleSettings.DCinemaBottomMargin.ToString(CultureInfo.InvariantCulture));
@@ -9172,6 +9197,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainListViewColumnTextDown", shortcuts.MainListViewColumnTextDown);
             textWriter.WriteElementString("MainListViewGoToNextError", shortcuts.MainListViewGoToNextError);
             textWriter.WriteElementString("MainListViewRemoveBlankLines", shortcuts.MainListViewRemoveBlankLines);
+            textWriter.WriteElementString("ApplyAssaOverrideTags", shortcuts.ApplyAssaOverrideTags);
             textWriter.WriteElementString("MainListViewRemoveTimeCodes", shortcuts.MainListViewRemoveTimeCodes);
             textWriter.WriteElementString("MainEditFixRTLViaUnicodeChars", shortcuts.MainEditFixRTLViaUnicodeChars);
             textWriter.WriteElementString("MainEditRemoveRTLUnicodeChars", shortcuts.MainEditRemoveRTLUnicodeChars);
