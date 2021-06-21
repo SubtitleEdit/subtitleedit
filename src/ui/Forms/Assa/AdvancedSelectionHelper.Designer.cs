@@ -109,6 +109,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.listViewFixes.TabIndex = 1;
             this.listViewFixes.UseCompatibleStateImageBehavior = false;
             this.listViewFixes.View = System.Windows.Forms.View.Details;
+            this.listViewFixes.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.listViewFixes_ItemChecked);
             // 
             // columnHeaderApply
             // 
