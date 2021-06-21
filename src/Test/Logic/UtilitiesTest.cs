@@ -65,6 +65,15 @@ namespace Test.Logic
         }
 
         [TestMethod]
+        public void AutoBreakFrenchSpaceBeforePunctuation()
+        {
+            Configuration.Settings.General.SubtitleLineMaximumLength = 43;
+            string s1 = "Et elle te le dis maintenant ? Pour quoi donc ?";
+            string s2 = Utilities.AutoBreakLine(s1, "fr");
+            Assert.AreEqual("Et elle te le dis maintenant ?" + Environment.NewLine + "Pour quoi donc ?", s2);
+        }
+
+        [TestMethod]
         public void AutoBreakLine5DoNoBreakAtTwoMusicTaggedLines()
         {
             Configuration.Settings.General.SubtitleLineMaximumLength = 43;
@@ -443,7 +452,7 @@ namespace Test.Logic
         {
             var s1 = "<i<Hallo!<i/>";
             string s2 = HtmlUtil.FixInvalidItalicTags(s1);
-            Assert.AreEqual( "<i>Hallo!</i>", s2);
+            Assert.AreEqual("<i>Hallo!</i>", s2);
         }
 
         [TestMethod]
@@ -717,7 +726,7 @@ namespace Test.Logic
         public void RemoveLineBreaks5()
         {
             string result = Utilities.RemoveLineBreaks("<i>Foobar" + Environment.NewLine + "</i>");
-            Assert.AreEqual( "<i>Foobar</i>", result);
+            Assert.AreEqual("<i>Foobar</i>", result);
         }
 
         [TestMethod]

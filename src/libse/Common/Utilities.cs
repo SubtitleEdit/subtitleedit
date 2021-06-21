@@ -248,6 +248,15 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return false;
             }
 
+            if (nextChar == ' ' && language == "fr" && index + 1 < s.Length)
+            {
+                var nextNext = s[index + 1];
+                if (nextNext == '?' || nextNext == '!' || nextNext == '.')
+                {
+                    return false;
+                }
+            }
+
             return true;
         }
 
