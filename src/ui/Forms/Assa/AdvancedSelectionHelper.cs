@@ -97,7 +97,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
 
             Indices = indices.ToArray();
+            listViewFixes.ItemChecked -= listViewFixes_ItemChecked;
             listViewFixes.Items.AddRange(listViewItems.ToArray());
+            listViewFixes.ItemChecked += listViewFixes_ItemChecked;
             listViewFixes.EndUpdate();
             groupBoxPreview.Text = string.Format(LanguageSettings.Current.ModifySelection.MatchingLinesX, listViewFixes.Items.Count);
             listViewFixes.AutoSizeLastColumn();
@@ -185,6 +187,19 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             {
                 UiUtil.ShowHelp(string.Empty);
                 e.SuppressKeyPress = true;
+            }
+        }
+
+        private void listViewFixes_ItemChecked(object sender, ItemCheckedEventArgs e)
+        {
+            if (e.Item == null)
+            {
+                return;
+            }
+
+            if (int.TryParse(e.Item.Tag.ToString(), out var index))
+            {
+                Indices = Indices.ToList().Where(p => p != index).ToArray();
             }
         }
     }
