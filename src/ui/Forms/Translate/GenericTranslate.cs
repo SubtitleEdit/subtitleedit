@@ -1,5 +1,4 @@
 ﻿using Nikse.SubtitleEdit.Controls;
-using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.Translate;
@@ -341,8 +340,20 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             }
             catch (TranslationException translationException)
             {
-                MessageBox.Show(translationException.Message + Environment.NewLine +
-                                translationException.InnerException?.Source + ": " + translationException.InnerException?.Message);
+                if (translationException.InnerException != null && translationException.InnerException.Message.Contains("The remote name could not be resolved"))
+                {
+                    ShowNetworkError(translationException.InnerException);
+                }
+                else
+                {
+                    MessageBox.Show(translationException.Message + Environment.NewLine +
+                                    translationException.InnerException?.Source + ": " + translationException.InnerException?.Message);
+                }
+            }
+            catch (Exception exception)
+            {
+                SeLogger.Error(exception);
+                ShowNetworkError(exception);
             }
             finally
             {
@@ -356,6 +367,14 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
                 Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage = _targetLanguageIsoCode;
             }
+        }
+
+        private static void ShowNetworkError(Exception exception)
+        {
+            MessageBox.Show("Subtitle Edit was unable to connect to the translation service." + Environment.NewLine +
+                            "Try again later or check your internet connection." + Environment.NewLine +
+                            Environment.NewLine +
+                            "Error: " + exception.Message);
         }
 
         private List<Paragraph> GetSelectedParagraphs()

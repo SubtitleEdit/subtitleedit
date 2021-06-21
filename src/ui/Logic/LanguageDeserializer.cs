@@ -4225,6 +4225,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/ContextMenu/ApplyDurationLimitsForSelectedLines":
                     language.Main.Menu.ContextMenu.ApplyDurationLimitsForSelectedLines = reader.Value;
                     break;
+                case "Main/Menu/ContextMenu/ApplyCustomOverrideTag":
+                    language.Main.Menu.ContextMenu.ApplyCustomOverrideTag = reader.Value;
+                    break;
                 case "Main/Menu/ContextMenu/FixCommonErrorsInSelectedLines":
                     language.Main.Menu.ContextMenu.FixCommonErrorsInSelectedLines = reader.Value;
                     break;
@@ -5451,6 +5454,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Settings/RemoveBlankLines":
                     language.Settings.RemoveBlankLines = reader.Value;
+                    break;
+                case "Settings/ApplyAssaOverrideTags":
+                    language.Settings.ApplyAssaOverrideTags = reader.Value;
                     break;
                 case "Settings/ShowLineBreaksAs":
                     language.Settings.ShowLineBreaksAs = reader.Value;
