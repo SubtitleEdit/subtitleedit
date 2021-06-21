@@ -176,6 +176,15 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <RemoveOneAttachment>Fjern en vedhæftet fil?</RemoveOneAttachment>
     <RemoveXAttachments>Fjern {0} vedhæftede filer?</RemoveXAttachments>
   </AssaAttachments>
+  <AssaOverrideTags>
+    <ApplyCustomTags>Anvend tilpassede tags</ApplyCustomTags>
+    <History>Historie</History>
+    <TagsToApply>Tags der skal anvendes</TagsToApply>
+    <ApplyTo>Anved på
+</ApplyTo>
+    <SelectedLinesX>Valgte linjer: {0}</SelectedLinesX>
+    <AdvancedSelection>Avanceret valg</AdvancedSelection>
+  </AssaOverrideTags>
   <AudioToText>
     <Title>Lyd til tekst</Title>
     <ExtractingAudioUsingX>Udtræk lyd ved hjælp af {0}...</ExtractingAudioUsingX>

@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.Assa
 {
-    public partial class TagHistory : Form
+    public sealed partial class TagHistory : Form
     {
         public string HistoryStyle { get; private set; }
 
@@ -14,6 +14,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             InitializeComponent();
             UiUtil.FixFonts(this);
 
+            Text = LanguageSettings.Current.AssaOverrideTags.History;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
