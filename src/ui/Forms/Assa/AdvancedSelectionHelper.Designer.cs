@@ -1,7 +1,7 @@
 ﻿
 namespace Nikse.SubtitleEdit.Forms.Assa
 {
-    partial class AdvancedSelectionHelper
+    sealed partial class AdvancedSelectionHelper
     {
         /// <summary>
         /// Required designer variable.

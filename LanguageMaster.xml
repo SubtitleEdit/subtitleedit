@@ -179,6 +179,14 @@ Note: Do check free disk space.</WaveFileMalformed>
     <RemoveOneAttachment>Remove one attachment?</RemoveOneAttachment>
     <RemoveXAttachments>Remove {0} attachments?</RemoveXAttachments>
   </AssaAttachments>
+  <AssaOverrideTags>
+    <ApplyCustomTags>Apply custom tags</ApplyCustomTags>
+    <History>History</History>
+    <TagsToApply>Tags to apply</TagsToApply>
+    <ApplyTo>Apply to</ApplyTo>
+    <SelectedLinesX>Selected lines: {0}</SelectedLinesX>
+    <AdvancedSelection>Advanced selection</AdvancedSelection>
+  </AssaOverrideTags>
   <AudioToText>
     <Title>Audio to text</Title>
     <ExtractingAudioUsingX>Extracting audio using {0}...</ExtractingAudioUsingX>
