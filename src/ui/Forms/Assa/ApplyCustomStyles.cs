@@ -43,6 +43,12 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             MainTextBoxAssaIntellisense = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxAssaIntellisense);
             MainTextBoxAssaRemoveTag = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxAssaRemoveTag);
 
+            radioButtonAdvancedSelection_CheckedChanged(null, null);
+            Text = LanguageSettings.Current.AssaOverrideTags.ApplyCustomTags;
+            labelOverrideTags.Text = LanguageSettings.Current.AssaOverrideTags.TagsToApply;
+            radioButtonAdvancedSelection.Text = LanguageSettings.Current.AssaOverrideTags.AdvancedSelection;
+            radioButtonSelectedLines.Text = string.Format(LanguageSettings.Current.AssaOverrideTags.SelectedLinesX, _selectedIndices.Length);
+            radioButtonAllLines.Text = LanguageSettings.Current.ShowEarlierLater.AllLines;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
@@ -53,8 +59,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 seTextBox1.Text = Configuration.Settings.SubtitleSettings.AssaOverrideTagHistory[0];
             }
 
-            radioButtonAdvancedSelection_CheckedChanged(null, null);
-            radioButtonSelectedLines.Text = string.Format("Selected lines: {0}", _selectedIndices.Length);
 
             groupBoxPreview.Visible = false;
             _originalHeight = Height;

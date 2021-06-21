@@ -186,6 +186,16 @@
             public string RemoveXAttachments { get; set; }
         }
 
+        public class AssaOverrideTags
+        {
+            public string ApplyCustomTags { get; set; }
+            public string History { get; set; }
+            public string TagsToApply { get; set; }
+            public string ApplyTo { get; set; }
+            public string SelectedLinesX { get; set; }
+            public string AdvancedSelection { get; set; }
+        }
+
         public class AudioToText
         {
             public string Title { get; set; }

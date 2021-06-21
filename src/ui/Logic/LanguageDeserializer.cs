@@ -487,6 +487,24 @@ namespace Nikse.SubtitleEdit.Logic
                 case "AssaAttachments/RemoveXAttachments":
                     language.AssaAttachments.RemoveXAttachments = reader.Value;
                     break;
+                case "AssaOverrideTags/ApplyCustomTags":
+                    language.AssaOverrideTags.ApplyCustomTags = reader.Value;
+                    break;
+                case "AssaOverrideTags/History":
+                    language.AssaOverrideTags.History = reader.Value;
+                    break;
+                case "AssaOverrideTags/TagsToApply":
+                    language.AssaOverrideTags.TagsToApply = reader.Value;
+                    break;
+                case "AssaOverrideTags/ApplyTo":
+                    language.AssaOverrideTags.ApplyTo = reader.Value;
+                    break;
+                case "AssaOverrideTags/SelectedLinesX":
+                    language.AssaOverrideTags.SelectedLinesX = reader.Value;
+                    break;
+                case "AssaOverrideTags/AdvancedSelection":
+                    language.AssaOverrideTags.AdvancedSelection = reader.Value;
+                    break;
                 case "AudioToText/Title":
                     language.AudioToText.Title = reader.Value;
                     break;

@@ -40,6 +40,7 @@
     <Bold>Fed</Bold>
     <Italic>Kursiv</Italic>
     <Underline>Understreg</Underline>
+    <Strikeout>Gennemstreg</Strikeout>
     <Visible>Synlig</Visible>
     <FrameRate>Billeder pr. sekund</FrameRate>
     <Name>Navn</Name>
@@ -670,6 +671,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <CommonOcrErrorsFixed>Ret OCR fejl (via OcrReplaceList fil): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Fjern mellemrum mellem tal</RemoveSpaceBetweenNumber>
     <FixDialogsOnOneLine>Fix dialoger på én linje</FixDialogsOnOneLine>
+    <RemoveDialogFirstInNonDialogs>Fjern startstreg i første linje for ikke-dialoger</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>Normaliser strenge</NormalizeStrings>
     <FixTurkishAnsi>Fix tyrkiske ANSI (islandske) bogstaver til Unicode</FixTurkishAnsi>
     <FixDanishLetterI>Ret fejl vedr. det dansk bogstav »i«</FixDanishLetterI>
@@ -732,6 +734,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <FixOcrErrorExample>D0n't -&gt; Don't</FixOcrErrorExample>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Hej John! - Hej Ida! -&gt; Hej John!&lt;br /&gt;- Hej Ida!</FixDialogsOneLineExample>
+    <RemoveDialogFirstInNonDialogsExample>- Hvordan har du det?  -&gt; Hvordan har du det?</RemoveDialogFirstInNonDialogsExample>
     <SelectDefault>Vælg standard</SelectDefault>
     <SetDefault>Indstil aktuelle rettelser som standard</SetDefault>
     <FixContinuationStyleX>Fix fortsættelsestil: {0}</FixContinuationStyleX>
@@ -1206,9 +1209,9 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
       </ToolBar>
       <ContextMenu>
         <SizeAllColumnsToFit>Auto-tilpas kolonner</SizeAllColumnsToFit>
-        <AdvancedSubStationAlphaSetStyle>Advanced Sub Station Alpha - vælg stilart</AdvancedSubStationAlphaSetStyle>
-        <SubStationAlphaSetStyle>(Advanced) Sub Station Alpha - vælg stilart</SubStationAlphaSetStyle>
+        <SetStyle>Vælg stil</SetStyle>
         <SetActor>Vælg taler</SetActor>
+        <SetOverrideTags>Vælg override tags</SetOverrideTags>
         <SubStationAlphaStyles>Sub Station Alpha stilarter...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Advanced Sub Station Alpha stilarter...</AdvancedSubStationAlphaStyles>
         <TimedTextSetRegion>Timed Text - Sæt region</TimedTextSetRegion>
@@ -1272,6 +1275,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <TranslateSelectedLines>Oversæt valgte linjer...</TranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Juster visningstider for valgte linjer...</AdjustDisplayDurationForSelectedLines>
         <ApplyDurationLimitsForSelectedLines>Anvend varighedsgrænser for valgte linjer...</ApplyDurationLimitsForSelectedLines>
+        <ApplyCustomOverrideTag>Anvend override tags</ApplyCustomOverrideTag>
         <FixCommonErrorsInSelectedLines>Ret almindelige fejl i valgte linjer...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Skift casing (små/store/normal) for valgte linjer...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Gem valgte linjer som...</SaveSelectedLines>
@@ -2005,6 +2009,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <StartInSourceView>Start i kilde visning</StartInSourceView>
     <RemoveBlankLinesWhenOpening>Fjern tomme linjer, når undertekst åbnes</RemoveBlankLinesWhenOpening>
     <RemoveBlankLines>Fjern blanke linjer</RemoveBlankLines>
+    <ApplyAssaOverrideTags>Anvend ASSA override tags til valgte linjer</ApplyAssaOverrideTags>
     <ShowLineBreaksAs>Vis linjeskift i listevisning som</ShowLineBreaksAs>
     <SaveAsFileNameFrom>"Gem som..." bruger filnavn fra</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>Dobbeltklik på linje i hovedvinduet listevisning starter</MainListViewDoubleClickAction>
@@ -2136,6 +2141,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <ContinuationStyleNoneLeadingTrailingDots>Ingen, punktummer for pauser</ContinuationStyleNoneLeadingTrailingDots>
     <ContinuationStyleOnlyTrailingDots>punktummer (kun bagest)</ContinuationStyleOnlyTrailingDots>
     <ContinuationStyleLeadingTrailingDots>Punktummer </ContinuationStyleLeadingTrailingDots>
+    <ContinuationStyleLeadingTrailingEllipsis>Ellipsis</ContinuationStyleLeadingTrailingEllipsis>
+    <ContinuationStyleNoneTrailingEllipsis>Ingen, ellipsis til pauser</ContinuationStyleNoneTrailingEllipsis>
     <ContinuationStyleLeadingTrailingDash>Bindestreg</ContinuationStyleLeadingTrailingDash>
     <ContinuationStyleLeadingTrailingDashDots>Stip, men punktummer for pauser</ContinuationStyleLeadingTrailingDashDots>
     <MusicSymbol>Musik symbol</MusicSymbol>
@@ -2278,7 +2285,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <GoBack3Second>Tre sekunder tilbage</GoBack3Second>
     <GoToStartCurrent>Indstil video pos til start af den aktuelle undertekst</GoToStartCurrent>
     <ToggleStartEndCurrent>Skift video pos mellem start/slut af aktuelle undertekst</ToggleStartEndCurrent>
-    <PlayCurrent>Afspil nuværende undertekst</PlayCurrent>
+    <PlaySelectedLines>Afspil valgte linjer</PlaySelectedLines>
     <WaveformGoToPrevSubtitle>Gå til forrige undertekst (fra video position)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Gå til næste undertekst (fra video position)</WaveformGoToNextSubtitle>
     <WaveformGoToPrevChapter>Gå til forrige kapitel</WaveformGoToPrevChapter>
@@ -2291,6 +2298,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <PlayRateFaster>Afspilningshastighed hurtigere</PlayRateFaster>
     <VideoResetSpeedAndZoom>Nulstil hastighed/zoom</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>Toggle videokontrol</MainToggleVideoControls>
+    <VideoToggleContrast>Skift kontrast (kun mpv)</VideoToggleContrast>
+    <VideoToggleBrightness>Skift lysstyrke (kun mpv)</VideoToggleBrightness>
     <CustomSearch1>Oversæt, brugerdefineret søgning 1</CustomSearch1>
     <CustomSearch2>Oversæt, brugerdefineret søgning 2</CustomSearch2>
     <CustomSearch3>Oversæt, brugerdefineret søgning 3</CustomSearch3>
@@ -2352,6 +2361,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <MainTextBoxAutoBreakFromPosAndGoToNext>Bryd i første mellemrum fra markørposition og gå til næste</MainTextBoxAutoBreakFromPosAndGoToNext>
     <MainTextBoxUnbreak>Fjern linjeskift</MainTextBoxUnbreak>
     <MainTextBoxUnbreakNoSpace>Unbreak uden plads (CJK)</MainTextBoxUnbreakNoSpace>
+    <MainTextBoxAssaIntellisense>Vis ASSA-tag-hjælper</MainTextBoxAssaIntellisense>
+    <MainTextBoxAssaRemoveTag>Fjern ASSA-tag ved markøren</MainTextBoxAssaRemoveTag>
     <MainFileSaveAll>Gem alle</MainFileSaveAll>
     <Miscellaneous>Diverse</Miscellaneous>
     <CpsIncludesSpace>Tegn/sek (CPS) inkluderer mellemrum</CpsIncludesSpace>
@@ -2627,6 +2638,10 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <CategoryNote>Bemærk: Stilarterne i standardkategorien (farvet i grønt) anvendes på nye ASSA-filer</CategoryNote>
     <CategoriesManage>Styre</CategoriesManage>
     <MoveToCategory>Flyt valgte stilarter til kategori...</MoveToCategory>
+    <ScaleX>ScaleX</ScaleX>
+    <ScaleY>ScaleY</ScaleY>
+    <Spacing>Spacing</Spacing>
+    <Angle>Angle</Angle>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
     <Category>Kategori</Category>

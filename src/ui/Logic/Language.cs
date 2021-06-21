@@ -19,6 +19,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.AdjustDisplayDuration AdjustDisplayDuration;
         public LanguageStructure.ApplyDurationLimits ApplyDurationLimits;
         public LanguageStructure.AssaAttachments AssaAttachments;
+        public LanguageStructure.AssaOverrideTags AssaOverrideTags;
         public LanguageStructure.AudioToText AudioToText;
         public LanguageStructure.AutoBreakUnbreakLines AutoBreakUnbreakLines;
         public LanguageStructure.BatchConvert BatchConvert;
@@ -317,6 +318,16 @@ namespace Nikse.SubtitleEdit.Logic
                 FilesSkippedX = "Files skipped: {0}",
                 RemoveOneAttachment = "Remove one attachment?",
                 RemoveXAttachments = "Remove {0} attachments?",
+            };
+
+            AssaOverrideTags = new LanguageStructure.AssaOverrideTags
+            {
+                ApplyCustomTags = "Apply custom tags",
+                AdvancedSelection = "Advanced selection",
+                ApplyTo = "Apply to",
+                History = "History",
+                SelectedLinesX = "Selected lines: {0}",
+                TagsToApply = "Tags to apply",
             };
 
             AudioToText = new LanguageStructure.AudioToText

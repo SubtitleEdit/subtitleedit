@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.Assa
 {
-    public partial class AdvancedSelectionHelper : Form
+    public sealed partial class AdvancedSelectionHelper : Form
     {
         public int[] Indices { get; private set; }
         private readonly Subtitle _subtitle;
@@ -24,6 +24,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             _loading = true;
             _subtitle = subtitle;
             Indices = new int[0];
+            Text = LanguageSettings.Current.AssaOverrideTags.AdvancedSelection;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             columnHeaderApply.Text = LanguageSettings.Current.General.Apply;
