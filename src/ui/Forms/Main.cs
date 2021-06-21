@@ -1667,6 +1667,7 @@ namespace Nikse.SubtitleEdit.Forms
             setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SetStyle;
             setActorForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SetActor;
             toolStripMenuItemAssaOverrideTags.Text = _language.Menu.ContextMenu.SetOverrideTags;
+            applyCustomStylesToolStripMenuItem.Text = _language.Menu.ContextMenu.ApplyCustomOverrideTag;
 
             toolStripMenuItemDelete.Text = _language.Menu.ContextMenu.Delete;
             insertLineToolStripMenuItem.Text = _language.Menu.ContextMenu.InsertFirstLine;
@@ -9832,7 +9833,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_shortcuts.MainTextBoxAssaRemoveTag == e.KeyData)
             {
-                MakeHistoryForUndo("text change"); //TODO: fix language tag
+                MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.MainTextBoxAssaRemoveTag));
                 AssaTagHelper.RemoveTagAtCursor(textBoxListViewText);
                 e.SuppressKeyPress = true;
                 return;
@@ -25711,7 +25712,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_shortcuts.MainTextBoxAssaRemoveTag == e.KeyData)
             {
-                MakeHistoryForUndo("text change"); //TODO: fix language tag
+                MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.MainTextBoxAssaRemoveTag));
                 AssaTagHelper.RemoveTagAtCursor(textBoxListViewTextOriginal);
                 e.SuppressKeyPress = true;
                 return;
@@ -31182,7 +31183,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                MakeHistoryForUndo(string.Format(_language.BeforeX, "Apply custom override tag")); //TODO: fix
+                MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.AssaOverrideTags.ApplyCustomTags));
                 SaveSubtitleListviewIndices();
                 _subtitle.Paragraphs.Clear();
                 _subtitle.Paragraphs.AddRange(form.UpdatedSubtitle.Paragraphs);

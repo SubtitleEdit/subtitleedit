@@ -1814,7 +1814,7 @@ namespace Nikse.SubtitleEdit.Logic
                         TranslateSelectedLines = "Translate selected lines...",
                         AdjustDisplayDurationForSelectedLines = "Adjust durations for selected lines...",
                         ApplyDurationLimitsForSelectedLines = "Apply duration limits for selected lines...",
-                        ApplyCustomOverrideTag = "Apply custom override tag...",
+                        ApplyCustomOverrideTag = "Apply custom override tags...",
                         FixCommonErrorsInSelectedLines = "Fix common errors in selected lines...",
                         ChangeCasingForSelectedLines = "Change casing for selected lines...",
                         SaveSelectedLines = "Save selected lines as...",
