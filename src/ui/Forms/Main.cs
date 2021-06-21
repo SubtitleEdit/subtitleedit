@@ -2138,7 +2138,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool ContinueNewOrExitOriginal()
         {
-            if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0 && _changeOriginalSubtitleHash != _subtitleOriginal.GetFastHashCode(GetCurrentEncoding().BodyName))
+            if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0 && _changeOriginalSubtitleHash != GetFastSubtitleOriginalHash())
             {
                 string promptText = _language.SaveChangesToUntitledOriginal;
                 if (!string.IsNullOrEmpty(_subtitleOriginalFileName))
@@ -3986,7 +3986,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0)
                 {
                     _subtitleOriginal.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-Configuration.Settings.General.CurrentVideoOffsetInMs));
-                    _changeOriginalSubtitleHash = _subtitleOriginal.GetFastHashCode(GetCurrentEncoding().BodyName);
+                    _changeOriginalSubtitleHash = GetFastSubtitleOriginalHash();
                     SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
                 }
                 else
@@ -4432,7 +4432,7 @@ namespace Nikse.SubtitleEdit.Forms
                             Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
                             Configuration.Settings.Save();
                             ShowStatus(string.Format(_language.SavedOriginalSubtitleX, _subtitleOriginalFileName));
-                            _changeOriginalSubtitleHash = _subtitleOriginal.GetFastHashCode(GetCurrentEncoding().BodyName);
+                            _changeOriginalSubtitleHash = GetFastSubtitleOriginalHash();
                             return DialogResult.OK;
                         }
 
@@ -4460,7 +4460,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 File.WriteAllText(_subtitleOriginalFileName, allText, currentEncoding);
                 ShowStatus(string.Format(_language.SavedOriginalSubtitleX, _subtitleOriginalFileName));
-                _changeOriginalSubtitleHash = _subtitleOriginal.GetFastHashCode(GetCurrentEncoding().BodyName);
+                _changeOriginalSubtitleHash = GetFastSubtitleOriginalHash();
                 return DialogResult.OK;
             }
             catch
@@ -20028,7 +20028,7 @@ namespace Nikse.SubtitleEdit.Forms
                 labelCharactersPerSecond.Left = textBoxListViewText.Left + (textBoxListViewText.Width - labelCharactersPerSecond.Width);
                 labelTextLineTotal.Left = textBoxListViewText.Left + (textBoxListViewText.Width - labelTextLineTotal.Width);
                 Main_Resize(null, null);
-                _changeOriginalSubtitleHash = _subtitleOriginal.GetFastHashCode(GetCurrentEncoding().BodyName);
+                _changeOriginalSubtitleHash = GetFastSubtitleOriginalHash();
 
                 SetTitle();
             }
@@ -20501,8 +20501,7 @@ namespace Nikse.SubtitleEdit.Forms
             var originalActive = Configuration.Settings.General.AllowEditOfOriginalSubtitle &&
                                  _subtitleOriginal != null &&
                                  _subtitleOriginal.Paragraphs.Count > 0;
-            var originalChanged = originalActive &&
-                                    _changeOriginalSubtitleHash != _subtitleOriginal.GetFastHashCode(GetCurrentEncoding().BodyName);
+            var originalChanged = originalActive && _changeOriginalSubtitleHash != GetFastSubtitleOriginalHash();
             if (currentChanged || originalChanged)
             {
                 AddTitleBarChangeAsterisk(currentChanged, originalChanged, originalActive);
@@ -24568,7 +24567,7 @@ namespace Nikse.SubtitleEdit.Forms
                         labelTextLineTotal.Left = textBoxListViewText.Left + (textBoxListViewText.Width - labelTextLineTotal.Width);
                         AddOriginal();
                         Main_Resize(null, null);
-                        _changeOriginalSubtitleHash = _subtitleOriginal.GetFastHashCode(GetCurrentEncoding().BodyName);
+                        _changeOriginalSubtitleHash = GetFastSubtitleOriginalHash();
                     }
                     else
                     {
@@ -31110,6 +31109,11 @@ namespace Nikse.SubtitleEdit.Forms
         private int GetFastSubtitleHash()
         {
             return _subtitle.GetFastHashCode(_fileName + GetCurrentEncoding().BodyName);
+        }
+
+        private int GetFastSubtitleOriginalHash()
+        {
+            return _subtitleOriginal.GetFastHashCode(_subtitleOriginalFileName + GetCurrentEncoding().BodyName);
         }
 
         private void mergeSentencesToolStripMenuItem_Click(object sender, EventArgs e)
