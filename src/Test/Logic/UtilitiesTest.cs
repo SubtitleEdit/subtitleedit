@@ -68,9 +68,9 @@ namespace Test.Logic
         public void AutoBreakFrenchSpaceBeforePunctuation()
         {
             Configuration.Settings.General.SubtitleLineMaximumLength = 43;
-            string s1 = "Et elle te le dis maintenant ? Pour quoi donc ?";
+            string s1 = "Et elle te le dis maintenant ? Pour quoi donc donc ?";
             string s2 = Utilities.AutoBreakLine(s1, "fr");
-            Assert.AreEqual("Et elle te le dis maintenant ?" + Environment.NewLine + "Pour quoi donc ?", s2);
+            Assert.AreEqual("Et elle te le dis maintenant ?" + Environment.NewLine + "Pour quoi donc donc ?", s2);
         }
 
         [TestMethod]

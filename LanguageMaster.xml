@@ -1287,7 +1287,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <TranslateSelectedLines>Translate selected lines...</TranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Adjust durations for selected lines...</AdjustDisplayDurationForSelectedLines>
         <ApplyDurationLimitsForSelectedLines>Apply duration limits for selected lines...</ApplyDurationLimitsForSelectedLines>
-        <ApplyCustomOverrideTag>Apply custom override tag...</ApplyCustomOverrideTag>
+        <ApplyCustomOverrideTag>Apply custom override tags...</ApplyCustomOverrideTag>
         <FixCommonErrorsInSelectedLines>Fix common errors in selected lines...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Change casing for selected lines...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Save selected lines as...</SaveSelectedLines>
