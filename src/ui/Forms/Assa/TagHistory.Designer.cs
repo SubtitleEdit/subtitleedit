@@ -1,7 +1,7 @@
 ﻿
 namespace Nikse.SubtitleEdit.Forms.Assa
 {
-    partial class TagHistory
+    sealed partial class TagHistory
     {
         /// <summary>
         /// Required designer variable.

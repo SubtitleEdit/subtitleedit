@@ -45,6 +45,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             radioButtonAdvancedSelection_CheckedChanged(null, null);
             Text = LanguageSettings.Current.AssaOverrideTags.ApplyCustomTags;
+            buttonHistory.Text = LanguageSettings.Current.AssaOverrideTags.History;
             labelOverrideTags.Text = LanguageSettings.Current.AssaOverrideTags.TagsToApply;
             radioButtonAdvancedSelection.Text = LanguageSettings.Current.AssaOverrideTags.AdvancedSelection;
             radioButtonSelectedLines.Text = string.Format(LanguageSettings.Current.AssaOverrideTags.SelectedLinesX, _selectedIndices.Length);
