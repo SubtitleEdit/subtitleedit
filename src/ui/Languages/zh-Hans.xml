@@ -186,6 +186,15 @@ Command line: {1} {2}
     <SelectedLinesX>已选行：{0}</SelectedLinesX>
     <AdvancedSelection>高级选择</AdvancedSelection>
   </AssaOverrideTags>
+  <AssaSetPosition>
+    <SetPosition>设置/获取位置</SetPosition>
+    <VideoResolutionX>视频分辨率：{0}</VideoResolutionX>
+    <StyleAlignmentX>样式对齐：{0}</StyleAlignmentX>
+    <CurrentMousePositionX>鼠标位置：{0}</CurrentMousePositionX>
+    <CurrentTextPositionX>文本位置：{0}</CurrentTextPositionX>
+    <SetPosInfo>点击视频切换设置/移动位置</SetPosInfo>
+    <Clipboard>剪贴板</Clipboard>
+  </AssaSetPosition>
   <AudioToText>
     <Title>音频转文字</Title>
     <ExtractingAudioUsingX>使用{0}提取音频...</ExtractingAudioUsingX>
@@ -2014,6 +2023,7 @@ Command line: {1} {2}
     <RemoveBlankLinesWhenOpening>打开字幕时删除空行</RemoveBlankLinesWhenOpening>
     <RemoveBlankLines>删除空行</RemoveBlankLines>
     <ApplyAssaOverrideTags>应用ASSA覆盖标签到所选</ApplyAssaOverrideTags>
+    <SetAssaPosition>设置/获取ASSA位置</SetAssaPosition>
     <ShowLineBreaksAs>列表视图中的换行符显示为</ShowLineBreaksAs>
     <SaveAsFileNameFrom>“另存为...”使用的文件名来源</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>双击主窗口中的行时，列表视图将</MainListViewDoubleClickAction>
