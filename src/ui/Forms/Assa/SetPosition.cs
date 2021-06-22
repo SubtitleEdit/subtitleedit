@@ -108,15 +108,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 return;
             }
 
-            Configuration.Settings.SubtitleSettings.AssaOverrideTagHistory = Configuration.Settings.SubtitleSettings.AssaOverrideTagHistory
-                .Where(p => p != styleToApply)
-                .ToList();
-            Configuration.Settings.SubtitleSettings.AssaOverrideTagHistory.Insert(0, styleToApply);
-            if (Configuration.Settings.SubtitleSettings.AssaOverrideTagHistory.Count > 25)
-            {
-                Configuration.Settings.SubtitleSettings.AssaOverrideTagHistory.RemoveAt(Configuration.Settings.SubtitleSettings.AssaOverrideTagHistory.Count - 1);
-            }
-
             UpdatedSubtitle = new Subtitle(subtitle, false);
             var indices = GetIndices(subtitle);
 

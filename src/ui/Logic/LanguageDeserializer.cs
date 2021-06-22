@@ -505,6 +505,27 @@ namespace Nikse.SubtitleEdit.Logic
                 case "AssaOverrideTags/AdvancedSelection":
                     language.AssaOverrideTags.AdvancedSelection = reader.Value;
                     break;
+                case "AssaSetPosition/SetPosition":
+                    language.AssaSetPosition.SetPosition = reader.Value;
+                    break;
+                case "AssaSetPosition/VideoResolutionX":
+                    language.AssaSetPosition.VideoResolutionX = reader.Value;
+                    break;
+                case "AssaSetPosition/StyleAlignmentX":
+                    language.AssaSetPosition.StyleAlignmentX = reader.Value;
+                    break;
+                case "AssaSetPosition/CurrentMousePositionX":
+                    language.AssaSetPosition.CurrentMousePositionX = reader.Value;
+                    break;
+                case "AssaSetPosition/CurrentTextPositionX":
+                    language.AssaSetPosition.CurrentTextPositionX = reader.Value;
+                    break;
+                case "AssaSetPosition/SetPosInfo":
+                    language.AssaSetPosition.SetPosInfo = reader.Value;
+                    break;
+                case "AssaSetPosition/Clipboard":
+                    language.AssaSetPosition.Clipboard = reader.Value;
+                    break;
                 case "AudioToText/Title":
                     language.AudioToText.Title = reader.Value;
                     break;
