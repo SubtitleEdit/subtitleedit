@@ -196,6 +196,17 @@
             public string AdvancedSelection { get; set; }
         }
 
+        public class AssaSetPosition
+        {
+            public string SetPosition { get; set; }
+            public string VideoResolutionX { get; set; }
+            public string StyleAlignmentX { get; set; }
+            public string CurrentMousePositionX { get; set; }
+            public string CurrentTextPositionX { get; set; }
+            public string SetPosInfo { get; set; }
+            public string Clipboard { get; set; }
+        }
+
         public class AudioToText
         {
             public string Title { get; set; }
@@ -2195,6 +2206,7 @@
             public string RemoveBlankLinesWhenOpening { get; set; }
             public string RemoveBlankLines { get; set; }
             public string ApplyAssaOverrideTags { get; set; }
+            public string SetAssaPosition { get; set; }
             public string ShowLineBreaksAs { get; set; }
             public string SaveAsFileNameFrom { get; set; }
             public string MainListViewDoubleClickAction { get; set; }

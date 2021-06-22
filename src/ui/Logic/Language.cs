@@ -20,6 +20,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.ApplyDurationLimits ApplyDurationLimits;
         public LanguageStructure.AssaAttachments AssaAttachments;
         public LanguageStructure.AssaOverrideTags AssaOverrideTags;
+        public LanguageStructure.AssaSetPosition AssaSetPosition;
         public LanguageStructure.AudioToText AudioToText;
         public LanguageStructure.AutoBreakUnbreakLines AutoBreakUnbreakLines;
         public LanguageStructure.BatchConvert BatchConvert;
@@ -328,6 +329,17 @@ namespace Nikse.SubtitleEdit.Logic
                 History = "History",
                 SelectedLinesX = "Selected lines: {0}",
                 TagsToApply = "Tags to apply",
+            };
+
+            AssaSetPosition = new LanguageStructure.AssaSetPosition
+            {
+                SetPosition = "Set/get position",
+                VideoResolutionX = "Video reslution: {0}",
+                StyleAlignmentX = "Style alignment: {0}",
+                CurrentMousePositionX = "Mouse position: {0}",
+                CurrentTextPositionX = "Text position: {0}",
+                SetPosInfo = "Click on video to toggle set/move position",
+                Clipboard = "Clipboard",
             };
 
             AudioToText = new LanguageStructure.AudioToText
@@ -2340,6 +2352,7 @@ can edit in same subtitle file (collaboration)",
                 RemoveBlankLinesWhenOpening = "Remove blank lines when opening a subtitle",
                 RemoveBlankLines = "Remove blank lines",
                 ApplyAssaOverrideTags = "Apply ASSA override tags to selection",
+                SetAssaPosition = "Set/get ASSA position",
                 ShowLineBreaksAs = "Show line breaks in list view as",
                 SaveAsFileNameFrom = "\"Save as...\" uses file name from",
                 MainListViewDoubleClickAction = "Double-clicking line in main window list view will",

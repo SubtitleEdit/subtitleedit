@@ -181,10 +181,10 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (format.Name == AdvancedSubStationAlpha.NameOfFormat && header != null)
                         {
-                            var oldPlayResX = AdvancedSubStationAlpha.GetTag("PlayResX", "[Script Info]", header);
-                            var oldPlayResY = AdvancedSubStationAlpha.GetTag("PlayResY", "[Script Info]", header);
-                            var newPlayResX = AdvancedSubStationAlpha.GetTag("PlayResX", "[Script Info]", sub.Header);
-                            var newPlayResY = AdvancedSubStationAlpha.GetTag("PlayResY", "[Script Info]", sub.Header);
+                            var oldPlayResX = AdvancedSubStationAlpha.GetTagFromHeader("PlayResX", "[Script Info]", header);
+                            var oldPlayResY = AdvancedSubStationAlpha.GetTagFromHeader("PlayResY", "[Script Info]", header);
+                            var newPlayResX = AdvancedSubStationAlpha.GetTagFromHeader("PlayResX", "[Script Info]", sub.Header);
+                            var newPlayResY = AdvancedSubStationAlpha.GetTagFromHeader("PlayResY", "[Script Info]", sub.Header);
 
                             var stylesInHeader = AdvancedSubStationAlpha.GetStylesFromHeader(header);
                             var styles = new List<SsaStyle>();

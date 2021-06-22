@@ -1,5 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
@@ -102,9 +101,9 @@ namespace Nikse.SubtitleEdit.Controls
             public Paragraph Paragraph { get; set; }
         }
 
-        private List<SyntaxColorLineParamter> _syntaxColorList = new List<SyntaxColorLineParamter>();
-        private object _syntaxColorListLock = new object();
-        private Timer _syntaxColorLineTimer = null;
+        private readonly List<SyntaxColorLineParamter> _syntaxColorList = new List<SyntaxColorLineParamter>();
+        private static readonly object SyntaxColorListLock = new object();
+        private readonly Timer _syntaxColorLineTimer;
 
         public int FirstVisibleIndex { get; set; } = -1;
 
@@ -1292,12 +1291,13 @@ namespace Nikse.SubtitleEdit.Controls
         private void SyntaxColorLineTimerTick(object sender, EventArgs e)
         {
             var hashSet = new HashSet<int>();
-            lock (_syntaxColorListLock)
+            lock (SyntaxColorListLock)
             {
                 _syntaxColorLineTimer.Stop();
+                
                 for (int i = _syntaxColorList.Count - 1; i >= 0; i--)
                 {
-                    SyntaxColorLineParamter item = _syntaxColorList[i];
+                    var item = _syntaxColorList[i];
                     if (!hashSet.Contains(item.Index))
                     {
                         if (IsValidIndex(item.Index))
@@ -1307,6 +1307,7 @@ namespace Nikse.SubtitleEdit.Controls
                         hashSet.Add(item.Index);
                     }
                 }
+                _syntaxColorList.Clear();
             }
         }
 
@@ -1320,10 +1321,10 @@ namespace Nikse.SubtitleEdit.Controls
                 return;
             }
 
-            lock (_syntaxColorListLock)
+            lock (SyntaxColorListLock)
             {
-                _syntaxColorList.Add(new SyntaxColorLineParamter { Index = i, Paragraphs = paragraphs, Paragraph = paragraph });
                 _syntaxColorLineTimer.Stop();
+                _syntaxColorList.Add(new SyntaxColorLineParamter { Index = i, Paragraphs = paragraphs, Paragraph = paragraph });
                 _syntaxColorLineTimer.Start();
             }
         }

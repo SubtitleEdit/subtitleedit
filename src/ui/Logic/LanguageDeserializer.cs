@@ -5476,6 +5476,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/ApplyAssaOverrideTags":
                     language.Settings.ApplyAssaOverrideTags = reader.Value;
                     break;
+                case "Settings/SetAssaPosition":
+                    language.Settings.SetAssaPosition = reader.Value;
+                    break;
                 case "Settings/ShowLineBreaksAs":
                     language.Settings.ShowLineBreaksAs = reader.Value;
                     break;
