@@ -43,9 +43,26 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.labelStyleAlignment = new System.Windows.Forms.Label();
             this.labelVideoResolution = new System.Windows.Forms.Label();
             this.labelCurrentTextPosition = new System.Windows.Forms.Label();
+            this.numericUpDownRotateX = new System.Windows.Forms.NumericUpDown();
+            this.labelRotateX = new System.Windows.Forms.Label();
+            this.numericUpDownRotateY = new System.Windows.Forms.NumericUpDown();
+            this.labelRotateY = new System.Windows.Forms.Label();
+            this.numericUpDownRotateZ = new System.Windows.Forms.NumericUpDown();
+            this.labelRotateZ = new System.Windows.Forms.Label();
+            this.panelAdvanced = new System.Windows.Forms.Panel();
+            this.labelDistortX = new System.Windows.Forms.Label();
+            this.numericUpDownDistortX = new System.Windows.Forms.NumericUpDown();
+            this.labelDistortY = new System.Windows.Forms.Label();
+            this.numericUpDownDistortY = new System.Windows.Forms.NumericUpDown();
             this.groupBox1.SuspendLayout();
             this.groupBoxPreview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRotateX)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRotateY)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRotateZ)).BeginInit();
+            this.panelAdvanced.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDistortX)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDistortY)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -53,9 +70,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.radioButtonClipboard);
             this.groupBox1.Controls.Add(this.radioButtonSelectedLines);
-            this.groupBox1.Location = new System.Drawing.Point(715, 12);
+            this.groupBox1.Location = new System.Drawing.Point(763, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(246, 75);
+            this.groupBox1.Size = new System.Drawing.Size(195, 75);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Apply to";
@@ -181,11 +198,180 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.labelCurrentTextPosition.TabIndex = 10;
             this.labelCurrentTextPosition.Text = "Current text position:";
             // 
+            // numericUpDownRotateX
+            // 
+            this.numericUpDownRotateX.DecimalPlaces = 1;
+            this.numericUpDownRotateX.Location = new System.Drawing.Point(91, 9);
+            this.numericUpDownRotateX.Maximum = new decimal(new int[] {
+            360,
+            0,
+            0,
+            0});
+            this.numericUpDownRotateX.Minimum = new decimal(new int[] {
+            360,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDownRotateX.Name = "numericUpDownRotateX";
+            this.numericUpDownRotateX.Size = new System.Drawing.Size(52, 20);
+            this.numericUpDownRotateX.TabIndex = 18;
+            this.numericUpDownRotateX.ValueChanged += new System.EventHandler(this.numericUpDownRotateX_ValueChanged);
+            // 
+            // labelRotateX
+            // 
+            this.labelRotateX.AutoSize = true;
+            this.labelRotateX.Location = new System.Drawing.Point(15, 11);
+            this.labelRotateX.Name = "labelRotateX";
+            this.labelRotateX.Size = new System.Drawing.Size(70, 13);
+            this.labelRotateX.TabIndex = 17;
+            this.labelRotateX.Text = "Rotate X axis";
+            // 
+            // numericUpDownRotateY
+            // 
+            this.numericUpDownRotateY.DecimalPlaces = 1;
+            this.numericUpDownRotateY.Location = new System.Drawing.Point(91, 34);
+            this.numericUpDownRotateY.Maximum = new decimal(new int[] {
+            360,
+            0,
+            0,
+            0});
+            this.numericUpDownRotateY.Minimum = new decimal(new int[] {
+            360,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDownRotateY.Name = "numericUpDownRotateY";
+            this.numericUpDownRotateY.Size = new System.Drawing.Size(52, 20);
+            this.numericUpDownRotateY.TabIndex = 20;
+            this.numericUpDownRotateY.ValueChanged += new System.EventHandler(this.numericUpDownRotateX_ValueChanged);
+            // 
+            // labelRotateY
+            // 
+            this.labelRotateY.AutoSize = true;
+            this.labelRotateY.Location = new System.Drawing.Point(15, 36);
+            this.labelRotateY.Name = "labelRotateY";
+            this.labelRotateY.Size = new System.Drawing.Size(70, 13);
+            this.labelRotateY.TabIndex = 19;
+            this.labelRotateY.Text = "Rotate Y axis";
+            // 
+            // numericUpDownRotateZ
+            // 
+            this.numericUpDownRotateZ.DecimalPlaces = 1;
+            this.numericUpDownRotateZ.Location = new System.Drawing.Point(91, 60);
+            this.numericUpDownRotateZ.Maximum = new decimal(new int[] {
+            360,
+            0,
+            0,
+            0});
+            this.numericUpDownRotateZ.Minimum = new decimal(new int[] {
+            360,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDownRotateZ.Name = "numericUpDownRotateZ";
+            this.numericUpDownRotateZ.Size = new System.Drawing.Size(52, 20);
+            this.numericUpDownRotateZ.TabIndex = 22;
+            this.numericUpDownRotateZ.ValueChanged += new System.EventHandler(this.numericUpDownRotateX_ValueChanged);
+            // 
+            // labelRotateZ
+            // 
+            this.labelRotateZ.AutoSize = true;
+            this.labelRotateZ.Location = new System.Drawing.Point(15, 62);
+            this.labelRotateZ.Name = "labelRotateZ";
+            this.labelRotateZ.Size = new System.Drawing.Size(70, 13);
+            this.labelRotateZ.TabIndex = 21;
+            this.labelRotateZ.Text = "Rotate Z axis";
+            // 
+            // panelAdvanced
+            // 
+            this.panelAdvanced.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelAdvanced.Controls.Add(this.labelDistortX);
+            this.panelAdvanced.Controls.Add(this.numericUpDownDistortX);
+            this.panelAdvanced.Controls.Add(this.labelDistortY);
+            this.panelAdvanced.Controls.Add(this.numericUpDownDistortY);
+            this.panelAdvanced.Controls.Add(this.labelRotateX);
+            this.panelAdvanced.Controls.Add(this.numericUpDownRotateZ);
+            this.panelAdvanced.Controls.Add(this.numericUpDownRotateX);
+            this.panelAdvanced.Controls.Add(this.labelRotateZ);
+            this.panelAdvanced.Controls.Add(this.labelRotateY);
+            this.panelAdvanced.Controls.Add(this.numericUpDownRotateY);
+            this.panelAdvanced.Location = new System.Drawing.Point(458, 11);
+            this.panelAdvanced.Name = "panelAdvanced";
+            this.panelAdvanced.Size = new System.Drawing.Size(299, 88);
+            this.panelAdvanced.TabIndex = 23;
+            // 
+            // labelDistortX
+            // 
+            this.labelDistortX.AutoSize = true;
+            this.labelDistortX.Location = new System.Drawing.Point(175, 11);
+            this.labelDistortX.Name = "labelDistortX";
+            this.labelDistortX.Size = new System.Drawing.Size(47, 13);
+            this.labelDistortX.TabIndex = 23;
+            this.labelDistortX.Text = "Distort X";
+            // 
+            // numericUpDownDistortX
+            // 
+            this.numericUpDownDistortX.DecimalPlaces = 2;
+            this.numericUpDownDistortX.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            131072});
+            this.numericUpDownDistortX.Location = new System.Drawing.Point(231, 9);
+            this.numericUpDownDistortX.Maximum = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
+            this.numericUpDownDistortX.Minimum = new decimal(new int[] {
+            3,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDownDistortX.Name = "numericUpDownDistortX";
+            this.numericUpDownDistortX.Size = new System.Drawing.Size(52, 20);
+            this.numericUpDownDistortX.TabIndex = 24;
+            this.numericUpDownDistortX.ValueChanged += new System.EventHandler(this.numericUpDownRotateX_ValueChanged);
+            // 
+            // labelDistortY
+            // 
+            this.labelDistortY.AutoSize = true;
+            this.labelDistortY.Location = new System.Drawing.Point(175, 36);
+            this.labelDistortY.Name = "labelDistortY";
+            this.labelDistortY.Size = new System.Drawing.Size(47, 13);
+            this.labelDistortY.TabIndex = 25;
+            this.labelDistortY.Text = "Distort Y";
+            // 
+            // numericUpDownDistortY
+            // 
+            this.numericUpDownDistortY.DecimalPlaces = 2;
+            this.numericUpDownDistortY.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+            this.numericUpDownDistortY.Location = new System.Drawing.Point(231, 34);
+            this.numericUpDownDistortY.Maximum = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.numericUpDownDistortY.Minimum = new decimal(new int[] {
+            3,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDownDistortY.Name = "numericUpDownDistortY";
+            this.numericUpDownDistortY.Size = new System.Drawing.Size(52, 20);
+            this.numericUpDownDistortY.TabIndex = 26;
+            this.numericUpDownDistortY.ValueChanged += new System.EventHandler(this.numericUpDownRotateX_ValueChanged);
+            // 
             // SetPosition
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(973, 734);
+            this.Controls.Add(this.panelAdvanced);
             this.Controls.Add(this.labelCurrentTextPosition);
             this.Controls.Add(this.labelVideoResolution);
             this.Controls.Add(this.labelStyleAlignment);
@@ -198,7 +384,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(720, 545);
+            this.MinimumSize = new System.Drawing.Size(790, 545);
             this.Name = "SetPosition";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
@@ -212,6 +398,13 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.groupBox1.PerformLayout();
             this.groupBoxPreview.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRotateX)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRotateY)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRotateZ)).EndInit();
+            this.panelAdvanced.ResumeLayout(false);
+            this.panelAdvanced.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDistortX)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDistortY)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -231,5 +424,16 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private System.Windows.Forms.Label labelStyleAlignment;
         private System.Windows.Forms.Label labelVideoResolution;
         private System.Windows.Forms.Label labelCurrentTextPosition;
+        private System.Windows.Forms.NumericUpDown numericUpDownRotateX;
+        private System.Windows.Forms.Label labelRotateX;
+        private System.Windows.Forms.NumericUpDown numericUpDownRotateY;
+        private System.Windows.Forms.Label labelRotateY;
+        private System.Windows.Forms.NumericUpDown numericUpDownRotateZ;
+        private System.Windows.Forms.Label labelRotateZ;
+        private System.Windows.Forms.Panel panelAdvanced;
+        private System.Windows.Forms.Label labelDistortX;
+        private System.Windows.Forms.NumericUpDown numericUpDownDistortX;
+        private System.Windows.Forms.Label labelDistortY;
+        private System.Windows.Forms.NumericUpDown numericUpDownDistortY;
     }
 }

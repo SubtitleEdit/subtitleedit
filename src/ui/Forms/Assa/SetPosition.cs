@@ -30,6 +30,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private readonly string _videoFileName;
         private readonly VideoInfo _videoInfo;
         private bool _positionChanged;
+        private bool _loading = true;
 
         public SetPosition(Subtitle subtitle, int[] selectedIndices, string videoFileName, VideoInfo videoInfo)
         {
@@ -50,6 +51,13 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             groupBoxPreview.Text = LanguageSettings.Current.General.Preview;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+
+            numericUpDownRotateX.Left = labelRotateX.Left + labelRotateX.Width + 3;
+            numericUpDownRotateY.Left = labelRotateY.Left + labelRotateY.Width + 3;
+            numericUpDownRotateZ.Left = labelRotateZ.Left + labelRotateZ.Width + 3;
+            numericUpDownDistortX.Left = labelDistortX.Left + labelDistortX.Width + 3;
+            numericUpDownDistortY.Left = labelDistortY.Left + labelDistortY.Width + 3;
+
             UiUtil.FixLargeFonts(this, buttonOK);
 
             if (_videoInfo == null)
@@ -85,8 +93,13 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 UiUtil.OpenUrl("https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#pos");
                 e.SuppressKeyPress = true;
             }
+            else if (e.KeyData == Keys.F2)
+            {
+                panelAdvanced.Visible = !panelAdvanced.Visible;
+                VideoLoaded(null, null);
+            }
 
-            if (e.Modifiers == Keys.Alt || e.Modifiers == Keys.Control)
+            if (e.Modifiers == Keys.Alt || e.Modifiers == Keys.Control && !_updatePos)
             {
                 var v = e.Modifiers == Keys.Alt ? 1 : 10;
 
@@ -95,24 +108,28 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                     _y -= v;
                     e.SuppressKeyPress = true;
                     VideoLoaded(null, null);
+                    labelCurrentTextPosition.Text = string.Format(LanguageSettings.Current.AssaSetPosition.CurrentTextPositionX, $"{_x},{_y}");
                 }
                 else if (e.KeyCode == Keys.Down && _x != -1 && _y != -1)
                 {
                     _y += v;
                     e.SuppressKeyPress = true;
                     VideoLoaded(null, null);
+                    labelCurrentTextPosition.Text = string.Format(LanguageSettings.Current.AssaSetPosition.CurrentTextPositionX, $"{_x},{_y}");
                 }
                 else if (e.KeyCode == Keys.Left && _x != -1 && _y != -1)
                 {
                     _x -= v;
                     e.SuppressKeyPress = true;
                     VideoLoaded(null, null);
+                    labelCurrentTextPosition.Text = string.Format(LanguageSettings.Current.AssaSetPosition.CurrentTextPositionX, $"{_x},{_y}");
                 }
                 else if (e.KeyCode == Keys.Right && _x != -1 && _y != -1)
                 {
                     _x += v;
                     e.SuppressKeyPress = true;
                     VideoLoaded(null, null);
+                    labelCurrentTextPosition.Text = string.Format(LanguageSettings.Current.AssaSetPosition.CurrentTextPositionX, $"{_x},{_y}");
                 }
             }
         }
@@ -132,6 +149,13 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             var styleToApply = $"{{\\pos({_x},{_y})}}";
 
+            var advancedVisible = panelAdvanced.Visible;
+            if (advancedVisible)
+            {
+                styleToApply = AddAdvancedTags(styleToApply);
+            }
+
+
             if (radioButtonClipboard.Checked)
             {
                 Clipboard.SetText(styleToApply);
@@ -150,9 +174,12 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
                 var p = UpdatedSubtitle.Paragraphs[i];
 
-                // remove old position tags
-                p.Text = Regex.Replace(p.Text, @"{\\pos(.*)}", string.Empty);
-                p.Text = Regex.Replace(p.Text, @"\\pos(.*)", string.Empty);
+                RemoveOldPosTags(p);
+
+                if (advancedVisible)
+                {
+                    RemoveAdvancedTags(p);
+                }
 
                 if (p.Text.StartsWith("{\\", StringComparison.Ordinal) && styleToApply.EndsWith('}'))
                 {
@@ -163,6 +190,12 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                     p.Text = styleToApply + p.Text;
                 }
             }
+        }
+
+        private static void RemoveOldPosTags(Paragraph p)
+        {
+            p.Text = Regex.Replace(p.Text, @"{\\pos\([\d,\.-]*\)}", string.Empty);
+            p.Text = Regex.Replace(p.Text, @"\\pos\([\d,\.-]*\)", string.Empty);
         }
 
         private int[] GetIndices(Subtitle subtitle)
@@ -237,17 +270,24 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             var subtitle = new Subtitle();
             var indices = GetIndices(subtitle);
             var styleToApply = $"{{\\pos({_x},{_y})}}";
+
             var p = indices.Length > 0 ?
                 new Paragraph(_subtitleWithNewHeader.Paragraphs[indices[0]]) :
                 new Paragraph(Configuration.Settings.General.PreviewAssaText, 0, 1000);
 
-            // remove old position tags
-            p.Text = Regex.Replace(p.Text, @"{\\pos(.*)}", string.Empty);
-            p.Text = Regex.Replace(p.Text, @"\\pos(.*)", string.Empty);
+            RemoveOldPosTags(p);
 
             // remove fade tags 
-            p.Text = Regex.Replace(p.Text, @"{\\fad(.*)}", string.Empty);
-            p.Text = Regex.Replace(p.Text, @"\\fade(.*)", string.Empty);
+            p.Text = Regex.Replace(p.Text, @"{\\fad\([\d\.,]*\)}", string.Empty);
+            p.Text = Regex.Replace(p.Text, @"\\fad\([\d\.,]*\)", string.Empty);
+            p.Text = Regex.Replace(p.Text, @"{\\fade\([\d\.,]*\)}", string.Empty);
+            p.Text = Regex.Replace(p.Text, @"\\fade\([\d\.,]*\)", string.Empty);
+
+            if (panelAdvanced.Visible)
+            {
+                RemoveAdvancedTags(p);
+                styleToApply = AddAdvancedTags(styleToApply);
+            }
 
             p.Text = styleToApply + p.Text;
             subtitle.Paragraphs.Add(p);
@@ -269,10 +309,64 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
         }
 
+        private string AddAdvancedTags(string styleToApply)
+        {
+            if (numericUpDownRotateX.Value != 0)
+            {
+                styleToApply += $"{{\\frx{numericUpDownRotateX.Value.ToString(CultureInfo.InvariantCulture)}}}";
+            }
+
+            if (numericUpDownRotateY.Value != 0)
+            {
+                styleToApply += $"{{\\fry{numericUpDownRotateY.Value.ToString(CultureInfo.InvariantCulture)}}}";
+            }
+
+            if (numericUpDownRotateZ.Value != 0)
+            {
+                styleToApply += $"{{\\frz{numericUpDownRotateZ.Value.ToString(CultureInfo.InvariantCulture)}}}";
+            }
+
+            if (numericUpDownDistortX.Value != 0)
+            {
+                styleToApply += $"{{\\fax{numericUpDownDistortX.Value.ToString(CultureInfo.InvariantCulture)}}}";
+            }
+
+            if (numericUpDownDistortY.Value != 0)
+            {
+                styleToApply += $"{{\\fay{numericUpDownDistortY.Value.ToString(CultureInfo.InvariantCulture)}}}";
+            }
+
+            styleToApply = styleToApply.Replace("}{", string.Empty);
+
+            return styleToApply;
+        }
+
+        private static void RemoveAdvancedTags(Paragraph p)
+        {
+            p.Text = Regex.Replace(p.Text, @"{\\frx[\d+\.-]*}", string.Empty);
+            p.Text = Regex.Replace(p.Text, @"\\frx[\d+\.-]*\\", "\\");
+            p.Text = Regex.Replace(p.Text, @"\\frx[\d+\.-]*}", "}");
+
+            p.Text = Regex.Replace(p.Text, @"{\\fry[\d+\.-]*}", string.Empty);
+            p.Text = Regex.Replace(p.Text, @"\\fry[\d+\.-]*\\", "\\");
+            p.Text = Regex.Replace(p.Text, @"\\fry[\d+\.-]*}", "}");
+
+            p.Text = Regex.Replace(p.Text, @"{\\frz[\d+\.-]*}", string.Empty);
+            p.Text = Regex.Replace(p.Text, @"\\frz[\d+\.-]*\\", "\\");
+            p.Text = Regex.Replace(p.Text, @"\\frz[\d+\.-]*}", "}");
+
+            p.Text = Regex.Replace(p.Text, @"{\\fax[\d+\.-]*}", string.Empty);
+            p.Text = Regex.Replace(p.Text, @"\\fax[\d+\.-]*\\", "\\");
+            p.Text = Regex.Replace(p.Text, @"\\fax[\d+\.-]*}", "}");
+
+            p.Text = Regex.Replace(p.Text, @"{\\fay[\d+\.-]*}", string.Empty);
+            p.Text = Regex.Replace(p.Text, @"\\fay[\d+\.-]*\\", "\\");
+            p.Text = Regex.Replace(p.Text, @"\\fay[\d+\.-]*}", "}");
+        }
+
         private void ApplyCustomStyles_FormClosing(object sender, FormClosingEventArgs e)
         {
             _closing = true;
-            Application.DoEvents();
             Configuration.Settings.Tools.AssaSetPositionTarget = radioButtonClipboard.Checked ? "Clipboard" : "SelectedLines";
             _mpv?.Dispose();
         }
@@ -283,7 +377,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             {
                 return;
             }
-
 
             if (_updatePos && (_x != _tempX || _y != _tempY))
             {
@@ -311,6 +404,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
 
             GeneratePreviewViaMpv();
+            _loading = false;
         }
 
         private void ShowCurrentPosition()
@@ -322,7 +416,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
 
             var p = _subtitleWithNewHeader.Paragraphs[indices[0]];
-            var match = Regex.Match(p.Text, @"\\pos(.*)");
+            var match = Regex.Match(p.Text, @"\\pos\([\d\.,-]*");
             if (match.Success)
             {
                 var arr = match.Value.Split('(', ')', ',');
@@ -334,6 +428,71 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                         _y = y;
                         _updatePos = false;
                         labelCurrentTextPosition.Text = string.Format(LanguageSettings.Current.AssaSetPosition.CurrentTextPositionX, $"{_x},{_y}");
+                    }
+                }
+            }
+
+            match = Regex.Match(p.Text, @"\\frx[\d\.-]*");
+            if (match.Success)
+            {
+                var arr = match.Value.Split('x', '\\', '}');
+                if (arr.Length > 2)
+                {
+                    if (decimal.TryParse(arr[2], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var x))
+                    {
+                        numericUpDownRotateX.Value = x;
+                    }
+                }
+            }
+
+            match = Regex.Match(p.Text, @"\\fry[\d\.-]*");
+            if (match.Success)
+            {
+                var arr = match.Value.Split('y', '\\', '}');
+                if (arr.Length > 2)
+                {
+                    if (decimal.TryParse(arr[2], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var x))
+                    {
+                        numericUpDownRotateY.Value = x;
+                    }
+                }
+            }
+
+            match = Regex.Match(p.Text, @"\\frz[\d\.-]*");
+            if (match.Success)
+            {
+                var arr = match.Value.Split('z', '\\', '}');
+                if (arr.Length > 2)
+                {
+                    if (decimal.TryParse(arr[2], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var x))
+                    {
+                        numericUpDownRotateZ.Value = x;
+                    }
+                }
+            }
+
+            match = Regex.Match(p.Text, @"\\fax[\d\.-]*");
+            if (match.Success)
+            {
+                var arr = match.Value.Split('x', '\\', '}');
+                if (arr.Length > 2)
+                {
+                    if (decimal.TryParse(arr[2], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var x))
+                    {
+                        numericUpDownDistortX.Value = x;
+                    }
+                }
+            }
+
+            match = Regex.Match(p.Text, @"\\fay[\d\.-]*");
+            if (match.Success)
+            {
+                var arr = match.Value.Split('y', '\\', '}');
+                if (arr.Length > 2)
+                {
+                    if (decimal.TryParse(arr[2], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var x))
+                    {
+                        numericUpDownDistortY.Value = x;
                     }
                 }
             }
@@ -380,6 +539,17 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             var aspectRatio = (double)_videoInfo.Width / _videoInfo.Height;
             var newWidth = pictureBoxPreview.Height * aspectRatio;
             Width += (int)(newWidth - pictureBoxPreview.Width);
+        }
+
+        private void numericUpDownRotateX_ValueChanged(object sender, EventArgs e)
+        {
+            if (_loading || !panelAdvanced.Visible)
+            {
+                return;
+            }
+
+            _positionChanged = true;
+            VideoLoaded(null, null);
         }
     }
 }

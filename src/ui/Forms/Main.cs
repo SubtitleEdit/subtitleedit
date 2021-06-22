@@ -31213,9 +31213,16 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void setPositionToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(VideoFileName))
+            {
+                MessageBox.Show(LanguageSettings.Current.General.NoVideoLoaded);
+                return;
+            }
+
             using (var form = new SetPosition(_subtitle, SubtitleListview1.GetSelectedIndices(), VideoFileName, _videoInfo))
             {
-                if (form.ShowDialog(this) != DialogResult.OK)
+                var result = form.ShowDialog(this);
+                if (result != DialogResult.OK)
                 {
                     return;
                 }
