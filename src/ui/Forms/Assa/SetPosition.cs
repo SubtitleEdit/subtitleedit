@@ -85,6 +85,36 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 UiUtil.OpenUrl("https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#pos");
                 e.SuppressKeyPress = true;
             }
+
+            if (e.Modifiers == Keys.Alt || e.Modifiers == Keys.Control)
+            {
+                var v = e.Modifiers == Keys.Alt ? 1 : 10;
+
+                if (e.KeyCode == Keys.Up && _x != -1 && _y != -1)
+                {
+                    _y -= v;
+                    e.SuppressKeyPress = true;
+                    VideoLoaded(null, null);
+                }
+                else if (e.KeyCode == Keys.Down && _x != -1 && _y != -1)
+                {
+                    _y += v;
+                    e.SuppressKeyPress = true;
+                    VideoLoaded(null, null);
+                }
+                else if (e.KeyCode == Keys.Left && _x != -1 && _y != -1)
+                {
+                    _x -= v;
+                    e.SuppressKeyPress = true;
+                    VideoLoaded(null, null);
+                }
+                else if (e.KeyCode == Keys.Right && _x != -1 && _y != -1)
+                {
+                    _x += v;
+                    e.SuppressKeyPress = true;
+                    VideoLoaded(null, null);
+                }
+            }
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
@@ -207,8 +237,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             var subtitle = new Subtitle();
             var indices = GetIndices(subtitle);
             var styleToApply = $"{{\\pos({_x},{_y})}}";
-            var p = indices.Length > 0 ? 
-                new Paragraph(_subtitleWithNewHeader.Paragraphs[indices[0]]) : 
+            var p = indices.Length > 0 ?
+                new Paragraph(_subtitleWithNewHeader.Paragraphs[indices[0]]) :
                 new Paragraph(Configuration.Settings.General.PreviewAssaText, 0, 1000);
 
             // remove old position tags
