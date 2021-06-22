@@ -187,6 +187,15 @@ Note: Do check free disk space.</WaveFileMalformed>
     <SelectedLinesX>Selected lines: {0}</SelectedLinesX>
     <AdvancedSelection>Advanced selection</AdvancedSelection>
   </AssaOverrideTags>
+  <AssaSetPosition>
+    <SetPosition>Set/get position</SetPosition>
+    <VideoResolutionX>Video reslution: {0}</VideoResolutionX>
+    <StyleAlignmentX>Style alignment: {0}</StyleAlignmentX>
+    <CurrentMousePositionX>Mouse position: {0}</CurrentMousePositionX>
+    <CurrentTextPositionX>Text position: {0}</CurrentTextPositionX>
+    <SetPosInfo>Click on video to toggle set/move position</SetPosInfo>
+    <Clipboard>Clipboard</Clipboard>
+  </AssaSetPosition>
   <AudioToText>
     <Title>Audio to text</Title>
     <ExtractingAudioUsingX>Extracting audio using {0}...</ExtractingAudioUsingX>
