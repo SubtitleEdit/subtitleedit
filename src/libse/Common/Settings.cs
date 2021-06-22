@@ -328,6 +328,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string ColumnPasteColumn { get; set; }
         public string ColumnPasteOverwriteMode { get; set; }
         public string AssaAttachmentFontTextPreview { get; set; }
+        public string AssaSetPositionTarget { get; set; }
         public string VisualSyncStartSize { get; set; }
 
         public ToolsSettings()
@@ -2042,6 +2043,7 @@ $HorzAlign          =   Center
         public string MainListViewGoToNextError { get; set; }
         public string MainListViewRemoveBlankLines { get; set; }
         public string ApplyAssaOverrideTags { get; set; }
+        public string SetAssaPosition { get; set; }
         public string MainListViewRemoveTimeCodes { get; set; }
         public string MainTextBoxSplitAtCursor { get; set; }
         public string MainTextBoxSplitAtCursorAndVideoPos { get; set; }
@@ -5080,6 +5082,12 @@ $HorzAlign          =   Center
                 settings.Tools.AssaAttachmentFontTextPreview = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("AssaSetPositionTarget");
+            if (subNode != null)
+            {
+                settings.Tools.AssaSetPositionTarget = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("VisualSyncStartSize");
             if (subNode != null)
             {
@@ -7554,7 +7562,13 @@ $HorzAlign          =   Center
                 if (subNode != null)
                 {
                     shortcuts.ApplyAssaOverrideTags = subNode.InnerText;
-                }                
+                }
+
+                subNode = node.SelectSingleNode("SetAssaPosition");
+                if (subNode != null)
+                {
+                    shortcuts.SetAssaPosition = subNode.InnerText;
+                }
 
                 subNode = node.SelectSingleNode("MainListViewRemoveTimeCodes");
                 if (subNode != null)
@@ -8697,6 +8711,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ColumnPasteColumn", settings.Tools.ColumnPasteColumn);
                 textWriter.WriteElementString("ColumnPasteOverwriteMode", settings.Tools.ColumnPasteOverwriteMode);
                 textWriter.WriteElementString("AssaAttachmentFontTextPreview", settings.Tools.AssaAttachmentFontTextPreview);
+                textWriter.WriteElementString("AssaSetPositionTarget", settings.Tools.AssaSetPositionTarget);
                 textWriter.WriteElementString("VisualSyncStartSize", settings.Tools.VisualSyncStartSize);
 
                 if (settings.Tools.FindHistory != null && settings.Tools.FindHistory.Count > 0)
@@ -9198,6 +9213,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainListViewGoToNextError", shortcuts.MainListViewGoToNextError);
             textWriter.WriteElementString("MainListViewRemoveBlankLines", shortcuts.MainListViewRemoveBlankLines);
             textWriter.WriteElementString("ApplyAssaOverrideTags", shortcuts.ApplyAssaOverrideTags);
+            textWriter.WriteElementString("SetAssaPosition", shortcuts.SetAssaPosition);
             textWriter.WriteElementString("MainListViewRemoveTimeCodes", shortcuts.MainListViewRemoveTimeCodes);
             textWriter.WriteElementString("MainEditFixRTLViaUnicodeChars", shortcuts.MainEditFixRTLViaUnicodeChars);
             textWriter.WriteElementString("MainEditRemoveRTLUnicodeChars", shortcuts.MainEditRemoveRTLUnicodeChars);

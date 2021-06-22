@@ -4,6 +4,8 @@
 * NEW:
    * Keep ASSA override tags (no html for italic/font etc.)
    * ASSA override tag helper (shortcut + custom templates)
+   * ASSA set/get position
+   * ASSA plugin support
    * Shortcuts for video contrast/brightness (mpv only)
    * Waveform "Right-click + Ctrl" will toggle select of a subtitle
    * Waveform "Right-click + Shift" will select a range of subtitles
@@ -27,6 +29,7 @@
    * Installer: Use ngen64 on 64-bit - thx XhmikosR
    * Keep selected line (nearest) after "Remove text for HI" - thx Atlantis
    * Improve FPC compatibility + PAC refactor - thx ngaullier
+   * Improve auto br / French regarding "space-punctuation" - thx Norbert
 * FIXED:
    * Fix MergeLinesShorterThan saving/loading - thx uckthis/OmrSi
    * Fix load/save some ASSA storage style settings - thx Andrebavila

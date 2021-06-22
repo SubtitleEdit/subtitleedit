@@ -121,6 +121,12 @@
     <Compile Include="Forms\Assa\AdvancedSelectionHelper.Designer.cs">
       <DependentUpon>AdvancedSelectionHelper.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Assa\SetPosition.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Assa\SetPosition.Designer.cs">
+      <DependentUpon>SetPosition.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Assa\ApplyCustomStyles.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1260,6 +1266,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Assa\AdvancedSelectionHelper.resx">
       <DependentUpon>AdvancedSelectionHelper.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Assa\SetPosition.resx">
+      <DependentUpon>SetPosition.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Assa\ApplyCustomStyles.resx">
       <DependentUpon>ApplyCustomStyles.cs</DependentUpon>

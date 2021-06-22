@@ -699,7 +699,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             }
         }
 
-        public static string GetTag(string tagName, string section, string header)
+        public static string GetTagFromHeader(string tagName, string section, string header)
         {
             var sectionOn = false;
             foreach (var line in header.SplitToLines())

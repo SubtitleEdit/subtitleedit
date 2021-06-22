@@ -1283,6 +1283,24 @@ namespace Nikse.SubtitleEdit.Forms
 
                     MovePrevNext(e, beforeParagraph, index);
                     SubtitleListview1.SyntaxColorLineBackground(_subtitle.Paragraphs, index, paragraph);
+                    if (e.MouseDownParagraphType == AudioVisualizer.MouseDownParagraphType.End)
+                    {
+                        var next = _subtitle.GetParagraphOrDefault(index + 1);
+                        if (next != null)
+                        {
+                            SubtitleListview1.SyntaxColorLineBackground(_subtitle.Paragraphs, index + 1, next);
+                        }
+                    }
+                    if (e.MouseDownParagraphType == AudioVisualizer.MouseDownParagraphType.Start)
+                    {
+                        var prev = _subtitle.GetParagraphOrDefault(index - 1);
+                        if (prev != null)
+                        {
+                            SubtitleListview1.SyntaxColorLineBackground(_subtitle.Paragraphs, index - 1, prev);
+                        }
+                    }
+
+
 
                     if (_subtitleOriginal != null)
                     {
@@ -22610,6 +22628,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemReverseRightToLeftStartEnd.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
             translateToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAutoTranslate);
             applyCustomStylesToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.ApplyAssaOverrideTags);
+            setPositionToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.SetAssaPosition);
 
             audioVisualizer.InsertAtVideoPositionShortcut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition);
             audioVisualizer.Move100MsLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.Waveform100MsLeft);
@@ -31189,6 +31208,27 @@ namespace Nikse.SubtitleEdit.Forms
                 _subtitle.Paragraphs.AddRange(form.UpdatedSubtitle.Paragraphs);
                 SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
                 RestoreSubtitleListviewIndices();
+            }
+        }
+
+        private void setPositionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var form = new SetPosition(_subtitle, SubtitleListview1.GetSelectedIndices(), VideoFileName, _videoInfo))
+            {
+                if (form.ShowDialog(this) != DialogResult.OK)
+                {
+                    return;
+                }
+
+                MakeHistoryForUndo(string.Format(_language.BeforeX, "Set position"));
+                if (form.UpdatedSubtitle != null)
+                {
+                    SaveSubtitleListviewIndices();
+                    _subtitle.Paragraphs.Clear();
+                    _subtitle.Paragraphs.AddRange(form.UpdatedSubtitle.Paragraphs);
+                    SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                    RestoreSubtitleListviewIndices();
+                }
             }
         }
     }
