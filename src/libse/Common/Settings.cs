@@ -1867,6 +1867,7 @@ $HorzAlign          =   Center
 
     public class Shortcuts
     {
+        public List<PluginShortcut> PluginShortcuts { get; set; }
         public string GeneralGoToFirstSelectedLine { get; set; }
         public string GeneralGoToNextEmptyLine { get; set; }
         public string GeneralMergeSelectedLines { get; set; }
@@ -2154,6 +2155,7 @@ $HorzAlign          =   Center
 
         public Shortcuts()
         {
+            PluginShortcuts = new List<PluginShortcut>();
             GeneralGoToFirstSelectedLine = "Control+L";
             GeneralMergeSelectedLines = "Control+Shift+M";
             GeneralToggleTranslationMode = "Control+Shift+O";
@@ -6532,6 +6534,18 @@ $HorzAlign          =   Center
             node = doc.DocumentElement.SelectSingleNode("Shortcuts");
             if (node != null)
             {
+                foreach (XmlNode pluginNode in node.SelectNodes("Plugins/Plugin"))
+                {
+                    var nameNode = pluginNode.SelectSingleNode("Name");
+                    var shortcutNode = pluginNode.SelectSingleNode("Shortcut");
+                    if (nameNode != null && shortcutNode != null)
+                    {
+                        var name = nameNode.InnerText;
+                        var shortcut = shortcutNode.InnerText;
+                        shortcuts.PluginShortcuts.Add(new PluginShortcut { Name = name, Shortcut  = shortcut });
+                    }
+                }
+
                 subNode = node.SelectSingleNode("GeneralGoToFirstSelectedLine");
                 if (subNode != null)
                 {
@@ -9042,6 +9056,17 @@ $HorzAlign          =   Center
         internal static void WriteShortcuts(Shortcuts shortcuts, XmlWriter textWriter)
         {
             textWriter.WriteStartElement("Shortcuts", string.Empty);
+
+            textWriter.WriteStartElement("Plugins", string.Empty);
+            foreach (var shortcut in shortcuts.PluginShortcuts)
+            {
+                textWriter.WriteStartElement("Plugin");
+                textWriter.WriteElementString("Name", shortcut.Name);
+                textWriter.WriteElementString("Shortcut", shortcut.Shortcut);
+                textWriter.WriteEndElement();
+            }
+            textWriter.WriteEndElement();
+
             textWriter.WriteElementString("GeneralGoToFirstSelectedLine", shortcuts.GeneralGoToFirstSelectedLine);
             textWriter.WriteElementString("GeneralGoToNextEmptyLine", shortcuts.GeneralGoToNextEmptyLine);
             textWriter.WriteElementString("GeneralMergeSelectedLines", shortcuts.GeneralMergeSelectedLines);

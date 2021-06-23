@@ -5310,6 +5310,7 @@ namespace Nikse.SubtitleEdit.Forms
             mediaPlayer.VideoPlayerContainerResize(null, null);
             ShowLineInformationListView();
             ShowSourceLineNumber();
+            LoadPlugins();
         }
 
         private void SetAudioVisualizerSettings()
@@ -22823,6 +22824,12 @@ namespace Nikse.SubtitleEdit.Forms
                         if (!string.IsNullOrEmpty(shortcut))
                         {
                             item.ShortcutKeys = UiUtil.GetKeys(shortcut);
+                        }
+
+                        var shortcutCustom = Configuration.Settings.Shortcuts.PluginShortcuts.FirstOrDefault(p => p.Name == name);
+                        if (shortcutCustom != null)
+                        {
+                            item.ShortcutKeys = UiUtil.GetKeys(shortcutCustom.Shortcut);
                         }
 
                         if (actionType.Equals("File", StringComparison.OrdinalIgnoreCase))

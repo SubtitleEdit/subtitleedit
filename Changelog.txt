@@ -6,6 +6,7 @@
    * ASSA override tag helper (shortcut + custom templates)
    * ASSA set/get position
    * ASSA plugin support
+   * Allow custom shortcuts for plugins
    * Shortcuts for video contrast/brightness (mpv only)
    * Waveform "Right-click + Ctrl" will toggle select of a subtitle
    * Waveform "Right-click + Shift" will select a range of subtitles
