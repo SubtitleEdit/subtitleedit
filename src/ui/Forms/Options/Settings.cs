@@ -45,6 +45,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private bool _oldListViewShowWpm;
         private readonly Dictionary<ShortcutHelper, string> _newShortcuts = new Dictionary<ShortcutHelper, string>();
         private List<RulesProfile> _rulesProfiles;
+        private List<PluginShortcut> _pluginShortcuts;
 
         private class ComboBoxLanguage
         {
@@ -76,14 +77,16 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         public class ShortcutHelper
         {
-            public ShortcutHelper(PropertyInfo shortcut, bool isMenuItem)
+            public ShortcutHelper(PropertyInfo shortcut, bool isMenuItem, bool isPlugin = false)
             {
                 Shortcut = shortcut;
                 IsMenuItem = isMenuItem;
+                IsPlugin = isPlugin;
             }
 
             public PropertyInfo Shortcut { get; set; }
             public bool IsMenuItem { get; set; }
+            public bool IsPlugin { get; set; }
         }
 
         private static string GetRelativePath(string fileName)
@@ -1543,6 +1546,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(audioVisualizerNode, language.GoBack1Second, nameof(Configuration.Settings.Shortcuts.Waveform1000MsLeft));
             AddNode(audioVisualizerNode, language.GoForward1Second, nameof(Configuration.Settings.Shortcuts.Waveform1000MsRight));
             _shortcuts.Nodes.Add(audioVisualizerNode);
+
+            LoadPluginsShortcuts();
         }
 
         private void ShowShortcutsTreeView()
@@ -2061,9 +2066,13 @@ namespace Nikse.SubtitleEdit.Forms.Options
             gs.FFmpegLocation = textBoxFFmpegPath.Text;
 
             // save shortcuts
+            Configuration.Settings.Shortcuts.PluginShortcuts = _pluginShortcuts;
             foreach (var kvp in _newShortcuts)
             {
-                kvp.Key.Shortcut.SetValue(Configuration.Settings.Shortcuts, kvp.Value, null);
+                if (!kvp.Key.IsPlugin)
+                {
+                    kvp.Key.Shortcut.SetValue(Configuration.Settings.Shortcuts, kvp.Value, null);
+                }
             }
 
             Configuration.Settings.Save();
@@ -2628,6 +2637,42 @@ namespace Nikse.SubtitleEdit.Forms.Options
             section.Visible = true;
         }
 
+        private void LoadPluginsShortcuts()
+        {
+            if (_pluginShortcuts == null)
+            {
+                _pluginShortcuts = Configuration.Settings.Shortcuts.PluginShortcuts.Select(p => new PluginShortcut { Name = p.Name, Shortcut = p.Shortcut }).ToList();
+            }
+
+            var pluginsNode = new ShortcutNode(LanguageSettings.Current.PluginsGet.Title);
+            foreach (var pluginFileName in Directory.GetFiles(Configuration.PluginsDirectory, "*.DLL"))
+            {
+                Main.GetPropertiesAndDoAction(pluginFileName, out var name, out _, out var version, out var description, out var actionType, out _, out var mi);
+                if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(actionType) && mi != null)
+                {
+                    var text = GetPluginShortcutText(name);
+                    var shortcutNode = new ShortcutNode(text)
+                    {
+                        Text = text,
+                        ShortcutText = name,
+                        Shortcut = new ShortcutHelper(null, true, true),
+                    };
+                    pluginsNode.Nodes.Add(shortcutNode);
+                }
+            }
+
+            if (pluginsNode.Nodes.Count > 0)
+            {
+                _shortcuts.Nodes.Add(pluginsNode);
+            }
+        }
+
+        private string GetPluginShortcutText(string name)
+        {
+            var shortcut = _pluginShortcuts.FirstOrDefault(p => p.Name == name);
+            return shortcut == null ? $"{name} [{LanguageSettings.Current.General.None}]" : $"{name} [{shortcut.Shortcut}]";
+        }
+
         private void ListBoxKeyDownSearch(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape ||
@@ -2998,11 +3043,26 @@ namespace Nikse.SubtitleEdit.Forms.Options
             var shortcutText = GetCurrentShortcutText();
             var existsIn = new StringBuilder();
             var sh = (ShortcutHelper)treeViewShortcuts.SelectedNode.Tag;
+
+            if (sh.IsPlugin)
+            {
+                var cleanShortcut = shortcutText.RemoveChar('[').RemoveChar(']');
+                var existingShortCut = _pluginShortcuts.FirstOrDefault(p => p.Name == text);
+                if (existingShortCut == null)
+                {
+                    _pluginShortcuts.Add(new PluginShortcut { Name = text, Shortcut = cleanShortcut });
+                }
+                else
+                {
+                    existingShortCut.Shortcut = cleanShortcut;
+                }
+            }
+
             foreach (ShortcutNode parent in _shortcuts.Nodes)
             {
                 foreach (ShortcutNode subNode in parent.Nodes)
                 {
-                    if (sh != null && subNode.Shortcut.Shortcut.Name == sh.Shortcut.Name)
+                    if (sh != null && !sh.IsPlugin && subNode.Shortcut.Shortcut.Name == sh.Shortcut.Name)
                     {
                         subNode.Text = text + " " + shortcutText;
                     }
