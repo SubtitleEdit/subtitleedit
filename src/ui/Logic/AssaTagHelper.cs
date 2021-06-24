@@ -120,8 +120,8 @@ namespace Nikse.SubtitleEdit.Logic
             new IntellisenseItem("{\\3a&Haa}",  "Alpha for outline box (00=fully visible, ff=transparent)", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#alpha"),
             new IntellisenseItem("{\\4a&Haa}",  "Alpha for shadow (00=fully visible, ff=transparent)", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#alpha"),
 
-            new IntellisenseItem("{\\clip(x1,y1,x2,y2)}",  "Clips (hides) any drawing outside the rectangle defined by the parameters.", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#clip"),
-            new IntellisenseItem("{\\iclip(x1,y1,x2,y2)}",  "Clips (hides) any drawing inside the rectangle defined by the parameters.", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#clip"),
+            new IntellisenseItem("{\\clip(x1,y1,x2,y2)}",  "Clips (hides) any drawing outside the rectangle", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#clip"),
+            new IntellisenseItem("{\\iclip(x1,y1,x2,y2)}",  "Clips (hides) any drawing inside the rectangle", true, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#clip"),
 
             new IntellisenseItem("{\\r}",  "Reset inline styles", false, "https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#reset"),
 
@@ -379,7 +379,7 @@ namespace Nikse.SubtitleEdit.Logic
                 DarkTheme.SetDarkTheme(listBox);
             }
 
-            listBox.Width = 480;
+            listBox.Width = 500;
             listBox.Height = 200;
             var height = listBox.Items.Count * listBox.ItemHeight + listBox.Items.Count + listBox.ItemHeight;
             if (height < listBox.Height)

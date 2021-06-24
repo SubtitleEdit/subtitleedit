@@ -57,6 +57,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelTimeCodeSeparator.Text = l.TimeCodeSeparator;
             comboBoxTimeCodeSeparator.Left = labelTimeCodeSeparator.Left + labelTimeCodeSeparator.Width + 5;
             labelEncoding.Text = LanguageSettings.Current.Main.Controls.FileEncoding;
+            comboBoxEncoding.Left = labelEncoding.Left + labelEncoding.Width + 3;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             buttonOK.Text = LanguageSettings.Current.Main.Menu.File.SaveAs;
 

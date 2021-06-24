@@ -176,6 +176,7 @@
             // 
             this.groupBoxImageSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxImageSettings.Controls.Add(this.comboBoxResolution);
             this.groupBoxImageSettings.Controls.Add(this.labelResize);
             this.groupBoxImageSettings.Controls.Add(this.comboBoxResizePercentage);
             this.groupBoxImageSettings.Controls.Add(this.comboBoxBottomMarginUnit);
@@ -208,7 +209,6 @@
             this.groupBoxImageSettings.Controls.Add(this.comboBoxImageFormat);
             this.groupBoxImageSettings.Controls.Add(this.checkBoxBold);
             this.groupBoxImageSettings.Controls.Add(this.labelResolution);
-            this.groupBoxImageSettings.Controls.Add(this.comboBoxResolution);
             this.groupBoxImageSettings.Controls.Add(this.comboBoxHAlign);
             this.groupBoxImageSettings.Controls.Add(this.labelHorizontalAlign);
             this.groupBoxImageSettings.Controls.Add(this.checkBoxSimpleRender);
@@ -470,6 +470,7 @@
             // comboBox3D
             // 
             this.comboBox3D.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox3D.DropDownWidth = 150;
             this.comboBox3D.FormattingEnabled = true;
             this.comboBox3D.Location = new System.Drawing.Point(309, 110);
             this.comboBox3D.Name = "comboBox3D";
@@ -514,7 +515,7 @@
             // labelBottomMargin
             // 
             this.labelBottomMargin.AutoSize = true;
-            this.labelBottomMargin.Location = new System.Drawing.Point(6, 135);
+            this.labelBottomMargin.Location = new System.Drawing.Point(5, 135);
             this.labelBottomMargin.Name = "labelBottomMargin";
             this.labelBottomMargin.Size = new System.Drawing.Size(74, 13);
             this.labelBottomMargin.TabIndex = 9;
@@ -608,7 +609,7 @@
             // labelResolution
             // 
             this.labelResolution.AutoSize = true;
-            this.labelResolution.Location = new System.Drawing.Point(6, 81);
+            this.labelResolution.Location = new System.Drawing.Point(5, 81);
             this.labelResolution.Name = "labelResolution";
             this.labelResolution.Size = new System.Drawing.Size(51, 13);
             this.labelResolution.TabIndex = 4;
@@ -659,7 +660,7 @@
             // labelHorizontalAlign
             // 
             this.labelHorizontalAlign.AutoSize = true;
-            this.labelHorizontalAlign.Location = new System.Drawing.Point(6, 108);
+            this.labelHorizontalAlign.Location = new System.Drawing.Point(5, 108);
             this.labelHorizontalAlign.Name = "labelHorizontalAlign";
             this.labelHorizontalAlign.Size = new System.Drawing.Size(30, 13);
             this.labelHorizontalAlign.TabIndex = 7;
@@ -679,7 +680,7 @@
             // labelSubtitleFontSize
             // 
             this.labelSubtitleFontSize.AutoSize = true;
-            this.labelSubtitleFontSize.Location = new System.Drawing.Point(6, 54);
+            this.labelSubtitleFontSize.Location = new System.Drawing.Point(5, 54);
             this.labelSubtitleFontSize.Name = "labelSubtitleFontSize";
             this.labelSubtitleFontSize.Size = new System.Drawing.Size(84, 13);
             this.labelSubtitleFontSize.TabIndex = 2;
@@ -819,7 +820,7 @@
             // labelSubtitleFont
             // 
             this.labelSubtitleFont.AutoSize = true;
-            this.labelSubtitleFont.Location = new System.Drawing.Point(6, 29);
+            this.labelSubtitleFont.Location = new System.Drawing.Point(5, 29);
             this.labelSubtitleFont.Name = "labelSubtitleFont";
             this.labelSubtitleFont.Size = new System.Drawing.Size(63, 13);
             this.labelSubtitleFont.TabIndex = 0;
@@ -915,7 +916,7 @@
             // checkBoxFcpFullPathUrl
             // 
             this.checkBoxFcpFullPathUrl.AutoSize = true;
-            this.checkBoxFcpFullPathUrl.Location = new System.Drawing.Point(6, 161);
+            this.checkBoxFcpFullPathUrl.Location = new System.Drawing.Point(5, 161);
             this.checkBoxFcpFullPathUrl.Name = "checkBoxFcpFullPathUrl";
             this.checkBoxFcpFullPathUrl.Size = new System.Drawing.Size(182, 17);
             this.checkBoxFcpFullPathUrl.TabIndex = 62;
@@ -925,7 +926,7 @@
             // labelLeftRightMargin
             // 
             this.labelLeftRightMargin.AutoSize = true;
-            this.labelLeftRightMargin.Location = new System.Drawing.Point(6, 161);
+            this.labelLeftRightMargin.Location = new System.Drawing.Point(5, 161);
             this.labelLeftRightMargin.Name = "labelLeftRightMargin";
             this.labelLeftRightMargin.Size = new System.Drawing.Size(84, 13);
             this.labelLeftRightMargin.TabIndex = 56;
@@ -1075,10 +1076,10 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ExportPngXml";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ExportPngXml_FormClosing);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ExportPngXml_KeyDown);
-            this.ResizeEnd += new System.EventHandler(this.ExportPngXml_ResizeEnd);
             this.Shown += new System.EventHandler(this.ExportPngXml_Shown);
+            this.ResizeEnd += new System.EventHandler(this.ExportPngXml_ResizeEnd);
             this.SizeChanged += new System.EventHandler(this.ExportPngXml_SizeChanged);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ExportPngXml_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
             this.groupBoxImageSettings.ResumeLayout(false);
