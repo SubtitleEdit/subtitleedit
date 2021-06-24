@@ -2,10 +2,11 @@
 
 3.6.2 BETA (xth July 2021)
 * NEW:
-   * Keep ASSA override tags (no html for italic/font etc.)
-   * ASSA override tag helper (shortcut + custom templates)
-   * ASSA set/get position
-   * ASSA plugin support
+   * ASSA: Keep override tags (no html for italic/font etc.)
+   * ASSA: Support for ScalingX/ScalingY/Spacing/Angle/Strikeout - thx ausencia
+   * ASSA: Override tag helper (shortcut + custom templates)
+   * ASSA: Set/get position
+   * ASSA: Plugin support
    * Allow custom shortcuts for plugins
    * Shortcuts for video contrast/brightness (mpv only)
    * Waveform "Right-click + Ctrl" will toggle select of a subtitle
@@ -18,7 +19,6 @@
    * Update Polish translation - thx admas
    * Update Portuguese translation - thx hugok79
    * Update Hungarian translation - thx Zityi
-   * ASSA: Support for ScalingX/ScalingY/Spacing/Angle/Strikeout - thx ausencia
    * MPC: Try to search for mpc-be too - thx Fábio
    * Shortcut F5 is now "Play selected lines"
    * Support read of time codes with format "<number>f" in TTML - thx LeonCheung
