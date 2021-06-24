@@ -4377,23 +4377,26 @@ namespace Nikse.SubtitleEdit.Forms
                         return DialogResult.Cancel;
                     }
 
-                    if (comboBoxEncoding.SelectedIndex == TextEncoding.Utf8WithoutBomIndex)
+                    Retry.Do(() =>
                     {
-                        var outputEnc = new UTF8Encoding(false); // create encoding with no BOM
-                        using (var file = new StreamWriter(_fileName, false, outputEnc)) // open file with encoding
+                        if (comboBoxEncoding.SelectedIndex == TextEncoding.Utf8WithoutBomIndex)
                         {
-                            file.Write(allText);
+                            var outputEnc = new UTF8Encoding(false); // create encoding with no BOM
+                            using (var file = new StreamWriter(_fileName, false, outputEnc)) // open file with encoding
+                            {
+                                file.Write(allText);
+                            }
                         }
-                    }
-                    else
-                    {
-                        // create file - includes BOM for Unicode formats
-                        using (var fs = new FileStream(_fileName, FileMode.Create, FileAccess.Write, FileShare.Read))
-                        using (var sw = new StreamWriter(fs, currentEncoding))
+                        else
                         {
-                            sw.Write(allText);
+                            // create file - includes BOM for Unicode formats
+                            using (var fs = new FileStream(_fileName, FileMode.Create, FileAccess.Write, FileShare.Read))
+                            using (var sw = new StreamWriter(fs, currentEncoding))
+                            {
+                                sw.Write(allText);
+                            }
                         }
-                    }
+                    }, TimeSpan.FromSeconds(1), 4);
                 }
 
                 Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
@@ -20833,8 +20836,8 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         catch
                         {
-                            // ignore
-                        }
+                    // ignore
+                }
                     }
                     _lastFormWindowState = WindowState;
                 });
@@ -30757,8 +30760,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch
                 {
-                    // Ignore
-                }
+            // Ignore
+        }
             });
         }
 
