@@ -3062,7 +3062,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             {
                 foreach (ShortcutNode subNode in parent.Nodes)
                 {
-                    if (sh != null && !sh.IsPlugin && subNode.Shortcut.Shortcut.Name == sh.Shortcut.Name)
+                    if (sh != null && !sh.IsPlugin && !subNode.Shortcut.IsPlugin && subNode.Shortcut.Shortcut.Name == sh.Shortcut.Name)
                     {
                         subNode.Text = text + " " + shortcutText;
                     }
