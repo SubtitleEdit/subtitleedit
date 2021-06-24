@@ -2,7 +2,7 @@
 
 3.6.2 BETA (xth July 2021)
 * NEW:
-   * ASSA: Keep override tags (no html for italic/font etc.)
+   * ASSA: Keep override tags (no conversion to html for italic/font etc.)
    * ASSA: Support for ScalingX/ScalingY/Spacing/Angle/Strikeout - thx ausencia
    * ASSA: Override tag helper (shortcut + custom templates)
    * ASSA: Set/get position
@@ -19,6 +19,7 @@
    * Update Polish translation - thx admas
    * Update Portuguese translation - thx hugok79
    * Update Hungarian translation - thx Zityi
+   * Update Brazil translation - thx Igor
    * MPC: Try to search for mpc-be too - thx Fábio
    * Shortcut F5 is now "Play selected lines"
    * Support read of time codes with format "<number>f" in TTML - thx LeonCheung
@@ -30,7 +31,7 @@
    * Installer: Use ngen64 on 64-bit - thx XhmikosR
    * Keep selected line (nearest) after "Remove text for HI" - thx Atlantis
    * Improve FPC compatibility + PAC refactor - thx ngaullier
-   * Improve auto br / French regarding "space-punctuation" - thx Norbert
+   * Improve auto br / French regarding "space+punctuation" - thx Norbert
 * FIXED:
    * Fix MergeLinesShorterThan saving/loading - thx uckthis/OmrSi
    * Fix load/save some ASSA storage style settings - thx Andrebavila
@@ -39,6 +40,7 @@
    * Minor fix for split with zero time codes - thx darnn
    * Try to fix Tools - Join... with different ASSA styles - thx Joe
    * Fix crash in "Continuation style" - thx ivandrofly
+   * Make sub preview work with mpv / audio files - thx Rabia
 
 
 3.6.1 (20th May 2021)
