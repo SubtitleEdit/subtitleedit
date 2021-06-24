@@ -1213,9 +1213,9 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
       </ToolBar>
       <ContextMenu>
         <SizeAllColumnsToFit>Ajustar o tamanho das colunas para caber</SizeAllColumnsToFit>
-        <AdvancedSubStationAlphaSetStyle>Advanced Sub Station Alpha - Definir estilo</AdvancedSubStationAlphaSetStyle>
-        <SubStationAlphaSetStyle>Sub Station Alpha - Definir estilo</SubStationAlphaSetStyle>
-        <SetActor>Estipular actor</SetActor>
+        <SetStyle>Definir estilo</SetStyle>
+        <SetActor>Definir actor</SetActor>
+        <SetOverrideTags>Definir etiquetas de substituição</SetOverrideTags>
         <SubStationAlphaStyles>Estilos Sub Station Alpha...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Estilos Advanced Sub Station Alpha...</AdvancedSubStationAlphaStyles>
         <TimedTextSetRegion>Timed Text - Definir região</TimedTextSetRegion>
