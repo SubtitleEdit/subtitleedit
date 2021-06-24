@@ -41,7 +41,13 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             _subtitle = subtitle;
             _videoFileName = videoFileName;
             _videoInfo = videoInfo;
+
             _subtitleWithNewHeader = new Subtitle(_subtitle, false);
+            if (_subtitleWithNewHeader.Header == null)
+            {
+                _subtitleWithNewHeader.Header = AdvancedSubStationAlpha.DefaultHeader;
+            }
+
             _selectedIndices = selectedIndices;
             radioButtonSelectedLines.Checked = true;
             Text = LanguageSettings.Current.AssaSetPosition.SetPosition;
