@@ -374,7 +374,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             var mpv = VideoPlayer as LibMpvDynamic;
             LastParagraph = p;
-            if (mpv != null && Configuration.Settings.General.MpvHandlesPreviewText)
+            if (mpv != null && Configuration.Settings.General.MpvHandlesPreviewText && VideoHeight > 0 && VideoWidth > 0)
             {
                 if (_subtitlesHeight > 0)
                 {
