@@ -178,6 +178,23 @@ Command line: {1} {2}
     <RemoveOneAttachment>删除一个附件？</RemoveOneAttachment>
     <RemoveXAttachments>删除{0}个附件？</RemoveXAttachments>
   </AssaAttachments>
+  <AssaOverrideTags>
+    <ApplyCustomTags>应用自定义标签</ApplyCustomTags>
+    <History>历史</History>
+    <TagsToApply>要应用的标签</TagsToApply>
+    <ApplyTo>适用于</ApplyTo>
+    <SelectedLinesX>已选行：{0}</SelectedLinesX>
+    <AdvancedSelection>高级选择</AdvancedSelection>
+  </AssaOverrideTags>
+  <AssaSetPosition>
+    <SetPosition>设置/获取位置</SetPosition>
+    <VideoResolutionX>视频分辨率：{0}</VideoResolutionX>
+    <StyleAlignmentX>样式对齐：{0}</StyleAlignmentX>
+    <CurrentMousePositionX>鼠标位置：{0}</CurrentMousePositionX>
+    <CurrentTextPositionX>文本位置：{0}</CurrentTextPositionX>
+    <SetPosInfo>点击视频切换设置/移动位置</SetPosInfo>
+    <Clipboard>剪贴板</Clipboard>
+  </AssaSetPosition>
   <AudioToText>
     <Title>音频转文字</Title>
     <ExtractingAudioUsingX>使用{0}提取音频...</ExtractingAudioUsingX>
@@ -1274,6 +1291,7 @@ Command line: {1} {2}
         <TranslateSelectedLines>翻译选中的行...</TranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>调整所选行时长...</AdjustDisplayDurationForSelectedLines>
         <ApplyDurationLimitsForSelectedLines>对选定的行应用持续时间限制...</ApplyDurationLimitsForSelectedLines>
+        <ApplyCustomOverrideTag>应用自定义覆盖标签...</ApplyCustomOverrideTag>
         <FixCommonErrorsInSelectedLines>修复所选行常规错误...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>更改所选行大小写...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>所选行另存为...</SaveSelectedLines>
@@ -2004,6 +2022,8 @@ Command line: {1} {2}
     <StartInSourceView>在源视图中开始</StartInSourceView>
     <RemoveBlankLinesWhenOpening>打开字幕时删除空行</RemoveBlankLinesWhenOpening>
     <RemoveBlankLines>删除空行</RemoveBlankLines>
+    <ApplyAssaOverrideTags>应用ASSA覆盖标签到所选</ApplyAssaOverrideTags>
+    <SetAssaPosition>设置/获取ASSA位置</SetAssaPosition>
     <ShowLineBreaksAs>列表视图中的换行符显示为</ShowLineBreaksAs>
     <SaveAsFileNameFrom>“另存为...”使用的文件名来源</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>双击主窗口中的行时，列表视图将</MainListViewDoubleClickAction>
