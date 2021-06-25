@@ -216,7 +216,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private bool GeneratePreviewViaMpv()
         {
-            var fileName = _videoFileName; // Path.Combine(Configuration.DataDirectory, "preview.mp4");
+            var fileName = _videoFileName;
             if (!File.Exists(fileName))
             {
                 var isFfmpegAvailable = !Configuration.IsRunningOnWindows || !string.IsNullOrEmpty(Configuration.Settings.General.FFmpegLocation) && File.Exists(Configuration.Settings.General.FFmpegLocation);

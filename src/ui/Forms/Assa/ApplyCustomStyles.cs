@@ -343,23 +343,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private bool GeneratePreviewViaMpv()
         {
-            var fileName = Path.Combine(Configuration.DataDirectory, "preview.mp4");
-            if (!File.Exists(fileName))
-            {
-                var isFfmpegAvailable = !Configuration.IsRunningOnWindows || !string.IsNullOrEmpty(Configuration.Settings.General.FFmpegLocation) && File.Exists(Configuration.Settings.General.FFmpegLocation);
-                if (!isFfmpegAvailable)
-                {
-                    return false;
-                }
-
-                using (var p = GetFFmpegProcess(fileName))
-                {
-                    p.Start();
-                    p.WaitForExit();
-                }
-            }
-
-            if (!LibMpvDynamic.IsInstalled)
+            var fileName = VideoPreviewGenerator.GetVideoPreviewFileName();
+            if (string.IsNullOrEmpty(fileName) || !LibMpvDynamic.IsInstalled)
             {
                 return false;
             }
@@ -377,26 +362,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             return true;
         }
 
-        public static Process GetFFmpegProcess(string outputFileName)
-        {
-            var ffmpegLocation = Configuration.Settings.General.FFmpegLocation;
-            if (!Configuration.IsRunningOnWindows && (string.IsNullOrEmpty(ffmpegLocation) || !File.Exists(ffmpegLocation)))
-            {
-                ffmpegLocation = "ffmpeg";
-            }
-
-            return new Process
-            {
-                StartInfo =
-                {
-                    FileName = ffmpegLocation,
-                    Arguments = $"-t 1 -f lavfi -i color=c=blue:s=720x480 -c:v libx264 -tune stillimage -pix_fmt yuv420p \"{outputFileName}\"",
-                    UseShellExecute = false,
-                    CreateNoWindow = true
-                }
-            };
-        }
-
         private void VideoLoaded(object sender, EventArgs e)
         {
             var format = new AdvancedSubStationAlpha();
@@ -407,8 +372,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             {
                 var p = new Paragraph(_subtitle.Paragraphs[indices[0]])
                 {
-                    StartTime = { TotalMilliseconds = 0 }, 
-                    EndTime = { TotalMilliseconds = 1000 }
+                    StartTime = { TotalMilliseconds = 0 },
+                    EndTime = { TotalMilliseconds = 2000 }
                 };
                 p.Text = styleToApply + p.Text;
                 subtitle.Paragraphs.Add(p);

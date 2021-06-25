@@ -1240,6 +1240,7 @@
     <Compile Include="Logic\VideoPlayers\MpcHC\NativeMethods.cs" />
     <Compile Include="Logic\VideoPlayers\QuartsPlayer.cs" />
     <Compile Include="Logic\VideoPlayers\VideoPlayer.cs" />
+    <Compile Include="Logic\VideoPreviewGenerator.cs" />
     <Compile Include="Logic\WordSpellChecker.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
