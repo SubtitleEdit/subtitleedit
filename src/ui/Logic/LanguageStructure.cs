@@ -205,6 +205,7 @@
             public string CurrentTextPositionX { get; set; }
             public string SetPosInfo { get; set; }
             public string Clipboard { get; set; }
+            public string ResolutionMissing { get; set; }
         }
 
         public class AudioToText

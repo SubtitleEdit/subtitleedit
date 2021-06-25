@@ -526,6 +526,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "AssaSetPosition/Clipboard":
                     language.AssaSetPosition.Clipboard = reader.Value;
                     break;
+                case "AssaSetPosition/ResolutionMissing":
+                    language.AssaSetPosition.ResolutionMissing = reader.Value;
+                    break;
                 case "AudioToText/Title":
                     language.AudioToText.Title = reader.Value;
                     break;

@@ -43,8 +43,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonHistory = new System.Windows.Forms.Button();
             this.buttonTogglePreview = new System.Windows.Forms.Button();
-            this.seTextBox1 = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.seTextBox1 = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.groupBox1.SuspendLayout();
             this.groupBoxPreview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
@@ -198,11 +199,16 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonTogglePreview.UseVisualStyleBackColor = true;
             this.buttonTogglePreview.Click += new System.EventHandler(this.buttonTogglePreview_Click);
             // 
+            // timer1
+            // 
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // seTextBox1
             // 
             this.seTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.seTextBox1.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.seTextBox1.ContextMenuStrip = this.contextMenuStrip1;
             this.seTextBox1.CurrentLanguage = "";
             this.seTextBox1.CurrentLineIndex = 0;
             this.seTextBox1.HideSelection = true;
@@ -222,9 +228,11 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.seTextBox1.Size = new System.Drawing.Size(522, 156);
             this.seTextBox1.TabIndex = 0;
             // 
-            // timer1
+            // contextMenuStrip1
             // 
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 26);
+            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // ApplyCustomStyles
             // 
@@ -274,5 +282,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private System.Windows.Forms.Button buttonTogglePreview;
         private System.Windows.Forms.PictureBox pictureBoxPreview;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
     }
 }

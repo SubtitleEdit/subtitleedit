@@ -1,14 +1,13 @@
 ﻿using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using Nikse.SubtitleEdit.Logic.VideoPlayers;
 
 namespace Nikse.SubtitleEdit.Forms.Assa
 {
@@ -64,6 +63,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             groupBoxPreview.Visible = false;
             _originalHeight = Height;
             MinimumSize = new Size(MinimumSize.Width, _originalHeight);
+
+            buttonTogglePreview.Visible = LibMpvDynamic.IsInstalled;
 
             seTextBox1.TextChanged += (sender, args) =>
             {
@@ -197,7 +198,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             if (AssaTagHelper.AutoCompleteTextBox(tb, intellisenseListBox))
             {
                 var p = GetPositionInForm(tb);
-                intellisenseListBox.Location = new Point(p.X + 10, p.Y + 40); //TODO: improve position
+                intellisenseListBox.Location = new Point(p.X + 10, p.Y + 30); //TODO: improve position
+                intellisenseListBox.Height = 185;
                 intellisenseListBox.Show();
                 intellisenseListBox.BringToFront();
                 intellisenseListBox.Focus();
@@ -420,6 +422,20 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             _mpv?.Stop();
             _mpv?.Play();
+        }
+
+        private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (_intellisenseList != null && _intellisenseList.Focused)
+            {
+                _intellisenseList.Hide();
+            }
+            else
+            {
+                _intellisenseList = DoIntellisense(seTextBox1, _intellisenseList);
+            }
+
+            e.Cancel = true;
         }
     }
 }
