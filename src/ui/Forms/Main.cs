@@ -131,6 +131,7 @@ namespace Nikse.SubtitleEdit.Forms
         private StatusLog _statusLogForm;
         private bool _makeHistoryPaused;
         private bool _saveAsCalled;
+        private readonly Timer _timerSlow = new Timer();
 
         private CheckForUpdatesHelper _checkForUpdatesHelper;
         private Timer _timerCheckForUpdates;
@@ -11925,9 +11926,12 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch
                 {
+                    // ignore
                 }
             }
 
+            _timerSlow.Stop();
+            ShowSubtitleTimer.Stop();
             if (Configuration.Settings.General.StartRememberPositionAndSize && WindowState != FormWindowState.Minimized)
             {
                 Configuration.Settings.General.StartPosition = Left + ";" + Top;
@@ -20497,22 +20501,6 @@ namespace Nikse.SubtitleEdit.Forms
                     timeUpDownVideoPositionAdjust.TimeCode = new TimeCode(pos);
                 }
 
-                mediaPlayer.RefreshProgressBar();
-
-                trackBarWaveformPosition.ValueChanged -= trackBarWaveformPosition_ValueChanged;
-                int value = (int)currentPosition;
-                if (value > trackBarWaveformPosition.Maximum)
-                {
-                    value = trackBarWaveformPosition.Maximum;
-                }
-
-                if (value < trackBarWaveformPosition.Minimum)
-                {
-                    value = trackBarWaveformPosition.Minimum;
-                }
-
-                trackBarWaveformPosition.Value = value;
-                trackBarWaveformPosition.ValueChanged += trackBarWaveformPosition_ValueChanged;
 
                 if (labelNextWord.Visible && _labelNextTicks + 100000000 < DateTime.UtcNow.Ticks)
                 {
@@ -20836,8 +20824,8 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         catch
                         {
-                    // ignore
-                }
+                            // ignore
+                        }
                     }
                     _lastFormWindowState = WindowState;
                 });
@@ -21635,7 +21623,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            SubtitleListview1.BeginUpdate();
             for (int i = startFrom; i < _subtitle.Paragraphs.Count; i++)
             {
                 switch (selection)
@@ -21654,7 +21641,11 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            SubtitleListview1.EndUpdate();
+            lock (_updateShowEarlierLock)
+            {
+                _updateShowEarlier = true;
+            }
+
             RefreshSelectedParagraph();
             UpdateSourceView();
             UpdateListSyntaxColoring();
@@ -21677,7 +21668,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                 p.StartTime.TotalMilliseconds += adjustMilliseconds;
                 p.EndTime.TotalMilliseconds += adjustMilliseconds;
-                SubtitleListview1.SetStartTimeAndDuration(i, p, _subtitle.GetParagraphOrDefault(i + 1), _subtitle.GetParagraphOrDefault(i - 1));
             }
         }
 
@@ -22442,6 +22432,55 @@ namespace Nikse.SubtitleEdit.Forms
             RemoveNotExistingFilesFromRecentFilesUI();
             ShowSubtitleTimer.Start();
             textBoxSource.SelectionLength = 0;
+            _timerSlow.Interval = 150;
+            _timerSlow.Tick += _timerSlow_Tick;
+            _timerSlow.Start();
+        }
+
+        private bool _updateShowEarlier;
+        private object _updateShowEarlierLock = new object();
+
+        private void _timerSlow_Tick(object sender, EventArgs e)
+        {
+            _timerSlow.Stop();
+
+            if (mediaPlayer.VideoPlayer != null && !mediaPlayer.IsDisposed)
+            {
+                mediaPlayer.RefreshProgressBar();
+
+                trackBarWaveformPosition.ValueChanged -= trackBarWaveformPosition_ValueChanged;
+                int value = (int)mediaPlayer.CurrentPosition;
+                if (value > trackBarWaveformPosition.Maximum)
+                {
+                    value = trackBarWaveformPosition.Maximum;
+                }
+                else if (value < trackBarWaveformPosition.Minimum)
+                {
+                    value = trackBarWaveformPosition.Minimum;
+                }
+                trackBarWaveformPosition.Value = value;
+                trackBarWaveformPosition.ValueChanged += trackBarWaveformPosition_ValueChanged;
+            }
+
+
+            if (_updateShowEarlier)
+            {
+                lock (_updateShowEarlierLock)
+                {
+
+                    SubtitleListview1.BeginUpdate();
+                    for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+                    {
+                        var p = _subtitle.Paragraphs[i];
+                        SubtitleListview1.SetStartTimeAndDuration(i, p, _subtitle.GetParagraphOrDefault(i + 1), _subtitle.GetParagraphOrDefault(i - 1));
+                    }
+
+                    SubtitleListview1.EndUpdate();
+                    _updateShowEarlier = false;
+                }
+            }
+
+            _timerSlow.Start();
         }
 
         private void TextBoxListViewText_SizeChanged(object sender, EventArgs e)
@@ -30760,8 +30799,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch
                 {
-            // Ignore
-        }
+                    // Ignore
+                }
             });
         }
 
