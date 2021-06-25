@@ -1468,7 +1468,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     if (!param.Saved)
                     {
                         string numberString = $"IMAGE{i:000}";
-                        string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLowerInvariant());
+                        var path = Path.GetDirectoryName(saveFileDialog1.FileName);
+                        string fileName = Path.Combine(path, numberString + "." + comboBoxImageFormat.Text.ToLowerInvariant());
                         SaveImage(param.Bitmap, fileName, ImageFormat);
 
                         imagesSavedCount++;
