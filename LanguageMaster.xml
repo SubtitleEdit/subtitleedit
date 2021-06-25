@@ -195,6 +195,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <CurrentTextPositionX>Text position: {0}</CurrentTextPositionX>
     <SetPosInfo>Click on video to toggle set/move position</SetPosInfo>
     <Clipboard>Clipboard</Clipboard>
+    <ResolutionMissing>PlayResX/PlayResY are not set - set the resolution now?</ResolutionMissing>
   </AssaSetPosition>
   <AudioToText>
     <Title>Audio to text</Title>

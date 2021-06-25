@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Forms.Options;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
@@ -169,7 +170,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
 
             UpdatedSubtitle = new Subtitle(subtitle, false);
-            var indices = GetIndices(subtitle);
+            var indices = GetIndices();
 
             for (int i = 0; i < UpdatedSubtitle.Paragraphs.Count; i++)
             {
@@ -204,7 +205,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             p.Text = Regex.Replace(p.Text, @"\\pos\([\d,\.-]*\)", string.Empty);
         }
 
-        private int[] GetIndices(Subtitle subtitle)
+        private int[] GetIndices()
         {
             return _selectedIndices;
         }
@@ -214,7 +215,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             DialogResult = DialogResult.Cancel;
         }
 
-        private bool GeneratePreviewViaMpv()
+        private void GeneratePreviewViaMpv()
         {
             var fileName = _videoFileName;
             if (!File.Exists(fileName))
@@ -222,7 +223,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 var isFfmpegAvailable = !Configuration.IsRunningOnWindows || !string.IsNullOrEmpty(Configuration.Settings.General.FFmpegLocation) && File.Exists(Configuration.Settings.General.FFmpegLocation);
                 if (!isFfmpegAvailable)
                 {
-                    return false;
+                    return;
                 }
 
                 using (var p = GetFFmpegProcess(fileName))
@@ -234,7 +235,23 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             if (!LibMpvDynamic.IsInstalled)
             {
-                return false;
+                if (MessageBox.Show("Download and use \"mpv\" as video player?", "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                {
+                    using (var form = new SettingsMpv(!LibMpvDynamic.IsInstalled))
+                    {
+                        if (form.ShowDialog(this) != DialogResult.OK)
+                        {
+                            return;
+                        }
+
+                        Configuration.Settings.General.VideoPlayer = "MPV";
+                    }
+                }
+            }
+
+            if (!LibMpvDynamic.IsInstalled)
+            {
+                return;
             }
 
             if (_mpv == null)
@@ -246,8 +263,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             {
                 VideoLoaded(null, null);
             }
-
-            return true;
         }
 
         public static Process GetFFmpegProcess(string outputFileName)
@@ -274,7 +289,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             var format = new AdvancedSubStationAlpha();
             var subtitle = new Subtitle();
-            var indices = GetIndices(subtitle);
+            var indices = GetIndices();
             var styleToApply = $"{{\\pos({_x},{_y})}}";
 
             var p = indices.Length > 0 ?
@@ -401,7 +416,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             var playResY = AdvancedSubStationAlpha.GetTagFromHeader("PlayResY", "[Script Info]", _subtitleWithNewHeader.Header);
             if (string.IsNullOrEmpty(playResX) || string.IsNullOrEmpty(playResY))
             {
-                var dialogResult = MessageBox.Show("PlayResX/PlayResY are not set - set the resolution now?", "Subtitle Edit", MessageBoxButtons.YesNoCancel);
+                var dialogResult = MessageBox.Show(LanguageSettings.Current.AssaSetPosition.ResolutionMissing, "Subtitle Edit", MessageBoxButtons.YesNoCancel);
                 if (dialogResult == DialogResult.OK || dialogResult == DialogResult.Yes)
                 {
                     _subtitleWithNewHeader.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + _videoInfo.Width.ToString(CultureInfo.InvariantCulture), "[Script Info]", _subtitleWithNewHeader.Header);
@@ -415,7 +430,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private void ShowCurrentPosition()
         {
-            var indices = GetIndices(_subtitle);
+            var indices = GetIndices();
             if (indices.Length == 0)
             {
                 return;
@@ -446,7 +461,14 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 {
                     if (decimal.TryParse(arr[2], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var x))
                     {
-                        numericUpDownRotateX.Value = x;
+                        try
+                        {
+                            numericUpDownRotateX.Value = x;
+                        }
+                        catch
+                        {
+                            // ignore
+                        }
                     }
                 }
             }
@@ -459,7 +481,14 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 {
                     if (decimal.TryParse(arr[2], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var x))
                     {
-                        numericUpDownRotateY.Value = x;
+                        try
+                        {
+                            numericUpDownRotateY.Value = x;
+                        }
+                        catch
+                        {
+                            // ignore
+                        }
                     }
                 }
             }
@@ -472,7 +501,14 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 {
                     if (decimal.TryParse(arr[2], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var x))
                     {
-                        numericUpDownRotateZ.Value = x;
+                        try
+                        {
+                            numericUpDownRotateZ.Value = x;
+                        }
+                        catch
+                        {
+                            // ignore
+                        }
                     }
                 }
             }
@@ -485,7 +521,14 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 {
                     if (decimal.TryParse(arr[2], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var x))
                     {
-                        numericUpDownDistortX.Value = x;
+                        try
+                        {
+                            numericUpDownDistortX.Value = x;
+                        }
+                        catch
+                        {
+                            // ignore
+                        }
                     }
                 }
             }
@@ -498,7 +541,14 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 {
                     if (decimal.TryParse(arr[2], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var x))
                     {
-                        numericUpDownDistortY.Value = x;
+                        try
+                        {
+                            numericUpDownDistortY.Value = x;
+                        }
+                        catch
+                        {
+                            // ignore
+                        }
                     }
                 }
             }
@@ -506,7 +556,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private void ShowStyleAlignment()
         {
-            var indices = GetIndices(_subtitle);
+            var indices = GetIndices();
             if (indices.Length == 0)
             {
                 labelStyleAlignment.Text = string.Format(LanguageSettings.Current.AssaSetPosition.StyleAlignmentX, "{\\an2}");

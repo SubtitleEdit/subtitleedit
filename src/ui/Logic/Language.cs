@@ -340,6 +340,7 @@ namespace Nikse.SubtitleEdit.Logic
                 CurrentTextPositionX = "Text position: {0}",
                 SetPosInfo = "Click on video to toggle set/move position",
                 Clipboard = "Clipboard",
+                ResolutionMissing = "PlayResX/PlayResY are not set - set the resolution now?",
             };
 
             AudioToText = new LanguageStructure.AudioToText

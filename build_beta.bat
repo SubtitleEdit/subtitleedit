@@ -179,6 +179,7 @@ IF NOT EXIST "temp_zip\Tesseract302"          MD "temp_zip\Tesseract302"
 ECHO.
 COPY /Y /V "..\..\..\..\LICENSE.txt"      "temp_zip\"
 COPY /Y /V "..\..\..\..\Changelog.txt"    "temp_zip\"
+COPY /Y /V "..\..\..\..\preview.mkv"    "temp_zip\"
 COPY /Y /V "Hunspellx86.dll"           "temp_zip\"
 COPY /Y /V "Hunspellx64.dll"           "temp_zip\"
 COPY /Y /V "SubtitleEdit.exe"          "temp_zip\"
