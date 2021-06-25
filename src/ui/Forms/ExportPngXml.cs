@@ -630,7 +630,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var sb = new StringBuilder();
                 if (_exportType == ExportFormats.Stl)
                 {
-                    sb.AppendLine("$SetFilePathToken =" + folderBrowserDialog1.SelectedPath);
+                    sb.AppendLine("$SetFilePathToken =" + Path.GetDirectoryName(saveFileDialog1.FileName));
                     sb.AppendLine();
                 }
 
@@ -797,9 +797,9 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (_exportType == ExportFormats.Stl)
                 {
-                    File.WriteAllText(Path.Combine(folderBrowserDialog1.SelectedPath, "DVD_Studio_Pro_Image_script.stl"), sb.ToString());
+                    File.WriteAllText(saveFileDialog1.FileName, sb.ToString());
                     var text = string.Format(LanguageSettings.Current.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath);
-                    MessageBoxShowWithFolderName(text, folderBrowserDialog1.SelectedPath);
+                    MessageBoxShowWithFolderName(text, Path.GetDirectoryName(saveFileDialog1.FileName));
                 }
                 else if (_exportType == ExportFormats.Spumux)
                 {
