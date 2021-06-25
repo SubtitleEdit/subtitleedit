@@ -1,5 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.BluRaySup;
+﻿using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Interfaces;
@@ -751,12 +750,10 @@ namespace Nikse.SubtitleEdit.Forms
                 if (errors.Count > 0)
                 {
                     var errorSb = new StringBuilder();
-                    for (int i = 0; i < 20; i++)
+                    int min = Math.Min(20, errors.Count);
+                    for (int i = 0; i < min; i++)
                     {
-                        if (i < errors.Count)
-                        {
-                            errorSb.AppendLine(errors[i]);
-                        }
+                        errorSb.AppendLine(errors[i]);
                     }
                     if (errors.Count > 20)
                     {
