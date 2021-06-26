@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using System;
+using System.IO;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -28,12 +29,23 @@ namespace Nikse.SubtitleEdit.Forms
                 radioButtonColor.Checked = true;
             }
 
-            //Text = LanguageSettings.Current.AssaSetPosition.SetPosition;
-            //buttonOK.Text = LanguageSettings.Current.General.ge;
+            Text = LanguageSettings.Current.GenerateBlankVideo.Title;
+            radioButtonCheckeredImage.Text = LanguageSettings.Current.GenerateBlankVideo.CheckeredImage;
+            radioButtonColor.Text = LanguageSettings.Current.GenerateBlankVideo.SolidColor;
+            labelDuration.Text = LanguageSettings.Current.GenerateBlankVideo.DurationInMinutes;
+            buttonColor.Text = LanguageSettings.Current.Settings.ChooseColor;
+            buttonOK.Text = LanguageSettings.Current.Watermark.Generate;
+            labelResolution.Text = LanguageSettings.Current.ExportPngXml.VideoResolution;
             labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             progressBar1.Visible = false;
             labelPleaseWait.Visible = false;
+
+            var left = Math.Max(labelResolution.Left + labelResolution.Width, labelDuration.Left + labelDuration.Width) + 5;
+            numericUpDownDurationMinutes.Left = left;
+            numericUpDownWidth.Left = left;
+            labelX.Left = numericUpDownWidth.Left + numericUpDownWidth.Width + 3;
+            numericUpDownHeight.Left = labelX.Left + labelX.Width + 3;
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
@@ -48,6 +60,11 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 VideoFileName = saveDialog.FileName;
+            }
+
+            if (File.Exists(VideoFileName))
+            {
+                File.Delete(VideoFileName);
             }
 
             progressBar1.Style = ProgressBarStyle.Marquee;
