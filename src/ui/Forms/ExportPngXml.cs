@@ -749,18 +749,18 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (errors.Count > 0)
                 {
-                    var maxErrorsToDisplay = new StringBuilder();
-                    int min = Math.Min(20, errors.Count);
-                    for (int i = 0; i < min; i++)
+                    var errorSb = new StringBuilder();
+                    var maxErrorsToDisplay = Math.Min(20, errors.Count);
+                    for (var i = 0; i < maxErrorsToDisplay; i++)
                     {
-                        maxErrorsToDisplay.AppendLine(errors[i]);
+                        errorSb.AppendLine(errors[i]);
                     }
                     if (errors.Count > 20)
                     {
-                        maxErrorsToDisplay.AppendLine("...");
+                        errorSb.AppendLine("...");
                     }
 
-                    MessageBox.Show(string.Format(LanguageSettings.Current.ExportPngXml.SomeLinesWereTooLongX, maxErrorsToDisplay));
+                    MessageBox.Show(string.Format(LanguageSettings.Current.ExportPngXml.SomeLinesWereTooLongX, errorSb));
                 }
 
                 _previewTimer.Tick += previewTimer_Tick;
