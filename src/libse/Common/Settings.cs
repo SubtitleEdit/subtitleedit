@@ -330,6 +330,9 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string AssaAttachmentFontTextPreview { get; set; }
         public string AssaSetPositionTarget { get; set; }
         public string VisualSyncStartSize { get; set; }
+        public Color BlankVideoColor { get; set; }
+        public bool BlankVideoUseCheckeredImage { get; set; }
+        public int BlankVideoMinutes { get; set; }
 
         public ToolsSettings()
         {
@@ -469,6 +472,9 @@ namespace Nikse.SubtitleEdit.Core.Common
                 "こんにちは世界" + Environment.NewLine +
                 "你好世界！" + Environment.NewLine +
                 "1234567890";
+            BlankVideoColor = Color.CadetBlue;
+            BlankVideoUseCheckeredImage = true;
+            BlankVideoMinutes = 2;
         }
     }
 
@@ -5096,6 +5102,24 @@ $HorzAlign          =   Center
                 settings.Tools.VisualSyncStartSize = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("BlankVideoColor");
+            if (subNode != null)
+            {
+                settings.Tools.BlankVideoColor = ColorTranslator.FromHtml(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("BlankVideoMinutes");
+            if (subNode != null)
+            {
+                settings.Tools.BlankVideoMinutes = Convert.ToInt32(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("BlankVideoUseCheckeredImage");
+            if (subNode != null)
+            {
+                settings.Tools.BlankVideoUseCheckeredImage = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("FindHistory");
             if (subNode != null)
             {
@@ -6542,7 +6566,7 @@ $HorzAlign          =   Center
                     {
                         var name = nameNode.InnerText;
                         var shortcut = shortcutNode.InnerText;
-                        shortcuts.PluginShortcuts.Add(new PluginShortcut { Name = name, Shortcut  = shortcut });
+                        shortcuts.PluginShortcuts.Add(new PluginShortcut { Name = name, Shortcut = shortcut });
                     }
                 }
 
@@ -8727,6 +8751,9 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AssaAttachmentFontTextPreview", settings.Tools.AssaAttachmentFontTextPreview);
                 textWriter.WriteElementString("AssaSetPositionTarget", settings.Tools.AssaSetPositionTarget);
                 textWriter.WriteElementString("VisualSyncStartSize", settings.Tools.VisualSyncStartSize);
+                textWriter.WriteElementString("BlankVideoColor", ColorTranslator.ToHtml(settings.Tools.BlankVideoColor));
+                textWriter.WriteElementString("BlankVideoUseCheckeredImage", settings.Tools.BlankVideoUseCheckeredImage.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BlankVideoMinutes", settings.Tools.BlankVideoMinutes.ToString(CultureInfo.InvariantCulture));
 
                 if (settings.Tools.FindHistory != null && settings.Tools.FindHistory.Count > 0)
                 {
