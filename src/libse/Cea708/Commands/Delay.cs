@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Nikse.SubtitleEdit.Core.Cea708.Commands
+﻿namespace Nikse.SubtitleEdit.Core.Cea708.Commands
 {
     public class Delay : ICea708Command
     {
