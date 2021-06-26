@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
 
         public string VideoFileName { get; private set; }
-        private bool _abort { get; set; }
+        private bool _abort;
 
         public GenerateVideo(Subtitle subtitle)
         {
