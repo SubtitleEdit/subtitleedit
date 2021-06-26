@@ -1685,8 +1685,10 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemAssaStyles.Text = _language.Menu.ContextMenu.SubStationAlphaStyles;
             setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SetStyle;
             setActorForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SetActor;
-            toolStripMenuItemAssaOverrideTags.Text = _language.Menu.ContextMenu.SetOverrideTags;
+            toolStripMenuItemAssaOverrideTags.Text = _language.Menu.ContextMenu.SetOverrideTagsEtc;
             applyCustomStylesToolStripMenuItem.Text = _language.Menu.ContextMenu.ApplyCustomOverrideTag;
+            setPositionToolStripMenuItem.Text = LanguageSettings.Current.AssaSetPosition.SetPosition;
+            setResolutionPlayResXAndPlayResYToolStripMenuItem.Text = _language.Menu.ContextMenu.SetResolution;
 
             toolStripMenuItemDelete.Text = _language.Menu.ContextMenu.Delete;
             insertLineToolStripMenuItem.Text = _language.Menu.ContextMenu.InsertFirstLine;
@@ -31286,6 +31288,28 @@ namespace Nikse.SubtitleEdit.Forms
                     RestoreSubtitleListviewIndices();
                 }
             }
+        }
+
+        private void setResolutionPlayResXAndPlayResYToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!IsAssa() || string.IsNullOrEmpty(VideoFileName) || _videoInfo.Width == 0 || _videoInfo.Height == 0)
+            {
+                return;
+            }
+
+            if (string.IsNullOrEmpty(_subtitle.Header))
+            {
+                _subtitle.Header = AdvancedSubStationAlpha.DefaultHeader;
+            }
+
+            ShowStatus($"{_language.Menu.ContextMenu.SetResolution}  {_videoInfo.Width.ToString(CultureInfo.InvariantCulture)}x{_videoInfo.Height.ToString(CultureInfo.InvariantCulture)}");
+            _subtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + _videoInfo.Width.ToString(CultureInfo.InvariantCulture), "[Script Info]", _subtitle.Header);
+            _subtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + _videoInfo.Height.ToString(CultureInfo.InvariantCulture), "[Script Info]", _subtitle.Header);
+        }
+
+        private void toolStripMenuItemAssaOverrideTags_DropDownOpening(object sender, EventArgs e)
+        {
+            setResolutionPlayResXAndPlayResYToolStripMenuItem.Visible = !string.IsNullOrEmpty(VideoFileName) && _videoInfo?.Width > 0 && _videoInfo?.Height > 0;
         }
     }
 }

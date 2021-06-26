@@ -4075,8 +4075,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/ContextMenu/SetActor":
                     language.Main.Menu.ContextMenu.SetActor = reader.Value;
                     break;
-                case "Main/Menu/ContextMenu/SetOverrideTags":
-                    language.Main.Menu.ContextMenu.SetOverrideTags = reader.Value;
+                case "Main/Menu/ContextMenu/SetOverrideTagsEtc":
+                    language.Main.Menu.ContextMenu.SetOverrideTagsEtc = reader.Value;
                     break;
                 case "Main/Menu/ContextMenu/SubStationAlphaStyles":
                     language.Main.Menu.ContextMenu.SubStationAlphaStyles = reader.Value;
