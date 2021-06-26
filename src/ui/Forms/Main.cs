@@ -25705,6 +25705,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             generateTextFromCurrentVideoToolStripMenuItem.Visible = Directory.Exists(Path.Combine(Configuration.DataDirectory, "pocketsphinx"));
+
+            generateBlankVideoToolStripMenuItem.Enabled = !Configuration.IsRunningOnWindows || 
+                !string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) && File.Exists(Configuration.Settings.General.FFmpegLocation);
         }
 
         private void ChooseAudioTrack(object sender, EventArgs e)
@@ -31310,6 +31313,20 @@ namespace Nikse.SubtitleEdit.Forms
         private void toolStripMenuItemAssaOverrideTags_DropDownOpening(object sender, EventArgs e)
         {
             setResolutionPlayResXAndPlayResYToolStripMenuItem.Visible = !string.IsNullOrEmpty(VideoFileName) && _videoInfo?.Width > 0 && _videoInfo?.Height > 0;
+        }
+
+        private void generateBlankVideoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var form = new GenerateVideo(_subtitle))
+            {
+                var result = form.ShowDialog(this);
+                if (result != DialogResult.OK)
+                {
+                    return;
+                }
+
+                OpenVideo(form.VideoFileName);
+            }
         }
     }
 }
