@@ -25705,9 +25705,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             generateTextFromCurrentVideoToolStripMenuItem.Visible = Directory.Exists(Path.Combine(Configuration.DataDirectory, "pocketsphinx"));
-
-            generateBlankVideoToolStripMenuItem.Enabled = !Configuration.IsRunningOnWindows || 
-                !string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) && File.Exists(Configuration.Settings.General.FFmpegLocation);
         }
 
         private void ChooseAudioTrack(object sender, EventArgs e)
@@ -31317,6 +31314,26 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void generateBlankVideoToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (Configuration.IsRunningOnWindows && (string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) || !File.Exists(Configuration.Settings.General.FFmpegLocation)))
+            {
+                if (MessageBox.Show(LanguageSettings.Current.Settings.DownloadFFmpeg, "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                {
+                    return;
+                }
+
+                using (var form = new DownloadFfmpeg())
+                {
+                    if (form.ShowDialog(this) == DialogResult.OK && !string.IsNullOrEmpty(form.FFmpegPath))
+                    {
+                        Configuration.Settings.General.FFmpegLocation = form.FFmpegPath;
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+            }
+
             using (var form = new GenerateVideo(_subtitle))
             {
                 var result = form.ShowDialog(this);
@@ -31325,7 +31342,48 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                OpenVideo(form.VideoFileName);
+                if (!string.IsNullOrEmpty(VideoFileName) && _videoInfo != null && _videoInfo.Width == 0 && _videoInfo.Height == 0)
+                {
+                    // if audio only, then keep the current waveform/specgtrogram - but still load the new video
+
+                    var peakWaveFileName = WavePeakGenerator.GetPeakWaveFileName(VideoFileName);
+                    var spectrogramFolder = WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(VideoFileName);
+                    OpenVideo(form.VideoFileName);
+                    var newPeakWaveFileName = WavePeakGenerator.GetPeakWaveFileName(VideoFileName);
+                    var newSpectrogramFolder = WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(VideoFileName);
+                    if (File.Exists(peakWaveFileName) && !File.Exists(newPeakWaveFileName))
+                    {
+                        timerWaveform.Stop();
+                        File.Copy(peakWaveFileName, newPeakWaveFileName);
+
+                        foreach (var fileName in Directory.GetFiles(spectrogramFolder))
+                        {
+                            if (!Directory.Exists(newSpectrogramFolder))
+                            {
+                                Directory.CreateDirectory(newSpectrogramFolder);
+                            }
+
+                            var dest = Path.Combine(newSpectrogramFolder, Path.GetFileName(fileName));
+                            if (!File.Exists(dest))
+                            {
+                                File.Copy(fileName, dest);
+                            }
+                        }
+
+                        audioVisualizer.ZoomFactor = 1.0;
+                        audioVisualizer.VerticalZoomFactor = 1.0;
+                        SelectZoomTextInComboBox();
+                        audioVisualizer.WavePeaks = WavePeakData.FromDisk(newPeakWaveFileName);
+                        audioVisualizer.SetSpectrogram(SpectrogramData.FromDisk(newSpectrogramFolder));
+                        audioVisualizer.SceneChanges = new List<double>();
+                        SetWaveformPosition(0, 0, 0);
+                        timerWaveform.Start();
+                    }
+                }
+                else
+                {
+                    OpenVideo(form.VideoFileName);
+                }
             }
         }
     }
