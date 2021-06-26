@@ -1614,7 +1614,7 @@
                     public string SizeAllColumnsToFit { get; set; }
                     public string SetStyle { get; set; }
                     public string SetActor { get; set; }
-                    public string SetOverrideTags { get; set; }
+                    public string SetOverrideTagsEtc { get; set; }
                     public string SubStationAlphaStyles { get; set; }
                     public string AdvancedSubStationAlphaStyles { get; set; }
                     public string TimedTextSetRegion { get; set; }
@@ -1679,6 +1679,7 @@
                     public string AdjustDisplayDurationForSelectedLines { get; set; }
                     public string ApplyDurationLimitsForSelectedLines { get; set; }
                     public string ApplyCustomOverrideTag { get; set; }
+                    public string SetResolution { get; set; }
                     public string FixCommonErrorsInSelectedLines { get; set; }
                     public string ChangeCasingForSelectedLines { get; set; }
                     public string SaveSelectedLines { get; set; }
