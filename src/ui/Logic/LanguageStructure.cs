@@ -839,6 +839,14 @@
             public string FixUnnecessaryLeadingDots { get; set; }
         }
 
+        public class GenerateBlankVideo
+        {
+            public string Title { get; set; }
+            public string CheckeredImage { get; set; }
+            public string SolidColor { get; set; }
+            public string DurationInMinutes { get; set; }
+        }
+
         public class GetDictionaries
         {
             public string Title { get; set; }
@@ -1531,6 +1539,7 @@
                     public string SetVideoOffset { get; set; }
                     public string SmptTimeMode { get; set; }
                     public string GenerateTextFromVideo { get; set; }
+                    public string GenerateBlankVideo { get; set; }
                     public string ImportChaptersFromVideo { get; set; }
                     public string GenerateImportSceneChanges { get; set; }
                     public string RemoveSceneChanges { get; set; }

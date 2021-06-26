@@ -2023,6 +2023,18 @@ namespace Nikse.SubtitleEdit.Logic
                 case "FixCommonErrors/FixUnnecessaryLeadingDots":
                     language.FixCommonErrors.FixUnnecessaryLeadingDots = reader.Value;
                     break;
+                case "GenerateBlankVideo/Title":
+                    language.GenerateBlankVideo.Title = reader.Value;
+                    break;
+                case "GenerateBlankVideo/CheckeredImage":
+                    language.GenerateBlankVideo.CheckeredImage = reader.Value;
+                    break;
+                case "GenerateBlankVideo/SolidColor":
+                    language.GenerateBlankVideo.SolidColor = reader.Value;
+                    break;
+                case "GenerateBlankVideo/DurationInMinutes":
+                    language.GenerateBlankVideo.DurationInMinutes = reader.Value;
+                    break;
                 case "GetDictionaries/Title":
                     language.GetDictionaries.Title = reader.Value;
                     break;
@@ -3910,6 +3922,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/Video/GenerateTextFromVideo":
                     language.Main.Menu.Video.GenerateTextFromVideo = reader.Value;
                     break;
+                case "Main/Menu/Video/GenerateBlankVideo":
+                    language.Main.Menu.Video.GenerateBlankVideo = reader.Value;
+                    break;
                 case "Main/Menu/Video/ImportChaptersFromVideo":
                     language.Main.Menu.Video.ImportChaptersFromVideo = reader.Value;
                     break;
@@ -4074,6 +4089,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Main/Menu/ContextMenu/SetActor":
                     language.Main.Menu.ContextMenu.SetActor = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/SetOverrideTagsEtc":
+                    language.Main.Menu.ContextMenu.SetOverrideTagsEtc = reader.Value;
                     break;
                 case "Main/Menu/ContextMenu/SubStationAlphaStyles":
                     language.Main.Menu.ContextMenu.SubStationAlphaStyles = reader.Value;
@@ -4266,6 +4284,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Main/Menu/ContextMenu/ApplyCustomOverrideTag":
                     language.Main.Menu.ContextMenu.ApplyCustomOverrideTag = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/SetResolution":
+                    language.Main.Menu.ContextMenu.SetResolution = reader.Value;
                     break;
                 case "Main/Menu/ContextMenu/FixCommonErrorsInSelectedLines":
                     language.Main.Menu.ContextMenu.FixCommonErrorsInSelectedLines = reader.Value;

@@ -54,6 +54,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.FindDialog FindDialog;
         public LanguageStructure.FindSubtitleLine FindSubtitleLine;
         public LanguageStructure.FixCommonErrors FixCommonErrors;
+        public LanguageStructure.GenerateBlankVideo GenerateBlankVideo;
         public LanguageStructure.GetDictionaries GetDictionaries;
         public LanguageStructure.GetTesseractDictionaries GetTesseractDictionaries;
         public LanguageStructure.GoogleTranslate GoogleTranslate;
@@ -972,6 +973,14 @@ namespace Nikse.SubtitleEdit.Logic
                 FixUnnecessaryLeadingDots = "Remove unnecessary leading dots",
             };
 
+            GenerateBlankVideo = new LanguageStructure.GenerateBlankVideo
+            {
+                Title = "Generate blank video file",
+                CheckeredImage = "Chekered image",
+                DurationInMinutes = "Duration in minutes",
+                SolidColor = "Solid color",
+            };
+
             GetDictionaries = new LanguageStructure.GetDictionaries
             {
                 Title = "Need dictionaries?",
@@ -1676,6 +1685,7 @@ namespace Nikse.SubtitleEdit.Logic
                         SetVideoOffset = "Set video offset...",
                         SmptTimeMode = "SMPTE timing (drop frame)",
                         GenerateTextFromVideo = "Generate text from video...",
+                        GenerateBlankVideo = "Generate blank video...",
                         ImportChaptersFromVideo = "Import chapters from video",
                         GenerateImportSceneChanges = "Generate/import scene changes...",
                         RemoveSceneChanges = "Remove scene changes",

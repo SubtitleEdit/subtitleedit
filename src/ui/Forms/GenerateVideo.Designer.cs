@@ -37,8 +37,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelDuration = new System.Windows.Forms.Label();
             this.numericUpDownWidth = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownHeight = new System.Windows.Forms.NumericUpDown();
-            this.labelWidth = new System.Windows.Forms.Label();
-            this.labelHeight = new System.Windows.Forms.Label();
+            this.labelResolution = new System.Windows.Forms.Label();
+            this.labelX = new System.Windows.Forms.Label();
             this.groupBoxBackground = new System.Windows.Forms.GroupBox();
             this.radioButtonColor = new System.Windows.Forms.RadioButton();
             this.radioButtonCheckeredImage = new System.Windows.Forms.RadioButton();
@@ -56,7 +56,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.panelColor.Location = new System.Drawing.Point(169, 81);
             this.panelColor.Name = "panelColor";
             this.panelColor.Size = new System.Drawing.Size(21, 20);
-            this.panelColor.TabIndex = 19;
+            this.panelColor.TabIndex = 3;
             this.panelColor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelColor_MouseClick);
             // 
             // buttonColor
@@ -64,7 +64,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonColor.Location = new System.Drawing.Point(42, 80);
             this.buttonColor.Name = "buttonColor";
             this.buttonColor.Size = new System.Drawing.Size(121, 23);
-            this.buttonColor.TabIndex = 20;
+            this.buttonColor.TabIndex = 2;
             this.buttonColor.Text = "Color";
             this.buttonColor.UseVisualStyleBackColor = true;
             this.buttonColor.Click += new System.EventHandler(this.buttonColor_Click);
@@ -73,10 +73,10 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(451, 275);
+            this.buttonOK.Location = new System.Drawing.Point(451, 155);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(121, 23);
-            this.buttonOK.TabIndex = 21;
+            this.buttonOK.TabIndex = 9;
             this.buttonOK.Text = "Generate";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
@@ -86,10 +86,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(578, 275);
+            this.buttonCancel.Location = new System.Drawing.Point(578, 155);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 22;
+            this.buttonCancel.TabIndex = 10;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -98,10 +98,10 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(12, 275);
+            this.progressBar1.Location = new System.Drawing.Point(12, 155);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(433, 23);
-            this.progressBar1.TabIndex = 23;
+            this.progressBar1.TabIndex = 8;
             this.progressBar1.Visible = false;
             // 
             // labelDuration
@@ -110,7 +110,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelDuration.Location = new System.Drawing.Point(12, 29);
             this.labelDuration.Name = "labelDuration";
             this.labelDuration.Size = new System.Drawing.Size(97, 13);
-            this.labelDuration.TabIndex = 24;
+            this.labelDuration.TabIndex = 0;
             this.labelDuration.Text = "Duration in minutes";
             // 
             // numericUpDownWidth
@@ -127,8 +127,8 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0});
             this.numericUpDownWidth.Name = "numericUpDownWidth";
-            this.numericUpDownWidth.Size = new System.Drawing.Size(110, 20);
-            this.numericUpDownWidth.TabIndex = 25;
+            this.numericUpDownWidth.Size = new System.Drawing.Size(64, 20);
+            this.numericUpDownWidth.TabIndex = 3;
             this.numericUpDownWidth.Value = new decimal(new int[] {
             1080,
             0,
@@ -137,7 +137,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // numericUpDownHeight
             // 
-            this.numericUpDownHeight.Location = new System.Drawing.Point(165, 82);
+            this.numericUpDownHeight.Location = new System.Drawing.Point(253, 56);
             this.numericUpDownHeight.Maximum = new decimal(new int[] {
             50000,
             0,
@@ -149,31 +149,31 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0});
             this.numericUpDownHeight.Name = "numericUpDownHeight";
-            this.numericUpDownHeight.Size = new System.Drawing.Size(110, 20);
-            this.numericUpDownHeight.TabIndex = 26;
+            this.numericUpDownHeight.Size = new System.Drawing.Size(64, 20);
+            this.numericUpDownHeight.TabIndex = 5;
             this.numericUpDownHeight.Value = new decimal(new int[] {
             720,
             0,
             0,
             0});
             // 
-            // labelWidth
+            // labelResolution
             // 
-            this.labelWidth.AutoSize = true;
-            this.labelWidth.Location = new System.Drawing.Point(12, 58);
-            this.labelWidth.Name = "labelWidth";
-            this.labelWidth.Size = new System.Drawing.Size(35, 13);
-            this.labelWidth.TabIndex = 27;
-            this.labelWidth.Text = "Width";
+            this.labelResolution.AutoSize = true;
+            this.labelResolution.Location = new System.Drawing.Point(12, 58);
+            this.labelResolution.Name = "labelResolution";
+            this.labelResolution.Size = new System.Drawing.Size(57, 13);
+            this.labelResolution.TabIndex = 2;
+            this.labelResolution.Text = "Resolution";
             // 
-            // labelHeight
+            // labelX
             // 
-            this.labelHeight.AutoSize = true;
-            this.labelHeight.Location = new System.Drawing.Point(12, 84);
-            this.labelHeight.Name = "labelHeight";
-            this.labelHeight.Size = new System.Drawing.Size(38, 13);
-            this.labelHeight.TabIndex = 28;
-            this.labelHeight.Text = "Height";
+            this.labelX.AutoSize = true;
+            this.labelX.Location = new System.Drawing.Point(235, 58);
+            this.labelX.Name = "labelX";
+            this.labelX.Size = new System.Drawing.Size(12, 13);
+            this.labelX.TabIndex = 4;
+            this.labelX.Text = "x";
             // 
             // groupBoxBackground
             // 
@@ -181,10 +181,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxBackground.Controls.Add(this.radioButtonCheckeredImage);
             this.groupBoxBackground.Controls.Add(this.buttonColor);
             this.groupBoxBackground.Controls.Add(this.panelColor);
-            this.groupBoxBackground.Location = new System.Drawing.Point(15, 118);
+            this.groupBoxBackground.Location = new System.Drawing.Point(339, 12);
             this.groupBoxBackground.Name = "groupBoxBackground";
             this.groupBoxBackground.Size = new System.Drawing.Size(314, 118);
-            this.groupBoxBackground.TabIndex = 29;
+            this.groupBoxBackground.TabIndex = 6;
             this.groupBoxBackground.TabStop = false;
             this.groupBoxBackground.Text = "Background";
             // 
@@ -194,7 +194,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.radioButtonColor.Location = new System.Drawing.Point(18, 57);
             this.radioButtonColor.Name = "radioButtonColor";
             this.radioButtonColor.Size = new System.Drawing.Size(74, 17);
-            this.radioButtonColor.TabIndex = 22;
+            this.radioButtonColor.TabIndex = 1;
             this.radioButtonColor.Text = "Solid color";
             this.radioButtonColor.UseVisualStyleBackColor = true;
             // 
@@ -205,7 +205,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.radioButtonCheckeredImage.Location = new System.Drawing.Point(18, 34);
             this.radioButtonCheckeredImage.Name = "radioButtonCheckeredImage";
             this.radioButtonCheckeredImage.Size = new System.Drawing.Size(108, 17);
-            this.radioButtonCheckeredImage.TabIndex = 21;
+            this.radioButtonCheckeredImage.TabIndex = 0;
             this.radioButtonCheckeredImage.TabStop = true;
             this.radioButtonCheckeredImage.Text = "Checkered image";
             this.radioButtonCheckeredImage.UseVisualStyleBackColor = true;
@@ -224,8 +224,8 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0});
             this.numericUpDownDurationMinutes.Name = "numericUpDownDurationMinutes";
-            this.numericUpDownDurationMinutes.Size = new System.Drawing.Size(110, 20);
-            this.numericUpDownDurationMinutes.TabIndex = 30;
+            this.numericUpDownDurationMinutes.Size = new System.Drawing.Size(64, 20);
+            this.numericUpDownDurationMinutes.TabIndex = 1;
             this.numericUpDownDurationMinutes.Value = new decimal(new int[] {
             10,
             0,
@@ -234,23 +234,24 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // labelPleaseWait
             // 
+            this.labelPleaseWait.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelPleaseWait.AutoSize = true;
-            this.labelPleaseWait.Location = new System.Drawing.Point(12, 259);
+            this.labelPleaseWait.Location = new System.Drawing.Point(12, 135);
             this.labelPleaseWait.Name = "labelPleaseWait";
             this.labelPleaseWait.Size = new System.Drawing.Size(70, 13);
-            this.labelPleaseWait.TabIndex = 31;
+            this.labelPleaseWait.TabIndex = 7;
             this.labelPleaseWait.Text = "Please wait...";
             // 
             // GenerateVideo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(665, 310);
+            this.ClientSize = new System.Drawing.Size(665, 190);
             this.Controls.Add(this.labelPleaseWait);
             this.Controls.Add(this.numericUpDownDurationMinutes);
             this.Controls.Add(this.groupBoxBackground);
-            this.Controls.Add(this.labelHeight);
-            this.Controls.Add(this.labelWidth);
+            this.Controls.Add(this.labelX);
+            this.Controls.Add(this.labelResolution);
             this.Controls.Add(this.numericUpDownHeight);
             this.Controls.Add(this.numericUpDownWidth);
             this.Controls.Add(this.labelDuration);
@@ -285,8 +286,8 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Label labelDuration;
         private System.Windows.Forms.NumericUpDown numericUpDownWidth;
         private System.Windows.Forms.NumericUpDown numericUpDownHeight;
-        private System.Windows.Forms.Label labelWidth;
-        private System.Windows.Forms.Label labelHeight;
+        private System.Windows.Forms.Label labelResolution;
+        private System.Windows.Forms.Label labelX;
         private System.Windows.Forms.GroupBox groupBoxBackground;
         private System.Windows.Forms.RadioButton radioButtonColor;
         private System.Windows.Forms.RadioButton radioButtonCheckeredImage;

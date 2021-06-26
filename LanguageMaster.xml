@@ -761,6 +761,12 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FixContinuationStyleX>Fix continuation style: {0}</FixContinuationStyleX>
     <FixUnnecessaryLeadingDots>Remove unnecessary leading dots</FixUnnecessaryLeadingDots>
   </FixCommonErrors>
+  <GenerateBlankVideo>
+    <Title>Generate blank video file</Title>
+    <CheckeredImage>Chekered image</CheckeredImage>
+    <SolidColor>Solid color</SolidColor>
+    <DurationInMinutes>Duration in minutes</DurationInMinutes>
+  </GenerateBlankVideo>
   <GetDictionaries>
     <Title>Need dictionaries?</Title>
     <DescriptionLine1>Subtitle Edit's spell check is based on the NHunspell engine which</DescriptionLine1>
@@ -1162,6 +1168,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <SetVideoOffset>Set video offset...</SetVideoOffset>
         <SmptTimeMode>SMPTE timing (drop frame)</SmptTimeMode>
         <GenerateTextFromVideo>Generate text from video...</GenerateTextFromVideo>
+        <GenerateBlankVideo>Generate blank video...</GenerateBlankVideo>
         <ImportChaptersFromVideo>Import chapters from video</ImportChaptersFromVideo>
         <GenerateImportSceneChanges>Generate/import scene changes...</GenerateImportSceneChanges>
         <RemoveSceneChanges>Remove scene changes</RemoveSceneChanges>
@@ -1233,7 +1240,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <SizeAllColumnsToFit>Size all columns to fit</SizeAllColumnsToFit>
         <SetStyle>Set style</SetStyle>
         <SetActor>Set actor</SetActor>
-        <SetOverrideTags>Set override tags</SetOverrideTags>
+        <SetOverrideTagsEtc>Set override tags etc.</SetOverrideTagsEtc>
         <SubStationAlphaStyles>Sub Station Alpha styles...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Advanced Sub Station Alpha styles...</AdvancedSubStationAlphaStyles>
         <TimedTextSetRegion>Timed Text - set region</TimedTextSetRegion>
@@ -1298,6 +1305,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <AdjustDisplayDurationForSelectedLines>Adjust durations for selected lines...</AdjustDisplayDurationForSelectedLines>
         <ApplyDurationLimitsForSelectedLines>Apply duration limits for selected lines...</ApplyDurationLimitsForSelectedLines>
         <ApplyCustomOverrideTag>Apply custom override tags...</ApplyCustomOverrideTag>
+        <SetResolution>Set resolution (PlayResX/PlayResY)</SetResolution>
         <FixCommonErrorsInSelectedLines>Fix common errors in selected lines...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Change casing for selected lines...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Save selected lines as...</SaveSelectedLines>

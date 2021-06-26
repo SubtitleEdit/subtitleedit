@@ -12,7 +12,8 @@
    * Waveform "Right-click + Ctrl" will toggle select of a subtitle
    * Waveform "Right-click + Shift" will select a range of subtitles
    * Add a few profiles for Amazon Prime
-   * Add new FCE rule: "Remove first dash in non-dialogs" 
+   * Add new FCE rule: "Remove first dash in non-dialogs"
+   * Add "Video - Generate blank video" - thx OmrSi
 * IMPROVED:
    * Update Bulgarian translation - thx Калин
    * Update Chinese translation - thx nkh0472
