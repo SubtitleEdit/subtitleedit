@@ -194,6 +194,7 @@ Command line: {1} {2}
     <CurrentTextPositionX>文本位置：{0}</CurrentTextPositionX>
     <SetPosInfo>点击视频切换设置/移动位置</SetPosInfo>
     <Clipboard>剪贴板</Clipboard>
+    <ResolutionMissing>未设置分辨率 - 现在设置分辨率？</ResolutionMissing>
   </AssaSetPosition>
   <AudioToText>
     <Title>音频转文字</Title>
