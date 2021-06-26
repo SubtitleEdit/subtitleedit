@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Controls;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Test.AssaTagHelper
 {
