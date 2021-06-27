@@ -761,6 +761,12 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <FixContinuationStyleX>Corriger style de configuration : {0}</FixContinuationStyleX>
     <FixUnnecessaryLeadingDots>Retirer les points finaux inutiles</FixUnnecessaryLeadingDots>
   </FixCommonErrors>
+  <GenerateBlankVideo>
+    <Title>Générer un fichier de vidéo vierge</Title>
+    <CheckeredImage>Image quadrillée</CheckeredImage>
+    <SolidColor>Couleur solide</SolidColor>
+    <DurationInMinutes>Durée en minutes</DurationInMinutes>
+  </GenerateBlankVideo>
   <GetDictionaries>
     <Title>Besoin de dictionnaires ?</Title>
     <DescriptionLine1>Le correcteur d'orthographe de Subtitle Edit est basé sur le moteur</DescriptionLine1>
@@ -1161,6 +1167,7 @@ Pour utiliser une clé API allez à "Options -&gt; Paramètres -&gt; Outils" et 
         <SetVideoOffset>Etablir un décalage vidéo ...</SetVideoOffset>
         <SmptTimeMode>Chronométrage SMPTE (Drop Frame)</SmptTimeMode>
         <GenerateTextFromVideo>Générer texte depuis vidéo ...</GenerateTextFromVideo>
+        <GenerateBlankVideo>Générer une vidéo vierge ...</GenerateBlankVideo>
         <ImportChaptersFromVideo>Importer des chapitres de la vidéo</ImportChaptersFromVideo>
         <GenerateImportSceneChanges>Générer / Importer les changements de scènes ...</GenerateImportSceneChanges>
         <RemoveSceneChanges>Supprimer les changements de scène</RemoveSceneChanges>
@@ -1297,6 +1304,7 @@ Pour utiliser une clé API allez à "Options -&gt; Paramètres -&gt; Outils" et 
         <AdjustDisplayDurationForSelectedLines>Ajuster la durée des lignes sélectionnées ...</AdjustDisplayDurationForSelectedLines>
         <ApplyDurationLimitsForSelectedLines>Appliquer les limites de durée aux  lignes sélectionnées ...</ApplyDurationLimitsForSelectedLines>
         <ApplyCustomOverrideTag>Appliquer des balises de remplacement personnalisées ...</ApplyCustomOverrideTag>
+        <SetResolution>Définir la résolution de lecture Set resolution (X/Y)</SetResolution>
         <FixCommonErrorsInSelectedLines>Corriger les erreurs fréquentes (lignes sélectionnées) ...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Changer la casse des lignes sélectionnées ...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Sauvegarder les lignes sélectionnées sous ...</SaveSelectedLines>
@@ -2901,7 +2909,7 @@ visuelle'. Les garder ?</KeepChangesMessage>
   <WaveformGenerateTimeCodes>
     <Title>Supposer l'horodatage</Title>
     <StartFrom>A partir de</StartFrom>
-    <CurrentVideoPosition>Vidéo position actuelle</CurrentVideoPosition>
+    <CurrentVideoPosition>Position actuelle vidéo</CurrentVideoPosition>
     <Beginning>Début</Beginning>
     <DeleteLines>Supprimer les lignes</DeleteLines>
     <FromCurrentVideoPosition>A partir de la position vidéo actuelle</FromCurrentVideoPosition>
