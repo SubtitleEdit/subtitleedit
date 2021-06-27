@@ -44,6 +44,7 @@
    * Try to fix Tools - Join... with different ASSA styles - thx Joe
    * Fix crash in "Continuation style" - thx ivandrofly
    * Fix export to "dvd studio stl" - thx nonofx
+   * Apply duration limit: Only fix "checked" lines - thx PM
 
 
 3.6.1 (20th May 2021)
