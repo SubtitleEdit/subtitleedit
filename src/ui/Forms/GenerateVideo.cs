@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using System;
+using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 
@@ -33,6 +34,7 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonCheckeredImage.Text = LanguageSettings.Current.GenerateBlankVideo.CheckeredImage;
             radioButtonColor.Text = LanguageSettings.Current.GenerateBlankVideo.SolidColor;
             labelDuration.Text = LanguageSettings.Current.GenerateBlankVideo.DurationInMinutes;
+            labelFrameRate.Text = LanguageSettings.Current.General.FrameRate;
             buttonColor.Text = LanguageSettings.Current.Settings.ChooseColor;
             buttonOK.Text = LanguageSettings.Current.Watermark.Generate;
             labelResolution.Text = LanguageSettings.Current.ExportPngXml.VideoResolution;
@@ -46,6 +48,28 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownWidth.Left = left;
             labelX.Left = numericUpDownWidth.Left + numericUpDownWidth.Width + 3;
             numericUpDownHeight.Left = labelX.Left + labelX.Width + 3;
+            comboBoxFrameRate.Left = left;
+
+            comboBoxFrameRate.Items.Clear();
+            comboBoxFrameRate.Items.Add(23.976.ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Add(24.0.ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Add(25.0.ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Add(29.97.ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Add(30.00.ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Add(50.00.ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Add(59.94.ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Add(60.00.ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.SelectedIndex = 0;
+            for (var index = 0; index < comboBoxFrameRate.Items.Count; index++)
+            {
+                var item = comboBoxFrameRate.Items[index];
+                var v = Convert.ToDecimal(item.ToString(), CultureInfo.CurrentCulture);
+                if (Math.Abs(v - Configuration.Settings.Tools.BlankVideoFrameRate) < 0.01m)
+                {
+                    comboBoxFrameRate.SelectedIndex = index;
+                    break;
+                }
+            }
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
@@ -76,7 +100,9 @@ namespace Nikse.SubtitleEdit.Forms
                 (int)numericUpDownWidth.Value,
                 (int)numericUpDownHeight.Value,
                 panelColor.BackColor,
-                radioButtonCheckeredImage.Checked);
+                radioButtonCheckeredImage.Checked,
+                decimal.Parse(comboBoxFrameRate.Text)
+                );
 
             process.Start();
             while (!process.HasExited)
@@ -115,6 +141,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.BlankVideoColor = panelColor.BackColor;
             Configuration.Settings.Tools.BlankVideoUseCheckeredImage = radioButtonCheckeredImage.Checked;
             Configuration.Settings.Tools.BlankVideoMinutes = (int)numericUpDownDurationMinutes.Value;
+            Configuration.Settings.Tools.BlankVideoFrameRate = Convert.ToDecimal(comboBoxFrameRate.Text, CultureInfo.CurrentCulture);
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)

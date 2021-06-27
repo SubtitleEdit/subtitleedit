@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Globalization;
 using System.IO;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -19,7 +20,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             try
             {
-                var process = GenerateVideoFile(previewFileName, 3, 720, 480, Color.Black, true);
+                var process = GenerateVideoFile(previewFileName, 3, 720, 480, Color.Black, true, 25);
                 process.Start();
                 process.WaitForExit();
 
@@ -31,7 +32,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        public static Process GenerateVideoFile(string previewFileName, int seconds, int width, int height, Color color, bool checkered)
+        public static Process GenerateVideoFile(string previewFileName, int seconds, int width, int height, Color color, bool checkered, decimal frameRate)
         {
             Process processMakeVideo;
 
@@ -41,17 +42,17 @@ namespace Nikse.SubtitleEdit.Logic
                 var backgroundImage = TextDesigner.MakeBackgroundImage(width, height, rectangleSize, Configuration.Settings.General.UseDarkTheme);
                 var tempImageFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".png");
                 backgroundImage.Save(tempImageFileName, ImageFormat.Png);
-                processMakeVideo = GetFFmpegProcess(tempImageFileName, previewFileName, backgroundImage.Width, backgroundImage.Height, seconds);
+                processMakeVideo = GetFFmpegProcess(tempImageFileName, previewFileName, backgroundImage.Width, backgroundImage.Height, seconds, frameRate);
             }
             else
             {
-                processMakeVideo = GetFFmpegProcess(color, previewFileName, width, height, seconds);
+                processMakeVideo = GetFFmpegProcess(color, previewFileName, width, height, seconds, frameRate);
             }
 
             return processMakeVideo;
         }
 
-        private static Process GetFFmpegProcess(string imageFileName, string outputFileName, int videoWidth, int videoHeight, int seconds)
+        private static Process GetFFmpegProcess(string imageFileName, string outputFileName, int videoWidth, int videoHeight, int seconds, decimal frameRate)
         {
             var ffmpegLocation = Configuration.Settings.General.FFmpegLocation;
             if (!Configuration.IsRunningOnWindows && (string.IsNullOrEmpty(ffmpegLocation) || !File.Exists(ffmpegLocation)))
@@ -64,14 +65,14 @@ namespace Nikse.SubtitleEdit.Logic
                 StartInfo =
                 {
                     FileName = ffmpegLocation,
-                    Arguments = $"-t {seconds} -loop 1 -i \"{imageFileName}\" -c:v libx264 -tune stillimage -shortest -s {videoWidth}x{videoHeight} \"{outputFileName}\"",
+                    Arguments = $"-t {seconds} -loop 1 -r {frameRate.ToString(CultureInfo.InvariantCulture)} -i \"{imageFileName}\" -c:v libx264 -tune stillimage -shortest -s {videoWidth}x{videoHeight} \"{outputFileName}\"",
                     UseShellExecute = false,
                     CreateNoWindow = true
                 }
             };
         }
 
-        private static Process GetFFmpegProcess(Color color, string outputFileName, int videoWidth, int videoHeight, int seconds)
+        private static Process GetFFmpegProcess(Color color, string outputFileName, int videoWidth, int videoHeight, int seconds, decimal frameRate)
         {
             var ffmpegLocation = Configuration.Settings.General.FFmpegLocation;
             if (!Configuration.IsRunningOnWindows && (string.IsNullOrEmpty(ffmpegLocation) || !File.Exists(ffmpegLocation)))
@@ -86,7 +87,7 @@ namespace Nikse.SubtitleEdit.Logic
                 StartInfo =
                 {
                     FileName = ffmpegLocation,
-                    Arguments = $"-t {seconds} -f lavfi -i color=c={htmlColor} -c:v libx264 -tune stillimage -shortest -s {videoWidth}x{videoHeight} \"{outputFileName}\"",
+                    Arguments = $"-t {seconds} -f lavfi -i color=c={htmlColor}:r={frameRate.ToString(CultureInfo.InvariantCulture)} -c:v libx264 -tune stillimage -shortest -s {videoWidth}x{videoHeight} \"{outputFileName}\"",
                     UseShellExecute = false,
                     CreateNoWindow = true
                 }
