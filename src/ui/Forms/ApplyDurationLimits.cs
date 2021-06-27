@@ -144,13 +144,13 @@ namespace Nikse.SubtitleEdit.Forms
             double minDisplayTime = (double)numericUpDownDurationMin.Value;
             for (int i = 0; i < _working.Paragraphs.Count; i++)
             {
-                Paragraph p = _working.Paragraphs[i];
-                double displayTime = p.Duration.TotalMilliseconds;
+                var p = _working.Paragraphs[i];
+                var displayTime = p.Duration.TotalMilliseconds;
                 if (displayTime < minDisplayTime)
                 {
                     var next = _working.GetParagraphOrDefault(i + 1);
                     var wantedEndMs = p.StartTime.TotalMilliseconds + minDisplayTime;
-                    if (next == null || wantedEndMs < next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines && AllowFix(p))
+                    if (next == null || wantedEndMs < next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines)
                     {
                         AddFix(p, wantedEndMs, DefaultBackColor);
                     }
@@ -180,21 +180,26 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddFix(Paragraph p, double endMs, Color backgroundColor)
         {
-            string before = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
+            if (!AllowFix(p))
+            {
+                return;
+            }
+
+            var before = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
             p.EndTime.TotalMilliseconds = endMs;
-            string after = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
+            var after = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
             _totalFixes++;
             AddFixToListView(p, before, after, backgroundColor);
         }
 
         public void FixLongDisplayTimes()
         {
-            double maxDisplayTime = (double)numericUpDownDurationMax.Value;
+            var maxDisplayTime = (double)numericUpDownDurationMax.Value;
             for (int i = 0; i < _working.Paragraphs.Count; i++)
             {
-                Paragraph p = _working.Paragraphs[i];
-                double displayTime = p.Duration.TotalMilliseconds;
-                if (displayTime > maxDisplayTime && AllowFix(p))
+                var p = _working.Paragraphs[i];
+                var displayTime = p.Duration.TotalMilliseconds;
+                if (displayTime > maxDisplayTime)
                 {
                     AddFix(p, p.StartTime.TotalMilliseconds + maxDisplayTime, DefaultBackColor);
                 }
