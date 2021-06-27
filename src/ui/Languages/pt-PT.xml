@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.1</Version>
-    <TranslatedBy>Traduzido para Português de Portugal, por hugok79
+    <TranslatedBy>Traduzido para Português de Portugal, por Hugo Carvalho(hugok79)
 Email: mailto:hugokarvalho@hotmail.com</TranslatedBy>
     <CultureName>pt-PT</CultureName>
     <HelpFile />
@@ -41,6 +41,7 @@ Email: mailto:hugokarvalho@hotmail.com</TranslatedBy>
     <Bold>Negrito</Bold>
     <Italic>Itálico</Italic>
     <Underline>Sublinhado</Underline>
+    <Strikeout>Rasurado</Strikeout>
     <Visible>Visível</Visible>
     <FrameRate>Taxa de fotogramas</FrameRate>
     <Name>Nome</Name>
@@ -179,6 +180,24 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <RemoveOneAttachment>Eliminar um anexo?</RemoveOneAttachment>
     <RemoveXAttachments>Eliminar {0} anexos?</RemoveXAttachments>
   </AssaAttachments>
+  <AssaOverrideTags>
+    <ApplyCustomTags>Aplicar etiquetas personalizadas</ApplyCustomTags>
+    <History>Histórico</History>
+    <TagsToApply>Etiquetas a aplicar</TagsToApply>
+    <ApplyTo>Aplicar a</ApplyTo>
+    <SelectedLinesX>Linhas selecionadas: {0}</SelectedLinesX>
+    <AdvancedSelection>Selecção avançada</AdvancedSelection>
+  </AssaOverrideTags>
+  <AssaSetPosition>
+    <SetPosition>Definir/obter posição</SetPosition>
+    <VideoResolutionX>Resolução do vídeo: {0}</VideoResolutionX>
+    <StyleAlignmentX>Alinhamento do estilo: {0}</StyleAlignmentX>
+    <CurrentMousePositionX>Posição do rato: {0}</CurrentMousePositionX>
+    <CurrentTextPositionX>Posição do texto: {0}</CurrentTextPositionX>
+    <SetPosInfo>Clique no vídeo para alternar a posição definir/mover</SetPosInfo>
+    <Clipboard>Área de transferência</Clipboard>
+    <ResolutionMissing>PlayResX/PlayResY não estão definidos - definir a resolução agora?</ResolutionMissing>
+  </AssaSetPosition>
   <AudioToText>
     <Title>Áudio para texto</Title>
     <ExtractingAudioUsingX>Extrair áudio utilizando {0}...</ExtractingAudioUsingX>
@@ -743,6 +762,12 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <FixContinuationStyleX>Corrigir estilo de continuação: {0}</FixContinuationStyleX>
     <FixUnnecessaryLeadingDots>Eliminar reticências iniciais desnecessárias</FixUnnecessaryLeadingDots>
   </FixCommonErrors>
+  <GenerateBlankVideo>
+    <Title>Gerar ficheiro de vídeo em branco</Title>
+    <CheckeredImage>Imagem animada</CheckeredImage>
+    <SolidColor>Cor sólida</SolidColor>
+    <DurationInMinutes>Duração em minutos</DurationInMinutes>
+  </GenerateBlankVideo>
   <GetDictionaries>
     <Title>Precisa de dicionários?</Title>
     <DescriptionLine1>A revisão ortográfica do Subtitle Edit é baseada no mecanismo NHunspell</DescriptionLine1>
@@ -1144,6 +1169,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <SetVideoOffset>Definir o deslocamento do vídeo...</SetVideoOffset>
         <SmptTimeMode>SMPTE temporização (drop frame)</SmptTimeMode>
         <GenerateTextFromVideo>Gerar texto a partir do vídeo...</GenerateTextFromVideo>
+        <GenerateBlankVideo>Gerar vídeo em branco...</GenerateBlankVideo>
         <ImportChaptersFromVideo>Importar capítulos do vídeo</ImportChaptersFromVideo>
         <GenerateImportSceneChanges>Gerar/Importar mudanças de cena...</GenerateImportSceneChanges>
         <RemoveSceneChanges>Eliminar mudanças de cena</RemoveSceneChanges>
@@ -1215,7 +1241,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <SizeAllColumnsToFit>Ajustar o tamanho das colunas para caber</SizeAllColumnsToFit>
         <SetStyle>Definir estilo</SetStyle>
         <SetActor>Definir actor</SetActor>
-        <SetOverrideTags>Definir etiquetas de substituição</SetOverrideTags>
+        <SetOverrideTagsEtc>Definir etiquetas de substituição</SetOverrideTagsEtc>
         <SubStationAlphaStyles>Estilos Sub Station Alpha...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Estilos Advanced Sub Station Alpha...</AdvancedSubStationAlphaStyles>
         <TimedTextSetRegion>Timed Text - Definir região</TimedTextSetRegion>
@@ -1279,6 +1305,8 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <TranslateSelectedLines>Traduzir linhas seleccionadas...</TranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Ajustar duração das linhas seleccionadas</AdjustDisplayDurationForSelectedLines>
         <ApplyDurationLimitsForSelectedLines>Aplicar limites de duração às linhas seleccionadas...</ApplyDurationLimitsForSelectedLines>
+        <ApplyCustomOverrideTag>Aplicar etiquetas de substituição personalizadas...</ApplyCustomOverrideTag>
+        <SetResolution>Definir resolução (PlayResX/PlayResY)</SetResolution>
         <FixCommonErrorsInSelectedLines>Corrigir erros frequentes nas linhas seleccionadas</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Alterar Maiúsculas/Minúsculas nas linhas seleccionadas</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Guardar linhas seleccionadas como...</SaveSelectedLines>
@@ -2014,6 +2042,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <StartInSourceView>Iniciar no separador (Original) da janela principal</StartInSourceView>
     <RemoveBlankLinesWhenOpening>Eliminar linhas em branco ao abrir a legenda</RemoveBlankLinesWhenOpening>
     <RemoveBlankLines>Eliminar linhas em branco</RemoveBlankLines>
+    <ApplyAssaOverrideTags>Aplicar etiquetas de substituição ASSA à selecção</ApplyAssaOverrideTags>
+    <SetAssaPosition>Definir/obter posição ASSA</SetAssaPosition>
     <ShowLineBreaksAs>Ver quebras de linha na "Lista" da janela principal como:</ShowLineBreaksAs>
     <SaveAsFileNameFrom>"Guardar como..." usa o nome do ficheiro de:</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>Ao clicar duas vezes na linha de texto na janela principal irá...</MainListViewDoubleClickAction>
