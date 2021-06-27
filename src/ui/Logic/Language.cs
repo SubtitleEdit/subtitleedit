@@ -335,7 +335,7 @@ namespace Nikse.SubtitleEdit.Logic
             AssaSetPosition = new LanguageStructure.AssaSetPosition
             {
                 SetPosition = "Set/get position",
-                VideoResolutionX = "Video reslution: {0}",
+                VideoResolutionX = "Video resolution: {0}",
                 StyleAlignmentX = "Style alignment: {0}",
                 CurrentMousePositionX = "Mouse position: {0}",
                 CurrentTextPositionX = "Text position: {0}",

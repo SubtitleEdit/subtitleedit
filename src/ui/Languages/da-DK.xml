@@ -185,6 +185,16 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <SelectedLinesX>Valgte linjer: {0}</SelectedLinesX>
     <AdvancedSelection>Avanceret valg</AdvancedSelection>
   </AssaOverrideTags>
+  <AssaSetPosition>
+    <SetPosition>Indstil/hent position</SetPosition>
+    <VideoResolutionX>Video opløsning: {0}</VideoResolutionX>
+    <StyleAlignmentX>Stiljustering: {0}</StyleAlignmentX>
+    <CurrentMousePositionX>Musposition: {0}</CurrentMousePositionX>
+    <CurrentTextPositionX>Tekstposition: {0}</CurrentTextPositionX>
+    <SetPosInfo>Klik på video for at skifte mellem sæt/flyt position</SetPosInfo>
+    <Clipboard>Udklipsholder</Clipboard>
+    <ResolutionMissing>PlayResX/PlayResY er ikke indstillet - indstil opløsningen nu?</ResolutionMissing>
+  </AssaSetPosition>
   <AudioToText>
     <Title>Lyd til tekst</Title>
     <ExtractingAudioUsingX>Udtræk lyd ved hjælp af {0}...</ExtractingAudioUsingX>
@@ -749,6 +759,12 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <FixContinuationStyleX>Fix fortsættelsestil: {0}</FixContinuationStyleX>
     <FixUnnecessaryLeadingDots>Fjern unødvendige førende punktummer</FixUnnecessaryLeadingDots>
   </FixCommonErrors>
+  <GenerateBlankVideo>
+    <Title>Generer blank videofil</Title>
+    <CheckeredImage>Ternet billede</CheckeredImage>
+    <SolidColor>Farve</SolidColor>
+    <DurationInMinutes>Varighed i minutter</DurationInMinutes>
+  </GenerateBlankVideo>
   <GetDictionaries>
     <Title>Mangler ordbøger?</Title>
     <DescriptionLine1>Subtitle Edit's stavekontrol er baseret på NHunspell, der</DescriptionLine1>
@@ -1149,6 +1165,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <SetVideoOffset>Indstil video offset...</SetVideoOffset>
         <SmptTimeMode>SMPTE timing (drop frame)</SmptTimeMode>
         <GenerateTextFromVideo>Generer tekst fra video...</GenerateTextFromVideo>
+        <GenerateBlankVideo>Generer blank video...</GenerateBlankVideo>
         <ImportChaptersFromVideo>Importer kapitler fra video</ImportChaptersFromVideo>
         <GenerateImportSceneChanges>Generer/importer sceneændringer...</GenerateImportSceneChanges>
         <RemoveSceneChanges>Fjern sceneskift</RemoveSceneChanges>
@@ -1220,7 +1237,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <SizeAllColumnsToFit>Auto-tilpas kolonner</SizeAllColumnsToFit>
         <SetStyle>Vælg stil</SetStyle>
         <SetActor>Vælg taler</SetActor>
-        <SetOverrideTags>Vælg override tags</SetOverrideTags>
+        <SetOverrideTagsEtc>Indstil override tags mv.</SetOverrideTagsEtc>
         <SubStationAlphaStyles>Sub Station Alpha stilarter...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Advanced Sub Station Alpha stilarter...</AdvancedSubStationAlphaStyles>
         <TimedTextSetRegion>Timed Text - Sæt region</TimedTextSetRegion>
@@ -1285,6 +1302,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <AdjustDisplayDurationForSelectedLines>Juster visningstider for valgte linjer...</AdjustDisplayDurationForSelectedLines>
         <ApplyDurationLimitsForSelectedLines>Anvend varighedsgrænser for valgte linjer...</ApplyDurationLimitsForSelectedLines>
         <ApplyCustomOverrideTag>Anvend override tags</ApplyCustomOverrideTag>
+        <SetResolution>Indstil opløsning (PlayResX/PlayResY)</SetResolution>
         <FixCommonErrorsInSelectedLines>Ret almindelige fejl i valgte linjer...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Skift casing (små/store/normal) for valgte linjer...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Gem valgte linjer som...</SaveSelectedLines>
@@ -2019,6 +2037,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <RemoveBlankLinesWhenOpening>Fjern tomme linjer, når undertekst åbnes</RemoveBlankLinesWhenOpening>
     <RemoveBlankLines>Fjern blanke linjer</RemoveBlankLines>
     <ApplyAssaOverrideTags>Anvend ASSA override tags til valgte linjer</ApplyAssaOverrideTags>
+    <SetAssaPosition>Indstil/hent ASSA position</SetAssaPosition>
     <ShowLineBreaksAs>Vis linjeskift i listevisning som</ShowLineBreaksAs>
     <SaveAsFileNameFrom>"Gem som..." bruger filnavn fra</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>Dobbeltklik på linje i hovedvinduet listevisning starter</MainListViewDoubleClickAction>
