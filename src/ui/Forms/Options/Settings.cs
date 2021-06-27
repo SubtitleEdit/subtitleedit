@@ -2644,6 +2644,11 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 _pluginShortcuts = Configuration.Settings.Shortcuts.PluginShortcuts.Select(p => new PluginShortcut { Name = p.Name, Shortcut = p.Shortcut }).ToList();
             }
 
+            if (!Directory.Exists(Configuration.PluginsDirectory))
+            {
+                return;
+            }
+
             var pluginsNode = new ShortcutNode(LanguageSettings.Current.PluginsGet.Title);
             foreach (var pluginFileName in Directory.GetFiles(Configuration.PluginsDirectory, "*.DLL"))
             {
