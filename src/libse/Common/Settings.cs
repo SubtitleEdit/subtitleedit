@@ -333,6 +333,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public Color BlankVideoColor { get; set; }
         public bool BlankVideoUseCheckeredImage { get; set; }
         public int BlankVideoMinutes { get; set; }
+        public decimal BlankVideoFrameRate { get; set; }
 
         public ToolsSettings()
         {
@@ -475,6 +476,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             BlankVideoColor = Color.CadetBlue;
             BlankVideoUseCheckeredImage = true;
             BlankVideoMinutes = 2;
+            BlankVideoFrameRate = 23.976m;
         }
     }
 
@@ -5111,7 +5113,13 @@ $HorzAlign          =   Center
             subNode = node.SelectSingleNode("BlankVideoMinutes");
             if (subNode != null)
             {
-                settings.Tools.BlankVideoMinutes = Convert.ToInt32(subNode.InnerText);
+                settings.Tools.BlankVideoMinutes = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("BlankVideoFrameRate");
+            if (subNode != null)
+            {
+                settings.Tools.BlankVideoFrameRate = Convert.ToDecimal(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("BlankVideoUseCheckeredImage");
@@ -8754,6 +8762,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("BlankVideoColor", ColorTranslator.ToHtml(settings.Tools.BlankVideoColor));
                 textWriter.WriteElementString("BlankVideoUseCheckeredImage", settings.Tools.BlankVideoUseCheckeredImage.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BlankVideoMinutes", settings.Tools.BlankVideoMinutes.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BlankVideoFrameRate", settings.Tools.BlankVideoFrameRate.ToString(CultureInfo.InvariantCulture));
 
                 if (settings.Tools.FindHistory != null && settings.Tools.FindHistory.Count > 0)
                 {

@@ -44,6 +44,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.radioButtonCheckeredImage = new System.Windows.Forms.RadioButton();
             this.numericUpDownDurationMinutes = new System.Windows.Forms.NumericUpDown();
             this.labelPleaseWait = new System.Windows.Forms.Label();
+            this.labelFrameRate = new System.Windows.Forms.Label();
+            this.comboBoxFrameRate = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).BeginInit();
             this.groupBoxBackground.SuspendLayout();
@@ -56,7 +58,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.panelColor.Location = new System.Drawing.Point(169, 81);
             this.panelColor.Name = "panelColor";
             this.panelColor.Size = new System.Drawing.Size(21, 20);
-            this.panelColor.TabIndex = 3;
+            this.panelColor.TabIndex = 11;
             this.panelColor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelColor_MouseClick);
             // 
             // buttonColor
@@ -64,7 +66,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonColor.Location = new System.Drawing.Point(42, 80);
             this.buttonColor.Name = "buttonColor";
             this.buttonColor.Size = new System.Drawing.Size(121, 23);
-            this.buttonColor.TabIndex = 2;
+            this.buttonColor.TabIndex = 10;
             this.buttonColor.Text = "Color";
             this.buttonColor.UseVisualStyleBackColor = true;
             this.buttonColor.Click += new System.EventHandler(this.buttonColor_Click);
@@ -76,7 +78,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonOK.Location = new System.Drawing.Point(451, 155);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(121, 23);
-            this.buttonOK.TabIndex = 9;
+            this.buttonOK.TabIndex = 20;
             this.buttonOK.Text = "Generate";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
@@ -89,7 +91,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel.Location = new System.Drawing.Point(578, 155);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 10;
+            this.buttonCancel.TabIndex = 21;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -184,7 +186,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxBackground.Location = new System.Drawing.Point(339, 12);
             this.groupBoxBackground.Name = "groupBoxBackground";
             this.groupBoxBackground.Size = new System.Drawing.Size(314, 118);
-            this.groupBoxBackground.TabIndex = 6;
+            this.groupBoxBackground.TabIndex = 7;
             this.groupBoxBackground.TabStop = false;
             this.groupBoxBackground.Text = "Background";
             // 
@@ -194,7 +196,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.radioButtonColor.Location = new System.Drawing.Point(18, 57);
             this.radioButtonColor.Name = "radioButtonColor";
             this.radioButtonColor.Size = new System.Drawing.Size(74, 17);
-            this.radioButtonColor.TabIndex = 1;
+            this.radioButtonColor.TabIndex = 9;
             this.radioButtonColor.Text = "Solid color";
             this.radioButtonColor.UseVisualStyleBackColor = true;
             // 
@@ -205,7 +207,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.radioButtonCheckeredImage.Location = new System.Drawing.Point(18, 34);
             this.radioButtonCheckeredImage.Name = "radioButtonCheckeredImage";
             this.radioButtonCheckeredImage.Size = new System.Drawing.Size(108, 17);
-            this.radioButtonCheckeredImage.TabIndex = 0;
+            this.radioButtonCheckeredImage.TabIndex = 8;
             this.radioButtonCheckeredImage.TabStop = true;
             this.radioButtonCheckeredImage.Text = "Checkered image";
             this.radioButtonCheckeredImage.UseVisualStyleBackColor = true;
@@ -242,11 +244,31 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelPleaseWait.TabIndex = 7;
             this.labelPleaseWait.Text = "Please wait...";
             // 
+            // labelFrameRate
+            // 
+            this.labelFrameRate.AutoSize = true;
+            this.labelFrameRate.Location = new System.Drawing.Point(12, 83);
+            this.labelFrameRate.Name = "labelFrameRate";
+            this.labelFrameRate.Size = new System.Drawing.Size(57, 13);
+            this.labelFrameRate.TabIndex = 11;
+            this.labelFrameRate.Text = "Frame rate";
+            // 
+            // comboBoxFrameRate
+            // 
+            this.comboBoxFrameRate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxFrameRate.FormattingEnabled = true;
+            this.comboBoxFrameRate.Location = new System.Drawing.Point(165, 83);
+            this.comboBoxFrameRate.Name = "comboBoxFrameRate";
+            this.comboBoxFrameRate.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxFrameRate.TabIndex = 6;
+            // 
             // GenerateVideo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(665, 190);
+            this.Controls.Add(this.comboBoxFrameRate);
+            this.Controls.Add(this.labelFrameRate);
             this.Controls.Add(this.labelPleaseWait);
             this.Controls.Add(this.numericUpDownDurationMinutes);
             this.Controls.Add(this.groupBoxBackground);
@@ -293,5 +315,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.RadioButton radioButtonCheckeredImage;
         private System.Windows.Forms.NumericUpDown numericUpDownDurationMinutes;
         private System.Windows.Forms.Label labelPleaseWait;
+        private System.Windows.Forms.Label labelFrameRate;
+        private System.Windows.Forms.ComboBox comboBoxFrameRate;
     }
 }
