@@ -189,7 +189,7 @@ Note: Do check free disk space.</WaveFileMalformed>
   </AssaOverrideTags>
   <AssaSetPosition>
     <SetPosition>Set/get position</SetPosition>
-    <VideoResolutionX>Video reslution: {0}</VideoResolutionX>
+    <VideoResolutionX>Video resolution: {0}</VideoResolutionX>
     <StyleAlignmentX>Style alignment: {0}</StyleAlignmentX>
     <CurrentMousePositionX>Mouse position: {0}</CurrentMousePositionX>
     <CurrentTextPositionX>Text position: {0}</CurrentTextPositionX>
