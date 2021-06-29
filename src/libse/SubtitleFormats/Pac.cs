@@ -394,6 +394,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0xEC55, new SpecialCharacter("Ű")},
             { 0xEC6F, new SpecialCharacter("ő")},
             { 0xEC75, new SpecialCharacter("ű")},
+            { 0xC0, new SpecialCharacter("[")},
+            { 0xC1, new SpecialCharacter("]")},
         };
 
         private static readonly Dictionary<int, SpecialCharacter> LatinTurkishOverrides = new Dictionary<int, SpecialCharacter>
