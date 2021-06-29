@@ -4285,9 +4285,6 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/ContextMenu/ApplyCustomOverrideTag":
                     language.Main.Menu.ContextMenu.ApplyCustomOverrideTag = reader.Value;
                     break;
-                case "Main/Menu/ContextMenu/SetResolution":
-                    language.Main.Menu.ContextMenu.SetResolution = reader.Value;
-                    break;
                 case "Main/Menu/ContextMenu/FixCommonErrorsInSelectedLines":
                     language.Main.Menu.ContextMenu.FixCommonErrorsInSelectedLines = reader.Value;
                     break;

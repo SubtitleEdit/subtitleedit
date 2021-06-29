@@ -35,6 +35,7 @@
    * Improve FPC compatibility + PAC refactor - thx ngaullier
    * Improve auto br / French regarding "space+punctuation" - thx Norbert
    * Make sub preview work with mpv + audio only files - thx Rabia
+   * Add "[]" characters to PAC Latin - thx Valentin
 * FIXED:
    * Fix MergeLinesShorterThan saving/loading - thx uckthis/OmrSi
    * Fix load/save some ASSA storage style settings - thx Andrebavila
