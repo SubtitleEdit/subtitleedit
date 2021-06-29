@@ -1610,6 +1610,7 @@ namespace Nikse.SubtitleEdit.Forms
             openSecondSubtitleToolStripMenuItem.Text = _language.Menu.Video.OpenSecondSubtitle;
             generateTextFromCurrentVideoToolStripMenuItem.Text = _language.Menu.Video.GenerateTextFromVideo;
             generateBlankVideoToolStripMenuItem.Text = _language.Menu.Video.GenerateBlankVideo;
+            generateVideoWithHardcodedSubtitleToolStripMenuItem.Text = _language.Menu.Video.GenerateVideoWithBurnedInSub;
 
             smpteTimeModedropFrameToolStripMenuItem.Text = _language.Menu.Video.SmptTimeMode;
             toolStripMenuItemImportChapters.Text = _language.Menu.Video.ImportChaptersFromVideo;
@@ -1689,7 +1690,6 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemAssaOverrideTags.Text = _language.Menu.ContextMenu.SetOverrideTagsEtc;
             applyCustomStylesToolStripMenuItem.Text = _language.Menu.ContextMenu.ApplyCustomOverrideTag;
             setPositionToolStripMenuItem.Text = LanguageSettings.Current.AssaSetPosition.SetPosition;
-            setResolutionPlayResXAndPlayResYToolStripMenuItem.Text = _language.Menu.ContextMenu.SetResolution;
 
             toolStripMenuItemDelete.Text = _language.Menu.ContextMenu.Delete;
             insertLineToolStripMenuItem.Text = _language.Menu.ContextMenu.InsertFirstLine;
@@ -15314,6 +15314,11 @@ namespace Nikse.SubtitleEdit.Forms
             else if (_shortcuts.MainGeneralFileSaveAll == e.KeyData)
             {
                 SaveAll();
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainGeneralSetAssaResolution == e.KeyData)
+            {
+                SetAssaResolution();
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainToggleFocus == e.KeyData)
@@ -31291,7 +31296,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void setResolutionPlayResXAndPlayResYToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SetAssaResolution()
         {
             if (!IsAssa() || string.IsNullOrEmpty(VideoFileName) || _videoInfo.Width == 0 || _videoInfo.Height == 0)
             {
@@ -31303,14 +31308,9 @@ namespace Nikse.SubtitleEdit.Forms
                 _subtitle.Header = AdvancedSubStationAlpha.DefaultHeader;
             }
 
-            ShowStatus($"{_language.Menu.ContextMenu.SetResolution}  {_videoInfo.Width.ToString(CultureInfo.InvariantCulture)}x{_videoInfo.Height.ToString(CultureInfo.InvariantCulture)}");
+            ShowStatus($"{LanguageSettings.Current.Settings.SetAssaResolution}  {_videoInfo.Width.ToString(CultureInfo.InvariantCulture)}x{_videoInfo.Height.ToString(CultureInfo.InvariantCulture)}");
             _subtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + _videoInfo.Width.ToString(CultureInfo.InvariantCulture), "[Script Info]", _subtitle.Header);
             _subtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + _videoInfo.Height.ToString(CultureInfo.InvariantCulture), "[Script Info]", _subtitle.Header);
-        }
-
-        private void toolStripMenuItemAssaOverrideTags_DropDownOpening(object sender, EventArgs e)
-        {
-            setResolutionPlayResXAndPlayResYToolStripMenuItem.Visible = !string.IsNullOrEmpty(VideoFileName) && _videoInfo?.Width > 0 && _videoInfo?.Height > 0;
         }
 
         private void generateBlankVideoToolStripMenuItem_Click(object sender, EventArgs e)
@@ -31327,6 +31327,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (form.ShowDialog(this) == DialogResult.OK && !string.IsNullOrEmpty(form.FFmpegPath))
                     {
                         Configuration.Settings.General.FFmpegLocation = form.FFmpegPath;
+                        Configuration.Settings.General.UseFFmpegForWaveExtraction = true;
                     }
                     else
                     {
@@ -31384,6 +31385,65 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     OpenVideo(form.VideoFileName);
+                }
+            }
+        }
+
+        private void generateVideoWithHardcodedSubtitleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_subtitle == null || _subtitle.Paragraphs.Count == 0)
+            {
+                MessageBox.Show(_language.NoSubtitlesFound);
+                return;
+            }
+
+            if (string.IsNullOrEmpty(VideoFileName) || _videoInfo == null || _videoInfo.Width == 0 || _videoInfo.Height == 0)
+            {
+                MessageBox.Show(LanguageSettings.Current.General.NoVideoLoaded);
+                return;
+            }
+
+            if (Configuration.IsRunningOnWindows && (string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) || !File.Exists(Configuration.Settings.General.FFmpegLocation)))
+            {
+                if (MessageBox.Show(LanguageSettings.Current.Settings.DownloadFFmpeg, "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                {
+                    return;
+                }
+
+                using (var form = new DownloadFfmpeg())
+                {
+                    if (form.ShowDialog(this) == DialogResult.OK && !string.IsNullOrEmpty(form.FFmpegPath))
+                    {
+                        Configuration.Settings.General.FFmpegLocation = form.FFmpegPath;
+                        Configuration.Settings.General.UseFFmpegForWaveExtraction = true;
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+            }
+
+            var sub = new Subtitle(_subtitle, false);
+            if (string.IsNullOrEmpty(sub.Header))
+            {
+                sub.Header = AdvancedSubStationAlpha.DefaultHeader;
+            }
+
+            sub.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + _videoInfo.Width.ToString(CultureInfo.InvariantCulture), "[Script Info]", sub.Header);
+            sub.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + _videoInfo.Height.ToString(CultureInfo.InvariantCulture), "[Script Info]", sub.Header);
+
+            using (var form = new GenerateVideoWithHardSubs(sub, VideoFileName))
+            {
+                var result = form.ShowDialog(this);
+                if (result != DialogResult.OK)
+                {
+                    return;
+                }
+
+                using (var f = new ExportPngXmlDialogOpenFolder(string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.XGeneratedWithBurnedInSubs, Path.GetFileName(form.VideoFileName)), Path.GetDirectoryName(form.VideoFileName)))
+                {
+                    f.ShowDialog(this);
                 }
             }
         }

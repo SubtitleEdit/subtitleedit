@@ -1265,6 +1265,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(generalNode, language.RemoveBlankLines, nameof(Configuration.Settings.Shortcuts.MainListViewRemoveBlankLines));
             AddNode(generalNode, language.ApplyAssaOverrideTags, nameof(Configuration.Settings.Shortcuts.ApplyAssaOverrideTags), true);
             AddNode(generalNode, language.SetAssaPosition, nameof(Configuration.Settings.Shortcuts.SetAssaPosition), true);
+            AddNode(generalNode, language.SetAssaResolution, nameof(Configuration.Settings.Shortcuts.SetAssaResolution));
             AddNode(generalNode, language.Help, nameof(Configuration.Settings.Shortcuts.GeneralHelp), true);
             _shortcuts.Nodes.Add(generalNode);
 
@@ -3336,6 +3337,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 if (form.ShowDialog(this) == DialogResult.OK && !string.IsNullOrEmpty(form.FFmpegPath))
                 {
                     textBoxFFmpegPath.Text = form.FFmpegPath;
+                    checkBoxUseFFmpeg.Checked = true;
                 }
             }
         }

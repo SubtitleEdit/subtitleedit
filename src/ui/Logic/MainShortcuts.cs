@@ -24,6 +24,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainGeneralGoToStartOfCurrentSubtitle { get; set; }
         public Keys MainGeneralGoToEndOfCurrentSubtitle { get; set; }
         public Keys MainGeneralFileSaveAll { get; set; }
+        public Keys MainGeneralSetAssaResolution { get; set; }
         public Keys MainToolsAutoDuration { get; set; }
         public Keys MainToolsBeamer { get; set; }
         public Keys MainVideoFoucsSetVideoPosition { get; set; }
@@ -227,6 +228,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainGeneralGoToStartOfCurrentSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToStartOfCurrentSubtitle);
             MainGeneralGoToEndOfCurrentSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToEndOfCurrentSubtitle);
             MainGeneralFileSaveAll = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveAll);
+            MainGeneralSetAssaResolution = UiUtil.GetKeys(Configuration.Settings.Shortcuts.SetAssaResolution);
             MainVideoPlayFromJustBefore = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlayFromJustBefore);
             MainVideoPlayFromBeginning = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlayFromBeginning);
             VideoPause = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPause);

@@ -847,6 +847,13 @@
             public string DurationInMinutes { get; set; }
         }
 
+        public class GenerateVideoWithBurnedInSubs
+        {
+            public string Title { get; set; }
+            public string Info { get; set; }
+            public string XGeneratedWithBurnedInSubs { get; set; }
+        }
+
         public class GetDictionaries
         {
             public string Title { get; set; }
@@ -1540,6 +1547,7 @@
                     public string SmptTimeMode { get; set; }
                     public string GenerateTextFromVideo { get; set; }
                     public string GenerateBlankVideo { get; set; }
+                    public string GenerateVideoWithBurnedInSub { get; set; }
                     public string ImportChaptersFromVideo { get; set; }
                     public string GenerateImportSceneChanges { get; set; }
                     public string RemoveSceneChanges { get; set; }
@@ -1688,7 +1696,6 @@
                     public string AdjustDisplayDurationForSelectedLines { get; set; }
                     public string ApplyDurationLimitsForSelectedLines { get; set; }
                     public string ApplyCustomOverrideTag { get; set; }
-                    public string SetResolution { get; set; }
                     public string FixCommonErrorsInSelectedLines { get; set; }
                     public string ChangeCasingForSelectedLines { get; set; }
                     public string SaveSelectedLines { get; set; }
@@ -2218,6 +2225,7 @@
             public string RemoveBlankLines { get; set; }
             public string ApplyAssaOverrideTags { get; set; }
             public string SetAssaPosition { get; set; }
+            public string SetAssaResolution { get; set; }
             public string ShowLineBreaksAs { get; set; }
             public string SaveAsFileNameFrom { get; set; }
             public string MainListViewDoubleClickAction { get; set; }

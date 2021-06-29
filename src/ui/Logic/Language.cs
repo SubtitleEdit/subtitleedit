@@ -55,6 +55,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.FindSubtitleLine FindSubtitleLine;
         public LanguageStructure.FixCommonErrors FixCommonErrors;
         public LanguageStructure.GenerateBlankVideo GenerateBlankVideo;
+        public LanguageStructure.GenerateVideoWithBurnedInSubs GenerateVideoWithBurnedInSubs;
         public LanguageStructure.GetDictionaries GetDictionaries;
         public LanguageStructure.GetTesseractDictionaries GetTesseractDictionaries;
         public LanguageStructure.GoogleTranslate GoogleTranslate;
@@ -981,6 +982,13 @@ namespace Nikse.SubtitleEdit.Logic
                 SolidColor = "Solid color",
             };
 
+            GenerateVideoWithBurnedInSubs = new LanguageStructure.GenerateVideoWithBurnedInSubs
+            {
+                Title = "Generate video with burned-in subtile",
+                Info = "Will generate a video file with burned-in subtitle.\r\n\r\nNote: Advanced Substation Alpha supported.",
+                XGeneratedWithBurnedInSubs = "\"{0}\" generated with burned-in subtitle."
+            };
+
             GetDictionaries = new LanguageStructure.GetDictionaries
             {
                 Title = "Need dictionaries?",
@@ -1686,6 +1694,7 @@ namespace Nikse.SubtitleEdit.Logic
                         SmptTimeMode = "SMPTE timing (drop frame)",
                         GenerateTextFromVideo = "Generate text from video...",
                         GenerateBlankVideo = "Generate blank video...",
+                        GenerateVideoWithBurnedInSub = "Generate video with burned-in sub...",
                         ImportChaptersFromVideo = "Import chapters from video",
                         GenerateImportSceneChanges = "Generate/import scene changes...",
                         RemoveSceneChanges = "Remove scene changes",
@@ -1838,7 +1847,6 @@ namespace Nikse.SubtitleEdit.Logic
                         AdjustDisplayDurationForSelectedLines = "Adjust durations for selected lines...",
                         ApplyDurationLimitsForSelectedLines = "Apply duration limits for selected lines...",
                         ApplyCustomOverrideTag = "Apply custom override tags...",
-                        SetResolution = "Set resolution (PlayResX/PlayResY)",
                         FixCommonErrorsInSelectedLines = "Fix common errors in selected lines...",
                         ChangeCasingForSelectedLines = "Change casing for selected lines...",
                         SaveSelectedLines = "Save selected lines as...",
@@ -2365,6 +2373,7 @@ can edit in same subtitle file (collaboration)",
                 RemoveBlankLines = "Remove blank lines",
                 ApplyAssaOverrideTags = "Apply ASSA override tags to selection",
                 SetAssaPosition = "Set/get ASSA position",
+                SetAssaResolution = "Set ASSA resolution (PlayResX/PlayResY)",
                 ShowLineBreaksAs = "Show line breaks in list view as",
                 SaveAsFileNameFrom = "\"Save as...\" uses file name from",
                 MainListViewDoubleClickAction = "Double-clicking line in main window list view will",

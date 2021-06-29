@@ -235,6 +235,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemRemoveSceneChanges = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAddWaveformBatch = new System.Windows.Forms.ToolStripMenuItem();
             this.generateBlankVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.generateVideoWithHardcodedSubtitleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.generateTextFromCurrentVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.showhideWaveformToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -275,7 +276,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemAssaOverrideTags = new System.Windows.Forms.ToolStripMenuItem();
             this.applyCustomStylesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setPositionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.setResolutionPlayResXAndPlayResYToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAssStyles = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorAssa = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemSetRegion = new System.Windows.Forms.ToolStripMenuItem();
@@ -2168,6 +2168,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemRemoveSceneChanges,
             this.toolStripMenuItemAddWaveformBatch,
             this.generateBlankVideoToolStripMenuItem,
+            this.generateVideoWithHardcodedSubtitleToolStripMenuItem,
             this.generateTextFromCurrentVideoToolStripMenuItem,
             this.toolStripSeparator5,
             this.showhideWaveformToolStripMenuItem,
@@ -2184,135 +2185,142 @@ namespace Nikse.SubtitleEdit.Forms
             // openVideoToolStripMenuItem
             // 
             this.openVideoToolStripMenuItem.Name = "openVideoToolStripMenuItem";
-            this.openVideoToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+            this.openVideoToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
             this.openVideoToolStripMenuItem.Text = "Open video...";
             this.openVideoToolStripMenuItem.Click += new System.EventHandler(this.buttonOpenVideo_Click);
             // 
             // toolStripMenuItemOpenVideoFromUrl
             // 
             this.toolStripMenuItemOpenVideoFromUrl.Name = "toolStripMenuItemOpenVideoFromUrl";
-            this.toolStripMenuItemOpenVideoFromUrl.Size = new System.Drawing.Size(257, 22);
+            this.toolStripMenuItemOpenVideoFromUrl.Size = new System.Drawing.Size(295, 22);
             this.toolStripMenuItemOpenVideoFromUrl.Text = "Open video from url...";
             this.toolStripMenuItemOpenVideoFromUrl.Click += new System.EventHandler(this.toolStripMenuItemOpenVideoFromUrl_Click);
             // 
             // toolStripMenuItemOpenDvd
             // 
             this.toolStripMenuItemOpenDvd.Name = "toolStripMenuItemOpenDvd";
-            this.toolStripMenuItemOpenDvd.Size = new System.Drawing.Size(257, 22);
+            this.toolStripMenuItemOpenDvd.Size = new System.Drawing.Size(295, 22);
             this.toolStripMenuItemOpenDvd.Text = "Open DVD...";
             this.toolStripMenuItemOpenDvd.Click += new System.EventHandler(this.toolStripMenuItemOpenDvd_Click);
             // 
             // toolStripMenuItemSetAudioTrack
             // 
             this.toolStripMenuItemSetAudioTrack.Name = "toolStripMenuItemSetAudioTrack";
-            this.toolStripMenuItemSetAudioTrack.Size = new System.Drawing.Size(257, 22);
+            this.toolStripMenuItemSetAudioTrack.Size = new System.Drawing.Size(295, 22);
             this.toolStripMenuItemSetAudioTrack.Text = "Choose audio track";
             // 
             // closeVideoToolStripMenuItem
             // 
             this.closeVideoToolStripMenuItem.Name = "closeVideoToolStripMenuItem";
-            this.closeVideoToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+            this.closeVideoToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
             this.closeVideoToolStripMenuItem.Text = "Close video";
             this.closeVideoToolStripMenuItem.Click += new System.EventHandler(this.CloseVideoToolStripMenuItemClick);
             // 
             // openSecondSubtitleToolStripMenuItem
             // 
             this.openSecondSubtitleToolStripMenuItem.Name = "openSecondSubtitleToolStripMenuItem";
-            this.openSecondSubtitleToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+            this.openSecondSubtitleToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
             this.openSecondSubtitleToolStripMenuItem.Text = "Open second subtitle...";
             this.openSecondSubtitleToolStripMenuItem.Click += new System.EventHandler(this.openSecondSubtitleToolStripMenuItem_Click);
             // 
             // setVideoOffsetToolStripMenuItem
             // 
             this.setVideoOffsetToolStripMenuItem.Name = "setVideoOffsetToolStripMenuItem";
-            this.setVideoOffsetToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+            this.setVideoOffsetToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
             this.setVideoOffsetToolStripMenuItem.Text = "Set video offset...";
             this.setVideoOffsetToolStripMenuItem.Click += new System.EventHandler(this.setVideoOffsetToolStripMenuItem_Click);
             // 
             // smpteTimeModedropFrameToolStripMenuItem
             // 
             this.smpteTimeModedropFrameToolStripMenuItem.Name = "smpteTimeModedropFrameToolStripMenuItem";
-            this.smpteTimeModedropFrameToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+            this.smpteTimeModedropFrameToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
             this.smpteTimeModedropFrameToolStripMenuItem.Text = "SMPTE timing (drop frame)";
             this.smpteTimeModedropFrameToolStripMenuItem.Click += new System.EventHandler(this.SmpteTimeModedropFrameToolStripMenuItem_Click);
             // 
             // toolStripMenuItemImportChapters
             // 
             this.toolStripMenuItemImportChapters.Name = "toolStripMenuItemImportChapters";
-            this.toolStripMenuItemImportChapters.Size = new System.Drawing.Size(257, 22);
+            this.toolStripMenuItemImportChapters.Size = new System.Drawing.Size(295, 22);
             this.toolStripMenuItemImportChapters.Text = "Import chapters from video...";
             this.toolStripMenuItemImportChapters.Click += new System.EventHandler(this.toolStripMenuItemImportChapters_Click);
             // 
             // toolStripMenuItemImportSceneChanges
             // 
             this.toolStripMenuItemImportSceneChanges.Name = "toolStripMenuItemImportSceneChanges";
-            this.toolStripMenuItemImportSceneChanges.Size = new System.Drawing.Size(257, 22);
+            this.toolStripMenuItemImportSceneChanges.Size = new System.Drawing.Size(295, 22);
             this.toolStripMenuItemImportSceneChanges.Text = "Import scene changes...";
             this.toolStripMenuItemImportSceneChanges.Click += new System.EventHandler(this.toolStripMenuItemImportSceneChanges_Click);
             // 
             // toolStripMenuItemRemoveSceneChanges
             // 
             this.toolStripMenuItemRemoveSceneChanges.Name = "toolStripMenuItemRemoveSceneChanges";
-            this.toolStripMenuItemRemoveSceneChanges.Size = new System.Drawing.Size(257, 22);
+            this.toolStripMenuItemRemoveSceneChanges.Size = new System.Drawing.Size(295, 22);
             this.toolStripMenuItemRemoveSceneChanges.Text = "Remove scene changes";
             this.toolStripMenuItemRemoveSceneChanges.Click += new System.EventHandler(this.toolStripMenuItemRemoveSceneChanges_Click);
             // 
             // toolStripMenuItemAddWaveformBatch
             // 
             this.toolStripMenuItemAddWaveformBatch.Name = "toolStripMenuItemAddWaveformBatch";
-            this.toolStripMenuItemAddWaveformBatch.Size = new System.Drawing.Size(257, 22);
+            this.toolStripMenuItemAddWaveformBatch.Size = new System.Drawing.Size(295, 22);
             this.toolStripMenuItemAddWaveformBatch.Text = "Add waveform batch...";
             this.toolStripMenuItemAddWaveformBatch.Click += new System.EventHandler(this.ToolStripMenuItemAddWaveformBatchClick);
             // 
             // generateBlankVideoToolStripMenuItem
             // 
             this.generateBlankVideoToolStripMenuItem.Name = "generateBlankVideoToolStripMenuItem";
-            this.generateBlankVideoToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+            this.generateBlankVideoToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
             this.generateBlankVideoToolStripMenuItem.Text = "Generate blank video...";
             this.generateBlankVideoToolStripMenuItem.Click += new System.EventHandler(this.generateBlankVideoToolStripMenuItem_Click);
+            // 
+            // generateVideoWithHardcodedSubtitleToolStripMenuItem
+            // 
+            this.generateVideoWithHardcodedSubtitleToolStripMenuItem.Name = "generateVideoWithHardcodedSubtitleToolStripMenuItem";
+            this.generateVideoWithHardcodedSubtitleToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
+            this.generateVideoWithHardcodedSubtitleToolStripMenuItem.Text = "Generate video with hardcoded subtitle...";
+            this.generateVideoWithHardcodedSubtitleToolStripMenuItem.Click += new System.EventHandler(this.generateVideoWithHardcodedSubtitleToolStripMenuItem_Click);
             // 
             // generateTextFromCurrentVideoToolStripMenuItem
             // 
             this.generateTextFromCurrentVideoToolStripMenuItem.Name = "generateTextFromCurrentVideoToolStripMenuItem";
-            this.generateTextFromCurrentVideoToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+            this.generateTextFromCurrentVideoToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
             this.generateTextFromCurrentVideoToolStripMenuItem.Text = "Generate text from current video...";
             this.generateTextFromCurrentVideoToolStripMenuItem.Click += new System.EventHandler(this.generateTextFromCurrentVideoToolStripMenuItem_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(254, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(292, 6);
             // 
             // showhideWaveformToolStripMenuItem
             // 
             this.showhideWaveformToolStripMenuItem.Name = "showhideWaveformToolStripMenuItem";
-            this.showhideWaveformToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+            this.showhideWaveformToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
             this.showhideWaveformToolStripMenuItem.Text = "Show/hide waveform";
             this.showhideWaveformToolStripMenuItem.Click += new System.EventHandler(this.ShowhideWaveformToolStripMenuItemClick);
             // 
             // showhideVideoToolStripMenuItem
             // 
             this.showhideVideoToolStripMenuItem.Name = "showhideVideoToolStripMenuItem";
-            this.showhideVideoToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+            this.showhideVideoToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
             this.showhideVideoToolStripMenuItem.Text = "Show/hide video";
             this.showhideVideoToolStripMenuItem.Click += new System.EventHandler(this.toolStripButtonToggleVideo_Click);
             // 
             // toolStripSeparator19
             // 
             this.toolStripSeparator19.Name = "toolStripSeparator19";
-            this.toolStripSeparator19.Size = new System.Drawing.Size(254, 6);
+            this.toolStripSeparator19.Size = new System.Drawing.Size(292, 6);
             // 
             // undockVideoControlsToolStripMenuItem
             // 
             this.undockVideoControlsToolStripMenuItem.Name = "undockVideoControlsToolStripMenuItem";
-            this.undockVideoControlsToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+            this.undockVideoControlsToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
             this.undockVideoControlsToolStripMenuItem.Text = "Un-dock video controls";
             this.undockVideoControlsToolStripMenuItem.Click += new System.EventHandler(this.UndockVideoControlsToolStripMenuItemClick);
             // 
             // redockVideoControlsToolStripMenuItem
             // 
             this.redockVideoControlsToolStripMenuItem.Name = "redockVideoControlsToolStripMenuItem";
-            this.redockVideoControlsToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+            this.redockVideoControlsToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
             this.redockVideoControlsToolStripMenuItem.Text = "Re-dock video controls";
             this.redockVideoControlsToolStripMenuItem.Visible = false;
             this.redockVideoControlsToolStripMenuItem.Click += new System.EventHandler(this.RedockVideoControlsToolStripMenuItemClick);
@@ -2595,33 +2603,24 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.toolStripMenuItemAssaOverrideTags.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.applyCustomStylesToolStripMenuItem,
-            this.setPositionToolStripMenuItem,
-            this.setResolutionPlayResXAndPlayResYToolStripMenuItem});
+            this.setPositionToolStripMenuItem});
             this.toolStripMenuItemAssaOverrideTags.Name = "toolStripMenuItemAssaOverrideTags";
             this.toolStripMenuItemAssaOverrideTags.Size = new System.Drawing.Size(284, 22);
             this.toolStripMenuItemAssaOverrideTags.Text = "Set override tags";
-            this.toolStripMenuItemAssaOverrideTags.DropDownOpening += new System.EventHandler(this.toolStripMenuItemAssaOverrideTags_DropDownOpening);
             // 
             // applyCustomStylesToolStripMenuItem
             // 
             this.applyCustomStylesToolStripMenuItem.Name = "applyCustomStylesToolStripMenuItem";
-            this.applyCustomStylesToolStripMenuItem.Size = new System.Drawing.Size(277, 22);
+            this.applyCustomStylesToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
             this.applyCustomStylesToolStripMenuItem.Text = "Apply custom tags...";
             this.applyCustomStylesToolStripMenuItem.Click += new System.EventHandler(this.applyCustomStylesToolStripMenuItem_Click);
             // 
             // setPositionToolStripMenuItem
             // 
             this.setPositionToolStripMenuItem.Name = "setPositionToolStripMenuItem";
-            this.setPositionToolStripMenuItem.Size = new System.Drawing.Size(277, 22);
+            this.setPositionToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
             this.setPositionToolStripMenuItem.Text = "Set position...";
             this.setPositionToolStripMenuItem.Click += new System.EventHandler(this.setPositionToolStripMenuItem_Click);
-            // 
-            // setResolutionPlayResXAndPlayResYToolStripMenuItem
-            // 
-            this.setResolutionPlayResXAndPlayResYToolStripMenuItem.Name = "setResolutionPlayResXAndPlayResYToolStripMenuItem";
-            this.setResolutionPlayResXAndPlayResYToolStripMenuItem.Size = new System.Drawing.Size(277, 22);
-            this.setResolutionPlayResXAndPlayResYToolStripMenuItem.Text = "Set resolution (PlayResX and PlayResY)";
-            this.setResolutionPlayResXAndPlayResYToolStripMenuItem.Click += new System.EventHandler(this.setResolutionPlayResXAndPlayResYToolStripMenuItem_Click);
             // 
             // toolStripMenuItemAssStyles
             // 
@@ -6027,7 +6026,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInsertSubtitle;
         private System.Windows.Forms.ToolStripMenuItem applyCustomStylesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem setPositionToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem setResolutionPlayResXAndPlayResYToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem generateBlankVideoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem generateVideoWithHardcodedSubtitleToolStripMenuItem;
     }
 }

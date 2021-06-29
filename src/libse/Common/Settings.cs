@@ -2053,6 +2053,7 @@ $HorzAlign          =   Center
         public string MainListViewRemoveBlankLines { get; set; }
         public string ApplyAssaOverrideTags { get; set; }
         public string SetAssaPosition { get; set; }
+        public string SetAssaResolution { get; set; }
         public string MainListViewRemoveTimeCodes { get; set; }
         public string MainTextBoxSplitAtCursor { get; set; }
         public string MainTextBoxSplitAtCursorAndVideoPos { get; set; }
@@ -7616,6 +7617,12 @@ $HorzAlign          =   Center
                     shortcuts.SetAssaPosition = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("SetAssaResolution");
+                if (subNode != null)
+                {
+                    shortcuts.SetAssaResolution = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainListViewRemoveTimeCodes");
                 if (subNode != null)
                 {
@@ -9275,6 +9282,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainListViewRemoveBlankLines", shortcuts.MainListViewRemoveBlankLines);
             textWriter.WriteElementString("ApplyAssaOverrideTags", shortcuts.ApplyAssaOverrideTags);
             textWriter.WriteElementString("SetAssaPosition", shortcuts.SetAssaPosition);
+            textWriter.WriteElementString("SetAssaResolution", shortcuts.SetAssaResolution);
             textWriter.WriteElementString("MainListViewRemoveTimeCodes", shortcuts.MainListViewRemoveTimeCodes);
             textWriter.WriteElementString("MainEditFixRTLViaUnicodeChars", shortcuts.MainEditFixRTLViaUnicodeChars);
             textWriter.WriteElementString("MainEditRemoveRTLUnicodeChars", shortcuts.MainEditRemoveRTLUnicodeChars);

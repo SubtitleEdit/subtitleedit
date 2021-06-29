@@ -52,6 +52,33 @@ namespace Nikse.SubtitleEdit.Logic
             return processMakeVideo;
         }
 
+        /// <summary>
+        /// Generate a video with a burned-in Advanced Sub Station Alpha subtitle.
+        /// </summary>
+        /// <param name="inputVideoFileName">Source video file name</param>
+        /// <param name="assaSubtitleFileName">Source subtitle file name</param>
+        /// <param name="outputVideoFileName">Output video file name with burned-in subtitle</param>
+        public static Process GenerateHardcodedVideoFile(string inputVideoFileName, string assaSubtitleFileName, string outputVideoFileName)
+        {
+            var ffmpegLocation = Configuration.Settings.General.FFmpegLocation;
+            if (!Configuration.IsRunningOnWindows && (string.IsNullOrEmpty(ffmpegLocation) || !File.Exists(ffmpegLocation)))
+            {
+                ffmpegLocation = "ffmpeg";
+            }
+
+            return new Process
+            {
+                StartInfo =
+                {
+                    FileName = ffmpegLocation,
+                    Arguments = $"-i \"{inputVideoFileName}\" -vf \"ass={Path.GetFileName(assaSubtitleFileName)}\" -strict -2 \"{outputVideoFileName}\"",
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    WorkingDirectory = Path.GetDirectoryName(assaSubtitleFileName),
+                }
+            };
+        }
+
         private static Process GetFFmpegProcess(string imageFileName, string outputFileName, int videoWidth, int videoHeight, int seconds, decimal frameRate)
         {
             var ffmpegLocation = Configuration.Settings.General.FFmpegLocation;
