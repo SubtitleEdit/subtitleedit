@@ -14,7 +14,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string _inputVideoFileName;
         public string VideoFileName { get; private set; }
 
-        public GenerateVideoWithHardSubs(Subtitle assaSubtitle, string inputVideoFileName)
+        public GenerateVideoWithHardSubs(Subtitle assaSubtitle, string inputVideoFileName, int? fontSize)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -26,9 +26,20 @@ namespace Nikse.SubtitleEdit.Forms
             _inputVideoFileName = inputVideoFileName;
             buttonOK.Text = LanguageSettings.Current.Watermark.Generate;
             labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
+            labelFontSize.Text = LanguageSettings.Current.ExportPngXml.FontSize;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             progressBar1.Visible = false;
             labelPleaseWait.Visible = false;
+
+            if (fontSize.HasValue)
+            {
+                numericUpDownFontSize.Value = fontSize.Value;
+            }
+            else
+            {
+                labelFontSize.Visible = false;
+                numericUpDownFontSize.Visible = false;
+            }
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -56,6 +67,15 @@ namespace Nikse.SubtitleEdit.Forms
             if (File.Exists(VideoFileName))
             {
                 File.Delete(VideoFileName);
+            }
+
+            if (numericUpDownFontSize.Visible)
+            {
+                var fontSize = (int)numericUpDownFontSize.Value;
+                var style = AdvancedSubStationAlpha.GetSsaStyle("Default", _assaSubtitle.Header);
+                style.FontSize = fontSize;
+                var styleLine = style.ToRawAss();
+                _assaSubtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("Style", styleLine, "[V4+ Styles]", _assaSubtitle.Header);
             }
 
             SubtitleFormat format = new AdvancedSubStationAlpha();
