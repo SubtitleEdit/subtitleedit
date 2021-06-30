@@ -767,6 +767,13 @@ Note: Do check free disk space.</WaveFileMalformed>
     <SolidColor>Solid color</SolidColor>
     <DurationInMinutes>Duration in minutes</DurationInMinutes>
   </GenerateBlankVideo>
+  <GenerateVideoWithBurnedInSubs>
+    <Title>Generate video with burned-in subtile</Title>
+    <Info>Will generate a video file with burned-in subtitle.
+
+Note: Advanced Substation Alpha supported.</Info>
+    <XGeneratedWithBurnedInSubs>"{0}" generated with burned-in subtitle.</XGeneratedWithBurnedInSubs>
+  </GenerateVideoWithBurnedInSubs>
   <GetDictionaries>
     <Title>Need dictionaries?</Title>
     <DescriptionLine1>Subtitle Edit's spell check is based on the NHunspell engine which</DescriptionLine1>
@@ -1169,6 +1176,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <SmptTimeMode>SMPTE timing (drop frame)</SmptTimeMode>
         <GenerateTextFromVideo>Generate text from video...</GenerateTextFromVideo>
         <GenerateBlankVideo>Generate blank video...</GenerateBlankVideo>
+        <GenerateVideoWithBurnedInSub>Generate video with burned-in sub...</GenerateVideoWithBurnedInSub>
         <ImportChaptersFromVideo>Import chapters from video</ImportChaptersFromVideo>
         <GenerateImportSceneChanges>Generate/import scene changes...</GenerateImportSceneChanges>
         <RemoveSceneChanges>Remove scene changes</RemoveSceneChanges>
@@ -1305,7 +1313,6 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <AdjustDisplayDurationForSelectedLines>Adjust durations for selected lines...</AdjustDisplayDurationForSelectedLines>
         <ApplyDurationLimitsForSelectedLines>Apply duration limits for selected lines...</ApplyDurationLimitsForSelectedLines>
         <ApplyCustomOverrideTag>Apply custom override tags...</ApplyCustomOverrideTag>
-        <SetResolution>Set resolution (PlayResX/PlayResY)</SetResolution>
         <FixCommonErrorsInSelectedLines>Fix common errors in selected lines...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Change casing for selected lines...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Save selected lines as...</SaveSelectedLines>
@@ -2043,6 +2050,7 @@ can edit in same subtitle file (collaboration)</Information>
     <RemoveBlankLines>Remove blank lines</RemoveBlankLines>
     <ApplyAssaOverrideTags>Apply ASSA override tags to selection</ApplyAssaOverrideTags>
     <SetAssaPosition>Set/get ASSA position</SetAssaPosition>
+    <SetAssaResolution>Set ASSA resolution (PlayResX/PlayResY)</SetAssaResolution>
     <ShowLineBreaksAs>Show line breaks in list view as</ShowLineBreaksAs>
     <SaveAsFileNameFrom>"Save as..." uses file name from</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>Double-clicking line in main window list view will</MainListViewDoubleClickAction>
