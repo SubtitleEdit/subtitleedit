@@ -62,6 +62,10 @@ namespace Nikse.SubtitleEdit.Forms
             buttonSave.Text = LanguageSettings.Current.ExportCustomText.SaveAs;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
+            comboBoxFrameRate.Left = labelFrameRate.Left + Math.Max(labelFrameRate.Width, labelResolution.Width) + 3;
+            comboBoxResolution.Left = comboBoxFrameRate.Left;
+            buttonCustomResolution.Left = comboBoxResolution.Left + comboBoxResolution.Width + 3;
+
             comboBoxHAlign.Items.Clear();
             comboBoxHAlign.Items.Add(LanguageSettings.Current.ExportPngXml.Left);
             comboBoxHAlign.Items.Add(LanguageSettings.Current.ExportPngXml.Center);
