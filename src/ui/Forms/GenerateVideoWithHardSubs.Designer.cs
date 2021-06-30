@@ -34,15 +34,18 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel = new System.Windows.Forms.Button();
             this.labelPleaseWait = new System.Windows.Forms.Label();
             this.labelInfo = new System.Windows.Forms.Label();
+            this.numericUpDownFontSize = new System.Windows.Forms.NumericUpDown();
+            this.labelFontSize = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).BeginInit();
             this.SuspendLayout();
             // 
             // progressBar1
             // 
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(12, 108);
+            this.progressBar1.Location = new System.Drawing.Point(12, 135);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(278, 23);
+            this.progressBar1.Size = new System.Drawing.Size(405, 23);
             this.progressBar1.TabIndex = 22;
             this.progressBar1.Visible = false;
             // 
@@ -50,7 +53,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(296, 108);
+            this.buttonOK.Location = new System.Drawing.Point(423, 135);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(121, 23);
             this.buttonOK.TabIndex = 23;
@@ -63,7 +66,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(423, 108);
+            this.buttonCancel.Location = new System.Drawing.Point(550, 135);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 24;
@@ -75,7 +78,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelPleaseWait.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelPleaseWait.AutoSize = true;
-            this.labelPleaseWait.Location = new System.Drawing.Point(12, 92);
+            this.labelPleaseWait.Location = new System.Drawing.Point(12, 119);
             this.labelPleaseWait.Name = "labelPleaseWait";
             this.labelPleaseWait.Size = new System.Drawing.Size(70, 13);
             this.labelPleaseWait.TabIndex = 25;
@@ -90,11 +93,44 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelInfo.TabIndex = 26;
             this.labelInfo.Text = "This will save video x with burned-in subtitle.";
             // 
+            // numericUpDownFontSize
+            // 
+            this.numericUpDownFontSize.Location = new System.Drawing.Point(472, 40);
+            this.numericUpDownFontSize.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericUpDownFontSize.Minimum = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
+            this.numericUpDownFontSize.Name = "numericUpDownFontSize";
+            this.numericUpDownFontSize.Size = new System.Drawing.Size(72, 20);
+            this.numericUpDownFontSize.TabIndex = 27;
+            this.numericUpDownFontSize.Value = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            // 
+            // labelFontSize
+            // 
+            this.labelFontSize.AutoSize = true;
+            this.labelFontSize.Location = new System.Drawing.Point(472, 21);
+            this.labelFontSize.Name = "labelFontSize";
+            this.labelFontSize.Size = new System.Drawing.Size(49, 13);
+            this.labelFontSize.TabIndex = 28;
+            this.labelFontSize.Text = "Font size";
+            // 
             // GenerateVideoWithHardSubs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(510, 143);
+            this.ClientSize = new System.Drawing.Size(637, 170);
+            this.Controls.Add(this.labelFontSize);
+            this.Controls.Add(this.numericUpDownFontSize);
             this.Controls.Add(this.labelInfo);
             this.Controls.Add(this.labelPleaseWait);
             this.Controls.Add(this.progressBar1);
@@ -108,6 +144,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "GenerateVideoWithHardSubs";
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -120,5 +157,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Label labelPleaseWait;
         private System.Windows.Forms.Label labelInfo;
+        private System.Windows.Forms.NumericUpDown numericUpDownFontSize;
+        private System.Windows.Forms.Label labelFontSize;
     }
 }

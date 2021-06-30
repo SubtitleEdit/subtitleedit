@@ -31425,15 +31425,21 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var sub = new Subtitle(_subtitle, false);
+            int? fontSize = null;
             if (string.IsNullOrEmpty(sub.Header))
             {
                 sub.Header = AdvancedSubStationAlpha.DefaultHeader;
+                var style = AdvancedSubStationAlpha.GetSsaStyle("Default", sub.Header);
+                style.FontSize = GetOptimalSubtitleFontSize(_videoInfo.Height);
+                fontSize = (int)style.FontSize;
+                var styleLine = style.ToRawAss();
+                sub.Header = AdvancedSubStationAlpha.AddTagToHeader("Style", styleLine, "[V4+ Styles]", sub.Header);
             }
 
             sub.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + _videoInfo.Width.ToString(CultureInfo.InvariantCulture), "[Script Info]", sub.Header);
             sub.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + _videoInfo.Height.ToString(CultureInfo.InvariantCulture), "[Script Info]", sub.Header);
 
-            using (var form = new GenerateVideoWithHardSubs(sub, VideoFileName))
+            using (var form = new GenerateVideoWithHardSubs(sub, VideoFileName, fontSize))
             {
                 var result = form.ShowDialog(this);
                 if (result != DialogResult.OK)
@@ -31446,6 +31452,33 @@ namespace Nikse.SubtitleEdit.Forms
                     f.ShowDialog(this);
                 }
             }
+        }
+
+        private int GetOptimalSubtitleFontSize(int height)
+        {
+            var wantedHeight = height * 0.08; // let the optimal height be 8% of video height
+            var currentSize = 50;
+
+            using (var graphics = CreateGraphics())
+            {
+                for (int i = 40; i > -10; i--)
+                {
+                    using (var font = new Font(Font.FontFamily, (float)currentSize, FontStyle.Regular))
+                    {
+                        var currentHeight = graphics.MeasureString("HJKLj", font).Height;
+                        if (currentHeight > wantedHeight)
+                        {
+                            currentSize -= Math.Max(1, i);
+                        }
+                        else if (currentHeight < wantedHeight)
+                        {
+                            currentSize += Math.Max(1, i);
+                        }
+                    }
+                }
+            }
+
+            return currentSize;
         }
     }
 }
