@@ -760,6 +760,12 @@ Command line: {1} {2}
     <FixContinuationStyleX>修复延续型样式: {0}</FixContinuationStyleX>
     <FixUnnecessaryLeadingDots>移除不必要的点标题</FixUnnecessaryLeadingDots>
   </FixCommonErrors>
+  <GenerateBlankVideo>
+    <Title>生成空白视频文件</Title>
+    <CheckeredImage>方格图像</CheckeredImage>
+    <SolidColor>纯色</SolidColor>
+    <DurationInMinutes>持续时间（分钟）</DurationInMinutes>
+  </GenerateBlankVideo>
   <GetDictionaries>
     <Title>是否使用词典？</Title>
     <DescriptionLine1>Subtitle Edit 的拼写检查基于 NHunspell 引擎，它</DescriptionLine1>
@@ -1157,6 +1163,7 @@ Command line: {1} {2}
         <SetVideoOffset>设置视频偏移...</SetVideoOffset>
         <SmptTimeMode>SMPTE 时间 (弃帧)</SmptTimeMode>
         <GenerateTextFromVideo>从视频生成文本...</GenerateTextFromVideo>
+        <GenerateBlankVideo>生成空白视频...</GenerateBlankVideo>
         <ImportChaptersFromVideo>从视频中导入章节</ImportChaptersFromVideo>
         <GenerateImportSceneChanges>生成/导入场景切换...</GenerateImportSceneChanges>
         <RemoveSceneChanges>移除场景变更</RemoveSceneChanges>
@@ -1228,7 +1235,7 @@ Command line: {1} {2}
         <SizeAllColumnsToFit>自适应所有的列宽度</SizeAllColumnsToFit>
         <SetStyle>设置样式</SetStyle>
         <SetActor>设置演员</SetActor>
-        <SetOverrideTags>设置标签覆盖</SetOverrideTags>
+        <SetOverrideTagsEtc>设置覆盖标签等</SetOverrideTagsEtc>
         <SubStationAlphaStyles>Sub Station Alpha 样式...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>高级 Sub Station Alpha 样式...</AdvancedSubStationAlphaStyles>
         <TimedTextSetRegion>带时间文本 - 设置区域</TimedTextSetRegion>
@@ -1293,6 +1300,7 @@ Command line: {1} {2}
         <AdjustDisplayDurationForSelectedLines>调整所选行时长...</AdjustDisplayDurationForSelectedLines>
         <ApplyDurationLimitsForSelectedLines>对选定的行应用持续时间限制...</ApplyDurationLimitsForSelectedLines>
         <ApplyCustomOverrideTag>应用自定义覆盖标签...</ApplyCustomOverrideTag>
+        <SetResolution>设置分辨率</SetResolution>
         <FixCommonErrorsInSelectedLines>修复所选行常规错误...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>更改所选行大小写...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>所选行另存为...</SaveSelectedLines>
