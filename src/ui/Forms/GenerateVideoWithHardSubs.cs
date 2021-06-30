@@ -78,6 +78,18 @@ namespace Nikse.SubtitleEdit.Forms
                 _assaSubtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("Style", styleLine, "[V4+ Styles]", _assaSubtitle.Header);
             }
 
+            if (Configuration.Settings.General.RightToLeftMode && LanguageAutoDetect.CouldBeRightToLeftLanguage(_assaSubtitle))
+            {
+                for (var index = 0; index < _assaSubtitle.Paragraphs.Count; index++)
+                {
+                    var paragraph = _assaSubtitle.Paragraphs[index];
+                    if (LanguageAutoDetect.ContainsRightToLeftLetter(paragraph.Text))
+                    {
+                        paragraph.Text = Utilities.FixRtlViaUnicodeChars(paragraph.Text);
+                    }
+                }
+            }
+
             SubtitleFormat format = new AdvancedSubStationAlpha();
             var assaTempFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".ass");
             File.WriteAllText(assaTempFileName, format.ToText(_assaSubtitle, null));
@@ -109,7 +121,7 @@ namespace Nikse.SubtitleEdit.Forms
                 File.Delete(assaTempFileName);
             }
             catch
-            { 
+            {
                 // ignore
             }
 
