@@ -40,6 +40,7 @@
     <Bold>굵게</Bold>
     <Italic>기울임꼴</Italic>
     <Underline>밑줄</Underline>
+    <Strikeout>취소선</Strikeout>
     <Visible>표시</Visible>
     <FrameRate>프레임 속도</FrameRate>
     <Name>이름</Name>
@@ -174,6 +175,24 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <RemoveOneAttachment>하나의 첨부 파일을 제거하시겠습니까?</RemoveOneAttachment>
     <RemoveXAttachments>{0} 첨부파일을 제거하시겠습니까?</RemoveXAttachments>
   </AssaAttachments>
+  <AssaOverrideTags>
+    <ApplyCustomTags>사용자 지정 태그 적용</ApplyCustomTags>
+    <History>히스토리</History>
+    <TagsToApply>적용할 태그</TagsToApply>
+    <ApplyTo>적용 대상</ApplyTo>
+    <SelectedLinesX>선택한 줄: {0}</SelectedLinesX>
+    <AdvancedSelection>고급 선택</AdvancedSelection>
+  </AssaOverrideTags>
+  <AssaSetPosition>
+    <SetPosition>위치 설정/얻기</SetPosition>
+    <VideoResolutionX>비디오 해상도: {0}</VideoResolutionX>
+    <StyleAlignmentX>스타일 정렬: {0}</StyleAlignmentX>
+    <CurrentMousePositionX>마우스 위치: {0}</CurrentMousePositionX>
+    <CurrentTextPositionX>텍스트 위치: {0}</CurrentTextPositionX>
+    <SetPosInfo>비디오 클릭하여 설정/이동 위치 전환</SetPosInfo>
+    <Clipboard>클립보드</Clipboard>
+    <ResolutionMissing>PlayResX/PlayResY가 설정되지 않습니다 - 지금 해상도를 설정하시겠습니까?</ResolutionMissing>
+  </AssaSetPosition>
   <AudioToText>
     <Title>오디오를 텍스트로</Title>
     <ExtractingAudioUsingX>{0}을 사용하여 오디오를 추출하는 중...</ExtractingAudioUsingX>
@@ -657,7 +676,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <BreakLongLines>긴 줄 줄바꿈</BreakLongLines>
     <RemoveLineBreaks>짧은 단일 문장의 줄바꿈 제거하기</RemoveLineBreaks>
     <RemoveLineBreaksAll>짧은 문장의 줄바꿈 제거하기 (대화형식은 제외)</RemoveLineBreaksAll>
-    <FixUppercaseIInsideLowercaseWords>한 단어 중간에 대문자 'I'가 쓰인 것 수정하기 (OCR 오류)</FixUppercaseIInsideLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>소문자 단어 안에 대문자 'I' 수정하기 (OCR 오류)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>두개의 작은 따옴표(')를 큰 따옴표(")로 수정하기</FixDoubleApostrophes>
     <AddPeriods>다음 줄이 대문자로 시작하면 줄 끝에 마침표 추가하기</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>단락이 끝나면 대문자로 시작하기</StartWithUppercaseLetterAfterParagraph>
@@ -668,6 +687,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <CommonOcrErrorsFixed>수정된 일반적인 OCR 오류 (OCR 재배치 목록을 사용함): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>숫자 사이의 공백 제거하기</RemoveSpaceBetweenNumber>
     <FixDialogsOnOneLine>한 줄 안에 많은 대화형식이 있을 때 수정하기</FixDialogsOnOneLine>
+    <RemoveDialogFirstInNonDialogs>대화 상자가 아닌 첫번째 줄의 시작 대시 제거하기</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>문자열 정규화</NormalizeStrings>
     <FixTurkishAnsi>유니코드로 터키의 ANSI (아이슬란드) 문자 수정하기</FixTurkishAnsi>
     <FixDanishLetterI>덴마크 문자 'i' 수정하기</FixDanishLetterI>
@@ -730,11 +750,18 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <FixOcrErrorExample>D0n't --&gt; Don't</FixOcrErrorExample>
     <FixSpaceBetweenNumbersExample>3 300 --&gt; 3300</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>안녕 존! - 안녕 리나! --&gt; 안녕 존!&lt;br /&gt;- 안녕 리나!</FixDialogsOneLineExample>
+    <RemoveDialogFirstInNonDialogsExample>- 어떻게 지내세요? -&gt; 어떻게 지내세요?</RemoveDialogFirstInNonDialogsExample>
     <SelectDefault>기본값 선택</SelectDefault>
     <SetDefault>현재 수정사항을 기본값으로 설정</SetDefault>
     <FixContinuationStyleX>연속 스타일 수정: {0}</FixContinuationStyleX>
     <FixUnnecessaryLeadingDots>불필요한 선행 점 제거</FixUnnecessaryLeadingDots>
   </FixCommonErrors>
+  <GenerateBlankVideo>
+    <Title>빈 비디오 파일 생성</Title>
+    <CheckeredImage>체크 이미지</CheckeredImage>
+    <SolidColor>단색</SolidColor>
+    <DurationInMinutes>지속시간(분)</DurationInMinutes>
+  </GenerateBlankVideo>
   <GetDictionaries>
     <Title>* 사전 다운로드</Title>
     <DescriptionLine1>Subtitle Edit 맞춤법 검사는 LibreOffice의 맞춤법 검사용 엔진인</DescriptionLine1>
@@ -1137,6 +1164,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <SetVideoOffset>비디오 오프셋 설정...</SetVideoOffset>
         <SmptTimeMode>SMPTE 타이밍 (드롭 프레임)</SmptTimeMode>
         <GenerateTextFromVideo>비디오에서 텍스트 생성...</GenerateTextFromVideo>
+        <GenerateBlankVideo>빈 비디오 생성...</GenerateBlankVideo>
         <ImportChaptersFromVideo>비디오에서 챕터 가져오기</ImportChaptersFromVideo>
         <GenerateImportSceneChanges>장면 전환 생성/가져오기...</GenerateImportSceneChanges>
         <RemoveSceneChanges>장면 전환 제거</RemoveSceneChanges>
@@ -1206,9 +1234,9 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
       </ToolBar>
       <ContextMenu>
         <SizeAllColumnsToFit>모든 열의 크기 맞추기</SizeAllColumnsToFit>
-        <AdvancedSubStationAlphaSetStyle>ASS의 스타일 설정</AdvancedSubStationAlphaSetStyle>
-        <SubStationAlphaSetStyle>SSA의 스타일 설정</SubStationAlphaSetStyle>
+        <SetStyle>스타일 설정</SetStyle>
         <SetActor>배우 설정</SetActor>
+        <SetOverrideTagsEtc>기타 재정의 태그 설정</SetOverrideTagsEtc>
         <SubStationAlphaStyles>SSA의 스타일...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>ASS의 스타일...</AdvancedSubStationAlphaStyles>
         <TimedTextSetRegion>시간 제한 텍스트 - 지역 설정</TimedTextSetRegion>
@@ -1272,6 +1300,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <TranslateSelectedLines>선택한 줄 번역...</TranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>표시시간 조정...</AdjustDisplayDurationForSelectedLines>
         <ApplyDurationLimitsForSelectedLines>선택한 줄의 표시시간 제한 적용...</ApplyDurationLimitsForSelectedLines>
+        <ApplyCustomOverrideTag>사용자 지정 재정의 태그 적용...</ApplyCustomOverrideTag>
+        <SetResolution>해상도 설정 (PlayResX/PlayResY)</SetResolution>
         <FixCommonErrorsInSelectedLines>일반 오류 수정...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>대/소문자 바꾸기</ChangeCasingForSelectedLines>
         <SaveSelectedLines>선택한 줄 저장...</SaveSelectedLines>
@@ -1451,8 +1481,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SpellCheck>맞춤법 검사</SpellCheck>
     <BeforeSpellCheck>맞춤법 검사 전</BeforeSpellCheck>
     <SpellCheckChangedXToY>'{0}'에서 '{1}'로 맞춤법 변경!</SpellCheckChangedXToY>
-    <BeforeAddingTagX>'{0}' 태그 추가 전</BeforeAddingTagX>
-    <TagXAdded>'{0}' 태그 추가함</TagXAdded>
+    <BeforeAddingTagX>&lt;{0}&gt; 태그 추가 전</BeforeAddingTagX>
+    <TagXAdded>&lt;{0}&gt; 태그 추가함</TagXAdded>
     <LineXOfY>{0}/{1}</LineXOfY>
     <XLinesSavedAsY>'{0}'줄을 {1}로 저장했습니다!</XLinesSavedAsY>
     <XLinesDeleted>'{0}'줄이 삭제되었습니다!</XLinesDeleted>
@@ -2007,6 +2037,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <StartInSourceView>「소스 보기」로 시작</StartInSourceView>
     <RemoveBlankLinesWhenOpening>자막 열 때, 빈 줄 제거</RemoveBlankLinesWhenOpening>
     <RemoveBlankLines>빈 줄 제거</RemoveBlankLines>
+    <ApplyAssaOverrideTags>ASSA 재정의 태그 선택 적용</ApplyAssaOverrideTags>
+    <SetAssaPosition>ASSA 위치 설정/얻기</SetAssaPosition>
     <ShowLineBreaksAs>다음 기호로 줄바꿈 표시</ShowLineBreaksAs>
     <SaveAsFileNameFrom>"다른 이름으로 저장..."에서 사용하는 파일 이름</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>「자막 보기」에서 줄을 더블 클릭하면 다음 실행:</MainListViewDoubleClickAction>
@@ -2138,6 +2170,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ContinuationStyleNoneLeadingTrailingDots>없음, 일시 정지를 위한 점</ContinuationStyleNoneLeadingTrailingDots>
     <ContinuationStyleOnlyTrailingDots>점 (후행만)</ContinuationStyleOnlyTrailingDots>
     <ContinuationStyleLeadingTrailingDots>점</ContinuationStyleLeadingTrailingDots>
+    <ContinuationStyleLeadingTrailingEllipsis>줄임표</ContinuationStyleLeadingTrailingEllipsis>
+    <ContinuationStyleNoneTrailingEllipsis>없음, 일시 중지를 위한 줄임표</ContinuationStyleNoneTrailingEllipsis>
     <ContinuationStyleLeadingTrailingDash>대시</ContinuationStyleLeadingTrailingDash>
     <ContinuationStyleLeadingTrailingDashDots>대시, 하지만 일시 정지을 위한 점</ContinuationStyleLeadingTrailingDashDots>
     <MusicSymbol>음표</MusicSymbol>
@@ -2280,7 +2314,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <GoBack3Second>3초 뒤로</GoBack3Second>
     <GoToStartCurrent>비디오 위치를  현재 자막의 시작으로 설정</GoToStartCurrent>
     <ToggleStartEndCurrent>현재 자막의 시작/끝 사이의 비디오 위치 전환</ToggleStartEndCurrent>
-    <PlayCurrent>현재 자막 재생</PlayCurrent>
+    <PlaySelectedLines>선택한 줄 재생</PlaySelectedLines>
     <WaveformGoToPrevSubtitle>이전 자막으로 이동 (비디오 위치에서)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>다음 자막으로 이동 (비디오 위치에서)</WaveformGoToNextSubtitle>
     <WaveformGoToPrevChapter>이전 챕터로 이동</WaveformGoToPrevChapter>
@@ -2293,6 +2327,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <PlayRateFaster>재생 속도 빠르게</PlayRateFaster>
     <VideoResetSpeedAndZoom>속도/줌 재설정</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>비디오 컨트롤 전환</MainToggleVideoControls>
+    <VideoToggleContrast>대비 전환 (mpv 만)</VideoToggleContrast>
+    <VideoToggleBrightness>밝기 전환 (mpv 만)</VideoToggleBrightness>
     <CustomSearch1>번역, 사용자 지정 검색 1</CustomSearch1>
     <CustomSearch2>번역, 사용자 지정 검색 2</CustomSearch2>
     <CustomSearch3>번역, 사용자 지정 검색 3</CustomSearch3>
@@ -2353,6 +2389,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <MainTextBoxAutoBreakFromPosAndGoToNext>커서 위치에서 첫 번째 공간에 줄바꿈하고 다음으로 이동</MainTextBoxAutoBreakFromPosAndGoToNext>
     <MainTextBoxUnbreak>줄바꿈 제거</MainTextBoxUnbreak>
     <MainTextBoxUnbreakNoSpace>공백없이 줄바꿈 제거 (CJK)</MainTextBoxUnbreakNoSpace>
+    <MainTextBoxAssaIntellisense>ASSA 태그 도우미 표시</MainTextBoxAssaIntellisense>
+    <MainTextBoxAssaRemoveTag>커서에서 ASSA 태그 제거</MainTextBoxAssaRemoveTag>
     <MainFileSaveAll>모두 저장</MainFileSaveAll>
     <Miscellaneous>기타</Miscellaneous>
     <CpsIncludesSpace>초당 문자수(CPS)에 공백도 포함</CpsIncludesSpace>
@@ -2629,6 +2667,10 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <CategoryNote>참고: 기본 카테고리(녹색 색상)의 스타일이 새로운 ASSA 파일에 적용됩니다.</CategoryNote>
     <CategoriesManage>관리</CategoriesManage>
     <MoveToCategory>선택한 스타일을 카테고리로 이동...</MoveToCategory>
+    <ScaleX>ScaleX</ScaleX>
+    <ScaleY>ScaleY</ScaleY>
+    <Spacing>간격</Spacing>
+    <Angle>각도</Angle>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
     <Category>카테고리 </Category>
