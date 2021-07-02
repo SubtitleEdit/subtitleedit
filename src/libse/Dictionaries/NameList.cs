@@ -12,12 +12,12 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
         private readonly HashSet<string> _namesList;
         private readonly HashSet<string> _namesMultiList;
         private readonly HashSet<string> _blackList;
-        private readonly string _languageName;
+        public string LanguageName { get; private set; }
 
         public NameList(string dictionaryFolder, string languageName, bool useOnlineNameList, string namesUrl)
         {
             _dictionaryFolder = dictionaryFolder;
-            _languageName = languageName;
+            LanguageName = languageName;
 
             _namesList = new HashSet<string>();
             _namesMultiList = new HashSet<string>();
@@ -84,10 +84,10 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
         private string GetLocalNamesFileName()
         {
             // Converts e.g en_US => en (Neutral culture).
-            string twoLetterIsoLanguageName = _languageName;
-            if (_languageName.Length > 2)
+            string twoLetterIsoLanguageName = LanguageName;
+            if (LanguageName.Length > 2)
             {
-                twoLetterIsoLanguageName = _languageName.Substring(0, 2);
+                twoLetterIsoLanguageName = LanguageName.Substring(0, 2);
             }
             return Path.Combine(_dictionaryFolder, twoLetterIsoLanguageName + "_names.xml");
         }
