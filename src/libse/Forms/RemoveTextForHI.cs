@@ -98,6 +98,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 return preAssTag + text;
             }
 
+            string language = Settings.NameList != null ? Settings.NameList.LanguageName : "en";
             string newText = string.Empty;
             var lines = text.Trim().SplitToLines();
             int noOfNames = 0;
@@ -241,7 +242,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                     }
                                 }
 
-                                if (remove && !ShouldRemoveNarrator(pre))
+                                if (remove && !ShouldRemoveNarrator(pre, language))
                                 {
                                     remove = false;
                                 }
@@ -581,7 +582,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             }
             else if (noOfNames == 2 && Utilities.GetNumberOfLines(newText) == 3 && Utilities.GetNumberOfLines(text) == 3)
             {
-                var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, TwoLetterLanguageCode = "en" };
+                var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, TwoLetterLanguageCode = language };
                 if (dialogHelper.IsDialog(text.SplitToLines()))
                 {
                     if (removedInFirstLine && removedInSecondLine)
@@ -636,7 +637,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             }
             else if (noOfNames == 1 && Utilities.GetNumberOfLines(newText) == 3 && Utilities.GetNumberOfLines(text) == 3)
             {
-                var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, TwoLetterLanguageCode = "en" };
+                var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, TwoLetterLanguageCode = language };
                 if (dialogHelper.IsDialog(text.SplitToLines()))
                 {
                     if (removedInFirstLine)
@@ -784,10 +785,31 @@ namespace Nikse.SubtitleEdit.Core.Forms
             return false;
         }
 
-        private static bool ShouldRemoveNarrator(string pre)
+        private static bool ShouldRemoveNarrator(string pre, string language)
         {
-            // Skip these: Barry, remember: She cannot; http://google.com; Improved by: ...
-            if (pre.IndexOfAny(new[] { "Previously on", "Improved by", "http", ", " }, StringComparison.OrdinalIgnoreCase) >= 0)
+            if (pre.Length > 30 || pre.IndexOfAny(new[] { "http", ", " }, StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                return false;
+            }
+
+            if (language == "en" && pre.Length > 15 && pre.IndexOfAny(new[]
+                {
+                    "Previously on",
+                    "Improved by",
+                    " is ",
+                    " are ",
+                    " were ",
+                    " was ",
+                    " think ",
+                    " guess ",
+                    " will ",
+                    " believe ",
+                    " say ",
+                    " said ",
+                    " do ",
+                    " want ",
+                    "That's "
+                }, StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 return false;
             }
