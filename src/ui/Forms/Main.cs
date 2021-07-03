@@ -1493,7 +1493,6 @@ namespace Nikse.SubtitleEdit.Forms
             saveToolStripMenuItem.Text = _language.Menu.File.Save;
             saveAsToolStripMenuItem.Text = _language.Menu.File.SaveAs;
             toolStripMenuItemRestoreAutoBackup.Text = _language.Menu.File.RestoreAutoBackup;
-            toolStripMenuItemTTProperties.Text = _language.Menu.File.TimedTextProperties;
             openOriginalToolStripMenuItem.Text = _language.Menu.File.OpenOriginal;
             saveOriginalToolStripMenuItem.Text = _language.Menu.File.SaveOriginal;
             saveOriginalAstoolStripMenuItem.Text = _language.SaveOriginalSubtitleAs;
@@ -21886,12 +21885,13 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            toolStripMenuItemFileFormatProperties.Visible = false;
             var format = GetCurrentSubtitleFormat();
             var ft = format.GetType();
             if (ft == typeof(AdvancedSubStationAlpha))
             {
-                toolStripMenuItemSubStationAlpha.Visible = true;
-                toolStripMenuItemSubStationAlpha.Text = _language.Menu.File.AdvancedSubStationAlphaProperties;
+                toolStripMenuItemFileFormatProperties.Text = string.Format(_language.Menu.File.FormatXProperties, ft.Name);
+                toolStripMenuItemFileFormatProperties.Visible = true;
 
                 toolStripMenuItemAssStyles.Visible = true;
                 toolStripMenuItemAssStyles.Text = _language.Menu.ContextMenu.AdvancedSubStationAlphaStyles;
@@ -21901,8 +21901,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (ft == typeof(SubStationAlpha))
             {
-                toolStripMenuItemSubStationAlpha.Visible = true;
-                toolStripMenuItemSubStationAlpha.Text = _language.Menu.File.SubStationAlphaProperties;
+                toolStripMenuItemFileFormatProperties.Text = string.Format(_language.Menu.File.FormatXProperties, ft.Name);
+                toolStripMenuItemFileFormatProperties.Visible = true;
 
                 toolStripMenuItemAssStyles.Visible = true;
                 toolStripMenuItemAssStyles.Text = _language.Menu.ContextMenu.SubStationAlphaStyles;
@@ -21912,54 +21912,39 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                toolStripMenuItemSubStationAlpha.Visible = false;
                 toolStripMenuItemAssStyles.Visible = false;
                 toolStripMenuItemAssaStyles.Visible = false;
             }
 
             if (ft == typeof(Ebu))
             {
-                toolStripMenuItemEbuProperties.Text = _language.Menu.File.EbuProperties;
-                toolStripMenuItemEbuProperties.Visible = !string.IsNullOrEmpty(_language.Menu.File.EbuProperties);
-            }
-            else
-            {
-                toolStripMenuItemEbuProperties.Visible = false;
+                toolStripMenuItemFileFormatProperties.Text = string.Format(_language.Menu.File.FormatXProperties, ft.Name);
+                toolStripMenuItemFileFormatProperties.Visible = true;
             }
 
-            if (ft == typeof(DvdStudioPro) ||
-                ft == typeof(DvdStudioProSpace) ||
-                ft == typeof(DvdStudioProSpaceOne) ||
-                ft == typeof(DvdStudioProSpaceOneSemicolon))
+            if (ft == typeof(DvdStudioPro) || ft == typeof(DvdStudioProSpace) || ft == typeof(DvdStudioProSpaceOne) || ft == typeof(DvdStudioProSpaceOneSemicolon))
             {
-                toolStripMenuItemDvdStudioProProperties.Text = _language.Menu.File.DvdStuioProProperties;
-                toolStripMenuItemDvdStudioProProperties.Visible = true;
-            }
-            else
-            {
-                toolStripMenuItemDvdStudioProProperties.Visible = false;
+                toolStripMenuItemFileFormatProperties.Text = string.Format(_language.Menu.File.FormatXProperties, ft.Name);
+                toolStripMenuItemFileFormatProperties.Visible = true;
             }
 
             if (ft == typeof(DCinemaInterop) || ft == typeof(DCinemaSmpte2014) || ft == typeof(DCinemaSmpte2010) || ft == typeof(DCinemaSmpte2007))
             {
-                toolStripMenuItemDCinemaProperties.Visible = true;
-            }
-            else
-            {
-                toolStripMenuItemDCinemaProperties.Visible = false;
+                toolStripMenuItemFileFormatProperties.Visible = true;
+                toolStripMenuItemFileFormatProperties.Text = _language.Menu.File.FormatXProperties;
             }
 
             if (ft == typeof(TimedText10) || ft == typeof(ItunesTimedText))
             {
-                toolStripMenuItemTTProperties.Visible = true;
-            }
-            else
-            {
-                toolStripMenuItemTTProperties.Visible = false;
+                toolStripMenuItemFileFormatProperties.Visible = true;
+                toolStripMenuItemFileFormatProperties.Text = _language.Menu.File.FormatXProperties;
             }
 
-            toolStripMenuItemNuendoProperties.Visible = format.Name == "Nuendo";
-            toolStripMenuItemFcpProperties.Visible = ft == typeof(FinalCutProXml);
+            if (format.Name == "Nuendo")
+            {
+                toolStripMenuItemFileFormatProperties.Visible = true;
+                toolStripMenuItemFileFormatProperties.Text = _language.Menu.File.FormatXProperties;
+            }
         }
 
         private void toolStripMenuItemOpenContainingFolder_Click(object sender, EventArgs e)
@@ -28020,22 +28005,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void toolStripMenuItemSubStationAlpha_Click(object sender, EventArgs e)
-        {
-            if (InSourceView)
-            {
-                ReloadFromSourceView();
-            }
-
-            using (var properties = new SubStationAlphaProperties(_subtitle, GetCurrentSubtitleFormat(), VideoFileName, _videoInfo, _fileName))
-            {
-                if (properties.ShowDialog(this) == DialogResult.OK)
-                {
-                    UpdateSourceView();
-                }
-            }
-        }
-
         private static string RemoveAssAlignmentTags(string s)
         {
             return s.Replace("{\\an1}", string.Empty) // ASS tags alone
@@ -28278,26 +28247,125 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void toolStripMenuItemDCinemaProperties_Click(object sender, EventArgs e)
+        private void toolStripMenuItemFileFormatProperties_Click(object sender, EventArgs e)
         {
-            PositionAndSizeForm properties = null;
-            try
+            if (InSourceView)
             {
-                if (GetCurrentSubtitleFormat().GetType() == typeof(DCinemaInterop))
+                ReloadFromSourceView();
+            }
+
+            var format = GetCurrentSubtitleFormat();
+            var ft = format.GetType();
+            if (ft == typeof(DCinemaInterop) || ft == typeof(DCinemaSmpte2014) || ft == typeof(DCinemaSmpte2010) || ft == typeof(DCinemaSmpte2007))
+            {
+                PositionAndSizeForm properties = null;
+                try
                 {
-                    properties = new DCinema.DCinemaPropertiesInterop();
+                    if (GetCurrentSubtitleFormat().GetType() == typeof(DCinemaInterop))
+                    {
+                        properties = new DCinema.DCinemaPropertiesInterop();
+                    }
+                    else
+                    {
+                        properties = new DCinema.DCinemaPropertiesSmpte();
+                    }
+
+                    properties.ShowDialog(this);
                 }
-                else
+                finally
                 {
-                    properties = new DCinema.DCinemaPropertiesSmpte();
+                    properties?.Dispose();
+                }
+                return;
+            }
+
+            if (ft == typeof(Ebu))
+            {
+                return;
+            }
+
+
+            if (ft == typeof(AdvancedSubStationAlpha) || ft == typeof(SubStationAlpha))
+            {
+                using (var properties = new SubStationAlphaProperties(_subtitle, GetCurrentSubtitleFormat(), VideoFileName, _videoInfo, _fileName))
+                {
+                    if (properties.ShowDialog(this) == DialogResult.OK)
+                    {
+                        UpdateSourceView();
+                    }
                 }
 
-                properties.ShowDialog(this);
+                return;
             }
-            finally
+
+            if (ft == typeof(Ebu))
             {
-                properties?.Dispose();
+                using (var properties = new EbuSaveOptions())
+                {
+                    if (_subtitle != null && _subtitle.Header != null && (_subtitle.Header.Contains("STL2") || _subtitle.Header.Contains("STL3")))
+                    {
+                        var encoding = Ebu.GetEncoding(_subtitle.Header.Substring(0, 3));
+                        var buffer = encoding.GetBytes(_subtitle.Header);
+                        var header = Ebu.ReadHeader(buffer);
+                        properties.Initialize(header, Ebu.EbuUiHelper.JustificationCode, null, _subtitle);
+                    }
+                    else
+                    {
+                        var header = new Ebu.EbuGeneralSubtitleInformation();
+                        if (!string.IsNullOrEmpty(_fileName) && new Ebu().IsMine(null, _fileName))
+                        {
+                            properties.Initialize(header, Ebu.EbuUiHelper.JustificationCode, _fileName, _subtitle);
+                        }
+                        else
+                        {
+                            properties.Initialize(header, Ebu.EbuUiHelper.JustificationCode, null, _subtitle);
+                        }
+                    }
+
+                    if (properties.ShowDialog(this) == DialogResult.OK)
+                    {
+                        Ebu.EbuUiHelper.JustificationCode = properties.JustificationCode;
+                    }
+                }
+
+                return;
             }
+
+            if (ft == typeof(DvdStudioPro) || ft == typeof(DvdStudioProSpace) || ft == typeof(DvdStudioProSpaceOne) || ft == typeof(DvdStudioProSpaceOneSemicolon))
+            {
+                using (var form = new DvdStudioProProperties())
+                {
+                    form.ShowDialog(this);
+                }
+
+                return;
+            }
+
+
+            if (ft == typeof(TimedText10) || ft == typeof(ItunesTimedText))
+            {
+                using (var properties = new TimedTextProperties(_subtitle))
+                {
+                    properties.ShowDialog(this);
+                }
+                return;
+            }
+
+
+            if (format.Name == "Nuendo")
+            {
+                using (var form = new NuendoProperties())
+                {
+                    if (form.ShowDialog(this) == DialogResult.OK)
+                    {
+                        Configuration.Settings.SubtitleSettings.NuendoCharacterListFile = form.CharacterListFile;
+                    }
+                }
+
+                return;
+            }
+
+
         }
 
         private void toolStripMenuItemExportTextTimeCodePair_Click(object sender, EventArgs e)
@@ -28344,20 +28412,6 @@ namespace Nikse.SubtitleEdit.Forms
         private void textWordsPerMinutewpmToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SortSubtitle(SubtitleSortCriteria.WordsPerMinute, (sender as ToolStripItem).Text);
-        }
-
-        private void toolStripMenuItemTTPropertiesClick(object sender, EventArgs e)
-        {
-            var subtitleFormatType = GetCurrentSubtitleFormat().GetType();
-            if (subtitleFormatType != typeof(TimedText10) && subtitleFormatType != typeof(ItunesTimedText))
-            {
-                return;
-            }
-
-            using (var properties = new TimedTextProperties(_subtitle))
-            {
-                properties.ShowDialog(this);
-            }
         }
 
         private void ToolStripMenuItemSaveSelectedLinesClick(object sender, EventArgs e)
@@ -29159,17 +29213,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void ToolStripMenuItemNuendoPropertiesClick(object sender, EventArgs e)
-        {
-            using (var form = new NuendoProperties())
-            {
-                if (form.ShowDialog(this) == DialogResult.OK)
-                {
-                    Configuration.Settings.SubtitleSettings.NuendoCharacterListFile = form.CharacterListFile;
-                }
-            }
-        }
-
         private void toolStripMenuItemExportDost_Click(object sender, EventArgs e)
         {
             using (var exportBdnXmlPng = new ExportPngXml())
@@ -29342,18 +29385,6 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         Configuration.Settings.General.VideoPlayer = oldVideoPlayer;
                     }
-                }
-            }
-        }
-
-        private void toolStripMenuItemFcpProperties_Click(object sender, EventArgs e)
-        {
-            using (var form = new FcpProperties())
-            {
-                if (form.ShowDialog(this) == DialogResult.OK)
-                {
-                    Configuration.Settings.SubtitleSettings.FcpFontSize = form.FcpFontSize;
-                    Configuration.Settings.SubtitleSettings.FcpFontName = form.FcpFontName;
                 }
             }
         }
@@ -29701,37 +29732,6 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
                     RefreshSelectedParagraph();
                     RestoreSubtitleListviewIndices();
-                }
-            }
-        }
-
-        private void toolStripMenuItemEbuProperties_Click(object sender, EventArgs e)
-        {
-            using (var properties = new EbuSaveOptions())
-            {
-                if (_subtitle != null && _subtitle.Header != null && (_subtitle.Header.Contains("STL2") || _subtitle.Header.Contains("STL3")))
-                {
-                    var encoding = Ebu.GetEncoding(_subtitle.Header.Substring(0, 3));
-                    var buffer = encoding.GetBytes(_subtitle.Header);
-                    var header = Ebu.ReadHeader(buffer);
-                    properties.Initialize(header, Ebu.EbuUiHelper.JustificationCode, null, _subtitle);
-                }
-                else
-                {
-                    var header = new Ebu.EbuGeneralSubtitleInformation();
-                    if (!string.IsNullOrEmpty(_fileName) && new Ebu().IsMine(null, _fileName))
-                    {
-                        properties.Initialize(header, Ebu.EbuUiHelper.JustificationCode, _fileName, _subtitle);
-                    }
-                    else
-                    {
-                        properties.Initialize(header, Ebu.EbuUiHelper.JustificationCode, null, _subtitle);
-                    }
-                }
-
-                if (properties.ShowDialog(this) == DialogResult.OK)
-                {
-                    Ebu.EbuUiHelper.JustificationCode = properties.JustificationCode;
                 }
             }
         }
@@ -30189,14 +30189,6 @@ namespace Nikse.SubtitleEdit.Forms
                         ToolStripMenuItemAutoMergeShortLinesClick(sender, e);
                     }
                 }
-            }
-        }
-
-        private void toolStripMenuDvdStudioProperties_Click(object sender, EventArgs e)
-        {
-            using (var form = new DvdStudioProProperties())
-            {
-                form.ShowDialog(this);
             }
         }
 
@@ -31152,11 +31144,6 @@ namespace Nikse.SubtitleEdit.Forms
                     audioVisualizer.Invalidate();
                 }
             }
-        }
-
-        private void toolStripButtonAssProperties_Click(object sender, EventArgs e)
-        {
-            toolStripMenuItemSubStationAlpha_Click(null, null);
         }
 
         private void toolStripButtonAssStyleManager_Click(object sender, EventArgs e)

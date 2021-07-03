@@ -1057,12 +1057,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <Save>&amp;Save</Save>
         <SaveAs>Save &amp;as...</SaveAs>
         <RestoreAutoBackup>Restore auto-backup...</RestoreAutoBackup>
-        <AdvancedSubStationAlphaProperties>Advanced Sub Station Alpha properties...</AdvancedSubStationAlphaProperties>
-        <SubStationAlphaProperties>Sub Station Alpha properties...</SubStationAlphaProperties>
-        <EbuProperties>EBU STL properties...</EbuProperties>
-        <DvdStuioProProperties>DVD Studio Pro properties...</DvdStuioProProperties>
-        <TimedTextProperties>Timed Text properties...</TimedTextProperties>
-        <PacProperties>PAC properties...</PacProperties>
+        <FormatXProperties>{0} properties...</FormatXProperties>
         <OpenOriginal>Open original subtitle (translator mode)...</OpenOriginal>
         <SaveOriginal>Save original subtitle</SaveOriginal>
         <CloseOriginal>Close original subtitle</CloseOriginal>
