@@ -89,11 +89,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
 
-                if (!string.IsNullOrWhiteSpace(Configuration.Settings.SubtitleSettings.WebVttOverrideCueSetting))
-                {
-                    positionInfo = " " + Configuration.Settings.SubtitleSettings.WebVttOverrideCueSetting;
-                }
-
                 sb.AppendLine(string.Format(paragraphWriteFormat, start, end, positionInfo, FormatText(p), style, Environment.NewLine));
             }
             return sb.ToString().Trim();
@@ -103,39 +98,44 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             string positionInfo = string.Empty;
 
-            if (p.Text.StartsWith("{\\a", StringComparison.Ordinal))
+            if (p.Text.StartsWith("{\\an1", StringComparison.Ordinal))
             {
-                string position = null; // horizontal
-                if (p.Text.StartsWith("{\\an1}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an4}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an7}", StringComparison.Ordinal)) // advanced sub station alpha
-                {
-                    position = "20%"; //left
-                }
-                else if (p.Text.StartsWith("{\\an3}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an6}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an9}", StringComparison.Ordinal)) // advanced sub station alpha
-                {
-                    position = "80%"; //right
-                }
-
-                string line = null;
-                if (p.Text.StartsWith("{\\an7}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an8}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an9}", StringComparison.Ordinal)) // advanced sub station alpha
-                {
-                    line = "20%"; //top
-                }
-                else if (p.Text.StartsWith("{\\an4}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an5}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an6}", StringComparison.Ordinal)) // advanced sub station alpha
-                {
-                    line = "50%"; //middle
-                }
-
-                if (!string.IsNullOrEmpty(position))
-                {
-                    positionInfo = " position:" + position;
-                }
-                if (!string.IsNullOrEmpty(line))
-                {
-                    positionInfo += " line:" + line;
-                }
+                positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn1;
+            }
+            else if (p.Text.StartsWith("{\\an2", StringComparison.Ordinal))
+            {
+                positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn2;
+            }
+            else if (p.Text.StartsWith("{\\an3", StringComparison.Ordinal))
+            {
+                positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn3;
+            }
+            else if (p.Text.StartsWith("{\\an4", StringComparison.Ordinal))
+            {
+                positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn4;
+            }
+            else if (p.Text.StartsWith("{\\an5", StringComparison.Ordinal))
+            {
+                positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn5;
+            }
+            else if (p.Text.StartsWith("{\\an6", StringComparison.Ordinal))
+            {
+                positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn6;
+            }
+            else if (p.Text.StartsWith("{\\an7", StringComparison.Ordinal))
+            {
+                positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn7;
+            }
+            else if (p.Text.StartsWith("{\\an8", StringComparison.Ordinal))
+            {
+                positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn8;
+            }
+            else if (p.Text.StartsWith("{\\an9", StringComparison.Ordinal))
+            {
+                positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn9;
             }
 
-            return positionInfo;
+            return (" " + positionInfo).TrimEnd();
         }
 
         internal static string FormatText(Paragraph p)

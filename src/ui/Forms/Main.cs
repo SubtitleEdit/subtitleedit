@@ -14,6 +14,7 @@ using Nikse.SubtitleEdit.Core.SpellCheck;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Forms.Assa;
+using Nikse.SubtitleEdit.Forms.FormatProperties;
 using Nikse.SubtitleEdit.Forms.Networking;
 using Nikse.SubtitleEdit.Forms.Ocr;
 using Nikse.SubtitleEdit.Forms.Styles;
@@ -21931,19 +21932,25 @@ namespace Nikse.SubtitleEdit.Forms
             if (ft == typeof(DCinemaInterop) || ft == typeof(DCinemaSmpte2014) || ft == typeof(DCinemaSmpte2010) || ft == typeof(DCinemaSmpte2007))
             {
                 toolStripMenuItemFileFormatProperties.Visible = true;
-                toolStripMenuItemFileFormatProperties.Text = _language.Menu.File.FormatXProperties;
+                toolStripMenuItemFileFormatProperties.Text = string.Format(_language.Menu.File.FormatXProperties, ft.Name);
             }
 
             if (ft == typeof(TimedText10) || ft == typeof(ItunesTimedText))
             {
                 toolStripMenuItemFileFormatProperties.Visible = true;
-                toolStripMenuItemFileFormatProperties.Text = _language.Menu.File.FormatXProperties;
+                toolStripMenuItemFileFormatProperties.Text = string.Format(_language.Menu.File.FormatXProperties, ft.Name);
+            }
+
+            if (ft == typeof(WebVTT) || ft == typeof(WebVTTFileWithLineNumber))
+            {
+                toolStripMenuItemFileFormatProperties.Visible = true;
+                toolStripMenuItemFileFormatProperties.Text = string.Format(_language.Menu.File.FormatXProperties, ft.Name);
             }
 
             if (format.Name == "Nuendo")
             {
                 toolStripMenuItemFileFormatProperties.Visible = true;
-                toolStripMenuItemFileFormatProperties.Text = _language.Menu.File.FormatXProperties;
+                toolStripMenuItemFileFormatProperties.Text = string.Format(_language.Menu.File.FormatXProperties, ft.Name);
             }
         }
 
@@ -28276,14 +28283,9 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     properties?.Dispose();
                 }
+
                 return;
             }
-
-            if (ft == typeof(Ebu))
-            {
-                return;
-            }
-
 
             if (ft == typeof(AdvancedSubStationAlpha) || ft == typeof(SubStationAlpha))
             {
@@ -28341,7 +28343,6 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-
             if (ft == typeof(TimedText10) || ft == typeof(ItunesTimedText))
             {
                 using (var properties = new TimedTextProperties(_subtitle))
@@ -28351,6 +28352,14 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            if (ft == typeof(WebVTT) || ft == typeof(WebVTTFileWithLineNumber))
+            {
+                using (var properties = new WebVttProperties())
+                {
+                    properties.ShowDialog(this);
+                }
+                return;
+            }
 
             if (format.Name == "Nuendo")
             {
@@ -28364,8 +28373,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                 return;
             }
-
-
         }
 
         private void toolStripMenuItemExportTextTimeCodePair_Click(object sender, EventArgs e)
