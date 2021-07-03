@@ -766,6 +766,13 @@ Command line: {1} {2}
     <SolidColor>纯色</SolidColor>
     <DurationInMinutes>持续时间（分钟）</DurationInMinutes>
   </GenerateBlankVideo>
+  <GenerateVideoWithBurnedInSubs>
+    <Title>生成带有内嵌字幕的视频</Title>
+    <Info>将生成带有内嵌字幕的视频文件。
+
+注意：支持Advanced SubStation Alpha。</Info>
+    <XGeneratedWithBurnedInSubs>带有内嵌字幕的“{0}”已生成。</XGeneratedWithBurnedInSubs>
+  </GenerateVideoWithBurnedInSubs>
   <GetDictionaries>
     <Title>是否使用词典？</Title>
     <DescriptionLine1>Subtitle Edit 的拼写检查基于 NHunspell 引擎，它</DescriptionLine1>
@@ -1045,12 +1052,7 @@ Command line: {1} {2}
         <Save>保存(&amp;S)</Save>
         <SaveAs>另存为(&amp;A)...</SaveAs>
         <RestoreAutoBackup>还原自动备份...</RestoreAutoBackup>
-        <AdvancedSubStationAlphaProperties>高级 Sub Station Alpha 属性...</AdvancedSubStationAlphaProperties>
-        <SubStationAlphaProperties>Sub Station Alpha 属性...</SubStationAlphaProperties>
-        <EbuProperties>EBU STL 属性...</EbuProperties>
-        <DvdStuioProProperties>DVD Studio Pro 属性...</DvdStuioProProperties>
-        <TimedTextProperties>Timed Text 属性...</TimedTextProperties>
-        <PacProperties>PAC 属性...</PacProperties>
+        <FormatXProperties>{0} 个属性...</FormatXProperties>
         <OpenOriginal>打开原始字幕 (翻译模式)...</OpenOriginal>
         <SaveOriginal>保存原始字幕</SaveOriginal>
         <CloseOriginal>关闭原始字幕</CloseOriginal>
@@ -1164,6 +1166,7 @@ Command line: {1} {2}
         <SmptTimeMode>SMPTE 时间 (弃帧)</SmptTimeMode>
         <GenerateTextFromVideo>从视频生成文本...</GenerateTextFromVideo>
         <GenerateBlankVideo>生成空白视频...</GenerateBlankVideo>
+        <GenerateVideoWithBurnedInSub>生成带有内嵌字幕的视频...</GenerateVideoWithBurnedInSub>
         <ImportChaptersFromVideo>从视频中导入章节</ImportChaptersFromVideo>
         <GenerateImportSceneChanges>生成/导入场景切换...</GenerateImportSceneChanges>
         <RemoveSceneChanges>移除场景变更</RemoveSceneChanges>
@@ -1300,7 +1303,6 @@ Command line: {1} {2}
         <AdjustDisplayDurationForSelectedLines>调整所选行时长...</AdjustDisplayDurationForSelectedLines>
         <ApplyDurationLimitsForSelectedLines>对选定的行应用持续时间限制...</ApplyDurationLimitsForSelectedLines>
         <ApplyCustomOverrideTag>应用自定义覆盖标签...</ApplyCustomOverrideTag>
-        <SetResolution>设置分辨率</SetResolution>
         <FixCommonErrorsInSelectedLines>修复所选行常规错误...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>更改所选行大小写...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>所选行另存为...</SaveSelectedLines>
@@ -2033,6 +2035,7 @@ Command line: {1} {2}
     <RemoveBlankLines>删除空行</RemoveBlankLines>
     <ApplyAssaOverrideTags>应用ASSA覆盖标签到所选</ApplyAssaOverrideTags>
     <SetAssaPosition>设置/获取ASSA位置</SetAssaPosition>
+    <SetAssaResolution>设置ASSA分辨率(PlayResX/PlayResY)</SetAssaResolution>
     <ShowLineBreaksAs>列表视图中的换行符显示为</ShowLineBreaksAs>
     <SaveAsFileNameFrom>“另存为...”使用的文件名来源</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>双击主窗口中的行时，列表视图将</MainListViewDoubleClickAction>
