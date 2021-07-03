@@ -1425,12 +1425,7 @@
                     public string Save { get; set; }
                     public string SaveAs { get; set; }
                     public string RestoreAutoBackup { get; set; }
-                    public string AdvancedSubStationAlphaProperties { get; set; }
-                    public string SubStationAlphaProperties { get; set; }
-                    public string EbuProperties { get; set; }
-                    public string DvdStuioProProperties { get; set; }
-                    public string TimedTextProperties { get; set; }
-                    public string PacProperties { get; set; }
+                    public string FormatXProperties { get; set; }
                     public string OpenOriginal { get; set; }
                     public string SaveOriginal { get; set; }
                     public string CloseOriginal { get; set; }

@@ -3595,23 +3595,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/File/RestoreAutoBackup":
                     language.Main.Menu.File.RestoreAutoBackup = reader.Value;
                     break;
-                case "Main/Menu/File/AdvancedSubStationAlphaProperties":
-                    language.Main.Menu.File.AdvancedSubStationAlphaProperties = reader.Value;
-                    break;
-                case "Main/Menu/File/SubStationAlphaProperties":
-                    language.Main.Menu.File.SubStationAlphaProperties = reader.Value;
-                    break;
-                case "Main/Menu/File/EbuProperties":
-                    language.Main.Menu.File.EbuProperties = reader.Value;
-                    break;
-                case "Main/Menu/File/DvdStuioProProperties":
-                    language.Main.Menu.File.DvdStuioProProperties = reader.Value;
-                    break;
-                case "Main/Menu/File/TimedTextProperties":
-                    language.Main.Menu.File.TimedTextProperties = reader.Value;
-                    break;
-                case "Main/Menu/File/PacProperties":
-                    language.Main.Menu.File.PacProperties = reader.Value;
+                case "Main/Menu/File/FormatXProperties":
+                    language.Main.Menu.File.FormatXProperties = reader.Value;
                     break;
                 case "Main/Menu/File/OpenOriginal":
                     language.Main.Menu.File.OpenOriginal = reader.Value;
