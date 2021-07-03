@@ -581,7 +581,15 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public bool WebVttUseXTimestampMap { get; set; }
         public long WebVttTimescale { get; set; }
-        public string WebVttOverrideCueSetting { get; set; }
+        public string WebVttCueAn1 { get; set; }
+        public string WebVttCueAn2 { get; set; }
+        public string WebVttCueAn3 { get; set; }
+        public string WebVttCueAn4 { get; set; }
+        public string WebVttCueAn5 { get; set; }
+        public string WebVttCueAn6 { get; set; }
+        public string WebVttCueAn7 { get; set; }
+        public string WebVttCueAn8 { get; set; }
+        public string WebVttCueAn9 { get; set; }
 
         public bool TeletextItalicFix { get; set; }
         public bool MccDebug { get; set; }
@@ -643,6 +651,15 @@ $HorzAlign          =   Center
 
             WebVttTimescale = 90000;
             WebVttUseXTimestampMap = true;
+            WebVttCueAn1 = "position:20%";
+            WebVttCueAn2 = "";
+            WebVttCueAn3 = "position:80%";
+            WebVttCueAn4 = "position:20% line:50%";
+            WebVttCueAn5 = "line:50 %";
+            WebVttCueAn6 = "position:80% line:50%";
+            WebVttCueAn7 = "position:20% line:20%";
+            WebVttCueAn8 = "line:20%";
+            WebVttCueAn9 = "position:80% line:20%";
 
             TeletextItalicFix = true;
         }
@@ -5487,10 +5504,58 @@ $HorzAlign          =   Center
                     settings.SubtitleSettings.WebVttTimescale = long.Parse(subNode.InnerText, CultureInfo.InvariantCulture);
                 }
 
-                subNode = node.SelectSingleNode("WebVttOverrideCueSetting");
+                subNode = node.SelectSingleNode("WebVttCueAn1");
                 if (subNode != null)
                 {
-                    settings.SubtitleSettings.WebVttOverrideCueSetting = subNode.InnerText;
+                    settings.SubtitleSettings.WebVttCueAn1 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("WebVttCueAn2");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.WebVttCueAn2 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("WebVttCueAn3");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.WebVttCueAn3 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("WebVttCueAn4");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.WebVttCueAn4 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("WebVttCueAn5");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.WebVttCueAn5 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("WebVttCueAn6");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.WebVttCueAn6 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("WebVttCueAn7");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.WebVttCueAn7 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("WebVttCueAn8");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.WebVttCueAn8 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("WebVttCueAn9");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.WebVttCueAn9 = subNode.InnerText;
                 }
 
                 subNode = node.SelectSingleNode("TeletextItalicFix");
@@ -8867,7 +8932,15 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("CheetahCaptionAlwayWriteEndTime", settings.SubtitleSettings.CheetahCaptionAlwayWriteEndTime.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("NuendoCharacterListFile", settings.SubtitleSettings.NuendoCharacterListFile);
                 textWriter.WriteElementString("WebVttTimescale", settings.SubtitleSettings.WebVttTimescale.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WebVttOverrideCueSetting", settings.SubtitleSettings.WebVttOverrideCueSetting);
+                textWriter.WriteElementString("WebVttCueAn1", settings.SubtitleSettings.WebVttCueAn1);
+                textWriter.WriteElementString("WebVttCueAn2", settings.SubtitleSettings.WebVttCueAn2);
+                textWriter.WriteElementString("WebVttCueAn3", settings.SubtitleSettings.WebVttCueAn3);
+                textWriter.WriteElementString("WebVttCueAn4", settings.SubtitleSettings.WebVttCueAn4);
+                textWriter.WriteElementString("WebVttCueAn5", settings.SubtitleSettings.WebVttCueAn5);
+                textWriter.WriteElementString("WebVttCueAn6", settings.SubtitleSettings.WebVttCueAn6);
+                textWriter.WriteElementString("WebVttCueAn7", settings.SubtitleSettings.WebVttCueAn7);
+                textWriter.WriteElementString("WebVttCueAn8", settings.SubtitleSettings.WebVttCueAn8);
+                textWriter.WriteElementString("WebVttCueAn9", settings.SubtitleSettings.WebVttCueAn9);
                 textWriter.WriteElementString("TeletextItalicFix", settings.SubtitleSettings.TeletextItalicFix.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MccDebug", settings.SubtitleSettings.MccDebug.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WebVttUseXTimestampMap", settings.SubtitleSettings.WebVttUseXTimestampMap.ToString(CultureInfo.InvariantCulture));

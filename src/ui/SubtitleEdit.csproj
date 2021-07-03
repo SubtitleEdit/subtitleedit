@@ -301,6 +301,12 @@
     <Compile Include="Forms\ExportPngXmlDialogOpenFolder.Designer.cs">
       <DependentUpon>ExportPngXmlDialogOpenFolder.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FormatProperties\WebVttProperties.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormatProperties\WebVttProperties.Designer.cs">
+      <DependentUpon>WebVttProperties.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\GenerateVideo.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1370,6 +1376,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ExportPngXmlDialogOpenFolder.resx">
       <DependentUpon>ExportPngXmlDialogOpenFolder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormatProperties\WebVttProperties.resx">
+      <DependentUpon>WebVttProperties.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\GenerateVideo.resx">
       <DependentUpon>GenerateVideo.cs</DependentUpon>
