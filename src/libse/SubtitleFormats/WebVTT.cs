@@ -96,15 +96,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         internal static string GetPositionInfoFromAssTag(Paragraph p)
         {
-            string positionInfo = string.Empty;
-
+            string positionInfo;
             if (p.Text.StartsWith("{\\an1", StringComparison.Ordinal))
             {
                 positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn1;
-            }
-            else if (p.Text.StartsWith("{\\an2", StringComparison.Ordinal))
-            {
-                positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn2;
             }
             else if (p.Text.StartsWith("{\\an3", StringComparison.Ordinal))
             {
@@ -134,8 +129,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn9;
             }
+            else
+            {
+                positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn2;
+            }
 
-            return (" " + positionInfo).TrimEnd();
+            return (" " +  positionInfo).TrimEnd();
         }
 
         internal static string FormatText(Paragraph p)
