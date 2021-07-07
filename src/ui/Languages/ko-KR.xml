@@ -762,6 +762,13 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SolidColor>단색</SolidColor>
     <DurationInMinutes>지속시간(분)</DurationInMinutes>
   </GenerateBlankVideo>
+  <GenerateVideoWithBurnedInSubs>
+    <Title>구운 자막으로 비디오 생성</Title>
+    <Info>구운 자막이 포함된 비디오 파일을 생성합니다.
+
+참고: Advanced Substation Alpha 지원</Info>
+    <XGeneratedWithBurnedInSubs>"{0}"이 구운 자막으로 생성되었습니다.</XGeneratedWithBurnedInSubs>
+  </GenerateVideoWithBurnedInSubs>
   <GetDictionaries>
     <Title>* 사전 다운로드</Title>
     <DescriptionLine1>Subtitle Edit 맞춤법 검사는 LibreOffice의 맞춤법 검사용 엔진인</DescriptionLine1>
@@ -1046,12 +1053,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <Save>저장...</Save>
         <SaveAs>다른 이름으로 저장(&amp;A)...</SaveAs>
         <RestoreAutoBackup>자동 백업된 자막 불러오기</RestoreAutoBackup>
-        <AdvancedSubStationAlphaProperties>Advanced Sub Station Alpha(.ass)의 속성...</AdvancedSubStationAlphaProperties>
-        <SubStationAlphaProperties>Sub Station Alpha(.ssa)의 속성...</SubStationAlphaProperties>
-        <EbuProperties>EBU STL 속성...</EbuProperties>
-        <DvdStuioProProperties>DVD Studio Pro 속성...</DvdStuioProProperties>
-        <TimedTextProperties>시간 제한 텍스트 속성...</TimedTextProperties>
-        <PacProperties>PAC 속성...</PacProperties>
+        <FormatXProperties>{0} 속성...</FormatXProperties>
         <OpenOriginal>원본 자막 열기 (번역 모드)</OpenOriginal>
         <SaveOriginal>원본 자막 저장...</SaveOriginal>
         <CloseOriginal>원본 자막 닫기</CloseOriginal>
@@ -1165,6 +1167,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <SmptTimeMode>SMPTE 타이밍 (드롭 프레임)</SmptTimeMode>
         <GenerateTextFromVideo>비디오에서 텍스트 생성...</GenerateTextFromVideo>
         <GenerateBlankVideo>빈 비디오 생성...</GenerateBlankVideo>
+        <GenerateVideoWithBurnedInSub>구운 자막으로 비디오 생성...</GenerateVideoWithBurnedInSub>
         <ImportChaptersFromVideo>비디오에서 챕터 가져오기</ImportChaptersFromVideo>
         <GenerateImportSceneChanges>장면 전환 생성/가져오기...</GenerateImportSceneChanges>
         <RemoveSceneChanges>장면 전환 제거</RemoveSceneChanges>
@@ -1301,7 +1304,6 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <AdjustDisplayDurationForSelectedLines>표시시간 조정...</AdjustDisplayDurationForSelectedLines>
         <ApplyDurationLimitsForSelectedLines>선택한 줄의 표시시간 제한 적용...</ApplyDurationLimitsForSelectedLines>
         <ApplyCustomOverrideTag>사용자 지정 재정의 태그 적용...</ApplyCustomOverrideTag>
-        <SetResolution>해상도 설정 (PlayResX/PlayResY)</SetResolution>
         <FixCommonErrorsInSelectedLines>일반 오류 수정...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>대/소문자 바꾸기</ChangeCasingForSelectedLines>
         <SaveSelectedLines>선택한 줄 저장...</SaveSelectedLines>
@@ -2039,6 +2041,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <RemoveBlankLines>빈 줄 제거</RemoveBlankLines>
     <ApplyAssaOverrideTags>ASSA 재정의 태그 선택 적용</ApplyAssaOverrideTags>
     <SetAssaPosition>ASSA 위치 설정/얻기</SetAssaPosition>
+    <SetAssaResolution>ASSA 해상도 설정 (PlayResX/PlayResY)</SetAssaResolution>
     <ShowLineBreaksAs>다음 기호로 줄바꿈 표시</ShowLineBreaksAs>
     <SaveAsFileNameFrom>"다른 이름으로 저장..."에서 사용하는 파일 이름</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>「자막 보기」에서 줄을 더블 클릭하면 다음 실행:</MainListViewDoubleClickAction>
@@ -2437,9 +2440,9 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
   </SettingsFfmpeg>
   <SetVideoOffset>
     <Title>비디오 오프셋 설정</Title>
-    <Description>비디오 오프셋 설정 (자막이 실제 비디오 시간을 따를 필요는 없다, 하지만 +10시간이라면...)</Description>
+    <Description>비디오 오프셋 설정 (자막은 실제 비디오 시간을 따를수 밖에 없다. 예를들어 +10시간)</Description>
     <RelativeToCurrentVideoPosition>현재 비디오 위치 기준</RelativeToCurrentVideoPosition>
-    <KeepTimeCodes>기존 타임코드 유지 (비디오 오프셋을 추가하지 마시오!)</KeepTimeCodes>
+    <KeepTimeCodes>기존 타임코드 유지 (비디오 오프셋 추가 안함)</KeepTimeCodes>
     <Reset>초기화</Reset>
   </SetVideoOffset>
   <ShowEarlierLater>
