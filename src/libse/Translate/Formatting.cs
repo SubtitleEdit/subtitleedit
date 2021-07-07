@@ -19,6 +19,8 @@ namespace Nikse.SubtitleEdit.Core.Translate
         private bool AutoBreak { get; set; }
         private bool SquareBrackets { get; set; }
         private bool SquareBracketsUppercase { get; set; }
+        public bool Parentheses { get; set; }
+        public bool ParenthesesUppercase { get; set; }
         private int BreakNumberOfLines { get; set; }
         private bool BreakSplitAtLineEnding { get; set; }
         private bool BreakIsDialog { get; set; }
@@ -65,10 +67,11 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 text = text.Remove(text.Length - "</font>".Length);
             }
 
+            int lineCount = Utilities.GetNumberOfLines(text);
             // Square brackets
             if (text.StartsWith("[", StringComparison.Ordinal) && text.EndsWith("]", StringComparison.Ordinal) &&
-                Utilities.GetNumberOfLines(text) == 1 && Utilities.CountTagInText(text, "[") == 1 &&
-                Utilities.GetNumberOfLines(text) == 1 && Utilities.CountTagInText(text, "]") == 1)
+                lineCount == 1 && Utilities.CountTagInText(text, "[") == 1 &&
+                Utilities.CountTagInText(text, "]") == 1)
             {
                 if (text == text.ToUpperInvariant())
                 {
@@ -79,7 +82,25 @@ namespace Nikse.SubtitleEdit.Core.Translate
                     SquareBrackets = true;
                 }
 
-                text = text.Replace("[", string.Empty).Replace("]", string.Empty);
+                // [foobar] => foobar
+                text = text.Substring(1, text.Length - 2);
+            }
+            // parentheses
+            else if (text.StartsWith("(", StringComparison.Ordinal) && text.EndsWith(")", StringComparison.Ordinal) &&
+                     lineCount == 1 && Utilities.CountTagInText(text, "(") == 1 &&
+                     Utilities.CountTagInText(text, ")") == 1)
+            {
+                if (text == text.ToUpperInvariant())
+                {
+                    ParenthesesUppercase = true;
+                }
+                else
+                {
+                    Parentheses = true;
+                }
+
+                // (foobar) => foobar
+                text = text.Substring(1, text.Length - 2);
             }
 
             // Un-break line
@@ -118,6 +139,16 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 text = "[" + text.Trim() + "]";
             }
 
+            // parentheses
+            if (ParenthesesUppercase)
+            {
+                text = "(" + text.ToUpperInvariant().Trim() + ")";
+            }
+            else if (Parentheses)
+            {
+                text = "(" + text.Trim() + ")";
+            }
+
             // Italic tags
             if (ItalicTwoLines)
             {
@@ -126,6 +157,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 {
                     sb.AppendLine("<i>" + line + "</i>");
                 }
+
                 text = sb.ToString().Trim();
             }
             else if (Italic)
@@ -151,9 +183,9 @@ namespace Nikse.SubtitleEdit.Core.Translate
             BreakNumberOfLines = lines.Count;
             BreakSplitAtLineEnding = lines.Count == 2 && lines[0].HasSentenceEnding();
             BreakIsDialog = lines.Count == 2 &&
-                       (lines[0].StartsWith('-') || lines[0].StartsWith("<i>-", StringComparison.Ordinal)) &&
-                       lines[1].StartsWith('-') &&
-                       Utilities.CountTagInText(source, '-') == 2;
+                            (lines[0].StartsWith('-') || lines[0].StartsWith("<i>-", StringComparison.Ordinal)) &&
+                            lines[1].StartsWith('-') &&
+                            Utilities.CountTagInText(source, '-') == 2;
             return Utilities.UnbreakLine(text);
         }
 
