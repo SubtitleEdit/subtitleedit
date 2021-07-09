@@ -26,10 +26,10 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 }
                 else if (p.Text.SplitToLines().Count == 2 && p.Text.Contains(Environment.NewLine) &&
                     p.Text.Replace(Environment.NewLine, " ").Replace("  ", " ").CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) <= controller.SingleLineMaxLength &&
-                    p.Text != Utilities.AutoBreakLine(p.Text, controller.Language))
+                    p.Text != Utilities.AutoBreakLine(p.Text, controller.SingleLineMaxLength, controller.SingleLineMaxLength + 1, controller.Language))
                 {
                     var fixedParagraph = new Paragraph(p, false);
-                    fixedParagraph.Text = Utilities.AutoBreakLine(fixedParagraph.Text, controller.SingleLineMaxLength, controller.SingleLineMaxLength - 3, controller.Language);
+                    fixedParagraph.Text = Utilities.AutoBreakLine(fixedParagraph.Text, controller.SingleLineMaxLength, controller.SingleLineMaxLength + 1, controller.Language);
                     string comment = "Text can fit on one line";
                     controller.AddRecord(p, fixedParagraph, comment);
                 }
