@@ -54,7 +54,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonOK_Click(object sender, EventArgs e)
         {
             buttonOK.Enabled = false;
-            using (var saveDialog = new SaveFileDialog { FileName = string.Empty, Filter = "Matroska|*.mkv|MP4|*.mp4|WebM|*.webm" })
+            using (var saveDialog = new SaveFileDialog { FileName = string.Empty, Filter = "MP4|*.mp4|Matroska|*.mkv|WebM|*.webm" })
             {
                 if (saveDialog.ShowDialog(this) != DialogResult.OK)
                 {
