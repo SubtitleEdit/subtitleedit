@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             Name = "Default";
             FontName = "Arial";
-            FontSize = 20F;
+            FontSize = 50F;
             Primary = Color.White;
             Secondary = Color.Yellow;
             Outline = Color.Black;

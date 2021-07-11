@@ -2225,7 +2225,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                                 }
                                 else if (i == borderStyleIndex)
                                 {
-                                    if (f.Length != 0 && !"123".Contains(f))
+                                    if (f.Length != 0 && !"1234".Contains(f))
                                     {
                                         sb.AppendLine("'BorderStyle' incorrect: " + rawLine);
                                         sb.AppendLine();

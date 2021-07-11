@@ -139,6 +139,12 @@
     <Compile Include="Forms\Assa\AssaTagTemplate.Designer.cs">
       <DependentUpon>AssaTagTemplate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Assa\Styles.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Assa\Styles.Designer.cs">
+      <DependentUpon>Styles.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Assa\TagHistory.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1294,6 +1300,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Assa\AssaTagTemplate.resx">
       <DependentUpon>AssaTagTemplate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Assa\Styles.resx">
+      <DependentUpon>Styles.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Assa\TagHistory.resx">
       <DependentUpon>TagHistory.cs</DependentUpon>
