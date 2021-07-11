@@ -768,6 +768,13 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <SolidColor>Cor sólida</SolidColor>
     <DurationInMinutes>Duração em minutos</DurationInMinutes>
   </GenerateBlankVideo>
+  <GenerateVideoWithBurnedInSubs>
+    <Title>Gerar vídeo com legenda embutida</Title>
+    <Info>Irá gerar um ficheiro de vídeo com legenda embutida.
+
+Nota: Suporte a Advanced Substation Alpha.</Info>
+    <XGeneratedWithBurnedInSubs>"{0}" gerado com legenda embutida.</XGeneratedWithBurnedInSubs>
+  </GenerateVideoWithBurnedInSubs>
   <GetDictionaries>
     <Title>Precisa de dicionários?</Title>
     <DescriptionLine1>A revisão ortográfica do Subtitle Edit é baseada no mecanismo NHunspell</DescriptionLine1>
@@ -1051,12 +1058,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <Save>&amp;Guardar</Save>
         <SaveAs>Guardar &amp;como...</SaveAs>
         <RestoreAutoBackup>Restaurar cópia de segurança automática...</RestoreAutoBackup>
-        <AdvancedSubStationAlphaProperties>Advanced Sub Station Alpha propriedades...</AdvancedSubStationAlphaProperties>
-        <SubStationAlphaProperties>Sub Station Alpha propriedades...</SubStationAlphaProperties>
-        <EbuProperties>EBU STL propriedades...</EbuProperties>
-        <DvdStuioProProperties>DVD Studio Pro propriedades...</DvdStuioProProperties>
-        <TimedTextProperties>Propriedades de Timed Text...</TimedTextProperties>
-        <PacProperties>PAC propriedades...</PacProperties>
+        <FormatXProperties>{0} propriedades...</FormatXProperties>
         <OpenOriginal>Abrir legenda original (modo tradutor)...</OpenOriginal>
         <SaveOriginal>Guardar legenda original</SaveOriginal>
         <CloseOriginal>Fechar legenda original</CloseOriginal>
@@ -1170,6 +1172,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <SmptTimeMode>SMPTE temporização (drop frame)</SmptTimeMode>
         <GenerateTextFromVideo>Gerar texto a partir do vídeo...</GenerateTextFromVideo>
         <GenerateBlankVideo>Gerar vídeo em branco...</GenerateBlankVideo>
+        <GenerateVideoWithBurnedInSub>Gerar vídeo com a legenda embutida...</GenerateVideoWithBurnedInSub>
         <ImportChaptersFromVideo>Importar capítulos do vídeo</ImportChaptersFromVideo>
         <GenerateImportSceneChanges>Gerar/Importar mudanças de cena...</GenerateImportSceneChanges>
         <RemoveSceneChanges>Eliminar mudanças de cena</RemoveSceneChanges>
@@ -1290,31 +1293,30 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <RemoveFormattingAlignment>Eliminar alinhamento</RemoveFormattingAlignment>
         <Underline>Sublinhado</Underline>
         <Box>Caixa</Box>
-        <Color>Cor</Color>
-        <FontName>Tipo de letra</FontName>
+        <Color>Cor...</Color>
+        <FontName>Tipo de letra...</FontName>
         <Superscript>Superscript</Superscript>
         <Subscript>Subscript</Subscript>
-        <Alignment>Alinhamento</Alignment>
-        <AutoBalanceSelectedLines>Auto-ajustar linhas seleccionadas</AutoBalanceSelectedLines>
-        <RemoveLineBreaksFromSelectedLines>Eliminar quebras de linha das linhas seleccionadas</RemoveLineBreaksFromSelectedLines>
-        <TypewriterEffect>Efeito máquina de escrever</TypewriterEffect>
-        <KaraokeEffect>Efeito Karaoke</KaraokeEffect>
-        <ShowSelectedLinesEarlierLater>Mostrar linhas seleccionadas antes/depois</ShowSelectedLinesEarlierLater>
-        <VisualSyncSelectedLines>Sincronia visual das linhas seleccionadas</VisualSyncSelectedLines>
+        <Alignment>Alinhamento...</Alignment>
+        <AutoBalanceSelectedLines>Auto-ajustar linhas seleccionadas...</AutoBalanceSelectedLines>
+        <RemoveLineBreaksFromSelectedLines>Eliminar quebras de linha das linhas seleccionadas...</RemoveLineBreaksFromSelectedLines>
+        <TypewriterEffect>Efeito máquina de escrever...</TypewriterEffect>
+        <KaraokeEffect>Efeito Karaoke...</KaraokeEffect>
+        <ShowSelectedLinesEarlierLater>Mostrar linhas seleccionadas antes/depois...</ShowSelectedLinesEarlierLater>
+        <VisualSyncSelectedLines>Sincronia visual das linhas seleccionadas...</VisualSyncSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Google/Microsoft traduzir linha original</GoogleAndMicrosoftTranslateSelectedLine>
         <TranslateSelectedLines>Traduzir linhas seleccionadas...</TranslateSelectedLines>
-        <AdjustDisplayDurationForSelectedLines>Ajustar duração das linhas seleccionadas</AdjustDisplayDurationForSelectedLines>
+        <AdjustDisplayDurationForSelectedLines>Ajustar duração das linhas seleccionadas...</AdjustDisplayDurationForSelectedLines>
         <ApplyDurationLimitsForSelectedLines>Aplicar limites de duração às linhas seleccionadas...</ApplyDurationLimitsForSelectedLines>
         <ApplyCustomOverrideTag>Aplicar etiquetas de substituição personalizadas...</ApplyCustomOverrideTag>
-        <SetResolution>Definir resolução (PlayResX/PlayResY)</SetResolution>
-        <FixCommonErrorsInSelectedLines>Corrigir erros frequentes nas linhas seleccionadas</FixCommonErrorsInSelectedLines>
-        <ChangeCasingForSelectedLines>Alterar Maiúsculas/Minúsculas nas linhas seleccionadas</ChangeCasingForSelectedLines>
+        <FixCommonErrorsInSelectedLines>Corrigir erros frequentes nas linhas seleccionadas...</FixCommonErrorsInSelectedLines>
+        <ChangeCasingForSelectedLines>Alterar Maiúsculas/Minúsculas nas linhas seleccionadas...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Guardar linhas seleccionadas como...</SaveSelectedLines>
-        <WebVTTSetNewVoice>Definir nova voz</WebVTTSetNewVoice>
+        <WebVTTSetNewVoice>Definir nova voz...</WebVTTSetNewVoice>
         <WebVTTRemoveVoices>Eliminar vozes</WebVTTRemoveVoices>
         <NewActor>Novo actor...</NewActor>
         <RemoveActors>Eliminar actores</RemoveActors>
-        <EditBookmark>Editar marcador</EditBookmark>
+        <EditBookmark>Editar marcador...</EditBookmark>
         <RemoveBookmark>Eliminar marcador</RemoveBookmark>
         <GoToSourceView>Ir para a lista Original</GoToSourceView>
         <GoToListView>Ir para a Lista</GoToListView>
@@ -2044,6 +2046,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <RemoveBlankLines>Eliminar linhas em branco</RemoveBlankLines>
     <ApplyAssaOverrideTags>Aplicar etiquetas de substituição ASSA à selecção</ApplyAssaOverrideTags>
     <SetAssaPosition>Definir/obter posição ASSA</SetAssaPosition>
+    <SetAssaResolution>Definir resolução ASSA (PlayResX/PlayResY)</SetAssaResolution>
     <ShowLineBreaksAs>Ver quebras de linha na "Lista" da janela principal como:</ShowLineBreaksAs>
     <SaveAsFileNameFrom>"Guardar como..." usa o nome do ficheiro de:</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>Ao clicar duas vezes na linha de texto na janela principal irá...</MainListViewDoubleClickAction>
@@ -2266,6 +2269,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ToggleFocus>Alternar o enfoque entre a caixa de texto da legenda e o separador (Lista) na janela principal</ToggleFocus>
     <ToggleFocusWaveform>Alternar o enfoque entre a lista e waveform/espectrograma</ToggleFocusWaveform>
     <ToggleDialogDashes>Alternar travessões</ToggleDialogDashes>
+    <ToggleQuotes>Alternar aspas</ToggleQuotes>
     <ToggleMusicSymbols>Alternar símbolos de música</ToggleMusicSymbols>
     <Alignment>Alinhamento (linhas seleccionadas)</Alignment>
     <AlignmentN1>Alinhamento inferior esquerdo - {\an1}</AlignmentN1>
@@ -2392,6 +2396,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <MainTextBoxAutoBreakFromPosAndGoToNext>Quebrar no primeiro espaço a partir da posição do cursor e ir para o próximo</MainTextBoxAutoBreakFromPosAndGoToNext>
     <MainTextBoxUnbreak>Eliminar quebra de linha</MainTextBoxUnbreak>
     <MainTextBoxUnbreakNoSpace>Eliminar quebra sem espaço em branco (CJK)</MainTextBoxUnbreakNoSpace>
+    <MainTextBoxAssaIntellisense>Mostrar ajuda da etiqueta ASSA</MainTextBoxAssaIntellisense>
+    <MainTextBoxAssaRemoveTag>Remover a etiqueta ASSA no cursor</MainTextBoxAssaRemoveTag>
     <MainFileSaveAll>Guardar tudo</MainFileSaveAll>
     <Miscellaneous>Diversos</Miscellaneous>
     <CpsIncludesSpace>Caracteres/seg (CPS) incluindo espaços</CpsIncludesSpace>
