@@ -27930,22 +27930,32 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemAssStyles_Click(object sender, EventArgs e)
         {
-            StylesForm styles = null;
-            try
+            var format = GetCurrentSubtitleFormat();
+            var formatType = format.GetType();
+            if (formatType == typeof(AdvancedSubStationAlpha))
             {
-                var format = GetCurrentSubtitleFormat();
-                var formatType = format.GetType();
-                if (formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha))
+                using (var assaStyles = new Assa.Styles(_subtitle, format, this))
                 {
-                    styles = new SubStationAlphaStyles(_subtitle, format, this);
-                    if (styles.ShowDialog(this) == DialogResult.OK)
+                    if (assaStyles.ShowDialog(this) == DialogResult.OK)
                     {
-                        ApplyAssaStyles(styles);
+                        ApplyAssaStyles(assaStyles);
                     }
                 }
-                else if (formatType == typeof(TimedText10) || formatType == typeof(ItunesTimedText))
+            }
+            else if (formatType == typeof(SubStationAlpha))
+            {
+                using (var styles = new SubStationAlphaStyles(_subtitle, format, this))
                 {
-                    styles = new TimedTextStyles(_subtitle);
+                    if (styles.ShowDialog(this) == DialogResult.OK)
+                    {
+                        ApplySsaStyles(styles);
+                    }
+                }
+            }
+            else if (formatType == typeof(TimedText10) || formatType == typeof(ItunesTimedText))
+            {
+                using (var styles = new TimedTextStyles(_subtitle))
+                {
                     if (styles.ShowDialog(this) == DialogResult.OK)
                     {
                         if (_subtitle.Header != styles.Header)
@@ -27957,15 +27967,12 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            finally
-            {
-                mediaPlayer.LastParagraph = null;
-                UiUtil.ShowSubtitle(_subtitle, mediaPlayer);
-                styles?.Dispose();
-            }
+
+            mediaPlayer.LastParagraph = null;
+            UiUtil.ShowSubtitle(_subtitle, mediaPlayer);
         }
 
-        public void ApplyAssaStyles(StylesForm styles)
+        public void ApplySsaStyles(StylesForm styles)
         {
             if (_subtitle.Header != styles.Header)
             {
@@ -27977,6 +27984,40 @@ namespace Nikse.SubtitleEdit.Forms
             if ((styles as SubStationAlphaStyles).RenameActions.Count > 0)
             {
                 foreach (var renameAction in (styles as SubStationAlphaStyles).RenameActions)
+                {
+                    for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
+                    {
+                        var p = _subtitle.Paragraphs[i];
+                        if (p.Extra == renameAction.OldName)
+                        {
+                            p.Extra = renameAction.NewName;
+                        }
+                    }
+                }
+
+                CleanRemovedStyles(styleList);
+                SaveSubtitleListviewIndices();
+                SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                RestoreSubtitleListviewIndices();
+            }
+            else
+            {
+                CleanRemovedStyles(styleList);
+            }
+        }
+
+        public void ApplyAssaStyles(Assa.Styles styles)
+        {
+            if (_subtitle.Header != styles.Header)
+            {
+                MakeHistoryForUndo(styles.Text);
+            }
+
+            _subtitle.Header = styles.Header;
+            var styleList = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
+            if (styles.RenameActions.Count > 0)
+            {
+                foreach (var renameAction in styles.RenameActions)
                 {
                     for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
                     {
@@ -30806,8 +30847,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch
                 {
-                    // Ignore
-                }
+                // Ignore
+            }
             });
         }
 
