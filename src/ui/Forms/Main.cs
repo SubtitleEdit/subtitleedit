@@ -27934,7 +27934,9 @@ namespace Nikse.SubtitleEdit.Forms
             var formatType = format.GetType();
             if (formatType == typeof(AdvancedSubStationAlpha))
             {
-                using (var assaStyles = new Assa.Styles(_subtitle, format, this))
+                var p = _subtitle.GetParagraphOrDefault(FirstSelectedIndex);
+                var currentStyleName = p == null ? string.Empty : p.Extra;
+                using (var assaStyles = new Assa.Styles(_subtitle, format, this, currentStyleName))
                 {
                     if (assaStyles.ShowDialog(this) == DialogResult.OK)
                     {

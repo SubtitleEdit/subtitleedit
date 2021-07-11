@@ -56,7 +56,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private ListView ActiveListView => _fileStyleActive ? listViewStyles : listViewStorage;
 
-        public Styles(Subtitle subtitle, SubtitleFormat format, Main mainForm)
+        public Styles(Subtitle subtitle, SubtitleFormat format, Main mainForm, string currentStyleName)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -296,7 +296,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
-            InitializeStylesListView();
+            InitializeStylesListView(currentStyleName);
             listViewStorage_SelectedIndexChanged(this, EventArgs.Empty);
             UiUtil.FixLargeFonts(this, buttonCancel);
 
@@ -638,7 +638,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             privateFontCollection.Dispose();
         }
 
-        private void InitializeStylesListView()
+        private void InitializeStylesListView(string currentStyleName)
         {
             if (_currentFileStyles.Count == 0)
             {
@@ -646,12 +646,22 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
 
             listViewStyles.Items.Clear();
+            var selectionSet = false;
             foreach (var style in _currentFileStyles)
             {
                 AddStyle(listViewStyles, style, _subtitle, _isSubStationAlpha);
+                if (style.Name == currentStyleName)
+                {
+                    listViewStyles.Items[listViewStyles.Items.Count - 1].Selected = true;
+                    selectionSet = true;
+                }
+                else
+                {
+                    listViewStyles.Items[listViewStyles.Items.Count - 1].Selected = false;
+                }
             }
 
-            if (listViewStyles.Items.Count > 0)
+            if (listViewStyles.Items.Count > 0 && !selectionSet)
             {
                 listViewStyles.Items[0].Selected = true;
             }
@@ -1466,7 +1476,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             if (listViewStyles.Items.Count == 0)
             {
-                InitializeStylesListView();
+                InitializeStylesListView(string.Empty);
             }
 
             UpdateSelectedIndices(listViewStyles);
@@ -1486,7 +1496,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             listViewStyles.Items.Clear();
             _currentFileStyles.Clear();
-            InitializeStylesListView();
+            InitializeStylesListView(string.Empty);
             UpdateSelectedIndices(listViewStyles);
         }
 
