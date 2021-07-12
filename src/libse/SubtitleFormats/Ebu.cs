@@ -875,6 +875,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             header.TotalNumberOfSubtitles = subtitle.Paragraphs.Count.ToString("D5"); // seems to be 1 higher than actual number of subtitles
             header.TotalNumberOfTextAndTimingInformationBlocks = header.TotalNumberOfSubtitles;
+            header.TotalNumberOfSubtitleGroups = "001";
 
             var today = $"{DateTime.Now:yyMMdd}";
             if (today.Length == 6)
