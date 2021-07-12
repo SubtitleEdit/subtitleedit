@@ -9571,7 +9571,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
 
-                        var lang = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
+                        var lang = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle, 50);
                         var abl = Utilities.AutoBreakLine(s, lang).SplitToLines();
                         if (abl.Count > maxLines || abl.Any(li => li.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) > Configuration.Settings.General.SubtitleLineMaximumLength))
                         {
@@ -9595,7 +9595,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                var lang = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
+                var lang = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle, 50);
                 var abl = Utilities.AutoBreakLine(s, lang).SplitToLines();
                 if (abl.Count > maxLines || abl.Any(li => li.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) > Configuration.Settings.General.SubtitleLineMaximumLength) &&
                     !textBoxListViewTextOriginal.Visible)
