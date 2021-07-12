@@ -901,6 +901,11 @@ $HorzAlign          =   Center
                 sb.Append(nameof(FixDialogsOnOneLineTicked) + ";");
             }
 
+            if (RemoveDialogFirstLineInNonDialogs)
+            {
+                sb.Append(nameof(RemoveDialogFirstLineInNonDialogs) + ";");
+            }
+
             if (TurkishAnsiTicked)
             {
                 sb.Append(nameof(TurkishAnsiTicked) + ";");
@@ -984,6 +989,7 @@ $HorzAlign          =   Center
             FixOcrErrorsViaReplaceListTicked = list.Contains(nameof(FixOcrErrorsViaReplaceListTicked));
             RemoveSpaceBetweenNumberTicked = list.Contains(nameof(RemoveSpaceBetweenNumberTicked));
             FixDialogsOnOneLineTicked = list.Contains(nameof(FixDialogsOnOneLineTicked));
+            RemoveDialogFirstLineInNonDialogs = list.Contains(nameof(RemoveDialogFirstLineInNonDialogs));
             TurkishAnsiTicked = list.Contains(nameof(TurkishAnsiTicked));
             DanishLetterITicked = list.Contains(nameof(DanishLetterITicked));
             SpanishInvertedQuestionAndExclamationMarksTicked = list.Contains(nameof(SpanishInvertedQuestionAndExclamationMarksTicked));
@@ -5834,6 +5840,12 @@ $HorzAlign          =   Center
                 settings.CommonErrors.FixDialogsOnOneLineTicked = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("RemoveDialogFirstLineInNonDialogs");
+            if (subNode != null)
+            {
+                settings.CommonErrors.RemoveDialogFirstLineInNonDialogs = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("TurkishAnsiTicked");
             if (subNode != null)
             {
@@ -8997,6 +9009,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("FixOcrErrorsViaReplaceListTicked", settings.CommonErrors.FixOcrErrorsViaReplaceListTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("RemoveSpaceBetweenNumberTicked", settings.CommonErrors.RemoveSpaceBetweenNumberTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FixDialogsOnOneLineTicked", settings.CommonErrors.FixDialogsOnOneLineTicked.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("RemoveDialogFirstLineInNonDialogs", settings.CommonErrors.RemoveDialogFirstLineInNonDialogs.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("TurkishAnsiTicked", settings.CommonErrors.TurkishAnsiTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DanishLetterITicked", settings.CommonErrors.DanishLetterITicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SpanishInvertedQuestionAndExclamationMarksTicked", settings.CommonErrors.SpanishInvertedQuestionAndExclamationMarksTicked.ToString(CultureInfo.InvariantCulture));
