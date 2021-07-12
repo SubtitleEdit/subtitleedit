@@ -573,7 +573,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public async Task CheckForLanguageChange(Subtitle subtitle)
         {
-            var detectedLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
+            var detectedLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle, 100);
             if (CurrentLanguage != detectedLanguage)
             {
                 DisposeHunspellAndDictionaries();
@@ -590,7 +590,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             if (_spellCheckWordLists is null && _hunspell is null)
             {
-                var detectedLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
+                var detectedLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle, 100);
                 var downloadedDictionaries = Utilities.GetDictionaryLanguagesCultureNeutral();
                 var isDictionaryAvailable = false;
                 foreach (var downloadedDictionary in downloadedDictionaries)

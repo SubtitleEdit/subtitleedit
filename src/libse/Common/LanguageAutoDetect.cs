@@ -655,6 +655,43 @@ namespace Nikse.SubtitleEdit.Core.Common
             return AutoDetectGoogleLanguageOrNull(subtitle) ?? "en";
         }
 
+        public static string AutoDetectGoogleLanguage(Subtitle subtitle, int maxNumberOfSubtitlesToCheck)
+        {
+            const int averageLength = 40;
+            int max = subtitle.Paragraphs.Count;
+            var sb = new StringBuilder(max * averageLength);
+            int index = 0;
+            int emptyLines = 0;
+            while (index < max && index < maxNumberOfSubtitlesToCheck + emptyLines)
+            {
+                var text = subtitle.Paragraphs[index].Text;
+                if (string.IsNullOrEmpty(text))
+                {
+                    emptyLines++;
+                }
+                else
+                {
+                    sb.AppendLine();
+                }
+
+                index++;
+            }
+
+            var allText = sb.ToString();
+            string languageId = AutoDetectGoogleLanguage(allText, maxNumberOfSubtitlesToCheck / 14);
+            if (string.IsNullOrEmpty(languageId))
+            {
+                languageId = GetEncodingViaLetter(allText);
+            }
+
+            if (string.IsNullOrEmpty(languageId))
+            {
+                return "en";
+            }
+
+            return languageId;
+        }
+
         public static string AutoDetectGoogleLanguageOrNull(Subtitle subtitle)
         {
             var s = new Subtitle(subtitle);
