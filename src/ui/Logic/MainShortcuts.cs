@@ -77,6 +77,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainGeneralGoToPreviousBookmark { get; set; }
         public Keys MainGeneralGoToNextBookmark { get; set; }
         public Keys MainGeneralChooseProfile { get; set; }
+        public Keys MainGeneralOpenDataFolder { get; set; }
         public Keys MainGeneralDuplicateLine { get; set; }
         public Keys MainGeneralToggleView { get; set; }
         public Keys MainGeneralToggleMode { get; set; }
@@ -273,6 +274,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainGeneralGoToPreviousBookmark = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPreviousBookmark);
             MainGeneralGoToNextBookmark = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextBookmark);
             MainGeneralChooseProfile = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralChooseProfile);
+            MainGeneralOpenDataFolder = UiUtil.GetKeys(Configuration.Settings.Shortcuts.OpenDataFolder);
             MainGeneralDuplicateLine = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralDuplicateLine);
             MainGeneralToggleView = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleView);
             MainGeneralToggleMode = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleMode);

@@ -2176,6 +2176,7 @@
             public string GoToPreviousBookmark { get; set; }
             public string GoToNextBookmark { get; set; }
             public string ChooseProfile { get; set; }
+            public string OpenDataFolder { get; set; }
             public string DuplicateLine { get; set; }
             public string ToggleView { get; set; }
             public string ToggleMode { get; set; }
