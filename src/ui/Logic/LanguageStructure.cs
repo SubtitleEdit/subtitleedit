@@ -2882,6 +2882,8 @@
             public string ScaleY { get; set; }
             public string Spacing { get; set; }
             public string Angle { get; set; }
+            public string BoxPerLine { get; set; }
+            public string BoxMultiLine { get; set; }
         }
 
         public class SubStationAlphaStylesCategoriesManager

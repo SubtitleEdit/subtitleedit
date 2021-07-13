@@ -2592,7 +2592,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <Vertical>Pystysuunta</Vertical>
     <Border>Reunus</Border>
     <PlusShadow>+ Varjo</PlusShadow>
-    <OpaqueBox>Läpinäkymätön laatikko (käyttää ääriviivaväriä)</OpaqueBox>
+    <OpaqueBox>Läpinäkymätön laatikko</OpaqueBox>
     <Import>Tuo</Import>
     <Export>Vie</Export>
     <Copy>Kopioi</Copy>

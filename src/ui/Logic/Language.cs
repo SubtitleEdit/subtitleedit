@@ -3001,7 +3001,7 @@ can edit in same subtitle file (collaboration)",
                 Vertical = "Vertical",
                 Border = "Border",
                 PlusShadow = "+ Shadow",
-                OpaqueBox = "Opaque box (uses outline color)",
+                OpaqueBox = "Opaque box",
                 Import = "Import...",
                 Export = "Export...",
                 New = "New",
@@ -3029,6 +3029,8 @@ can edit in same subtitle file (collaboration)",
                 ScaleY = "ScaleY",
                 Spacing = "Spacing",
                 Angle = "Angle",
+                BoxPerLine = "Box per line (use outline color)",
+                BoxMultiLine = "One box (use shadow color)",
             };
 
             SubStationAlphaStylesCategoriesManager = new LanguageStructure.SubStationAlphaStylesCategoriesManager

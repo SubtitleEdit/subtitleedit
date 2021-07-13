@@ -227,6 +227,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 w = (int)graphics.MeasureString(buttonBackColor.Text, Font).Width;
                 buttonBackColor.Width = w + 15;
                 panelBackColor.Left = buttonBackColor.Left + buttonBackColor.Width + 4;
+
+                var w1 = (int)graphics.MeasureString(l.BoxPerLine, Font).Width + 5;
+                var w2 = (int)graphics.MeasureString(l.BoxMultiLine, Font).Width + 5;
+                comboBoxOpaqueBoxStyle.DropDownWidth = Math.Max(w1, w2);
             }
 
             if (_isSubStationAlpha)
@@ -288,8 +292,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
 
             comboBoxOpaqueBoxStyle.Items.Clear();
-            comboBoxOpaqueBoxStyle.Items.Add(LanguageSettings.Current.ExportPngXml.BoxSingleLine);
-            comboBoxOpaqueBoxStyle.Items.Add(LanguageSettings.Current.ExportPngXml.BoxMultiLine);
+            comboBoxOpaqueBoxStyle.Items.Add(l.BoxPerLine);
+            comboBoxOpaqueBoxStyle.Items.Add(l.BoxMultiLine);
             comboBoxOpaqueBoxStyle.SelectedIndex = 0;
 
             buttonApply.Text = LanguageSettings.Current.General.Apply;

@@ -2642,7 +2642,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <Vertical>Lodret</Vertical>
     <Border>Kant</Border>
     <PlusShadow>+ Skygge</PlusShadow>
-    <OpaqueBox>Kasse (bruger konturfarve)</OpaqueBox>
+    <OpaqueBox>Kasse</OpaqueBox>
     <Import>Importer...</Import>
     <Export>Eksporter...</Export>
     <Copy>Kopi</Copy>

@@ -2641,7 +2641,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Vertical>Κάθετο</Vertical>
     <Border>Όριο</Border>
     <PlusShadow>+ Σκιά</PlusShadow>
-    <OpaqueBox>Συμπαγές πλαίσιο (χρήση χρώματος περιγράμματος)</OpaqueBox>
+    <OpaqueBox>Συμπαγές πλαίσιο</OpaqueBox>
     <Import>Εισαγωγή…</Import>
     <Export>Εξαγωγή…</Export>
     <Copy>Αντιγραφή</Copy>

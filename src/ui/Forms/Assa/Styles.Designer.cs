@@ -550,7 +550,7 @@
             this.comboBoxOpaqueBoxStyle.FormattingEnabled = true;
             this.comboBoxOpaqueBoxStyle.Location = new System.Drawing.Point(35, 69);
             this.comboBoxOpaqueBoxStyle.Name = "comboBoxOpaqueBoxStyle";
-            this.comboBoxOpaqueBoxStyle.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxOpaqueBoxStyle.Size = new System.Drawing.Size(187, 21);
             this.comboBoxOpaqueBoxStyle.TabIndex = 5;
             this.comboBoxOpaqueBoxStyle.SelectedIndexChanged += new System.EventHandler(this.radioButtonOpaqueBox_CheckedChanged);
             // 

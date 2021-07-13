@@ -2588,7 +2588,7 @@ de subtítulo con información de fuente incorporada como "Advanced Sub Station 
     <Vertical>Vertical</Vertical>
     <Border>Borde</Border>
     <PlusShadow>+ Sombra</PlusShadow>
-    <OpaqueBox>Caja opaca (usa el color del contorno)</OpaqueBox>
+    <OpaqueBox>Caja opaca</OpaqueBox>
     <Import>Importar...</Import>
     <Export>Exportar...</Export>
     <Copy>Copiar</Copy>
