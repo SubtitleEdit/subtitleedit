@@ -2615,7 +2615,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Vertical>Вертикално</Vertical>
     <Border>Граница (Рамка)</Border>
     <PlusShadow>+ Сянка</PlusShadow>
-    <OpaqueBox>Непрозрачно поле (използва външния цвят)</OpaqueBox>
+    <OpaqueBox>Непрозрачно поле</OpaqueBox>
     <Import>Импорт...</Import>
     <Export>Експорт...</Export>
     <Copy>Копиране</Copy>

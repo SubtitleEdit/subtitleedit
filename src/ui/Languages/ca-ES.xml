@@ -2497,7 +2497,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MarginVertical>Marge vertical</MarginVertical>
     <Border>Vora</Border>
     <PlusShadow>+ Sombra</PlusShadow>
-    <OpaqueBox>Caixa opaca(empra color absent)</OpaqueBox>
+    <OpaqueBox>Caixa opaca</OpaqueBox>
     <Import>Importa...</Import>
     <Export>Exporta...</Export>
     <Copy>Copia</Copy>

@@ -2218,7 +2218,7 @@ Bitte versuchen Sie es später noch einmal.</DownloadMpvFailed>
     <MarginVertical>Rand vertikal</MarginVertical>
     <Border>Umrandung</Border>
     <PlusShadow>+ Schatten</PlusShadow>
-    <OpaqueBox>Opake Box (verwendet Konturfarben)</OpaqueBox>
+    <OpaqueBox>Opake Box</OpaqueBox>
     <Import>Importiere...</Import>
     <Export>Exportiere...</Export>
     <Copy>Kopie</Copy>

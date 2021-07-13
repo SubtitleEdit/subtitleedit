@@ -2646,7 +2646,7 @@ Continuer ?</RestoreDefaultSettingsMsg>
     <Vertical>Verticale</Vertical>
     <Border>Bordure</Border>
     <PlusShadow>Ombre</PlusShadow>
-    <OpaqueBox>Boîte opaque (utilise la couleur du contour)</OpaqueBox>
+    <OpaqueBox>Boîte opaque</OpaqueBox>
     <Import>Importer ...</Import>
     <Export>Exporter ...</Export>
     <Copy>Copier</Copy>

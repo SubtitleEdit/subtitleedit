@@ -2584,7 +2584,7 @@ bezala hizkiaren argibideak barnebiltzen dituen azpidatzi heuskarri bat erabiliz
     <Vertical>Zutika</Vertical>
     <Border>Hertza</Border>
     <PlusShadow>+ Itzala</PlusShadow>
-    <OpaqueBox>Kutxa argikaitza (inguru margoa erabiliz)</OpaqueBox>
+    <OpaqueBox>Kutxa argikaitza</OpaqueBox>
     <Import>Inportatu</Import>
     <Export>Esportatu</Export>
     <Copy>Kopiatu</Copy>

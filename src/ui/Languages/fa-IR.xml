@@ -2265,7 +2265,7 @@ Setting a font for a subtitle is normally done in the video player, but can also
     <MarginVertical>حاشیه عمودی</MarginVertical>
     <Border>مرز</Border>
     <PlusShadow>+ سایه</PlusShadow>
-    <OpaqueBox>جعبه مات (با استفاده از رنگ اصلی)</OpaqueBox>
+    <OpaqueBox>با استفاده از رنگ اصلی</OpaqueBox>
     <Import>واردات...</Import>
     <Export>صادرات...</Export>
     <Copy>کپی</Copy>

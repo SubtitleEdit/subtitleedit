@@ -2250,7 +2250,7 @@ jako je „Advanced Sub Station Alpha“ nebo prostřednictvím exportu do form�
     <MarginVertical>Svislý okraj</MarginVertical>
     <Border>Ohraničení</Border>
     <PlusShadow>+ Stín</PlusShadow>
-    <OpaqueBox>Neprůhledné pole (používá barvu obrysu)</OpaqueBox>
+    <OpaqueBox>Neprůhledné pole</OpaqueBox>
     <Import>Importovat...</Import>
     <Export>Exportovat...</Export>
     <Copy>Kopírovat</Copy>

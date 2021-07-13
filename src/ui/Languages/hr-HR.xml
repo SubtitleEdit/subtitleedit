@@ -2150,7 +2150,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <MarginVertical>Vertikalna margina</MarginVertical>
     <Border>Granica</Border>
     <PlusShadow>+ Sjena</PlusShadow>
-    <OpaqueBox>Neprozirna kutija (koristi obris boje)</OpaqueBox>
+    <OpaqueBox>Neprozirna kutija</OpaqueBox>
     <Import>Uvoz...</Import>
     <Export>Izvezi...</Export>
     <Copy>Kopiraj</Copy>

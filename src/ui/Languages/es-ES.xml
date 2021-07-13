@@ -2586,7 +2586,7 @@ La configuración de una fuente para un subtítulo se realiza normalmente en el 
     <Vertical>Vertical</Vertical>
     <Border>Borde</Border>
     <PlusShadow>+ Sombra</PlusShadow>
-    <OpaqueBox>Caja opaca (usa el color del contorno)</OpaqueBox>
+    <OpaqueBox>Caja opaca</OpaqueBox>
     <Import>Importar...</Import>
     <Export>Exportar...</Export>
     <Copy>Copiar</Copy>
