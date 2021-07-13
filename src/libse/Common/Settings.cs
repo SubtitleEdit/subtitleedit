@@ -1930,6 +1930,7 @@ $HorzAlign          =   Center
         public string GeneralGoToPreviousBookmark { get; set; }
         public string GeneralGoToNextBookmark { get; set; }
         public string GeneralChooseProfile { get; set; }
+        public string OpenDataFolder { get; set; }
         public string GeneralDuplicateLine { get; set; }
         public string GeneralToggleView { get; set; }
         public string GeneralToggleMode { get; set; }
@@ -2194,6 +2195,7 @@ $HorzAlign          =   Center
             GeneralMergeOriginalAndTranslation = "Control+Alt+Shift+M";
             GeneralGoToNextSubtitle = "Shift+Return";
             GeneralToggleBookmarksWithText = "Control+Shift+B";
+            OpenDataFolder = "Control+Alt+Shift+D";
             GeneralToggleView = "F2";
             GeneralHelp = "F1";
             MainFileNew = "Control+N";
@@ -6842,6 +6844,12 @@ $HorzAlign          =   Center
                     shortcuts.GeneralChooseProfile = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("OpenDataFolder");
+                if (subNode != null)
+                {
+                    shortcuts.OpenDataFolder = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralDuplicateLine");
                 if (subNode != null)
                 {
@@ -9227,6 +9235,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("GeneralGoToNextBookmark", shortcuts.GeneralGoToNextBookmark);
             textWriter.WriteElementString("GeneralGoToPreviousBookmark", shortcuts.GeneralGoToPreviousBookmark);
             textWriter.WriteElementString("GeneralChooseProfile", shortcuts.GeneralChooseProfile);
+            textWriter.WriteElementString("OpenDataFolder", shortcuts.OpenDataFolder);
             textWriter.WriteElementString("GeneralDuplicateLine", shortcuts.GeneralDuplicateLine);
             textWriter.WriteElementString("GeneralToggleView", shortcuts.GeneralToggleView);
             textWriter.WriteElementString("GeneralToggleMode", shortcuts.GeneralToggleMode);

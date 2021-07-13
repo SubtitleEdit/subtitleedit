@@ -15265,6 +15265,11 @@ namespace Nikse.SubtitleEdit.Forms
                 ChooseProfile();
                 e.SuppressKeyPress = true;
             }
+            else if (_shortcuts.MainGeneralOpenDataFolder == e.KeyData)
+            {
+                UiUtil.OpenFolder(Configuration.DataDirectory);
+                e.SuppressKeyPress = true;
+            }
             else if (_shortcuts.MainGeneralDuplicateLine == e.KeyData && SubtitleListview1.SelectedItems.Count == 1)
             {
                 DuplicateLine();
@@ -30276,7 +30281,7 @@ namespace Nikse.SubtitleEdit.Forms
                 pictureBoxBookmark.Show();
                 panelBookmark.Hide();
             }
-            else if (panelBookmark.Visible || pictureBoxBookmark.Visible)
+            else if (panelBookmark.Visible || pictureBoxBookmark.Visible || _loading)
             {
                 panelBookmark.Hide();
                 pictureBoxBookmark.Hide();
@@ -30849,8 +30854,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch
                 {
-                // Ignore
-            }
+                    // Ignore
+                }
             });
         }
 
