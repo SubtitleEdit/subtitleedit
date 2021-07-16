@@ -124,7 +124,7 @@ namespace Nikse.SubtitleEdit.Controls
         private readonly ToolTip _currentPositionToolTip = new ToolTip();
         private int _lastCurrentPositionToolTipX;
         private int _lastCurrentPositionToolTipY;
-        private List<MatroskaChapter> _chapters = null;
+        private List<MatroskaChapter> _chapters = new List<MatroskaChapter>();
 
         public List<MatroskaChapter> Chapters
         {
@@ -1791,7 +1791,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void PictureBoxProgressbarBackgroundPaint(object sender, PaintEventArgs e)
         {
-            if (_chapters != null)
+            if (_chapters?.Count > 0)
             {
                 DrawChapters(e.Graphics, 3, _pictureBoxProgressBar.Location.Y, _pictureBoxProgressBar.Location.Y + 3);
             }
@@ -1799,7 +1799,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void PictureBoxProgressBarPaint(object sender, PaintEventArgs e)
         {
-            if (_chapters != null)
+            if (_chapters?.Count > 0)
             {
                 DrawChapters(e.Graphics, -1, 1, _pictureBoxProgressBar.Height);
             }

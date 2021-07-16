@@ -270,6 +270,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemAssaOverrideTags = new System.Windows.Forms.ToolStripMenuItem();
             this.applyCustomStylesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setPositionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.progressBarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAssStyles = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorAssa = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemSetRegion = new System.Windows.Forms.ToolStripMenuItem();
@@ -2549,7 +2550,8 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.toolStripMenuItemAssaOverrideTags.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.applyCustomStylesToolStripMenuItem,
-            this.setPositionToolStripMenuItem});
+            this.setPositionToolStripMenuItem,
+            this.progressBarToolStripMenuItem});
             this.toolStripMenuItemAssaOverrideTags.Name = "toolStripMenuItemAssaOverrideTags";
             this.toolStripMenuItemAssaOverrideTags.Size = new System.Drawing.Size(284, 22);
             this.toolStripMenuItemAssaOverrideTags.Text = "Set override tags";
@@ -2567,6 +2569,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.setPositionToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
             this.setPositionToolStripMenuItem.Text = "Set position...";
             this.setPositionToolStripMenuItem.Click += new System.EventHandler(this.setPositionToolStripMenuItem_Click);
+            // 
+            // progressBarToolStripMenuItem
+            // 
+            this.progressBarToolStripMenuItem.Name = "progressBarToolStripMenuItem";
+            this.progressBarToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+            this.progressBarToolStripMenuItem.Text = "Progress bar...";
+            this.progressBarToolStripMenuItem.Click += new System.EventHandler(this.progressBarToolStripMenuItem_Click);
             // 
             // toolStripMenuItemAssStyles
             // 
@@ -5968,5 +5977,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem setPositionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem generateBlankVideoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem generateVideoWithHardcodedSubtitleToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem progressBarToolStripMenuItem;
     }
 }

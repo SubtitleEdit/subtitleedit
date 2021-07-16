@@ -334,6 +334,9 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool BlankVideoUseCheckeredImage { get; set; }
         public int BlankVideoMinutes { get; set; }
         public decimal BlankVideoFrameRate { get; set; }
+        public Color AssaProgressBarForeColor { get; set; }
+        public Color AssaProgressBarBackColor { get; set; }
+        public Color AssaProgressBarTextColor { get; set; }
 
         public ToolsSettings()
         {
@@ -477,6 +480,9 @@ namespace Nikse.SubtitleEdit.Core.Common
             BlankVideoUseCheckeredImage = true;
             BlankVideoMinutes = 2;
             BlankVideoFrameRate = 23.976m;
+            AssaProgressBarForeColor = Color.FromArgb(200, 200, 0, 0);
+            AssaProgressBarBackColor = Color.FromArgb(150, 80, 80, 80);
+            AssaProgressBarTextColor = Color.White;
         }
     }
 

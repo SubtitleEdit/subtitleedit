@@ -31522,5 +31522,23 @@ namespace Nikse.SubtitleEdit.Forms
 
             return currentSize;
         }
+
+        private void progressBarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(VideoFileName) || _videoInfo == null || _videoInfo.Width == 0 || _videoInfo.Height == 0)
+            {
+                MessageBox.Show(LanguageSettings.Current.General.NoVideoLoaded);
+                return;
+            }
+
+            using (var form = new AssaProgressBar(_subtitle, VideoFileName, _videoInfo))
+            {
+                var result = form.ShowDialog(this);
+                if (result != DialogResult.OK)
+                {
+                    return;
+                }
+            }
+        }
     }
 }
