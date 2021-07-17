@@ -1307,6 +1307,9 @@
     <EmbeddedResource Include="Forms\Assa\AssaProgressBar.resx">
       <DependentUpon>AssaProgressBar.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Assa\ResolutionResampler.resx">
+      <DependentUpon>ResolutionResampler.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Assa\SetPosition.resx">
       <DependentUpon>SetPosition.cs</DependentUpon>
     </EmbeddedResource>
