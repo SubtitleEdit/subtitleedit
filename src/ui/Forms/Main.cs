@@ -17769,6 +17769,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             SubtitleListview1.SyntaxColorLineBackground(_subtitle.Paragraphs, i, p);
             UpdateSourceView();
+            audioVisualizer.Invalidate();
         }
 
         private void MoveEndCurrent(int ms, bool keepGapNextIfClose)
@@ -17875,6 +17876,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             SubtitleListview1.SyntaxColorLineBackground(_subtitle.Paragraphs, i, p);
             UpdateSourceView();
+            audioVisualizer.Invalidate();
         }
 
         private void ShowNextSubtitleLabel()
@@ -31532,6 +31534,18 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             using (var form = new AssaProgressBar(_subtitle, VideoFileName, _videoInfo))
+            {
+                var result = form.ShowDialog(this);
+                if (result != DialogResult.OK)
+                {
+                    return;
+                }
+            }
+        }
+
+        private void videoResolutionResamplerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var form = new ResolutionResampler(_subtitle, VideoFileName, _videoInfo))
             {
                 var result = form.ShowDialog(this);
                 if (result != DialogResult.OK)

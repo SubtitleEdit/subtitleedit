@@ -554,6 +554,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerOriginalTextUndo = new System.Windows.Forms.Timer(this.components);
+            this.videoResolutionResamplerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -2529,7 +2530,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemSelectedLines,
             this.toolStripMenuItemGoogleMicrosoftTranslateSelLine});
             this.contextMenuStripListView.Name = "contextMenuStripListView";
-            this.contextMenuStripListView.Size = new System.Drawing.Size(285, 732);
+            this.contextMenuStripListView.Size = new System.Drawing.Size(285, 754);
             this.contextMenuStripListView.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
             this.contextMenuStripListView.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListViewOpening);
             this.contextMenuStripListView.Opened += new System.EventHandler(this.MenuOpened);
@@ -2551,7 +2552,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemAssaOverrideTags.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.applyCustomStylesToolStripMenuItem,
             this.setPositionToolStripMenuItem,
-            this.progressBarToolStripMenuItem});
+            this.progressBarToolStripMenuItem,
+            this.videoResolutionResamplerToolStripMenuItem});
             this.toolStripMenuItemAssaOverrideTags.Name = "toolStripMenuItemAssaOverrideTags";
             this.toolStripMenuItemAssaOverrideTags.Size = new System.Drawing.Size(284, 22);
             this.toolStripMenuItemAssaOverrideTags.Text = "Set override tags";
@@ -2559,22 +2561,22 @@ namespace Nikse.SubtitleEdit.Forms
             // applyCustomStylesToolStripMenuItem
             // 
             this.applyCustomStylesToolStripMenuItem.Name = "applyCustomStylesToolStripMenuItem";
-            this.applyCustomStylesToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+            this.applyCustomStylesToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
             this.applyCustomStylesToolStripMenuItem.Text = "Apply custom tags...";
             this.applyCustomStylesToolStripMenuItem.Click += new System.EventHandler(this.applyCustomStylesToolStripMenuItem_Click);
             // 
             // setPositionToolStripMenuItem
             // 
             this.setPositionToolStripMenuItem.Name = "setPositionToolStripMenuItem";
-            this.setPositionToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+            this.setPositionToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
             this.setPositionToolStripMenuItem.Text = "Set position...";
             this.setPositionToolStripMenuItem.Click += new System.EventHandler(this.setPositionToolStripMenuItem_Click);
             // 
             // progressBarToolStripMenuItem
             // 
             this.progressBarToolStripMenuItem.Name = "progressBarToolStripMenuItem";
-            this.progressBarToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
-            this.progressBarToolStripMenuItem.Text = "Progress bar...";
+            this.progressBarToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.progressBarToolStripMenuItem.Text = "Generate progress bar...";
             this.progressBarToolStripMenuItem.Click += new System.EventHandler(this.progressBarToolStripMenuItem_Click);
             // 
             // toolStripMenuItemAssStyles
@@ -5383,6 +5385,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.timerOriginalTextUndo.Interval = 700;
             this.timerOriginalTextUndo.Tick += new System.EventHandler(this.TimerOriginalTextUndoTick);
             // 
+            // videoResolutionResamplerToolStripMenuItem
+            // 
+            this.videoResolutionResamplerToolStripMenuItem.Name = "videoResolutionResamplerToolStripMenuItem";
+            this.videoResolutionResamplerToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.videoResolutionResamplerToolStripMenuItem.Text = "Video resolution resampler...";
+            this.videoResolutionResamplerToolStripMenuItem.Click += new System.EventHandler(this.videoResolutionResamplerToolStripMenuItem_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -5978,5 +5987,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem generateBlankVideoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem generateVideoWithHardcodedSubtitleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem progressBarToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem videoResolutionResamplerToolStripMenuItem;
     }
 }
