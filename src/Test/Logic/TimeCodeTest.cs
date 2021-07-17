@@ -101,5 +101,44 @@ namespace Test.Logic
             Assert.AreEqual("00:00", res);
         }
 
+        [TestMethod]
+        public void ToHHMMSSFFTestSecond()
+        {
+            Configuration.Settings.General.CurrentFrameRate = 00;
+            var res = new TimeCode(23, 23, 21, 0).ToHHMMSSFF();
+            
+            // note: one second is added when converting to ToHHMMSSFF
+            Assert.AreEqual("23:23:22:00", res);
+        }
+        
+        [TestMethod]
+        public void ToHHMMSSFFTestFrame()
+        {
+            Configuration.Settings.General.CurrentFrameRate = 25;
+            var res = new TimeCode(23, 23, 21, 0).ToHHMMSSFF();
+            
+            // note: one second is added when converting to ToHHMMSSFF
+            Assert.AreEqual("23:23:21:00", res);
+        }
+        
+        [TestMethod]
+        public void ToHHMMSSFFTestNegative()
+        {
+            Configuration.Settings.General.CurrentFrameRate = 00;
+            var res = new TimeCode(1, -1, 0, 0).ToHHMMSSFF();
+            
+            // note: one second is added when converting to ToHHMMSSFF
+            Assert.AreEqual("00:59:01:00", res);
+        }
+        
+        [TestMethod]
+        public void ToHHMMSSPeriodFFTest()
+        {
+            Configuration.Settings.General.CurrentFrameRate = 00;
+            var res = new TimeCode(23, 23, 21, 0).ToHHMMSSPeriodFF();
+            
+            // note: one second is added when converting to ToHHMMSSFF
+            Assert.AreEqual("23:23:22.00", res);
+        }
     }
 }
