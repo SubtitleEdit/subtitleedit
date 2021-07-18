@@ -30,7 +30,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private void InitializeComponent()
         {
             Nikse.SubtitleEdit.Core.Common.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AssaProgressBar));
             this.groupBoxStyle = new System.Windows.Forms.GroupBox();
             this.radioButtonPosTop = new System.Windows.Forms.RadioButton();
             this.radioButtonPosBottom = new System.Windows.Forms.RadioButton();
@@ -57,7 +56,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.labelStartTime = new System.Windows.Forms.Label();
             this.panelTextColor = new System.Windows.Forms.Panel();
             this.buttonTextColor = new System.Windows.Forms.Button();
-            this.buttonImport = new System.Windows.Forms.Button();
             this.buttonRemoveAll = new System.Windows.Forms.Button();
             this.buttonAdd = new System.Windows.Forms.Button();
             this.buttonRemove = new System.Windows.Forms.Button();
@@ -66,7 +64,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.columnHeaderStart = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.videoPlayerContainer1 = new Nikse.SubtitleEdit.Controls.VideoPlayerContainer();
             this.textBoxSource = new System.Windows.Forms.TextBox();
             this.groupBoxStyle.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).BeginInit();
@@ -74,7 +71,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSplitterHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).BeginInit();
             this.groupBoxChapters.SuspendLayout();
-            this.videoPlayerContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBoxStyle
@@ -318,7 +314,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.groupBoxChapters.Controls.Add(this.panelTextColor);
             this.groupBoxChapters.Controls.Add(this.buttonTextColor);
             this.groupBoxChapters.Controls.Add(this.buttonPickAttachmentFont);
-            this.groupBoxChapters.Controls.Add(this.buttonImport);
             this.groupBoxChapters.Controls.Add(this.comboBoxFontName);
             this.groupBoxChapters.Controls.Add(this.buttonRemoveAll);
             this.groupBoxChapters.Controls.Add(this.labelFontName);
@@ -340,7 +335,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             // textBoxChapterText
             // 
-            this.textBoxChapterText.Location = new System.Drawing.Point(63, 399);
+            this.textBoxChapterText.Location = new System.Drawing.Point(63, 409);
             this.textBoxChapterText.Name = "textBoxChapterText";
             this.textBoxChapterText.Size = new System.Drawing.Size(314, 20);
             this.textBoxChapterText.TabIndex = 229;
@@ -349,7 +344,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             this.labelText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelText.AutoSize = true;
-            this.labelText.Location = new System.Drawing.Point(6, 402);
+            this.labelText.Location = new System.Drawing.Point(6, 412);
             this.labelText.Name = "labelText";
             this.labelText.Size = new System.Drawing.Size(28, 13);
             this.labelText.TabIndex = 228;
@@ -361,7 +356,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.timeUpDownStartTime.AutoSize = true;
             this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.timeUpDownStartTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.timeUpDownStartTime.Location = new System.Drawing.Point(63, 365);
+            this.timeUpDownStartTime.Location = new System.Drawing.Point(63, 375);
             this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
             this.timeUpDownStartTime.Size = new System.Drawing.Size(111, 27);
@@ -380,7 +375,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             this.labelStartTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelStartTime.AutoSize = true;
-            this.labelStartTime.Location = new System.Drawing.Point(6, 372);
+            this.labelStartTime.Location = new System.Drawing.Point(6, 382);
             this.labelStartTime.Name = "labelStartTime";
             this.labelStartTime.Size = new System.Drawing.Size(51, 13);
             this.labelStartTime.TabIndex = 227;
@@ -405,22 +400,11 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonTextColor.UseVisualStyleBackColor = true;
             this.buttonTextColor.Click += new System.EventHandler(this.buttonTextColor_Click);
             // 
-            // buttonImport
-            // 
-            this.buttonImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonImport.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonImport.Location = new System.Drawing.Point(4, 446);
-            this.buttonImport.Name = "buttonImport";
-            this.buttonImport.Size = new System.Drawing.Size(82, 23);
-            this.buttonImport.TabIndex = 8;
-            this.buttonImport.Text = "Import...";
-            this.buttonImport.UseVisualStyleBackColor = true;
-            // 
             // buttonRemoveAll
             // 
             this.buttonRemoveAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonRemoveAll.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonRemoveAll.Location = new System.Drawing.Point(278, 446);
+            this.buttonRemoveAll.Location = new System.Drawing.Point(195, 440);
             this.buttonRemoveAll.Name = "buttonRemoveAll";
             this.buttonRemoveAll.Size = new System.Drawing.Size(92, 23);
             this.buttonRemoveAll.TabIndex = 11;
@@ -432,7 +416,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             this.buttonAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonAdd.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonAdd.Location = new System.Drawing.Point(92, 446);
+            this.buttonAdd.Location = new System.Drawing.Point(9, 440);
             this.buttonAdd.Name = "buttonAdd";
             this.buttonAdd.Size = new System.Drawing.Size(82, 23);
             this.buttonAdd.TabIndex = 9;
@@ -444,7 +428,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             this.buttonRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonRemove.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonRemove.Location = new System.Drawing.Point(180, 446);
+            this.buttonRemove.Location = new System.Drawing.Point(97, 440);
             this.buttonRemove.Name = "buttonRemove";
             this.buttonRemove.Size = new System.Drawing.Size(92, 23);
             this.buttonRemove.TabIndex = 10;
@@ -462,10 +446,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.columnHeaderStart});
             this.listViewChapters.FullRowSelect = true;
             this.listViewChapters.HideSelection = false;
-            this.listViewChapters.Location = new System.Drawing.Point(6, 198);
+            this.listViewChapters.Location = new System.Drawing.Point(6, 186);
             this.listViewChapters.MultiSelect = false;
             this.listViewChapters.Name = "listViewChapters";
-            this.listViewChapters.Size = new System.Drawing.Size(371, 160);
+            this.listViewChapters.Size = new System.Drawing.Size(371, 182);
             this.listViewChapters.TabIndex = 1;
             this.listViewChapters.UseCompatibleStateImageBehavior = false;
             this.listViewChapters.View = System.Windows.Forms.View.Details;
@@ -506,32 +490,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
-            // videoPlayerContainer1
-            // 
-            this.videoPlayerContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.videoPlayerContainer1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(18)))), ((int)(((byte)(18)))));
-            this.videoPlayerContainer1.Chapters = ((System.Collections.Generic.List<Nikse.SubtitleEdit.Core.ContainerFormats.Matroska.MatroskaChapter>)(resources.GetObject("videoPlayerContainer1.Chapters")));
-            this.videoPlayerContainer1.Controls.Add(this.textBoxSource);
-            this.videoPlayerContainer1.CurrentPosition = 0D;
-            this.videoPlayerContainer1.FontSizeFactor = 1F;
-            this.videoPlayerContainer1.LastParagraph = null;
-            this.videoPlayerContainer1.Location = new System.Drawing.Point(401, 12);
-            this.videoPlayerContainer1.Name = "videoPlayerContainer1";
-            this.videoPlayerContainer1.ShowFullscreenButton = true;
-            this.videoPlayerContainer1.ShowMuteButton = true;
-            this.videoPlayerContainer1.ShowStopButton = true;
-            this.videoPlayerContainer1.Size = new System.Drawing.Size(923, 601);
-            this.videoPlayerContainer1.SmpteMode = false;
-            this.videoPlayerContainer1.SubtitleText = "";
-            this.videoPlayerContainer1.TabIndex = 8;
-            this.videoPlayerContainer1.TextRightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.videoPlayerContainer1.VideoHeight = 0;
-            this.videoPlayerContainer1.VideoPlayer = null;
-            this.videoPlayerContainer1.VideoWidth = 0;
-            this.videoPlayerContainer1.Volume = 0D;
-            // 
             // textBoxSource
             // 
             this.textBoxSource.Location = new System.Drawing.Point(0, 3);
@@ -546,7 +504,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1336, 654);
-            this.Controls.Add(this.videoPlayerContainer1);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.groupBoxChapters);
@@ -556,7 +513,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "AssaProgressBar";
+            this.Text = "Generate progress bar";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AssaProgressBar_FormClosing);
             this.Shown += new System.EventHandler(this.AssaProgressBar_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AssaProgressBar_KeyDown);
@@ -568,8 +525,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).EndInit();
             this.groupBoxChapters.ResumeLayout(false);
             this.groupBoxChapters.PerformLayout();
-            this.videoPlayerContainer1.ResumeLayout(false);
-            this.videoPlayerContainer1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -591,11 +546,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private System.Windows.Forms.ListView listViewChapters;
         private System.Windows.Forms.ColumnHeader columnHeaderName;
         private System.Windows.Forms.ColumnHeader columnHeaderStart;
-        private System.Windows.Forms.Button buttonImport;
         private System.Windows.Forms.Button buttonRemoveAll;
         private System.Windows.Forms.Button buttonAdd;
         private System.Windows.Forms.Button buttonRemove;
-        private Controls.VideoPlayerContainer videoPlayerContainer1;
         private System.Windows.Forms.Label labelHeight;
         private System.Windows.Forms.NumericUpDown numericUpDownHeight;
         private System.Windows.Forms.NumericUpDown numericUpDownSplitterWidth;

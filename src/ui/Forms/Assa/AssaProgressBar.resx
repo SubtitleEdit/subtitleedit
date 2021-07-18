@@ -117,18 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="videoPlayerContainer1.Chapters" mimetype="application/x-microsoft.net.object.binary.base64">
-    <value>
-        AAEAAAD/////AQAAAAAAAAAMAgAAAI0BbGlic2UsIFZlcnNpb249My42LjEuMjQwLCBDdWx0dXJlPW5l
-        dXRyYWwsIFB1YmxpY0tleVRva2VuPW51bGxdXSwgbXNjb3JsaWIsIFZlcnNpb249NC4wLjAuMCwgQ3Vs
-        dHVyZT1uZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj1iNzdhNWM1NjE5MzRlMDg5DAMAAAA+bGlic2UsIFZl
-        cnNpb249My42LjEuMjQwLCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPW51bGwFAQAAAGRT
-        eXN0ZW0uQ29sbGVjdGlvbnMuR2VuZXJpYy5MaXN0YDFbW05pa3NlLlN1YnRpdGxlRWRpdC5Db3JlLkNv
-        bnRhaW5lckZvcm1hdHMuTWF0cm9za2EuTWF0cm9za2FDaGFwdGVyAwAAAAZfaXRlbXMFX3NpemUIX3Zl
-        cnNpb24EAABDTmlrc2UuU3VidGl0bGVFZGl0LkNvcmUuQ29udGFpbmVyRm9ybWF0cy5NYXRyb3NrYS5N
-        YXRyb3NrYUNoYXB0ZXJbXQMAAAAICAIAAAAJBAAAAAAAAAAAAAAABwQAAAAAAQAAAAAAAAAEQU5pa3Nl
-        LlN1YnRpdGxlRWRpdC5Db3JlLkNvbnRhaW5lckZvcm1hdHMuTWF0cm9za2EuTWF0cm9za2FDaGFwdGVy
-        AwAAAAs=
-</value>
-  </data>
 </root>

@@ -21,6 +21,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private Timer _timer1;
         private int _oldHashValue = -1;
         private Subtitle _chapters;
+        private Controls.VideoPlayerContainer _videoPlayerContainer;
 
         public AssaProgressBar(Subtitle subtitle, string videoFileName, VideoInfo videoInfo)
         {
@@ -40,6 +41,19 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             {
                 comboBoxFontName.Items.Add(font.Name);
             }
+
+            _videoPlayerContainer = new Controls.VideoPlayerContainer();
+            Controls.Add(_videoPlayerContainer);
+            _videoPlayerContainer.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            //this.videoPlayerContainer1.BackColor = Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(18)))), ((int)(((byte)(18)))));
+            //this.videoPlayerContainer1.Chapters = ((System.Collections.Generic.List<Nikse.SubtitleEdit.Core.ContainerFormats.Matroska.MatroskaChapter>)(resources.GetObject("videoPlayerContainer1.Chapters")));
+            //this.videoPlayerContainer1.Controls.Add(this.textBoxSource);
+            //this.videoPlayerContainer1.CurrentPosition = 0D;
+            //this.videoPlayerContainer1.FontSizeFactor = 1F;
+            //this.videoPlayerContainer1.LastParagraph = null;
+            _videoPlayerContainer.Location = new Point(401, 12);
+            _videoPlayerContainer.Name = "_videoPlayerContainer";
+            _videoPlayerContainer.Size = new Size(923, 601);
 
             _timer1 = new Timer();
             _timer1.Interval = 100;
@@ -131,25 +145,25 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                     return;
                 }
 
-                if (videoPlayerContainer1.VideoPlayer != null)
+                if (_videoPlayerContainer.VideoPlayer != null)
                 {
-                    videoPlayerContainer1.Pause();
-                    videoPlayerContainer1.VideoPlayer.DisposeVideoPlayer();
+                    _videoPlayerContainer.Pause();
+                    _videoPlayerContainer.VideoPlayer.DisposeVideoPlayer();
                 }
 
                 VideoInfo videoInfo = UiUtil.GetVideoInfo(fileName);
-                UiUtil.InitializeVideoPlayerAndContainer(fileName, videoInfo, videoPlayerContainer1, VideoStartLoaded, VideoStartEnded);
+                UiUtil.InitializeVideoPlayerAndContainer(fileName, videoInfo, _videoPlayerContainer, VideoStartLoaded, VideoStartEnded);
             }
         }
 
         private void VideoStartEnded(object sender, EventArgs e)
         {
-            videoPlayerContainer1.Pause();
+            _videoPlayerContainer.Pause();
         }
 
         private void VideoStartLoaded(object sender, EventArgs e)
         {
-            videoPlayerContainer1.Pause();
+            _videoPlayerContainer.Pause();
             _timer1.Start();
         }
 
@@ -157,8 +171,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             _timer1.Stop();
             Application.DoEvents();
-            videoPlayerContainer1?.Pause();
-            videoPlayerContainer1?.VideoPlayer?.DisposeVideoPlayer();
+            _videoPlayerContainer?.Pause();
+            _videoPlayerContainer?.VideoPlayer?.DisposeVideoPlayer();
         }
 
         private void AssaProgressBar_Shown(object sender, EventArgs e)
@@ -328,18 +342,18 @@ Dialogue: -255,0:00:00.00,0:43:00.00,sepbar_bg,,0,0,0,,{\K[DURATION]\p1}m 0 0 l 
             var hashValue = _progessBarSubtitle.GetFastHashCode(string.Empty);
             if (hashValue != _oldHashValue)
             {
-                videoPlayerContainer1.SetSubtitleText(string.Empty, new Paragraph(), _progessBarSubtitle);
+                _videoPlayerContainer.SetSubtitleText(string.Empty, new Paragraph(), _progessBarSubtitle);
                 _oldHashValue = hashValue;
             }
 
-            videoPlayerContainer1.RefreshProgressBar();
+            _videoPlayerContainer.RefreshProgressBar();
         }
 
         private void buttonAdd_Click(object sender, EventArgs e)
         {
-            if (_subtitle.Paragraphs.Count > 0)
+            if (_chapters.Paragraphs.Count > 0)
             {
-                var startTimeMs = _subtitle.Paragraphs.Last().StartTime.TotalMilliseconds + 2000;
+                var startTimeMs = _chapters.Paragraphs.Last().StartTime.TotalMilliseconds + 2000;
                 _chapters.Paragraphs.Add(new Paragraph("Text", startTimeMs, startTimeMs));
             }
             else
@@ -426,6 +440,19 @@ Dialogue: -255,0:00:00.00,0:43:00.00,sepbar_bg,,0,0,0,,{\K[DURATION]\p1}m 0 0 l 
             var p = (Paragraph)listViewChapters.SelectedItems[0].Tag;
             timeUpDownStartTime.TimeCode = new TimeCode(p.StartTime.TotalMilliseconds);
             textBoxChapterText.Text = p.Text;
+        }
+
+        private void buttonImport_Click(object sender, EventArgs e)
+        {
+            using (var openFileDialog1 = new OpenFileDialog())
+            {
+                openFileDialog1.Title = LanguageSettings.Current.General.OpenSubtitle;
+                openFileDialog1.FileName = string.Empty;
+                openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;
+                if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                }
+            }
         }
     }
 }

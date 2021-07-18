@@ -5389,6 +5389,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/ChooseProfile":
                     language.Settings.ChooseProfile = reader.Value;
                     break;
+                case "Settings/OpenDataFolder":
+                    language.Settings.OpenDataFolder = reader.Value;
+                    break;
                 case "Settings/DuplicateLine":
                     language.Settings.DuplicateLine = reader.Value;
                     break;
@@ -7317,6 +7320,12 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "SubStationAlphaStyles/Angle":
                     language.SubStationAlphaStyles.Angle = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/BoxPerLine":
+                    language.SubStationAlphaStyles.BoxPerLine = reader.Value;
+                    break;
+                case "SubStationAlphaStyles/BoxMultiLine":
+                    language.SubStationAlphaStyles.BoxMultiLine = reader.Value;
                     break;
                 case "SubStationAlphaStylesCategoriesManager/Category":
                     language.SubStationAlphaStylesCategoriesManager.Category = reader.Value;
