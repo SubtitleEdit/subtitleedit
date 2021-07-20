@@ -723,6 +723,31 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             return null;
         }
 
+        public static string GetTagValueFromHeader(string tagName, string section, string header)
+        {
+            var sectionOn = false;
+            foreach (var line in header.SplitToLines())
+            {
+                var s = line.Trim();
+                if (s.StartsWith('['))
+                {
+                    if (s.Equals(section, StringComparison.OrdinalIgnoreCase))
+                    {
+                        sectionOn = true;
+                    }
+                }
+                else if (sectionOn &&
+                         s.StartsWith(tagName, StringComparison.OrdinalIgnoreCase) &&
+                         s.RemoveChar(' ').StartsWith(tagName + ":", StringComparison.OrdinalIgnoreCase))
+                {
+
+                    return s.Remove(0, s.IndexOf(':') + 1).Trim();
+                }
+            }
+
+            return null;
+        }
+
         /// <summary>
         /// Add tag to header.
         /// </summary>
@@ -809,7 +834,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                         sectionOn = false;
                     }
                 }
-                else if (sectionOn && 
+                else if (sectionOn &&
                          s.StartsWith(tagName, StringComparison.OrdinalIgnoreCase) &&
                          s.RemoveChar(' ').StartsWith(tagName + ":", StringComparison.OrdinalIgnoreCase))
                 {
@@ -820,6 +845,16 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             }
 
             return sb.ToString();
+        }
+
+        public static List<SsaStyle> GetSsaStylesFromHeader(string header)
+        {
+            var styles = new List<SsaStyle>();
+            foreach (var styleName in GetStylesFromHeader(header))
+            {
+                styles.Add(AdvancedSubStationAlpha.GetSsaStyle(styleName, header));
+            }
+            return styles;
         }
 
         public static List<string> GetStylesFromHeader(string headerLines)
@@ -1584,7 +1619,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                                 StartTime = GetTimeCodeFromString(start),
                                 EndTime = GetTimeCodeFromString(end),
                                 Text = text
-                                    .Replace("\\n",Environment.NewLine)
+                                    .Replace("\\n", Environment.NewLine)
                                     .Replace("\\N", Environment.NewLine),
                             };
 
