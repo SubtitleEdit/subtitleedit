@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                 }
             }
-            catch (Exception)
+            catch
             {
                 // ignored
             }
@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                 }
             }
-            catch (Exception)
+            catch
             {
                 // ignored
             }
@@ -76,7 +76,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                 }
             }
-            catch (Exception)
+            catch
             {
                 // ignored
             }
@@ -86,11 +86,13 @@ namespace Nikse.SubtitleEdit.Core.Common
                 subtitle1.Renumber();
                 return FixTimeCodeMsOrSeconds(subtitle1);
             }
+
             if (subtitle2.Paragraphs.Count >= subtitle1.Paragraphs.Count && subtitle2.Paragraphs.Count >= subtitle3.Paragraphs.Count)
             {
                 subtitle2.Renumber();
                 return FixTimeCodeMsOrSeconds(subtitle2);
             }
+
             subtitle3.Renumber();
             return FixTimeCodeMsOrSeconds(subtitle3);
         }
@@ -129,8 +131,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 // so all time codes are divided by 1000.
                 foreach (var p in subtitle.Paragraphs)
                 {
-                    p.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds / TimeCode.BaseUnit;
-                    p.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds / TimeCode.BaseUnit;
+                    p.StartTime.TotalMilliseconds /= TimeCode.BaseUnit;
+                    p.EndTime.TotalMilliseconds /= TimeCode.BaseUnit;
                 }
             }
 
@@ -183,10 +185,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 start = start.TrimEnd('s');
                 duration = duration.TrimEnd('s');
-                double startSeconds;
-                double durationSeconds;
-                if (double.TryParse(start, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out startSeconds) &&
-                    double.TryParse(duration, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out durationSeconds))
+                if (double.TryParse(start, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out double startSeconds) &&
+                    double.TryParse(duration, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out double durationSeconds))
                 {
                     var p = new Paragraph(Json.DecodeJsonText(text), startSeconds * TimeCode.BaseUnit, (startSeconds + durationSeconds) * TimeCode.BaseUnit) { Extra = originalStart, Style = s };
                     subtitle.Paragraphs.Add(p);
@@ -204,7 +204,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             return ReadFirstMultiTag(s, new[]
             {
-                "start",
+                "start", "in",
                 "startTime", "start_time", "starttime",
                 "startMillis", "start_Millis", "startmillis",
                 "startMs", "start_ms", "startms",
@@ -217,7 +217,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             return ReadFirstMultiTag(s, new[]
             {
-                "end",
+                "end", "out",
                 "endTime", "end_time", "endtime",
                 "endMillis", "end_Millis", "endmillis",
                 "endMs", "end_ms", "startms",
@@ -242,6 +242,10 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 idx = s.IndexOf("\"content", StringComparison.OrdinalIgnoreCase);
             }
+            if (idx < 0)
+            {
+                idx = s.IndexOf("\"value", StringComparison.OrdinalIgnoreCase);
+            }
 
             if (idx < 0)
             {
@@ -259,6 +263,10 @@ namespace Nikse.SubtitleEdit.Core.Common
             if (text == null)
             {
                 text = Json.ReadTag(s, "content");
+            }
+            if (text == null)
+            {
+                text = Json.ReadTag(s, "value");
             }
 
             var textLines = Json.ReadArray(s, "text");
@@ -298,6 +306,5 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
             return null;
         }
-
     }
 }
