@@ -214,6 +214,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ResolutionResampler";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ResolutionResampler_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetHeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetWidth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSourceHeight)).EndInit();

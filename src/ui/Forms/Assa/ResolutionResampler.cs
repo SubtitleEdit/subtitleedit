@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using System;
+using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 
@@ -28,25 +29,27 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             _videoFileName = videoFileName;
             _videoInfo = videoInfo;
 
-            if (!string.IsNullOrEmpty(_subtitle.Header))
+            if (string.IsNullOrEmpty(_subtitle.Header))
             {
-                var oldPlayResX = AdvancedSubStationAlpha.GetTagFromHeader("PlayResX", "[Script Info]", _subtitle.Header);
-                if (int.TryParse(oldPlayResX, out var w))
-                {
-                    numericUpDownSourceWidth.Value = w;
-                }
+                _subtitle.Header = AdvancedSubStationAlpha.DefaultHeader;
+            }
 
-                var oldPlayResY = AdvancedSubStationAlpha.GetTagFromHeader("PlayResY", "[Script Info]", _subtitle.Header);
-                if (int.TryParse(oldPlayResY, out var h))
-                {
-                    numericUpDownSourceHeight.Value = h;
-                }
+            var oldPlayResX = AdvancedSubStationAlpha.GetTagValueFromHeader("PlayResX", "[Script Info]", _subtitle.Header);
+            if (int.TryParse(oldPlayResX, out var w))
+            {
+                numericUpDownSourceWidth.Value = w;
+            }
+
+            var oldPlayResY = AdvancedSubStationAlpha.GetTagValueFromHeader("PlayResY", "[Script Info]", _subtitle.Header);
+            if (int.TryParse(oldPlayResY, out var h))
+            {
+                numericUpDownSourceHeight.Value = h;
             }
 
             if (_videoInfo != null && _videoInfo.Width > 0 && _videoInfo.Height > 0)
             {
-                numericUpDownSourceWidth.Value = _videoInfo.Width;
-                numericUpDownSourceHeight.Value = _videoInfo.Height;
+                numericUpDownTargetWidth.Value = _videoInfo.Width;
+                numericUpDownTargetHeight.Value = _videoInfo.Height;
             }
         }
 
@@ -104,12 +107,48 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
+            var sourceWidth = numericUpDownSourceWidth.Value;
+            var sourceHeight = numericUpDownSourceHeight.Value;
+            var targetWidth = numericUpDownTargetWidth.Value;
+            var targetHeight = numericUpDownTargetHeight.Value;
+
+            var fixMargins = checkBoxKeepAspectRatio.Checked;
+            var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(_subtitle.Header);
+            foreach (var style in styles)
+            {
+                if (fixMargins)
+                {
+                    style.MarginLeft = AssaResampler.Resample(sourceWidth, targetWidth, style.MarginLeft);
+                    style.MarginRight = AssaResampler.Resample(sourceWidth, targetWidth, style.MarginLeft);
+                    style.MarginVertical = AssaResampler.Resample(sourceHeight, targetHeight, style.MarginLeft);
+                }
+                style.FontSize = AssaResampler.Resample(sourceHeight, targetHeight, style.FontSize);
+            }
+
+            _subtitle.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(_subtitle.Header, styles);
+
+            _subtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + _videoInfo.Width.ToString(CultureInfo.InvariantCulture), "[Script Info]", _subtitle.Header);
+            _subtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + _videoInfo.Height.ToString(CultureInfo.InvariantCulture), "[Script Info]", _subtitle.Header);
+
+            foreach (var p in _subtitle.Paragraphs)
+            {
+                p.Text = AssaResampler.ResampleOverrideTags(sourceWidth, targetWidth, sourceHeight, targetHeight, p.Text);
+            }
+
             DialogResult = DialogResult.OK;
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
+        }
+
+        private void ResolutionResampler_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                DialogResult = DialogResult.Cancel;
+            }
         }
     }
 }
