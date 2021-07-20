@@ -204,6 +204,12 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             }
 
             var idx = text.IndexOfAny(EndPlusDashList, StringComparison.Ordinal);
+            if (idx < 0)
+            {
+                var endPlusDashItalicList = EndPlusDashList.Select(p => p.Insert(p.Length - 1, "<i>")).ToArray();
+                idx = text.IndexOfAny(endPlusDashItalicList, StringComparison.Ordinal);
+            }
+
             if (idx >= 0)
             {
                 int lineCount = Utilities.GetNumberOfLines(text);
@@ -251,6 +257,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                 }
             }
+
             return text;
         }
 

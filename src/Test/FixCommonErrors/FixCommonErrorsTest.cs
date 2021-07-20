@@ -1934,8 +1934,8 @@ namespace Test.FixCommonErrors
         public void FixDialogsOnOneLine1()
         {
             const string source = "- I was here, putting our child to sleep-- - Emma.";
-            string target = "- I was here, putting our child to sleep--" + Environment.NewLine + "- Emma.";
-            string result = Helper.FixDialogsOnOneLine(source, "en");
+            var target = "- I was here, putting our child to sleep--" + Environment.NewLine + "- Emma.";
+            var result = Helper.FixDialogsOnOneLine(source, "en");
             Assert.AreEqual(result, target);
         }
 
@@ -1943,35 +1943,44 @@ namespace Test.FixCommonErrors
         public void FixDialogsOnOneLine2()
         {
             const string source = "- Seriously, though. Are you being bullied? - Nope.";
-            string target = "- Seriously, though. Are you being bullied?" + Environment.NewLine + "- Nope.";
-            string result = Helper.FixDialogsOnOneLine(source, "en");
+            var target = "- Seriously, though. Are you being bullied?" + Environment.NewLine + "- Nope.";
+            var result = Helper.FixDialogsOnOneLine(source, "en");
             Assert.AreEqual(result, target);
         }
 
         [TestMethod]
         public void FixDialogsOnOneLine3()
         {
-            string source = "- Having sexual relationships" + Environment.NewLine + "with other women. - A'ight.";
-            string target = "- Having sexual relationships with other women." + Environment.NewLine + "- A'ight.";
-            string result = Helper.FixDialogsOnOneLine(source, "en");
+            var source = "- Having sexual relationships" + Environment.NewLine + "with other women. - A'ight.";
+            var target = "- Having sexual relationships with other women." + Environment.NewLine + "- A'ight.";
+            var result = Helper.FixDialogsOnOneLine(source, "en");
             Assert.AreEqual(result, target);
         }
 
         [TestMethod]
         public void FixDialogsOnOneLine4()
         {
-            string source = "- Haiman, say: \"I love you.\" - So," + Environment.NewLine + "what are you up to? Another question!";
-            string target = "- Haiman, say: \"I love you.\"" + Environment.NewLine + "- So, what are you up to? Another question!";
-            string result = Helper.FixDialogsOnOneLine(source, "en");
+            var source = "- Haiman, say: \"I love you.\" - So," + Environment.NewLine + "what are you up to? Another question!";
+            var target = "- Haiman, say: \"I love you.\"" + Environment.NewLine + "- So, what are you up to? Another question!";
+            var result = Helper.FixDialogsOnOneLine(source, "en");
             Assert.AreEqual(result, target);
         }
 
         [TestMethod]
         public void FixDialogsOnOneLine5()
         {
-            string source = "- [Gunshot] - [Scream]";
-            string target = "- [Gunshot]" + Environment.NewLine + "- [Scream]";
-            string result = Helper.FixDialogsOnOneLine(source, "en");
+            var source = "- [Gunshot] - [Scream]";
+            var target = "- [Gunshot]" + Environment.NewLine + "- [Scream]";
+            var result = Helper.FixDialogsOnOneLine(source, "en");
+            Assert.AreEqual(result, target);
+        }
+
+        [TestMethod]
+        public void FixDialogsOnOneLine6()
+        {
+            var source = "- Where did she get the tip? <i>- I don't know.</i>";
+            var target = "- Where did she get the tip?" + Environment.NewLine + "<i>- I don't know.</i>";
+            var result = Helper.FixDialogsOnOneLine(source, "en");
             Assert.AreEqual(result, target);
         }
 
@@ -3345,7 +3354,7 @@ namespace Test.FixCommonErrors
         {
             using (var target = GetFixCommonErrorsLib())
             {
-                InitializeFixCommonErrorsLine(target, "- They wanted to test!" + Environment.NewLine  + "But not Kal-El.");
+                InitializeFixCommonErrorsLine(target, "- They wanted to test!" + Environment.NewLine + "But not Kal-El.");
                 Configuration.Settings.General.ContinuationStyle = ContinuationStyle.LeadingTrailingDots;
                 new RemoveDialogFirstLineInNonDialogs().Fix(_subtitle, new EmptyFixCallback());
                 Assert.AreEqual("They wanted to test!" + Environment.NewLine + "But not Kal-El.", _subtitle.Paragraphs[0].Text);
