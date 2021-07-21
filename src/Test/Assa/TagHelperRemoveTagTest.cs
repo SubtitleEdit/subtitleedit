@@ -1,10 +1,10 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Controls;
 
-namespace Test.AssaTagHelper
+namespace Test.Assa
 {
     [TestClass]
-    public class RemoveTag
+    public class TagHelperRemoveTagTest
     {
         [TestMethod]
         public void RemoveTag1()

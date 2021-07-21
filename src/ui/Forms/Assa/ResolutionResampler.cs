@@ -112,7 +112,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             var targetWidth = numericUpDownTargetWidth.Value;
             var targetHeight = numericUpDownTargetHeight.Value;
 
-            var fixMargins = checkBoxKeepAspectRatio.Checked;
+            var fixMargins = checkBoxMargins.Checked;
+            var fixFonts = checkBoxFontSize.Checked;
+            var fixPos = checkBoxPosition.Checked;
+            var fixDraw = checkBoxDrawing.Checked;
             var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(_subtitle.Header);
             foreach (var style in styles)
             {
@@ -132,7 +135,20 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             foreach (var p in _subtitle.Paragraphs)
             {
-                p.Text = AssaResampler.ResampleOverrideTags(sourceWidth, targetWidth, sourceHeight, targetHeight, p.Text);
+                if (fixFonts)
+                {
+                    p.Text = AssaResampler.ResampleOverrideTagsFont(sourceWidth, targetWidth, sourceHeight, targetHeight, p.Text);
+                }
+
+                if (fixPos)
+                {
+                    p.Text = AssaResampler.ResampleOverrideTagsPosition(sourceWidth, targetWidth, sourceHeight, targetHeight, p.Text);
+                }
+
+                if (fixDraw)
+                {
+                    p.Text = AssaResampler.ResampleOverrideTagsDrawing(sourceWidth, targetWidth, sourceHeight, targetHeight, p.Text);
+                }
             }
 
             DialogResult = DialogResult.OK;
