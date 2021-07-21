@@ -3,10 +3,13 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.Assa
@@ -40,24 +43,123 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             foreach (var font in FontFamily.Families)
             {
                 comboBoxFontName.Items.Add(font.Name);
+                if (font.Name == "Arial")
+                {
+                    comboBoxFontName.SelectedIndex = comboBoxFontName.Items.Count - 1;
+                }
+            }
+            if (comboBoxFontName.SelectedIndex == -1 && comboBoxFontName.Items.Count > 0)
+            {
+                comboBoxFontName.SelectedIndex = 1;
             }
 
             _videoPlayerContainer = new Controls.VideoPlayerContainer();
             Controls.Add(_videoPlayerContainer);
             _videoPlayerContainer.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            //this.videoPlayerContainer1.BackColor = Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(18)))), ((int)(((byte)(18)))));
-            //this.videoPlayerContainer1.Chapters = ((System.Collections.Generic.List<Nikse.SubtitleEdit.Core.ContainerFormats.Matroska.MatroskaChapter>)(resources.GetObject("videoPlayerContainer1.Chapters")));
-            //this.videoPlayerContainer1.Controls.Add(this.textBoxSource);
-            //this.videoPlayerContainer1.CurrentPosition = 0D;
-            //this.videoPlayerContainer1.FontSizeFactor = 1F;
-            //this.videoPlayerContainer1.LastParagraph = null;
             _videoPlayerContainer.Location = new Point(401, 12);
             _videoPlayerContainer.Name = "_videoPlayerContainer";
             _videoPlayerContainer.Size = new Size(923, 601);
 
+            _fontAttachments = new List<AssaAttachmentFont>();
+            if (subtitle.Footer != null)
+            {
+                GetFonts(subtitle.Footer.SplitToLines());
+            }
+            buttonPickAttachmentFont.Visible = _fontAttachments.Count > 0;
+
+
+            listViewChapters_SelectedIndexChanged(null, null);
+
             _timer1 = new Timer();
             _timer1.Interval = 100;
             _timer1.Tick += _timer1_Tick;
+
+        }
+
+        private void GetFonts(List<string> lines)
+        {
+            bool attachmentOn = false;
+            var attachmentContent = new StringBuilder();
+            var attachmentFileName = string.Empty;
+            var category = string.Empty;
+            foreach (var line in lines)
+            {
+                var s = line.Trim();
+                if (attachmentOn)
+                {
+                    if (s == "[V4+ Styles]" || s == "[Events]")
+                    {
+                        SaveFontNames(attachmentFileName, attachmentContent.ToString(), category);
+                        attachmentOn = false;
+                        attachmentContent = new StringBuilder();
+                        attachmentFileName = string.Empty;
+                    }
+                    else if (s.Length == 0)
+                    {
+                        SaveFontNames(attachmentFileName, attachmentContent.ToString(), category);
+                        attachmentContent = new StringBuilder();
+                        attachmentFileName = string.Empty;
+                    }
+                    else if (s.StartsWith("filename:", StringComparison.Ordinal) || s.StartsWith("fontname:", StringComparison.Ordinal))
+                    {
+                        SaveFontNames(attachmentFileName, attachmentContent.ToString(), category);
+                        attachmentContent = new StringBuilder();
+                        attachmentFileName = s.Remove(0, 9).Trim();
+                    }
+                    else
+                    {
+                        attachmentContent.AppendLine(s);
+                    }
+                }
+                else if (s == "[Fonts]" || s == "[Graphics]")
+                {
+                    category = s;
+                    attachmentOn = true;
+                    attachmentContent = new StringBuilder();
+                    attachmentFileName = string.Empty;
+                }
+            }
+
+            SaveFontNames(attachmentFileName, attachmentContent.ToString(), category);
+        }
+
+        private void SaveFontNames(string attachmentFileName, string attachmentContent, string category)
+        {
+            var content = attachmentContent.Trim();
+            if (string.IsNullOrEmpty(attachmentFileName) || content.Length == 0 || !attachmentFileName.EndsWith(".ttf", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return;
+            }
+
+            var bytes = UUEncoding.UUDecode(content);
+            foreach (var fontName in GetFontNames(bytes))
+            {
+                _fontAttachments.Add(new AssaAttachmentFont { FileName = attachmentFileName, FontName = fontName, Bytes = bytes, Category = category, Content = content });
+            }
+        }
+
+        private List<string> GetFontNames(byte[] fontBytes)
+        {
+            var privateFontCollection = new PrivateFontCollection();
+            var handle = GCHandle.Alloc(fontBytes, GCHandleType.Pinned);
+            var pointer = handle.AddrOfPinnedObject();
+            try
+            {
+                privateFontCollection.AddMemoryFont(pointer, fontBytes.Length);
+            }
+            finally
+            {
+                handle.Free();
+            }
+
+            var resultList = new List<string>();
+            foreach (var font in privateFontCollection.Families)
+            {
+                resultList.Add(font.Name);
+            }
+
+            privateFontCollection.Dispose();
+            return resultList;
         }
 
         private void buttonOK_Click(object sender, System.EventArgs e)
@@ -203,7 +305,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             var p = (Paragraph)listViewChapters.SelectedItems[0].Tag;
             p.StartTime.TotalMilliseconds = timeUpDownStartTime.TimeCode.TotalMilliseconds;
-            listViewChapters.SelectedItems[0].SubItems[0].Text = p.StartTime.ToDisplayString();
+            listViewChapters.SelectedItems[0].SubItems[1].Text = p.StartTime.ToDisplayString();
         }
 
         private void _timer1_Tick(object sender, EventArgs e)
@@ -353,7 +455,7 @@ Dialogue: -255,0:00:00.00,0:43:00.00,sepbar_bg,,0,0,0,,{\K[DURATION]\p1}m 0 0 l 
         {
             if (_chapters.Paragraphs.Count > 0)
             {
-                var startTimeMs = _chapters.Paragraphs.Last().StartTime.TotalMilliseconds + 2000;
+                var startTimeMs = _chapters.Paragraphs.Last().StartTime.TotalMilliseconds + 60000 * 5;
                 _chapters.Paragraphs.Add(new Paragraph("Text", startTimeMs, startTimeMs));
             }
             else
@@ -425,6 +527,7 @@ Dialogue: -255,0:00:00.00,0:43:00.00,sepbar_bg,,0,0,0,,{\K[DURATION]\p1}m 0 0 l 
             if (listViewChapters.SelectedItems.Count == 0)
             {
                 labelStartTime.Enabled = false;
+                labelText.Enabled = false;
                 timeUpDownStartTime.Enabled = false;
                 timeUpDownStartTime.MaskedTextBox.Enabled = false;
                 textBoxChapterText.Enabled = false;
@@ -432,8 +535,9 @@ Dialogue: -255,0:00:00.00,0:43:00.00,sepbar_bg,,0,0,0,,{\K[DURATION]\p1}m 0 0 l 
                 return;
             }
 
-            labelStartTime.Enabled = Enabled;
-            timeUpDownStartTime.Enabled = Enabled;
+            labelStartTime.Enabled = true;
+            labelText.Enabled = true;
+            timeUpDownStartTime.Enabled = true;
             timeUpDownStartTime.MaskedTextBox.Enabled = true;
             textBoxChapterText.Enabled = true;
 
@@ -452,6 +556,21 @@ Dialogue: -255,0:00:00.00,0:43:00.00,sepbar_bg,,0,0,0,,{\K[DURATION]\p1}m 0 0 l 
                 if (openFileDialog1.ShowDialog() == DialogResult.OK)
                 {
                 }
+            }
+        }
+
+        private void buttonGoToPosition_Click(object sender, EventArgs e)
+        {
+            _videoPlayerContainer.CurrentPosition = timeUpDownStartTime.TimeCode.TotalSeconds;
+        }
+
+        private void listViewChapters_DoubleClick(object sender, EventArgs e)
+        {
+            if (listViewChapters.SelectedItems.Count == 1)
+            {
+
+                var p = (Paragraph)listViewChapters.SelectedItems[0].Tag;
+                _videoPlayerContainer.CurrentPosition = p.StartTime.TotalSeconds;
             }
         }
     }
