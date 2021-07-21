@@ -41,7 +41,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.numericUpDownSourceWidth = new System.Windows.Forms.NumericUpDown();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
-            this.checkBoxKeepAspectRatio = new System.Windows.Forms.CheckBox();
+            this.checkBoxMargins = new System.Windows.Forms.CheckBox();
+            this.checkBoxFontSize = new System.Windows.Forms.CheckBox();
+            this.checkBoxPosition = new System.Windows.Forms.CheckBox();
+            this.checkBoxDrawing = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSourceHeight)).BeginInit();
@@ -157,7 +160,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(327, 143);
+            this.buttonCancel.Location = new System.Drawing.Point(371, 189);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 16;
@@ -169,7 +172,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(246, 143);
+            this.buttonOK.Location = new System.Drawing.Point(290, 189);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 15;
@@ -177,22 +180,61 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
-            // checkBoxKeepAspectRatio
+            // checkBoxMargins
             // 
-            this.checkBoxKeepAspectRatio.AutoSize = true;
-            this.checkBoxKeepAspectRatio.Location = new System.Drawing.Point(15, 99);
-            this.checkBoxKeepAspectRatio.Name = "checkBoxKeepAspectRatio";
-            this.checkBoxKeepAspectRatio.Size = new System.Drawing.Size(169, 17);
-            this.checkBoxKeepAspectRatio.TabIndex = 17;
-            this.checkBoxKeepAspectRatio.Text = "Keep aspect ration for margins";
-            this.checkBoxKeepAspectRatio.UseVisualStyleBackColor = true;
+            this.checkBoxMargins.AutoSize = true;
+            this.checkBoxMargins.Location = new System.Drawing.Point(15, 99);
+            this.checkBoxMargins.Name = "checkBoxMargins";
+            this.checkBoxMargins.Size = new System.Drawing.Size(169, 17);
+            this.checkBoxMargins.TabIndex = 17;
+            this.checkBoxMargins.Text = "Keep aspect ration for margins";
+            this.checkBoxMargins.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxFontSize
+            // 
+            this.checkBoxFontSize.AutoSize = true;
+            this.checkBoxFontSize.Checked = true;
+            this.checkBoxFontSize.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxFontSize.Location = new System.Drawing.Point(12, 122);
+            this.checkBoxFontSize.Name = "checkBoxFontSize";
+            this.checkBoxFontSize.Size = new System.Drawing.Size(172, 17);
+            this.checkBoxFontSize.TabIndex = 18;
+            this.checkBoxFontSize.Text = "Keep aspect ration for font size";
+            this.checkBoxFontSize.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxPosition
+            // 
+            this.checkBoxPosition.AutoSize = true;
+            this.checkBoxPosition.Checked = true;
+            this.checkBoxPosition.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxPosition.Location = new System.Drawing.Point(12, 145);
+            this.checkBoxPosition.Name = "checkBoxPosition";
+            this.checkBoxPosition.Size = new System.Drawing.Size(169, 17);
+            this.checkBoxPosition.TabIndex = 19;
+            this.checkBoxPosition.Text = "Keep aspect ration for position";
+            this.checkBoxPosition.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxDrawing
+            // 
+            this.checkBoxDrawing.AutoSize = true;
+            this.checkBoxDrawing.Checked = true;
+            this.checkBoxDrawing.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxDrawing.Location = new System.Drawing.Point(12, 168);
+            this.checkBoxDrawing.Name = "checkBoxDrawing";
+            this.checkBoxDrawing.Size = new System.Drawing.Size(170, 17);
+            this.checkBoxDrawing.TabIndex = 20;
+            this.checkBoxDrawing.Text = "Keep aspect ration for drawing";
+            this.checkBoxDrawing.UseVisualStyleBackColor = true;
             // 
             // ResolutionResampler
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(414, 178);
-            this.Controls.Add(this.checkBoxKeepAspectRatio);
+            this.ClientSize = new System.Drawing.Size(458, 224);
+            this.Controls.Add(this.checkBoxDrawing);
+            this.Controls.Add(this.checkBoxPosition);
+            this.Controls.Add(this.checkBoxFontSize);
+            this.Controls.Add(this.checkBoxMargins);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.label1);
@@ -238,6 +280,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private System.Windows.Forms.NumericUpDown numericUpDownSourceWidth;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
-        private System.Windows.Forms.CheckBox checkBoxKeepAspectRatio;
+        private System.Windows.Forms.CheckBox checkBoxMargins;
+        private System.Windows.Forms.CheckBox checkBoxFontSize;
+        private System.Windows.Forms.CheckBox checkBoxPosition;
+        private System.Windows.Forms.CheckBox checkBoxDrawing;
     }
 }

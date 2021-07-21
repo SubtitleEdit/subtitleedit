@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return factor * v;
         }
 
-        public static string ResampleOverrideTags(decimal sourceWidth, decimal targetWidth, decimal sourceHeight, decimal targetHeight, string input)
+        public static string ResampleOverrideTagsFont(decimal sourceWidth, decimal targetWidth, decimal sourceHeight, decimal targetHeight, string input)
         {
             var s = input;
 
@@ -28,23 +28,37 @@ namespace Nikse.SubtitleEdit.Core.Common
             s = FixTagWithNumber(sourceWidth, targetWidth, s, "fscx");
             s = FixTagWithNumber(sourceHeight, targetHeight, s, "fscy");
 
+            return s;
+        }
+
+        public static string ResampleOverrideTagsPosition(decimal sourceWidth, decimal targetWidth, decimal sourceHeight, decimal targetHeight, string input)
+        {
+            var s = input;
+
             // {\\pos(10,11)}
             s = FixMethodTwoParameters(sourceWidth, targetWidth, sourceHeight, targetHeight, s, "pos");
             s = FixMethodTwoParameters(sourceWidth, targetWidth, sourceHeight, targetHeight, s, "org");
 
             // {\\move(10,11,20,21,5,5)}
-            FixMethodSixParametersFourActive(sourceWidth, targetWidth, sourceHeight, targetHeight, s, "move");
+            s = FixMethodSixParametersFourActive(sourceWidth, targetWidth, sourceHeight, targetHeight, s, "move");
 
             // {\\move(10,11,20,21)}
-            FixMethodFourParameters(sourceWidth, targetWidth, sourceHeight, targetHeight, s, "move");
-            FixMethodFourParameters(sourceWidth, targetWidth, sourceHeight, targetHeight, s, "clip");
-            FixMethodFourParameters(sourceWidth, targetWidth, sourceHeight, targetHeight, s, "iclip");
+            s = FixMethodFourParameters(sourceWidth, targetWidth, sourceHeight, targetHeight, s, "move");
+            s = FixMethodFourParameters(sourceWidth, targetWidth, sourceHeight, targetHeight, s, "clip");
+            s = FixMethodFourParameters(sourceWidth, targetWidth, sourceHeight, targetHeight, s, "iclip");
+
+            return s;
+        }
+
+        public static string ResampleOverrideTagsDrawing(decimal sourceWidth, decimal targetWidth, decimal sourceHeight, decimal targetHeight, string input)
+        {
+            var s = input;
 
             //{\clip(1,m 50 0 b 100 0 100 100 50 100 b 0 100 0 0 50 0)}
             //{\p1}m 0 0 l 100 0 100 100 0 100{\p0}
-            FixDrawing(sourceWidth, targetWidth, sourceHeight, targetHeight, s, "\\iclip\\(", ")");
-            FixDrawing(sourceWidth, targetWidth, sourceHeight, targetHeight, s, "\\clip\\(", ")");
-            FixDrawing(sourceWidth, targetWidth, sourceHeight, targetHeight, s, "{\\p1}", "{\\p0}");
+            s = FixDrawing(sourceWidth, targetWidth, sourceHeight, targetHeight, s, "\\iclip\\(", ")");
+            s = FixDrawing(sourceWidth, targetWidth, sourceHeight, targetHeight, s, "\\clip\\(", ")");
+            s = FixDrawing(sourceWidth, targetWidth, sourceHeight, targetHeight, s, "{\\p1}", "{\\p0}");
 
             return s;
         }
