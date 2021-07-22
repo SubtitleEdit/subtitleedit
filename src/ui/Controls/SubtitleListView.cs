@@ -356,6 +356,11 @@ namespace Nikse.SubtitleEdit.Controls
                 }
             }
 
+            if (Configuration.Settings != null && !Configuration.Settings.Tools.ListViewShowColumnStartTime)
+            {
+                HideColumn(SubtitleColumn.Start);
+            }
+
             if (Configuration.Settings != null && !Configuration.Settings.Tools.ListViewShowColumnEndTime)
             {
                 HideColumn(SubtitleColumn.End);
@@ -772,6 +777,41 @@ namespace Nikse.SubtitleEdit.Controls
             Columns[ColumnIndexText].Width = lengthAvailable;
             Columns[ColumnIndexText].Width = lengthAvailable;
             SubtitleListViewLastColumnFill(this, null);
+        }
+
+        public void ShowStartColumn(string title)
+        {
+            if (GetColumnIndex(SubtitleColumn.Start) == -1)
+            {
+                var ch = new ColumnHeader { Text = title };
+                if (ColumnIndexNumber >= 0)
+                {
+                    SubtitleColumns.Insert(ColumnIndexNumber + 1, SubtitleColumn.Start);
+                    Columns.Insert(ColumnIndexNumber + 1, ch);
+                }
+                else
+                {
+                    SubtitleColumns.Add(SubtitleColumn.Start);
+                    Columns.Insert(0, ch);
+                }
+                UpdateColumnIndexes();
+
+                try
+                {
+                    using (var graphics = Parent.CreateGraphics())
+                    {
+                        var timestampSizeF = graphics.MeasureString(new TimeCode(0, 0, 33, 527).ToDisplayString(), Font);
+                        var timestampWidth = (int)(timestampSizeF.Width + 0.5) + 11;
+                        Columns[ColumnIndexStart].Width = timestampWidth;
+                    }
+                }
+                catch
+                {
+                    Columns[ColumnIndexStart].Width = 65;
+                }
+
+                AutoSizeAllColumns(null);
+            }
         }
 
         public void ShowEndColumn(string title)

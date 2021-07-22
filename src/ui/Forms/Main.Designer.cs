@@ -271,6 +271,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.applyCustomStylesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setPositionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.progressBarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.videoResolutionResamplerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAssStyles = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorAssa = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemSetRegion = new System.Windows.Forms.ToolStripMenuItem();
@@ -554,7 +555,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerOriginalTextUndo = new System.Windows.Forms.Timer(this.components);
-            this.videoResolutionResamplerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -2530,7 +2530,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemSelectedLines,
             this.toolStripMenuItemGoogleMicrosoftTranslateSelLine});
             this.contextMenuStripListView.Name = "contextMenuStripListView";
-            this.contextMenuStripListView.Size = new System.Drawing.Size(285, 754);
+            this.contextMenuStripListView.Size = new System.Drawing.Size(285, 732);
             this.contextMenuStripListView.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
             this.contextMenuStripListView.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListViewOpening);
             this.contextMenuStripListView.Opened += new System.EventHandler(this.MenuOpened);
@@ -2578,6 +2578,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.progressBarToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
             this.progressBarToolStripMenuItem.Text = "Generate progress bar...";
             this.progressBarToolStripMenuItem.Click += new System.EventHandler(this.progressBarToolStripMenuItem_Click);
+            // 
+            // videoResolutionResamplerToolStripMenuItem
+            // 
+            this.videoResolutionResamplerToolStripMenuItem.Name = "videoResolutionResamplerToolStripMenuItem";
+            this.videoResolutionResamplerToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.videoResolutionResamplerToolStripMenuItem.Text = "Video resolution resampler...";
+            this.videoResolutionResamplerToolStripMenuItem.Click += new System.EventHandler(this.videoResolutionResamplerToolStripMenuItem_Click);
             // 
             // toolStripMenuItemAssStyles
             // 
@@ -5177,7 +5184,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemInsertUnicodeSymbol,
             this.toolStripMenuItemInsertUnicodeControlCharacters});
             this.contextMenuStripTextBoxSourceView.Name = "contextMenuStripTextBoxSourceView";
-            this.contextMenuStripTextBoxSourceView.Size = new System.Drawing.Size(243, 198);
+            this.contextMenuStripTextBoxSourceView.Size = new System.Drawing.Size(243, 220);
             this.contextMenuStripTextBoxSourceView.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
             this.contextMenuStripTextBoxSourceView.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripTextBoxListViewOpening);
             this.contextMenuStripTextBoxSourceView.Opened += new System.EventHandler(this.MenuOpened);
@@ -5384,13 +5391,6 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.timerOriginalTextUndo.Interval = 700;
             this.timerOriginalTextUndo.Tick += new System.EventHandler(this.TimerOriginalTextUndoTick);
-            // 
-            // videoResolutionResamplerToolStripMenuItem
-            // 
-            this.videoResolutionResamplerToolStripMenuItem.Name = "videoResolutionResamplerToolStripMenuItem";
-            this.videoResolutionResamplerToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
-            this.videoResolutionResamplerToolStripMenuItem.Text = "Video resolution resampler...";
-            this.videoResolutionResamplerToolStripMenuItem.Click += new System.EventHandler(this.videoResolutionResamplerToolStripMenuItem_Click);
             // 
             // Main
             // 

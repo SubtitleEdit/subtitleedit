@@ -4970,6 +4970,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             var oldFavoriteFormats = Configuration.Settings.General.FavoriteSubtitleFormats;
             var oldAllowEditOfOriginalSubtitle = Configuration.Settings.General.AllowEditOfOriginalSubtitle;
+            var oldShowColumnStartTime = Configuration.Settings.Tools.ListViewShowColumnStartTime;
             var oldShowColumnEndTime = Configuration.Settings.Tools.ListViewShowColumnEndTime;
             var oldShowcolumnDuration = Configuration.Settings.Tools.ListViewShowColumnDuration;
             var oldShowColumnCharsPerSec = Configuration.Settings.Tools.ListViewShowColumnCharsPerSec;
@@ -5034,11 +5035,22 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.General.SubtitleListViewFontBold.ToString() +
                 Configuration.Settings.General.SubtitleListViewFontSize ||
                 oldSyntaxColoring != newSyntaxColoring ||
+                oldShowColumnStartTime != Configuration.Settings.Tools.ListViewShowColumnStartTime ||
                 oldShowColumnEndTime != Configuration.Settings.Tools.ListViewShowColumnEndTime ||
                 oldShowcolumnDuration != Configuration.Settings.Tools.ListViewShowColumnDuration ||
                 oldShowColumnCharsPerSec != Configuration.Settings.Tools.ListViewShowColumnCharsPerSec ||
                 oldShowWordsMinColumn != Configuration.Settings.Tools.ListViewShowColumnWordsPerMin)
             {
+                if (Configuration.Settings.Tools.ListViewShowColumnStartTime)
+                {
+                    SubtitleListview1.ShowEndColumn(LanguageSettings.Current.General.StartTime);
+                }
+                else
+                {
+                    SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.Start);
+                }
+
+
                 if (Configuration.Settings.Tools.ListViewShowColumnEndTime)
                 {
                     SubtitleListview1.ShowEndColumn(LanguageSettings.Current.General.EndTime);
@@ -7906,6 +7918,34 @@ namespace Nikse.SubtitleEdit.Forms
                 var tss = new ToolStripSeparator();
                 UiUtil.FixFonts(tss);
                 cm.Items.Add(tss);
+
+                // Start time
+                var contextMenuStripLvHeaderStartTimeToolStripMenuItem = new ToolStripMenuItem(LanguageSettings.Current.General.StartTime)
+                {
+                    CheckOnClick = true,
+                    Checked = Configuration.Settings.Tools.ListViewShowColumnStartTime
+                };
+                contextMenuStripLvHeaderStartTimeToolStripMenuItem.Click += (sender2, e2) =>
+                {
+                    SubtitleListview1.BeginUpdate();
+                    Configuration.Settings.Tools.ListViewShowColumnStartTime = contextMenuStripLvHeaderStartTimeToolStripMenuItem.Checked;
+                    if (Configuration.Settings.Tools.ListViewShowColumnStartTime)
+                    {
+                        SubtitleListview1.ShowStartColumn(LanguageSettings.Current.General.StartTime);
+                    }
+                    else
+                    {
+                        SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.Start);
+                    }
+
+                    SaveSubtitleListviewIndices();
+                    UiUtil.InitializeSubtitleFont(SubtitleListview1);
+                    SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                    RestoreSubtitleListviewIndices();
+                    SubtitleListview1.EndUpdate();
+                };
+                cm.Items.Add(contextMenuStripLvHeaderStartTimeToolStripMenuItem);
+
 
                 // End time
                 var contextMenuStripLvHeaderEndTimeToolStripMenuItem = new ToolStripMenuItem(LanguageSettings.Current.General.EndTime)

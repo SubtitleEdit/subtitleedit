@@ -161,6 +161,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public Color Color2 { get; set; }
         public Color Color3 { get; set; }
         public Color Color4 { get; set; }
+        public bool ListViewShowColumnStartTime { get; set; }
         public bool ListViewShowColumnEndTime { get; set; }
         public bool ListViewShowColumnDuration { get; set; }
         public bool ListViewShowColumnCharsPerSec { get; set; }
@@ -385,6 +386,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             Color2 = Color.FromArgb(byte.MaxValue, 0, 0);
             Color3 = Color.FromArgb(0, byte.MaxValue, 0);
             Color4 = Color.Cyan;
+            ListViewShowColumnStartTime = true;
             ListViewShowColumnEndTime = true;
             ListViewShowColumnDuration = true;
             SplitAdvanced = false;
@@ -4126,6 +4128,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.Color4 = ColorTranslator.FromHtml(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("ListViewShowColumnStartTime");
+            if (subNode != null)
+            {
+                settings.Tools.ListViewShowColumnStartTime = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("ListViewShowColumnEndTime");
@@ -8690,6 +8698,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("Color2", ColorTranslator.ToHtml(settings.Tools.Color2));
                 textWriter.WriteElementString("Color3", ColorTranslator.ToHtml(settings.Tools.Color3));
                 textWriter.WriteElementString("Color4", ColorTranslator.ToHtml(settings.Tools.Color4));
+                textWriter.WriteElementString("ListViewShowColumnStartTime", settings.Tools.ListViewShowColumnStartTime.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewShowColumnEndTime", settings.Tools.ListViewShowColumnEndTime.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewShowColumnDuration", settings.Tools.ListViewShowColumnDuration.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewShowColumnCharsPerSec", settings.Tools.ListViewShowColumnCharsPerSec.ToString(CultureInfo.InvariantCulture));
