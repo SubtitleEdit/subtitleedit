@@ -31580,6 +31580,12 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     return;
                 }
+
+                _subtitle.Renumber();
+                var idx = FirstSelectedIndex;
+                SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                _subtitleListViewIndex = -1;
+                SubtitleListview1.SelectIndexAndEnsureVisibleFaster(idx);
             }
         }
 
