@@ -65,12 +65,15 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonCancel = new System.Windows.Forms.Button();
             this.textBoxSource = new System.Windows.Forms.TextBox();
             this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
+            this.labelYAdjust = new System.Windows.Forms.Label();
+            this.numericUpDownyAdjust = new System.Windows.Forms.NumericUpDown();
             this.groupBoxStyle.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSplitterWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSplitterHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).BeginInit();
             this.groupBoxChapters.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownyAdjust)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBoxStyle
@@ -307,6 +310,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             this.groupBoxChapters.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBoxChapters.Controls.Add(this.labelYAdjust);
+            this.groupBoxChapters.Controls.Add(this.numericUpDownyAdjust);
             this.groupBoxChapters.Controls.Add(this.textBoxChapterText);
             this.groupBoxChapters.Controls.Add(this.labelText);
             this.groupBoxChapters.Controls.Add(this.timeUpDownStartTime);
@@ -335,6 +340,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             // textBoxChapterText
             // 
+            this.textBoxChapterText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.textBoxChapterText.Location = new System.Drawing.Point(63, 409);
             this.textBoxChapterText.Name = "textBoxChapterText";
             this.textBoxChapterText.Size = new System.Drawing.Size(314, 20);
@@ -425,10 +431,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.columnHeaderStart});
             this.listViewChapters.FullRowSelect = true;
             this.listViewChapters.HideSelection = false;
-            this.listViewChapters.Location = new System.Drawing.Point(6, 186);
+            this.listViewChapters.Location = new System.Drawing.Point(6, 204);
             this.listViewChapters.MultiSelect = false;
             this.listViewChapters.Name = "listViewChapters";
-            this.listViewChapters.Size = new System.Drawing.Size(371, 182);
+            this.listViewChapters.Size = new System.Drawing.Size(371, 164);
             this.listViewChapters.TabIndex = 1;
             this.listViewChapters.UseCompatibleStateImageBehavior = false;
             this.listViewChapters.View = System.Windows.Forms.View.Details;
@@ -500,6 +506,28 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.timeUpDownStartTime.TimeCode = timeCode1;
             this.timeUpDownStartTime.UseVideoOffset = false;
             // 
+            // labelYAdjust
+            // 
+            this.labelYAdjust.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelYAdjust.AutoSize = true;
+            this.labelYAdjust.Location = new System.Drawing.Point(11, 168);
+            this.labelYAdjust.Name = "labelYAdjust";
+            this.labelYAdjust.Size = new System.Drawing.Size(45, 13);
+            this.labelYAdjust.TabIndex = 230;
+            this.labelYAdjust.Text = "Y adjust";
+            // 
+            // numericUpDownyAdjust
+            // 
+            this.numericUpDownyAdjust.Location = new System.Drawing.Point(93, 166);
+            this.numericUpDownyAdjust.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDownyAdjust.Name = "numericUpDownyAdjust";
+            this.numericUpDownyAdjust.Size = new System.Drawing.Size(52, 20);
+            this.numericUpDownyAdjust.TabIndex = 231;
+            // 
             // AssaProgressBar
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -510,6 +538,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.Controls.Add(this.groupBoxChapters);
             this.Controls.Add(this.groupBoxStyle);
             this.KeyPreview = true;
+            this.MinimumSize = new System.Drawing.Size(1200, 680);
             this.Name = "AssaProgressBar";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
@@ -526,6 +555,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).EndInit();
             this.groupBoxChapters.ResumeLayout(false);
             this.groupBoxChapters.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownyAdjust)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -567,5 +597,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private System.Windows.Forms.Label labelStartTime;
         private System.Windows.Forms.TextBox textBoxChapterText;
         private System.Windows.Forms.Label labelText;
+        private System.Windows.Forms.Label labelYAdjust;
+        private System.Windows.Forms.NumericUpDown numericUpDownyAdjust;
     }
 }

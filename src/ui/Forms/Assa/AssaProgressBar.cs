@@ -70,10 +70,28 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             listViewChapters_SelectedIndexChanged(null, null);
 
+            var left = labelStorageCategory.Left + Math.Max(labelStorageCategory.Width, labelHeight.Width) + 10;
+            radioButtonPosBottom.Left = left;
+            radioButtonPosTop.Left = left + radioButtonPosBottom.Width + 10;
+            numericUpDownHeight.Left = left;
+            buttonForeColor.Left = left;
+            panelPrimaryColor.Left = left + buttonForeColor.Width + 5;
+            buttonSecondaryColor.Left = left;
+            panelSecondaryColor.Left = left + buttonSecondaryColor.Width + 5;
+
+            left = Math.Max(Math.Max(Math.Max(labelSplitterWidth.Width, labelSplitter.Width), Math.Max(labelFontName.Width, labelRotateX.Width)), labelYAdjust.Width) + 12;
+            numericUpDownSplitterWidth.Left = left;
+            numericUpDownSplitterHeight.Left = left;
+            comboBoxFontName.Left = left;
+            buttonPickAttachmentFont.Left = left + comboBoxFontName.Width + 5;
+            numericUpDownFontSize.Left = left;
+            buttonTextColor.Left = left;
+            panelTextColor.Left = left + buttonTextColor.Width + 5;
+            numericUpDownyAdjust.Left = left;
+
             _timer1 = new Timer();
             _timer1.Interval = 100;
             _timer1.Tick += _timer1_Tick;
-
         }
 
         private void GetFonts(List<string> lines)
@@ -380,11 +398,11 @@ Dialogue: -255,0:00:00.00,0:43:00.00,sepbar_bg,,0,0,0,,{\K[DURATION]\p1}m 0 0 l 
 
                         if (radioButtonPosTop.Checked)
                         {
-                            var top = 0;
+                            var top = numericUpDownyAdjust.Value;
                             if ((decimal)chapterSize.Height < numericUpDownHeight.Value)
                             {
                                 var textHeight = (decimal)chapterSize.Height;
-                                top = (int)Math.Round((numericUpDownHeight.Value - textHeight) / 2.0m);
+                                top = (int)Math.Round((numericUpDownHeight.Value - textHeight) / 2.0m + numericUpDownyAdjust.Value);
                             }
                             posTag = $"{{\\pos({position + 10}, {top})}}";
 
@@ -402,7 +420,7 @@ Dialogue: -255,0:00:00.00,0:43:00.00,sepbar_bg,,0,0,0,,{\K[DURATION]\p1}m 0 0 l 
                         }
                         else
                         {
-                            posTag = $"{{\\pos({position + 10}, {_videoInfo.Height - numericUpDownHeight.Value})}}";
+                            posTag = $"{{\\pos({position + 10}, {_videoInfo.Height - numericUpDownHeight.Value + numericUpDownyAdjust.Value})}}";
 
                             var splitterTop = _videoInfo.Height - numericUpDownHeight.Value;
                             if (numericUpDownSplitterHeight.Value < numericUpDownHeight.Value)
