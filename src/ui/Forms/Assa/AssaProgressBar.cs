@@ -89,11 +89,45 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             panelTextColor.Left = left + buttonTextColor.Width + 5;
             numericUpDownyAdjust.Left = left;
 
-            //TODO: load existing progress bar settings (if any)
+            //Load existing progress bar settings (if any)
+            foreach (var p in _subtitle.Paragraphs)
+            {
+                if (p.Extra == "SE-progress-bar-text")
+                {
+                    var newParagraph = new Paragraph(p)
+                    {
+                        Text = Utilities.RemoveSsaTags(p.Text)
+                    };
+
+                    if (double.TryParse(p.Actor, NumberStyles.None, CultureInfo.InvariantCulture, out var number))
+                    {
+                        newParagraph.StartTime.TotalMilliseconds = number;
+                    }
+
+                    _chapters.Paragraphs.Add(newParagraph);
+                }
+            }
+
+            foreach (var style in AdvancedSubStationAlpha.GetSsaStylesFromHeader(_subtitle.Header))
+            {
+                if (style.Name == "SE-progress-bar-text")
+                {
+                    comboBoxFontName.Text = style.FontName;
+                    numericUpDownFontSize.Value = (decimal)style.FontSize;
+                    panelTextColor.BackColor = style.Primary;
+                }
+                else if (style.Name == "SE-progress-bar-bg")
+                {
+                    panelPrimaryColor.BackColor = style.Primary;
+                    panelSecondaryColor.BackColor = style.Secondary;
+                }
+            }
 
             _timer1 = new Timer();
             _timer1.Interval = 100;
             _timer1.Tick += _timer1_Tick;
+
+            RefreshListView();
         }
 
         private void GetFonts(List<string> lines)
@@ -194,6 +228,14 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(_subtitle.Header).Where(p=>!ignoreStyleNames.Contains(p.Name)).ToList();
             styles.AddRange(newStyles);
             _subtitle.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(_subtitle.Header, styles);
+
+            for (int i = _subtitle.Paragraphs.Count - 1; i >= 0; i--)
+            {
+                if (ignoreStyleNames.Contains(_subtitle.Paragraphs[i].Extra))
+                {
+                    _subtitle.Paragraphs.RemoveAt(i);
+                }
+            }
 
             _subtitle.Paragraphs.AddRange(_progessBarSubtitle.Paragraphs);
 
@@ -402,7 +444,6 @@ Dialogue: -255,0:00:00.00,0:43:00.00,SE-progress-bar-bg,,0,0,0,,{\K[DURATION]\p1
                     for (int i = 0; i < _chapters.Paragraphs.Count; i++)
                     {
                         Paragraph p = _chapters.Paragraphs[i];
-
                         var percentOfDuration = p.StartTime.TotalMilliseconds * 100 / _videoInfo.TotalMilliseconds;
                         var position = (int)Math.Round(_videoInfo.Width * percentOfDuration / 100.0);
                         string posTag;
@@ -480,7 +521,8 @@ Dialogue: -255,0:00:00.00,0:43:00.00,SE-progress-bar-bg,,0,0,0,,{\K[DURATION]\p1
                         {
                             Extra = "SE-progress-bar-text",
                             Layer = -1,
-                        };
+                            Actor = p.StartTime.TotalMilliseconds.ToString(CultureInfo.InvariantCulture),
+                    };
                         _progessBarSubtitle.Paragraphs.Add(chapterInfo);
                     }
                 }
