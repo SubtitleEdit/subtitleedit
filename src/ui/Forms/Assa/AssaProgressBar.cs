@@ -90,6 +90,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             numericUpDownyAdjust.Left = left;
 
             //Load existing progress bar settings (if any)
+
+            //TODO: splitter height + width
             foreach (var p in _subtitle.Paragraphs)
             {
                 if (p.Extra == "SE-progress-bar-text")
@@ -120,6 +122,16 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 {
                     panelPrimaryColor.BackColor = style.Primary;
                     panelSecondaryColor.BackColor = style.Secondary;
+
+                    if (style.Alignment != "7")
+                    {
+                        radioButtonPosBottom.Checked = true;
+                    }
+                    else
+                    {
+                        radioButtonPosTop.Checked = true;
+                    }
+
                 }
             }
 
@@ -225,7 +237,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             var newStyles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(_progessBarSubtitle.Header);
             var ignoreStyleNames = new List<string> { "SE-progress-bar-text", "SE-progress-bar-splitter", "SE-progress-bar-bg" };
-            var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(_subtitle.Header).Where(p=>!ignoreStyleNames.Contains(p.Name)).ToList();
+            var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(_subtitle.Header).Where(p => !ignoreStyleNames.Contains(p.Name)).ToList();
             styles.AddRange(newStyles);
             _subtitle.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(_subtitle.Header, styles);
 
@@ -522,7 +534,7 @@ Dialogue: -255,0:00:00.00,0:43:00.00,SE-progress-bar-bg,,0,0,0,,{\K[DURATION]\p1
                             Extra = "SE-progress-bar-text",
                             Layer = -1,
                             Actor = p.StartTime.TotalMilliseconds.ToString(CultureInfo.InvariantCulture),
-                    };
+                        };
                         _progessBarSubtitle.Paragraphs.Add(chapterInfo);
                     }
                 }
