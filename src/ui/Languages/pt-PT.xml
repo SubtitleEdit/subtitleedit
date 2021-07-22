@@ -2004,6 +2004,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <GoToPreviousBookmark>Ir para o marcador anterior</GoToPreviousBookmark>
     <GoToNextBookmark>Ir para o marcador seguinte</GoToNextBookmark>
     <ChooseProfile>Escolher perfil</ChooseProfile>
+    <OpenDataFolder>Abrir a pasta de dados do Subtitle Edit</OpenDataFolder>
     <DuplicateLine>Duplicar linha</DuplicateLine>
     <ToggleView>Alternar lista/original</ToggleView>
     <ToggleMode>Alternar traduzir/criar/ajustar</ToggleMode>
@@ -2651,7 +2652,7 @@ Continuar?</RestoreDefaultSettingsMsg>
     <Vertical>Vertical</Vertical>
     <Border>Contorno</Border>
     <PlusShadow>+ Sombra</PlusShadow>
-    <OpaqueBox>Caixa opaca (contorno colorido)</OpaqueBox>
+    <OpaqueBox>Caixa opaca</OpaqueBox>
     <Import>Importar...</Import>
     <Export>Exportar...</Export>
     <Copy>Copiar</Copy>
@@ -2679,6 +2680,8 @@ Continuar?</RestoreDefaultSettingsMsg>
     <ScaleY>EscalaY</ScaleY>
     <Spacing>Espaçamento</Spacing>
     <Angle>Ângulo</Angle>
+    <BoxPerLine>Caixa por linha (usar cor de contorno)</BoxPerLine>
+    <BoxMultiLine>Uma caixa (usar cor de sombra)</BoxMultiLine>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
     <Category>Categoria</Category>
