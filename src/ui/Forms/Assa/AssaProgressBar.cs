@@ -89,6 +89,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             panelTextColor.Left = left + buttonTextColor.Width + 5;
             numericUpDownyAdjust.Left = left;
 
+            //TODO: load existing progress bar settings (if any)
+
             _timer1 = new Timer();
             _timer1.Interval = 100;
             _timer1.Tick += _timer1_Tick;
@@ -180,8 +182,27 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             return resultList;
         }
 
-        private void buttonOK_Click(object sender, System.EventArgs e)
+        private void buttonOK_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(_subtitle.Header))
+            {
+                _subtitle.Header = AdvancedSubStationAlpha.DefaultHeader;
+            }
+
+            var newStyles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(_progessBarSubtitle.Header);
+            var ignoreStyleNames = new List<string> { "SE-progress-bar-text", "SE-progress-bar-splitter", "SE-progress-bar-bg" };
+            var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(_subtitle.Header).Where(p=>!ignoreStyleNames.Contains(p.Name)).ToList();
+            styles.AddRange(newStyles);
+            _subtitle.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(_subtitle.Header, styles);
+
+            _subtitle.Paragraphs.AddRange(_progessBarSubtitle.Paragraphs);
+
+            if (_videoInfo != null && _videoInfo.Width > 0 && _videoInfo.Height > 0)
+            {
+                _subtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + _videoInfo.Width.ToString(CultureInfo.InvariantCulture), "[Script Info]", _subtitle.Header);
+                _subtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + _videoInfo.Height.ToString(CultureInfo.InvariantCulture), "[Script Info]", _subtitle.Header);
+            }
+
             DialogResult = DialogResult.OK;
         }
 
@@ -338,14 +359,13 @@ PlayResY: [VIDEO_HEIGHT]
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Default,Arial,40,&H00FFFFFF,&H0000FFFB,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,1,1,2,0,0,50,1
-Style: sepbar_splitter,Arial,20,[TEXT_COLOR],&H0000FFFF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,0,0,7,0,0,0,1
-Style: sepbar_bg,Arial,20,[FORE_COLOR],[BACK_COLOR],&H00FFFFFF,&H00000000,0,0,0,0,100,100,0,0,1,0,0,[ALIGNMENT],0,0,0,1
-Style: sepbar_title,Arial,[FONT_SIZE],[TEXT_COLOR],&H0000FFFF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,0,0,7,0,0,0,1
+Style: SE-progress-bar-splitter,Arial,20,[TEXT_COLOR],&H0000FFFF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,0,0,7,0,0,0,1
+Style: SE-progress-bar-bg,Arial,20,[FORE_COLOR],[BACK_COLOR],&H00FFFFFF,&H00000000,0,0,0,0,100,100,0,0,1,0,0,[ALIGNMENT],0,0,0,1
+Style: SE-progress-bar-text,Arial,[FONT_SIZE],[TEXT_COLOR],&H0000FFFF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,0,0,7,0,0,0,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
-Dialogue: -255,0:00:00.00,0:43:00.00,sepbar_bg,,0,0,0,,{\K[DURATION]\p1}m 0 0 l [VIDEO_WIDTH] 0 [VIDEO_WIDTH] [PROGRESS_BAR_HEIGHT] 0 [PROGRESS_BAR_HEIGHT]{\p0}";
+Dialogue: -255,0:00:00.00,0:43:00.00,SE-progress-bar-bg,,0,0,0,,{\K[DURATION]\p1}m 0 0 l [VIDEO_WIDTH] 0 [VIDEO_WIDTH] [PROGRESS_BAR_HEIGHT] 0 [PROGRESS_BAR_HEIGHT]{\p0}";
 
             script = script.Replace("[VIDEO_WIDTH]", _videoInfo.Width.ToString(CultureInfo.InvariantCulture));
             script = script.Replace("[VIDEO_HEIGHT]", _videoInfo.Height.ToString(CultureInfo.InvariantCulture));
@@ -389,12 +409,22 @@ Dialogue: -255,0:00:00.00,0:43:00.00,sepbar_bg,,0,0,0,,{\K[DURATION]\p1}m 0 0 l 
                         string splitterText;
                         SizeF chapterSize;
 
-                        //TODO: use real font
-                        using (var font = new Font("Arial", (float)(numericUpDownFontSize.Value * 0.7m), FontStyle.Regular))
-                        {
-                            chapterSize = graphics.MeasureString(p.Text, font);
-                        }
 
+                        try
+                        {
+                            //TODO: use font from attachment (if relevant)
+                            using (var font = new Font(comboBoxFontName.Text, (float)(numericUpDownFontSize.Value * 0.7m), FontStyle.Regular))
+                            {
+                                chapterSize = graphics.MeasureString(p.Text, font);
+                            }
+                        }
+                        catch
+                        {
+                            using (var font = new Font(Font.Name, (float)(numericUpDownFontSize.Value * 0.7m), FontStyle.Regular))
+                            {
+                                chapterSize = graphics.MeasureString(p.Text, font);
+                            }
+                        }
 
                         if (radioButtonPosTop.Checked)
                         {
@@ -439,7 +469,7 @@ Dialogue: -255,0:00:00.00,0:43:00.00,sepbar_bg,,0,0,0,,{\K[DURATION]\p1}m 0 0 l 
                         {
                             var splitter = new Paragraph(splitterText, 0, _videoInfo.TotalMilliseconds)
                             {
-                                Extra = "sepbar_splitter",
+                                Extra = "SE-progress-bar-splitter",
                                 Layer = layer,
                             };
                             layer++;
@@ -448,7 +478,7 @@ Dialogue: -255,0:00:00.00,0:43:00.00,sepbar_bg,,0,0,0,,{\K[DURATION]\p1}m 0 0 l 
 
                         var chapterInfo = new Paragraph(posTag + p.Text, 0, _videoInfo.TotalMilliseconds)
                         {
-                            Extra = "sepbar_title",
+                            Extra = "SE-progress-bar-text",
                             Layer = -1,
                         };
                         _progessBarSubtitle.Paragraphs.Add(chapterInfo);
