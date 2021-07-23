@@ -344,6 +344,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string AssaProgressBarFontName { get; set; }
         public int AssaProgressBarFontSize { get; set; }
         public bool AssaProgressBarTopAlign { get; set; }
+        public string AssaProgressBarTextAlign { get; set; }
 
         public ToolsSettings()
         {
@@ -496,6 +497,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             AssaProgressBarSplitterHeight = 40;
             AssaProgressBarFontName = "Arial";
             AssaProgressBarFontSize = 30;
+            AssaProgressBarTextAlign = "left";
         }
     }
 
@@ -5233,6 +5235,12 @@ $HorzAlign          =   Center
                 settings.Tools.AssaProgressBarTopAlign = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("AssaProgressBarTextAlign");
+            if (subNode != null)
+            {
+                settings.Tools.AssaProgressBarTextAlign = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("FindHistory");
             if (subNode != null)
             {
@@ -8944,6 +8952,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AssaProgressBarFontName", settings.Tools.AssaProgressBarFontName);
                 textWriter.WriteElementString("AssaProgressBarFontSize", settings.Tools.AssaProgressBarFontSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AssaProgressBarTopAlign", settings.Tools.AssaProgressBarTopAlign.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AssaProgressBarTextAlign", settings.Tools.AssaProgressBarTextAlign);
 
                 if (settings.Tools.FindHistory != null && settings.Tools.FindHistory.Count > 0)
                 {

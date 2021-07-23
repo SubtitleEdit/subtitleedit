@@ -76,15 +76,18 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             buttonSecondaryColor.Left = left;
             panelSecondaryColor.Left = left + buttonSecondaryColor.Width + 5;
 
-            left = Math.Max(Math.Max(Math.Max(labelSplitterWidth.Width, labelSplitter.Width), Math.Max(labelFontName.Width, labelRotateX.Width)), labelYAdjust.Width) + 12;
+            left = Math.Max(Math.Max(Math.Max(labelSplitterHeight.Width, labelTextHorizontalAlignment.Width), Math.Max(labelFontName.Width, labelRotateX.Width)), labelYAdjust.Width) + 12;
             numericUpDownSplitterWidth.Left = left;
-            numericUpDownSplitterHeight.Left = left;
+            labelSplitterHeight.Left = numericUpDownSplitterWidth.Left + numericUpDownSplitterWidth.Width + 15;
+            numericUpDownSplitterHeight.Left = labelSplitterHeight.Left + labelSplitterHeight.Width + 5;
             comboBoxFontName.Left = left;
             buttonPickAttachmentFont.Left = left + comboBoxFontName.Width + 5;
             numericUpDownFontSize.Left = left;
             buttonTextColor.Left = left;
             panelTextColor.Left = left + buttonTextColor.Width + 5;
-            numericUpDownyAdjust.Left = left;
+            numericUpDownYAdjust.Left = left;
+            numericUpDownXAdjust.Left = left;
+            comboBoxTextHorizontalAlignment.Left = left;
 
             LoadExistingProgressBarSettings();
 
@@ -129,6 +132,19 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             else
             {
                 radioButtonPosBottom.Checked = true;
+            }
+
+            if (Configuration.Settings.Tools.AssaProgressBarTextAlign == "center")
+            {
+                comboBoxTextHorizontalAlignment.SelectedIndex = 1;
+            }
+            else if (Configuration.Settings.Tools.AssaProgressBarTextAlign == "right")
+            {
+                comboBoxTextHorizontalAlignment.SelectedIndex = 2;
+            }
+            else
+            {
+                comboBoxTextHorizontalAlignment.SelectedIndex = 0;
             }
         }
 
@@ -301,6 +317,22 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             Configuration.Settings.Tools.AssaProgressBarBackColor = panelSecondaryColor.BackColor;
             Configuration.Settings.Tools.AssaProgressBarTextColor = panelTextColor.BackColor;
             Configuration.Settings.Tools.AssaProgressBarHeight = (int)numericUpDownHeight.Value;
+            Configuration.Settings.Tools.AssaProgressBarSplitterWidth = (int)numericUpDownSplitterWidth.Value;
+            Configuration.Settings.Tools.AssaProgressBarSplitterHeight = (int)numericUpDownSplitterHeight.Value;
+            Configuration.Settings.Tools.AssaProgressBarFontName = comboBoxFontName.Text;
+            Configuration.Settings.Tools.AssaProgressBarFontSize = (int)numericUpDownFontSize.Value;
+            if (comboBoxTextHorizontalAlignment.SelectedIndex == 1)
+            {
+                Configuration.Settings.Tools.AssaProgressBarTextAlign = "center";
+            }
+            else if (comboBoxTextHorizontalAlignment.SelectedIndex == 2)
+            {
+                Configuration.Settings.Tools.AssaProgressBarTextAlign = "right";
+            }
+            else
+            {
+                Configuration.Settings.Tools.AssaProgressBarTextAlign = "left";
+            }
 
             DialogResult = DialogResult.OK;
         }
@@ -460,7 +492,7 @@ PlayResY: [VIDEO_HEIGHT]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
 Style: SE-progress-bar-splitter,Arial,20,[TEXT_COLOR],&H0000FFFF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,0,0,7,0,0,0,1
 Style: SE-progress-bar-bg,Arial,20,[FORE_COLOR],[BACK_COLOR],&H00FFFFFF,&H00000000,0,0,0,0,100,100,0,0,1,0,0,[ALIGNMENT],0,0,0,1
-Style: SE-progress-bar-text,[FONT_NAME],[FONT_SIZE],[TEXT_COLOR],&H0000FFFF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,0,0,7,0,0,0,1
+Style: SE-progress-bar-text,[FONT_NAME],[FONT_SIZE],[TEXT_COLOR],&H0000FFFF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,0,0,[TEXT_ALIGNMENT],0,0,0,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
@@ -490,6 +522,19 @@ Dialogue: -255,0:00:00.00,0:43:00.00,SE-progress-bar-bg,,0,0,0,,{\K[DURATION]\p1
                 script = script.Replace("[ALIGNMENT]", "1");
             }
 
+            if (comboBoxTextHorizontalAlignment.SelectedIndex == 1)
+            {
+                script = script.Replace("[TEXT_ALIGNMENT]", "5");
+            }
+            else if (comboBoxTextHorizontalAlignment.SelectedIndex == 2)
+            {
+                script = script.Replace("[TEXT_ALIGNMENT]", "6");
+            }
+            else
+            {
+                script = script.Replace("[TEXT_ALIGNMENT]", "4");
+            }
+
             new AdvancedSubStationAlpha().LoadSubtitle(_progessBarSubtitle, script.SplitToLines(), string.Empty);
 
             _progessBarSubtitle.Paragraphs[0].EndTime.TotalMilliseconds = _videoInfo.TotalMilliseconds;
@@ -502,8 +547,9 @@ Dialogue: -255,0:00:00.00,0:43:00.00,SE-progress-bar-bg,,0,0,0,,{\K[DURATION]\p1
                     for (int i = 0; i < _chapters.Paragraphs.Count; i++)
                     {
                         Paragraph p = _chapters.Paragraphs[i];
-                        var percentOfDuration = p.StartTime.TotalMilliseconds * 100 / _videoInfo.TotalMilliseconds;
+                        var percentOfDuration = p.StartTime.TotalMilliseconds * 100.0 / _videoInfo.TotalMilliseconds;
                         var position = (int)Math.Round(_videoInfo.Width * percentOfDuration / 100.0);
+                        var textPosition = GetTextPosition(position, p, i, percentOfDuration);
                         string posTag;
                         string splitterText;
                         SizeF chapterSize;
@@ -527,13 +573,8 @@ Dialogue: -255,0:00:00.00,0:43:00.00,SE-progress-bar-bg,,0,0,0,,{\K[DURATION]\p1
 
                         if (radioButtonPosTop.Checked)
                         {
-                            var top = numericUpDownyAdjust.Value;
-                            if ((decimal)chapterSize.Height < numericUpDownHeight.Value)
-                            {
-                                var textHeight = (decimal)chapterSize.Height;
-                                top = (int)Math.Round((numericUpDownHeight.Value - textHeight) / 2.0m + numericUpDownyAdjust.Value);
-                            }
-                            posTag = $"{{\\pos({position + 10}, {top})}}";
+                            var top = (int)Math.Round((numericUpDownHeight.Value / 2.0m) + numericUpDownYAdjust.Value);
+                            posTag = $"{{\\pos({textPosition}, {top})}}";
 
                             var splitterTop = 0;
                             if (numericUpDownSplitterHeight.Value < numericUpDownHeight.Value)
@@ -546,10 +587,12 @@ Dialogue: -255,0:00:00.00,0:43:00.00,SE-progress-bar-bg,,0,0,0,,{\K[DURATION]\p1
                                 $"{position} {splitterTop + numericUpDownSplitterHeight.Value} " + // bottom left point
                                 $"{position} {splitterTop}" + // top left point
                                 $"{{\\p0}}";
+
                         }
                         else
                         {
-                            posTag = $"{{\\pos({position + 10}, {_videoInfo.Height - numericUpDownHeight.Value + numericUpDownyAdjust.Value})}}";
+                            posTag = $"{{\\pos({textPosition}, {_videoInfo.Height - numericUpDownHeight.Value + numericUpDownYAdjust.Value})}}";
+                            posTag = $"{{\\pos({textPosition}, {(int)Math.Round(_videoInfo.Height - numericUpDownHeight.Value + (decimal)(chapterSize.Height / 2.0) + numericUpDownYAdjust.Value)})}}";
 
                             var splitterTop = _videoInfo.Height - numericUpDownHeight.Value;
                             if (numericUpDownSplitterHeight.Value < numericUpDownHeight.Value)
@@ -597,6 +640,34 @@ Dialogue: -255,0:00:00.00,0:43:00.00,SE-progress-bar-bg,,0,0,0,,{\K[DURATION]\p1
             }
 
             _videoPlayerContainer.RefreshProgressBar();
+        }
+
+        private int GetTextPosition(int position, Paragraph p, int i, double percentOfDuration)
+        {
+            if (comboBoxTextHorizontalAlignment.SelectedIndex == 1) // center
+            {
+                var positionNextX = _videoInfo.Width * 100.0 / 100.0;
+                var next = _chapters.GetParagraphOrDefault(i + 1);
+                if (next != null)
+                {
+                    var percentOfDurationNext = next.StartTime.TotalMilliseconds * 100.0 / _videoInfo.TotalMilliseconds;
+                    positionNextX = (int)Math.Round(_videoInfo.Width * percentOfDurationNext / 100.0);
+                }
+                return (int)Math.Round((position + positionNextX) / 2.0 + (double)numericUpDownXAdjust.Value);
+            }
+            else if (comboBoxTextHorizontalAlignment.SelectedIndex == 2) // right
+            {
+                var positionNextX = _videoInfo.Width * 100.0 / 100.0;
+                var next = _chapters.GetParagraphOrDefault(i + 1);
+                if (next != null)
+                {
+                    var percentOfDurationNext = next.StartTime.TotalMilliseconds * 100.0 / _videoInfo.TotalMilliseconds;
+                    positionNextX = (int)Math.Round(_videoInfo.Width * percentOfDurationNext / 100.0);
+                }
+                return (int)Math.Round(positionNextX - 10.0 + (double)numericUpDownXAdjust.Value);
+            }
+
+            return (int)Math.Round(position + 8 + numericUpDownSplitterWidth.Value + numericUpDownXAdjust.Value);
         }
 
         private void buttonAdd_Click(object sender, EventArgs e)
@@ -734,7 +805,7 @@ Dialogue: -255,0:00:00.00,0:43:00.00,SE-progress-bar-bg,,0,0,0,,{\K[DURATION]\p1
             Configuration.Settings.Tools.AssaProgressBarFontName = defaultToolsSettings.AssaProgressBarFontName;
             Configuration.Settings.Tools.AssaProgressBarFontSize = defaultToolsSettings.AssaProgressBarFontSize;
             Configuration.Settings.Tools.AssaProgressBarTopAlign = defaultToolsSettings.AssaProgressBarTopAlign;
-
+            numericUpDownYAdjust.Value = 0;
             InitializeFromSettings();
         }
     }
