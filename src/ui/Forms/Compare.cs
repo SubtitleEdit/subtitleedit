@@ -81,7 +81,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             subtitleListView1.Fill(subtitle1);
 
-            if (!string.IsNullOrEmpty(subtitleFileName1))
+            if (!string.IsNullOrEmpty(subtitleFileName1) && File.Exists(subtitleFileName1))
             {
                 try
                 {
