@@ -283,6 +283,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             {
                 try
                 {
+                    if (Configuration.IsRunningOnWindows && string.IsNullOrEmpty(GetVlcPath("libvlc.dll")))
+                    { 
+                        return false;
+                    }
+
                     using (var vlc = new LibVlcDynamic())
                     {
                         vlc.Initialize(null, null, null, null);
