@@ -112,6 +112,19 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             var targetWidth = numericUpDownTargetWidth.Value;
             var targetHeight = numericUpDownTargetHeight.Value;
 
+            if (sourceWidth == 0 || sourceHeight == 0 || targetWidth == 0 || targetHeight == 0)
+            {
+                MessageBox.Show("Video width/height cannot be zero");
+                return;
+            }
+
+
+            if (sourceWidth == targetWidth && sourceHeight == targetHeight)
+            {
+                MessageBox.Show("Source and target resolution is the same - nothing to do.");
+                return;
+            }
+
             var fixMargins = checkBoxMargins.Checked;
             var fixFonts = checkBoxFontSize.Checked;
             var fixPos = checkBoxPosition.Checked;

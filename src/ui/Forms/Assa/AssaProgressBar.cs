@@ -35,15 +35,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             _videoInfo = videoInfo;
             _chapters = new Subtitle();
 
-            panelPrimaryColor.BackColor = Configuration.Settings.Tools.AssaProgressBarForeColor;
-            panelSecondaryColor.BackColor = Configuration.Settings.Tools.AssaProgressBarBackColor;
-            panelTextColor.BackColor = Configuration.Settings.Tools.AssaProgressBarTextColor;
-            if (Configuration.Settings.Tools.AssaProgressBarHeight >= numericUpDownHeight.Minimum &&
-                Configuration.Settings.Tools.AssaProgressBarHeight <= numericUpDownHeight.Maximum)
-            {
-                numericUpDownHeight.Value = Configuration.Settings.Tools.AssaProgressBarHeight;
-            }
-
             comboBoxFontName.Items.Clear();
             foreach (var font in FontFamily.Families)
             {
@@ -57,6 +48,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             {
                 comboBoxFontName.SelectedIndex = 1;
             }
+
+            InitializeFromSettings();
 
             _videoPlayerContainer = new Controls.VideoPlayerContainer();
             Controls.Add(_videoPlayerContainer);
@@ -98,6 +91,45 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             _timer1 = new Timer();
             _timer1.Interval = 100;
             _timer1.Tick += _timer1_Tick;
+        }
+
+        private void InitializeFromSettings()
+        {
+            panelPrimaryColor.BackColor = Configuration.Settings.Tools.AssaProgressBarForeColor;
+            panelSecondaryColor.BackColor = Configuration.Settings.Tools.AssaProgressBarBackColor;
+            panelTextColor.BackColor = Configuration.Settings.Tools.AssaProgressBarTextColor;
+            if (Configuration.Settings.Tools.AssaProgressBarHeight >= numericUpDownHeight.Minimum &&
+                Configuration.Settings.Tools.AssaProgressBarHeight <= numericUpDownHeight.Maximum)
+            {
+                numericUpDownHeight.Value = Configuration.Settings.Tools.AssaProgressBarHeight;
+            }
+
+            if (Configuration.Settings.Tools.AssaProgressBarSplitterWidth >= numericUpDownSplitterWidth.Minimum &&
+                Configuration.Settings.Tools.AssaProgressBarSplitterWidth <= numericUpDownSplitterWidth.Maximum)
+            {
+                numericUpDownSplitterWidth.Value = Configuration.Settings.Tools.AssaProgressBarSplitterWidth;
+            }
+
+            if (Configuration.Settings.Tools.AssaProgressBarSplitterHeight >= numericUpDownSplitterHeight.Minimum &&
+                Configuration.Settings.Tools.AssaProgressBarSplitterHeight <= numericUpDownSplitterHeight.Maximum)
+            {
+                numericUpDownSplitterHeight.Value = Configuration.Settings.Tools.AssaProgressBarSplitterHeight;
+            }
+
+            if (Configuration.Settings.Tools.AssaProgressBarFontSize >= numericUpDownFontSize.Minimum &&
+                Configuration.Settings.Tools.AssaProgressBarFontSize <= numericUpDownFontSize.Maximum)
+            {
+                numericUpDownFontSize.Value = Configuration.Settings.Tools.AssaProgressBarFontSize;
+            }
+
+            if (Configuration.Settings.Tools.AssaProgressBarTopAlign)
+            {
+                radioButtonPosTop.Checked = true;
+            }
+            else
+            {
+                radioButtonPosBottom.Checked = true;
+            }
         }
 
         private void LoadExistingProgressBarSettings()
@@ -688,6 +720,22 @@ Dialogue: -255,0:00:00.00,0:43:00.00,SE-progress-bar-bg,,0,0,0,,{\K[DURATION]\p1
                 var p = (Paragraph)listViewChapters.SelectedItems[0].Tag;
                 _videoPlayerContainer.CurrentPosition = p.StartTime.TotalSeconds;
             }
+        }
+
+        private void buttonReset_Click(object sender, EventArgs e)
+        {
+            var defaultToolsSettings = new ToolsSettings();
+            Configuration.Settings.Tools.AssaProgressBarForeColor = defaultToolsSettings.AssaProgressBarForeColor;
+            Configuration.Settings.Tools.AssaProgressBarBackColor = defaultToolsSettings.AssaProgressBarBackColor;
+            Configuration.Settings.Tools.AssaProgressBarTextColor = defaultToolsSettings.AssaProgressBarTextColor;
+            Configuration.Settings.Tools.AssaProgressBarHeight = defaultToolsSettings.AssaProgressBarHeight;
+            Configuration.Settings.Tools.AssaProgressBarSplitterWidth = defaultToolsSettings.AssaProgressBarSplitterWidth;
+            Configuration.Settings.Tools.AssaProgressBarSplitterHeight = defaultToolsSettings.AssaProgressBarSplitterHeight;
+            Configuration.Settings.Tools.AssaProgressBarFontName = defaultToolsSettings.AssaProgressBarFontName;
+            Configuration.Settings.Tools.AssaProgressBarFontSize = defaultToolsSettings.AssaProgressBarFontSize;
+            Configuration.Settings.Tools.AssaProgressBarTopAlign = defaultToolsSettings.AssaProgressBarTopAlign;
+
+            InitializeFromSettings();
         }
     }
 }
