@@ -38,6 +38,11 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             panelPrimaryColor.BackColor = Configuration.Settings.Tools.AssaProgressBarForeColor;
             panelSecondaryColor.BackColor = Configuration.Settings.Tools.AssaProgressBarBackColor;
             panelTextColor.BackColor = Configuration.Settings.Tools.AssaProgressBarTextColor;
+            if (Configuration.Settings.Tools.AssaProgressBarHeight >= numericUpDownHeight.Minimum &&
+                Configuration.Settings.Tools.AssaProgressBarHeight <= numericUpDownHeight.Maximum)
+            {
+                numericUpDownHeight.Value = Configuration.Settings.Tools.AssaProgressBarHeight;
+            }
 
             comboBoxFontName.Items.Clear();
             foreach (var font in FontFamily.Families)
@@ -67,7 +72,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
             buttonPickAttachmentFont.Visible = _fontAttachments.Count > 0;
 
-
             listViewChapters_SelectedIndexChanged(null, null);
 
             var left = labelStorageCategory.Left + Math.Max(labelStorageCategory.Width, labelHeight.Width) + 10;
@@ -89,8 +93,15 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             panelTextColor.Left = left + buttonTextColor.Width + 5;
             numericUpDownyAdjust.Left = left;
 
-            //Load existing progress bar settings (if any)
+            LoadExistingProgressBarSettings();
 
+            _timer1 = new Timer();
+            _timer1.Interval = 100;
+            _timer1.Tick += _timer1_Tick;
+        }
+
+        private void LoadExistingProgressBarSettings()
+        {
             //TODO: splitter height + width
             foreach (var p in _subtitle.Paragraphs)
             {
@@ -134,10 +145,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
                 }
             }
-
-            _timer1 = new Timer();
-            _timer1.Interval = 100;
-            _timer1.Tick += _timer1_Tick;
 
             RefreshListView();
         }
@@ -256,6 +263,12 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 _subtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + _videoInfo.Width.ToString(CultureInfo.InvariantCulture), "[Script Info]", _subtitle.Header);
                 _subtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + _videoInfo.Height.ToString(CultureInfo.InvariantCulture), "[Script Info]", _subtitle.Header);
             }
+
+
+            Configuration.Settings.Tools.AssaProgressBarForeColor = panelPrimaryColor.BackColor;
+            Configuration.Settings.Tools.AssaProgressBarBackColor = panelSecondaryColor.BackColor;
+            Configuration.Settings.Tools.AssaProgressBarTextColor = panelTextColor.BackColor;
+            Configuration.Settings.Tools.AssaProgressBarHeight = (int)numericUpDownHeight.Value;
 
             DialogResult = DialogResult.OK;
         }
@@ -415,7 +428,7 @@ PlayResY: [VIDEO_HEIGHT]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
 Style: SE-progress-bar-splitter,Arial,20,[TEXT_COLOR],&H0000FFFF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,0,0,7,0,0,0,1
 Style: SE-progress-bar-bg,Arial,20,[FORE_COLOR],[BACK_COLOR],&H00FFFFFF,&H00000000,0,0,0,0,100,100,0,0,1,0,0,[ALIGNMENT],0,0,0,1
-Style: SE-progress-bar-text,Arial,[FONT_SIZE],[TEXT_COLOR],&H0000FFFF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,0,0,7,0,0,0,1
+Style: SE-progress-bar-text,[FONT_NAME],[FONT_SIZE],[TEXT_COLOR],&H0000FFFF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,0,0,7,0,0,0,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
@@ -429,6 +442,7 @@ Dialogue: -255,0:00:00.00,0:43:00.00,SE-progress-bar-bg,,0,0,0,,{\K[DURATION]\p1
             script = script.Replace("[TEXT_COLOR]", AdvancedSubStationAlpha.GetSsaColorString(panelTextColor.BackColor));
 
             script = script.Replace("[FONT_SIZE]", numericUpDownFontSize.Value.ToString(CultureInfo.InvariantCulture));
+            script = script.Replace("[FONT_NAME]", comboBoxFontName.Text);
 
             var duration = (int)(_videoInfo.TotalMilliseconds / 10);
             script = script.Replace("[DURATION]", duration.ToString(CultureInfo.InvariantCulture));
