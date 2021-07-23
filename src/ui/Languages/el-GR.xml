@@ -121,7 +121,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Δημιουργία δεδομένων κυματομορφής</Title>
     <SourceVideoFile>Πηγαίο αρχείο βίντεο:</SourceVideoFile>
     <GenerateWaveformData>Δημιουργία δεδομένων κυματομορφής</GenerateWaveformData>
-    <PleaseWait>Χρειάζονται μερικά λεπτά. Παρακαλώ, περιμένετε.</PleaseWait>
+    <PleaseWait>Χρειάζεται λίγος χρόνος. Παρακαλώ, περιμένετε.</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>Δεν βρέθηκε το πρόγραμμα VLC media player</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Χρήση του VLC media player 1.1.χ ή νεότερο για την εξαγωγή δεδομένων ήχου.</VlcMediaPlayerNotFound>
     <GoToVlcMediaPlayerHomePage>Μετάβαση στην αρχική σελίδα του VLC media player;</GoToVlcMediaPlayerHomePage>
@@ -225,7 +225,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ConvertOptions>Επιλογές μετατροπής</ConvertOptions>
     <RemoveFormatting>Αφαίρεση ετικετών μορφοποίησης</RemoveFormatting>
     <RemoveStyleActor>Αφαίρεση στυλ/ηθοποιού</RemoveStyleActor>
-    <RemoveTextForHI>Αφαίρεση κειμένου για ανθρώπους με πρόβλημα ακοής</RemoveTextForHI>
+    <RemoveTextForHI>Αφαίρεση κειμένου προβλήματος ακοής</RemoveTextForHI>
     <OverwriteOriginalFiles>Αντικατάσταση αρχικών αρχείων (νέα επέκταση, για αλλαγμένη μορφή)</OverwriteOriginalFiles>
     <RedoCasing>Επανάληψη αρχικού γράμματος</RedoCasing>
     <Convert>Μετατροπή</Convert>
@@ -795,7 +795,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <From>Από:</From>
     <To>Σε:</To>
     <Translate>Μετάφραση</Translate>
-    <PleaseWait>Παρακαλώ, περιμένετε. Χρειάζεται λίγη ώρα.</PleaseWait>
+    <PleaseWait>Παρακαλώ, περιμένετε. Χρειάζεται λίγος χρόνος.</PleaseWait>
     <PoweredByGoogleTranslate>Τροφοδοσία Google</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>Τροφοδοσία Bing</PoweredByMicrosoftTranslate>
     <MsClientSecretNeeded>Συγγνώμη, χρειάζεστε ένα γνωστικό κλειδί εξυπηρέτησης 'μετάφρασης κειμένου' από τη Microsoft για τη χρήση του.
@@ -848,7 +848,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Frames>Καρέ</Frames>
     <Seconds>Δευτερόλεπτα</Seconds>
     <Milliseconds>Χιλιοστά δευτερολέπτου</Milliseconds>
-    <GetSceneChangesWithFfmpeg>Δημιουργία αλλαγών σκηνών με FFmpeg</GetSceneChangesWithFfmpeg>
+    <GetSceneChangesWithFfmpeg>Δημιουργία αλλαγών σκηνής με FFmpeg</GetSceneChangesWithFfmpeg>
     <Sensitivity>Ευαισθησία</Sensitivity>
     <SensitivityDescription>Μικρότερη τιμή δίνει περισσότερες αλλαγές σκηνών</SensitivityDescription>
     <NoSceneChangesFound>Αδυναμία εύρεσης αλλαγών σκηνών.</NoSceneChangesFound>
@@ -1121,7 +1121,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <SubtitlesBridgeGaps>Ένωση κενών στις διάρκειες…</SubtitlesBridgeGaps>
         <FixCommonErrors>&amp;Διόρθωση σφαλμάτων…</FixCommonErrors>
         <StartNumberingFrom>Επαναρίθμηση…</StartNumberingFrom>
-        <RemoveTextForHearingImpaired>Αφαίρεση κειμένου για ανθρώπους με πρόβλημα ακοής…</RemoveTextForHearingImpaired>
+        <RemoveTextForHearingImpaired>Αφαίρεση κειμένου προβλήματος ακοής…</RemoveTextForHearingImpaired>
         <ChangeCasing>Αλλαγή πεζών-κεφαλαίων…</ChangeCasing>
         <ChangeFrameRate>Αλλαγή ρυθμού καρέ…</ChangeFrameRate>
         <ChangeSpeedInPercent>Αλλαγή ταχύτητας (επί τοις εκατό)…</ChangeSpeedInPercent>
@@ -1224,7 +1224,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Find>Εύρεση</Find>
         <Replace>Αντικατάσταση</Replace>
         <FixCommonErrors>Διόρθωση σφαλμάτων</FixCommonErrors>
-        <RemoveTextForHi>Αφαίρεση κειμένου για ανθρώπους με πρόβλημα ακοής</RemoveTextForHi>
+        <RemoveTextForHi>Αφαίρεση κειμένου προβλήματος ακοής</RemoveTextForHi>
         <VisualSync>Οπτικός συγχρονισμός</VisualSync>
         <SpellCheck>Ορθογραφικός έλεγχος</SpellCheck>
         <NetflixQualityCheck>Έλεγχος ποιότητας Netflix</NetflixQualityCheck>
@@ -1905,7 +1905,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NotInCharacterGroup>Όχι στο σύνολο χαρακτήρων ([^δοκιμή])</NotInCharacterGroup>
   </RegularExpressionContextMenu>
   <RemoveTextFromHearImpaired>
-    <Title>Αφαίρεση κειμένου για ανθρώπους με πρόβλημα ακοής</Title>
+    <Title>Αφαίρεση κειμένου προβλήματος ακοής</Title>
     <RemoveTextConditions>Αφαίρεση συνθηκών κειμένου</RemoveTextConditions>
     <RemoveTextBetween>Αφαίρεση κειμένου μεταξύ</RemoveTextBetween>
     <SquareBrackets>'[' και ']'</SquareBrackets>
@@ -1913,11 +1913,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Parentheses>'(' και ')'</Parentheses>
     <QuestionMarks>'?' και '?'</QuestionMarks>
     <And>και</And>
-    <RemoveTextBeforeColon>Αφαίρεση κειμένου πριν άνω και κάτω τελείας (':')</RemoveTextBeforeColon>
+    <RemoveTextBeforeColon>Αφαίρεση κειμένου πριν άνω-κάτω τελείας (':')</RemoveTextBeforeColon>
     <OnlyIfTextIsUppercase>Μόνο κείμενο σε κεφαλαία</OnlyIfTextIsUppercase>
     <OnlyIfInSeparateLine>Μόνο σε ξεχωριστή γραμμή</OnlyIfInSeparateLine>
     <LinesFoundX>Γραμμές που βρέθηκαν: {0}</LinesFoundX>
-    <RemoveTextIfContains>Αφαίρεση κειμένου εάν περιέχει:</RemoveTextIfContains>
+    <RemoveTextIfContains>Αφαίρεση κειμένου, αν περιέχει:</RemoveTextIfContains>
     <RemoveTextIfAllUppercase>Αφαίρεση γραμμής με κεφαλαία</RemoveTextIfAllUppercase>
     <RemoveInterjections>Αφαίρεση επιφωνημάτων</RemoveInterjections>
     <EditInterjections>Επεξεργασία…</EditInterjections>
@@ -1997,6 +1997,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GoToPreviousBookmark>Προηγούμενη σημείωση</GoToPreviousBookmark>
     <GoToNextBookmark>Επόμενη σημείωση</GoToNextBookmark>
     <ChooseProfile>Επιλογή προφίλ</ChooseProfile>
+    <OpenDataFolder>Άνοιγμα φακέλου δεδομένων χρήστη</OpenDataFolder>
     <DuplicateLine>Αντιγραφή γραμμής</DuplicateLine>
     <ToggleView>Εναλλαγή λίστας/πηγαίας προβολής</ToggleView>
     <ToggleMode>Εναλλαγή λειτουργίας μετάφρασης/δημιουργίας/προσαρμογής</ToggleMode>
@@ -2104,9 +2105,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WaveformSingleClickSelect>Μονό κλικ επιλογής υποτίτλου</WaveformSingleClickSelect>
     <WaveformSnapToSceneChanges>Εικόνα για την αλλαγή σκηνών (κράτημα Shift για παράκαμψη)</WaveformSnapToSceneChanges>
     <WaveformBorderHitMs1>Το χτύπημα του πλαισίου σήμανσης πρέπει να βρίσκεται μεταξύ</WaveformBorderHitMs1>
-    <WaveformBorderHitMs2>χιλιοστά δευτερολέπτου</WaveformBorderHitMs2>
+    <WaveformBorderHitMs2>χιλιοστών του δευτερολέπτου.</WaveformBorderHitMs2>
     <WaveformColor>Χρώμα</WaveformColor>
-    <WaveformSelectedColor>Επιλεγμένο χρώμα</WaveformSelectedColor>
+    <WaveformSelectedColor>Χρώμα επιλεγμένου</WaveformSelectedColor>
     <WaveformBackgroundColor>Χρώμα φόντου</WaveformBackgroundColor>
     <WaveformCursorColor>Χρώμα δείκτη</WaveformCursorColor>
     <WaveformTextColor>Χρώμα κειμένου</WaveformTextColor>
@@ -2158,7 +2159,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FirstPlusX>Αρχή + {0}</FirstPlusX>
     <LastMinusX>Τέλος - {0}</LastMinusX>
     <FixCommonerrors>Διόρθωση σφαλμάτων</FixCommonerrors>
-    <RemoveTextForHi>Αφαίρεση κειμένου για ανθρώπους με πρόβλημα ακοής</RemoveTextForHi>
+    <RemoveTextForHi>Αφαίρεση κειμένου προβλήματος ακοής</RemoveTextForHi>
     <MergeLinesShorterThan>Συνένωση γραμμών μικρότερες από</MergeLinesShorterThan>
     <DialogStyle>Στυλ διαλόγου</DialogStyle>
     <DialogStyleDashBothLinesWithSpace>Παύλες με κενό</DialogStyleDashBothLinesWithSpace>
@@ -2669,6 +2670,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ScaleY>ΚλίμακαY</ScaleY>
     <Spacing>Διάταξη</Spacing>
     <Angle>Κλίση</Angle>
+    <BoxPerLine>Πλαίσιο ανά γραμμή (χρήση χρώματος περιγράμματος)</BoxPerLine>
+    <BoxMultiLine>Ένα πλαίσιο (χρήση χρώματος σκιάς)</BoxMultiLine>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
     <Category>Κατηγορία</Category>
