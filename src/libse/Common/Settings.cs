@@ -338,6 +338,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public Color AssaProgressBarForeColor { get; set; }
         public Color AssaProgressBarBackColor { get; set; }
         public Color AssaProgressBarTextColor { get; set; }
+        public int AssaProgressBarHeight { get; set; }
 
         public ToolsSettings()
         {
@@ -485,6 +486,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             AssaProgressBarForeColor = Color.FromArgb(200, 200, 0, 0);
             AssaProgressBarBackColor = Color.FromArgb(150, 80, 80, 80);
             AssaProgressBarTextColor = Color.White;
+            AssaProgressBarHeight= 40;
         }
     }
 
@@ -5168,6 +5170,30 @@ $HorzAlign          =   Center
                 settings.Tools.BlankVideoUseCheckeredImage = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("AssaProgressBarBackColor");
+            if (subNode != null)
+            {
+                settings.Tools.AssaProgressBarBackColor = ColorTranslator.FromHtml(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("AssaProgressBarForeColor");
+            if (subNode != null)
+            {
+                settings.Tools.AssaProgressBarForeColor = ColorTranslator.FromHtml(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("AssaProgressBarTextColor");
+            if (subNode != null)
+            {
+                settings.Tools.AssaProgressBarTextColor = ColorTranslator.FromHtml(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("AssaProgressBarHeight");
+            if (subNode != null)
+            {
+                settings.Tools.AssaProgressBarHeight = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("FindHistory");
             if (subNode != null)
             {
@@ -8870,6 +8896,10 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("BlankVideoUseCheckeredImage", settings.Tools.BlankVideoUseCheckeredImage.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BlankVideoMinutes", settings.Tools.BlankVideoMinutes.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BlankVideoFrameRate", settings.Tools.BlankVideoFrameRate.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AssaProgressBarBackColor", ColorTranslator.ToHtml(settings.Tools.AssaProgressBarBackColor));
+                textWriter.WriteElementString("AssaProgressBarForeColor", ColorTranslator.ToHtml(settings.Tools.AssaProgressBarForeColor));
+                textWriter.WriteElementString("AssaProgressBarTextColor", ColorTranslator.ToHtml(settings.Tools.AssaProgressBarTextColor));
+                textWriter.WriteElementString("AssaProgressBarHeight", settings.Tools.AssaProgressBarHeight.ToString(CultureInfo.InvariantCulture));
 
                 if (settings.Tools.FindHistory != null && settings.Tools.FindHistory.Count > 0)
                 {

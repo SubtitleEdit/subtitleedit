@@ -50,8 +50,11 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.labelRotateX = new System.Windows.Forms.Label();
             this.numericUpDownFontSize = new System.Windows.Forms.NumericUpDown();
             this.groupBoxChapters = new System.Windows.Forms.GroupBox();
+            this.labelYAdjust = new System.Windows.Forms.Label();
+            this.numericUpDownyAdjust = new System.Windows.Forms.NumericUpDown();
             this.textBoxChapterText = new System.Windows.Forms.TextBox();
             this.labelText = new System.Windows.Forms.Label();
+            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.labelStartTime = new System.Windows.Forms.Label();
             this.panelTextColor = new System.Windows.Forms.Panel();
             this.buttonTextColor = new System.Windows.Forms.Button();
@@ -64,9 +67,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.textBoxSource = new System.Windows.Forms.TextBox();
-            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
-            this.labelYAdjust = new System.Windows.Forms.Label();
-            this.numericUpDownyAdjust = new System.Windows.Forms.NumericUpDown();
             this.groupBoxStyle.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSplitterWidth)).BeginInit();
@@ -100,7 +100,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.radioButtonPosTop.Location = new System.Drawing.Point(156, 25);
             this.radioButtonPosTop.Name = "radioButtonPosTop";
             this.radioButtonPosTop.Size = new System.Drawing.Size(44, 17);
-            this.radioButtonPosTop.TabIndex = 220;
+            this.radioButtonPosTop.TabIndex = 2;
             this.radioButtonPosTop.Text = "Top";
             this.radioButtonPosTop.UseVisualStyleBackColor = true;
             // 
@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.radioButtonPosBottom.Location = new System.Drawing.Point(92, 25);
             this.radioButtonPosBottom.Name = "radioButtonPosBottom";
             this.radioButtonPosBottom.Size = new System.Drawing.Size(58, 17);
-            this.radioButtonPosBottom.TabIndex = 219;
+            this.radioButtonPosBottom.TabIndex = 1;
             this.radioButtonPosBottom.TabStop = true;
             this.radioButtonPosBottom.Text = "Bottom";
             this.radioButtonPosBottom.UseVisualStyleBackColor = true;
@@ -122,7 +122,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.labelHeight.Location = new System.Drawing.Point(10, 55);
             this.labelHeight.Name = "labelHeight";
             this.labelHeight.Size = new System.Drawing.Size(38, 13);
-            this.labelHeight.TabIndex = 217;
+            this.labelHeight.TabIndex = 3;
             this.labelHeight.Text = "Height";
             // 
             // numericUpDownHeight
@@ -140,7 +140,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             0});
             this.numericUpDownHeight.Name = "numericUpDownHeight";
             this.numericUpDownHeight.Size = new System.Drawing.Size(52, 20);
-            this.numericUpDownHeight.TabIndex = 218;
+            this.numericUpDownHeight.TabIndex = 4;
             this.numericUpDownHeight.Value = new decimal(new int[] {
             40,
             0,
@@ -153,7 +153,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.panelSecondaryColor.Location = new System.Drawing.Point(206, 103);
             this.panelSecondaryColor.Name = "panelSecondaryColor";
             this.panelSecondaryColor.Size = new System.Drawing.Size(21, 20);
-            this.panelSecondaryColor.TabIndex = 26;
+            this.panelSecondaryColor.TabIndex = 8;
             this.panelSecondaryColor.Click += new System.EventHandler(this.panelSecondaryColor_Click);
             // 
             // buttonSecondaryColor
@@ -161,7 +161,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonSecondaryColor.Location = new System.Drawing.Point(91, 103);
             this.buttonSecondaryColor.Name = "buttonSecondaryColor";
             this.buttonSecondaryColor.Size = new System.Drawing.Size(109, 23);
-            this.buttonSecondaryColor.TabIndex = 25;
+            this.buttonSecondaryColor.TabIndex = 7;
             this.buttonSecondaryColor.Text = "Background color";
             this.buttonSecondaryColor.UseVisualStyleBackColor = true;
             this.buttonSecondaryColor.Click += new System.EventHandler(this.buttonSecondaryColor_Click);
@@ -172,7 +172,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.panelPrimaryColor.Location = new System.Drawing.Point(207, 74);
             this.panelPrimaryColor.Name = "panelPrimaryColor";
             this.panelPrimaryColor.Size = new System.Drawing.Size(21, 20);
-            this.panelPrimaryColor.TabIndex = 24;
+            this.panelPrimaryColor.TabIndex = 6;
             this.panelPrimaryColor.Click += new System.EventHandler(this.panelPrimaryColor_Click);
             // 
             // buttonForeColor
@@ -180,7 +180,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonForeColor.Location = new System.Drawing.Point(92, 74);
             this.buttonForeColor.Name = "buttonForeColor";
             this.buttonForeColor.Size = new System.Drawing.Size(108, 23);
-            this.buttonForeColor.TabIndex = 23;
+            this.buttonForeColor.TabIndex = 5;
             this.buttonForeColor.Text = "Foreground color";
             this.buttonForeColor.UseVisualStyleBackColor = true;
             this.buttonForeColor.Click += new System.EventHandler(this.buttonForeColor_Click);
@@ -191,7 +191,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.labelStorageCategory.Location = new System.Drawing.Point(10, 30);
             this.labelStorageCategory.Name = "labelStorageCategory";
             this.labelStorageCategory.Size = new System.Drawing.Size(44, 13);
-            this.labelStorageCategory.TabIndex = 21;
+            this.labelStorageCategory.TabIndex = 0;
             this.labelStorageCategory.Text = "Position";
             // 
             // buttonPickAttachmentFont
@@ -199,7 +199,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonPickAttachmentFont.Location = new System.Drawing.Point(287, 84);
             this.buttonPickAttachmentFont.Name = "buttonPickAttachmentFont";
             this.buttonPickAttachmentFont.Size = new System.Drawing.Size(24, 23);
-            this.buttonPickAttachmentFont.TabIndex = 223;
+            this.buttonPickAttachmentFont.TabIndex = 6;
             this.buttonPickAttachmentFont.Text = "...";
             this.buttonPickAttachmentFont.UseVisualStyleBackColor = true;
             this.buttonPickAttachmentFont.Click += new System.EventHandler(this.buttonPickAttachmentFont_Click);
@@ -210,7 +210,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.comboBoxFontName.Location = new System.Drawing.Point(93, 84);
             this.comboBoxFontName.Name = "comboBoxFontName";
             this.comboBoxFontName.Size = new System.Drawing.Size(188, 21);
-            this.comboBoxFontName.TabIndex = 222;
+            this.comboBoxFontName.TabIndex = 5;
             // 
             // labelFontName
             // 
@@ -218,7 +218,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.labelFontName.Location = new System.Drawing.Point(11, 87);
             this.labelFontName.Name = "labelFontName";
             this.labelFontName.Size = new System.Drawing.Size(57, 13);
-            this.labelFontName.TabIndex = 221;
+            this.labelFontName.TabIndex = 4;
             this.labelFontName.Text = "Font name";
             // 
             // numericUpDownSplitterWidth
@@ -231,7 +231,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             0});
             this.numericUpDownSplitterWidth.Name = "numericUpDownSplitterWidth";
             this.numericUpDownSplitterWidth.Size = new System.Drawing.Size(52, 20);
-            this.numericUpDownSplitterWidth.TabIndex = 216;
+            this.numericUpDownSplitterWidth.TabIndex = 1;
             this.numericUpDownSplitterWidth.Value = new decimal(new int[] {
             2,
             0,
@@ -245,7 +245,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.labelSplitterWidth.Location = new System.Drawing.Point(10, 26);
             this.labelSplitterWidth.Name = "labelSplitterWidth";
             this.labelSplitterWidth.Size = new System.Drawing.Size(67, 13);
-            this.labelSplitterWidth.TabIndex = 215;
+            this.labelSplitterWidth.TabIndex = 0;
             this.labelSplitterWidth.Text = "Splitter width";
             // 
             // numericUpDownSplitterHeight
@@ -258,7 +258,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             0});
             this.numericUpDownSplitterHeight.Name = "numericUpDownSplitterHeight";
             this.numericUpDownSplitterHeight.Size = new System.Drawing.Size(52, 20);
-            this.numericUpDownSplitterHeight.TabIndex = 214;
+            this.numericUpDownSplitterHeight.TabIndex = 3;
             this.numericUpDownSplitterHeight.Value = new decimal(new int[] {
             40,
             0,
@@ -272,7 +272,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.labelSplitter.Location = new System.Drawing.Point(10, 52);
             this.labelSplitter.Name = "labelSplitter";
             this.labelSplitter.Size = new System.Drawing.Size(71, 13);
-            this.labelSplitter.TabIndex = 213;
+            this.labelSplitter.TabIndex = 2;
             this.labelSplitter.Text = "Splitter height";
             // 
             // labelRotateX
@@ -281,7 +281,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.labelRotateX.Location = new System.Drawing.Point(11, 118);
             this.labelRotateX.Name = "labelRotateX";
             this.labelRotateX.Size = new System.Drawing.Size(49, 13);
-            this.labelRotateX.TabIndex = 19;
+            this.labelRotateX.TabIndex = 7;
             this.labelRotateX.Text = "Font size";
             // 
             // numericUpDownFontSize
@@ -299,7 +299,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             0});
             this.numericUpDownFontSize.Name = "numericUpDownFontSize";
             this.numericUpDownFontSize.Size = new System.Drawing.Size(52, 20);
-            this.numericUpDownFontSize.TabIndex = 20;
+            this.numericUpDownFontSize.TabIndex = 8;
             this.numericUpDownFontSize.Value = new decimal(new int[] {
             30,
             0,
@@ -338,13 +338,35 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.groupBoxChapters.TabStop = false;
             this.groupBoxChapters.Text = "Chapters";
             // 
+            // labelYAdjust
+            // 
+            this.labelYAdjust.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelYAdjust.AutoSize = true;
+            this.labelYAdjust.Location = new System.Drawing.Point(11, 168);
+            this.labelYAdjust.Name = "labelYAdjust";
+            this.labelYAdjust.Size = new System.Drawing.Size(45, 13);
+            this.labelYAdjust.TabIndex = 11;
+            this.labelYAdjust.Text = "Y adjust";
+            // 
+            // numericUpDownyAdjust
+            // 
+            this.numericUpDownyAdjust.Location = new System.Drawing.Point(93, 166);
+            this.numericUpDownyAdjust.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDownyAdjust.Name = "numericUpDownyAdjust";
+            this.numericUpDownyAdjust.Size = new System.Drawing.Size(52, 20);
+            this.numericUpDownyAdjust.TabIndex = 12;
+            // 
             // textBoxChapterText
             // 
             this.textBoxChapterText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.textBoxChapterText.Location = new System.Drawing.Point(63, 409);
             this.textBoxChapterText.Name = "textBoxChapterText";
             this.textBoxChapterText.Size = new System.Drawing.Size(314, 20);
-            this.textBoxChapterText.TabIndex = 229;
+            this.textBoxChapterText.TabIndex = 17;
             // 
             // labelText
             // 
@@ -353,8 +375,29 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.labelText.Location = new System.Drawing.Point(6, 412);
             this.labelText.Name = "labelText";
             this.labelText.Size = new System.Drawing.Size(28, 13);
-            this.labelText.TabIndex = 228;
+            this.labelText.TabIndex = 16;
             this.labelText.Text = "Text";
+            // 
+            // timeUpDownStartTime
+            // 
+            this.timeUpDownStartTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.timeUpDownStartTime.AutoSize = true;
+            this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownStartTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.timeUpDownStartTime.Location = new System.Drawing.Point(63, 375);
+            this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
+            this.timeUpDownStartTime.Name = "timeUpDownStartTime";
+            this.timeUpDownStartTime.Size = new System.Drawing.Size(111, 27);
+            this.timeUpDownStartTime.TabIndex = 15;
+            timeCode1.Hours = 0;
+            timeCode1.Milliseconds = 0;
+            timeCode1.Minutes = 0;
+            timeCode1.Seconds = 0;
+            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode1.TotalMilliseconds = 0D;
+            timeCode1.TotalSeconds = 0D;
+            this.timeUpDownStartTime.TimeCode = timeCode1;
+            this.timeUpDownStartTime.UseVideoOffset = false;
             // 
             // labelStartTime
             // 
@@ -363,7 +406,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.labelStartTime.Location = new System.Drawing.Point(6, 382);
             this.labelStartTime.Name = "labelStartTime";
             this.labelStartTime.Size = new System.Drawing.Size(51, 13);
-            this.labelStartTime.TabIndex = 227;
+            this.labelStartTime.TabIndex = 14;
             this.labelStartTime.Text = "Start time";
             // 
             // panelTextColor
@@ -372,7 +415,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.panelTextColor.Location = new System.Drawing.Point(208, 137);
             this.panelTextColor.Name = "panelTextColor";
             this.panelTextColor.Size = new System.Drawing.Size(21, 20);
-            this.panelTextColor.TabIndex = 225;
+            this.panelTextColor.TabIndex = 10;
             this.panelTextColor.Click += new System.EventHandler(this.panelTextColor_Click);
             // 
             // buttonTextColor
@@ -380,7 +423,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonTextColor.Location = new System.Drawing.Point(93, 137);
             this.buttonTextColor.Name = "buttonTextColor";
             this.buttonTextColor.Size = new System.Drawing.Size(109, 23);
-            this.buttonTextColor.TabIndex = 224;
+            this.buttonTextColor.TabIndex = 9;
             this.buttonTextColor.Text = "Text color";
             this.buttonTextColor.UseVisualStyleBackColor = true;
             this.buttonTextColor.Click += new System.EventHandler(this.buttonTextColor_Click);
@@ -392,7 +435,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonRemoveAll.Location = new System.Drawing.Point(195, 440);
             this.buttonRemoveAll.Name = "buttonRemoveAll";
             this.buttonRemoveAll.Size = new System.Drawing.Size(92, 23);
-            this.buttonRemoveAll.TabIndex = 11;
+            this.buttonRemoveAll.TabIndex = 20;
             this.buttonRemoveAll.Text = "Remove all";
             this.buttonRemoveAll.UseVisualStyleBackColor = true;
             this.buttonRemoveAll.Click += new System.EventHandler(this.buttonRemoveAll_Click);
@@ -404,7 +447,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonAdd.Location = new System.Drawing.Point(9, 440);
             this.buttonAdd.Name = "buttonAdd";
             this.buttonAdd.Size = new System.Drawing.Size(82, 23);
-            this.buttonAdd.TabIndex = 9;
+            this.buttonAdd.TabIndex = 18;
             this.buttonAdd.Text = "New";
             this.buttonAdd.UseVisualStyleBackColor = true;
             this.buttonAdd.Click += new System.EventHandler(this.buttonAdd_Click);
@@ -416,7 +459,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonRemove.Location = new System.Drawing.Point(97, 440);
             this.buttonRemove.Name = "buttonRemove";
             this.buttonRemove.Size = new System.Drawing.Size(92, 23);
-            this.buttonRemove.TabIndex = 10;
+            this.buttonRemove.TabIndex = 19;
             this.buttonRemove.Text = "Remove";
             this.buttonRemove.UseVisualStyleBackColor = true;
             this.buttonRemove.Click += new System.EventHandler(this.buttonRemove_Click);
@@ -435,7 +478,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.listViewChapters.MultiSelect = false;
             this.listViewChapters.Name = "listViewChapters";
             this.listViewChapters.Size = new System.Drawing.Size(371, 164);
-            this.listViewChapters.TabIndex = 1;
+            this.listViewChapters.TabIndex = 13;
             this.listViewChapters.UseCompatibleStateImageBehavior = false;
             this.listViewChapters.View = System.Windows.Forms.View.Details;
             this.listViewChapters.SelectedIndexChanged += new System.EventHandler(this.listViewChapters_SelectedIndexChanged);
@@ -484,49 +527,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.textBoxSource.Size = new System.Drawing.Size(923, 595);
             this.textBoxSource.TabIndex = 9;
             this.textBoxSource.Visible = false;
-            // 
-            // timeUpDownStartTime
-            // 
-            this.timeUpDownStartTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.timeUpDownStartTime.AutoSize = true;
-            this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.timeUpDownStartTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.timeUpDownStartTime.Location = new System.Drawing.Point(63, 375);
-            this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
-            this.timeUpDownStartTime.Name = "timeUpDownStartTime";
-            this.timeUpDownStartTime.Size = new System.Drawing.Size(111, 27);
-            this.timeUpDownStartTime.TabIndex = 226;
-            timeCode1.Hours = 0;
-            timeCode1.Milliseconds = 0;
-            timeCode1.Minutes = 0;
-            timeCode1.Seconds = 0;
-            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode1.TotalMilliseconds = 0D;
-            timeCode1.TotalSeconds = 0D;
-            this.timeUpDownStartTime.TimeCode = timeCode1;
-            this.timeUpDownStartTime.UseVideoOffset = false;
-            // 
-            // labelYAdjust
-            // 
-            this.labelYAdjust.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelYAdjust.AutoSize = true;
-            this.labelYAdjust.Location = new System.Drawing.Point(11, 168);
-            this.labelYAdjust.Name = "labelYAdjust";
-            this.labelYAdjust.Size = new System.Drawing.Size(45, 13);
-            this.labelYAdjust.TabIndex = 230;
-            this.labelYAdjust.Text = "Y adjust";
-            // 
-            // numericUpDownyAdjust
-            // 
-            this.numericUpDownyAdjust.Location = new System.Drawing.Point(93, 166);
-            this.numericUpDownyAdjust.Minimum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            -2147483648});
-            this.numericUpDownyAdjust.Name = "numericUpDownyAdjust";
-            this.numericUpDownyAdjust.Size = new System.Drawing.Size(52, 20);
-            this.numericUpDownyAdjust.TabIndex = 231;
             // 
             // AssaProgressBar
             // 
