@@ -339,6 +339,11 @@ namespace Nikse.SubtitleEdit.Core.Common
         public Color AssaProgressBarBackColor { get; set; }
         public Color AssaProgressBarTextColor { get; set; }
         public int AssaProgressBarHeight { get; set; }
+        public int AssaProgressBarSplitterWidth { get; set; }
+        public int AssaProgressBarSplitterHeight { get; set; }
+        public string AssaProgressBarFontName { get; set; }
+        public int AssaProgressBarFontSize { get; set; }
+        public bool AssaProgressBarTopAlign { get; set; }
 
         public ToolsSettings()
         {
@@ -486,7 +491,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             AssaProgressBarForeColor = Color.FromArgb(200, 200, 0, 0);
             AssaProgressBarBackColor = Color.FromArgb(150, 80, 80, 80);
             AssaProgressBarTextColor = Color.White;
-            AssaProgressBarHeight= 40;
+            AssaProgressBarHeight = 40;
+            AssaProgressBarSplitterWidth = 2;
+            AssaProgressBarSplitterHeight = 40;
+            AssaProgressBarFontName = "Arial";
+            AssaProgressBarFontSize = 30;
         }
     }
 
@@ -5194,6 +5203,36 @@ $HorzAlign          =   Center
                 settings.Tools.AssaProgressBarHeight = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("AssaProgressBarSplitterWidth");
+            if (subNode != null)
+            {
+                settings.Tools.AssaProgressBarSplitterWidth = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("AssaProgressBarSplitterHeight");
+            if (subNode != null)
+            {
+                settings.Tools.AssaProgressBarSplitterHeight = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("AssaProgressBarFontName");
+            if (subNode != null)
+            {
+                settings.Tools.AssaProgressBarFontName = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("AssaProgressBarFontSize");
+            if (subNode != null)
+            {
+                settings.Tools.AssaProgressBarFontSize = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("AssaProgressBarTopAlign");
+            if (subNode != null)
+            {
+                settings.Tools.AssaProgressBarTopAlign = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("FindHistory");
             if (subNode != null)
             {
@@ -8900,6 +8939,11 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AssaProgressBarForeColor", ColorTranslator.ToHtml(settings.Tools.AssaProgressBarForeColor));
                 textWriter.WriteElementString("AssaProgressBarTextColor", ColorTranslator.ToHtml(settings.Tools.AssaProgressBarTextColor));
                 textWriter.WriteElementString("AssaProgressBarHeight", settings.Tools.AssaProgressBarHeight.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AssaProgressBarSplitterWidth", settings.Tools.AssaProgressBarSplitterWidth.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AssaProgressBarSplitterHeight", settings.Tools.AssaProgressBarSplitterHeight.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AssaProgressBarFontName", settings.Tools.AssaProgressBarFontName);
+                textWriter.WriteElementString("AssaProgressBarFontSize", settings.Tools.AssaProgressBarFontSize.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AssaProgressBarTopAlign", settings.Tools.AssaProgressBarTopAlign.ToString(CultureInfo.InvariantCulture));
 
                 if (settings.Tools.FindHistory != null && settings.Tools.FindHistory.Count > 0)
                 {

@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         /// </summary>
         private void InitializeComponent()
         {
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
             this.groupBoxStyle = new System.Windows.Forms.GroupBox();
             this.radioButtonPosTop = new System.Windows.Forms.RadioButton();
             this.radioButtonPosBottom = new System.Windows.Forms.RadioButton();
@@ -54,7 +54,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.numericUpDownyAdjust = new System.Windows.Forms.NumericUpDown();
             this.textBoxChapterText = new System.Windows.Forms.TextBox();
             this.labelText = new System.Windows.Forms.Label();
-            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.labelStartTime = new System.Windows.Forms.Label();
             this.panelTextColor = new System.Windows.Forms.Panel();
             this.buttonTextColor = new System.Windows.Forms.Button();
@@ -67,6 +66,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.textBoxSource = new System.Windows.Forms.TextBox();
+            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
+            this.buttonReset = new System.Windows.Forms.Button();
             this.groupBoxStyle.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSplitterWidth)).BeginInit();
@@ -78,6 +79,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             // groupBoxStyle
             // 
+            this.groupBoxStyle.Controls.Add(this.buttonReset);
             this.groupBoxStyle.Controls.Add(this.radioButtonPosTop);
             this.groupBoxStyle.Controls.Add(this.radioButtonPosBottom);
             this.groupBoxStyle.Controls.Add(this.labelHeight);
@@ -378,27 +380,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.labelText.TabIndex = 16;
             this.labelText.Text = "Text";
             // 
-            // timeUpDownStartTime
-            // 
-            this.timeUpDownStartTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.timeUpDownStartTime.AutoSize = true;
-            this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.timeUpDownStartTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.timeUpDownStartTime.Location = new System.Drawing.Point(63, 375);
-            this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
-            this.timeUpDownStartTime.Name = "timeUpDownStartTime";
-            this.timeUpDownStartTime.Size = new System.Drawing.Size(111, 27);
-            this.timeUpDownStartTime.TabIndex = 15;
-            timeCode1.Hours = 0;
-            timeCode1.Milliseconds = 0;
-            timeCode1.Minutes = 0;
-            timeCode1.Seconds = 0;
-            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode1.TotalMilliseconds = 0D;
-            timeCode1.TotalSeconds = 0D;
-            this.timeUpDownStartTime.TimeCode = timeCode1;
-            this.timeUpDownStartTime.UseVideoOffset = false;
-            // 
             // labelStartTime
             // 
             this.labelStartTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -528,6 +509,37 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.textBoxSource.TabIndex = 9;
             this.textBoxSource.Visible = false;
             // 
+            // timeUpDownStartTime
+            // 
+            this.timeUpDownStartTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.timeUpDownStartTime.AutoSize = true;
+            this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownStartTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.timeUpDownStartTime.Location = new System.Drawing.Point(63, 375);
+            this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
+            this.timeUpDownStartTime.Name = "timeUpDownStartTime";
+            this.timeUpDownStartTime.Size = new System.Drawing.Size(111, 27);
+            this.timeUpDownStartTime.TabIndex = 15;
+            timeCode2.Hours = 0;
+            timeCode2.Milliseconds = 0;
+            timeCode2.Minutes = 0;
+            timeCode2.Seconds = 0;
+            timeCode2.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode2.TotalMilliseconds = 0D;
+            timeCode2.TotalSeconds = 0D;
+            this.timeUpDownStartTime.TimeCode = timeCode2;
+            this.timeUpDownStartTime.UseVideoOffset = false;
+            // 
+            // buttonReset
+            // 
+            this.buttonReset.Location = new System.Drawing.Point(305, 112);
+            this.buttonReset.Name = "buttonReset";
+            this.buttonReset.Size = new System.Drawing.Size(72, 23);
+            this.buttonReset.TabIndex = 8;
+            this.buttonReset.Text = "Reset";
+            this.buttonReset.UseVisualStyleBackColor = true;
+            this.buttonReset.Click += new System.EventHandler(this.buttonReset_Click);
+            // 
             // AssaProgressBar
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -599,5 +611,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private System.Windows.Forms.Label labelText;
         private System.Windows.Forms.Label labelYAdjust;
         private System.Windows.Forms.NumericUpDown numericUpDownyAdjust;
+        private System.Windows.Forms.Button buttonReset;
     }
 }
