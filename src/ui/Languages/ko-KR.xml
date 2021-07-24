@@ -183,6 +183,21 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SelectedLinesX>선택한 줄: {0}</SelectedLinesX>
     <AdvancedSelection>고급 선택</AdvancedSelection>
   </AssaOverrideTags>
+  <AssaProgressBarGenerator>
+    <Title>진행 표시줄 생성</Title>
+    <Progressbar>진행 표시줄</Progressbar>
+    <Chapters>챕터</Chapters>
+    <SplitterWidth>분할 너비</SplitterWidth>
+    <SplitterHeight>분할 높이</SplitterHeight>
+    <XAdjustment>X 조정</XAdjustment>
+    <YAdjustment>Y 조정</YAdjustment>
+    <Position>위치</Position>
+    <TextAlignment>텍스트 정렬</TextAlignment>
+    <SquareCorners>정사각 모서리</SquareCorners>
+    <RoundedCorners>둥근 모서리</RoundedCorners>
+    <Top>맨 위</Top>
+    <Bottom>맨 아래</Bottom>
+  </AssaProgressBarGenerator>
   <AssaSetPosition>
     <SetPosition>위치 설정/얻기</SetPosition>
     <VideoResolutionX>비디오 해상도: {0}</VideoResolutionX>
@@ -763,11 +778,11 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <DurationInMinutes>지속시간(분)</DurationInMinutes>
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
-    <Title>구운 자막으로 비디오 생성</Title>
-    <Info>구운 자막이 포함된 비디오 파일을 생성합니다.
+    <Title>자막 입혀진 비디오 파일 생성</Title>
+    <Info>자막이 입혀진 비디오 파일을 생성합니다.
 
 참고: Advanced Substation Alpha 지원</Info>
-    <XGeneratedWithBurnedInSubs>"{0}"이 구운 자막으로 생성되었습니다.</XGeneratedWithBurnedInSubs>
+    <XGeneratedWithBurnedInSubs>"{0}"이름으로 자막이 입혀진 비디오 파일을 생성했습니다.</XGeneratedWithBurnedInSubs>
   </GenerateVideoWithBurnedInSubs>
   <GetDictionaries>
     <Title>* 사전 다운로드</Title>
@@ -1167,7 +1182,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <SmptTimeMode>SMPTE 타이밍 (드롭 프레임)</SmptTimeMode>
         <GenerateTextFromVideo>비디오에서 텍스트 생성...</GenerateTextFromVideo>
         <GenerateBlankVideo>빈 비디오 생성...</GenerateBlankVideo>
-        <GenerateVideoWithBurnedInSub>구운 자막으로 비디오 생성...</GenerateVideoWithBurnedInSub>
+        <GenerateVideoWithBurnedInSub>자막 입혀진 비디오 파일 생성...</GenerateVideoWithBurnedInSub>
         <ImportChaptersFromVideo>비디오에서 챕터 가져오기</ImportChaptersFromVideo>
         <GenerateImportSceneChanges>장면 전환 생성/가져오기...</GenerateImportSceneChanges>
         <RemoveSceneChanges>장면 전환 제거</RemoveSceneChanges>
@@ -1999,6 +2014,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <GoToPreviousBookmark>이전 북마크로 이동</GoToPreviousBookmark>
     <GoToNextBookmark>다음 북마크로 이동</GoToNextBookmark>
     <ChooseProfile>프로필 선택</ChooseProfile>
+    <OpenDataFolder>Subtitle Edit 데이터 폴더 열기</OpenDataFolder>
     <DuplicateLine>중복 줄</DuplicateLine>
     <ToggleView>자막/소스 보기 전환</ToggleView>
     <ToggleMode>번역/생성/조정 모드 전환</ToggleMode>
@@ -2646,7 +2662,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Vertical>세로</Vertical>
     <Border>테두리</Border>
     <PlusShadow>+ 그림자</PlusShadow>
-    <OpaqueBox>불투명 상자 (테두리 색 사용)</OpaqueBox>
+    <OpaqueBox>불투명 상자</OpaqueBox>
     <Import>가져오기...</Import>
     <Export>내보내기...</Export>
     <Copy>복사</Copy>
@@ -2674,6 +2690,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ScaleY>ScaleY</ScaleY>
     <Spacing>간격</Spacing>
     <Angle>각도</Angle>
+    <BoxPerLine>라인 별 상자 (테두리 색상 사용)</BoxPerLine>
+    <BoxMultiLine>하나의 상자 (그림자 색상 사용)</BoxMultiLine>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
     <Category>카테고리 </Category>
