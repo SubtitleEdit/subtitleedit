@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class MicroDvd : SubtitleFormat
     {
-        private static readonly Regex RegexMicroDvdLine = new Regex(@"^\{-?\d+}\{-?\d+}.*$", RegexOptions.Compiled);
+        internal static readonly Regex RegexMicroDvdLine = new Regex(@"^\{-?\d+}\{-?\d+}.*$", RegexOptions.Compiled);
         public string Errors { get; private set; }
         private StringBuilder _errors;
         private int _lineNumber;
@@ -39,12 +39,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             errors++;
                         }
                     }
+                    else if (line.StartsWith("[JRT2:", StringComparison.Ordinal))
+                    {
+                        return false;
+                    }
                     else
                     {
                         errors++;
                     }
                 }
             }
+
             Errors = null;
             return trimmedLines.Count > errors;
         }
