@@ -680,7 +680,7 @@ Dialogue: -255,0:00:00.00,0:43:00.00,SE-progress-bar-bg,,0,0,0,,[PB_DRAWING]";
             {
                 var barEnd = videoInfo.Width - height;
                 var w = videoInfo.Width;
-                return $@"{{\K180000\p1}}m {height} 0 b 0 0 0 {height} {height} {height} l {barEnd} {height} b {w} {height} {w} 0 {barEnd} 0 l  {barEnd} 0 {height} 0{{\p0}}";
+                return $@"{{\K{duration}\p1}}m {height} 0 b 0 0 0 {height} {height} {height} l {barEnd} {height} b {w} {height} {w} 0 {barEnd} 0 l  {barEnd} 0 {height} 0{{\p0}}";
             }
 
             return $"{{\\K{duration}\\p1}}m 0 0 l {videoInfo.Width} 0 {videoInfo.Width} {height} 0 {height}{{\\p0}}";
