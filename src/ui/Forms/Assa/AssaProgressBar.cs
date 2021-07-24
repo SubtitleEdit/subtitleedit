@@ -28,12 +28,47 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         public AssaProgressBar(Subtitle subtitle, string videoFileName, VideoInfo videoInfo)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             _subtitle = subtitle;
             _videoFileName = videoFileName;
             _videoInfo = videoInfo;
             _chapters = new Subtitle();
+
+            var l = LanguageSettings.Current.AssaProgressBarGenerator;
+            Text = l.Title;
+            groupBoxStyle.Text = l.Progressbar;
+            labelPosition.Text = l.Position;
+            radioButtonPosBottom.Text = l.Bottom;
+            radioButtonPosTop.Text = l.Top;
+            labelHeight.Text = LanguageSettings.Current.General.Height;
+            buttonForeColor.Text = "Color";
+            buttonSecondaryColor.Text = LanguageSettings.Current.Settings.SubtitleBackgroundColor;
+            labelEdgeStyle.Text = LanguageSettings.Current.General.Style;
+            groupBoxChapters.Text = l.Chapters;
+            labelSplitterWidth.Text = l.SplitterWidth;
+            labelSplitterHeight.Text = l.SplitterHeight;
+            labelFontName.Text = LanguageSettings.Current.ExportPngXml.FontFamily;
+            labelFontSize.Text = LanguageSettings.Current.ExportPngXml.FontSize;
+            labelXAdjust.Text = l.XAdjustment;
+            labelYAdjust.Text = l.YAdjustment;
+            labelTextHorizontalAlignment.Text = l.TextAlignment;
+            labelStartTime.Text = LanguageSettings.Current.General.StartTime;
+            labelText.Text = LanguageSettings.Current.General.Text;
+            buttonAdd.Text = LanguageSettings.Current.SubStationAlphaStyles.New;
+            buttonRemove.Text = LanguageSettings.Current.SubStationAlphaStyles.Remove;
+            buttonRemoveAll.Text = LanguageSettings.Current.SubStationAlphaStyles.RemoveAll;
+            columnHeaderName.Text = LanguageSettings.Current.General.Text;
+            columnHeaderStart.Text = LanguageSettings.Current.General.StartTime;
+            comboBoxProgressBarEdge.Items.Clear();
+            comboBoxProgressBarEdge.Items.Add(l.SquareCorners);
+            comboBoxProgressBarEdge.Items.Add(l.RoundedCorners);
+
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            UiUtil.FixLargeFonts(this, buttonOK);
 
             comboBoxFontName.Items.Clear();
             foreach (var font in FontFamily.Families)
@@ -67,7 +102,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             listViewChapters_SelectedIndexChanged(null, null);
 
-            var left = labelStorageCategory.Left + Math.Max(labelStorageCategory.Width, labelHeight.Width) + 10;
+            var left = labelPosition.Left + Math.Max(labelPosition.Width, labelHeight.Width) + 10;
             radioButtonPosBottom.Left = left;
             radioButtonPosTop.Left = left + radioButtonPosBottom.Width + 10;
             numericUpDownHeight.Left = left;
@@ -78,7 +113,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             comboBoxProgressBarEdge.Left = left;
             comboBoxProgressBarEdge.SelectedIndex = 0;
 
-            left = Math.Max(Math.Max(labelSplitterHeight.Width, labelTextHorizontalAlignment.Width), Math.Max(labelFontName.Width, labelRotateX.Width)) + 12;
+            left = Math.Max(Math.Max(labelSplitterHeight.Width, labelTextHorizontalAlignment.Width), Math.Max(labelFontName.Width, labelFontSize.Width)) + 12;
             numericUpDownSplitterWidth.Left = left;
             labelSplitterHeight.Left = numericUpDownSplitterWidth.Left + numericUpDownSplitterWidth.Width + 15;
             numericUpDownSplitterHeight.Left = labelSplitterHeight.Left + labelSplitterHeight.Width + 4;
@@ -816,6 +851,20 @@ Dialogue: -255,0:00:00.00,0:43:00.00,SE-progress-bar-bg,,0,0,0,,[PB_DRAWING]";
             Configuration.Settings.Tools.AssaProgressBarTopAlign = defaultToolsSettings.AssaProgressBarTopAlign;
             numericUpDownYAdjust.Value = 0;
             InitializeFromSettings();
+        }
+
+        private void listViewChapters_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                buttonRemove_Click(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == UiUtil.HelpKeys)
+            {
+                UiUtil.OpenUrl("https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#pos");
+                e.SuppressKeyPress = true;
+            }
         }
     }
 }

@@ -20,6 +20,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.ApplyDurationLimits ApplyDurationLimits;
         public LanguageStructure.AssaAttachments AssaAttachments;
         public LanguageStructure.AssaOverrideTags AssaOverrideTags;
+        public LanguageStructure.AssaProgressBarGenerator AssaProgressBarGenerator;
         public LanguageStructure.AssaSetPosition AssaSetPosition;
         public LanguageStructure.AudioToText AudioToText;
         public LanguageStructure.AutoBreakUnbreakLines AutoBreakUnbreakLines;
@@ -331,6 +332,23 @@ namespace Nikse.SubtitleEdit.Logic
                 History = "History",
                 SelectedLinesX = "Selected lines: {0}",
                 TagsToApply = "Tags to apply",
+            };
+
+            AssaProgressBarGenerator = new LanguageStructure.AssaProgressBarGenerator
+            {
+                Title = "Generate progress bar",
+                Chapters = "Chapters",
+                Progressbar = "Progress bar",
+                SplitterHeight = "Splitter height",
+                SplitterWidth = "Splitter width",
+                XAdjustment = "X adjustment",
+                YAdjustment = "Y adjustment",
+                Position = "Position",
+                TextAlignment = "Text alignment",
+                RoundedCorners = "Rounded corners",
+                SquareCorners = "Square corners",
+                Bottom = "Bottom",
+                Top = "Top",
             };
 
             AssaSetPosition = new LanguageStructure.AssaSetPosition

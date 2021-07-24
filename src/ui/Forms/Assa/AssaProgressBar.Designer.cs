@@ -33,7 +33,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.groupBoxStyle = new System.Windows.Forms.GroupBox();
             this.comboBoxProgressBarEdge = new System.Windows.Forms.ComboBox();
             this.labelEdgeStyle = new System.Windows.Forms.Label();
-            this.buttonReset = new System.Windows.Forms.Button();
             this.radioButtonPosTop = new System.Windows.Forms.RadioButton();
             this.radioButtonPosBottom = new System.Windows.Forms.RadioButton();
             this.labelHeight = new System.Windows.Forms.Label();
@@ -42,7 +41,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonSecondaryColor = new System.Windows.Forms.Button();
             this.panelPrimaryColor = new System.Windows.Forms.Panel();
             this.buttonForeColor = new System.Windows.Forms.Button();
-            this.labelStorageCategory = new System.Windows.Forms.Label();
+            this.labelPosition = new System.Windows.Forms.Label();
+            this.buttonReset = new System.Windows.Forms.Button();
             this.buttonPickAttachmentFont = new System.Windows.Forms.Button();
             this.comboBoxFontName = new System.Windows.Forms.ComboBox();
             this.labelFontName = new System.Windows.Forms.Label();
@@ -50,7 +50,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.labelSplitterWidth = new System.Windows.Forms.Label();
             this.numericUpDownSplitterHeight = new System.Windows.Forms.NumericUpDown();
             this.labelSplitterHeight = new System.Windows.Forms.Label();
-            this.labelRotateX = new System.Windows.Forms.Label();
+            this.labelFontSize = new System.Windows.Forms.Label();
             this.numericUpDownFontSize = new System.Windows.Forms.NumericUpDown();
             this.groupBoxChapters = new System.Windows.Forms.GroupBox();
             this.labelXAdjust = new System.Windows.Forms.Label();
@@ -61,6 +61,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.numericUpDownYAdjust = new System.Windows.Forms.NumericUpDown();
             this.textBoxChapterText = new System.Windows.Forms.TextBox();
             this.labelText = new System.Windows.Forms.Label();
+            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.labelStartTime = new System.Windows.Forms.Label();
             this.panelTextColor = new System.Windows.Forms.Panel();
             this.buttonTextColor = new System.Windows.Forms.Button();
@@ -73,7 +74,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.textBoxSource = new System.Windows.Forms.TextBox();
-            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.groupBoxStyle.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSplitterWidth)).BeginInit();
@@ -96,7 +96,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.groupBoxStyle.Controls.Add(this.buttonSecondaryColor);
             this.groupBoxStyle.Controls.Add(this.panelPrimaryColor);
             this.groupBoxStyle.Controls.Add(this.buttonForeColor);
-            this.groupBoxStyle.Controls.Add(this.labelStorageCategory);
+            this.groupBoxStyle.Controls.Add(this.labelPosition);
             this.groupBoxStyle.Location = new System.Drawing.Point(12, 12);
             this.groupBoxStyle.Name = "groupBoxStyle";
             this.groupBoxStyle.Size = new System.Drawing.Size(383, 167);
@@ -124,17 +124,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.labelEdgeStyle.Size = new System.Drawing.Size(30, 13);
             this.labelEdgeStyle.TabIndex = 9;
             this.labelEdgeStyle.Text = "Style";
-            // 
-            // buttonReset
-            // 
-            this.buttonReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonReset.Location = new System.Drawing.Point(1059, 619);
-            this.buttonReset.Name = "buttonReset";
-            this.buttonReset.Size = new System.Drawing.Size(103, 23);
-            this.buttonReset.TabIndex = 2;
-            this.buttonReset.Text = "Reset";
-            this.buttonReset.UseVisualStyleBackColor = true;
-            this.buttonReset.Click += new System.EventHandler(this.buttonReset_Click);
             // 
             // radioButtonPosTop
             // 
@@ -227,14 +216,25 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonForeColor.UseVisualStyleBackColor = true;
             this.buttonForeColor.Click += new System.EventHandler(this.buttonForeColor_Click);
             // 
-            // labelStorageCategory
+            // labelPosition
             // 
-            this.labelStorageCategory.AutoSize = true;
-            this.labelStorageCategory.Location = new System.Drawing.Point(10, 30);
-            this.labelStorageCategory.Name = "labelStorageCategory";
-            this.labelStorageCategory.Size = new System.Drawing.Size(44, 13);
-            this.labelStorageCategory.TabIndex = 0;
-            this.labelStorageCategory.Text = "Position";
+            this.labelPosition.AutoSize = true;
+            this.labelPosition.Location = new System.Drawing.Point(10, 30);
+            this.labelPosition.Name = "labelPosition";
+            this.labelPosition.Size = new System.Drawing.Size(44, 13);
+            this.labelPosition.TabIndex = 0;
+            this.labelPosition.Text = "Position";
+            // 
+            // buttonReset
+            // 
+            this.buttonReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonReset.Location = new System.Drawing.Point(1059, 619);
+            this.buttonReset.Name = "buttonReset";
+            this.buttonReset.Size = new System.Drawing.Size(103, 23);
+            this.buttonReset.TabIndex = 2;
+            this.buttonReset.Text = "Reset";
+            this.buttonReset.UseVisualStyleBackColor = true;
+            this.buttonReset.Click += new System.EventHandler(this.buttonReset_Click);
             // 
             // buttonPickAttachmentFont
             // 
@@ -317,14 +317,14 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.labelSplitterHeight.TabIndex = 2;
             this.labelSplitterHeight.Text = "Splitter height";
             // 
-            // labelRotateX
+            // labelFontSize
             // 
-            this.labelRotateX.AutoSize = true;
-            this.labelRotateX.Location = new System.Drawing.Point(10, 84);
-            this.labelRotateX.Name = "labelRotateX";
-            this.labelRotateX.Size = new System.Drawing.Size(49, 13);
-            this.labelRotateX.TabIndex = 7;
-            this.labelRotateX.Text = "Font size";
+            this.labelFontSize.AutoSize = true;
+            this.labelFontSize.Location = new System.Drawing.Point(10, 84);
+            this.labelFontSize.Name = "labelFontSize";
+            this.labelFontSize.Size = new System.Drawing.Size(49, 13);
+            this.labelFontSize.TabIndex = 7;
+            this.labelFontSize.Text = "Font size";
             // 
             // numericUpDownFontSize
             // 
@@ -374,7 +374,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.groupBoxChapters.Controls.Add(this.labelSplitterWidth);
             this.groupBoxChapters.Controls.Add(this.numericUpDownFontSize);
             this.groupBoxChapters.Controls.Add(this.numericUpDownSplitterWidth);
-            this.groupBoxChapters.Controls.Add(this.labelRotateX);
+            this.groupBoxChapters.Controls.Add(this.labelFontSize);
             this.groupBoxChapters.Controls.Add(this.labelSplitterHeight);
             this.groupBoxChapters.Controls.Add(this.numericUpDownSplitterHeight);
             this.groupBoxChapters.Location = new System.Drawing.Point(12, 185);
@@ -470,6 +470,27 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.labelText.TabIndex = 20;
             this.labelText.Text = "Text";
             // 
+            // timeUpDownStartTime
+            // 
+            this.timeUpDownStartTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.timeUpDownStartTime.AutoSize = true;
+            this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownStartTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.timeUpDownStartTime.Location = new System.Drawing.Point(63, 290);
+            this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
+            this.timeUpDownStartTime.Name = "timeUpDownStartTime";
+            this.timeUpDownStartTime.Size = new System.Drawing.Size(111, 27);
+            this.timeUpDownStartTime.TabIndex = 19;
+            timeCode1.Hours = 0;
+            timeCode1.Milliseconds = 0;
+            timeCode1.Minutes = 0;
+            timeCode1.Seconds = 0;
+            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode1.TotalMilliseconds = 0D;
+            timeCode1.TotalSeconds = 0D;
+            this.timeUpDownStartTime.TimeCode = timeCode1;
+            this.timeUpDownStartTime.UseVideoOffset = false;
+            // 
             // labelStartTime
             // 
             this.labelStartTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -554,6 +575,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.listViewChapters.View = System.Windows.Forms.View.Details;
             this.listViewChapters.SelectedIndexChanged += new System.EventHandler(this.listViewChapters_SelectedIndexChanged);
             this.listViewChapters.DoubleClick += new System.EventHandler(this.listViewChapters_DoubleClick);
+            this.listViewChapters.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listViewChapters_KeyDown);
             // 
             // columnHeaderName
             // 
@@ -599,27 +621,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.textBoxSource.TabIndex = 9;
             this.textBoxSource.Visible = false;
             // 
-            // timeUpDownStartTime
-            // 
-            this.timeUpDownStartTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.timeUpDownStartTime.AutoSize = true;
-            this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.timeUpDownStartTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.timeUpDownStartTime.Location = new System.Drawing.Point(63, 290);
-            this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
-            this.timeUpDownStartTime.Name = "timeUpDownStartTime";
-            this.timeUpDownStartTime.Size = new System.Drawing.Size(111, 27);
-            this.timeUpDownStartTime.TabIndex = 19;
-            timeCode1.Hours = 0;
-            timeCode1.Milliseconds = 0;
-            timeCode1.Minutes = 0;
-            timeCode1.Seconds = 0;
-            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode1.TotalMilliseconds = 0D;
-            timeCode1.TotalSeconds = 0D;
-            this.timeUpDownStartTime.TimeCode = timeCode1;
-            this.timeUpDownStartTime.UseVideoOffset = false;
-            // 
             // AssaProgressBar
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -660,9 +661,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private System.Windows.Forms.GroupBox groupBoxChapters;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.Label labelRotateX;
+        private System.Windows.Forms.Label labelFontSize;
         private System.Windows.Forms.NumericUpDown numericUpDownFontSize;
-        private System.Windows.Forms.Label labelStorageCategory;
+        private System.Windows.Forms.Label labelPosition;
         private System.Windows.Forms.Panel panelSecondaryColor;
         private System.Windows.Forms.Button buttonSecondaryColor;
         private System.Windows.Forms.Panel panelPrimaryColor;
