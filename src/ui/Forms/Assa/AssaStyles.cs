@@ -16,7 +16,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.Assa
 {
-    public sealed partial class Styles : Form
+    public sealed partial class AssaStyles : Form
     {
 
 
@@ -56,7 +56,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private ListView ActiveListView => _fileStyleActive ? listViewStyles : listViewStorage;
 
-        public Styles(Subtitle subtitle, SubtitleFormat format, Main mainForm, string currentStyleName)
+        public AssaStyles(Subtitle subtitle, SubtitleFormat format, Main mainForm, string currentStyleName)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -305,11 +305,12 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             UiUtil.FixLargeFonts(this, buttonCancel);
 
             comboBoxFontName.Left = labelFontName.Left + labelFontName.Width + 2;
-            buttonPickAttachmentFont.Visible = subtitle.Footer != null &&
+            var hasFont = subtitle.Footer != null &&
                                                subtitle.Footer.Contains("[Fonts]") &&
                                                subtitle.Footer.Contains("fontname:");
+            buttonPickAttachmentFont.Visible = hasFont;
             buttonPickAttachmentFont.Left = comboBoxFontName.Left + comboBoxFontName.Width + 3;
-            var controlLeftOfFontSize = buttonPickAttachmentFont.Visible ? buttonPickAttachmentFont : (Control)comboBoxFontName;
+            var controlLeftOfFontSize = hasFont ? buttonPickAttachmentFont : (Control)comboBoxFontName;
             labelFontSize.Left = controlLeftOfFontSize.Left + controlLeftOfFontSize.Width + 15;
             numericUpDownFontSize.Left = labelFontSize.Left + labelFontSize.Width + 2;
 
@@ -2783,7 +2784,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private void buttonPickAttachmentFont_Click(object sender, EventArgs e)
         {
-            using (var form = new Forms.Styles.ChooseFontName(_fontAttachments))
+            using (var form = new ChooseAssaFontName(_fontAttachments))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {

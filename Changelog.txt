@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.6.2 BETA (xth July 2021)
+3.6.2 BETA (xth August 2021)
 * NEW:
    * ASSA: Keep override tags (no conversion to html for italic/font etc.)
    * ASSA: Support for ScalingX/ScalingY/Spacing/Angle/Strikeout - thx ausencia
@@ -9,6 +9,7 @@
    * ASSA: Plugin support
    * Allow custom shortcuts for plugins
    * Shortcuts for video contrast/brightness (mpv only)
+   * Add shortcut for opening "Subtitle Edit data folder" (Ctrl+Alt+Shift+D)
    * Waveform "Right-click + Ctrl" will toggle select of a subtitle
    * Waveform "Right-click + Shift" will select a range of subtitles
    * Add a few profiles for Amazon Prime
@@ -39,6 +40,7 @@
    * Improve auto br / French regarding "space+punctuation" - thx Norbert
    * Make sub preview work with mpv + audio only files - thx Rabia
    * Add "[]" characters to PAC Latin - thx Valentin
+   * Allow hide of "Start time" column - thx ThomasLeigh/darnn
 * FIXED:
    * Fix MergeLinesShorterThan saving/loading - thx uckthis/OmrSi
    * Fix load/save some ASSA storage style settings - thx Andrebavila
@@ -49,6 +51,7 @@
    * Fix crash in "Continuation style" - thx ivandrofly
    * Fix export to "dvd studio stl" - thx nonofx
    * Apply duration limit: Only fix "checked" lines - thx PM
+   * Fix crash in compare - thx Janusz
 
 
 3.6.1 (20th May 2021)

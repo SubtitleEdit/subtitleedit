@@ -1,5 +1,5 @@
 ﻿
-namespace Nikse.SubtitleEdit.Forms.Styles
+namespace Nikse.SubtitleEdit.Forms.Assa
 {
     sealed partial class Attachments
     {

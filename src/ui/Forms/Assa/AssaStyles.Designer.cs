@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms.Assa
 {
-    sealed partial class Styles
+    sealed partial class AssaStyles
     {
         /// <summary>
         /// Required designer variable.

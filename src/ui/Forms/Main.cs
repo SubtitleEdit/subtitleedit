@@ -27983,7 +27983,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var p = _subtitle.GetParagraphOrDefault(FirstSelectedIndex);
                 var currentStyleName = p == null ? string.Empty : p.Extra;
-                using (var assaStyles = new Assa.Styles(_subtitle, format, this, currentStyleName))
+                using (var assaStyles = new Assa.AssaStyles(_subtitle, format, this, currentStyleName))
                 {
                     if (assaStyles.ShowDialog(this) == DialogResult.OK)
                     {
@@ -28055,7 +28055,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public void ApplyAssaStyles(Assa.Styles styles)
+        public void ApplyAssaStyles(Assa.AssaStyles styles)
         {
             if (_subtitle.Header != styles.Header)
             {
