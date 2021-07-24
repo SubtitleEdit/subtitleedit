@@ -187,6 +187,21 @@ Note: Do check free disk space.</WaveFileMalformed>
     <SelectedLinesX>Selected lines: {0}</SelectedLinesX>
     <AdvancedSelection>Advanced selection</AdvancedSelection>
   </AssaOverrideTags>
+  <AssaProgressBarGenerator>
+    <Title>Generate progress bar</Title>
+    <Progressbar>Progress bar</Progressbar>
+    <Chapters>Chapters</Chapters>
+    <SplitterWidth>Splitter width</SplitterWidth>
+    <SplitterHeight>Splitter height</SplitterHeight>
+    <XAdjustment>X adjustment</XAdjustment>
+    <YAdjustment>Y adjustment</YAdjustment>
+    <Position>Position</Position>
+    <TextAlignment>Text alignment</TextAlignment>
+    <SquareCorners>Square corners</SquareCorners>
+    <RoundedCorners>Rounded corners</RoundedCorners>
+    <Top>Top</Top>
+    <Bottom>Bottom</Bottom>
+  </AssaProgressBarGenerator>
   <AssaSetPosition>
     <SetPosition>Set/get position</SetPosition>
     <VideoResolutionX>Video resolution: {0}</VideoResolutionX>

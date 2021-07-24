@@ -505,6 +505,45 @@ namespace Nikse.SubtitleEdit.Logic
                 case "AssaOverrideTags/AdvancedSelection":
                     language.AssaOverrideTags.AdvancedSelection = reader.Value;
                     break;
+                case "AssaProgressBarGenerator/Title":
+                    language.AssaProgressBarGenerator.Title = reader.Value;
+                    break;
+                case "AssaProgressBarGenerator/Progressbar":
+                    language.AssaProgressBarGenerator.Progressbar = reader.Value;
+                    break;
+                case "AssaProgressBarGenerator/Chapters":
+                    language.AssaProgressBarGenerator.Chapters = reader.Value;
+                    break;
+                case "AssaProgressBarGenerator/SplitterWidth":
+                    language.AssaProgressBarGenerator.SplitterWidth = reader.Value;
+                    break;
+                case "AssaProgressBarGenerator/SplitterHeight":
+                    language.AssaProgressBarGenerator.SplitterHeight = reader.Value;
+                    break;
+                case "AssaProgressBarGenerator/XAdjustment":
+                    language.AssaProgressBarGenerator.XAdjustment = reader.Value;
+                    break;
+                case "AssaProgressBarGenerator/YAdjustment":
+                    language.AssaProgressBarGenerator.YAdjustment = reader.Value;
+                    break;
+                case "AssaProgressBarGenerator/Position":
+                    language.AssaProgressBarGenerator.Position = reader.Value;
+                    break;
+                case "AssaProgressBarGenerator/TextAlignment":
+                    language.AssaProgressBarGenerator.TextAlignment = reader.Value;
+                    break;
+                case "AssaProgressBarGenerator/SquareCorners":
+                    language.AssaProgressBarGenerator.SquareCorners = reader.Value;
+                    break;
+                case "AssaProgressBarGenerator/RoundedCorners":
+                    language.AssaProgressBarGenerator.RoundedCorners = reader.Value;
+                    break;
+                case "AssaProgressBarGenerator/Top":
+                    language.AssaProgressBarGenerator.Top = reader.Value;
+                    break;
+                case "AssaProgressBarGenerator/Bottom":
+                    language.AssaProgressBarGenerator.Bottom = reader.Value;
+                    break;
                 case "AssaSetPosition/SetPosition":
                     language.AssaSetPosition.SetPosition = reader.Value;
                     break;

@@ -196,6 +196,23 @@
             public string AdvancedSelection { get; set; }
         }
 
+        public class AssaProgressBarGenerator
+        {
+            public string Title { get; set; }
+            public string Progressbar { get; set; }
+            public string Chapters { get; set; }
+            public string SplitterWidth { get; set; }
+            public string SplitterHeight { get; set; }
+            public string XAdjustment { get; set; }
+            public string YAdjustment { get; set; }
+            public string Position { get; set; }
+            public string TextAlignment { get; set; }
+            public string SquareCorners { get; set; }
+            public string RoundedCorners { get; set; }
+            public string Top { get; set; }
+            public string Bottom { get; set; }
+        }
+
         public class AssaSetPosition
         {
             public string SetPosition { get; set; }
@@ -2516,7 +2533,7 @@
             public string MainToggleVideoControls { get; set; }
             public string VideoToggleContrast { get; set; }
             public string VideoToggleBrightness { get; set; }
-            public string CustomSearch1 { get; set; } 
+            public string CustomSearch1 { get; set; }
             public string CustomSearch2 { get; set; }
             public string CustomSearch3 { get; set; }
             public string CustomSearch4 { get; set; }
