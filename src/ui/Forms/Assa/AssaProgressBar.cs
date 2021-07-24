@@ -56,7 +56,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             _videoPlayerContainer.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             _videoPlayerContainer.Location = new Point(401, 12);
             _videoPlayerContainer.Name = "_videoPlayerContainer";
-            _videoPlayerContainer.Size = new Size(923, 601);
+            _videoPlayerContainer.Size = new Size(923, buttonOK.Top - 18);
 
             _fontAttachments = new List<AssaAttachmentFont>();
             if (subtitle.Footer != null)
@@ -72,21 +72,24 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             radioButtonPosTop.Left = left + radioButtonPosBottom.Width + 10;
             numericUpDownHeight.Left = left;
             buttonForeColor.Left = left;
-            panelPrimaryColor.Left = left + buttonForeColor.Width + 5;
+            panelPrimaryColor.Left = left + buttonForeColor.Width + 4;
             buttonSecondaryColor.Left = left;
-            panelSecondaryColor.Left = left + buttonSecondaryColor.Width + 5;
+            panelSecondaryColor.Left = left + buttonSecondaryColor.Width + 4;
+            comboBoxProgressBarEdge.Left = left;
+            comboBoxProgressBarEdge.SelectedIndex = 0;
 
-            left = Math.Max(Math.Max(Math.Max(labelSplitterHeight.Width, labelTextHorizontalAlignment.Width), Math.Max(labelFontName.Width, labelRotateX.Width)), labelYAdjust.Width) + 12;
+            left = Math.Max(Math.Max(labelSplitterHeight.Width, labelTextHorizontalAlignment.Width), Math.Max(labelFontName.Width, labelRotateX.Width)) + 12;
             numericUpDownSplitterWidth.Left = left;
             labelSplitterHeight.Left = numericUpDownSplitterWidth.Left + numericUpDownSplitterWidth.Width + 15;
-            numericUpDownSplitterHeight.Left = labelSplitterHeight.Left + labelSplitterHeight.Width + 5;
+            numericUpDownSplitterHeight.Left = labelSplitterHeight.Left + labelSplitterHeight.Width + 4;
             comboBoxFontName.Left = left;
-            buttonPickAttachmentFont.Left = left + comboBoxFontName.Width + 5;
+            buttonPickAttachmentFont.Left = left + comboBoxFontName.Width + 4;
             numericUpDownFontSize.Left = left;
             buttonTextColor.Left = left;
-            panelTextColor.Left = left + buttonTextColor.Width + 5;
-            numericUpDownYAdjust.Left = left;
+            panelTextColor.Left = left + buttonTextColor.Width + 4;
             numericUpDownXAdjust.Left = left;
+            labelYAdjust.Left = numericUpDownXAdjust.Left + numericUpDownXAdjust.Width + 10;
+            numericUpDownYAdjust.Left = labelYAdjust.Left + labelYAdjust.Width + 4;
             comboBoxTextHorizontalAlignment.Left = left;
 
             LoadExistingProgressBarSettings();
@@ -496,7 +499,7 @@ Style: SE-progress-bar-text,[FONT_NAME],[FONT_SIZE],[TEXT_COLOR],&H0000FFFF,&H00
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
-Dialogue: -255,0:00:00.00,0:43:00.00,SE-progress-bar-bg,,0,0,0,,{\K[DURATION]\p1}m 0 0 l [VIDEO_WIDTH] 0 [VIDEO_WIDTH] [PROGRESS_BAR_HEIGHT] 0 [PROGRESS_BAR_HEIGHT]{\p0}";
+Dialogue: -255,0:00:00.00,0:43:00.00,SE-progress-bar-bg,,0,0,0,,[PB_DRAWING]";
 
             script = script.Replace("[VIDEO_WIDTH]", _videoInfo.Width.ToString(CultureInfo.InvariantCulture));
             script = script.Replace("[VIDEO_HEIGHT]", _videoInfo.Height.ToString(CultureInfo.InvariantCulture));
@@ -508,10 +511,8 @@ Dialogue: -255,0:00:00.00,0:43:00.00,SE-progress-bar-bg,,0,0,0,,{\K[DURATION]\p1
             script = script.Replace("[FONT_SIZE]", numericUpDownFontSize.Value.ToString(CultureInfo.InvariantCulture));
             script = script.Replace("[FONT_NAME]", comboBoxFontName.Text);
 
-            var duration = (int)(_videoInfo.TotalMilliseconds / 10);
-            script = script.Replace("[DURATION]", duration.ToString(CultureInfo.InvariantCulture));
-
-            script = script.Replace("[PROGRESS_BAR_HEIGHT]", numericUpDownHeight.Value.ToString(CultureInfo.InvariantCulture));
+            var duration = (int)Math.Round(_videoInfo.TotalMilliseconds / 10.0);
+            script = script.Replace("[PB_DRAWING]", GenerateProgressBar(_videoInfo, (int)numericUpDownHeight.Value, duration));
 
             if (radioButtonPosTop.Checked)
             {
@@ -553,11 +554,8 @@ Dialogue: -255,0:00:00.00,0:43:00.00,SE-progress-bar-bg,,0,0,0,,{\K[DURATION]\p1
                         string posTag;
                         string splitterText;
                         SizeF chapterSize;
-
-
                         try
                         {
-                            //TODO: use font from attachment (if relevant)
                             using (var font = new Font(comboBoxFontName.Text, (float)(numericUpDownFontSize.Value * 0.7m), FontStyle.Regular))
                             {
                                 chapterSize = graphics.MeasureString(p.Text, font);
@@ -591,8 +589,7 @@ Dialogue: -255,0:00:00.00,0:43:00.00,SE-progress-bar-bg,,0,0,0,,{\K[DURATION]\p1
                         }
                         else
                         {
-                            posTag = $"{{\\pos({textPosition}, {_videoInfo.Height - numericUpDownHeight.Value + numericUpDownYAdjust.Value})}}";
-                            posTag = $"{{\\pos({textPosition}, {(int)Math.Round(_videoInfo.Height - numericUpDownHeight.Value + (decimal)(chapterSize.Height / 2.0) + numericUpDownYAdjust.Value)})}}";
+                            posTag = $"{{\\pos({textPosition}, {(int)Math.Round(_videoInfo.Height - (numericUpDownHeight.Value / 2.0m) + numericUpDownYAdjust.Value)})}}";
 
                             var splitterTop = _videoInfo.Height - numericUpDownHeight.Value;
                             if (numericUpDownSplitterHeight.Value < numericUpDownHeight.Value)
@@ -640,6 +637,18 @@ Dialogue: -255,0:00:00.00,0:43:00.00,SE-progress-bar-bg,,0,0,0,,{\K[DURATION]\p1
             }
 
             _videoPlayerContainer.RefreshProgressBar();
+        }
+
+        private string GenerateProgressBar(VideoInfo videoInfo, int height, int duration)
+        {
+            if (comboBoxProgressBarEdge.SelectedIndex == 1)
+            {
+                var barEnd = videoInfo.Width - height;
+                var w = videoInfo.Width;
+                return $@"{{\K180000\p1}}m {height} 0 b 0 0 0 {height} {height} {height} l {barEnd} {height} b {w} {height} {w} 0 {barEnd} 0 l  {barEnd} 0 {height} 0{{\p0}}";
+            }
+
+            return $"{{\\K{duration}\\p1}}m 0 0 l {videoInfo.Width} 0 {videoInfo.Width} {height} 0 {height}{{\\p0}}";
         }
 
         private int GetTextPosition(int position, Paragraph p, int i, double percentOfDuration)

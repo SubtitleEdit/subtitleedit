@@ -31,6 +31,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
             this.groupBoxStyle = new System.Windows.Forms.GroupBox();
+            this.comboBoxProgressBarEdge = new System.Windows.Forms.ComboBox();
+            this.labelEdgeStyle = new System.Windows.Forms.Label();
+            this.buttonReset = new System.Windows.Forms.Button();
             this.radioButtonPosTop = new System.Windows.Forms.RadioButton();
             this.radioButtonPosBottom = new System.Windows.Forms.RadioButton();
             this.labelHeight = new System.Windows.Forms.Label();
@@ -50,6 +53,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.labelRotateX = new System.Windows.Forms.Label();
             this.numericUpDownFontSize = new System.Windows.Forms.NumericUpDown();
             this.groupBoxChapters = new System.Windows.Forms.GroupBox();
+            this.labelXAdjust = new System.Windows.Forms.Label();
+            this.numericUpDownXAdjust = new System.Windows.Forms.NumericUpDown();
+            this.comboBoxTextHorizontalAlignment = new System.Windows.Forms.ComboBox();
+            this.labelTextHorizontalAlignment = new System.Windows.Forms.Label();
             this.labelYAdjust = new System.Windows.Forms.Label();
             this.numericUpDownYAdjust = new System.Windows.Forms.NumericUpDown();
             this.textBoxChapterText = new System.Windows.Forms.TextBox();
@@ -66,11 +73,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.textBoxSource = new System.Windows.Forms.TextBox();
-            this.buttonReset = new System.Windows.Forms.Button();
-            this.labelTextHorizontalAlignment = new System.Windows.Forms.Label();
-            this.comboBoxTextHorizontalAlignment = new System.Windows.Forms.ComboBox();
-            this.labelXAdjust = new System.Windows.Forms.Label();
-            this.numericUpDownXAdjust = new System.Windows.Forms.NumericUpDown();
             this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.groupBoxStyle.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).BeginInit();
@@ -78,13 +80,14 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSplitterHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).BeginInit();
             this.groupBoxChapters.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownYAdjust)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownXAdjust)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownYAdjust)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBoxStyle
             // 
-            this.groupBoxStyle.Controls.Add(this.buttonReset);
+            this.groupBoxStyle.Controls.Add(this.comboBoxProgressBarEdge);
+            this.groupBoxStyle.Controls.Add(this.labelEdgeStyle);
             this.groupBoxStyle.Controls.Add(this.radioButtonPosTop);
             this.groupBoxStyle.Controls.Add(this.radioButtonPosBottom);
             this.groupBoxStyle.Controls.Add(this.labelHeight);
@@ -96,10 +99,42 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.groupBoxStyle.Controls.Add(this.labelStorageCategory);
             this.groupBoxStyle.Location = new System.Drawing.Point(12, 12);
             this.groupBoxStyle.Name = "groupBoxStyle";
-            this.groupBoxStyle.Size = new System.Drawing.Size(383, 141);
+            this.groupBoxStyle.Size = new System.Drawing.Size(383, 167);
             this.groupBoxStyle.TabIndex = 0;
             this.groupBoxStyle.TabStop = false;
             this.groupBoxStyle.Text = "Progress bar";
+            // 
+            // comboBoxProgressBarEdge
+            // 
+            this.comboBoxProgressBarEdge.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxProgressBarEdge.FormattingEnabled = true;
+            this.comboBoxProgressBarEdge.Items.AddRange(new object[] {
+            "Square corners",
+            "Rounded corners"});
+            this.comboBoxProgressBarEdge.Location = new System.Drawing.Point(91, 132);
+            this.comboBoxProgressBarEdge.Name = "comboBoxProgressBarEdge";
+            this.comboBoxProgressBarEdge.Size = new System.Drawing.Size(188, 21);
+            this.comboBoxProgressBarEdge.TabIndex = 10;
+            // 
+            // labelEdgeStyle
+            // 
+            this.labelEdgeStyle.AutoSize = true;
+            this.labelEdgeStyle.Location = new System.Drawing.Point(5, 135);
+            this.labelEdgeStyle.Name = "labelEdgeStyle";
+            this.labelEdgeStyle.Size = new System.Drawing.Size(30, 13);
+            this.labelEdgeStyle.TabIndex = 9;
+            this.labelEdgeStyle.Text = "Style";
+            // 
+            // buttonReset
+            // 
+            this.buttonReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonReset.Location = new System.Drawing.Point(1059, 619);
+            this.buttonReset.Name = "buttonReset";
+            this.buttonReset.Size = new System.Drawing.Size(103, 23);
+            this.buttonReset.TabIndex = 2;
+            this.buttonReset.Text = "Reset";
+            this.buttonReset.UseVisualStyleBackColor = true;
+            this.buttonReset.Click += new System.EventHandler(this.buttonReset_Click);
             // 
             // radioButtonPosTop
             // 
@@ -157,7 +192,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // panelSecondaryColor
             // 
             this.panelSecondaryColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelSecondaryColor.Location = new System.Drawing.Point(206, 103);
+            this.panelSecondaryColor.Location = new System.Drawing.Point(206, 104);
             this.panelSecondaryColor.Name = "panelSecondaryColor";
             this.panelSecondaryColor.Size = new System.Drawing.Size(21, 20);
             this.panelSecondaryColor.TabIndex = 8;
@@ -165,7 +200,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             // buttonSecondaryColor
             // 
-            this.buttonSecondaryColor.Location = new System.Drawing.Point(91, 103);
+            this.buttonSecondaryColor.Location = new System.Drawing.Point(92, 103);
             this.buttonSecondaryColor.Name = "buttonSecondaryColor";
             this.buttonSecondaryColor.Size = new System.Drawing.Size(109, 23);
             this.buttonSecondaryColor.TabIndex = 7;
@@ -176,7 +211,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // panelPrimaryColor
             // 
             this.panelPrimaryColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelPrimaryColor.Location = new System.Drawing.Point(207, 74);
+            this.panelPrimaryColor.Location = new System.Drawing.Point(207, 75);
             this.panelPrimaryColor.Name = "panelPrimaryColor";
             this.panelPrimaryColor.Size = new System.Drawing.Size(21, 20);
             this.panelPrimaryColor.TabIndex = 6;
@@ -342,26 +377,70 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.groupBoxChapters.Controls.Add(this.labelRotateX);
             this.groupBoxChapters.Controls.Add(this.labelSplitterHeight);
             this.groupBoxChapters.Controls.Add(this.numericUpDownSplitterHeight);
-            this.groupBoxChapters.Location = new System.Drawing.Point(12, 159);
+            this.groupBoxChapters.Location = new System.Drawing.Point(12, 185);
             this.groupBoxChapters.Name = "groupBoxChapters";
-            this.groupBoxChapters.Size = new System.Drawing.Size(383, 483);
+            this.groupBoxChapters.Size = new System.Drawing.Size(383, 418);
             this.groupBoxChapters.TabIndex = 1;
             this.groupBoxChapters.TabStop = false;
             this.groupBoxChapters.Text = "Chapters";
+            // 
+            // labelXAdjust
+            // 
+            this.labelXAdjust.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelXAdjust.AutoSize = true;
+            this.labelXAdjust.Location = new System.Drawing.Point(9, 134);
+            this.labelXAdjust.Name = "labelXAdjust";
+            this.labelXAdjust.Size = new System.Drawing.Size(45, 13);
+            this.labelXAdjust.TabIndex = 11;
+            this.labelXAdjust.Text = "X adjust";
+            // 
+            // numericUpDownXAdjust
+            // 
+            this.numericUpDownXAdjust.Location = new System.Drawing.Point(92, 134);
+            this.numericUpDownXAdjust.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDownXAdjust.Name = "numericUpDownXAdjust";
+            this.numericUpDownXAdjust.Size = new System.Drawing.Size(52, 20);
+            this.numericUpDownXAdjust.TabIndex = 12;
+            // 
+            // comboBoxTextHorizontalAlignment
+            // 
+            this.comboBoxTextHorizontalAlignment.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxTextHorizontalAlignment.FormattingEnabled = true;
+            this.comboBoxTextHorizontalAlignment.Items.AddRange(new object[] {
+            "Left",
+            "Center",
+            "Right"});
+            this.comboBoxTextHorizontalAlignment.Location = new System.Drawing.Point(92, 160);
+            this.comboBoxTextHorizontalAlignment.Name = "comboBoxTextHorizontalAlignment";
+            this.comboBoxTextHorizontalAlignment.Size = new System.Drawing.Size(188, 21);
+            this.comboBoxTextHorizontalAlignment.TabIndex = 16;
+            // 
+            // labelTextHorizontalAlignment
+            // 
+            this.labelTextHorizontalAlignment.AutoSize = true;
+            this.labelTextHorizontalAlignment.Location = new System.Drawing.Point(6, 163);
+            this.labelTextHorizontalAlignment.Name = "labelTextHorizontalAlignment";
+            this.labelTextHorizontalAlignment.Size = new System.Drawing.Size(76, 13);
+            this.labelTextHorizontalAlignment.TabIndex = 15;
+            this.labelTextHorizontalAlignment.Text = "Text alignment";
             // 
             // labelYAdjust
             // 
             this.labelYAdjust.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelYAdjust.AutoSize = true;
-            this.labelYAdjust.Location = new System.Drawing.Point(9, 160);
+            this.labelYAdjust.Location = new System.Drawing.Point(176, 136);
             this.labelYAdjust.Name = "labelYAdjust";
             this.labelYAdjust.Size = new System.Drawing.Size(45, 13);
-            this.labelYAdjust.TabIndex = 11;
+            this.labelYAdjust.TabIndex = 13;
             this.labelYAdjust.Text = "Y adjust";
             // 
             // numericUpDownYAdjust
             // 
-            this.numericUpDownYAdjust.Location = new System.Drawing.Point(91, 158);
+            this.numericUpDownYAdjust.Location = new System.Drawing.Point(227, 134);
             this.numericUpDownYAdjust.Minimum = new decimal(new int[] {
             100,
             0,
@@ -369,42 +448,42 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             -2147483648});
             this.numericUpDownYAdjust.Name = "numericUpDownYAdjust";
             this.numericUpDownYAdjust.Size = new System.Drawing.Size(52, 20);
-            this.numericUpDownYAdjust.TabIndex = 12;
+            this.numericUpDownYAdjust.TabIndex = 14;
             // 
             // textBoxChapterText
             // 
             this.textBoxChapterText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.textBoxChapterText.Location = new System.Drawing.Point(63, 393);
+            this.textBoxChapterText.Location = new System.Drawing.Point(63, 324);
             this.textBoxChapterText.Multiline = true;
             this.textBoxChapterText.Name = "textBoxChapterText";
             this.textBoxChapterText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.textBoxChapterText.Size = new System.Drawing.Size(314, 46);
-            this.textBoxChapterText.TabIndex = 17;
+            this.textBoxChapterText.TabIndex = 21;
             // 
             // labelText
             // 
             this.labelText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelText.AutoSize = true;
-            this.labelText.Location = new System.Drawing.Point(6, 396);
+            this.labelText.Location = new System.Drawing.Point(6, 327);
             this.labelText.Name = "labelText";
             this.labelText.Size = new System.Drawing.Size(28, 13);
-            this.labelText.TabIndex = 16;
+            this.labelText.TabIndex = 20;
             this.labelText.Text = "Text";
             // 
             // labelStartTime
             // 
             this.labelStartTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelStartTime.AutoSize = true;
-            this.labelStartTime.Location = new System.Drawing.Point(6, 366);
+            this.labelStartTime.Location = new System.Drawing.Point(6, 297);
             this.labelStartTime.Name = "labelStartTime";
             this.labelStartTime.Size = new System.Drawing.Size(51, 13);
-            this.labelStartTime.TabIndex = 14;
+            this.labelStartTime.TabIndex = 18;
             this.labelStartTime.Text = "Start time";
             // 
             // panelTextColor
             // 
             this.panelTextColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelTextColor.Location = new System.Drawing.Point(207, 103);
+            this.panelTextColor.Location = new System.Drawing.Point(207, 104);
             this.panelTextColor.Name = "panelTextColor";
             this.panelTextColor.Size = new System.Drawing.Size(21, 20);
             this.panelTextColor.TabIndex = 10;
@@ -412,7 +491,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             // buttonTextColor
             // 
-            this.buttonTextColor.Location = new System.Drawing.Point(92, 103);
+            this.buttonTextColor.Location = new System.Drawing.Point(91, 103);
             this.buttonTextColor.Name = "buttonTextColor";
             this.buttonTextColor.Size = new System.Drawing.Size(109, 23);
             this.buttonTextColor.TabIndex = 9;
@@ -424,10 +503,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             this.buttonRemoveAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonRemoveAll.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonRemoveAll.Location = new System.Drawing.Point(195, 447);
+            this.buttonRemoveAll.Location = new System.Drawing.Point(190, 386);
             this.buttonRemoveAll.Name = "buttonRemoveAll";
             this.buttonRemoveAll.Size = new System.Drawing.Size(92, 23);
-            this.buttonRemoveAll.TabIndex = 20;
+            this.buttonRemoveAll.TabIndex = 24;
             this.buttonRemoveAll.Text = "Remove all";
             this.buttonRemoveAll.UseVisualStyleBackColor = true;
             this.buttonRemoveAll.Click += new System.EventHandler(this.buttonRemoveAll_Click);
@@ -436,10 +515,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             this.buttonAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonAdd.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonAdd.Location = new System.Drawing.Point(9, 447);
+            this.buttonAdd.Location = new System.Drawing.Point(4, 386);
             this.buttonAdd.Name = "buttonAdd";
             this.buttonAdd.Size = new System.Drawing.Size(82, 23);
-            this.buttonAdd.TabIndex = 18;
+            this.buttonAdd.TabIndex = 22;
             this.buttonAdd.Text = "New";
             this.buttonAdd.UseVisualStyleBackColor = true;
             this.buttonAdd.Click += new System.EventHandler(this.buttonAdd_Click);
@@ -448,10 +527,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             this.buttonRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonRemove.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonRemove.Location = new System.Drawing.Point(97, 447);
+            this.buttonRemove.Location = new System.Drawing.Point(92, 386);
             this.buttonRemove.Name = "buttonRemove";
             this.buttonRemove.Size = new System.Drawing.Size(92, 23);
-            this.buttonRemove.TabIndex = 19;
+            this.buttonRemove.TabIndex = 23;
             this.buttonRemove.Text = "Remove";
             this.buttonRemove.UseVisualStyleBackColor = true;
             this.buttonRemove.Click += new System.EventHandler(this.buttonRemove_Click);
@@ -466,11 +545,11 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.columnHeaderStart});
             this.listViewChapters.FullRowSelect = true;
             this.listViewChapters.HideSelection = false;
-            this.listViewChapters.Location = new System.Drawing.Point(6, 211);
+            this.listViewChapters.Location = new System.Drawing.Point(6, 187);
             this.listViewChapters.MultiSelect = false;
             this.listViewChapters.Name = "listViewChapters";
-            this.listViewChapters.Size = new System.Drawing.Size(371, 140);
-            this.listViewChapters.TabIndex = 13;
+            this.listViewChapters.Size = new System.Drawing.Size(371, 96);
+            this.listViewChapters.TabIndex = 17;
             this.listViewChapters.UseCompatibleStateImageBehavior = false;
             this.listViewChapters.View = System.Windows.Forms.View.Details;
             this.listViewChapters.SelectedIndexChanged += new System.EventHandler(this.listViewChapters_SelectedIndexChanged);
@@ -493,7 +572,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonOK.Location = new System.Drawing.Point(1168, 619);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 6;
+            this.buttonOK.TabIndex = 3;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
@@ -506,7 +585,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonCancel.Location = new System.Drawing.Point(1249, 619);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 7;
+            this.buttonCancel.TabIndex = 4;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -520,71 +599,17 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.textBoxSource.TabIndex = 9;
             this.textBoxSource.Visible = false;
             // 
-            // buttonReset
-            // 
-            this.buttonReset.Location = new System.Drawing.Point(305, 112);
-            this.buttonReset.Name = "buttonReset";
-            this.buttonReset.Size = new System.Drawing.Size(72, 23);
-            this.buttonReset.TabIndex = 8;
-            this.buttonReset.Text = "Reset";
-            this.buttonReset.UseVisualStyleBackColor = true;
-            this.buttonReset.Click += new System.EventHandler(this.buttonReset_Click);
-            // 
-            // labelTextHorizontalAlignment
-            // 
-            this.labelTextHorizontalAlignment.AutoSize = true;
-            this.labelTextHorizontalAlignment.Location = new System.Drawing.Point(8, 187);
-            this.labelTextHorizontalAlignment.Name = "labelTextHorizontalAlignment";
-            this.labelTextHorizontalAlignment.Size = new System.Drawing.Size(76, 13);
-            this.labelTextHorizontalAlignment.TabIndex = 21;
-            this.labelTextHorizontalAlignment.Text = "Text alignment";
-            // 
-            // comboBoxTextHorizontalAlignment
-            // 
-            this.comboBoxTextHorizontalAlignment.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxTextHorizontalAlignment.FormattingEnabled = true;
-            this.comboBoxTextHorizontalAlignment.Items.AddRange(new object[] {
-            "Left",
-            "Center",
-            "Right"});
-            this.comboBoxTextHorizontalAlignment.Location = new System.Drawing.Point(91, 184);
-            this.comboBoxTextHorizontalAlignment.Name = "comboBoxTextHorizontalAlignment";
-            this.comboBoxTextHorizontalAlignment.Size = new System.Drawing.Size(188, 21);
-            this.comboBoxTextHorizontalAlignment.TabIndex = 22;
-            // 
-            // labelXAdjust
-            // 
-            this.labelXAdjust.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelXAdjust.AutoSize = true;
-            this.labelXAdjust.Location = new System.Drawing.Point(9, 134);
-            this.labelXAdjust.Name = "labelXAdjust";
-            this.labelXAdjust.Size = new System.Drawing.Size(45, 13);
-            this.labelXAdjust.TabIndex = 23;
-            this.labelXAdjust.Text = "X adjust";
-            // 
-            // numericUpDownXAdjust
-            // 
-            this.numericUpDownXAdjust.Location = new System.Drawing.Point(91, 132);
-            this.numericUpDownXAdjust.Minimum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            -2147483648});
-            this.numericUpDownXAdjust.Name = "numericUpDownXAdjust";
-            this.numericUpDownXAdjust.Size = new System.Drawing.Size(52, 20);
-            this.numericUpDownXAdjust.TabIndex = 24;
-            // 
             // timeUpDownStartTime
             // 
             this.timeUpDownStartTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.timeUpDownStartTime.AutoSize = true;
             this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.timeUpDownStartTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.timeUpDownStartTime.Location = new System.Drawing.Point(63, 359);
+            this.timeUpDownStartTime.Location = new System.Drawing.Point(63, 290);
             this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
             this.timeUpDownStartTime.Size = new System.Drawing.Size(111, 27);
-            this.timeUpDownStartTime.TabIndex = 15;
+            this.timeUpDownStartTime.TabIndex = 19;
             timeCode1.Hours = 0;
             timeCode1.Milliseconds = 0;
             timeCode1.Minutes = 0;
@@ -602,6 +627,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.ClientSize = new System.Drawing.Size(1336, 654);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
+            this.Controls.Add(this.buttonReset);
             this.Controls.Add(this.groupBoxChapters);
             this.Controls.Add(this.groupBoxStyle);
             this.KeyPreview = true;
@@ -622,8 +648,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).EndInit();
             this.groupBoxChapters.ResumeLayout(false);
             this.groupBoxChapters.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownYAdjust)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownXAdjust)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownYAdjust)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -672,5 +698,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private System.Windows.Forms.Label labelTextHorizontalAlignment;
         private System.Windows.Forms.Label labelXAdjust;
         private System.Windows.Forms.NumericUpDown numericUpDownXAdjust;
+        private System.Windows.Forms.ComboBox comboBoxProgressBarEdge;
+        private System.Windows.Forms.Label labelEdgeStyle;
     }
 }

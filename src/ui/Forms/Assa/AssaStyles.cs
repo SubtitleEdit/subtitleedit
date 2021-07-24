@@ -18,8 +18,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 {
     public sealed partial class AssaStyles : Form
     {
-
-
         public class NameEdit
         {
             public string OldName { get; set; }
@@ -306,8 +304,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             comboBoxFontName.Left = labelFontName.Left + labelFontName.Width + 2;
             var hasFont = subtitle.Footer != null &&
-                                               subtitle.Footer.Contains("[Fonts]") &&
-                                               subtitle.Footer.Contains("fontname:");
+                          subtitle.Footer.Contains("[Fonts]") &&
+                          subtitle.Footer.Contains("fontname:");
             buttonPickAttachmentFont.Visible = hasFont;
             buttonPickAttachmentFont.Left = comboBoxFontName.Left + comboBoxFontName.Width + 3;
             var controlLeftOfFontSize = hasFont ? buttonPickAttachmentFont : (Control)comboBoxFontName;
