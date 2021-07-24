@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace Nikse.SubtitleEdit.Forms.Styles
+namespace Nikse.SubtitleEdit.Forms.Assa
 {
     public partial class AttachmentPreviewText : Form
     {

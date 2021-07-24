@@ -344,7 +344,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private void buttonPickAttachmentFont_Click(object sender, System.EventArgs e)
         {
-            using (var form = new Forms.Styles.ChooseFontName(_fontAttachments))
+            using (var form = new ChooseAssaFontName(_fontAttachments))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {

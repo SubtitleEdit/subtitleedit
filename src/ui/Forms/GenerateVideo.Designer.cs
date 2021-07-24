@@ -132,7 +132,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.numericUpDownWidth.Size = new System.Drawing.Size(64, 20);
             this.numericUpDownWidth.TabIndex = 3;
             this.numericUpDownWidth.Value = new decimal(new int[] {
-            1080,
+            1280,
             0,
             0,
             0});

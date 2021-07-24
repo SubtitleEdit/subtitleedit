@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Forms.Assa;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
@@ -2720,7 +2721,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void buttonPickAttachmentFont_Click(object sender, EventArgs e)
         {
-            using (var form = new ChooseFontName(_fontAttachments))
+            using (var form = new ChooseAssaFontName(_fontAttachments))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {

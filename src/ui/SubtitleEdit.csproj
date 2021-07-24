@@ -151,11 +151,11 @@
     <Compile Include="Forms\Assa\AssaTagTemplate.Designer.cs">
       <DependentUpon>AssaTagTemplate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Assa\Styles.cs">
+    <Compile Include="Forms\Assa\AssaStyles.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Assa\Styles.Designer.cs">
-      <DependentUpon>Styles.cs</DependentUpon>
+    <Compile Include="Forms\Assa\AssaStyles.Designer.cs">
+      <DependentUpon>AssaStyles.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Assa\TagHistory.cs">
       <SubType>Form</SubType>
@@ -337,23 +337,23 @@
     <Compile Include="Forms\GenerateVideoWithHardSubs.Designer.cs">
       <DependentUpon>GenerateVideoWithHardSubs.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Styles\AttachmentPreviewText.cs">
+    <Compile Include="Forms\Assa\AttachmentPreviewText.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Styles\AttachmentPreviewText.Designer.cs">
+    <Compile Include="Forms\Assa\AttachmentPreviewText.Designer.cs">
       <DependentUpon>AttachmentPreviewText.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Styles\Attachments.cs">
+    <Compile Include="Forms\Assa\Attachments.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Styles\Attachments.Designer.cs">
+    <Compile Include="Forms\Assa\Attachments.Designer.cs">
       <DependentUpon>Attachments.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Styles\ChooseFontName.cs">
+    <Compile Include="Forms\Assa\ChooseAssaFontName.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Styles\ChooseFontName.Designer.cs">
-      <DependentUpon>ChooseFontName.cs</DependentUpon>
+    <Compile Include="Forms\Assa\ChooseAssaFontName.Designer.cs">
+      <DependentUpon>ChooseAssaFontName.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Styles\SubStationAlphaStylesCategoriesImportExport.cs">
       <SubType>Form</SubType>
@@ -1319,8 +1319,8 @@
     <EmbeddedResource Include="Forms\Assa\AssaTagTemplate.resx">
       <DependentUpon>AssaTagTemplate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Assa\Styles.resx">
-      <DependentUpon>Styles.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Assa\AssaStyles.resx">
+      <DependentUpon>AssaStyles.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Assa\TagHistory.resx">
       <DependentUpon>TagHistory.cs</DependentUpon>
@@ -1413,14 +1413,14 @@
     <EmbeddedResource Include="Forms\GenerateVideoWithHardSubs.resx">
       <DependentUpon>GenerateVideoWithHardSubs.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Styles\AttachmentPreviewText.resx">
+    <EmbeddedResource Include="Forms\Assa\AttachmentPreviewText.resx">
       <DependentUpon>AttachmentPreviewText.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Styles\Attachments.resx">
+    <EmbeddedResource Include="Forms\Assa\Attachments.resx">
       <DependentUpon>Attachments.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Styles\ChooseFontName.resx">
-      <DependentUpon>ChooseFontName.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Assa\ChooseAssaFontName.resx">
+      <DependentUpon>ChooseAssaFontName.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Styles\SubStationAlphaStylesCategoriesImportExport.resx">
       <DependentUpon>SubStationAlphaStylesCategoriesImportExport.cs</DependentUpon>

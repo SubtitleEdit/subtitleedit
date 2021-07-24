@@ -4,15 +4,15 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace Nikse.SubtitleEdit.Forms.Styles
+namespace Nikse.SubtitleEdit.Forms.Assa
 {
-    public partial class ChooseFontName : Form
+    public partial class ChooseAssaFontName : Form
     {
         private readonly List<AssaAttachmentFont> _attachments;
         public string FontName { get; set; }
         public AssaAttachmentFont FontAttachment { get; set; }
 
-        public ChooseFontName(List<AssaAttachmentFont> attachments)
+        public ChooseAssaFontName(List<AssaAttachmentFont> attachments)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();

@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Forms.Assa;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Nikse.SubtitleEdit.Forms.Styles
+namespace Nikse.SubtitleEdit.Forms.Assa
 {
     public sealed partial class Attachments : Form
     {
@@ -676,7 +677,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         {
             var sb = new StringBuilder();
 
-            var fonts = _attachments.Where(p => p.Category == "[Fonts]").ToList();
+            var fonts = _attachments.Where(p => p.Category == "[Fonts]" || p.Category == LanguageSettings.Current.AssaAttachments.Font).ToList();
             if (fonts.Count > 0)
             {
                 sb.AppendLine("[Fonts]");
@@ -688,7 +689,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 sb.AppendLine();
             }
 
-            var graphics = _attachments.Where(p => p.Category != "[Fonts]").ToList();
+            var graphics = _attachments.Where(p => p.Category != "[Fonts]" && p.Category != LanguageSettings.Current.AssaAttachments.Font).ToList();
             if (graphics.Count > 0)
             {
                 sb = new StringBuilder(sb.ToString().Trim());
