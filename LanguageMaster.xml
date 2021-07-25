@@ -201,6 +201,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <RoundedCorners>Rounded corners</RoundedCorners>
     <Top>Top</Top>
     <Bottom>Bottom</Bottom>
+    <TakePosFromVideo>Take video position</TakePosFromVideo>
   </AssaProgressBarGenerator>
   <AssaSetPosition>
     <SetPosition>Set/get position</SetPosition>

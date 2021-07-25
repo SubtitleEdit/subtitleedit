@@ -671,7 +671,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else
                 {
-                    sb.AppendLine();
+                    sb.AppendLine(text);
                 }
 
                 index++;

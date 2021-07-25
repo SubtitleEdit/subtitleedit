@@ -512,7 +512,7 @@ namespace Nikse.SubtitleEdit.Controls
                     colorStart++;
                 }
 
-                int colorEnd = text.IndexOfAny(new[] {'}', '\\', '&'}, colorStart + 1);
+                int colorEnd = text.IndexOfAny(new[] { '}', '\\', '&' }, colorStart + 1);
                 if (colorEnd > 0)
                 {
                     var color = text.Substring(colorStart, colorEnd - colorStart);
@@ -590,7 +590,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             if (_spellCheckWordLists is null && _hunspell is null)
             {
-                var detectedLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle, 100);
+                var detectedLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle, 300);
                 var downloadedDictionaries = Utilities.GetDictionaryLanguagesCultureNeutral();
                 var isDictionaryAvailable = false;
                 foreach (var downloadedDictionary in downloadedDictionaries)
