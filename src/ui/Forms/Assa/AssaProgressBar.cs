@@ -677,7 +677,7 @@ Dialogue: -255,0:00:00.00,0:43:00.00,SE-progress-bar-bg,,0,0,0,,[PB_DRAWING]";
 
         private string GenerateProgressBar(VideoInfo videoInfo, int height, int duration)
         {
-            if (comboBoxProgressBarEdge.SelectedIndex == 1)
+            if (comboBoxProgressBarEdge.SelectedIndex == 1) // rounded corners
             {
                 var barEnd = videoInfo.Width - height;
                 var w = videoInfo.Width;
@@ -709,8 +709,19 @@ Dialogue: -255,0:00:00.00,0:43:00.00,SE-progress-bar-bg,,0,0,0,,[PB_DRAWING]";
                     var percentOfDurationNext = next.StartTime.TotalMilliseconds * 100.0 / _videoInfo.TotalMilliseconds;
                     positionNextX = (int)Math.Round(_videoInfo.Width * percentOfDurationNext / 100.0);
                 }
+
+                if (comboBoxProgressBarEdge.SelectedIndex == 1 && i == _chapters.Paragraphs.Count - 1 && comboBoxTextHorizontalAlignment.SelectedIndex == 2) // Rounded corners + last paragraph + align text right
+                {
+                    return (int)Math.Round(positionNextX - (double)numericUpDownHeight.Value + (double)numericUpDownXAdjust.Value);
+                }
+
                 return (int)Math.Round(positionNextX - 10.0 + (double)numericUpDownXAdjust.Value);
             }
+
+            if (comboBoxProgressBarEdge.SelectedIndex == 1 && i == 0 && comboBoxTextHorizontalAlignment.SelectedIndex == 0) // Rounded corners + first paragraph + align text left
+            {
+                return (int)Math.Round(position + numericUpDownHeight.Value + numericUpDownSplitterWidth.Value + numericUpDownXAdjust.Value);
+            }            
 
             return (int)Math.Round(position + 8 + numericUpDownSplitterWidth.Value + numericUpDownXAdjust.Value);
         }
@@ -886,6 +897,11 @@ Dialogue: -255,0:00:00.00,0:43:00.00,SE-progress-bar-bg,,0,0,0,,[PB_DRAWING]";
             var p = (Paragraph)listViewChapters.SelectedItems[0].Tag;
             p.StartTime.TotalMilliseconds = _videoPlayerContainer.CurrentPosition * 1000.0;
             listViewChapters.SelectedItems[0].SubItems[1].Text = p.StartTime.ToDisplayString();
+        }
+
+        private void numericUpDownSplitterHeight_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+
         }
     }
 }
