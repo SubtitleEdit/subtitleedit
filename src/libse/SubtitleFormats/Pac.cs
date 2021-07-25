@@ -492,7 +492,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0xdd, new SpecialCharacter("דּ")},
             { 0xde, new SpecialCharacter("גּ")},
             { 0xdf, new SpecialCharacter("בּ")},
-            { 0x2b, new SpecialCharacter(".")},
+            { 0x2e, new SpecialCharacter(".")},
             { 0x2c, new SpecialCharacter(",")}
         };
 
