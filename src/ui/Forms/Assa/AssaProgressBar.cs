@@ -126,6 +126,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             labelYAdjust.Left = numericUpDownXAdjust.Left + numericUpDownXAdjust.Width + 10;
             numericUpDownYAdjust.Left = labelYAdjust.Left + labelYAdjust.Width + 4;
             comboBoxTextHorizontalAlignment.Left = left;
+            buttonTakePosFromVideo.Left = timeUpDownStartTime.Left + timeUpDownStartTime.Width + 10;
 
             LoadExistingProgressBarSettings();
 
@@ -719,6 +720,12 @@ Dialogue: -255,0:00:00.00,0:43:00.00,SE-progress-bar-bg,,0,0,0,,[PB_DRAWING]";
             if (_chapters.Paragraphs.Count > 0)
             {
                 var startTimeMs = _chapters.Paragraphs.Last().StartTime.TotalMilliseconds + 60000 * 5;
+                var videoMs = _videoPlayerContainer.CurrentPosition * 1000.0;
+                if (videoMs - 999 > _chapters.Paragraphs.Last().StartTime.TotalMilliseconds)
+                {
+                    startTimeMs = videoMs;
+                }
+
                 _chapters.Paragraphs.Add(new Paragraph("Text", startTimeMs, startTimeMs));
             }
             else
@@ -795,6 +802,7 @@ Dialogue: -255,0:00:00.00,0:43:00.00,SE-progress-bar-bg,,0,0,0,,[PB_DRAWING]";
                 timeUpDownStartTime.MaskedTextBox.Enabled = false;
                 textBoxChapterText.Enabled = false;
                 textBoxChapterText.Text = string.Empty;
+                buttonTakePosFromVideo.Enabled = false;
                 return;
             }
 
@@ -803,6 +811,7 @@ Dialogue: -255,0:00:00.00,0:43:00.00,SE-progress-bar-bg,,0,0,0,,[PB_DRAWING]";
             timeUpDownStartTime.Enabled = true;
             timeUpDownStartTime.MaskedTextBox.Enabled = true;
             textBoxChapterText.Enabled = true;
+            buttonTakePosFromVideo.Enabled = true;
 
             var p = (Paragraph)listViewChapters.SelectedItems[0].Tag;
             timeUpDownStartTime.TimeCode = new TimeCode(p.StartTime.TotalMilliseconds);
@@ -865,6 +874,18 @@ Dialogue: -255,0:00:00.00,0:43:00.00,SE-progress-bar-bg,,0,0,0,,[PB_DRAWING]";
                 UiUtil.OpenUrl("https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#pos");
                 e.SuppressKeyPress = true;
             }
+        }
+
+        private void buttonTakePosFromVideo_Click(object sender, EventArgs e)
+        {
+            if (listViewChapters.SelectedItems.Count != 1)
+            {
+                return;
+            }
+
+            var p = (Paragraph)listViewChapters.SelectedItems[0].Tag;
+            p.StartTime.TotalMilliseconds = _videoPlayerContainer.CurrentPosition * 1000.0;
+            listViewChapters.SelectedItems[0].SubItems[1].Text = p.StartTime.ToDisplayString();
         }
     }
 }
