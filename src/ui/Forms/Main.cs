@@ -14891,16 +14891,17 @@ namespace Nikse.SubtitleEdit.Forms
             var fc = FindFocusedControl(this);
             if (fc != null && (e.Modifiers == Keys.None || e.Modifiers == Keys.Shift))
             {
+                var typeName = fc.GetType().Name;
+
                 // do not check for shortcuts if text is being entered and a textbox is focused
-                if ((fc.Parent.Name == textBoxListViewText.Name || fc.Parent.Name == textBoxListViewTextOriginal.Name || fc.Name == textBoxSearchWord.Name) &&
-                    ((e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z) || (e.KeyCode >= Keys.OemSemicolon && e.KeyCode <= Keys.OemBackslash)) &&
-                    !Configuration.Settings.General.AllowLetterShortcutsInTextBox)
+                var textBoxTypes = new List<string> { "AdvancedTextBox", "SimpleTextBox", "SETextBox", "TextBox", "RichTextBox" };
+                if (textBoxTypes.Contains(typeName) && !Configuration.Settings.General.AllowLetterShortcutsInTextBox)
                 {
                     return;
                 }
 
                 // do not check for shortcuts if a number is being entered and a time box is focused
-                if (fc.Parent != null && (fc.Parent.Name == timeUpDownStartTime.Name || fc.Parent.Name == numericUpDownDuration.Name) &&
+                if (typeName == "UpDownEdit" &&
                     (e.KeyCode >= Keys.NumPad0 && e.KeyCode <= Keys.NumPad9 || e.KeyValue >= 48 && e.KeyValue <= 57))
                 {
                     return;
