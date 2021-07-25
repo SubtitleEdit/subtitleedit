@@ -899,9 +899,20 @@ Dialogue: -255,0:00:00.00,0:43:00.00,SE-progress-bar-bg,,0,0,0,,[PB_DRAWING]";
             listViewChapters.SelectedItems[0].SubItems[1].Text = p.StartTime.ToDisplayString();
         }
 
-        private void numericUpDownSplitterHeight_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        private void numericUpDownHeight_ValueChanged(object sender, EventArgs e)
         {
+            if (numericUpDownHeight.Value < numericUpDownSplitterHeight.Value)
+            {
+                numericUpDownSplitterHeight.Value = numericUpDownHeight.Value;
+            }
+        }
 
+        private void numericUpDownSplitterHeight_ValueChanged(object sender, EventArgs e)
+        {
+            if (numericUpDownHeight.Value < numericUpDownSplitterHeight.Value)
+            {
+                numericUpDownSplitterHeight.Value = numericUpDownHeight.Value;
+            }
         }
     }
 }
