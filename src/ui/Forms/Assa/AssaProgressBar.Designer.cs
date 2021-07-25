@@ -53,6 +53,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.labelFontSize = new System.Windows.Forms.Label();
             this.numericUpDownFontSize = new System.Windows.Forms.NumericUpDown();
             this.groupBoxChapters = new System.Windows.Forms.GroupBox();
+            this.buttonTakePosFromVideo = new System.Windows.Forms.Button();
             this.labelXAdjust = new System.Windows.Forms.Label();
             this.numericUpDownXAdjust = new System.Windows.Forms.NumericUpDown();
             this.comboBoxTextHorizontalAlignment = new System.Windows.Forms.ComboBox();
@@ -61,6 +62,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.numericUpDownYAdjust = new System.Windows.Forms.NumericUpDown();
             this.textBoxChapterText = new System.Windows.Forms.TextBox();
             this.labelText = new System.Windows.Forms.Label();
+            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.labelStartTime = new System.Windows.Forms.Label();
             this.panelTextColor = new System.Windows.Forms.Panel();
             this.buttonTextColor = new System.Windows.Forms.Button();
@@ -73,8 +75,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.textBoxSource = new System.Windows.Forms.TextBox();
-            this.buttonTakePosFromVideo = new System.Windows.Forms.Button();
-            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.groupBoxStyle.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSplitterWidth)).BeginInit();
@@ -307,6 +307,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             0,
             0,
             0});
+            this.numericUpDownSplitterHeight.Validating += new System.ComponentModel.CancelEventHandler(this.numericUpDownSplitterHeight_Validating);
             // 
             // labelSplitterHeight
             // 
@@ -385,6 +386,18 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.groupBoxChapters.TabIndex = 1;
             this.groupBoxChapters.TabStop = false;
             this.groupBoxChapters.Text = "Chapters";
+            // 
+            // buttonTakePosFromVideo
+            // 
+            this.buttonTakePosFromVideo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonTakePosFromVideo.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonTakePosFromVideo.Location = new System.Drawing.Point(181, 291);
+            this.buttonTakePosFromVideo.Name = "buttonTakePosFromVideo";
+            this.buttonTakePosFromVideo.Size = new System.Drawing.Size(145, 23);
+            this.buttonTakePosFromVideo.TabIndex = 20;
+            this.buttonTakePosFromVideo.Text = "Take pos from video";
+            this.buttonTakePosFromVideo.UseVisualStyleBackColor = true;
+            this.buttonTakePosFromVideo.Click += new System.EventHandler(this.buttonTakePosFromVideo_Click);
             // 
             // labelXAdjust
             // 
@@ -471,6 +484,27 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.labelText.Size = new System.Drawing.Size(28, 13);
             this.labelText.TabIndex = 20;
             this.labelText.Text = "Text";
+            // 
+            // timeUpDownStartTime
+            // 
+            this.timeUpDownStartTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.timeUpDownStartTime.AutoSize = true;
+            this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownStartTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.timeUpDownStartTime.Location = new System.Drawing.Point(63, 290);
+            this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
+            this.timeUpDownStartTime.Name = "timeUpDownStartTime";
+            this.timeUpDownStartTime.Size = new System.Drawing.Size(111, 27);
+            this.timeUpDownStartTime.TabIndex = 19;
+            timeCode1.Hours = 0;
+            timeCode1.Milliseconds = 0;
+            timeCode1.Minutes = 0;
+            timeCode1.Seconds = 0;
+            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode1.TotalMilliseconds = 0D;
+            timeCode1.TotalSeconds = 0D;
+            this.timeUpDownStartTime.TimeCode = timeCode1;
+            this.timeUpDownStartTime.UseVideoOffset = false;
             // 
             // labelStartTime
             // 
@@ -601,39 +635,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.textBoxSource.Size = new System.Drawing.Size(923, 595);
             this.textBoxSource.TabIndex = 9;
             this.textBoxSource.Visible = false;
-            // 
-            // buttonTakePosFromVideo
-            // 
-            this.buttonTakePosFromVideo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonTakePosFromVideo.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonTakePosFromVideo.Location = new System.Drawing.Point(181, 291);
-            this.buttonTakePosFromVideo.Name = "buttonTakePosFromVideo";
-            this.buttonTakePosFromVideo.Size = new System.Drawing.Size(145, 23);
-            this.buttonTakePosFromVideo.TabIndex = 20;
-            this.buttonTakePosFromVideo.Text = "Take pos from video";
-            this.buttonTakePosFromVideo.UseVisualStyleBackColor = true;
-            this.buttonTakePosFromVideo.Click += new System.EventHandler(this.buttonTakePosFromVideo_Click);
-            // 
-            // timeUpDownStartTime
-            // 
-            this.timeUpDownStartTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.timeUpDownStartTime.AutoSize = true;
-            this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.timeUpDownStartTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.timeUpDownStartTime.Location = new System.Drawing.Point(63, 290);
-            this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
-            this.timeUpDownStartTime.Name = "timeUpDownStartTime";
-            this.timeUpDownStartTime.Size = new System.Drawing.Size(111, 27);
-            this.timeUpDownStartTime.TabIndex = 19;
-            timeCode1.Hours = 0;
-            timeCode1.Milliseconds = 0;
-            timeCode1.Minutes = 0;
-            timeCode1.Seconds = 0;
-            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode1.TotalMilliseconds = 0D;
-            timeCode1.TotalSeconds = 0D;
-            this.timeUpDownStartTime.TimeCode = timeCode1;
-            this.timeUpDownStartTime.UseVideoOffset = false;
             // 
             // AssaProgressBar
             // 
