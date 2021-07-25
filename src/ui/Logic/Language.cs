@@ -349,6 +349,7 @@ namespace Nikse.SubtitleEdit.Logic
                 SquareCorners = "Square corners",
                 Bottom = "Bottom",
                 Top = "Top",
+                TakePosFromVideo = "Take video position",
             };
 
             AssaSetPosition = new LanguageStructure.AssaSetPosition

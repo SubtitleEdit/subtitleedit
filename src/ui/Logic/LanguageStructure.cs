@@ -211,6 +211,7 @@
             public string RoundedCorners { get; set; }
             public string Top { get; set; }
             public string Bottom { get; set; }
+            public string TakePosFromVideo { get; set; }
         }
 
         public class AssaSetPosition
