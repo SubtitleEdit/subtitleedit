@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             //{\p1}m 0 0 l 100 0 100 100 0 100{\p0}
             s = FixDrawing(sourceWidth, targetWidth, sourceHeight, targetHeight, s, "\\iclip\\(", ")");
             s = FixDrawing(sourceWidth, targetWidth, sourceHeight, targetHeight, s, "\\clip\\(", ")");
-            s = FixDrawing(sourceWidth, targetWidth, sourceHeight, targetHeight, s, "{\\p1}", "{\\p0}");
+            s = FixDrawing(sourceWidth, targetWidth, sourceHeight, targetHeight, s, "\\p1}", "{\\p0}");
 
             return s;
         }

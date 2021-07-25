@@ -195,7 +195,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.checkBoxFontSize.AutoSize = true;
             this.checkBoxFontSize.Checked = true;
             this.checkBoxFontSize.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxFontSize.Location = new System.Drawing.Point(12, 122);
+            this.checkBoxFontSize.Location = new System.Drawing.Point(15, 122);
             this.checkBoxFontSize.Name = "checkBoxFontSize";
             this.checkBoxFontSize.Size = new System.Drawing.Size(172, 17);
             this.checkBoxFontSize.TabIndex = 18;
@@ -207,7 +207,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.checkBoxPosition.AutoSize = true;
             this.checkBoxPosition.Checked = true;
             this.checkBoxPosition.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxPosition.Location = new System.Drawing.Point(12, 145);
+            this.checkBoxPosition.Location = new System.Drawing.Point(15, 145);
             this.checkBoxPosition.Name = "checkBoxPosition";
             this.checkBoxPosition.Size = new System.Drawing.Size(169, 17);
             this.checkBoxPosition.TabIndex = 19;
@@ -219,7 +219,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.checkBoxDrawing.AutoSize = true;
             this.checkBoxDrawing.Checked = true;
             this.checkBoxDrawing.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxDrawing.Location = new System.Drawing.Point(12, 168);
+            this.checkBoxDrawing.Location = new System.Drawing.Point(14, 168);
             this.checkBoxDrawing.Name = "checkBoxDrawing";
             this.checkBoxDrawing.Size = new System.Drawing.Size(170, 17);
             this.checkBoxDrawing.TabIndex = 20;

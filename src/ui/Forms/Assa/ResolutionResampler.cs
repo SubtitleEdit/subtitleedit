@@ -107,6 +107,11 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(_subtitle.Header))
+            {
+                _subtitle.Header = AdvancedSubStationAlpha.DefaultHeader;
+            }
+
             var sourceWidth = numericUpDownSourceWidth.Value;
             var sourceHeight = numericUpDownSourceHeight.Value;
             var targetWidth = numericUpDownTargetWidth.Value;
@@ -143,8 +148,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             _subtitle.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(_subtitle.Header, styles);
 
-            _subtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + _videoInfo.Width.ToString(CultureInfo.InvariantCulture), "[Script Info]", _subtitle.Header);
-            _subtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + _videoInfo.Height.ToString(CultureInfo.InvariantCulture), "[Script Info]", _subtitle.Header);
+            _subtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + targetWidth.ToString(CultureInfo.InvariantCulture), "[Script Info]", _subtitle.Header);
+            _subtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + targetHeight.ToString(CultureInfo.InvariantCulture), "[Script Info]", _subtitle.Header);
 
             foreach (var p in _subtitle.Paragraphs)
             {
