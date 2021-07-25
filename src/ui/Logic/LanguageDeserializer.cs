@@ -544,6 +544,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "AssaProgressBarGenerator/Bottom":
                     language.AssaProgressBarGenerator.Bottom = reader.Value;
                     break;
+                case "AssaProgressBarGenerator/TakePosFromVideo":
+                    language.AssaProgressBarGenerator.TakePosFromVideo = reader.Value;
+                    break;
                 case "AssaSetPosition/SetPosition":
                     language.AssaSetPosition.SetPosition = reader.Value;
                     break;
