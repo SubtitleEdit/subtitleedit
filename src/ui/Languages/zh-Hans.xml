@@ -190,8 +190,8 @@ Command line: {1} {2}
     <Title>生成进度条</Title>
     <Progressbar>进度条</Progressbar>
     <Chapters>章节</Chapters>
-    <SplitterWidth>分离器宽度</SplitterWidth>
-    <SplitterHeight>分离器高度</SplitterHeight>
+    <SplitterWidth>分隔线宽度</SplitterWidth>
+    <SplitterHeight>分隔线高度</SplitterHeight>
     <XAdjustment>X轴调整</XAdjustment>
     <YAdjustment>Y轴调整</YAdjustment>
     <Position>位置</Position>
