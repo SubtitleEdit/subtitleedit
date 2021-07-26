@@ -186,6 +186,22 @@ Command line: {1} {2}
     <SelectedLinesX>已选行：{0}</SelectedLinesX>
     <AdvancedSelection>高级选择</AdvancedSelection>
   </AssaOverrideTags>
+  <AssaProgressBarGenerator>
+    <Title>生成进度条</Title>
+    <Progressbar>进度条</Progressbar>
+    <Chapters>章节</Chapters>
+    <SplitterWidth>分离器宽度</SplitterWidth>
+    <SplitterHeight>分离器高度</SplitterHeight>
+    <XAdjustment>X轴调整</XAdjustment>
+    <YAdjustment>Y轴调整</YAdjustment>
+    <Position>位置</Position>
+    <TextAlignment>文字对齐</TextAlignment>
+    <SquareCorners>方角</SquareCorners>
+    <RoundedCorners>圆角</RoundedCorners>
+    <Top>顶部</Top>
+    <Bottom>底部</Bottom>
+    <TakePosFromVideo>获取视频位置</TakePosFromVideo>
+  </AssaProgressBarGenerator>
   <AssaSetPosition>
     <SetPosition>设置/获取位置</SetPosition>
     <VideoResolutionX>视频分辨率：{0}</VideoResolutionX>
@@ -1993,6 +2009,7 @@ Command line: {1} {2}
     <GoToPreviousBookmark>转到上一书签</GoToPreviousBookmark>
     <GoToNextBookmark>转到下一书签</GoToNextBookmark>
     <ChooseProfile>选择预设方案</ChooseProfile>
+    <OpenDataFolder>打开Subtitle Edit数据文件夹</OpenDataFolder>
     <DuplicateLine>创建副本行</DuplicateLine>
     <ToggleView>切换表格/源视图</ToggleView>
     <ToggleMode>切换翻译/创建/调整模式</ToggleMode>
@@ -2667,6 +2684,8 @@ Command line: {1} {2}
     <ScaleY>Y轴缩放</ScaleY>
     <Spacing>间距</Spacing>
     <Angle>角度</Angle>
+    <BoxPerLine>每行一个框（使用轮廓色）</BoxPerLine>
+    <BoxMultiLine>共用一个框（使用阴影色）</BoxMultiLine>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
     <Category>类别</Category>
