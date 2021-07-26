@@ -200,7 +200,7 @@ Command line: {1} {2}
     <RoundedCorners>圆角</RoundedCorners>
     <Top>顶部</Top>
     <Bottom>底部</Bottom>
-    <TakePosFromVideo>获取视频位置</TakePosFromVideo>
+    <TakePosFromVideo>从视频中获取位置</TakePosFromVideo>
   </AssaProgressBarGenerator>
   <AssaSetPosition>
     <SetPosition>设置/获取位置</SetPosition>
