@@ -900,14 +900,16 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 comboBoxMergeShortLineLengthList.Add(i.ToString(CultureInfo.InvariantCulture));
             }
             comboBoxMergeShortLineLength.Items.AddRange(comboBoxMergeShortLineLengthList.ToArray<object>());
-
-            if (gs.MergeLinesShorterThan >= 1 && gs.MergeLinesShorterThan < comboBoxMergeShortLineLength.Items.Count)
+            comboBoxMergeShortLineLength.SelectedIndex = 0;
+            var selMatch = gs.MergeLinesShorterThan.ToString();
+            for (int i = 0; i < comboBoxMergeShortLineLength.Items.Count; i++)
             {
-                comboBoxMergeShortLineLength.SelectedIndex = gs.MergeLinesShorterThan - 1;
-            }
-            else
-            {
-                comboBoxMergeShortLineLength.SelectedIndex = 0;
+                object item = comboBoxMergeShortLineLength.Items[i];
+                if (item.ToString() == selMatch)
+                {
+                    comboBoxMergeShortLineLength.SelectedIndex = i;
+                    break;
+                }
             }
 
             SetDialogStyle(Configuration.Settings.General.DialogStyle);
@@ -1973,7 +1975,11 @@ namespace Nikse.SubtitleEdit.Forms.Options
             toolsSettings.VerifyPlaySeconds = comboBoxToolsVerifySeconds.SelectedIndex + 2;
             toolsSettings.StartSceneIndex = comboBoxToolsStartSceneIndex.SelectedIndex;
             toolsSettings.EndSceneIndex = comboBoxToolsEndSceneIndex.SelectedIndex;
-            gs.MergeLinesShorterThan = comboBoxMergeShortLineLength.SelectedIndex + 1;
+            if (comboBoxMergeShortLineLength.SelectedIndex >= 0 && !string.IsNullOrEmpty(comboBoxMergeShortLineLength.Text))
+            {
+                gs.MergeLinesShorterThan = int.Parse(comboBoxMergeShortLineLength.Text, CultureInfo.InvariantCulture);
+            }
+
             if (gs.MergeLinesShorterThan > gs.SubtitleLineMaximumLength + 1)
             {
                 gs.MergeLinesShorterThan = gs.SubtitleLineMaximumLength;
@@ -3455,7 +3461,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             _rulesProfiles[idx].MaxNumberOfLines = (int)numericUpDownMaxNumberOfLines.Value;
             _rulesProfiles[idx].SubtitleMaximumWordsPerMinute = (int)numericUpDownMaxWordsMin.Value;
             _rulesProfiles[idx].CpsIncludesSpace = checkBoxCpsIncludeWhiteSpace.Checked;
-            _rulesProfiles[idx].MergeLinesShorterThan = comboBoxMergeShortLineLength.SelectedIndex;
+            _rulesProfiles[idx].MergeLinesShorterThan = int.Parse(comboBoxMergeShortLineLength.Text, CultureInfo.InvariantCulture);
             _rulesProfiles[idx].DialogStyle = DialogSplitMerge.GetDialogStyleFromIndex(comboBoxDialogStyle.SelectedIndex);
             _rulesProfiles[idx].ContinuationStyle = ContinuationUtilities.GetContinuationStyleFromIndex(comboBoxContinuationStyle.SelectedIndex);
 
