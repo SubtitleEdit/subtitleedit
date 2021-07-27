@@ -174,7 +174,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <IconName>Όνομα εικονίδιου:</IconName>
     <FontName>Όνομα γραμματοσειράς</FontName>
     <ImageResized>Η εικόνα άλλαξε διαστάσεις, για να ταιριάζει με το τρέχον παράθυρο.</ImageResized>
-    <FilesSkippedX>Εικόνες που παραλείφθηκαν: {0}</FilesSkippedX>
+    <FilesSkippedX>Αρχεία που παραλείφθηκαν: {0}</FilesSkippedX>
     <RemoveOneAttachment>Αφαίρεση προσάρτησης;</RemoveOneAttachment>
     <RemoveXAttachments>Αφαίρεση {0} προσαρτήσεων;</RemoveXAttachments>
   </AssaAttachments>
@@ -184,8 +184,24 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TagsToApply>Ετικέτες προς εφαρμογή</TagsToApply>
     <ApplyTo>Εφαρμογή σε</ApplyTo>
     <SelectedLinesX>Επιλεγμένες γραμμές: {0}</SelectedLinesX>
-    <AdvancedSelection>Προχωρημένη επλογή</AdvancedSelection>
+    <AdvancedSelection>Προχωρημένη επιλογή</AdvancedSelection>
   </AssaOverrideTags>
+  <AssaProgressBarGenerator>
+    <Title>Δημιουργία γραμμής προόδου</Title>
+    <Progressbar>Γραμμή προόδου</Progressbar>
+    <Chapters>Κεφάλαια</Chapters>
+    <SplitterWidth>Διαίρεση πλάτους</SplitterWidth>
+    <SplitterHeight>Διαίρεση ύψους</SplitterHeight>
+    <XAdjustment>Προσαρμογή Χ</XAdjustment>
+    <YAdjustment>Προσαρμογή Υ</YAdjustment>
+    <Position>Θέση</Position>
+    <TextAlignment>Στοίχιση κειμένου</TextAlignment>
+    <SquareCorners>Τετραγωνισμένες γωνίες</SquareCorners>
+    <RoundedCorners>Καμπυλωτές γωνίες</RoundedCorners>
+    <Top>Πάνω</Top>
+    <Bottom>Κάτω</Bottom>
+    <TakePosFromVideo>Λήψη θέσης βίντεο</TakePosFromVideo>
+  </AssaProgressBarGenerator>
   <AssaSetPosition>
     <SetPosition>Ορισμός/λήψη θέσης</SetPosition>
     <VideoResolutionX>Ανάλυση βίντεο: {0}</VideoResolutionX>
@@ -2865,12 +2881,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Υδατόσημο</Title>
     <WatermarkX>Υδατόσημο: {0}</WatermarkX>
     <GenerateWatermarkTitle>Δημιουργία υδατόσημου</GenerateWatermarkTitle>
-    <SpreadOverEntireSubtitle>Γέμισμα σε όλον τον υπότιτλο</SpreadOverEntireSubtitle>
+    <SpreadOverEntireSubtitle>Γέμισμα όλου του υποτίτλου</SpreadOverEntireSubtitle>
     <CurrentLineOnlyX>Μόνο σε τρέχουσα γραμμή: {0}</CurrentLineOnlyX>
     <Generate>Δημιουργία</Generate>
     <Remove>Αφαίρεση</Remove>
     <BeforeWatermark>Πριν του υδατόσημου</BeforeWatermark>
-    <ErrorUnicodeEncodingOnly>Το υδατόσημολειτουργεί μόνο με κωδικοποίηση αρχείου unicode.</ErrorUnicodeEncodingOnly>
+    <ErrorUnicodeEncodingOnly>Το υδατόσημο λειτουργεί μόνο με κωδικοποίηση αρχείου Unicode.</ErrorUnicodeEncodingOnly>
   </Watermark>
   <Waveform>
     <AddWaveformAndSpectrogram>Προσθήκη κυματομορφής/φασματογράμματος</AddWaveformAndSpectrogram>
