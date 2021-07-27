@@ -262,9 +262,17 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 numericUpDownMaxWordsMin.Value = p.SubtitleMaximumWordsPerMinute;
             }
             checkBoxCpsIncludeWhiteSpace.Checked = RulesProfiles[idx].CpsIncludesSpace;
-            if (RulesProfiles[idx].MergeLinesShorterThan >= 1 && RulesProfiles[idx].MergeLinesShorterThan - 1 < comboBoxMergeShortLineLength.Items.Count)
+            var comboIdx = RulesProfiles[idx].MergeLinesShorterThan - 1;
+            if (comboIdx >= 0 && comboIdx < comboBoxMergeShortLineLength.Items.Count)
             {
-                comboBoxMergeShortLineLength.SelectedIndex = RulesProfiles[idx].MergeLinesShorterThan - 1;
+                try
+                {
+                    comboBoxMergeShortLineLength.SelectedIndex = comboIdx;
+                }
+                catch
+                {
+                    comboBoxMergeShortLineLength.SelectedIndex = 0;
+                }
             }
             else
             {
@@ -305,7 +313,14 @@ namespace Nikse.SubtitleEdit.Forms.Options
             comboBoxContinuationStyle.SelectedIndex = 0;
             toolTipContinuationPreview.RemoveAll();
             toolTipContinuationPreview.SetToolTip(comboBoxContinuationStyle, ContinuationUtilities.GetContinuationStylePreview(RulesProfiles[idx].ContinuationStyle));
-            comboBoxContinuationStyle.SelectedIndex = ContinuationUtilities.GetIndexFromContinuationStyle(RulesProfiles[idx].ContinuationStyle);
+            try
+            {
+                comboBoxContinuationStyle.SelectedIndex = ContinuationUtilities.GetIndexFromContinuationStyle(RulesProfiles[idx].ContinuationStyle);
+            }
+            catch
+            { 
+                // ignore
+            }
 
             _editOn = oldEditOn;
         }
