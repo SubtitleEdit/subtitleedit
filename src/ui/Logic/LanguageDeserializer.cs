@@ -7957,6 +7957,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Waveform/RemoveSceneChange":
                     language.Waveform.RemoveSceneChange = reader.Value;
                     break;
+                case "Waveform/RemoveSceneChangesFromSelection":
+                    language.Waveform.RemoveSceneChangesFromSelection = reader.Value;
+                    break;
                 case "Waveform/GuessTimeCodes":
                     language.Waveform.GuessTimeCodes = reader.Value;
                     break;

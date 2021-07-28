@@ -2923,6 +2923,7 @@ Keep changes?</KeepChangesMessage>
     <ShowSpectrogramOnly>Show spectrogram only</ShowSpectrogramOnly>
     <AddSceneChange>Add scene change</AddSceneChange>
     <RemoveSceneChange>Remove scene change</RemoveSceneChange>
+    <RemoveSceneChangesFromSelection>Remove scene changes from selection</RemoveSceneChangesFromSelection>
     <GuessTimeCodes>Guess time codes...</GuessTimeCodes>
     <SeekSilence>Seek silence...</SeekSilence>
     <InsertSubtitleHere>Insert subtitle here...</InsertSubtitleHere>

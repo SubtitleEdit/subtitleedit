@@ -4084,7 +4084,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.seekSilenceToolStripMenuItem,
             this.insertSubtitleHereToolStripMenuItem});
             this.contextMenuStripWaveform.Name = "contextMenuStripWaveform";
-            this.contextMenuStripWaveform.Size = new System.Drawing.Size(275, 490);
+            this.contextMenuStripWaveform.Size = new System.Drawing.Size(275, 512);
             this.contextMenuStripWaveform.Closing += new System.Windows.Forms.ToolStripDropDownClosingEventHandler(this.contextMenuStripWaveform_Closing);
             this.contextMenuStripWaveform.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripWaveformOpening);
             // 
@@ -5184,7 +5184,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemInsertUnicodeSymbol,
             this.toolStripMenuItemInsertUnicodeControlCharacters});
             this.contextMenuStripTextBoxSourceView.Name = "contextMenuStripTextBoxSourceView";
-            this.contextMenuStripTextBoxSourceView.Size = new System.Drawing.Size(243, 220);
+            this.contextMenuStripTextBoxSourceView.Size = new System.Drawing.Size(243, 198);
             this.contextMenuStripTextBoxSourceView.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
             this.contextMenuStripTextBoxSourceView.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripTextBoxListViewOpening);
             this.contextMenuStripTextBoxSourceView.Opened += new System.EventHandler(this.MenuOpened);
