@@ -1038,6 +1038,18 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void removeSceneChangeToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (audioVisualizer.NewSelectionParagraph != null)
+            {
+                var newP = audioVisualizer.NewSelectionParagraph;
+                var sceneChanges = audioVisualizer.SceneChanges?.Where(p => p >= newP.StartTime.TotalSeconds && p <= newP.EndTime.TotalSeconds).ToList();
+                foreach (var sceneChange in sceneChanges)
+                {
+                    var deleteIdx = audioVisualizer.GetSceneChangeIndex(sceneChange);
+                    RemoveSceneChange(deleteIdx);
+                }
+                return;
+            }
+
             if (!_audioWaveformRightClickSeconds.HasValue)
             {
                 return;
@@ -1093,6 +1105,19 @@ namespace Nikse.SubtitleEdit.Forms
             extendToPreviousToolStripMenuItem.Visible = false;
             extendToNextToolStripMenuItem.Visible = false;
             toolStripSeparator6.Visible = false;
+
+            addSceneChangeToolStripMenuItem.Visible = false;
+            var sceneChangeCount = audioVisualizer.SceneChanges?.Count(p => p >= e.Paragraph.StartTime.TotalSeconds && p <= e.Paragraph.EndTime.TotalSeconds);
+            removeSceneChangeToolStripMenuItem.Text = LanguageSettings.Current.Waveform.RemoveSceneChange;
+            if (sceneChangeCount == 0)
+            {
+                removeSceneChangeToolStripMenuItem.Visible = false;
+            }
+            else if (sceneChangeCount >= 1)
+            {
+                removeSceneChangeToolStripMenuItem.Visible = true;
+                removeSceneChangeToolStripMenuItem.Text = LanguageSettings.Current.Waveform.RemoveSceneChangesFromSelection;
+            }
 
             contextMenuStripWaveform.Show(MousePosition.X, MousePosition.Y);
         }

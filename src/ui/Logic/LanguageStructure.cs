@@ -3154,6 +3154,7 @@
             public string ShowSpectrogramOnly { get; set; }
             public string AddSceneChange { get; set; }
             public string RemoveSceneChange { get; set; }
+            public string RemoveSceneChangesFromSelection { get; set; }
             public string GuessTimeCodes { get; set; }
             public string SeekSilence { get; set; }
             public string InsertSubtitleHere { get; set; }
