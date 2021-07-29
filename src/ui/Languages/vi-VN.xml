@@ -152,9 +152,6 @@ Hộp thư: Gửi thư tới: nikse.dk@gmail.com</AboutText1>
     <PleaseChooseOutputFolder>Vui lòng chọn đường dẫn đầu ra thư mục</PleaseChooseOutputFolder>
     <Converted>Chuyển đổi</Converted>
   </BatchConvert>
-  <Beamer>
-    <Title>Chuẩn xác</Title>
-  </Beamer>
   <ChangeCasing>
     <Title>Thay đổi cách hiển thị</Title>
     <ChangeCasingTo>Chọn cách hiển thị c ở</ChangeCasingTo>
@@ -1491,7 +1488,6 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <ListViewColumnDelete>Cột, xóa văn bản</ListViewColumnDelete>
     <ListViewColumnInsert>Cột, chèn văn bản</ListViewColumnInsert>
     <ListViewColumnPaste>Cột, dán</ListViewColumnPaste>
-    <ShowBeamer>Phát phụ đề toàn màn hình của máy chiếu</ShowBeamer>
   </Settings>
   <ShowEarlierLater>
     <Title>Hiện chọn dòng trước/sau</Title>

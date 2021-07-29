@@ -233,9 +233,6 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <MkvLanguageStyleThreeLetter>Drieletterige taalcode</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>Geen taalcode</MkvLanguageStyleEmpty>
   </BatchConvert>
-  <Beamer>
-    <Title>Beamer</Title>
-  </Beamer>
   <Bookmarks>
     <EditBookmark>Bladwĳzer bewerken</EditBookmark>
     <AddBookmark>Bladwĳzer toevoegen</AddBookmark>
@@ -2119,7 +2116,6 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <ListViewColumnTextUp>Kolom, tekst omhoog</ListViewColumnTextUp>
     <ListViewColumnTextDown>Kolom, tekst omlaag</ListViewColumnTextDown>
     <ListViewGoToNextError>Naar volgende fout</ListViewGoToNextError>
-    <ShowBeamer>Ondertitelingbeamer voor volledig scherm starten</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Laatste woord naar volgende ondertitel verplaatsen</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Eerste woord uit volgende ondertitel halen</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Eerste woord uit volgende ondertitel halen (huidige ondertitel)</MainTextBoxMoveFirstWordUpCurrent>

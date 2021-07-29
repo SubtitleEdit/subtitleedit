@@ -211,9 +211,6 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <AutoBalanceErrorX>Automatické vyvážení: {0}</AutoBalanceErrorX>
     <OffsetTimeCodes>Posunout časové kódy</OffsetTimeCodes>
   </BatchConvert>
-  <Beamer>
-    <Title>Beamer</Title>
-  </Beamer>
   <Bookmarks>
     <EditBookmark>Upravit záložku</EditBookmark>
     <AddBookmark>Přidat záložku</AddBookmark>
@@ -2021,7 +2018,6 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <ListViewColumnTextUp>Sloupec, text nahoru</ListViewColumnTextUp>
     <ListViewColumnTextDown>Sloupec, text dolů</ListViewColumnTextDown>
     <ListViewGoToNextError>Přejít na další chybu</ListViewGoToNextError>
-    <ShowBeamer>Spustit beamer titulků na celou obrazovku</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Přesunout poslední slovo do dalšího titulku</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Načíst první slovo z dalšího titulku</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Přesunout první slovo z dalšího řádku nahoru (aktuální titulek)</MainTextBoxMoveFirstWordUpCurrent>

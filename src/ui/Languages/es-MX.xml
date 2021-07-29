@@ -250,9 +250,6 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
     <MkvLanguageStyleThreeLetter>Código lingüístico de tres letras</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>Sin código de idioma</MkvLanguageStyleEmpty>
   </BatchConvert>
-  <Beamer>
-    <Title>Videoproyector</Title>
-  </Beamer>
   <BinEdit>
     <ImportImage>Importar imagen...</ImportImage>
     <ExportImage>Exportar imagen...</ExportImage>
@@ -2319,7 +2316,6 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <ListViewColumnTextUp>Columna, subir texto</ListViewColumnTextUp>
     <ListViewColumnTextDown>Columna, bajar texto</ListViewColumnTextDown>
     <ListViewGoToNextError>Ir al siguiente error</ListViewGoToNextError>
-    <ShowBeamer>Inicio proyector de subtítulos en pantalla completa</ShowBeamer>
     <ShowStyleManager>Mostrar gestor de estilo</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>Mover última palabra a la siguiente línea de subtítulos</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Mover primera palabra a la anterior línea de subtítulos</MainTextBoxMoveFirstWordFromNextUp>

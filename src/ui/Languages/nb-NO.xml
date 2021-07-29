@@ -188,9 +188,6 @@ Tips: Se om du har noe plass igjen på harddisken.</WaveFileMalformed>
     <MultipleReplaceErrorX>Erstatter flere: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Autobalanse: {0}</AutoBalanceErrorX>
   </BatchConvert>
-  <Beamer>
-    <Title>Prosjektering</Title>
-  </Beamer>
   <ChangeCasing>
     <Title>Endre bokstavkapitalisering</Title>
     <ChangeCasingTo>Endre bokstavkapitalisering til</ChangeCasingTo>
@@ -1852,7 +1849,6 @@ Hvis du har redigert denne filen i Subtitle Edit, kan du kanskje finne en backup
     <ListViewColumnInsert>Kolonne, sett inn tekst</ListViewColumnInsert>
     <ListViewColumnPaste>Kolonne, lim inn</ListViewColumnPaste>
     <ListViewGoToNextError>Hopp til neste feil</ListViewGoToNextError>
-    <ShowBeamer>Start fullskjermsprosjektering av undertekst</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Flytt siste ord ned til neste undertekstlinje</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Flytt opp første ord fra neste undertekstlinje</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxSelectionToLower>Gjør utvalg til småbokstaver</MainTextBoxSelectionToLower>

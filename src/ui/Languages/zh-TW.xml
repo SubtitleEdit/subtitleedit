@@ -174,9 +174,6 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <Filter>篩選</Filter>
     <FilterContains>包含文字...</FilterContains>
   </BatchConvert>
-  <Beamer>
-    <Title>投影儀</Title>
-  </Beamer>
   <ChangeCasing>
     <Title>變更大小寫</Title>
     <ChangeCasingTo>大小寫變更為</ChangeCasingTo>
@@ -1838,7 +1835,6 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <ListViewColumnInsert>行、插入文字</ListViewColumnInsert>
     <ListViewColumnPaste>行、貼上</ListViewColumnPaste>
     <ListViewGoToNextError>移至下一處錯誤</ListViewGoToNextError>
-    <ShowBeamer>啟動字幕全螢幕投影儀</ShowBeamer>
     <MainTextBoxMoveLastWordDown>將上一行的最後一個單字移至下一行</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>將下一行的第一個單字移至上一行</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxSelectionToLower>選擇部份變更為小寫</MainTextBoxSelectionToLower>

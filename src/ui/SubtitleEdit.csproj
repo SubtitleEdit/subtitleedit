@@ -451,12 +451,6 @@
     <Compile Include="Forms\BatchConvert.Designer.cs">
       <DependentUpon>BatchConvert.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Beamer.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Beamer.Designer.cs">
-      <DependentUpon>Beamer.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\ChangeCasing.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1467,9 +1461,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BatchConvert.resx">
       <DependentUpon>BatchConvert.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Beamer.resx">
-      <DependentUpon>Beamer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ChangeCasing.resx">
       <DependentUpon>ChangeCasing.cs</DependentUpon>

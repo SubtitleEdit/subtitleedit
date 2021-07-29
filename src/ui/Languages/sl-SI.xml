@@ -163,9 +163,6 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <Recursive>Vključi podmape</Recursive>
     <SetMinMsBetweenSubtitles>Nastavi mini. milisekund med vrsticami</SetMinMsBetweenSubtitles>
   </BatchConvert>
-  <Beamer>
-    <Title>Beamer</Title>
-  </Beamer>
   <ChangeCasing>
     <Title>Spremeni primere</Title>
     <ChangeCasingTo>Spremeni primere v</ChangeCasingTo>
@@ -1708,7 +1705,6 @@ popravlja en podnapis (sodelovanje)</Information>
     <ListViewColumnDelete>Stolpec, pobriši besedilo</ListViewColumnDelete>
     <ListViewColumnInsert>Stolpec, vstavi besedilo</ListViewColumnInsert>
     <ListViewColumnPaste>Stolpec, prilepi</ListViewColumnPaste>
-    <ShowBeamer>Zaženi prenosnik za podnapise v celem ekranu</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Pomakni besedo nižje v naslednjo vrstico</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Pomakni besedo višje v naslednjo vrstico</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxAutoBreak>Samodejno lomi besedilo</MainTextBoxAutoBreak>

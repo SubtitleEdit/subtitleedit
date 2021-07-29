@@ -256,9 +256,6 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <MkvLanguageStyleThreeLetter>Hárombetűs nyelvkód</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>Nincs nyelvkód</MkvLanguageStyleEmpty>
   </BatchConvert>
-  <Beamer>
-    <Title>Projektor</Title>
-  </Beamer>
   <BinEdit>
     <ImportImage>Kép importálása...</ImportImage>
     <ExportImage>Kép exportálása...</ExportImage>
@@ -2340,7 +2337,6 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <ListViewColumnTextUp>Oszlop, szöveg felfelé</ListViewColumnTextUp>
     <ListViewColumnTextDown>Oszlop, szöveg lefelé</ListViewColumnTextDown>
     <ListViewGoToNextError>Ugrás a következő hibára</ListViewGoToNextError>
-    <ShowBeamer>Teljes képernyős projektor felirat indítás</ShowBeamer>
     <ShowStyleManager>Stíluskezelő megjelenítése</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>Utolsó szó áthelyezése a következő feliratra</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Első szó lekérése a következő feliratból</MainTextBoxMoveFirstWordFromNextUp>

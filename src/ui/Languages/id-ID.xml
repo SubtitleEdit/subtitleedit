@@ -204,9 +204,6 @@ Catatan: Periksa ruang kosong disk.</WaveFileMalformed>
     <AutoBalanceErrorX>Oto. seimbangkan: {0}</AutoBalanceErrorX>
     <OffsetTimeCodes>Offset kode waktu</OffsetTimeCodes>
   </BatchConvert>
-  <Beamer>
-    <Title>Beamer</Title>
-  </Beamer>
   <ChangeCasing>
     <Title>Ubah sensitifitas huruf</Title>
     <ChangeCasingTo>Ubah sensitifitas huruf ke</ChangeCasingTo>
@@ -1972,7 +1969,6 @@ bisa mengedit dlm file subjudul yg sama (kolaborasi)</Information>
     <ListViewColumnTextUp>Kolom, teks ke atas</ListViewColumnTextUp>
     <ListViewColumnTextDown>Kolom, teks ke bawah</ListViewColumnTextDown>
     <ListViewGoToNextError>Pergi ke eror berikutnya</ListViewGoToNextError>
-    <ShowBeamer>Mulai beamer layar penuh subjudul</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Pindah kata terakhir ke subjudul berikutnya</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Ambil kata pertama dari subjudul berikutnya</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Pindah kata pertama dari baris berikutnya ke atas (subjudul saat ini)</MainTextBoxMoveFirstWordUpCurrent>

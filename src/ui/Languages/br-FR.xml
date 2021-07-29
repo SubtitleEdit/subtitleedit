@@ -192,9 +192,6 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
     <MultipleReplaceErrorX>Erlec'hiadennoù lies: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Pouezerez emgefreek: {0}</AutoBalanceErrorX>
   </BatchConvert>
-  <Beamer>
-    <Title>Istitl an arvester</Title>
-  </Beamer>
   <ChangeCasing>
     <Title>Cheñch al log</Title>
     <ChangeCasingTo>Cheñch al log</ChangeCasingTo>
@@ -1842,7 +1839,6 @@ meur a zen ar memes restr istitloù (kenlabour)</Information>
     <ListViewColumnInsert>Bann, pegañ testenn</ListViewColumnInsert>
     <ListViewColumnPaste>Bann, pegañ golvar</ListViewColumnPaste>
     <ListViewGoToNextError>Mont d'ar fazi da-heul</ListViewGoToNextError>
-    <ShowBeamer>Penn-kentañ an istitloù arvester (skramm a-bezh)</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Diblaseal ar ger diwezhañ e-barzh linenn an istitl da-heul</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Diblaseal ar ger kentañ e-barzh linenn an istitl a-raok</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxSelectionToLower>Diuzit lizherennoù munut</MainTextBoxSelectionToLower>

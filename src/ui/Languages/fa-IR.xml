@@ -212,9 +212,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AutoBalanceErrorX>تعادل خودکار: {0}</AutoBalanceErrorX>
     <OffsetTimeCodes>کدگذاری زمان افست</OffsetTimeCodes>
   </BatchConvert>
-  <Beamer>
-    <Title>Beamer</Title>
-  </Beamer>
   <Bookmarks>
     <EditBookmark>ویرایش نشانک</EditBookmark>
     <AddBookmark>افزودن نشانک</AddBookmark>
@@ -2034,7 +2031,6 @@ Continue anyway?</PromptInsertSubtitleOverlap>
     <ListViewColumnTextUp>ستون ، متن بالا</ListViewColumnTextUp>
     <ListViewColumnTextDown>ستون ، متن پایین</ListViewColumnTextDown>
     <ListViewGoToNextError>رفتن به خطای بعدی</ListViewGoToNextError>
-    <ShowBeamer>beamer تمام صفحه زیرنویس را شروع کنید</ShowBeamer>
     <MainTextBoxMoveLastWordDown>انتقال آخرین کلمه به خط بعدی زیرنویس</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>انتقال اولین کلمه از زیرنویس بعدی به بالا</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Move first word from next line up (current subtitle)</MainTextBoxMoveFirstWordUpCurrent>

@@ -256,9 +256,6 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <MkvLanguageStyleThreeLetter>Trzyliterowy kod języka</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>Brak kodu języka</MkvLanguageStyleEmpty>
   </BatchConvert>
-  <Beamer>
-    <Title>Projektor</Title>
-  </Beamer>
   <BinEdit>
     <ImportImage>Importuj obraz...</ImportImage>
     <ExportImage>Eksportuj obraz...</ExportImage>
@@ -2340,7 +2337,6 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <ListViewColumnTextUp>Kolumna, tekst do góry</ListViewColumnTextUp>
     <ListViewColumnTextDown>Kolumna, tekst w dół</ListViewColumnTextDown>
     <ListViewGoToNextError>Przejdź do następnego błędu</ListViewGoToNextError>
-    <ShowBeamer>Uruchom projekcję napisów na pełnym ekranie</ShowBeamer>
     <ShowStyleManager>Pokaż menedżera stylów</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>Przenieś ostatnie słowo do następnej linii napisów</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Pobierz pierwsze słowo z następnej linii napisów</MainTextBoxMoveFirstWordFromNextUp>

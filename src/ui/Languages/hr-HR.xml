@@ -197,9 +197,6 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <AutoBalanceErrorX>Auto ravnoteža: {0}</AutoBalanceErrorX>
     <OffsetTimeCodes />
   </BatchConvert>
-  <Beamer>
-    <Title>Beamer (Video projekcija)</Title>
-  </Beamer>
   <ChangeCasing>
     <Title>Promjena veličine slova</Title>
     <ChangeCasingTo>Promjena malih i velikih slova</ChangeCasingTo>
@@ -1934,7 +1931,6 @@ određeni podnaslov s drugim ljudima.</Information>
     <ListViewColumnInsert>Stup, umetnuti tekst</ListViewColumnInsert>
     <ListViewColumnPaste>Stup, zalijepiti</ListViewColumnPaste>
     <ListViewGoToNextError>Idi na sljedeću pogrešku</ListViewGoToNextError>
-    <ShowBeamer>Započni pregled podnaslova preko cijelog zaslona</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Pomakni zadnju riječ dolje u novi redak podnaslova</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Pomakni prvu riječ u novi redak gore</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxSelectionToLower>Izbor u mala slova</MainTextBoxSelectionToLower>

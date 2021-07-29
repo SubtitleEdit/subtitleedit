@@ -239,9 +239,6 @@ https://github.com/SubtitleEdit/subtitleedit
     <MkvLanguageStyleThreeLetter>Трёхбуквенный код языка</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>Код языка отсутствует</MkvLanguageStyleEmpty>
   </BatchConvert>
-  <Beamer>
-    <Title>Проектор</Title>
-  </Beamer>
   <Bookmarks>
     <EditBookmark>Изменить закладку</EditBookmark>
     <AddBookmark>Добавить закладку</AddBookmark>
@@ -2171,7 +2168,6 @@ https://github.com/SubtitleEdit/subtitleedit
     <ListViewColumnTextUp>Колонка, текст выше</ListViewColumnTextUp>
     <ListViewColumnTextDown>Колонка, текст ниже</ListViewColumnTextDown>
     <ListViewGoToNextError>Перейти к следующей ошибке</ListViewGoToNextError>
-    <ShowBeamer>Запустить субтитры при полноэкранном режиме проектора</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Переместить последнее слово вниз на следующую строку субтитров</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Переместить первое слово вверх на предыдущую строку субтитров</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Переместить первое слово из следующей строки вверх (текущий субтитр)</MainTextBoxMoveFirstWordUpCurrent>
