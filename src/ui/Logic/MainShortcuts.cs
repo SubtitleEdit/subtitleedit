@@ -19,8 +19,10 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainGeneralMergeWithNext { get; set; }
         public Keys MainGeneralMergeWithPrevious { get; set; }
         public Keys MainGeneralGoToNextSubtitle { get; set; }
+        public Keys MainGeneralGoToNextSubtitlePlayTranslate { get; set; }
         public Keys MainGeneralGoToNextSubtitleCursorAtEnd { get; set; }
         public Keys MainGeneralGoToPrevSubtitle { get; set; }
+        public Keys MainGeneralGoToPrevSubtitlePlayTranslate { get; set; }
         public Keys MainGeneralGoToStartOfCurrentSubtitle { get; set; }
         public Keys MainGeneralGoToEndOfCurrentSubtitle { get; set; }
         public Keys MainGeneralFileSaveAll { get; set; }
@@ -223,8 +225,10 @@ namespace Nikse.SubtitleEdit.Logic
             MainGeneralMergeWithNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeWithNext);
             MainGeneralMergeWithPrevious = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeWithPrevious);
             MainGeneralGoToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
+            MainGeneralGoToNextSubtitlePlayTranslate = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitlePlayTranslate);
             MainGeneralGoToNextSubtitleCursorAtEnd = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitleCursorAtEnd);
             MainGeneralGoToPrevSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
+            MainGeneralGoToPrevSubtitlePlayTranslate = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitlePlayTranslate);
             MainGeneralGoToStartOfCurrentSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToStartOfCurrentSubtitle);
             MainGeneralGoToEndOfCurrentSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToEndOfCurrentSubtitle);
             MainGeneralFileSaveAll = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveAll);

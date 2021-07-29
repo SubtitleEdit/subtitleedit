@@ -1934,8 +1934,10 @@ $HorzAlign          =   Center
         public string GeneralSwitchOriginalAndTranslation { get; set; }
         public string GeneralMergeOriginalAndTranslation { get; set; }
         public string GeneralGoToNextSubtitle { get; set; }
+        public string GeneralGoToNextSubtitlePlayTranslate { get; set; }
         public string GeneralGoToNextSubtitleCursorAtEnd { get; set; }
         public string GeneralGoToPrevSubtitle { get; set; }
+        public string GeneralGoToPrevSubtitlePlayTranslate { get; set; }
         public string GeneralGoToStartOfCurrentSubtitle { get; set; }
         public string GeneralGoToEndOfCurrentSubtitle { get; set; }
         public string GeneralGoToPreviousSubtitleAndFocusVideo { get; set; }
@@ -2214,6 +2216,8 @@ $HorzAlign          =   Center
             GeneralToggleTranslationMode = "Control+Shift+O";
             GeneralMergeOriginalAndTranslation = "Control+Alt+Shift+M";
             GeneralGoToNextSubtitle = "Shift+Return";
+            GeneralGoToNextSubtitlePlayTranslate = "Alt+Down";
+            GeneralGoToPrevSubtitlePlayTranslate = "Alt+Up";
             GeneralToggleBookmarksWithText = "Control+Shift+B";
             OpenDataFolder = "Control+Alt+Shift+D";
             GeneralToggleView = "F2";
@@ -6827,6 +6831,12 @@ $HorzAlign          =   Center
                     shortcuts.GeneralGoToNextSubtitle = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("GeneralGoToNextSubtitlePlayTranslate");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralGoToNextSubtitlePlayTranslate = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralGoToNextSubtitleCursorAtEnd");
                 if (subNode != null)
                 {
@@ -6837,6 +6847,12 @@ $HorzAlign          =   Center
                 if (subNode != null)
                 {
                     shortcuts.GeneralGoToPrevSubtitle = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralGoToPrevSubtitlePlayTranslate");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralGoToPrevSubtitlePlayTranslate = subNode.InnerText;
                 }
 
                 subNode = node.SelectSingleNode("GeneralGoToEndOfCurrentSubtitle");
@@ -9308,8 +9324,10 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("GeneralSwitchOriginalAndTranslation", shortcuts.GeneralSwitchOriginalAndTranslation);
             textWriter.WriteElementString("GeneralMergeOriginalAndTranslation", shortcuts.GeneralMergeOriginalAndTranslation);
             textWriter.WriteElementString("GeneralGoToNextSubtitle", shortcuts.GeneralGoToNextSubtitle);
+            textWriter.WriteElementString("GeneralGoToNextSubtitlePlayTranslate", shortcuts.GeneralGoToNextSubtitlePlayTranslate);
             textWriter.WriteElementString("GeneralGoToNextSubtitleCursorAtEnd", shortcuts.GeneralGoToNextSubtitleCursorAtEnd);
             textWriter.WriteElementString("GeneralGoToPrevSubtitle", shortcuts.GeneralGoToPrevSubtitle);
+            textWriter.WriteElementString("GeneralGoToPrevSubtitlePlayTranslate", shortcuts.GeneralGoToPrevSubtitlePlayTranslate);
             textWriter.WriteElementString("GeneralGoToEndOfCurrentSubtitle", shortcuts.GeneralGoToEndOfCurrentSubtitle);
             textWriter.WriteElementString("GeneralGoToStartOfCurrentSubtitle", shortcuts.GeneralGoToStartOfCurrentSubtitle);
             textWriter.WriteElementString("GeneralGoToPreviousSubtitleAndFocusVideo", shortcuts.GeneralGoToPreviousSubtitleAndFocusVideo);
