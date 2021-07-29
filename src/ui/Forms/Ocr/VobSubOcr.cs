@@ -6905,7 +6905,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 UiUtil.ShowHelp("#importvobsub");
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyCode == Keys.Down && e.Modifiers == Keys.Alt)
+            else if (e.KeyData == UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitlePlayTranslate))
             {
                 int selectedIndex = 0;
                 if (subtitleListView1.SelectedItems.Count > 0)

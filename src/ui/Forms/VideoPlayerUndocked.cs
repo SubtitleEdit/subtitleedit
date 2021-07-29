@@ -11,7 +11,10 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly Main _mainForm;
         private readonly Controls.VideoPlayerContainer _videoPlayerContainer;
         private readonly Keys _redockKeys;
-
+        private readonly Keys _mainGeneralGoToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
+        private readonly Keys _mainGeneralGoToNextSubtitlePlayTranslate = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitlePlayTranslate);
+        private readonly Keys _mainGeneralGoToPrevSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
+        private readonly Keys _mainGeneralGoToPrevSubtitlePlayTranslate = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitlePlayTranslate);
         private bool _autoSized;
 
         public bool RedockOnFullscreenEnd { get; set; }
@@ -109,12 +112,12 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyCode == Keys.Up && e.Modifiers == Keys.Alt && IsFullscreen)
+            else if (_mainGeneralGoToPrevSubtitle == e.KeyData || _mainGeneralGoToPrevSubtitlePlayTranslate == e.KeyData)
             {
                 _mainForm.GotoPrevSubPosFromvideoPos();
                 e.SuppressKeyPress = true;
             }
-            else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.Down && IsFullscreen)
+            else if (_mainGeneralGoToNextSubtitle == e.KeyData || _mainGeneralGoToNextSubtitlePlayTranslate == e.KeyData)
             {
                 _mainForm.GotoNextSubPosFromVideoPos();
                 e.SuppressKeyPress = true;

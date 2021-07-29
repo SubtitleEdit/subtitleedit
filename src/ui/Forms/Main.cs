@@ -15110,7 +15110,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemRedo_Click(sender, e);
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyCode == Keys.Down && e.Modifiers == Keys.Alt)
+            else if (_shortcuts.MainGeneralGoToNextSubtitlePlayTranslate == e.KeyData)
             {
                 if (AutoRepeatContinueOn || AutoRepeatOn)
                 {
@@ -15121,7 +15121,7 @@ namespace Nikse.SubtitleEdit.Forms
                     ButtonNextClick(null, null);
                 }
             }
-            else if (e.KeyCode == Keys.Up && e.Modifiers == Keys.Alt)
+            else if (_shortcuts.MainGeneralGoToPrevSubtitlePlayTranslate == e.KeyData)
             {
                 if (AutoRepeatContinueOn || AutoRepeatOn)
                 {
