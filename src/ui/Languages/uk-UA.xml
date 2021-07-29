@@ -189,9 +189,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MultipleReplaceErrorX>Множинна заміна: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Автобалансування: {0}</AutoBalanceErrorX>
   </BatchConvert>
-  <Beamer>
-    <Title>Проектор</Title>
-  </Beamer>
   <ChangeCasing>
     <Title>Зміна регістру</Title>
     <ChangeCasingTo>Змінити регістр на</ChangeCasingTo>
@@ -1844,7 +1841,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ListViewColumnInsert>Стовпчик, вставити текст</ListViewColumnInsert>
     <ListViewColumnPaste>Стовпчик, вставити з буферу обміну</ListViewColumnPaste>
     <ListViewGoToNextError>Перейти до наступної помилки</ListViewGoToNextError>
-    <ShowBeamer>Запустити повноекранний проектор субтитрів</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Пересунути останнє слово вниз до наступного субтитру</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Пересунути перше слово з наступного субтитру на рядок вище</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxSelectionToLower>Виділення - у нижній регістр</MainTextBoxSelectionToLower>

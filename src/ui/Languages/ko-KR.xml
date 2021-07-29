@@ -286,9 +286,6 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <MkvLanguageStyleThreeLetter>세 문자 언어 코드</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>언어 코드 없음</MkvLanguageStyleEmpty>
   </BatchConvert>
-  <Beamer>
-    <Title>프로젝터</Title>
-  </Beamer>
   <BinEdit>
     <ImportImage>이미지 가져오기...</ImportImage>
     <ExportImage>이미지 내보내기...</ExportImage>
@@ -2391,7 +2388,6 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ListViewColumnTextUp>문자열, 텍스트 위로</ListViewColumnTextUp>
     <ListViewColumnTextDown>문자열, 텍스트 아래로</ListViewColumnTextDown>
     <ListViewGoToNextError>다음 오류로 이동</ListViewGoToNextError>
-    <ShowBeamer>전체 화면으로 자막 프로젝터 시작</ShowBeamer>
     <ShowStyleManager>스타일 관리자 표시</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>마지막 단어를 아래로 이동</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>다음 줄의 첫 단어를 위로 이동</MainTextBoxMoveFirstWordFromNextUp>

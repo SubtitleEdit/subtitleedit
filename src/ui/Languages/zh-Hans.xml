@@ -290,9 +290,6 @@ Command line: {1} {2}
     <MkvLanguageStyleThreeLetter>三字母语言代码</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>无语言代码</MkvLanguageStyleEmpty>
   </BatchConvert>
-  <Beamer>
-    <Title>投影仪</Title>
-  </Beamer>
   <BinEdit>
     <ImportImage>导入图片…</ImportImage>
     <ExportImage>导出图片…</ExportImage>
@@ -2387,7 +2384,6 @@ Command line: {1} {2}
     <ListViewColumnTextUp>列，文本上移</ListViewColumnTextUp>
     <ListViewColumnTextDown>列，文本下移</ListViewColumnTextDown>
     <ListViewGoToNextError>转到下一处错误</ListViewGoToNextError>
-    <ShowBeamer>启动字幕全屏幕投影仪</ShowBeamer>
     <ShowStyleManager>显示样式管理器</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>将上一行的最后一个单词移到下一行</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>将下一行的第一个单词移到上一行</MainTextBoxMoveFirstWordFromNextUp>

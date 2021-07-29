@@ -15995,14 +15995,6 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonAdjustSecForward2_Click(null, null);
                 e.SuppressKeyPress = true;
             }
-            else if (_shortcuts.MainToolsBeamer == e.KeyData)
-            {
-                using (var beamer = new Beamer(this, _subtitle, _subtitleListViewIndex))
-                {
-                    beamer.ShowDialog(this);
-                }
-                e.SuppressKeyPress = true;
-            }
             else if (e.KeyData == _shortcuts.MainVideoFullscreen) // fullscreen
             {
                 GoFullscreen(false);

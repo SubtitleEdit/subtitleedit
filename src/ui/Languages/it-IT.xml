@@ -256,9 +256,6 @@ Nota: Controlla lo spazio libero sul disco.</WaveFileMalformed>
     <MkvLanguageStyleThreeLetter>Codice lingua di tre lettere</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>Nessun codice lingua</MkvLanguageStyleEmpty>
   </BatchConvert>
-  <Beamer>
-    <Title>Raggio</Title>
-  </Beamer>
   <BinEdit>
     <ImportImage>Importa immagine...</ImportImage>
     <ExportImage>Esporta immagine...</ExportImage>
@@ -2370,9 +2367,7 @@ Non udenti</RemoveTextForHi>
     <ListViewColumnPaste>Colonna, incolla</ListViewColumnPaste>
     <ListViewColumnTextUp>Colonna, testo su</ListViewColumnTextUp>
     <ListViewColumnTextDown>Colonna, testo basso</ListViewColumnTextDown>
-
     <ListViewGoToNextError>Vai al prossimo errore</ListViewGoToNextError>
-    <ShowBeamer>Avvia a schermo intero i sottotitoli  </ShowBeamer>
     <ShowStyleManager>Mostra gestore stile</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>Sposta l'ultima parola al sottotitolo successivo</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Recupera la prima parola dal sottotitolo successivo</MainTextBoxMoveFirstWordFromNextUp>

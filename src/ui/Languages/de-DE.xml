@@ -212,9 +212,6 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <AutoBalanceErrorX>Text ausbalancieren: {0}</AutoBalanceErrorX>
     <OffsetTimeCodes>Zeitstempel verschieben</OffsetTimeCodes>
   </BatchConvert>
-  <Beamer>
-    <Title>Beamer</Title>
-  </Beamer>
   <Bookmarks>
     <EditBookmark>Lesezeichen bearbeiten</EditBookmark>
     <AddBookmark>Lesezeichen hinzufügen</AddBookmark>
@@ -2003,7 +2000,6 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <ListViewColumnInsert>Zeile, Text einfügen</ListViewColumnInsert>
     <ListViewColumnPaste>Zeile, Einfügen</ListViewColumnPaste>
     <ListViewGoToNextError>Zum nächsten Fehler</ListViewGoToNextError>
-    <ShowBeamer>Starte Untertitel Vollbildbeamer</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Letzes Wort zur nächsten Zeile</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Erstes Wort der nächsten Zeile nach oben</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxSelectionToLower>Auswahl in Kleinbuchstaben</MainTextBoxSelectionToLower>

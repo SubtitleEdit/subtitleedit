@@ -215,9 +215,6 @@ Napomena: Proverite slobodan prostor na disku.</WaveFileMalformed>
     <AutoBalanceErrorX>Automatska ravnoteža linja: {0}</AutoBalanceErrorX>
     <OffsetTimeCodes>Pomeri vreme</OffsetTimeCodes>
   </BatchConvert>
-  <Beamer>
-    <Title>Beamer (Projektor)</Title>
-  </Beamer>
   <Bookmarks>
     <EditBookmark>Uredi marker</EditBookmark>
     <AddBookmark>Dodaj marker</AddBookmark>
@@ -2043,7 +2040,6 @@ da uređujete određeni prevod sa drugim ljudima.</Information>
     <ListViewColumnTextUp>Kolona, tekst gore</ListViewColumnTextUp>
     <ListViewColumnTextDown>Kolona, tekst dole</ListViewColumnTextDown>
     <ListViewGoToNextError>Idi na sledeću grešku</ListViewGoToNextError>
-    <ShowBeamer>Počni pregled prevoda na celom ekranu beamera</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Pomeri poslednju reč u idući prevod</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Donesi prvu reč iz sledećeg prevoda</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Pomeri prvu reč iz sledeće linije gore (trenutni prevod)</MainTextBoxMoveFirstWordUpCurrent>

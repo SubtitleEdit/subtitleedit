@@ -2009,7 +2009,6 @@ $HorzAlign          =   Center
         public string MainToolsSplit { get; set; }
         public string MainToolsAppend { get; set; }
         public string MainToolsJoin { get; set; }
-        public string MainToolsBeamer { get; set; }
         public string MainToolsStyleManager { get; set; }
         public string MainVideoOpen { get; set; }
         public string MainVideoClose { get; set; }
@@ -2255,7 +2254,6 @@ $HorzAlign          =   Center
             MainTextBoxSelectionToLower = "Control+U";
             MainTextBoxSelectionToUpper = "Control+Shift+U";
             MainTextBoxSelectionToggleCasing = "Control+Shift+F3";
-            MainToolsBeamer = "Control+Shift+Alt+B";
             MainCreateInsertSubAtVideoPos = "Shift+F9";
             MainVideoGoToStartCurrent = "Shift+F11";
             MainVideoToggleStartEndCurrent = "F4";
@@ -7231,12 +7229,6 @@ $HorzAlign          =   Center
                     shortcuts.MainToolsJoin = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("MainToolsBeamer");
-                if (subNode != null)
-                {
-                    shortcuts.MainToolsBeamer = subNode.InnerText;
-                }
-
                 subNode = node.SelectSingleNode("MainToolsStyleManager");
                 if (subNode != null)
                 {
@@ -9383,7 +9375,6 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainToolsSplit", shortcuts.MainToolsSplit);
             textWriter.WriteElementString("MainToolsAppend", shortcuts.MainToolsAppend);
             textWriter.WriteElementString("MainToolsJoin", shortcuts.MainToolsJoin);
-            textWriter.WriteElementString("MainToolsBeamer", shortcuts.MainToolsBeamer);
             textWriter.WriteElementString("MainToolsStyleManager", shortcuts.MainToolsStyleManager);
             textWriter.WriteElementString("MainEditToggleTranslationOriginalInPreviews", shortcuts.MainEditToggleTranslationOriginalInPreviews);
             textWriter.WriteElementString("MainEditInverseSelection", shortcuts.MainEditInverseSelection);

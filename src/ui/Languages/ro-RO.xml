@@ -258,9 +258,6 @@ Notă: Verifică spațiul liber al discului.</WaveFileMalformed>
     <MkvLanguageStyleThreeLetter>Codul de limbă din 3 litere</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>Niciun cod de limbă</MkvLanguageStyleEmpty>
   </BatchConvert>
-  <Beamer>
-    <Title>Proiector</Title>
-  </Beamer>
   <BinEdit>
     <ImportImage>Importare imagine...</ImportImage>
     <ExportImage>Exportare imagine...</ExportImage>
@@ -2340,7 +2337,6 @@ pot edita aceeași subtitrare (colaborare)</Information>
     <ListViewColumnTextUp>Coloana „Text”, urcă textul</ListViewColumnTextUp>
     <ListViewColumnTextDown>Coloana „Text”, coboară textul</ListViewColumnTextDown>
     <ListViewGoToNextError>Accesează următoarea eroare</ListViewGoToNextError>
-    <ShowBeamer>Începe subtitrarea pe tot ecranul</ShowBeamer>
     <ShowStyleManager>Arată managerul de stiluri</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>Mută ultimul cuvânt la următoarea subtitrare</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Aduce primul cuvânt din următoarea subtitrare</MainTextBoxMoveFirstWordFromNextUp>

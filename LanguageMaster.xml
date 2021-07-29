@@ -291,9 +291,6 @@ Note: Do check free disk space.</WaveFileMalformed>
     <MkvLanguageStyleThreeLetter>Three letter language code</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>No language code</MkvLanguageStyleEmpty>
   </BatchConvert>
-  <Beamer>
-    <Title>Beamer</Title>
-  </Beamer>
   <BinEdit>
     <ImportImage>Import image...</ImportImage>
     <ExportImage>Export image...</ExportImage>
@@ -2396,7 +2393,6 @@ can edit in same subtitle file (collaboration)</Information>
     <ListViewColumnTextUp>Column, text up</ListViewColumnTextUp>
     <ListViewColumnTextDown>Column, text down</ListViewColumnTextDown>
     <ListViewGoToNextError>Go to next error</ListViewGoToNextError>
-    <ShowBeamer>Start subtitle fullscreen beamer</ShowBeamer>
     <ShowStyleManager>Show style manager</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>Move last word to next subtitle</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Fetch first word from next subtitle</MainTextBoxMoveFirstWordFromNextUp>

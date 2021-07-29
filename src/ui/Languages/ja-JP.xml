@@ -187,9 +187,6 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <FilterSkipped>フィルタによってスキップ</FilterSkipped>
     <OffsetTimeCodes>タイムコードのオフセット</OffsetTimeCodes>
   </BatchConvert>
-  <Beamer>
-    <Title>ビーマー</Title>
-  </Beamer>
   <Bookmarks>
     <EditBookmark>ブックマークを編集</EditBookmark>
     <AddBookmark>ブックマークを追加</AddBookmark>
@@ -1787,7 +1784,6 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <ListViewColumnDelete>列、テキストの削除</ListViewColumnDelete>
     <ListViewColumnInsert>列、テキストの挿入</ListViewColumnInsert>
     <ListViewColumnPaste>列、貼り付け</ListViewColumnPaste>
-    <ShowBeamer>字幕の全画面ビーマーの開始</ShowBeamer>
     <MainTextBoxAutoBreakFromPos>カーソル位置から最初のスペースで中断</MainTextBoxAutoBreakFromPos>
     <MainTextBoxAutoBreakFromPosAndGoToNext>カーソル位置から最初のスペースで中断し、次へ進む</MainTextBoxAutoBreakFromPosAndGoToNext>
     <MainFileSaveAll>すべて保存</MainFileSaveAll>

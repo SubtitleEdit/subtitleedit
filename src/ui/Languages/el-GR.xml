@@ -290,9 +290,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MkvLanguageStyleThreeLetter>Κώδικες γλωσσών τριών γραμμάτων</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>Χωρίς κώδικα γλώσσας</MkvLanguageStyleEmpty>
   </BatchConvert>
-  <Beamer>
-    <Title>Βιντεοπροβολέας</Title>
-  </Beamer>
   <BinEdit>
     <ImportImage>Εισαγωγή εικόνας…</ImportImage>
     <ExportImage>Εξαγωγή εικόνας…</ExportImage>
@@ -2390,7 +2387,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ListViewColumnTextUp>Στήλη, κείμενο προς τα πάνω</ListViewColumnTextUp>
     <ListViewColumnTextDown>Στήλη, κείμενο προς τα κάτω</ListViewColumnTextDown>
     <ListViewGoToNextError>Μετάβαση σε επόμενο σφάλμα</ListViewGoToNextError>
-    <ShowBeamer>Ξεκινήστε υπότιτλο σε πλήρη οθόνη βιντεοπροβολέα</ShowBeamer>
     <ShowStyleManager>Προβολή διαχείρισης στυλ</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>Μετακίνηση τελευταίας λέξης στην επόμενη γραμμή</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Μετακίνηση πρώτης λέξης από την επόμενη γραμμή επάνω</MainTextBoxMoveFirstWordFromNextUp>

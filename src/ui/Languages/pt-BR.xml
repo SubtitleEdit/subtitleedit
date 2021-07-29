@@ -272,9 +272,6 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
     <MkvLanguageStyleThreeLetter>Código de idioma de 3 letras</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>Nenhum código de idioma</MkvLanguageStyleEmpty>
   </BatchConvert>
-  <Beamer>
-    <Title>Projetor</Title>
-  </Beamer>
   <BinEdit>
     <ImportImage>Importar imagem...</ImportImage>
     <ExportImage>Exportar imagem...</ExportImage>
@@ -2362,7 +2359,6 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <ListViewColumnTextUp>Coluna, texto para cima</ListViewColumnTextUp>
     <ListViewColumnTextDown>Coluna, texto para baixo</ListViewColumnTextDown>
     <ListViewGoToNextError>Ir para próximo erro</ListViewGoToNextError>
-    <ShowBeamer>Iniciar projeção da legenda em tela cheia</ShowBeamer>
     <ShowStyleManager>Exibir gerenciador de estilo</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>Mover a última palavra para a próxima legenda</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Buscar a primeira palavra da próxima legenda</MainTextBoxMoveFirstWordFromNextUp>

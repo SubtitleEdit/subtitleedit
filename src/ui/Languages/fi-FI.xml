@@ -254,9 +254,6 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <MkvLanguageStyleThreeLetter>Kolmikirjaiminen kielikoodi</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>Ei kielikoodia</MkvLanguageStyleEmpty>
   </BatchConvert>
-  <Beamer>
-    <Title>Videotykki</Title>
-  </Beamer>
   <BinEdit>
     <ImportImage>Tuo kuva</ImportImage>
     <ExportImage>Vie kuva</ExportImage>
@@ -2327,7 +2324,6 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <ListViewColumnTextUp>Sarake, teksti ylös</ListViewColumnTextUp>
     <ListViewColumnTextDown>Sarake, teksti alas</ListViewColumnTextDown>
     <ListViewGoToNextError>Siirry seuraavaan virheeseen</ListViewGoToNextError>
-    <ShowBeamer>Aloita tekstityksen kokonäytön videoesitys</ShowBeamer>
     <ShowStyleManager>Käynnistä tyylinhallinta</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>Siirrä viimeinen sana seuraavalle riville</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Siirrä seuraavan tekstityksen ensimmäinen sana edelliselle</MainTextBoxMoveFirstWordFromNextUp>

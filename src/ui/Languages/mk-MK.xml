@@ -233,9 +233,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MkvLanguageStyleThreeLetter>Код за јазик со три букви</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>Без код за јазик</MkvLanguageStyleEmpty>
   </BatchConvert>
-  <Beamer>
-    <Title>Проектор</Title>
-  </Beamer>
   <Bookmarks>
     <EditBookmark>Уреди ознака</EditBookmark>
     <AddBookmark>Додади ознака</AddBookmark>
@@ -2141,7 +2138,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ListViewColumnTextDown>Колона, помести текст долу</ListViewColumnTextDown>
     <ListViewFocusWaveform>Фокусирај брановиден облик/спектограм</ListViewFocusWaveform>
     <ListViewGoToNextError>Оди на следна грешка</ListViewGoToNextError>
-    <ShowBeamer>Отвори титл на проектор на цел екран</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Премести го последниот збор во следната линија</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Земи го првиот збор од следната линија</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Помести горе прв збор од следна линија (моментален титл)</MainTextBoxMoveFirstWordUpCurrent>

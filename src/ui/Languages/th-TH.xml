@@ -158,9 +158,6 @@
     <SetMinMsBetweenSubtitles>กำหนดวินาทีต่ำสุดระหว่างซับไตเติ้ล</SetMinMsBetweenSubtitles>
     <PlainText>ข้อความล้วน</PlainText>
   </BatchConvert>
-  <Beamer>
-    <Title>บีมเมอร์</Title>
-  </Beamer>
   <ChangeCasing>
     <Title>เปลี่ยนลักษณะตัวพิมพ์</Title>
     <ChangeCasingTo>เปลี่ยนลักษณะตัวพิมพ์เป็น</ChangeCasingTo>
@@ -1753,7 +1750,6 @@
     <ListViewColumnInsert>คอลัมน์ แทรกข้อความ</ListViewColumnInsert>
     <ListViewColumnPaste>คอลัมน์ วาง</ListViewColumnPaste>
     <ListViewGoToNextError>ไปที่ข้อผิดพลาดถัดไป</ListViewGoToNextError>
-    <ShowBeamer>เริ่มซับไตเติ้ลเต็มจอแสดงบีมเมอร์</ShowBeamer>
     <MainTextBoxMoveLastWordDown>ย้ายคำสุดท้ายไปซับไตเติ้ลบรรทัดถัดไป</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>ย้ายคำแรกจากซับไตเติ้ลถัดไปขึ้นมา</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxSelectionToLower>เปลี่ยนส่วนที่เลือกเป็นตัวพิมพ์เล็ก</MainTextBoxSelectionToLower>

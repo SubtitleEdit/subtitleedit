@@ -273,9 +273,6 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <MkvLanguageStyleThreeLetter>Tre bogstavs sprogkode</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>Ingen sprogkode</MkvLanguageStyleEmpty>
   </BatchConvert>
-  <Beamer>
-    <Title>Undertekst fremviser</Title>
-  </Beamer>
   <BinEdit>
     <ImportImage>Importer billede...</ImportImage>
     <ExportImage>Eksportér billede...</ExportImage>
@@ -2372,7 +2369,6 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <ListViewColumnTextUp>Kolonne, tekst op</ListViewColumnTextUp>
     <ListViewColumnTextDown>Kolonne, tekst ned</ListViewColumnTextDown>
     <ListViewGoToNextError>Gå til næste fejl</ListViewGoToNextError>
-    <ShowBeamer>Start undertekst fremviser (fuldskærm)</ShowBeamer>
     <ShowStyleManager>Vis style manager</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>Flyt sidste ord ned til næste linje</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Flyt første ord fra næste linje op</MainTextBoxMoveFirstWordFromNextUp>

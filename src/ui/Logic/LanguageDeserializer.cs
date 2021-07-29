@@ -787,9 +787,6 @@ namespace Nikse.SubtitleEdit.Logic
                 case "BatchConvert/MkvLanguageStyleEmpty":
                     language.BatchConvert.MkvLanguageStyleEmpty = reader.Value;
                     break;
-                case "Beamer/Title":
-                    language.Beamer.Title = reader.Value;
-                    break;
                 case "BinEdit/ImportImage":
                     language.BinEdit.ImportImage = reader.Value;
                     break;
@@ -6561,9 +6558,6 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Settings/ListViewGoToNextError":
                     language.Settings.ListViewGoToNextError = reader.Value;
-                    break;
-                case "Settings/ShowBeamer":
-                    language.Settings.ShowBeamer = reader.Value;
                     break;
                 case "Settings/ShowStyleManager":
                     language.Settings.ShowStyleManager = reader.Value;

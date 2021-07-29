@@ -258,9 +258,6 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
     <MkvLanguageStyleThreeLetter>Üç harfli dil kodu</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>Dil kodu yok</MkvLanguageStyleEmpty>
   </BatchConvert>
-  <Beamer>
-    <Title>Dengeleyici</Title>
-  </Beamer>
   <BinEdit>
     <ImportImage>Görüntüyü içe aktar...</ImportImage>
     <ExportImage>Görüntüyü dışa aktar...</ExportImage>
@@ -2342,7 +2339,6 @@ Yeni oturum başlatın (işbirliği)</Information>
     <ListViewColumnTextUp>Sütun, metin yukarı</ListViewColumnTextUp>
     <ListViewColumnTextDown>Sütun, metin aşağı</ListViewColumnTextDown>
     <ListViewGoToNextError>Sonraki hataya git</ListViewGoToNextError>
-    <ShowBeamer>Altyazı tam ekran akışını başlat</ShowBeamer>
     <ShowStyleManager>Stil yöneticisini göster</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>Bir sonraki altyazı satırının son kelimesini aşağı taşı</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Bir sonraki altyazı satırından ilk kelimeyi yukarı taşı</MainTextBoxMoveFirstWordFromNextUp>

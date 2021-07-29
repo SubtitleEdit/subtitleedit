@@ -212,9 +212,6 @@ Obs: Kontrollera ledigt utrymme.</WaveFileMalformed>
     <AutoBalanceErrorX>Autobalansera: {0}</AutoBalanceErrorX>
     <OffsetTimeCodes>Förskjutna tidskoder</OffsetTimeCodes>
   </BatchConvert>
-  <Beamer>
-    <Title>Textvisare</Title>
-  </Beamer>
   <Bookmarks>
     <EditBookmark>Redigera bokmärke</EditBookmark>
     <AddBookmark>Lägg till bokmärke</AddBookmark>
@@ -2036,7 +2033,6 @@ kan redigera i samma undertextfil (samarbete)</Information>
     <ListViewColumnTextUp>Kolumn, text upp</ListViewColumnTextUp>
     <ListViewColumnTextDown>Kolumn, text ner</ListViewColumnTextDown>
     <ListViewGoToNextError>Gå till nästa fel</ListViewGoToNextError>
-    <ShowBeamer>Starta undertext i helskärms-beamer</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Flytta sista ordet till nästa undertext</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Hämta första ordet från nästa undertext</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Flytta första ordet från nästa rad upp (aktuell undertext)</MainTextBoxMoveFirstWordUpCurrent>

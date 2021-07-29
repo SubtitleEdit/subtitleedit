@@ -310,11 +310,6 @@
             public string MkvLanguageStyleEmpty { get; set; }
         }
 
-        public class Beamer
-        {
-            public string Title { get; set; }
-        }
-
         public class BinEdit
         {
             public string ImportImage { get; set; }
@@ -2577,7 +2572,6 @@
             public string ListViewColumnTextUp { get; set; }
             public string ListViewColumnTextDown { get; set; }
             public string ListViewGoToNextError { get; set; }
-            public string ShowBeamer { get; set; }
             public string ShowStyleManager { get; set; }
             public string MainTextBoxMoveLastWordDown { get; set; }
             public string MainTextBoxMoveFirstWordFromNextUp { get; set; }

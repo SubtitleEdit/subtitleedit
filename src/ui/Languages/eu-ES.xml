@@ -253,9 +253,6 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <MkvLanguageStyleThreeLetter>Hiru  hizkiko hizkuntza kodea</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>Ez dago hizkuntza koderik</MkvLanguageStyleEmpty>
   </BatchConvert>
-  <Beamer>
-    <Title>Beamer</Title>
-  </Beamer>
   <BinEdit>
     <ImportImage>Inportatu irudia...</ImportImage>
     <ExportImage>Esportatu irudia...</ExportImage>
@@ -2318,7 +2315,6 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <ListViewColumnTextUp>Zutabea, idazkia gora</ListViewColumnTextUp>
     <ListViewColumnTextDown>Zutabea, idazkia behera</ListViewColumnTextDown>
     <ListViewGoToNextError>Joan hurrengo akatsera</ListViewGoToNextError>
-    <ShowBeamer>Hasi azpidatzia ikusleiho-osoko beamer</ShowBeamer>
     <ShowStyleManager>Erakutsi estilo kudeatzailea</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>Mugitu azken hitza behera hurrengo azpidatzi lerrora</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Mugitu hurrengo azpidatziko lehen hitza lerroan gora</MainTextBoxMoveFirstWordFromNextUp>

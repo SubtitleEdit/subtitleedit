@@ -227,9 +227,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MkvLanguageStyleThreeLetter>Codi d'idioma tres lletres</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>Sense codi d'idioma</MkvLanguageStyleEmpty>
   </BatchConvert>
-  <Beamer>
-    <Title>Projector</Title>
-  </Beamer>
   <Bookmarks>
     <EditBookmark>Edita marcador</EditBookmark>
     <AddBookmark>Afegeix marcador</AddBookmark>
@@ -2240,7 +2237,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ListViewColumnTextDown>Columna, text avall</ListViewColumnTextDown>
     <ListViewFocusWaveform>Focus a espectrograma/forma ona</ListViewFocusWaveform>
     <ListViewGoToNextError>Aneu al següent error</ListViewGoToNextError>
-    <ShowBeamer>Inicia subtítol projecció pantalla sencera</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Mou últim mot avall a següent línia subtítol</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Mou primer mot de la següent línia subtítol amunt</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Moure el primer mot de la següent línia amunt (subtítol actual)</MainTextBoxMoveFirstWordUpCurrent>

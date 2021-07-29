@@ -275,9 +275,6 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <MkvLanguageStyleThreeLetter>Code langue à 3 lettres</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>Pas de code langue</MkvLanguageStyleEmpty>
   </BatchConvert>
-  <Beamer>
-    <Title>Vidéoprojecteur</Title>
-  </Beamer>
   <BinEdit>
     <ImportImage>Importer l'image ...</ImportImage>
     <ExportImage>Exporter l'image ...</ExportImage>
@@ -2375,7 +2372,6 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <ListViewColumnTextUp>Colonne, monter le texte</ListViewColumnTextUp>
     <ListViewColumnTextDown>Colonne, descendre le texte</ListViewColumnTextDown>
     <ListViewGoToNextError>Aller à l'erreur suivante</ListViewGoToNextError>
-    <ShowBeamer>Démarrer la vidéo-projection des sous-titres en plein écran</ShowBeamer>
     <ShowStyleManager>Afficher le gestionnaire de style</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>Déplacer le dernier mot vers le sous-titre suivant</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Avancer le premier mot du sous-titre suivant</MainTextBoxMoveFirstWordFromNextUp>
