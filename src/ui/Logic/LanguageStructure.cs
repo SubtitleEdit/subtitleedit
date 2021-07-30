@@ -1311,6 +1311,7 @@
             public string BeforeImportFromMatroskaFile { get; set; }
             public string SubtitleImportedFromMatroskaFile { get; set; }
             public string DropFileXNotAccepted { get; set; }
+            public string DropSubtitleFileXNotAccepted { get; set; }
             public string DropOnlyOneFile { get; set; }
             public string OpenAnsiSubtitle { get; set; }
             public string BeforeChangeCasing { get; set; }

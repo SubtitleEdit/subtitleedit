@@ -14394,9 +14394,13 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     OpenSubtitle(fileName, null);
                 }
+                else if (ext == ".divx" || ext == ".avi")
+                {
+                    OpenSubtitle(fileName, null);
+                }
                 else
                 {
-                    MessageBox.Show(string.Format(_language.DropFileXNotAccepted, fileName));
+                    MessageBox.Show(string.Format(_language.DropSubtitleFileXNotAccepted, fileName));
                 }
 
                 comboBoxSubtitleFormats.EndUpdate();
