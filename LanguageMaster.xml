@@ -203,6 +203,15 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Bottom>Bottom</Bottom>
     <TakePosFromVideo>Take video position</TakePosFromVideo>
   </AssaProgressBarGenerator>
+  <AssaResulationChanger>
+    <Title>Script resolution changer</Title>
+    <SourceVideoRes>Source video resolution</SourceVideoRes>
+    <TargetVideoRes>Target video resolution</TargetVideoRes>
+    <KeepAspectRatioMargins>Keep aspect ration for margin</KeepAspectRatioMargins>
+    <KeepAspectRatioFontSize>Keep aspect ration for font size</KeepAspectRatioFontSize>
+    <KeepAspectRatioPositions>Keep aspect ration for position</KeepAspectRatioPositions>
+    <KeepAspectRatioDrawing>Keep aspect ration for drawing</KeepAspectRatioDrawing>
+  </AssaResulationChanger>
   <AssaSetPosition>
     <SetPosition>Set/get position</SetPosition>
     <VideoResolutionX>Video resolution: {0}</VideoResolutionX>
@@ -1256,7 +1265,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <SizeAllColumnsToFit>Size all columns to fit</SizeAllColumnsToFit>
         <SetStyle>Set style</SetStyle>
         <SetActor>Set actor</SetActor>
-        <SetOverrideTagsEtc>Set override tags etc.</SetOverrideTagsEtc>
+        <AssaTools>ASSA tools</AssaTools>
         <SubStationAlphaStyles>Sub Station Alpha styles...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Advanced Sub Station Alpha styles...</AdvancedSubStationAlphaStyles>
         <TimedTextSetRegion>Timed Text - set region</TimedTextSetRegion>
@@ -2271,8 +2280,10 @@ can edit in same subtitle file (collaboration)</Information>
     <MainCreateStartDownEndUp>Insert new subtitle at key-down, set end time at key-up</MainCreateStartDownEndUp>
     <MergeDialog>Merge dialog (insert dashes)</MergeDialog>
     <GoToNext>Go to next line</GoToNext>
+    <GoToNextPlayTranslate>Go to next line (and play in 'Translate mode')</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>Go to next line and set cursor at end</GoToNextCursorAtEnd>
     <GoToPrevious>Go to previous line</GoToPrevious>
+    <GoToPreviousPlayTranslate>Go to previous line (and play in 'Translate mode')</GoToPreviousPlayTranslate>
     <GoToCurrentSubtitleStart>Go to current line start</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Go to current line end</GoToCurrentSubtitleEnd>
     <GoToPreviousSubtitleAndFocusVideo>Go to previous line and set video position</GoToPreviousSubtitleAndFocusVideo>

@@ -1234,7 +1234,6 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <SizeAllColumnsToFit>Auto-tilpas kolonner</SizeAllColumnsToFit>
         <SetStyle>Vælg stil</SetStyle>
         <SetActor>Vælg taler</SetActor>
-        <SetOverrideTagsEtc>Indstil override tags mv.</SetOverrideTagsEtc>
         <SubStationAlphaStyles>Sub Station Alpha stilarter...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Advanced Sub Station Alpha stilarter...</AdvancedSubStationAlphaStyles>
         <TimedTextSetRegion>Timed Text - Sæt region</TimedTextSetRegion>

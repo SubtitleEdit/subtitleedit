@@ -547,6 +547,27 @@ namespace Nikse.SubtitleEdit.Logic
                 case "AssaProgressBarGenerator/TakePosFromVideo":
                     language.AssaProgressBarGenerator.TakePosFromVideo = reader.Value;
                     break;
+                case "AssaResulationChanger/Title":
+                    language.AssaResulationChanger.Title = reader.Value;
+                    break;
+                case "AssaResulationChanger/SourceVideoRes":
+                    language.AssaResulationChanger.SourceVideoRes = reader.Value;
+                    break;
+                case "AssaResulationChanger/TargetVideoRes":
+                    language.AssaResulationChanger.TargetVideoRes = reader.Value;
+                    break;
+                case "AssaResulationChanger/KeepAspectRatioMargins":
+                    language.AssaResulationChanger.KeepAspectRatioMargins = reader.Value;
+                    break;
+                case "AssaResulationChanger/KeepAspectRatioFontSize":
+                    language.AssaResulationChanger.KeepAspectRatioFontSize = reader.Value;
+                    break;
+                case "AssaResulationChanger/KeepAspectRatioPositions":
+                    language.AssaResulationChanger.KeepAspectRatioPositions = reader.Value;
+                    break;
+                case "AssaResulationChanger/KeepAspectRatioDrawing":
+                    language.AssaResulationChanger.KeepAspectRatioDrawing = reader.Value;
+                    break;
                 case "AssaSetPosition/SetPosition":
                     language.AssaSetPosition.SetPosition = reader.Value;
                     break;
@@ -4126,8 +4147,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/ContextMenu/SetActor":
                     language.Main.Menu.ContextMenu.SetActor = reader.Value;
                     break;
-                case "Main/Menu/ContextMenu/SetOverrideTagsEtc":
-                    language.Main.Menu.ContextMenu.SetOverrideTagsEtc = reader.Value;
+                case "Main/Menu/ContextMenu/AssaTools":
+                    language.Main.Menu.ContextMenu.AssaTools = reader.Value;
                     break;
                 case "Main/Menu/ContextMenu/SubStationAlphaStyles":
                     language.Main.Menu.ContextMenu.SubStationAlphaStyles = reader.Value;
@@ -6193,11 +6214,17 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/GoToNext":
                     language.Settings.GoToNext = reader.Value;
                     break;
+                case "Settings/GoToNextPlayTranslate":
+                    language.Settings.GoToNextPlayTranslate = reader.Value;
+                    break;
                 case "Settings/GoToNextCursorAtEnd":
                     language.Settings.GoToNextCursorAtEnd = reader.Value;
                     break;
                 case "Settings/GoToPrevious":
                     language.Settings.GoToPrevious = reader.Value;
+                    break;
+                case "Settings/GoToPreviousPlayTranslate":
+                    language.Settings.GoToPreviousPlayTranslate = reader.Value;
                     break;
                 case "Settings/GoToCurrentSubtitleStart":
                     language.Settings.GoToCurrentSubtitleStart = reader.Value;

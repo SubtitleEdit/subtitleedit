@@ -1251,7 +1251,6 @@ Command line: {1} {2}
         <SizeAllColumnsToFit>自适应所有的列宽度</SizeAllColumnsToFit>
         <SetStyle>设置样式</SetStyle>
         <SetActor>设置演员</SetActor>
-        <SetOverrideTagsEtc>设置覆盖标签等</SetOverrideTagsEtc>
         <SubStationAlphaStyles>Sub Station Alpha 样式...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>高级 Sub Station Alpha 样式...</AdvancedSubStationAlphaStyles>
         <TimedTextSetRegion>带时间文本 - 设置区域</TimedTextSetRegion>

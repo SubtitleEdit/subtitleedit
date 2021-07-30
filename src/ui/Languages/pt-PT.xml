@@ -1241,7 +1241,6 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <SizeAllColumnsToFit>Ajustar o tamanho das colunas para caber</SizeAllColumnsToFit>
         <SetStyle>Definir estilo</SetStyle>
         <SetActor>Definir actor</SetActor>
-        <SetOverrideTagsEtc>Definir etiquetas de substituição</SetOverrideTagsEtc>
         <SubStationAlphaStyles>Estilos Sub Station Alpha...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Estilos Advanced Sub Station Alpha...</AdvancedSubStationAlphaStyles>
         <TimedTextSetRegion>Timed Text - Definir região</TimedTextSetRegion>
