@@ -214,6 +214,17 @@
             public string TakePosFromVideo { get; set; }
         }
 
+        public class AssaResulationChanger
+        {
+            public string Title { get; set; }
+            public string SourceVideoRes { get; set; }
+            public string TargetVideoRes { get; set; }
+            public string KeepAspectRatioMargins { get; set; }
+            public string KeepAspectRatioFontSize { get; set; }
+            public string KeepAspectRatioPositions { get; set; }
+            public string KeepAspectRatioDrawing { get; set; }
+        }
+
         public class AssaSetPosition
         {
             public string SetPosition { get; set; }
@@ -1639,7 +1650,7 @@
                     public string SizeAllColumnsToFit { get; set; }
                     public string SetStyle { get; set; }
                     public string SetActor { get; set; }
-                    public string SetOverrideTagsEtc { get; set; }
+                    public string AssaTools { get; set; }
                     public string SubStationAlphaStyles { get; set; }
                     public string AdvancedSubStationAlphaStyles { get; set; }
                     public string TimedTextSetRegion { get; set; }
@@ -1704,6 +1715,9 @@
                     public string AdjustDisplayDurationForSelectedLines { get; set; }
                     public string ApplyDurationLimitsForSelectedLines { get; set; }
                     public string ApplyCustomOverrideTag { get; set; }
+                    public string SetPosition { get; set; }
+                    public string GenerateProgressBar { get; set; }
+                    public string AssaResolutionChanger { get; set; }
                     public string FixCommonErrorsInSelectedLines { get; set; }
                     public string ChangeCasingForSelectedLines { get; set; }
                     public string SaveSelectedLines { get; set; }

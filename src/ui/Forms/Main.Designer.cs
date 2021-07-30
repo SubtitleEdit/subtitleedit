@@ -267,7 +267,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.contextMenuStripListView = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.setStylesForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setActorForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemAssaOverrideTags = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemAssaTools = new System.Windows.Forms.ToolStripMenuItem();
             this.applyCustomStylesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setPositionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.progressBarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -2495,7 +2495,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.contextMenuStripListView.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.setStylesForSelectedLinesToolStripMenuItem,
             this.setActorForSelectedLinesToolStripMenuItem,
-            this.toolStripMenuItemAssaOverrideTags,
+            this.toolStripMenuItemAssaTools,
             this.toolStripMenuItemAssStyles,
             this.toolStripSeparatorAssa,
             this.toolStripMenuItemSetRegion,
@@ -2530,7 +2530,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemSelectedLines,
             this.toolStripMenuItemGoogleMicrosoftTranslateSelLine});
             this.contextMenuStripListView.Name = "contextMenuStripListView";
-            this.contextMenuStripListView.Size = new System.Drawing.Size(285, 732);
+            this.contextMenuStripListView.Size = new System.Drawing.Size(285, 754);
             this.contextMenuStripListView.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
             this.contextMenuStripListView.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListViewOpening);
             this.contextMenuStripListView.Opened += new System.EventHandler(this.MenuOpened);
@@ -2547,16 +2547,16 @@ namespace Nikse.SubtitleEdit.Forms
             this.setActorForSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(284, 22);
             this.setActorForSelectedLinesToolStripMenuItem.Text = "Set actor";
             // 
-            // toolStripMenuItemAssaOverrideTags
+            // toolStripMenuItemAssaTools
             // 
-            this.toolStripMenuItemAssaOverrideTags.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemAssaTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.applyCustomStylesToolStripMenuItem,
             this.setPositionToolStripMenuItem,
             this.progressBarToolStripMenuItem,
             this.videoResolutionResamplerToolStripMenuItem});
-            this.toolStripMenuItemAssaOverrideTags.Name = "toolStripMenuItemAssaOverrideTags";
-            this.toolStripMenuItemAssaOverrideTags.Size = new System.Drawing.Size(284, 22);
-            this.toolStripMenuItemAssaOverrideTags.Text = "Set override tags";
+            this.toolStripMenuItemAssaTools.Name = "toolStripMenuItemAssaTools";
+            this.toolStripMenuItemAssaTools.Size = new System.Drawing.Size(284, 22);
+            this.toolStripMenuItemAssaTools.Text = "ASSA tools";
             // 
             // applyCustomStylesToolStripMenuItem
             // 
@@ -4084,7 +4084,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.seekSilenceToolStripMenuItem,
             this.insertSubtitleHereToolStripMenuItem});
             this.contextMenuStripWaveform.Name = "contextMenuStripWaveform";
-            this.contextMenuStripWaveform.Size = new System.Drawing.Size(275, 512);
+            this.contextMenuStripWaveform.Size = new System.Drawing.Size(275, 490);
             this.contextMenuStripWaveform.Closing += new System.Windows.Forms.ToolStripDropDownClosingEventHandler(this.contextMenuStripWaveform_Closing);
             this.contextMenuStripWaveform.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripWaveformOpening);
             // 
@@ -5976,7 +5976,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem fixCommonErrorsInSelectedLinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemTranslateSelected;
         private System.Windows.Forms.ToolStripMenuItem genericTranslateToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAssaOverrideTags;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAssaTools;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorAssa;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInsert;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInsertAfter;

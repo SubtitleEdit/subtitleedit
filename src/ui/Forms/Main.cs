@@ -1712,9 +1712,11 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemAssaStyles.Text = _language.Menu.ContextMenu.SubStationAlphaStyles;
             setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SetStyle;
             setActorForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SetActor;
-            toolStripMenuItemAssaOverrideTags.Text = _language.Menu.ContextMenu.SetOverrideTagsEtc;
+            toolStripMenuItemAssaTools.Text = _language.Menu.ContextMenu.AssaTools;
             applyCustomStylesToolStripMenuItem.Text = _language.Menu.ContextMenu.ApplyCustomOverrideTag;
-            setPositionToolStripMenuItem.Text = LanguageSettings.Current.AssaSetPosition.SetPosition;
+            setPositionToolStripMenuItem.Text = _language.Menu.ContextMenu.SetPosition;
+            progressBarToolStripMenuItem.Text = _language.Menu.ContextMenu.GenerateProgressBar;
+            videoResolutionResamplerToolStripMenuItem.Text = _language.Menu.ContextMenu.AssaResolutionChanger;
 
             toolStripMenuItemDelete.Text = _language.Menu.ContextMenu.Delete;
             insertLineToolStripMenuItem.Text = _language.Menu.ContextMenu.InsertFirstLine;
@@ -8611,13 +8613,13 @@ namespace Nikse.SubtitleEdit.Forms
             // final tuning for ASSA
             if (formatType == typeof(AdvancedSubStationAlpha))
             {
-                toolStripMenuItemAssaOverrideTags.Visible = true;
+                toolStripMenuItemAssaTools.Visible = true;
                 toolStripSeparatorAssa.Visible = true;
                 toolStripMenuItemAssStyles.Visible = false; // Use toolbar instead
             }
             else
             {
-                toolStripMenuItemAssaOverrideTags.Visible = false;
+                toolStripMenuItemAssaTools.Visible = false;
                 toolStripSeparatorAssa.Visible = false;
             }
         }
@@ -22910,7 +22912,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.CleanUpMenuItemPlugin(toolStripMenuItemSynchronization);
             UiUtil.CleanUpMenuItemPlugin(toolStripMenuItemAutoTranslate);
             UiUtil.CleanUpMenuItemPlugin(toolStripMenuItemTranslateSelected);
-            UiUtil.CleanUpMenuItemPlugin(toolStripMenuItemAssaOverrideTags);
+            UiUtil.CleanUpMenuItemPlugin(toolStripMenuItemAssaTools);
 
             var fileMenuItems = new List<ToolStripMenuItem>();
             var toolsMenuItems = new List<ToolStripMenuItem>();
@@ -23001,7 +23003,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemTranslateSelected.DropDownItems.AddRange(translateSelectedLinesMenuItems.OrderBy(p => p.Text).ToArray());
             toolStripMenuItemSynchronization.DropDownItems.AddRange(syncMenuItems.OrderBy(p => p.Text).ToArray());
             toolStripMenuItemSpellCheckMain.DropDownItems.AddRange(spellCheckMenuItems.OrderBy(p => p.Text).ToArray());
-            toolStripMenuItemAssaOverrideTags.DropDownItems.AddRange(assaOverrideTagsMenuItems.OrderBy(p => p.Text).ToArray());
+            toolStripMenuItemAssaTools.DropDownItems.AddRange(assaOverrideTagsMenuItems.OrderBy(p => p.Text).ToArray());
         }
 
         private void AddSeparator(int pluginCount, ToolStripMenuItem parent, int? relativeOffset = null)

@@ -1251,7 +1251,6 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <SizeAllColumnsToFit>모든 열의 크기 맞추기</SizeAllColumnsToFit>
         <SetStyle>스타일 설정</SetStyle>
         <SetActor>배우 설정</SetActor>
-        <SetOverrideTagsEtc>기타 재정의 태그 설정</SetOverrideTagsEtc>
         <SubStationAlphaStyles>SSA의 스타일...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>ASS의 스타일...</AdvancedSubStationAlphaStyles>
         <TimedTextSetRegion>시간 제한 텍스트 - 지역 설정</TimedTextSetRegion>

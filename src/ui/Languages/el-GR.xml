@@ -1250,7 +1250,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <SizeAllColumnsToFit>Αλλαγή μεγέθους στηλών για να χωρούν</SizeAllColumnsToFit>
         <SetStyle>Ορισμός στυλ</SetStyle>
         <SetActor>Ορισμός παράγοντα</SetActor>
-        <SetOverrideTagsEtc>Ορισμός ετικετών παράκαμψης κτλ.</SetOverrideTagsEtc>
         <SubStationAlphaStyles>Στυλ Sub Station Alpha…</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Προηγμένο στυλ Sub Station Alpha…</AdvancedSubStationAlphaStyles>
         <TimedTextSetRegion>Timed Text - ορισμός περιοχής</TimedTextSetRegion>
