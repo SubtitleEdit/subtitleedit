@@ -180,7 +180,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <RemoveXAttachments>Remove {0} attachments?</RemoveXAttachments>
   </AssaAttachments>
   <AssaOverrideTags>
-    <ApplyCustomTags>Apply custom tags</ApplyCustomTags>
+    <ApplyCustomTags>Apply custom override tags</ApplyCustomTags>
     <History>History</History>
     <TagsToApply>Tags to apply</TagsToApply>
     <ApplyTo>Apply to</ApplyTo>
@@ -204,7 +204,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <TakePosFromVideo>Take video position</TakePosFromVideo>
   </AssaProgressBarGenerator>
   <AssaResulationChanger>
-    <Title>Script resolution changer</Title>
+    <Title>Change script resolution</Title>
     <SourceVideoRes>Source video resolution</SourceVideoRes>
     <TargetVideoRes>Target video resolution</TargetVideoRes>
     <KeepAspectRatioMargins>Keep aspect ration for margin</KeepAspectRatioMargins>
@@ -213,7 +213,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <KeepAspectRatioDrawing>Keep aspect ration for drawing</KeepAspectRatioDrawing>
   </AssaResulationChanger>
   <AssaSetPosition>
-    <SetPosition>Set/get position</SetPosition>
+    <SetPosition>Set position</SetPosition>
     <VideoResolutionX>Video resolution: {0}</VideoResolutionX>
     <StyleAlignmentX>Style alignment: {0}</StyleAlignmentX>
     <CurrentMousePositionX>Mouse position: {0}</CurrentMousePositionX>
@@ -1330,6 +1330,9 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <AdjustDisplayDurationForSelectedLines>Adjust durations for selected lines...</AdjustDisplayDurationForSelectedLines>
         <ApplyDurationLimitsForSelectedLines>Apply duration limits for selected lines...</ApplyDurationLimitsForSelectedLines>
         <ApplyCustomOverrideTag>Apply custom override tags...</ApplyCustomOverrideTag>
+        <SetPosition>Set position...</SetPosition>
+        <GenerateProgressBar>Generate progress bar...</GenerateProgressBar>
+        <AssaResolutionChanger>Change script resolution...</AssaResolutionChanger>
         <FixCommonErrorsInSelectedLines>Fix common errors in selected lines...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Change casing for selected lines...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Save selected lines as...</SaveSelectedLines>
@@ -1547,6 +1550,7 @@ Continue?</SubtitleAppendPrompt>
     <BeforeImportFromMatroskaFile>Before import subtitle from Matroska file</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Subtitle imported from Matroska file</SubtitleImportedFromMatroskaFile>
     <DropFileXNotAccepted>Drop file '{0}' not accepted - file is too large</DropFileXNotAccepted>
+    <DropSubtitleFileXNotAccepted>Drop file '{0}' not accepted - file is too large for a subtitle</DropSubtitleFileXNotAccepted>
     <DropOnlyOneFile>You can only drop one file</DropOnlyOneFile>
     <OpenAnsiSubtitle>Open subtitle...</OpenAnsiSubtitle>
     <BeforeChangeCasing>Before change casing</BeforeChangeCasing>

@@ -1454,6 +1454,7 @@ namespace Nikse.SubtitleEdit.Logic
                 BeforeImportFromMatroskaFile = "Before import subtitle from Matroska file",
                 SubtitleImportedFromMatroskaFile = "Subtitle imported from Matroska file",
                 DropFileXNotAccepted = "Drop file '{0}' not accepted - file is too large",
+                DropSubtitleFileXNotAccepted = "Drop file '{0}' not accepted - file is too large for a subtitle",
                 DropOnlyOneFile = "You can only drop one file",
                 OpenAnsiSubtitle = "Open subtitle...",
                 BeforeChangeCasing = "Before change casing",

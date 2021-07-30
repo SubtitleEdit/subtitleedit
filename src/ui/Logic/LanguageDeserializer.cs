@@ -3256,6 +3256,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/DropFileXNotAccepted":
                     language.Main.DropFileXNotAccepted = reader.Value;
                     break;
+                case "Main/DropSubtitleFileXNotAccepted":
+                    language.Main.DropSubtitleFileXNotAccepted = reader.Value;
+                    break;
                 case "Main/DropOnlyOneFile":
                     language.Main.DropOnlyOneFile = reader.Value;
                     break;
@@ -4341,6 +4344,15 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Main/Menu/ContextMenu/ApplyCustomOverrideTag":
                     language.Main.Menu.ContextMenu.ApplyCustomOverrideTag = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/SetPosition":
+                    language.Main.Menu.ContextMenu.SetPosition = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/GenerateProgressBar":
+                    language.Main.Menu.ContextMenu.GenerateProgressBar = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/AssaResolutionChanger":
+                    language.Main.Menu.ContextMenu.AssaResolutionChanger = reader.Value;
                     break;
                 case "Main/Menu/ContextMenu/FixCommonErrorsInSelectedLines":
                     language.Main.Menu.ContextMenu.FixCommonErrorsInSelectedLines = reader.Value;
