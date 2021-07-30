@@ -1249,7 +1249,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <ContextMenu>
         <SizeAllColumnsToFit>Αλλαγή μεγέθους στηλών για να χωρούν</SizeAllColumnsToFit>
         <SetStyle>Ορισμός στυλ</SetStyle>
-        <SetActor>Ορισμός παράγοντα</SetActor>
+        <SetActor>Ορισμός ηθοποιού</SetActor>
         <SetOverrideTagsEtc>Ορισμός ετικετών παράκαμψης κτλ.</SetOverrideTagsEtc>
         <SubStationAlphaStyles>Στυλ Sub Station Alpha…</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Προηγμένο στυλ Sub Station Alpha…</AdvancedSubStationAlphaStyles>
@@ -1268,9 +1268,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <AutoDurationCurrentLine>Αυτόματη διάρκεια (τρέχουσα γραμμή)</AutoDurationCurrentLine>
         <SelectAll>Επιλογή όλων</SelectAll>
         <InsertFirstLine>Εισαγωγή γραμμής</InsertFirstLine>
-        <InsertBefore>Εισαγωγή πριν</InsertBefore>
-        <InsertAfter>Εισαγωγή μετά</InsertAfter>
-        <InsertSubtitleAfter>Εισαγωγή υποτίτλου μετά της γραμμής…</InsertSubtitleAfter>
+        <InsertBefore>Πριν</InsertBefore>
+        <InsertAfter>Μετά</InsertAfter>
+        <InsertSubtitleAfter>Υποτίτλου μετά τη γραμμή…</InsertSubtitleAfter>
         <CopyToClipboard>Αντιγραφή κειμένου στο πρόχειρο</CopyToClipboard>
         <Column>Στήλη</Column>
         <ColumnDeleteText>Διαγραφή κειμένου</ColumnDeleteText>
@@ -2910,6 +2910,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ShowSpectrogramOnly>Εμφάνιση μόνο φασματογράμματος</ShowSpectrogramOnly>
     <AddSceneChange>Προσθήκη αλλαγής σκηνής</AddSceneChange>
     <RemoveSceneChange>Αφαίρεση αλλαγής σκηνής</RemoveSceneChange>
+    <RemoveSceneChangesFromSelection>Αφαίρεση αλλαγής σκηνών από επιλογή</RemoveSceneChangesFromSelection>
     <GuessTimeCodes>Εικασία κωδικών χρόνου…</GuessTimeCodes>
     <SeekSilence>Αναζήτηση σιωπής…</SeekSilence>
     <InsertSubtitleHere>Εισαγωγή υποτίτλου εδώ…</InsertSubtitleHere>
