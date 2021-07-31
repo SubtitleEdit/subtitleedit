@@ -207,10 +207,10 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Title>Change script resolution</Title>
     <SourceVideoRes>Source video resolution</SourceVideoRes>
     <TargetVideoRes>Target video resolution</TargetVideoRes>
-    <KeepAspectRatioMargins>Keep aspect ration for margin</KeepAspectRatioMargins>
-    <KeepAspectRatioFontSize>Keep aspect ration for font size</KeepAspectRatioFontSize>
-    <KeepAspectRatioPositions>Keep aspect ration for position</KeepAspectRatioPositions>
-    <KeepAspectRatioDrawing>Keep aspect ration for drawing</KeepAspectRatioDrawing>
+    <ChangeResolutionMargins>Change resolution for margin</ChangeResolutionMargins>
+    <ChangeResolutionFontSize>Change resolution for font size</ChangeResolutionFontSize>
+    <ChangeResolutionPositions>Change resolution for position</ChangeResolutionPositions>
+    <ChangeResolutionDrawing>Change resolution for drawing</ChangeResolutionDrawing>
   </AssaResulationChanger>
   <AssaSetPosition>
     <SetPosition>Set position</SetPosition>

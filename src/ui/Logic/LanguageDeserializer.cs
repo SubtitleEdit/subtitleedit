@@ -556,17 +556,17 @@ namespace Nikse.SubtitleEdit.Logic
                 case "AssaResulationChanger/TargetVideoRes":
                     language.AssaResulationChanger.TargetVideoRes = reader.Value;
                     break;
-                case "AssaResulationChanger/KeepAspectRatioMargins":
-                    language.AssaResulationChanger.KeepAspectRatioMargins = reader.Value;
+                case "AssaResulationChanger/ChangeResolutionMargins":
+                    language.AssaResulationChanger.ChangeResolutionMargins = reader.Value;
                     break;
-                case "AssaResulationChanger/KeepAspectRatioFontSize":
-                    language.AssaResulationChanger.KeepAspectRatioFontSize = reader.Value;
+                case "AssaResulationChanger/ChangeResolutionFontSize":
+                    language.AssaResulationChanger.ChangeResolutionFontSize = reader.Value;
                     break;
-                case "AssaResulationChanger/KeepAspectRatioPositions":
-                    language.AssaResulationChanger.KeepAspectRatioPositions = reader.Value;
+                case "AssaResulationChanger/ChangeResolutionPositions":
+                    language.AssaResulationChanger.ChangeResolutionPositions = reader.Value;
                     break;
-                case "AssaResulationChanger/KeepAspectRatioDrawing":
-                    language.AssaResulationChanger.KeepAspectRatioDrawing = reader.Value;
+                case "AssaResulationChanger/ChangeResolutionDrawing":
+                    language.AssaResulationChanger.ChangeResolutionDrawing = reader.Value;
                     break;
                 case "AssaSetPosition/SetPosition":
                     language.AssaSetPosition.SetPosition = reader.Value;
