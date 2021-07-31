@@ -18534,7 +18534,7 @@ namespace Nikse.SubtitleEdit.Forms
             string separator = " + ";
             if (!string.IsNullOrEmpty(_fileName))
             {
-                text = Path.GetFileName(_fileName);
+                text = Configuration.Settings.General.TitleBarFullFileName ? _fileName : Path.GetFileName(_fileName);
             }
 
             if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0)
@@ -18543,7 +18543,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (!string.IsNullOrEmpty(_subtitleOriginalFileName))
                 {
-                    text += Path.GetFileName(_subtitleOriginalFileName);
+                    text += Configuration.Settings.General.TitleBarFullFileName ? _fileName : Path.GetFileName(_fileName);
                 }
                 else
                 {
