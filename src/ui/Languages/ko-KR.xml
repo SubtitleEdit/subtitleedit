@@ -176,7 +176,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <RemoveXAttachments>{0} 첨부파일을 제거하시겠습니까?</RemoveXAttachments>
   </AssaAttachments>
   <AssaOverrideTags>
-    <ApplyCustomTags>사용자 지정 태그 적용</ApplyCustomTags>
+    <ApplyCustomTags>사용자 지정 재정의 태그 적용</ApplyCustomTags>
     <History>히스토리</History>
     <TagsToApply>적용할 태그</TagsToApply>
     <ApplyTo>적용 대상</ApplyTo>
@@ -197,9 +197,19 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <RoundedCorners>둥근 모서리</RoundedCorners>
     <Top>맨 위</Top>
     <Bottom>맨 아래</Bottom>
+    <TakePosFromVideo>비디오 위치 얻기</TakePosFromVideo>
   </AssaProgressBarGenerator>
+  <AssaResulationChanger>
+    <Title>스크립트 해상도 변경</Title>
+    <SourceVideoRes>소스 비디오 해상도</SourceVideoRes>
+    <TargetVideoRes>대상 비디오 해상도</TargetVideoRes>
+    <ChangeResolutionMargins>병합을 위한 해상도 변경</ChangeResolutionMargins>
+    <ChangeResolutionFontSize>글꼴 크기를 위한 해상도 변경</ChangeResolutionFontSize>
+    <ChangeResolutionPositions>위치를 위한 해상도 변경</ChangeResolutionPositions>
+    <ChangeResolutionDrawing>그림을 위한 해상도 변경</ChangeResolutionDrawing>
+  </AssaResulationChanger>
   <AssaSetPosition>
-    <SetPosition>위치 설정/얻기</SetPosition>
+    <SetPosition>위치 설정</SetPosition>
     <VideoResolutionX>비디오 해상도: {0}</VideoResolutionX>
     <StyleAlignmentX>스타일 정렬: {0}</StyleAlignmentX>
     <CurrentMousePositionX>마우스 위치: {0}</CurrentMousePositionX>
@@ -1251,6 +1261,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <SizeAllColumnsToFit>모든 열의 크기 맞추기</SizeAllColumnsToFit>
         <SetStyle>스타일 설정</SetStyle>
         <SetActor>배우 설정</SetActor>
+        <AssaTools>ASSA 도구</AssaTools>
         <SubStationAlphaStyles>SSA의 스타일...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>ASS의 스타일...</AdvancedSubStationAlphaStyles>
         <TimedTextSetRegion>시간 제한 텍스트 - 지역 설정</TimedTextSetRegion>
@@ -1315,6 +1326,9 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <AdjustDisplayDurationForSelectedLines>표시시간 조정...</AdjustDisplayDurationForSelectedLines>
         <ApplyDurationLimitsForSelectedLines>선택한 줄의 표시시간 제한 적용...</ApplyDurationLimitsForSelectedLines>
         <ApplyCustomOverrideTag>사용자 지정 재정의 태그 적용...</ApplyCustomOverrideTag>
+        <SetPosition>위치 설정...</SetPosition>
+        <GenerateProgressBar>진행 표시줄 생성...</GenerateProgressBar>
+        <AssaResolutionChanger>스크립트 해상도 변경...</AssaResolutionChanger>
         <FixCommonErrorsInSelectedLines>일반 오류 수정...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>대/소문자 바꾸기</ChangeCasingForSelectedLines>
         <SaveSelectedLines>선택한 줄 저장...</SaveSelectedLines>
@@ -1530,6 +1544,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <BeforeImportFromMatroskaFile>Matroska 파일에서 자막을 가져오기 전</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Matroska 파일에서 자막을 추출했습니다.</SubtitleImportedFromMatroskaFile>
     <DropFileXNotAccepted>파일 '{0}'을 가져올 수 없습니다 - 파일이 너무 큼.</DropFileXNotAccepted>
+    <DropSubtitleFileXNotAccepted>드롭 파일 '{0}' 은 허용되지 않음 - 파일이 너무 큼</DropSubtitleFileXNotAccepted>
     <DropOnlyOneFile>하나의 파일만 놓을 수 있습니다.</DropOnlyOneFile>
     <OpenAnsiSubtitle>자막 열기...</OpenAnsiSubtitle>
     <BeforeChangeCasing>대/소문자 바꾸기 전</BeforeChangeCasing>
@@ -2265,8 +2280,10 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <MainCreateStartDownEndUp>'↓'키로 새로운 자막 삽입, '↑'키로 종료 시간 설정</MainCreateStartDownEndUp>
     <MergeDialog>대화 병합 (대시 삽입)</MergeDialog>
     <GoToNext>다음 줄로 이동</GoToNext>
+    <GoToNextPlayTranslate>다음 줄로 이동 (그리고 '번역 모드'에서 재생)</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>다음 줄로 이동하여 끝에 커서 설정</GoToNextCursorAtEnd>
     <GoToPrevious>이전 줄로 이동</GoToPrevious>
+    <GoToPreviousPlayTranslate>이전 줄로 이동 (그리고 '번역 모드'에서 재생)</GoToPreviousPlayTranslate>
     <GoToCurrentSubtitleStart>현재 줄의 시작 지점으로 이동</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>현재 줄의 끝 지점으로 이동</GoToCurrentSubtitleEnd>
     <GoToPreviousSubtitleAndFocusVideo>이전 줄로 이동하고 비디오 위치 설정</GoToPreviousSubtitleAndFocusVideo>
@@ -2912,6 +2929,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ShowSpectrogramOnly>스펙트로그램만 표시</ShowSpectrogramOnly>
     <AddSceneChange>장면 전환 추가</AddSceneChange>
     <RemoveSceneChange>장면 전환 제거</RemoveSceneChange>
+    <RemoveSceneChangesFromSelection>선택에서 장면 전환 제거</RemoveSceneChangesFromSelection>
     <GuessTimeCodes>타임코드 알아내기</GuessTimeCodes>
     <SeekSilence>무음 탐색...</SeekSilence>
     <InsertSubtitleHere>여기에 자막 삽입...</InsertSubtitleHere>
