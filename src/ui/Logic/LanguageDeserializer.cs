@@ -547,6 +547,27 @@ namespace Nikse.SubtitleEdit.Logic
                 case "AssaProgressBarGenerator/TakePosFromVideo":
                     language.AssaProgressBarGenerator.TakePosFromVideo = reader.Value;
                     break;
+                case "AssaResulationChanger/Title":
+                    language.AssaResulationChanger.Title = reader.Value;
+                    break;
+                case "AssaResulationChanger/SourceVideoRes":
+                    language.AssaResulationChanger.SourceVideoRes = reader.Value;
+                    break;
+                case "AssaResulationChanger/TargetVideoRes":
+                    language.AssaResulationChanger.TargetVideoRes = reader.Value;
+                    break;
+                case "AssaResulationChanger/ChangeResolutionMargins":
+                    language.AssaResulationChanger.ChangeResolutionMargins = reader.Value;
+                    break;
+                case "AssaResulationChanger/ChangeResolutionFontSize":
+                    language.AssaResulationChanger.ChangeResolutionFontSize = reader.Value;
+                    break;
+                case "AssaResulationChanger/ChangeResolutionPositions":
+                    language.AssaResulationChanger.ChangeResolutionPositions = reader.Value;
+                    break;
+                case "AssaResulationChanger/ChangeResolutionDrawing":
+                    language.AssaResulationChanger.ChangeResolutionDrawing = reader.Value;
+                    break;
                 case "AssaSetPosition/SetPosition":
                     language.AssaSetPosition.SetPosition = reader.Value;
                     break;
@@ -3235,6 +3256,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/DropFileXNotAccepted":
                     language.Main.DropFileXNotAccepted = reader.Value;
                     break;
+                case "Main/DropSubtitleFileXNotAccepted":
+                    language.Main.DropSubtitleFileXNotAccepted = reader.Value;
+                    break;
                 case "Main/DropOnlyOneFile":
                     language.Main.DropOnlyOneFile = reader.Value;
                     break;
@@ -4126,8 +4150,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/ContextMenu/SetActor":
                     language.Main.Menu.ContextMenu.SetActor = reader.Value;
                     break;
-                case "Main/Menu/ContextMenu/SetOverrideTagsEtc":
-                    language.Main.Menu.ContextMenu.SetOverrideTagsEtc = reader.Value;
+                case "Main/Menu/ContextMenu/AssaTools":
+                    language.Main.Menu.ContextMenu.AssaTools = reader.Value;
                     break;
                 case "Main/Menu/ContextMenu/SubStationAlphaStyles":
                     language.Main.Menu.ContextMenu.SubStationAlphaStyles = reader.Value;
@@ -4320,6 +4344,15 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Main/Menu/ContextMenu/ApplyCustomOverrideTag":
                     language.Main.Menu.ContextMenu.ApplyCustomOverrideTag = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/SetPosition":
+                    language.Main.Menu.ContextMenu.SetPosition = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/GenerateProgressBar":
+                    language.Main.Menu.ContextMenu.GenerateProgressBar = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/AssaResolutionChanger":
+                    language.Main.Menu.ContextMenu.AssaResolutionChanger = reader.Value;
                     break;
                 case "Main/Menu/ContextMenu/FixCommonErrorsInSelectedLines":
                     language.Main.Menu.ContextMenu.FixCommonErrorsInSelectedLines = reader.Value;
@@ -6193,11 +6226,17 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/GoToNext":
                     language.Settings.GoToNext = reader.Value;
                     break;
+                case "Settings/GoToNextPlayTranslate":
+                    language.Settings.GoToNextPlayTranslate = reader.Value;
+                    break;
                 case "Settings/GoToNextCursorAtEnd":
                     language.Settings.GoToNextCursorAtEnd = reader.Value;
                     break;
                 case "Settings/GoToPrevious":
                     language.Settings.GoToPrevious = reader.Value;
+                    break;
+                case "Settings/GoToPreviousPlayTranslate":
+                    language.Settings.GoToPreviousPlayTranslate = reader.Value;
                     break;
                 case "Settings/GoToCurrentSubtitleStart":
                     language.Settings.GoToCurrentSubtitleStart = reader.Value;

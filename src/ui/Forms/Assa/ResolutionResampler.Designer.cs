@@ -29,12 +29,12 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         /// </summary>
         private void InitializeComponent()
         {
-            this.labelVideoResolution = new System.Windows.Forms.Label();
+            this.labelTargetRes = new System.Windows.Forms.Label();
             this.numericUpDownTargetHeight = new System.Windows.Forms.NumericUpDown();
             this.buttonGetResolutionFromVideo = new System.Windows.Forms.Button();
             this.labelX = new System.Windows.Forms.Label();
             this.numericUpDownTargetWidth = new System.Windows.Forms.NumericUpDown();
-            this.label1 = new System.Windows.Forms.Label();
+            this.labelSourceRes = new System.Windows.Forms.Label();
             this.numericUpDownSourceHeight = new System.Windows.Forms.NumericUpDown();
             this.buttonSourceRes = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
@@ -51,14 +51,14 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSourceWidth)).BeginInit();
             this.SuspendLayout();
             // 
-            // labelVideoResolution
+            // labelTargetRes
             // 
-            this.labelVideoResolution.AutoSize = true;
-            this.labelVideoResolution.Location = new System.Drawing.Point(12, 65);
-            this.labelVideoResolution.Name = "labelVideoResolution";
-            this.labelVideoResolution.Size = new System.Drawing.Size(115, 13);
-            this.labelVideoResolution.TabIndex = 5;
-            this.labelVideoResolution.Text = "Target video resolution";
+            this.labelTargetRes.AutoSize = true;
+            this.labelTargetRes.Location = new System.Drawing.Point(12, 65);
+            this.labelTargetRes.Name = "labelTargetRes";
+            this.labelTargetRes.Size = new System.Drawing.Size(115, 13);
+            this.labelTargetRes.TabIndex = 5;
+            this.labelTargetRes.Text = "Target video resolution";
             // 
             // numericUpDownTargetHeight
             // 
@@ -103,14 +103,14 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.numericUpDownTargetWidth.Size = new System.Drawing.Size(47, 20);
             this.numericUpDownTargetWidth.TabIndex = 6;
             // 
-            // label1
+            // labelSourceRes
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 39);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(118, 13);
-            this.label1.TabIndex = 10;
-            this.label1.Text = "Source video resolution";
+            this.labelSourceRes.AutoSize = true;
+            this.labelSourceRes.Location = new System.Drawing.Point(12, 39);
+            this.labelSourceRes.Name = "labelSourceRes";
+            this.labelSourceRes.Size = new System.Drawing.Size(118, 13);
+            this.labelSourceRes.TabIndex = 10;
+            this.labelSourceRes.Text = "Source video resolution";
             // 
             // numericUpDownSourceHeight
             // 
@@ -185,9 +185,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.checkBoxMargins.AutoSize = true;
             this.checkBoxMargins.Location = new System.Drawing.Point(15, 99);
             this.checkBoxMargins.Name = "checkBoxMargins";
-            this.checkBoxMargins.Size = new System.Drawing.Size(169, 17);
+            this.checkBoxMargins.Size = new System.Drawing.Size(165, 17);
             this.checkBoxMargins.TabIndex = 17;
-            this.checkBoxMargins.Text = "Keep aspect ration for margins";
+            this.checkBoxMargins.Text = "Change resolution for margins";
             this.checkBoxMargins.UseVisualStyleBackColor = true;
             // 
             // checkBoxFontSize
@@ -197,9 +197,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.checkBoxFontSize.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxFontSize.Location = new System.Drawing.Point(15, 122);
             this.checkBoxFontSize.Name = "checkBoxFontSize";
-            this.checkBoxFontSize.Size = new System.Drawing.Size(172, 17);
+            this.checkBoxFontSize.Size = new System.Drawing.Size(168, 17);
             this.checkBoxFontSize.TabIndex = 18;
-            this.checkBoxFontSize.Text = "Keep aspect ration for font size";
+            this.checkBoxFontSize.Text = "Change resolution for font size";
             this.checkBoxFontSize.UseVisualStyleBackColor = true;
             // 
             // checkBoxPosition
@@ -209,9 +209,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.checkBoxPosition.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxPosition.Location = new System.Drawing.Point(15, 145);
             this.checkBoxPosition.Name = "checkBoxPosition";
-            this.checkBoxPosition.Size = new System.Drawing.Size(169, 17);
+            this.checkBoxPosition.Size = new System.Drawing.Size(165, 17);
             this.checkBoxPosition.TabIndex = 19;
-            this.checkBoxPosition.Text = "Keep aspect ration for position";
+            this.checkBoxPosition.Text = "Change resolution for position";
             this.checkBoxPosition.UseVisualStyleBackColor = true;
             // 
             // checkBoxDrawing
@@ -221,9 +221,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.checkBoxDrawing.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxDrawing.Location = new System.Drawing.Point(14, 168);
             this.checkBoxDrawing.Name = "checkBoxDrawing";
-            this.checkBoxDrawing.Size = new System.Drawing.Size(170, 17);
+            this.checkBoxDrawing.Size = new System.Drawing.Size(166, 17);
             this.checkBoxDrawing.TabIndex = 20;
-            this.checkBoxDrawing.Text = "Keep aspect ration for drawing";
+            this.checkBoxDrawing.Text = "Change resolution for drawing";
             this.checkBoxDrawing.UseVisualStyleBackColor = true;
             // 
             // ResolutionResampler
@@ -237,12 +237,12 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.Controls.Add(this.checkBoxMargins);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.labelSourceRes);
             this.Controls.Add(this.numericUpDownSourceHeight);
             this.Controls.Add(this.buttonSourceRes);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.numericUpDownSourceWidth);
-            this.Controls.Add(this.labelVideoResolution);
+            this.Controls.Add(this.labelTargetRes);
             this.Controls.Add(this.numericUpDownTargetHeight);
             this.Controls.Add(this.buttonGetResolutionFromVideo);
             this.Controls.Add(this.labelX);
@@ -268,12 +268,12 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         #endregion
 
-        private System.Windows.Forms.Label labelVideoResolution;
+        private System.Windows.Forms.Label labelTargetRes;
         private System.Windows.Forms.NumericUpDown numericUpDownTargetHeight;
         private System.Windows.Forms.Button buttonGetResolutionFromVideo;
         private System.Windows.Forms.Label labelX;
         private System.Windows.Forms.NumericUpDown numericUpDownTargetWidth;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelSourceRes;
         private System.Windows.Forms.NumericUpDown numericUpDownSourceHeight;
         private System.Windows.Forms.Button buttonSourceRes;
         private System.Windows.Forms.Label label2;

@@ -20,7 +20,14 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            Text = LanguageSettings.Current.AssaOverrideTags.History;
+            var l = LanguageSettings.Current.AssaResulationChanger;
+            Text = l.Title;
+            labelSourceRes.Text = l.SourceVideoRes;
+            labelTargetRes.Text = l.TargetVideoRes;
+            checkBoxMargins.Text = l.ChangeResolutionMargins;
+            checkBoxFontSize.Text = l.ChangeResolutionFontSize;
+            checkBoxPosition.Text = l.ChangeResolutionPositions;
+            checkBoxDrawing.Text = l.ChangeResolutionDrawing;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
