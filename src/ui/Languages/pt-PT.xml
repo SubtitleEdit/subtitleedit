@@ -181,15 +181,40 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <RemoveXAttachments>Eliminar {0} anexos?</RemoveXAttachments>
   </AssaAttachments>
   <AssaOverrideTags>
-    <ApplyCustomTags>Aplicar etiquetas personalizadas</ApplyCustomTags>
+    <ApplyCustomTags>Aplicar etiquetas de substituição personalizadas</ApplyCustomTags>
     <History>Histórico</History>
     <TagsToApply>Etiquetas a aplicar</TagsToApply>
     <ApplyTo>Aplicar a</ApplyTo>
     <SelectedLinesX>Linhas selecionadas: {0}</SelectedLinesX>
     <AdvancedSelection>Selecção avançada</AdvancedSelection>
   </AssaOverrideTags>
+  <AssaProgressBarGenerator>
+    <Title>Gerar barra de progressão</Title>
+    <Progressbar>Barra de progressão</Progressbar>
+    <Chapters>Capítulos</Chapters>
+    <SplitterWidth>Largura do divisor</SplitterWidth>
+    <SplitterHeight>Altura do divisor</SplitterHeight>
+    <XAdjustment>Ajuste X</XAdjustment>
+    <YAdjustment>Ajuste Y</YAdjustment>
+    <Position>Posição</Position>
+    <TextAlignment>Alinhamento do texto</TextAlignment>
+    <SquareCorners>Cantos quadrados</SquareCorners>
+    <RoundedCorners>Cantos arredondados</RoundedCorners>
+    <Top>Superior</Top>
+    <Bottom>Inferior</Bottom>
+    <TakePosFromVideo>Assumir a posição do vídeo</TakePosFromVideo>
+  </AssaProgressBarGenerator>
+  <AssaResulationChanger>
+    <Title>Alterar a resolução do script</Title>
+    <SourceVideoRes>Resolução do vídeo de origem</SourceVideoRes>
+    <TargetVideoRes>Resolução do vídeo de destino</TargetVideoRes>
+    <ChangeResolutionMargins>Alterar resolução para margem</ChangeResolutionMargins>
+    <ChangeResolutionFontSize>Alterar a resolução para o tamanho do tipo de letra</ChangeResolutionFontSize>
+    <ChangeResolutionPositions>Alterar a resolução para a posição</ChangeResolutionPositions>
+    <ChangeResolutionDrawing>Alterar a resolução para desenho</ChangeResolutionDrawing>
+  </AssaResulationChanger>
   <AssaSetPosition>
-    <SetPosition>Definir/obter posição</SetPosition>
+    <SetPosition>Definir posição</SetPosition>
     <VideoResolutionX>Resolução do vídeo: {0}</VideoResolutionX>
     <StyleAlignmentX>Alinhamento do estilo: {0}</StyleAlignmentX>
     <CurrentMousePositionX>Posição do rato: {0}</CurrentMousePositionX>
@@ -1241,6 +1266,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <SizeAllColumnsToFit>Ajustar o tamanho das colunas para caber</SizeAllColumnsToFit>
         <SetStyle>Definir estilo</SetStyle>
         <SetActor>Definir actor</SetActor>
+        <AssaTools>Ferramentas ASSA</AssaTools>
         <SubStationAlphaStyles>Estilos Sub Station Alpha...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Estilos Advanced Sub Station Alpha...</AdvancedSubStationAlphaStyles>
         <TimedTextSetRegion>Timed Text - Definir região</TimedTextSetRegion>
@@ -1305,6 +1331,9 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <AdjustDisplayDurationForSelectedLines>Ajustar duração das linhas seleccionadas...</AdjustDisplayDurationForSelectedLines>
         <ApplyDurationLimitsForSelectedLines>Aplicar limites de duração às linhas seleccionadas...</ApplyDurationLimitsForSelectedLines>
         <ApplyCustomOverrideTag>Aplicar etiquetas de substituição personalizadas...</ApplyCustomOverrideTag>
+        <SetPosition>Definir posição...</SetPosition>
+        <GenerateProgressBar>Gerar barra de progressão...</GenerateProgressBar>
+        <AssaResolutionChanger>Alterar a resolução do script...</AssaResolutionChanger>
         <FixCommonErrorsInSelectedLines>Corrigir erros frequentes nas linhas seleccionadas...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Alterar Maiúsculas/Minúsculas nas linhas seleccionadas...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Guardar linhas seleccionadas como...</SaveSelectedLines>
@@ -1522,6 +1551,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <BeforeImportFromMatroskaFile>Antes de importar legenda do ficheiro Matroska (.mkv)</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Legenda importada do ficheiro Matroska (.mkv)</SubtitleImportedFromMatroskaFile>
     <DropFileXNotAccepted>Ficheiro '{0}' não aceite - ficheiro demasiado grande</DropFileXNotAccepted>
+    <DropSubtitleFileXNotAccepted>Ficheiro '{0}' não aceite - ficheiro demasiado grande para um legenda</DropSubtitleFileXNotAccepted>
     <DropOnlyOneFile>Só pode baixar um ficheiro</DropOnlyOneFile>
     <OpenAnsiSubtitle>Abrir legenda...</OpenAnsiSubtitle>
     <BeforeChangeCasing>Antes de alterar o formato</BeforeChangeCasing>
@@ -2255,8 +2285,10 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <MainCreateStartDownEndUp>Inserir nova linha com tecla "Page Down", definir tempo final com tecla "Page Up"</MainCreateStartDownEndUp>
     <MergeDialog>Combinar os diálogos (inserir travessões)</MergeDialog>
     <GoToNext>Ir para a linha seguinte</GoToNext>
+    <GoToNextPlayTranslate>Ir para a linha seguinte (e reproduzir no 'Modo de tradução')</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>Ir para a linha seguinte e pôr o cursor no fim</GoToNextCursorAtEnd>
     <GoToPrevious>Ir para a linha anterior</GoToPrevious>
+    <GoToPreviousPlayTranslate>Ir para a linha anterior (e reproduzir no 'Modo de tradução')</GoToPreviousPlayTranslate>
     <GoToCurrentSubtitleStart>Ir para o início da linha actual</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Ir para o final da linha actual</GoToCurrentSubtitleEnd>
     <GoToPreviousSubtitleAndFocusVideo>Ir para a linha anterior e definir a posição do vídeo</GoToPreviousSubtitleAndFocusVideo>
@@ -2318,14 +2350,14 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <GoBack3Second>Atrasar 3 segundos</GoBack3Second>
     <GoToStartCurrent>Definir posição de vídeo para o início da linha actual</GoToStartCurrent>
     <ToggleStartEndCurrent>Alternar posição do vídeo entre início/fim da linha actual</ToggleStartEndCurrent>
-    <PlayCurrent>Reproduzir linha actual</PlayCurrent>
+    <PlaySelectedLines>Reproduzir linhas selecionadas</PlaySelectedLines>
     <WaveformGoToPrevSubtitle>Ir para linha anterior (da posição do vídeo)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Ir para linha seguinte (da posição do vídeo)</WaveformGoToNextSubtitle>
     <WaveformGoToPrevChapter>Ir para capítulo anterior</WaveformGoToPrevChapter>
     <WaveformGoToNextChapter>Ir para capítulo seguinte</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>Seleccionar linha seguinte (da posição de vídeo, manter posição de vídeo)</WaveformSelectNextSubtitle>
-    <TogglePlayPause>Alternar reproduzir/pausar</TogglePlayPause>
-    <Pause>Pausar</Pause>
+    <TogglePlayPause>Alternar reproduzir/pausa</TogglePlayPause>
+    <Pause>Pausa</Pause>
     <Fullscreen>Ecrã inteiro</Fullscreen>
     <PlayRateSlower>Taxa de velocidade lenta</PlayRateSlower>
     <PlayRateFaster>Taxa de velocidade rápida</PlayRateFaster>
@@ -2902,7 +2934,8 @@ Manter as alterações?</KeepChangesMessage>
     <ShowWaveformOnly>Mostrar só "waveform"</ShowWaveformOnly>
     <ShowSpectrogramOnly>Mostrar só espectrograma</ShowSpectrogramOnly>
     <AddSceneChange>Adicionar mudança de cena</AddSceneChange>
-    <RemoveSceneChange>Eliminar mudança de cena</RemoveSceneChange>
+    <RemoveSceneChange>Remover mudança de cena</RemoveSceneChange>
+    <RemoveSceneChangesFromSelection>Remover mudanças de cena da seleção</RemoveSceneChangesFromSelection>
     <GuessTimeCodes>Adivinhar os tempos...</GuessTimeCodes>
     <SeekSilence>Localizar silêncio no áudio...</SeekSilence>
     <InsertSubtitleHere>Inserir legendagem aqui...</InsertSubtitleHere>
