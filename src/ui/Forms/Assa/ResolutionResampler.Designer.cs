@@ -185,9 +185,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.checkBoxMargins.AutoSize = true;
             this.checkBoxMargins.Location = new System.Drawing.Point(15, 99);
             this.checkBoxMargins.Name = "checkBoxMargins";
-            this.checkBoxMargins.Size = new System.Drawing.Size(169, 17);
+            this.checkBoxMargins.Size = new System.Drawing.Size(165, 17);
             this.checkBoxMargins.TabIndex = 17;
-            this.checkBoxMargins.Text = "Keep aspect ration for margins";
+            this.checkBoxMargins.Text = "Change resolution for margins";
             this.checkBoxMargins.UseVisualStyleBackColor = true;
             // 
             // checkBoxFontSize
@@ -197,9 +197,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.checkBoxFontSize.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxFontSize.Location = new System.Drawing.Point(15, 122);
             this.checkBoxFontSize.Name = "checkBoxFontSize";
-            this.checkBoxFontSize.Size = new System.Drawing.Size(172, 17);
+            this.checkBoxFontSize.Size = new System.Drawing.Size(168, 17);
             this.checkBoxFontSize.TabIndex = 18;
-            this.checkBoxFontSize.Text = "Keep aspect ration for font size";
+            this.checkBoxFontSize.Text = "Change resolution for font size";
             this.checkBoxFontSize.UseVisualStyleBackColor = true;
             // 
             // checkBoxPosition
@@ -209,9 +209,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.checkBoxPosition.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxPosition.Location = new System.Drawing.Point(15, 145);
             this.checkBoxPosition.Name = "checkBoxPosition";
-            this.checkBoxPosition.Size = new System.Drawing.Size(169, 17);
+            this.checkBoxPosition.Size = new System.Drawing.Size(165, 17);
             this.checkBoxPosition.TabIndex = 19;
-            this.checkBoxPosition.Text = "Keep aspect ration for position";
+            this.checkBoxPosition.Text = "Change resolution for position";
             this.checkBoxPosition.UseVisualStyleBackColor = true;
             // 
             // checkBoxDrawing
@@ -221,9 +221,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.checkBoxDrawing.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxDrawing.Location = new System.Drawing.Point(14, 168);
             this.checkBoxDrawing.Name = "checkBoxDrawing";
-            this.checkBoxDrawing.Size = new System.Drawing.Size(170, 17);
+            this.checkBoxDrawing.Size = new System.Drawing.Size(166, 17);
             this.checkBoxDrawing.TabIndex = 20;
-            this.checkBoxDrawing.Text = "Keep aspect ration for drawing";
+            this.checkBoxDrawing.Text = "Change resolution for drawing";
             this.checkBoxDrawing.UseVisualStyleBackColor = true;
             // 
             // ResolutionResampler

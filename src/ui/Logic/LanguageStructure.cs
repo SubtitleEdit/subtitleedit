@@ -219,10 +219,10 @@
             public string Title { get; set; }
             public string SourceVideoRes { get; set; }
             public string TargetVideoRes { get; set; }
-            public string KeepAspectRatioMargins { get; set; }
-            public string KeepAspectRatioFontSize { get; set; }
-            public string KeepAspectRatioPositions { get; set; }
-            public string KeepAspectRatioDrawing { get; set; }
+            public string ChangeResolutionMargins { get; set; }
+            public string ChangeResolutionFontSize { get; set; }
+            public string ChangeResolutionPositions { get; set; }
+            public string ChangeResolutionDrawing { get; set; }
         }
 
         public class AssaSetPosition

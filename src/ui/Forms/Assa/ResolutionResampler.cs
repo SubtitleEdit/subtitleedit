@@ -24,10 +24,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             Text = l.Title;
             labelSourceRes.Text = l.SourceVideoRes;
             labelTargetRes.Text = l.TargetVideoRes;
-            checkBoxMargins.Text = l.KeepAspectRatioMargins;
-            checkBoxFontSize.Text = l.KeepAspectRatioFontSize;
-            checkBoxPosition.Text = l.KeepAspectRatioPositions;
-            checkBoxDrawing.Text = l.KeepAspectRatioDrawing;
+            checkBoxMargins.Text = l.ChangeResolutionMargins;
+            checkBoxFontSize.Text = l.ChangeResolutionFontSize;
+            checkBoxPosition.Text = l.ChangeResolutionPositions;
+            checkBoxDrawing.Text = l.ChangeResolutionDrawing;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);

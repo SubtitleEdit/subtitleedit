@@ -357,10 +357,10 @@ namespace Nikse.SubtitleEdit.Logic
                 Title = "Change script resolution",
                 SourceVideoRes = "Source video resolution",
                 TargetVideoRes = "Target video resolution",
-                KeepAspectRatioMargins = "Keep aspect ration for margin",
-                KeepAspectRatioFontSize = "Keep aspect ration for font size",
-                KeepAspectRatioPositions = "Keep aspect ration for position",
-                KeepAspectRatioDrawing = "Keep aspect ration for drawing",
+                ChangeResolutionMargins = "Change resolution for margin",
+                ChangeResolutionFontSize = "Change resolution for font size",
+                ChangeResolutionPositions = "Change resolution for position",
+                ChangeResolutionDrawing = "Change resolution for drawing",
             };
 
             AssaSetPosition = new LanguageStructure.AssaSetPosition
