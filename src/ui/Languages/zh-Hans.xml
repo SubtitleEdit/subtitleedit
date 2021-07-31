@@ -202,6 +202,15 @@ Command line: {1} {2}
     <Bottom>底部</Bottom>
     <TakePosFromVideo>从视频中获取位置</TakePosFromVideo>
   </AssaProgressBarGenerator>
+  <AssaResulationChanger>
+    <Title>更改脚本分辨率</Title>
+    <SourceVideoRes>源视频分辨率</SourceVideoRes>
+    <TargetVideoRes>目标视频分辨率</TargetVideoRes>
+    <KeepAspectRatioMargins>保持边距的纵横比</KeepAspectRatioMargins>
+    <KeepAspectRatioFontSize>保持字体大小的纵横比</KeepAspectRatioFontSize>
+    <KeepAspectRatioPositions>保持位置的纵横比</KeepAspectRatioPositions>
+    <KeepAspectRatioDrawing>保持绘图的纵横比</KeepAspectRatioDrawing>
+  </AssaResulationChanger>
   <AssaSetPosition>
     <SetPosition>设置/获取位置</SetPosition>
     <VideoResolutionX>视频分辨率：{0}</VideoResolutionX>
@@ -1251,6 +1260,7 @@ Command line: {1} {2}
         <SizeAllColumnsToFit>自适应所有的列宽度</SizeAllColumnsToFit>
         <SetStyle>设置样式</SetStyle>
         <SetActor>设置演员</SetActor>
+        <AssaTools>ASSA工具</AssaTools>
         <SubStationAlphaStyles>Sub Station Alpha 样式...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>高级 Sub Station Alpha 样式...</AdvancedSubStationAlphaStyles>
         <TimedTextSetRegion>带时间文本 - 设置区域</TimedTextSetRegion>
@@ -1315,6 +1325,9 @@ Command line: {1} {2}
         <AdjustDisplayDurationForSelectedLines>调整所选行时长...</AdjustDisplayDurationForSelectedLines>
         <ApplyDurationLimitsForSelectedLines>对选定的行应用持续时间限制...</ApplyDurationLimitsForSelectedLines>
         <ApplyCustomOverrideTag>应用自定义覆盖标签...</ApplyCustomOverrideTag>
+        <SetPosition>设置位置...</SetPosition>
+        <GenerateProgressBar>生成进度条...</GenerateProgressBar>
+        <AssaResolutionChanger>更改脚本分辨率...</AssaResolutionChanger>
         <FixCommonErrorsInSelectedLines>修复所选行常规错误...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>更改所选行大小写...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>所选行另存为...</SaveSelectedLines>
@@ -1529,6 +1542,7 @@ Command line: {1} {2}
     <BeforeImportFromMatroskaFile>从 Matroska 文件导入字幕之前</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>字幕已从 Matroska 文件导入</SubtitleImportedFromMatroskaFile>
     <DropFileXNotAccepted>拖放的文件 '{0}' 未被接受 - 文件太大</DropFileXNotAccepted>
+    <DropSubtitleFileXNotAccepted>拖放的文件 '{0}' 未被接受 - 字幕文件太大</DropSubtitleFileXNotAccepted>
     <DropOnlyOneFile>您只能放一个文件</DropOnlyOneFile>
     <OpenAnsiSubtitle>打开字幕...</OpenAnsiSubtitle>
     <BeforeChangeCasing>更改大小写之前</BeforeChangeCasing>
@@ -2260,8 +2274,10 @@ Command line: {1} {2}
     <MainCreateStartDownEndUp>用向下方向键创建新的开始时间，用向上方向键设置结束时间</MainCreateStartDownEndUp>
     <MergeDialog>合并对话 (插入破折号)</MergeDialog>
     <GoToNext>转到下一行</GoToNext>
+    <GoToNextPlayTranslate>转到下一行（并以“翻译模式”播放）</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>转到下一行并将光标置于末尾</GoToNextCursorAtEnd>
     <GoToPrevious>转到上一行</GoToPrevious>
+    <GoToPreviousPlayTranslate>转到上一行（并以“翻译模式”播放）</GoToPreviousPlayTranslate>
     <GoToCurrentSubtitleStart>转到当前行的起始时间点</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>转到当前行尾</GoToCurrentSubtitleEnd>
     <GoToPreviousSubtitleAndFocusVideo>转到上一行并设置视频位置</GoToPreviousSubtitleAndFocusVideo>
@@ -2905,6 +2921,7 @@ Command line: {1} {2}
     <ShowSpectrogramOnly>仅显示频谱图</ShowSpectrogramOnly>
     <AddSceneChange>添加场景变动</AddSceneChange>
     <RemoveSceneChange>移除场景变动</RemoveSceneChange>
+    <RemoveSceneChangesFromSelection>从所选中移除场景变动</RemoveSceneChangesFromSelection>
     <GuessTimeCodes>猜测时间码...</GuessTimeCodes>
     <SeekSilence>搜索静音...</SeekSilence>
     <InsertSubtitleHere>在这里插入字幕...</InsertSubtitleHere>
