@@ -22924,7 +22924,7 @@ namespace Nikse.SubtitleEdit.Forms
             var translateSelectedLinesMenuItems = new List<ToolStripMenuItem>();
             var syncMenuItems = new List<ToolStripMenuItem>();
             var spellCheckMenuItems = new List<ToolStripMenuItem>();
-            var assaOverrideTagsMenuItems = new List<ToolStripMenuItem>();
+            var assaToolMenuItems = new List<ToolStripMenuItem>();
 
             foreach (var pluginFileName in Directory.GetFiles(path, "*.DLL"))
             {
@@ -22986,10 +22986,10 @@ namespace Nikse.SubtitleEdit.Forms
                             item.Click += PluginClickNoFormatChange;
                             spellCheckMenuItems.Add(item);
                         }
-                        else if (actionType.Equals("AssaOverrideTags", StringComparison.OrdinalIgnoreCase))
+                        else if (actionType.Equals("AssaTool", StringComparison.OrdinalIgnoreCase))
                         {
                             item.Click += CallPluginAssa;
-                            assaOverrideTagsMenuItems.Add(item);
+                            assaToolMenuItems.Add(item);
                         }
                     }
                 }
@@ -23007,7 +23007,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemTranslateSelected.DropDownItems.AddRange(translateSelectedLinesMenuItems.OrderBy(p => p.Text).ToArray());
             toolStripMenuItemSynchronization.DropDownItems.AddRange(syncMenuItems.OrderBy(p => p.Text).ToArray());
             toolStripMenuItemSpellCheckMain.DropDownItems.AddRange(spellCheckMenuItems.OrderBy(p => p.Text).ToArray());
-            toolStripMenuItemAssaTools.DropDownItems.AddRange(assaOverrideTagsMenuItems.OrderBy(p => p.Text).ToArray());
+            toolStripMenuItemAssaTools.DropDownItems.AddRange(assaToolMenuItems.OrderBy(p => p.Text).ToArray());
         }
 
         private void AddSeparator(int pluginCount, ToolStripMenuItem parent, int? relativeOffset = null)
