@@ -180,7 +180,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <RemoveXAttachments>Remove {0} attachments?</RemoveXAttachments>
   </AssaAttachments>
   <AssaOverrideTags>
-    <ApplyCustomTags>Apply custom tags</ApplyCustomTags>
+    <ApplyCustomTags>Apply custom override tags</ApplyCustomTags>
     <History>History</History>
     <TagsToApply>Tags to apply</TagsToApply>
     <ApplyTo>Apply to</ApplyTo>
@@ -203,8 +203,17 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Bottom>Bottom</Bottom>
     <TakePosFromVideo>Take video position</TakePosFromVideo>
   </AssaProgressBarGenerator>
+  <AssaResulationChanger>
+    <Title>Change script resolution</Title>
+    <SourceVideoRes>Source video resolution</SourceVideoRes>
+    <TargetVideoRes>Target video resolution</TargetVideoRes>
+    <ChangeResolutionMargins>Change resolution for margin</ChangeResolutionMargins>
+    <ChangeResolutionFontSize>Change resolution for font size</ChangeResolutionFontSize>
+    <ChangeResolutionPositions>Change resolution for position</ChangeResolutionPositions>
+    <ChangeResolutionDrawing>Change resolution for drawing</ChangeResolutionDrawing>
+  </AssaResulationChanger>
   <AssaSetPosition>
-    <SetPosition>Set/get position</SetPosition>
+    <SetPosition>Set position</SetPosition>
     <VideoResolutionX>Video resolution: {0}</VideoResolutionX>
     <StyleAlignmentX>Style alignment: {0}</StyleAlignmentX>
     <CurrentMousePositionX>Mouse position: {0}</CurrentMousePositionX>
@@ -1256,7 +1265,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <SizeAllColumnsToFit>Size all columns to fit</SizeAllColumnsToFit>
         <SetStyle>Set style</SetStyle>
         <SetActor>Set actor</SetActor>
-        <SetOverrideTagsEtc>Set override tags etc.</SetOverrideTagsEtc>
+        <AssaTools>ASSA tools</AssaTools>
         <SubStationAlphaStyles>Sub Station Alpha styles...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Advanced Sub Station Alpha styles...</AdvancedSubStationAlphaStyles>
         <TimedTextSetRegion>Timed Text - set region</TimedTextSetRegion>
@@ -1321,6 +1330,9 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <AdjustDisplayDurationForSelectedLines>Adjust durations for selected lines...</AdjustDisplayDurationForSelectedLines>
         <ApplyDurationLimitsForSelectedLines>Apply duration limits for selected lines...</ApplyDurationLimitsForSelectedLines>
         <ApplyCustomOverrideTag>Apply custom override tags...</ApplyCustomOverrideTag>
+        <SetPosition>Set position...</SetPosition>
+        <GenerateProgressBar>Generate progress bar...</GenerateProgressBar>
+        <AssaResolutionChanger>Change script resolution...</AssaResolutionChanger>
         <FixCommonErrorsInSelectedLines>Fix common errors in selected lines...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Change casing for selected lines...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Save selected lines as...</SaveSelectedLines>
@@ -1538,6 +1550,7 @@ Continue?</SubtitleAppendPrompt>
     <BeforeImportFromMatroskaFile>Before import subtitle from Matroska file</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Subtitle imported from Matroska file</SubtitleImportedFromMatroskaFile>
     <DropFileXNotAccepted>Drop file '{0}' not accepted - file is too large</DropFileXNotAccepted>
+    <DropSubtitleFileXNotAccepted>Drop file '{0}' not accepted - file is too large for a subtitle</DropSubtitleFileXNotAccepted>
     <DropOnlyOneFile>You can only drop one file</DropOnlyOneFile>
     <OpenAnsiSubtitle>Open subtitle...</OpenAnsiSubtitle>
     <BeforeChangeCasing>Before change casing</BeforeChangeCasing>
@@ -2271,8 +2284,10 @@ can edit in same subtitle file (collaboration)</Information>
     <MainCreateStartDownEndUp>Insert new subtitle at key-down, set end time at key-up</MainCreateStartDownEndUp>
     <MergeDialog>Merge dialog (insert dashes)</MergeDialog>
     <GoToNext>Go to next line</GoToNext>
+    <GoToNextPlayTranslate>Go to next line (and play in 'Translate mode')</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>Go to next line and set cursor at end</GoToNextCursorAtEnd>
     <GoToPrevious>Go to previous line</GoToPrevious>
+    <GoToPreviousPlayTranslate>Go to previous line (and play in 'Translate mode')</GoToPreviousPlayTranslate>
     <GoToCurrentSubtitleStart>Go to current line start</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Go to current line end</GoToCurrentSubtitleEnd>
     <GoToPreviousSubtitleAndFocusVideo>Go to previous line and set video position</GoToPreviousSubtitleAndFocusVideo>

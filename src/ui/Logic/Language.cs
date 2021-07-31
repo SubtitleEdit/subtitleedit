@@ -21,6 +21,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.AssaAttachments AssaAttachments;
         public LanguageStructure.AssaOverrideTags AssaOverrideTags;
         public LanguageStructure.AssaProgressBarGenerator AssaProgressBarGenerator;
+        public LanguageStructure.AssaResulationChanger AssaResulationChanger;
         public LanguageStructure.AssaSetPosition AssaSetPosition;
         public LanguageStructure.AudioToText AudioToText;
         public LanguageStructure.AutoBreakUnbreakLines AutoBreakUnbreakLines;
@@ -325,7 +326,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             AssaOverrideTags = new LanguageStructure.AssaOverrideTags
             {
-                ApplyCustomTags = "Apply custom tags",
+                ApplyCustomTags = "Apply custom override tags",
                 AdvancedSelection = "Advanced selection",
                 ApplyTo = "Apply to",
                 History = "History",
@@ -351,9 +352,20 @@ namespace Nikse.SubtitleEdit.Logic
                 TakePosFromVideo = "Take video position",
             };
 
+            AssaResulationChanger = new LanguageStructure.AssaResulationChanger
+            {
+                Title = "Change script resolution",
+                SourceVideoRes = "Source video resolution",
+                TargetVideoRes = "Target video resolution",
+                ChangeResolutionMargins = "Change resolution for margin",
+                ChangeResolutionFontSize = "Change resolution for font size",
+                ChangeResolutionPositions = "Change resolution for position",
+                ChangeResolutionDrawing = "Change resolution for drawing",
+            };
+
             AssaSetPosition = new LanguageStructure.AssaSetPosition
             {
-                SetPosition = "Set/get position",
+                SetPosition = "Set position",
                 VideoResolutionX = "Video resolution: {0}",
                 StyleAlignmentX = "Style alignment: {0}",
                 CurrentMousePositionX = "Mouse position: {0}",
@@ -1442,6 +1454,7 @@ namespace Nikse.SubtitleEdit.Logic
                 BeforeImportFromMatroskaFile = "Before import subtitle from Matroska file",
                 SubtitleImportedFromMatroskaFile = "Subtitle imported from Matroska file",
                 DropFileXNotAccepted = "Drop file '{0}' not accepted - file is too large",
+                DropSubtitleFileXNotAccepted = "Drop file '{0}' not accepted - file is too large for a subtitle",
                 DropOnlyOneFile = "You can only drop one file",
                 OpenAnsiSubtitle = "Open subtitle...",
                 BeforeChangeCasing = "Before change casing",
@@ -1790,7 +1803,7 @@ namespace Nikse.SubtitleEdit.Logic
                         SizeAllColumnsToFit = "Size all columns to fit",
                         SetStyle = "Set style",
                         SetActor = "Set actor",
-                        SetOverrideTagsEtc = "Set override tags etc.",
+                        AssaTools = "ASSA tools",
                         AdvancedSubStationAlphaStyles = "Advanced Sub Station Alpha styles...",
                         SubStationAlphaStyles = "Sub Station Alpha styles...",
                         TimedTextStyles = "Timed Text styles...",
@@ -1855,6 +1868,9 @@ namespace Nikse.SubtitleEdit.Logic
                         AdjustDisplayDurationForSelectedLines = "Adjust durations for selected lines...",
                         ApplyDurationLimitsForSelectedLines = "Apply duration limits for selected lines...",
                         ApplyCustomOverrideTag = "Apply custom override tags...",
+                        SetPosition = "Set position...",
+                        GenerateProgressBar = "Generate progress bar...",
+                        AssaResolutionChanger = "Change script resolution...",
                         FixCommonErrorsInSelectedLines = "Fix common errors in selected lines...",
                         ChangeCasingForSelectedLines = "Change casing for selected lines...",
                         SaveSelectedLines = "Save selected lines as...",
