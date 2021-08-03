@@ -829,24 +829,6 @@ Dialogue: -255,0:00:00.00,0:43:00.00,SE-progress-bar-bg,,0,0,0,,[PB_DRAWING]";
             textBoxChapterText.Text = p.Text;
         }
 
-        private void buttonImport_Click(object sender, EventArgs e)
-        {
-            using (var openFileDialog1 = new OpenFileDialog())
-            {
-                openFileDialog1.Title = LanguageSettings.Current.General.OpenSubtitle;
-                openFileDialog1.FileName = string.Empty;
-                openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;
-                if (openFileDialog1.ShowDialog() == DialogResult.OK)
-                {
-                }
-            }
-        }
-
-        private void buttonGoToPosition_Click(object sender, EventArgs e)
-        {
-            _videoPlayerContainer.CurrentPosition = timeUpDownStartTime.TimeCode.TotalSeconds;
-        }
-
         private void listViewChapters_DoubleClick(object sender, EventArgs e)
         {
             if (listViewChapters.SelectedItems.Count == 1)

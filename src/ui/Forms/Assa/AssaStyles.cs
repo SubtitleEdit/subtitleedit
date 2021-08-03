@@ -1889,6 +1889,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
                                     _doUpdate = false;
                                     AddStyle(listViewStyles, style, _subtitle, _isSubStationAlpha);
+                                    AddStyleToHeader(style);
                                     _header = _header.Trim();
                                     if (_header.EndsWith("[Events]", StringComparison.Ordinal))
                                     {
