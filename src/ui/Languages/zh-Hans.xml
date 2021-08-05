@@ -206,10 +206,10 @@ Command line: {1} {2}
     <Title>更改脚本分辨率</Title>
     <SourceVideoRes>源视频分辨率</SourceVideoRes>
     <TargetVideoRes>目标视频分辨率</TargetVideoRes>
-    <KeepAspectRatioMargins>保持边距的纵横比</KeepAspectRatioMargins>
-    <KeepAspectRatioFontSize>保持字体大小的纵横比</KeepAspectRatioFontSize>
-    <KeepAspectRatioPositions>保持位置的纵横比</KeepAspectRatioPositions>
-    <KeepAspectRatioDrawing>保持绘图的纵横比</KeepAspectRatioDrawing>
+    <ChangeResolutionMargins>缩放边距</ChangeResolutionMargins>
+    <ChangeResolutionFontSize>缩放字号</ChangeResolutionFontSize>
+    <ChangeResolutionPositions>缩放位置</ChangeResolutionPositions>
+    <ChangeResolutionDrawing>缩放图形</ChangeResolutionDrawing>
   </AssaResulationChanger>
   <AssaSetPosition>
     <SetPosition>设置/获取位置</SetPosition>
