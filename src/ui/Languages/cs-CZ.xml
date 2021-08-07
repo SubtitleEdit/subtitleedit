@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Čeština">
   <General>
     <Title>Subtitle Edit</Title>
@@ -15,6 +15,8 @@
     <SubtitleFiles>Soubory titulků</SubtitleFiles>
     <AllFiles>Všechny soubory</AllFiles>
     <VideoFiles>Soubory videa</VideoFiles>
+    <Images>Obrázky</Images>
+    <Fonts>Písma</Fonts>
     <AudioFiles>Soubory audia</AudioFiles>
     <OpenSubtitle>Otevřít titulky...</OpenSubtitle>
     <OpenVideoFile>Otevřít soubor videa...</OpenVideoFile>
@@ -32,11 +34,13 @@
     <NumberSymbol>Č.</NumberSymbol>
     <Number>Číslo</Number>
     <Text>Text</Text>
-    <HourMinutesSecondsMilliseconds>Hod:min:s:ms</HourMinutesSecondsMilliseconds>
+    <HourMinutesSecondsDecimalSeparatorMilliseconds>Hod:min:s{0}ms</HourMinutesSecondsDecimalSeparatorMilliseconds>
     <HourMinutesSecondsFrames>Hod:min:s:snímky</HourMinutesSecondsFrames>
+    <XSeconds>{0:0.0##} sekund</XSeconds>
     <Bold>Tučné</Bold>
     <Italic>Kurzíva</Italic>
     <Underline>Podtržené</Underline>
+    <Strikeout>Přeškrtnuté</Strikeout>
     <Visible>Zobrazit</Visible>
     <FrameRate>Snímková frekvence</FrameRate>
     <Name>Název</Name>
@@ -60,9 +64,10 @@
     <OpenOriginalSubtitleFile>Otevřít soubor původních titulků...</OpenOriginalSubtitleFile>
     <PleaseWait>Čekejte...</PleaseWait>
     <SessionKey>Klíč relace</SessionKey>
+    <SessionKeyGenerate>Vygenerovat nový klíč</SessionKeyGenerate>
     <UserName>Uživatelské jméno</UserName>
     <UserNameAlreadyInUse>Uživatelské jméno již existuje</UserNameAlreadyInUse>
-    <WebServiceUrl>Adresa webové služby</WebServiceUrl>
+    <WebServiceUrl>URL webové služby</WebServiceUrl>
     <IP>IP</IP>
     <VideoWindowTitle>Video - {0}</VideoWindowTitle>
     <AudioWindowTitle>Audio - {0}</AudioWindowTitle>
@@ -79,6 +84,11 @@
     <Size>Velikost</Size>
     <Search>Hledat</Search>
     <DeleteCurrentLine>Odstranit aktuální řádek</DeleteCurrentLine>
+    <Width>Šířka</Width>
+    <Height>Výška</Height>
+    <Collapse>Sbalit</Collapse>
+    <ShortcutX>Klávesová zkratka: {0}</ShortcutX>
+    <ExampleX>Příklad: {0}</ExampleX>
   </General>
   <About>
     <Title>O aplikaci Subtitle Edit</Title>
@@ -128,6 +138,7 @@ Příkazový řádek: {1} {2}
 Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <LowDiskSpace>NEDOSTATEK MÍSTA NA DISKU!</LowDiskSpace>
     <FreeDiskSpace>{0} volných</FreeDiskSpace>
+    <NoAudioTracksFoundGenerateEmptyWaveform>Nebyly nalezeny žádné stopy audia! Vytvořit prázdnou křivku?</NoAudioTracksFoundGenerateEmptyWaveform>
   </AddWaveform>
   <AddWaveformBatch>
     <Title>Dávkově generovat data křivky</Title>
@@ -147,12 +158,70 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <Note>Poznámka: Čas zobrazení se nepřekryje se začátkem dalšího textu</Note>
     <Fixed>Opraveno</Fixed>
     <Milliseconds>Milisekundy</Milliseconds>
+    <ExtendOnly>Pouze rozšířit</ExtendOnly>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Použít limity trvání</Title>
     <FixesAvailable>Dostupných oprav: {0}</FixesAvailable>
     <UnableToFix>Nelze opravit: {0}</UnableToFix>
   </ApplyDurationLimits>
+  <AssaAttachments>
+    <Title>Přílohy Advanced Sub Station Alpha</Title>
+    <AttachFiles>Připojit soubory...</AttachFiles>
+    <FontsAndImages>Písma a obrázky</FontsAndImages>
+    <Graphics>Obrázky</Graphics>
+    <Font>Písmo</Font>
+    <ImageName>Název obrázku ({0}x{1}):</ImageName>
+    <IconName>Název ikony:</IconName>
+    <FontName>Název písma:</FontName>
+    <ImageResized>Obrázku byla změněna velikost, aby se vešel do aktuálního okna</ImageResized>
+    <FilesSkippedX>Souborů přeskočeno: {0}</FilesSkippedX>
+    <RemoveOneAttachment>Odebrat přílohu?</RemoveOneAttachment>
+    <RemoveXAttachments>Odebrat {0} příloh?</RemoveXAttachments>
+  </AssaAttachments>
+  <AssaOverrideTags>
+    <ApplyCustomTags>Použít vlastní štítky přepsání</ApplyCustomTags>
+    <History>Historie</History>
+    <TagsToApply>Štítky k použití</TagsToApply>
+    <ApplyTo>Použít na</ApplyTo>
+    <SelectedLinesX>Vybrané řádky: {0}</SelectedLinesX>
+    <AdvancedSelection>Rozšířený výběr</AdvancedSelection>
+  </AssaOverrideTags>
+  <AssaProgressBarGenerator>
+    <Title>Generovat indikátor průběhu</Title>
+    <Progressbar>Indikátor průběhu</Progressbar>
+    <Chapters>Kapitoly</Chapters>
+    <SplitterWidth>Šířka rozdělovače</SplitterWidth>
+    <SplitterHeight>Výška rozdělovače</SplitterHeight>
+    <XAdjustment>Úprava X</XAdjustment>
+    <YAdjustment>Úprava Y</YAdjustment>
+    <Position>Pozice</Position>
+    <TextAlignment>Zarovnání textu</TextAlignment>
+    <SquareCorners>Ostré rohy</SquareCorners>
+    <RoundedCorners>Zaoblené rohy</RoundedCorners>
+    <Top>Nahoru</Top>
+    <Bottom>Dolů</Bottom>
+    <TakePosFromVideo>Vzít pozici videa</TakePosFromVideo>
+  </AssaProgressBarGenerator>
+  <AssaResulationChanger>
+    <Title>Změnit rozlišení skriptu</Title>
+    <SourceVideoRes>Rozlišení zdrojového videa</SourceVideoRes>
+    <TargetVideoRes>Rozlišení cílového videa</TargetVideoRes>
+    <ChangeResolutionMargins>Změnit rozlišení pro okraje</ChangeResolutionMargins>
+    <ChangeResolutionFontSize>Změnit rozlišení pro velikost písma</ChangeResolutionFontSize>
+    <ChangeResolutionPositions>Změnit rozlišení pro pozici</ChangeResolutionPositions>
+    <ChangeResolutionDrawing>Změnit rozlišení pro kresbu</ChangeResolutionDrawing>
+  </AssaResulationChanger>
+  <AssaSetPosition>
+    <SetPosition>Nastavit pozici</SetPosition>
+    <VideoResolutionX>Rozlišení videa: {0}</VideoResolutionX>
+    <StyleAlignmentX>Styl zarovnání: {0}</StyleAlignmentX>
+    <CurrentMousePositionX>Pozice myši: {0}</CurrentMousePositionX>
+    <CurrentTextPositionX>Pozice textu: {0}</CurrentTextPositionX>
+    <SetPosInfo>Klikněte na video pro přepnutí nastavení nebo přesunu pozice</SetPosInfo>
+    <Clipboard>Schránka</Clipboard>
+    <ResolutionMissing>PlayResX nebo PlayResY nejsou nastaveny - nastavit rozlišení nyní?</ResolutionMissing>
+  </AssaSetPosition>
   <AudioToText>
     <Title>Audio na text</Title>
     <ExtractingAudioUsingX>Extrahování audia pomocí {0}...</ExtractingAudioUsingX>
@@ -174,12 +243,14 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <InputDescription>Vstupní soubory (procházet nebo přetáhnout)</InputDescription>
     <Status>Stav</Status>
     <Output>Výstup</Output>
-    <ChooseOutputFolder>Zvolte výstupní složku</ChooseOutputFolder>
-    <OverwriteExistingFiles>Přepsat stávající soubory</OverwriteExistingFiles>
+    <SaveInSourceFolder>Uložit do složky zdrojového souboru</SaveInSourceFolder>
+    <SaveInOutputFolder>Uložit do níže uvedené výstupní složky</SaveInOutputFolder>
+    <OverwriteFiles>Přepsat soubory</OverwriteFiles>
     <Style>Styl...</Style>
     <UseStyleFromSource>Použít styl ze zdroje</UseStyleFromSource>
     <ConvertOptions>Volby převodu</ConvertOptions>
     <RemoveFormatting>Odebrat značky formátování</RemoveFormatting>
+    <RemoveStyleActor>Odebrat styl nebo herce</RemoveStyleActor>
     <RemoveTextForHI>Odebrat text pro sluchově postižené</RemoveTextForHI>
     <OverwriteOriginalFiles>Přepsat původní soubory (nová přípona při změně formátu)</OverwriteOriginalFiles>
     <RedoCasing>Znovu velikost písmen</RedoCasing>
@@ -197,7 +268,6 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <AutoBalance>Automaticky vyvážit řádky</AutoBalance>
     <ScanFolder>Prohledat složku...</ScanFolder>
     <Recursive>Včetně podsložek</Recursive>
-    <SetMinMsBetweenSubtitles>Nastavit min. milisekund mezi titulky</SetMinMsBetweenSubtitles>
     <BridgeGaps>Překlenout mezery</BridgeGaps>
     <PlainText>Prostý text</PlainText>
     <Ocr>OCR...</Ocr>
@@ -206,11 +276,57 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <FilterSrtNoUtf8BOM>Soubory SubRip (.srt) bez hlavičky UTF-8 BOM</FilterSrtNoUtf8BOM>
     <FilterMoreThanTwoLines>Více než dva řádky v jednom titulku</FilterMoreThanTwoLines>
     <FilterContains>Text obsahuje...</FilterContains>
+    <FilterFileNameContains>Název souboru obsahuje...</FilterFileNameContains>
+    <MkvLanguageCodeContains>Kód jazyka Matroska (.mkv) obsahuje...</MkvLanguageCodeContains>
     <FixCommonErrorsErrorX>Opravit běžné chyby: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Hromadné nahrazení: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Automatické vyvážení: {0}</AutoBalanceErrorX>
     <OffsetTimeCodes>Posunout časové kódy</OffsetTimeCodes>
+    <TransportStreamSettings>Nastavení datového proudu přenosu</TransportStreamSettings>
+    <TransportStreamOverrideXPosition>Přepsat původní pozici X</TransportStreamOverrideXPosition>
+    <TransportStreamOverrideYPosition>Přepsat původní pozici Y</TransportStreamOverrideYPosition>
+    <TransportStreamOverrideVideoSize>Přepsat původní velikost videa</TransportStreamOverrideVideoSize>
+    <TransportStreamFileNameEnding>Zakončení názvu souboru</TransportStreamFileNameEnding>
+    <TransportStreamSettingsButton>Nastavení DPP...</TransportStreamSettingsButton>
+    <RemoveLineBreaks>Odebrat zalomení řádků</RemoveLineBreaks>
+    <DeleteLines>Odstranit řádky</DeleteLines>
+    <TryToUseSourceEncoding>Zkusit použt kódování zdroje</TryToUseSourceEncoding>
+    <DeleteFirstLines>Odstranit první řádky</DeleteFirstLines>
+    <DeleteLastLines>Odstranit poslední řádky</DeleteLastLines>
+    <DeleteContaining>Odstranit řádky obsahující</DeleteContaining>
+    <MkvLanguageInOutputFileName>„Jazyk“ v názvu výstupního souboru</MkvLanguageInOutputFileName>
+    <MkvLanguageInOutputFileNameX>„Jazyk“ Matroska (.mkv) v názvu výstupního souboru: {0}</MkvLanguageInOutputFileNameX>
+    <MkvLanguageStyleTwoLetter>Dvoupísmenný kód jazyka</MkvLanguageStyleTwoLetter>
+    <MkvLanguageStyleThreeLetter>Třípísmenný kód jazyka</MkvLanguageStyleThreeLetter>
+    <MkvLanguageStyleEmpty>Žádný kód jazyka</MkvLanguageStyleEmpty>
   </BatchConvert>
+  <BinEdit>
+    <ImportImage>Importovat obrázek...</ImportImage>
+    <ExportImage>Exportovat obrázek...</ExportImage>
+    <SetText>Nastavit text...</SetText>
+    <QuickOcr>Rychlé OCR textů (pouze pro náhled)</QuickOcr>
+    <ResizeBitmaps>Změnit velikost obrázků...</ResizeBitmaps>
+    <ChangeBrightness>Upravit jas...</ChangeBrightness>
+    <ChangeAlpha>Upravit alpha...</ChangeAlpha>
+    <ResizeBitmapsForSelectedLines>Změnit velikost obrázků pro vybrané řádky...</ResizeBitmapsForSelectedLines>
+    <ChangeColorForSelectedLines>Změnit barvu pro vybrané řádky...</ChangeColorForSelectedLines>
+    <ChangeBrightnessForSelectedLines>Upravit jas pro vybrané řádky...</ChangeBrightnessForSelectedLines>
+    <ChangeAlphaForSelectedLines>Upravit alpha pro vybrané řádky...</ChangeAlphaForSelectedLines>
+    <AlignSelectedLines>Zarovnat vybrané řádky</AlignSelectedLines>
+    <CenterSelectedLines>Zarovnat na střed vybrané řádky (vodorovně, ponechat svislou pozici)</CenterSelectedLines>
+    <TopAlignSelectedLines>Zarovnat nahoru vybrané řádky (ponechat vodorovnou pozici)</TopAlignSelectedLines>
+    <BottomAlignSelectedLines>Zarovnat dolů vybrané řádky (ponechat vodorovnou pozici)</BottomAlignSelectedLines>
+    <ToggleForcedSelectedLines>Přepnout „Vynucené“ pro vybrané řádky</ToggleForcedSelectedLines>
+    <SelectForcedLines>Vybrat vynucené řádky</SelectForcedLines>
+    <SizeXY>Velikost: {0}x{1}</SizeXY>
+    <SetAspectRatio11>Nastavit poměr stran 1:1</SetAspectRatio11>
+    <ChangeBrightnessTitle>Upravit jas</ChangeBrightnessTitle>
+    <BrightnessX>Jas: {0}%</BrightnessX>
+    <ResizeTitle>Změnit velikost obrázků</ResizeTitle>
+    <ResizeX>Změnit velikost: {0}%</ResizeX>
+    <ChangeAlphaTitle>Upravit alpha</ChangeAlphaTitle>
+    <AlphaX>Alpha: {0}%</AlphaX>
+  </BinEdit>
   <Bookmarks>
     <EditBookmark>Upravit záložku</EditBookmark>
     <AddBookmark>Přidat záložku</AddBookmark>
@@ -290,6 +406,7 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
   </ColumnPaste>
   <CompareSubtitles>
     <Title>Porovnat titulky</Title>
+    <Reload>Znovu načíst</Reload>
     <PreviousDifference>&amp;Předchozí rozdíl</PreviousDifference>
     <NextDifference>&amp;Další rozdíl</NextDifference>
     <SubtitlesNotAlike>Titulky nemají žádné podobnosti</SubtitlesNotAlike>
@@ -330,12 +447,16 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <Generate>Generovat</Generate>
   </DCinemaProperties>
   <DurationsBridgeGaps>
-    <Title>Překlenout malé mezery v trvání</Title>
+    <Title>Překlenout malé mezery mezi titulky</Title>
     <GapsBridgedX>Počet překlenutých malých mezer: {0}</GapsBridgedX>
     <GapToNext>Mezera do dalšího v sekundách</GapToNext>
+    <GapToNextFrames>Mezera do dalšího ve snímcích</GapToNextFrames>
     <BridgeGapsSmallerThanXPart1>Překlenout mezery menší než</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>milisekund</BridgeGapsSmallerThanXPart2>
+    <BridgeGapsSmallerThanXPart1Frames>Překlenout mezery menší než</BridgeGapsSmallerThanXPart1Frames>
+    <BridgeGapsSmallerThanXPart2Frames>snímků</BridgeGapsSmallerThanXPart2Frames>
     <MinMillisecondsBetweenLines>Min. milisekund mezi řádky</MinMillisecondsBetweenLines>
+    <MinFramesBetweenLines>Min. snímků mezi řádky</MinFramesBetweenLines>
     <ProlongEndTime>Předchozí text zabere celý čas mezery</ProlongEndTime>
     <DivideEven>Texty si rozdělí čas mezery</DivideEven>
   </DurationsBridgeGaps>
@@ -375,6 +496,8 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <DiskFormatCode>Kód formátu disku</DiskFormatCode>
     <DisplayStandardCode>Zobrazit standardní kód</DisplayStandardCode>
     <ColorRequiresTeletext>Barvy vyžadují teletext!</ColorRequiresTeletext>
+    <AlignmentRequiresTeletext>Zarovnání vyžaduje teletext!</AlignmentRequiresTeletext>
+    <TeletextCharsShouldBe38>'Max. znaků na řádek' pro teletext by mělo být 38!</TeletextCharsShouldBe38>
     <CharacterCodeTable>Tabulka znaků</CharacterCodeTable>
     <LanguageCode>Kód jazyka</LanguageCode>
     <OriginalProgramTitle>Původní název programu</OriginalProgramTitle>
@@ -408,13 +531,18 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <TextLeftJustifiedText>Text zarovnaný doleva</TextLeftJustifiedText>
     <TextCenteredText>Text zarovnaný na střed</TextCenteredText>
     <TextRightJustifiedText>Text zarovnaný doprava</TextRightJustifiedText>
+    <UseBoxForOneNewLine>Zaškrtněte ‚Použít pole kolem textu‘ pro pouze jeden nový řádek</UseBoxForOneNewLine>
   </EbuSaveOptions>
   <EffectKaraoke>
     <Title>Efekt Karaoke</Title>
     <ChooseColor>Zvolte barvu:</ChooseColor>
+    <TotalSeconds>Celkem milisekund:</TotalSeconds>
+    <EndDelayInSeconds>Zpoždění v milisekundách:</EndDelayInSeconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Efekt Psací stroj</Title>
+    <TotalSeconds>Celkem milisekund:</TotalSeconds>
+    <EndDelayInSeconds>Zpoždění konce v milisekundách:</EndDelayInSeconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Exportovat vlastní textový formát</Title>
@@ -441,6 +569,7 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <FontName>Název písma</FontName>
     <FontSize>Velikost písma</FontSize>
     <FontFace>Řez písma</FontFace>
+    <FontFaceRegular>Normální</FontFaceRegular>
     <Alignment>Zarovnání</Alignment>
     <Baseline>Účaří</Baseline>
   </ExportFcpXmlAdvanced>
@@ -468,14 +597,16 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <HalfTopBottom3D>Poloviční nad sebou</HalfTopBottom3D>
     <Depth>Hloubka</Depth>
     <ExportAllLines>Exportovat všechny řádky...</ExportAllLines>
-    <XImagesSavedInY>{0} obrázků uloženo do {1}</XImagesSavedInY>
+    <XImagesSavedInY>{0:#,##0} obrázků uloženo do {1}</XImagesSavedInY>
     <VideoResolution>Rozlišení videa</VideoResolution>
     <Align>Zarovnat</Align>
     <Left>Vlevo</Left>
     <Right>Vpravo</Right>
     <Center>Na střed</Center>
     <CenterLeftJustify>Na střed, do bloku vlevo</CenterLeftJustify>
+    <CenterLeftJustifyDialogs>Na střed, dialog do bloku vlevo</CenterLeftJustifyDialogs>
     <CenterTopJustify>Na střed, do bloku nahoru</CenterTopJustify>
+    <CenterRightJustify>Na střed, do bloku vpravo</CenterRightJustify>
     <BottomMargin>Dolní okraj</BottomMargin>
     <LeftRightMargin>Levý a pravý okraj</LeftRightMargin>
     <SaveBluRaySupAs>Zvolte název souboru Blu-ray sup</SaveBluRaySupAs>
@@ -483,6 +614,7 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <SaveFabImageScriptAs>Zvolte název souboru FAB image script</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Zvolte název souboru DVD Studio Pro STL</SaveDvdStudioProStlAs>
     <SaveDigitalCinemaInteropAs>Zvolte název souboru Digital Cinema Interop</SaveDigitalCinemaInteropAs>
+    <SaveDigitalCinemaSmpte2014>Zvolte název souboru Digital Cinema SMPTE 2014</SaveDigitalCinemaSmpte2014>
     <SavePremiereEdlAs>Zvolte název souboru Premiere EDL</SavePremiereEdlAs>
     <SaveFcpAs>Zvolte název souboru Final Cut Pro xml</SaveFcpAs>
     <SaveDostAs>Zvolte název souboru DoStudio dost</SaveDostAs>
@@ -527,12 +659,12 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
   </ExtractDateTimeInfo>
   <FindDialog>
     <Title>Najít</Title>
-    <Find>Najít</Find>
+    <Find>&amp;Najít</Find>
     <Normal>&amp;Normálně</Normal>
     <CaseSensitive>Rozlišovat &amp;velikost písmen</CaseSensitive>
     <RegularExpression>&amp;Regulární výraz</RegularExpression>
-    <WholeWord>Celé slovo</WholeWord>
-    <Count>Počet</Count>
+    <WholeWord>&amp;Celé slovo</WholeWord>
+    <Count>&amp;Počet</Count>
     <XNumberOfMatches>{0:#,##0} shod</XNumberOfMatches>
     <OneMatch>Jedna shoda</OneMatch>
   </FindDialog>
@@ -559,13 +691,14 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <RemovedEmptyLineAtBottom>Odebrat prázdný řádek na konci</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Odebrat prázdný řádek uprostřed</RemovedEmptyLineInMiddle>
     <RemovedEmptyLinesUnsedLineBreaks>Odebrat prázdné řádky nebo nevyužitá zalomení řádků</RemovedEmptyLinesUnsedLineBreaks>
-    <EmptyLinesRemovedX>Odebráno prázdných řádků: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Opravit překrývání časů zobrazení</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Opravit krátké časy zobrazení</FixShortDisplayTimes>
     <FixLongDisplayTimes>Opravit dlouhé časy zobrazení</FixLongDisplayTimes>
+    <FixShortGaps>Opravit krátké mezery</FixShortGaps>
     <FixInvalidItalicTags>Opravit neplatné značky kurzívy</FixInvalidItalicTags>
     <RemoveUnneededSpaces>Odebrat nepotřebné mezery</RemoveUnneededSpaces>
     <RemoveUnneededPeriods>Odebrat nepotřebné tečky</RemoveUnneededPeriods>
+    <FixCommas>Opravit čárky</FixCommas>
     <FixMissingSpaces>Opravit chybějící mezery</FixMissingSpaces>
     <BreakLongLines>Zalomit dlouhé řádky</BreakLongLines>
     <RemoveLineBreaks>Odebrat zalomení řádků v krátkých textech s jedinou větou</RemoveLineBreaks>
@@ -581,37 +714,35 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <CommonOcrErrorsFixed>Opraveny běžné chyby OCR (použit soubor OcrReplaceList): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Odebrat mezeru mezi čísly</RemoveSpaceBetweenNumber>
     <FixDialogsOnOneLine>Opravit dialogy na jednom řádku</FixDialogsOnOneLine>
-    <RemoveSpaceBetweenNumbersFixed>Opraveno odebrání mezery mezi čísly: {0}</RemoveSpaceBetweenNumbersFixed>
+    <RemoveDialogFirstInNonDialogs>Odebrat pomlčku na začátku prvního řádku, pokud se nejedná o dialogy</RemoveDialogFirstInNonDialogs>
+    <NormalizeStrings>Normalizovat řetězce</NormalizeStrings>
     <FixTurkishAnsi>Opravit znaky v tureckém ANSI (islandština) na Unicode</FixTurkishAnsi>
     <FixDanishLetterI>Opravit dánské písmeno 'i'</FixDanishLetterI>
     <FixSpanishInvertedQuestionAndExclamationMarks>Opravit španělské obrácené otazníky a vykřičníky</FixSpanishInvertedQuestionAndExclamationMarks>
     <AddMissingQuote>Přidat jedny chybějící uvozovky (")</AddMissingQuote>
     <AddMissingQuotes>Přidat více chybějících uvozovek (")</AddMissingQuotes>
-    <FixHyphens>Opravit řádky začínající pomlčkou (-)</FixHyphens>
-    <FixHyphensAdd>Opravit (přidat pomlčku) dvojice řádků pouze s jednou pomlčkou (-)</FixHyphensAdd>
-    <FixHyphen>Opravit řádek začínající pomlčkou (-)</FixHyphen>
-    <XHyphensFixed>Opravených pomlček: {0}</XHyphensFixed>
+    <RemoveHyphensSingleLine>Odebrat dialogové pomlčky v jednom řádku</RemoveHyphensSingleLine>
+    <FixHyphensInDialogs>Opravit pomlčky v dialozích prostřednictvím stylu: {0}</FixHyphensInDialogs>
     <AddMissingQuotesExample>"Jak se máte? -&gt; "Jak se máte?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Přidáno chybějících uvozovek: {0}</XMissingQuotesAdded>
-    <Fix3PlusLines>Opravit titulky s více než dvěma řádky</Fix3PlusLines>
     <Fix3PlusLine>Opravit titulek s více než dvěma řádky</Fix3PlusLine>
-    <X3PlusLinesFixed>Opraveno titulků s více než dvěma řádky: {0}</X3PlusLinesFixed>
+    <Fix3PlusLines>Opravit titulky s více než dvěma řádky</Fix3PlusLines>
     <Analysing>Analyzování...</Analysing>
     <NothingToFix>Není co opravovat :)</NothingToFix>
     <FixesFoundX>Nalezeno oprav: {0}</FixesFoundX>
     <XFixesApplied>Použito oprav: {0}</XFixesApplied>
-    <NothingToFixBut>Není co opravovat, ale pár věcí lze vylepšit - viz zpráva pro podrobnosti</NothingToFixBut>
-    <UncheckedFixLowercaseIToUppercaseI>Nezatrženo "Opravit samotná malá 'i' na 'I' (angličtina)"</UncheckedFixLowercaseIToUppercaseI>
-    <XIsChangedToUppercase>{0} písmen 'i' změněno na velká</XIsChangedToUppercase>
+    <NothingFixableBut>Nic nemůže být upraveno automaticky. Titulky obsahují chyby - podrobnosti naleznete v protokolu</NothingFixableBut>
+    <XFixedBut>{0} problémů opraveno, ale titulky stále obsahují chyby - podrobnosti naleznete v protokolu</XFixedBut>
+    <XCouldBeFixedBut>{0} problémů mohlo být opraveno, ale titulky budou stále obsahovat chyby - podrobnosti naleznete v protokolu</XCouldBeFixedBut>
     <FixFirstLetterToUppercaseAfterParagraph>Opravit první písmeno na velké po odstavci</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>Sloučit krátký řádek (samostatná věta)</MergeShortLine>
     <MergeShortLineAll>Sloučit krátký řádek (vše kromě rozhovorů)</MergeShortLineAll>
-    <XLineBreaksAdded>Přidáno {0} zalomení řádků</XLineBreaksAdded>
     <BreakLongLine>Zalomit dlouhý řádek</BreakLongLine>
     <FixLongDisplayTime>Opravit dlouhý čas zobrazení</FixLongDisplayTime>
     <FixInvalidItalicTag>Opravit neplatnou značku kurzívy</FixInvalidItalicTag>
     <FixShortDisplayTime>Opravit krátký čas zobrazení</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Opravit překrývající čas zobrazení</FixOverlappingDisplayTime>
+    <FixShortGap>Opravit krátkou mezeru</FixShortGap>
     <FixInvalidItalicTagsExample>&lt;i&gt;Co je mi do toho.&lt;i&gt; -&gt; &lt;i&gt;Co je mi do toho.&lt;/i&gt;</FixInvalidItalicTagsExample>
     <RemoveUnneededSpacesExample>Hej , chlape. -&gt; Hej, chlape.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hej, chlape!. -&gt; Hej, chlape!</RemoveUnneededPeriodsExample>
@@ -622,36 +753,20 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <UnableToFixStartTimeLaterThanEndTime>Nelze opravit text číslo {0}: Čas začátku je později než čas konce: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} opraveno na: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>Nelze opravit text číslo {0}: {1}</UnableToFixTextXY>
-    <XOverlappingTimestampsFixed>Opraveno {0} překrývajících se časových kódů</XOverlappingTimestampsFixed>
-    <XDisplayTimesProlonged>Prodlouženo {0} časů zobrazení</XDisplayTimesProlonged>
-    <XInvalidHtmlTagsFixed>Opraveno {0} neplatných značek HTML</XInvalidHtmlTagsFixed>
-    <XDisplayTimesShortned>Zkráceno {0} časů zobrazení</XDisplayTimesShortned>
-    <XLinesUnbreaked>Zrušeno zalomení {0} řádků</XLinesUnbreaked>
     <UnneededSpace>Nadbytečná mezera</UnneededSpace>
-    <XUnneededSpacesRemoved>Odebráno {0} nadbytečných mezer</XUnneededSpacesRemoved>
     <UnneededPeriod>Nadbytečná tečka</UnneededPeriod>
-    <XUnneededPeriodsRemoved>Odebráno {0} nadbytečných teček</XUnneededPeriodsRemoved>
     <FixMissingSpace>Opravit chybějící mezeru</FixMissingSpace>
-    <XMissingSpacesAdded>Přidáno {0} chybějících mezer</XMissingSpacesAdded>
     <FixUppercaseIInsideLowercaseWord>Opravit 'i' velkými písmeny uprostřed slova malými písmeny</FixUppercaseIInsideLowercaseWord>
-    <XPeriodsAdded>Přidáno {0} teček.</XPeriodsAdded>
     <FixMissingPeriodAtEndOfLine>Přidat chybějící tečku na konec řádku</FixMissingPeriodAtEndOfLine>
-    <XDoubleApostrophesFixed>Opraveno {0} dvojitých apostrofů.</XDoubleApostrophesFixed>
-    <XUppercaseIsFoundInsideLowercaseWords>Nalezeno {0} 'i' velkými písmeny uprostřed slov malými písmeny</XUppercaseIsFoundInsideLowercaseWords>
     <RefreshFixes>Obnovit dostupné opravy</RefreshFixes>
     <ApplyFixes>Použít vybrané opravy</ApplyFixes>
-    <AutoBreak>Auto &amp;br</AutoBreak>
+    <AutoBreak>&amp;Automatické zalomení</AutoBreak>
     <Unbreak>&amp;Zrušit zalomení</Unbreak>
     <FixDoubleDash>Opravit '--' -&gt; '...'</FixDoubleDash>
     <FixDoubleGreaterThan>Odebrat '&gt;&gt;'</FixDoubleGreaterThan>
     <FixEllipsesStart>Odebrat úvodní '...'</FixEllipsesStart>
     <FixMissingOpenBracket>Opravit chybějící '[' v řádku</FixMissingOpenBracket>
     <FixMusicNotation>Nahradit hudební symboly (např. âTª) upřednostňovaným symbolem</FixMusicNotation>
-    <XFixDoubleDash>Opraveno {0} '--'</XFixDoubleDash>
-    <XFixDoubleGreaterThan>Odebráno {0} '&gt;&gt;'</XFixDoubleGreaterThan>
-    <XFixEllipsesStart>Odebráno {0} začátečních '...'</XFixEllipsesStart>
-    <XFixMissingOpenBracket>Opraveno {0} chybějících '[' v řádku</XFixMissingOpenBracket>
-    <XFixMusicNotation>Opraveno {0} hudebních symbolů v řádku</XFixMusicNotation>
     <FixDoubleDashExample>'Páni-- jo!' -&gt; 'Páni... jo!'</FixDoubleDashExample>
     <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Jez!' -&gt; 'Robert: Jez!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... a pak my' -&gt; 'a pak my'</FixEllipsesStartExample>
@@ -662,11 +777,28 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <FixOcrErrorExample>H0nza -&gt; Honza</FixOcrErrorExample>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Ahoj, Honzo! - Ahoj, Jano! -&gt; Ahoj, Honzo!&lt;br /&gt;- Ahoj, Jano!</FixDialogsOneLineExample>
+    <RemoveDialogFirstInNonDialogsExample>- Jak se máš? -&gt; Jak se máš?</RemoveDialogFirstInNonDialogsExample>
     <SelectDefault>Vyberte výchozí</SelectDefault>
+    <SetDefault>Nastavit aktuální opravy jako výchozí</SetDefault>
+    <FixContinuationStyleX>Opravit sytl pokračování: {0}</FixContinuationStyleX>
+    <FixUnnecessaryLeadingDots>Odebrat zbytečné úvodní tečky</FixUnnecessaryLeadingDots>
   </FixCommonErrors>
+  <GenerateBlankVideo>
+    <Title>Generovat prázdný soubor videa</Title>
+    <CheckeredImage>Šachovnice</CheckeredImage>
+    <SolidColor>Jednobarevný</SolidColor>
+    <DurationInMinutes>Trvání v minutách</DurationInMinutes>
+  </GenerateBlankVideo>
+  <GenerateVideoWithBurnedInSubs>
+    <Title>Generovat video s vypálenými titulky</Title>
+    <Info>Vygeneruje soubor videa s vypálenými titulky.
+
+Poznámka: Advanced Substation Alpha je podporováno.</Info>
+    <XGeneratedWithBurnedInSubs>"{0}" vygenerováno s vypálenými titulky.</XGeneratedWithBurnedInSubs>
+  </GenerateVideoWithBurnedInSubs>
   <GetDictionaries>
     <Title>Potřebujete slovníky?</Title>
-    <DescriptionLine1>Kontrola pravopisu programu Subtitle Edit je založena na jádru programu NHunspell,</DescriptionLine1>
+    <DescriptionLine1>Kontrola pravopisu programu Subtitle Edit je založena na modulu programu NHunspell,</DescriptionLine1>
     <DescriptionLine2>který používá slovníky kontroly pravopisu z programu LibreOffice.</DescriptionLine2>
     <ChooseLanguageAndClickDownload>Zvolte svůj jazyk a klikněte na Stáhnout</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Otevřít složku 'Dictionaries'</OpenDictionariesFolder>
@@ -684,7 +816,7 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <XDownloaded>{0} byla stažena a nainstalována</XDownloaded>
   </GetTesseractDictionaries>
   <GoogleTranslate>
-    <Title>Překladač Google</Title>
+    <Title>Překladač</Title>
     <From>Z:</From>
     <To>Do:</To>
     <Translate>Přeložit</Translate>
@@ -694,10 +826,24 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <MsClientSecretNeeded>Bohužel, pro používání nejnovějšího překladače Microsoft potřebujete od Microsoftu klíč Cognitive Services 'Translator Text'.
 
 Přejděte na "Volby -&gt; Nastavení -&gt; Nástroje" pro zadání vašeho klíče.</MsClientSecretNeeded>
-    <GoogleApiKeyNeeded>Bohužel, pro používání nejnovějšího překladače Google potřebujete od Google klíč API.
-
-Přejděte na "Volby -&gt; Nastavení -&gt; Nástroje" pro zadání vašeho klíče API pro překladač Google.</GoogleApiKeyNeeded>
-    <GoogleNoApiKeyWarning>Pokus o překlad bez klíče API... (pomalé a omezená data)</GoogleNoApiKeyWarning>
+    <GoogleNoApiKeyWarning>Pokus o překlad bez klíče API... (pomalé a omezená data)
+Pro použití klíče API pejděte na "Volby -&gt; Nastavení -&gt; Nástroje" pro zadání vašeho klíče API pro překladač Google.</GoogleNoApiKeyWarning>
+    <Service>Služba:</Service>
+    <LineMergeHandling>Sloučení řádků:</LineMergeHandling>
+    <ProcessorMergeNext>Sloučit maximálně dva řádky</ProcessorMergeNext>
+    <ProcessorSentence>Sloučit věty</ProcessorSentence>
+    <ProcessorSingle>Neslučovat</ProcessorSingle>
+    <AutoTranslateViaCopyPaste>Automaticky přeložit pomocí zkopírování a vložení</AutoTranslateViaCopyPaste>
+    <CopyPasteMaxSize>Maximální velikost bloku</CopyPasteMaxSize>
+    <AutoCopyToClipboard>Automaticky zkopírovat do schránky</AutoCopyToClipboard>
+    <AutoCopyLineSeparator>Oddělovač řádků</AutoCopyLineSeparator>
+    <TranslateBlockXOfY>Přeložit blok {0} z {1}</TranslateBlockXOfY>
+    <TranslateBlockInfo>Přejděte na překladač a vložte text, zkopírujte výsledek zpět do schránky a klikněte na níže uvedené tlačítko</TranslateBlockInfo>
+    <TranslateBlockGetFromClipboard>Získat přeložený text ze schránky
+(Ctrl + V)</TranslateBlockGetFromClipboard>
+    <TranslateBlockCopySourceText>Zkopírovat zdrojový text do schránky</TranslateBlockCopySourceText>
+    <TranslateBlockClipboardError1>Schránka obsahuje zdrojový text!</TranslateBlockClipboardError1>
+    <TranslateBlockClipboardError2>Přejděte na překladač a přeložte, zkopírujte výsledek do schránky a klikněte znovu na toto tlačítko.</TranslateBlockClipboardError2>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Překladač Google vs. Microsoft</Title>
@@ -706,7 +852,7 @@ Přejděte na "Volby -&gt; Nastavení -&gt; Nástroje" pro zadání vašeho klí
     <Translate>Přeložit</Translate>
     <SourceText>Zdrojový text</SourceText>
     <GoogleTranslate>Překladač Google</GoogleTranslate>
-    <MicrosoftTranslate>Překladač Microsoft</MicrosoftTranslate>
+    <MicrosoftTranslate>Překladač Microsoft Bing</MicrosoftTranslate>
   </GoogleOrMicrosoftTranslate>
   <GoToLine>
     <Title>Přejít na řádek číslo</Title>
@@ -751,6 +897,8 @@ Přejděte na "Volby -&gt; Nastavení -&gt; Nástroje" pro zadání vašeho klí
     <RemoveEmptyLines>Odebrat prázdné řádky</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>Odebrat řádky bez písmen</RemoveLinesWithoutLetters>
     <GenerateTimeCodes>Generovat časové kódy</GenerateTimeCodes>
+    <TakeTimeFromCurrentFile>Vzít čas z aktuálního souboru</TakeTimeFromCurrentFile>
+    <TakeTimeFromFileName>Vzít čas z názvu souboru</TakeTimeFromFileName>
     <GapBetweenSubtitles>Mezera mezi titulky (milisekundy)</GapBetweenSubtitles>
     <Auto>Automaticky</Auto>
     <Fixed>Opraveno</Fixed>
@@ -767,15 +915,18 @@ Přejděte na "Volby -&gt; Nastavení -&gt; Nástroje" pro zadání vašeho klí
     <Title>Spojit titulky</Title>
     <Information>Přidat titulky pro spojení (přetažení je také podporováno)</Information>
     <NumberOfLines>Č. řádků</NumberOfLines>
-    <StartTime>Počáteční čas</StartTime>
-    <EndTime>Konečný čas</EndTime>
+    <StartTime>Čas začátku</StartTime>
+    <EndTime>Čas konce</EndTime>
     <FileName>Název souboru</FileName>
     <Join>Spojit</Join>
     <TotalNumberOfLinesX>Celkový počet řádků: {0:#,###,###}</TotalNumberOfLinesX>
+    <Note>Poznámka: Soubory musí již mít správné časové kódy</Note>
+    <AppendTimeCodes>Přidat čas konce předchozího souboru</AppendTimeCodes>
+    <AddMs>Přidat milisekund za každý soubor</AddMs>
   </JoinSubtitles>
   <LanguageNames>
-    <NotSpecified>Not Specified</NotSpecified>
-    <UnknownCodeX>Unknown ({0})</UnknownCodeX>
+    <NotSpecified>Nezadáno</NotSpecified>
+    <UnknownCodeX>Neznámý ({0})</UnknownCodeX>
     <aaName>Afar</aaName>
     <abName>Abkhazian</abName>
     <afName>Afrikaans</afName>
@@ -928,28 +1079,24 @@ Přejděte na "Volby -&gt; Nastavení -&gt; Nástroje" pro zadání vašeho klí
         <Save>&amp;Uložit</Save>
         <SaveAs>Uložit &amp;jako...</SaveAs>
         <RestoreAutoBackup>Obnovit automatickou zálohu...</RestoreAutoBackup>
-        <AdvancedSubStationAlphaProperties>Vlastnosti Advanced Sub Station Alpha...</AdvancedSubStationAlphaProperties>
-        <SubStationAlphaProperties>Vlastnosti Sub Station Alpha...</SubStationAlphaProperties>
-        <EbuProperties>Vlastnosti EBU STL...</EbuProperties>
-        <DvdStuioProProperties>Vlastnosti DVD Studio Pro...</DvdStuioProProperties>
-        <TimedTextProperties>Vlastnosti časovaného textu...</TimedTextProperties>
-        <PacProperties>Vlastnosti PAC...</PacProperties>
-        <OpenOriginal>Otevřít původní titulky (překladatelský režim)...</OpenOriginal>
+        <FormatXProperties>Vlastnosti {0}...</FormatXProperties>
+       <OpenOriginal>Otevřít původní titulky (překladatelský režim)...</OpenOriginal>
         <SaveOriginal>Uložit původní titulky</SaveOriginal>
         <CloseOriginal>Zavřít původní titulky</CloseOriginal>
         <OpenContainingFolder>Otevřít nadřazenou složku</OpenContainingFolder>
         <Compare>&amp;Porovnat...</Compare>
         <Statistics>&amp;Statistika...</Statistics>
         <Plugins>Doplňky...</Plugins>
-        <ImportOcrFromDvd>Importovat/OCR titulky z VOB/IFO (DVD)...</ImportOcrFromDvd>
-        <ImportOcrVobSubSubtitle>Importovat/OCR titulky VobSub (sub/idx)...</ImportOcrVobSubSubtitle>
-        <ImportBluRaySupFile>Importovat/OCR soubor titulků Blu-ray (.sup)...</ImportBluRaySupFile>
-        <ImportXSub>Importovat/OCR XSub z divx/avi...</ImportXSub>
-        <ImportSubtitleFromMatroskaFile>Importovat titulky ze souboru Matroska...</ImportSubtitleFromMatroskaFile>
-        <ImportSubtitleWithManualChosenEncoding>Importovat titulky s ručně zvoleným kódováním...</ImportSubtitleWithManualChosenEncoding>
-        <ImportText>Importovat prostý text...</ImportText>
-        <ImportImages>Importovat obrázky...</ImportImages>
-        <ImportTimecodes>Importovat časové kódy...</ImportTimecodes>
+        <ImportSubtitleFromVideoFile>Titulky ze souboru videa...</ImportSubtitleFromVideoFile>
+        <ImportOcrFromDvd>Titulky z VOB/IFO (DVD)...</ImportOcrFromDvd>
+        <ImportOcrVobSubSubtitle>Titulky VobSub (sub/idx) pro OCR...</ImportOcrVobSubSubtitle>
+        <ImportBluRaySupFile>Soubor titulků Blu-ray (.sup) pro OCR...</ImportBluRaySupFile>
+        <ImportBluRaySupFileEdit>Soubor titulků Blu-ray (.sup) pro úpravu...</ImportBluRaySupFileEdit>
+        <ImportSubtitleWithManualChosenEncoding>Titulky s ručně zvoleným kódováním...</ImportSubtitleWithManualChosenEncoding>
+        <ImportText>Prostý text...</ImportText>
+        <ImportImages>Obrázky...</ImportImages>
+        <ImportTimecodes>Časové kódy...</ImportTimecodes>
+        <Import>Importovat</Import>
         <Export>Exportovat</Export>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
         <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
@@ -989,6 +1136,7 @@ Přejděte na "Volby -&gt; Nastavení -&gt; Nástroje" pro zadání vašeho klí
         <GoToSubtitleNumber>&amp;Přejít na řádek číslo...</GoToSubtitleNumber>
         <RightToLeftMode>Režim zprava doleva</RightToLeftMode>
         <FixRtlViaUnicodeControlCharacters>Opravit zprava do leva pomocí řídících znaků Unicode (pro vybrané řádky)</FixRtlViaUnicodeControlCharacters>
+        <RemoveUnicodeControlCharacters>Odebrat řídící znaky Unicode (z vybraných řádků)</RemoveUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Obrátit začátek a konec zprava doleva (pro vybrané řádky)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Zobrazit původní text v náhledech audia a videa</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Změnit výběr...</ModifySelection>
@@ -998,7 +1146,7 @@ Přejděte na "Volby -&gt; Nastavení -&gt; Nástroje" pro zadání vašeho klí
         <Title>Nástroje</Title>
         <AdjustDisplayDuration>&amp;Upravit trvání...</AdjustDisplayDuration>
         <ApplyDurationLimits>Použít limity trvání...</ApplyDurationLimits>
-        <SubtitlesBridgeGaps>Překlenout mezery v trvání...</SubtitlesBridgeGaps>
+        <SubtitlesBridgeGaps>Překlenout mezery mezi titulky...</SubtitlesBridgeGaps>
         <FixCommonErrors>&amp;Opravit běžné chyby...</FixCommonErrors>
         <StartNumberingFrom>Přečíslovat...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Odebrat text pro sluchově postižené...</RemoveTextForHearingImpaired>
@@ -1008,8 +1156,8 @@ Přejděte na "Volby -&gt; Nastavení -&gt; Nástroje" pro zadání vašeho klí
         <MergeShortLines>Sloučit krátké řádky...</MergeShortLines>
         <MergeDuplicateText>Sloučit řádky se stejným textem...</MergeDuplicateText>
         <MergeSameTimeCodes>Sloučit řádky se stejnými časovými kódy...</MergeSameTimeCodes>
-        <SplitLongLines>Rozdělit dlouhé řádky...</SplitLongLines>
-        <MinimumDisplayTimeBetweenParagraphs>Minimální čas zobrazení mezi titulky...</MinimumDisplayTimeBetweenParagraphs>
+        <SplitLongLines>Zalomit nebo rozdělit dlouhé řádky...</SplitLongLines>
+        <MinimumDisplayTimeBetweenParagraphs>Použít minimální mezeru mezi titulky...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Seřadit podle</SortBy>
         <NetflixQualityCheck>Kontrola kvality Netflix...</NetflixQualityCheck>
         <Number>Čísla</Number>
@@ -1036,13 +1184,17 @@ Přejděte na "Volby -&gt; Nastavení -&gt; Nástroje" pro zadání vašeho klí
       <Video>
         <Title>Video</Title>
         <OpenVideo>Otevřít soubor videa...</OpenVideo>
-        <OpenVideoFromUrl>Otevřít video z adresy url...</OpenVideoFromUrl>
+        <OpenVideoFromUrl>Otevřít video z URL...</OpenVideoFromUrl>
         <OpenDvd>Otevřít DVD...</OpenDvd>
         <ChooseAudioTrack>Zvolit zvukovou stopu</ChooseAudioTrack>
         <CloseVideo>Zavřít soubor videa</CloseVideo>
+        <OpenSecondSubtitle>Otevřít druhý soubor titulků...</OpenSecondSubtitle>
         <SetVideoOffset>Nastavit posun videa...</SetVideoOffset>
         <SmptTimeMode>Časování SMPTE (drop frame)</SmptTimeMode>
         <GenerateTextFromVideo>Generovat text z videa...</GenerateTextFromVideo>
+        <GenerateBlankVideo>Generovat prázdné video...</GenerateBlankVideo>
+        <GenerateVideoWithBurnedInSub>Generovat video s vypálenými titulky...</GenerateVideoWithBurnedInSub>
+        <ImportChaptersFromVideo>Importovat kapitoly z videa</ImportChaptersFromVideo>
         <GenerateImportSceneChanges>Generovat nebo importovat změny scén...</GenerateImportSceneChanges>
         <RemoveSceneChanges>Odebrat změny scén</RemoveSceneChanges>
         <WaveformBatchGenerate>Dávkově generovat křivky...</WaveformBatchGenerate>
@@ -1070,9 +1222,8 @@ Přejděte na "Volby -&gt; Nastavení -&gt; Nástroje" pro zadání vašeho klí
       </Synchronization>
       <AutoTranslate>
         <Title>Automatický překlad</Title>
-        <TranslatePoweredByGoogle>Přeložit (používá technologii Google)...</TranslatePoweredByGoogle>
-        <TranslatePoweredByMicrosoft>Přeložit (používá technologii Microsoft)...</TranslatePoweredByMicrosoft>
-        <TranslateFromSwedishToDanish>Přeložit ze švédštiny do dánštiny (používá technologii nikse.dk)...</TranslateFromSwedishToDanish>
+        <AutoTranslate>Automaticky přeložit...</AutoTranslate>
+        <AutoTranslateViaCopyPaste>Automaticky přeložit pomocí zkopírování a vložení...</AutoTranslateViaCopyPaste>
       </AutoTranslate>
       <Options>
         <Title>Volby</Title>
@@ -1112,9 +1263,9 @@ Přejděte na "Volby -&gt; Nastavení -&gt; Nástroje" pro zadání vašeho klí
       </ToolBar>
       <ContextMenu>
         <SizeAllColumnsToFit>Přizpůsobit velikost všech sloupců</SizeAllColumnsToFit>
-        <AdvancedSubStationAlphaSetStyle>Advanced Sub Station Alpha - nastavit styl</AdvancedSubStationAlphaSetStyle>
-        <SubStationAlphaSetStyle>Sub Station Alpha - nastavit styl</SubStationAlphaSetStyle>
+        <SetStyle>Nastavit styl</SetStyle>
         <SetActor>Nastavit herce</SetActor>
+        <AssaTools>Nástroje ASSA</AssaTools>
         <SubStationAlphaStyles>Styly Sub Station Alpha...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Styly Advanced Sub Station Alpha...</AdvancedSubStationAlphaStyles>
         <TimedTextSetRegion>Časovaný text - nastavit oblast</TimedTextSetRegion>
@@ -1151,7 +1302,16 @@ Přejděte na "Volby -&gt; Nastavení -&gt; Nástroje" pro zadání vašeho klí
         <MergeSelectedLinesAsDialog>Sloučit vybrané řádky jako dialog</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Sloučit s předchozím řádkem</MergeWithLineBefore>
         <MergeWithLineAfter>Sloučit s následujícím řádkem</MergeWithLineAfter>
-        <Normal>Normální (odebrat formátování)</Normal>
+        <ExtendToLineBefore>Rozšířit na předchozí řádek</ExtendToLineBefore>
+        <ExtendToLineAfter>Rozšířit na následující řádek</ExtendToLineAfter>
+        <RemoveFormatting>Odebrat formátování</RemoveFormatting>
+        <RemoveFormattingAll>Odebrat veškeré formátování</RemoveFormattingAll>
+        <RemoveFormattingBold>Odebrat tučné</RemoveFormattingBold>
+        <RemoveFormattingItalic>Odebrat kurzívu</RemoveFormattingItalic>
+        <RemoveFormattingUnderline>Odebrat podtržené</RemoveFormattingUnderline>
+        <RemoveFormattingColor>Odebrat barvu</RemoveFormattingColor>
+        <RemoveFormattingFontName>Odebrat název písma</RemoveFormattingFontName>
+        <RemoveFormattingAlignment>Odebrat zarovnání</RemoveFormattingAlignment>
         <Underline>Podtržené</Underline>
         <Box>Pole</Box>
         <Color>Barva...</Color>
@@ -1166,8 +1326,13 @@ Přejděte na "Volby -&gt; Nastavení -&gt; Nástroje" pro zadání vašeho klí
         <ShowSelectedLinesEarlierLater>Zobrazit vybrané řádky dříve nebo později...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Vizuální synchronizace vybraných řádků...</VisualSyncSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Přeložit Googlem nebo Microsoftem vybrané řádky...</GoogleAndMicrosoftTranslateSelectedLine>
-        <GoogleTranslateSelectedLines>Přeložit vybrané řádky...</GoogleTranslateSelectedLines>
+        <TranslateSelectedLines>Přeložit vybrané řádky...</TranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Nastavit trvání pro vybrané řádky...</AdjustDisplayDurationForSelectedLines>
+        <ApplyDurationLimitsForSelectedLines>Použít limity trvání pro vybrané řádky...</ApplyDurationLimitsForSelectedLines>
+        <ApplyCustomOverrideTag>Použít vlastní značky přepsání...</ApplyCustomOverrideTag>
+        <SetPosition>Nastavit pozici...</SetPosition>
+        <GenerateProgressBar>Generovat indikátor průběhu...</GenerateProgressBar>
+        <AssaResolutionChanger>Změnit rozlišení skriptu...</AssaResolutionChanger>
         <FixCommonErrorsInSelectedLines>Opravit běžné chyby ve vybraných řádcích...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Změnit velikost písmen pro vybrané řádky...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Uložit vybrané řádky jako...</SaveSelectedLines>
@@ -1175,8 +1340,10 @@ Přejděte na "Volby -&gt; Nastavení -&gt; Nástroje" pro zadání vašeho klí
         <WebVTTRemoveVoices>Odebrat hlasy</WebVTTRemoveVoices>
         <NewActor>Nový herec...</NewActor>
         <RemoveActors>Odebrat herce</RemoveActors>
-        <EditBookmark>Upravit záložku</EditBookmark>
+        <EditBookmark>Upravit záložku...</EditBookmark>
         <RemoveBookmark>Odebrat záložku</RemoveBookmark>
+        <GoToSourceView>Přejít na zobrazení zdroje</GoToSourceView>
+        <GoToListView>Přejít na zobrazení seznamu</GoToListView>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1212,8 +1379,10 @@ Přejděte na "Volby -&gt; Nastavení -&gt; Nástroje" pro zadání vašeho klí
       <AutoContinueInXSeconds>Automatické pokračování za {0} sekund</AutoContinueInXSeconds>
       <StillTypingAutoContinueStopped>Ještě píšete... automatické pokračování zastaveno</StillTypingAutoContinueStopped>
       <InsertNewSubtitleAtVideoPosition>&amp;Vložit nový titulek na pozici videa</InsertNewSubtitleAtVideoPosition>
+      <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Vložit nový titulek na pozici videa (bez zaměření na textové pole)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
       <Auto>Automaticky</Auto>
       <PlayFromJustBeforeText>Přehrát těsně před &amp;textem</PlayFromJustBeforeText>
+      <PlayFromBeginning>Přehrát od začátku videa</PlayFromBeginning>
       <Pause>Pozastavit</Pause>
       <GoToSubtitlePositionAndPause>Přejít na pozici a pozastavit</GoToSubtitlePositionAndPause>
       <SetStartTime>Nastavit čas &amp;začátku</SetStartTime>
@@ -1223,6 +1392,7 @@ Přejděte na "Volby -&gt; Nastavení -&gt; Nástroje" pro zadání vašeho klí
       <SetStartTimeAndOffsetTheRest>Nastavit začátek a &amp;posunout zbytek</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Vyhledat text online</SearchTextOnline>
       <GoogleTranslate>Překladač Google</GoogleTranslate>
+      <AutoTranslate>Automaticky přeložit</AutoTranslate>
       <GoogleIt>Vygooglit</GoogleIt>
       <SecondsBackShort>&lt;&lt;</SecondsBackShort>
       <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
@@ -1239,6 +1409,7 @@ Přejděte na "Volby -&gt; Nastavení -&gt; Nástroje" pro zadání vašeho klí
     <SaveChangesToOriginalX>Uložit změny do původního souboru {0}?</SaveChangesToOriginalX>
     <SaveSubtitleAs>Uložit titulky jako...</SaveSubtitleAs>
     <SaveOriginalSubtitleAs>Uložit původní titulky jako...</SaveOriginalSubtitleAs>
+    <CannotSaveEmptySubtitle>Nelze uložit prázdné titulky</CannotSaveEmptySubtitle>
     <NoSubtitleLoaded>Nenačteny žádné titulky</NoSubtitleLoaded>
     <VisualSyncSelectedLines>Vizuální synchronizace - vybrané řádky</VisualSyncSelectedLines>
     <VisualSyncTitle>Vizuální synchronizace</VisualSyncTitle>
@@ -1261,6 +1432,7 @@ Přejděte na "Volby -&gt; Nastavení -&gt; Nástroje" pro zadání vašeho klí
 Soubor je pouze pro čtení!</FileXIsReadOnly>
     <UnableToSaveSubtitleX>Nelze uložit soubor titulků {0}
 Titulky se zdají být prázdné - zkuste je znovu uložit, pokud pracujete na platných titulcích!</UnableToSaveSubtitleX>
+    <FormatXShouldUseUft8>Při ukládání souborů {0} by mělo být použito kódování UTF-8!</FormatXShouldUseUft8>
     <BeforeNew>Před novým</BeforeNew>
     <New>Nový</New>
     <BeforeConvertingToX>Před převodem na {0}</BeforeConvertingToX>
@@ -1319,7 +1491,7 @@ Pokračovat?</SubtitleAppendPrompt>
     <SubtitleAppendedX>Připojeny titulky: {0}</SubtitleAppendedX>
     <SubtitleNotAppended>Titulky NEBYLY připojeny!</SubtitleNotAppended>
     <GoogleTranslate>Překladač Google</GoogleTranslate>
-    <MicrosoftTranslate>Překladač Microsoft</MicrosoftTranslate>
+    <MicrosoftTranslate>Překladač Microsoft Bing</MicrosoftTranslate>
     <BeforeGoogleTranslation>Před překladem Googlem</BeforeGoogleTranslation>
     <SelectedLinesTranslated>Přeloženy vybrané řádky</SelectedLinesTranslated>
     <SubtitleTranslated>Přeloženy titulky</SubtitleTranslated>
@@ -1329,7 +1501,6 @@ Pokračovat?</SubtitleAppendPrompt>
     <BeforeSwedishToDanishTranslation>Před překladem ze švédštiny do dánštiny</BeforeSwedishToDanishTranslation>
     <TranslationFromSwedishToDanishComplete>Dokončen překlad ze švédštiny do dánštiny</TranslationFromSwedishToDanishComplete>
     <TranslationFromSwedishToDanishFailed>Překlad ze švédštiny do dánštiny selhal</TranslationFromSwedishToDanishFailed>
-    <BeforeUndo>Před vrácením zpět</BeforeUndo>
     <UndoPerformed>Provedeno vrácení zpět</UndoPerformed>
     <RedoPerformed>Provedeno provedení znovu</RedoPerformed>
     <NothingToUndo>Není co vrátit zpět</NothingToUndo>
@@ -1343,39 +1514,43 @@ Pokračovat?</SubtitleAppendPrompt>
     <SpellCheck>Kontrola pravopisu</SpellCheck>
     <BeforeSpellCheck>Před kontrolou pravopisu</BeforeSpellCheck>
     <SpellCheckChangedXToY>Kontrola pravopisu: Změněno '{0}' na '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Před přidáním značky '{0}'</BeforeAddingTagX>
-    <TagXAdded>Přidány značky '{0}'</TagXAdded>
+    <BeforeAddingTagX>Před přidáním značky &lt;{0}&gt;</BeforeAddingTagX>
+    <TagXAdded>Přidána značka {0}</TagXAdded>
     <LineXOfY>řádek {0} z {1}</LineXOfY>
     <XLinesSavedAsY>{0} řádků uloženo jako {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} řádků odstraněno</XLinesDeleted>
-    <BeforeDeletingXLines>Před odstraněním {0} řádků</BeforeDeletingXLines>
-    <DeleteXLinesPrompt>Odstranit {0} řádků?</DeleteXLinesPrompt>
+    <BeforeDeletingXLines>Před odstraněním {0:#,##0} řádků</BeforeDeletingXLines>
+    <DeleteXLinesPrompt>Odstranit {0:#,##0} řádků?</DeleteXLinesPrompt>
     <OneLineDeleted>Řádek odstraněn</OneLineDeleted>
     <BeforeDeletingOneLine>Před odstraněním řádku</BeforeDeletingOneLine>
     <DeleteOneLinePrompt>Odstranit jeden řádek?</DeleteOneLinePrompt>
     <BeforeInsertLine>Před vložením řádku</BeforeInsertLine>
     <LineInserted>Řádek vložen</LineInserted>
     <BeforeLineUpdatedInListView>Před aktualizací řádku v zobrazení seznamu</BeforeLineUpdatedInListView>
-    <BeforeSettingFontToNormal>Před nastavením písma na normální</BeforeSettingFontToNormal>
     <BeforeSplitLine>Před rozdělením řádku</BeforeSplitLine>
     <LineSplitted>Řádek rozdělen</LineSplitted>
     <BeforeMergeLines>Před sloučením řádků</BeforeMergeLines>
     <LinesMerged>Řádky sloučeny</LinesMerged>
+    <MergeSentences>Sloučit věty...</MergeSentences>
+    <MergeSentencesXLines>Sloučit věty - řádků sloučeno: {0}</MergeSentencesXLines>
     <BeforeSettingColor>Před nastavením barvy</BeforeSettingColor>
     <BeforeSettingFontName>Před nastavením názvu písma</BeforeSettingFontName>
     <BeforeTypeWriterEffect>Před efektem Psací stroj</BeforeTypeWriterEffect>
     <BeforeKaraokeEffect>Před efektem Karaoke</BeforeKaraokeEffect>
     <BeforeImportingDvdSubtitle>Před importováním titulků z DVD</BeforeImportingDvdSubtitle>
-    <OpenMatroskaFile>Otevřít soubor Matroska...</OpenMatroskaFile>
-    <MatroskaFiles>Soubory Matroska</MatroskaFiles>
+    <OpenSubtitleVideoFile>Otevřít titulky ze souboru videa...</OpenSubtitleVideoFile>
+    <VideoFiles>Soubory videa</VideoFiles>
     <NoSubtitlesFound>Nenalezeny žádné titulky</NoSubtitlesFound>
     <NotAValidMatroskaFileX>Toto není platný soubor Matroska: {0}</NotAValidMatroskaFileX>
     <BlurayNotSubtitlesFound>Soubor Blu-ray sup neobsahuje žádné titulky nebo obsahuje chyby - zkuste znovu demuxovat.</BlurayNotSubtitlesFound>
+    <ImportingChapters>Importování kapitol...</ImportingChapters>
+    <XChaptersImported>Importováno {0} kapitol</XChaptersImported>
     <ParsingMatroskaFile>Analýza souboru Matroska. Čekejte...</ParsingMatroskaFile>
     <ParsingTransportStreamFile>Analýza souboru datového proudu přenosu. Čekejte...</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Před importováním titulků ze souboru Matroska</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Importovány titulky ze souboru Matroska</SubtitleImportedFromMatroskaFile>
     <DropFileXNotAccepted>Přetažený soubor '{0}' nebyl přijat - soubor je příliš velký</DropFileXNotAccepted>
+    <DropSubtitleFileXNotAccepted>Přetažený soubor '{0}' nebyl přijat - soubor je příliš velký na titulky</DropSubtitleFileXNotAccepted>
     <DropOnlyOneFile>Můžete přetáhnout pouze jeden soubor</DropOnlyOneFile>
     <OpenAnsiSubtitle>Otevřít titulky...</OpenAnsiSubtitle>
     <BeforeChangeCasing>Před změnou velikost písmen</BeforeChangeCasing>
@@ -1391,8 +1566,6 @@ Pokračovat?</SubtitleAppendPrompt>
     <VobSubFiles>Soubor titulků VobSub</VobSubFiles>
     <OpenBluRaySupFile>Otevřít soubor Blu-ray sup...</OpenBluRaySupFile>
     <BluRaySupFiles>Soubory Blu-ray sup</BluRaySupFiles>
-    <OpenXSubFiles>Otevřít soubor XSub...</OpenXSubFiles>
-    <XSubFiles>Soubory XSub</XSubFiles>
     <BeforeImportingVobSubFile>Před importováním titulků VobSub</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Před importováním souboru Blu-ray sup</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>Před importováním souboru BDN xml</BeforeImportingBdnXml>
@@ -1459,6 +1632,7 @@ Pokračovat?</SubtitleAppendPrompt>
     <LineNumberXErrorReadingFromSourceLineY>Řádek {0} - chyba čtení: {1}</LineNumberXErrorReadingFromSourceLineY>
     <LineNumberXErrorReadingTimeCodeFromSourceLineY>Řádek {0} - chyba čtení časového kódu: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
     <LineNumberXExpectedNumberFromSourceLineY>Řádek {0} - očekáváno čílo titulku: {1}</LineNumberXExpectedNumberFromSourceLineY>
+    <LineNumberXExpectedEmptyLine>Řádek {0} - očekáván prázdný řádek, ale nalezeno číslo a časový kód (číslo přeskočeno): {1}</LineNumberXExpectedEmptyLine>
     <BeforeGuessingTimeCodes>Před odhadem časových kódů</BeforeGuessingTimeCodes>
     <BeforeAutoDuration>Před automatickým trváním pro vybrané řádky</BeforeAutoDuration>
     <BeforeColumnPaste>Před vložením v sloupci</BeforeColumnPaste>
@@ -1466,10 +1640,11 @@ Pokračovat?</SubtitleAppendPrompt>
     <BeforeColumnImportText>Před importem textu v sloupci</BeforeColumnImportText>
     <BeforeColumnShiftCellsDown>Před posunem buněk dolů v sloupci</BeforeColumnShiftCellsDown>
     <BeforeX>Před: {0}</BeforeX>
+    <LinesUpdatedX>Aktualizováno řádků: {0}</LinesUpdatedX>
     <ErrorLoadingPluginXErrorY>Chyba načtení doplňku: {0}: {1}</ErrorLoadingPluginXErrorY>
     <BeforeRunningPluginXVersionY>Před spuštěním doplňku: {0}: {1}</BeforeRunningPluginXVersionY>
     <UnableToReadPluginResult>Nelze přečíst výsledek titulků z doplňku!</UnableToReadPluginResult>
-    <UnableToCreateBackupDirectory>Nelze vytvořit záložní adresář {0}: {1}</UnableToCreateBackupDirectory>
+    <UnableToCreateBackupDirectory>Nelze vytvořit záložní složku {0}: {1}</UnableToCreateBackupDirectory>
     <BeforeDisplaySubtitleJoin>Před spojením titulků</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Titulky spojeny</SubtitlesJoined>
     <StatusLog>Záznam stavu</StatusLog>
@@ -1484,6 +1659,7 @@ Pokračovat?</SubtitleAppendPrompt>
     <PromptInsertSubtitleOverlap>Vložit titulky na pozici křivky způsobí překrytí!
 
 Přesto pokračovat?</PromptInsertSubtitleOverlap>
+    <SubtitleContainsNegativeDurationsX>Titulky obsahují záporné trvání v řádcích: {0}</SubtitleContainsNegativeDurationsX>
     <SetPlayRateX>Nastavit rychlost přehrávání na {0} %</SetPlayRateX>
     <ErrorLoadIdx>Nelze přečíst nebo upravit soubory .idx. Soubory .idx jsou součástí páru souborů idx/sub (tzv. VobSub) a Subtitle Edit může otevřít soubor .sub.</ErrorLoadIdx>
     <ErrorLoadRar>Tento soubor se zdá být komprimovaným souborem .rar. Subtitle Edit neumí otvírat komprimované soubory.</ErrorLoadRar>
@@ -1496,12 +1672,14 @@ Přesto pokračovat?</PromptInsertSubtitleOverlap>
     <ErrorLoadBinaryZeroes>Bohužel, tento soubor obsahuje pouze binární nuly!
 
 Pokud jste upravili tento soubor v Subtitle Edit, možná budete moci najít zálohu pomocí položky nabídky Soubor -&gt; Obnovit automatickou zálohu...</ErrorLoadBinaryZeroes>
-    <ErrorDirectoryDropNotAllowed>Přetahování adresářů zde není podporováno.</ErrorDirectoryDropNotAllowed>
+    <ErrorDirectoryDropNotAllowed>Přetahování složek zde není podporováno.</ErrorDirectoryDropNotAllowed>
     <NoSupportEncryptedVobSub>Šifrovaný obsah VobSub není podporován.</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>Soubory Blu-ray sup zde nejsou podporovány.</NoSupportHereBluRaySup>
     <NoSupportHereDvdSup>Soubory DVD sup zde nejsou podporovány.</NoSupportHereDvdSup>
     <NoSupportHereVobSub>Soubory VobSub zde nejsou podporovány.</NoSupportHereVobSub>
     <NoSupportHereDivx>Soubory DivX zde nejsou podporovány.</NoSupportHereDivx>
+    <NoChapters>Ve videu nebyly nalezeny žádné kapitoly.</NoChapters>
+    <DarkThemeRestart>Restartujte Subtitle Edit, aby se uplatnily změny tmavého motivu.</DarkThemeRestart>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Zvolte titulky ze souboru Matroska</Title>
@@ -1514,16 +1692,110 @@ Pokud jste upravili tento soubor v Subtitle Edit, možná budete moci najít zá
     <ConvertFrom>Převést z</ConvertFrom>
     <ConvertTo>Převést na</ConvertTo>
     <CopyToClipboard>Kopírovat do schránky</CopyToClipboard>
-    <Celsius>Stupně Celsia</Celsius>
-    <Fahrenheit>Stupně Fahrenheita</Fahrenheit>
-    <Miles>Míle</Miles>
+    <CloseOnInsert>Zavřít při vložení</CloseOnInsert>
+    <Length>Délka</Length>
+    <Mass>Mass</Mass>
+    <Volume>Volume</Volume>
+    <Area>Area</Area>
+    <Time>Čas</Time>
+    <Temperature>Teplota</Temperature>
+    <Velocity>Velocity</Velocity>
+    <Force>Force</Force>
+    <Energy>Energy</Energy>
+    <Power>Power</Power>
+    <Pressure>Tlak</Pressure>
     <Kilometers>Kilometry</Kilometers>
     <Meters>Metry</Meters>
+    <Centimeters>Centimetry</Centimeters>
+    <Millimeters>Milimetry</Millimeters>
+    <Micrometers>Micrometers</Micrometers>
+    <Nanometers>Nanometry</Nanometers>
+    <Angstroms>Angstroms</Angstroms>
+    <MilesTerrestial>Miles (terrestial)</MilesTerrestial>
+    <MilesNautical>Miles (nautical)</MilesNautical>
     <Yards>Yardy</Yards>
     <Feet>Stopy</Feet>
     <Inches>Palce</Inches>
-    <Pounds>Libry</Pounds>
+    <Chains>Chains</Chains>
+    <Fathoms>Fathoms</Fathoms>
+    <Hands>Hands</Hands>
+    <Rods>Rods</Rods>
+    <Spans>Spans</Spans>
+    <LongTonnes>Long tonnes</LongTonnes>
+    <ShortTonnes>Short tonnes</ShortTonnes>
+    <Tonnes>Tuny</Tonnes>
     <Kilos>Kilogramy</Kilos>
+    <Grams>Gramy</Grams>
+    <Milligrams>Miligramy</Milligrams>
+    <Micrograms>Micrograms</Micrograms>
+    <Pounds>Libry</Pounds>
+    <Ounces>Ounces</Ounces>
+    <Carats>Carats</Carats>
+    <Drams>Drams</Drams>
+    <Grains>Grains</Grains>
+    <Stones>Stones</Stones>
+    <CubicKilometers>Cubic kilometers</CubicKilometers>
+    <CubicMeters>Cubic meters</CubicMeters>
+    <Litres>Litres</Litres>
+    <CubicCentimeters>Cubic centimeters</CubicCentimeters>
+    <CubicMillimeters>Cubic millimeters</CubicMillimeters>
+    <CubicMiles>Cubic miles</CubicMiles>
+    <CubicYards>Cubic yards</CubicYards>
+    <CubicFTs>Cubic fts</CubicFTs>
+    <CubicInches>Cubic inches</CubicInches>
+    <OilBarrels>Oil barrels</OilBarrels>
+    <GallonUS>Gallon (US)</GallonUS>
+    <QuartsUS>Quarts (US)</QuartsUS>
+    <PintsUS>Pints (US)</PintsUS>
+    <FluidOuncesUS>Fluid ounces (US)</FluidOuncesUS>
+    <Bushels>Bushels</Bushels>
+    <Pecks>Pecks</Pecks>
+    <GallonsUK>Gallons (UK)</GallonsUK>
+    <QuartsUK>Quarts (UK)</QuartsUK>
+    <PintsUK>Pints (UK)</PintsUK>
+    <FluidOuncesUK>Fluid ounces (UK)</FluidOuncesUK>
+    <SquareKilometers>Square kilometers</SquareKilometers>
+    <SquareMeters>Square meters</SquareMeters>
+    <SquareCentimeters>Square Centimeters</SquareCentimeters>
+    <SquareMillimeters>Square millimeters</SquareMillimeters>
+    <SquareMiles>Square miles</SquareMiles>
+    <SquareYards>Square yards</SquareYards>
+    <SquareFTs>Square fts</SquareFTs>
+    <SquareInches>Square inches</SquareInches>
+    <Hectares>Hectares</Hectares>
+    <Acres>Acres</Acres>
+    <Ares>Ares</Ares>
+    <Hours>Hours</Hours>
+    <Minutes>Minutes</Minutes>
+    <Seconds>Seconds</Seconds>
+    <Milliseconds>Milliseconds</Milliseconds>
+    <Microseconds>Microseconds</Microseconds>
+    <Fahrenheit>Fahrenheit</Fahrenheit>
+    <Celsius>Celsius</Celsius>
+    <Kelvin>Kelvin</Kelvin>
+    <KilometersPerHour>Kilometers/Hour</KilometersPerHour>
+    <MetersPerSecond>Meters/Seconds</MetersPerSecond>
+    <MilesPerHour>Miles/Hour</MilesPerHour>
+    <YardsPerMinute>Yards/Minute</YardsPerMinute>
+    <FTsPerSecond>fts/Second</FTsPerSecond>
+    <Knots>Knots</Knots>
+    <PoundsForce>Pounds-Force</PoundsForce>
+    <Newtons>Newtons</Newtons>
+    <KilosForce>Kilos-Force</KilosForce>
+    <Jouls>Jouls</Jouls>
+    <Calories>Calories</Calories>
+    <Ergs>Ergs</Ergs>
+    <ElectronVolts>Electron-volts</ElectronVolts>
+    <Btus>Btus</Btus>
+    <Watts>Watts</Watts>
+    <Horsepower>Horsepower</Horsepower>
+    <Atmospheres>Atmospheres</Atmospheres>
+    <Bars>Bars</Bars>
+    <Pascals>Pascals</Pascals>
+    <MillimetersOfMercury>Millimeters of Mercury</MillimetersOfMercury>
+    <PoundPerSquareInch>Pound-force per square inch</PoundPerSquareInch>
+    <KilogramPerSquareCentimeter>Kilogram-force per square centimeter</KilogramPerSquareCentimeter>
+    <KiloPascals>Kilopascals</KiloPascals>
   </MeasurementConverter>
   <MergeDoubleLines>
     <Title>Sloučit řádky se stejným textem</Title>
@@ -1554,7 +1826,7 @@ Pokud jste upravili tento soubor v Subtitle Edit, možná budete moci najít zá
     <AddToCurrentSelection>Přidat do aktuálního výběru</AddToCurrentSelection>
     <SubtractFromCurrentSelection>Odečíst od aktuálního výběru</SubtractFromCurrentSelection>
     <IntersectWithCurrentSelection>Průnik s aktuálním výběrem</IntersectWithCurrentSelection>
-    <MatchingLinesX>Shodné řádky: {0}</MatchingLinesX>
+    <MatchingLinesX>Shodné řádky: {0:#,##0}</MatchingLinesX>
     <Contains>Obsahuje</Contains>
     <StartsWith>Začíná</StartsWith>
     <EndsWith>Končí</EndsWith>
@@ -1564,6 +1836,8 @@ Pokud jste upravili tento soubor v Subtitle Edit, možná budete moci najít zá
     <EvenLines>Řádky se sudými čísly</EvenLines>
     <DurationLessThan>Trvání menší než</DurationLessThan>
     <DurationGreaterThan>Trvání větší než</DurationGreaterThan>
+    <MoreThanTwoLines>Více než dva řádky</MoreThanTwoLines>
+    <Bookmarked>Uloženo jako záložka</Bookmarked>
   </ModifySelection>
   <MultipleReplace>
     <Title>Hromadné nahrazení</Title>
@@ -1708,11 +1982,13 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <MaxVolume>Hlasitost musí být pod</MaxVolume>
   </SeekSilence>
   <SetMinimumDisplayTimeBetweenParagraphs>
-    <Title>Nastavit minimální čas zobrazení mezi titulky</Title>
+    <Title>Použít minimální mezeru mezi titulky</Title>
     <PreviewLinesModifiedX>Náhled - změněno titulků: {0}</PreviewLinesModifiedX>
     <ShowOnlyModifiedLines>Zobrazit pouze změněné řádky</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Minimálně milisekund mezi řádky</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Informace o snímkové frekvenci</FrameInfo>
+    <Frames>Snímků</Frames>
+    <XFrameYisZMilliseconds>{0} snímků při {1} fps je {2} milisekund</XFrameYisZMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Nastavit synchronizační bod pro řádek {0}</Title>
@@ -1725,6 +2001,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
   <Settings>
     <Title>Nastavení</Title>
     <General>Obecné</General>
+    <SubtitleFormats>Formáty titulků</SubtitleFormats>
     <Toolbar>Panel nástrojů</Toolbar>
     <VideoPlayer>Přehrávač videa</VideoPlayer>
     <WaveformAndSpectrogram>Křivka a spektrogram</WaveformAndSpectrogram>
@@ -1744,20 +2021,32 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <SpellCheck>Kontrola pravopisu</SpellCheck>
     <NetflixQualityCheck>Kontrola kvality Netflix</NetflixQualityCheck>
     <SettingsName>Nastavení</SettingsName>
-    <Help>Nápověda</Help>
-    <UnbreakNoSpace>Zrušit zalomení bez mezery (CJK)</UnbreakNoSpace>
     <ToggleBookmarks>Přepnout záložky</ToggleBookmarks>
     <ToggleBookmarksWithComment>Přepnout záložky - přidat komentář</ToggleBookmarksWithComment>
     <ClearBookmarks>Vymazat záložky</ClearBookmarks>
+    <ExportBookmarks>Exportovat záložky...</ExportBookmarks>
     <GoToBookmark>Přejít na záložku</GoToBookmark>
     <GoToPreviousBookmark>Přejít na předchozí záložku</GoToPreviousBookmark>
     <GoToNextBookmark>Přejít na další záložku</GoToNextBookmark>
+    <ChooseProfile>Zvolte profil</ChooseProfile>
+    <OpenDataFolder>Otevřít složku dat Subtitle Edit</OpenDataFolder>
+    <DuplicateLine>Duplikovat řádek</DuplicateLine>
+    <ToggleView>Přepnout zobrazení seznamu a zdroje</ToggleView>
+    <ToggleMode>Přepnout režim přeložit, vytvořit a upravit</ToggleMode>
+    <TogglePreviewOnVideo>Přepnout náhled na video</TogglePreviewOnVideo>
+    <Help>Nápověda</Help>
     <FontInUi>Písmo v uživatelském rozhraní</FontInUi>
+    <Appearance>Vzhled</Appearance>
     <ShowFrameRate>Zobrazit snímkovou frekvenci v panelu nástrojů</ShowFrameRate>
     <DefaultFrameRate>Výchozí snímková frekvence</DefaultFrameRate>
     <DefaultFileEncoding>Výchozí kódování souboru</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Automaticky rozpoznat kódování ANSI</AutoDetectAnsiEncoding>
+    <Profile>Profil</Profile>
+    <Profiles>Profily</Profiles>
+    <ImportProfiles>Importovat profily</ImportProfiles>
+    <ExportProfiles>Exportovat profily</ExportProfiles>
     <SubtitleLineMaximumLength>Maximální délka jednotlivého řádku</SubtitleLineMaximumLength>
+    <OptimalCharactersPerSecond>Optimálně znaků/s</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>Max. znaků/s</MaximumCharactersPerSecond>
     <MaximumWordsPerMinute>Max. slov/min</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>Automaticky zalamovat během psaní</AutoWrapWhileTyping>
@@ -1780,6 +2069,10 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <RememberPositionAndSize>Zapamatovat pozici a velikost hlavního okna</RememberPositionAndSize>
     <StartInSourceView>Spustit v zobrazení zdroje</StartInSourceView>
     <RemoveBlankLinesWhenOpening>Odebrat prázdné řádky při otevírání titulků</RemoveBlankLinesWhenOpening>
+    <RemoveBlankLines>Odebrat prázdné řádk</RemoveBlankLines>
+    <ApplyAssaOverrideTags>Použít značky přepsání ASSA na výběr</ApplyAssaOverrideTags>
+    <SetAssaPosition>Nastavit nebo získat pozici ASSA</SetAssaPosition>
+    <SetAssaResolution>Nastavit zozlišení ASSA (PlayResX/PlayResY)</SetAssaResolution>
     <ShowLineBreaksAs>Zobrazit zalomení řádků v zobrazení seznamu jako</ShowLineBreaksAs>
     <SaveAsFileNameFrom>„Uložit jako...“ používá názvy souborů z</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>Poklepáním na řádek v zobrazení seznamu v hlavním okně</MainListViewDoubleClickAction>
@@ -1803,12 +2096,16 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <AutoBackupDeleteAfterThreeMonths>3 měsíce</AutoBackupDeleteAfterThreeMonths>
     <AutoBackupDeleteAfterSixMonths>6 měsíců</AutoBackupDeleteAfterSixMonths>
     <CheckForUpdates>Kontrolovat aktualizace</CheckForUpdates>
-    <AutoSave>Automatické uložení</AutoSave>
+    <AutoSave>Automatické ukládání</AutoSave>
     <AllowEditOfOriginalSubtitle>Povolit úpravu původních titulků</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Dotázat se na odstranění řádků</PromptDeleteLines>
     <TimeCodeMode>Režim časového kódu</TimeCodeMode>
     <TimeCodeModeHHMMSSMS>HH:MM:SS,MS (00:00:01,500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
+    <SplitBehavior>Chování rozdělení</SplitBehavior>
+    <SplitBehaviorPrevious>Přidat nmezeru vlevo od bodu rozdělení (zaměření vpravo)</SplitBehaviorPrevious>
+    <SplitBehaviorHalf>Přidat nmezeru na střed bodu rozdělení (zaměření vlevo)</SplitBehaviorHalf>
+    <SplitBehaviorNext>Přidat nmezeru vlevo od bodu rozdělení (zaměření vlevo)</SplitBehaviorNext>
     <VideoEngine>Modul videa</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll ve složce system32</DirectShowDescription>
@@ -1823,9 +2120,10 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <ShowStopButton>Zobrazit tlačítko zastavení</ShowStopButton>
     <ShowMuteButton>Zobrazit tlačítko ztlumení</ShowMuteButton>
     <ShowFullscreenButton>Zobrazit tlačítko na celou obrazovku</ShowFullscreenButton>
+    <PreviewFontName>Název písma náhledu titulků</PreviewFontName>
     <PreviewFontSize>Velikost písma náhledu titulků</PreviewFontSize>
     <MainWindowVideoControls>Ovládání videa v hlavním okně</MainWindowVideoControls>
-    <CustomSearchTextAndUrl>Vlastní text hledání a adresa</CustomSearchTextAndUrl>
+    <CustomSearchTextAndUrl>Vlastní text hledání a URL</CustomSearchTextAndUrl>
     <WaveformAppearance>Vzhled křivky</WaveformAppearance>
     <WaveformGridColor>Barva mřížky</WaveformGridColor>
     <WaveformShowGridLines>Zobrazit mřížku</WaveformShowGridLines>
@@ -1836,11 +2134,14 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <WaveformSetVideoPosMoveStartEnd>Nastavit pozici videa při přesouvání začátku nebo konce</WaveformSetVideoPosMoveStartEnd>
     <WaveformFocusMouseEnter>Nastavit zaměření na potvrzení myší</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Také nastavit zaměření zobrazení seznamu na potvrzení myší v zobrazení seznamu</WaveformListViewFocusMouseEnter>
+    <WaveformSingleClickSelect>Kliknutí pro výběr titulků</WaveformSingleClickSelect>
+    <WaveformSnapToSceneChanges>Přichytit pro změny scén (držet Shift pro přepsání)</WaveformSnapToSceneChanges>
     <WaveformBorderHitMs1>Označení hranice musí být v rámci</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>milisekund</WaveformBorderHitMs2>
     <WaveformColor>Barva</WaveformColor>
     <WaveformSelectedColor>Barva výběru</WaveformSelectedColor>
     <WaveformBackgroundColor>Barva pozadí</WaveformBackgroundColor>
+    <WaveformCursorColor>Barva kurzoru</WaveformCursorColor>
     <WaveformTextColor>Barva textu</WaveformTextColor>
     <WaveformTextFontSize>Velikost písma textu</WaveformTextFontSize>
     <WaveformAndSpectrogramsFolderEmpty>Vyprázdnit složky 'Spectrograms' a 'Waveforms'</WaveformAndSpectrogramsFolderEmpty>
@@ -1892,11 +2193,31 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <FixCommonerrors>Opravit běžné chyby</FixCommonerrors>
     <RemoveTextForHi>Odebrat text pro sluchově postižené</RemoveTextForHi>
     <MergeLinesShorterThan>Zrušit zalomení titulků kratších než</MergeLinesShorterThan>
+    <DialogStyle>Styl dialogu</DialogStyle>
+    <DialogStyleDashBothLinesWithSpace>Pomlčka v obou řádcích s mezerou</DialogStyleDashBothLinesWithSpace>
+    <DialogStyleDashBothLinesWithoutSpace>Pomlčka v obou řádcích bez mezery</DialogStyleDashBothLinesWithoutSpace>
+    <DialogStyleDashSecondLineWithSpace>Pomlčka ve druhém řádku s mezerou</DialogStyleDashSecondLineWithSpace>
+    <DialogStyleDashSecondLineWithoutSpace>Pomlčka ve druhém řádku bez mezery</DialogStyleDashSecondLineWithoutSpace>
+    <ContinuationStyle>Styl pokračování</ContinuationStyle>
+    <ContinuationStyleNone>Žádný</ContinuationStyleNone>
+    <ContinuationStyleNoneTrailingDots>Žádný, tečky pro pomlky (pouze na konci)</ContinuationStyleNoneTrailingDots>
+    <ContinuationStyleNoneLeadingTrailingDots>Žádný, tečky pro pomlky</ContinuationStyleNoneLeadingTrailingDots>
+    <ContinuationStyleOnlyTrailingDots>Tečky (pouze na konci)</ContinuationStyleOnlyTrailingDots>
+    <ContinuationStyleLeadingTrailingDots>Tečky</ContinuationStyleLeadingTrailingDots>
+    <ContinuationStyleLeadingTrailingEllipsis>Tři tečky</ContinuationStyleLeadingTrailingEllipsis>
+    <ContinuationStyleNoneTrailingEllipsis>Žádné, tři tečky pro pomlky</ContinuationStyleNoneTrailingEllipsis>
+    <ContinuationStyleLeadingTrailingDash>Pomlčka</ContinuationStyleLeadingTrailingDash>
+    <ContinuationStyleLeadingTrailingDashDots>Pomlčka, ale tečky pro pomlky</ContinuationStyleLeadingTrailingDashDots>
     <MusicSymbol>Hudební symbol</MusicSymbol>
     <MusicSymbolsReplace>Hudební symboly, které nahradit (oddělené čárkami)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Opravit běžné chyby OCR - použít také pravidla pevného kódování</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Opravit krátké časy zobrazení - povolit posun času začátku</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Přeskočit krok jedna (volba pravidel oprav)</FixCommonErrorsSkipStepOne>
+    <DefaultFormat>Výchozí formát</DefaultFormat>
+    <DefaultSaveAsFormat>Výchozí formát pro uložit jako</DefaultSaveAsFormat>
+    <Favorites>Oblíbené</Favorites>
+    <FavoriteFormats>Oblíbené formáty</FavoriteFormats>
+    <FavoriteSubtitleFormatsNote>Poznámka: oblíbené formáty budou při výběru formátu zobrazeny první, výchozí formát bude vždy zobrazen první</FavoriteSubtitleFormatsNote>
     <Shortcuts>Klávesové zkratky</Shortcuts>
     <Shortcut>Klávesová zkratka</Shortcut>
     <Control>Ctrl</Control>
@@ -1906,36 +2227,78 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <ListViewAndTextBox>Zobrazení seznamu a textové pole</ListViewAndTextBox>
     <ListView>Zobrazení seznamu</ListView>
     <TextBox>Textové pole</TextBox>
+    <UseSyntaxColoring>Použít obarvováni syntaxe</UseSyntaxColoring>
+    <HtmlColor>Barva Html</HtmlColor>
+    <AssaColor>Barva ASSA</AssaColor>
+    <DarkTheme>Tmavý motiv</DarkTheme>
+    <DarkThemeEnabled>Použít tmavý motiv</DarkThemeEnabled>
+    <DarkThemeShowGridViewLines>Zobrazit čáry mřížky v zobrazení seznamu</DarkThemeShowGridViewLines>
     <UpdateShortcut>Aktualizovat</UpdateShortcut>
+    <FoucsSetVideoPosition>Zaměřit nastavenou pozici videa</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Ukotvit nebo zrušit ukotvení ovládání videa</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Nastavit konec, přidat nový a přejít na nový</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Nastavit podle pozice konce</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Nastavit podle pozice konce a přejít na další</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustSetEndMinusGapAndStartNextHere>Nastavit konec minus mezera, přejít na další a začít další zde</AdjustSetEndMinusGapAndStartNextHere>
     <AdjustSetEndTimeAndGoToNext>Nastavit konec a přejít na další</AdjustSetEndTimeAndGoToNext>
+    <AdjustSetEndTimeAndPause>Nastavit konec a pozastavit</AdjustSetEndTimeAndPause>
     <AdjustSetStartAutoDurationAndGoToNext>Nastavit začátek, automatické trvání a přejít na další</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Nastavit konec, další začátek a přejít na další</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>Šipka dolů = nastavit začátek, šipka nahoru = nastavit konec a přejít na další</AdjustStartDownEndUpAndGoToNext>
+    <AdjustSetStartAndEndOfPrevious>Nastavit začátek a nastavit konec předchozího (minus min. mezera)</AdjustSetStartAndEndOfPrevious>
+    <AdjustSetStartAndEndOfPreviousAndGoToNext>Nastavit začátek a nastavit konec předchozího a přejít na další (minus min. mezera)</AdjustSetStartAndEndOfPreviousAndGoToNext>
     <AdjustSelected100MsForward>Posunout vybrané řádky o 100 ms vpřed</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Posunout vybrané řádky o 100 ms zpět</AdjustSelected100MsBack>
     <AdjustStartXMsBack>Posunout začátek o {0} ms zpět</AdjustStartXMsBack>
     <AdjustStartXMsForward>Posunout začátek o {0} ms vpřed</AdjustStartXMsForward>
     <AdjustEndXMsBack>Posunout konec o {0} ms zpět</AdjustEndXMsBack>
     <AdjustEndXMsForward>Posunout konec o {0} ms zpět</AdjustEndXMsForward>
+    <AdjustStartOneFrameBack>Posunout začátek o 1 snímek zpět</AdjustStartOneFrameBack>
+    <AdjustStartOneFrameForward>Posunout začátek o 1 snímek vpřed</AdjustStartOneFrameForward>
+    <AdjustEndOneFrameBack>Posunout konec o 1 snímek zpět</AdjustEndOneFrameBack>
+    <AdjustEndOneFrameForward>Posunout konec o 1 snímek vpřed</AdjustEndOneFrameForward>
+    <AdjustStartOneFrameBackKeepGapPrev>Posunout začátek o 1 snímek zpět (ponechat mezeru u předchozího, pokud je blízko)</AdjustStartOneFrameBackKeepGapPrev>
+    <AdjustStartOneFrameForwardKeepGapPrev>Posunout začátek o 1 snímek vpřed (ponechat mezeru u předchozího, pokud je blízko)</AdjustStartOneFrameForwardKeepGapPrev>
+    <AdjustEndOneFrameBackKeepGapNext>Posunout konec o 1 snímek zpět  (ponechat mezeru u dalšího, pokud je blízko)</AdjustEndOneFrameBackKeepGapNext>
+    <AdjustEndOneFrameForwardKeepGapNext>Posunout konec o 1 snímek vpřed  (ponechat mezeru u dalšího, pokud je blízko)</AdjustEndOneFrameForwardKeepGapNext>
     <AdjustSetStartTimeKeepDuration>Nastavit čas začátku, ponechat trvání</AdjustSetStartTimeKeepDuration>
+    <AdjustVideoSetStartForAppropriateLine>Nastavit začátek pro příslušný řádek</AdjustVideoSetStartForAppropriateLine>
+    <AdjustVideoSetEndForAppropriateLine>Nastavit konec pro příslušný řádek</AdjustVideoSetEndForAppropriateLine>
+    <AdjustSetStartAndOffsetTheWholeSubtitle>Nastavit čas začátku, posunout celé titulky</AdjustSetStartAndOffsetTheWholeSubtitle>
     <AdjustSetEndAndOffsetTheRest>Nastavit konec, posunout zbytek</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Nastavit konec, posunout zbytek a přejít na další</AdjustSetEndAndOffsetTheRestAndGoToNext>
+    <AdjustSnapStartToNextSceneChange>Přichytit začátek vybraných řádků k následující změně scény</AdjustSnapStartToNextSceneChange>
+    <AdjustSnapStartToNextSceneChangeWithGap>Přichytit začátek vybraných řádků k následující změně scény s min. mezerou</AdjustSnapStartToNextSceneChangeWithGap>
+    <AdjustSnapEndToPreviousSceneChange>Přichytit konec vybraných řádků k předchozí změně scény</AdjustSnapEndToPreviousSceneChange>
+    <AdjustSnapEndToPreviousSceneChangeWithGap>Přichytit konec vybraných řádků k předchozí změně scény s min. mezerou</AdjustSnapEndToPreviousSceneChangeWithGap>
+    <AdjustExtendToNextSceneChange>Rozšířit vybrané řádky na následující změnu scény (nebo následující titulek)</AdjustExtendToNextSceneChange>
+    <AdjustExtendToNextSceneChangeWithGap>Rozšířit vybrané řádky na následující změnu scény s min. mezerou (nebo následující titulek)</AdjustExtendToNextSceneChangeWithGap>
+    <AdjustExtendToPreviousSceneChange>Rozšířit vybrané řádky na předchozí změnu scény (nebo předchozí titulek)</AdjustExtendToPreviousSceneChange>
+    <AdjustExtendToPreviousSceneChangeWithGap>Rozšířit vybrané řádky na předchozí změnu scény s min. mezerou (nebo předchozí titulek)</AdjustExtendToPreviousSceneChangeWithGap>
+    <AdjustExtendToNextSubtitle>Rozšířit vybrané řádky na následující titulek</AdjustExtendToNextSubtitle>
+    <AdjustExtendToPreviousSubtitle>Rozšířit vybrané řádky na předchozí titulek</AdjustExtendToPreviousSubtitle>
     <AdjustExtendCurrentSubtitle>Rozšířit aktuální řádek do dalšího titulku nebo max. trvání</AdjustExtendCurrentSubtitle>
+    <AdjustExtendPreviousLineEndToCurrentStart>Rozšířit konec předchozího řádku na začátek aktuálního</AdjustExtendPreviousLineEndToCurrentStart>
+    <AdjustExtendNextLineStartToCurrentEnd>Rozšířit začátek následujícího řádku na konec aktuálního</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>Přepočítat trvání aktuálního titulku</RecalculateDurationOfCurrentSubtitle>
     <MainCreateStartDownEndUp>Vložit nový titulek šipkou dolů, nastavit čas konce šipkou nahoru</MainCreateStartDownEndUp>
     <MergeDialog>Sloučit dialog (vložit pomlčky)</MergeDialog>
     <GoToNext>Přejít na další řádek</GoToNext>
+    <GoToNextPlayTranslate>Přejít na další řádek (a přehrát v 'Překladatelském režimu')</GoToNextPlayTranslate>
+    <GoToNextCursorAtEnd>Přejít na další řádek a nastavit kurzor na konec</GoToNextCursorAtEnd>
     <GoToPrevious>Přejít na předchozí řádek</GoToPrevious>
+    <GoToPreviousPlayTranslate>Přejít na předchozí řádek (a přehrát v 'Překladatelském režimu')</GoToPreviousPlayTranslate>
     <GoToCurrentSubtitleStart>Přejít na začátek aktuálního řádku</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Přejít na konec aktuálního řádku</GoToCurrentSubtitleEnd>
     <GoToPreviousSubtitleAndFocusVideo>Přejít na předchozí řádek a nastavit pozici videa</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Přejít na další řádek a nastavit pozici videa</GoToNextSubtitleAndFocusVideo>
+    <GoToPrevSubtitleAndPlay>Přejít na předchozí řádek a přehrát</GoToPrevSubtitleAndPlay>
+    <GoToNextSubtitleAndPlay>Přejít na další řádek a přehrát</GoToNextSubtitleAndPlay>
     <ToggleFocus>Přepnout mezi zobrazením seznamu a textovým oknem titulků</ToggleFocus>
+    <ToggleFocusWaveform>Přepnout zaměření mezi zobrazením seznamu a křivkou nebo spektrogramem</ToggleFocusWaveform>
     <ToggleDialogDashes>Přepnout dialogové pomlčky</ToggleDialogDashes>
+    <ToggleQuotes>Přepnout uvozovky</ToggleQuotes>
+    <ToggleHiTags>Přepnout značky pro sluchově postižené</ToggleHiTags>
     <ToggleMusicSymbols>Přepnout hudební symboly</ToggleMusicSymbols>
     <Alignment>Zarovnání (vybrané řádky)</Alignment>
     <AlignmentN1>Zarovnání dolů vlevo - {\an1}</AlignmentN1>
@@ -1947,9 +2310,12 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <AlignmentN7>Zarovnání nahoru vlevo - {\an7}</AlignmentN7>
     <AlignmentN8>Zarovnání nahoru na střed - {\an8}</AlignmentN8>
     <AlignmentN9>Zarovnání nahoru vpravo - {\an9}</AlignmentN9>
+    <ColorX>Barva {0} ({1})</ColorX>
     <CopyTextOnly>Kopírovat text pouze do schránky (vybrané řádky)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Kopírovat text z původního do aktuálního</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Automatické trvání (vybrané řádky)</AutoDurationSelectedLines>
+    <FixRTLViaUnicodeChars>Opravit zprava doleva prostřednictvím řídících znaků Unicode</FixRTLViaUnicodeChars>
+    <RemoveRTLUnicodeChars>Odebrat řídící znaky Unicode</RemoveRTLUnicodeChars>
     <ReverseStartAndEndingForRtl>Obrátit začátek a konec zprava doleva</ReverseStartAndEndingForRtl>
     <VerticalZoom>Svislé zvětšení</VerticalZoom>
     <VerticalZoomOut>Svislé zmenšení</VerticalZoomOut>
@@ -1957,12 +2323,14 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <WaveformSeekSilenceBack>Tiché hledání zpět</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Přidat text sem (pro nový výběr)</WaveformAddTextHere>
     <WaveformAddTextHereFromClipboard>Přidat text sem (pro nový výběr ze schránky)</WaveformAddTextHereFromClipboard>
+    <SetParagraphAsSelection>Nastavit aktuální jako nový výběr</SetParagraphAsSelection>
     <WaveformPlayNewSelection>Přehrát výběr</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Přehrát konec výběru</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Přehrát první vybraný titulek</WaveformPlayFirstSelectedSubtitle>
     <WaveformGoToPreviousSceneChange>Přejít na předchozí změnu scény</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Přejít na další změnu scény</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Přepnout změnu scény</WaveformToggleSceneChange>
+    <WaveformGuessStart>Automaticky upravit začátek prostřednictvím změny hlasitosti nebo scény</WaveformGuessStart>
     <GoBack1Frame>Jeden snímek zpět</GoBack1Frame>
     <GoForward1Frame>Jeden snímek vpřed</GoForward1Frame>
     <GoBack1FrameWithPlay>Jeden snímek zpět (s přehráním)</GoBack1FrameWithPlay>
@@ -1975,13 +2343,28 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <GoForward1Second>O jednu sekundu vpřed</GoForward1Second>
     <GoBack5Seconds>O pět sekund zpět</GoBack5Seconds>
     <GoForward5Seconds>O pět sekund vpřed</GoForward5Seconds>
+    <GoBackXSSeconds>O malý vybraný čas zpět</GoBackXSSeconds>
+    <GoForwardXSSeconds>O malý vybraný čas vpřed</GoForwardXSSeconds>
+    <GoBackXLSeconds>O velký vybraný čas zpět</GoBackXLSeconds>
+    <GoForwardXLSeconds>O velký vybraný čas vpřed</GoForwardXLSeconds>
+    <GoBack3Second>O tři sekundy zpět</GoBack3Second>
+    <GoToStartCurrent>Nastavit pozici videa na začátek aktuálního titulku</GoToStartCurrent>
+    <ToggleStartEndCurrent>Přepnout pozici videa mezi začátkem a koncem aktuálního titulku</ToggleStartEndCurrent>
+    <PlaySelectedLines>Přehrát vybrané řádky</PlaySelectedLines>
     <WaveformGoToPrevSubtitle>Přejít na předchozí titulek (z pozice videa)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Přejít na další titulek (z pozice videa)</WaveformGoToNextSubtitle>
+    <WaveformGoToPrevChapter>Přejít na přechozí kapitolu</WaveformGoToPrevChapter>
+    <WaveformGoToNextChapter>Přejít na další kapitolu</WaveformGoToNextChapter>
+    <WaveformSelectNextSubtitle>Vybrat následující titulek (od pozice videa, ponechat pozici videa)</WaveformSelectNextSubtitle>
     <TogglePlayPause>Přepnout přehrávání a pozastavení</TogglePlayPause>
     <Pause>Pozastavit</Pause>
     <Fullscreen>Na celou obrazovku</Fullscreen>
     <PlayRateSlower>Pomalejší rychlost přehrávání</PlayRateSlower>
     <PlayRateFaster>Rychlejší rychlost přehrávání</PlayRateFaster>
+    <VideoResetSpeedAndZoom>Obnovit rychlost nebo změnu velikosti</VideoResetSpeedAndZoom>
+    <MainToggleVideoControls>Přepnout ovládací prvky videa</MainToggleVideoControls>
+    <VideoToggleContrast>Přepnout kontrast (pouze mpv)</VideoToggleContrast>
+    <VideoToggleBrightness>Přepnout jas (pouze mpv)</VideoToggleBrightness>
     <CustomSearch1>Přeložit, vlastní vyhledávání 1</CustomSearch1>
     <CustomSearch2>Přeložit, vlastní vyhledávání 2</CustomSearch2>
     <CustomSearch3>Přeložit, vlastní vyhledávání 3</CustomSearch3>
@@ -1992,9 +2375,16 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <SyntaxColorDurationIfTooSmall>Obarvit trvání, pokud je příliš krátké</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Obarvit trvání, pokud je příliš dlouhé</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Obarvit text, pokud je příliš dlouhý</SyntaxColorTextIfTooLong>
+    <SyntaxColorTextIfTooWide>Obarvit text, pokud je příliš široký (pixely)</SyntaxColorTextIfTooWide>
     <SyntaxColorTextMoreThanMaxLines>Obarvit text, pokud má více než {0} řádky</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Obarvit překrývání časového kódu</SyntaxColorOverlap>
+    <SyntaxColorGap>Obarvit mezeru, pokud je příliš krátká</SyntaxColorGap>
     <SyntaxErrorColor>Barva chyby</SyntaxErrorColor>
+    <SyntaxLineWidthSettings>Nastavení...</SyntaxLineWidthSettings>
+    <LineWidthSettings>Nastaevní šířky řádku</LineWidthSettings>
+    <MaximumLineWidth>Maximální šíře řádku:</MaximumLineWidth>
+    <Pixels>pixelů</Pixels>
+    <MeasureFont>Písmo pro měření:</MeasureFont>
     <GoToFirstSelectedLine>Přejít na první vybraný řádek</GoToFirstSelectedLine>
     <GoToNextEmptyLine>Přejít na další prázdný řádek</GoToNextEmptyLine>
     <MergeSelectedLines>Sloučit vybrané řádky</MergeSelectedLines>
@@ -2018,30 +2408,59 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <ListViewColumnTextUp>Sloupec, text nahoru</ListViewColumnTextUp>
     <ListViewColumnTextDown>Sloupec, text dolů</ListViewColumnTextDown>
     <ListViewGoToNextError>Přejít na další chybu</ListViewGoToNextError>
+    <ShowStyleManager>Zobrazit správce stylů</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>Přesunout poslední slovo do dalšího titulku</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Načíst první slovo z dalšího titulku</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Přesunout první slovo z dalšího řádku nahoru (aktuální titulek)</MainTextBoxMoveFirstWordUpCurrent>
+    <MainTextBoxMoveFromCursorToNext>Přesunout text za pozicí kurzoru do dalšího titulku a přejít na další</MainTextBoxMoveFromCursorToNext>
     <MainTextBoxMoveLastWordDownCurrent>Přesunout poslední slovo z prvního řádku dolů (aktuální titulek)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Výběr na malá písmena</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Výběr na velká písmena</MainTextBoxSelectionToUpper>
+    <MainTextBoxSelectionToggleCasing>Přepnout velikost písmen výběru (prvvní písmena ve slovech velká, velká písmena, malá písmena)</MainTextBoxSelectionToggleCasing>
+    <MainTextBoxSelectionToRuby>Výběr do Ruby (Japonština)</MainTextBoxSelectionToRuby>
     <MainTextBoxToggleAutoDuration>Přepnout automatické trvání</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Automaticky zalomit text</MainTextBoxAutoBreak>
+    <MainTextBoxAutoBreakFromPos>Zalomit na první mezeře od pozice kurzoru</MainTextBoxAutoBreakFromPos>
+    <MainTextBoxAutoBreakFromPosAndGoToNext>Zalomit na první mezeře od pozice kurzoru a přejít na další</MainTextBoxAutoBreakFromPosAndGoToNext>
     <MainTextBoxUnbreak>Zrušit zalomení textu</MainTextBoxUnbreak>
+    <MainTextBoxUnbreakNoSpace>Zrušit zalomení bez mezery (východoasijské jazyky)</MainTextBoxUnbreakNoSpace>
+    <MainTextBoxAssaIntellisense>Zobrazit nápovědu ke štítkům ASSA</MainTextBoxAssaIntellisense>
+    <MainTextBoxAssaRemoveTag>Odebrat značku ASSA na kurzoru</MainTextBoxAssaRemoveTag>
     <MainFileSaveAll>Uložit vše</MainFileSaveAll>
     <Miscellaneous>Různé</Miscellaneous>
     <CpsIncludesSpace>Znaky/s (CPS) včetně mezer</CpsIncludesSpace>
-    <UseDoNotBreakAfterList>Používat seznam nezalamování po (pro automatické zalamování)</UseDoNotBreakAfterList>
+    <UseDoNotBreakAfterList>Používat seznam nezalamování po</UseDoNotBreakAfterList>
+    <BreakEarlyForLineEnding>Zalomit včas pro konec věty (.!?)</BreakEarlyForLineEnding>
+    <BreakByPixelWidth>Zalomit podle šířky v pixelech</BreakByPixelWidth>
+    <BreakPreferBottomHeavy>Upřednostňovat delší spodní řádek</BreakPreferBottomHeavy>
+    <BreakEarlyForDashDialog>Zalomit včas pro dialogovou pomlčku</BreakEarlyForDashDialog>
+    <BreakEarlyForComma>Zalomit včas pro čárku</BreakEarlyForComma>
     <GoogleTranslate>Překladač Google</GoogleTranslate>
     <GoogleTranslateApiKey>Klíč API</GoogleTranslateApiKey>
     <MicrosoftBingTranslator>Překladač Microsoft</MicrosoftBingTranslator>
     <HowToSignUp>Jak se zaregistrovat</HowToSignUp>
     <MicrosoftTranslateApiKey>Klíč</MicrosoftTranslateApiKey>
+    <MicrosoftTranslateTokenEndpoint>Koncový bod tokenu</MicrosoftTranslateTokenEndpoint>
     <FontNote>Poznámka: Tato nastavení písma jsou pouze pro uživatelské rozhraní Subtitle Edit.
 Nastavení písma pro titulky se normálně provádí v přehrávači videa, ale lze je také provést při použití formátu titulků s vestavěnými informacemi o písmu,
 jako je „Advanced Sub Station Alpha“ nebo prostřednictvím exportu do formátů založených na obrázcích.</FontNote>
+    <RestoreDefaultSettings>Obnovit výchozí nastavení</RestoreDefaultSettings>
+    <RestoreDefaultSettingsMsg>Všechna nastavení budou obnovena na výchozí hodnoty
+
+Pokračovat?</RestoreDefaultSettingsMsg>
+    <RemoveTimeCodes>Odebrat časové kódy</RemoveTimeCodes>
+    <EditFixContinuationStyleSettings>Upravit nastavení pro opravu stylu pokračování...</EditFixContinuationStyleSettings>
+    <FixContinuationStyleSettings>Nastavení pro opravu stylu pokračování</FixContinuationStyleSettings>
+    <UncheckInsertsAllCaps>Rozpoznat a zrušit zaškrtnutí u jednotlivých titulků velkými písmeny (např.: ZÁKAZ VSTUPU)</UncheckInsertsAllCaps>
+    <UncheckInsertsItalic>Rozpoznat a zrušit zaškrtnutí u jednotlivých titulků kurzívou nebo textů písní</UncheckInsertsItalic>
+    <UncheckInsertsLowercase>Rozpoznat a zrušit zaškrtnutí u jednotlivých titulků nebo textů písní malými písmeny</UncheckInsertsLowercase>
+    <HideContinuationCandidatesWithoutName>Skrýt nepravděpodobná pokračování vět</HideContinuationCandidatesWithoutName>
+    <IgnoreLyrics>Ignorovat texty písní mezi hudebními symboly</IgnoreLyrics>
+    <MinFrameGap>Min. mezera ve snímcích</MinFrameGap>
+    <XFramesAtYFrameRateGivesZMs>{0} snímků při snímkoví frekvenci {1} se rovná {2} milisekund.</XFramesAtYFrameRateGivesZMs>
+    <UseXAsNewGap>Použít „{0}“ milisekund jako novou minimální mezeru?</UseXAsNewGap>
   </Settings>
   <SettingsMpv>
-    <Title>Nastavení pro mpv</Title>
     <DownloadMpv>Stáhnout knihovnu mpv</DownloadMpv>
     <DownloadMpvFailed>Nelze stáhnout mpv - zkuste to znovu později!</DownloadMpvFailed>
     <DownloadMpvOk>Knihovna mpv byla stažena a je připravena k použití.</DownloadMpvOk>
@@ -2061,12 +2480,12 @@ jako je „Advanced Sub Station Alpha“ nebo prostřednictvím exportu do form�
   <ShowEarlierLater>
     <Title>Zobrazit vybrané řádky dříve nebo později</Title>
     <TitleAll>Zobrazit všechny řádky dříve nebo později</TitleAll>
-    <ShowEarlier>Zobrazit dříve</ShowEarlier>
-    <ShowLater>Zobrazit později</ShowLater>
+    <ShowEarlier>Zobrazit &amp;dříve</ShowEarlier>
+    <ShowLater>&amp;Zobrazit později</ShowLater>
     <TotalAdjustmentX>Celková úprava: {0}</TotalAdjustmentX>
-    <AllLines>Všechny řádky</AllLines>
-    <SelectedLinesOnly>Pouze vybrané řádky</SelectedLinesOnly>
-    <SelectedLinesAndForward>Vybrané řádky a dopředu</SelectedLinesAndForward>
+    <AllLines>&amp;Všechny řádky</AllLines>
+    <SelectedLinesOnly>&amp;Pouze vybrané řádky</SelectedLinesOnly>
+    <SelectedLinesAndForward>Vybrané řádky &amp;a dopředu</SelectedLinesAndForward>
   </ShowEarlierLater>
   <ShowHistory>
     <Title>Historie (pro vrácení zpět)</Title>
@@ -2099,21 +2518,29 @@ jako je „Advanced Sub Station Alpha“ nebo prostřednictvím exportu do form�
     <AddXToNames>Přidat '{0}' na seznam jmen</AddXToNames>
     <AddXToUserDictionary>Přidat '{0}' do vlastního slovníku</AddXToUserDictionary>
     <AutoFixNames>Automaticky opravit jména pokud se liší pouze velikost písmen</AutoFixNames>
+    <AutoFixNamesViaSuggestions>Opravit také jména pomocí ‚návrhů kontroly pravopisu‘</AutoFixNamesViaSuggestions>
     <CheckOneLetterWords>Ptát se na neznámá jednopísmenná slova</CheckOneLetterWords>
     <TreatINQuoteAsING>Zacházet se slovy končícími na „in'“ jako s „ing“ (pouze angličtina)</TreatINQuoteAsING>
     <RememberUseAlwaysList>Zapamatovat seznam „Použít vždy“</RememberUseAlwaysList>
+    <LiveSpellCheck>Živá kontrola pravopisu</LiveSpellCheck>
+    <LiveSpellCheckLanguage>Živá kontrola pravopisu - Pracujete s jazykem [{0}]</LiveSpellCheckLanguage>
+    <NoDictionaryForLiveSpellCheck>Živá kontrola pravopisu - Nemáte slovníky pro tento jazyk [{0}]</NoDictionaryForLiveSpellCheck>
     <ImageText>Obrázek textu</ImageText>
     <SpellCheckCompleted>Kontrola pravopisu dokončena</SpellCheckCompleted>
     <SpellCheckAborted>Kontrola pravopisu přerušena</SpellCheckAborted>
     <SpacesNotAllowed>V jednom slově nejsou povoleny mezery!</SpacesNotAllowed>
-    <UndoX>Zpět: {0}</UndoX>
+    <UndoX>Zpět: "{0}"</UndoX>
   </SpellCheck>
   <NetflixQualityCheck>
     <GlyphCheckReport>Neplatný znak {0} nalezen ve sloupci {1}</GlyphCheckReport>
     <WhiteSpaceCheckReport>Neplatný prázdný znak nalezen ve sloupci {0}.</WhiteSpaceCheckReport>
     <ReportPrompt>Úplnou zprávu naleznete zde: {0}.</ReportPrompt>
-    <FoundXIssues>Kontrola kvality Netflix nalezla {0} problémů.</FoundXIssues>
+    <OpenReportInFolder>Otevřít zprávu ve složce</OpenReportInFolder>
+    <FoundXIssues>Kontrola kvality Netflix nalezla {0:#,##0} problémů.</FoundXIssues>
     <CheckOk>Kontrola kvality Netflix v pořádku :)</CheckOk>
+    <MaximumXCharsPerSecond>Maximálně {0} znaků za sekundu (včetně prázdných znaků)</MaximumXCharsPerSecond>
+    <MaximumLineLength>Maximální délka řádku ({0})</MaximumLineLength>
+    <MinimumDuration>Minimální trvání: 5/6 sekundy (833 ms)</MinimumDuration>
   </NetflixQualityCheck>
   <Split>
     <Title>Rozdělit</Title>
@@ -2131,11 +2558,11 @@ jako je „Advanced Sub Station Alpha“ nebo prostřednictvím exportu do form�
     <Basic>Základní</Basic>
   </Split>
   <SplitLongLines>
-    <Title>Rozdělit dlouhé řádky</Title>
+    <Title>Zalomit nebo rozdělit dlouhé řádky</Title>
     <SingleLineMaximumLength>Maximální délka samostaného řádku</SingleLineMaximumLength>
     <LineMaximumLength>Maximální délka řádku</LineMaximumLength>
     <LineContinuationBeginEndStrings>Řetězce začátku nebo konce pokračování řádku</LineContinuationBeginEndStrings>
-    <NumberOfSplits>Počet rozdělení: {0}</NumberOfSplits>
+    <NumberOfSplits>Počet zalomení nebo rozdělení: {0}</NumberOfSplits>
     <LongestSingleLineIsXAtY>Největší délka samostaného řádku je {0} na řádku {1}</LongestSingleLineIsXAtY>
     <LongestLineIsXAtY>Největší celková délka řádku je {0} na řádku {1}</LongestLineIsXAtY>
   </SplitLongLines>
@@ -2186,6 +2613,9 @@ jako je „Advanced Sub Station Alpha“ nebo prostřednictvím exportu do form�
     <SingleLineLengthMinimum>Minimální délka jednotlivého řádku: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Maximální délka jednotlivého řádku: {0}</SingleLineLengthMaximum>
     <SingleLineLengthAverage>Průměrná délka jednotlivého řádku: {0}</SingleLineLengthAverage>
+    <SingleLineWidthMinimum>Šířka jednoho řádku - minimálně: {0} pixels</SingleLineWidthMinimum>
+    <SingleLineWidthMaximum>Šířka jednoho řádku - maximálně: {0} pixels</SingleLineWidthMaximum>
+    <SingleLineWidthAverage>Šířka jednoho řádku - průměrně: {0} pixels</SingleLineWidthAverage>
     <DurationMinimum>Minimální trvání: {0:0.000} sekund</DurationMinimum>
     <DurationMaximum>Maximální trvání: {0:0.000} sekund</DurationMaximum>
     <DurationAverage>Průměrné trvání: {0:0.000} sekund</DurationAverage>
@@ -2208,6 +2638,7 @@ jako je „Advanced Sub Station Alpha“ nebo prostřednictvím exportu do form�
     <UpdateDetails>Podrobnosti aktualizace</UpdateDetails>
     <Resolution>Rozlišení</Resolution>
     <VideoResolution>Rozlišení videa</VideoResolution>
+    <FromCurrentVideo>Z aktuálního videa</FromCurrentVideo>
     <Options>Volby</Options>
     <WrapStyle>Styl zalomení</WrapStyle>
     <Collision>Kolize</Collision>
@@ -2244,6 +2675,7 @@ jako je „Advanced Sub Station Alpha“ nebo prostřednictvím exportu do form�
     <MarginLeft>Okraj vlevo</MarginLeft>
     <MarginRight>Okraj vpravo</MarginRight>
     <MarginVertical>Svislý okraj</MarginVertical>
+    <Vertical>Svislé</Vertical>
     <Border>Ohraničení</Border>
     <PlusShadow>+ Stín</PlusShadow>
     <OpaqueBox>Neprůhledné pole</OpaqueBox>
@@ -2261,7 +2693,36 @@ jako je „Advanced Sub Station Alpha“ nebo prostřednictvím exportu do form�
     <StyleAlreadyExits>Styl již existuje: {0}</StyleAlreadyExits>
     <StyleXExportedToFileY>Styl '{0}' exportován do souboru '{1}'</StyleXExportedToFileY>
     <StyleXImportedFromFileY>Styl '{0}' importován ze souboru '{1}'</StyleXImportedFromFileY>
+    <SetPreviewText>Nastavit text náhledu...</SetPreviewText>
+    <AddToFile>Přidat do souboru</AddToFile>
+    <AddToStorage>Přidat do úložiště</AddToStorage>
+    <StyleStorage>Úložiště stylů</StyleStorage>
+    <StyleCurrentFile>Styly v aktuálním souboru</StyleCurrentFile>
+    <OverwriteX>Přepsat {0}?</OverwriteX>
+    <CategoryNote>Poznámka: Styly ve výchozí kategorie (zbarveny zeleně) budou použity na nové soubory ASSA</CategoryNote>
+    <CategoriesManage>Spravovat</CategoriesManage>
+    <MoveToCategory>Přesunout vybrné styly do kategorie...</MoveToCategory>
+    <ScaleX>Měřítko X</ScaleX>
+    <ScaleY>Měřítko Y</ScaleY>
+    <Spacing>Mezery</Spacing>
+    <Angle>Úhel</Angle>
+    <BoxPerLine>Pole na řádek (použít barvu obrysu)</BoxPerLine>
+    <BoxMultiLine>Jedno pole (použít barvu stínu)</BoxMultiLine>
   </SubStationAlphaStyles>
+  <SubStationAlphaStylesCategoriesManager>
+    <Category>Kategorie</Category>
+    <Categories>Kategorie</Categories>
+    <CategoryName>Název kategorie</CategoryName>
+    <CategoryDelete>Opravdu chcete odstranit vybranou kategorii nebo vybrané kategorie?</CategoryDelete>
+    <NewCategory>Nová kategorie</NewCategory>
+    <CategoryRename>Přejmenovat kategorii</CategoryRename>
+    <CategorySetDefault>Nastavit jako výchozí</CategorySetDefault>
+    <NumberOfStyles>Počet stylů</NumberOfStyles>
+    <CategoryDefault>Výchozí</CategoryDefault>
+    <ChooseCategories>Zvolte kategorie pro {0}</ChooseCategories>
+    <ImportCategoriesTitle>Importovat kategorie z...</ImportCategoriesTitle>
+    <ExportCategoriesTitle>Exportovat kategorie do...</ExportCategoriesTitle>
+  </SubStationAlphaStylesCategoriesManager>
   <PointSync>
     <Title>Bodová synchronizace</Title>
     <TitleViaOtherSubtitle>Bodová synchronizace pomocí jiných titulků</TitleViaOtherSubtitle>
@@ -2274,7 +2735,8 @@ jako je „Advanced Sub Station Alpha“ nebo prostřednictvím exportu do form�
   </PointSync>
   <TransportStreamSubtitleChooser>
     <Title>Volba datového proudu přenosu titulků - {0}</Title>
-    <PidLine>Identifikátor paketu přenosu (PID) = {0}, počet titulků = {1}</PidLine>
+    <PidLineImage>Obrázky - Identifikátor paketu přenosu (PID) = {0}, jazyk = {1}, počet titulků = {2}</PidLineImage>
+    <PidLineTeletext>Teletext - Identifikátor paketu přenosu (PID) = {1}, stránka {0}, jazyk = {2}, počet titulků = {3}</PidLineTeletext>
     <SubLine>{0}: {1} -&gt; {2}, {3} obrázků</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
@@ -2317,13 +2779,18 @@ Zachovat změny?</KeepChangesMessage>
     <Title>Importovat/OCR titulky VobSub (sub/idx)</Title>
     <TitleBluRay>Importovat/OCR titulky Blu-ray (.sup)</TitleBluRay>
     <OcrMethod>Metoda OCR</OcrMethod>
-    <OcrViaModi>OCR pomocí Microsoft Office Document Imaging (MODI). Requires Microsoft Office</OcrViaModi>
-    <OcrViaTesseract>OCR pomocí Tesseract</OcrViaTesseract>
+    <OcrViaTesseractVersionX>Tesseract {0}</OcrViaTesseractVersionX>
+    <OcrViaImageCompare>Porovnání binárních obrázků</OcrViaImageCompare>
+    <OcrViaModi>OCR pomocí Microsoft Office Document Imaging (MODI). Vyžaduje Microsoft Office</OcrViaModi>
     <OcrViaNOCR>OCR pomocí nOCR</OcrViaNOCR>
+    <TesseractEngineMode>Režim modulu</TesseractEngineMode>
+    <TesseractEngineModeLegacy>Pouze původní Tesseract (umí rozpoznat kurzívu)</TesseractEngineModeLegacy>
+    <TesseractEngineModeNeural>Pouze neurální sítě LSTM</TesseractEngineModeNeural>
+    <TesseractEngineModeBoth>Tesseract + LSTM</TesseractEngineModeBoth>
+    <TesseractEngineModeDefault>Výchozí, podle toho, co je dostupné</TesseractEngineModeDefault>
     <Language>Jazyk</Language>
-    <OcrViaImageCompare>OCR pomocí porovnání obrázků</OcrViaImageCompare>
     <ImageDatabase>Databáze obrázků</ImageDatabase>
-    <NoOfPixelsIsSpace>Počet bodů je mezera</NoOfPixelsIsSpace>
+    <NoOfPixelsIsSpace>Počet pixelů je mezera</NoOfPixelsIsSpace>
     <MaxErrorPercent>Max. procent chyb</MaxErrorPercent>
     <New>Nový</New>
     <Edit>Upravit</Edit>
@@ -2350,6 +2817,7 @@ Zachovat změny?</KeepChangesMessage>
     <AllFixes>Všechny opravy</AllFixes>
     <GuessesUsed>Použité odhady</GuessesUsed>
     <UnknownWords>Neznámá slova</UnknownWords>
+    <UnknownWordToGuessInLine>{0} ⇒ {1} pomocí 'OCRFixReplaceList.xml' v řádku: {2}</UnknownWordToGuessInLine>
     <OcrAutoCorrectionSpellChecking>Automatická oprava a kontrola pravopisu OCR</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Opravit chyby OCR</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importovat text s odpovídajícími časovými kódy...</ImportTextWithMatchingTimeCodes>
@@ -2364,17 +2832,29 @@ Zachovat změny?</KeepChangesMessage>
     <UseTimeCodesFromIdx>Použít časové kódy ze souboru .idx</UseTimeCodesFromIdx>
     <NoMatch>&lt;Žádná shoda&gt;</NoMatch>
     <AutoTransparentBackground>Automatické průhledné pozadí</AutoTransparentBackground>
+    <CaptureTopAlign>Zachytit zarovnání nahoru</CaptureTopAlign>
     <InspectCompareMatchesForCurrentImage>Prozkoumat porovnání shod pro aktuální obrázek...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Upravit poslední přidaná porovnání obrázků...</EditLastAdditions>
-    <SetUnitalicFactor>Nastavit koeficient nekurzívy...</SetUnitalicFactor>
+    <SetItalicAngle>Nastavit úhel kurzívy...</SetItalicAngle>
+    <ItalicAngle>Úhel kurzívy</ItalicAngle>
     <DiscardTitle>Zahodit změny provedené v OCR?</DiscardTitle>
     <DiscardText>Chcete zahodit změny provedené v aktuální relaci OCR?</DiscardText>
     <MinLineSplitHeight>Min. výška řádku (rozdělit)</MinLineSplitHeight>
     <FallbackToX>Záložní {0}</FallbackToX>
     <ImagePreProcessing>Předzpracování obrázku...</ImagePreProcessing>
+    <EditImageDb>Upravit databázi obrázků</EditImageDb>
+    <OcrTraining>Trénink OCR...</OcrTraining>
+    <SubtitleTrainingFile>Soubor titulků pro trénink</SubtitleTrainingFile>
+    <LetterCombinations>Kombinace písmena, které mohou být rozděleny jako jeden obrázek</LetterCombinations>
+    <TrainingOptions>Možnosti tréninku</TrainingOptions>
+    <NumberOfSegments>Počet segmentů na písmeno</NumberOfSegments>
+    <AlsoTrainItalic>Trénovat také kurzívu</AlsoTrainItalic>
+    <AlsoTrainBold>Trénovat také tučné</AlsoTrainBold>
+    <StartTraining>Spustit trénink</StartTraining>
+    <NowTraining>Nyní trénujete písmo ‚{1}‘. Natrénováno celkem znaků: {0:#,###,##0}, {2:#,###,##0} známo</NowTraining>
   </VobSubOcr>
   <VobSubOcrCharacter>
-    <Title>VobSub - Ručně obrázek na text</Title>
+    <Title>OCR - Ručně obrázek na text</Title>
     <ShrinkSelection>Zmenšit výběr</ShrinkSelection>
     <ExpandSelection>Zvětšit výběr</ExpandSelection>
     <SubtitleImage>Obrázek titulku</SubtitleImage>
@@ -2399,10 +2879,24 @@ Zachovat změny?</KeepChangesMessage>
     <Title>Nová složka</Title>
     <Message>Název nové složky databáze znaků</Message>
   </VobSubOcrNewFolder>
-  <VobSubOcrSetItalicFactor>
-    <Title>Nastavit koeficient nekurzívy</Title>
+  <VobSubOcrSetItalicAngle>
+    <Title>Nastavit úhel kurzívy</Title>
     <Description>Upravujte hodnotu, dokud styl textu nebude normální a ne kurzívou. Pozor, původní obrázek by měl být kurzívou.</Description>
-  </VobSubOcrSetItalicFactor>
+  </VobSubOcrSetItalicAngle>
+  <OcrPreprocessing>
+    <Title>Předzpracování OCR obrázků</Title>
+    <Colors>Barvy</Colors>
+    <AdjustAlpha>Upravte hodnoty dokud není text zobrazen jasně (obyčejně hodnoty mezi 200 a 300)</AdjustAlpha>
+    <OriginalImage>Původní obrázek</OriginalImage>
+    <PostImage>Obrázek po předzpracování</PostImage>
+    <BinaryThreshold>Práh porovnání binárního obrázku</BinaryThreshold>
+    <InvertColors>Invertovat barvy</InvertColors>
+    <YellowToWhite>Žlutá na bílou</YellowToWhite>
+    <ColorToWhite>Barva na bílou</ColorToWhite>
+    <ColorToRemove>Barva k odebrání</ColorToRemove>
+    <Cropping>Oříznutí</Cropping>
+    <CropTransparentColors>Oříznout průhledné barvy</CropTransparentColors>
+  </OcrPreprocessing>
   <Watermark>
     <Title>Vodoznak</Title>
     <WatermarkX>Vodoznak: {0}</WatermarkX>
@@ -2415,6 +2909,7 @@ Zachovat změny?</KeepChangesMessage>
     <ErrorUnicodeEncodingOnly>Vodoznak funguje pouze s kódováním souboru unicode.</ErrorUnicodeEncodingOnly>
   </Watermark>
   <Waveform>
+    <AddWaveformAndSpectrogram>Přidat křivku nebo spektrogram</AddWaveformAndSpectrogram>
     <ClickToAddWaveform>Klikněte pro přidání křivky</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Klikněte pro přidání křivky a spektrogramu</ClickToAddWaveformAndSpectrogram>
     <Seconds>sekund</Seconds>
@@ -2422,18 +2917,24 @@ Zachovat změny?</KeepChangesMessage>
     <ZoomOut>Zmenšit</ZoomOut>
     <AddParagraphHere>Přidat text sem</AddParagraphHere>
     <AddParagraphHereAndPasteText>Přidat text ze schránky sem</AddParagraphHereAndPasteText>
+    <SetParagraphAsSelection>Nastavit aktuální jako nový výběr</SetParagraphAsSelection>
     <FocusTextBox>Přepnout na textové pole</FocusTextBox>
+    <GoToPrevious>Přejít na předchozí titulek</GoToPrevious>
+    <GoToNext>Přejít na následující titulek</GoToNext>
     <DeleteParagraph>Odtranit text</DeleteParagraph>
     <Split>Rozdělit</Split>
     <SplitAtCursor>Rozdělit na kurzoru</SplitAtCursor>
     <MergeWithPrevious>Sloučit s předchozím</MergeWithPrevious>
     <MergeWithNext>Sloučit s dalším</MergeWithNext>
+    <ExtendToPrevious>Rozšířit na předchozí</ExtendToPrevious>
+    <ExtendToNext>Rozšířit na následující</ExtendToNext>
     <PlaySelection>Přehrát výběr</PlaySelection>
     <ShowWaveformAndSpectrogram>Zobrazit křivku a spektrogram</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Zobrazit pouze křivku</ShowWaveformOnly>
     <ShowSpectrogramOnly>Zobrazit pouze spektrogram</ShowSpectrogramOnly>
     <AddSceneChange>Přidat změnu scény</AddSceneChange>
     <RemoveSceneChange>Odebrat změnu scény</RemoveSceneChange>
+    <RemoveSceneChangesFromSelection>Odebrat změnu scén z výběru</RemoveSceneChangesFromSelection>
     <GuessTimeCodes>Odhadnout časové kódy...</GuessTimeCodes>
     <SeekSilence>Hledat ticho...</SeekSilence>
     <InsertSubtitleHere>Vložit titulek sem...</InsertSubtitleHere>
