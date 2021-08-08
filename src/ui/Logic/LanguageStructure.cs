@@ -3017,6 +3017,8 @@
             public string DictionaryX { get; set; }
             public string RightToLeft { get; set; }
             public string ShowOnlyForcedSubtitles { get; set; }
+            public string ShowOnlyNonForcedSubtitles { get; set; }
+            public string ShowAllSubtitles { get; set; }
             public string UseTimeCodesFromIdx { get; set; }
             public string NoMatch { get; set; }
             public string AutoTransparentBackground { get; set; }

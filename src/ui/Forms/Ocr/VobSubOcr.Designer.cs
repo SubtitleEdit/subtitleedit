@@ -147,11 +147,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemImageSaveAs = new System.Windows.Forms.ToolStripMenuItem();
             this.previewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.checkBoxShowOnlyForced = new System.Windows.Forms.CheckBox();
             this.checkBoxUseTimeCodesFromIdx = new System.Windows.Forms.CheckBox();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.splitContainerBottom = new System.Windows.Forms.SplitContainer();
+            this.comboBoxShowForced = new System.Windows.Forms.ComboBox();
             this.textBoxCurrentText = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.contextMenuStripTextBox = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -206,6 +206,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             // contextMenuStripListview
             // 
+            this.contextMenuStripListview.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStripListview.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.normalToolStripMenuItem,
             this.italicToolStripMenuItem,
@@ -229,65 +230,65 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.toolStripSeparator3,
             this.deleteToolStripMenuItem});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(306, 386);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(367, 418);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             // 
             // normalToolStripMenuItem
             // 
             this.normalToolStripMenuItem.Name = "normalToolStripMenuItem";
-            this.normalToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
+            this.normalToolStripMenuItem.Size = new System.Drawing.Size(366, 24);
             this.normalToolStripMenuItem.Text = "Normal";
             this.normalToolStripMenuItem.Click += new System.EventHandler(this.NormalToolStripMenuItemClick);
             // 
             // italicToolStripMenuItem
             // 
             this.italicToolStripMenuItem.Name = "italicToolStripMenuItem";
-            this.italicToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
+            this.italicToolStripMenuItem.Size = new System.Drawing.Size(366, 24);
             this.italicToolStripMenuItem.Text = "Italic";
             this.italicToolStripMenuItem.Click += new System.EventHandler(this.ItalicToolStripMenuItemClick);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(302, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(363, 6);
             // 
             // importTextWithMatchingTimeCodesToolStripMenuItem
             // 
             this.importTextWithMatchingTimeCodesToolStripMenuItem.Name = "importTextWithMatchingTimeCodesToolStripMenuItem";
-            this.importTextWithMatchingTimeCodesToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
+            this.importTextWithMatchingTimeCodesToolStripMenuItem.Size = new System.Drawing.Size(366, 24);
             this.importTextWithMatchingTimeCodesToolStripMenuItem.Text = "Import text with matching time codes...";
             this.importTextWithMatchingTimeCodesToolStripMenuItem.Click += new System.EventHandler(this.importTextWithMatchingTimeCodesToolStripMenuItem_Click);
             // 
             // importNewTimeCodesToolStripMenuItem
             // 
             this.importNewTimeCodesToolStripMenuItem.Name = "importNewTimeCodesToolStripMenuItem";
-            this.importNewTimeCodesToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
+            this.importNewTimeCodesToolStripMenuItem.Size = new System.Drawing.Size(366, 24);
             this.importNewTimeCodesToolStripMenuItem.Text = "Import new time codes...";
             this.importNewTimeCodesToolStripMenuItem.Click += new System.EventHandler(this.importNewTimeCodesToolStripMenuItem_Click);
             // 
             // toolStripMenuItemSaveSubtitleAs
             // 
             this.toolStripMenuItemSaveSubtitleAs.Name = "toolStripMenuItemSaveSubtitleAs";
-            this.toolStripMenuItemSaveSubtitleAs.Size = new System.Drawing.Size(305, 22);
+            this.toolStripMenuItemSaveSubtitleAs.Size = new System.Drawing.Size(366, 24);
             this.toolStripMenuItemSaveSubtitleAs.Text = "Save subtitle as...";
             this.toolStripMenuItemSaveSubtitleAs.Click += new System.EventHandler(this.toolStripMenuItemSaveSubtitleAs_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(302, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(363, 6);
             // 
             // saveImageAsToolStripMenuItem
             // 
             this.saveImageAsToolStripMenuItem.Name = "saveImageAsToolStripMenuItem";
-            this.saveImageAsToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
+            this.saveImageAsToolStripMenuItem.Size = new System.Drawing.Size(366, 24);
             this.saveImageAsToolStripMenuItem.Text = "Save image as...";
             this.saveImageAsToolStripMenuItem.Click += new System.EventHandler(this.SaveImageAsToolStripMenuItemClick);
             // 
             // saveAllImagesWithHtmlIndexViewToolStripMenuItem
             // 
             this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Name = "saveAllImagesWithHtmlIndexViewToolStripMenuItem";
-            this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
+            this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Size = new System.Drawing.Size(366, 24);
             this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Text = "Save all images with HTML index view...";
             this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Click += new System.EventHandler(this.SaveAllImagesWithHtmlIndexViewToolStripMenuItem_Click);
             // 
@@ -300,67 +301,67 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.dOSTToolStripMenuItem,
             this.finalCutProImageToolStripMenuItem});
             this.toolStripMenuItemExport.Name = "toolStripMenuItemExport";
-            this.toolStripMenuItemExport.Size = new System.Drawing.Size(305, 22);
+            this.toolStripMenuItemExport.Size = new System.Drawing.Size(366, 24);
             this.toolStripMenuItemExport.Text = "Export all images as...";
             // 
             // bDNXMLToolStripMenuItem
             // 
             this.bDNXMLToolStripMenuItem.Name = "bDNXMLToolStripMenuItem";
-            this.bDNXMLToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.bDNXMLToolStripMenuItem.Size = new System.Drawing.Size(244, 26);
             this.bDNXMLToolStripMenuItem.Text = "BDN XML...";
             this.bDNXMLToolStripMenuItem.Click += new System.EventHandler(this.BDNXMLToolStripMenuItem_Click);
             // 
             // bluraySupToolStripMenuItem
             // 
             this.bluraySupToolStripMenuItem.Name = "bluraySupToolStripMenuItem";
-            this.bluraySupToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.bluraySupToolStripMenuItem.Size = new System.Drawing.Size(244, 26);
             this.bluraySupToolStripMenuItem.Text = "Blu-ray sup...";
             this.bluraySupToolStripMenuItem.Click += new System.EventHandler(this.BluraySupToolStripMenuItem_Click);
             // 
             // vobSubToolStripMenuItem
             // 
             this.vobSubToolStripMenuItem.Name = "vobSubToolStripMenuItem";
-            this.vobSubToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.vobSubToolStripMenuItem.Size = new System.Drawing.Size(244, 26);
             this.vobSubToolStripMenuItem.Text = "VobSub...";
             this.vobSubToolStripMenuItem.Click += new System.EventHandler(this.VobSubToolStripMenuItem_Click);
             // 
             // dOSTToolStripMenuItem
             // 
             this.dOSTToolStripMenuItem.Name = "dOSTToolStripMenuItem";
-            this.dOSTToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.dOSTToolStripMenuItem.Size = new System.Drawing.Size(244, 26);
             this.dOSTToolStripMenuItem.Text = "DOST...";
             this.dOSTToolStripMenuItem.Click += new System.EventHandler(this.DOSTToolStripMenuItem_Click);
             // 
             // finalCutProImageToolStripMenuItem
             // 
             this.finalCutProImageToolStripMenuItem.Name = "finalCutProImageToolStripMenuItem";
-            this.finalCutProImageToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.finalCutProImageToolStripMenuItem.Size = new System.Drawing.Size(244, 26);
             this.finalCutProImageToolStripMenuItem.Text = "Final Cut Pro + image...";
             this.finalCutProImageToolStripMenuItem.Click += new System.EventHandler(this.finalCutProImageToolStripMenuItem_Click);
             // 
             // toolStripSeparatorImageCompare
             // 
             this.toolStripSeparatorImageCompare.Name = "toolStripSeparatorImageCompare";
-            this.toolStripSeparatorImageCompare.Size = new System.Drawing.Size(302, 6);
+            this.toolStripSeparatorImageCompare.Size = new System.Drawing.Size(363, 6);
             // 
             // toolStripMenuItemInspectNOcrMatches
             // 
             this.toolStripMenuItemInspectNOcrMatches.Name = "toolStripMenuItemInspectNOcrMatches";
-            this.toolStripMenuItemInspectNOcrMatches.Size = new System.Drawing.Size(305, 22);
+            this.toolStripMenuItemInspectNOcrMatches.Size = new System.Drawing.Size(366, 24);
             this.toolStripMenuItemInspectNOcrMatches.Text = "Inspect nocr matches for current image...";
             this.toolStripMenuItemInspectNOcrMatches.Click += new System.EventHandler(this.toolStripMenuItemInspectNOcrMatches_Click);
             // 
             // inspectImageCompareMatchesForCurrentImageToolStripMenuItem
             // 
             this.inspectImageCompareMatchesForCurrentImageToolStripMenuItem.Name = "inspectImageCompareMatchesForCurrentImageToolStripMenuItem";
-            this.inspectImageCompareMatchesForCurrentImageToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
+            this.inspectImageCompareMatchesForCurrentImageToolStripMenuItem.Size = new System.Drawing.Size(366, 24);
             this.inspectImageCompareMatchesForCurrentImageToolStripMenuItem.Text = "Inspect compare matches for current image";
             this.inspectImageCompareMatchesForCurrentImageToolStripMenuItem.Click += new System.EventHandler(this.InspectImageCompareMatchesForCurrentImageToolStripMenuItem_Click);
             // 
             // EditLastAdditionsToolStripMenuItem
             // 
             this.EditLastAdditionsToolStripMenuItem.Name = "EditLastAdditionsToolStripMenuItem";
-            this.EditLastAdditionsToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
+            this.EditLastAdditionsToolStripMenuItem.Size = new System.Drawing.Size(366, 24);
             this.EditLastAdditionsToolStripMenuItem.Text = "Edit last OCR image additions...";
             this.EditLastAdditionsToolStripMenuItem.Click += new System.EventHandler(this.inspectLastAdditionsToolStripMenuItem_Click);
             // 
@@ -368,19 +369,19 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             this.OcrTrainingToolStripMenuItem.Name = "OcrTrainingToolStripMenuItem";
             this.OcrTrainingToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
-            this.OcrTrainingToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
+            this.OcrTrainingToolStripMenuItem.Size = new System.Drawing.Size(366, 24);
             this.OcrTrainingToolStripMenuItem.Text = "OCR training..";
             this.OcrTrainingToolStripMenuItem.Click += new System.EventHandler(this.OcrTrainingToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(302, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(363, 6);
             // 
             // toolStripMenuItemSetUnItalicFactor
             // 
             this.toolStripMenuItemSetUnItalicFactor.Name = "toolStripMenuItemSetUnItalicFactor";
-            this.toolStripMenuItemSetUnItalicFactor.Size = new System.Drawing.Size(305, 22);
+            this.toolStripMenuItemSetUnItalicFactor.Size = new System.Drawing.Size(366, 24);
             this.toolStripMenuItemSetUnItalicFactor.Text = "Set italic angle...";
             this.toolStripMenuItemSetUnItalicFactor.Click += new System.EventHandler(this.toolStripMenuItemSetUnItalicFactor_Click);
             // 
@@ -388,7 +389,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             this.captureTopAlignmentToolStripMenuItem.CheckOnClick = true;
             this.captureTopAlignmentToolStripMenuItem.Name = "captureTopAlignmentToolStripMenuItem";
-            this.captureTopAlignmentToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
+            this.captureTopAlignmentToolStripMenuItem.Size = new System.Drawing.Size(366, 24);
             this.captureTopAlignmentToolStripMenuItem.Text = "Capture top alignment";
             this.captureTopAlignmentToolStripMenuItem.Click += new System.EventHandler(this.captureTopAlignmentToolStripMenuItem_Click);
             // 
@@ -397,19 +398,19 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.ImagePreProcessingToolStripMenuItem.Name = "ImagePreProcessingToolStripMenuItem";
             this.ImagePreProcessingToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.P)));
-            this.ImagePreProcessingToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
+            this.ImagePreProcessingToolStripMenuItem.Size = new System.Drawing.Size(366, 24);
             this.ImagePreProcessingToolStripMenuItem.Text = "Image preprocessing...";
             this.ImagePreProcessingToolStripMenuItem.Click += new System.EventHandler(this.ImagePreProcessingToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(302, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(363, 6);
             // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(366, 24);
             this.deleteToolStripMenuItem.Text = "Delete";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.DeleteToolStripMenuItemClick);
             // 
@@ -418,7 +419,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.labelSubtitleText.AutoSize = true;
             this.labelSubtitleText.Location = new System.Drawing.Point(7, 5);
             this.labelSubtitleText.Name = "labelSubtitleText";
-            this.labelSubtitleText.Size = new System.Drawing.Size(66, 13);
+            this.labelSubtitleText.Size = new System.Drawing.Size(82, 17);
             this.labelSubtitleText.TabIndex = 6;
             this.labelSubtitleText.Text = "Subtitle text";
             // 
@@ -437,7 +438,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.labelStatus.AutoSize = true;
             this.labelStatus.Location = new System.Drawing.Point(12, 543);
             this.labelStatus.Name = "labelStatus";
-            this.labelStatus.Size = new System.Drawing.Size(131, 13);
+            this.labelStatus.Size = new System.Drawing.Size(166, 17);
             this.labelStatus.TabIndex = 8;
             this.labelStatus.Text = "Loading VobSub images...";
             // 
@@ -491,7 +492,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             "OCR via Tesseract 3.02"});
             this.comboBoxOcrMethod.Location = new System.Drawing.Point(13, 20);
             this.comboBoxOcrMethod.Name = "comboBoxOcrMethod";
-            this.comboBoxOcrMethod.Size = new System.Drawing.Size(366, 21);
+            this.comboBoxOcrMethod.Size = new System.Drawing.Size(366, 25);
             this.comboBoxOcrMethod.TabIndex = 0;
             this.comboBoxOcrMethod.SelectedIndexChanged += new System.EventHandler(this.ComboBoxOcrMethodSelectedIndexChanged);
             // 
@@ -522,7 +523,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(137, 77);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(104, 13);
+            this.label3.Size = new System.Drawing.Size(131, 17);
             this.label3.TabIndex = 49;
             this.label3.Text = "Line split min. height";
             // 
@@ -603,14 +604,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             "150"});
             this.comboBoxNOcrLineSplitMinHeight.Location = new System.Drawing.Point(247, 74);
             this.comboBoxNOcrLineSplitMinHeight.Name = "comboBoxNOcrLineSplitMinHeight";
-            this.comboBoxNOcrLineSplitMinHeight.Size = new System.Drawing.Size(103, 21);
+            this.comboBoxNOcrLineSplitMinHeight.Size = new System.Drawing.Size(103, 25);
             this.comboBoxNOcrLineSplitMinHeight.TabIndex = 48;
             // 
             // numericUpDownNOcrMaxWrongPixels
             // 
             this.numericUpDownNOcrMaxWrongPixels.Location = new System.Drawing.Point(123, 45);
             this.numericUpDownNOcrMaxWrongPixels.Name = "numericUpDownNOcrMaxWrongPixels";
-            this.numericUpDownNOcrMaxWrongPixels.Size = new System.Drawing.Size(50, 21);
+            this.numericUpDownNOcrMaxWrongPixels.Size = new System.Drawing.Size(50, 24);
             this.numericUpDownNOcrMaxWrongPixels.TabIndex = 43;
             this.numericUpDownNOcrMaxWrongPixels.Value = new decimal(new int[] {
             45,
@@ -623,7 +624,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.labelNOcrMaxWrongPixels.AutoSize = true;
             this.labelNOcrMaxWrongPixels.Location = new System.Drawing.Point(13, 48);
             this.labelNOcrMaxWrongPixels.Name = "labelNOcrMaxWrongPixels";
-            this.labelNOcrMaxWrongPixels.Size = new System.Drawing.Size(90, 13);
+            this.labelNOcrMaxWrongPixels.Size = new System.Drawing.Size(113, 17);
             this.labelNOcrMaxWrongPixels.TabIndex = 42;
             this.labelNOcrMaxWrongPixels.Text = "Max wrong pixels";
             // 
@@ -652,7 +653,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(11, 104);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(54, 13);
+            this.label2.Size = new System.Drawing.Size(68, 17);
             this.label2.TabIndex = 35;
             this.label2.Text = "Language";
             // 
@@ -662,7 +663,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.comboBoxNOcrLanguage.FormattingEnabled = true;
             this.comboBoxNOcrLanguage.Location = new System.Drawing.Point(74, 100);
             this.comboBoxNOcrLanguage.Name = "comboBoxNOcrLanguage";
-            this.comboBoxNOcrLanguage.Size = new System.Drawing.Size(130, 21);
+            this.comboBoxNOcrLanguage.Size = new System.Drawing.Size(130, 25);
             this.comboBoxNOcrLanguage.TabIndex = 34;
             this.comboBoxNOcrLanguage.SelectedIndexChanged += new System.EventHandler(this.comboBoxNOcrLanguage_SelectedIndexChanged);
             // 
@@ -671,7 +672,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.checkBoxNOcrItalic.AutoSize = true;
             this.checkBoxNOcrItalic.Location = new System.Drawing.Point(12, 69);
             this.checkBoxNOcrItalic.Name = "checkBoxNOcrItalic";
-            this.checkBoxNOcrItalic.Size = new System.Drawing.Size(92, 17);
+            this.checkBoxNOcrItalic.Size = new System.Drawing.Size(112, 21);
             this.checkBoxNOcrItalic.TabIndex = 8;
             this.checkBoxNOcrItalic.Text = "Contains italic";
             this.checkBoxNOcrItalic.UseVisualStyleBackColor = true;
@@ -681,7 +682,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.checkBoxNOcrDrawUnknownLetters.AutoSize = true;
             this.checkBoxNOcrDrawUnknownLetters.Location = new System.Drawing.Point(235, 17);
             this.checkBoxNOcrDrawUnknownLetters.Name = "checkBoxNOcrDrawUnknownLetters";
-            this.checkBoxNOcrDrawUnknownLetters.Size = new System.Drawing.Size(116, 17);
+            this.checkBoxNOcrDrawUnknownLetters.Size = new System.Drawing.Size(145, 21);
             this.checkBoxNOcrDrawUnknownLetters.TabIndex = 7;
             this.checkBoxNOcrDrawUnknownLetters.Text = "Draw missing texts";
             this.checkBoxNOcrDrawUnknownLetters.UseVisualStyleBackColor = true;
@@ -691,7 +692,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.checkBoxRightToLeftNOCR.AutoSize = true;
             this.checkBoxRightToLeftNOCR.Location = new System.Drawing.Point(235, 40);
             this.checkBoxRightToLeftNOCR.Name = "checkBoxRightToLeftNOCR";
-            this.checkBoxRightToLeftNOCR.Size = new System.Drawing.Size(83, 17);
+            this.checkBoxRightToLeftNOCR.Size = new System.Drawing.Size(101, 21);
             this.checkBoxRightToLeftNOCR.TabIndex = 6;
             this.checkBoxRightToLeftNOCR.Text = "Right to left";
             this.checkBoxRightToLeftNOCR.UseVisualStyleBackColor = true;
@@ -710,7 +711,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             0,
             0});
             this.numericUpDownNumberOfPixelsIsSpaceNOCR.Name = "numericUpDownNumberOfPixelsIsSpaceNOCR";
-            this.numericUpDownNumberOfPixelsIsSpaceNOCR.Size = new System.Drawing.Size(50, 21);
+            this.numericUpDownNumberOfPixelsIsSpaceNOCR.Size = new System.Drawing.Size(50, 24);
             this.numericUpDownNumberOfPixelsIsSpaceNOCR.TabIndex = 5;
             this.numericUpDownNumberOfPixelsIsSpaceNOCR.Value = new decimal(new int[] {
             12,
@@ -724,7 +725,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.labelNumberOfPixelsIsSpaceNOCR.AutoSize = true;
             this.labelNumberOfPixelsIsSpaceNOCR.Location = new System.Drawing.Point(12, 20);
             this.labelNumberOfPixelsIsSpaceNOCR.Name = "labelNumberOfPixelsIsSpaceNOCR";
-            this.labelNumberOfPixelsIsSpaceNOCR.Size = new System.Drawing.Size(104, 13);
+            this.labelNumberOfPixelsIsSpaceNOCR.Size = new System.Drawing.Size(129, 17);
             this.labelNumberOfPixelsIsSpaceNOCR.TabIndex = 4;
             this.labelNumberOfPixelsIsSpaceNOCR.Text = "No of pixels is space";
             // 
@@ -762,7 +763,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.labelMinLineSplitHeight.AutoSize = true;
             this.labelMinLineSplitHeight.Location = new System.Drawing.Point(238, 86);
             this.labelMinLineSplitHeight.Name = "labelMinLineSplitHeight";
-            this.labelMinLineSplitHeight.Size = new System.Drawing.Size(104, 13);
+            this.labelMinLineSplitHeight.Size = new System.Drawing.Size(131, 17);
             this.labelMinLineSplitHeight.TabIndex = 47;
             this.labelMinLineSplitHeight.Text = "Line split min. height";
             // 
@@ -843,7 +844,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             "150"});
             this.comboBoxLineSplitMinLineHeight.Location = new System.Drawing.Point(239, 102);
             this.comboBoxLineSplitMinLineHeight.Name = "comboBoxLineSplitMinLineHeight";
-            this.comboBoxLineSplitMinLineHeight.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxLineSplitMinLineHeight.Size = new System.Drawing.Size(121, 25);
             this.comboBoxLineSplitMinLineHeight.TabIndex = 46;
             // 
             // labelMaxErrorPercent
@@ -851,7 +852,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.labelMaxErrorPercent.AutoSize = true;
             this.labelMaxErrorPercent.Location = new System.Drawing.Point(7, 83);
             this.labelMaxErrorPercent.Name = "labelMaxErrorPercent";
-            this.labelMaxErrorPercent.Size = new System.Drawing.Size(55, 13);
+            this.labelMaxErrorPercent.Size = new System.Drawing.Size(69, 17);
             this.labelMaxErrorPercent.TabIndex = 45;
             this.labelMaxErrorPercent.Text = "Max Err%";
             // 
@@ -870,7 +871,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             0,
             0});
             this.numericUpDownMaxErrorPct.Name = "numericUpDownMaxErrorPct";
-            this.numericUpDownMaxErrorPct.Size = new System.Drawing.Size(50, 21);
+            this.numericUpDownMaxErrorPct.Size = new System.Drawing.Size(50, 24);
             this.numericUpDownMaxErrorPct.TabIndex = 44;
             this.numericUpDownMaxErrorPct.Value = new decimal(new int[] {
             10,
@@ -884,7 +885,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.checkBoxRightToLeft.AutoSize = true;
             this.checkBoxRightToLeft.Location = new System.Drawing.Point(9, 107);
             this.checkBoxRightToLeft.Name = "checkBoxRightToLeft";
-            this.checkBoxRightToLeft.Size = new System.Drawing.Size(83, 17);
+            this.checkBoxRightToLeft.Size = new System.Drawing.Size(101, 21);
             this.checkBoxRightToLeft.TabIndex = 6;
             this.checkBoxRightToLeft.Text = "Right to left";
             this.checkBoxRightToLeft.UseVisualStyleBackColor = true;
@@ -903,7 +904,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             0,
             0});
             this.numericUpDownPixelsIsSpace.Name = "numericUpDownPixelsIsSpace";
-            this.numericUpDownPixelsIsSpace.Size = new System.Drawing.Size(50, 21);
+            this.numericUpDownPixelsIsSpace.Size = new System.Drawing.Size(50, 24);
             this.numericUpDownPixelsIsSpace.TabIndex = 5;
             this.numericUpDownPixelsIsSpace.Value = new decimal(new int[] {
             1,
@@ -917,7 +918,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.labelNoOfPixelsIsSpace.AutoSize = true;
             this.labelNoOfPixelsIsSpace.Location = new System.Drawing.Point(6, 56);
             this.labelNoOfPixelsIsSpace.Name = "labelNoOfPixelsIsSpace";
-            this.labelNoOfPixelsIsSpace.Size = new System.Drawing.Size(104, 13);
+            this.labelNoOfPixelsIsSpace.Size = new System.Drawing.Size(129, 17);
             this.labelNoOfPixelsIsSpace.TabIndex = 4;
             this.labelNoOfPixelsIsSpace.Text = "No of pixels is space";
             // 
@@ -927,7 +928,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.comboBoxCharacterDatabase.FormattingEnabled = true;
             this.comboBoxCharacterDatabase.Location = new System.Drawing.Point(130, 19);
             this.comboBoxCharacterDatabase.Name = "comboBoxCharacterDatabase";
-            this.comboBoxCharacterDatabase.Size = new System.Drawing.Size(182, 21);
+            this.comboBoxCharacterDatabase.Size = new System.Drawing.Size(182, 25);
             this.comboBoxCharacterDatabase.TabIndex = 1;
             this.comboBoxCharacterDatabase.SelectedIndexChanged += new System.EventHandler(this.ComboBoxCharacterDatabaseSelectedIndexChanged);
             // 
@@ -936,7 +937,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.labelImageDatabase.AutoSize = true;
             this.labelImageDatabase.Location = new System.Drawing.Point(7, 22);
             this.labelImageDatabase.Name = "labelImageDatabase";
-            this.labelImageDatabase.Size = new System.Drawing.Size(85, 13);
+            this.labelImageDatabase.Size = new System.Drawing.Size(105, 17);
             this.labelImageDatabase.TabIndex = 0;
             this.labelImageDatabase.Text = "Image database";
             // 
@@ -962,7 +963,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.checkBoxTesseractFallback.AutoSize = true;
             this.checkBoxTesseractFallback.Location = new System.Drawing.Point(21, 104);
             this.checkBoxTesseractFallback.Name = "checkBoxTesseractFallback";
-            this.checkBoxTesseractFallback.Size = new System.Drawing.Size(152, 17);
+            this.checkBoxTesseractFallback.Size = new System.Drawing.Size(188, 21);
             this.checkBoxTesseractFallback.TabIndex = 7;
             this.checkBoxTesseractFallback.Text = "Fallback to Tesseract 3.02";
             this.checkBoxTesseractFallback.UseVisualStyleBackColor = true;
@@ -972,7 +973,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.labelTesseractEngineMode.AutoSize = true;
             this.labelTesseractEngineMode.Location = new System.Drawing.Point(18, 50);
             this.labelTesseractEngineMode.Name = "labelTesseractEngineMode";
-            this.labelTesseractEngineMode.Size = new System.Drawing.Size(68, 13);
+            this.labelTesseractEngineMode.Size = new System.Drawing.Size(88, 17);
             this.labelTesseractEngineMode.TabIndex = 6;
             this.labelTesseractEngineMode.Text = "Engine mode";
             // 
@@ -987,7 +988,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             "Default, based on what is available"});
             this.comboBoxTesseractEngineMode.Location = new System.Drawing.Point(98, 47);
             this.comboBoxTesseractEngineMode.Name = "comboBoxTesseractEngineMode";
-            this.comboBoxTesseractEngineMode.Size = new System.Drawing.Size(195, 21);
+            this.comboBoxTesseractEngineMode.Size = new System.Drawing.Size(195, 25);
             this.comboBoxTesseractEngineMode.TabIndex = 5;
             this.comboBoxTesseractEngineMode.SelectedIndexChanged += new System.EventHandler(this.comboBoxTesseractEngineMode_SelectedIndexChanged);
             // 
@@ -1008,7 +1009,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.checkBoxTesseractMusicOn.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxTesseractMusicOn.Location = new System.Drawing.Point(81, 77);
             this.checkBoxTesseractMusicOn.Name = "checkBoxTesseractMusicOn";
-            this.checkBoxTesseractMusicOn.Size = new System.Drawing.Size(93, 17);
+            this.checkBoxTesseractMusicOn.Size = new System.Drawing.Size(117, 21);
             this.checkBoxTesseractMusicOn.TabIndex = 4;
             this.checkBoxTesseractMusicOn.Text = "Music symbols";
             this.checkBoxTesseractMusicOn.UseVisualStyleBackColor = true;
@@ -1020,7 +1021,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.checkBoxTesseractItalicsOn.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxTesseractItalicsOn.Location = new System.Drawing.Point(21, 77);
             this.checkBoxTesseractItalicsOn.Name = "checkBoxTesseractItalicsOn";
-            this.checkBoxTesseractItalicsOn.Size = new System.Drawing.Size(54, 17);
+            this.checkBoxTesseractItalicsOn.Size = new System.Drawing.Size(63, 21);
             this.checkBoxTesseractItalicsOn.TabIndex = 3;
             this.checkBoxTesseractItalicsOn.Text = "Italics";
             this.checkBoxTesseractItalicsOn.UseVisualStyleBackColor = true;
@@ -1030,7 +1031,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.labelTesseractLanguage.AutoSize = true;
             this.labelTesseractLanguage.Location = new System.Drawing.Point(18, 22);
             this.labelTesseractLanguage.Name = "labelTesseractLanguage";
-            this.labelTesseractLanguage.Size = new System.Drawing.Size(54, 13);
+            this.labelTesseractLanguage.Size = new System.Drawing.Size(68, 17);
             this.labelTesseractLanguage.TabIndex = 0;
             this.labelTesseractLanguage.Text = "Language";
             // 
@@ -1040,7 +1041,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.comboBoxTesseractLanguages.FormattingEnabled = true;
             this.comboBoxTesseractLanguages.Location = new System.Drawing.Point(98, 20);
             this.comboBoxTesseractLanguages.Name = "comboBoxTesseractLanguages";
-            this.comboBoxTesseractLanguages.Size = new System.Drawing.Size(195, 21);
+            this.comboBoxTesseractLanguages.Size = new System.Drawing.Size(195, 25);
             this.comboBoxTesseractLanguages.TabIndex = 1;
             this.comboBoxTesseractLanguages.SelectedIndexChanged += new System.EventHandler(this.ComboBoxTesseractLanguagesSelectedIndexChanged);
             // 
@@ -1060,7 +1061,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(11, 58);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(54, 13);
+            this.label1.Size = new System.Drawing.Size(68, 17);
             this.label1.TabIndex = 33;
             this.label1.Text = "Language";
             // 
@@ -1070,7 +1071,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.comboBoxModiLanguage.FormattingEnabled = true;
             this.comboBoxModiLanguage.Location = new System.Drawing.Point(108, 55);
             this.comboBoxModiLanguage.Name = "comboBoxModiLanguage";
-            this.comboBoxModiLanguage.Size = new System.Drawing.Size(195, 21);
+            this.comboBoxModiLanguage.Size = new System.Drawing.Size(195, 25);
             this.comboBoxModiLanguage.TabIndex = 0;
             this.comboBoxModiLanguage.SelectedIndexChanged += new System.EventHandler(this.ComboBoxModiLanguageSelectedIndexChanged);
             // 
@@ -1093,7 +1094,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.labelStartFrom.AutoSize = true;
             this.labelStartFrom.Location = new System.Drawing.Point(120, 26);
             this.labelStartFrom.Name = "labelStartFrom";
-            this.labelStartFrom.Size = new System.Drawing.Size(127, 13);
+            this.labelStartFrom.Size = new System.Drawing.Size(160, 17);
             this.labelStartFrom.TabIndex = 1;
             this.labelStartFrom.Text = "Start OCR from subtitle#";
             // 
@@ -1111,7 +1112,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             0,
             0});
             this.numericUpDownStartNumber.Name = "numericUpDownStartNumber";
-            this.numericUpDownStartNumber.Size = new System.Drawing.Size(64, 21);
+            this.numericUpDownStartNumber.Size = new System.Drawing.Size(64, 24);
             this.numericUpDownStartNumber.TabIndex = 3;
             this.numericUpDownStartNumber.Value = new decimal(new int[] {
             1,
@@ -1177,7 +1178,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.labelFixesMade.AutoSize = true;
             this.labelFixesMade.Location = new System.Drawing.Point(151, 48);
             this.labelFixesMade.Name = "labelFixesMade";
-            this.labelFixesMade.Size = new System.Drawing.Size(98, 13);
+            this.labelFixesMade.Size = new System.Drawing.Size(123, 17);
             this.labelFixesMade.TabIndex = 3;
             this.labelFixesMade.Text = "NumberOfOcrFixes";
             // 
@@ -1189,7 +1190,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.comboBoxDictionaries.FormattingEnabled = true;
             this.comboBoxDictionaries.Location = new System.Drawing.Point(127, 20);
             this.comboBoxDictionaries.Name = "comboBoxDictionaries";
-            this.comboBoxDictionaries.Size = new System.Drawing.Size(229, 21);
+            this.comboBoxDictionaries.Size = new System.Drawing.Size(229, 25);
             this.comboBoxDictionaries.TabIndex = 1;
             this.comboBoxDictionaries.SelectedIndexChanged += new System.EventHandler(this.comboBoxDictionaries_SelectedIndexChanged);
             // 
@@ -1200,7 +1201,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.checkBoxGuessUnknownWords.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxGuessUnknownWords.Location = new System.Drawing.Point(11, 91);
             this.checkBoxGuessUnknownWords.Name = "checkBoxGuessUnknownWords";
-            this.checkBoxGuessUnknownWords.Size = new System.Drawing.Size(164, 17);
+            this.checkBoxGuessUnknownWords.Size = new System.Drawing.Size(209, 21);
             this.checkBoxGuessUnknownWords.TabIndex = 5;
             this.checkBoxGuessUnknownWords.Text = "Try to guess unknown words";
             this.checkBoxGuessUnknownWords.UseVisualStyleBackColor = true;
@@ -1222,15 +1223,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             // contextMenuStripAllFixes
             // 
+            this.contextMenuStripAllFixes.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStripAllFixes.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItemClearFixes});
             this.contextMenuStripAllFixes.Name = "contextMenuStripUnknownWords";
-            this.contextMenuStripAllFixes.Size = new System.Drawing.Size(102, 26);
+            this.contextMenuStripAllFixes.Size = new System.Drawing.Size(113, 28);
             // 
             // toolStripMenuItemClearFixes
             // 
             this.toolStripMenuItemClearFixes.Name = "toolStripMenuItemClearFixes";
-            this.toolStripMenuItemClearFixes.Size = new System.Drawing.Size(101, 22);
+            this.toolStripMenuItemClearFixes.Size = new System.Drawing.Size(112, 24);
             this.toolStripMenuItemClearFixes.Text = "Clear";
             this.toolStripMenuItemClearFixes.Click += new System.EventHandler(this.toolStripMenuItemClearFixes_Click);
             // 
@@ -1241,9 +1243,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.tabPageUnknownWords.Controls.Add(this.buttonUknownToUserDic);
             this.tabPageUnknownWords.Controls.Add(this.buttonUknownToNames);
             this.tabPageUnknownWords.Controls.Add(this.listBoxUnknownWords);
-            this.tabPageUnknownWords.Location = new System.Drawing.Point(4, 22);
+            this.tabPageUnknownWords.Location = new System.Drawing.Point(4, 26);
             this.tabPageUnknownWords.Name = "tabPageUnknownWords";
-            this.tabPageUnknownWords.Size = new System.Drawing.Size(375, 155);
+            this.tabPageUnknownWords.Size = new System.Drawing.Size(375, 151);
             this.tabPageUnknownWords.TabIndex = 2;
             this.tabPageUnknownWords.Text = "Unknown words";
             this.tabPageUnknownWords.UseVisualStyleBackColor = true;
@@ -1305,34 +1307,36 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.listBoxUnknownWords.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBoxUnknownWords.FormattingEnabled = true;
             this.listBoxUnknownWords.HorizontalScrollbar = true;
+            this.listBoxUnknownWords.ItemHeight = 17;
             this.listBoxUnknownWords.Location = new System.Drawing.Point(3, 3);
             this.listBoxUnknownWords.Name = "listBoxUnknownWords";
-            this.listBoxUnknownWords.Size = new System.Drawing.Size(143, 149);
+            this.listBoxUnknownWords.Size = new System.Drawing.Size(143, 140);
             this.listBoxUnknownWords.TabIndex = 40;
             this.listBoxUnknownWords.SelectedIndexChanged += new System.EventHandler(this.ListBoxLogSelectedIndexChanged);
             this.listBoxUnknownWords.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBoxCopyToClipboard_KeyDown);
             // 
             // contextMenuStripUnknownWords
             // 
+            this.contextMenuStripUnknownWords.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStripUnknownWords.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.clearToolStripMenuItem});
             this.contextMenuStripUnknownWords.Name = "contextMenuStripUnknownWords";
-            this.contextMenuStripUnknownWords.Size = new System.Drawing.Size(102, 26);
+            this.contextMenuStripUnknownWords.Size = new System.Drawing.Size(113, 28);
             // 
             // clearToolStripMenuItem
             // 
             this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
-            this.clearToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(112, 24);
             this.clearToolStripMenuItem.Text = "Clear";
             this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
             // 
             // tabPageAllFixes
             // 
             this.tabPageAllFixes.Controls.Add(this.listBoxLog);
-            this.tabPageAllFixes.Location = new System.Drawing.Point(4, 22);
+            this.tabPageAllFixes.Location = new System.Drawing.Point(4, 26);
             this.tabPageAllFixes.Name = "tabPageAllFixes";
             this.tabPageAllFixes.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageAllFixes.Size = new System.Drawing.Size(375, 155);
+            this.tabPageAllFixes.Size = new System.Drawing.Size(375, 151);
             this.tabPageAllFixes.TabIndex = 0;
             this.tabPageAllFixes.Text = "All fixes";
             this.tabPageAllFixes.UseVisualStyleBackColor = true;
@@ -1343,9 +1347,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.listBoxLog.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBoxLog.FormattingEnabled = true;
             this.listBoxLog.HorizontalScrollbar = true;
+            this.listBoxLog.ItemHeight = 17;
             this.listBoxLog.Location = new System.Drawing.Point(3, 3);
             this.listBoxLog.Name = "listBoxLog";
-            this.listBoxLog.Size = new System.Drawing.Size(369, 149);
+            this.listBoxLog.Size = new System.Drawing.Size(369, 145);
             this.listBoxLog.TabIndex = 0;
             this.listBoxLog.SelectedIndexChanged += new System.EventHandler(this.ListBoxLogSelectedIndexChanged);
             this.listBoxLog.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBoxCopyToClipboard_KeyDown);
@@ -1353,10 +1358,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // tabPageSuggestions
             // 
             this.tabPageSuggestions.Controls.Add(this.listBoxLogSuggestions);
-            this.tabPageSuggestions.Location = new System.Drawing.Point(4, 22);
+            this.tabPageSuggestions.Location = new System.Drawing.Point(4, 26);
             this.tabPageSuggestions.Name = "tabPageSuggestions";
             this.tabPageSuggestions.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageSuggestions.Size = new System.Drawing.Size(375, 155);
+            this.tabPageSuggestions.Size = new System.Drawing.Size(375, 151);
             this.tabPageSuggestions.TabIndex = 1;
             this.tabPageSuggestions.Text = "Guesses used";
             this.tabPageSuggestions.UseVisualStyleBackColor = true;
@@ -1368,24 +1373,26 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.listBoxLogSuggestions.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBoxLogSuggestions.FormattingEnabled = true;
             this.listBoxLogSuggestions.HorizontalScrollbar = true;
+            this.listBoxLogSuggestions.ItemHeight = 17;
             this.listBoxLogSuggestions.Location = new System.Drawing.Point(3, 3);
             this.listBoxLogSuggestions.Name = "listBoxLogSuggestions";
-            this.listBoxLogSuggestions.Size = new System.Drawing.Size(369, 149);
+            this.listBoxLogSuggestions.Size = new System.Drawing.Size(369, 145);
             this.listBoxLogSuggestions.TabIndex = 40;
             this.listBoxLogSuggestions.SelectedIndexChanged += new System.EventHandler(this.ListBoxLogSelectedIndexChanged);
             this.listBoxLogSuggestions.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBoxCopyToClipboard_KeyDown);
             // 
             // contextMenuStripGuessesUsed
             // 
+            this.contextMenuStripGuessesUsed.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStripGuessesUsed.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItemClearGuesses});
             this.contextMenuStripGuessesUsed.Name = "contextMenuStripUnknownWords";
-            this.contextMenuStripGuessesUsed.Size = new System.Drawing.Size(102, 26);
+            this.contextMenuStripGuessesUsed.Size = new System.Drawing.Size(113, 28);
             // 
             // toolStripMenuItemClearGuesses
             // 
             this.toolStripMenuItemClearGuesses.Name = "toolStripMenuItemClearGuesses";
-            this.toolStripMenuItemClearGuesses.Size = new System.Drawing.Size(101, 22);
+            this.toolStripMenuItemClearGuesses.Size = new System.Drawing.Size(112, 24);
             this.toolStripMenuItemClearGuesses.Text = "Clear";
             this.toolStripMenuItemClearGuesses.Click += new System.EventHandler(this.toolStripMenuItemClearGuesses_Click);
             // 
@@ -1396,7 +1403,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.checkBoxPromptForUnknownWords.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxPromptForUnknownWords.Location = new System.Drawing.Point(11, 69);
             this.checkBoxPromptForUnknownWords.Name = "checkBoxPromptForUnknownWords";
-            this.checkBoxPromptForUnknownWords.Size = new System.Drawing.Size(255, 17);
+            this.checkBoxPromptForUnknownWords.Size = new System.Drawing.Size(325, 21);
             this.checkBoxPromptForUnknownWords.TabIndex = 4;
             this.checkBoxPromptForUnknownWords.Text = "Prompt for unknown words (requires dictionary)";
             this.checkBoxPromptForUnknownWords.UseVisualStyleBackColor = true;
@@ -1408,7 +1415,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.checkBoxAutoBreakLines.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxAutoBreakLines.Location = new System.Drawing.Point(11, 113);
             this.checkBoxAutoBreakLines.Name = "checkBoxAutoBreakLines";
-            this.checkBoxAutoBreakLines.Size = new System.Drawing.Size(208, 17);
+            this.checkBoxAutoBreakLines.Size = new System.Drawing.Size(259, 21);
             this.checkBoxAutoBreakLines.TabIndex = 6;
             this.checkBoxAutoBreakLines.Text = "Auto break subtitle, if line number > 2";
             this.checkBoxAutoBreakLines.UseVisualStyleBackColor = true;
@@ -1418,7 +1425,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.labelDictionaryLoaded.AutoSize = true;
             this.labelDictionaryLoaded.Location = new System.Drawing.Point(11, 24);
             this.labelDictionaryLoaded.Name = "labelDictionaryLoaded";
-            this.labelDictionaryLoaded.Size = new System.Drawing.Size(112, 13);
+            this.labelDictionaryLoaded.Size = new System.Drawing.Size(141, 17);
             this.labelDictionaryLoaded.TabIndex = 0;
             this.labelDictionaryLoaded.Text = "labelDictionaryLoaded";
             // 
@@ -1429,7 +1436,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.checkBoxAutoFixCommonErrors.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxAutoFixCommonErrors.Location = new System.Drawing.Point(11, 47);
             this.checkBoxAutoFixCommonErrors.Name = "checkBoxAutoFixCommonErrors";
-            this.checkBoxAutoFixCommonErrors.Size = new System.Drawing.Size(139, 17);
+            this.checkBoxAutoFixCommonErrors.Size = new System.Drawing.Size(178, 21);
             this.checkBoxAutoFixCommonErrors.TabIndex = 2;
             this.checkBoxAutoFixCommonErrors.Text = "Fix common OCR errors";
             this.checkBoxAutoFixCommonErrors.UseVisualStyleBackColor = true;
@@ -1461,7 +1468,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.checkBoxBackgroundTransparent.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxBackgroundTransparent.Location = new System.Drawing.Point(144, 19);
             this.checkBoxBackgroundTransparent.Name = "checkBoxBackgroundTransparent";
-            this.checkBoxBackgroundTransparent.Size = new System.Drawing.Size(85, 17);
+            this.checkBoxBackgroundTransparent.Size = new System.Drawing.Size(104, 21);
             this.checkBoxBackgroundTransparent.TabIndex = 8;
             this.checkBoxBackgroundTransparent.Text = "Transparent";
             this.checkBoxBackgroundTransparent.UseVisualStyleBackColor = true;
@@ -1482,7 +1489,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.checkBoxEmphasis2Transparent.AutoSize = true;
             this.checkBoxEmphasis2Transparent.Location = new System.Drawing.Point(507, 19);
             this.checkBoxEmphasis2Transparent.Name = "checkBoxEmphasis2Transparent";
-            this.checkBoxEmphasis2Transparent.Size = new System.Drawing.Size(85, 17);
+            this.checkBoxEmphasis2Transparent.Size = new System.Drawing.Size(104, 21);
             this.checkBoxEmphasis2Transparent.TabIndex = 6;
             this.checkBoxEmphasis2Transparent.Text = "Transparent";
             this.checkBoxEmphasis2Transparent.UseVisualStyleBackColor = true;
@@ -1493,7 +1500,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.checkBoxEmphasis1Transparent.AutoSize = true;
             this.checkBoxEmphasis1Transparent.Location = new System.Drawing.Point(387, 19);
             this.checkBoxEmphasis1Transparent.Name = "checkBoxEmphasis1Transparent";
-            this.checkBoxEmphasis1Transparent.Size = new System.Drawing.Size(85, 17);
+            this.checkBoxEmphasis1Transparent.Size = new System.Drawing.Size(104, 21);
             this.checkBoxEmphasis1Transparent.TabIndex = 5;
             this.checkBoxEmphasis1Transparent.Text = "Transparent";
             this.checkBoxEmphasis1Transparent.UseVisualStyleBackColor = true;
@@ -1504,7 +1511,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.checkBoxPatternTransparent.AutoSize = true;
             this.checkBoxPatternTransparent.Location = new System.Drawing.Point(266, 19);
             this.checkBoxPatternTransparent.Name = "checkBoxPatternTransparent";
-            this.checkBoxPatternTransparent.Size = new System.Drawing.Size(85, 17);
+            this.checkBoxPatternTransparent.Size = new System.Drawing.Size(104, 21);
             this.checkBoxPatternTransparent.TabIndex = 4;
             this.checkBoxPatternTransparent.Text = "Transparent";
             this.checkBoxPatternTransparent.UseVisualStyleBackColor = true;
@@ -1548,7 +1555,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.checkBoxCustomFourColors.AutoSize = true;
             this.checkBoxCustomFourColors.Location = new System.Drawing.Point(7, 16);
             this.checkBoxCustomFourColors.Name = "checkBoxCustomFourColors";
-            this.checkBoxCustomFourColors.Size = new System.Drawing.Size(116, 17);
+            this.checkBoxCustomFourColors.Size = new System.Drawing.Size(147, 21);
             this.checkBoxCustomFourColors.TabIndex = 0;
             this.checkBoxCustomFourColors.Text = "Use custom colors:";
             this.checkBoxCustomFourColors.UseVisualStyleBackColor = true;
@@ -1576,7 +1583,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.labelMinAlpha.AutoSize = true;
             this.labelMinAlpha.Location = new System.Drawing.Point(351, 171);
             this.labelMinAlpha.Name = "labelMinAlpha";
-            this.labelMinAlpha.Size = new System.Drawing.Size(252, 13);
+            this.labelMinAlpha.Size = new System.Drawing.Size(312, 17);
             this.labelMinAlpha.TabIndex = 40;
             this.labelMinAlpha.Text = "Min. alpha value (0=transparent, 255=fully visible)";
             this.labelMinAlpha.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -1592,7 +1599,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             0,
             0});
             this.numericUpDownAutoTransparentAlphaMax.Name = "numericUpDownAutoTransparentAlphaMax";
-            this.numericUpDownAutoTransparentAlphaMax.Size = new System.Drawing.Size(44, 21);
+            this.numericUpDownAutoTransparentAlphaMax.Size = new System.Drawing.Size(44, 24);
             this.numericUpDownAutoTransparentAlphaMax.TabIndex = 37;
             this.numericUpDownAutoTransparentAlphaMax.Value = new decimal(new int[] {
             140,
@@ -1621,7 +1628,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.checkBoxTransportStreamGetColorAndSplit.AutoSize = true;
             this.checkBoxTransportStreamGetColorAndSplit.Location = new System.Drawing.Point(135, 15);
             this.checkBoxTransportStreamGetColorAndSplit.Name = "checkBoxTransportStreamGetColorAndSplit";
-            this.checkBoxTransportStreamGetColorAndSplit.Size = new System.Drawing.Size(253, 17);
+            this.checkBoxTransportStreamGetColorAndSplit.Size = new System.Drawing.Size(317, 21);
             this.checkBoxTransportStreamGetColorAndSplit.TabIndex = 1;
             this.checkBoxTransportStreamGetColorAndSplit.Text = "Try get color (will include some splitting of lines)";
             this.checkBoxTransportStreamGetColorAndSplit.UseVisualStyleBackColor = true;
@@ -1632,7 +1639,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.checkBoxTransportStreamGrayscale.AutoSize = true;
             this.checkBoxTransportStreamGrayscale.Location = new System.Drawing.Point(7, 16);
             this.checkBoxTransportStreamGrayscale.Name = "checkBoxTransportStreamGrayscale";
-            this.checkBoxTransportStreamGrayscale.Size = new System.Drawing.Size(73, 17);
+            this.checkBoxTransportStreamGrayscale.Size = new System.Drawing.Size(88, 21);
             this.checkBoxTransportStreamGrayscale.TabIndex = 0;
             this.checkBoxTransportStreamGrayscale.Text = "Grayscale";
             this.checkBoxTransportStreamGrayscale.UseVisualStyleBackColor = true;
@@ -1654,6 +1661,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             // contextMenuStripImage
             // 
+            this.contextMenuStripImage.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStripImage.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.autoTransparentBackgroundToolStripMenuItem,
             this.setItalicAngleToolStripMenuItem,
@@ -1663,20 +1671,20 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.toolStripMenuItemImageSaveAs,
             this.previewToolStripMenuItem});
             this.contextMenuStripImage.Name = "contextMenuStripUnknownWords";
-            this.contextMenuStripImage.Size = new System.Drawing.Size(267, 142);
+            this.contextMenuStripImage.Size = new System.Drawing.Size(317, 154);
             this.contextMenuStripImage.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripImage_Opening);
             // 
             // autoTransparentBackgroundToolStripMenuItem
             // 
             this.autoTransparentBackgroundToolStripMenuItem.CheckOnClick = true;
             this.autoTransparentBackgroundToolStripMenuItem.Name = "autoTransparentBackgroundToolStripMenuItem";
-            this.autoTransparentBackgroundToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
+            this.autoTransparentBackgroundToolStripMenuItem.Size = new System.Drawing.Size(316, 24);
             this.autoTransparentBackgroundToolStripMenuItem.Text = "Auto transparent background";
             // 
             // setItalicAngleToolStripMenuItem
             // 
             this.setItalicAngleToolStripMenuItem.Name = "setItalicAngleToolStripMenuItem";
-            this.setItalicAngleToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
+            this.setItalicAngleToolStripMenuItem.Size = new System.Drawing.Size(316, 24);
             this.setItalicAngleToolStripMenuItem.Text = "Set italic angle...";
             this.setItalicAngleToolStripMenuItem.Click += new System.EventHandler(this.setItalicAngleToolStripMenuItem_Click);
             // 
@@ -1684,7 +1692,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             this.toolStripMenuItemCaptureTopAlign.CheckOnClick = true;
             this.toolStripMenuItemCaptureTopAlign.Name = "toolStripMenuItemCaptureTopAlign";
-            this.toolStripMenuItemCaptureTopAlign.Size = new System.Drawing.Size(266, 22);
+            this.toolStripMenuItemCaptureTopAlign.Size = new System.Drawing.Size(316, 24);
             this.toolStripMenuItemCaptureTopAlign.Text = "Capture top alignment";
             this.toolStripMenuItemCaptureTopAlign.Click += new System.EventHandler(this.toolStripMenuItemCaptureTopAlign_Click);
             // 
@@ -1693,19 +1701,19 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.imagePreprocessingToolStripMenuItem1.Name = "imagePreprocessingToolStripMenuItem1";
             this.imagePreprocessingToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.P)));
-            this.imagePreprocessingToolStripMenuItem1.Size = new System.Drawing.Size(266, 22);
+            this.imagePreprocessingToolStripMenuItem1.Size = new System.Drawing.Size(316, 24);
             this.imagePreprocessingToolStripMenuItem1.Text = "Image preprocessing...";
             this.imagePreprocessingToolStripMenuItem1.Click += new System.EventHandler(this.imagePreprocessingToolStripMenuItem1_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(263, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(313, 6);
             // 
             // toolStripMenuItemImageSaveAs
             // 
             this.toolStripMenuItemImageSaveAs.Name = "toolStripMenuItemImageSaveAs";
-            this.toolStripMenuItemImageSaveAs.Size = new System.Drawing.Size(266, 22);
+            this.toolStripMenuItemImageSaveAs.Size = new System.Drawing.Size(316, 24);
             this.toolStripMenuItemImageSaveAs.Text = "Save image as...";
             this.toolStripMenuItemImageSaveAs.Click += new System.EventHandler(this.toolStripMenuItemImageSaveAs_Click);
             // 
@@ -1713,29 +1721,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             this.previewToolStripMenuItem.Name = "previewToolStripMenuItem";
             this.previewToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
-            this.previewToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
+            this.previewToolStripMenuItem.Size = new System.Drawing.Size(316, 24);
             this.previewToolStripMenuItem.Text = "Preview...";
             this.previewToolStripMenuItem.Click += new System.EventHandler(this.previewToolStripMenuItem_Click);
-            // 
-            // checkBoxShowOnlyForced
-            // 
-            this.checkBoxShowOnlyForced.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkBoxShowOnlyForced.AutoSize = true;
-            this.checkBoxShowOnlyForced.Location = new System.Drawing.Point(369, 313);
-            this.checkBoxShowOnlyForced.Name = "checkBoxShowOnlyForced";
-            this.checkBoxShowOnlyForced.Size = new System.Drawing.Size(152, 17);
-            this.checkBoxShowOnlyForced.TabIndex = 4;
-            this.checkBoxShowOnlyForced.Text = "Show only forced subtitles";
-            this.checkBoxShowOnlyForced.UseVisualStyleBackColor = true;
-            this.checkBoxShowOnlyForced.CheckedChanged += new System.EventHandler(this.checkBoxShowOnlyForced_CheckedChanged);
             // 
             // checkBoxUseTimeCodesFromIdx
             // 
             this.checkBoxUseTimeCodesFromIdx.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBoxUseTimeCodesFromIdx.AutoSize = true;
-            this.checkBoxUseTimeCodesFromIdx.Location = new System.Drawing.Point(369, 295);
+            this.checkBoxUseTimeCodesFromIdx.Location = new System.Drawing.Point(291, 291);
             this.checkBoxUseTimeCodesFromIdx.Name = "checkBoxUseTimeCodesFromIdx";
-            this.checkBoxUseTimeCodesFromIdx.Size = new System.Drawing.Size(152, 17);
+            this.checkBoxUseTimeCodesFromIdx.Size = new System.Drawing.Size(230, 21);
             this.checkBoxUseTimeCodesFromIdx.TabIndex = 3;
             this.checkBoxUseTimeCodesFromIdx.Text = "Use lines/time codes from .idx file";
             this.checkBoxUseTimeCodesFromIdx.UseVisualStyleBackColor = true;
@@ -1755,7 +1751,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             // splitContainerBottom.Panel1
             // 
-            this.splitContainerBottom.Panel1.Controls.Add(this.checkBoxShowOnlyForced);
+            this.splitContainerBottom.Panel1.Controls.Add(this.comboBoxShowForced);
             this.splitContainerBottom.Panel1.Controls.Add(this.textBoxCurrentText);
             this.splitContainerBottom.Panel1.Controls.Add(this.groupBoxOCRControls);
             this.splitContainerBottom.Panel1.Controls.Add(this.checkBoxUseTimeCodesFromIdx);
@@ -1771,6 +1767,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.splitContainerBottom.SplitterDistance = 658;
             this.splitContainerBottom.TabIndex = 39;
             // 
+            // comboBoxShowForced
+            // 
+            this.comboBoxShowForced.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxShowForced.FormattingEnabled = true;
+            this.comboBoxShowForced.Location = new System.Drawing.Point(291, 305);
+            this.comboBoxShowForced.Name = "comboBoxShowForced";
+            this.comboBoxShowForced.Size = new System.Drawing.Size(241, 25);
+            this.comboBoxShowForced.TabIndex = 7;
+            this.comboBoxShowForced.SelectedValueChanged += new System.EventHandler(this.comboBoxShowForced_SelectedValueChanged);
+            // 
             // textBoxCurrentText
             // 
             this.textBoxCurrentText.AllowDrop = true;
@@ -1778,8 +1784,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxCurrentText.BackColor = System.Drawing.SystemColors.WindowFrame;
             this.textBoxCurrentText.ContextMenuStrip = this.contextMenuStripTextBox;
+            this.textBoxCurrentText.CurrentLanguage = "";
+            this.textBoxCurrentText.CurrentLineIndex = 0;
             this.textBoxCurrentText.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxCurrentText.HideSelection = true;
+            this.textBoxCurrentText.IsDictionaryDownloaded = true;
+            this.textBoxCurrentText.IsSpellCheckerInitialized = false;
+            this.textBoxCurrentText.IsSpellCheckRequested = false;
+            this.textBoxCurrentText.IsWrongWord = false;
+            this.textBoxCurrentText.LanguageChanged = false;
             this.textBoxCurrentText.Location = new System.Drawing.Point(8, 214);
             this.textBoxCurrentText.Multiline = true;
             this.textBoxCurrentText.Name = "textBoxCurrentText";
@@ -1795,6 +1808,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             // contextMenuStripTextBox
             // 
+            this.contextMenuStripTextBox.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStripTextBox.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cutToolStripMenuItem,
             this.copyToolStripMenuItem,
@@ -1808,13 +1822,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.italicToolStripMenuItem1,
             this.underlineToolStripMenuItem1});
             this.contextMenuStripTextBox.Name = "contextMenuStripTextBoxListView";
-            this.contextMenuStripTextBox.Size = new System.Drawing.Size(163, 214);
+            this.contextMenuStripTextBox.Size = new System.Drawing.Size(191, 232);
             // 
             // cutToolStripMenuItem
             // 
             this.cutToolStripMenuItem.Name = "cutToolStripMenuItem";
             this.cutToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-            this.cutToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.cutToolStripMenuItem.Size = new System.Drawing.Size(190, 24);
             this.cutToolStripMenuItem.Text = "Cut";
             this.cutToolStripMenuItem.Click += new System.EventHandler(this.cutToolStripMenuItem_Click);
             // 
@@ -1822,7 +1836,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
             this.copyToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(190, 24);
             this.copyToolStripMenuItem.Text = "Copy";
             this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
             // 
@@ -1830,46 +1844,46 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
             this.pasteToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(190, 24);
             this.pasteToolStripMenuItem.Text = "Paste";
             this.pasteToolStripMenuItem.Click += new System.EventHandler(this.pasteToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(162, 22);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(190, 24);
             this.toolStripMenuItem1.Text = "Delete";
             this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
             // toolStripSeparator18
             // 
             this.toolStripSeparator18.Name = "toolStripSeparator18";
-            this.toolStripSeparator18.Size = new System.Drawing.Size(159, 6);
+            this.toolStripSeparator18.Size = new System.Drawing.Size(187, 6);
             // 
             // selectAllToolStripMenuItem
             // 
             this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
             this.selectAllToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
-            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(190, 24);
             this.selectAllToolStripMenuItem.Text = "Select all";
             this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
             // 
             // toolStripSeparator17
             // 
             this.toolStripSeparator17.Name = "toolStripSeparator17";
-            this.toolStripSeparator17.Size = new System.Drawing.Size(159, 6);
+            this.toolStripSeparator17.Size = new System.Drawing.Size(187, 6);
             // 
             // normalToolStripMenuItem1
             // 
             this.normalToolStripMenuItem1.Name = "normalToolStripMenuItem1";
-            this.normalToolStripMenuItem1.Size = new System.Drawing.Size(162, 22);
+            this.normalToolStripMenuItem1.Size = new System.Drawing.Size(190, 24);
             this.normalToolStripMenuItem1.Text = "Normal";
             this.normalToolStripMenuItem1.Click += new System.EventHandler(this.normalToolStripMenuItem1_Click);
             // 
             // boldToolStripMenuItem1
             // 
             this.boldToolStripMenuItem1.Name = "boldToolStripMenuItem1";
-            this.boldToolStripMenuItem1.Size = new System.Drawing.Size(162, 22);
+            this.boldToolStripMenuItem1.Size = new System.Drawing.Size(190, 24);
             this.boldToolStripMenuItem1.Text = "Bold";
             this.boldToolStripMenuItem1.Click += new System.EventHandler(this.boldToolStripMenuItem1_Click);
             // 
@@ -1877,14 +1891,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             this.italicToolStripMenuItem1.Name = "italicToolStripMenuItem1";
             this.italicToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
-            this.italicToolStripMenuItem1.Size = new System.Drawing.Size(162, 22);
+            this.italicToolStripMenuItem1.Size = new System.Drawing.Size(190, 24);
             this.italicToolStripMenuItem1.Text = "Italic";
             this.italicToolStripMenuItem1.Click += new System.EventHandler(this.italicToolStripMenuItem1_Click);
             // 
             // underlineToolStripMenuItem1
             // 
             this.underlineToolStripMenuItem1.Name = "underlineToolStripMenuItem1";
-            this.underlineToolStripMenuItem1.Size = new System.Drawing.Size(162, 22);
+            this.underlineToolStripMenuItem1.Size = new System.Drawing.Size(190, 24);
             this.underlineToolStripMenuItem1.Text = "Underline";
             this.underlineToolStripMenuItem1.Click += new System.EventHandler(this.underlineToolStripMenuItem1_Click);
             // 
@@ -1923,7 +1937,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             // VobSubOcr
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1089, 582);
             this.Controls.Add(this.splitContainerBottom);
@@ -2054,7 +2068,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private System.Windows.Forms.CheckBox checkBoxEmphasis1Transparent;
         private System.Windows.Forms.CheckBox checkBoxPatternTransparent;
         private System.Windows.Forms.CheckBox checkBoxRightToLeft;
-        private System.Windows.Forms.CheckBox checkBoxShowOnlyForced;
         private System.Windows.Forms.CheckBox checkBoxUseTimeCodesFromIdx;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.ComboBox comboBoxDictionaries;
@@ -2146,5 +2159,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private System.Windows.Forms.ToolStripMenuItem boldToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem italicToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem underlineToolStripMenuItem1;
+        private System.Windows.Forms.ComboBox comboBoxShowForced;
     }
 }

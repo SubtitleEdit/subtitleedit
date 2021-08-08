@@ -36,6 +36,30 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private static readonly Color _listViewYellow = Configuration.Settings.General.UseDarkTheme ? Color.FromArgb(218, 135, 32) : Color.Yellow;
         private static readonly Color _listViewOrange = Configuration.Settings.General.UseDarkTheme ? Color.OrangeRed : Color.Orange;
 
+        private enum ForcedOption
+        {
+            ShowAll,
+            ShowForced,
+            ShowNonForced
+        }
+
+        public class ComboBoxItem<T>
+        {
+            public string Text { get; set; }
+            public T Value { get; set; }
+
+            public ComboBoxItem(T value, string text)
+            {
+                this.Text = text;
+                this.Value = value;
+            }
+
+            public override string ToString()
+            {
+                return Text;
+            }
+        }
+
         internal class CompareItem
         {
             public ManagedBitmap Bitmap { get; }
@@ -263,6 +287,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private int _selectedIndex = -1;
         private VobSubOcrSettings _vobSubOcrSettings;
         private bool _italicCheckedLast;
+        private bool _setupForcedOptions = false;
+        private ForcedOption _previousForced = ForcedOption.ShowAll;
         private double _unItalicFactor = 0.33;
 
         private BinaryOcrDb _binaryOcrDb;
@@ -537,7 +563,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             numericUpDownPixelsIsSpace.Value = Configuration.Settings.VobSubOcr.XOrMorePixelsMakesSpace;
             numericUpDownNumberOfPixelsIsSpaceNOCR.Value = Configuration.Settings.VobSubOcr.XOrMorePixelsMakesSpace;
 
-            checkBoxShowOnlyForced.Text = language.ShowOnlyForcedSubtitles;
+            comboBoxShowForced.DisplayMember = "Text";
+            comboBoxShowForced.ValueMember = "Value";
+            comboBoxShowForced.DataSource = new List<ComboBoxItem<ForcedOption>>
+            {
+                new ComboBoxItem<ForcedOption>(ForcedOption.ShowAll, language.ShowAllSubtitles),
+                new ComboBoxItem<ForcedOption>(ForcedOption.ShowForced, language.ShowOnlyForcedSubtitles),
+                new ComboBoxItem<ForcedOption>(ForcedOption.ShowNonForced, language.ShowOnlyNonForcedSubtitles)
+            };
+            comboBoxShowForced.SelectedValue = ForcedOption.ShowAll;
+            _setupForcedOptions = true;
             checkBoxUseTimeCodesFromIdx.Text = language.UseTimeCodesFromIdx;
 
             normalToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.RemoveFormattingAll;
@@ -636,14 +671,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             Initialize(vobSubFileName, vobSubOcrSettings, null, true);
             FormVobSubOcr_Shown(null, null);
-            checkBoxShowOnlyForced.Checked = forcedOnly;
+            comboBoxShowForced.SelectedValue = forcedOnly ? ForcedOption.ShowForced : ForcedOption.ShowAll;
             checkBoxPromptForUnknownWords.Checked = false;
 
             if (ocrEngine?.ToLowerInvariant() == "nocr")
             {
                 var oldNOcrDrawText = checkBoxNOcrDrawUnknownLetters.Checked;
                 InitializeNOcrForBatch(language);
-                checkBoxShowOnlyForced.Checked = forcedOnly;
+                comboBoxShowForced.SelectedValue = forcedOnly ? ForcedOption.ShowForced : ForcedOption.ShowAll;
                 DoBatch();
                 checkBoxNOcrDrawUnknownLetters.Checked = oldNOcrDrawText;
                 return;
@@ -878,7 +913,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 SetTesseractLanguageFromLanguageString(language);
             }
 
-            checkBoxShowOnlyForced.Checked = forcedOnly;
+            comboBoxShowForced.SelectedValue = forcedOnly ? ForcedOption.ShowForced : ForcedOption.ShowAll;
+
             DoBatch();
             checkBoxNOcrDrawUnknownLetters.Checked = oldNOcrDrawText;
         }
@@ -891,7 +927,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             InitializeOcrEngineBatch(language, ocrEngine);
 
-            checkBoxShowOnlyForced.Checked = forcedOnly;
+            comboBoxShowForced.SelectedValue = forcedOnly ? ForcedOption.ShowForced : ForcedOption.ShowAll;
+
             DoBatch();
             checkBoxNOcrDrawUnknownLetters.Checked = oldNOcrDrawText;
         }
@@ -922,7 +959,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         internal void InitializeBatch(List<VobSubMergedPack> vobSubMergedPackList, List<Color> palette, VobSubOcrSettings vobSubOcrSettings, string fileName, bool forcedOnly, string language, string ocrEngine)
         {
             Initialize(vobSubMergedPackList, palette, vobSubOcrSettings, language);
-            checkBoxShowOnlyForced.Checked = forcedOnly;
+            comboBoxShowForced.SelectedValue = forcedOnly ? ForcedOption.ShowForced : ForcedOption.ShowAll;
+
             InitializeOcrEngineBatch(language, ocrEngine);
             DoBatch();
         }
@@ -1344,8 +1382,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             for (int i = 0; i < max; i++)
             {
                 var x = _bdnXmlOriginal.Paragraphs[i];
-                if (checkBoxShowOnlyForced.Checked && x.Forced ||
-                    checkBoxShowOnlyForced.Checked == false)
+                if ((ForcedOption)comboBoxShowForced.SelectedValue == ForcedOption.ShowAll ||
+                    ((ForcedOption)comboBoxShowForced.SelectedValue == ForcedOption.ShowForced && x.Forced) ||
+                    ((ForcedOption)comboBoxShowForced.SelectedValue == ForcedOption.ShowNonForced && !x.Forced))
                 {
                     _bdnXmlSubtitle.Paragraphs.Add(new Paragraph(x));
                     _subtitle.Paragraphs.Add(new Paragraph(x) { Text = string.Empty });
@@ -1378,7 +1417,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             for (int i = 0; i < max; i++)
             {
                 var x = _bluRaySubtitlesOriginal[i];
-                if (checkBoxShowOnlyForced.Checked && x.IsForced || checkBoxShowOnlyForced.Checked == false)
+                if ((ForcedOption)comboBoxShowForced.SelectedValue == ForcedOption.ShowAll ||
+                    ((ForcedOption)comboBoxShowForced.SelectedValue == ForcedOption.ShowForced && x.IsForced) ||
+                    ((ForcedOption)comboBoxShowForced.SelectedValue == ForcedOption.ShowNonForced && !x.IsForced))
                 {
                     _bluRaySubtitles.Add(x);
                     _subtitle.Paragraphs.Add(new Paragraph
@@ -1414,8 +1455,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             for (int i = 0; i < max; i++)
             {
                 var x = _vobSubMergedPackListOriginal[i];
-                if (checkBoxShowOnlyForced.Checked && x.SubPicture.Forced ||
-                    checkBoxShowOnlyForced.Checked == false)
+                if ((ForcedOption)comboBoxShowForced.SelectedValue == ForcedOption.ShowAll ||
+                    ((ForcedOption)comboBoxShowForced.SelectedValue == ForcedOption.ShowForced && x.SubPicture.Forced) ||
+                    ((ForcedOption)comboBoxShowForced.SelectedValue == ForcedOption.ShowNonForced && !x.SubPicture.Forced))
                 {
                     _vobSubMergedPackList.Add(x);
                     Paragraph p = new Paragraph(string.Empty, x.StartTime.TotalMilliseconds, x.EndTime.TotalMilliseconds);
@@ -4777,7 +4819,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             if (_mp4List != null)
             {
-                checkBoxShowOnlyForced.Visible = false;
+                comboBoxShowForced.Visible = false;
                 checkBoxUseTimeCodesFromIdx.Visible = false;
 
                 SetButtonsEnabledAfterOcrDone();
@@ -4785,7 +4827,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
             else if (_spList != null)
             {
-                checkBoxShowOnlyForced.Visible = false;
+                comboBoxShowForced.Visible = false;
                 checkBoxUseTimeCodesFromIdx.Visible = false;
 
                 SetButtonsEnabledAfterOcrDone();
@@ -4793,7 +4835,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
             else if (_dvbSubtitles != null)
             {
-                checkBoxShowOnlyForced.Visible = false;
+                comboBoxShowForced.Visible = false;
                 checkBoxUseTimeCodesFromIdx.Visible = false;
 
                 SetButtonsEnabledAfterOcrDone();
@@ -4801,7 +4843,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
             else if (_dvbPesSubtitles != null)
             {
-                checkBoxShowOnlyForced.Visible = false;
+                comboBoxShowForced.Visible = false;
                 checkBoxUseTimeCodesFromIdx.Visible = false;
 
                 SetButtonsEnabledAfterOcrDone();
@@ -4820,7 +4862,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
                 }
 
-                checkBoxShowOnlyForced.Enabled = _hasForcedSubtitles;
+                comboBoxShowForced.Enabled = _hasForcedSubtitles;
                 checkBoxUseTimeCodesFromIdx.Visible = false;
             }
             else if (_bluRaySubtitlesOriginal != null)
@@ -4842,12 +4884,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
                 }
 
-                checkBoxShowOnlyForced.Enabled = _hasForcedSubtitles;
+                comboBoxShowForced.Enabled = _hasForcedSubtitles;
+
                 checkBoxUseTimeCodesFromIdx.Visible = false;
             }
             else if (_xSubList != null)
             {
-                checkBoxShowOnlyForced.Visible = false;
+                comboBoxShowForced.Visible = false;
                 checkBoxUseTimeCodesFromIdx.Visible = false;
 
                 SetButtonsEnabledAfterOcrDone();
@@ -4901,7 +4944,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             checkBoxUseTimeCodesFromIdx.Visible = hasIdxTimeCodes;
             checkBoxUseTimeCodesFromIdx.Checked = hasIdxTimeCodes;
             checkBoxUseTimeCodesFromIdx.CheckedChanged += checkBoxUseTimeCodesFromIdx_CheckedChanged;
-            checkBoxShowOnlyForced.Enabled = _hasForcedSubtitles;
+            comboBoxShowForced.Enabled = _hasForcedSubtitles;
+
             if (!hasIdxTimeCodes)
             {
                 checkBoxCustomFourColors.Checked = true;
@@ -4934,7 +4978,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             progressBar1.Visible = true;
             subtitleListView1.MultiSelect = false;
             checkBoxUseTimeCodesFromIdx.Enabled = false;
-            checkBoxShowOnlyForced.Enabled = false;
+            comboBoxShowForced.Enabled = false;
+
             labelStatus.Text = string.Empty;
         }
 
@@ -4952,7 +4997,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             progressBar1.Visible = false;
             subtitleListView1.MultiSelect = true;
             checkBoxUseTimeCodesFromIdx.Enabled = checkBoxUseTimeCodesFromIdx.Visible;
-            checkBoxShowOnlyForced.Enabled = _hasForcedSubtitles;
+            comboBoxShowForced.Enabled = _hasForcedSubtitles;
         }
 
         private bool _isLatinDb;
@@ -7582,8 +7627,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private Subtitle _beforeOnlyForced;
 
-        private void checkBoxShowOnlyForced_CheckedChanged(object sender, EventArgs e)
+        private void comboBoxShowForced_SelectedValueChanged(object sender, EventArgs e)
         {
+            if (!_setupForcedOptions)
+            {
+                // Control not yet initialized
+                return;
+            }
+
             if (_tesseractThreadRunner != null)
             {
                 _tesseractThreadRunner.Cancel();
@@ -7596,7 +7647,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             var oldSubtitle = new Subtitle(_subtitle);
-            if (checkBoxShowOnlyForced.Checked)
+            if (_previousForced == ForcedOption.ShowAll && ((ForcedOption)comboBoxShowForced.SelectedValue == ForcedOption.ShowForced || (ForcedOption)comboBoxShowForced.SelectedValue == ForcedOption.ShowNonForced))
             {
                 _beforeOnlyForced = oldSubtitle;
             }
@@ -7619,21 +7670,41 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 LoadVobRip();
             }
 
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+
+            if ((ForcedOption)comboBoxShowForced.SelectedValue != ForcedOption.ShowAll && _beforeOnlyForced != null)
             {
-                var current = _subtitle.Paragraphs[i];
-                foreach (var old in oldSubtitle.Paragraphs)
+                // Load any values from the master list into the new filtered values
+                for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
                 {
-                    if (Math.Abs(current.StartTime.TotalMilliseconds - old.StartTime.TotalMilliseconds) < 0.01 &&
-                        Math.Abs(current.Duration.TotalMilliseconds - old.Duration.TotalMilliseconds) < 0.01)
+                    var current = _subtitle.Paragraphs[i];
+                    foreach (var master in _beforeOnlyForced.Paragraphs)
                     {
-                        current.Text = old.Text;
+                        if (Math.Abs(current.StartTime.TotalMilliseconds - master.StartTime.TotalMilliseconds) < 0.01 &&
+                            Math.Abs(current.Duration.TotalMilliseconds - master.Duration.TotalMilliseconds) < 0.01)
+                        {
+                            current.Text = master.Text;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Write any text from this filter back to the master unfiltered list
+            for (int i = 0; i < oldSubtitle.Paragraphs.Count; i++)
+            {
+                var current = oldSubtitle.Paragraphs[i];
+                foreach (var master in _beforeOnlyForced.Paragraphs)
+                {
+                    if (Math.Abs(current.StartTime.TotalMilliseconds - master.StartTime.TotalMilliseconds) < 0.01 &&
+                        Math.Abs(current.Duration.TotalMilliseconds - master.Duration.TotalMilliseconds) < 0.01 && !string.IsNullOrWhiteSpace(current.Text))
+                    {
+                        master.Text = current.Text;
                         break;
                     }
                 }
             }
 
-            if (!checkBoxShowOnlyForced.Checked && _beforeOnlyForced != null)
+            if ((ForcedOption)comboBoxShowForced.SelectedValue == ForcedOption.ShowAll && _beforeOnlyForced != null)
             {
                 for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
                 {
@@ -7648,6 +7719,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             subtitleListView1.Fill(_subtitle);
             subtitleListView1.EndUpdate();
+            _previousForced = (ForcedOption)comboBoxShowForced.SelectedValue;
         }
 
         private void LoadDvbSubtitles()
@@ -7856,7 +7928,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             splitContainerBottom.Top = groupBoxSubtitleImage.Top + groupBoxSubtitleImage.Height + 5;
             splitContainerBottom.Height = progressBar1.Top - (splitContainerBottom.Top + 20);
             checkBoxUseTimeCodesFromIdx.Left = groupBoxOCRControls.Left + 1;
-            checkBoxShowOnlyForced.Left = checkBoxUseTimeCodesFromIdx.Left;
+            comboBoxShowForced.Left = checkBoxUseTimeCodesFromIdx.Left;
+
 
             listBoxUnknownWords.Top = listBoxLog.Top;
             listBoxUnknownWords.Left = listBoxLog.Left;
@@ -9669,5 +9742,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             TextBoxListViewToggleTag(HtmlUtil.TagUnderline);
         }
+
     }
 }
