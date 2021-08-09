@@ -6019,6 +6019,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/DefaultSaveAsFormat":
                     language.Settings.DefaultSaveAsFormat = reader.Value;
                     break;
+                case "Settings/DefaultSaveAsFormatAuto":
+                    language.Settings.DefaultSaveAsFormatAuto = reader.Value;
+                    break;
                 case "Settings/Favorites":
                     language.Settings.Favorites = reader.Value;
                     break;

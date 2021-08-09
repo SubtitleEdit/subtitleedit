@@ -2215,6 +2215,7 @@ can edit in same subtitle file (collaboration)</Information>
     <FixCommonErrorsSkipStepOne>Skip step one (choose fix rules)</FixCommonErrorsSkipStepOne>
     <DefaultFormat>Default format</DefaultFormat>
     <DefaultSaveAsFormat>Default save as format</DefaultSaveAsFormat>
+    <DefaultSaveAsFormatAuto>- Auto -</DefaultSaveAsFormatAuto>
     <Favorites>Favorites</Favorites>
     <FavoriteFormats>Favorite formats</FavoriteFormats>
     <FavoriteSubtitleFormatsNote>Note: favorite formats will be shown first when selecting a format, the default format will always be shown first</FavoriteSubtitleFormatsNote>
