@@ -2216,6 +2216,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <FixCommonErrorsSkipStepOne>Ignorar a fase um (escolher regras de correcção)</FixCommonErrorsSkipStepOne>
     <DefaultFormat>Formato predefinido</DefaultFormat>
     <DefaultSaveAsFormat>Guardar como formato predefinido</DefaultSaveAsFormat>
+    <DefaultSaveAsFormatAuto>- Auto -</DefaultSaveAsFormatAuto>
     <Favorites>Favoritos</Favorites>
     <FavoriteFormats>Formatos favoritos</FavoriteFormats>
     <FavoriteSubtitleFormatsNote>Nota: os formatos favoritos serão mostrados primeiro ao seleccionar um formato, o formato predefinido será sempre mostrado primeiro</FavoriteSubtitleFormatsNote>
