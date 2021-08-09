@@ -37,28 +37,30 @@
             this.checkBoxNoItalics = new System.Windows.Forms.CheckBox();
             this.checkBoxGapMin = new System.Windows.Forms.CheckBox();
             this.checkBoxCheckValidGlyphs = new System.Windows.Forms.CheckBox();
-            this.checkBox17CharsPerSecond = new System.Windows.Forms.CheckBox();
-            this.checkBoxChildrenProgram = new System.Windows.Forms.CheckBox();
             this.checkBoxSDH = new System.Windows.Forms.CheckBox();
+            this.checkBoxChildrenProgram = new System.Windows.Forms.CheckBox();
+            this.checkBox17CharsPerSecond = new System.Windows.Forms.CheckBox();
             this.comboBoxLanguage = new System.Windows.Forms.ComboBox();
             this.labelLanguage = new System.Windows.Forms.Label();
             this.checkBoxWriteOutOneToTen = new System.Windows.Forms.CheckBox();
             this.checkBoxSpellOutStartNumbers = new System.Windows.Forms.CheckBox();
             this.checkBoxSquareBracketForHi = new System.Windows.Forms.CheckBox();
-            this.checkBoxSpeakerStyle = new System.Windows.Forms.CheckBox();
             this.checkBoxEllipsesNotThreeDots = new System.Windows.Forms.CheckBox();
+            this.checkBoxSpeakerStyle = new System.Windows.Forms.CheckBox();
             this.checkBoxTwoLinesMax = new System.Windows.Forms.CheckBox();
             this.checkBoxMinDuration = new System.Windows.Forms.CheckBox();
             this.checkBoxMaxDuration = new System.Windows.Forms.CheckBox();
             this.buttonOK = new System.Windows.Forms.Button();
             this.labelTotal = new System.Windows.Forms.Label();
             this.listViewFixes = new System.Windows.Forms.ListView();
-            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.linkLabelOpenReportFolder = new System.Windows.Forms.LinkLabel();
+            this.buttonFixesSelectAll = new System.Windows.Forms.Button();
+            this.buttonFixesInverse = new System.Windows.Forms.Button();
             this.groupBoxRules.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -66,6 +68,8 @@
             // 
             this.groupBoxRules.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxRules.Controls.Add(this.buttonFixesSelectAll);
+            this.groupBoxRules.Controls.Add(this.buttonFixesInverse);
             this.groupBoxRules.Controls.Add(this.checkBoxGapBridge);
             this.groupBoxRules.Controls.Add(this.checkBoxWhiteSpace);
             this.groupBoxRules.Controls.Add(this.checkBoxMaxLineLength);
@@ -101,7 +105,7 @@
             this.checkBoxGapBridge.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxGapBridge.Location = new System.Drawing.Point(19, 164);
             this.checkBoxGapBridge.Name = "checkBoxGapBridge";
-            this.checkBoxGapBridge.Size = new System.Drawing.Size(210, 17);
+            this.checkBoxGapBridge.Size = new System.Drawing.Size(207, 17);
             this.checkBoxGapBridge.TabIndex = 8;
             this.checkBoxGapBridge.Text = "Frame gap: 3 to 11 frames => 2 frames";
             this.checkBoxGapBridge.UseVisualStyleBackColor = true;
@@ -140,7 +144,7 @@
             this.checkBoxSceneChange.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxSceneChange.Location = new System.Drawing.Point(19, 230);
             this.checkBoxSceneChange.Name = "checkBoxSceneChange";
-            this.checkBoxSceneChange.Size = new System.Drawing.Size(194, 17);
+            this.checkBoxSceneChange.Size = new System.Drawing.Size(191, 17);
             this.checkBoxSceneChange.TabIndex = 11;
             this.checkBoxSceneChange.Text = "Check timing to shot changes rules";
             this.checkBoxSceneChange.UseVisualStyleBackColor = true;
@@ -179,7 +183,7 @@
             this.checkBoxGapMin.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxGapMin.Location = new System.Drawing.Point(19, 142);
             this.checkBoxGapMin.Name = "checkBoxGapMin";
-            this.checkBoxGapMin.Size = new System.Drawing.Size(168, 17);
+            this.checkBoxGapMin.Size = new System.Drawing.Size(165, 17);
             this.checkBoxGapMin.TabIndex = 7;
             this.checkBoxGapMin.Text = "Frame gap: minimum 2 frames";
             this.checkBoxGapMin.UseVisualStyleBackColor = true;
@@ -192,11 +196,33 @@
             this.checkBoxCheckValidGlyphs.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxCheckValidGlyphs.Location = new System.Drawing.Point(409, 164);
             this.checkBoxCheckValidGlyphs.Name = "checkBoxCheckValidGlyphs";
-            this.checkBoxCheckValidGlyphs.Size = new System.Drawing.Size(330, 17);
+            this.checkBoxCheckValidGlyphs.Size = new System.Drawing.Size(327, 17);
             this.checkBoxCheckValidGlyphs.TabIndex = 17;
             this.checkBoxCheckValidGlyphs.Text = "Only text/characters included in the Netflix Glyph List (version 2)";
             this.checkBoxCheckValidGlyphs.UseVisualStyleBackColor = true;
             this.checkBoxCheckValidGlyphs.CheckedChanged += new System.EventHandler(this.RuleCheckedChanged);
+            // 
+            // checkBoxSDH
+            // 
+            this.checkBoxSDH.AutoSize = true;
+            this.checkBoxSDH.Location = new System.Drawing.Point(175, 120);
+            this.checkBoxSDH.Name = "checkBoxSDH";
+            this.checkBoxSDH.Size = new System.Drawing.Size(49, 17);
+            this.checkBoxSDH.TabIndex = 6;
+            this.checkBoxSDH.Text = "SDH";
+            this.checkBoxSDH.UseVisualStyleBackColor = true;
+            this.checkBoxSDH.CheckedChanged += new System.EventHandler(this.ReadingSpeedChanged);
+            // 
+            // checkBoxChildrenProgram
+            // 
+            this.checkBoxChildrenProgram.AutoSize = true;
+            this.checkBoxChildrenProgram.Location = new System.Drawing.Point(46, 120);
+            this.checkBoxChildrenProgram.Name = "checkBoxChildrenProgram";
+            this.checkBoxChildrenProgram.Size = new System.Drawing.Size(113, 17);
+            this.checkBoxChildrenProgram.TabIndex = 5;
+            this.checkBoxChildrenProgram.Text = "Children\'s Program";
+            this.checkBoxChildrenProgram.UseVisualStyleBackColor = true;
+            this.checkBoxChildrenProgram.CheckedChanged += new System.EventHandler(this.ReadingSpeedChanged);
             // 
             // checkBox17CharsPerSecond
             // 
@@ -210,32 +236,6 @@
             this.checkBox17CharsPerSecond.Text = "Maximum 20 characters per second (incl. white spaces)";
             this.checkBox17CharsPerSecond.UseVisualStyleBackColor = true;
             this.checkBox17CharsPerSecond.CheckedChanged += new System.EventHandler(this.RuleCheckedChanged);
-            // 
-            // checkBoxChildrenProgram
-            // 
-            this.checkBoxChildrenProgram.AutoSize = true;
-            this.checkBoxChildrenProgram.Checked = false;
-            this.checkBoxChildrenProgram.CheckState = System.Windows.Forms.CheckState.Unchecked;
-            this.checkBoxChildrenProgram.Location = new System.Drawing.Point(46, 120);
-            this.checkBoxChildrenProgram.Name = "checkBoxChildrenProgram";
-            this.checkBoxChildrenProgram.Size = new System.Drawing.Size(287, 17);
-            this.checkBoxChildrenProgram.TabIndex = 5;
-            this.checkBoxChildrenProgram.Text = "Children's Program";
-            this.checkBoxChildrenProgram.UseVisualStyleBackColor = true;
-            this.checkBoxChildrenProgram.CheckedChanged += new System.EventHandler(this.ReadingSpeedChanged);
-            // 
-            // checkBoxSDH
-            // 
-            this.checkBoxSDH.AutoSize = true;
-            this.checkBoxSDH.Checked = false;
-            this.checkBoxSDH.CheckState = System.Windows.Forms.CheckState.Unchecked;
-            this.checkBoxSDH.Location = new System.Drawing.Point(175, 120);
-            this.checkBoxSDH.Name = "checkBoxSDH";
-            this.checkBoxSDH.Size = new System.Drawing.Size(287, 17);
-            this.checkBoxSDH.TabIndex = 6;
-            this.checkBoxSDH.Text = "SDH";
-            this.checkBoxSDH.UseVisualStyleBackColor = true;
-            this.checkBoxSDH.CheckedChanged += new System.EventHandler(this.ReadingSpeedChanged);
             // 
             // comboBoxLanguage
             // 
@@ -289,11 +289,24 @@
             this.checkBoxSquareBracketForHi.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxSquareBracketForHi.Location = new System.Drawing.Point(409, 98);
             this.checkBoxSquareBracketForHi.Name = "checkBoxSquareBracketForHi";
-            this.checkBoxSquareBracketForHi.Size = new System.Drawing.Size(286, 17);
+            this.checkBoxSquareBracketForHi.Size = new System.Drawing.Size(289, 17);
             this.checkBoxSquareBracketForHi.TabIndex = 14;
             this.checkBoxSquareBracketForHi.Text = "Use brackets [] to enclose speaker IDs or sound effects";
             this.checkBoxSquareBracketForHi.UseVisualStyleBackColor = true;
             this.checkBoxSquareBracketForHi.CheckedChanged += new System.EventHandler(this.RuleCheckedChanged);
+            // 
+            // checkBoxEllipsesNotThreeDots
+            // 
+            this.checkBoxEllipsesNotThreeDots.AutoSize = true;
+            this.checkBoxEllipsesNotThreeDots.Checked = true;
+            this.checkBoxEllipsesNotThreeDots.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxEllipsesNotThreeDots.Location = new System.Drawing.Point(409, 76);
+            this.checkBoxEllipsesNotThreeDots.Name = "checkBoxEllipsesNotThreeDots";
+            this.checkBoxEllipsesNotThreeDots.Size = new System.Drawing.Size(181, 17);
+            this.checkBoxEllipsesNotThreeDots.TabIndex = 13;
+            this.checkBoxEllipsesNotThreeDots.Text = "Use ellipses instead of three dots";
+            this.checkBoxEllipsesNotThreeDots.UseVisualStyleBackColor = true;
+            this.checkBoxEllipsesNotThreeDots.CheckedChanged += new System.EventHandler(this.RuleCheckedChanged);
             // 
             // checkBoxSpeakerStyle
             // 
@@ -307,19 +320,6 @@
             this.checkBoxSpeakerStyle.Text = "Dual Speakers: Use a hyphen without a space";
             this.checkBoxSpeakerStyle.UseVisualStyleBackColor = true;
             this.checkBoxSpeakerStyle.CheckedChanged += new System.EventHandler(this.RuleCheckedChanged);
-            // 
-            // checkBoxEllipsesNotThreeDots
-            // 
-            this.checkBoxEllipsesNotThreeDots.AutoSize = true;
-            this.checkBoxEllipsesNotThreeDots.Checked = true;
-            this.checkBoxEllipsesNotThreeDots.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxEllipsesNotThreeDots.Location = new System.Drawing.Point(409, 76);
-            this.checkBoxEllipsesNotThreeDots.Name = "checkBoxEllipsesNotThreeDots";
-            this.checkBoxEllipsesNotThreeDots.Size = new System.Drawing.Size(246, 17);
-            this.checkBoxEllipsesNotThreeDots.TabIndex = 13;
-            this.checkBoxEllipsesNotThreeDots.Text = "Use ellipses instead of three dots";
-            this.checkBoxEllipsesNotThreeDots.UseVisualStyleBackColor = true;
-            this.checkBoxEllipsesNotThreeDots.CheckedChanged += new System.EventHandler(this.RuleCheckedChanged);
             // 
             // checkBoxTwoLinesMax
             // 
@@ -402,11 +402,6 @@
             this.listViewFixes.UseCompatibleStateImageBehavior = false;
             this.listViewFixes.View = System.Windows.Forms.View.Details;
             // 
-            // columnHeader4
-            // 
-            this.columnHeader4.Text = "Apply";
-            this.columnHeader4.Width = 50;
-            // 
             // columnHeader5
             // 
             this.columnHeader5.Text = "Line#";
@@ -427,6 +422,11 @@
             this.columnHeader8.Text = "Suggested fix";
             this.columnHeader8.Width = 350;
             // 
+            // columnHeader4
+            // 
+            this.columnHeader4.Text = "Apply";
+            this.columnHeader4.Width = 50;
+            // 
             // linkLabelOpenReportFolder
             // 
             this.linkLabelOpenReportFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -438,6 +438,30 @@
             this.linkLabelOpenReportFolder.TabStop = true;
             this.linkLabelOpenReportFolder.Text = "Open report folder";
             this.linkLabelOpenReportFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelOpenReportFolder_LinkClicked);
+            // 
+            // buttonFixesSelectAll
+            // 
+            this.buttonFixesSelectAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonFixesSelectAll.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonFixesSelectAll.Location = new System.Drawing.Point(829, 231);
+            this.buttonFixesSelectAll.Name = "buttonFixesSelectAll";
+            this.buttonFixesSelectAll.Size = new System.Drawing.Size(75, 23);
+            this.buttonFixesSelectAll.TabIndex = 105;
+            this.buttonFixesSelectAll.Text = "Select &all";
+            this.buttonFixesSelectAll.UseVisualStyleBackColor = true;
+            this.buttonFixesSelectAll.Click += new System.EventHandler(this.buttonFixesSelectAll_Click);
+            // 
+            // buttonFixesInverse
+            // 
+            this.buttonFixesInverse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonFixesInverse.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonFixesInverse.Location = new System.Drawing.Point(910, 231);
+            this.buttonFixesInverse.Name = "buttonFixesInverse";
+            this.buttonFixesInverse.Size = new System.Drawing.Size(100, 23);
+            this.buttonFixesInverse.TabIndex = 106;
+            this.buttonFixesInverse.Text = "&Inverse selection";
+            this.buttonFixesInverse.UseVisualStyleBackColor = true;
+            this.buttonFixesInverse.Click += new System.EventHandler(this.buttonFixesInverse_Click);
             // 
             // NetflixFixErrors
             // 
@@ -455,8 +479,8 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "NetflixFixErrors";
-            this.ResizeEnd += new System.EventHandler(this.NetflixFixErrors_ResizeEnd);
             this.Shown += new System.EventHandler(this.NetflixFixErrors_Shown);
+            this.ResizeEnd += new System.EventHandler(this.NetflixFixErrors_ResizeEnd);
             this.groupBoxRules.ResumeLayout(false);
             this.groupBoxRules.PerformLayout();
             this.ResumeLayout(false);
@@ -497,5 +521,7 @@
         private System.Windows.Forms.CheckBox checkBoxWhiteSpace;
         private System.Windows.Forms.LinkLabel linkLabelOpenReportFolder;
         private System.Windows.Forms.CheckBox checkBoxGapBridge;
+        private System.Windows.Forms.Button buttonFixesSelectAll;
+        private System.Windows.Forms.Button buttonFixesInverse;
     }
 }

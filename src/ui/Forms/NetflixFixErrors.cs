@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using static Nikse.SubtitleEdit.Forms.FixCommonErrors;
 
@@ -45,6 +46,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelLanguage.Text = LanguageSettings.Current.ChooseLanguage.Language;
             groupBoxRules.Text = LanguageSettings.Current.Settings.Rules;
             checkBoxMinDuration.Text = LanguageSettings.Current.NetflixQualityCheck.MinimumDuration;
+            buttonFixesSelectAll.Text = LanguageSettings.Current.FixCommonErrors.SelectAll;
+            buttonFixesInverse.Text = LanguageSettings.Current.FixCommonErrors.InverseSelection;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             _loading = true;
             var language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
@@ -57,7 +60,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RefreshCheckBoxes(string language)
         {
-            _netflixQualityController = new NetflixQualityController { Language = language, VideoFileName = _videoFileName, FrameRate = _frameRate};
+            _netflixQualityController = new NetflixQualityController { Language = language, VideoFileName = _videoFileName, FrameRate = _frameRate };
 
             checkBoxNoItalics.Checked = !_netflixQualityController.AllowItalics;
             checkBoxNoItalics.Enabled = !_netflixQualityController.AllowItalics;
@@ -329,6 +332,36 @@ namespace Nikse.SubtitleEdit.Forms
         private void NetflixFixErrors_Shown(object sender, EventArgs e)
         {
             NetflixFixErrors_ResizeEnd(sender, e);
+        }
+
+        private void buttonFixesSelectAll_Click(object sender, EventArgs e)
+        {
+            _loading = true;
+            foreach (var checkBox in groupBoxRules.Controls.OfType<CheckBox>())
+            {
+                if (checkBox.Enabled)
+                {
+                    checkBox.Checked = true;
+                }
+            }
+
+            _loading = false;
+            RuleCheckedChanged(null, null);
+        }
+
+        private void buttonFixesInverse_Click(object sender, EventArgs e)
+        {
+            _loading = true;
+            foreach (var checkBox in groupBoxRules.Controls.OfType<CheckBox>())
+            {
+                if (checkBox.Enabled)
+                {
+                    checkBox.Checked = !checkBox.Checked;
+                }
+            }
+
+            _loading = false;
+            RuleCheckedChanged(null, null);
         }
     }
 }
