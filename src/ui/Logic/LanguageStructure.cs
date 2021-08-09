@@ -2394,6 +2394,7 @@
 
             public string DefaultFormat { get; set; }
             public string DefaultSaveAsFormat { get; set; }
+            public string DefaultSaveAsFormatAuto { get; set; }
             public string Favorites { get; set; }
             public string FavoriteFormats { get; set; }
             public string FavoriteSubtitleFormatsNote { get; set; }

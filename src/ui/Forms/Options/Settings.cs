@@ -1059,13 +1059,13 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
 
             UiUtil.InitializeSubtitleFormatComboBox(comboBoxSubtitleFormats, Configuration.Settings.General.DefaultSubtitleFormat);
-            UiUtil.InitializeSubtitleFormatComboBox(comboBoxSubtitleSaveAsFormats, Configuration.Settings.General.DefaultSaveAsFormat);
-            if (string.IsNullOrEmpty(Configuration.Settings.General.DefaultSaveAsFormat))
+
+            var formatNamesForSave = SubtitleFormat.AllSubtitleFormats.Where(format => !format.IsVobSubIndexFile).Select(format => format.FriendlyName).ToList();
+            formatNamesForSave.Insert(0, LanguageSettings.Current.Settings.DefaultSaveAsFormatAuto);
+            UiUtil.InitializeSubtitleFormatComboBox(comboBoxSubtitleSaveAsFormats, formatNamesForSave, Configuration.Settings.General.DefaultSaveAsFormat);
+            if (string.IsNullOrEmpty(Configuration.Settings.General.DefaultSaveAsFormat) || comboBoxSubtitleSaveAsFormats.SelectedIndex == -1)
             {
-                comboBoxSubtitleSaveAsFormats.ResetText();
-                comboBoxSubtitleSaveAsFormats.SelectedItem = null;
-                comboBoxSubtitleSaveAsFormats.SelectedIndex = -1;
-                comboBoxSubtitleSaveAsFormats.SelectedText = "- Auto -";
+                comboBoxSubtitleSaveAsFormats.SelectedIndex = 0;
             }
 
             var formatNames = GetSubtitleFormats();
@@ -1950,7 +1950,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
 
             gs.DefaultSubtitleFormat = comboBoxSubtitleFormats.Text;
-            gs.DefaultSaveAsFormat = comboBoxSubtitleSaveAsFormats.Text == "- Auto -" ? string.Empty : comboBoxSubtitleSaveAsFormats.Text;
+            gs.DefaultSaveAsFormat = comboBoxSubtitleSaveAsFormats.Text == LanguageSettings.Current.Settings.DefaultSaveAsFormatAuto ? string.Empty : comboBoxSubtitleSaveAsFormats.Text;
             if (listBoxFavoriteSubtitleFormats.Items.Count >= 0)
             {
                 var sb = new StringBuilder();
