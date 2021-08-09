@@ -114,6 +114,11 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
+            if (!checkBoxMargins.Checked && !checkBoxFontSize.Checked && !checkBoxPosition.Checked && !checkBoxDrawing.Checked)
+            {
+                return;
+            }
+
             if (string.IsNullOrEmpty(_subtitle.Header))
             {
                 _subtitle.Header = AdvancedSubStationAlpha.DefaultHeader;

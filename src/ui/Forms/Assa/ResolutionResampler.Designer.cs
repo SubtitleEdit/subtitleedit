@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.labelTargetRes.Location = new System.Drawing.Point(12, 65);
             this.labelTargetRes.Name = "labelTargetRes";
             this.labelTargetRes.Size = new System.Drawing.Size(115, 13);
-            this.labelTargetRes.TabIndex = 5;
+            this.labelTargetRes.TabIndex = 7;
             this.labelTargetRes.Text = "Target video resolution";
             // 
             // numericUpDownTargetHeight
@@ -70,14 +70,19 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             0});
             this.numericUpDownTargetHeight.Name = "numericUpDownTargetHeight";
             this.numericUpDownTargetHeight.Size = new System.Drawing.Size(47, 20);
-            this.numericUpDownTargetHeight.TabIndex = 8;
+            this.numericUpDownTargetHeight.TabIndex = 10;
+            this.numericUpDownTargetHeight.Value = new decimal(new int[] {
+            288,
+            0,
+            0,
+            0});
             // 
             // buttonGetResolutionFromVideo
             // 
             this.buttonGetResolutionFromVideo.Location = new System.Drawing.Point(316, 63);
             this.buttonGetResolutionFromVideo.Name = "buttonGetResolutionFromVideo";
             this.buttonGetResolutionFromVideo.Size = new System.Drawing.Size(27, 23);
-            this.buttonGetResolutionFromVideo.TabIndex = 9;
+            this.buttonGetResolutionFromVideo.TabIndex = 11;
             this.buttonGetResolutionFromVideo.Text = "...";
             this.buttonGetResolutionFromVideo.UseVisualStyleBackColor = true;
             this.buttonGetResolutionFromVideo.Click += new System.EventHandler(this.buttonGetResolutionFromVideo_Click);
@@ -88,7 +93,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.labelX.Location = new System.Drawing.Point(247, 66);
             this.labelX.Name = "labelX";
             this.labelX.Size = new System.Drawing.Size(14, 13);
-            this.labelX.TabIndex = 7;
+            this.labelX.TabIndex = 9;
             this.labelX.Text = "X";
             // 
             // numericUpDownTargetWidth
@@ -101,7 +106,12 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             0});
             this.numericUpDownTargetWidth.Name = "numericUpDownTargetWidth";
             this.numericUpDownTargetWidth.Size = new System.Drawing.Size(47, 20);
-            this.numericUpDownTargetWidth.TabIndex = 6;
+            this.numericUpDownTargetWidth.TabIndex = 8;
+            this.numericUpDownTargetWidth.Value = new decimal(new int[] {
+            384,
+            0,
+            0,
+            0});
             // 
             // labelSourceRes
             // 
@@ -109,7 +119,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.labelSourceRes.Location = new System.Drawing.Point(12, 39);
             this.labelSourceRes.Name = "labelSourceRes";
             this.labelSourceRes.Size = new System.Drawing.Size(118, 13);
-            this.labelSourceRes.TabIndex = 10;
+            this.labelSourceRes.TabIndex = 2;
             this.labelSourceRes.Text = "Source video resolution";
             // 
             // numericUpDownSourceHeight
@@ -122,14 +132,19 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             0});
             this.numericUpDownSourceHeight.Name = "numericUpDownSourceHeight";
             this.numericUpDownSourceHeight.Size = new System.Drawing.Size(47, 20);
-            this.numericUpDownSourceHeight.TabIndex = 13;
+            this.numericUpDownSourceHeight.TabIndex = 5;
+            this.numericUpDownSourceHeight.Value = new decimal(new int[] {
+            288,
+            0,
+            0,
+            0});
             // 
             // buttonSourceRes
             // 
             this.buttonSourceRes.Location = new System.Drawing.Point(316, 37);
             this.buttonSourceRes.Name = "buttonSourceRes";
             this.buttonSourceRes.Size = new System.Drawing.Size(27, 23);
-            this.buttonSourceRes.TabIndex = 14;
+            this.buttonSourceRes.TabIndex = 6;
             this.buttonSourceRes.Text = "...";
             this.buttonSourceRes.UseVisualStyleBackColor = true;
             this.buttonSourceRes.Click += new System.EventHandler(this.buttonSourceRes_Click);
@@ -140,7 +155,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.label2.Location = new System.Drawing.Point(247, 40);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(14, 13);
-            this.label2.TabIndex = 12;
+            this.label2.TabIndex = 4;
             this.label2.Text = "X";
             // 
             // numericUpDownSourceWidth
@@ -153,7 +168,12 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             0});
             this.numericUpDownSourceWidth.Name = "numericUpDownSourceWidth";
             this.numericUpDownSourceWidth.Size = new System.Drawing.Size(47, 20);
-            this.numericUpDownSourceWidth.TabIndex = 11;
+            this.numericUpDownSourceWidth.TabIndex = 3;
+            this.numericUpDownSourceWidth.Value = new decimal(new int[] {
+            384,
+            0,
+            0,
+            0});
             // 
             // buttonCancel
             // 
@@ -163,7 +183,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonCancel.Location = new System.Drawing.Point(371, 189);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 16;
+            this.buttonCancel.TabIndex = 1;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -175,7 +195,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonOK.Location = new System.Drawing.Point(290, 189);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 15;
+            this.buttonOK.TabIndex = 0;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
@@ -186,7 +206,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.checkBoxMargins.Location = new System.Drawing.Point(15, 99);
             this.checkBoxMargins.Name = "checkBoxMargins";
             this.checkBoxMargins.Size = new System.Drawing.Size(165, 17);
-            this.checkBoxMargins.TabIndex = 17;
+            this.checkBoxMargins.TabIndex = 12;
             this.checkBoxMargins.Text = "Change resolution for margins";
             this.checkBoxMargins.UseVisualStyleBackColor = true;
             // 
@@ -198,7 +218,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.checkBoxFontSize.Location = new System.Drawing.Point(15, 122);
             this.checkBoxFontSize.Name = "checkBoxFontSize";
             this.checkBoxFontSize.Size = new System.Drawing.Size(168, 17);
-            this.checkBoxFontSize.TabIndex = 18;
+            this.checkBoxFontSize.TabIndex = 13;
             this.checkBoxFontSize.Text = "Change resolution for font size";
             this.checkBoxFontSize.UseVisualStyleBackColor = true;
             // 
@@ -210,7 +230,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.checkBoxPosition.Location = new System.Drawing.Point(15, 145);
             this.checkBoxPosition.Name = "checkBoxPosition";
             this.checkBoxPosition.Size = new System.Drawing.Size(165, 17);
-            this.checkBoxPosition.TabIndex = 19;
+            this.checkBoxPosition.TabIndex = 14;
             this.checkBoxPosition.Text = "Change resolution for position";
             this.checkBoxPosition.UseVisualStyleBackColor = true;
             // 
@@ -222,7 +242,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.checkBoxDrawing.Location = new System.Drawing.Point(14, 168);
             this.checkBoxDrawing.Name = "checkBoxDrawing";
             this.checkBoxDrawing.Size = new System.Drawing.Size(166, 17);
-            this.checkBoxDrawing.TabIndex = 20;
+            this.checkBoxDrawing.TabIndex = 15;
             this.checkBoxDrawing.Text = "Change resolution for drawing";
             this.checkBoxDrawing.UseVisualStyleBackColor = true;
             // 
