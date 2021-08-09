@@ -1542,6 +1542,7 @@
             // 
             // comboBoxSubtitleSaveAsFormats
             // 
+            this.comboBoxSubtitleSaveAsFormats.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSubtitleSaveAsFormats.FormattingEnabled = true;
             this.comboBoxSubtitleSaveAsFormats.Location = new System.Drawing.Point(100, 60);
             this.comboBoxSubtitleSaveAsFormats.Name = "comboBoxSubtitleSaveAsFormats";
@@ -4917,10 +4918,10 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
+            this.Controls.Add(this.panelSubtitleFormats);
             this.Controls.Add(this.panelGeneral);
             this.Controls.Add(this.panelFont);
             this.Controls.Add(this.panelNetwork);
-            this.Controls.Add(this.panelSubtitleFormats);
             this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.panelWordLists);
             this.Controls.Add(this.panelTools);

@@ -6,6 +6,7 @@
    * ASSA: Support for ScalingX/ScalingY/Spacing/Angle/Strikeout - thx ausencia
    * ASSA: Override tag helper (shortcut + custom templates)
    * ASSA: Set/get position
+   * ASSA: Progress bar generator
    * ASSA: Plugin support
    * Allow custom shortcuts for plugins
    * Shortcuts for video contrast/brightness (mpv only)
@@ -41,6 +42,7 @@
    * Make sub preview work with mpv + audio only files - thx Rabia
    * Add "[]" characters to PAC Latin - thx Valentin
    * Allow hide of "Start time" column - thx ThomasLeigh/darnn
+   * Make title bar only-file-name or full-path configurable - thx robena
 * FIXED:
    * Fix MergeLinesShorterThan saving/loading - thx uckthis/OmrSi
    * Fix load/save some ASSA storage style settings - thx Andrebavila
@@ -52,7 +54,7 @@
    * Fix export to "dvd studio stl" - thx nonofx
    * Apply duration limit: Only fix "checked" lines - thx PM
    * Fix crash in compare - thx Janusz
-
+   * Fix crash in ASSA style import - thx Isabella
 
 3.6.1 (20th May 2021)
 * NEW:

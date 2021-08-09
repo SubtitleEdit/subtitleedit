@@ -301,8 +301,26 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         public static string FixHyphensRemoveForSingleLine(Subtitle subtitle, string input, int i)
         {
-            if (string.IsNullOrEmpty(input) || !IsOneSentence(input))
+            if (string.IsNullOrEmpty(input))
             {
+                return input;
+            }
+
+            if (!IsOneSentence(input))
+            {
+                var arr = input.SplitToLines();
+                if (arr.Count == 2)
+                {
+                    if (arr[0].Trim() == "-" && arr[1].Length > 2)
+                    {
+                        return arr[1].TrimStart('-').TrimStart();
+                    }
+                    else if (arr[1].Trim() == "-" && arr[0].Length > 2)
+                    {
+                        return arr[0].TrimStart('-').TrimStart();
+                    }
+                }
+
                 return input;
             }
 
