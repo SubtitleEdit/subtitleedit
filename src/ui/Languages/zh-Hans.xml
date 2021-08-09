@@ -2205,6 +2205,7 @@ Command line: {1} {2}
     <FixCommonErrorsSkipStepOne>设置结束点并转到下一条</FixCommonErrorsSkipStepOne>
     <DefaultFormat>默认格式</DefaultFormat>
     <DefaultSaveAsFormat>默认另存为格式</DefaultSaveAsFormat>
+    <DefaultSaveAsFormatAuto>- 自动 -</DefaultSaveAsFormatAuto>
     <Favorites>收藏</Favorites>
     <FavoriteFormats>收藏格式</FavoriteFormats>
     <FavoriteSubtitleFormatsNote>注意：默认格式始终优先显示，选择格式时收藏格式亦将优先显示</FavoriteSubtitleFormatsNote>
