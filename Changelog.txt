@@ -27,6 +27,7 @@
    * Update French translation - thx Pierre
    * Update Italian translation - thx NAMP
    * Update Korean translation - thx domddol
+   * Update Czech translation - thx Trottel
    * MPC: Try to search for mpc-be too - thx Fábio
    * Shortcut F5 is now "Play selected lines"
    * Support read of time codes with format "<number>f" in TTML - thx LeonCheung
