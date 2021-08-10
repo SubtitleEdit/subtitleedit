@@ -14,8 +14,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         public DownloadFfmpeg()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             Text = LanguageSettings.Current.SettingsFfmpeg.Title;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            UiUtil.FixLargeFonts(this, buttonOK);
         }
 
         private void DownloadFfmpeg_KeyDown(object sender, KeyEventArgs e)

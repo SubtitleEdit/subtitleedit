@@ -1630,6 +1630,7 @@ namespace Nikse.SubtitleEdit.Forms
             openVideoToolStripMenuItem.Text = _language.Menu.Video.OpenVideo;
             toolStripMenuItemOpenVideoFromUrl.Text = _language.Menu.Video.OpenVideoFromUrl;
             toolStripMenuItemOpenDvd.Text = _language.Menu.Video.OpenDvd;
+            setVideoOffsetToolStripMenuItem.Text = _language.Menu.Video.SetVideoOffset;
             toolStripMenuItemSetAudioTrack.Text = _language.Menu.Video.ChooseAudioTrack;
             closeVideoToolStripMenuItem.Text = _language.Menu.Video.CloseVideo;
             openSecondSubtitleToolStripMenuItem.Text = _language.Menu.Video.OpenSecondSubtitle;
