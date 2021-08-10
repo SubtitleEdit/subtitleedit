@@ -76,7 +76,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     // adjust to last exisiting sub
                     var lastSub = subtitle.GetParagraphOrDefault(subtitle.Paragraphs.Count - 1);
-                    if (lastSub != null)
+                    if (lastSub != null && sub.Paragraphs.Count > 0 && lastSub.StartTime.TotalMilliseconds > sub.Paragraphs[0].StartTime.TotalMilliseconds)
                     {
                         sub.AddTimeToAllParagraphs(lastSub.EndTime.TimeSpan);
                     }
@@ -87,6 +87,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     _errorCount++;
                 }
+            }
+
+            var merged = MergeLinesSameTextUtils.MergeLinesWithSameTextInSubtitle(subtitle, false, 250);
+            if (merged.Paragraphs.Count < subtitle.Paragraphs.Count)
+            {
+                subtitle.Paragraphs.Clear();
+                subtitle.Paragraphs.AddRange(merged.Paragraphs);
             }
 
             subtitle.Renumber();
