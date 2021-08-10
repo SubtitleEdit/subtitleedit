@@ -604,14 +604,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var textLines = new List<SubtitleLine>();
                     var pText = new StringBuilder();
                     var vAlignment = string.Empty;
-                    string lastVPosition = string.Empty;
+                    var vPosition = string.Empty;
+                    var lastVPosition = string.Empty;
                     foreach (XmlNode innerNode in node.ChildNodes)
                     {
                         if (innerNode.Name == "Text")
                         {
                             if (innerNode.Attributes["VPosition"] != null)
                             {
-                                string vPosition = innerNode.Attributes["VPosition"].InnerText;
+                                vPosition = innerNode.Attributes["VPosition"].InnerText;
                                 var vAlignmentNode = innerNode.Attributes["VAlign"];
                                 if (vAlignmentNode != null)
                                 {
@@ -751,6 +752,46 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 }
                             }
                         }
+                        else if (innerNode.Name == "Font")
+                        {
+                            var italic = innerNode.Name == "Font" &&
+                                         innerNode.Attributes["Italic"] != null &&
+                                         innerNode.Attributes["Italic"].InnerText.Equals("yes", StringComparison.OrdinalIgnoreCase);
+
+                            var pre = string.Empty;
+                            if (italic)
+                            {
+                                pre = "<i>";
+                            }
+
+                            foreach (XmlNode innerInnerNode in innerNode)
+                            {
+                                if (innerInnerNode.Attributes["VPosition"] != null)
+                                {
+                                    vPosition = innerInnerNode.Attributes["VPosition"].InnerText;
+                                    if (vPosition != lastVPosition)
+                                    {
+                                        if (pText.Length > 0 && lastVPosition.Length > 0)
+                                        {
+                                            pText.AppendLine();
+                                            pText.Append(pre);
+                                            pre = string.Empty;
+                                        }
+
+                                        lastVPosition = vPosition;
+                                    }
+                                }
+
+                                pText.Append(pre);
+                                pre = string.Empty;
+                                pText.Append(innerInnerNode.InnerText);
+                            }
+
+                            if (italic)
+                            {
+                                pText.Append("</i>");
+                            }
+                        }
                         else
                         {
                             pText.Append(innerNode.InnerText);
@@ -798,7 +839,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                     }
 
-                    subtitle.Paragraphs.Add(new Paragraph(GetTimeCode(start), GetTimeCode(end), text));
+                    subtitle.Paragraphs.Add(new Paragraph(GetTimeCode(start), GetTimeCode(end), HtmlUtil.FixInvalidItalicTags(text)));
                 }
                 catch (Exception ex)
                 {
