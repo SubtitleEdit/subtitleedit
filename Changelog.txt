@@ -56,6 +56,7 @@
    * Apply duration limit: Only fix "checked" lines - thx PM
    * Fix crash in compare - thx Janusz
    * Fix crash in ASSA style import - thx Isabella
+   * Fix issue with DCinema interop and missing new-lines - thx Pepo
 
 3.6.1 (20th May 2021)
 * NEW:
