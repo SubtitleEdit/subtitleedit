@@ -745,6 +745,18 @@ Dialogue: 0,0:00:05.02,0:00:07.94,Segoe Script Red shadow alpha 160,,0,0,0,,Dit 
             Assert.AreEqual(2, subtitle.Paragraphs.Count);
         }
 
+        [TestMethod]
+        public void AddSsaStyleToHeader()
+        {
+            var s = new Subtitle();
+            s.Paragraphs.Add(new Paragraph("<font color=\"#ff0000\">Previously...</font> :)", 0, 2000));
+            s.Header = AdvancedSubStationAlpha.DefaultHeader;
+            var newStyle = new SsaStyle();
+            newStyle.Name = "Test12334666";
+            s.Header = AdvancedSubStationAlpha.AddSsaStyle(newStyle, s.Header);
+            var text = new AdvancedSubStationAlpha().ToText(s, string.Empty);
+            Assert.IsTrue(text.Contains(newStyle.Name));
+        }
 
         #endregion Advanced Sub Station alpha (.ass)
 
