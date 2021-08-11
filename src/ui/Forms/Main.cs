@@ -6666,28 +6666,33 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public void ShowStatus(string message, bool log = true)
+        public void ShowStatus(string message, bool log = true, int clearAfterSeconds = 0, bool isError = false)
         {
             if (_disableShowStatus)
             {
                 return;
             }
 
+            _timerClearStatus.Stop();
             labelStatus.Text = message.Replace("&", "&&");
             statusStrip1.Refresh();
             if (!string.IsNullOrEmpty(message))
             {
-                _timerClearStatus.Stop();
+                labelStatus.ForeColor = isError ? Color.Red : UiUtil.ForeColor;
                 if (log)
                 {
-                    _timerClearStatus.Interval = Configuration.Settings.General.ClearStatusBarAfterSeconds * 1000;
+                    _timerClearStatus.Interval = clearAfterSeconds > 0 ? clearAfterSeconds : (Configuration.Settings.General.ClearStatusBarAfterSeconds * 1000);
                     _statusLog.Add(string.Format("{0:0000}-{1:00}-{2:00} {3}: {4}", DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.ToLongTimeString(), message));
                 }
                 else
                 {
-                    _timerClearStatus.Interval = 1500;
+                    _timerClearStatus.Interval = clearAfterSeconds > 0 ? (clearAfterSeconds * 1000) : 1500;
                 }
                 _timerClearStatus.Start();
+            }
+            else
+            {
+                _timerClearStatus.Stop();
             }
             ShowSourceLineNumber();
             ShowLineInformationListView();
@@ -9789,11 +9794,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _subtitle.Paragraphs[idx].Text = text;
+            labelStatus.Text = string.Empty;
             UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelSingleLinePixels, labelTextLineTotal, labelCharactersPerSecond, _subtitle.Paragraphs[idx], textBoxListViewText);
             SubtitleListview1.SetText(idx, text);
 
             _listViewTextUndoIndex = _subtitleListViewIndex;
-            labelStatus.Text = string.Empty;
 
             StartUpdateListSyntaxColoring();
             FixVerticalScrollBars(textBoxListViewText, ref _lastNumberOfNewLines);
@@ -11684,10 +11689,12 @@ namespace Nikse.SubtitleEdit.Forms
 
             labelStartTimeWarning.Text = startTimeWarning;
             labelDurationWarning.Text = durationWarning;
-
+            labelDurationWarning.Left = numericUpDownDuration.Left;
             if (!string.IsNullOrEmpty(startTimeWarning) && !string.IsNullOrEmpty(durationWarning))
             {
-                labelDurationWarning.Left = labelStartTimeWarning.Right + 2;
+                labelStartTimeWarning.Text = "Overlap";
+                labelDurationWarning.Text = "Overlap";
+                ShowStatus(startTimeWarning + "  " + durationWarning, false, 4, true);
             }
         }
 
@@ -11779,14 +11786,13 @@ namespace Nikse.SubtitleEdit.Forms
             _durationIsDirty = true;
             if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
             {
+                labelStatus.Text = string.Empty;
                 int firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
-
                 var currentParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
                 if (currentParagraph != null)
                 {
                     // update _subtitle + listview
-                    string oldDuration = currentParagraph.Duration.ToString();
-
+                    var oldDuration = currentParagraph.Duration.ToString();
                     var temp = new Paragraph(currentParagraph);
 
                     if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
@@ -11832,7 +11838,6 @@ namespace Nikse.SubtitleEdit.Forms
                     StartUpdateListSyntaxColoring();
                 }
 
-                labelStatus.Text = string.Empty;
                 StartUpdateListSyntaxColoring();
             }
         }
@@ -11931,10 +11936,9 @@ namespace Nikse.SubtitleEdit.Forms
                     oldParagraph = new Paragraph(oldParagraph, false);
                 }
 
-                UpdateStartTimeInfo(timeUpDownStartTime.TimeCode);
-
-                UpdateOriginalTimeCodes(oldParagraph);
                 labelStatus.Text = string.Empty;
+                UpdateStartTimeInfo(timeUpDownStartTime.TimeCode);
+                UpdateOriginalTimeCodes(oldParagraph);
             }
         }
 

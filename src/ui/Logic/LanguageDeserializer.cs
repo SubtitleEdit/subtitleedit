@@ -217,6 +217,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "General/NotAvailable":
                     language.General.NotAvailable = reader.Value;
                     break;
+                case "General/Overlap":
+                    language.General.Overlap = reader.Value;
+                    break;
                 case "General/OverlapPreviousLineX":
                     language.General.OverlapPreviousLineX = reader.Value;
                     break;

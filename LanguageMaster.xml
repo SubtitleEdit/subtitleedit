@@ -54,6 +54,7 @@
     <TotalLengthXSplitLine>Total length: {0} (split line!)</TotalLengthXSplitLine>
     <SplitLine>Split line!</SplitLine>
     <NotAvailable>N/A</NotAvailable>
+    <Overlap>Overlap</Overlap>
     <OverlapPreviousLineX>Overlap prev line ({0:#,##0.###})</OverlapPreviousLineX>
     <OverlapX>Overlap ({0:#,##0.###})</OverlapX>
     <OverlapNextX>Overlap next ({0:#,##0.###})</OverlapNextX>
