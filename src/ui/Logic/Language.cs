@@ -180,6 +180,7 @@ namespace Nikse.SubtitleEdit.Logic
                 FrameRateX = "Frame rate: {0:0.0###}",
                 TotalFramesX = "Total frames: {0:#,##0.##}",
                 VideoEncodingX = "Video encoding: {0}",
+                Overlap = "Overlap",
                 OverlapPreviousLineX = "Overlap prev line ({0:#,##0.###})",
                 OverlapX = "Overlap ({0:#,##0.###})",
                 OverlapNextX = "Overlap next ({0:#,##0.###})",

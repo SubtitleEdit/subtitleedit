@@ -58,6 +58,7 @@
             public string TotalLengthXSplitLine { get; set; }
             public string SplitLine { get; set; }
             public string NotAvailable { get; set; }
+            public string Overlap { get; set; }
             public string OverlapPreviousLineX { get; set; }
             public string OverlapX { get; set; }
             public string OverlapNextX { get; set; }
