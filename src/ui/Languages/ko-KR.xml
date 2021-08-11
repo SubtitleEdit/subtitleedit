@@ -2211,6 +2211,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <FixCommonErrorsSkipStepOne>1 단계 건너뛰기 (수정 규칙 선택)</FixCommonErrorsSkipStepOne>
     <DefaultFormat>기본 형식</DefaultFormat>
     <DefaultSaveAsFormat>기본값으로 저장</DefaultSaveAsFormat>
+    <DefaultSaveAsFormatAuto>- 자동 -</DefaultSaveAsFormatAuto>
     <Favorites>즐겨찾기</Favorites>
     <FavoriteFormats>즐겨찾기 형식</FavoriteFormats>
     <FavoriteSubtitleFormatsNote>참고: 형식을 선택할 때 즐겨찾기 형식이 먼저 표시되며 기본 형식이 항상 먼저 표시될 것입니다.</FavoriteSubtitleFormatsNote>
