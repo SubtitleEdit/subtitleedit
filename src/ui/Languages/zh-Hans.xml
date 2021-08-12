@@ -54,6 +54,7 @@
     <TotalLengthXSplitLine>总长度: {0} (分割行！)</TotalLengthXSplitLine>
     <SplitLine>分割行</SplitLine>
     <NotAvailable>N/A</NotAvailable>
+    <Overlap>重叠</Overlap>
     <OverlapPreviousLineX>重叠上一行 ({0:#,##0.###})</OverlapPreviousLineX>
     <OverlapX>重叠 ({0:#,##0.###})</OverlapX>
     <OverlapNextX>重叠下一行 ({0:#,##0.###})</OverlapNextX>
