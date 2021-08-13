@@ -76,7 +76,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             buttonOK.Enabled = false;
             var fileName = radioButtonColor.Checked ? "blank_video_solid" : "blank_video_checkered";
-            using (var saveDialog = new SaveFileDialog { FileName = fileName, Filter = "Matroska|*.mkv" })
+            using (var saveDialog = new SaveFileDialog { FileName = string.Empty, Filter = "MP4|*.mp4|Matroska|*.mkv|WebM|*.webm" })
             {
                 if (saveDialog.ShowDialog(this) != DialogResult.OK)
                 {
