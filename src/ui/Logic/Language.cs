@@ -1003,7 +1003,7 @@ namespace Nikse.SubtitleEdit.Logic
             GenerateBlankVideo = new LanguageStructure.GenerateBlankVideo
             {
                 Title = "Generate blank video file",
-                CheckeredImage = "Chekered image",
+                CheckeredImage = "Checkered image",
                 DurationInMinutes = "Duration in minutes",
                 SolidColor = "Solid color",
             };
