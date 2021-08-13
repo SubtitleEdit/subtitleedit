@@ -820,6 +820,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     {
                         hash = hash * 23 + p.Actor.GetHashCode();
                     }
+                    hash = hash * 23 + p.Layer.GetHashCode();
                 }
 
                 return hash;
