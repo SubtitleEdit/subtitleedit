@@ -44,6 +44,7 @@
    * Add "[]" characters to PAC Latin - thx Valentin
    * Allow hide of "Start time" column - thx ThomasLeigh/darnn
    * Make title bar only-file-name or full-path configurable - thx robena
+   * Make DVD RIP window resizable - thx freMea
 * FIXED:
    * Fix MergeLinesShorterThan saving/loading - thx uckthis/OmrSi
    * Fix load/save some ASSA storage style settings - thx Andrebavila
