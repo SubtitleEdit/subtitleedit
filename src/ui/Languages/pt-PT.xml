@@ -787,7 +787,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
   </FixCommonErrors>
   <GenerateBlankVideo>
     <Title>Gerar ficheiro de vídeo em branco</Title>
-    <CheckeredImage>Imagem animada</CheckeredImage>
+    <CheckeredImage>Imagem axadrezada</CheckeredImage>
     <SolidColor>Cor sólida</SolidColor>
     <DurationInMinutes>Duração em minutos</DurationInMinutes>
   </GenerateBlankVideo>
