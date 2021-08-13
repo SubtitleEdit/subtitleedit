@@ -58,12 +58,14 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (saveDialog.ShowDialog(this) != DialogResult.OK)
                 {
+                    buttonOK.Enabled = true;
                     return;
                 }
 
                 VideoFileName = saveDialog.FileName;
             }
 
+            buttonOK.Enabled = true;
             if (File.Exists(VideoFileName))
             {
                 File.Delete(VideoFileName);
