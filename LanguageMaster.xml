@@ -786,7 +786,7 @@ Note: Do check free disk space.</WaveFileMalformed>
   </FixCommonErrors>
   <GenerateBlankVideo>
     <Title>Generate blank video file</Title>
-    <CheckeredImage>Chekered image</CheckeredImage>
+    <CheckeredImage>Checkered image</CheckeredImage>
     <SolidColor>Solid color</SolidColor>
     <DurationInMinutes>Duration in minutes</DurationInMinutes>
   </GenerateBlankVideo>
