@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Core.Common;
+using System;
 
 namespace Test.Assa
 {
@@ -42,10 +43,10 @@ namespace Test.Assa
         }
 
         [TestMethod]
-        public void TestResampleOverrideFontTags6()
+        public void TestResampleOverrideFontTags6DoNotChange()
         {
             var result = AssaResampler.ResampleOverrideTagsFont(100, 200, 100, 200, "{\\fscx110\\fscy138}Hallo!");
-            Assert.AreEqual("{\\fscx220\\fscy276}Hallo!", result);
+            Assert.AreEqual("{\\fscx110\\fscy138}Hallo!", result);
         }
 
         [TestMethod]
@@ -70,6 +71,13 @@ namespace Test.Assa
         }
 
         [TestMethod]
+        public void TestResampleOverrideDrawingTagsClip()
+        {
+            var result = AssaResampler.ResampleOverrideTagsDrawing(100, 200, 100, 200, "{\\iclip(m 0 0 l 100 0 100 100 0 100)}");
+            Assert.AreEqual("{\\iclip(m 0 0 l 200 0 200 200 0 200)}", result);
+        }
+
+        [TestMethod]
         public void TestResampleOverrideDrawingTags1()
         {
             var result = AssaResampler.ResampleOverrideTagsDrawing(100, 200, 100, 200, "{\\p1}m 0 0 l 100 0 100 100 0 100{\\p0}");
@@ -81,6 +89,27 @@ namespace Test.Assa
         {
             var result = AssaResampler.ResampleOverrideTagsDrawing(100, 200, 100, 200, "{\\p1}m 0 0 l 100.111 0.222 100 100 0 100{\\p0}");
             Assert.AreEqual("{\\p1}m 0 0 l 200.222 0.444 200 200 0 200{\\p0}", result);
+        }
+
+        [TestMethod]
+        public void TestResampleOverrideDrawingTags3()
+        {
+            var result = AssaResampler.ResampleOverrideTagsDrawing(100, 200, 100, 200, "{\\p1\\an7}m 0 0 l 100.111 0.222 100 100 0 100{\\p0}");
+            Assert.AreEqual("{\\p1\\an7}m 0 0 l 200.222 0.444 200 200 0 200{\\p0}", result);
+        }
+
+        [TestMethod]
+        public void TestResampleOverrideDrawingTags4()
+        {
+            var result = AssaResampler.ResampleOverrideTagsDrawing(100, 200, 100, 200, "{\\p1\\an7}m 0 0 l 100.111 0.222 100 100 0 100");
+            Assert.AreEqual("{\\p1\\an7}m 0 0 l 200.222 0.444 200 200 0 200", result);
+        }
+
+        [TestMethod]
+        public void TestResampleOverrideDrawingTags5()
+        {
+            var result = AssaResampler.ResampleOverrideTagsDrawing(100, 200, 100, 200, "{\\an7\\p1}m 0 0 l 100 0 100 100 0 100{\\p0}" + Environment.NewLine + "{\\iclip(m 0 0 l 100 0 100 100 0 100)}");
+            Assert.AreEqual("{\\an7\\p1}m 0 0 l 200 0 200 200 0 200{\\p0}" + Environment.NewLine + "{\\iclip(m 0 0 l 200 0 200 200 0 200)}", result);
         }
     }
 }
