@@ -19412,14 +19412,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (Configuration.Settings.General.ListViewDoubleClickAction == 2)
             {
-                if (AutoRepeatContinueOn || AutoRepeatOn)
-                {
-                    PlayCurrent();
-                }
-                else
-                {
-                    buttonBeforeText_Click(null, null);
-                }
+                GotoSubPositionAndPause();
+                mediaPlayer.Play();
             }
             else if (Configuration.Settings.General.ListViewDoubleClickAction == 3)
             {
@@ -19431,30 +19425,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (Configuration.Settings.General.ListViewDoubleClickAction == 5)
             {
-                if (AutoRepeatContinueOn || AutoRepeatOn)
-                {
-                    PlayCurrent();
-                }
-                else
-                {
-                    if (SubtitleListview1.SelectedItems.Count > 0)
-                    {
-                        int index = SubtitleListview1.SelectedItems[0].Index;
-
-                        mediaPlayer.Pause();
-                        double pos = _subtitle.Paragraphs[index].StartTime.TotalSeconds;
-                        if (pos > 1)
-                        {
-                            mediaPlayer.CurrentPosition = (_subtitle.Paragraphs[index].StartTime.TotalSeconds) - 1.0;
-                        }
-                        else
-                        {
-                            mediaPlayer.CurrentPosition = _subtitle.Paragraphs[index].StartTime.TotalSeconds;
-                        }
-
-                        mediaPlayer.Play();
-                    }
-                }
+                GotoSubPositionAndPause(-1.0);
+                mediaPlayer.Play();
             }
             else if (Configuration.Settings.General.ListViewDoubleClickAction == 6)
             {
@@ -20493,6 +20465,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
 
+                        mediaPlayer.CurrentPosition = _endSeconds;
                         _endSeconds = -1;
                         if (_playSelectionIndex >= 0)
                         {
