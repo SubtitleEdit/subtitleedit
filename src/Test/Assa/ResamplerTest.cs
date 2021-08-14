@@ -64,6 +64,13 @@ namespace Test.Assa
         }
 
         [TestMethod]
+        public void TestResampleOverridePositionTags2Negative()
+        {
+            var result = AssaResampler.ResampleOverrideTagsPosition(100, 200, 100, 200, "{\\pos(-10,20)\\pos(20,-30)}Hallo!");
+            Assert.AreEqual("{\\pos(-20,40)\\pos(40,-60)}Hallo!", result);
+        }
+
+        [TestMethod]
         public void TestResampleOverridePositionTags3()
         {
             var result = AssaResampler.ResampleOverrideTagsPosition(100, 200, 100, 200, "{\\pos(10.111,20.222)\\pos(20.333,30.444)}Hallo!");

@@ -26,6 +26,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             // {\\fs50}
             s = FixTagWithNumber(sourceHeight, targetHeight, s, "fs");
             s = FixTagWithNumber(sourceHeight, targetHeight, s, "blur");
+            s = FixTagWithNumber(sourceHeight, targetHeight, s, "shad");
 
             return s;
         }
@@ -49,20 +50,20 @@ namespace Nikse.SubtitleEdit.Core.Common
             return s;
         }
 
-        public static string ResampleOverrideTagsDrawing(decimal sourceWidth, decimal targetWidth, decimal sourceHeight, decimal targetHeight, string input)
+        public static string ResampleOverrideTagsDrawing(decimal sourceWidth, decimal targetWidth, decimal sourceHeight, decimal targetHeight, string input, StringBuilder errors = null)
         {
             var s = input;
 
             //{\clip(1,m 50 0 b 100 0 100 100 50 100 b 0 100 0 0 50 0)}
             //{\p1}m 0 0 l 100 0 100 100 0 100{\p0}
-            s = FixDrawing(sourceWidth, targetWidth, sourceHeight, targetHeight, s, @"\\iclip\(", @"\)");
-            s = FixDrawing(sourceWidth, targetWidth, sourceHeight, targetHeight, s, @"\\clip\(", @"\)");
-            s = FixDrawing(sourceWidth, targetWidth, sourceHeight, targetHeight, s, @"\{[^{]*\\p1[^}]*}", @"\{[^{]*\\p0[^}]*}");
+            s = FixDrawing(sourceWidth, targetWidth, sourceHeight, targetHeight, s, @"\\iclip\(", @"\)", errors);
+            s = FixDrawing(sourceWidth, targetWidth, sourceHeight, targetHeight, s, @"\\clip\(", @"\)", errors);
+            s = FixDrawing(sourceWidth, targetWidth, sourceHeight, targetHeight, s, @"\{[^{]*\\p1[^}]*}", @"\{[^{]*\\p0[^}]*}", errors);
 
             return s;
         }
 
-        private static string FixDrawing(decimal sourceWidth, decimal targetWidth, decimal sourceHeight, decimal targetHeight, string input, string tag, string endTag)
+        private static string FixDrawing(decimal sourceWidth, decimal targetWidth, decimal sourceHeight, decimal targetHeight, string input, string tag, string endTag, StringBuilder errors)
         {
             var regexStart = new Regex(tag);
             var regexEnd = new Regex(endTag);
@@ -120,7 +121,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                     else if (state == "start")
                     {
-                        if (float.TryParse(element, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var number))
+                        if (float.TryParse(element, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var number))
                         {
                             var x = Resample(sourceWidth, targetWidth, number);
                             sb.Append(x.ToString("0.###", CultureInfo.InvariantCulture));
@@ -129,12 +130,13 @@ namespace Nikse.SubtitleEdit.Core.Common
                         }
                         else
                         {
-                            return input;
+                            sb.Append(element);
+                            errors?.AppendLine($"Expected x element but found '{element}' at draw element {i}");
                         }
                     }
                     else if (state == "y")
                     {
-                        if (float.TryParse(element, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var number))
+                        if (float.TryParse(element, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var number))
                         {
                             var y = Resample(sourceHeight, targetHeight, number);
                             sb.Append(y.ToString("0.###", CultureInfo.InvariantCulture));
@@ -143,12 +145,18 @@ namespace Nikse.SubtitleEdit.Core.Common
                         }
                         else
                         {
-                            return input;
+                            sb.Append(element);
+                            errors?.AppendLine($"Expected y element but found '{element}' at draw element {i}");
+                            if ("mnlbspc".Contains(element) && element.Length == 1)
+                            {
+                                state = "start";
+                            }
                         }
                     }
                     else
                     {
-                        return input;
+                        sb.Append(element);
+                        errors?.AppendLine($"Expected code element (m, n, l, b, s, p, c) but found '{element}' at draw element {i}");
                     }
                 }
 
@@ -160,7 +168,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static string FixMethodFourParameters(decimal sourceWidth, decimal targetWidth, decimal sourceHeight, decimal targetHeight, string input, string tag)
         {
-            var regex = new Regex("\\\\" + tag + "\\s*\\(\\s*\\d+[\\.\\d+]*\\s*,\\s*\\d+[\\.\\d+]*\\s*,\\s*\\d+[\\.\\d+]*\\s*,\\s*\\d+[\\.\\d+]*\\s*\\)");
+            var regex = new Regex("\\\\" + tag + "\\s*\\(\\s*[-+]?\\d+[\\.\\d+]*\\s*,\\s*[-+]?\\d+[\\.\\d+]*\\s*,\\s*[-+]?\\d+[\\.\\d+]*\\s*,\\s*[-+]?\\d+[\\.\\d+]*\\s*\\)");
             var s = input;
             var match = regex.Match(s);
             while (match.Success)
@@ -168,10 +176,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var value = match.Value.Substring(tag.Length + 2, match.Value.Length - tag.Length - 3).RemoveChar(' ');
                 var arr = value.Split(',');
                 if (arr.Length == 4 &&
-                    float.TryParse(arr[0], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var x1) &&
-                    float.TryParse(arr[1], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var y1) &&
-                    float.TryParse(arr[2], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var x2) &&
-                    float.TryParse(arr[3], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var y2))
+                    float.TryParse(arr[0], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var x1) &&
+                    float.TryParse(arr[1], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var y1) &&
+                    float.TryParse(arr[2], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var x2) &&
+                    float.TryParse(arr[3], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var y2))
                 {
                     var resizedX1 = Resample(sourceWidth, targetWidth, x1);
                     var resizedY1 = Resample(sourceHeight, targetHeight, y1);
@@ -196,7 +204,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static string FixMethodSixParametersFourActive(decimal sourceWidth, decimal targetWidth, decimal sourceHeight, decimal targetHeight, string input, string tag)
         {
-            var regex = new Regex("\\\\" + tag + "\\s*\\(\\s*\\d+[\\.\\d+]*\\s*,\\s*\\d+[\\.\\d+]*\\s*,\\s*\\d+[\\.\\d+]*\\s*,\\s*\\d+[\\.\\d+]*\\s*,\\s*\\d+[\\.\\d+]*\\s*,\\s*\\d+[\\.\\d+]*\\s*\\)");
+            var regex = new Regex("\\\\" + tag + "\\s*\\(\\s*[-+]?\\d+[\\.\\d+]*\\s*,\\s*[-+]?\\d+[\\.\\d+]*\\s*,\\s*[-+]?\\d+[\\.\\d+]*\\s*,\\s*[-+]?\\d+[\\.\\d+]*\\s*,\\s*[-+]?\\d+[\\.\\d+]*\\s*,\\s*[-+]?\\d+[\\.\\d+]*\\s*\\)");
             var s = input;
             var match = regex.Match(s);
             while (match.Success)
@@ -204,12 +212,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var value = match.Value.Substring(tag.Length + 2, match.Value.Length - tag.Length - 3).RemoveChar(' ');
                 var arr = value.Split(',');
                 if (arr.Length == 6 &&
-                    float.TryParse(arr[0], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var x1) &&
-                    float.TryParse(arr[1], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var y1) &&
-                    float.TryParse(arr[2], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var x2) &&
-                    float.TryParse(arr[3], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var y2) &&
-                    float.TryParse(arr[4], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var t1) &&
-                    float.TryParse(arr[5], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var t2))
+                    float.TryParse(arr[0], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var x1) &&
+                    float.TryParse(arr[1], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var y1) &&
+                    float.TryParse(arr[2], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var x2) &&
+                    float.TryParse(arr[3], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var y2) &&
+                    float.TryParse(arr[4], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var t1) &&
+                    float.TryParse(arr[5], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var t2))
                 {
                     var resizedX1 = Resample(sourceWidth, targetWidth, x1);
                     var resizedY1 = Resample(sourceHeight, targetHeight, y1);
@@ -236,7 +244,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static string FixMethodTwoParameters(decimal sourceWidth, decimal targetWidth, decimal sourceHeight, decimal targetHeight, string input, string tag)
         {
-            var regex = new Regex("\\\\" + tag + "\\s*\\(\\s*\\d+[\\.\\d+]*\\s*,\\s*\\d+[\\.\\d+]*\\s*\\)");
+            var regex = new Regex("\\\\" + tag + "\\s*\\(\\s*[-+]?\\d+[\\.\\d+]*\\s*,\\s*[-+]?\\d+[\\.\\d+]*\\s*\\)");
             var s = input;
             var match = regex.Match(s);
             while (match.Success)
@@ -244,8 +252,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var value = match.Value.Substring(tag.Length + 2, match.Value.Length - tag.Length - 3).RemoveChar(' ');
                 var arr = value.Split(',');
                 if (arr.Length == 2 &&
-                    float.TryParse(arr[0], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var x) &&
-                    float.TryParse(arr[1], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var y))
+                    float.TryParse(arr[0], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var x) &&
+                    float.TryParse(arr[1], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var y))
                 {
                     var resizedX = Resample(sourceWidth, targetWidth, x);
                     var resizedY = Resample(sourceHeight, targetHeight, y);
@@ -266,13 +274,13 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static string FixTagWithNumber(decimal sourceHeight, decimal targetHeight, string input, string tag)
         {
-            var regex = new Regex("\\\\" + tag + "\\d+[\\.\\d+]*[}\\\\]");
+            var regex = new Regex("\\\\" + tag + "[-+]?\\d+[\\.\\d+]*[}\\\\]");
             var s = input;
             var match = regex.Match(s);
             while (match.Success)
             {
                 var value = match.Value.Substring(tag.Length + 1, match.Value.Length - tag.Length - 2);
-                if (float.TryParse(value, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var d))
+                if (float.TryParse(value, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var d))
                 {
                     var resizedValue = Resample(sourceHeight, targetHeight, d);
                     s = s.Remove(match.Index, match.Value.Length);
