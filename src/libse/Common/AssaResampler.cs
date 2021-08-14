@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             s = FixTagWithNumber(sourceWidth, targetWidth, s, "fscx");
             s = FixTagWithNumber(sourceHeight, targetHeight, s, "fscy");
             s = FixTagWithNumber(sourceHeight, targetHeight, s, "blur");
-            
+
             return s;
         }
 
@@ -105,7 +105,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         if (float.TryParse(element, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var number))
                         {
                             var x = Resample(sourceWidth, targetWidth, number);
-                            sb.Append(x.ToString(CultureInfo.InvariantCulture));
+                            sb.Append(x.ToString("0.###", CultureInfo.InvariantCulture));
                             sb.Append(' ');
                             state = "y";
                         }
@@ -119,7 +119,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         if (float.TryParse(element, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var number))
                         {
                             var y = Resample(sourceHeight, targetHeight, number);
-                            sb.Append(y.ToString(CultureInfo.InvariantCulture));
+                            sb.Append(y.ToString("0.###", CultureInfo.InvariantCulture));
                             sb.Append(' ');
                             state = "start";
                         }
@@ -165,10 +165,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                     var resizedY2 = Resample(sourceHeight, targetHeight, y2);
                     s = s.Remove(match.Index, match.Value.Length);
                     s = s.Insert(match.Index, "\\" + tag + "(" +
-                        resizedX1.ToString(CultureInfo.InvariantCulture) + "," +
-                        resizedY1.ToString(CultureInfo.InvariantCulture) + "," +
-                        resizedX2.ToString(CultureInfo.InvariantCulture) + "," +
-                        resizedY2.ToString(CultureInfo.InvariantCulture) + ")");
+                        resizedX1.ToString("0.###", CultureInfo.InvariantCulture) + "," +
+                        resizedY1.ToString("0.###", CultureInfo.InvariantCulture) + "," +
+                        resizedX2.ToString("0.###", CultureInfo.InvariantCulture) + "," +
+                        resizedY2.ToString("0.###", CultureInfo.InvariantCulture) + ")");
                     match = regex.Match(s, match.Index + tag.Length);
                 }
                 else
@@ -203,12 +203,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                     var resizedY2 = Resample(sourceHeight, targetHeight, y2);
                     s = s.Remove(match.Index, match.Value.Length);
                     s = s.Insert(match.Index, "\\" + tag + "(" +
-                        resizedX1.ToString(CultureInfo.InvariantCulture) + "," +
-                        resizedY1.ToString(CultureInfo.InvariantCulture) + "," +
-                        resizedX2.ToString(CultureInfo.InvariantCulture) + "," +
-                        resizedY2.ToString(CultureInfo.InvariantCulture) + "," +
-                        t1.ToString(CultureInfo.InvariantCulture) + "," +
-                        t2.ToString(CultureInfo.InvariantCulture) + ")");
+                        resizedX1.ToString("0.###", CultureInfo.InvariantCulture) + "," +
+                        resizedY1.ToString("0.###", CultureInfo.InvariantCulture) + "," +
+                        resizedX2.ToString("0.###", CultureInfo.InvariantCulture) + "," +
+                        resizedY2.ToString("0.###", CultureInfo.InvariantCulture) + "," +
+                        t1.ToString("0.###", CultureInfo.InvariantCulture) + "," +
+                        t2.ToString("0.###", CultureInfo.InvariantCulture) + ")");
                     match = regex.Match(s, match.Index + tag.Length);
                 }
                 else
@@ -237,8 +237,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                     var resizedY = Resample(sourceHeight, targetHeight, y);
                     s = s.Remove(match.Index, match.Value.Length);
                     s = s.Insert(match.Index, "\\" + tag + "(" +
-                        resizedX.ToString(CultureInfo.InvariantCulture) + "," +
-                        resizedY.ToString(CultureInfo.InvariantCulture) + ")");
+                        resizedX.ToString("0.###", CultureInfo.InvariantCulture) + "," +
+                        resizedY.ToString("0.###", CultureInfo.InvariantCulture) + ")");
                     match = regex.Match(s, match.Index + tag.Length);
                 }
                 else
