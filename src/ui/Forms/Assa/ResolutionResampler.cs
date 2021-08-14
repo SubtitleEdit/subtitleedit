@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Globalization;
 using System.IO;
+using System.Text;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.Assa
@@ -163,8 +164,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             _subtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + targetWidth.ToString(CultureInfo.InvariantCulture), "[Script Info]", _subtitle.Header);
             _subtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + targetHeight.ToString(CultureInfo.InvariantCulture), "[Script Info]", _subtitle.Header);
 
-            foreach (var p in _subtitle.Paragraphs)
+            var convertErrors = new StringBuilder();
+            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
+                Paragraph p = _subtitle.Paragraphs[i];
                 if (fixFonts)
                 {
                     p.Text = AssaResampler.ResampleOverrideTagsFont(sourceWidth, targetWidth, sourceHeight, targetHeight, p.Text);
@@ -177,11 +180,24 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
                 if (fixDraw)
                 {
-                    p.Text = AssaResampler.ResampleOverrideTagsDrawing(sourceWidth, targetWidth, sourceHeight, targetHeight, p.Text);
+                    var errors = new StringBuilder();
+                    p.Text = AssaResampler.ResampleOverrideTagsDrawing(sourceWidth, targetWidth, sourceHeight, targetHeight, p.Text, errors);
+                    if (errors.Length > 0)
+                    {
+                        convertErrors.AppendLine($"Error occurred in line {i + 1}: {errors}");
+                        convertErrors.AppendLine();
+                    }
                 }
             }
 
             DialogResult = DialogResult.OK;
+
+            if (convertErrors.Length > 0)
+            {
+                var tempFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".txt");
+                File.WriteAllText(tempFileName, "ASSA codes contains errors: " + Environment.NewLine + Environment.NewLine + convertErrors);
+                UiUtil.OpenFile(tempFileName);
+            }
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
