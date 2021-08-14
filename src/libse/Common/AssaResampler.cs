@@ -25,8 +25,6 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             // {\\fs50}
             s = FixTagWithNumber(sourceHeight, targetHeight, s, "fs");
-            s = FixTagWithNumber(sourceWidth, targetWidth, s, "fscx");
-            s = FixTagWithNumber(sourceHeight, targetHeight, s, "fscy");
             s = FixTagWithNumber(sourceHeight, targetHeight, s, "blur");
 
             return s;
@@ -57,24 +55,44 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             //{\clip(1,m 50 0 b 100 0 100 100 50 100 b 0 100 0 0 50 0)}
             //{\p1}m 0 0 l 100 0 100 100 0 100{\p0}
-            s = FixDrawing(sourceWidth, targetWidth, sourceHeight, targetHeight, s, "\\iclip\\(", ")");
-            s = FixDrawing(sourceWidth, targetWidth, sourceHeight, targetHeight, s, "\\clip\\(", ")");
-            s = FixDrawing(sourceWidth, targetWidth, sourceHeight, targetHeight, s, "\\p1}", "{\\p0}");
+            s = FixDrawing(sourceWidth, targetWidth, sourceHeight, targetHeight, s, @"\\iclip\(", @"\)");
+            s = FixDrawing(sourceWidth, targetWidth, sourceHeight, targetHeight, s, @"\\clip\(", @"\)");
+            s = FixDrawing(sourceWidth, targetWidth, sourceHeight, targetHeight, s, @"\{[^{]*\\p1[^}]*}", @"\{[^{]*\\p0[^}]*}");
 
             return s;
         }
 
         private static string FixDrawing(decimal sourceWidth, decimal targetWidth, decimal sourceHeight, decimal targetHeight, string input, string tag, string endTag)
         {
-            var regex = new Regex(tag.Replace("\\", "\\\\") + ".*" + endTag.Replace("\\", "\\\\"));
+            var regexStart = new Regex(tag);
+            var regexEnd = new Regex(endTag);
             var s = input;
-            var match = regex.Match(s);
+            var match = regexStart.Match(s);
+            var sb = new StringBuilder();
             while (match.Success)
             {
-                var value = match.Value.Substring(tag.Length, match.Value.Length - tag.Length - endTag.Length);
+                if (match.Index > 0)
+                {
+                    sb.Append(s.Substring(0, match.Index));
+                    s = s.Remove(0, match.Index);
+                }
+
+                sb.Append(match.Value);
+                s = s.Remove(0, match.Value.Length);
+
+                var value = s;
+                var endMatch = regexEnd.Match(s);
+                if (endMatch.Success)
+                {
+                    value = s.Substring(0, endMatch.Index);
+                    s = s.Substring(endMatch.Index);
+                }
+                else 
+                {
+                    s = string.Empty;
+                }
+
                 string[] arr;
-                var sb = new StringBuilder();
-                sb.Append(tag);
                 var commaSplitArr = value.Split(',');
                 if (commaSplitArr.Length == 1)
                 {
@@ -134,14 +152,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                 }
 
-                s = s.Remove(match.Index, match.Value.Length);
-                var newTag = sb.ToString().TrimEnd() + endTag;
-                s = s.Insert(match.Index, newTag);
-
-                match = regex.Match(s, match.Index + tag.Length);
+                match = regexStart.Match(s);
             }
 
-            return s;
+            return sb.ToString().TrimEnd() + s;
         }
 
         private static string FixMethodFourParameters(decimal sourceWidth, decimal targetWidth, decimal sourceHeight, decimal targetHeight, string input, string tag)
