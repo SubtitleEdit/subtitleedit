@@ -27,7 +27,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             s = FixTagWithNumber(sourceHeight, targetHeight, s, "fs");
             s = FixTagWithNumber(sourceWidth, targetWidth, s, "fscx");
             s = FixTagWithNumber(sourceHeight, targetHeight, s, "fscy");
-
+            s = FixTagWithNumber(sourceHeight, targetHeight, s, "blur");
+            
             return s;
         }
 
@@ -221,7 +222,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static string FixMethodTwoParameters(decimal sourceWidth, decimal targetWidth, decimal sourceHeight, decimal targetHeight, string input, string tag)
         {
-            var regex = new Regex("\\\\" + tag + "\\s*\\(\\s*\\d+[\\.\\d+]*\\s*,\\s*\\d+\\s*\\)");
+            var regex = new Regex("\\\\" + tag + "\\s*\\(\\s*\\d+[\\.\\d+]*\\s*,\\s*\\d+[\\.\\d+]*\\s*\\)");
             var s = input;
             var match = regex.Match(s);
             while (match.Success)
@@ -261,7 +262,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     var resizedValue = Resample(sourceHeight, targetHeight, d);
                     s = s.Remove(match.Index, match.Value.Length);
-                    s = s.Insert(match.Index, "\\" + tag + resizedValue.ToString(CultureInfo.InvariantCulture) + match.Value.Substring(match.Value.Length - 1));
+                    s = s.Insert(match.Index, "\\" + tag + resizedValue.ToString("0.###", CultureInfo.InvariantCulture) + match.Value.Substring(match.Value.Length - 1));
                     match = regex.Match(s, match.Index + tag.Length);
                 }
                 else
