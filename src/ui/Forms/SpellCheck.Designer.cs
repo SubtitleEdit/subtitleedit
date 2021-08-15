@@ -82,16 +82,16 @@
             // 
             this.comboBoxDictionaries.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxDictionaries.FormattingEnabled = true;
-            this.comboBoxDictionaries.Location = new System.Drawing.Point(317, 33);
+            this.comboBoxDictionaries.Location = new System.Drawing.Point(393, 34);
             this.comboBoxDictionaries.Name = "comboBoxDictionaries";
-            this.comboBoxDictionaries.Size = new System.Drawing.Size(237, 21);
+            this.comboBoxDictionaries.Size = new System.Drawing.Size(245, 21);
             this.comboBoxDictionaries.TabIndex = 8;
             this.comboBoxDictionaries.SelectedIndexChanged += new System.EventHandler(this.ComboBoxDictionariesSelectedIndexChanged);
             // 
             // labelLanguage
             // 
             this.labelLanguage.AutoSize = true;
-            this.labelLanguage.Location = new System.Drawing.Point(314, 14);
+            this.labelLanguage.Location = new System.Drawing.Point(390, 14);
             this.labelLanguage.Name = "labelLanguage";
             this.labelLanguage.Size = new System.Drawing.Size(54, 13);
             this.labelLanguage.TabIndex = 7;
@@ -101,10 +101,11 @@
             // 
             this.richTextBoxParagraph.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBoxParagraph.ContextMenuStrip = this.contextMenuStrip1;
+            this.richTextBoxParagraph.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.richTextBoxParagraph.Location = new System.Drawing.Point(11, 33);
             this.richTextBoxParagraph.Name = "richTextBoxParagraph";
             this.richTextBoxParagraph.ReadOnly = true;
-            this.richTextBoxParagraph.Size = new System.Drawing.Size(292, 54);
+            this.richTextBoxParagraph.Size = new System.Drawing.Size(358, 92);
             this.richTextBoxParagraph.TabIndex = 5;
             this.richTextBoxParagraph.Text = "";
             // 
@@ -149,10 +150,12 @@
             // 
             this.listBoxSuggestions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.listBoxSuggestions.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBoxSuggestions.FormattingEnabled = true;
+            this.listBoxSuggestions.ItemHeight = 16;
             this.listBoxSuggestions.Location = new System.Drawing.Point(8, 47);
             this.listBoxSuggestions.Name = "listBoxSuggestions";
-            this.listBoxSuggestions.Size = new System.Drawing.Size(272, 121);
+            this.listBoxSuggestions.Size = new System.Drawing.Size(272, 180);
             this.listBoxSuggestions.TabIndex = 2;
             this.listBoxSuggestions.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ListBoxSuggestionsMouseDoubleClick);
             // 
@@ -167,6 +170,7 @@
             // 
             // textBoxWord
             // 
+            this.textBoxWord.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxWord.Location = new System.Drawing.Point(6, 20);
             this.textBoxWord.Name = "textBoxWord";
             this.textBoxWord.Size = new System.Drawing.Size(280, 21);
@@ -176,7 +180,7 @@
             // buttonAbort
             // 
             this.buttonAbort.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonAbort.Location = new System.Drawing.Point(515, 351);
+            this.buttonAbort.Location = new System.Drawing.Point(599, 392);
             this.buttonAbort.Name = "buttonAbort";
             this.buttonAbort.Size = new System.Drawing.Size(85, 23);
             this.buttonAbort.TabIndex = 3;
@@ -265,9 +269,9 @@
             this.groupBoxWordNotFound.Controls.Add(this.textBoxWord);
             this.groupBoxWordNotFound.Controls.Add(this.buttonSkipAll);
             this.groupBoxWordNotFound.Controls.Add(this.buttonChange);
-            this.groupBoxWordNotFound.Location = new System.Drawing.Point(11, 120);
+            this.groupBoxWordNotFound.Location = new System.Drawing.Point(11, 165);
             this.groupBoxWordNotFound.Name = "groupBoxWordNotFound";
-            this.groupBoxWordNotFound.Size = new System.Drawing.Size(292, 225);
+            this.groupBoxWordNotFound.Size = new System.Drawing.Size(358, 218);
             this.groupBoxWordNotFound.TabIndex = 0;
             this.groupBoxWordNotFound.TabStop = false;
             this.groupBoxWordNotFound.Text = "Word not found";
@@ -301,9 +305,9 @@
             this.groupBoxSuggestions.Controls.Add(this.buttonUseSuggestionAlways);
             this.groupBoxSuggestions.Controls.Add(this.checkBoxAutoChangeNames);
             this.groupBoxSuggestions.Controls.Add(this.listBoxSuggestions);
-            this.groupBoxSuggestions.Location = new System.Drawing.Point(309, 120);
+            this.groupBoxSuggestions.Location = new System.Drawing.Point(393, 73);
             this.groupBoxSuggestions.Name = "groupBoxSuggestions";
-            this.groupBoxSuggestions.Size = new System.Drawing.Size(291, 225);
+            this.groupBoxSuggestions.Size = new System.Drawing.Size(291, 271);
             this.groupBoxSuggestions.TabIndex = 1;
             this.groupBoxSuggestions.TabStop = false;
             this.groupBoxSuggestions.Text = "Suggestions";
@@ -312,9 +316,9 @@
             // 
             this.checkBoxAutoChangeNames.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxAutoChangeNames.AutoSize = true;
-            this.checkBoxAutoChangeNames.Location = new System.Drawing.Point(8, 201);
+            this.checkBoxAutoChangeNames.Location = new System.Drawing.Point(8, 247);
             this.checkBoxAutoChangeNames.Name = "checkBoxAutoChangeNames";
-            this.checkBoxAutoChangeNames.Size = new System.Drawing.Size(216, 17);
+            this.checkBoxAutoChangeNames.Size = new System.Drawing.Size(221, 17);
             this.checkBoxAutoChangeNames.TabIndex = 3;
             this.checkBoxAutoChangeNames.Text = "Auto fix names where only casing differs";
             this.checkBoxAutoChangeNames.UseVisualStyleBackColor = true;
@@ -322,7 +326,7 @@
             // 
             // buttonEditWholeText
             // 
-            this.buttonEditWholeText.Location = new System.Drawing.Point(175, 91);
+            this.buttonEditWholeText.Location = new System.Drawing.Point(241, 131);
             this.buttonEditWholeText.Name = "buttonEditWholeText";
             this.buttonEditWholeText.Size = new System.Drawing.Size(128, 23);
             this.buttonEditWholeText.TabIndex = 6;
@@ -335,16 +339,16 @@
             this.groupBoxEditWholeText.Controls.Add(this.buttonSkipText);
             this.groupBoxEditWholeText.Controls.Add(this.buttonChangeWholeText);
             this.groupBoxEditWholeText.Controls.Add(this.textBoxWholeText);
-            this.groupBoxEditWholeText.Location = new System.Drawing.Point(11, 120);
+            this.groupBoxEditWholeText.Location = new System.Drawing.Point(11, 166);
             this.groupBoxEditWholeText.Name = "groupBoxEditWholeText";
-            this.groupBoxEditWholeText.Size = new System.Drawing.Size(292, 192);
+            this.groupBoxEditWholeText.Size = new System.Drawing.Size(358, 223);
             this.groupBoxEditWholeText.TabIndex = 40;
             this.groupBoxEditWholeText.TabStop = false;
             this.groupBoxEditWholeText.Text = "Edit whole text";
             // 
             // buttonSkipText
             // 
-            this.buttonSkipText.Location = new System.Drawing.Point(151, 88);
+            this.buttonSkipText.Location = new System.Drawing.Point(151, 194);
             this.buttonSkipText.Name = "buttonSkipText";
             this.buttonSkipText.Size = new System.Drawing.Size(135, 21);
             this.buttonSkipText.TabIndex = 35;
@@ -354,7 +358,7 @@
             // 
             // buttonChangeWholeText
             // 
-            this.buttonChangeWholeText.Location = new System.Drawing.Point(6, 88);
+            this.buttonChangeWholeText.Location = new System.Drawing.Point(6, 194);
             this.buttonChangeWholeText.Name = "buttonChangeWholeText";
             this.buttonChangeWholeText.Size = new System.Drawing.Size(135, 21);
             this.buttonChangeWholeText.TabIndex = 0;
@@ -364,18 +368,18 @@
             // 
             // textBoxWholeText
             // 
-            this.textBoxWholeText.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxWholeText.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxWholeText.Location = new System.Drawing.Point(6, 19);
             this.textBoxWholeText.Multiline = true;
             this.textBoxWholeText.Name = "textBoxWholeText";
-            this.textBoxWholeText.Size = new System.Drawing.Size(280, 63);
+            this.textBoxWholeText.Size = new System.Drawing.Size(341, 169);
             this.textBoxWholeText.TabIndex = 31;
             // 
             // labelActionInfo
             // 
             this.labelActionInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelActionInfo.AutoSize = true;
-            this.labelActionInfo.Location = new System.Drawing.Point(12, 364);
+            this.labelActionInfo.Location = new System.Drawing.Point(12, 405);
             this.labelActionInfo.Name = "labelActionInfo";
             this.labelActionInfo.Size = new System.Drawing.Size(79, 13);
             this.labelActionInfo.TabIndex = 2;
@@ -384,7 +388,7 @@
             // buttonSpellCheckDownload
             // 
             this.buttonSpellCheckDownload.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSpellCheckDownload.Location = new System.Drawing.Point(560, 32);
+            this.buttonSpellCheckDownload.Location = new System.Drawing.Point(644, 32);
             this.buttonSpellCheckDownload.Name = "buttonSpellCheckDownload";
             this.buttonSpellCheckDownload.Size = new System.Drawing.Size(28, 23);
             this.buttonSpellCheckDownload.TabIndex = 9;
@@ -396,18 +400,18 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(612, 386);
+            this.ClientSize = new System.Drawing.Size(696, 427);
             this.Controls.Add(this.buttonSpellCheckDownload);
             this.Controls.Add(this.labelActionInfo);
-            this.Controls.Add(this.richTextBoxParagraph);
             this.Controls.Add(this.comboBoxDictionaries);
             this.Controls.Add(this.buttonEditWholeText);
             this.Controls.Add(this.groupBoxSuggestions);
             this.Controls.Add(this.labelFullText);
             this.Controls.Add(this.buttonAbort);
             this.Controls.Add(this.labelLanguage);
-            this.Controls.Add(this.groupBoxWordNotFound);
+            this.Controls.Add(this.richTextBoxParagraph);
             this.Controls.Add(this.groupBoxEditWholeText);
+            this.Controls.Add(this.groupBoxWordNotFound);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
