@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Core.Common
     {
         public static int Resample(decimal source, decimal target, int v)
         {
-            var factor = source / target;
+            var factor = target / source;
             return (int)Math.Round(factor * v);
         }
 
@@ -131,7 +131,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         else
                         {
                             sb.Append(element);
-                            errors?.AppendLine($"Expected x element but found '{element}' at draw element {i}");
+                            errors?.AppendLine($"Expected x element but found '{element}' at draw element {i} in '{value}'");
                         }
                     }
                     else if (state == "y")
@@ -146,7 +146,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         else
                         {
                             sb.Append(element);
-                            errors?.AppendLine($"Expected y element but found '{element}' at draw element {i}");
+                            errors?.AppendLine($"Expected y element but found '{element}' at draw element {i} in '{value}'");
                             if ("mnlbspc".Contains(element) && element.Length == 1)
                             {
                                 state = "start";
@@ -156,7 +156,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     else
                     {
                         sb.Append(element);
-                        errors?.AppendLine($"Expected code element (m, n, l, b, s, p, c) but found '{element}' at draw element {i}");
+                        errors?.AppendLine($"Expected code element (m, n, l, b, s, p, c) but found '{element}' at draw element {i} in '{value}'");
                     }
                 }
 
