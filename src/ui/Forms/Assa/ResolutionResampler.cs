@@ -153,8 +153,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 if (fixMargins)
                 {
                     style.MarginLeft = AssaResampler.Resample(sourceWidth, targetWidth, style.MarginLeft);
-                    style.MarginRight = AssaResampler.Resample(sourceWidth, targetWidth, style.MarginLeft);
-                    style.MarginVertical = AssaResampler.Resample(sourceHeight, targetHeight, style.MarginLeft);
+                    style.MarginRight = AssaResampler.Resample(sourceWidth, targetWidth, style.MarginRight);
+                    style.MarginVertical = AssaResampler.Resample(sourceHeight, targetHeight, style.MarginVertical);
                 }
                 style.FontSize = AssaResampler.Resample(sourceHeight, targetHeight, style.FontSize);
             }
@@ -195,7 +195,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             if (convertErrors.Length > 0)
             {
                 var tempFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".txt");
-                File.WriteAllText(tempFileName, "ASSA codes contains errors: " + Environment.NewLine + Environment.NewLine + convertErrors);
+                File.WriteAllText(tempFileName, "This file seems to contain some ASSA drawing code errors: " + Environment.NewLine + Environment.NewLine + convertErrors);
                 UiUtil.OpenFile(tempFileName);
             }
         }
