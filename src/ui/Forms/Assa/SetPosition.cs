@@ -419,6 +419,11 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 var dialogResult = MessageBox.Show(LanguageSettings.Current.AssaSetPosition.ResolutionMissing, "Subtitle Edit", MessageBoxButtons.YesNoCancel);
                 if (dialogResult == DialogResult.OK || dialogResult == DialogResult.Yes)
                 {
+                    if (string.IsNullOrEmpty(_subtitleWithNewHeader.Header))
+                    {
+                        _subtitleWithNewHeader.Header = AdvancedSubStationAlpha.DefaultHeader;
+                    }
+
                     _subtitleWithNewHeader.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + _videoInfo.Width.ToString(CultureInfo.InvariantCulture), "[Script Info]", _subtitleWithNewHeader.Header);
                     _subtitleWithNewHeader.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + _videoInfo.Height.ToString(CultureInfo.InvariantCulture), "[Script Info]", _subtitleWithNewHeader.Header);
                 }
