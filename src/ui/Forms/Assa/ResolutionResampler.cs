@@ -164,7 +164,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             _subtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + targetWidth.ToString(CultureInfo.InvariantCulture), "[Script Info]", _subtitle.Header);
             _subtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + targetHeight.ToString(CultureInfo.InvariantCulture), "[Script Info]", _subtitle.Header);
 
-            var convertErrors = new StringBuilder();
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = _subtitle.Paragraphs[i];
@@ -180,24 +179,11 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
                 if (fixDraw)
                 {
-                    var errors = new StringBuilder();
-                    p.Text = AssaResampler.ResampleOverrideTagsDrawing(sourceWidth, targetWidth, sourceHeight, targetHeight, p.Text, errors);
-                    if (errors.Length > 0)
-                    {
-                        convertErrors.AppendLine($"Error occurred in line {i + 1}: {errors}");
-                        convertErrors.AppendLine();
-                    }
+                    p.Text = AssaResampler.ResampleOverrideTagsDrawing(sourceWidth, targetWidth, sourceHeight, targetHeight, p.Text, null);
                 }
             }
 
             DialogResult = DialogResult.OK;
-
-            if (convertErrors.Length > 0)
-            {
-                var tempFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".txt");
-                File.WriteAllText(tempFileName, "This file seems to contain some ASSA drawing code errors: " + Environment.NewLine + Environment.NewLine + convertErrors);
-                UiUtil.OpenFile(tempFileName);
-            }
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
