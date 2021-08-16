@@ -54,6 +54,7 @@
     <TotalLengthXSplitLine>총 문자: {0} (분할)</TotalLengthXSplitLine>
     <SplitLine>줄 분할</SplitLine>
     <NotAvailable>사용불가!</NotAvailable>
+    <Overlap>중복</Overlap>
     <OverlapPreviousLineX>이전 줄보다 빠름 ({0:#,##0.###})</OverlapPreviousLineX>
     <OverlapX>중복됨! ({0:#,##0.###})</OverlapX>
     <OverlapNextX>현재 시작이 다음 시작보다 느림 ({0:#,##0.###})</OverlapNextX>
