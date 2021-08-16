@@ -418,6 +418,8 @@ namespace Nikse.SubtitleEdit.Controls
             double startThresholdMilliseconds = (_startPositionSeconds - additionalSeconds) * TimeCode.BaseUnit;
             double endThresholdMilliseconds = (EndPositionSeconds + additionalSeconds) * TimeCode.BaseUnit;
 
+            var lastTimeStampHash = -1;
+            var lastLastTimeStampHash = -2;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 var p = subtitle.Paragraphs[i];
@@ -431,7 +433,20 @@ namespace Nikse.SubtitleEdit.Controls
 
                 if (p.EndTime.TotalMilliseconds >= startThresholdMilliseconds && p.StartTime.TotalMilliseconds <= endThresholdMilliseconds)
                 {
+                    var timeStampHash = p.StartTime.TotalMilliseconds.GetHashCode() + p.EndTime.TotalMilliseconds.GetHashCode();
+                    if (timeStampHash == lastTimeStampHash && timeStampHash == lastLastTimeStampHash)
+                    {
+                        continue;
+                    }
+
                     _displayableParagraphs.Add(p);
+                    if (_displayableParagraphs.Count > 200)
+                    {
+                        break;
+                    }
+
+                    lastLastTimeStampHash = lastTimeStampHash;
+                    lastTimeStampHash = timeStampHash;
                 }
             }
 
