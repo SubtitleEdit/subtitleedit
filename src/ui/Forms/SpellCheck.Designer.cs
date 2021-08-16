@@ -348,9 +348,9 @@
             // 
             // buttonSkipText
             // 
-            this.buttonSkipText.Location = new System.Drawing.Point(151, 194);
+            this.buttonSkipText.Location = new System.Drawing.Point(147, 191);
             this.buttonSkipText.Name = "buttonSkipText";
-            this.buttonSkipText.Size = new System.Drawing.Size(135, 21);
+            this.buttonSkipText.Size = new System.Drawing.Size(135, 23);
             this.buttonSkipText.TabIndex = 35;
             this.buttonSkipText.Text = "Skip once";
             this.buttonSkipText.UseVisualStyleBackColor = true;
@@ -358,9 +358,9 @@
             // 
             // buttonChangeWholeText
             // 
-            this.buttonChangeWholeText.Location = new System.Drawing.Point(6, 194);
+            this.buttonChangeWholeText.Location = new System.Drawing.Point(6, 191);
             this.buttonChangeWholeText.Name = "buttonChangeWholeText";
-            this.buttonChangeWholeText.Size = new System.Drawing.Size(135, 21);
+            this.buttonChangeWholeText.Size = new System.Drawing.Size(135, 23);
             this.buttonChangeWholeText.TabIndex = 0;
             this.buttonChangeWholeText.Text = "Change";
             this.buttonChangeWholeText.UseVisualStyleBackColor = true;
@@ -372,7 +372,7 @@
             this.textBoxWholeText.Location = new System.Drawing.Point(6, 19);
             this.textBoxWholeText.Multiline = true;
             this.textBoxWholeText.Name = "textBoxWholeText";
-            this.textBoxWholeText.Size = new System.Drawing.Size(341, 169);
+            this.textBoxWholeText.Size = new System.Drawing.Size(341, 166);
             this.textBoxWholeText.TabIndex = 31;
             // 
             // labelActionInfo
