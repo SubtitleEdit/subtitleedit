@@ -30609,6 +30609,22 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 s = s.Remove(endIndex, 7);
                             }
+                            else 
+                            {
+                                endIndex = s.IndexOf("< /font>", match.Index - 5, StringComparison.OrdinalIgnoreCase);
+                                if (endIndex >= 0)
+                                {
+                                    s = s.Remove(endIndex, 7);
+                                }
+                                else
+                                {
+                                    endIndex = s.IndexOf("</ font>", match.Index - 5, StringComparison.OrdinalIgnoreCase);
+                                    if (endIndex >= 0)
+                                    {
+                                        s = s.Remove(endIndex, 7);
+                                    }
+                                }
+                            }
                         }
                         else if (s.Length > match.Index + 1 && s[match.Index + 1] == '>')
                         {
