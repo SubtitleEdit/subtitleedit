@@ -54,6 +54,7 @@
     <TotalLengthXSplitLine>Συνολικό μήκος: {0} (Διαχωρισμός)</TotalLengthXSplitLine>
     <SplitLine>Διαχωρισμός</SplitLine>
     <NotAvailable>Μη διαθέσιμο</NotAvailable>
+    <Overlap>Επικάλυψη</Overlap>
     <OverlapPreviousLineX>Επικάλυψη προηγούμενης ({0:#,##0.###})</OverlapPreviousLineX>
     <OverlapX>Επικάλυψη ({0:#,##0.###})</OverlapX>
     <OverlapNextX>Επικάλυψη επόμενης ({0:#,##0.###})</OverlapNextX>
@@ -202,6 +203,15 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Bottom>Κάτω</Bottom>
     <TakePosFromVideo>Λήψη θέσης βίντεο</TakePosFromVideo>
   </AssaProgressBarGenerator>
+  <AssaResulationChanger>
+    <Title>Αλλαγή ανάλυσης κειμένου</Title>
+    <SourceVideoRes>Ανάλυση αρχικού βίντεο</SourceVideoRes>
+    <TargetVideoRes>Υιοθέτηση ανάλυσης βίντεο</TargetVideoRes>
+    <ChangeResolutionMargins>Αλλαγή ανάλυσης για περιθώριο</ChangeResolutionMargins>
+    <ChangeResolutionFontSize>Αλλαγή ανάλυσης για μέγεθος γραμματοσειράς</ChangeResolutionFontSize>
+    <ChangeResolutionPositions>Αλλαγή ανάλυσης για θέση</ChangeResolutionPositions>
+    <ChangeResolutionDrawing>Αλλαγή ανάλυσης για σχέδιο</ChangeResolutionDrawing>
+  </AssaResulationChanger>
   <AssaSetPosition>
     <SetPosition>Ορισμός/λήψη θέσης</SetPosition>
     <VideoResolutionX>Ανάλυση βίντεο: {0}</VideoResolutionX>
@@ -1250,6 +1260,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <SizeAllColumnsToFit>Αλλαγή μεγέθους στηλών για να χωρούν</SizeAllColumnsToFit>
         <SetStyle>Ορισμός στυλ</SetStyle>
         <SetActor>Ορισμός ηθοποιού</SetActor>
+        <AssaTools>Εργαλεία ASSA</AssaTools>
         <SubStationAlphaStyles>Στυλ Sub Station Alpha…</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Προηγμένο στυλ Sub Station Alpha…</AdvancedSubStationAlphaStyles>
         <TimedTextSetRegion>Timed Text - ορισμός περιοχής</TimedTextSetRegion>
@@ -1314,6 +1325,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <AdjustDisplayDurationForSelectedLines>Προσαρμογή διαρκειών γραμμών…</AdjustDisplayDurationForSelectedLines>
         <ApplyDurationLimitsForSelectedLines>Εφαρμογή ορίων διάρκειας επιλεγμένων γραμμών…</ApplyDurationLimitsForSelectedLines>
         <ApplyCustomOverrideTag>Εφαρμογή προσαρμοσμένων ετικετών παράκαμψης…</ApplyCustomOverrideTag>
+        <SetPosition>Ορισμός θέσης…</SetPosition>
+        <GenerateProgressBar>Δημιουργία γραμμής προόδου…</GenerateProgressBar>
+        <AssaResolutionChanger>Αλλαγή ανάλυσης κειμένου…</AssaResolutionChanger>
         <FixCommonErrorsInSelectedLines>Διόρθωση σφαλμάτων των γραμμών…</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Αλλαγή πεζών-κεφαλαίων στις γραμμές…</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Αποθήκευση γραμμών ως…</SaveSelectedLines>
@@ -1528,7 +1542,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ParsingTransportStreamFile>Ανάλυση αρχείου Trasport Stream. Παρακαλώ, περιμένετε.</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Πριν από εισαγωγή υποτίτλου από αρχείο Matroska</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Εισαγωγή υποτίτλου από αρχείο Matroska</SubtitleImportedFromMatroskaFile>
-    <DropFileXNotAccepted>Απόρριψη συρμένου αρχείου '{0}' - το αρχείο είναι πολύ μεγάλο</DropFileXNotAccepted>
+    <DropFileXNotAccepted>Απόρριψη συρμένου αρχείου '{0}'. Το αρχείο είναι πολύ μεγάλο.</DropFileXNotAccepted>
+    <DropSubtitleFileXNotAccepted>Απόρριψη συρμένου αρχείου '{0}'. Το αρχείο είναι πολύ μεγάλο για υπότιτλο.</DropSubtitleFileXNotAccepted>
     <DropOnlyOneFile>Μπορείτε να σύρετε μόνο ένα αρχείο</DropOnlyOneFile>
     <OpenAnsiSubtitle>Άνοιγμα υποτίτλου…</OpenAnsiSubtitle>
     <BeforeChangeCasing>Πριν από αλλαγή πεζών-κεφαλαίων</BeforeChangeCasing>
@@ -2195,6 +2210,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixCommonErrorsSkipStepOne>Παράβλεψη πρώτου βήματος (προεπιλεγμένα)</FixCommonErrorsSkipStepOne>
     <DefaultFormat>Προεπιλεγμένη μορφή</DefaultFormat>
     <DefaultSaveAsFormat>Προεπιλεγμένη μορφή αποθήκευσης ως</DefaultSaveAsFormat>
+    <DefaultSaveAsFormatAuto>Αυτόματο</DefaultSaveAsFormatAuto>
     <Favorites>Αγαπημένες</Favorites>
     <FavoriteFormats>Αγαπημένες μορφες</FavoriteFormats>
     <FavoriteSubtitleFormatsNote>Σημείωση: Οι αγαπημένες μορφές εμφανίζονται πρώτες στη λίστα. Η προκαθορισμένη μορφή εμφανίζεται πάντα πρώτη.</FavoriteSubtitleFormatsNote>
@@ -2264,8 +2280,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MainCreateStartDownEndUp>Δημιουργία νέου στο πάτημα του κάτω βέλους, ορισμός χρόνου λήξης στο πάτημα του πάνω βέλους</MainCreateStartDownEndUp>
     <MergeDialog>Συγχώνευση διαλόγου (εισαγωγή παυλών)</MergeDialog>
     <GoToNext>Μετάβαση σε επόμενη γραμμή</GoToNext>
+    <GoToNextPlayTranslate>Μετάβαση σε επόμενη γραμμή (και αναπαραγωγή σε λειτουργία μετάφρασης)</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>Μετάβαση σε επόμενη γραμμή και ορισμός δείκτη στη λήξη</GoToNextCursorAtEnd>
     <GoToPrevious>Μετάβαση σε προηγούμενη γραμμή</GoToPrevious>
+    <GoToPreviousPlayTranslate>Μετάβαση σε προηγούμενη γραμμή (και αναπαραγωγή σε λειτουργία μετάφρασης)</GoToPreviousPlayTranslate>
     <GoToCurrentSubtitleStart>Μετάβαση στην αρχή της τρέχουσας γραμμής</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Μετάβαση στη λήξη της τρέχουσας γραμμής</GoToCurrentSubtitleEnd>
     <GoToPreviousSubtitleAndFocusVideo>Μετάβαση σε προηγούμενη γραμμή και ορισμός θέσης βίντεο</GoToPreviousSubtitleAndFocusVideo>
