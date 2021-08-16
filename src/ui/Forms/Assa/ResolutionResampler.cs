@@ -156,7 +156,18 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                     style.MarginRight = AssaResampler.Resample(sourceWidth, targetWidth, style.MarginRight);
                     style.MarginVertical = AssaResampler.Resample(sourceHeight, targetHeight, style.MarginVertical);
                 }
-                style.FontSize = AssaResampler.Resample(sourceHeight, targetHeight, style.FontSize);
+
+                if (fixFonts)
+                {
+                    style.FontSize = AssaResampler.Resample(sourceHeight, targetHeight, style.FontSize);
+                }
+
+                if (fixFonts || fixDraw)
+                {
+                    style.OutlineWidth = (decimal)AssaResampler.Resample(sourceHeight, targetHeight, (float)style.OutlineWidth);
+                    style.ShadowWidth = (decimal)AssaResampler.Resample(sourceHeight, targetHeight, (float)style.ShadowWidth);
+                    style.Spacing = (decimal)AssaResampler.Resample(sourceWidth, targetWidth, (float)style.Spacing);
+                }
             }
 
             _subtitle.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(_subtitle.Header, styles);
