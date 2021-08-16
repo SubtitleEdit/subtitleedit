@@ -23323,6 +23323,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         UpdateSourceView();
                         SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                        _subtitleListViewIndex = -1;
 
                         if (beforeParagraphCount == _subtitle.Paragraphs.Count)
                         {
