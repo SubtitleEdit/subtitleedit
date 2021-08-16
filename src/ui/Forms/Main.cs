@@ -23329,6 +23329,10 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             RestoreSubtitleListviewIndices();
                         }
+                        else if (_selectedIndices.Count > 0)
+                        {
+                            SubtitleListview1.SelectIndexAndEnsureVisible(_selectedIndices.First());
+                        }
                         else
                         {
                             SubtitleListview1.SelectIndexAndEnsureVisible(0);
