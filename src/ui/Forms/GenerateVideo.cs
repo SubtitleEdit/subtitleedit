@@ -154,5 +154,23 @@ namespace Nikse.SubtitleEdit.Forms
                 DialogResult = DialogResult.Cancel;
             }
         }
+
+        private void numericUpDownWidth_ValueChanged(object sender, EventArgs e)
+        {
+            var v = (int)numericUpDownWidth.Value;
+            if (v % 2 == 1)
+            {
+                numericUpDownWidth.Value++;
+            }
+        }
+
+        private void numericUpDownHeight_ValueChanged(object sender, EventArgs e)
+        {
+            var v = (int)numericUpDownHeight.Value;
+            if (v % 2 == 1)
+            {
+                numericUpDownHeight.Value++;
+            }
+        }
     }
 }

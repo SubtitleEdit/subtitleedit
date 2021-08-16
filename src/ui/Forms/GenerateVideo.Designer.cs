@@ -117,6 +117,11 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // numericUpDownWidth
             // 
+            this.numericUpDownWidth.Increment = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
             this.numericUpDownWidth.Location = new System.Drawing.Point(165, 56);
             this.numericUpDownWidth.Maximum = new decimal(new int[] {
             50000,
@@ -136,9 +141,15 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0,
             0});
+            this.numericUpDownWidth.ValueChanged += new System.EventHandler(this.numericUpDownWidth_ValueChanged);
             // 
             // numericUpDownHeight
             // 
+            this.numericUpDownHeight.Increment = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
             this.numericUpDownHeight.Location = new System.Drawing.Point(253, 56);
             this.numericUpDownHeight.Maximum = new decimal(new int[] {
             50000,
@@ -158,6 +169,7 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0,
             0});
+            this.numericUpDownHeight.ValueChanged += new System.EventHandler(this.numericUpDownHeight_ValueChanged);
             // 
             // labelResolution
             // 
