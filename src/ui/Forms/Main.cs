@@ -23281,7 +23281,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SaveSubtitleListviewIndices();
                 var beforeParagraphCount = _subtitle.Paragraphs.Count;
 
-                // Add "SelectedLines" section
+                // Add "SelectedLines" and "VideoFilePositionMs" to [Script Info] section
                 var selectedLines = SubtitleListview1.GetSelectedIndices();
                 var sub = new Subtitle(_subtitle);
                 SubtitleFormat format = new AdvancedSubStationAlpha();
@@ -23290,8 +23290,13 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     sub.Header = AdvancedSubStationAlpha.DefaultHeader;
                 }
+                sub.Header = AdvancedSubStationAlpha.AddTagToHeader("SelectedLines", $"SelectedLines: {selectedIndicesText}", "[Script Info]", sub.Header);
+                if (!string.IsNullOrEmpty(VideoFileName))
+                {
+                    var ms = (int)Math.Round(mediaPlayer.CurrentPosition * 1000.0);
+                    sub.Header = AdvancedSubStationAlpha.AddTagToHeader("VideoFilePositionMs", $"VideoFilePositionMs: {ms}", "[Script Info]", sub.Header);
+                }
 
-                sub.Header = AdvancedSubStationAlpha.AddTagToHeader("SelectedLines", "SelectedLines: " + selectedIndicesText, "[Script Info]", sub.Header);
                 var rawText = sub.ToText(format);
 
                 string pluginResult = (string)mi.Invoke(pluginObject,
@@ -23319,6 +23324,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _subtitle.Paragraphs.Clear();
                         _subtitle.Paragraphs.AddRange(s.Paragraphs);
                         _subtitle.Header = AdvancedSubStationAlpha.RemoveTagFromHeader("SelectedLines", "[Script Info]", s.Header);
+                        _subtitle.Header = AdvancedSubStationAlpha.RemoveTagFromHeader("VideoFilePositionMs", "[Script Info]", s.Header);
                         _subtitle.Footer = s.Footer;
 
                         UpdateSourceView();
