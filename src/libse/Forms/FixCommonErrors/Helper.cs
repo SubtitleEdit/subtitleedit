@@ -325,74 +325,13 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             }
 
             var text = input;
-            if (HtmlUtil.RemoveHtmlTags(text, true).TrimStart().StartsWith('-') ||
-                text.Contains(Environment.NewLine + '-') ||
-                text.Contains(Environment.NewLine + " -") ||
-                text.Contains(Environment.NewLine + "<i>-", StringComparison.OrdinalIgnoreCase) ||
-                text.Contains(Environment.NewLine + "<i> -", StringComparison.OrdinalIgnoreCase))
+            if (HasDash(text, "-"))
             {
-                var prev = subtitle.GetParagraphOrDefault(i - 1);
-
-                if (prev == null || !HtmlUtil.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-') || HtmlUtil.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith("--", StringComparison.Ordinal))
-                {
-                    var noTagLines = HtmlUtil.RemoveHtmlTags(text, true).SplitToLines();
-                    int startHyphenCount = noTagLines.Count(line => line.TrimStart().StartsWith('-'));
-                    if (startHyphenCount == 1)
-                    {
-                        bool remove = true;
-                        var noTagParts = HtmlUtil.RemoveHtmlTags(text).SplitToLines();
-                        if (noTagParts.Count == 2)
-                        {
-                            if (noTagParts[0].TrimStart().StartsWith('-') && noTagParts[1].Contains(": ") ||
-                                noTagParts[1].TrimStart().StartsWith('-') && noTagParts[0].Contains(": "))
-                            {
-                                remove = false;
-                            }
-                        }
-
-                        if (remove)
-                        {
-                            int idx = text.IndexOf('-');
-                            var st = new StrippableText(text);
-                            if (st.Pre.Length >= idx)
-                            {
-                                text = text.Remove(idx, 1).TrimStart();
-                                idx = text.IndexOf('-');
-                                st = new StrippableText(text);
-                                if (idx >= 0 && st.Pre.Length >= idx)
-                                {
-                                    text = text.Remove(idx, 1).TrimStart();
-                                    st = new StrippableText(text);
-                                }
-                                idx = text.IndexOf('-');
-                                if (idx >= 0 && st.Pre.Length >= idx)
-                                {
-                                    text = text.Remove(idx, 1).TrimStart();
-                                }
-                                text = RemoveSpacesBeginLine(text);
-                            }
-                            else
-                            {
-                                int indexOfNewLine = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
-                                if (indexOfNewLine > 0)
-                                {
-                                    idx = text.IndexOf('-', indexOfNewLine);
-                                    if (idx >= 0 && indexOfNewLine + 5 > indexOfNewLine)
-                                    {
-                                        text = text.Remove(idx, 1).TrimStart().Replace(Environment.NewLine + " ", Environment.NewLine);
-                                        text = RemoveSpacesBeginLine(text);
-                                        idx = text.IndexOf('-', indexOfNewLine);
-                                        if (idx >= 0 && indexOfNewLine + 5 > indexOfNewLine)
-                                        {
-                                            text = text.Remove(idx, 1).TrimStart();
-                                            text = RemoveSpacesBeginLine(text);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                text = FixDash(subtitle, i, text, "-");
+            }
+            else if (HasDash(text, "‐")) // unicode dash
+            {
+                text = FixDash(subtitle, i, text, "‐"); // unicode dash
             }
             else if (text.StartsWith("<font ", StringComparison.Ordinal))
             {
@@ -407,6 +346,84 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 }
             }
             return text;
+        }
+
+        private static string FixDash(Subtitle subtitle, int i, string text, string dash)
+        {
+            var prev = subtitle.GetParagraphOrDefault(i - 1);
+            if (prev == null || !HtmlUtil.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith(dash, StringComparison.Ordinal) || HtmlUtil.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith(dash + dash, StringComparison.Ordinal))
+            {
+                var noTagLines = HtmlUtil.RemoveHtmlTags(text, true).SplitToLines();
+                int startHyphenCount = noTagLines.Count(line => line.TrimStart().StartsWith(dash, StringComparison.Ordinal));
+                if (startHyphenCount == 1)
+                {
+                    bool remove = true;
+                    var noTagParts = HtmlUtil.RemoveHtmlTags(text).SplitToLines();
+                    if (noTagParts.Count == 2)
+                    {
+                        if (noTagParts[0].TrimStart().StartsWith(dash, StringComparison.Ordinal) && noTagParts[1].Contains(": ") ||
+                            noTagParts[1].TrimStart().StartsWith(dash, StringComparison.Ordinal) && noTagParts[0].Contains(": "))
+                        {
+                            remove = false;
+                        }
+                    }
+
+                    if (remove)
+                    {
+                        int idx = text.IndexOf(dash, StringComparison.Ordinal);
+                        var st = new StrippableText(text);
+                        if (st.Pre.Length >= idx)
+                        {
+                            text = text.Remove(idx, 1).TrimStart();
+                            idx = text.IndexOf(dash, StringComparison.Ordinal);
+                            st = new StrippableText(text);
+                            if (idx >= 0 && st.Pre.Length >= idx)
+                            {
+                                text = text.Remove(idx, 1).TrimStart();
+                                st = new StrippableText(text);
+                            }
+
+                            idx = text.IndexOf(dash, StringComparison.Ordinal);
+                            if (idx >= 0 && st.Pre.Length >= idx)
+                            {
+                                text = text.Remove(idx, 1).TrimStart();
+                            }
+
+                            text = RemoveSpacesBeginLine(text);
+                        }
+                        else
+                        {
+                            int indexOfNewLine = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
+                            if (indexOfNewLine > 0)
+                            {
+                                idx = text.IndexOf(dash, indexOfNewLine, StringComparison.Ordinal);
+                                if (idx >= 0 && indexOfNewLine + 5 > indexOfNewLine)
+                                {
+                                    text = text.Remove(idx, 1).TrimStart().Replace(Environment.NewLine + " ", Environment.NewLine);
+                                    text = RemoveSpacesBeginLine(text);
+                                    idx = text.IndexOf('-', indexOfNewLine);
+                                    if (idx >= 0 && indexOfNewLine + 5 > indexOfNewLine)
+                                    {
+                                        text = text.Remove(idx, 1).TrimStart();
+                                        text = RemoveSpacesBeginLine(text);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return text;
+        }
+
+        private static bool HasDash(string text, string dash)
+        {
+            return HtmlUtil.RemoveHtmlTags(text, true).TrimStart().StartsWith(dash, StringComparison.Ordinal) ||
+                   text.Contains(Environment.NewLine + dash) ||
+                   text.Contains($"{Environment.NewLine} {dash}") ||
+                   text.Contains($"{Environment.NewLine}<i>{dash}", StringComparison.OrdinalIgnoreCase) ||
+                   text.Contains($"{Environment.NewLine}<i> {dash}", StringComparison.OrdinalIgnoreCase);
         }
 
         private static string RemoveSpacesBeginLine(string text)
