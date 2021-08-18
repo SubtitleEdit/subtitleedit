@@ -35,12 +35,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static string GetPluginXmlFileUrl()
         {
-            if (Environment.Version.Major < 4)
-            {
-                return "https://raw.github.com/SubtitleEdit/plugins/master/Plugins2.xml"; // .net 2-3.5
-            }
-
-            return "https://raw.github.com/SubtitleEdit/plugins/master/Plugins4.xml"; // .net 4-?
+            return "https://raw.github.com/SubtitleEdit/plugins/master/Plugins4.xml"; // .net 4-
         }
 
         public PluginsGet()
@@ -179,18 +174,43 @@ namespace Nikse.SubtitleEdit.Forms
 
                 foreach (ListViewItem installed in listViewInstalledPlugins.Items)
                 {
-                    var installedVer = Convert.ToDouble(installed.SubItems[2].Text.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), CultureInfo.InvariantCulture);
-                    var currentVer = Convert.ToDouble(node.SelectSingleNode("Version").InnerText.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), CultureInfo.InvariantCulture);
-
-                    if (string.Compare(installed.Text, node.SelectSingleNode("Name").InnerText.Trim('.'), StringComparison.OrdinalIgnoreCase) == 0 && installedVer < currentVer)
+                    if (string.Compare(installed.Text, node.SelectSingleNode("Name").InnerText.Trim('.'), StringComparison.OrdinalIgnoreCase) == 0)
                     {
-                        installed.BackColor = Configuration.Settings.General.UseDarkTheme ? Color.IndianRed : Color.LightPink;
-                        installed.SubItems[1].Text = $"{_language.UpdateAvailable} {installed.SubItems[1].Text}";
-                        buttonUpdateAll.Visible = true;
-                        _updateAllListUrls.Add(item.Url);
+                        var installedVer = MakeComparableVersionNumber(installed.SubItems[2].Text);
+                        var currentVer = MakeComparableVersionNumber(node.SelectSingleNode("Version").InnerText);
+                        if (installedVer < currentVer)
+                        {
+                            installed.BackColor = Configuration.Settings.General.UseDarkTheme ? Color.IndianRed : Color.LightPink;
+                            installed.SubItems[1].Text = $"{_language.UpdateAvailable} {installed.SubItems[1].Text}";
+                            buttonUpdateAll.Visible = true;
+                            _updateAllListUrls.Add(item.Url);
+                        }
                     }
                 }
             }
+        }
+
+        private long MakeComparableVersionNumber(string versionNumber)
+        {
+            var s = versionNumber.Replace(',', '.').Replace(" ", string.Empty);
+            var arr = s.Split('.');
+            if (arr.Length == 1 && long.TryParse(arr[0], out var a0))
+            {
+                return a0 * 1_000_000;
+            }
+
+            if (arr.Length == 2 && long.TryParse(arr[0], out var b0) && long.TryParse(arr[1], out var b1))
+            {
+                return b0 * 1_000_000 + b1 * 1_000;
+            }
+
+            if (arr.Length == 3 && long.TryParse(arr[0], out var c0) && long.TryParse(arr[1], out var c1) && long.TryParse(arr[2], out var c2))
+            {
+                return c0 * 1_000_000 + c1 * 1_000 + c2;
+            }
+
+            SeLogger.Error("Bad plugin version number: " + versionNumber);
+            return 0;
         }
 
         private void ShowAvailablePlugins()
@@ -312,9 +332,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var ms = new MemoryStream(e.Result);
-            using (ZipExtractor zip = ZipExtractor.Open(ms))
+            using (var zip = ZipExtractor.Open(ms))
             {
-                List<ZipExtractor.ZipFileEntry> dir = zip.ReadCentralDir();
+                var dir = zip.ReadCentralDir();
 
                 // Extract dic/aff files in dictionary folder
                 foreach (ZipExtractor.ZipFileEntry entry in dir)
@@ -370,7 +390,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void linkLabelOpenDictionaryFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            string pluginsFolder = Configuration.PluginsDirectory;
+            var pluginsFolder = Configuration.PluginsDirectory;
             if (!Directory.Exists(pluginsFolder))
             {
                 try
@@ -421,8 +441,8 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            string fileName = listViewInstalledPlugins.SelectedItems[0].Tag.ToString();
-            int index = listViewInstalledPlugins.SelectedItems[0].Index;
+            var fileName = listViewInstalledPlugins.SelectedItems[0].Tag.ToString();
+            var index = listViewInstalledPlugins.SelectedItems[0].Index;
             if (File.Exists(fileName))
             {
                 try
