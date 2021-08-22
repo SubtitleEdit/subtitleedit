@@ -17247,7 +17247,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             foreach (var p in _subtitle.Paragraphs)
             {
-                if (p.StartTime.TotalMilliseconds > currentPosition)
+                if (p.StartTime.TotalMilliseconds > currentPosition + 0.01)
                 {
                     mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
                     SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.Paragraphs.IndexOf(p), true);
