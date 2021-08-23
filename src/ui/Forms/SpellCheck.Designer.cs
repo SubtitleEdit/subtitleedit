@@ -125,7 +125,7 @@
             this.addXToNamesnoiseListToolStripMenuItem.Name = "addXToNamesnoiseListToolStripMenuItem";
             this.addXToNamesnoiseListToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
             this.addXToNamesnoiseListToolStripMenuItem.Text = "Add x to names/noise list";
-            this.addXToNamesnoiseListToolStripMenuItem.Click += new System.EventHandler(this.AddXToNamesnoiseListToolStripMenuItemClick);
+            this.addXToNamesnoiseListToolStripMenuItem.Click += new System.EventHandler(this.AddXToNamesNoiseListToolStripMenuItemClick);
             // 
             // addXToUserDictionaryToolStripMenuItem
             // 

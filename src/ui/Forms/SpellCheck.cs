@@ -376,7 +376,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripSeparator1.Visible = showAddItems;
         }
 
-        private void AddXToNamesnoiseListToolStripMenuItemClick(object sender, EventArgs e)
+        private void AddXToNamesNoiseListToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (!string.IsNullOrWhiteSpace(richTextBoxParagraph.SelectedText))
             {
@@ -737,6 +737,20 @@ namespace Nikse.SubtitleEdit.Forms
                                     correct = _spellCheckWordLists.HasUserWord(wordWithDash.Replace("‑", "-"));
                                 }
                                 if (!correct && _spellCheckWordLists.HasName(wordWithDash.Replace("‑", "-")))
+                                {
+                                    correct = true;
+                                    _noOfNames++;
+                                }
+                            }
+                            if (!correct && _currentWord.EndsWith('\u2014')) // em dash
+                            {
+                                var wordWithoutDash = _currentWord.TrimEnd('\u2014');
+                                correct = DoSpell(wordWithoutDash);
+                                if (!correct)
+                                {
+                                    correct = _spellCheckWordLists.HasUserWord(wordWithoutDash);
+                                }
+                                if (!correct && _spellCheckWordLists.HasName(wordWithoutDash))
                                 {
                                     correct = true;
                                     _noOfNames++;
