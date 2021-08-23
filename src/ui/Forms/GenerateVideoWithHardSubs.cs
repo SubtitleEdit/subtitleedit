@@ -54,18 +54,19 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonOK_Click(object sender, EventArgs e)
         {
             buttonOK.Enabled = false;
+            numericUpDownFontSize.Enabled = false;
             using (var saveDialog = new SaveFileDialog { FileName = string.Empty, Filter = "MP4|*.mp4|Matroska|*.mkv|WebM|*.webm" })
             {
                 if (saveDialog.ShowDialog(this) != DialogResult.OK)
                 {
                     buttonOK.Enabled = true;
+                    numericUpDownFontSize.Enabled = true;
                     return;
                 }
 
                 VideoFileName = saveDialog.FileName;
             }
 
-            buttonOK.Enabled = true;
             if (File.Exists(VideoFileName))
             {
                 File.Delete(VideoFileName);

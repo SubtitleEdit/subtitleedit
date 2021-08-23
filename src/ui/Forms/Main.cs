@@ -31541,7 +31541,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             var sub = new Subtitle(_subtitle, false);
             int? fontSize = null;
-            if (string.IsNullOrEmpty(sub.Header))
+            if (string.IsNullOrEmpty(sub.Header) || !IsAssa())
             {
                 sub.Header = AdvancedSubStationAlpha.DefaultHeader;
                 var style = AdvancedSubStationAlpha.GetSsaStyle("Default", sub.Header);

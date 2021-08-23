@@ -74,20 +74,19 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            buttonOK.Enabled = false;
+            EnableDisableControls(false);
             var fileName = radioButtonColor.Checked ? "blank_video_solid" : "blank_video_checkered";
             using (var saveDialog = new SaveFileDialog { FileName = fileName, Filter = "MP4|*.mp4|Matroska|*.mkv|WebM|*.webm" })
             {
                 if (saveDialog.ShowDialog(this) != DialogResult.OK)
                 {
-                    buttonOK.Enabled = true;
+                    EnableDisableControls(true);
                     return;
                 }
 
                 VideoFileName = saveDialog.FileName;
             }
 
-            buttonOK.Enabled = true;
             if (File.Exists(VideoFileName))
             {
                 File.Delete(VideoFileName);
@@ -120,6 +119,16 @@ namespace Nikse.SubtitleEdit.Forms
             progressBar1.Visible = false;
             labelPleaseWait.Visible = false;
             DialogResult = _abort ? DialogResult.Cancel : DialogResult.OK;
+        }
+
+        private void EnableDisableControls(bool enable)
+        {
+            buttonOK.Enabled = enable;
+            numericUpDownDurationMinutes.Enabled = enable;
+            numericUpDownWidth.Enabled = enable;
+            numericUpDownHeight.Enabled = enable;
+            comboBoxFrameRate.Enabled = enable;
+            groupBoxBackground.Enabled = enable;
         }
 
         private void buttonColor_Click(object sender, EventArgs e)
