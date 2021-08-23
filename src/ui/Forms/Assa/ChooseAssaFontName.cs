@@ -74,5 +74,15 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 buttonOK_Click(null, null);
             }
         }
+
+        private void listViewAttachments_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (listViewAttachments.SelectedItems.Count == 0)
+            {
+                return;
+            }
+
+            buttonOK_Click(null, null);
+        }
     }
 }

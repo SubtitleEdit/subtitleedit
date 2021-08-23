@@ -54,6 +54,7 @@
             this.listViewAttachments.TabIndex = 1;
             this.listViewAttachments.UseCompatibleStateImageBehavior = false;
             this.listViewAttachments.View = System.Windows.Forms.View.Details;
+            this.listViewAttachments.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listViewAttachments_MouseDoubleClick);
             // 
             // columnHeaderFileName
             // 
@@ -95,7 +96,7 @@
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
-            // ChooseFontName
+            // ChooseAssaFontName
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -107,7 +108,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(574, 331);
-            this.Name = "ChooseFontName";
+            this.Name = "ChooseAssaFontName";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
