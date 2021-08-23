@@ -476,6 +476,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 return;
             }
             subtitle.Header = GetFileHeader(_fileStyleActive ? _currentFileStyles : _currentCategory.Styles);
+            subtitle.Footer = _subtitle.Footer;
             var text = subtitle.ToText(format);
             _mpvTextFileName = FileUtil.GetTempFileName(format.Extension);
             File.WriteAllText(_mpvTextFileName, text);
