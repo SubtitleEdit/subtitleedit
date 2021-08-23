@@ -1425,16 +1425,30 @@ namespace Nikse.SubtitleEdit.Controls
 
             if (_settings.Tools.ListViewSyntaxColorOverlap && i > 0 && i < paragraphs.Count && ColumnIndexEnd >= 0)
             {
-                Paragraph prev = paragraphs[i - 1];
+                var prev = paragraphs[i - 1];
                 if (paragraph.StartTime.TotalMilliseconds < prev.EndTime.TotalMilliseconds && !prev.EndTime.IsMaxTime)
                 {
-                    Items[i - 1].SubItems[ColumnIndexEnd].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
-                    item.SubItems[ColumnIndexStart].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                    if (ColumnIndexEnd >= 0)
+                    {
+                        Items[i - 1].SubItems[ColumnIndexEnd].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                    }
+
+                    if (ColumnIndexStart >= 0)
+                    {
+                        item.SubItems[ColumnIndexStart].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                    }
                 }
                 else
                 {
-                    Items[i - 1].SubItems[ColumnIndexEnd].BackColor = BackColor;
-                    item.SubItems[ColumnIndexStart].BackColor = BackColor;
+                    if (ColumnIndexEnd >= 0)
+                    {
+                        Items[i - 1].SubItems[ColumnIndexEnd].BackColor = BackColor;
+                    }
+
+                    if (ColumnIndexStart >= 0)
+                    {
+                        item.SubItems[ColumnIndexStart].BackColor = BackColor;
+                    }
                 }
             }
 
