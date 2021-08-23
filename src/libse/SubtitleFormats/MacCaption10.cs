@@ -276,14 +276,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static byte[] HexStringToByteArray(string hex)
         {
-            var numberChars = hex.Length;
-            var bytes = new byte[numberChars / 2];
-            for (var i = 0; i < numberChars - 1; i += 2)
+            try
             {
-                bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
-            }
+                var numberChars = hex.Length;
+                var bytes = new byte[numberChars / 2];
+                for (var i = 0; i < numberChars - 1; i += 2)
+                {
+                    bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
+                }
 
-            return bytes;
+                return bytes;
+            }
+            catch
+            {
+                return new byte[] { };
+            }
         }
     }
 }
