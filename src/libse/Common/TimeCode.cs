@@ -195,6 +195,24 @@ namespace Nikse.SubtitleEdit.Core.Common
             return PrefixSign(s);
         }
 
+        public string ToHHMMSSFFDropFrame()
+        {
+            string s;
+            var ts = TimeSpan;
+            var frames = Math.Round(ts.Milliseconds / (BaseUnit / Configuration.Settings.General.CurrentFrameRate));
+            if (frames >= Configuration.Settings.General.CurrentFrameRate - 0.001)
+            {
+                var newTs = new TimeSpan(ts.Ticks);
+                newTs = newTs.Add(new TimeSpan(0, 0, 1));
+                s = $"{newTs.Days * 24 + newTs.Hours:00}:{newTs.Minutes:00}:{newTs.Seconds:00};{0:00}";
+            }
+            else
+            {
+                s = $"{ts.Days * 24 + ts.Hours:00}:{ts.Minutes:00}:{ts.Seconds:00};{SubtitleFormat.MillisecondsToFramesMaxFrameRate(ts.Milliseconds):00}";
+            }
+            return PrefixSign(s);
+        }
+
         public string ToSSFF()
         {
             string s;
