@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.6.2 BETA (xth August 2021)
+3.6.2 (24th August 2021)
 * NEW:
    * ASSA: Keep override tags (no conversion to html for italic/font etc.)
    * ASSA: Support for ScalingX/ScalingY/Spacing/Angle/Strikeout - thx ausencia

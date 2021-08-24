@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Čeština">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.1</Version>
+    <Version>3.6.2</Version>
     <TranslatedBy>Překlad do češtiny: Trottel</TranslatedBy>
     <CultureName>cs-CZ</CultureName>
     <HelpFile />
@@ -1080,7 +1080,7 @@ Pro použití klíče API pejděte na "Volby -&gt; Nastavení -&gt; Nástroje" p
         <SaveAs>Uložit &amp;jako...</SaveAs>
         <RestoreAutoBackup>Obnovit automatickou zálohu...</RestoreAutoBackup>
         <FormatXProperties>Vlastnosti {0}...</FormatXProperties>
-       <OpenOriginal>Otevřít původní titulky (překladatelský režim)...</OpenOriginal>
+        <OpenOriginal>Otevřít původní titulky (překladatelský režim)...</OpenOriginal>
         <SaveOriginal>Uložit původní titulky</SaveOriginal>
         <CloseOriginal>Zavřít původní titulky</CloseOriginal>
         <OpenContainingFolder>Otevřít nadřazenou složku</OpenContainingFolder>
