@@ -745,11 +745,11 @@
     <Compile Include="Forms\Networking\NetworkStart.Designer.cs">
       <DependentUpon>NetworkStart.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Ocr\DownloadTesseract4.cs">
+    <Compile Include="Forms\Ocr\DownloadTesseract5.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Ocr\DownloadTesseract4.Designer.cs">
-      <DependentUpon>DownloadTesseract4.cs</DependentUpon>
+    <Compile Include="Forms\Ocr\DownloadTesseract5.Designer.cs">
+      <DependentUpon>DownloadTesseract5.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Ocr\DownloadTesseract302.cs">
       <SubType>Form</SubType>
@@ -1610,8 +1610,8 @@
     <EmbeddedResource Include="Forms\Networking\NetworkStart.resx">
       <DependentUpon>NetworkStart.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Ocr\DownloadTesseract4.resx">
-      <DependentUpon>DownloadTesseract4.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Ocr\DownloadTesseract5.resx">
+      <DependentUpon>DownloadTesseract5.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Ocr\DownloadTesseract302.resx">
       <DependentUpon>DownloadTesseract302.cs</DependentUpon>
