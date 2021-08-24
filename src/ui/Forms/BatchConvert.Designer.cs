@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            TimeCode timeCode1 = new TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
             this.buttonConvert = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxConvertOptions = new System.Windows.Forms.GroupBox();
@@ -202,17 +202,17 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.groupBoxConvertOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxConvertOptions.Controls.Add(this.buttonConvertOptionsSettings);
+            this.groupBoxConvertOptions.Controls.Add(this.listViewConvertOptions);
+            this.groupBoxConvertOptions.Controls.Add(this.groupBoxMergeShortLines);
+            this.groupBoxConvertOptions.Controls.Add(this.groupBoxAdjustDuration);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxDeleteLines);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxRemoveStyle);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxOffsetTimeCodes);
-            this.groupBoxConvertOptions.Controls.Add(this.buttonConvertOptionsSettings);
-            this.groupBoxConvertOptions.Controls.Add(this.listViewConvertOptions);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxChangeFrameRate);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxFixRtl);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxSpeed);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxChangeCasing);
-            this.groupBoxConvertOptions.Controls.Add(this.groupBoxMergeShortLines);
-            this.groupBoxConvertOptions.Controls.Add(this.groupBoxAdjustDuration);
             this.groupBoxConvertOptions.Location = new System.Drawing.Point(422, 19);
             this.groupBoxConvertOptions.Name = "groupBoxConvertOptions";
             this.groupBoxConvertOptions.Size = new System.Drawing.Size(583, 275);
@@ -741,7 +741,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.numericUpDownMaxMillisecondsBetweenLines.Location = new System.Drawing.Point(15, 90);
             this.numericUpDownMaxMillisecondsBetweenLines.Maximum = new decimal(new int[] {
-            2000,
+            10000,
             0,
             0,
             0});
@@ -1455,9 +1455,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Batch convert";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.BatchConvert_FormClosing);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.BatchConvert_KeyDown);
-            this.ResizeEnd += new System.EventHandler(this.BatchConvert_ResizeEnd);
             this.Shown += new System.EventHandler(this.BatchConvert_Shown);
+            this.ResizeEnd += new System.EventHandler(this.BatchConvert_ResizeEnd);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.BatchConvert_KeyDown);
             this.groupBoxConvertOptions.ResumeLayout(false);
             this.groupBoxDeleteLines.ResumeLayout(false);
             this.groupBoxDeleteLines.PerformLayout();
