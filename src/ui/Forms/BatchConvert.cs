@@ -379,7 +379,13 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 numericUpDownMaxCharacters.Value = Configuration.Settings.General.SubtitleLineMaximumLength;
             }
-            numericUpDownMaxMillisecondsBetweenLines.Value = Configuration.Settings.Tools.MergeShortLinesMaxGap;
+
+            if (Configuration.Settings.Tools.MergeShortLinesMaxGap >= numericUpDownMaxMillisecondsBetweenLines.Minimum &&
+                Configuration.Settings.Tools.MergeShortLinesMaxGap <= numericUpDownMaxMillisecondsBetweenLines.Maximum)
+            {
+                numericUpDownMaxMillisecondsBetweenLines.Value = Configuration.Settings.Tools.MergeShortLinesMaxGap;
+            }
+
             checkBoxOnlyContinuationLines.Checked = Configuration.Settings.Tools.MergeShortLinesOnlyContinuous;
 
             inverseSelectionToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.Edit.InverseSelection;
