@@ -555,6 +555,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             setItalicAngleToolStripMenuItem.Text = language.SetItalicAngle;
             deleteToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.Delete;
             imagePreprocessingToolStripMenuItem1.Text = language.ImagePreProcessing;
+            ImagePreProcessingToolStripMenuItem.Text = language.ImagePreProcessing;
             toolStripMenuItemSaveSubtitleAs.Text = LanguageSettings.Current.Main.SaveSubtitleAs;
             toolStripMenuItemExport.Text = LanguageSettings.Current.Main.Menu.File.Export;
             vobSubToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.File.ExportVobSub;

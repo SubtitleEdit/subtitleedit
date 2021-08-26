@@ -742,6 +742,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "BatchConvert/Ocr":
                     language.BatchConvert.Ocr = reader.Value;
                     break;
+                case "BatchConvert/AddFiles":
+                    language.BatchConvert.AddFiles = reader.Value;
+                    break;
                 case "BatchConvert/Filter":
                     language.BatchConvert.Filter = reader.Value;
                     break;

@@ -297,6 +297,7 @@
             public string BridgeGaps { get; set; }
             public string PlainText { get; set; }
             public string Ocr { get; set; }
+            public string AddFiles { get; set; }
             public string Filter { get; set; }
             public string FilterSkipped { get; set; }
             public string FilterSrtNoUtf8BOM { get; set; }

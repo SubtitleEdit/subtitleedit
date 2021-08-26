@@ -9,7 +9,7 @@
     <Ok>&amp;OK</Ok>
     <Cancel>C&amp;ancel</Cancel>
     <Apply>Apply</Apply>
-    <ApplyTo>ApplyTo</ApplyTo>
+    <ApplyTo>Apply to</ApplyTo>
     <None>None</None>
     <All>All</All>
     <Preview>Preview</Preview>
@@ -277,6 +277,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <BridgeGaps>Bridge gaps</BridgeGaps>
     <PlainText>Plain text</PlainText>
     <Ocr>OCR...</Ocr>
+    <AddFiles>Add files...</AddFiles>
     <Filter>Filter</Filter>
     <FilterSkipped>Skipped by filter</FilterSkipped>
     <FilterSrtNoUtf8BOM>SubRip (.srt) files without UTF-8 BOM header</FilterSrtNoUtf8BOM>
