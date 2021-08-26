@@ -2700,6 +2700,29 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxFilter.Visible = comboBoxFilter.SelectedIndex == 3 || comboBoxFilter.SelectedIndex == 4 || comboBoxFilter.SelectedIndex == 5;
         }
 
+        private void textBoxFilter_TextChanged(object sender, EventArgs e)
+        {
+            if (listViewInputFiles.Items.Count == 0)
+            {
+                return;
+            }
+
+            if (comboBoxFilter.SelectedIndex == 5)
+            {
+                var listViewItems = new List<ListViewItem>();
+                foreach (ListViewItem item in listViewInputFiles.Items)
+                {
+                    listViewItems.Add(item);
+                }
+
+                listViewInputFiles.BeginUpdate();
+                listViewInputFiles.Items.Clear();
+                listViewInputFiles.Items.AddRange(listViewItems.FindAll(item => item.SubItems[2].Text.Contains(textBoxFilter.Text, StringComparison.OrdinalIgnoreCase)).ToArray());
+                listViewInputFiles.EndUpdate();
+                UpdateNumberOfFiles();
+            }
+        }
+
         private void buttonTransportStreamSettings_Click(object sender, EventArgs e)
         {
             using (var form = new BatchConvertTsSettings())
