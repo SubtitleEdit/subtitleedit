@@ -9,9 +9,12 @@
     <Ok>&amp;OK</Ok>
     <Cancel>&amp;Fortryd</Cancel>
     <Apply>Anvend</Apply>
+    <ApplyTo>Anvend for</ApplyTo>
     <None>Ingen</None>
     <All>Alle</All>
     <Preview>Vist test</Preview>
+    <ShowPreview>Vis forhåndsvisning</ShowPreview>
+    <HidePreview>Skjul forhåndsvisning</HidePreview>
     <SubtitleFiles>Undertekst filer</SubtitleFiles>
     <AllFiles>Alle filer</AllFiles>
     <VideoFiles>Video filer</VideoFiles>
@@ -220,6 +223,8 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <SetPosInfo>Klik på video for at skifte mellem sæt/flyt position</SetPosInfo>
     <Clipboard>Udklipsholder</Clipboard>
     <ResolutionMissing>PlayResX/PlayResY er ikke indstillet - indstil opløsningen nu?</ResolutionMissing>
+    <RotateXAxis>Drej {0} akse</RotateXAxis>
+    <DistortX>Forvræng {0}</DistortX>
   </AssaSetPosition>
   <AudioToText>
     <Title>Lyd til tekst</Title>
@@ -1280,6 +1285,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <SplitLineAtCursorAndWaveformPosition>Split linje ved cursor/video position</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>Auto varighed (aktuelle linje)</AutoDurationCurrentLine>
         <SelectAll>Vælg alle</SelectAll>
+        <Insert>Indsæt</Insert>
         <InsertFirstLine>Indsæt linje</InsertFirstLine>
         <InsertBefore>Indsæt før</InsertBefore>
         <InsertAfter>Indsæt efter</InsertAfter>
@@ -1324,6 +1330,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <ShowSelectedLinesEarlierLater>Vis valgte linjer tidligere/senere...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Visual sync markerede linjer...</VisualSyncSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Google/Microsoft oversæt original linje</GoogleAndMicrosoftTranslateSelectedLine>
+        <SelectedLines>Valgte linjer</SelectedLines>
         <TranslateSelectedLines>Oversæt valgte linjer...</TranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Juster visningstider for valgte linjer...</AdjustDisplayDurationForSelectedLines>
         <ApplyDurationLimitsForSelectedLines>Anvend varighedsgrænser for valgte linjer...</ApplyDurationLimitsForSelectedLines>

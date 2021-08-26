@@ -155,6 +155,8 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownDeleteFirst.Left = labelDeleteFirstLines.Left + labelDeleteFirstLines.Width + 5;
             numericUpDownDeleteLast.Left = labelDeleteLastLines.Left + labelDeleteLastLines.Width + 5;
             groupBoxAdjustDuration.Text = LanguageSettings.Current.AdjustDisplayDuration.Title;
+            addFilesToolStripMenuItem.Text = l.AddFiles;
+            groupBoxDeleteLines.Text = l.DeleteLines;
 
             comboBoxFrameRateFrom.Left = labelFromFrameRate.Left + labelFromFrameRate.Width + 3;
             comboBoxFrameRateTo.Left = labelToFrameRate.Left + labelToFrameRate.Width + 3;

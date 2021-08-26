@@ -35,21 +35,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonConvert = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxConvertOptions = new System.Windows.Forms.GroupBox();
-            this.groupBoxDeleteLines = new System.Windows.Forms.GroupBox();
-            this.textBoxDeleteContains = new System.Windows.Forms.TextBox();
-            this.labelDeleteLinesContaining = new System.Windows.Forms.Label();
-            this.numericUpDownDeleteLast = new System.Windows.Forms.NumericUpDown();
-            this.labelDeleteLastLines = new System.Windows.Forms.Label();
-            this.numericUpDownDeleteFirst = new System.Windows.Forms.NumericUpDown();
-            this.labelDeleteFirstLines = new System.Windows.Forms.Label();
-            this.groupBoxRemoveStyle = new System.Windows.Forms.GroupBox();
-            this.textBoxRemoveStyle = new System.Windows.Forms.TextBox();
-            this.labelStyleName = new System.Windows.Forms.Label();
-            this.groupBoxOffsetTimeCodes = new System.Windows.Forms.GroupBox();
-            this.radioButtonShowLater = new System.Windows.Forms.RadioButton();
-            this.radioButtonShowEarlier = new System.Windows.Forms.RadioButton();
-            this.timeUpDownAdjust = new Nikse.SubtitleEdit.Controls.TimeUpDown();
-            this.labelHourMinSecMilliSecond = new System.Windows.Forms.Label();
             this.buttonConvertOptionsSettings = new System.Windows.Forms.Button();
             this.listViewConvertOptions = new System.Windows.Forms.ListView();
             this.ActionCheckBox = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -57,27 +42,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.contextMenuStripOptions = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemSelectAll = new System.Windows.Forms.ToolStripMenuItem();
             this.inverseSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.groupBoxChangeFrameRate = new System.Windows.Forms.GroupBox();
-            this.buttonSwapFrameRate = new System.Windows.Forms.Button();
-            this.comboBoxFrameRateTo = new System.Windows.Forms.ComboBox();
-            this.labelToFrameRate = new System.Windows.Forms.Label();
-            this.comboBoxFrameRateFrom = new System.Windows.Forms.ComboBox();
-            this.labelFromFrameRate = new System.Windows.Forms.Label();
-            this.groupBoxFixRtl = new System.Windows.Forms.GroupBox();
-            this.radioButtonReverseStartEnd = new System.Windows.Forms.RadioButton();
-            this.radioButtonRemoveUnicode = new System.Windows.Forms.RadioButton();
-            this.radioButtonAddUnicode = new System.Windows.Forms.RadioButton();
-            this.groupBoxSpeed = new System.Windows.Forms.GroupBox();
-            this.radioButtonToDropFrame = new System.Windows.Forms.RadioButton();
-            this.radioButtonSpeedFromDropFrame = new System.Windows.Forms.RadioButton();
-            this.radioButtonSpeedCustom = new System.Windows.Forms.RadioButton();
-            this.numericUpDownPercent = new System.Windows.Forms.NumericUpDown();
-            this.labelPercent = new System.Windows.Forms.Label();
-            this.groupBoxChangeCasing = new System.Windows.Forms.GroupBox();
-            this.radioButtonFixOnlyNames = new System.Windows.Forms.RadioButton();
-            this.radioButtonLowercase = new System.Windows.Forms.RadioButton();
-            this.radioButtonUppercase = new System.Windows.Forms.RadioButton();
-            this.radioButtonNormal = new System.Windows.Forms.RadioButton();
             this.groupBoxMergeShortLines = new System.Windows.Forms.GroupBox();
             this.checkBoxOnlyContinuationLines = new System.Windows.Forms.CheckBox();
             this.numericUpDownMaxCharacters = new System.Windows.Forms.NumericUpDown();
@@ -103,6 +67,42 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelOptimalCharsSec = new System.Windows.Forms.Label();
             this.numericUpDownMaxCharsSec = new System.Windows.Forms.NumericUpDown();
             this.labelMaxCharsPerSecond = new System.Windows.Forms.Label();
+            this.groupBoxDeleteLines = new System.Windows.Forms.GroupBox();
+            this.textBoxDeleteContains = new System.Windows.Forms.TextBox();
+            this.labelDeleteLinesContaining = new System.Windows.Forms.Label();
+            this.numericUpDownDeleteLast = new System.Windows.Forms.NumericUpDown();
+            this.labelDeleteLastLines = new System.Windows.Forms.Label();
+            this.numericUpDownDeleteFirst = new System.Windows.Forms.NumericUpDown();
+            this.labelDeleteFirstLines = new System.Windows.Forms.Label();
+            this.groupBoxRemoveStyle = new System.Windows.Forms.GroupBox();
+            this.textBoxRemoveStyle = new System.Windows.Forms.TextBox();
+            this.labelStyleName = new System.Windows.Forms.Label();
+            this.groupBoxOffsetTimeCodes = new System.Windows.Forms.GroupBox();
+            this.radioButtonShowLater = new System.Windows.Forms.RadioButton();
+            this.radioButtonShowEarlier = new System.Windows.Forms.RadioButton();
+            this.timeUpDownAdjust = new Nikse.SubtitleEdit.Controls.TimeUpDown();
+            this.labelHourMinSecMilliSecond = new System.Windows.Forms.Label();
+            this.groupBoxChangeFrameRate = new System.Windows.Forms.GroupBox();
+            this.buttonSwapFrameRate = new System.Windows.Forms.Button();
+            this.comboBoxFrameRateTo = new System.Windows.Forms.ComboBox();
+            this.labelToFrameRate = new System.Windows.Forms.Label();
+            this.comboBoxFrameRateFrom = new System.Windows.Forms.ComboBox();
+            this.labelFromFrameRate = new System.Windows.Forms.Label();
+            this.groupBoxFixRtl = new System.Windows.Forms.GroupBox();
+            this.radioButtonReverseStartEnd = new System.Windows.Forms.RadioButton();
+            this.radioButtonRemoveUnicode = new System.Windows.Forms.RadioButton();
+            this.radioButtonAddUnicode = new System.Windows.Forms.RadioButton();
+            this.groupBoxSpeed = new System.Windows.Forms.GroupBox();
+            this.radioButtonToDropFrame = new System.Windows.Forms.RadioButton();
+            this.radioButtonSpeedFromDropFrame = new System.Windows.Forms.RadioButton();
+            this.radioButtonSpeedCustom = new System.Windows.Forms.RadioButton();
+            this.numericUpDownPercent = new System.Windows.Forms.NumericUpDown();
+            this.labelPercent = new System.Windows.Forms.Label();
+            this.groupBoxChangeCasing = new System.Windows.Forms.GroupBox();
+            this.radioButtonFixOnlyNames = new System.Windows.Forms.RadioButton();
+            this.radioButtonLowercase = new System.Windows.Forms.RadioButton();
+            this.radioButtonUppercase = new System.Windows.Forms.RadioButton();
+            this.radioButtonNormal = new System.Windows.Forms.RadioButton();
             this.groupBoxOutput = new System.Windows.Forms.GroupBox();
             this.buttonBrowseEncoding = new System.Windows.Forms.Button();
             this.radioButtonSaveInOutputFolder = new System.Windows.Forms.RadioButton();
@@ -145,17 +145,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelStatus = new System.Windows.Forms.Label();
             this.groupBoxConvertOptions.SuspendLayout();
-            this.groupBoxDeleteLines.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDeleteLast)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDeleteFirst)).BeginInit();
-            this.groupBoxRemoveStyle.SuspendLayout();
-            this.groupBoxOffsetTimeCodes.SuspendLayout();
             this.contextMenuStripOptions.SuspendLayout();
-            this.groupBoxChangeFrameRate.SuspendLayout();
-            this.groupBoxFixRtl.SuspendLayout();
-            this.groupBoxSpeed.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPercent)).BeginInit();
-            this.groupBoxChangeCasing.SuspendLayout();
             this.groupBoxMergeShortLines.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharacters)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxMillisecondsBetweenLines)).BeginInit();
@@ -169,6 +159,16 @@ namespace Nikse.SubtitleEdit.Forms
             this.panelAdjustDurationRecalc.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOptimalCharsSec)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharsSec)).BeginInit();
+            this.groupBoxDeleteLines.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDeleteLast)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDeleteFirst)).BeginInit();
+            this.groupBoxRemoveStyle.SuspendLayout();
+            this.groupBoxOffsetTimeCodes.SuspendLayout();
+            this.groupBoxChangeFrameRate.SuspendLayout();
+            this.groupBoxFixRtl.SuspendLayout();
+            this.groupBoxSpeed.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPercent)).BeginInit();
+            this.groupBoxChangeCasing.SuspendLayout();
             this.groupBoxOutput.SuspendLayout();
             this.groupBoxInput.SuspendLayout();
             this.contextMenuStripFiles.SuspendLayout();
@@ -204,8 +204,6 @@ namespace Nikse.SubtitleEdit.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxConvertOptions.Controls.Add(this.buttonConvertOptionsSettings);
             this.groupBoxConvertOptions.Controls.Add(this.listViewConvertOptions);
-            this.groupBoxConvertOptions.Controls.Add(this.groupBoxMergeShortLines);
-            this.groupBoxConvertOptions.Controls.Add(this.groupBoxAdjustDuration);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxDeleteLines);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxRemoveStyle);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxOffsetTimeCodes);
@@ -213,169 +211,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxFixRtl);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxSpeed);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxChangeCasing);
+            this.groupBoxConvertOptions.Controls.Add(this.groupBoxMergeShortLines);
+            this.groupBoxConvertOptions.Controls.Add(this.groupBoxAdjustDuration);
             this.groupBoxConvertOptions.Location = new System.Drawing.Point(422, 19);
             this.groupBoxConvertOptions.Name = "groupBoxConvertOptions";
             this.groupBoxConvertOptions.Size = new System.Drawing.Size(583, 275);
             this.groupBoxConvertOptions.TabIndex = 11;
             this.groupBoxConvertOptions.TabStop = false;
             this.groupBoxConvertOptions.Text = "Convert options";
-            // 
-            // groupBoxDeleteLines
-            // 
-            this.groupBoxDeleteLines.Controls.Add(this.textBoxDeleteContains);
-            this.groupBoxDeleteLines.Controls.Add(this.labelDeleteLinesContaining);
-            this.groupBoxDeleteLines.Controls.Add(this.numericUpDownDeleteLast);
-            this.groupBoxDeleteLines.Controls.Add(this.labelDeleteLastLines);
-            this.groupBoxDeleteLines.Controls.Add(this.numericUpDownDeleteFirst);
-            this.groupBoxDeleteLines.Controls.Add(this.labelDeleteFirstLines);
-            this.groupBoxDeleteLines.Location = new System.Drawing.Point(305, 94);
-            this.groupBoxDeleteLines.Name = "groupBoxDeleteLines";
-            this.groupBoxDeleteLines.Size = new System.Drawing.Size(271, 140);
-            this.groupBoxDeleteLines.TabIndex = 308;
-            this.groupBoxDeleteLines.TabStop = false;
-            this.groupBoxDeleteLines.Text = "Delete lines";
-            this.groupBoxDeleteLines.Visible = false;
-            // 
-            // textBoxDeleteContains
-            // 
-            this.textBoxDeleteContains.Location = new System.Drawing.Point(10, 110);
-            this.textBoxDeleteContains.Name = "textBoxDeleteContains";
-            this.textBoxDeleteContains.Size = new System.Drawing.Size(237, 20);
-            this.textBoxDeleteContains.TabIndex = 5;
-            // 
-            // labelDeleteLinesContaining
-            // 
-            this.labelDeleteLinesContaining.AutoSize = true;
-            this.labelDeleteLinesContaining.Location = new System.Drawing.Point(9, 89);
-            this.labelDeleteLinesContaining.Name = "labelDeleteLinesContaining";
-            this.labelDeleteLinesContaining.Size = new System.Drawing.Size(114, 13);
-            this.labelDeleteLinesContaining.TabIndex = 4;
-            this.labelDeleteLinesContaining.Text = "Delete lines containing";
-            // 
-            // numericUpDownDeleteLast
-            // 
-            this.numericUpDownDeleteLast.Location = new System.Drawing.Point(92, 45);
-            this.numericUpDownDeleteLast.Name = "numericUpDownDeleteLast";
-            this.numericUpDownDeleteLast.Size = new System.Drawing.Size(43, 20);
-            this.numericUpDownDeleteLast.TabIndex = 3;
-            // 
-            // labelDeleteLastLines
-            // 
-            this.labelDeleteLastLines.AutoSize = true;
-            this.labelDeleteLastLines.Location = new System.Drawing.Point(5, 47);
-            this.labelDeleteLastLines.Name = "labelDeleteLastLines";
-            this.labelDeleteLastLines.Size = new System.Drawing.Size(81, 13);
-            this.labelDeleteLastLines.TabIndex = 2;
-            this.labelDeleteLastLines.Text = "Delete last lines";
-            // 
-            // numericUpDownDeleteFirst
-            // 
-            this.numericUpDownDeleteFirst.Location = new System.Drawing.Point(93, 19);
-            this.numericUpDownDeleteFirst.Name = "numericUpDownDeleteFirst";
-            this.numericUpDownDeleteFirst.Size = new System.Drawing.Size(43, 20);
-            this.numericUpDownDeleteFirst.TabIndex = 1;
-            // 
-            // labelDeleteFirstLines
-            // 
-            this.labelDeleteFirstLines.AutoSize = true;
-            this.labelDeleteFirstLines.Location = new System.Drawing.Point(6, 20);
-            this.labelDeleteFirstLines.Name = "labelDeleteFirstLines";
-            this.labelDeleteFirstLines.Size = new System.Drawing.Size(81, 13);
-            this.labelDeleteFirstLines.TabIndex = 0;
-            this.labelDeleteFirstLines.Text = "Delete first lines";
-            // 
-            // groupBoxRemoveStyle
-            // 
-            this.groupBoxRemoveStyle.Controls.Add(this.textBoxRemoveStyle);
-            this.groupBoxRemoveStyle.Controls.Add(this.labelStyleName);
-            this.groupBoxRemoveStyle.Location = new System.Drawing.Point(307, 12);
-            this.groupBoxRemoveStyle.Name = "groupBoxRemoveStyle";
-            this.groupBoxRemoveStyle.Size = new System.Drawing.Size(271, 76);
-            this.groupBoxRemoveStyle.TabIndex = 307;
-            this.groupBoxRemoveStyle.TabStop = false;
-            this.groupBoxRemoveStyle.Text = "Remove style/actor";
-            this.groupBoxRemoveStyle.Visible = false;
-            // 
-            // textBoxRemoveStyle
-            // 
-            this.textBoxRemoveStyle.Location = new System.Drawing.Point(6, 35);
-            this.textBoxRemoveStyle.Name = "textBoxRemoveStyle";
-            this.textBoxRemoveStyle.Size = new System.Drawing.Size(257, 20);
-            this.textBoxRemoveStyle.TabIndex = 8;
-            // 
-            // labelStyleName
-            // 
-            this.labelStyleName.AutoSize = true;
-            this.labelStyleName.Location = new System.Drawing.Point(6, 20);
-            this.labelStyleName.Name = "labelStyleName";
-            this.labelStyleName.Size = new System.Drawing.Size(59, 13);
-            this.labelStyleName.TabIndex = 0;
-            this.labelStyleName.Text = "Style/actor";
-            // 
-            // groupBoxOffsetTimeCodes
-            // 
-            this.groupBoxOffsetTimeCodes.Controls.Add(this.radioButtonShowLater);
-            this.groupBoxOffsetTimeCodes.Controls.Add(this.radioButtonShowEarlier);
-            this.groupBoxOffsetTimeCodes.Controls.Add(this.timeUpDownAdjust);
-            this.groupBoxOffsetTimeCodes.Controls.Add(this.labelHourMinSecMilliSecond);
-            this.groupBoxOffsetTimeCodes.Location = new System.Drawing.Point(305, 19);
-            this.groupBoxOffsetTimeCodes.Name = "groupBoxOffsetTimeCodes";
-            this.groupBoxOffsetTimeCodes.Size = new System.Drawing.Size(271, 119);
-            this.groupBoxOffsetTimeCodes.TabIndex = 306;
-            this.groupBoxOffsetTimeCodes.TabStop = false;
-            this.groupBoxOffsetTimeCodes.Text = "Offset time codes";
-            this.groupBoxOffsetTimeCodes.Visible = false;
-            // 
-            // radioButtonShowLater
-            // 
-            this.radioButtonShowLater.AutoSize = true;
-            this.radioButtonShowLater.Checked = true;
-            this.radioButtonShowLater.Location = new System.Drawing.Point(9, 89);
-            this.radioButtonShowLater.Name = "radioButtonShowLater";
-            this.radioButtonShowLater.Size = new System.Drawing.Size(75, 17);
-            this.radioButtonShowLater.TabIndex = 3;
-            this.radioButtonShowLater.TabStop = true;
-            this.radioButtonShowLater.Text = "Show later";
-            this.radioButtonShowLater.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonShowEarlier
-            // 
-            this.radioButtonShowEarlier.AutoSize = true;
-            this.radioButtonShowEarlier.Location = new System.Drawing.Point(9, 66);
-            this.radioButtonShowEarlier.Name = "radioButtonShowEarlier";
-            this.radioButtonShowEarlier.Size = new System.Drawing.Size(83, 17);
-            this.radioButtonShowEarlier.TabIndex = 2;
-            this.radioButtonShowEarlier.Text = "Show earlier";
-            this.radioButtonShowEarlier.UseVisualStyleBackColor = true;
-            // 
-            // timeUpDownAdjust
-            // 
-            this.timeUpDownAdjust.AutoSize = true;
-            this.timeUpDownAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.timeUpDownAdjust.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.timeUpDownAdjust.Location = new System.Drawing.Point(7, 37);
-            this.timeUpDownAdjust.Margin = new System.Windows.Forms.Padding(4);
-            this.timeUpDownAdjust.Name = "timeUpDownAdjust";
-            this.timeUpDownAdjust.Size = new System.Drawing.Size(111, 27);
-            this.timeUpDownAdjust.TabIndex = 1;
-            timeCode1.Hours = 0;
-            timeCode1.Milliseconds = 0;
-            timeCode1.Minutes = 0;
-            timeCode1.Seconds = 0;
-            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode1.TotalMilliseconds = 0D;
-            timeCode1.TotalSeconds = 0D;
-            this.timeUpDownAdjust.TimeCode = timeCode1;
-            this.timeUpDownAdjust.UseVideoOffset = false;
-            // 
-            // labelHourMinSecMilliSecond
-            // 
-            this.labelHourMinSecMilliSecond.AutoSize = true;
-            this.labelHourMinSecMilliSecond.Location = new System.Drawing.Point(6, 20);
-            this.labelHourMinSecMilliSecond.Name = "labelHourMinSecMilliSecond";
-            this.labelHourMinSecMilliSecond.Size = new System.Drawing.Size(90, 13);
-            this.labelHourMinSecMilliSecond.TabIndex = 0;
-            this.labelHourMinSecMilliSecond.Text = "Hours:min:sec.ms";
             // 
             // buttonConvertOptionsSettings
             // 
@@ -437,256 +280,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.inverseSelectionToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
             this.inverseSelectionToolStripMenuItem.Text = "Inverse selection";
             this.inverseSelectionToolStripMenuItem.Click += new System.EventHandler(this.inverseSelectionToolStripMenuItem_Click);
-            // 
-            // groupBoxChangeFrameRate
-            // 
-            this.groupBoxChangeFrameRate.Controls.Add(this.buttonSwapFrameRate);
-            this.groupBoxChangeFrameRate.Controls.Add(this.comboBoxFrameRateTo);
-            this.groupBoxChangeFrameRate.Controls.Add(this.labelToFrameRate);
-            this.groupBoxChangeFrameRate.Controls.Add(this.comboBoxFrameRateFrom);
-            this.groupBoxChangeFrameRate.Controls.Add(this.labelFromFrameRate);
-            this.groupBoxChangeFrameRate.Location = new System.Drawing.Point(307, 12);
-            this.groupBoxChangeFrameRate.Name = "groupBoxChangeFrameRate";
-            this.groupBoxChangeFrameRate.Size = new System.Drawing.Size(269, 90);
-            this.groupBoxChangeFrameRate.TabIndex = 305;
-            this.groupBoxChangeFrameRate.TabStop = false;
-            this.groupBoxChangeFrameRate.Text = "Change frame rate";
-            this.groupBoxChangeFrameRate.Visible = false;
-            // 
-            // buttonSwapFrameRate
-            // 
-            this.buttonSwapFrameRate.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonSwapFrameRate.Location = new System.Drawing.Point(207, 28);
-            this.buttonSwapFrameRate.Name = "buttonSwapFrameRate";
-            this.buttonSwapFrameRate.Size = new System.Drawing.Size(27, 28);
-            this.buttonSwapFrameRate.TabIndex = 9;
-            this.buttonSwapFrameRate.Text = "<->";
-            this.buttonSwapFrameRate.UseVisualStyleBackColor = true;
-            this.buttonSwapFrameRate.Click += new System.EventHandler(this.buttonSwapFrameRate_Click);
-            // 
-            // comboBoxFrameRateTo
-            // 
-            this.comboBoxFrameRateTo.FormattingEnabled = true;
-            this.comboBoxFrameRateTo.Location = new System.Drawing.Point(130, 46);
-            this.comboBoxFrameRateTo.Name = "comboBoxFrameRateTo";
-            this.comboBoxFrameRateTo.Size = new System.Drawing.Size(71, 21);
-            this.comboBoxFrameRateTo.TabIndex = 3;
-            // 
-            // labelToFrameRate
-            // 
-            this.labelToFrameRate.AutoSize = true;
-            this.labelToFrameRate.Location = new System.Drawing.Point(6, 50);
-            this.labelToFrameRate.Name = "labelToFrameRate";
-            this.labelToFrameRate.Size = new System.Drawing.Size(70, 13);
-            this.labelToFrameRate.TabIndex = 2;
-            this.labelToFrameRate.Text = "To frame rate";
-            // 
-            // comboBoxFrameRateFrom
-            // 
-            this.comboBoxFrameRateFrom.FormattingEnabled = true;
-            this.comboBoxFrameRateFrom.Location = new System.Drawing.Point(130, 17);
-            this.comboBoxFrameRateFrom.Name = "comboBoxFrameRateFrom";
-            this.comboBoxFrameRateFrom.Size = new System.Drawing.Size(71, 21);
-            this.comboBoxFrameRateFrom.TabIndex = 1;
-            // 
-            // labelFromFrameRate
-            // 
-            this.labelFromFrameRate.AutoSize = true;
-            this.labelFromFrameRate.Location = new System.Drawing.Point(6, 21);
-            this.labelFromFrameRate.Name = "labelFromFrameRate";
-            this.labelFromFrameRate.Size = new System.Drawing.Size(80, 13);
-            this.labelFromFrameRate.TabIndex = 0;
-            this.labelFromFrameRate.Text = "From frame rate";
-            // 
-            // groupBoxFixRtl
-            // 
-            this.groupBoxFixRtl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxFixRtl.Controls.Add(this.radioButtonReverseStartEnd);
-            this.groupBoxFixRtl.Controls.Add(this.radioButtonRemoveUnicode);
-            this.groupBoxFixRtl.Controls.Add(this.radioButtonAddUnicode);
-            this.groupBoxFixRtl.Location = new System.Drawing.Point(305, 17);
-            this.groupBoxFixRtl.Name = "groupBoxFixRtl";
-            this.groupBoxFixRtl.Size = new System.Drawing.Size(271, 115);
-            this.groupBoxFixRtl.TabIndex = 303;
-            this.groupBoxFixRtl.TabStop = false;
-            this.groupBoxFixRtl.Text = "Settings";
-            this.groupBoxFixRtl.Visible = false;
-            // 
-            // radioButtonReverseStartEnd
-            // 
-            this.radioButtonReverseStartEnd.AutoSize = true;
-            this.radioButtonReverseStartEnd.Location = new System.Drawing.Point(19, 77);
-            this.radioButtonReverseStartEnd.Name = "radioButtonReverseStartEnd";
-            this.radioButtonReverseStartEnd.Size = new System.Drawing.Size(135, 17);
-            this.radioButtonReverseStartEnd.TabIndex = 2;
-            this.radioButtonReverseStartEnd.TabStop = true;
-            this.radioButtonReverseStartEnd.Text = "Reverse RTL start/end";
-            this.radioButtonReverseStartEnd.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonRemoveUnicode
-            // 
-            this.radioButtonRemoveUnicode.AutoSize = true;
-            this.radioButtonRemoveUnicode.Location = new System.Drawing.Point(19, 54);
-            this.radioButtonRemoveUnicode.Name = "radioButtonRemoveUnicode";
-            this.radioButtonRemoveUnicode.Size = new System.Drawing.Size(153, 17);
-            this.radioButtonRemoveUnicode.TabIndex = 1;
-            this.radioButtonRemoveUnicode.TabStop = true;
-            this.radioButtonRemoveUnicode.Text = "Remove RTL unicode tags";
-            this.radioButtonRemoveUnicode.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonAddUnicode
-            // 
-            this.radioButtonAddUnicode.AutoSize = true;
-            this.radioButtonAddUnicode.Location = new System.Drawing.Point(19, 31);
-            this.radioButtonAddUnicode.Name = "radioButtonAddUnicode";
-            this.radioButtonAddUnicode.Size = new System.Drawing.Size(145, 17);
-            this.radioButtonAddUnicode.TabIndex = 0;
-            this.radioButtonAddUnicode.TabStop = true;
-            this.radioButtonAddUnicode.Text = "Fix RTL via Unicode tags";
-            this.radioButtonAddUnicode.UseVisualStyleBackColor = true;
-            // 
-            // groupBoxSpeed
-            // 
-            this.groupBoxSpeed.Controls.Add(this.radioButtonToDropFrame);
-            this.groupBoxSpeed.Controls.Add(this.radioButtonSpeedFromDropFrame);
-            this.groupBoxSpeed.Controls.Add(this.radioButtonSpeedCustom);
-            this.groupBoxSpeed.Controls.Add(this.numericUpDownPercent);
-            this.groupBoxSpeed.Controls.Add(this.labelPercent);
-            this.groupBoxSpeed.Location = new System.Drawing.Point(305, 17);
-            this.groupBoxSpeed.Name = "groupBoxSpeed";
-            this.groupBoxSpeed.Size = new System.Drawing.Size(271, 129);
-            this.groupBoxSpeed.TabIndex = 307;
-            this.groupBoxSpeed.TabStop = false;
-            this.groupBoxSpeed.Text = "Change speed";
-            this.groupBoxSpeed.Visible = false;
-            // 
-            // radioButtonToDropFrame
-            // 
-            this.radioButtonToDropFrame.AutoSize = true;
-            this.radioButtonToDropFrame.Location = new System.Drawing.Point(6, 91);
-            this.radioButtonToDropFrame.Name = "radioButtonToDropFrame";
-            this.radioButtonToDropFrame.Size = new System.Drawing.Size(91, 17);
-            this.radioButtonToDropFrame.TabIndex = 3;
-            this.radioButtonToDropFrame.Text = "To drop frame";
-            this.radioButtonToDropFrame.UseVisualStyleBackColor = true;
-            this.radioButtonToDropFrame.CheckedChanged += new System.EventHandler(this.radioButtonToDropFrame_CheckedChanged);
-            // 
-            // radioButtonSpeedFromDropFrame
-            // 
-            this.radioButtonSpeedFromDropFrame.AutoSize = true;
-            this.radioButtonSpeedFromDropFrame.Location = new System.Drawing.Point(6, 68);
-            this.radioButtonSpeedFromDropFrame.Name = "radioButtonSpeedFromDropFrame";
-            this.radioButtonSpeedFromDropFrame.Size = new System.Drawing.Size(101, 17);
-            this.radioButtonSpeedFromDropFrame.TabIndex = 2;
-            this.radioButtonSpeedFromDropFrame.Text = "From drop frame";
-            this.radioButtonSpeedFromDropFrame.UseVisualStyleBackColor = true;
-            this.radioButtonSpeedFromDropFrame.CheckedChanged += new System.EventHandler(this.radioButtonSpeedFromDropFrame_CheckedChanged);
-            // 
-            // radioButtonSpeedCustom
-            // 
-            this.radioButtonSpeedCustom.AutoSize = true;
-            this.radioButtonSpeedCustom.Checked = true;
-            this.radioButtonSpeedCustom.Location = new System.Drawing.Point(6, 45);
-            this.radioButtonSpeedCustom.Name = "radioButtonSpeedCustom";
-            this.radioButtonSpeedCustom.Size = new System.Drawing.Size(60, 17);
-            this.radioButtonSpeedCustom.TabIndex = 1;
-            this.radioButtonSpeedCustom.TabStop = true;
-            this.radioButtonSpeedCustom.Text = "Custom";
-            this.radioButtonSpeedCustom.UseVisualStyleBackColor = true;
-            this.radioButtonSpeedCustom.CheckedChanged += new System.EventHandler(this.radioButtonSpeedCustom_CheckedChanged);
-            // 
-            // numericUpDownPercent
-            // 
-            this.numericUpDownPercent.DecimalPlaces = 5;
-            this.numericUpDownPercent.Location = new System.Drawing.Point(6, 19);
-            this.numericUpDownPercent.Maximum = new decimal(new int[] {
-            200,
-            0,
-            0,
-            0});
-            this.numericUpDownPercent.Minimum = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-            this.numericUpDownPercent.Name = "numericUpDownPercent";
-            this.numericUpDownPercent.Size = new System.Drawing.Size(81, 20);
-            this.numericUpDownPercent.TabIndex = 0;
-            this.numericUpDownPercent.Value = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            // 
-            // labelPercent
-            // 
-            this.labelPercent.AutoSize = true;
-            this.labelPercent.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.labelPercent.Location = new System.Drawing.Point(87, 22);
-            this.labelPercent.Name = "labelPercent";
-            this.labelPercent.Size = new System.Drawing.Size(15, 13);
-            this.labelPercent.TabIndex = 12;
-            this.labelPercent.Text = "%";
-            // 
-            // groupBoxChangeCasing
-            // 
-            this.groupBoxChangeCasing.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxChangeCasing.Controls.Add(this.radioButtonFixOnlyNames);
-            this.groupBoxChangeCasing.Controls.Add(this.radioButtonLowercase);
-            this.groupBoxChangeCasing.Controls.Add(this.radioButtonUppercase);
-            this.groupBoxChangeCasing.Controls.Add(this.radioButtonNormal);
-            this.groupBoxChangeCasing.Location = new System.Drawing.Point(308, 16);
-            this.groupBoxChangeCasing.Name = "groupBoxChangeCasing";
-            this.groupBoxChangeCasing.Size = new System.Drawing.Size(268, 125);
-            this.groupBoxChangeCasing.TabIndex = 308;
-            this.groupBoxChangeCasing.TabStop = false;
-            this.groupBoxChangeCasing.Text = "Change casing to";
-            // 
-            // radioButtonFixOnlyNames
-            // 
-            this.radioButtonFixOnlyNames.AutoSize = true;
-            this.radioButtonFixOnlyNames.Location = new System.Drawing.Point(11, 43);
-            this.radioButtonFixOnlyNames.Name = "radioButtonFixOnlyNames";
-            this.radioButtonFixOnlyNames.Size = new System.Drawing.Size(263, 17);
-            this.radioButtonFixOnlyNames.TabIndex = 6;
-            this.radioButtonFixOnlyNames.Text = "Fix only names casing (via Dictionaries\\names.xml)";
-            this.radioButtonFixOnlyNames.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonLowercase
-            // 
-            this.radioButtonLowercase.AutoSize = true;
-            this.radioButtonLowercase.Location = new System.Drawing.Point(11, 89);
-            this.radioButtonLowercase.Name = "radioButtonLowercase";
-            this.radioButtonLowercase.Size = new System.Drawing.Size(86, 17);
-            this.radioButtonLowercase.TabIndex = 10;
-            this.radioButtonLowercase.Text = "all lowercase";
-            this.radioButtonLowercase.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonUppercase
-            // 
-            this.radioButtonUppercase.AutoSize = true;
-            this.radioButtonUppercase.Location = new System.Drawing.Point(11, 66);
-            this.radioButtonUppercase.Name = "radioButtonUppercase";
-            this.radioButtonUppercase.Size = new System.Drawing.Size(112, 17);
-            this.radioButtonUppercase.TabIndex = 8;
-            this.radioButtonUppercase.Text = "ALL UPPERCASE";
-            this.radioButtonUppercase.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonNormal
-            // 
-            this.radioButtonNormal.AutoSize = true;
-            this.radioButtonNormal.Checked = true;
-            this.radioButtonNormal.Location = new System.Drawing.Point(11, 18);
-            this.radioButtonNormal.Name = "radioButtonNormal";
-            this.radioButtonNormal.Size = new System.Drawing.Size(282, 17);
-            this.radioButtonNormal.TabIndex = 0;
-            this.radioButtonNormal.TabStop = true;
-            this.radioButtonNormal.Text = "Normal casing. Sentences begin with uppercase letter.";
-            this.radioButtonNormal.UseVisualStyleBackColor = true;
             // 
             // groupBoxMergeShortLines
             // 
@@ -1028,6 +621,413 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelMaxCharsPerSecond.Size = new System.Drawing.Size(81, 13);
             this.labelMaxCharsPerSecond.TabIndex = 11;
             this.labelMaxCharsPerSecond.Text = "Max. chars/sec";
+            // 
+            // groupBoxDeleteLines
+            // 
+            this.groupBoxDeleteLines.Controls.Add(this.textBoxDeleteContains);
+            this.groupBoxDeleteLines.Controls.Add(this.labelDeleteLinesContaining);
+            this.groupBoxDeleteLines.Controls.Add(this.numericUpDownDeleteLast);
+            this.groupBoxDeleteLines.Controls.Add(this.labelDeleteLastLines);
+            this.groupBoxDeleteLines.Controls.Add(this.numericUpDownDeleteFirst);
+            this.groupBoxDeleteLines.Controls.Add(this.labelDeleteFirstLines);
+            this.groupBoxDeleteLines.Location = new System.Drawing.Point(305, 94);
+            this.groupBoxDeleteLines.Name = "groupBoxDeleteLines";
+            this.groupBoxDeleteLines.Size = new System.Drawing.Size(271, 140);
+            this.groupBoxDeleteLines.TabIndex = 308;
+            this.groupBoxDeleteLines.TabStop = false;
+            this.groupBoxDeleteLines.Text = "Delete lines";
+            this.groupBoxDeleteLines.Visible = false;
+            // 
+            // textBoxDeleteContains
+            // 
+            this.textBoxDeleteContains.Location = new System.Drawing.Point(10, 110);
+            this.textBoxDeleteContains.Name = "textBoxDeleteContains";
+            this.textBoxDeleteContains.Size = new System.Drawing.Size(237, 20);
+            this.textBoxDeleteContains.TabIndex = 5;
+            // 
+            // labelDeleteLinesContaining
+            // 
+            this.labelDeleteLinesContaining.AutoSize = true;
+            this.labelDeleteLinesContaining.Location = new System.Drawing.Point(9, 89);
+            this.labelDeleteLinesContaining.Name = "labelDeleteLinesContaining";
+            this.labelDeleteLinesContaining.Size = new System.Drawing.Size(114, 13);
+            this.labelDeleteLinesContaining.TabIndex = 4;
+            this.labelDeleteLinesContaining.Text = "Delete lines containing";
+            // 
+            // numericUpDownDeleteLast
+            // 
+            this.numericUpDownDeleteLast.Location = new System.Drawing.Point(92, 45);
+            this.numericUpDownDeleteLast.Name = "numericUpDownDeleteLast";
+            this.numericUpDownDeleteLast.Size = new System.Drawing.Size(43, 20);
+            this.numericUpDownDeleteLast.TabIndex = 3;
+            // 
+            // labelDeleteLastLines
+            // 
+            this.labelDeleteLastLines.AutoSize = true;
+            this.labelDeleteLastLines.Location = new System.Drawing.Point(5, 47);
+            this.labelDeleteLastLines.Name = "labelDeleteLastLines";
+            this.labelDeleteLastLines.Size = new System.Drawing.Size(81, 13);
+            this.labelDeleteLastLines.TabIndex = 2;
+            this.labelDeleteLastLines.Text = "Delete last lines";
+            // 
+            // numericUpDownDeleteFirst
+            // 
+            this.numericUpDownDeleteFirst.Location = new System.Drawing.Point(93, 19);
+            this.numericUpDownDeleteFirst.Name = "numericUpDownDeleteFirst";
+            this.numericUpDownDeleteFirst.Size = new System.Drawing.Size(43, 20);
+            this.numericUpDownDeleteFirst.TabIndex = 1;
+            // 
+            // labelDeleteFirstLines
+            // 
+            this.labelDeleteFirstLines.AutoSize = true;
+            this.labelDeleteFirstLines.Location = new System.Drawing.Point(6, 20);
+            this.labelDeleteFirstLines.Name = "labelDeleteFirstLines";
+            this.labelDeleteFirstLines.Size = new System.Drawing.Size(81, 13);
+            this.labelDeleteFirstLines.TabIndex = 0;
+            this.labelDeleteFirstLines.Text = "Delete first lines";
+            // 
+            // groupBoxRemoveStyle
+            // 
+            this.groupBoxRemoveStyle.Controls.Add(this.textBoxRemoveStyle);
+            this.groupBoxRemoveStyle.Controls.Add(this.labelStyleName);
+            this.groupBoxRemoveStyle.Location = new System.Drawing.Point(307, 12);
+            this.groupBoxRemoveStyle.Name = "groupBoxRemoveStyle";
+            this.groupBoxRemoveStyle.Size = new System.Drawing.Size(271, 76);
+            this.groupBoxRemoveStyle.TabIndex = 307;
+            this.groupBoxRemoveStyle.TabStop = false;
+            this.groupBoxRemoveStyle.Text = "Remove style/actor";
+            this.groupBoxRemoveStyle.Visible = false;
+            // 
+            // textBoxRemoveStyle
+            // 
+            this.textBoxRemoveStyle.Location = new System.Drawing.Point(6, 35);
+            this.textBoxRemoveStyle.Name = "textBoxRemoveStyle";
+            this.textBoxRemoveStyle.Size = new System.Drawing.Size(257, 20);
+            this.textBoxRemoveStyle.TabIndex = 8;
+            // 
+            // labelStyleName
+            // 
+            this.labelStyleName.AutoSize = true;
+            this.labelStyleName.Location = new System.Drawing.Point(6, 20);
+            this.labelStyleName.Name = "labelStyleName";
+            this.labelStyleName.Size = new System.Drawing.Size(59, 13);
+            this.labelStyleName.TabIndex = 0;
+            this.labelStyleName.Text = "Style/actor";
+            // 
+            // groupBoxOffsetTimeCodes
+            // 
+            this.groupBoxOffsetTimeCodes.Controls.Add(this.radioButtonShowLater);
+            this.groupBoxOffsetTimeCodes.Controls.Add(this.radioButtonShowEarlier);
+            this.groupBoxOffsetTimeCodes.Controls.Add(this.timeUpDownAdjust);
+            this.groupBoxOffsetTimeCodes.Controls.Add(this.labelHourMinSecMilliSecond);
+            this.groupBoxOffsetTimeCodes.Location = new System.Drawing.Point(305, 19);
+            this.groupBoxOffsetTimeCodes.Name = "groupBoxOffsetTimeCodes";
+            this.groupBoxOffsetTimeCodes.Size = new System.Drawing.Size(271, 119);
+            this.groupBoxOffsetTimeCodes.TabIndex = 306;
+            this.groupBoxOffsetTimeCodes.TabStop = false;
+            this.groupBoxOffsetTimeCodes.Text = "Offset time codes";
+            this.groupBoxOffsetTimeCodes.Visible = false;
+            // 
+            // radioButtonShowLater
+            // 
+            this.radioButtonShowLater.AutoSize = true;
+            this.radioButtonShowLater.Checked = true;
+            this.radioButtonShowLater.Location = new System.Drawing.Point(9, 89);
+            this.radioButtonShowLater.Name = "radioButtonShowLater";
+            this.radioButtonShowLater.Size = new System.Drawing.Size(75, 17);
+            this.radioButtonShowLater.TabIndex = 3;
+            this.radioButtonShowLater.TabStop = true;
+            this.radioButtonShowLater.Text = "Show later";
+            this.radioButtonShowLater.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonShowEarlier
+            // 
+            this.radioButtonShowEarlier.AutoSize = true;
+            this.radioButtonShowEarlier.Location = new System.Drawing.Point(9, 66);
+            this.radioButtonShowEarlier.Name = "radioButtonShowEarlier";
+            this.radioButtonShowEarlier.Size = new System.Drawing.Size(83, 17);
+            this.radioButtonShowEarlier.TabIndex = 2;
+            this.radioButtonShowEarlier.Text = "Show earlier";
+            this.radioButtonShowEarlier.UseVisualStyleBackColor = true;
+            // 
+            // timeUpDownAdjust
+            // 
+            this.timeUpDownAdjust.AutoSize = true;
+            this.timeUpDownAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownAdjust.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.timeUpDownAdjust.Location = new System.Drawing.Point(7, 37);
+            this.timeUpDownAdjust.Margin = new System.Windows.Forms.Padding(4);
+            this.timeUpDownAdjust.Name = "timeUpDownAdjust";
+            this.timeUpDownAdjust.Size = new System.Drawing.Size(111, 27);
+            this.timeUpDownAdjust.TabIndex = 1;
+            timeCode1.Hours = 0;
+            timeCode1.Milliseconds = 0;
+            timeCode1.Minutes = 0;
+            timeCode1.Seconds = 0;
+            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode1.TotalMilliseconds = 0D;
+            timeCode1.TotalSeconds = 0D;
+            this.timeUpDownAdjust.TimeCode = timeCode1;
+            this.timeUpDownAdjust.UseVideoOffset = false;
+            // 
+            // labelHourMinSecMilliSecond
+            // 
+            this.labelHourMinSecMilliSecond.AutoSize = true;
+            this.labelHourMinSecMilliSecond.Location = new System.Drawing.Point(6, 20);
+            this.labelHourMinSecMilliSecond.Name = "labelHourMinSecMilliSecond";
+            this.labelHourMinSecMilliSecond.Size = new System.Drawing.Size(90, 13);
+            this.labelHourMinSecMilliSecond.TabIndex = 0;
+            this.labelHourMinSecMilliSecond.Text = "Hours:min:sec.ms";
+            // 
+            // groupBoxChangeFrameRate
+            // 
+            this.groupBoxChangeFrameRate.Controls.Add(this.buttonSwapFrameRate);
+            this.groupBoxChangeFrameRate.Controls.Add(this.comboBoxFrameRateTo);
+            this.groupBoxChangeFrameRate.Controls.Add(this.labelToFrameRate);
+            this.groupBoxChangeFrameRate.Controls.Add(this.comboBoxFrameRateFrom);
+            this.groupBoxChangeFrameRate.Controls.Add(this.labelFromFrameRate);
+            this.groupBoxChangeFrameRate.Location = new System.Drawing.Point(307, 12);
+            this.groupBoxChangeFrameRate.Name = "groupBoxChangeFrameRate";
+            this.groupBoxChangeFrameRate.Size = new System.Drawing.Size(269, 90);
+            this.groupBoxChangeFrameRate.TabIndex = 305;
+            this.groupBoxChangeFrameRate.TabStop = false;
+            this.groupBoxChangeFrameRate.Text = "Change frame rate";
+            this.groupBoxChangeFrameRate.Visible = false;
+            // 
+            // buttonSwapFrameRate
+            // 
+            this.buttonSwapFrameRate.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonSwapFrameRate.Location = new System.Drawing.Point(207, 28);
+            this.buttonSwapFrameRate.Name = "buttonSwapFrameRate";
+            this.buttonSwapFrameRate.Size = new System.Drawing.Size(27, 28);
+            this.buttonSwapFrameRate.TabIndex = 9;
+            this.buttonSwapFrameRate.Text = "<->";
+            this.buttonSwapFrameRate.UseVisualStyleBackColor = true;
+            this.buttonSwapFrameRate.Click += new System.EventHandler(this.buttonSwapFrameRate_Click);
+            // 
+            // comboBoxFrameRateTo
+            // 
+            this.comboBoxFrameRateTo.FormattingEnabled = true;
+            this.comboBoxFrameRateTo.Location = new System.Drawing.Point(130, 46);
+            this.comboBoxFrameRateTo.Name = "comboBoxFrameRateTo";
+            this.comboBoxFrameRateTo.Size = new System.Drawing.Size(71, 21);
+            this.comboBoxFrameRateTo.TabIndex = 3;
+            // 
+            // labelToFrameRate
+            // 
+            this.labelToFrameRate.AutoSize = true;
+            this.labelToFrameRate.Location = new System.Drawing.Point(6, 50);
+            this.labelToFrameRate.Name = "labelToFrameRate";
+            this.labelToFrameRate.Size = new System.Drawing.Size(70, 13);
+            this.labelToFrameRate.TabIndex = 2;
+            this.labelToFrameRate.Text = "To frame rate";
+            // 
+            // comboBoxFrameRateFrom
+            // 
+            this.comboBoxFrameRateFrom.FormattingEnabled = true;
+            this.comboBoxFrameRateFrom.Location = new System.Drawing.Point(130, 17);
+            this.comboBoxFrameRateFrom.Name = "comboBoxFrameRateFrom";
+            this.comboBoxFrameRateFrom.Size = new System.Drawing.Size(71, 21);
+            this.comboBoxFrameRateFrom.TabIndex = 1;
+            // 
+            // labelFromFrameRate
+            // 
+            this.labelFromFrameRate.AutoSize = true;
+            this.labelFromFrameRate.Location = new System.Drawing.Point(6, 21);
+            this.labelFromFrameRate.Name = "labelFromFrameRate";
+            this.labelFromFrameRate.Size = new System.Drawing.Size(80, 13);
+            this.labelFromFrameRate.TabIndex = 0;
+            this.labelFromFrameRate.Text = "From frame rate";
+            // 
+            // groupBoxFixRtl
+            // 
+            this.groupBoxFixRtl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxFixRtl.Controls.Add(this.radioButtonReverseStartEnd);
+            this.groupBoxFixRtl.Controls.Add(this.radioButtonRemoveUnicode);
+            this.groupBoxFixRtl.Controls.Add(this.radioButtonAddUnicode);
+            this.groupBoxFixRtl.Location = new System.Drawing.Point(305, 17);
+            this.groupBoxFixRtl.Name = "groupBoxFixRtl";
+            this.groupBoxFixRtl.Size = new System.Drawing.Size(271, 115);
+            this.groupBoxFixRtl.TabIndex = 303;
+            this.groupBoxFixRtl.TabStop = false;
+            this.groupBoxFixRtl.Text = "Settings";
+            this.groupBoxFixRtl.Visible = false;
+            // 
+            // radioButtonReverseStartEnd
+            // 
+            this.radioButtonReverseStartEnd.AutoSize = true;
+            this.radioButtonReverseStartEnd.Location = new System.Drawing.Point(19, 77);
+            this.radioButtonReverseStartEnd.Name = "radioButtonReverseStartEnd";
+            this.radioButtonReverseStartEnd.Size = new System.Drawing.Size(135, 17);
+            this.radioButtonReverseStartEnd.TabIndex = 2;
+            this.radioButtonReverseStartEnd.TabStop = true;
+            this.radioButtonReverseStartEnd.Text = "Reverse RTL start/end";
+            this.radioButtonReverseStartEnd.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonRemoveUnicode
+            // 
+            this.radioButtonRemoveUnicode.AutoSize = true;
+            this.radioButtonRemoveUnicode.Location = new System.Drawing.Point(19, 54);
+            this.radioButtonRemoveUnicode.Name = "radioButtonRemoveUnicode";
+            this.radioButtonRemoveUnicode.Size = new System.Drawing.Size(153, 17);
+            this.radioButtonRemoveUnicode.TabIndex = 1;
+            this.radioButtonRemoveUnicode.TabStop = true;
+            this.radioButtonRemoveUnicode.Text = "Remove RTL unicode tags";
+            this.radioButtonRemoveUnicode.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonAddUnicode
+            // 
+            this.radioButtonAddUnicode.AutoSize = true;
+            this.radioButtonAddUnicode.Location = new System.Drawing.Point(19, 31);
+            this.radioButtonAddUnicode.Name = "radioButtonAddUnicode";
+            this.radioButtonAddUnicode.Size = new System.Drawing.Size(145, 17);
+            this.radioButtonAddUnicode.TabIndex = 0;
+            this.radioButtonAddUnicode.TabStop = true;
+            this.radioButtonAddUnicode.Text = "Fix RTL via Unicode tags";
+            this.radioButtonAddUnicode.UseVisualStyleBackColor = true;
+            // 
+            // groupBoxSpeed
+            // 
+            this.groupBoxSpeed.Controls.Add(this.radioButtonToDropFrame);
+            this.groupBoxSpeed.Controls.Add(this.radioButtonSpeedFromDropFrame);
+            this.groupBoxSpeed.Controls.Add(this.radioButtonSpeedCustom);
+            this.groupBoxSpeed.Controls.Add(this.numericUpDownPercent);
+            this.groupBoxSpeed.Controls.Add(this.labelPercent);
+            this.groupBoxSpeed.Location = new System.Drawing.Point(305, 17);
+            this.groupBoxSpeed.Name = "groupBoxSpeed";
+            this.groupBoxSpeed.Size = new System.Drawing.Size(271, 129);
+            this.groupBoxSpeed.TabIndex = 307;
+            this.groupBoxSpeed.TabStop = false;
+            this.groupBoxSpeed.Text = "Change speed";
+            this.groupBoxSpeed.Visible = false;
+            // 
+            // radioButtonToDropFrame
+            // 
+            this.radioButtonToDropFrame.AutoSize = true;
+            this.radioButtonToDropFrame.Location = new System.Drawing.Point(6, 91);
+            this.radioButtonToDropFrame.Name = "radioButtonToDropFrame";
+            this.radioButtonToDropFrame.Size = new System.Drawing.Size(91, 17);
+            this.radioButtonToDropFrame.TabIndex = 3;
+            this.radioButtonToDropFrame.Text = "To drop frame";
+            this.radioButtonToDropFrame.UseVisualStyleBackColor = true;
+            this.radioButtonToDropFrame.CheckedChanged += new System.EventHandler(this.radioButtonToDropFrame_CheckedChanged);
+            // 
+            // radioButtonSpeedFromDropFrame
+            // 
+            this.radioButtonSpeedFromDropFrame.AutoSize = true;
+            this.radioButtonSpeedFromDropFrame.Location = new System.Drawing.Point(6, 68);
+            this.radioButtonSpeedFromDropFrame.Name = "radioButtonSpeedFromDropFrame";
+            this.radioButtonSpeedFromDropFrame.Size = new System.Drawing.Size(101, 17);
+            this.radioButtonSpeedFromDropFrame.TabIndex = 2;
+            this.radioButtonSpeedFromDropFrame.Text = "From drop frame";
+            this.radioButtonSpeedFromDropFrame.UseVisualStyleBackColor = true;
+            this.radioButtonSpeedFromDropFrame.CheckedChanged += new System.EventHandler(this.radioButtonSpeedFromDropFrame_CheckedChanged);
+            // 
+            // radioButtonSpeedCustom
+            // 
+            this.radioButtonSpeedCustom.AutoSize = true;
+            this.radioButtonSpeedCustom.Checked = true;
+            this.radioButtonSpeedCustom.Location = new System.Drawing.Point(6, 45);
+            this.radioButtonSpeedCustom.Name = "radioButtonSpeedCustom";
+            this.radioButtonSpeedCustom.Size = new System.Drawing.Size(60, 17);
+            this.radioButtonSpeedCustom.TabIndex = 1;
+            this.radioButtonSpeedCustom.TabStop = true;
+            this.radioButtonSpeedCustom.Text = "Custom";
+            this.radioButtonSpeedCustom.UseVisualStyleBackColor = true;
+            this.radioButtonSpeedCustom.CheckedChanged += new System.EventHandler(this.radioButtonSpeedCustom_CheckedChanged);
+            // 
+            // numericUpDownPercent
+            // 
+            this.numericUpDownPercent.DecimalPlaces = 5;
+            this.numericUpDownPercent.Location = new System.Drawing.Point(6, 19);
+            this.numericUpDownPercent.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+            this.numericUpDownPercent.Minimum = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.numericUpDownPercent.Name = "numericUpDownPercent";
+            this.numericUpDownPercent.Size = new System.Drawing.Size(81, 20);
+            this.numericUpDownPercent.TabIndex = 0;
+            this.numericUpDownPercent.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            // 
+            // labelPercent
+            // 
+            this.labelPercent.AutoSize = true;
+            this.labelPercent.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.labelPercent.Location = new System.Drawing.Point(87, 22);
+            this.labelPercent.Name = "labelPercent";
+            this.labelPercent.Size = new System.Drawing.Size(15, 13);
+            this.labelPercent.TabIndex = 12;
+            this.labelPercent.Text = "%";
+            // 
+            // groupBoxChangeCasing
+            // 
+            this.groupBoxChangeCasing.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxChangeCasing.Controls.Add(this.radioButtonFixOnlyNames);
+            this.groupBoxChangeCasing.Controls.Add(this.radioButtonLowercase);
+            this.groupBoxChangeCasing.Controls.Add(this.radioButtonUppercase);
+            this.groupBoxChangeCasing.Controls.Add(this.radioButtonNormal);
+            this.groupBoxChangeCasing.Location = new System.Drawing.Point(308, 16);
+            this.groupBoxChangeCasing.Name = "groupBoxChangeCasing";
+            this.groupBoxChangeCasing.Size = new System.Drawing.Size(268, 125);
+            this.groupBoxChangeCasing.TabIndex = 308;
+            this.groupBoxChangeCasing.TabStop = false;
+            this.groupBoxChangeCasing.Text = "Change casing to";
+            // 
+            // radioButtonFixOnlyNames
+            // 
+            this.radioButtonFixOnlyNames.AutoSize = true;
+            this.radioButtonFixOnlyNames.Location = new System.Drawing.Point(11, 43);
+            this.radioButtonFixOnlyNames.Name = "radioButtonFixOnlyNames";
+            this.radioButtonFixOnlyNames.Size = new System.Drawing.Size(263, 17);
+            this.radioButtonFixOnlyNames.TabIndex = 6;
+            this.radioButtonFixOnlyNames.Text = "Fix only names casing (via Dictionaries\\names.xml)";
+            this.radioButtonFixOnlyNames.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonLowercase
+            // 
+            this.radioButtonLowercase.AutoSize = true;
+            this.radioButtonLowercase.Location = new System.Drawing.Point(11, 89);
+            this.radioButtonLowercase.Name = "radioButtonLowercase";
+            this.radioButtonLowercase.Size = new System.Drawing.Size(86, 17);
+            this.radioButtonLowercase.TabIndex = 10;
+            this.radioButtonLowercase.Text = "all lowercase";
+            this.radioButtonLowercase.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonUppercase
+            // 
+            this.radioButtonUppercase.AutoSize = true;
+            this.radioButtonUppercase.Location = new System.Drawing.Point(11, 66);
+            this.radioButtonUppercase.Name = "radioButtonUppercase";
+            this.radioButtonUppercase.Size = new System.Drawing.Size(112, 17);
+            this.radioButtonUppercase.TabIndex = 8;
+            this.radioButtonUppercase.Text = "ALL UPPERCASE";
+            this.radioButtonUppercase.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonNormal
+            // 
+            this.radioButtonNormal.AutoSize = true;
+            this.radioButtonNormal.Checked = true;
+            this.radioButtonNormal.Location = new System.Drawing.Point(11, 18);
+            this.radioButtonNormal.Name = "radioButtonNormal";
+            this.radioButtonNormal.Size = new System.Drawing.Size(282, 17);
+            this.radioButtonNormal.TabIndex = 0;
+            this.radioButtonNormal.TabStop = true;
+            this.radioButtonNormal.Text = "Normal casing. Sentences begin with uppercase letter.";
+            this.radioButtonNormal.UseVisualStyleBackColor = true;
             // 
             // groupBoxOutput
             // 
@@ -1460,24 +1460,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.ResizeEnd += new System.EventHandler(this.BatchConvert_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.BatchConvert_KeyDown);
             this.groupBoxConvertOptions.ResumeLayout(false);
-            this.groupBoxDeleteLines.ResumeLayout(false);
-            this.groupBoxDeleteLines.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDeleteLast)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDeleteFirst)).EndInit();
-            this.groupBoxRemoveStyle.ResumeLayout(false);
-            this.groupBoxRemoveStyle.PerformLayout();
-            this.groupBoxOffsetTimeCodes.ResumeLayout(false);
-            this.groupBoxOffsetTimeCodes.PerformLayout();
             this.contextMenuStripOptions.ResumeLayout(false);
-            this.groupBoxChangeFrameRate.ResumeLayout(false);
-            this.groupBoxChangeFrameRate.PerformLayout();
-            this.groupBoxFixRtl.ResumeLayout(false);
-            this.groupBoxFixRtl.PerformLayout();
-            this.groupBoxSpeed.ResumeLayout(false);
-            this.groupBoxSpeed.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPercent)).EndInit();
-            this.groupBoxChangeCasing.ResumeLayout(false);
-            this.groupBoxChangeCasing.PerformLayout();
             this.groupBoxMergeShortLines.ResumeLayout(false);
             this.groupBoxMergeShortLines.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharacters)).EndInit();
@@ -1497,6 +1480,23 @@ namespace Nikse.SubtitleEdit.Forms
             this.panelAdjustDurationRecalc.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOptimalCharsSec)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharsSec)).EndInit();
+            this.groupBoxDeleteLines.ResumeLayout(false);
+            this.groupBoxDeleteLines.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDeleteLast)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDeleteFirst)).EndInit();
+            this.groupBoxRemoveStyle.ResumeLayout(false);
+            this.groupBoxRemoveStyle.PerformLayout();
+            this.groupBoxOffsetTimeCodes.ResumeLayout(false);
+            this.groupBoxOffsetTimeCodes.PerformLayout();
+            this.groupBoxChangeFrameRate.ResumeLayout(false);
+            this.groupBoxChangeFrameRate.PerformLayout();
+            this.groupBoxFixRtl.ResumeLayout(false);
+            this.groupBoxFixRtl.PerformLayout();
+            this.groupBoxSpeed.ResumeLayout(false);
+            this.groupBoxSpeed.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPercent)).EndInit();
+            this.groupBoxChangeCasing.ResumeLayout(false);
+            this.groupBoxChangeCasing.PerformLayout();
             this.groupBoxOutput.ResumeLayout(false);
             this.groupBoxOutput.PerformLayout();
             this.groupBoxInput.ResumeLayout(false);
