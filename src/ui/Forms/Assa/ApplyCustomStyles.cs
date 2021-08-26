@@ -51,6 +51,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             radioButtonAllLines.Text = LanguageSettings.Current.ShowEarlierLater.AllLines;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            groupBoxApplyTo.Text = LanguageSettings.Current.General.ApplyTo;
+            buttonTogglePreview.Text = LanguageSettings.Current.General.ShowPreview;
+            groupBoxPreview.Text = LanguageSettings.Current.General.Preview;
             UiUtil.FixLargeFonts(this, buttonOK);
 
             buttonHistory.Enabled = Configuration.Settings.SubtitleSettings.AssaOverrideTagHistory.Count > 0;
@@ -310,7 +313,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 }
 
                 _advancedIndices = form.Indices;
-                labelAdvancedSelection.Text = string.Format("Lines selected: {0}", _advancedIndices.Length);
+                labelAdvancedSelection.Text = string.Format(LanguageSettings.Current.Main.XLinesSelected, _advancedIndices.Length);
             }
         }
 
@@ -324,7 +327,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             if (groupBoxPreview.Visible)
             {
-                buttonTogglePreview.Text = "Show preview";
+                buttonTogglePreview.Text = LanguageSettings.Current.General.ShowPreview;
                 MinimumSize = new Size(MinimumSize.Width, _originalHeight);
                 Height = _originalHeight;
                 groupBoxPreview.Visible = false;
@@ -332,7 +335,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             else
             {
                 MinimumSize = new Size(MinimumSize.Width, _originalHeight + PreviewHeight);
-                buttonTogglePreview.Text = "Hide preview";
+                buttonTogglePreview.Text = LanguageSettings.Current.General.HidePreview;
                 Height = _originalHeight + PreviewHeight;
                 groupBoxPreview.Height = buttonTogglePreview.Top - groupBoxPreview.Top - 10;
                 groupBoxPreview.Visible = true;

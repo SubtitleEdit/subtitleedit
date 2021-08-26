@@ -1,7 +1,7 @@
 ﻿
 namespace Nikse.SubtitleEdit.Forms.Assa
 {
-    partial class AssaProgressBar
+    sealed partial class AssaProgressBar
     {
         /// <summary>
         /// Required designer variable.

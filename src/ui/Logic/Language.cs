@@ -135,9 +135,12 @@ namespace Nikse.SubtitleEdit.Logic
                 Ok = "&OK",
                 Cancel = "C&ancel",
                 Apply = "Apply",
+                ApplyTo = "ApplyTo",
                 None = "None",
                 All = "All",
                 Preview = "Preview",
+                ShowPreview = "Show preview",
+                HidePreview = "Hide preview",
                 SubtitleFiles = "Subtitle files",
                 AllFiles = "All files",
                 VideoFiles = "Video files",
@@ -374,6 +377,8 @@ namespace Nikse.SubtitleEdit.Logic
                 SetPosInfo = "Click on video to toggle set/move position",
                 Clipboard = "Clipboard",
                 ResolutionMissing = "PlayResX/PlayResY are not set - set the resolution now?",
+                RotateXAxis = "Rotate {0} axis",
+                DistortX = "Distort {0}",
             };
 
             AudioToText = new LanguageStructure.AudioToText
@@ -1821,6 +1826,7 @@ namespace Nikse.SubtitleEdit.Logic
                         SplitLineAtCursorAndWaveformPosition = "Split line at cursor/video position",
                         AutoDurationCurrentLine = "Auto duration (current line)",
                         SelectAll = "Select all",
+                        Insert = "Insert",
                         InsertFirstLine = "Insert line",
                         InsertBefore = "Insert before",
                         InsertAfter = "Insert after",
@@ -1865,6 +1871,7 @@ namespace Nikse.SubtitleEdit.Logic
                         ShowSelectedLinesEarlierLater = "Show selected lines earlier/later...",
                         VisualSyncSelectedLines = "Visual sync selected lines...",
                         GoogleAndMicrosoftTranslateSelectedLine = "Google/Microsoft translate original line",
+                        SelectedLines = "Selected lines",
                         TranslateSelectedLines = "Translate selected lines...",
                         AdjustDisplayDurationForSelectedLines = "Adjust durations for selected lines...",
                         ApplyDurationLimitsForSelectedLines = "Apply duration limits for selected lines...",

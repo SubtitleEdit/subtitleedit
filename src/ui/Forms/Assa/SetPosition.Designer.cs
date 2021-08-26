@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBoxApplyTo = new System.Windows.Forms.GroupBox();
             this.radioButtonClipboard = new System.Windows.Forms.RadioButton();
             this.radioButtonSelectedLines = new System.Windows.Forms.RadioButton();
             this.groupBoxPreview = new System.Windows.Forms.GroupBox();
@@ -54,7 +54,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.numericUpDownDistortX = new System.Windows.Forms.NumericUpDown();
             this.labelDistortY = new System.Windows.Forms.Label();
             this.numericUpDownDistortY = new System.Windows.Forms.NumericUpDown();
-            this.groupBox1.SuspendLayout();
+            this.groupBoxApplyTo.SuspendLayout();
             this.groupBoxPreview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRotateX)).BeginInit();
@@ -65,17 +65,17 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDistortY)).BeginInit();
             this.SuspendLayout();
             // 
-            // groupBox1
+            // groupBoxApplyTo
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this.radioButtonClipboard);
-            this.groupBox1.Controls.Add(this.radioButtonSelectedLines);
-            this.groupBox1.Location = new System.Drawing.Point(763, 12);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(195, 75);
-            this.groupBox1.TabIndex = 1;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Apply to";
+            this.groupBoxApplyTo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxApplyTo.Controls.Add(this.radioButtonClipboard);
+            this.groupBoxApplyTo.Controls.Add(this.radioButtonSelectedLines);
+            this.groupBoxApplyTo.Location = new System.Drawing.Point(763, 12);
+            this.groupBoxApplyTo.Name = "groupBoxApplyTo";
+            this.groupBoxApplyTo.Size = new System.Drawing.Size(195, 75);
+            this.groupBoxApplyTo.TabIndex = 1;
+            this.groupBoxApplyTo.TabStop = false;
+            this.groupBoxApplyTo.Text = "Apply to";
             // 
             // radioButtonClipboard
             // 
@@ -380,7 +380,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.groupBoxPreview);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.groupBoxApplyTo);
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -394,8 +394,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.Shown += new System.EventHandler(this.SetPosition_Shown);
             this.ResizeEnd += new System.EventHandler(this.SetPosition_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ApplyCustomStyles_KeyDown);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.groupBoxApplyTo.ResumeLayout(false);
+            this.groupBoxApplyTo.PerformLayout();
             this.groupBoxPreview.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRotateX)).EndInit();
@@ -411,7 +411,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         }
 
         #endregion
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBoxApplyTo;
         private System.Windows.Forms.GroupBox groupBoxPreview;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
