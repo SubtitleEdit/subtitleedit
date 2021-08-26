@@ -2189,7 +2189,7 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <RemoveTextForHi>Remover texto para PCD</RemoveTextForHi>
     <MergeLinesShorterThan>Combinar linhas menores que</MergeLinesShorterThan>
     <DialogStyle>Estilo do diálogo</DialogStyle>
-    <DialogStyleDashBothLinesWithSpace>Traço em ambas as linhas sem espaço</DialogStyleDashBothLinesWithSpace>
+    <DialogStyleDashBothLinesWithSpace>Traço em ambas as linhas com espaço</DialogStyleDashBothLinesWithSpace>
     <DialogStyleDashBothLinesWithoutSpace>Traço em ambas as linhas sem espaço</DialogStyleDashBothLinesWithoutSpace>
     <DialogStyleDashSecondLineWithSpace>Traço na segunda linha com espaço</DialogStyleDashSecondLineWithSpace>
     <DialogStyleDashSecondLineWithoutSpace>Traço na segunda linha sem espaço</DialogStyleDashSecondLineWithoutSpace>
