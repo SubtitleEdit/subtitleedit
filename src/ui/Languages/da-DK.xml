@@ -275,6 +275,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <BridgeGaps>Lap små huller</BridgeGaps>
     <PlainText>Almindelig tekst</PlainText>
     <Ocr>OCR...</Ocr>
+    <AddFiles>Tilføj filer...</AddFiles>
     <Filter>Filter</Filter>
     <FilterSkipped>Sprunget over pga. filter</FilterSkipped>
     <FilterSrtNoUtf8BOM>SubRip (.srt) filer uden UTF-8 BOM header</FilterSrtNoUtf8BOM>
