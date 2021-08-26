@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBoxApplyTo = new System.Windows.Forms.GroupBox();
             this.labelAdvancedSelection = new System.Windows.Forms.Label();
             this.buttonAdvancedSelection = new System.Windows.Forms.Button();
             this.radioButtonAdvancedSelection = new System.Windows.Forms.RadioButton();
@@ -46,25 +46,25 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.seTextBox1 = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.groupBox1.SuspendLayout();
+            this.groupBoxApplyTo.SuspendLayout();
             this.groupBoxPreview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
             this.SuspendLayout();
             // 
-            // groupBox1
+            // groupBoxApplyTo
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this.labelAdvancedSelection);
-            this.groupBox1.Controls.Add(this.buttonAdvancedSelection);
-            this.groupBox1.Controls.Add(this.radioButtonAdvancedSelection);
-            this.groupBox1.Controls.Add(this.radioButtonAllLines);
-            this.groupBox1.Controls.Add(this.radioButtonSelectedLines);
-            this.groupBox1.Location = new System.Drawing.Point(540, 40);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(246, 156);
-            this.groupBox1.TabIndex = 1;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Apply to";
+            this.groupBoxApplyTo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxApplyTo.Controls.Add(this.labelAdvancedSelection);
+            this.groupBoxApplyTo.Controls.Add(this.buttonAdvancedSelection);
+            this.groupBoxApplyTo.Controls.Add(this.radioButtonAdvancedSelection);
+            this.groupBoxApplyTo.Controls.Add(this.radioButtonAllLines);
+            this.groupBoxApplyTo.Controls.Add(this.radioButtonSelectedLines);
+            this.groupBoxApplyTo.Location = new System.Drawing.Point(540, 40);
+            this.groupBoxApplyTo.Name = "groupBoxApplyTo";
+            this.groupBoxApplyTo.Size = new System.Drawing.Size(246, 156);
+            this.groupBoxApplyTo.TabIndex = 1;
+            this.groupBoxApplyTo.TabStop = false;
+            this.groupBoxApplyTo.Text = "Apply to";
             // 
             // labelAdvancedSelection
             // 
@@ -231,7 +231,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 26);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // ApplyCustomStyles
@@ -245,7 +245,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.labelOverrideTags);
             this.Controls.Add(this.groupBoxPreview);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.groupBoxApplyTo);
             this.Controls.Add(this.seTextBox1);
             this.KeyPreview = true;
             this.MinimumSize = new System.Drawing.Size(800, 245);
@@ -256,8 +256,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.Text = "ApplyCustomStyles";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ApplyCustomStyles_FormClosing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ApplyCustomStyles_KeyDown);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.groupBoxApplyTo.ResumeLayout(false);
+            this.groupBoxApplyTo.PerformLayout();
             this.groupBoxPreview.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).EndInit();
             this.ResumeLayout(false);
@@ -268,7 +268,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         #endregion
 
         private Controls.SETextBox seTextBox1;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBoxApplyTo;
         private System.Windows.Forms.GroupBox groupBoxPreview;
         private System.Windows.Forms.Label labelOverrideTags;
         private System.Windows.Forms.Button buttonOK;

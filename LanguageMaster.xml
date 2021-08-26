@@ -9,9 +9,12 @@
     <Ok>&amp;OK</Ok>
     <Cancel>C&amp;ancel</Cancel>
     <Apply>Apply</Apply>
+    <ApplyTo>ApplyTo</ApplyTo>
     <None>None</None>
     <All>All</All>
     <Preview>Preview</Preview>
+    <ShowPreview>Show preview</ShowPreview>
+    <HidePreview>Hide preview</HidePreview>
     <SubtitleFiles>Subtitle files</SubtitleFiles>
     <AllFiles>All files</AllFiles>
     <VideoFiles>Video files</VideoFiles>
@@ -222,6 +225,8 @@ Note: Do check free disk space.</WaveFileMalformed>
     <SetPosInfo>Click on video to toggle set/move position</SetPosInfo>
     <Clipboard>Clipboard</Clipboard>
     <ResolutionMissing>PlayResX/PlayResY are not set - set the resolution now?</ResolutionMissing>
+    <RotateXAxis>Rotate {0} axis</RotateXAxis>
+    <DistortX>Distort {0}</DistortX>
   </AssaSetPosition>
   <AudioToText>
     <Title>Audio to text</Title>
@@ -1283,6 +1288,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <SplitLineAtCursorAndWaveformPosition>Split line at cursor/video position</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>Auto duration (current line)</AutoDurationCurrentLine>
         <SelectAll>Select all</SelectAll>
+        <Insert>Insert</Insert>
         <InsertFirstLine>Insert line</InsertFirstLine>
         <InsertBefore>Insert before</InsertBefore>
         <InsertAfter>Insert after</InsertAfter>
@@ -1327,6 +1333,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <ShowSelectedLinesEarlierLater>Show selected lines earlier/later...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Visual sync selected lines...</VisualSyncSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Google/Microsoft translate original line</GoogleAndMicrosoftTranslateSelectedLine>
+        <SelectedLines>Selected lines</SelectedLines>
         <TranslateSelectedLines>Translate selected lines...</TranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Adjust durations for selected lines...</AdjustDisplayDurationForSelectedLines>
         <ApplyDurationLimitsForSelectedLines>Apply duration limits for selected lines...</ApplyDurationLimitsForSelectedLines>

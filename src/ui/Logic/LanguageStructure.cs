@@ -13,9 +13,12 @@
             public string Ok { get; set; }
             public string Cancel { get; set; }
             public string Apply { get; set; }
+            public string ApplyTo { get; set; }
             public string None { get; set; }
             public string All { get; set; }
             public string Preview { get; set; }
+            public string ShowPreview { get; set; }
+            public string HidePreview { get; set; }
             public string SubtitleFiles { get; set; }
             public string AllFiles { get; set; }
             public string VideoFiles { get; set; }
@@ -236,6 +239,8 @@
             public string SetPosInfo { get; set; }
             public string Clipboard { get; set; }
             public string ResolutionMissing { get; set; }
+            public string RotateXAxis { get; set; }
+            public string DistortX { get; set; }
         }
 
         public class AudioToText
@@ -1669,6 +1674,7 @@
                     public string SplitLineAtCursorAndWaveformPosition { get; set; }
                     public string AutoDurationCurrentLine { get; set; }
                     public string SelectAll { get; set; }
+                    public string Insert { get; set; }
                     public string InsertFirstLine { get; set; }
                     public string InsertBefore { get; set; }
                     public string InsertAfter { get; set; }
@@ -1713,6 +1719,7 @@
                     public string ShowSelectedLinesEarlierLater { get; set; }
                     public string VisualSyncSelectedLines { get; set; }
                     public string GoogleAndMicrosoftTranslateSelectedLine { get; set; }
+                    public string SelectedLines { get; set; }
                     public string TranslateSelectedLines { get; set; }
                     public string AdjustDisplayDurationForSelectedLines { get; set; }
                     public string ApplyDurationLimitsForSelectedLines { get; set; }

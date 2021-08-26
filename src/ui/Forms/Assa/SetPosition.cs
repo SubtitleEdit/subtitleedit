@@ -56,6 +56,13 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             radioButtonClipboard.Text = LanguageSettings.Current.AssaSetPosition.Clipboard;
             labelInfo.Text = LanguageSettings.Current.AssaSetPosition.SetPosInfo;
             groupBoxPreview.Text = LanguageSettings.Current.General.Preview;
+            groupBoxApplyTo.Text = LanguageSettings.Current.General.ApplyTo;
+            labelCurrentTextPosition.Text = string.Format(LanguageSettings.Current.AssaSetPosition.CurrentTextPositionX, string.Empty);
+            labelRotateX.Text = string.Format(LanguageSettings.Current.AssaSetPosition.RotateXAxis, "X");
+            labelRotateY.Text = string.Format(LanguageSettings.Current.AssaSetPosition.RotateXAxis, "Y");
+            labelRotateZ.Text = string.Format(LanguageSettings.Current.AssaSetPosition.RotateXAxis, "Z");
+            labelDistortX.Text = string.Format(LanguageSettings.Current.AssaSetPosition.DistortX, "X");
+            labelDistortY.Text = string.Format(LanguageSettings.Current.AssaSetPosition.DistortX, "Y");
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 

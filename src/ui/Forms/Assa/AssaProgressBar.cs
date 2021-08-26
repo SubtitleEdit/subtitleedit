@@ -14,17 +14,17 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.Assa
 {
-    public partial class AssaProgressBar : Form
+    public sealed partial class AssaProgressBar : Form
     {
         private readonly List<AssaAttachmentFont> _fontAttachments;
-        private Subtitle _subtitle;
+        private readonly Subtitle _subtitle;
         private Subtitle _progessBarSubtitle;
-        private string _videoFileName;
-        private VideoInfo _videoInfo;
-        private Timer _timer1;
+        private readonly string _videoFileName;
+        private readonly VideoInfo _videoInfo;
+        private readonly Timer _timerRender;
         private int _oldHashValue = -1;
-        private Subtitle _chapters;
-        private Controls.VideoPlayerContainer _videoPlayerContainer;
+        private readonly Subtitle _chapters;
+        private readonly Controls.VideoPlayerContainer _videoPlayerContainer;
 
         public AssaProgressBar(Subtitle subtitle, string videoFileName, VideoInfo videoInfo)
         {
@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             radioButtonPosBottom.Text = l.Bottom;
             radioButtonPosTop.Text = l.Top;
             labelHeight.Text = LanguageSettings.Current.General.Height;
-            buttonForeColor.Text = "Color";
+            buttonForeColor.Text = LanguageSettings.Current.Settings.WaveformColor;
             buttonSecondaryColor.Text = LanguageSettings.Current.Settings.SubtitleBackgroundColor;
             labelEdgeStyle.Text = LanguageSettings.Current.General.Style;
             groupBoxChapters.Text = l.Chapters;
@@ -60,8 +60,15 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             buttonAdd.Text = LanguageSettings.Current.SubStationAlphaStyles.New;
             buttonRemove.Text = LanguageSettings.Current.SubStationAlphaStyles.Remove;
             buttonRemoveAll.Text = LanguageSettings.Current.SubStationAlphaStyles.RemoveAll;
+            buttonTextColor.Text = LanguageSettings.Current.Settings.WaveformTextColor;
             columnHeaderName.Text = LanguageSettings.Current.General.Text;
             columnHeaderStart.Text = LanguageSettings.Current.General.StartTime;
+
+            comboBoxTextHorizontalAlignment.Items.Clear();
+            comboBoxTextHorizontalAlignment.Items.Add(LanguageSettings.Current.ExportPngXml.Left);
+            comboBoxTextHorizontalAlignment.Items.Add(LanguageSettings.Current.ExportPngXml.Center);
+            comboBoxTextHorizontalAlignment.Items.Add(LanguageSettings.Current.ExportPngXml.Right);
+
             comboBoxProgressBarEdge.Items.Clear();
             comboBoxProgressBarEdge.Items.Add(l.SquareCorners);
             comboBoxProgressBarEdge.Items.Add(l.RoundedCorners);
@@ -130,9 +137,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             LoadExistingProgressBarSettings();
 
-            _timer1 = new Timer();
-            _timer1.Interval = 100;
-            _timer1.Tick += _timer1_Tick;
+            _timerRender = new Timer { Interval = 100 };
+            _timerRender.Tick += TimerRenderTick;
         }
 
         private void InitializeFromSettings()
@@ -376,12 +382,12 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             DialogResult = DialogResult.OK;
         }
 
-        private void buttonCancel_Click(object sender, System.EventArgs e)
+        private void buttonCancel_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
         }
 
-        private void buttonPickAttachmentFont_Click(object sender, System.EventArgs e)
+        private void buttonPickAttachmentFont_Click(object sender, EventArgs e)
         {
             using (var form = new ChooseAssaFontName(_fontAttachments))
             {
@@ -392,13 +398,13 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
         }
 
-        private void buttonRemoveAll_Click(object sender, System.EventArgs e)
+        private void buttonRemoveAll_Click(object sender, EventArgs e)
         {
             _chapters.Paragraphs.Clear();
             RefreshListView();
         }
 
-        private void buttonRemove_Click(object sender, System.EventArgs e)
+        private void buttonRemove_Click(object sender, EventArgs e)
         {
             if (listViewChapters.SelectedItems.Count == 0)
             {
@@ -414,7 +420,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             RefreshListView();
         }
 
-        private void buttonForeColor_Click(object sender, System.EventArgs e)
+        private void buttonForeColor_Click(object sender, EventArgs e)
         {
             using (var colorChooser = new ColorChooser { Color = panelPrimaryColor.BackColor })
             {
@@ -425,7 +431,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
         }
 
-        private void buttonSecondaryColor_Click(object sender, System.EventArgs e)
+        private void buttonSecondaryColor_Click(object sender, EventArgs e)
         {
             using (var colorChooser = new ColorChooser { Color = panelSecondaryColor.BackColor })
             {
@@ -436,12 +442,12 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
         }
 
-        private void panelPrimaryColor_Click(object sender, System.EventArgs e)
+        private void panelPrimaryColor_Click(object sender, EventArgs e)
         {
             buttonForeColor_Click(null, null);
         }
 
-        private void panelSecondaryColor_Click(object sender, System.EventArgs e)
+        private void panelSecondaryColor_Click(object sender, EventArgs e)
         {
             buttonSecondaryColor_Click(null, null);
         }
@@ -475,12 +481,12 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private void VideoStartLoaded(object sender, EventArgs e)
         {
             _videoPlayerContainer.Pause();
-            _timer1.Start();
+            _timerRender.Start();
         }
 
         private void AssaProgressBar_FormClosing(object sender, FormClosingEventArgs e)
         {
-            _timer1.Stop();
+            _timerRender.Stop();
             Application.DoEvents();
             _videoPlayerContainer?.Pause();
             _videoPlayerContainer?.VideoPlayer?.DisposeVideoPlayer();
@@ -517,7 +523,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             listViewChapters.SelectedItems[0].SubItems[1].Text = p.StartTime.ToDisplayString();
         }
 
-        private void _timer1_Tick(object sender, EventArgs e)
+        private void TimerRenderTick(object sender, EventArgs e)
         {
             _progessBarSubtitle = new Subtitle();
             var script = @"[Script Info]
@@ -620,7 +626,7 @@ Dialogue: -255,0:00:00.00,0:43:00.00,SE-progress-bar-bg,,0,0,0,,[PB_DRAWING]";
                                 $"{position + numericUpDownSplitterWidth.Value} {splitterTop + numericUpDownSplitterHeight.Value} " + // bottom right point
                                 $"{position} {splitterTop + numericUpDownSplitterHeight.Value} " + // bottom left point
                                 $"{position} {splitterTop}" + // top left point
-                                $"{{\\p0}}";
+                                "{{\\p0}}";
 
                         }
                         else
@@ -637,7 +643,7 @@ Dialogue: -255,0:00:00.00,0:43:00.00,SE-progress-bar-bg,,0,0,0,,[PB_DRAWING]";
                                 $"{position + numericUpDownSplitterWidth.Value} {splitterTop + numericUpDownSplitterHeight.Value} " + // bottom right point
                                 $"{position} {splitterTop + numericUpDownSplitterHeight.Value} " + // bottom left point
                                 $"{position} {splitterTop}" + // top left point
-                                $"{{\\p0}}";
+                                "{{\\p0}}";
                         }
 
                         if (i > 0)

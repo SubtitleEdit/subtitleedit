@@ -1720,6 +1720,7 @@ namespace Nikse.SubtitleEdit.Forms
             videoResolutionResamplerToolStripMenuItem.Text = _language.Menu.ContextMenu.AssaResolutionChanger;
 
             toolStripMenuItemDelete.Text = _language.Menu.ContextMenu.Delete;
+            toolStripMenuItemInsert.Text = _language.Menu.ContextMenu.Insert;
             insertLineToolStripMenuItem.Text = _language.Menu.ContextMenu.InsertFirstLine;
             toolStripMenuItemEmptyGoToSourceView.Text = _language.Menu.ContextMenu.GoToSourceView;
             toolStripMenuItemInsertBefore.Text = _language.Menu.ContextMenu.InsertBefore;
@@ -1770,6 +1771,7 @@ namespace Nikse.SubtitleEdit.Forms
             showSelectedLinesEarlierlaterToolStripMenuItem.Text = _language.Menu.ContextMenu.ShowSelectedLinesEarlierLater;
             visualSyncSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.VisualSyncSelectedLines;
             toolStripMenuItemGoogleMicrosoftTranslateSelLine.Text = _language.Menu.ContextMenu.GoogleAndMicrosoftTranslateSelectedLine;
+            toolStripMenuItemSelectedLines.Text = _language.Menu.ContextMenu.SelectedLines;
 
             toolStripMenuItemAutoTranslate.Text = _language.Menu.AutoTranslate.Title;
             genericTranslateToolStripMenuItem.Text = _language.Menu.AutoTranslate.AutoTranslate;

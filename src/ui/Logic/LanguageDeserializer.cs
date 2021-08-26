@@ -82,6 +82,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "General/Apply":
                     language.General.Apply = reader.Value;
                     break;
+                case "General/ApplyTo":
+                    language.General.ApplyTo = reader.Value;
+                    break;
                 case "General/None":
                     language.General.None = reader.Value;
                     break;
@@ -90,6 +93,12 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "General/Preview":
                     language.General.Preview = reader.Value;
+                    break;
+                case "General/ShowPreview":
+                    language.General.ShowPreview = reader.Value;
+                    break;
+                case "General/HidePreview":
+                    language.General.HidePreview = reader.Value;
                     break;
                 case "General/SubtitleFiles":
                     language.General.SubtitleFiles = reader.Value;
@@ -594,6 +603,12 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "AssaSetPosition/ResolutionMissing":
                     language.AssaSetPosition.ResolutionMissing = reader.Value;
+                    break;
+                case "AssaSetPosition/RotateXAxis":
+                    language.AssaSetPosition.RotateXAxis = reader.Value;
+                    break;
+                case "AssaSetPosition/DistortX":
+                    language.AssaSetPosition.DistortX = reader.Value;
                     break;
                 case "AudioToText/Title":
                     language.AudioToText.Title = reader.Value;
@@ -4204,6 +4219,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/ContextMenu/SelectAll":
                     language.Main.Menu.ContextMenu.SelectAll = reader.Value;
                     break;
+                case "Main/Menu/ContextMenu/Insert":
+                    language.Main.Menu.ContextMenu.Insert = reader.Value;
+                    break;
                 case "Main/Menu/ContextMenu/InsertFirstLine":
                     language.Main.Menu.ContextMenu.InsertFirstLine = reader.Value;
                     break;
@@ -4335,6 +4353,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Main/Menu/ContextMenu/GoogleAndMicrosoftTranslateSelectedLine":
                     language.Main.Menu.ContextMenu.GoogleAndMicrosoftTranslateSelectedLine = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/SelectedLines":
+                    language.Main.Menu.ContextMenu.SelectedLines = reader.Value;
                     break;
                 case "Main/Menu/ContextMenu/TranslateSelectedLines":
                     language.Main.Menu.ContextMenu.TranslateSelectedLines = reader.Value;
