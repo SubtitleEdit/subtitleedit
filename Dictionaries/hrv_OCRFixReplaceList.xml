@@ -142,6 +142,7 @@
     <Word from="čas" to="sat" />
     <Word from="četvoro" to="četvero" />
     <Word from="Čitaću" to="Čitat ću" />
+    <Word from="čitaću" to="čitat ću" />
     <Word from="čerku" to="kćer" />
     <Word from="Čerku" to="Kćer" />
     <Word from="čud" to="ćud" />
@@ -937,6 +938,7 @@
     <Word from="obe" to="obje" />
     <Word from="Obe" to="Obje" />
     <Word from="obema" to="objema" />
+    <Word from="obezbede" to="osiguraju" />
     <Word from="Obezbeđuju" to="Osiguravaju" />
     <Word from="obezbeđuju" to="osiguravaju" />
     <Word from="objekat" to="objekt" />
@@ -1140,6 +1142,7 @@
     <Word from="poeni" to="bodovi" />
     <Word from="Poeni" to="Bodovi" />
     <Word from="poenima" to="bodovima" />
+    <Word from="pojačaću" to="pojačat ću" />
     <Word from="Pokušaču" to="Pokušat ću" />
     <Word from="poleće" to="polijeće" />
     <Word from="Polcija" to="Policija" />
@@ -3228,6 +3231,7 @@
     <RegEx find="sačeka" replaceWith="pričeka" />
     <RegEx find="Sačeka" replaceWith="Pričeka" />
     <RegEx find="aglasno" replaceWith="uglasno" />
+    <RegEx find="samk" replaceWith="samo" />
     <RegEx find="\bsam sam\b" replaceWith="sam sâm" />
     <RegEx find="amoubic" replaceWith="amoubojic" />
     <RegEx find="\bsanti" replaceWith="centi" />
