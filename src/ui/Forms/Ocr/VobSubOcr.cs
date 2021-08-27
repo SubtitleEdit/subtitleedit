@@ -556,6 +556,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             deleteToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.Delete;
             imagePreprocessingToolStripMenuItem1.Text = language.ImagePreProcessing;
             ImagePreProcessingToolStripMenuItem.Text = language.ImagePreProcessing;
+            autoTransparentBackgroundToolStripMenuItem.Text = language.AutoTransparentBackground;
             toolStripMenuItemSaveSubtitleAs.Text = LanguageSettings.Current.Main.SaveSubtitleAs;
             toolStripMenuItemExport.Text = LanguageSettings.Current.Main.Menu.File.Export;
             vobSubToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.File.ExportVobSub;
