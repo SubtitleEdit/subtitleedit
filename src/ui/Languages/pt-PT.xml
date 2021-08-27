@@ -10,9 +10,12 @@ Email: mailto:hugokarvalho@hotmail.com</TranslatedBy>
     <Ok>&amp;OK</Ok>
     <Cancel>C&amp;ancelar</Cancel>
     <Apply>Aplicar</Apply>
+    <ApplyTo>Aplicar a</ApplyTo>
     <None>Nenhum</None>
     <All>Todas</All>
     <Preview>Pré-visualizar</Preview>
+    <ShowPreview>Mostrar pré-visualização</ShowPreview>
+    <HidePreview>Ocultar pré-visualização</HidePreview>
     <SubtitleFiles>Ficheiros de legendas</SubtitleFiles>
     <AllFiles>Todos os ficheiros</AllFiles>
     <VideoFiles>Ficheiros de vídeo</VideoFiles>
@@ -223,6 +226,8 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <SetPosInfo>Clique no vídeo para alternar a posição definir/mover</SetPosInfo>
     <Clipboard>Área de transferência</Clipboard>
     <ResolutionMissing>PlayResX/PlayResY não estão definidos - definir a resolução agora?</ResolutionMissing>
+    <RotateXAxis>Rodar o eixo {0}</RotateXAxis>
+    <DistortX>Distorcer {0}</DistortX>
   </AssaSetPosition>
   <AudioToText>
     <Title>Áudio para texto</Title>
@@ -273,6 +278,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <BridgeGaps>Unir intervalos</BridgeGaps>
     <PlainText>Texto sem formatação</PlainText>
     <Ocr>OCR...</Ocr>
+    <AddFiles>Adicionar ficheiros...</AddFiles>
     <Filter>Filtro</Filter>
     <FilterSkipped>Ignorado pelo filtro</FilterSkipped>
     <FilterSrtNoUtf8BOM>Ficheiros SubRip (.srt) sem o cabeçalho UTF-8 BOM</FilterSrtNoUtf8BOM>
@@ -1284,6 +1290,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <SplitLineAtCursorAndWaveformPosition>Dividir linha a partir do cursor/posição de vídeo</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>Duração automática (linha corrente)</AutoDurationCurrentLine>
         <SelectAll>Seleccionar tudo</SelectAll>
+        <Insert>Inserir</Insert>
         <InsertFirstLine>Inserir linha</InsertFirstLine>
         <InsertBefore>Inserir antes</InsertBefore>
         <InsertAfter>Inserir depois</InsertAfter>
@@ -1328,6 +1335,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <ShowSelectedLinesEarlierLater>Mostrar linhas seleccionadas antes/depois...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Sincronia visual das linhas seleccionadas...</VisualSyncSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Google/Microsoft traduzir linha original</GoogleAndMicrosoftTranslateSelectedLine>
+        <SelectedLines>Linhas selecionadas</SelectedLines>
         <TranslateSelectedLines>Traduzir linhas seleccionadas...</TranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Ajustar duração das linhas seleccionadas...</AdjustDisplayDurationForSelectedLines>
         <ApplyDurationLimitsForSelectedLines>Aplicar limites de duração às linhas seleccionadas...</ApplyDurationLimitsForSelectedLines>
