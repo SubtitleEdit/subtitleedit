@@ -20245,6 +20245,36 @@ namespace Nikse.SubtitleEdit.Forms
 
                 SetUndockedWindowsTitle();
                 ShowSubtitleTimer.Start();
+
+                if (Configuration.Settings.SubtitleSettings.AssaResolutionAutoNew && IsAssa() && _videoInfo?.Height > 0)
+                {
+                    var oldPlayResX = AdvancedSubStationAlpha.GetTagValueFromHeader("PlayResX", "[Script Info]", _subtitle.Header);
+                    var oldPlayResY = AdvancedSubStationAlpha.GetTagValueFromHeader("PlayResY", "[Script Info]", _subtitle.Header);
+
+                    if (oldPlayResX == null || oldPlayResY == null)
+                    {
+                        SetAssaResolution();
+                        var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(_subtitle.Header);
+                        foreach (var style in styles)
+                        {
+                            if (style.FontSize <= 25)
+                            {
+                                const int defaultAssaHeight = 288;
+                                style.FontSize = AssaResampler.Resample(defaultAssaHeight, _videoInfo.Height, style.FontSize);
+                            }
+                        }
+                        _subtitle.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(_subtitle.Header, styles);
+                    }
+                    else if (oldPlayResX == _videoInfo.Width.ToString(CultureInfo.InvariantCulture) &&
+                             oldPlayResY == _videoInfo.Height.ToString(CultureInfo.InvariantCulture))
+                    {
+                        // all good - correct resolution
+                    }
+                    else if (Configuration.Settings.SubtitleSettings.AssaResolutionPromptChange)
+                    {
+                        videoResolutionResamplerToolStripMenuItem_Click(null, null);
+                    }
+                }
             }
         }
 
@@ -20885,8 +20915,8 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         catch
                         {
-                            // ignore
-                        }
+                        // ignore
+                    }
                     }
                     _lastFormWindowState = WindowState;
                 });
@@ -30617,7 +30647,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 s = s.Remove(endIndex, 7);
                             }
-                            else 
+                            else
                             {
                                 endIndex = s.IndexOf("< /font>", match.Index - 5, StringComparison.OrdinalIgnoreCase);
                                 if (endIndex >= 0)
@@ -30929,8 +30959,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch
                 {
-                    // Ignore
-                }
+                // Ignore
+            }
             });
         }
 

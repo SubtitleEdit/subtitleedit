@@ -537,6 +537,8 @@ namespace Nikse.SubtitleEdit.Core.Common
     {
         public List<AssaStorageCategory> AssaStyleStorageCategories { get; set; }
         public List<string> AssaOverrideTagHistory { get; set; }
+        public bool AssaResolutionAutoNew { get; set; }
+        public bool AssaResolutionPromptChange { get; set; }
 
         public string DCinemaFontFile { get; set; }
         public string DCinemaLoadFontResource { get; set; }
@@ -619,6 +621,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             AssaStyleStorageCategories = new List<AssaStorageCategory>();
             AssaOverrideTagHistory = new List<string>();
+            AssaResolutionAutoNew = true;
+            AssaResolutionPromptChange = true;
 
             DCinemaFontFile = "Arial.ttf";
             DCinemaLoadFontResource = "urn:uuid:3dec6dc0-39d0-498d-97d0-928d2eb78391";
@@ -5434,6 +5438,18 @@ $HorzAlign          =   Center
                     }
                 }
 
+                subNode = node.SelectSingleNode("AssaResolutionAutoNew");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.AssaResolutionAutoNew = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
+                subNode = node.SelectSingleNode("AssaResolutionPromptChange");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.AssaResolutionPromptChange = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
                 subNode = node.SelectSingleNode("DCinemaFontFile");
                 if (subNode != null)
                 {
@@ -9036,6 +9052,9 @@ $HorzAlign          =   Center
                     textWriter.WriteElementString("Tag", tag);
                 }
                 textWriter.WriteEndElement();
+
+                textWriter.WriteElementString("AssaResolutionAutoNew", settings.SubtitleSettings.AssaResolutionAutoNew.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AssaResolutionPromptChange", settings.SubtitleSettings.AssaResolutionPromptChange.ToString(CultureInfo.InvariantCulture));
 
                 textWriter.WriteElementString("DCinemaFontFile", settings.SubtitleSettings.DCinemaFontFile);
                 textWriter.WriteElementString("DCinemaFontSize", settings.SubtitleSettings.DCinemaFontSize.ToString(CultureInfo.InvariantCulture));
