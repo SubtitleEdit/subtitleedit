@@ -18550,7 +18550,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (!string.IsNullOrEmpty(_subtitleOriginalFileName))
                 {
-                    text += Configuration.Settings.General.TitleBarFullFileName ? _fileName : Path.GetFileName(_fileName);
+                    text += Configuration.Settings.General.TitleBarFullFileName ? _subtitleOriginalFileName : Path.GetFileName(_subtitleOriginalFileName);
                 }
                 else
                 {
