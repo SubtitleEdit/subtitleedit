@@ -145,11 +145,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else if (f == "outline")
                 {
-                    sb.Append(ColorTranslator.ToWin32(Outline));
+                    sb.Append(OutlineWidth.ToString(CultureInfo.InvariantCulture));
                 }
                 else if (f == "shadow")
                 {
-                    sb.Append(OutlineWidth.ToString(CultureInfo.InvariantCulture));
+                    sb.Append(ShadowWidth.ToString(CultureInfo.InvariantCulture));
                 }
                 else if (f == "marginl")
                 {
