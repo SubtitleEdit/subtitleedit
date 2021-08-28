@@ -191,6 +191,14 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     sb.Append(Angle.ToString(CultureInfo.InvariantCulture));
                 }
+                else if (f == "alignment")
+                {
+                    sb.Append(Alignment);
+                }
+                else if (f == "alphalevel")
+                {
+                    sb.Append("0");
+                }
 
                 sb.Append(',');
             }
