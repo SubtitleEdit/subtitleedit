@@ -1651,6 +1651,7 @@
                     public string Help { get; set; }
                     public string ShowHideWaveform { get; set; }
                     public string ShowHideVideo { get; set; }
+                    public string AssaDraw { get; set; }
                 }
 
                 public class ListViewContextMenu

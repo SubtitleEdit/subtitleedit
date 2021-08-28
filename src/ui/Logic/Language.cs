@@ -1803,6 +1803,7 @@ namespace Nikse.SubtitleEdit.Logic
                         Help = "Help",
                         ShowHideWaveform = "Show/hide waveform",
                         ShowHideVideo = "Show/hide video",
+                        AssaDraw = "Advanced Sub Station Alpha draw",
                     },
 
                     ContextMenu = new LanguageStructure.Main.MainMenu.ListViewContextMenu
