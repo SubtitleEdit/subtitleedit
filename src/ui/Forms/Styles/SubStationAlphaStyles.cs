@@ -1551,7 +1551,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         {
             if (listViewStyles.SelectedItems.Count == 1 && _doUpdate)
             {
-                string name = listViewStyles.SelectedItems[0].Text;
+                var name = listViewStyles.SelectedItems[0].Text;
                 SetSsaStyle(name, "outline", numericUpDownOutline.Value.ToString(CultureInfo.InvariantCulture));
                 GeneratePreview();
             }
@@ -1561,7 +1561,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         {
             if (listViewStyles.SelectedItems.Count == 1 && _doUpdate)
             {
-                string name = listViewStyles.SelectedItems[0].Text;
+                var name = listViewStyles.SelectedItems[0].Text;
                 SetSsaStyle(name, "shadow", numericUpDownShadowWidth.Value.ToString(CultureInfo.InvariantCulture));
                 GeneratePreview();
             }
@@ -1571,7 +1571,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         {
             if (sender is RadioButton rb && listViewStyles.SelectedItems.Count == 1 && _doUpdate && rb.Checked)
             {
-                string name = listViewStyles.SelectedItems[0].Text;
+                var name = listViewStyles.SelectedItems[0].Text;
                 SetSsaStyle(name, "outline", numericUpDownOutline.Value.ToString(CultureInfo.InvariantCulture));
                 SetSsaStyle(name, "borderstyle", "1");
                 GeneratePreview();
@@ -1582,7 +1582,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         {
             if (sender is RadioButton rb && listViewStyles.SelectedItems.Count == 1 && _doUpdate && rb.Checked)
             {
-                string name = listViewStyles.SelectedItems[0].Text;
+                var name = listViewStyles.SelectedItems[0].Text;
                 SetSsaStyle(name, "outline", numericUpDownOutline.Value.ToString(CultureInfo.InvariantCulture));
                 SetSsaStyle(name, "borderstyle", "3");
                 GeneratePreview();
