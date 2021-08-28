@@ -73,6 +73,7 @@ namespace Nikse.SubtitleEdit.Forms
         private long _sourceTextTicks = -1;
 
         private int _videoAudioTrackNumber = -1;
+
         public int VideoAudioTrackNumber
         {
             get => _videoAudioTrackNumber;
@@ -84,6 +85,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         ReloadWaveform(VideoFileName, value);
                     }
+
                     _videoAudioTrackNumber = value;
                 }
             }
@@ -152,8 +154,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool _cleanupHasRun;
         private bool _cancelWordSpellCheck = true;
+
         private bool IsLiveSpellCheckEnabled => Configuration.Settings.Tools.LiveSpellCheck &&
                                                 Configuration.Settings.General.SubtitleTextBoxSyntaxColor;
+
         private bool _clearLastFind;
         private FindType _clearLastFindType = FindType.Normal;
         private string _clearLastFindText = string.Empty;
@@ -235,6 +239,7 @@ namespace Nikse.SubtitleEdit.Forms
                             ComboBoxSubtitleFormatsSelectedIndexChanged(null, null);
                             _makeHistoryPaused = false;
                         }
+
                         return;
                     }
 
@@ -266,6 +271,7 @@ namespace Nikse.SubtitleEdit.Forms
                     numericUpDownDuration.Width += 5;
                     labelDuration.Left = numericUpDownDuration.Left - 3;
                 }
+
                 var xDiff = timeUpDownStartTime.Top - (labelStartTime.Top + labelStartTime.Height);
                 if (xDiff < 0) // DPI auto-size fixes: see https://github.com/SubtitleEdit/subtitleedit/issues/3981
                 {
@@ -1047,6 +1053,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var deleteIdx = audioVisualizer.GetSceneChangeIndex(sceneChange);
                     RemoveSceneChange(deleteIdx);
                 }
+
                 return;
             }
 
@@ -1318,6 +1325,7 @@ namespace Nikse.SubtitleEdit.Forms
                             SubtitleListview1.SyntaxColorLineBackground(_subtitle.Paragraphs, index + 1, next);
                         }
                     }
+
                     if (e.MouseDownParagraphType == AudioVisualizer.MouseDownParagraphType.Start)
                     {
                         var prev = _subtitle.GetParagraphOrDefault(index - 1);
@@ -1704,6 +1712,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonAssStyleManager.ToolTipText = LanguageSettings.Current.SubStationAlphaStyles.Title;
             toolStripButtonAssProperties.ToolTipText = LanguageSettings.Current.SubStationAlphaProperties.Title;
             toolStripButtonAssAttachments.ToolTipText = LanguageSettings.Current.AssaAttachments.Title;
+            toolStripButtonAssaDraw.ToolTipText = _language.Menu.ToolBar.AssaDraw;
             toolStripButtonSettings.ToolTipText = _language.Menu.ToolBar.Settings;
             toolStripButtonHelp.ToolTipText = _language.Menu.ToolBar.Help;
             toolStripButtonToggleWaveform.ToolTipText = _language.Menu.ToolBar.ShowHideWaveform;
@@ -1944,146 +1953,146 @@ namespace Nikse.SubtitleEdit.Forms
             DvdSubtitleLanguage.Language.CultureName = LanguageSettings.Current.General.CultureName;
             DvdSubtitleLanguage.Language.LanguageNames = new Dictionary<string, string>
             {
-                {  "aa", LanguageSettings.Current.LanguageNames.aaName },
-                {  "ab", LanguageSettings.Current.LanguageNames.abName },
-                {  "af", LanguageSettings.Current.LanguageNames.afName },
-                {  "am", LanguageSettings.Current.LanguageNames.amName },
-                {  "ar", LanguageSettings.Current.LanguageNames.arName },
-                {  "as", LanguageSettings.Current.LanguageNames.asName },
-                {  "ay", LanguageSettings.Current.LanguageNames.ayName },
-                {  "az", LanguageSettings.Current.LanguageNames.azName },
-                {  "ba", LanguageSettings.Current.LanguageNames.baName },
-                {  "be", LanguageSettings.Current.LanguageNames.beName },
-                {  "bg", LanguageSettings.Current.LanguageNames.bgName },
-                {  "bh", LanguageSettings.Current.LanguageNames.bhName },
-                {  "bi", LanguageSettings.Current.LanguageNames.biName },
-                {  "bn", LanguageSettings.Current.LanguageNames.bnName },
-                {  "bo", LanguageSettings.Current.LanguageNames.boName },
-                {  "br", LanguageSettings.Current.LanguageNames.brName },
-                {  "ca", LanguageSettings.Current.LanguageNames.caName },
-                {  "co", LanguageSettings.Current.LanguageNames.coName },
-                {  "cs", LanguageSettings.Current.LanguageNames.csName },
-                {  "cy", LanguageSettings.Current.LanguageNames.cyName },
-                {  "da", LanguageSettings.Current.LanguageNames.daName },
-                {  "de", LanguageSettings.Current.LanguageNames.deName },
-                {  "dz", LanguageSettings.Current.LanguageNames.dzName },
-                {  "el", LanguageSettings.Current.LanguageNames.elName },
-                {  "en", LanguageSettings.Current.LanguageNames.enName },
-                {  "eo", LanguageSettings.Current.LanguageNames.eoName },
-                {  "es", LanguageSettings.Current.LanguageNames.esName },
-                {  "et", LanguageSettings.Current.LanguageNames.etName },
-                {  "eu", LanguageSettings.Current.LanguageNames.euName },
-                {  "fa", LanguageSettings.Current.LanguageNames.faName },
-                {  "fi", LanguageSettings.Current.LanguageNames.fiName },
-                {  "fj", LanguageSettings.Current.LanguageNames.fjName },
-                {  "fo", LanguageSettings.Current.LanguageNames.foName },
-                {  "fr", LanguageSettings.Current.LanguageNames.frName },
-                {  "fy", LanguageSettings.Current.LanguageNames.fyName },
-                {  "ga", LanguageSettings.Current.LanguageNames.gaName },
-                {  "gd", LanguageSettings.Current.LanguageNames.gdName },
-                {  "gl", LanguageSettings.Current.LanguageNames.glName },
-                {  "gn", LanguageSettings.Current.LanguageNames.gnName },
-                {  "gu", LanguageSettings.Current.LanguageNames.guName },
-                {  "ha", LanguageSettings.Current.LanguageNames.haName },
-                {  "he", LanguageSettings.Current.LanguageNames.heName },
-                {  "hi", LanguageSettings.Current.LanguageNames.hiName },
-                {  "hr", LanguageSettings.Current.LanguageNames.hrName },
-                {  "hu", LanguageSettings.Current.LanguageNames.huName },
-                {  "hy", LanguageSettings.Current.LanguageNames.hyName },
-                {  "ia", LanguageSettings.Current.LanguageNames.iaName },
-                {  "id", LanguageSettings.Current.LanguageNames.idName },
-                {  "ie", LanguageSettings.Current.LanguageNames.ieName },
-                {  "ik", LanguageSettings.Current.LanguageNames.ikName },
-                {  "is", LanguageSettings.Current.LanguageNames.isName },
-                {  "it", LanguageSettings.Current.LanguageNames.itName },
-                {  "iu", LanguageSettings.Current.LanguageNames.iuName },
-                {  "ja", LanguageSettings.Current.LanguageNames.jaName },
-                {  "jv", LanguageSettings.Current.LanguageNames.jvName },
-                {  "ka", LanguageSettings.Current.LanguageNames.kaName },
-                {  "kk", LanguageSettings.Current.LanguageNames.kkName },
-                {  "kl", LanguageSettings.Current.LanguageNames.klName },
-                {  "km", LanguageSettings.Current.LanguageNames.kmName },
-                {  "kn", LanguageSettings.Current.LanguageNames.knName },
-                {  "ko", LanguageSettings.Current.LanguageNames.koName },
-                {  "ks", LanguageSettings.Current.LanguageNames.ksName },
-                {  "ku", LanguageSettings.Current.LanguageNames.kuName },
-                {  "ky", LanguageSettings.Current.LanguageNames.kyName },
-                {  "la", LanguageSettings.Current.LanguageNames.laName },
-                {  "lb", LanguageSettings.Current.LanguageNames.lbName },
-                {  "ln", LanguageSettings.Current.LanguageNames.lnName },
-                {  "lo", LanguageSettings.Current.LanguageNames.loName },
-                {  "lt", LanguageSettings.Current.LanguageNames.ltName },
-                {  "lv", LanguageSettings.Current.LanguageNames.lvName },
-                {  "mg", LanguageSettings.Current.LanguageNames.mgName },
-                {  "mi", LanguageSettings.Current.LanguageNames.miName },
-                {  "mk", LanguageSettings.Current.LanguageNames.mkName },
-                {  "ml", LanguageSettings.Current.LanguageNames.mlName },
-                {  "mn", LanguageSettings.Current.LanguageNames.mnName },
-                {  "mo", LanguageSettings.Current.LanguageNames.moName },
-                {  "mr", LanguageSettings.Current.LanguageNames.mrName },
-                {  "ms", LanguageSettings.Current.LanguageNames.msName },
-                {  "mt", LanguageSettings.Current.LanguageNames.mtName },
-                {  "my", LanguageSettings.Current.LanguageNames.myName },
-                {  "na", LanguageSettings.Current.LanguageNames.naName },
-                {  "ne", LanguageSettings.Current.LanguageNames.neName },
-                {  "nl", LanguageSettings.Current.LanguageNames.nlName },
-                {  "no", LanguageSettings.Current.LanguageNames.noName },
-                {  "oc", LanguageSettings.Current.LanguageNames.ocName },
-                {  "om", LanguageSettings.Current.LanguageNames.omName },
-                {  "or", LanguageSettings.Current.LanguageNames.orName },
-                {  "pa", LanguageSettings.Current.LanguageNames.paName },
-                {  "pl", LanguageSettings.Current.LanguageNames.plName },
-                {  "ps", LanguageSettings.Current.LanguageNames.psName },
-                {  "pt", LanguageSettings.Current.LanguageNames.ptName },
-                {  "qu", LanguageSettings.Current.LanguageNames.quName },
-                {  "rm", LanguageSettings.Current.LanguageNames.rmName },
-                {  "rn", LanguageSettings.Current.LanguageNames.rnName },
-                {  "ro", LanguageSettings.Current.LanguageNames.roName },
-                {  "ru", LanguageSettings.Current.LanguageNames.ruName },
-                {  "rw", LanguageSettings.Current.LanguageNames.rwName },
-                {  "sa", LanguageSettings.Current.LanguageNames.saName },
-                {  "sd", LanguageSettings.Current.LanguageNames.sdName },
-                {  "sg", LanguageSettings.Current.LanguageNames.sgName },
-                {  "sh", LanguageSettings.Current.LanguageNames.shName },
-                {  "si", LanguageSettings.Current.LanguageNames.siName },
-                {  "sk", LanguageSettings.Current.LanguageNames.skName },
-                {  "sl", LanguageSettings.Current.LanguageNames.slName },
-                {  "sm", LanguageSettings.Current.LanguageNames.smName },
-                {  "sn", LanguageSettings.Current.LanguageNames.snName },
-                {  "so", LanguageSettings.Current.LanguageNames.soName },
-                {  "sq", LanguageSettings.Current.LanguageNames.sqName },
-                {  "sr", LanguageSettings.Current.LanguageNames.srName },
-                {  "ss", LanguageSettings.Current.LanguageNames.ssName },
-                {  "st", LanguageSettings.Current.LanguageNames.stName },
-                {  "su", LanguageSettings.Current.LanguageNames.suName },
-                {  "sv", LanguageSettings.Current.LanguageNames.svName },
-                {  "sw", LanguageSettings.Current.LanguageNames.swName },
-                {  "ta", LanguageSettings.Current.LanguageNames.taName },
-                {  "te", LanguageSettings.Current.LanguageNames.teName },
-                {  "tg", LanguageSettings.Current.LanguageNames.tgName },
-                {  "th", LanguageSettings.Current.LanguageNames.thName },
-                {  "ti", LanguageSettings.Current.LanguageNames.tiName },
-                {  "tk", LanguageSettings.Current.LanguageNames.tkName },
-                {  "tl", LanguageSettings.Current.LanguageNames.tlName },
-                {  "tn", LanguageSettings.Current.LanguageNames.tnName },
-                {  "to", LanguageSettings.Current.LanguageNames.toName },
-                {  "tr", LanguageSettings.Current.LanguageNames.trName },
-                {  "ts", LanguageSettings.Current.LanguageNames.tsName },
-                {  "tt", LanguageSettings.Current.LanguageNames.ttName },
-                {  "tw", LanguageSettings.Current.LanguageNames.twName },
-                {  "ug", LanguageSettings.Current.LanguageNames.ugName },
-                {  "uk", LanguageSettings.Current.LanguageNames.ukName },
-                {  "ur", LanguageSettings.Current.LanguageNames.urName },
-                {  "uz", LanguageSettings.Current.LanguageNames.uzName },
-                {  "vi", LanguageSettings.Current.LanguageNames.viName },
-                {  "vo", LanguageSettings.Current.LanguageNames.voName },
-                {  "wo", LanguageSettings.Current.LanguageNames.woName },
-                {  "xh", LanguageSettings.Current.LanguageNames.xhName },
-                {  "yi", LanguageSettings.Current.LanguageNames.yiName },
-                {  "yo", LanguageSettings.Current.LanguageNames.yoName },
-                {  "za", LanguageSettings.Current.LanguageNames.zaName },
-                {  "zh", LanguageSettings.Current.LanguageNames.zhName },
-                {  "zu", LanguageSettings.Current.LanguageNames.zuName },
+                { "aa", LanguageSettings.Current.LanguageNames.aaName },
+                { "ab", LanguageSettings.Current.LanguageNames.abName },
+                { "af", LanguageSettings.Current.LanguageNames.afName },
+                { "am", LanguageSettings.Current.LanguageNames.amName },
+                { "ar", LanguageSettings.Current.LanguageNames.arName },
+                { "as", LanguageSettings.Current.LanguageNames.asName },
+                { "ay", LanguageSettings.Current.LanguageNames.ayName },
+                { "az", LanguageSettings.Current.LanguageNames.azName },
+                { "ba", LanguageSettings.Current.LanguageNames.baName },
+                { "be", LanguageSettings.Current.LanguageNames.beName },
+                { "bg", LanguageSettings.Current.LanguageNames.bgName },
+                { "bh", LanguageSettings.Current.LanguageNames.bhName },
+                { "bi", LanguageSettings.Current.LanguageNames.biName },
+                { "bn", LanguageSettings.Current.LanguageNames.bnName },
+                { "bo", LanguageSettings.Current.LanguageNames.boName },
+                { "br", LanguageSettings.Current.LanguageNames.brName },
+                { "ca", LanguageSettings.Current.LanguageNames.caName },
+                { "co", LanguageSettings.Current.LanguageNames.coName },
+                { "cs", LanguageSettings.Current.LanguageNames.csName },
+                { "cy", LanguageSettings.Current.LanguageNames.cyName },
+                { "da", LanguageSettings.Current.LanguageNames.daName },
+                { "de", LanguageSettings.Current.LanguageNames.deName },
+                { "dz", LanguageSettings.Current.LanguageNames.dzName },
+                { "el", LanguageSettings.Current.LanguageNames.elName },
+                { "en", LanguageSettings.Current.LanguageNames.enName },
+                { "eo", LanguageSettings.Current.LanguageNames.eoName },
+                { "es", LanguageSettings.Current.LanguageNames.esName },
+                { "et", LanguageSettings.Current.LanguageNames.etName },
+                { "eu", LanguageSettings.Current.LanguageNames.euName },
+                { "fa", LanguageSettings.Current.LanguageNames.faName },
+                { "fi", LanguageSettings.Current.LanguageNames.fiName },
+                { "fj", LanguageSettings.Current.LanguageNames.fjName },
+                { "fo", LanguageSettings.Current.LanguageNames.foName },
+                { "fr", LanguageSettings.Current.LanguageNames.frName },
+                { "fy", LanguageSettings.Current.LanguageNames.fyName },
+                { "ga", LanguageSettings.Current.LanguageNames.gaName },
+                { "gd", LanguageSettings.Current.LanguageNames.gdName },
+                { "gl", LanguageSettings.Current.LanguageNames.glName },
+                { "gn", LanguageSettings.Current.LanguageNames.gnName },
+                { "gu", LanguageSettings.Current.LanguageNames.guName },
+                { "ha", LanguageSettings.Current.LanguageNames.haName },
+                { "he", LanguageSettings.Current.LanguageNames.heName },
+                { "hi", LanguageSettings.Current.LanguageNames.hiName },
+                { "hr", LanguageSettings.Current.LanguageNames.hrName },
+                { "hu", LanguageSettings.Current.LanguageNames.huName },
+                { "hy", LanguageSettings.Current.LanguageNames.hyName },
+                { "ia", LanguageSettings.Current.LanguageNames.iaName },
+                { "id", LanguageSettings.Current.LanguageNames.idName },
+                { "ie", LanguageSettings.Current.LanguageNames.ieName },
+                { "ik", LanguageSettings.Current.LanguageNames.ikName },
+                { "is", LanguageSettings.Current.LanguageNames.isName },
+                { "it", LanguageSettings.Current.LanguageNames.itName },
+                { "iu", LanguageSettings.Current.LanguageNames.iuName },
+                { "ja", LanguageSettings.Current.LanguageNames.jaName },
+                { "jv", LanguageSettings.Current.LanguageNames.jvName },
+                { "ka", LanguageSettings.Current.LanguageNames.kaName },
+                { "kk", LanguageSettings.Current.LanguageNames.kkName },
+                { "kl", LanguageSettings.Current.LanguageNames.klName },
+                { "km", LanguageSettings.Current.LanguageNames.kmName },
+                { "kn", LanguageSettings.Current.LanguageNames.knName },
+                { "ko", LanguageSettings.Current.LanguageNames.koName },
+                { "ks", LanguageSettings.Current.LanguageNames.ksName },
+                { "ku", LanguageSettings.Current.LanguageNames.kuName },
+                { "ky", LanguageSettings.Current.LanguageNames.kyName },
+                { "la", LanguageSettings.Current.LanguageNames.laName },
+                { "lb", LanguageSettings.Current.LanguageNames.lbName },
+                { "ln", LanguageSettings.Current.LanguageNames.lnName },
+                { "lo", LanguageSettings.Current.LanguageNames.loName },
+                { "lt", LanguageSettings.Current.LanguageNames.ltName },
+                { "lv", LanguageSettings.Current.LanguageNames.lvName },
+                { "mg", LanguageSettings.Current.LanguageNames.mgName },
+                { "mi", LanguageSettings.Current.LanguageNames.miName },
+                { "mk", LanguageSettings.Current.LanguageNames.mkName },
+                { "ml", LanguageSettings.Current.LanguageNames.mlName },
+                { "mn", LanguageSettings.Current.LanguageNames.mnName },
+                { "mo", LanguageSettings.Current.LanguageNames.moName },
+                { "mr", LanguageSettings.Current.LanguageNames.mrName },
+                { "ms", LanguageSettings.Current.LanguageNames.msName },
+                { "mt", LanguageSettings.Current.LanguageNames.mtName },
+                { "my", LanguageSettings.Current.LanguageNames.myName },
+                { "na", LanguageSettings.Current.LanguageNames.naName },
+                { "ne", LanguageSettings.Current.LanguageNames.neName },
+                { "nl", LanguageSettings.Current.LanguageNames.nlName },
+                { "no", LanguageSettings.Current.LanguageNames.noName },
+                { "oc", LanguageSettings.Current.LanguageNames.ocName },
+                { "om", LanguageSettings.Current.LanguageNames.omName },
+                { "or", LanguageSettings.Current.LanguageNames.orName },
+                { "pa", LanguageSettings.Current.LanguageNames.paName },
+                { "pl", LanguageSettings.Current.LanguageNames.plName },
+                { "ps", LanguageSettings.Current.LanguageNames.psName },
+                { "pt", LanguageSettings.Current.LanguageNames.ptName },
+                { "qu", LanguageSettings.Current.LanguageNames.quName },
+                { "rm", LanguageSettings.Current.LanguageNames.rmName },
+                { "rn", LanguageSettings.Current.LanguageNames.rnName },
+                { "ro", LanguageSettings.Current.LanguageNames.roName },
+                { "ru", LanguageSettings.Current.LanguageNames.ruName },
+                { "rw", LanguageSettings.Current.LanguageNames.rwName },
+                { "sa", LanguageSettings.Current.LanguageNames.saName },
+                { "sd", LanguageSettings.Current.LanguageNames.sdName },
+                { "sg", LanguageSettings.Current.LanguageNames.sgName },
+                { "sh", LanguageSettings.Current.LanguageNames.shName },
+                { "si", LanguageSettings.Current.LanguageNames.siName },
+                { "sk", LanguageSettings.Current.LanguageNames.skName },
+                { "sl", LanguageSettings.Current.LanguageNames.slName },
+                { "sm", LanguageSettings.Current.LanguageNames.smName },
+                { "sn", LanguageSettings.Current.LanguageNames.snName },
+                { "so", LanguageSettings.Current.LanguageNames.soName },
+                { "sq", LanguageSettings.Current.LanguageNames.sqName },
+                { "sr", LanguageSettings.Current.LanguageNames.srName },
+                { "ss", LanguageSettings.Current.LanguageNames.ssName },
+                { "st", LanguageSettings.Current.LanguageNames.stName },
+                { "su", LanguageSettings.Current.LanguageNames.suName },
+                { "sv", LanguageSettings.Current.LanguageNames.svName },
+                { "sw", LanguageSettings.Current.LanguageNames.swName },
+                { "ta", LanguageSettings.Current.LanguageNames.taName },
+                { "te", LanguageSettings.Current.LanguageNames.teName },
+                { "tg", LanguageSettings.Current.LanguageNames.tgName },
+                { "th", LanguageSettings.Current.LanguageNames.thName },
+                { "ti", LanguageSettings.Current.LanguageNames.tiName },
+                { "tk", LanguageSettings.Current.LanguageNames.tkName },
+                { "tl", LanguageSettings.Current.LanguageNames.tlName },
+                { "tn", LanguageSettings.Current.LanguageNames.tnName },
+                { "to", LanguageSettings.Current.LanguageNames.toName },
+                { "tr", LanguageSettings.Current.LanguageNames.trName },
+                { "ts", LanguageSettings.Current.LanguageNames.tsName },
+                { "tt", LanguageSettings.Current.LanguageNames.ttName },
+                { "tw", LanguageSettings.Current.LanguageNames.twName },
+                { "ug", LanguageSettings.Current.LanguageNames.ugName },
+                { "uk", LanguageSettings.Current.LanguageNames.ukName },
+                { "ur", LanguageSettings.Current.LanguageNames.urName },
+                { "uz", LanguageSettings.Current.LanguageNames.uzName },
+                { "vi", LanguageSettings.Current.LanguageNames.viName },
+                { "vo", LanguageSettings.Current.LanguageNames.voName },
+                { "wo", LanguageSettings.Current.LanguageNames.woName },
+                { "xh", LanguageSettings.Current.LanguageNames.xhName },
+                { "yi", LanguageSettings.Current.LanguageNames.yiName },
+                { "yo", LanguageSettings.Current.LanguageNames.yoName },
+                { "za", LanguageSettings.Current.LanguageNames.zaName },
+                { "zh", LanguageSettings.Current.LanguageNames.zhName },
+                { "zu", LanguageSettings.Current.LanguageNames.zuName },
             };
             DvdSubtitleLanguage.Initialize();
         }
@@ -2533,6 +2542,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
             }
+
             Configuration.Settings.General.CurrentVideoOffsetInMs = 0;
 
             openFileDialog1.InitialDirectory = file.DirectoryName;
@@ -2678,6 +2688,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         // ignored
                     }
+
                     if (f.IsMine(list, tempFileName))
                     {
                         f.LoadSubtitle(_subtitle, list, fileName);
@@ -3439,6 +3450,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     textBoxSource.Text = _subtitle.ToText(format);
                 }
+
                 SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
                 if (SubtitleListview1.Items.Count > 0)
                 {
@@ -4317,7 +4329,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (MessageBox.Show(_language.NegativeTimeWarning + Environment.NewLine +
                                         string.Format(LanguageSettings.Current.MultipleReplace.LinesFoundX, string.Join(", ", negativeTimeLines)),
-                                        Title, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                        Title, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                     {
                         return DialogResult.No;
                     }
@@ -4330,9 +4342,9 @@ namespace Nikse.SubtitleEdit.Forms
                     if (_fileDateTime != fileOnDisk && _fileDateTime != new DateTime())
                     {
                         if (MessageBox.Show(string.Format(_language.OverwriteModifiedFile,
-                                    _fileName, fileOnDisk.ToShortDateString(), fileOnDisk.ToString("HH:mm:ss"),
-                                    Environment.NewLine, _fileDateTime.ToShortDateString(), _fileDateTime.ToString("HH:mm:ss")),
-                                Title + " - " + _language.FileOnDiskModified, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                                _fileName, fileOnDisk.ToShortDateString(), fileOnDisk.ToString("HH:mm:ss"),
+                                Environment.NewLine, _fileDateTime.ToShortDateString(), _fileDateTime.ToString("HH:mm:ss")),
+                            Title + " - " + _language.FileOnDiskModified, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                         {
                             return DialogResult.No;
                         }
@@ -4753,6 +4765,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 format = new SubRip();
             }
+
             var formatType = format.GetType();
 
             if (_oldSubtitleFormat == null)
@@ -5491,6 +5504,7 @@ namespace Nikse.SubtitleEdit.Forms
                 TryLoadIcon(toolStripButtonAssStyleManager, "AssaStyle");
                 TryLoadIcon(toolStripButtonAssProperties, "AssaProperties");
                 TryLoadIcon(toolStripButtonAssAttachments, "AssaAttachments");
+                TryLoadIcon(toolStripButtonAssAttachments, "AssaDraw");
                 TryLoadIcon(toolStripButtonSettings, "Settings");
                 TryLoadIcon(toolStripButtonHelp, "Help");
                 TryLoadIcon(toolStripButtonToggleWaveform, "WaveformToggle");
@@ -5594,6 +5608,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 sb.Append(", ");
                             }
+
                             sb.Append((index + 1).ToString(CultureInfo.InvariantCulture));
                         }
                         else
@@ -5671,6 +5686,7 @@ namespace Nikse.SubtitleEdit.Forms
                     text = "<i>" + textBoxSource.SelectedText + "</i>";
                     textBoxSource.SelectedText = "<i>" + textBoxSource.SelectedText + "</i>";
                 }
+
                 e.SuppressKeyPress = true;
                 textBoxSource.SelectionStart = start;
                 textBoxSource.SelectionLength = text.Length;
@@ -6700,12 +6716,14 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     _timerClearStatus.Interval = clearAfterSeconds > 0 ? (clearAfterSeconds * 1000) : 1500;
                 }
+
                 _timerClearStatus.Start();
             }
             else
             {
                 _timerClearStatus.Stop();
             }
+
             ShowSourceLineNumber();
             ShowLineInformationListView();
         }
@@ -6874,6 +6892,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     UiUtil.OpenUrl(item.HelpLink);
                 }
+
                 return;
             }
 
@@ -6884,6 +6903,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     UiUtil.OpenUrl(item.HelpLink);
                 }
+
                 return;
             }
 
@@ -7624,6 +7644,7 @@ namespace Nikse.SubtitleEdit.Forms
                             UndoToIndex(true);
                             rollBackCount++;
                         }
+
                         SubtitleListview1.EndUpdate();
                         Cursor.Current = Cursors.Default;
                         audioVisualizer.Invalidate();
@@ -8197,6 +8218,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     styles = AdvancedSubStationAlpha.GetStylesFromHeader(AdvancedSubStationAlpha.DefaultHeader);
                 }
+
                 setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Clear();
                 foreach (var style in styles)
                 {
@@ -9589,7 +9611,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (len <= Configuration.Settings.General.SubtitleLineMaximumLength * Math.Max(numberOfLines, 2) &&
                     splitLines.Count == 2 && splitLines[0].StartsWith('-') && splitLines[1].StartsWith('-') &&
                     (splitLines[0].CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) > Configuration.Settings.General.SubtitleLineMaximumLength ||
-                    splitLines[1].CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) > Configuration.Settings.General.SubtitleLineMaximumLength))
+                     splitLines[1].CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) > Configuration.Settings.General.SubtitleLineMaximumLength))
                 {
                     if (buttonUnBreak.Visible)
                     {
@@ -9912,6 +9934,7 @@ namespace Nikse.SubtitleEdit.Forms
                 p.Offset(parent.Location.X, parent.Location.Y);
                 parent = parent.Parent;
             }
+
             return p;
         }
 
@@ -10080,6 +10103,7 @@ namespace Nikse.SubtitleEdit.Forms
                     p.EndTime.TotalMilliseconds = TimeCode.MaxTimeTotalMilliseconds;
                     RefreshSelectedParagraph();
                 }
+
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainTextBoxSelectionToLower == e.KeyData && textBoxListViewText.SelectionLength > 0) // selection to lowercase
@@ -10302,6 +10326,7 @@ namespace Nikse.SubtitleEdit.Forms
                             SubtitleListview1.SetText(firstIndex, p.Text);
                             SubtitleListview1.SetText(firstIndex + 1, next.Text);
                         }
+
                         var selectionStart = textBoxListViewText.SelectionStart;
                         tb.Text = p.Text;
                         if (selectionStart >= 0)
@@ -10346,6 +10371,7 @@ namespace Nikse.SubtitleEdit.Forms
                             SubtitleListview1.SetText(firstIndex, p.Text);
                             SubtitleListview1.SetText(firstIndex + 1, next.Text);
                         }
+
                         var selectionStart = textBoxListViewText.SelectionStart;
                         tb.Text = p.Text;
                         if (selectionStart >= 0)
@@ -10482,10 +10508,8 @@ namespace Nikse.SubtitleEdit.Forms
                         b = DialogSplitMerge.RemoveStartDash(b);
                     }
 
-                    currentParagraph.Text = a.SplitToLines().Any(line => line.Length > maxSingleLineLength) ?
-                        Utilities.AutoBreakLine(a, language) : a;
-                    newParagraph.Text = b.SplitToLines().Any(line => line.Length > maxSingleLineLength) ?
-                        Utilities.AutoBreakLine(b, language) : b;
+                    currentParagraph.Text = a.SplitToLines().Any(line => line.Length > maxSingleLineLength) ? Utilities.AutoBreakLine(a, language) : a;
+                    newParagraph.Text = b.SplitToLines().Any(line => line.Length > maxSingleLineLength) ? Utilities.AutoBreakLine(b, language) : b;
                 }
                 else
                 {
@@ -10684,12 +10708,8 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             var firstPart = oldText.Substring(0, originalTextIndex.Value).Trim();
                             var secondPart = oldText.Substring(originalTextIndex.Value).Trim();
-                            originalCurrent.Text = firstPart.SplitToLines().Any(line => line.Length > maxSingleLineLength) ?
-                                Utilities.AutoBreakLine(firstPart, language) :
-                                firstPart;
-                            originalNew.Text = secondPart.SplitToLines().Any(line => line.Length > maxSingleLineLength) ?
-                                Utilities.AutoBreakLine(secondPart, language) :
-                                secondPart;
+                            originalCurrent.Text = firstPart.SplitToLines().Any(line => line.Length > maxSingleLineLength) ? Utilities.AutoBreakLine(firstPart, language) : firstPart;
+                            originalNew.Text = secondPart.SplitToLines().Any(line => line.Length > maxSingleLineLength) ? Utilities.AutoBreakLine(secondPart, language) : secondPart;
                             if (originalCurrent.Text.Contains("<i>", StringComparison.Ordinal) && !originalCurrent.Text.Contains("</i>", StringComparison.Ordinal) &&
                                 originalNew.Text.Contains("</i>", StringComparison.Ordinal) && !originalNew.Text.Contains("<i>", StringComparison.Ordinal))
                             {
@@ -10993,6 +11013,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         currentParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds - MinGapBetweenLines;
                     }
+
                     newParagraph.StartTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + MinGapBetweenLines;
                 }
             }
@@ -11157,6 +11178,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _subtitleListViewIndex = -1;
             }
+
             p.Text = text1;
             newParagraph.Text = text2;
             SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
@@ -11610,6 +11632,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 s = s.Remove(0, 6);
             }
+
             return s;
         }
 
@@ -11731,6 +11754,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private bool _skipDurationChangedEvent = false;
+
         private void SetDurationInSeconds(double seconds)
         {
             _durationIsDirty = false;
@@ -14036,8 +14060,10 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             OpenVideo(fileName);
                         }
+
                         _converted = true;
                     }
+
                     SetTitle();
                     Configuration.Settings.Save();
                     return true;
@@ -14704,6 +14730,7 @@ namespace Nikse.SubtitleEdit.Forms
                         fs.Seek(fs.Position - buffer.Length + 1, SeekOrigin.Begin);
                         bytesRead = fs.Read(buffer, 0, buffer.Length);
                     }
+
                     header = new SpHeader(buffer);
                 }
             }
@@ -15019,6 +15046,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     audioVisualizer.FindDataBelowThreshold(Configuration.Settings.VideoControls.WaveformSeeksSilenceMaxVolume, Configuration.Settings.VideoControls.WaveformSeeksSilenceDurationSeconds);
                 }
+
                 e.SuppressKeyPress = true;
             }
             else if (audioVisualizer.Visible && e.KeyData == _shortcuts.WaveformSearchSilenceBack)
@@ -15027,6 +15055,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     audioVisualizer.FindDataBelowThresholdBack(Configuration.Settings.VideoControls.WaveformSeeksSilenceMaxVolume, Configuration.Settings.VideoControls.WaveformSeeksSilenceDurationSeconds);
                 }
+
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainInsertAfter == e.KeyData && InListView)
@@ -15400,6 +15429,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         libMpv.RemoveSubtitle();
                     }
+
                     mediaPlayer.VideoPlayer = mediaPlayer.VideoPlayer;
                     mediaPlayer.SetSubtitleText(string.Empty, null, _subtitle);
                     ShowSubtitle();
@@ -15680,6 +15710,7 @@ namespace Nikse.SubtitleEdit.Forms
                         mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
                     }
                 }
+
                 e.SuppressKeyPress = true;
             }
             else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.D2)
@@ -15692,6 +15723,7 @@ namespace Nikse.SubtitleEdit.Forms
                         mediaPlayer.CurrentPosition = p.EndTime.TotalSeconds;
                     }
                 }
+
                 e.SuppressKeyPress = true;
             }
             else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.D3)
@@ -15706,6 +15738,7 @@ namespace Nikse.SubtitleEdit.Forms
                         mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
                     }
                 }
+
                 e.SuppressKeyPress = true;
             }
             else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.D4)
@@ -15720,6 +15753,7 @@ namespace Nikse.SubtitleEdit.Forms
                         mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
                     }
                 }
+
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainVideoToggleStartEndCurrent == e.KeyData)
@@ -15740,6 +15774,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                 }
+
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainVideoPlaySelectedLines == e.KeyData)
@@ -15756,6 +15791,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _playSelectionIndex = _subtitle.GetIndex(p);
                     }
                 }
+
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainVideoGoToStartCurrent == e.KeyData)
@@ -15769,6 +15805,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     GoBackSeconds(3);
                 }
+
                 e.SuppressKeyPress = true;
             }
             else if (e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift) && e.KeyCode == Keys.W) // watermark
@@ -15873,6 +15910,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             OpenVideo(videoFileName);
                         }
+
                         e.SuppressKeyPress = true;
                     }
                 }
@@ -15887,6 +15925,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     UndockVideoControlsToolStripMenuItemClick(null, null);
                 }
+
                 e.SuppressKeyPress = true;
             }
             else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.MainVideoFoucsSetVideoPosition)
@@ -15941,6 +15980,7 @@ namespace Nikse.SubtitleEdit.Forms
                     mediaPlayer.Play();
                     _endSecondsNewPositionTicks = DateTime.UtcNow.Ticks;
                 }
+
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.Video1FrameRightWithPlay)
@@ -15956,6 +15996,7 @@ namespace Nikse.SubtitleEdit.Forms
                     mediaPlayer.Play();
                     _endSecondsNewPositionTicks = DateTime.UtcNow.Ticks;
                 }
+
                 e.SuppressKeyPress = true;
             }
             else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video100MsLeft)
@@ -16229,6 +16270,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     MoveLastWordDown(textBoxListViewText);
                 }
+
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainTextBoxMoveFirstWordFromNextUp)
@@ -16241,6 +16283,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     MoveFirstWordInNextUp(textBoxListViewText);
                 }
+
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainTextBoxMoveLastWordDownCurrent)
@@ -16253,6 +16296,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     MoveWordUpDownInCurrent(true, textBoxListViewText);
                 }
+
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainTextBoxMoveFirstWordUpCurrent)
@@ -16265,6 +16309,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     MoveWordUpDownInCurrent(false, textBoxListViewText);
                 }
+
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainTextBoxMoveFromCursorToNextAndGoToNext)
@@ -16277,6 +16322,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     MoveTextFromCursorToNext(textBoxListViewText);
                 }
+
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainAutoCalcCurrentDuration == e.KeyData)
@@ -16379,6 +16425,7 @@ namespace Nikse.SubtitleEdit.Forms
                     RestoreSubtitleListviewIndices();
                     RefreshSelectedParagraph();
                 }
+
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainWaveformAdd)
@@ -16387,6 +16434,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     AudioWaveform_Click(null, null);
                 }
+
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainVideoToggleBrightness)
@@ -16833,6 +16881,7 @@ namespace Nikse.SubtitleEdit.Forms
                         MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustExtendToNextSubtitle));
                         historyAdded = true;
                     }
+
                     p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - MinGapBetweenLines;
                 }
 
@@ -17239,10 +17288,12 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         audioVisualizer.StartPositionSeconds = mediaPlayer.CurrentPosition - 0.2;
                     }
+
                     found = true;
                     break;
                 }
             }
+
             if (!found && _subtitle.Paragraphs.Count > 0 && _subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].StartTime.TotalMilliseconds < currentPosition)
             {
                 var p = _subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1];
@@ -17293,6 +17344,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 add = highPercent - lowPercent - 0.3;
             }
+
             for (var startVolume = lowPercent + add; startVolume < 14; startVolume += 0.3)
             {
                 var pos = audioVisualizer.FindDataBelowThresholdBackForStart(startVolume, silenceLengthInSeconds, p.StartTime.TotalSeconds);
@@ -17681,6 +17733,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     SubtitleListview1.SetText(firstIndex, p.Text);
                 }
+
                 tb.Text = p.Text;
 
                 // keep cursor position
@@ -18804,6 +18857,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 SubtitleListview1.Items[selectedIndex].Selected = true;
                             }
+
                             RestartHistory();
                         }
                     }
@@ -18825,6 +18879,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 InsertAfter(s, true);
                             }
                         }
+
                         SubtitleListview1.EndUpdate();
                         RestartHistory();
                     }
@@ -18916,6 +18971,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 indices.Add(item.Index);
             }
+
             foreach (int i in indices)
             {
                 if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsOriginalTextColumnVisible)
@@ -18927,6 +18983,7 @@ namespace Nikse.SubtitleEdit.Forms
                         original.EndTime.TotalMilliseconds = TimeCode.MaxTimeTotalMilliseconds;
                     }
                 }
+
                 _subtitle.Paragraphs[i].StartTime.TotalMilliseconds = TimeCode.MaxTimeTotalMilliseconds;
                 _subtitle.Paragraphs[i].EndTime.TotalMilliseconds = TimeCode.MaxTimeTotalMilliseconds;
             }
@@ -20273,6 +20330,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 style.FontSize = AssaResampler.Resample(defaultAssaHeight, _videoInfo.Height, style.FontSize);
                             }
                         }
+
                         _subtitle.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(_subtitle.Header, styles);
                     }
                     else if (oldPlayResX == _videoInfo.Width.ToString(CultureInfo.InvariantCulture) &&
@@ -20654,6 +20712,7 @@ namespace Nikse.SubtitleEdit.Forms
                         s = s.Substring(0, s.Length - length).TrimEnd(' ', '*', '-') + "* - " + Title;
                     }
                 }
+
                 if (currentChanged)
                 {
                     s = s.Replace(" + ", "* + ");
@@ -20925,9 +20984,10 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         catch
                         {
-                        // ignore
+                            // ignore
+                        }
                     }
-                    }
+
                     _lastFormWindowState = WindowState;
                 });
             }
@@ -22551,6 +22611,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     value = trackBarWaveformPosition.Minimum;
                 }
+
                 trackBarWaveformPosition.Value = value;
                 trackBarWaveformPosition.ValueChanged += trackBarWaveformPosition_ValueChanged;
             }
@@ -23018,10 +23079,12 @@ namespace Nikse.SubtitleEdit.Forms
                     MessageBox.Show(string.Format(_language.ErrorLoadingPluginXErrorY, pluginFileName, exception.Message));
                 }
             }
+
             foreach (var fileMenuItem in fileMenuItems)
             {
                 fileToolStripMenuItem.DropDownItems.Insert(fileToolStripMenuItem.DropDownItems.Count - 2, fileMenuItem);
             }
+
             toolsToolStripMenuItem.DropDownItems.AddRange(toolsMenuItems.OrderBy(p => p.Text).ToArray());
             toolStripMenuItemAutoTranslate.DropDownItems.AddRange(translateMenuItems.OrderBy(p => p.Text).ToArray());
             toolStripMenuItemTranslateSelected.DropDownItems.AddRange(translateSelectedLinesMenuItems.OrderBy(p => p.Text).ToArray());
@@ -23332,6 +23395,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     sub.Header = AdvancedSubStationAlpha.DefaultHeader;
                 }
+
                 sub.Header = AdvancedSubStationAlpha.AddTagToHeader("SelectedLines", $"SelectedLines: {selectedIndicesText}", "[Script Info]", sub.Header);
                 if (!string.IsNullOrEmpty(VideoFileName))
                 {
@@ -23427,6 +23491,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string _lastWrittenAutoBackup = string.Empty;
         private bool _showAutoBackupError = true;
+
         private void TimerAutoBackupTick(object sender, EventArgs e)
         {
             string currentText = string.Empty;
@@ -23639,7 +23704,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (audioVisualizer.WavePeaks == null)
             {
                 if (VideoFileName != null && (VideoFileName.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
-                                               VideoFileName.StartsWith("https://", StringComparison.OrdinalIgnoreCase)))
+                                              VideoFileName.StartsWith("https://", StringComparison.OrdinalIgnoreCase)))
                 {
                     return;
                 }
@@ -23689,6 +23754,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             audioVisualizer.UseSmpteDropFrameTime();
                         }
+
                         audioVisualizer.SetSpectrogram(addWaveform.Spectrogram);
                         timerWaveform.Start();
                     }
@@ -23878,6 +23944,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     _subtitle.Paragraphs[idx].Text = Clipboard.GetText();
                 }
+
                 UpdateSourceView();
             }
             else
@@ -24416,6 +24483,7 @@ namespace Nikse.SubtitleEdit.Forms
                         numberOfNewLines++;
                     }
                 }
+
                 int selectedLineIdx = numberOfNewLines; // Do not use 'GetLineFromCharIndex' as it also counts when lines are wrapped
 
                 // Get line from index.
@@ -26665,7 +26733,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void contextMenuStripTextBoxListViewClosing(object sender, ToolStripDropDownClosingEventArgs e)
         {
             if (IsLiveSpellCheckEnabled && textBoxListViewText.IsWrongWord
-                && sender is ContextMenuStrip textBoxContextMenu && textBoxContextMenu.Name == "contextMenuStripTextBoxListView")
+                                        && sender is ContextMenuStrip textBoxContextMenu && textBoxContextMenu.Name == "contextMenuStripTextBoxListView")
             {
                 var firstSpellCheckItemIndex = textBoxContextMenu.Items.IndexOfKey("toolStripSeparatorSpellCheckSuggestions");
                 if (firstSpellCheckItemIndex > 0)
@@ -27767,6 +27835,7 @@ namespace Nikse.SubtitleEdit.Forms
                         SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
                         RestoreSubtitleListviewIndices();
                     }
+
                     UpdateSourceView();
                 }
             }
@@ -28496,6 +28565,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     properties.ShowDialog(this);
                 }
+
                 return;
             }
 
@@ -28505,6 +28575,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     properties.ShowDialog(this);
                 }
+
                 return;
             }
 
@@ -28684,6 +28755,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 form.ShowDialog(this);
                 LoadPlugins();
+                UpdateToolbarButtonsToCurrentFormat();
             }
         }
 
@@ -29038,6 +29110,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _subtitle.Paragraphs[index + i].Text = tmp.Paragraphs[i].Text;
                     }
+
                     SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
                     SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
                     RefreshSelectedParagraph();
@@ -29623,6 +29696,7 @@ namespace Nikse.SubtitleEdit.Forms
                             p.Text = s + " " + p.Text;
                             SubtitleListview1.SetText(item.Index, p.Text);
                         }
+
                         RefreshSelectedParagraph();
                     }
                     else
@@ -29985,6 +30059,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     _subtitleOriginal.InsertParagraphInCorrectTimeOrder(new Paragraph(newParagraph));
                 }
+
                 _subtitleOriginal.Renumber();
             }
 
@@ -30062,6 +30137,7 @@ namespace Nikse.SubtitleEdit.Forms
             var assFormatOn = formatType == typeof(AdvancedSubStationAlpha);
             toolStripButtonAssStyleManager.Visible = assFormatOn;
             toolStripButtonAssProperties.Visible = assFormatOn;
+            toolStripButtonAssaDraw.Visible = assFormatOn && File.Exists(Path.Combine(Configuration.PluginsDirectory, "AssaDraw.dll"));
             toolStripButtonAssAttachments.Visible = assFormatOn;
         }
 
@@ -30521,6 +30597,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             MakeHistoryForUndo(historyMessage);
                         }
+
                         if (newText.IsOnlyControlCharactersOrWhiteSpace())
                         {
                             _subtitle.Paragraphs.RemoveAt(idx);
@@ -30529,6 +30606,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             p.Text = newText;
                         }
+
                         linesUpdated++;
                     }
 
@@ -30544,6 +30622,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 {
                                     MakeHistoryForUndo(historyMessage);
                                 }
+
                                 if (newText.IsOnlyControlCharactersOrWhiteSpace())
                                 {
                                     _subtitleOriginal.Paragraphs.RemoveAt(idx);
@@ -30552,6 +30631,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 {
                                     original.Text = newText;
                                 }
+
                                 linesUpdated++;
                             }
                         }
@@ -30819,7 +30899,8 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     rubyText = "<ruby-text>" + rubyText + "</ruby-text>";
                 }
-                var rubyHtml = before + "<ruby-container><ruby-base>" + form.RubyBaseText + "</ruby-base>" + rubyText + "</ruby-container>" + after;  // sami ruby tag fix
+
+                var rubyHtml = before + "<ruby-container><ruby-base>" + form.RubyBaseText + "</ruby-base>" + rubyText + "</ruby-container>" + after; // sami ruby tag fix
                 var formatType = GetCurrentSubtitleFormat().GetType();
                 if (formatType == typeof(Sami)) // sami ruby tag fix
                 {
@@ -30832,6 +30913,7 @@ namespace Nikse.SubtitleEdit.Forms
                         .Replace("<ruby-text-italic>", string.Empty)
                         .Replace("</ruby-text-italic>", string.Empty);
                 }
+
                 tb.Text = rubyHtml;
             }
         }
@@ -30969,8 +31051,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch
                 {
-                // Ignore
-            }
+                    // Ignore
+                }
             });
         }
 
@@ -31127,6 +31209,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             toolStripMenuItemGoToListView.Visible = true;
         }
+
         private void TranslateSelectedLinesToolStripMenuItemClick(object sender, EventArgs e)
         {
             var onlySelectedLines = true;
@@ -31676,6 +31759,18 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
                 _subtitleListViewIndex = -1;
                 SubtitleListview1.SelectIndexAndEnsureVisibleFaster(idx);
+            }
+        }
+
+        private void toolStripButtonAssaDraw_Click(object sender, EventArgs e)
+        {
+            var assaDrawPluginFileName = Path.Combine(Configuration.PluginsDirectory, "AssaDraw.dll");
+            GetPropertiesAndDoAction(assaDrawPluginFileName, out var name, out var text, out var version, out var description, out var actionType, out var shortcut, out var mi);
+            if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(actionType) && mi != null)
+            {
+                var item = new ToolStripMenuItem { Text = text, Tag = assaDrawPluginFileName };
+                item.Click += CallPluginAssa;
+                item.PerformClick();
             }
         }
     }
