@@ -124,45 +124,6 @@
             this.saveFileDialogStyle = new System.Windows.Forms.SaveFileDialog();
             this.labelStatus = new System.Windows.Forms.Label();
             this.timerClearStatus = new System.Windows.Forms.Timer(this.components);
-            this.groupBoxStorage = new System.Windows.Forms.GroupBox();
-            this.buttonAddToFile = new System.Windows.Forms.Button();
-            this.buttonStorageExport = new System.Windows.Forms.Button();
-            this.buttonStorageImport = new System.Windows.Forms.Button();
-            this.buttonStorageCopy = new System.Windows.Forms.Button();
-            this.buttonStorageRemoveAll = new System.Windows.Forms.Button();
-            this.buttonStorageAdd = new System.Windows.Forms.Button();
-            this.buttonStorageRemove = new System.Windows.Forms.Button();
-            this.listViewStorage = new System.Windows.Forms.ListView();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.contextMenuStripStorage = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripMenuItemStorageRemove = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemStorageRemoveAll = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.addToFileStylesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItemStorageMoveStylesToCategory = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItemStorageMoveUp = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemStorageMoveDown = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemStorageMoveTop = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemStorageMoveBottom = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItemStorageNew = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemStorageCopy = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItemStorageImport = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemStorageExport = new System.Windows.Forms.ToolStripMenuItem();
-            this.labelCategoryDefaultNote = new System.Windows.Forms.Label();
-            this.buttonStorageManageCategories = new System.Windows.Forms.Button();
-            this.buttonStorageCategoryDelete = new System.Windows.Forms.Button();
-            this.buttonStorageCategoryNew = new System.Windows.Forms.Button();
-            this.comboboxStorageCategories = new System.Windows.Forms.ComboBox();
-            this.labelStorageCategory = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.buttonApply = new System.Windows.Forms.Button();
             this.contextMenuStripFile.SuspendLayout();
@@ -186,11 +147,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownScaleY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownScaleX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).BeginInit();
-            this.groupBoxStorage.SuspendLayout();
-            this.contextMenuStripStorage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -290,14 +248,6 @@
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
             this.toolStripSeparator4.Size = new System.Drawing.Size(212, 6);
-            // 
-            // addToStorageToolStripMenuItem1
-            // 
-            this.addToStorageToolStripMenuItem1.Name = "addToStorageToolStripMenuItem1";
-            this.addToStorageToolStripMenuItem1.ShortcutKeys = System.Windows.Forms.Keys.F4;
-            this.addToStorageToolStripMenuItem1.Size = new System.Drawing.Size(215, 22);
-            this.addToStorageToolStripMenuItem1.Text = "Add to storage";
-            this.addToStorageToolStripMenuItem1.Click += new System.EventHandler(this.buttonAddStyleToStorage_Click);
             // 
             // toolStripSeparator8
             // 
@@ -420,18 +370,6 @@
             this.groupBoxStyles.TabIndex = 0;
             this.groupBoxStyles.TabStop = false;
             this.groupBoxStyles.Text = "File styles";
-            // 
-            // buttonAddStyleToStorage
-            // 
-            this.buttonAddStyleToStorage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonAddStyleToStorage.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonAddStyleToStorage.Location = new System.Drawing.Point(280, 275);
-            this.buttonAddStyleToStorage.Name = "buttonAddStyleToStorage";
-            this.buttonAddStyleToStorage.Size = new System.Drawing.Size(163, 52);
-            this.buttonAddStyleToStorage.TabIndex = 4;
-            this.buttonAddStyleToStorage.Text = "Add to storage";
-            this.buttonAddStyleToStorage.UseVisualStyleBackColor = true;
-            this.buttonAddStyleToStorage.Click += new System.EventHandler(this.buttonAddStyleToStorage_Click);
             // 
             // buttonExport
             // 
@@ -1189,374 +1127,6 @@
             this.timerClearStatus.Interval = 9000;
             this.timerClearStatus.Tick += new System.EventHandler(this.timerClearStatus_Tick);
             // 
-            // groupBoxStorage
-            // 
-            this.groupBoxStorage.Controls.Add(this.buttonAddToFile);
-            this.groupBoxStorage.Controls.Add(this.buttonStorageExport);
-            this.groupBoxStorage.Controls.Add(this.buttonStorageImport);
-            this.groupBoxStorage.Controls.Add(this.buttonStorageCopy);
-            this.groupBoxStorage.Controls.Add(this.buttonStorageRemoveAll);
-            this.groupBoxStorage.Controls.Add(this.buttonStorageAdd);
-            this.groupBoxStorage.Controls.Add(this.buttonStorageRemove);
-            this.groupBoxStorage.Controls.Add(this.listViewStorage);
-            this.groupBoxStorage.Controls.Add(this.labelCategoryDefaultNote);
-            this.groupBoxStorage.Controls.Add(this.buttonStorageManageCategories);
-            this.groupBoxStorage.Controls.Add(this.buttonStorageCategoryDelete);
-            this.groupBoxStorage.Controls.Add(this.buttonStorageCategoryNew);
-            this.groupBoxStorage.Controls.Add(this.comboboxStorageCategories);
-            this.groupBoxStorage.Controls.Add(this.labelStorageCategory);
-            this.groupBoxStorage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxStorage.Location = new System.Drawing.Point(0, 0);
-            this.groupBoxStorage.Name = "groupBoxStorage";
-            this.groupBoxStorage.Size = new System.Drawing.Size(557, 329);
-            this.groupBoxStorage.TabIndex = 0;
-            this.groupBoxStorage.TabStop = false;
-            this.groupBoxStorage.Text = "Style storage";
-            // 
-            // buttonAddToFile
-            // 
-            this.buttonAddToFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonAddToFile.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonAddToFile.Location = new System.Drawing.Point(280, 271);
-            this.buttonAddToFile.Name = "buttonAddToFile";
-            this.buttonAddToFile.Size = new System.Drawing.Size(163, 52);
-            this.buttonAddToFile.TabIndex = 10;
-            this.buttonAddToFile.Text = "Add to file";
-            this.buttonAddToFile.UseVisualStyleBackColor = true;
-            this.buttonAddToFile.Click += new System.EventHandler(this.buttonAddToFile_Click);
-            // 
-            // buttonStorageExport
-            // 
-            this.buttonStorageExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonStorageExport.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonStorageExport.Location = new System.Drawing.Point(6, 300);
-            this.buttonStorageExport.Name = "buttonStorageExport";
-            this.buttonStorageExport.Size = new System.Drawing.Size(82, 23);
-            this.buttonStorageExport.TabIndex = 11;
-            this.buttonStorageExport.Text = "Export...";
-            this.buttonStorageExport.UseVisualStyleBackColor = true;
-            this.buttonStorageExport.Click += new System.EventHandler(this.buttonStorageExport_Click);
-            // 
-            // buttonStorageImport
-            // 
-            this.buttonStorageImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonStorageImport.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonStorageImport.Location = new System.Drawing.Point(6, 271);
-            this.buttonStorageImport.Name = "buttonStorageImport";
-            this.buttonStorageImport.Size = new System.Drawing.Size(82, 23);
-            this.buttonStorageImport.TabIndex = 7;
-            this.buttonStorageImport.Text = "Import...";
-            this.buttonStorageImport.UseVisualStyleBackColor = true;
-            this.buttonStorageImport.Click += new System.EventHandler(this.buttonStorageImport_Click);
-            // 
-            // buttonStorageCopy
-            // 
-            this.buttonStorageCopy.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonStorageCopy.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonStorageCopy.Location = new System.Drawing.Point(94, 300);
-            this.buttonStorageCopy.Name = "buttonStorageCopy";
-            this.buttonStorageCopy.Size = new System.Drawing.Size(82, 23);
-            this.buttonStorageCopy.TabIndex = 12;
-            this.buttonStorageCopy.Text = "Copy";
-            this.buttonStorageCopy.UseVisualStyleBackColor = true;
-            this.buttonStorageCopy.Click += new System.EventHandler(this.buttonStorageCopy_Click);
-            // 
-            // buttonStorageRemoveAll
-            // 
-            this.buttonStorageRemoveAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonStorageRemoveAll.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonStorageRemoveAll.Location = new System.Drawing.Point(182, 300);
-            this.buttonStorageRemoveAll.Name = "buttonStorageRemoveAll";
-            this.buttonStorageRemoveAll.Size = new System.Drawing.Size(92, 23);
-            this.buttonStorageRemoveAll.TabIndex = 13;
-            this.buttonStorageRemoveAll.Text = "Remove all";
-            this.buttonStorageRemoveAll.UseVisualStyleBackColor = true;
-            this.buttonStorageRemoveAll.Click += new System.EventHandler(this.buttonStorageRemoveAll_Click);
-            // 
-            // buttonStorageAdd
-            // 
-            this.buttonStorageAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonStorageAdd.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonStorageAdd.Location = new System.Drawing.Point(94, 271);
-            this.buttonStorageAdd.Name = "buttonStorageAdd";
-            this.buttonStorageAdd.Size = new System.Drawing.Size(82, 23);
-            this.buttonStorageAdd.TabIndex = 8;
-            this.buttonStorageAdd.Text = "New";
-            this.buttonStorageAdd.UseVisualStyleBackColor = true;
-            this.buttonStorageAdd.Click += new System.EventHandler(this.buttonStorageAdd_Click);
-            // 
-            // buttonStorageRemove
-            // 
-            this.buttonStorageRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonStorageRemove.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonStorageRemove.Location = new System.Drawing.Point(182, 271);
-            this.buttonStorageRemove.Name = "buttonStorageRemove";
-            this.buttonStorageRemove.Size = new System.Drawing.Size(92, 23);
-            this.buttonStorageRemove.TabIndex = 9;
-            this.buttonStorageRemove.Text = "Remove";
-            this.buttonStorageRemove.UseVisualStyleBackColor = true;
-            this.buttonStorageRemove.Click += new System.EventHandler(this.buttonStorageRemove_Click);
-            // 
-            // listViewStorage
-            // 
-            this.listViewStorage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.listViewStorage.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1,
-            this.columnHeader2,
-            this.columnHeader3,
-            this.columnHeader4,
-            this.columnHeader5,
-            this.columnHeader6});
-            this.listViewStorage.ContextMenuStrip = this.contextMenuStripStorage;
-            this.listViewStorage.FullRowSelect = true;
-            this.listViewStorage.HideSelection = false;
-            this.listViewStorage.Location = new System.Drawing.Point(6, 68);
-            this.listViewStorage.Name = "listViewStorage";
-            this.listViewStorage.Size = new System.Drawing.Size(545, 197);
-            this.listViewStorage.TabIndex = 6;
-            this.listViewStorage.UseCompatibleStateImageBehavior = false;
-            this.listViewStorage.View = System.Windows.Forms.View.Details;
-            this.listViewStorage.SelectedIndexChanged += new System.EventHandler(this.listViewStorage_SelectedIndexChanged);
-            this.listViewStorage.ClientSizeChanged += new System.EventHandler(this.listViewStorage_ClientSizeChanged);
-            this.listViewStorage.Enter += new System.EventHandler(this.listViewStorage_Enter);
-            this.listViewStorage.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listViewStorage_KeyDown);
-            // 
-            // columnHeader1
-            // 
-            this.columnHeader1.Text = "Name";
-            this.columnHeader1.Width = 130;
-            // 
-            // columnHeader2
-            // 
-            this.columnHeader2.Text = "Font name";
-            this.columnHeader2.Width = 128;
-            // 
-            // columnHeader3
-            // 
-            this.columnHeader3.Text = "Font size";
-            this.columnHeader3.Width = 80;
-            // 
-            // columnHeader4
-            // 
-            this.columnHeader4.Text = "Used#";
-            this.columnHeader4.Width = 0;
-            // 
-            // columnHeader5
-            // 
-            this.columnHeader5.Text = "Primary";
-            this.columnHeader5.Width = 70;
-            // 
-            // columnHeader6
-            // 
-            this.columnHeader6.Text = "Outline";
-            this.columnHeader6.Width = 55;
-            // 
-            // contextMenuStripStorage
-            // 
-            this.contextMenuStripStorage.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemStorageRemove,
-            this.toolStripMenuItemStorageRemoveAll,
-            this.toolStripSeparator2,
-            this.addToFileStylesToolStripMenuItem,
-            this.toolStripSeparator7,
-            this.toolStripMenuItemStorageMoveStylesToCategory,
-            this.toolStripSeparator9,
-            this.toolStripMenuItemStorageMoveUp,
-            this.toolStripMenuItemStorageMoveDown,
-            this.toolStripMenuItemStorageMoveTop,
-            this.toolStripMenuItemStorageMoveBottom,
-            this.toolStripSeparator5,
-            this.toolStripMenuItemStorageNew,
-            this.toolStripMenuItemStorageCopy,
-            this.toolStripSeparator6,
-            this.toolStripMenuItemStorageImport,
-            this.toolStripMenuItemStorageExport});
-            this.contextMenuStripStorage.Name = "contextMenuStrip1";
-            this.contextMenuStripStorage.Size = new System.Drawing.Size(255, 298);
-            this.contextMenuStripStorage.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripStorage_Opening);
-            // 
-            // toolStripMenuItemStorageRemove
-            // 
-            this.toolStripMenuItemStorageRemove.Name = "toolStripMenuItemStorageRemove";
-            this.toolStripMenuItemStorageRemove.ShortcutKeys = System.Windows.Forms.Keys.Delete;
-            this.toolStripMenuItemStorageRemove.Size = new System.Drawing.Size(254, 22);
-            this.toolStripMenuItemStorageRemove.Text = "Remove";
-            this.toolStripMenuItemStorageRemove.Click += new System.EventHandler(this.buttonStorageRemove_Click);
-            // 
-            // toolStripMenuItemStorageRemoveAll
-            // 
-            this.toolStripMenuItemStorageRemoveAll.Name = "toolStripMenuItemStorageRemoveAll";
-            this.toolStripMenuItemStorageRemoveAll.Size = new System.Drawing.Size(254, 22);
-            this.toolStripMenuItemStorageRemoveAll.Text = "Remove all";
-            this.toolStripMenuItemStorageRemoveAll.Click += new System.EventHandler(this.buttonStorageRemoveAll_Click);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(251, 6);
-            // 
-            // addToFileStylesToolStripMenuItem
-            // 
-            this.addToFileStylesToolStripMenuItem.Name = "addToFileStylesToolStripMenuItem";
-            this.addToFileStylesToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F4;
-            this.addToFileStylesToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
-            this.addToFileStylesToolStripMenuItem.Text = "Add to file styles";
-            this.addToFileStylesToolStripMenuItem.Click += new System.EventHandler(this.buttonAddToFile_Click);
-            // 
-            // toolStripSeparator7
-            // 
-            this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(251, 6);
-            // 
-            // toolStripMenuItemStorageMoveStylesToCategory
-            // 
-            this.toolStripMenuItemStorageMoveStylesToCategory.Name = "toolStripMenuItemStorageMoveStylesToCategory";
-            this.toolStripMenuItemStorageMoveStylesToCategory.Size = new System.Drawing.Size(254, 22);
-            this.toolStripMenuItemStorageMoveStylesToCategory.Text = "Move selected styles to category...";
-            // 
-            // toolStripSeparator9
-            // 
-            this.toolStripSeparator9.Name = "toolStripSeparator9";
-            this.toolStripSeparator9.Size = new System.Drawing.Size(251, 6);
-            // 
-            // toolStripMenuItemStorageMoveUp
-            // 
-            this.toolStripMenuItemStorageMoveUp.Name = "toolStripMenuItemStorageMoveUp";
-            this.toolStripMenuItemStorageMoveUp.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Up)));
-            this.toolStripMenuItemStorageMoveUp.Size = new System.Drawing.Size(254, 22);
-            this.toolStripMenuItemStorageMoveUp.Text = "Move up";
-            this.toolStripMenuItemStorageMoveUp.Click += new System.EventHandler(this.toolStripMenuItem3_Click);
-            // 
-            // toolStripMenuItemStorageMoveDown
-            // 
-            this.toolStripMenuItemStorageMoveDown.Name = "toolStripMenuItemStorageMoveDown";
-            this.toolStripMenuItemStorageMoveDown.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Down)));
-            this.toolStripMenuItemStorageMoveDown.Size = new System.Drawing.Size(254, 22);
-            this.toolStripMenuItemStorageMoveDown.Text = "Move down";
-            this.toolStripMenuItemStorageMoveDown.Click += new System.EventHandler(this.toolStripMenuItemStorageMoveDown_Click);
-            // 
-            // toolStripMenuItemStorageMoveTop
-            // 
-            this.toolStripMenuItemStorageMoveTop.Name = "toolStripMenuItemStorageMoveTop";
-            this.toolStripMenuItemStorageMoveTop.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Home)));
-            this.toolStripMenuItemStorageMoveTop.Size = new System.Drawing.Size(254, 22);
-            this.toolStripMenuItemStorageMoveTop.Text = "Move to top";
-            this.toolStripMenuItemStorageMoveTop.Click += new System.EventHandler(this.toolStripMenuItemStorageMoveTop_Click);
-            // 
-            // toolStripMenuItemStorageMoveBottom
-            // 
-            this.toolStripMenuItemStorageMoveBottom.Name = "toolStripMenuItemStorageMoveBottom";
-            this.toolStripMenuItemStorageMoveBottom.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.End)));
-            this.toolStripMenuItemStorageMoveBottom.Size = new System.Drawing.Size(254, 22);
-            this.toolStripMenuItemStorageMoveBottom.Text = "Move to bottom";
-            this.toolStripMenuItemStorageMoveBottom.Click += new System.EventHandler(this.toolStripMenuItemStorageMoveBottom_Click);
-            // 
-            // toolStripSeparator5
-            // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(251, 6);
-            // 
-            // toolStripMenuItemStorageNew
-            // 
-            this.toolStripMenuItemStorageNew.Name = "toolStripMenuItemStorageNew";
-            this.toolStripMenuItemStorageNew.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.toolStripMenuItemStorageNew.Size = new System.Drawing.Size(254, 22);
-            this.toolStripMenuItemStorageNew.Text = "New";
-            this.toolStripMenuItemStorageNew.Click += new System.EventHandler(this.buttonStorageAdd_Click);
-            // 
-            // toolStripMenuItemStorageCopy
-            // 
-            this.toolStripMenuItemStorageCopy.Name = "toolStripMenuItemStorageCopy";
-            this.toolStripMenuItemStorageCopy.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.toolStripMenuItemStorageCopy.Size = new System.Drawing.Size(254, 22);
-            this.toolStripMenuItemStorageCopy.Text = "Copy";
-            this.toolStripMenuItemStorageCopy.Click += new System.EventHandler(this.buttonStorageCopy_Click);
-            // 
-            // toolStripSeparator6
-            // 
-            this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(251, 6);
-            // 
-            // toolStripMenuItemStorageImport
-            // 
-            this.toolStripMenuItemStorageImport.Name = "toolStripMenuItemStorageImport";
-            this.toolStripMenuItemStorageImport.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
-            this.toolStripMenuItemStorageImport.Size = new System.Drawing.Size(254, 22);
-            this.toolStripMenuItemStorageImport.Text = "Import...";
-            this.toolStripMenuItemStorageImport.Click += new System.EventHandler(this.buttonStorageImport_Click);
-            // 
-            // toolStripMenuItemStorageExport
-            // 
-            this.toolStripMenuItemStorageExport.Name = "toolStripMenuItemStorageExport";
-            this.toolStripMenuItemStorageExport.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.E)));
-            this.toolStripMenuItemStorageExport.Size = new System.Drawing.Size(254, 22);
-            this.toolStripMenuItemStorageExport.Text = "Export...";
-            this.toolStripMenuItemStorageExport.Click += new System.EventHandler(this.buttonStorageExport_Click);
-            // 
-            // labelCategoryDefaultNote
-            // 
-            this.labelCategoryDefaultNote.AutoSize = true;
-            this.labelCategoryDefaultNote.Location = new System.Drawing.Point(10, 48);
-            this.labelCategoryDefaultNote.Name = "labelCategoryDefaultNote";
-            this.labelCategoryDefaultNote.Size = new System.Drawing.Size(433, 13);
-            this.labelCategoryDefaultNote.TabIndex = 5;
-            this.labelCategoryDefaultNote.Text = "Note: The styles in the default category (colored in green) will be applied to ne" +
-    "w ASSA files";
-            // 
-            // buttonStorageManageCategories
-            // 
-            this.buttonStorageManageCategories.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonStorageManageCategories.Location = new System.Drawing.Point(455, 19);
-            this.buttonStorageManageCategories.Name = "buttonStorageManageCategories";
-            this.buttonStorageManageCategories.Size = new System.Drawing.Size(98, 23);
-            this.buttonStorageManageCategories.TabIndex = 4;
-            this.buttonStorageManageCategories.Text = "Manage categories";
-            this.buttonStorageManageCategories.UseVisualStyleBackColor = true;
-            this.buttonStorageManageCategories.Click += new System.EventHandler(this.buttonStorageManageCategories_Click);
-            // 
-            // buttonStorageCategoryDelete
-            // 
-            this.buttonStorageCategoryDelete.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonStorageCategoryDelete.Location = new System.Drawing.Point(357, 19);
-            this.buttonStorageCategoryDelete.Name = "buttonStorageCategoryDelete";
-            this.buttonStorageCategoryDelete.Size = new System.Drawing.Size(92, 23);
-            this.buttonStorageCategoryDelete.TabIndex = 3;
-            this.buttonStorageCategoryDelete.Text = "Remove";
-            this.buttonStorageCategoryDelete.UseVisualStyleBackColor = true;
-            this.buttonStorageCategoryDelete.Click += new System.EventHandler(this.buttonStorageCategoryDelete_Click);
-            // 
-            // buttonStorageCategoryNew
-            // 
-            this.buttonStorageCategoryNew.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonStorageCategoryNew.Location = new System.Drawing.Point(259, 19);
-            this.buttonStorageCategoryNew.Name = "buttonStorageCategoryNew";
-            this.buttonStorageCategoryNew.Size = new System.Drawing.Size(92, 23);
-            this.buttonStorageCategoryNew.TabIndex = 2;
-            this.buttonStorageCategoryNew.Text = "New";
-            this.buttonStorageCategoryNew.UseVisualStyleBackColor = true;
-            this.buttonStorageCategoryNew.Click += new System.EventHandler(this.buttonStorageCategoryNew_Click);
-            // 
-            // comboboxStorageCategories
-            // 
-            this.comboboxStorageCategories.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboboxStorageCategories.FormattingEnabled = true;
-            this.comboboxStorageCategories.Location = new System.Drawing.Point(73, 19);
-            this.comboboxStorageCategories.Name = "comboboxStorageCategories";
-            this.comboboxStorageCategories.Size = new System.Drawing.Size(180, 21);
-            this.comboboxStorageCategories.TabIndex = 1;
-            this.comboboxStorageCategories.SelectedIndexChanged += new System.EventHandler(this.comboboxStorageCategories_SelectedIndexChanged);
-            // 
-            // labelStorageCategory
-            // 
-            this.labelStorageCategory.AutoSize = true;
-            this.labelStorageCategory.Location = new System.Drawing.Point(10, 21);
-            this.labelStorageCategory.Name = "labelStorageCategory";
-            this.labelStorageCategory.Size = new System.Drawing.Size(49, 13);
-            this.labelStorageCategory.TabIndex = 0;
-            this.labelStorageCategory.Text = "Category";
-            // 
             // splitContainer1
             // 
             this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -1569,10 +1139,6 @@
             // 
             this.splitContainer1.Panel1.Controls.Add(this.groupBoxStyles);
             this.splitContainer1.Panel1MinSize = 150;
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.groupBoxStorage);
             this.splitContainer1.Panel2MinSize = 150;
             this.splitContainer1.Size = new System.Drawing.Size(557, 666);
             this.splitContainer1.SplitterDistance = 333;
@@ -1640,11 +1206,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownScaleY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownScaleX)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).EndInit();
-            this.groupBoxStorage.ResumeLayout(false);
-            this.groupBoxStorage.PerformLayout();
-            this.contextMenuStripStorage.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -1720,28 +1282,7 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialogStyle;
         private System.Windows.Forms.Label labelStatus;
         private System.Windows.Forms.Timer timerClearStatus;
-        private System.Windows.Forms.GroupBox groupBoxStorage;
-        private System.Windows.Forms.Label labelStorageCategory;
-        private System.Windows.Forms.ComboBox comboboxStorageCategories;
-        private System.Windows.Forms.Button buttonStorageCategoryNew;
-        private System.Windows.Forms.Button buttonStorageCategoryDelete;
-        private System.Windows.Forms.Button buttonStorageManageCategories;
-        private System.Windows.Forms.Label labelCategoryDefaultNote;
-        private System.Windows.Forms.ListView listViewStorage;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
-        private System.Windows.Forms.ColumnHeader columnHeader2;
-        private System.Windows.Forms.ColumnHeader columnHeader3;
-        private System.Windows.Forms.ColumnHeader columnHeader4;
-        private System.Windows.Forms.ColumnHeader columnHeader5;
-        private System.Windows.Forms.ColumnHeader columnHeader6;
         private System.Windows.Forms.Button buttonAddStyleToStorage;
-        private System.Windows.Forms.Button buttonAddToFile;
-        private System.Windows.Forms.Button buttonStorageExport;
-        private System.Windows.Forms.Button buttonStorageImport;
-        private System.Windows.Forms.Button buttonStorageCopy;
-        private System.Windows.Forms.Button buttonStorageRemoveAll;
-        private System.Windows.Forms.Button buttonStorageAdd;
-        private System.Windows.Forms.Button buttonStorageRemove;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripFile;
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRemoveAll;
@@ -1756,26 +1297,8 @@
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItemNew;
         private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItemCopy;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStripStorage;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStorageRemove;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStorageRemoveAll;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStorageMoveStylesToCategory;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStorageMoveUp;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStorageMoveDown;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStorageMoveTop;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStorageMoveBottom;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStorageNew;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStorageCopy;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStorageImport;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStorageExport;
         private System.Windows.Forms.ToolStripMenuItem addToStorageToolStripMenuItem1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
-        private System.Windows.Forms.ToolStripMenuItem addToFileStylesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripPreview;
         private System.Windows.Forms.ToolStripMenuItem setPreviewTextToolStripMenuItem;
         private System.Windows.Forms.SplitContainer splitContainer1;

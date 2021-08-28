@@ -4795,7 +4795,17 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (formatType == typeof(AdvancedSubStationAlpha) && _oldSubtitleFormat.GetType() == typeof(SubStationAlpha))
                 {
-                    _subtitle.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromSubStationAlpha(_subtitle.Header);
+                    if (!_subtitle.Header.Contains("[V4+ Styles]"))
+                    {
+                        _subtitle.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromSubStationAlpha(_subtitle.Header);
+                        foreach (var p in _subtitle.Paragraphs)
+                        {
+                            if (p.Extra != null)
+                            {
+                                p.Extra = p.Extra.TrimStart('*');
+                            }
+                        }
+                    }
                 }
                 else if (formatType == typeof(SubStationAlpha) && _oldSubtitleFormat.GetType() == typeof(AdvancedSubStationAlpha))
                 {
@@ -28102,7 +28112,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public void ApplyAssaStyles(Assa.AssaStyles styles)
+        public void ApplyAssaStyles(AssaStyles styles)
         {
             if (_subtitle.Header != styles.Header)
             {
