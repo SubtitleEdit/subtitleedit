@@ -469,6 +469,12 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 else
                 {
+                    if (subtitle.Header == null || subtitle.Header.Contains("[V4 Styles]"))
+                    {
+                        subtitle = new Subtitle(subtitle, false);
+                        subtitle.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromSubStationAlpha(subtitle.Header);
+                    }
+
                     if (subtitle.Header == null || !subtitle.Header.Contains("[V4+ Styles]"))
                     {
                         var oldSub = subtitle;

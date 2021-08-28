@@ -66,9 +66,9 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             const string commentWriteFormat = "Comment: Marked={4},{0},{1},{3},{5},{6},{7},{8},{9},{2}";
 
             var sb = new StringBuilder();
-            bool isValidAssHeader = !string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4 Styles]");
+            var isValidSsaHeader = !string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4 Styles]");
             var styles = new List<string>();
-            if (isValidAssHeader)
+            if (isValidSsaHeader)
             {
                 sb.AppendLine(subtitle.Header.Trim());
                 const string formatLine = "Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text";
@@ -82,7 +82,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             else if (!string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4+ Styles]"))
             {
                 LoadStylesFromAdvancedSubstationAlpha(subtitle, title, subtitle.Header, HeaderNoStyles, sb);
-                isValidAssHeader = true;
+                isValidSsaHeader = true;
                 styles = AdvancedSubStationAlpha.GetStylesFromHeader(subtitle.Header);
             }
             else if (subtitle.Header != null && subtitle.Header.Contains("http://www.w3.org/ns/ttml"))
@@ -93,15 +93,15 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             {
                 SsaStyle style = null;
                 var storageCategories = Configuration.Settings.SubtitleSettings.AssaStyleStorageCategories;
-                if (storageCategories.Count > 0 && storageCategories.Exists(x => x.IsDefault))
+                if (storageCategories != null && storageCategories.Count > 0 && storageCategories.Exists(x => x.IsDefault))
                 {
-                    var defaultStyle = storageCategories.SingleOrDefault(x => x.IsDefault).Styles.SingleOrDefault(x => x.Name.ToLowerInvariant() == "default");
-                    style = defaultStyle ?? storageCategories.SingleOrDefault(x => x.IsDefault).Styles[0];
+                    var defaultStyle = storageCategories.FirstOrDefault(x => x.IsDefault)?.Styles.FirstOrDefault(x => x.Name.ToLowerInvariant() == "default");
+                    style = defaultStyle ?? storageCategories.FirstOrDefault(x => x.IsDefault)?.Styles[0];
                 }
 
                 style = style ?? new SsaStyle();
 
-                string boldStyle = "0"; // 0=regular
+                var boldStyle = "0"; // 0=regular
                 if (style.Bold)
                 {
                     boldStyle = "-1"; // -1 = true, 0 is false
@@ -120,25 +120,24 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                                             boldStyle
                                             ));
             }
-            foreach (Paragraph p in subtitle.Paragraphs)
+            foreach (var p in subtitle.Paragraphs)
             {
-                string start = string.Format(timeCodeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds / 10);
-                string end = string.Format(timeCodeFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds / 10);
-                string style = "Default";
-
-                string actor = "NTP";
+                var start = string.Format(timeCodeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds / 10);
+                var end = string.Format(timeCodeFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds / 10);
+                var style = "Default";
+                var actor = "NTP";
                 if (!string.IsNullOrEmpty(p.Actor))
                 {
                     actor = p.Actor;
                 }
 
-                string marginL = "0000";
+                var marginL = "0000";
                 if (!string.IsNullOrEmpty(p.MarginL) && Utilities.IsInteger(p.MarginL))
                 {
                     marginL = p.MarginL.PadLeft(4, '0');
                 }
 
-                string marginR = "0000";
+                var marginR = "0000";
                 if (!string.IsNullOrEmpty(p.MarginR) && Utilities.IsInteger(p.MarginR))
                 {
                     marginR = p.MarginR.PadLeft(4, '0');
@@ -156,7 +155,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                     effect = p.Effect;
                 }
 
-                if (!string.IsNullOrEmpty(p.Extra) && isValidAssHeader && styles.Contains(p.Extra))
+                if (!string.IsNullOrEmpty(p.Extra) && isValidSsaHeader && styles.Contains(p.Extra))
                 {
                     style = p.Extra;
                 }
