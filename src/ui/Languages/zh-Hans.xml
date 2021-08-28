@@ -9,9 +9,12 @@
     <Ok>确定(&amp;O)</Ok>
     <Cancel>取消(&amp;A)</Cancel>
     <Apply>应用</Apply>
+    <ApplyTo>应用于</ApplyTo>
     <None>无</None>
     <All>全部</All>
     <Preview>预览</Preview>
+    <ShowPreview>显示预览</ShowPreview>
+    <HidePreview>隐藏预览</HidePreview>
     <SubtitleFiles>字幕文件</SubtitleFiles>
     <AllFiles>所有文件</AllFiles>
     <VideoFiles>视频文件</VideoFiles>
@@ -221,6 +224,8 @@ Command line: {1} {2}
     <SetPosInfo>点击视频切换设置/移动位置</SetPosInfo>
     <Clipboard>剪贴板</Clipboard>
     <ResolutionMissing>未设置分辨率 - 现在设置分辨率？</ResolutionMissing>
+    <RotateXAxis>旋转 {0} 轴</RotateXAxis>
+    <DistortX>扭曲{0}</DistortX>
   </AssaSetPosition>
   <AudioToText>
     <Title>音频转文字</Title>
@@ -271,6 +276,7 @@ Command line: {1} {2}
     <BridgeGaps>桥接间隙</BridgeGaps>
     <PlainText>纯文本</PlainText>
     <Ocr>OCR...</Ocr>
+    <AddFiles>添加文件...</AddFiles>
     <Filter>过滤器</Filter>
     <FilterSkipped>经过滤器剔除</FilterSkipped>
     <FilterSrtNoUtf8BOM>不带UTF-8 BOM数据头的SubRip (.srt) 文件</FilterSrtNoUtf8BOM>
@@ -1278,6 +1284,7 @@ Command line: {1} {2}
         <SplitLineAtCursorAndWaveformPosition>在光标/视频位置处分割行</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>自动设置时长 (当前行)</AutoDurationCurrentLine>
         <SelectAll>全部选择</SelectAll>
+        <Insert>插入</Insert>
         <InsertFirstLine>插入行</InsertFirstLine>
         <InsertBefore>之前插入</InsertBefore>
         <InsertAfter>之后插入</InsertAfter>
@@ -1322,6 +1329,7 @@ Command line: {1} {2}
         <ShowSelectedLinesEarlierLater>提前/推后 显示所选行...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>对所选行进行影音对照同步...</VisualSyncSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>谷歌/微软 翻译所选行...</GoogleAndMicrosoftTranslateSelectedLine>
+        <SelectedLines>所选行</SelectedLines>
         <TranslateSelectedLines>翻译选中的行...</TranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>调整所选行时长...</AdjustDisplayDurationForSelectedLines>
         <ApplyDurationLimitsForSelectedLines>对选定的行应用持续时间限制...</ApplyDurationLimitsForSelectedLines>
