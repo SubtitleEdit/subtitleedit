@@ -802,6 +802,8 @@ Note: Do check free disk space.</WaveFileMalformed>
 
 Note: Advanced Substation Alpha supported.</Info>
     <XGeneratedWithBurnedInSubs>"{0}" generated with burned-in subtitle.</XGeneratedWithBurnedInSubs>
+    <TimeRemainingSeconds>Time remaining: {0} seconds</TimeRemainingSeconds>
+    <TimeRemainingMinutesAndSeconds>Time remaining: {0} minutes and {1} seconds</TimeRemainingMinutesAndSeconds>
   </GenerateVideoWithBurnedInSubs>
   <GetDictionaries>
     <Title>Need dictionaries?</Title>
@@ -1267,6 +1269,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <Help>Help</Help>
         <ShowHideWaveform>Show/hide waveform</ShowHideWaveform>
         <ShowHideVideo>Show/hide video</ShowHideVideo>
+        <AssaDraw>Advanced Sub Station Alpha draw</AssaDraw>
       </ToolBar>
       <ContextMenu>
         <SizeAllColumnsToFit>Size all columns to fit</SizeAllColumnsToFit>
