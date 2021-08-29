@@ -883,6 +883,8 @@
             public string Title { get; set; }
             public string Info { get; set; }
             public string XGeneratedWithBurnedInSubs { get; set; }
+            public string TimeRemainingSeconds { get; set; }
+            public string TimeRemainingMinutesAndSeconds { get; set; }
         }
 
         public class GetDictionaries

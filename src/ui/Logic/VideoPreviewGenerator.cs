@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        public static Process GenerateVideoFile(string previewFileName, int seconds, int width, int height, Color color, bool checkered, decimal frameRate)
+        public static Process GenerateVideoFile(string previewFileName, int seconds, int width, int height, Color color, bool checkered, decimal frameRate, DataReceivedEventHandler dataReceivedHandler = null)
         {
             Process processMakeVideo;
 
@@ -49,7 +49,20 @@ namespace Nikse.SubtitleEdit.Logic
                 processMakeVideo = GetFFmpegProcess(color, previewFileName, width, height, seconds, frameRate);
             }
 
+            SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
+
             return processMakeVideo;
+        }
+
+        private static void SetupDataReceiveHandler(DataReceivedEventHandler dataReceivedHandler, Process processMakeVideo)
+        {
+            if (dataReceivedHandler != null)
+            {
+                processMakeVideo.StartInfo.RedirectStandardOutput = true;
+                processMakeVideo.StartInfo.RedirectStandardError = true;
+                processMakeVideo.OutputDataReceived += dataReceivedHandler;
+                processMakeVideo.ErrorDataReceived += dataReceivedHandler;
+            }
         }
 
         /// <summary>
@@ -58,7 +71,7 @@ namespace Nikse.SubtitleEdit.Logic
         /// <param name="inputVideoFileName">Source video file name</param>
         /// <param name="assaSubtitleFileName">Source subtitle file name</param>
         /// <param name="outputVideoFileName">Output video file name with burned-in subtitle</param>
-        public static Process GenerateHardcodedVideoFile(string inputVideoFileName, string assaSubtitleFileName, string outputVideoFileName)
+        public static Process GenerateHardcodedVideoFile(string inputVideoFileName, string assaSubtitleFileName, string outputVideoFileName, int width, int height, DataReceivedEventHandler dataReceivedHandler = null)
         {
             var ffmpegLocation = Configuration.Settings.General.FFmpegLocation;
             if (!Configuration.IsRunningOnWindows && (string.IsNullOrEmpty(ffmpegLocation) || !File.Exists(ffmpegLocation)))
@@ -66,17 +79,21 @@ namespace Nikse.SubtitleEdit.Logic
                 ffmpegLocation = "ffmpeg";
             }
 
-            return new Process
+            var processMakeVideo = new Process
             {
                 StartInfo =
                 {
                     FileName = ffmpegLocation,
-                    Arguments = $"-i \"{inputVideoFileName}\" -vf \"ass={Path.GetFileName(assaSubtitleFileName)}\" -strict -2 \"{outputVideoFileName}\"",
+                    Arguments = $"-i \"{inputVideoFileName}\" -vf \"ass={Path.GetFileName(assaSubtitleFileName)}\" -strict -2 -s {width}x{height} \"{outputVideoFileName}\" -v quiet -stats",
                     UseShellExecute = false,
                     CreateNoWindow = true,
                     WorkingDirectory = Path.GetDirectoryName(assaSubtitleFileName),
                 }
             };
+
+            SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
+
+            return processMakeVideo;
         }
 
         private static Process GetFFmpegProcess(string imageFileName, string outputFileName, int videoWidth, int videoHeight, int seconds, decimal frameRate)

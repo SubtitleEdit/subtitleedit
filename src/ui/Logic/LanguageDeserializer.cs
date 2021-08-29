@@ -2125,6 +2125,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "GenerateVideoWithBurnedInSubs/XGeneratedWithBurnedInSubs":
                     language.GenerateVideoWithBurnedInSubs.XGeneratedWithBurnedInSubs = reader.Value;
                     break;
+                case "GenerateVideoWithBurnedInSubs/TimeRemainingSeconds":
+                    language.GenerateVideoWithBurnedInSubs.TimeRemainingSeconds = reader.Value;
+                    break;
+                case "GenerateVideoWithBurnedInSubs/TimeRemainingMinutesAndSeconds":
+                    language.GenerateVideoWithBurnedInSubs.TimeRemainingMinutesAndSeconds = reader.Value;
+                    break;
                 case "GetDictionaries/Title":
                     language.GetDictionaries.Title = reader.Value;
                     break;
@@ -4161,6 +4167,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Main/Menu/ToolBar/ShowHideVideo":
                     language.Main.Menu.ToolBar.ShowHideVideo = reader.Value;
+                    break;
+                case "Main/Menu/ToolBar/AssaDraw":
+                    language.Main.Menu.ToolBar.AssaDraw = reader.Value;
                     break;
                 case "Main/Menu/ContextMenu/SizeAllColumnsToFit":
                     language.Main.Menu.ContextMenu.SizeAllColumnsToFit = reader.Value;
