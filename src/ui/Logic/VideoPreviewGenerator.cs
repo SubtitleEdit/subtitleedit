@@ -68,9 +68,6 @@ namespace Nikse.SubtitleEdit.Logic
         /// <summary>
         /// Generate a video with a burned-in Advanced Sub Station Alpha subtitle.
         /// </summary>
-        /// <param name="inputVideoFileName">Source video file name</param>
-        /// <param name="assaSubtitleFileName">Source subtitle file name</param>
-        /// <param name="outputVideoFileName">Output video file name with burned-in subtitle</param>
         public static Process GenerateHardcodedVideoFile(string inputVideoFileName, string assaSubtitleFileName, string outputVideoFileName, int width, int height, DataReceivedEventHandler dataReceivedHandler = null)
         {
             var ffmpegLocation = Configuration.Settings.General.FFmpegLocation;

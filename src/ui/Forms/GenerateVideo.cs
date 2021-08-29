@@ -1,8 +1,10 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -12,6 +14,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         public string VideoFileName { get; private set; }
         private bool _abort;
+        private long _processedFrames;
+        private long _startTicks;
+        private long _totalFrames;
+        private static readonly Regex FrameFinderRegex = new Regex(@"[Ff]rame=\s*\d+", RegexOptions.Compiled);
 
         public GenerateVideo(Subtitle subtitle)
         {
@@ -42,6 +48,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             progressBar1.Visible = false;
             labelPleaseWait.Visible = false;
+            labelProgress.Text = string.Empty;
 
             var left = Math.Max(labelResolution.Left + labelResolution.Width, labelDuration.Left + labelDuration.Width) + 5;
             numericUpDownDurationMinutes.Left = left;
@@ -71,6 +78,23 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
         }
+        private void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
+        {
+            if (string.IsNullOrWhiteSpace(outLine.Data))
+            {
+                return;
+            }
+
+            var match = FrameFinderRegex.Match(outLine.Data);
+            if (match.Success)
+            {
+                var arr = match.Value.Split('=');
+                if (arr.Length > 0 && long.TryParse(arr[1], out var f))
+                {
+                    _processedFrames = f;
+                }
+            }
+        }
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
@@ -92,7 +116,6 @@ namespace Nikse.SubtitleEdit.Forms
                 File.Delete(VideoFileName);
             }
 
-            progressBar1.Style = ProgressBarStyle.Marquee;
             progressBar1.Visible = true;
             labelPleaseWait.Visible = true;
             var process = VideoPreviewGenerator.GenerateVideoFile(
@@ -102,12 +125,19 @@ namespace Nikse.SubtitleEdit.Forms
                 (int)numericUpDownHeight.Value,
                 panelColor.BackColor,
                 radioButtonCheckeredImage.Checked,
-                decimal.Parse(comboBoxFrameRate.Text)
-                );
+                decimal.Parse(comboBoxFrameRate.Text),
+                OutputHandler);
 
             process.Start();
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
+            _totalFrames = (long)Math.Round(float.Parse(comboBoxFrameRate.Text, CultureInfo.CurrentCulture) * (float)numericUpDownDurationMinutes.Value * 60.0f);
+            progressBar1.Maximum = (int)_totalFrames;
+            _startTicks = DateTime.UtcNow.Ticks;
+            timer1.Start();
             while (!process.HasExited)
             {
+                progressBar1.Value = (int)_processedFrames;
                 System.Threading.Thread.Sleep(100);
                 Application.DoEvents();
                 if (_abort)
@@ -118,6 +148,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             progressBar1.Visible = false;
             labelPleaseWait.Visible = false;
+            timer1.Stop();
+            labelProgress.Text = string.Empty;
             DialogResult = _abort ? DialogResult.Cancel : DialogResult.OK;
         }
 
@@ -180,6 +212,33 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 numericUpDownHeight.Value++;
             }
+        }
+
+
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (_processedFrames <= 0)
+            {
+                return;
+            }
+
+            var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
+            var msPerFrame = (float)durationMs / _processedFrames;
+            var estimatedTotalMs = msPerFrame * _totalFrames;
+            var estimatedLeft = ToProgressTime(estimatedTotalMs - durationMs);
+            labelProgress.Text = estimatedLeft;
+        }
+
+        private string ToProgressTime(float estimatedTotalMs)
+        {
+            var timeCode = new TimeCode(estimatedTotalMs);
+            if (timeCode.TotalSeconds < 60)
+            {
+                return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingSeconds, (int)Math.Round(timeCode.TotalSeconds));
+            }
+
+            return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingMinutesAndSeconds, timeCode.Minutes + timeCode.Hours * 60, timeCode.Seconds);
         }
     }
 }
