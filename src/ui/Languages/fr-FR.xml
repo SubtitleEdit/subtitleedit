@@ -1358,7 +1358,7 @@ Pour utiliser une clé API allez à "Options -&gt; Paramètres -&gt; Outils" et 
       <SetEndTimeAndGoToNext>Fixer fin - aller au suivant</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Ajusté par rapport à l'heure de fin {0}</AdjustedViaEndTime>
       <SetEndTime>Définir l'heure de fin</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Fixer début - décaler suite</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Fixer début - décaler suite</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Chercher du texte en ligne</SearchTextOnline>
       <GoogleTranslate>Traduction Google</GoogleTranslate>
       <AutoTranslate>Traduction automatique</AutoTranslate>
