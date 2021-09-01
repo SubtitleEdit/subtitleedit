@@ -1002,9 +1002,12 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.SelectNone();
                     var end = Math.Max(start, idx);
                     start = Math.Min(start, idx);
-                    for (int i = start; i <= end; i++)
+                    if (start >= 0)
                     {
-                        SubtitleListview1.Items[i].Selected = true;
+                        for (int i = start; i <= end; i++)
+                        {
+                            SubtitleListview1.Items[i].Selected = true;
+                        }
                     }
                 }
 
