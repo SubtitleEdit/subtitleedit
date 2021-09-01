@@ -4806,23 +4806,28 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.Network);
                 }
 
-                if (formatType == typeof(AdvancedSubStationAlpha) && _oldSubtitleFormat.GetType() == typeof(SubStationAlpha))
+                if (formatType == typeof(AdvancedSubStationAlpha))
                 {
-                    if (!_subtitle.Header.Contains("[V4+ Styles]"))
+                    if (_oldSubtitleFormat.GetType() == typeof(SubStationAlpha))
                     {
-                        _subtitle.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromSubStationAlpha(_subtitle.Header);
-                        foreach (var p in _subtitle.Paragraphs)
+                        if (!_subtitle.Header.Contains("[V4+ Styles]"))
                         {
-                            if (p.Extra != null)
+                            _subtitle.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromSubStationAlpha(_subtitle.Header);
+                            foreach (var p in _subtitle.Paragraphs)
                             {
-                                p.Extra = p.Extra.TrimStart('*');
+                                if (p.Extra != null)
+                                {
+                                    p.Extra = p.Extra.TrimStart('*');
+                                }
                             }
                         }
                     }
-                }
-                else if (formatType == typeof(SubStationAlpha) && _oldSubtitleFormat.GetType() == typeof(AdvancedSubStationAlpha))
-                {
-                    _subtitle.Header = SubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(_subtitle.Header, string.Empty);
+                    else if (_oldSubtitleFormat.GetType() == typeof(AdvancedSubStationAlpha))
+                    {
+                        _subtitle.Header = SubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(_subtitle.Header, string.Empty);
+                    }
+
+                    SetAssaResolutionWithChecks();
                 }
             }
 
@@ -20309,39 +20314,47 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 Cursor = Cursors.Default;
-
                 SetUndockedWindowsTitle();
                 ShowSubtitleTimer.Start();
+                SetAssaResolutionWithChecks();
+            }
+        }
 
-                if (Configuration.Settings.SubtitleSettings.AssaResolutionAutoNew && IsAssa() && _videoInfo?.Height > 0)
+        private void SetAssaResolutionWithChecks()
+        {
+            if (Configuration.Settings.SubtitleSettings.AssaResolutionAutoNew && IsAssa() && _videoInfo?.Height > 0)
+            {
+                if (string.IsNullOrEmpty(_subtitle?.Header))
                 {
-                    var oldPlayResX = AdvancedSubStationAlpha.GetTagValueFromHeader("PlayResX", "[Script Info]", _subtitle.Header);
-                    var oldPlayResY = AdvancedSubStationAlpha.GetTagValueFromHeader("PlayResY", "[Script Info]", _subtitle.Header);
+                    _subtitle.Header = AdvancedSubStationAlpha.DefaultHeader;
+                }
 
-                    if (oldPlayResX == null || oldPlayResY == null)
+                var oldPlayResX = AdvancedSubStationAlpha.GetTagValueFromHeader("PlayResX", "[Script Info]", _subtitle.Header);
+                var oldPlayResY = AdvancedSubStationAlpha.GetTagValueFromHeader("PlayResY", "[Script Info]", _subtitle.Header);
+
+                if (oldPlayResX == null || oldPlayResY == null)
+                {
+                    SetAssaResolution();
+                    var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(_subtitle.Header);
+                    foreach (var style in styles)
                     {
-                        SetAssaResolution();
-                        var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(_subtitle.Header);
-                        foreach (var style in styles)
+                        if (style.FontSize <= 25)
                         {
-                            if (style.FontSize <= 25)
-                            {
-                                const int defaultAssaHeight = 288;
-                                style.FontSize = AssaResampler.Resample(defaultAssaHeight, _videoInfo.Height, style.FontSize);
-                            }
+                            const int defaultAssaHeight = 288;
+                            style.FontSize = AssaResampler.Resample(defaultAssaHeight, _videoInfo.Height, style.FontSize);
                         }
+                    }
 
-                        _subtitle.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(_subtitle.Header, styles);
-                    }
-                    else if (oldPlayResX == _videoInfo.Width.ToString(CultureInfo.InvariantCulture) &&
-                             oldPlayResY == _videoInfo.Height.ToString(CultureInfo.InvariantCulture))
-                    {
-                        // all good - correct resolution
-                    }
-                    else if (Configuration.Settings.SubtitleSettings.AssaResolutionPromptChange)
-                    {
-                        videoResolutionResamplerToolStripMenuItem_Click(null, null);
-                    }
+                    _subtitle.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(_subtitle.Header, styles);
+                }
+                else if (oldPlayResX == _videoInfo.Width.ToString(CultureInfo.InvariantCulture) &&
+                         oldPlayResY == _videoInfo.Height.ToString(CultureInfo.InvariantCulture))
+                {
+                    // all good - correct resolution
+                }
+                else if (Configuration.Settings.SubtitleSettings.AssaResolutionPromptChange)
+                {
+                    videoResolutionResamplerToolStripMenuItem_Click(null, null);
                 }
             }
         }
