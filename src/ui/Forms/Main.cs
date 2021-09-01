@@ -4777,6 +4777,12 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     MakeHistoryForUndo(string.Format(_language.BeforeConvertingToX, format.FriendlyName));
                 }
+
+                if (formatType == typeof(AdvancedSubStationAlpha))
+                {
+                    SetAssaResolutionWithChecks();
+                }
+
             }
             else
             {
