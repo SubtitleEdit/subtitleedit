@@ -801,6 +801,8 @@ Command line: {1} {2}
 
 注意：支持Advanced SubStation Alpha。</Info>
     <XGeneratedWithBurnedInSubs>带有内嵌字幕的“{0}”已生成。</XGeneratedWithBurnedInSubs>
+    <TimeRemainingSeconds>剩余时间: {0} 秒</TimeRemainingSeconds>
+    <TimeRemainingMinutesAndSeconds>剩余时间: {0} 分 {1} 秒</TimeRemainingMinutesAndSeconds>
   </GenerateVideoWithBurnedInSubs>
   <GetDictionaries>
     <Title>是否使用词典？</Title>
@@ -1201,6 +1203,7 @@ Command line: {1} {2}
         <RemoveSceneChanges>移除场景变更</RemoveSceneChanges>
         <WaveformBatchGenerate>批量生成波形...</WaveformBatchGenerate>
         <ShowHideVideo>显示/隐藏视频</ShowHideVideo>
+        <AssaDraw>ASSA 绘图</AssaDraw>
         <ShowHideWaveform>显示/隐藏波形</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>显示/隐藏波形和频谱图</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>取消停靠视频控件</UnDockVideoControls>
