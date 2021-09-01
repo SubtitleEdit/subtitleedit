@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                if (fs.Length > 20000000)
+                if (fs.Length > 50_000_000)
                 {
                     return false;
                 }
