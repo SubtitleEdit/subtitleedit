@@ -137,7 +137,12 @@ namespace Nikse.SubtitleEdit.Forms
             timer1.Start();
             while (!process.HasExited)
             {
-                progressBar1.Value = (int)_processedFrames;
+                var v = (int)_processedFrames;
+                if (v >= progressBar1.Minimum && v <= progressBar1.Maximum)
+                {
+                    progressBar1.Value = v;
+                }
+
                 System.Threading.Thread.Sleep(100);
                 Application.DoEvents();
                 if (_abort)

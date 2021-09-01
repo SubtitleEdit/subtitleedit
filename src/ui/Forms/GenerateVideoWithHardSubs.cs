@@ -161,7 +161,11 @@ namespace Nikse.SubtitleEdit.Forms
                     process.Kill();
                 }
 
-                progressBar1.Value = (int)_processedFrames;
+                var v = (int)_processedFrames;
+                if (v >= progressBar1.Minimum && v <= progressBar1.Maximum)
+                {
+                    progressBar1.Value = v;
+                }
             }
 
             progressBar1.Visible = false;
