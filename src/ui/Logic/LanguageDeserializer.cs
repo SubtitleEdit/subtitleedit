@@ -5311,6 +5311,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "RemoveTextFromHearImpaired/EditInterjections":
                     language.RemoveTextFromHearImpaired.EditInterjections = reader.Value;
                     break;
+                case "RemoveTextFromHearImpaired/Apply":
+                    language.RemoveTextFromHearImpaired.Apply = reader.Value;
+                    break;
                 case "ReplaceDialog/Title":
                     language.ReplaceDialog.Title = reader.Value;
                     break;

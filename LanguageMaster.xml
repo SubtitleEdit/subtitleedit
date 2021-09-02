@@ -766,7 +766,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FixUppercaseIInsideLowercaseWord>Fix uppercase 'i' inside lowercase word</FixUppercaseIInsideLowercaseWord>
     <FixMissingPeriodAtEndOfLine>Add missing period at end of line</FixMissingPeriodAtEndOfLine>
     <RefreshFixes>Refresh available fixes</RefreshFixes>
-    <ApplyFixes>Apply selected fixes</ApplyFixes>
+    <ApplyFixes>A&amp;pply selected fixes</ApplyFixes>
     <AutoBreak>Auto &amp;br</AutoBreak>
     <Unbreak>&amp;Unbreak</Unbreak>
     <FixDoubleDash>Fix '--' -&gt; '...'</FixDoubleDash>
@@ -1967,6 +1967,7 @@ can edit in same subtitle file (collaboration)</Information>
     <RemoveTextIfAllUppercase>Remove line if UPPERCASE</RemoveTextIfAllUppercase>
     <RemoveInterjections>Remove interjections (shh, hmm, etc.)</RemoveInterjections>
     <EditInterjections>Edit...</EditInterjections>
+    <Apply>A&amp;pply</Apply>
   </RemoveTextFromHearImpaired>
   <ReplaceDialog>
     <Title>Replace</Title>

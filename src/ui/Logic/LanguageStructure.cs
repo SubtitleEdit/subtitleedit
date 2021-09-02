@@ -2130,6 +2130,7 @@
             public string RemoveTextIfAllUppercase { get; set; }
             public string RemoveInterjections { get; set; }
             public string EditInterjections { get; set; }
+            public string Apply { get; set; }
         }
 
         public class ReplaceDialog

@@ -979,7 +979,7 @@ namespace Nikse.SubtitleEdit.Logic
                 FixMissingSpace = "Fix missing space",
                 FixUppercaseIInsideLowercaseWord = "Fix uppercase 'i' inside lowercase word",
                 FixMissingPeriodAtEndOfLine = "Add missing period at end of line",
-                ApplyFixes = "Apply selected fixes",
+                ApplyFixes = "A&pply selected fixes",
                 RefreshFixes = "Refresh available fixes",
                 FixDoubleDash = "Fix '--' -> '...'",
                 FixDoubleGreaterThan = "Remove '>>'",
@@ -2279,6 +2279,7 @@ can edit in same subtitle file (collaboration)",
                 RemoveTextIfAllUppercase = "Remove line if UPPERCASE",
                 RemoveInterjections = "Remove interjections (shh, hmm, etc.)",
                 EditInterjections = "Edit...",
+                Apply = "A&pply",
             };
 
             ReplaceDialog = new LanguageStructure.ReplaceDialog
