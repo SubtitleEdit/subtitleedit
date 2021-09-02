@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -39,6 +40,7 @@ namespace Nikse.SubtitleEdit.Forms
             progressBar1.Visible = false;
             labelPleaseWait.Visible = false;
             labelProgress.Text = string.Empty;
+            labelFileName.Text = string.Empty;
 
             numericUpDownWidth.Value = _videoInfo.Width;
             numericUpDownHeight.Value = _videoInfo.Height;
@@ -76,13 +78,25 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var match = FrameFinderRegex.Match(outLine.Data);
-            if (match.Success)
+            if (!match.Success)
             {
-                var arr = match.Value.Split('=');
-                if (arr.Length > 0 && long.TryParse(arr[1], out var f))
-                {
-                    _processedFrames = f;
-                }
+                return;
+            }
+
+            var arr = match.Value.Split('=');
+            if (arr.Length != 2)
+            {
+                return;
+            }
+
+            var frameNumberString = arr[1]
+                .Replace(",", ".")
+                .Replace("٫", ".")
+                .Replace("⠨", ".")
+                .Trim();
+            if (double.TryParse(frameNumberString, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var f))
+            {
+                _processedFrames = (long)Math.Round(f);
             }
         }
 
@@ -107,6 +121,7 @@ namespace Nikse.SubtitleEdit.Forms
                 File.Delete(VideoFileName);
             }
 
+            labelFileName.Text = string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TargetFileName, VideoFileName);
             if (numericUpDownFontSize.Visible)
             {
                 var fontSize = (int)numericUpDownFontSize.Value;
@@ -200,12 +215,17 @@ namespace Nikse.SubtitleEdit.Forms
             labelProgress.Text = estimatedLeft;
         }
 
-        private string ToProgressTime(float estimatedTotalMs)
+        public static string ToProgressTime(float estimatedTotalMs)
         {
             var timeCode = new TimeCode(estimatedTotalMs);
             if (timeCode.TotalSeconds < 60)
             {
                 return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingSeconds, (int)Math.Round(timeCode.TotalSeconds));
+            }
+
+            if (timeCode.TotalSeconds * 60 > 5)
+            {
+                return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingMinutes, (int)Math.Round(timeCode.TotalSeconds / 60));
             }
 
             return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingMinutesAndSeconds, timeCode.Minutes + timeCode.Hours * 60, timeCode.Seconds);

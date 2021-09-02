@@ -86,13 +86,25 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var match = FrameFinderRegex.Match(outLine.Data);
-            if (match.Success)
+            if (!match.Success)
             {
-                var arr = match.Value.Split('=');
-                if (arr.Length > 0 && long.TryParse(arr[1], out var f))
-                {
-                    _processedFrames = f;
-                }
+                return;
+            }
+
+            var arr = match.Value.Split('=');
+            if (arr.Length != 2)
+            {
+                return;
+            }
+
+            var frameNumberString = arr[1]
+                .Replace(",", ".")
+                .Replace("٫", ".")
+                .Replace("⠨", ".")
+                .Trim();
+            if (double.TryParse(frameNumberString, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var f))
+            {
+                _processedFrames = (long)Math.Round(f);
             }
         }
 
@@ -231,19 +243,8 @@ namespace Nikse.SubtitleEdit.Forms
             var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
             var msPerFrame = (float)durationMs / _processedFrames;
             var estimatedTotalMs = msPerFrame * _totalFrames;
-            var estimatedLeft = ToProgressTime(estimatedTotalMs - durationMs);
+            var estimatedLeft = GenerateVideoWithHardSubs.ToProgressTime(estimatedTotalMs - durationMs);
             labelProgress.Text = estimatedLeft;
-        }
-
-        private string ToProgressTime(float estimatedTotalMs)
-        {
-            var timeCode = new TimeCode(estimatedTotalMs);
-            if (timeCode.TotalSeconds < 60)
-            {
-                return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingSeconds, (int)Math.Round(timeCode.TotalSeconds));
-            }
-
-            return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingMinutesAndSeconds, timeCode.Minutes + timeCode.Hours * 60, timeCode.Seconds);
         }
     }
 }

@@ -1019,8 +1019,10 @@ namespace Nikse.SubtitleEdit.Logic
                 Title = "Generate video with burned-in subtile",
                 Info = "Will generate a video file with burned-in subtitle.\r\n\r\nNote: Advanced Substation Alpha supported.",
                 XGeneratedWithBurnedInSubs = "\"{0}\" generated with burned-in subtitle.",
+                TimeRemainingMinutes = "Time remaining: {0} minutes",
                 TimeRemainingSeconds = "Time remaining: {0} seconds",
                 TimeRemainingMinutesAndSeconds = "Time remaining: {0} minutes and {1} seconds",
+                TargetFileName = "Target file name: {0}",
             };
 
             GetDictionaries = new LanguageStructure.GetDictionaries

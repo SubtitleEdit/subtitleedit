@@ -40,6 +40,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.labelProgress = new System.Windows.Forms.Label();
             this.groupBoxSettings = new System.Windows.Forms.GroupBox();
+            this.labelFileName = new System.Windows.Forms.Label();
             this.labelX = new System.Windows.Forms.Label();
             this.labelResolution = new System.Windows.Forms.Label();
             this.numericUpDownHeight = new System.Windows.Forms.NumericUpDown();
@@ -54,9 +55,9 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(12, 199);
+            this.progressBar1.Location = new System.Drawing.Point(12, 218);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(434, 11);
+            this.progressBar1.Size = new System.Drawing.Size(485, 11);
             this.progressBar1.TabIndex = 22;
             this.progressBar1.Visible = false;
             // 
@@ -64,7 +65,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(452, 199);
+            this.buttonOK.Location = new System.Drawing.Point(503, 218);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(121, 23);
             this.buttonOK.TabIndex = 23;
@@ -77,7 +78,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(579, 199);
+            this.buttonCancel.Location = new System.Drawing.Point(630, 218);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 24;
@@ -89,7 +90,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelPleaseWait.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelPleaseWait.AutoSize = true;
-            this.labelPleaseWait.Location = new System.Drawing.Point(12, 183);
+            this.labelPleaseWait.Location = new System.Drawing.Point(12, 202);
             this.labelPleaseWait.Name = "labelPleaseWait";
             this.labelPleaseWait.Size = new System.Drawing.Size(70, 13);
             this.labelPleaseWait.TabIndex = 25;
@@ -118,7 +119,7 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0});
             this.numericUpDownFontSize.Name = "numericUpDownFontSize";
-            this.numericUpDownFontSize.Size = new System.Drawing.Size(72, 20);
+            this.numericUpDownFontSize.Size = new System.Drawing.Size(64, 20);
             this.numericUpDownFontSize.TabIndex = 27;
             this.numericUpDownFontSize.Value = new decimal(new int[] {
             50,
@@ -144,7 +145,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelProgress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelProgress.AutoSize = true;
-            this.labelProgress.Location = new System.Drawing.Point(15, 213);
+            this.labelProgress.Location = new System.Drawing.Point(12, 232);
             this.labelProgress.Name = "labelProgress";
             this.labelProgress.Size = new System.Drawing.Size(88, 13);
             this.labelProgress.TabIndex = 29;
@@ -155,18 +156,28 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxSettings.Controls.Add(this.labelFileName);
             this.groupBoxSettings.Controls.Add(this.labelX);
             this.groupBoxSettings.Controls.Add(this.labelResolution);
             this.groupBoxSettings.Controls.Add(this.numericUpDownHeight);
             this.groupBoxSettings.Controls.Add(this.numericUpDownWidth);
             this.groupBoxSettings.Controls.Add(this.numericUpDownFontSize);
             this.groupBoxSettings.Controls.Add(this.labelFontSize);
-            this.groupBoxSettings.Location = new System.Drawing.Point(18, 58);
+            this.groupBoxSettings.Location = new System.Drawing.Point(18, 52);
             this.groupBoxSettings.Name = "groupBoxSettings";
-            this.groupBoxSettings.Size = new System.Drawing.Size(636, 107);
+            this.groupBoxSettings.Size = new System.Drawing.Size(687, 134);
             this.groupBoxSettings.TabIndex = 30;
             this.groupBoxSettings.TabStop = false;
             this.groupBoxSettings.Text = "Settings";
+            // 
+            // labelFileName
+            // 
+            this.labelFileName.AutoSize = true;
+            this.labelFileName.Location = new System.Drawing.Point(19, 94);
+            this.labelFileName.Name = "labelFileName";
+            this.labelFileName.Size = new System.Drawing.Size(52, 13);
+            this.labelFileName.TabIndex = 33;
+            this.labelFileName.Text = "File name";
             // 
             // labelX
             // 
@@ -246,7 +257,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(666, 234);
+            this.ClientSize = new System.Drawing.Size(717, 253);
             this.Controls.Add(this.groupBoxSettings);
             this.Controls.Add(this.labelProgress);
             this.Controls.Add(this.labelInfo);
@@ -288,5 +299,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Label labelResolution;
         private System.Windows.Forms.NumericUpDown numericUpDownHeight;
         private System.Windows.Forms.NumericUpDown numericUpDownWidth;
+        private System.Windows.Forms.Label labelFileName;
     }
 }
