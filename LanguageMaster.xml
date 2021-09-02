@@ -802,8 +802,10 @@ Note: Do check free disk space.</WaveFileMalformed>
 
 Note: Advanced Substation Alpha supported.</Info>
     <XGeneratedWithBurnedInSubs>"{0}" generated with burned-in subtitle.</XGeneratedWithBurnedInSubs>
+    <TimeRemainingMinutes>Time remaining: {0} minutes</TimeRemainingMinutes>
     <TimeRemainingSeconds>Time remaining: {0} seconds</TimeRemainingSeconds>
     <TimeRemainingMinutesAndSeconds>Time remaining: {0} minutes and {1} seconds</TimeRemainingMinutesAndSeconds>
+    <TargetFileName>Target file name: {0}</TargetFileName>
   </GenerateVideoWithBurnedInSubs>
   <GetDictionaries>
     <Title>Need dictionaries?</Title>

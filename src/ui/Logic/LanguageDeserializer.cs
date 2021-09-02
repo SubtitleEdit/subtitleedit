@@ -2125,11 +2125,17 @@ namespace Nikse.SubtitleEdit.Logic
                 case "GenerateVideoWithBurnedInSubs/XGeneratedWithBurnedInSubs":
                     language.GenerateVideoWithBurnedInSubs.XGeneratedWithBurnedInSubs = reader.Value;
                     break;
+                case "GenerateVideoWithBurnedInSubs/TimeRemainingMinutes":
+                    language.GenerateVideoWithBurnedInSubs.TimeRemainingMinutes = reader.Value;
+                    break;
                 case "GenerateVideoWithBurnedInSubs/TimeRemainingSeconds":
                     language.GenerateVideoWithBurnedInSubs.TimeRemainingSeconds = reader.Value;
                     break;
                 case "GenerateVideoWithBurnedInSubs/TimeRemainingMinutesAndSeconds":
                     language.GenerateVideoWithBurnedInSubs.TimeRemainingMinutesAndSeconds = reader.Value;
+                    break;
+                case "GenerateVideoWithBurnedInSubs/TargetFileName":
+                    language.GenerateVideoWithBurnedInSubs.TargetFileName = reader.Value;
                     break;
                 case "GetDictionaries/Title":
                     language.GetDictionaries.Title = reader.Value;
