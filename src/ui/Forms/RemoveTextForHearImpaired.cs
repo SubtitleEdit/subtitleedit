@@ -76,7 +76,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelText.Text = LanguageSettings.Current.General.Text;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
-            buttonApply.Text = LanguageSettings.Current.General.Apply;
+            buttonApply.Text = _language.Apply;
             UiUtil.FixLargeFonts(this, buttonOK);
             listViewFixes_SelectedIndexChanged(null, null);
         }
