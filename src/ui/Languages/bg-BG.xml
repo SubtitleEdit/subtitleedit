@@ -5,7 +5,8 @@
     <Version>3.6.2</Version>
     <TranslatedBy>Превод на български: KalinM, Ivo Ivanov и JJD</TranslatedBy>
     <CultureName>bg-BG</CultureName>
-    <HelpFile />
+    <HelpFile>
+    </HelpFile>
     <Ok>OK</Ok>
     <Cancel>Отказ</Cancel>
     <Apply>Приложи</Apply>
@@ -138,7 +139,8 @@ https://github.com/SubtitleEdit/subtitleedit
 Конзолна команда: {1} {2} Забележка: Проверете за свободно дисково пространство</WaveFileMalformed>
     <LowDiskSpace>НЕДОСТАТЪЧНО ДИСКОВО ПРОСТРАНСТВО!</LowDiskSpace>
     <FreeDiskSpace>Свободно: {0}</FreeDiskSpace>
-    <NoAudioTracksFoundGenerateEmptyWaveform>Не са намерени аудио записи! Създаване на празна вълнова Wav форма на  на звуковия сигнал?</NoAudioTracksFoundGenerateEmptyWaveform>
+    <NoAudioTracksFoundGenerateEmptyWaveform>НЯМА НАМЕРЕНИ АУДИ ЗАПИСИ!
+Създаване на празна вълнова Wav форма на звуковия сигнал?</NoAudioTracksFoundGenerateEmptyWaveform>
   </AddWaveform>
   <AddWaveformBatch>
     <Title>Пакетно създаване вълнова Wav форма на звуковия сигнал</Title>
@@ -273,6 +275,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <BridgeGaps>Премахване на пропуски</BridgeGaps>
     <PlainText>Обикновен текст</PlainText>
     <Ocr>OCR...</Ocr>
+    <AddFiles>Добавяне на файлове...</AddFiles>
     <Filter>Филтър</Filter>
     <FilterSkipped>Пропуснато от филтъра</FilterSkipped>
     <FilterSrtNoUtf8BOM>SubRip (.srt) файлове без UTF-8 BOM заглавие</FilterSrtNoUtf8BOM>
@@ -797,6 +800,8 @@ https://github.com/SubtitleEdit/subtitleedit
 
 Забележка: Настройка Substation Alpha поддръжка.</Info>
     <XGeneratedWithBurnedInSubs>„{0}“, генерирано със записани субтитри.</XGeneratedWithBurnedInSubs>
+    <TimeRemainingSeconds>Оставащо време: {0} секунди</TimeRemainingSeconds>
+    <TimeRemainingMinutesAndSeconds>Оставащо време: {0} минути и {1} секунди</TimeRemainingMinutesAndSeconds>
   </GenerateVideoWithBurnedInSubs>
   <GetDictionaries>
     <Title>Кой речник желаете?</Title>
@@ -1263,6 +1268,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <Help>Помощ</Help>
         <ShowHideWaveform>Покажи/скрий формата на звуковия сигнал</ShowHideWaveform>
         <ShowHideVideo>Покажи/скрий видео</ShowHideVideo>
+        <AssaDraw>Настройка на Sub Station Alpha draw</AssaDraw>
       </ToolBar>
       <ContextMenu>
         <SizeAllColumnsToFit>Побери по дължина</SizeAllColumnsToFit>
