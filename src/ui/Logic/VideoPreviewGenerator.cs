@@ -91,7 +91,7 @@ namespace Nikse.SubtitleEdit.Logic
                 StartInfo =
                 {
                     FileName = ffmpegLocation,
-                    Arguments = $"-i \"{inputVideoFileName}\" -vf \"ass={Path.GetFileName(assaSubtitleFileName)}\",yadif,format=yuv420p -bf 2 -strict -2 -s {width}x{height} \"{outputVideoFileName}\" -c:v {videoEnding} -preset {preset}  -crf {crf} {audioSettings}",
+                    Arguments = $"-i \"{inputVideoFileName}\" -vf \"ass={Path.GetFileName(assaSubtitleFileName)}\",yadif,format=yuv420p -g 30 -bf 2 -strict -2 -s {width}x{height} \"{outputVideoFileName}\" -c:v {videoEnding} -preset {preset}  -crf {crf} {audioSettings} -use_editlist 0 -movflags +faststart",
                     UseShellExecute = false,
                     CreateNoWindow = true,
                     WorkingDirectory = Path.GetDirectoryName(assaSubtitleFileName),

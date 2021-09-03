@@ -525,6 +525,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                     info.Width = mp4Parser.VideoResolution.X;
                     info.Height = mp4Parser.VideoResolution.Y;
                     info.TotalMilliseconds = mp4Parser.Duration.TotalSeconds * 1000;
+                    info.TotalSeconds = info.TotalMilliseconds / 1000.0;
+                    info.TotalFrames = mp4Parser.FrameRate * info.TotalSeconds;
                     info.VideoCodec = "MP4";
                     info.FramesPerSecond = mp4Parser.FrameRate;
                     info.Success = true;
