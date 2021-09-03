@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.Logic
         /// <summary>
         /// Generate a video with a burned-in Advanced Sub Station Alpha subtitle.
         /// </summary>
-        public static Process GenerateHardcodedVideoFile(string inputVideoFileName, string assaSubtitleFileName, string outputVideoFileName, int width, int height, DataReceivedEventHandler dataReceivedHandler = null)
+        public static Process GenerateHardcodedVideoFile(string inputVideoFileName, string assaSubtitleFileName, string outputVideoFileName, int width, int height, string videoEnding, string preset, string crf, string audioEncoding, bool forceStereo, string sampleRate, DataReceivedEventHandler dataReceivedHandler = null)
         {
             var ffmpegLocation = Configuration.Settings.General.FFmpegLocation;
             if (!Configuration.IsRunningOnWindows && (string.IsNullOrEmpty(ffmpegLocation) || !File.Exists(ffmpegLocation)))
@@ -76,17 +76,29 @@ namespace Nikse.SubtitleEdit.Logic
                 ffmpegLocation = "ffmpeg";
             }
 
+            var audioSettings = $"-c:a {audioEncoding}";
+            if (audioEncoding != "copy")
+            {
+                audioSettings += $" -ar {sampleRate}";
+                if (forceStereo)
+                {
+                    audioSettings += " -ac 2";
+                }
+            }
+
             var processMakeVideo = new Process
             {
                 StartInfo =
                 {
                     FileName = ffmpegLocation,
-                    Arguments = $"-i \"{inputVideoFileName}\" -vf \"ass={Path.GetFileName(assaSubtitleFileName)}\" -strict -2 -s {width}x{height} \"{outputVideoFileName}\" -v quiet -stats",
+                    Arguments = $"-i \"{inputVideoFileName}\" -vf \"ass={Path.GetFileName(assaSubtitleFileName)}\",yadif,format=yuv420p -bf 2 -strict -2 -s {width}x{height} \"{outputVideoFileName}\" -c:v {videoEnding} -preset {preset}  -crf {crf} {audioSettings}",
                     UseShellExecute = false,
                     CreateNoWindow = true,
                     WorkingDirectory = Path.GetDirectoryName(assaSubtitleFileName),
                 }
             };
+
+            processMakeVideo.StartInfo.Arguments = processMakeVideo.StartInfo.Arguments.Replace("  ", " ").Trim();
 
             SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
 

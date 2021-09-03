@@ -31730,14 +31730,17 @@ namespace Nikse.SubtitleEdit.Forms
                         var currentHeight = graphics.MeasureString("HJKLj", font).Height;
                         if (currentHeight > wantedHeight)
                         {
-                            currentSize -= i;
+                            currentSize -= Math.Max(1, i);
                         }
                         else if (currentHeight < wantedHeight)
                         {
-                            currentSize += i;
+                            currentSize += Math.Max(1, i);
                         }
 
-                        currentSize = Math.Max(1, currentSize);
+                        if (Math.Abs(currentHeight - wantedHeight) < 1)
+                        {
+                            return currentSize;
+                        }
                     }
                 }
             }

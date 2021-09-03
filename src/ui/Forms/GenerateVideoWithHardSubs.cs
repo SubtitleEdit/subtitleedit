@@ -5,6 +5,7 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -20,6 +21,7 @@ namespace Nikse.SubtitleEdit.Forms
         private long _processedFrames;
         private long _startTicks;
         private long _totalFrames;
+        private StringBuilder _log;
         public string VideoFileName { get; private set; }
 
         public GenerateVideoWithHardSubs(Subtitle assaSubtitle, string inputVideoFileName, VideoInfo videoInfo, int? fontSize)
@@ -41,12 +43,28 @@ namespace Nikse.SubtitleEdit.Forms
             labelPleaseWait.Visible = false;
             labelProgress.Text = string.Empty;
             labelFileName.Text = string.Empty;
+            comboBoxVideoEncoding.SelectedIndex = 0;
+            comboBoxPreset.SelectedIndex = 5;
+            comboBoxCrf.SelectedIndex = 23;
+            comboBoxAudioEnc.SelectedIndex = 0;
+            comboBoxAudioSampleRate.SelectedIndex = 1;
 
             numericUpDownWidth.Value = _videoInfo.Width;
             numericUpDownHeight.Value = _videoInfo.Height;
             if (fontSize.HasValue)
             {
-                numericUpDownFontSize.Value = fontSize.Value;
+                if (fontSize.Value < numericUpDownFontSize.Minimum)
+                {
+                    numericUpDownFontSize.Value = numericUpDownFontSize.Minimum;
+                }
+                else if (fontSize.Value > numericUpDownFontSize.Maximum)
+                {
+                    numericUpDownFontSize.Value = numericUpDownFontSize.Maximum;
+                }
+                else
+                {
+                    numericUpDownFontSize.Value = fontSize.Value;
+                }
 
                 var left = Math.Max(labelResolution.Left + labelResolution.Width, labelFontSize.Left + labelFontSize.Width) + 5;
                 numericUpDownFontSize.Left = left;
@@ -59,6 +77,8 @@ namespace Nikse.SubtitleEdit.Forms
                 groupBoxSettings.Visible = false;
                 Height -= groupBoxSettings.Height - 20;
             }
+
+            textBoxLog.Visible = false;
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -77,12 +97,15 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            _log.AppendLine(outLine.Data);
+
             var match = FrameFinderRegex.Match(outLine.Data);
             if (!match.Success)
             {
                 return;
             }
 
+            SeLogger.Error(outLine.Data);
             var arr = match.Value.Split('=');
             if (arr.Length != 2)
             {
@@ -115,6 +138,15 @@ namespace Nikse.SubtitleEdit.Forms
 
                 VideoFileName = saveDialog.FileName;
             }
+
+            _totalFrames = (long)_videoInfo.TotalFrames;
+
+            _log = new StringBuilder();
+            _log.AppendLine("Target file name: " + VideoFileName);
+            _log.AppendLine("Video info width: " + _videoInfo.Width);
+            _log.AppendLine("Video info width: " + _videoInfo.Height);
+            _log.AppendLine("Video info total frames: " + _videoInfo.TotalFrames);
+            _log.AppendLine("Video info total seconds: " + _videoInfo.TotalSeconds);
 
             if (File.Exists(VideoFileName))
             {
@@ -157,13 +189,20 @@ namespace Nikse.SubtitleEdit.Forms
                 VideoFileName,
                 (int)numericUpDownWidth.Value,
                 (int)numericUpDownHeight.Value,
+                comboBoxVideoEncoding.Text,
+                comboBoxPreset.Text,
+                comboBoxCrf.Text,
+                comboBoxAudioEnc.Text,
+                checkBoxMakeStereo.Checked,
+                comboBoxAudioSampleRate.Text.Replace("Hz", string.Empty).Trim(),
                 OutputHandler);
+
+            _log.AppendLine("ffmpeg arguments: " + process.StartInfo.Arguments);
 
             process.Start();
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
 
-            _totalFrames = (long)_videoInfo.TotalFrames;
             _startTicks = DateTime.UtcNow.Ticks;
             timer1.Start();
 
@@ -246,6 +285,31 @@ namespace Nikse.SubtitleEdit.Forms
             if (v % 2 == 1)
             {
                 numericUpDownHeight.Value++;
+            }
+        }
+
+        private void comboBoxAudioEnc_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            checkBoxMakeStereo.Enabled = comboBoxAudioEnc.SelectedIndex > 0;
+            comboBoxAudioSampleRate.Enabled = comboBoxAudioEnc.SelectedIndex > 0;
+        }
+
+        private void GenerateVideoWithHardSubs_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.F2)
+            {
+                if (textBoxLog.Visible)
+                {
+                    textBoxLog.Visible = false;
+                }
+                else
+                {
+                    textBoxLog.Visible = true;
+                    textBoxLog.ScrollBars = ScrollBars.Both;
+                    textBoxLog.BringToFront();
+                    textBoxLog.Text = _log.ToString();
+                    textBoxLog.Dock = DockStyle.Fill;
+                }
             }
         }
     }
