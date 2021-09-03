@@ -345,6 +345,13 @@ namespace Nikse.SubtitleEdit.Core.Common
         public int AssaProgressBarFontSize { get; set; }
         public bool AssaProgressBarTopAlign { get; set; }
         public string AssaProgressBarTextAlign { get; set; }
+        public string GenVideoEncoding { get; set; }
+        public string GenVideoPreset { get; set; }
+        public string GenVideoCrf { get; set; }
+        public string GenVideoTune { get; set; }
+        public string GenVideoAudioEncoding { get; set; }
+        public bool GenVideoAudioForceStereo { get; set; }
+        public string GenVideoAudioSampleRate { get; set; }
 
         public ToolsSettings()
         {
@@ -498,6 +505,14 @@ namespace Nikse.SubtitleEdit.Core.Common
             AssaProgressBarFontName = "Arial";
             AssaProgressBarFontSize = 30;
             AssaProgressBarTextAlign = "left";
+
+            GenVideoEncoding = "libx264";
+            GenVideoPreset = "medium";
+            GenVideoCrf = "23";
+            GenVideoTune = "film";
+            GenVideoAudioEncoding = "copy";
+            GenVideoAudioForceStereo = true;
+            GenVideoAudioSampleRate = "48000";
         }
     }
 
@@ -5254,6 +5269,49 @@ $HorzAlign          =   Center
                 settings.Tools.AssaProgressBarTextAlign = subNode.InnerText;
             }
 
+
+            subNode = node.SelectSingleNode("GenVideoEncoding");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoEncoding = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("GenVideoPreset");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoPreset = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("GenVideoCrf");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoCrf = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("GenVideoTune");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoTune = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("GenVideoAudioEncoding");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoAudioEncoding = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("GenVideoAudioForceStereo");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoAudioForceStereo = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("GenVideoAudioSampleRate");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoAudioSampleRate = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("FindHistory");
             if (subNode != null)
             {
@@ -8985,6 +9043,13 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AssaProgressBarFontSize", settings.Tools.AssaProgressBarFontSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AssaProgressBarTopAlign", settings.Tools.AssaProgressBarTopAlign.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AssaProgressBarTextAlign", settings.Tools.AssaProgressBarTextAlign);
+                textWriter.WriteElementString("GenVideoEncoding", settings.Tools.GenVideoEncoding);
+                textWriter.WriteElementString("GenVideoPreset", settings.Tools.GenVideoPreset);
+                textWriter.WriteElementString("GenVideoCrf", settings.Tools.GenVideoCrf);
+                textWriter.WriteElementString("GenVideoTune", settings.Tools.GenVideoTune);
+                textWriter.WriteElementString("GenVideoAudioEncoding", settings.Tools.GenVideoAudioEncoding);
+                textWriter.WriteElementString("GenVideoAudioForceStereo", settings.Tools.GenVideoAudioForceStereo.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("GenVideoAudioSampleRate", settings.Tools.GenVideoAudioSampleRate);
 
                 if (settings.Tools.FindHistory != null && settings.Tools.FindHistory.Count > 0)
                 {

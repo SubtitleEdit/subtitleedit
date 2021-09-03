@@ -68,12 +68,22 @@ namespace Nikse.SubtitleEdit.Logic
         /// <summary>
         /// Generate a video with a burned-in Advanced Sub Station Alpha subtitle.
         /// </summary>
-        public static Process GenerateHardcodedVideoFile(string inputVideoFileName, string assaSubtitleFileName, string outputVideoFileName, int width, int height, string videoEnding, string preset, string crf, string audioEncoding, bool forceStereo, string sampleRate, DataReceivedEventHandler dataReceivedHandler = null)
+        public static Process GenerateHardcodedVideoFile(string inputVideoFileName, string assaSubtitleFileName, string outputVideoFileName, int width, int height, string videoEncoding, string preset, string crf, string audioEncoding, bool forceStereo, string sampleRate, string tune, DataReceivedEventHandler dataReceivedHandler = null)
         {
             var ffmpegLocation = Configuration.Settings.General.FFmpegLocation;
             if (!Configuration.IsRunningOnWindows && (string.IsNullOrEmpty(ffmpegLocation) || !File.Exists(ffmpegLocation)))
             {
                 ffmpegLocation = "ffmpeg";
+            }
+
+            var videoEncodingSettings = string.Empty;
+            if (!string.IsNullOrEmpty(videoEncoding))
+            {
+                videoEncodingSettings = $"-c:v {videoEncoding}";
+                if (videoEncoding == "libx265")
+                {
+                    videoEncodingSettings += " -tag:v hvc1";
+                }
             }
 
             var audioSettings = $"-c:a {audioEncoding}";
@@ -86,12 +96,18 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
+            var tuneParameter = string.Empty;
+            if (!string.IsNullOrEmpty(tune))
+            {
+                tuneParameter = $" -tune {tune}";
+            }
+
             var processMakeVideo = new Process
             {
                 StartInfo =
                 {
                     FileName = ffmpegLocation,
-                    Arguments = $"-i \"{inputVideoFileName}\" -vf \"ass={Path.GetFileName(assaSubtitleFileName)}\",yadif,format=yuv420p -g 30 -bf 2 -strict -2 -s {width}x{height} \"{outputVideoFileName}\" -c:v {videoEnding} -preset {preset}  -crf {crf} {audioSettings} -use_editlist 0 -movflags +faststart",
+                    Arguments = $"-i \"{inputVideoFileName}\" -vf \"ass={Path.GetFileName(assaSubtitleFileName)}\",yadif,format=yuv420p -g 30 -bf 2 -s {width}x{height} {videoEncodingSettings} -preset {preset} -crf {crf} {audioSettings}{tuneParameter} -use_editlist 0 -movflags +faststart \"{outputVideoFileName}\"",
                     UseShellExecute = false,
                     CreateNoWindow = true,
                     WorkingDirectory = Path.GetDirectoryName(assaSubtitleFileName),
