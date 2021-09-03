@@ -97,14 +97,9 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            var frameNumberString = arr[1]
-                .Replace(",", ".")
-                .Replace("٫", ".")
-                .Replace("⠨", ".")
-                .Trim();
-            if (double.TryParse(frameNumberString, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var f))
+            if (long.TryParse(arr[1].Trim(), out var f))
             {
-                _processedFrames = (long)Math.Round(f);
+                _processedFrames = f;
             }
         }
 

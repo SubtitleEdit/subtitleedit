@@ -44,9 +44,18 @@ namespace Nikse.SubtitleEdit.Forms
             labelFileName.Text = string.Empty;
             comboBoxVideoEncoding.SelectedIndex = 0;
             comboBoxPreset.SelectedIndex = 5;
-            comboBoxCrf.SelectedIndex = 23;
+            comboBoxCrf.SelectedIndex = 6;
             comboBoxAudioEnc.SelectedIndex = 0;
             comboBoxAudioSampleRate.SelectedIndex = 1;
+            comboBoxTune.SelectedIndex = 0;
+
+            comboBoxPreset.Text = Configuration.Settings.Tools.GenVideoPreset;
+            comboBoxVideoEncoding.Text = Configuration.Settings.Tools.GenVideoEncoding;
+            comboBoxCrf.Text = Configuration.Settings.Tools.GenVideoCrf;
+            comboBoxTune.Text = Configuration.Settings.Tools.GenVideoTune;
+            comboBoxAudioEnc.Text = Configuration.Settings.Tools.GenVideoAudioEncoding;
+            comboBoxAudioSampleRate.Text = Configuration.Settings.Tools.GenVideoAudioSampleRate;
+            checkBoxMakeStereo.Checked = Configuration.Settings.Tools.GenVideoAudioForceStereo;
 
             numericUpDownWidth.Value = _videoInfo.Width;
             numericUpDownHeight.Value = _videoInfo.Height;
@@ -108,21 +117,15 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            SeLogger.Error(outLine.Data);
             var arr = match.Value.Split('=');
             if (arr.Length != 2)
             {
                 return;
             }
 
-            var frameNumberString = arr[1]
-                .Replace(",", ".")
-                .Replace("٫", ".")
-                .Replace("⠨", ".")
-                .Trim();
-            if (double.TryParse(frameNumberString, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var f))
+            if (long.TryParse(arr[1].Trim(), out var f))
             {
-                _processedFrames = (long)Math.Round(f);
+                _processedFrames = f;
             }
         }
 
@@ -198,6 +201,7 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxAudioEnc.Text,
                 checkBoxMakeStereo.Checked,
                 comboBoxAudioSampleRate.Text.Replace("Hz", string.Empty).Trim(),
+                comboBoxTune.Text,
                 OutputHandler);
 
             _log.AppendLine("ffmpeg arguments: " + process.StartInfo.Arguments);
@@ -230,6 +234,12 @@ namespace Nikse.SubtitleEdit.Forms
             timer1.Stop();
             labelProgress.Text = string.Empty;
             groupBoxSettings.Enabled = true;
+
+            for (int i = 0; i < 10; i++)
+            {
+                System.Threading.Thread.Sleep(100);
+                Application.DoEvents();
+            }
 
             try
             {
@@ -265,7 +275,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingSeconds, (int)Math.Round(timeCode.TotalSeconds));
             }
 
-            if (timeCode.TotalSeconds * 60 > 5)
+            if (timeCode.TotalSeconds / 60 > 5)
             {
                 return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingMinutes, (int)Math.Round(timeCode.TotalSeconds / 60));
             }
@@ -300,7 +310,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GenerateVideoWithHardSubs_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.F2)
+            if (e.KeyCode == Keys.F2 && _log != null)
             {
                 if (textBoxLog.Visible)
                 {
@@ -314,7 +324,38 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxLog.Text = _log.ToString();
                     textBoxLog.Dock = DockStyle.Fill;
                 }
+                e.SuppressKeyPress = true;
             }
+            else if (e.KeyCode == Keys.Escape && _log == null)
+            {
+                DialogResult = DialogResult.Cancel;
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.Escape && _log == null)
+            {
+                DialogResult = DialogResult.Cancel;
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == UiUtil.HelpKeys)
+            {
+                linkLabelHelp_LinkClicked(null, null);
+            }
+        }
+
+        private void linkLabelHelp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            UiUtil.OpenUrl("http://trac.ffmpeg.org/wiki/Encode/H.264");
+        }
+
+        private void GenerateVideoWithHardSubs_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Configuration.Settings.Tools.GenVideoEncoding = comboBoxVideoEncoding.Text;
+            Configuration.Settings.Tools.GenVideoPreset = comboBoxPreset.Text;
+            Configuration.Settings.Tools.GenVideoCrf = comboBoxCrf.Text;
+            Configuration.Settings.Tools.GenVideoTune = comboBoxTune.Text;
+            Configuration.Settings.Tools.GenVideoAudioEncoding = comboBoxAudioEnc.Text;
+            Configuration.Settings.Tools.GenVideoAudioForceStereo = checkBoxMakeStereo.Checked;
+            Configuration.Settings.Tools.GenVideoAudioSampleRate = comboBoxAudioSampleRate.Text;
         }
     }
 }
