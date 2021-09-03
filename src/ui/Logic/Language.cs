@@ -1017,7 +1017,8 @@ namespace Nikse.SubtitleEdit.Logic
             GenerateVideoWithBurnedInSubs = new LanguageStructure.GenerateVideoWithBurnedInSubs
             {
                 Title = "Generate video with burned-in subtile",
-                Info = "Will generate a video file with burned-in subtitle.\r\n\r\nNote: Advanced Substation Alpha supported.",
+                InfoAssaOff = "Note: Advanced Substation Alpha styling supported.",
+                InfoAssaOn= "Note: Advanced Substation Alpha styling will be used :)",
                 XGeneratedWithBurnedInSubs = "\"{0}\" generated with burned-in subtitle.",
                 TimeRemainingMinutes = "Time remaining: {0} minutes",
                 TimeRemainingSeconds = "Time remaining: {0} seconds",

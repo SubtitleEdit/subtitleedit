@@ -34,7 +34,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.labelPleaseWait = new System.Windows.Forms.Label();
-            this.labelInfo = new System.Windows.Forms.Label();
             this.numericUpDownFontSize = new System.Windows.Forms.NumericUpDown();
             this.labelFontSize = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
@@ -57,6 +56,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxAudioSampleRate = new System.Windows.Forms.ComboBox();
             this.labelAudioSampleRate = new System.Windows.Forms.Label();
             this.textBoxLog = new System.Windows.Forms.TextBox();
+            this.labelInfo = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).BeginInit();
             this.groupBoxSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).BeginInit();
@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(12, 339);
+            this.progressBar1.Location = new System.Drawing.Point(12, 304);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(485, 11);
             this.progressBar1.TabIndex = 22;
@@ -77,7 +77,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(503, 339);
+            this.buttonOK.Location = new System.Drawing.Point(503, 304);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(121, 23);
             this.buttonOK.TabIndex = 23;
@@ -90,7 +90,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(630, 339);
+            this.buttonCancel.Location = new System.Drawing.Point(630, 304);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 24;
@@ -102,20 +102,11 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelPleaseWait.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelPleaseWait.AutoSize = true;
-            this.labelPleaseWait.Location = new System.Drawing.Point(12, 323);
+            this.labelPleaseWait.Location = new System.Drawing.Point(12, 288);
             this.labelPleaseWait.Name = "labelPleaseWait";
             this.labelPleaseWait.Size = new System.Drawing.Size(70, 13);
             this.labelPleaseWait.TabIndex = 25;
             this.labelPleaseWait.Text = "Please wait...";
-            // 
-            // labelInfo
-            // 
-            this.labelInfo.AutoSize = true;
-            this.labelInfo.Location = new System.Drawing.Point(15, 29);
-            this.labelInfo.Name = "labelInfo";
-            this.labelInfo.Size = new System.Drawing.Size(220, 13);
-            this.labelInfo.TabIndex = 26;
-            this.labelInfo.Text = "This will save video x with burned-in subtitles.";
             // 
             // numericUpDownFontSize
             // 
@@ -157,7 +148,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelProgress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelProgress.AutoSize = true;
-            this.labelProgress.Location = new System.Drawing.Point(12, 353);
+            this.labelProgress.Location = new System.Drawing.Point(12, 318);
             this.labelProgress.Name = "labelProgress";
             this.labelProgress.Size = new System.Drawing.Size(88, 13);
             this.labelProgress.TabIndex = 29;
@@ -186,9 +177,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxSettings.Controls.Add(this.numericUpDownWidth);
             this.groupBoxSettings.Controls.Add(this.numericUpDownFontSize);
             this.groupBoxSettings.Controls.Add(this.labelFontSize);
-            this.groupBoxSettings.Location = new System.Drawing.Point(18, 52);
+            this.groupBoxSettings.Location = new System.Drawing.Point(12, 13);
             this.groupBoxSettings.Name = "groupBoxSettings";
-            this.groupBoxSettings.Size = new System.Drawing.Size(687, 255);
+            this.groupBoxSettings.Size = new System.Drawing.Size(693, 236);
             this.groupBoxSettings.TabIndex = 30;
             this.groupBoxSettings.TabStop = false;
             this.groupBoxSettings.Text = "Settings";
@@ -196,7 +187,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelFileName
             // 
             this.labelFileName.AutoSize = true;
-            this.labelFileName.Location = new System.Drawing.Point(19, 224);
+            this.labelFileName.Location = new System.Drawing.Point(19, 211);
             this.labelFileName.Name = "labelFileName";
             this.labelFileName.Size = new System.Drawing.Size(52, 13);
             this.labelFileName.TabIndex = 33;
@@ -279,7 +270,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelPreset
             // 
             this.labelPreset.AutoSize = true;
-            this.labelPreset.Location = new System.Drawing.Point(19, 140);
+            this.labelPreset.Location = new System.Drawing.Point(19, 135);
             this.labelPreset.Name = "labelPreset";
             this.labelPreset.Size = new System.Drawing.Size(37, 13);
             this.labelPreset.TabIndex = 35;
@@ -299,7 +290,7 @@ namespace Nikse.SubtitleEdit.Forms
             "slow",
             "slower",
             "veryslow "});
-            this.comboBoxPreset.Location = new System.Drawing.Point(88, 138);
+            this.comboBoxPreset.Location = new System.Drawing.Point(88, 133);
             this.comboBoxPreset.Name = "comboBoxPreset";
             this.comboBoxPreset.Size = new System.Drawing.Size(121, 21);
             this.comboBoxPreset.TabIndex = 36;
@@ -361,7 +352,7 @@ namespace Nikse.SubtitleEdit.Forms
             "49",
             "50",
             "51"});
-            this.comboBoxCrf.Location = new System.Drawing.Point(88, 165);
+            this.comboBoxCrf.Location = new System.Drawing.Point(88, 160);
             this.comboBoxCrf.Name = "comboBoxCrf";
             this.comboBoxCrf.Size = new System.Drawing.Size(121, 21);
             this.comboBoxCrf.TabIndex = 38;
@@ -369,7 +360,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelCRF
             // 
             this.labelCRF.AutoSize = true;
-            this.labelCRF.Location = new System.Drawing.Point(19, 167);
+            this.labelCRF.Location = new System.Drawing.Point(19, 162);
             this.labelCRF.Name = "labelCRF";
             this.labelCRF.Size = new System.Drawing.Size(28, 13);
             this.labelCRF.TabIndex = 37;
@@ -383,7 +374,7 @@ namespace Nikse.SubtitleEdit.Forms
             "libx264",
             "libx265",
             "mpeg4 "});
-            this.comboBoxVideoEncoding.Location = new System.Drawing.Point(88, 111);
+            this.comboBoxVideoEncoding.Location = new System.Drawing.Point(88, 106);
             this.comboBoxVideoEncoding.Name = "comboBoxVideoEncoding";
             this.comboBoxVideoEncoding.Size = new System.Drawing.Size(121, 21);
             this.comboBoxVideoEncoding.TabIndex = 40;
@@ -391,7 +382,7 @@ namespace Nikse.SubtitleEdit.Forms
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(19, 113);
+            this.label1.Location = new System.Drawing.Point(19, 108);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(55, 13);
             this.label1.TabIndex = 39;
@@ -404,7 +395,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxAudioEnc.Items.AddRange(new object[] {
             "copy",
             "aac"});
-            this.comboBoxAudioEnc.Location = new System.Drawing.Point(334, 111);
+            this.comboBoxAudioEnc.Location = new System.Drawing.Point(334, 106);
             this.comboBoxAudioEnc.Name = "comboBoxAudioEnc";
             this.comboBoxAudioEnc.Size = new System.Drawing.Size(121, 21);
             this.comboBoxAudioEnc.TabIndex = 42;
@@ -413,7 +404,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelAudioEnc
             // 
             this.labelAudioEnc.AutoSize = true;
-            this.labelAudioEnc.Location = new System.Drawing.Point(265, 113);
+            this.labelAudioEnc.Location = new System.Drawing.Point(265, 108);
             this.labelAudioEnc.Name = "labelAudioEnc";
             this.labelAudioEnc.Size = new System.Drawing.Size(55, 13);
             this.labelAudioEnc.TabIndex = 41;
@@ -424,7 +415,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxMakeStereo.AutoSize = true;
             this.checkBoxMakeStereo.Checked = true;
             this.checkBoxMakeStereo.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxMakeStereo.Location = new System.Drawing.Point(334, 140);
+            this.checkBoxMakeStereo.Location = new System.Drawing.Point(334, 135);
             this.checkBoxMakeStereo.Name = "checkBoxMakeStereo";
             this.checkBoxMakeStereo.Size = new System.Drawing.Size(57, 17);
             this.checkBoxMakeStereo.TabIndex = 43;
@@ -441,7 +432,7 @@ namespace Nikse.SubtitleEdit.Forms
             "88200 Hz",
             "96000 Hz",
             "192000 Hz"});
-            this.comboBoxAudioSampleRate.Location = new System.Drawing.Point(334, 165);
+            this.comboBoxAudioSampleRate.Location = new System.Drawing.Point(334, 160);
             this.comboBoxAudioSampleRate.Name = "comboBoxAudioSampleRate";
             this.comboBoxAudioSampleRate.Size = new System.Drawing.Size(121, 21);
             this.comboBoxAudioSampleRate.TabIndex = 45;
@@ -449,7 +440,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelAudioSampleRate
             // 
             this.labelAudioSampleRate.AutoSize = true;
-            this.labelAudioSampleRate.Location = new System.Drawing.Point(265, 167);
+            this.labelAudioSampleRate.Location = new System.Drawing.Point(265, 162);
             this.labelAudioSampleRate.Name = "labelAudioSampleRate";
             this.labelAudioSampleRate.Size = new System.Drawing.Size(63, 13);
             this.labelAudioSampleRate.TabIndex = 44;
@@ -463,14 +454,24 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxLog.Size = new System.Drawing.Size(188, 26);
             this.textBoxLog.TabIndex = 31;
             // 
+            // labelInfo
+            // 
+            this.labelInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelInfo.AutoSize = true;
+            this.labelInfo.Location = new System.Drawing.Point(12, 252);
+            this.labelInfo.Name = "labelInfo";
+            this.labelInfo.Size = new System.Drawing.Size(25, 13);
+            this.labelInfo.TabIndex = 46;
+            this.labelInfo.Text = "Info";
+            // 
             // GenerateVideoWithHardSubs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(717, 374);
+            this.ClientSize = new System.Drawing.Size(717, 339);
+            this.Controls.Add(this.labelInfo);
             this.Controls.Add(this.groupBoxSettings);
             this.Controls.Add(this.labelProgress);
-            this.Controls.Add(this.labelInfo);
             this.Controls.Add(this.labelPleaseWait);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.buttonOK);
@@ -501,7 +502,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Label labelPleaseWait;
-        private System.Windows.Forms.Label labelInfo;
         private System.Windows.Forms.NumericUpDown numericUpDownFontSize;
         private System.Windows.Forms.Label labelFontSize;
         private System.Windows.Forms.Timer timer1;
@@ -524,5 +524,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Label labelAudioSampleRate;
         private System.Windows.Forms.CheckBox checkBoxMakeStereo;
         private System.Windows.Forms.TextBox textBoxLog;
+        private System.Windows.Forms.Label labelInfo;
     }
 }

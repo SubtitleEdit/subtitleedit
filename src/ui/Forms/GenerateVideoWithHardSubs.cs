@@ -32,7 +32,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             _videoInfo = videoInfo;
             Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Title;
-            labelInfo.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Info;
             _assaSubtitle = assaSubtitle;
             _inputVideoFileName = inputVideoFileName;
             buttonOK.Text = LanguageSettings.Current.Watermark.Generate;
@@ -71,11 +70,15 @@ namespace Nikse.SubtitleEdit.Forms
                 numericUpDownWidth.Left = left;
                 labelX.Left = numericUpDownWidth.Left + numericUpDownWidth.Width + 3;
                 numericUpDownHeight.Left = labelX.Left + labelX.Width + 3;
+                labelInfo.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.InfoAssaOff;
             }
             else
             {
-                groupBoxSettings.Visible = false;
-                Height -= groupBoxSettings.Height - 20;
+                numericUpDownFontSize.Visible = false;
+                labelFontSize.Visible = false;
+                numericUpDownWidth.Enabled = false;
+                numericUpDownHeight.Enabled = false;
+                labelInfo.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.InfoAssaOn;
             }
 
             textBoxLog.Visible = false;
@@ -292,6 +295,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             checkBoxMakeStereo.Enabled = comboBoxAudioEnc.SelectedIndex > 0;
             comboBoxAudioSampleRate.Enabled = comboBoxAudioEnc.SelectedIndex > 0;
+            labelAudioSampleRate.Enabled = comboBoxAudioEnc.SelectedIndex > 0;
         }
 
         private void GenerateVideoWithHardSubs_KeyDown(object sender, KeyEventArgs e)

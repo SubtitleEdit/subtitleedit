@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -8,7 +9,9 @@ namespace Nikse.SubtitleEdit.Forms
     public sealed partial class ExportPngXmlDialogOpenFolder : Form
     {
         private readonly string _folder;
-        public ExportPngXmlDialogOpenFolder(string text, string folder)
+        private readonly string _fileName;
+
+        public ExportPngXmlDialogOpenFolder(string text, string folder, string fileName = null)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -27,6 +30,7 @@ namespace Nikse.SubtitleEdit.Forms
             Width = width + buttonOK.Width + 75;
             Height = labelText.Top + labelText.Height + buttonOK.Height + titleBarHeight + 40;
             _folder = folder;
+            _fileName = fileName;
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
@@ -44,7 +48,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void linkLabelOpenFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            UiUtil.OpenFolder(_folder);
+            if (string.IsNullOrEmpty(_fileName) || !File.Exists(_fileName))
+            {
+                UiUtil.OpenFolder(_folder);
+            }
+            else
+            {
+                UiUtil.OpenFolderFromFileName(_fileName);
+            }
         }
     }
 }
