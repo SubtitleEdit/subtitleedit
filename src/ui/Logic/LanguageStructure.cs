@@ -881,7 +881,8 @@
         public class GenerateVideoWithBurnedInSubs
         {
             public string Title { get; set; }
-            public string Info { get; set; }
+            public string InfoAssaOff { get; set; }
+            public string InfoAssaOn { get; set; }
             public string XGeneratedWithBurnedInSubs { get; set; }
             public string TimeRemainingMinutes { get; set; }
             public string TimeRemainingSeconds { get; set; }

@@ -2119,8 +2119,11 @@ namespace Nikse.SubtitleEdit.Logic
                 case "GenerateVideoWithBurnedInSubs/Title":
                     language.GenerateVideoWithBurnedInSubs.Title = reader.Value;
                     break;
-                case "GenerateVideoWithBurnedInSubs/Info":
-                    language.GenerateVideoWithBurnedInSubs.Info = reader.Value;
+                case "GenerateVideoWithBurnedInSubs/InfoAssaOff":
+                    language.GenerateVideoWithBurnedInSubs.InfoAssaOff = reader.Value;
+                    break;
+                case "GenerateVideoWithBurnedInSubs/InfoAssaOn":
+                    language.GenerateVideoWithBurnedInSubs.InfoAssaOn = reader.Value;
                     break;
                 case "GenerateVideoWithBurnedInSubs/XGeneratedWithBurnedInSubs":
                     language.GenerateVideoWithBurnedInSubs.XGeneratedWithBurnedInSubs = reader.Value;

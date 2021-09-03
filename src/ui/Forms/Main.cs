@@ -31709,7 +31709,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                using (var f = new ExportPngXmlDialogOpenFolder(string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.XGeneratedWithBurnedInSubs, Path.GetFileName(form.VideoFileName)), Path.GetDirectoryName(form.VideoFileName)))
+                using (var f = new ExportPngXmlDialogOpenFolder(string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.XGeneratedWithBurnedInSubs, Path.GetFileName(form.VideoFileName)), Path.GetDirectoryName(form.VideoFileName), form.VideoFileName))
                 {
                     f.ShowDialog(this);
                 }
