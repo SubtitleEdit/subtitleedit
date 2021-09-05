@@ -797,12 +797,13 @@ Command line: {1} {2}
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
     <Title>生成带有内嵌字幕的视频</Title>
-    <Info>将生成带有内嵌字幕的视频文件。
-
-注意：支持Advanced SubStation Alpha。</Info>
+    <InfoAssaOff>注意：支持 ASSA 样式。</InfoAssaOff>
+    <InfoAssaOn>注意：将使用 ASSA 样式:)</InfoAssaOn>
     <XGeneratedWithBurnedInSubs>带有内嵌字幕的“{0}”已生成。</XGeneratedWithBurnedInSubs>
+    <TimeRemainingMinutes>剩余时间：{0} 分钟</TimeRemainingMinutes>
     <TimeRemainingSeconds>剩余时间: {0} 秒</TimeRemainingSeconds>
     <TimeRemainingMinutesAndSeconds>剩余时间: {0} 分 {1} 秒</TimeRemainingMinutesAndSeconds>
+    <TargetFileName>目标文件名：{0}</TargetFileName>
   </GenerateVideoWithBurnedInSubs>
   <GetDictionaries>
     <Title>是否使用词典？</Title>
@@ -1203,7 +1204,6 @@ Command line: {1} {2}
         <RemoveSceneChanges>移除场景变更</RemoveSceneChanges>
         <WaveformBatchGenerate>批量生成波形...</WaveformBatchGenerate>
         <ShowHideVideo>显示/隐藏视频</ShowHideVideo>
-        <AssaDraw>ASSA 绘图</AssaDraw>
         <ShowHideWaveform>显示/隐藏波形</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>显示/隐藏波形和频谱图</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>取消停靠视频控件</UnDockVideoControls>
@@ -1265,6 +1265,7 @@ Command line: {1} {2}
         <Help>帮助</Help>
         <ShowHideWaveform>显示/隐藏音频</ShowHideWaveform>
         <ShowHideVideo>显示/隐藏视频</ShowHideVideo>
+        <AssaDraw>ASSA 绘图</AssaDraw>
       </ToolBar>
       <ContextMenu>
         <SizeAllColumnsToFit>自适应所有的列宽度</SizeAllColumnsToFit>
@@ -1955,6 +1956,7 @@ Command line: {1} {2}
     <RemoveTextIfAllUppercase>如果大写就删除行</RemoveTextIfAllUppercase>
     <RemoveInterjections>删除感叹词</RemoveInterjections>
     <EditInterjections>编辑...</EditInterjections>
+    <Apply>应用</Apply>
   </RemoveTextFromHearImpaired>
   <ReplaceDialog>
     <Title>替换</Title>
