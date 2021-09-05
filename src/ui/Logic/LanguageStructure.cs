@@ -888,6 +888,16 @@
             public string TimeRemainingSeconds { get; set; }
             public string TimeRemainingMinutesAndSeconds { get; set; }
             public string TargetFileName { get; set; }
+            public string TargetFileSize { get; set; }
+            public string FileSizeMb { get; set; }
+            public string PassX { get; set; }
+            public string Encoding { get; set; }
+            public string BitRate { get; set; }
+            public string SampleRate { get; set; }
+            public string Stereo { get; set; }
+            public string Preset { get; set; }
+            public string Crf { get; set; }
+            public string TuneFor { get; set; }
         }
 
         public class GetDictionaries

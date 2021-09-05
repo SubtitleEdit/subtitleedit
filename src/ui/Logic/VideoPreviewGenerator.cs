@@ -68,14 +68,8 @@ namespace Nikse.SubtitleEdit.Logic
         /// <summary>
         /// Generate a video with a burned-in Advanced Sub Station Alpha subtitle.
         /// </summary>
-        public static Process GenerateHardcodedVideoFile(string inputVideoFileName, string assaSubtitleFileName, string outputVideoFileName, int width, int height, string videoEncoding, string preset, string crf, string audioEncoding, bool forceStereo, string sampleRate, string tune, DataReceivedEventHandler dataReceivedHandler = null)
+        public static Process GenerateHardcodedVideoFile(string inputVideoFileName, string assaSubtitleFileName, string outputVideoFileName, int width, int height, string videoEncoding, string preset, string crf, string audioEncoding, bool forceStereo, string sampleRate, string tune, string audioBitRate, string pass, string twoPassBitRate, DataReceivedEventHandler dataReceivedHandler = null)
         {
-            var ffmpegLocation = Configuration.Settings.General.FFmpegLocation;
-            if (!Configuration.IsRunningOnWindows && (string.IsNullOrEmpty(ffmpegLocation) || !File.Exists(ffmpegLocation)))
-            {
-                ffmpegLocation = "ffmpeg";
-            }
-
             var videoEncodingSettings = string.Empty;
             if (!string.IsNullOrEmpty(videoEncoding))
             {
@@ -96,10 +90,46 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
+            var presetSettings = string.Empty;
+            if (!string.IsNullOrEmpty(preset))
+            {
+                presetSettings = $" -preset {preset}";
+            }
+
+            var crfSettings = string.Empty;
+            if (!string.IsNullOrEmpty(crf) && string.IsNullOrEmpty(pass))
+            {
+                crfSettings = $" -crf {crf}";
+            }
+
             var tuneParameter = string.Empty;
             if (!string.IsNullOrEmpty(tune))
             {
                 tuneParameter = $" -tune {tune}";
+            }
+
+            outputVideoFileName = $"\"{outputVideoFileName}\"";
+
+            var passSettings = string.Empty;
+            if (!string.IsNullOrEmpty(pass) && !string.IsNullOrEmpty(twoPassBitRate))
+            {
+                passSettings = $" -b:v {twoPassBitRate} -pass {pass}";
+
+                if (!string.IsNullOrEmpty(audioBitRate))
+                {
+                    passSettings += $" -b:a {audioBitRate}";
+                }
+
+                if (pass == "1")
+                {
+                    outputVideoFileName = Configuration.IsRunningOnWindows ? "-f null NUL" : "-f null /dev/null";
+                }
+            }
+
+            var ffmpegLocation = Configuration.Settings.General.FFmpegLocation;
+            if (!Configuration.IsRunningOnWindows && (string.IsNullOrEmpty(ffmpegLocation) || !File.Exists(ffmpegLocation)))
+            {
+                ffmpegLocation = "ffmpeg";
             }
 
             var processMakeVideo = new Process
@@ -107,14 +137,17 @@ namespace Nikse.SubtitleEdit.Logic
                 StartInfo =
                 {
                     FileName = ffmpegLocation,
-                    Arguments = $"-i \"{inputVideoFileName}\" -vf \"ass={Path.GetFileName(assaSubtitleFileName)}\",yadif,format=yuv420p -g 30 -bf 2 -s {width}x{height} {videoEncodingSettings} -preset {preset} -crf {crf} {audioSettings}{tuneParameter} -use_editlist 0 -movflags +faststart \"{outputVideoFileName}\"",
+                    Arguments = $"-i \"{inputVideoFileName}\" -vf \"ass={Path.GetFileName(assaSubtitleFileName)}\",yadif,format=yuv420p -g 30 -bf 2 -s {width}x{height} {videoEncodingSettings} {passSettings} {presetSettings} {crfSettings} {audioSettings}{tuneParameter} -use_editlist 0 -movflags +faststart {outputVideoFileName}",
                     UseShellExecute = false,
                     CreateNoWindow = true,
-                    WorkingDirectory = Path.GetDirectoryName(assaSubtitleFileName),
+                    WorkingDirectory = Path.GetDirectoryName(assaSubtitleFileName) ?? string.Empty,
                 }
             };
 
-            processMakeVideo.StartInfo.Arguments = processMakeVideo.StartInfo.Arguments.Replace("  ", " ").Trim();
+            processMakeVideo.StartInfo.Arguments = processMakeVideo.StartInfo.Arguments
+                .Replace("  ", " ")
+                .Replace("  ", " ")
+                .Trim();
 
             SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
 

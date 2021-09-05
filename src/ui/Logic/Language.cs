@@ -1024,6 +1024,16 @@ namespace Nikse.SubtitleEdit.Logic
                 TimeRemainingSeconds = "Time remaining: {0} seconds",
                 TimeRemainingMinutesAndSeconds = "Time remaining: {0} minutes and {1} seconds",
                 TargetFileName = "Target file name: {0}",
+                TargetFileSize = "Target file size (requires 2 pass encoding)",
+                FileSizeMb = "File size in MB",
+                PassX = "Pass {0}",
+                Encoding = "Encoding",
+                BitRate = "Bit rate",
+                SampleRate = "Sample rate",
+                Stereo = "Stereo",
+                Preset = "Preset",
+                Crf = "CRF",
+                TuneFor = "Tune for",
             };
 
             GetDictionaries = new LanguageStructure.GetDictionaries

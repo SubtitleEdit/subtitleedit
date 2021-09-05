@@ -352,6 +352,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string GenVideoAudioEncoding { get; set; }
         public bool GenVideoAudioForceStereo { get; set; }
         public string GenVideoAudioSampleRate { get; set; }
+        public bool GenVideoTargetFileSize { get; set; }
 
         public ToolsSettings()
         {
@@ -5312,6 +5313,12 @@ $HorzAlign          =   Center
                 settings.Tools.GenVideoAudioSampleRate = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("GenVideoTargetFileSize");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoTargetFileSize = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("FindHistory");
             if (subNode != null)
             {
@@ -9050,6 +9057,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("GenVideoAudioEncoding", settings.Tools.GenVideoAudioEncoding);
                 textWriter.WriteElementString("GenVideoAudioForceStereo", settings.Tools.GenVideoAudioForceStereo.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenVideoAudioSampleRate", settings.Tools.GenVideoAudioSampleRate);
+                textWriter.WriteElementString("GenVideoTargetFileSize", settings.Tools.GenVideoTargetFileSize.ToString(CultureInfo.InvariantCulture));
 
                 if (settings.Tools.FindHistory != null && settings.Tools.FindHistory.Count > 0)
                 {
