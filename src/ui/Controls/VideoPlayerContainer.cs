@@ -469,14 +469,14 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 else
                 {
-                    if (subtitle.Header == null || subtitle.Header.Contains("[V4 Styles]"))
-                    {
-                        subtitle = new Subtitle(subtitle, false);
-                        subtitle.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromSubStationAlpha(subtitle.Header);
-                    }
-
                     if (subtitle.Header == null || !subtitle.Header.Contains("[V4+ Styles]"))
                     {
+                        if (subtitle.Header != null && subtitle.Header.Contains("[V4 Styles]"))
+                        {
+                            subtitle = new Subtitle(subtitle, false);
+                            subtitle.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromSubStationAlpha(subtitle.Header);
+                        }
+
                         var oldSub = subtitle;
                         subtitle = new Subtitle(subtitle);
                         if (TextBox.RightToLeft == RightToLeft.Yes && LanguageAutoDetect.CouldBeRightToLeftLanguage(subtitle))
