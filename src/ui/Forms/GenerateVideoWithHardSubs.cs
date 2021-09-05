@@ -38,16 +38,27 @@ namespace Nikse.SubtitleEdit.Forms
             labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
             labelFontSize.Text = LanguageSettings.Current.ExportPngXml.FontSize;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            labelAudioEnc.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Encoding;
+            labelVideoEncoding.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Encoding;
+            labelAudioBitRate.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.BitRate;
+            labelAudioSampleRate.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.SampleRate;
+            checkBoxMakeStereo.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Stereo;
+            labelCRF.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Crf;
+            labelPreset.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Preset;
+            labelTune.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TuneFor;
             progressBar1.Visible = false;
             labelPleaseWait.Visible = false;
             labelProgress.Text = string.Empty;
             labelFileName.Text = string.Empty;
+            labelPass.Text = string.Empty;
             comboBoxVideoEncoding.SelectedIndex = 0;
             comboBoxPreset.SelectedIndex = 5;
             comboBoxCrf.SelectedIndex = 6;
             comboBoxAudioEnc.SelectedIndex = 0;
             comboBoxAudioSampleRate.SelectedIndex = 1;
             comboBoxTune.SelectedIndex = 0;
+            comboBoxAudioBitRate.Text = "128k";
+            checkBoxTargetFileSize_CheckedChanged(null, null);
 
             comboBoxPreset.Text = Configuration.Settings.Tools.GenVideoPreset;
             comboBoxVideoEncoding.Text = Configuration.Settings.Tools.GenVideoEncoding;
@@ -56,6 +67,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxAudioEnc.Text = Configuration.Settings.Tools.GenVideoAudioEncoding;
             comboBoxAudioSampleRate.Text = Configuration.Settings.Tools.GenVideoAudioSampleRate;
             checkBoxMakeStereo.Checked = Configuration.Settings.Tools.GenVideoAudioForceStereo;
+            checkBoxTargetFileSize.Checked = Configuration.Settings.Tools.GenVideoTargetFileSize;
 
             numericUpDownWidth.Value = _videoInfo.Width;
             numericUpDownHeight.Value = _videoInfo.Height;
@@ -189,27 +201,161 @@ namespace Nikse.SubtitleEdit.Forms
             progressBar1.Maximum = (int)_videoInfo.TotalFrames;
             progressBar1.Visible = true;
             labelPleaseWait.Visible = true;
-            var process = VideoPreviewGenerator.GenerateHardcodedVideoFile(
-                _inputVideoFileName,
-                assaTempFileName,
-                VideoFileName,
-                (int)numericUpDownWidth.Value,
-                (int)numericUpDownHeight.Value,
-                comboBoxVideoEncoding.Text,
-                comboBoxPreset.Text,
-                comboBoxCrf.Text,
-                comboBoxAudioEnc.Text,
-                checkBoxMakeStereo.Checked,
-                comboBoxAudioSampleRate.Text.Replace("Hz", string.Empty).Trim(),
-                comboBoxTune.Text,
-                OutputHandler);
 
-            _log.AppendLine("ffmpeg arguments: " + process.StartInfo.Arguments);
+            if (checkBoxTargetFileSize.Checked)
+            {
+                RunTwoPassEncoding(assaTempFileName);
+            }
+            else
+            {
+                RunOnePassEncoding(assaTempFileName);
+            }
 
+            progressBar1.Visible = false;
+            labelPleaseWait.Visible = false;
+            timer1.Stop();
+            labelProgress.Text = string.Empty;
+            groupBoxSettings.Enabled = true;
+
+            try
+            {
+                File.Delete(assaTempFileName);
+            }
+            catch
+            {
+                // ignore
+            }
+
+            DialogResult = _abort ? DialogResult.Cancel : DialogResult.OK;
+        }
+
+        private void RunTwoPassEncoding(string assaTempFileName)
+        {
+            labelPass.Text = string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.PassX, "1");
+
+            var audioMb = 0;
+            if (comboBoxAudioEnc.Text == "copy")
+            {
+                audioMb = GetAudioFileSizeInMb();
+            }
+
+            // (MiB * 8192 [converts MiB to kBit]) / video seconds = kBit/s total bitrate
+            var bitRate = (int)Math.Round(((double)numericUpDownTargetFileSize.Value - audioMb) * 8192.0 / _videoInfo.TotalSeconds);
+            if (comboBoxAudioEnc.Text != "copy" && !string.IsNullOrWhiteSpace(comboBoxAudioBitRate.Text))
+            {
+                var audioBitRate = int.Parse(comboBoxAudioBitRate.Text.RemoveChar('k').TrimEnd());
+                bitRate -= audioBitRate;
+            }
+            var videoBitRate = bitRate.ToString(CultureInfo.InvariantCulture) + "k";
+
+            if (bitRate < 10)
+            {
+                MessageBox.Show($"Bitrate too low: {bitRate}k");
+                return;
+            }
+
+            var process = GetFfmpegProcess(assaTempFileName, 1, videoBitRate);
+            _log.AppendLine("ffmpeg arguments pass 1: " + process.StartInfo.Arguments);
             process.Start();
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
+            _startTicks = DateTime.UtcNow.Ticks;
+            timer1.Start();
 
+            while (!process.HasExited)
+            {
+                System.Threading.Thread.Sleep(100);
+                Application.DoEvents();
+                if (_abort)
+                {
+                    process.Kill();
+                    return;
+                }
+
+                var v = (int)_processedFrames;
+                if (v >= progressBar1.Minimum && v <= progressBar1.Maximum)
+                {
+                    progressBar1.Value = v;
+                }
+            }
+
+
+            labelPass.Text = string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.PassX, "2");
+            process = GetFfmpegProcess(assaTempFileName, 2, videoBitRate);
+            _log.AppendLine("ffmpeg arguments pass 2: " + process.StartInfo.Arguments);
+            process.Start();
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
+            _startTicks = DateTime.UtcNow.Ticks;
+            timer1.Start();
+
+            while (!process.HasExited)
+            {
+                System.Threading.Thread.Sleep(100);
+                Application.DoEvents();
+                if (_abort)
+                {
+                    process.Kill();
+                    return;
+                }
+
+                var v = (int)_processedFrames;
+                if (v >= progressBar1.Minimum && v <= progressBar1.Maximum)
+                {
+                    progressBar1.Value = v;
+                }
+            }
+        }
+
+        private int GetAudioFileSizeInMb()
+        {
+            var ffmpegLocation = Configuration.Settings.General.FFmpegLocation;
+            if (!Configuration.IsRunningOnWindows && (string.IsNullOrEmpty(ffmpegLocation) || !File.Exists(ffmpegLocation)))
+            {
+                ffmpegLocation = "ffmpeg";
+            }
+
+            var tempFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".aac");
+            var process = new Process
+            {
+                StartInfo =
+                {
+                    FileName = ffmpegLocation,
+                    Arguments = $"-i \"{_inputVideoFileName}\" -vn -acodec copy \"{tempFileName}\"",
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                }
+            };
+
+            process.Start();
+            process.WaitForExit();
+            try
+            {
+                var length = (int)Math.Round(new FileInfo(tempFileName).Length / 1024.0 / 1024);
+                try
+                {
+                    File.Delete(tempFileName);
+                }
+                catch
+                {
+                    // ignore
+                }
+
+                return length;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
+        private void RunOnePassEncoding(string assaTempFileName)
+        {
+            var process = GetFfmpegProcess(assaTempFileName, null);
+            _log.AppendLine("ffmpeg arguments: " + process.StartInfo.Arguments);
+            process.Start();
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
             _startTicks = DateTime.UtcNow.Ticks;
             timer1.Start();
 
@@ -228,29 +374,33 @@ namespace Nikse.SubtitleEdit.Forms
                     progressBar1.Value = v;
                 }
             }
+        }
 
-            progressBar1.Visible = false;
-            labelPleaseWait.Visible = false;
-            timer1.Stop();
-            labelProgress.Text = string.Empty;
-            groupBoxSettings.Enabled = true;
-
-            for (int i = 0; i < 10; i++)
+        private Process GetFfmpegProcess(string assaTempFileName, int? passNumber = null, string twoPassBitRate = null)
+        {
+            var pass = string.Empty;
+            if (passNumber.HasValue)
             {
-                System.Threading.Thread.Sleep(100);
-                Application.DoEvents();
+                pass = passNumber.Value.ToString(CultureInfo.InvariantCulture);
             }
 
-            try
-            {
-                File.Delete(assaTempFileName);
-            }
-            catch
-            {
-                // ignore
-            }
-
-            DialogResult = _abort ? DialogResult.Cancel : DialogResult.OK;
+            return VideoPreviewGenerator.GenerateHardcodedVideoFile(
+                _inputVideoFileName,
+                assaTempFileName,
+                VideoFileName,
+                (int)numericUpDownWidth.Value,
+                (int)numericUpDownHeight.Value,
+                comboBoxVideoEncoding.Text,
+                comboBoxPreset.Text,
+                comboBoxCrf.Text,
+                comboBoxAudioEnc.Text,
+                checkBoxMakeStereo.Checked,
+                comboBoxAudioSampleRate.Text.Replace("Hz", string.Empty).Trim(),
+                comboBoxTune.Text,
+                comboBoxAudioBitRate.Text,
+                pass,
+                twoPassBitRate,
+                OutputHandler);
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -303,14 +453,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void comboBoxAudioEnc_SelectedIndexChanged(object sender, EventArgs e)
         {
-            checkBoxMakeStereo.Enabled = comboBoxAudioEnc.SelectedIndex > 0;
-            comboBoxAudioSampleRate.Enabled = comboBoxAudioEnc.SelectedIndex > 0;
-            labelAudioSampleRate.Enabled = comboBoxAudioEnc.SelectedIndex > 0;
+            checkBoxMakeStereo.Enabled = comboBoxAudioEnc.Text != "copy";
+            comboBoxAudioSampleRate.Enabled = comboBoxAudioEnc.Text != "copy";
+            labelAudioSampleRate.Enabled = comboBoxAudioEnc.Text != "copy";
         }
 
         private void GenerateVideoWithHardSubs_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.F2 && _log != null)
+            if (e.KeyCode == Keys.F2)
             {
                 if (textBoxLog.Visible)
                 {
@@ -321,8 +471,23 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxLog.Visible = true;
                     textBoxLog.ScrollBars = ScrollBars.Both;
                     textBoxLog.BringToFront();
-                    textBoxLog.Text = _log.ToString();
                     textBoxLog.Dock = DockStyle.Fill;
+
+                    if (_log == null)
+                    {
+                        var log = new StringBuilder();
+                        log.AppendLine("Video info width: " + _videoInfo.Width);
+                        log.AppendLine("Video info width: " + _videoInfo.Height);
+                        log.AppendLine("Video info total frames: " + _videoInfo.TotalFrames);
+                        log.AppendLine("Video info total seconds: " + _videoInfo.TotalSeconds);
+                        log.AppendLine();
+                        log.AppendLine("ffmpeg " + GetFfmpegProcess("input.ass", null).StartInfo.Arguments);
+                        textBoxLog.Text = log.ToString();
+                    }
+                    else
+                    {
+                        textBoxLog.Text = _log.ToString();
+                    }
                 }
                 e.SuppressKeyPress = true;
             }
@@ -344,7 +509,18 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void linkLabelHelp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            UiUtil.OpenUrl("http://trac.ffmpeg.org/wiki/Encode/H.264");
+            if (comboBoxVideoEncoding.Text == "libx265")
+            {
+                UiUtil.OpenUrl("http://trac.ffmpeg.org/wiki/Encode/H.265");
+            }
+            else if (comboBoxVideoEncoding.Text == "libvpx-vp9")
+            {
+                UiUtil.OpenUrl("http://trac.ffmpeg.org/wiki/Encode/VP9");
+            }
+            else
+            {
+                UiUtil.OpenUrl("http://trac.ffmpeg.org/wiki/Encode/H.264");
+            }
         }
 
         private void GenerateVideoWithHardSubs_FormClosing(object sender, FormClosingEventArgs e)
@@ -356,6 +532,73 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.GenVideoAudioEncoding = comboBoxAudioEnc.Text;
             Configuration.Settings.Tools.GenVideoAudioForceStereo = checkBoxMakeStereo.Checked;
             Configuration.Settings.Tools.GenVideoAudioSampleRate = comboBoxAudioSampleRate.Text;
+            Configuration.Settings.Tools.GenVideoTargetFileSize = checkBoxTargetFileSize.Checked;
+        }
+
+        private void comboBoxVideoEncoding_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            comboBoxCrf.Items.Clear();
+            comboBoxCrf.BeginUpdate();
+            comboBoxCrf.Items.Add(string.Empty);
+            labelTune.Visible = true;
+            comboBoxTune.Visible = true;
+            if (comboBoxVideoEncoding.Text == "libx265")
+            {
+                for (int i = 0; i < 51; i++)
+                {
+                    comboBoxCrf.Items.Add(i.ToString(CultureInfo.InvariantCulture));
+                }
+
+                comboBoxCrf.Text = "28";
+            }
+            else if (comboBoxVideoEncoding.Text == "libvpx-vp9")
+            {
+                for (int i = 4; i <= 63; i++)
+                {
+                    comboBoxCrf.Items.Add(i.ToString(CultureInfo.InvariantCulture));
+                }
+
+                comboBoxCrf.Text = "10";
+                labelTune.Visible = false;
+                comboBoxTune.Visible = false;
+                comboBoxTune.Text = string.Empty;
+            }
+            else
+            {
+                for (int i = 17; i <= 28; i++)
+                {
+                    comboBoxCrf.Items.Add(i.ToString(CultureInfo.InvariantCulture));
+                }
+
+                comboBoxCrf.Text = "23";
+            }
+            comboBoxCrf.EndUpdate();
+        }
+
+        private void GenerateVideoWithHardSubs_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void GenerateVideoWithHardSubs_Shown(object sender, EventArgs e)
+        {
+            var targetFileSizeMb = (int)Math.Round(new FileInfo(_inputVideoFileName).Length / 1024.0 / 1024);
+            numericUpDownTargetFileSize.Value = Math.Max(targetFileSizeMb, numericUpDownTargetFileSize.Minimum);
+        }
+
+        private void checkBoxTargetFileSize_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxTargetFileSize.Checked)
+            {
+                comboBoxAudioEnc.Text = "aac";
+                labelAudioBitRate.Enabled = true;
+                comboBoxAudioBitRate.Enabled = true;
+            }
+            else
+            {
+                labelAudioBitRate.Enabled = false;
+                comboBoxAudioBitRate.Enabled = false;
+            }
         }
     }
 }

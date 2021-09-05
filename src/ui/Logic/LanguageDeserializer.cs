@@ -2140,6 +2140,36 @@ namespace Nikse.SubtitleEdit.Logic
                 case "GenerateVideoWithBurnedInSubs/TargetFileName":
                     language.GenerateVideoWithBurnedInSubs.TargetFileName = reader.Value;
                     break;
+                case "GenerateVideoWithBurnedInSubs/TargetFileSize":
+                    language.GenerateVideoWithBurnedInSubs.TargetFileSize = reader.Value;
+                    break;
+                case "GenerateVideoWithBurnedInSubs/FileSizeMb":
+                    language.GenerateVideoWithBurnedInSubs.FileSizeMb = reader.Value;
+                    break;
+                case "GenerateVideoWithBurnedInSubs/PassX":
+                    language.GenerateVideoWithBurnedInSubs.PassX = reader.Value;
+                    break;
+                case "GenerateVideoWithBurnedInSubs/Encoding":
+                    language.GenerateVideoWithBurnedInSubs.Encoding = reader.Value;
+                    break;
+                case "GenerateVideoWithBurnedInSubs/BitRate":
+                    language.GenerateVideoWithBurnedInSubs.BitRate = reader.Value;
+                    break;
+                case "GenerateVideoWithBurnedInSubs/SampleRate":
+                    language.GenerateVideoWithBurnedInSubs.SampleRate = reader.Value;
+                    break;
+                case "GenerateVideoWithBurnedInSubs/Stereo":
+                    language.GenerateVideoWithBurnedInSubs.Stereo = reader.Value;
+                    break;
+                case "GenerateVideoWithBurnedInSubs/Preset":
+                    language.GenerateVideoWithBurnedInSubs.Preset = reader.Value;
+                    break;
+                case "GenerateVideoWithBurnedInSubs/Crf":
+                    language.GenerateVideoWithBurnedInSubs.Crf = reader.Value;
+                    break;
+                case "GenerateVideoWithBurnedInSubs/TuneFor":
+                    language.GenerateVideoWithBurnedInSubs.TuneFor = reader.Value;
+                    break;
                 case "GetDictionaries/Title":
                     language.GetDictionaries.Title = reader.Value;
                     break;
