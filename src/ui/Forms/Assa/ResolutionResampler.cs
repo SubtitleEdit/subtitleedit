@@ -4,16 +4,14 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Globalization;
 using System.IO;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.Assa
 {
-    public partial class ResolutionResampler : Form
+    public sealed partial class ResolutionResampler : Form
     {
-        private string _videoFileName;
-        private VideoInfo _videoInfo;
-        private Subtitle _subtitle;
+        private readonly string _videoFileName;
+        private readonly Subtitle _subtitle;
 
         public ResolutionResampler(Subtitle subtitle, string videoFileName, VideoInfo videoInfo)
         {
@@ -35,7 +33,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             _subtitle = subtitle;
             _videoFileName = videoFileName;
-            _videoInfo = videoInfo;
+            var videoInfo1 = videoInfo;
 
             if (string.IsNullOrEmpty(_subtitle.Header))
             {
@@ -54,10 +52,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 numericUpDownSourceHeight.Value = h;
             }
 
-            if (_videoInfo != null && _videoInfo.Width > 0 && _videoInfo.Height > 0)
+            if (videoInfo1 != null && videoInfo1.Width > 0 && videoInfo1.Height > 0)
             {
-                numericUpDownTargetWidth.Value = _videoInfo.Width;
-                numericUpDownTargetHeight.Value = _videoInfo.Height;
+                numericUpDownTargetWidth.Value = videoInfo1.Width;
+                numericUpDownTargetHeight.Value = videoInfo1.Height;
             }
         }
 
@@ -77,7 +75,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
                 if (openFileDialog1.ShowDialog() == DialogResult.OK)
                 {
-                    VideoInfo info = UiUtil.GetVideoInfo(openFileDialog1.FileName);
+                    var info = UiUtil.GetVideoInfo(openFileDialog1.FileName);
                     if (info != null && info.Success)
                     {
                         numericUpDownSourceWidth.Value = info.Width;
@@ -103,7 +101,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
                 if (openFileDialog1.ShowDialog() == DialogResult.OK)
                 {
-                    VideoInfo info = UiUtil.GetVideoInfo(openFileDialog1.FileName);
+                    var info = UiUtil.GetVideoInfo(openFileDialog1.FileName);
                     if (info != null && info.Success)
                     {
                         numericUpDownTargetWidth.Value = info.Width;
@@ -175,9 +173,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             _subtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + targetWidth.ToString(CultureInfo.InvariantCulture), "[Script Info]", _subtitle.Header);
             _subtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + targetHeight.ToString(CultureInfo.InvariantCulture), "[Script Info]", _subtitle.Header);
 
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            foreach (var p in _subtitle.Paragraphs)
             {
-                Paragraph p = _subtitle.Paragraphs[i];
                 if (fixFonts)
                 {
                     p.Text = AssaResampler.ResampleOverrideTagsFont(sourceWidth, targetWidth, sourceHeight, targetHeight, p.Text);

@@ -1,7 +1,7 @@
 ﻿
 namespace Nikse.SubtitleEdit.Forms.Assa
 {
-    partial class ResolutionResampler
+    sealed partial class ResolutionResampler
     {
         /// <summary>
         /// Required designer variable.
