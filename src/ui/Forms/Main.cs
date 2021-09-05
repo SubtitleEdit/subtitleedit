@@ -4614,6 +4614,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ResetSubtitle(bool forceVideoReload = false)
         {
+            if (ModifierKeys != Keys.Shift || forceVideoReload)
+            {
+                VideoFileName = null;
+                _videoInfo = null;
+            }
+
             SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
 
             labelStartTimeWarning.Text = string.Empty;
@@ -4831,9 +4837,9 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
                     }
-                    else if (_oldSubtitleFormat.GetType() == typeof(AdvancedSubStationAlpha))
+                    else if (_oldSubtitleFormat.GetType() == typeof(AdvancedSubStationAlpha) && string.IsNullOrEmpty(_subtitle.Header))
                     {
-                        _subtitle.Header = SubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(_subtitle.Header, string.Empty);
+                        _subtitle.Header = AdvancedSubStationAlpha.DefaultHeader;
                     }
 
                     SetAssaResolutionWithChecks();
@@ -20341,7 +20347,12 @@ namespace Nikse.SubtitleEdit.Forms
                 var oldPlayResX = AdvancedSubStationAlpha.GetTagValueFromHeader("PlayResX", "[Script Info]", _subtitle.Header);
                 var oldPlayResY = AdvancedSubStationAlpha.GetTagValueFromHeader("PlayResY", "[Script Info]", _subtitle.Header);
 
-                if (oldPlayResX == null || oldPlayResY == null)
+                if (oldPlayResX == _videoInfo.Width.ToString(CultureInfo.InvariantCulture) &&
+                         oldPlayResY == _videoInfo.Height.ToString(CultureInfo.InvariantCulture))
+                {
+                    // all good - correct resolution
+                }
+                else if (oldPlayResX == null || oldPlayResY == null)
                 {
                     SetAssaResolution();
                     var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(_subtitle.Header);
@@ -20356,14 +20367,25 @@ namespace Nikse.SubtitleEdit.Forms
 
                     _subtitle.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(_subtitle.Header, styles);
                 }
-                else if (oldPlayResX == _videoInfo.Width.ToString(CultureInfo.InvariantCulture) &&
-                         oldPlayResY == _videoInfo.Height.ToString(CultureInfo.InvariantCulture))
-                {
-                    // all good - correct resolution
-                }
+
                 else if (Configuration.Settings.SubtitleSettings.AssaResolutionPromptChange)
                 {
-                    videoResolutionResamplerToolStripMenuItem_Click(null, null);
+                    if (_subtitle.Paragraphs.Count == 0 && int.TryParse(oldPlayResX, out var sourceWidth) && int.TryParse(oldPlayResX, out var sourceHeight))
+                    {
+                        var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(_subtitle.Header);
+                        foreach (var style in styles)
+                        {
+                            style.FontSize = AssaResampler.Resample(sourceHeight, _videoInfo.Height, style.FontSize);
+
+                            style.OutlineWidth = (decimal)AssaResampler.Resample(sourceHeight, _videoInfo.Height, (float)style.OutlineWidth);
+                            style.ShadowWidth = (decimal)AssaResampler.Resample(sourceHeight, _videoInfo.Height, (float)style.ShadowWidth);
+                            style.Spacing = (decimal)AssaResampler.Resample(sourceWidth, _videoInfo.Width, (float)style.Spacing);
+                        }
+                    }
+                    else
+                    {
+                        videoResolutionResamplerToolStripMenuItem_Click(null, null);
+                    }
                 }
             }
         }
