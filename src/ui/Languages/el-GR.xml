@@ -9,9 +9,12 @@
     <Ok>&amp;Εντάξει</Ok>
     <Cancel>&amp;Ακύρωση</Cancel>
     <Apply>Εφαρμογή</Apply>
+    <ApplyTo>Εφαρμογή σε</ApplyTo>
     <None>Κανένα</None>
     <All>Όλα</All>
     <Preview>Προεπισκόπηση</Preview>
+    <ShowPreview>Εμφάνιση προεπισκόπησης</ShowPreview>
+    <HidePreview>Κρύψιμο προεπισκόπησης</HidePreview>
     <SubtitleFiles>Αρχεία υποτίτλου</SubtitleFiles>
     <AllFiles>Όλα τα αρχεία</AllFiles>
     <VideoFiles>Αρχεία βίντεο</VideoFiles>
@@ -221,6 +224,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SetPosInfo>Κλικ στο βίντεο για εναλλαγή ορισμού/μετακίνησης θέσης</SetPosInfo>
     <Clipboard>Πρόχειρο</Clipboard>
     <ResolutionMissing>Μη ορισμένες διαστάσεις αναπαραγωγής Χ και Υ. Ορισμός τώρα;</ResolutionMissing>
+    <RotateXAxis>Περιστροφή {0} άξονα</RotateXAxis>
+    <DistortX>Παραμόρφωση {0}</DistortX>
   </AssaSetPosition>
   <AudioToText>
     <Title>Ήχος σε κείμενο</Title>
@@ -271,6 +276,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BridgeGaps>Ένωση κενών</BridgeGaps>
     <PlainText>Καθαρό κείμενο</PlainText>
     <Ocr>OCR…</Ocr>
+    <AddFiles>Προσθήκη αρχείων…</AddFiles>
     <Filter>Φίλτρο</Filter>
     <FilterSkipped>Παραλείφτηκαν μέσω φίλτρου</FilterSkipped>
     <FilterSrtNoUtf8BOM>Αρχεία SubRip (.srt) χωρίς UTF-8 BOM</FilterSrtNoUtf8BOM>
@@ -791,8 +797,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
     <Title>Δημιουργία βίντεο με ενσωματωμένους υπότιτλους</Title>
-    <Info>Θα δημιουργηθεί βίντεο με ενσωματωμένους υποτιτλους. Σημείωση: υποστηρίζεται Advanced Substatio Alpha.</Info>
+    <InfoAssaOff>Σημείωση: Υποστηρίζεται μορφοποίηση ASSA.</InfoAssaOff>
+    <InfoAssaOn>Σημείωση: Θα χρησιμοποιηθεί η μορφοποίηση ASSA.</InfoAssaOn>
     <XGeneratedWithBurnedInSubs>"{0}" δημιουργήθηκε με ενσωματωμένους υπότιτλους.</XGeneratedWithBurnedInSubs>
+    <TimeRemainingMinutes>Υπολειπόμενος χρόνος: {0} λεπτά</TimeRemainingMinutes>
+    <TimeRemainingSeconds>Υπολειπόμενος χρόνος: {0} δευτερόλεπτα</TimeRemainingSeconds>
+    <TimeRemainingMinutesAndSeconds>Υπολειπόμενος χρόνος: {0} λεπτά και {1} δευτερόλεπτα</TimeRemainingMinutesAndSeconds>
+    <TargetFileName>Χρήση ονόματος αρχείου: {0}</TargetFileName>
   </GenerateVideoWithBurnedInSubs>
   <GetDictionaries>
     <Title>Χρειάζεστε λεξικά;</Title>
@@ -1255,6 +1266,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Help>Βοήθεια</Help>
         <ShowHideWaveform>Εμφάνιση/απόκρυψη κυματομορφής</ShowHideWaveform>
         <ShowHideVideo>Εμφάνιση/απόκρυψη βίντεο</ShowHideVideo>
+        <AssaDraw>Σχέδιο ASSA</AssaDraw>
       </ToolBar>
       <ContextMenu>
         <SizeAllColumnsToFit>Αλλαγή μεγέθους στηλών για να χωρούν</SizeAllColumnsToFit>
@@ -1277,6 +1289,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <SplitLineAtCursorAndWaveformPosition>Διαχωρισμός γραμμής στη θέση δείκτη/βίντεο</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>Αυτόματη διάρκεια (τρέχουσα γραμμή)</AutoDurationCurrentLine>
         <SelectAll>Επιλογή όλων</SelectAll>
+        <Insert>Εισαγωγή</Insert>
         <InsertFirstLine>Εισαγωγή γραμμής</InsertFirstLine>
         <InsertBefore>Πριν</InsertBefore>
         <InsertAfter>Μετά</InsertAfter>
@@ -1321,6 +1334,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ShowSelectedLinesEarlierLater>Εμφάνιση γραμμών νωρίτερα/αργότερα…</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Οπτικός συγχρονισμός γραμμών…</VisualSyncSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Μετάφραση αρχικής γραμμής μέσω Google/Bing</GoogleAndMicrosoftTranslateSelectedLine>
+        <SelectedLines>Επιλεγμένες γραμμές</SelectedLines>
         <TranslateSelectedLines>Μετάφραση γραμμών…</TranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Προσαρμογή διαρκειών γραμμών…</AdjustDisplayDurationForSelectedLines>
         <ApplyDurationLimitsForSelectedLines>Εφαρμογή ορίων διάρκειας επιλεγμένων γραμμών…</ApplyDurationLimitsForSelectedLines>
@@ -1948,6 +1962,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveTextIfAllUppercase>Αφαίρεση γραμμής με κεφαλαία</RemoveTextIfAllUppercase>
     <RemoveInterjections>Αφαίρεση επιφωνημάτων</RemoveInterjections>
     <EditInterjections>Επεξεργασία…</EditInterjections>
+    <Apply>Ε&amp;φαρμογή</Apply>
   </RemoveTextFromHearImpaired>
   <ReplaceDialog>
     <Title>Αντικατάσταση</Title>
