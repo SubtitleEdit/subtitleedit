@@ -3,16 +3,24 @@
 3.6.3 BETA (xth September 2021)
 * NEW:
    * Auto set ASSA resolution - thx Leon
-   * (Show) icon for plugin "ASSA Draw" - thx Leon
+   * Icon for plugin "ASSA Draw" - thx Leon
 * IMPROVED:
-   * Add progress for "Generate video" - thx David
+   * Update Greek translation - thx PMitsakis
+   * Update Chinese translation - thx nkh0472
+   * Update Bulgarian translation - thx Калин
+   * Update Hungarian translation - thx Zityi
+   * Update Portuguese translation - thx hugok79
+   * Update Italian translation - thx NAMP
+   * Add progress for "Generate video w burned-in subs" - thx David
+   * Add more settings for "Generate video w burned-in subs" - thx Leon/David
    * Improve SSA styling/preview - thxfiolek2000
    * Allow .ismt files up to 50 mb - thx Essam3152
 * FIXED:
-   * Try to fix "Title bar text" when translating - thx Andrebavila
+   * Fix "Title bar text" when translating - thx Andrebavila
    * Fix culture name for French translation - thx jpsdr
    * Fix waveform multiple select error - thx darbor87
    * Fix issue with "Merge short lines" in "batch convert" - thx fhtdtdj
+   * Fix waveform multiple select crash - thx darbor87
 
 
 3.6.2 (24th August 2021)
