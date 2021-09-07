@@ -189,7 +189,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <History>Histórico</History>
     <TagsToApply>Etiquetas a aplicar</TagsToApply>
     <ApplyTo>Aplicar a</ApplyTo>
-    <SelectedLinesX>Linhas selecionadas: {0}</SelectedLinesX>
+    <SelectedLinesX>Linhas seleccionadas: {0}</SelectedLinesX>
     <AdvancedSelection>Selecção avançada</AdvancedSelection>
   </AssaOverrideTags>
   <AssaProgressBarGenerator>
@@ -324,7 +324,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <CenterSelectedLines>Centrar linhas seleccionadas (horizontal, manter posição vertical)</CenterSelectedLines>
     <TopAlignSelectedLines>Alinhamento superior das linhas seleccionadas (manter posição horizontal)</TopAlignSelectedLines>
     <BottomAlignSelectedLines>Alinhamento inferior das linhas seleccionadas (manter posição horizontal)</BottomAlignSelectedLines>
-    <ToggleForcedSelectedLines>Alternar "Forçado" das linhas selecionadas</ToggleForcedSelectedLines>
+    <ToggleForcedSelectedLines>Alternar "Forçado" das linhas seleccionadas</ToggleForcedSelectedLines>
     <SelectForcedLines>Seleccionar linhas forçadas</SelectForcedLines>
     <SizeXY>Tamanho: {0}x{1}</SizeXY>
     <SetAspectRatio11>Definir proporção da aparência 1:1</SetAspectRatio11>
@@ -799,10 +799,23 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
     <Title>Gerar vídeo com legenda embutida</Title>
-    <Info>Irá gerar um ficheiro de vídeo com legenda embutida.
-
-Nota: Suporte a Advanced Substation Alpha.</Info>
+    <InfoAssaOff>Nota: Suporta o estilo de Advanced Substation Alpha.</InfoAssaOff>
+    <InfoAssaOn>Nota: O estilo de Advanced Substation Alpha será usado :)</InfoAssaOn>
     <XGeneratedWithBurnedInSubs>"{0}" gerado com legenda embutida.</XGeneratedWithBurnedInSubs>
+    <TimeRemainingMinutes>Tempo restante: {0} minutos</TimeRemainingMinutes>
+    <TimeRemainingSeconds>Tempo restante: {0} segundos</TimeRemainingSeconds>
+    <TimeRemainingMinutesAndSeconds>Tempo restante: {0} minutos e {1} segundos</TimeRemainingMinutesAndSeconds>
+    <TargetFileName>Nome do ficheiro de destino: {0}</TargetFileName>
+    <TargetFileSize>Tamanho do ficheiro de destino (requer codificação de 2 passagens)</TargetFileSize>
+    <FileSizeMb>Tamanho do ficheiro em MB</FileSizeMb>
+    <PassX>Passagem {0}</PassX>
+    <Encoding>Codificação</Encoding>
+    <BitRate>Taxa de bits</BitRate>
+    <SampleRate>Taxa de amostra</SampleRate>
+    <Stereo>Estéreo</Stereo>
+    <Preset>Predefinição</Preset>
+    <Crf>CRF</Crf>
+    <TuneFor>Sintonizar para</TuneFor>
   </GenerateVideoWithBurnedInSubs>
   <GetDictionaries>
     <Title>Precisa de dicionários?</Title>
@@ -1268,6 +1281,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <Help>Ajuda</Help>
         <ShowHideWaveform>Mostrar/ocultar "waveform"</ShowHideWaveform>
         <ShowHideVideo>Mostrar/ocultar vídeo</ShowHideVideo>
+        <AssaDraw>Desenho de Advanced Sub Station Alpha</AssaDraw>
       </ToolBar>
       <ContextMenu>
         <SizeAllColumnsToFit>Ajustar o tamanho das colunas para caber</SizeAllColumnsToFit>
@@ -1335,7 +1349,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <ShowSelectedLinesEarlierLater>Mostrar linhas seleccionadas antes/depois...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Sincronia visual das linhas seleccionadas...</VisualSyncSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Google/Microsoft traduzir linha original</GoogleAndMicrosoftTranslateSelectedLine>
-        <SelectedLines>Linhas selecionadas</SelectedLines>
+        <SelectedLines>Linhas seleccionadas</SelectedLines>
         <TranslateSelectedLines>Traduzir linhas seleccionadas...</TranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Ajustar duração das linhas seleccionadas...</AdjustDisplayDurationForSelectedLines>
         <ApplyDurationLimitsForSelectedLines>Aplicar limites de duração às linhas seleccionadas...</ApplyDurationLimitsForSelectedLines>
@@ -1963,6 +1977,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <RemoveTextIfAllUppercase>Eliminar linha se tiver em MAIÚSCULA</RemoveTextIfAllUppercase>
     <RemoveInterjections>Eliminar interjeições (shh, hmm, etc.)</RemoveInterjections>
     <EditInterjections>Editar...</EditInterjections>
+    <Apply>A&amp;plicar</Apply>
   </RemoveTextFromHearImpaired>
   <ReplaceDialog>
     <Title>Substituir</Title>
@@ -2336,7 +2351,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <SetParagraphAsSelection>Definir a actual como nova selecção</SetParagraphAsSelection>
     <WaveformPlayNewSelection>Reproduzir selecção</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Reproduzir a partir do fim da selecção</WaveformPlayNewSelectionEnd>
-    <WaveformPlayFirstSelectedSubtitle>Reproduzir a partir da primeira linha selecionada</WaveformPlayFirstSelectedSubtitle>
+    <WaveformPlayFirstSelectedSubtitle>Reproduzir a partir da primeira linha seleccionada</WaveformPlayFirstSelectedSubtitle>
     <WaveformGoToPreviousSceneChange>Ir para a mudança de cena anterior</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Ir para a próxima mudança de cena</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Alternar a mudança de cena</WaveformToggleSceneChange>
@@ -2360,7 +2375,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <GoBack3Second>Atrasar 3 segundos</GoBack3Second>
     <GoToStartCurrent>Definir posição de vídeo para o início da linha actual</GoToStartCurrent>
     <ToggleStartEndCurrent>Alternar posição do vídeo entre início/fim da linha actual</ToggleStartEndCurrent>
-    <PlaySelectedLines>Reproduzir linhas selecionadas</PlaySelectedLines>
+    <PlaySelectedLines>Reproduzir linhas seleccionadas</PlaySelectedLines>
     <WaveformGoToPrevSubtitle>Ir para linha anterior (da posição do vídeo)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Ir para linha seguinte (da posição do vídeo)</WaveformGoToNextSubtitle>
     <WaveformGoToPrevChapter>Ir para capítulo anterior</WaveformGoToPrevChapter>
