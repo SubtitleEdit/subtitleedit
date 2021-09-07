@@ -11,6 +11,7 @@
    * Update Hungarian translation - thx Zityi
    * Update Portuguese translation - thx hugok79
    * Update Italian translation - thx NAMP
+   * Update French translation - thx Pierre
    * Add progress for "Generate video w burned-in subs" - thx David
    * Add more settings for "Generate video w burned-in subs" - thx Leon/David
    * Improve SSA styling/preview - thxfiolek2000
