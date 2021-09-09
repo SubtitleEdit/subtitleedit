@@ -764,13 +764,32 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 correct = true;
                             }
-                            else if (_languageName.StartsWith("en_", StringComparison.Ordinal) && (_currentWord.Equals("a", StringComparison.OrdinalIgnoreCase) || _currentWord == "I"))
+                            else if (_languageName.StartsWith("en", StringComparison.Ordinal) && (_currentWord.Equals("a", StringComparison.OrdinalIgnoreCase) || _currentWord == "I"))
                             {
                                 correct = true;
                             }
-                            else if (_languageName.StartsWith("da_", StringComparison.Ordinal) && _currentWord.Equals("i", StringComparison.OrdinalIgnoreCase))
+                            else if (_languageName.StartsWith("da", StringComparison.Ordinal) && _currentWord.Equals("i", StringComparison.OrdinalIgnoreCase))
                             {
                                 correct = true;
+                            }
+                            else if (_languageName.StartsWith("fr", StringComparison.Ordinal))
+                            {
+                                if (_currentWord.Equals("a", StringComparison.OrdinalIgnoreCase) ||
+                                    _currentWord.Equals("à", StringComparison.OrdinalIgnoreCase) ||
+                                    _currentWord.Equals("y", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    correct = true;
+                                }
+                            }
+                            else if (_languageName.StartsWith("es", StringComparison.Ordinal))
+                            {
+                                if (_currentWord.Equals("a", StringComparison.OrdinalIgnoreCase) ||
+                                    _currentWord.Equals("y", StringComparison.OrdinalIgnoreCase) ||
+                                    _currentWord.Equals("o", StringComparison.OrdinalIgnoreCase) ||
+                                    _currentWord.Equals("u", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    correct = true;
+                                }
                             }
                         }
 
