@@ -1142,6 +1142,7 @@ $HorzAlign          =   Center
         public bool RemoveBadCharsWhenOpening { get; set; }
         public int SubtitleLineMaximumLength { get; set; }
         public int MaxNumberOfLines { get; set; }
+        public int MaxNumberOfLinesPlusAbort { get; set; }
         public int MergeLinesShorterThan { get; set; }
         public int SubtitleMinimumDisplayMilliseconds { get; set; }
         public int SubtitleMaximumDisplayMilliseconds { get; set; }
@@ -1309,6 +1310,7 @@ $HorzAlign          =   Center
             StartRememberPositionAndSize = true;
             SubtitleLineMaximumLength = 43;
             MaxNumberOfLines = 2;
+            MaxNumberOfLinesPlusAbort = 1;
             MergeLinesShorterThan = 33;
             SubtitleMinimumDisplayMilliseconds = 1000;
             SubtitleMaximumDisplayMilliseconds = 8 * 1000;
@@ -3134,6 +3136,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.MaxNumberOfLines = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("MaxNumberOfLinesPlusAbort");
+            if (subNode != null)
+            {
+                settings.General.MaxNumberOfLinesPlusAbort = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("MergeLinesShorterThan");
@@ -8686,6 +8694,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("RemoveBadCharsWhenOpening", settings.General.RemoveBadCharsWhenOpening.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleLineMaximumLength", settings.General.SubtitleLineMaximumLength.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MaxNumberOfLines", settings.General.MaxNumberOfLines.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("MaxNumberOfLinesPlusAbort", settings.General.MaxNumberOfLinesPlusAbort.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MergeLinesShorterThan", settings.General.MergeLinesShorterThan.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleMinimumDisplayMilliseconds", settings.General.SubtitleMinimumDisplayMilliseconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleMaximumDisplayMilliseconds", settings.General.SubtitleMaximumDisplayMilliseconds.ToString(CultureInfo.InvariantCulture));
