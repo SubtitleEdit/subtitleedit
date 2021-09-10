@@ -22,25 +22,31 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             }
 
             int version = Buffer[0];
-            int addToIndex64Bit = 0;
             if (version == 1)
             {
+                int addToIndex64Bit = 0;
                 addToIndex64Bit = 8;
-            }
-
-            TrackId = GetUInt(12 + addToIndex64Bit);
-            if (version == 1)
-            {
+                TrackId = GetUInt(12 + addToIndex64Bit);
                 Duration = GetUInt64(20 + addToIndex64Bit);
                 addToIndex64Bit += 4;
+
+                Buffer = new byte[80 + addToIndex64Bit + 2 - 84];
+                bytesRead = fs.Read(Buffer, 0, Buffer.Length);
+                if (bytesRead < Buffer.Length)
+                {
+                    return;
+                }
+
+                Width = (uint)GetWord(76 + addToIndex64Bit - 84); // skip decimals
+                Height = (uint)GetWord(80 + addToIndex64Bit - 84); // skip decimals
             }
             else
             {
-                Duration = GetUInt(20 + addToIndex64Bit);
+                TrackId = GetUInt(12);
+                Duration = GetUInt(20);
+                Width = (uint)GetWord(76); // skip decimals
+                Height = (uint)GetWord(80); // skip decimals
             }
-
-            Width = (uint)GetWord(76 + addToIndex64Bit); // skip decimals
-            Height = (uint)GetWord(80 + addToIndex64Bit); // skip decimals
         }
     }
 }
