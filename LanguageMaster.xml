@@ -2484,6 +2484,9 @@ Continue?</RestoreDefaultSettingsMsg>
     <MinFrameGap>Min. gap in frames</MinFrameGap>
     <XFramesAtYFrameRateGivesZMs>{0} frames at a frame rate of {1} gives {2} milliseconds.</XFramesAtYFrameRateGivesZMs>
     <UseXAsNewGap>Use "{0}" milliseconds as new minimum gap?</UseXAsNewGap>
+    <BDOpensIn>BD sup/bdn-xml opens in</BDOpensIn>
+    <BDOpensInOcr>OCR</BDOpensInOcr>
+    <BDOpensInEdit>Edit</BDOpensInEdit>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Download mpv lib</DownloadMpv>
