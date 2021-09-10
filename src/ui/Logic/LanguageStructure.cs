@@ -2663,6 +2663,9 @@
             public string MinFrameGap { get; set; }
             public string XFramesAtYFrameRateGivesZMs { get; set; }
             public string UseXAsNewGap { get; set; }
+            public string BDOpensIn { get; set; }
+            public string BDOpensInOcr { get; set; }
+            public string BDOpensInEdit { get; set; }
         }
 
         public class SettingsMpv

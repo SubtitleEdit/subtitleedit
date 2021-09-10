@@ -133,6 +133,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string OcrTrainFonts { get; set; }
         public string OcrTrainMergedLetters { get; set; }
         public string OcrTrainSrtFile { get; set; }
+        public string BDOpenIn { get; set; }
         public string Interjections { get; set; }
         public string MicrosoftBingApiId { get; set; }
         public string MicrosoftTranslatorApiKey { get; set; }
@@ -4010,6 +4011,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.OcrTrainSrtFile = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("BDOpenIn");
+            if (subNode != null)
+            {
+                settings.Tools.BDOpenIn = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("Interjections");
@@ -8849,6 +8856,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("OcrTrainFonts", settings.Tools.OcrTrainFonts);
                 textWriter.WriteElementString("OcrTrainMergedLetters", settings.Tools.OcrTrainMergedLetters);
                 textWriter.WriteElementString("OcrTrainSrtFile", settings.Tools.OcrTrainSrtFile);
+                textWriter.WriteElementString("BDOpenIn", settings.Tools.BDOpenIn);
                 textWriter.WriteElementString("Interjections", settings.Tools.Interjections);
                 textWriter.WriteElementString("MicrosoftBingApiId", settings.Tools.MicrosoftBingApiId);
                 textWriter.WriteElementString("MicrosoftTranslatorApiKey", settings.Tools.MicrosoftTranslatorApiKey);
