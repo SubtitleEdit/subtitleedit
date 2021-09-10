@@ -345,17 +345,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private string RemoveWeirdReatingHeader(string input)
         {
-            var text = input.Trim();
+            var text = input;
             text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
             text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
             if (text.Contains(Environment.NewLine + "WEBVTT"))
             {
-                if (text.EndsWith('}') && text.Contains("STYLE"))
+                if (text.TrimEnd().EndsWith('}') && text.Contains("STYLE"))
                 {
                     text = text.Remove(text.IndexOf(Environment.NewLine + "WEBVTT"));
                 }
             }
-            else if (text.EndsWith(Environment.NewLine + "WEBVTT", StringComparison.Ordinal))
+            else if (text.TrimEnd().EndsWith(Environment.NewLine + "WEBVTT", StringComparison.Ordinal))
             {
                 text = text.Remove(text.LastIndexOf(Environment.NewLine + "WEBVTT"));
             }
