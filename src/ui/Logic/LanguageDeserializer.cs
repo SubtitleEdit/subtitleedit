@@ -6820,6 +6820,15 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/UseXAsNewGap":
                     language.Settings.UseXAsNewGap = reader.Value;
                     break;
+                case "Settings/BDOpensIn":
+                    language.Settings.BDOpensIn = reader.Value;
+                    break;
+                case "Settings/BDOpensInOcr":
+                    language.Settings.BDOpensInOcr = reader.Value;
+                    break;
+                case "Settings/BDOpensInEdit":
+                    language.Settings.BDOpensInEdit = reader.Value;
+                    break;
                 case "SettingsMpv/DownloadMpv":
                     language.SettingsMpv.DownloadMpv = reader.Value;
                     break;

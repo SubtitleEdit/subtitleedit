@@ -134,7 +134,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn2;
             }
 
-            return (" " +  positionInfo).TrimEnd();
+            return (" " + positionInfo).TrimEnd();
         }
 
         internal static string FormatText(Paragraph p)
@@ -329,6 +329,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 paragraph.Text = ColorWebVttToHtml(paragraph.Text);
                 paragraph.Text = EscapeDecodeText(paragraph.Text);
+                paragraph.Text = RemoveWeirdReatingHeader(paragraph.Text);
                 paragraph.StartTime.TotalMilliseconds += addSeconds * 1000;
                 paragraph.EndTime.TotalMilliseconds += addSeconds * 1000;
             }
@@ -340,6 +341,33 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     .Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine)
                     .Trim();
             }
+        }
+
+        private string RemoveWeirdReatingHeader(string input)
+        {
+            var text = input.Trim();
+            text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
+            text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
+            if (text.Contains(Environment.NewLine + "WEBVTT"))
+            {
+                if (text.EndsWith('}') && text.Contains("STYLE"))
+                {
+                    text = text.Remove(text.IndexOf(Environment.NewLine + "WEBVTT"));
+                }
+            }
+            else if (text.EndsWith(Environment.NewLine + "WEBVTT", StringComparison.Ordinal))
+            {
+                text = text.Remove(text.LastIndexOf(Environment.NewLine + "WEBVTT"));
+            }
+            else if (text.Contains(Environment.NewLine + "STYLE" + Environment.NewLine))
+            {
+                if (text.TrimEnd().EndsWith("}"))
+                {
+                    text = text.Remove(text.IndexOf(Environment.NewLine + "STYLE" + Environment.NewLine));
+                }
+            }
+
+            return text;
         }
 
         private static double GetXTimeStampSeconds(string input)
