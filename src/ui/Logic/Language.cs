@@ -2810,6 +2810,9 @@ can edit in same subtitle file (collaboration)",
                 MinFrameGap = "Min. gap in frames",
                 XFramesAtYFrameRateGivesZMs = "{0} frames at a frame rate of {1} gives {2} milliseconds.",
                 UseXAsNewGap = "Use \"{0}\" milliseconds as new minimum gap?",
+                BDOpensIn = "BD sup/bdn-xml opens in",
+                BDOpensInOcr = "OCR",
+                BDOpensInEdit = "Edit",
             };
 
             SettingsMpv = new LanguageStructure.SettingsMpv

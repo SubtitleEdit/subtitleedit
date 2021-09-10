@@ -789,6 +789,14 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxCpsIncludeWhiteSpace.Text = language.CpsIncludesSpace;
             buttonEditDoNotBreakAfterList.Text = LanguageSettings.Current.VobSubOcr.Edit;
 
+            groupBoxMiscellaneous.Text = language.Miscellaneous;
+            labelBDOpensIn.Text = language.BDOpensIn;
+            comboBoxBDOpensIn.Left = labelBDOpensIn.Left + labelBDOpensIn.Width + 5;
+            comboBoxBDOpensIn.Items.Clear();
+            comboBoxBDOpensIn.Items.Add(language.BDOpensInOcr);
+            comboBoxBDOpensIn.Items.Add(language.BDOpensInEdit);
+            comboBoxBDOpensIn.SelectedIndex = Configuration.Settings.Tools.BDOpenIn == "EDIT" ? 1 : 0;
+
             groupBoxGoogleTranslate.Text = language.GoogleTranslate;
             labelGoogleTranslateApiKey.Text = language.GoogleTranslateApiKey;
             linkLabelGoogleTranslateSignUp.Text = language.HowToSignUp;
@@ -2004,6 +2012,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             toolsSettings.AutoBreakPreferBottomHeavy = checkBoxToolsBreakPreferBottomHeavy.Checked;
             toolsSettings.AutoBreakPreferBottomPercent = (double)numericUpDownToolsBreakPreferBottomHeavy.Value;
             toolsSettings.AutoBreakDashEarly = checkBoxToolsBreakEarlyDash.Checked;
+
+            Configuration.Settings.Tools.BDOpenIn = comboBoxBDOpensIn.SelectedIndex == 0 ? "OCR" : "EDIT";
 
             Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace = !checkBoxCpsIncludeWhiteSpace.Checked;
             toolsSettings.OcrFixUseHardcodedRules = checkBoxFixCommonOcrErrorsUsingHardcodedRules.Checked;

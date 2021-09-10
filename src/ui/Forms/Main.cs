@@ -2570,7 +2570,18 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (FileUtil.IsBluRaySup(fileName))
                 {
-                    ImportAndOcrBluRaySup(fileName, _loading);
+                    if (Configuration.Settings.Tools.BDOpenIn == "EDIT")
+                    {
+                        using (var form = new BinaryEdit.BinEdit(fileName))
+                        {
+                            form.ShowDialog(this);
+                        }
+                    }
+                    else
+                    {
+                        ImportAndOcrBluRaySup(fileName, _loading);
+                    }
+
                     return;
                 }
 
