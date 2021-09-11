@@ -14,7 +14,7 @@ namespace Nikse.SubtitleEdit.Forms
     public sealed partial class GenerateVideoWithHardSubs : Form
     {
         private bool _abort;
-        private readonly Subtitle _assaSubtitle;
+        private Subtitle _assaSubtitle;
         private readonly VideoInfo _videoInfo;
         private readonly string _inputVideoFileName;
         private static readonly Regex FrameFinderRegex = new Regex(@"[Ff]rame=\s*\d+", RegexOptions.Compiled);
@@ -97,8 +97,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 numericUpDownFontSize.Visible = false;
                 labelFontSize.Visible = false;
-                numericUpDownWidth.Enabled = false;
-                numericUpDownHeight.Enabled = false;
                 labelInfo.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.InfoAssaOn;
             }
 
@@ -179,6 +177,42 @@ namespace Nikse.SubtitleEdit.Forms
                 style.FontSize = fontSize;
                 var styleLine = style.ToRawAss();
                 _assaSubtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("Style", styleLine, "[V4+ Styles]", _assaSubtitle.Header);
+            }
+            else
+            {
+                _assaSubtitle = new Subtitle(_assaSubtitle);
+                if (numericUpDownWidth.Value != _videoInfo.Width || numericUpDownHeight.Value != _videoInfo.Height)
+                {
+                    var sourceWidth = _videoInfo.Width;
+                    var sourceHeight = _videoInfo.Height;
+                    var targetWidth = numericUpDownWidth.Value;
+                    var targetHeight = numericUpDownHeight.Value;
+                    var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(_assaSubtitle.Header);
+                    foreach (var style in styles)
+                    {
+                        style.MarginLeft = AssaResampler.Resample(sourceWidth, targetWidth, style.MarginLeft);
+                        style.MarginRight = AssaResampler.Resample(sourceWidth, targetWidth, style.MarginRight);
+                        style.MarginVertical = AssaResampler.Resample(sourceHeight, targetHeight, style.MarginVertical);
+
+                        style.FontSize = AssaResampler.Resample(sourceHeight, targetHeight, style.FontSize);
+
+                        style.OutlineWidth = (decimal)AssaResampler.Resample(sourceHeight, targetHeight, (float)style.OutlineWidth);
+                        style.ShadowWidth = (decimal)AssaResampler.Resample(sourceHeight, targetHeight, (float)style.ShadowWidth);
+                        style.Spacing = (decimal)AssaResampler.Resample(sourceWidth, targetWidth, (float)style.Spacing);
+                    }
+
+                    _assaSubtitle.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(_assaSubtitle.Header, styles);
+
+                    _assaSubtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + targetWidth.ToString(CultureInfo.InvariantCulture), "[Script Info]", _assaSubtitle.Header);
+                    _assaSubtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + targetHeight.ToString(CultureInfo.InvariantCulture), "[Script Info]", _assaSubtitle.Header);
+
+                    foreach (var p in _assaSubtitle.Paragraphs)
+                    {
+                        p.Text = AssaResampler.ResampleOverrideTagsFont(sourceWidth, targetWidth, sourceHeight, targetHeight, p.Text);
+                        p.Text = AssaResampler.ResampleOverrideTagsPosition(sourceWidth, targetWidth, sourceHeight, targetHeight, p.Text);
+                        p.Text = AssaResampler.ResampleOverrideTagsDrawing(sourceWidth, targetWidth, sourceHeight, targetHeight, p.Text, null);
+                    }
+                }
             }
 
             if (Configuration.Settings.General.RightToLeftMode && LanguageAutoDetect.CouldBeRightToLeftLanguage(_assaSubtitle))
