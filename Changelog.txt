@@ -16,12 +16,16 @@
    * Add more settings for "Generate video w burned-in subs" - thx Leon/David
    * Improve SSA styling/preview - thxfiolek2000
    * Allow .ismt files up to 50 mb - thx Essam3152
+   * Allow some malformed WebVTT - thx manuelrn/larsk2 
+   * Make BD Sup configuable regarding open action - ocr/edit - thx peter-qgd
 * FIXED:
    * Fix "Title bar text" when translating - thx Andrebavila
    * Fix culture name for French translation - thx jpsdr
    * Fix waveform multiple select error - thx darbor87
    * Fix issue with "Merge short lines" in "batch convert" - thx fhtdtdj
    * Fix waveform multiple select crash - thx darbor87
+   * Fix broken "Duplicate line" shortcut - thx Kelvets/OmrSi
+   * Fix crash in reading .ismt - thx DarkHorse-APP2
 
 
 3.6.2 (24th August 2021)
