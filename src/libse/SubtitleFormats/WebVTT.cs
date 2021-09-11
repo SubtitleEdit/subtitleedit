@@ -352,18 +352,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 if (text.TrimEnd().EndsWith('}') && text.Contains("STYLE"))
                 {
-                    text = text.Remove(text.IndexOf(Environment.NewLine + "WEBVTT"));
+                    text = text.Remove(text.IndexOf(Environment.NewLine + "WEBVTT")).Trim();
                 }
             }
             else if (text.TrimEnd().EndsWith(Environment.NewLine + "WEBVTT", StringComparison.Ordinal))
             {
-                text = text.Remove(text.LastIndexOf(Environment.NewLine + "WEBVTT"));
+                text = text.Remove(text.LastIndexOf(Environment.NewLine + "WEBVTT")).Trim();
             }
             else if (text.Contains(Environment.NewLine + "STYLE" + Environment.NewLine))
             {
                 if (text.TrimEnd().EndsWith("}"))
                 {
-                    text = text.Remove(text.IndexOf(Environment.NewLine + "STYLE" + Environment.NewLine));
+                    text = text.Remove(text.IndexOf(Environment.NewLine + "STYLE" + Environment.NewLine)).Trim();
                 }
             }
 
