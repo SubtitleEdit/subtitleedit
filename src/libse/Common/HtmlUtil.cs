@@ -441,6 +441,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         inside = true;
                         continue;
                     }
+
                     if (next == '/' && i < s.Length - 3)
                     {
                         var nextNextNext = s[i + 3];
@@ -455,7 +456,14 @@ namespace Nikse.SubtitleEdit.Core.Common
                             inside = true;
                             continue;
                         }
+
+                        if (nextNext == 'c' && nextNextNext == '.')
+                        {
+                            inside = true;
+                            continue;
+                        }
                     }
+
                     if (nextNext == '/' && i < s.Length - 3)
                     { // some bad end tags sometimes seen
                         var nextNextNext = s[i + 3];
@@ -471,10 +479,17 @@ namespace Nikse.SubtitleEdit.Core.Common
                             continue;
                         }
                     }
+
                     if ((next == 'f' || next == 'F') && s.Substring(i).StartsWith("<font", StringComparison.OrdinalIgnoreCase) || // <font
                         next == '/' && (nextNext == 'f' || nextNext == 'F') && s.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase) ||  // </font>                        
                         next == ' ' && nextNext == '/' && s.Substring(i).StartsWith("< /font>", StringComparison.OrdinalIgnoreCase) ||  // < /font>
                         next == '/' && nextNext == ' ' && s.Substring(i).StartsWith("</ font>", StringComparison.OrdinalIgnoreCase))  // </ font>
+                    {
+                        inside = true;
+                        continue;
+                    }
+
+                    if (next == 'c' && nextNext == '.')
                     {
                         inside = true;
                         continue;
