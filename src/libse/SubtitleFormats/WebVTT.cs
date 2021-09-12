@@ -578,14 +578,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     text = System.Net.WebUtility.HtmlDecode(text);
 
-                    var match = regexWebVttColorMulti.Match(text);
+                    var match = regexWebVttColorMulti.Match(text);                    
                     while (match.Success)
                     {
                         var tag = match.Value.Substring(3, match.Value.Length - 4);
                         tag = FindBestColorTagOrDefault(tag);
                         if (tag == null)
                         {
-                            break;
+                            text = text.Replace(match.Value, string.Empty);
+                            text = text.Replace(match.Value.Insert(1, "/"), string.Empty);
+                            match = regexWebVttColorMulti.Match(text);
+                            continue;
                         }
                         var fontString = "<font color=\"" + tag + "\">";
                         fontString = fontString.Trim('"').Trim('\'');
@@ -594,6 +597,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         if (endIndex >= 0)
                         {
                             text = text.Remove(endIndex, 4).Insert(endIndex, "</font>");
+                        }
+                        else
+                        {
+                            endIndex = text.IndexOf("</c.", match.Index, StringComparison.OrdinalIgnoreCase);
+                            if (endIndex >= 0)
+                            {
+                                var endEndIndex = text.IndexOf('>', endIndex);
+                                if (endEndIndex > 0)
+                                {
+                                    text = text.Remove(endIndex, endEndIndex - endIndex).Insert(endIndex, "</font>");
+                                }
+                            }
                         }
                         match = regexWebVttColorMulti.Match(text);
                     }
@@ -661,6 +676,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (endIndex >= 0)
                     {
                         res = res.Remove(endIndex, 4).Insert(endIndex, "</font>");
+                    }
+                    else 
+                    {
+                        var findString = $"</c.{value}>";
+                        endIndex = res.IndexOf(findString, match.Index, StringComparison.OrdinalIgnoreCase);
+                        if (endIndex >= 0)
+                        {
+                            res = res.Remove(endIndex, findString.Length).Insert(endIndex, "</font>");
+                        }
                     }
                 }
 
