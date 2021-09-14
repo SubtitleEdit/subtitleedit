@@ -21108,6 +21108,9 @@ namespace Nikse.SubtitleEdit.Forms
             var lbSingleLine = labelTextLineLengths;
             var lbSingleLineOriginal = labelTextOriginalLineLengths;
 
+            var lbTotal = labelTextLineTotal;
+            var lbTotalOriginal = labelTextOriginalLineTotal;
+
             tbText.Left = firstLeft;
             tbOriginal.Left = firstLeft;
             lbText.Left = firstLeft;
@@ -21124,6 +21127,9 @@ namespace Nikse.SubtitleEdit.Forms
 
                 lbSingleLine = labelTextOriginalLineLengths;
                 lbSingleLineOriginal = labelTextLineLengths;
+
+                lbTotal = labelTextOriginalLineTotal;
+                lbTotalOriginal = labelTextLineTotal;
             }
             else
             {
@@ -21147,14 +21153,14 @@ namespace Nikse.SubtitleEdit.Forms
                 lbSingleLineOriginal.Left = tbOriginal.Left;
                 labelOriginalSingleLine.Left = labelTextOriginalLineLengths.Left + labelTextOriginalLineLengths.Width;
                 labelOriginalSingleLinePixels.Left = labelOriginalSingleLine.Left + labelOriginalSingleLine.Width + 10;
-                labelTextOriginalLineTotal.Left = tbOriginal.Left + (tbOriginal.Width - labelTextOriginalLineTotal.Width);
+                lbTotalOriginal.Left = tbOriginal.Left + (tbOriginal.Width - lbTotalOriginal.Width);
                 if (textBoxListViewText.Width / 2.1 < labelTextLineLengths.Width)
                 {
-                    labelTextOriginalLineTotal.Visible = false;
+                    lbTotalOriginal.Visible = false;
                 }
                 else
                 {
-                    labelTextOriginalLineTotal.Visible = true;
+                    lbTotalOriginal.Visible = true;
                 }
 
                 if (textBoxListViewText.Width / 3 < labelTextLineLengths.Width)
@@ -21169,16 +21175,16 @@ namespace Nikse.SubtitleEdit.Forms
 
             labelOriginalCharactersPerSecond.Top = labelCharactersPerSecond.Top;
             labelCharactersPerSecond.Left = tbText.Left + (tbText.Width - labelCharactersPerSecond.Width);
-            labelTextLineTotal.Left = tbText.Left + (tbText.Width - labelTextLineTotal.Width);
+            lbTotal.Left = tbText.Left + (tbText.Width - lbTotal.Width);
             SubtitleListview1.AutoSizeAllColumns(this);
 
             if (textBoxListViewText.Width / 2.1 < labelTextLineLengths.Width)
             {
-                labelTextLineTotal.Visible = false;
+                lbTotal.Visible = false;
             }
             else
             {
-                labelTextLineTotal.Visible = true;
+                lbTotal.Visible = true;
             }
 
             if (textBoxListViewText.Width / 3 < labelTextLineLengths.Width)
