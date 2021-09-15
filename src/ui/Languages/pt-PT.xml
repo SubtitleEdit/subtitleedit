@@ -1506,7 +1506,7 @@ Gostaria de começar do início do documento a localizar e substituir?</ReplaceX
     <SubtitleAppendPrompt>Isto irá acrescentar uma legenda existente à legenda já carregada que deve
 já estar em sincronia com o vídeo.
 
-Deseja continuar?</SubtitleAppendPrompt>
+Continuar?</SubtitleAppendPrompt>
     <SubtitleAppendPromptTitle>Anexar legenda</SubtitleAppendPromptTitle>
     <OpenSubtitleToAppend>Abrir legenda para anexar...</OpenSubtitleToAppend>
     <AppendViaVisualSyncTitle>Sincronia visual - anexar a segunda parte da legenda</AppendViaVisualSyncTitle>
@@ -1682,7 +1682,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <NextX>Próximo: {0}</NextX>
     <PromptInsertSubtitleOverlap>Inserir linha na posição da "waveform" causará sobreposição!
 
-Deseja continuar?</PromptInsertSubtitleOverlap>
+Continuar mesmo assim?</PromptInsertSubtitleOverlap>
     <SubtitleContainsNegativeDurationsX>A legenda contém a duração negativa na(s) linha(s): {0}</SubtitleContainsNegativeDurationsX>
     <SetPlayRateX>Definir a taxa de velocidade para {0}%</SetPlayRateX>
     <ErrorLoadIdx>Não foi possível ler/editar o ficheiro idx. Os ficheiros idx são parte de um par de ficheiros idx/sub (também conhecidos como VobSub) e o Subtitle Edit pode abrir o ficheiro sub.</ErrorLoadIdx>
@@ -2485,6 +2485,9 @@ Continuar?</RestoreDefaultSettingsMsg>
     <MinFrameGap>Intervalo mínimo em fotogramas</MinFrameGap>
     <XFramesAtYFrameRateGivesZMs>{0} fotogramas a uma velocidade de {1} dá {2} milissegundos.</XFramesAtYFrameRateGivesZMs>
     <UseXAsNewGap>Utilizar "{0}" milissegundos como novo intervalo mínimo?</UseXAsNewGap>
+    <BDOpensIn>BD sup/bdn-xml abre em</BDOpensIn>
+    <BDOpensInOcr>OCR</BDOpensInOcr>
+    <BDOpensInEdit>Editar</BDOpensInEdit>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Transferir o mpv lib</DownloadMpv>
@@ -2915,11 +2918,11 @@ Manter as alterações?</KeepChangesMessage>
     <AdjustAlpha>Ajustar o valor até que o texto seja mostrado claramente (normalmente valores entre 200 e 300)</AdjustAlpha>
     <OriginalImage>Imagem original</OriginalImage>
     <PostImage>Imagem após pré-processamento</PostImage>
-    <BinaryThreshold>Imagem binária comparar limiar</BinaryThreshold>
+    <BinaryThreshold>Limite de comparação de imagem binária</BinaryThreshold>
     <InvertColors>Inverter cores</InvertColors>
     <YellowToWhite>Amarelo para branco</YellowToWhite>
     <ColorToWhite>Cor para branco</ColorToWhite>
-    <ColorToRemove>Cor a excluir</ColorToRemove>
+    <ColorToRemove>Cor a remover</ColorToRemove>
     <Cropping>Cortar</Cropping>
     <CropTransparentColors>Cortar cores transparentes</CropTransparentColors>
   </OcrPreprocessing>
