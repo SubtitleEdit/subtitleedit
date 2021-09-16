@@ -274,7 +274,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ScanFolder>Σάρωση φακέλου…</ScanFolder>
     <Recursive>Συμπερίληψη υποφακέλων</Recursive>
     <BridgeGaps>Ένωση κενών</BridgeGaps>
-    <PlainText>Καθαρό κείμενο</PlainText>
+    <PlainText>Απλό κείμενο</PlainText>
     <Ocr>OCR…</Ocr>
     <AddFiles>Προσθήκη αρχείων…</AddFiles>
     <Filter>Φίλτρο</Filter>
@@ -448,7 +448,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FadeUpTime>Χρόνος εμφάνισης εφέ</FadeUpTime>
     <FadeDownTime>Χρόνος εξαφάνισης εφέ</FadeDownTime>
     <ZPosition>Κάθετη θέση</ZPosition>
-    <ZPositionHelp>Θετικοί αριθμοί μετακινούν το κείμενο μακριά, αρνητικοί αριθμοί μετακινούν το κείμενο κοντά.
+    <ZPositionHelp>Οι θετικοί αριθμοί μετακινούν το κείμενο μακριά και οι αρνητικοί αριθμοί κοντά.
 Εάν η κάθετη θέση είναι μηδέν, τότε είναι 2D.</ZPositionHelp>
     <ChooseColor>Επιλογή χρώματος…</ChooseColor>
     <Generate>Δημιουργία</Generate>
@@ -803,7 +803,17 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TimeRemainingMinutes>Υπολειπόμενος χρόνος: {0} λεπτά</TimeRemainingMinutes>
     <TimeRemainingSeconds>Υπολειπόμενος χρόνος: {0} δευτερόλεπτα</TimeRemainingSeconds>
     <TimeRemainingMinutesAndSeconds>Υπολειπόμενος χρόνος: {0} λεπτά και {1} δευτερόλεπτα</TimeRemainingMinutesAndSeconds>
-    <TargetFileName>Χρήση ονόματος αρχείου: {0}</TargetFileName>
+    <TargetFileName>Καθορισμός ονόματος αρχείου: {0}</TargetFileName>
+    <TargetFileSize>Καθορισμός μεγέθους αρχείου (απαιτείται διπλό πέρασμα κωδικοποίησης)</TargetFileSize>
+    <FileSizeMb>Μέγεθος αρχείου σε ΜΒ</FileSizeMb>
+    <PassX>Πέρασμα {0}</PassX>
+    <Encoding>Κωδικοποίηση</Encoding>
+    <BitRate>Ρυθμός bit</BitRate>
+    <SampleRate>Ρυθμός δείγματος</SampleRate>
+    <Stereo>Στερεοφωνικά</Stereo>
+    <Preset>Προεπιλογή</Preset>
+    <Crf>Σταθερός συντελεστής ρυθμού</Crf>
+    <TuneFor>Συντονισμός για</TuneFor>
   </GenerateVideoWithBurnedInSubs>
   <GetDictionaries>
     <Title>Χρειάζεστε λεξικά;</Title>
@@ -1085,7 +1095,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Save>Α&amp;ποθήκευση</Save>
         <SaveAs>Αποθήκευση &amp;ως…</SaveAs>
         <RestoreAutoBackup>Επαναφορά αυτόματου αντίγραφου ασφαλείας</RestoreAutoBackup>
-        <FormatXProperties>{0} ιδιότητες…</FormatXProperties>
+        <FormatXProperties>Ιδιότητες {0}…</FormatXProperties>
         <OpenOriginal>Άνοιγμα αρχικού υποτίτλου (λειτουργία μετάφρασης)…</OpenOriginal>
         <SaveOriginal>Αποθήκευση αρχικού υποτίτλου</SaveOriginal>
         <CloseOriginal>Κλείσιμο αρχικού υποτίτλου</CloseOriginal>
@@ -1274,7 +1284,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <SetActor>Ορισμός ηθοποιού</SetActor>
         <AssaTools>Εργαλεία ASSA</AssaTools>
         <SubStationAlphaStyles>Στυλ Sub Station Alpha…</SubStationAlphaStyles>
-        <AdvancedSubStationAlphaStyles>Προηγμένο στυλ Sub Station Alpha…</AdvancedSubStationAlphaStyles>
+        <AdvancedSubStationAlphaStyles>Στυλ Advanced Sub Station Alpha…</AdvancedSubStationAlphaStyles>
         <TimedTextSetRegion>Timed Text - ορισμός περιοχής</TimedTextSetRegion>
         <TimedTextSetStyle>Timed Text - ορισμός στυλ</TimedTextSetStyle>
         <TimedTextStyles>Στυλ Timed Text…</TimedTextStyles>
@@ -1302,8 +1312,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ColumnInsertTextFromSubtitle>Εισαγωγή κειμένου από υπότιτλο…</ColumnInsertTextFromSubtitle>
         <ColumnImportTextAndShiftCellsDown>Εισαγωγή κειμένου και κατέβασμα κελιών</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>Επικόλληση από το πρόχειρο…</ColumnPasteFromClipboard>
-        <ColumnTextUp>Κείμενο πάνω</ColumnTextUp>
-        <ColumnTextDown>Κείμενο κάτω</ColumnTextDown>
+        <ColumnTextUp>Μετακίνηση κειμένου πάνω</ColumnTextUp>
+        <ColumnTextDown>Μετακίνηση κειμένου κάτω</ColumnTextDown>
         <ColumnCopyOriginalTextToCurrent>Αντιγραφή κειμένου από το αρχικό στο τρέχων</ColumnCopyOriginalTextToCurrent>
         <Split>Διαχωρισμός</Split>
         <MergeSelectedLines>Συγχώνευση γραμμών</MergeSelectedLines>
@@ -2467,6 +2477,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MinFrameGap>Ελάχιστο κενό σε καρέ</MinFrameGap>
     <XFramesAtYFrameRateGivesZMs>{0} καρέ ανά {1} καρέ είναι {2} χιλ. δευτερολέπτου.</XFramesAtYFrameRateGivesZMs>
     <UseXAsNewGap>Χρήση "{0}" χιλ. δευτερολέπτου ως ελάχιστο κενό;</UseXAsNewGap>
+    <BDOpensIn>Άνοιγμα BD sup/bdn-xml σε</BDOpensIn>
+    <BDOpensInOcr>OCR</BDOpensInOcr>
+    <BDOpensInEdit>Επεξεργασία</BDOpensInEdit>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Λήψη mpv lib</DownloadMpv>
@@ -2633,7 +2646,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Export>Εξαγωγή…</Export>
   </Statistics>
   <SubStationAlphaProperties>
-    <Title>Προχωρημένες ιδιότητες Sub Station Alpha</Title>
+    <Title>Ιδιότητες Advanced Sub Station Alpha</Title>
     <TitleSubstationAlpha>Ιδιότητες Sub Station Alpha</TitleSubstationAlpha>
     <Script>Σενάριο</Script>
     <ScriptTitle>Τίτλος</ScriptTitle>
@@ -2653,7 +2666,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ScaleBorderAndShadow>Κλίμακα ορίων και σκιάς</ScaleBorderAndShadow>
   </SubStationAlphaProperties>
   <SubStationAlphaStyles>
-    <Title>Προχωρημένα στυλ Sub Station Alpha</Title>
+    <Title>Στυλ Advanced Sub Station Alpha</Title>
     <TitleSubstationAlpha>Στυλ Sub Station Alpha</TitleSubstationAlpha>
     <Styles>Στυλ</Styles>
     <Properties>Ιδιότητες</Properties>
