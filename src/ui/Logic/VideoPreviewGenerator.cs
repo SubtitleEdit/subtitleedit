@@ -126,17 +126,11 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
-            var ffmpegLocation = Configuration.Settings.General.FFmpegLocation;
-            if (!Configuration.IsRunningOnWindows && (string.IsNullOrEmpty(ffmpegLocation) || !File.Exists(ffmpegLocation)))
-            {
-                ffmpegLocation = "ffmpeg";
-            }
-
             var processMakeVideo = new Process
             {
                 StartInfo =
                 {
-                    FileName = ffmpegLocation,
+                    FileName = GetFfmpegLocation(),
                     Arguments = $"-i \"{inputVideoFileName}\" -vf \"ass={Path.GetFileName(assaSubtitleFileName)}\",yadif,format=yuv420p -g 30 -bf 2 -s {width}x{height} {videoEncodingSettings} {passSettings} {presetSettings} {crfSettings} {audioSettings}{tuneParameter} -use_editlist 0 -movflags +faststart {outputVideoFileName}",
                     UseShellExecute = false,
                     CreateNoWindow = true,
@@ -156,17 +150,11 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static Process GetFFmpegProcess(string imageFileName, string outputFileName, int videoWidth, int videoHeight, int seconds, decimal frameRate)
         {
-            var ffmpegLocation = Configuration.Settings.General.FFmpegLocation;
-            if (!Configuration.IsRunningOnWindows && (string.IsNullOrEmpty(ffmpegLocation) || !File.Exists(ffmpegLocation)))
-            {
-                ffmpegLocation = "ffmpeg";
-            }
-
             return new Process
             {
                 StartInfo =
                 {
-                    FileName = ffmpegLocation,
+                    FileName = GetFfmpegLocation(),
                     Arguments = $"-t {seconds} -loop 1 -r {frameRate.ToString(CultureInfo.InvariantCulture)} -i \"{imageFileName}\" -c:v libx264 -tune stillimage -shortest -s {videoWidth}x{videoHeight} \"{outputFileName}\"",
                     UseShellExecute = false,
                     CreateNoWindow = true
@@ -176,24 +164,48 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static Process GetFFmpegProcess(Color color, string outputFileName, int videoWidth, int videoHeight, int seconds, decimal frameRate)
         {
-            var ffmpegLocation = Configuration.Settings.General.FFmpegLocation;
-            if (!Configuration.IsRunningOnWindows && (string.IsNullOrEmpty(ffmpegLocation) || !File.Exists(ffmpegLocation)))
-            {
-                ffmpegLocation = "ffmpeg";
-            }
-
             var htmlColor = $"#{(color.R.ToString("X2") + color.G.ToString("X2") + color.B.ToString("X2")).ToUpperInvariant()}";
 
             return new Process
             {
                 StartInfo =
                 {
-                    FileName = ffmpegLocation,
+                    FileName = GetFfmpegLocation(),
                     Arguments = $"-t {seconds} -f lavfi -i color=c={htmlColor}:r={frameRate.ToString(CultureInfo.InvariantCulture)}:s={videoWidth}x{videoHeight} -c:v libx264 -tune stillimage -shortest -s {videoWidth}x{videoHeight} \"{outputFileName}\"",
                     UseShellExecute = false,
                     CreateNoWindow = true
                 }
             };
+        }
+
+        public static string GetScreenShot(string inputFileName, string timeCode)
+        {
+            var outputFileName = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.png");
+            var process = new Process
+            {
+                StartInfo =
+                {
+                    FileName = GetFfmpegLocation(),
+                    Arguments = $"-ss {timeCode} -i \"{inputFileName}\" -frames:v 1 -q:v 2 \"{outputFileName}\"",
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+
+            process.Start();
+            process.WaitForExit();
+            return outputFileName;
+        }
+
+        private static string GetFfmpegLocation()
+        {
+            var ffmpegLocation = Configuration.Settings.General.FFmpegLocation;
+            if (!Configuration.IsRunningOnWindows && (string.IsNullOrEmpty(ffmpegLocation) || !File.Exists(ffmpegLocation)))
+            {
+                ffmpegLocation = "ffmpeg";
+            }
+
+            return ffmpegLocation;
         }
     }
 }

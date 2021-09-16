@@ -39,49 +39,53 @@ namespace Nikse.SubtitleEdit.Forms
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.labelProgress = new System.Windows.Forms.Label();
             this.groupBoxSettings = new System.Windows.Forms.GroupBox();
-            this.comboBoxTune = new System.Windows.Forms.ComboBox();
-            this.labelTune = new System.Windows.Forms.Label();
-            this.comboBoxAudioSampleRate = new System.Windows.Forms.ComboBox();
-            this.labelAudioSampleRate = new System.Windows.Forms.Label();
-            this.checkBoxMakeStereo = new System.Windows.Forms.CheckBox();
-            this.comboBoxAudioEnc = new System.Windows.Forms.ComboBox();
-            this.labelAudioEnc = new System.Windows.Forms.Label();
-            this.comboBoxVideoEncoding = new System.Windows.Forms.ComboBox();
-            this.labelVideoEncoding = new System.Windows.Forms.Label();
-            this.comboBoxCrf = new System.Windows.Forms.ComboBox();
-            this.labelCRF = new System.Windows.Forms.Label();
-            this.comboBoxPreset = new System.Windows.Forms.ComboBox();
-            this.labelPreset = new System.Windows.Forms.Label();
-            this.labelFileName = new System.Windows.Forms.Label();
-            this.labelX = new System.Windows.Forms.Label();
+            this.comboBoxSubtitleFont = new System.Windows.Forms.ComboBox();
+            this.labelSubtitleFont = new System.Windows.Forms.Label();
+            this.buttonPreview = new System.Windows.Forms.Button();
+            this.groupBoxVideo = new System.Windows.Forms.GroupBox();
             this.labelResolution = new System.Windows.Forms.Label();
-            this.numericUpDownHeight = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownWidth = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownHeight = new System.Windows.Forms.NumericUpDown();
+            this.labelX = new System.Windows.Forms.Label();
+            this.labelPreset = new System.Windows.Forms.Label();
+            this.comboBoxTune = new System.Windows.Forms.ComboBox();
+            this.comboBoxPreset = new System.Windows.Forms.ComboBox();
+            this.labelTune = new System.Windows.Forms.Label();
+            this.labelCRF = new System.Windows.Forms.Label();
+            this.comboBoxVideoEncoding = new System.Windows.Forms.ComboBox();
+            this.comboBoxCrf = new System.Windows.Forms.ComboBox();
+            this.labelVideoEncoding = new System.Windows.Forms.Label();
+            this.groupBoxAudio = new System.Windows.Forms.GroupBox();
+            this.labelAudioEnc = new System.Windows.Forms.Label();
+            this.comboBoxAudioBitRate = new System.Windows.Forms.ComboBox();
+            this.comboBoxAudioEnc = new System.Windows.Forms.ComboBox();
+            this.labelAudioBitRate = new System.Windows.Forms.Label();
+            this.checkBoxMakeStereo = new System.Windows.Forms.CheckBox();
+            this.labelAudioSampleRate = new System.Windows.Forms.Label();
+            this.comboBoxAudioSampleRate = new System.Windows.Forms.ComboBox();
+            this.numericUpDownTargetFileSize = new System.Windows.Forms.NumericUpDown();
+            this.labelFileSize = new System.Windows.Forms.Label();
+            this.checkBoxTargetFileSize = new System.Windows.Forms.CheckBox();
+            this.labelFileName = new System.Windows.Forms.Label();
             this.linkLabelHelp = new System.Windows.Forms.LinkLabel();
             this.textBoxLog = new System.Windows.Forms.TextBox();
             this.labelInfo = new System.Windows.Forms.Label();
-            this.checkBoxTargetFileSize = new System.Windows.Forms.CheckBox();
-            this.numericUpDownTargetFileSize = new System.Windows.Forms.NumericUpDown();
-            this.labelFileSize = new System.Windows.Forms.Label();
             this.labelPass = new System.Windows.Forms.Label();
-            this.comboBoxAudioBitRate = new System.Windows.Forms.ComboBox();
-            this.labelAudioBitRate = new System.Windows.Forms.Label();
-            this.groupBoxAudio = new System.Windows.Forms.GroupBox();
-            this.groupBoxVideo = new System.Windows.Forms.GroupBox();
+            this.checkBoxRightToLeft = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).BeginInit();
             this.groupBoxSettings.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetFileSize)).BeginInit();
-            this.groupBoxAudio.SuspendLayout();
             this.groupBoxVideo.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).BeginInit();
+            this.groupBoxAudio.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetFileSize)).BeginInit();
             this.SuspendLayout();
             // 
             // progressBar1
             // 
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(12, 438);
+            this.progressBar1.Location = new System.Drawing.Point(12, 515);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(628, 11);
             this.progressBar1.TabIndex = 22;
@@ -91,7 +95,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(646, 438);
+            this.buttonOK.Location = new System.Drawing.Point(646, 515);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(121, 23);
             this.buttonOK.TabIndex = 23;
@@ -104,7 +108,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(773, 438);
+            this.buttonCancel.Location = new System.Drawing.Point(773, 515);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 24;
@@ -116,7 +120,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelPleaseWait.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelPleaseWait.AutoSize = true;
-            this.labelPleaseWait.Location = new System.Drawing.Point(12, 422);
+            this.labelPleaseWait.Location = new System.Drawing.Point(12, 499);
             this.labelPleaseWait.Name = "labelPleaseWait";
             this.labelPleaseWait.Size = new System.Drawing.Size(70, 13);
             this.labelPleaseWait.TabIndex = 25;
@@ -124,7 +128,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // numericUpDownFontSize
             // 
-            this.numericUpDownFontSize.Location = new System.Drawing.Point(104, 33);
+            this.numericUpDownFontSize.Location = new System.Drawing.Point(120, 33);
             this.numericUpDownFontSize.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -162,7 +166,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelProgress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelProgress.AutoSize = true;
-            this.labelProgress.Location = new System.Drawing.Point(12, 452);
+            this.labelProgress.Location = new System.Drawing.Point(12, 529);
             this.labelProgress.Name = "labelProgress";
             this.labelProgress.Size = new System.Drawing.Size(88, 13);
             this.labelProgress.TabIndex = 29;
@@ -173,6 +177,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxSettings.Controls.Add(this.checkBoxRightToLeft);
+            this.groupBoxSettings.Controls.Add(this.comboBoxSubtitleFont);
+            this.groupBoxSettings.Controls.Add(this.labelSubtitleFont);
+            this.groupBoxSettings.Controls.Add(this.buttonPreview);
             this.groupBoxSettings.Controls.Add(this.groupBoxVideo);
             this.groupBoxSettings.Controls.Add(this.groupBoxAudio);
             this.groupBoxSettings.Controls.Add(this.numericUpDownTargetFileSize);
@@ -183,192 +191,62 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxSettings.Controls.Add(this.labelFontSize);
             this.groupBoxSettings.Location = new System.Drawing.Point(12, 13);
             this.groupBoxSettings.Name = "groupBoxSettings";
-            this.groupBoxSettings.Size = new System.Drawing.Size(836, 370);
+            this.groupBoxSettings.Size = new System.Drawing.Size(836, 447);
             this.groupBoxSettings.TabIndex = 30;
             this.groupBoxSettings.TabStop = false;
             this.groupBoxSettings.Text = "Settings";
             // 
-            // comboBoxTune
+            // comboBoxSubtitleFont
             // 
-            this.comboBoxTune.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxTune.FormattingEnabled = true;
-            this.comboBoxTune.Items.AddRange(new object[] {
-            "",
-            "film",
-            "animation",
-            "grain"});
-            this.comboBoxTune.Location = new System.Drawing.Point(101, 139);
-            this.comboBoxTune.Name = "comboBoxTune";
-            this.comboBoxTune.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxTune.TabIndex = 48;
+            this.comboBoxSubtitleFont.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxSubtitleFont.DropDownWidth = 250;
+            this.comboBoxSubtitleFont.FormattingEnabled = true;
+            this.comboBoxSubtitleFont.Location = new System.Drawing.Point(120, 63);
+            this.comboBoxSubtitleFont.Name = "comboBoxSubtitleFont";
+            this.comboBoxSubtitleFont.Size = new System.Drawing.Size(250, 21);
+            this.comboBoxSubtitleFont.TabIndex = 58;
             // 
-            // labelTune
+            // labelSubtitleFont
             // 
-            this.labelTune.AutoSize = true;
-            this.labelTune.Location = new System.Drawing.Point(16, 141);
-            this.labelTune.Name = "labelTune";
-            this.labelTune.Size = new System.Drawing.Size(32, 13);
-            this.labelTune.TabIndex = 47;
-            this.labelTune.Text = "Tune";
+            this.labelSubtitleFont.AutoSize = true;
+            this.labelSubtitleFont.Location = new System.Drawing.Point(19, 66);
+            this.labelSubtitleFont.Name = "labelSubtitleFont";
+            this.labelSubtitleFont.Size = new System.Drawing.Size(63, 13);
+            this.labelSubtitleFont.TabIndex = 57;
+            this.labelSubtitleFont.Text = "Subtitle font";
             // 
-            // comboBoxAudioSampleRate
+            // buttonPreview
             // 
-            this.comboBoxAudioSampleRate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxAudioSampleRate.FormattingEnabled = true;
-            this.comboBoxAudioSampleRate.Items.AddRange(new object[] {
-            "44100 Hz",
-            "48000 Hz",
-            "88200 Hz",
-            "96000 Hz",
-            "192000 Hz"});
-            this.comboBoxAudioSampleRate.Location = new System.Drawing.Point(97, 83);
-            this.comboBoxAudioSampleRate.Name = "comboBoxAudioSampleRate";
-            this.comboBoxAudioSampleRate.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxAudioSampleRate.TabIndex = 45;
+            this.buttonPreview.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonPreview.Location = new System.Drawing.Point(726, 19);
+            this.buttonPreview.Name = "buttonPreview";
+            this.buttonPreview.Size = new System.Drawing.Size(95, 23);
+            this.buttonPreview.TabIndex = 56;
+            this.buttonPreview.Text = "Preview";
+            this.buttonPreview.UseVisualStyleBackColor = true;
+            this.buttonPreview.Click += new System.EventHandler(this.buttonPreview_Click);
             // 
-            // labelAudioSampleRate
+            // groupBoxVideo
             // 
-            this.labelAudioSampleRate.AutoSize = true;
-            this.labelAudioSampleRate.Location = new System.Drawing.Point(20, 85);
-            this.labelAudioSampleRate.Name = "labelAudioSampleRate";
-            this.labelAudioSampleRate.Size = new System.Drawing.Size(63, 13);
-            this.labelAudioSampleRate.TabIndex = 44;
-            this.labelAudioSampleRate.Text = "Sample rate";
-            // 
-            // checkBoxMakeStereo
-            // 
-            this.checkBoxMakeStereo.AutoSize = true;
-            this.checkBoxMakeStereo.Checked = true;
-            this.checkBoxMakeStereo.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxMakeStereo.Location = new System.Drawing.Point(97, 58);
-            this.checkBoxMakeStereo.Name = "checkBoxMakeStereo";
-            this.checkBoxMakeStereo.Size = new System.Drawing.Size(57, 17);
-            this.checkBoxMakeStereo.TabIndex = 43;
-            this.checkBoxMakeStereo.Text = "Stereo";
-            this.checkBoxMakeStereo.UseVisualStyleBackColor = true;
-            // 
-            // comboBoxAudioEnc
-            // 
-            this.comboBoxAudioEnc.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxAudioEnc.FormattingEnabled = true;
-            this.comboBoxAudioEnc.Items.AddRange(new object[] {
-            "copy",
-            "aac"});
-            this.comboBoxAudioEnc.Location = new System.Drawing.Point(97, 29);
-            this.comboBoxAudioEnc.Name = "comboBoxAudioEnc";
-            this.comboBoxAudioEnc.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxAudioEnc.TabIndex = 42;
-            this.comboBoxAudioEnc.SelectedIndexChanged += new System.EventHandler(this.comboBoxAudioEnc_SelectedIndexChanged);
-            // 
-            // labelAudioEnc
-            // 
-            this.labelAudioEnc.AutoSize = true;
-            this.labelAudioEnc.Location = new System.Drawing.Point(20, 31);
-            this.labelAudioEnc.Name = "labelAudioEnc";
-            this.labelAudioEnc.Size = new System.Drawing.Size(52, 13);
-            this.labelAudioEnc.TabIndex = 41;
-            this.labelAudioEnc.Text = "Encoding";
-            // 
-            // comboBoxVideoEncoding
-            // 
-            this.comboBoxVideoEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxVideoEncoding.FormattingEnabled = true;
-            this.comboBoxVideoEncoding.Items.AddRange(new object[] {
-            "libx264",
-            "libx264rgb",
-            "libx265",
-            "libvpx-vp9"});
-            this.comboBoxVideoEncoding.Location = new System.Drawing.Point(101, 58);
-            this.comboBoxVideoEncoding.Name = "comboBoxVideoEncoding";
-            this.comboBoxVideoEncoding.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxVideoEncoding.TabIndex = 40;
-            this.comboBoxVideoEncoding.SelectedIndexChanged += new System.EventHandler(this.comboBoxVideoEncoding_SelectedIndexChanged);
-            // 
-            // labelVideoEncoding
-            // 
-            this.labelVideoEncoding.AutoSize = true;
-            this.labelVideoEncoding.Location = new System.Drawing.Point(16, 60);
-            this.labelVideoEncoding.Name = "labelVideoEncoding";
-            this.labelVideoEncoding.Size = new System.Drawing.Size(55, 13);
-            this.labelVideoEncoding.TabIndex = 39;
-            this.labelVideoEncoding.Text = "Video enc";
-            // 
-            // comboBoxCrf
-            // 
-            this.comboBoxCrf.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxCrf.FormattingEnabled = true;
-            this.comboBoxCrf.Items.AddRange(new object[] {
-            "17",
-            "18",
-            "19",
-            "20",
-            "21",
-            "22",
-            "23",
-            "24",
-            "25",
-            "26",
-            "27",
-            "28"});
-            this.comboBoxCrf.Location = new System.Drawing.Point(101, 112);
-            this.comboBoxCrf.Name = "comboBoxCrf";
-            this.comboBoxCrf.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxCrf.TabIndex = 38;
-            // 
-            // labelCRF
-            // 
-            this.labelCRF.AutoSize = true;
-            this.labelCRF.Location = new System.Drawing.Point(16, 114);
-            this.labelCRF.Name = "labelCRF";
-            this.labelCRF.Size = new System.Drawing.Size(28, 13);
-            this.labelCRF.TabIndex = 37;
-            this.labelCRF.Text = "CRF";
-            // 
-            // comboBoxPreset
-            // 
-            this.comboBoxPreset.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxPreset.FormattingEnabled = true;
-            this.comboBoxPreset.Items.AddRange(new object[] {
-            "ultrafast",
-            "superfast",
-            "veryfast",
-            "faster",
-            "fast",
-            "medium",
-            "slow",
-            "slower",
-            "veryslow "});
-            this.comboBoxPreset.Location = new System.Drawing.Point(101, 85);
-            this.comboBoxPreset.Name = "comboBoxPreset";
-            this.comboBoxPreset.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxPreset.TabIndex = 36;
-            // 
-            // labelPreset
-            // 
-            this.labelPreset.AutoSize = true;
-            this.labelPreset.Location = new System.Drawing.Point(16, 87);
-            this.labelPreset.Name = "labelPreset";
-            this.labelPreset.Size = new System.Drawing.Size(37, 13);
-            this.labelPreset.TabIndex = 35;
-            this.labelPreset.Text = "Preset";
-            // 
-            // labelFileName
-            // 
-            this.labelFileName.AutoSize = true;
-            this.labelFileName.Location = new System.Drawing.Point(19, 343);
-            this.labelFileName.Name = "labelFileName";
-            this.labelFileName.Size = new System.Drawing.Size(52, 13);
-            this.labelFileName.TabIndex = 33;
-            this.labelFileName.Text = "File name";
-            // 
-            // labelX
-            // 
-            this.labelX.AutoSize = true;
-            this.labelX.Location = new System.Drawing.Point(172, 28);
-            this.labelX.Name = "labelX";
-            this.labelX.Size = new System.Drawing.Size(12, 13);
-            this.labelX.TabIndex = 31;
-            this.labelX.Text = "x";
+            this.groupBoxVideo.Controls.Add(this.labelResolution);
+            this.groupBoxVideo.Controls.Add(this.numericUpDownWidth);
+            this.groupBoxVideo.Controls.Add(this.numericUpDownHeight);
+            this.groupBoxVideo.Controls.Add(this.labelX);
+            this.groupBoxVideo.Controls.Add(this.labelPreset);
+            this.groupBoxVideo.Controls.Add(this.comboBoxTune);
+            this.groupBoxVideo.Controls.Add(this.comboBoxPreset);
+            this.groupBoxVideo.Controls.Add(this.labelTune);
+            this.groupBoxVideo.Controls.Add(this.labelCRF);
+            this.groupBoxVideo.Controls.Add(this.comboBoxVideoEncoding);
+            this.groupBoxVideo.Controls.Add(this.comboBoxCrf);
+            this.groupBoxVideo.Controls.Add(this.labelVideoEncoding);
+            this.groupBoxVideo.Location = new System.Drawing.Point(6, 136);
+            this.groupBoxVideo.Name = "groupBoxVideo";
+            this.groupBoxVideo.Size = new System.Drawing.Size(364, 197);
+            this.groupBoxVideo.TabIndex = 55;
+            this.groupBoxVideo.TabStop = false;
+            this.groupBoxVideo.Text = "Video";
             // 
             // labelResolution
             // 
@@ -378,34 +256,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelResolution.Size = new System.Drawing.Size(57, 13);
             this.labelResolution.TabIndex = 29;
             this.labelResolution.Text = "Resolution";
-            // 
-            // numericUpDownHeight
-            // 
-            this.numericUpDownHeight.Increment = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-            this.numericUpDownHeight.Location = new System.Drawing.Point(190, 26);
-            this.numericUpDownHeight.Maximum = new decimal(new int[] {
-            50000,
-            0,
-            0,
-            0});
-            this.numericUpDownHeight.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDownHeight.Name = "numericUpDownHeight";
-            this.numericUpDownHeight.Size = new System.Drawing.Size(64, 20);
-            this.numericUpDownHeight.TabIndex = 32;
-            this.numericUpDownHeight.Value = new decimal(new int[] {
-            720,
-            0,
-            0,
-            0});
-            this.numericUpDownHeight.ValueChanged += new System.EventHandler(this.numericUpDownHeight_ValueChanged);
             // 
             // numericUpDownWidth
             // 
@@ -435,50 +285,253 @@ namespace Nikse.SubtitleEdit.Forms
             0});
             this.numericUpDownWidth.ValueChanged += new System.EventHandler(this.numericUpDownWidth_ValueChanged);
             // 
-            // linkLabelHelp
+            // numericUpDownHeight
             // 
-            this.linkLabelHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkLabelHelp.AutoSize = true;
-            this.linkLabelHelp.Location = new System.Drawing.Point(819, 386);
-            this.linkLabelHelp.Name = "linkLabelHelp";
-            this.linkLabelHelp.Size = new System.Drawing.Size(29, 13);
-            this.linkLabelHelp.TabIndex = 46;
-            this.linkLabelHelp.TabStop = true;
-            this.linkLabelHelp.Text = "Help";
-            this.linkLabelHelp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelHelp_LinkClicked);
+            this.numericUpDownHeight.Increment = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.numericUpDownHeight.Location = new System.Drawing.Point(190, 26);
+            this.numericUpDownHeight.Maximum = new decimal(new int[] {
+            50000,
+            0,
+            0,
+            0});
+            this.numericUpDownHeight.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownHeight.Name = "numericUpDownHeight";
+            this.numericUpDownHeight.Size = new System.Drawing.Size(64, 20);
+            this.numericUpDownHeight.TabIndex = 32;
+            this.numericUpDownHeight.Value = new decimal(new int[] {
+            720,
+            0,
+            0,
+            0});
+            this.numericUpDownHeight.ValueChanged += new System.EventHandler(this.numericUpDownHeight_ValueChanged);
             // 
-            // textBoxLog
+            // labelX
             // 
-            this.textBoxLog.Location = new System.Drawing.Point(12, 13);
-            this.textBoxLog.Multiline = true;
-            this.textBoxLog.Name = "textBoxLog";
-            this.textBoxLog.Size = new System.Drawing.Size(188, 26);
-            this.textBoxLog.TabIndex = 31;
+            this.labelX.AutoSize = true;
+            this.labelX.Location = new System.Drawing.Point(172, 28);
+            this.labelX.Name = "labelX";
+            this.labelX.Size = new System.Drawing.Size(12, 13);
+            this.labelX.TabIndex = 31;
+            this.labelX.Text = "x";
             // 
-            // labelInfo
+            // labelPreset
             // 
-            this.labelInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.labelInfo.AutoSize = true;
-            this.labelInfo.Location = new System.Drawing.Point(12, 386);
-            this.labelInfo.Name = "labelInfo";
-            this.labelInfo.Size = new System.Drawing.Size(25, 13);
-            this.labelInfo.TabIndex = 46;
-            this.labelInfo.Text = "Info";
+            this.labelPreset.AutoSize = true;
+            this.labelPreset.Location = new System.Drawing.Point(16, 87);
+            this.labelPreset.Name = "labelPreset";
+            this.labelPreset.Size = new System.Drawing.Size(37, 13);
+            this.labelPreset.TabIndex = 35;
+            this.labelPreset.Text = "Preset";
             // 
-            // checkBoxTargetFileSize
+            // comboBoxTune
             // 
-            this.checkBoxTargetFileSize.AutoSize = true;
-            this.checkBoxTargetFileSize.Location = new System.Drawing.Point(22, 277);
-            this.checkBoxTargetFileSize.Name = "checkBoxTargetFileSize";
-            this.checkBoxTargetFileSize.Size = new System.Drawing.Size(192, 17);
-            this.checkBoxTargetFileSize.TabIndex = 49;
-            this.checkBoxTargetFileSize.Text = "Target file size (two pass encoding)";
-            this.checkBoxTargetFileSize.UseVisualStyleBackColor = true;
-            this.checkBoxTargetFileSize.CheckedChanged += new System.EventHandler(this.checkBoxTargetFileSize_CheckedChanged);
+            this.comboBoxTune.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxTune.FormattingEnabled = true;
+            this.comboBoxTune.Items.AddRange(new object[] {
+            "",
+            "film",
+            "animation",
+            "grain"});
+            this.comboBoxTune.Location = new System.Drawing.Point(101, 139);
+            this.comboBoxTune.Name = "comboBoxTune";
+            this.comboBoxTune.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxTune.TabIndex = 48;
+            // 
+            // comboBoxPreset
+            // 
+            this.comboBoxPreset.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxPreset.FormattingEnabled = true;
+            this.comboBoxPreset.Items.AddRange(new object[] {
+            "ultrafast",
+            "superfast",
+            "veryfast",
+            "faster",
+            "fast",
+            "medium",
+            "slow",
+            "slower",
+            "veryslow "});
+            this.comboBoxPreset.Location = new System.Drawing.Point(101, 85);
+            this.comboBoxPreset.Name = "comboBoxPreset";
+            this.comboBoxPreset.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxPreset.TabIndex = 36;
+            // 
+            // labelTune
+            // 
+            this.labelTune.AutoSize = true;
+            this.labelTune.Location = new System.Drawing.Point(16, 141);
+            this.labelTune.Name = "labelTune";
+            this.labelTune.Size = new System.Drawing.Size(32, 13);
+            this.labelTune.TabIndex = 47;
+            this.labelTune.Text = "Tune";
+            // 
+            // labelCRF
+            // 
+            this.labelCRF.AutoSize = true;
+            this.labelCRF.Location = new System.Drawing.Point(16, 114);
+            this.labelCRF.Name = "labelCRF";
+            this.labelCRF.Size = new System.Drawing.Size(28, 13);
+            this.labelCRF.TabIndex = 37;
+            this.labelCRF.Text = "CRF";
+            // 
+            // comboBoxVideoEncoding
+            // 
+            this.comboBoxVideoEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxVideoEncoding.FormattingEnabled = true;
+            this.comboBoxVideoEncoding.Items.AddRange(new object[] {
+            "libx264",
+            "libx264rgb",
+            "libx265",
+            "libvpx-vp9"});
+            this.comboBoxVideoEncoding.Location = new System.Drawing.Point(101, 58);
+            this.comboBoxVideoEncoding.Name = "comboBoxVideoEncoding";
+            this.comboBoxVideoEncoding.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxVideoEncoding.TabIndex = 40;
+            this.comboBoxVideoEncoding.SelectedIndexChanged += new System.EventHandler(this.comboBoxVideoEncoding_SelectedIndexChanged);
+            // 
+            // comboBoxCrf
+            // 
+            this.comboBoxCrf.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxCrf.FormattingEnabled = true;
+            this.comboBoxCrf.Items.AddRange(new object[] {
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23",
+            "24",
+            "25",
+            "26",
+            "27",
+            "28"});
+            this.comboBoxCrf.Location = new System.Drawing.Point(101, 112);
+            this.comboBoxCrf.Name = "comboBoxCrf";
+            this.comboBoxCrf.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxCrf.TabIndex = 38;
+            // 
+            // labelVideoEncoding
+            // 
+            this.labelVideoEncoding.AutoSize = true;
+            this.labelVideoEncoding.Location = new System.Drawing.Point(16, 60);
+            this.labelVideoEncoding.Name = "labelVideoEncoding";
+            this.labelVideoEncoding.Size = new System.Drawing.Size(55, 13);
+            this.labelVideoEncoding.TabIndex = 39;
+            this.labelVideoEncoding.Text = "Video enc";
+            // 
+            // groupBoxAudio
+            // 
+            this.groupBoxAudio.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxAudio.Controls.Add(this.labelAudioEnc);
+            this.groupBoxAudio.Controls.Add(this.comboBoxAudioBitRate);
+            this.groupBoxAudio.Controls.Add(this.comboBoxAudioEnc);
+            this.groupBoxAudio.Controls.Add(this.labelAudioBitRate);
+            this.groupBoxAudio.Controls.Add(this.checkBoxMakeStereo);
+            this.groupBoxAudio.Controls.Add(this.labelAudioSampleRate);
+            this.groupBoxAudio.Controls.Add(this.comboBoxAudioSampleRate);
+            this.groupBoxAudio.Location = new System.Drawing.Point(376, 136);
+            this.groupBoxAudio.Name = "groupBoxAudio";
+            this.groupBoxAudio.Size = new System.Drawing.Size(445, 222);
+            this.groupBoxAudio.TabIndex = 54;
+            this.groupBoxAudio.TabStop = false;
+            this.groupBoxAudio.Text = "Audio";
+            // 
+            // labelAudioEnc
+            // 
+            this.labelAudioEnc.AutoSize = true;
+            this.labelAudioEnc.Location = new System.Drawing.Point(20, 31);
+            this.labelAudioEnc.Name = "labelAudioEnc";
+            this.labelAudioEnc.Size = new System.Drawing.Size(52, 13);
+            this.labelAudioEnc.TabIndex = 41;
+            this.labelAudioEnc.Text = "Encoding";
+            // 
+            // comboBoxAudioBitRate
+            // 
+            this.comboBoxAudioBitRate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxAudioBitRate.FormattingEnabled = true;
+            this.comboBoxAudioBitRate.Items.AddRange(new object[] {
+            "64k",
+            "128k",
+            "160k",
+            "196k",
+            "320k"});
+            this.comboBoxAudioBitRate.Location = new System.Drawing.Point(97, 110);
+            this.comboBoxAudioBitRate.Name = "comboBoxAudioBitRate";
+            this.comboBoxAudioBitRate.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxAudioBitRate.TabIndex = 53;
+            // 
+            // comboBoxAudioEnc
+            // 
+            this.comboBoxAudioEnc.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxAudioEnc.FormattingEnabled = true;
+            this.comboBoxAudioEnc.Items.AddRange(new object[] {
+            "copy",
+            "aac"});
+            this.comboBoxAudioEnc.Location = new System.Drawing.Point(97, 29);
+            this.comboBoxAudioEnc.Name = "comboBoxAudioEnc";
+            this.comboBoxAudioEnc.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxAudioEnc.TabIndex = 42;
+            this.comboBoxAudioEnc.SelectedIndexChanged += new System.EventHandler(this.comboBoxAudioEnc_SelectedIndexChanged);
+            // 
+            // labelAudioBitRate
+            // 
+            this.labelAudioBitRate.AutoSize = true;
+            this.labelAudioBitRate.Location = new System.Drawing.Point(20, 112);
+            this.labelAudioBitRate.Name = "labelAudioBitRate";
+            this.labelAudioBitRate.Size = new System.Drawing.Size(40, 13);
+            this.labelAudioBitRate.TabIndex = 52;
+            this.labelAudioBitRate.Text = "Bit rate";
+            // 
+            // checkBoxMakeStereo
+            // 
+            this.checkBoxMakeStereo.AutoSize = true;
+            this.checkBoxMakeStereo.Checked = true;
+            this.checkBoxMakeStereo.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxMakeStereo.Location = new System.Drawing.Point(97, 58);
+            this.checkBoxMakeStereo.Name = "checkBoxMakeStereo";
+            this.checkBoxMakeStereo.Size = new System.Drawing.Size(57, 17);
+            this.checkBoxMakeStereo.TabIndex = 43;
+            this.checkBoxMakeStereo.Text = "Stereo";
+            this.checkBoxMakeStereo.UseVisualStyleBackColor = true;
+            // 
+            // labelAudioSampleRate
+            // 
+            this.labelAudioSampleRate.AutoSize = true;
+            this.labelAudioSampleRate.Location = new System.Drawing.Point(20, 85);
+            this.labelAudioSampleRate.Name = "labelAudioSampleRate";
+            this.labelAudioSampleRate.Size = new System.Drawing.Size(63, 13);
+            this.labelAudioSampleRate.TabIndex = 44;
+            this.labelAudioSampleRate.Text = "Sample rate";
+            // 
+            // comboBoxAudioSampleRate
+            // 
+            this.comboBoxAudioSampleRate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxAudioSampleRate.FormattingEnabled = true;
+            this.comboBoxAudioSampleRate.Items.AddRange(new object[] {
+            "44100 Hz",
+            "48000 Hz",
+            "88200 Hz",
+            "96000 Hz",
+            "192000 Hz"});
+            this.comboBoxAudioSampleRate.Location = new System.Drawing.Point(97, 83);
+            this.comboBoxAudioSampleRate.Name = "comboBoxAudioSampleRate";
+            this.comboBoxAudioSampleRate.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxAudioSampleRate.TabIndex = 45;
             // 
             // numericUpDownTargetFileSize
             // 
-            this.numericUpDownTargetFileSize.Location = new System.Drawing.Point(120, 300);
+            this.numericUpDownTargetFileSize.Location = new System.Drawing.Point(120, 372);
             this.numericUpDownTargetFileSize.Maximum = new decimal(new int[] {
             25000,
             0,
@@ -501,91 +554,87 @@ namespace Nikse.SubtitleEdit.Forms
             // labelFileSize
             // 
             this.labelFileSize.AutoSize = true;
-            this.labelFileSize.Location = new System.Drawing.Point(35, 302);
+            this.labelFileSize.Location = new System.Drawing.Point(35, 374);
             this.labelFileSize.Name = "labelFileSize";
             this.labelFileSize.Size = new System.Drawing.Size(74, 13);
             this.labelFileSize.TabIndex = 51;
             this.labelFileSize.Text = "File size in MB";
             // 
+            // checkBoxTargetFileSize
+            // 
+            this.checkBoxTargetFileSize.AutoSize = true;
+            this.checkBoxTargetFileSize.Location = new System.Drawing.Point(22, 349);
+            this.checkBoxTargetFileSize.Name = "checkBoxTargetFileSize";
+            this.checkBoxTargetFileSize.Size = new System.Drawing.Size(192, 17);
+            this.checkBoxTargetFileSize.TabIndex = 49;
+            this.checkBoxTargetFileSize.Text = "Target file size (two pass encoding)";
+            this.checkBoxTargetFileSize.UseVisualStyleBackColor = true;
+            this.checkBoxTargetFileSize.CheckedChanged += new System.EventHandler(this.checkBoxTargetFileSize_CheckedChanged);
+            // 
+            // labelFileName
+            // 
+            this.labelFileName.AutoSize = true;
+            this.labelFileName.Location = new System.Drawing.Point(19, 420);
+            this.labelFileName.Name = "labelFileName";
+            this.labelFileName.Size = new System.Drawing.Size(52, 13);
+            this.labelFileName.TabIndex = 33;
+            this.labelFileName.Text = "File name";
+            // 
+            // linkLabelHelp
+            // 
+            this.linkLabelHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkLabelHelp.AutoSize = true;
+            this.linkLabelHelp.Location = new System.Drawing.Point(819, 463);
+            this.linkLabelHelp.Name = "linkLabelHelp";
+            this.linkLabelHelp.Size = new System.Drawing.Size(29, 13);
+            this.linkLabelHelp.TabIndex = 46;
+            this.linkLabelHelp.TabStop = true;
+            this.linkLabelHelp.Text = "Help";
+            this.linkLabelHelp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelHelp_LinkClicked);
+            // 
+            // textBoxLog
+            // 
+            this.textBoxLog.Location = new System.Drawing.Point(12, 13);
+            this.textBoxLog.Multiline = true;
+            this.textBoxLog.Name = "textBoxLog";
+            this.textBoxLog.Size = new System.Drawing.Size(188, 26);
+            this.textBoxLog.TabIndex = 31;
+            // 
+            // labelInfo
+            // 
+            this.labelInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelInfo.AutoSize = true;
+            this.labelInfo.Location = new System.Drawing.Point(12, 463);
+            this.labelInfo.Name = "labelInfo";
+            this.labelInfo.Size = new System.Drawing.Size(25, 13);
+            this.labelInfo.TabIndex = 46;
+            this.labelInfo.Text = "Info";
+            // 
             // labelPass
             // 
             this.labelPass.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelPass.AutoSize = true;
-            this.labelPass.Location = new System.Drawing.Point(589, 422);
+            this.labelPass.Location = new System.Drawing.Point(589, 499);
             this.labelPass.Name = "labelPass";
             this.labelPass.Size = new System.Drawing.Size(51, 13);
             this.labelPass.TabIndex = 47;
             this.labelPass.Text = "Pass one";
             // 
-            // comboBoxAudioBitRate
+            // checkBoxRightToLeft
             // 
-            this.comboBoxAudioBitRate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxAudioBitRate.FormattingEnabled = true;
-            this.comboBoxAudioBitRate.Items.AddRange(new object[] {
-            "64k",
-            "128k",
-            "160k",
-            "196k",
-            "320k"});
-            this.comboBoxAudioBitRate.Location = new System.Drawing.Point(97, 110);
-            this.comboBoxAudioBitRate.Name = "comboBoxAudioBitRate";
-            this.comboBoxAudioBitRate.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxAudioBitRate.TabIndex = 53;
-            // 
-            // labelAudioBitRate
-            // 
-            this.labelAudioBitRate.AutoSize = true;
-            this.labelAudioBitRate.Location = new System.Drawing.Point(20, 112);
-            this.labelAudioBitRate.Name = "labelAudioBitRate";
-            this.labelAudioBitRate.Size = new System.Drawing.Size(40, 13);
-            this.labelAudioBitRate.TabIndex = 52;
-            this.labelAudioBitRate.Text = "Bit rate";
-            // 
-            // groupBoxAudio
-            // 
-            this.groupBoxAudio.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxAudio.Controls.Add(this.labelAudioEnc);
-            this.groupBoxAudio.Controls.Add(this.comboBoxAudioBitRate);
-            this.groupBoxAudio.Controls.Add(this.comboBoxAudioEnc);
-            this.groupBoxAudio.Controls.Add(this.labelAudioBitRate);
-            this.groupBoxAudio.Controls.Add(this.checkBoxMakeStereo);
-            this.groupBoxAudio.Controls.Add(this.labelAudioSampleRate);
-            this.groupBoxAudio.Controls.Add(this.comboBoxAudioSampleRate);
-            this.groupBoxAudio.Location = new System.Drawing.Point(376, 64);
-            this.groupBoxAudio.Name = "groupBoxAudio";
-            this.groupBoxAudio.Size = new System.Drawing.Size(445, 197);
-            this.groupBoxAudio.TabIndex = 54;
-            this.groupBoxAudio.TabStop = false;
-            this.groupBoxAudio.Text = "Audio";
-            // 
-            // groupBoxVideo
-            // 
-            this.groupBoxVideo.Controls.Add(this.labelResolution);
-            this.groupBoxVideo.Controls.Add(this.numericUpDownWidth);
-            this.groupBoxVideo.Controls.Add(this.numericUpDownHeight);
-            this.groupBoxVideo.Controls.Add(this.labelX);
-            this.groupBoxVideo.Controls.Add(this.labelPreset);
-            this.groupBoxVideo.Controls.Add(this.comboBoxTune);
-            this.groupBoxVideo.Controls.Add(this.comboBoxPreset);
-            this.groupBoxVideo.Controls.Add(this.labelTune);
-            this.groupBoxVideo.Controls.Add(this.labelCRF);
-            this.groupBoxVideo.Controls.Add(this.comboBoxVideoEncoding);
-            this.groupBoxVideo.Controls.Add(this.comboBoxCrf);
-            this.groupBoxVideo.Controls.Add(this.labelVideoEncoding);
-            this.groupBoxVideo.Location = new System.Drawing.Point(6, 64);
-            this.groupBoxVideo.Name = "groupBoxVideo";
-            this.groupBoxVideo.Size = new System.Drawing.Size(364, 197);
-            this.groupBoxVideo.TabIndex = 55;
-            this.groupBoxVideo.TabStop = false;
-            this.groupBoxVideo.Text = "Video";
+            this.checkBoxRightToLeft.AutoSize = true;
+            this.checkBoxRightToLeft.Location = new System.Drawing.Point(120, 90);
+            this.checkBoxRightToLeft.Name = "checkBoxRightToLeft";
+            this.checkBoxRightToLeft.Size = new System.Drawing.Size(80, 17);
+            this.checkBoxRightToLeft.TabIndex = 59;
+            this.checkBoxRightToLeft.Text = "Right to left";
+            this.checkBoxRightToLeft.UseVisualStyleBackColor = true;
             // 
             // GenerateVideoWithHardSubs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(860, 473);
+            this.ClientSize = new System.Drawing.Size(860, 550);
             this.Controls.Add(this.labelPass);
             this.Controls.Add(this.labelInfo);
             this.Controls.Add(this.groupBoxSettings);
@@ -605,19 +654,18 @@ namespace Nikse.SubtitleEdit.Forms
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "GenerateVideoWithHardSubs";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GenerateVideoWithHardSubs_FormClosing);
-            this.Load += new System.EventHandler(this.GenerateVideoWithHardSubs_Load);
             this.Shown += new System.EventHandler(this.GenerateVideoWithHardSubs_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GenerateVideoWithHardSubs_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).EndInit();
             this.groupBoxSettings.ResumeLayout(false);
             this.groupBoxSettings.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetFileSize)).EndInit();
-            this.groupBoxAudio.ResumeLayout(false);
-            this.groupBoxAudio.PerformLayout();
             this.groupBoxVideo.ResumeLayout(false);
             this.groupBoxVideo.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).EndInit();
+            this.groupBoxAudio.ResumeLayout(false);
+            this.groupBoxAudio.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetFileSize)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -663,5 +711,9 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Label labelAudioBitRate;
         private System.Windows.Forms.GroupBox groupBoxAudio;
         private System.Windows.Forms.GroupBox groupBoxVideo;
+        private System.Windows.Forms.Button buttonPreview;
+        private System.Windows.Forms.ComboBox comboBoxSubtitleFont;
+        private System.Windows.Forms.Label labelSubtitleFont;
+        private System.Windows.Forms.CheckBox checkBoxRightToLeft;
     }
 }

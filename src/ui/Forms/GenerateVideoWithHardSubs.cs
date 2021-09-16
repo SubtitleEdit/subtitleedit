@@ -3,8 +3,10 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -37,6 +39,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = LanguageSettings.Current.Watermark.Generate;
             labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
             labelFontSize.Text = LanguageSettings.Current.ExportPngXml.FontSize;
+            labelSubtitleFont.Text = LanguageSettings.Current.ExportPngXml.FontFamily;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             labelAudioEnc.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Encoding;
             labelVideoEncoding.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Encoding;
@@ -46,6 +49,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelCRF.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Crf;
             labelPreset.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Preset;
             labelTune.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TuneFor;
+            buttonPreview.Text = LanguageSettings.Current.General.Preview;
             progressBar1.Visible = false;
             labelPleaseWait.Visible = false;
             labelProgress.Text = string.Empty;
@@ -85,21 +89,46 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     numericUpDownFontSize.Value = fontSize.Value;
                 }
-
-                var left = Math.Max(labelResolution.Left + labelResolution.Width, labelFontSize.Left + labelFontSize.Width) + 5;
-                numericUpDownFontSize.Left = left;
-                numericUpDownWidth.Left = left;
-                labelX.Left = numericUpDownWidth.Left + numericUpDownWidth.Width + 3;
-                numericUpDownHeight.Left = labelX.Left + labelX.Width + 3;
-                labelInfo.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.InfoAssaOff;
             }
             else
             {
                 numericUpDownFontSize.Visible = false;
+                buttonPreview.Visible = false;
                 labelFontSize.Visible = false;
                 labelInfo.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.InfoAssaOn;
             }
 
+            var left = Math.Max(Math.Max(labelResolution.Left + labelResolution.Width, labelFontSize.Left + labelFontSize.Width), labelSubtitleFont.Left + labelSubtitleFont.Width) + 5;
+            numericUpDownFontSize.Left = left;
+            comboBoxSubtitleFont.Left = left;
+            numericUpDownWidth.Left = left;
+            labelX.Left = numericUpDownWidth.Left + numericUpDownWidth.Width + 3;
+            numericUpDownHeight.Left = labelX.Left + labelX.Width + 3;
+            labelInfo.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.InfoAssaOff;
+            checkBoxRightToLeft.Left = left;
+
+            var initialFont = Configuration.Settings.Tools.ExportBluRayFontName;
+            if (string.IsNullOrEmpty(initialFont))
+            {
+                initialFont = UiUtil.GetDefaultFont().Name;
+            }
+            foreach (var x in FontFamily.Families)
+            {
+                if (x.IsStyleAvailable(FontStyle.Regular) || x.IsStyleAvailable(FontStyle.Bold))
+                {
+                    comboBoxSubtitleFont.Items.Add(x.Name);
+                    if (x.Name.Equals(initialFont, StringComparison.OrdinalIgnoreCase))
+                    {
+                        comboBoxSubtitleFont.SelectedIndex = comboBoxSubtitleFont.Items.Count - 1;
+                    }
+                }
+            }
+            if (comboBoxSubtitleFont.SelectedIndex < 0 && comboBoxSubtitleFont.Items.Count > 0)
+            {
+                comboBoxSubtitleFont.SelectedIndex = 0;
+            }
+
+            checkBoxRightToLeft.Checked = Configuration.Settings.General.RightToLeftMode && LanguageAutoDetect.CouldBeRightToLeftLanguage(_assaSubtitle);
             textBoxLog.Visible = false;
         }
 
@@ -119,7 +148,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            _log.AppendLine(outLine.Data);
+            _log?.AppendLine(outLine.Data);
 
             var match = FrameFinderRegex.Match(outLine.Data);
             if (!match.Success)
@@ -141,6 +170,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
+            _log = new StringBuilder();
             buttonOK.Enabled = false;
             numericUpDownFontSize.Enabled = false;
             using (var saveDialog = new SaveFileDialog { FileName = string.Empty, Filter = "MP4|*.mp4|Matroska|*.mkv|WebM|*.webm" })
@@ -170,26 +200,18 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             labelFileName.Text = string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TargetFileName, VideoFileName);
-            if (numericUpDownFontSize.Visible)
+            if (numericUpDownFontSize.Visible) // not ASSA format
             {
                 var fontSize = (int)numericUpDownFontSize.Value;
                 var style = AdvancedSubStationAlpha.GetSsaStyle("Default", _assaSubtitle.Header);
                 style.FontSize = fontSize;
                 var styleLine = style.ToRawAss();
                 _assaSubtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("Style", styleLine, "[V4+ Styles]", _assaSubtitle.Header);
+                _assaSubtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + ((int)numericUpDownWidth.Value).ToString(CultureInfo.InvariantCulture), "[Script Info]", _assaSubtitle.Header);
+                _assaSubtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + ((int)numericUpDownHeight.Value).ToString(CultureInfo.InvariantCulture), "[Script Info]", _assaSubtitle.Header);
             }
 
-            if (Configuration.Settings.General.RightToLeftMode && LanguageAutoDetect.CouldBeRightToLeftLanguage(_assaSubtitle))
-            {
-                for (var index = 0; index < _assaSubtitle.Paragraphs.Count; index++)
-                {
-                    var paragraph = _assaSubtitle.Paragraphs[index];
-                    if (LanguageAutoDetect.ContainsRightToLeftLetter(paragraph.Text))
-                    {
-                        paragraph.Text = Utilities.FixRtlViaUnicodeChars(paragraph.Text);
-                    }
-                }
-            }
+            FixRightToLeft(_assaSubtitle);
 
             var format = new AdvancedSubStationAlpha();
             var assaTempFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".ass");
@@ -227,6 +249,21 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult = _abort ? DialogResult.Cancel : DialogResult.OK;
         }
 
+        private void FixRightToLeft(Subtitle subtitle)
+        {
+            if (checkBoxRightToLeft.Checked)
+            {
+                for (var index = 0; index < subtitle.Paragraphs.Count; index++)
+                {
+                    var paragraph = subtitle.Paragraphs[index];
+                    if (LanguageAutoDetect.ContainsRightToLeftLetter(paragraph.Text))
+                    {
+                        paragraph.Text = Utilities.FixRtlViaUnicodeChars(paragraph.Text);
+                    }
+                }
+            }
+        }
+
         private void RunTwoPassEncoding(string assaTempFileName)
         {
             labelPass.Text = string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.PassX, "1");
@@ -252,7 +289,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            var process = GetFfmpegProcess(assaTempFileName, 1, videoBitRate);
+            var process = GetFfmpegProcess(_inputVideoFileName, VideoFileName, assaTempFileName, 1, videoBitRate);
             _log.AppendLine("ffmpeg arguments pass 1: " + process.StartInfo.Arguments);
             process.Start();
             process.BeginOutputReadLine();
@@ -279,7 +316,7 @@ namespace Nikse.SubtitleEdit.Forms
 
 
             labelPass.Text = string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.PassX, "2");
-            process = GetFfmpegProcess(assaTempFileName, 2, videoBitRate);
+            process = GetFfmpegProcess(_inputVideoFileName, VideoFileName, assaTempFileName, 2, videoBitRate);
             _log.AppendLine("ffmpeg arguments pass 2: " + process.StartInfo.Arguments);
             process.Start();
             process.BeginOutputReadLine();
@@ -349,7 +386,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RunOnePassEncoding(string assaTempFileName)
         {
-            var process = GetFfmpegProcess(assaTempFileName, null);
+            var process = GetFfmpegProcess(_inputVideoFileName, VideoFileName, assaTempFileName, null);
             _log.AppendLine("ffmpeg arguments: " + process.StartInfo.Arguments);
             process.Start();
             process.BeginOutputReadLine();
@@ -374,7 +411,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private Process GetFfmpegProcess(string assaTempFileName, int? passNumber = null, string twoPassBitRate = null)
+        private Process GetFfmpegProcess(string inputVideoFileName, string outputVideoFileName, string assaTempFileName, int? passNumber = null, string twoPassBitRate = null)
         {
             var pass = string.Empty;
             if (passNumber.HasValue)
@@ -383,9 +420,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             return VideoPreviewGenerator.GenerateHardcodedVideoFile(
-                _inputVideoFileName,
+                inputVideoFileName,
                 assaTempFileName,
-                VideoFileName,
+                outputVideoFileName,
                 (int)numericUpDownWidth.Value,
                 (int)numericUpDownHeight.Value,
                 comboBoxVideoEncoding.Text,
@@ -479,7 +516,7 @@ namespace Nikse.SubtitleEdit.Forms
                         log.AppendLine("Video info total frames: " + _videoInfo.TotalFrames);
                         log.AppendLine("Video info total seconds: " + _videoInfo.TotalSeconds);
                         log.AppendLine();
-                        log.AppendLine("ffmpeg " + GetFfmpegProcess("input.ass", null).StartInfo.Arguments);
+                        log.AppendLine("ffmpeg " + GetFfmpegProcess(_inputVideoFileName, VideoFileName, "input.ass", null).StartInfo.Arguments);
                         textBoxLog.Text = log.ToString();
                     }
                     else
@@ -573,11 +610,6 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxCrf.EndUpdate();
         }
 
-        private void GenerateVideoWithHardSubs_Load(object sender, EventArgs e)
-        {
-
-        }
-
         private void GenerateVideoWithHardSubs_Shown(object sender, EventArgs e)
         {
             var targetFileSizeMb = (int)Math.Round(new FileInfo(_inputVideoFileName).Length / 1024.0 / 1024);
@@ -597,6 +629,103 @@ namespace Nikse.SubtitleEdit.Forms
                 labelAudioBitRate.Enabled = false;
                 comboBoxAudioBitRate.Enabled = false;
             }
+        }
+
+        private void buttonPreview_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                buttonPreview.Enabled = false;
+                Cursor = Cursors.WaitCursor;
+
+                // generate blank video
+                var tempVideoFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".mkv");
+                var process = VideoPreviewGenerator.GenerateVideoFile(
+                               tempVideoFileName,
+                               10,
+                               (int)numericUpDownWidth.Value,
+                               (int)numericUpDownHeight.Value,
+                               Color.Black,
+                               true,
+                               25);
+                process.Start();
+                while (!process.HasExited)
+                {
+                    System.Threading.Thread.Sleep(100);
+                    Application.DoEvents();
+                }
+
+                // make temp assa file with font
+                var assaTempFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".ass");
+                var sub = new Subtitle();
+                sub.Paragraphs.Add(new Paragraph(GetPreviewText(), 0, 10_000));
+                sub.Header = AdvancedSubStationAlpha.DefaultHeader;
+                var style = AdvancedSubStationAlpha.GetSsaStyle("Default", sub.Header);
+                style.FontSize = (float)numericUpDownFontSize.Value;
+                style.FontName = comboBoxSubtitleFont.Text;
+                sub.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(sub.Header, new System.Collections.Generic.List<SsaStyle>() { style });
+                sub.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + ((int)numericUpDownWidth.Value).ToString(CultureInfo.InvariantCulture), "[Script Info]", sub.Header);
+                sub.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + ((int)numericUpDownHeight.Value).ToString(CultureInfo.InvariantCulture), "[Script Info]", sub.Header);
+                FixRightToLeft(sub);
+                File.WriteAllText(assaTempFileName, new AdvancedSubStationAlpha().ToText(sub, string.Empty));
+
+                // hardcode subtitle
+                var outputVideoFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".mp4");
+                process = GetFfmpegProcess(tempVideoFileName, outputVideoFileName, assaTempFileName);
+                process.Start();
+                process.BeginOutputReadLine();
+                process.BeginErrorReadLine();
+                while (!process.HasExited)
+                {
+                    System.Threading.Thread.Sleep(100);
+                    Application.DoEvents();
+                }
+
+                Cursor = Cursors.Default;
+                var bmpFileName = VideoPreviewGenerator.GetScreenShot(outputVideoFileName, "00:00:01");
+                using (var bmp = new Bitmap(bmpFileName))
+                {
+                    using (var form = new ExportPngXmlPreview(bmp))
+                    {
+                        form.AllowNext = false;
+                        form.AllowPrevious = false;
+                        form.ShowDialog(this);
+                    }
+                }
+
+                try
+                {
+                    File.Delete(tempVideoFileName);
+                    File.Delete(assaTempFileName);
+                    File.Delete(outputVideoFileName);
+                    File.Delete(bmpFileName);
+                }
+                catch
+                {
+                    // ignore
+                }
+            }
+            finally
+            {
+                Cursor = Cursors.Default;
+                buttonPreview.Enabled = true;
+            }
+        }
+
+        private string GetPreviewText()
+        {
+            string text = string.Empty;
+            _assaSubtitle.Renumber();
+            if (_assaSubtitle.Paragraphs.Count > 2)
+            {
+                var longest = _assaSubtitle.Paragraphs.Where(p => p.Number > 1).OrderByDescending(p => p.Text.Length).FirstOrDefault();
+                if (longest != null)
+                {
+                    return longest.Text;
+                }
+            }
+
+            return "Example text";
         }
     }
 }
