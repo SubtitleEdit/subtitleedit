@@ -20359,7 +20359,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var oldPlayResY = AdvancedSubStationAlpha.GetTagValueFromHeader("PlayResY", "[Script Info]", _subtitle.Header);
 
                 if (oldPlayResX == _videoInfo.Width.ToString(CultureInfo.InvariantCulture) &&
-                         oldPlayResY == _videoInfo.Height.ToString(CultureInfo.InvariantCulture))
+                    oldPlayResY == _videoInfo.Height.ToString(CultureInfo.InvariantCulture))
                 {
                     // all good - correct resolution
                 }
