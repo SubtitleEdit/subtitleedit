@@ -1678,7 +1678,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             while (index >= 0 && index < text.Length - 1)
             {
+                bool insertSpace = false;
+                if (index > 1 && text[index - 1] != ' ')
+                {
+                    insertSpace = true;
+                }
+
                 text = text.Insert(index + 1, "i>");
+                if (insertSpace)
+                {
+                    text = text.Insert(index, " ");
+                    index++;
+                }
+
                 int indexOfNewLine = text.IndexOf(Environment.NewLine, index + 3, StringComparison.Ordinal);
                 int indexOfEnd = text.IndexOf('>', index + 3);
                 if (indexOfNewLine < 0 && indexOfEnd < 0)
@@ -1690,7 +1702,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     if (indexOfNewLine < 0 || (indexOfEnd > 0 && indexOfEnd < indexOfNewLine))
                     {
+                        insertSpace = indexOfEnd > 1 && text[indexOfEnd - 1] != ' ';
                         text = text.Insert(indexOfEnd, "</i");
+                        if (insertSpace)
+                        {
+                            text = text.Insert(indexOfEnd + 4, " ");
+                            indexOfEnd++;
+                        }
                         index = text.IndexOf('<', indexOfEnd + 3);
                     }
                     else
