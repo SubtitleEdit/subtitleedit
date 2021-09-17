@@ -1781,6 +1781,7 @@
             "Zoom",
             "NoName",
             "Pa1",
+            "Clear",
             "OemClear",
             "KeyCode",
             "F13",
