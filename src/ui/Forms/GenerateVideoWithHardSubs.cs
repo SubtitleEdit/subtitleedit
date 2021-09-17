@@ -50,6 +50,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelPreset.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Preset;
             labelTune.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TuneFor;
             buttonPreview.Text = LanguageSettings.Current.General.Preview;
+            checkBoxRightToLeft.Text = LanguageSettings.Current.Settings.FixRTLViaUnicodeChars;
+            checkBoxAlignRight.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.AlignRight;
             progressBar1.Visible = false;
             labelPleaseWait.Visible = false;
             labelProgress.Text = string.Empty;
@@ -75,6 +77,17 @@ namespace Nikse.SubtitleEdit.Forms
 
             numericUpDownWidth.Value = _videoInfo.Width;
             numericUpDownHeight.Value = _videoInfo.Height;
+
+            var left = Math.Max(Math.Max(labelResolution.Left + labelResolution.Width, labelFontSize.Left + labelFontSize.Width), labelSubtitleFont.Left + labelSubtitleFont.Width) + 5;
+            numericUpDownFontSize.Left = left;
+            comboBoxSubtitleFont.Left = left;
+            numericUpDownWidth.Left = left;
+            labelX.Left = numericUpDownWidth.Left + numericUpDownWidth.Width + 3;
+            numericUpDownHeight.Left = labelX.Left + labelX.Width + 3;
+            labelInfo.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.InfoAssaOff;
+            checkBoxRightToLeft.Left = left;
+            checkBoxAlignRight.Left = left;
+
             if (fontSize.HasValue)
             {
                 if (fontSize.Value < numericUpDownFontSize.Minimum)
@@ -93,19 +106,13 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 numericUpDownFontSize.Visible = false;
-                buttonPreview.Visible = false;
                 labelFontSize.Visible = false;
+                labelSubtitleFont.Visible = false;
+                comboBoxSubtitleFont.Visible = false;
+                checkBoxRightToLeft.Left = checkBoxTargetFileSize.Left;
+                checkBoxAlignRight.Visible = false;
                 labelInfo.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.InfoAssaOn;
             }
-
-            var left = Math.Max(Math.Max(labelResolution.Left + labelResolution.Width, labelFontSize.Left + labelFontSize.Width), labelSubtitleFont.Left + labelSubtitleFont.Width) + 5;
-            numericUpDownFontSize.Left = left;
-            comboBoxSubtitleFont.Left = left;
-            numericUpDownWidth.Left = left;
-            labelX.Left = numericUpDownWidth.Left + numericUpDownWidth.Width + 3;
-            numericUpDownHeight.Left = labelX.Left + labelX.Width + 3;
-            labelInfo.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.InfoAssaOff;
-            checkBoxRightToLeft.Left = left;
 
             var initialFont = Configuration.Settings.Tools.ExportBluRayFontName;
             if (string.IsNullOrEmpty(initialFont))
@@ -205,6 +212,12 @@ namespace Nikse.SubtitleEdit.Forms
                 var fontSize = (int)numericUpDownFontSize.Value;
                 var style = AdvancedSubStationAlpha.GetSsaStyle("Default", _assaSubtitle.Header);
                 style.FontSize = fontSize;
+                style.FontName = comboBoxSubtitleFont.Text;
+                if (checkBoxAlignRight.Checked)
+                {
+                    style.Alignment = "3";
+                }
+
                 var styleLine = style.ToRawAss();
                 _assaSubtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("Style", styleLine, "[V4+ Styles]", _assaSubtitle.Header);
                 _assaSubtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + ((int)numericUpDownWidth.Value).ToString(CultureInfo.InvariantCulture), "[Script Info]", _assaSubtitle.Header);
@@ -658,14 +671,24 @@ namespace Nikse.SubtitleEdit.Forms
                 // make temp assa file with font
                 var assaTempFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".ass");
                 var sub = new Subtitle();
+                sub.Header = _assaSubtitle.Header;
                 sub.Paragraphs.Add(new Paragraph(GetPreviewText(), 0, 10_000));
-                sub.Header = AdvancedSubStationAlpha.DefaultHeader;
-                var style = AdvancedSubStationAlpha.GetSsaStyle("Default", sub.Header);
-                style.FontSize = (float)numericUpDownFontSize.Value;
-                style.FontName = comboBoxSubtitleFont.Text;
-                sub.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(sub.Header, new System.Collections.Generic.List<SsaStyle>() { style });
-                sub.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + ((int)numericUpDownWidth.Value).ToString(CultureInfo.InvariantCulture), "[Script Info]", sub.Header);
-                sub.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + ((int)numericUpDownHeight.Value).ToString(CultureInfo.InvariantCulture), "[Script Info]", sub.Header);
+
+                if (numericUpDownFontSize.Visible) // not ASSA format
+                {
+                    sub.Header = AdvancedSubStationAlpha.DefaultHeader;
+                    var style = AdvancedSubStationAlpha.GetSsaStyle("Default", sub.Header);
+                    style.FontSize = (float)numericUpDownFontSize.Value;
+                    style.FontName = comboBoxSubtitleFont.Text;
+                    if (checkBoxAlignRight.Checked)
+                    {
+                        style.Alignment = "3";
+                    }
+
+                    sub.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(sub.Header, new System.Collections.Generic.List<SsaStyle>() { style });
+                    sub.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + ((int)numericUpDownWidth.Value).ToString(CultureInfo.InvariantCulture), "[Script Info]", sub.Header);
+                    sub.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + ((int)numericUpDownHeight.Value).ToString(CultureInfo.InvariantCulture), "[Script Info]", sub.Header);
+                }
                 FixRightToLeft(sub);
                 File.WriteAllText(assaTempFileName, new AdvancedSubStationAlpha().ToText(sub, string.Empty));
 
@@ -716,13 +739,20 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string text = string.Empty;
             _assaSubtitle.Renumber();
+            Paragraph longest;
             if (_assaSubtitle.Paragraphs.Count > 2)
             {
-                var longest = _assaSubtitle.Paragraphs.Where(p => p.Number > 1).OrderByDescending(p => p.Text.Length).FirstOrDefault();
-                if (longest != null)
+                longest = _assaSubtitle.Paragraphs.Where(p => p.Number > 1).OrderByDescending(p => p.Text.Length).FirstOrDefault();
+                if (longest != null && longest.Text.Length > 2)
                 {
                     return longest.Text;
                 }
+            }
+
+            longest = _assaSubtitle.Paragraphs.OrderByDescending(p => p.Text.Length).FirstOrDefault();
+            if (longest != null && longest.Text.Length > 2)
+            {
+                return longest.Text;
             }
 
             return "Example text";

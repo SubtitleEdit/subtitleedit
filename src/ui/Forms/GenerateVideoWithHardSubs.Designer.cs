@@ -39,6 +39,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.labelProgress = new System.Windows.Forms.Label();
             this.groupBoxSettings = new System.Windows.Forms.GroupBox();
+            this.checkBoxRightToLeft = new System.Windows.Forms.CheckBox();
             this.comboBoxSubtitleFont = new System.Windows.Forms.ComboBox();
             this.labelSubtitleFont = new System.Windows.Forms.Label();
             this.buttonPreview = new System.Windows.Forms.Button();
@@ -71,7 +72,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxLog = new System.Windows.Forms.TextBox();
             this.labelInfo = new System.Windows.Forms.Label();
             this.labelPass = new System.Windows.Forms.Label();
-            this.checkBoxRightToLeft = new System.Windows.Forms.CheckBox();
+            this.checkBoxAlignRight = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).BeginInit();
             this.groupBoxSettings.SuspendLayout();
             this.groupBoxVideo.SuspendLayout();
@@ -177,6 +178,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxSettings.Controls.Add(this.checkBoxAlignRight);
             this.groupBoxSettings.Controls.Add(this.checkBoxRightToLeft);
             this.groupBoxSettings.Controls.Add(this.comboBoxSubtitleFont);
             this.groupBoxSettings.Controls.Add(this.labelSubtitleFont);
@@ -195,6 +197,16 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxSettings.TabIndex = 30;
             this.groupBoxSettings.TabStop = false;
             this.groupBoxSettings.Text = "Settings";
+            // 
+            // checkBoxRightToLeft
+            // 
+            this.checkBoxRightToLeft.AutoSize = true;
+            this.checkBoxRightToLeft.Location = new System.Drawing.Point(120, 90);
+            this.checkBoxRightToLeft.Name = "checkBoxRightToLeft";
+            this.checkBoxRightToLeft.Size = new System.Drawing.Size(80, 17);
+            this.checkBoxRightToLeft.TabIndex = 59;
+            this.checkBoxRightToLeft.Text = "Right to left";
+            this.checkBoxRightToLeft.UseVisualStyleBackColor = true;
             // 
             // comboBoxSubtitleFont
             // 
@@ -620,15 +632,15 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelPass.TabIndex = 47;
             this.labelPass.Text = "Pass one";
             // 
-            // checkBoxRightToLeft
+            // checkBoxAlignRight
             // 
-            this.checkBoxRightToLeft.AutoSize = true;
-            this.checkBoxRightToLeft.Location = new System.Drawing.Point(120, 90);
-            this.checkBoxRightToLeft.Name = "checkBoxRightToLeft";
-            this.checkBoxRightToLeft.Size = new System.Drawing.Size(80, 17);
-            this.checkBoxRightToLeft.TabIndex = 59;
-            this.checkBoxRightToLeft.Text = "Right to left";
-            this.checkBoxRightToLeft.UseVisualStyleBackColor = true;
+            this.checkBoxAlignRight.AutoSize = true;
+            this.checkBoxAlignRight.Location = new System.Drawing.Point(120, 113);
+            this.checkBoxAlignRight.Name = "checkBoxAlignRight";
+            this.checkBoxAlignRight.Size = new System.Drawing.Size(72, 17);
+            this.checkBoxAlignRight.TabIndex = 60;
+            this.checkBoxAlignRight.Text = "Align right";
+            this.checkBoxAlignRight.UseVisualStyleBackColor = true;
             // 
             // GenerateVideoWithHardSubs
             // 
@@ -715,5 +727,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ComboBox comboBoxSubtitleFont;
         private System.Windows.Forms.Label labelSubtitleFont;
         private System.Windows.Forms.CheckBox checkBoxRightToLeft;
+        private System.Windows.Forms.CheckBox checkBoxAlignRight;
     }
 }
