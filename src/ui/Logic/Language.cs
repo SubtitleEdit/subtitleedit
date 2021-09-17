@@ -1034,6 +1034,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Preset = "Preset",
                 Crf = "CRF",
                 TuneFor = "Tune for",
+                AlignRight = "Align right",
             };
 
             GetDictionaries = new LanguageStructure.GetDictionaries
