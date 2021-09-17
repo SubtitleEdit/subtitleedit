@@ -116,20 +116,6 @@ IF %ERRORLEVEL% NEQ 0 GOTO EndWithError
 
 IF /I "%BUILDTYPE%" == "Clean" GOTO EndSuccessful
 
-PUSHD "src/ui"
-ECHO.
-ECHO Merging assemblies with ILRepack...
-FOR /D %%A IN (..\..\packages\ILRepack.*) DO (SET "ILREPACKDIR=%%A")
-ECHO.
-echo ILREPACKDIR
-echo %ILREPACKDIR%
-echo ILREPACKDIR done
-"%ILREPACKDIR%\tools\ILRepack.exe" /parallel /internalize /targetplatform:v4 /out:"bin\Release\SubtitleEdit.exe" "bin\Release\SubtitleEdit.exe"^
- "bin\Release\libse.dll" "bin\Release\zlib.net.dll" "bin\Release\NHunspell.dll" "bin\Release\UtfUnknown.dll" "DLLs\Interop.QuartzTypeLib.dll"^
- "bin\Release\Newtonsoft.Json.dll" "bin\Release\System.Net.Http.Extensions.dll" "bin\Release\System.Net.Http.Primitives.dll"
-IF %ERRORLEVEL% NEQ 0 GOTO EndWithError
-POPD
-
 CALL :SubDetectSevenzipPath
 IF DEFINED SEVENZIP IF EXIST "%SEVENZIP%" (
   CALL :SubZipFile
@@ -182,6 +168,14 @@ COPY /Y /V "..\..\..\..\Changelog.txt"    "temp_zip\"
 COPY /Y /V "..\..\..\..\preview.mkv"    "temp_zip\"
 COPY /Y /V "Hunspellx86.dll"           "temp_zip\"
 COPY /Y /V "Hunspellx64.dll"           "temp_zip\"
+COPY /Y /V "libse.dll"           "temp_zip\"
+COPY /Y /V "zlib.net.dll"           "temp_zip\"
+COPY /Y /V "NHunspell.dll"           "temp_zip\"
+COPY /Y /V "UtfUnknown.dll"           "temp_zip\"
+COPY /Y /V "..\..\DLLs\Interop.QuartzTypeLib.dll"           "temp_zip\"
+COPY /Y /V "System.Net.Http.Extensions.dll"           "temp_zip\"
+COPY /Y /V "Newtonsoft.Json.dll"           "temp_zip\"
+COPY /Y /V "System.Net.Http.Primitives.dll"           "temp_zip\"
 COPY /Y /V "SubtitleEdit.exe"          "temp_zip\"
 COPY /Y /V "Languages\*.xml"           "temp_zip\Languages\"
 COPY /Y /V "..\..\..\..\Dictionaries\*.*" "temp_zip\Dictionaries\"
