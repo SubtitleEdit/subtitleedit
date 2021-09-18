@@ -31764,7 +31764,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private int GetOptimalSubtitleFontSize(int height)
         {
-            var wantedHeight = height * 0.08; // let the optimal height be 8% of video height
+            var wantedHeight = height * 0.075; // let the optimal height be 7,5% of video height
             var currentSize = 50;
 
             using (var graphics = CreateGraphics())
