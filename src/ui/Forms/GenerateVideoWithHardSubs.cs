@@ -38,6 +38,7 @@ namespace Nikse.SubtitleEdit.Forms
             _inputVideoFileName = inputVideoFileName;
             buttonOK.Text = LanguageSettings.Current.Watermark.Generate;
             labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
+            labelPreviewPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
             labelFontSize.Text = LanguageSettings.Current.ExportPngXml.FontSize;
             labelSubtitleFont.Text = LanguageSettings.Current.ExportPngXml.FontFamily;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
@@ -54,6 +55,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxAlignRight.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.AlignRight;
             progressBar1.Visible = false;
             labelPleaseWait.Visible = false;
+            labelPreviewPleaseWait.Visible = false;
             labelProgress.Text = string.Empty;
             labelFileName.Text = string.Empty;
             labelPass.Text = string.Empty;
@@ -661,13 +663,14 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 buttonPreview.Enabled = false;
+                labelPreviewPleaseWait.Visible = true;
                 Cursor = Cursors.WaitCursor;
 
                 // generate blank video
                 var tempVideoFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".mkv");
                 var process = VideoPreviewGenerator.GenerateVideoFile(
                                tempVideoFileName,
-                               10,
+                               2,
                                (int)numericUpDownWidth.Value,
                                (int)numericUpDownHeight.Value,
                                Color.Black,
@@ -724,6 +727,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         form.AllowNext = false;
                         form.AllowPrevious = false;
+                        labelPreviewPleaseWait.Visible = false;
                         form.ShowDialog(this);
                     }
                 }
@@ -744,6 +748,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Cursor = Cursors.Default;
                 buttonPreview.Enabled = true;
+                labelPreviewPleaseWait.Visible = false;
             }
         }
 
