@@ -27961,6 +27961,13 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 SubtitleListview1.SelectIndexAndEnsureVisible(focusedItem.Index, true);
             }
+
+            if (mediaPlayer != null && mediaPlayer.VideoPlayer is LibMpvDynamic libMpv)
+            {
+                // refresh mpv text
+                mediaPlayer.SetSubtitleText("", new Paragraph(), new Subtitle());
+                UiUtil.ShowSubtitle(_subtitle, mediaPlayer);
+            }
         }
 
         private void joinSubtitlesToolStripMenuItem_Click(object sender, EventArgs e)

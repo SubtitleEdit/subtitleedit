@@ -102,6 +102,9 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     numericUpDownFontSize.Value = fontSize.Value;
                 }
+
+                checkBoxRightToLeft.Checked = Configuration.Settings.General.RightToLeftMode && 
+                                              LanguageAutoDetect.CouldBeRightToLeftLanguage(_assaSubtitle);
             }
             else
             {
