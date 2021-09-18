@@ -18,6 +18,8 @@
    * Allow .ismt files up to 50 mb - thx Essam3152
    * Allow some malformed WebVTT - thx manuelrn/larsk2 
    * Make BD Sup configuable regarding open action - ocr/edit - thx peter-qgd
+   * Do not use ILRepack - to avoid anti-virus warnings
+   * Add "Clear" key to list of shortcut keys - thx OmrSi
 * FIXED:
    * Fix "Title bar text" when translating - thx Andrebavila
    * Fix culture name for French translation - thx jpsdr
@@ -26,6 +28,9 @@
    * Fix waveform multiple select crash - thx darbor87
    * Fix broken "Duplicate line" shortcut - thx Kelvets/OmrSi
    * Fix crash in reading .ismt - thx DarkHorse-APP2
+   * Fix for PAC italic w missing space - thx Milenko
+   * Fix switched total labels in RTL mode w original subtitle - thx OmrSi
+   * Rollback max #lines enforce (hidden setting setting) - thx pandalamp 
 
 
 3.6.2 (24th August 2021)
