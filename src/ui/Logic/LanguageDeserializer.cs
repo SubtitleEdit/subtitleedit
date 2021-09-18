@@ -2170,6 +2170,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "GenerateVideoWithBurnedInSubs/TuneFor":
                     language.GenerateVideoWithBurnedInSubs.TuneFor = reader.Value;
                     break;
+                case "GenerateVideoWithBurnedInSubs/AlignRight":
+                    language.GenerateVideoWithBurnedInSubs.AlignRight = reader.Value;
+                    break;
                 case "GetDictionaries/Title":
                     language.GetDictionaries.Title = reader.Value;
                     break;

@@ -815,6 +815,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Preset>Preset</Preset>
     <Crf>CRF</Crf>
     <TuneFor>Tune for</TuneFor>
+    <AlignRight>Align right</AlignRight>
   </GenerateVideoWithBurnedInSubs>
   <GetDictionaries>
     <Title>Need dictionaries?</Title>
