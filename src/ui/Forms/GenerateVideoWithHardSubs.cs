@@ -584,6 +584,15 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.GenVideoAudioForceStereo = checkBoxMakeStereo.Checked;
             Configuration.Settings.Tools.GenVideoAudioSampleRate = comboBoxAudioSampleRate.Text;
             Configuration.Settings.Tools.GenVideoTargetFileSize = checkBoxTargetFileSize.Checked;
+
+            using (var graphics = CreateGraphics())
+            {
+                using (var font = new Font(UiUtil.GetDefaultFont().FontFamily, (float)numericUpDownFontSize.Value, FontStyle.Regular))
+                {
+                    var currentHeight = graphics.MeasureString("HJKLj", font).Height;
+                    Configuration.Settings.Tools.GenVideoFontSizePercentOfHeight = (float)(currentHeight * 100 / _videoInfo.Height / 100.0);
+                }
+            }
         }
 
         private void comboBoxVideoEncoding_SelectedIndexChanged(object sender, EventArgs e)
