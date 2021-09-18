@@ -31764,16 +31764,26 @@ namespace Nikse.SubtitleEdit.Forms
 
         private int GetOptimalSubtitleFontSize(int height)
         {
-            var wantedHeight = height * 0.075; // let the optimal height be 7,5% of video height
+            var factor = Configuration.Settings.Tools.GenVideoFontSizePercentOfHeight;
+            if (factor > 0.1 || factor < 0.01)
+            {
+                factor = 0.077f;
+            }
+            var wantedHeight = height * factor; // let the optimal height be x% of video height
             var currentSize = 50;
 
             using (var graphics = CreateGraphics())
             {
                 for (int i = 40; i > -10; i--)
                 {
-                    using (var font = new Font(Font.FontFamily, (float)currentSize, FontStyle.Regular))
+                    using (var font = new Font(UiUtil.GetDefaultFont().FontFamily, (float)currentSize, FontStyle.Regular))
                     {
                         var currentHeight = graphics.MeasureString("HJKLj", font).Height;
+                        if (Math.Abs(currentHeight - wantedHeight) < 1)
+                        {
+                            return currentSize;
+                        }
+
                         if (currentHeight > wantedHeight)
                         {
                             currentSize -= Math.Max(1, i);
@@ -31783,10 +31793,6 @@ namespace Nikse.SubtitleEdit.Forms
                             currentSize += Math.Max(1, i);
                         }
 
-                        if (Math.Abs(currentHeight - wantedHeight) < 1)
-                        {
-                            return currentSize;
-                        }
                     }
                 }
             }

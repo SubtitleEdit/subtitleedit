@@ -354,6 +354,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool GenVideoAudioForceStereo { get; set; }
         public string GenVideoAudioSampleRate { get; set; }
         public bool GenVideoTargetFileSize { get; set; }
+        public float GenVideoFontSizePercentOfHeight { get; set; }
 
         public ToolsSettings()
         {
@@ -515,6 +516,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             GenVideoAudioEncoding = "copy";
             GenVideoAudioForceStereo = true;
             GenVideoAudioSampleRate = "48000";
+            GenVideoFontSizePercentOfHeight = 0.08f;
         }
     }
 
@@ -5334,6 +5336,12 @@ $HorzAlign          =   Center
                 settings.Tools.GenVideoTargetFileSize = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("GenVideoFontSizePercentOfHeight");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoFontSizePercentOfHeight = (float)Convert.ToDecimal(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("FindHistory");
             if (subNode != null)
             {
@@ -9075,6 +9083,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("GenVideoAudioForceStereo", settings.Tools.GenVideoAudioForceStereo.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenVideoAudioSampleRate", settings.Tools.GenVideoAudioSampleRate);
                 textWriter.WriteElementString("GenVideoTargetFileSize", settings.Tools.GenVideoTargetFileSize.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("GenVideoFontSizePercentOfHeight", settings.Tools.GenVideoFontSizePercentOfHeight.ToString(CultureInfo.InvariantCulture));
 
                 if (settings.Tools.FindHistory != null && settings.Tools.FindHistory.Count > 0)
                 {
