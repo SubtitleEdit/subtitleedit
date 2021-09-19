@@ -31767,7 +31767,7 @@ namespace Nikse.SubtitleEdit.Forms
             var factor = Configuration.Settings.Tools.GenVideoFontSizePercentOfHeight;
             if (factor > 0.1 || factor < 0.01)
             {
-                factor = 0.077f;
+                factor = new ToolsSettings().GenVideoFontSizePercentOfHeight;
             }
             var wantedHeight = height * factor; // let the optimal height be x% of video height
             var currentSize = 50;

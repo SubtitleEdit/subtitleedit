@@ -516,7 +516,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             GenVideoAudioEncoding = "copy";
             GenVideoAudioForceStereo = true;
             GenVideoAudioSampleRate = "48000";
-            GenVideoFontSizePercentOfHeight = 0.08f;
+            GenVideoFontSizePercentOfHeight = 0.078f;
         }
     }
 
