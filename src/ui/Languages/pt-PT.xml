@@ -453,6 +453,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <ZPositionHelp>Números positivos afasta o texto, números negativos aproxima o texto, se a posição-Z for zero, então é 2D</ZPositionHelp>
     <ChooseColor>Seleccionar a cor...</ChooseColor>
     <Generate>Gerar</Generate>
+    <GenerateNewIdOnSave>Gerar novo ID ao guardar</GenerateNewIdOnSave>
   </DCinemaProperties>
   <DurationsBridgeGaps>
     <Title>Unir pequenos intervalos entre linhas</Title>
@@ -816,6 +817,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <Preset>Predefinição</Preset>
     <Crf>CRF</Crf>
     <TuneFor>Sintonizar para</TuneFor>
+    <AlignRight>Alinhar à direita</AlignRight>
   </GenerateVideoWithBurnedInSubs>
   <GetDictionaries>
     <Title>Precisa de dicionários?</Title>
