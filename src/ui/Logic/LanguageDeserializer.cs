@@ -1186,6 +1186,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "DCinemaProperties/Generate":
                     language.DCinemaProperties.Generate = reader.Value;
                     break;
+                case "DCinemaProperties/GenerateNewIdOnSave":
+                    language.DCinemaProperties.GenerateNewIdOnSave = reader.Value;
+                    break;
                 case "DurationsBridgeGaps/Title":
                     language.DurationsBridgeGaps.Title = reader.Value;
                     break;

@@ -43,6 +43,8 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             comboBoxLanguage.Sorted = true;
 
             var ss = Configuration.Settings.SubtitleSettings;
+            checkBoxGenerateIdAuto.Checked = ss.DCinemaAutoGenerateSubtitleId;
+
             if (!string.IsNullOrEmpty(ss.CurrentDCinemaSubtitleId))
             {
                 textBoxSubtitleID.Text = ss.CurrentDCinemaSubtitleId;
@@ -116,6 +118,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
 
         private void buttonGenerateID_Click(object sender, EventArgs e)
         {
+            Core.SubtitleFormats.DCinemaInterop.GenerateId();
             string hex = Guid.NewGuid().ToString().RemoveChar('-');
             textBoxSubtitleID.Text = hex.Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
         }
@@ -141,6 +144,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
         private void buttonOK_Click(object sender, EventArgs e)
         {
             var ss = Configuration.Settings.SubtitleSettings;
+            ss.DCinemaAutoGenerateSubtitleId = checkBoxGenerateIdAuto.Checked;
             ss.CurrentDCinemaSubtitleId = textBoxSubtitleID.Text;
             ss.CurrentDCinemaMovieTitle = textBoxMovieTitle.Text;
             ss.CurrentDCinemaReelNumber = Convert.ToInt32(numericUpDownReelNumber.Value).ToString(CultureInfo.InvariantCulture);

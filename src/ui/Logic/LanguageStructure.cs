@@ -501,6 +501,7 @@
             public string ZPositionHelp { get; set; }
             public string ChooseColor { get; set; }
             public string Generate { get; set; }
+            public string GenerateNewIdOnSave { get; set; }
         }
 
         public class DurationsBridgeGaps

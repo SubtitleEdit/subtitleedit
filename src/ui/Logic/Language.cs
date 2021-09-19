@@ -638,6 +638,7 @@ namespace Nikse.SubtitleEdit.Logic
                 ZPositionHelp = "Positive numbers moves text away, negative numbers moves text closer, if z-position is zero then it's 2D",
                 ChooseColor = "Choose color...",
                 Generate = "Generate",
+                GenerateNewIdOnSave = "Generate new ID on save",
             };
 
             DurationsBridgeGaps = new LanguageStructure.DurationsBridgeGaps

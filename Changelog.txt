@@ -20,6 +20,7 @@
    * Make BD Sup configuable regarding open action - ocr/edit - thx peter-qgd
    * Do not use ILRepack - to avoid anti-virus warnings
    * Add "Clear" key to list of shortcut keys - thx OmrSi
+   * Refresh text in mpv when changing RTL mode
 * FIXED:
    * Fix "Title bar text" when translating - thx Andrebavila
    * Fix culture name for French translation - thx jpsdr

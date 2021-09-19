@@ -40,11 +40,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             internal double GetVerticalPositionAsNumber()
             {
-                if (double.TryParse(VerticalPosition, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var d))
-                {
-                    return d;
-                }
-                return 0;
+                return double.TryParse(VerticalPosition, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var d) ? d : 0;
             }
         }
 
@@ -97,11 +93,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 languageEnglishName = "English";
             }
 
-            var hex = Guid.NewGuid().ToString().RemoveChar('-');
-            hex = hex.Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
-
             var xmlStructure = "<DCSubtitle Version=\"1.0\">" + Environment.NewLine +
-                               "    <SubtitleID>" + hex.ToLowerInvariant() + "</SubtitleID>" + Environment.NewLine +
+                               "    <SubtitleID>" + GenerateId() + "</SubtitleID>" + Environment.NewLine +
                                "    <MovieTitle></MovieTitle>" + Environment.NewLine +
                                "    <ReelNumber>1</ReelNumber>" + Environment.NewLine +
                                "    <Language>" + languageEnglishName + "</Language>" + Environment.NewLine +
@@ -132,7 +125,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             xml.DocumentElement.SelectSingleNode("MovieTitle").InnerText = ss.CurrentDCinemaMovieTitle;
-            xml.DocumentElement.SelectSingleNode("SubtitleID").InnerText = ss.CurrentDCinemaSubtitleId.Replace("urn:uuid:", string.Empty);
+
+            if (!ss.DCinemaAutoGenerateSubtitleId)
+            {
+                xml.DocumentElement.SelectSingleNode("SubtitleID").InnerText = ss.CurrentDCinemaSubtitleId.Replace("urn:uuid:", string.Empty);
+            }
+
             xml.DocumentElement.SelectSingleNode("ReelNumber").InnerText = ss.CurrentDCinemaReelNumber;
             xml.DocumentElement.SelectSingleNode("Language").InnerText = ss.CurrentDCinemaLanguage;
             xml.DocumentElement.SelectSingleNode("LoadFont").Attributes["URI"].InnerText = ss.CurrentDCinemaFontUri;
@@ -491,6 +489,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 s = s.Replace("horizontal\"> <Font", "horizontal\"><Font");
             }
             return s;
+        }
+
+        public static string GenerateId()
+        {
+            return Guid.NewGuid().ToString().RemoveChar('-').Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-").ToLowerInvariant();
         }
 
         internal static string GetDCinemaColorString(string c)

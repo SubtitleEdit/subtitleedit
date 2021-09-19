@@ -566,6 +566,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public double DCinemaZPosition { get; set; }
         public int DCinemaFadeUpTime { get; set; }
         public int DCinemaFadeDownTime { get; set; }
+        public bool DCinemaAutoGenerateSubtitleId { get; set; }
 
         public string CurrentDCinemaSubtitleId { get; set; }
         public string CurrentDCinemaMovieTitle { get; set; }
@@ -650,6 +651,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             DCinemaZPosition = 0;
             DCinemaFadeUpTime = 0;
             DCinemaFadeDownTime = 0;
+            DCinemaAutoGenerateSubtitleId = true;
 
             EbuStlTeletextUseBox = true;
             EbuStlTeletextUseDoubleHeight = true;
@@ -5574,6 +5576,12 @@ $HorzAlign          =   Center
                     settings.SubtitleSettings.DCinemaFadeDownTime = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
                 }
 
+                subNode = node.SelectSingleNode("DCinemaAutoGenerateSubtitleId");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.DCinemaAutoGenerateSubtitleId = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
                 subNode = node.SelectSingleNode("SamiDisplayTwoClassesAsTwoSubtitles");
                 if (subNode != null)
                 {
@@ -9161,6 +9169,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("DCinemaZPosition", settings.SubtitleSettings.DCinemaZPosition.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DCinemaFadeUpTime", settings.SubtitleSettings.DCinemaFadeUpTime.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DCinemaFadeDownTime", settings.SubtitleSettings.DCinemaFadeDownTime.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("DCinemaAutoGenerateSubtitleId", settings.SubtitleSettings.DCinemaAutoGenerateSubtitleId.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SamiDisplayTwoClassesAsTwoSubtitles", settings.SubtitleSettings.SamiDisplayTwoClassesAsTwoSubtitles.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SamiHtmlEncodeMode", settings.SubtitleSettings.SamiHtmlEncodeMode.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("TimedText10TimeCodeFormat", settings.SubtitleSettings.TimedText10TimeCodeFormat);
