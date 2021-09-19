@@ -452,6 +452,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <ZPositionHelp>Positive numbers moves text away, negative numbers moves text closer, if z-position is zero then it's 2D</ZPositionHelp>
     <ChooseColor>Choose color...</ChooseColor>
     <Generate>Generate</Generate>
+    <GenerateNewIdOnSave>Generate new ID on save</GenerateNewIdOnSave>
   </DCinemaProperties>
   <DurationsBridgeGaps>
     <Title>Bridge small gaps between subtitles</Title>

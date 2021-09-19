@@ -65,6 +65,7 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.checkBoxGenerateIdAuto = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownReelNumber)).BeginInit();
             this.groupBoxFont.SuspendLayout();
@@ -89,6 +90,7 @@
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.checkBoxGenerateIdAuto);
             this.groupBox1.Controls.Add(this.comboBoxLanguage);
             this.groupBox1.Controls.Add(this.labelLanguage);
             this.groupBox1.Controls.Add(this.numericUpDownReelNumber);
@@ -101,14 +103,14 @@
             this.groupBox1.Controls.Add(this.labelSubtitleID);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(660, 463);
+            this.groupBox1.Size = new System.Drawing.Size(660, 505);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             // 
             // comboBoxLanguage
             // 
             this.comboBoxLanguage.FormattingEnabled = true;
-            this.comboBoxLanguage.Location = new System.Drawing.Point(139, 109);
+            this.comboBoxLanguage.Location = new System.Drawing.Point(139, 149);
             this.comboBoxLanguage.Name = "comboBoxLanguage";
             this.comboBoxLanguage.Size = new System.Drawing.Size(233, 21);
             this.comboBoxLanguage.TabIndex = 4;
@@ -116,7 +118,7 @@
             // labelLanguage
             // 
             this.labelLanguage.AutoSize = true;
-            this.labelLanguage.Location = new System.Drawing.Point(15, 112);
+            this.labelLanguage.Location = new System.Drawing.Point(15, 152);
             this.labelLanguage.Name = "labelLanguage";
             this.labelLanguage.Size = new System.Drawing.Size(55, 13);
             this.labelLanguage.TabIndex = 32;
@@ -124,7 +126,7 @@
             // 
             // numericUpDownReelNumber
             // 
-            this.numericUpDownReelNumber.Location = new System.Drawing.Point(139, 83);
+            this.numericUpDownReelNumber.Location = new System.Drawing.Point(139, 123);
             this.numericUpDownReelNumber.Maximum = new decimal(new int[] {
             250,
             0,
@@ -183,9 +185,9 @@
             this.groupBoxFont.Controls.Add(this.labelFontId);
             this.groupBoxFont.Controls.Add(this.textBoxFontUri);
             this.groupBoxFont.Controls.Add(this.labelFontUri);
-            this.groupBoxFont.Location = new System.Drawing.Point(6, 141);
+            this.groupBoxFont.Location = new System.Drawing.Point(6, 185);
             this.groupBoxFont.Name = "groupBoxFont";
-            this.groupBoxFont.Size = new System.Drawing.Size(648, 316);
+            this.groupBoxFont.Size = new System.Drawing.Size(648, 314);
             this.groupBoxFont.TabIndex = 5;
             this.groupBoxFont.TabStop = false;
             this.groupBoxFont.Text = "Font";
@@ -433,7 +435,7 @@
             // labelReelNumber
             // 
             this.labelReelNumber.AutoSize = true;
-            this.labelReelNumber.Location = new System.Drawing.Point(15, 85);
+            this.labelReelNumber.Location = new System.Drawing.Point(15, 125);
             this.labelReelNumber.Name = "labelReelNumber";
             this.labelReelNumber.Size = new System.Drawing.Size(67, 13);
             this.labelReelNumber.TabIndex = 4;
@@ -441,16 +443,15 @@
             // 
             // textBoxMovieTitle
             // 
-            this.textBoxMovieTitle.Location = new System.Drawing.Point(139, 56);
+            this.textBoxMovieTitle.Location = new System.Drawing.Point(139, 96);
             this.textBoxMovieTitle.Name = "textBoxMovieTitle";
             this.textBoxMovieTitle.Size = new System.Drawing.Size(224, 20);
             this.textBoxMovieTitle.TabIndex = 2;
-            this.textBoxMovieTitle.Text = "";
             // 
             // labelMovieTitle
             // 
             this.labelMovieTitle.AutoSize = true;
-            this.labelMovieTitle.Location = new System.Drawing.Point(15, 59);
+            this.labelMovieTitle.Location = new System.Drawing.Point(15, 99);
             this.labelMovieTitle.Name = "labelMovieTitle";
             this.labelMovieTitle.Size = new System.Drawing.Size(55, 13);
             this.labelMovieTitle.TabIndex = 2;
@@ -477,7 +478,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(597, 481);
+            this.buttonCancel.Location = new System.Drawing.Point(597, 523);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 2;
@@ -489,7 +490,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(516, 481);
+            this.buttonOK.Location = new System.Drawing.Point(516, 523);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 1;
@@ -497,11 +498,21 @@
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
+            // checkBoxGenerateIdAuto
+            // 
+            this.checkBoxGenerateIdAuto.AutoSize = true;
+            this.checkBoxGenerateIdAuto.Location = new System.Drawing.Point(139, 57);
+            this.checkBoxGenerateIdAuto.Name = "checkBoxGenerateIdAuto";
+            this.checkBoxGenerateIdAuto.Size = new System.Drawing.Size(148, 17);
+            this.checkBoxGenerateIdAuto.TabIndex = 33;
+            this.checkBoxGenerateIdAuto.Text = "Generate new ID on save";
+            this.checkBoxGenerateIdAuto.UseVisualStyleBackColor = true;
+            // 
             // DCinemaPropertiesInterop
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(684, 514);
+            this.ClientSize = new System.Drawing.Size(684, 556);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
@@ -567,5 +578,6 @@
         private System.Windows.Forms.Label labelFadeDownTime;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
+        private System.Windows.Forms.CheckBox checkBoxGenerateIdAuto;
     }
 }

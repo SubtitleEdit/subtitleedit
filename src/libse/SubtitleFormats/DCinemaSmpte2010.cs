@@ -91,7 +91,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             string xmlStructure =
                 "<dcst:SubtitleReel xmlns:dcst=\"http://www.smpte-ra.org/schemas/428-7/2010/DCST\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">" + Environment.NewLine +
-                "  <dcst:Id>urn:uuid:7be835a3-cfb4-43d0-bb4b-f0b4c95e962e</dcst:Id>" + Environment.NewLine +
+                "  <dcst:Id>" + DCinemaSmpte2007.GenerateId()  + "</dcst:Id>" + Environment.NewLine +
                 "  <dcst:ContentTitleText></dcst:ContentTitleText> " + Environment.NewLine +
                 "  <dcst:AnnotationText>This is a subtitle file</dcst:AnnotationText>" + Environment.NewLine +
                 "  <dcst:IssueDate>2012-06-26T12:33:59.000-00:00</dcst:IssueDate>" + Environment.NewLine +
@@ -129,7 +129,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 ss.CurrentDCinemaSubtitleId = "urn:uuid:" + Guid.NewGuid();
             }
 
-            xml.DocumentElement.SelectSingleNode("dcst:Id", nsmgr).InnerText = ss.CurrentDCinemaSubtitleId;
+            if (!ss.DCinemaAutoGenerateSubtitleId)
+            {
+                xml.DocumentElement.SelectSingleNode("dcst:Id", nsmgr).InnerText = ss.CurrentDCinemaSubtitleId;
+            }
+
             xml.DocumentElement.SelectSingleNode("dcst:ReelNumber", nsmgr).InnerText = ss.CurrentDCinemaReelNumber;
             xml.DocumentElement.SelectSingleNode("dcst:IssueDate", nsmgr).InnerText = ss.CurrentDCinemaIssueDate;
             if (string.IsNullOrEmpty(ss.CurrentDCinemaLanguage))
