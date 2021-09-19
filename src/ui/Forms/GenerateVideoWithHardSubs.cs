@@ -592,7 +592,7 @@ namespace Nikse.SubtitleEdit.Forms
                 using (var font = new Font(UiUtil.GetDefaultFont().FontFamily, (float)numericUpDownFontSize.Value, FontStyle.Regular))
                 {
                     var currentHeight = graphics.MeasureString("HJKLj", font).Height;
-                    Configuration.Settings.Tools.GenVideoFontSizePercentOfHeight = (float)(currentHeight * 100 / _videoInfo.Height / 100.0);
+                    Configuration.Settings.Tools.GenVideoFontSizePercentOfHeight = (float)(currentHeight / _videoInfo.Height);
                 }
             }
         }
