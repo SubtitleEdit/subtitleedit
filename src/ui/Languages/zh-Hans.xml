@@ -805,16 +805,16 @@ Command line: {1} {2}
     <TimeRemainingSeconds>剩余时间: {0} 秒</TimeRemainingSeconds>
     <TimeRemainingMinutesAndSeconds>剩余时间: {0} 分 {1} 秒</TimeRemainingMinutesAndSeconds>
     <TargetFileName>目标文件名：{0}</TargetFileName>
-    <TargetFileSize>目标文件大小（需要启用2pass编码）</TargetFileSize>
+    <TargetFileSize>目标文件大小（需要启用2次编码）</TargetFileSize>
     <FileSizeMb>文件大小 (MB)</FileSizeMb>
-    <PassX>已用时间{0}</PassX>
+    <PassX>{0}次编码</PassX>
     <Encoding>编码</Encoding>
     <BitRate>比特率</BitRate>
     <SampleRate>采样率</SampleRate>
     <Stereo>立体声</Stereo>
     <Preset>预设</Preset>
     <Crf>CRF</Crf>
-    <TuneFor>调谐</TuneFor>
+    <TuneFor>视频类型</TuneFor>
     <AlignRight>右对齐</AlignRight>
   </GenerateVideoWithBurnedInSubs>
   <GetDictionaries>
