@@ -21111,6 +21111,9 @@ namespace Nikse.SubtitleEdit.Forms
             var lbTotal = labelTextLineTotal;
             var lbTotalOriginal = labelTextOriginalLineTotal;
 
+            var lbCps = labelCharactersPerSecond;
+            var lbCpsOriginal = labelOriginalCharactersPerSecond;
+
             tbText.Left = firstLeft;
             tbOriginal.Left = firstLeft;
             lbText.Left = firstLeft;
@@ -21130,6 +21133,9 @@ namespace Nikse.SubtitleEdit.Forms
 
                 lbTotal = labelTextOriginalLineTotal;
                 lbTotalOriginal = labelTextLineTotal;
+
+                lbCps = labelOriginalCharactersPerSecond;
+                lbCpsOriginal = labelCharactersPerSecond;
             }
             else
             {
@@ -21173,8 +21179,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            labelOriginalCharactersPerSecond.Top = labelCharactersPerSecond.Top;
-            labelCharactersPerSecond.Left = tbText.Left + (tbText.Width - labelCharactersPerSecond.Width);
+            lbCpsOriginal.Top = lbCps.Top;
+            lbCps.Left = tbText.Left + (tbText.Width - lbCps.Width);
             lbTotal.Left = tbText.Left + (tbText.Width - lbTotal.Width);
             SubtitleListview1.AutoSizeAllColumns(this);
 
