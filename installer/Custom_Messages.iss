@@ -603,20 +603,20 @@ zh.types_default=Default installation
 
 
 ; Chinese Traditional
-zhTW.comp_translations=Translations
-zhTW.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.7.2. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.7.2 now?
-zhTW.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
-zhTW.msg_OptimizingPerformance=Optimizing performance...
-zhTW.run_VisitWebsite=Visit Subtitle Edit's Website
-zhTW.sm_com_Changelog=Subtitle Edit's Changelog
-zhTW.tsk_AllUsers=For all users
-zhTW.tsk_CurrentUser=For the current user only
-zhTW.tsk_Other=Other:
-zhTW.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
-zhTW.tsk_ResetSettings=Reset Subtitle Edit's settings
-zhTW.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
-zhTW.types_custom=Custom installation
-zhTW.types_default=Default installation
+zhTW.comp_translations=翻譯
+zhTW.msg_AskToDownNET=Subtitle Edit 需要 .NET Framework 4.7.2。請下載並安裝 .NET Framework，然後再次執行安裝程式。%n%n你要現在下載 .NET Framework 4.7.2 嗎？
+zhTW.msg_DeleteSettings=您要一並刪除 Subtitle Edit 的設定和所有自訂字典嗎？%n%n如果你要重新安裝 Subtitle Edit，則無需刪除。
+zhTW.msg_OptimizingPerformance=正在最佳化性能...
+zhTW.run_VisitWebsite=前往 Subtitle Edit 的網頁
+zhTW.sm_com_Changelog=Subtitle Edit 更新日誌
+zhTW.tsk_AllUsers=所有使用者
+zhTW.tsk_CurrentUser=僅目前使用者 
+zhTW.tsk_Other=其他：
+zhTW.tsk_ResetDictionaries=重設字典並刪除所有自訂名稱
+zhTW.tsk_ResetSettings=重置 Subtitle Edit 的設定
+zhTW.tsk_SetFileTypes=將 SubRip Text (.srt) 檔案與 Subtitle Edit 關聯
+zhTW.types_custom=自訂安裝
+zhTW.types_default=預設安裝
 
 
 ; Indonesian
