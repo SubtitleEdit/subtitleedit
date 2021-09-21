@@ -1700,14 +1700,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else
                 {
-                    if (indexOfNewLine < 0 || (indexOfEnd > 0 && indexOfEnd < indexOfNewLine))
+                    if (indexOfNewLine < 0 || (indexOfEnd > 0 && (indexOfEnd < indexOfNewLine || indexOfEnd == -1)))
                     {
                         insertSpace = indexOfEnd > 1 && text[indexOfEnd - 1] != ' ';
                         text = text.Insert(indexOfEnd, "</i");
                         if (insertSpace)
                         {
-                            text = text.Insert(indexOfEnd + 4, " ");
-                            indexOfEnd++;
+                            if (text.Length > indexOfEnd + 4 && ".!?\"".Contains(text[indexOfEnd + 4]))
+                            {
+                                insertSpace = false;
+                            }
+
+                            if (insertSpace)
+                            {
+                                text = text.Insert(indexOfEnd + 4, " ");
+                                indexOfEnd++;
+                            }
                         }
                         index = text.IndexOf('<', indexOfEnd + 3);
                     }
