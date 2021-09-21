@@ -452,6 +452,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
 Εάν η κάθετη θέση είναι μηδέν, τότε είναι 2D.</ZPositionHelp>
     <ChooseColor>Επιλογή χρώματος…</ChooseColor>
     <Generate>Δημιουργία</Generate>
+    <GenerateNewIdOnSave>Δημιουργία νέας ταυτότητας κατά την αποθήκευση</GenerateNewIdOnSave>
   </DCinemaProperties>
   <DurationsBridgeGaps>
     <Title>Ένωση μικρών κενών μεταξύ γραμμών</Title>
@@ -814,6 +815,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Preset>Προεπιλογή</Preset>
     <Crf>Σταθερός συντελεστής ρυθμού</Crf>
     <TuneFor>Συντονισμός για</TuneFor>
+    <AlignRight>Στοίχιση δεξιά</AlignRight>
   </GenerateVideoWithBurnedInSubs>
   <GetDictionaries>
     <Title>Χρειάζεστε λεξικά;</Title>
@@ -2220,14 +2222,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DialogStyleDashSecondLineWithoutSpace>Δεύτερη γραμμή χωρίς κενό</DialogStyleDashSecondLineWithoutSpace>
     <ContinuationStyle>Στυλ συνέχισης</ContinuationStyle>
     <ContinuationStyleNone>Χωρίς</ContinuationStyleNone>
-    <ContinuationStyleNoneTrailingDots>Χωρίς, αποσιωπητικά για παύσεις (μόνο συνέχιση)</ContinuationStyleNoneTrailingDots>
-    <ContinuationStyleNoneLeadingTrailingDots>Χωρίς, αποσιωπητικά για παύσεις</ContinuationStyleNoneLeadingTrailingDots>
+    <ContinuationStyleNoneTrailingDots>Χωρίς, τελείες για παύσεις (μόνο συνέχιση)</ContinuationStyleNoneTrailingDots>
+    <ContinuationStyleNoneLeadingTrailingDots>Χωρίς, τελείες για παύσεις</ContinuationStyleNoneLeadingTrailingDots>
     <ContinuationStyleOnlyTrailingDots>Τελείες (μόνο συνέχιση)</ContinuationStyleOnlyTrailingDots>
     <ContinuationStyleLeadingTrailingDots>Τελείες</ContinuationStyleLeadingTrailingDots>
     <ContinuationStyleLeadingTrailingEllipsis>Αποσιωπητικά</ContinuationStyleLeadingTrailingEllipsis>
     <ContinuationStyleNoneTrailingEllipsis>Χωρίς, αποσιωπητικά για παύσεις</ContinuationStyleNoneTrailingEllipsis>
     <ContinuationStyleLeadingTrailingDash>Παύλα</ContinuationStyleLeadingTrailingDash>
-    <ContinuationStyleLeadingTrailingDashDots>Παύλα, αποσιωπητικά για παύσεις</ContinuationStyleLeadingTrailingDashDots>
+    <ContinuationStyleLeadingTrailingDashDots>Παύλα, τελείες για παύσεις</ContinuationStyleLeadingTrailingDashDots>
     <MusicSymbol>Μουσικό σύμβολο</MusicSymbol>
     <MusicSymbolsReplace>Αντικατάσταση μουσικών συμβόλων (χωρισμένα με κόμμα)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Διόρθωση σφαλμάτων OCR - χρήση ενσωματωμένων κανόνων</FixCommonOcrErrorsUseHardcodedRules>
