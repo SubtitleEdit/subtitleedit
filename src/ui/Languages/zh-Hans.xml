@@ -2475,7 +2475,7 @@ Command line: {1} {2}
     <MinFrameGap>最小间隙 (帧)</MinFrameGap>
     <XFramesAtYFrameRateGivesZMs>当帧数为 {0}、帧速率为 {1} 时，间隙长度为 {2} 毫秒。</XFramesAtYFrameRateGivesZMs>
     <UseXAsNewGap>是否将 "{0}" 毫秒设为新的最小间隙值？</UseXAsNewGap>
-    <BDOpensIn>打开BD sup/bdn-xml文件……</BDOpensIn>
+    <BDOpensIn>打开BD sup/bdn-xml文件的方式</BDOpensIn>
     <BDOpensInOcr>OCR</BDOpensInOcr>
     <BDOpensInEdit>编辑</BDOpensInEdit>
   </Settings>
