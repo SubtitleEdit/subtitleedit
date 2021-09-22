@@ -451,6 +451,7 @@ Command line: {1} {2}
     <ZPositionHelp>正值可将文字推远，复制可将文字拉近</ZPositionHelp>
     <ChooseColor>选择颜色...</ChooseColor>
     <Generate>生成</Generate>
+    <GenerateNewIdOnSave>保存时生成新 ID</GenerateNewIdOnSave>
   </DCinemaProperties>
   <DurationsBridgeGaps>
     <Title>桥接行间的小间隔</Title>
@@ -804,6 +805,17 @@ Command line: {1} {2}
     <TimeRemainingSeconds>剩余时间: {0} 秒</TimeRemainingSeconds>
     <TimeRemainingMinutesAndSeconds>剩余时间: {0} 分 {1} 秒</TimeRemainingMinutesAndSeconds>
     <TargetFileName>目标文件名：{0}</TargetFileName>
+    <TargetFileSize>目标文件大小（需要启用2次编码）</TargetFileSize>
+    <FileSizeMb>文件大小 (MB)</FileSizeMb>
+    <PassX>{0}次编码</PassX>
+    <Encoding>编码</Encoding>
+    <BitRate>比特率</BitRate>
+    <SampleRate>采样率</SampleRate>
+    <Stereo>立体声</Stereo>
+    <Preset>预设</Preset>
+    <Crf>CRF</Crf>
+    <TuneFor>视频类型</TuneFor>
+    <AlignRight>右对齐</AlignRight>
   </GenerateVideoWithBurnedInSubs>
   <GetDictionaries>
     <Title>是否使用词典？</Title>
@@ -2463,6 +2475,9 @@ Command line: {1} {2}
     <MinFrameGap>最小间隙 (帧)</MinFrameGap>
     <XFramesAtYFrameRateGivesZMs>当帧数为 {0}、帧速率为 {1} 时，间隙长度为 {2} 毫秒。</XFramesAtYFrameRateGivesZMs>
     <UseXAsNewGap>是否将 "{0}" 毫秒设为新的最小间隙值？</UseXAsNewGap>
+    <BDOpensIn>打开BD sup/bdn-xml文件的方式</BDOpensIn>
+    <BDOpensInOcr>OCR</BDOpensInOcr>
+    <BDOpensInEdit>编辑</BDOpensInEdit>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>下载 mpv 库</DownloadMpv>
