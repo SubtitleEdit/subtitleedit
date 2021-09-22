@@ -4799,7 +4799,6 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     SetAssaResolutionWithChecks();
                 }
-
             }
             else
             {
@@ -4816,6 +4815,14 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_oldSubtitleFormat?.GetType() != format.GetType())
                 {
                     _oldSubtitleFormat.RemoveNativeFormatting(_subtitle, format);
+                }
+
+                if (formatType == typeof(AdvancedSubStationAlpha))
+                {
+                    foreach (var p in _subtitle.Paragraphs)
+                    {
+                        p.Text = AdvancedSubStationAlpha.FormatText(p);
+                    }
                 }
 
                 SaveSubtitleListviewIndices();
@@ -4986,6 +4993,8 @@ namespace Nikse.SubtitleEdit.Forms
             ShowHideTextBasedFeatures(format);
 
             UpdateToolbarButtonsToCurrentFormat();
+
+            _oldSubtitleFormat = format;
         }
 
         private static List<string> GetNuendoStyles()
