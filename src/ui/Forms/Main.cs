@@ -4139,6 +4139,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private DialogResult FileSaveAs(bool allowUsingDefaultOrLastSaveAsFormat)
         {
+            var oldFormat = GetCurrentSubtitleFormat();
             SubtitleFormat currentFormat = null;
             if (allowUsingDefaultOrLastSaveAsFormat)
             {
@@ -4239,6 +4240,23 @@ namespace Nikse.SubtitleEdit.Forms
                         _saveAsCalled = true;
                         if (SaveSubtitle(format) == DialogResult.OK)
                         {
+                            if (oldFormat.GetType() != format.GetType())
+                            {
+                                oldFormat.RemoveNativeFormatting(_subtitle, format);
+
+                                if (format.GetType() == typeof(AdvancedSubStationAlpha))
+                                {
+                                    foreach (var p in _subtitle.Paragraphs)
+                                    {
+                                        p.Text = AdvancedSubStationAlpha.FormatText(p);
+                                    }
+
+                                    SaveSubtitleListviewIndices();
+                                    SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                                    RestoreSubtitleListviewIndices();
+                                }
+                            }
+
                             Configuration.Settings.General.LastSaveAsFormat = format.Name;
                             SetCurrentFormat(format);
                             Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
