@@ -1192,18 +1192,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             text = text.Replace("<I>", "<i>");
             text = text.Replace("</I>", "</i>");
-
-            if (Utilities.CountTagInText(text, "<i>") == 1 && text.StartsWith("<i>", StringComparison.Ordinal) && text.EndsWith("</i>", StringComparison.Ordinal))
-            {
-                return "<" + HtmlUtil.RemoveHtmlTags(text).Replace(Environment.NewLine, Environment.NewLine + "<");
-            }
-
             var sb = new StringBuilder();
             var parts = text.SplitToLines();
+            var nextPre = string.Empty;
             foreach (string line in parts)
             {
-                string s = line.Trim();
-                if (Utilities.CountTagInText(s, "<i>") == 1 && s.StartsWith("<i>", StringComparison.Ordinal) && s.EndsWith("</i>", StringComparison.Ordinal))
+                string s = nextPre + line.Trim();
+                nextPre = string.Empty;
+                var noOfStartTags = Utilities.CountTagInText(s, "<i>");
+                var noOfEndTags = Utilities.CountTagInText(s, "</i>");
+                if (noOfStartTags == 1 && noOfEndTags ==1 && s.StartsWith("<i>", StringComparison.Ordinal) && s.EndsWith("</i>", StringComparison.Ordinal))
                 {
                     sb.AppendLine("<" + HtmlUtil.RemoveHtmlTags(s));
                 }
@@ -1214,6 +1212,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     s = s.Replace("___@___", ">");
                     s = s.Replace(" <", "<");
                     s = s.Replace("> ", ">");
+                    if (noOfStartTags > noOfEndTags)
+                    {
+                        s = s.TrimEnd() + ">";
+                        nextPre = "<i>";
+                    }
                     sb.AppendLine(s);
                 }
             }
@@ -1726,8 +1729,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
             }
-            text = text.Replace("  ", " ");
-            return pre + text.Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
+
+            text = text
+                .Replace("  ", " ")
+                .Replace("  ", " ")
+                .Replace(" " + Environment.NewLine, Environment.NewLine)
+                .Replace(" " + Environment.NewLine, Environment.NewLine)
+                .Replace(Environment.NewLine + " ", Environment.NewLine)
+                .Replace(Environment.NewLine + " ", Environment.NewLine)
+                .Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine)
+                .Trim();
+
+            return pre + HtmlUtil.FixInvalidItalicTags(text);
         }
 
         public static Encoding GetEncoding(int codePage)
