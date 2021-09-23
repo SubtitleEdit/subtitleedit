@@ -1726,7 +1726,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
             }
-            text = text.Replace("</i>", "</i> ");
             text = text.Replace("  ", " ");
             return pre + text.Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
         }
