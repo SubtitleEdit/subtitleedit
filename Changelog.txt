@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.6.3 BETA (xth September 2021)
+3.6.3 BETA (xth October 2021)
 * NEW:
    * Auto set ASSA resolution - thx Leon
    * Icon for plugin "ASSA Draw" - thx Leon
@@ -17,11 +17,12 @@
    * Improve SSA styling/preview - thxfiolek2000
    * Allow .ismt files up to 50 mb - thx Essam3152
    * Allow some malformed WebVTT - thx manuelrn/larsk2 
-   * Make BD Sup configuable regarding open action - ocr/edit - thx peter-qgd
+   * Make BD Sup configurable regarding open action - ocr/edit - thx peter-qgd
    * Do not use ILRepack - to avoid anti-virus warnings
    * Add "Clear" key to list of shortcut keys - thx OmrSi
    * Refresh text in mpv when changing RTL mode
 * FIXED:
+   * Fix tag style converting from/to ASSA - thx von Suppé
    * Fix "Title bar text" when translating - thx Andrebavila
    * Fix culture name for French translation - thx jpsdr
    * Fix waveform multiple select error - thx darbor87
@@ -31,7 +32,7 @@
    * Fix crash in reading .ismt - thx DarkHorse-APP2
    * Fix for PAC italic w missing space - thx Milenko
    * Fix switched total labels in RTL mode w original subtitle - thx OmrSi
-   * Rollback max #lines enforce (hidden setting setting) - thx pandalamp 
+   * Rollback max #lines enforce (now hidden setting) - thx pandalamp 
 
 
 3.6.2 (24th August 2021)
