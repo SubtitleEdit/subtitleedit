@@ -1144,9 +1144,9 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <Redo>重做</Redo>
         <ShowUndoHistory>顯示歷史記錄 (用於復原)</ShowUndoHistory>
         <InsertUnicodeSymbol>插入 Unicode 符號</InsertUnicodeSymbol>
-        <InsertUnicodeControlCharacters>Insert Unicode control characters</InsertUnicodeControlCharacters>
-        <InsertUnicodeControlCharactersLRM>Left-to-right mark (LRM)</InsertUnicodeControlCharactersLRM>
-        <InsertUnicodeControlCharactersRLM>Right-to-left mark (RLM)</InsertUnicodeControlCharactersRLM>
+        <InsertUnicodeControlCharacters>插入 Unicode 控制字符</InsertUnicodeControlCharacters>
+        <InsertUnicodeControlCharactersLRM>左至右符號 (LRM)</InsertUnicodeControlCharactersLRM>
+        <InsertUnicodeControlCharactersRLM>右至左符號 (RLM)</InsertUnicodeControlCharactersRLM>
         <InsertUnicodeControlCharactersLRE>Start of left-to-right embedding (LRE)</InsertUnicodeControlCharactersLRE>
         <InsertUnicodeControlCharactersRLE>Start of right-to-left embedding (RLE)</InsertUnicodeControlCharactersRLE>
         <InsertUnicodeControlCharactersLRO>Start of left-to-right override (LRO)</InsertUnicodeControlCharactersLRO>
@@ -1158,7 +1158,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <GoToSubtitleNumber>移至字幕編號(&amp;G)...</GoToSubtitleNumber>
         <RightToLeftMode>由右至左讀取模式</RightToLeftMode>
         <FixRtlViaUnicodeControlCharacters>使用 Unicode 控制字元修復 RTL (針對已選的行)</FixRtlViaUnicodeControlCharacters>
-        <RemoveUnicodeControlCharacters>Remove Unicode control characters (from selected lines)</RemoveUnicodeControlCharacters>
+        <RemoveUnicodeControlCharacters>移除 Unicode 控制字符 (從已選的行)</RemoveUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>反轉 RTL 起始/結束 (針對已選的行)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>在 音訊/視訊 預覽中顯示原始文字</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>修改選擇部份...</ModifySelection>
@@ -2276,18 +2276,18 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <AdjustSetStartAndEndOfPreviousAndGoToNext>Set start and set end of previous and go to next (minus min gap)</AdjustSetStartAndEndOfPreviousAndGoToNext>
     <AdjustSelected100MsForward>已選的行前移 100 毫秒</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>已選的行後移 100 毫秒</AdjustSelected100MsBack>
-    <AdjustStartXMsBack>Move start {0} ms back</AdjustStartXMsBack>
-    <AdjustStartXMsForward>Move start {0} ms forward</AdjustStartXMsForward>
-    <AdjustEndXMsBack>Move end {0} ms back</AdjustEndXMsBack>
-    <AdjustEndXMsForward>Move end {0} ms forward</AdjustEndXMsForward>
-    <AdjustStartOneFrameBack>Move start 1 frame back</AdjustStartOneFrameBack>
-    <AdjustStartOneFrameForward>Move start 1 frame forward</AdjustStartOneFrameForward>
-    <AdjustEndOneFrameBack>Move end 1 frame back</AdjustEndOneFrameBack>
-    <AdjustEndOneFrameForward>Move end 1 frame forward</AdjustEndOneFrameForward>
-    <AdjustStartOneFrameBackKeepGapPrev>Move start 1 frame back (keep gap to previous if close)</AdjustStartOneFrameBackKeepGapPrev>
-    <AdjustStartOneFrameForwardKeepGapPrev>Move start 1 frame forward (keep gap to previous if close)</AdjustStartOneFrameForwardKeepGapPrev>
-    <AdjustEndOneFrameBackKeepGapNext>Move end 1 frame back (keep gap to next if close)</AdjustEndOneFrameBackKeepGapNext>
-    <AdjustEndOneFrameForwardKeepGapNext>Move end 1 frame forward (keep gap to next if close)</AdjustEndOneFrameForwardKeepGapNext>
+    <AdjustStartXMsBack>起始時間後移 {0} 毫秒</AdjustStartXMsBack>
+    <AdjustStartXMsForward>起始時間前移 {0} 毫秒</AdjustStartXMsForward>
+    <AdjustEndXMsBack>結束時間後移 {0} 毫秒</AdjustEndXMsBack>
+    <AdjustEndXMsForward>結束時間前移 {0} 毫秒</AdjustEndXMsForward>
+    <AdjustStartOneFrameBack>起始時間後移 1 幀</AdjustStartOneFrameBack>
+    <AdjustStartOneFrameForward>起始時間前移 1 幀</AdjustStartOneFrameForward>
+    <AdjustEndOneFrameBack>結束時間後移 1 幀</AdjustEndOneFrameBack>
+    <AdjustEndOneFrameForward>結束時間前移 1 幀</AdjustEndOneFrameForward>
+    <AdjustStartOneFrameBackKeepGapPrev>起始時間後移 1 幀 (keep gap to previous if close)</AdjustStartOneFrameBackKeepGapPrev>
+    <AdjustStartOneFrameForwardKeepGapPrev>起始時間後移 1 幀 (keep gap to previous if close)</AdjustStartOneFrameForwardKeepGapPrev>
+    <AdjustEndOneFrameBackKeepGapNext>結束時間後移 1 幀 (keep gap to next if close)</AdjustEndOneFrameBackKeepGapNext>
+    <AdjustEndOneFrameForwardKeepGapNext>結束時間前移 1 幀 (keep gap to next if close)</AdjustEndOneFrameForwardKeepGapNext>
     <AdjustSetStartTimeKeepDuration>Set start time, keep duration</AdjustSetStartTimeKeepDuration>
     <AdjustVideoSetStartForAppropriateLine>Set start for appropriate line</AdjustVideoSetStartForAppropriateLine>
     <AdjustVideoSetEndForAppropriateLine>Set end for appropriate line</AdjustVideoSetEndForAppropriateLine>
@@ -2462,9 +2462,9 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <BreakPreferBottomHeavy>Prefer bottom heavy</BreakPreferBottomHeavy>
     <BreakEarlyForDashDialog>Break early for dialog dash</BreakEarlyForDashDialog>
     <BreakEarlyForComma>Break early for comma</BreakEarlyForComma>
-    <GoogleTranslate>Google Translate</GoogleTranslate>
+    <GoogleTranslate>Google 翻譯</GoogleTranslate>
     <GoogleTranslateApiKey>API 金鑰</GoogleTranslateApiKey>
-    <MicrosoftBingTranslator>Microsoft Translator</MicrosoftBingTranslator>
+    <MicrosoftBingTranslator>Microsoft 翻譯</MicrosoftBingTranslator>
     <HowToSignUp>如何註冊</HowToSignUp>
     <MicrosoftTranslateApiKey>金鑰</MicrosoftTranslateApiKey>
     <MicrosoftTranslateTokenEndpoint>Token endpoint</MicrosoftTranslateTokenEndpoint>
@@ -2475,7 +2475,7 @@ Setting a font for a subtitle is normally done in the video player, but can also
     <RestoreDefaultSettingsMsg>All settings will be restored to default values
 
 Continue?</RestoreDefaultSettingsMsg>
-    <RemoveTimeCodes>Remove time codes</RemoveTimeCodes>
+    <RemoveTimeCodes>移除時間碼</RemoveTimeCodes>
     <EditFixContinuationStyleSettings>Edit settings for fixing continuation style...</EditFixContinuationStyleSettings>
     <FixContinuationStyleSettings>Settings for fixing continuation style</FixContinuationStyleSettings>
     <UncheckInsertsAllCaps>Detect and uncheck single titles in all-caps (for example: NO ENTRY)</UncheckInsertsAllCaps>
@@ -2546,7 +2546,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <EditWholeText>編輯整個文字</EditWholeText>
     <EditWordOnly>僅編輯單字</EditWordOnly>
     <AddXToNames>加入 '{0}' 到 名稱/其它 清單</AddXToNames>
-    <AddXToUserDictionary>Add '{0}' to user dictionary</AddXToUserDictionary>
+    <AddXToUserDictionary>新增 '{0}' 至使用者字典</AddXToUserDictionary>
     <AutoFixNames>自動修復僅大小寫相異的名稱</AutoFixNames>
     <AutoFixNamesViaSuggestions>Also fix names via 'spell check suggestions'</AutoFixNamesViaSuggestions>
     <CheckOneLetterWords>提示未知單子母單字</CheckOneLetterWords>
@@ -2881,7 +2881,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <AlsoTrainItalic>同時訓練斜體</AlsoTrainItalic>
     <AlsoTrainBold>同時訓練粗體</AlsoTrainBold>
     <StartTraining>開始訓練</StartTraining>
-    <NowTraining>Now training font '{1}'. Total chars trained: {0:#,###,##0}, {2:#,###,##0} known</NowTraining>
+    <NowTraining>正在訓練字型 '{1}'。總計訓練字元: {0:#,###,##0}，已知 {2:#,###,##0}</NowTraining>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - 手動圖像到文字</Title>
@@ -2911,7 +2911,7 @@ Continue?</RestoreDefaultSettingsMsg>
   </VobSubOcrNewFolder>
 <VobSubOcrSetItalicAngle>
     <Title>設置斜體角度</Title>
-    <Description>Adjust value until text style is normal and not italic. Note that original image should be italic.</Description>
+    <Description>調整數值，直到字型變正常，而非斜體。注意：原始圖片應為斜體。</Description>
   </VobSubOcrSetItalicAngle>
   <OcrPreprocessing>
     <Title>OCR 圖片預處理</Title>
