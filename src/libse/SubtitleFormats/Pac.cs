@@ -1682,7 +1682,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             while (index >= 0 && index < text.Length - 1)
             {
                 bool insertSpace = false;
-                if (index > 1 && text[index - 1] != ' ')
+                if (index >= 1 && text[index - 1] != ' ')
                 {
                     insertSpace = true;
                 }
