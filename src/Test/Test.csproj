@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="Assa\TagHelperRemoveTagTest.cs" />
     <Compile Include="Assa\ResamplerTest.cs" />
+    <Compile Include="Logic\SubtitleFormats\PacTest.cs" />
     <Compile Include="Core\UUEncodingTest.cs" />
     <Compile Include="Core\CharUtilsTest.cs" />
     <Compile Include="Core\DialogTypeTest.cs" />
