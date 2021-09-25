@@ -890,7 +890,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
 
         public static string FormatText(Paragraph p)
         {
-            string text = NormalizeNewLines(p.Text);
+            string text = p.Text.Replace(Environment.NewLine, "\\N");
 
             if (!text.Contains('<'))
             {

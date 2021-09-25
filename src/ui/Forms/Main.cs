@@ -10966,8 +10966,9 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            var pre = string.Empty;
             var startIdx = currentParagraph.Text.LastIndexOf("<i>", StringComparison.OrdinalIgnoreCase);
+
+            string pre;
             if (startIdx >= 0 &&
                 !currentParagraph.Text.Contains("</i>", StringComparison.OrdinalIgnoreCase) &&
                 nextParagraph.Text.Contains("</i>", StringComparison.OrdinalIgnoreCase))
