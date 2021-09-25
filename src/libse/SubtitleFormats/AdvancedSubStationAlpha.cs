@@ -890,7 +890,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
 
         public static string FormatText(Paragraph p)
         {
-            string text = p.Text.Replace(Environment.NewLine, "\\N");
+            string text = NormalizeNewLines(p.Text);
 
             if (!text.Contains('<'))
             {
@@ -1002,8 +1002,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
 
         public static string GetFormattedText(string input)
         {
-            var text = input.Replace("\\N", Environment.NewLine).Replace("\\n", Environment.NewLine);
-
+            var text = NormalizeNewLines(input);
             var tooComplex = ContainsUnsupportedTags(text);
 
             if (!tooComplex)
@@ -1618,9 +1617,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                             {
                                 StartTime = GetTimeCodeFromString(start),
                                 EndTime = GetTimeCodeFromString(end),
-                                Text = text
-                                    .Replace("\\n", Environment.NewLine)
-                                    .Replace("\\N", Environment.NewLine),
+                                Text = NormalizeNewLines(text),
                             };
 
                             if (!string.IsNullOrEmpty(style))
@@ -1694,6 +1691,19 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 int.Parse(timeCode[1]),
                 int.Parse(timeCode[2]),
                 int.Parse(timeCode[3]) * 10);
+        }
+
+        public static void NormalizeNewLines(Subtitle subtitle)
+        {
+            foreach (var p in subtitle.Paragraphs)
+            {
+                p.Text = NormalizeNewLines(p.Text);
+            }
+        }
+
+        private static string NormalizeNewLines(string text)
+        { 
+            return text.Replace("\\N", Environment.NewLine).Replace("\\n", Environment.NewLine);
         }
 
         public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
@@ -1779,8 +1789,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                         continue;
                     }
 
-                    p.Text = p.Text.Replace("\\n", Environment.NewLine); // Soft line break
-                    p.Text = p.Text.Replace("\\N", Environment.NewLine); // Hard line break
+                    p.Text = NormalizeNewLines(p.Text);
                     p.Text = p.Text.Replace("\\h", " "); // Hard space
 
                     if (noTags.StartsWith("m ", StringComparison.Ordinal))
