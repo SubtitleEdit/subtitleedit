@@ -214,6 +214,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetCurrentFormat(SubtitleFormat format)
         {
+            if (format.Name == AdvancedSubStationAlpha.NameOfFormat)
+            {
+                AdvancedSubStationAlpha.NormalizeNewLines(_subtitle);
+            }
+
             if (format.IsVobSubIndexFile)
             {
                 UiUtil.InitializeSubtitleFormatComboBox(comboBoxSubtitleFormats, format);
