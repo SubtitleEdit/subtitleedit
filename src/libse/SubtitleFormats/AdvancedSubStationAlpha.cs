@@ -210,6 +210,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                     effect = p.Effect;
                 }
 
+                p.Text = p.Text.Replace(Environment.NewLine, "\\N");
                 if (p.IsComment)
                 {
                     sb.AppendFormat(commentWriteFormat, start, end, FormatText(p), style, actor, marginL, marginR, marginV, effect, p.Layer).AppendLine();
@@ -890,8 +891,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
 
         public static string FormatText(Paragraph p)
         {
-            string text = p.Text.Replace(Environment.NewLine, "\\N");
-
+            var text = p.Text;
             if (!text.Contains('<'))
             {
                 return text;
