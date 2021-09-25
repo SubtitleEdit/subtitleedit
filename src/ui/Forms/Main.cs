@@ -3419,6 +3419,18 @@ namespace Nikse.SubtitleEdit.Forms
                 _subtitleListViewIndex = -1;
                 Configuration.Settings.General.CurrentVideoOffsetInMs = 0;
 
+                if (_resetVideo && ModifierKeys != Keys.Shift)
+                {
+                    VideoFileName = null;
+                    _videoInfo = null;
+                    VideoAudioTrackNumber = -1;
+                    labelVideoInfo.Text = _languageGeneral.NoVideoLoaded;
+                    audioVisualizer.WavePeaks = null;
+                    audioVisualizer.SetSpectrogram(null);
+                    audioVisualizer.SceneChanges = new List<double>();
+                    audioVisualizer.Chapters = new List<MatroskaChapter>();
+                }
+
                 var oldSaveFormat = Configuration.Settings.General.LastSaveAsFormat;
                 _oldSubtitleFormat = format;
                 SetCurrentFormat(format);
@@ -3478,19 +3490,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 _findHelper = null;
-                _spellCheckForm = null;
-
-                if (_resetVideo && ModifierKeys != Keys.Shift)
-                {
-                    VideoFileName = null;
-                    _videoInfo = null;
-                    VideoAudioTrackNumber = -1;
-                    labelVideoInfo.Text = _languageGeneral.NoVideoLoaded;
-                    audioVisualizer.WavePeaks = null;
-                    audioVisualizer.SetSpectrogram(null);
-                    audioVisualizer.SceneChanges = new List<double>();
-                    audioVisualizer.Chapters = new List<MatroskaChapter>();
-                }
+                _spellCheckForm = null;                
 
                 if (Configuration.Settings.General.ShowVideoPlayer || Configuration.Settings.General.ShowAudioVisualizer)
                 {
@@ -4253,7 +4253,8 @@ namespace Nikse.SubtitleEdit.Forms
                                 {
                                     foreach (var p in _subtitle.Paragraphs)
                                     {
-                                        p.Text = AdvancedSubStationAlpha.FormatText(p);
+                                        var text = p.Text.Replace(Environment.NewLine, "\\N");
+                                        p.Text = AdvancedSubStationAlpha.FormatText(text);
                                     }
 
                                     SaveSubtitleListviewIndices();
@@ -4844,7 +4845,8 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     foreach (var p in _subtitle.Paragraphs)
                     {
-                        p.Text = AdvancedSubStationAlpha.FormatText(p);
+                        var text = p.Text.Replace(Environment.NewLine, "\\N");
+                        p.Text = AdvancedSubStationAlpha.FormatText(text);
                     }
                 }
 
@@ -15519,7 +15521,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_shortcuts.MainGeneralSetAssaResolution == e.KeyData)
             {
-                SetAssaResolution();
+                SetAssaResolution(_subtitle);
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainToggleFocus == e.KeyData)
@@ -20224,6 +20226,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return false;
             }
 
+            SetAssaResolution(_subtitleOriginal);
             SetupOriginalEdit();
             FixRightToLeftDependingOnLanguage();
             return true;
@@ -20409,7 +20412,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (oldPlayResX == null || oldPlayResY == null)
                 {
-                    SetAssaResolution();
+                    SetAssaResolution(_subtitle);
                     var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(_subtitle.Header);
                     foreach (var style in styles)
                     {
@@ -22707,6 +22710,36 @@ namespace Nikse.SubtitleEdit.Forms
         private void _timerSlow_Tick(object sender, EventArgs e)
         {
             _timerSlow.Stop();
+
+            //if (_subtitle?.Paragraphs.Count == _subtitleOriginal?.Paragraphs.Count)
+            //{
+            //    bool ok = true;
+            //    for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            //    {
+            //        var p = _subtitle.Paragraphs[0];
+            //        var o = _subtitleOriginal.Paragraphs[0];
+            //        if (Math.Abs(p.StartTime.TotalMilliseconds - o.StartTime.TotalMilliseconds) > 0.001)
+            //        {
+            //            tabControlModes.TabPages[0].Text = "Sync start error at: " + i;
+            //            ok = false;
+            //            ShowStatus("Sync start time error at: " + i, false, 0, true);
+            //            break;
+            //        }
+            //        if (Math.Abs(p.EndTime.TotalMilliseconds - o.EndTime.TotalMilliseconds) > 0.001)
+            //        {
+            //            tabControlModes.TabPages[0].Text = "Sync end error at: " + i;
+            //            ok = false;
+            //            ShowStatus("Sync end time error at: " + i, false, 0, true);
+            //            break;
+            //        }
+            //    }
+
+            //    if (ok)
+            //    {
+            //        tabControlModes.TabPages[0].Text = "OK";
+            //    }
+            //}
+
 
             if (mediaPlayer.VideoPlayer != null && !mediaPlayer.IsDisposed)
             {
@@ -31425,6 +31458,7 @@ namespace Nikse.SubtitleEdit.Forms
                             _subtitle.Paragraphs.Add(new Paragraph(p));
                         }
 
+                        SetAssaResolution(_subtitleOriginal);
                         ShowStatus(_language.SubtitleTranslated);
                         _changeOriginalSubtitleHash = oldHash;
                         _changeSubtitleHash = -1;
@@ -31654,21 +31688,21 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void SetAssaResolution()
+        private void SetAssaResolution(Subtitle subtitle)
         {
             if (!IsAssa() || string.IsNullOrEmpty(VideoFileName) || _videoInfo.Width == 0 || _videoInfo.Height == 0)
             {
                 return;
             }
 
-            if (string.IsNullOrEmpty(_subtitle.Header))
+            if (string.IsNullOrEmpty(subtitle.Header))
             {
-                _subtitle.Header = AdvancedSubStationAlpha.DefaultHeader;
+                subtitle.Header = AdvancedSubStationAlpha.DefaultHeader;
             }
 
             ShowStatus($"{LanguageSettings.Current.Settings.SetAssaResolution}  {_videoInfo.Width.ToString(CultureInfo.InvariantCulture)}x{_videoInfo.Height.ToString(CultureInfo.InvariantCulture)}");
-            _subtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + _videoInfo.Width.ToString(CultureInfo.InvariantCulture), "[Script Info]", _subtitle.Header);
-            _subtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + _videoInfo.Height.ToString(CultureInfo.InvariantCulture), "[Script Info]", _subtitle.Header);
+            subtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + _videoInfo.Width.ToString(CultureInfo.InvariantCulture), "[Script Info]", subtitle.Header);
+            subtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + _videoInfo.Height.ToString(CultureInfo.InvariantCulture), "[Script Info]", subtitle.Header);
         }
 
         private void generateBlankVideoToolStripMenuItem_Click(object sender, EventArgs e)

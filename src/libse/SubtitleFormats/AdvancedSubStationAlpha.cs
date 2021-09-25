@@ -210,14 +210,14 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                     effect = p.Effect;
                 }
 
-                p.Text = p.Text.Replace(Environment.NewLine, "\\N");
+                var text = p.Text.Replace(Environment.NewLine, "\\N");
                 if (p.IsComment)
                 {
-                    sb.AppendFormat(commentWriteFormat, start, end, FormatText(p), style, actor, marginL, marginR, marginV, effect, p.Layer).AppendLine();
+                    sb.AppendFormat(commentWriteFormat, start, end, FormatText(text), style, actor, marginL, marginR, marginV, effect, p.Layer).AppendLine();
                 }
                 else
                 {
-                    sb.AppendFormat(paragraphWriteFormat, start, end, FormatText(p), style, actor, marginL, marginR, marginV, effect, p.Layer).AppendLine();
+                    sb.AppendFormat(paragraphWriteFormat, start, end, FormatText(text), style, actor, marginL, marginR, marginV, effect, p.Layer).AppendLine();
                 }
             }
 
@@ -889,9 +889,9 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             return list;
         }
 
-        public static string FormatText(Paragraph p)
+        public static string FormatText(string input)
         {
-            var text = p.Text;
+            var text = input;
             if (!text.Contains('<'))
             {
                 return text;
