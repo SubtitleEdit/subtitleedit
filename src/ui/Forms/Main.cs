@@ -10544,6 +10544,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 currentParagraph.Text = currentParagraph.Text.Replace("< /i>", "</i>");
                 currentParagraph.Text = currentParagraph.Text.Replace("< i>", "<i>");
+
                 string oldText = currentParagraph.Text;
                 var lines = currentParagraph.Text.SplitToLines();
                 if (textIndex != null && textIndex.Value > 1 && textIndex.Value < oldText.Length - 1)
@@ -10965,6 +10966,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            var pre = string.Empty;
             var startIdx = currentParagraph.Text.LastIndexOf("<i>", StringComparison.OrdinalIgnoreCase);
             if (startIdx >= 0 &&
                 !currentParagraph.Text.Contains("</i>", StringComparison.OrdinalIgnoreCase) &&
@@ -10974,7 +10976,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (endIdx >= 0)
                 {
                     var fontTag = currentParagraph.Text.Substring(startIdx, endIdx - startIdx + 1);
-                    var pre = string.Empty;
+                    pre = string.Empty;
                     if (currentParagraph.Text.StartsWith('{') && currentParagraph.Text.IndexOf('}') > 0)
                     {
                         var i = currentParagraph.Text.IndexOf('}');
@@ -10984,6 +10986,15 @@ namespace Nikse.SubtitleEdit.Forms
 
                     currentParagraph.Text = pre + currentParagraph.Text + "</i>";
                     nextParagraph.Text = pre + fontTag + nextParagraph.Text;
+                }
+            }
+            else if (currentParagraph.Text.StartsWith("{\\", StringComparison.Ordinal))
+            {
+                var endIdx = currentParagraph.Text.IndexOf('}', 2);
+                if (endIdx > 2)
+                {
+                    pre = currentParagraph.Text.Substring(0, endIdx + 1);
+                    nextParagraph.Text = pre + nextParagraph.Text;
                 }
             }
         }
