@@ -1737,7 +1737,6 @@ namespace Nikse.SubtitleEdit.Forms
             videoResolutionResamplerToolStripMenuItem.Text = _language.Menu.ContextMenu.AssaResolutionChanger;
 
             toolStripMenuItemDelete.Text = _language.Menu.ContextMenu.Delete;
-            toolStripMenuItemInsert.Text = _language.Menu.ContextMenu.Insert;
             insertLineToolStripMenuItem.Text = _language.Menu.ContextMenu.InsertFirstLine;
             toolStripMenuItemEmptyGoToSourceView.Text = _language.Menu.ContextMenu.GoToSourceView;
             toolStripMenuItemInsertBefore.Text = _language.Menu.ContextMenu.InsertBefore;
@@ -8627,7 +8626,6 @@ namespace Nikse.SubtitleEdit.Forms
                 bool noNetWorkSession = _networkSession == null;
 
                 toolStripMenuItemSaveSelectedLines.Visible = false;
-                toolStripMenuItemInsert.Visible = true;
                 toolStripMenuItemInsertBefore.Visible = true;
                 toolStripMenuItemInsertAfter.Visible = true;
                 toolStripMenuItemInsertSubtitle.Visible = noNetWorkSession;
@@ -8659,7 +8657,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (SubtitleListview1.SelectedItems.Count == 2)
                 {
-                    toolStripMenuItemInsert.Visible = false;
                     toolStripMenuItemInsertBefore.Visible = false;
                     toolStripMenuItemInsertAfter.Visible = false;
                     toolStripMenuItemInsertSubtitle.Visible = false;
@@ -8671,7 +8668,6 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (SubtitleListview1.SelectedItems.Count >= 2)
                 {
                     toolStripMenuItemSaveSelectedLines.Visible = true;
-                    toolStripMenuItemInsert.Visible = false;
                     toolStripMenuItemInsertBefore.Visible = false;
                     toolStripMenuItemInsertAfter.Visible = false;
                     toolStripMenuItemInsertSubtitle.Visible = false;
@@ -22722,14 +22718,14 @@ namespace Nikse.SubtitleEdit.Forms
             //        {
             //            tabControlModes.TabPages[0].Text = "Sync start error at: " + i;
             //            ok = false;
-            //            ShowStatus("Sync start time error at: " + i, false, 0, true);
+            //            ShowStatus("Sync start time error at: " + i, true, 0, true);
             //            break;
             //        }
             //        if (Math.Abs(p.EndTime.TotalMilliseconds - o.EndTime.TotalMilliseconds) > 0.001)
             //        {
             //            tabControlModes.TabPages[0].Text = "Sync end error at: " + i;
             //            ok = false;
-            //            ShowStatus("Sync end time error at: " + i, false, 0, true);
+            //            ShowStatus("Sync end time error at: " + i, true, 0, true);
             //            break;
             //        }
             //    }
