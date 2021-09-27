@@ -89,12 +89,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             subtitle.Paragraphs.Clear();
             subtitle.Header = null;
-            byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
+            var buffer = FileUtil.ReadAllBytesShared(fileName);
 
             int index = 40;
             while (index < buffer.Length)
             {
-                Paragraph p = GetParagraph(ref index, buffer);
+                var p = GetParagraph(ref index, buffer);
                 if (p != null)
                 {
                     subtitle.Paragraphs.Add(p);
@@ -136,19 +136,32 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     if (buffer.Length > index + 15 + textLength)
                     {
+                        var sb = new StringBuilder();
                         for (int j = index + 16; j < index + 16 + textLength; j++)
                         {
                             if (buffer[j] < 32 && buffer[j] != 0xd)
                             {
-                                buffer[j] = 0;
+                                if (buffer[j] == 5)
+                                {
+                                    sb.Append("<i>");
+                                }
+                                else if (buffer[j] == 15)
+                                {
+                                    sb.Append("</i>");
+                                }
+                            }
+                            else
+                            {
+                                sb.Append(Encoding.GetEncoding(1250).GetString(buffer, j, 1)); // encoding?
                             }
                         }
-                        string text = Encoding.GetEncoding(1250).GetString(buffer, index + 16, textLength); // encoding?
+
+                        var text = sb.ToString();
                         text = text.Replace("\0", string.Empty);
                         text = text.Replace("\n", Environment.NewLine);
                         text = text.Replace("\r", Environment.NewLine);
                         text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-                        index += (15 + textLength);
+                        index += 15 + textLength;
                         var p = new Paragraph(text, startSeconds * 1000 + FramesToMillisecondsMax999(startFrame), endSeconds * 1000 + FramesToMillisecondsMax999(endFrame));
                         return p;
                     }
@@ -160,6 +173,5 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             index++;
             return null;
         }
-
     }
 }
