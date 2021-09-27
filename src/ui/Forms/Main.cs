@@ -214,11 +214,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetCurrentFormat(SubtitleFormat format)
         {
-            if (format.Name == AdvancedSubStationAlpha.NameOfFormat)
-            {
-                AdvancedSubStationAlpha.NormalizeNewLines(_subtitle);
-            }
-
             if (format.IsVobSubIndexFile)
             {
                 UiUtil.InitializeSubtitleFormatComboBox(comboBoxSubtitleFormats, format);
@@ -3489,7 +3484,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 _findHelper = null;
-                _spellCheckForm = null;                
+                _spellCheckForm = null;
 
                 if (Configuration.Settings.General.ShowVideoPlayer || Configuration.Settings.General.ShowAudioVisualizer)
                 {
@@ -4844,8 +4839,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     foreach (var p in _subtitle.Paragraphs)
                     {
-                        var text = p.Text.Replace(Environment.NewLine, "\\N");
-                        p.Text = AdvancedSubStationAlpha.FormatText(text);
+                        p.Text = AdvancedSubStationAlpha.FormatText(p.Text);
                     }
                 }
 
