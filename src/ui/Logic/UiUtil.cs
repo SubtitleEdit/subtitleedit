@@ -1117,6 +1117,7 @@ namespace Nikse.SubtitleEdit.Logic
             AddExtension(sb, new IsmtDfxp().Extension);
             AddExtension(sb, new PlayCaptionsFreeEditor().Extension);
             AddExtension(sb, ".cdg"); // karaoke
+            AddExtension(sb, ".pns"); // karaoke
 
             if (!string.IsNullOrEmpty(Configuration.Settings.General.OpenSubtitleExtraExtensions))
             {
