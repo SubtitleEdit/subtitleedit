@@ -24,6 +24,7 @@ namespace Nikse.SubtitleEdit.Forms
         private long _startTicks;
         private long _totalFrames;
         private StringBuilder _log;
+        private bool _isAssa;
         public string VideoFileName { get; private set; }
 
         public GenerateVideoWithHardSubs(Subtitle assaSubtitle, string inputVideoFileName, VideoInfo videoInfo, int? fontSize)
@@ -92,6 +93,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxAlignRight.Left = left;
             checkBoxBox.Left = left;
 
+            _isAssa = !fontSize.HasValue;
             if (fontSize.HasValue)
             {
                 if (fontSize.Value < numericUpDownFontSize.Minimum)
@@ -215,7 +217,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             labelFileName.Text = string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TargetFileName, VideoFileName);
-            if (numericUpDownFontSize.Visible) // not ASSA format
+            if (!_isAssa)
             {
                 SetStyleForNonAssa(_assaSubtitle);
             }
@@ -678,9 +680,9 @@ namespace Nikse.SubtitleEdit.Forms
                 var assaTempFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".ass");
                 var sub = new Subtitle();
                 sub.Header = _assaSubtitle.Header;
-                sub.Paragraphs.Add(new Paragraph(GetPreviewText(), 0, 10_000));
+                sub.Paragraphs.Add(new Paragraph(GetPreviewParagraph()));
 
-                if (numericUpDownFontSize.Visible) // not ASSA format
+                if (!_isAssa)
                 {
                     SetStyleForNonAssa(sub);
                 }
@@ -754,7 +756,7 @@ namespace Nikse.SubtitleEdit.Forms
             sub.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + ((int)numericUpDownHeight.Value).ToString(CultureInfo.InvariantCulture), "[Script Info]", sub.Header);
         }
 
-        private string GetPreviewText()
+        private Paragraph GetPreviewParagraph()
         {
             string text = string.Empty;
             _assaSubtitle.Renumber();
@@ -764,17 +766,17 @@ namespace Nikse.SubtitleEdit.Forms
                 longest = _assaSubtitle.Paragraphs.Where(p => p.Number > 1).OrderByDescending(p => p.Text.Length).FirstOrDefault();
                 if (longest != null && longest.Text.Length > 2)
                 {
-                    return longest.Text;
+                    return new Paragraph(longest) { StartTime = new TimeCode(0), EndTime = new TimeCode(10000) };
                 }
             }
 
             longest = _assaSubtitle.Paragraphs.OrderByDescending(p => p.Text.Length).FirstOrDefault();
             if (longest != null && longest.Text.Length > 2)
             {
-                return longest.Text;
+                return new Paragraph(longest) { StartTime = new TimeCode(0), EndTime = new TimeCode(10000) };
             }
 
-            return "Example text";
+            return new Paragraph("Example text", 0, 10000);
         }
     }
 }

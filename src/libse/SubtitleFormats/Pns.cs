@@ -120,7 +120,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         var sb = new StringBuilder();
                         var skipNext = false;
-                        bool italicOn = false;
                         for (int j = index + 16; j < index + 16 + textLength; j++)
                         {
                             if (skipNext)
@@ -130,7 +129,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
 
                             var v = buffer[j];
-                            
+
                             if (v < 32 && v != 0xd && v != 0xa)
                             {
                                 if (v == 1)
@@ -141,16 +140,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 if (v == 5)
                                 {
                                     sb.Append("<i>");
-                                    italicOn = true;
                                 }
                                 else if (v == 15)
                                 {
                                     sb.Append("</i>");
-                                    italicOn = false;
-                                }
-                                else
-                                {
-                                   // sb.Append("(" + v + ")");
                                 }
                             }
                             else
@@ -164,7 +157,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         text = text.Replace("\n", "\r");
                         text = text.Replace("\r", Environment.NewLine);
                         text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-                        text = string.Join(Environment.NewLine, text.SplitToLines()); 
+                        text = string.Join(Environment.NewLine, text.SplitToLines());
                         text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
                         if (text.StartsWith("</i>"))
                         {
