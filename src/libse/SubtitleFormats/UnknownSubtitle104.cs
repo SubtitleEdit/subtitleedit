@@ -64,7 +64,25 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
-            subtitle.RecalculateDisplayTimes(Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds, null, Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds, true);
+            for (int i = 0; i < subtitle.Paragraphs.Count; i++)
+            {
+                var p = subtitle.Paragraphs[i];
+                p.Text = Utilities.AutoBreakLine(p.Text);
+                var next = subtitle.GetParagraphOrDefault(i + 1);
+                if (next == null)
+                {
+                    p.EndTime.TotalMilliseconds = Utilities.GetOptimalDisplayMilliseconds(p.Text) + p.StartTime.TotalMilliseconds;
+                }
+                else
+                {
+                    p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                    if (p.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                    {
+                        p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
+                    }
+                }
+            }
+
             subtitle.Renumber();
         }
     }
