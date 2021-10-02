@@ -1267,6 +1267,7 @@ $HorzAlign          =   Center
         public bool UseDarkTheme { get; set; }
         public bool DarkThemeShowListViewGridLines { get; set; }
         public bool ShowBetaStuff { get; set; }
+        public bool DebugTranslationSync { get; set; }
 
         public GeneralSettings()
         {
@@ -1405,6 +1406,7 @@ $HorzAlign          =   Center
             TagsInToggleHiTags = "[;]";
             SubtitleTextBoxMaxHeight = 200;
             ShowBetaStuff = false;
+            DebugTranslationSync = false;
             NewEmptyDefaultMs = 2000;
             DialogStyle = DialogType.DashBothLinesWithSpace;
             ContinuationStyle = ContinuationStyle.None;
@@ -3842,6 +3844,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.ShowBetaStuff = Convert.ToBoolean(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("DebugTranslationSync");
+            if (subNode != null)
+            {
+                settings.General.DebugTranslationSync = Convert.ToBoolean(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("NewEmptyDefaultMs");
@@ -8833,6 +8841,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("UseDarkTheme", settings.General.UseDarkTheme.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DarkThemeShowListViewGridLines", settings.General.DarkThemeShowListViewGridLines.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowBetaStuff", settings.General.ShowBetaStuff.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("DebugTranslationSync", settings.General.DebugTranslationSync.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("NewEmptyDefaultMs", settings.General.NewEmptyDefaultMs.ToString(CultureInfo.InvariantCulture));
 
                 textWriter.WriteEndElement();

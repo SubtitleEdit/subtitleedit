@@ -22697,39 +22697,59 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _updateShowEarlier;
         private object _updateShowEarlierLock = new object();
 
+        string _lastTranslationDebugError = string.Empty;
         private void _timerSlow_Tick(object sender, EventArgs e)
         {
             _timerSlow.Stop();
 
-            //if (_subtitle?.Paragraphs.Count == _subtitleOriginal?.Paragraphs.Count)
-            //{
-            //    bool ok = true;
-            //    for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
-            //    {
-            //        var p = _subtitle.Paragraphs[0];
-            //        var o = _subtitleOriginal.Paragraphs[0];
-            //        if (Math.Abs(p.StartTime.TotalMilliseconds - o.StartTime.TotalMilliseconds) > 0.001)
-            //        {
-            //            tabControlModes.TabPages[0].Text = "Sync start error at: " + i;
-            //            ok = false;
-            //            ShowStatus("Sync start time error at: " + i, true, 0, true);
-            //            break;
-            //        }
-            //        if (Math.Abs(p.EndTime.TotalMilliseconds - o.EndTime.TotalMilliseconds) > 0.001)
-            //        {
-            //            tabControlModes.TabPages[0].Text = "Sync end error at: " + i;
-            //            ok = false;
-            //            ShowStatus("Sync end time error at: " + i, true, 0, true);
-            //            break;
-            //        }
-            //    }
+            if (Configuration.Settings.General.DebugTranslationSync)
+            {
+                if (_subtitle?.Paragraphs.Count == _subtitleOriginal?.Paragraphs.Count)
+                {
+                    bool ok = true;
+                    for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+                    {
+                        var error = string.Empty;
+                        var p = _subtitle.Paragraphs[i];
+                        var o = _subtitleOriginal.Paragraphs[i];
+                        if (Math.Abs(p.StartTime.TotalMilliseconds - o.StartTime.TotalMilliseconds) > 0.001)
+                        {
+                            tabControlModes.TabPages[0].Text = "Sync start error at: " + i;
+                            ok = false;
+                            var errorMessage = "Sync start time error at: " + i;
+                            if (errorMessage != _lastTranslationDebugError)
+                            {
+                                ShowStatus(errorMessage, true, 0, true);
+                                _lastTranslationDebugError = errorMessage;
+                            }
 
-            //    if (ok)
-            //    {
-            //        tabControlModes.TabPages[0].Text = "OK";
-            //    }
-            //}
+                            break;
+                        }
+                        if (Math.Abs(p.EndTime.TotalMilliseconds - o.EndTime.TotalMilliseconds) > 0.001)
+                        {
+                            tabControlModes.TabPages[0].Text = "Sync end error at: " + i;
+                            ok = false;
+                            var errorMessage = "Sync end time error at: " + i;
+                            if (errorMessage != _lastTranslationDebugError)
+                            {
+                                ShowStatus(errorMessage, true, 0, true);
+                                _lastTranslationDebugError = errorMessage;
+                            }
 
+                            break;
+                        }
+                    }
+
+                    if (ok)
+                    {
+                        tabControlModes.TabPages[0].Text = "OK";
+                    }
+                }
+                else
+                {
+                    tabControlModes.TabPages[0].Text = "Count does not match";
+                }
+            }
 
             if (mediaPlayer.VideoPlayer != null && !mediaPlayer.IsDisposed)
             {
