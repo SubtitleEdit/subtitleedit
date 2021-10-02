@@ -1077,8 +1077,10 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
 
             var formatNames = GetSubtitleFormats();
+            listBoxSubtitleFormats.Items.Clear();
             listBoxSubtitleFormats.Items.AddRange(formatNames.ToArray<object>());
 
+            listBoxFavoriteSubtitleFormats.Items.Clear();
             if (!string.IsNullOrEmpty(Configuration.Settings.General.FavoriteSubtitleFormats))
             {
                 var favoriteFormats = Configuration.Settings.General.FavoriteSubtitleFormats.Split(';');
