@@ -45,6 +45,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate int MpvGetPropertyDouble(IntPtr mpvHandle, byte[] name, int format, ref double data);
+
         private MpvGetPropertyDouble _mpvGetPropertyDouble;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -324,6 +325,83 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 var isPaused = Marshal.PtrToStringAnsi(lpBuffer) == "yes";
                 _mpvFree(lpBuffer);
                 return isPaused;
+            }
+        }
+
+        public int VideoWidth
+        {
+            get
+            {
+                if (_mpvHandle == IntPtr.Zero)
+                {
+                    return 0;
+                }
+                int mpvFormatDouble = 5;
+                double d = 0;
+                _mpvGetPropertyDouble(_mpvHandle, GetUtf8Bytes("width"), mpvFormatDouble, ref d);
+                return (int)d;
+            }
+        }
+
+        public int VideoHeight
+        {
+            get
+            {
+                if (_mpvHandle == IntPtr.Zero)
+                {
+                    return 0;
+                }
+                int mpvFormatDouble = 5;
+                double d = 0;
+                _mpvGetPropertyDouble(_mpvHandle, GetUtf8Bytes("height"), mpvFormatDouble, ref d);
+                return (int)d;
+            }
+        }
+
+        public int VideoTotalFrames
+        {
+            get
+            {
+                if (_mpvHandle == IntPtr.Zero)
+                {
+                    return 0;
+                }
+                int mpvFormatDouble = 5;
+                double d = 0;
+                _mpvGetPropertyDouble(_mpvHandle, GetUtf8Bytes("estimated-frame-count"), mpvFormatDouble, ref d);
+                return (int)d;
+            }
+        }
+
+        public double VideoFps
+        {
+            get
+            {
+                if (_mpvHandle == IntPtr.Zero)
+                {
+                    return 0;
+                }
+                int mpvFormatDouble = 5;
+                double d = 0;
+                _mpvGetPropertyDouble(_mpvHandle, GetUtf8Bytes("container-fps"), mpvFormatDouble, ref d);
+                return d;
+            }
+        }
+
+        public string VideoCodec
+        {
+            get
+            {
+                if (_mpvHandle == IntPtr.Zero)
+                {
+                    return string.Empty;
+                }
+
+                var lpBuffer = IntPtr.Zero;
+                _mpvGetPropertyString(_mpvHandle, GetUtf8Bytes("video-codec"), MpvFormatString, ref lpBuffer);
+                var codec = Marshal.PtrToStringAnsi(lpBuffer);
+                _mpvFree(lpBuffer);
+                return codec;
             }
         }
 
@@ -759,6 +837,40 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
             _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("contrast"), GetUtf8Bytes(_contrast.ToString(CultureInfo.InvariantCulture)));
             return _contrast;
+        }
+
+        internal static VideoInfo GetVideoInfo(string fileName)
+        {
+            var info = new VideoInfo { Success = false };
+
+            try
+            {
+                var libmpv = new LibMpvDynamic();
+                libmpv.Initialize(null, fileName, null, null);
+
+                for (int i = 0; i < 10; i++)
+                {
+                    System.Threading.Thread.Sleep(10);
+                    Application.DoEvents();
+                }
+
+                info.Width = libmpv.VideoWidth;
+                info.Height = libmpv.VideoHeight;
+                info.TotalSeconds = libmpv.Duration;
+                info.TotalMilliseconds = info.TotalSeconds * 1000.0;
+                info.TotalFrames = libmpv.VideoTotalFrames;
+                info.VideoCodec = libmpv.VideoCodec;
+                info.FramesPerSecond = libmpv.VideoFps;
+                info.FileType = Path.GetExtension(fileName).TrimStart('.');
+                info.Success = true;
+                libmpv.HardDispose();
+            }
+            catch
+            {
+                // ignored
+            }
+
+            return info;
         }
     }
 }
