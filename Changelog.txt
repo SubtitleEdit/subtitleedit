@@ -4,6 +4,7 @@
 * NEW:
    * Auto set ASSA resolution - thx Leon
    * Icon for plugin "ASSA Draw" - thx Leon
+   * New sub format - thx Leon
 * IMPROVED:
    * Update Greek translation - thx PMitsakis
    * Update Chinese translation - thx nkh0472
@@ -21,6 +22,9 @@
    * Do not use ILRepack - to avoid anti-virus warnings
    * Add "Clear" key to list of shortcut keys - thx OmrSi
    * Refresh text in mpv when changing RTL mode
+   * Improve detect of video info - thx Janjens
+   * Improve read of PNS format - thx Milenko
+   * Improve split with ASSA tags - thx Leon
 * FIXED:
    * Fix tag style converting from/to ASSA - thx von Suppé
    * Fix "Title bar text" when translating - thx Andrebavila
@@ -33,6 +37,8 @@
    * Fix for PAC italic w missing space - thx Milenko
    * Fix switched total labels in RTL mode w original subtitle - thx OmrSi
    * Rollback max #lines enforce (now hidden setting) - thx pandalamp 
+   * Include favourite formats in "reset"
+   * Take first audio track when loading wave form - thx Tuan-P
 
 
 3.6.2 (24th August 2021)
