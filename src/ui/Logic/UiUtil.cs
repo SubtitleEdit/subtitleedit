@@ -47,12 +47,23 @@ namespace Nikse.SubtitleEdit.Logic
                 return info;
             }
 
+            info = TryReadVideoInfoViaLibMpv(fileName);
+            if (info.Success)
+            {
+                return info;
+            }
+
             return new VideoInfo { VideoCodec = "Unknown" };
         }
 
         private static VideoInfo TryReadVideoInfoViaDirectShow(string fileName)
         {
             return QuartsPlayer.GetVideoInfo(fileName);
+        }
+
+        private static VideoInfo TryReadVideoInfoViaLibMpv(string fileName)
+        {
+            return LibMpvDynamic.GetVideoInfo(fileName);
         }
 
         private static long _lastShowSubTicks = DateTime.UtcNow.Ticks;
