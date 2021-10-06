@@ -82,6 +82,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     subtitle.Paragraphs.Add(p);
                 }
             }
+
+            subtitle.RemoveEmptyLines();
             subtitle.Renumber();
         }
 
@@ -119,12 +121,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (buffer.Length > index + 15 + textLength)
                     {
                         var sb = new StringBuilder();
-                        var skipNext = false;
+                        var skipCount = 0;
                         for (int j = index + 16; j < index + 16 + textLength; j++)
                         {
-                            if (skipNext)
+                            if (skipCount > 0)
                             {
-                                skipNext = false;
+                                skipCount--;
                                 continue;
                             }
 
@@ -134,10 +136,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             {
                                 if (v == 1)
                                 {
-                                    skipNext = true;
+                                    skipCount = 1;
                                     continue;
                                 }
-                                if (v == 5)
+                                else if (v == 2)
+                                {
+                                    skipCount = 2;
+                                    continue;
+                                }
+                                else if (v == 5)
                                 {
                                     sb.Append("<i>");
                                 }
