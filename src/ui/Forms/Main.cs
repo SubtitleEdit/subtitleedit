@@ -16863,7 +16863,8 @@ namespace Nikse.SubtitleEdit.Forms
             var p = _subtitle.GetParagraphOrDefault(index - 1);
             if (p == null || p.StartTime.TotalMilliseconds < p.StartTime.TotalMilliseconds - 9000)
             {
-                SetStartTime(false, mediaPlayer.CurrentPosition);
+                MakeHistoryForUndoOnlyIfNotRecent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + p.Number + " " + p.Text));
+                SetStartTime(false, positionInSeconds);
                 return;
             }
 
@@ -16872,10 +16873,17 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            SetStartTime(false, mediaPlayer.CurrentPosition);
+            MakeHistoryForUndoOnlyIfNotRecent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + p.Number + " " + p.Text));
+            var oldCurrent = new Paragraph(current);
+            current.StartTime.TotalMilliseconds = positionInSeconds * 1_000.0;
+            UpdateOriginalTimeCodes(oldCurrent);
+            if (oldCurrent.EndTime.IsMaxTime)
+            {
+                current.EndTime.TotalMilliseconds = current.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(p.Text);
+                UpdateOriginalTimeCodes(oldCurrent);
+            }
 
             var oldParagraph = new Paragraph(p, false);
-            MakeHistoryForUndoOnlyIfNotRecent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + p.Number + " " + p.Text));
             p.EndTime.TotalMilliseconds = positionInSeconds * TimeCode.BaseUnit - MinGapBetweenLines;
             if (oldParagraph.StartTime.IsMaxTime)
             {
@@ -16886,10 +16894,10 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.SetStartTimeAndDuration(index - 1, p, current, _subtitle.GetParagraphOrDefault(index - 2));
             UpdateOriginalTimeCodes(oldParagraph);
             UpdateSourceView();
-
             var next = _subtitle.GetParagraphOrDefault(index - 1);
             if (goToNext && next != null)
             {
+                _subtitleListViewIndex = -1;
                 SubtitleListview1.SelectIndexAndEnsureVisible(index + 1, true);
             }
         }
