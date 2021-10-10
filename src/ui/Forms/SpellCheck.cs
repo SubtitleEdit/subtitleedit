@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SpellCheck;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.SpellCheck;
 using System;
@@ -25,7 +26,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
         public string ChangeWholeText => textBoxWholeText.Text;
         public bool AutoFixNames => checkBoxAutoChangeNames.Checked;
-
+        private SubtitleFormat _subtitleFormat;
         private SpellCheckWordLists _spellCheckWordLists;
         private List<string> _skipAllList = new List<string>();
         private HashSet<string> _skipOneList = new HashSet<string>();
@@ -84,11 +85,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public SpellCheck()
+        public SpellCheck(SubtitleFormat subtitleFormat)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
+            _subtitleFormat = subtitleFormat;
             labelActionInfo.Text = string.Empty;
             Text = LanguageSettings.Current.SpellCheck.Title;
             labelFullText.Text = LanguageSettings.Current.SpellCheck.FullText;
@@ -590,6 +592,11 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         // ignore short/empty words and special chars
                     }
+                    else if (IsBetweenActiveAssaTags(_words[_wordsIndex].Index, _currentParagraph, _subtitleFormat))
+
+                    {
+                        // ignore words between {} in ASSA/SSA
+                    }
                     else if (_spellCheckWordLists.HasName(_currentWord))
                     {
                         _noOfNames++;
@@ -884,6 +891,20 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+        }
+
+        private static bool IsBetweenActiveAssaTags(int currentIndex, Paragraph currentParagraph, SubtitleFormat subtitleFormat)
+        {
+            if (subtitleFormat.Name != AdvancedSubStationAlpha.NameOfFormat &&
+                subtitleFormat.Name != SubStationAlpha.NameOfFormat)
+            {
+                return false;
+            }
+
+            var s = currentParagraph.Text.Substring(0, currentIndex);
+            var lastIndexOfStart = s.LastIndexOf('{');
+            var lastIndexOfEnd = s.LastIndexOf('}');
+            return lastIndexOfStart > lastIndexOfEnd;
         }
 
         private bool DoAutoFixNames(string word, List<string> suggestions)
