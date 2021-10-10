@@ -16890,9 +16890,9 @@ namespace Nikse.SubtitleEdit.Forms
                 p.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds - Utilities.GetOptimalDisplayMilliseconds(p.Text);
             }
 
+            UpdateOriginalTimeCodes(oldParagraph);
             SubtitleListview1.SetStartTimeAndDuration(index, current, _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
             SubtitleListview1.SetStartTimeAndDuration(index - 1, p, current, _subtitle.GetParagraphOrDefault(index - 2));
-            UpdateOriginalTimeCodes(oldParagraph);
             UpdateSourceView();
             var next = _subtitle.GetParagraphOrDefault(index - 1);
             if (goToNext && next != null)
