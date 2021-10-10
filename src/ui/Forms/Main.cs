@@ -16863,7 +16863,6 @@ namespace Nikse.SubtitleEdit.Forms
             var p = _subtitle.GetParagraphOrDefault(index - 1);
             if (p == null || p.StartTime.TotalMilliseconds < p.StartTime.TotalMilliseconds - 9000)
             {
-                MakeHistoryForUndoOnlyIfNotRecent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + p.Number + " " + p.Text));
                 SetStartTime(false, positionInSeconds);
                 return;
             }
@@ -16899,6 +16898,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _subtitleListViewIndex = -1;
                 SubtitleListview1.SelectIndexAndEnsureVisible(index + 1, true);
+            }
+            else
+            {
+                p = _subtitle.GetParagraphOrDefault(index);
+                InitializeListViewEditBox(p);
             }
         }
 
