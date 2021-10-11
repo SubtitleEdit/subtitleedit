@@ -7029,6 +7029,19 @@ namespace Nikse.SubtitleEdit.Forms
             AdjustDisplayTime(false);
         }
 
+        private void RecalcCurrentDuration(bool onlyOptimal = false)
+        {
+            if (SubtitleListview1.SelectedItems.Count >= 1)
+            {
+                MakeHistoryForUndo(_language.BeforeDisplayTimeAdjustment);
+                _makeHistoryPaused = true;
+                var idx = SubtitleListview1.SelectedItems[0].Index;
+                _subtitle.RecalculateDisplayTime(Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds, idx, Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds, onlyOptimal: onlyOptimal);
+                SetDurationInSeconds(_subtitle.Paragraphs[idx].Duration.TotalSeconds);
+                _makeHistoryPaused = false;
+            }
+        }
+
         private void AdjustDisplayTime(bool onlySelectedLines)
         {
             if (!IsSubtitleLoaded)
@@ -16415,16 +16428,13 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_shortcuts.MainAutoCalcCurrentDuration == e.KeyData)
             {
+                RecalcCurrentDuration();
                 e.SuppressKeyPress = true;
-                if (SubtitleListview1.SelectedItems.Count >= 1)
-                {
-                    MakeHistoryForUndo(_language.BeforeDisplayTimeAdjustment);
-                    _makeHistoryPaused = true;
-                    var idx = SubtitleListview1.SelectedItems[0].Index;
-                    _subtitle.RecalculateDisplayTime(Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds, idx, Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds);
-                    SetDurationInSeconds(_subtitle.Paragraphs[idx].Duration.TotalSeconds);
-                    _makeHistoryPaused = false;
-                }
+            }
+            else if (_shortcuts.MainAutoCalcCurrentDurationByOptimalReadingSpeed == e.KeyData)
+            {
+                RecalcCurrentDuration(true);
+                e.SuppressKeyPress = true;
             }
             else if (e.KeyCode == Keys.F3 && e.Modifiers == Keys.Shift)
             {
