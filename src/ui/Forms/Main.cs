@@ -2181,7 +2181,7 @@ namespace Nikse.SubtitleEdit.Forms
                             openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
                             _fileName = saveFileDialog1.FileName;
                             SetTitle();
-                            Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
+                            Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs, Configuration.Settings.General.CurrentVideoIsSmpte);
                             Configuration.Settings.Save();
                         }
                         else
@@ -2542,10 +2542,11 @@ namespace Nikse.SubtitleEdit.Forms
             // save last first visible index + first selected index from listview
             if (_fileName != null && updateRecentFile)
             {
-                Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
+                Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs, Configuration.Settings.General.CurrentVideoIsSmpte);
             }
 
             Configuration.Settings.General.CurrentVideoOffsetInMs = 0;
+            Configuration.Settings.General.CurrentVideoIsSmpte = false;
 
             openFileDialog1.InitialDirectory = file.DirectoryName;
 
@@ -3412,6 +3413,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 _subtitleListViewIndex = -1;
                 Configuration.Settings.General.CurrentVideoOffsetInMs = 0;
+                Configuration.Settings.General.CurrentVideoIsSmpte = false;
 
                 if (_resetVideo && ModifierKeys != Keys.Shift)
                 {
@@ -3657,7 +3659,7 @@ namespace Nikse.SubtitleEdit.Forms
                     audioVisualizer.SceneChanges = new List<double>();
                     audioVisualizer.Chapters = new List<MatroskaChapter>();
 
-                    Configuration.Settings.RecentFiles.Add(fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
+                    Configuration.Settings.RecentFiles.Add(fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs, Configuration.Settings.General.CurrentVideoIsSmpte);
                     Configuration.Settings.Save();
                     UpdateRecentFilesUI();
                     _fileName = fileName;
@@ -4002,7 +4004,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (!string.IsNullOrEmpty(_fileName))
                 {
-                    Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
+                    Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs, Configuration.Settings.General.CurrentVideoIsSmpte);
                 }
 
                 RecentFileEntry rfe = null;
@@ -4071,6 +4073,12 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     SubtitleListview1.Fill(_subtitle);
                 }
+            }
+
+            Configuration.Settings.General.CurrentVideoIsSmpte = rfe.VideoIsSmpte;
+            if (rfe.VideoIsSmpte)
+            {
+                SmpteTimeModedropFrameToolStripMenuItem_Click(null, null);
             }
         }
 
@@ -4259,7 +4267,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                             Configuration.Settings.General.LastSaveAsFormat = format.Name;
                             SetCurrentFormat(format);
-                            Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
+                            Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs, Configuration.Settings.General.CurrentVideoIsSmpte);
                             Configuration.Settings.Save();
                             UpdateRecentFilesUI();
                             _changeSubtitleHash = GetFastSubtitleHash();
@@ -4301,7 +4309,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (ebu.Save(_fileName, sub, !_saveAsCalled, header))
                         {
                             _changeSubtitleHash = GetFastSubtitleHash();
-                            Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
+                            Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs, Configuration.Settings.General.CurrentVideoIsSmpte);
                             Configuration.Settings.Save();
                         }
                     }
@@ -4477,7 +4485,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }, TimeSpan.FromSeconds(1), 4);
                 }
 
-                Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
+                Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs, Configuration.Settings.General.CurrentVideoIsSmpte);
                 Configuration.Settings.Save();
                 new BookmarkPersistence(_subtitle, _fileName).Save();
                 _fileDateTime = File.GetLastWriteTime(_fileName);
@@ -4529,7 +4537,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (ebu.Save(_subtitleOriginalFileName, subAlt))
                         {
-                            Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
+                            Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs, Configuration.Settings.General.CurrentVideoIsSmpte);
                             Configuration.Settings.Save();
                             ShowStatus(string.Format(_language.SavedOriginalSubtitleX, _subtitleOriginalFileName));
                             _changeOriginalSubtitleHash = GetFastSubtitleOriginalHash();
@@ -4655,6 +4663,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelDurationWarning.Text = string.Empty;
 
             Configuration.Settings.General.CurrentVideoOffsetInMs = 0;
+            Configuration.Settings.General.CurrentVideoIsSmpte = false;
+            smpteTimeModedropFrameToolStripMenuItem.Checked = false;
             _subtitle = new Subtitle(_subtitle.HistoryItems);
             _changeOriginalSubtitleHash = -1;
             _changeSubtitleHash = -1;
@@ -4778,7 +4788,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (Configuration.Settings.General.ShowRecentFiles)
                 {
-                    Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
+                    Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs, Configuration.Settings.General.CurrentVideoIsSmpte);
                 }
 
                 MakeHistoryForUndo(_language.BeforeNew);
@@ -12142,7 +12152,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (!string.IsNullOrEmpty(_fileName))
                 {
-                    Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
+                    Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs, Configuration.Settings.General.CurrentVideoIsSmpte);
                 }
                 else if (Configuration.Settings.RecentFiles.Files.Count > 0)
                 {
@@ -20180,7 +20190,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
                 RestoreSubtitleListviewIndices();
 
-                Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
+                Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs, Configuration.Settings.General.CurrentVideoIsSmpte);
                 Configuration.Settings.Save();
                 UpdateRecentFilesUI();
                 MainResize();
@@ -26333,7 +26343,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SetTitle();
                 if (_fileName != null)
                 {
-                    Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
+                    Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs, Configuration.Settings.General.CurrentVideoIsSmpte);
                 }
             }
         }
@@ -26375,7 +26385,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (_fileName != null && updateRecentFiles)
                 {
-                    Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
+                    Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs, Configuration.Settings.General.CurrentVideoIsSmpte);
                     Configuration.Settings.Save();
                     UpdateRecentFilesUI();
                 }
@@ -30520,6 +30530,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             smpteTimeModedropFrameToolStripMenuItem.Checked = !smpteTimeModedropFrameToolStripMenuItem.Checked;
             mediaPlayer.SmpteMode = smpteTimeModedropFrameToolStripMenuItem.Checked;
+            Configuration.Settings.General.CurrentVideoIsSmpte = smpteTimeModedropFrameToolStripMenuItem.Checked;
             if (audioVisualizer.WavePeaks != null)
             {
                 ReloadWaveform(VideoFileName, VideoAudioTrackNumber);
