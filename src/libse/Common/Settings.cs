@@ -22,6 +22,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public int FirstVisibleIndex { get; set; }
         public int FirstSelectedIndex { get; set; }
         public long VideoOffsetInMs { get; set; }
+        public bool VideoIsSmpte { get; set; }
     }
 
     public class RecentFilesSettings
@@ -36,7 +37,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             Files = new List<RecentFileEntry>();
         }
 
-        public void Add(string fileName, int firstVisibleIndex, int firstSelectedIndex, string videoFileName, string originalFileName, long videoOffset)
+        public void Add(string fileName, int firstVisibleIndex, int firstSelectedIndex, string videoFileName, string originalFileName, long videoOffset, bool isSmpte)
         {
             Files = Files.Where(p => !string.IsNullOrEmpty(p.FileName)).ToList();
 
@@ -61,10 +62,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 Files.Remove(existingEntry);
                 existingEntry.FirstSelectedIndex = firstSelectedIndex;
-                existingEntry.VideoOffsetInMs = videoOffset;
                 existingEntry.FirstVisibleIndex = firstVisibleIndex;
                 existingEntry.VideoFileName = videoFileName;
                 existingEntry.OriginalFileName = originalFileName;
+                existingEntry.VideoOffsetInMs = videoOffset;
+                existingEntry.VideoIsSmpte = isSmpte;
                 Files.Insert(0, existingEntry);
             }
             Files = Files.Take(MaxRecentFiles).ToList();
@@ -1256,6 +1258,7 @@ $HorzAlign          =   Center
         public bool ShowNegativeDurationInfoOnSave { get; set; }
         public bool ShowFormatRequiresUtf8Warning { get; set; }
         public long CurrentVideoOffsetInMs { get; set; }
+        public bool CurrentVideoIsSmpte { get; set; }
         public string TitleBarAsterisk { get; set; } // Show asteriks "before" or "after" file name (any other value will hide asteriks)
         public bool TitleBarFullFileName { get; set; } // Show full file name with path or just file name
         public bool MeasurementConverterCloseOnInsert { get; set; }
@@ -2704,7 +2707,13 @@ $HorzAlign          =   Center
                     long.TryParse(listNode.Attributes["VideoOffset"].Value, out videoOffset);
                 }
 
-                settings.RecentFiles.Files.Add(new RecentFileEntry { FileName = listNode.InnerText, FirstVisibleIndex = int.Parse(firstVisibleIndex, CultureInfo.InvariantCulture), FirstSelectedIndex = int.Parse(firstSelectedIndex, CultureInfo.InvariantCulture), VideoFileName = videoFileName, OriginalFileName = originalFileName, VideoOffsetInMs = videoOffset });
+                bool isSmpte = false;
+                if (listNode.Attributes["IsSmpte"] != null)
+                {
+                    bool.TryParse(listNode.Attributes["IsSmpte"].Value, out isSmpte);
+                }
+
+                settings.RecentFiles.Files.Add(new RecentFileEntry { FileName = listNode.InnerText, FirstVisibleIndex = int.Parse(firstVisibleIndex, CultureInfo.InvariantCulture), FirstSelectedIndex = int.Parse(firstSelectedIndex, CultureInfo.InvariantCulture), VideoFileName = videoFileName, OriginalFileName = originalFileName, VideoOffsetInMs = videoOffset, VideoIsSmpte = isSmpte });
             }
 
             // General
@@ -8634,9 +8643,15 @@ $HorzAlign          =   Center
 
                     textWriter.WriteAttributeString("FirstVisibleIndex", item.FirstVisibleIndex.ToString(CultureInfo.InvariantCulture));
                     textWriter.WriteAttributeString("FirstSelectedIndex", item.FirstSelectedIndex.ToString(CultureInfo.InvariantCulture));
+
                     if (item.VideoOffsetInMs != 0)
                     {
                         textWriter.WriteAttributeString("VideoOffset", item.VideoOffsetInMs.ToString(CultureInfo.InvariantCulture));
+                    }
+
+                    if (item.VideoIsSmpte)
+                    {
+                        textWriter.WriteAttributeString("VideoIsSmpte", item.VideoIsSmpte.ToString(CultureInfo.InvariantCulture));
                     }
 
                     textWriter.WriteString(item.FileName);
