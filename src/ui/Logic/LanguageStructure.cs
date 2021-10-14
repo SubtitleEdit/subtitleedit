@@ -2490,6 +2490,7 @@
             public string AdjustExtendPreviousLineEndToCurrentStart { get; set; }
             public string AdjustExtendNextLineStartToCurrentEnd { get; set; }
             public string RecalculateDurationOfCurrentSubtitle { get; set; }
+            public string RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed { get; set; }
             public string MainCreateStartDownEndUp { get; set; }
             public string MergeDialog { get; set; }
             public string GoToNext { get; set; }
