@@ -1708,6 +1708,10 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
 
         public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
         {
+            var paragraphs = subtitle.Paragraphs.Where(p => !p.IsComment).Select(p=> new Paragraph(p)).ToList();
+            subtitle.Paragraphs.Clear();
+            subtitle.Paragraphs.AddRange(paragraphs);
+
             if (newFormat != null && newFormat.Name == SubStationAlpha.NameOfFormat)
             {
                 foreach (var p in subtitle.Paragraphs)
