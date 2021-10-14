@@ -20420,6 +20420,11 @@ namespace Nikse.SubtitleEdit.Forms
                     audioVisualizer.SceneChanges = SceneChangeHelper.FromDisk(VideoFileName);
                     SetWaveformPosition(0, 0, 0);
                     timerWaveform.Start();
+
+                    if (smpteTimeModedropFrameToolStripMenuItem.Checked)
+                    {
+                        audioVisualizer.UseSmpteDropFrameTime();
+                    }
                 }
                 else if (audioVisualizer.WavePeaks != null)
                 {
