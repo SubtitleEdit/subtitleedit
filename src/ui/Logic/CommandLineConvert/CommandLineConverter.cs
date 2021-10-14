@@ -154,6 +154,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 _stdOutWriter.WriteLine("        /" + BatchAction.RemoveFormatting);
                 _stdOutWriter.WriteLine("        /" + BatchAction.RemoveTextForHI);
                 _stdOutWriter.WriteLine("        /" + BatchAction.RedoCasing);
+                _stdOutWriter.WriteLine("        /" + BatchAction.BalanceLines);
                 _stdOutWriter.WriteLine();
                 _stdOutWriter.WriteLine("    Example: SubtitleEdit /convert *.srt sami");
                 _stdOutWriter.WriteLine("    Show this usage message: SubtitleEdit /help");
@@ -1943,6 +1944,21 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                             foreach (var p in sub.Paragraphs)
                             {
                                 p.Text = Utilities.RemoveLineBreaks(p.Text);
+                            }
+
+                            break;
+                        case BatchAction.BalanceLines:
+                            try
+                            {
+                                var l = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(sub);
+                                foreach (var p in sub.Paragraphs)
+                                {
+                                    p.Text = Utilities.AutoBreakLine(p.Text, l ?? "en");
+                                }
+                            }
+                            catch
+                            {
+                                // ignore
                             }
 
                             break;
