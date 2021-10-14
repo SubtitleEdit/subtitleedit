@@ -5,6 +5,7 @@
    * Auto set ASSA resolution - thx Leon
    * Icon for plugin "ASSA Draw" - thx Leon
    * New sub format - thx Leon
+   * Save SMPTE video time code mode for recent files - thx OmrSi
 * IMPROVED:
    * Update Greek translation - thx PMitsakis
    * Update Chinese translation - thx nkh0472
@@ -25,6 +26,8 @@
    * Improve detect of video info - thx Janjens
    * Improve read of PNS format - thx Milenko
    * Improve split with ASSA tags - thx Leon
+   * Improve drag'n'drop to list view with istm format - thx Zivko
+   * Ignore text between {} when spell checking ASSA/SSA - thx Omair
 * FIXED:
    * Fix tag style converting from/to ASSA - thx von Suppé
    * Fix "Title bar text" when translating - thx Andrebavila
@@ -40,6 +43,7 @@
    * Include favourite formats in "reset"
    * Take first audio track when loading wave form - thx Tuan-P
    * Fix issue with waveform original out of sync - thx Leon
+   * Fix " Set start and set end of prev" when playing - thx Leon
 
 
 3.6.2 (24th August 2021)
