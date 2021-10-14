@@ -463,6 +463,17 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     return true;
                 }
+
+                if ((l0.TrimStart().StartsWith(GetDashChar()) || l0.TrimStart().StartsWith(GetAlternateDashChar())) &&
+                    l0.EndsWith("--", StringComparison.Ordinal) && !l0.EndsWith("---", StringComparison.Ordinal) &&
+                    (l1.TrimStart().StartsWith(GetDashChar()) || l1.TrimStart().StartsWith(GetAlternateDashChar())))
+                {
+                    var trimmed = l0.TrimEnd('-').TrimEnd();
+                    if (trimmed.Length > 0 && char.IsLetterOrDigit(trimmed[trimmed.Length - 1]))
+                    {
+                        return true;
+                    }
+                }
             }
 
             if (lines.Count == 3)
