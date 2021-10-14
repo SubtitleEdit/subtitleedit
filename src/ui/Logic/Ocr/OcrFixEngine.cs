@@ -1522,7 +1522,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             .All(w => w.Length > 2 && (DoSpell(w) || IsWordKnownOrNumber(word, line)));
                     }
 
-                    if (!correct && word.Length == 1 && i < words.Count - 1 && words[i + 1].Length == 1)
+                    if (word.Length == 1 && i < words.Count - 1 && words[i + 1].Length == 1)
                     {
                         var abbreviation = word + "." + words[i + 1] + ".";
                         if (_abbreviationList.Contains(abbreviation) && line.Contains(abbreviation, StringComparison.Ordinal))
