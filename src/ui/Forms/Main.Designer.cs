@@ -5345,7 +5345,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.mediaPlayer.ShowMuteButton = true;
             this.mediaPlayer.ShowStopButton = true;
             this.mediaPlayer.Size = new System.Drawing.Size(219, 246);
-            this.mediaPlayer.SmpteMode = false;
             this.mediaPlayer.SubtitleText = "";
             this.mediaPlayer.TabIndex = 5;
             this.mediaPlayer.TextRightToLeft = System.Windows.Forms.RightToLeft.No;

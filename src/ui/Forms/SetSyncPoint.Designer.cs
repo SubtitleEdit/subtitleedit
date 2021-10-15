@@ -261,7 +261,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.videoPlayerContainer1.ShowMuteButton = true;
             this.videoPlayerContainer1.ShowStopButton = true;
             this.videoPlayerContainer1.Size = new System.Drawing.Size(779, 263);
-            this.videoPlayerContainer1.SmpteMode = false;
             this.videoPlayerContainer1.SubtitleText = "";
             this.videoPlayerContainer1.TabIndex = 13;
             this.videoPlayerContainer1.TextRightToLeft = System.Windows.Forms.RightToLeft.No;
