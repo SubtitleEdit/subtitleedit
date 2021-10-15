@@ -201,7 +201,6 @@ namespace Nikse.SubtitleEdit.Controls
         public VideoPlayerContainer()
         {
             _chapters = new List<MatroskaChapter>();
-            SmpteMode = false;
             FontSizeFactor = 1.0F;
             BorderStyle = BorderStyle.None;
             _resources = new System.ComponentModel.ComponentResourceManager(typeof(VideoPlayerContainer));
@@ -1856,7 +1855,7 @@ namespace Nikse.SubtitleEdit.Controls
         /// See https://blog.frame.io/2017/07/17/timecode-and-frame-rates/ and
         ///     https://backlothelp.netflix.com/hc/en-us/articles/215131928-How-do-I-know-whether-to-select-SMPTE-or-MEDIA-for-a-timing-reference-
         /// </summary>
-        public bool SmpteMode { get; set; }
+        public bool SmpteMode => Configuration.Settings.General.CurrentVideoIsSmpte;
 
         public void RefreshProgressBar()
         {
@@ -2132,7 +2131,6 @@ namespace Nikse.SubtitleEdit.Controls
             DeleteTempMpvFileName();
             base.Dispose(disposing);
             _retryCount = 3;
-            SmpteMode = false;
         }
 
         public void PauseAndDisposePlayer()
@@ -2156,7 +2154,6 @@ namespace Nikse.SubtitleEdit.Controls
 
             DeleteTempMpvFileName();
             _retryCount = 3;
-            SmpteMode = false;
             RefreshProgressBar();
         }
 

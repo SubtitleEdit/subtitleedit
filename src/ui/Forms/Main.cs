@@ -4075,10 +4075,16 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            Configuration.Settings.General.CurrentVideoIsSmpte = rfe.VideoIsSmpte;
             if (rfe.VideoIsSmpte)
             {
-                SmpteTimeModedropFrameToolStripMenuItem_Click(null, null);
+                if (!smpteTimeModedropFrameToolStripMenuItem.Checked)
+                {
+                    SmpteTimeModedropFrameToolStripMenuItem_Click(null, null);
+                }
+                else
+                {
+                    Configuration.Settings.General.CurrentVideoIsSmpte = true;
+                }
             }
         }
 
@@ -20420,6 +20426,11 @@ namespace Nikse.SubtitleEdit.Forms
                     audioVisualizer.SceneChanges = SceneChangeHelper.FromDisk(VideoFileName);
                     SetWaveformPosition(0, 0, 0);
                     timerWaveform.Start();
+
+                    if (smpteTimeModedropFrameToolStripMenuItem.Checked)
+                    {
+                        audioVisualizer.UseSmpteDropFrameTime();
+                    }
                 }
                 else if (audioVisualizer.WavePeaks != null)
                 {
@@ -25985,7 +25996,7 @@ namespace Nikse.SubtitleEdit.Forms
                     setVideoOffsetToolStripMenuItem.Text = _language.Menu.Video.SetVideoOffset;
                 }
 
-                smpteTimeModedropFrameToolStripMenuItem.Checked = mediaPlayer.SmpteMode;
+                smpteTimeModedropFrameToolStripMenuItem.Checked = Configuration.Settings.General.CurrentVideoIsSmpte;
             }
 
             toolStripMenuItemOpenVideoFromUrl.Enabled = Configuration.Settings.General.VideoPlayer.Trim().Equals("MPV", StringComparison.OrdinalIgnoreCase) &&
@@ -30539,7 +30550,6 @@ namespace Nikse.SubtitleEdit.Forms
         private void SmpteTimeModedropFrameToolStripMenuItem_Click(object sender, EventArgs e)
         {
             smpteTimeModedropFrameToolStripMenuItem.Checked = !smpteTimeModedropFrameToolStripMenuItem.Checked;
-            mediaPlayer.SmpteMode = smpteTimeModedropFrameToolStripMenuItem.Checked;
             Configuration.Settings.General.CurrentVideoIsSmpte = smpteTimeModedropFrameToolStripMenuItem.Checked;
             if (audioVisualizer.WavePeaks != null)
             {

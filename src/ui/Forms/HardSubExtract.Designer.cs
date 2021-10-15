@@ -358,7 +358,6 @@
             this.mediaPlayer.ShowMuteButton = true;
             this.mediaPlayer.ShowStopButton = true;
             this.mediaPlayer.Size = new System.Drawing.Size(503, 247);
-            this.mediaPlayer.SmpteMode = false;
             this.mediaPlayer.SubtitleText = "";
             this.mediaPlayer.TabIndex = 23;
             this.mediaPlayer.TextRightToLeft = System.Windows.Forms.RightToLeft.No;
