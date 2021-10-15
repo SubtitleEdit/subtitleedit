@@ -117,7 +117,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.MediaPlayerStart.ShowMuteButton = true;
             this.MediaPlayerStart.ShowStopButton = true;
             this.MediaPlayerStart.Size = new System.Drawing.Size(450, 287);
-            this.MediaPlayerStart.SmpteMode = false;
             this.MediaPlayerStart.SubtitleText = "";
             this.MediaPlayerStart.TabIndex = 13;
             this.MediaPlayerStart.TextRightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -225,7 +224,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.MediaPlayerEnd.ShowMuteButton = true;
             this.MediaPlayerEnd.ShowStopButton = true;
             this.MediaPlayerEnd.Size = new System.Drawing.Size(438, 287);
-            this.MediaPlayerEnd.SmpteMode = false;
             this.MediaPlayerEnd.SubtitleText = "";
             this.MediaPlayerEnd.TabIndex = 14;
             this.MediaPlayerEnd.TextRightToLeft = System.Windows.Forms.RightToLeft.No;
