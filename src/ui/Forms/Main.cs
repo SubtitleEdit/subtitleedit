@@ -5044,6 +5044,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var oldFormat = _currentSubtitleFormat;
                 _currentSubtitleFormat = newFormat;
                 MakeFormatChange(newFormat, oldFormat);
+                _converted = _currentSubtitleFormat != null;
             }
         }
 
@@ -30398,6 +30399,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 toolStripButtonAssStyleManager.Visible = true;
                 toolStripButtonAssProperties.Visible = true;
+                toolStripButtonAssAttachments.Visible = true;
             }
         }
 
