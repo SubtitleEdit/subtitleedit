@@ -370,7 +370,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public Paragraph LastParagraph { get; set; }
 
-        public void SetSubtitleText(string text, Paragraph p, Subtitle subtitle)
+        public void SetSubtitleText(string text, Paragraph p, Subtitle subtitle, SubtitleFormat format)
         {
             var mpv = VideoPlayer as LibMpvDynamic;
             LastParagraph = p;
@@ -382,7 +382,7 @@ namespace Nikse.SubtitleEdit.Controls
                     VideoPlayerContainerResize(null, null);
                 }
                 _subtitleText = text;
-                RefreshMpv(mpv, subtitle);
+                RefreshMpv(mpv, subtitle, format);
                 if (TextBox.Text.Length > 0)
                 {
                     TextBox.Text = string.Empty;
@@ -441,7 +441,7 @@ namespace Nikse.SubtitleEdit.Controls
         private int _mpvSubOldHash = -1;
         private string _mpvTextFileName;
         private int _retryCount = 3;
-        private void RefreshMpv(LibMpvDynamic mpv, Subtitle subtitle)
+        private void RefreshMpv(LibMpvDynamic mpv, Subtitle subtitle, SubtitleFormat uiFormat)
         {
             if (subtitle == null)
             {
@@ -469,7 +469,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 else
                 {
-                    if (subtitle.Header == null || !subtitle.Header.Contains("[V4+ Styles]"))
+                    if (subtitle.Header == null || !subtitle.Header.Contains("[V4+ Styles]") || uiFormat.Name != AdvancedSubStationAlpha.NameOfFormat)
                     {
                         if (subtitle.Header != null && subtitle.Header.Contains("[V4 Styles]"))
                         {

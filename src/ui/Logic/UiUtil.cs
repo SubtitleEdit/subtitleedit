@@ -69,7 +69,7 @@ namespace Nikse.SubtitleEdit.Logic
         private static long _lastShowSubTicks = DateTime.UtcNow.Ticks;
         private static int _lastShowSubHash;
 
-        public static int ShowSubtitle(Subtitle subtitle, VideoPlayerContainer videoPlayerContainer)
+        public static int ShowSubtitle(Subtitle subtitle, VideoPlayerContainer videoPlayerContainer, SubtitleFormat format)
         {
             if (videoPlayerContainer.VideoPlayer == null)
             {
@@ -89,13 +89,13 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         if (videoPlayerContainer.LastParagraph != p)
                         {
-                            videoPlayerContainer.SetSubtitleText(text, p, subtitle);
+                            videoPlayerContainer.SetSubtitleText(text, p, subtitle, format);
                         }
                         else if (videoPlayerContainer.SubtitleText != text)
                         {
-                            videoPlayerContainer.SetSubtitleText(text, p, subtitle);
+                            videoPlayerContainer.SetSubtitleText(text, p, subtitle, format);
                         }
-                        TimeOutRefresh(subtitle, videoPlayerContainer, p);
+                        TimeOutRefresh(subtitle, videoPlayerContainer, format, p);
                         return i;
                     }
                 }
@@ -103,23 +103,23 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (!string.IsNullOrEmpty(videoPlayerContainer.SubtitleText))
             {
-                videoPlayerContainer.SetSubtitleText(string.Empty, null, subtitle);
+                videoPlayerContainer.SetSubtitleText(string.Empty, null, subtitle, format);
             }
             else
             {
-                TimeOutRefresh(subtitle, videoPlayerContainer);
+                TimeOutRefresh(subtitle, videoPlayerContainer, format);
             }
             return -1;
         }
 
-        private static void TimeOutRefresh(Subtitle subtitle, VideoPlayerContainer videoPlayerContainer, Paragraph p = null)
+        private static void TimeOutRefresh(Subtitle subtitle, VideoPlayerContainer videoPlayerContainer, SubtitleFormat format, Paragraph p = null)
         {
             if (DateTime.UtcNow.Ticks - _lastShowSubTicks > 10000 * 1000) // more than 1+ seconds ago
             {
                 var newHash = subtitle.GetFastHashCode(string.Empty);
                 if (newHash != _lastShowSubHash)
                 {
-                    videoPlayerContainer.SetSubtitleText(p == null ? string.Empty : p.Text, p, subtitle);
+                    videoPlayerContainer.SetSubtitleText(p == null ? string.Empty : p.Text, p, subtitle, format);
                     _lastShowSubHash = newHash;
                 }
 
@@ -127,7 +127,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        public static int ShowSubtitle(Subtitle subtitle, Subtitle original, VideoPlayerContainer videoPlayerContainer)
+        public static int ShowSubtitle(Subtitle subtitle, Subtitle original, VideoPlayerContainer videoPlayerContainer, SubtitleFormat format)
         {
             if (videoPlayerContainer.VideoPlayer == null)
             {
@@ -153,7 +153,7 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         if (videoPlayerContainer.LastParagraph != p || videoPlayerContainer.SubtitleText != text)
                         {
-                            videoPlayerContainer.SetSubtitleText(text, p, subtitle);
+                            videoPlayerContainer.SetSubtitleText(text, p, subtitle, format);
                         }
                         return i;
                     }
@@ -161,7 +161,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
             if (!string.IsNullOrEmpty(videoPlayerContainer.SubtitleText))
             {
-                videoPlayerContainer.SetSubtitleText(string.Empty, null, subtitle);
+                videoPlayerContainer.SetSubtitleText(string.Empty, null, subtitle, format);
             }
             return -1;
         }

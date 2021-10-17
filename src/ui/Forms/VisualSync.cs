@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
@@ -253,7 +254,7 @@ namespace Nikse.SubtitleEdit.Forms
                         MediaPlayerStart.CurrentPosition = _startGoBackPosition;
                         _startStopPosition = -1;
                     }
-                    UiUtil.ShowSubtitle(new Subtitle(_paragraphs), MediaPlayerStart);
+                    UiUtil.ShowSubtitle(new Subtitle(_paragraphs), MediaPlayerStart, new SubRip());
                 }
                 if (!MediaPlayerEnd.IsPaused)
                 {
@@ -264,7 +265,7 @@ namespace Nikse.SubtitleEdit.Forms
                         MediaPlayerEnd.CurrentPosition = _endGoBackPosition;
                         _endStopPosition = -1;
                     }
-                    UiUtil.ShowSubtitle(new Subtitle(_paragraphs), MediaPlayerEnd);
+                    UiUtil.ShowSubtitle(new Subtitle(_paragraphs), MediaPlayerEnd, new SubRip());
                 }
             }
         }
@@ -508,7 +509,7 @@ namespace Nikse.SubtitleEdit.Forms
                 mediaPlayer.CurrentPosition = 0;
             }
 
-            UiUtil.ShowSubtitle(new Subtitle(_paragraphs), mediaPlayer);
+            UiUtil.ShowSubtitle(new Subtitle(_paragraphs), mediaPlayer, new SubRip());
         }
 
         private void ButtonStartHalfASecondBackClick(object sender, EventArgs e)
