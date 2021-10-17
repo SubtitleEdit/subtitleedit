@@ -668,13 +668,14 @@ Dialogue: -255,0:00:00.00,0:43:00.00,SE-progress-bar-bg,,0,0,0,,[PB_DRAWING]";
                 }
             }
 
-            textBoxSource.Text = new AdvancedSubStationAlpha().ToText(_progessBarSubtitle, string.Empty);
+            var format = new AdvancedSubStationAlpha();
+            textBoxSource.Text = format.ToText(_progessBarSubtitle, string.Empty);
 
 
             var hashValue = _progessBarSubtitle.GetFastHashCode(string.Empty);
             if (hashValue != _oldHashValue)
             {
-                _videoPlayerContainer.SetSubtitleText(string.Empty, new Paragraph(), _progessBarSubtitle);
+                _videoPlayerContainer.SetSubtitleText(string.Empty, new Paragraph(), _progessBarSubtitle, format);
                 _oldHashValue = hashValue;
             }
 

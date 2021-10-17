@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
@@ -206,7 +207,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 if (Math.Abs(pos - _lastPosition) > 0.01)
                 {
-                    UiUtil.ShowSubtitle(_subtitle, videoPlayerContainer1);
+                    UiUtil.ShowSubtitle(_subtitle, videoPlayerContainer1, new SubRip());
                     timeUpDownLine.TimeCode = TimeCode.FromSeconds(pos);
                     _lastPosition = pos;
                 }
