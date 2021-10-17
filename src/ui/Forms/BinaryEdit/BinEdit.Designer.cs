@@ -888,7 +888,6 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.videoPlayerContainer1.ShowMuteButton = true;
             this.videoPlayerContainer1.ShowStopButton = true;
             this.videoPlayerContainer1.Size = new System.Drawing.Size(584, 333);
-            this.videoPlayerContainer1.SmpteMode = false;
             this.videoPlayerContainer1.SubtitleText = "";
             this.videoPlayerContainer1.TabIndex = 16;
             this.videoPlayerContainer1.TextRightToLeft = System.Windows.Forms.RightToLeft.No;
