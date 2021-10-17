@@ -15,6 +15,7 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly bool _isSubStationAlpha;
         private readonly string _videoFileName;
         private readonly VideoInfo _currentVideoInfo;
+        private int _height;
 
         public SubStationAlphaProperties(Subtitle subtitle, SubtitleFormat format, string videoFileName, VideoInfo currentVideoInfo, string subtitleFileName)
         {
@@ -27,13 +28,14 @@ namespace Nikse.SubtitleEdit.Forms
             _currentVideoInfo = currentVideoInfo;
 
             var l = LanguageSettings.Current.SubStationAlphaProperties;
+            _height = 500;
             if (_isSubStationAlpha)
             {
                 Text = l.TitleSubstationAlpha;
                 labelWrapStyle.Visible = false;
                 comboBoxWrapStyle.Visible = false;
                 checkBoxScaleBorderAndShadow.Visible = false;
-                Height = Height - (comboBoxWrapStyle.Height + checkBoxScaleBorderAndShadow.Height + 8);
+                _height -= (comboBoxWrapStyle.Height + checkBoxScaleBorderAndShadow.Height + 8);
             }
             else
             {
@@ -162,6 +164,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixLargeFonts(this, buttonCancel);
 
             buttonGetResolutionFromCurrentVideo.Enabled = !string.IsNullOrEmpty(videoFileName);
+            Height = _height;
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -318,6 +321,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             numericUpDownVideoWidth.Value = _currentVideoInfo.Width;
             numericUpDownVideoHeight.Value = _currentVideoInfo.Height;
+        }
+
+        private void SubStationAlphaProperties_Shown(object sender, EventArgs e)
+        {
+            Height = _height;
         }
     }
 }
