@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 var s = line.Trim();
                 if (attachmentOn)
                 {
-                    if (s == "[V4+ Styles]" || s == "[Events]")
+                    if (s == "[V4+ Styles]" || s == "[V4 Styles]" || s == "[Events]")
                     {
                         AddToListIfNotEmpty(attachmentContent.ToString(), attachmentFileName, attachments, category);
                         attachmentOn = false;
@@ -347,8 +347,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             if (skipCount > 0)
             {
                 MessageBox.Show(string.Format(LanguageSettings.Current.AssaAttachments.FilesSkippedX, skipCount + Environment.NewLine +
-                                                Environment.NewLine +
-                                                string.Join(Environment.NewLine, skipFiles)));
+                                              Environment.NewLine +
+                                              string.Join(Environment.NewLine, skipFiles)));
             }
         }
 
@@ -356,7 +356,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             openFileDialog1.Title = LanguageSettings.Current.Main.Menu.File.Open.RemoveChar('&');
             openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = AdvancedSubStationAlpha.NameOfFormat + " |*.ass";
+            openFileDialog1.Filter = AdvancedSubStationAlpha.NameOfFormat + "|*.ass;" + SubStationAlpha.NameOfFormat + "|*.ssa;";
             openFileDialog1.FilterIndex = 0;
             openFileDialog1.Multiselect = false;
             var result = openFileDialog1.ShowDialog(this);
@@ -396,8 +396,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             if (skipCount > 0)
             {
                 MessageBox.Show(string.Format(LanguageSettings.Current.AssaAttachments.FilesSkippedX, skipCount + Environment.NewLine +
-                              Environment.NewLine +
-                              string.Join(Environment.NewLine, skipFiles)));
+                                Environment.NewLine +
+                                string.Join(Environment.NewLine, skipFiles)));
             }
 
         }
