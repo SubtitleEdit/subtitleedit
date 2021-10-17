@@ -126,7 +126,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
             };
             _process = Process.Start(_startInfo);
             _process?.WaitForInputIdle();
-           
+
             _positionTimer = new Timer { Interval = 100 };
             _positionTimer.Tick += PositionTimerTick;
         }
@@ -134,7 +134,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
         private void PositionTimerTick(object sender, EventArgs e)
         {
             SendMpcMessage(MpcHcCommand.GetCurrentPosition);
-            Pause();
         }
 
         private void OnCopyData(object sender, EventArgs e)
