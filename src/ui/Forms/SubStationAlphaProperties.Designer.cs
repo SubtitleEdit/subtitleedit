@@ -416,6 +416,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Sub Station Alpha properties";
+            this.Shown += new System.EventHandler(this.SubStationAlphaProperties_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SubStationAlphaProperties_KeyDown);
             this.groupBoxScript.ResumeLayout(false);
             this.groupBoxScript.PerformLayout();

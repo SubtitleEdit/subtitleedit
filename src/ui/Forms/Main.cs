@@ -22236,7 +22236,7 @@ namespace Nikse.SubtitleEdit.Forms
             var ft = format.GetType();
             if (ft == typeof(AdvancedSubStationAlpha))
             {
-                toolStripMenuItemFileFormatProperties.Text = string.Format(_language.Menu.File.FormatXProperties, ft.Name);
+                toolStripMenuItemFileFormatProperties.Text = string.Format(_language.Menu.File.FormatXProperties, format.Name);
                 toolStripMenuItemFileFormatProperties.Visible = true;
 
                 toolStripMenuItemAssStyles.Visible = true;
@@ -22247,7 +22247,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (ft == typeof(SubStationAlpha))
             {
-                toolStripMenuItemFileFormatProperties.Text = string.Format(_language.Menu.File.FormatXProperties, ft.Name);
+                toolStripMenuItemFileFormatProperties.Text = string.Format(_language.Menu.File.FormatXProperties, format.Name);
                 toolStripMenuItemFileFormatProperties.Visible = true;
 
                 toolStripMenuItemAssStyles.Visible = true;
@@ -22264,38 +22264,38 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (ft == typeof(Ebu))
             {
-                toolStripMenuItemFileFormatProperties.Text = string.Format(_language.Menu.File.FormatXProperties, ft.Name);
+                toolStripMenuItemFileFormatProperties.Text = string.Format(_language.Menu.File.FormatXProperties, format.Name);
                 toolStripMenuItemFileFormatProperties.Visible = true;
             }
 
             if (ft == typeof(DvdStudioPro) || ft == typeof(DvdStudioProSpace) || ft == typeof(DvdStudioProSpaceOne) || ft == typeof(DvdStudioProSpaceOneSemicolon))
             {
-                toolStripMenuItemFileFormatProperties.Text = string.Format(_language.Menu.File.FormatXProperties, ft.Name);
+                toolStripMenuItemFileFormatProperties.Text = string.Format(_language.Menu.File.FormatXProperties, format.Name);
                 toolStripMenuItemFileFormatProperties.Visible = true;
             }
 
             if (ft == typeof(DCinemaInterop) || ft == typeof(DCinemaSmpte2014) || ft == typeof(DCinemaSmpte2010) || ft == typeof(DCinemaSmpte2007))
             {
                 toolStripMenuItemFileFormatProperties.Visible = true;
-                toolStripMenuItemFileFormatProperties.Text = string.Format(_language.Menu.File.FormatXProperties, ft.Name);
+                toolStripMenuItemFileFormatProperties.Text = string.Format(_language.Menu.File.FormatXProperties, format.Name);
             }
 
             if (ft == typeof(TimedText10) || ft == typeof(ItunesTimedText))
             {
                 toolStripMenuItemFileFormatProperties.Visible = true;
-                toolStripMenuItemFileFormatProperties.Text = string.Format(_language.Menu.File.FormatXProperties, ft.Name);
+                toolStripMenuItemFileFormatProperties.Text = string.Format(_language.Menu.File.FormatXProperties, format.Name);
             }
 
             if (ft == typeof(WebVTT) || ft == typeof(WebVTTFileWithLineNumber))
             {
                 toolStripMenuItemFileFormatProperties.Visible = true;
-                toolStripMenuItemFileFormatProperties.Text = string.Format(_language.Menu.File.FormatXProperties, ft.Name);
+                toolStripMenuItemFileFormatProperties.Text = string.Format(_language.Menu.File.FormatXProperties, format.Name);
             }
 
             if (format.Name == "Nuendo")
             {
                 toolStripMenuItemFileFormatProperties.Visible = true;
-                toolStripMenuItemFileFormatProperties.Text = string.Format(_language.Menu.File.FormatXProperties, ft.Name);
+                toolStripMenuItemFileFormatProperties.Text = string.Format(_language.Menu.File.FormatXProperties, format.Name);
             }
         }
 
@@ -30393,6 +30393,12 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonAssProperties.Visible = assFormatOn;
             toolStripButtonAssaDraw.Visible = assFormatOn && File.Exists(Path.Combine(Configuration.PluginsDirectory, "AssaDraw.dll"));
             toolStripButtonAssAttachments.Visible = assFormatOn;
+
+            if (formatType == typeof(SubStationAlpha))
+            {
+                toolStripButtonAssStyleManager.Visible = true;
+                toolStripButtonAssProperties.Visible = true;
+            }
         }
 
         private void NetflixGlyphCheck(bool isSaving)
