@@ -8658,7 +8658,7 @@ $HorzAlign          =   Center
 
                     if (item.VideoIsSmpte)
                     {
-                        textWriter.WriteAttributeString("VideoIsSmpte", item.VideoIsSmpte.ToString(CultureInfo.InvariantCulture));
+                        textWriter.WriteAttributeString("IsSmpte", item.VideoIsSmpte.ToString(CultureInfo.InvariantCulture));
                     }
 
                     textWriter.WriteString(item.FileName);
