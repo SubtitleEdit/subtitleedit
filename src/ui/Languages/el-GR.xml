@@ -1322,8 +1322,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <MergeSelectedLinesAsDialog>Συγχώνευση γραμμών ως διάλογο</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Συγχώνευση με τη γραμμή πριν</MergeWithLineBefore>
         <MergeWithLineAfter>Συγχώνευση με τη γραμμή μετά</MergeWithLineAfter>
-        <ExtendToLineBefore>Επέκταση στην προηγούμενη γραμμή</ExtendToLineBefore>
-        <ExtendToLineAfter>Επέκταση στην επόμενη γραμμή</ExtendToLineAfter>
+        <ExtendToLineBefore>Επέκταση μέχρι την προηγούμενη γραμμή</ExtendToLineBefore>
+        <ExtendToLineAfter>Επέκταση μέχρι την επόμενη γραμμή</ExtendToLineAfter>
         <RemoveFormatting>Αφαίρεση μορφοποίησης</RemoveFormatting>
         <RemoveFormattingAll>Αφαίρεση όλης της μορφοποίησης</RemoveFormattingAll>
         <RemoveFormattingBold>Αφαίρεση έντονων</RemoveFormattingBold>
@@ -2304,6 +2304,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AdjustExtendPreviousLineEndToCurrentStart>Επέκταση λήξης προηγούμενης γραμμής σε έναρξη τρέχουσας</AdjustExtendPreviousLineEndToCurrentStart>
     <AdjustExtendNextLineStartToCurrentEnd>Επέκταση έναρξης επόμενης γραμμής σε λήξη τρέχουσας</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>Επαναϋπολογισμός διάρκειας υποτίτλου</RecalculateDurationOfCurrentSubtitle>
+    <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>Επαναϋπολογισμός διάρκειας τρέχοντος υποτίτλου (βάσει βέλτιστης ταχύτητας ανάγνωσης)</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
     <MainCreateStartDownEndUp>Δημιουργία νέου στο πάτημα του κάτω βέλους, ορισμός χρόνου λήξης στο πάτημα του πάνω βέλους</MainCreateStartDownEndUp>
     <MergeDialog>Συγχώνευση διαλόγου (εισαγωγή παυλών)</MergeDialog>
     <GoToNext>Μετάβαση σε επόμενη γραμμή</GoToNext>
@@ -2949,8 +2950,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SplitAtCursor>Διαχωρισμός στη θέση του δείκτη</SplitAtCursor>
     <MergeWithPrevious>Συγχώνευση με προηγούμενο</MergeWithPrevious>
     <MergeWithNext>Συγχώνευση με επόμενο</MergeWithNext>
-    <ExtendToPrevious>Επέκταση μέχρι το προηγούμενο</ExtendToPrevious>
-    <ExtendToNext>Επέκταση μέχρι το επόμενο</ExtendToNext>
+    <ExtendToPrevious>Επέκταση μέχρι τον προηγούμενο υπότιτλο</ExtendToPrevious>
+    <ExtendToNext>Επέκταση μέχρι τον επόμενο υπότιτλο</ExtendToNext>
     <PlaySelection>Αναπαραγωγή επιλογής</PlaySelection>
     <ShowWaveformAndSpectrogram>Εμφάνιση κυματομορφής και φασματογράμματος</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Εμφάνιση μόνο κυματομορφής</ShowWaveformOnly>
