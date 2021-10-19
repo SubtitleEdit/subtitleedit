@@ -20419,7 +20419,10 @@ namespace Nikse.SubtitleEdit.Forms
                     UiUtil.InitializeVideoPlayerAndContainer(fileName, _videoInfo, mediaPlayer, VideoLoaded, VideoEnded);
                 }
 
-                mediaPlayer.Volume = 0;
+                if (!(mediaPlayer.VideoPlayer is LibMpvDynamic))
+                {
+                    mediaPlayer.Volume = 0;
+                }
                 mediaPlayer.ShowFullscreenButton = Configuration.Settings.General.VideoPlayerShowFullscreenButton;
                 mediaPlayer.OnButtonClicked -= MediaPlayer_OnButtonClicked;
                 mediaPlayer.OnButtonClicked += MediaPlayer_OnButtonClicked;
