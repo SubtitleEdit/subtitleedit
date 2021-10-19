@@ -6838,6 +6838,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/BDOpensInEdit":
                     language.Settings.BDOpensInEdit = reader.Value;
                     break;
+                case "Settings/ShortcutsAllowSingleLetterOrNumberInTextBox":
+                    language.Settings.ShortcutsAllowSingleLetterOrNumberInTextBox = reader.Value;
+                    break;
                 case "SettingsMpv/DownloadMpv":
                     language.SettingsMpv.DownloadMpv = reader.Value;
                     break;

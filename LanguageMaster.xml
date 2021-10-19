@@ -2490,6 +2490,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <BDOpensIn>BD sup/bdn-xml opens in</BDOpensIn>
     <BDOpensInOcr>OCR</BDOpensInOcr>
     <BDOpensInEdit>Edit</BDOpensInEdit>
+    <ShortcutsAllowSingleLetterOrNumberInTextBox>Shorcuts: Allow single letter/number in text box</ShortcutsAllowSingleLetterOrNumberInTextBox>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Download mpv lib</DownloadMpv>

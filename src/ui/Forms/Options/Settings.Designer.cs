@@ -243,6 +243,9 @@
             this.buttonWaveformSelectedColor = new System.Windows.Forms.Button();
             this.checkBoxWaveformShowGrid = new System.Windows.Forms.CheckBox();
             this.panelTools = new System.Windows.Forms.Panel();
+            this.groupBoxToolsMisc = new System.Windows.Forms.GroupBox();
+            this.comboBoxBDOpensIn = new System.Windows.Forms.ComboBox();
+            this.labelBDOpensIn = new System.Windows.Forms.Label();
             this.groupBoxGoogleTranslate = new System.Windows.Forms.GroupBox();
             this.labelGoogleTranslateApiKey = new System.Windows.Forms.Label();
             this.textBoxGoogleTransleApiKey = new System.Windows.Forms.TextBox();
@@ -410,9 +413,7 @@
             this.buttonReset = new System.Windows.Forms.Button();
             this.toolTipContinuationPreview = new System.Windows.Forms.ToolTip(this.components);
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.groupBoxToolsMisc = new System.Windows.Forms.GroupBox();
-            this.labelBDOpensIn = new System.Windows.Forms.Label();
-            this.comboBoxBDOpensIn = new System.Windows.Forms.ComboBox();
+            this.checkBoxShortcutsAllowLetterOrNumberInTextBox = new System.Windows.Forms.CheckBox();
             this.panelGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
@@ -444,6 +445,7 @@
             this.groupBoxWaveformAppearence.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWaveformBorderHitMs)).BeginInit();
             this.panelTools.SuspendLayout();
+            this.groupBoxToolsMisc.SuspendLayout();
             this.groupBoxGoogleTranslate.SuspendLayout();
             this.groupBoxBing.SuspendLayout();
             this.groupBoxToolsAutoBr.SuspendLayout();
@@ -484,7 +486,6 @@
             this.groupBoxNetworkSession.SuspendLayout();
             this.groupBoxProxySettings.SuspendLayout();
             this.groupBoxProxyAuthentication.SuspendLayout();
-            this.groupBoxToolsMisc.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -3130,6 +3131,39 @@
             this.panelTools.TabIndex = 7;
             this.panelTools.Text = "Tools";
             // 
+            // groupBoxToolsMisc
+            // 
+            this.groupBoxToolsMisc.Controls.Add(this.checkBoxShortcutsAllowLetterOrNumberInTextBox);
+            this.groupBoxToolsMisc.Controls.Add(this.comboBoxBDOpensIn);
+            this.groupBoxToolsMisc.Controls.Add(this.labelBDOpensIn);
+            this.groupBoxToolsMisc.Location = new System.Drawing.Point(418, 180);
+            this.groupBoxToolsMisc.Name = "groupBoxToolsMisc";
+            this.groupBoxToolsMisc.Size = new System.Drawing.Size(434, 109);
+            this.groupBoxToolsMisc.TabIndex = 33;
+            this.groupBoxToolsMisc.TabStop = false;
+            this.groupBoxToolsMisc.Text = "Misc";
+            // 
+            // comboBoxBDOpensIn
+            // 
+            this.comboBoxBDOpensIn.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxBDOpensIn.FormattingEnabled = true;
+            this.comboBoxBDOpensIn.Items.AddRange(new object[] {
+            "OCR",
+            "BD SUP EDIIT"});
+            this.comboBoxBDOpensIn.Location = new System.Drawing.Point(158, 27);
+            this.comboBoxBDOpensIn.Name = "comboBoxBDOpensIn";
+            this.comboBoxBDOpensIn.Size = new System.Drawing.Size(221, 21);
+            this.comboBoxBDOpensIn.TabIndex = 1;
+            // 
+            // labelBDOpensIn
+            // 
+            this.labelBDOpensIn.AutoSize = true;
+            this.labelBDOpensIn.Location = new System.Drawing.Point(6, 29);
+            this.labelBDOpensIn.Name = "labelBDOpensIn";
+            this.labelBDOpensIn.Size = new System.Drawing.Size(146, 13);
+            this.labelBDOpensIn.TabIndex = 0;
+            this.labelBDOpensIn.Text = "Blu-ray sup/bdn-xml opens in";
+            // 
             // groupBoxGoogleTranslate
             // 
             this.groupBoxGoogleTranslate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -4919,37 +4953,15 @@
             this.toolTipContinuationPreview.InitialDelay = 500;
             this.toolTipContinuationPreview.ReshowDelay = 100;
             // 
-            // groupBoxToolsMisc
+            // checkBoxShortcutsAllowLetterOrNumberInTextBox
             // 
-            this.groupBoxToolsMisc.Controls.Add(this.comboBoxBDOpensIn);
-            this.groupBoxToolsMisc.Controls.Add(this.labelBDOpensIn);
-            this.groupBoxToolsMisc.Location = new System.Drawing.Point(418, 180);
-            this.groupBoxToolsMisc.Name = "groupBoxToolsMisc";
-            this.groupBoxToolsMisc.Size = new System.Drawing.Size(434, 109);
-            this.groupBoxToolsMisc.TabIndex = 33;
-            this.groupBoxToolsMisc.TabStop = false;
-            this.groupBoxToolsMisc.Text = "Misc";
-            // 
-            // labelBDOpensIn
-            // 
-            this.labelBDOpensIn.AutoSize = true;
-            this.labelBDOpensIn.Location = new System.Drawing.Point(6, 29);
-            this.labelBDOpensIn.Name = "labelBDOpensIn";
-            this.labelBDOpensIn.Size = new System.Drawing.Size(146, 13);
-            this.labelBDOpensIn.TabIndex = 0;
-            this.labelBDOpensIn.Text = "Blu-ray sup/bdn-xml opens in";
-            // 
-            // comboBoxBDOpensIn
-            // 
-            this.comboBoxBDOpensIn.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxBDOpensIn.FormattingEnabled = true;
-            this.comboBoxBDOpensIn.Items.AddRange(new object[] {
-            "OCR",
-            "BD SUP EDIIT"});
-            this.comboBoxBDOpensIn.Location = new System.Drawing.Point(158, 27);
-            this.comboBoxBDOpensIn.Name = "comboBoxBDOpensIn";
-            this.comboBoxBDOpensIn.Size = new System.Drawing.Size(221, 21);
-            this.comboBoxBDOpensIn.TabIndex = 1;
+            this.checkBoxShortcutsAllowLetterOrNumberInTextBox.AutoSize = true;
+            this.checkBoxShortcutsAllowLetterOrNumberInTextBox.Location = new System.Drawing.Point(8, 65);
+            this.checkBoxShortcutsAllowLetterOrNumberInTextBox.Name = "checkBoxShortcutsAllowLetterOrNumberInTextBox";
+            this.checkBoxShortcutsAllowLetterOrNumberInTextBox.Size = new System.Drawing.Size(223, 17);
+            this.checkBoxShortcutsAllowLetterOrNumberInTextBox.TabIndex = 61;
+            this.checkBoxShortcutsAllowLetterOrNumberInTextBox.Text = "Allow letter/number shortcuts in text box";
+            this.checkBoxShortcutsAllowLetterOrNumberInTextBox.UseVisualStyleBackColor = true;
             // 
             // Settings
             // 
@@ -4957,6 +4969,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.panelTools);
+            this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelSubtitleFormats);
             this.Controls.Add(this.panelGeneral);
             this.Controls.Add(this.panelFont);
@@ -4966,7 +4979,6 @@
             this.Controls.Add(this.panelToolBar);
             this.Controls.Add(this.panelWaveform);
             this.Controls.Add(this.panelSyntaxColoring);
-            this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.listBoxSection);
             this.Controls.Add(this.buttonReset);
             this.Controls.Add(this.labelStatus);
@@ -5026,6 +5038,8 @@
             this.groupBoxWaveformAppearence.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWaveformBorderHitMs)).EndInit();
             this.panelTools.ResumeLayout(false);
+            this.groupBoxToolsMisc.ResumeLayout(false);
+            this.groupBoxToolsMisc.PerformLayout();
             this.groupBoxGoogleTranslate.ResumeLayout(false);
             this.groupBoxGoogleTranslate.PerformLayout();
             this.groupBoxBing.ResumeLayout(false);
@@ -5087,8 +5101,6 @@
             this.groupBoxProxySettings.PerformLayout();
             this.groupBoxProxyAuthentication.ResumeLayout(false);
             this.groupBoxProxyAuthentication.PerformLayout();
-            this.groupBoxToolsMisc.ResumeLayout(false);
-            this.groupBoxToolsMisc.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -5480,5 +5492,6 @@
         private System.Windows.Forms.GroupBox groupBoxToolsMisc;
         private System.Windows.Forms.ComboBox comboBoxBDOpensIn;
         private System.Windows.Forms.Label labelBDOpensIn;
+        private System.Windows.Forms.CheckBox checkBoxShortcutsAllowLetterOrNumberInTextBox;
     }
 }

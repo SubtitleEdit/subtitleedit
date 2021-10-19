@@ -2669,6 +2669,7 @@
             public string BDOpensIn { get; set; }
             public string BDOpensInOcr { get; set; }
             public string BDOpensInEdit { get; set; }
+            public string ShortcutsAllowSingleLetterOrNumberInTextBox { get; set; }
         }
 
         public class SettingsMpv
