@@ -1,10 +1,11 @@
 ﻿Subtitle Edit Changelog
 
-3.6.3 BETA (xth October 2021)
+3.6.3 BETA (xth November 2021)
 * NEW:
    * Auto set ASSA resolution - thx Leon
    * Icon for plugin "ASSA Draw" - thx Leon
    * New sub format - thx Leon
+   * Add read support for "combined ttml" files - thx Martin
    * Save SMPTE video time code mode for recent files - thx OmrSi
 * IMPROVED:
    * Update Greek translation - thx PMitsakis
@@ -28,6 +29,9 @@
    * Improve split with ASSA tags - thx Leon
    * Improve drag'n'drop to list view with istm format - thx Zivko
    * Ignore text between {} when spell checking ASSA/SSA - thx Omair
+   * Show ASSA style icon + ASSA prop icon for SSA - thx Mike
+   * Add option to allow single letter/digit as shortcut in text box - thx walgvogel
+   * Try avoid set mpv volume to 0 - thx Janusz
 * FIXED:
    * Fix tag style converting from/to ASSA - thx von Suppé
    * Fix "Title bar text" when translating - thx Andrebavila
