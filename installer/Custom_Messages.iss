@@ -383,17 +383,17 @@ pl.types_default=Instalacja domyślna
 
 ; Portuguese (Portugal)
 pt.comp_translations=Traduções
-pt.msg_AskToDownNET=O Subtitle Edit necessita do .NET Framework 4.7.2. Por favor, baixe e instale o .NET Framework, e execute a instalação novamente.%n%nDeseja baixar o .NET Framework 4.7.2 agora?
-pt.msg_DeleteSettings=Deseja remover as configurações do Subtitle Edit e quaisquer mudanças feitas nos dicionários?%n%nSe planeia reinstalar o Subtitle Edit não necessita remover estes itens.
-pt.msg_OptimizingPerformance=Otimizando performance...
+pt.msg_AskToDownNET=O Subtitle Edit necessita do .NET Framework 4.7.2. Por favor, transfira e instale o .NET Framework e execute a instalação novamente.%n%nDeseja transferir o .NET Framework 4.7.2 agora?
+pt.msg_DeleteSettings=Deseja remover as definições do Subtitle Edit e quaisquer alterações feitas nos dicionários?%n%nSe planeia reinstalar o Subtitle Edit não necessita de remover estes itens.
+pt.msg_OptimizingPerformance=A optimizar o desempenho...
 pt.run_VisitWebsite=Visitar o site do Subtitle Edit
 pt.sm_com_Changelog=Relatório de alterações do Subtitle Edit
 pt.tsk_AllUsers=Todos os utilizadores
 pt.tsk_CurrentUser=Utilizador atual
 pt.tsk_Other=Outro:
-pt.tsk_ResetDictionaries=Reiniciar Dicionários e remover quaisquer nomes personalizados
-pt.tsk_ResetSettings=Reiniciar configurações do  Subtitle Edit
-pt.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
+pt.tsk_ResetDictionaries=Repor os Dicionários e remover quaisquer nomes personalizados
+pt.tsk_ResetSettings=Repor as definições do Subtitle Edit
+pt.tsk_SetFileTypes=Associar os ficheiros de texto SubRip (.srt) ao Subtitle Edit
 pt.types_custom=Instalação personalizada
 pt.types_default=Instalação padrão
 
