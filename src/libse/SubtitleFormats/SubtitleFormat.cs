@@ -649,6 +649,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 new JsonArchtime(),
                 new MacCaption10(),
                 new Rdf1(),
+                new CombinedXml(),
             };
         }
 
