@@ -626,7 +626,7 @@ Dialogue: -255,0:00:00.00,0:43:00.00,SE-progress-bar-bg,,0,0,0,,[PB_DRAWING]";
                                 $"{position + numericUpDownSplitterWidth.Value} {splitterTop + numericUpDownSplitterHeight.Value} " + // bottom right point
                                 $"{position} {splitterTop + numericUpDownSplitterHeight.Value} " + // bottom left point
                                 $"{position} {splitterTop}" + // top left point
-                                "{{\\p0}}";
+                                $"{{\\p0}}";
 
                         }
                         else
@@ -643,7 +643,7 @@ Dialogue: -255,0:00:00.00,0:43:00.00,SE-progress-bar-bg,,0,0,0,,[PB_DRAWING]";
                                 $"{position + numericUpDownSplitterWidth.Value} {splitterTop + numericUpDownSplitterHeight.Value} " + // bottom right point
                                 $"{position} {splitterTop + numericUpDownSplitterHeight.Value} " + // bottom left point
                                 $"{position} {splitterTop}" + // top left point
-                                "{{\\p0}}";
+                                $"{{\\p0}}";
                         }
 
                         if (i > 0)
