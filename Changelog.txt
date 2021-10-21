@@ -47,7 +47,7 @@
    * Include favourite formats in "reset"
    * Take first audio track when loading wave form - thx Tuan-P
    * Fix issue with waveform original out of sync - thx Leon
-   * Fix " Set start and set end of prev" when playing - thx Leon
+   * Fix "Set start and set end of prev" when playing - thx Leon
 
 
 3.6.2 (24th August 2021)
