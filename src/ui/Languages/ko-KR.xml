@@ -9,9 +9,12 @@
     <Ok>확인(&amp;O)</Ok>
     <Cancel>취소(&amp;A)</Cancel>
     <Apply>적용</Apply>
+    <ApplyTo>적용 대상</ApplyTo>
     <None>없음</None>
     <All>모두</All>
     <Preview>미리 보기</Preview>
+    <ShowPreview>미리보기 표시</ShowPreview>
+    <HidePreview>미리보기 숨기기</HidePreview>
     <SubtitleFiles>자막 파일</SubtitleFiles>
     <AllFiles>모든 파일</AllFiles>
     <VideoFiles>비디오 파일</VideoFiles>
@@ -218,6 +221,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SetPosInfo>비디오 클릭하여 설정/이동 위치 전환</SetPosInfo>
     <Clipboard>클립보드</Clipboard>
     <ResolutionMissing>PlayResX/PlayResY가 설정되지 않습니다 - 지금 해상도를 설정하시겠습니까?</ResolutionMissing>
+    <RotateXAxis>{0} 축 회전</RotateXAxis>
+    <DistortX>{0} 왜곡</DistortX>
   </AssaSetPosition>
   <AudioToText>
     <Title>오디오를 텍스트로</Title>
@@ -268,6 +273,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <BridgeGaps>브리지 간격</BridgeGaps>
     <PlainText>일반 텍스트</PlainText>
     <Ocr>OCR...</Ocr>
+    <AddFiles>파일 추가...</AddFiles>
     <Filter>필터</Filter>
     <FilterSkipped>필터에서 제외</FilterSkipped>
     <FilterSrtNoUtf8BOM>UTF-8에서 BOM 표식 없는 subRip(.srt) 파일</FilterSrtNoUtf8BOM>
@@ -442,6 +448,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ZPositionHelp>양수는 텍스트를 멀리 이동시키고 음수는 텍스트를 더 가까이 이동킵니다. 만약 z-포지션이 '0'이라면 그때는 '2D'입니다.</ZPositionHelp>
     <ChooseColor>색상 선택...</ChooseColor>
     <Generate>생성</Generate>
+    <GenerateNewIdOnSave>저장시 새 ID 생성</GenerateNewIdOnSave>
   </DCinemaProperties>
   <DurationsBridgeGaps>
     <Title>* 자막 사이의 작은 간격 메우기</Title>
@@ -755,7 +762,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <FixUppercaseIInsideLowercaseWord>한 단어 중간에 대문자 'I'가 쓰인 것 수정하기</FixUppercaseIInsideLowercaseWord>
     <FixMissingPeriodAtEndOfLine>줄 끝에 누락된 마침표 추가하기</FixMissingPeriodAtEndOfLine>
     <RefreshFixes>새로 고침</RefreshFixes>
-    <ApplyFixes>수정 적용하기</ApplyFixes>
+    <ApplyFixes>수정 적용(&amp;P)</ApplyFixes>
     <AutoBreak>자동 줄바꿈(&amp;B)</AutoBreak>
     <Unbreak>줄바꿈 제거(&amp;U)</Unbreak>
     <FixDoubleDash>'--' -&gt; '...' 로 수정하기</FixDoubleDash>
@@ -787,10 +794,24 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
     <Title>자막 입혀진 비디오 파일 생성</Title>
-    <Info>자막이 입혀진 비디오 파일을 생성합니다.
-
-참고: Advanced Substation Alpha 지원</Info>
+    <InfoAssaOff>참고: Advanced Substation Alpha 스타일이 지원됨.</InfoAssaOff>
+    <InfoAssaOn>참고: Advanced Substation Alpha 스타일링이 사용됩니다:)</InfoAssaOn>
     <XGeneratedWithBurnedInSubs>"{0}"이름으로 자막이 입혀진 비디오 파일을 생성했습니다.</XGeneratedWithBurnedInSubs>
+    <TimeRemainingMinutes>남은 시간: {0} 분</TimeRemainingMinutes>
+    <TimeRemainingSeconds>남은 시간: {0} 초</TimeRemainingSeconds>
+    <TimeRemainingMinutesAndSeconds>남은 시간: {0} 분 {1} 초</TimeRemainingMinutesAndSeconds>
+    <TargetFileName>대상 파일 이름: {0}</TargetFileName>
+    <TargetFileSize>대상 파일 크기 (2패스 인코딩 필요)</TargetFileSize>
+    <FileSizeMb>MB의 파일 크기</FileSizeMb>
+    <PassX>패스 {0}</PassX>
+    <Encoding>인코딩</Encoding>
+    <BitRate>비트레이트</BitRate>
+    <SampleRate>샘플레이트</SampleRate>
+    <Stereo>스테레오</Stereo>
+    <Preset>프리셋</Preset>
+    <Crf>CRF</Crf>
+    <TuneFor>튜닝</TuneFor>
+    <AlignRight>오른쪽 정렬</AlignRight>
   </GenerateVideoWithBurnedInSubs>
   <GetDictionaries>
     <Title>* 사전 다운로드</Title>
@@ -1257,6 +1278,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <Help>도움말</Help>
         <ShowHideWaveform>파형 표시 | 숨김</ShowHideWaveform>
         <ShowHideVideo>비디오 표시 | 숨김</ShowHideVideo>
+        <AssaDraw>Advanced Sub Station Alpha 그리기</AssaDraw>
       </ToolBar>
       <ContextMenu>
         <SizeAllColumnsToFit>모든 열의 크기 맞추기</SizeAllColumnsToFit>
@@ -1279,6 +1301,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <SplitLineAtCursorAndWaveformPosition>커서/비디오 위치에서 줄 분할</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>표시시간 자동 설정 (현재 줄)</AutoDurationCurrentLine>
         <SelectAll>모두 선택</SelectAll>
+        <Insert>삽입</Insert>
         <InsertFirstLine>줄 삽입</InsertFirstLine>
         <InsertBefore>앞에 빈 줄 삽입...</InsertBefore>
         <InsertAfter>뒤에 빈 줄 삽입...</InsertAfter>
@@ -1323,6 +1346,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <ShowSelectedLinesEarlierLater>싱크 조정...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>시각 동기화...</VisualSyncSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Google/Microsoft 번역</GoogleAndMicrosoftTranslateSelectedLine>
+        <SelectedLines>선택한 줄</SelectedLines>
         <TranslateSelectedLines>선택한 줄 번역...</TranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>표시시간 조정...</AdjustDisplayDurationForSelectedLines>
         <ApplyDurationLimitsForSelectedLines>선택한 줄의 표시시간 제한 적용...</ApplyDurationLimitsForSelectedLines>
@@ -1950,6 +1974,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <RemoveTextIfAllUppercase>줄이 모두 대문자인 경우</RemoveTextIfAllUppercase>
     <RemoveInterjections>감탄사 제거 (shh,hmm등)</RemoveInterjections>
     <EditInterjections>편집</EditInterjections>
+    <Apply>적용(&amp;P)</Apply>
   </RemoveTextFromHearImpaired>
   <ReplaceDialog>
     <Title>바꾸기</Title>
@@ -2279,6 +2304,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <AdjustExtendPreviousLineEndToCurrentStart>이전 줄의 끝을 현재의 시작으로 확장</AdjustExtendPreviousLineEndToCurrentStart>
     <AdjustExtendNextLineStartToCurrentEnd>다음 줄의 시작을 현재의 끝으로 확장</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>현재 자막의 표시시간 다시 계산</RecalculateDurationOfCurrentSubtitle>
+    <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>현재 자막의 표시시간 다시 계산 (최적의 판독 속도 기준)</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
     <MainCreateStartDownEndUp>'↓'키로 새로운 자막 삽입, '↑'키로 종료 시간 설정</MainCreateStartDownEndUp>
     <MergeDialog>대화 병합 (대시 삽입)</MergeDialog>
     <GoToNext>다음 줄로 이동</GoToNext>
@@ -2457,6 +2483,10 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <MinFrameGap>최소 프레임 간격</MinFrameGap>
     <XFramesAtYFrameRateGivesZMs>{1} 프레임 속도에서 {0} 프레임은 {2} 밀리초를 제공합니다.</XFramesAtYFrameRateGivesZMs>
     <UseXAsNewGap>"{0}" 밀리초를 새로운 최소 간격으로 사용하시겠습니까?</UseXAsNewGap>
+    <BDOpensIn>BD sup/bdn-xml 열기</BDOpensIn>
+    <BDOpensInOcr>OCR</BDOpensInOcr>
+    <BDOpensInEdit>편집</BDOpensInEdit>
+    <ShortcutsAllowSingleLetterOrNumberInTextBox>단축키: 텍스트 상자에 단일 문자/숫자 허용</ShortcutsAllowSingleLetterOrNumberInTextBox>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>mpv lib 다운로드</DownloadMpv>
