@@ -1939,6 +1939,11 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SetStartTimeAndDuration(int index, Paragraph paragraph, Paragraph next, Paragraph prev)
         {
+            if (paragraph == null)
+            {
+                return;
+            }
+
             if (IsValidIndex(index))
             {
                 ListViewItem item = Items[index];
