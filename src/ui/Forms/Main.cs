@@ -26554,6 +26554,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             UpdateOriginalTimeCodes(oldParagraph, oldNextParagraph);
             SubtitleListview1.SelectIndexAndEnsureVisible(index + 1, true);
+            SubtitleListview1.SetStartTimeAndDuration(index, _subtitle.GetParagraphOrDefault(index-1), _subtitle.GetParagraphOrDefault(index - 2), _subtitle.GetParagraphOrDefault(index));
+            SubtitleListview1.SetStartTimeAndDuration(index, _subtitle.GetParagraphOrDefault(index), _subtitle.GetParagraphOrDefault(index - 1), _subtitle.GetParagraphOrDefault(index + 1));
+            RefreshSelectedParagraph();
             ShowStatus(string.Format(_language.VideoControls.AdjustedViaEndTime, p.StartTime.ToShortString()));
             audioVisualizer.Invalidate();
             UpdateSourceView();
