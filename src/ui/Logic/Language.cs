@@ -2816,7 +2816,7 @@ can edit in same subtitle file (collaboration)",
                 BDOpensIn = "BD sup/bdn-xml opens in",
                 BDOpensInOcr = "OCR",
                 BDOpensInEdit = "Edit",
-                ShortcutsAllowSingleLetterOrNumberInTextBox = "Shorcuts: Allow single letter/number in text box",
+                ShortcutsAllowSingleLetterOrNumberInTextBox = "Shortcuts: Allow single letter/number in text box",
             };
 
             SettingsMpv = new LanguageStructure.SettingsMpv
