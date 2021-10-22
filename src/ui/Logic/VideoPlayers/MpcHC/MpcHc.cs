@@ -255,7 +255,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                        cName.EndsWith(":b:0000000000010004:0000000000000006:0000000000000000") || // MPC-HC 64-bit video class???
                        cName.EndsWith(":b:0000000000010005:0000000000000006:0000000000000000") || // MPC-HC 64-bit video class???
                        cName.EndsWith(":b:0000000000010006:0000000000000006:0000000000000000") || // MPC-HC 64-bit video class???
-                       cName.EndsWith(":b:0000000000010006:0000000000000007:0000000000000000") || // MPC-HC 64-bit video class???
+                       cName.EndsWith(":b:0000000000010007:0000000000000006:0000000000000000") || // MPC-HC 64-bit video class???
                        cName.EndsWith(":b:00010003:00000006:00000000");                           // MPC-HC 32-bit video class???
             }
 
