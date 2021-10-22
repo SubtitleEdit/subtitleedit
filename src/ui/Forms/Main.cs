@@ -12399,6 +12399,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         p.Text = newText;
                         SubtitleListview1.SetText(index, p.Text);
+                        SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, index, p);
                     }
 
                     if (_subtitleOriginal != null && SubtitleListview1.IsOriginalTextColumnVisible && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
@@ -12432,7 +12433,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                SubtitleListview1.EndUpdate();
+                SubtitleListview1.EndUpdate();                
                 RefreshSelectedParagraph();
             }
             else
@@ -12460,6 +12461,8 @@ namespace Nikse.SubtitleEdit.Forms
                     MakeHistoryForUndo(_language.BeforeRemoveLineBreaksInSelectedLines);
                     textBoxListViewText.Text = fixedText;
                 }
+                
+                SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, _subtitleListViewIndex, _subtitle.GetParagraphOrDefault(_subtitleListViewIndex));
             }
 
             _doAutoBreakOnTextChanged = true;
