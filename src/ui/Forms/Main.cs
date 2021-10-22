@@ -15773,9 +15773,12 @@ namespace Nikse.SubtitleEdit.Forms
                     var idx = SubtitleListview1.SelectedItems[0].Index;
                     if (idx >= 0 && _subtitle.Paragraphs.Count > idx + 1)
                     {
+                        _makeHistoryPaused = true;
+                        MakeHistoryForUndo(_language.BeforeMergeLines);
                         SubtitleListview1.SelectIndexAndEnsureVisible(idx, true);
                         MergeAfterToolStripMenuItemClick(null, null);
                         ButtonUnBreakClick(null, null);
+                        _makeHistoryPaused = false;
                         e.SuppressKeyPress = true;
                     }
                 }
@@ -15787,9 +15790,12 @@ namespace Nikse.SubtitleEdit.Forms
                     var idx = SubtitleListview1.SelectedItems[0].Index;
                     if (idx > 0)
                     {
+                        _makeHistoryPaused = true;
+                        MakeHistoryForUndo(_language.BeforeMergeLines);
                         SubtitleListview1.SelectIndexAndEnsureVisible(idx - 1, true);
                         MergeAfterToolStripMenuItemClick(null, null);
                         ButtonUnBreakClick(null, null);
+                        _makeHistoryPaused = false;
                         e.SuppressKeyPress = true;
                     }
                 }
@@ -15801,9 +15807,12 @@ namespace Nikse.SubtitleEdit.Forms
                     var idx = SubtitleListview1.SelectedItems[0].Index;
                     if (idx >= 0 && _subtitle.Paragraphs.Count > idx + 1)
                     {
+                        _makeHistoryPaused = true;
+                        MakeHistoryForUndo(_language.BeforeMergeLines);
                         SubtitleListview1.SelectIndexAndEnsureVisible(idx, true);
                         MergeAfterToolStripMenuItemClick(null, null);
                         ButtonAutoBreakClick(null, null);
+                        _makeHistoryPaused = false;
                         e.SuppressKeyPress = true;
                     }
                 }
@@ -15815,9 +15824,12 @@ namespace Nikse.SubtitleEdit.Forms
                     var idx = SubtitleListview1.SelectedItems[0].Index;
                     if (idx > 0)
                     {
+                        _makeHistoryPaused = true;
+                        MakeHistoryForUndo(_language.BeforeMergeLines);
                         SubtitleListview1.SelectIndexAndEnsureVisible(idx - 1, true);
                         MergeAfterToolStripMenuItemClick(null, null);
                         ButtonAutoBreakClick(null, null);
+                        _makeHistoryPaused = false;
                         e.SuppressKeyPress = true;
                     }
                 }
