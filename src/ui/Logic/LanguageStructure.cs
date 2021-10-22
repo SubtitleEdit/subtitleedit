@@ -2981,6 +2981,15 @@
             public string ApplySync { get; set; }
         }
 
+        public class TimedTextSmpteTiming
+        {
+            public string Title { get; set; }
+            public string UseSmpteTiming { get; set; }
+            public string SmpteTimingInfo { get; set; }
+            public string YesAlways { get; set; }
+            public string NoNever { get; set; }
+        }
+
         public class TransportStreamSubtitleChooser
         {
             public string Title { get; set; }
