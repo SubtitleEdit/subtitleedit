@@ -1248,6 +1248,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(generalNode, language.MergeWithNext, nameof(Configuration.Settings.Shortcuts.GeneralMergeWithNext));
             AddNode(generalNode, language.MergeWithPreviousAndUnbreak, nameof(Configuration.Settings.Shortcuts.GeneralMergeWithPreviousAndUnbreak));
             AddNode(generalNode, language.MergeWithNextAndUnbreak, nameof(Configuration.Settings.Shortcuts.GeneralMergeWithNextAndUnbreak));
+            AddNode(generalNode, language.MergeWithPreviousAndBreak, nameof(Configuration.Settings.Shortcuts.GeneralMergeWithPreviousAndBreak));
+            AddNode(generalNode, language.MergeWithNextAndBreak, nameof(Configuration.Settings.Shortcuts.GeneralMergeWithNextAndBreak));
             AddNode(generalNode, language.MergeSelectedLinesAndAutoBreak, nameof(Configuration.Settings.Shortcuts.GeneralMergeSelectedLinesAndAutoBreak));
             AddNode(generalNode, language.MergeSelectedLinesAndUnbreak, nameof(Configuration.Settings.Shortcuts.GeneralMergeSelectedLinesAndUnbreak));
             AddNode(generalNode, language.MergeSelectedLinesAndUnbreakCjk, nameof(Configuration.Settings.Shortcuts.GeneralMergeSelectedLinesAndUnbreakCjk));

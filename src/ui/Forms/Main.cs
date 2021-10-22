@@ -15794,6 +15794,34 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+            else if (_shortcuts.MainGeneralMergeWithNextAndBreak == e.KeyData)
+            {
+                if (SubtitleListview1.SelectedItems.Count >= 1)
+                {
+                    var idx = SubtitleListview1.SelectedItems[0].Index;
+                    if (idx >= 0 && _subtitle.Paragraphs.Count > idx + 1)
+                    {
+                        SubtitleListview1.SelectIndexAndEnsureVisible(idx, true);
+                        MergeAfterToolStripMenuItemClick(null, null);
+                        ButtonAutoBreakClick(null, null);
+                        e.SuppressKeyPress = true;
+                    }
+                }
+            }
+            else if (_shortcuts.MainGeneralMergeWithPreviousAndBreak == e.KeyData)
+            {
+                if (SubtitleListview1.SelectedItems.Count >= 1)
+                {
+                    var idx = SubtitleListview1.SelectedItems[0].Index;
+                    if (idx > 0)
+                    {
+                        SubtitleListview1.SelectIndexAndEnsureVisible(idx - 1, true);
+                        MergeAfterToolStripMenuItemClick(null, null);
+                        ButtonAutoBreakClick(null, null);
+                        e.SuppressKeyPress = true;
+                    }
+                }
+            }
             else if (_shortcuts.MainGeneralToggleTranslationMode == e.KeyData)
             { // toggle translator mode
                 EditToolStripMenuItemDropDownOpening(null, null);
