@@ -1212,7 +1212,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <CloseVideo>Close video file</CloseVideo>
         <OpenSecondSubtitle>Open second subtitle file...</OpenSecondSubtitle>
         <SetVideoOffset>Set video offset...</SetVideoOffset>
-        <SmptTimeMode>SMPTE timing (drop frame)</SmptTimeMode>
+        <SmptTimeMode>SMPTE timing (non integer frame rate)</SmptTimeMode>
         <GenerateTextFromVideo>Generate text from video...</GenerateTextFromVideo>
         <GenerateBlankVideo>Generate blank video...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Generate video with burned-in sub...</GenerateVideoWithBurnedInSub>
@@ -2428,6 +2428,8 @@ can edit in same subtitle file (collaboration)</Information>
     <MergeWithNext>Merge with next</MergeWithNext>
     <MergeWithPreviousAndUnbreak>Merge with previous and unbreak</MergeWithPreviousAndUnbreak>
     <MergeWithNextAndUnbreak>Merge with next and unbreak</MergeWithNextAndUnbreak>
+    <MergeWithPreviousAndBreak>Merge with previous and auto-break</MergeWithPreviousAndBreak>
+    <MergeWithNextAndBreak>Merge with next and auto-break</MergeWithNextAndBreak>
     <MergeWithPrevious>Merge with previous</MergeWithPrevious>
     <ShortcutIsAlreadyDefinedX>Shortcut already defined: {0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>Toggle translation and original in video/audio preview</ToggleTranslationAndOriginalInPreviews>

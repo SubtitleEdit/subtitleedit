@@ -6664,6 +6664,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/MergeWithNextAndUnbreak":
                     language.Settings.MergeWithNextAndUnbreak = reader.Value;
                     break;
+                case "Settings/MergeWithPreviousAndBreak":
+                    language.Settings.MergeWithPreviousAndBreak = reader.Value;
+                    break;
+                case "Settings/MergeWithNextAndBreak":
+                    language.Settings.MergeWithNextAndBreak = reader.Value;
+                    break;
                 case "Settings/MergeWithPrevious":
                     language.Settings.MergeWithPrevious = reader.Value;
                     break;
