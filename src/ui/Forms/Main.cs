@@ -5061,7 +5061,7 @@ namespace Nikse.SubtitleEdit.Forms
         private SubtitleFormat GetCurrentSubtitleFormat()
         {
             if (_currentSubtitleFormat == null)
-            { 
+            {
                 _currentSubtitleFormat = Utilities.GetSubtitleFormatByFriendlyName(comboBoxSubtitleFormats.SelectedItem.ToString());
                 MakeFormatChange(null, _currentSubtitleFormat);
             }
@@ -15759,6 +15759,34 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         SubtitleListview1.SelectIndexAndEnsureVisible(idx - 1, true);
                         MergeAfterToolStripMenuItemClick(null, null);
+                        e.SuppressKeyPress = true;
+                    }
+                }
+            }
+            else if (_shortcuts.MainGeneralMergeWithNextAndUnbreak == e.KeyData)
+            {
+                if (SubtitleListview1.SelectedItems.Count >= 1)
+                {
+                    var idx = SubtitleListview1.SelectedItems[0].Index;
+                    if (idx >= 0 && _subtitle.Paragraphs.Count > idx + 1)
+                    {
+                        SubtitleListview1.SelectIndexAndEnsureVisible(idx, true);
+                        MergeAfterToolStripMenuItemClick(null, null);
+                        ButtonUnBreakClick(null, null);
+                        e.SuppressKeyPress = true;
+                    }
+                }
+            }
+            else if (_shortcuts.MainGeneralMergeWithPreviousAndUnbreak == e.KeyData)
+            {
+                if (SubtitleListview1.SelectedItems.Count >= 1)
+                {
+                    var idx = SubtitleListview1.SelectedItems[0].Index;
+                    if (idx > 0)
+                    {
+                        SubtitleListview1.SelectIndexAndEnsureVisible(idx - 1, true);
+                        MergeAfterToolStripMenuItemClick(null, null);
+                        ButtonUnBreakClick(null, null);
                         e.SuppressKeyPress = true;
                     }
                 }
@@ -26554,7 +26582,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             UpdateOriginalTimeCodes(oldParagraph, oldNextParagraph);
             SubtitleListview1.SelectIndexAndEnsureVisible(index + 1, true);
-            SubtitleListview1.SetStartTimeAndDuration(index, _subtitle.GetParagraphOrDefault(index-1), _subtitle.GetParagraphOrDefault(index - 2), _subtitle.GetParagraphOrDefault(index));
+            SubtitleListview1.SetStartTimeAndDuration(index, _subtitle.GetParagraphOrDefault(index - 1), _subtitle.GetParagraphOrDefault(index - 2), _subtitle.GetParagraphOrDefault(index));
             SubtitleListview1.SetStartTimeAndDuration(index, _subtitle.GetParagraphOrDefault(index), _subtitle.GetParagraphOrDefault(index - 1), _subtitle.GetParagraphOrDefault(index + 1));
             RefreshSelectedParagraph();
             ShowStatus(string.Format(_language.VideoControls.AdjustedViaEndTime, p.StartTime.ToShortString()));

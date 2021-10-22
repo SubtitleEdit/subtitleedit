@@ -2609,6 +2609,8 @@
             public string SwitchOriginalAndTranslation { get; set; }
             public string MergeOriginalAndTranslation { get; set; }
             public string MergeWithNext { get; set; }
+            public string MergeWithPreviousAndUnbreak { get; set; }
+            public string MergeWithNextAndUnbreak { get; set; }
             public string MergeWithPrevious { get; set; }
             public string ShortcutIsAlreadyDefinedX { get; set; }
             public string ToggleTranslationAndOriginalInPreviews { get; set; }
