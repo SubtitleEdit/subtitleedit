@@ -106,6 +106,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.SubStationAlphaStyles SubStationAlphaStyles;
         public LanguageStructure.SubStationAlphaStylesCategoriesManager SubStationAlphaStylesCategoriesManager;
         public LanguageStructure.PointSync PointSync;
+        public LanguageStructure.TimedTextSmpteTiming TimedTextSmpteTiming;
         public LanguageStructure.TransportStreamSubtitleChooser TransportStreamSubtitleChooser;
         public LanguageStructure.UnknownSubtitle UnknownSubtitle;
         public LanguageStructure.VisualSync VisualSync;
@@ -3127,6 +3128,15 @@ can edit in same subtitle file (collaboration)",
                 SyncPointsX = "Sync points: {0}",
                 Info = "One sync point will adjust position, two or more sync points will adjust position and speed",
                 ApplySync = "Apply",
+            };
+
+            TimedTextSmpteTiming = new LanguageStructure.TimedTextSmpteTiming
+            {
+                Title = "SMPTE timing",
+                UseSmpteTiming = "Use SMPTE timing for current subtitle?",
+                SmpteTimingInfo = "Note: SMPTE timing can be changed later in the \"Video menu\"",
+                NoNever = "No, never",
+                YesAlways = "Yes, always for non-whole-number frame rates",
             };
 
             TransportStreamSubtitleChooser = new LanguageStructure.TransportStreamSubtitleChooser
