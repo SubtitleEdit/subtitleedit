@@ -1963,6 +1963,8 @@ $HorzAlign          =   Center
         public string GeneralMergeSelectedLinesBilingual { get; set; }
         public string GeneralMergeWithNext { get; set; }
         public string GeneralMergeWithPrevious { get; set; }
+        public string GeneralMergeWithPreviousAndUnbreak { get; set; }
+        public string GeneralMergeWithNextAndUnbreak { get; set; }
         public string GeneralToggleTranslationMode { get; set; }
         public string GeneralSwitchOriginalAndTranslation { get; set; }
         public string GeneralMergeOriginalAndTranslation { get; set; }
@@ -6944,6 +6946,18 @@ $HorzAlign          =   Center
                     shortcuts.GeneralMergeWithPrevious = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("GeneralMergeWithPreviousAndUnbreak");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralMergeWithPreviousAndUnbreak = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralMergeWithNextAndUnbreak");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralMergeWithNextAndUnbreak = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralToggleTranslationMode");
                 if (subNode != null)
                 {
@@ -9486,6 +9500,8 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("GeneralMergeSelectedLinesBilingual", shortcuts.GeneralMergeSelectedLinesBilingual);
             textWriter.WriteElementString("GeneralMergeWithNext", shortcuts.GeneralMergeWithNext);
             textWriter.WriteElementString("GeneralMergeWithPrevious", shortcuts.GeneralMergeWithPrevious);
+            textWriter.WriteElementString("GeneralMergeWithPreviousAndUnbreak", shortcuts.GeneralMergeWithPreviousAndUnbreak);
+            textWriter.WriteElementString("GeneralMergeWithNextAndUnbreak", shortcuts.GeneralMergeWithNextAndUnbreak);
             textWriter.WriteElementString("GeneralToggleTranslationMode", shortcuts.GeneralToggleTranslationMode);
             textWriter.WriteElementString("GeneralSwitchOriginalAndTranslation", shortcuts.GeneralSwitchOriginalAndTranslation);
             textWriter.WriteElementString("GeneralMergeOriginalAndTranslation", shortcuts.GeneralMergeOriginalAndTranslation);
