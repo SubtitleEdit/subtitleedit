@@ -7,6 +7,9 @@
    * New sub format - thx Leon
    * Add read support for "combined ttml" files - thx Martin
    * Save SMPTE video time code mode for recent files - thx OmrSi
+   * Optionally prompt some TTML files regarding SMPTE time mode
+   * New shortcuts for merge - the Leon
+   * New shortcut for calc duration by CPS - thx OmrSi
 * IMPROVED:
    * Update Greek translation - thx PMitsakis
    * Update Chinese translation - thx nkh0472
