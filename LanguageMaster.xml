@@ -2769,6 +2769,13 @@ Continue?</RestoreDefaultSettingsMsg>
     <Info>One sync point will adjust position, two or more sync points will adjust position and speed</Info>
     <ApplySync>Apply</ApplySync>
   </PointSync>
+  <TimedTextSmpteTiming>
+    <Title>SMPTE timing</Title>
+    <UseSmpteTiming>Use SMPTE timing for current subtitle?</UseSmpteTiming>
+    <SmpteTimingInfo>Note: SMPTE timing can be changed later in the "Video menu"</SmpteTimingInfo>
+    <YesAlways>Yes, always for non-whole-number frame rates</YesAlways>
+    <NoNever>No, never</NoNever>
+  </TimedTextSmpteTiming>
   <TransportStreamSubtitleChooser>
     <Title>Transport stream subtitle chooser - {0}</Title>
     <PidLineImage>Images - Transport Packet Identifier (PID) = {0}, language = {1}, number of subtitles = {2}</PidLineImage>
