@@ -185,7 +185,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                             _durationInSeconds = d;
                         }
 
-                        Pause();
                         Resize(_initialWidth, _initialHeight);
                         OnVideoLoaded?.Invoke(this, new EventArgs());
 
@@ -206,6 +205,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                             }
                         };
                         _hideMpcTimer.Start();
+                        Pause();
                     }
                     break;
                 case MpcHcCommand.NotifyEndOfStream:
@@ -250,8 +250,13 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
             int returnCode = NativeMethods.GetClassName(hWnd, className, className.Capacity); // Get the window class name
             if (returnCode != 0)
             {
-                return className.ToString().EndsWith(":b:0000000000010003:0000000000000006:0000000000000000") || // MPC-HC 64-bit video class???
-                       className.ToString().EndsWith(":b:00010003:00000006:00000000");                           // MPC-HC 32-bit video class???
+                var cName = className.ToString();
+                return cName.EndsWith(":b:0000000000010003:0000000000000006:0000000000000000") || // MPC-HC 64-bit video class???
+                       cName.EndsWith(":b:0000000000010004:0000000000000006:0000000000000000") || // MPC-HC 64-bit video class???
+                       cName.EndsWith(":b:0000000000010005:0000000000000006:0000000000000000") || // MPC-HC 64-bit video class???
+                       cName.EndsWith(":b:0000000000010006:0000000000000006:0000000000000000") || // MPC-HC 64-bit video class???
+                       cName.EndsWith(":b:0000000000010006:0000000000000007:0000000000000000") || // MPC-HC 64-bit video class???
+                       cName.EndsWith(":b:00010003:00000006:00000000");                           // MPC-HC 32-bit video class???
             }
 
             return false;
@@ -271,6 +276,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                     return true;
                 }
             }
+
+            SeLogger.Error("Unable to find mpc video window");
             return false;
         }
 
@@ -343,6 +350,12 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                 }
 
                 path = $@"C:\Program Files\{prefix.ToUpperInvariant()}\{fileName}";
+                if (File.Exists(path))
+                {
+                    return path;
+                }
+
+                path = $@"C:\Program Files\{prefix.ToUpperInvariant()} x64\{fileName}";
                 if (File.Exists(path))
                 {
                     return path;
