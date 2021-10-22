@@ -7,7 +7,7 @@
    * New sub format - thx Leon
    * Add read support for "combined ttml" files - thx Martin
    * Save SMPTE video time code mode for recent files - thx OmrSi
-   * Optionally prompt some TTML files regarding SMPTE time mode
+   * Optionally prompt some TTML files regarding SMPTE time mode - thx uckthis
    * New shortcuts for merge - the Leon
    * New shortcut for calc duration by CPS - thx OmrSi
 * IMPROVED:
@@ -48,7 +48,7 @@
    * Fix for PAC italic w missing space - thx Milenko
    * Fix switched total labels in RTL mode w original subtitle - thx OmrSi
    * Rollback max #lines enforce (now hidden setting) - thx pandalamp 
-   * Include favourite formats in "reset"
+   * Include favorite formats in "reset"
    * Take first audio track when loading wave form - thx Tuan-P
    * Fix issue with waveform original out of sync - thx Leon
    * Fix "Set start and set end of prev" when playing - thx Leon
