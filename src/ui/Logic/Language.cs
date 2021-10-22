@@ -1736,7 +1736,7 @@ namespace Nikse.SubtitleEdit.Logic
                         CloseVideo = "Close video file",
                         OpenSecondSubtitle = "Open second subtitle file...",
                         SetVideoOffset = "Set video offset...",
-                        SmptTimeMode = "SMPTE timing (drop frame)",
+                        SmptTimeMode = "SMPTE timing (non integer frame rate)",
                         GenerateTextFromVideo = "Generate text from video...",
                         GenerateBlankVideo = "Generate blank video...",
                         GenerateVideoWithBurnedInSub = "Generate video with burned-in sub...",
