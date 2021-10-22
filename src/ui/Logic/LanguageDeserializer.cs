@@ -7576,6 +7576,21 @@ namespace Nikse.SubtitleEdit.Logic
                 case "PointSync/ApplySync":
                     language.PointSync.ApplySync = reader.Value;
                     break;
+                case "TimedTextSmpteTiming/Title":
+                    language.TimedTextSmpteTiming.Title = reader.Value;
+                    break;
+                case "TimedTextSmpteTiming/UseSmpteTiming":
+                    language.TimedTextSmpteTiming.UseSmpteTiming = reader.Value;
+                    break;
+                case "TimedTextSmpteTiming/SmpteTimingInfo":
+                    language.TimedTextSmpteTiming.SmpteTimingInfo = reader.Value;
+                    break;
+                case "TimedTextSmpteTiming/YesAlways":
+                    language.TimedTextSmpteTiming.YesAlways = reader.Value;
+                    break;
+                case "TimedTextSmpteTiming/NoNever":
+                    language.TimedTextSmpteTiming.NoNever = reader.Value;
+                    break;
                 case "TransportStreamSubtitleChooser/Title":
                     language.TransportStreamSubtitleChooser.Title = reader.Value;
                     break;
