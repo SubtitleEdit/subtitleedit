@@ -450,6 +450,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <ZPositionHelp>positive tal flytter tekst væk, negative tal flytter tekst tættere på, hvis z-position er nul så er det 2D</ZPositionHelp>
     <ChooseColor>Vælg farve...</ChooseColor>
     <Generate>Generer</Generate>
+    <GenerateNewIdOnSave>Generer nyt id ved gem</GenerateNewIdOnSave>
   </DCinemaProperties>
   <DurationsBridgeGaps>
     <Title>Lap små huller mellem tekster</Title>
@@ -796,10 +797,24 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
     <Title>Generer video med indbrændt subtil</Title>
-    <Info>Vil generere en video fil med 'brændt i' undertekster.
-
-Note: Advanced Substation Alpha er understøttet.</Info>
+    <InfoAssaOff>Bemærk: Avanceret substation Alpha -styling understøttes.</InfoAssaOff>
+    <InfoAssaOn>Bemærk: Avanceret substation Alpha styling vil blive brugt :)</InfoAssaOn>
     <XGeneratedWithBurnedInSubs>"{0}" genereret med indbrændt undertekst.</XGeneratedWithBurnedInSubs>
+    <TimeRemainingMinutes>Resterende tid: {0} minutter</TimeRemainingMinutes>
+    <TimeRemainingSeconds>Resterende tid: {0} sekunder</TimeRemainingSeconds>
+    <TimeRemainingMinutesAndSeconds>Resterende tid: {0} minutter og {1} sekunder</TimeRemainingMinutesAndSeconds>
+    <TargetFileName>Målfilnavn: {0}</TargetFileName>
+    <TargetFileSize>Målfilstørrelse (kræver 2 -pass -kodning)</TargetFileSize>
+    <FileSizeMb>Filstørrelse i MB</FileSizeMb>
+    <PassX>Pass {0}</PassX>
+    <Encoding>Encoding</Encoding>
+    <BitRate>Bit rate</BitRate>
+    <SampleRate>Sample rate</SampleRate>
+    <Stereo>Stereo</Stereo>
+    <Preset>Preset</Preset>
+    <Crf>CRF</Crf>
+    <TuneFor>Indstil efter</TuneFor>
+    <AlignRight>Juster til højre</AlignRight>
   </GenerateVideoWithBurnedInSubs>
   <GetDictionaries>
     <Title>Mangler ordbøger?</Title>
@@ -1264,6 +1279,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <Help>Hjælp</Help>
         <ShowHideWaveform>Vis/skjul kurveform</ShowHideWaveform>
         <ShowHideVideo>Vis/skjul video</ShowHideVideo>
+        <AssaDraw>Advanced Sub Station Alpha tegn</AssaDraw>
       </ToolBar>
       <ContextMenu>
         <SizeAllColumnsToFit>Auto-tilpas kolonner</SizeAllColumnsToFit>
@@ -1957,6 +1973,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <RemoveTextIfAllUppercase>Fjern linje hvis kun med STORE bogstaver</RemoveTextIfAllUppercase>
     <RemoveInterjections>Fjern følelsesudbrud (Ahh, hmm, osv.)</RemoveInterjections>
     <EditInterjections>Rediger...</EditInterjections>
+    <Apply>Udfør</Apply>
   </RemoveTextFromHearImpaired>
   <ReplaceDialog>
     <Title>Erstat</Title>
@@ -2286,6 +2303,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <AdjustExtendPreviousLineEndToCurrentStart>Forlæng slutningen af ​​den forrige linje til den aktuelle start</AdjustExtendPreviousLineEndToCurrentStart>
     <AdjustExtendNextLineStartToCurrentEnd>Forlæng næste linjes start til strømens slutning</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>Genberegn varighed valgte undertekst</RecalculateDurationOfCurrentSubtitle>
+    <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>Genberegn varigheden af ​​den aktuelle undertekst (baseret på optimal læsehastighed)</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
     <MainCreateStartDownEndUp>Opret ny på tast-ned, sæt sluttid ved tast-op</MainCreateStartDownEndUp>
     <MergeDialog>Flet dialog (indsæt tankestreger)</MergeDialog>
     <GoToNext>Gå til næste linje</GoToNext>
@@ -2464,6 +2482,10 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <MinFrameGap>Min.  gap i frames</MinFrameGap>
     <XFramesAtYFrameRateGivesZMs>{0} rammer med en billedhastighed på {1} giver {2} millisekunder.</XFramesAtYFrameRateGivesZMs>
     <UseXAsNewGap>Brug "{0}" millisekunder som nyt minimumskløft?</UseXAsNewGap>
+    <BDOpensIn>BD sup/bdn-xml åbner i</BDOpensIn>
+    <BDOpensInOcr>OCR</BDOpensInOcr>
+    <BDOpensInEdit>Rediger</BDOpensInEdit>
+    <ShortcutsAllowSingleLetterOrNumberInTextBox>Genveje: Tillad enkelt bogstav/tal i tekstfeltet</ShortcutsAllowSingleLetterOrNumberInTextBox>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Hent MPV lib</DownloadMpv>
