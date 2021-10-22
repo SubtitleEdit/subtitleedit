@@ -2426,6 +2426,8 @@ can edit in same subtitle file (collaboration)</Information>
     <SwitchOriginalAndTranslation>Switch original and translation</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Merge original and translation</MergeOriginalAndTranslation>
     <MergeWithNext>Merge with next</MergeWithNext>
+    <MergeWithPreviousAndUnbreak>Merge with previous and unbreak</MergeWithPreviousAndUnbreak>
+    <MergeWithNextAndUnbreak>Merge with next and unbreak</MergeWithNextAndUnbreak>
     <MergeWithPrevious>Merge with previous</MergeWithPrevious>
     <ShortcutIsAlreadyDefinedX>Shortcut already defined: {0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>Toggle translation and original in video/audio preview</ToggleTranslationAndOriginalInPreviews>
