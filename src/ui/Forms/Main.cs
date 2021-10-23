@@ -14432,6 +14432,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SubtitleListview1_DragDrop(object sender, DragEventArgs e)
         {
+            mediaPlayer.Pause();
             _dragAndDropFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
             if (_dragAndDropFiles.Length == 1)
             {
@@ -23967,6 +23968,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void mediaPlayer_DragDrop(object sender, DragEventArgs e)
         {
+            mediaPlayer.Pause();
             var files = (string[])e.Data.GetData(DataFormats.FileDrop);
             if (files.Length == 1)
             {
