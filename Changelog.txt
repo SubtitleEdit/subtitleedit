@@ -6,7 +6,7 @@
    * Icon for plugin "ASSA Draw" - thx Leon
    * New sub format - thx Leon
    * Add read support for "combined ttml" files - thx Martin
-   * Save SMPTE video time code mode for recent files - thx OmrSi
+   * Save SMPTE video time mode for recent files - thx OmrSi
    * Optionally prompt some TTML files regarding SMPTE time mode - thx uckthis
    * New shortcuts for merge - the Leon
    * New shortcut for calc duration by CPS - thx OmrSi
