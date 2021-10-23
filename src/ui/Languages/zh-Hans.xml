@@ -2416,6 +2416,10 @@ Command line: {1} {2}
     <SwitchOriginalAndTranslation>切换原文和翻译</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>合并原文和翻译</MergeOriginalAndTranslation>
     <MergeWithNext>合并到下一行</MergeWithNext>
+    <MergeWithPreviousAndUnbreak>合并到上一行，且断行</MergeWithPreviousAndUnbreak>
+    <MergeWithNextAndUnbreak>合并到上一行，取消断行</MergeWithNextAndUnbreak>
+    <MergeWithPreviousAndBreak>合并到上一行，自动断行</MergeWithPreviousAndBreak>
+    <MergeWithNextAndBreak>合并到下一行，自动断行</MergeWithNextAndBreak>
     <MergeWithPrevious>合并到上一行</MergeWithPrevious>
     <ShortcutIsAlreadyDefinedX>快捷键已经定义:
 {0}</ShortcutIsAlreadyDefinedX>
@@ -2754,6 +2758,13 @@ Command line: {1} {2}
     <Info>一个同步点可调整位置，两个以上同步点可调整位置和速度</Info>
     <ApplySync>应用</ApplySync>
   </PointSync>
+  <TimedTextSmpteTiming>
+    <Title>SMPTE 时序</Title>
+    <UseSmpteTiming>对当前字幕使用 SMPTE 时序？</UseSmpteTiming>
+    <SmpteTimingInfo>注意：稍后可以在“视频菜单”中更改 SMPTE 时序</SmpteTimingInfo>
+    <YesAlways>是的，总是用于非整数帧率</YesAlways>
+    <NoNever>永不用于非整数帧率</NoNever>
+  </TimedTextSmpteTiming>
   <TransportStreamSubtitleChooser>
     <Title>传输流字幕选择器 - {0}</Title>
     <PidLineImage>图像 - 传输包标识符（PID）= {0}，语言 = {1}，字幕行数 = {2}</PidLineImage>
